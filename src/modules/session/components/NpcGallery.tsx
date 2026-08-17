@@ -180,7 +180,12 @@ const NpcGallery: React.FC = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, staggerChildren: 0.05 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-8"
+                    /* La grille plafonnait à trois colonnes quelle que soit la
+                       largeur : sur un écran large, vingt-huit fiches
+                       défilaient sur trois rangs étroits pendant qu'un tiers de
+                       la place restait vide. L'écart entre cartes se resserre
+                       aussi — huit unités séparaient plus qu'elles n'aéraient. */
+                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 [@media(min-width:1900px)]:grid-cols-5 gap-6"
                 >
                     {filteredEntities.map((npc) => (
                         <NpcGalleryItem
@@ -226,7 +231,7 @@ const NpcGallery: React.FC = () => {
                     {/* Empty State / Add Card */}
                     <button 
                         onClick={() => setIsAddingEntity(true)}
-                        className="h-[28rem] rounded-2xl border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-6 hover:border-accent/50 hover:bg-accent/5 transition-all group"
+                        className="h-96 rounded-2xl border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-6 hover:border-accent/50 hover:bg-accent/5 transition-all group"
                     >
                         <div className="w-16 h-16 rounded-full border border-app-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
                             <Plus size={32} className="text-slate-600 group-hover:text-accent group-hover:rotate-90 transition-all duration-300" />
@@ -315,7 +320,11 @@ const NpcGalleryItem: React.FC<{
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className={`group relative h-[28rem] rounded-2xl overflow-hidden cursor-pointer transition-all border border-app-border glass-bento !bg-app-surface/40 backdrop-blur-md hover:border-accent/30 ${
+            /* 28rem de haut pour une fiche qui en remplit vingt : sur un écran
+               large, trois rangs suffisaient à remplir la page. On resserre à
+               24, ce qui laisse le portrait dominant sans faire défiler pour
+               rien. */
+            className={`group relative h-96 rounded-2xl overflow-hidden cursor-pointer transition-all border border-app-border glass-bento !bg-app-surface/40 backdrop-blur-md hover:border-accent/30 ${
                 isSelected ? 'ring-2 ring-accent shadow-glow-accent/20 bg-app-surface/80' : ''
             }`}
         >
@@ -367,7 +376,7 @@ const NpcGalleryItem: React.FC<{
             </div>
 
             {/* Content Area */}
-            <div className="p-6 h-56 flex flex-col relative text-app-text">
+            <div className="p-5 h-48 flex flex-col relative text-app-text">
                 {/* Role Badge */}
                 <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-slate-400 border-white/10'}`}>
                     {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
@@ -377,7 +386,13 @@ const NpcGalleryItem: React.FC<{
                     <h3 className="font-display font-black text-xl text-app-text leading-tight mb-1 group-hover:text-accent transition-colors uppercase tracking-tighter">
                         {npc.name}
                     </h3>
-                    <p className="text-[10px] text-slate-500 font-bold italic tracking-wide truncate">
+                    {/*
+                        `truncate` coupait toute description à une ligne — « Un
+                        technicie… », « Réplicant 'b… » — alors que le bloc en a
+                        la place. Deux lignes suffisent à distinguer deux PNJ, ce
+                        qu'un mot et demi ne permettait pas.
+                    */}
+                    <p className="text-[10px] text-slate-500 font-bold italic tracking-wide line-clamp-2 leading-snug">
                         {npc.description || t('modules:session.npc_gallery.default_description')}
                     </p>
                 </div>

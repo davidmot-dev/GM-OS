@@ -2,6 +2,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LANGUES } from '../../forge/rules/langueDeForge';
 
+/**
+ * Les sections qui affichent des données plutôt qu'un formulaire.
+ *
+ * Elles prennent toute la largeur : une grille de fiches gagne à chaque colonne
+ * gagnée, là où un champ de saisie perd à chaque pixel au-delà d'une ligne
+ * confortable.
+ */
+const SECTIONS_PLEINE_LARGEUR = new Set<string | null>(['npc', 'clues', 'world']);
+
 import CluesManager from './CluesManager';
 import { useSessionOSStore } from '../store/index';
 import type { Campaign } from '../store/types';
@@ -169,7 +178,22 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
 
                 {/* Main Content Area */}
                 <main className="flex-1 overflow-y-auto custom-scrollbar p-16 bg-app-bg">
-                    <div className="max-w-4xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                    {/*
+                        **Toutes les sections n'ont pas la même largeur utile.**
+
+                        `max-w-4xl` — 896 px — est la bonne mesure pour un
+                        formulaire : au-delà, une ligne de saisie devient
+                        illisible et l'œil perd son point de retour. Mais les
+                        sections qui affichent des DONNÉES — la galerie de PNJ,
+                        les indices, l'atlas — n'y gagnent rien et y perdent tout :
+                        vingt-huit fiches s'entassaient sur trois colonnes en
+                        laissant un tiers de l'écran vide.
+
+                        Relevé par David le 2026-08-17, capture à l'appui.
+                    */}
+                    <div className={`mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700 ${
+                        SECTIONS_PLEINE_LARGEUR.has(activeSection) ? 'max-w-none' : 'max-w-4xl'
+                    }`}>
                         
                         {/* 1. IDENTITY SECTION */}
                         {activeSection === 'identity' && (
