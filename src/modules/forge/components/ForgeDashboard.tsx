@@ -76,7 +76,7 @@ const JournalDesLacunes: React.FC<{ lacunes: LacuneDuPilote[] }> = ({ lacunes })
 };
 
 const ForgeDashboard: React.FC = () => {
-  const { t } = useTranslation(['modules']);
+  const { t, i18n } = useTranslation(["modules"]);
   /*
     La campagne active n'entre plus ici. Les pilotes et les modèles de fiche
     sont un catalogue global — ils vivent dans le store de session mais ne
@@ -182,6 +182,17 @@ const ForgeDashboard: React.FC = () => {
     })();
     return () => { annule = true; };
   }, [dossiersSystemes]);
+
+  /**
+   * La langue déclarée par un corpus, lue à la demande.
+   *
+   * Lue au lancement plutôt que gardée en état : un `corpus.json` corrigé entre
+   * deux forges doit valoir tout de suite, sans redémarrer l'application.
+   */
+  const langueDuCorpus = async (dossier: string): Promise<string | undefined> => {
+    const brut = await window.appBridge?.ai?.readDoc?.(`systems/${dossier}/corpus.json`).catch(() => null);
+    return lireNature(brut)?.langue ?? i18n.language;
+  };
 
   const [familleCible, setFamilleCible] = useState<string | null>(null);
   const familleVisee = familleCible ? corpusChoisi(familleCible, dossiersSystemes) : null;
@@ -506,6 +517,13 @@ const ForgeDashboard: React.FC = () => {
         abandonne: () => useForgeStore.getState().arretDemande,
         // Aucune fiche ne dit comment le jeu s'appelle : le dossier, si.
         corpus: corpusVise.id,
+        /*
+          **La langue du corpus, sinon celle de l'interface.** Réglage demandé
+          par David le 2026-08-17 : il forge parfois depuis des livres anglais et
+          veut un résultat en français. Le déclaré l'emporte toujours — c'est
+          tout l'intérêt d'un réglage par corpus.
+        */
+        langue: await langueDuCorpus(corpusVise.id),
       });
 
       forgeStore.completeAnalysis(

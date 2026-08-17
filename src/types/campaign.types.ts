@@ -67,6 +67,19 @@ export interface Campaign {
     systemPath?: string;
     campaignPath?: string;
     obsidianPath?: string;
+    /**
+     * La langue dans laquelle la Forge écrit cette campagne — un code, `fr`, `en`…
+     *
+     * **Réglage par campagne, décidé par David le 2026-08-17** : on peut forger
+     * depuis un livre anglais et vouloir un résultat en français, ou garder une
+     * campagne dans sa langue d'origine pendant que le reste passe au français.
+     * Le corpus du système porte le sien de son côté ; les deux ne se croisent
+     * jamais, chaque forge lisant ses propres fiches.
+     *
+     * Absent : la langue de l'interface sert de repli. *On ne fait pas payer une
+     * nouveauté à l'existant.*
+     */
+    langueDeForge?: string;
 
     // Social Graph Optimization
     nodePositions?: Record<string, { x: number; y: number }>;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { LANGUES } from '../../forge/rules/langueDeForge';
 
 import CluesManager from './CluesManager';
 import { useSessionOSStore } from '../store/index';
@@ -37,6 +38,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
         notebookUrl, setNotebookUrl,
         systemPath, setSystemPath,
         campaignPath, setCampaignPath,
+        langueDeForge, setLangueDeForge,
         activeLocationIds, setActiveLocationIds,
         aiPersonas, setAiPersonas,
         obsidianPath, setObsidianPath,
@@ -470,6 +472,38 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                             </label>
                                             <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.notes_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
                                         </div>
+                                    </div>
+
+                                    {/*
+                                        **La langue dans laquelle la Forge écrit cette campagne.**
+                                        On forge parfois depuis un livre anglais et on veut un
+                                        résultat en français. Vide : la langue de l'interface — ce
+                                        qui reste le cas de toutes les campagnes existantes.
+
+                                        Elle ne gouverne que la PROSE : les identifiants, les
+                                        valeurs imposées et les noms propres ne sont jamais
+                                        traduits, sinon les renvois de la reforge ne résoudraient
+                                        plus rien.
+                                    */}
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
+                                            <PenTool size={12} /> Langue de la Forge
+                                        </label>
+                                        <select
+                                            value={langueDeForge}
+                                            onChange={e => setLangueDeForge(e.target.value)}
+                                            title="La Forge écrira la prose de cette campagne dans cette langue, quelle que soit celle des fiches"
+                                            className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner cursor-pointer"
+                                        >
+                                            <option value="">— la langue de l’interface —</option>
+                                            {Object.entries(LANGUES).map(([code, nom]) => (
+                                                <option key={code} value={code}>{nom}</option>
+                                            ))}
+                                        </select>
+                                        <p className="text-[10px] text-app-text/25 italic px-2 leading-relaxed">
+                                            Ne gouverne que la prose. Les identifiants et les noms propres
+                                            restent écrits comme les fiches les écrivent.
+                                        </p>
                                     </div>
 
                                 </div>

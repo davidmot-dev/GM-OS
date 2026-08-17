@@ -34,6 +34,7 @@
  * modèle ce qu'il sait produire, on fabrique localement ce qui doit être exact*.
  */
 
+import { consigneDeLangue } from '../rules/langueDeForge';
 import type { GameDriver } from '../../../types/drivers';
 import { normaliser } from '../rules/canevas';
 import { santeAAnnoncer } from '../../session/logic/santeDesAdversaires';
@@ -149,6 +150,14 @@ export interface ContexteDeLaTrame {
      * PNJ, et à quelle échelle.
      */
     driver?: GameDriver;
+    /**
+     * La langue dans laquelle écrire la prose — un code, `fr`, `en`…
+     *
+     * Vient de la campagne, avec la langue de l'interface pour repli. Absente,
+     * aucune consigne n'est posée : le modèle suit alors la langue des fiches,
+     * ce qui était le comportement jusqu'au 2026-08-17.
+     */
+    langue?: string;
 }
 
 export interface GroupeDeLaTrame {
@@ -525,6 +534,13 @@ export function promptDuGroupe(
         '',
         `TÂCHE : rends un JSON compact contenant ${groupe.cible(contexte)}. Rien d'autre.`,
         '',
+        /*
+          **La langue vient juste après la tâche**, comme le vocabulaire et pour
+          la même raison : *une consigne noyée est une consigne perdue.* Celle du
+          seuil, insérée au milieu d'une cible le 2026-08-16, a fait ressortir
+          `jet.seuil` vide le lendemain.
+        */
+        ...(consigneDeLangue(contexte.langue) ? [consigneDeLangue(contexte.langue), ''] : []),
         // Le vocabulaire vient juste après la tâche et avant les interdits :
         // c'est la contrainte la plus dure, elle ne doit pas se noyer.
         ...(groupe.designe?.length

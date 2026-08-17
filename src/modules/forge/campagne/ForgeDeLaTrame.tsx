@@ -9,6 +9,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { Bloc, CibleDeCampagne } from './atomes';
 import { corpusDeLaCampagne } from './ServiceDeCampagne';
 import { lireLesFichesDeLaCampagne, partiesDesFiches, type LectureDesFichesDeCampagne } from './lectureDesFiches';
+import i18next from 'i18next';
 import { forgerLaCampagne, type ResultatDeForge, type AvancementDeForge } from './ForgeDeCampagne';
 import { ecrireLaCampagne, type EcritureDeLaCampagne } from './ecritureDeLaCampagne';
 import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
@@ -115,6 +116,14 @@ const ForgeDeLaTrame: React.FC = () => {
         try {
             setResultat(await forgerLaCampagne(lecture.fiches, {
                 ...(driver ? { driver } : {}),
+                /*
+                  **La langue de la campagne, sinon celle de l'interface.**
+                  Réglage demandé par David le 2026-08-17 : on forge parfois
+                  depuis un livre anglais et on veut un résultat en français. Le
+                  déclaré l'emporte toujours — sinon le réglage ne servirait à
+                  rien pour la seule campagne qu'on voudrait garder en anglais.
+                */
+                langue: campagneExistante?.langueDeForge || i18next.language,
                 onProgres: setAvancement,
             }));
         } catch (e) {

@@ -218,6 +218,15 @@ export class ForgeService {
        * plausible se joue en séance.
        */
       fichesDeLaFamille?: FicheDuCorpus[];
+      /**
+       * La langue dans laquelle écrire la prose — un code, `fr`, `en`…
+       *
+       * Vient de `corpus.json`, avec la langue de l'interface pour repli.
+       * Absente, aucune consigne n'est posée et le modèle suit la langue des
+       * fiches : c'est le comportement d'avant le 2026-08-17, et il reste celui
+       * des corpus qui n'ont rien déclaré.
+       */
+      langue?: string;
     } = {},
   ): Promise<{
     resultat: FragmentDePilote;
@@ -304,6 +313,7 @@ export class ForgeService {
           promptDuGroupe(groupe, source.fiches, {
             vocabulaire: vocabulaireAcquis(fusionnerFragments(fragments)),
             corpus: options.corpus,
+            ...(options.langue ? { langue: options.langue } : {}),
             venuDeLaFamille: source.venuDeLaFamille,
           }),
           systemPrompt,

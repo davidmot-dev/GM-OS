@@ -38,6 +38,11 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
     const [notebookUrl, setNotebookUrl] = useState(fullCampaign?.notebookUrl || '');
     const [systemPath, setSystemPath] = useState(fullCampaign?.systemPath || '');
     const [campaignPath, setCampaignPath] = useState(fullCampaign?.campaignPath || '');
+    /*
+      La langue dans laquelle la Forge écrit cette campagne. Vide = la langue de
+      l'interface, ce qui reste le cas de toutes les campagnes existantes.
+    */
+    const [langueDeForge, setLangueDeForge] = useState(fullCampaign?.langueDeForge || '');
     const [obsidianPath, setObsidianPath] = useState(fullCampaign?.obsidianPath || '');
     const [activeLocationIds, setActiveLocationIds] = useState<string[]>(fullCampaign?.activeLocationIds || []);
     const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
@@ -92,6 +97,9 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
             systemPath,
             campaignPath,
             obsidianPath,
+            // Vide se range comme « non déclaré » : sinon une chaîne vide
+            // passerait pour une langue et écraserait le repli sur l'interface.
+            langueDeForge: langueDeForge.trim() || undefined,
             activeLocationIds,
             aiPersonas
         } as Partial<Campaign>;
@@ -139,6 +147,7 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
         notebookUrl, setNotebookUrl,
         systemPath, setSystemPath,
         campaignPath, setCampaignPath,
+        langueDeForge, setLangueDeForge,
         activeLocationIds, setActiveLocationIds,
         aiPersonas, setAiPersonas,
         obsidianPath, setObsidianPath,

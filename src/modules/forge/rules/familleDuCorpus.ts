@@ -37,6 +37,15 @@ export interface NatureDuCorpus {
      * et son socle se reconnaissent sans table de correspondance.
      */
     moteur?: string;
+    /**
+     * La langue dans laquelle ce corpus doit être forgé — un code, `fr`, `en`…
+     *
+     * **Réglage demandé par David le 2026-08-17** : il forge parfois depuis des
+     * livres anglais et veut un résultat en français. Déclaré ici parce qu'un
+     * corpus est d'une langue une fois pour toutes ; absent, la langue de
+     * l'interface sert de repli.
+     */
+    langue?: string;
 }
 
 /**
@@ -51,11 +60,23 @@ export function lireNature(brut: string | null | undefined): NatureDuCorpus | nu
     try {
         const lu: unknown = JSON.parse(brut);
         if (!lu || typeof lu !== 'object') return null;
-        const { nature, moteur } = lu as Record<string, unknown>;
-        if (nature !== 'famille' && nature !== 'jeu') return null;
+        const { nature, moteur, langue } = lu as Record<string, unknown>;
+        const langueLue = typeof langue === 'string' && langue.trim() ? langue.trim() : undefined;
+
+        /*
+          **Un corpus peut ne déclarer QUE sa langue.** La version précédente
+          rendait `null` dès que `nature` manquait — un `corpus.json` réduit à
+          `{"langue":"fr"}` aurait donc été lu comme vide, et le réglage perdu
+          sans un mot. On retombe sur le défaut documenté, « un corpus sans
+          déclaration est un jeu », au lieu de tout jeter.
+        */
+        if (nature !== 'famille' && nature !== 'jeu') {
+            return langueLue ? { nature: 'jeu', langue: langueLue } : null;
+        }
         return {
             nature,
             moteur: typeof moteur === 'string' && moteur.trim() ? moteur.trim() : undefined,
+            langue: langueLue,
         };
     } catch {
         return null;

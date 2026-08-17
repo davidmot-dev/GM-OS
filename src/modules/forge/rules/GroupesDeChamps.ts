@@ -1,5 +1,6 @@
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
+import { consigneDeLangue } from './langueDeForge';
 import { normaliser } from './canevas';
 
 /**
@@ -574,6 +575,14 @@ export interface ContexteDuGroupe {
      */
     corpus?: string;
     /**
+     * La langue dans laquelle écrire la prose — un code, `fr`, `en`…
+     *
+     * Vient de `corpus.json`, avec la langue de l'interface pour repli. Absente,
+     * aucune consigne n'est posée : le modèle suit la langue des fiches, ce qui
+     * était le comportement jusqu'au 2026-08-17.
+     */
+    langue?: string;
+    /**
      * Ces fiches viennent-elles de la **famille** plutôt que du jeu ?
      *
      * **Il faut le dire au modèle, et c'est tout l'enjeu du comblement.** Un
@@ -594,7 +603,7 @@ export function promptDuGroupe(
     fiches: FicheDuCorpus[],
     contexte: ContexteDuGroupe = {},
 ): string {
-    const { vocabulaire, corpus, venuDeLaFamille } = contexte;
+    const { vocabulaire, corpus, venuDeLaFamille, langue } = contexte;
     const retenues = fichesDuGroupe(groupe, fiches);
     const corps = retenues.map(f => `### ${f.sujet}\n${f.contenu}`).join('\n\n');
 
@@ -608,6 +617,13 @@ export function promptDuGroupe(
         corps || '(aucune fiche disponible sur ce sujet)',
         '',
         `TÂCHE : rends un JSON compact contenant ${groupe.cible}. Rien d'autre.`,
+        /*
+          **La langue vient juste après la tâche**, comme le vocabulaire et pour
+          la même raison : *une consigne noyée est une consigne perdue.* Celle du
+          seuil, glissée au milieu d'une cible le 2026-08-16, a fait ressortir
+          `jet.seuil` vide dès le lendemain.
+        */
+        ...(consigneDeLangue(langue) ? ['', consigneDeLangue(langue)] : []),
         '',
         // L'ancrage ne sert qu'au groupe qui nomme le jeu, et il lui est
         // indispensable : aucune fiche ne dit comment le jeu s'appelle.

@@ -287,6 +287,14 @@ function recolter(
 export interface OptionsDeForge {
     /** Le pilote du jeu, tiré du `jeu:` des fiches. */
     driver?: GameDriver;
+    /**
+     * La langue dans laquelle écrire la prose — un code, `fr`, `en`…
+     *
+     * Vient de la campagne (`Campaign.langueDeForge`), avec la langue de
+     * l'interface pour repli. Absente, aucune consigne n'est posée et le modèle
+     * suit la langue des fiches — le comportement d'avant le 2026-08-17.
+     */
+    langue?: string;
     groupes?: readonly GroupeDeLaTrame[];
     onProgres?: (avancement: AvancementDeForge) => void;
     /** Consulté avant chaque passe. Vrai : on s'arrête et on rend l'acquis. */
@@ -443,6 +451,7 @@ export async function forgerLaCampagne(
                 vocabulaire: vocabulaireDuProjet(projet),
                 ...(acte ? { acte } : {}),
                 ...(options.driver ? { driver: options.driver } : {}),
+                ...(options.langue ? { langue: options.langue } : {}),
             };
 
             try {
