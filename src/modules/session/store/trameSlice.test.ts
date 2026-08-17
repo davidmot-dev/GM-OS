@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createStore } from 'zustand';
 import { createTrameSlice, type TrameSlice } from './trameSlice';
-import { actesOrdonnes, scenesOrdonnees } from '../logic/trame';
+import { actesOrdonnes, scenesOrdonnees, etatDeLaScene, closeSansAvoirEteJouee } from '../logic/trame';
 
 /**
  * Ce que ces tests protègent : **les deux liens d'une scène ne se contredisent
@@ -173,5 +173,164 @@ describe('trameSlice', () => {
 
         expect(store.getState().scenes.find(s => s.id === prevue)!.origine).toBe('preparee');
         expect(store.getState().scenes.find(s => s.id === surprise)!.origine).toBe('improvisee');
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **les gestes du parcours réel**, arrivés le
+ * 2026-08-17 avec le code qui les écrit.
+ *
+ * Le point le plus délicat est la cascade de l'acte : achever un acte termine
+ * TOUTES ses scènes, y compris celles où le groupe n'est jamais passé. C'est la
+ * règle voulue — l'acte est derrière, le reste ne se jouera plus — mais elle ne
+ * doit se déclencher qu'au PASSAGE à `acheve`, sinon rééditer le titre d'un acte
+ * clos re-terminerait des scènes qu'on aurait rouvertes depuis.
+ */
+describe('le parcours réel', () => {
+    const nouveauStoreDeTrame = () => createStore<TrameSlice>()((...a) => createTrameSlice(...a));
+
+    let s: ReturnType<typeof nouveauStoreDeTrame>;
+    let acteId: string;
+
+    beforeEach(() => {
+        s = nouveauStoreDeTrame();
+        acteId = s.getState().ajouterActe('c1', 'Acte I');
+    });
+
+    const etat = (id: string) => etatDeLaScene(s.getState().scenes.find(x => x.id === id)!);
+
+    it('ouvrir puis terminer une scène', () => {
+        const id = s.getState().ajouterScene(acteId, 'Le réveil');
+        expect(etat(id)).toBe('prevue');
+
+        s.getState().ouvrirLaScene(id, 'seance-1');
+        expect(etat(id)).toBe('en-cours');
+
+        s.getState().terminerLaScene(id);
+        expect(etat(id)).toBe('terminee');
+    });
+
+    it('deux scènes en cours à la fois — le groupe s\'est séparé', () => {
+        // C'est l'exigence qui a tué le pointeur unique : une campagne peut
+        // avoir plusieurs scènes ouvertes, et le modèle doit le porter sans
+        // champ supplémentaire.
+        const a = s.getState().ajouterScene(acteId, 'La cave');
+        const b = s.getState().ajouterScene(acteId, 'Le toit');
+        s.getState().ouvrirLaScene(a);
+        s.getState().ouvrirLaScene(b);
+
+        expect([etat(a), etat(b)]).toEqual(['en-cours', 'en-cours']);
+    });
+
+    it('une scène improvisée naît ouverte', () => {
+        // Deux gestes séparés auraient laissé exister « scène improvisée jamais
+        // ouverte », qui ne veut rien dire : on l'improvise parce qu'on y est.
+        const id = s.getState().creerSceneImprovisee(acteId, 'Une embuscade', 'seance-1');
+        const scene = s.getState().scenes.find(x => x.id === id)!;
+
+        expect(scene.origine).toBe('improvisee');
+        expect(etatDeLaScene(scene)).toBe('en-cours');
+        expect(scene.passages![0].seanceId).toBe('seance-1');
+    });
+
+    it('une scène improvisée sans acte n\'est pas créée', () => {
+        // On suit la décision d'`ajouterScene` au lieu de la contredire.
+        expect(s.getState().creerSceneImprovisee('acte-fantome', 'X')).toBe('');
+        expect(s.getState().scenes).toHaveLength(0);
+    });
+
+    it('le clone se pose juste après son original, et décale la suite', () => {
+        const a = s.getState().ajouterScene(acteId, 'Le réveil');
+        s.getState().ajouterScene(acteId, 'La suite');
+        s.getState().ouvrirLaScene(a);
+
+        const cloneId = s.getState().clonerLaScene(a);
+        const ordre = scenesOrdonnees(s.getState().scenes, acteId).map(x => x.titre);
+
+        expect(ordre).toEqual(['Le réveil', 'Le réveil (2)', 'La suite']);
+        expect(etat(cloneId)).toBe('prevue');
+        // L'original garde son vécu : cloner n'est pas déplacer.
+        expect(etat(a)).toBe('en-cours');
+    });
+
+    it('cloner une scène inconnue ne crée rien', () => {
+        expect(s.getState().clonerLaScene('fantome')).toBe('');
+        expect(s.getState().scenes).toHaveLength(0);
+    });
+
+    it('achever l\'acte termine toutes ses scènes, jouées ou non', () => {
+        const jouee = s.getState().ajouterScene(acteId, 'Jouée');
+        const jamais = s.getState().ajouterScene(acteId, 'Jamais');
+        const autreActe = s.getState().ajouterActe('c1', 'Acte II');
+        const ailleurs = s.getState().ajouterScene(autreActe, 'Ailleurs');
+        s.getState().ouvrirLaScene(jouee);
+
+        s.getState().modifierActe(acteId, { acheve: true });
+
+        expect(etat(jouee)).toBe('terminee');
+        expect(etat(jamais)).toBe('terminee');
+        expect(etat(ailleurs), 'un autre acte n\'est pas touché').toBe('prevue');
+
+        // Et les deux se distinguent : celle qu'on n'a jamais jouée n'a aucun
+        // passage, donc l'écran la grisera au lieu de la barrer seulement.
+        expect(closeSansAvoirEteJouee(s.getState().scenes.find(x => x.id === jamais)!)).toBe(true);
+        expect(closeSansAvoirEteJouee(s.getState().scenes.find(x => x.id === jouee)!)).toBe(false);
+    });
+
+    it('rééditer un acte déjà achevé ne re-termine pas ce qu\'on a rouvert', () => {
+        const id = s.getState().ajouterScene(acteId, 'Reprise');
+        s.getState().modifierActe(acteId, { acheve: true });
+        s.getState().ouvrirLaScene(id);
+        expect(etat(id)).toBe('en-cours');
+
+        s.getState().modifierActe(acteId, { titre: 'Acte I bis' });
+
+        expect(etat(id), 'la cascade ne joue qu\'au passage à « achevé »').toBe('en-cours');
+    });
+
+    it('suspendre puis reprendre toute une campagne', () => {
+        const ouverte = s.getState().ajouterScene(acteId, 'Ouverte');
+        const prevue = s.getState().ajouterScene(acteId, 'Prévue');
+        s.getState().ouvrirLaScene(ouverte, 'seance-1');
+
+        s.getState().suspendreLesScenesDeLaCampagne('c1');
+        expect([etat(ouverte), etat(prevue)]).toEqual(['en-pause', 'prevue']);
+
+        s.getState().reprendreLesScenesDeLaCampagne('c1', 'seance-2');
+        expect([etat(ouverte), etat(prevue)]).toEqual(['en-cours', 'prevue']);
+
+        const passages = s.getState().scenes.find(x => x.id === ouverte)!.passages!;
+        expect(passages).toHaveLength(2);
+        expect(passages[0].seanceId).toBe('seance-1');
+        expect(passages[1].seanceId).toBe('seance-2');
+    });
+});
+
+describe('les homonymes de scènes', () => {
+    /**
+     * La Forge de campagne résout ses renvois PAR NOM, et un ex æquo ne résout
+     * rien. Deux « Combat improvisé » dans la même campagne — deux soirs de
+     * suite, c'est le cas le plus probable — casseraient en silence tout renvoi
+     * qui les vise à la prochaine reforge.
+     */
+    const s = () => createStore<TrameSlice>()((...a) => createTrameSlice(...a));
+
+    it('une seconde scène improvisée du même nom est numérotée', () => {
+        const store = s();
+        const acteId = store.getState().ajouterActe('c1', 'Acte I');
+
+        store.getState().creerSceneImprovisee(acteId, 'Combat improvisé');
+        store.getState().creerSceneImprovisee(acteId, 'Combat improvisé');
+        store.getState().creerSceneImprovisee(acteId, 'Combat improvisé');
+
+        expect(store.getState().scenes.map(x => x.titre))
+            .toEqual(['Combat improvisé', 'Combat improvisé (2)', 'Combat improvisé (3)']);
+    });
+
+    it('un titre libre reste intact — on ne numérote pas pour le plaisir', () => {
+        const store = s();
+        const acteId = store.getState().ajouterActe('c1', 'Acte I');
+        store.getState().creerSceneImprovisee(acteId, 'Une embuscade');
+        expect(store.getState().scenes[0].titre).toBe('Une embuscade');
     });
 });

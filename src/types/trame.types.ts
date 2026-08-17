@@ -24,13 +24,17 @@
  *
  * ---
  *
- * **CE QUI N'EST DÉLIBÉRÉMENT PAS ICI.** Le parcours réel — quelles scènes une
- * séance a traversées, à quelle scène rattacher un événement de journal —
- * appartient à la **capture en partie**, une autre temporalité (plan du
- * 2026-08-15, § 0). Poser ces champs maintenant en ferait des *champs morts qui
- * ont l'air vivants* : rien ne les écrirait, et un écran finirait par les lire
- * comme s'ils disaient quelque chose. Ils viendront avec le code qui les
- * remplit.
+ * **LE PARCOURS RÉEL EST ARRIVÉ, LE 2026-08-17.** Ce bloc disait jusqu'ici qu'il
+ * était écarté — *« poser ces champs maintenant en ferait des champs morts qui
+ * ont l'air vivants ; ils viendront avec le code qui les remplit. »* La condition
+ * est remplie : `passages` et `termineeLe` naissent avec les boutons qui les
+ * écrivent (Commencer, Terminer, et la reprise à l'ouverture d'une séance).
+ *
+ * Le déclencheur est un constat de David, vérifié : il déclarait son acte et ses
+ * scènes en préparation, puis lançait la séance — et **aucun écran de jeu ne
+ * montrait la trame**. `PanneauDeTrameDeSeance` n'était monté que dans
+ * `SessionFocusEditor`, l'écran de préparation. Le plan existait, on le perdait
+ * de vue au moment de jouer.
  */
 
 /**
@@ -45,6 +49,30 @@
  * remplissage est bas.
  */
 export type OrigineDeScene = 'preparee' | 'improvisee';
+
+/**
+ * Une tranche de jeu passée dans une scène, bornée.
+ *
+ * **Pourquoi une LISTE et non deux dates.** Décision de David le 2026-08-17,
+ * contre le modèle simple : une scène reprise après une pause perdrait son
+ * premier passage, et *le journal ne saurait plus rattacher ce qui s'y est dit
+ * ce soir-là*. Le journal vient ensuite ; changer de modèle après coup aurait
+ * demandé de réécrire les scènes déjà jouées.
+ *
+ * Un passage sans `fin` est **le passage en cours** — il n'y en a jamais deux.
+ */
+export interface PassageDeScene {
+    debut: number;
+    /** Absente tant que la scène est ouverte. */
+    fin?: number;
+    /**
+     * La séance pendant laquelle ce passage a eu lieu.
+     *
+     * Facultative parce qu'une scène peut s'ouvrir hors séance — on ne refuse
+     * pas au meneur d'avancer sa trame un dimanche après-midi.
+     */
+    seanceId?: string;
+}
 
 export interface Acte {
     id: string;
@@ -99,6 +127,24 @@ export interface Scene {
     lieuId?: string;
     /** Les PNJ présents. */
     entiteIds: string[];
+    /**
+     * Les personnages joueurs présents dans cette scène.
+     *
+     * **Le champ sans lequel les scènes simultanées ne servent à rien.** Le
+     * modèle sait depuis le 2026-08-17 qu'un groupe séparé, ce sont deux scènes
+     * ouvertes en même temps — mais rien ne disait **qui est où**, et c'est
+     * pourtant la seule chose que le meneur ait besoin de relire à ce
+     * moment-là. Relevé par David en voyant le panneau tourner.
+     *
+     * Facultatif, comme `passages` : les scènes d'avant n'en portent pas, et le
+     * déclarer obligatoire le rendrait `undefined` à l'exécution en prétendant
+     * le contraire.
+     *
+     * **Il n'entre pas dans le taux de préparation.** Qui est présent est un
+     * fait de partie, pas un élément qu'on prépare : le compter ferait chuter la
+     * pastille de toutes les scènes déjà écrites, et pour une raison fausse.
+     */
+    personnagesIds?: string[];
     /** Les indices qui peuvent tomber ici. */
     indiceIds: string[];
     /**
@@ -109,6 +155,30 @@ export interface Scene {
      * objets aurait obligé à dupliquer un moment de storyboard par scène.
      */
     momentDeStoryboardId?: string;
+
+    /**
+     * Ce que la scène a réellement vécu, dans l'ordre.
+     *
+     * **Facultatif, et lu partout avec `?? []`.** Les scènes écrites avant le
+     * 2026-08-17 n'en portent pas — les 29 du « Secret de Milo » entre autres.
+     * Le déclarer obligatoire le rendrait `undefined` à l'exécution en
+     * prétendant le contraire, exactement le défaut déjà réglé pour
+     * `scenesPrevuesIds`.
+     */
+    passages?: PassageDeScene[];
+
+    /**
+     * Quand le meneur a déclaré la scène close. C'est elle qui la barre.
+     *
+     * **Distincte de la pause.** Une scène qu'on quitte en fin de séance ferme
+     * son passage et reste *en pause* : elle reprendra à la séance suivante.
+     * Terminer est une décision, pas une conséquence de l'horloge.
+     *
+     * Une scène terminée **sans aucun passage** n'a jamais été jouée — l'acte
+     * s'est achevé avant qu'on n'y passe. Les deux ne se confondent pas à
+     * l'écran : barrée dans les deux cas, grisée dans celui-là.
+     */
+    termineeLe?: number;
 
     creeeLe: number;
 }

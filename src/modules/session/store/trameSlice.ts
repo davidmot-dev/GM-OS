@@ -10,7 +10,11 @@
 import type { StateCreator } from 'zustand';
 import type { Acte, Scene, OrigineDeScene } from '../../../types/trame.types';
 import type { GameSession } from '../../../types/session.types';
-import { actesOrdonnes, scenesOrdonnees, prochainOrdre, deplacer } from '../logic/trame';
+import {
+    actesOrdonnes, scenesOrdonnees, prochainOrdre, deplacer,
+    ouvrirLaScene as ouvrir, terminerLaScene as terminer,
+    suspendreLesScenes, reprendreLesScenes, clonerLaScene as cloner, titreDisponible,
+} from '../logic/trame';
 
 /**
  * Ce que ce slice doit voir chez son voisin, et rien de plus.
@@ -68,6 +72,24 @@ export interface TrameSliceActions {
     deplacerScene: (id: string, sens: 'haut' | 'bas') => void;
     /** Déplace une scène vers un autre acte, à la fin. */
     rattacherSceneAUnActe: (id: string, acteId: string) => void;
+
+    /* ---- Le parcours réel, depuis le 2026-08-17 ------------------------- */
+
+    /** On y est. Rouvre une scène terminée si c'est elle qu'on désigne. */
+    ouvrirLaScene: (id: string, seanceId?: string) => void;
+    /** La scène est finie — elle se barre. */
+    terminerLaScene: (id: string) => void;
+    /** Une scène née en cours de partie, ouverte dans la foulée. Rend son identifiant. */
+    creerSceneImprovisee: (acteId: string, titre: string, seanceId?: string) => string;
+    /**
+     * Une copie du contenu, état de jeu vierge, posée juste après l'originale.
+     * Rend son identifiant, ou `''` si la scène source n'existe pas.
+     */
+    clonerLaScene: (id: string) => string;
+    /** Suspend les scènes en cours d'une campagne — la séance s'arrête. */
+    suspendreLesScenesDeLaCampagne: (campaignId: string) => void;
+    /** Relance les scènes en pause d'une campagne — une séance s'ouvre. */
+    reprendreLesScenesDeLaCampagne: (campaignId: string, seanceId: string) => void;
 }
 
 export type TrameSlice = TrameSliceState & TrameSliceActions;
@@ -93,10 +115,29 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
         return id;
     },
 
+    /*
+      **Achever un acte termine toutes ses scènes.** Règle de David du
+      2026-08-17, et c'est une cascade au même titre que la suppression : le
+      nombre s'annonce AVANT, par `scenesACloreAvecLActe`, sinon on découvre
+      après coup que six scènes jamais jouées viennent d'être barrées.
+
+      Elle ne se déclenche qu'au **passage** à `acheve` : rééditer le titre d'un
+      acte déjà achevé ne doit pas re-terminer des scènes qu'on aurait rouvertes
+      depuis. Et l'inverse ne se déduit pas — dé-marquer l'acte ne ressuscite
+      rien, parce qu'on ne saurait pas lesquelles ressusciter.
+    */
     modifierActe: (id, updates) =>
-        set((state) => ({
-            actes: state.actes.map((a) => (a.id === id ? { ...a, ...updates } : a)),
-        })),
+        set((state) => {
+            const avant = state.actes.find((a) => a.id === id);
+            const actes = state.actes.map((a) => (a.id === id ? { ...a, ...updates } : a));
+            if (!avant || updates.acheve !== true || avant.acheve === true) return { actes };
+
+            const quand = Date.now();
+            return {
+                actes,
+                scenes: state.scenes.map((s) => (s.acteId === id ? terminer(s, quand) : s)),
+            };
+        }),
 
     /*
       **Cascade, et assumée.** Une scène dont l'acte a disparu n'apparaîtrait sur
@@ -192,4 +233,78 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
             ),
         }));
     },
+
+    /* ─────────────────────────────────────────────
+       Le parcours réel
+       ───────────────────────────────────────────── */
+
+    ouvrirLaScene: (id, seanceId) =>
+        set((state) => {
+            const quand = Date.now();
+            return { scenes: state.scenes.map((s) => (s.id === id ? ouvrir(s, quand, seanceId) : s)) };
+        }),
+
+    terminerLaScene: (id) =>
+        set((state) => {
+            const quand = Date.now();
+            return { scenes: state.scenes.map((s) => (s.id === id ? terminer(s, quand) : s)) };
+        }),
+
+    /*
+      **Improvisée ET ouverte du même geste.** C'est tout l'intérêt : on
+      l'improvise parce qu'on y est déjà. Deux actions séparées auraient laissé
+      exister l'état « scène improvisée jamais ouverte », qui ne veut rien dire.
+
+      `ajouterScene` refuse déjà un acte inexistant et rend `''` — on suit sa
+      décision au lieu de la contredire.
+    */
+    creerSceneImprovisee: (acteId, titre, seanceId) => {
+        // Un homonyme dans la même campagne casserait la résolution par nom de
+        // la Forge — « Combat improvisé » deux soirs de suite est le cas le plus
+        // probable, et le moins visible.
+        const pris = get().scenes
+            .filter((s) => s.campaignId === get().actes.find((a) => a.id === acteId)?.campaignId)
+            .map((s) => s.titre);
+        const id = get().ajouterScene(
+            acteId,
+            pris.includes(titre) ? titreDisponible(titre, pris) : titre,
+            'improvisee',
+        );
+        if (!id) return '';
+        get().ouvrirLaScene(id, seanceId);
+        return id;
+    },
+
+    clonerLaScene: (id) => {
+        const source = get().scenes.find((s) => s.id === id);
+        if (!source) return '';
+
+        const voisines = scenesOrdonnees(get().scenes, source.acteId);
+        const nouvelId = `scene-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+        const clone = cloner(
+            source,
+            nouvelId,
+            titreDisponible(source.titre, voisines.map((s) => s.titre)),
+            source.ordre + 1,
+            Date.now(),
+        );
+
+        set((state) => ({
+            scenes: [
+                // Le clone se pose JUSTE APRÈS son original, pas à la fin : une
+                // scène clonée l'est pour être rejouée là où elle est, et la
+                // retrouver dix lignes plus bas serait la perdre.
+                ...state.scenes.map((s) =>
+                    s.acteId === source.acteId && s.ordre > source.ordre ? { ...s, ordre: s.ordre + 1 } : s),
+                clone,
+            ],
+        }));
+        return nouvelId;
+    },
+
+    suspendreLesScenesDeLaCampagne: (campaignId) =>
+        set((state) => ({ scenes: suspendreLesScenes(state.scenes, campaignId, Date.now()) })),
+
+    reprendreLesScenesDeLaCampagne: (campaignId, seanceId) =>
+        set((state) => ({ scenes: reprendreLesScenes(state.scenes, campaignId, seanceId, Date.now()) })),
 });

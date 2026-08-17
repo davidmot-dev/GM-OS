@@ -13,7 +13,19 @@ import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import type { GameSession, TransferRequest, SessionFeedback } from './types';
+import type { Scene } from '../../../types/trame.types';
 import { sanitizeSession } from '../logic/sanitization';
+import { suspendreLesScenes, reprendreLesScenes } from '../logic/trame';
+
+/**
+ * Ce que ce slice doit voir chez son voisin, et rien de plus.
+ *
+ * Une séance qui s'active ou s'arrête déplace l'état de jeu des scènes. On
+ * élargit le typage **localement** plutôt que d'importer `TrameSlice` —
+ * l'importer fermerait un cycle entre les deux modules, et c'est le geste déjà
+ * retenu dans `trameSlice` et `entitySlice`.
+ */
+type AvecTrame = SessionSlice & { scenes: Scene[] };
 
 // ─────────────────────────────────────────────
 // State
@@ -97,10 +109,39 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         return id;
     },
 
+    /*
+      **Changer le statut d'une séance déplace les scènes avec elle.**
+
+      Les deux règles de David du 2026-08-17 : une séance qui s'arrête SUSPEND
+      ses scènes — elle ne les termine pas —, et une séance qui s'ouvre relance
+      celles qui étaient en pause.
+
+      Ici plutôt que dans l'écran, parce que **trois chemins** font ce même
+      changement : le bouton de fin de séance du cockpit, le sélecteur de statut
+      de l'éditeur de préparation, et `SessionManager.launchSession`. Le poser
+      dans chacun aurait produit trois versions qui auraient fini par diverger —
+      *une vérification qui ne couvre qu'un chemin ne protège que ce chemin.*
+
+      Le déplacement ne se fait qu'au **changement** de statut : réenregistrer
+      une séance active ne doit pas rouvrir un passage à chaque frappe.
+    */
     updateSession: (id, updates) =>
-        set((state) => ({
-            sessions: state.sessions.map((s) => (s.id === id ? { ...s, ...updates } : s)),
-        })),
+        (set as unknown as (fn: (state: AvecTrame) => Partial<AvecTrame>) => void)((state) => {
+            const avant = state.sessions.find((s) => s.id === id);
+            const sessions = state.sessions.map((s) => (s.id === id ? { ...s, ...updates } : s));
+            if (!avant || updates.status === undefined || updates.status === avant.status) {
+                return { sessions };
+            }
+
+            const quand = Date.now();
+            if (updates.status === 'active') {
+                return { sessions, scenes: reprendreLesScenes(state.scenes ?? [], avant.campaignId, id, quand) };
+            }
+            if (avant.status === 'active') {
+                return { sessions, scenes: suspendreLesScenes(state.scenes ?? [], avant.campaignId, quand) };
+            }
+            return { sessions };
+        }),
 
     updateSessionPublicSummary: (sessionId, summary) =>
         set((state) => ({

@@ -4,6 +4,7 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useObsidianStore } from '../useObsidianStore';
 import type { SessionOSStore } from '../store/index';
 import type { GameSession, Campaign } from '../store/types';
+import { suspendreLesScenes, reprendreLesScenes } from './trame';
 
 /**
  * SessionManager logic service.
@@ -50,16 +51,37 @@ export class SessionManager {
      * Launches a session, updating statuses and starting the Journal.
      */
     static launchSession(set: any, get: any, sessionId: string) {
-        const { sessions, campaigns } = get() as SessionOSStore;
+        const { sessions, campaigns, scenes } = get() as SessionOSStore;
         const session = sessions.find((s: GameSession) => s.id === sessionId);
         if (!session) return;
 
         // 1. Update session statuses (Only ONE active session globally)
+        const sortante = sessions.find(s => s.status === 'active' && s.id !== sessionId);
         const updatedSessions = sessions.map(s => {
             if (s.id === sessionId) return { ...s, status: 'active' as const };
             if (s.status === 'active') return { ...s, status: 'done' as const };
             return s;
         });
+
+        /*
+          **Les scènes suivent le changement de séance, ici aussi.**
+
+          `updateSession` porte déjà cette règle, mais ce chemin ne passe pas par
+          lui : il réécrit le tableau des séances en bloc pour garantir qu'une
+          seule est active. Il doit donc appliquer la même chose — la séance qui
+          s'arrête SUSPEND ses scènes, celle qui s'ouvre relance ce qui était en
+          pause.
+
+          Quand les deux séances sont de la même campagne, les deux passes se
+          suivent et c'est voulu : le passage de la veille se ferme, un nouveau
+          s'ouvre au nom de la séance du jour. C'est précisément ce que le
+          journal aura besoin de distinguer.
+        */
+        const quand = Date.now();
+        const scenesSuspendues = sortante
+            ? suspendreLesScenes(scenes ?? [], sortante.campaignId, quand)
+            : (scenes ?? []);
+        const updatedScenes = reprendreLesScenes(scenesSuspendues, session.campaignId, sessionId, quand);
 
         // 2. Update campaign's active session
         const updatedCampaigns = campaigns.map(c => {
@@ -86,6 +108,7 @@ export class SessionManager {
         set({
             sessions: updatedSessions,
             campaigns: updatedCampaigns,
+            scenes: updatedScenes,
             activeCampaignId: session.campaignId,
             activeCampaignName: campaign?.name || null,
             activeCampaignWallpaper: campaign?.wallpaperUrl || null,

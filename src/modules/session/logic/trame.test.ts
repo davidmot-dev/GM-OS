@@ -2,6 +2,9 @@ import { describe, it, expect } from 'vitest';
 import {
     actesOrdonnes, scenesOrdonnees, prochainOrdre, deplacer,
     remplissageDeLaScene, scenesEmportees, repartirLesScenesPrevues,
+    etatDeLaScene, passageEnCours, closeSansAvoirEteJouee, scenesDansLEtat,
+    ouvrirLaScene, suspendreLaScene, terminerLaScene, titreDisponible, clonerLaScene,
+    suspendreLesScenes, reprendreLesScenes, scenesACloreAvecLActe,
 } from './trame';
 import type { Acte, Scene } from '../../../types/trame.types';
 
@@ -170,5 +173,264 @@ describe('scenesEmportees — la confirmation dit ce qu\'elle coûte', () => {
 
     it('un acte sans scène n\'emporte rien', () => {
         expect(scenesEmportees([scene('s1', 'a1', 0)], 'a2')).toEqual([]);
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **les quatre états d'une scène sont dérivés, et
+ * jamais stockés**.
+ *
+ * Le modèle est né le 2026-08-17 d'un constat de David : il déclarait son acte
+ * et ses scènes en préparation, lançait la séance, et ne les retrouvait nulle
+ * part — `PanneauDeTrameDeSeance` n'était monté que dans l'écran de préparation.
+ *
+ * La nuance qui a coûté le plus de discussion est **« en pause »** : une séance
+ * qui s'arrête ne termine pas ses scènes, elle les suspend. Les confondre
+ * barrerait en fin de soirée des scènes que le groupe reprendra la semaine
+ * suivante.
+ */
+describe('les quatre états d\'une scène', () => {
+    it('sans passage ni clôture : prévue', () => {
+        expect(etatDeLaScene(scene('s', 'a', 0))).toBe('prevue');
+    });
+
+    it('un passage ouvert : en cours', () => {
+        const s = ouvrirLaScene(scene('s', 'a', 0), 100);
+        expect(etatDeLaScene(s)).toBe('en-cours');
+        expect(passageEnCours(s)).toEqual({ debut: 100 });
+    });
+
+    it('un passage clos, sans clôture de la scène : en pause', () => {
+        const s = suspendreLaScene(ouvrirLaScene(scene('s', 'a', 0), 100), 200);
+        expect(etatDeLaScene(s)).toBe('en-pause');
+        expect(passageEnCours(s)).toBeUndefined();
+    });
+
+    it('terminée l\'emporte sur tout le reste', () => {
+        const s = terminerLaScene(ouvrirLaScene(scene('s', 'a', 0), 100), 200);
+        expect(etatDeLaScene(s)).toBe('terminee');
+        expect(s.passages).toEqual([{ debut: 100, fin: 200 }]);
+    });
+
+    it('une scène d\'avant le 2026-08-17 se lit quand même', () => {
+        // Les 29 scènes du « Secret de Milo » sont dans ce cas : `passages` est
+        // absent, pas vide. Un lecteur qui ne s'en protégerait pas planterait
+        // sur la première campagne existante.
+        const ancienne = scene('s', 'a', 0);
+        expect(ancienne.passages).toBeUndefined();
+        expect(etatDeLaScene(ancienne)).toBe('prevue');
+        expect(passageEnCours(ancienne)).toBeUndefined();
+    });
+});
+
+describe('les passages s\'empilent — c\'est pour le journal', () => {
+    /**
+     * Décision de David, contre le modèle simple à deux dates : une scène
+     * reprise perdrait son premier passage, et *le journal ne saurait plus
+     * rattacher ce qui s'y est dit ce soir-là*.
+     */
+    it('reprendre une scène en pause ajoute un passage sans effacer le premier', () => {
+        let s = ouvrirLaScene(scene('s', 'a', 0), 100, 'seance-1');
+        s = suspendreLaScene(s, 200);
+        s = ouvrirLaScene(s, 300, 'seance-2');
+
+        expect(s.passages).toEqual([
+            { debut: 100, fin: 200, seanceId: 'seance-1' },
+            { debut: 300, seanceId: 'seance-2' },
+        ]);
+        expect(etatDeLaScene(s)).toBe('en-cours');
+    });
+
+    it('ouvrir une scène déjà ouverte ne fait rien', () => {
+        // Deux passages ouverts n'auraient aucun sens : lequel serait le bon ?
+        const s = ouvrirLaScene(scene('s', 'a', 0), 100);
+        expect(ouvrirLaScene(s, 500)).toBe(s);
+    });
+
+    it('suspendre une scène qui ne tourne pas est un geste sans effet', () => {
+        const prevue = scene('s', 'a', 0);
+        expect(suspendreLaScene(prevue, 500)).toBe(prevue);
+    });
+
+    it('rouvrir une scène terminée la ranime — c\'est un geste explicite', () => {
+        const close = terminerLaScene(ouvrirLaScene(scene('s', 'a', 0), 100), 200);
+        const ranimee = ouvrirLaScene(close, 300);
+        expect(ranimee.termineeLe).toBeUndefined();
+        expect(etatDeLaScene(ranimee)).toBe('en-cours');
+        expect(ranimee.passages).toHaveLength(2);
+    });
+});
+
+describe('close sans avoir été jouée', () => {
+    /**
+     * L'acte s'achève et emporte ses scènes, dont celles où le groupe n'est
+     * jamais passé. Les confondre avec du vécu ferait croire à une partie qui
+     * n'a pas eu lieu — et le journal les lirait comme telle.
+     */
+    it('terminée sans aucun passage : jamais jouée', () => {
+        const s = terminerLaScene(scene('s', 'a', 0), 500);
+        expect(closeSansAvoirEteJouee(s)).toBe(true);
+        expect(s.passages ?? []).toEqual([]);
+    });
+
+    it('terminée après avoir été jouée : non', () => {
+        const s = terminerLaScene(ouvrirLaScene(scene('s', 'a', 0), 100), 200);
+        expect(closeSansAvoirEteJouee(s)).toBe(false);
+    });
+
+    it('une scène encore ouverte n\'est close de rien', () => {
+        expect(closeSansAvoirEteJouee(ouvrirLaScene(scene('s', 'a', 0), 100))).toBe(false);
+    });
+});
+
+describe('le passage d\'une séance à l\'autre', () => {
+    const troisScenes = () => [
+        ouvrirLaScene(scene('ouverte', 'a1', 0), 100, 'seance-1'),
+        scene('jamais', 'a1', 1),
+        terminerLaScene(ouvrirLaScene(scene('close', 'a1', 2), 50), 60),
+    ];
+
+    it('la séance s\'arrête : les scènes en cours passent en PAUSE, pas terminées', () => {
+        const apres = suspendreLesScenes(troisScenes(), 'c1', 999);
+        expect(apres.map(etatDeLaScene)).toEqual(['en-pause', 'prevue', 'terminee']);
+        // La distinction est tout le sujet : rien n'a été barré ce soir.
+        expect(apres[0].termineeLe).toBeUndefined();
+    });
+
+    it('la séance suivante s\'ouvre : seules les scènes en pause repartent', () => {
+        const enPause = suspendreLesScenes(troisScenes(), 'c1', 999);
+        const apres = reprendreLesScenes(enPause, 'c1', 'seance-2', 1000);
+
+        expect(apres.map(etatDeLaScene)).toEqual(['en-cours', 'prevue', 'terminee']);
+        expect(apres[0].passages).toEqual([
+            { debut: 100, fin: 999, seanceId: 'seance-1' },
+            { debut: 1000, seanceId: 'seance-2' },
+        ]);
+        // Une scène jamais ouverte ne s'ouvre pas toute seule, et une scène
+        // close ne ressuscite pas : la reprise ne concerne que la pause.
+        expect(apres[1].passages).toBeUndefined();
+        expect(apres[2].termineeLe).toBe(60);
+    });
+
+    it('une autre campagne n\'est jamais touchée', () => {
+        const ailleurs = ouvrirLaScene({ ...scene('voisine', 'a9', 0), campaignId: 'c2' }, 100);
+        const apres = suspendreLesScenes([ailleurs], 'c1', 999);
+        expect(apres[0]).toBe(ailleurs);
+    });
+});
+
+describe('cloner une scène', () => {
+    /**
+     * **Le titre ne peut pas être repris tel quel.** La Forge de campagne résout
+     * ses renvois PAR NOM, et sa règle est qu'un ex æquo ne résout rien : deux
+     * scènes homonymes feraient échouer en silence tout renvoi qui les vise.
+     */
+    it('numérote le clone, et n\'empile pas les suffixes', () => {
+        expect(titreDisponible('Le réveil', [])).toBe('Le réveil (2)');
+        expect(titreDisponible('Le réveil', ['Le réveil (2)'])).toBe('Le réveil (3)');
+        expect(titreDisponible('Le réveil (2)', ['Le réveil (2)'])).toBe('Le réveil (3)');
+    });
+
+    it('copie le contenu et repart d\'un état vierge', () => {
+        const source = terminerLaScene(
+            ouvrirLaScene(scene('s', 'a1', 3, {
+                resume: 'On y trouve un carnet',
+                lieuId: 'lieu-7',
+                entiteIds: ['pnj-1'],
+                indiceIds: ['indice-2'],
+                momentDeStoryboardId: 'moment-3',
+                origine: 'improvisee',
+            }), 100), 200);
+
+        const clone = clonerLaScene(source, 'neuf', 'Le réveil (2)', 4, 900);
+
+        expect(clone.resume).toBe('On y trouve un carnet');
+        expect(clone.lieuId).toBe('lieu-7');
+        expect(clone.entiteIds).toEqual(['pnj-1']);
+        expect(clone.indiceIds).toEqual(['indice-2']);
+        expect(clone.momentDeStoryboardId).toBe('moment-3');
+        // L'origine se transmet : un clone descend de la même nature.
+        expect(clone.origine).toBe('improvisee');
+
+        // Mais rien du vécu ne se copie — sinon le journal attribuerait au clone
+        // une soirée qu'il n'a pas connue.
+        expect(clone.id).toBe('neuf');
+        expect(etatDeLaScene(clone)).toBe('prevue');
+        expect(clone.passages).toBeUndefined();
+        expect(clone.termineeLe).toBeUndefined();
+        expect(clone.creeeLe).toBe(900);
+    });
+});
+
+describe('scenesACloreAvecLActe — la cascade se dit avant', () => {
+    it('sépare ce qui tourne de ce qui n\'a jamais été joué', () => {
+        const scenes = [
+            ouvrirLaScene(scene('ouverte', 'a1', 0), 100),
+            scene('jamais', 'a1', 1),
+            suspendreLaScene(ouvrirLaScene(scene('pause', 'a1', 2), 10), 20),
+            terminerLaScene(scene('deja-close', 'a1', 3), 5),
+            scene('autre-acte', 'a2', 0),
+        ];
+        const bilan = scenesACloreAvecLActe(scenes, 'a1');
+
+        expect(bilan.total).toBe(3);
+        expect(bilan.enCours.map(s => s.id)).toEqual(['ouverte']);
+        expect(bilan.jamaisJouees.map(s => s.id)).toEqual(['jamais']);
+    });
+});
+
+describe('scenesDansLEtat — l\'ordre des actes puis des scènes', () => {
+    it('range les scènes en cours dans l\'ordre de lecture de la campagne', () => {
+        const actes = [acte('a2', 'c1', 1), acte('a1', 'c1', 0)];
+        const scenes = [
+            ouvrirLaScene(scene('deuxieme-acte', 'a2', 0), 100),
+            ouvrirLaScene(scene('premier-acte-b', 'a1', 1), 100),
+            ouvrirLaScene(scene('premier-acte-a', 'a1', 0), 100),
+            scene('pas-ouverte', 'a1', 2),
+        ];
+        expect(scenesDansLEtat(scenes, actes, 'c1', 'en-cours').map(s => s.id))
+            .toEqual(['premier-acte-a', 'premier-acte-b', 'deuxieme-acte']);
+    });
+});
+
+describe('les personnages présents', () => {
+    /**
+     * **Le champ sans lequel les scènes simultanées ne servent à rien.** Deux
+     * scènes ouvertes décrivent un groupe séparé — encore faut-il savoir qui est
+     * où, et c'est la seule chose que le meneur relise à ce moment-là.
+     */
+    it('n\'entre PAS dans le taux de préparation', () => {
+        /*
+          Qui est présent est un fait de partie, pas un élément qu'on prépare.
+          Le compter ferait chuter la pastille de toutes les scènes déjà
+          écrites — les 29 du « Secret de Milo » passeraient de 100 % à 83 % —
+          et pour une raison fausse.
+        */
+        const preparee = scene('s', 'a', 0, {
+            resume: 'Les PJ cherchent le manifeste',
+            lieuId: 'am-1',
+            entiteIds: ['e-1'],
+            indiceIds: ['clue-1'],
+            momentDeStoryboardId: 'sm-1',
+        });
+        expect(remplissageDeLaScene(preparee)).toBe(1);
+        expect(remplissageDeLaScene({ ...preparee, personnagesIds: [] })).toBe(1);
+        expect(remplissageDeLaScene({ ...preparee, personnagesIds: ['pj-1'] })).toBe(1);
+    });
+
+    it('une scène d\'avant le champ n\'en porte pas, et se lit quand même', () => {
+        const ancienne = scene('s', 'a', 0);
+        expect(ancienne.personnagesIds).toBeUndefined();
+        expect(ancienne.personnagesIds ?? []).toEqual([]);
+    });
+
+    it('le clone emmène les présents avec le reste du contenu', () => {
+        // Cloner sert à rejouer une scène ailleurs ou plus tard : sa
+        // distribution fait partie de ce qu'on recopie, au même titre que ses
+        // PNJ. Seul le VÉCU repart à zéro.
+        const source = scene('s', 'a1', 3, { personnagesIds: ['pj-1', 'pj-2'] });
+        const clone = clonerLaScene(source, 'neuf', 'S (2)', 4, 900);
+        expect(clone.personnagesIds).toEqual(['pj-1', 'pj-2']);
+        expect(clone.passages).toBeUndefined();
     });
 });
