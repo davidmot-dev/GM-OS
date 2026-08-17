@@ -93,6 +93,58 @@ describe('useCharacterEditor', () => {
         expect(result.current.saved).toBe(true);
     });
 
+    /**
+     * Ce que ces deux tests protègent : **la fiche est la source de la santé
+     * quand le pilote dit où la lire, et elle ne l'est jamais sinon.**
+     *
+     * Relevé par David le 2026-08-17 sur Cthulhu Hack : sa fiche portait
+     * « Points de vie 12 » dans ses Ressources et « 10 / 10 » dans le bloc de
+     * gauche. Deux nombres pour une seule chose, et **rien ne les reliait** —
+     * `combat.santeDeDepart` était vide, donc chaque écran gardait le sien. Le
+     * combat serait parti sur dix points pour un personnage qui en a douze.
+     *
+     * Le fil existait depuis le 2026-08-15 ; il n'était simplement pas branché.
+     * Ces tests vérifient les deux côtés du contrat, car **le second est aussi
+     * important que le premier** : sans formule, on ne reprend pas au meneur un
+     * réglage qu'il a posé à la main.
+     */
+    it('la santé maximale suit le champ de la fiche que le pilote désigne', () => {
+        const updateCharacterMaxHP = vi.fn();
+        const updateCharacterHP = vi.fn();
+        (useSessionOSStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+            ...mockStore,
+            updateCharacterHP,
+            updateCharacterMaxHP,
+            getActiveDriver: () => ({ combat: { santeDeDepart: 'points_de_vie' } }),
+        });
+
+        const { result } = renderHook(() => useCharacterEditor());
+
+        act(() => { result.current.updateLocal('points_de_vie', 12); });
+        act(() => { result.current.handleSave(); });
+
+        expect(updateCharacterMaxHP).toHaveBeenCalledWith('player-1', 'char-1', 12);
+        // Les points courants ne dépassent jamais le plafond, et ne montent pas
+        // tout seuls : le personnage était à 10, il y reste.
+        expect(updateCharacterHP).toHaveBeenCalledWith('player-1', 'char-1', 10);
+    });
+
+    it('mais sans formule, on ne touche pas au réglage du meneur', () => {
+        const updateCharacterMaxHP = vi.fn();
+        (useSessionOSStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+            ...mockStore,
+            updateCharacterMaxHP,
+            getActiveDriver: () => ({ combat: {} }),
+        });
+
+        const { result } = renderHook(() => useCharacterEditor());
+
+        act(() => { result.current.updateLocal('points_de_vie', 12); });
+        act(() => { result.current.handleSave(); });
+
+        expect(updateCharacterMaxHP).not.toHaveBeenCalled();
+    });
+
     it('exposes direct update helpers safely', () => {
         const { result } = renderHook(() => useCharacterEditor());
         

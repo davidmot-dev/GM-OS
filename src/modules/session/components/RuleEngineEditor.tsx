@@ -13,6 +13,7 @@ import { useRuleEngine } from '../hooks/useRuleEngine';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
 import EditeurDuJet from './rules/EditeurDuJet';
+import { TYPES_NUMERIQUES } from '../../forge/rules/controlesDuPilote';
 
 export const RuleEngineEditor: React.FC = () => {
     const { t } = useTranslation(['settings', 'modules']);
@@ -37,6 +38,19 @@ export const RuleEngineEditor: React.FC = () => {
             {t('modules:session.rule_engine_editor.loading')}
         </div>
     );
+
+    /**
+     * Les champs de la fiche qu'une formule peut réellement additionner.
+     *
+     * `TYPES_NUMERIQUES` vient des contrôles du pilote, et n'est pas recopié
+     * ici : l'écran qui propose et le contrôle qui refuse doivent dire la même
+     * chose, sinon l'un invite à écrire ce que l'autre condamnera.
+     */
+    const gabaritDuPilote = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates]
+        .find(g => g.id === driver.templateId);
+    const champsNumeriquesDeLaFiche = (gabaritDuPilote?.sections ?? [])
+        .flatMap(s => (s.fields ?? []).map(f => ({ id: f.id, label: `${f.label} — ${s.label || s.id}`, type: f.type })))
+        .filter(f => TYPES_NUMERIQUES.has(f.type));
 
     const navItems = [
         { id: 'core', label: t('modules:session.rule_engine_editor.nav.core'), icon: Dice5, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
@@ -251,7 +265,7 @@ export const RuleEngineEditor: React.FC = () => {
                                 */}
                                 <EditeurDuJet
                                     driver={driver}
-                                    gabarit={[...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].find(g => g.id === driver.templateId)}
+                                    gabarit={gabaritDuPilote}
                                     onUpdate={handleUpdate}
                                 />
                             </div>
@@ -317,17 +331,52 @@ export const RuleEngineEditor: React.FC = () => {
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">
                                                 Santé de départ — lue sur la fiche
                                             </label>
+                                            {/*
+                                              **Les identifiants se proposent, ils ne se devinent pas.**
+
+                                              Le champ reste libre — c'est une formule,
+                                              pas un choix, et `(force + agilite) / 2 + 1`
+                                              doit rester saisissable. Mais un identifiant
+                                              mal tapé ne se voit **nulle part** :
+                                              `santeDeDepart` refuse un champ illisible et
+                                              rend `null`, l'appelant garde son
+                                              comportement, et la santé de départ ne
+                                              s'applique jamais — sans un mot. Le contrôle
+                                              qui l'attrape, lui, ne tourne qu'à la Forge :
+                                              *une vérification qui ne tourne qu'à la
+                                              naissance ne protège que du premier jour.*
+
+                                              On ne propose que les champs NUMÉRIQUES :
+                                              une formule ne s'additionne que sur des
+                                              nombres, et le « dé de vie » de Cthulhu Hack
+                                              — un `d6` — est exactement le piège dans
+                                              lequel la dérivation est tombée.
+                                            */}
                                             <input
                                                 type="text"
+                                                list="champs-numeriques-de-la-fiche"
                                                 value={combat.santeDeDepart || ''}
                                                 onChange={e => handleUpdate({ combat: { ...combat, santeDeDepart: e.target.value } })}
                                                 className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-indigo-400 focus:border-indigo-500/40 outline-none shadow-inner"
                                                 placeholder="ex. force — ou (force + agilite) / 2 + 1"
                                             />
+                                            <datalist id="champs-numeriques-de-la-fiche">
+                                                {champsNumeriquesDeLaFiche.map(c => (
+                                                    <option key={c.id} value={c.id}>{c.label}</option>
+                                                ))}
+                                            </datalist>
                                             <p className="text-[9px] text-app-text/30 font-bold uppercase tracking-widest mt-3 px-2 leading-relaxed">
                                                 Formule sur des identifiants de champs de la fiche. Vide : chaque écran
                                                 garde les points de vie qu'il fournit. Un nombre seul n'a pas sa place
                                                 ici — il vaudrait pour tout le monde.
+                                            </p>
+                                            {/* Ce que la fiche offre vraiment, sous les yeux : sans gabarit
+                                                rattaché, aucun identifiant n'existe et la formule ne pourra
+                                                rien lire. */}
+                                            <p className="text-[9px] text-indigo-300/40 font-bold uppercase tracking-widest mt-2 px-2 leading-relaxed">
+                                                {champsNumeriquesDeLaFiche.length > 0
+                                                    ? `Champs numériques disponibles : ${champsNumeriquesDeLaFiche.map(c => c.id).join(', ')}`
+                                                    : 'Aucun champ numérique sur la fiche rattachée — une formule n’y lirait rien.'}
                                             </p>
                                         </div>
 

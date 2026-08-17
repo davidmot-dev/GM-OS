@@ -62,6 +62,16 @@ const CharacterSheetEditor: React.FC = () => {
         [campaigns, activeCampaignId, customGameDrivers, editor.character],
     );
 
+    /**
+     * **La fiche porte-t-elle déjà la santé ?**
+     *
+     * Quand le pilote déclare `combat.santeDeDepart`, le plafond se lit sur un
+     * champ de la fiche et `useCharacterEditor` le recalcule à chaque
+     * enregistrement. Le proposer aussi à la saisie ici donnerait deux endroits
+     * pour un seul nombre — et celui-ci perdrait toujours.
+     */
+    const santeSuitLaFiche = !!piloteDeLaFiche?.combat?.santeDeDepart?.trim();
+
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);
     const [newItemName, setNewItemName] = React.useState('');
@@ -272,14 +282,48 @@ const CharacterSheetEditor: React.FC = () => {
                                     />
                                 </div>
                                 <span className="text-app-text/20 font-bold text-xs">/</span>
-                                <div className="bg-black/20 border border-white/5 w-14 h-10 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/10 transition-all">
-                                    <input 
-                                        type="number" 
-                                        value={character.maxHp}
-                                        onChange={(e) => updateCharacterMaxHP(parseInt(e.target.value) || 0)}
-                                        className="w-full bg-transparent text-center text-app-text/40 font-black text-sm focus:outline-none"
-                                        title="Points de Vie Max"
-                                    />
+                                {/*
+                                  **Le maximum ne se saisit plus quand la fiche
+                                  le porte** (2026-08-17, relevé par David sur
+                                  Cthulhu Hack : « 10 / 10 » ici, « Points de
+                                  vie 12 » dans les Ressources).
+
+                                  Dès que le pilote déclare OÙ lire la santé,
+                                  c'est la fiche qui fait foi — `handleSave`
+                                  recalcule le plafond à chaque enregistrement.
+                                  Laisser la case éditable offrait donc un
+                                  second endroit où taper le même nombre, dont
+                                  la valeur était **écrasée à la sauvegarde
+                                  suivante sans un mot**. *Deux endroits pour un
+                                  seul nombre, c'est un endroit de trop, et
+                                  c'est toujours l'autre qui gagne.*
+
+                                  Les points COURANTS restent éditables : eux ne
+                                  se déduisent de rien.
+                                */}
+                                <div
+                                    className={`w-14 h-10 rounded-lg flex items-center justify-center shadow-inner transition-all ${
+                                        santeSuitLaFiche
+                                            ? 'bg-transparent border border-dashed border-white/10'
+                                            : 'bg-black/20 border border-white/5 group-hover:border-accent/10'
+                                    }`}
+                                    title={santeSuitLaFiche
+                                        ? `Maximum lu sur la fiche (${piloteDeLaFiche?.combat?.santeDeDepart}) — il suit à l’enregistrement`
+                                        : 'Points de Vie Max'}
+                                >
+                                    {santeSuitLaFiche ? (
+                                        <span className="w-full text-center text-app-text/40 font-black text-sm">
+                                            {character.maxHp}
+                                        </span>
+                                    ) : (
+                                        <input
+                                            type="number"
+                                            value={character.maxHp}
+                                            onChange={(e) => updateCharacterMaxHP(parseInt(e.target.value) || 0)}
+                                            className="w-full bg-transparent text-center text-app-text/40 font-black text-sm focus:outline-none"
+                                            title="Points de Vie Max"
+                                        />
+                                    )}
                                 </div>
                             </div>
                             
