@@ -149,3 +149,162 @@ describe('applyDamage — le système de santé suit les dégâts', () => {
         expect(useCombatStore.getState().combatants[0].hp).toBe(7);
     });
 });
+
+/**
+ * Ce que ces tests protègent : **un combat appartient à une scène, et les
+ * combats se garent au lieu de se superposer**.
+ *
+ * Demandes de David du 2026-08-17. La première parce qu'un combat non rattaché
+ * n'entre dans aucun résumé de séance — le journal saura qu'il a eu lieu, jamais
+ * où. La seconde parce qu'*un meneur ne joue pas deux combats à la fois, il
+ * alterne* : plutôt que rendre le combat multiple (48 fichiers le lisent, tous
+ * supposant une instance unique), on gare le plateau sous sa scène.
+ */
+describe('le combat et sa scène', () => {
+    beforeEach(() => {
+        useCombatStore.getState().reset();
+        useCombatStore.setState({ combatsGares: {} });
+    });
+
+    const unCombattant = (name: string) => ({
+        name, init: 10, hp: 10, hpMax: 10, isPlayer: false, faction: 'enemy' as const, statuses: [],
+    });
+
+    it('garer une scène et revenir rend le plateau, le tour et le round', () => {
+        const store = () => useCombatStore.getState();
+
+        store().rattacherLeCombat('scene-A');
+        store().addCombatant(unCombattant('Goule'));
+        useCombatStore.setState({ round: 4, currentTurnIdx: 1 });
+
+        store().basculerVersLaScene('scene-B');
+        expect(store().sceneId).toBe('scene-B');
+        expect(store().combatants, 'la scène B n\'a jamais eu de combat').toHaveLength(0);
+        expect(store().round).toBe(1);
+
+        store().addCombatant(unCombattant('Pirate'));
+        store().basculerVersLaScene('scene-A');
+
+        expect(store().sceneId).toBe('scene-A');
+        expect(store().combatants.map(c => c.name)).toEqual(['Goule']);
+        expect(store().round, 'le round revient avec son plateau').toBe(4);
+        expect(store().currentTurnIdx).toBe(1);
+
+        // Et la scène B n'a rien perdu en attendant son tour.
+        expect(store().combatsGares['scene-B'].combatants.map(c => c.name)).toEqual(['Pirate']);
+    });
+
+    it('basculer vers la scène courante ne fait rien', () => {
+        const store = () => useCombatStore.getState();
+        store().rattacherLeCombat('scene-A');
+        store().addCombatant(unCombattant('Goule'));
+
+        store().basculerVersLaScene('scene-A');
+
+        expect(store().combatants).toHaveLength(1);
+    });
+
+    it('terminer le combat le retire du garage et le détache', () => {
+        // Sans ce nettoyage, revenir sur la scène ressusciterait les morts d'un
+        // combat déjà résumé au journal.
+        const store = () => useCombatStore.getState();
+        store().rattacherLeCombat('scene-A');
+        store().addCombatant(unCombattant('Goule'));
+        store().basculerVersLaScene('scene-B');
+        store().basculerVersLaScene('scene-A');
+
+        store().clearCombatants();
+
+        expect(store().sceneId).toBeNull();
+        expect(store().combatsGares['scene-A']).toBeUndefined();
+        expect(store().combatants).toHaveLength(0);
+    });
+
+    it('réinitialiser détache le combat de sa scène', () => {
+        // Garder le rattachement ferait entrer le combat SUIVANT dans le résumé
+        // de la scène précédente.
+        useCombatStore.getState().rattacherLeCombat('scene-A');
+        useCombatStore.getState().reset();
+        expect(useCombatStore.getState().sceneId).toBeNull();
+    });
+});
+
+describe('un combattant ajouté est toujours complet', () => {
+    /**
+     * **Le défaut tombé en séance le 2026-08-17.** `rattacherLeCombat`
+     * construisait ses PJ avec un `as unknown as Omit<Combatant, 'id'>` — le
+     * cast a fait taire le compilateur sur un objet qui disait `initiative` au
+     * lieu d'`init` et **oubliait `statuses`**. `CombatCard` lit
+     * `combatant.statuses.length` : « Cannot read properties of undefined ».
+     *
+     * On vérifie l'invariant au goulot plutôt que de rendre le lecteur
+     * tolérant : un combattant sans liste d'états est malformé, et l'accepter en
+     * silence masquerait la prochaine occurrence.
+     */
+    beforeEach(() => useCombatStore.getState().reset());
+
+    it('complète les états manquants au lieu de laisser passer un trou', () => {
+        // Le cast reproduit exactement le geste fautif : c'est ce qu'on protège.
+        const malforme = { name: 'Sans états', init: 0, isPlayer: false } as unknown as Parameters<
+            ReturnType<typeof useCombatStore.getState>['addCombatant']
+        >[0];
+        useCombatStore.getState().addCombatant(malforme);
+        const ajoute = useCombatStore.getState().combatants[0];
+        expect(Array.isArray(ajoute.statuses), 'CombatCard lit statuses.length').toBe(true);
+        expect(ajoute.faction, 'déduite de isPlayer quand elle manque').toBe('enemy');
+    });
+
+    it('les PJ d\'une scène rattachée entrent bien formés', () => {
+        useCombatStore.getState().rattacherLeCombat('scene-sans-store');
+        // Sans magasin de séance, personne n'entre — mais rien ne casse non
+        // plus : un combat ne s'interrompt pas parce que la trame est absente.
+        expect(useCombatStore.getState().combatants).toEqual([]);
+        expect(useCombatStore.getState().sceneId).toBe('scene-sans-store');
+    });
+});
+
+describe('la réparation à la lecture du stockage', () => {
+    /**
+     * **Le défaut a survécu à son correctif.** Poser l'invariant dans
+     * `addCombatant` protégeait les combattants suivants ; celui qui était déjà
+     * en stockage revenait intact à chaque démarrage, et `CombatCard` plantait
+     * avant qu'on puisse seulement vider le combat.
+     *
+     * *Une garantie posée en écriture ne dit rien des données écrites avant
+     * elle.* Le `merge` du persist est le seul endroit qui atteigne l'existant.
+     */
+    it('complète les états manquants du plateau ET des combats garés', () => {
+        const persist = (useCombatStore as unknown as {
+            persist: { getOptions: () => { merge?: (p: unknown, c: unknown) => unknown } };
+        }).persist;
+        const merge = persist.getOptions().merge!;
+
+        const repare = merge(
+            {
+                combatants: [{ id: 'c1', name: 'Ancien', init: 0, isPlayer: false, faction: 'enemy' }],
+                combatsGares: {
+                    'scene-A': {
+                        round: 2, currentTurnIdx: 0,
+                        combatants: [{ id: 'c2', name: 'Garé', init: 0, isPlayer: false, faction: 'enemy' }],
+                    },
+                },
+            },
+            useCombatStore.getState(),
+        ) as { combatants: { statuses: unknown[] }[]; combatsGares: Record<string, { combatants: { statuses: unknown[] }[] }> };
+
+        expect(repare.combatants[0].statuses, 'le plateau courant').toEqual([]);
+        expect(repare.combatsGares['scene-A'].combatants[0].statuses, 'et les combats garés').toEqual([]);
+    });
+
+    it('un stockage vide ne fabrique rien', () => {
+        const merge = (useCombatStore as unknown as {
+            persist: { getOptions: () => { merge?: (p: unknown, c: unknown) => unknown } };
+        }).persist.getOptions().merge!;
+
+        const repare = merge(undefined, useCombatStore.getState()) as {
+            combatants: unknown[]; combatsGares: Record<string, unknown>;
+        };
+        expect(repare.combatants).toEqual([]);
+        expect(repare.combatsGares).toEqual({});
+    });
+});

@@ -17,6 +17,10 @@ import {
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { santeDeDepart } from './logic/SanteDuCombattant';
+// `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
+// contrairement au store de séance qui reste atteint par le global.
+import { etatDeLaScene } from '../session/logic/trame';
+import type { Scene } from '../../types/trame.types';
 import type { HealthSystem } from '../../types/entity.types';
 
 /**
@@ -57,6 +61,141 @@ function piloteActif(): { combat?: { santeDeDepart?: string } } | undefined {
         }).useSessionOSStore?.getState()?.getActiveDriver?.() ?? undefined;
     } catch {
         return undefined;
+    }
+}
+
+/**
+ * Un combat qui démarre alors qu'aucune scène ne tourne en ouvre une.
+ *
+ * **La condition de déclenchement a une histoire.** Le type `OrigineDeScene`
+ * annonçait depuis le 2026-08-08 une scène « née d'un combat lancé sans scène
+ * active » — et le marqueur `improvisée` est resté **inatteignable** jusqu'ici :
+ * aucun appelant ne passait `'improvisee'`, parce que « scène active » n'existait
+ * pas. Le parcours réel arrivé le 2026-08-17 lui donne enfin son sens.
+ *
+ * **Trois garde-fous, et chacun évite une scène fantôme :**
+ *
+ * 1. *Une séance doit être active.* Il n'existe aucun « lancement de combat »
+ *    dans ce store — un combat commence quand le premier combattant arrive sur
+ *    un plateau vide. Sans cette condition, **préparer le combat de la semaine
+ *    prochaine un dimanche après-midi créerait une scène** dans la campagne.
+ * 2. *Aucune scène ne doit tourner.* Si le groupe est déjà quelque part, le
+ *    combat s'y déroule ; en ouvrir une seconde dédoublerait le lieu.
+ * 3. *La séance doit annoncer un acte.* Sans lui, la scène n'aurait nulle part
+ *    où se ranger, et deviner l'acte la rangerait au mauvais endroit sans un mot.
+ */
+function rattacherLeCombatQuiDemarre(rattacher: (sceneId: string) => void): void {
+    try {
+        const s = magasinDeSeance();
+        const campaignId = s?.activeCampaignId;
+        if (!s || !campaignId) return;
+
+        const seance = (s.sessions ?? [])
+            .find(x => x.campaignId === campaignId && x.status === 'active');
+        if (!seance) return;
+
+        const ouvertes = (s.scenes ?? [])
+            .filter(sc => sc.campaignId === campaignId && etatDeLaScene(sc) === 'en-cours');
+
+        // UNE scène : aucune ambiguïté, on s'y rattache et ses PJ entrent.
+        if (ouvertes.length === 1) {
+            rattacher(ouvertes[0].id);
+            return;
+        }
+
+        /*
+          PLUSIEURS : on ne choisit pas à la place du meneur. Le combat reste
+          non rattaché et **l'écran le demande** — un combat rangé dans la
+          mauvaise scène fausserait le résumé sans jamais se signaler, et c'est
+          exactement la classe de défaut qu'on passe nos journées à retirer.
+        */
+        if (ouvertes.length > 1) return;
+
+        // AUCUNE : la scène improvisée, qui existe pour ce cas précis.
+        if (!seance.acteId) return;
+        const id = s.creerSceneImprovisee?.(seance.acteId, 'Combat improvisé', seance.id);
+        if (id) rattacher(id);
+    } catch {
+        // Un combat ne s'interrompt pas parce que la trame est mal en point.
+    }
+}
+
+/** Le magasin de séance, lu par le global — un import direct fermerait un cycle. */
+function magasinDeSeance() {
+    try {
+        return (window as unknown as {
+            useSessionOSStore?: { getState: () => {
+                activeCampaignId?: string | null;
+                sessions?: { id: string; campaignId: string; status: string; acteId?: string }[];
+                scenes?: Scene[];
+                players?: { characters?: { id: string; name: string; campaignId?: string | null; portraitUrl?: string }[] }[];
+                creerSceneImprovisee?: (acteId: string, titre: string, seanceId?: string) => string;
+            } };
+        }).useSessionOSStore?.getState();
+    } catch {
+        return undefined;
+    }
+}
+
+/** Les personnages joueurs qu'une scène déclare présents. */
+function personnagesDeLaScene(sceneId: string): { id: string; name: string; portraitUrl?: string }[] {
+    const s = magasinDeSeance();
+    const scene = (s?.scenes ?? []).find(x => x.id === sceneId);
+    if (!s || !scene) return [];
+    const ids = new Set(scene.personnagesIds ?? []);
+    return (s.players ?? [])
+        .flatMap(p => p.characters ?? [])
+        .filter(c => ids.has(c.id))
+        .map(c => ({ id: c.id, name: c.name, portraitUrl: c.portraitUrl }));
+}
+
+/** L'état de table qu'une bascule de scène doit emporter et rendre. */
+interface EtatDeLaCarte {
+    mapUrl: string | null;
+    mapName: string | null;
+    isVideo: boolean;
+    tokens: unknown[];
+}
+
+/** Le magasin de cartes, lu par le global — un import direct fermerait un cycle. */
+function magasinDeCartes() {
+    try {
+        return (window as unknown as {
+            useMapStore?: { getState: () => {
+                mapUrl: string | null; mapName: string | null; isVideo: boolean; tokens: unknown[];
+                setMap?: (url: string | null, isVideo?: boolean, name?: string) => void;
+            } & Record<string, unknown> };
+        }).useMapStore?.getState();
+    } catch {
+        return undefined;
+    }
+}
+
+/** Ce que la table montre en ce moment — carte et pions. */
+function releverLaCarte(): EtatDeLaCarte | undefined {
+    const m = magasinDeCartes();
+    if (!m) return undefined;
+    return { mapUrl: m.mapUrl, mapName: m.mapName, isVideo: m.isVideo, tokens: m.tokens ?? [] };
+}
+
+/**
+ * Repose la carte et les pions d'une scène.
+ *
+ * **Les tokens sont écrits directement, sans passer par `addToken`** : ce
+ * dernier attribue un identifiant neuf, et un pion qui change d'identité à
+ * chaque bascule perdrait ses liens vers son combattant.
+ */
+function reposerLaCarte(carte: EtatDeLaCarte | undefined): void {
+    const m = magasinDeCartes();
+    if (!m || !carte) return;
+    try {
+        m.setMap?.(carte.mapUrl, carte.isVideo, carte.mapName ?? 'Sans titre');
+        (window as unknown as {
+            useMapStore?: { setState: (p: Record<string, unknown>) => void };
+        }).useMapStore?.setState({ tokens: carte.tokens });
+    } catch {
+        // Une carte qui ne se repose pas ne doit pas empêcher le combat de
+        // repartir : le meneur la remettra à la main.
     }
 }
 
@@ -129,6 +268,42 @@ export { STATUS_CONFLICT_MAP, COMBAT_AUTO_STATUS_RULES } from './logic/CombatRul
 interface CombatState {
     /** Liste des combattants actifs sur le plateau */
     combatants: Combatant[];
+    /**
+     * La scène à laquelle ce combat appartient.
+     *
+     * **Sans elle, un combat n'entre dans aucun résumé de séance** — c'est le
+     * constat de David du 2026-08-17 : le journal saura dire qu'un combat a eu
+     * lieu, jamais *où*, ni avec qui. Le rattachement se fait au premier
+     * combattant posé sur un plateau vide, et **seulement quand il n'y a pas
+     * d'ambiguïté** : une scène en cours, on s'y rattache ; aucune, on en
+     * improvise une ; plusieurs, on laisse `null` et **l'écran demande**.
+     */
+    sceneId: string | null;
+    /**
+     * Les combats mis de côté, par scène.
+     *
+     * **Un meneur ne joue pas deux combats à la fois — il alterne.** C'est la
+     * question tranchée avec David le 2026-08-17 : plutôt que rendre le combat
+     * multiple (48 fichiers le lisent, tous supposant une instance unique), on
+     * gare le plateau courant sous sa scène et on restaure celui de la scène
+     * qu'on rejoint. Le groupe séparé se joue donc en alternant, ce qui est ce
+     * qui se passe réellement à la table.
+     *
+     * **La carte et ses tokens sont garés avec le combat.** Demande de David :
+     * changer de scène sans retenir *où se trouve chaque token* rendrait le
+     * retour inutile — on retrouverait les combattants et plus le terrain. La
+     * position d'un pion est l'état le plus coûteux à reconstituer de mémoire.
+     *
+     * Le brouillard n'y est pas, et c'est délibéré : `useMapStore` l'exclut déjà
+     * de sa persistance et le range dans IndexedDB par carte. Le recopier ici en
+     * dupliquerait des images entières à chaque bascule.
+     */
+    combatsGares: Record<string, {
+        combatants: Combatant[];
+        currentTurnIdx: number;
+        round: number;
+        carte?: { mapUrl: string | null; mapName: string | null; isVideo: boolean; tokens: unknown[] };
+    }>;
     /** Index du combattant dont c'est le tour */
     currentTurnIdx: number;
     /** Numéro du round actuel */
@@ -206,6 +381,24 @@ interface CombatState {
     applySnapshot: (snapshot: { combatants: Combatant[]; currentTurnIdx: number; round: number }) => void;
     /** Réinitialise complètement le store */
     reset: () => void;
+
+    /* ---- Le combat et sa scène, depuis le 2026-08-17 -------------------- */
+
+    /**
+     * Rattache le combat courant à une scène, et y fait entrer ses personnages.
+     *
+     * Les PJ de la scène rejoignent le plateau **s'ils n'y sont pas déjà** :
+     * c'est la moitié du geste, puisque la scène sait qui est présent et que le
+     * meneur vient de les y placer.
+     */
+    rattacherLeCombat: (sceneId: string) => void;
+    /**
+     * Gare le plateau courant sous sa scène, et restaure celui de la scène visée.
+     *
+     * Un plateau vide est un état légitime — la scène rejointe n'a pas encore eu
+     * de combat. On ne fabrique rien.
+     */
+    basculerVersLaScene: (sceneId: string) => void;
 }
 
 export const useCombatStore = create<CombatState>()(
@@ -215,6 +408,74 @@ export const useCombatStore = create<CombatState>()(
             currentTurnIdx: 0,
             round: 1,
             isCombatProjected: true,
+            sceneId: null,
+            combatsGares: {},
+
+            rattacherLeCombat: (sceneId) => {
+                set({ sceneId });
+                /*
+                  **Les PJ de la scène entrent sur le plateau.** La scène sait
+                  qui est présent — le meneur vient de le poser —, et le lui
+                  redemander combattant par combattant serait lui faire saisir
+                  deux fois la même chose. On n'ajoute que les absents : un
+                  personnage déjà engagé garde ses points de vie et son
+                  initiative.
+                */
+                const perso = personnagesDeLaScene(sceneId);
+                const dejaLa = new Set(get().combatants.map(c => c.sourcePlayerId).filter(Boolean));
+                for (const pj of perso) {
+                    if (dejaLa.has(pj.id)) continue;
+                    /*
+                      **Pas de cast ici, et c'est délibéré.** La première version
+                      écrivait `as unknown as Omit<Combatant, 'id'>` sur un objet
+                      qui disait `initiative` au lieu d'`init`, `portraitUrl` au
+                      lieu d'`avatar`, et **oubliait `statuses`** — d'où le
+                      « Cannot read properties of undefined (reading 'length') »
+                      de `CombatCard`, tombé en séance chez David le 2026-08-17.
+
+                      Le compilateur savait. *Un cast qui force n'est pas un
+                      raccourci : c'est une vérification qu'on éteint, et elle
+                      s'éteint exactement là où on se trompe.*
+                    */
+                    get().addCombatant({
+                        name: pj.name,
+                        init: 0,
+                        isPlayer: true,
+                        faction: 'player',
+                        statuses: [],
+                        sourcePlayerId: pj.id,
+                        avatar: pj.portraitUrl,
+                    });
+                }
+            },
+
+            basculerVersLaScene: (sceneId) => {
+                const { sceneId: courante, combatants, currentTurnIdx, round, combatsGares } = get();
+                if (courante === sceneId) return;
+
+                /*
+                  On gare avant de restaurer, sinon le plateau courant serait
+                  écrasé par celui qu'on rejoint et perdu sans un mot. Un plateau
+                  vide sans scène n'a rien à garer.
+                */
+                const gares = { ...combatsGares };
+                if (courante) {
+                    gares[courante] = { combatants, currentTurnIdx, round, carte: releverLaCarte() };
+                }
+
+                const repris = gares[sceneId];
+                set({
+                    sceneId,
+                    combatants: repris?.combatants ?? [],
+                    currentTurnIdx: repris?.currentTurnIdx ?? 0,
+                    round: repris?.round ?? 1,
+                    combatsGares: gares,
+                });
+                // Un plateau jamais joué n'a pas de carte à reposer : on laisse
+                // celle qui est là plutôt que de vider l'écran de la table.
+                reposerLaCarte(repris?.carte);
+                get().broadcastSync();
+            },
 
             applySnapshot: (snapshot) => {
                 set({
@@ -229,7 +490,11 @@ export const useCombatStore = create<CombatState>()(
                 set({
                     combatants: [],
                     currentTurnIdx: 0,
-                    round: 1
+                    round: 1,
+                    // Un plateau vide n'appartient à aucune scène : garder le
+                    // rattachement ferait entrer le combat SUIVANT dans le
+                    // résumé de la scène précédente.
+                    sceneId: null,
                 });
                 get().broadcastSync();
             },
@@ -272,11 +537,29 @@ export const useCombatStore = create<CombatState>()(
                 */
                 const fiche = combatant.sheetData ?? ficheDuCombattant(combatant);
 
+                /*
+                  **Un combat commence quand le premier combattant arrive sur un
+                  plateau vide** — il n'existe aucun autre signal dans ce store,
+                  ni `startCombat` ni `isCombatActive`. C'est donc ici, et
+                  seulement à ce moment-là, qu'une scène peut naître du combat.
+                */
+                const premierDuCombat = get().combatants.length === 0;
+
                 set((state) => ({
                     combatants: [...state.combatants, {
                         ...combatant,
                         id: generateEffectId(),
                         faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy'),
+                        /*
+                          **Le seul endroit qui garantisse l'invariant.** Huit
+                          écrans ajoutent des combattants et `CombatCard` lit
+                          `statuses.length` sans se protéger — à raison : un
+                          combattant sans liste d'états est malformé, et rendre
+                          le lecteur tolérant masquerait la prochaine
+                          occurrence au lieu de la montrer. On complète donc au
+                          goulot, comme pour `sheetData` et `healthSystem`.
+                        */
+                        statuses: combatant.statuses ?? [],
                         sheetData: fiche,
                         healthSystem: combatant.healthSystem ?? santeSelonLeSysteme(fiche),
                         // La santé de départ vient de la fiche quand le pilote
@@ -286,6 +569,12 @@ export const useCombatStore = create<CombatState>()(
                         ...pointsDeVieDeDepart(combatant, fiche),
                     }]
                 }));
+                // Le rattachement suit l'ajout, jamais l'inverse : il peut lui
+                // aussi ajouter des combattants (les PJ de la scène), et le
+                // faire avant aurait rendu `premierDuCombat` faux.
+                if (premierDuCombat && !get().sceneId) {
+                    rattacherLeCombatQuiDemarre(id => get().rattacherLeCombat(id));
+                }
                 get().broadcastSync();
             },
 
@@ -313,13 +602,26 @@ export const useCombatStore = create<CombatState>()(
             },
 
             clearCombatants: () => {
-                const { combatants, round } = get();
-                
+                const { combatants, round, sceneId } = get();
+
+                /*
+                  **La scène entre dans le résumé, et c'est tout le point.**
+                  Demande de David du 2026-08-17 : sans elle, le journal savait
+                  dire qu'un combat avait eu lieu, jamais où ni dans quel fil de
+                  l'histoire. Un combat non rattaché le dit franchement plutôt
+                  que de se taire — c'est un défaut de rattachement, pas une
+                  absence de combat.
+                */
+                const scene = sceneId
+                    ? (magasinDeSeance()?.scenes ?? []).find(s => s.id === sceneId)
+                    : undefined;
+
                 if (combatants.length > 0) {
                     const survivors = combatants.filter(c => !c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀'));
                     const casualities = combatants.filter(c => c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀'));
                     
                     const summary = [
+                        scene ? `**Scène :** ${scene.titre}` : '_Combat rattaché à aucune scène._',
                         `Combat terminé après **${round} rounds**.`,
                         `**Participants :** ${combatants.length}`,
                         casualities.length > 0 ? `**Pertes :** ${casualities.map(c => c.name).join(', ')}` : '**Pertes :** Aucune',
@@ -328,13 +630,26 @@ export const useCombatStore = create<CombatState>()(
 
                     useJournalStore.getState().addEvent({
                         type: 'COMBAT',
-                        title: 'Combat : Résumé de fin',
+                        title: scene ? `Combat : ${scene.titre}` : 'Combat : Résumé de fin',
                         content: summary,
-                        metadata: { round, totalCombatants: combatants.length, casualitiesCount: casualities.length }
+                        metadata: {
+                            round,
+                            totalCombatants: combatants.length,
+                            casualitiesCount: casualities.length,
+                            sceneId: sceneId ?? undefined,
+                        }
                     });
                 }
-                
-                set({ combatants: [], currentTurnIdx: 0, round: 1 });
+
+                /*
+                  Le combat est fini : il ne reste pas garé. Sans ce nettoyage,
+                  revenir à cette scène ressusciterait les morts d'un combat déjà
+                  résumé au journal.
+                */
+                const gares = { ...get().combatsGares };
+                if (sceneId) delete gares[sceneId];
+
+                set({ combatants: [], currentTurnIdx: 0, round: 1, sceneId: null, combatsGares: gares });
                 get().broadcastSync();
             },
 
@@ -656,11 +971,51 @@ export const useCombatStore = create<CombatState>()(
         }),
         {
             name: 'gmos-combat-storage',
-            partialize: (state) => ({ 
-                combatants: state.combatants, 
-                round: state.round, 
+            /*
+              **Réparer ce qui est DÉJÀ écrit.**
+
+              Le 2026-08-17, un combattant sans `statuses` est parti en
+              stockage — `CombatCard` lit `statuses.length` et l'écran plantait
+              **au démarrage**, avant même qu'on puisse vider le combat. Poser
+              l'invariant dans `addCombatant` protège les suivants ; il
+              n'atteint pas ce qui est déjà sur le disque. *Une garantie posée
+              en écriture ne dit rien des données écrites avant elle.*
+
+              On répare donc à la lecture, plateau courant **et combats garés** —
+              ces derniers portent des combattants de la même origine, et un
+              plateau repris planterait exactement pareil.
+
+              On ne rend pas `CombatCard` tolérant pour autant : un combattant
+              sans liste d'états reste malformé, et masquer le symptôme au
+              lecteur cacherait la prochaine occurrence au lieu de la montrer.
+            */
+            merge: (persiste, courant) => {
+                const p = (persiste ?? {}) as Partial<CombatState>;
+                const reparer = (liste: Combatant[] | undefined) =>
+                    (liste ?? []).map(c => ({ ...c, statuses: c.statuses ?? [] }));
+
+                return {
+                    ...courant,
+                    ...p,
+                    combatants: reparer(p.combatants),
+                    combatsGares: Object.fromEntries(
+                        Object.entries(p.combatsGares ?? {}).map(([sceneId, gare]) => [
+                            sceneId,
+                            { ...gare, combatants: reparer(gare?.combatants) },
+                        ]),
+                    ),
+                };
+            },
+            partialize: (state) => ({
+                combatants: state.combatants,
+                round: state.round,
                 currentTurnIdx: state.currentTurnIdx,
-                isCombatProjected: state.isCombatProjected 
+                isCombatProjected: state.isCombatProjected,
+                // Le rattachement et les combats garés survivent au
+                // rechargement : un combat qu'on reprend le lendemain doit
+                // retrouver sa scène, sinon il n'entrera dans aucun résumé.
+                sceneId: state.sceneId,
+                combatsGares: state.combatsGares,
             })
         }
     )
