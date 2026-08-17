@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 import { natureParDefaut } from './types';
+import { rendreLeCompteRendu } from './compteRendu';
 import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
@@ -362,7 +363,14 @@ export const useJournalStore = create<JournalState>()(
             await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'source_add', {
               notebook_id: notebookId,
               source_type: 'text',
-              text: resume,
+              /*
+                **Le compte rendu entier, pas le seul récit.** L'état des lieux
+                et ce qui attend sont exactement ce qu'on relit avant la séance
+                suivante — et ils ne coûtent rien, puisqu'ils sont déjà calculés.
+                Le garde ci-dessus reste sur le récit : un compte rendu sans
+                narration n'est pas une source de chronique.
+              */
+              text: rendreLeCompteRendu(journal),
               title: `Résumé Session: ${journal.title}`
             });
           } else {
