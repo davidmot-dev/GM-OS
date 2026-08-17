@@ -25,6 +25,9 @@ import type { DiceConfig } from '../../../../types/drivers';
  * Le panneau ne s'affiche que si le pilote décrit ses jets. Un système sans
  * descripteur garde sa fiche telle quelle, sans bouton mort.
  */
+/** Ce que le sélecteur affiche, et ce que le journal de séance retient. */
+const LIBELLES = { avantage: 'Avantage', desavantage: 'Désavantage' } as const;
+
 interface PanneauDeJetProps {
     descripteur: DescripteurDeJet;
     dice: DiceConfig;
@@ -61,6 +64,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [difficulte, setDifficulte] = useState(descripteur.difficulte?.defaut ?? 0);
     const [resultat, setResultat] = useState<RollResult | null>(null);
     const [seuilDuLancer, setSeuilDuLancer] = useState(0);
+    /**
+     * Avantage, désavantage, ou rien — **la règle de Dice OS**, et c'est
+     * délibérément la même : *un jet qui change selon l'écran d'où on le lance
+     * n'est pas le même jet.* On lance deux dés et on garde le meilleur, ou le
+     * moins bon ; « meilleur » se lit selon le sens du comptage, donc le PLUS
+     * BAS sur un jeu qui jette sous un seuil.
+     */
+    const [modificateur, setModificateur] = useState<'aucun' | 'avantage' | 'desavantage'>('aucun');
     /** Ce que le dernier lancer a fait aux réserves de la table. */
     const [mouvements, setMouvements] = useState<string[]>([]);
 
@@ -108,6 +119,36 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         [descripteur, valeurs, choix, desAchetes, difficulte, template.sections],
     );
 
+    /*
+      **Le seuil composé ne remplace un seuil fixe que s'il existe.**
+
+      Le panneau écrasait `dice.successThreshold` par `jet.seuil` dans tous les
+      cas. Or un jeu à réserve n'en compose aucun : `jet.seuil` vaut alors
+      **zéro**, et `rollFromConfig` traite ce zéro comme une absence —
+      `(… ?? config.successThreshold) || 10`. Un pilote déclarant « chaque six
+      est une réussite » aurait donc lancé contre **dix**.
+
+      Alien y échappait par chance : son moteur `yze` court-circuite ce chemin et
+      compte les six en dur. Le défaut n'attendait que le premier jeu à réserve
+      déclarant un autre moteur.
+    */
+    const seuilDuMoteur = jet.composantes.length > 0 ? jet.seuil : dice.successThreshold;
+
+    /**
+     * L'Avantage ne s'offre que là où il veut dire quelque chose.
+     *
+     * *Lancer un dé de plus et garder celui qu'on préfère* suppose qu'un seul
+     * dé tranche, et qu'il y ait une valeur à comparer. Sur une réserve il n'y a
+     * pas de « meilleur dé », il y a un compte de réussites — proposer le
+     * sélecteur là inviterait à inventer une règle que le jeu n'a pas, ce que
+     * l'outil ne fait jamais.
+     *
+     * La liste des moteurs qui résolvent eux-mêmes vit dans `DiceEngine`, et
+     * nulle part ailleurs : recopiée ici, elle dériverait.
+     */
+    const avantagePossible = DiceEngine.unSeulDeDecide(dice.engine, jet.nombreDeDes)
+        && !!seuilDuMoteur;
+
     /** Rien ne part tant que chaque composante n'a pas son champ. */
     // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
     // composantes de la réserve comptent autant que celles du seuil : lancer
@@ -147,9 +188,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          * séance et y trouver une Impulsion tombée de quatre à un sans savoir
          * pourquoi ne renseigne sur rien.
          */
-        const enTete = jet.composantes.length > 0
+        const dit = modificateur === 'aucun' ? '' : ` avec ${LIBELLES[modificateur]}`;
+        const enTete = (jet.composantes.length > 0
             ? `Jet : ${jet.composantes.map(c => c.label).join(' + ')} (seuil ${jet.seuil})`
-            : `Jet : ${jet.nombreDeDes}d${jet.faces}`;
+            : `Jet : ${jet.nombreDeDes}d${jet.faces}`) + dit;
 
         if (monnaie && jet.cout.ressource && jet.cout.total > 0) {
             dits.push(...mouvoir(
@@ -157,21 +199,6 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 `${enTete}, ${jet.desAchetes} dé${jet.desAchetes > 1 ? 's' : ''} acheté${jet.desAchetes > 1 ? 's' : ''}`,
             ).avertissements);
         }
-
-        /*
-          **Le seuil composé ne remplace un seuil fixe que s'il existe.**
-
-          Le panneau écrasait `dice.successThreshold` par `jet.seuil` dans tous
-          les cas. Or un jeu à réserve n'en compose aucun : `jet.seuil` vaut
-          alors **zéro**, et `rollFromConfig` traite ce zéro comme une absence —
-          `(… ?? config.successThreshold) || 10`. Un pilote déclarant « chaque
-          six est une réussite » aurait donc lancé contre **dix**.
-
-          Alien y échappait par chance : son moteur `yze` court-circuite ce
-          chemin et compte les six en dur. Le défaut n'attendait que le premier
-          jeu à réserve déclarant un autre moteur.
-        */
-        const seuilDuMoteur = jet.composantes.length > 0 ? jet.seuil : dice.successThreshold;
 
         /*
           **La seconde poule part avec la première, et compte à part.**
@@ -182,13 +209,40 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           donc sa réserve sans ses dés de stress, et la Panique ne pouvait pas
           se déclencher. Le moteur savait faire ; le chemin s'arrêtait avant lui.
         */
-        const res = DiceEngine.rollFromConfig(
-            // `jet.sens` accompagne le seuil : sans lui, une réserve « sous le
-            // seuil » comptait les dés au-dessus, et rendait des réussites
-            // plausibles et exactement inverses.
-            { ...dice, successThreshold: seuilDuMoteur, sens: jet.sens },
-            { baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires, doubleSous: jet.doubleSous },
-        );
+        /*
+          **Avantage et désavantage court-circuitent le pilote, et c'est voulu.**
+
+          Le jet ne se compte plus, il se tranche : deux dés, on en garde un.
+          `rollAdvantage` sait déjà lire le sens — en « sous-ou-egal », le
+          meilleur dé est le PLUS BAS —, et il conserve le dé écarté dans son
+          résultat, marqué `isDropped`. *On montre les deux dés :* garder pour
+          le joueur la trace de ce qu'il a évité est la moitié de l'intérêt, et
+          c'est aussi ce qui permet au meneur de trancher autrement quand la
+          fiche dit « généralement le plus bas ».
+
+          Le verdict se relit ensuite dans la monnaie commune du panneau — une
+          réussite ou zéro —, sans quoi l'écran afficherait « Échec » sur un dé
+          qui passe : `verdict` compte des réussites, et `rollAdvantage` n'en
+          rend pas.
+        */
+        const res = modificateur !== 'aucun' && avantagePossible
+            ? (() => {
+                const brut = DiceEngine.rollAdvantage(
+                    jet.faces,
+                    0,
+                    modificateur === 'avantage',
+                    seuilDuMoteur!,
+                    jet.sens === 'sous-ou-egal' ? 'under' : 'over',
+                );
+                return { ...brut, successes: brut.tagSuccess ? 1 : 0, fails: 0 };
+            })()
+            : DiceEngine.rollFromConfig(
+                // `jet.sens` accompagne le seuil : sans lui, une réserve « sous
+                // le seuil » comptait les dés au-dessus, et rendait des
+                // réussites plausibles et exactement inverses.
+                { ...dice, successThreshold: seuilDuMoteur, sens: jet.sens },
+                { baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires, doubleSous: jet.doubleSous },
+            );
         setSeuilDuLancer(jet.seuil);
         setResultat(res);
 
@@ -216,8 +270,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const reussites = resultat?.successes ?? 0;
     const v = verdict(reussites, jet.reussitesRequises);
+    // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
+    // complication que le tirage vient précisément d'éviter.
     const complications = descripteur.complication
-        ? (resultat?.rolls ?? []).filter(d => typeof d.val === 'number' && d.val >= descripteur.complication!).length
+        ? (resultat?.rolls ?? []).filter(
+            d => !d.isDropped && typeof d.val === 'number' && d.val >= descripteur.complication!,
+        ).length
         : 0;
 
     return (
@@ -365,6 +423,42 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     </span>
                 )}
 
+                {/*
+                    **Avantage / Désavantage — la règle de Dice OS, à l'identique.**
+
+                    Deux dés, on garde le meilleur ou le moins bon. Le sélecteur
+                    ne paraît que là où un seul dé tranche : sur une réserve, il
+                    n'y a pas de meilleur dé, et l'offrir inviterait à inventer
+                    une règle que le jeu n'a pas.
+
+                    Il reste affiché après le lancer, et c'est délibéré — un
+                    modificateur qui se remettrait seul à zéro se rejouerait sans
+                    qu'on le voie, et un qui persiste se lit à l'écran.
+                */}
+                {avantagePossible && (
+                    <label className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">Tirage</span>
+                        <select
+                            value={modificateur}
+                            onChange={e => setModificateur(e.target.value as typeof modificateur)}
+                            title={jet.sens === 'sous-ou-egal'
+                                ? 'Deux dés : l’Avantage garde le plus BAS, le Désavantage le plus haut'
+                                : 'Deux dés : l’Avantage garde le plus HAUT, le Désavantage le plus bas'}
+                            className={`bg-app-bg/60 border rounded-lg px-2 py-1 text-[11px] font-bold focus:outline-none focus:border-accent/50 ${
+                                modificateur === 'avantage'
+                                    ? 'border-emerald-400/50 text-emerald-300'
+                                    : modificateur === 'desavantage'
+                                        ? 'border-red-400/50 text-red-300'
+                                        : 'border-app-border/40 text-app-text/60'
+                            }`}
+                        >
+                            <option value="aucun">Normal</option>
+                            <option value="avantage">Avantage</option>
+                            <option value="desavantage">Désavantage</option>
+                        </select>
+                    </label>
+                )}
+
                 {/* Pas de champ pour ce que le jeu ne fixe pas : un sélecteur de
                     difficulté sur un jeu qui n'en a pas invite à en inventer une. */}
                 {descripteur.difficulte && (
@@ -430,8 +524,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     <div className="flex flex-wrap gap-1.5">
                         {resultat.rolls.map((d, i) => {
                             const val = typeof d.val === 'number' ? d.val : 0;
-                            const critique = descripteur.critique !== undefined && val <= jet.doubleSous;
-                            const complique = descripteur.complication !== undefined && val >= descripteur.complication;
+                            /*
+                              **Le dé écarté se montre, et ne compte pour rien.**
+                              C'est le dé qu'on a évité — un joueur doit voir de
+                              quoi l'Avantage l'a sauvé. Mais lui appliquer les
+                              couleurs du critique ou de la complication
+                              annoncerait un événement qui n'a pas eu lieu.
+                            */
+                            const ecarte = d.isDropped === true;
+                            const critique = !ecarte && descripteur.critique !== undefined && val <= jet.doubleSous;
+                            const complique = !ecarte && descripteur.complication !== undefined && val >= descripteur.complication;
                             /*
                               **Quel dé a déclenché, et pas seulement combien.**
                               Un compte de Paniques sans savoir lequel des huit
@@ -445,12 +547,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             return (
                                 <span
                                     key={i}
-                                    title={declenche ? nomDuUn
+                                    title={ecarte ? 'Dé écarté — celui que le tirage n’a pas retenu'
+                                        : declenche ? nomDuUn
                                         : seconde ? descripteur.reserve?.secondaire?.label
                                         : critique ? 'Deux réussites'
                                         : complique ? 'Complication' : undefined}
                                     className={`w-9 h-9 rounded-lg flex items-center justify-center font-mono text-sm font-black border ${
-                                        declenche
+                                        ecarte
+                                            ? 'bg-transparent border-dashed border-app-border/30 text-app-text/25 line-through'
+                                        : declenche
                                             ? 'bg-amber-500/25 border-amber-400 text-amber-100 shadow-[0_0_10px_rgba(251,191,36,0.35)]'
                                             : critique
                                                 ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'

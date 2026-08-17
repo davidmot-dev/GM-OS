@@ -497,6 +497,31 @@ export class DiceEngine {
      * @param options Options dynamiques (modificateur, nombre de dés, seuil forcé).
      * @returns Objet RollResult final.
      */
+    /**
+     * Les moteurs qui imposent leur propre résolution et **ignorent `logic`**.
+     *
+     * `rollFromConfig` les intercepte avant toute logique — une réserve Year
+     * Zero, une famille 2d20, un percentile. Un appelant qui veut savoir si un
+     * jet se décide sur **un seul dé comparé à un seuil** doit donc les exclure,
+     * et cette liste est le seul endroit où ils sont nommés : recopiée ailleurs,
+     * elle dériverait le jour où un moteur s'ajoute, et l'écran offrirait une
+     * option que le moteur n'appliquerait pas.
+     */
+    static readonly MOTEURS_A_RESOLUTION_PROPRE: readonly string[] = [
+        'year-zero', 'yze', 'd100', 'rolemaster', '2d20',
+    ];
+
+    /**
+     * Ce jet se décide-t-il sur la valeur d'**un seul dé** face à un seuil ?
+     *
+     * C'est la condition de l'Avantage : *lancer un dé de plus et garder celui
+     * qu'on préfère* n'a de sens que si un seul dé tranche. Sur une réserve, il
+     * n'y a pas de « meilleur dé » — il y a un compte de réussites.
+     */
+    static unSeulDeDecide(engine: string | undefined, nombreDeDes: number): boolean {
+        return nombreDeDes === 1 && !this.MOTEURS_A_RESOLUTION_PROPRE.includes(engine ?? '');
+    }
+
     static rollFromConfig(
         config: {
             defaultDice: string;

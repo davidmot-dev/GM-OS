@@ -165,3 +165,126 @@ describe('le sens du comptage voyage jusqu\'au moteur', () => {
         expect(dessus.successes).toBe(val <= 15 ? 1 : 0);
     });
 });
+
+/**
+ * Ce que ces tests protègent : **« le meilleur dé » s'inverse avec le sens du
+ * comptage**, et `rollAdvantage` n'avait aucun test.
+ *
+ * La règle de Dice OS est la même partout — deux dés, on garde le meilleur pour
+ * un Avantage, le moins bon pour un Désavantage. Mais « meilleur » n'est pas une
+ * valeur haute : sur un jeu qui jette SOUS une Sauvegarde, c'est le PLUS BAS.
+ * Un Avantage qui garderait le 18 plutôt que le 3 rendrait le bonus en malus —
+ * *et comme toujours ici, ça ne planterait pas.* Le moteur savait déjà le faire
+ * (le paramètre `rule`) ; rien ne le vérifiait.
+ *
+ * On ne peut pas forcer le tirage, donc on vérifie l'invariant sur les deux dés
+ * réellement obtenus, deux cents fois : le dé retenu est toujours l'extremum
+ * attendu, quelle que soit la paire.
+ */
+describe('l\'Avantage garde le meilleur dé, et « meilleur » dépend du sens', () => {
+    /** Les deux dés d'un tirage : celui qu'on garde, celui qu'on écarte. */
+    const tirage = (isAvantage: boolean, rule: 'over' | 'under') => {
+        const res = DiceEngine.rollAdvantage(20, 0, isAvantage, 11, rule);
+        const garde = res.rolls[0].val as number;
+        const ecarte = res.rolls[1].val as number;
+        return { res, garde, ecarte };
+    };
+
+    const centFois = (f: () => void) => { for (let i = 0; i < 200; i++) f(); };
+
+    it('en comptage « sous », l\'Avantage garde le PLUS BAS', () => {
+        centFois(() => {
+            const { garde, ecarte } = tirage(true, 'under');
+            expect(garde).toBe(Math.min(garde, ecarte));
+        });
+    });
+
+    it('en comptage « sous », le Désavantage garde le plus haut', () => {
+        centFois(() => {
+            const { garde, ecarte } = tirage(false, 'under');
+            expect(garde).toBe(Math.max(garde, ecarte));
+        });
+    });
+
+    it('en comptage « au-dessus », l\'Avantage garde le plus haut', () => {
+        centFois(() => {
+            const { garde, ecarte } = tirage(true, 'over');
+            expect(garde).toBe(Math.max(garde, ecarte));
+        });
+    });
+
+    it('en comptage « au-dessus », le Désavantage garde le plus bas', () => {
+        centFois(() => {
+            const { garde, ecarte } = tirage(false, 'over');
+            expect(garde).toBe(Math.min(garde, ecarte));
+        });
+    });
+
+    it('le verdict se lit sur le dé retenu, jamais sur celui qu\'on a écarté', () => {
+        centFois(() => {
+            const { res, garde } = tirage(true, 'under');
+            expect(res.tagSuccess).toBe(garde <= 11);
+        });
+    });
+
+    it('le dé écarté est marqué, et il est le second', () => {
+        const { res } = tirage(true, 'under');
+        expect(res.rolls).toHaveLength(2);
+        expect(res.rolls[0].isDropped).toBeUndefined();
+        expect(res.rolls[1].isDropped).toBe(true);
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **le panneau n'offre l'Avantage que là où un seul
+ * dé tranche**.
+ *
+ * *Lancer un dé de plus et garder celui qu'on préfère* n'a aucun sens sur une
+ * réserve — il n'y a pas de meilleur dé, il y a un compte de réussites. Offrir
+ * le sélecteur chez Dune ou Alien inviterait à inventer une règle que ces jeux
+ * n'ont pas, ce que l'outil ne fait jamais.
+ *
+ * La liste des moteurs qui résolvent eux-mêmes vit dans `DiceEngine` et nulle
+ * part ailleurs : recopiée dans le panneau, elle dériverait le jour où un moteur
+ * s'ajoute — et l'écran offrirait une option que le moteur n'appliquerait pas.
+ */
+describe('un seul dé décide, ou personne', () => {
+    it('un d20 unique contre un seuil : oui', () => {
+        expect(DiceEngine.unSeulDeDecide('standard', 1)).toBe(true);
+        expect(DiceEngine.unSeulDeDecide(undefined, 1)).toBe(true);
+    });
+
+    it('une réserve de plusieurs dés : non', () => {
+        expect(DiceEngine.unSeulDeDecide('standard', 2)).toBe(false);
+        expect(DiceEngine.unSeulDeDecide('standard', 6)).toBe(false);
+    });
+
+    it('les moteurs qui résolvent eux-mêmes : non, même sur un seul dé', () => {
+        for (const moteur of DiceEngine.MOTEURS_A_RESOLUTION_PROPRE) {
+            expect(DiceEngine.unSeulDeDecide(moteur, 1), moteur).toBe(false);
+        }
+    });
+
+    /**
+     * **Le garde-fou contre la dérive.** Chacun de ces moteurs doit réellement
+     * imposer sa résolution — au point de ne même pas lancer les dés que
+     * `defaultDice` déclare. Le jour où l'un d'eux cesserait de le faire, la
+     * liste mentirait au panneau sans qu'aucun écran ne le dise.
+     *
+     * On leur donne « 1d20 » et « lowest », soit exactement le jet où
+     * l'Avantage aurait un sens. Aucun ne doit rendre un seul dé à vingt faces :
+     * `yze` lance des d6, le percentile un d100, la famille 2d20 en lance deux.
+     */
+    it('et ces moteurs ne lancent même pas les dés déclarés', () => {
+        for (const moteur of DiceEngine.MOTEURS_A_RESOLUTION_PROPRE) {
+            const res = DiceEngine.rollFromConfig({
+                defaultDice: '1d20',
+                logic: 'lowest',
+                successThreshold: 11,
+                engine: moteur,
+            });
+            const unSeulD20 = res.rolls.length === 1 && res.rolls[0].sides === 20;
+            expect(unSeulD20, moteur).toBe(false);
+        }
+    });
+});
