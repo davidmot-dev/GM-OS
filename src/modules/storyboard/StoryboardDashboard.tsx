@@ -16,6 +16,7 @@ import {
     X,
     Settings2,
     Play,
+    Square,
     Waves,
     Clapperboard,
     ArrowRight,
@@ -50,6 +51,8 @@ interface SortableMomentProps {
     activeMomentId: string | null;
     isLast: boolean;
     onTrigger: (id: string) => void;
+    /** Referme la parenthèse : l'image de la scène revient. */
+    onArreter: () => void;
     onEdit: (moment: StoryboardMoment) => void;
     onDelete: (id: string) => void;
     onDuplicate: (id: string) => void;
@@ -60,7 +63,8 @@ const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, u
     moment, 
     index, 
     activeMomentId, 
-    onTrigger, 
+    onTrigger,
+    onArreter,
     onEdit, 
     onDelete,
     onDuplicate,
@@ -132,7 +136,11 @@ const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, u
 
                 {/* Main Trigger Button */}
                 <button 
-                    onClick={() => onTrigger(moment.id)}
+                    /* Le même bouton arrête ce qu'il a lancé : un moment
+                       qu'on ne peut couper que depuis un autre écran laisse son
+                       image sur la table, et l'image de la scène ne revient
+                       jamais. */
+                    onClick={() => (activeMomentId === moment.id ? onArreter() : onTrigger(moment.id))}
                     disabled={isOverlay}
                     className="flex-1 flex flex-col items-center justify-center gap-4 group/play"
                 >
@@ -141,7 +149,9 @@ const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, u
                             ? 'bg-accent text-app-bg border-accent shadow-glow-accent' 
                             : 'bg-white/5 border-white/10 group-hover/play:bg-white/10 group-hover/play:border-accent group-hover/play:text-accent'
                     }`}>
-                        <Play size={32} fill="currentColor" className={activeMomentId === moment.id ? '' : 'group-hover/play:scale-110 transition-transform'} />
+                        {activeMomentId === moment.id
+                            ? <Square size={28} fill="currentColor" />
+                            : <Play size={32} fill="currentColor" className="group-hover/play:scale-110 transition-transform" />}
                     </div>
                     <h3 className="text-sm font-black uppercase tracking-wider text-center leading-tight group-hover/play:text-accent transition-colors">
                         {moment.name}
@@ -202,7 +212,7 @@ const SortableMoment: React.FC<SortableMomentProps> = (props) => {
 
 const StoryboardDashboard: React.FC = () => {
     const { t } = useTranslation(['modules']);
-    const { moments, triggerMoment, addMoment, updateMoment, deleteMoment, activeMomentId, setMoments, duplicateMoment } = useStoryboardStore();
+    const { moments, triggerMoment, arreterLeMoment, addMoment, updateMoment, deleteMoment, activeMomentId, setMoments, duplicateMoment } = useStoryboardStore();
     const { activeCampaignId, atlasMaps } = useSessionOSStore();
 
     const [isEditing, setIsEditing] = useState(false);
@@ -412,6 +422,7 @@ const StoryboardDashboard: React.FC = () => {
                                     activeMomentId={activeMomentId}
                                     isLast={index === campaignMoments.length - 1}
                                     onTrigger={triggerMoment}
+                                    onArreter={arreterLeMoment}
                                     onEdit={startEdit}
                                     onDelete={deleteMoment}
                                     onDuplicate={duplicateMoment}
@@ -427,6 +438,7 @@ const StoryboardDashboard: React.FC = () => {
                                     activeMomentId={activeMomentId}
                                     isLast={true}
                                     onTrigger={() => {}}
+                                    onArreter={() => {}}
                                     onEdit={() => {}}
                                     onDelete={() => {}}
                                     onDuplicate={() => {}}

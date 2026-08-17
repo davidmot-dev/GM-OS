@@ -20,9 +20,29 @@ export interface StoryboardMoment {
     campaignId: string;
 }
 
+/** Ce que la table montrait avant qu'un moment ne prenne la main. */
+export interface ImageAvantLeMoment {
+    mapUrl: string | null;
+    mapName: string | null;
+    isVideo: boolean;
+}
+
 interface StoryboardState {
     moments: StoryboardMoment[];
     activeMomentId: string | null;
+    /**
+     * L'image de la scène, mise de côté le temps du moment.
+     *
+     * **Un moment est une parenthèse, pas un remplacement.** Demande de David du
+     * 2026-08-17 : quand le moment commence, son image prend la place de celle
+     * de la scène ; quand il s'arrête, **on revient à l'image de la scène**.
+     * Sans cette mémoire, arrêter une ambiance laisserait la table sur son décor
+     * — et le meneur devrait retrouver à la main le lieu qu'il avait projeté.
+     *
+     * `null` quand aucun moment ne tourne, ou quand le moment ne portait pas
+     * d'image : il n'y a alors rien eu à remplacer, donc rien à rendre.
+     */
+    imageAvantLeMoment: ImageAvantLeMoment | null;
 
     // Actions
     addMoment: (moment: Omit<StoryboardMoment, 'id'>) => void;
@@ -31,6 +51,15 @@ interface StoryboardState {
     duplicateMoment: (id: string) => void;
     setMoments: (moments: StoryboardMoment[]) => void;
     triggerMoment: (id: string) => Promise<void>;
+    /**
+     * Referme la parenthèse : l'image de la scène revient.
+     *
+     * **On ne coupe que ce que le moment a posé.** La musique et les lumières
+     * restent : le meneur les arrête quand il le décide, et les couper d'office
+     * ferait tomber le silence sur la table pour un geste qui ne parlait que de
+     * l'image.
+     */
+    arreterLeMoment: () => void;
     reset: () => void;
 }
 
@@ -39,6 +68,22 @@ export const useStoryboardStore = create<StoryboardState>()(
         (set, get) => ({
             moments: [],
             activeMomentId: null,
+            imageAvantLeMoment: null,
+
+            arreterLeMoment: () => {
+                const { imageAvantLeMoment } = get();
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const gWindow = window as any;
+
+                if (imageAvantLeMoment && gWindow.useMapStore) {
+                    gWindow.useMapStore.getState().setMap(
+                        imageAvantLeMoment.mapUrl,
+                        imageAvantLeMoment.isVideo,
+                        imageAvantLeMoment.mapName ?? 'Sans titre',
+                    );
+                }
+                set({ activeMomentId: null, imageAvantLeMoment: null });
+            },
 
             addMoment: (momentData) => set((state) => ({
                 moments: [...state.moments, { ...momentData, id: crypto.randomUUID() }]
@@ -99,10 +144,25 @@ export const useStoryboardStore = create<StoryboardState>()(
                     lightStore.setActiveScene(moment.lightSceneId);
                 }
 
-                // 3. Atlas-OS (Map)
+                /*
+                  3. Atlas-OS (Map) — **et on retient ce qu'on remplace.**
+
+                  L'image du moment prend la place de celle de la scène, et
+                  `arreterLeMoment` la rendra. On ne relève rien quand le moment
+                  ne porte pas d'image : il n'a alors rien remplacé, et écrire
+                  une mémoire vide ferait croire à une parenthèse ouverte qui
+                  rendrait un décor arbitraire à sa fermeture.
+                */
                 if (moment.mapUrl && gWindow.useMapStore) {
                     console.log(`[Storyboard] Map: Setting URL ${moment.mapUrl}`);
                     const mapStore = gWindow.useMapStore.getState();
+                    set({
+                        imageAvantLeMoment: {
+                            mapUrl: mapStore.mapUrl ?? null,
+                            mapName: mapStore.mapName ?? null,
+                            isVideo: !!mapStore.isVideo,
+                        },
+                    });
                     mapStore.setMap(moment.mapUrl, moment.isMapVideo || false);
                 }
 

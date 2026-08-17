@@ -2,6 +2,7 @@ import React from 'react';
 import { Play, Square, Plus, ExternalLink, CheckCircle2, Circle, PauseCircle, ChevronRight, ChevronDown } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
+import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import {
     actesOrdonnes, etatDeLaScene, closeSansAvoirEteJouee,
     scenesDansLEtat, scenesACloreAvecLActe, repartirLesScenesPrevues, scenesOrdonnees,
@@ -36,6 +37,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
         ouvrirLaScene, terminerLaScene, creerSceneImprovisee, modifierActe, modifierScene,
     } = useSessionOSStore();
     const setMap = useMapStore(s => s.setMap);
+    const { moments, activeMomentId, triggerMoment, arreterLeMoment } = useStoryboardStore();
 
     /*
       **La troupe de la séance, et pas tous les personnages de la campagne.**
@@ -174,6 +176,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                 <LigneDeSceneJouee
                     key={scene.id} scene={scene} etat="en-cours"
                     troupe={troupe} pnjDeLaCampagne={pnjDeLaCampagne} lieux={lieux}
+                            ambiance={moments.find(m => m.id === scene.momentDeStoryboardId)}
+                            momentEnCours={!!scene.momentDeStoryboardId && activeMomentId === scene.momentDeStoryboardId}
+                            triggerMoment={triggerMoment} arreterLeMoment={arreterLeMoment}
                     onOuvrir={() => ouvrirEtProjeter(scene)}
                     onTerminer={() => terminerLaScene(scene.id)}
                     onModifier={u => modifierScene(scene.id, u)}
@@ -192,6 +197,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                         <LigneDeSceneJouee
                             key={scene.id} scene={scene} etat="en-pause"
                             troupe={troupe} pnjDeLaCampagne={pnjDeLaCampagne} lieux={lieux}
+                            ambiance={moments.find(m => m.id === scene.momentDeStoryboardId)}
+                            momentEnCours={!!scene.momentDeStoryboardId && activeMomentId === scene.momentDeStoryboardId}
+                            triggerMoment={triggerMoment} arreterLeMoment={arreterLeMoment}
                             onOuvrir={() => ouvrirEtProjeter(scene)}
                             onTerminer={() => terminerLaScene(scene.id)}
                             onModifier={u => modifierScene(scene.id, u)}
@@ -210,6 +218,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                             key={scene.id} scene={scene} etat={etatDeLaScene(scene)}
                             prevueCeSoir={prevuesIds.has(scene.id)}
                             troupe={troupe} pnjDeLaCampagne={pnjDeLaCampagne} lieux={lieux}
+                            ambiance={moments.find(m => m.id === scene.momentDeStoryboardId)}
+                            momentEnCours={!!scene.momentDeStoryboardId && activeMomentId === scene.momentDeStoryboardId}
+                            triggerMoment={triggerMoment} arreterLeMoment={arreterLeMoment}
                             onOuvrir={() => ouvrirEtProjeter(scene)}
                             onTerminer={() => terminerLaScene(scene.id)}
                             onModifier={u => modifierScene(scene.id, u)}
@@ -292,12 +303,19 @@ const LigneDeSceneJouee: React.FC<{
     troupe: { id: string; name: string }[];
     pnjDeLaCampagne: { id: string; name: string }[];
     lieux: { id: string; name: string }[];
+    /** Le moment de storyboard que la scène désigne, s'il existe encore. */
+    ambiance?: { id: string; name: string };
+    /** Ce moment tourne-t-il en ce moment ? */
+    momentEnCours: boolean;
+    triggerMoment: (id: string) => void;
+    arreterLeMoment: () => void;
     onOuvrir: () => void;
     onTerminer: () => void;
     onModifier: (updates: Partial<Scene>) => void;
 }> = ({
     scene, etat, prevueCeSoir = false, onOuvrir, onTerminer,
     troupe, pnjDeLaCampagne, lieux, onModifier,
+    ambiance, momentEnCours, triggerMoment, arreterLeMoment,
 }) => {
     const jamaisJouee = closeSansAvoirEteJouee(scene);
     const [depliee, setDepliee] = React.useState(false);
@@ -411,6 +429,45 @@ const LigneDeSceneJouee: React.FC<{
                         {nomsDesPNJ.length > 0 && (
                             <span><span className="opacity-50">PNJ </span>{nomsDesPNJ.join(', ')}</span>
                         )}
+                    </div>
+                )}
+
+                {/*
+                    **L'ambiance se déclenche à la main, jamais toute seule.**
+
+                    La scène nomme son moment depuis le 2026-08-08 — et
+                    jusqu'ici PERSONNE ne le déclenchait : le lien comptait dans
+                    le taux de préparation, la pastille verdissait, et il fallait
+                    aller lancer l'ambiance dans un autre onglet. Troisième lien
+                    mort de la trame, après le badge « improvisée ».
+
+                    L'ouverture de la scène ne l'allume pas : *une ambiance se
+                    lance quand le meneur juge le moment venu*, pas quand la
+                    scène commence. Le moment est une parenthèse — son image
+                    prend la place de celle de la scène, et l'arrêt la rend.
+                */}
+                {ambiance && (
+                    <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
+                            Ambiance
+                        </span>
+                        <span className="text-[11px] text-app-text/60 truncate flex-1 min-w-0">
+                            {ambiance.name}
+                        </span>
+                        <button
+                            onClick={() => (momentEnCours ? arreterLeMoment() : triggerMoment(ambiance.id))}
+                            title={momentEnCours
+                                ? 'Arrêter l’ambiance — l’image de la scène revient'
+                                : 'Lancer l’ambiance — son image remplace celle de la scène'}
+                            className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border transition-all ${
+                                momentEnCours
+                                    ? 'bg-accent/20 border-accent/50 text-accent'
+                                    : 'bg-app-bg/40 border-app-border/20 text-app-text/50 hover:text-app-text'
+                            }`}
+                        >
+                            {momentEnCours ? <Square size={11} /> : <Play size={11} />}
+                            {momentEnCours ? 'En cours' : 'Lancer'}
+                        </button>
                     </div>
                 )}
 
