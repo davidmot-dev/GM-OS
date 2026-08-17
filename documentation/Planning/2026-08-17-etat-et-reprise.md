@@ -18,8 +18,14 @@ attend, ce qu'on ne rouvre pas, et le geste exact pour continuer.
 | Où | Ce qu'il faut | Pourquoi |
 | --- | --- | --- |
 | `dice.logic` | **Compter les réussites** | `sum` ne résout pas une Sauvegarde. Le sélecteur n'existait pas avant ce soir |
-| `combat.santeDeDepart` | **vide** | La formule visait un dé, pas un nombre : elle ne s'évalue jamais |
-| `jet.seuil` | les **six** Sauvegardes | Une seule entrée signifierait qu'on ne peut jeter que celle-là |
+| `combat.santeDeDepart` | ~~vide~~ → **`points_de_vie`**, le champ des Ressources | La formule visait le « dé de vie », un `d6` et non un nombre : elle ne s'évaluait jamais. Vide, la fiche et le bloc de gauche portaient **deux nombres différents** pour une seule chose |
+| `jet.seuil` | **une seule** entrée, sur la section des six Sauvegardes | ~~Une seule entrée signifierait qu'on ne peut jeter que celle-là~~ — **faux, corrigé le 2026-08-17** : les composantes s'ADDITIONNENT, et le choix se joue dans `sectionId` |
+
+> **Défaut n° 13, trouvé en tentant ce contrôle.** Les six Sauvegardes avaient bien été inscrites — et le
+> panneau de jet a réclamé les six menus avant de lancer, pour les additionner : un seuil de 60 sur un
+> d20. La consigne qui l'a commandé est celle qu'on avait remontée en tête la veille pour qu'elle ne se
+> noie pas. *Une consigne remontée en tête est lue ; encore faut-il qu'elle dise vrai.* L'invite est
+> corrigée, et un contrôle avertit désormais quand plusieurs composantes lisent la même section.
 
 Puis **un jet d'essai au pupitre**, seuil bas : les réussites doivent tomber **sous** le seuil. C'est le
 seul contrôle qui compte, parce qu'un jet résolu à l'envers ne se voit jamais en séance.
