@@ -113,7 +113,7 @@ const ORDRE_DES_PORTEES = ['contact', 'courte', 'moyenne', 'longue', 'extreme'] 
  * et `checkbox` non : un « dé de vie » rangé dans un `text` vaut `d8`, et
  * `"d8" + 8` n'est pas une addition.
  */
-const TYPES_NUMERIQUES = new Set(['number', 'gauge', 'rating']);
+export const TYPES_NUMERIQUES = new Set(['number', 'gauge', 'rating']);
 
 /** Tout ce que les exemples de l'invite montrent — donc tout ce qui peut en être recopié. */
 const TEXTE_DES_EXEMPLES = GROUPES.map(g => g.exemple).join(' ');
@@ -432,6 +432,49 @@ export function controlerLePilote(
                 : ''),
         );
     }));
+
+    /*
+      **Plusieurs composantes sur la MÊME section : une somme là où le jeu
+      offre un choix.**
+
+      Relevé sur Cthulhu Hack le 2026-08-17, et c'est l'invite qui l'avait
+      commandé — elle exigeait que les six Sauvegardes figurent dans
+      `jet.seuil`. Or une composante est un TERME D'UNE SOMME, et l'alternative
+      se joue dans sa section : *« le joueur retient un champ de cette
+      section »*. Les six y étaient donc additionnées — le panneau réclamait les
+      six menus, `LANCER` restait mort, et un joueur patient aurait obtenu un
+      seuil de 60 pour un d20.
+
+      Deux termes pris sur la même section restent concevables — un jeu peut
+      demander la somme de deux attributs — donc on avertit, on n'interdit pas.
+      *Un contrôle qui se trompe est pire qu'un contrôle absent.*
+
+      Le vrai signe, c'est la répétition : deux composantes visant la même
+      section décrivent presque toujours des valeurs entre lesquelles on
+      choisit, jamais des valeurs qu'on ajoute.
+    */
+    composantesDuJet.forEach(([ou, liste]) => {
+        const parSection = new Map<string, string[]>();
+        for (const composante of liste ?? []) {
+            if (!composante.sectionId) continue;
+            parSection.set(
+                composante.sectionId,
+                [...(parSection.get(composante.sectionId) ?? []), composante.label || composante.id],
+            );
+        }
+        for (const [sectionId, labels] of parSection) {
+            if (labels.length < 2) continue;
+            const nom = sections.find(s => s.id === sectionId)?.label || sectionId;
+            avertir(
+                ou,
+                `${labels.length} composantes lisent la même section « ${nom} » — ` +
+                `${labels.join(', ')} — et elles s'ADDITIONNENT. Si le joueur n'en jette qu'une à ` +
+                'la fois, il en faut UNE SEULE : c\'est la section qui offre le choix, et le menu ' +
+                'proposera tous ses champs. Six Sauvegardes additionnées donneraient un seuil que ' +
+                'le jeu n\'a jamais eu, et le panneau exigerait les six avant de lancer.',
+            );
+        }
+    });
 
     const reserve = driver.jet?.reserve;
     /*

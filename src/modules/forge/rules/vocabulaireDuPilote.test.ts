@@ -171,8 +171,19 @@ describe('la cible du groupe « jet »', () => {
         expect(rangSens, 'le sens passe avant les énumérations').toBeLessThan(rangEnums);
     });
 
-    it('exige TOUTES les valeurs de seuil, pas une', () => {
-        expect(jet.cible).toContain('TOUTES LES VALEURS');
+    /**
+     * **La consigne remontée en tête le 2026-08-16 disait vrai sur la forme et
+     * faux sur le fond**, et Cthulhu Hack l'a payé le lendemain : elle réclamait
+     * les six Sauvegardes dans `jet.seuil`, où les composantes s'ADDITIONNENT.
+     *
+     * Ce que ce test verrouille, c'est la distinction elle-même — le nombre
+     * d'entrées dit ce qui s'ajoute, la section dit entre quoi on choisit. La
+     * perdre une seconde fois rendrait un pilote qu'on ne peut pas lancer.
+     */
+    it('dit que le nombre d\'entrées du seuil est une somme, pas un choix', () => {
+        expect(jet.cible).toContain('S\'ADDITIONNE');
+        expect(jet.cible).toContain('UNE SEULE entrée');
+        expect(jet.cible, 'le choix se joue dans la section').toContain('"sectionId"');
     });
 
     it('dit que « sous-ou-egal » sans seuil ne veut rien dire', () => {

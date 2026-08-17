@@ -292,14 +292,33 @@ export const GROUPES: readonly GroupeDeChamps[] = [
           revue, viennent après. C'est le même raisonnement qui place
           `blocDuVocabulaire` juste après la tâche : *la contrainte la plus dure
           ne doit pas se noyer.*
+
+          **ET LA CONSIGNE AINSI REMONTÉE ÉTAIT FAUSSE — troisième fois qu'un
+          correctif fabrique le défaut suivant** (2026-08-17). Elle disait : *« si
+          la fiche porte six Sauvegardes, les SIX y sont ; une seule entrée
+          signifierait qu'on ne peut jamais jeter que celle-là. »* Cthulhu Hack
+          est ressorti avec ses six Sauvegardes dans `jet.seuil`, et le panneau a
+          exigé les six d'un coup pour les ADDITIONNER — un seuil de 60 là où le
+          jeu jette un d20 sous 11.
+
+          La confusion est dans le modèle, pas dans le modèle de langage : une
+          `ComposanteDeJet` est *une valeur qui s'ajoute*, et l'alternative se
+          joue DANS sa section — « le joueur retient **un** champ de cette
+          section ». Une consigne remontée en tête est lue ; encore faut-il
+          qu'elle dise vrai. *Écrire d'une liste qu'elle énumère des choix quand
+          elle énumère des termes d'une somme, c'est se tromper de mécanique en
+          croyant préciser la règle.*
         */
         cible:
             '"driver" avec seulement dice et jet. ' +
             'DEUX EXIGENCES D\'ABORD, le reste ensuite. ' +
-            '**(1) "jet.seuil" LISTE TOUTES LES VALEURS DE LA FICHE QUE LE JOUEUR PEUT CHOISIR** — ' +
-            'si la fiche porte six Sauvegardes, les SIX y sont, chacune avec son "id", son "label" ' +
-            'et le "sectionId" de la section où elle se lit. Une seule entrée signifierait qu\'on ne ' +
-            'peut jamais jeter que celle-là. Un jeu dont la réserve se compose depuis la fiche ' +
+            '**(1) "jet.seuil" LISTE CE QUI S\'ADDITIONNE POUR FORMER LE SEUIL** — une entrée PAR ' +
+            'VALEUR AJOUTÉE, chacune avec son "id", son "label" et le "sectionId" de la section où ' +
+            'elle se lit. Chez Dune, une compétence PLUS un principe : deux entrées, deux sections. ' +
+            'LE CHOIX SE FAIT DANS "sectionId", PAS DANS LE NOMBRE D\'ENTRÉES : au moment de lancer, ' +
+            'le joueur retient UN champ de cette section. Six Sauvegardes dont on n\'en jette QU\'UNE ' +
+            'à la fois = UNE SEULE entrée, sur la section qui les porte — six entrées demanderaient ' +
+            'les six et les additionneraient. Un jeu dont la réserve se compose depuis la fiche ' +
             'laisse "seuil" vide et remplit "reserve.composantes" à la place — l\'un ou l\'autre, ' +
             'jamais ni l\'un ni l\'autre. ' +
             '**(2) "jet.sens" vaut "superieur-ou-egal"** si le jeu compte les dés qui ATTEIGNENT OU ' +

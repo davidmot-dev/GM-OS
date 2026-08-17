@@ -304,6 +304,50 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
         )).toEqual([]);
     });
 
+    it('six composantes sur la même section : une somme là où le jeu offre un choix', () => {
+        /**
+         * **Charge réelle du 2026-08-17, sur Cthulhu Hack — et c'est l'invite
+         * qui l'avait commandé.** Elle exigeait que les six Sauvegardes
+         * figurent dans `jet.seuil`. Or les composantes s'additionnent : le
+         * panneau a réclamé six menus, `LANCER` est resté mort, et un joueur
+         * patient aurait obtenu un seuil de 60 pour un seul d20.
+         *
+         * Le jeu jette un d20 sous UNE Sauvegarde. C'est donc une composante,
+         * sur la section qui porte les six — le menu offre le choix.
+         */
+        const sauvegardes = ['force', 'dexterite', 'constitution', 'sagesse', 'intelligence', 'charisme'];
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    seuil: sauvegardes.map(id => ({ id, label: id, sectionId: 'competences' })),
+                    sens: 'sous-ou-egal',
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['jet.seuil']);
+        expect(constats[0].gravite, 'deux attributs additionnés restent concevables').toBe('avertissement');
+        expect(constats[0].message).toContain('ADDITIONNENT');
+        expect(constats[0].message).toContain('UNE SEULE');
+        expect(constats[0].message, 'la section est nommée telle que la fiche la nomme')
+            .toContain('Compétences');
+    });
+
+    it('mais deux composantes sur deux sections ne disent rien — c\'est Dune', () => {
+        expect(controlerLePilote(
+            {
+                jet: {
+                    seuil: [
+                        { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+                        { id: 'jauge', label: 'Jauge', sectionId: 'jauges' },
+                    ],
+                    sens: 'sous-ou-egal',
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        )).toEqual([]);
+    });
+
     it('une réserve écrite en formule plutôt qu\'en dés', () => {
         // Relevé sur Alien : `base: "attribut+comp_level"`. Le panneau de jet
         // n'aurait rien lancé.
