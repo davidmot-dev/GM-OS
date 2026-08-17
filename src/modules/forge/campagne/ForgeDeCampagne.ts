@@ -391,6 +391,20 @@ export async function forgerLaCampagne(
     const appeler = options.appeler ?? ((prompt, schema) =>
         AIService.getInstance().generateJSON<unknown>(prompt, SYSTEM_PROMPT, [], {
             lite: true, sansPersona: true, schema,
+            /*
+              **Cette forge rend des LISTES, pas un fragment.** Le plafond par
+              défaut — 2048 tokens — a été calibré pour la Forge Système, dont le
+              commentaire dit « un fragment de pilote fait quelques centaines de
+              tokens ». Mesuré ici le 2026-08-17 : sur 144 réponses, une seule a
+              été coupée, celle du groupe `lieux`, à 8 091 caractères — son
+              schéma demande deux longs champs de prose par lieu, et une campagne
+              en compte une quinzaine.
+
+              On double plutôt que de viser large : un plafond haut n'est pas
+              gratuit, il autorise l'emballement que ce garde-fou existe pour
+              borner. À 7,7 tokens/s, une fuite se paie en minutes.
+            */
+            plafondDeGeneration: 4096,
         }));
 
     /*

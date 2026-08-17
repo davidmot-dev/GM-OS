@@ -99,6 +99,17 @@ export class AIService {
      * Un schéma, lui, interdit la clé de trop et la prose **par construction**.
      */
     schema?: Record<string, unknown>,
+    /**
+     * Le plafond de génération, quand l'appelant sait qu'il demande gros.
+     *
+     * **Mesuré le 2026-08-17 sur la Forge de campagne.** Le défaut de 2048
+     * tokens tenait pour 143 réponses sur 144 — et le groupe `lieux` a été coupé
+     * à 8 091 caractères. Son commentaire d'origine visait l'autre forge : *« un
+     * fragment de pilote fait quelques centaines de tokens »*. Une forge qui rend
+     * des LISTES n'a pas le même appétit, et personne ne pouvait le dire :
+     * la valeur n'était réglable nulle part.
+     */
+    plafondDeGeneration?: number,
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
     const TIMEOUT_MS = 2700000; // 45 minutes
@@ -116,7 +127,7 @@ export class AIService {
     console.log(`[AIService] Sending ${activeProvider} request (${prompt.length + systemPrompt.length} chars)...`);
 
     return Promise.race([
-      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema),
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration),
       new Promise<AIResponse>((_, reject) => 
         setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 45min.`)), TIMEOUT_MS)
       )
@@ -132,6 +143,7 @@ export class AIService {
     _lite?: boolean,
     attendJson: boolean = false,
     schema?: Record<string, unknown>,
+    plafondDeGeneration?: number,
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -173,7 +185,15 @@ export class AIService {
           // If needed, we'll have to upgrade the bridge or use proxyRequest for OpenAI-compatible Ollama Cloud providers.
           const text = await window.appBridge.ai.ollamaChat(model, [
             { role: 'user', content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}` }
-          ], endpoint, attendJson ? { json: true, ...(schema ? { schema } : {}) } : undefined);
+          ], endpoint, attendJson || plafondDeGeneration
+            ? {
+                ...(attendJson ? { json: true } : {}),
+                ...(schema ? { schema } : {}),
+                // Absent, le service garde son défaut : on ne fait pas payer
+                // une nouveauté aux appelants qui n'ont rien demandé.
+                ...(plafondDeGeneration ? { num_predict: plafondDeGeneration } : {}),
+              }
+            : undefined);
 
           return { text, metadata: { provider: activeProvider, model, endpoint } };
         }
@@ -955,7 +975,19 @@ ${fullContext}`;
      * — une tâche structurée n'a que faire d'une voix de meneur, et celle de la
      * campagne active n'a rien à faire dans la dérivation d'un autre jeu.
      */
-    options: { lite?: boolean; sansPersona?: boolean; schema?: Record<string, unknown> } = {}
+    options: {
+      lite?: boolean;
+      sansPersona?: boolean;
+      schema?: Record<string, unknown>;
+      /**
+       * Le plafond de génération, pour les appelants qui rendent des LISTES.
+       *
+       * La Forge de campagne en est une : mesuré le 2026-08-17, son groupe
+       * `lieux` a été coupé à 8 091 caractères par le défaut de 2048 tokens,
+       * quand 143 autres réponses tenaient dedans.
+       */
+      plafondDeGeneration?: number;
+    } = {}
   ): Promise<T> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -1085,6 +1117,7 @@ ${fullContext}`;
 
     const response = await this.generateText(
       prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona, options.schema,
+      options.plafondDeGeneration,
     );
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     

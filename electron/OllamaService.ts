@@ -133,6 +133,26 @@ export function corpsDeChat(
  * borne. À 7,7 tok/s de décodage, un emballement se paie en dizaines de
  * minutes.
  */
+/**
+ * Le caractère sur lequel une réponse a dégénéré, s'il y en a un.
+ *
+ * **Relevé le 2026-08-17 sur la Forge de campagne.** Le groupe `relations` s'est
+ * terminé par `{"source":"Ser1111111111111111111111111111111` — trois mille
+ * caractères de JSON valide, puis le même caractère répété jusqu'à l'arrêt.
+ * L'appelant n'a vu qu'un « Expected ',' or ']' at position 3430 », qui désigne
+ * le parseur au lieu de la cause.
+ *
+ * **Trente répétitions**, parce qu'un JSON légitime en contient de courtes —
+ * une ligne de tirets dans une description, des zéros dans un identifiant. Une
+ * trentaine du même caractère collée à la fin ne s'écrit pas par hasard.
+ *
+ * On ne regarde que la FIN : une répétition au milieu d'un texte est une
+ * citation, pas une panne.
+ */
+export function caractereQuiBoucle(contenu: string): string | null {
+    return /(.)\1{29,}\s*$/.exec(contenu)?.[1] ?? null;
+}
+
 export const OPTIONS_PAR_DEFAUT = {
     /**
      * Fenêtre demandée. Ne la fixe pas au maximum de l'architecture : le cache
@@ -323,6 +343,54 @@ export class OllamaService {
                     `La réponse de « ${model} » a été coupée à ${plafond} tokens (num_predict) : ` +
                     'le JSON est forcément incomplet. Relever le plafond, ou demander moins à la fois.',
                 );
+            }
+
+            /*
+              **Le modèle a bouclé, et il faut le dire.**
+
+              Relevé le 2026-08-17 sur la Forge de campagne : le groupe
+              `relations` s'est terminé par
+              `{"source":"Ser1111111111111111111111111111111` — trois mille
+              caractères de JSON valide, puis le même caractère répété jusqu'à
+              l'arrêt. L'appelant n'a vu qu'un « Expected ',' or ']' at position
+              3430 », qui désigne le parseur au lieu de la cause.
+
+              **Ce sont NOS options qui l'ouvrent.** `temperature: 0` et
+              `top_k: 1` font un décodage strictement glouton, connu pour tomber
+              dans des boucles absorbantes ; `repeat_penalty: 1` et
+              `repeat_last_n: 0` désactivent ce qui l'en sortirait. Cette
+              désactivation est volontaire — en JSON les tokens se répètent
+              légitimement — mais elle a un prix, et le prix se paie ici. *Le
+              remède d'un défaut ouvre le suivant.*
+
+              On ne corrige pas l'échantillonnage ici : on NOMME la panne, pour
+              qu'elle ne coûte pas une heure la prochaine fois.
+            */
+            if (options?.json || options?.schema) {
+                const boucle = /(.)\1{29,}\s*$/.exec(contenu);
+                if (boucle) {
+                    throw new Error(
+                        `La réponse de « ${model} » dégénère : elle se termine par le caractère ` +
+                        `« ${boucle} » répété. Le décodage glouton (temperature 0, top_k 1) sans ` +
+                        'pénalité de répétition peut boucler. Relancer suffit souvent ; sinon ' +
+                        "desserrer l'échantillonnage ou demander moins à la fois.",
+                    );
+                }
+
+                /*
+                  **Un `done_reason` absent n'est pas un `done_reason` normal.**
+                  Le garde-fou de troncature ne se déclenche que sur `'length'` ;
+                  la réponse qui a bouclé n'en portait aucun, et le journal a
+                  affiché « ← ? ». On ne refuse pas la réponse pour autant — elle
+                  peut être parfaitement valide — mais on cesse de tenir ce
+                  silence pour un succès et on le laisse dans le journal.
+                */
+                if (!data.done_reason) {
+                    console.warn(
+                        `[Ollama] ${model} n'a rendu aucun done_reason — ni « stop » ni « length ». ` +
+                        `Réponse de ${contenu.length} caractères, acceptée mais suspecte.`,
+                    );
+                }
             }
 
             return contenu;
