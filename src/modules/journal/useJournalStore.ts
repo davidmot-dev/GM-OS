@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
+import { natureParDefaut } from './types';
 import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
@@ -192,8 +193,15 @@ export const useJournalStore = create<JournalState>()(
           return state;
         }
 
+        /*
+          **La nature se pose au goulot.** Trente-cinq émetteurs écrivent ici ;
+          leur demander à tous de déclarer un axe de plus aurait produit trente
+          oublis. Le type porte déjà l'essentiel — seuls ceux dont la nature le
+          contredit la disent, et ils sont deux.
+        */
         const newEvent: JournalEvent = {
           ...eventData,
+          nature: eventData.nature ?? natureParDefaut(eventData.type),
           id: uuidv4(),
           timestamp: Date.now(),
         };
@@ -251,9 +259,35 @@ export const useJournalStore = create<JournalState>()(
         const journal = get().journals.find(j => j.id === journalId);
         if (!journal || journal.events.length === 0) return;
 
+        /*
+          **On n'envoie au modèle que ce qui raconte.** Jusqu'ici
+          `summarizeSession(journal.events)` recevait TOUT, « l'initiative a été
+          tirée pour 6 combattants » compris. Trois dégâts, chiffrés dans le plan
+          du 2026-08-08 : l'invite gonfle et se fait tronquer à 16 384 jetons, le
+          signal narratif se dilue, et le résumé risque de raconter des jets de
+          dés.
+
+          Le tri se fait ici et non dans `summarizeSession` : c'est le journal
+          qui sait ce que ses événements valent, le service d'IA ne voit que du
+          texte.
+        */
+        const recit = journal.events.filter(e => (e.nature ?? natureParDefaut(e.type)) === 'chronique');
+        if (recit.length === 0) {
+          /*
+            Rien à raconter n'est pas une panne — une séance de préparation pure
+            existe. On le dit, et on ne paie pas un appel pour l'apprendre.
+          */
+          get().addEvent({
+            type: 'SYSTEM',
+            title: i18next.t('modules:journal.events.ai_summary_failed'),
+            content: 'Aucun événement narratif dans cette séance : il n’y a rien à résumer.',
+          });
+          return;
+        }
+
         try {
           const { aiService } = await import('../ai/AIService');
-          const summary = await aiService.summarizeSession(journal.events);
+          const summary = await aiService.summarizeSession(recit);
 
           set((state) => ({
             journals: state.journals.map(j =>

@@ -630,6 +630,10 @@ export const useCombatStore = create<CombatState>()(
 
                     useJournalStore.getState().addEvent({
                         type: 'COMBAT',
+                        /* Le seul événement de combat qui raconte : ce qui s'est
+                           passé, qui est tombé, qui a survécu. Son type est
+                           mécanique, sa nature ne l'est pas. */
+                        nature: 'chronique',
                         title: scene ? `Combat : ${scene.titre}` : 'Combat : Résumé de fin',
                         content: summary,
                         metadata: {

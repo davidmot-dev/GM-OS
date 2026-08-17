@@ -11,6 +11,45 @@ export type JournalEventType =
   | 'ORACLE';
 
 /**
+ * Ce qu'un événement est, indépendamment de son sujet.
+ *
+ * **On ne supprime pas, on distingue** (§ 4.3 du plan du 2026-08-08). Le journal
+ * sert deux usages qui ne veulent pas la même granularité : *pendant* la partie
+ * c'est un fil qu'on regarde, et « initiative tirée » confirme que l'action est
+ * passée ; *après*, c'est la matière de la chronique, et la même ligne est du
+ * bruit. Filtrer à la lecture aurait fait perdre le premier usage pour servir le
+ * second.
+ *
+ * C'est cet axe qui permet de n'envoyer à un modèle que ce qui raconte —
+ * aujourd'hui `summarizeSession` lui envoie tout, jets de dés compris.
+ */
+export type NatureDeLEvenement = 'trace' | 'chronique';
+
+/**
+ * La nature qu'on retient quand l'émetteur ne la déclare pas.
+ *
+ * **Un défaut par défaut, et non trente sites à instruire.** Le `type` porte
+ * déjà l'essentiel de l'information ; seuls les émetteurs dont la nature
+ * contredit leur type ont à le dire — le résumé de fin de combat, par exemple,
+ * qui est du récit sous un type mécanique.
+ *
+ * `COMBAT` retombe sur `trace` parce que le cas courant est le tirage
+ * d'initiative et les chutes de points de vie ; ses deux exceptions narratives
+ * se déclarent. `ORACLE` aussi : consulter l'Oracle est un geste de meneur, pas
+ * un fait de la fiction — à rebasculer si l'usage montre le contraire.
+ */
+export function natureParDefaut(type: JournalEventType): NatureDeLEvenement {
+  switch (type) {
+    case 'NPC':
+    case 'LOCATION':
+    case 'NOTE':
+      return 'chronique';
+    default:
+      return 'trace';
+  }
+}
+
+/**
  * Représente un événement unique dans le journal de session.
  */
 export interface JournalEvent {
@@ -23,6 +62,14 @@ export interface JournalEvent {
   title: string;
   /** Contenu textuel ou Markdown */
   content: string;
+  /**
+   * Trace mécanique ou matière de chronique.
+   *
+   * Facultative à l'émission — `addEvent` la déduit du type quand elle manque —
+   * mais **toujours présente sur un événement enregistré**. Les émetteurs dont
+   * la nature contredit leur type la déclarent.
+   */
+  nature?: NatureDeLEvenement;
   /** Données additionnelles (ex: URLs d'images, IDs d'entités) */
   metadata?: Record<string, unknown>;
   /** État de favori pour l'affichage rapide */
