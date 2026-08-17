@@ -8,6 +8,7 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 import SessionClueDeck from './SessionClueDeck';
+import PanneauDeTrameEnCours from './PanneauDeTrameEnCours';
 
 const SessionWorkspace: React.FC = () => {
     const { t } = useTranslation();
@@ -159,6 +160,18 @@ const SessionWorkspace: React.FC = () => {
 
                 </div>
             </div>
+
+            {/*
+                **Où on en est dans l'histoire, pendant qu'on joue.**
+
+                Relevé par David le 2026-08-17 : il déclarait son acte et ses
+                scènes en préparation, lançait la séance, et arrivait sur cet
+                écran — qui ne mentionnait ni `actes` ni `scenes`, pas une
+                ligne. Le plan existait, on le perdait de vue au moment de
+                jouer. Ce panneau vient au-dessus des indices parce que la
+                question « où sommes-nous » précède toujours « que trouvent-ils ».
+            */}
+            <PanneauDeTrameEnCours session={session} />
 
             {/* Session Clues Deck (v5.2) */}
             <SessionClueDeck />

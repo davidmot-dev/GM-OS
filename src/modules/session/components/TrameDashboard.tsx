@@ -1,14 +1,16 @@
 import React from 'react';
 import {
     Layers, Plus, ChevronUp, ChevronDown, Trash2, Users, Key,
-    Clapperboard, CheckCircle2, Circle, Sparkles, CornerDownRight,
+    Clapperboard, CheckCircle2, Circle, Sparkles, CornerDownRight, Play, Square, Copy,
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import {
-    actesOrdonnes, scenesOrdonnees, remplissageDeLaScene, scenesEmportees,
+    actesOrdonnes, scenesOrdonnees, scenesEmportees,
+    etatDeLaScene, closeSansAvoirEteJouee, scenesACloreAvecLActe,
 } from '../logic/trame';
+import PastilleDePreparation from './trame/PastilleDePreparation';
 import type { Acte, Scene } from '../../../types/trame.types';
 
 /**
@@ -28,11 +30,20 @@ import type { Acte, Scene } from '../../../types/trame.types';
  */
 const TrameDashboard: React.FC = () => {
     const {
-        actes, scenes, campaigns, activeCampaignId, atlasMaps, entities, clues,
+        actes, scenes, campaigns, activeCampaignId, atlasMaps, entities, clues, sessions, players,
         ajouterActe, modifierActe, supprimerActe, deplacerActe,
         ajouterScene, modifierScene, supprimerScene, deplacerScene,
+        ouvrirLaScene, terminerLaScene, clonerLaScene,
     } = useSessionOSStore();
     const moments = useStoryboardStore(s => s.moments);
+
+    /*
+      La séance active, pour que les passages ouverts d'ici portent son nom.
+      Sans elle on ouvre quand même — préparer sa trame un dimanche est
+      légitime — mais le passage restera anonyme, et le journal ne saura pas à
+      quelle soirée le rattacher.
+    */
+    const seanceActive = sessions.find(s => s.campaignId === activeCampaignId && s.status === 'active');
 
     const [acteOuvert, setActeOuvert] = React.useState<string | null>(null);
     const [selection, setSelection] = React.useState<{ type: 'acte' | 'scene'; id: string } | null>(null);
@@ -45,6 +56,10 @@ const TrameDashboard: React.FC = () => {
     // l'erreur, et le lien serait ensuite invisible à la relecture.
     const mesLieux = atlasMaps.filter(m => m.campaignId === activeCampaignId);
     const mesPnj = entities.filter(e => e.campaignId === activeCampaignId);
+    const mesPersonnages = players
+        .flatMap(p => p.characters ?? [])
+        .filter(c => c.campaignId === activeCampaignId)
+        .map(c => ({ id: c.id, name: c.name }));
     const mesIndices = clues.filter(c => c.campaignId === activeCampaignId);
     const mesAmbiances = moments.filter(m => m.campaignId === activeCampaignId);
 
@@ -68,6 +83,36 @@ const TrameDashboard: React.FC = () => {
     const creerScene = (acteId: string) => {
         const id = ajouterScene(acteId, 'Nouvelle scène');
         if (id) setSelection({ type: 'scene', id });
+    };
+
+    /*
+      **Achever un acte termine toutes ses scènes** depuis le 2026-08-17, y
+      compris celles que le groupe n'a jamais visitées. C'est une cascade au même
+      titre que la suppression, donc elle s'annonce — sinon on découvre après
+      coup que six scènes viennent d'être barrées.
+
+      Dé-marquer ne demande rien : ça ne ressuscite aucune scène, faute de savoir
+      lesquelles avaient été closes par l'acte et lesquelles l'étaient déjà.
+    */
+    const demanderAchevementActe = (acte: Acte) => {
+        if (acte.acheve) {
+            modifierActe(acte.id, { acheve: false });
+            return;
+        }
+        const { total, enCours, jamaisJouees } = scenesACloreAvecLActe(scenes, acte.id);
+        if (total === 0) {
+            modifierActe(acte.id, { acheve: true });
+            return;
+        }
+        const details = [
+            enCours.length > 0 ? `${enCours.length} en cours` : '',
+            jamaisJouees.length > 0 ? `${jamaisJouees.length} jamais jouée${jamaisJouees.length > 1 ? 's' : ''}` : '',
+        ].filter(Boolean).join(', ');
+        gmConfirm(
+            `Achever « ${acte.titre} » terminera ses ${total} scène${total > 1 ? 's' : ''}`
+            + (details ? ` (${details})` : '') + '.',
+            () => modifierActe(acte.id, { acheve: true }),
+        );
     };
 
     /** La confirmation dit ce qu'elle coûte, au lieu de demander un accord à l'aveugle. */
@@ -168,6 +213,13 @@ const TrameDashboard: React.FC = () => {
                                                     supprimerScene(scene.id);
                                                     setSelection(null);
                                                 })}
+                                                onBasculerLEtat={() => (etatDeLaScene(scene) === 'en-cours'
+                                                    ? terminerLaScene(scene.id)
+                                                    : ouvrirLaScene(scene.id, seanceActive?.id))}
+                                                onCloner={() => {
+                                                    const id = clonerLaScene(scene.id);
+                                                    if (id) setSelection({ type: 'scene', id });
+                                                }}
                                             />
                                         ))}
                                         <button
@@ -211,7 +263,7 @@ const TrameDashboard: React.FC = () => {
                                 />
                             </Champ>
                             <button
-                                onClick={() => modifierActe(acteSelectionne.id, { acheve: !acteSelectionne.acheve })}
+                                onClick={() => demanderAchevementActe(acteSelectionne)}
                                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-app-border/20 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
                             >
                                 {acteSelectionne.acheve ? <CheckCircle2 size={14} className="text-emerald-400" /> : <Circle size={14} />}
@@ -220,6 +272,7 @@ const TrameDashboard: React.FC = () => {
                             {/* On n'efface pas un acte joué : il reste lisible, barré. */}
                             <p className="text-[11px] text-app-text/30 italic leading-relaxed">
                                 Un acte achevé reste dans la trame et se relit — c'est lui qui dit d'où la campagne vient.
+                                Ses scènes se terminent avec lui.
                             </p>
                         </div>
                     )}
@@ -229,6 +282,7 @@ const TrameDashboard: React.FC = () => {
                             scene={sceneSelectionnee}
                             lieux={mesLieux}
                             pnj={mesPnj}
+                            personnages={mesPersonnages}
                             indices={mesIndices}
                             ambiances={mesAmbiances}
                             onChange={updates => modifierScene(sceneSelectionnee.id, updates)}
@@ -261,11 +315,12 @@ const Champ: React.FC<{ label: string; children: React.ReactNode }> = ({ label, 
  * scène ordinaire peu remplie, et c'est ce que la pastille montre. Rien
  * n'oblige à la remplir.
  */
-function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprimer }: {
+function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprimer, onBasculerLEtat, onCloner }: {
     scene: Scene; actif: boolean;
     onSelect: () => void; onMonter: () => void; onDescendre: () => void; onSupprimer: () => void;
+    onBasculerLEtat: () => void; onCloner: () => void;
 }) {
-    const taux = remplissageDeLaScene(scene);
+    const etat = etatDeLaScene(scene);
     return (
         <div
             onClick={onSelect}
@@ -273,16 +328,40 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
                 actif ? 'bg-accent/15 border border-accent/30' : 'border border-transparent hover:bg-white/5'
             }`}
         >
+            <PastilleDePreparation scene={scene} />
+            {/* L'état de jeu se lit ici, à côté de la préparation et jamais
+                confondu avec elle : une scène bien préparée n'est pas une scène
+                déjà traversée. */}
             <span
-                title={`Préparation : ${Math.round(taux * 100)} %`}
-                className="w-2 h-2 rounded-full shrink-0"
-                style={{ backgroundColor: `color-mix(in srgb, var(--accent, #d97706) ${Math.round(taux * 100)}%, transparent)`, outline: '1px solid rgba(255,255,255,.15)' }}
-            />
-            <span className="flex-1 min-w-0 text-xs truncate">{scene.titre}</span>
+                className={`flex-1 min-w-0 text-xs truncate ${
+                    etat === 'terminee'
+                        ? `line-through ${closeSansAvoirEteJouee(scene) ? 'text-app-text/20' : 'text-app-text/40'}`
+                        : ''
+                }`}
+                title={closeSansAvoirEteJouee(scene) ? 'Close avec son acte, sans avoir été jouée' : undefined}
+            >{scene.titre}</span>
+            {etat === 'en-cours' && (
+                <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
+            )}
+            {etat === 'en-pause' && (
+                <span className="text-[8px] font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
+            )}
             {scene.origine === 'improvisee' && (
                 <span className="text-[8px] font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
             )}
             <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
+                {/*
+                    Le même geste qu'en séance, là où les scènes vivent. On peut
+                    préparer sa trame et y ouvrir une scène : rien n'oblige à
+                    passer par l'espace de jeu, et refuser ici aurait fait de cet
+                    écran une vue en lecture seule sur son propre objet.
+                */}
+                <button
+                    onClick={onBasculerLEtat}
+                    title={etat === 'en-cours' ? 'Terminer la scène' : etat === 'terminee' ? 'Rouvrir la scène' : 'Commencer la scène'}
+                    className={`p-1 rounded ${etat === 'en-cours' ? 'text-emerald-400 hover:text-red-300' : 'text-app-text/30 hover:text-emerald-300'}`}
+                >{etat === 'en-cours' ? <Square size={12} /> : <Play size={12} />}</button>
+                <button onClick={onCloner} title="Cloner la scène — une copie vierge, juste après" className="p-1 rounded text-app-text/30 hover:text-app-text"><Copy size={12} /></button>
                 <button onClick={onMonter} title="Monter" className="p-1 rounded text-app-text/30 hover:text-app-text"><ChevronUp size={12} /></button>
                 <button onClick={onDescendre} title="Descendre" className="p-1 rounded text-app-text/30 hover:text-app-text"><ChevronDown size={12} /></button>
                 <button onClick={onSupprimer} title="Supprimer la scène" className="p-1 rounded text-app-text/30 hover:text-red-400"><Trash2 size={12} /></button>
@@ -295,10 +374,11 @@ const EditeurDeScene: React.FC<{
     scene: Scene;
     lieux: { id: string; name: string }[];
     pnj: { id: string; name: string }[];
+    personnages: { id: string; name: string }[];
     indices: { id: string; title: string }[];
     ambiances: { id: string; name: string }[];
     onChange: (updates: Partial<Scene>) => void;
-}> = ({ scene, lieux, pnj, indices, ambiances, onChange }) => {
+}> = ({ scene, lieux, pnj, personnages, indices, ambiances, onChange }) => {
     const bascule = (liste: string[], id: string) =>
         liste.includes(id) ? liste.filter(x => x !== id) : [...liste, id];
 
@@ -344,6 +424,23 @@ const EditeurDeScene: React.FC<{
                 </Champ>
             </div>
             {/* On lie une ambiance, on ne la duplique pas : la même sert plusieurs scènes. */}
+
+            {/*
+                **Qui est là, du côté des joueurs.** Sans ce champ, deux scènes
+                ouvertes en même temps — un groupe séparé — ne disent pas qui est
+                où, et c'est pourtant la seule chose que le meneur relise à ce
+                moment-là. Même geste que les PNJ, à dessein : deux listes de
+                présence qui se rempliraient différemment finiraient par se
+                contredire.
+            */}
+            <Cases
+                icone={<Users size={12} />}
+                label="Personnages présents"
+                vide="Aucun personnage rattaché à cette campagne."
+                options={personnages.map(p => ({ id: p.id, label: p.name }))}
+                choisis={scene.personnagesIds ?? []}
+                onBascule={id => onChange({ personnagesIds: bascule(scene.personnagesIds ?? [], id) })}
+            />
 
             <Cases
                 icone={<Users size={12} />}

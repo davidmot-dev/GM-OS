@@ -9,6 +9,7 @@ import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
 import { tousLesPilotes } from '../store/tousLesPilotes';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { scenesDansLEtat, actesOrdonnes } from '../logic/trame';
 
 const CampaignCockpit: React.FC = () => {
     const { t } = useTranslation();
@@ -22,7 +23,9 @@ const CampaignCockpit: React.FC = () => {
         applySystemSnapshot,
         decks,
         customGameDrivers,
-        customSheetTemplates
+        customSheetTemplates,
+        scenes,
+        actes
     } = useSessionOSStore();
     const { setActiveModule } = useSessionStore();
     const { showCustom, showConfirm, customVariant, type: modalType } = useModalStore();
@@ -66,6 +69,24 @@ const CampaignCockpit: React.FC = () => {
     // Find active session for progress (mock logic for now)
     const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId && s.status === 'active') : null;
     const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
+
+    /**
+     * La trace hélicoptère : où en est l'histoire, d'un coup d'œil.
+     *
+     * Le rail est visible en permanence à côté de l'espace de jeu — c'est donc
+     * lui qui doit répondre à « où en suis-je » sans qu'on change d'écran. Il ne
+     * porte que des nombres : les gestes vivent dans le panneau de séance, et
+     * offrir ici un second endroit pour ouvrir une scène en ferait deux à tenir
+     * d'accord.
+     */
+    const scenesEnCours = scenesDansLEtat(scenes, actes, activeCampaignId, 'en-cours').length;
+    const scenesEnPause = scenesDansLEtat(scenes, actes, activeCampaignId, 'en-pause').length;
+    const acteEnCours = activeSession?.acteId
+        ? actesOrdonnes(actes, activeCampaignId).findIndex(a => a.id === activeSession.acteId)
+        : -1;
+    const acteDeLaSeance = acteEnCours >= 0
+        ? actesOrdonnes(actes, activeCampaignId)[acteEnCours]
+        : undefined;
 
     return (
         <aside className="flex-1 min-h-0 premium-glass border-r-0 flex flex-col">
@@ -230,7 +251,29 @@ const CampaignCockpit: React.FC = () => {
                         <motion.button
                             variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
                             onClick={() => showConfirm(
-                                t('modules:session.cockpit.session_done_confirm'),
+                                /*
+                                  **Le garde-fou de fin de séance.**
+
+                                  Une séance qui s'arrête SUSPEND ses scènes, elle
+                                  ne les termine pas : elles repartiront à la
+                                  prochaine ouverture. La conséquence assumée est
+                                  qu'une scène oubliée en pause se rallumera des
+                                  semaines plus tard, indiscernable d'une reprise
+                                  voulue.
+
+                                  D'où ce rappel au seul moment où on peut encore
+                                  trancher en connaissance de cause. *On préfère
+                                  montrer avant que deviner après.*
+                                */
+                                [
+                                    t('modules:session.cockpit.session_done_confirm'),
+                                    scenesEnPause > 0
+                                        ? `${scenesEnPause} scène${scenesEnPause > 1 ? 's' : ''} restera${scenesEnPause > 1 ? 'ont' : ''} `
+                                          + 'ouverte' + (scenesEnPause > 1 ? 's' : '') + ' et reprendra'
+                                          + (scenesEnPause > 1 ? 'ont' : '')
+                                          + ' à la prochaine séance. Termine celles qui sont finies depuis la trame.'
+                                        : '',
+                                ].filter(Boolean).join('\n\n'),
                                 () => updateSession(activeSession.id, { status: 'done' }),
                                 undefined,
                                 t('modules:session.cockpit.confirm_finish'),
@@ -245,7 +288,45 @@ const CampaignCockpit: React.FC = () => {
                             <Play size={20} fill="currentColor" className="text-emerald-500 relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-transform" />
                             <span className="text-sm font-bold uppercase tracking-tighter text-emerald-400 relative z-10 drop-shadow-md">{t('modules:session.cockpit.active_session')}</span>
                         </motion.button>
-                        
+
+                        {/*
+                            **Où en est l'histoire — la vue hélicoptère.**
+
+                            Le rail reste visible pendant qu'on joue : c'est donc
+                            ici que « où en suis-je » doit se répondre sans
+                            changer d'écran. Que des nombres, et un clic vers la
+                            trame — les gestes vivent dans le panneau de séance,
+                            et un second endroit pour ouvrir une scène ferait
+                            deux écrans à tenir d'accord.
+                        */}
+                        {(acteDeLaSeance || scenesEnCours > 0 || scenesEnPause > 0) && (
+                            <button
+                                onClick={() => setCurrentView('trame')}
+                                title="Ouvrir la trame"
+                                className="flex flex-col gap-1 px-3 py-2.5 rounded-lg w-full text-left transition-all text-app-text/50 hover:bg-accent/10 hover:text-accent border border-white/5"
+                            >
+                                {acteDeLaSeance && (
+                                    <span className="text-[11px] font-bold truncate w-full">
+                                        <span className="font-mono opacity-50 mr-1.5">
+                                            {String(acteEnCours + 1).padStart(2, '0')}
+                                        </span>
+                                        {acteDeLaSeance.titre}
+                                    </span>
+                                )}
+                                <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest">
+                                    {scenesEnCours > 0 && (
+                                        <span className="text-emerald-400">{scenesEnCours} en cours</span>
+                                    )}
+                                    {scenesEnPause > 0 && (
+                                        <span className="opacity-50">{scenesEnPause} en pause</span>
+                                    )}
+                                    {scenesEnCours === 0 && scenesEnPause === 0 && (
+                                        <span className="opacity-40">aucune scène ouverte</span>
+                                    )}
+                                </span>
+                            </button>
+                        )}
+
                         <button
                             onClick={() => showCustom('session-notes')}
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/60 hover:bg-accent/10 hover:text-accent"

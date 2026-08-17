@@ -1,7 +1,8 @@
 import React from 'react';
 import { ExternalLink, AlertTriangle } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { actesOrdonnes, scenesOrdonnees, remplissageDeLaScene, repartirLesScenesPrevues } from '../logic/trame';
+import { actesOrdonnes, scenesOrdonnees, repartirLesScenesPrevues } from '../logic/trame';
+import PastilleDePreparation from './trame/PastilleDePreparation';
 import type { GameSession } from '../../../types/session.types';
 import type { Scene } from '../../../types/trame.types';
 
@@ -122,7 +123,6 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
 };
 
 const CaseDeScene: React.FC<{ scene: Scene; choisie: boolean; onBascule: () => void }> = ({ scene, choisie, onBascule }) => {
-    const taux = remplissageDeLaScene(scene);
     return (
         <button
             onClick={onBascule}
@@ -132,14 +132,7 @@ const CaseDeScene: React.FC<{ scene: Scene; choisie: boolean; onBascule: () => v
                     : 'bg-app-bg/30 border-app-border/20 text-app-text/50 hover:text-app-text/80'
             }`}
         >
-            <span
-                title={`Préparation : ${Math.round(taux * 100)} %`}
-                className="w-2 h-2 rounded-full shrink-0"
-                style={{
-                    backgroundColor: `color-mix(in srgb, var(--accent, #d97706) ${Math.round(taux * 100)}%, transparent)`,
-                    outline: '1px solid rgba(255,255,255,.15)',
-                }}
-            />
+            <PastilleDePreparation scene={scene} />
             <span className="flex-1 min-w-0 text-sm truncate">{scene.titre}</span>
             {scene.origine === 'improvisee' && (
                 <span className="text-[8px] font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
