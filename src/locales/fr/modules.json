@@ -229,7 +229,7 @@
       "ai_unavailable": "Le Cortex est indisponible pour le moment."
     },
     "report": {
-      "header": "### âš”ï¸ Rapport de Combat - {{date}}\n\n",
+      "header": "### ⚔️ Rapport de Combat - {{date}}\n\n",
       "round": "**Fin du Round :** {{round}}\n\n",
       "participants": "#### Participants :\n",
       "players_section": "\n**Alliés & Joueurs :**\n",
@@ -625,8 +625,8 @@
       "clock_status_content": "Jauges actives :\n{{clockContent}}",
       "whiteboard_save": "Sauvegarde Whiteboard",
       "whiteboard_save_content": "Une copie du Whiteboard a été archivée avec cette session.",
-      "ai_summary": "âœ¨ Résumé Narratif (IA)",
-      "ai_summary_failed": "âš ï¸ Échec du résumé IA",
+      "ai_summary": "✨ Résumé Narratif (IA)",
+      "ai_summary_failed": "⚠️ Échec du résumé IA",
       "ai_summary_error": "Une erreur est survenue lors de la génération du résumé narratif."
     },
     "messages": {
@@ -1631,17 +1631,17 @@
       "item_transfer_content": "{{from}} a donné {{item}} à {{to}}.",
       "card_draw_title": "Tirage : {{card}}",
       "card_draw_content": "Paquet : **{{deck}}**\nRésultat : {{card}}",
-      "impact_title": "ðŸ’¥ Impact sur {{name}}",
-      "impact_content": "HP : {{hp}} / {{max}} â€” État : {{state}}"
+      "impact_title": "💥 Impact sur {{name}}",
+      "impact_content": "HP : {{hp}} / {{max}} — État : {{state}}"
     },
     "messages": {
       "campaign_activated": "Campagne activée",
       "campaign_activated_desc": "La campagne \"{{name}}\" est maintenant active.",
       "campaign_deleted": "Campagne \"{{name}}\" et ses données liées ont été supprimées.",
       "snapshot_restored": "État du système restauré avec succès !",
-      "navigation": "ðŸ“ Navigation: {{name}}",
+      "navigation": "📍 Navigation: {{name}}",
       "navigation_desc": "Le groupe se déplace vers {{name}}.",
-      "quick_navigation": "ðŸ“ Navigation Rapide: {{name}}",
+      "quick_navigation": "📍 Navigation Rapide: {{name}}",
       "quick_navigation_desc": "Accès direct à la carte {{name}} depuis le Master Cockpit."
     },
     "npc_gallery": {
@@ -1989,8 +1989,8 @@
       "status": {
         "active": "ACTIVE",
         "delete_confirm": "Supprimer définitivement \"{{name}}\" ?",
-        "nexus_ready_tooltip": "{{count}} média(s) détecté(s) â€” Export Nexus complet disponible",
-        "nexus_lite_tooltip": "Aucun fichier média â€” Export Nexus léger (JSON uniquement)"
+        "nexus_ready_tooltip": "{{count}} média(s) détecté(s) — Export Nexus complet disponible",
+        "nexus_lite_tooltip": "Aucun fichier média — Export Nexus léger (JSON uniquement)"
       }
     },
     "template_dashboard": {
@@ -2332,8 +2332,8 @@
       },
       "nexus": {
         "ready": "Nexus-Ready",
-        "ready_tooltip": "{{count}} fichier(s) média détecté(s) â€” Export Nexus complet disponible",
-        "light_tooltip": "Aucun fichier média â€” Export Nexus léger (JSON uniquement)",
+        "ready_tooltip": "{{count}} fichier(s) média détecté(s) — Export Nexus complet disponible",
+        "light_tooltip": "Aucun fichier média — Export Nexus léger (JSON uniquement)",
         "select_file": "Sélectionnez un fichier .gmos..."
       }
     },
@@ -2429,11 +2429,11 @@
         "project_off": "Projection coupée",
         "reveal_warning": "Révelez l'indice avant de le projeter",
         "title_required": "Le titre est requis",
-        "wiki_import": "Fragment importé du Wiki ðŸ“–",
-        "location_import": "Lieu prêt à l'import ðŸ“"
+        "wiki_import": "Fragment importé du Wiki 📖",
+        "location_import": "Lieu prêt à l'import 📍"
       },
       "journal": {
-        "reveal_log": "ðŸ”Ž Indice Révélé : {{title}}",
+        "reveal_log": "🔎 Indice Révélé : {{title}}",
         "reveal_log_content": "**Moment :** {{moment}}\n\n**Description :** {{content}}"
       },
       "delete_confirm": "Voulez-vous vraiment supprimer cet indice ?"
@@ -2867,7 +2867,7 @@
       "stop": "Arrêter"
     },
     "projection": {
-      "active": "Projection Active â€¢ {{target}}",
+      "active": "Projection Active • {{target}}",
       "player_hub": "Player Hub",
       "monitor": "Moniteur",
       "choose_dest": "Choisissez la destination pour projeter le Whiteboard :",
