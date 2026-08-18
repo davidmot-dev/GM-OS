@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
+import {
+    raconterLeCombat, ajouterUnCoup, estTombe, type FaitsDArmes,
+} from './logic/RecitDuCombat';
 import type { Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
 import { 
     type Combatant, 
@@ -303,6 +306,22 @@ interface CombatState {
         currentTurnIdx: number;
         round: number;
         carte?: { mapUrl: string | null; mapName: string | null; isVideo: boolean; tokens: unknown[] };
+        /**
+         * Ce combat garé a déjà son récit au journal.
+         *
+         * Voyage avec le plateau, et non à côté : un drapeau global serait faux
+         * dès la première bascule — soit il resterait levé et le combat de la
+         * scène suivante ne s'écrirait jamais, soit il retomberait et revenir
+         * sur un combat déjà raconté le raconterait deux fois.
+         */
+        dejaConsigne?: boolean;
+        /**
+         * Ce que ce plateau-là a encaissé.
+         *
+         * Même raison de voyager avec lui : les coups pris dans le hangar ne
+         * doivent pas apparaître dans le récit du combat de la cave.
+         */
+        faitsDArmes?: Record<string, FaitsDArmes>;
     }>;
     /** Index du combattant dont c'est le tour */
     currentTurnIdx: number;
@@ -324,6 +343,45 @@ interface CombatState {
     updateCombatant: (id: string, updates: Partial<Combatant>) => void;
     /** Vide la liste complète des combattants et génère un rapport dans le Journal */
     clearCombatants: () => void;
+    /**
+     * Écrit au journal le récit du combat en cours — **une seule fois**.
+     *
+     * C'est le seul événement de combat de nature `chronique`, donc le seul que
+     * le résumé par IA reçoive. Il n'était produit que par `clearCombatants`,
+     * derrière le bouton rouge de réinitialisation : terminer un combat par le
+     * bouton « Fin de combat » n'en laissait aucune trace narrative.
+     */
+    consignerLeCombat: () => void;
+    /**
+     * Le combat courant a déjà son récit au journal.
+     *
+     * Évite le doublon quand le meneur termine son combat puis vide le plateau.
+     * Retombe à `false` quand le plateau repart à zéro.
+     */
+    dejaConsigne: boolean;
+    /**
+     * Ce que chaque combattant a encaissé pendant CE combat, par identifiant.
+     *
+     * **Décision de David du 2026-08-18** : le détail des coups ne doit pas
+     * entrer dans le résumé, mais le récit du combat doit en tenir compte pour
+     * raconter quelque chose d'intéressant. On agrège donc au fil de l'eau —
+     * quatre nombres par combattant — au lieu d'envoyer trente lignes de trace
+     * au modèle.
+     */
+    faitsDArmes: Record<string, FaitsDArmes>;
+    /**
+     * Compte un coup au crédit du combattant visé.
+     *
+     * **Accepte l'identifiant du combattant ou celui de sa fiche** — entité de
+     * la Galerie ou personnage joueur. Les dégâts arrivent par deux chemins qui
+     * ne désignent pas leur cible de la même façon : le pupitre du tracker
+     * (`applyDamage`, identifiant de combattant) et le panneau de santé de
+     * Session-OS (`handleApplyImpact`, identifiant de fiche). Une seule porte
+     * d'entrée évite d'avoir à choisir laquelle des deux compte vraiment.
+     *
+     * Un coup porté hors combat ne compte pour personne, et c'est sans effet.
+     */
+    noterUnCoup: (cibleId: string, impact: { value: number; isRecovery?: boolean }) => void;
 
     // Initiative
     /** Définit manuellement l'initiative d'un combattant */
@@ -410,6 +468,21 @@ export const useCombatStore = create<CombatState>()(
             isCombatProjected: true,
             sceneId: null,
             combatsGares: {},
+            dejaConsigne: false,
+            faitsDArmes: {},
+
+            noterUnCoup: (cibleId, impact) => {
+                const cible = get().combatants.find(c =>
+                    c.id === cibleId || c.sourceEntityId === cibleId || c.sourcePlayerId === cibleId);
+                if (!cible) return;
+
+                set((state) => ({
+                    faitsDArmes: {
+                        ...state.faitsDArmes,
+                        [cible.id]: ajouterUnCoup(state.faitsDArmes[cible.id], impact),
+                    },
+                }));
+            },
 
             rattacherLeCombat: (sceneId) => {
                 set({ sceneId });
@@ -450,7 +523,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             basculerVersLaScene: (sceneId) => {
-                const { sceneId: courante, combatants, currentTurnIdx, round, combatsGares } = get();
+                const { sceneId: courante, combatants, currentTurnIdx, round, combatsGares, dejaConsigne, faitsDArmes } = get();
                 if (courante === sceneId) return;
 
                 /*
@@ -460,7 +533,13 @@ export const useCombatStore = create<CombatState>()(
                 */
                 const gares = { ...combatsGares };
                 if (courante) {
-                    gares[courante] = { combatants, currentTurnIdx, round, carte: releverLaCarte() };
+                    // Le « déjà raconté » et les compteurs de coups se garent AVEC
+                    // leur plateau : ce sont des faits de ce combat-là, pas de la
+                    // session.
+                    gares[courante] = {
+                        combatants, currentTurnIdx, round, carte: releverLaCarte(),
+                        dejaConsigne, faitsDArmes,
+                    };
                 }
 
                 const repris = gares[sceneId];
@@ -470,6 +549,8 @@ export const useCombatStore = create<CombatState>()(
                     currentTurnIdx: repris?.currentTurnIdx ?? 0,
                     round: repris?.round ?? 1,
                     combatsGares: gares,
+                    dejaConsigne: repris?.dejaConsigne ?? false,
+                    faitsDArmes: repris?.faitsDArmes ?? {},
                 });
                 // Un plateau jamais joué n'a pas de carte à reposer : on laisse
                 // celle qui est là plutôt que de vider l'écran de la table.
@@ -601,49 +682,71 @@ export const useCombatStore = create<CombatState>()(
                 get().broadcastSync();
             },
 
-            clearCombatants: () => {
-                const { combatants, round, sceneId } = get();
+            /*
+              **Le récit du combat, écrit une fois, par quelque porte qu'on sorte.**
 
-                /*
-                  **La scène entre dans le résumé, et c'est tout le point.**
-                  Demande de David du 2026-08-17 : sans elle, le journal savait
-                  dire qu'un combat avait eu lieu, jamais où ni dans quel fil de
-                  l'histoire. Un combat non rattaché le dit franchement plutôt
-                  que de se taire — c'est un défaut de rattachement, pas une
-                  absence de combat.
-                */
+              Il ne vivait que dans `clearCombatants` — c'est-à-dire derrière le
+              bouton rouge **« Reset Combat »** et sa demande de confirmation
+              « voulez-vous vraiment vider la liste des combattants ? ». Le bouton
+              qui s'appelle **« Fin de combat »**, lui, exportait un événement de
+              chronologie et ne touchait pas au journal.
+
+              Conséquence exacte du défaut signalé par David le 2026-08-18 —
+              *« les données de combat ne sont pas prises en compte dans le
+              résumé »* : ce résumé de fin est **le seul événement de combat de
+              nature `chronique`**, donc le seul que `generateAISummary` laisse
+              passer. Terminer ses combats par le bouton qui dit « fin de
+              combat » revenait à n'en jamais rien raconter au modèle.
+
+              *Un artefact narratif accroché à l'action destructrice plutôt qu'à
+              l'action d'achèvement n'est produit que par ceux qui détruisent.*
+
+              `dejaConsigne` garde l'écriture unique : le meneur qui termine son
+              combat **puis** vide le plateau ne doit pas obtenir deux récits du
+              même combat.
+            */
+            consignerLeCombat: () => {
+                const { combatants, round, sceneId, dejaConsigne, faitsDArmes } = get();
+                if (combatants.length === 0 || dejaConsigne) return;
+
                 const scene = sceneId
                     ? (magasinDeSeance()?.scenes ?? []).find(s => s.id === sceneId)
                     : undefined;
 
-                if (combatants.length > 0) {
-                    const survivors = combatants.filter(c => !c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀'));
-                    const casualities = combatants.filter(c => c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀'));
-                    
-                    const summary = [
-                        scene ? `**Scène :** ${scene.titre}` : '_Combat rattaché à aucune scène._',
-                        `Combat terminé après **${round} rounds**.`,
-                        `**Participants :** ${combatants.length}`,
-                        casualities.length > 0 ? `**Pertes :** ${casualities.map(c => c.name).join(', ')}` : '**Pertes :** Aucune',
-                        `**Survivants :** ${survivors.map(c => c.name).join(', ')}`
-                    ].join('\n');
+                const casualities = combatants.filter(estTombe);
 
-                    useJournalStore.getState().addEvent({
-                        type: 'COMBAT',
-                        /* Le seul événement de combat qui raconte : ce qui s'est
-                           passé, qui est tombé, qui a survécu. Son type est
-                           mécanique, sa nature ne l'est pas. */
-                        nature: 'chronique',
-                        title: scene ? `Combat : ${scene.titre}` : 'Combat : Résumé de fin',
-                        content: summary,
-                        metadata: {
-                            round,
-                            totalCombatants: combatants.length,
-                            casualitiesCount: casualities.length,
-                            sceneId: sceneId ?? undefined,
-                        }
-                    });
-                }
+                useJournalStore.getState().addEvent({
+                    type: 'COMBAT',
+                    /* Le seul événement de combat qui raconte : ce qui s'est
+                       passé, qui est tombé, qui a survécu, et ce que chacun a
+                       encaissé pour en arriver là. Son type est mécanique, sa
+                       nature ne l'est pas. */
+                    nature: 'chronique',
+                    title: scene ? `Combat : ${scene.titre}` : 'Combat : Résumé de fin',
+                    content: raconterLeCombat({
+                        titreDeScene: scene?.titre,
+                        round,
+                        combattants: combatants,
+                        faits: faitsDArmes,
+                    }),
+                    metadata: {
+                        round,
+                        totalCombatants: combatants.length,
+                        casualitiesCount: casualities.length,
+                        sceneId: sceneId ?? undefined,
+                    }
+                });
+
+                set({ dejaConsigne: true });
+            },
+
+            clearCombatants: () => {
+                // Vider sans avoir terminé reste une fin de combat : on consigne
+                // avant de perdre le plateau, et la garde évite le doublon quand
+                // « Fin de combat » vient d'être pressé.
+                get().consignerLeCombat();
+
+                const { sceneId } = get();
 
                 /*
                   Le combat est fini : il ne reste pas garé. Sans ce nettoyage,
@@ -653,7 +756,12 @@ export const useCombatStore = create<CombatState>()(
                 const gares = { ...get().combatsGares };
                 if (sceneId) delete gares[sceneId];
 
-                set({ combatants: [], currentTurnIdx: 0, round: 1, sceneId: null, combatsGares: gares });
+                // Le plateau repart à zéro, donc le prochain combat est à écrire
+                // et ses compteurs repartent vides.
+                set({
+                    combatants: [], currentTurnIdx: 0, round: 1, sceneId: null,
+                    combatsGares: gares, dejaConsigne: false, faitsDArmes: {},
+                });
                 get().broadcastSync();
             },
 
@@ -918,6 +1026,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             applyDamage: (amount, type, targetIds) => {
+                const coupsPortes: [string, number][] = [];
                 set((state) => {
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
@@ -954,11 +1063,23 @@ export const useCombatStore = create<CombatState>()(
                             })
                             : c.healthSystem;
 
+                        /*
+                          Le coup est compté APRÈS résistances : c'est ce que le
+                          combattant a réellement pris, et c'est ce nombre-là que
+                          le récit de fin de combat doit annoncer.
+                        */
+                        coupsPortes.push([c.id, finalAmount]);
+
                         return { ...c, hp: newHp, healthSystem, statuses: newStatuses };
                     });
                     return { combatants: newCombatants };
                 });
-                
+
+                // Hors du calcul d'état : `noterUnCoup` écrit lui-même dans le
+                // store, et le faire pendant une mise à jour reviendrait à muter
+                // pendant qu'on se met à jour.
+                coupsPortes.forEach(([id, valeur]) => get().noterUnCoup(id, { value: valeur }));
+
                 // Synchronisation différée pour la stabilité
                 targetIds.forEach(id => get().syncCombatantToSession(id));
                 get().broadcastSync();
@@ -1020,6 +1141,10 @@ export const useCombatStore = create<CombatState>()(
                 // retrouver sa scène, sinon il n'entrera dans aucun résumé.
                 sceneId: state.sceneId,
                 combatsGares: state.combatsGares,
+                // Sinon un rechargement en pleine séance rendrait racontable un
+                // combat déjà raconté, et effacerait ce qu'il a coûté.
+                dejaConsigne: state.dejaConsigne,
+                faitsDArmes: state.faitsDArmes,
             })
         }
     )

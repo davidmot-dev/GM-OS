@@ -1632,7 +1632,8 @@
       "card_draw_title": "Tirage : {{card}}",
       "card_draw_content": "Paquet : **{{deck}}**\nRésultat : {{card}}",
       "impact_title": "💥 Impact sur {{name}}",
-      "impact_content": "HP : {{hp}} / {{max}} — État : {{state}}"
+      "impact_damage": "Encaisse **{{value}}**{{detail}}",
+      "impact_healing": "Récupère **{{value}}**{{detail}}"
     },
     "messages": {
       "campaign_activated": "Campagne activée",

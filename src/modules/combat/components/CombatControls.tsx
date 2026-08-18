@@ -23,6 +23,7 @@ const CombatControls: React.FC = () => {
         nextTurn,
         addCombatant,
         clearCombatants,
+        consignerLeCombat,
         syncCombatantHPToSession,
         propagateStatusToSession,
         isCombatProjected,
@@ -215,6 +216,21 @@ const CombatControls: React.FC = () => {
             type: 'combat',
             involvedEntityIds: combatants.map(c => c.sourceEntityId || c.sourcePlayerId).filter(Boolean) as string[]
         });
+
+        /*
+          **« Fin de combat » raconte enfin le combat au journal.**
+
+          Ce bouton n'écrivait qu'un événement de chronologie. Le récit du
+          combat — le seul événement de combat de nature `chronique`, donc le
+          seul que le résumé par IA reçoive — n'était produit que par
+          `clearCombatants`, c'est-à-dire par le bouton rouge « Reset Combat »
+          d'en dessous. Terminer un combat par le bouton qui dit « fin de
+          combat » revenait à n'en jamais rien raconter.
+
+          L'écriture est unique : vider le plateau ensuite ne redonne pas un
+          second récit du même combat.
+        */
+        consignerLeCombat();
 
         // 🆕 Propagation of statuses (e.g. Mort) to Session OS entities
         propagateStatusToSession();

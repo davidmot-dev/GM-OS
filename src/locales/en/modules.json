@@ -1603,7 +1603,8 @@
       "card_draw_title": "Draw: {{card}}",
       "card_draw_content": "Deck: **{{deck}}**\nResult: {{card}}",
       "impact_title": "💥 Impact on {{name}}",
-      "impact_content": "HP: {{hp}} / {{max}} — State: {{state}}"
+      "impact_damage": "Takes **{{value}}**{{detail}}",
+      "impact_healing": "Recovers **{{value}}**{{detail}}"
     },
     "messages": {
       "campaign_activated": "Campaign activated",

@@ -12,6 +12,7 @@ import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
 import { HealthInterpreter } from '../logic/HealthInterpreter';
+import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { tousLesPilotes } from './tousLesPilotes';
 import type { GameDriver } from '../../../types/drivers';
@@ -590,6 +591,18 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     handleApplyImpact: (targetId, targetType, impact) => {
         const { entities, players } = get();
 
+        /*
+          **Le coup est compté au combat en cours, s'il y en a un.**
+
+          Les dégâts arrivent par deux chemins : le pupitre du tracker, et ce
+          panneau-ci. Le récit de fin de combat — le seul événement de combat que
+          le résumé par IA reçoive — n'aurait connu que le premier, alors que
+          c'est par celui-ci que passent les impacts qu'on voit au journal.
+          `noterUnCoup` accepte l'identifiant de la fiche et ne fait rien si
+          personne sur le plateau ne lui correspond.
+        */
+        (window as any).useCombatStore?.getState?.().noterUnCoup?.(targetId, impact);
+
         if (targetType === 'npc') {
             const entity = entities.find((e) => e.id === targetId);
             if (!entity) return;
@@ -605,10 +618,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 (window as any).useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: entity.name }),
-                    content: i18next.t('modules:session.events.impact_content', { 
-                        hp: newHp, 
-                        max: entity.maxHp, 
-                        state: updatedHealth.state 
+                    content: raconterLImpact(impact, {
+                        hp: newHp, maxHp: entity.maxHp, healthSystem: updatedHealth,
                     }),
                 });
             }
@@ -630,10 +641,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 (window as any).useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: character.name }),
-                    content: i18next.t('modules:session.events.impact_content', { 
-                        hp: newHp, 
-                        max: character.maxHp, 
-                        state: updatedHealth.state 
+                    content: raconterLImpact(impact, {
+                        hp: newHp, maxHp: character.maxHp, healthSystem: updatedHealth,
                     }),
                 });
             }
