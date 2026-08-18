@@ -347,7 +347,18 @@ export class AIService {
    * @throws si le fournisseur n'est pas configuré ou si la génération échoue —
    *         *une panne doit ressembler à une panne.*
    */
-  public async summarizeSession(events: JournalEvent[]): Promise<string> {
+  /**
+   * @param noteFinale La note de conclusion du meneur, **passée par l'appelant**.
+   *
+   * Elle était lue ici sur `journals.find(j => j.id === activeJournalId)` —
+   * c'est-à-dire sur le journal SÉLECTIONNÉ, quand les événements reçus en
+   * paramètre viennent d'un journal désigné par son identifiant. Deux sources
+   * pour un même compte rendu, qui ne coïncident que tant que l'écran les tient
+   * alignées : résumer un journal autrement que par un clic dans la liste y
+   * collait la note d'un autre. *Le service d'IA ne voit que du texte ; c'est au
+   * journal de dire de quel journal il parle.*
+   */
+  public async summarizeSession(events: JournalEvent[], noteFinale?: string): Promise<string> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
@@ -366,14 +377,13 @@ export class AIService {
       })
       .join('\n');
 
-    const journalStore = useJournalStore.getState();
-    const activeJournal = journalStore.journals.find(j => j.id === journalStore.activeJournalId);
+    const note = noteFinale?.trim();
 
-    const summaryPrompt = i18n.language === 'fr' 
+    const summaryPrompt = i18n.language === 'fr'
       ? `En tant que Chroniqueur Expert, transforme ces logs de session de jeu de rôle en un résumé narratif captivant.
     Les événements sont chronologiques. Crée un récit fluide, avec des titres de sections, des moments forts et des développements d'intrigue.
     
-    ${activeJournal?.finalNote ? `IMPORTANT - NOTE FINALE DU MJ :\n"${activeJournal.finalNote}"\nPrends bien en compte ces notes pour conclure le résumé.` : ''}
+    ${note ? `IMPORTANT - NOTE FINALE DU MJ :\n"${note}"\nPrends bien en compte ces notes pour conclure le résumé.` : ''}
  
 
     LOGS DE LA SESSION :
@@ -383,7 +393,7 @@ export class AIService {
       : `As an Expert Chronicler, transform these role-playing session logs into a compelling narrative summary.
     Events are chronological. Create a fluid narrative with section titles, highlights, and plot developments.
     
-    ${activeJournal?.finalNote ? `IMPORTANT - GM FINAL NOTE:\n"${activeJournal.finalNote}"\nTake these notes into account to conclude the summary.` : ''}
+    ${note ? `IMPORTANT - GM FINAL NOTE:\n"${note}"\nTake these notes into account to conclude the summary.` : ''}
  
 
     SESSION LOGS:

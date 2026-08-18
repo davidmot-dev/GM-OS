@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 import { natureParDefaut } from './types';
 import { rendreLeCompteRendu } from './compteRendu';
+import { reparerLesTitres } from './titreDeJournal';
 import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
@@ -300,7 +301,8 @@ export const useJournalStore = create<JournalState>()(
 
         try {
           const { aiService } = await import('../ai/AIService');
-          const summary = await aiService.summarizeSession(recit);
+          // La note du journal qu'on résume, pas celle du journal sélectionné.
+          const summary = await aiService.summarizeSession(recit, journal.finalNote);
 
           set((state) => ({
             journals: state.journals.map(j =>
@@ -399,6 +401,32 @@ export const useJournalStore = create<JournalState>()(
           journals: [newJournal, ...state.journals],
           activeJournalId: id,
         }));
+      },
+
+      /*
+        **Réparer les titres écrits avec un identifiant de campagne.**
+
+        `launchSession` passait `session.campaignId` à `startJournal`, qui compose
+        le titre une fois pour toutes. Corriger l'appelant ne répare que les
+        séances à venir — celles déjà archivées gardaient
+        « c-1187082150026-gtbgs - 18/08 21:59 » pour toujours, alors qu'un titre
+        de journal existe précisément pour être relu des mois plus tard.
+
+        Une action plutôt qu'une migration `persist` : la réparation a besoin des
+        campagnes, qui vivent dans un AUTRE store persisté. Se fier à l'ordre de
+        réhydratation de deux stores indépendants, c'est parier sur un détail
+        d'implémentation ; l'écran, lui, sait qu'il a les deux.
+
+        Idempotente, et **sans aucun appel à `set` quand rien ne change** : elle
+        tourne à chaque ouverture de l'écran, et `set` fabrique un nouvel état
+        même pour un objet vide — donc un rendu de plus et une écriture dans le
+        stockage persisté, à chaque fois, pour rien.
+      */
+      reparerLesTitresDeCampagne: (campagnes) => {
+        const { journals } = get();
+        const repares = reparerLesTitres(journals, campagnes);
+        if (repares === journals) return;
+        set({ journals: repares as Journal[] });
       },
 
       clearJournal: () => set({ journals: [], activeJournalId: null, isRecording: false }),

@@ -69,7 +69,29 @@ function releverLEtatDeFin(campaignId: string | null | undefined): SessionSnapsh
     const clocks = (magasinDHorloges()?.tensions ?? [])
         .map(c => ({ name: c.name, filled: c.filledSegments, total: c.totalSegments }));
 
-    return { presentPCs, sessionEntities, pendingChecklist, clocks };
+    /*
+      **Les notes prises pendant la séance, enfin ramassées.**
+
+      `stopJournal` sait depuis toujours quoi faire de `snapshot.notes` : il en
+      fait un événement `NOTE`, donc de nature `chronique`, donc **la seule
+      matière écrite de la main du meneur qui parte au résumé**. Mais aucun
+      appelant ne remplissait ce champ — `sessionNotes` restait sur la séance,
+      lue par deux écrans et par personne d'autre.
+
+      Le meneur qui note « Milo avoue avoir menti » pendant la partie écrivait
+      donc la phrase la plus utile de la soirée à l'endroit exact où le résumé ne
+      la lirait jamais. *Une branche prête à recevoir une donnée que personne ne
+      lui passe ne se distingue pas d'une branche morte.*
+    */
+    const notes = seance?.sessionNotes?.trim();
+
+    return {
+        ...(notes ? { notes } : {}),
+        presentPCs,
+        sessionEntities,
+        pendingChecklist,
+        clocks,
+    };
 }
 
 /** Ce qui reste devant, lu sur la trame. */
@@ -91,6 +113,8 @@ function magasinDeSeance() {
                 id: string; campaignId: string; status: string;
                 sessionEntityIds?: string[];
                 checklist?: { text: string; isCompleted: boolean }[];
+                /** Ce que le meneur a écrit pendant la partie. */
+                sessionNotes?: string;
             }[];
             players?: { characters?: { name: string; campaignId?: string | null; hp?: number; maxHp?: number }[] }[];
             entities?: { id: string; name: string; campaignId: string; hp?: number; status?: string }[];

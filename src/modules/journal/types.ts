@@ -1,3 +1,5 @@
+import type { CampagneNommee } from './titreDeJournal';
+
 /**
  * Types d'événements enregistrables dans le journal.
  */
@@ -237,6 +239,14 @@ export interface JournalState {
   syncToNotebook: (journalId: string) => Promise<void>;
   /** Met à jour la note de fin de session */
   updateJournalNote: (journalId: string, note: string) => void;
+  /**
+   * Réécrit les titres qui portent un identifiant de campagne au lieu de son nom.
+   *
+   * Les journaux d'avant le 2026-08-18 s'appellent « c-1187082150026-gtbgs -
+   * 18/08 21:59 » : `launchSession` passait l'identifiant à `startJournal`, qui
+   * fige le titre à l'ouverture. Idempotente, et sans effet si rien ne change.
+   */
+  reparerLesTitresDeCampagne: (campagnes: readonly CampagneNommee[]) => void;
   /** Vide tout l'historique des journaux */
   clearJournal: () => void;
 }

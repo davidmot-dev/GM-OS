@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useJournalStore } from './useJournalStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
 import { 
   Book, 
   History, 
@@ -48,12 +49,42 @@ const JournalDashboard: React.FC = () => {
     toggleRecording,
     generateAISummary,
     syncToNotebook,
-    updateJournalNote
+    updateJournalNote,
+    reparerLesTitresDeCampagne
   } = useJournalStore();
+
+  /*
+    **Les journaux d'avant portent un identifiant en guise de titre.**
+
+    `launchSession` passait `session.campaignId` à `startJournal`, qui fige le
+    titre à l'ouverture de la séance : corriger l'appelant ne répare que les
+    séances à venir. On répare ici les anciennes, une fois, à l'ouverture de
+    l'écran — c'est le moment où l'on sait que les deux stores sont là, ce qu'une
+    migration `persist` ne pourrait pas garantir entre deux stores indépendants.
+
+    L'action ne réécrit rien quand il n'y a rien à réécrire, donc cet effet ne se
+    rappelle pas lui-même.
+  */
+  const campagnes = useSessionOSStore(s => s.campaigns);
+  useEffect(() => {
+    reparerLesTitresDeCampagne(campagnes ?? []);
+  }, [campagnes, reparerLesTitresDeCampagne]);
 
   const activeJournal = journals.find(j => j.id === activeJournalId);
   const events = activeJournal?.events || [];
-  const hasAISummary = events.some(e => e.title === t('modules:journal.events.ai_summary'));
+  /*
+    **Le résumé se lit sur son champ, comme partout ailleurs.**
+
+    Ce garde cherchait encore un ÉVÉNEMENT dont le titre égale la traduction de
+    `ai_summary` — la forme d'avant le 2026-08-17, quand le résumé vivait dans
+    `journal.events`. Depuis qu'il vit sur `journal.resumeIA`, la condition est
+    toujours fausse : **le bouton « envoyer au carnet » ne pouvait plus jamais
+    apparaître**, alors que `syncToNotebook` derrière lui fonctionnait.
+
+    Même fragilité que celle déjà corrigée dans `syncToNotebook` : une relation
+    structurelle ne s'établit pas sur une chaîne d'affichage.
+  */
+  const hasAISummary = !!activeJournal?.resumeIA?.trim();
 
   const handleAISummary = async () => {
     if (!activeJournalId || events.length === 0) return;

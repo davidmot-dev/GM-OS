@@ -1,5 +1,6 @@
 import { gmToast } from '../../../stores/useToastStore';
 import { useJournalStore } from '../../journal/useJournalStore';
+import { cloturerLeJournalDeLaSeance } from '../../journal/clotureDeSeance';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useObsidianStore } from '../useObsidianStore';
 import type { SessionOSStore } from '../store/index';
@@ -13,6 +14,16 @@ import { suspendreLesScenes, reprendreLesScenes } from './trame';
 export class SessionManager {
     /**
      * Activates a campaign and sets the initial UI view.
+     *
+     * **Changer de campagne n'arrête PAS une séance** — règle de David du
+     * 2026-08-18. Ce chemin appelait `stopJournal()` dans ses deux branches :
+     * consulter une autre campagne en pleine partie fermait le journal en cours,
+     * et le fermait *nu*, sans instantané ni relevé de ce qui attend. La séance,
+     * elle, continuait — on se retrouvait à jouer sans que rien ne s'enregistre.
+     *
+     * Naviguer n'est pas jouer. Une séance ne se termine que là où elle se
+     * termine : par son statut (`updateSession`) ou parce qu'une autre prend sa
+     * place (`launchSession`).
      */
     static setActiveCampaign(set: any, get: any, id: string | null) {
         const state = get() as SessionOSStore;
@@ -28,21 +39,25 @@ export class SessionManager {
         });
 
         if (id) {
-            const campaign = state.campaigns.find((c) => c.id === id);
-            
             // Sync Obsidian Vault if path is defined
             if (campaign?.obsidianPath) {
                 useObsidianStore.getState().setVaultPath(campaign.obsidianPath);
             }
 
-            useJournalStore.getState().stopJournal();
-            useJournalStore.getState().addEvent({
-                type: 'SYSTEM',
-                title: 'Campagne activée',
-                content: `La campagne "${campaign?.name || id}" est maintenant active.`,
-            });
+            /*
+              Hors séance, il n'y a rien à consigner. `addEvent` laisse passer les
+              `SYSTEM` même à l'arrêt : sans ce garde, feuilleter ses campagnes un
+              mardi soir ajoutait des lignes « Campagne activée » à un journal
+              archivé des semaines plus tôt.
+            */
+            if (useJournalStore.getState().isRecording) {
+                useJournalStore.getState().addEvent({
+                    type: 'SYSTEM',
+                    title: 'Campagne activée',
+                    content: `La campagne "${campaign?.name || id}" est maintenant active.`,
+                });
+            }
         } else {
-            useJournalStore.getState().stopJournal();
             gmToast('Campagne désactivée.', 'info');
         }
     }
@@ -91,14 +106,53 @@ export class SessionManager {
             return c;
         });
 
-        // 3. Init Journal OS
+        const campaign = updatedCampaigns.find(c => c.id === session.campaignId);
+
+        /*
+          **Une seule séance à la fois : celle qui part clôt son journal.**
+
+          Ce chemin déclassait la séance sortante en `done` en réécrivant le
+          tableau en bloc — sans jamais passer par `updateSession`, qui est le
+          seul endroit à savoir clore un journal. Le journal de la séance sortante
+          restait donc **ouvert pour toujours** : pas d'heure de fin, pas de
+          durée, pas d'état des lieux, pas de « ce qui attend ». Puis
+          `startJournal` remplaçait `activeJournalId` et il devenait orphelin.
+          Même famille que l'oubli des scènes noté juste au-dessus, et même
+          remède — ce chemin doit porter les règles qu'il court-circuite.
+
+          **L'appel est synchrone, et l'ordre fait tout** : la clôture lit la
+          séance encore `active` dans le store global pour relever son état, et
+          elle doit s'achever AVANT `startJournal`, sinon elle refermerait le
+          journal qu'on vient d'ouvrir. C'est pourquoi ce n'est pas un
+          `queueMicrotask` comme dans `updateSession` — là-bas, l'appel se fait
+          depuis un calcul d'état et doit en sortir ; ici, non.
+        */
+        // Relancer la séance déjà active la clôt aussi : c'est bien un journal
+        // sortant, celui de la même séance, et `sortante` ne le voit pas.
+        const campagneSortante = sortante?.campaignId
+            ?? (session.status === 'active' ? session.campaignId : undefined);
+        if (campagneSortante) {
+            cloturerLeJournalDeLaSeance(campagneSortante);
+        }
+
+        /*
+          **Le journal porte le NOM de la campagne, pas son identifiant.**
+
+          `startJournal` reçoit ce texte pour en faire le titre du journal — un
+          titre qui se lit dans la liste des séances, et se relit des mois plus
+          tard. On lui passait `session.campaignId`, si bien que chaque séance
+          s'appelait « c-1187082150026-gtbgs — 18/08 21h59 » : illisible, et
+          impossible à rattacher de tête à sa campagne.
+
+          L'identifiant reste la clé, jamais l'étiquette. Il ne sert de repli que
+          si la campagne a disparu entre-temps — mieux vaut un titre laid qu'un
+          titre vide.
+        */
         useJournalStore.getState().startJournal(
-            session.campaignId,
+            campaign?.name || session.campaignId,
             `Session #${session.number}`,
             { publicSummary: session.publicSummary }
         );
-
-        const campaign = updatedCampaigns.find(c => c.id === session.campaignId);
 
         // Sync Obsidian Vault if path is defined
         if (campaign?.obsidianPath) {
