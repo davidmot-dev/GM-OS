@@ -24,8 +24,14 @@ describe('le récit du combat au journal', () => {
         statuses: mort ? [{ id: 'x', name: 'Mort', duration: 99, icon: '💀' }] : [],
     });
 
+    /*
+      `?.` et non `.` : depuis le 2026-08-19 le pupitre écrit aussi ses impacts,
+      dont le titre passe par i18next — que ce fichier n'initialise pas, et qui
+      rend alors `undefined`. Le sujet ici est le récit, pas les traces ; on les
+      écarte sans supposer qu'elles ont un titre.
+    */
     const recits = () => (journal().journals[0]?.events ?? [])
-        .filter(e => e.title.startsWith('Combat :') && e.title !== 'Combat : Initiative');
+        .filter(e => e.title?.startsWith('Combat :') && e.title !== 'Combat : Initiative');
 
     beforeEach(() => {
         useCombatStore.getState().reset();
@@ -99,6 +105,46 @@ describe('le récit du combat au journal', () => {
 
         expect(recits()[0].content).toContain('pas touché');
         expect(recits()[0].content).not.toContain('0 encaissés');
+    });
+
+    /**
+     * **La scène est un champ de premier ordre.**
+     *
+     * § 9 du plan du 2026-08-08 : *« le rattachement événement → scène doit être
+     * un champ de premier ordre, pas une entrée dans `metadata` : c'est une
+     * relation structurelle, pas une donnée accessoire. »* Elle voyageait dans
+     * `metadata` depuis le 2026-08-17.
+     */
+    it('le recit porte sa scene en champ propre, pas dans metadata', () => {
+        store().rattacherLeCombat('scene-A');
+        store().addCombatant(unCombattant('Goule'));
+
+        store().consignerLeCombat();
+
+        expect(recits()[0].sceneId).toBe('scene-A');
+        expect(recits()[0].metadata?.sceneId, 'plus rien à lire dans le sac').toBeUndefined();
+    });
+
+    /* Les compteurs, eux, restent accessoires : ils n'ouvrent aucune relation. */
+    it('les compteurs restent dans metadata', () => {
+        store().rattacherLeCombat('scene-A');
+        store().addCombatant(unCombattant('Goule'));
+        useCombatStore.setState({ round: 3 });
+
+        store().consignerLeCombat();
+
+        expect(recits()[0].metadata).toMatchObject({ round: 3, totalCombatants: 1 });
+    });
+
+    /* Un combat non rattaché n'invente pas de scène — il le dit déjà en toutes
+       lettres dans son texte. */
+    it('un combat sans scene ne porte aucun rattachement', () => {
+        store().addCombatant(unCombattant('Goule'));
+
+        store().consignerLeCombat();
+
+        expect(recits()[0].sceneId).toBeUndefined();
+        expect(recits()[0].content).toContain('_Combat rattaché à aucune scène._');
     });
 
     /* Les coups pris dans le hangar n'appartiennent pas au combat de la cave. */

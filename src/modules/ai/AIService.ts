@@ -6,6 +6,7 @@ import { ragService } from './RAGService';
 import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
 import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
+import { contexteEstVide, type ContexteDeCampagne } from '../journal/contexteDeCampagne';
 import i18n from '../../i18n';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
@@ -358,7 +359,20 @@ export class AIService {
    * collait la note d'un autre. *Le service d'IA ne voit que du texte ; c'est au
    * journal de dire de quel journal il parle.*
    */
-  public async summarizeSession(events: JournalEvent[], noteFinale?: string): Promise<string> {
+  /**
+   * Le compte rendu narratif d'une séance.
+   *
+   * **`contexte` n'est pas décoratif.** Sans lui, l'invite ne disait ni le jeu,
+   * ni la campagne, ni qui étaient les personnages : le modèle a intitulé une
+   * séance d'Alien « Chroniques des Terres Oubliées » et l'a écrite en
+   * heroic-fantasy. *Un modèle à qui l'on ne donne pas le cadre n'en fait pas
+   * l'économie : il en invente un.*
+   */
+  public async summarizeSession(
+    events: JournalEvent[],
+    noteFinale?: string,
+    contexte?: ContexteDeCampagne,
+  ): Promise<string> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
@@ -379,26 +393,52 @@ export class AIService {
 
     const note = noteFinale?.trim();
 
+    /*
+      **Le cadre passe avant le fil, et c'est délibéré.** Le modèle décide du ton
+      et du titre dès ses premières lignes ; lui donner le jeu après les
+      événements reviendrait à le corriger une fois qu'il a choisi. La consigne
+      de ne rien inventer est explicite : sans elle, un modèle comble.
+    */
+    const cadre = contexte && !contexteEstVide(contexte)
+      ? (i18n.language === 'fr'
+        ? `CADRE DE LA PARTIE — respecte-le, n'invente ni univers ni ton :
+${contexte.systeme ? `- Jeu : ${contexte.systeme}` : ''}
+${contexte.campagne ? `- Campagne : ${contexte.campagne}` : ''}
+${contexte.synopsis ? `- Pitch : ${contexte.synopsis}` : ''}
+${contexte.personnages?.length ? `- Personnages joueurs : ${contexte.personnages.join(', ')}` : ''}
+Emploie les noms ci-dessus tels quels. N'invente aucun titre d'univers.
+`
+        : `GAME SETTING — respect it, do not invent a universe or a tone:
+${contexte.systeme ? `- Game: ${contexte.systeme}` : ''}
+${contexte.campagne ? `- Campaign: ${contexte.campagne}` : ''}
+${contexte.synopsis ? `- Pitch: ${contexte.synopsis}` : ''}
+${contexte.personnages?.length ? `- Player characters: ${contexte.personnages.join(', ')}` : ''}
+Use the names above verbatim. Do not invent a setting title.
+`)
+      : '';
+
     const summaryPrompt = i18n.language === 'fr'
       ? `En tant que Chroniqueur Expert, transforme ces logs de session de jeu de rôle en un résumé narratif captivant.
     Les événements sont chronologiques. Crée un récit fluide, avec des titres de sections, des moments forts et des développements d'intrigue.
-    
+
+    ${cadre}
     ${note ? `IMPORTANT - NOTE FINALE DU MJ :\n"${note}"\nPrends bien en compte ces notes pour conclure le résumé.` : ''}
- 
+
 
     LOGS DE LA SESSION :
     ${eventLog}
-    
+
     RÉSUMÉ FINAL :`
       : `As an Expert Chronicler, transform these role-playing session logs into a compelling narrative summary.
     Events are chronological. Create a fluid narrative with section titles, highlights, and plot developments.
-    
+
+    ${cadre}
     ${note ? `IMPORTANT - GM FINAL NOTE:\n"${note}"\nTake these notes into account to conclude the summary.` : ''}
- 
+
 
     SESSION LOGS:
     ${eventLog}
-    
+
     FINAL SUMMARY:`;
 
     try {

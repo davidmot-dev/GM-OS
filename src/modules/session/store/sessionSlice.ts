@@ -151,8 +151,17 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                   Appelé hors du `set` — la clôture lit plusieurs stores et en
                   écrit un autre ; la faire pendant le calcul d'un état
                   reviendrait à muter pendant qu'on se met à jour.
+
+                  **`avant` part avec elle, et c'est indispensable.** La
+                  microtâche tourne après ce commit, donc après que la séance
+                  soit passée à `done` : la clôture, qui cherchait la séance
+                  encore `active`, ne trouvait plus rien et perdait les notes du
+                  meneur, les entités de la séance et la checklist. Trouvé le
+                  2026-08-19 en relisant une vraie séance — les tests
+                  appelaient la clôture directement, sur un magasin où la séance
+                  était `active` en dur, et ne pouvaient pas le voir.
                 */
-                queueMicrotask(() => cloturerLeJournalDeLaSeance(avant.campaignId));
+                queueMicrotask(() => cloturerLeJournalDeLaSeance(avant.campaignId, avant));
                 return { sessions, scenes: suspendreLesScenes(state.scenes ?? [], avant.campaignId, quand) };
             }
             return { sessions };

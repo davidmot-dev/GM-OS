@@ -19,7 +19,7 @@ import { natureParDefaut } from './types';
  */
 const journalNeuf = () => {
     useJournalStore.setState({ journals: [], activeJournalId: null, isRecording: false });
-    useJournalStore.getState().startJournal('Campagne', 'Séance 1');
+    useJournalStore.getState().startJournal({ nom: 'Campagne' }, 'Séance 1');
     return useJournalStore.getState().activeJournalId!;
 };
 
@@ -148,5 +148,77 @@ describe('l\'axe trace / chronique', () => {
 
         expect(appele, 'rien à raconter n\'est pas une panne, mais ne se demande pas au modèle').toBe(false);
         expect(useJournalStore.getState().journals.find(j => j.id === id)!.resumeIA).toBeUndefined();
+    });
+});
+
+/**
+ * **Le modèle doit savoir à quel jeu il joue.**
+ *
+ * L'invite ne portait que le fil et la note finale. Faute de cadre, le résumé de
+ * la séance du 2026-08-19 — Alien, à Hadley Hope — s'intitulait « Chroniques des
+ * Terres Oubliées » et racontait de l'heroic-fantasy. *Un modèle à qui l'on ne
+ * donne pas le cadre n'en fait pas l'économie : il en invente un.*
+ */
+describe('le résumé reçoit le cadre de la partie', () => {
+    beforeEach(() => {
+        vi.restoreAllMocks();
+        (window as unknown as { useSessionOSStore: unknown }).useSessionOSStore = {
+            getState: () => ({
+                campaigns: [{
+                    id: 'c-1', name: 'Hadley Hope', system: 'alien',
+                    synopsis: 'Une colonie coupée du monde.',
+                }],
+            }),
+        };
+    });
+
+    const journalDeHadley = () => {
+        useJournalStore.setState({ journals: [], activeJournalId: null, isRecording: false });
+        useJournalStore.getState().startJournal({ id: 'c-1', nom: 'Hadley Hope' }, 'Session #2');
+        const id = useJournalStore.getState().activeJournalId!;
+        useJournalStore.getState().addEvent({
+            type: 'NOTE', title: 'La cave', content: 'Ils ont trouvé le carnet.',
+        });
+        return id;
+    };
+
+    it('transmet le jeu, la campagne et le pitch au service', async () => {
+        const id = journalDeHadley();
+
+        let contexte: unknown;
+        vi.doMock('../ai/AIService', () => ({
+            aiService: {
+                summarizeSession: async (_e: unknown, _n: unknown, c: unknown) => { contexte = c; return 'ok'; },
+            },
+        }));
+        await useJournalStore.getState().generateAISummary(id);
+
+        expect(contexte).toMatchObject({
+            campagne: 'Hadley Hope',
+            systeme: 'alien',
+            synopsis: 'Une colonie coupée du monde.',
+        });
+    });
+
+    /* Les personnages de CE soir-là, lus sur l'état de fin conservé. */
+    it('nomme les personnages presents en fin de seance', async () => {
+        const id = journalDeHadley();
+        useJournalStore.setState(s => ({
+            journals: s.journals.map(j => j.id === id
+                ? { ...j, etatDeFin: { presentPCs: [{ name: 'JC Alien', state: 'présent' }] } }
+                : j),
+        }));
+
+        let contexte: { personnages?: string[] } | undefined;
+        vi.doMock('../ai/AIService', () => ({
+            aiService: {
+                summarizeSession: async (_e: unknown, _n: unknown, c: { personnages?: string[] }) => {
+                    contexte = c; return 'ok';
+                },
+            },
+        }));
+        await useJournalStore.getState().generateAISummary(id);
+
+        expect(contexte?.personnages).toEqual(['JC Alien']);
     });
 });

@@ -149,7 +149,13 @@ export class SessionManager {
           titre vide.
         */
         useJournalStore.getState().startJournal(
-            campaign?.name || session.campaignId,
+            /*
+              Deux champs nommés, et la confusion du 18/08 devient impossible à
+              écrire : `campaignName` recevait `session.campaignId`, et le
+              compilateur ne pouvait rien dire puisque les deux sont des chaînes.
+              L'identifiant rattache, le nom s'affiche.
+            */
+            { id: session.campaignId, nom: campaign?.name || session.campaignId },
             `Session #${session.number}`,
             { publicSummary: session.publicSummary }
         );

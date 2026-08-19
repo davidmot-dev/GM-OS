@@ -3,7 +3,8 @@ import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 import { natureParDefaut } from './types';
 import { rendreLeCompteRendu } from './compteRendu';
-import { reparerLesTitres } from './titreDeJournal';
+import { reparerLesTitres, rattacherLesCampagnes } from './titreDeJournal';
+import { contexteDuJournal } from './contexteDeCampagne';
 import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
@@ -23,15 +24,22 @@ export const useJournalStore = create<JournalState>()(
       activeJournalId: null,
       isRecording: false,
 
-      startJournal: (campaignName, sessionName, startSnapshot) => {
+      startJournal: (campagne, sessionName, startSnapshot) => {
         const id = uuidv4();
         const now = Date.now();
         const actualSessionName = sessionName || i18next.t('modules:journal.dashboard.new_session');
-        const title = `${campaignName} - ${format(now, 'dd/MM HH:mm')} (${actualSessionName})`;
+        const title = `${campagne.nom} - ${format(now, 'dd/MM HH:mm')} (${actualSessionName})`;
 
         const newJournal: Journal = {
           id,
           title,
+          /*
+            **Le journal retient sa campagne, et non plus seulement son nom.**
+            Le titre servait de rattachement, ce qui obligeait toute question sur
+            la campagne d'une séance à passer par une correspondance de chaîne —
+            et privait le résumé par IA de savoir à quel jeu il joue.
+          */
+          ...(campagne.id ? { campaignId: campagne.id } : {}),
           startTimestamp: now,
           events: [],
         };
@@ -301,8 +309,17 @@ export const useJournalStore = create<JournalState>()(
 
         try {
           const { aiService } = await import('../ai/AIService');
+          /*
+            **Le modèle doit savoir à quel jeu il joue.** Sans cadre il en
+            invente un : la séance du 19/08, jouée sur Alien à Hadley Hope, lui a
+            valu le titre « Chroniques des Terres Oubliées » et un récit
+            d'heroic-fantasy. Le contexte se relève ici, où l'on tient le
+            journal ; le service d'IA, lui, ne voit que du texte.
+          */
           // La note du journal qu'on résume, pas celle du journal sélectionné.
-          const summary = await aiService.summarizeSession(recit, journal.finalNote);
+          const summary = await aiService.summarizeSession(
+            recit, journal.finalNote, contexteDuJournal(journal),
+          );
 
           set((state) => ({
             journals: state.journals.map(j =>
@@ -424,7 +441,20 @@ export const useJournalStore = create<JournalState>()(
       */
       reparerLesTitresDeCampagne: (campagnes) => {
         const { journals } = get();
-        const repares = reparerLesTitres(journals, campagnes);
+        /*
+          **Le rattachement d'abord, le titre ensuite.**
+
+          `rattacherLesCampagnes` reconnaît les deux formes de titre — celle
+          d'avant le 18/08 qui porte l'identifiant, celle d'après qui porte le
+          nom — donc l'ordre ne lui importe pas. Mais partir du titre non réparé
+          garde la signature la plus exacte des deux : l'identifiant.
+
+          Les deux passes conservent le tableau reçu quand elles n'ont rien à
+          faire, si bien que la comparaison finale reste vraie et qu'aucune
+          écriture n'a lieu pour rien.
+        */
+        const rattaches = rattacherLesCampagnes(journals, campagnes);
+        const repares = reparerLesTitres(rattaches, campagnes);
         if (repares === journals) return;
         set({ journals: repares as Journal[] });
       },

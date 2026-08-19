@@ -168,7 +168,7 @@ describe('SessionManager', () => {
         SessionManager.launchSession(mockSet, mockGet, 's1');
 
         expect(journal.startJournal).toHaveBeenCalledWith(
-            'Campaign 1',
+            { id: 'c1', nom: 'Campaign 1' },
             'Session #1',
             expect.anything(),
         );
@@ -181,7 +181,11 @@ describe('SessionManager', () => {
 
         SessionManager.launchSession(mockSet, sansCampagne, 's1');
 
-        expect(journal.startJournal).toHaveBeenCalledWith('c1', 'Session #1', expect.anything());
+        expect(journal.startJournal).toHaveBeenCalledWith(
+            { id: 'c1', nom: 'c1' },
+            'Session #1',
+            expect.anything(),
+        );
     });
 
     it('should delete campaign and related data (cascade)', () => {

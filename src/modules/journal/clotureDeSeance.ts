@@ -22,22 +22,47 @@ import type { Acte, Scene } from '../../types/trame.types';
  * absence est traitée comme un cas normal — *une séance ne doit pas échouer à se
  * terminer parce qu'un module n'a pas encore été monté.*
  */
-export function cloturerLeJournalDeLaSeance(campaignId: string | null | undefined): void {
+export function cloturerLeJournalDeLaSeance(
+    campaignId: string | null | undefined,
+    seanceSortante?: SeanceSortante,
+): void {
     try {
         const journal = useJournalStore.getState();
         // Rien à clore : la séance n'enregistrait pas.
         if (!journal.isRecording) return;
 
-        journal.stopJournal(releverLEtatDeFin(campaignId), releverLaSuite(campaignId));
+        journal.stopJournal(releverLEtatDeFin(campaignId, seanceSortante), releverLaSuite(campaignId));
     } catch (err) {
         console.error('[Journal] Clôture de séance impossible :', err);
     }
 }
 
 /** Ce que la table montre au moment où l'on s'arrête. */
-function releverLEtatDeFin(campaignId: string | null | undefined): SessionSnapshot {
+function releverLEtatDeFin(
+    campaignId: string | null | undefined,
+    seanceSortante?: SeanceSortante,
+): SessionSnapshot {
     const s = magasinDeSeance();
-    const seance = (s?.sessions ?? []).find(x => x.campaignId === campaignId && x.status === 'active');
+    /*
+      **La séance sortante est donnée quand l'appelant la tient**, et c'est le
+      seul cas fiable.
+
+      Défaut trouvé le 2026-08-19 en relisant une vraie séance : le bouton
+      « Terminer la séance » passe par `updateSession`, qui commet `status:
+      'done'` dans son `set` puis planifie la clôture en `queueMicrotask`. La
+      microtâche tourne donc **après** le commit, et cette recherche par
+      `status === 'active'` ne trouvait plus rien. Les trois champs qui
+      dépendent de la séance — les notes, les entités, la checklist — sortaient
+      vides ; `presentPCs`, qui vient des joueurs, sortait rempli. C'est cette
+      dissymétrie qui a désigné le coupable.
+
+      `SessionManager.launchSession` appelle avant son `set` et lit donc une
+      séance encore `active` : le repli reste juste pour lui. Mais *une clôture
+      qui devine sa séance dépend de l'ordre d'écriture de son appelant* — on la
+      lui fait dire.
+    */
+    const seance = seanceSortante
+        ?? (s?.sessions ?? []).find(x => x.campaignId === campaignId && x.status === 'active');
 
     /*
       La santé n'est relevée que si le jeu en compte. Écrire un `0` là où le jeu
@@ -106,16 +131,27 @@ function releverLaSuite(campaignId: string | null | undefined) {
     );
 }
 
+/**
+ * La séance qui s'arrête, telle que la clôture a besoin de la lire.
+ *
+ * Volontairement structurel et minimal : `GameSession` s'y conforme sans le
+ * savoir, et le journal n'a pas à en importer le type — ce serait le cycle que
+ * l'accès par le global existe pour éviter.
+ */
+export interface SeanceSortante {
+    id: string;
+    campaignId: string;
+    status: string;
+    sessionEntityIds?: string[];
+    checklist?: { text: string; isCompleted: boolean }[];
+    /** Ce que le meneur a écrit pendant la partie. */
+    sessionNotes?: string;
+}
+
 function magasinDeSeance() {
     return (window as unknown as {
         useSessionOSStore?: { getState: () => {
-            sessions?: {
-                id: string; campaignId: string; status: string;
-                sessionEntityIds?: string[];
-                checklist?: { text: string; isCompleted: boolean }[];
-                /** Ce que le meneur a écrit pendant la partie. */
-                sessionNotes?: string;
-            }[];
+            sessions?: SeanceSortante[];
             players?: { characters?: { name: string; campaignId?: string | null; hp?: number; maxHp?: number }[] }[];
             entities?: { id: string; name: string; campaignId: string; hp?: number; status?: string }[];
             clues?: { campaignId: string; title: string; isRevealed: boolean }[];

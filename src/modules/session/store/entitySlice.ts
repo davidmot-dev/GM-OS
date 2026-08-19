@@ -28,6 +28,28 @@ import type {
 } from './types';
 
 /**
+ * Le plateau de combat, atteint par le global.
+ *
+ * Un import direct fermerait un cycle entre les deux stores — c'est le même
+ * accès que celui déjà retenu par `clotureDeSeance` et par `useCombatStore`
+ * lui-même dans l'autre sens. On n'y déclare que ce qu'on appelle : hors combat
+ * il n'y a pas de plateau, et chaque appel doit pouvoir ne rien trouver.
+ */
+const plateauDeCombat = () => (window as unknown as {
+    useCombatStore?: {
+        getState: () => {
+            /** La scène à laquelle le combat en cours est rattaché, s'il l'est. */
+            sceneId?: string | null;
+            noterUnCoup?: (cibleId: string, impact: DamageImpact) => void;
+            refleterLaFiche?: (
+                cibleId: string,
+                sante: { hp?: number; healthSystem?: HealthSystem },
+            ) => void;
+        };
+    };
+}).useCombatStore?.getState();
+
+/**
  * Accorde le système de santé aux points de vie, quand il y en a.
  *
  * **`currentHp` et `maxHp` sont devenus facultatifs le 2026-08-15** : les
@@ -601,7 +623,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
           `noterUnCoup` accepte l'identifiant de la fiche et ne fait rien si
           personne sur le plateau ne lui correspond.
         */
-        (window as any).useCombatStore?.getState?.().noterUnCoup?.(targetId, impact);
+        plateauDeCombat()?.noterUnCoup?.(targetId, impact);
 
         if (targetType === 'npc') {
             const entity = entities.find((e) => e.id === targetId);
@@ -613,7 +635,20 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
             
             get().updateEntityHealth(targetId, updatedHealth);
             get().updateEntityHP(targetId, newHp);
-            
+
+            /*
+              **Le plateau doit l'apprendre, sinon il l'écrasera.**
+
+              `syncCombatantToSession` ne va que du combattant vers la fiche.
+              Sans ce retour, le combattant garde ses points de vie d'avant, le
+              récit de fin de combat les annonce, et la prochaine
+              synchronisation les réécrit par-dessus le travail de ce panneau —
+              c'est ainsi qu'un soin disparaissait sans laisser de trace.
+            */
+            plateauDeCombat()?.refleterLaFiche?.(targetId, {
+                hp: newHp, healthSystem: updatedHealth,
+            });
+
             if (typeof window !== 'undefined' && (window as any).useJournalStore) {
                 (window as any).useJournalStore.getState().addEvent({
                     type: 'COMBAT',
@@ -621,6 +656,15 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                     content: raconterLImpact(impact, {
                         hp: newHp, maxHp: entity.maxHp, healthSystem: updatedHealth,
                     }),
+                    /*
+                      **La scène se lit sur le plateau, pas ici.** Un coup porté
+                      depuis ce panneau appartient au combat en cours ; sans ce
+                      rattachement, la moitié des impacts d'une même scène
+                      seraient groupables et l'autre non, selon la porte
+                      empruntée. Hors combat il n'y a pas de plateau, et
+                      l'événement n'a pas de scène — ce qui est vrai.
+                    */
+                    sceneId: plateauDeCombat()?.sceneId ?? undefined,
                 });
             }
         } else {
@@ -637,6 +681,11 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
             get().updateCharacterHealth(player.id, targetId, updatedHealth);
             get().updateCharacterHP(player.id, targetId, newHp);
 
+            // Même retour que pour une entité : voir la branche ci-dessus.
+            plateauDeCombat()?.refleterLaFiche?.(targetId, {
+                hp: newHp, healthSystem: updatedHealth,
+            });
+
             if (typeof window !== 'undefined' && (window as any).useJournalStore) {
                 (window as any).useJournalStore.getState().addEvent({
                     type: 'COMBAT',
@@ -644,6 +693,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                     content: raconterLImpact(impact, {
                         hp: newHp, maxHp: character.maxHp, healthSystem: updatedHealth,
                     }),
+                    // Même rattachement que pour une entité : voir la branche ci-dessus.
+                    sceneId: plateauDeCombat()?.sceneId ?? undefined,
                 });
             }
         }

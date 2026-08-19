@@ -72,6 +72,25 @@ export interface JournalEvent {
    * la nature contredit leur type la déclarent.
    */
   nature?: NatureDeLEvenement;
+  /**
+   * La scène pendant laquelle l'événement a eu lieu.
+   *
+   * **Un champ de premier ordre, et le § 9 du plan du 2026-08-08 l'exige en
+   * toutes lettres** : *« le rattachement événement → scène doit être un champ
+   * de premier ordre, pas une entrée dans `metadata` : c'est une relation
+   * structurelle, pas une donnée accessoire. »*
+   *
+   * Il voyageait dans `metadata` depuis le 2026-08-17 — dette contractée en
+   * même temps que le rattachement lui-même. La différence n'est pas cosmétique :
+   * `metadata` est un sac de `unknown` que rien ne vérifie, où une faute de
+   * frappe ne se voit jamais, et qu'aucun regroupement ne peut interroger sans
+   * savoir d'avance ce qu'il cherche. C'est ce regroupement après coup qui est
+   * le but — relire une séance scène par scène plutôt qu'en un seul fil.
+   *
+   * Facultatif : tout n'arrive pas pendant une scène, et un combat non rattaché
+   * le dit franchement plutôt que de se taire.
+   */
+  sceneId?: string;
   /** Données additionnelles (ex: URLs d'images, IDs d'entités) */
   metadata?: Record<string, unknown>;
   /** État de favori pour l'affichage rapide */
@@ -85,6 +104,25 @@ export interface Journal {
   id: string;
   /** Titre généré (ex: "Campagne - Date (Session)") */
   title: string;
+  /**
+   * La campagne dont cette séance relève.
+   *
+   * **Il n'existait pas, et ça coûtait cher.** Le journal ne connaissait sa
+   * campagne que par son titre, donc toute question à son sujet passait par une
+   * correspondance de chaîne — c'est exactement la fragilité corrigée deux fois
+   * ailleurs le 2026-08-18 (le résumé cherché par son titre traduit, le carnet
+   * qui suivait l'écrivain et pas le lecteur). Relevé comme dette le soir même.
+   *
+   * Ce qui l'a rendu nécessaire : **le résumé par IA ne savait pas à quel jeu il
+   * jouait.** Faute de campagne, il ne pouvait pas connaître le système, et il a
+   * intitulé la séance du 19/08 « Chroniques des Terres Oubliées » — de
+   * l'heroic-fantasy pour une campagne Alien.
+   *
+   * Facultatif : les journaux d'avant n'en portent pas, et un journal ouvert à
+   * la main n'appartient à aucune campagne. `rattacherLesCampagnes` en rattrape
+   * ce qu'il peut par le titre, sans jamais parier.
+   */
+  campaignId?: string;
   /** Heure de début de l'enregistrement */
   startTimestamp: number;
   /** Heure de fin (si terminée) */
@@ -191,6 +229,25 @@ export interface SessionSnapshot {
 }
 
 /**
+ * La campagne, telle qu'on l'annonce en ouvrant un journal.
+ *
+ * **Deux champs plutôt qu'une chaîne, et c'est le point.** `startJournal`
+ * prenait un `campaignName: string`, et `launchSession` lui passait
+ * `session.campaignId` — d'où les séances archivées sous
+ * « c-1187082150026-gtbgs - 18/08 21:59 ». Le compilateur ne pouvait rien dire :
+ * les deux sont des chaînes. En les nommant séparément, la confusion devient
+ * impossible à écrire.
+ *
+ * L'identifiant **rattache**, le nom **s'affiche** — et jamais l'inverse.
+ */
+export interface CampagneDuJournal {
+  /** Ce qui rattache. Absent pour un journal ouvert à la main. */
+  id?: string;
+  /** Ce qui s'affiche dans le titre, et se relit des mois plus tard. */
+  nom: string;
+}
+
+/**
  * Données initiales pour le début d'une session.
  */
 export interface SessionStartSnapshot {
@@ -211,7 +268,7 @@ export interface JournalState {
   
   // Actions
   /** Démarre un nouvel enregistrement de session avec snapshot initial */
-  startJournal: (campaignName: string, sessionName?: string, startSnapshot?: SessionStartSnapshot) => void;
+  startJournal: (campagne: CampagneDuJournal, sessionName?: string, startSnapshot?: SessionStartSnapshot) => void;
   /**
    * Termine l'enregistrement en cours et **conserve** l'état final du système.
    *

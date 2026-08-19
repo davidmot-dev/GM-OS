@@ -191,6 +191,14 @@
         "psychic": "Psychic",
         "necrotic": "Necrotic",
         "radiant": "Radiant"
+      },
+      "locations": {
+        "head": "Head",
+        "torso": "Torso",
+        "leftArm": "Left arm",
+        "rightArm": "Right arm",
+        "leftLeg": "Left leg",
+        "rightLeg": "Right leg"
       }
     },
     "status": {

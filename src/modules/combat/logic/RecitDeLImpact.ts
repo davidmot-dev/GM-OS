@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { decrireLaSante, type PorteurDeSante } from './SanteDuCombattant';
+import { nommerLeType, nommerLaLocalisation } from './TypesDeDegats';
 import type { DamageImpact } from '../../../types/entity.types';
 
 /**
@@ -34,9 +35,21 @@ export function raconterLImpact(impact: DamageImpact, porteur: PorteurDeSante): 
     const soin = impact.isRecovery === true || impact.value < 0;
     const valeur = Math.abs(impact.value);
 
-    // Type et localisation ne sont pas toujours renseignés — on n'écrit pas de
-    // parenthèses vides pour autant.
-    const precisions = [impact.type, impact.location].filter(Boolean).join(', ');
+    /*
+      Type et localisation ne sont pas toujours renseignés — on n'écrit pas de
+      parenthèses vides pour autant.
+
+      **Et ils se traduisent.** Les deux sont des jetons internes : `physical`
+      vient de la liste des types, `leftArm` de la silhouette anatomique. Ils
+      atteignaient le journal tels quels — *exactement le reproche fait à
+      `scratched` le 2026-08-18, dans cette fonction même.* On stocke le jeton,
+      parce que c'est sur lui que les résistances se comparent ; on n'affiche
+      jamais que le mot.
+    */
+    const precisions = [
+        impact.type ? nommerLeType(impact.type) : undefined,
+        impact.location ? nommerLaLocalisation(impact.location) : undefined,
+    ].filter(Boolean).join(', ');
     const detail = precisions ? ` (${precisions})` : '';
 
     const coup = i18next.t(

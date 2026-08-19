@@ -15,6 +15,12 @@ beforeAll(async () => {
                             impact_healing: 'Récupère **{{value}}**{{detail}}',
                         },
                     },
+                    combat: {
+                        damage: {
+                            types: { physical: 'Physique' },
+                            locations: { leftArm: 'Bras gauche' },
+                        },
+                    },
                 },
             },
         },
@@ -58,6 +64,29 @@ describe('raconterLImpact', () => {
             { value: 7, type: 'balistique', location: 'torse' },
             { healthSystem: pointsDeVie(3, 10, 'wounded') },
         )).toBe('Encaisse **7** (balistique, torse) — 3/10 (blessé)');
+    });
+
+    /**
+     * **Le jeton interne ne doit pas plus atteindre le journal que `scratched`.**
+     *
+     * `physical` et `leftArm` sont des identifiants — le premier vient de la
+     * liste des types, le second de la silhouette anatomique — et ils
+     * s'écrivaient tels quels dans le fil. On stocke le jeton, parce que c'est
+     * sur lui que les résistances se comparent ; on n'affiche que le mot.
+     */
+    it('traduit le type et la localisation', () => {
+        expect(raconterLImpact(
+            { value: 7, type: 'physical', location: 'leftArm' },
+            { healthSystem: pointsDeVie(3, 10, 'wounded') },
+        )).toBe('Encaisse **7** (Physique, Bras gauche) — 3/10 (blessé)');
+    });
+
+    /* Un pilote forgé peut nommer ses types comme il veut. */
+    it('garde le jeton brut faute de traduction', () => {
+        expect(raconterLImpact(
+            { value: 2, type: 'balistique' },
+            { healthSystem: pointsDeVie(8, 10, 'healthy') },
+        )).toBe('Encaisse **2** (balistique) — 8/10 (indemne)');
     });
 
     it('n\'ecrit pas de parentheses vides sans type ni localisation', () => {

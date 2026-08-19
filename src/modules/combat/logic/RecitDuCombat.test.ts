@@ -134,3 +134,88 @@ describe('raconterLeCombat', () => {
         expect(recit).toContain('**Pertes :** Aucune');
     });
 });
+
+/**
+ * **Qui compte parmi les pertes.**
+ *
+ * Défaut relevé le 2026-08-19 dans le journal d'une vraie séance : le récit
+ * annonçait « **Pertes :** Aucune » sur un combat où deux combattants étaient à
+ * zéro, et rangeait un personnage à `0/4` parmi les **Survivants**. `estTombe`
+ * ne regardait que l'étiquette « Mort », celle que le meneur pose à la main.
+ *
+ * La réponse existait depuis le 2026-08-14 dans `estHorsDeCombat`, avec le bon
+ * ordre d'autorité. *Le module de santé avait acquis un dixième lecteur
+ * dissident.*
+ */
+describe('un combattant tombé sans étiquette « Mort »', () => {
+    const avecSante = (
+        name: string,
+        healthSystem: CombattantRaconte['healthSystem'],
+    ): CombattantRaconte => ({ id: name, name, statuses: [], healthSystem });
+
+    const pertes = (recit: string) => recit.slice(
+        recit.indexOf('**Pertes :**'),
+        recit.indexOf('**Survivants :**') === -1 ? undefined : recit.indexOf('**Survivants :**'),
+    );
+
+    it('a zero point de vie, il est une perte', () => {
+        const recit = raconterLeCombat({
+            round: 1,
+            combattants: [avecSante('test', { type: 'hp', data: { current: 0, max: 4 }, state: 'dead' })],
+            faits: {},
+        });
+
+        expect(recit).not.toContain('**Pertes :** Aucune');
+        expect(pertes(recit)).toContain('**test**');
+        expect(recit).not.toContain('**Survivants :**');
+    });
+
+    /* L'état calculé fait autorité, quel que soit le modèle de santé. */
+    it('une horloge de defaite pleine le met aussi dans les pertes', () => {
+        const recit = raconterLeCombat({
+            round: 1,
+            combattants: [avecSante('Duncan', { type: 'clocks', data: { filled: 6, segments: 6 }, state: 'dead' })],
+            faits: {},
+        });
+
+        expect(pertes(recit)).toContain('**Duncan**');
+    });
+
+    /**
+     * *L'absence n'est pas un zéro* — la règle du module de santé. Un jeu qui ne
+     * compte pas la santé ne doit pas voir son plateau déclaré mort.
+     */
+    it('sans jauge ni systeme, personne n\'est declare tombe', () => {
+        const recit = raconterLeCombat({
+            round: 1,
+            combattants: [{ id: 'a', name: 'Ripley', statuses: [] }],
+            faits: {},
+        });
+
+        expect(recit).toContain('**Pertes :** Aucune');
+    });
+
+    /* Les deux conditions se cumulent : l'étiquette reste le seul moyen de dire
+       la mort dans un jeu sans jauge. */
+    it('l\'etiquette « Mort » suffit encore, sans jauge', () => {
+        const recit = raconterLeCombat({
+            round: 1,
+            combattants: [{ id: 'a', name: 'Ripley', statuses: [{ name: 'Mort', icon: '💀' }] }],
+            faits: {},
+        });
+
+        expect(pertes(recit)).toContain('**Ripley**');
+    });
+
+    /* Un combattant encore debout ne doit pas basculer pour autant. */
+    it('un blesse reste un survivant', () => {
+        const recit = raconterLeCombat({
+            round: 1,
+            combattants: [avecSante('Goule', { type: 'hp', data: { current: 3, max: 10 }, state: 'wounded' })],
+            faits: {},
+        });
+
+        expect(recit).toContain('**Pertes :** Aucune');
+        expect(recit).toContain('**Survivants :**');
+    });
+});

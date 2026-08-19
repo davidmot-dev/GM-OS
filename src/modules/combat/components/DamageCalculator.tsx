@@ -4,10 +4,9 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { fractionDeVie, decrireLaSante } from '../logic/SanteDuCombattant';
+import { typesDeDegats } from '../logic/TypesDeDegats';
 import { Zap, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, Shield, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-const DEFAULT_DAMAGE_TYPES = ['magical', 'physical', 'fire', 'cold', 'lightning', 'acid', 'psychic', 'necrotic', 'radiant'];
 
 const DamageCalculator: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
@@ -17,7 +16,9 @@ const DamageCalculator: React.FC = () => {
     const { lastRoll } = useDiceStore();
     
     const activeDriver = getActiveDriver();
-    const damageTypes = activeDriver?.combat.damageTypes || DEFAULT_DAMAGE_TYPES;
+    // La liste vit dans `TypesDeDegats` depuis le 2026-08-19 : le panneau de
+    // santé en a besoin aussi, et deux copies auraient divergé au premier ajout.
+    const damageTypes = typesDeDegats(activeDriver);
 
     const [selectedIds, setSelectedIds] = useState<string[]>(() => {
         if (defaultValue && typeof defaultValue === 'object') {

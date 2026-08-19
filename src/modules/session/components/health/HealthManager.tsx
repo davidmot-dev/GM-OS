@@ -7,6 +7,7 @@ import { ClockDriver } from './ClockDriver';
 import { WoundLevelsDriver } from './WoundLevelsDriver';
 import { HarmBoxesDriver } from './HarmBoxesDriver';
 import { AnatomicalSilhouette, type PartStatus } from './AnatomicalSilhouette';
+import { typesDeDegats, nommerLeType } from '../../../combat/logic/TypesDeDegats';
 import { Plus, Minus, Heart, Settings2, Swords } from 'lucide-react';
 
 interface HealthManagerProps {
@@ -34,6 +35,18 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   const [internalHealth, setInternalHealth] = useState<HealthSystem | null>(null);
   const [impactValue, setImpactValue] = useState(1);
   const [lastImpactType, setLastImpactType] = useState<string | undefined>(undefined);
+  /**
+   * Le type de dégâts choisi pour le prochain coup.
+   *
+   * Il **persiste entre deux clics** à dessein : une bagarre au fusil est une
+   * suite de coups balistiques, et redemander le type à chaque fois ferait de
+   * ce panneau — la porte rapide — une seconde boîte de dialogue.
+   *
+   * `undefined` tant que le meneur n'a rien choisi : le pilote n'est pas encore
+   * lu à cette ligne, et surtout **la liste change avec la campagne**. On résout
+   * plus bas, contre la liste du moment.
+   */
+  const [impactType, setImpactType] = useState<string | undefined>(undefined);
   const [isHealing, setIsHealing] = useState(false);
   const [isDamaged, setIsDamaged] = useState(false);
 
@@ -43,9 +56,19 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     return campaign ? state.getGameDriver(campaign.system) : null;
   });
 
-  const target = type === 'pc' 
+  const target = type === 'pc'
     ? players.flatMap(p => p.characters).find(c => c.id === id)
     : entities.find(e => e.id === id);
+
+  /*
+    Le choix du meneur est confronté à la liste du jeu courant : changer de
+    campagne peut retirer le type retenu, et frapper avec un type que le pilote
+    ne connaît plus ne correspondrait à aucune étiquette de résistance.
+  */
+  const typesDisponibles = typesDeDegats(activeDriver);
+  const typeChoisi = impactType && typesDisponibles.includes(impactType)
+    ? impactType
+    : typesDisponibles[0];
 
   // 1. Resolve Current Health State
   // Priority: Internal State (Immediate Feedback) > Store Target > initialHealthSystem > Default
@@ -68,7 +91,29 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   // if (!target) return null; // Removed to fix standalone bug
 
   const triggerImpact = (isRecovery: boolean, partId?: string) => {
-    const impact = DamageCalculator.translateRoll(impactValue, activeDriver?.id || 'generic', { isRecovery, location: partId });
+    /*
+      **Le type de dégâts part avec le coup, et il n'est pas décoratif.**
+
+      Ce panneau n'en proposait aucun : `translateRoll` ne recevait que
+      `isRecovery` et la localisation, si bien que `DamageImpact.type` restait
+      vide sur ce chemin. Deux conséquences, relevées le 2026-08-19 en relisant
+      un vrai journal — le fil écrivait « Encaisse **2** » sans jamais dire de
+      quoi, et surtout `HealthInterpreter.processResistances` sortait aussitôt
+      (`if (!impact.type …) return impact`) : **les résistances et les
+      vulnérabilités des fiches étaient purement et simplement ignorées dès
+      qu'on frappait par ici.** Le pupitre du tracker, lui, les appliquait.
+
+      Décision de David du 2026-08-19 : une seule règle pour les deux portes.
+      Les nombres encaissés par ce chemin peuvent donc changer, et c'est le but.
+
+      **Jamais sur un soin.** `processResistances` l'ignore déjà, mais le récit
+      de l'impact, lui, écrirait « Récupère **2** (Physique) ».
+    */
+    const impact = DamageCalculator.translateRoll(impactValue, activeDriver?.id || 'generic', {
+        isRecovery,
+        location: partId,
+        ...(isRecovery ? {} : { type: typeChoisi }),
+    });
     
     // 1. Update Persistent Store if target exists
     if (target) {
@@ -268,7 +313,25 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                     </div>
                 </div>
 
-                <button 
+                {/*
+                  Le type se choisit ici, à côté de l'intensité, et non dans une
+                  boîte à part : c'est le même geste, et ce panneau est la porte
+                  rapide. Il ne concerne que les dégâts — un soin l'ignore.
+                */}
+                <select
+                    value={typeChoisi}
+                    onChange={(e) => setImpactType(e.target.value)}
+                    className="max-w-[92px] bg-black/40 border border-white/10 rounded-lg px-1.5 py-1 text-[9px] font-black uppercase tracking-wider text-slate-300 outline-none focus:border-primary/50 transition-colors cursor-pointer"
+                    title="Type de dégâts — appliqué aux résistances de la fiche"
+                >
+                    {typesDisponibles.map(jeton => (
+                        <option key={jeton} value={jeton} className="bg-slate-900 normal-case">
+                            {nommerLeType(jeton)}
+                        </option>
+                    ))}
+                </select>
+
+                <button
                   onClick={() => triggerImpact(true)}
                   className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-emerald-500/20 transition-all group/heal"
                   title="Soigner"

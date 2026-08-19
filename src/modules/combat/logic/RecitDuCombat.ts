@@ -1,4 +1,4 @@
-import { decrireLaSante, type PorteurDeSante } from './SanteDuCombattant';
+import { decrireLaSante, estHorsDeCombat, type PorteurDeSante } from './SanteDuCombattant';
 
 /**
  * Ce qu'un combattant a encaissé pendant **un** combat.
@@ -56,8 +56,31 @@ export function ajouterUnCoup(
         };
 }
 
+/**
+ * Ce combattant est-il tombé ?
+ *
+ * **Le statut ne suffit pas, et c'est ce qui a rendu le récit du 19/08 faux.**
+ * Cette fonction ne regardait que l'étiquette « Mort » — celle que le meneur
+ * pose à la main. Le récit annonçait donc « **Pertes :** Aucune » sur un combat
+ * où deux combattants étaient à zéro, et rangeait un personnage à `0/4` parmi
+ * les **Survivants**.
+ *
+ * `estHorsDeCombat` porte déjà la bonne réponse depuis le 2026-08-14, avec le
+ * bon ordre d'autorité — l'état calculé par `HealthInterpreter` d'abord, la
+ * jauge de points ensuite, et **jamais de mort déclarée faute d'information**.
+ * `CombatCard` et `MapTokenNode` l'utilisent ; celle-ci était la dernière à
+ * avoir sa propre idée de ce qu'un zéro veut dire. *Le module de santé avait
+ * acquis un dixième lecteur dissident* — le même reproche que celui déjà fait à
+ * l'écriture des impacts la veille.
+ *
+ * **Les deux conditions se cumulent, elles ne se remplacent pas.** Un jeu sans
+ * jauge n'a que l'étiquette pour dire la mort, et `estHorsDeCombat` y répond
+ * non, à raison ; à l'inverse un combattant à zéro est tombé sans qu'on ait eu
+ * à l'étiqueter.
+ */
 export const estTombe = (c: CombattantRaconte): boolean =>
-    c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
+    c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀')
+    || estHorsDeCombat(c);
 
 /**
  * Ce qu'un combattant a traversé, en une ligne.

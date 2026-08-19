@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import i18next from 'i18next';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import {
     raconterLeCombat, ajouterUnCoup, estTombe, type FaitsDArmes,
 } from './logic/RecitDuCombat';
+import { raconterLImpact } from './logic/RecitDeLImpact';
 import type { Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
 import { 
     type Combatant, 
@@ -383,6 +385,34 @@ interface CombatState {
      */
     noterUnCoup: (cibleId: string, impact: { value: number; isRecovery?: boolean }) => void;
 
+    /**
+     * Le plateau apprend ce que la fiche vient de subir.
+     *
+     * **Le retour qui manquait, trouvé le 2026-08-19 en relisant une vraie
+     * séance.** `syncCombatantToSession` pousse le combattant *vers* la fiche,
+     * et rien ne faisait le chemin inverse : le panneau de santé de Session-OS
+     * soignait un personnage sans que le plateau l'apprenne. Deux conséquences,
+     * toutes deux vues dans le journal du 19/08 :
+     *
+     * - **Le récit de fin de combat mentait sur l'état de chacun**, puisqu'il
+     *   lit le plateau : « AL SIMPSON 8/10 » quand le fil disait 0/10.
+     * - **Les soins étaient annulés.** Le prochain `syncCombatantToSession` —
+     *   un statut posé, le bouton « Sync HP », ou « Fin de combat » — réécrivait
+     *   les points de vie périmés du plateau par-dessus la fiche. D'où trois
+     *   `Récupère **1** — 1/4` d'affilée, sur un personnage qui ne remontait
+     *   jamais.
+     *
+     * *Une synchronisation à sens unique entre deux copies d'une même donnée
+     * n'est pas une synchronisation : c'est un écrasement périodique.*
+     *
+     * Ne resynchronise rien en retour, délibérément : la fiche est déjà à jour,
+     * c'est elle qui appelle, et repartir vers elle fermerait la boucle.
+     */
+    refleterLaFiche: (
+        cibleId: string,
+        sante: { hp?: number; healthSystem?: HealthSystem },
+    ) => void;
+
     // Initiative
     /** Définit manuellement l'initiative d'un combattant */
     setInitiative: (id: string, init: number) => void;
@@ -481,6 +511,27 @@ export const useCombatStore = create<CombatState>()(
                         ...state.faitsDArmes,
                         [cible.id]: ajouterUnCoup(state.faitsDArmes[cible.id], impact),
                     },
+                }));
+            },
+
+            refleterLaFiche: (cibleId, sante) => {
+                // Même triple correspondance que `noterUnCoup` : les deux
+                // chemins ne désignent pas leur cible de la même façon.
+                const cible = get().combatants.find(c =>
+                    c.id === cibleId || c.sourceEntityId === cibleId || c.sourcePlayerId === cibleId);
+                if (!cible) return;
+
+                set((state) => ({
+                    combatants: state.combatants.map(c => c.id === cible.id
+                        ? {
+                            ...c,
+                            // Une fiche sans jauge ne doit pas inventer un `0`
+                            // sur le plateau : chaque moitié ne s'écrit que si
+                            // elle existe.
+                            ...(typeof sante.hp === 'number' ? { hp: sante.hp } : {}),
+                            ...(sante.healthSystem ? { healthSystem: sante.healthSystem } : {}),
+                        }
+                        : c),
                 }));
             },
 
@@ -729,11 +780,19 @@ export const useCombatStore = create<CombatState>()(
                         combattants: combatants,
                         faits: faitsDArmes,
                     }),
+                    /*
+                      **La scène est un champ de premier ordre, pas une entrée
+                      de `metadata`.** Le § 9 du plan du 2026-08-08 l'exige, et
+                      elle y voyageait depuis le 2026-08-17 : dette contractée
+                      en même temps que le rattachement. Ce qui reste dans
+                      `metadata` est bien accessoire — des compteurs qu'on relit
+                      à l'oeil ; le lien vers la scène, lui, est structurel.
+                    */
+                    sceneId: sceneId ?? undefined,
                     metadata: {
                         round,
                         totalCombatants: combatants.length,
                         casualitiesCount: casualities.length,
-                        sceneId: sceneId ?? undefined,
                     }
                 });
 
@@ -824,6 +883,7 @@ export const useCombatStore = create<CombatState>()(
                         type: 'COMBAT',
                         title: 'Combat : Initiative',
                         content: `Round ${state.round} - L'initiative a été tirée pour ${newCombatants.length} combattants.`,
+                        sceneId: state.sceneId ?? undefined,
                         metadata: { round: state.round, count: newCombatants.length }
                     });
 
@@ -1018,6 +1078,7 @@ export const useCombatStore = create<CombatState>()(
                                 type: 'NPC',
                                 title: `Décès : ${c.name}`,
                                 content: `Le PNJ **${c.name}** a été marqué comme **MORT** suite au combat (Combat-OS).`,
+                                sceneId: get().sceneId ?? undefined,
                                 metadata: { entityId: c.sourceEntityId }
                             });
                         }
@@ -1079,6 +1140,36 @@ export const useCombatStore = create<CombatState>()(
                 // store, et le faire pendant une mise à jour reviendrait à muter
                 // pendant qu'on se met à jour.
                 coupsPortes.forEach(([id, valeur]) => get().noterUnCoup(id, { value: valeur }));
+
+                /*
+                  **Le pupitre écrit sa trace, lui aussi.**
+
+                  Il ne l'écrivait pas : seul le panneau de santé de Session-OS
+                  consignait ses impacts. Le fil du 19/08 le montre en creux —
+                  AL SIMPSON y passe de 9/10 à 2/10 sans une seule ligne entre
+                  les deux, et les compteurs du récit voyaient des coups dont le
+                  journal n'avait aucune trace. *Deux chemins vers la même
+                  donnée, un seul qui la raconte.*
+
+                  Écrit après le `set` : la ligne dit l'état d'arrivée, il faut
+                  donc relire le combattant une fois le coup appliqué.
+                */
+                coupsPortes.forEach(([id, valeur]) => {
+                    const c = get().combatants.find(x => x.id === id);
+                    if (!c) return;
+                    const soin = valeur < 0;
+                    useJournalStore.getState().addEvent({
+                        type: 'COMBAT',
+                        title: i18next.t('modules:session.events.impact_title', { name: c.name }),
+                        // Le type de dégâts ne se dit que sur une blessure : « Récupère
+                        // 2 (balistique) » n'aurait aucun sens.
+                        content: raconterLImpact(
+                            { value: Math.abs(valeur), isRecovery: soin, ...(soin ? {} : { type }) },
+                            c,
+                        ),
+                        sceneId: get().sceneId ?? undefined,
+                    });
+                });
 
                 // Synchronisation différée pour la stabilité
                 targetIds.forEach(id => get().syncCombatantToSession(id));
