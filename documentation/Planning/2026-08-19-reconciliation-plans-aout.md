@@ -177,13 +177,17 @@ les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
 Les trois ménages sont faits, **rapportés par David le soir même** : le doublon de campagne « secret de
 Milo », les 14 factions à juger, et le sort d'`Agents_of_Dune.md`.
 
-*Ce qui a été vérifié et ce qui ne l'a pas été, parce que la distinction compte* : les deux premiers
-vivent dans le magasin de l'application (IndexedDB) et **ne sont pas observables depuis le dépôt** — ils
-sont consignés sur la parole de David, ce qui suffit puisque c'est lui qui les a faits. En revanche
-`docs/campaigns/dune/Agents_of_Dune.md` **est toujours sur le disque, inchangé**. Deux lectures
-possibles, et aucune n'est un problème : soit le sort réglé a été de le *garder* — le document
-d'origine notait que le renommer risquait de casser un « Chemin des Notes » déclaré, *qui est
-souverain* — soit ce point-là reste à faire. **À trancher d'un coup d'œil, sans urgence.**
+*Ce qui a été vérifié et ce qui ne l'a pas été, parce que la distinction compte* : le doublon de
+campagne et les factions vivent dans le magasin de l'application (IndexedDB) et **ne sont pas
+observables depuis le dépôt** — ils sont consignés sur la parole de David, ce qui suffit puisque c'est
+lui qui les a faits.
+
+**`docs/campaigns/dune/Agents_of_Dune.md` reste où il est, et c'est une décision** (David, 2026-08-19) :
+*« Agents de Dune me convient pour l'instant, si je veux le reforger je le ferai plus tard. »* Le
+fichier est donc hors convention **volontairement**, et non par oubli — le document d'origine notait
+d'ailleurs que le renommer risquait de casser un « Chemin des Notes » déclaré, *qui est souverain*. Une
+reforge éventuelle viserait `campaigns/agents-de-dune/` et rendrait la question sans objet. **À ne pas
+resignaler comme un reste.**
 
 ### P6 — Ce qui n'a jamais été vu tourner
 
