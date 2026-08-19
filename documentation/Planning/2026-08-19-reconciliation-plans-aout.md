@@ -172,10 +172,18 @@ les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
 - Le **plafond de 4 000 jetons** du RAG ne laisse passer que deux fiches entières — à réévaluer depuis
   que l'iGPU est actif.
 
-### P5 — Données et ménages
+### ~~P5 — Données et ménages~~ ✅ fait le 2026-08-19
 
-Deux campagnes « secret de Milo » (à vérifier dans l'application) · les 14 factions de Milo à juger ·
-`docs/campaigns/dune/Agents_of_Dune.md` hors convention.
+Les trois ménages sont faits, **rapportés par David le soir même** : le doublon de campagne « secret de
+Milo », les 14 factions à juger, et le sort d'`Agents_of_Dune.md`.
+
+*Ce qui a été vérifié et ce qui ne l'a pas été, parce que la distinction compte* : les deux premiers
+vivent dans le magasin de l'application (IndexedDB) et **ne sont pas observables depuis le dépôt** — ils
+sont consignés sur la parole de David, ce qui suffit puisque c'est lui qui les a faits. En revanche
+`docs/campaigns/dune/Agents_of_Dune.md` **est toujours sur le disque, inchangé**. Deux lectures
+possibles, et aucune n'est un problème : soit le sort réglé a été de le *garder* — le document
+d'origine notait que le renommer risquait de casser un « Chemin des Notes » déclaré, *qui est
+souverain* — soit ce point-là reste à faire. **À trancher d'un coup d'œil, sans urgence.**
 
 ### P6 — Ce qui n'a jamais été vu tourner
 

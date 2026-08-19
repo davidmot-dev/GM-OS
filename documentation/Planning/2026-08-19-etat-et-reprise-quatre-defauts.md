@@ -164,14 +164,20 @@ L'émission sémantique s'étend-elle tout de suite aux autres modules ? Une sc�
 reste-t-elle dans la trame ou est-elle marquée abandonnée — *la réponse détermine si la trame est un plan
 glissant ou un registre.*
 
-### 3.3 Hors journal, toujours vrai
+### 3.3 Hors journal
 
-- **`SessionService.saveFullSession` omet `entities` et `clues`** — vérifié ce soir, toujours absent
-  depuis le 16/08. **Les PNJ et les indices ne sont pas dans les sauvegardes.**
-- **Le réglage de langue d'un corpus n'a pas d'écran** : il s'édite à la main dans `corpus.json`.
-- **Deux campagnes « secret de Milo »** dans la base, dont une orpheline.
-- **Le corpus de Cthulhu Hack** porte un doublon exact et trois fiches gardent leurs renvois de carnet.
-- **Les 14 factions de Milo** à juger : le chiffre est haut pour trois scénarios.
+**La liste consolidée vit dans `2026-08-19-reconciliation-plans-aout.md`, § 5**, et nulle part ailleurs.
+
+*Pourquoi ce renvoi plutôt qu'une copie* : cette section en portait une, écrite quelques heures plus
+tôt, et elle était **déjà fausse** — elle annonçait un doublon dans le corpus de Cthulhu Hack que la
+réconciliation n'a pas retrouvé, et des ménages que David a faits le soir même. *Recopier un reste le
+fait survivre à sa correction.*
+
+Un seul mérite d'être répété ici, parce qu'il est d'une autre nature que tout le reste :
+
+- ⚠️ **`SessionService.saveFullSession` omet `entities` et `clues`** — vérifié ce soir, toujours absent
+  depuis le 16/08. **Les PNJ et les indices ne sont dans aucune sauvegarde.** C'est le seul reste connu
+  qui détruit du travail au lieu de le dégrader.
 
 ### 3.4 Ce qui n'a jamais été vu tourner
 
