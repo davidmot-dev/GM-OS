@@ -12,15 +12,19 @@ changé, ce qui reste ouvert, et les décisions qu'on ne rouvre pas.
 
 ---
 
-## 1. Le geste pour reprendre
+## 1. Le plan du 2026-08-20
 
-**Jouer un combat complet, en séance, et regarder le fil.**
+**Décidé le 19/08 au soir : on attaque le plan.** L'ordre ci-dessous est convenu, et la raison de chaque
+rang est écrite — un ordre sans motif se rediscute à chaque reprise.
 
-C'est le seul contrôle qui reste : les correctifs de ce soir portent sur ce qu'un combat *écrit*, et
-regénérer un vieux résumé relit les événements sans les réécrire. Le journal du 19/08 porte donc encore
-le récit d'avant.
+L'inventaire complet des restes vit dans `2026-08-19-reconciliation-plans-aout.md`, § 5. Ce qui suit est
+l'ordre dans lequel on l'attaque, pas une seconde copie.
 
-Le parcours, dans l'ordre :
+### Étape 0 — le combat de test (~10 min, David)
+
+**D'abord, parce que ça valide quatre correctifs d'un coup et que ça ne coûte rien.** Les correctifs du
+19/08 portent sur ce qu'un combat *écrit* : regénérer un vieux résumé relit les événements sans les
+réécrire, donc le journal du 19/08 porte encore le récit d'avant. Rien d'autre ne peut les confirmer.
 
 1. **Rattacher le combat à une scène** avant de le lancer — le récit doit s'intituler
    « Combat : *nom de la scène* » et non « Combat : Résumé de fin ».
@@ -31,6 +35,39 @@ Le parcours, dans l'ordre :
 4. **Soigner quelqu'un deux fois de suite.** Les points de vie doivent monter à chaque fois.
 5. Mettre un combattant **à zéro**, puis « Fin de combat » : il doit apparaître dans les **Pertes**.
 6. Écrire des **notes de séance**, clore, et regarder si elles sont dans le résumé.
+
+*Si quelque chose cloche, on corrige avant d'avancer* : un correctif non confirmé qu'on empile est un
+correctif qu'on ne saura plus isoler.
+
+### Étape 1 — P1, `saveFullSession` (code)
+
+**Les PNJ et les indices ne sont dans aucune sauvegarde.** `SessionService.saveFullSession` omet
+`entities` et `clues`. Signalé le 16/08, reporté trois fois.
+
+Premier rang parce que c'est **le seul reste connu qui détruise du travail** au lieu de le dégrader, et
+parce que le préjudice grandit avec le temps : chaque séance jouée d'ici là est une séance dont les PNJ
+ne sont pas sauvegardés.
+
+### Étape 2 — P2, le journal et la trame (code)
+
+Le module vient d'être éprouvé deux soirs de suite ; c'est le moment de finir pendant qu'on le connaît.
+Dans cet ordre, du court au structurant :
+
+1. **La mort d'un PJ** — étape 2 de l'ordre de travail du 08/08, marquée *correction* et non
+   fonctionnalité. Courte, et elle débloque le récit.
+2. **L'événement d'ouverture de combat** — l'autre moitié de l'étape 8.
+3. **`addEvent` dans un journal clos**, et **l'export en JSON brut** — deux gardes courtes.
+4. **La revue des 37 émetteurs**, un par un.
+5. **La curation scène par scène** (étape 6) — le cœur du § 4.1, et le plus gros morceau.
+
+### Ce qu'on ne fait pas demain, et pourquoi
+
+- **P3, le Cortex** — son propre document prévient de ne pas le traiter avant les axes A à C du plan
+  d'accélération. A est fait, B et C ne le sont pas.
+- **P4, le corpus** — de la justesse de réponse, pas de la fiabilité. Rien n'est bloqué. Et sa moitié
+  code (le plafond RAG) **demande une mesure**, qui vaudra mieux une fois l'iGPU vu tourner en combat.
+- **P6** — ce n'est pas une tâche, c'est une manière de travailler : chaque geste de la liste se
+  vérifie en séance, pas en relisant du code. C'est ce qui a produit tous les défauts des 18 et 19.
 
 ---
 

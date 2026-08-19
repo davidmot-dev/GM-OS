@@ -161,6 +161,11 @@ les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
 
 ### P4 — Le corpus et les règles
 
+> **Partagé, et le partage a été tranché le 2026-08-19.** Les quatre premiers points sont du **contenu** :
+> ils demandent le carnet, la Forge et le jugement de David, pas une ligne de code. Les deux derniers
+> sont du **code**. Aucun des six ne bloque quoi que ce soit — c'est de la justesse de réponse, pas de
+> la fiabilité, et c'est pourquoi P4 passe après P1 et P2.
+
 - **`docs/commun/`** est reconnu par le moteur et **n'existe toujours pas** sur le disque.
 - **16 fiches à régénérer**, 4 doublons à fusionner à cette occasion.
 - **noc (4 fiches) et rêves de dragons (7)** sont très en dessous des autres ; **coc7 et dnd-5e sont
@@ -168,9 +173,20 @@ les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
 - Le **« Chemin des Règles » est vide** pour les campagnes, qui utilisent toutes des systèmes
   `custom-…` : le rattachement repose sur le repli par nom affiché, douteux pour « Rêve de Dragon » au
   singulier contre le dossier `reves de dragons` au pluriel.
-- Le **réglage de langue d'un corpus n'a pas d'écran** (édition à la main dans `corpus.json`).
-- Le **plafond de 4 000 jetons** du RAG ne laisse passer que deux fiches entières — à réévaluer depuis
-  que l'iGPU est actif.
+**Les deux qui sont du code :**
+
+- Le **réglage de langue d'un corpus n'a pas d'écran** — édition à la main dans `corpus.json`. Une UI
+  manquante, rien de plus.
+- Le **plafond du RAG**, `MAX_CONTEXT_TOKENS = 4000` (`electron/ragSelection.ts:39`). À 5 800 caractères
+  de moyenne par fiche, il n'en laisse passer que **deux entières**. Le plan du 10/08 disait « à
+  réévaluer une fois l'iGPU en place » : il l'est depuis le 12/08. **Mais ça se mesure, ça ne s'intuite
+  pas** — monter le plafond coûte du temps de réponse, et le plan d'accélération porte un banc pour ça.
+  À faire **après** le combat de test, quand l'iGPU aura tourné en conditions réelles.
+
+*Note sur le « Chemin des Règles » : le repli échoue vraiment.* `memeIdentite` ne rapproche que des
+identifiants égaux ou préfixés d'un tiret — il compare donc `reve-de-dragon` à `reves-de-dragons` et ne
+conclut rien. Mais **le code offre déjà deux sorties propres** : le Chemin des Règles, qui est souverain,
+et le choix à la main dans l'atelier. Il n'y a pas de correctif à écrire, seulement un champ à remplir.
 
 ### ~~P5 — Données et ménages~~ ✅ fait le 2026-08-19
 
