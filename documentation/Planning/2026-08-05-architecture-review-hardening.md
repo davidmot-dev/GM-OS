@@ -415,7 +415,13 @@ passant de `{}` à `[]` — ou l'inverse — était donc vu comme inchangé et *
 diffusé**. Une garde `Array.isArray` a été ajoutée. La correction ne peut que faire
 émettre davantage, jamais moins : le sens sûr.
 
-## 9. Aucune autorisation par rôle sur les actions reçues ⬜
+## 9. Aucune autorisation par rôle sur les actions reçues ✅
+
+> **Marqueur corrigé le 2026-08-19.** Ce titre portait `⬜` alors que le tableau de bord donnait le
+> point pour fait : la moitié réseau a été close le 2026-08-06 (`electron/actionPolicy.ts`), et la
+> moitié fenêtres locales — l'angle mort que le bilan du chantier signalait encore — l'a été le
+> 2026-08-07 par `electron/relayPolicy.ts`. Voir
+> `2026-08-07-restes-unification-transport.md`, dont les cinq points sont clos.
 
 **Origine.** Point identifié en traitant les points 3 et 7, qui l'ont chacun approché sans
 le couvrir. Le point 3 a authentifié *l'accès aux données* — qui a le droit de **recevoir**
