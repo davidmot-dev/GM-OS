@@ -5,8 +5,8 @@ puis à reclasser en récit clos.
 
 **Date :** 2026-08-20
 **Périmètre :** les étapes **4**, ~~9~~ et **10** du § 8 de `2026-08-08-trame-narrative-cycle-seance.md`.
-La 9 s'est révélée **déjà faite** à la vérification, et la correction du § 0 est posée : **il reste la 4
-et la 10.**
+La 9 s'est révélée **déjà faite** à la vérification ; la correction du § 0 et l'étape 4 sont posées le
+même jour. **Il ne reste que l'étape 10** — et à voir l'étape 4 tourner en séance.
 **Méthode :** chaque état ci-dessous a été **lu dans le code aujourd'hui**, jamais recopié d'un document.
 Les fichiers et les lignes sont cités pour qu'on puisse en douter.
 
@@ -45,7 +45,7 @@ ne ment plus.
 | --- | --- | --- |
 | **A** | La correction du § 0 | Une ligne, un défaut actif, aucune dépendance. On ne construit pas sur un contexte faux. |
 | ~~**B**~~ | ~~**Étape 9** — trancher le sort de la Forge Chronique~~ | ✅ **Sans objet** : elle était déjà faite par la Forge de campagne. Voir le § 2. |
-| **C** | **Étape 4** — la capture en un clic | Elle **produit la matière** dont vivent la curation (faite) et l'étape 10. Sans elle, peu de scènes sont marquées, et les deux autres travaillent sur du vide. |
+| ~~**C**~~ | ~~**Étape 4** — la capture en un clic~~ | ✅ **faite le 2026-08-20**. Reste à la voir tourner en séance — voir le § 3. |
 | **D** | **Étape 10** — la trame dans l'Oracle | Elle **consomme** ce que C produit. La faire avant, c'est injecter une trame que personne n'a marquée. |
 
 *Le rang de C avant D est le seul qui ne se discute pas* : l'étape 10 remplace dix événements bruts par
@@ -91,52 +91,34 @@ faire.
 
 ---
 
-## 3. Étape 4 — la capture en un clic
+## 3. ~~Étape 4 — la capture en un clic~~ ✅ faite le 2026-08-20 (`78c60f2`)
 
-### Ce qui est vrai aujourd'hui, vérifié
+Une promesse sur trois était tenue. Les trois le sont.
 
-Le § 3.1 demande **deux marquages gratuits** et le § 3 demande **un clic sans frappe**. Voici l'état des
-trois promesses, une par une.
-
-| Promesse | État | Vérifié où |
+| Promesse (§ 3 et § 3.1) | Avant | Maintenant |
 | --- | --- | --- |
-| Démarrer un combat sans scène active **crée une scène improvisée** | ✅ **fait** | `useCombatStore.ts:92` (`rattacherLeCombatQuiDemarre`) → `creerSceneImprovisee` |
-| Déclencher un moment de storyboard lié à une scène **marque la scène** | ❌ **pas fait** | `momentDeStoryboardId` n'est jamais qu'**lu** : `PanneauDeTrameEnCours.tsx:180` l'affiche, `TrameDashboard.tsx:417` l'édite. Rien n'ouvre la scène quand le moment part |
-| Une scène improvisée se crée **en un clic, sans rien taper**, et **capture l'état** | ❌ **pas fait, deux fois** | `PanneauDeTrameEnCours.tsx:135-138` exige un **titre saisi** (`titreImprovise`) ; et `trameSlice.ts:261` ne capture **rien** — ni lieu, ni PNJ, ni PJ, ni ambiance |
+| Un combat sans scène active crée une scène improvisée | ✅ | ✅ et elle capture aussi |
+| **Un clic, sans rien taper** | ❌ le bouton ouvrait un champ de titre | ✅ la scène naît sous le nom du lieu ; on la nomme à la revue |
+| **Elle capture l'état** | ❌ `creerSceneImprovisee` ne relevait rien | ✅ lieu, PNJ en piste, PJ présents, ambiance — **quatre identifiants, jamais de contenus** |
+| **L'ambiance marque la scène** | ❌ `momentDeStoryboardId` n'était que lu | ✅ une seule candidate ou rien, jamais une scène close |
 
-**Le deuxième point est le plus coûteux, et le plan le disait d'avance** : *« tout ce qui demande de la
-frappe pendant que les joueurs attendent ne sera pas fait »*. Le bouton existe, il demande de taper, donc
-il ne sera pas utilisé — et la trame ne se remplira pas.
+**La carte projetée l'emporte sur la carte sélectionnée** — c'est *« la carte active »* du § 3 : ce que
+les joueurs ont sous les yeux, pas ce que le meneur a ouvert dans son atlas.
 
-### Le geste, dans cet ordre
+**Rien ne peut échouer** : magasin absent, piste vide, trame en mauvais état — la capture rend moins de
+choses et le clic marche quand même. *Une capture partielle vaut infiniment mieux qu'un clic qui ne fait
+rien.*
 
-1. **Rendre le clic muet.** Le bouton crée la scène immédiatement, avec un titre par défaut daté ou tiré
-   du lieu actif. Le champ de saisie reste, mais **après** : on nomme une scène qui existe déjà, ou on la
-   nomme à la revue de fin de séance — laquelle sait maintenant éditer le titre sur place.
-2. **Capturer l'état à la création.** `creerSceneImprovisee` relève, **par référence et jamais par
-   contenu** (§ 3, « le précédent et le piège ») : `lieuId` depuis la carte active, `entiteIds` depuis les
-   PNJ en piste, `personnagesIds` depuis les PJ présents, `momentDeStoryboardId` depuis le moment en
-   cours.
-3. **Brancher le second marquage.** Déclencher un moment de storyboard ouvre la scène qui le déclare —
-   `activeMomentId` est déjà là, dans le même panneau (`PanneauDeTrameEnCours.tsx:40`). Deux gardes : ne
-   rien faire si la scène est déjà ouverte, et **ne pas fermer** celle qui l'est — le groupe séparé reste
-   le cas normal.
+### Ce qu'il reste à voir tourner — en séance
 
-> **Le risque est connu et accepté** (§ 3.2) : un changement de scène sera oublié. Les deux amortisseurs
-> existent désormais tous les deux — le marquage gratuit, et **la revue de fin de séance**, qui est faite
-> depuis aujourd'hui.
+C'est le seul contrôle qui vaille, et il n'a pas encore été fait :
 
-### Comment savoir que c'est fait — en séance
-
-1. Lancer un combat sans scène ouverte : une scène improvisée doit naître **et porter le nom de la carte
-   ou du lieu**, pas « Combat improvisé ».
-2. Cliquer « scène improvisée » dans le panneau de trame : elle doit exister **avant** qu'on ait tapé
-   quoi que ce soit.
-3. Ouvrir la scène ainsi créée : elle doit déjà connaître **le lieu, les PJ présents et les PNJ en
-   piste**.
+1. Lancer un combat sans scène ouverte : la scène improvisée doit porter **le nom de la carte**.
+2. Cliquer « scène improvisée » : elle doit exister **avant** d'avoir tapé quoi que ce soit.
+3. L'ouvrir : elle doit déjà connaître **le lieu, les PJ présents et les PNJ en piste**.
 4. Déclencher l'ambiance d'une scène prévue : cette scène doit passer « en cours » toute seule.
-5. Terminer la séance et ouvrir la revue : les scènes marquées doivent y être, **avec leurs événements
-   dedans** — c'est le rattachement automatique posé ce matin qui s'en charge.
+5. Clore la séance, ouvrir la revue : les scènes marquées doivent y être, **avec leurs événements
+   dedans**.
 
 ---
 
