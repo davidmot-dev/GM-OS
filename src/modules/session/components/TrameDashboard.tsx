@@ -213,9 +213,8 @@ const TrameDashboard: React.FC = () => {
                                                     supprimerScene(scene.id);
                                                     setSelection(null);
                                                 })}
-                                                onBasculerLEtat={() => (etatDeLaScene(scene) === 'en-cours'
-                                                    ? terminerLaScene(scene.id)
-                                                    : ouvrirLaScene(scene.id, seanceActive?.id))}
+                                                onBasculerLEtat={() => ouvrirLaScene(scene.id, seanceActive?.id)}
+                                                onTerminer={() => terminerLaScene(scene.id)}
                                                 onCloner={() => {
                                                     const id = clonerLaScene(scene.id);
                                                     if (id) setSelection({ type: 'scene', id });
@@ -315,10 +314,10 @@ const Champ: React.FC<{ label: string; children: React.ReactNode }> = ({ label, 
  * scène ordinaire peu remplie, et c'est ce que la pastille montre. Rien
  * n'oblige à la remplir.
  */
-function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprimer, onBasculerLEtat, onCloner }: {
+function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprimer, onBasculerLEtat, onTerminer, onCloner }: {
     scene: Scene; actif: boolean;
     onSelect: () => void; onMonter: () => void; onDescendre: () => void; onSupprimer: () => void;
-    onBasculerLEtat: () => void; onCloner: () => void;
+    onBasculerLEtat: () => void; onTerminer: () => void; onCloner: () => void;
 }) {
     const etat = etatDeLaScene(scene);
     return (
@@ -356,11 +355,37 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
                     passer par l'espace de jeu, et refuser ici aurait fait de cet
                     écran une vue en lecture seule sur son propre objet.
                 */}
-                <button
-                    onClick={onBasculerLEtat}
-                    title={etat === 'en-cours' ? 'Terminer la scène' : etat === 'terminee' ? 'Rouvrir la scène' : 'Commencer la scène'}
-                    className={`p-1 rounded ${etat === 'en-cours' ? 'text-emerald-400 hover:text-red-300' : 'text-app-text/30 hover:text-emerald-300'}`}
-                >{etat === 'en-cours' ? <Square size={12} /> : <Play size={12} />}</button>
+                {/*
+                    **Terminer est une action à part, et il a fallu ça pour
+                    qu'une scène jouée puisse enfin se barrer.**
+
+                    Ce bouton faisait `en-cours ? terminer : ouvrir`. Or une
+                    scène jouée puis quittée en fin de séance est **en pause**,
+                    pas en cours : le seul bouton disponible la ROUVRAIT, et il
+                    n'existait aucun chemin, depuis cet écran, pour clore ce
+                    qu'on venait de jouer. Signalé par David le 2026-08-20 —
+                    *« les scènes jouées n'apparaissent pas comme barrées »*.
+
+                    Une scène en pause a besoin des DEUX gestes, reprendre et
+                    terminer : un bouton unique ne pouvait pas les porter tous
+                    les deux, et c'est reprendre qu'il avait choisi.
+                */}
+                {etat !== 'en-cours' && (
+                    <button
+                        onClick={onBasculerLEtat}
+                        title={etat === 'terminee' ? 'Rouvrir la scène'
+                            : etat === 'en-pause' ? 'Reprendre la scène'
+                                : 'Commencer la scène'}
+                        className="p-1 rounded text-app-text/30 hover:text-emerald-300"
+                    ><Play size={12} /></button>
+                )}
+                {(etat === 'en-cours' || etat === 'en-pause') && (
+                    <button
+                        onClick={onTerminer}
+                        title="Terminer la scène — elle se barre"
+                        className="p-1 rounded text-emerald-400 hover:text-red-300"
+                    ><Square size={12} /></button>
+                )}
                 <button onClick={onCloner} title="Cloner la scène — une copie vierge, juste après" className="p-1 rounded text-app-text/30 hover:text-app-text"><Copy size={12} /></button>
                 <button onClick={onMonter} title="Monter" className="p-1 rounded text-app-text/30 hover:text-app-text"><ChevronUp size={12} /></button>
                 <button onClick={onDescendre} title="Descendre" className="p-1 rounded text-app-text/30 hover:text-app-text"><ChevronDown size={12} /></button>

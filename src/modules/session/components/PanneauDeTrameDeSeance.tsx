@@ -1,7 +1,10 @@
 import React from 'react';
 import { ExternalLink, AlertTriangle } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { actesOrdonnes, scenesOrdonnees, repartirLesScenesPrevues } from '../logic/trame';
+import {
+    actesOrdonnes, scenesOrdonnees, repartirLesScenesPrevues,
+    etatDeLaScene, closeSansAvoirEteJouee,
+} from '../logic/trame';
 import PastilleDePreparation from './trame/PastilleDePreparation';
 import type { GameSession } from '../../../types/session.types';
 import type { Scene } from '../../../types/trame.types';
@@ -122,10 +125,27 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
     );
 };
 
+/**
+ * Une scène qu'on peut prévoir pour cette séance.
+ *
+ * **L'état de jeu s'y lit, et il a fallu qu'il manque pour qu'on le voie.**
+ * Cette case n'affichait que la préparation : une scène déjà terminée y était
+ * proposée exactement comme une scène jamais touchée. *On pouvait donc préparer
+ * une séance autour d'une scène déjà finie, et rien ne le disait.* Signalé par
+ * David le 2026-08-20, en même temps que le bouton de la trame qui ne savait
+ * pas terminer.
+ *
+ * Les mêmes règles qu'ailleurs, parce qu'un état ne doit pas se lire de deux
+ * façons selon l'écran : barrée quand elle est terminée, **grisée en plus** si
+ * elle l'a été sans jamais avoir été jouée.
+ */
 const CaseDeScene: React.FC<{ scene: Scene; choisie: boolean; onBascule: () => void }> = ({ scene, choisie, onBascule }) => {
+    const etat = etatDeLaScene(scene);
+    const jamaisJouee = closeSansAvoirEteJouee(scene);
     return (
         <button
             onClick={onBascule}
+            title={jamaisJouee ? 'Close sans avoir été jouée' : undefined}
             className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-left transition-all ${
                 choisie
                     ? 'bg-accent/15 border-accent/40 text-app-text'
@@ -133,7 +153,17 @@ const CaseDeScene: React.FC<{ scene: Scene; choisie: boolean; onBascule: () => v
             }`}
         >
             <PastilleDePreparation scene={scene} />
-            <span className="flex-1 min-w-0 text-sm truncate">{scene.titre}</span>
+            <span className={`flex-1 min-w-0 text-sm truncate ${
+                etat === 'terminee'
+                    ? `line-through ${jamaisJouee ? 'text-app-text/20' : 'text-app-text/40'}`
+                    : ''
+            }`}>{scene.titre}</span>
+            {etat === 'en-cours' && (
+                <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
+            )}
+            {etat === 'en-pause' && (
+                <span className="text-[8px] font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
+            )}
             {scene.origine === 'improvisee' && (
                 <span className="text-[8px] font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
             )}

@@ -312,3 +312,86 @@ export function repartirLesScenesPrevues(
         introuvables: ids.length - retenues.length,
     };
 }
+
+/**
+ * Ce que clôturer une campagne fait à sa trame.
+ *
+ * **Décision de David, 2026-08-20** — c'est la dernière des trois questions
+ * laissées ouvertes au § 10 du plan du 2026-08-08 : *« que devient une scène
+ * prévue jamais jouée ? »* Réponse : **elle devient annulée quand la campagne se
+ * termine**, et pas avant. La trame est donc un **plan glissant tant que la
+ * campagne vit, et un registre une fois qu'elle est close.**
+ *
+ * **Rien de neuf dans le modèle, et c'est le point.** Une scène annulée est une
+ * scène `termineeLe` sans aucun passage — ce que `closeSansAvoirEteJouee`
+ * appelle déjà « close sans avoir été jouée », et que tous les écrans rendent
+ * déjà barrée *et* grisée. La doc du champ le disait mot pour mot depuis le
+ * 2026-08-17 : *« l'acte s'est achevé avant qu'on n'y passe »*. Clôturer une
+ * campagne, c'est le geste de `scenesACloreAvecLActe` étendu à tous ses actes.
+ *
+ * **Les scènes jouées sans avoir été terminées deviennent terminées**, pas
+ * annulées (décision de David du même jour) : elles ont été jouées, et la
+ * distinction survit toute seule dans les données — c'est le nombre de passages
+ * qui la porte, jamais un second champ.
+ *
+ * **On ne touche pas à ce qui est déjà terminé.** Réécrire leur `termineeLe`
+ * remplacerait la date où le meneur les a closes par celle de la clôture, et
+ * ferait mentir la chronologie de la campagne au moment précis où on l'archive.
+ */
+export function laTrameALaCloture(
+    scenes: readonly Scene[],
+    actes: readonly Acte[],
+    campaignId: string,
+    quand: number,
+): { scenes: Scene[]; actes: Acte[]; annulees: number; terminees: number } {
+    const idsDesActes = new Set(actes.filter(a => a.campaignId === campaignId).map(a => a.id));
+
+    let annulees = 0;
+    let terminees = 0;
+
+    const nouvelles = scenes.map(scene => {
+        if (scene.campaignId !== campaignId && !idsDesActes.has(scene.acteId)) return scene;
+        if (scene.termineeLe) return scene;
+
+        if ((scene.passages ?? []).length === 0) annulees++;
+        else terminees++;
+
+        // `terminerLaScene` ferme aussi le passage en cours : une scène qu'on
+        // clôt pendant qu'elle tourne ne doit pas garder un passage ouvert pour
+        // toujours.
+        return terminerLaScene(scene, quand);
+    });
+
+    return {
+        scenes: nouvelles,
+        // Les actes s'achèvent avec elle : un acte encore ouvert dans une
+        // campagne close se relit mal des mois plus tard.
+        actes: actes.map(a => (a.campaignId === campaignId && !a.acheve ? { ...a, acheve: true } : a)),
+        annulees,
+        terminees,
+    };
+}
+
+/**
+ * Ce que la clôture va faire, **annoncé avant qu'elle le fasse**.
+ *
+ * Même règle que pour l'achèvement d'un acte : *le nombre s'annonce AVANT,
+ * sinon on découvre après coup ce qu'on vient de barrer.* Clôturer une campagne
+ * est le geste le plus large de l'application ; il ne doit pas se prendre à
+ * l'aveugle.
+ */
+export function ceQueLaClotureVaFaire(
+    scenes: readonly Scene[],
+    actes: readonly Acte[],
+    campaignId: string,
+): { annulees: Scene[]; terminees: Scene[]; actesOuverts: number } {
+    const idsDesActes = new Set(actes.filter(a => a.campaignId === campaignId).map(a => a.id));
+    const concernees = scenes.filter(s =>
+        (s.campaignId === campaignId || idsDesActes.has(s.acteId)) && !s.termineeLe);
+
+    return {
+        annulees: concernees.filter(s => (s.passages ?? []).length === 0),
+        terminees: concernees.filter(s => (s.passages ?? []).length > 0),
+        actesOuverts: actes.filter(a => a.campaignId === campaignId && !a.acheve).length,
+    };
+}

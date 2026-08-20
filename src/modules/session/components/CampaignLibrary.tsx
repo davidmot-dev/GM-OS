@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload, Power } from 'lucide-react';
+import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore } from 'lucide-react';
+import { ceQueLaClotureVaFaire } from '../logic/trame';
 import { motion } from 'framer-motion';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -180,6 +181,44 @@ const CampaignLibrary: React.FC = () => {
                                         >
                                             <Settings size={18} />
                                         </button>
+                                        {/*
+                                            **Clôturer n'est pas supprimer**, et
+                                            les deux boutons se touchent : celui-ci
+                                            range, l'autre détruit. D'où l'annonce
+                                            AVANT — le nombre de scènes qu'on va
+                                            barrer se dit, sinon on découvre après
+                                            coup ce qu'on vient de faire. Même règle
+                                            que pour l'achèvement d'un acte.
+                                        */}
+                                        <button
+                                            className="p-2 text-app-text/20 hover:text-accent transition-colors opacity-0 group-hover:opacity-100"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                const os = useSessionOSStore.getState();
+                                                if (campaign.clotureeLe) {
+                                                    os.rouvrirLaCampagne(campaign.id);
+                                                    return;
+                                                }
+                                                const { annulees, terminees, actesOuverts } =
+                                                    ceQueLaClotureVaFaire(os.scenes, os.actes, campaign.id);
+                                                const dits = [
+                                                    terminees.length > 0 && `${terminees.length} scène(s) jouée(s) seront terminées`,
+                                                    annulees.length > 0 && `${annulees.length} jamais jouée(s) seront annulées`,
+                                                    actesOuverts > 0 && `${actesOuverts} acte(s) seront achevés`,
+                                                ].filter(Boolean).join(', ');
+                                                gmConfirm(
+                                                    `Clôturer « ${campaign.name} » ?`
+                                                    + (dits ? ` ${dits}.` : '')
+                                                    + " Rien n'est effacé, et on peut rouvrir.",
+                                                    () => os.cloturerLaCampagne(campaign.id),
+                                                );
+                                            }}
+                                            title={campaign.clotureeLe
+                                                ? 'Rouvrir la campagne'
+                                                : "Clôturer la campagne — elle se range, rien n'est effacé"}
+                                        >
+                                            {campaign.clotureeLe ? <ArchiveRestore size={18} /> : <Archive size={18} />}
+                                        </button>
                                         <button
                                             className="p-2 text-app-text/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                                             onClick={(e) => { 
@@ -194,11 +233,20 @@ const CampaignLibrary: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-app-text/90 mb-1 group-hover:text-accent transition-colors">{campaign.name}</h3>
+                                <h3 className={`text-xl font-bold mb-1 transition-colors ${
+                                    campaign.clotureeLe
+                                        ? 'text-app-text/40 line-through'
+                                        : 'text-app-text/90 group-hover:text-accent'
+                                }`}>{campaign.name}</h3>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
                                     {campaign.id === activeCampaignId && (
                                         <span className="text-[10px] bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
+                                    )}
+                                    {campaign.clotureeLe && (
+                                        <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">
+                                            clôturée
+                                        </span>
                                     )}
                                 </div>
                                 <p className="text-app-text/40 text-xs mt-3 line-clamp-2 leading-relaxed italic">

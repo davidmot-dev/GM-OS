@@ -81,6 +81,27 @@ export interface Campaign {
      */
     langueDeForge?: string;
 
+    /**
+     * Quand la campagne a été clôturée. C'est elle qui la range.
+     *
+     * **Il n'existait aucun statut de campagne** — relevé par David le
+     * 2026-08-20. On pouvait achever un acte, terminer une scène, clore une
+     * séance, mais jamais dire d'une campagne qu'elle est finie : elle restait
+     * indéfiniment dans la bibliothèque au même rang que celle qu'on joue ce
+     * soir.
+     *
+     * **Une date et non un booléen**, comme `Scene.termineeLe` : *quand* une
+     * campagne s'est achevée est une information qu'on relit des années après,
+     * et un `true` ne la porte pas.
+     *
+     * **Clôturer n'efface rien** — c'est la règle déjà tenue par l'acte achevé
+     * et la scène terminée. La campagne reste lisible, ses fiches consultables,
+     * et rouvrir est un simple geste. Ce qu'elle emporte est décrit par
+     * `laTrameALaCloture` : les scènes jamais jouées deviennent annulées, celles
+     * qu'on a jouées sans les clore deviennent terminées.
+     */
+    clotureeLe?: number;
+
     // Social Graph Optimization
     nodePositions?: Record<string, { x: number; y: number }>;
     isGraphLocked?: boolean;

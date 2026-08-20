@@ -54,6 +54,10 @@ interface CrossDomainActions {
     lastBackupAt: string | null;
     // Actions déléguées au SessionManager ou SnapshotService
     launchSession: (sessionId: string) => void;
+    /** La campagne est finie : sa trame se range avec elle, rien n'est effacé. */
+    cloturerLaCampagne: (id: string) => void;
+    /** Elle redevient jouable. Sa trame reste telle quelle — voir `rouvrirLaCampagne`. */
+    rouvrirLaCampagne: (id: string) => void;
     saveSystemSnapshot: (sessionId: string) => void;
     applySystemSnapshot: (snapshot: SessionModuleSnapshot) => Promise<void>;
     clearDiceRolls: () => void;
@@ -151,6 +155,9 @@ export const useSessionOSStore = create<SessionOSStore>()(
             setActiveCampaign: (id) => SessionManager.setActiveCampaign(set, get, id),
             
             deleteCampaign: (id) => SessionManager.deleteCampaign(set, get, id),
+
+            cloturerLaCampagne: (id) => SessionManager.cloturerLaCampagne(set, get, id),
+            rouvrirLaCampagne: (id) => SessionManager.rouvrirLaCampagne(set, get, id),
 
             setCurrentView: (view) => {
                 set({ currentView: view });

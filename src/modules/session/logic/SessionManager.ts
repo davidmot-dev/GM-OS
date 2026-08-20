@@ -5,7 +5,7 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useObsidianStore } from '../useObsidianStore';
 import type { SessionOSStore } from '../store/index';
 import type { GameSession, Campaign } from '../store/types';
-import { suspendreLesScenes, reprendreLesScenes } from './trame';
+import { suspendreLesScenes, reprendreLesScenes, laTrameALaCloture } from './trame';
 
 /**
  * SessionManager logic service.
@@ -182,6 +182,82 @@ export class SessionManager {
     /**
      * Performs a cascade delete of a campaign and its related data.
      */
+    /**
+     * Clôture une campagne : elle est finie, et sa trame se range avec elle.
+     *
+     * **Il n'existait aucun statut de campagne** — relevé par David le
+     * 2026-08-20. On pouvait achever un acte, terminer une scène, clore une
+     * séance, mais jamais dire d'une campagne qu'elle est finie.
+     *
+     * **Clôturer n'efface rien**, et c'est ce qui la distingue de
+     * `deleteCampaign` juste en dessous, qui emporte tout. La règle est celle
+     * déjà tenue par l'acte achevé et la scène terminée : on range, on ne
+     * détruit pas, et rouvrir est un simple geste.
+     *
+     * Ce que la trame devient est décidé par `laTrameALaCloture` : les scènes
+     * jamais jouées deviennent **annulées**, celles qu'on a jouées sans les
+     * clore deviennent **terminées**, et les actes s'achèvent.
+     *
+     * **La séance en cours s'arrête d'abord.** Clôturer une campagne pendant
+     * qu'on y joue laisserait un journal ouvert sur une campagne close, et un
+     * `activeSessionId` qui désigne une séance d'une campagne finie.
+     */
+    static cloturerLaCampagne(set: any, get: any, id: string) {
+        const state = get() as SessionOSStore;
+        const campaign = state.campaigns.find((c: Campaign) => c.id === id);
+        if (!campaign || campaign.clotureeLe) return;
+
+        const quand = Date.now();
+        const { scenes, actes, annulees, terminees } = laTrameALaCloture(
+            state.scenes, state.actes, id, quand,
+        );
+
+        set((s: SessionOSStore) => ({
+            campaigns: s.campaigns.map(c => (c.id === id ? { ...c, clotureeLe: quand } : c)),
+            scenes,
+            actes,
+            // Une campagne close ne garde pas de séance en cours.
+            sessions: s.sessions.map(x =>
+                (x.campaignId === id && x.status === 'active' ? { ...x, status: 'done' as const } : x)),
+        }));
+
+        gmToast(
+            `« ${campaign.name} » est clôturée.`
+            + (terminees > 0 ? ` ${terminees} scène(s) terminée(s).` : '')
+            + (annulees > 0 ? ` ${annulees} jamais jouée(s), annulée(s).` : ''),
+            'info',
+        );
+    }
+
+    /**
+     * Rouvre une campagne close.
+     *
+     * **Elle ne ranime pas la trame, et c'est délibéré.** Rouvrir rend la
+     * campagne jouable ; décider que telle scène annulée redevient à jouer est
+     * un geste par scène, que la trame sait déjà faire — *« rouvrir une scène
+     * terminée la ranime, délibérément »*. Tout défaire d'un coup ressusciterait
+     * aussi ce que le meneur avait clos de sa main avant la clôture, et on ne
+     * saurait plus lequel était lequel.
+     */
+    static rouvrirLaCampagne(set: any, get: any, id: string) {
+        const state = get() as SessionOSStore;
+        const campaign = state.campaigns.find((c: Campaign) => c.id === id);
+        if (!campaign?.clotureeLe) return;
+
+        set((s: SessionOSStore) => ({
+            campaigns: s.campaigns.map(c => {
+                if (c.id !== id) return c;
+                // On retire la date plutôt que de la mettre à `undefined` : une
+                // clé absente et une clé vide se lisent pareil dans le code, mais
+                // pas dans la base persistée ni dans une sauvegarde relue.
+                const rouverte = { ...c };
+                delete rouverte.clotureeLe;
+                return rouverte;
+            }),
+        }));
+        gmToast(`« ${campaign.name} » est rouverte. Sa trame reste telle quelle.`, 'info');
+    }
+
     static deleteCampaign(set: any, get: any, id: string) {
         const state = get() as SessionOSStore;
         const campaign = state.campaigns.find((c: Campaign) => c.id === id);
