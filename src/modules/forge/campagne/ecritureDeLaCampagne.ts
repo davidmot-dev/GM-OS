@@ -8,12 +8,16 @@
  *
  * ---
  *
- * **ON NE JETTE PLUS EN SILENCE.** `crossDomainHelpers.ts:42` fait
- * `.filter(r => r.targetId)` : une relation dont le nom ne tombe pas juste
- * disparaît **sans un mot**. Sur une relation, la perte est discrète. Sur une
- * scène, elle serait invisible et grave — une scène amputée de ses PNJ et de ses
- * indices a l'aspect exact d'une scène qui n'en avait pas, et l'écran
+ * **ON NE JETTE PLUS EN SILENCE.** L'import de campagne faisait
+ * `.filter(r => r.targetId)` : une relation dont le nom ne tombait pas juste
+ * disparaissait **sans un mot**. Sur une relation, la perte est discrète. Sur
+ * une scène, elle serait invisible et grave — une scène amputée de ses PNJ et de
+ * ses indices a l'aspect exact d'une scène qui n'en avait pas, et l'écran
  * annoncerait un succès.
+ *
+ * *(Ce `filter` n'existe plus : `crossDomainHelpers.ts` ne le porte plus, et la
+ * référence à sa ligne 42 était périmée — elle a fait croire le 2026-08-20 que
+ * le défaut vivait encore.)*
  *
  * Ici, chaque renvoi qui ne trouve pas sa cible est **rendu**, avec l'objet qui
  * le portait, le champ visé et le nom écrit. Le renvoi est abandonné — on ne

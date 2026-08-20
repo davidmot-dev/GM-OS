@@ -4,9 +4,10 @@ import { forgeService } from './ForgeService';
  * Le catalogue du carnet NotebookLM : ses carnets, et les sources de chacun.
  *
  * **Extrait le 2026-08-15, parce qu'il était sur le point d'être écrit une
- * troisième fois.** `ChronicleForge` et `ForgeDashboard` en portaient chacun
- * leur version, et elles ne lisaient déjà pas la réponse de la même façon — la
- * première seule connaissait le cas des sources rendues **à côté** du carnet.
+ * troisième fois.** `ChronicleForge` — retirée depuis, le 2026-08-17 — et
+ * `ForgeDashboard` en portaient chacun leur version, et elles ne lisaient déjà
+ * pas la réponse de la même façon : la première seule connaissait le cas des
+ * sources rendues **à côté** du carnet.
  * *Deux chemins vers le même service finissent toujours par ne plus dire la même
  * chose*, et ici la divergence est muette : une liste de sources vide s'affiche
  * comme « ce carnet n'en a pas ».

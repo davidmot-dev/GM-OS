@@ -1,11 +1,12 @@
-# Les trois étapes restantes du plan de trame — procédure d'exécution
+# Les étapes restantes du plan de trame — procédure d'exécution
 
-**Nature de ce document : référence vivante.** À tenir à jour jusqu'à ce que les trois étapes soient
-closes, puis à reclasser en récit clos.
+**Nature de ce document : référence vivante.** À tenir à jour jusqu'à ce que les étapes soient closes,
+puis à reclasser en récit clos.
 
 **Date :** 2026-08-20
-**Périmètre :** les étapes **4**, **9** et **10** du § 8 de `2026-08-08-trame-narrative-cycle-seance.md`,
-seules ouvertes après la journée du 20/08.
+**Périmètre :** les étapes **4**, ~~9~~ et **10** du § 8 de `2026-08-08-trame-narrative-cycle-seance.md`.
+La 9 s'est révélée **déjà faite** à la vérification, et la correction du § 0 est posée : **il reste la 4
+et la 10.**
 **Méthode :** chaque état ci-dessous a été **lu dans le code aujourd'hui**, jamais recopié d'un document.
 Les fichiers et les lignes sont cités pour qu'on puisse en douter.
 
@@ -43,7 +44,7 @@ ne ment plus.
 | Rang | Quoi | Pourquoi ici |
 | --- | --- | --- |
 | **A** | La correction du § 0 | Une ligne, un défaut actif, aucune dépendance. On ne construit pas sur un contexte faux. |
-| **B** | **Étape 9** — trancher le sort de la Forge Chronique | Ce n'est pas une tâche, c'est une **décision de David**. Cinq minutes, et elle retire ou requalifie un point de la liste. |
+| ~~**B**~~ | ~~**Étape 9** — trancher le sort de la Forge Chronique~~ | ✅ **Sans objet** : elle était déjà faite par la Forge de campagne. Voir le § 2. |
 | **C** | **Étape 4** — la capture en un clic | Elle **produit la matière** dont vivent la curation (faite) et l'étape 10. Sans elle, peu de scènes sont marquées, et les deux autres travaillent sur du vide. |
 | **D** | **Étape 10** — la trame dans l'Oracle | Elle **consomme** ce que C produit. La faire avant, c'est injecter une trame que personne n'a marquée. |
 
@@ -53,47 +54,40 @@ coûte trop cher, elle remplace dix lignes par rien.
 
 ---
 
-## 2. Étape 9 — la Forge Chronique : trancher, pas coder
+## 2. ~~Étape 9 — la Forge Chronique~~ ✅ close le 2026-08-20 : elle était déjà faite
 
-### Ce qui est vrai aujourd'hui, vérifié
+**Ce § 2 disait faux, et il est réécrit.** Sa version d'origine annonçait qu'il restait une décision à
+prendre — *« où vont les trois idées survivantes du § 6 »*. Vérification faite dans le code : **elles y
+sont déjà, toutes les quatre**, depuis le 15-16 août.
 
-**La Forge de chronique a été retirée le 2026-08-17, et le retrait est complet.** Il n'en reste que des
-mentions dans des commentaires — `src/modules/forge/carnetNotebookLM.ts:7` et le bandeau de
-`src/types/trame.types.ts:7`. Le `chronicleSlice` qui subsiste **ne la concerne pas** : il gère le wiki et
-la chronologie de campagne (`src/modules/session/store/chronicleSlice.ts:3`).
+| Idée du § 6 | Où elle vit |
+| --- | --- |
+| 6.1 — actes et scènes générés | `ecritureDeLaCampagne.ts:291-306` et `:481` écrivent actes **et** scènes |
+| 6.2 — générer en passes, résoudre sur les noms créés | l'annuaire `parNom`, avec rapprochement approximatif |
+| 6.3 — ne plus jeter en silence | `nonResolus` et `approximatifs` remontent **à l'écran**, `ForgeDeLaTrame.tsx:427-461` |
+| 6.4 — reforger n'écrase pas les retouches | *« REFORGER N'ÉCRASE RIEN »*, en tête du même fichier |
 
-**L'étape 9 est donc sans objet en l'état.** Elle dit *« `ChronicleForgeResult` gagne des actes »* d'un
-objet qui n'existe plus.
+Et le `.filter(r => r.targetId)` que j'annonçais comme une perte de données vivante **n'existe plus** :
+`crossDomainHelpers.ts` fait 178 lignes et ne le porte pas. C'est un **commentaire périmé** de
+`ecritureDeLaCampagne.ts`, qui le citait encore par son ancien numéro de ligne, qui me l'a fait croire
+vivant. Le commentaire est corrigé.
 
-### La décision à prendre
+La preuve était par ailleurs dans les données : la Forge de campagne du 16/08 a signalé **6 renvois sur
+~150** sur « Le secret de Milo ». C'est le § 6.3 en train de fonctionner.
 
-Le § 6 du plan portait quatre idées, et **trois survivent au retrait de la Forge**. La question n'est pas
-« garde-t-on l'étape 9 », c'est **où vont ses trois idées survivantes** :
+> **La leçon, et elle est désagréable parce qu'elle porte sur ce document même.** J'avais vérifié que la
+> Forge de chronique était retirée. Je n'ai **pas** vérifié si ses idées avaient été reprises ailleurs :
+> je les ai déclarées « survivantes » en lisant le plan, pas le code. C'est exactement la règle 3 de la
+> réconciliation — *un statut se vérifie avant d'être écrit* — enfreinte dans un document qui la cite.
+>
+> *Vérifier qu'une chose a disparu n'est pas vérifier que son travail n'a pas été fait.*
 
-| Idée du § 6 | Elle survit ? | Où elle irait |
-| --- | --- | --- |
-| 6.1 — la Forge génère actes et scènes | ⛔ sans objet | — |
-| **6.2 — générer en passes**, en donnant au modèle la liste des noms déjà créés | ✅ | **La Forge de campagne**, qui génère déjà PNJ, lieux et indices — et qui a été éprouvée en réel le 16/08 |
-| **6.3 — ne plus jeter en silence** ce qui ne se résout pas (`crossDomainHelpers.ts`, `.filter(r => r.targetId)`) | ✅ **et c'est le plus utile** | Correctif isolé, profite rétroactivement à toutes les relations déjà importées |
-| **6.4 — reforger n'écrase pas les retouches** | ✅ | La Forge de campagne, mode enrichissement |
+**Ce qui restait n'était donc pas une décision mais un bandeau**, posé le même jour sur le § 6 et sur la
+ligne 9 du § 8 du plan du 2026-08-08. Les sections y sont conservées telles quelles : elles restent le
+récit de ce qui a été trouvé, et c'est leur valeur — elles ne disent simplement plus ce qu'il reste à
+faire.
 
-> **6.3 mérite d'être sorti du lot.** Ce n'est pas une fonctionnalité, c'est une **perte de données
-> silencieuse** de la même famille que le reste P1 du 16/08 : ce qui ne se résout pas est écarté sans un
-> mot. La Forge de campagne du 16/08 a signalé six renvois sur ~150 — mais elle les a *signalés* ; ici on
-> parle du chemin qui ne signale rien.
-
-### Le geste
-
-1. **David tranche** : l'étape 9 est *abandonnée en tant que telle*, et ses trois idées survivantes
-   deviennent des points de la Forge de campagne. Ou bien elle est réécrite. **Il n'y a pas de troisième
-   possibilité : la laisser en l'état est ce qu'on a déjà fait pendant trois jours.**
-2. Quel que soit le choix, **le § 6 du plan du 08/08 reçoit un bandeau** disant lequel — *un plan qui dit
-   faux coûte plus qu'un plan absent*, et c'est exactement le reproche déjà fait à `roadmap-v6.md`.
-
-### Comment savoir que c'est fait
-
-Rien à vérifier en séance : c'est de la documentation. Le contrôle est qu'**aucun document ne dise plus
-qu'une Forge de chronique va générer la trame**.
+**Il ne reste donc que deux étapes ouvertes : la 4 et la 10.**
 
 ---
 

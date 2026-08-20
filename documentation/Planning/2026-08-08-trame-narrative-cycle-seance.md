@@ -289,7 +289,28 @@ maintenant que la redécouvrir module par module.**
 
 ---
 
-## 6. La Forge Chronique génère la trame
+## 6. ~~La Forge Chronique génère la trame~~ ✅ fait ailleurs, par la Forge de campagne
+
+> **BANDEAU DU 2026-08-20 — cette section est close, et elle ne l'a pas été comme elle l'annonçait.**
+>
+> La **Forge de chronique a été retirée le 2026-08-17**, et `ChronicleForgeResult` avec elle. Cette
+> section décrit donc un objet qui n'existe plus. Mais **ses quatre idées ont toutes été réalisées**,
+> dans la **Forge de campagne** (`ecritureDeLaCampagne.ts`, 15-16 août) :
+>
+> | Idée | Où elle vit |
+> | --- | --- |
+> | 6.1 — actes et scènes générés | `ecritureDeLaCampagne.ts` écrit actes **et** scènes |
+> | 6.2 — générer en passes, résoudre sur les noms déjà créés | l'annuaire `parNom`, avec rapprochement approximatif |
+> | 6.3 — ne plus jeter en silence | `nonResolus` et `approximatifs` remontent **à l'écran** (`ForgeDeLaTrame.tsx`) |
+> | 6.4 — reforger n'écrase pas les retouches | *« REFORGER N'ÉCRASE RIEN »*, en tête du même fichier |
+>
+> **Éprouvée en réel le 2026-08-16** sur « Le secret de Milo » : 3 actes, 29 scènes, 43 PNJ, et
+> **6 renvois sur ~150 signalés** — c'est le § 6.3 en train de fonctionner.
+>
+> Le `.filter(r => r.targetId)` que le § 6.3 dénonçait **n'existe plus** dans `crossDomainHelpers.ts`.
+>
+> *La section est conservée telle quelle en dessous : elle reste le récit de ce qui a été trouvé, et
+> c'est sa valeur. Elle ne dit simplement plus ce qu'il reste à faire.*
 
 **Décision de David : la Forge propose une trame, et lie les éléments connexes — lieux, PNJ présents,
 indices, objets. Tout reste modifiable au moment de retravailler la séance à venir.**
@@ -361,7 +382,7 @@ elle dit où la préparation a tenu et où les joueurs sont sortis du script.
 | 6 | Revue de fin de séance scène par scène | l'étape 1 |
 | 7 | Résumé sur l'ensemble curé | l'étape 2 |
 | 8 | Résumé de combat enrichi + événement d'ouverture | § 5.2 |
-| 9 | Trame générée par la Forge Chronique, en passes | § 6 |
+| ~~9~~ | ~~Trame générée par la Forge Chronique, en passes~~ **✅ fait par la Forge de campagne** (15-16/08) — voir le bandeau du § 6 | § 6 |
 | 10 | Trame injectée dans le contexte Oracle / Cortex | § 7 |
 
 Les deux premières lignes sont des **corrections**, pas des fonctionnalités : à traiter indépendamment

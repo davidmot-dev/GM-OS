@@ -7,6 +7,10 @@
  * `GameSession` n'a aucune structure interne. `ChronicleForgeResult` fabrique un
  * décor, jamais une progression.
  *
+ * *(La Forge de chronique a été retirée le 2026-08-17, et `ChronicleForgeResult`
+ * avec elle. Le constat reste : c'est lui qui a fait naître ce modèle. C'est la
+ * Forge de campagne qui écrit désormais actes et scènes.)*
+ *
  * **Deux niveaux, pas quatre.** Pas d'objet « scénario » distinct : l'acte en
  * tient lieu. Décision de David — *« dans une séance, on est censé savoir dans
  * quel acte on se trouve, et a priori quelles scènes seront jouées. »* Et pas de
