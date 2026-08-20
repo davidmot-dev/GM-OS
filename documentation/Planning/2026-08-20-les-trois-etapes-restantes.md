@@ -217,6 +217,14 @@ Deux sont tranchées, une reste.
 - 🟠 **L'émission sémantique s'étend-elle tout de suite aux autres modules ?** Répondue de fait par la
   revue des 36 émetteurs : elle s'étend **au fil de l'eau**, et la revue a dit où. Trois modules ne
   consignent toujours rien — les dés (qui ont leur propre registre), les ambiances et les lumières.
-- ❌ **Que devient une scène prévue jamais jouée ?** *Toujours ouverte, et l'étape 4 la rend urgente* :
-  plus on marque de scènes improvisées, plus il y aura de scènes prévues jamais jouées à trier. **La
-  réponse détermine si la trame est un plan glissant ou un registre.**
+- ✅ **Que devient une scène prévue jamais jouée ?** **Tranchée par David le 2026-08-20 : elle devient
+  *annulée* quand la campagne se termine, et pas avant.** La trame est donc un **plan glissant tant que la
+  campagne vit, et un registre une fois qu'elle est close**. Une scène jouée sans avoir été terminée
+  devient *terminée*, pas annulée — la distinction survit à l'archivage, portée par le nombre de passages
+  et par aucun second champ. Livré le même jour (`6709876`), avec le statut de campagne qui manquait
+  (`Campaign.clotureeLe`) et deux défauts d'affichage qui l'accompagnaient : on ne pouvait pas terminer
+  une scène **en pause** depuis la trame — le bouton la rouvrait —, et l'écran de préparation de séance
+  n'affichait **aucun** état de jeu, si bien qu'on pouvait préparer une séance autour d'une scène déjà
+  finie.
+
+**Les trois questions du § 10 sont donc closes.**
