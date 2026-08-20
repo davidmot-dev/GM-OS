@@ -216,6 +216,38 @@ export const useJournalStore = create<JournalState>()(
         }
 
         /*
+          **Un journal clos ne reçoit plus rien.**
+
+          `isRecording` ne suffit pas : les `NOTE` et les `SYSTEM` le
+          contournent délibérément — c'est ce qui permet au meneur d'écrire une
+          note hors enregistrement. Mais rien ne regardait le journal VISÉ, et
+          `activeJournalId` désigne aussi bien celui qu'on enregistre que celui
+          qu'on a simplement sélectionné pour le relire. Ouvrir une séance
+          archivée pour la consulter suffisait donc à ce que le prochain
+          événement automatique s'y ajoute — après son `endTimestamp`, après que
+          sa durée et son état de fin ont été calculés.
+
+          *Une séance close est un compte rendu, pas un cahier.* Le fil qu'elle
+          porte a servi à produire son résumé et son état de fin ; le grossir
+          après coup rend faux ce qui en a déjà été tiré, sans que rien ne le
+          signale.
+
+          On se tait, mais pas en silence : la console dit ce qui a été refusé,
+          parce qu'un événement perdu sans un mot est exactement ce qu'on
+          reproche au reste du module.
+        */
+        const cible = state.journals.find(j => j.id === state.activeJournalId);
+        if (!cible) return state;
+        if (cible.endTimestamp) {
+          console.warn(
+            `[JournalStore] « ${eventData.title} » (${eventData.type}) refusé : ` +
+            `la séance « ${cible.title} » est close depuis le ` +
+            `${new Date(cible.endTimestamp).toLocaleString()}.`,
+          );
+          return state;
+        }
+
+        /*
           **La nature se pose au goulot.** Trente-cinq émetteurs écrivent ici ;
           leur demander à tous de déclarer un axe de plus aurait produit trente
           oublis. Le type porte déjà l'essentiel — seuls ceux dont la nature le
@@ -298,13 +330,16 @@ export const useJournalStore = create<JournalState>()(
           /*
             Rien à raconter n'est pas une panne — une séance de préparation pure
             existe. On le dit, et on ne paie pas un appel pour l'apprendre.
+
+            **On le dit en levant, et non en écrivant dans le journal.** Ces deux
+            messages y étaient déposés en `SYSTEM`, ce qui les rendait faux deux
+            fois : ils salissaient le fil d'une séance close avec du bruit
+            d'outil, et surtout `generateAISummary` revenait alors NORMALEMENT —
+            de sorte que l'écran annonçait « Résumé narratif généré ! » sur un
+            résumé qui n'existait pas. *Le geste qui rassure n'est pas le geste
+            qui vérifie.*
           */
-          get().addEvent({
-            type: 'SYSTEM',
-            title: i18next.t('modules:journal.events.ai_summary_failed'),
-            content: 'Aucun événement narratif dans cette séance : il n’y a rien à résumer.',
-          });
-          return;
+          throw new Error(i18next.t('modules:journal.messages.nothing_to_summarize'));
         }
 
         try {
@@ -327,13 +362,11 @@ export const useJournalStore = create<JournalState>()(
           }));
         } catch (err) {
           console.error("[JournalStore] AI Summary failed:", err);
-          get().addEvent({
-            type: 'SYSTEM',
-            title: i18next.t('modules:journal.events.ai_summary_failed'),
-            content: err instanceof Error
-              ? err.message
-              : i18next.t('modules:journal.events.ai_summary_error'),
-          });
+          // Levée jusqu'à l'écran, qui sait afficher une erreur. L'avaler ici
+          // faisait annoncer un succès sur un résumé absent.
+          throw err instanceof Error
+            ? err
+            : new Error(i18next.t('modules:journal.events.ai_summary_error'));
         }
       },
 

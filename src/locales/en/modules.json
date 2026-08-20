@@ -640,6 +640,7 @@
     "messages": {
       "summary_generated": "Narrative summary generated!",
       "summary_error": "Error generating summary.",
+      "nothing_to_summarize": "No narrative events in this session: there is nothing to summarize.",
       "sync_success": "Synced with NotebookLM!",
       "sync_error": "Sync error: {{message}}",
       "new_journal_created": "New journal created: {{name}}",

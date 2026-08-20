@@ -75,18 +75,41 @@ describe('le résumé est un artefact, pas un événement', () => {
         expect(contamines, 'le résumé ne doit apparaître dans aucun événement').toEqual([]);
     });
 
-    it('une panne s\'écrit dans le fil, et ne prend pas la place du résumé', async () => {
+    it("une panne ressemble a une panne, et remonte jusqu'a l'ecran", async () => {
+        /*
+          **L'INTENTION DU 2026-08-17 EST TENUE, LE MOYEN A CHANGE.** Ce test
+          exigeait que la panne s'ECRIVE DANS LE FIL — c'etait alors la seule
+          facon de la rendre visible, puisque `summarizeSession` rendait une
+          phrase d'excuse comme un succes.
+
+          Deux raisons de changer de moyen, trouvees le 2026-08-20 :
+
+          1. `generateAISummary` avalait l'erreur pour l'ecrire, donc elle
+             revenait NORMALEMENT — et l'ecran annoncait « Resume narratif
+             genere ! » sur un resume inexistant. Le moyen cense rendre la panne
+             visible la rendait invisible la ou on regarde.
+          2. On resume une seance CLOSE. Le message d'outil atterrissait donc
+             dans le fil d'un compte rendu deja produit.
+
+          Elle leve : l'ecran attrape et affiche le message. La panne ressemble
+          toujours a une panne, et davantage qu'avant.
+        */
         const id = journalAvecRecit();
         vi.doMock('../ai/AIService', () => ({
             aiService: {
                 summarizeSession: async () => { throw new Error('Ollama injoignable'); },
             },
         }));
-        await useJournalStore.getState().generateAISummary(id);
+
+        await expect(useJournalStore.getState().generateAISummary(id))
+            .rejects.toThrow('Ollama injoignable');
 
         const journal = useJournalStore.getState().journals.find(j => j.id === id)!;
-        expect(journal.resumeIA, 'surtout pas une phrase d\'excuse').toBeUndefined();
-        expect(journal.events.some(e => (e.content ?? '').includes('Ollama injoignable'))).toBe(true);
+        expect(journal.resumeIA, "surtout pas une phrase d'excuse").toBeUndefined();
+        expect(
+            journal.events.some(e => (e.content ?? '').includes('Ollama injoignable')),
+            "un message d'outil n'est pas un fait de la fiction",
+        ).toBe(false);
     });
 });
 
@@ -139,18 +162,22 @@ describe('l\'axe trace / chronique', () => {
         expect(evenements.every(e => e.nature === 'trace' || e.nature === 'chronique')).toBe(true);
     });
 
-    it('une séance sans récit ne paie pas d\'appel au modèle', async () => {
+    it("une seance sans recit ne paie pas d'appel au modele, et le DIT", async () => {
         const id = journalNeuf();
         useJournalStore.getState().addEvent({ type: 'COMBAT', title: 'Initiative', content: '6 combattants.' });
+        const avant = useJournalStore.getState().journals.find(j => j.id === id)!.events.length;
 
         let appele = false;
         vi.doMock('../ai/AIService', () => ({
             aiService: { summarizeSession: async () => { appele = true; return 'x'; } },
         }));
-        await useJournalStore.getState().generateAISummary(id);
 
-        expect(appele, 'rien à raconter n\'est pas une panne, mais ne se demande pas au modèle').toBe(false);
+        await expect(useJournalStore.getState().generateAISummary(id)).rejects.toThrow();
+
+        expect(appele, "rien a raconter n'est pas une panne, mais ne se demande pas au modele").toBe(false);
         expect(useJournalStore.getState().journals.find(j => j.id === id)!.resumeIA).toBeUndefined();
+        // Et le fil de la seance n'a pas grossi d'un message d'outil.
+        expect(useJournalStore.getState().journals.find(j => j.id === id)!.events).toHaveLength(avant);
     });
 });
 

@@ -99,7 +99,14 @@ const JournalDashboard: React.FC = () => {
       gmToast(t('modules:journal.messages.summary_generated'), "success");
     } catch (err) {
       console.error(err);
-      gmToast(t('modules:journal.messages.summary_error'), "error");
+      // Le message du store plutôt qu'un texte générique : « il n'y a rien à
+      // résumer » et « le modèle n'a pas répondu » ne se corrigent pas pareil.
+      gmToast(
+        err instanceof Error && err.message
+          ? err.message
+          : t('modules:journal.messages.summary_error'),
+        "error",
+      );
     } finally {
       setIsSummarizing(false);
     }

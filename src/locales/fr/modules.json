@@ -640,6 +640,7 @@
     "messages": {
       "summary_generated": "Résumé narratif généré !",
       "summary_error": "Erreur lors de la génération du résumé.",
+      "nothing_to_summarize": "Aucun événement narratif dans cette séance : il n'y a rien à résumer.",
       "sync_success": "Synchronisé avec NotebookLM !",
       "sync_error": "Erreur de synchronisation : {{message}}",
       "new_journal_created": "Nouveau journal créé : {{name}}",
