@@ -1,6 +1,7 @@
 import { useAIStore } from '../../stores/useAIStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useJournalStore } from '../journal/useJournalStore';
+import { lesDerniersEvenements } from '../journal/derniersEvenements';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
 import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
@@ -1350,10 +1351,22 @@ ${fullContext}`;
         .filter(c => c.campaignId === activeCampaignId && c.isRevealed)
         .map(c => `- ${c.title}: ${c.content}`);
 
-      // 4. Événements récents (Journal/Chronique)
-      const lastEvents = lite ? [] : (journalStore.journals.find(j => j.id === journalStore.activeJournalId)?.events || [])
-        .slice(-10) 
-        .map(e => `[${new Date(e.timestamp).toLocaleTimeString('fr-FR')}] ${e.title}: ${e.content}`);
+      /*
+        4. Événements récents (Journal/Chronique)
+
+        **`slice(-10)` prenait les dix plus ANCIENS**, le journal empilant le
+        plus récent en tête. L'Oracle recevait donc le début de la séance sous un
+        intitulé qui annonce la fin, et rien ne le signalait : ni erreur, ni
+        vide — une réponse plausible, simplement fondée sur ce qui ne se joue
+        plus. Trouvé le 2026-08-20 en vérifiant l'étape 10 avant de l'écrire.
+
+        Le sens de la pile est su **à un seul endroit** désormais, dans
+        `lesDerniersEvenements` : c'est le même remède que pour les trois listes
+        de session et les onze lecteurs du module de santé.
+      */
+      const lastEvents = lite ? [] : lesDerniersEvenements(
+        journalStore.journals.find(j => j.id === journalStore.activeJournalId)?.events, 10,
+      ).map(e => `[${new Date(e.timestamp).toLocaleTimeString('fr-FR')}] ${e.title}: ${e.content}`);
 
       if (lite) {
         return `## Campagne: ${campaign?.name || "Inconnue"}
