@@ -154,6 +154,52 @@ function personnagesDeLaScene(sceneId: string): { id: string; name: string; port
         .map(c => ({ id: c.id, name: c.name, portraitUrl: c.portraitUrl }));
 }
 
+/**
+ * **Les PJ de la scène entrent sur le plateau.** La scène sait qui est présent
+ * — le meneur vient de le poser —, et le lui redemander combattant par
+ * combattant serait lui faire saisir deux fois la même chose. On n'ajoute que
+ * les absents : un personnage déjà engagé garde ses points de vie et son
+ * initiative.
+ *
+ * **Partagée par les deux portes qui mènent à une scène**, et c'est tout
+ * l'objet de cette fonction. Elle ne vivait que dans `rattacherLeCombat` :
+ * basculer vers une scène jamais jouée rendait donc un plateau vide, sans les
+ * PJ, et le meneur les rajoutait à la main. Trouvé par David en jouant le
+ * combat de test du 2026-08-20 — invisible à la lecture, comme les quatre
+ * défauts de la veille.
+ */
+function faireEntrerLesPJDeLaScene(
+    sceneId: string,
+    get: () => Pick<CombatState, 'combatants' | 'addCombatant'>,
+): void {
+    const perso = personnagesDeLaScene(sceneId);
+    const dejaLa = new Set(get().combatants.map(c => c.sourcePlayerId).filter(Boolean));
+    for (const pj of perso) {
+        if (dejaLa.has(pj.id)) continue;
+        /*
+          **Pas de cast ici, et c'est délibéré.** La première version écrivait
+          `as unknown as Omit<Combatant, 'id'>` sur un objet qui disait
+          `initiative` au lieu d'`init`, `portraitUrl` au lieu d'`avatar`, et
+          **oubliait `statuses`** — d'où le « Cannot read properties of undefined
+          (reading 'length') » de `CombatCard`, tombé en séance chez David le
+          2026-08-17.
+
+          Le compilateur savait. *Un cast qui force n'est pas un raccourci :
+          c'est une vérification qu'on éteint, et elle s'éteint exactement là où
+          on se trompe.*
+        */
+        get().addCombatant({
+            name: pj.name,
+            init: 0,
+            isPlayer: true,
+            faction: 'player',
+            statuses: [],
+            sourcePlayerId: pj.id,
+            avatar: pj.portraitUrl,
+        });
+    }
+}
+
 /** L'état de table qu'une bascule de scène doit emporter et rendre. */
 interface EtatDeLaCarte {
     mapUrl: string | null;
@@ -483,8 +529,10 @@ interface CombatState {
     /**
      * Gare le plateau courant sous sa scène, et restaure celui de la scène visée.
      *
-     * Un plateau vide est un état légitime — la scène rejointe n'a pas encore eu
-     * de combat. On ne fabrique rien.
+     * Une scène rejointe qui n'a jamais eu de combat reçoit les PJ qu'elle
+     * déclare présents, exactement comme au rattachement — les deux portes vers
+     * une scène posent le même plateau. Rien d'autre n'est fabriqué : un plateau
+     * garé est restauré tel qu'il a été laissé.
      */
     basculerVersLaScene: (sceneId: string) => void;
 }
@@ -537,40 +585,7 @@ export const useCombatStore = create<CombatState>()(
 
             rattacherLeCombat: (sceneId) => {
                 set({ sceneId });
-                /*
-                  **Les PJ de la scène entrent sur le plateau.** La scène sait
-                  qui est présent — le meneur vient de le poser —, et le lui
-                  redemander combattant par combattant serait lui faire saisir
-                  deux fois la même chose. On n'ajoute que les absents : un
-                  personnage déjà engagé garde ses points de vie et son
-                  initiative.
-                */
-                const perso = personnagesDeLaScene(sceneId);
-                const dejaLa = new Set(get().combatants.map(c => c.sourcePlayerId).filter(Boolean));
-                for (const pj of perso) {
-                    if (dejaLa.has(pj.id)) continue;
-                    /*
-                      **Pas de cast ici, et c'est délibéré.** La première version
-                      écrivait `as unknown as Omit<Combatant, 'id'>` sur un objet
-                      qui disait `initiative` au lieu d'`init`, `portraitUrl` au
-                      lieu d'`avatar`, et **oubliait `statuses`** — d'où le
-                      « Cannot read properties of undefined (reading 'length') »
-                      de `CombatCard`, tombé en séance chez David le 2026-08-17.
-
-                      Le compilateur savait. *Un cast qui force n'est pas un
-                      raccourci : c'est une vérification qu'on éteint, et elle
-                      s'éteint exactement là où on se trompe.*
-                    */
-                    get().addCombatant({
-                        name: pj.name,
-                        init: 0,
-                        isPlayer: true,
-                        faction: 'player',
-                        statuses: [],
-                        sourcePlayerId: pj.id,
-                        avatar: pj.portraitUrl,
-                    });
-                }
+                faireEntrerLesPJDeLaScene(sceneId, get);
             },
 
             basculerVersLaScene: (sceneId) => {
@@ -603,6 +618,20 @@ export const useCombatStore = create<CombatState>()(
                     dejaConsigne: repris?.dejaConsigne ?? false,
                     faitsDArmes: repris?.faitsDArmes ?? {},
                 });
+                /*
+                  **Une scène jamais jouée reçoit ses PJ, comme au rattachement.**
+                  Les deux portes vers une scène doivent poser le même plateau :
+                  sans ceci, entrer par la bascule rendait un plateau vide que le
+                  meneur regarnissait à la main — c'est ce que David a trouvé au
+                  combat de test du 2026-08-20.
+
+                  **Et seulement là où rien n'est garé.** Un plateau garé est le
+                  compte rendu de ce combat-là : y refaire entrer les PJ y
+                  ressusciterait ceux que le meneur en a retirés. *Restaurer,
+                  c'est rendre ce qu'on avait, pas ce qu'on aurait dû avoir.*
+                */
+                if (!repris) faireEntrerLesPJDeLaScene(sceneId, get);
+
                 // Un plateau jamais joué n'a pas de carte à reposer : on laisse
                 // celle qui est là plutôt que de vider l'écran de la table.
                 reposerLaCarte(repris?.carte);
