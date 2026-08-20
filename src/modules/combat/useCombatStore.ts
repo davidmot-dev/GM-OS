@@ -366,6 +366,14 @@ interface CombatState {
          */
         dejaConsigne?: boolean;
         /**
+         * Ce combat garé a déjà son ouverture au journal.
+         *
+         * Voyage avec le plateau pour la raison exacte de `dejaConsigne` : un
+         * drapeau global ferait qu'alterner entre deux scènes ouvrirait deux
+         * fois le même combat, ou n'ouvrirait jamais le second.
+         */
+        ouvertureConsignee?: boolean;
+        /**
          * Ce que ce plateau-là a encaissé.
          *
          * Même raison de voyager avec lui : les coups pris dans le hangar ne
@@ -401,6 +409,21 @@ interface CombatState {
      * derrière le bouton rouge de réinitialisation : terminer un combat par le
      * bouton « Fin de combat » n'en laissait aucune trace narrative.
      */
+    /**
+     * Écrit au journal que le combat s'engage — **une seule fois par plateau**.
+     *
+     * L'autre moitié de l'étape 8 du plan du 2026-08-08 : le store n'émettait
+     * que l'initiative et le récit de fin, si bien qu'un combat n'avait dans le
+     * fil qu'une borne sur deux. La curation scène par scène ne pouvait donc pas
+     * dire ce qui appartient au combat et ce qui l'entoure.
+     *
+     * **Appelée par les deux gestes qui ouvrent réellement un combat** — tirer
+     * l'initiative, ou porter le premier coup. Le meneur fait l'un ou l'autre,
+     * jamais aucun des deux, et l'idempotence est portée ici plutôt que chez les
+     * appelants : *une garde recopiée chez ses appelants est une garde qui
+     * finira par manquer chez l'un d'eux.*
+     */
+    consignerLOuvertureDuCombat: () => void;
     consignerLeCombat: () => void;
     /**
      * Le combat courant a déjà son récit au journal.
@@ -409,6 +432,7 @@ interface CombatState {
      * Retombe à `false` quand le plateau repart à zéro.
      */
     dejaConsigne: boolean;
+    ouvertureConsignee: boolean;
     /**
      * Ce que chaque combattant a encaissé pendant CE combat, par identifiant.
      *
@@ -549,6 +573,7 @@ export const useCombatStore = create<CombatState>()(
             sceneId: null,
             combatsGares: {},
             dejaConsigne: false,
+            ouvertureConsignee: false,
             faitsDArmes: {},
 
             noterUnCoup: (cibleId, impact) => {
@@ -591,7 +616,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             basculerVersLaScene: (sceneId) => {
-                const { sceneId: courante, combatants, currentTurnIdx, round, combatsGares, dejaConsigne, faitsDArmes } = get();
+                const { sceneId: courante, combatants, currentTurnIdx, round, combatsGares, dejaConsigne, ouvertureConsignee, faitsDArmes } = get();
                 if (courante === sceneId) return;
 
                 /*
@@ -606,7 +631,7 @@ export const useCombatStore = create<CombatState>()(
                     // session.
                     gares[courante] = {
                         combatants, currentTurnIdx, round, carte: releverLaCarte(),
-                        dejaConsigne, faitsDArmes,
+                        dejaConsigne, ouvertureConsignee, faitsDArmes,
                     };
                 }
 
@@ -618,6 +643,7 @@ export const useCombatStore = create<CombatState>()(
                     round: repris?.round ?? 1,
                     combatsGares: gares,
                     dejaConsigne: repris?.dejaConsigne ?? false,
+                    ouvertureConsignee: repris?.ouvertureConsignee ?? false,
                     faitsDArmes: repris?.faitsDArmes ?? {},
                 });
                 /*
@@ -787,6 +813,36 @@ export const useCombatStore = create<CombatState>()(
               combat **puis** vide le plateau ne doit pas obtenir deux récits du
               même combat.
             */
+            consignerLOuvertureDuCombat: () => {
+                const { combatants, round, sceneId, ouvertureConsignee } = get();
+                if (combatants.length === 0 || ouvertureConsignee) return;
+
+                const scene = sceneId
+                    ? (magasinDeSeance()?.scenes ?? []).find(s => s.id === sceneId)
+                    : undefined;
+
+                useJournalStore.getState().addEvent({
+                    type: 'COMBAT',
+                    /*
+                      **De nature `trace`, comme l'initiative et les impacts.**
+                      Décision reprise du 2026-08-19, § 4 : ce qui est mécanique
+                      reste mécanique. L'ouverture borne le combat dans le fil et
+                      sert la curation scène par scène ; ce qu'il faut en
+                      raconter, le récit de fin le dit déjà mieux — l'écrire deux
+                      fois au modèle ne l'informerait pas, ça le répéterait.
+                    */
+                    title: scene ? `Combat engagé : ${scene.titre}` : 'Combat engagé',
+                    content: `Le combat s'engage${scene ? ` — *${scene.titre}*` : ''}. `
+                        + `${combatants.length} combattants : `
+                        + combatants.map(c => `**${c.name}**`).join(', ')
+                        + '.',
+                    sceneId: sceneId ?? undefined,
+                    metadata: { round, totalCombatants: combatants.length },
+                });
+
+                set({ ouvertureConsignee: true });
+            },
+
             consignerLeCombat: () => {
                 const { combatants, round, sceneId, dejaConsigne, faitsDArmes } = get();
                 if (combatants.length === 0 || dejaConsigne) return;
@@ -850,7 +906,8 @@ export const useCombatStore = create<CombatState>()(
                 // et ses compteurs repartent vides.
                 set({
                     combatants: [], currentTurnIdx: 0, round: 1, sceneId: null,
-                    combatsGares: gares, dejaConsigne: false, faitsDArmes: {},
+                    combatsGares: gares, dejaConsigne: false, ouvertureConsignee: false,
+                    faitsDArmes: {},
                 });
                 get().broadcastSync();
             },
@@ -871,6 +928,11 @@ export const useCombatStore = create<CombatState>()(
             },
 
             rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards }) => {
+                // Porte 1 de l'ouverture : le rituel qui commence un combat dans
+                // presque tous les jeux. Avant le tirage, pour que le fil ouvre
+                // le combat puis annonce l'initiative.
+                get().consignerLOuvertureDuCombat();
+
                 set((state) => {
                     const combatants = state.combatants;
                     if (combatants.length === 0) {
@@ -1120,6 +1182,11 @@ export const useCombatStore = create<CombatState>()(
             },
 
             applyDamage: (amount, type, targetIds) => {
+                // Porte 2 de l'ouverture : le premier coup. Avant le calcul, pour
+                // que le fil lise « le combat s'engage » puis l'impact, et non
+                // l'inverse.
+                get().consignerLOuvertureDuCombat();
+
                 const coupsPortes: [string, number][] = [];
                 set((state) => {
                     const newCombatants = state.combatants.map(c => {
@@ -1268,6 +1335,7 @@ export const useCombatStore = create<CombatState>()(
                 // Sinon un rechargement en pleine séance rendrait racontable un
                 // combat déjà raconté, et effacerait ce qu'il a coûté.
                 dejaConsigne: state.dejaConsigne,
+                ouvertureConsignee: state.ouvertureConsignee,
                 faitsDArmes: state.faitsDArmes,
             })
         }
