@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
-import { natureParDefaut } from './types';
+import { natureParDefaut, estUnTypeDEvenement, TYPES_D_EVENEMENT } from './types';
 import { rendreLeCompteRendu } from './compteRendu';
 import { reparerLesTitres, rattacherLesCampagnes } from './titreDeJournal';
 import { contexteDuJournal } from './contexteDeCampagne';
@@ -236,6 +236,28 @@ export const useJournalStore = create<JournalState>()(
           parce qu'un événement perdu sans un mot est exactement ce qu'on
           reproche au reste du module.
         */
+        /*
+          **Un type inventé ne passe plus sans un mot.**
+
+          `type: 'STORY' as any` est parti d'ici pendant des mois, depuis le
+          générateur de narration : un `as any` au départ, et plus personne ne
+          vérifiait rien. Toutes les conséquences étaient silencieuses —
+          `natureParDefaut` ne le reconnaissait pas, donc `trace`, donc écarté du
+          résumé, donc la vision de l'Oracle n'entrait jamais dans la chronique ;
+          et sans entrée dans `eventIcons`, la ligne s'affichait sans icône.
+
+          **On garde l'événement et on crie.** Le perdre punirait le meneur d'un
+          défaut de code, et une donnée jetée en silence est précisément ce
+          qu'on reproche au reste du module.
+        */
+        if (!estUnTypeDEvenement(eventData.type)) {
+          console.error(
+            `[JournalStore] Type d'événement inconnu : « ${eventData.type} » ` +
+            `(« ${eventData.title} »). Il sera traité comme une trace et n'entrera ` +
+            `dans aucun résumé. Types connus : ${TYPES_D_EVENEMENT.join(', ')}.`,
+          );
+        }
+
         const cible = state.journals.find(j => j.id === state.activeJournalId);
         if (!cible) return state;
         if (cible.endTimestamp) {

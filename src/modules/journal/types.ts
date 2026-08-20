@@ -3,14 +3,27 @@ import type { CampagneNommee } from './titreDeJournal';
 /**
  * Types d'événements enregistrables dans le journal.
  */
-export type JournalEventType = 
-  | 'AUDIO' 
-  | 'COMBAT' 
-  | 'NPC' 
-  | 'LOCATION' 
-  | 'NOTE' 
-  | 'SYSTEM'
-  | 'ORACLE'
+/**
+ * **La liste fait foi, et le type en découle** — pas l'inverse.
+ *
+ * Écrite comme une union à la main, elle n'existait qu'à la compilation : un
+ * seul `as any` suffisait à faire partir un événement avec un type inventé, et
+ * `type: 'STORY' as any` l'a fait pendant des mois depuis le générateur de
+ * narration. Les conséquences étaient toutes silencieuses — `natureParDefaut`
+ * ne reconnaissant pas le type, l'événement retombait sur `trace`, se faisait
+ * écarter du résumé, et s'affichait sans icône.
+ *
+ * En partant du tableau, le contrôle existe aussi À L'EXÉCUTION, et il ne peut
+ * pas diverger de l'union : les deux sont le même objet.
+ */
+export const TYPES_D_EVENEMENT = [
+  'AUDIO',
+  'COMBAT',
+  'NPC',
+  'LOCATION',
+  'NOTE',
+  'SYSTEM',
+  'ORACLE',
   /**
    * Ce qui arrive à un personnage joueur.
    *
@@ -21,7 +34,14 @@ export type JournalEventType =
    * raconte le plus longtemps. *Un type qui ment sur son sujet coûte le jour où
    * l'on filtre.*
    */
-  | 'PJ';
+  'PJ',
+] as const;
+
+export type JournalEventType = typeof TYPES_D_EVENEMENT[number];
+
+/** Ce type existe-t-il vraiment ? Question posée au goulot, voir `addEvent`. */
+export const estUnTypeDEvenement = (t: string): t is JournalEventType =>
+  (TYPES_D_EVENEMENT as readonly string[]).includes(t);
 
 /**
  * Ce qu'un événement est, indépendamment de son sujet.

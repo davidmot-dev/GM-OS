@@ -1,7 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
-// import { useJournalStore } from '../journal/useJournalStore'; // Broken by circular dependency
+// L'import direct fermerait un cycle ; on passe donc par le global. **Mais on
+// le type** : c'est un `(window as any)` qui a laissé partir un événement sans
+// titre et avec un champ `severity` qui n'existe pas, sans que rien ne le dise.
+import type { JournalEvent } from '../journal/types';
+
+const journal = () =>
+    (window as unknown as {
+        useJournalStore?: {
+            getState: () => { addEvent: (e: Omit<JournalEvent, 'id' | 'timestamp'>) => void };
+        };
+    }).useJournalStore?.getState();
 import { gmToast } from '../../stores/useToastStore';
 import i18n from '../../i18n';
 // import { ImageService } from './logic/ImageService'; // Broken by circular dependency
@@ -141,10 +151,25 @@ export const useImageStore = create<ImageState>()(
                 const success = await ImageService.projectMedia(media.path, target as any);
                 
                 if (success) {
-                    (window as any).useJournalStore.getState().addEvent({
+                    /*
+                      **Il n'avait pas de titre, et il parlait français en dur.**
+                      `title` est pourtant obligatoire sur un `JournalEvent` : le
+                      `(window as any)` éteignait la vérification, et le fil
+                      affichait une ligne vide. `severity: 'info'` n'existe sur
+                      aucun événement et n'était lu par personne.
+
+                      Les deux messages employés ici **existaient déjà, traduits
+                      dans les deux langues** — `image.events.imageProjected` —
+                      et n'étaient appelés de nulle part. *Une branche prête à
+                      recevoir une donnée que personne ne lui passe ne se
+                      distingue pas d'une branche morte.*
+                    */
+                    journal()?.addEvent({
                         type: 'SYSTEM',
-                        content: `Projection de ${media.name} sur ${target}`,
-                        severity: 'info'
+                        title: i18n.t('modules:image.events.imageProjected.title'),
+                        content: i18n.t('modules:image.events.imageProjected.content', {
+                            name: media.name, target,
+                        }),
                     });
                 } else {
                     gmToast(i18n.t('modules:image.notifications.projectionFailed'));
@@ -160,7 +185,20 @@ export const useImageStore = create<ImageState>()(
 
                 set((state) => ({ projections: { ...state.projections, [target]: url } }));
                 import('./logic/ImageService').then(({ ImageService }) => {
-                    ImageService.projectMedia(url, target as any).catch(() => {
+                    ImageService.projectMedia(url, target as any).then(() => {
+                        /*
+                          **Projeter une URL ne laissait aucune trace**, alors
+                          que projeter un fichier en laissait une : le même geste
+                          du meneur, consigné une fois sur deux selon la
+                          provenance du média. `image.events.urlProjected`
+                          attendait ici depuis toujours, traduit et jamais appelé.
+                        */
+                        journal()?.addEvent({
+                            type: 'SYSTEM',
+                            title: i18n.t('modules:image.events.urlProjected.title'),
+                            content: i18n.t('modules:image.events.urlProjected.content', { url, target }),
+                        });
+                    }).catch(() => {
                         set((state) => ({ projections: { ...state.projections, [target]: null } }));
                     });
                 });
@@ -185,7 +223,7 @@ export const useImageStore = create<ImageState>()(
                             get().blackout();
                             gmToast(i18n.t('modules:image.notifications.projectionFailed'));
                         } else if (entity) {
-                            (window as any).useJournalStore.getState().addEvent({
+                            journal()?.addEvent({
                                 type: 'NPC',
                                 title: i18n.t('modules:image.events.entityProjected.title'),
                                 content: i18n.t('modules:image.events.entityProjected.content', { name: entity.name, subtitle: entity.subtitle || '...' })

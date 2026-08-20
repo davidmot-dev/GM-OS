@@ -226,6 +226,17 @@ export const useMapStore = create<MapState>()(
                 if (mapUrl) {
                     useJournalStore.getState().addEvent({
                         type: 'LOCATION',
+                        /*
+                          **Le lieu est le sujet, le geste ne l'est pas.**
+                          `LOCATION` retombe sur `chronique`, donc « Le MJ a
+                          chargé la carte "X" » — qui dit lui-même que c'est le
+                          MJ qui agit — partait au modèle comme matière de
+                          récit. Charger une carte est un geste de table, au même
+                          titre que lancer une musique. Le type reste
+                          `LOCATION` pour l'icône et le filtre ; c'est la nature
+                          qui est corrigée.
+                        */
+                        nature: 'trace',
                         title: `🗺️ Carte chargée: ${mapName}`,
                         content: narrativeDescription || `Le MJ a chargé la carte "${mapName}".`
                     });

@@ -10,7 +10,6 @@
  */
 
 import type { StateCreator } from 'zustand';
-import { useJournalStore } from '../../journal/useJournalStore';
 import type { AtlasMap, AtlasLinkedEntity } from './types';
 
 // ─────────────────────────────────────────────
@@ -42,7 +41,9 @@ export type AtlasSlice = AtlasSliceState & AtlasSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createAtlasSlice: StateCreator<AtlasSlice, [], [], AtlasSlice> = (set, get) => ({
+// Ni `get` ni le journal ici : le seul usage qu'en faisait ce slice était
+// l'émetteur mort de `setSelectedAtlasMap`.
+export const createAtlasSlice: StateCreator<AtlasSlice, [], [], AtlasSlice> = (set) => ({
     // Initial State
     atlasMaps: [],
 
@@ -82,18 +83,21 @@ export const createAtlasSlice: StateCreator<AtlasSlice, [], [], AtlasSlice> = (s
             ),
         })),
 
-    // Note: setSelectedAtlasMap et autoSelectFirstMap sont implémentés dans le root store
-    // car ils dépendent du journalStore et de activeCampaignId (cross-slice).
-    setSelectedAtlasMap: (id) => {
-        const { atlasMaps } = get();
-        const map = atlasMaps.find((m) => m.id === id);
-        if (map) {
-            useJournalStore.getState().addEvent({
-                type: 'LOCATION',
-                title: `📍 Navigation: ${map.name}`,
-                content: map.narrativeDescription || `Le groupe se déplace vers ${map.name}.`,
-            });
-        }
+    // Note: setSelectedAtlasMap et autoSelectFirstMap sont implémentés dans le root
+    // store, car ils dépendent du journalStore et de activeCampaignId (cross-slice).
+    // Les deux corps ci-dessous sont donc vides, et doivent le rester.
+    setSelectedAtlasMap: () => {
+        /*
+          **Implémentée dans le root store**, qui la remplace par
+          `SessionManager.navigateToAtlasMap` — la note ci-dessus le disait déjà,
+          mais le corps était resté ici, avec son `addEvent` complet.
+
+          Un émetteur qui ne part jamais est pire qu'un émetteur absent : il en
+          existait deux exemplaires identiques du même événement « Navigation »,
+          et corriger celui-ci n'aurait rien changé au journal, sans que rien ne
+          l'explique. Vidée comme `autoSelectFirstMap` juste en dessous, qui a
+          toujours été honnête sur son sort.
+        */
     },
 
     toggleMapVisited: (id: string) =>

@@ -75,9 +75,26 @@ Réponds en français. Pas d'introduction méta, commence directement par la des
         }
     };
 
+    /*
+      **Le seul evenement que le meneur ajoute EXPRES au journal, et il n'y
+      arrivait qu'a moitie.**
+
+      Il partait avec `type: 'STORY' as any` -- un type qui **n'existe pas** dans
+      `JournalEventType`. Le `as any` eteignait le compilateur, et les
+      consequences etaient silencieuses : `natureParDefaut` ne le reconnait pas,
+      donc il retombait sur `trace`, donc `generateAISummary` -- qui ne garde que
+      la chronique -- **l'ecartait**. La vision generee par l'Oracle, la matiere
+      la plus narrative de toute l'application, n'atteignait jamais le resume.
+      Et `eventIcons` n'ayant pas de `STORY`, la ligne s'affichait sans icone.
+
+      `ORACLE` dit d'ou elle vient, `nature: 'chronique'` dit ce qu'elle est. Le
+      type est mecanique et la nature ne l'est pas : c'est exactement le cas que
+      le paragraphe 4.3 prevoit qu'un emetteur declare.
+    */
     const addToJournal = (text: string) => {
         useJournalStore.getState().addEvent({
-            type: 'STORY' as any,
+            type: 'ORACLE',
+            nature: 'chronique',
             title: '📜 Vision de l\'Oracle',
             content: text
         });

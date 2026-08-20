@@ -177,6 +177,10 @@ const MapControls: React.FC = () => {
             
             useJournalStore.getState().addEvent({
                 type: 'LOCATION',
+                // Retirer une carte de la table n'est pas un fait de la
+                // fiction : même raison que « Carte chargée », dans
+                // `useMapStore`.
+                nature: 'trace',
                 title: `🗺️ ${t('map.sidebar.import.removedTitle', { name: oldName })}`,
                 content: t('map.sidebar.import.removedContent')
             });
