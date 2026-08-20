@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 import { natureParDefaut, estUnTypeDEvenement, TYPES_D_EVENEMENT } from './types';
+import { laSceneCourante } from './sceneCourante';
 import { rendreLeCompteRendu } from './compteRendu';
 import { reparerLesTitres, rattacherLesCampagnes } from './titreDeJournal';
 import { contexteDuJournal } from './contexteDeCampagne';
@@ -278,6 +279,16 @@ export const useJournalStore = create<JournalState>()(
         const newEvent: JournalEvent = {
           ...eventData,
           nature: eventData.nature ?? natureParDefaut(eventData.type),
+          /*
+            **La scène se pose au goulot, comme la nature, et pour la même
+            raison.** Le § 9 exige un rattachement automatique ; il ne l'était
+            que pour le combat, et 29 des 36 émetteurs n'en portaient aucun. La
+            curation scène par scène n'aurait eu à ranger que du combat.
+
+            L'émetteur qui sait garde la main : le combat connaît sa scène mieux
+            que la trame ne la devine, et son `sceneId` passe ici intact.
+          */
+          sceneId: eventData.sceneId ?? laSceneCourante(),
           id: uuidv4(),
           timestamp: Date.now(),
         };
