@@ -6,6 +6,7 @@ import { reparerLiensDeGabarit } from '../store/liensDeGabarit';
 import { inscrireLesSystemes } from './systemeDeclare';
 import { redimensionnerLesHorloges } from './horlogesADimensionner';
 import { rattacherLaSanteDesAdversaires } from './santeDesAdversaires';
+import { lesDonneesDeLaSession } from './donneesDeLaSession';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
@@ -211,26 +212,11 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
     // continuent de lire cette base et de recevoir la synchronisation.
     partialize: (state) => {
         return {
-            campaigns: state.campaigns,
-            sessions: state.sessions,
-            entities: state.entities,
-            players: state.players,
-            atlasMaps: state.atlasMaps,
-            timelineEvents: state.timelineEvents,
-            wikiEntries: state.wikiEntries,
-            clues: state.clues,
-            // La trame est de la préparation : elle survit à la fermeture au même
-            // titre que les PNJ et les lieux qu'elle désigne. L'oublier ici
-            // l'aurait fait disparaître au redémarrage sans rien signaler — le
-            // piège du profil vocal, dont le `partialize` ne retient que les
-            // fiches mémorisées.
-            actes: state.actes,
-            scenes: state.scenes,
-            customSheetTemplates: state.customSheetTemplates,
-            customGameDrivers: state.customGameDrivers,
-            activeCampaignId: state.activeCampaignId,
-            decks: state.decks,
-            deckStates: state.deckStates,
+            // Une seule liste de ce qu'une session contient, partagée avec la
+            // sauvegarde vers fichier : voir `donneesDeLaSession.ts`.
+            ...lesDonneesDeLaSession(state),
+            // Et deux champs de vue que la persistance vivante garde
+            // délibérément, pour rouvrir l'application là où on l'a laissée.
             isProjecting: state.isProjecting,
             currentView: state.currentView,
         } as SessionOSStore;

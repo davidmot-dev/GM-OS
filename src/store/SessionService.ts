@@ -10,6 +10,7 @@ import { validateSession, type FullSession } from '../types/schemas';
 import { useLoadingStore } from '../stores/useLoadingStore';
 import { withTimeout } from '../utils/promiseUtils';
 import { Logger } from '../utils/logger';
+import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSession';
 
 export const SessionService = {
     async saveFullSession(silent = false) {
@@ -30,22 +31,12 @@ export const SessionService = {
                 activeModule: sessionState.activeModule,
             },
             modules: {
-                sessionOS: {
-                    campaigns: osState.campaigns,
-                    activeCampaignId: osState.activeCampaignId,
-                    players: osState.players,
-                    timelineEvents: osState.timelineEvents,
-                    wikiEntries: osState.wikiEntries,
-                    atlasMaps: osState.atlasMaps,
-                    // La trame est de la préparation, au même titre que le wiki
-                    // et l'atlas qu'elle désigne : une sauvegarde qui rendrait
-                    // les lieux sans les scènes qui les emploient rendrait un
-                    // décor sans son histoire.
-                    actes: osState.actes,
-                    scenes: osState.scenes,
-                    customGameDrivers: osState.customGameDrivers,
-                    customSheetTemplates: osState.customSheetTemplates,
-                },
+                // Une seule liste de ce qu'une session contient, partagée avec
+                // la persistance vivante : voir `donneesDeLaSession.ts`. Elle
+                // était recopiée ici, et il y manquait `entities`, `clues` et
+                // `sessions` — les PNJ, les indices et l'historique des séances
+                // n'étaient donc dans aucune sauvegarde.
+                sessionOS: lesDonneesDeLaSession(osState),
                 npc: {
                     savedEntities: npcState.savedEntities,
                 },

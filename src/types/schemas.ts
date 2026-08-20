@@ -47,6 +47,13 @@ export const SessionOSModuleSchema = z.object({
     timelineEvents: z.array(z.any()).optional().default([]),
     wikiEntries: z.array(z.any()).optional().default([]),
     atlasMaps: z.array(z.any()).optional().default([]),
+    // Déclarés sans `.default([])`, et c'est le point : une sauvegarde d'avant
+    // le 2026-08-20 ne les porte pas, et `distributeData` fait un `setState`.
+    // Un défaut à vide y remplacerait des PNJ bien vivants par rien du tout —
+    // absent, le champ laisse le store tranquille.
+    sessions: z.array(z.any()).optional(),
+    entities: z.array(z.any()).optional(),
+    clues: z.array(z.any()).optional(),
 }).passthrough();
 
 // --- Global Structure ---

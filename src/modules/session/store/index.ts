@@ -35,11 +35,7 @@ import { createDeckSlice, type DeckSlice } from './deckSlice';
 import { createLootSlice, type LootSlice } from './lootSlice';
 
 import type {
-    Campaign,
     Entity,
-    AtlasMap,
-    WikiEntry,
-    Clue,
     SessionModuleSnapshot,
 } from './types';
 import { resolveSheetTemplate } from '../logic/templateResolver';
@@ -48,6 +44,7 @@ import { EncounterGenerator } from '../logic/EncounterGenerator';
 import { SessionManager } from '../logic/SessionManager';
 import { SnapshotService } from '../logic/SnapshotService';
 import { PersistenceService, syncStorageAcrossWindows } from '../logic/PersistenceService';
+import { lesDonneesDeLaSession } from '../logic/donneesDeLaSession';
 
 // ─────────────────────────────────────────────
 // Cross-domain actions type
@@ -64,17 +61,7 @@ interface CrossDomainActions {
 
     // Sélecteurs 
     getActiveDriver: () => import('../../../types/drivers').GameDriver | null;
-    getBackupData: () => {
-        campaigns: Campaign[];
-        sessions: import('./types').GameSession[];
-        entities: Entity[];
-        players: import('./types').Player[];
-        atlasMaps: AtlasMap[];
-        timelineEvents: import('./types').TimelineEvent[];
-        wikiEntries: WikiEntry[];
-        clues: Clue[];
-        activeCampaignId: string | null;
-    };
+    getBackupData: () => ReturnType<typeof lesDonneesDeLaSession>;
 
     // Navigation
     navigateToAtlasMap: (id: string | null) => void;
@@ -225,10 +212,10 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 );
             },
 
-            getBackupData: () => {
-                const { campaigns, sessions, entities, players, atlasMaps, timelineEvents, wikiEntries, clues, activeCampaignId } = get();
-                return { campaigns, sessions, entities, players, atlasMaps, timelineEvents, wikiEntries, clues, activeCampaignId };
-            },
+            // Troisième copie de la liste, il n'y a pas si longtemps : celle-ci
+            // ignorait la trame et les pilotes. Elle délègue désormais comme les
+            // deux autres.
+            getBackupData: () => lesDonneesDeLaSession(get()),
 
             // ── Snapshot System (via SnapshotService) ──────
 
