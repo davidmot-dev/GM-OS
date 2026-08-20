@@ -25,6 +25,7 @@ import { format } from 'date-fns';
 import { gmToast } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
 import CompteRenduDeSeance from './CompteRenduDeSeance';
+import { leFichierDuCompteRendu } from './compteRendu';
 
 const eventIcons: Record<string, React.ReactNode> = {
   AUDIO: <Music className="size-4 text-blue-400" />,
@@ -126,15 +127,32 @@ const JournalDashboard: React.FC = () => {
     }
   };
 
+  /*
+    **Exporter rend le compte rendu, plus le magasin.**
+
+    Ceci téléchargeait `JSON.stringify(activeJournal)` : la forme interne du
+    store — identifiants, horodatages en millisecondes, natures, métadonnées —
+    dans un fichier que **rien ne sait relire**, puisqu'il n'existe aucun import
+    de journal. Le seul lecteur possible était donc un humain, à qui l'on
+    tendait la structure de données plutôt que le texte.
+
+    `rendreLeCompteRendu` existait, testé, et le bouton « Copier » l'utilisait
+    déjà : les deux gestes qui sortent une séance de l'application n'en
+    sortaient pas la même chose. *Un artefact qu'on croit perdu est souvent un
+    artefact dont un seul lecteur connaît le chemin.*
+
+    L'URL est révoquée après le clic : sans cela, le contenu de chaque séance
+    exportée reste en mémoire jusqu'à la fermeture de la fenêtre.
+  */
   const handleExport = () => {
     if (!activeJournal) return;
-    const content = JSON.stringify(activeJournal, null, 2);
-    const blob = new Blob([content], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    const { nom, contenu, type } = leFichierDuCompteRendu(activeJournal);
+    const url = URL.createObjectURL(new Blob([contenu], { type }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = `journal-${activeJournal.title.replace(/\s+/g, '_')}.json`;
+    a.download = nom;
     a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (

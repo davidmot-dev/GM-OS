@@ -117,3 +117,31 @@ export function rendreLeCompteRendu(journal: Journal): string {
 
     return lignes.join('\n').trimEnd();
 }
+
+/**
+ * Le fichier qu'on télécharge quand on exporte une séance.
+ *
+ * **Le compte rendu, et non le magasin.** L'export téléchargeait
+ * `JSON.stringify(journal)` — la forme interne du store, dans un fichier que
+ * rien ne sait relire puisqu'il n'existe aucun import de journal. Le seul
+ * lecteur possible était un humain, à qui l'on tendait la structure de données
+ * plutôt que le texte. Pendant ce temps le bouton « Copier » rendait déjà le
+ * compte rendu : *les deux gestes qui sortent une séance de l'application n'en
+ * sortaient pas la même chose.*
+ *
+ * Séparé de la partie navigateur pour être vérifiable : ce qui décide du nom et
+ * du contenu est ici, le `Blob` et le clic restent dans l'écran.
+ */
+export function leFichierDuCompteRendu(journal: Journal): {
+    nom: string;
+    contenu: string;
+    type: string;
+} {
+    return {
+        // Les espaces deviennent des tirets bas, parce qu'un titre de séance en
+        // porte toujours et qu'ils survivent mal au trajet jusqu'à un carnet.
+        nom: `${journal.title.replace(/\s+/g, '_')}.md`,
+        contenu: rendreLeCompteRendu(journal),
+        type: 'text/markdown;charset=utf-8',
+    };
+}

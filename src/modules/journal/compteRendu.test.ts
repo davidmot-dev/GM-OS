@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { relevePourLaSuite, laSuiteEstVide, rendreLeCompteRendu } from './compteRendu';
+import { relevePourLaSuite, laSuiteEstVide, rendreLeCompteRendu, leFichierDuCompteRendu } from './compteRendu';
 import { ouvrirLaScene, suspendreLaScene, terminerLaScene } from '../session/logic/trame';
 import type { Acte, Scene } from '../../types/trame.types';
 import type { Journal } from './types';
@@ -113,5 +113,40 @@ describe('le compte rendu n\'écrit pas de section vide', () => {
         });
         expect(rendu).toContain('Duncan (présent)');
         expect(rendu).not.toContain('undefined');
+    });
+});
+
+/**
+ * **Ce que ces tests protègent : exporter sort le compte rendu, pas le magasin.**
+ *
+ * L'export téléchargeait `JSON.stringify(journal)` — la forme interne du store,
+ * dans un fichier que rien ne sait relire puisqu'il n'existe aucun import de
+ * journal. Le bouton « Copier » rendait pendant ce temps le compte rendu : les
+ * deux gestes qui sortent une séance de l'application n'en sortaient pas la
+ * même chose.
+ */
+describe("le fichier d'export d'une séance", () => {
+    const uneSeance = {
+        id: 'j-1',
+        title: 'Hadley Hope - 19/08 21:04 (Séance 2)',
+        startTimestamp: 0,
+        events: [],
+        resumeIA: 'Les échos du vide.',
+    };
+
+    it('porte le compte rendu, et non la structure de données', () => {
+        const fichier = leFichierDuCompteRendu(uneSeance);
+
+        expect(fichier.contenu).toBe(rendreLeCompteRendu(uneSeance));
+        expect(fichier.contenu).toContain('Les échos du vide.');
+        // Le signe qui trahissait le JSON brut : les clés du store.
+        expect(fichier.contenu).not.toContain('"startTimestamp"');
+    });
+
+    it('se nomme comme la séance, en Markdown', () => {
+        const fichier = leFichierDuCompteRendu(uneSeance);
+
+        expect(fichier.nom).toBe('Hadley_Hope_-_19/08_21:04_(Séance_2).md');
+        expect(fichier.type).toContain('text/markdown');
     });
 });
