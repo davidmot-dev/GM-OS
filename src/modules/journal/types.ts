@@ -10,7 +10,18 @@ export type JournalEventType =
   | 'LOCATION' 
   | 'NOTE' 
   | 'SYSTEM'
-  | 'ORACLE';
+  | 'ORACLE'
+  /**
+   * Ce qui arrive à un personnage joueur.
+   *
+   * **Décision de David, 2026-08-20** — l'une des trois questions laissées
+   * ouvertes au § 10 du plan du 2026-08-08. La mort d'un PJ s'écrivait en `NPC`,
+   * ce qui fonctionnait — nature `chronique`, donc elle atteignait le résumé —
+   * mais rangeait sous « personnage non joueur » l'événement qu'une table
+   * raconte le plus longtemps. *Un type qui ment sur son sujet coûte le jour où
+   * l'on filtre.*
+   */
+  | 'PJ';
 
 /**
  * Ce qu'un événement est, indépendamment de son sujet.
@@ -43,6 +54,7 @@ export type NatureDeLEvenement = 'trace' | 'chronique';
 export function natureParDefaut(type: JournalEventType): NatureDeLEvenement {
   switch (type) {
     case 'NPC':
+    case 'PJ':
     case 'LOCATION':
     case 'NOTE':
       return 'chronique';

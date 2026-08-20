@@ -15,6 +15,7 @@ import {
   Music,
   Swords,
   User,
+  UserRound,
   MapPin,
   FileText,
   Settings,
@@ -29,6 +30,9 @@ const eventIcons: Record<string, React.ReactNode> = {
   AUDIO: <Music className="size-4 text-blue-400" />,
   COMBAT: <Swords className="size-4 text-red-400" />,
   NPC: <User className="size-4 text-emerald-400" />,
+  // Le PJ se distingue du PNJ d'un coup d'œil : c'est la ligne qu'on cherche
+  // en relisant le fil.
+  PJ: <UserRound className="size-4 text-cyan-300" />,
   LOCATION: <MapPin className="size-4 text-amber-400" />,
   NOTE: <FileText className="size-4 text-slate-400" />,
   SYSTEM: <Settings className="size-4 text-indigo-400" />,

@@ -115,6 +115,9 @@ describe('l\'axe trace / chronique', () => {
         expect(natureParDefaut('COMBAT')).toBe('trace');
         expect(natureParDefaut('NPC')).toBe('chronique');
         expect(natureParDefaut('LOCATION')).toBe('chronique');
+        // Un décès de PJ doit atteindre le résumé : c'est l'événement qu'une
+        // table raconte le plus longtemps.
+        expect(natureParDefaut('PJ')).toBe('chronique');
         expect(natureParDefaut('NOTE')).toBe('chronique');
     });
 

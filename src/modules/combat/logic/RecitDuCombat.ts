@@ -79,8 +79,23 @@ export function ajouterUnCoup(
  * à l'étiqueter.
  */
 export const estTombe = (c: CombattantRaconte): boolean =>
-    c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀')
-    || estHorsDeCombat(c);
+    porteLEtiquetteDeMort(c) || estHorsDeCombat(c);
+
+/**
+ * L'étiquette « Mort », celle que le meneur pose à la main.
+ *
+ * **Distincte de `estTombe`, et la distinction porte une décision.** Tomber, un
+ * combattant le fait dès qu'il est à zéro ; *être déclaré mort* est un geste du
+ * meneur. Le journal raconte la chute — c'est ce qui s'est passé à la table.
+ * La Galerie, elle, n'inscrit `status: 'dead'` que sur l'étiquette : un PNJ à
+ * zéro peut n'être qu'assommé, et une fiche marquée morte l'est pour de bon.
+ *
+ * Extraite pour n'être écrite qu'une fois : elle vivait recopiée dans
+ * `propagateStatusToSession`, qui pouvait donc dériver de celle-ci sans que
+ * rien ne le signale.
+ */
+export const porteLEtiquetteDeMort = (c: CombattantRaconte): boolean =>
+    c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
 
 /**
  * Ce qu'un combattant a traversé, en une ligne.

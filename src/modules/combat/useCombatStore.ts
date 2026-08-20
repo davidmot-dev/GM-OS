@@ -4,9 +4,11 @@ import i18next from 'i18next';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import {
-    raconterLeCombat, ajouterUnCoup, estTombe, type FaitsDArmes,
+    raconterLeCombat, ajouterUnCoup, estTombe, porteLEtiquetteDeMort, type FaitsDArmes,
 } from './logic/RecitDuCombat';
 import { raconterLImpact } from './logic/RecitDeLImpact';
+import { observerLesChutes, raconterLeDeces } from './logic/DecesAuJournal';
+import { isMainWindow } from '../../utils/windowRole';
 import type { Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
 import { 
     type Combatant, 
@@ -1093,25 +1095,27 @@ export const useCombatStore = create<CombatState>()(
                 combatants.forEach(c => get().syncCombatantToSession(c.id));
             },
 
+            /*
+              **Inscrit la mort sur les fiches de la Galerie.** Rien de plus
+              depuis le 2026-08-20 : le décès au journal est écrit par
+              `observerLesChutes`, à l'instant où le combattant tombe, et pour
+              tout le monde. Le laisser ici l'aurait écrit deux fois pour un PNJ,
+              et jamais pour un PJ.
+
+              **Sur l'étiquette seule, et c'est voulu.** Un PNJ à zéro peut
+              n'être qu'assommé ; une fiche marquée morte l'est pour de bon. Le
+              journal raconte la chute, la Galerie enregistre la décision du
+              meneur — voir `porteLEtiquetteDeMort`.
+            */
             propagateStatusToSession: () => {
                 const { combatants } = get();
                 const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
-                    const isMort = c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
-                    if (isMort && !c.isPlayer && c.sourceEntityId) {
-                        if (typeof sessionStore.updateEntity === 'function') {
-                            sessionStore.updateEntity(c.sourceEntityId, { status: 'dead' });
-                            gmToast(`${c.name} marqué comme MORT dans la Galerie.`, "info");
-                            useJournalStore.getState().addEvent({
-                                type: 'NPC',
-                                title: `Décès : ${c.name}`,
-                                content: `Le PNJ **${c.name}** a été marqué comme **MORT** suite au combat (Combat-OS).`,
-                                sceneId: get().sceneId ?? undefined,
-                                metadata: { entityId: c.sourceEntityId }
-                            });
-                        }
-                    }
+                    if (!porteLEtiquetteDeMort(c) || c.isPlayer || !c.sourceEntityId) return;
+                    if (typeof sessionStore.updateEntity !== 'function') return;
+                    sessionStore.updateEntity(c.sourceEntityId, { status: 'dead' });
+                    gmToast(`${c.name} marqué comme MORT dans la Galerie.`, "info");
                 });
             },
 
@@ -1274,3 +1278,34 @@ export const useCombatStore = create<CombatState>()(
 if (typeof window !== 'undefined') {
     (window as unknown as { useCombatStore: typeof useCombatStore }).useCombatStore = useCombatStore;
 }
+
+/*
+  **Les décès s'écrivent au journal quand ils arrivent.** Voir `DecesAuJournal.ts`
+  pour le pourquoi : ils ne valaient que pour les PNJ, et n'étaient émis qu'au
+  bouton d'export.
+
+  Branché ici, sur le plateau, plutôt que dans chacune des cinq portes qui
+  changent la santé d'un combattant — c'est la leçon des impacts du 19/08, où
+  une porte racontait et l'autre se taisait.
+*/
+observerLesChutes(
+    useCombatStore,
+    (chute) => {
+        const { title, content } = raconterLeDeces(chute);
+        useJournalStore.getState().addEvent({
+            // Décision de David du 2026-08-20 : ce qui arrive à un PJ porte son
+            // propre type. Les deux sont de nature `chronique`, donc les deux
+            // atteignent le résumé.
+            type: chute.isPlayer ? 'PJ' : 'NPC',
+            title,
+            content,
+            sceneId: useCombatStore.getState().sceneId ?? undefined,
+            metadata: chute.sourceEntityId
+                ? { entityId: chute.sourceEntityId }
+                : chute.sourcePlayerId
+                    ? { characterId: chute.sourcePlayerId }
+                    : undefined,
+        });
+    },
+    isMainWindow,
+);
