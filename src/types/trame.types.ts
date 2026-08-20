@@ -180,5 +180,20 @@ export interface Scene {
      */
     termineeLe?: number;
 
+    /**
+     * Mise de côté à la curation : la scène ne part pas au résumé.
+     *
+     * **Jeter au sens de la chronique, jamais au sens des données.** Le § 4.1 du
+     * plan du 2026-08-08 demande de pouvoir *« jeter celles qui n'étaient
+     * rien »* — une scène ouverte par erreur, une bascule sans suite. La scène
+     * reste dans la trame et ses événements dans le journal : **on n'efface
+     * rien**, c'est la règle déjà tenue par l'acte achevé et la scène terminée,
+     * qui restent lisibles.
+     *
+     * Facultatif, et lu avec `=== true` : les scènes d'avant le 2026-08-20 n'en
+     * portent pas, et une scène sans réponse n'est pas une scène écartée.
+     */
+    ecarteeDeLaChronique?: boolean;
+
     creeeLe: number;
 }

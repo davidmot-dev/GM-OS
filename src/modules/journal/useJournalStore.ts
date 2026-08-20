@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 import { natureParDefaut, estUnTypeDEvenement, TYPES_D_EVENEMENT } from './types';
 import { laSceneCourante } from './sceneCourante';
+import { leRecitCureDuJournal } from './recitCure';
 import { rendreLeCompteRendu } from './compteRendu';
 import { reparerLesTitres, rattacherLesCampagnes } from './titreDeJournal';
 import { contexteDuJournal } from './contexteDeCampagne';
@@ -357,8 +358,20 @@ export const useJournalStore = create<JournalState>()(
           Le tri se fait ici et non dans `summarizeSession` : c'est le journal
           qui sait ce que ses événements valent, le service d'IA ne voit que du
           texte.
+
+          **Et depuis le 2026-08-20, on n'envoie que l'ENSEMBLE CURÉ** — étape 2
+          des deux du § 4.1. Trois différences avec le simple tri par nature :
+          les scènes que le meneur a mises de côté à la revue n'y sont pas, ce
+          qui est toute la promesse que lui fait l'écran de curation ; l'ordre
+          est celui de l'histoire, scène après scène, et non celui du fil, qui
+          empile du plus récent au plus ancien ; et les événements qu'on n'a pas
+          su ranger ferment la marche au lieu de disparaître.
+
+          La trame se lit par le global, comme le fait déjà `contexteDuJournal` :
+          un import direct fermerait un cycle. Son absence n'est pas une panne —
+          sans trame, la revue ne groupe rien et le tri par nature suffit.
         */
-        const recit = journal.events.filter(e => (e.nature ?? natureParDefaut(e.type)) === 'chronique');
+        const recit = leRecitCureDuJournal(journal);
         if (recit.length === 0) {
           /*
             Rien à raconter n'est pas une panne — une séance de préparation pure

@@ -25,6 +25,7 @@ import { format } from 'date-fns';
 import { gmToast } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
 import CompteRenduDeSeance from './CompteRenduDeSeance';
+import RevueDeSeance from './RevueDeSeance';
 import { leFichierDuCompteRendu } from './compteRendu';
 
 const eventIcons: Record<string, React.ReactNode> = {
@@ -342,6 +343,15 @@ const JournalDashboard: React.FC = () => {
                 aucun modèle.
               */}
               {activeJournal && <CompteRenduDeSeance journal={activeJournal} />}
+
+              {/*
+                **La revue vient APRÈS le compte rendu dans l'écran, et avant lui
+                dans l'ordre des étapes.** Le § 4.1 met la curation en premier des
+                deux, mais on la lit en descendant : on cure ce qu'on vient de
+                trouver insuffisant. *Un résumé raté se relance ; une curation
+                ratée fausse tout ce qui en découle.*
+              */}
+              {activeJournal && <RevueDeSeance journal={activeJournal} />}
 
               {/* Final Note Section */}
               <div className="mt-16 pt-12 border-t border-app-border/30">
