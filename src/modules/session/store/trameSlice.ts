@@ -15,6 +15,8 @@ import {
     ouvrirLaScene as ouvrir, terminerLaScene as terminer,
     suspendreLesScenes, reprendreLesScenes, clonerLaScene as cloner, titreDisponible,
 } from '../logic/trame';
+import { releverLaTableMaintenant, titreParDefaut } from '../logic/etatDeLaTable';
+import type { AtlasMap } from '../../../types/chronicle.types';
 
 /**
  * Ce que ce slice doit voir chez son voisin, et rien de plus.
@@ -26,6 +28,19 @@ import {
  * `entitySlice`.
  */
 type AvecSeances = TrameSlice & { sessions: GameSession[] };
+
+/**
+ * Ce que la capture d'une scène improvisée doit voir chez ses voisins.
+ *
+ * Même geste que `AvecSeances` juste au-dessus, et pour la même raison :
+ * importer les slices d'atlas et de séance fermerait un cycle. Tout y est
+ * facultatif — une campagne sans atlas doit pouvoir marquer une scène.
+ */
+type AvecLaTable = TrameSlice & {
+    atlasMaps?: AtlasMap[];
+    selectedAtlasMapId?: string | null;
+    sessions?: GameSession[];
+};
 
 /** Retire un acte et ses scènes des prévisions de toutes les séances. */
 function oublierDansLesSeances(
@@ -80,7 +95,16 @@ export interface TrameSliceActions {
     /** La scène est finie — elle se barre. */
     terminerLaScene: (id: string) => void;
     /** Une scène née en cours de partie, ouverte dans la foulée. Rend son identifiant. */
-    creerSceneImprovisee: (acteId: string, titre: string, seanceId?: string) => string;
+    /**
+     * Une scène née en cours de partie, ouverte dans la foulée. Rend son
+     * identifiant.
+     *
+     * **Le titre est facultatif, et c'est tout l'objet du § 3 du plan du
+     * 2026-08-08** : *« une scène improvisée se crée en un clic, sans rien
+     * taper »*. Sans titre, elle prend celui du lieu sur la table, et capture
+     * l'état — lieu, PNJ en piste, PJ présents, ambiance en cours.
+     */
+    creerSceneImprovisee: (acteId: string, titre?: string, seanceId?: string) => string;
     /**
      * Une copie du contenu, état de jeu vierge, posée juste après l'originale.
      * Rend son identifiant, ou `''` si la scène source n'existe pas.
@@ -259,18 +283,47 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
       décision au lieu de la contredire.
     */
     creerSceneImprovisee: (acteId, titre, seanceId) => {
+        const voisin = get() as AvecLaTable;
+        const atlasMaps = voisin.atlasMaps ?? [];
+
+        /*
+          **L'état de la table est relevé AVANT de créer la scène**, parce que
+          créer en ouvre une : la capture doit décrire le moment où le meneur a
+          cliqué, pas celui d'après.
+        */
+        const seance = (voisin.sessions ?? []).find(x => x.id === seanceId);
+        const capture = releverLaTableMaintenant({
+            atlasMaps,
+            lieuSelectionne: voisin.selectedAtlasMapId,
+            personnagesDeLaSeance: seance?.sessionEntityIds,
+        });
+
+        /*
+          **Le titre du lieu plutôt qu'une invite à taper.** Le § 3 le disait :
+          *« tout ce qui demande de la frappe pendant que les joueurs attendent
+          ne sera pas fait. »* Le meneur corrigera à la revue de fin de séance,
+          qui sait éditer le titre sur place ; ce qu'il lui faut d'ici là, c'est
+          reconnaître la scène dans une liste.
+        */
+        const nomDuLieu = capture.lieuId
+            ? atlasMaps.find(m => m.id === capture.lieuId)?.name
+            : undefined;
+        const voulu = titre?.trim() || titreParDefaut(nomDuLieu, new Date());
+
         // Un homonyme dans la même campagne casserait la résolution par nom de
-        // la Forge — « Combat improvisé » deux soirs de suite est le cas le plus
-        // probable, et le moins visible.
+        // la Forge — deux scènes prises au même endroit dans la soirée est le
+        // cas le plus probable, et le moins visible.
         const pris = get().scenes
             .filter((s) => s.campaignId === get().actes.find((a) => a.id === acteId)?.campaignId)
             .map((s) => s.titre);
         const id = get().ajouterScene(
             acteId,
-            pris.includes(titre) ? titreDisponible(titre, pris) : titre,
+            pris.includes(voulu) ? titreDisponible(voulu, pris) : voulu,
             'improvisee',
         );
         if (!id) return '';
+
+        get().modifierScene(id, capture);
         get().ouvrirLaScene(id, seanceId);
         return id;
     },

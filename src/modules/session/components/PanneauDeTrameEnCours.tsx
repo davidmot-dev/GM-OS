@@ -64,9 +64,6 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
         [atlasMaps, activeCampaignId],
     );
 
-    /** Le titre qu'on tape pour une scène improvisée. `null` : on n'en crée pas. */
-    const [titreImprovise, setTitreImprovise] = React.useState<string | null>(null);
-
     const acte = actesOrdonnes(actes, activeCampaignId).find(a => a.id === session.acteId);
     const enCours = scenesDansLEtat(scenes, actes, activeCampaignId, 'en-cours');
     const enPause = scenesDansLEtat(scenes, actes, activeCampaignId, 'en-pause');
@@ -131,11 +128,22 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
         if (lieu?.fileUrl) setMap(lieu.fileUrl, lieu.isVideo, lieu.name, lieu.narrativeDescription);
     };
 
+    /**
+     * **Un clic, et rien à taper** — § 3 du plan du 2026-08-08.
+     *
+     * Ce geste exigeait un titre : le bouton ouvrait un champ, et la scène
+     * n'existait qu'une fois la phrase écrite. *« Tout ce qui demande de la
+     * frappe pendant que les joueurs attendent ne sera pas fait »*, disait le
+     * plan — et il avait raison, la trame ne se remplissait pas.
+     *
+     * La scène naît maintenant tout de suite, avec le nom du lieu sur la table
+     * et l'état capturé. Le titre se corrige à la revue de fin de séance, qui
+     * sait l'éditer sur place depuis le 2026-08-20 : *on nomme après, quand
+     * personne n'attend.*
+     */
     const improviser = () => {
-        const titre = (titreImprovise ?? '').trim();
-        if (!titre || !session.acteId) return;
-        creerSceneImprovisee(session.acteId, titre, session.id);
-        setTitreImprovise(null);
+        if (!session.acteId) return;
+        creerSceneImprovisee(session.acteId, undefined, session.id);
     };
 
     return (
@@ -248,24 +256,17 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                     <p className="text-[11px] text-app-text/30 italic px-1">
                         Annonce un acte pour cette séance : une scène improvisée doit pouvoir s'y ranger.
                     </p>
-                ) : titreImprovise === null ? (
-                    <button
-                        onClick={() => setTitreImprovise('')}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-accent/30 text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/10 transition-all"
-                    ><Plus size={14} /> Scène improvisée</button>
                 ) : (
-                    <input
-                        autoFocus
-                        value={titreImprovise}
-                        onChange={e => setTitreImprovise(e.target.value)}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter') improviser();
-                            if (e.key === 'Escape') setTitreImprovise(null);
-                        }}
-                        onBlur={improviser}
-                        placeholder="Ce qui vient de se passer — Entrée pour ouvrir"
-                        className="w-full bg-app-bg/40 px-4 py-2.5 rounded-xl border border-accent/40 text-sm focus:outline-none"
-                    />
+                    <div className="flex flex-col gap-1.5">
+                        <button
+                            onClick={improviser}
+                            title="Elle s'ouvre tout de suite, avec le lieu, les PNJ en piste et l'ambiance en cours. Le titre se corrige après."
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-accent/30 text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/10 transition-all"
+                        ><Plus size={14} /> Scène improvisée</button>
+                        <p className="text-[9px] text-app-text/25 px-1 leading-relaxed">
+                            Un clic : elle capture le lieu, les PNJ en piste et l'ambiance. On la nomme après.
+                        </p>
+                    </div>
                 )}
             </div>
 

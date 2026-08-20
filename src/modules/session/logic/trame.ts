@@ -395,3 +395,39 @@ export function ceQueLaClotureVaFaire(
         actesOuverts: actes.filter(a => a.campaignId === campaignId && !a.acheve).length,
     };
 }
+
+/**
+ * La scène qu'un moment de storyboard ouvre en se déclenchant.
+ *
+ * **Le second marquage gratuit du § 3.1** : *« déclencher un moment de
+ * storyboard lié à une scène marque la scène »*. Il n'existait pas —
+ * `momentDeStoryboardId` n'était jamais que lu, pour afficher l'ambiance à côté
+ * du titre. Le marquage doit être gratuit, sinon *« la trame pourrira en une
+ * séance »*, et lancer une ambiance est un geste que le meneur fait déjà.
+ *
+ * **Une seule candidate, ou rien.** *« On LIE, on ne fusionne pas »* — une même
+ * ambiance sert plusieurs scènes, c'est écrit dans le modèle. Quand deux d'entre
+ * elles la déclarent, l'outil ne peut pas savoir laquelle commence, et il ne
+ * devine pas : c'est la règle déjà tenue par le rattachement des événements et
+ * par le bandeau de scène du combat.
+ *
+ * **Ni les scènes terminées, ni celle qui tourne déjà.** Une ambiance ne
+ * ressuscite pas une scène close — rouvrir est une décision, et elle a son
+ * bouton. Et relancer l'ambiance d'une scène en cours ne doit rien faire :
+ * *un geste répété ne doit pas produire un second effet.*
+ */
+export function laSceneQueLAmbianceOuvre(
+    scenes: readonly Scene[],
+    campaignId: string | null | undefined,
+    momentId: string | null | undefined,
+): string | undefined {
+    if (!campaignId || !momentId) return undefined;
+
+    const candidates = scenes.filter(s =>
+        s.campaignId === campaignId
+        && s.momentDeStoryboardId === momentId
+        && etatDeLaScene(s) !== 'terminee');
+
+    if (candidates.length !== 1) return undefined;
+    return etatDeLaScene(candidates[0]) === 'en-cours' ? undefined : candidates[0].id;
+}

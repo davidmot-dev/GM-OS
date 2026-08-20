@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { laSceneQueLAmbianceOuvre } from '../session/logic/trame';
+import type { Scene } from '../../types/trame.types';
 import { persist } from 'zustand/middleware';
 
 export interface StoryboardMoment {
@@ -117,6 +119,46 @@ export const useStoryboardStore = create<StoryboardState>()(
                 console.log(`[Storyboard] Triggering Moment: ${moment.name} (${id})`);
                 set({ activeMomentId: id });
 
+                /*
+                  **Lancer une ambiance ouvre la scène qui la déclare.**
+
+                  Second marquage gratuit du § 3.1 du plan du 2026-08-08, resté
+                  à l'état de projet jusqu'au 2026-08-20 :
+                  `momentDeStoryboardId` n'était jamais que LU, pour afficher
+                  l'ambiance à côté du titre.
+
+                  *Si déclarer « on est maintenant dans la scène X » coûte plus
+                  d'un clic, ce ne sera pas fait, et la trame pourrira en une
+                  séance.* Lancer une ambiance est un geste que le meneur fait
+                  déjà : il ne lui en coûte rien de plus.
+
+                  `laSceneQueLAmbianceOuvre` porte les gardes — une seule
+                  candidate ou rien, jamais une scène close, jamais celle qui
+                  tourne déjà. Et l'échec est muet à dessein : une ambiance qui
+                  n'ouvre aucune scène reste une ambiance qui marche.
+                */
+                try {
+                    const os = (window as unknown as {
+                        useSessionOSStore?: { getState: () => {
+                            scenes?: Scene[]; activeCampaignId?: string | null;
+                            ouvrirLaScene?: (id: string, seanceId?: string) => void;
+                            sessions?: { id: string; campaignId: string; status: string }[];
+                        } };
+                    }).useSessionOSStore?.getState();
+                    if (os?.ouvrirLaScene) {
+                        const aOuvrir = laSceneQueLAmbianceOuvre(
+                            os.scenes ?? [], os.activeCampaignId, id,
+                        );
+                        if (aOuvrir) {
+                            const seance = (os.sessions ?? []).find(
+                                x => x.campaignId === os.activeCampaignId && x.status === 'active');
+                            os.ouvrirLaScene(aOuvrir, seance?.id);
+                        }
+                    }
+                } catch {
+                    // Une trame en mauvais état n'empêche pas de lancer une ambiance.
+                }
+
                 // Cross-store orchestration
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const gWindow = window as any;
@@ -213,3 +255,15 @@ export const useStoryboardStore = create<StoryboardState>()(
         }
     )
 );
+
+/*
+  **Exposé sur le global, comme le combat et la carte.**
+
+  La trame en a besoin pour capturer l'ambiance en cours quand une scène naît en
+  un clic (§ 3 du plan du 2026-08-08) : un import direct fermerait un cycle, le
+  storyboard orchestrant déjà les autres modules par ce même chemin.
+*/
+if (typeof window !== 'undefined') {
+    (window as unknown as { useStoryboardStore: typeof useStoryboardStore }).useStoryboardStore =
+        useStoryboardStore;
+}
