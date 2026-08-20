@@ -16,29 +16,25 @@ accumule des défauts qu'aucune revue de code ne trouve.*
 
 ---
 
-## 0. Ce que la vérification a trouvé en chemin
+## 0. ~~Ce que la vérification a trouvé en chemin~~ ✅ corrigé le 2026-08-20 (`5a64ec2`)
 
-**Un défaut actif, et il fausse l'Oracle à chaque séance.**
+**Un défaut actif, et il faussait l'Oracle à chaque séance.**
 
-`AIService.getLiveSessionContext` compose la section « Historique Récent » ainsi
-(`src/modules/ai/AIService.ts:1354-1356`) :
+`AIService.getLiveSessionContext` composait la section « Historique Récent » avec `.slice(-10)` sur
+`journal.events`. Or le journal **empile le plus récent en tête** — `events: [newEvent, ...j.events]` :
+il envoyait donc **les dix plus ANCIENS**. L'Oracle recevait le début de la séance sous un intitulé qui
+annonce la fin, et trois heures de jeu plus tard il répondait sur les dix premières minutes.
 
-```ts
-const lastEvents = (journalStore.journals.find(…)?.events || [])
-  .slice(-10)
-```
+**Rien ne pouvait le signaler** : ni erreur, ni vide, ni incohérence visible — une réponse plausible,
+simplement fondée sur ce qui ne se joue plus.
 
-Or le journal **empile le plus récent en tête** — `events: [newEvent, ...j.events]`
-(`src/modules/journal/useJournalStore.ts:300`). `slice(-10)` prend donc **les dix plus ANCIENS**.
+**Corrigé, et le sens de la pile n'est plus su qu'à un endroit** (`lesDerniersEvenements`). Les sept
+autres `slice(-N)` du dépôt ont été vérifiés un par un : ils empilent tous à la fin, donc ils désignent
+bien les derniers. Le rendu est chronologique — *une chronologie à l'envers n'est pas un détail de
+présentation : un modèle à qui on la donne en tire des causes fausses.*
 
-**L'Oracle reçoit le début de la séance en croyant recevoir la fin.** Trois heures de jeu plus tard, il
-répond sur les dix premières minutes, sous un intitulé qui affirme le contraire. C'est le même défaut de
-famille que « `tsc --noEmit` sortait en 0 sans rien vérifier » : *le geste qui rassure n'est pas le geste
-qui vérifie.*
-
-Correctif : `.slice(0, 10)`, puis inverser pour rendre l'ordre chronologique au modèle. **Une ligne, et
-elle ne dépend d'aucune des trois étapes** — à faire avant elles, comme les étapes 1 et 2 du plan
-d'origine étaient des corrections à traiter indépendamment.
+**Le rang A de l'ordre ci-dessous est donc franchi.** L'étape 10 peut se construire sur un contexte qui
+ne ment plus.
 
 ---
 
