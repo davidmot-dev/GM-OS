@@ -17,7 +17,7 @@ import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { enrichirLePilote } from '../rules/enrichirLePilote';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
-import { corpusChoisi, corpusPourNouveauSysteme, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
+import { corpusChoisi, corpusPourNouveauSysteme, slug, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
 import { useForgeStore, type LacuneDuPilote } from '../store/useForgeStore';
 import { lireNature } from '../rules/familleDuCorpus';
 
@@ -137,9 +137,22 @@ const ForgeDashboard: React.FC = () => {
    * dans ses donnees.
    */
   const [dossiersSystemes, setDossiersSystemes] = useState<string[]>([]);
-  useEffect(() => {
-    window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
-  }, []);
+  /**
+   * L'inventaire des dossiers, relu **à la demande**.
+   *
+   * Il ne se lisait qu'au montage, ce qui suffisait tant que rien ne pouvait
+   * naître depuis cet écran. Un corpus ouvert ci-dessous doit apparaître dans
+   * le menu sans relancer l'application — sinon on vient de créer un dossier
+   * qu'on ne peut toujours pas choisir, ce qui est le défaut d'origine sous une
+   * autre forme.
+   */
+  const inventorierLesCorpus = React.useCallback(
+    () => (window.appBridge?.ai?.listSystems?.() ?? Promise.resolve([]))
+      .then(setDossiersSystemes)
+      .catch(() => setDossiersSystemes([])),
+    [],
+  );
+  useEffect(() => { void inventorierLesCorpus(); }, [inventorierLesCorpus]);
 
   /**
    * Le corpus visé : celui qu'on a choisi, et rien d'autre.
@@ -192,6 +205,74 @@ const ForgeDashboard: React.FC = () => {
   const langueDuCorpus = async (dossier: string): Promise<string | undefined> => {
     const brut = await window.appBridge?.ai?.readDoc?.(`systems/${dossier}/corpus.json`).catch(() => null);
     return lireNature(brut)?.langue ?? i18n.language;
+  };
+
+  /**
+   * Ouvrir le corpus d'un jeu que **personne n'a encore documenté**.
+   *
+   * **Le défaut qu'il corrige, relevé par David le 2026-08-21 :** « je ne sais
+   * pas créer de nouveau corpus dans l'Atelier de Règles ». Le menu ci-dessous
+   * ne propose que les dossiers présents sur le disque — c'est sa raison d'être
+   * — et le bouton « Analyser » exige un corpus choisi. Un jeu neuf n'avait donc
+   * aucune porte : la seule création de corpus vivait au bout de
+   * `handleForgeSave`, c'est-à-dire *après* une dérivation, alors que la
+   * procédure va dans l'autre sens — les fiches d'abord, le pilote ensuite.
+   *
+   * Le geste existait pourtant déjà, dans `BrainstormOverlay`, sous un
+   * commentaire qui disait exactement ce qu'il fallait : « sans cette entrée,
+   * l'atelier serait fermé aux jeux nouveaux ». Mais l'overlay ne s'affiche
+   * qu'une fois l'atelier lancé : **la création était enfermée derrière la
+   * porte qu'elle devait ouvrir.**
+   *
+   * **Les dossiers naissent tout de suite**, et non à la première fiche. Trois
+   * `mkdir` rendent le corpus visible partout ailleurs — l'onglet Structure, le
+   * grimoire, la sélection RAG — au lieu de le laisser à l'état d'intention
+   * dans un champ de saisie que fermer suffit à perdre. Et `sousDossiersDuCorpus`
+   * les crée tous les trois : un corpus sans `index/` ni `personas/` se paie en
+   * `catch {}` silencieux, ce que le corpus de Dune a déjà coûté.
+   */
+  const [nouveauCorpus, setNouveauCorpus] = useState('');
+  const [ouvertureEnCours, setOuvertureEnCours] = useState(false);
+
+  const ouvrirUnCorpus = async () => {
+    const id = slug(nouveauCorpus);
+    if (!id || ouvertureEnCours) return;
+    setOuvertureEnCours(true);
+    try {
+      const corpus = corpusChoisi(id, dossiersSystemes);
+      const creerCorpus = window.appBridge?.ai?.createCorpus;
+      // Annoncé par ce qui a réellement eu lieu : rejoindre un corpus existant
+      // et en ouvrir un neuf ne se confondent pas.
+      const crees = creerCorpus
+        ? await creerCorpus(sousDossiersDuCorpus(corpus)).catch(() => null)
+        : null;
+
+      if (crees === null) {
+        const message = t('modules:session.forge_module.corpus_unavailable', { racine: corpus.racine });
+        addLog(message);
+        gmToast(message, 'warning');
+      } else if (crees.length > 0) {
+        const message = t('modules:session.forge_module.corpus_created', { racine: corpus.racine, nombre: crees.length });
+        addLog(message);
+        gmToast(message, 'success');
+      } else {
+        const message = t('modules:session.forge_module.corpus_joined', { racine: corpus.racine });
+        addLog(message);
+        gmToast(message, 'info');
+      }
+
+      /*
+        On vise le corpus même quand le pont est indisponible : le dossier
+        manquera, mais l'atelier écrira au bon endroit et la première fiche le
+        créera. Refuser ici laisserait l'écran exactement dans l'impasse qu'on
+        vient de corriger.
+      */
+      await inventorierLesCorpus();
+      brainstormStore.setCorpusCible(id);
+      setNouveauCorpus('');
+    } finally {
+      setOuvertureEnCours(false);
+    }
   };
 
   const [familleCible, setFamilleCible] = useState<string | null>(null);
@@ -1048,6 +1129,50 @@ const ForgeDashboard: React.FC = () => {
                     <ChevronRight size={14} className="rotate-90" />
                   </div>
                 </div>
+
+                {/*
+                  La porte des jeux neufs. Le menu ci-dessus ne peut pas
+                  proposer un dossier qui n'existe pas — c'est sa raison
+                  d'etre —, et l'atelier ne demarre pas sans corpus vise :
+                  sans cette entree, documenter un jeu par ses fiches est
+                  impossible tant qu'on ne l'a pas d'abord derive d'un livre,
+                  ce qui est l'ordre inverse de la procedure.
+                */}
+                <div className="flex items-center gap-2">
+                  <input
+                    value={nouveauCorpus}
+                    onChange={e => setNouveauCorpus(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') void ouvrirUnCorpus(); }}
+                    placeholder={t('modules:session.forge_module.atelier.corpus_new_placeholder')}
+                    className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white/80 font-mono focus:outline-none focus:border-purple-500/50 placeholder:text-white/20"
+                  />
+                  <button
+                    disabled={!slug(nouveauCorpus) || ouvertureEnCours}
+                    onClick={() => void ouvrirUnCorpus()}
+                    className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${
+                      slug(nouveauCorpus) && !ouvertureEnCours
+                        ? 'bg-purple-600 text-white hover:bg-purple-500'
+                        : 'bg-white/5 text-white/10 cursor-not-allowed'
+                    }`}
+                  >
+                    {t('modules:session.forge_module.atelier.corpus_new_button')}
+                  </button>
+                </div>
+                {/*
+                  Le dossier s'affiche avant d'etre cree : « Reves de Dragons »
+                  donne `reves-de-dragons`, et c'est ce nom-la que le grimoire,
+                  la selection RAG et les personas iront chercher. Le voir
+                  d'avance evite le corpus jumeau, cree a une lettre pres de
+                  celui qui porte deja les fiches.
+                */}
+                {slug(nouveauCorpus) && (
+                  <p className="text-[10px] text-white/30 font-mono -mt-1">
+                    systems/{slug(nouveauCorpus)}
+                    {dossiersSystemes.some(d => d === slug(nouveauCorpus)) && (
+                      <span className="text-amber-400/70 not-italic"> — existe deja, sera rejoint</span>
+                    )}
+                  </p>
+                )}
 
                 <div className="h-px bg-white/5 my-1" />
 
