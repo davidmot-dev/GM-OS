@@ -313,13 +313,23 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         cible:
             '"driver" avec seulement dice et jet. ' +
             'DEUX EXIGENCES D\'ABORD, le reste ensuite. ' +
-            '**(1) "jet.seuil" LISTE CE QUI S\'ADDITIONNE POUR FORMER LE SEUIL** — une entrée PAR ' +
-            'VALEUR AJOUTÉE, chacune avec son "id", son "label" et le "sectionId" de la section où ' +
-            'elle se lit. Chez Dune, une compétence PLUS un principe : deux entrées, deux sections. ' +
-            'LE CHOIX SE FAIT DANS "sectionId", PAS DANS LE NOMBRE D\'ENTRÉES : au moment de lancer, ' +
-            'le joueur retient UN champ de cette section. Six Sauvegardes dont on n\'en jette QU\'UNE ' +
-            'à la fois = UNE SEULE entrée, sur la section qui les porte — six entrées demanderaient ' +
-            'les six et les additionneraient. Un jeu dont la réserve se compose depuis la fiche ' +
+            // LE COMPTE D'ABORD, LE CONTENU ENSUITE — et c'est l'inverse qui
+            // était écrit. « Une entrée par valeur ajoutée » se lit en tête,
+            // donc se lit en premier : douze compétences, douze entrées. La
+            // correction venait après, sous condition, et arrivait trop tard.
+            '**(1) "jet.seuil" : UNE ENTRÉE PAR SECTION DE FICHE LUE, JAMAIS UNE PAR CHAMP.** Le ' +
+            'nombre d\'entrées est le nombre de SECTIONS différentes où le joueur va lire une ' +
+            'valeur — jamais le nombre de valeurs possibles dans ces sections, parce que TOUT CE ' +
+            'QUI FIGURE DANS "jet.seuil" S\'ADDITIONNE. Si la section "competences" porte douze ' +
+            'compétences et que le joueur n\'en jette QU\'UNE à la fois, cela fait UNE SEULE entrée ' +
+            'et non douze : c\'est au moment de lancer qu\'il retient un champ, et le menu lui ' +
+            'proposera les douze. Douze entrées réclameraient les douze compétences et les ' +
+            'additionneraient — un seuil que le jeu n\'a jamais eu. Même chose pour six ' +
+            'Sauvegardes, ou pour n\'importe quelle liste de valeurs interchangeables. ' +
+            'Chaque entrée porte son "id", son "label" et le "sectionId" de la section où elle se ' +
+            'lit. Chez Dune, une compétence PLUS un principe : deux entrées, DEUX SECTIONS. ' +
+            'N\'écris jamais deux entrées portant le même "sectionId". ' +
+            'Un jeu dont la réserve se compose depuis la fiche ' +
             'laisse "seuil" vide et remplit "reserve.composantes" à la place — l\'un ou l\'autre, ' +
             'jamais ni l\'un ni l\'autre. ' +
             // Ce que « ce qui s'additionne » ne dit pas, et qui manquait : OÙ.

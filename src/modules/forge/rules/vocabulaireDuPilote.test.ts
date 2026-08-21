@@ -186,6 +186,32 @@ describe('la cible du groupe « jet »', () => {
         expect(jet.cible, 'le choix se joue dans la section').toContain('"sectionId"');
     });
 
+    /**
+     * **La règle disait vrai, mais dans le mauvais ordre** — troisième forme du
+     * même défaut, relevée par David le 2026-08-21. Rêves de Dragons est
+     * ressorti avec DOUZE composantes « Compétence 1 » à « Compétence 12 »,
+     * toutes sur la section `competences`.
+     *
+     * La tête de consigne annonçait « une entrée PAR VALEUR AJOUTÉE » : douze
+     * compétences, douze entrées, et c'est cette phrase-là qui se lit en
+     * premier. La correction — « six Sauvegardes = UNE SEULE entrée » — venait
+     * après et sous condition, donc trop tard.
+     *
+     * *Ce qui décide du COMPTE doit s'énoncer avant ce qui décide du contenu.*
+     * Ce test verrouille l'ordre autant que la règle : la phrase qui donne le
+     * nombre d'entrées ouvre la cible.
+     */
+    it('donne la règle du COMPTE avant celle du contenu', () => {
+        const rangDuCompte = jet.cible.indexOf('UNE ENTRÉE PAR SECTION DE FICHE LUE');
+        const rangDuDetail = jet.cible.indexOf('Chaque entrée porte son "id"');
+
+        expect(rangDuCompte, 'la règle du compte doit exister').toBeGreaterThan(-1);
+        expect(rangDuCompte).toBeLessThan(rangDuDetail);
+        // Et elle interdit explicitement ce que Rêves de Dragons a produit.
+        expect(jet.cible).toContain('JAMAIS UNE PAR CHAMP');
+        expect(jet.cible).toContain('deux entrées portant le même "sectionId"');
+    });
+
     it('dit que « sous-ou-egal » sans seuil ne veut rien dire', () => {
         expect(jet.cible).toContain('SANS seuil ne veut rien dire');
     });

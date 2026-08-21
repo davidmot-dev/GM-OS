@@ -171,7 +171,16 @@ bloc de métadonnées en en-tête : commence directement par « ## Métadonnées
 - sujet : ${sujet}
 - couverture : complète | partielle | absente
 - sources : titre exact de chaque source utilisée
-- sections : titres exacts des chapitres ou sections dont la règle est tirée
+- sections : titres des chapitres ou sections dont la règle est tirée, RECOPIÉS
+  MOT POUR MOT tels qu'ils sont imprimés dans le livre — article compris. Ces
+  titres sont ensuite CONFRONTÉS À L'INDEX DU LIVRE : un titre approché s'y lit
+  comme un titre inventé. Donc jamais de reformulation thématique (« Périls
+  Magiques » pour un chapitre qui s'appelle « Queues, souffles et têtes de
+  Dragon »), jamais deux titres fondus en un (« Lancement et Réserve » pour
+  « Lancer un sort » et « Mise en réserve », qui sont deux sections distinctes),
+  jamais un titre que tu formes toi-même à partir du contenu. Si tu ne retrouves
+  pas le titre exact, OMETS-LE : une section de moins vaut mieux qu'un titre qui
+  ne renvoie à rien.
 
 ## Règle
 L'énoncé de la règle telle que le livre la pose.
