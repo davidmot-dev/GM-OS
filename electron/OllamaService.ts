@@ -25,6 +25,48 @@ function journaliser(message: string): void {
     }
 }
 
+/**
+ * **Ce qui part, résumé en une ligne — écrit le 2026-08-22.**
+ *
+ * David, ce soir-là : *« l'étape 10 fonctionne, et je ne vois pas le nom de la
+ * scène »*. La question était juste, et le journal ne pouvait pas y répondre :
+ * il disait le modèle, les options, ce qui revenait — jamais ce qui partait.
+ * Lire le code prouve qu'une section EXISTE ; il ne prouve pas qu'elle porte
+ * quelque chose ce soir-là, sur cette campagne.
+ *
+ * **Les titres et leur poids, pas le prompt.** Le contexte entier ferait des
+ * milliers de caractères à chaque appel et noierait le journal. Les titres
+ * suffisent à trancher la question qu'on se pose vraiment — « Scène en cours »
+ * est-elle là ? — et le nombre qui suit chacun tranche la seconde, qu'un titre
+ * seul laisserait ouverte : *une section vide et une section pleine portent le
+ * même titre.*
+ */
+export function sommaireDuSysteme(
+    messages: readonly { role: string; content: string }[],
+): string {
+    const systeme = messages.find(m => m.role === 'system')?.content ?? '';
+    if (!systeme) return 'aucun message systeme';
+
+    const titres = [...systeme.matchAll(/^[ 	]*#{2,4} +(.+?)[ 	]*$/gm)];
+    const sommaire = titres.map((t, i) => {
+        const debut = (t.index ?? 0) + t[0].length;
+        const fin = i + 1 < titres.length ? (titres[i + 1].index ?? systeme.length) : systeme.length;
+        return `${t[1]}(${systeme.slice(debut, fin).trim().length})`;
+    });
+
+    /*
+      Le contexte RAG apporte ses propres titres — une fiche de règles en a
+      plusieurs. On borne : au-delà, la ligne cesse d'être lisible d'un coup
+      d'oeil, ce qui est tout ce qu'on lui demande.
+    */
+    const MAX = 20;
+    const listee = sommaire.length > MAX
+        ? [...sommaire.slice(0, MAX), `+${sommaire.length - MAX}`]
+        : sommaire;
+
+    return `${systeme.length} car. [${listee.join(' | ') || 'sans titre'}]`;
+}
+
 export interface OllamaChatResponse {
     model: string;
     created_at: string;
@@ -384,7 +426,8 @@ export class OllamaService {
             const corps = corpsDeChat(model, messages, options, true);
             const ligne =
                 `[Ollama] ${model} — format=${corps.format ?? 'aucun'}, think=${corps.think}, ` +
-                `options=${JSON.stringify(corps.options)}, recu=${JSON.stringify(options ?? null)}`;
+                `options=${JSON.stringify(corps.options)}, recu=${JSON.stringify(options ?? null)}` +
+                `, contexte=${sommaireDuSysteme(messages)}`;
             console.log(ligne);
             journaliser(ligne);
 
@@ -587,7 +630,8 @@ export class OllamaService {
             const corps = corpsDeChat(model, messages, options, true, true);
             journaliser(
                 `[Ollama] ⇢ flux ${model} — think=${corps.think}, keep_alive=${corps.keep_alive}, `
-                + `options=${JSON.stringify(corps.options)}`,
+                + `options=${JSON.stringify(corps.options)}, `
+                + `contexte=${sommaireDuSysteme(messages)}`,
             );
 
             let response = await envoyer(true);
