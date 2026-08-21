@@ -37,6 +37,51 @@ describe('DiceEngine Alignment', () => {
     });
 });
 
+/**
+ * **Le seuil n'est pas une réserve.**
+ *
+ * Relevé par David le 2026-08-21 sur Alien : six dés de base, un dé
+ * d'équipement, et le pupitre en lançait seize à chaque jet. La branche Year
+ * Zero lisait `targetOverwrite ?? gearCount` — le seuil de réussite servait de
+ * nombre de dés d'équipement, et il l'emportait. Le pupitre naît avec un seuil
+ * à dix et n'a aucune raison de le remettre à zéro en entrant dans un moteur
+ * qui n'en a pas l'usage : six et dix font seize.
+ *
+ * On mesure ici le total de dés, pas le nombre de réussites : c'est la seule
+ * chose que le défaut changeait, et le comptage des six est ailleurs.
+ */
+describe('Year Zero — le seuil ne se compte pas comme des dés', () => {
+    const alien = { defaultDice: '6', logic: 'count-success', engine: 'yze' as const };
+
+    it('un seuil transmis ne gonfle plus la réserve', () => {
+        const res = DiceEngine.rollFromConfig(alien, {
+            baseCount: 6,
+            gearCount: 1,
+            // Ce que le pupitre envoie sans le vouloir : son seuil par défaut.
+            targetOverwrite: 10,
+        });
+
+        expect(res.rolls.length).toBe(7);
+        expect(res.rolls.filter(r => r.source === 'base').length).toBe(6);
+        expect(res.rolls.filter(r => r.source === 'gear').length).toBe(1);
+    });
+
+    it("les dés d'équipement suivent ce qu'on saisit", () => {
+        const sans = DiceEngine.rollFromConfig(alien, { baseCount: 6, gearCount: 0, targetOverwrite: 10 });
+        const trois = DiceEngine.rollFromConfig(alien, { baseCount: 6, gearCount: 3, targetOverwrite: 10 });
+
+        expect(sans.rolls.length).toBe(6);
+        expect(trois.rolls.length).toBe(9);
+    });
+
+    it("le modificateur reste sur la réserve de base, pas sur l'équipement", () => {
+        const res = DiceEngine.rollFromConfig(alien, { baseCount: 6, gearCount: 2, modifier: -2 });
+
+        expect(res.rolls.filter(r => r.source === 'base').length).toBe(4);
+        expect(res.rolls.filter(r => r.source === 'gear').length).toBe(2);
+    });
+});
+
 describe('un seuil fixe ne se fait pas écraser par un seuil non composé', () => {
     /**
      * **Le défaut, trouvé le 2026-08-15 sur une question de David** : *« et au

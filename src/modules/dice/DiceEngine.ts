@@ -549,7 +549,30 @@ export class DiceEngine {
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
             const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);
-            const gear = options?.targetOverwrite ?? options?.gearCount ?? 0;
+            /**
+             * **Les dés d'équipement se comptent, ils ne se seuillent pas.**
+             *
+             * Cette ligne lisait `targetOverwrite ?? gearCount` : le SEUIL de
+             * réussite pris pour un NOMBRE de dés, et prioritaire par-dessus le
+             * marché. Or le pupitre initialise son seuil à dix et ne le remet
+             * jamais à zéro en entrant dans Year Zero — le moteur n'en a aucun
+             * usage, un six est une réussite en dur dans `rollYZE`. Alien
+             * lançait donc `base + 10` dés à chaque jet, quoi qu'on saisisse
+             * dans « dés d'équipement » : six et un donnaient seize dés,
+             * relevé par David le 2026-08-21.
+             *
+             * Le champ E de l'écran était affiché et ignoré — même défaut que
+             * le sélecteur ≥ / ≤ du 2026-08-16, et que le sens du comptage qui
+             * n'arrivait pas jusqu'au moteur : *le chemin s'arrête avant le
+             * moteur, et le résultat reste plausible.* Dix dés d'équipement
+             * rendent des Fléaux crédibles ; rien ne se plaint.
+             *
+             * Les trois appelants passent `gearCount` — le pupitre, la
+             * tablette et le panneau de jet —, et deux d'entre eux passaient
+             * aussi un `targetOverwrite` qui n'a aucun sens ici. On ne lit donc
+             * plus que le seul champ qui parle de dés.
+             */
+            const gear = options?.gearCount ?? 0;
             const mod = options?.modifier ?? 0;
             return this.rollYZE(Math.max(1, count + mod), gear);
         }
