@@ -1,7 +1,12 @@
 import { useAIStore } from '../../stores/useAIStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useJournalStore } from '../journal/useJournalStore';
-import { lesDerniersEvenements } from '../journal/derniersEvenements';
+import { leRecitCureDuJournal } from '../journal/recitCure';
+import {
+  decrireLesScenesOuvertes, derniersFaitsRacontes, nommerLesScenesOuvertes,
+  type SceneEnContexte,
+} from '../journal/contexteDeLaTrame';
+import { scenesDansLEtat } from '../session/logic/trame';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
 import { attenteAnnoncee, budgetDuMoment } from './budgetsDeTemps';
@@ -1485,7 +1490,44 @@ ${fullContext}`;
       if (!activeCampaignId) return "Aucune campagne active.";
 
       const campaign = osStore.campaigns.find(c => c.id === activeCampaignId);
-      
+
+      /*
+        **0. LA TRAME — étape 10 du § 8 du plan du 2026-08-08, la dernière.**
+
+        L'Oracle recevait la campagne, les PJ, les PNJ, les indices et dix
+        événements bruts. **Aucune scène, aucun acte, aucun enjeu** — vrai le
+        08/08, encore vrai treize jours plus tard.
+
+        Le § 7 chiffre le bénéfice : « scène en cours : l'embuscade de
+        l'entrepôt — les PJ cherchent le manifeste, le garde est corrompu » est
+        un bien meilleur ancrage pour bien moins de jetons. Ce qui compte double
+        avec le plafond RAG à 4 000.
+
+        **Deux scènes ouvertes est le cas normal**, pas une anomalie : quand le
+        groupe se sépare, deux scènes tournent — et c'est précisément le moment
+        où le meneur consulte l'Oracle.
+      */
+      const nomDuLieu = new Map(osStore.atlasMaps.map(m => [m.id, m.name]));
+      const nomDeLEntite = new Map(osStore.entities.map(e => [e.id, e.name]));
+      const nomDuPersonnage = new Map(
+        osStore.players.flatMap(p => p.characters).map(c => [c.id, c.name]),
+      );
+      const titreDeLActe = new Map(osStore.actes.map(a => [a.id, a.titre]));
+
+      const scenesOuvertes: SceneEnContexte[] = scenesDansLEtat(
+        osStore.scenes, osStore.actes, activeCampaignId, 'en-cours',
+      ).map(sc => ({
+        titre: sc.titre,
+        acte: titreDeLActe.get(sc.acteId),
+        resume: sc.resume,
+        lieu: sc.lieuId ? nomDuLieu.get(sc.lieuId) : undefined,
+        // `?? []` partout : les scènes d'avant le 2026-08-17 ne portent pas
+        // `personnagesIds`, et le déclarer obligatoire le rendrait `undefined`
+        // à l'exécution en prétendant le contraire.
+        pj: (sc.personnagesIds ?? []).map(id => nomDuPersonnage.get(id)).filter((n): n is string => !!n),
+        pnj: (sc.entiteIds ?? []).map(id => nomDeLEntite.get(id)).filter((n): n is string => !!n),
+      }));
+
       // 1. Personnages Joueurs (Vitals & Info)
       const party = osStore.players.flatMap(p => p.characters)
         .filter(c => c.campaignId === activeCampaignId)
@@ -1522,13 +1564,34 @@ ${fullContext}`;
         `lesDerniersEvenements` : c'est le même remède que pour les trois listes
         de session et les onze lecteurs du module de santé.
       */
-      const lastEvents = lite ? [] : lesDerniersEvenements(
-        journalStore.journals.find(j => j.id === journalStore.activeJournalId)?.events, 10,
-      ).map(e => `[${new Date(e.timestamp).toLocaleTimeString('fr-FR')}] ${e.title}: ${e.content}`);
+      /*
+        **Ce qui raconte, et non ce qui trace — § 3 de la procédure de l'étape 10.**
+
+        Dix événements BRUTS partaient : jets de dés, ambiances, gestes d'outil.
+        La matière pour faire mieux existait déjà — la curation distingue la
+        `trace` de la `chronique` depuis le 18/08, et `leRecitCureDuJournal` la
+        rend **dans l'ordre de l'histoire**, scène après scène.
+
+        Huit plutôt que dix, parce qu'ils sont désormais tous denses : on ne
+        paie plus des jetons pour « Initiative : tirée pour 6 combattants ».
+      */
+      const journalActif = journalStore.journals.find(j => j.id === journalStore.activeJournalId);
+      const recitRecent = lite || !journalActif
+        ? ''
+        : derniersFaitsRacontes(leRecitCureDuJournal(journalActif), 8);
 
       if (lite) {
+        /*
+          **Le Cortex y gagne pour quelques dizaines de jetons — § 7 du plan.**
+          Savoir OÙ l'on est et CE QUI s'y joue vaut mieux, pour un conseil de
+          combat, que tout le lore d'une campagne. On ne lui donne pas le
+          détail — il a déjà son rapport de situation — mais l'ancrage.
+        */
+        const ancrage = nommerLesScenesOuvertes(scenesOuvertes);
         return `## Campagne: ${campaign?.name || "Inconnue"}
-### Groupe (PJ)
+${ancrage ? `### Scène en cours
+${ancrage}
+` : ''}### Groupe (PJ)
 ${party.length > 0 ? party.join('\n') : "N/A"}
 ### PNJs & Alliés
 ${npcs.length > 0 ? npcs.join('\n') : "N/A"}`;
@@ -1546,8 +1609,12 @@ ${npcs.length > 0 ? npcs.join('\n') : "Aucun PNJ notable recensé."}
 ### Indices Révélés
 ${clues.length > 0 ? clues.join('\n') : "Aucun indice découvert pour le moment."}
 
-### Historique Récent (Chronologie)
-${lastEvents.length > 0 ? lastEvents.join('\n') : "Aucun événement récent dans la chronique."}
+${scenesOuvertes.length > 0 ? `
+### Scène${scenesOuvertes.length > 1 ? 's' : ''} en cours
+${decrireLesScenesOuvertes(scenesOuvertes)}` : ''}
+
+### Ce qui vient de se jouer
+${recitRecent || "Rien encore dans la chronique de cette séance."}
 `;
     } catch (err) {
       console.error("[AIService] Failed to gather live context:", err);
