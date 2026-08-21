@@ -4,6 +4,7 @@ import { useJournalStore } from '../journal/useJournalStore';
 import { lesDerniersEvenements } from '../journal/derniersEvenements';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
+import { attenteAnnoncee, budgetDuMoment } from './budgetsDeTemps';
 import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
 import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
@@ -192,7 +193,16 @@ export class AIService {
     libelle?: string,
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
-    const TIMEOUT_MS = 2700000; // 45 minutes
+    /*
+      **Le plafond suit le moment de jeu — axe D.4.**
+
+      Il valait 45 minutes en dur, écrit deux fois dans ce fichier, pendant que
+      le MCP en tenait 10 et que la génération d'image n'en avait aucun. Aucun
+      des trois ne consultait le signal de séance, qui existe pourtant depuis
+      toujours : *quarante-cinq minutes d'attente en préparation sont normales,
+      en pleine partie elles sont absurdes.*
+    */
+    const budget = budgetDuMoment(useSessionOSStore.getState().sessions);
     const systemPrompt = sansPersona
       ? (customContext ?? '')
       : await this.prepareSystemPrompt(prompt, customContext, gemId, ragOptions, lite);
@@ -206,11 +216,26 @@ export class AIService {
 
     console.log(`[AIService] Sending ${activeProvider} request (${prompt.length + systemPrompt.length} chars)...`);
 
+    /*
+      **Le plafond ARRÊTE, il ne se contente plus d'abandonner l'attente.**
+
+      Ce `Promise.race` rejetait la promesse pendant que la génération continuait
+      chez Ollama, sur l'unique créneau : le plafond n'était donc pas un plafond,
+      seulement une façon de cesser de regarder. `identifierLaRequete` et
+      `ollamaAbort`, posés à l'axe D.1, permettent enfin de le rendre vrai.
+    */
+    const requete = identifierLaRequete(libelle);
     return Promise.race([
-      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration, libelle),
-      new Promise<AIResponse>((_, reject) => 
-        setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 45min.`)), TIMEOUT_MS)
-      )
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration, libelle, requete),
+      new Promise<AIResponse>((_, reject) =>
+        setTimeout(() => {
+          void window.appBridge?.ai?.ollamaAbort?.(requete.id);
+          reject(new Error(
+            `TIMEOUT : ${activeProvider} n'a pas répondu en ${attenteAnnoncee(budget)}. `
+            + 'La requête a été abandonnée.',
+          ));
+        }, budget),
+      ),
     ]);
   }
 
@@ -224,7 +249,9 @@ export class AIService {
     attendJson: boolean = false,
     schema?: Record<string, unknown>,
     plafondDeGeneration?: number,
-    libelle?: string,
+    _libelle?: string,
+    /** Identité déjà fabriquée par l'appelant, pour que le plafond puisse l'annuler. */
+    requete?: { id: string; libelle: string },
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -277,7 +304,7 @@ export class AIService {
             : undefined,
             // Toute requête s'inscrit au registre, nommée : c'est ce qui permet
             // au panneau de dire ce qui occupe le modèle, et de l'abandonner.
-            identifierLaRequete(libelle));
+            requete);
 
           return { text, metadata: { provider: activeProvider, model, endpoint } };
         }
@@ -1207,7 +1234,9 @@ ${fullContext}`;
       
       if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
-      const TIMEOUT_MS = 2700000; // 45 minutes
+      // Même budget que le reste : le fournisseur ne change pas le moment de
+      // jeu, et c'est le moment qui décide de la patience du meneur.
+      const TIMEOUT_MS = budgetDuMoment(useSessionOSStore.getState().sessions);
       
       const payload: any = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -1247,7 +1276,7 @@ ${fullContext}`;
           response = await Promise.race([
             window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, payload),
             new Promise((_, reject) => 
-              setTimeout(() => reject(new Error("TIMEOUT: Gemini n'a pas répondu après 45min.")), TIMEOUT_MS)
+              setTimeout(() => reject(new Error(`TIMEOUT : Gemini n'a pas répondu en ${attenteAnnoncee(TIMEOUT_MS)}.`)), TIMEOUT_MS)
             )
           ]) as any;
 

@@ -1,5 +1,7 @@
 import { AIService } from '../ai/AIService';
 import { useAIStore } from '../../stores/useAIStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
+import { attenteAnnoncee, budgetDuMoment } from '../ai/budgetsDeTemps';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
@@ -653,13 +655,27 @@ ${pratique.trim()}`;
 
     const isAuthError = estErreurAuth;
 
-    const TIMEOUT_MS = 600000; // 10 minutes
+    /*
+      **Le même budget que le modèle — axe D.4.**
+
+      Il valait 10 minutes en dur pendant que le modèle en tenait 45 : deux
+      plafonds pour la même attente, et le plan relève l'incohérence au § 3.3.
+      Elle avait une conséquence concrète — une Forge dont le carnet répond en
+      12 minutes échouait sur le MCP alors que le modèle, lui, l'aurait attendue.
+
+      Ils suivent désormais tous les deux le moment de jeu. Un seul endroit
+      décide, `budgetsDeTemps` ; recopier un plafond est précisément ce qui les
+      a fait diverger.
+    */
+    const TIMEOUT_MS = budgetDuMoment(useSessionOSStore.getState().sessions);
 
     const callWithTimeout = async (name: string, tool: string, a: any) => {
       return Promise.race([
         mcpBridge.callTool(name, tool, a),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error(`MCP_TIMEOUT: ${name}.${tool} non répondu après 10min.`)), TIMEOUT_MS)
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error(
+            `MCP_TIMEOUT : ${name}.${tool} n'a pas répondu en ${attenteAnnoncee(TIMEOUT_MS)}.`,
+          )), TIMEOUT_MS)
         )
       ]);
     };

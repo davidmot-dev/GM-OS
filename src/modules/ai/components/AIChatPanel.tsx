@@ -14,8 +14,10 @@ import { useTranslation } from 'react-i18next';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useGemStore } from '../../../stores/useGemStore';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
+import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
 
 interface Message {
   id: string;
@@ -42,6 +44,8 @@ const AIChatPanel: React.FC = () => {
   const [loading, setLoading] = useState(false);
   // Ce qui occupe le modèle pendant qu'on regarde ce panneau — axe D.3.
   const { requetes: enAttente, abandonner } = useFileDAttente();
+  // Le moment de jeu decide du plafond, et le plafond s'affiche — axe D.5.
+  const sessions = useSessionOSStore(s => s.sessions);
   const [aiStatus, setAiStatus] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -231,6 +235,23 @@ const AIChatPanel: React.FC = () => {
                     {aiStatus}
                   </span>
                 )}
+                {/*
+                  **L'attente annonce sa borne — axe D.5 du plan du 2026-08-07.**
+
+                  « Réception de la vision… » ne disait rien de sa fin : trois
+                  points qui rebondissent ne distinguent pas une réponse qui
+                  arrive d'une requête perdue, et *une attente qu'on ne peut pas
+                  borner se ressent plus longue qu'elle n'est*.
+
+                  **On annonce le PLAFOND, pas une prédiction.** Prédire la durée
+                  demanderait de connaître la machine, le modèle et la longueur de
+                  la réponse ; annoncer « 20 s » et se tromper ferait plus de mal
+                  que de se taire. Le plafond, lui, est une promesse tenue : au
+                  pire, ça s'arrête là — et depuis l'axe D.1, ça s'arrête vraiment.
+                */}
+                <span className="text-[10px] font-mono text-app-text/25 tracking-widest ml-1">
+                  {attenteAnnoncee(budgetDuMoment(sessions))}
+                </span>
               </div>
             </div>
           </div>
