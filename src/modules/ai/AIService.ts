@@ -77,6 +77,22 @@ ${stable}
 ${liveContext}`;
 }
 
+/**
+ * L'identité d'une requête au modèle — un nom unique, et ce qu'elle est.
+ *
+ * **Le libellé est ce qui compte.** Il ne sert pas au code, qui n'a besoin que
+ * de l'identifiant pour annuler : il sert au meneur, à qui le panneau de
+ * l'Oracle dira « Forge en cours depuis 3 min » plutôt que « une opération est
+ * en cours ». Voir `useFileDAttente`.
+ */
+function identifierLaRequete(libelle?: string): { id: string; libelle: string } {
+    return {
+        id: `req-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        // Une attente mal nommée vaut mieux qu'une attente muette.
+        libelle: libelle ?? 'Requête IA',
+    };
+}
+
 export class AIService {
   private static instance: AIService;
 
@@ -159,6 +175,21 @@ export class AIService {
      * la valeur n'était réglable nulle part.
      */
     plafondDeGeneration?: number,
+    /**
+     * Ce que le meneur reconnaîtra si cette requête occupe le modèle —
+     * « Forge », « Oracle », « Cortex ». **Axe D.3 du plan du 2026-08-07.**
+     *
+     * Sous `OLLAMA_NUM_PARALLEL: 1`, une requête longue tient l'unique créneau
+     * et toutes les autres font la queue derrière elle. Le panneau de l'Oracle
+     * affiche ce libellé et propose d'abandonner : *« Forge en cours, l'Oracle
+     * attendra » est actionnable ; un bouton grisé ne l'est pas.*
+     *
+     * Facultatif : un appel qui ne se nomme pas s'affiche quand même, sous un
+     * libellé générique. Mieux vaut une attente mal nommée qu'une attente
+     * muette — et **exiger le libellé de trente appelants en aurait fait
+     * oublier vingt-neuf**, comme pour les émetteurs du journal.
+     */
+    libelle?: string,
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
     const TIMEOUT_MS = 2700000; // 45 minutes
@@ -176,7 +207,7 @@ export class AIService {
     console.log(`[AIService] Sending ${activeProvider} request (${prompt.length + systemPrompt.length} chars)...`);
 
     return Promise.race([
-      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration),
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration, libelle),
       new Promise<AIResponse>((_, reject) => 
         setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 45min.`)), TIMEOUT_MS)
       )
@@ -193,6 +224,7 @@ export class AIService {
     attendJson: boolean = false,
     schema?: Record<string, unknown>,
     plafondDeGeneration?: number,
+    libelle?: string,
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -242,7 +274,10 @@ export class AIService {
                 // une nouveauté aux appelants qui n'ont rien demandé.
                 ...(plafondDeGeneration ? { num_predict: plafondDeGeneration } : {}),
               }
-            : undefined);
+            : undefined,
+            // Toute requête s'inscrit au registre, nommée : c'est ce qui permet
+            // au panneau de dire ce qui occupe le modèle, et de l'abandonner.
+            identifierLaRequete(libelle));
 
           return { text, metadata: { provider: activeProvider, model, endpoint } };
         }
@@ -529,6 +564,32 @@ Use the names above verbatim. Do not invent a setting title.
       // 0. TENTATIVE OLLAMA LOCAL FLUX (Si actif)
       if (activeProvider === 'ollama') {
         try {
+          /*
+            **UN DÉLAI D'ABANDON, ET IL ARRÊTE VRAIMENT — axe D.2 du plan du
+            2026-08-07, que celui-ci demande de traiter en premier.**
+
+            Il n'existait AUCUN délai ici : ni dans `AIService.generateImage`,
+            ni dans `OllamaService.generateImage`. Le plafond de 45 minutes ne
+            couvre que `generateText`. Or si le fournisseur actif est Ollama,
+            cette branche tente **d'abord une diffusion locale** — sur une
+            machine mesurée à `size_vram: 0`, c'est-à-dire sur processeur.
+
+            Un portrait demandé à table pouvait donc bloquer **indéfiniment,
+            avant même d'atteindre les replis cloud qui répondraient en quelques
+            secondes** — et il occupait l'unique créneau de `NUM_PARALLEL: 1`,
+            donc l'Oracle et le Cortex avec lui.
+
+            **Quatre-vingt-dix secondes.** Assez pour un iGPU qui a de la
+            chance, trop peu pour une nuit de diffusion sur CPU. Et surtout : à
+            l'échéance on ABANDONNE POUR DE BON — `ollamaAbort` coupe le `fetch`
+            côté processus principal — puis **on tombe sur le cloud** au lieu
+            d'échouer. *Dégrader plutôt qu'échouer*, comme le demande l'axe D.4.
+          */
+          const DELAI_IMAGE_LOCALE_MS = 90_000;
+          const requete = {
+            id: `image-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            libelle: "Génération d'image",
+          };
           let model = config.modelId || 'flux';
           const endpoint = config.endpoint;
           // Force flux if a text model is used for image generation
@@ -541,7 +602,19 @@ Use the names above verbatim. Do not invent a setting title.
           console.log(`[AI Service] Envoi de la requête Ollama Image (Modèle: ${model}, Endpoint: ${endpoint})...`);
           if (!window.appBridge?.ai?.ollamaGenerateImage) throw new Error("Bridge Ollama Generate Image non disponible.");
           
-          const base64Response = await window.appBridge.ai.ollamaGenerateImage(model, prompt, endpoint);
+          const base64Response = await Promise.race([
+            window.appBridge.ai.ollamaGenerateImage(model, prompt, endpoint, requete),
+            new Promise<never>((_, rejeter) => setTimeout(() => {
+              // On coupe la requête AVANT de rejeter : sans cela la diffusion
+              // continuerait sur le créneau unique, et le repli cloud
+              // attendrait derrière elle.
+              void window.appBridge?.ai?.ollamaAbort?.(requete.id);
+              rejeter(new Error(
+                `La génération locale a dépassé ${DELAI_IMAGE_LOCALE_MS / 1000} s et a été abandonnée. `
+                + 'Bascule sur le service distant.',
+              ));
+            }, DELAI_IMAGE_LOCALE_MS)),
+          ]);
           
           if (base64Response) {
              let base64Data = base64Response;
@@ -963,7 +1036,7 @@ Use the names above verbatim. Do not invent a setting title.
         await window.appBridge.ai.ollamaChatStream(model, [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
-        ], endpoint, { num_predict: 1024 });
+        ], endpoint, { num_predict: 1024 }, identifierLaRequete("Oracle"));
       } finally {
         unsubscribe();
       }
@@ -1092,6 +1165,8 @@ ${fullContext}`;
        * quand 143 autres réponses tenaient dedans.
        */
       plafondDeGeneration?: number;
+      /** Ce qui s'affichera si cette requête occupe le modèle — voir `generateText`. */
+      libelle?: string;
     } = {}
   ): Promise<T> {
     const { activeProvider, configs } = useAIStore.getState();
@@ -1222,7 +1297,7 @@ ${fullContext}`;
 
     const response = await this.generateText(
       prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona, options.schema,
-      options.plafondDeGeneration,
+      options.plafondDeGeneration, options.libelle,
     );
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     

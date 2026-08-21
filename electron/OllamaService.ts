@@ -172,6 +172,99 @@ export function caractereQuiBoucle(contenu: string): string | null {
     return /(.)\1{29,}\s*$/.exec(contenu)?.[1] ?? null;
 }
 
+/**
+ * **Les requêtes en vol, et de quoi les arrêter vraiment — axe D.1 du plan du
+ * 2026-08-07.**
+ *
+ * **Ce que rien ne faisait.** Aucun `AbortController`, aucun `signal`, nulle
+ * part dans la chaîne IA. Le délai de 45 minutes d'`AIService` est un
+ * `Promise.race` : il rejette la promesse, **mais la génération continue chez
+ * Ollama**. Et sous `OLLAMA_NUM_PARALLEL: 1` elle occupe l'unique créneau.
+ *
+ * Conséquence, et c'est le défaut le plus structurant du plan : *une Forge
+ * lancée par erreur en séance bloque l'Oracle et le Cortex pour toute sa durée
+ * réelle, quoi que fasse le meneur.* Fermer la fenêtre n'y changeait rien.
+ * **Aucun plafond de temps n'était donc réel** — ils promettaient tous
+ * d'abandonner l'attente, aucun n'arrêtait le travail.
+ *
+ * **Pourquoi un registre et non un `signal` passé au pont.** Un `AbortSignal`
+ * ne traverse pas l'IPC : il n'est pas sérialisable. On échange donc un
+ * identifiant, et le contrôleur reste du côté où vit le `fetch`. C'est la seule
+ * forme possible, et elle a un mérite : le processus principal sait à tout
+ * moment ce qui est en vol, ce qu'aucun des deux côtés ne savait avant.
+ *
+ * L'entrée se retire dans un `finally` : un registre qui fuit ferait grossir la
+ * mémoire d'une requête par appel, et rendrait faux tout compte de ce qui
+ * tourne.
+ */
+/** Ce qu'on retient d'une requête en vol — de quoi la nommer et la dater. */
+interface RequeteEnVol {
+    controleur: AbortController;
+    /** Ce que le meneur reconnaîtra : « Forge », « Oracle », « Portrait ». */
+    libelle: string;
+    debut: number;
+}
+
+/** L'identité d'une requête : son nom d'annulation et ce qu'elle est. */
+export interface Requete {
+    id: string;
+    libelle: string;
+}
+
+const enVol = new Map<string, RequeteEnVol>();
+
+/** Ouvre un créneau annulable. Rend le signal à passer au `fetch`. */
+function inscrire(requete?: Requete): AbortSignal | undefined {
+    if (!requete) return undefined;
+    // Une reprise sous le même identifiant remplace la précédente : c'est le
+    // cas de la seconde tentative quand un modèle refuse « think ».
+    enVol.get(requete.id)?.controleur.abort();
+    const controleur = new AbortController();
+    enVol.set(requete.id, { controleur, libelle: requete.libelle, debut: Date.now() });
+    return controleur.signal;
+}
+
+/** Referme le créneau, quoi qu'il soit arrivé. */
+function retirer(requete?: Requete): void {
+    if (requete) enVol.delete(requete.id);
+}
+
+/**
+ * Arrête la requête portant cet identifiant. Rend `true` si elle existait.
+ *
+ * Rendre `false` plutôt que de lever : abandonner une requête déjà terminée est
+ * le cas normal — l'utilisateur clique pendant que la réponse arrive.
+ */
+export function abandonnerLaRequete(requeteId: string): boolean {
+    const vol = enVol.get(requeteId);
+    if (!vol) return false;
+    vol.controleur.abort();
+    enVol.delete(requeteId);
+    journaliser(`[Ollama] ✕ « ${vol.libelle} » abandonnée à la demande.`);
+    return true;
+}
+
+/**
+ * Ce qui tourne, nommé et daté — **la matière du verrou visible, axe D.3.**
+ *
+ * **Un compte ne suffit pas, et c'est tout l'enjeu.** David, le 2026-08-21 :
+ * *« je n'ai pas la main sur le Cortex quand je forge »*. Il peut pourtant
+ * envoyer sa question — le `loading` du panneau est local à lui. Elle part, et
+ * **fait la queue chez Ollama** sous `NUM_PARALLEL: 1`, sans que rien ne
+ * l'explique : l'écran affiche « réception de la vision… » indéfiniment.
+ *
+ * Le plan tranche la façon d'y répondre : *« savoir qu'une opération tourne vaut
+ * mieux que l'empêcher — "Forge en cours, l'Oracle attendra ~12 min" est
+ * actionnable ; un bouton grisé ne l'est pas. »* Encore faut-il pouvoir dire
+ * LAQUELLE et DEPUIS QUAND, d'où le libellé et la date plutôt qu'un entier.
+ */
+export function requetesEnVol(): { id: string; libelle: string; depuis: number }[] {
+    const maintenant = Date.now();
+    return [...enVol.entries()].map(([id, v]) => ({
+        id, libelle: v.libelle, depuis: maintenant - v.debut,
+    }));
+}
+
 export const OPTIONS_PAR_DEFAUT = {
     /**
      * Fenêtre demandée. Ne la fixe pas au maximum de l'architecture : le cache
@@ -273,8 +366,11 @@ export class OllamaService {
         messages: { role: string; content: string }[],
         endpoint?: string,
         options?: OptionsDeChat,
+        /** Nom et libellé de la requête — voir le registre `enVol`. */
+        requete?: Requete,
     ): Promise<string> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
+        const signal = inscrire(requete);
         try {
             /*
               **Ce qui part est écrit, une ligne par appel.**
@@ -295,7 +391,8 @@ export class OllamaService {
             const envoyer = async (avecThink: boolean) => net.fetch(`${url}/api/chat`, {
                 method: 'POST',
                 body: JSON.stringify(avecThink ? corps : corpsDeChat(model, messages, options, false)),
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
+                signal,
             });
 
             let response = await envoyer(true);
@@ -434,10 +531,21 @@ export class OllamaService {
             return contenu;
         } catch (error: unknown) {
             const err = error as Error & { code?: string; cause?: unknown };
+            /*
+              **Une requête abandonnée n'est pas une panne d'Ollama.** Sans ce
+              cas, un abandon volontaire ressortait en « Ollama est inaccessible,
+              assurez-vous qu'il est lancé » — un message qui envoie chercher un
+              serveur éteint alors que c'est l'utilisateur qui a cliqué.
+            */
+            if (err.name === 'AbortError') {
+                throw new Error('Requête abandonnée.');
+            }
             if (err.code === 'ECONNREFUSED' || err.message?.includes('fetch failed')) {
                 throw new Error(`Ollama est inaccessible sur ${url}. Assurez-vous qu'Ollama est lancé et que le port est correct.`);
             }
             throw error;
+        } finally {
+            retirer(requete);
         }
     }
 
@@ -463,13 +571,17 @@ export class OllamaService {
         onToken: (token: string) => void,
         endpoint?: string,
         options?: OptionsDeChat,
+        /** Nom et libellé de la requête — voir le registre `enVol`. */
+        requete?: Requete,
     ): Promise<void> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
+        const signal = inscrire(requete);
         try {
             const envoyer = async (avecThink: boolean) => net.fetch(`${url}/api/chat`, {
                 method: 'POST',
                 body: JSON.stringify(corpsDeChat(model, messages, options, avecThink, true)),
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
+                signal,
             });
 
             const corps = corpsDeChat(model, messages, options, true, true);
@@ -529,6 +641,10 @@ export class OllamaService {
         } catch (error) {
             console.error('[Ollama] Stream error:', error);
             throw error;
+        } finally {
+            // Un registre qui fuit ferait grossir la mémoire d'une entrée par
+            // appel, et rendrait faux tout compte de ce qui tourne.
+            retirer(requete);
         }
     }
 
@@ -571,8 +687,9 @@ export class OllamaService {
     /**
      * Génère une image via l'API Ollama (modèles expérimentaux type Flux)
      */
-    async generateImage(model: string, prompt: string, endpoint?: string): Promise<string> {
+    async generateImage(model: string, prompt: string, endpoint?: string, requete?: Requete): Promise<string> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
+        const signal = inscrire(requete);
         try {
             console.log(`[Ollama] Generating image with: ${model} at ${url}`);
             const response = await net.fetch(`${url}/api/generate`, {
@@ -582,7 +699,8 @@ export class OllamaService {
                     prompt: prompt,
                     stream: false,
                 }),
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
+                signal,
             });
 
             if (!response.ok) {
@@ -594,6 +712,8 @@ export class OllamaService {
         } catch (error) {
             console.error(`[Ollama] Erreur de génération d'image sur ${url}:`, error);
             throw error;
+        } finally {
+            retirer(requete);
         }
     }
 
@@ -613,21 +733,35 @@ export class OllamaService {
             messages: { role: string; content: string }[],
             endpoint?: string,
             options?: OptionsDeChat,
+            requete?: Requete,
         ) => {
-            return await service.chat(model, messages, endpoint, options);
+            return await service.chat(model, messages, endpoint, options, requete);
         });
 
-        ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string, endpoint?: string) => {
-            return await service.generateImage(model, prompt, endpoint);
+        /*
+          **Arrêter, et pas seulement cesser d'attendre — axe D.1.**
+
+          Les plafonds d'`AIService` sont des `Promise.race` : ils rejettent la
+          promesse pendant que la génération continue chez Ollama, occupant
+          l'unique créneau de `NUM_PARALLEL: 1`. Ce canal est ce qui rend un
+          plafond réel.
+        */
+        ipcMain.handle('ai:ollama-abort', async (_event, requeteId: string) => abandonnerLaRequete(requeteId));
+
+        /** Ce qui tourne, pour que le verrou puisse se montrer (axe D.3). */
+        ipcMain.handle('ai:ollama-en-vol', async () => requetesEnVol());
+
+        ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string, endpoint?: string, requete?: Requete) => {
+            return await service.generateImage(model, prompt, endpoint, requete);
         });
 
-        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[], endpoint?: string, options?: OptionsDeChat) => {
+        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[], endpoint?: string, options?: OptionsDeChat, requete?: Requete) => {
             try {
                 await service.chatStream(model, messages, (token) => {
                     if (!event.sender.isDestroyed()) {
                         event.sender.send('ai:ollama-stream-token', token);
                     }
-                }, endpoint, options);
+                }, endpoint, options, requete);
                 return { success: true };
             } catch (error) {
                 console.error('[Ollama Bridge] Streaming error:', error);

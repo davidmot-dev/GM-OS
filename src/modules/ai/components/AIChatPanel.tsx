@@ -7,6 +7,7 @@ import {
   Sparkles, 
   ChevronRight, 
   Cpu,
+  Clock,
   type LucideIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import { useAIStore } from '../../../stores/useAIStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { aiService } from '../AIService';
+import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 
 interface Message {
   id: string;
@@ -38,6 +40,8 @@ const AIChatPanel: React.FC = () => {
     }
   ]);
   const [loading, setLoading] = useState(false);
+  // Ce qui occupe le modèle pendant qu'on regarde ce panneau — axe D.3.
+  const { requetes: enAttente, abandonner } = useFileDAttente();
   const [aiStatus, setAiStatus] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -177,6 +181,42 @@ const AIChatPanel: React.FC = () => {
             </div>
           </div>
         ))}
+        {/*
+          **Ce qui occupe Ollama, dit plutôt que subi — axe D.3 du plan du
+          2026-08-07.**
+
+          David, le 2026-08-21 : « je n'ai pas la main sur le Cortex quand je
+          forge ». Il pouvait pourtant envoyer — `loading` est local à ce
+          panneau — mais sa question faisait la queue sous
+          `OLLAMA_NUM_PARALLEL: 1`, et l'écran affichait « réception de la
+          vision… » indéfiniment sans rien expliquer.
+
+          **On ne grise pas le champ**, et c'est la position du plan : *savoir
+          qu'une opération tourne vaut mieux que l'empêcher*. Le meneur garde le
+          droit d'envoyer et d'attendre ; on lui dit ce qu'il attend, depuis
+          quand, et on lui laisse la main pour trancher.
+        */}
+        {enAttente.length > 0 && (
+          <div className="flex justify-start">
+            <div className="bg-amber-500/[0.06] border border-amber-500/25 rounded-2xl p-3 space-y-2 w-full">
+              {enAttente.map(r => (
+                <div key={r.id} className="flex items-center gap-3 flex-wrap">
+                  <Clock size={12} className="text-amber-400 shrink-0" />
+                  <span className="text-[11px] text-amber-200/80 leading-relaxed flex-1 min-w-0">
+                    <b>{r.libelle}</b> occupe le modèle depuis {depuisQuand(r.depuis)} — votre
+                    question partira à la suite.
+                  </span>
+                  <button
+                    onClick={() => void abandonner(r.id)}
+                    className="shrink-0 px-2.5 py-1 rounded-lg border border-amber-500/30 text-[9px] font-black uppercase tracking-widest text-amber-300/80 hover:bg-amber-500/15 hover:text-amber-200 transition-all"
+                  >
+                    Abandonner
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {(loading || aiStatus) && (
           <div className="flex justify-start">
             <div className="bg-app-surface/40 p-3.5 rounded-2xl rounded-tl-none border border-app-border/30">

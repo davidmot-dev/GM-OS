@@ -253,17 +253,23 @@ declare global {
                 messages: { role: string; content: string }[],
                 endpoint?: string,
                 options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
+                requete?: { id: string; libelle: string },
             ) => Promise<string>;
             ollamaChatStream: (
                 model: string,
                 messages: { role: string; content: string }[],
                 endpoint?: string,
                 options?: { num_ctx?: number; num_predict?: number },
+                requete?: { id: string; libelle: string },
             ) => Promise<unknown>;
+            /** Arrête une requête en vol. `false` si elle était déjà finie. */
+            ollamaAbort?: (requeteId: string) => Promise<boolean>;
+            /** Combien de requêtes tournent chez Ollama. */
+            ollamaEnVol?: () => Promise<{ id: string; libelle: string; depuis: number }[]>;
             ollamaStatus: (endpoint?: string) => Promise<boolean>;
             ollamaListModels: (endpoint?: string) => Promise<string[]>;
             ollamaPull: (model: string, endpoint?: string) => Promise<boolean>;
-            ollamaGenerateImage: (model: string, prompt: string, endpoint?: string) => Promise<string>;
+            ollamaGenerateImage: (model: string, prompt: string, endpoint?: string, requete?: { id: string; libelle: string }) => Promise<string>;
             onStreamToken: (callback: (token: string) => void) => () => void;
         };
         sound?: {

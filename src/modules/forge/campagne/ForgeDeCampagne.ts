@@ -391,6 +391,8 @@ export async function forgerLaCampagne(
     const appeler = options.appeler ?? ((prompt, schema) =>
         AIService.getInstance().generateJSON<unknown>(prompt, SYSTEM_PROMPT, [], {
             lite: true, sansPersona: true, schema,
+            // Un quart d'heure sur le créneau unique : voir `useFileDAttente`.
+            libelle: 'Forge de campagne',
             /*
               **Cette forge rend des LISTES, pas un fragment.** Le plafond par
               défaut — 2048 tokens — a été calibré pour la Forge Système, dont le

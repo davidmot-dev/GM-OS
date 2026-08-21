@@ -111,7 +111,15 @@ contextBridge.exposeInMainWorld('appBridge', {
             messages: { role: string; content: string }[],
             endpoint?: string,
             options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
-        ) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint, options),
+            /**
+             * Nom et libellé de la requête. Un `AbortSignal` ne traverse pas
+             * l'IPC — il n'est pas sérialisable —, donc on échange une identité
+             * et le contrôleur reste du côté où vit le `fetch`. Le libellé sert
+             * à dire au meneur CE QUI tourne, pas seulement qu'il se passe
+             * quelque chose.
+             */
+            requete?: { id: string; libelle: string },
+        ) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint, options, requete),
         ollamaChatStream: (
             model: string,
             messages: { role: string; content: string }[],
@@ -119,11 +127,17 @@ contextBridge.exposeInMainWorld('appBridge', {
             // Les mêmes options que `ollamaChat`. Elles ne voyageaient pas :
             // le flux partait sans borne de génération ni `think: false`.
             options?: { num_ctx?: number; num_predict?: number },
-        ) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint, options),
+            requete?: { id: string; libelle: string },
+        ) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint, options, requete),
+
+        /** Arrête une requête en vol. Rend `false` si elle était déjà finie. */
+        ollamaAbort: (requeteId: string): Promise<boolean> => ipcRenderer.invoke('ai:ollama-abort', requeteId),
+        /** Ce qui tourne, nommé et daté — de quoi montrer le verrou. */
+        ollamaEnVol: (): Promise<{ id: string; libelle: string; depuis: number }[]> => ipcRenderer.invoke('ai:ollama-en-vol'),
         ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),
         ollamaListModels: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-list-models', endpoint),
         ollamaPull: (model: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-pull', model, endpoint),
-        ollamaGenerateImage: (model: string, prompt: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-generate-image', model, prompt, endpoint),
+        ollamaGenerateImage: (model: string, prompt: string, endpoint?: string, requete?: { id: string; libelle: string }) => ipcRenderer.invoke('ai:ollama-generate-image', model, prompt, endpoint, requete),
         onStreamToken: (callback: (token: string) => void) => {
             const listener = (_event: Electron.IpcRendererEvent, token: string) => callback(token);
             ipcRenderer.on('ai:ollama-stream-token', listener);

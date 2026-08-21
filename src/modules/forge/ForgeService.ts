@@ -171,7 +171,12 @@ export class ForgeService {
     Pas de texte avant, pas d'explications après. Si tu ne peux pas générer le système, renvoie un objet vide {}.`;
 
     console.error(`[ForgeService] Sending request to ${activeProvider} (LITE MODE: ON)...`);
-    const result = await aiService.generateJSON<ForgeSystemResult>(fullPrompt, systemPrompt, attachments, { lite: true, sansPersona: true });
+    const result = await aiService.generateJSON<ForgeSystemResult>(fullPrompt, systemPrompt, attachments, {
+      lite: true, sansPersona: true,
+      // Elle tient l'unique créneau d'Ollama plusieurs minutes : le panneau de
+      // l'Oracle doit pouvoir dire QUI attend, et proposer de l'abandonner.
+      libelle: 'Forge Système',
+    });
     console.error(`[ForgeService] ${activeProvider} responded!`);
     return result;
   }
@@ -333,7 +338,13 @@ export class ForgeService {
             est pire qu'un champ absent : il fait croire que la question est
             réglée.*
           */
-          { lite: true, sansPersona: true, ...(groupe.schema ? { schema: groupe.schema } : {}) },
+          {
+            lite: true, sansPersona: true,
+            ...(groupe.schema ? { schema: groupe.schema } : {}),
+            // Le groupe se nomme : une dérivation dure un quart d'heure, et le
+            // meneur qui attend l'Oracle doit savoir lequel des huit tourne.
+            libelle: `Dérivation — ${groupe.label}`,
+          },
         );
         if (fragment && Object.keys(fragment).length > 0) fragments.push(fragment);
         else echecs.push({ groupe: groupe.id, raison: 'le modèle a rendu un objet vide' });
