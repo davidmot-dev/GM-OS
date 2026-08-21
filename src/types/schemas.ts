@@ -44,13 +44,29 @@ export const SessionOSModuleSchema = z.object({
     campaigns: z.array(CampaignSchema).default([]),
     players: z.array(PlayerSchema).default([]),
     activeCampaignId: z.string().nullable().default(null),
-    timelineEvents: z.array(z.any()).optional().default([]),
-    wikiEntries: z.array(z.any()).optional().default([]),
-    atlasMaps: z.array(z.any()).optional().default([]),
-    // Déclarés sans `.default([])`, et c'est le point : une sauvegarde d'avant
-    // le 2026-08-20 ne les porte pas, et `distributeData` fait un `setState`.
-    // Un défaut à vide y remplacerait des PNJ bien vivants par rien du tout —
-    // absent, le champ laisse le store tranquille.
+    /*
+      **AUCUN `.default([])` ICI, ET C'EST LA SEULE CHOSE À RETENIR DE CE BLOC.**
+
+      `distributeData` termine par `useSessionOSStore.setState(sessionOS)`. Un
+      `setState` partiel ne touche QUE les clés présentes — mais un défaut à vide
+      rend la clé présente, avec du vide dedans. Relire une sauvegarde qui ne
+      porte pas `timelineEvents` remplaçait donc une chronologie bien vivante par
+      `[]`, sans erreur, sans message, et sans que rien ne distingue « la
+      sauvegarde n'en parle pas » de « la sauvegarde dit qu'il n'y en a aucun ».
+
+      *Un champ absent laisse le store tranquille ; un défaut à vide l'écrase.*
+      C'est pour cette raison que `sessions`, `entities` et `clues` ont été
+      déclarés sans défaut le 2026-08-20 ; les trois du dessus l'avaient gardé,
+      et la moitié du défaut est restée en place cinq jours. Ils sont désormais
+      tous les six sur la même règle.
+
+      Le schéma est `.passthrough()` : les champs qu'il ne nomme pas — `actes`,
+      `scenes`, les pilotes, les decks — traversent intacts. Ne rien déclarer est
+      donc toujours plus sûr que de déclarer un défaut.
+    */
+    timelineEvents: z.array(z.any()).optional(),
+    wikiEntries: z.array(z.any()).optional(),
+    atlasMaps: z.array(z.any()).optional(),
     sessions: z.array(z.any()).optional(),
     entities: z.array(z.any()).optional(),
     clues: z.array(z.any()).optional(),
@@ -86,17 +102,52 @@ export const FullSessionSchema = z.object({
 
 export type FullSession = z.infer<typeof FullSessionSchema>;
 
+/** Les chemins fautifs, condensés pour tenir dans un message lisible. */
+function cheminsFautifs(erreur: z.ZodError, maximum = 3): string {
+    const chemins = erreur.issues
+        .map(souci => souci.path.join('.') || '(racine)')
+        .filter((chemin, rang, tous) => tous.indexOf(chemin) === rang);
+    const montres = chemins.slice(0, maximum).join(', ');
+    const reste = chemins.length - maximum;
+    return reste > 0 ? `${montres} et ${reste} autre${reste > 1 ? 's' : ''}` : montres;
+}
+
 /**
- * Validates session data and returns a cleaned version with defaults for missing/invalid fields.
- * This is the CORE of the "Auto-Healing" mechanism.
+ * Rend la sauvegarde relue, **ou refuse de la rendre**.
+ *
+ * **Le défaut corrigé le 2026-08-21.** Sur échec, cette fonction rendait
+ * `FullSessionSchema.parse({})` — une session vide, parfaitement valide. Le
+ * chargement distribuait donc du néant, remettait le thème à `cyberpunk` et le
+ * module actif à `dashboard`, puis `SessionService` annonçait « Session chargée
+ * et vérifiée 📂 ». *Le geste qui rassure n'est pas le geste qui vérifie* :
+ * troisième occurrence du même motif en deux jours, après le résumé annoncé sur
+ * un résumé inexistant et l'Oracle qui recevait le début sous l'intitulé de la
+ * fin.
+ *
+ * **Ce qui arrive vraiment dans ce `else`.** Le schéma est `.passthrough()` et
+ * presque tout y est facultatif : ce qui échoue n'est pas une sauvegarde un peu
+ * datée, c'est une sauvegarde dont un champ REQUIS est cassé — une campagne sans
+ * `system`, un joueur sans `realName`. Autrement dit, **une campagne malformée
+ * faisait jeter le fichier entier**, en silence.
+ *
+ * **On lève plutôt qu'on ne répare, parce qu'il n'y a rien à réparer.** Zod a
+ * déjà comblé, par ses défauts et son `passthrough`, tout ce qui était
+ * comblable ; ce qui reste est un fichier qu'on ne sait pas lire. L'appelant a
+ * un `catch` qui dit l'erreur et n'écrit rien — c'est exactement le
+ * comportement voulu, et il vaut mieux qu'un chargement qui prétend avoir eu
+ * lieu. **Rien n'est distribué : l'état en mémoire reste celui d'avant.**
+ *
+ * Reste ouverte la question du soin par champ — écarter la seule campagne
+ * fautive et garder le reste. C'est un autre geste, et il demande de savoir dire
+ * ce qu'on a écarté ; le taire serait retomber dans le défaut d'ici.
  */
 export function validateSession(data: unknown): FullSession {
     const result = FullSessionSchema.safeParse(data);
-    if (result.success) {
-        return result.data;
-    } else {
-        console.warn('[Validation] Session data is partially invalid, applying defaults:', result.error.format());
-        // Fallback to absolute defaults
-        return FullSessionSchema.parse({}); 
-    }
+    if (result.success) return result.data;
+
+    console.warn('[Validation] Sauvegarde illisible :', result.error.format());
+    throw new Error(
+        `Sauvegarde illisible — ${cheminsFautifs(result.error)}. Rien n'a été chargé, `
+        + "l'état en cours est intact.",
+    );
 }
