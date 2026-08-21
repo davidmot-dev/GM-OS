@@ -53,7 +53,20 @@ const CombatControls: React.FC = () => {
         : null;
 
     const handleAddCombatant = () => {
-        gmPrompt(`${t('combat.card.rename_prompt', { name: '' })}`, t('combat.controls.add_combatant'), (name) => {
+        /*
+          **Le champ part VIDE, et c'est un correctif — 2026-08-22.**
+
+          Le deuxième argument de `gmPrompt` est la valeur par défaut du champ,
+          pas son intitulé : on y posait le libellé du bouton. Valider sans
+          rien taper créait donc un combattant nommé « Ajouter un Combattant »,
+          que `name.trim()` laisse passer puisqu'il n'est pas vide.
+
+          Ce n'est pas resté à l'écran. Le résumé de séance du 21/08 raconte
+          « un allié, **Ajouter un Combattant**, est précipité hors de combat » :
+          la faute traverse le journal, la chronique et le modèle, et ressort
+          dans le récit que le meneur relira dans six mois.
+        */
+        gmPrompt(`${t('combat.card.rename_prompt', { name: '' })}`, '', (name) => {
             if (name.trim()) {
                 /**
                  * **Pas de PV pour un système qui n'en a pas.** Ces dix points
