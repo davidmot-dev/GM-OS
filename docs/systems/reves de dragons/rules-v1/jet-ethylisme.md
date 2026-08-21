@@ -45,6 +45,7 @@ Le personnage commence sobre (0 degré d'éthylisme). Dès le degré 1 (Gris), c
 ### Le Coup de Fouet (Gestion de la Fatigue)
 *   **Du degré 1 au degré 3 :** Le personnage perd de l'endurance mais ne coche pas les cases de fatigue correspondantes, simulant un "coup de fouet" procuré par l'alcool [2].
 *   **Dès le degré 4 (Ivre) :** Le contrecoup survient. Le personnage doit cocher toutes les cases de fatigue correspondant à l'endurance perdue précédemment. À partir de ce stade, chaque nouvelle perte d'endurance due à l'alcool s'accompagne d'une augmentation équivalente de la fatigue [2].
+*   **Arrêt prématuré :** Si le personnage s'arrête de boire avant le degré 4, il coche sa fatigue **30 minutes** après l'absorption de la dernière dose [3].
 
 ### Le Sommeil Éthylique
 Si les pertes d'endurance infligées par l'éthylisme amènent le compteur d'endurance du personnage à **zéro**, il sombre dans un sommeil éthylique et **perd 1 point de vie** [4]. Il est strictement impossible de le réveiller tant qu'il n'a pas dormi au moins une heure pleine [4].
