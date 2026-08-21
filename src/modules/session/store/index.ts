@@ -69,6 +69,14 @@ interface CrossDomainActions {
 
     // Navigation
     navigateToAtlasMap: (id: string | null) => void;
+    /**
+     * Le groupe se rend à ce lieu — un geste déclaré, jamais déduit d'un clic.
+     *
+     * Distinct de `navigateToAtlasMap`, qui ne fait plus qu'ouvrir la carte :
+     * seul celui-ci écrit dans la chronique, et il marque le lieu visité au
+     * passage.
+     */
+    leGroupeSyRend: (id: string) => void;
     navigateToNpcDetail: (id: string) => void;
     navigateToPlayerDetail: (playerId: string, characterId: string) => void;
 
@@ -169,6 +177,8 @@ export const useSessionOSStore = create<SessionOSStore>()(
             setSelectedAtlasMap: (id) => SessionManager.navigateToAtlasMap(set, get, id),
 
             navigateToAtlasMap: (id) => SessionManager.navigateToAtlasMap(set, get, id),
+
+            leGroupeSyRend: (id) => SessionManager.leGroupeSyRend(set, get, id),
 
             navigateToNpcDetail: (id) => {
                 set({ 

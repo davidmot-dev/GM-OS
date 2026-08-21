@@ -175,7 +175,20 @@ const NPCCard: React.FC = () => {
             lootString = `${currentEntity.name} (${itemDetails})`;
         }
 
-        // Add to Journal
+        /*
+          **`SYSTEM`, donc `trace` : le don s'écrit au fil, jamais au résumé.**
+
+          La question était ouverte depuis la revue des émetteurs du 2026-08-20 —
+          donner un objet est une `trace` pendant que révéler un indice est de la
+          `chronique`, et l'asymétrie sautait aux yeux. **Tranché par David le
+          2026-08-21** : on peut écrire les dons d'objets dans le journal, mais
+          ils n'entrent pas dans le résumé. Le type reste donc tel quel, et il
+          n'y a rien à déclarer — `natureParDefaut('SYSTEM')` rend déjà `trace`.
+
+          Les deux autres portes du même geste s'alignent dessus :
+          `approveItemTransfer` d'un PJ à l'autre, et `assignLootToCharacter`
+          depuis le butin de séance, qui n'écrivait rien du tout avant ce jour.
+        */
         useJournalStore.getState().addEvent({
             type: 'SYSTEM',
             title: t('npc.card.give_journal_title', { name: currentEntity.name }),

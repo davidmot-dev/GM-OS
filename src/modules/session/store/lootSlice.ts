@@ -7,6 +7,7 @@
  */
 
 import type { StateCreator } from 'zustand';
+import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import type { InventoryItem, LootHistoryEntry } from './types';
 
@@ -87,6 +88,42 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
             set((state) => ({ 
                 lootHistory: [historyEntry, ...state.lootHistory] 
             }));
+
+            /*
+              **Le troisième chemin d'un objet qui change de mains, et le seul
+              qui ne disait rien.**
+
+              Un objet arrive dans l'inventaire d'un PJ par trois portes :
+              `NPCCard.handleGive` depuis une entité NPC-OS, `approveItemTransfer`
+              d'un PJ à l'autre, et celle-ci depuis le butin de séance. Les deux
+              premières consignent ; celle-ci n'écrivait que dans `lootHistory`,
+              qui n'est lu que par son propre écran. Le même geste était donc
+              consigné deux fois sur trois — et le meneur qui relit son fil pour
+              savoir quand Brucelin a reçu l'Épée n'y trouvait rien.
+
+              *Plusieurs écrivains pour une même donnée* : le motif de la semaine,
+              et ici c'est un écrivain de moins qu'il n'en fallait.
+
+              **`SYSTEM`, donc `trace`, et c'est une décision de David du
+              2026-08-21** : un don d'objet s'écrit au journal — le fil doit
+              pouvoir le rendre — mais **n'entre pas dans le résumé**. Les trois
+              portes sont ainsi d'accord, ce qui était la question posée.
+            */
+            const journal = (window as unknown as {
+                useJournalStore?: { getState: () => { addEvent: (e: unknown) => void } };
+            }).useJournalStore?.getState();
+            journal?.addEvent({
+                type: 'SYSTEM',
+                title: i18next.t('modules:session.events.loot_grant_title', { item: item.name }),
+                content: i18next.t('modules:session.events.loot_grant_content', {
+                    item: item.name,
+                    // La quantité ne se dit que si elle apprend quelque chose :
+                    // « ×1 » sur chaque ligne est du bruit qui se lit à chaque fois.
+                    quantite: item.quantity > 1 ? ` ×${item.quantity}` : '',
+                    recipient: char?.name || 'un joueur',
+                }),
+                metadata: { itemId: item.id, characterId, playerId },
+            });
 
             gmToast(`"${item.name}" donné à ${char?.name || 'un joueur'}.`, 'success');
         } else {

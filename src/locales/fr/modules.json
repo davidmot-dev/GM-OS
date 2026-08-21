@@ -581,8 +581,8 @@
         "content": "Source \"{{url}}\" projetée sur : {{target}}"
       },
       "entityProjected": {
-        "title": "Entité projetée",
-        "content": "Fiche de \"{{name}}\" ({{subtitle}}) envoyée au Player Hub."
+        "title": "🎭 Face à {{name}}",
+        "content": "Le groupe fait face à **{{name}}**{{subtitle}}."
       }
     }
   },
@@ -1638,6 +1638,12 @@
     "events": {
       "item_transfer_title": "Échange d'objets",
       "item_transfer_content": "{{from}} a donné {{item}} à {{to}}.",
+      "loot_grant_title": "🎁 Butin attribué : {{item}}",
+      "loot_grant_content": "**{{item}}**{{quantite}} attribué à **{{recipient}}**, depuis le butin de séance.",
+      "atlas_browse_title": "🗺️ Carte consultée : {{map}}",
+      "atlas_browse_content": "Le meneur ouvre la carte « {{map}} ».",
+      "atlas_travel_title": "📍 {{map}}",
+      "atlas_travel_content": "Le groupe se rend à {{map}}.",
       "card_draw_title": "Tirage : {{card}}",
       "card_draw_content": "Paquet : **{{deck}}**\nRésultat : {{card}}",
       "impact_title": "💥 Impact sur {{name}}",
@@ -1911,7 +1917,9 @@
         "visited": "Visité",
         "not_visited": "Non visité",
         "pinned": "Épinglé",
-        "pin": "Épingler"
+        "pin": "Épingler",
+        "travel_here": "Le groupe s'y rend",
+        "travel_here_hint": "Inscrit l'arrivée du groupe dans la chronique et marque le lieu comme visité. Ouvrir une carte ne fait ni l'un ni l'autre."
       },
       "linked_entities": {
         "title": "Entités Liées",

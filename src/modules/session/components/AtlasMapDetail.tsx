@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2 } from 'lucide-react';
+import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2, Footprints } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -25,7 +25,7 @@ const AtlasMapDetail: React.FC = () => {
         atlasMaps, selectedAtlasMapId, updateAtlasMap, setCurrentView,
         clues, setActiveCampaignFormSection, setEditingClueId,
         generateAtlasMapImage, isGeneratingAIImage,
-        campaigns, toggleActiveLocation, activeCampaignId, toggleMapVisited
+        campaigns, toggleActiveLocation, activeCampaignId, toggleMapVisited, leGroupeSyRend
     } = useSessionOSStore();
     const { t } = useTranslation();
     const { setMap } = useMapStore();
@@ -156,6 +156,29 @@ const AtlasMapDetail: React.FC = () => {
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
+                            {/*
+                              **Le groupe s'y rend — le seul geste qui écrit dans
+                              la chronique.**
+
+                              Ouvrir une carte ne le fait plus : jusqu'au
+                              2026-08-21, un simple clic dans l'atlas inscrivait
+                              « Le groupe se déplace vers X » au résumé, et
+                              consulter sa carte en séance suffisait à faire
+                              voyager le groupe. Le déplacement se déclare
+                              désormais, et c'est ce bouton qui le déclare.
+
+                              Il est le premier de la rangée parce qu'il est le
+                              seul à raconter quelque chose ; les trois autres
+                              rangent, épinglent ou projettent.
+                            */}
+                            <button
+                                onClick={() => leGroupeSyRend(selectedMap.id)}
+                                className="flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/30"
+                                title={t('modules:session.world_atlas.detail.travel_here_hint')}
+                            >
+                                <Footprints size={16} />
+                                {t('modules:session.world_atlas.detail.travel_here')}
+                            </button>
                             <button
                                 onClick={() => toggleMapVisited(selectedMap.id)}
                                 className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${

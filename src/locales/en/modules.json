@@ -581,8 +581,8 @@
         "content": "Source \"{{url}}\" projected on: {{target}}"
       },
       "entityProjected": {
-        "title": "Entity projected",
-        "content": "Card for \"{{name}}\" ({{subtitle}}) sent to Player Hub."
+        "title": "🎭 Facing {{name}}",
+        "content": "The party comes face to face with **{{name}}**{{subtitle}}."
       }
     }
   },
@@ -1609,6 +1609,12 @@
     "events": {
       "item_transfer_title": "Item Exchange",
       "item_transfer_content": "{{from}} gave {{item}} to {{to}}.",
+      "loot_grant_title": "🎁 Loot granted: {{item}}",
+      "loot_grant_content": "**{{item}}**{{quantite}} granted to **{{recipient}}**, from the session loot pool.",
+      "atlas_browse_title": "🗺️ Map opened: {{map}}",
+      "atlas_browse_content": "The GM opens the “{{map}}” map.",
+      "atlas_travel_title": "📍 {{map}}",
+      "atlas_travel_content": "The party travels to {{map}}.",
       "card_draw_title": "Draw: {{card}}",
       "card_draw_content": "Deck: **{{deck}}**\nResult: {{card}}",
       "impact_title": "💥 Impact on {{name}}",
@@ -1882,7 +1888,9 @@
         "visited": "Visited",
         "not_visited": "Not visited",
         "pinned": "Pinned",
-        "pin": "Pin"
+        "pin": "Pin",
+        "travel_here": "The party goes there",
+        "travel_here_hint": "Records the party’s arrival in the chronicle and marks the place as visited. Merely opening a map does neither."
       },
       "linked_entities": {
         "title": "Linked Entities",

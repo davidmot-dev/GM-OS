@@ -223,10 +223,39 @@ export const useImageStore = create<ImageState>()(
                             get().blackout();
                             gmToast(i18n.t('modules:image.notifications.projectionFailed'));
                         } else if (entity) {
+                            /*
+                              **La chronique garde cette marque — décision de
+                              David du 2026-08-21.**
+
+                              La question était ouverte depuis la revue des
+                              émetteurs : projeter la fiche d'un PNJ est de la
+                              `chronique` pendant que projeter un média est une
+                              `trace`. Le déséquilibre était réel, et il aurait
+                              pu se trancher dans l'autre sens — projeter est un
+                              geste de meneur. Il a été tranché ainsi parce que
+                              **projeter la fiche d'un PNJ, c'est l'instant où
+                              ce PNJ entre en scène**, et c'est ce que la
+                              chronique retient.
+
+                              **Mais la phrase, elle, a dû changer.** Elle disait
+                              « Fiche de "X" envoyée au Player Hub » : du
+                              vocabulaire de table, parti au modèle comme matière
+                              de récit. Un événement narratif qui ne raconte rien
+                              coûte deux fois — il occupe le budget et il apprend
+                              au modèle qu'il existe un Player Hub. Le type reste
+                              `NPC`, donc `chronique` par défaut ; c'est le
+                              CONTENU qui a été mis d'accord avec sa nature.
+                            */
                             journal()?.addEvent({
                                 type: 'NPC',
-                                title: i18n.t('modules:image.events.entityProjected.title'),
-                                content: i18n.t('modules:image.events.entityProjected.content', { name: entity.name, subtitle: entity.subtitle || '...' })
+                                title: i18n.t('modules:image.events.entityProjected.title', { name: entity.name }),
+                                content: i18n.t('modules:image.events.entityProjected.content', {
+                                    name: entity.name,
+                                    // Le sous-titre ne s'annonce que s'il existe.
+                                    // Le repli valait « ... », qui se lisait comme
+                                    // une hésitation du meneur dans la chronique.
+                                    subtitle: entity.subtitle ? `, ${entity.subtitle}` : '',
+                                }),
                             });
                         }
                     });

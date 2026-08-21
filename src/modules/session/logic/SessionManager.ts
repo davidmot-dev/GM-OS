@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { cloturerLeJournalDeLaSeance } from '../../journal/clotureDeSeance';
@@ -294,19 +295,81 @@ export class SessionManager {
     }
 
     /**
-     * Atomic navigation helpers
+     * Ouvrir une carte de l'atlas. **Regarder, et rien de plus.**
+     *
+     * **Le défaut, tranché par David le 2026-08-21.** Ce chemin écrivait
+     * *« Le groupe se déplace vers X »* en `LOCATION` — donc en `chronique`,
+     * donc dans le résumé — sur un simple clic dans l'atlas. Consulter sa carte
+     * en pleine séance pour vérifier un nom suffisait à faire voyager le groupe,
+     * et le résumé narratif en tirait ensuite un déplacement qui n'avait jamais
+     * eu lieu.
+     *
+     * *C'est le pire des trois défauts d'axe relevés à la revue des émetteurs,
+     * parce qu'il n'ajoutait pas du bruit : il ajoutait un FAIT.* Et un fait
+     * faux ne se plaint de rien — il se lit comme les autres.
+     *
+     * Le geste reste consigné, en `trace` et sous son vrai nom : le fil doit
+     * pouvoir dire quelle carte le meneur a ouverte. Le déplacement, lui, a
+     * désormais son propre geste — `leGroupeSyRend` ci-dessous.
      */
     static navigateToAtlasMap(set: any, get: any, id: string | null) {
         set({ selectedAtlasMapId: id, currentView: 'world-atlas' });
-        if (id) {
-            const map = (get() as SessionOSStore).atlasMaps.find(m => m.id === id);
-            if (map) {
-                useJournalStore.getState().addEvent({
-                    type: 'LOCATION',
-                    title: `📍 Navigation: ${map.name}`,
-                    content: map.narrativeDescription || `Le groupe se déplace vers ${map.name}.`,
-                });
-            }
+        if (!id) return;
+
+        const map = (get() as SessionOSStore).atlasMaps.find(m => m.id === id);
+        if (!map) return;
+
+        useJournalStore.getState().addEvent({
+            type: 'LOCATION',
+            /*
+              Le type reste `LOCATION` — l'icône et le filtre du fil parlent bien
+              d'un lieu — et c'est la NATURE qui est corrigée. Même geste que
+              « Carte chargée » dans `useMapStore` : *le lieu est le sujet, le
+              geste ne l'est pas.*
+            */
+            nature: 'trace',
+            title: i18next.t('modules:session.events.atlas_browse_title', { map: map.name }),
+            content: i18next.t('modules:session.events.atlas_browse_content', { map: map.name }),
+        });
+    }
+
+    /**
+     * **Le groupe s'y rend.** Un geste explicite, demandé par David le
+     * 2026-08-21.
+     *
+     * C'est la moitié qui manquait : une fois `navigateToAtlasMap` rendu muet
+     * pour la chronique, plus rien n'aurait dit qu'un groupe arrive quelque
+     * part — et l'arrivée quelque part est précisément ce qu'une chronique
+     * retient. On ne devine donc plus le déplacement d'un clic : **on le
+     * déclare.**
+     *
+     * **Il marque aussi le lieu comme visité**, parce que les deux disent la
+     * même chose et qu'un meneur qui vient d'annoncer l'arrivée du groupe ne
+     * doit pas avoir à cocher une seconde case pour la même vérité. Il ne
+     * dé-visite jamais : `toggleMapVisited` reste là pour se dédire.
+     *
+     * Le récit du lieu l'emporte sur la phrase de repli. Cette phrase est
+     * écrite par le code, pas par le meneur — et c'est elle, précisément, qui
+     * entrait dans les résumés jusqu'ici.
+     */
+    static leGroupeSyRend(set: any, get: any, id: string) {
+        const state = get() as SessionOSStore;
+        const map = state.atlasMaps.find(m => m.id === id);
+        if (!map) return;
+
+        if (!map.isVisited) {
+            set({
+                atlasMaps: state.atlasMaps.map(m => (m.id === id ? { ...m, isVisited: true } : m)),
+            });
         }
+
+        useJournalStore.getState().addEvent({
+            // Pas de `nature` : `LOCATION` retombe sur `chronique`, et c'est
+            // exactement ce qu'on veut ici. La déclarer serait la répéter.
+            type: 'LOCATION',
+            title: i18next.t('modules:session.events.atlas_travel_title', { map: map.name }),
+            content: map.narrativeDescription
+                || i18next.t('modules:session.events.atlas_travel_content', { map: map.name }),
+        });
     }
 }
