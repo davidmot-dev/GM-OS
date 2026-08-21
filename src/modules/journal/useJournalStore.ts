@@ -319,6 +319,25 @@ export const useJournalStore = create<JournalState>()(
         )
       })),
 
+      deplacerLesEvenements: (versSceneId, correspond) => {
+        let deplaces = 0;
+        set((state) => ({
+          journals: state.journals.map((j) => {
+            const events = j.events.map((e) => {
+              if (!correspond(e)) return e;
+              deplaces += 1;
+              return { ...e, sceneId: versSceneId };
+            });
+            // On ne remplace le journal que s'il a bougé : `preparerLaRevue` se
+            // recalcule sur l'identité du tableau d'événements, et rendre un
+            // tableau neuf pour chaque journal ferait retravailler tous les
+            // autres pour rien.
+            return deplaces === 0 || events.every((e, i) => e === j.events[i]) ? j : { ...j, events };
+          }),
+        }));
+        return deplaces;
+      },
+
       deleteJournal: (id) => set((state) => ({
         journals: state.journals.filter((j) => j.id !== id),
         activeJournalId: state.activeJournalId === id ? null : state.activeJournalId,

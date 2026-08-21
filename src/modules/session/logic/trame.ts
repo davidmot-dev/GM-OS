@@ -192,6 +192,138 @@ export function clonerLaScene(scene: Scene, id: string, titre: string, ordre: nu
 }
 
 /* ─────────────────────────────────────────────
+   FUSIONNER ET SCINDER — les deux gestes de curation du § 4.1
+   ───────────────────────────────────────────── */
+
+/** Union sans doublon, ordre de la première liste puis de la seconde. */
+function reunir(a: readonly string[] | undefined, b: readonly string[] | undefined): string[] {
+    return [...new Set([...(a ?? []), ...(b ?? [])])];
+}
+
+/**
+ * Colle deux textes sans en perdre un, et sans en inventer un troisième.
+ *
+ * Le vide n'ajoute pas de ligne blanche, et deux textes identiques ne se
+ * répètent pas — deux scènes qui n'en faisaient qu'une portent souvent le même
+ * résumé recopié.
+ */
+function accoler(a: string | undefined, b: string | undefined): string {
+    const gauche = (a ?? '').trim();
+    const droite = (b ?? '').trim();
+    if (!droite || gauche === droite) return gauche;
+    if (!gauche) return droite;
+    return `${gauche}
+
+${droite}`;
+}
+
+/**
+ * **Fusionner deux scènes qui n'en faisaient qu'une** — § 4.1 du plan du
+ * 2026-08-08, le quatrième des cinq gestes de curation.
+ *
+ * **Rien ne se perd, et c'est la seule règle qui compte ici.** Une bascule ratée
+ * en séance, deux scènes improvisées pour un même moment, un marquage en double :
+ * le meneur doit pouvoir dire « c'était la même » sans que la moitié du contenu
+ * disparaisse au passage. Chaque champ est donc traité, aucun n'est laissé au
+ * hasard d'un `...spread` :
+ *
+ * - **les listes se réunissent** — PNJ, PJ présents, indices : une scène fusionnée
+ *   a vu tout ce que les deux ont vu ;
+ * - **les textes s'accolent** plutôt que de s'écraser, résumé comme notes ;
+ * - **les passages se recollent dans l'ordre du temps** : c'est le parcours réel,
+ *   et le perdre effacerait quand la scène a été jouée ;
+ * - **le lieu et l'ambiance de la gardée l'emportent**, et ceux de l'absorbée ne
+ *   servent que si elle n'en avait pas — on ne remplace jamais un choix par un autre ;
+ * - **`creeeLe` recule au plus ancien** : la scène a commencé quand la première
+ *   a commencé.
+ *
+ * **La fin ne se devine pas non plus.** Si l'une des deux est encore ouverte,
+ * la fusionnée l'est : absorber une scène en cours dans une scène close
+ * fermerait un passage que personne n'a fermé. Elles ne sont terminées que si
+ * les deux l'étaient, et alors à la plus tardive des deux dates.
+ *
+ * **Ce que cette fonction ne fait PAS**, et qui appartient à l'appelant : retirer
+ * l'absorbée de la trame, et surtout **déplacer ses événements**. Une fusion qui
+ * oublierait le journal laisserait des événements pointer sur une scène disparue
+ * — ils réapparaîtraient en orphelins à la revue suivante, ce que `preparerLaRevue`
+ * gère mais qui n'est pas ce qu'on a demandé.
+ */
+export function fusionnerLesScenes(gardee: Scene, absorbee: Scene): Scene {
+    const passages = [...(gardee.passages ?? []), ...(absorbee.passages ?? [])]
+        .sort((a, b) => a.debut - b.debut);
+
+    /*
+      Terminée seulement si les DEUX l'étaient. Une scène en cours absorbée dans
+      une scène close doit rouvrir la fusionnée : la partie continue, et une
+      scène barrée par erreur ne se rouvre qu'à la main.
+    */
+    const termineeLe = gardee.termineeLe && absorbee.termineeLe
+        ? Math.max(gardee.termineeLe, absorbee.termineeLe)
+        : undefined;
+
+    return {
+        ...gardee,
+        resume: accoler(gardee.resume, absorbee.resume),
+        notesDuMeneur: accoler(gardee.notesDuMeneur, absorbee.notesDuMeneur) || undefined,
+        lieuId: gardee.lieuId ?? absorbee.lieuId,
+        momentDeStoryboardId: gardee.momentDeStoryboardId ?? absorbee.momentDeStoryboardId,
+        entiteIds: reunir(gardee.entiteIds, absorbee.entiteIds),
+        indiceIds: reunir(gardee.indiceIds, absorbee.indiceIds),
+        personnagesIds: reunir(gardee.personnagesIds, absorbee.personnagesIds),
+        passages: passages.length > 0 ? passages : undefined,
+        termineeLe,
+        creeeLe: Math.min(gardee.creeeLe, absorbee.creeeLe),
+    };
+}
+
+/**
+ * **Scinder celle qui en cachait deux** — le cinquième geste du § 4.1.
+ *
+ * Rend la **seconde moitié** : une scène neuve posée juste après l'originale,
+ * qui hérite du décor — même acte, même lieu, mêmes PNJ, mêmes PJ, mêmes
+ * indices — parce que c'est le même moment de jeu qu'on coupe en deux, pas une
+ * scène sans rapport qu'on invente.
+ *
+ * **Ce qu'elle n'hérite PAS, et c'est là que tout se joue :**
+ *
+ * - **le résumé et les notes restent à la première.** Ils décrivent ce que le
+ *   meneur avait écrit d'un seul tenant ; les recopier créerait deux textes que
+ *   personne ne saurait plus départager, et l'un des deux serait faux.
+ * - **les passages restent à la première.** Le parcours réel n'est pas
+ *   duplicable : la scène a été ouverte une fois, à un moment, et c'est la
+ *   première moitié qui porte cette histoire. La seconde tient son ancrage
+ *   temporel de ses événements.
+ * - **`ecarteeDeLaChronique` ne se transmet pas.** Scinder une scène mise de
+ *   côté rend une moitié que le meneur n'a pas encore jugée — et la juger est
+ *   précisément la raison pour laquelle il vient de la scinder.
+ *
+ * **Elle est terminée si l'originale l'était** : couper en deux ce qui est joué
+ * ne rouvre rien.
+ *
+ * L'appelant place le rang et **déplace les événements** : la coupure se décide
+ * sur le fil, pas ici. Voir `scinderLaScene` du store, qui coupe au temps d'un
+ * événement désigné.
+ */
+export function secondeMoitieDeLaScene(
+    scene: Scene, id: string, titre: string, ordre: number, quand: number,
+): Scene {
+    return {
+        ...scene,
+        id,
+        titre,
+        ordre,
+        resume: '',
+        notesDuMeneur: undefined,
+        entiteIds: [...scene.entiteIds],
+        indiceIds: [...scene.indiceIds],
+        personnagesIds: scene.personnagesIds ? [...scene.personnagesIds] : undefined,
+        passages: undefined,
+        ecarteeDeLaChronique: undefined,
+        creeeLe: quand,
+    };
+}
+
+/* ─────────────────────────────────────────────
    LE PASSAGE D'UNE SÉANCE À L'AUTRE
    ───────────────────────────────────────────── */
 

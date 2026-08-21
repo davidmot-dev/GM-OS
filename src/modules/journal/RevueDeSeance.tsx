@@ -1,5 +1,7 @@
 import React from 'react';
-import { Layers, EyeOff, Eye, Inbox, ChevronDown, ChevronRight, Feather, Cog } from 'lucide-react';
+import { Layers, EyeOff, Eye, Inbox, ChevronDown, ChevronRight, Feather, Cog, Scissors, Combine } from 'lucide-react';
+import { gmConfirm } from '../../stores/useModalStore';
+import { gmToast } from '../../stores/useToastStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useJournalStore } from './useJournalStore';
 import {
@@ -30,7 +32,10 @@ import type { Journal } from './types';
  * dont le récit est mince. *On ne supprime pas, on distingue.*
  */
 const RevueDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
-    const { scenes, actes, activeCampaignId, modifierScene } = useSessionOSStore();
+    const {
+        scenes, actes, activeCampaignId, modifierScene,
+        fusionnerDeuxScenes, scinderLaSceneAuTemps,
+    } = useSessionOSStore();
     const updateEvent = useJournalStore(s => s.updateEvent);
 
     /*
@@ -81,10 +86,37 @@ const RevueDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
                     <BlocDeScene
                         key={s.scene.id}
                         revue={s}
+                        autres={revue.scenes.filter(a => a.scene.id !== s.scene.id)}
                         modifierScene={modifierScene}
                         basculerLaNature={(e) => updateEvent(journal.id, e.id, {
                             nature: natureDe(e) === 'chronique' ? 'trace' : 'chronique',
                         })}
+                        fusionner={(absorbee) => gmConfirm(
+                            `« ${absorbee.titre} » sera absorbée dans « ${s.scene.titre} » : ses événements, `
+                            + 'ses PNJ, ses indices et son résumé la rejoignent, et elle disparaît de la trame. '
+                            + "Rien n'est effacé du journal.",
+                            () => {
+                                const deplaces = fusionnerDeuxScenes(s.scene.id, absorbee.id);
+                                gmToast(
+                                    deplaces === null
+                                        ? 'Fusion impossible — les deux scènes doivent appartenir à la même campagne.'
+                                        : `« ${absorbee.titre} » absorbée : ${deplaces} événement${deplaces > 1 ? 's' : ''} déplacé${deplaces > 1 ? 's' : ''}.`,
+                                    deplaces === null ? 'warning' : 'success',
+                                );
+                            },
+                            undefined,
+                            'FUSIONNER',
+                            'ANNULER',
+                        )}
+                        scinder={(depuis) => {
+                            const id = scinderLaSceneAuTemps(s.scene.id, depuis);
+                            gmToast(
+                                id
+                                    ? 'Scène scindée : la seconde moitié se trouve juste en dessous, à nommer.'
+                                    : 'Scission impossible — la scène est introuvable.',
+                                id ? 'success' : 'warning',
+                            );
+                        }}
                     />
                 ))}
             </div>
@@ -155,12 +187,29 @@ const ARanger: React.FC<{
 
 const BlocDeScene: React.FC<{
     revue: SceneAReviser;
+    /** Les autres scènes de la revue — celles qu'on peut absorber dans celle-ci. */
+    autres: SceneAReviser[];
     modifierScene: (id: string, updates: { titre?: string; resume?: string; ecarteeDeLaChronique?: boolean }) => void;
     basculerLaNature: (e: EvenementCure) => void;
-}> = ({ revue, modifierScene, basculerLaNature }) => {
+    fusionner: (absorbee: SceneAReviser['scene']) => void;
+    scinder: (depuis: number) => void;
+}> = ({ revue, autres, modifierScene, basculerLaNature, fusionner, scinder }) => {
     const [deplie, setDeplie] = React.useState(false);
     const { scene, acte, recit, traces } = revue;
     const ecartee = sceneEcartee(scene);
+
+    /*
+      **Le premier événement de la scène ne porte pas de ciseaux.** Couper
+      dessus donnerait tout à la seconde moitié et rien à la première : le
+      moteur l'accepte — il n'y a rien d'abîmé là-dedans — mais l'offrir
+      reviendrait à proposer un geste dont le résultat n'est pas celui qu'on
+      lit. Les traces comptent dans ce calcul : c'est souvent une trace qui
+      ouvre une scène.
+    */
+    const premier = React.useMemo(
+        () => Math.min(...[...recit, ...traces].map(e => e.timestamp)),
+        [recit, traces],
+    );
 
     return (
         <div className={`border rounded-2xl overflow-hidden transition-all ${
@@ -194,6 +243,37 @@ const BlocDeScene: React.FC<{
                             className="w-full bg-app-bg/40 border border-app-border/30 rounded-xl px-3 py-2 text-[12px] text-slate-300 outline-none focus:border-accent/40 resize-y leading-relaxed"
                         />
                     </div>
+                    {/*
+                      **Fusionner : on désigne celle qui SURVIT, on choisit celle
+                      qui disparaît.** Le menu est posé sur la scène gardée, et
+                      son intitulé le dit — « Absorber… ». C'est le seul
+                      agencement où le meneur sait d'avance ce qu'il va obtenir ;
+                      un menu « fusionner avec » laisserait la question ouverte
+                      de savoir laquelle des deux reste.
+                    */}
+                    {autres.length > 0 && !ecartee && (
+                        <div className="shrink-0 relative">
+                            <select
+                                value=""
+                                onChange={e => {
+                                    const cible = autres.find(a => a.scene.id === e.target.value);
+                                    if (cible) fusionner(cible.scene);
+                                    e.target.value = '';
+                                }}
+                                title="Absorber une autre scène dans celle-ci : elles n'en faisaient qu'une"
+                                className="appearance-none bg-app-bg border border-app-border/30 rounded-lg pl-7 pr-2 py-2 text-[10px] font-bold text-slate-500 hover:text-accent hover:border-accent/40 transition-all cursor-pointer"
+                            >
+                                <option value="">Absorber…</option>
+                                {autres.map(a => (
+                                    <option key={a.scene.id} value={a.scene.id}>{a.scene.titre}</option>
+                                ))}
+                            </select>
+                            <Combine
+                                size={14}
+                                className="absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500"
+                            />
+                        </div>
+                    )}
                     <button
                         onClick={() => modifierScene(scene.id, { ecarteeDeLaChronique: !ecartee })}
                         title={ecartee
@@ -207,7 +287,10 @@ const BlocDeScene: React.FC<{
 
                 <ul className="space-y-1 pl-8">
                     {recit.map(e => (
-                        <LigneDEvenement key={e.id} evenement={e} basculer={basculerLaNature} />
+                        <LigneDEvenement
+                            key={e.id} evenement={e} basculer={basculerLaNature}
+                            scinder={e.timestamp > premier ? scinder : undefined}
+                        />
                     ))}
                     {recit.length === 0 && (
                         <li className="text-[11px] text-slate-600 italic">
@@ -228,7 +311,10 @@ const BlocDeScene: React.FC<{
                         {deplie && (
                             <ul className="mt-2 space-y-1">
                                 {traces.map(e => (
-                                    <LigneDEvenement key={e.id} evenement={e} basculer={basculerLaNature} />
+                                    <LigneDEvenement
+                                        key={e.id} evenement={e} basculer={basculerLaNature}
+                                        scinder={e.timestamp > premier ? scinder : undefined}
+                                    />
                                 ))}
                             </ul>
                         )}
@@ -239,11 +325,25 @@ const BlocDeScene: React.FC<{
     );
 };
 
-/** Un événement, et le seul geste qu'on lui applique : changer sa nature. */
+/**
+ * Un événement, et les deux gestes qu'on lui applique : changer sa nature, et
+ * **couper la scène juste avant lui**.
+ *
+ * *La coupure se désigne sur le fil.* Scinder demande de dire OÙ la seconde
+ * scène commence, et le seul endroit où cette question a une réponse est la
+ * ligne de l'événement qui l'ouvre. Un formulaire à part aurait obligé à
+ * retrouver ce même événement dans une liste, hors de son contexte.
+ *
+ * Les ciseaux ne se montrent qu'au survol : ils ne concernent qu'une ligne sur
+ * dix, et une rangée d'icônes permanentes ferait de la revue un tableau de bord
+ * là où elle doit se lire.
+ */
 const LigneDEvenement: React.FC<{
     evenement: EvenementCure;
     basculer: (e: EvenementCure) => void;
-}> = ({ evenement, basculer }) => (
+    /** Absent sur le premier événement de la scène : voir `premier` ci-dessus. */
+    scinder?: (depuis: number) => void;
+}> = ({ evenement, basculer, scinder }) => (
     <li className="flex items-center gap-2.5 text-[12px] group">
         <button
             onClick={() => basculer(evenement)}
@@ -256,6 +356,15 @@ const LigneDEvenement: React.FC<{
         <span className={natureDe(evenement) === 'chronique' ? 'text-slate-300' : 'text-slate-600'}>
             {evenement.title}
         </span>
+        {scinder && (
+            <button
+                onClick={() => scinder(evenement.timestamp)}
+                title="Scinder ici : cet événement et tous les suivants passent dans une nouvelle scène"
+                className="ml-auto shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 text-slate-600 hover:text-accent transition-all"
+            >
+                <Scissors size={12} />
+            </button>
+        )}
     </li>
 );
 

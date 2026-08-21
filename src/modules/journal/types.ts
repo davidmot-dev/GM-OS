@@ -320,6 +320,20 @@ export interface JournalState {
   removeEvent: (journalId: string, eventId: string) => void;
   /** Met à jour un événement existant */
   updateEvent: (journalId: string, eventId: string, updates: Partial<JournalEvent>) => void;
+  /**
+   * Rattache à une scène **tous** les événements qui répondent au test, dans
+   * tous les journaux. Rend combien ont bougé.
+   *
+   * **Tous les journaux, et c'est le point.** Une scène peut avoir été jouée sur
+   * deux séances — c'est même le cas normal d'une scène laissée en pause. Ne
+   * balayer que le journal ouvert laisserait la moitié de ses événements
+   * pointer sur une scène que la fusion vient de faire disparaître.
+   *
+   * Le test est fourni par l'appelant parce que la politique lui appartient :
+   * fusionner déplace tout ce qui portait l'ancienne scène, scinder ne déplace
+   * que ce qui suit un instant donné. Le store, lui, ne connaît qu'un geste.
+   */
+  deplacerLesEvenements: (versSceneId: string, correspond: (e: JournalEvent) => boolean) => number;
   /** Active/Désactive l'état d'enregistrement */
   toggleRecording: (status?: boolean) => void;
   /** Génère un résumé narratif via LLM à partir des événements du journal */

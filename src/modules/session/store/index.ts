@@ -42,6 +42,7 @@ import { resolveSheetTemplate } from '../logic/templateResolver';
 import { EncounterGenerator } from '../logic/EncounterGenerator';
 
 import { SessionManager } from '../logic/SessionManager';
+import { fusionnerDeuxScenes, scinderLaSceneAuTemps } from '../logic/curationDeLaTrame';
 import { SnapshotService } from '../logic/SnapshotService';
 import { PersistenceService, syncStorageAcrossWindows } from '../logic/PersistenceService';
 import { lesDonneesDeLaSession } from '../logic/donneesDeLaSession';
@@ -77,6 +78,22 @@ interface CrossDomainActions {
      * passage.
      */
     leGroupeSyRend: (id: string) => void;
+
+    /* ---- Curation de la trame : les deux gestes du § 4.1 ---------------- */
+
+    /**
+     * Absorbe une scène dans une autre. **La gardée est celle qu'on désigne.**
+     *
+     * Déplace aussi ses événements, dans tous les journaux : la trame et le
+     * journal ne peuvent pas être d'accord à moitié. Rend combien d'événements
+     * ont bougé, ou `null` si la fusion a été refusée.
+     */
+    fusionnerDeuxScenes: (gardeeId: string, absorbeeId: string) => number | null;
+    /**
+     * Coupe une scène en deux à partir d'un instant. Rend l'identifiant de la
+     * seconde moitié, ou `null`.
+     */
+    scinderLaSceneAuTemps: (sceneId: string, depuis: number) => string | null;
     navigateToNpcDetail: (id: string) => void;
     navigateToPlayerDetail: (playerId: string, characterId: string) => void;
 
@@ -179,6 +196,12 @@ export const useSessionOSStore = create<SessionOSStore>()(
             navigateToAtlasMap: (id) => SessionManager.navigateToAtlasMap(set, get, id),
 
             leGroupeSyRend: (id) => SessionManager.leGroupeSyRend(set, get, id),
+
+            fusionnerDeuxScenes: (gardeeId, absorbeeId) =>
+                fusionnerDeuxScenes(set, get, gardeeId, absorbeeId)?.evenements ?? null,
+
+            scinderLaSceneAuTemps: (sceneId, depuis) =>
+                scinderLaSceneAuTemps(set, get, sceneId, depuis)?.scene.id ?? null,
 
             navigateToNpcDetail: (id) => {
                 set({ 
