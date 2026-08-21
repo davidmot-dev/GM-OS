@@ -358,6 +358,46 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     <p className="text-app-text/40 text-sm italic">{selectedNpc.description}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    {/*
+                                      **Le TYPE se corrige, comme le rôle.**
+
+                                      Signalé par David le 2026-08-21 : « je ne
+                                      sais pas marquer un PNJ comme Monstre ». Il
+                                      ne pouvait pas — `type` ne se choisissait
+                                      qu'à la création, dans `AddEntityForm`,
+                                      pendant que le rôle juste à côté se change
+                                      d'un clic depuis toujours. Une entité née
+                                      `npc`, ou importée par la Forge de campagne
+                                      qui décide du type à notre place, restait
+                                      `npc` pour la vie.
+                                      
+                                      *Une valeur qu'on ne peut pas corriger à la
+                                      main est une valeur qu'on subit* — la règle
+                                      posée pour `dice.logic` le 2026-08-17, et
+                                      le même remède.
+
+                                      Ça dépasse le filtre « Monstres » de la
+                                      galerie : `ObsidianExportService` range les
+                                      `monster` dans `Bestiaire/` et le reste
+                                      dans `PNJs/`. Un type faux se paie aussi à
+                                      l'export.
+                                    */}
+                                    <button
+                                        onClick={() => {
+                                            const types = ['npc', 'monster', 'pc'] as const;
+                                            const rang = types.indexOf(selectedNpc.type as typeof types[number]);
+                                            // Un type inconnu repart sur « PNJ » plutôt que
+                                            // de bloquer le cycle : -1 + 1 = 0.
+                                            updateEntity(selectedNpc.id, { type: types[(rang + 1) % types.length] });
+                                        }}
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-app-border bg-app-surface text-app-text/50 hover:text-accent hover:border-accent/40 transition-all"
+                                        title={t('modules:session.npc_detail.change_type')}
+                                    >
+                                        {selectedNpc.type === 'monster' ? <Skull size={14} /> : <Users size={14} />}
+                                        <span className="text-[10px] font-black uppercase tracking-widest">
+                                            {t(`modules:session.forms.types.${selectedNpc.type || 'npc'}`)}
+                                        </span>
+                                    </button>
                                     <button
                                         onClick={() => {
                                             const roles: (keyof typeof ROLE_LABELS)[] = ['ally', 'neutral', 'hostile', 'boss'];

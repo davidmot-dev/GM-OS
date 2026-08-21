@@ -28,6 +28,21 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { motion } from 'framer-motion';
 
+/**
+ * Le gabarit d'une carte dans la grille — **et il n'existe que pour la case
+ * vide**.
+ *
+ * Une carte de PNJ ne déclare plus sa hauteur : elle est la somme du portrait
+ * (`h-56`) et du contenu (`h-48`), ce qui la rend incapable de rogner ses
+ * propres boutons. La case « initialiser une entité », elle, n'a pas de
+ * contenu à mesurer et doit pourtant tenir le même rang dans la grille : c'est
+ * la seule raison pour laquelle ce nombre est écrit quelque part.
+ *
+ * 26rem = 416px = 224 + 192. S'il faut le changer, ce sont les deux moitiés
+ * qu'on change, et celui-ci suit.
+ */
+const HAUTEUR_DE_CARTE = 'h-[26rem]';
+
 const ROLE_COLORS = {
     ally: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
     neutral: 'bg-slate-500/20 text-slate-600 dark:text-slate-300 border-slate-500/30',
@@ -231,7 +246,7 @@ const NpcGallery: React.FC = () => {
                     {/* Empty State / Add Card */}
                     <button 
                         onClick={() => setIsAddingEntity(true)}
-                        className="h-96 rounded-2xl border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-6 hover:border-accent/50 hover:bg-accent/5 transition-all group"
+                        className={`${HAUTEUR_DE_CARTE} rounded-2xl border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-6 hover:border-accent/50 hover:bg-accent/5 transition-all group`}
                     >
                         <div className="w-16 h-16 rounded-full border border-app-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
                             <Plus size={32} className="text-slate-600 group-hover:text-accent group-hover:rotate-90 transition-all duration-300" />
@@ -320,16 +335,34 @@ const NpcGalleryItem: React.FC<{
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4 }}
-            /* 28rem de haut pour une fiche qui en remplit vingt : sur un écran
-               large, trois rangs suffisaient à remplir la page. On resserre à
-               24, ce qui laisse le portrait dominant sans faire défiler pour
-               rien. */
-            className={`group relative h-96 rounded-2xl overflow-hidden cursor-pointer transition-all border border-app-border glass-bento !bg-app-surface/40 backdrop-blur-md hover:border-accent/30 ${
+            /*
+              **La carte ne déclare plus sa hauteur : elle est la somme de ses
+              deux moitiés.**
+
+              Signalé par David le 2026-08-21 — « je ne sais pas lire les boutons
+              en dessous des PNJ ». C'était de l'arithmétique : la carte valait
+              `h-96` (384 px) pendant que le portrait faisait `h-56` (224) et le
+              contenu `h-48` (192), soit 416. Trente-deux pixels de trop, et
+              `overflow-hidden` les coupait — précisément la moitié basse de la
+              rangée de boutons. *Un bouton qu'on ne voit pas est un bouton qui
+              n'existe pas.*
+
+              Le resserrage de 28rem à 24 documenté ici n'avait touché que le
+              total ; les deux moitiés étaient restées à leur taille. **Trois
+              hauteurs pour une seule vérité, et elles ont divergé** — le motif
+              de la semaine, appliqué cette fois à du CSS.
+
+              `flex flex-col` sans hauteur imposée : le total suit ses parties
+              par construction, et la même erreur ne peut plus se reproduire.
+              `HAUTEUR_DE_CARTE` n'existe que pour que la case « ajouter » garde
+              le même gabarit dans la grille.
+            */
+            className={`group relative flex flex-col rounded-2xl overflow-hidden cursor-pointer transition-all border border-app-border glass-bento !bg-app-surface/40 backdrop-blur-md hover:border-accent/30 ${
                 isSelected ? 'ring-2 ring-accent shadow-glow-accent/20 bg-app-surface/80' : ''
             }`}
         >
             {/* Header / Avatar Area */}
-            <div className="relative h-56 overflow-hidden">
+            <div className="relative h-56 shrink-0 overflow-hidden">
                 <ResolvedImage
                     src={npc.avatar}
                     alt=""
@@ -376,7 +409,7 @@ const NpcGalleryItem: React.FC<{
             </div>
 
             {/* Content Area */}
-            <div className="p-5 h-48 flex flex-col relative text-app-text">
+            <div className="p-5 h-48 shrink-0 flex flex-col relative text-app-text">
                 {/* Role Badge */}
                 <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-slate-400 border-white/10'}`}>
                     {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
