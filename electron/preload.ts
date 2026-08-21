@@ -112,7 +112,14 @@ contextBridge.exposeInMainWorld('appBridge', {
             endpoint?: string,
             options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
         ) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint, options),
-        ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint),
+        ollamaChatStream: (
+            model: string,
+            messages: { role: string; content: string }[],
+            endpoint?: string,
+            // Les mêmes options que `ollamaChat`. Elles ne voyageaient pas :
+            // le flux partait sans borne de génération ni `think: false`.
+            options?: { num_ctx?: number; num_predict?: number },
+        ) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint, options),
         ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),
         ollamaListModels: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-list-models', endpoint),
         ollamaPull: (model: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-pull', model, endpoint),

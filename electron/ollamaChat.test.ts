@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { corpsDeChat, OPTIONS_PAR_DEFAUT, OPTIONS_JSON } from './OllamaService';
+import { corpsDeChat, DUREE_DE_CHARGE, OPTIONS_PAR_DEFAUT, OPTIONS_JSON } from './OllamaService';
 
 /**
  * Ce que ces tests protègent : **la requête dit ce qu'elle attend**.
@@ -97,4 +97,63 @@ describe('le corps de la requête Ollama', () => {
     // `json` pilote `format`, il n'a rien à faire dans les options du modèle.
     expect(corps.options).not.toHaveProperty('json');
   });
+});
+
+/**
+ * **Le flux passe par le même corps que le reste — axe E.1, fait le 2026-08-21.**
+ *
+ * `chatStream` fabriquait le sien : `{ model, messages, stream: true }`, et rien
+ * d'autre. Il n'avait donc reçu aucune des corrections des deux derniers
+ * mois — ni les bornes de génération, ni `think: false`, dont ce fichier mesure
+ * pourtant le prix : 349 s contre 64 s.
+ *
+ * **Et c'est LUI que l'Oracle emprunte.** En flux, la réflexion du modèle part
+ * dans `message.thinking`, que la boucle de lecture ignore : l'écran affiche
+ * « réception de la vision… » et rien ne s'écrit tant que le modèle pense.
+ * Signalé par David le 2026-08-21 — « les temps de réponse sont très longs ».
+ *
+ * *Deux chemins vers le même service, dont un seul était entretenu.*
+ */
+describe('le corps de requête en flux', () => {
+    const messages = [{ role: 'user', content: 'Décris la salle.' }];
+
+    it('demande bien un flux, et lui seul', () => {
+        expect(corpsDeChat('gemma4:12b', messages, {}, true, true)).toMatchObject({ stream: true });
+        expect(corpsDeChat('gemma4:12b', messages)).toMatchObject({ stream: false });
+    });
+
+    it('emporte « think: false » comme le chemin bloquant', () => {
+        // La correction du 2026-08-12 ne s'appliquait qu'à `chat`. C'est
+        // pourtant en flux qu'une réflexion muette se voit le plus : rien ne
+        // s'écrit à l'écran pendant qu'elle dure.
+        expect(corpsDeChat('gemma4:12b', messages, {}, true, true)).toMatchObject({ think: false });
+    });
+
+    it('emporte les bornes de génération', () => {
+        const corps = corpsDeChat('gemma4:12b', messages, { num_predict: 1024 }, true, true);
+
+        expect(corps.options).toMatchObject({ num_ctx: OPTIONS_PAR_DEFAUT.num_ctx, num_predict: 1024 });
+    });
+
+    it('et la durée de charge, AU PREMIER NIVEAU', () => {
+        /**
+         * `keep_alive` n'est pas une option : Ollama le lit à côté de `model` et
+         * de `messages`. Rangé dans `options`, il serait accepté sans effet et
+         * sans un mot — le genre de réglage qu'on croit avoir posé pendant des
+         * semaines.
+         */
+        const corps = corpsDeChat('gemma4:12b', messages, {}, true, true);
+
+        expect(corps.keep_alive).toBe(DUREE_DE_CHARGE);
+        expect(corps.options).not.toHaveProperty('keep_alive');
+    });
+
+    it('le chemin bloquant garde exactement les mêmes garanties', () => {
+        // Un seul corps pour les deux : ce qui vaut pour l'un vaut pour l'autre,
+        // et c'est tout l'objet de l'unification.
+        const flux = corpsDeChat('gemma4:12b', messages, {}, true, true);
+        const bloquant = corpsDeChat('gemma4:12b', messages, {}, true, false);
+
+        expect({ ...flux, stream: undefined }).toEqual({ ...bloquant, stream: undefined });
+    });
 });

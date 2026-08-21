@@ -135,7 +135,24 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 target: currentTarget?.name || t('combat.card.target_none')
             });
             
-            const response = await aiService.generateText(prompt);
+            /*
+              **Un conseil de combat n'a pas besoin de tout le lore de la
+              campagne** — axe F.3 du plan du 2026-08-07, fait le 2026-08-21.
+
+              Cet appel partait nu : RAG complet ET contexte vivant complet —
+              PNJ, indices révélés, historique — pour répondre « que fait ce
+              combattant ? » alors que l'invite porte déjà ses points de vie,
+              sa CA, ses états, sa cible et sa situation tactique.
+
+              `systemOnly` restreint au corpus du système, et la question trie
+              les fiches par sujet depuis le 2026-08-19 : une demande de combat
+              ramène les règles de combat. `lite` réduit le contexte vivant au
+              groupe et aux PNJ, ce que ce conseil est le seul à devoir savoir.
+
+              C'est du prefill payé à chaque suggestion, en pleine partie, sur
+              un geste dont l'intérêt est d'être immédiat.
+            */
+            const response = await aiService.generateText(prompt, undefined, 'sage', { systemOnly: true }, true);
             setSuggestedAction(response.text.trim());
         } catch (error) {
             console.error("[CombatCard] Erreur Cortex:", error);

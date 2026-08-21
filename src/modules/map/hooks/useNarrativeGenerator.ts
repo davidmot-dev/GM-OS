@@ -63,7 +63,19 @@ Réponds en français. Pas d'introduction méta, commence directement par la des
 
         setIsGenerating(true);
         try {
-            const response = await aiService.generateText(prompt);
+            /*
+              **Une narration de carte ne cite aucune règle** — axe F.3 du plan
+              du 2026-08-07, fait le 2026-08-21.
+
+              Cet appel emportait le corpus de règles entier pour décrire une
+              ambiance et suggérer comment jouer des hostiles. `lite` sans
+              `systemOnly` ne charge AUCUNE fiche et réduit le contexte vivant
+              au groupe et aux PNJ — c'est-à-dire exactement ce que cette
+              description met en scène.
+
+              *On ne fait pas payer à la narration le budget des règles.*
+            */
+            const response = await aiService.generateText(prompt, undefined, 'sage', {}, true);
             const text = response.text.trim();
             setLastNarrative(text);
             return text;

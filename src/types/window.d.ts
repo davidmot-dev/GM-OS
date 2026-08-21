@@ -254,7 +254,12 @@ declare global {
                 endpoint?: string,
                 options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
             ) => Promise<string>;
-            ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<unknown>;
+            ollamaChatStream: (
+                model: string,
+                messages: { role: string; content: string }[],
+                endpoint?: string,
+                options?: { num_ctx?: number; num_predict?: number },
+            ) => Promise<unknown>;
             ollamaStatus: (endpoint?: string) => Promise<boolean>;
             ollamaListModels: (endpoint?: string) => Promise<string[]>;
             ollamaPull: (model: string, endpoint?: string) => Promise<boolean>;

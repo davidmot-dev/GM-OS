@@ -101,12 +101,31 @@ export function corpsDeChat(
     messages: { role: string; content: string }[],
     options: OptionsDeChat = {},
     avecThink = true,
+    /**
+     * **Le streaming passe par ici depuis le 2026-08-21, et c'est le correctif.**
+     *
+     * `chatStream` fabriquait son propre corps : `{ model, messages, stream }`,
+     * et rien d'autre. Ni `options`, donc ni `num_ctx` ni `num_predict` — et
+     * surtout **PAS `think: false`**, dont ce fichier mesure pourtant le prix
+     * juste au-dessus : 349 s contre 64 s sur `gemma4:12b`, le raisonnement
+     * consommant tout le budget avant d'écrire un caractère de réponse.
+     *
+     * En streaming, la réflexion part dans `message.thinking` que la boucle de
+     * lecture ignore : l'écran affiche « réception de la vision… » et **rien ne
+     * s'écrit**, parfois pendant des minutes. C'est exactement le symptôme que
+     * David a signalé le 2026-08-21.
+     *
+     * *Deux chemins vers Ollama, dont un seul recevait les corrections des deux
+     * derniers mois.* Il n'y en a plus qu'un.
+     */
+    enFlux = false,
 ): Record<string, unknown> {
     const { json, schema, ...limites } = options;
     return {
         model,
         messages,
-        stream: false,
+        stream: enFlux,
+        keep_alive: DUREE_DE_CHARGE,
         // Le schéma l'emporte : il dit la forme, là où `'json'` ne dit que la
         // syntaxe.
         ...(schema ? { format: schema } : json ? { format: 'json' } : {}),
@@ -166,6 +185,25 @@ export const OPTIONS_PAR_DEFAUT = {
      */
     num_predict: 2048,
 } as const;
+
+/**
+ * Combien de temps le modèle reste chargé après une réponse.
+ *
+ * **Absent jusqu'au 2026-08-21**, donc laissé au défaut d'Ollama : cinq
+ * minutes. Passé ce délai le modèle se décharge, et le chargement suivant se
+ * paie en entier — sur un iGPU qui partage sa mémoire, cela se compte en
+ * dizaines de secondes avant le premier token.
+ *
+ * **Il emportait aussi le cache d'invite avec lui**, ce qui annulait le
+ * bénéfice de l'axe C : inverser les blocs pour rendre le préfixe réutilisable
+ * ne sert à rien si le modèle qui le tenait n'est plus là. Trente minutes
+ * couvrent une séance sans monopoliser la machine hors jeu.
+ *
+ * **Il est de PREMIER NIVEAU, pas une option.** Ollama le lit à côté de `model`
+ * et de `messages` ; rangé dans `options`, il serait accepté sans effet et sans
+ * un mot — le genre de réglage qu'on croit avoir posé pendant des semaines.
+ */
+export const DUREE_DE_CHARGE = '30m';
 
 /**
  * Ce qu'on impose **en plus** quand on attend du JSON.
@@ -406,18 +444,57 @@ export class OllamaService {
     /**
      * Envoie une requête de chat au modèle local avec streaming (Réactifs)
      */
-    async chatStream(model: string, messages: { role: string; content: string }[], onToken: (token: string) => void, endpoint?: string): Promise<void> {
+    /**
+     * **Le même corps de requête que `chat`, et la même reprise sur `think`.**
+     *
+     * Ce chemin fabriquait le sien — `{ model, messages, stream: true }` — et
+     * n'avait donc reçu aucune des corrections des deux derniers mois : ni
+     * `num_ctx`, ni `num_predict`, ni `keep_alive`, et surtout pas
+     * `think: false`. Or c'est LUI que l'Oracle emprunte.
+     *
+     * En flux, la réflexion du modèle part dans `message.thinking`, que la
+     * boucle de lecture ci-dessous ignore : l'écran affiche « réception de la
+     * vision… » et rien ne s'écrit tant que le modèle pense. Signalé par David
+     * le 2026-08-21.
+     */
+    async chatStream(
+        model: string,
+        messages: { role: string; content: string }[],
+        onToken: (token: string) => void,
+        endpoint?: string,
+        options?: OptionsDeChat,
+    ): Promise<void> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
-            const response = await net.fetch(`${url}/api/chat`, {
+            const envoyer = async (avecThink: boolean) => net.fetch(`${url}/api/chat`, {
                 method: 'POST',
-                body: JSON.stringify({
-                    model: model,
-                    messages: messages,
-                    stream: true,
-                }),
+                body: JSON.stringify(corpsDeChat(model, messages, options, avecThink, true)),
                 headers: { 'Content-Type': 'application/json' }
             });
+
+            const corps = corpsDeChat(model, messages, options, true, true);
+            journaliser(
+                `[Ollama] ⇢ flux ${model} — think=${corps.think}, keep_alive=${corps.keep_alive}, `
+                + `options=${JSON.stringify(corps.options)}`,
+            );
+
+            let response = await envoyer(true);
+
+            /*
+              Même reprise que `chat` : tous les modèles n'acceptent pas
+              `think`. On essaie, et on refait sans si le serveur le refuse —
+              nommé dans le journal, parce qu'un repli silencieux rendrait le
+              prochain diagnostic impossible.
+            */
+            if (!response.ok) {
+                const refus = await response.text().catch(() => '');
+                if (/think/i.test(refus)) {
+                    console.warn(`[Ollama] « ${model} » refuse « think » en flux ; reprise sans lui.`);
+                    response = await envoyer(false);
+                } else {
+                    throw new Error(`Ollama stream error (${response.status}): ${refus || response.statusText}`);
+                }
+            }
 
             if (!response.ok) {
                 throw new Error(`Ollama stream error: ${response.statusText}`);
@@ -544,13 +621,13 @@ export class OllamaService {
             return await service.generateImage(model, prompt, endpoint);
         });
 
-        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[], endpoint?: string) => {
+        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[], endpoint?: string, options?: OptionsDeChat) => {
             try {
                 await service.chatStream(model, messages, (token) => {
                     if (!event.sender.isDestroyed()) {
                         event.sender.send('ai:ollama-stream-token', token);
                     }
-                }, endpoint);
+                }, endpoint, options);
                 return { success: true };
             } catch (error) {
                 console.error('[Ollama Bridge] Streaming error:', error);
