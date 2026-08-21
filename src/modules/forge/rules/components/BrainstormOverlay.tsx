@@ -32,6 +32,8 @@ interface ResolutionDesSections {
   /** Faux quand aucun index n'a pu être chargé : la fiche n'y est pour rien. */
   indexDisponible: boolean;
   sources: string[];
+  /** Fichiers présents dans `index/` dont rien n'a pu être tiré. */
+  ignores?: string[];
   resolutions: {
     demande: string;
     statut: 'exact' | 'approche' | 'introuvable';
@@ -906,10 +908,23 @@ export const BrainstormOverlay: React.FC = () => {
                    </div>
 
                    {resolution && !resolution.indexDisponible && (
-                     // Pas d'index n'est pas une fiche fautive : on ne compte
-                     // pas « zéro section résolue », ce serait l'en accuser.
+                     /*
+                       Pas d'index n'est pas une fiche fautive : on ne compte pas
+                       « zéro section résolue », ce serait l'en accuser.
+
+                       **Et déposer un index illisible n'est pas ne rien avoir
+                       déposé.** Le message unique disait « déposez le sommaire et
+                       l'index du livre » à qui venait de le faire — relevé par
+                       David le 2026-08-21 sur un index de 31 Ko dont aucune
+                       forme n'était reconnue. On nomme donc les fichiers vus.
+                     */
                      <p className="text-xs text-white/30 leading-relaxed">
-                       {t('session.forge_module.atelier.sections_no_index', { corpus: corpus?.id ?? '' })}
+                       {resolution.ignores && resolution.ignores.length > 0
+                         ? t('session.forge_module.atelier.sections_index_illisible', {
+                             corpus: corpus?.id ?? '',
+                             fichiers: resolution.ignores.map(f => `« ${f} »`).join(', '),
+                           })
+                         : t('session.forge_module.atelier.sections_no_index', { corpus: corpus?.id ?? '' })}
                      </p>
                    )}
 

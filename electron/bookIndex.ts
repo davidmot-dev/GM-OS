@@ -30,6 +30,14 @@ export interface IndexLivre {
     /** Fichiers d'où proviennent les entrées, pour la traçabilité. */
     sources: string[];
     entrees: EntreeIndex[];
+    /**
+     * Fichiers **présents mais dont aucune entrée n'a pu être tirée**.
+     *
+     * *Un dossier vide et un dossier illisible ne se ressemblent pas.* Sans
+     * cette liste, les deux rendaient « aucun index chargé » — et l'atelier
+     * demandait de déposer un index déjà déposé.
+     */
+    ignores: string[];
 }
 
 export type StatutResolution = 'exact' | 'approche' | 'introuvable';
@@ -196,10 +204,122 @@ export function extraireEntrees(lignes: readonly string[]): EntreeIndex[] {
     return entrees;
 }
 
-/** Charge tous les index d'un système depuis `docs/systems/<id>/index/`. */
+/**
+ * Nombre d'entrées en dessous duquel un repli n'est pas un index.
+ *
+ * **C'est le garde-fou de la cinquième forme, et il vaut plus qu'elle.** Un
+ * index alphabétique est une liste DENSE — celui de Rêves de Dragons couvre
+ * quatorze pages. Une poignée de correspondances trouvées dans un fichier n'est
+ * pas un index maigre : c'est de la prose où le hasard a mis un nombre après
+ * quelques mots. On préfère alors ne rien rendre, parce qu'*une entrée d'index
+ * fausse est pire qu'une entrée absente* — elle donne une page à un titre qui
+ * n'est pas là, et le résolveur la servira avec le même aplomb qu'une vraie.
+ */
+const DENSITE_MINIMALE = 40;
+
+/**
+ * Cinquième forme : **l'index alphabétique nu**, `Titre 80, 88, 91-94`.
+ *
+ * **Pourquoi elle est à part.** Les quatre règles de `extraireEntrees` se
+ * recouvrent et se rattrapent sans risque : chacune exige un balisage — un
+ * `<br>`, une barre de table, trois points de conduite — qu'un texte ordinaire
+ * ne porte pas. Celle-ci n'exige qu'**un espace** entre un titre et un nombre,
+ * ce que la moindre phrase contient. Servie au même rang que les autres, elle
+ * transformerait n'importe quel livre en index.
+ *
+ * Relevé par David le 2026-08-21 : l'index de Rêves de Dragons, 977 lignes et
+ * 31 Ko déposés dans `index/`, rendait **zéro entrée**. Son convertisseur écrit
+ * `Maladie 18, 25, 91 -94` — pas de balisage, un seul espace — et l'application
+ * lui répondait *« aucun index chargé, déposez le sommaire et l'index du
+ * livre »*, c'est-à-dire de refaire ce qu'il venait de faire.
+ *
+ * **Trois garde-fous, et ils sont la raison d'être de cette fonction :**
+ *
+ * 1. **Elle ne sert qu'en repli**, quand les quatre formes balisées n'ont rien
+ *    rendu. Un corpus qui marche aujourd'hui ne peut donc pas se dégrader.
+ * 2. **Elle exige une SUITE de pages séparées par des virgules.** C'est la
+ *    signature d'une entrée d'index, et c'est ce qui écarte « attaque avec 3
+ *    dés » : un nombre isolé au fil du texte n'est pas une pagination.
+ * 3. **Un titre d'index est COURT** — six mots, soixante caractères, aucun
+ *    chiffre. C'est ce qui protège du sommaire en pavé continu, où titres et
+ *    numéros s'enchaînent sur cent quarante caractères : le candidat trop long
+ *    est rejeté au lieu de produire un titre de paragraphe.
+ *
+ * Et `DENSITE_MINIMALE` par-dessus, appliquée par `chargerIndex`.
+ */
+export function extraireIndexNu(lignes: readonly string[]): EntreeIndex[] {
+    const entrees: EntreeIndex[] = [];
+    const vues = new Set<string>();
+
+    /** Un titre d'index tient en une poignée de mots et ne porte pas de chiffre. */
+    const estUnTitreCourt = (brut: string): boolean => {
+        const t = brut.replace(/^[\s\-–—•*.,;:)\]]+/, '').trim();
+        if (t.length < 3 || t.length > 60 || /\d/.test(t)) return false;
+        if (!/[a-zA-ZÀ-ÿ]{3}/.test(t)) return false;
+        /*
+          **Une parenthèse orpheline trahit un fragment, pas un titre.** Un index
+          imprimé sur deux colonnes déborde d'une colonne sur l'autre : la fin de
+          « Mariol 408 - 409 (ill.), 418 (ill.) » retombe devant le nombre de la
+          colonne voisine, et donne « ill.) » comme titre. Le compte des
+          parenthèses le dit sans avoir à connaître le mot.
+        */
+        const ouvrantes = (t.match(/\(/g) ?? []).length;
+        const fermantes = (t.match(/\)/g) ?? []).length;
+        if (ouvrantes !== fermantes) return false;
+        /*
+          **Un titre porte au moins un mot plein.** « Chapitre 3 sur 12 » laissait
+          passer « sur » devant le 12 : trois lettres suffisaient. Les entrées
+          réelles d'un index ont un substantif — « Marche », « Maladie »,
+          « Agilité » —, jamais une préposition seule.
+        */
+        const mots = t.split(/\s+/);
+        if (!mots.some(m => /[a-zA-ZÀ-ÿ]{4}/.test(m))) return false;
+        return mots.length <= 6;
+    };
+
+    /**
+     * La ligne porte-t-elle une pagination d'index ?
+     *
+     * Au moins deux nombres séparés par une virgule, ou une plage — `18, 25` ou
+     * `91 -94`. Une phrase qui cite un nombre n'en a pas.
+     */
+    const porteUnePagination = (ligne: string): boolean =>
+        /\b\d{1,3}\s*(,\s*\d{1,3}|[-–]\s*\d{1,3})/.test(ligne);
+
+    for (const ligne of lignes) {
+        if (!porteUnePagination(ligne)) continue;
+
+        for (const m of ligne.matchAll(/([A-Za-zÀ-ÿ][^\d|<>]{1,59}?)\s+(\d{1,3})(?!\d)/g)) {
+            if (!estUnTitreCourt(m[1])) continue;
+            const titre = m[1].replace(/^[\s\-–—•*.,;:)\]]+/, '').replace(/[\s.,;:]+$/, '').trim();
+            const page = Number(m[2]);
+            if (page <= 0 || page >= 1000) continue;
+            const empreinte = `${clef(titre)}|${page}`;
+            if (vues.has(empreinte)) continue;
+            vues.add(empreinte);
+            entrees.push({ titre, page });
+        }
+    }
+
+    return entrees;
+}
+
+/**
+ * Charge tous les index d'un système depuis `docs/systems/<id>/index/`.
+ *
+ * **Un fichier écarté se dit désormais.** La version d'avant faisait `continue`
+ * en silence sur un format non reconnu, si bien qu'un index de 31 Ko déposé dans
+ * le bon dossier laissait `sources` vide — et l'atelier affichait *« aucun index
+ * chargé, déposez le sommaire et l'index du livre »*, c'est-à-dire demandait de
+ * refaire ce qui venait d'être fait. Relevé par David le 2026-08-21.
+ *
+ * *Un dossier vide et un dossier illisible ne se ressemblent pas*, et c'est
+ * exactement la distinction que `ignores` porte. Elle ne change rien au calcul :
+ * elle change ce que l'écran peut dire.
+ */
 export function chargerIndex(racineDocs: string, systeme: string): IndexLivre {
     const dossier = path.join(racineDocs, 'systems', systeme, 'index');
-    const livre: IndexLivre = { systeme, sources: [], entrees: [] };
+    const livre: IndexLivre = { systeme, sources: [], entrees: [], ignores: [] };
     if (!fs.existsSync(dossier)) return livre;
 
     for (const nom of fs.readdirSync(dossier).sort()) {
@@ -209,10 +329,25 @@ export function chargerIndex(racineDocs: string, systeme: string): IndexLivre {
         let lignes: string[] | null = null;
         if (ext === '.md' || ext === '.txt') lignes = fs.readFileSync(complet, 'utf8').split(/\r?\n/);
         else if (ext === '.docx') lignes = paragraphesDocx(complet);
-        if (!lignes) continue;
+        if (!lignes) continue;   // ni un texte ni un docx : ce n'est pas un index manqué
 
-        const trouvees = extraireEntrees(lignes);
-        if (trouvees.length === 0) continue;   // format non exploitable pour ce livre
+        let trouvees = extraireEntrees(lignes);
+
+        /*
+          **Le repli ne sert que si les formes balisées ont échoué**, et il doit
+          alors ramener un index ENTIER. Une poignée d'entrées n'est pas un index
+          maigre : c'est de la prose où quelques nombres suivent quelques mots.
+          Voir `extraireIndexNu`, qui porte les trois autres garde-fous.
+        */
+        if (trouvees.length === 0) {
+            const repli = extraireIndexNu(lignes);
+            if (repli.length >= DENSITE_MINIMALE) trouvees = repli;
+        }
+
+        if (trouvees.length === 0) {
+            livre.ignores.push(nom);
+            continue;
+        }
 
         livre.sources.push(nom);
         livre.entrees.push(...trouvees);
@@ -343,6 +478,15 @@ export interface Verification {
     indexDisponible: boolean;
     /** Fichiers d'index ayant contribué, pour que le verdict soit traçable. */
     sources: string[];
+    /**
+     * Fichiers **présents dans `index/` dont rien n'a pu être tiré**.
+     *
+     * Sans eux, « aucun index chargé » se disait de la même façon qu'on ait
+     * déposé un fichier ou non — et l'écran demandait alors de déposer un index
+     * déjà déposé. *Un dossier vide et un dossier illisible ne se ressemblent
+     * pas.*
+     */
+    ignores: string[];
     resolutions: Resolution[];
     /** Pages citées au-delà de la pagination attestée. */
     pagesDouteuses: number[];
@@ -362,12 +506,19 @@ export interface Verification {
  */
 export function verifierLesCitations(livre: IndexLivre, contenuFiche: string): Verification {
     if (livre.entrees.length === 0) {
-        return { indexDisponible: false, sources: [], resolutions: [], pagesDouteuses: [], plage: null };
+        return {
+            indexDisponible: false,
+            sources: [],
+            // Ce qui distingue « rien déposé » de « déposé, mais illisible ».
+            ignores: livre.ignores,
+            resolutions: [], pagesDouteuses: [], plage: null,
+        };
     }
     const resolveur = creerResolveur(livre);
     return {
         indexDisponible: true,
         sources: livre.sources,
+        ignores: livre.ignores,
         resolutions: sectionsCitees(contenuFiche).map(s => resolveur.resoudre(s)),
         pagesDouteuses: pagesInvraisemblables(contenuFiche, livre),
         plage: plageDePages(livre),

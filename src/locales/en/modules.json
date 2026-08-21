@@ -1441,6 +1441,7 @@
         "sections_title": "Cited sections, checked against the book index",
         "sections_checking": "Checking…",
         "sections_no_index": "No index loaded for “{{corpus}}”: this card's citations cannot be verified. Drop the book's table of contents and alphabetical index into index/ for this check to mean anything.",
+        "sections_index_illisible": "The index/ folder for “{{corpus}}” contains {{fichiers}}, but no recognisable index format was found: citations cannot be verified. An index is read in four marked-up forms (table, dot leaders, cells) or, failing that, as a “Title 80, 88, 91-94” list dense enough to be an index.",
         "sections_score": "{{resolues}} of {{total}} found in the index ({{sources}}).",
         "sections_unresolved": "not found",
         "sections_unresolved_hint": "A section that is not found does not condemn the card on its own: the index may be incomplete, or the title invented. Yours to judge before publishing.",

@@ -114,6 +114,7 @@ describe('résolution', () => {
     const livre = {
         systeme: 'test',
         sources: ['fictif'],
+        ignores: [],
         entrees: [
             { titre: 'Forcer le test', page: 60 },
             { titre: 'Niveau de Stress', page: 61 },
@@ -270,6 +271,7 @@ describe('contrôle de vraisemblance des pages', () => {
     const livre = {
         systeme: 'test',
         sources: ['fictif'],
+        ignores: [],
         entrees: [{ titre: 'Début', page: 1 }, { titre: 'Fin', page: 329 }],
     };
 
@@ -282,7 +284,7 @@ describe('contrôle de vraisemblance des pages', () => {
     });
 
     it('reste muet sans index', () => {
-        const vide = { systeme: 'x', sources: [], entrees: [] };
+        const vide = { systeme: 'x', sources: [], entrees: [], ignores: [] };
         expect(pagesInvraisemblables('p. 9999', vide)).toEqual([]);
     });
 
@@ -326,7 +328,7 @@ describe('verifierLesCitations', () => {
          * la fiche d'un manque qui n'est pas le sien. Une mesure impossible
          * n'est pas une mesure mauvaise.
          */
-        const sansIndex = { systeme: 'x', sources: [], entrees: [] };
+        const sansIndex = { systeme: 'x', sources: [], entrees: [], ignores: [] };
         const v = verifierLesCitations(sansIndex, '---\nsections: « Forcer le test »\n---\n');
 
         expect(v.indexDisponible).toBe(false);
