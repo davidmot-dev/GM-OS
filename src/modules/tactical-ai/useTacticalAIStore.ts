@@ -108,7 +108,26 @@ export const useTacticalAIStore = create<TacticalAIState>()(
              const fullSystemPrompt = await aiService.prepareSystemPrompt(
                advicePrompt, 
                `Tu es "Le Stratège", expert en JDR. Réponds exclusivement en JSON valide avec ce format exact : [ { "id": "...", "type": "attack|move|spell|defense", "message": "...", "priority": 1-5 } ]. Ne parle pas avant ni après le JSON.`,
-               'oracle'
+               'oracle',
+               /*
+                 **Les règles du système, et rien du lore — axe C.3 du plan du
+                 2026-08-07.**
+
+                 Aucune `ragOptions` n'était passée : le Cortex chargeait TOUT
+                 le lore de campagne pour répondre à « attaquer ou se déplacer
+                 ? ». Or `TacticalNarrativeService` vient de lui préparer un
+                 rapport de situation précis — positions, portées, zones de
+                 danger — et c'est cela qui décide du conseil. Le lore n'y
+                 ajoute rien et se paie en prefill sur un module qui vise
+                 trente à soixante secondes, parce que son conseil se périme.
+
+                 `systemOnly` restreint la sélection au corpus du système ;
+                 `limit: 2` tient dans le plafond des 4 000 jetons sans le
+                 saturer, et la question elle-même trie les fiches par sujet
+                 depuis le 2026-08-19 — un conseil de combat ramène donc les
+                 fiches de combat.
+               */
+               { systemOnly: true, limit: 2 },
              );
 
              /*
@@ -123,8 +142,21 @@ export const useTacticalAIStore = create<TacticalAIState>()(
              return aiService.generateJSON<any[]>(advicePrompt, fullSystemPrompt, undefined, { sansPersona: true });
           })();
 
-          // Exécution parallèle pour réduire considérablement le temps de réponse
-          // particulièrement important pour les modèles lourds (gemini-3.1-pro)
+          /*
+            **`Promise.all` attend les deux ; il ne les parallélise pas
+            forcément.** Le commentaire d'origine annonçait une « exécution
+            parallèle qui réduit considérablement le temps de réponse » —
+            relevé comme mensonger au § 3.5 du plan du 2026-08-07 : sous
+            `NUM_PARALLEL=1`, qui est le défaut d'Ollama, **les deux appels
+            font la queue**. On attend donc la somme des deux, pas le plus
+            long des deux.
+
+            On garde `Promise.all` — il est juste, et il gagne réellement
+            quand le fournisseur sert deux requêtes de front, ce qui est le
+            cas du cloud. Mais on cesse de promettre ce gain : *une
+            optimisation annoncée qui n'a pas lieu fait chercher le temps
+            perdu ailleurs.*
+          */
           const [, advices] = await Promise.all([narrationPromise, advicePromise]);
 
           set({ activeAdvices: advices, status: 'idle' });

@@ -30,6 +30,53 @@ interface GeminiResponse {
  * Service central pour les interactions avec l'IA.
  * Gère plusieurs fournisseurs (Gemini, Anthropic, Ollama) et types de contenu (Texte, Image).
  */
+/**
+ * L'ordre des blocs d'une invite système — **le stable d'abord, le volatil
+ * ensuite.**
+ *
+ * **Axe C.1 du plan du 2026-08-07, fait le 2026-08-21.** L'ordre était :
+ *
+ * ```
+ * [persona — stable] → [CONTEXTE VIVANT — change à chaque tour]
+ *                    → [RAG — stable et volumineux]
+ * ```
+ *
+ * Or un modèle ne réutilise son cache que tant que **le début** de l'invite est
+ * identique. Le bloc volatil — points de vie, round, tour — précédait le bloc
+ * massif et stable : **dès qu'un PJ perdait un point de vie, tout le cache du
+ * RAG était invalidé**, et le prefill des règles se repayait à chaque question
+ * au lieu d'une fois par séance.
+ *
+ * C'est la cause la plus directe des temps de réponse signalés par David le
+ * 2026-08-21 — *« les temps de réponse sont très longs »*.
+ *
+ * **Inverser ne change rien à ce que le modèle lit** : les deux blocs sont là,
+ * nommés, dans la même invite. Cela change ce qu'il peut garder d'une question
+ * à l'autre.
+ *
+ * `customContext` reste collé au RAG parce qu'il est de la même nature : un
+ * contexte fourni par l'appelant, stable pour la durée de son geste.
+ *
+ * **Fonction pure et exportée pour une seule raison : que la règle se teste.**
+ * Une inversion est invisible à la lecture d'un résultat — l'invite est correcte
+ * dans les deux sens, seule sa réutilisabilité change. Un ordre qui se remet à
+ * l'envers ne se plaindrait de rien.
+ */
+export function assemblerLeContexte(
+    ragContext: string,
+    customContext: string | undefined,
+    liveContext: string,
+): string {
+    const stable = customContext ? `${customContext}
+
+${ragContext}` : ragContext;
+    return `--- CONTEXTE RAG (RÈGLES ET LORE) ---
+${stable}
+
+--- CONTEXTE VIVANT (SESSION ACTUELLE) ---
+${liveContext}`;
+}
+
 export class AIService {
   private static instance: AIService;
 
@@ -902,10 +949,21 @@ Use the names above verbatim. Do not invent a setting title.
       });
 
       try {
+        /*
+          **Une borne de génération, enfin.** Ce chemin partait sans aucune
+          option : ni fenêtre de contexte, ni plafond de sortie. Le commentaire
+          d'`OllamaService` chiffre ce que ça coûte — *« à 7,7 tok/s de
+          décodage, un emballement se paie en dizaines de minutes »*.
+
+          1 024 plutôt que les 2 048 du défaut : une réponse d'Oracle est une
+          réponse de table, deux à trois paragraphes. Le plan le dit — *« le
+          prévisible vaut mieux que le rapide »* — et une borne basse rend
+          l'attente bornée, ce qu'aucune animation ne fait.
+        */
         await window.appBridge.ai.ollamaChatStream(model, [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
-        ], endpoint);
+        ], endpoint, { num_predict: 1024 });
       } finally {
         unsubscribe();
       }
@@ -933,12 +991,8 @@ Use the names above verbatim. Do not invent a setting title.
       : await ragService.getRelevantContext({ ...ragOptions, query: prompt });
 
     const liveContext = this.getLiveSessionContext(isLite);
-    
-    const fullContext = `--- CONTEXTE VIVANT (SESSION ACTUELLE) ---
-${liveContext}
 
---- CONTEXTE RAG (RÈGLES ET LORE) ---
-${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
+    const fullContext = assemblerLeContexte(ragContext, customContext, liveContext);
 
     const gemStore = (await import('../../stores/useGemStore')).useGemStore.getState();
     const gem = gemStore.gems.find(g => g.id === gemId) || gemStore.gems[0];
