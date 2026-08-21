@@ -322,6 +322,16 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'les six et les additionneraient. Un jeu dont la réserve se compose depuis la fiche ' +
             'laisse "seuil" vide et remplit "reserve.composantes" à la place — l\'un ou l\'autre, ' +
             'jamais ni l\'un ni l\'autre. ' +
+            // Ce que « ce qui s'additionne » ne dit pas, et qui manquait : OÙ.
+            // Voir le commentaire ci-dessus — troisième fois que la consigne
+            // remontée en tête est vraie mais trop large.
+            'ET N\'Y METS QUE CE QUE LE JOUEUR LIT SUR SA PROPRE FICHE. La difficulté que le ' +
+            'MENEUR fixe n\'est pas une composante : elle se déclare dans "jet.difficulte" ' +
+            '({"min","max","defaut"}). Un malus qui SE CALCULE — état général, fatigue, ' +
+            'blessures, encombrement — n\'est pas une composante non plus, et ne se déclare NULLE ' +
+            'PART : il se lit sur les jauges. Si une valeur qui s\'ajoute n\'a aucune section dans ' +
+            'la liste des identifiants disponibles, c\'est le signe qu\'elle n\'a rien à faire ici : ' +
+            'OMETS l\'entrée. N\'invente jamais un "sectionId" pour la loger. ' +
             '**(2) "jet.sens" vaut "superieur-ou-egal"** si le jeu compte les dés qui ATTEIGNENT OU ' +
             'DÉPASSENT une valeur (« chaque six est une réussite »), **"sous-ou-egal"** s\'il compte ' +
             'ceux qui restent SOUS un seuil lu sur la fiche (« lance sous ta Sauvegarde »). ' +
@@ -369,9 +379,28 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'ALORS TU L\'OMETS ENTIÈREMENT : ne mets jamais une chaîne de caractères, même vide, ' +
             'et n\'y écris jamais une phrase qui décrit la règle. Si le jeu tire des cartes ' +
             'numérotées, omets "initiative" et donne le nombre de cartes dans ' +
-            '"combat.initiativeCards". Si l\'ordre ne se calcule pas depuis la fiche, laisse ' +
+            '"combat.initiativeCards". ' +
+            // Ce que le champ EST, et il ne le disait nulle part. Voir le
+            // commentaire ci-dessus : c'est le silence qui a produit la phrase.
+            '"combat.initiativeFormula" EST UN CALCUL, JAMAIS UNE PHRASE : une expression ' +
+            'arithmétique portant des identifiants de champs de la fiche, des nombres, une ' +
+            'notation de dés, et les signes + - * / ( ). Exemples valides : "agilite", ' +
+            '"agilite / 2 + melee + 1d6", "(dexterite + reflexes) / 2". ' +
+            '**N\'ÉCRIS JAMAIS "section.champ"** : seul l\'identifiant du CHAMP compte. ' +
+            'Si la règle dit « une demi-caractéristique arrondie à l\'inférieur plus le niveau ' +
+            'de compétence, plus un dé à six faces », tu écris "agilite / 2 + melee + 1d6" et ' +
+            'RIEN D\'AUTRE — pas la phrase, pas les parenthèses explicatives, pas les arrondis ' +
+            'en toutes lettres. Si l\'ordre ne se calcule pas depuis la fiche, laisse ' +
             '"initiativeFormula" à ""',
-        exemple: '{"driver":{"combat":{"initiativeFormula":"","initiative":{"mode":"alternance","coutDeRetention":{"montant":2,"ressource":"impulsion"},"coutDOuverture":{"montant":2,"ressource":"impulsion"},"activationsConsecutivesMax":2}}}}',
+        /*
+          **L'exemple montre une formule NON VIDE, et c'est délibéré.** Il ne
+          portait que `"initiativeFormula":""`, si bien que la seule chose que le
+          modèle voyait de ce champ était son cas d'absence. Rêves de Dragons,
+          dont l'initiative se calcule bel et bien, y a répondu par la règle
+          rédigée en français — vingt reproches à l'écran le 2026-08-21.
+          *Un exemple qui ne montre qu'un cas enseigne ce seul cas.*
+        */
+        exemple: '{"driver":{"combat":{"initiativeFormula":"agilite / 2 + melee + 1d6","initiativeSort":"desc","initiative":{"mode":"alternance","coutDeRetention":{"montant":2,"ressource":"impulsion"},"coutDOuverture":{"montant":2,"ressource":"impulsion"},"activationsConsecutivesMax":2}}}}',
     },
     {
         id: 'defaite',
@@ -526,6 +555,16 @@ export function blocDuVocabulaire(vocabulaire: VocabulaireDuPilote): string {
         'Un "sectionId" est l\'identifiant d\'une SECTION DE LA FICHE ci-dessus.',
         'Un "fieldId" est l\'identifiant d\'un CHAMP ci-dessus.',
         'Une "ressource" est l\'identifiant d\'une RÉSERVE ci-dessus.',
+        '',
+        // Chaque champ est listé « "identifiant" (Libellé) », et le modèle
+        // recopiait le second. Relevé le 2026-08-21 : `santeDeDepart` valait
+        // « (Taille + Constitution) / 2 » là où la fiche porte `taille` et
+        // `constitution`. La distinction est visible dans la liste, mais elle
+        // n'était nommée nulle part.
+        'Chaque champ est écrit ci-dessus sous la forme "identifiant" (Libellé). RECOPIE',
+        "L'IDENTIFIANT, celui entre guillemets, EXACTEMENT tel qu'il est écrit — jamais le",
+        'libellé entre parenthèses, jamais une variante à toi. Cela vaut aussi DANS LES',
+        'FORMULES : on écrit "taille + constitution", pas "Taille + Constitution".',
         '',
         'Les titres de chapitre du LIVRE cités dans les fiches de règles — « Attaques réussies »,',
         '« Les compétences » — ne sont PAS des identifiants. Ne les recopie jamais dans un',

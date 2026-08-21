@@ -4,7 +4,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { resolveSheetTemplate } from '../logic/templateResolver';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import { santeDeDepart } from '../../combat/logic/SanteDuCombattant';
+import { santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import type { Player, PlayerCharacter } from '../store/types';
 
 export function useCharacterEditor() {
@@ -95,11 +95,10 @@ export function useCharacterEditor() {
         const pilote = getActiveDriver?.();
         const formule = pilote?.combat?.santeDeDepart;
         if (formule) {
-            const nouveauMax = santeDeDepart(formule, champ => {
-                const brut = localData[champ];
-                const n = typeof brut === 'number' ? brut : Number(brut);
-                return Number.isFinite(n) ? n : undefined;
-            });
+            // Lecture unique : cet écran lisait AVEC la casse quand le combat
+            // lisait sans, de sorte que « Taille » y valait undefined et la
+            // santé de départ ne s'appliquait jamais depuis la fiche.
+            const nouveauMax = santeDeDepart(formule, champ => valeurDuChamp(localData, champ));
             if (nouveauMax !== null && nouveauMax !== character.maxHp) {
                 updateCharacterMaxHP(selectedPlayer.id, character.id, nouveauMax);
                 // Les points courants suivent le plafond quand il monte, et ne

@@ -23,7 +23,7 @@ import {
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
-import { santeDeDepart } from './logic/SanteDuCombattant';
+import { santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
 // contrairement au store de séance qui reste atteint par le global.
 import { etatDeLaScene } from '../session/logic/trame';
@@ -301,11 +301,10 @@ function pointsDeVieDeDepart(
     if (!fiche) return {};
 
     const formule = piloteActif()?.combat?.santeDeDepart;
-    const depart = santeDeDepart(formule, champ => {
-        const entree = Object.entries(fiche).find(([k]) => k.toLowerCase() === champ.toLowerCase());
-        const valeur = entree ? Number(entree[1]) : NaN;
-        return Number.isFinite(valeur) ? valeur : undefined;
-    });
+    // `valeurDuChamp` est la SEULE lecture d'un champ de fiche : trois portes
+    // sur cinq s'en écartaient, et le même personnage n'obtenait pas la même
+    // santé selon l'écran qui l'avait touché.
+    const depart = santeDeDepart(formule, champ => valeurDuChamp(fiche, champ));
 
     return depart === null ? {} : { hp: c.hp ?? depart, hpMax: c.hpMax ?? depart };
 }

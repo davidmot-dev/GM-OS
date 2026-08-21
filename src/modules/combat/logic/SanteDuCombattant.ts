@@ -202,6 +202,58 @@ export function champsDUneFormule(formule: string): string[] {
         .filter((m, i, tous) => tous.indexOf(m) === i);
 }
 
+/**
+ * La clé sous laquelle on reconnaît un identifiant de champ — **sans casse et
+ * sans accents**.
+ *
+ * **Le défaut qu'elle corrige, relevé par David le 2026-08-21 sur Rêves de
+ * Dragons.** Cinq endroits posent la même question — « ce nom désigne-t-il un
+ * champ de la fiche, et que vaut-il ? » — et ils répondaient de trois façons :
+ *
+ * | Porte | Avant |
+ * |---|---|
+ * | `CombatControls`, le jet d'initiative | sans casse |
+ * | `useCombatStore`, la santé au combat | sans casse |
+ * | `useCharacterEditor`, la fiche qu'on édite | **avec casse** |
+ * | `AddCharacterForm`, le personnage neuf | **avec casse** |
+ * | `controlesDuPilote`, la revue du pilote | **avec casse** |
+ *
+ * Conséquences, toutes muettes : le contrôle reprochait `« Taille »` à une
+ * formule que le combat évalue très bien, et **le même personnage n'obtenait pas
+ * la même santé de départ selon l'écran par lequel il était passé** — créé par
+ * le formulaire il naissait sans, ramassé par le combat il en avait une.
+ *
+ * *Cinq chemins vers la même question finissent toujours par ne plus dire la
+ * même chose*, et c'est la troisième fois que ce module le paie. On ne garde
+ * donc qu'une règle, et c'est la plus tolérante : deux portes sur cinq
+ * l'appliquaient déjà, et refuser un champ qu'on sait lire est le seul des deux
+ * torts qui coûte une donnée.
+ */
+export function clefDeChamp(champ: string): string {
+    return champ
+        .normalize('NFD')
+        .replace(/\p{Mn}/gu, '')
+        .toLowerCase();
+}
+
+/**
+ * La valeur numérique d'un champ de fiche, quel que soit l'habillage de son nom.
+ *
+ * Rend `undefined` — et jamais zéro — quand le champ manque ou n'est pas
+ * lisible en nombre : *l'absence n'est pas un zéro*, et un `force: "D (D6)"`
+ * ferait naître un personnage à un point de vie.
+ */
+export function valeurDuChamp(
+    donnees: Record<string, unknown> | undefined | null, champ: string,
+): number | undefined {
+    if (!donnees) return undefined;
+    const vise = clefDeChamp(champ);
+    const entree = Object.entries(donnees).find(([k]) => clefDeChamp(k) === vise);
+    if (!entree) return undefined;
+    const n = typeof entree[1] === 'number' ? entree[1] : Number(entree[1]);
+    return Number.isFinite(n) ? n : undefined;
+}
+
 export function santeDeDepart(
     formule: string | undefined,
     lire: (champ: string) => number | undefined,

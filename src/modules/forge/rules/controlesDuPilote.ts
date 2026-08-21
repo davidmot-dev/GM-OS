@@ -3,7 +3,7 @@ import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
 import { GROUPES } from './GroupesDeChamps';
-import { champsDUneFormule } from '../../combat/logic/SanteDuCombattant';
+import { champsDUneFormule, clefDeChamp } from '../../combat/logic/SanteDuCombattant';
 
 /**
  * Le pilote se vérifie — axe 4 du plan du 2026-08-11.
@@ -143,6 +143,38 @@ export function champsInvoques(formule: string): string[] {
 }
 
 /**
+ * Cette « formule » est-elle en réalité **une phrase** ?
+ *
+ * **Le défaut qu'elle corrige, relevé par David le 2026-08-21 sur Rêves de
+ * Dragons.** La dérivation a rendu `initiativeFormula` sous forme de règle
+ * rédigée : *« (une demi-caractéristique concernée (arrondie à l'inférieur) plus
+ * le niveau de la compétence) + un dé à six faces - malus d'état général »*. Le
+ * contrôle a fait son travail — aucun de ces mots n'est un champ — mais il a
+ * crié **une fois par mot** : vingt lignes rouges pour un seul défaut, sur un
+ * écran qui en comptait vingt-cinq en tout.
+ *
+ * *Un contrôle qui répète vingt fois la même chose ne se lit pas mieux qu'un
+ * contrôle absent* — corollaire de la règle du 2026-08-17. Le meneur qui déroule
+ * cette liste n'y trouve pas le seul reproche qui compte : **ce n'est pas une
+ * formule.**
+ *
+ * **Le test est structurel, pas lexical.** On ne cherche pas des mots français :
+ * on cherche **deux identifiants côte à côte sans opérateur entre eux**, ce
+ * qu'aucune expression arithmétique ne peut contenir. `agilite / 2 + melee` n'en
+ * a pas ; « une demi-caractéristique » en a un dès son deuxième mot. Une liste
+ * de mots vides aurait vieilli avec la langue du corpus ; celui-ci vaut pour
+ * toutes.
+ *
+ * La notation de dés part d'abord, pour la raison qui vaut déjà dans
+ * `champsInvoques` : `1d10` n'est pas un champ, et le lire comme tel ferait
+ * crier sur une formule valide.
+ */
+export function estUnePhrase(formule: string): boolean {
+    const sansDes = formule.replace(/\b\d*d\d+\b/gi, ' ');
+    return /[\p{L}_][\p{L}\p{N}_]*\s+[\p{L}_]/u.test(sansDes);
+}
+
+/**
  * Tout ce qui, dans ce pilote, ne se raccorde à rien.
  *
  * Rend une liste vide quand tout se tient. N'exige **pas** que le pilote soit
@@ -161,8 +193,43 @@ export function controlerLePilote(
     const idsDeSections = new Set(sections.map(s => s.id));
     const champsParSection = new Map(sections.map(s => [s.id, new Set((s.fields ?? []).map(f => f.id))]));
     const tousLesChamps = new Set(sections.flatMap(s => (s.fields ?? []).map(f => f.id)));
+    /**
+     * Les champs **tels que le moteur les reconnaît** — sans casse, sans accents.
+     *
+     * **Le contrôle était plus sévère que le jeu**, relevé le 2026-08-21 sur
+     * Rêves de Dragons : il reprochait à `(Taille + Constitution) / 2` d'invoquer
+     * « Taille », que `valeurDuChamp` retrouve pourtant sans hésiter sur un champ
+     * `taille`. *Un contrôle qui condamne ce qui marche apprend à ne plus être
+     * lu* — c'est la règle du 2026-08-17, appliquée cette fois à la casse et non
+     * à la découpe.
+     */
+    const champsReconnus = new Map(
+        sections.flatMap(s => (s.fields ?? []).map(f => [clefDeChamp(f.id), f.id])),
+    );
+    /**
+     * Les champs retrouvés par leur LIBELLÉ, pour pouvoir nommer le bon.
+     *
+     * Quand rien ne correspond, le message disait seulement « n'est un champ
+     * d'aucune section » — et le meneur devait deviner par quoi remplacer. Or
+     * l'outil le sait : une fiche qui porte un champ `carac_taille` intitulé
+     * « Taille » répond exactement à la question posée. Même geste que la
+     * suggestion déjà rendue sur les `sectionId`.
+     */
+    const champsParLibelle = new Map(
+        sections.flatMap(s => (s.fields ?? []).map(f => [clefDeChamp(f.label ?? ''), f.id])),
+    );
     /** Le type déclaré de chaque champ — une formule ne s'évalue que sur des nombres. */
     const typeDuChamp = new Map(sections.flatMap(s => (s.fields ?? []).map(f => [f.id, f.type as string])));
+
+    /** L'identifiant réel derrière un nom invoqué, ou `null`. */
+    const champInvoque = (nom: string): string | null =>
+        champsReconnus.get(clefDeChamp(nom)) ?? null;
+
+    /** Ce que la fiche propose de plus proche, quand elle propose quelque chose. */
+    const suggestionDeChamp = (nom: string): string => {
+        const parLibelle = champsParLibelle.get(clefDeChamp(nom));
+        return parLibelle ? ` La fiche porte « ${nom} » sous l'identifiant « ${parLibelle} ».` : '';
+    };
     const ressources = new Set((driver.ressourcesDeTable ?? []).map(r => r.id));
 
     /*
@@ -424,12 +491,36 @@ export function controlerLePilote(
         const { section } = sectionDeLaComposante(sections as SheetSection[], composante);
         erreur(
             `${ou}[${i}].sectionId`,
-            `« ${composante.sectionId} » n'est pas une section de la fiche : le joueur n'aurait ` +
-            'nulle part où choisir sa ' + composante.label.toLowerCase() + '.'
+            /*
+              **Le label se cite, il ne se décline pas.** Le message écrivait
+              « nulle part où choisir sa » suivi du label en minuscules, ce qui
+              donnait *« nulle part où choisir sa état général »* sur Rêves de
+              Dragons le 2026-08-21. Un accord grammatical demande un genre que
+              rien ici ne connaît ; le citer entre guillemets n'en demande aucun,
+              et rend au passage le label tel que le pilote le porte.
+            */
+            `« ${composante.sectionId} » n'est pas une section de la fiche : le joueur n'aurait `
+            + `nulle part où choisir « ${composante.label} ».`
             + (section
                 ? ` La fiche nomme « ${section.label || section.id} » (${section.id}) — c'est `
                   + 'sans doute elle.'
-                : ''),
+                /*
+                  **Quand RIEN ne ressemble, le remède n'est pas de chercher
+                  mieux : c'est souvent qu'il ne fallait pas d'entrée du tout.**
+
+                  Relevé sur Rêves de Dragons le 2026-08-21. Le modèle a créé une
+                  composante « Les difficultés » et une « Fonctionnement » —
+                  deux titres de chapitre du livre — parce que la règle du jeu
+                  fait bel et bien s'ajouter une difficulté et un malus d'état
+                  général. Ce sont des valeurs qui s'additionnent, mais **aucune
+                  des deux ne se lit sur la fiche du joueur** : la difficulté est
+                  fixée par le meneur (`jet.difficulte`), le malus se calcule sur
+                  les jauges. Sans cette phrase, le meneur part chercher une
+                  section qui n'a aucune raison d'exister.
+                */
+                : ' Aucune section ne lui ressemble. Si cette valeur ne se lit pas sur la fiche '
+                  + "du joueur — une difficulté que le meneur fixe, un malus qui se calcule —, "
+                  + "c'est l'entrée elle-même qui est de trop."),
         );
     }));
 
@@ -539,12 +630,29 @@ export function controlerLePilote(
         erreur('combat.initiativeSort', `« ${String(tri)} » n'est ni « asc » ni « desc ».`);
     }
 
+    /*
+      **Une phrase se reproche UNE FOIS.** Sans ce garde, une règle rédigée
+      produit un reproche par mot : vingt lignes rouges pour un seul défaut,
+      relevé sur Rêves de Dragons le 2026-08-21. Et le reproche par mot est
+      trompeur autant que long — il envoie chercher un champ nommé « une »,
+      alors que le défaut est que rien ici n'est une formule.
+    */
     const formule = driver.combat?.initiativeFormula ?? '';
-    for (const champ of champsInvoques(formule)) {
-        if (!tousLesChamps.has(champ)) {
+    if (formule.trim() && estUnePhrase(formule)) {
+        erreur(
+            'combat.initiativeFormula',
+            `« ${formule} » est une phrase, pas une formule. Attendu une expression sur les `
+            + 'identifiants de champs de la fiche — « agilite / 2 + melee + 1d6 ». Telle quelle, le '
+            + "bouton « Jet Système » s'affiche et le jet part quand même, sur des valeurs que "
+            + 'personne ne peut fournir.',
+        );
+    } else {
+        for (const champ of champsInvoques(formule)) {
+            if (champInvoque(champ)) continue;
             erreur(
                 'combat.initiativeFormula',
-                `La formule « ${formule} » invoque « ${champ} », qui n'est un champ d'aucune section.`,
+                `La formule « ${formule} » invoque « ${champ} », qui n'est un champ d'aucune `
+                + `section.${suggestionDeChamp(champ)}`,
             );
         }
     }
@@ -557,12 +665,25 @@ export function controlerLePilote(
       et pour la même raison.
     */
     const formuleDeSante = driver.combat?.santeDeDepart ?? '';
-    for (const champ of champsInvoques(formuleDeSante)) {
-        if (!tousLesChamps.has(champ)) {
+    // Même garde que l'initiative : une règle rédigée crierait ici autant de
+    // fois qu'elle a de mots, et pour la même raison inutile.
+    const santeEstUnePhrase = !!formuleDeSante.trim() && estUnePhrase(formuleDeSante);
+    if (santeEstUnePhrase) {
+        erreur(
+            'combat.santeDeDepart',
+            `« ${formuleDeSante} » est une phrase, pas une formule. Attendu une expression sur `
+            + "les identifiants de champs de la fiche — « (taille + constitution) / 2 ». Telle "
+            + "quelle, elle ne s'évaluera jamais et la santé de départ restera sans effet.",
+        );
+    }
+    for (const champ of santeEstUnePhrase ? [] : champsInvoques(formuleDeSante)) {
+        const reel = champInvoque(champ);
+        if (!reel) {
             erreur(
                 'combat.santeDeDepart',
-                `La santé de départ « ${formuleDeSante} » invoque « ${champ} », qui n'est un champ ` +
-                "d'aucune section de la fiche : chaque personnage naîtrait au minimum.",
+                `La santé de départ « ${formuleDeSante} » invoque « ${champ} », qui n'est un champ `
+                + "d'aucune section de la fiche : chaque personnage naîtrait au minimum."
+                + suggestionDeChamp(champ),
             );
             continue;
         }
@@ -582,7 +703,7 @@ export function controlerLePilote(
           Le type se lit sur la fiche, donc le contrôle peut trancher ici plutôt
           que d'attendre la première création de personnage.
         */
-        const type = typeDuChamp.get(champ);
+        const type = typeDuChamp.get(reel);
         if (type && !TYPES_NUMERIQUES.has(type)) {
             erreur(
                 'combat.santeDeDepart',

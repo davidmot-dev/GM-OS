@@ -8,7 +8,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { tousLesPilotes } from '../store/tousLesPilotes';
 import { ficheNeuve } from '../logic/ficheNeuve';
 import { horlogeDeDefaite } from '../../combat/logic/TacheDeDefaite';
-import { santeDeDepart } from '../../combat/logic/SanteDuCombattant';
+import { santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
 
 export const AddCharacterForm: React.FC = () => {
@@ -83,11 +83,8 @@ export const AddCharacterForm: React.FC = () => {
         const valeurs = ficheNeuve(gabarit);
         const depart = santeDeDepart(
             jeuChoisi?.combat?.santeDeDepart,
-            champ => {
-                const brut = valeurs[champ];
-                const n = typeof brut === 'number' ? brut : Number(brut);
-                return Number.isFinite(n) ? n : undefined;
-            },
+            // Même lecture que partout ailleurs : voir `valeurDuChamp`.
+            champ => valeurDuChamp(valeurs, champ),
         ) ?? 10;
 
         /*

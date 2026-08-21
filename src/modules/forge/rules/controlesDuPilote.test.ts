@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { champsInvoques, controlerLePilote } from './controlesDuPilote';
+import { champsInvoques, controlerLePilote, estUnePhrase } from './controlesDuPilote';
 import { GROUPES } from './GroupesDeChamps';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -29,6 +29,33 @@ const fiche: Partial<SheetTemplate> = {
         { id: 'jauges', label: 'Jauges', fields: [{ id: 'determination', label: 'Détermination', type: 'number' }] },
     ] as SheetTemplate['sections'],
 };
+
+/**
+ * **Le test est structurel, pas lexical** : deux identifiants côte à côte sans
+ * opérateur entre eux, ce qu'aucune expression arithmétique ne peut contenir.
+ * Une liste de mots vides français aurait vieilli avec la langue du corpus.
+ */
+describe('reconnaître une phrase déguisée en formule', () => {
+    it('les vraies formules passent, quelle que soit leur forme', () => {
+        for (const bonne of [
+            'dex', 'dex + int', '1d10', 'agilite / 2 + melee + 1d6',
+            '(dexterite + reflexes) / 2', 'dé_de_vie + 8', '',
+        ]) {
+            expect(estUnePhrase(bonne), bonne).toBe(false);
+        }
+    });
+
+    it('les phrases sont reconnues sur leur structure, pas sur leurs mots', () => {
+        for (const mauvaise of [
+            'une demi-caractéristique plus le niveau de la compétence',
+            'la moyenne de la taille et de la constitution',
+            // Anglais : la règle ne connaît aucune langue, seulement la syntaxe.
+            'half your agility plus your melee skill',
+        ]) {
+            expect(estUnePhrase(mauvaise), mauvaise).toBe(true);
+        }
+    });
+});
 
 describe('l\'étalon passe les contrôles', () => {
     it('le pilote Dune de référence ne produit aucun constat', () => {
@@ -63,6 +90,35 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats.map(c => c.ou)).toEqual(['jet.seuil[0].sectionId']);
     });
 
+    /**
+     * **Deux défauts du même message, relevés sur Rêves de Dragons le
+     * 2026-08-21.** Il écrivait « nulle part où choisir sa » suivi du label —
+     * donc *« sa état général »* — et, quand aucune section ne ressemblait, il
+     * s'arrêtait là. Or c'est précisément ce cas qui appelle le seul conseil
+     * utile : la composante « Les difficultés » n'avait pas de section parce
+     * qu'elle n'aurait pas dû exister.
+     */
+    it('le message cite le label sans l\'accorder, et dit quoi faire quand rien ne ressemble', () => {
+        const constats = controlerLePilote(
+            { jet: { seuil: [{ id: 'etat', label: 'État général', sectionId: 'Fonctionnement' }] } } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats[0].message).toContain('choisir « État général »');
+        expect(constats[0].message).not.toContain('sa état');
+        expect(constats[0].message).toContain("c'est l'entrée elle-même qui est de trop");
+    });
+
+    it('mais quand une section ressemble, c\'est elle qu\'on propose', () => {
+        const constats = controlerLePilote(
+            { jet: { seuil: [{ id: 'competence', label: 'Compétence', sectionId: 'Les compétences' }] } } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats[0].message).toContain('(competences)');
+        expect(constats[0].message).not.toContain('de trop');
+    });
+
     it('une réserve qui paie les dés sans exister', () => {
         const constats = controlerLePilote(
             { dice: { engine: '2d20' }, jet: { seuil: [], reserve: { base: 2, max: 5, faces: 20, ressource: 'impulsion' } } } as unknown as Partial<GameDriver>,
@@ -78,6 +134,42 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         );
         expect(constats).toHaveLength(2);
         expect(constats.every(c => c.ou === 'combat.initiativeFormula')).toBe(true);
+    });
+
+    /**
+     * **Relevé par David le 2026-08-21 sur Rêves de Dragons.** La dérivation a
+     * rendu la règle d'initiative **rédigée en français**, et le contrôle a crié
+     * une fois par mot : vingt lignes rouges pour un seul défaut, sur un écran
+     * qui en comptait vingt-cinq. *Un contrôle qui répète vingt fois la même
+     * chose ne se lit pas mieux qu'un contrôle absent.*
+     */
+    it('une règle rédigée ne produit qu\'UN reproche, et il dit lequel', () => {
+        const phrase = '(une demi-caractéristique concernée (arrondie à l\'inférieur) plus le '
+            + 'niveau de la compétence) + un dé à six faces - malus d\'état général';
+
+        const constats = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: phrase } } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats).toHaveLength(1);
+        expect(constats[0].ou).toBe('combat.initiativeFormula');
+        expect(constats[0].message).toContain('est une phrase, pas une formule');
+    });
+
+    it('la santé de départ rédigée se reproche une fois elle aussi', () => {
+        const constats = controlerLePilote(
+            {
+                combat: {
+                    statsToTrack: [], initiativeFormula: '',
+                    santeDeDepart: 'la moyenne de la taille et de la constitution',
+                },
+            } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats).toHaveLength(1);
+        expect(constats[0].ou).toBe('combat.santeDeDepart');
     });
 
     it('mais une formule à dés purs ne déclenche rien', () => {
