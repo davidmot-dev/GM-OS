@@ -214,8 +214,29 @@ export function extraireEntrees(lignes: readonly string[]): EntreeIndex[] {
  * quelques mots. On préfère alors ne rien rendre, parce qu'*une entrée d'index
  * fausse est pire qu'une entrée absente* — elle donne une page à un titre qui
  * n'est pas là, et le résolveur la servira avec le même aplomb qu'une vraie.
+ *
+ * **Cent, et le chiffre est mesuré, pas choisi.** Il valait quarante tant que le
+ * repli n'acceptait que la pagination par virgules ; la forme « sommaire nu »
+ * ajoutée le 2026-08-21 a fait monter le bruit du **livre complet d'Alien** de
+ * neuf à trente-huit entrées — deux de moins que le seuil. Un garde-fou à deux
+ * unités près n'en est pas un.
+ *
+ * Les mesures du 2026-08-21, en dessous et au-dessus :
+ *
+ * | Fichier | Rendement du repli |
+ * |---|---|
+ * | `Blade Runner_Index.md` | 2 |
+ * | `Dune_Index.md` | 3 |
+ * | `ALIEN_Index.md` | 10 |
+ * | `Dune_TOC.md` | 23 |
+ * | `ALIEN_le_jeu_de_rôle.docx` — un livre entier | **38** |
+ * | `Reve_de_Dragon_TOC.md` | **265** |
+ * | `Reve_de_Dragon_2.3.1-485-498.md` | **279** |
+ *
+ * L'écart est net : un vrai index rend des centaines d'entrées, un livre pris
+ * pour un index en rend quelques dizaines. Cent tombe au milieu du vide.
  */
-const DENSITE_MINIMALE = 40;
+const DENSITE_MINIMALE = 100;
 
 /**
  * Cinquième forme : **l'index alphabétique nu**, `Titre 80, 88, 91-94`.
@@ -286,8 +307,29 @@ export function extraireIndexNu(lignes: readonly string[]): EntreeIndex[] {
     const porteUnePagination = (ligne: string): boolean =>
         /\b\d{1,3}\s*(,\s*\d{1,3}|[-–]\s*\d{1,3})/.test(ligne);
 
+    /**
+     * La ligne est-elle un sommaire nu — **`Taille 18`, et rien après** ?
+     *
+     * **La forme que la règle ci-dessus laissait tomber**, relevé par David le
+     * 2026-08-21 : il a déposé un `Reve_de_Dragon_TOC.md` de 287 lignes, une
+     * entrée par ligne, un seul numéro chacune. La pagination par virgules est
+     * la signature d'un index *alphabétique* ; un sommaire, lui, n'en a pas —
+     * chaque titre y renvoie à une page et une seule.
+     *
+     * **Et cette forme-ci est PLUS sûre que l'autre, pas moins.** Ce qui la
+     * distingue d'une phrase n'est pas le contenu mais la fin : un sommaire se
+     * termine sur son numéro, une phrase se termine sur un mot ou un point. La
+     * ligne doit donc être courte ET s'achever sur ses chiffres — deux
+     * conditions qu'un paragraphe ne réunit à peu près jamais, et que la densité
+     * minimale achève de garantir.
+     */
+    const finitParSaPage = (ligne: string): boolean => {
+        const t = ligne.trim();
+        return t.length <= 80 && /\s\d{1,3}$/.test(t);
+    };
+
     for (const ligne of lignes) {
-        if (!porteUnePagination(ligne)) continue;
+        if (!porteUnePagination(ligne) && !finitParSaPage(ligne)) continue;
 
         for (const m of ligne.matchAll(/([A-Za-zÀ-ÿ][^\d|<>]{1,59}?)\s+(\d{1,3})(?!\d)/g)) {
             if (!estUnTitreCourt(m[1])) continue;

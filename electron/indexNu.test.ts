@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
-import { chargerIndex, creerResolveur, extraireEntrees, extraireIndexNu } from './bookIndex';
+import { chargerIndex, creerResolveur, extraireIndexNu, paragraphesDocx } from './bookIndex';
 
 const DOCS = path.resolve(process.cwd(), 'docs');
 
@@ -26,10 +26,11 @@ describe('ce que le repli refuse', () => {
         expect(extraireIndexNu(['Le xénomorphe attaque avec 3 dés supplémentaires.'])).toEqual([]);
     });
 
-    it('il faut une SUITE de pages, pas un nombre isolé', () => {
-        // La virgule ou la plage est la signature d'une pagination. Sans elle,
-        // « quelque chose 12 » est une phrase où un nombre est tombé.
-        expect(extraireIndexNu(['Marche 80'])).toEqual([]);
+    it('il faut une SUITE de pages, ou une ligne qui finit sur la sienne', () => {
+        // La virgule ou la plage est la signature d'un index alphabétique ;
+        // s'achever sur son numéro est celle d'un sommaire. Au milieu d'une
+        // phrase, un nombre isolé n'est ni l'un ni l'autre.
+        expect(extraireIndexNu(['Marche 80 puis le groupe repart vers la cité.'])).toEqual([]);
         expect(extraireIndexNu(['Marche 80, 88'])).toEqual([{ titre: 'Marche', page: 80 }]);
         expect(extraireIndexNu(['Marche 80 -88'])).toEqual([{ titre: 'Marche', page: 80 }]);
     });
@@ -112,47 +113,67 @@ describe('la cinquième forme ne dégrade aucun corpus', () => {
         expect(chargerIndex(DOCS, systeme as string).entrees.length).toBe(attendu);
     });
 
-    it('Rêves de Dragons passe de rien à un index utilisable', () => {
+    it('Rêves de Dragons passe de rien à ses deux fichiers chargés', () => {
         const livre = chargerIndex(DOCS, 'reves de dragons');
 
-        // 217 le 2026-08-21, contre 0 avant le repli. Les quatre formes balisées
-        // n'en tirent toujours RIEN : c'est lui qui travaille, et lui seul.
-        expect(livre.entrees.length).toBe(217);
-        expect(livre.sources).toContain('Reve_de_Dragon_2.3.1-485-498.md');
+        // 544 le 2026-08-21, contre 0 avant le repli — l'index alphabétique et
+        // le sommaire. Les quatre formes balisées n'en tirent toujours RIEN :
+        // c'est le repli qui travaille, et lui seul.
+        expect(livre.entrees.length).toBe(544);
+        expect(livre.sources).toEqual([
+            'Reve_de_Dragon_2.3.1-485-498.md',
+            'Reve_de_Dragon_TOC.md',
+        ]);
     });
 
     it('et ses entrées se résolvent vraiment', () => {
         /**
-         * Le compte ne prouve rien à lui seul : un index de 217 fragments
-         * illisibles aurait le même. Ce qui compte est qu'un titre cité par une
+         * Le compte ne prouve rien à lui seul : 544 fragments illisibles
+         * l'atteindraient aussi. Ce qui compte est qu'un titre cité par une
          * fiche retrouve sa page.
+         *
+         * Les trois premiers viennent de l'index alphabétique, les trois
+         * suivants du sommaire — et ce sont ceux-là que les fiches v3 citent,
+         * puisqu'elles nomment des sections et non des termes.
          */
         const resolveur = creerResolveur(chargerIndex(DOCS, 'reves de dragons'));
 
-        for (const [titre, page] of [['Initiative', 120], ['Maladresse', 81], ['Éthylisme', 51]] as const) {
+        const attendus = [
+            ['Initiative', 120], ['Maladresse', 81], ['Éthylisme', 51],
+            ['Le round de combat', 120], ['La fatigue', 88], ['Les compétences', 21],
+        ] as const;
+
+        for (const [titre, page] of attendus) {
             const r = resolveur.resoudre(titre);
             expect(r.statut, titre).toBe('exact');
             expect(r.page, titre).toBe(page);
         }
     });
 
-    it('le seuil de densité a de la marge : aucun livre n\'atteint la moitié', () => {
+    it('le seuil de densité garde sa marge, y compris sur un livre entier', () => {
         /**
-         * Ce qui rend le repli sûr n'est pas sa finesse, c'est ce seuil. On
-         * mesure donc ce qu'il aurait laissé passer sur les fichiers des trois
-         * corpus sains — 9 au plus, pour un seuil de 40.
+         * **Ce qui rend le repli sûr n'est pas sa finesse, c'est ce seuil** — et
+         * c'est ici qu'on le surveille. La forme « sommaire nu » ajoutée le
+         * 2026-08-21 a fait passer le bruit du LIVRE COMPLET D'ALIEN de neuf à
+         * trente-huit entrées, contre un seuil qui valait alors quarante. Deux
+         * unités de marge n'en sont pas.
+         *
+         * Le seuil est monté à cent, et ce test tient l'écart : rien de ce qui
+         * n'est pas un index ne doit approcher la moitié.
          */
-        const sains = [
+        const pasDesIndex = [
             ['alien', 'ALIEN_Index.md'],
             ['blade-runner', 'Blade Runner_Index.md'],
             ['dune', 'Dune_TOC.md'],
+            ['alien', 'ALIEN_le_jeu_de_rôle.docx'],
         ] as const;
 
-        for (const [systeme, fichier] of sains) {
+        for (const [systeme, fichier] of pasDesIndex) {
             const chemin = path.join(DOCS, 'systems', systeme, 'index', fichier);
-            const lignes = fs.readFileSync(chemin, 'utf8').split(/\r?\n/);
-            expect(extraireEntrees(lignes).length, fichier).toBeGreaterThan(0);
-            expect(extraireIndexNu(lignes).length, `${fichier} — bruit du repli`).toBeLessThan(20);
+            const lignes = fichier.endsWith('.docx')
+                ? paragraphesDocx(chemin)
+                : fs.readFileSync(chemin, 'utf8').split(/\r?\n/);
+            expect(extraireIndexNu(lignes).length, `${fichier} — bruit du repli`).toBeLessThan(50);
         }
     });
 });
