@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useTranslation } from 'react-i18next';
 import { 
-    Search, BookOpen, Brain, History, Scroll, 
+    Search, History, Scroll, 
     Zap, Sparkles, FileText, X, ChevronRight,
     SearchX, Loader2, Plus, Globe, Edit2, Hammer, CheckCircle2, Layers, RefreshCw
 } from 'lucide-react';
@@ -90,7 +90,6 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
     const [allDocs, setAllDocs] = useState<DocEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeFilter, setActiveFilter] = useState<'all' | 'rule' | 'memory' | 'scenario'>('all');
     const [selectedCard, setSelectedCard] = useState<RuleCard | null>(null);
     const [readingContent, setReadingContent] = useState<string | null>(null);
     const [isReading, setIsReading] = useState(false);
@@ -183,26 +182,35 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
         return allDocs.filter(doc => {
             if (doc.type !== 'file') return false;
             
-            const name = doc.name.toLowerCase();
-            const matchesSearch = name.includes(searchTerm.toLowerCase());
-            
-            // Implement category filtering based on filename or content patterns
-            // In GM-OS, Forge-generated rules often have specific prefixes or keywords
-            let matchesFilter = true;
-            if (activeFilter !== 'all') {
-                if (activeFilter === 'rule') {
-                    // For example, Forge rules often contain 'rule' or specific markers
-                    matchesFilter = name.includes('rule') || name.includes('regle') || true; // Fallback to true if we don't have metadata yet
-                } else if (activeFilter === 'memory') {
-                    matchesFilter = name.includes('memory') || name.includes('souvenir') || name.includes('lore');
-                } else if (activeFilter === 'scenario') {
-                    matchesFilter = name.includes('scenario') || name.includes('intrigue');
-                }
-            }
-            
-            return matchesSearch && matchesFilter;
+            /*
+              **Il n'y a plus de filtre par catégorie, et c'est le correctif.**
+
+              Quatre onglets — Toutes les fiches, Règles Forgées, Souvenirs,
+              Scénarios — filtraient sur le NOM DE FICHIER : « souvenir » ou
+              « lore » pour l'un, « scenario » ou « intrigue » pour l'autre. La
+              Forge nomme ses fiches d'après leur sujet, « combat-spatial.md »,
+              « sante-et-blessures.md » : **aucune ne pouvait matcher**, et les
+              deux onglets étaient vides par construction. David, le 2026-08-21 :
+              *« je ne sais pas remplir Souvenirs et Scénarios »* — il n'y avait
+              pas de réponse à sa question.
+
+              Le troisième se terminait par `|| true`, sous le commentaire
+              « fallback if we don't have metadata yet » : il rendait donc
+              exactement la même liste que le premier. Et le champ `category`,
+              typé sur quatre valeurs, valait `'rule'` en dur partout.
+
+              **Et le `|| true` avait raison sans le savoir.** Cet écran lit
+              `docs/systems/<corpus>/rules/`, dont le contenu est par
+              construction des fiches de règles — `drafts/` et `rules-v1/` sont
+              ailleurs. Il n'y a pas de sous-catégorie à distinguer : la
+              distinction n'était pas mal implémentée, elle n'existe pas.
+
+              *Un onglet qui ne peut rien afficher est pire qu'absent* : il fait
+              chercher comment le remplir. Reste la recherche, qui, elle, marche.
+            */
+            return doc.name.toLowerCase().includes(searchTerm.toLowerCase());
         });
-    }, [allDocs, searchTerm, activeFilter]);
+    }, [allDocs, searchTerm]);
 
     const handleReadCard = async (doc: DocEntry) => {
         setIsReading(true);
@@ -332,13 +340,6 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
         }
     };
 
-    const filters = [
-        { id: 'all', label: t('modules:session.forge_module.workshop_viewer.filter_all'), icon: BookOpen },
-        { id: 'rule', label: t('modules:session.forge_module.workshop_viewer.filter_rules'), icon: Zap },
-        { id: 'memory', label: t('modules:session.forge_module.workshop_viewer.filter_memories'), icon: Brain },
-        { id: 'scenario', label: t('modules:session.forge_module.workshop_viewer.filter_scenarios'), icon: Scroll },
-    ];
-
     if (loading) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center p-20 text-app-text/40">
@@ -362,23 +363,6 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="bg-app-bg/40 border border-white/5 rounded-2xl pl-12 pr-6 py-3 text-sm font-bold w-80 focus:ring-2 focus:ring-accent/20 focus:border-accent/40 outline-none transition-all"
                         />
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-black/20 p-1 rounded-2xl border border-white/5">
-                        {filters.map(f => (
-                            <button
-                                key={f.id}
-                                onClick={() => setActiveFilter(f.id as any)}
-                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all ${
-                                    activeFilter === f.id 
-                                        ? 'bg-accent text-white shadow-glow-accent/20' 
-                                        : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/5'
-                                }`}
-                            >
-                                <f.icon size={14} />
-                                {f.label}
-                            </button>
-                        ))}
                     </div>
                 </div>
 

@@ -1482,10 +1482,6 @@
         "save": "Save",
         "markdown_editor": "Markdown Editor",
         "editor_placeholder": "Write your rule here in Markdown...",
-        "filter_all": "All Cards",
-        "filter_rules": "Forged Rules",
-        "filter_memories": "Memories",
-        "filter_scenarios": "Scenarios",
         "save_success": "Rule saved successfully.",
         "save_error": "Error while saving.",
         "critical_save_error": "A critical error occurred while saving.",
@@ -1714,7 +1710,8 @@
         "combat": "Combat",
         "map": "Map",
         "project": "Project"
-      }
+      },
+      "change_type": "Change the type: NPC, Monster, Player"
     },
     "wiki_form": {
       "title_label": "Article Title",

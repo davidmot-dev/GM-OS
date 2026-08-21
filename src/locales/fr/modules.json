@@ -1511,10 +1511,6 @@
         "save": "Sauvegarder",
         "markdown_editor": "Éditeur Markdown",
         "editor_placeholder": "Écrivez votre règle ici en Markdown...",
-        "filter_all": "Toutes les fiches",
-        "filter_rules": "Règles Forgées",
-        "filter_memories": "Souvenirs",
-        "filter_scenarios": "Scénarios",
         "save_success": "Règle sauvegardée avec succès.",
         "save_error": "Erreur lors de la sauvegarde.",
         "critical_save_error": "Une erreur critique est survenue lors de la sauvegarde.",
@@ -1743,7 +1739,8 @@
         "combat": "Combat",
         "map": "Carte",
         "project": "Projeter"
-      }
+      },
+      "change_type": "Changer le type : PNJ, Monstre, Joueur"
     },
     "wiki_form": {
       "title_label": "Titre de l'article",
