@@ -2,6 +2,7 @@
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useObsidianStore } from '../session/useObsidianStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
+import { resoudreCorpus } from '../../../electron/corpusSysteme';
 
 export type DocEntry = {
   name: string;
@@ -66,7 +67,46 @@ export class RAGService {
     // On envoie les deux : le moteur essaie l'identifiant d'abord.
     const systemId = activeCampaign?.system || 'unknown';
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...osStore.customSheetTemplates];
-    const systemName = allTemplates.find(t => t.id === systemId)?.name;
+
+    /*
+      **Le pilote SAIT où vit son corpus, et le moteur l'ignorait.**
+
+      Une campagne porte `system: 'custom-1777730495114'` — la Forge nomme ses
+      pilotes de l'horodatage de leur naissance. Le moteur cherchait donc un
+      dossier `docs/systems/custom-1777730495114`, qui n'existe pas, et retombait
+      sur le nom affiché… qu'il allait chercher dans les GABARITS DE FICHE, où un
+      pilote forgé n'a rien à faire. Les deux échouaient, et **aucune fiche du
+      corpus n'a jamais été retenue pour une campagne forgée.**
+
+      Rien ne le signalait : l'Oracle répondait de sa propre mémoire, avec
+      aplomb, et la réponse était souvent plausible. *Une recherche qui n'atteint
+      rien produit tout de même une réponse confiante.*
+
+      `resoudreCorpus` existe depuis le 2026-08-10 et porte l'ordre d'autorité
+      complet — chemin de campagne, `corpusId` déclaré, `ragPath` hérité,
+      identifiant, nom affiché. Quatrième champ déclaré qu'un moteur n'allait pas
+      lire, et le plus coûteux : il coupait l'Oracle de tout le corpus.
+    */
+    const pilote = osStore.customGameDrivers?.find(d => d.id === systemId);
+    const systemName = pilote?.name ?? allTemplates.find(t => t.id === systemId)?.name;
+
+    /*
+      **`listSystems` et non `listDir`** : le second ne rend que des FICHIERS
+      (`e.isFile()`), donc il aurait rendu une liste vide et le rapprochement par
+      nom affiché serait resté impossible — un correctif qui aurait eu l'air de
+      marcher. Le premier existe précisément pour ça.
+    */
+    const dossiersSystemes = await window.appBridge?.ai?.listSystems?.()
+        .catch(() => [] as string[]) ?? [];
+
+    const corpus = resoudreCorpus({
+        systemId,
+        systemName,
+        systemPath: activeCampaign?.systemPath,
+        corpusId: pilote?.corpusId,
+        ragPath: pilote?.ragPath,
+        dossiersConnus: dossiersSystemes,
+    });
     const campaignName = activeCampaign?.name || 'unknown';
 
     if (!window.appBridge?.ai?.searchContext) {
@@ -81,7 +121,12 @@ export class RAGService {
             // « Chemin des Règles » et « Chemin des Notes » de la fiche de campagne.
             // Ils étaient saisissables et enregistrés depuis toujours, mais leur
             // unique lecteur était resté en commentaire : rien ne les lisait.
-            systemPath: activeCampaign?.systemPath,
+            /*
+              **Le chemin déclaré reste souverain ; sinon, celui qu'on a résolu.**
+              `resoudreCorpus` le met déjà en tête de son ordre d'autorité, donc
+              lui repasser sa propre réponse ne peut pas contredire le meneur.
+            */
+            systemPath: corpus.racine,
             campaignPath: activeCampaign?.campaignPath,
         });
 
