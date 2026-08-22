@@ -20,6 +20,9 @@ import { useBrainstormStore } from '../rules/store/useBrainstormStore';
 import { corpusChoisi, corpusPourNouveauSysteme, slug, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
 import { useForgeStore, type LacuneDuPilote } from '../store/useForgeStore';
 import { lireNature } from '../rules/familleDuCorpus';
+import {
+  declarationAffichee, fusionnerLaDeclaration, type DeclarationSaisie,
+} from '../rules/declarationDuCorpus';
 
 interface NotebookSource {
   id: string;
@@ -183,6 +186,14 @@ const ForgeDashboard: React.FC = () => {
    * fait* — le 2026-08-10, il a envoyé une forge Dune vers Blade Runner.
    */
   const [famillesConnues, setFamillesConnues] = useState<string[]>([]);
+  /**
+   * De quoi relire la liste après une déclaration.
+   *
+   * **Sans elle, on aurait déclaré une famille sans la voir apparaître** — et
+   * la seule façon de le vérifier aurait été de recharger la fenêtre, ce que
+   * l'écran existe précisément pour éviter.
+   */
+  const [relectureDesFamilles, setRelectureDesFamilles] = useState(0);
   useEffect(() => {
     let annule = false;
     (async () => {
@@ -194,7 +205,7 @@ const ForgeDashboard: React.FC = () => {
       if (!annule) setFamillesConnues(trouvees);
     })();
     return () => { annule = true; };
-  }, [dossiersSystemes]);
+  }, [dossiersSystemes, relectureDesFamilles]);
 
   /**
    * La langue déclarée par un corpus, lue à la demande.
@@ -205,6 +216,62 @@ const ForgeDashboard: React.FC = () => {
   const langueDuCorpus = async (dossier: string): Promise<string | undefined> => {
     const brut = await window.appBridge?.ai?.readDoc?.(`systems/${dossier}/corpus.json`).catch(() => null);
     return lireNature(brut)?.langue ?? i18n.language;
+  };
+
+  /**
+   * Ce que le corpus visé déclare de lui-même, et de quoi le changer.
+   *
+   * **Le réglage n'avait pas d'écran.** Un corpus dit sa nature, son moteur et
+   * sa langue dans `corpus.json` ; les trois se saisissaient à la main, dans un
+   * éditeur de texte, hors de l'application — l'un des deux restes « code » du
+   * corpus au § 5 de la réconciliation. *On répète qu'une valeur qu'on ne peut
+   * pas corriger à la main est une valeur qu'on subit ; celle-ci ne se
+   * corrigeait QUE à la main, ce qui revient au même.*
+   */
+  const [declaration, setDeclaration] = useState<DeclarationSaisie>({ nature: 'jeu', moteur: '', langue: '' });
+  /*
+    **On dépend de l'IDENTIFIANT, pas de l'objet.** `corpusVise` est recomposé à
+    chaque rendu : en dépendre relirait le fichier à chaque frappe de clavier
+    ailleurs dans l'écran.
+  */
+  const idDuCorpusVise = corpusVise?.id ?? null;
+  useEffect(() => {
+    let annule = false;
+    (async () => {
+      if (!idDuCorpusVise) return;
+      const brut = await window.appBridge?.ai?.readDoc?.(`systems/${idDuCorpusVise}/corpus.json`).catch(() => null);
+      if (!annule) setDeclaration(declarationAffichee(brut));
+    })();
+    return () => { annule = true; };
+  }, [idDuCorpusVise]);
+
+  /**
+   * Enregistre la déclaration, **sans perdre ce que le fichier portait déjà**.
+   *
+   * C'est la leçon du trousseau de clés : *retaper une clé détruisait les
+   * autres*, parce qu'on réécrivait le coffre entier depuis ce qu'un seul écran
+   * connaissait. On relit, on fusionne, on écrit.
+   */
+  const enregistrerLaDeclaration = async (saisie: DeclarationSaisie) => {
+    if (!corpusVise) return;
+    setDeclaration(saisie);
+
+    const chemin = `systems/${corpusVise.id}/corpus.json`;
+    const brut = await window.appBridge?.ai?.readDoc?.(chemin).catch(() => null);
+    const { json, erreur } = fusionnerLaDeclaration(brut, saisie);
+
+    if (erreur) {
+      gmToast(erreur);
+      return;
+    }
+    const ecrit = await window.appBridge?.ai?.writeDoc?.(chemin, json!).catch(() => false);
+    if (!ecrit) {
+      gmToast("La déclaration n'a pas pu être écrite sur le disque.");
+      return;
+    }
+    // La liste des socles se relit tout de suite : déclarer une famille sans la
+    // voir apparaître obligerait à recharger la fenêtre.
+    setRelectureDesFamilles(n => n + 1);
   };
 
   /**
@@ -984,6 +1051,79 @@ const ForgeDashboard: React.FC = () => {
                     <ChevronRight size={14} className="rotate-90" />
                   </div>
                 </div>
+
+                {/*
+                  **Ce que ce corpus déclare de lui-même.** Trois champs qui
+                  vivaient dans un fichier, hors de l'application : on ne devrait
+                  pas avoir à ouvrir un éditeur de texte pour dire qu'un SRD est
+                  un socle.
+
+                  Il n'apparaît qu'une fois le corpus choisi — régler la nature
+                  de « aucun corpus » n'a pas de sens, et un champ qui ne mord
+                  sur rien invite à croire qu'il a agi.
+                */}
+                {corpusVise && (
+                  <div className="flex flex-col gap-2 rounded-xl border border-white/10 bg-black/20 p-3">
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30">
+                      Ce corpus est
+                    </span>
+                    <div className="flex gap-2">
+                      {([
+                        { valeur: 'jeu' as const, libelle: 'Un jeu' },
+                        { valeur: 'famille' as const, libelle: 'Un socle commun' },
+                      ]).map(choix => (
+                        <button
+                          key={choix.valeur}
+                          onClick={() => void enregistrerLaDeclaration({ ...declaration, nature: choix.valeur })}
+                          className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                            declaration.nature === choix.valeur
+                              ? 'bg-purple-600 text-white'
+                              : 'bg-white/5 text-white/40 hover:bg-white/10'
+                          }`}
+                        >
+                          {choix.libelle}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      {/*
+                        Le moteur ne sert à personne AUJOURD'HUI — le socle se
+                        choisit à la main dans le menu ci-dessous. Il est ici
+                        parce que le fichier le documente, et le libellé le dit
+                        plutôt que de laisser croire qu'il agit.
+                      */}
+                      <label className="flex flex-col gap-1">
+                        <span className="text-[9px] uppercase tracking-widest text-white/25">
+                          Moteur (non lu)
+                        </span>
+                        <input
+                          value={declaration.moteur ?? ''}
+                          onChange={e => setDeclaration({ ...declaration, moteur: e.target.value })}
+                          onBlur={() => void enregistrerLaDeclaration(declaration)}
+                          placeholder="2d20, yze…"
+                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[11px] font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
+                        />
+                      </label>
+                      <label className="flex flex-col gap-1">
+                        <span className="text-[9px] uppercase tracking-widest text-white/25">
+                          Langue de forge
+                        </span>
+                        <input
+                          value={declaration.langue ?? ''}
+                          onChange={e => setDeclaration({ ...declaration, langue: e.target.value })}
+                          onBlur={() => void enregistrerLaDeclaration(declaration)}
+                          placeholder={i18n.language}
+                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[11px] font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
+                        />
+                      </label>
+                    </div>
+                    <p className="text-[9px] text-white/25 leading-relaxed">
+                      Un socle commun ne se forge pas en pilote : il sert à combler les sujets
+                      qu&apos;un corpus de jeu ne couvre pas. Vider un champ retire la déclaration.
+                    </p>
+                  </div>
+                )}
 
                 {/*
                   **Le socle commun, facultatif et désigné.** Il n'apparaît que
