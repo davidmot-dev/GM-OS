@@ -44,7 +44,7 @@ export class RAGService {
    * concurrentes se marcheraient dessus, et c'est pourquoi seul le chemin qui
    * les a demandées s'en sert.
    */
-  public dernieresSources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] = [];
+  public dernieresSources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] | undefined = [];
 
   public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();
@@ -91,6 +91,33 @@ export class RAGService {
           voyagent à part du texte parce qu'elles ne s'adressent pas au même
           lecteur : le texte va au modèle, la liste va au meneur.
         */
+        /*
+          **Le pont peut rendre l'ANCIENNE forme, et il faut le survivre.**
+
+          `electron/` ne se recharge pas avec Ctrl+R : après une modification du
+          processus principal, l'application tourne avec le nouveau renderer et
+          l'ancien moteur, qui rend une CHAÎNE au lieu d'un objet. Lire
+          `context.context` sur une chaîne donne `undefined` — donc **aucun
+          contexte du tout**, et l'Oracle répondait sans son corpus pendant que
+          l'écran annonçait « jugement de table » sur chaque question.
+
+          *Une incompatibilité de version qui se traduit par un silence est le
+          pire des deux mondes* : rien ne casse, tout se dégrade. On accepte donc
+          les deux formes, et on dit ce qui manque.
+        */
+        if (typeof context === 'string') {
+            console.warn(
+                '[RAG Service] Le pont a rendu l’ancienne forme (une chaîne) : '
+                + 'le processus principal n’a pas été redémarré. Le contexte est '
+                + 'utilisé, mais les sources restent inconnues.',
+            );
+            // **Inconnues, et non vides.** Une liste absente n'est pas une liste
+            // vide : la dire vide ferait annoncer « aucune source » à des
+            // réponses parfaitement sourcées.
+            this.dernieresSources = undefined;
+            return context || "";
+        }
+
         this.dernieresSources = context?.sources ?? [];
         return context?.context || "";
     } catch (error) {

@@ -190,26 +190,25 @@ const AIChatPanel: React.FC = () => {
         },
         activeGem,
         {},
-        (recues, venueDeLaFiche) => {
+        (recues, venueDeLaFiche, aCherche) => {
+          /*
+            **On n'affiche et on ne note QUE si l'on a cherché.**
+
+            En mode allégé, le RAG n'est pas appelé du tout : la liste arrive
+            vide parce qu'on n'a rien demandé, et non parce que rien n'a répondu.
+            L'écran lisait les deux pareil et annonçait « jugement de table » sur
+            chaque question — *une liste qu'on n'a pas remplie n'est pas une
+            liste qui n'a rien trouvé.*
+
+            Le verdict vient du service, qui seul sait s'il a cherché : le
+            recalculer ici était une seconde écriture de la même vérité.
+          */
+          if (!aCherche || !recues) return;
+
           setSources(recues);
           setFicheDirecte(venueDeLaFiche ?? null);
-          /*
-            **Le journal des lacunes se remplit ici, et sans rien demander.**
-            Décision du plan : *pas de pouces haut/bas* — à table, ils créent une
-            friction et ne sont jamais cliqués. Une question posée EST le signal ;
-            une question reformulée dans la minute en est un second, gratuit.
-
-            Noté au moment où les sources arrivent, avant même la réponse : ce
-            qu'on veut savoir est ce que la RECHERCHE a atteint, pas ce que le
-            modèle a fini par dire.
-          */
           useJournalDesLacunes.getState().noter(question, recues, systemeActif);
 
-          /*
-            **On ne cherche dans le livre QUE si aucune fiche n'a répondu.**
-            Quand une fiche répond, la référence n'ajoute rien et coûte une
-            ligne à l'écran ; quand rien ne répond, elle est tout ce qu'on a.
-          */
           const atteinte = atteinteDeLaRecherche(recues);
           setJugement(doitJuger(atteinte));
 

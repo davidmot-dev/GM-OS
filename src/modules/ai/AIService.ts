@@ -104,6 +104,16 @@ function identifierLaRequete(libelle?: string): { id: string; libelle: string } 
 export class AIService {
   private static instance: AIService;
 
+  /**
+   * A-t-on cherché dans le corpus au dernier appel ?
+   *
+   * **Faux en mode allégé**, où le RAG n'est pas appelé. Retenu ici plutôt que
+   * recalculé par l'écran : *deux écritures d'une même vérité finissent par en
+   * dire deux*, et celle de l'écran annonçait un jugement de table sur des
+   * questions qu'on n'avait jamais cherchées.
+   */
+  private aCherche = false;
+
   private constructor() {}
 
   /**
@@ -1039,7 +1049,7 @@ Use the names above verbatim. Do not invent a setting title.
      * vérifiée.*
      */
     onSources?: (
-      sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[],
+      sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] | undefined,
       /**
        * La fiche qui a répondu **seule**, sans qu'aucun modèle soit invoqué.
        *
@@ -1049,6 +1059,16 @@ Use the names above verbatim. Do not invent a setting title.
        * réponse que le modèle a écrite.
        */
       ficheDirecte?: string,
+      /**
+       * A-t-on RÉELLEMENT cherché dans le corpus ?
+       *
+       * **Faux en mode allégé**, où le RAG n'est pas appelé du tout. Sans cette
+       * distinction, l'écran lisait une liste vide comme « aucune source n'a
+       * répondu » et annonçait un jugement de table sur chaque question — alors
+       * qu'on n'avait simplement rien demandé. *Une liste qu'on n'a pas remplie
+       * n'est pas une liste qui n'a rien trouvé.*
+       */
+      aCherche?: boolean,
     ) => void,
   ): Promise<void> {
     const { activeProvider, configs, streamEnabled } = useAIStore.getState();
@@ -1057,7 +1077,7 @@ Use the names above verbatim. Do not invent a setting title.
     if (!streamEnabled || activeProvider !== 'ollama') {
        onStatusUpdate?.("Mode bloquant actif...");
        const resp = await this.generateText(prompt, undefined, gemId, ragOptions);
-       onSources?.(ragService.dernieresSources);
+       onSources?.(ragService.dernieresSources, undefined, this.aCherche);
        onToken(resp.text);
        return;
     }
@@ -1085,7 +1105,7 @@ Use the names above verbatim. Do not invent a setting title.
     if (fiche) {
         const contenu = await window.appBridge?.ai?.readDoc?.(fiche.path).catch(() => null);
         if (contenu) {
-            onSources?.(ragService.dernieresSources, fiche.path);
+            onSources?.(ragService.dernieresSources, fiche.path, this.aCherche);
             onStatusUpdate?.('');
             onToken(extraireLaRegle(contenu));
             return;
@@ -1175,7 +1195,14 @@ Use the names above verbatim. Do not invent a setting title.
       et *l'étiquette doit rester rare pour rester lue.*
     */
     const sources = ragService.dernieresSources;
-    const sansAucuneSource = !isLite && Array.isArray(sources) && sources.length === 0;
+    /*
+      **Un seul endroit décide, et il le dit.** Le panneau recalculait ce verdict
+      de son côté, sans savoir que le mode allégé n'appelle pas le RAG : il
+      annonçait donc « jugement de table » sur des questions qu'on n'avait jamais
+      cherchées. *Deux écritures d'une même vérité finissent par en dire deux.*
+    */
+    this.aCherche = !isLite;
+    const sansAucuneSource = this.aCherche && Array.isArray(sources) && sources.length === 0;
 
     const fullContext = assemblerLeContexte(ragContext, customContext, liveContext);
 
