@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Book, 
   PenTool, 
@@ -16,6 +16,7 @@ import { useSessionStore } from '../../../store/useSessionStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { marquerCommeRelue, marquerCommeSuspecte } from '../../forge/rules/marqueDeRelecture';
+import { regrouperLesLacunes, useJournalDesLacunes } from '../lacunes/useJournalDesLacunes';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -56,7 +57,17 @@ const AIChatPanel: React.FC = () => {
    * ce qui est faux — une fiche erronée produit une recherche réussie, une
    * citation confiante, et aucun signal.
    */
-  const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean }[]>([]);
+  /**
+   * Ce que l'Oracle n'a pas su trouver, regroupé et trié.
+   *
+   * Lu du magasin plutôt que gardé ici : une lacune notée pendant une séance
+   * doit se retrouver la semaine suivante, quand le meneur forge.
+   */
+  const questionsNotees = useJournalDesLacunes(e => e.questions);
+  const lacunes = useMemo(() => regrouperLesLacunes(questionsNotees), [questionsNotees]);
+  const oublierLaLacune = useJournalDesLacunes(e => e.oublier);
+
+  const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[]>([]);
 
   /**
    * Déclarer une fiche relue, depuis la réponse qu'elle vient de fournir.
@@ -120,6 +131,10 @@ const AIChatPanel: React.FC = () => {
       gemId: activeGem
     }]);
     
+    const question = input;
+    const systemeActif = useSessionOSStore.getState().campaigns
+      .find(c => c.id === useSessionOSStore.getState().activeCampaignId)?.system;
+
     setInput('');
     setSources([]);
     setLoading(true);
@@ -142,7 +157,20 @@ const AIChatPanel: React.FC = () => {
         },
         activeGem,
         {},
-        setSources,
+        (recues) => {
+          setSources(recues);
+          /*
+            **Le journal des lacunes se remplit ici, et sans rien demander.**
+            Décision du plan : *pas de pouces haut/bas* — à table, ils créent une
+            friction et ne sont jamais cliqués. Une question posée EST le signal ;
+            une question reformulée dans la minute en est un second, gratuit.
+
+            Noté au moment où les sources arrivent, avant même la réponse : ce
+            qu'on veut savoir est ce que la RECHERCHE a atteint, pas ce que le
+            modèle a fini par dire.
+          */
+          useJournalDesLacunes.getState().noter(question, recues, systemeActif);
+        },
       );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue';
@@ -228,6 +256,43 @@ const AIChatPanel: React.FC = () => {
           prétendu être une fiche, et le montrer « non relu » ferait crier
           l'écran sur ce qui n'a rien à se reprocher.
         */}
+        {/*
+          **Le journal des lacunes — ce que l'Oracle n'a pas su trouver.**
+
+          Étage 4 de l'axe M, et ce que le plan appelle « la meilleure idée du
+          lot » : les sujets à forger cessent d'être choisis à l'intuition,
+          L'USAGE REEL EN SEANCE LES DESIGNE. Les plus fréquentes d'abord — ce
+          qui revient est ce qui manque vraiment.
+
+          Il ne s'affiche que s'il y a quelque chose : un compteur à zéro
+          n'apprend rien et occupe la place où la réponse va s'écrire.
+        */}
+        {lacunes.length > 0 && (
+          <details className="px-1 pb-2">
+            <summary className="cursor-pointer text-[9px] font-black uppercase tracking-widest text-amber-300/50 hover:text-amber-300/80">
+              Lacunes — {lacunes.length} sujet{lacunes.length > 1 ? 's' : ''} sans fiche
+            </summary>
+            <ul className="mt-1.5 space-y-1">
+              {lacunes.slice(0, 8).map(lacune => (
+                <li key={lacune.clef} className="flex items-start gap-2 text-[10px] text-app-text/45">
+                  <span className="font-mono text-amber-300/60 shrink-0">
+                    ×{lacune.fois}
+                  </span>
+                  <span className="flex-1">{lacune.question}</span>
+                  <button
+                    onClick={() => oublierLaLacune(lacune.clef)}
+                    title="Retirer de la file — la fiche existe, ou la question ne valait pas une fiche."
+                    className="text-app-text/20 hover:text-app-text/60 transition-colors shrink-0"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+
+
         {sources.length > 0 && (
           <div className="flex flex-wrap gap-1.5 px-1 pb-2">
             {sources.map(source => {

@@ -44,7 +44,7 @@ export class RAGService {
    * concurrentes se marcheraient dessus, et c'est pourquoi seul le chemin qui
    * les a demandées s'en sert.
    */
-  public dernieresSources: { path: string; relu?: boolean; aRegenerer?: boolean }[] = [];
+  public dernieresSources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[] = [];
 
   public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();

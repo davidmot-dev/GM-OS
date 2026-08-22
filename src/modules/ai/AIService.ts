@@ -1036,7 +1036,7 @@ Use the names above verbatim. Do not invent a setting title.
      * *l'Oracle citait une fiche jamais relue exactement comme une fiche
      * vérifiée.*
      */
-    onSources?: (sources: { path: string; relu?: boolean; aRegenerer?: boolean }[]) => void,
+    onSources?: (sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[]) => void,
   ): Promise<void> {
     const { activeProvider, configs, streamEnabled } = useAIStore.getState();
     const config = configs[activeProvider];
