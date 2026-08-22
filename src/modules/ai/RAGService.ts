@@ -1,6 +1,5 @@
 /** RAG Service — Document Management */
 import { useSessionOSStore } from '../session/useSessionOSStore';
-import { useObsidianStore } from '../session/useObsidianStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { resoudreCorpus } from '../../../electron/corpusSysteme';
 
@@ -49,13 +48,28 @@ export class RAGService {
 
   public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();
-    const obsidianStore = useObsidianStore.getState();
 
-    // 1. Align RAG Path with Obsidian Vault if available
-    if (obsidianStore.vaultPath && window.appBridge?.ai?.reindex) {
-        // We trigger a background reindex if the path changed handled by RAGEngine.ts logic
-        window.appBridge.ai.reindex(obsidianStore.vaultPath).catch(console.error);
-    }
+    /*
+      **La racine du corpus ne se negocie pas — et elle se negociait a chaque
+      question.**
+
+      Ces quatre lignes appelaient `reindex(vaultPath)` avant toute recherche, et
+      `ai:reindex` appelle `setDocsPath` : le coffre Obsidian REMPLACAIT la
+      racine documentaire du moteur. Tout `docs/` sortait de l'index — le corpus,
+      les campagnes, `.ragignore` — et il n'en restait rien a retenir.
+
+      Le coffre etait renseigne par defaut, en dur, dans `useObsidianStore` :
+      personne n'avait a le demander pour que ca arrive.
+
+      **Deux arbres, une seule variable de racine, le dernier ecrivain gagne** —
+      le meme motif que partout ailleurs. Et il etait indetectable : l'Oracle
+      repondait de sa propre memoire, avec aplomb.
+
+      Le coffre reste lisible : `obsidian.listNotes` et `obsidian.readNote`
+      recoivent leur chemin en argument et n'ont jamais eu besoin de la racine du
+      moteur. Le bouton de reindexation, lui, appelle `reindex()` SANS argument
+      — il reindexe la racine, il ne la deplace pas.
+    */
 
     if (options.systemOnly && options.systemName) {
       return this.getContextForSpecificSystem(options.systemName, options.limit);
@@ -133,7 +147,8 @@ export class RAGService {
     if (corpus.aCreer) {
         console.warn(
             `[RAG Service] le dossier docs/${corpus.racine} ne figure pas parmi les`
-            + ` corpus connus — aucune fiche ne sera retenue.`,
+            + ` corpus connus — aucune fiche ne sera retenue. Vus sous la racine :`
+            + ` ${dossiersSystemes.join(', ') || '(aucun dossier)'}.`,
         );
     }
     const campaignName = activeCampaign?.name || 'unknown';

@@ -86,14 +86,20 @@ export class RAGEngine {
         this.docsPath = path.join(process.env.APP_ROOT || '', 'docs');
     }
 
-    public setDocsPath(newPath: string) {
-        if (newPath && newPath !== this.docsPath) {
-            console.log(`[RAG Engine] Updating docs path to: ${newPath}`);
-            this.docsPath = newPath;
-            this.index.clear();
-            this.updateIndex();
-        }
-    }
+    /*
+      **`setDocsPath` a ete retire, et c'est le correctif.**
+
+      Il existait pour qu'un coffre Obsidian puisse devenir la racine du moteur,
+      et `RAGService` l'appelait AVANT CHAQUE RECHERCHE avec un chemin de coffre
+      renseigne en dur par defaut. Tout `docs/` sortait alors de l'index : le
+      corpus, les campagnes, `.ragignore`. La recherche ne retenait rien, et
+      l'Oracle repondait quand meme, de sa propre memoire.
+
+      **Deux arbres, une seule variable de racine, le dernier ecrivain gagne.**
+      Le rendre impossible vaut mieux que le deconseiller : un champ qu'on peut
+      ecrire finit ecrit. Le coffre reste lisible par le pont Obsidian, qui
+      recoit son chemin en argument et n'a jamais eu besoin de cette racine.
+    */
 
     public static getInstance(): RAGEngine {
         if (!RAGEngine.instance) {
@@ -310,8 +316,8 @@ export function registerRagHandlers() {
         return await engine.getRelevantContextDetaille({ systemId, campaignName, ...(options ?? {}) });
     });
 
-    ipcMain.handle('ai:reindex', async (_event, customPath?: string) => {
-        if (customPath) engine.setDocsPath(customPath);
+    // Reindexe la racine ; il n'a jamais eu a la deplacer.
+    ipcMain.handle('ai:reindex', async () => {
         await engine.updateIndex();
         return true;
     });

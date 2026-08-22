@@ -265,7 +265,8 @@ declare global {
                  * réponse, ni qu'une fiche n'avait jamais été relue.
                  */
             ) => Promise<{ context: string; sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] }>;
-            reindex: (customPath?: string) => Promise<boolean>;
+            /** Reindexe `docs/`. La racine est fixe : rien ne la deplace. */
+            reindex: () => Promise<boolean>;
             /**
              * `options.json` pose `format: 'json'` côté Ollama — le décodage
              * est alors contraint par une grammaire, et la sortie ne peut plus

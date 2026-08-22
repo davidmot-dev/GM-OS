@@ -110,7 +110,7 @@ contextBridge.exposeInMainWorld('appBridge', {
             options?: { query?: string; systemName?: string; systemPath?: string; campaignPath?: string; maxTokens?: number },
         ): Promise<{ context: string; sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] }> =>
             ipcRenderer.invoke('ai:search-context', systemId, campaignName, options),
-        reindex: (customPath?: string) => ipcRenderer.invoke('ai:reindex', customPath),
+        reindex: () => ipcRenderer.invoke('ai:reindex'),
         // Ollama Local AI
         ollamaChat: (
             model: string,

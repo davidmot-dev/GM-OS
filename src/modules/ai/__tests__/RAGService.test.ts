@@ -50,9 +50,26 @@ describe('RAGService', () => {
     };
   });
 
-  it('should trigger reindex with vault path if available', async () => {
+  /**
+   * **Ce test affirmait exactement le défaut**, et c'est pour ça qu'il change de
+   * sens plutôt que de disparaître.
+   *
+   * `reindex(vaultPath)` déclenchait `setDocsPath` dans le processus principal :
+   * le coffre Obsidian *remplaçait* la racine documentaire du moteur. Tout
+   * `docs/` sortait de l'index — le corpus, les campagnes, `.ragignore` — et la
+   * recherche ne retenait plus rien. Le coffre étant renseigné **en dur par
+   * défaut** dans `useObsidianStore`, personne n'avait à le demander.
+   *
+   * Rien ne le disait : l'Oracle répondait de sa propre mémoire, avec aplomb.
+   *
+   * *Deux arbres, une seule variable de racine, le dernier écrivain gagne.* Le
+   * coffre reste lisible par le pont Obsidian, qui reçoit son chemin en argument
+   * et n'a jamais eu besoin de cette racine. `electron/racineDuCorpus.test.ts`
+   * tient l'autre bout : le moteur n'offre plus de quoi la déplacer.
+   */
+  it('ne déplace jamais la racine du moteur, même avec un coffre renseigné', async () => {
     await service.getRelevantContext();
-    expect((window as any).appBridge.ai.reindex).toHaveBeenCalledWith('C:/Vault');
+    expect((window as any).appBridge.ai.reindex).not.toHaveBeenCalled();
   });
 
   it('should call searchContext with correct system and campaign name', async () => {
