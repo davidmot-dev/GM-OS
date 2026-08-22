@@ -355,7 +355,35 @@ digestion au composant qui en est le moins capable.
 | **D** — annulation, verrou, plafonds | ✅ 21/08 | `9069da3` puis `e2d50dc` (D.4, D.5). **Aucun plafond n'était réel avant** |
 | **E** — assainir la voie Ollama | 🟠 **E.1 ✅ 21/08** (`859fd48`) · E.2 ✅ pour Ollama (schéma natif transmis) · **E.3 ⛔ caduc** (`ChronicleService` n'existe plus) · **E.4 ❌** | `MAX_TEXT_CHARS = 100000` est toujours en dur dans `ForgeService.ts:144`, sans lien avec le `num_ctx` réel et sans avertissement à l'écran |
 | **F** — brancher le mode | 🟠 **F.3 ✅ 21/08** ; F.1, F.2, F.4, F.5 ❌ | Les **trois appels en partie** ne portent plus le RAG complet : `useVoiceStore` l'était déjà, `CombatCard` passe en `{ systemOnly: true }` + `lite`, `useNarrativeGenerator` en `lite` seul — *on ne fait pas payer à la narration le budget des règles*. `useNPCStore` n'est pas touché : l'enrichissement de PNJ relève de la préparation. D.5 a branché le moment de jeu sur les **plafonds**, mais le contexte, le fournisseur et le moteur d'image ne le consultent toujours pas |
-| **G, H, I, J, K, L, M, N, O** | ❌ | Voir la note sur l'axe L ci-dessous |
+| **G** — pause de séance | ❌ | Sa seconde raison d'être — « couper à la reprise » suppose des passes — est **levée** : l'axe K est fait |
+| **H** — les canevas | ✅ **déjà fait**, découvert le 22/08 | `rules/canevas.ts` porte les quatorze sujets, `campagne/canevasDeCampagne.ts` ceux de la campagne, l'état de couverture vit dans le frontmatter (`couverture: complète/partielle/absente`) et **les invites en sont dérivées** (`GroupesDeChamps`). Les trois bénéfices annoncés sont acquis : couverture mesurable, lacunes bornées, prompts engendrés |
+| **I** — inverser la chaîne NotebookLM | ✅ **déjà fait** | `notebook_query` a remplacé `source_get_content` (`ForgeService.ts:512`), et `source_add` écrit les synthèses dans le carnet (`useJournalStore.ts:480`). L'écriture double vers `docs/` est le fonctionnement normal de l'Atelier |
+| **J** — sélecteur de moteur par Forge | ❌ | Rien dans le code |
+| **K** — découper les Forges | ✅ **déjà fait** | Huit groupes forgés **dans l'ordre de leurs dépendances**, chacun recevant le vocabulaire produit par les précédents (`vocabulaireAcquis`) — c'est exactement « la cohérence des identifiants devient structurelle ». Barre de progression (`ForgeProgress`) et reprise (`reprendreLAtelier`) comprises |
+| **L** — index des livres | ✅ **déjà fait**, et amélioré le 21/08 | `electron/bookIndex.ts` résout titre de section → page, localement et sans modèle ; son parseur a gagné deux formes et un seuil de densité mesuré |
+| **M** — Oracle bibliothécaire | ❌ | S'appuyait sur L, H et O : les deux premiers sont faits |
+| **N** — régimes d'interface | ❌ | Le plus visible, le moins urgent — inchangé |
+| **O** — boucle de revue | ❌ **et c'est le plus mûr** | Voir ci-dessous |
+
+### Ce que la relecture du 2026-08-22 a trouvé
+
+**Quatre axes chiffrés à dix-huit heures étaient déjà faits** — H, I, K et L — par les chantiers de Forge
+Système, de Forge de campagne et de corpus. Aucun n'a jamais été rapporté à ce plan : *deux plans qui
+avancent sans se regarder finissent par se croire en retard l'un sur l'autre.* Le reste chiffré passe
+d'environ 40 h à **environ 26 h**, et l'ordre change entièrement puisque H conditionnait I, L et M.
+
+**Et l'axe O est le plus mûr de tous, pour une raison que le plan ne pouvait pas prévoir : sa donnée
+existe déjà.** `relu: false` est écrit par trois endroits — `conversion.ts:260`, `inventaire.ts:294`,
+`ServiceDeCampagne.ts:394` — et **il est lu par personne**. Compté le 22/08 : **194 fiches** le portent.
+
+> **C'est le motif corrigé trois fois cette semaine, mais à l'échelle du corpus entier** : le libellé des
+> portées, l'unité de distance, le champ `moteur` d'un `corpus.json`. *Un champ rempli que rien ne lit
+> est un champ qui finira faux sans qu'on le sache* — sauf qu'ici il ne finira pas faux, **il est déjà
+> sans effet** : l'Oracle cite une fiche jamais relue exactement comme une fiche vérifiée.
+>
+> La question était pourtant tranchée dès le 07/08, au § 9 : *« Comment l'Oracle signale une fiche non
+> relue ? — Mention discrète, toujours visible. »* La décision existe, la donnée existe, le lecteur
+> manque.
 
 **Ce que l'axe C a mesuré, et qui vaut au-delà de lui.** Le § 3.5 promettait *« exécution parallèle pour
 réduire considérablement le temps de réponse »*. **Sous `NUM_PARALLEL=1`, qui est le défaut d'Ollama, les
