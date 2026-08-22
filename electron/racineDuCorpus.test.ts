@@ -104,3 +104,39 @@ describe('ce que la racine contient réellement', () => {
         expect(fiches.filter(f => f.endsWith('.md')).length).toBeGreaterThan(0);
     });
 });
+
+/**
+ * **Le verdict de recherche voyage entier, ou il ne voyage pas.**
+ *
+ * Trois points d'émission appellent `onSources`, et le troisième — *le chemin
+ * de streaming, le plus emprunté* — passait `onSources?.(sources)` tout court.
+ * L'écran, qui refuse d'afficher quoi que ce soit sans savoir si l'on a
+ * cherché, ne montrait alors **ni sources, ni étiquette, ni renvoi au livre.**
+ *
+ * Le paramètre est désormais obligatoire, donc le compilateur monte la garde.
+ * Ce test tient l'autre bout : il compte les émissions, pour qu'une quatrième
+ * ajoutée un jour ne reparte pas incomplète sans qu'on le voie.
+ */
+describe('le verdict de recherche', () => {
+    const service = lire('src/modules/ai/AIService.ts');
+
+    it('part avec ses trois arguments à chaque émission', () => {
+        // Les lignes de CODE, pas les commentaires qui les citent : la
+        // documentation du paramètre nomme l'appel fautif d'origine.
+        const appels = service.split(/\r?\n/)
+            .filter(l => l.trimStart().startsWith('onSources?.('));
+        expect(appels.length, 'trois points d’émission').toBe(3);
+        for (const appel of appels) {
+            expect(appel, appel).toContain('this.verdictCourant');
+        }
+    });
+
+    /** L'écran affiche ; il ne recalcule plus rien. */
+    it('n’est pas recalculé par l’écran', () => {
+        const panneau = lire('src/modules/ai/components/AIChatPanel.tsx');
+        expect(panneau).not.toMatch(/doitJuger\s*\(/);
+        expect(panneau).not.toMatch(/atteinteDeLaRecherche\s*\(/);
+        expect(panneau, 'la recherche dans le livre appartient au service')
+            .not.toMatch(/chercherDansLIndex\s*\?\.\(/);
+    });
+});

@@ -16,6 +16,7 @@
  */
 
 import path from 'node:path';
+import { motsDeLaQuestion } from './motsDeLaQuestion';
 import fs from 'node:fs';
 import AdmZip from 'adm-zip';
 
@@ -582,12 +583,6 @@ export function verifierLesCitations(livre: IndexLivre, contenuFiche: string): V
  */
 
 /** Les mots d'une question qui portent du sens, pour chercher dans l'index. */
-const MOTS_SANS_PORTEE = new Set([
-    'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'et', 'ou', 'que', 'qui',
-    'quoi', 'quel', 'quelle', 'quelles', 'quels', 'est', 'sont', 'ce', 'ces',
-    'cette', 'pour', 'sur', 'dans', 'avec', 'en', 'au', 'aux', 'comment',
-    'combien', 'pourquoi', 'faire', 'fait', 'peut', 'quand',
-]);
 
 export interface TrouvailleDIndex {
     titre: string;
@@ -610,18 +605,24 @@ export function chercherDansLIndex(
     question: string,
     combien = 3,
 ): TrouvailleDIndex[] {
-    const mots = question
-        .normalize('NFD').replace(/[̀-ͯ]/g, '')
-        .toLowerCase()
-        .split(/[^a-z0-9]+/)
-        .filter(m => m.length >= 4 && !MOTS_SANS_PORTEE.has(m));
-
+    const mots = motsDeLaQuestion(question);
     if (mots.length === 0) return [];
 
+    /*
+      **Mot à mot, et plus par sous-chaîne.** `titre.includes(mot)` faisait
+      attraper « Fonctionnement » par `fonctionne`, et rendait donc *Fonctionnement
+      p.30* pour une question sur le crochetage d'une serrure. Le meneur allait à
+      la page indiquée et n'y trouvait rien — *une référence fausse coûte plus
+      cher qu'une référence absente, parce qu'on s'y rend.*
+
+      Les deux côtés passent désormais par le MÊME découpage : sans lui, on
+      comparait des mots normalisés à des titres bruts, et la comparaison mentait
+      dans les deux sens.
+    */
     const trouvees: TrouvailleDIndex[] = [];
     for (const entree of livre.entrees) {
-        const titre = entree.titre.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-        const compte = mots.filter(m => titre.includes(m)).length;
+        const duTitre = new Set(motsDeLaQuestion(entree.titre));
+        const compte = mots.filter(m => duTitre.has(m)).length;
         if (compte > 0) trouvees.push({ titre: entree.titre, page: entree.page, mots: compte });
     }
 

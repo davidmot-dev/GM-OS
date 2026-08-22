@@ -17,8 +17,7 @@ import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { marquerCommeRelue, marquerCommeSuspecte } from '../../forge/rules/marqueDeRelecture';
 import { regrouperLesLacunes, useJournalDesLacunes } from '../lacunes/useJournalDesLacunes';
-import { atteinteDeLaRecherche, estUneLacune } from '../lacunes/atteinteDeLaRecherche';
-import { doitJuger, ETIQUETTE_DU_JUGEMENT } from '../lacunes/jugementDeTable';
+import { ETIQUETTE_DU_JUGEMENT } from '../lacunes/jugementDeTable';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -190,7 +189,7 @@ const AIChatPanel: React.FC = () => {
         },
         activeGem,
         {},
-        (recues, venueDeLaFiche, aCherche) => {
+        (recues, venueDeLaFiche, verdict) => {
           /*
             **On n'affiche et on ne note QUE si l'on a cherché.**
 
@@ -199,24 +198,27 @@ const AIChatPanel: React.FC = () => {
             L'écran lisait les deux pareil et annonçait « jugement de table » sur
             chaque question — *une liste qu'on n'a pas remplie n'est pas une
             liste qui n'a rien trouvé.*
-
-            Le verdict vient du service, qui seul sait s'il a cherché : le
-            recalculer ici était une seconde écriture de la même vérité.
           */
-          if (!aCherche || !recues) return;
+          if (!verdict.aCherche || !recues) return;
 
           setSources(recues);
           setFicheDirecte(venueDeLaFiche ?? null);
           useJournalDesLacunes.getState().noter(question, recues, systemeActif);
 
-          const atteinte = atteinteDeLaRecherche(recues, question);
-          setJugement(doitJuger(atteinte));
+          /*
+            **L'écran affiche, il ne décide plus.**
 
-          if (systemeActif && estUneLacune(atteinte)) {
-            void window.appBridge?.ai?.chercherDansLIndex?.(systemeActif, question)
-              .then(r => setDansLeLivre(r.trouvailles.map(t => ({ titre: t.titre, page: t.page }))))
-              .catch(() => setDansLeLivre([]));
-          }
+            Il recalculait le jugement de table de son côté et allait chercher
+            dans le livre lui-même — avec `campaign.system`, c'est-à-dire
+            `custom-1777730495114`, qui n'a aucun dossier d'index. *« Le livre en
+            parle » n'a donc jamais rien montré pour une campagne forgée.*
+
+            Le service décide désormais, parce qu'il est le seul à pouvoir : la
+            consigne de jugement part dans l'invite, donc la décision doit être
+            prise AVANT la réponse, pas en parallèle d'elle.
+          */
+          setJugement(verdict.jugement);
+          setDansLeLivre(verdict.leLivreEnParle);
         },
       );
     } catch (error: unknown) {

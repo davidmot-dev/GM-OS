@@ -1,4 +1,4 @@
-import type { Atteinte } from './atteinteDeLaRecherche';
+import { estUneLacune, type Atteinte } from './atteinteDeLaRecherche';
 
 /**
  * Le jugement de table — **étage 3 de l'axe M.**
@@ -18,15 +18,27 @@ import type { Atteinte } from './atteinteDeLaRecherche';
 /**
  * Faut-il juger plutôt que répondre ?
  *
- * **Seulement quand la recherche n'a RIEN atteint.** Un document non vérifié a
- * beau être faible, il est une source : la réponse qu'il nourrit n'est pas une
- * invention, et l'annoncer comme un jugement de table serait se calomnier.
+ * **Les deux conditions du plan, enfin toutes les deux.** Il dit *« à défaut
+ * d'une fiche ET à défaut du livre »* ; le code n'en tenait aucune, il tenait un
+ * substitut — *« aucune source retenue »*.
  *
- * *L'étiquette doit rester rare pour rester lue* — apposée sur tout ce qui n'est
- * pas une fiche, elle deviendrait un ornement que l'œil saute.
+ * Ce substitut a cessé d'être atteignable le jour où le corpus s'est enfin
+ * résolu. La sélection n'a **aucun seuil de pertinence** : tout fichier du
+ * périmètre devient candidat, et le budget seul décide. Il y a donc toujours au
+ * moins une source, et `rien` n'arrive plus jamais. *L'étiquette que David a vue
+ * fonctionner le 2026-08-22 marchait parce que le corpus était encore cassé.*
+ *
+ * **Le livre est ce qui rend la règle sûre.** Sans lui, on apposerait
+ * « pas la règle officielle » sur une réponse qu'une fiche voisine couvrait
+ * peut-être dans son corps de texte — *se calomnier*, exactement ce que la
+ * rédaction précédente redoutait. Avec lui, on ne juge que ce dont **ni le
+ * corpus ni l'ouvrage** ne parlent.
+ *
+ * *L'étiquette doit rester rare pour rester lue* — et deux conditions la gardent
+ * plus rare qu'un seuil qu'il faudrait régler.
  */
-export function doitJuger(atteinte: Atteinte): boolean {
-    return atteinte === 'rien';
+export function doitJuger(atteinte: Atteinte, leLivreEnParle: boolean): boolean {
+    return estUneLacune(atteinte) && !leLivreEnParle;
 }
 
 /**

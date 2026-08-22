@@ -44,6 +44,21 @@ export class RAGService {
    * concurrentes se marcheraient dessus, et c'est pourquoi seul le chemin qui
    * les a demandées s'en sert.
    */
+  /**
+   * Le **corpus retenu** au dernier appel — `reves de dragons`, et non
+   * `custom-1777730495114`.
+   *
+   * *Cinquième champ qui devait passer par `resoudreCorpus` et n'y passait pas.*
+   * L'écran donnait l'identifiant du pilote à la recherche dans le livre, qui
+   * cherchait donc `docs/systems/custom-1777730495114/index` : **« Le livre en
+   * parle » n'a jamais rien affiché pour une campagne forgée**, sans un mot.
+   *
+   * Résolu ici, une seule fois, et relu par qui en a besoin — plutôt que
+   * re-déduit ailleurs, ce qui est la façon dont les quatre premiers se sont
+   * trompés.
+   */
+  public dernierCorpus: string | undefined = undefined;
+
   public dernieresSources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] | undefined = [];
 
   public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
@@ -151,6 +166,7 @@ export class RAGService {
             + ` ${dossiersSystemes.join(', ') || '(aucun dossier)'}.`,
         );
     }
+    this.dernierCorpus = corpus.id;
     const campaignName = activeCampaign?.name || 'unknown';
 
     if (!window.appBridge?.ai?.searchContext) {

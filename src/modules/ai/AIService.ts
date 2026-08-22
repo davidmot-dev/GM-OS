@@ -15,7 +15,8 @@ import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
 import { contexteEstVide, type ContexteDeCampagne } from '../journal/contexteDeCampagne';
 import i18n from '../../i18n';
-import { CONSIGNE_DE_JUGEMENT } from './lacunes/jugementDeTable';
+import { CONSIGNE_DE_JUGEMENT, doitJuger } from './lacunes/jugementDeTable';
+import { atteinteDeLaRecherche, estUneLacune } from './lacunes/atteinteDeLaRecherche';
 import { extraireLaRegle, laFicheRepondSeule } from './lacunes/ficheQuiRepond';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
@@ -101,6 +102,29 @@ function identifierLaRequete(libelle?: string): { id: string; libelle: string } 
     };
 }
 
+/**
+ * Ce que la recherche a conclu, tel que l'écran doit l'afficher — **sans rien
+ * en recalculer.**
+ *
+ * Les trois champs voyagent ensemble parce qu'ils se lisent ensemble : un
+ * jugement de table n'a de sens que si l'on a cherché, et il ne s'affiche que
+ * si le livre est resté muet. *Séparés, ils ont déjà été oubliés un à un* — le
+ * chemin de streaming n'en transmettait aucun, et l'écran ne montrait alors ni
+ * sources, ni étiquette, ni renvoi.
+ */
+export interface VerdictDeRecherche {
+  /**
+   * A-t-on seulement cherché ? **Faux en mode allégé**, où le RAG n'est pas
+   * appelé. *Une liste qu'on n'a pas remplie n'est pas une liste qui n'a rien
+   * trouvé.*
+   */
+  aCherche: boolean;
+  /** Ni le corpus ni le livre ne couvrent la question. */
+  jugement: boolean;
+  /** Ce que l'index du livre a trouvé — étage 2 de l'axe M. */
+  leLivreEnParle: { titre: string; page: number }[];
+}
+
 export class AIService {
   private static instance: AIService;
 
@@ -113,6 +137,16 @@ export class AIService {
    * questions qu'on n'avait jamais cherchées.
    */
   private aCherche = false;
+
+  /**
+   * Le verdict de la recherche, **décidé ici et nulle part ailleurs.**
+   *
+   * L'écran le recalculait de son côté — sans savoir si l'on avait cherché, ni
+   * ce que le livre avait dit — et il annonçait donc « jugement de table » sur
+   * des questions jamais cherchées. *Deux écritures d'une même vérité finissent
+   * par en dire deux.*
+   */
+  private verdictCourant: VerdictDeRecherche = { aCherche: false, jugement: false, leLivreEnParle: [] };
 
   private constructor() {}
 
@@ -1058,17 +1092,21 @@ Use the names above verbatim. Do not invent a setting title.
        * autrement*, et l'écran annoncerait alors « aucun modèle invoqué » sur une
        * réponse que le modèle a écrite.
        */
-      ficheDirecte?: string,
+      ficheDirecte: string | undefined,
       /**
-       * A-t-on RÉELLEMENT cherché dans le corpus ?
+       * Ce que la recherche a conclu — **et il n'est pas optionnel.**
        *
-       * **Faux en mode allégé**, où le RAG n'est pas appelé du tout. Sans cette
-       * distinction, l'écran lisait une liste vide comme « aucune source n'a
-       * répondu » et annonçait un jugement de table sur chaque question — alors
-       * qu'on n'avait simplement rien demandé. *Une liste qu'on n'a pas remplie
-       * n'est pas une liste qui n'a rien trouvé.*
+       * Il l'était, sous la forme d'un `aCherche?: boolean`, et **le chemin de
+       * streaming l'oubliait** : `onSources?.(sources)` tout court, sur les trois
+       * points d'émission. L'écran, qui refuse d'afficher quoi que ce soit sans
+       * savoir si l'on a cherché, ne montrait alors ni sources, ni étiquette, ni
+       * renvoi au livre — sur le chemin le plus emprunté de l'application.
+       *
+       * *Un paramètre facultatif qu'on doit passer partout est un paramètre
+       * qu'on oubliera quelque part.* Le rendre obligatoire confie le rappel au
+       * compilateur.
        */
-      aCherche?: boolean,
+      verdict: VerdictDeRecherche,
     ) => void,
   ): Promise<void> {
     const { activeProvider, configs, streamEnabled } = useAIStore.getState();
@@ -1077,7 +1115,7 @@ Use the names above verbatim. Do not invent a setting title.
     if (!streamEnabled || activeProvider !== 'ollama') {
        onStatusUpdate?.("Mode bloquant actif...");
        const resp = await this.generateText(prompt, undefined, gemId, ragOptions);
-       onSources?.(ragService.dernieresSources, undefined, this.aCherche);
+       onSources?.(ragService.dernieresSources, undefined, this.verdictCourant);
        onToken(resp.text);
        return;
     }
@@ -1132,7 +1170,7 @@ Use the names above verbatim. Do not invent a setting title.
     if (fiche) {
         const contenu = await window.appBridge?.ai?.readDoc?.(fiche.path).catch(() => null);
         if (contenu) {
-            onSources?.(ragService.dernieresSources, fiche.path, this.aCherche);
+            onSources?.(ragService.dernieresSources, fiche.path, this.verdictCourant);
             onStatusUpdate?.('');
             onToken(extraireLaRegle(contenu));
             return;
@@ -1147,7 +1185,7 @@ Use the names above verbatim. Do not invent a setting title.
       marcheraient dessus, et c'est pourquoi seul le chemin qui les a demandées
       s'en sert — ici, une ligne après.
     */
-    onSources?.(ragService.dernieresSources);
+    onSources?.(ragService.dernieresSources, undefined, this.verdictCourant);
 
     onStatusUpdate?.("Réception de la vision...");
     
@@ -1229,7 +1267,38 @@ Use the names above verbatim. Do not invent a setting title.
       cherchées. *Deux écritures d'une même vérité finissent par en dire deux.*
     */
     this.aCherche = !isLite;
-    const sansAucuneSource = this.aCherche && Array.isArray(sources) && sources.length === 0;
+
+    /*
+      **Les DEUX conditions du plan, et elles se décident ici.**
+
+      *« À défaut d'une fiche et à défaut du livre, une proposition en deux
+      lignes. »* Le code n'en tenait aucune : il tenait un substitut — « aucune
+      source retenue » — qui a cessé d'être atteignable le jour où le corpus
+      s'est enfin résolu. La sélection n'a **aucun seuil de pertinence** : tout
+      fichier du périmètre devient candidat, et le budget seul décide. Il y a
+      donc toujours au moins une source.
+
+      Le livre se consulte **avant** de bâtir l'invite, parce que c'est lui qui
+      dit s'il faut ajouter la consigne de jugement. L'écran le faisait après, en
+      parallèle de la réponse — trop tard pour l'invite, et sur le mauvais
+      identifiant.
+    */
+    const atteinte = this.aCherche && Array.isArray(sources)
+      ? atteinteDeLaRecherche(sources, prompt)
+      : undefined;
+
+    let leLivreEnParle: { titre: string; page: number }[] = [];
+    if (atteinte && estUneLacune(atteinte) && ragService.dernierCorpus) {
+      // Le corpus RÉSOLU, pas l'identifiant du pilote : `custom-1777730495114`
+      // n'a pas de dossier d'index, et la recherche rendait donc toujours vide.
+      const trouve = await window.appBridge?.ai?.chercherDansLIndex?.(
+        ragService.dernierCorpus, prompt,
+      ).catch(() => null);
+      leLivreEnParle = (trouve?.trouvailles ?? []).map(t => ({ titre: t.titre, page: t.page }));
+    }
+
+    const jugement = atteinte !== undefined && doitJuger(atteinte, leLivreEnParle.length > 0);
+    this.verdictCourant = { aCherche: this.aCherche, jugement, leLivreEnParle };
 
     const fullContext = assemblerLeContexte(ragContext, customContext, liveContext);
 
@@ -1302,7 +1371,7 @@ ${i18n.language === 'fr'
       : 'Cite the source document (its path) for rule points. Never invent page numbers, and do not repeat those found in the documents: their pagination is unreliable.'}
 
 CONTEXTE RÉCUPÉRÉ (RAG + SESSION) :
-${fullContext}${sansAucuneSource ? `
+${fullContext}${jugement ? `
 
 ${CONSIGNE_DE_JUGEMENT}` : ''}`;
   }

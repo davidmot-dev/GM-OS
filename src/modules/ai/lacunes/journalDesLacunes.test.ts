@@ -78,10 +78,14 @@ describe('ce que la recherche a atteint', () => {
             .not.toBe('rien');
     });
 
-    /** Il reste le seul à déclencher le jugement de table : voir `jugementDeTable`. */
-    it('une fiche hors sujet a tout de même nourri la réponse', () => {
-        expect(doitJuger('fiche-hors-sujet'), 'ce n’est pas une réponse sans source')
-            .toBe(false);
+    /**
+     * **Une fiche voisine ne suffit plus à faire taire le jugement**, mais le
+     * livre, lui, le fait taire. Les deux conditions du plan : *« à défaut
+     * d'une fiche ET à défaut du livre »*.
+     */
+    it('déclenche le jugement seulement si le livre est muet lui aussi', () => {
+        expect(doitJuger('fiche-hors-sujet', false)).toBe(true);
+        expect(doitJuger('fiche-hors-sujet', true), 'le livre a répondu').toBe(false);
     });
 });
 

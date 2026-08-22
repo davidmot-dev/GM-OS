@@ -13,26 +13,50 @@ import { ATTEINTES } from './atteinteDeLaRecherche';
  */
 
 describe('quand faut-il juger', () => {
-    /**
-     * **Seulement quand la recherche n'a RIEN atteint.** Un document non
-     * vérifié a beau être faible, il est une source : annoncer sa réponse comme
-     * un jugement de table serait se calomnier.
-     */
-    it('juge quand aucune source n’a répondu', () => {
-        expect(doitJuger('rien')).toBe(true);
-    });
-
-    it('ne juge pas quand quelque chose a répondu', () => {
-        expect(doitJuger('fiche')).toBe(false);
-        expect(doitJuger('document')).toBe(false);
-    });
+    const LIVRE_MUET = false;
+    const LIVRE_EN_PARLE = true;
 
     /**
-     * *L'étiquette doit rester rare pour rester lue* — apposée sur tout ce qui
-     * n'est pas une fiche, elle deviendrait un ornement que l'œil saute.
+     * **Les deux conditions du plan** : *« à défaut d'une fiche ET à défaut du
+     * livre »*. Le code n'en tenait aucune — il tenait un substitut, « aucune
+     * source retenue », qui a cessé d'être atteignable le jour où le corpus
+     * s'est enfin résolu.
      */
-    it('reste rare : un seul des trois états la déclenche', () => {
-        expect(ATTEINTES.filter(doitJuger)).toEqual(['rien']);
+    it('juge quand ni le corpus ni le livre ne couvrent la question', () => {
+        expect(doitJuger('rien', LIVRE_MUET)).toBe(true);
+        expect(doitJuger('fiche-hors-sujet', LIVRE_MUET)).toBe(true);
+        expect(doitJuger('document', LIVRE_MUET)).toBe(true);
+    });
+
+    /**
+     * **Une fiche qui répond ferme la question**, que le livre en parle ou non :
+     * c'est la réponse pleine, elle porte ses sources.
+     */
+    it('ne juge jamais quand une fiche répond', () => {
+        expect(doitJuger('fiche', LIVRE_MUET)).toBe(false);
+        expect(doitJuger('fiche', LIVRE_EN_PARLE)).toBe(false);
+    });
+
+    /**
+     * **Le livre est ce qui rend la règle sûre.** Sans lui, on apposerait « pas
+     * la règle officielle » sur une réponse qu'une fiche voisine couvrait
+     * peut-être dans son corps de texte — *se calomnier*.
+     */
+    it('se tait dès que le livre en parle', () => {
+        expect(doitJuger('fiche-hors-sujet', LIVRE_EN_PARLE)).toBe(false);
+        expect(doitJuger('document', LIVRE_EN_PARLE)).toBe(false);
+        expect(doitJuger('rien', LIVRE_EN_PARLE)).toBe(false);
+    });
+
+    /**
+     * *L'étiquette doit rester rare pour rester lue.* Deux conditions la gardent
+     * plus rare qu'un seuil qu'il faudrait régler : **le livre suffit à la faire
+     * taire sur les quatre états.**
+     */
+    it('reste rare : le livre la fait taire partout', () => {
+        expect(ATTEINTES.filter(a => doitJuger(a, LIVRE_EN_PARLE))).toEqual([]);
+        expect(ATTEINTES.filter(a => doitJuger(a, LIVRE_MUET)))
+            .toEqual(['fiche-hors-sujet', 'document', 'rien']);
     });
 });
 
