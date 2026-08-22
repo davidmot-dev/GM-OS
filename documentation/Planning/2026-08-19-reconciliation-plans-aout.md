@@ -208,12 +208,16 @@ question de livre** — l'échec particulier commence-t-il à 86 ou à 87 ?
 
 *C'est désormais le seul reste de la liste qui fausse une partie en cours.*
 
-### P3 — Le Cortex
+### ~~P3 — Le Cortex~~ ✅ CLOS le 2026-08-22
 
 *Il garde son rang d'origine : d'autres documents le citent comme « P3 », et renuméroter un reste le rend
 introuvable. Dans les faits il est deuxième, P1 et P2 étant closes.*
 
-Axes 2 à 5, plus les trois questions non tranchées. **Le garde-fou du document — *ne pas traiter ce plan
+~~Axes 2 à 5, plus les trois questions non tranchées.~~ **Les cinq axes sont faits** — `89e77c0`,
+`6a441f5`, `4a57cde` — et l'une des trois questions est tranchée (conseiller en restreignant le propos
+quand les entrées ne sont pas fiables). Restent les deux autres, dont *« fusionner les deux appels »*.
+
+**Le garde-fou du document — *ne pas traiter ce plan
 avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les trois sont faits. Voir le
 § 3 pour ce que la mesure de `NUM_PARALLEL: 1` change à sa troisième question.
 

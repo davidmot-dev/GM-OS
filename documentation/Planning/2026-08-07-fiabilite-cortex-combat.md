@@ -2,8 +2,9 @@
 
 **Date :** 2026-08-07
 **Branche :** `feature/tablet-hub-pwa`
-**Statut :** ~~constats vérifiés dans le code — aucun code modifié~~ · **référence vivante — axe 1 fait,
-axes 2 à 5 ouverts, et c'est le chantier de code le plus mûr du dépôt au 2026-08-22.**
+**Statut :** ~~constats vérifiés dans le code~~ · **LES CINQ AXES SONT FAITS le 2026-08-22** —
+`89e77c0` (axe 5), `6a441f5` (axe 2), `4a57cde` (axes 3 et 4) ; l'axe 1 l'était depuis le 07/08.
+Le document passe en **récit clos**, sauf ses trois questions du § 5, dont une est tranchée.
 
 > **Son garde-fou est levé.** Ce document interdisait de le traiter avant les axes A à C du plan jumeau :
 > **les trois sont faits** (A le 12/08, B le 09/08, C le 21/08). Rien ne le retient plus.
@@ -166,6 +167,25 @@ aplomb.** C'est le point central de ce document.
 
 ## 4. Axes de correction
 
+> **✅ LES CINQ SONT FAITS le 2026-08-22.** Ce que chacun a réellement trouvé — et qui dépassait souvent
+> le constat — est consigné dans son commit. Trois choses méritent d'être remontées ici, parce qu'elles
+> corrigent le plan lui-même :
+>
+> - **L'axe 2 était pire que décrit.** Le plan visait la valeur par défaut (`enemy`) ; le vrai défaut
+>   était **le tri lui-même**, `c.faction === actor.faction`. Un PNJ *explicitement marqué allié* n'est
+>   pas `player` : il tombait du côté des cibles. Corriger la valeur par défaut n'y aurait rien changé.
+>   Et la bonne notion existait déjà à dix lignes de là — `campDe`, dans `OrdreDuTour`, que l'écran
+>   d'alternance utilise. **Deux écritures de « qui est de mon côté », et elles se contredisaient.**
+> - **L'axe 5 en cachait un second.** Le pilote ne déclarait pas son unité de distance — mais il
+>   déclarait déjà **le nom de ses portées**, et personne ne le lisait : `getRangeInfo` rendait la clé
+>   canonique, donc trois écrans affichaient « Contact » sur un jeu qui dit « au toucher ».
+> - **L'axe 3 se corrige au goulot, pas chez les appelants.** Poser `linkedCombatantId` dans les quatre
+>   chemins manquants aurait tenu jusqu'au cinquième. `addToken` le pose désormais lui-même, à partir du
+>   `sourceEntityId` que ces chemins connaissent — *un identifiant, et non un mot.*
+>
+> **Et le test que l'axe 1 réclamait depuis le 07/08 est écrit** : les appelants s'accordent sur la même
+> distance, vérifié sur sept valeurs.
+
 **Axe 1 — Transmettre la configuration tactique.** Passer `activeDriver?.tactical` à
 `GridEngine.getRangeInfo` dans `TacticalNarrativeService`, comme le font déjà `DiceBoard` et
 `useTacticalOrchestrator`. Correction d'une ligne. **Ajouter un test qui vérifie que les trois appelants
@@ -196,9 +216,12 @@ position n'est pas fiable — ce qui manque aujourd'hui (§ 2.6).
   fait par `OLLAMA_NUM_PARALLEL=1`. Une passe unique rendant les deux à la fois diviserait le temps par
   deux, au prix de la disparition du retour progressif. **C'est peut-être le vrai levier de performance
   du Cortex**, plus que les réglages traités dans le plan jumeau.
-- **Quel comportement quand les entrées ne sont pas fiables ?** Refuser de conseiller, ou conseiller en
-  restreignant explicitement le propos au non-spatial (santé, états, moral) ? La seconde option est
-  probablement plus utile à table, mais demande de segmenter le prompt.
+- ✅ **Quel comportement quand les entrées ne sont pas fiables ?** **Tranchée le 2026-08-22 : conseiller
+  en restreignant le propos.** Sans position connue, le rapport écrit désormais *« AUCUNE POSITION
+  CONNUE : ne conseille aucun déplacement ni aucune portée. Tiens-toi à ce qui ne dépend pas du terrain —
+  santé, états, moral. »* Il n'a pas fallu segmenter le prompt : une consigne à l'endroit où l'absence
+  est déjà annoncée a suffi. *Le défaut n'était pas l'absence d'information, c'était l'absence
+  d'instruction* — le § 2.6 le disait, et c'était la bonne lecture.
 - **Faut-il un mode « hors carte » assumé ?** Beaucoup de combats se jouent sans carte. Le Cortex y est
   aujourd'hui dégradé par accident plutôt que conçu pour, alors que conseiller sur la seule base des PV,
   des états et du moral reste parfaitement possible.
