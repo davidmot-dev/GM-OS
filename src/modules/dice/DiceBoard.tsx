@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { EtiquetteDuDegre } from './EtiquetteDuDegre';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult } from './DiceEngine';
 import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Settings, Info, XCircle, Cast } from 'lucide-react';
@@ -703,11 +704,13 @@ const DiceBoard: React.FC = () => {
                                     {getFateRankLabel(history[0].fateRank, t)}
                                 </div>
                             )}
-                            {history[0].tagSuccess !== undefined && (
-                                <div className={`px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg ${history[0].tagSuccess ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50' : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/50'}`}>
-                                    {history[0].tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
-                                </div>
-                            )}
+                            <EtiquetteDuDegre
+                                resultat={history[0]}
+                                classes={reussi => 'px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg '
+                                    + (reussi
+                                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50'
+                                        : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/50')}
+                            />
                             <div className="flex flex-wrap gap-2 mt-2 justify-center z-10 max-h-[8rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
                                 {history[0].rolls.map((r, i) => (
                                     <span key={i} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg text-xs font-black shadow-inner relative group ${getDieCssClass(r)}`}>
@@ -762,11 +765,11 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                     <span className="text-lg font-black text-app-text">{record.totalDisplay}</span>
                                 </div>
-                                {record.tagSuccess !== undefined && (
-                                    <div className={`mt-1 text-[10px] uppercase font-bold text-right ${record.tagSuccess ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                        {record.tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
-                                    </div>
-                                )}
+                                <EtiquetteDuDegre
+                                    resultat={record}
+                                    classes={reussi => 'mt-1 text-[10px] uppercase font-bold text-right '
+                                        + (reussi ? 'text-emerald-500' : 'text-rose-500')}
+                                />
                             </div>
                         ))}
                     </div>

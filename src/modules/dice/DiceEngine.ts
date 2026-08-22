@@ -1,3 +1,8 @@
+import {
+    degreDepuisLeBooleen, degreDuDe, estUneReussite,
+    type DegreDeReussite, type EchelleDuJet,
+} from './degresDeReussite';
+
 export interface DieResult {
     val: number | string;
     sides?: number; // Needed for 3D box
@@ -17,6 +22,21 @@ export interface RollResult {
     successes?: number;
     fails?: number;
     tagSuccess?: boolean;
+    /**
+     * **Le degré, quand le jeu en a un — et l'équivalent du booléen sinon.**
+     *
+     * `tagSuccess` reste, et il reste juste : six écrans le lisent. Mais il ne
+     * sait dire que réussi ou raté, et *il n'y avait nulle part où poser
+     * « réussite particulière »*. Les jeux en pourcentage — Rêves de Dragons,
+     * L'Appel de Cthulhu, RuneQuest — gradent en six bandes ; Dune porte déjà
+     * `critique` et `complication`, deux degrés qui ne disent pas leur nom.
+     *
+     * **Un jeu qui ne gradue pas n'y gagne pas de degrés** : il reçoit
+     * `reussite-normale` ou `echec-normal`, et rien d'autre. Fabriquer les
+     * quatre extrêmes ferait dire au journal qu'un jet fut spectaculaire alors
+     * que le jeu ne le sait pas.
+     */
+    degre?: DegreDeReussite;
     totalDisplay: string;
     fateRank?: number; // For Fate/Fudge results
 }
@@ -146,12 +166,40 @@ export class DiceEngine {
      * @param modifier Modificateur global.
      * @param target Seuil à atteindre.
      * @param rule Règle de comparaison ('over' ou 'under').
+     * @param echelle Les bornes des six degrés, quand le jeu en gradue.
      * @returns Objet RollResult avec tagSuccess.
      */
-    static rollThreshold(faces: number, count: number, modifier: number, target: number, rule: 'over' | 'under' = 'over'): RollResult {
+    static rollThreshold(
+        faces: number, count: number, modifier: number, target: number,
+        rule: 'over' | 'under' = 'over',
+        /**
+         * **Le degré se pose ICI, et pas chez l'appelant.**
+         *
+         * Trois écrans lancent un jet — le pupitre du meneur, la tablette des
+         * joueurs et le panneau de fiche. Qualifier le dé chez chacun d'eux
+         * donnerait trois qualifications qui finiraient par diverger, et deux
+         * d'entre elles ne seraient jamais relues. *C'est le remède qui a
+         * corrigé les seize dés d'Alien pour les trois appelants d'un coup :
+         * on corrige dans le moteur.*
+         */
+        echelle?: EchelleDuJet,
+    ): RollResult {
         const res = this.rollStandard(faces, count, modifier);
         const success = rule === 'over' ? res.total >= target : res.total <= target;
         res.tagSuccess = success;
+        /*
+          **L'échelle l'emporte, et elle peut contredire le booléen.** À 96-100 %
+          de chances, un « 00 » est inférieur ou égal à la cible — donc `success`
+          vaut vrai — et le livre en fait pourtant un échec total. On aligne les
+          deux : *un écran qui annonce « réussite » pendant qu'un autre annonce
+          « échec total » pour le même dé est pire que les deux séparément.*
+        */
+        if (echelle) {
+            res.degre = degreDuDe(res.total, echelle, faces);
+            res.tagSuccess = estUneReussite(res.degre);
+        } else {
+            res.degre = degreDepuisLeBooleen(success);
+        }
         res.totalDisplay = `${res.total} vs ${target}`;
         return res;
     }
@@ -245,6 +293,7 @@ export class DiceEngine {
             successes,
             fails: ones,
             tagSuccess: netScore > 0,
+            degre: degreDepuisLeBooleen(netScore > 0),
             totalDisplay: `${grossSuccess} Brut / ${netScore} Net`
         };
     }
@@ -259,7 +308,19 @@ export class DiceEngine {
      * @param rule Règle de comparaison ('over' ou 'under').
      * @returns Objet RollResult.
      */
-    static rollAdvantage(faces: number, modifier: number, isAdvantage: boolean, target: number, rule: 'over' | 'under' = 'over'): RollResult {
+    static rollAdvantage(
+        faces: number, modifier: number, isAdvantage: boolean, target: number,
+        rule: 'over' | 'under' = 'over',
+        /**
+         * **Sans elle, l'avantage effacerait les degrés.** Un jet à l'avantage
+         * reste le même jet — *« un jet qui change selon l'écran d'où on le
+         * lance n'est pas le même jet »* —, et il n'y a aucune raison qu'une
+         * réussite particulière cesse d'en être une parce qu'on a lancé deux
+         * dés. C'est le même oubli que le sens du comptage : le chemin s'arrête
+         * avant le moteur.
+         */
+        echelle?: EchelleDuJet,
+    ): RollResult {
         const r1 = this.roll(faces);
         const r2 = this.roll(faces);
         let kept, dropped;
@@ -282,7 +343,8 @@ export class DiceEngine {
                 { val: dropped, sides: faces, isDropped: true, displayStr: `(${dropped})` }
             ],
             modifier,
-            tagSuccess: success,
+            tagSuccess: echelle ? estUneReussite(degreDuDe(total, echelle, faces)) : success,
+            degre: echelle ? degreDuDe(total, echelle, faces) : degreDepuisLeBooleen(success),
             totalDisplay: `${total} vs ${target}`
         };
     }
@@ -403,6 +465,7 @@ export class DiceEngine {
             successes,
             fails: banes,
             tagSuccess,
+            degre: degreDepuisLeBooleen(tagSuccess),
             totalDisplay: `${successes} Succès${banes > 0 ? ` / ${banes} Fléaux` : ''}`
         };
     }
@@ -544,7 +607,16 @@ export class DiceEngine {
              */
             sens?: 'sous-ou-egal' | 'superieur-ou-egal';
         },
-        options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number; doubleSous?: number },
+        options?: {
+            modifier?: number; baseCount?: number; gearCount?: number;
+            targetOverwrite?: number; doubleSous?: number;
+            /**
+             * Les bornes des six degrés, quand le pilote décrit un jeu qui
+             * gradue. Elles viennent de `preparerLeJet`, qui les tient de la
+             * mécanique du système — le moteur ne connaît aucune table.
+             */
+            echelle?: EchelleDuJet;
+        },
     ): RollResult {
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
@@ -640,7 +712,7 @@ export class DiceEngine {
                 };
             }
             case 'd100-low':
-                return this.rollThreshold(100, 1, modifier, threshold, 'under');
+                return this.rollThreshold(100, 1, modifier, threshold, 'under', options?.echelle);
             default:
                 return this.rollFormula(config.defaultDice);
         }

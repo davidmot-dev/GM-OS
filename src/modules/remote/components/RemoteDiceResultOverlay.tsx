@@ -1,4 +1,5 @@
 import React from 'react';
+import { EtiquetteDuDegre } from '../../dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
 import { type RollRecord } from '../hooks/useRemoteSync';
 import { type DieResult } from '../../dice/DiceEngine';
@@ -77,20 +78,37 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             )}
                         </div>
 
-                        {(result.successes !== undefined || result.tagSuccess !== undefined) && (
-                            <motion.div 
-                                initial={{ y: 10, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                                className={`mt-2 px-10 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all ${
-                                    (result.tagSuccess || (result.successes && result.successes > 0))
-                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30' 
-                                        : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30'
-                                }`}
-                            >
-                                {(result.tagSuccess || (result.successes && result.successes > 0)) ? 'Succès' : 'Échec'}
-                            </motion.div>
-                        )}
+                        {/*
+                            **Elle écrivait « Succès » en dur** quand la tablette
+                            écrivait « Réussite » : deux mots pour le même jet, sur
+                            deux écrans côte à côte. Le mot vient d'un seul endroit
+                            désormais.
+
+                            Le repli sur `successes` est conservé : une réserve
+                            peut ne pas porter de verdict booléen, et c'est alors
+                            le nombre de réussites qui tranche.
+                        */}
+                        <EtiquetteDuDegre
+                            resultat={{
+                                degre: result.degre,
+                                tagSuccess: result.tagSuccess
+                                    ?? (result.successes !== undefined ? result.successes > 0 : undefined),
+                            }}
+                            classes={reussi => 'px-10 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all '
+                                + (reussi
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30'
+                                    : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30')}
+                            enveloppe={contenu => (
+                                <motion.div
+                                    initial={{ y: 10, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="mt-2"
+                                >
+                                    {contenu}
+                                </motion.div>
+                            )}
+                        />
 
                         <div className="mt-2 text-[10px] font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
                             <span className="w-4 h-px bg-white/10" />

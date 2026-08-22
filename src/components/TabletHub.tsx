@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { EtiquetteDuDegre } from '../modules/dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Monitor, 
@@ -583,20 +584,30 @@ const DiceResultDisplay: React.FC = () => {
             </div>
 
             {/* Final Tag */}
-            {lastRoll.tagSuccess !== undefined && (
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className={`mt-4 px-10 py-3 rounded-2xl border-2 text-lg md:text-xl font-black uppercase tracking-[0.3em] backdrop-blur-2xl shadow-xl transition-all ${
-                        lastRoll.tagSuccess 
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/60 shadow-glow-emerald/40' 
-                            : 'bg-rose-500/20 text-rose-400 border-rose-500/60 shadow-glow-rose/40'
-                    }`}
-                >
-                    {lastRoll.tagSuccess ? 'Réussite' : 'Échec'}
-                </motion.div>
-            )}
+            {/*
+                **La tablette écrivait « Réussite » en dur** pendant que
+                l'incrustation de résultat écrivait « Succès » et le pupitre une
+                clé i18n : trois vocabulaires pour le même jet, sous les yeux des
+                mêmes joueurs. Le mot vient désormais d'un seul endroit ;
+                l'animation, elle, reste celle de la tablette.
+            */}
+            <EtiquetteDuDegre
+                resultat={lastRoll}
+                classes={reussi => 'px-10 py-3 rounded-2xl border-2 text-lg md:text-xl font-black uppercase tracking-[0.3em] backdrop-blur-2xl shadow-xl transition-all '
+                    + (reussi
+                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/60 shadow-glow-emerald/40'
+                        : 'bg-rose-500/20 text-rose-400 border-rose-500/60 shadow-glow-rose/40')}
+                enveloppe={contenu => (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="mt-4"
+                    >
+                        {contenu}
+                    </motion.div>
+                )}
+            />
         </motion.div>
     );
 };

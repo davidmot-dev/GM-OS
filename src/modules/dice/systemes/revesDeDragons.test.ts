@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
+import { degreDuDe } from '../degresDeReussite';
 import {
     bandesDuJet,
     chancesDeReussite,
-    degreDuJet,
     AJUSTEMENT_INFERIEUR,
     MULTIPLICATEUR_PAR_AJUSTEMENT,
     RESULTATS_SPECIAUX,
@@ -69,7 +69,7 @@ describe('les bandes, transcrites du livre', () => {
         expect(bandes.echecParticulier).toBe(86);
         expect(bandes.echecTotal).toBe(94);
 
-        const degre = (de: number) => degreDuJet(de, bandes);
+        const degre = (de: number) => degreDuDe(de, bandes);
         expect(degre(1)).toBe('reussite-particuliere');
         expect(degre(6)).toBe('reussite-particuliere');
         expect(degre(7)).toBe('reussite-significative');
@@ -97,7 +97,7 @@ describe('les bandes, transcrites du livre', () => {
         expect(bandes.chances).toBe(1);
         expect(bandes.particuliere).toBe(1);
         expect(bandes.significative).toBeNull();
-        expect(degreDuJet(1, bandes)).toBe('reussite-particuliere');
+        expect(degreDuDe(1, bandes)).toBe('reussite-particuliere');
     });
 });
 
@@ -133,23 +133,23 @@ describe('les cas de bord que la table tranche', () => {
         expect(bandes.chances).toBe(100);
         expect(bandes.echecParticulier).toBeNull();
         expect(bandes.echecTotal).toBe(100);
-        expect(degreDuJet(99, bandes)).toBe('reussite-normale');
-        expect(degreDuJet(100, bandes)).toBe('echec-total');
+        expect(degreDuDe(99, bandes)).toBe('reussite-normale');
+        expect(degreDuDe(100, bandes)).toBe('echec-total');
     });
 
     it('rend le double zéro NORMAL au-dessus de cent pour cent', () => {
         const bandes = bandesDuJet(20, 1); // 20 × 5,5 = 110
         expect(bandes.chances).toBe(110);
         expect(bandes.echecTotal).toBeNull();
-        expect(degreDuJet(100, bandes)).toBe('echec-normal');
+        expect(degreDuDe(100, bandes)).toBe('echec-normal');
     });
 
     it('garde la réussite particulière au-delà de cent pour cent', () => {
         // Le livre imprime encore les paliers 101-105 et 106-110.
         const bandes = bandesDuJet(20, 1);
         expect(bandes.particuliere).toBe(22);
-        expect(degreDuJet(22, bandes)).toBe('reussite-particuliere');
-        expect(degreDuJet(23, bandes)).toBe('reussite-significative');
+        expect(degreDuDe(22, bandes)).toBe('reussite-particuliere');
+        expect(degreDuDe(23, bandes)).toBe('reussite-significative');
     });
 
     it('signale quand il sort de la table au lieu de rendre un nombre plausible', () => {
@@ -166,16 +166,16 @@ describe('l’ajustement inférieur à −10', () => {
         expect(bandes.chances).toBe(1);
         expect(bandes.particuliere).toBeNull();
         expect(bandes.significative).toBeNull();
-        expect(degreDuJet(1, bandes)).toBe('reussite-normale');
+        expect(degreDuDe(1, bandes)).toBe('reussite-normale');
     });
 
     it('rend tout échec particulier, et l’échec total à partir du seuil du livre', () => {
         const bandes = bandesDuJet(18, -13);
         expect(bandes.echecParticulier).toBe(2);
         expect(bandes.echecTotal).toBe(50);
-        expect(degreDuJet(2, bandes)).toBe('echec-particulier');
-        expect(degreDuJet(49, bandes)).toBe('echec-particulier');
-        expect(degreDuJet(50, bandes)).toBe('echec-total');
+        expect(degreDuDe(2, bandes)).toBe('echec-particulier');
+        expect(degreDuDe(49, bandes)).toBe('echec-particulier');
+        expect(degreDuDe(50, bandes)).toBe('echec-total');
     });
 
     it('descend le seuil au lieu de le monter — l’erreur des fiches du corpus', () => {
@@ -189,7 +189,7 @@ describe('l’ajustement inférieur à −10', () => {
     it('ne laisse plus aucune réussite à partir de −17', () => {
         const bandes = bandesDuJet(20, -17);
         expect(bandes.chances).toBe(0);
-        expect(degreDuJet(1, bandes)).toBe('echec-total');
-        expect(degreDuJet(100, bandes)).toBe('echec-total');
+        expect(degreDuDe(1, bandes)).toBe('echec-total');
+        expect(degreDuDe(100, bandes)).toBe('echec-total');
     });
 });

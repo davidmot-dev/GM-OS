@@ -19,7 +19,7 @@
  * séance, donc il se vérifie par des tests et non par l'œil.
  */
 
-import type { DegreDeReussite } from '../degresDeReussite';
+import type { EchelleDuJet } from '../degresDeReussite';
 
 /** Le dé à cent faces rend 1 à 100 ; le livre écrit « 00 » pour 100. */
 export const FACES_DU_DE = 100;
@@ -150,17 +150,7 @@ export const AJUSTEMENT_SANS_RETOUR = -17;
  * chances — ce que le livre imprime « — ». *Zéro aurait voulu dire « la bande
  * commence à zéro », ce qui est faux et se serait vu au premier jet.*
  */
-export interface BandesDuJet {
-    /** Pourcentage de réussite, arrondi à l'inférieur. Zéro quand elle est impossible. */
-    chances: number;
-    /** Plafond de la réussite particulière. */
-    particuliere: number | null;
-    /** Plafond de la réussite significative. */
-    significative: number | null;
-    /** Plancher de l'échec particulier. */
-    echecParticulier: number | null;
-    /** Plancher de l'échec total. */
-    echecTotal: number | null;
+export interface BandesDuJet extends EchelleDuJet {
     /**
      * Ce que le calcul a dû supposer, dit au joueur plutôt que tu.
      *
@@ -326,50 +316,4 @@ export function bandesDuJet(caracteristique: number, ajustement: number): Bandes
         echecTotal: ligne.echT,
         remarques,
     };
-}
-
-/**
- * Qualifie un résultat de dé sur les bandes d'un jet.
- *
- * **L'ordre des comparaisons est la règle**, et il se lit du meilleur au pire
- * puis du pire au moins pire : une particulière est aussi sous le plafond de la
- * significative, et un échec total est aussi au-dessus du plancher du
- * particulier. *Inverser deux lignes rendrait un degré toujours plausible et
- * toujours faux.*
- */
-export function degreDuJet(de: number, bandes: BandesDuJet): DegreDeReussite {
-    const { chances, particuliere, significative, echecParticulier, echecTotal } = bandes;
-
-    /*
-      **LE « 00 » NE RÉUSSIT JAMAIS, et c'est la table qui l'impose.** À 96-00 %
-      de chances, tout résultat du dé est inférieur ou égal aux chances — et
-      pourtant la ligne porte encore un échec total à 00. Cette colonne n'a de
-      sens que si le double zéro échoue quelles que soient les chances. La règle
-      en prose ne le dit que pour le cas au-dessus de cent pour cent ; la table le
-      dit pour celui d'en dessous, et les deux se rejoignent.
-    */
-    const cestUnDoubleZero = de >= FACES_DU_DE;
-
-    if (!cestUnDoubleZero && de <= chances) {
-        if (particuliere !== null && de <= particuliere) return 'reussite-particuliere';
-        if (significative !== null && de <= significative) return 'reussite-significative';
-        return 'reussite-normale';
-    }
-
-    /*
-      **Au-dessus de cent pour cent, le seul échec possible est NORMAL**
-      (section « Succès supérieur à cent »), et la table le confirme en n'y
-      imprimant plus aucune bande d'échec. À 96-100 % en revanche elle porte
-      encore un échec total : *la frontière est à cent, et les deux cas ne se
-      confondent pas.*
-
-      La réussite particulière, elle, survit au-delà de cent — la table imprime
-      encore ses paliers 101-105 et 106-110 — et c'est pourquoi ce retour vient
-      APRÈS le bloc de réussite et non avant.
-    */
-    if (chances > FACES_DU_DE) return 'echec-normal';
-
-    if (echecTotal !== null && de >= echecTotal) return 'echec-total';
-    if (echecParticulier !== null && de >= echecParticulier) return 'echec-particulier';
-    return 'echec-normal';
 }

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Dices, AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
+import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
 import {
     preparerLeJet, sectionDeLaComposante, verdict,
@@ -253,6 +254,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     modificateur === 'avantage',
                     seuilDuMoteur!,
                     jet.sens === 'sous-ou-egal' ? 'under' : 'over',
+                    jet.echelle,
                 );
                 return { ...brut, successes: brut.tagSuccess ? 1 : 0, fails: 0 };
             })()
@@ -261,7 +263,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 // le seuil » comptait les dés au-dessus, et rendait des
                 // réussites plausibles et exactement inverses.
                 { ...dice, successThreshold: seuilDuMoteur, sens: jet.sens },
-                { baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires, doubleSous: jet.doubleSous },
+                {
+                    baseCount: jet.nombreDeDes,
+                    gearCount: jet.desSecondaires,
+                    doubleSous: jet.doubleSous,
+                    // Sans elle, le moteur retomberait sur le booléen : réussi ou
+                    // raté, et jamais « particulière ». C'est le même oubli que
+                    // `jet.sens`, qui n'arrivait pas non plus jusqu'ici.
+                    echelle: jet.echelle,
+                },
             );
         setSeuilDuLancer(jet.seuil);
         setResultat(res);
@@ -642,9 +652,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     </div>
 
                     <div className="flex items-center gap-4 text-xs">
-                        <span className={`font-black uppercase tracking-widest ${v.reussi ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {v.reussi ? 'Réussite' : 'Échec'}
-                        </span>
+                        {/*
+                            **Le septième lecteur, et il écrivait lui aussi son
+                            propre mot.** Le degré l'emporte quand le jeu en
+                            gradue ; sinon c'est le verdict du compte de
+                            réussites, qui reste l'autorité sur une réserve.
+                        */}
+                        <EtiquetteDuDegre
+                            resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
+                            classes={reussi => 'font-black uppercase tracking-widest '
+                                + (reussi ? 'text-emerald-400' : 'text-red-400')}
+                        />
                         {/* « difficulté 0 » ne voulait rien dire sur un jeu qui
                             n'en gradue aucune : il en faut une, et c'est ça
                             qu'on annonce. */}

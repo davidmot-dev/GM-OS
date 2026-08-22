@@ -21,6 +21,7 @@
 
 import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
+import type { EchelleDuJet } from './degresDeReussite';
 
 /** Un choix que le joueur fait sur sa fiche au moment de lancer. */
 export interface ComposanteDeJet {
@@ -229,6 +230,15 @@ export interface JetPrepare {
      * *un écran qui explique faux est pire qu'un écran qui n'explique rien.*
      */
     explicationDuSeuil?: string;
+    /**
+     * Les bornes des six degrés, quand le jeu gradue ses réussites.
+     *
+     * **Absente sur les jeux qui ne graduent pas**, et c'est voulu : le moteur
+     * rend alors une réussite normale ou un échec normal. *Fabriquer les quatre
+     * degrés extrêmes ferait dire au journal qu'un jet fut spectaculaire alors
+     * que le jeu ne le sait pas.*
+     */
+    echelle?: EchelleDuJet;
     nombreDeDes: number;
     /**
      * Le détail de la réserve, quand elle se compose depuis la fiche.
@@ -478,6 +488,7 @@ export function preparerLeJet(
     let seuil = additionnees.total;
     let composantes = additionnees.retenues;
     let explicationDuSeuil: string | undefined;
+    let echelle: EchelleDuJet | undefined;
 
     /*
       **La cible calculée l'emporte sur le seuil additionné**, et les deux ne
@@ -510,6 +521,7 @@ export function preparerLeJet(
             seuil = cible.chances;
             composantes = [...caracteristique.retenues, ...depuisLaFiche.retenues];
             explicationDuSeuil = cible.explication;
+            echelle = cible.echelle;
             // Des remarques, jamais des avertissements : elles disent ce que le
             // calcul a supposé, elles n'empêchent pas de lancer.
             remarques.push(...cible.remarques);
@@ -574,6 +586,7 @@ export function preparerLeJet(
         seuil,
         composantes,
         explicationDuSeuil,
+        echelle,
         nombreDeDes,
         composantesDeLaReserve: deLaReserve.retenues,
         /*

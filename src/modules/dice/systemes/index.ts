@@ -15,6 +15,7 @@
  * nombres produit des nombres plausibles et faux.
  */
 
+import type { EchelleDuJet } from '../degresDeReussite';
 import { bandesDuJet, expliquerLesChances } from './revesDeDragons';
 
 /** Ce qu'une mécanique de cible rend, quelle que soit sa table. */
@@ -32,6 +33,15 @@ export interface CibleCalculee {
     explication: string;
     /** Ce que le calcul a dû supposer — dit, jamais tu. */
     remarques: string[];
+    /**
+     * Les bornes des six degrés, pour qualifier le dé une fois lancé.
+     *
+     * **Elles voyagent avec la cible parce qu'elles en dépendent** : les bandes
+     * se lisent SUR le pourcentage obtenu. Les calculer ailleurs supposerait de
+     * refaire le calcul de la cible, et deux calculs de la même chose finissent
+     * par diverger.
+     */
+    echelle: EchelleDuJet;
 }
 
 /**
@@ -52,6 +62,7 @@ export const MECANIQUES_DE_CIBLE: Readonly<Record<
             chances: bandes.chances,
             explication: expliquerLesChances(caracteristique, ajustement),
             remarques: bandes.remarques,
+            echelle: bandes,
         };
     },
 };

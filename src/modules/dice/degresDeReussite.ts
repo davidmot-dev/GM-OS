@@ -69,6 +69,68 @@ export function cleI18nDuDegre(degre: DegreDeReussite): string {
 }
 
 /**
+ * Les quatre bornes qui découpent un jet en pourcentage.
+ *
+ * **Elles sont des BORNES et non des bandes**, parce que c'est ainsi que les
+ * livres les impriment : `particuliere` et `significative` sont des plafonds, le
+ * dé leur est inférieur ou égal ; `echecParticulier` et `echecTotal` sont des
+ * planchers. `null` signifie que **le degré n'existe pas** à ce niveau de
+ * chances — ce que les tables impriment « — ». *Zéro aurait voulu dire « la
+ * bande commence à zéro », ce qui est faux et se verrait au premier jet.*
+ *
+ * **Les nombres viennent de chaque jeu ; le découpage, lui, est commun.**
+ */
+export interface EchelleDuJet {
+    /** Le pourcentage à ne pas dépasser au dé. */
+    chances: number;
+    particuliere: number | null;
+    significative: number | null;
+    echecParticulier: number | null;
+    echecTotal: number | null;
+}
+
+/**
+ * Qualifie un résultat de dé sur l'échelle d'un jet.
+ *
+ * **L'ordre des comparaisons est la règle**, et il se lit du meilleur au pire
+ * puis du pire au moins pire : une particulière est aussi sous le plafond de la
+ * significative, et un échec total est aussi au-dessus du plancher du
+ * particulier. *Inverser deux lignes rendrait un degré toujours plausible et
+ * toujours faux* — le genre de défaut qui ne se voit pas en séance.
+ */
+export function degreDuDe(de: number, echelle: EchelleDuJet, facesDuDe = 100): DegreDeReussite {
+    const { chances, particuliere, significative, echecParticulier, echecTotal } = echelle;
+
+    /*
+      **LE « 00 » NE RÉUSSIT JAMAIS.** C'est la convention du d100, et la table
+      de Rêves de Dragons l'impose sans le dire : à 96-100 % de chances, tout
+      résultat est inférieur ou égal aux chances, et pourtant la ligne porte
+      encore un échec total à 00. Cette colonne n'a de sens que si le double zéro
+      échoue quelles que soient les chances. L'Appel de Cthulhu et RuneQuest
+      disent la même chose en toutes lettres.
+    */
+    const cestUnDoubleZero = de >= facesDuDe;
+
+    if (!cestUnDoubleZero && de <= chances) {
+        if (particuliere !== null && de <= particuliere) return 'reussite-particuliere';
+        if (significative !== null && de <= significative) return 'reussite-significative';
+        return 'reussite-normale';
+    }
+
+    /*
+      **Au-dessus de cent pour cent, le seul échec possible est NORMAL.** La
+      réussite particulière, elle, survit — les tables impriment encore ses
+      paliers au-delà de cent —, et c'est pourquoi ce retour vient APRÈS le bloc
+      de réussite et non avant.
+    */
+    if (chances > facesDuDe) return 'echec-normal';
+
+    if (echecTotal !== null && de >= echecTotal) return 'echec-total';
+    if (echecParticulier !== null && de >= echecParticulier) return 'echec-particulier';
+    return 'echec-normal';
+}
+
+/**
  * Le degré équivalent à l'ancien booléen, pour les jeux qui ne graduent pas.
  *
  * **Un jeu sans degrés n'en gagne pas par notre faute.** Alien, Dune et les
@@ -79,4 +141,25 @@ export function cleI18nDuDegre(degre: DegreDeReussite): string {
  */
 export function degreDepuisLeBooleen(reussi: boolean): DegreDeReussite {
     return reussi ? 'reussite-normale' : 'echec-normal';
+}
+
+/**
+ * Le degré d'un résultat, **quelle que soit son ancienneté**.
+ *
+ * `degre` est né le 2026-08-22 ; `tagSuccess` a des mois. Un jet relu dans une
+ * séance enregistrée avant ce jour-là, ou reçu d'une tablette qui n'a pas
+ * encore la mise à jour, ne porte que le booléen — et un écran qui n'afficherait
+ * alors plus rien se lirait comme un jet qui n'a pas eu lieu.
+ *
+ * Rend `null` quand il n'y a **ni l'un ni l'autre** : le jet ne se prononce pas,
+ * et il ne faut surtout pas trancher à sa place. C'est le cas d'une somme
+ * ordinaire — un 2d6 de dégâts n'est ni réussi ni raté.
+ */
+export function degreOuBooleen(
+    degre: DegreDeReussite | undefined,
+    reussi: boolean | undefined,
+): DegreDeReussite | null {
+    if (degre) return degre;
+    if (reussi === undefined) return null;
+    return degreDepuisLeBooleen(reussi);
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { EtiquetteDuDegre } from '../../modules/dice/EtiquetteDuDegre';
 import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from '../../modules/dice/DiceUIUtils';
 import type { DieResult } from '../../modules/dice/DiceEngine';
@@ -13,6 +14,7 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
     const { t } = useTranslation(['modules', 'common']);
 
     if (!lastRoll) return null;
+
 
     return (
         <div className={`fixed inset-0 z-[70] flex items-center justify-center p-12 pointer-events-none transition-all duration-1000 ${
@@ -49,15 +51,13 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
                     ))}
                 </div>
                 
-                {lastRoll.tagSuccess !== undefined && (
-                    <div className={`mt-4 px-12 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all ${
-                        lastRoll.tagSuccess 
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30' 
-                            : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30'
-                    }`}>
-                        {lastRoll.tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
-                    </div>
-                )}
+                <EtiquetteDuDegre
+                    resultat={lastRoll}
+                    classes={reussi => 'mt-4 px-12 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all '
+                        + (reussi
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30'
+                            : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30')}
+                />
             </div>
         </div>
     );

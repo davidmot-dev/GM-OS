@@ -292,6 +292,14 @@
       "project_stop": "Arrêter la projection",
       "project_start": "Projeter sur le Hub (5s)"
     },
+    "degres": {
+      "reussite-particuliere": "Réussite particulière",
+      "reussite-significative": "Réussite significative",
+      "reussite-normale": "Réussite",
+      "echec-normal": "Échec",
+      "echec-particulier": "Échec particulier",
+      "echec-total": "Échec total"
+    },
     "quick_rolls": {
       "title": "Jets Rapides",
       "empty": "Aucun raccourci pour l'instant.",

@@ -292,6 +292,14 @@
       "project_stop": "Stop projection",
       "project_start": "Project on Hub (5s)"
     },
+    "degres": {
+      "reussite-particuliere": "Special success",
+      "reussite-significative": "Significant success",
+      "reussite-normale": "Success",
+      "echec-normal": "Failure",
+      "echec-particulier": "Special failure",
+      "echec-total": "Total failure"
+    },
     "quick_rolls": {
       "title": "Quick Rolls",
       "empty": "No shortcuts yet.",
