@@ -149,6 +149,10 @@ describe('l’étage 1 sur le corpus réel', () => {
         ["Comment fonctionne l'initiative ?", 'Initiative et déroulement du tour'],
         ['Comment fonctionne la santé et les blessures ?', 'Santé et blessures'],
         ['Quels sont les degrés de réussite ?', 'Degrés de réussite et critiques'],
+        // Les trois que le verbe au pluriel faisait taire, jusqu'au 2026-08-22.
+        ['Comment fonctionnent les jauges et ressources ?', 'Jauges et ressources individuelles'],
+        ['Comment fonctionnent les points de tâche ?', 'Les points de tâche (actions dans la durée)'],
+        ['Comment fonctionnent les jets opposés ?', 'Jets opposés, aide et coopération'],
     ])('« %s » est répondue par la fiche seule', (question, sujetAttendu) => {
         expect(ficheQuiRepond(question)).toBe(sujetAttendu);
     });
@@ -162,6 +166,23 @@ describe('l’étage 1 sur le corpus réel', () => {
      */
     it('se tait quand aucune fiche ne couvre la question', () => {
         expect(ficheQuiRepond('Comment parer avec un cheval ?')).toBeUndefined();
+    });
+
+    /**
+     * **Se taire vaut mieux que répondre à côté.**
+     *
+     * *Résolution des jets* existe et serait la bonne fiche, mais le
+     * rapprochement ne relie pas « résolvent » à « résolution ». Le premier jet
+     * du correctif retirait `résolvent` des mots porteurs — la question se
+     * réduisait à `jets`, et elle répondait *Jets opposés, aide et
+     * coopération* : **une règle exacte, tirée d'une source vérifiée, qui ne
+     * répond pas à la question.**
+     *
+     * On préfère donc la lacune. Elle est visible, elle entre dans la file de
+     * la Forge, et elle ne trompe personne à la table.
+     */
+    it('préfère se taire plutôt que de rendre la fiche voisine', () => {
+        expect(ficheQuiRepond('Comment se résolvent les jets ?')).toBeUndefined();
     });
 
     /**

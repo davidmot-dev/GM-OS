@@ -19,6 +19,36 @@ describe('les mots qui portent', () => {
     it('ramène les pluriels, pour que deux formulations se rejoignent', () => {
         expect(motsPorteurs('dégâts')).toEqual(motsPorteurs('dégât'));
     });
+
+    /**
+     * **Une liste qui couvre un verbe à une forme et pas aux autres est une
+     * liste qui ne le couvre pas.**
+     *
+     * `fonctionne` y était depuis toujours ; `fonctionnent` non. Le
+     * rapprochement étant un recouvrement STRICT, ce seul mot parasite suffisait
+     * à faire échouer « Comment fonctionnent les points de tâche ? » — quatre
+     * fiches sur vingt-et-une restaient muettes le 2026-08-22.
+     */
+    it('écarte le verbe interrogatif à toutes ses formes', () => {
+        expect(motsPorteurs('Comment fonctionne l’initiative ?')).toEqual(['initiative']);
+        expect(motsPorteurs('Comment fonctionnent les jauges ?')).toEqual(['jauge']);
+        expect(motsPorteurs('fonctionner'), 'l’infinitif aussi').toEqual([]);
+    });
+
+    /**
+     * **Et il n'y en a qu'un.** `résoudre`, `calculer`, `gérer`, `dérouler`
+     * NOMMENT un sujet dans un corpus de règles — résolution, calcul,
+     * déroulement — là où `fonctionner` ne titre jamais rien.
+     *
+     * La mesure l'a tranché : en retirant `résolvent`, « Comment se résolvent
+     * les jets ? » se réduisait à `jets` et répondait *Jets opposés, aide et
+     * coopération*. **La mauvaise fiche.** Voir le test qui garde ce cas plus
+     * bas.
+     */
+    it('garde les verbes qui peuvent être le sujet', () => {
+        expect(motsPorteurs('Comment se résolvent les jets ?')).toContain('resolvent');
+        expect(motsPorteurs('Comment se calculent les dégâts ?')).toContain('calculent');
+    });
 });
 
 describe('la fiche répond-elle seule', () => {
@@ -47,6 +77,30 @@ describe('la fiche répond-elle seule', () => {
 
     it('se tait aussi quand rien ne se croise', () => {
         expect(laFicheRepondSeule('Santé et blessures', 'règles de poursuite')).toBe(false);
+    });
+
+    /**
+     * **Le cas qui a fait rejeter six verbes de la liste des mots vides.**
+     *
+     * Privée de `résolvent`, la question ne pèse plus que `jets` — et un mot
+     * générique recouvre la première fiche venue. Elle répondait alors *Jets
+     * opposés, aide et coopération* là où *Résolution des jets* était la bonne.
+     *
+     * *Retirer un mot qui pouvait être le sujet coûte une règle exacte et hors
+     * sujet, ce qui est pire que la question restée sans réponse.*
+     */
+    it('ne répond pas « jets opposés » à une question sur la résolution des jets', () => {
+        const question = 'Comment se résolvent les jets ?';
+        expect(laFicheRepondSeule('Jets opposés, aide et coopération', question)).toBe(false);
+    });
+
+    /** Le verbe interrogatif, lui, ne fait plus obstacle. */
+    it.each([
+        ['Jauges et ressources individuelles', 'Comment fonctionnent les jauges et ressources ?'],
+        ['Les points de tâche (actions dans la durée)', 'Comment fonctionnent les points de tâche ?'],
+        ['Jets opposés, aide et coopération', 'Comment fonctionnent les jets opposés ?'],
+    ])('« %s » répond à « %s »', (sujet, question) => {
+        expect(laFicheRepondSeule(sujet, question)).toBe(true);
     });
 
     /**

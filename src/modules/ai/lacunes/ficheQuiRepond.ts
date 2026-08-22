@@ -16,12 +16,48 @@
  * volontairement **strict**, sans score ni seuil à régler.
  */
 
-/** Les mots qui ne distinguent rien, et qu'on ne compte donc pas. */
+/**
+ * Les mots qui ne distinguent rien, et qu'on ne compte donc pas.
+ *
+ * **Les verbes de la seconde moitié interrogent la FORME, jamais le sujet.**
+ * « Comment fonctionne l'initiative ? » et « l'initiative » demandent la même
+ * chose : le verbe dit qu'on pose une question, il ne dit pas sur quoi.
+ *
+ * Cette liste connaissait déjà `fonctionne` et `marche` — **au singulier
+ * seulement**, et c'est ce qui a coûté quatre fiches sur vingt-et-une le
+ * 2026-08-22. « Comment fonctionnent les points de tâche ? » gardait
+ * `fonctionnent` parmi ses mots porteurs, et la fiche *Les points de tâche* ne
+ * pouvait plus le recouvrir : le rapprochement est un recouvrement STRICT, donc
+ * **un seul mot parasite suffit à le faire échouer**.
+ *
+ * *Une liste qui couvre un verbe à une forme et pas aux autres est une liste qui
+ * ne le couvre pas.* Les trois formes qu'une question emploie — troisième
+ * personne du singulier, du pluriel, infinitif — sont donc écrites ensemble.
+ *
+ * **Un seul verbe y entre, et la mesure a dit pourquoi.** Le premier jet
+ * ajoutait aussi `résoudre`, `calculer`, `gérer`, `dérouler`, `utiliser`,
+ * `appliquer` — et « Comment se résolvent les jets ? » s'est mise à répondre
+ * *Jets opposés, aide et coopération*. **La mauvaise fiche.** Privée de son
+ * verbe, la question se réduisait à `jets`, un mot générique qui recouvre la
+ * première fiche venue.
+ *
+ * Ces verbes-là **nomment un sujet** dans un corpus de règles : résolution,
+ * calcul, déroulement, application. `fonctionner` non — il ne titre jamais
+ * rien. *Retirer un mot qui pouvait être le sujet coûte une règle exacte et
+ * hors sujet, ce qui est pire que la question restée sans réponse.*
+ *
+ * `marche` était là avant, seul et au singulier ; on ne le complète pas, parce
+ * que la marche est un déplacement autant qu'un verbe et que la même mesure
+ * manque pour trancher.
+ */
 const MOTS_SANS_PORTEE = new Set([
     'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'et', 'ou', 'que', 'qui',
     'quoi', 'quel', 'quelle', 'quelles', 'quels', 'est', 'sont', 'ce', 'ces',
     'cette', 'pour', 'sur', 'dans', 'avec', 'en', 'au', 'aux', 'comment',
-    'combien', 'pourquoi', 'regle', 'regles', 'jeu', 'fonctionne', 'marche',
+    'combien', 'pourquoi', 'regle', 'regles', 'jeu',
+
+    'marche',
+    'fonctionne', 'fonctionnent', 'fonctionner',
 ]);
 
 /** Les mots porteurs d'un texte, sans accents ni casse, au singulier. */
