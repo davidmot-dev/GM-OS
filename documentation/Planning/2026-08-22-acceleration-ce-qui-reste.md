@@ -99,7 +99,8 @@ Quatre étages, du moins coûteux au plus coûteux.
 - [x] 2 — à défaut, **la référence dans le livre** (« p. 142, section Ivresse ») ; ouverture du PDF en
       secours ou sur demande, **jamais dans le chemin critique** — *fait le 22/08 : aucun modèle invoqué,
       aucun PDF ouvert, un rapprochement de mots sur l'index déjà extrait*
-- [ ] 3 — à défaut, **un jugement de table** en deux lignes
+- [x] 3 — à défaut, **un jugement de table** en deux lignes — *fait le 22/08 ; l'étiquette est posée
+      par l'écran et non par le modèle, parce qu'une consigne de placement se perd*
 - [x] 4 — **le journal des lacunes** — *fait le 22/08*
 
 Les quatre exigences du *ruling*, qui ne se négocient pas :

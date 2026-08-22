@@ -15,6 +15,7 @@ import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
 import { contexteEstVide, type ContexteDeCampagne } from '../journal/contexteDeCampagne';
 import i18n from '../../i18n';
+import { CONSIGNE_DE_JUGEMENT } from './lacunes/jugementDeTable';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 
@@ -1115,6 +1116,26 @@ Use the names above verbatim. Do not invent a setting title.
 
     const liveContext = this.getLiveSessionContext(isLite);
 
+    /*
+      **Aucune source ? On juge, et on le dit — étage 3 de l'axe M.**
+
+      C'est le seul moment où l'on sait que la recherche n'a rien atteint : après
+      le RAG, avant que le modèle ne parte. Sans cette consigne, il répondait de
+      lui-même, longuement, et parfois en citant une page qu'il inventait — *une
+      recherche qui n'atteint rien produit tout de même une réponse confiante.*
+
+      La consigne ne s'ajoute que sur le chemin complet : en mode allégé, le
+      Cortex ne pose pas de question de règle.
+    */
+    /*
+      **On ne juge que si l'on SAIT qu'il n'y avait rien.** Une liste absente
+      n'est pas une liste vide : elle veut dire qu'on ne sait pas. Traiter les
+      deux pareil apposerait l'étiquette sur des réponses parfaitement sourcées,
+      et *l'étiquette doit rester rare pour rester lue.*
+    */
+    const sources = ragService.dernieresSources;
+    const sansAucuneSource = !isLite && Array.isArray(sources) && sources.length === 0;
+
     const fullContext = assemblerLeContexte(ragContext, customContext, liveContext);
 
     const gemStore = (await import('../../stores/useGemStore')).useGemStore.getState();
@@ -1186,7 +1207,9 @@ ${i18n.language === 'fr'
       : 'Cite the source document (its path) for rule points. Never invent page numbers, and do not repeat those found in the documents: their pagination is unreliable.'}
 
 CONTEXTE RÉCUPÉRÉ (RAG + SESSION) :
-${fullContext}`;
+${fullContext}${sansAucuneSource ? `
+
+${CONSIGNE_DE_JUGEMENT}` : ''}`;
   }
 
   /**

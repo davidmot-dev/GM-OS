@@ -18,6 +18,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { marquerCommeRelue, marquerCommeSuspecte } from '../../forge/rules/marqueDeRelecture';
 import { regrouperLesLacunes, useJournalDesLacunes } from '../lacunes/useJournalDesLacunes';
 import { atteinteDeLaRecherche, estUneLacune } from '../lacunes/atteinteDeLaRecherche';
+import { doitJuger, ETIQUETTE_DU_JUGEMENT } from '../lacunes/jugementDeTable';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -76,6 +77,16 @@ const AIChatPanel: React.FC = () => {
    * fiche a répondu, la référence au livre n'ajoute rien et coûte une ligne.
    */
   const [dansLeLivre, setDansLeLivre] = useState<{ titre: string; page: number }[]>([]);
+
+  /**
+   * La dernière réponse est-elle **un jugement de table** ?
+   *
+   * Étage 3 de l'axe M. L'étiquette est posée par l'écran et non par le modèle,
+   * et c'est délibéré : *une consigne de placement se perd, un composant ne se
+   * trompe pas.* Un modèle qui oublierait de commencer par « Jugement de table »
+   * produirait exactement le défaut que l'exigence existe pour empêcher.
+   */
+  const [jugement, setJugement] = useState(false);
 
   const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[]>([]);
 
@@ -148,6 +159,7 @@ const AIChatPanel: React.FC = () => {
     setInput('');
     setSources([]);
     setDansLeLivre([]);
+    setJugement(false);
     setLoading(true);
     setAiStatus('Gathering intelligence...');
 
@@ -187,7 +199,10 @@ const AIChatPanel: React.FC = () => {
             Quand une fiche répond, la référence n'ajoute rien et coûte une
             ligne à l'écran ; quand rien ne répond, elle est tout ce qu'on a.
           */
-          if (systemeActif && estUneLacune(atteinteDeLaRecherche(recues))) {
+          const atteinte = atteinteDeLaRecherche(recues);
+          setJugement(doitJuger(atteinte));
+
+          if (systemeActif && estUneLacune(atteinte)) {
             void window.appBridge?.ai?.chercherDansLIndex?.(systemeActif, question)
               .then(r => setDansLeLivre(r.trouvailles.map(t => ({ titre: t.titre, page: t.page }))))
               .catch(() => setDansLeLivre([]));
@@ -324,6 +339,23 @@ const AIChatPanel: React.FC = () => {
           Il ne s'affiche qu'en cas de lacune : quand une fiche a répondu, la
           référence n'ajoute rien.
         */}
+        {/*
+          **L'étiquette AVANT le contenu, jamais après.** C'est la plus subtile
+          des quatre exigences de l'étage 3, et celle qu'on aurait perdue en la
+          confiant au modèle : *placée après, elle arrive quand le meneur a déjà
+          adopté la réponse.*
+
+          Elle est donc posée par l'écran, au-dessus de la conversation, dès que
+          la recherche n'a RIEN atteint — et avant même que le premier mot ne
+          s'écrive.
+        */}
+        {jugement && (
+          <div className="mx-1 mb-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-amber-300/90">
+            {ETIQUETTE_DU_JUGEMENT}
+          </div>
+        )}
+
+
         {dansLeLivre.length > 0 && (
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1 pb-2 text-[10px]">
             <span className="font-black uppercase tracking-widest text-sky-300/50">
