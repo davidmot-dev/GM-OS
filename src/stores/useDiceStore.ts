@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { consignerLeJet } from '../modules/journal/consignerLeJet';
 import type { RollResult } from '../modules/dice/DiceEngine';
 
 export interface QuickRoll {
@@ -44,10 +45,32 @@ export const useDiceStore = create<DiceState>()(
             isDiceProjected: false,
             projectionTrigger: 0,
             enable3D: true,
-            setLastRoll: (roll) => set((state) => ({
-                lastRoll: roll,
-                history: [roll, ...state.history].slice(0, 50)
-            })),
+            setLastRoll: (roll) => {
+                /*
+                  **Le journal se sert ICI, au goulot des deux écrans qui
+                  lancent** — le pupitre du meneur et la tablette des joueurs.
+
+                  Ce registre garde cinquante lancers pour l'écran et rien pour
+                  l'histoire : il ne survit pas à la séance et n'entre dans aucun
+                  résumé. Les dés étaient l'un des trois modules muets relevés à
+                  la revue des 36 émetteurs, alors que la musique — geste
+                  identique — émettait déjà.
+
+                  La décision de ce qui vaut d'être écrit n'est pas prise ici :
+                  elle vit dans `consignerLeJet`, avec le panneau de fiche pour
+                  second appelant.
+                */
+                consignerLeJet({
+                    titre: roll.title,
+                    totalDisplay: roll.totalDisplay,
+                    degre: roll.degre,
+                    tagSuccess: roll.tagSuccess,
+                });
+                set((state) => ({
+                    lastRoll: roll,
+                    history: [roll, ...state.history].slice(0, 50),
+                }));
+            },
             setIsDiceProjected: (isDiceProjected) => set({ isDiceProjected }),
             setEnable3D: (enable3D) => set({ enable3D }),
             triggerDiceProjection: () => set({ projectionTrigger: Date.now() }),

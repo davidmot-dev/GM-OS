@@ -188,6 +188,32 @@ export class HueEngine {
             return;
         }
 
+        /*
+          **Les lumières étaient muettes**, troisième des modules relevés à la
+          revue des 36 émetteurs du 2026-08-20.
+
+          **Et `isAutomatic` décide de tout.** Huit chemins appellent cette
+          méthode, et six sont des ENCHAÎNEMENTS : une scène liée à une piste de
+          musique, à un instantané, à un moment de storyboard. Les consigner
+          tous écrirait deux lignes pour un seul geste — la musique dit déjà
+          qu'elle démarre, et sa lumière liée le redirait aussitôt. *Un journal
+          qui double ses lignes se relit comme un journal qui ment sur le nombre
+          de gestes.*
+
+          Le paramètre existait déjà, et il portait exactement la distinction
+          qu'il fallait : **on consigne ce que le meneur a voulu, pas ce que
+          l'application a enchaîné.**
+        */
+        if (!isAutomatic) {
+            const { useJournalStore } = await import('../journal/useJournalStore');
+            useJournalStore.getState().addEvent({
+                type: 'SYSTEM',
+                title: `Lumières : ${scene.name}`,
+                content: `Scène lumineuse « ${scene.name} » appliquée à la table.`,
+                metadata: { sceneId },
+            });
+        }
+
         const transTime = useLightStore.getState().transitionTimeMs;
         useLightStore.getState().setActiveScene(sceneId, isAutomatic);
 

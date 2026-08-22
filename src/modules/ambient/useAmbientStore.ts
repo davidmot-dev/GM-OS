@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ambientEngine } from './AmbientEngine';
+import { useJournalStore } from '../journal/useJournalStore';
 // Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
 export interface AmbientTrackState {
@@ -340,6 +341,23 @@ export const useAmbientStore = create<AmbientState>()(
                 }
 
                 set({ tracks: newTracks });
+
+                /*
+                  **L'ambiance était muette**, l'un des trois modules relevés à
+                  la revue des 36 émetteurs du 2026-08-20 — alors que la musique,
+                  geste rigoureusement identique, émettait déjà. Elle prend donc
+                  le même type : une nappe d'ambiance EST du son.
+
+                  Nature `trace` par défaut d'`AUDIO`, et c'est juste : poser une
+                  ambiance est un geste de table. Ce qu'elle installe — la pluie,
+                  la taverne — relève de la scène, que la trame porte déjà.
+                */
+                useJournalStore.getState().addEvent({
+                    type: 'AUDIO',
+                    title: `Ambiance : ${scene.name}`,
+                    content: `Nappe d'ambiance « ${scene.name} » appliquée.`,
+                    metadata: { sceneId },
+                });
             },
 
             applySnapshot: async (snapshot) => {

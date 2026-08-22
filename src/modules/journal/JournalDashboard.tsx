@@ -19,7 +19,8 @@ import {
   MapPin,
   FileText,
   Settings,
-  HelpCircle
+  HelpCircle,
+  Dices
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { gmToast } from '../../stores/useToastStore';
@@ -38,7 +39,8 @@ const eventIcons: Record<string, React.ReactNode> = {
   LOCATION: <MapPin className="size-4 text-amber-400" />,
   NOTE: <FileText className="size-4 text-slate-400" />,
   SYSTEM: <Settings className="size-4 text-indigo-400" />,
-  ORACLE: <HelpCircle className="size-4 text-purple-400" />
+  ORACLE: <HelpCircle className="size-4 text-purple-400" />,
+  DICE: <Dices className="size-4 text-fuchsia-400" />,
 };
 
 const JournalDashboard: React.FC = () => {

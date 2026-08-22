@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Dices, AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
 import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
+import { consignerLeJet } from '../../../journal/consignerLeJet';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
 import {
     preparerLeJet, sectionDeLaComposante, verdict,
@@ -275,6 +276,27 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             );
         setSeuilDuLancer(jet.seuil);
         setResultat(res);
+
+        /*
+          **Le panneau de fiche ne traverse pas le registre des dés**, donc il
+          consigne lui-même. Ses jets n'apparaissaient ni dans l'historique du
+          pupitre, ni au journal : le seul moment où ils laissaient une trace
+          était quand ils dépensaient une ressource, et c'est le MOUVEMENT de
+          réserve qui était consigné, pas le jet.
+
+          Le brancher sur `setLastRoll` l'aurait aussi projeté sur le Hub des
+          joueurs — un changement de comportement que ce chantier n'a pas à
+          faire. On appelle donc le même décideur, par l'autre porte.
+        */
+        consignerLeJet({
+            titre: jet.composantes.length > 0
+                ? jet.composantes.map(c => c.label).join(' + ')
+                : `${jet.nombreDeDes}d${jet.faces}`,
+            totalDisplay: res.totalDisplay,
+            degre: res.degre,
+            tagSuccess: res.tagSuccess,
+            seuil: descripteur.cible || jet.composantes.length > 0 ? jet.seuil : undefined,
+        });
 
         /**
          * « Après la résolution d'un test réussi, chaque réussite excédentaire

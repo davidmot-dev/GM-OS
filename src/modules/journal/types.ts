@@ -35,6 +35,20 @@ export const TYPES_D_EVENEMENT = [
    * l'on filtre.*
    */
   'PJ',
+  /**
+   * Un jet de dés.
+   *
+   * **Pourquoi un type plutôt que `SYSTEM`.** Les dés sont le geste le PLUS
+   * fréquent d'une séance — des centaines de lignes —, et c'est précisément ce
+   * qu'on voudra filtrer, compter ou masquer en relisant. *Un type qui ment sur
+   * son sujet coûte le jour où l'on filtre*, et cette leçon-là a déjà été payée
+   * par la mort d'un PJ rangée sous « personnage non joueur ».
+   *
+   * Sa nature est `trace` par défaut, et son émetteur la relève à `chronique`
+   * pour les deux extrêmes de l'échelle : une réussite particulière et un échec
+   * total sont des faits de fiction, pas des mesures.
+   */
+  'DICE',
 ] as const;
 
 export type JournalEventType = typeof TYPES_D_EVENEMENT[number];
