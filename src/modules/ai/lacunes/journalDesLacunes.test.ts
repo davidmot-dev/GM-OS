@@ -3,6 +3,7 @@ import {
     atteinteDeLaRecherche, clefDeRegroupement, estUneLacune,
 } from './atteinteDeLaRecherche';
 import { useJournalDesLacunes } from './useJournalDesLacunes';
+import { doitJuger } from './jugementDeTable';
 
 /**
  * Ce que ces tests protègent : **les sujets à forger sont désignés par l'usage,
@@ -13,11 +14,12 @@ import { useJournalDesLacunes } from './useJournalDesLacunes';
  * friction à table et ne sont jamais cliqués.
  */
 
-const source = (provenance: string) => ({ provenance });
+const source = (provenance: string, sujet?: string) => ({ provenance, sujet });
 
 describe('ce que la recherche a atteint', () => {
     it('reconnaît une fiche du corpus comme la seule réponse pleine', () => {
-        expect(atteinteDeLaRecherche([source('fiche'), source('systeme')])).toBe('fiche');
+        const sources = [source('fiche', 'Éthylisme (jet, degrés et malus)'), source('systeme')];
+        expect(atteinteDeLaRecherche(sources, "règles d'éthylisme")).toBe('fiche');
     });
 
     /**
@@ -25,7 +27,7 @@ describe('ce que la recherche a atteint', () => {
      * règle vérifiée** : la question entre dans la file.
      */
     it('range un document non vérifié dans la file', () => {
-        expect(atteinteDeLaRecherche([source('campagne')])).toBe('document');
+        expect(atteinteDeLaRecherche([source('campagne')], 'peu importe')).toBe('document');
         expect(estUneLacune('document')).toBe(true);
     });
 
@@ -34,9 +36,52 @@ describe('ce que la recherche a atteint', () => {
      * sa réponse ne le dit.
      */
     it('appelle « rien » une réponse sans aucune source', () => {
-        expect(atteinteDeLaRecherche([])).toBe('rien');
+        expect(atteinteDeLaRecherche([], 'peu importe')).toBe('rien');
         expect(estUneLacune('rien')).toBe(true);
         expect(estUneLacune('fiche'), 'une fiche n’est pas une lacune').toBe(false);
+    });
+
+    /**
+     * **Le cas de table du 2026-08-22, et la raison du quatrième état.**
+     *
+     * « Comment se calculent les dégâts de chute ? » retenait deux fiches du
+     * corpus Rêves de Dragons — dont aucune ne parle de la chute. Le meneur
+     * repartait sans règle, **sans renvoi au livre et sans que la Forge
+     * apprenne le manque** : la recherche avait touché une fiche, donc tout
+     * allait bien.
+     *
+     * *Deux verdicts portaient sur la même chose et se contredisaient* —
+     * l'étage 1 disait « aucune fiche ne couvre », l'étage 4 disait « une fiche
+     * a répondu ». C'est le test de l'étage 1 qui tranche désormais.
+     */
+    it('distingue une fiche VOISINE d’une fiche qui répond', () => {
+        const voisines = [
+            source('fiche', 'Dégâts et types de dégâts'),
+            source('fiche', 'Environnement et dangers'),
+        ];
+        const question = 'Comment se calculent les dégâts de chute ?';
+
+        expect(atteinteDeLaRecherche(voisines, question)).toBe('fiche-hors-sujet');
+        expect(estUneLacune('fiche-hors-sujet'), 'la Forge doit l’apprendre').toBe(true);
+    });
+
+    /**
+     * **Un état distinct, et pas un repli sur `document`.** « Rien du tout » et
+     * « des fiches voisines mais aucune qui couvre » sont deux manques de
+     * nature différente : le second nomme même les fiches à étendre.
+     */
+    it('ne se confond ni avec « rien » ni avec « document »', () => {
+        const question = 'Comment se calculent les dégâts de chute ?';
+        expect(atteinteDeLaRecherche([source('fiche', 'Poursuites')], question))
+            .not.toBe('document');
+        expect(atteinteDeLaRecherche([source('fiche', 'Poursuites')], question))
+            .not.toBe('rien');
+    });
+
+    /** Il reste le seul à déclencher le jugement de table : voir `jugementDeTable`. */
+    it('une fiche hors sujet a tout de même nourri la réponse', () => {
+        expect(doitJuger('fiche-hors-sujet'), 'ce n’est pas une réponse sans source')
+            .toBe(false);
     });
 });
 
@@ -74,8 +119,26 @@ describe('le journal', () => {
     beforeEach(() => useJournalDesLacunes.setState({ questions: [] }));
 
     it('ne retient pas une question à laquelle une fiche a répondu', () => {
-        useJournalDesLacunes.getState().noter('Ivresse ?', [source('fiche')]);
+        // **Une fiche SANS sujet ne pouvait pas servir de témoin** : le moteur
+        // ne classe une source comme « fiche » que si elle en déclare un, et
+        // c'est ce sujet qui dit si elle répond. La fixture décrivait quelque
+        // chose qui n'existe pas.
+        useJournalDesLacunes.getState().noter('Ivresse ?', [source('fiche', 'Ivresse')]);
         expect(useJournalDesLacunes.getState().lacunes()).toEqual([]);
+    });
+
+    /**
+     * **Et une fiche voisine, elle, se retient.** C'est le cas de table du
+     * 2026-08-22 : deux fiches retenues, aucune qui parle de la chute, et la
+     * Forge n'en savait rien.
+     */
+    it('retient une question que seules des fiches voisines ont touchée', () => {
+        useJournalDesLacunes.getState()
+            .noter('Comment se calculent les dégâts de chute ?', [source('fiche', 'Dégâts et types de dégâts')]);
+
+        const lacunes = useJournalDesLacunes.getState().lacunes();
+        expect(lacunes).toHaveLength(1);
+        expect(lacunes[0].atteinte).toBe('fiche-hors-sujet');
     });
 
     it('compte les fois où la même demande est revenue', () => {

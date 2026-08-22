@@ -118,7 +118,7 @@ export const useJournalDesLacunes = create<EtatDuJournal>()(persist((set, get) =
         const notee: QuestionNotee = {
             question: propre,
             clef,
-            atteinte: atteinteDeLaRecherche(sources),
+            atteinte: atteinteDeLaRecherche(sources, propre),
             quand: Date.now(),
             systeme,
         };

@@ -209,7 +209,7 @@ const AIChatPanel: React.FC = () => {
           setFicheDirecte(venueDeLaFiche ?? null);
           useJournalDesLacunes.getState().noter(question, recues, systemeActif);
 
-          const atteinte = atteinteDeLaRecherche(recues);
+          const atteinte = atteinteDeLaRecherche(recues, question);
           setJugement(doitJuger(atteinte));
 
           if (systemeActif && estUneLacune(atteinte)) {
@@ -317,7 +317,7 @@ const AIChatPanel: React.FC = () => {
         {lacunes.length > 0 && (
           <details className="px-1 pb-2">
             <summary className="cursor-pointer text-[9px] font-black uppercase tracking-widest text-amber-300/50 hover:text-amber-300/80">
-              Lacunes — {lacunes.length} sujet{lacunes.length > 1 ? 's' : ''} sans fiche
+              Lacunes — {lacunes.length} sujet{lacunes.length > 1 ? 's' : ''} sans fiche qui réponde
             </summary>
             <ul className="mt-1.5 space-y-1">
               {lacunes.slice(0, 8).map(lacune => (

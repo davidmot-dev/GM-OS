@@ -1,3 +1,5 @@
+import { laFicheRepondSeule } from './ficheQuiRepond';
+
 /**
  * Ce que la recherche a atteint — **le socle du journal des lacunes.**
  *
@@ -18,17 +20,40 @@
 /**
  * Les états qu'une recherche peut atteindre, **du plus solide au plus fragile.**
  *
+ * **`fiche-hors-sujet` a été ajouté le 2026-08-22, sur un cas de table.**
+ * « Comment se calculent les dégâts de chute ? » retenait deux fiches — *Dégâts
+ * et types de dégâts*, *Environnement et dangers* — dont aucune ne parle de la
+ * chute. Le meneur repartait sans règle, **sans renvoi au livre et sans que la
+ * Forge apprenne le manque** : la recherche avait touché une fiche, donc tout
+ * allait bien.
+ *
+ * Deux verdicts portaient déjà sur la même chose et se contredisaient : l'étage
+ * 1 disait *« aucune fiche ne couvre cette question »* pendant que l'étage 4
+ * disait *« une fiche a répondu »*. **Deux écrivains pour une même vérité.**
+ * C'est désormais le test de l'étage 1 qui tranche, ici comme là-bas.
+ *
+ * Un état distinct plutôt qu'un repli sur `document` : *« rien du tout »* et
+ * *« des fiches voisines, mais aucune qui couvre »* sont deux manques de nature
+ * différente, et ils ne se forgent pas pareil — le second dit même **où** aller,
+ * puisqu'il nomme les fiches à étendre.
+ *
  * `index` manque à cette liste, et c'est délibéré : il appartient à l'étage 2 de
  * l'axe M — la référence dans le livre — qui n'est pas construit. *Déclarer une
  * valeur qu'aucun chemin ne produit ferait un champ mort de plus*, et le dépôt
  * en a compté trois en une seule journée.
  */
-export const ATTEINTES = ['fiche', 'document', 'rien'] as const;
+export const ATTEINTES = ['fiche', 'fiche-hors-sujet', 'document', 'rien'] as const;
 export type Atteinte = typeof ATTEINTES[number];
 
-/** Une source telle que le moteur la rend — seule sa provenance compte ici. */
+/**
+ * Une source telle que le moteur la rend.
+ *
+ * Le `sujet:` compte autant que la provenance : c'est lui qui dit si la fiche
+ * parle de ce qu'on a demandé, ou seulement de quelque chose de voisin.
+ */
 export interface SourceAtteinte {
     provenance: string;
+    sujet?: string;
 }
 
 /**
@@ -42,13 +67,35 @@ export interface SourceAtteinte {
  * **Aucune source du tout, c'est le cas le plus grave** : le modèle a répondu de
  * lui-même, et rien dans sa réponse ne le dit. *Une recherche qui n'atteint rien
  * produit tout de même une réponse confiante.*
+ *
+ * **La question est un paramètre, et elle devait l'être.** « Une fiche a-t-elle
+ * répondu ? » ne se juge pas sur la seule provenance : une fiche voisine est
+ * retenue par la recherche sans rien dire de ce qu'on demandait. Le juge est
+ * `laFicheRepondSeule`, **le même que celui de l'étage 1** — le rendre commun
+ * était tout l'objet du correctif.
  */
-export function atteinteDeLaRecherche(sources: readonly SourceAtteinte[]): Atteinte {
+export function atteinteDeLaRecherche(
+    sources: readonly SourceAtteinte[],
+    question: string,
+): Atteinte {
     if (sources.length === 0) return 'rien';
-    return sources.some(s => s.provenance === 'fiche') ? 'fiche' : 'document';
+
+    const fiches = sources.filter(s => s.provenance === 'fiche');
+    if (fiches.length === 0) return 'document';
+
+    return fiches.some(f => laFicheRepondSeule(f.sujet, question))
+        ? 'fiche'
+        : 'fiche-hors-sujet';
 }
 
-/** Cette question a-t-elle sa place dans la file de travail ? */
+/**
+ * Cette question a-t-elle sa place dans la file de travail ?
+ *
+ * **Une fiche voisine ne comble pas le manque.** « Dégâts et types de dégâts »
+ * a beau être retenue pour « comment se calculent les dégâts de chute ? », elle
+ * ne dit rien de la chute — et le meneur repartait sans règle, sans renvoi au
+ * livre, et sans que la Forge apprenne qu'il lui manquait quelque chose.
+ */
 export function estUneLacune(atteinte: Atteinte): boolean {
     return atteinte !== 'fiche';
 }

@@ -4,6 +4,7 @@ import { selectContext, type IndexedFile } from './ragSelection';
 import fs from 'node:fs';
 import path from 'node:path';
 import { laFicheRepondSeule } from '../src/modules/ai/lacunes/ficheQuiRepond';
+import { atteinteDeLaRecherche, estUneLacune } from '../src/modules/ai/lacunes/atteinteDeLaRecherche';
 
 /**
  * Ce que ces tests protègent : **une campagne forgée trouve son corpus.**
@@ -161,5 +162,34 @@ describe('l’étage 1 sur le corpus réel', () => {
      */
     it('se tait quand aucune fiche ne couvre la question', () => {
         expect(ficheQuiRepond('Comment parer avec un cheval ?')).toBeUndefined();
+    });
+
+    /**
+     * **Le cas de table du 2026-08-22, de bout en bout sur le disque.**
+     *
+     * « Comment se calculent les dégâts de chute ? » retient deux fiches — et
+     * aucune ne parle de la chute. Le meneur repartait sans règle, sans renvoi
+     * au livre, et **sans que la Forge apprenne le manque** : la recherche avait
+     * touché une fiche, donc tout allait bien.
+     *
+     * Deux verdicts portaient sur la même chose et se contredisaient. *C'est le
+     * test de l'étage 1 qui tranche désormais*, ici comme là-bas.
+     */
+    it('une question que seules des fiches voisines touchent entre dans la file', () => {
+        const question = 'Comment se calculent les dégâts de chute ?';
+        const corpus = resoudreCorpus({ ...PILOTE_FORGE, dossiersConnus: DOSSIERS });
+        const choix = selectContext(fichesDuDisque(), {
+            systemId: PILOTE_FORGE.systemId,
+            campaignName: 'A la claire fontaine',
+            systemPath: corpus.racine,
+            query: question,
+        });
+
+        expect(choix.retenus.length, 'des fiches ont bien été retenues').toBeGreaterThan(0);
+        expect(choix.retenus.every(r => r.provenance === 'fiche')).toBe(true);
+
+        const atteinte = atteinteDeLaRecherche(choix.retenus, question);
+        expect(atteinte, 'voisines, mais aucune ne couvre').toBe('fiche-hors-sujet');
+        expect(estUneLacune(atteinte), 'la Forge doit l’apprendre').toBe(true);
     });
 });
