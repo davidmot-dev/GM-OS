@@ -411,6 +411,27 @@ export function controlerLePilote(
     }
 
     /*
+      **Une cible sans caractéristique ne calcule rien.**
+
+      Relevé le 2026-08-22, à la première dérivation qui ait produit une cible :
+      le pilote portait `jet.cible` avec sa mécanique et son ajustement, et
+      AUCUNE caractéristique — l'ordonnée de la table. Le panneau aurait lu zéro,
+      multiplié zéro, et annoncé 0 % de chances sur chaque jet. *Un pourcentage
+      faux ne se plaint de rien.*
+
+      C'est une erreur et non un avertissement : sans ordonnée, la mécanique n'a
+      littéralement rien à croiser.
+    */
+    if (driver.jet?.cible && !driver.jet.cible.caracteristique?.sectionId) {
+        erreur(
+            'jet.cible.caracteristique',
+            'La cible se calcule en croisant une caractéristique et un ajustement, et le pilote '
+            + 'ne dit pas où lire la caractéristique. Le jet vaudrait zéro pour cent, quel que '
+            + 'soit le personnage.',
+        );
+    }
+
+    /*
       **Les deux façons de dire la cible ne cohabitent pas.** Elles répondent à
       la même question, et le panneau fait gagner la mécanique — donc un seuil
       déclaré à côté serait un travail perdu, silencieusement. On avertit plutôt
@@ -529,7 +550,7 @@ export function controlerLePilote(
           Verser la liste ici plutôt que d'écrire un contrôle jumeau, c'est
           garantir qu'ils ne divergeront pas.
         */
-        ['jet.cible.caracteristique', driver.jet?.cible ? [driver.jet.cible.caracteristique] : []],
+        ['jet.cible.caracteristique', driver.jet?.cible?.caracteristique ? [driver.jet.cible.caracteristique] : []],
         ['jet.cible.ajustement', driver.jet?.cible?.ajustement],
         // Même contrôle sur la réserve depuis le 2026-08-15 : elle se compose
         // désormais depuis la fiche, donc elle peut la manquer de la même façon.
@@ -539,6 +560,26 @@ export function controlerLePilote(
         ['jet.reserve.secondaire.composantes', driver.jet?.reserve?.secondaire?.composantes],
     ];
     composantesDuJet.forEach(([ou, liste]) => (liste ?? []).forEach((composante, i) => {
+        /*
+          **Une entrée peut être vide, ou n'être pas une composante du tout.**
+          Le type promet un objet avec un `sectionId` ; le pilote vient d'un
+          modèle de langage, et le 2026-08-22 il a rendu une cible sans
+          caractéristique. `undefined.sectionId` a fait tomber TOUTE la Revue du
+          Pilote — *l'écran qui existe pour signaler ce genre de défaut, mis hors
+          service par le défaut qu'il devait nommer.*
+
+          On le dit et on continue : les autres constats de la revue valent
+          toujours, et c'est justement quand un pilote est mauvais qu'on a le
+          plus besoin de les lire.
+        */
+        if (!composante || typeof composante !== 'object' || !composante.sectionId) {
+            erreur(
+                `${ou}[${i}]`,
+                'Cette entrée ne désigne aucune section de la fiche : le panneau de jet ne pourrait '
+                + 'rien proposer au joueur. Elle se retire, ou elle se complète.',
+            );
+            return;
+        }
         if (idsDeSections.has(composante.sectionId)) return;
 
         const { section } = sectionDeLaComposante(sections as SheetSection[], composante);
@@ -600,7 +641,9 @@ export function controlerLePilote(
     composantesDuJet.forEach(([ou, liste]) => {
         const parSection = new Map<string, string[]>();
         for (const composante of liste ?? []) {
-            if (!composante.sectionId) continue;
+            // Même garde que la boucle précédente, et pour la même raison : une
+            // entrée peut être vide. Elle y est déjà signalée — ici, on passe.
+            if (!composante?.sectionId) continue;
             parSection.set(
                 composante.sectionId,
                 [...(parSection.get(composante.sectionId) ?? []), composante.label || composante.id],

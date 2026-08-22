@@ -920,3 +920,72 @@ describe('une cible qui se calcule', () => {
         expect(constats.some(c => c.ou === 'jet.cible.caracteristique[0].sectionId')).toBe(true);
     });
 });
+
+/**
+ * Ce que ces tests protègent : **la Revue du Pilote survit à un mauvais
+ * pilote.**
+ *
+ * Le 2026-08-22, la première dérivation qui ait produit une cible a rendu
+ * `jet.cible` sans caractéristique. `undefined.sectionId` a fait tomber TOUT
+ * l'écran — *celui qui existe précisément pour signaler ce genre de défaut,
+ * mis hors service par le défaut qu'il devait nommer.*
+ *
+ * La règle était pourtant écrite en tête de `DescripteurDeJet` : **aucun champ
+ * d'un pilote n'est garanti à l'exécution**, puisqu'il vient d'un modèle de
+ * langage. Elle a été enfreinte en ajoutant la cible aux contrôles.
+ */
+describe('un pilote mal formé se dit, il ne fait pas tomber la revue', () => {
+    const fauxPilote = (jet: unknown) => ({ jet } as unknown as Partial<GameDriver>);
+
+    it('survit à une cible sans caractéristique, et la nomme', () => {
+        const constats = controlerLePilote(
+            fauxPilote({
+                cible: {
+                    mecanique: 'reves-de-dragons',
+                    ajustement: [{ id: 'competence', label: 'Compétence', sectionId: 'competences' }],
+                },
+                sens: 'sous-ou-egal',
+            }),
+            fiche,
+        );
+
+        const dit = constats.find(c => c.ou === 'jet.cible.caracteristique')!;
+        expect(dit.gravite).toBe('erreur');
+        expect(dit.message).toContain('zéro pour cent');
+    });
+
+    it('survit à une composante vide dans une liste', () => {
+        const constats = controlerLePilote(
+            fauxPilote({ seuil: [undefined, { id: 'ok', label: 'Ok', sectionId: 'competences' }] }),
+            fiche,
+        );
+
+        expect(constats.some(c => c.ou === 'jet.seuil[0]')).toBe(true);
+    });
+
+    it('survit à une composante sans sectionId', () => {
+        const constats = controlerLePilote(
+            fauxPilote({ seuil: [{ id: 'orphelin', label: 'Orphelin' }] }),
+            fiche,
+        );
+
+        expect(constats.some(c => c.ou === 'jet.seuil[0]')).toBe(true);
+    });
+
+    /**
+     * **Les autres constats valent toujours.** C'est justement quand un pilote
+     * est mauvais qu'on a le plus besoin de lire la revue en entier.
+     */
+    it('continue de contrôler le reste après une entrée fautive', () => {
+        const constats = controlerLePilote(
+            fauxPilote({
+                cible: { mecanique: 'runequest', ajustement: [] },
+                sens: 'sous-ou-egal',
+            }),
+            fiche,
+        );
+
+        expect(constats.some(c => c.ou === 'jet.cible.caracteristique')).toBe(true);
+        expect(constats.some(c => c.ou === 'jet.cible.mecanique')).toBe(true);
+    });
+});

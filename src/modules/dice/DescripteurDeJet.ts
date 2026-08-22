@@ -348,8 +348,18 @@ export interface SectionRetenue {
     ambigues: string[];
 }
 
-/** Sans accents, sans casse, sans ponctuation — deux façons d'écrire le même mot. */
-function normaliser(texte: string): string {
+/**
+ * Sans accents, sans casse, sans ponctuation — deux façons d'écrire le même mot.
+ *
+ * **Elle accepte l'absence, et ce n'est pas de la coquetterie.** Un pilote est
+ * forgé par un modèle de langage : `sectionId` peut tout simplement manquer, et
+ * `undefined.normalize()` a fait tomber toute la Revue du Pilote le 2026-08-22 —
+ * *l'écran qui existe précisément pour signaler ce genre de défaut.* C'est la
+ * règle posée en tête de ce fichier, enfreinte dans ce fichier même : aucun
+ * champ d'un pilote n'est garanti à l'exécution.
+ */
+function normaliser(texte: string | undefined): string {
+    if (!texte) return '';
     return texte.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
@@ -370,9 +380,17 @@ function memeNom(a: string, b: string): boolean {
 /** La section où choisir cette composante, si la fiche en tient une. */
 export function sectionDeLaComposante(
     sections: readonly SheetSection[] | undefined,
-    composante: ComposanteDeJet,
+    composante: ComposanteDeJet | undefined,
 ): SectionRetenue {
     const toutes = sections ?? [];
+
+    /*
+      **Une composante peut manquer entièrement.** Le type la déclare
+      obligatoire ; le pilote, lui, vient d'un modèle. On rend « introuvable »
+      plutôt que de lever : l'appelant sait déjà dire qu'une section ne répond
+      pas, et c'est exactement ce qu'il faut annoncer.
+    */
+    if (!composante) return { section: null, par: null, ambigues: [] };
 
     const parIdentifiant = toutes.find(s => s.id === composante.sectionId);
     if (parIdentifiant) return { section: parIdentifiant, par: 'id', ambigues: [] };
