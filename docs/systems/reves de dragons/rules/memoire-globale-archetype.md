@@ -5,8 +5,8 @@ couverture: complète
 hors_canevas: true
 sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
 genere_par: notebooklm-v1
-a_regenerer: true
-relu: false
+a_regenerer: false
+relu: true
 note: relève de la création de personnage et de la progression, que le canevas exclut (§ 2.5) — conservée parce qu'elle fixe le socle de compétences lu à chaque jet
 ---
 

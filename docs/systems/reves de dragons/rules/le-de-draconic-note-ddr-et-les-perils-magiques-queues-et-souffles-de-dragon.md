@@ -7,7 +7,7 @@ sources: "1_Livre_du_Voyageur_2.2.pdf, 2_Livre_du_Haut-Reve_2.2.pdf"
 sections: "« ddr (dé draconic) » ; « Queues, souffles et têtes de Dragon » ; « Queues de Dragon » ; « Souffles de Dragon » ; « Rêve de Dragon »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Le dé draconic (noté ddr) et les périls magiques (queues et souffles de Dragon)
