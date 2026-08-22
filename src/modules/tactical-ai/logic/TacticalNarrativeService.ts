@@ -24,6 +24,23 @@ export interface TacticalContext {
      * pas proposer de les attaquer.
      */
     neutres: { combatant: Combatant; token?: MapToken; distance: number }[];
+    /**
+     * **Ce que le rapport SAIT, distingué de ce qu'il SUPPOSE.**
+     *
+     * Le rapport présentait tout au même rang : une distance mesurée sur une
+     * grille calibrée et une distance calculée sur une grille par défaut de
+     * 50 px s'y lisaient pareil. *Un conseil de placement fondé sur une unité
+     * arbitraire est faux sans jamais se plaindre.*
+     */
+    fiabilite: {
+        /** Comment le jeton de l'acteur a été trouvé — ou pas du tout. */
+        acteurResoluPar: 'identifiant' | 'nom' | null;
+        /** Ceux que l'analyse n'a pas pu placer, nommés au lieu d'être tus. */
+        sansJeton: string[];
+        /** La grille est-elle affichée, donc vraisemblablement calibrée ? */
+        grilleActivee?: boolean;
+        gridSize: number;
+    };
     enemies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: string; rangeLabel: string }[];
     allies: { combatant: Combatant; token?: MapToken; distance: number }[];
     isFlanked: boolean;
@@ -68,9 +85,20 @@ export class TacticalNarrativeService {
          * sur Dune, dont les portées montent de 0 à 4.
          */
         tacticalConfig?: TacticalConfig,
+        /**
+         * La grille de la carte est-elle affichée ?
+         *
+         * **Le seul signal disponible sur la calibration.** `gridSize` vaut
+         * 50 px par défaut : sur une carte dont la grille n'a jamais été réglée,
+         * toutes les distances — donc toutes les portées — sont arbitraires, et
+         * le rapport ne le disait nulle part. Une grille affichée a
+         * vraisemblablement été réglée ; une grille éteinte, non.
+         */
+        grilleActivee?: boolean,
     ): string {
         const context = this.buildContext(
             actor, allCombatants, allTokens, dangerZones, gridSize, macroContext, tacticalConfig,
+            grilleActivee,
         );
         return this.formatNarrativePrompt(context);
     }
@@ -78,6 +106,28 @@ export class TacticalNarrativeService {
     /**
      * Construit un objet structuré contenant toutes les données tactiques pertinentes.
      */
+    /**
+     * Le jeton d'un combattant, **et par quoi on l'a trouvé**.
+     *
+     * *L'appariement par nom est un repli, pas une méthode.* Casse et espaces
+     * de bord sont normalisés, rien de plus : « Garde 1 » et « Garde #1 » ne se
+     * lient pas. Le dire permet au rapport de qualifier ce qu'il avance —
+     * `identifiant` est une mesure, `nom` est une supposition.
+     */
+    private static jetonDe(tokens: MapToken[], combattant: Combatant): {
+        token?: MapToken;
+        par: 'identifiant' | 'nom' | null;
+    } {
+        const parIdentifiant = tokens.find(t => t.linkedCombatantId === combattant.id);
+        if (parIdentifiant) return { token: parIdentifiant, par: 'identifiant' };
+
+        const parNom = tokens.find(t =>
+            t.name.toLowerCase().trim() === combattant.name.toLowerCase().trim());
+        if (parNom) return { token: parNom, par: 'nom' };
+
+        return { token: undefined, par: null };
+    }
+
     private static buildContext(
         actor: Combatant,
         allCombatants: Combatant[],
@@ -86,15 +136,14 @@ export class TacticalNarrativeService {
         gridSize: number,
         macroContext?: string,
         tacticalConfig?: TacticalConfig,
+        grilleActivee?: boolean,
     ): TacticalContext {
-        const actorToken = allTokens.find(t => 
-            t.linkedCombatantId === actor.id || 
-            t.name.toLowerCase().trim() === actor.name.toLowerCase().trim()
-        );
+        const { token: actorToken, par: acteurResoluPar } = this.jetonDe(allTokens, actor);
         
         const allies: TacticalContext['allies'] = [];
         const enemies: TacticalContext['enemies'] = [];
         const neutres: TacticalContext['neutres'] = [];
+        const sansJeton: Combatant[] = [];
 
         if (actorToken) {
             const actorPoint: GridPoint = { x: actorToken.x, y: actorToken.y };
@@ -102,11 +151,19 @@ export class TacticalNarrativeService {
             allCombatants.forEach(c => {
                 if (c.id === actor.id) return;
                 
-                const token = allTokens.find(t => 
-                    t.linkedCombatantId === c.id || 
-                    t.name.toLowerCase().trim() === c.name.toLowerCase().trim()
-                );
-                if (!token) return;
+                const { token } = this.jetonDe(allTokens, c);
+                if (!token) {
+                    /*
+                      **Un combattant sans jeton était omis en silence.** Il
+                      disparaissait de l'analyse — ni allié, ni cible, ni
+                      mention —, et le conseil se fondait alors sur une table
+                      incomplète sans que rien ne l'indique. On le NOMME : le
+                      meneur voit qui manque, et le modèle sait que sa vue est
+                      partielle.
+                    */
+                    sansJeton.push(c);
+                    return;
+                }
 
                 const distancePx = GridEngine.calculateDistance(actorPoint, { x: token.x, y: token.y });
                 const distanceUnits = GridEngine.pxToUnits(distancePx, gridSize);
@@ -200,6 +257,12 @@ export class TacticalNarrativeService {
             // mètre, ni zone. *On ne remplace pas une convention inventée par
             // une autre.*
             uniteDeDistance: tacticalConfig?.uniteDeDistance || 'unités',
+            fiabilite: {
+                acteurResoluPar,
+                sansJeton: sansJeton.map(c => c.name),
+                grilleActivee,
+                gridSize,
+            },
         };
     }
 
@@ -209,6 +272,7 @@ export class TacticalNarrativeService {
     private static formatNarrativePrompt(ctx: TacticalContext): string {
         const { actor, actorToken, enemies, allies, neutres, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
         const unite = ctx.uniteDeDistance;
+        const fiabilite = ctx.fiabilite;
 
         let prompt = `## ANALYSE TACTIQUE MICRO : ${actor.name}\n`;
         // Quatrième écrit à annoncer des points de vie sans regarder le modèle
@@ -222,7 +286,16 @@ export class TacticalNarrativeService {
         }
 
         if (!actorToken) {
-            prompt += `- Note : Absent de la carte Atlas.\n`;
+            /*
+              **L'information etait la, la consigne manquait.** Le rapport
+              ecrivait bien « Absent de la carte » — une ligne discrete parmi
+              d'autres — et RIEN n'interdisait au modele de conseiller un
+              deplacement quand meme. *Le defaut n'etait pas l'absence
+              d'information, c'etait l'absence d'instruction.*
+            */
+            prompt += `- Note : Absent de la carte Atlas. AUCUNE POSITION CONNUE : `
+                + `ne conseille aucun déplacement ni aucune portée. `
+                + `Tiens-toi à ce qui ne dépend pas du terrain — santé, états, moral.` + String.fromCharCode(10);
         } else {
             prompt += `- Position : Valide (Atlas).\n`;
             
@@ -274,6 +347,33 @@ export class TacticalNarrativeService {
             if (nearbyDangerZones.length > 0) {
                 prompt += `- RISQUES TERRAIN : ${nearbyDangerZones.map(dz => dz.name || 'Zone de danger').join(', ')}.\n`;
             }
+        }
+
+        /*
+          **Ce qui est mesure, et ce qui est suppose.** Le rapport presentait
+          tout au meme rang. Une distance lue sur une grille reglee et une
+          distance calculee sur les 50 px par defaut s'y lisaient pareil — et un
+          conseil de placement fonde sur une unite arbitraire est faux sans
+          jamais se plaindre.
+
+          On ne dit que ce qui EST douteux : un rapport qui se justifie a chaque
+          ligne finit non lu, et la ligne qui compte s'y noie.
+        */
+        const doutes: string[] = [];
+        if (fiabilite.acteurResoluPar === 'nom') {
+            doutes.push("la position de l'acteur est appariée par son NOM et non par un lien : "
+                + 'un homonyme la rendrait fausse');
+        }
+        if (fiabilite.grilleActivee === false) {
+            doutes.push(`la grille de la carte est éteinte : l'échelle vaut ${fiabilite.gridSize} px `
+                + 'par défaut, donc les distances et les portées sont indicatives');
+        }
+        if (fiabilite.sansJeton.length > 0) {
+            doutes.push('absents de la carte, donc hors de cette analyse : '
+                + fiabilite.sansJeton.join(', '));
+        }
+        if (doutes.length > 0) {
+            prompt += `- FIABILITÉ DES ENTRÉES — ${doutes.join(' ; ')}.` + String.fromCharCode(10);
         }
 
         prompt += `- Morphologie du Combat : Allies ${factionStatus.alliesHealthPercent}% vs Enemies ${factionStatus.enemiesHealthPercent}%\n`;

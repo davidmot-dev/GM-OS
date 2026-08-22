@@ -7,6 +7,26 @@ import type {
 import { useJournalStore } from '../journal/useJournalStore';
 import { fogDB } from '../../utils/indexedDB';
 
+/**
+ * Le combattant né de cette entité, s'il y en a un sur le plateau.
+ *
+ * **Lu par le global et non importé** : `useCombatStore` fait déjà l'inverse
+ * pour la même raison — un import direct fermerait un cycle entre les deux
+ * magasins. On suit la convention du dépôt plutôt que d'en inventer une
+ * seconde.
+ */
+function combattantDeLEntite(sourceEntityId?: string): string | undefined {
+    if (!sourceEntityId) return undefined;
+    try {
+        const combat = (window as unknown as {
+            useCombatStore?: { getState: () => { combatants: { id: string; sourceEntityId?: string }[] } };
+        }).useCombatStore?.getState();
+        return combat?.combatants.find(c => c.sourceEntityId === sourceEntityId)?.id;
+    } catch {
+        return undefined;
+    }
+}
+
 interface MapState {
     mapUrl: string | null;
     mapName: string | null;
@@ -46,7 +66,7 @@ interface MapState {
     // Actions
     setMap: (url: string | null, isVideo?: boolean, name?: string, narrativeDescription?: string) => void;
     setFogDataUrl: (dataUrl: string | null) => void;
-    addToken: (token: Omit<MapToken, 'id'>) => void;
+    addToken: (token: Omit<MapToken, 'id'> & { sourceEntityId?: string }) => void;
     updateToken: (id: string, updates: Partial<MapToken>) => void;
     updateProjectedToken: (id: string, updates: Partial<MapToken>) => void;
     removeToken: (id: string) => void;
@@ -262,9 +282,36 @@ export const useMapStore = create<MapState>()(
                 if (get().projectionTarget) get().syncToPlayers();
             },
 
-            addToken: (token: Omit<MapToken, 'id'>) => {
+            /**
+             * **Le lien vers le combattant se pose ICI, au goulot.**
+             *
+             * `linkedCombatantId` n'était posé que par UN des cinq chemins de
+             * création — le bouton de la carte. Les quatre autres — fiche de
+             * PNJ, dossier de favori, détail d'entité — envoyaient un jeton
+             * anonyme, et le Cortex retombait alors sur une **égalité de noms**
+             * pour le relier : « Garde 1 » et « Garde #1 » ne se lient pas, et
+             * le combattant disparaissait de l'analyse sans un mot.
+             *
+             * Le remède n'est pas de rendre l'appariement plus malin, c'est de
+             * **poser le lien quand on le connaît**. Ces quatre chemins partent
+             * d'une entité : on retrouve le combattant par son `sourceEntityId`,
+             * qui est un identifiant et non un mot.
+             *
+             * Au goulot plutôt que chez les cinq appelants, pour la même raison
+             * que les états manquants d'un combattant : *un invariant tenu à
+             * cinq endroits finit tenu à quatre.*
+             */
+            addToken: (token: Omit<MapToken, 'id'> & { sourceEntityId?: string }) => {
                 const id = Math.random().toString(36).substring(2, 9);
-                set(state => ({ tokens: [...state.tokens, { ...token, id, isVisible: true }] }));
+                const { sourceEntityId, ...jeton } = token;
+                set(state => ({
+                    tokens: [...state.tokens, {
+                        ...jeton,
+                        linkedCombatantId: jeton.linkedCombatantId ?? combattantDeLEntite(sourceEntityId),
+                        id,
+                        isVisible: true,
+                    }],
+                }));
                 if (get().projectionTarget) get().syncToPlayers();
             },
 

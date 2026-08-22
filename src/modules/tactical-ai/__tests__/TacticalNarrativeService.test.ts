@@ -175,6 +175,90 @@ describe('TacticalNarrativeService', () => {
         expect(report).toContain('Allies 100% vs Enemies 75%');
     });
 
+    /**
+     * **Ce que le rapport SAIT, distingué de ce qu'il SUPPOSE.**
+     *
+     * Il présentait tout au même rang : une distance mesurée sur une grille
+     * réglée et une distance calculée sur les 50 px par défaut s'y lisaient
+     * pareil. *Un conseil de placement fondé sur une unité arbitraire est faux
+     * sans jamais se plaindre.*
+     */
+    it("nomme les combattants absents de la carte au lieu de les taire", () => {
+        // Aucun jeton pour lui : il disparaissait de l'analyse sans un mot.
+        const invisible = { id: '9', name: 'Sentinelle', faction: 'enemy', hp: 4, hpMax: 4, statuses: [] };
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, invisible, ...mockEnemies] as Combatant[],
+            mockTokens as MapToken[],
+            [] as DangerZone[],
+        );
+
+        expect(report).toContain('FIABILITÉ DES ENTRÉES');
+        expect(report).toContain('Sentinelle');
+        expect(report).toContain('hors de cette analyse');
+    });
+
+    it("avoue une grille éteinte, dont l'échelle est arbitraire", () => {
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            mockTokens as MapToken[],
+            [] as DangerZone[],
+            50, undefined, undefined,
+            false,
+        );
+
+        expect(report).toContain('la grille de la carte est éteinte');
+        expect(report).toContain('indicatives');
+    });
+
+    it("signale une position appariée par le nom plutôt que par un lien", () => {
+        // Les jetons de ce test n'ont pas de `linkedCombatantId` : ils se lient
+        // par égalité de noms, ce qui est un repli et non une méthode.
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            mockTokens as MapToken[],
+            [] as DangerZone[],
+        );
+
+        expect(report).toContain('appariée par son NOM');
+    });
+
+    it("se tait sur la fiabilité quand tout est mesuré", () => {
+        // *Un rapport qui se justifie à chaque ligne finit non lu, et la ligne
+        // qui compte s'y noie.*
+        const lies = mockTokens.map((t, i) => ({
+            ...t,
+            linkedCombatantId: [mockActor, ...mockEnemies][i]?.id,
+        }));
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            lies as MapToken[],
+            [] as DangerZone[],
+            50, undefined, undefined,
+            true,
+        );
+
+        expect(report).not.toContain('FIABILITÉ DES ENTRÉES');
+    });
+
+    it("interdit tout conseil de placement quand l'acteur n'est pas sur la carte", () => {
+        // L'information était là — « Absent de la carte » — et rien n'interdisait
+        // au modèle de conseiller un déplacement quand même.
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor] as Combatant[],
+            [] as MapToken[],
+            [] as DangerZone[],
+        );
+
+        expect(report).toContain('AUCUNE POSITION CONNUE');
+        expect(report).toContain('ne conseille aucun déplacement');
+        expect(report, 'et il reste quelque chose à dire').toContain('santé, états, moral');
+    });
+
     it('should calculate faction health correctly', () => {
         const report = TacticalNarrativeService.getSituationalReport(
             mockActor as Combatant,

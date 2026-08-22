@@ -85,6 +85,11 @@ export const useTacticalAIStore = create<TacticalAIState>()(
               // sans elles, le rapport envoyé à l'IA classe les distances selon
               // un autre jeu. Les deux autres appelants les passaient déjà.
               useSessionOSStore.getState().getActiveDriver?.()?.tactical,
+              // Le seul signal disponible sur la calibration : une grille
+              // affichée a vraisemblablement été réglée, une grille éteinte non.
+              // Sans lui, le rapport ne pouvait pas dire que ses distances
+              // reposaient sur les 50 px par défaut.
+              mapState.isGridEnabled,
           );
 
           // 1. PHASE NARRATION (Streaming)

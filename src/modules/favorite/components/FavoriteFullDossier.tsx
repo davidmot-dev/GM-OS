@@ -187,6 +187,7 @@ export const FavoriteFullDossier: React.FC = () => {
                         <button
                             onClick={() => {
                                 addToken({
+                                    sourceEntityId: entity.id,
                                     name: formData.name || entity.name,
                                     avatar: formData.tokenUrl || formData.imageUrl || entity.tokenUrl || entity.imageUrl || '',
                                     x: 200,

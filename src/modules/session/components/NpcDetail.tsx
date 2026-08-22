@@ -234,6 +234,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const handleSendToMap = () => {
         const { selectedAtlasMapId } = useSessionOSStore.getState();
         addToken({
+            sourceEntityId: selectedNpc.id,
             name: selectedNpc.name,
             avatar: selectedNpc.avatar,
             x: 200, y: 200, size: 1,

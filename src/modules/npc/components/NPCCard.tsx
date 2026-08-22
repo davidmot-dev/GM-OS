@@ -91,6 +91,7 @@ const NPCCard: React.FC = () => {
 
     const handleAddToMap = () => {
         addToken({
+            sourceEntityId: currentEntity!.id,
             name: currentEntity!.name,
             avatar: avatarSrc || '',
             x: 200,

@@ -517,6 +517,10 @@ export const FavoriteDetailPanel: React.FC = () => {
                         <button
                             onClick={() => {
                                 addToken({
+                                    // Le lien vers le combattant se pose au
+                                    // goulot, depuis cet identifiant : sans lui,
+                                    // le Cortex retombe sur une égalité de noms.
+                                    sourceEntityId: entity.id,
                                     name: entity.name,
                                     avatar: entity.tokenUrl || entity.imageUrl || '',
                                     x: 200,
