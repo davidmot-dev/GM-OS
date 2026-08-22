@@ -121,6 +121,12 @@ Les quatre exigences du *ruling*, qui ne se négocient pas :
 >
 > **Ses trois appuis — L, H et O — sont désormais tous les trois faits.**
 
+> **Les quatre étages étaient écrits et INATTEIGNABLES**, et il a fallu la soirée du 22/08 pour s'en
+> apercevoir : le corpus ne se résolvait pas pour une campagne forgée, le coffre Obsidian remplaçait la
+> racine documentaire à chaque question, la recherche dans le livre recevait `campaign.system` au lieu du
+> corpus, et le chemin de streaming n'émettait aucun verdict. *Un axe coché sur la lecture du code peut
+> n'avoir jamais tourné.* Détail dans `2026-08-22-etat-et-reprise.md`, § 2.7 à 2.11.
+
 ### ⬜ N — deux régimes d'interface · *~6 h · le plus visible, le moins urgent*
 
 La partition existe **déjà de fait** dans `CurrentView`, et un module l'applique déjà (`session-prep` /
