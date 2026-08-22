@@ -15,7 +15,7 @@ import { useAIStore } from '../../../stores/useAIStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
-import { marquerCommeRelue } from '../../forge/rules/marqueDeRelecture';
+import { marquerCommeRelue, marquerCommeSuspecte } from '../../forge/rules/marqueDeRelecture';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -56,7 +56,7 @@ const AIChatPanel: React.FC = () => {
    * ce qui est faux — une fiche erronée produit une recherche réussie, une
    * citation confiante, et aucun signal.
    */
-  const [sources, setSources] = useState<{ path: string; relu?: boolean }[]>([]);
+  const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean }[]>([]);
 
   /**
    * Déclarer une fiche relue, depuis la réponse qu'elle vient de fournir.
@@ -73,6 +73,29 @@ const AIChatPanel: React.FC = () => {
 
     const ecrit = await window.appBridge?.ai?.writeDoc?.(chemin, corrige).catch(() => false);
     if (ecrit) setSources(liste => liste.map(s => (s.path === chemin ? { ...s, relu: true } : s)));
+  };
+
+  /**
+   * Signaler une fiche comme suspecte — **le symétrique du journal des
+   * lacunes.**
+   *
+   * *Le journal des lacunes attrape ce qui manque ; rien n'attrapait ce qui est
+   * faux.* Une fiche erronée produit une recherche réussie, une citation
+   * confiante, et aucun signal — pire, la citation renforce la confiance.
+   *
+   * **Il ne supprime jamais rien** : à table, un clic malheureux ne peut pas
+   * coûter une bonne fiche. La fiche reste en place, l'Oracle continue de la
+   * citer en le disant, et la correction est une action d'après-partie.
+   */
+  const signaler = async (chemin: string, suspecte: boolean) => {
+    const contenu = await window.appBridge?.ai?.readDoc?.(chemin).catch(() => null);
+    const corrige = contenu ? marquerCommeSuspecte(contenu, suspecte) : null;
+    if (!corrige) return;
+
+    const ecrit = await window.appBridge?.ai?.writeDoc?.(chemin, corrige).catch(() => false);
+    if (ecrit) {
+      setSources(liste => liste.map(s => (s.path === chemin ? { ...s, aRegenerer: suspecte } : s)));
+    }
   };
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -225,7 +248,31 @@ const AIChatPanel: React.FC = () => {
                       non relue
                     </button>
                   )}
-                  {source.relu === true && <span className="text-emerald-400/60">relue</span>}
+                  {source.relu === true && source.aRegenerer !== true && (
+                    <span className="text-emerald-400/60">relue</span>
+                  )}
+                  {/*
+                    **Signalée l'emporte sur relue** : une fiche qu'on vient de
+                    prendre en défaut n'est plus une fiche validée, quoi qu'on
+                    ait pensé d'elle avant.
+                  */}
+                  {source.aRegenerer === true ? (
+                    <button
+                      onClick={() => void signaler(source.path, false)}
+                      title="Signalée comme suspecte, et en file de reforge. Cliquer pour retirer le signalement."
+                      className="rounded-full bg-rose-500/20 px-1.5 text-rose-300/90 hover:bg-rose-500/35 transition-colors"
+                    >
+                      signalée
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => void signaler(source.path, true)}
+                      title="Cette fiche a-t-elle mal répondu ? La signaler la met en file de reforge, sans rien supprimer."
+                      className="text-app-text/20 hover:text-rose-300/80 transition-colors"
+                    >
+                      ⚑
+                    </button>
+                  )}
                 </span>
               );
             })}

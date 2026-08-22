@@ -66,3 +66,55 @@ export function marquerCommeRelue(markdown: string): string | null {
     const teteCorrigee = frontmatter[1].replace(ligne[0], ligne[0].replace('false', 'true'));
     return markdown.replace(frontmatter[1], teteCorrigee);
 }
+
+/**
+ * Signaler une fiche comme **suspecte**, depuis la réponse qu'elle vient de
+ * fournir.
+ *
+ * **Le point 3 de l'axe O, et son mécanisme central** : le symétrique du
+ * journal des lacunes. *Le journal des lacunes attrape ce qui manque ; rien
+ * n'attrape ce qui est faux.*
+ *
+ * **Il ne supprime jamais rien**, et c'est la règle qui gouverne sa forme : à
+ * table, un clic malheureux ne peut pas coûter une bonne fiche, et le meneur
+ * n'a pas le temps de bricoler. La fiche reste en place, l'Oracle continue de
+ * la citer **en le disant**, et la correction est une action d'après-partie.
+ *
+ * **On réutilise `a_regenerer`, on n'invente pas un quatrième marqueur.** Il
+ * existe depuis l'audit du corpus, il porte exactement ce sens — « cette fiche
+ * est à refaire » —, et **seize fiches le portaient déjà** le 2026-08-22 sans
+ * qu'aucun lecteur n'existe. Poser un `suspecte:` à côté aurait été le motif de
+ * la semaine, une fois de plus : *plusieurs écrivains pour une même donnée.*
+ */
+export function marquerCommeSuspecte(markdown: string, suspecte: boolean): string | null {
+    return poserDansLEntete(markdown, 'a_regenerer', suspecte);
+}
+
+/**
+ * Pose ou change un booléen du frontmatter, **sans toucher au reste**.
+ *
+ * Ajoute la ligne quand elle manque — toutes les fiches ne portent pas
+ * `a_regenerer` — et la remplace quand elle y est. Rend `null` quand il n'y a
+ * rien à faire : *réécrire un fichier identique à lui-même en change la date et
+ * fait mentir l'index.*
+ *
+ * **Le corps n'est jamais touché**, donc l'empreinte ne bouge pas : signaler une
+ * fiche ne doit pas la faire passer pour corrigée.
+ */
+function poserDansLEntete(markdown: string, clef: string, valeur: boolean): string | null {
+    const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(markdown);
+    if (!frontmatter) return null;
+
+    const tete = frontmatter[1];
+    const ligne = new RegExp(`^${clef}\\s*:\\s*(true|false)\\s*$`, 'm').exec(tete);
+
+    if (ligne) {
+        if (ligne[1] === String(valeur)) return null;
+        return markdown.replace(tete, tete.replace(ligne[0], `${clef}: ${valeur}`));
+    }
+
+    // Absente : on l'ajoute en queue de frontmatter plutot qu'en tete, pour ne
+    // pas deplacer le `sujet:` que plusieurs lecteurs cherchent en premier.
+    if (!valeur) return null;
+    return markdown.replace(tete, `${tete}\n${clef}: ${valeur}`);
+}

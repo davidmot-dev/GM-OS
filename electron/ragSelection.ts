@@ -102,6 +102,16 @@ export interface IndexedFile {
      * brut n'a pas à se prétendre relu ni non relu.
      */
     relu?: boolean;
+    /**
+     * La fiche est-elle **signalée comme suspecte** ?
+     *
+     * `a_regenerer` existe depuis l'audit du corpus et porte exactement ce sens.
+     * Seize fiches le portaient le 2026-08-22 **sans qu'aucun lecteur
+     * n'existe** : troisième marqueur écrit et jamais lu, après `relu` et
+     * `empreinte`. On lui donne son lecteur plutôt que d'en inventer un
+     * quatrième à côté.
+     */
+    aRegenerer?: boolean;
 }
 
 export interface RagRequest {
@@ -122,6 +132,8 @@ export interface RagRequest {
 export interface Retenu {
     /** L'état de relecture de la fiche, quand elle en déclare un. */
     relu?: boolean;
+    /** La fiche a-t-elle été signalée comme suspecte ? */
+    aRegenerer?: boolean;
     path: string;
     provenance: Provenance;
     score: number;
@@ -319,6 +331,7 @@ export function selectContext(
         retenus.push({
             path: candidat.file.path,
             relu: candidat.file.relu,
+            aRegenerer: candidat.file.aRegenerer,
             provenance: candidat.provenance,
             score: candidat.score,
             tokens,

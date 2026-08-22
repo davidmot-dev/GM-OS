@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { etatDeRelecture, marquerCommeRelue } from './marqueDeRelecture';
+import { etatDeRelecture, marquerCommeRelue, marquerCommeSuspecte } from './marqueDeRelecture';
+import { corpsDeLaFiche } from './empreinteDeLaFiche';
 
 /**
  * Ce que ces tests protègent : **marquer une fiche relue ne touche que cette
@@ -82,5 +83,51 @@ describe('marquer comme relue', () => {
 
         expect(apres, 'la tête bascule').toContain('relu: true');
         expect(apres, 'le corps est intact').toContain('porte `relu: false` tant que personne');
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **signaler une fiche ne la détruit pas, et ne la
+ * fait pas passer pour corrigée.**
+ *
+ * Point 3 de l'axe O, son mécanisme central : le symétrique du journal des
+ * lacunes. *Le journal des lacunes attrape ce qui manque ; rien n'attrape ce
+ * qui est faux.*
+ */
+describe('signaler une fiche suspecte', () => {
+    it('pose le marqueur quand la fiche ne le portait pas', () => {
+        const apres = marquerCommeSuspecte(fiche, true)!;
+
+        expect(apres).toContain('a_regenerer: true');
+        expect(apres, 'le reste de la tête survit').toContain('sujet: Résolution des jets');
+        expect(apres, 'le corps survit').toContain('Le corps de la fiche, qui ne doit pas bouger.');
+    });
+
+    /**
+     * **Il ne supprime jamais rien, donc il se retire.** À table, un clic
+     * malheureux ne peut pas coûter une bonne fiche, et le meneur n'a pas le
+     * temps de bricoler.
+     */
+    it('se retire, parce qu’un clic malheureux doit se défaire', () => {
+        const signalee = marquerCommeSuspecte(fiche, true)!;
+        const rendue = marquerCommeSuspecte(signalee, false)!;
+
+        expect(rendue).toContain('a_regenerer: false');
+        expect(marquerCommeSuspecte(rendue, false), 'et rien à faire deux fois').toBeNull();
+    });
+
+    it('ne rend rien quand il n’y a rien à faire', () => {
+        expect(marquerCommeSuspecte(fiche, false), 'pas de marqueur à retirer').toBeNull();
+        expect(marquerCommeSuspecte('# Une note libre', true)).toBeNull();
+    });
+
+    /**
+     * **Le corps n'est jamais touché**, donc l'empreinte ne bouge pas : signaler
+     * une fiche ne doit pas la faire passer pour corrigée — sans quoi la reforge
+     * l'archiverait comme un travail du meneur.
+     */
+    it('ne fait pas passer la fiche pour corrigée', () => {
+        expect(corpsDeLaFiche(marquerCommeSuspecte(fiche, true)!))
+            .toBe(corpsDeLaFiche(fiche));
     });
 });

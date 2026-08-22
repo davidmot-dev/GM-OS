@@ -48,9 +48,9 @@ function ecrire(level: 'info' | 'warn', message: string) {
  * c'est lui qui décide du rang à la sélection. On ne lit que la tête du
  * fichier — au-delà, ce n'est plus du frontmatter.
  */
-function lireEntete(content: string): { sujet?: string; titre?: string; relu?: boolean } {
+function lireEntete(content: string): { sujet?: string; titre?: string; relu?: boolean; aRegenerer?: boolean } {
     const tete = content.slice(0, 2000);
-    const resultat: { sujet?: string; titre?: string; relu?: boolean } = {};
+    const resultat: { sujet?: string; titre?: string; relu?: boolean; aRegenerer?: boolean } = {};
 
     const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(tete);
     if (frontmatter) {
@@ -65,6 +65,9 @@ function lireEntete(content: string): { sujet?: string; titre?: string; relu?: b
         */
         const relu = /^relu\s*:\s*(true|false)\s*$/m.exec(frontmatter[1]);
         if (relu) resultat.relu = relu[1] === 'true';
+
+        const suspecte = /^a_regenerer\s*:\s*(true|false)\s*$/m.exec(frontmatter[1]);
+        if (suspecte) resultat.aRegenerer = suspecte[1] === 'true';
     }
 
     const titre = /^#\s+(.+)$/m.exec(tete);
