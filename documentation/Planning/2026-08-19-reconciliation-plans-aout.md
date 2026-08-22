@@ -101,12 +101,15 @@ et ce que les deux jours suivants ont emporté.*
 | 9 | Trame générée par la Forge Chronique | ⛔ annoncée caduque | ✅ **elle était déjà faite** depuis le 15-16/08 |
 | 10 | Trame injectée dans Oracle / Cortex | ❌ | ✅ **21/08** (`516395a`) |
 
-**Le Cortex tactique — c'est désormais le chantier de code le plus mûr.** Axe 1 fait ; axes 2 (faction
-explicite, `unknown` plutôt qu'`enemy` par défaut), 3 (`linkedCombatantId` sur tous les chemins),
-4 (qualifier les entrées : mesuré contre supposé) et 5 (unité de distance tirée du pilote — « cases » est
-encore en dur, `TacticalNarrativeService.ts:191`, **revérifié le 22/08**) restent ouverts. Le document
-porte aussi **trois questions non tranchées**, dont *« fusionner les deux appels du Cortex en un seul »*,
-que le plan lui-même désigne comme *« peut-être le vrai levier de performance »*.
+~~**Le Cortex tactique — c'est désormais le chantier de code le plus mûr.**~~ **✅ SES CINQ AXES SONT
+FAITS le 2026-08-22.** L'axe 2 s'est révélé pire que décrit — ce n'était pas la valeur par défaut mais
+**le tri lui-même**, qui rangeait un allié déclaré parmi les cibles. L'axe 5 en cachait un second : le
+pilote déclarait déjà le **nom** de ses portées, et trois écrans affichaient la clé canonique.
+
+Il reste **deux des trois questions**, dont *« fusionner les deux appels du Cortex en un seul »*, que le
+plan désigne comme *« peut-être le vrai levier de performance »* — et qui a gagné un argument mesuré le
+21/08. La troisième est tranchée : quand les entrées ne sont pas fiables, **on conseille en restreignant
+le propos** plutôt que de refuser.
 
 > **Son garde-fou est levé depuis le 2026-08-21.** Le document interdisait de le traiter avant les axes A
 > à C du plan jumeau : **les trois sont faits**. Et sa question sur les deux appels a gagné un argument

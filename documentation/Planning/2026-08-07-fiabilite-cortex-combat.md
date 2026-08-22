@@ -14,8 +14,7 @@ Le document passe en **récit clos**, sauf ses trois questions du § 5, dont une
 > les deux appels font la queue** — on attend la somme, pas le plus long. Le commentaire qui promettait
 > une « exécution parallèle » est parti.
 >
-> **Rappel de l'axe 5, revérifié le 22/08** : l'unité de distance est toujours « cases » en dur,
-> `src/modules/tactical-ai/logic/TacticalNarrativeService.ts:191`, alors que le pilote la porte.
+> ~~**Rappel de l'axe 5**~~ — corrigé le 22/08 : le pilote déclare son unité, et le rapport l'emploie.
 **Origine :** extrait de la séance de conception sur l'accélération IA, à la demande de David, qui a
 signalé que le Cortex *« repose sur des mécanismes qui ne sont pas toujours bien gérés au niveau du
 module de combat »*. Le constat lui donne raison.
