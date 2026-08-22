@@ -12,6 +12,7 @@ import { useSessionOSStore } from '../../../session/useSessionOSStore';
 import { useSessionStore } from '../../../../store/useSessionStore';
 import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save, FolderTree, RotateCcw } from 'lucide-react';
 import { gmConfirm } from '../../../../stores/useModalStore';
+import { gmToast } from '../../../../stores/useToastStore';
 import DiscoveryUI from './DiscoveryUI';
 import ForgeProgress from './ForgeProgress';
 import {
@@ -22,6 +23,7 @@ import {
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
 import { fichesSupplantees, sujetDuFrontmatter } from '../fichesSupplantees';
+import { aEteRetouchee } from '../empreinteDeLaFiche';
 import { slugFiche } from '../canevas';
 import { ficheInventaire, lireInventaire } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
@@ -447,6 +449,39 @@ export const BrainstormOverlay: React.FC = () => {
     if (!card || !cheminDeLaFiche) return;
     brainstormStore.setProcessing(true);
     try {
+      /*
+        **Une reforge n'ecrase pas une correction — point 5 de l'axe O.**
+
+        Retomber sur le meme slug ECRASE EN PLACE, et c'est le comportement
+        voulu tant que la fiche n'a pas ete touchee. Des que le meneur l'a
+        editee, c'est une perte silencieuse : son travail disparait sous une
+        generation, sans un mot. *Sans quoi le MJ cesse de corriger.*
+
+        On ne bloque pas — bloquer la publication rendrait le corpus
+        inreformable —, on ARCHIVE la version retouchee avant d'ecrire, dans le
+        meme `rules-v1/` que les fiches supplantees. Rien ne se perd, et l'ecart
+        se lit en comparant deux fichiers.
+
+        Une fiche SANS empreinte — les 194 d'avant ce jour — n'est jamais
+        consideree comme retouchee : le doute penche du cote du comportement
+        d'avant.
+      */
+      const ancienne = await window.appBridge?.ai?.readDoc?.(cheminDeLaFiche).catch(() => null);
+      if (corpus && ancienne && aEteRetouchee(ancienne)) {
+        const nomArchive = `${card.slug}-retouchee-${Date.now()}.md`;
+        const archivee = await window.appBridge?.ai?.writeDoc?.(
+          `${cheminDesArchives(corpus)}/${nomArchive}`,
+          ancienne,
+        );
+        if (!archivee) {
+          throw new Error(
+            "La fiche en place a ete corrigee a la main et n'a pas pu etre archivee : "
+            + 'publication interrompue pour ne pas ecraser ce travail.',
+          );
+        }
+        gmToast(`Cette fiche avait ete corrigee : l'ancienne version est dans rules-v1/${nomArchive}.`);
+      }
+
       console.log(`[Forge] Saving document to: ${cheminDeLaFiche}`);
       const saveSuccess = await window.appBridge?.ai?.writeDoc(cheminDeLaFiche, card.content);
       if (!saveSuccess) throw new Error(t('session.forge_module.atelier.error_write'));

@@ -22,6 +22,7 @@
  */
 
 import { CANEVAS, rabattreSurLeCanevas, slugFiche, type SujetCanevas } from './canevas';
+import { CLEF_EMPREINTE, empreinteDuCorps } from './empreinteDeLaFiche';
 
 export interface FicheConvertie {
   /** Clé canonique si le sujet entre dans le canevas, libellé du carnet sinon. */
@@ -263,13 +264,28 @@ export function convertirFiche(brut: string, options: OptionsConversion): FicheC
   const aUnTitre = /^\s*#\s+\S/m.test(texteCorps.split('\n')[0] ?? '');
   const titre = aUnTitre ? '' : `# ${sujet || 'Fiche sans sujet'}\n\n`;
 
+  /*
+    **L'empreinte du corps, posee a la generation.**
+
+    C'est elle qui permettra de savoir, plus tard, que le meneur a edite la
+    fiche : le point 4 de l'axe O — *la provenance se deduit, elle ne se
+    declare pas*. Et surtout le point 5 : une reforge qui retombe sur le meme
+    slug ECRASE EN PLACE, ce qui est voulu tant que la fiche n'a pas ete
+    touchee, et une perte silencieuse des qu'elle l'a ete.
+
+    Elle ne couvre QUE le corps. Marquer une fiche relue reecrit sa tete : si
+    l'empreinte la couvrait, relire une fiche la ferait passer pour corrigee.
+  */
+  const corpsPublie = `${titre}${texteCorps}\n`;
+  entetes.push(`${CLEF_EMPREINTE}: ${empreinteDuCorps(corpsPublie)}`);
+
   return {
     sujet,
     horsCanevas,
     couverture,
     sections,
     slug: options.slug ?? slugFiche(sujet),
-    markdown: `---\n${entetes.join('\n')}\n---\n\n${titre}${texteCorps}\n`,
+    markdown: `---\n${entetes.join('\n')}\n---\n\n${corpsPublie}`,
     avertissements,
   };
 }
