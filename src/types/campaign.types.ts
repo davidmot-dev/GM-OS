@@ -62,7 +62,26 @@ export interface Campaign {
     activeLocationIds: string[];
     ragPath?: string;
     aiPersonas?: Record<string, string>;
+    /**
+     * La disposition de l'**atelier** — hors séance.
+     *
+     * Elle porte son nom d'origine, et c'est la migration : les campagnes
+     * écrites avant l'axe N n'en ont qu'une, et c'est celle-là. *Renommer ce
+     * champ aurait fait repartir tout le monde d'une disposition vide, sans que
+     * personne comprenne pourquoi.*
+     */
     layoutConfig?: LayoutConfig;
+    /**
+     * La disposition de la **table** — pendant une séance ouverte. Axe N.
+     *
+     * *« On retrouve son atelier tel qu'on l'a laissé le samedi matin, et sa
+     * table telle qu'on l'a laissée le samedi soir. »*
+     *
+     * Absente tant que le meneur n'a rien réglé en séance : on retombe alors sur
+     * celle de l'atelier, plutôt que sur une disposition vide. **Un régime qui
+     * démarre nu n'est pas un second régime, c'est une perte.**
+     */
+    layoutConfigPartie?: LayoutConfig;
     notebookUrl?: string;
     systemPath?: string;
     campaignPath?: string;

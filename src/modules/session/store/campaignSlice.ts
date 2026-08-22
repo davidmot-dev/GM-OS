@@ -12,6 +12,7 @@
 import type { StateCreator } from 'zustand';
 import { gmToast } from '../../../stores/useToastStore';
 import type { Campaign, LayoutConfig } from './types';
+import { momentDeJeu } from '../../ai/budgetsDeTemps';
 import { sessionBackupManager } from '../logic/SessionBackupManager';
 import { useObsidianStore } from '../useObsidianStore';
 
@@ -90,14 +91,43 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
         if (campaign) gmToast(`Campagne "${campaign.name}" supprimée.`, 'info');
     },
 
+    /*
+      **Deux dispositions, une par moment de jeu — axe N.**
+
+      *« On retrouve son atelier tel qu'on l'a laissé le samedi matin, et sa
+      table telle qu'on l'a laissée le samedi soir. »* Le champ existait déjà et
+      était persisté par campagne : le dédoubler livre l'essentiel du bénéfice
+      pour très peu de code, ce que le plan relevait.
+
+      **Le moment se lit ici, à l'écriture, et non chez l'appelant.** Le passer
+      en argument aurait fait autant d'endroits à tenir d'accord que d'appelants
+      — et il n'en faut qu'un qui l'oublie pour écrire la disposition de table
+      par-dessus celle de l'atelier.
+    */
     updateCampaignLayout: (campaignId, layout) =>
-        set((state) => ({
-            campaigns: state.campaigns.map((c) =>
-                c.id === campaignId
-                    ? { ...c, layoutConfig: { ...(c.layoutConfig ?? {}), ...layout } as LayoutConfig }
-                    : c
-            ),
-        })),
+        set((state) => {
+            /*
+              **Le magasin est composé : `state` porte les séances à
+              l'exécution, mais ce découpage ne les déclare pas.** Importer le
+              magasin complet ici ferait un cycle — c'est pourquoi les autres
+              tranches lisent de la même façon. Le repli sur une liste vide rend
+              « préparation », donc l'ancien comportement.
+            */
+            const seances = (state as unknown as { sessions?: { status?: string; pausedAt?: number }[] }).sessions;
+            const enPartie = momentDeJeu(seances) === 'partie';
+            return {
+                campaigns: state.campaigns.map((c) => {
+                    if (c.id !== campaignId) return c;
+                    // Faute de disposition de table, on part de celle de
+                    // l'atelier : un régime qui démarre nu est une perte.
+                    const base = enPartie ? (c.layoutConfigPartie ?? c.layoutConfig) : c.layoutConfig;
+                    const fusion = { ...(base ?? {}), ...layout } as LayoutConfig;
+                    return enPartie
+                        ? { ...c, layoutConfigPartie: fusion }
+                        : { ...c, layoutConfig: fusion };
+                }),
+            };
+        }),
 
     toggleActiveLocation: (mapId) => {
         const { activeCampaignId, campaigns } = get();

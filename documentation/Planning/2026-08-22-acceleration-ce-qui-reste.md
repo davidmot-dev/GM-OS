@@ -35,7 +35,7 @@ troisième fois.
 
 ---
 
-## 2. Ce qui reste — un axe, ~6 h
+## 2. Ce qui reste — un tiers d’axe, et c’est du dessin
 
 ### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
@@ -169,17 +169,31 @@ Les quatre exigences du *ruling*, qui ne se négocient pas :
 > corpus, et le chemin de streaming n'émettait aucun verdict. *Un axe coché sur la lecture du code peut
 > n'avoir jamais tourné.* Détail dans `2026-08-22-etat-et-reprise.md`, § 2.7 à 2.11.
 
-### ⬜ N — deux régimes d'interface · *~6 h · le plus visible, le moins urgent*
+### 🟠 N — deux régimes d'interface · *ses deux premiers temps faits le 2026-08-22*
 
 La partition existe **déjà de fait** dans `CurrentView`, et un module l'applique déjà (`session-prep` /
 `session-focus`).
 
-- [ ] 1 — **classer les vues** par affinité (préparation / partie / les deux) — quelques lignes, sert
-      immédiatement la navigation
-- [ ] 2 — **dédoubler `LayoutConfig`** par mode : il est déjà persisté par campagne, donc deux
-      dispositions livrent l'essentiel du bénéfice pour très peu de code
+- [x] 1 — **classer les vues** par affinité (préparation / partie / les deux) — `affiniteDesVues.ts`,
+      **exhaustif par le typage** : une vue neuve ne peut pas naître sans être classée
+- [x] 2 — **dédoubler `LayoutConfig`** par mode — `layoutConfigPartie`, et la restauration se déclenche
+      désormais **au changement de moment**, pas seulement de campagne
 - [ ] 3 — deux vues **seulement là où c'est justifié** : combat, carte, PNJ, Oracle, journal. Pas 24
       modules
+
+> **Ce qui reste n'est pas de la plomberie, c'est du dessin.** Le plan le dit lui-même : *« ce qui change
+> vraiment entre les deux modes n'est pas la liste des boutons : la densité (à table on regarde de loin,
+> parfois debout, souvent en parlant), les valeurs par défaut, et ce qui est à portée de main. »*
+> Cinq modules à redessiner, et **chacun demande l'œil de David à sa table** — pas une estimation en
+> heures. Les deux premiers temps, eux, livrent le bénéfice que le plan leur prêtait.
+>
+> **Le champ n'a pas été renommé, et c'est la migration** : `layoutConfig` reste l'atelier, donc les
+> campagnes écrites avant l'axe N gardent la leur. *Renommer aurait fait repartir tout le monde d'une
+> disposition vide, sans que personne comprenne pourquoi.*
+>
+> Un défaut trouvé en chemin : l'auto-sauvegarde **comparait à l'atelier même en partie**. *Lire ailleurs
+> que là où l'on écrit est indétectable par construction* — le défaut que `corpusSysteme` documente
+> depuis le 10/08.
 
 > Ce qui change vraiment entre les deux modes n'est pas la liste des boutons : la **densité** (à table on
 > regarde de loin, parfois debout, souvent en parlant), les **valeurs par défaut** (en préparation on
