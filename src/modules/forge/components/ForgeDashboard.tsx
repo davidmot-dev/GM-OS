@@ -23,6 +23,7 @@ import { lireNature } from '../rules/familleDuCorpus';
 import {
   declarationAffichee, fusionnerLaDeclaration, type DeclarationSaisie,
 } from '../rules/declarationDuCorpus';
+import { SelecteurDeMoteur } from '../../ai/SelecteurDeMoteur';
 
 interface NotebookSource {
   id: string;
@@ -1440,6 +1441,20 @@ const ForgeDashboard: React.FC = () => {
             {/* Forge Action Button */}
             {activeTab === 'structure' && (
               <div className="flex flex-col gap-2 mt-4">
+                {/*
+                  **Le moteur de cette Forge — axe J, et le MÊME composant que
+                  l'atelier de campagne.**
+
+                  Le § 8 du plan est explicite : les deux Forges ne sont pas des
+                  doublons, mais leur plomberie partagée l'est — *« une
+                  préoccupation partagée corrigée dans un seul de ses deux
+                  exemplaires »* est le bug de la migration Gemini du 07/08. On
+                  ne refabrique pas ce motif ici.
+
+                  Affiché juste au-dessus du bouton, parce que c'est là que le
+                  choix se fait : *« choix explicite à chaque lancement ».*
+                */}
+                <SelecteurDeMoteur forge="systeme" />
                 <button 
                   onClick={startAnalysis}
                   disabled={forgeStore.contextItems.length === 0 || forgeStore.isProcessing}

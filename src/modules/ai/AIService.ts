@@ -243,8 +243,21 @@ export class AIService {
      * oublier vingt-neuf**, comme pour les émetteurs du journal.
      */
     libelle?: string,
+    /**
+     * Le moteur à employer **pour cet appel seulement** — axe J.
+     *
+     * *Arbitrage de David : « cloud accepté pour les Forges, choix explicite à
+     * chaque lancement, jamais de bascule automatique. »*
+     *
+     * **Il court-circuite `activeProvider` sans le modifier.** Écrire dans le
+     * magasin le temps d'un appel ferait basculer, pour la durée de la Forge,
+     * l'Oracle et le Cortex avec elle — et laisserait le réglage global changé
+     * si la Forge échoue en chemin. *Un réglage qu'une opération modifie de son
+     * côté est un réglage que personne ne contrôle plus.*
+     */
+    provider?: AIProvider,
   ): Promise<AIResponse> {
-    const { activeProvider } = useAIStore.getState();
+    const activeProvider = provider ?? useAIStore.getState().activeProvider;
     /*
       **Le plafond suit le moment de jeu — axe D.4.**
 
@@ -1431,9 +1444,19 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
       plafondDeGeneration?: number;
       /** Ce qui s'affichera si cette requête occupe le modèle — voir `generateText`. */
       libelle?: string;
+      /**
+       * Le moteur à employer **pour cet appel seulement** — axe J.
+       *
+       * *« Cloud accepté pour les Forges, choix explicite à chaque lancement,
+       * jamais de bascule automatique. »* Il court-circuite `activeProvider`
+       * **sans le modifier** : écrire dans le magasin le temps d'une Forge
+       * ferait basculer l'Oracle et le Cortex avec elle.
+       */
+      provider?: AIProvider;
     } = {}
   ): Promise<T> {
-    const { activeProvider, configs } = useAIStore.getState();
+    const { configs } = useAIStore.getState();
+    const activeProvider = options.provider ?? useAIStore.getState().activeProvider;
     const config = configs[activeProvider];
 
     console.log(`[AIService] generateJSON call (${activeProvider}) ${attachments?.length ? `with ${attachments.length} attachments` : ''}`);
@@ -1563,7 +1586,7 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
 
     const response = await this.generateText(
       prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona, options.schema,
-      options.plafondDeGeneration, options.libelle,
+      options.plafondDeGeneration, options.libelle, options.provider,
     );
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     

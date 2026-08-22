@@ -35,7 +35,7 @@ troisième fois.
 
 ---
 
-## 2. Ce qui reste — deux axes, ~10 h
+## 2. Ce qui reste — un axe, ~6 h
 
 ### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
@@ -107,17 +107,31 @@ Un bouton pause avec chronomètre : la pause **lève les plafonds de partie**, l
 > Sa seconde raison d'être — « couper à la reprise » suppose des passes — est **levée** : l'axe K est
 > fait.
 
-### ⬜ J — sélecteur de moteur par Forge · *~4 h*
+### ✅ J — sélecteur de moteur par Forge · *fait le 2026-08-22*
 
 **Arbitrage de David : cloud accepté pour les Forges, choix explicite à chaque lancement**, jamais de
 bascule automatique.
 
-- [ ] Un `provider` passé à l'appel, qui court-circuite le fournisseur global **sans le modifier**
-- [ ] Le badge moteur devient un sélecteur, avec estimation de durée
-- [ ] Idem dans `ForgeDashboard` (attention à la plomberie partagée, § 8 du plan)
-- [ ] Mémoriser le dernier choix par Forge, mais **toujours l'afficher**
+- [x] Un `provider` passé à l'appel, qui court-circuite le fournisseur global **sans le modifier**
+- [x] Le badge moteur devient un sélecteur, avec estimation de durée
+- [x] Idem dans `ForgeDashboard` — **le même composant**, comme le § 8 l'exige
+- [x] Mémoriser le dernier choix par Forge, mais **toujours l'afficher**
 
 > L'Oracle et le Cortex n'en ont pas besoin : depuis les axes A à C, le local tient leur budget.
+
+> **`ChronicleForge.tsx` n'existe plus** — l'axe K l'a remplacé par l'atelier de campagne. Le sélecteur
+> vit donc dans `ForgeDashboard` et `AtelierDeCampagne`, et c'est **le même composant** : le § 8 prévient
+> que *« une préoccupation partagée corrigée dans un seul de ses deux exemplaires »* est le bug de la
+> migration Gemini du 07/08.
+>
+> **Les durées annoncées sont celles du § 5, mesurées** — ~2 à 5 min en local, ~30 s sur Gemini — et
+> jamais un chiffre unique : *annoncer « 3 min » et en mettre neuf fait plus de mal que de ne rien dire.*
+> En pause, le sélecteur dit en plus si la Forge **tient dans le temps qui reste**, ce que la convergence
+> des axes I et G rendait enfin possible.
+>
+> **L'invariant « sans le modifier » est tenu par un test de source**, et non par une réimplémentation :
+> aucune Forge n'appelle `setProvider`. *Deux fois ce jour-là, la vérification dans les deux sens a
+> montré qu'un correctif n'était tenu par aucun test* — celui-ci l'est, et la dégradation le prouve.
 
 ### ✅ M — l'Oracle bibliothécaire · *ses quatre étages faits le 2026-08-22*
 

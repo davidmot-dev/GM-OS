@@ -25,6 +25,7 @@ import {
 import { partiesDesFiches, type FicheDeCampagneLue } from './lectureDesFiches';
 import { lireLaStructure } from './structureDeCampagne';
 import { normaliser } from '../rules/canevas';
+import { moteurRetenu } from '../../ai/moteurParForge';
 
 // ─────────────────────────────────────────────
 // Ce que la Forge produit
@@ -393,6 +394,16 @@ export async function forgerLaCampagne(
             lite: true, sansPersona: true, schema,
             // Un quart d'heure sur le créneau unique : voir `useFileDAttente`.
             libelle: 'Forge de campagne',
+            /*
+              **Le moteur retenu pour CETTE Forge — axe J.**
+
+              *« Cloud accepté pour les Forges, choix explicite à chaque lancement,
+              jamais de bascule automatique. »* Il court-circuite `activeProvider`
+              sans le modifier : basculer le magasin le temps d'une Forge emporterait
+              l'Oracle et le Cortex avec elle, et laisserait le réglage changé si la
+              Forge échoue en chemin.
+            */
+            provider: moteurRetenu('campagne'),
             /*
               **Cette forge rend des LISTES, pas un fragment.** Le plafond par
               défaut — 2048 tokens — a été calibré pour la Forge Système, dont le

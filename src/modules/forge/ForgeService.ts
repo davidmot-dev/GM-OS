@@ -23,6 +23,7 @@ import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
 import { budgetEnCaracteres, direLEcart, preparerLeTexte } from './rules/budgetDeLaForge';
 import { OPTIONS_PAR_DEFAUT } from '../../../electron/optionsDuModele';
+import { moteurRetenu } from '../ai/moteurParForge';
 
 /**
  * Motifs d'un échec d'authentification réel.
@@ -183,6 +184,17 @@ export class ForgeService {
       // Elle tient l'unique créneau d'Ollama plusieurs minutes : le panneau de
       // l'Oracle doit pouvoir dire QUI attend, et proposer de l'abandonner.
       libelle: 'Forge Système',
+      /*
+        **Le moteur retenu pour CETTE Forge — axe J.**
+
+        *« Cloud accepté pour les Forges, choix explicite à chaque lancement,
+        jamais de bascule automatique. »* Il court-circuite `activeProvider`
+        sans le modifier : basculer le magasin le temps d'une Forge emporterait
+        l'Oracle et le Cortex avec elle, et laisserait le réglage changé si la
+        Forge échoue en chemin.
+      */
+      provider: moteurRetenu('systeme'),
+
     });
     console.error(`[ForgeService] ${activeProvider} responded!`);
 

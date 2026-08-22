@@ -17,6 +17,7 @@ import { reprendreLAtelier, type FicheReprise } from './reprendreLAtelier';
 import { Bloc, CibleDeCampagne } from './atomes';
 import type { ActeLu } from './structureDeCampagne';
 import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
+import { SelecteurDeMoteur } from '../../ai/SelecteurDeMoteur';
 
 /** Une fiche à l'écran : sortie du carnet, ou reprise du disque. */
 type FicheAffichee = FicheDeCampagne | FicheReprise;
@@ -413,6 +414,28 @@ const AtelierDeCampagne: React.FC = () => {
                         </div>
                     )}
                 </Bloc>
+
+
+                {/*
+                    **Le moteur de cette Forge — axe J.**
+
+                    *« Cloud accepté pour les Forges, choix explicite à chaque
+                    lancement, jamais de bascule automatique. »* Il était un
+                    badge : il annonçait ce qui allait servir sans offrir d'en
+                    changer, et le meneur devait passer par les réglages globaux
+                    — donc **basculer l'Oracle et le Cortex avec**, puis penser à
+                    revenir.
+
+                    Toujours affiché, même quand il suit le réglage global :
+                    *mémoriser sans montrer redonnerait un réglage qu'on a oublié
+                    d'avoir posé.*
+                */}
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-app-text/35">
+                        Moteur de la forge
+                    </span>
+                    <SelecteurDeMoteur forge="campagne" />
+                </div>
 
                 {erreur && (
                     <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
