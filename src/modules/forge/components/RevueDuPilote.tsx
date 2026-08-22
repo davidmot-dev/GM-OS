@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
+import { MECANIQUES_DE_CIBLE } from '../../dice/systemes';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { controlerLePilote, type ConstatDuPilote } from '../rules/controlesDuPilote';
@@ -40,14 +41,27 @@ const Ligne: React.FC<{ clef: string; children: React.ReactNode }> = ({ clef, ch
 );
 
 /** Un identifiant, et s'il se raccorde ou non. */
-const Id: React.FC<{ valeur: string; resolu?: boolean }> = ({ valeur, resolu }) => (
-  <code className={`font-mono px-1.5 py-0.5 rounded ${
-    resolu === false ? 'bg-red-500/20 text-red-300' : 'bg-app-text/10 text-app-text/70'
-  }`}>
-    {valeur}
-    {resolu === false && ' ✕'}
-  </code>
-);
+/**
+ * Un identifiant du pilote, et **le dire quand il n'y en a pas**.
+ *
+ * Le type promet une chaîne ; le pilote vient d'un modèle de langage. Une
+ * valeur absente rendait une pastille VIDE — indiscernable d'un identifiant
+ * correct pour qui parcourt l'écran. *Sur la revue, c'est le pire des rendus :
+ * elle existe pour montrer ce qui manque.*
+ */
+const Id: React.FC<{ valeur?: string; resolu?: boolean }> = ({ valeur, resolu }) => {
+  if (!valeur) {
+    return <em className="text-red-300">absent ✕</em>;
+  }
+  return (
+    <code className={`font-mono px-1.5 py-0.5 rounded ${
+      resolu === false ? 'bg-red-500/20 text-red-300' : 'bg-app-text/10 text-app-text/70'
+    }`}>
+      {valeur}
+      {resolu === false && ' ✕'}
+    </code>
+  );
+};
 
 const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constats }) => {
   if (constats.length === 0) {
@@ -161,8 +175,42 @@ export const RevueDuPilote: React.FC<{
         </Bloc>
       </div>
 
-      {(jet?.seuil?.length || jet?.reserve) && (
+      {(jet?.seuil?.length || jet?.reserve || jet?.cible) && (
         <Bloc titre="Composition du jet">
+          {/*
+            **La cible calculée se montre en PREMIER, et elle manquait.**
+
+            Ajoutée au modèle, aux contrôles et à la Forge le 2026-08-22, elle
+            n'avait pas été ajoutée ici — l'écran qui sert précisément à relire
+            un pilote avant de l'enregistrer. Un pilote dont la cible se calcule
+            n'affichait donc RIEN de sa composition, et « aucun constat » se
+            lisait comme « tout va bien » alors que ça pouvait aussi vouloir dire
+            « il n'y a pas de cible du tout ».
+
+            *Vérifier qu'une chose ne se plaint pas n'est pas vérifier qu'elle
+            est là.*
+          */}
+          {jet.cible && (
+            <>
+              <Ligne clef="Cible">
+                calculée par <Id valeur={jet.cible.mecanique} resolu={jet.cible.mecanique in MECANIQUES_DE_CIBLE} />
+                {' '}— la caractéristique multiplie, elle ne s’additionne pas
+              </Ligne>
+              <Ligne clef="Caractéristique">
+                <Id valeur={jet.cible.caracteristique?.id} /> pris dans la section{' '}
+                <Id
+                  valeur={jet.cible.caracteristique?.sectionId}
+                  resolu={idsDeSections.has(jet.cible.caracteristique?.sectionId)}
+                />
+              </Ligne>
+              {(jet.cible.ajustement ?? []).map((composante, i) => (
+                <Ligne key={`ajustement-${i}`} clef={`${composante?.label ?? '—'} (ajustement)`}>
+                  <Id valeur={composante?.id} /> pris dans la section{' '}
+                  <Id valeur={composante?.sectionId} resolu={idsDeSections.has(composante?.sectionId)} />
+                </Ligne>
+              ))}
+            </>
+          )}
           {(jet.seuil ?? []).map((composante, i) => (
             <Ligne key={i} clef={composante.label}>
               <Id valeur={composante.id} /> pris dans la section{' '}
