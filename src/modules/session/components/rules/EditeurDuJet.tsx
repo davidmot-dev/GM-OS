@@ -2,6 +2,7 @@ import React from 'react';
 import { Dices, Plus, Trash2 } from 'lucide-react';
 import type { GameDriver } from '../../../../types/drivers';
 import type { ComposanteDeJet } from '../../../dice/DescripteurDeJet';
+import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from '../../../dice/systemes';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 
 /**
@@ -34,7 +35,14 @@ const LigneDeComposante: React.FC<{
     composante: ComposanteDeJet;
     sections: SheetTemplate['sections'];
     onChange: (suivante: ComposanteDeJet) => void;
-    onRetirer: () => void;
+    /**
+     * Absent, aucune corbeille.
+     *
+     * La caractéristique d'une cible ne se retire pas seule : sans ordonnée la
+     * mécanique n'a rien à croiser, et le jet vaudrait zéro pour cent. On quitte
+     * la cible par son menu, jamais en vidant une de ses deux moitiés.
+     */
+    onRetirer?: () => void;
 }> = ({ composante, sections, onChange, onRetirer }) => (
     <div className="flex items-center gap-2">
         <input
@@ -74,11 +82,13 @@ const LigneDeComposante: React.FC<{
                 <option value={composante.sectionId}>⚠ {composante.sectionId} (introuvable)</option>
             )}
         </select>
-        <button
-            onClick={onRetirer}
-            className="p-2.5 rounded-xl text-app-text/20 hover:text-red-400 hover:bg-red-500/10 transition-all"
-            title="Retirer cette composante"
-        ><Trash2 size={16} /></button>
+        {onRetirer && (
+            <button
+                onClick={onRetirer}
+                className="p-2.5 rounded-xl text-app-text/20 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                title="Retirer cette composante"
+            ><Trash2 size={16} /></button>
+        )}
     </div>
 );
 
@@ -95,6 +105,40 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
 
     const majSecondaire = (patch: Partial<NonNullable<NonNullable<NonNullable<GameDriver['jet']>['reserve']>['secondaire']>>) =>
         majReserve({ secondaire: { label: '', ...jet?.reserve?.secondaire, ...patch } });
+
+    const cible = jet?.cible;
+
+    /**
+     * Toute écriture de cible part d'une cible complète.
+     *
+     * **La caractéristique naît avec elle**, vide mais présente : le contrôle du
+     * pilote refuse une cible qui n'en porte aucune, et la Revue du Pilote est
+     * TOMBÉE sur ce cas le 2026-08-22 — `undefined.sectionId`, et tout l'écran
+     * qui existe pour signaler ce genre de défaut mis hors service par le défaut
+     * qu'il devait nommer. Ici, il ne peut pas se produire.
+     */
+    const majCible = (patch: Partial<NonNullable<NonNullable<GameDriver['jet']>['cible']>>) =>
+        majJet({
+            cible: {
+                mecanique: 'reves-de-dragons',
+                caracteristique: { id: 'carac', label: 'Caractéristique', sectionId: '' },
+                ...cible,
+                ...patch,
+            },
+        });
+
+    /**
+     * Repasser à l'addition — **la clé disparaît, elle ne vaut pas `undefined`.**
+     *
+     * `estVide` traite les deux pareil, mais pas `JSON.stringify` ni la revue
+     * qui lit les clés : un pilote exporté porterait une cible fantôme. On
+     * retire la clé plutôt que de l'annuler.
+     */
+    const retirerLaCible = () => {
+        const suivant = { sens: 'superieur-ou-egal' as const, ...jet };
+        delete suivant.cible;
+        onUpdate({ jet: suivant });
+    };
 
     const nombre = (valeur: number | undefined, onChange: (n: number) => void, titre: string) => (
         <label className="flex-1">
@@ -216,10 +260,121 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                 )}
             </div>
 
+            {/*
+                **La cible calculée, et pourquoi il lui fallait un écran.**
+
+                Née le 2026-08-22 avec la table de Rêves de Dragons, elle n'était
+                déclarable que par une dérivation. Corriger un pilote qui
+                additionne là où le jeu multiplie demandait donc de repasser les
+                huit groupes devant le modèle — et ça n'aurait pas suffi :
+                `enrichirLePilote` remplit ce qui est vide et ne remplace jamais
+                ce qui est rempli, donc l'ancien seuil serait resté à côté de la
+                cible neuve.
+
+                *C'est le défaut du 2026-08-15 à l'identique, celui qui a fait
+                naître cet écran : la chose existe, fonctionne, et n'a pas d'écran
+                — donc n'existe pas pour qui s'en sert.*
+            */}
+            <div className="space-y-3 pt-2 border-t border-app-border/10">
+                <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-1">
+                        Cible calculée — quand le jeu croise sur une table
+                    </p>
+                    <p className="text-[11px] text-app-text/40 italic px-1 mt-1 leading-relaxed">
+                        Chez Rêves de Dragons la compétence ne s’ajoute pas au pourcentage : elle déplace
+                        la colonne, donc elle multiplie — Agilité 12 avec +3 vaut 78 % et non 15.
+                        Laisse « aucune » si les valeurs de la fiche s’additionnent.
+                    </p>
+                </div>
+                <select
+                    value={cible?.mecanique ?? ''}
+                    onChange={e => (e.target.value
+                        ? majCible({ mecanique: e.target.value as NomDeMecanique })
+                        : retirerLaCible())}
+                    title="La table qui calcule la cible — elle vit dans le code, avec ses nombres transcrits du livre"
+                    className="w-full bg-app-bg/40 px-5 py-3 rounded-2xl border border-app-border/20 text-sm focus:border-accent/50 outline-none cursor-pointer"
+                >
+                    <option value="">— aucune : le seuil s’additionne —</option>
+                    {/*
+                        **La liste vient du registre**, jamais d'une saisie. Un
+                        pilote qui nomme « runequest » ou « percentile » ne calcule
+                        aucune cible et affiche zéro ; ici le nom est inexprimable
+                        s'il n'existe pas dans le code.
+                    */}
+                    {Object.keys(MECANIQUES_DE_CIBLE).map(nom => (
+                        <option key={nom} value={nom}>{nom}</option>
+                    ))}
+                    {/* Une mécanique que cette version ne connaît plus reste visible
+                        plutôt que d'être effacée en silence — même règle que les
+                        sections introuvables. */}
+                    {cible && !(cible.mecanique in MECANIQUES_DE_CIBLE) && (
+                        <option value={cible.mecanique}>⚠ {cible.mecanique} (inconnue)</option>
+                    )}
+                </select>
+
+                {cible && (
+                    <div className="space-y-4 pl-1 pt-1">
+                        <div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-1">
+                                Caractéristique — ce qui se lit en ordonnée
+                            </p>
+                            <p className="text-[11px] text-app-text/40 italic px-1 mt-1 mb-3 leading-relaxed">
+                                Une seule. Sans elle la mécanique n’a rien à croiser : le jet vaudrait
+                                zéro pour cent quel que soit le personnage, et un pourcentage faux ne se
+                                plaint de rien.
+                            </p>
+                            <LigneDeComposante
+                                composante={cible.caracteristique
+                                    ?? { id: 'carac', label: 'Caractéristique', sectionId: '' }}
+                                sections={sections}
+                                onChange={caracteristique => majCible({ caracteristique })}
+                            />
+                        </div>
+                        {listeDeComposantes(
+                            'Ajustement — ce qui déplace la colonne',
+                            'UNE ENTRÉE PAR SECTION, jamais une par champ : douze compétences dont le '
+                            + 'joueur n’en jette qu’une font UNE seule entrée, et le menu lui proposera les '
+                            + 'douze. La difficulté que le meneur fixe ne se met pas ici — elle a son réglage.',
+                            cible.ajustement ?? [],
+                            ajustement => majCible({ ajustement }),
+                        )}
+                    </div>
+                )}
+
+                {/*
+                    **Les deux ne cohabitent pas, et le panneau de jet le paie
+                    deux fois.** Il compose ses menus depuis la cible ET le seuil
+                    réunis, et `LANCER` reste mort tant qu'il en manque un seul —
+                    ou qu'une vieille entrée vise une section disparue. Le nombre,
+                    lui, serait juste : la mécanique gagne. *Un écran qui exige
+                    douze choix inutiles avant un jet correct est un écran qu'on
+                    cesse d'utiliser.*
+
+                    On propose de vider plutôt qu'on ne vide : douze composantes
+                    sont peut-être un travail, et c'est au meneur de le jeter.
+                */}
+                {cible && (jet?.seuil ?? []).length > 0 && (
+                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
+                        <p className="flex-1 text-[11px] text-amber-200/80 leading-relaxed">
+                            {(jet?.seuil ?? []).length} composantes de seuil subsistent alors qu’une cible
+                            est déclarée. Elles ne servent plus à rien, et le panneau de jet les réclamera
+                            toutes au joueur avant de le laisser lancer.
+                        </p>
+                        <button
+                            onClick={() => majJet({ seuil: [] })}
+                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-[10px] font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
+                        >Vider le seuil</button>
+                    </div>
+                )}
+            </div>
+
             {listeDeComposantes(
                 'Seuil — la valeur à laquelle un dé se compare',
-                'Chez Dune : une compétence plus un principe, choisis test par test. '
-                + 'Laisse vide si le jeu compare à une valeur FIXE — « chaque six est une réussite ».',
+                cible
+                    ? 'Une cible calculée est déclarée au-dessus, et c’est ELLE qui décide. '
+                      + 'Tout ce qui reste ici sera réclamé au joueur sans jamais servir : la liste doit être vide.'
+                    : 'Chez Dune : une compétence plus un principe, choisis test par test. '
+                      + 'Laisse vide si le jeu compare à une valeur FIXE — « chaque six est une réussite ».',
                 jet?.seuil ?? [],
                 seuil => majJet({ seuil }),
             )}
