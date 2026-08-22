@@ -231,6 +231,21 @@ declare global {
              * alphabétique ; `systemPath`/`campaignPath` sont les chemins déclarés
              * sur la fiche de campagne, qui priment sur la déduction par nom.
              */
+            /**
+             * Ce que le livre dit d'une question, sans invoquer de modèle.
+             *
+             * Étage 2 de l'axe M : à défaut d'une fiche, la référence — « p. 142,
+             * section Ivresse ». `indexDisponible` distingue « le livre n'en
+             * parle pas » de « aucun index n'a été déposé », qui ne se
+             * ressemblent pas.
+             */
+            chercherDansLIndex: (
+                systeme: string,
+                question: string,
+            ) => Promise<{
+                indexDisponible: boolean;
+                trouvailles: { titre: string; page: number; mots: number }[];
+            }>;
             searchContext: (
                 systemId: string,
                 campaignName: string,

@@ -566,3 +566,83 @@ export function verifierLesCitations(livre: IndexLivre, contenuFiche: string): V
         plage: plageDePages(livre),
     };
 }
+
+/**
+ * Ce que le LIVRE dit d'une question — **étage 2 de l'axe M.**
+ *
+ * *« À défaut d'une fiche, la référence dans le livre : Rêves de Dragons,
+ * p. 142, section Ivresse. »* L'Oracle cesse alors d'être un moteur qui répond
+ * ou se tait : **il devient un bibliothécaire, qui sait dire « je n'ai pas, mais
+ * c'est là ».**
+ *
+ * **Aucun modèle n'est invoqué.** La recherche est un rapprochement de mots sur
+ * un index extrait du livre, donc instantanée et déterministe — le plan l'exige :
+ * *l'ouverture du PDF reste en secours ou sur demande explicite, jamais dans le
+ * chemin critique.*
+ */
+
+/** Les mots d'une question qui portent du sens, pour chercher dans l'index. */
+const MOTS_SANS_PORTEE = new Set([
+    'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'et', 'ou', 'que', 'qui',
+    'quoi', 'quel', 'quelle', 'quelles', 'quels', 'est', 'sont', 'ce', 'ces',
+    'cette', 'pour', 'sur', 'dans', 'avec', 'en', 'au', 'aux', 'comment',
+    'combien', 'pourquoi', 'faire', 'fait', 'peut', 'quand',
+]);
+
+export interface TrouvailleDIndex {
+    titre: string;
+    page: number;
+    /** Nombre de mots de la question retrouvés dans le titre. */
+    mots: number;
+}
+
+/**
+ * Cherche les entrées d'index qui répondent à une question.
+ *
+ * **On ne rapproche que des mots entiers, et on exige un mot d'au moins quatre
+ * lettres.** Un index de livre contient des centaines d'entrées : rapprocher sur
+ * trois lettres ferait remonter « art » pour « écart », et *une référence fausse
+ * à table est pire que pas de référence* — c'est la règle posée pour l'axe L, et
+ * elle vaut ici mot pour mot.
+ */
+export function chercherDansLIndex(
+    livre: IndexLivre,
+    question: string,
+    combien = 3,
+): TrouvailleDIndex[] {
+    const mots = question
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter(m => m.length >= 4 && !MOTS_SANS_PORTEE.has(m));
+
+    if (mots.length === 0) return [];
+
+    const trouvees: TrouvailleDIndex[] = [];
+    for (const entree of livre.entrees) {
+        const titre = entree.titre.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+        const compte = mots.filter(m => titre.includes(m)).length;
+        if (compte > 0) trouvees.push({ titre: entree.titre, page: entree.page, mots: compte });
+    }
+
+    /*
+      **Le plus de mots retrouvés d'abord, et à égalité le titre le plus court.**
+      Un titre court qui contient le mot cherché le traite ; un titre long qui le
+      contient au passage ne fait que le mentionner.
+    */
+    trouvees.sort((a, b) => b.mots - a.mots || a.titre.length - b.titre.length || a.page - b.page);
+
+    /*
+      **Une seule entrée par titre.** Un index renvoie souvent le même titre à
+      plusieurs pages ; les lister toutes noierait la référence utile — la
+      première occurrence est celle où la section commence, et `chargerIndex`
+      garde déjà la plus basse.
+    */
+    const vus = new Set<string>();
+    return trouvees.filter(t => {
+        const k = clef(t.titre);
+        if (vus.has(k)) return false;
+        vus.add(k);
+        return true;
+    }).slice(0, combien);
+}

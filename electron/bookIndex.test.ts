@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
 import {
+    chercherDansLIndex,
     chargerIndex,
     clef,
     creerResolveur,
@@ -373,5 +374,75 @@ describe('verifierLesCitations', () => {
             expect(v.indexDisponible, `${systeme} sans index`).toBe(true);
             expect(v.plage, `${systeme} sans pagination`).not.toBeNull();
         }
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **l'Oracle sait dire « je n'ai pas, mais c'est
+ * là ».**
+ *
+ * Étage 2 de l'axe M. Aucun modèle n'est invoqué : un rapprochement de mots sur
+ * l'index extrait du livre, donc instantané et déterministe — *l'ouverture du
+ * PDF reste en secours, jamais dans le chemin critique.*
+ */
+describe('chercher dans l’index du livre', () => {
+    const livre = {
+        systeme: 'reves de dragons',
+        sources: ['index.md'],
+        ignores: [],
+        entrees: [
+            { titre: 'Éthylisme', page: 77 },
+            { titre: 'Jet d’éthylisme et malus', page: 78 },
+            { titre: 'Le round de combat', page: 120 },
+            { titre: 'La fatigue', page: 88 },
+            // Le piège du rapprochement trop court : « écarts » contient « art ».
+            { titre: 'Écarts de conduite', page: 210 },
+            { titre: 'Éthylisme', page: 105 },
+        ],
+    };
+
+    it('trouve la section qui traite la question', () => {
+        const trouvees = chercherDansLIndex(livre, 'Quelles sont les règles d’éthylisme ?');
+
+        expect(trouvees.length).toBeGreaterThan(0);
+        expect(trouvees[0].titre).toBe('Éthylisme');
+        expect(trouvees[0].page).toBe(77);
+    });
+
+    /**
+     * **Le plus de mots retrouvés d'abord.** Un titre qui répond à deux mots de
+     * la question la traite mieux qu'un titre qui n'en croise qu'un.
+     */
+    it('classe par nombre de mots retrouvés', () => {
+        const trouvees = chercherDansLIndex(livre, 'jet éthylisme malus');
+        expect(trouvees[0].titre).toBe('Jet d’éthylisme et malus');
+    });
+
+    /**
+     * **Une seule entrée par titre.** Un index renvoie souvent le même titre à
+     * plusieurs pages ; les lister toutes noierait la référence utile.
+     */
+    it('ne répète pas un titre présent à plusieurs pages', () => {
+        const titres = chercherDansLIndex(livre, 'éthylisme').map(t => t.titre);
+        expect(titres.filter(t => t === 'Éthylisme')).toHaveLength(1);
+    });
+
+    /**
+     * *Une référence fausse à table est pire que pas de référence* — la règle
+     * de l'axe L, et elle vaut ici mot pour mot.
+     */
+    it('n’invente rien quand la question ne porte aucun mot utile', () => {
+        expect(chercherDansLIndex(livre, 'et alors ?')).toEqual([]);
+        expect(chercherDansLIndex(livre, 'que fait-on ?')).toEqual([]);
+    });
+
+    /**
+     * **On exige un mot d'au moins quatre lettres.** Un index contient des
+     * centaines d'entrées : rapprocher sur trois ferait remonter « Écarts de
+     * conduite » pour « art », et *une référence fausse à table est pire que pas
+     * de référence* — la règle de l'axe L, mot pour mot.
+     */
+    it('ne rapproche pas sur trois lettres', () => {
+        expect(chercherDansLIndex(livre, 'art'), 'ne doit pas trouver « Écarts »').toEqual([]);
     });
 });

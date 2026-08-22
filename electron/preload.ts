@@ -99,6 +99,11 @@ contextBridge.exposeInMainWorld('appBridge', {
         extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),
         proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => 
             ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),
+        chercherDansLIndex: (
+            systeme: string,
+            question: string,
+        ): Promise<{ indexDisponible: boolean; trouvailles: { titre: string; page: number; mots: number }[] }> =>
+            ipcRenderer.invoke('ai:chercher-index', systeme, question),
         searchContext: (
             systemId: string,
             campaignName: string,

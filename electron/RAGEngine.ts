@@ -11,7 +11,7 @@ import {
     type RagRequest,
     type RagSelection,
 } from './ragSelection';
-import { chargerIndex, verifierLesCitations } from './bookIndex';
+import { chargerIndex, chercherDansLIndex, verifierLesCitations } from './bookIndex';
 
 const require = createRequire(import.meta.url);
 let pdf: any;
@@ -445,6 +445,28 @@ export function registerRagHandlers() {
      * false` plutôt que « zéro section résolue », qui aurait accusé la fiche
      * d'un manque qui n'est pas le sien.
      */
+    /**
+     * Ce que le LIVRE dit d'une question — **étage 2 de l'axe M.**
+     *
+     * *« À défaut d'une fiche, la référence dans le livre. »* L'Oracle cesse
+     * d'être un moteur qui répond ou se tait : **il devient un bibliothécaire,
+     * qui sait dire « je n'ai pas, mais c'est là ».**
+     *
+     * Aucun modèle n'est invoqué et rien n'est ouvert : un rapprochement de mots
+     * sur l'index déjà extrait. *L'ouverture du PDF reste en secours ou sur
+     * demande explicite, jamais dans le chemin critique.*
+     */
+    ipcMain.handle('ai:chercher-index', async (_event, systeme: string, question: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const livre = chargerIndex(root, systeme);
+        return {
+            /* Un index absent n'est pas une absence de réponse : le dire permet
+               à l'écran de proposer d'en déposer un, au lieu de se taire. */
+            indexDisponible: livre.entrees.length > 0,
+            trouvailles: chercherDansLIndex(livre, question),
+        };
+    });
+
     ipcMain.handle('ai:resolve-sections', async (_event, systeme: string, contenuFiche: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         return verifierLesCitations(chargerIndex(root, systeme), contenuFiche);

@@ -96,10 +96,11 @@ bascule automatique.
 Quatre étages, du moins coûteux au plus coûteux.
 
 - [ ] 1 — **la fiche**, sans invoquer aucun modèle
-- [ ] 2 — à défaut, **la référence dans le livre** (« p. 142, section Ivresse ») ; ouverture du PDF en
-      secours ou sur demande, **jamais dans le chemin critique**
+- [x] 2 — à défaut, **la référence dans le livre** (« p. 142, section Ivresse ») ; ouverture du PDF en
+      secours ou sur demande, **jamais dans le chemin critique** — *fait le 22/08 : aucun modèle invoqué,
+      aucun PDF ouvert, un rapprochement de mots sur l'index déjà extrait*
 - [ ] 3 — à défaut, **un jugement de table** en deux lignes
-- [ ] 4 — **le journal des lacunes**
+- [x] 4 — **le journal des lacunes** — *fait le 22/08*
 
 Les quatre exigences du *ruling*, qui ne se négocient pas :
 

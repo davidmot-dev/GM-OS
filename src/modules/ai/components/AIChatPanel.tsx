@@ -17,6 +17,7 @@ import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { marquerCommeRelue, marquerCommeSuspecte } from '../../forge/rules/marqueDeRelecture';
 import { regrouperLesLacunes, useJournalDesLacunes } from '../lacunes/useJournalDesLacunes';
+import { atteinteDeLaRecherche, estUneLacune } from '../lacunes/atteinteDeLaRecherche';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -66,6 +67,15 @@ const AIChatPanel: React.FC = () => {
   const questionsNotees = useJournalDesLacunes(e => e.questions);
   const lacunes = useMemo(() => regrouperLesLacunes(questionsNotees), [questionsNotees]);
   const oublierLaLacune = useJournalDesLacunes(e => e.oublier);
+
+  /**
+   * Ce que le LIVRE dit, quand aucune fiche n'a répondu — **étage 2 de l'axe M.**
+   *
+   * L'Oracle cesse d'être un moteur qui répond ou se tait : *il sait dire « je
+   * n'ai pas, mais c'est là ».* Cherché seulement en cas de lacune — quand une
+   * fiche a répondu, la référence au livre n'ajoute rien et coûte une ligne.
+   */
+  const [dansLeLivre, setDansLeLivre] = useState<{ titre: string; page: number }[]>([]);
 
   const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[]>([]);
 
@@ -137,6 +147,7 @@ const AIChatPanel: React.FC = () => {
 
     setInput('');
     setSources([]);
+    setDansLeLivre([]);
     setLoading(true);
     setAiStatus('Gathering intelligence...');
 
@@ -170,6 +181,17 @@ const AIChatPanel: React.FC = () => {
             modèle a fini par dire.
           */
           useJournalDesLacunes.getState().noter(question, recues, systemeActif);
+
+          /*
+            **On ne cherche dans le livre QUE si aucune fiche n'a répondu.**
+            Quand une fiche répond, la référence n'ajoute rien et coûte une
+            ligne à l'écran ; quand rien ne répond, elle est tout ce qu'on a.
+          */
+          if (systemeActif && estUneLacune(atteinteDeLaRecherche(recues))) {
+            void window.appBridge?.ai?.chercherDansLIndex?.(systemeActif, question)
+              .then(r => setDansLeLivre(r.trouvailles.map(t => ({ titre: t.titre, page: t.page }))))
+              .catch(() => setDansLeLivre([]));
+          }
         },
       );
     } catch (error: unknown) {
@@ -290,6 +312,29 @@ const AIChatPanel: React.FC = () => {
               ))}
             </ul>
           </details>
+        )}
+
+
+        {/*
+          **« Je n'ai pas, mais c'est là. »** Étage 2 de l'axe M : à défaut d'une
+          fiche, la référence dans le livre. Aucun modèle n'a été invoqué pour
+          l'obtenir, et aucun PDF n'a été ouvert — un rapprochement de mots sur
+          l'index déjà extrait.
+
+          Il ne s'affiche qu'en cas de lacune : quand une fiche a répondu, la
+          référence n'ajoute rien.
+        */}
+        {dansLeLivre.length > 0 && (
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1 pb-2 text-[10px]">
+            <span className="font-black uppercase tracking-widest text-sky-300/50">
+              Le livre en parle
+            </span>
+            {dansLeLivre.map(t => (
+              <span key={`${t.titre}-${t.page}`} className="text-app-text/50">
+                {t.titre} <span className="font-mono text-sky-300/70">p. {t.page}</span>
+              </span>
+            ))}
+          </div>
         )}
 
 
