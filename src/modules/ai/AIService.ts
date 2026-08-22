@@ -10,6 +10,7 @@ import { scenesDansLEtat } from '../session/logic/trame';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
 import { attenteAnnoncee, budgetDuMoment } from './budgetsDeTemps';
+import { tenterLaDiffusionLocale } from './modeDeContexte';
 import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
 import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
@@ -639,8 +640,34 @@ Use the names above verbatim. Do not invent a setting title.
     const config = configs[activeProvider];
 
     try {
-      // 0. TENTATIVE OLLAMA LOCAL FLUX (Si actif)
-      if (activeProvider === 'ollama') {
+      /*
+        **Jamais de diffusion locale en partie — axe F.4.**
+
+        L'axe D.2 a posé un délai d'abandon de quatre-vingt-dix secondes sur la
+        diffusion locale, et il fallait le poser. Mais en pleine partie, ces
+        quatre-vingt-dix secondes sont **quatre-vingt-dix secondes d'attente
+        avant même de commencer** : le repli distant, lui, répond en quelques
+        secondes. Et pendant tout ce temps la diffusion occupe l'unique créneau
+        de `NUM_PARALLEL: 1`, **donc l'Oracle et le Cortex avec elle.**
+
+        *Un plafond empêche le blocage sans fin ; il ne rend pas l'attente
+        acceptable.* En partie on va donc droit au distant, et on ne tente le
+        local qu'en préparation, où personne n'attend.
+
+        **La pause rouvre le local**, comme elle rouvre tout le reste : c'est
+        exactement ce que l'axe G a rendu possible — `momentDeJeu` répond
+        « préparation » dès que la séance est en pause.
+      */
+      const enPartie = !tenterLaDiffusionLocale(useSessionOSStore.getState().sessions);
+      if (enPartie && activeProvider === 'ollama') {
+        console.info(
+          '[AI Service] Séance ouverte : la diffusion locale est court-circuitée,'
+          + ' on demande directement le service distant.',
+        );
+      }
+
+      // 0. TENTATIVE OLLAMA LOCAL FLUX (Si actif, et hors partie)
+      if (activeProvider === 'ollama' && !enPartie) {
         try {
           /*
             **UN DÉLAI D'ABANDON, ET IL ARRÊTE VRAIMENT — axe D.2 du plan du

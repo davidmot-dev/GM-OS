@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useModeDeContexte } from '../../ai/modeDeContexte';
+import { IndicateurDeMode } from '../../ai/IndicateurDeMode';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { LootGenerator } from '../logic/LootGenerator';
 import { Sparkles, Dices, Layers, Wand2, Search, Loader2, Zap, BookOpen } from 'lucide-react';
@@ -13,7 +15,20 @@ const LootGeneratorPanel: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [aiInput, setAiInput] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
-    const [useFullContext, setUseFullContext] = useState(false);
+    /*
+      **Le défaut suit désormais le moment de jeu — axes F.1 et F.5.**
+
+      Ce panneau était *« le seul endroit où le choix de contexte est conscient
+      et offert au MJ »*, et le plan demande de le généraliser. Il lui manquait
+      pourtant une chose : **il ne disait pas POURQUOI**. Un allègement par
+      défaut se lit comme une réponse maigre, pas comme un choix.
+
+      `undefined` est un troisième état, et il compte : *une surcharge qui ne se
+      distingue pas du défaut ne peut plus revenir au défaut.*
+    */
+    const [surcharge, setSurcharge] = useState<boolean | undefined>(undefined);
+    const mode = useModeDeContexte(surcharge);
+    const useFullContext = !mode.allege;
     
     const driver = getActiveDriver();
     const lootTables = driver?.lootTables || [];
@@ -101,7 +116,7 @@ const LootGeneratorPanel: React.FC = () => {
                     {/* Lite/Full Toggle */}
                     <div className="flex items-center bg-white/5 border border-white/10 rounded-lg p-0.5">
                         <button 
-                            onClick={() => setUseFullContext(false)}
+                            onClick={() => setSurcharge(true)}
                             title={t('modules:loot.generator.lite_mode')}
                             className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${!useFullContext ? 'bg-gm-gold/20 text-gm-gold' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
@@ -109,7 +124,7 @@ const LootGeneratorPanel: React.FC = () => {
                             LITE
                         </button>
                         <button 
-                            onClick={() => setUseFullContext(true)}
+                            onClick={() => setSurcharge(false)}
                             title={t('modules:loot.generator.full_mode')}
                             className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${useFullContext ? 'bg-indigo-500/20 text-indigo-400' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
@@ -118,6 +133,21 @@ const LootGeneratorPanel: React.FC = () => {
                         </button>
                     </div>
                 </div>
+
+                {/*
+                    **Dire pourquoi, et pas seulement quoi — axe F.5.**
+
+                    *« Si la Forge se comporte différemment parce qu'une session
+                    est ouverte, c'est la Forge qui doit le dire, avec le moyen
+                    de passer outre. »* Les deux boutons offraient déjà le moyen ;
+                    il manquait la raison, sans laquelle un allègement se lit
+                    comme une panne.
+                */}
+                {(mode.imposeParLaSeance || surcharge !== undefined) && (
+                    <div className="px-1">
+                        <IndicateurDeMode surcharge={surcharge} onSurcharge={setSurcharge} />
+                    </div>
+                )}
                 <div className="relative group">
                     <input 
                         className={`w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 pr-12 text-sm text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-gm-gold/50 transition-all outline-none ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}

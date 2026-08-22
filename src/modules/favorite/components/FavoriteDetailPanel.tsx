@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { contexteAllegeMaintenant } from '../../ai/modeDeContexte';
 import { gmToast } from '../../../stores/useToastStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { aiService } from '../../ai/AIService';
@@ -91,7 +92,17 @@ export const FavoriteDetailPanel: React.FC = () => {
             Attributs : ${JSON.stringify(entity.attributes || {})}
             `;
             
-            const result = await aiService.generateJSON<string[]>(prompt, systemPrompt);
+            /*
+              **Le contexte suit le moment de jeu — axe F.1.**
+
+              Cet appel ne déclarait rien, et retombait donc sur un réglage
+              global que personne ne regarde. En partie, le meneur attend et ses
+              joueurs avec lui : *un générateur n'a pas besoin de toute la
+              campagne.* La pause le remet au contexte complet, comme elle lève
+              les plafonds.
+            */
+            const result = await aiService.generateJSON<string[]>(
+                prompt, systemPrompt, undefined, { lite: contexteAllegeMaintenant() });
             if (Array.isArray(result)) {
                 updateFavorite(entity.id, { dialoguePrep: result });
                 gmToast(t('common:success_operation'));

@@ -35,7 +35,7 @@ troisième fois.
 
 ---
 
-## 2. Ce qui reste — trois axes, ~13 h
+## 2. Ce qui reste — deux axes, ~10 h
 
 ### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
@@ -51,20 +51,34 @@ troisième fois.
 > Le journal de la Forge attendait déjà ces lignes : son commentaire annonce « une ligne par groupe, une
 > par lacune et **une par fichier écarté** » depuis le 20/08. Le canal existait, personne ne lui parlait.
 
-### ⬜ F — brancher le mode · *~3 h · F.3 déjà fait*
+### ✅ F — brancher le mode · *fait le 2026-08-22*
 
-Le signal « une séance est ouverte » existe depuis toujours et ne décide encore que des **plafonds de
-temps**.
+Le signal « une séance est ouverte » ne décidait que des **plafonds de temps**.
 
-- [ ] F.1 — `AIService` en dérive aussi le **contexte, le fournisseur, le moteur d'image**
-- [ ] F.2 — généraliser le motif du générateur de butin : *le choix de contexte visible et
+- [x] F.1 — le **contexte** et le **moteur d'image** en dérivent ; **pas le fournisseur** — voir plus bas
+- [x] F.2 — le motif du générateur de butin, généralisé : *le choix de contexte visible et
       surchargeable, pas caché*
-- [ ] F.4 — jamais de diffusion locale en partie (cloud direct pour les images)
-- [ ] F.5 — **afficher le mode là où il agit**, pas seulement dans le cockpit
+- [x] F.4 — jamais de diffusion locale en partie (cloud direct pour les images)
+- [x] F.5 — **afficher le mode là où il agit**, pas seulement dans le cockpit
 
 > F.5 porte sa propre justification : *si la Forge se comporte différemment parce qu'une session est
 > ouverte, c'est la Forge qui doit le dire, avec le moyen de passer outre. Sinon on recrée l'action à
 > distance qu'on cherche à éviter.*
+
+> **Deux écarts au plan, tous deux assumés.**
+>
+> **Le fournisseur ne bascule pas tout seul.** F.1 le demandait, mais l'axe J porte l'arbitrage de
+> David — *« choix explicite à chaque lancement, jamais de bascule automatique »* — et il est
+> postérieur. Une bascule silencieuse vers le cloud enverrait le contexte de campagne à un tiers sans
+> que personne l'ait demandé.
+>
+> **Le contexte n'est allégé QUE pour les générateurs** — butin, PNJ, voix. *Décision de David, le
+> 22/08.* Appliqué à l'Oracle, `lite` ne veut pas dire « moins de contexte » mais **aucune recherche
+> dans le corpus** : il serait devenu aveugle en partie, ce qui est exactement l'état qu'on venait de
+> réparer. Une réponse rapide et fausse ne vaut rien.
+>
+> Et un **opt-in aux points d'appel** plutôt qu'un défaut global : un futur chemin de questions qui
+> oublierait de se déclarer chercherait alors dans un corpus vide, sans qu'on le voie.
 
 ### ✅ G — la pause de séance · *faite le 2026-08-22*
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
+import { contexteAllegeMaintenant } from '../ai/modeDeContexte';
 
 
 export interface VoiceEffects {
@@ -326,7 +327,15 @@ Règles des valeurs :
                       reste un choix que personne n'a fait.*
                     */
                     const response = await aiService.generateText(
-                        prompt, undefined, 'sage', {}, undefined,
+                        /*
+                          **Le moment décide, plutôt que personne — axe F.1.**
+                          Ce `undefined` laissait le réglage global trancher, et
+                          le commentaire ci-dessus dit déjà pourquoi c'est un
+                          problème : *un contexte hérité d'ailleurs reste un
+                          choix que personne n'a fait.* En partie on allège, en
+                          préparation et en pause on prend tout.
+                        */
+                        prompt, undefined, 'sage', {}, contexteAllegeMaintenant(),
                         true,   // attendJson
                         true,   // sansPersona
                         schema,
