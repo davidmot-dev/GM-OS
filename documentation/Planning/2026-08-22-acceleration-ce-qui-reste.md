@@ -35,7 +35,7 @@ troisième fois.
 
 ---
 
-## 2. Ce qui reste — six axes, ~26 h
+## 2. Ce qui reste — cinq axes, ~21 h
 
 ### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
@@ -50,10 +50,6 @@ troisième fois.
 >
 > Le journal de la Forge attendait déjà ces lignes : son commentaire annonce « une ligne par groupe, une
 > par lacune et **une par fichier écarté** » depuis le 20/08. Le canal existait, personne ne lui parlait.
-
-> C'est la **dernière troncature muette** du chemin IA : les autres sont tombées le 21/08. Une
-> troncature qui ne se dit pas produit une réponse fondée sur la moitié d'un livre, et rien ne le
-> signale.
 
 ### ⬜ F — brancher le mode · *~3 h · F.3 déjà fait*
 
@@ -147,12 +143,12 @@ La partition existe **déjà de fait** dans `CurrentView`, et un module l'appliq
 
 | Rang | Axe | Pourquoi ici |
 | --- | --- | --- |
-| 1 | **E.4** | Petit, et il ferme la dernière troncature muette du chemin IA |
-| 2 | **M** | C'est lui qui donne son sens à tout ce qui a été construit — et ses trois appuis viennent de tomber |
-| 3 | **G** | Deux heures, un prérequis levé, et le chronomètre sert même sans l'IA |
-| 4 | **J** | Du confort réel sur les Forges longues, sans dépendance |
-| 5 | **F** | Le plus de plomberie pour le moins de gain immédiat |
-| 6 | **N** | Le plus visible, le moins urgent — et il ne se juge qu'en jouant |
+| ~~1~~ | ~~**E.4**~~ | ✅ **fait le 22/08** — la dernière troncature muette du chemin IA est fermée |
+| 1 | **M** | C'est lui qui donne son sens à tout ce qui a été construit — et ses trois appuis viennent de tomber |
+| 2 | **G** | Deux heures, un prérequis levé, et le chronomètre sert même sans l'IA |
+| 3 | **J** | Du confort réel sur les Forges longues, sans dépendance |
+| 4 | **F** | Le plus de plomberie pour le moins de gain immédiat |
+| 5 | **N** | Le plus visible, le moins urgent — et il ne se juge qu'en jouant |
 
 **Ce que cet ordre ne dit pas, et qui compte plus que lui** : rien de ce qui a été construit les 21 et
 22 août n'a encore été vu tourner en séance. *Les onze défauts trouvés depuis le 17/08 l'ont tous été en
