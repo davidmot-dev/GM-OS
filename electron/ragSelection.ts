@@ -134,6 +134,14 @@ export interface Retenu {
     relu?: boolean;
     /** La fiche a-t-elle été signalée comme suspecte ? */
     aRegenerer?: boolean;
+    /**
+     * Le `sujet:` de la fiche — **c'est lui qui permet de répondre sans modèle.**
+     *
+     * Étage 1 de l'axe M : quand le sujet d'une fiche recouvre la question, la
+     * fiche EST la réponse, et l'invoquer un modèle pour la paraphraser
+     * n'ajouterait qu'une occasion de se tromper.
+     */
+    sujet?: string;
     path: string;
     provenance: Provenance;
     score: number;
@@ -332,6 +340,7 @@ export function selectContext(
             path: candidat.file.path,
             relu: candidat.file.relu,
             aRegenerer: candidat.file.aRegenerer,
+            sujet: candidat.file.sujet,
             provenance: candidat.provenance,
             score: candidat.score,
             tokens,

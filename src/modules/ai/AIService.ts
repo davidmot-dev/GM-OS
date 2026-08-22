@@ -16,6 +16,7 @@ import type { JournalEvent } from '../journal/types';
 import { contexteEstVide, type ContexteDeCampagne } from '../journal/contexteDeCampagne';
 import i18n from '../../i18n';
 import { CONSIGNE_DE_JUGEMENT } from './lacunes/jugementDeTable';
+import { extraireLaRegle, laFicheRepondSeule } from './lacunes/ficheQuiRepond';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 
@@ -1037,7 +1038,18 @@ Use the names above verbatim. Do not invent a setting title.
      * *l'Oracle citait une fiche jamais relue exactement comme une fiche
      * vérifiée.*
      */
-    onSources?: (sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[]) => void,
+    onSources?: (
+      sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[],
+      /**
+       * La fiche qui a répondu **seule**, sans qu'aucun modèle soit invoqué.
+       *
+       * Portée par le même canal que les sources, et non recalculée par l'écran :
+       * *deux endroits qui décident de la même chose finissent par en décider
+       * autrement*, et l'écran annoncerait alors « aucun modèle invoqué » sur une
+       * réponse que le modèle a écrite.
+       */
+      ficheDirecte?: string,
+    ) => void,
   ): Promise<void> {
     const { activeProvider, configs, streamEnabled } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -1052,6 +1064,35 @@ Use the names above verbatim. Do not invent a setting title.
 
     onStatusUpdate?.("Analyses tactiques & grimoires...");
     const systemPrompt = await this.prepareSystemPrompt(prompt, undefined, gemId, ragOptions);
+
+    /*
+      **Quand une fiche EST la réponse, on n'invoque personne — étage 1 de
+      l'axe M.**
+
+      *« La valeur de l'étage 1 n'est pas la milliseconde, c'est la
+      TRAÇABILITÉ. »* Une fiche a été forgée depuis un livre, relue, et elle
+      porte ses sources : la faire paraphraser par un modèle n'ajoute rien —
+      **et ajoute une occasion de se tromper**, sur le seul chemin où l'on tenait
+      enfin une réponse dont on connaît l'origine.
+
+      Le rapprochement est strict, et il doit l'être : répondre avec la MAUVAISE
+      fiche donnerait une règle exacte, tirée d'une source vérifiée, qui ne
+      répond pas à la question — plus grave qu'une paraphrase maladroite.
+    */
+    const fiche = (ragService.dernieresSources ?? [])
+        .find(s => s.provenance === 'fiche' && laFicheRepondSeule(s.sujet, prompt));
+
+    if (fiche) {
+        const contenu = await window.appBridge?.ai?.readDoc?.(fiche.path).catch(() => null);
+        if (contenu) {
+            onSources?.(ragService.dernieresSources, fiche.path);
+            onStatusUpdate?.('');
+            onToken(extraireLaRegle(contenu));
+            return;
+        }
+        // Fiche illisible : on retombe sur le modèle plutôt que de se taire.
+        // *Un chemin rapide qui échoue doit rendre la main, pas la réponse.*
+    }
 
     /*
       **Relevées juste après l'assemblage, jamais plus tard.** Le service ne

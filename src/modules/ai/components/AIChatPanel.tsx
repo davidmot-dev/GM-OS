@@ -88,7 +88,16 @@ const AIChatPanel: React.FC = () => {
    */
   const [jugement, setJugement] = useState(false);
 
-  const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[]>([]);
+  /**
+   * La fiche qui a répondu **seule**, sans qu'aucun modèle soit invoqué.
+   *
+   * *« La valeur de l'étage 1 n'est pas la milliseconde, c'est la
+   * traçabilité. »* Le dire est tout l'intérêt : le meneur sait alors qu'il lit
+   * une règle, pas une reformulation.
+   */
+  const [ficheDirecte, setFicheDirecte] = useState<string | null>(null);
+
+  const [sources, setSources] = useState<{ path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[]>([]);
 
   /**
    * Déclarer une fiche relue, depuis la réponse qu'elle vient de fournir.
@@ -160,6 +169,7 @@ const AIChatPanel: React.FC = () => {
     setSources([]);
     setDansLeLivre([]);
     setJugement(false);
+    setFicheDirecte(null);
     setLoading(true);
     setAiStatus('Gathering intelligence...');
 
@@ -180,8 +190,9 @@ const AIChatPanel: React.FC = () => {
         },
         activeGem,
         {},
-        (recues) => {
+        (recues, venueDeLaFiche) => {
           setSources(recues);
+          setFicheDirecte(venueDeLaFiche ?? null);
           /*
             **Le journal des lacunes se remplit ici, et sans rien demander.**
             Décision du plan : *pas de pouces haut/bas* — à table, ils créent une
@@ -349,6 +360,20 @@ const AIChatPanel: React.FC = () => {
           la recherche n'a RIEN atteint — et avant même que le premier mot ne
           s'écrive.
         */}
+        {/*
+          **« Cette réponse vient d'une fiche, pas d'un modèle. »**
+
+          Étage 1 de l'axe M, et sa raison d'être : *la valeur de l'étage 1 n'est
+          pas la milliseconde, c'est la TRAÇABILITÉ.* Le dire change ce que le
+          meneur lit — une règle, et non une reformulation qui peut avoir glissé.
+        */}
+        {ficheDirecte && (
+          <div className="mx-1 mb-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-300/90">
+            Tiré de la fiche — aucun modèle invoqué
+          </div>
+        )}
+
+
         {jugement && (
           <div className="mx-1 mb-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-amber-300/90">
             {ETIQUETTE_DU_JUGEMENT}

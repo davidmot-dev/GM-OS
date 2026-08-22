@@ -35,7 +35,7 @@ troisième fois.
 
 ---
 
-## 2. Ce qui reste — cinq axes, ~21 h
+## 2. Ce qui reste — quatre axes, ~15 h
 
 ### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
@@ -91,11 +91,12 @@ bascule automatique.
 
 > L'Oracle et le Cortex n'en ont pas besoin : depuis les axes A à C, le local tient leur budget.
 
-### ⬜ M — l'Oracle bibliothécaire · *~6 h · chantier de fond*
+### ✅ M — l'Oracle bibliothécaire · *ses quatre étages faits le 2026-08-22*
 
 Quatre étages, du moins coûteux au plus coûteux.
 
-- [ ] 1 — **la fiche**, sans invoquer aucun modèle
+- [x] 1 — **la fiche**, sans invoquer aucun modèle — *fait le 22/08 ; le rapprochement est un
+      RECOUVREMENT et non un score, parce qu'un seuil à régler serait un seuil à re-régler*
 - [x] 2 — à défaut, **la référence dans le livre** (« p. 142, section Ivresse ») ; ouverture du PDF en
       secours ou sur demande, **jamais dans le chemin critique** — *fait le 22/08 : aucun modèle invoqué,
       aucun PDF ouvert, un rapprochement de mots sur l'index déjà extrait*
@@ -146,11 +147,11 @@ La partition existe **déjà de fait** dans `CurrentView`, et un module l'appliq
 | Rang | Axe | Pourquoi ici |
 | --- | --- | --- |
 | ~~1~~ | ~~**E.4**~~ | ✅ **fait le 22/08** — la dernière troncature muette du chemin IA est fermée |
-| 1 | **M** | C'est lui qui donne son sens à tout ce qui a été construit — et ses trois appuis viennent de tomber |
-| 2 | **G** | Deux heures, un prérequis levé, et le chronomètre sert même sans l'IA |
-| 3 | **J** | Du confort réel sur les Forges longues, sans dépendance |
-| 4 | **F** | Le plus de plomberie pour le moins de gain immédiat |
-| 5 | **N** | Le plus visible, le moins urgent — et il ne se juge qu'en jouant |
+| ~~1~~ | ~~**M**~~ | ✅ **fait le 22/08** — ses quatre étages |
+| 1 | **G** | Deux heures, un prérequis levé, et le chronomètre sert même sans l'IA |
+| 2 | **J** | Du confort réel sur les Forges longues, sans dépendance |
+| 3 | **F** | Le plus de plomberie pour le moins de gain immédiat |
+| 4 | **N** | Le plus visible, le moins urgent — et il ne se juge qu'en jouant |
 
 **Ce que cet ordre ne dit pas, et qui compte plus que lui** : rien de ce qui a été construit les 21 et
 22 août n'a encore été vu tourner en séance. *Les onze défauts trouvés depuis le 17/08 l'ont tous été en

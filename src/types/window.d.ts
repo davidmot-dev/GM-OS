@@ -264,7 +264,7 @@ declare global {
                  * étage. L'écran ne pouvait donc pas dire d'où venait une
                  * réponse, ni qu'une fiche n'avait jamais été relue.
                  */
-            ) => Promise<{ context: string; sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string }[] }>;
+            ) => Promise<{ context: string; sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] }>;
             reindex: (customPath?: string) => Promise<boolean>;
             /**
              * `options.json` pose `format: 'json'` côté Ollama — le décodage
