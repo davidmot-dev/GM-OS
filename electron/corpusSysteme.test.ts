@@ -57,6 +57,45 @@ describe('resoudreCorpus', () => {
         expect(corpus.aCreer).toBe(false);
     });
 
+    /**
+     * **Un chemin saisi a la main n'a pas a connaitre l'arborescence.**
+     *
+     * Releve en reel le 2026-08-22, sur la campagne de David : la resolution
+     * annoncait bien le corpus « reves de dragons » — et la recherche ne
+     * retenait rien. La racine valait `reves de dragons`, sans `systems/`, et
+     * le perimetre se calcule par PREFIXE DE CHEMIN : aucune fiche de
+     * `systems/reves de dragons/rules/` n'y tombait.
+     *
+     * Le repli par identifiant ne rattrapait pas : `custom-1777730495114` et
+     * « Reve de Dragon » ne rejoignent pas le dossier `reves de dragons`.
+     *
+     * La regle 2 depliait deja `corpusId` de cette facon. *Deux champs qui
+     * designent la meme chose ne peuvent pas se normaliser differemment.*
+     */
+    it('deplie un chemin de campagne saisi sans le dossier « systems »', () => {
+        const corpus = resoudreCorpus({
+            systemId: 'custom-1777730495114',
+            systemName: 'Rêve de Dragon',
+            systemPath: 'reves de dragons',
+            dossiersConnus: DOSSIERS,
+        });
+        expect(corpus.racine).toBe('systems/reves de dragons');
+        expect(corpus.raison).toBe('chemin-de-campagne');
+        expect(corpus.aCreer).toBe(false);
+        // C'est le prefixe qui decide du perimetre : sans lui, rien ne tombe.
+        expect(cheminDesFiches(corpus)).toBe('systems/reves de dragons/rules');
+    });
+
+    it('laisse intact un chemin de campagne deja complet', () => {
+        // Un chemin qui porte un separateur est pris tel quel : il peut viser
+        // autre chose que `systems/`, et le meneur a alors dit ce qu'il voulait.
+        expect(resoudreCorpus({ systemId: 'x', systemPath: 'campaigns/milo' }).racine)
+            .toBe('campaigns/milo');
+        expect(resoudreCorpus({ systemId: 'x', systemPath: 'docs/systems/dune' }).racine)
+            .toBe('systems/dune');
+    });
+
+
     it('signale la contradiction entre chemin declare et nom du systeme', () => {
         /**
          * Le cas reel du 2026-08-10 : « Chemin des Regles » a `systems/blade-runner`

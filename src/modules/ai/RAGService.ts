@@ -115,10 +115,27 @@ export class RAGService {
       après coup, par n'importe qui* — c'est la règle du journal d'Ollama, et
       elle vaut ici.
     */
+    /*
+      **La racine, et pas seulement le nom du corpus.** La premiere redaction de
+      cette ligne n'annoncait que l'identifiant : le 2026-08-22 elle disait donc
+      « reves de dragons » — la bonne reponse — alors que la racine valait
+      `reves de dragons` sans `systems/` et que la recherche ne retenait rien.
+      *Un journal qui n'imprime pas le champ dont depend le resultat coute un
+      aller-retour de plus qu'un silence, parce qu'il innocente a tort.*
+    */
     console.info(
-        `[RAG Service] corpus « ${corpus.id} » (${corpus.raison})`
-        + ` pour le système ${systemId}${systemName ? ` — « ${systemName} »` : ''}.`,
+        `[RAG Service] corpus « ${corpus.id} » → docs/${corpus.racine}`
+        + ` (${corpus.raison}) pour le système ${systemId}`
+        + `${systemName ? ` — « ${systemName} »` : ''}.`,
     );
+    // Le dossier resolu n'existe pas parmi ceux du disque : la recherche ne
+    // retiendra rien, et il vaut mieux le dire avant la reponse qu'apres.
+    if (corpus.aCreer) {
+        console.warn(
+            `[RAG Service] le dossier docs/${corpus.racine} ne figure pas parmi les`
+            + ` corpus connus — aucune fiche ne sera retenue.`,
+        );
+    }
     const campaignName = activeCampaign?.name || 'unknown';
 
     if (!window.appBridge?.ai?.searchContext) {

@@ -191,7 +191,23 @@ export function resoudreCorpus(demande: DemandeCorpus): Corpus {
     // 1. Le chemin déclaré sur la campagne. Explicite, donc souverain — c'est
     //    déjà la règle côté lecture, et la faire valoir ici supprime l'écart.
     if (demande.systemPath?.trim()) {
-        return rendre(normaliseChemin(demande.systemPath), 'chemin-de-campagne');
+        /*
+          **Le meme depliage que le corpus declare, et pour la meme raison.**
+          Ce champ se saisit A LA MAIN dans la fiche de campagne, et « reves de
+          dragons » y est une reponse naturelle : elle donnait la racine
+          `reves de dragons`, sans `systems/`. Le perimetre de la recherche se
+          calcule par prefixe de chemin, donc aucune fiche de
+          `systems/reves de dragons/rules/` n'y tombait — et le repli par
+          identifiant ne rattrapait rien, `custom-1777730495114` et
+          « Reve de Dragon » ne rejoignant pas le dossier `reves de dragons`.
+
+          La regle 2 depliait deja `corpusId` de cette facon. **Deux champs qui
+          designent la meme chose ne peuvent pas se normaliser differemment** :
+          l'ecart ne se voit que le jour ou c'est l'autre qui est renseigne.
+        */
+        const nu = normaliseChemin(demande.systemPath);
+        const racine = nu.includes('/') ? nu : `${DOSSIER_SYSTEMES}/${nu}`;
+        return rendre(racine, 'chemin-de-campagne');
     }
 
     // 2. Le corpus déclaré par le pilote lui-même.
