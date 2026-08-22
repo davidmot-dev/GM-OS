@@ -15,6 +15,7 @@ import { useAIStore } from '../../../stores/useAIStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { marquerCommeRelue } from '../../forge/rules/marqueDeRelecture';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -47,6 +48,32 @@ const AIChatPanel: React.FC = () => {
   // Le moment de jeu decide du plafond, et le plafond s'affiche — axe D.5.
   const sessions = useSessionOSStore(s => s.sessions);
   const [aiStatus, setAiStatus] = useState<string>('');
+  /**
+   * Les fiches qui ont fourni le contexte de la dernière réponse.
+   *
+   * **L'Oracle citait une fiche jamais relue exactement comme une fiche
+   * vérifiée.** Le journal des lacunes attrape ce qui manque ; rien n'attrapait
+   * ce qui est faux — une fiche erronée produit une recherche réussie, une
+   * citation confiante, et aucun signal.
+   */
+  const [sources, setSources] = useState<{ path: string; relu?: boolean }[]>([]);
+
+  /**
+   * Déclarer une fiche relue, depuis la réponse qu'elle vient de fournir.
+   *
+   * **On relit à l'usage.** Relire vraiment une fiche prend trois à cinq
+   * minutes : dix fiches forgées créeraient trois quarts d'heure de lecture qui
+   * ne seront pas faits. Ici, la fiche vient de répondre et la question est
+   * sous les yeux — *le seul moment où l'on peut juger.*
+   */
+  const marquerRelue = async (chemin: string) => {
+    const contenu = await window.appBridge?.ai?.readDoc?.(chemin).catch(() => null);
+    const corrige = contenu ? marquerCommeRelue(contenu) : null;
+    if (!corrige) return;
+
+    const ecrit = await window.appBridge?.ai?.writeDoc?.(chemin, corrige).catch(() => false);
+    if (ecrit) setSources(liste => liste.map(s => (s.path === chemin ? { ...s, relu: true } : s)));
+  };
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,6 +98,7 @@ const AIChatPanel: React.FC = () => {
     }]);
     
     setInput('');
+    setSources([]);
     setLoading(true);
     setAiStatus('Gathering intelligence...');
 
@@ -89,7 +117,9 @@ const AIChatPanel: React.FC = () => {
         (status) => {
           setAiStatus(status);
         },
-        activeGem
+        activeGem,
+        {},
+        setSources,
       );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue';
@@ -160,6 +190,49 @@ const AIChatPanel: React.FC = () => {
         ref={scrollRef}
         className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-gradient-to-b from-transparent to-black/10"
       >
+        {/*
+          **D'où l'Oracle tient sa réponse, et si quelqu'un l'a relue.**
+
+          Le journal des lacunes attrape ce qui manque ; RIEN N'ATTRAPAIT CE QUI
+          EST FAUX. Une fiche erronée produit une recherche réussie, une citation
+          confiante, et aucun signal — pire, la citation renforce la confiance.
+
+          La mention est DISCRÈTE ET TOUJOURS VISIBLE (arbitrage du 2026-08-07) :
+          honnête sans être alarmiste, et présente à chaque citation, donc les
+          fiches qui reviennent souvent finissent par être relues d'elles-mêmes.
+
+          Une source SANS marque ne dit rien — un extrait brut n'a jamais
+          prétendu être une fiche, et le montrer « non relu » ferait crier
+          l'écran sur ce qui n'a rien à se reprocher.
+        */}
+        {sources.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 px-1 pb-2">
+            {sources.map(source => {
+              const nom = source.path.split('/').pop() ?? source.path;
+              return (
+                <span
+                  key={source.path}
+                  title={source.path}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-app-border/30 bg-app-text/5 px-2 py-0.5 text-[9px] font-mono text-app-text/40"
+                >
+                  {nom}
+                  {source.relu === false && (
+                    <button
+                      onClick={() => void marquerRelue(source.path)}
+                      title="Cette fiche n'a jamais été relue. Cliquer pour la déclarer relue."
+                      className="rounded-full bg-amber-500/15 px-1.5 text-amber-300/80 hover:bg-amber-500/30 transition-colors"
+                    >
+                      non relue
+                    </button>
+                  )}
+                  {source.relu === true && <span className="text-emerald-400/60">relue</span>}
+                </span>
+              );
+            })}
+          </div>
+        )}
+
+
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div 

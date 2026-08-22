@@ -31,6 +31,21 @@ export class RAGService {
    * `query` est la question posée. Sans elle, le moteur ne peut trier que par
    * système, et le choix des fiches à l'intérieur d'un corpus reste arbitraire.
    */
+  /**
+   * Les fiches retenues au dernier appel, et leur état de relecture.
+   *
+   * **Pourquoi un état plutôt qu'un retour.** `getRelevantContext` rend une
+   * chaîne, et deux appelants la consomment comme telle depuis des mois ; en
+   * faire un objet obligerait à les toucher pour un besoin qui n'est pas le
+   * leur. Le meneur, lui, veut savoir d'où vient LA réponse qu'il lit — donc
+   * celles du dernier appel, relevées juste après.
+   *
+   * *À ne pas lire ailleurs qu'immédiatement après un appel* : deux questions
+   * concurrentes se marcheraient dessus, et c'est pourquoi seul le chemin qui
+   * les a demandées s'en sert.
+   */
+  public dernieresSources: { path: string; relu?: boolean }[] = [];
+
   public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();
     const obsidianStore = useObsidianStore.getState();
@@ -69,7 +84,15 @@ export class RAGService {
             systemPath: activeCampaign?.systemPath,
             campaignPath: activeCampaign?.campaignPath,
         });
-        return context || "";
+
+        /*
+          **Les fiches qui ont répondu sont retenues ici**, pour que l'écran
+          puisse les nommer — et dire lesquelles n'ont jamais été relues. Elles
+          voyagent à part du texte parce qu'elles ne s'adressent pas au même
+          lecteur : le texte va au modèle, la liste va au meneur.
+        */
+        this.dernieresSources = context?.sources ?? [];
+        return context?.context || "";
     } catch (error) {
         console.error("[RAG Service] Search error:", error);
         return "";

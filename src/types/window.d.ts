@@ -241,7 +241,15 @@ declare global {
                     campaignPath?: string;
                     maxTokens?: number;
                 },
-            ) => Promise<string>;
+                /**
+                 * **Le contexte ET les fiches qui l'ont fourni.**
+                 *
+                 * Ne rendait qu'une chaîne : la liste des fiches retenues était
+                 * calculée dans le processus principal puis jetée au dernier
+                 * étage. L'écran ne pouvait donc pas dire d'où venait une
+                 * réponse, ni qu'une fiche n'avait jamais été relue.
+                 */
+            ) => Promise<{ context: string; sources: { path: string; relu?: boolean }[] }>;
             reindex: (customPath?: string) => Promise<boolean>;
             /**
              * `options.json` pose `format: 'json'` côté Ollama — le décodage

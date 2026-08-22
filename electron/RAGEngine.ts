@@ -48,14 +48,23 @@ function ecrire(level: 'info' | 'warn', message: string) {
  * c'est lui qui décide du rang à la sélection. On ne lit que la tête du
  * fichier — au-delà, ce n'est plus du frontmatter.
  */
-function lireEntete(content: string): { sujet?: string; titre?: string } {
+function lireEntete(content: string): { sujet?: string; titre?: string; relu?: boolean } {
     const tete = content.slice(0, 2000);
-    const resultat: { sujet?: string; titre?: string } = {};
+    const resultat: { sujet?: string; titre?: string; relu?: boolean } = {};
 
     const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(tete);
     if (frontmatter) {
         const sujet = /^sujet\s*:\s*(.+)$/m.exec(frontmatter[1]);
         if (sujet) resultat.sujet = sujet[1].trim().replace(/^["']|["']$/g, '');
+
+        /*
+          **`relu:` etait ecrit par trois endroits et lu par personne.** On ne
+          le retient QUE s'il est declare : un extrait brut, une decharge, une
+          note du meneur n'ont pas a se pretendre relus — ni non relus. C'est la
+          meme regle que partout ailleurs : *l'absence n'est pas un zero.*
+        */
+        const relu = /^relu\s*:\s*(true|false)\s*$/m.exec(frontmatter[1]);
+        if (relu) resultat.relu = relu[1] === 'true';
     }
 
     const titre = /^#\s+(.+)$/m.exec(tete);
@@ -177,6 +186,24 @@ export class RAGEngine {
     }
 
     /**
+     * Le contexte **et les fiches qui l'ont fourni**.
+     *
+     * **La liste existait et se jetait ici même.** `selectRelevantContext` rend
+     * depuis toujours les fiches retenues, leur provenance et leur état de
+     * relecture ; `getRelevantContext` n'en gardait que le texte, et le pont ne
+     * transportait qu'une chaîne. L'écran ne pouvait donc pas dire d'où venait
+     * une réponse — et le plan du 2026-08-07 affirmait pourtant que *« l'Oracle
+     * affiche déjà quelle fiche a répondu »*.
+     *
+     * *Une donnée calculée puis jetée au dernier étage coûte deux fois : on la
+     * paie, et on croit ne pas l'avoir.*
+     */
+    public async getRelevantContextDetaille(req: RagRequest) {
+        const { context, retenus } = await this.selectRelevantContext(req);
+        return { context, sources: retenus };
+    }
+
+    /**
      * Trace ce qui est retenu **et ce qui est écarté**.
      *
      * Sans cela, un document absent du prompt est indiscernable d'un document
@@ -277,7 +304,7 @@ export function registerRagHandlers() {
         campaignName: string,
         options?: Omit<RagRequest, 'systemId' | 'campaignName'>,
     ) => {
-        return await engine.getRelevantContext({ systemId, campaignName, ...(options ?? {}) });
+        return await engine.getRelevantContextDetaille({ systemId, campaignName, ...(options ?? {}) });
     });
 
     ipcMain.handle('ai:reindex', async (_event, customPath?: string) => {

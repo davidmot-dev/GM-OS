@@ -1027,7 +1027,16 @@ Use the names above verbatim. Do not invent a setting title.
     onToken: (token: string) => void,
     onStatusUpdate?: (status: string) => void,
     gemId: string = 'sage',
-    ragOptions: { systemOnly?: boolean; systemName?: string } = {}
+    ragOptions: { systemOnly?: boolean; systemName?: string } = {},
+    /**
+     * Les fiches qui ont fourni le contexte, dès qu'elles sont connues.
+     *
+     * **Elles arrivent AVANT la réponse**, pas après : le meneur voit d'où on
+     * tire pendant que ça s'écrit. Et elles portent leur état de relecture —
+     * *l'Oracle citait une fiche jamais relue exactement comme une fiche
+     * vérifiée.*
+     */
+    onSources?: (sources: { path: string; relu?: boolean }[]) => void,
   ): Promise<void> {
     const { activeProvider, configs, streamEnabled } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -1035,12 +1044,21 @@ Use the names above verbatim. Do not invent a setting title.
     if (!streamEnabled || activeProvider !== 'ollama') {
        onStatusUpdate?.("Mode bloquant actif...");
        const resp = await this.generateText(prompt, undefined, gemId, ragOptions);
+       onSources?.(ragService.dernieresSources);
        onToken(resp.text);
        return;
     }
 
     onStatusUpdate?.("Analyses tactiques & grimoires...");
     const systemPrompt = await this.prepareSystemPrompt(prompt, undefined, gemId, ragOptions);
+
+    /*
+      **Relevées juste après l'assemblage, jamais plus tard.** Le service ne
+      garde que les fiches du DERNIER appel : deux questions concurrentes se
+      marcheraient dessus, et c'est pourquoi seul le chemin qui les a demandées
+      s'en sert — ici, une ligne après.
+    */
+    onSources?.(ragService.dernieresSources);
 
     onStatusUpdate?.("Réception de la vision...");
     

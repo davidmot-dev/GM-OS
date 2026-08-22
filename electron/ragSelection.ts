@@ -89,6 +89,19 @@ export interface IndexedFile {
     sujet?: string;
     /** Premier titre `#` du document. */
     titre?: string;
+    /**
+     * La fiche a-t-elle été relue par un humain ?
+     *
+     * **Le marqueur existait, et personne ne le lisait.** `relu: false` est
+     * écrit par trois endroits depuis des semaines — la conversion de fiche,
+     * l'inventaire, le service de campagne — et **194 fiches le portaient** le
+     * 2026-08-22 sans qu'aucun lecteur n'existe. *Le journal des lacunes
+     * attrape ce qui manque ; rien n'attrapait ce qui est faux.*
+     *
+     * `undefined` pour tout ce qui n'est pas une fiche du corpus — un extrait
+     * brut n'a pas à se prétendre relu ni non relu.
+     */
+    relu?: boolean;
 }
 
 export interface RagRequest {
@@ -107,6 +120,8 @@ export interface RagRequest {
 }
 
 export interface Retenu {
+    /** L'état de relecture de la fiche, quand elle en déclare un. */
+    relu?: boolean;
     path: string;
     provenance: Provenance;
     score: number;
@@ -303,6 +318,7 @@ export function selectContext(
         blocs.push(`[Source: ${candidat.file.path}]\n${texte}`);
         retenus.push({
             path: candidat.file.path,
+            relu: candidat.file.relu,
             provenance: candidat.provenance,
             score: candidat.score,
             tokens,
