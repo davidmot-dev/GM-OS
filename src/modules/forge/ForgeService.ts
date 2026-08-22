@@ -21,6 +21,8 @@ import {
 import { sourceDuGroupe } from './rules/familleDuCorpus';
 import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
+import { budgetEnCaracteres, direLEcart, preparerLeTexte } from './rules/budgetDeLaForge';
+import { OPTIONS_PAR_DEFAUT } from '../../../electron/optionsDuModele';
 
 /**
  * Motifs d'un échec d'authentification réel.
@@ -118,6 +120,14 @@ export interface ForgeContextItem {
 export interface ForgeSystemResult {
   driver: Partial<GameDriver>;
   template: Partial<SheetTemplate>;
+  /**
+   * Ce que la Forge n'a pas pu lire — **jamais vide en silence.**
+   *
+   * Le journal de la Forge attendait déjà ces lignes : son commentaire annonce
+   * *« une ligne par groupe, une par lacune et une par fichier écarté »*. Le
+   * canal existait, personne ne lui parlait.
+   */
+  ecarts?: string[];
 }
 
 export class ForgeService {
@@ -138,29 +148,24 @@ export class ForgeService {
     const aiService = AIService.getInstance();
     const { activeProvider } = useAIStore.getState();
 
-    // 1. PRÉPARATION DU CONTENU (Capé pour éviter les surcharges)
-    let consolidatedText = "";
-    const attachments: { data: string, mimeType: string }[] = [];
-    const MAX_TEXT_CHARS = 100000;
-    const MAX_ATTACHMENTS = 5;
+    /*
+      **Le plafond vient de la fenêtre du modèle, plus d'une constante.**
 
-    items.forEach(item => {
-      if (item.type === 'text') {
-        if (consolidatedText.length < MAX_TEXT_CHARS) {
-          consolidatedText += `\n\nCONTENU DU DOCUMENT [${item.name}] :\n\n${item.content}`;
-        }
-      } else if (attachments.length < MAX_ATTACHMENTS) {
-        attachments.push({
-          data: item.content,
-          mimeType: item.mimeType || 'application/pdf'
-        });
-      }
-    });
+      `MAX_TEXT_CHARS` valait 100 000 caractères en dur — environ quatre fois ce
+      qui entre dans un `num_ctx` de 16 384. *On payait le temps d'envoyer un
+      texte dont les trois quarts allaient être coupés par le décodeur.*
 
-    if (consolidatedText.length >= MAX_TEXT_CHARS) {
-      console.warn("[ForgeService] Context text truncated to 100k chars.");
-      consolidatedText = consolidatedText.substring(0, MAX_TEXT_CHARS) + "\n\n[TEXTE TRONQUÉ POUR SURCHARGE]";
-    }
+      Et deux documents sur trois disparaissaient en silence : la boucle cessait
+      simplement d'ajouter une fois le plafond atteint. Le meneur croyait avoir
+      forgé depuis quatre livres, la Forge en avait lu deux. C'était la dernière
+      troncature muette du chemin IA.
+    */
+    const RESERVE_POUR_L_INVITE = 3000;
+    const { texte: consolidatedText, pieces: attachments, ecarts } = preparerLeTexte(
+        items,
+        budgetEnCaracteres(OPTIONS_PAR_DEFAUT.num_ctx, RESERVE_POUR_L_INVITE),
+        5,
+    );
 
     // 2. VÉRIFICATION DE CAPACITÉ VISUELLE
     if (attachments.length > 0 && activeProvider !== 'gemini') {
@@ -180,7 +185,13 @@ export class ForgeService {
       libelle: 'Forge Système',
     });
     console.error(`[ForgeService] ${activeProvider} responded!`);
-    return result;
+
+    /*
+      **Ce que la Forge n'a pas lu part avec ce qu'elle a produit.** Le rendre
+      a part — un second appel, un état de service — laisserait un appelant
+      l'oublier, et c'est exactement ce qui rend une troncature muette.
+    */
+    return { ...result, ecarts: ecarts.map(direLEcart) };
   }
 
   /**

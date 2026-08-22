@@ -583,6 +583,15 @@ const ForgeDashboard: React.FC = () => {
     try {
       console.error("[Forge] Calling forgeService.forgeSystem...");
       const result = await forgeService.forgeSystem(forgeStore.contextItems, forgeStore.userInstructions, forgeStore.targetSystemName);
+
+      /*
+        **Ce que la Forge n'a pas lu s'écrit AVANT le succès.** Annoncé après,
+        « SUCCESS » aurait déjà emporté la lecture : le meneur croirait avoir
+        forgé depuis tout ce qu'il a déposé. Ces lignes sont la dernière
+        troncature muette du chemin IA, et le journal les attendait — son
+        commentaire annonce « une ligne par fichier écarté » depuis le 20/08.
+      */
+      (result.ecarts ?? []).forEach(addLog);
       forgeStore.completeAnalysis(result);
       addLog("SUCCESS: UNIFIED SYSTEM CORE CONSTRUCTED.");
     } catch (err: unknown) {

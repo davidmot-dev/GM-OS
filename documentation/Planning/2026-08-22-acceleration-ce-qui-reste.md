@@ -37,13 +37,19 @@ troisième fois.
 
 ## 2. Ce qui reste — six axes, ~26 h
 
-### ⬜ E.4 — le plafond de texte de la Forge · *petit*
+### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
-`MAX_TEXT_CHARS = 100 000` est **écrit en dur** (`ForgeService.ts:144`), sans lien avec le `num_ctx` réel
-du modèle.
+- [x] Le plafonner sur le `num_ctx` effectif
+- [x] **Avertir à l'écran** quand un document est écarté
 
-- [ ] Le plafonner sur le `num_ctx` effectif
-- [ ] **Avertir à l'écran** quand un document est écarté
+> **Le plan décrivait un plafond ; le code en portait TROIS défauts, et deux étaient muets.** Le pavé de
+> 100 000 caractères valait environ quatre fois ce qui entre dans un `num_ctx` de 16 384 ; la garde
+> laissait passer le dernier document **entier** quel que soit son poids ; et une fois le plafond
+> atteint, la boucle **cessait simplement d'ajouter** — *le meneur croit avoir forgé depuis quatre
+> livres, la Forge en a lu deux.*
+>
+> Le journal de la Forge attendait déjà ces lignes : son commentaire annonce « une ligne par groupe, une
+> par lacune et **une par fichier écarté** » depuis le 20/08. Le canal existait, personne ne lui parlait.
 
 > C'est la **dernière troncature muette** du chemin IA : les autres sont tombées le 21/08. Une
 > troncature qui ne se dit pas produit une réponse fondée sur la moitié d'un livre, et rien ne le

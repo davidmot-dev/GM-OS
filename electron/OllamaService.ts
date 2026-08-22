@@ -307,19 +307,9 @@ export function requetesEnVol(): { id: string; libelle: string; depuis: number }
     }));
 }
 
-export const OPTIONS_PAR_DEFAUT = {
-    /**
-     * Fenêtre demandée. Ne la fixe pas au maximum de l'architecture : le cache
-     * clé-valeur est alloué en conséquence, et il partage la mémoire de l'iGPU
-     * avec le modèle.
-     */
-    num_ctx: 16384,
-    /**
-     * Plafond de génération. Un fragment de pilote fait quelques centaines de
-     * tokens ; deux mille laissent de la marge sans permettre la fuite.
-     */
-    num_predict: 2048,
-} as const;
+export { OPTIONS_PAR_DEFAUT } from './optionsDuModele';
+import { OPTIONS_PAR_DEFAUT } from './optionsDuModele';
+
 
 /**
  * Combien de temps le modèle reste chargé après une réponse.

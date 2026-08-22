@@ -51,7 +51,7 @@ export const MAX_CONTEXT_TOKENS = 4000;
 export const MAX_RAW_FILE_TOKENS = 1200;
 
 /** Français : ~3,5 caractères par token. Suffisant pour un budget. */
-const CHARS_PER_TOKEN = 3.5;
+export const CHARS_PER_TOKEN = 3.5;
 
 const MARQUE_TRONCATURE = '\n… [tronqué : plafond de contexte atteint]';
 const SEPARATEUR = '\n\n---\n\n';
