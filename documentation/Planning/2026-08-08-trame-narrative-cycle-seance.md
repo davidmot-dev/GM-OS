@@ -422,8 +422,10 @@ l'autre, des événements rejoindraient une fusion qui n'a pas eu lieu.
 - ✅ **Le décès d'un PJ mérite-t-il un type distinct ?** (§ 5.3) — **Oui, type `PJ`.** La mort d'un PJ ne
   se range plus sous « personnage non joueur ».
 - ✅ **Le principe d'émission sémantique s'étend-il tout de suite aux autres modules** (carte, Oracle), ou
-  au fil de l'eau ? (§ 5.4) — **Au fil de l'eau**, et la revue des 36 émetteurs a dit où. *Trois modules
-  ne consignent toujours rien : les dés (ils ont leur propre registre), les ambiances, les lumières.*
+  au fil de l'eau ? (§ 5.4) — **Au fil de l'eau**, et la revue des 36 émetteurs a dit où. ~~*Trois modules
+  ne consignent toujours rien : les dés (ils ont leur propre registre), les ambiances, les lumières.*~~
+  **✅ Les trois émettent depuis le 2026-08-22** (`0895d64`). L'émission sémantique est donc complète :
+  plus aucun module de table n'est muet.
 - ✅ **Que devient une scène prévue jamais jouée ?** — **Annulée à la clôture de la campagne, et pas
   avant.** La trame est donc un **plan glissant tant que la campagne vit, un registre une fois close**.
   Une scène jouée sans avoir été terminée devient *terminée*, pas annulée.

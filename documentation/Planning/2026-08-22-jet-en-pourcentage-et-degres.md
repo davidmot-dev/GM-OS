@@ -205,8 +205,14 @@ les nombres de RdD.
 2. Un jet réussi de justesse et un jet réussi à 1 doivent se lire **différemment**, et **du même nom sur
    les trois écrans** — pupitre du meneur, tablette des joueurs, incrustation de résultat.
 3. Un ajustement à −13 doit donner **01 % de chances** et un échec total à partir de 50.
-4. Le journal doit porter le degré : aujourd'hui une réussite particulière et une réussite de justesse y
-   laissent la même trace, **donc l'Oracle ne peut pas savoir qu'un jet a été spectaculaire.**
+4. ~~Le journal doit porter le degré~~ — **ce contrôle était irréalisable quand je l'ai écrit, et je
+   n'aurais pas dû le poser comme un contrôle.** Vérifié après coup : les dés n'écrivaient rien au
+   journal du tout. Ils ont leur propre registre, `useDiceStore`, qui garde cinquante lancers pour
+   l'écran et rien pour l'histoire. La conséquence annoncée était juste — *l'Oracle ne peut pas savoir
+   qu'un jet a été spectaculaire* — mais le degré n'en était pas la cause : **le jet lui-même n'arrivait
+   jamais.** Corrigé le 2026-08-22 (`0895d64`), avec les deux autres modules muets. Le contrôle devient
+   donc réel : **un jet à 1 sur une cible de 78 doit apparaître au journal en `chronique`, un jet
+   ordinaire en `trace`.**
 
 ---
 

@@ -214,8 +214,7 @@ Deux sont tranchées, une reste.
 
 - ✅ **Le décès d'un PJ mérite-t-il un type distinct ?** Oui — type `PJ`, décision de David du 2026-08-20.
 - 🟠 **L'émission sémantique s'étend-elle tout de suite aux autres modules ?** Répondue de fait par la
-  revue des 36 émetteurs : elle s'étend **au fil de l'eau**, et la revue a dit où. Trois modules ne
-  consignent toujours rien — les dés (qui ont leur propre registre), les ambiances et les lumières.
+  revue des 36 émetteurs : elle s'étend **au fil de l'eau**, et la revue a dit où. ~~Trois modules ne consignent toujours rien~~ — **les trois émettent depuis le 2026-08-22** (`0895d64`).
 - ✅ **Que devient une scène prévue jamais jouée ?** **Tranchée par David le 2026-08-20 : elle devient
   *annulée* quand la campagne se termine, et pas avant.** La trame est donc un **plan glissant tant que la
   campagne vit, et un registre une fois qu'elle est close**. Une scène jouée sans avoir été terminée
