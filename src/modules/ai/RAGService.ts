@@ -107,6 +107,18 @@ export class RAGService {
         ragPath: pilote?.ragPath,
         dossiersConnus: dossiersSystemes,
     });
+
+    /*
+      **Dire quel corpus on a retenu, et par quoi.** Trois essais de David sont
+      passés à côté de la cause faute de pouvoir l'observer : la recherche
+      échouait en silence, et l'Oracle répondait quand même. *Un fichier se relit
+      après coup, par n'importe qui* — c'est la règle du journal d'Ollama, et
+      elle vaut ici.
+    */
+    console.info(
+        `[RAG Service] corpus « ${corpus.id} » (${corpus.raison})`
+        + ` pour le système ${systemId}${systemName ? ` — « ${systemName} »` : ''}.`,
+    );
     const campaignName = activeCampaign?.name || 'unknown';
 
     if (!window.appBridge?.ai?.searchContext) {
