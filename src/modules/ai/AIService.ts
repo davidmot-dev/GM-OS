@@ -1102,6 +1102,33 @@ Use the names above verbatim. Do not invent a setting title.
     const fiche = (ragService.dernieresSources ?? [])
         .find(s => s.provenance === 'fiche' && laFicheRepondSeule(s.sujet, prompt));
 
+    /*
+      **Dire pourquoi l'etage 1 n'a pas joue, a chaque question.**
+
+      Les deux etiquettes de l'axe M sont volontairement RARES : « Tire de la
+      fiche » ne parait que si une fiche recouvre la question a elle seule, et
+      « Jugement de table » que si la recherche n'a RIEN atteint. Leur absence
+      est donc le cas NORMAL — et elle se lit exactement comme une panne.
+
+      Cinq causes distinctes produisent le meme ecran vide : le mode allege qui
+      ne cherche pas, un corpus mal resolu, aucune fiche retenue, une fiche
+      retenue dont le sujet ne recouvre pas la question, une fiche illisible.
+      *Sans cette ligne, il faut un aller-retour par question pour les
+      distinguer* — on en a use quatre ce soir.
+    */
+    const sourcesVues = ragService.dernieresSources;
+    const fichesVues = (sourcesVues ?? []).filter(s => s.provenance === 'fiche');
+    console.info(
+        `[Oracle] ${this.aCherche ? 'recherche faite' : 'MODE ALLÉGÉ — aucune recherche'} :`
+        + ` ${sourcesVues?.length ?? '?'} source(s), dont ${fichesVues.length} fiche(s).`
+        + (fiche
+            ? ` Étage 1 : « ${fiche.sujet} » répond seule — aucun modèle ne sera invoqué.`
+            : fichesVues.length
+                ? ` Étage 1 écarté : aucun sujet ne recouvre la question —`
+                  + ` ${fichesVues.map(f => f.sujet ?? f.path).join(' / ')}.`
+                : ' Étage 1 écarté : aucune fiche retenue.'),
+    );
+
     if (fiche) {
         const contenu = await window.appBridge?.ai?.readDoc?.(fiche.path).catch(() => null);
         if (contenu) {
