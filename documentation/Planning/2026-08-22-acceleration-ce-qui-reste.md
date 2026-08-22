@@ -35,7 +35,7 @@ troisième fois.
 
 ---
 
-## 2. Ce qui reste — quatre axes, ~15 h
+## 2. Ce qui reste — trois axes, ~13 h
 
 ### ✅ E.4 — le plafond de texte de la Forge · *fait le 2026-08-22*
 
@@ -66,15 +66,29 @@ temps**.
 > ouverte, c'est la Forge qui doit le dire, avec le moyen de passer outre. Sinon on recrée l'action à
 > distance qu'on cherche à éviter.*
 
-### ⬜ G — la pause de séance · *~2 h · son prérequis est levé*
+### ✅ G — la pause de séance · *faite le 2026-08-22*
 
 Un bouton pause avec chronomètre : la pause **lève les plafonds de partie**, la reprise récupère l'IA.
 
-- [ ] Un champ `pausedAt`, **et pas un quatrième statut** — cinq composants testent
+- [x] Un champ `pausedAt`, **et pas un quatrième statut** — cinq composants testent
       `status === 'active'`, et un statut `paused` les ferait tous croire la séance absente
-- [ ] À la reprise : **finir la passe en cours**, abandonner la file, prévenir
-- [ ] Plafonner par le **temps de pause restant** — « pause de 15 min : cette Forge en demande 4, on y va »
-- [ ] Le chronomètre, qui vaut le coup **même sans l'IA**
+- [x] À la reprise : **finir la passe en cours**, abandonner la file, prévenir
+- [x] Plafonner par le **temps de pause restant** — « pause de 15 min : cette Forge en demande 4, on y va »
+- [x] Le chronomètre, qui vaut le coup **même sans l'IA**
+
+> **Un garde-fou que le plan ne demandait pas, et qu'il impliquait.** « Plafonner par le temps de pause
+> restant » rendrait, à la quatorzième minute d'un quart d'heure, un plafond de quelques secondes —
+> **plus sévère que celui de la partie**. Or le plan dit ailleurs que *« couper net à la onzième minute
+> sur douze serait punitif et dissuaderait de rien lancer »*. **La pause ne peut donc que lever le
+> plafond, jamais l'abaisser** : `max(partie, min(preparation, restant))`.
+>
+> **Et un champ qu'on oublie de nettoyer devient un état permanent.** Une séance close qui porterait
+> encore son `pausedAt` lèverait les plafonds pour toujours. Plutôt que de nettoyer à trois endroits —
+> `updateSession`, `launchSession`, la clôture — **c'est `estEnPause` qui exige aussi
+> `status === 'active'`** : un seul juge, et le champ résiduel devient inoffensif.
+>
+> La reprise **avertit sans empêcher**, comme le § 7 l'exige partout ailleurs : elle nomme ce qui tourne
+> et depuis combien de temps, et laisse choisir entre laisser finir et rendre la main.
 
 > Sa seconde raison d'être — « couper à la reprise » suppose des passes — est **levée** : l'axe K est
 > fait.

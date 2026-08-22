@@ -126,6 +126,29 @@ export interface GameSession {
      * de `sessionEntityIds`, que tous ses lecteurs protègent par un `|| []`.
      */
     scenesPrevuesIds?: string[];
+
+    /**
+     * Instant du clic sur « pause » — **axe G.**
+     *
+     * **Un champ, et surtout pas un quatrième statut.** Les statuts sont
+     * `planned | active | done` et **cinq composants testent
+     * `status === 'active'`** : un statut `paused` les ferait tous considérer la
+     * séance comme absente, alors que le Hub reste affiché, la projection en
+     * cours et les scènes ouvertes. *Un champ séparé laisse les cinq lecteurs
+     * intacts.*
+     *
+     * Absent quand la séance tourne. Nettoyé à la reprise **et à la clôture** :
+     * un champ qu'on oublie de nettoyer devient un état permanent.
+     */
+    pausedAt?: number;
+    /**
+     * Durée annoncée de la pause, en millisecondes.
+     *
+     * Elle sert au plafond — *« pause de 15 min : cette Forge en demande 4, on y
+     * va »* — et **jamais à interrompre** : le chronomètre compte au-delà sans
+     * rien couper. Absente, on suppose un quart d'heure.
+     */
+    pauseDureePrevueMs?: number;
 }
 
 // ─────────────────────────────────────────────

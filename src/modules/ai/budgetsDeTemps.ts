@@ -17,6 +17,8 @@
  * ses joueurs avec lui.
  */
 
+import { estEnPause, pauseRestanteMs, type SeanceEnPause } from '../session/pauseDeSeance';
+
 /** Les deux moments, tels que le § 1.1 du plan du 2026-08-07 les nomme. */
 export type MomentDeJeu = 'preparation' | 'partie';
 
@@ -60,13 +62,51 @@ export const BUDGETS: Record<MomentDeJeu, number> = {
  * *toute la valeur du signal vient de ce qu'il est déclaré, pas inféré.* Un mode
  * mi-déclaré mi-deviné redevient imprévisible, donc indigne de confiance.
  */
-export function momentDeJeu(sessions: readonly { status?: string }[] | undefined): MomentDeJeu {
-    return sessions?.some(s => s.status === 'active') ? 'partie' : 'preparation';
+export function momentDeJeu(
+    sessions: readonly SeanceEnPause[] | undefined,
+): MomentDeJeu {
+    /*
+      **Une séance en pause n'est pas une séance en cours — axe G.**
+
+      C'est toute la raison d'être de la pause : *« elle lève les plafonds de
+      partie »*. Personne n'attend à la table pendant qu'on prend le café, donc
+      la contrainte qui justifiait les cinq minutes n'existe plus.
+
+      Et c'est bien ici que ça se décide, à la source : ajouter la pause chez
+      chacun des quatre lecteurs de `budgetDuMoment` aurait fait quatre endroits
+      à tenir d'accord, dont un finirait par l'oublier.
+    */
+    const enCours = sessions?.filter(s => s.status === 'active') ?? [];
+    if (enCours.length === 0) return 'preparation';
+    return enCours.every(estEnPause) ? 'preparation' : 'partie';
 }
 
-/** Le budget du moment courant. */
-export function budgetDuMoment(sessions: readonly { status?: string }[] | undefined): number {
-    return BUDGETS[momentDeJeu(sessions)];
+/**
+ * Le budget du moment courant.
+ *
+ * **En pause, le plafond suit le temps de pause restant** — *« pause de 15 min :
+ * cette Forge en demande 4, on y va »*. Une constante ne saurait pas qu'il ne
+ * reste que trois minutes.
+ *
+ * **Mais il ne descend jamais sous le budget de partie**, et le plan ne le dit
+ * pas — il dit autre chose, dont ça découle : *« couper net à la onzième minute
+ * sur douze serait punitif et dissuaderait de rien lancer. »* Une pause qui
+ * touche à sa fin rendrait sinon un plafond de quelques secondes, plus sévère
+ * que celui de la partie elle-même. **La pause ne peut que lever le plafond,
+ * jamais l'abaisser** ; c'est la seule lecture qui garde la promesse du bouton.
+ */
+export function budgetDuMoment(
+    sessions: readonly SeanceEnPause[] | undefined,
+    maintenant = Date.now(),
+): number {
+    const moment = momentDeJeu(sessions);
+    if (moment === 'partie') return BUDGETS.partie;
+
+    const enPause = (sessions ?? []).find(estEnPause);
+    if (!enPause) return BUDGETS.preparation;
+
+    const restant = pauseRestanteMs(enPause, maintenant);
+    return Math.max(BUDGETS.partie, Math.min(BUDGETS.preparation, restant));
 }
 
 /**

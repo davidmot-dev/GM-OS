@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { AlertTriangle, BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
+import { AlertTriangle, BookOpen, Pause, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
 import { tousLesPilotes } from '../store/tousLesPilotes';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { scenesDansLEtat, actesOrdonnes } from '../logic/trame';
+import { DUREE_DE_PAUSE_PAR_DEFAUT_MS, estEnPause, libelleDeLaPause } from '../pauseDeSeance';
+import { depuisQuand, useFileDAttente } from '../../ai/useFileDAttente';
 
 const CampaignCockpit: React.FC = () => {
     const { t } = useTranslation();
@@ -68,6 +70,65 @@ const CampaignCockpit: React.FC = () => {
 
     // Find active session for progress (mock logic for now)
     const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId && s.status === 'active') : null;
+
+    /*
+      **Le chronomètre de pause — axe G.**
+
+      Il vaut le coup *indépendamment de l'IA* : savoir que la pause dure depuis
+      dix-huit minutes est utile en soi, et ferme le risque d'oubli — le même que
+      l'indicateur de séance ouverte.
+
+      La seconde plutôt que la minute, parce que le libellé compte en secondes
+      sous une minute et demie ; et **seulement en pause**, pour ne pas faire
+      battre un minuteur pendant toute la partie.
+    */
+    const enPause = estEnPause(activeSession ?? undefined);
+    const [maintenant, setMaintenant] = React.useState(() => Date.now());
+    React.useEffect(() => {
+        if (!enPause) return;
+        setMaintenant(Date.now());
+        const minuteur = setInterval(() => setMaintenant(Date.now()), 1000);
+        return () => clearInterval(minuteur);
+    }, [enPause]);
+
+    /*
+      **Ce qui tourne encore quand on reprend.** Le plan : *« à la reprise, finir
+      la passe en cours, abandonner la file, PRÉVENIR. Couper net à la onzième
+      minute sur douze serait punitif et dissuaderait de rien lancer. »*
+
+      On ne relève la file que **pendant la pause** — c'est le seul moment où la
+      réponse sert, et l'interroger en continu ferait battre un minuteur de plus
+      pendant toute la partie.
+    */
+    const { requetes, abandonner } = useFileDAttente(enPause);
+
+    const reprendreLaSeance = () => {
+        if (!activeSession) return;
+        const reprendre = () => updateSession(activeSession.id, {
+            // **Les deux champs partent ensemble.** Laisser la durée annoncée
+            // ferait qu'une pause suivante hériterait de celle d'avant.
+            pausedAt: undefined,
+            pauseDureePrevueMs: undefined,
+        });
+
+        if (requetes.length === 0) { reprendre(); return; }
+
+        /*
+          **On avertit, on n'empêche pas.** Règle du § 7 du plan d'accélération,
+          et elle vaut ici mot pour mot : *« savoir qu'une opération tourne vaut
+          mieux que l'empêcher »*. Le meneur choisit de laisser finir ou de
+          rendre la main au Cortex tout de suite.
+        */
+        showConfirm(
+            'La séance reprend, et le modèle travaille encore :\n\n'
+            + requetes.map(r => `· ${r.libelle}, depuis ${depuisQuand(r.depuis)}`).join('\n')
+            + '\n\nLaisser finir garde le travail ; abandonner rend la main tout de suite.',
+            reprendre,
+            () => { requetes.forEach(r => void abandonner(r.id)); reprendre(); },
+            'Reprendre et laisser finir',
+            'Reprendre et abandonner',
+        );
+    };
     const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
 
     /**
@@ -288,6 +349,53 @@ const CampaignCockpit: React.FC = () => {
                             <Play size={20} fill="currentColor" className="text-emerald-500 relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-transform" />
                             <span className="text-sm font-bold uppercase tracking-tighter text-emerald-400 relative z-10 drop-shadow-md">{t('modules:session.cockpit.active_session')}</span>
                         </motion.button>
+
+                        {/*
+                            **La pause de séance — axe G.**
+
+                            *« Elle lève les plafonds de partie, la reprise
+                            récupère l'IA. »* Le chronomètre, lui, vaut le coup
+                            même sans l'IA : savoir que la pause dure depuis
+                            dix-huit minutes est utile en soi, et **ferme le
+                            risque d'oubli**.
+
+                            Elle vit ici, contre le bouton de séance, parce que
+                            c'est le seul endroit où l'on voit qu'une séance est
+                            ouverte. *Un second endroit pour l'ouvrir et la
+                            fermer ferait deux écrans à tenir d'accord.*
+                        */}
+                        {enPause ? (
+                            <button
+                                onClick={reprendreLaSeance}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full text-left glass-bento relative overflow-hidden group"
+                            >
+                                <div className="absolute inset-0 bg-amber-500/10 pointer-events-none" />
+                                <div className="absolute inset-y-0 left-0 w-0.5 bg-amber-500" />
+                                <Pause size={18} fill="currentColor" className="text-amber-500 relative z-10 group-hover:scale-110 transition-transform" />
+                                <div className="relative z-10 min-w-0">
+                                    <div className="text-[11px] font-black uppercase tracking-widest text-amber-400">
+                                        Reprendre
+                                    </div>
+                                    {/* Le dépassement se dit : c'est là que la table s'est dispersée. */}
+                                    <div className="text-[10px] text-app-text/45 truncate">
+                                        {libelleDeLaPause(activeSession, maintenant)}
+                                    </div>
+                                </div>
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => updateSession(activeSession.id, {
+                                    pausedAt: Date.now(),
+                                    pauseDureePrevueMs: DUREE_DE_PAUSE_PAR_DEFAUT_MS,
+                                })}
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left text-app-text/40 hover:text-amber-400 hover:bg-amber-500/5 transition-all"
+                            >
+                                <Pause size={16} />
+                                <span className="text-[11px] font-bold uppercase tracking-widest">
+                                    Mettre en pause
+                                </span>
+                            </button>
+                        )}
 
                         {/*
                             **Où en est l'histoire — la vue hélicoptère.**
