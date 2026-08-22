@@ -347,6 +347,14 @@ digestion au composant qui en est le moins capable.
 
 ### État des axes — vérifié dans le code le 2026-08-22
 
+> ⚠️ **CE TABLEAU EST DATÉ, ET IL NE SE MET PLUS À JOUR.** Il est le compte rendu de la relecture du
+> 2026-08-22, et rien d'autre. **L'état vivant des axes restants — et l'ordre — vivent dans
+> `2026-08-22-acceleration-ce-qui-reste.md`, et là seulement.**
+>
+> *Un reste vit à un seul endroit, et les autres y renvoient.* Deux tableaux d'état sur le même sujet
+> divergeraient en une semaine, et c'est exactement ce que la réconciliation du 19/08 a coûté à
+> reconstituer.
+
 | Axe | État | |
 | --- | --- | --- |
 | **A** — iGPU | ✅ 12/08 | `OLLAMA_IGPU_ENABLE=1`, mesures au § 2 |
