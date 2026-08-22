@@ -809,3 +809,114 @@ describe('une formule de santé sur un champ non numérique', () => {
         expect(constats[0].message).toContain("d'aucune section");
     });
 });
+
+/**
+ * Ce que ces tests protègent : **un pilote qui CALCULE sa cible se contrôle
+ * comme un autre, et pas moins.**
+ *
+ * La mécanique est nommée par un modèle de langage — il peut écrire
+ * « runequest » avec l'aplomb de ce qui existe —, et son ajustement se lit sur
+ * la fiche exactement comme un seuil : il peut désigner une section absente, ou
+ * en désigner douze fois la même. *C'est précisément ce qu'a rendu la
+ * dérivation de Rêves de Dragons : « Compétence 1 » à « Compétence 12 ».*
+ */
+describe('une cible qui se calcule', () => {
+    const cible = (ajustement: { id: string; label: string; sectionId: string }[]) => ({
+        mecanique: 'reves-de-dragons' as const,
+        caracteristique: { id: 'carac', label: 'Caractéristique', sectionId: 'competences' },
+        ajustement,
+    });
+
+    it('accepte une mécanique connue sans un constat', () => {
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    cible: cible([{ id: 'competence', label: 'Compétence', sectionId: 'jauges' }]),
+                    sens: 'sous-ou-egal',
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats).toEqual([]);
+    });
+
+    it('refuse une mécanique inventée, et dit lesquelles existent', () => {
+        const constats = controlerLePilote(
+            { jet: { cible: { ...cible([]), mecanique: 'runequest' }, sens: 'sous-ou-egal' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+
+        const dit = constats.find(c => c.ou === 'jet.cible.mecanique')!;
+        expect(dit.gravite).toBe('erreur');
+        expect(dit.message).toContain('reves-de-dragons');
+    });
+
+    /**
+     * **Le faux positif qu'il fallait éviter.** « sous-ou-egal » sans seuil
+     * n'avait aucun sens tant que le seuil était la seule cible possible. Un
+     * pilote en pourcentage en porte une, calculée — le lui reprocher aurait
+     * condamné tout jeu en pourcentage dès sa première dérivation.
+     */
+    it('ne reproche pas au pourcentage de jeter sous une cible qu’il porte', () => {
+        const constats = controlerLePilote(
+            { jet: { cible: cible([]), seuil: [], sens: 'sous-ou-egal' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats.filter(c => c.ou === 'jet.sens')).toEqual([]);
+    });
+
+    it('signale un pilote qui dirait la cible deux fois', () => {
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    cible: cible([]),
+                    seuil: [{ id: 'autre', label: 'Autre', sectionId: 'competences' }],
+                    sens: 'sous-ou-egal',
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+
+        const dit = constats.find(c => c.ou === 'jet.seuil')!;
+        expect(dit.gravite).toBe('avertissement');
+        expect(dit.message).toContain('C\'est la cible qui décide');
+    });
+
+    /**
+     * **Le défaut de Rêves de Dragons, contrôlé sans une ligne de plus.** La
+     * liste de l'ajustement est versée dans le même tableau que les seuils :
+     * les douze compétences y déclenchent l'avertissement qui existait déjà.
+     */
+    it('attrape les douze compétences additionnées, par le contrôle du seuil', () => {
+        const douze = Array.from({ length: 12 }, (_, i) => ({
+            id: `competence${i + 1}`, label: `Compétence ${i + 1}`, sectionId: 'jauges',
+        }));
+        const constats = controlerLePilote(
+            { jet: { cible: cible(douze), sens: 'sous-ou-egal' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+
+        const dit = constats.find(c => c.ou === 'jet.cible.ajustement')!;
+        expect(dit.gravite).toBe('avertissement');
+        expect(dit.message).toContain('12 composantes lisent la même section');
+    });
+
+    it('attrape aussi une section que la fiche ne porte pas', () => {
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    cible: {
+                        ...cible([]),
+                        caracteristique: { id: 'carac', label: 'Caractéristique', sectionId: 'caracteristiques' },
+                    },
+                    sens: 'sous-ou-egal',
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats.some(c => c.ou === 'jet.cible.caracteristique[0].sectionId')).toBe(true);
+    });
+});

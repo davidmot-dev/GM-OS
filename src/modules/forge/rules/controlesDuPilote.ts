@@ -2,6 +2,7 @@ import type { GameDriver, DiceRollLogic, DiceConfig } from '../../../types/drive
 import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
+import { MECANIQUES_DE_CIBLE } from '../../dice/systemes';
 import { GROUPES } from './GroupesDeChamps';
 import { champsDUneFormule, clefDeChamp } from '../../combat/logic/SanteDuCombattant';
 
@@ -373,13 +374,54 @@ export function controlerLePilote(
       qu'un « sous-ou-egal » suppose une valeur à comparer, et qu'un jeu à
       réserve de dés n'en a pas.
     */
-    if (driver.jet && driver.jet.sens === 'sous-ou-egal' && (driver.jet.seuil ?? []).length === 0) {
+    /*
+      **Une cible calculée EST une valeur à comparer**, même si elle ne se
+      compose pas par addition. Sans cette exception, tout pilote en pourcentage
+      — Rêves de Dragons le premier — se serait vu reprocher de jeter « sous »
+      quelque chose qu'il porte pourtant. *Un contrôle qui se trompe est pire
+      qu'un contrôle absent.*
+    */
+    if (driver.jet && driver.jet.sens === 'sous-ou-egal'
+        && (driver.jet.seuil ?? []).length === 0 && !driver.jet.cible) {
         erreur(
             'jet.sens',
             '« sous-ou-egal » compte les dés qui restent SOUS un seuil, mais aucun seuil n\'est ' +
             'composé depuis la fiche. Si le jeu compte les dés qui atteignent une valeur — « chaque ' +
             'six est une réussite » —, c\'est « superieur-ou-egal », et l\'inverse ne se verrait ' +
             'jamais en séance.',
+        );
+    }
+
+    /*
+      **Une mécanique de cible se NOMME, et le nom doit exister.**
+
+      Le pilote vient d'un modèle de langage : il peut écrire « runequest » ou
+      « percentile » avec l'aplomb de ce qui existe. Le panneau ne calculerait
+      alors aucune cible et afficherait zéro — *un jet qui a l'air d'un jet.*
+      C'est une erreur et non un avertissement : sans cible, le pilote n'a plus
+      rien à comparer.
+    */
+    if (driver.jet?.cible && !(driver.jet.cible.mecanique in MECANIQUES_DE_CIBLE)) {
+        erreur(
+            'jet.cible.mecanique',
+            `« ${driver.jet.cible.mecanique} » n'est pas une mécanique connue. Les seules ` +
+            `admises sont : ${Object.keys(MECANIQUES_DE_CIBLE).join(', ')}. Une mécanique porte ` +
+            'une table transcrite d\'un livre ; elle ne s\'invente pas depuis un nom.',
+        );
+    }
+
+    /*
+      **Les deux façons de dire la cible ne cohabitent pas.** Elles répondent à
+      la même question, et le panneau fait gagner la mécanique — donc un seuil
+      déclaré à côté serait un travail perdu, silencieusement. On avertit plutôt
+      qu'on interdit : le pilote reste jouable, et c'est la revue qui tranche.
+    */
+    if (driver.jet?.cible && (driver.jet.seuil ?? []).length > 0) {
+        avertir(
+            'jet.seuil',
+            'Le pilote déclare une cible calculée ET un seuil additionné. C\'est la cible qui ' +
+            'décide, et le seuil ne sera jamais lu : si le jeu croise ses valeurs sur une table, ' +
+            'vide « jet.seuil » ; s\'il les additionne, retire « jet.cible ».',
         );
     }
 
@@ -478,6 +520,17 @@ export function controlerLePilote(
     */
     const composantesDuJet: [string, NonNullable<GameDriver['jet']>['seuil']][] = [
         ['jet.seuil', driver.jet?.seuil],
+        /*
+          **La cible calculée hérite des deux contrôles, et ce n'est pas un
+          hasard.** Son ajustement se lit sur la fiche exactement comme un
+          seuil : il peut désigner une section absente, et il peut en désigner
+          douze fois la même — ce qui est précisément le défaut sorti de la
+          dérivation de Rêves de Dragons, « Compétence 1 » à « Compétence 12 ».
+          Verser la liste ici plutôt que d'écrire un contrôle jumeau, c'est
+          garantir qu'ils ne divergeront pas.
+        */
+        ['jet.cible.caracteristique', driver.jet?.cible ? [driver.jet.cible.caracteristique] : []],
+        ['jet.cible.ajustement', driver.jet?.cible?.ajustement],
         // Même contrôle sur la réserve depuis le 2026-08-15 : elle se compose
         // désormais depuis la fiche, donc elle peut la manquer de la même façon.
         ['jet.reserve.composantes', driver.jet?.reserve?.composantes],

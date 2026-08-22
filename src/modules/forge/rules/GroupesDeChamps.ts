@@ -312,12 +312,32 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         */
         cible:
             '"driver" avec seulement dice et jet. ' +
-            'DEUX EXIGENCES D\'ABORD, le reste ensuite. ' +
+            'TROIS EXIGENCES D\'ABORD, le reste ensuite. ' +
             // LE COMPTE D'ABORD, LE CONTENU ENSUITE — et c'est l'inverse qui
             // était écrit. « Une entrée par valeur ajoutée » se lit en tête,
             // donc se lit en premier : douze compétences, douze entrées. La
             // correction venait après, sous condition, et arrivait trop tard.
-            '**(1) "jet.seuil" : UNE ENTRÉE PAR SECTION DE FICHE LUE, JAMAIS UNE PAR CHAMP.** Le ' +
+            // **LA FOURCHE AVANT LE REMPLISSAGE.** Additionner et croiser sur
+            // une table ne se rattrapent pas l'un l'autre : un jeu en
+            // pourcentage rempli en « seuil » rend une cible cinq fois trop
+            // basse, et rien ne le dit. C'est donc la première question, et
+            // elle tient en trois lignes — le reste ne s'applique qu'ensuite.
+            '**(0) LA CIBLE SE COMPOSE-T-ELLE PAR ADDITION, OU SE LIT-ELLE SUR UNE TABLE ?** ' +
+            'Si les valeurs de la fiche S\'AJOUTENT pour former le nombre à comparer, remplis ' +
+            '"jet.seuil" et n\'écris PAS "jet.cible". Si le jeu croise une caractéristique et un ' +
+            'ajustement SUR UNE TABLE — la compétence et la difficulté déplacent une colonne au ' +
+            'lieu de s\'ajouter, et le pourcentage obtenu est bien plus grand que leur somme —, ' +
+            'alors remplis "jet.cible" et LAISSE "jet.seuil" VIDE. "jet.cible" porte "mecanique", ' +
+            '"caracteristique" (UNE composante, celle qu\'on lit en ordonnée) et "ajustement" ' +
+            '(les composantes lues sur la fiche qui déplacent la colonne). ' +
+            '"mecanique" vaut EXACTEMENT l\'un de : reves-de-dragons. ' +
+            'SI AUCUN DE CES NOMS NE DÉSIGNE LE JEU QUE TU LIS, N\'EN INVENTE AUCUN et n\'écris ' +
+            'pas "jet.cible" : une mécanique porte une table transcrite d\'un livre, elle ne se ' +
+            'déduit pas d\'un nom. NE METS JAMAIS DE NOMBRES DE CETTE TABLE dans le pilote — ' +
+            'ni multiplicateurs, ni seuils de réussite particulière : ils sont déjà dans le code, ' +
+            'saisis depuis le livre et protégés par des tests. ' +
+            '**(1) "jet.seuil" ET "jet.cible.ajustement" : UNE ENTRÉE PAR SECTION DE FICHE LUE, ' +
+            'JAMAIS UNE PAR CHAMP.** Le ' +
             'nombre d\'entrées est le nombre de SECTIONS différentes où le joueur va lire une ' +
             'valeur — jamais le nombre de valeurs possibles dans ces sections, parce que TOUT CE ' +
             'QUI FIGURE DANS "jet.seuil" S\'ADDITIONNE. Si la section "competences" porte douze ' +

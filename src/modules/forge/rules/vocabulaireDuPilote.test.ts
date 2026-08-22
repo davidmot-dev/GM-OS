@@ -163,12 +163,49 @@ describe('la cible du groupe « jet »', () => {
     it('nomme le seuil et le sens avant les énumérations', () => {
         const rangSeuil = jet.cible.indexOf('"jet.seuil"');
         const rangSens = jet.cible.indexOf('"jet.sens"');
-        const rangEnums = jet.cible.indexOf('vaut EXACTEMENT');
+        /*
+          **L'ancre nomme le champ, et pas seulement la tournure.** Elle valait
+          « vaut EXACTEMENT », qui est la formule de TOUTE valeur imposée : le
+          jour où une exigence en a porté une — le choix de la mécanique de
+          cible, le 2026-08-22 —, le test a désigné cette exigence-là comme
+          « les énumérations » et s'est mis à mesurer l'inverse de ce qu'il
+          protège. *Un repère trop court finit par désigner autre chose.*
+        */
+        const rangEnums = jet.cible.indexOf('"dice.logic" vaut EXACTEMENT');
 
         expect(rangSeuil).toBeGreaterThan(-1);
         expect(rangSens).toBeGreaterThan(-1);
+        expect(rangEnums, 'les valeurs imposées de "dice" sont bien là').toBeGreaterThan(-1);
         expect(rangSeuil, 'le seuil passe avant les énumérations').toBeLessThan(rangEnums);
         expect(rangSens, 'le sens passe avant les énumérations').toBeLessThan(rangEnums);
+    });
+
+    /**
+     * **La fourche passe avant tout le reste, et c'est la leçon du 2026-08-21.**
+     *
+     * Additionner et croiser sur une table ne se rattrapent pas l'un l'autre :
+     * un jeu en pourcentage rempli en « seuil » rend une cible **cinq fois trop
+     * basse**, et rien ne le dit. *Ce qui décide du COMPTE doit s'énoncer avant
+     * ce qui décide du CONTENU* — ici, avant même de dire comment remplir le
+     * seuil, il faut savoir s'il y en a un.
+     */
+    it('demande de choisir entre addition et table AVANT de remplir le seuil', () => {
+        const rangFourche = jet.cible.indexOf('LA CIBLE SE COMPOSE-T-ELLE PAR ADDITION');
+        const rangSeuil = jet.cible.indexOf('"jet.seuil"');
+
+        expect(rangFourche).toBeGreaterThan(-1);
+        expect(rangFourche, 'la fourche ouvre la cible').toBeLessThan(rangSeuil);
+    });
+
+    /**
+     * **Aucun nombre de table ne doit venir du modèle.** Les multiplicateurs et
+     * les bandes sont saisis depuis le livre et protégés par des tests : une
+     * Forge qui les « dérive » produirait des nombres plausibles et faux que
+     * personne ne verrait avant six séances.
+     */
+    it('interdit d’inventer une mécanique et d’y mettre des nombres', () => {
+        expect(jet.cible).toContain('N\'EN INVENTE AUCUN');
+        expect(jet.cible).toContain('NE METS JAMAIS DE NOMBRES DE CETTE TABLE');
     });
 
     /**
