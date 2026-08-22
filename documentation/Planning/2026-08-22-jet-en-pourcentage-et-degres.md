@@ -1,7 +1,10 @@
 # Le jet en pourcentage et les six degrés de réussite
 
-**Nature de ce document : référence vivante.** La procédure du chantier, à tenir à jour jusqu'à ce qu'il
-soit clos, puis à reclasser en récit clos.
+**Nature de ce document : ~~référence vivante~~ → RÉCIT CLOS le 2026-08-22 au soir**, sauf son § 6 (deux
+fiches du corpus à corriger) et **le geste qui reste** : le pilote RdD doit être **reforgé** pour déclarer
+la nouvelle cible — il vit dans le magasin de l'application, et la Revue du Pilote est en lecture seule.
+
+*Tant que la reforge n'a pas eu lieu, rien de tout ceci ne se voit à la table.*
 
 **Date :** 2026-08-22
 **Branche :** `feature/tablet-hub-pwa`
@@ -141,12 +144,38 @@ tout échec qui n'est pas total est particulier.
 
 ## 4. L'ordre de travail
 
-| Rang | Quoi | Pourquoi ici |
-| --- | --- | --- |
-| **A** | **Le calcul de la cible** — la courbe de multiplicateurs | C'est le dégât réel, et il ne dépend d'aucune décision restante. Un jet faux se paie à chaque séance |
-| **B** | **L'échelle ordonnée** à la place de `tagSuccess` | Elle doit exister **avant** qu'un lecteur ait à rendre six valeurs. Sinon les six divergent le jour même |
-| **C** | **Les bandes**, depuis la table du § 3 | Consomme A (elles se lisent sur la cible) et B (elles ont besoin de l'échelle pour se poser) |
-| **D** | **Les six lecteurs**, un par un | Vient en dernier, et c'est là que se joue le vocabulaire unique |
+> **✅ LES QUATRE RANGS SONT FAITS LE 2026-08-22.** `e8edd30` (la table et le
+> calcul) · `17e12e7` (le panneau) · `35f9459` (la Forge) · `2852323` (les degrés
+> jusqu'aux écrans). `tsc -b` propre, 2 004 tests au vert, ESLint inchangé à 536.
+
+| Rang | Quoi | Pourquoi ici | |
+| --- | --- | --- | --- |
+| **A** | **Le calcul de la cible** — la courbe de multiplicateurs | C'est le dégât réel, et il ne dépend d'aucune décision restante. Un jet faux se paie à chaque séance | ✅ |
+| **B** | **L'échelle ordonnée** à la place de `tagSuccess` | Elle doit exister **avant** qu'un lecteur ait à rendre six valeurs. Sinon les six divergent le jour même | ✅ |
+| **C** | **Les bandes**, depuis la table du § 3 | Consomme A (elles se lisent sur la cible) et B (elles ont besoin de l'échelle pour se poser) | ✅ |
+| **D** | **Les ~~six~~ SEPT lecteurs**, un par un | Vient en dernier, et c'est là que se joue le vocabulaire unique | ✅ |
+
+**Ils étaient sept, pas six.** L'investigation en avait compté six ; le panneau de jet en portait un
+septième, qui écrivait son propre « Réussite » à côté du compte de réussites. *Un lecteur qu'on ne compte
+pas est un lecteur qui divergera.*
+
+### Ce que le chemin a appris, et qui n'était pas au plan
+
+- **Le degré se pose dans le MOTEUR**, jamais chez les appelants : trois écrans lancent, et qualifier le
+  dé chez chacun donnerait trois qualifications dont deux ne seraient jamais relues. C'est le remède qui
+  a corrigé les seize dés d'Alien pour les trois appelants d'un coup.
+- **L'échelle l'emporte sur le booléen, parce qu'elle peut le contredire** : à 96-00 % de chances, un
+  « 00 » est inférieur ou égal à la cible — donc réussi au sens du booléen — et la table en fait pourtant
+  un échec total. *Un écran qui annonce « réussite » pendant qu'un autre annonce « échec total » pour le
+  même dé est pire que les deux séparément.*
+- **`rollAdvantage` devait recevoir l'échelle lui aussi.** Sans elle, lancer à l'avantage effaçait les
+  degrés : même oubli que le sens du comptage, *le chemin s'arrête avant le moteur*.
+- **Le repli sur `tagSuccess` est conservé et il compte** : un jet relu d'une séance enregistrée avant
+  aujourd'hui, ou reçu d'une tablette pas encore à jour, ne porte que le booléen. Et quand il n'y a ni
+  l'un ni l'autre, **on ne se prononce pas** — un 2d6 de dégâts n'est ni réussi ni raté.
+- **La Forge a appris la fourche** (`35f9459`), et la cible **hérite des contrôles du seuil sans une
+  ligne de logique** : son ajustement est versé dans le même tableau, donc les douze compétences y
+  déclenchent l'avertissement qui existait déjà.
 
 **A avant tout le reste, et B avant C.** Poser les bandes sur un booléen obligerait à les écraser pour les
 ressortir ensuite — c'est la conversion avec perte de `PanneauDeJet.ts:237`, en pire.
