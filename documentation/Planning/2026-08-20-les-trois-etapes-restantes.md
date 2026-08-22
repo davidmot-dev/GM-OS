@@ -1,12 +1,15 @@
 # Les étapes restantes du plan de trame — procédure d'exécution
 
-**Nature de ce document : référence vivante.** À tenir à jour jusqu'à ce que les étapes soient closes,
-puis à reclasser en récit clos.
+**Nature de ce document : ~~référence vivante~~ → RÉCIT CLOS le 2026-08-21.** Les trois étapes sont
+faites ; il se lit désormais pour comprendre un choix, jamais pour savoir quoi faire. *Il portait sa
+propre condition de reclassement : « à tenir à jour jusqu'à ce que les étapes soient closes, puis à
+reclasser en récit clos ».*
 
-**Date :** 2026-08-20
-**Périmètre :** les étapes **4**, ~~9~~ et **10** du § 8 de `2026-08-08-trame-narrative-cycle-seance.md`.
-La 9 s'est révélée **déjà faite** à la vérification ; la correction du § 0 et l'étape 4 sont posées le
-même jour. **Il ne reste que l'étape 10** — et à voir l'étape 4 tourner en séance.
+**Date :** 2026-08-20 · **clos le 2026-08-21**
+**Périmètre :** les étapes ~~**4**~~, ~~9~~ et ~~**10**~~ du § 8 de
+`2026-08-08-trame-narrative-cycle-seance.md`. La 9 s'est révélée **déjà faite** à la vérification ; la
+correction du § 0 et l'étape 4 sont posées le 20/08 ; **l'étape 10 est livrée le 21/08** (`516395a`), ce
+qui clôt le plan du 08/08 tout entier — voir le § 4.
 **Méthode :** chaque état ci-dessous a été **lu dans le code aujourd'hui**, jamais recopié d'un document.
 Les fichiers et les lignes sont cités pour qu'on puisse en douter.
 
@@ -46,7 +49,7 @@ ne ment plus.
 | **A** | La correction du § 0 | Une ligne, un défaut actif, aucune dépendance. On ne construit pas sur un contexte faux. |
 | ~~**B**~~ | ~~**Étape 9** — trancher le sort de la Forge Chronique~~ | ✅ **Sans objet** : elle était déjà faite par la Forge de campagne. Voir le § 2. |
 | ~~**C**~~ | ~~**Étape 4** — la capture en un clic~~ | ✅ **faite le 2026-08-20**. Reste à la voir tourner en séance — voir le § 3. |
-| **D** | **Étape 10** — la trame dans l'Oracle | Elle **consomme** ce que C produit. La faire avant, c'est injecter une trame que personne n'a marquée. |
+| ~~**D**~~ | ~~**Étape 10** — la trame dans l'Oracle~~ | ✅ **faite le 2026-08-21** (`516395a`), après une séance réellement jouée. Elle **consomme** ce que C produit : la faire avant aurait injecté une trame que personne n'avait marquée. |
 
 *Le rang de C avant D est le seul qui ne se discute pas* : l'étape 10 remplace dix événements bruts par
 « scène en cours : *l'embuscade de l'entrepôt* ». Si aucune scène n'est ouverte parce que le marquage
@@ -122,18 +125,42 @@ C'est le seul contrôle qui vaille, et il n'a pas encore été fait :
 
 ---
 
-## 4. Étape 10 — la trame dans le contexte de l'Oracle
+## 4. ~~Étape 10~~ — la trame dans le contexte de l'Oracle · ✅ **livrée le 2026-08-21** (`516395a`)
 
-### Ce qui est vrai aujourd'hui, vérifié
+> **Le prérequis a été levé le soir même : une séance réellement jouée, avec des scènes marquées.** Les
+> cinq points du geste ci-dessous ont tous été suivis. Ce qui a changé par rapport à la procédure :
+>
+> - **L'historique est réduit à HUIT faits et non « une poignée »** — huit plutôt que dix parce qu'ils
+>   sont désormais tous denses, tirés de `leRecitCureDuJournal`, uniquement de la `chronique`, **dans
+>   l'ordre de l'histoire** et non dans celui de la pile.
+> - **On prend la FIN de l'ensemble curé**, à l'inverse du journal : c'est chronologique. Treize tests,
+>   dont celui qui tient ce sens de lecture — c'est le piège exact du § 0.
+> - **Les champs vides ne laissent pas d'étiquette orpheline.** « Lieu : » sans lieu coûte des jetons
+>   pour dire qu'on ne sait rien, et invite le modèle à commenter cette absence. Sans scène ouverte, la
+>   section n'existe pas.
+> - **`useOracleContext` n'a PAS été branché, et c'est délibéré** (point 5 du geste) : le Cortex reçoit
+>   son ancrage par l'autre voie, et ajouter un second producteur de la même vérité est exactement ce que
+>   cette semaine a défait.
+> - **`lesDerniersEvenements` n'a plus d'appelant** — conservé avec ses tests pour l'avertissement sur le
+>   sens de la pile, mais c'est désormais un module que personne n'appelle.
+>
+> **Ce qui se vérifie en jouant, et seulement là** : l'Oracle doit *nommer* la scène sans qu'on le lui ait
+> dit, et les deux scènes doivent apparaître quand le groupe se sépare. Le journal
+> `~/ollama_debug.log` porte depuis le 22/08 les **titres et le poids** des sections envoyées — c'est là
+> qu'on voit si « Scènes en cours » part, et si elle porte quelque chose.
 
-`getLiveSessionContext` (`AIService.ts:1320-1385`) envoie quatre sections : la campagne et son synopsis,
-les PJ, les PNJ vivants, les indices révélés, et **« Historique Récent » — dix événements bruts, titre et
-contenu, horodatés à la seconde**.
+### Ce qui était vrai avant, vérifié
 
-**Aucune scène. Aucun acte. Aucun enjeu.** Le § 7 le disait déjà le 08/08, et c'est toujours vrai mot pour
-mot. S'y ajoute le défaut du § 0 : ces dix événements sont les dix plus anciens.
+`getLiveSessionContext` envoyait quatre sections : la campagne et son synopsis, les PJ, les PNJ vivants,
+les indices révélés, et **« Historique Récent » — dix événements bruts, titre et contenu, horodatés à la
+seconde**.
 
-Le second chemin de contexte, `useOracleContext.ts`, ne connaît pas davantage la trame.
+**Aucune scène. Aucun acte. Aucun enjeu.** Le § 7 le disait déjà le 08/08, et c'était encore vrai mot pour
+mot **treize jours plus tard**. S'y ajoutait le défaut du § 0 : ces dix événements étaient les dix plus
+anciens.
+
+Le second chemin de contexte, `useOracleContext.ts`, ne connaissait pas davantage la trame — **et ne la
+connaît toujours pas, délibérément** (voir le bandeau ci-dessus).
 
 ### Le geste
 

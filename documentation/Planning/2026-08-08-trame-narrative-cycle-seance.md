@@ -2,7 +2,10 @@
 
 **Date :** 2026-08-08
 **Branche :** `feature/tablet-hub-pwa`
-**Statut :** conception — aucun code écrit
+**Statut :** ~~conception — aucun code écrit~~ · **✅ LES DIX ÉTAPES DU § 8 SONT CLOSES** — la dernière,
+l'étape 10, le 2026-08-21 (`516395a`). **Ce document devient un récit clos** : il reste le *quoi* et le
+*pourquoi*, il ne dit plus ce qu'il reste à faire. Ce qui a réellement été livré, étape par étape, est au
+§ 8 ci-dessous ; l'état du jour est dans le plus récent `etat-et-reprise`.
 **Documents jumeaux :** `2026-08-07-acceleration-ia.md` (intégrations IA) ·
 `2026-08-07-fiabilite-cortex-combat.md` (fiabilité du Cortex)
 
@@ -372,21 +375,30 @@ elle dit où la préparation a tenu et où les joueurs sont sortis du script.
 
 ## 8. Ordre de travail suggéré
 
-| # | Étape | Pourquoi ici |
+> **✅ CLOS LE 2026-08-21.** Les dix étapes sont faites. La colonne « Livré » est vérifiée dans le code,
+> jamais recopiée d'un document. Le détail de chacune vit dans son commit ; le récit des trois derniers
+> jours est dans les `etat-et-reprise` des 20 et 22 août.
+
+| # | Étape | Livré |
 | --- | --- | --- |
-| 1 | **Corriger `summarizeSession`** hors Gemini | bug actif, données déjà polluées (§ 1.2) |
-| 2 | **Rendre l'événement de décès universel et automatique** | prérequis de § 5.3, sinon les morts disparaissent |
-| 3 | Modèle actes / scènes + rattachement automatique des événements | le socle |
-| 4 | Capture en un clic + marquages gratuits (storyboard, début de combat) | sans cela la trame ne vivra pas |
-| 5 | Axe `trace` / `chronique` sur les événements | rend l'étape 1 presque automatique |
-| 6 | Revue de fin de séance scène par scène | l'étape 1 |
-| 7 | Résumé sur l'ensemble curé | l'étape 2 |
-| 8 | Résumé de combat enrichi + événement d'ouverture | § 5.2 |
-| ~~9~~ | ~~Trame générée par la Forge Chronique, en passes~~ **✅ fait par la Forge de campagne** (15-16/08) — voir le bandeau du § 6 | § 6 |
-| 10 | Trame injectée dans le contexte Oracle / Cortex | § 7 |
+| 1 | **Corriger `summarizeSession`** hors Gemini | ✅ 17/08 — il lève au lieu de rendre une excuse |
+| 2 | **Rendre l'événement de décès universel et automatique** | ✅ 20/08 (`4ada4af`) — type `PJ`, écrit à l'instant de la chute |
+| 3 | Modèle actes / scènes + rattachement automatique des événements | ✅ 20/08 (`072e6da`) — posé au goulot, `sceneId` de premier ordre |
+| 4 | Capture en un clic + marquages gratuits (storyboard, début de combat) | ✅ 20/08 (`78c60f2`) — la scène naît sous le nom du lieu, quatre identifiants capturés |
+| 5 | Axe `trace` / `chronique` sur les événements | ✅ 18/08, ses trois arbitraires tranchés le 21/08 (`40f6aa9`) |
+| 6 | Revue de fin de séance scène par scène | ✅ 20/08 (`d535c1f`), **complétée le 21/08** (`82708b8`) : fusionner et scinder |
+| 7 | Résumé sur l'ensemble curé | ✅ 20/08 — `leRecitAResumer` ne retient que la `chronique` |
+| 8 | Résumé de combat enrichi + événement d'ouverture | ✅ 20/08 (`77eb3d1`) — l'ouverture est de nature `trace` |
+| ~~9~~ | ~~Trame générée par la Forge Chronique, en passes~~ | ✅ **déjà fait par la Forge de campagne** (15-16/08), découvert le 20/08 — voir le bandeau du § 6 |
+| 10 | Trame injectée dans le contexte Oracle / Cortex | ✅ **21/08** (`516395a`) — scènes en cours avec acte, enjeu, lieu, PJ présents ; historique réduit à huit faits de `chronique` |
 
 Les deux premières lignes sont des **corrections**, pas des fonctionnalités : à traiter indépendamment
 du reste.
+
+**Les deux gestes de curation les plus délicats — fusionner, scinder — ont été livrés en dernier
+(`82708b8`) et pour une raison** : ils *déplacent des événements*, donc la trame s'écrit avant le journal,
+jamais l'inverse. Dans cet ordre, le pire cas laisse des orphelins que la revue rend visibles ; dans
+l'autre, des événements rejoindraient une fusion qui n'a pas eu lieu.
 
 ---
 
@@ -405,10 +417,13 @@ du reste.
 
 ---
 
-## 10. Reste à décider
+## 10. ~~Reste à décider~~ — **les trois questions sont tranchées** (2026-08-20)
 
-- **Le décès d'un PJ mérite-t-il un type distinct ?** (§ 5.3)
-- **Le principe d'émission sémantique s'étend-il tout de suite aux autres modules** (carte, Oracle), ou
-  au fil de l'eau ? (§ 5.4)
-- **Que devient une scène prévue jamais jouée ?** Elle reste dans la trame pour une séance ultérieure,
-  ou elle est marquée abandonnée ? La réponse détermine si la trame est un plan glissant ou un registre.
+- ✅ **Le décès d'un PJ mérite-t-il un type distinct ?** (§ 5.3) — **Oui, type `PJ`.** La mort d'un PJ ne
+  se range plus sous « personnage non joueur ».
+- ✅ **Le principe d'émission sémantique s'étend-il tout de suite aux autres modules** (carte, Oracle), ou
+  au fil de l'eau ? (§ 5.4) — **Au fil de l'eau**, et la revue des 36 émetteurs a dit où. *Trois modules
+  ne consignent toujours rien : les dés (ils ont leur propre registre), les ambiances, les lumières.*
+- ✅ **Que devient une scène prévue jamais jouée ?** — **Annulée à la clôture de la campagne, et pas
+  avant.** La trame est donc un **plan glissant tant que la campagne vit, un registre une fois close**.
+  Une scène jouée sans avoir été terminée devient *terminée*, pas annulée.

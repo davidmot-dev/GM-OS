@@ -2,7 +2,8 @@
 
 **Date :** 2026-08-07, consolidé le 2026-08-08
 **Branche :** `feature/tablet-hub-pwa`
-**Statut :** plan de conception — aucun code applicatif écrit
+**Statut :** ~~plan de conception — aucun code applicatif écrit~~ · **référence vivante — le socle est posé
+(A, B, C, D), le reste est ouvert.** Tableau d'état au § 4, à jour du 2026-08-22.
 **Document jumeau :** `2026-08-07-fiabilite-cortex-combat.md` (fiabilité des entrées du Cortex)
 
 **Historique des cadrages.** Première version : optimiser la vitesse de l'IA. Deuxième : partir du
@@ -344,6 +345,31 @@ digestion au composant qui en est le moins capable.
 
 ## 4. Axes de travail
 
+### État des axes — vérifié dans le code le 2026-08-22
+
+| Axe | État | |
+| --- | --- | --- |
+| **A** — iGPU | ✅ 12/08 | `OLLAMA_IGPU_ENABLE=1`, mesures au § 2 |
+| **B** — réparer le RAG | ✅ 09/08 | bilan dans `2026-08-08-corpus-de-regles.md`, § 5 |
+| **C** — ordre du prompt + Cortex | ✅ 21/08 | `4a17b4d`. Le point 2 était déjà fait ; le point 4 a retiré un **commentaire mensonger** — voir ci-dessous |
+| **D** — annulation, verrou, plafonds | ✅ 21/08 | `9069da3` puis `e2d50dc` (D.4, D.5). **Aucun plafond n'était réel avant** |
+| **E** — assainir la voie Ollama | 🟠 **E.1 ✅ 21/08** (`859fd48`) · E.2 ✅ pour Ollama (schéma natif transmis) · **E.3 ⛔ caduc** (`ChronicleService` n'existe plus) · **E.4 ❌** | `MAX_TEXT_CHARS = 100000` est toujours en dur dans `ForgeService.ts:144`, sans lien avec le `num_ctx` réel et sans avertissement à l'écran |
+| **F** — brancher le mode | 🟠 **F.3 ✅ 21/08** ; F.1, F.2, F.4, F.5 ❌ | Les **trois appels en partie** ne portent plus le RAG complet : `useVoiceStore` l'était déjà, `CombatCard` passe en `{ systemOnly: true }` + `lite`, `useNarrativeGenerator` en `lite` seul — *on ne fait pas payer à la narration le budget des règles*. `useNPCStore` n'est pas touché : l'enrichissement de PNJ relève de la préparation. D.5 a branché le moment de jeu sur les **plafonds**, mais le contexte, le fournisseur et le moteur d'image ne le consultent toujours pas |
+| **G, H, I, J, K, L, M, N, O** | ❌ | Voir la note sur l'axe L ci-dessous |
+
+**Ce que l'axe C a mesuré, et qui vaut au-delà de lui.** Le § 3.5 promettait *« exécution parallèle pour
+réduire considérablement le temps de réponse »*. **Sous `NUM_PARALLEL=1`, qui est le défaut d'Ollama, les
+deux appels du Cortex font la queue** : on attend la somme, pas le plus long. Le `Promise.all` reste — il
+est juste, et il gagne sur le cloud ; c'est la promesse qui est partie. *Une optimisation annoncée qui
+n'a pas lieu fait chercher le temps perdu ailleurs.* Cela donne un argument mesuré à la troisième question
+du document jumeau : **fusionner les deux appels du Cortex en un seul.**
+
+**Note sur l'axe L (index des livres).** Il n'a pas été traité comme tel, mais l'Atelier lit déjà des index
+déposés dans `docs/systems/<id>/index/`, et **son parseur a reçu deux formes de plus le 21/08** — un index
+alphabétique non balisé et un sommaire nu —, plus un **seuil de densité mesuré** (quarante → cent) qui
+empêche un livre entier de se faire passer pour un index. Le principe du § L tient toujours : *aucun numéro
+de page ne vient jamais d'un modèle.*
+
 ### Bloc I — Le socle *(débloque les budgets)*
 
 #### Axe A — Activer l'iGPU · *0 ligne de code · ~15 min*
@@ -490,7 +516,18 @@ fait, l'Oracle continue de signaler « aucun document rattaché » — ce qui es
    indéterminée. *Le prévisible vaut mieux que le rapide : 90 s systématiques valent mieux que 30 s le
    plus souvent et 8 min parfois.*
 
-#### Axe E — Assainir la voie Ollama · *~2 h*
+#### Axe E — Assainir la voie Ollama · *~2 h* · 🟠 **E.1 faite le 21/08, E.4 ouverte, E.3 caduque**
+
+> **Ce que E.1 a trouvé, et que le plan ne prévoyait pas.** Il ne s'agissait pas d'« étendre »
+> `ollamaChatStream` : **il fabriquait son propre corps de requête** et n'avait donc reçu **aucune** des
+> corrections apportées à `chat` depuis deux mois — pas même `think: false`, dont ce fichier mesure le
+> prix trois lignes plus haut (349 s et un contenu vide, contre 64 s). *Et c'est ce chemin que l'Oracle
+> emprunte.* Il n'y a plus qu'un corps de requête, et un test vérifie que les deux chemins le partagent.
+>
+> **Et `keep_alive` est un champ de PREMIER NIVEAU.** Rangé dans `options`, il est accepté sans effet et
+> sans un mot — le genre de réglage qu'on croit avoir posé pendant des semaines. Il vaut 30 min ; sans lui
+> le modèle se déchargeait après cinq minutes d'inactivité **et emportait le cache d'invite avec lui, ce
+> qui annulait l'axe C**.
 
 1. Étendre `ollamaChat` / `ollamaChatStream` pour transmettre `format` et `options` (`num_ctx`,
    `num_predict`, `temperature`, `keep_alive`). Touche `preload.ts:95-96`, `window.d.ts:176-177`,
@@ -852,14 +889,19 @@ rend compatible avec le mode pause de l'axe G.**
 
 ## 6. Ordre recommandé
 
+> **Les cinq premières lignes sont faites au 2026-08-21** — c'est-à-dire tout ce que le § 6 appelait
+> « moins de 6 h qui ramènent les trois usages dans leur budget ». **Le reste n'a pas été relu depuis**,
+> et il le mérite : cet ordre date d'avant la Forge Système, la Forge de campagne et le journal, et
+> l'axe E.3 est caduc. *Ne pas reprendre les lignes 7 à 16 sans les réordonner d'abord.*
+
 | # | Axe | Effort | Pourquoi ici |
 |---|---|---|---|
-| 1 | **A — iGPU** | 15 min | Aucun code, réversible, porteur |
-| 2 | **D.2 — délai d'abandon sur les images** | ~30 min | Meilleur rapport gain/effort : quelques lignes contre un blocage illimité en partie |
-| 3 | **B — RAG** | ~3 h | Meilleur gain global, corrige la **qualité**, sert 20 modules |
-| 4 | **C — ordre du prompt + Cortex** | ~2 h | Débloque le dernier usage hors budget |
-| 5 | **D — annulation, verrou, plafonds** | ~3,5 h | Conditionne les plafonds et la pause |
-| 6 | **E — voie Ollama** | ~2 h | Petit, sans risque, fin des troncatures muettes |
+| ~~1~~ | ✅ **A — iGPU** *(12/08)* | 15 min | Aucun code, réversible, porteur |
+| ~~2~~ | ✅ **D.2 — délai d'abandon sur les images** | ~30 min | Meilleur rapport gain/effort : quelques lignes contre un blocage illimité en partie |
+| ~~3~~ | ✅ **B — RAG** *(09/08)* | ~3 h | Meilleur gain global, corrige la **qualité**, sert 20 modules |
+| ~~4~~ | ✅ **C — ordre du prompt + Cortex** *(21/08)* | ~2 h | Débloque le dernier usage hors budget |
+| ~~5~~ | ✅ **D — annulation, verrou, plafonds** *(21/08)* | ~3,5 h | Conditionne les plafonds et la pause |
+| 6 | 🟠 **E — voie Ollama** *(E.1 faite le 21/08, E.4 ouverte)* | ~2 h | Petit, sans risque, fin des troncatures muettes |
 | 7 | **F — brancher le mode** | ~3 h | Rend la partition opérante |
 | 8 | **H — canevas** | ~5 h | Borne le périmètre, engendre les prompts : conditionne I, L, M |
 | 9 | **I — inversion NotebookLM** | ~4 h | Déplace le poids hors de la machine ; rend la Forge compatible avec la pause |

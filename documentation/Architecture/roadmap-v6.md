@@ -1,5 +1,25 @@
 # 🛣️ Roadmap : Transition vers GM-OS v6 (Next-Gen Hub)
 
+> ## ⚠️ DOCUMENT PÉRIMÉ — ne pas s'en servir pour savoir quoi faire
+>
+> **Dernière mise à jour réelle : 16 avril 2026.** Tout ce qui a été conçu, décidé et livré depuis vit
+> dans `documentation/Planning/`. Quatre mois de chantiers — la Forge Système, la Forge de campagne, la
+> trame narrative, le journal de séance, l'accélération IA, le durcissement de l'architecture — n'y
+> figurent pas.
+>
+> *Une roadmap fausse coûte plus qu'une roadmap absente* : celle-ci décrit des orientations qui ont été
+> soit dépassées, soit abandonnées, soit accomplies autrement.
+>
+> **Où regarder à la place :**
+>
+> - **L'état du jour et le geste de reprise** → le `etat-et-reprise` le plus récent de
+>   `documentation/Planning/` (au 2026-08-22 : `2026-08-22-etat-et-reprise.md`).
+> - **La liste consolidée des restes, et le seul endroit où elle vit** →
+>   `documentation/Planning/2026-08-19-reconciliation-plans-aout.md`, § 5.
+> - **Quel document fait autorité sur quoi** → le § 1 du même document.
+>
+> Conservé pour l'histoire : il dit ce qu'on visait au printemps 2026, et c'est sa seule valeur.
+
 Ce document trace les grandes orientations du projet suite à la stabilisation de la v6.2.0.
 
 ---

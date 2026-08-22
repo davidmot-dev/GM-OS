@@ -2,7 +2,19 @@
 
 **Date :** 2026-08-07
 **Branche :** `feature/tablet-hub-pwa`
-**Statut :** constats vérifiés dans le code — aucun code modifié, aucun axe chiffré en détail
+**Statut :** ~~constats vérifiés dans le code — aucun code modifié~~ · **référence vivante — axe 1 fait,
+axes 2 à 5 ouverts, et c'est le chantier de code le plus mûr du dépôt au 2026-08-22.**
+
+> **Son garde-fou est levé.** Ce document interdisait de le traiter avant les axes A à C du plan jumeau :
+> **les trois sont faits** (A le 12/08, B le 09/08, C le 21/08). Rien ne le retient plus.
+>
+> **Et sa troisième question a gagné une mesure.** *« Fusionner les deux appels du Cortex en un seul »*
+> reposait sur une intuition ; le 21/08 a établi que **sous `NUM_PARALLEL=1`, qui est le défaut d'Ollama,
+> les deux appels font la queue** — on attend la somme, pas le plus long. Le commentaire qui promettait
+> une « exécution parallèle » est parti.
+>
+> **Rappel de l'axe 5, revérifié le 22/08** : l'unité de distance est toujours « cases » en dur,
+> `src/modules/tactical-ai/logic/TacticalNarrativeService.ts:191`, alors que le pilote la porte.
 **Origine :** extrait de la séance de conception sur l'accélération IA, à la demande de David, qui a
 signalé que le Cortex *« repose sur des mécanismes qui ne sont pas toujours bien gérés au niveau du
 module de combat »*. Le constat lui donne raison.

@@ -384,4 +384,91 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 
 ---
 
-*Dernière mise à jour : 7 Août 2026 - GM-OS v6.5.0 - Session de durcissement : récupération des campagnes, unification du transport (points 1 à 5 clos), migration MCP vers Gemini Notebook.*
+## 🧵 Plusieurs écrivains pour une même vérité (2026-08-08 → 2026-08-22)
+
+**C'est le motif dominant de la quinzaine.** Il a produit à lui seul une dizaine de défauts, et **aucun
+n'a été trouvé à la lecture du code** : ils sont tous sortis d'une séance jouée ou de la relecture d'une
+partie jouée.
+
+### 1. La forme du défaut, et le remède qui ne marche pas
+- **Défi** : trois listes de ce qu'est une session · deux portes vers une scène dont une seule faisait
+  entrer les PJ · un onzième lecteur dissident du module de santé · trois hauteurs CSS pour une seule
+  carte, qui rognait ses propres boutons · deux chemins vers Ollama dont un seul était entretenu · trois
+  plafonds de temps qui ne s'accordaient sur rien.
+- **Cause** : à chaque fois, plusieurs endroits ayant chacun leur idée de la même chose, et qui ont
+  divergé sans qu'aucun ne se plaigne.
+- **Leçon** : *le remède n'est jamais d'ajouter le champ manquant aux listes fautives — c'est de n'en
+  avoir qu'une.* Corollaire vérifié le 21/08 : **un écrivain de MOINS produit le même dégât** — sur les
+  trois portes par lesquelles un objet entre dans un inventaire, la troisième n'écrivait rien au journal.
+
+### 2. Un défaut qui ne se plaint de rien est le plus cher
+- **Défi** : `slice(-10)` sur un journal qui empile en tête envoyait à l'Oracle **les dix plus anciens**
+  événements sous un intitulé annonçant la fin ; un seuil de réussite pris pour une réserve faisait
+  lancer **seize dés au lieu de sept**, sur le pupitre *et* sur la tablette des joueurs ; un combattant
+  nommé « Ajouter un Combattant » est entré dans le résumé de séance.
+- **Cause** : ni erreur, ni vide, ni incohérence visible. Le résultat reste **plausible**.
+- **Leçon** : ces défauts ne se trouvent qu'en **jouant**, et la trace écrite est le seul filet — le
+  dernier a été trouvé dans `ollama_debug.log`, en cherchant tout autre chose. *Un jet faux ne se voit
+  jamais en séance ; un récit faux se relit six mois plus tard.*
+
+### 3. Le geste qui rassure n'est pas le geste qui vérifie
+- **Défi** : « Session chargée et vérifiée 📂 » sur un chargement qui n'avait rien chargé ;
+  `generateAISummary` annonçant un succès sur un résumé inexistant.
+- **Cause** : un repli qui **rend un objet valide** au lieu de lever — `FullSessionSchema.parse({})`.
+- **Leçon** : un repli silencieux transforme une panne en donnée. **Lever, ou dire.** Et sur un schéma :
+  *un champ absent laisse le store tranquille, un `.default([])` l'écrase.*
+
+### 4. Une consigne noyée est une consigne perdue — et l'ordre compte autant que le texte
+- **Défi** : la Forge a dérivé six Sauvegardes additionnées (Cthulhu Hack), puis **douze composantes de
+  jet « Compétence 1 » à « Compétence 12 »** (Rêves de Dragons), alors que la consigne l'interdisait dans
+  les deux cas. Et les titres de section étaient **reformulés au lieu d'être recopiés**.
+- **Cause** : la consigne juste arrivait **après** celle qu'elle corrige, ou tenait en une ligne au milieu
+  d'une liste de métadonnées.
+- **Leçon** : **ce qui décide du COMPTE doit s'énoncer avant ce qui décide du CONTENU.** Et une consigne
+  mord davantage quand elle dit **qu'elle sera vérifiée** — « ces titres sont confrontés à l'index » — avec
+  un repli qui ne coûte rien : *si tu ne retrouves pas le titre exact, omets-le.*
+
+### 5. Un contrôle qui se trompe est pire qu'un contrôle absent
+- **Défi** : un contrôle de dérivation a crié **vingt fois** sur un seul défaut, une fois par mot d'une
+  phrase prise pour une formule — envoyant chercher un champ nommé « une ». Ailleurs, un seuil de densité
+  d'index avec **deux unités de marge** laissait un livre entier se faire passer pour un index.
+- **Leçon** : un contrôle se teste sur son **cas limite**, pas sur les cas qui marchent. Et un seuil se
+  **mesure** : quarante → cent, parce que les rendements observés vont de 2 à 38 pour du bruit et de 265 à
+  279 pour de vrais index. *L'écart est net, cent tombe au milieu du vide.*
+
+### 6. Vérifier qu'une chose a disparu n'est pas vérifier que son travail n'a pas été fait
+- **Défi** : une étape déclarée « à faire » l'était depuis cinq jours. J'avais vérifié que la Forge de
+  chronique était *retirée*, et j'en avais déduit que ses idées restaient à reprendre.
+- **Cause** : statut lu dans un **plan**, pas dans le **code** — et un commentaire périmé, qui citait au
+  présent un défaut corrigé, m'y a confirmé.
+- **Leçon** : *un statut se vérifie avant d'être écrit.* Trois règles en découlent, posées le 19/08 :
+  un document **déclare sa nature** (référence vivante, récit clos, instantané daté) · **un reste ne se
+  recopie pas** d'un document à l'autre, sinon il survit à sa correction · **un statut se vérifie**.
+
+### 7. Lire le code prouve qu'une section existe, pas qu'elle porte quelque chose
+- **Défi** : « l'étape 10 fonctionne, et je ne vois pas le nom de la scène ». Le journal disait le modèle,
+  les options et la réponse — **jamais le contexte**.
+- **Leçon** : même impasse que le 12/08 pour la contrainte JSON, même remède — **un fichier se relit après
+  coup, par n'importe qui**. Journaliser les **titres ET leur poids** : une section vide et une section
+  pleine portent le même titre.
+
+### 8. Le chemin s'arrête avant le moteur
+- **Défi** : trois fois le même motif sur le pupitre de dés — le sens du comptage (16/08), le sélecteur
+  `>=` / `<=` affiché et ignoré, puis les dés d'équipement d'Alien (21/08).
+- **Leçon** : un champ affiché à l'écran doit être **suivi jusqu'au moteur**, et le correctif se pose
+  **dans le moteur** — c'est ce qui a corrigé la tablette des joueurs du même coup. **Règle** : *un seuil
+  et un nombre de dés ne partagent jamais un `??`.*
+
+### 9. Une optimisation annoncée qui n'a pas lieu fait chercher le temps perdu ailleurs
+- **Défi** : un commentaire promettait une « exécution parallèle » du Cortex. Sous `NUM_PARALLEL=1`, le
+  défaut d'Ollama, **les deux appels font la queue**. Ailleurs, `keep_alive` posé dans `options` est
+  accepté **sans effet et sans un mot**.
+- **Leçon** : une promesse de performance non mesurée est une dette de diagnostic. Et *ça se mesure, ça ne
+  s'intuite pas* — la règle vaut pour le plafond RAG comme pour tout le reste.
+
+---
+
+*Dernière mise à jour : 22 Août 2026 — trame narrative et journal de séance (plan du 08/08 clos), socle
+du plan d'accélération IA (axes A à D), Forge Système et Forge de campagne éprouvées en réel.*
+
+*Mise à jour précédente : 7 Août 2026 - GM-OS v6.5.0 - Session de durcissement : récupération des campagnes, unification du transport (points 1 à 5 clos), migration MCP vers Gemini Notebook.*

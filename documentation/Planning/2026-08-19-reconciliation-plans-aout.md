@@ -1,7 +1,11 @@
 # Réconciliation des plans d'août 2026
 
-**Date :** 2026-08-19
+**Date :** 2026-08-19 · **mis à jour le 2026-08-22** (§ 3, § 4, § 5 — les statuts, jamais le récit)
 **Périmètre :** les 19 documents de `documentation/Planning/2026-08-*.md`, ~440 Ko
+
+> **Nature de ce document : référence vivante.** C'est le **seul endroit** où vit la liste consolidée des
+> restes (§ 5). Un reste qui y est corrigé n'a pas à l'être ailleurs ; un reste qu'on découvre s'y ajoute.
+> L'instantané le plus récent à lire pour reprendre est **`2026-08-22-etat-et-reprise.md`**.
 **Méthode :** chaque statut est **vérifié dans le code ou sur le disque**, jamais recopié d'un document.
 Là où un document et le code se contredisent, c'est le code qui tranche, et la contradiction est écrite.
 
@@ -23,7 +27,7 @@ Trois natures, qui ne se lisent pas de la même façon.
 
 | Document | Autorité sur |
 | --- | --- |
-| `2026-08-08-trame-narrative-cycle-seance.md` | **Le chantier courant.** Son § 8 est l'ordre de travail, son § 9 les règles de rattachement, son § 10 les questions non tranchées |
+| ~~`2026-08-08-trame-narrative-cycle-seance.md`~~ | ~~**Le chantier courant.**~~ **✅ CLOS le 2026-08-21** — ses dix étapes sont faites et ses trois questions tranchées. Passe en **récit clos** : son § 9 (règles de rattachement) reste la référence de conception |
 | `2026-08-08-corpus-de-regles.md` | Le modèle du corpus : ce qu'un corpus définit, comment il se copie à la forge |
 | `2026-08-09-procedure-corpus-notebooklm.md` | La procédure pas à pas et les gabarits en toutes lettres |
 | `2026-08-07-acceleration-ia.md` | Le budget de temps des trois usages d'IA, et les seize axes chiffrés |
@@ -41,8 +45,9 @@ Trois natures, qui ne se lisent pas de la même façon.
 lit pour l'histoire, jamais pour l'état : les six `etat-et-reprise` des 10, 15, 17, 18 et 19 août, plus
 `2026-08-10-soiree-premiere-forge.md`.
 
-> **Le seul instantané à lire pour reprendre est le plus récent** :
-> `2026-08-19-etat-et-reprise-quatre-defauts.md`.
+> **Le seul instantané à lire pour reprendre est le plus récent** : ~~`2026-08-19-etat-et-reprise-quatre-defauts.md`~~
+> → **`2026-08-22-etat-et-reprise.md`** (mis à jour le 2026-08-22 ; ceux des 19 et 20 août l'ont précédé
+> et sont faux depuis, par construction).
 
 ---
 
@@ -79,50 +84,71 @@ Et une **fausse contradiction** : les comptes de fiches du corpus diffèrent d'u
 
 ### 🟠 En cours — c'est ici que le travail se passe
 
-**La trame narrative et le journal.** Ordre de travail du 08/08, § 8 :
+~~**La trame narrative et le journal.**~~ **✅ CLOSE le 2026-08-21** — les dix étapes du § 8 du 08/08 sont
+faites. *Le tableau d'origine est conservé ci-dessous pour l'histoire : il montre ce qui restait le 19/08
+et ce que les deux jours suivants ont emporté.*
 
-| # | Étape | État |
-| --- | --- | --- |
-| 1 | Corriger `summarizeSession` hors Gemini | ✅ 17/08 |
-| 2 | **Décès universel et automatique** | ❌ `useCombatStore.ts:1073` garde `!c.isPlayer` |
-| 3 | Modèle actes/scènes + **rattachement automatique** | 🟠 modèle fait ; rattachement fait pour le combat seul |
-| 4 | Capture en un clic + marquages gratuits | ❌ |
-| 5 | Axe `trace` / `chronique` | ✅ 18/08 |
-| 6 | **Revue de fin de séance scène par scène** | ❌ le cœur du § 4.1 |
-| 7 | Résumé sur l'ensemble curé | 🟠 le résumé tourne, la curation n'existe pas |
-| 8 | Résumé de combat enrichi + événement d'ouverture | 🟠 enrichi ✅, ouverture ❌ |
-| 9 | Trame générée par la Forge Chronique | ⛔ **caduque** — la Forge de chronique a été retirée le 17/08 |
-| 10 | Trame injectée dans Oracle / Cortex | ❌ |
+| # | Étape | État au 19/08 | Livré |
+| --- | --- | --- | --- |
+| 1 | Corriger `summarizeSession` hors Gemini | ✅ 17/08 | |
+| 2 | **Décès universel et automatique** | ❌ `useCombatStore.ts:1073` garde `!c.isPlayer` | ✅ 20/08 |
+| 3 | Modèle actes/scènes + **rattachement automatique** | 🟠 modèle fait ; rattachement fait pour le combat seul | ✅ 20/08, posé au goulot |
+| 4 | Capture en un clic + marquages gratuits | ❌ | ✅ 20/08 |
+| 5 | Axe `trace` / `chronique` | ✅ 18/08 | ses trois arbitraires tranchés le 21/08 |
+| 6 | **Revue de fin de séance scène par scène** | ❌ le cœur du § 4.1 | ✅ 20/08, **complétée le 21/08** (fusionner, scinder) |
+| 7 | Résumé sur l'ensemble curé | 🟠 le résumé tourne, la curation n'existe pas | ✅ 20/08 |
+| 8 | Résumé de combat enrichi + événement d'ouverture | 🟠 enrichi ✅, ouverture ❌ | ✅ 20/08 |
+| 9 | Trame générée par la Forge Chronique | ⛔ annoncée caduque | ✅ **elle était déjà faite** depuis le 15-16/08 |
+| 10 | Trame injectée dans Oracle / Cortex | ❌ | ✅ **21/08** (`516395a`) |
 
-**Le Cortex tactique.** Axe 1 fait ; axes 2 (faction explicite, `unknown` plutôt qu'`enemy` par défaut),
-3 (`linkedCombatantId` sur tous les chemins), 4 (qualifier les entrées : mesuré contre supposé) et 5
-(unité de distance tirée du pilote — « cases » est encore en dur, `TacticalNarrativeService.ts:191`)
-restent ouverts. Le document porte aussi **trois questions non tranchées**, dont *« fusionner les deux
-appels du Cortex en un seul »*, que le plan lui-même désigne comme *« peut-être le vrai levier de
-performance »*.
+**Le Cortex tactique — c'est désormais le chantier de code le plus mûr.** Axe 1 fait ; axes 2 (faction
+explicite, `unknown` plutôt qu'`enemy` par défaut), 3 (`linkedCombatantId` sur tous les chemins),
+4 (qualifier les entrées : mesuré contre supposé) et 5 (unité de distance tirée du pilote — « cases » est
+encore en dur, `TacticalNarrativeService.ts:191`, **revérifié le 22/08**) restent ouverts. Le document
+porte aussi **trois questions non tranchées**, dont *« fusionner les deux appels du Cortex en un seul »*,
+que le plan lui-même désigne comme *« peut-être le vrai levier de performance »*.
 
-**L'accélération IA.** L'axe A (iGPU) est activé depuis le 12/08. Les quinze autres axes du plan — 55 h
-chiffrées — n'ont pas été repris comme tels ; plusieurs ont été traités de biais par d'autres chantiers.
-**Ce plan mériterait sa propre relecture**, parce que son ordre recommandé date d'avant la Forge Système,
-la Forge de campagne et le journal.
+> **Son garde-fou est levé depuis le 2026-08-21.** Le document interdisait de le traiter avant les axes A
+> à C du plan jumeau : **les trois sont faits**. Et sa question sur les deux appels a gagné un argument
+> mesuré — sous `NUM_PARALLEL: 1`, qui est le défaut d'Ollama, **les deux appels font la queue** : on
+> attend la somme, pas le plus long. Le commentaire qui promettait le contraire est parti le 21/08.
+
+**L'accélération IA — son socle est posé.** Axe A (iGPU) le 12/08, axe B (RAG) le 09/08, puis le
+2026-08-21 : **axe C** (ordre du prompt et contexte du Cortex), **axe D** (annulation réelle, verrou,
+plafond unique qui suit le moment de jeu), **axe E.1** (la voie Ollama en flux, qui n'avait reçu aucune
+correction depuis deux mois). Restent E.4, F, G et les blocs III à V.
+
+**Ce plan mérite toujours sa propre relecture** avant d'être repris tel quel : son ordre recommandé date
+d'avant la Forge Système, la Forge de campagne et le journal — et l'axe E.3 est **caduc**, le
+`ChronicleService` qu'il vise n'existe plus.
 
 ---
 
 ## 4. L'état réel du corpus, compté sur le disque
 
-| Système | Fiches | Index |
-| --- | --- | --- |
-| alien | 25 | 2 |
-| blade-runner | 23 | 3 |
-| dune | 20 | 3 |
-| cthulhu hack | 18 | — |
-| srd-yze | 17 | — |
-| rêves de dragons | 7 | — |
-| noc | 4 | — |
-| coc7, dnd-5e | **0** | — |
+**Recompté le 2026-08-22.** La colonne du 19/08 est conservée : c'est elle qui montre ce qu'une soirée de
+reforge déplace.
 
-**88 fiches en v3** (avec `sections:`) · **16 marquées `a_regenerer: true`** · **4 marquées
-`doublon_de:`** · **28 citant des pages non fiables** (`pages_fiables: false`).
+| Système | Fiches au 19/08 | Fiches au 22/08 | |
+| --- | --- | --- | --- |
+| alien | 25 | 40 | |
+| blade-runner | 23 | 26 | |
+| dune | 20 | 24 | |
+| cthulhu hack | 18 | 20 | |
+| srd-yze | 17 | 18 | |
+| rêves de dragons | 7 | **24** | reforgé le 21/08 ; ses 6 v1 archivées dans `rules-v1/` |
+| noc | 4 | 4 | inchangé, toujours très en dessous |
+| coc7 | 0 | 2 | **aucune fiche v3**, pas de dossier `rules/` |
+| dnd-5e | 0 | 1 | idem |
+| star-trek | — | **0** | dossier vide |
+
+**16 marquées `a_regenerer: true`** · **4 marquées `doublon_de:`** · **28 citant des pages non fiables**
+(`pages_fiables: false`) — *les trois comptes sont inchangés depuis le 19/08*.
+
+**Les index des livres ont changé de rang le 21/08.** Deux formes de repli et un seuil de densité mesuré
+(quarante → cent) : Rêves de Dragons passe de 217 à **544 entrées**, ses deux fichiers enfin lus. C'est ce
+qui rend le contrôle des citations utilisable — une fiche citait quatre sections introuvables, elle en
+cite quatre qui se résolvent.
 
 Cinq campagnes sur disque : `a-la-claire-fontaine`, `anges-de-feu`, `dune`, `hadley-hope`,
 `le-secret-de-milo`.
@@ -138,26 +164,58 @@ Cinq campagnes sur disque : `a-la-claire-fontaine`, `anges-de-feu`, `dune`, `had
 Dix-neuf documents produisent une liste de restes qui se répètent. La voici dédoublonnée, par ordre de
 préjudice réel.
 
-### P1 — Perte de données silencieuse
+### ~~P1 — Perte de données silencieuse~~ ✅ close le 2026-08-20 et le 2026-08-21
 
-- **`SessionService.saveFullSession` omet `entities` et `clues`.** Vérifié le 19/08, toujours vrai.
-  **Les PNJ et les indices ne sont pas dans les sauvegardes.** Signalé le 16/08, reporté trois fois.
-  C'est le seul reste de toute la liste qui détruit du travail.
+- ~~**`SessionService.saveFullSession` omet `entities` et `clues`.**~~ ✅ **20/08** (`310d7a3`) — les PNJ,
+  les indices et l'historique des séances entrent dans les sauvegardes. C'était le seul reste de la liste
+  qui détruisait du travail ; il avait été signalé le 16/08 et reporté trois fois.
+- **Deux défauts du même genre, trouvés le 20/08 et corrigés le 21** (`655c715`) : le `.default([])` sur
+  `timelineEvents`, `wikiEntries` et `atlasMaps`, qui **remplaçait une chronologie vivante par du vide**
+  au chargement — *un champ absent laisse le store tranquille, un défaut à vide l'écrase* ; et
+  `validateSession` qui rendait `FullSessionSchema.parse({})` sur échec, d'où « Session chargée et
+  vérifiée 📂 » sur un chargement qui n'avait rien chargé.
 
-### P2 — Le journal et la trame
+### ~~P2 — Le journal et la trame~~ ✅ close le 2026-08-21
 
-- La **mort d'un PJ** n'émet rien, et l'événement de décès n'est produit qu'au bouton d'export (étape 2,
-  marquée *correction* et non fonctionnalité).
-- Aucun **événement d'ouverture de combat** (moitié de l'étape 8).
-- **`addEvent` écrit dans un journal clos** hors enregistrement.
-- L'**export** télécharge du JSON brut alors que `rendreLeCompteRendu` existe.
-- La **revue des 37 émetteurs**, un par un.
-- La **curation scène par scène** (étape 6) et l'**injection de la trame dans l'Oracle** (étape 10).
+Les six points sont faits. Conservés pour l'histoire, avec ce qui les a emportés :
+
+- ~~La **mort d'un PJ** n'émet rien~~ ✅ 20/08 — universelle, automatique, type `PJ`, écrite à l'instant
+  de la chute.
+- ~~Aucun **événement d'ouverture de combat**~~ ✅ 20/08, de nature `trace`.
+- ~~**`addEvent` écrit dans un journal clos**~~ et ~~l'**export** télécharge du JSON brut~~ ✅ 20/08 : une
+  séance close est un compte rendu, pas un cahier.
+- ~~La **revue des 37 émetteurs**~~ ✅ 20/08 — ils étaient 36, et elle a trouvé **cinq défauts muets** dont
+  un type d'événement inexistant. Ses **trois classements laissés ouverts** ont été tranchés le 21/08
+  (`40f6aa9`), et l'un d'eux cachait un défaut : ouvrir une carte dans l'atlas **déplaçait le groupe**
+  dans le résumé.
+- ~~La **curation scène par scène**~~ ✅ 20/08, **complétée le 21/08** — fusionner et scinder, avec la
+  réversibilité vérifiée (scinder puis refusionner rend le fil intact).
+- ~~L'**injection de la trame dans l'Oracle**~~ ✅ 21/08 (`516395a`).
+
+### P1 bis (nouveau, 2026-08-22) — Un jet faux d'un facteur cinq
+
+*Il prend le rang P1 laissé libre : c'est le seul reste de la liste qui produit un dégât à chaque séance.*
+
+**Le pilote de Rêves de Dragons compose `seuil = caractéristiques + compétences`.** Chez RdD la
+compétence **déplace la colonne, donc elle multiplie** : Agilité 12 avec +3 vaut 78 %, le pilote annonce
+15 %. Dans le sens qui fait échouer les personnages compétents — et *les joueurs concluront que leurs
+personnages sont mauvais, jamais que l'outil se trompe.*
+
+Le chantier est défini et non commencé ; il vit dans la mémoire du projet. **Sa vraie forme n'est pas le
+calcul mais l'échelle** : `tagSuccess` est un **booléen** que six écrans rendent en trois vocabulaires, et
+ils ne divergent aujourd'hui que parce qu'un booléen n'a que deux valeurs. Il est **bloqué sur une
+question de livre** — l'échec particulier commence-t-il à 86 ou à 87 ?
+
+*C'est désormais le seul reste de la liste qui fausse une partie en cours.*
 
 ### P3 — Le Cortex
 
-Axes 2 à 5, plus les trois questions non tranchées. Le document prévient : *ne pas traiter ce plan avant
-les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
+*Il garde son rang d'origine : d'autres documents le citent comme « P3 », et renuméroter un reste le rend
+introuvable. Dans les faits il est deuxième, P1 et P2 étant closes.*
+
+Axes 2 à 5, plus les trois questions non tranchées. **Le garde-fou du document — *ne pas traiter ce plan
+avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les trois sont faits. Voir le
+§ 3 pour ce que la mesure de `NUM_PARALLEL: 1` change à sa troisième question.
 
 ### P4 — Le corpus et les règles
 
@@ -168,8 +226,9 @@ les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
 
 - **`docs/commun/`** est reconnu par le moteur et **n'existe toujours pas** sur le disque.
 - **16 fiches à régénérer**, 4 doublons à fusionner à cette occasion.
-- **noc (4 fiches) et rêves de dragons (7)** sont très en dessous des autres ; **coc7 et dnd-5e sont
-  vides**.
+- ~~**noc (4 fiches) et rêves de dragons (7)** sont très en dessous des autres~~ — **rêves de dragons est
+  reforgé le 21/08 (24 fiches v3, index compris)**. Restent **noc** (4), et **coc7, dnd-5e et star-trek**,
+  qui n'ont **aucune fiche v3**.
 - Le **« Chemin des Règles » est vide** pour les campagnes, qui utilisent toutes des systèmes
   `custom-…` : le rattachement repose sur le repli par nom affiché, douteux pour « Rêve de Dragon » au
   singulier contre le dossier `reves de dragons` au pluriel.
@@ -177,11 +236,16 @@ les axes A à C du plan jumeau* — l'axe A est fait, B et C ne le sont pas.
 
 - Le **réglage de langue d'un corpus n'a pas d'écran** — édition à la main dans `corpus.json`. Une UI
   manquante, rien de plus.
-- Le **plafond du RAG**, `MAX_CONTEXT_TOKENS = 4000` (`electron/ragSelection.ts:39`). À 5 800 caractères
-  de moyenne par fiche, il n'en laisse passer que **deux entières**. Le plan du 10/08 disait « à
-  réévaluer une fois l'iGPU en place » : il l'est depuis le 12/08. **Mais ça se mesure, ça ne s'intuite
-  pas** — monter le plafond coûte du temps de réponse, et le plan d'accélération porte un banc pour ça.
-  À faire **après** le combat de test, quand l'iGPU aura tourné en conditions réelles.
+- Le **plafond du RAG**, `MAX_CONTEXT_TOKENS = 4000` (`electron/ragSelection.ts:39`, **revérifié le
+  22/08**). À 5 800 caractères de moyenne par fiche, il n'en laisse passer que **deux entières**. Le plan
+  du 10/08 disait « à réévaluer une fois l'iGPU en place » : il l'est depuis le 12/08. **Mais ça se
+  mesure, ça ne s'intuite pas** — monter le plafond coûte du temps de réponse, et le plan d'accélération
+  porte un banc pour ça. À faire **après** le combat de test, quand l'iGPU aura tourné en conditions
+  réelles.
+
+  > **Sa condition est remplie depuis le 2026-08-21** : le combat a eu lieu, l'iGPU a tourné, et l'axe C a
+  > supprimé le repaiement du prefill à chaque question — ce qui change le prix d'un plafond plus haut.
+  > **La mesure est donc à faire, et c'est un geste, pas un chantier.**
 
 *Note sur le « Chemin des Règles » : le repli échoue vraiment.* `memeIdentite` ne rapproche que des
 identifiants égaux ou préfixés d'un tiret — il compare donc `reve-de-dragon` à `reves-de-dragons` et ne
@@ -207,10 +271,16 @@ resignaler comme un reste.**
 
 ### P6 — Ce qui n'a jamais été vu tourner
 
-C'est la catégorie qui a produit **tous** les défauts des 18 et 19 août : la trame en séance (deux scènes
-en parallèle, la scène improvisée) · la bascule de combat entre deux scènes **et le retour des tokens** ·
-l'aller-retour d'image d'une ambiance · le sélecteur de tirage et le sens du dé · **la consigne de
+C'est la catégorie qui a produit **tous** les défauts des 18 et 19 août : ~~la trame en séance (deux scènes
+en parallèle, la scène improvisée)~~ · la bascule de combat entre deux scènes **et le retour des tokens** ·
+l'aller-retour d'image d'une ambiance · ~~le sélecteur de tirage et le sens du dé~~ · **la consigne de
 langue** — on sait qu'elle part, pas que le modèle l'applique.
+
+**Mise à jour du 2026-08-22, et elle vaut confirmation de la catégorie elle-même.** La séance du 21/08 a
+levé la trame en séance et le pupitre de dés — **en révélant huit défauts que la lecture du code n'avait
+pas trouvés**, dont un jet à seize dés et un combattant nommé « Ajouter un Combattant » qui a traversé le
+journal, la chronique et le modèle. S'ajoutent à la liste, non vus tourner : **la fusion et la scission de
+scènes** à la revue, livrées le 21/08, et le journal de contexte d'Ollama, posé le 22.
 
 ---
 
