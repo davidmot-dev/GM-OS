@@ -7,7 +7,15 @@ import { decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 export interface TacticalContext {
     actor: Combatant;
     actorToken?: MapToken;
-    enemies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: string }[];
+    /**
+     * Ce que ce jeu COMPTE — « cases », « zones », « mètres ».
+     *
+     * Portée par le contexte et non relue du pilote au moment d'écrire : le
+     * rapport se compose à partir de ce qu'on lui donne, et c'est ce qui le
+     * rend testable sans pilote.
+     */
+    uniteDeDistance: string;
+    enemies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: string; rangeLabel: string }[];
     allies: { combatant: Combatant; token?: MapToken; distance: number }[];
     isFlanked: boolean;
     flankedBy: string[];
@@ -101,7 +109,8 @@ export class TacticalNarrativeService {
                         combatant: c, 
                         token, 
                         distance: distanceUnits, 
-                        rangeCategory: rangeInfo.category 
+                        rangeCategory: rangeInfo.category,
+                        rangeLabel: rangeInfo.label 
                     });
                 }
             });
@@ -154,7 +163,11 @@ export class TacticalNarrativeService {
                 alliesHealthPercent: Math.round(myHealth.currentPercent),
                 enemiesHealthPercent: Math.round(enemyHealth.currentPercent)
             },
-            macroContext
+            macroContext,
+            // Sans déclaration, « unités » : le mot ne prétend ni grille, ni
+            // mètre, ni zone. *On ne remplace pas une convention inventée par
+            // une autre.*
+            uniteDeDistance: tacticalConfig?.uniteDeDistance || 'unités',
         };
     }
 
@@ -163,6 +176,7 @@ export class TacticalNarrativeService {
      */
     private static formatNarrativePrompt(ctx: TacticalContext): string {
         const { actor, actorToken, enemies, allies, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
+        const unite = ctx.uniteDeDistance;
 
         let prompt = `## ANALYSE TACTIQUE MICRO : ${actor.name}\n`;
         // Quatrième écrit à annoncer des points de vie sans regarder le modèle
@@ -188,7 +202,18 @@ export class TacticalNarrativeService {
                 prompt += `- Proximité Ennemi :\n`;
                 enemies.sort((a, b) => a.distance - b.distance).forEach(e => {
                     const santeEnnemi = decrireLaSante(e.combatant);
-                    prompt += `  * ${e.combatant.name} à ${e.distance} cases [Portée ${e.rangeCategory}]`
+                    /*
+                      **« cases » était écrit en dur, sur tous les systèmes.**
+                      Alien compte en zones, d'autres en mètres ou en pieds :
+                      *une convention d'un système appliquée à tous.* Le pilote
+                      la déclare désormais ; sans elle on écrit « unités », qui
+                      ne prétend rien plutôt que d'affirmer une grille.
+
+                      Et la portée s'annonce sous le nom que CE jeu lui donne —
+                      « au toucher » plutôt que « Contact ». La Forge collectait
+                      ces cinq libellés depuis les fiches, et rien ne les lisait.
+                    */
+                    prompt += `  * ${e.combatant.name} à ${e.distance} ${unite} [Portée ${e.rangeLabel}]`
                         + (santeEnnemi ? `. Santé : ${santeEnnemi}` : '') + '.\n';
                 });
             } else {

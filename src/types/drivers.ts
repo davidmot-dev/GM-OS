@@ -35,6 +35,18 @@ export interface TacticalRangeThreshold {
 }
 
 export interface TacticalConfig {
+    /**
+     * Ce que le jeu COMPTE — « cases », « mètres », « zones », « pieds ».
+     *
+     * **Le mot était écrit en dur dans le rapport du Cortex** : « à 3 cases »,
+     * sur tous les systèmes, alors qu'Alien compte en zones et d'autres en
+     * mètres. *Une convention d'un système appliquée à tous* — même famille de
+     * défaut que la configuration tactique ignorée.
+     *
+     * Facultatif, et sans repli inventé : quand le pilote ne le dit pas, le
+     * rapport écrit « unités », qui ne prétend rien.
+     */
+    uniteDeDistance?: string;
     ranges: {
         contact: TacticalRangeThreshold;
         courte: TacticalRangeThreshold;

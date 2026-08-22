@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { TacticalNarrativeService } from '../logic/TacticalNarrativeService';
 import type { Combatant } from '../../combat/useCombatStore';
 import type { MapToken, DangerZone } from '../../map/types';
+import type { TacticalConfig } from '../../../types/drivers';
 
 describe('TacticalNarrativeService', () => {
     const mockActor: Partial<Combatant> = {
@@ -38,8 +39,8 @@ describe('TacticalNarrativeService', () => {
         );
 
         expect(report).toContain('## ANALYSE TACTIQUE MICRO : Elara');
-        expect(report).toContain('* Orc 1 à 1 cases [Portée Contact]');
-        expect(report).toContain('* Orc 2 à 1 cases [Portée Contact]');
+        expect(report).toContain('* Orc 1 à 1 unités [Portée Contact]');
+        expect(report).toContain('* Orc 2 à 1 unités [Portée Contact]');
         expect(report).toContain('ALERTE : FLANQUÉ par Orc 1 et Orc 2 !');
         expect(report).toContain('RISQUES TERRAIN : Feu');
     });
@@ -53,6 +54,58 @@ describe('TacticalNarrativeService', () => {
         );
 
         expect(report).toContain("Absent de la carte Atlas");
+    });
+
+    /**
+     * **Le rapport parle la langue DU JEU.**
+     *
+     * Il écrivait « à 3 cases » sur tous les systèmes, alors qu'Alien compte en
+     * zones et d'autres en mètres — *une convention d'un système appliquée à
+     * tous.* Et il annonçait « Portée Contact » quand le pilote déclare « au
+     * toucher » : cinq libellés collectés par la Forge depuis les fiches, et
+     * rien ne les lisait. **Un champ rempli que rien ne lit est un champ qui
+     * finira faux sans qu'on le sache.**
+     */
+    const configZones: TacticalConfig = {
+        uniteDeDistance: 'zones',
+        useTacticalAI: true,
+        ranges: {
+            contact: { label: 'au toucher', maxUnits: 1, modifier: 0 },
+            courte: { label: 'tranche courte', maxUnits: 2, modifier: 0 },
+            moyenne: { label: 'tranche moyenne', maxUnits: 3, modifier: -1 },
+            longue: { label: 'tranche longue', maxUnits: 4, modifier: -2 },
+            extreme: { label: 'hors de portée', maxUnits: 5, modifier: -3 },
+        },
+    };
+
+    it("emploie l'unité du pilote, et le nom qu'il donne à la bande", () => {
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            mockTokens as MapToken[],
+            [] as DangerZone[],
+            50,
+            undefined,
+            configZones,
+        );
+
+        expect(report).toContain('à 1 zones');
+        expect(report, 'la bande porte le nom du jeu').toContain('[Portée au toucher]');
+        expect(report, 'et plus jamais la grille de personne').not.toContain('cases');
+    });
+
+    it('dit « unités » quand le pilote ne nomme rien — jamais « cases »', () => {
+        // *On ne remplace pas une convention inventée par une autre.* Sans
+        // déclaration, le mot ne prétend ni grille, ni mètre, ni zone.
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            mockTokens as MapToken[],
+            [] as DangerZone[],
+        );
+
+        expect(report).toContain('à 1 unités');
+        expect(report).not.toContain('cases');
     });
 
     it('should calculate faction health correctly', () => {

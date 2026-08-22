@@ -532,8 +532,14 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'extreme. Le libellé de chacune doit décrire la distance sous laquelle elle est ' +
             'rangée — « au corps à corps » va sous "contact", jamais sous "courte". "maxUnits" ' +
             'grandit d\'une bande à la suivante. Les modificateurs, eux, sont ceux que les fiches ' +
-            'donnent : recopie-les tels quels, même s\'ils ne vont pas dans un seul sens',
-        exemple: '{"driver":{"tactical":{"ranges":{"contact":{"label":"Même zone","maxUnits":1,"modifier":0},"courte":{"label":"Zone adjacente","maxUnits":2,"modifier":1},"moyenne":{"label":"Zone éloignée","maxUnits":3,"modifier":2},"longue":{"label":"Hors de portée","maxUnits":4,"modifier":3},"extreme":{"label":"Hors de portée","maxUnits":5,"modifier":4}},"useTacticalAI":false}}}',
+            'donnent : recopie-les tels quels, même s\'ils ne vont pas dans un seul sens. ' +
+            'AJOUTE "tactical.uniteDeDistance" : LE MOT QUE CE JEU EMPLOIE POUR COMPTER une ' +
+            'distance, tel qu\'il se lit après un nombre — « cases », « mètres », « zones », ' +
+            '« pieds ». Le rapport tactique écrit « à 3 <unité> », et il écrivait « cases » pour ' +
+            'TOUS les jeux. Si les fiches ne nomment aucune unité, OMETS le champ : le rapport ' +
+            'dira « unités », ce qui ne prétend rien. N\'invente pas une grille à un jeu qui ' +
+            'compte en zones',
+        exemple: '{"driver":{"tactical":{"uniteDeDistance":"zones","ranges":{"contact":{"label":"Même zone","maxUnits":1,"modifier":0},"courte":{"label":"Zone adjacente","maxUnits":2,"modifier":1},"moyenne":{"label":"Zone éloignée","maxUnits":3,"modifier":2},"longue":{"label":"Hors de portée","maxUnits":4,"modifier":3},"extreme":{"label":"Hors de portée","maxUnits":5,"modifier":4}},"useTacticalAI":false}}}',
     },
 ] as const;
 

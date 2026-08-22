@@ -10,7 +10,23 @@ export interface GridPoint {
 export type RangeCategory = 'Contact' | 'Courte' | 'Moyenne' | 'Longue' | 'Extrême';
 
 export interface RangeInfo {
+  /**
+   * La bande, sous son nom canonique — **c'est elle qui sert à comparer**, et
+   * elle ne change jamais d'un système à l'autre.
+   */
   category: RangeCategory;
+  /**
+   * Le nom que CE jeu donne à cette bande — « au toucher », « Même zone ».
+   *
+   * **Le pilote le déclarait, et personne ne le lisait.** La Forge collecte
+   * cinq libellés depuis les fiches du corpus ; le rapport du Cortex, le
+   * pupitre et la carte affichaient tous les trois le nom canonique. *Un champ
+   * rempli que rien ne lit est un champ qui finira faux sans qu'on le sache.*
+   *
+   * Retombe sur `category` quand le pilote ne dit rien : on ne montre jamais un
+   * vide là où un mot est attendu.
+   */
+  label: string;
   modifier: number;
   distanceUnits: number;
 }
@@ -53,13 +69,13 @@ export class GridEngine {
 
     // Overlap safety: extremely close tokens or distance < effective threshold
     if (distanceUnits < 0.1 || distanceUnits <= effectiveContactMax) {
-      return { category: 'Contact', modifier: ranges.contact.modifier, distanceUnits };
+      return { category: 'Contact', label: ranges.contact.label || 'Contact', modifier: ranges.contact.modifier, distanceUnits };
     }
 
-    if (distanceUnits <= ranges.courte.maxUnits) return { category: 'Courte', modifier: ranges.courte.modifier, distanceUnits };
-    if (distanceUnits <= ranges.moyenne.maxUnits) return { category: 'Moyenne', modifier: ranges.moyenne.modifier, distanceUnits };
-    if (distanceUnits <= ranges.longue.maxUnits) return { category: 'Longue', modifier: ranges.longue.modifier, distanceUnits };
-    return { category: 'Extrême', modifier: ranges.extreme.modifier, distanceUnits };
+    if (distanceUnits <= ranges.courte.maxUnits) return { category: 'Courte', label: ranges.courte.label || 'Courte', modifier: ranges.courte.modifier, distanceUnits };
+    if (distanceUnits <= ranges.moyenne.maxUnits) return { category: 'Moyenne', label: ranges.moyenne.label || 'Moyenne', modifier: ranges.moyenne.modifier, distanceUnits };
+    if (distanceUnits <= ranges.longue.maxUnits) return { category: 'Longue', label: ranges.longue.label || 'Longue', modifier: ranges.longue.modifier, distanceUnits };
+    return { category: 'Extrême', label: ranges.extreme.label || 'Extrême', modifier: ranges.extreme.modifier, distanceUnits };
   }
 
   /**
