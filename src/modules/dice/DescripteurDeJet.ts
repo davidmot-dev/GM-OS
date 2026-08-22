@@ -20,6 +20,7 @@
  */
 
 import type { SheetSection } from '../../data/defaultSheetTemplates';
+import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 
 /** Un choix que le joueur fait sur sa fiche au moment de lancer. */
 export interface ComposanteDeJet {
@@ -59,6 +60,37 @@ export interface DescripteurDeJet {
      * `PanneauDeJet` (« descripteur.seuil is not iterable »).
      */
     seuil?: ComposanteDeJet[];
+    /**
+     * **La cible se CALCULE, au lieu de s'additionner.**
+     *
+     * *Le mur du 2026-08-22.* Chez Rêves de Dragons, la compétence n'est pas
+     * dans l'ordonnée de la table de Résolution, elle est dans l'**abscisse** :
+     * elle ne s'ajoute pas au pourcentage, elle déplace la colonne, **donc elle
+     * multiplie**. Agilité 12 avec +3 vaut 78 % et non 15 — et le descripteur ne
+     * savait qu'additionner. *Facteur cinq, dans le sens qui fait échouer les
+     * personnages compétents, et rien ne le disait : un résultat faux a l'air
+     * d'un résultat.*
+     *
+     * **Exclusif de `seuil`** : les deux répondent à la même question, et un
+     * pilote qui déclarerait les deux dirait deux fois la cible. Quand `cible`
+     * est là, c'est elle qui décide.
+     *
+     * **Aucun nombre de la table n'entre ici.** Le pilote nomme une mécanique,
+     * qui vit dans `systemes/` avec ses tables transcrites du livre et ses
+     * tests.
+     */
+    cible?: {
+        /** Le nom de la mécanique, tel que le registre `systemes/` le connaît. */
+        mecanique: NomDeMecanique;
+        /** Ce qui se lit en ordonnée : la caractéristique. Une seule composante. */
+        caracteristique: ComposanteDeJet;
+        /**
+         * Ce qui compose l'abscisse depuis la fiche — la compétence, le malus
+         * d'état général. **Additionnées entre elles**, puis servies comme un
+         * tout à la mécanique, qui seule sait ce qu'elle en fait.
+         */
+        ajustement?: ComposanteDeJet[];
+    };
     /**
      * Réserve de dés : combien on en lance de base, jusqu'à combien, et à
      * combien de faces.
@@ -163,6 +195,20 @@ export interface ChoixDuJoueur {
     /** Difficulté fixée par le meneur. */
     difficulte?: number;
     /**
+     * **La difficulté qui déplace la colonne — et surtout pas `difficulte`.**
+     *
+     * Les deux se traduiraient par « la difficulté fixée par le meneur », et
+     * elles n'ont aucun rapport : `difficulte` est un **nombre de réussites à
+     * atteindre**, hérité de Dune ; celle-ci est un **ajustement** qui change le
+     * pourcentage, de la tâche chimérique à la très facile.
+     *
+     * *Même mot, mécanique sans rapport* — c'est exactement le piège relevé en
+     * ouvrant ce chantier, et les faire partager un champ l'aurait scellé. Un
+     * meneur qui règle « difficulté 2 » sur un jeu en pourcentage doit obtenir
+     * une colonne déplacée, jamais deux réussites exigées.
+     */
+    ajustementDeDifficulte?: number;
+    /**
      * Valeur sous laquelle un dé compte double, quand elle diffère du critique
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
      */
@@ -174,6 +220,15 @@ export interface JetPrepare {
     seuil: number;
     /** Le détail du seuil, pour l'afficher : `[{ label: 'Combat', valeur: 6 }, …]`. */
     composantes: { label: string; champ: string; valeur: number }[];
+    /**
+     * Comment le seuil a été obtenu, quand ce n'est pas une addition.
+     *
+     * **Absent sur les jeux qui additionnent** : le panneau montre alors les
+     * valeurs jointes par « + », ce qui dit vrai chez eux. Sur un jeu qui
+     * multiplie, ce même affichage montrerait « 12 + 3 » sous un seuil de 78 —
+     * *un écran qui explique faux est pire qu'un écran qui n'explique rien.*
+     */
+    explicationDuSeuil?: string;
     nombreDeDes: number;
     /**
      * Le détail de la réserve, quand elle se compose depuis la fiche.
@@ -419,7 +474,48 @@ export function preparerLeJet(
       chaque six est une réussite quelle que soit la valeur du personnage — mais
       où le NOMBRE de dés, lui, vient de la fiche.
     */
-    const { total: seuil, retenues: composantes } = additionner(descripteur.seuil ?? []);
+    const additionnees = additionner(descripteur.seuil ?? []);
+    let seuil = additionnees.total;
+    let composantes = additionnees.retenues;
+    let explicationDuSeuil: string | undefined;
+
+    /*
+      **La cible calculée l'emporte sur le seuil additionné**, et les deux ne
+      cohabitent pas : elles répondent à la même question. Un pilote qui
+      déclarerait les deux verrait la mécanique gagner, ce que le contrôle du
+      pilote signale à la revue.
+
+      Les composantes restent celles qu'on a lues sur la fiche — le joueur doit
+      voir d'où sortent les nombres, même quand ils ne s'additionnent pas.
+    */
+    if (descripteur.cible) {
+        const caracteristique = additionner([descripteur.cible.caracteristique]);
+        const depuisLaFiche = additionner(descripteur.cible.ajustement ?? []);
+        const ajustement = depuisLaFiche.total + (choix.ajustementDeDifficulte ?? 0);
+
+        const mecanique = MECANIQUES_DE_CIBLE[descripteur.cible.mecanique];
+        if (!mecanique) {
+            /*
+              Un pilote vient d'un modèle de langage : il peut nommer une
+              mécanique qui n'existe pas. On le dit et on retombe sur zéro
+              plutôt que d'inventer un pourcentage — *un jet qui a l'air d'un
+              jet est le pire des deux mondes.*
+            */
+            avertissements.push(
+                `Le pilote demande la mécanique de cible « ${descripteur.cible.mecanique} », `
+                + 'que cette version ne connaît pas : aucune cible n\'a pu être calculée.',
+            );
+        } else {
+            const cible = mecanique(caracteristique.total, ajustement);
+            seuil = cible.chances;
+            composantes = [...caracteristique.retenues, ...depuisLaFiche.retenues];
+            explicationDuSeuil = cible.explication;
+            // Des remarques, jamais des avertissements : elles disent ce que le
+            // calcul a supposé, elles n'empêchent pas de lancer.
+            remarques.push(...cible.remarques);
+        }
+    }
+
     const deLaReserve = additionner(descripteur.reserve?.composantes ?? []);
     const deLaSeconde = additionner(descripteur.reserve?.secondaire?.composantes ?? []);
 
@@ -477,6 +573,7 @@ export function preparerLeJet(
     return {
         seuil,
         composantes,
+        explicationDuSeuil,
         nombreDeDes,
         composantesDeLaReserve: deLaReserve.retenues,
         /*

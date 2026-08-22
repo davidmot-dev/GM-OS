@@ -62,6 +62,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     // Un jeu sans difficulté déclarée n'en affiche pas, et part de zéro : chez
     // Alien, un seul six suffit — il n'y a pas de seuil à atteindre.
     const [difficulte, setDifficulte] = useState(descripteur.difficulte?.defaut ?? 0);
+    /**
+     * L'ajustement de difficulté — **et ce n'est pas la même chose que
+     * `difficulte`**, qui compte des réussites à atteindre. Celui-ci déplace la
+     * colonne de la table et change le pourcentage. Zéro est la difficulté
+     * moyenne, et c'est pourquoi il est le défaut.
+     */
+    const [ajustementDeDifficulte, setAjustementDeDifficulte] = useState(0);
     const [resultat, setResultat] = useState<RollResult | null>(null);
     const [seuilDuLancer, setSeuilDuLancer] = useState(0);
     /**
@@ -113,10 +120,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => preparerLeJet(
             descripteur, valeurs,
-            { champs: choix, desSupplementaires: desAchetes, difficulte },
+            { champs: choix, desSupplementaires: desAchetes, difficulte, ajustementDeDifficulte },
             template.sections,
         ),
-        [descripteur, valeurs, choix, desAchetes, difficulte, template.sections],
+        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, template.sections],
     );
 
     /*
@@ -149,15 +156,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const avantagePossible = DiceEngine.unSeulDeDecide(dice.engine, jet.nombreDeDes)
         && !!seuilDuMoteur;
 
+    /**
+     * **Tout ce que le joueur doit retenir sur sa fiche, en une seule liste.**
+     *
+     * Elle vivait en deux exemplaires — l'une pour savoir si le jet est prêt,
+     * l'autre pour dessiner les menus — et elles ne portaient pas le même ordre.
+     * *Deux listes de la même chose finissent par diverger* : ajouter la cible
+     * à l'une seulement aurait donné un menu qu'on ne peut pas remplir, ou un
+     * bouton qui part sans caractéristique.
+     */
+    const composantesARetenir = useMemo(() => [
+        ...(descripteur.cible ? [descripteur.cible.caracteristique] : []),
+        ...(descripteur.cible?.ajustement ?? []),
+        ...(descripteur.reserve?.composantes ?? []),
+        ...(descripteur.reserve?.secondaire?.composantes ?? []),
+        ...(descripteur.seuil ?? []),
+    ], [descripteur]);
+
     /** Rien ne part tant que chaque composante n'a pas son champ. */
     // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
     // composantes de la réserve comptent autant que celles du seuil : lancer
     // sans attribut ni compétence donnerait une poignée de dés arbitraire.
-    const pret = [
-        ...(descripteur.seuil ?? []),
-        ...(descripteur.reserve?.composantes ?? []),
-        ...(descripteur.reserve?.secondaire?.composantes ?? []),
-    ].every(c => choix[c.id]) && jet.avertissements.length === 0;
+    const pret = composantesARetenir.every(c => choix[c.id]) && jet.avertissements.length === 0;
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -295,11 +315,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 joueur désigne ce qu'il invoque, avant de lancer.
             */}
             <div className="grid grid-cols-2 gap-3">
-                {[
-                    ...(descripteur.reserve?.composantes ?? []),
-                    ...(descripteur.reserve?.secondaire?.composantes ?? []),
-                    ...(descripteur.seuil ?? []),
-                ].map(composante => (
+                {composantesARetenir.map(composante => (
                     <label key={composante.id} className="flex flex-col gap-1">
                         <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
                             {composante.label}
@@ -323,11 +339,30 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à
                 réserve pure n'en compose aucun : on ne montre pas un « Seuil 0 »
                 qui se lirait comme une mesure. */}
-            {(descripteur.seuil ?? []).length > 0 && (
+            {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
                 <div className="flex items-baseline gap-2 text-xs">
-                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">Seuil</span>
-                    <span className="font-mono text-lg font-black text-accent">{jet.seuil}</span>
-                    {jet.composantes.length > 0 && (
+                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">
+                        {descripteur.cible ? 'Chances' : 'Seuil'}
+                    </span>
+                    <span className="font-mono text-lg font-black text-accent">
+                        {jet.seuil}{descripteur.cible ? ' %' : ''}
+                    </span>
+                    {/*
+                        **L'explication vient du calcul, jamais d'ici.** Joindre
+                        les valeurs par « + » dit vrai sur un jeu qui additionne
+                        et faux sur un jeu qui multiplie : il aurait montré
+                        « 12 + 3 » sous une cible de 78.
+                    */}
+                    {jet.explicationDuSeuil ? (
+                        <span className="text-app-text/30 font-mono">
+                            = {jet.explicationDuSeuil}
+                            {jet.composantes.length > 0 && (
+                                <span className="ml-1 opacity-60">
+                                    ({jet.composantes.map(c => c.champ).join(', ')})
+                                </span>
+                            )}
+                        </span>
+                    ) : jet.composantes.length > 0 && (
                         <span className="text-app-text/30 font-mono">
                             = {jet.composantes.map(c => `${c.valeur}`).join(' + ')}
                             <span className="ml-1 opacity-60">({jet.composantes.map(c => c.champ).join(' + ')})</span>
@@ -335,6 +370,38 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
                 </div>
             )}
+
+            {/*
+                L'ajustement de difficulté, quand la cible se calcule. Il ne
+                s'affiche que là : sur un jeu qui compte des réussites, il n'a
+                aucun sens, et deux réglages nommés « difficulté » côte à côte
+                seraient exactement le piège que ce chantier a défait.
+            */}
+            {descripteur.cible && (
+                <div className="flex items-center gap-2 text-xs">
+                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">
+                        Difficulté
+                    </span>
+                    <input
+                        type="range"
+                        min={-10}
+                        max={7}
+                        value={ajustementDeDifficulte}
+                        onChange={e => setAjustementDeDifficulte(Number(e.target.value))}
+                        className="flex-1 accent-accent"
+                    />
+                    <span className="font-mono font-black text-accent w-8 text-right">
+                        {ajustementDeDifficulte > 0 ? `+${ajustementDeDifficulte}` : ajustementDeDifficulte}
+                    </span>
+                </div>
+            )}
+
+            {/*
+                Ce que le calcul a dû supposer — hors de la table du livre, borné
+                à son dernier palier — s'affiche **avec les remarques du pilote**,
+                plus bas, et pas ici : le panneau en a déjà un endroit, et deux
+                listes de la même chose finissent par diverger.
+            */}
 
             {/* La seconde poule, nommée par le jeu. Elle se montre à part parce
                 qu'elle se compte à part : chez Alien, un 1 sur un dé de stress

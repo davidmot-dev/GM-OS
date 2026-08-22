@@ -215,6 +215,32 @@ export function chancesDeReussite(
 }
 
 /**
+ * D'où sort le pourcentage, en une ligne — pour l'écran et pour le journal.
+ *
+ * **L'explication appartient au calcul, jamais à l'affichage.** Le panneau de
+ * jet joignait les composantes par « + » : sur un jeu qui multiplie, il aurait
+ * montré « 12 + 3 » sous un seuil de 78. *Un écran qui explique faux est pire
+ * qu'un écran qui n'explique rien* — il apprend au joueur une règle que le jeu
+ * n'a pas.
+ */
+export function expliquerLesChances(caracteristique: number, ajustement: number): string {
+    const signe = ajustement >= 0 ? '+' : '−';
+    const ajuste = `ajustement ${signe}${Math.abs(ajustement)}`;
+
+    if (ajustement <= AJUSTEMENT_SANS_RETOUR) {
+        return `${ajuste} : aucune réussite n'est possible.`;
+    }
+
+    if (ajustement < AJUSTEMENT_MINIMAL_DE_LA_TABLE) {
+        return `${ajuste} : 1 % quel que soit le personnage.`;
+    }
+
+    const effectif = Math.min(ajustement, AJUSTEMENT_MAXIMAL);
+    const multiplicateur = String(MULTIPLICATEUR_PAR_AJUSTEMENT[effectif]).replace('.', ',');
+    return `${caracteristique} × ${multiplicateur} (${ajuste})`;
+}
+
+/**
  * La ligne des résultats spéciaux qui couvre ces chances, ou `null` au-delà de
  * ce que le livre imprime.
  */

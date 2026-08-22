@@ -665,3 +665,89 @@ describe('combien de réussites il faut vraiment', () => {
         expect(verdict(5, ardu.reussitesRequises)).toEqual({ reussi: true, excedent: 2 });
     });
 });
+
+/**
+ * **Le mur du 2026-08-22 : une cible qui se calcule au lieu de s'additionner.**
+ *
+ * Le descripteur ne savait qu'additionner. Chez Rêves de Dragons, la compétence
+ * n'est pas dans l'ordonnée de la table, elle est dans l'abscisse : elle
+ * déplace la colonne, donc elle multiplie. Agilité 12 avec +3 vaut 78 % et non
+ * 15 — *facteur cinq, et rien ne le disait.*
+ */
+describe('une cible qui se calcule', () => {
+    /** Un pilote qui nomme sa mécanique et ne porte aucun de ses nombres. */
+    const jetRdD: DescripteurDeJet = {
+        cible: {
+            mecanique: 'reves-de-dragons',
+            caracteristique: { id: 'carac', label: 'Caractéristique', sectionId: 'caracs' },
+            ajustement: [{ id: 'competence', label: 'Compétence', sectionId: 'competences' }],
+        },
+        reserve: { base: 1, max: 1, faces: 100 },
+        sens: 'sous-ou-egal',
+    };
+
+    const FICHE_RDD = { agilite: 12, discretion: 3, vue: 14 };
+    const retenus = { champs: { carac: 'agilite', competence: 'discretion' } };
+
+    it('multiplie au lieu d’additionner — le défaut d’origine', () => {
+        const jet = preparerLeJet(jetRdD, FICHE_RDD, retenus);
+
+        expect(jet.seuil, 'Agilité 12 × 6,5').toBe(78);
+        expect(jet.seuil, "et surtout pas l'addition").not.toBe(15);
+        expect(jet.avertissements).toEqual([]);
+    });
+
+    it('montre d’où sort le nombre, sans jamais écrire « + »', () => {
+        const jet = preparerLeJet(jetRdD, FICHE_RDD, retenus);
+
+        expect(jet.explicationDuSeuil).toBe('12 × 6,5 (ajustement +3)');
+        expect(jet.explicationDuSeuil).not.toContain('+ 3');
+        // Les composantes restent lisibles : le joueur voit ce qu'il a retenu.
+        expect(jet.composantes.map(c => c.champ)).toEqual(['agilite', 'discretion']);
+    });
+
+    it('laisse la difficulté du meneur déplacer la colonne', () => {
+        const facile = preparerLeJet(jetRdD, FICHE_RDD, { ...retenus, ajustementDeDifficulte: 2 });
+        const ardu = preparerLeJet(jetRdD, FICHE_RDD, { ...retenus, ajustementDeDifficulte: -4 });
+
+        expect(facile.seuil, 'ajustement +5 : ×7,5').toBe(90);
+        expect(ardu.seuil, 'ajustement −1 : ×4,5').toBe(54);
+    });
+
+    it('ne confond pas l’ajustement avec le nombre de réussites requises', () => {
+        // `difficulte` compte des réussites — hérité de Dune. Sur un jeu en
+        // pourcentage il ne doit RIEN déplacer : même mot, mécanique sans
+        // rapport, et les faire partager un champ scellerait le piège.
+        const avec = preparerLeJet(jetRdD, FICHE_RDD, { ...retenus, difficulte: 3 });
+
+        expect(avec.seuil).toBe(78);
+    });
+
+    it('l’emporte sur un seuil additionné, si un pilote déclare les deux', () => {
+        const confus: DescripteurDeJet = {
+            ...jetRdD,
+            seuil: [{ id: 'autre', label: 'Autre', sectionId: 'caracs' }],
+        };
+        const jet = preparerLeJet(confus, FICHE_RDD, { champs: { ...retenus.champs, autre: 'vue' } });
+
+        expect(jet.seuil, 'la mécanique décide, pas la somme').toBe(78);
+    });
+
+    it('refuse d’inventer un pourcentage sur une mécanique inconnue', () => {
+        const inconnu = {
+            ...jetRdD,
+            cible: { ...jetRdD.cible!, mecanique: 'runequest' as unknown as 'reves-de-dragons' },
+        };
+        const jet = preparerLeJet(inconnu, FICHE_RDD, retenus);
+
+        expect(jet.seuil).toBe(0);
+        expect(jet.avertissements[0]).toContain('runequest');
+    });
+
+    it('dit ce qu’il a supposé quand il sort de la table', () => {
+        const jet = preparerLeJet(jetRdD, { agilite: 12, discretion: 14 }, retenus);
+
+        expect(jet.remarques.join(' ')).toMatch(/s'arrête à \+10/);
+        expect(jet.avertissements, 'une remarque n’empêche pas de lancer').toEqual([]);
+    });
+});
