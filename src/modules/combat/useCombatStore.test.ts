@@ -251,7 +251,13 @@ describe('un combattant ajouté est toujours complet', () => {
         useCombatStore.getState().addCombatant(malforme);
         const ajoute = useCombatStore.getState().combatants[0];
         expect(Array.isArray(ajoute.statuses), 'CombatCard lit statuses.length').toBe(true);
-        expect(ajoute.faction, 'déduite de isPlayer quand elle manque').toBe('enemy');
+        /*
+          **Ce test exigeait « enemy », et il gravait le défaut.** Un combattant
+          dont personne n'a dit le camp arrivait en CIBLE dans le rapport du
+          Cortex — et faussait l'estimation de déroute. `neutral` ne prétend
+          rien : le Cortex le nomme sans le ranger d'aucun côté.
+        */
+        expect(ajoute.faction, 'sans camp déclaré, on ne suppose pas l’hostilité').toBe('neutral');
     });
 
     it('les PJ d\'une scène rattachée entrent bien formés', () => {

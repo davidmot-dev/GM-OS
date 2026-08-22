@@ -92,6 +92,36 @@ export function campDe(combattant: Combatant): Camp {
     return combattant.faction === 'player' || combattant.faction === 'ally' ? 'joueurs' : 'adversaires';
 }
 
+/**
+ * Ce qu'un combattant est **pour un autre** : un allié, une cible, ou ni l'un
+ * ni l'autre.
+ *
+ * **Pourquoi une troisième valeur, alors que les camps sont deux.** L'ordre du
+ * tour oppose deux camps et doit trancher : un neutre agit bien à un moment
+ * précis. Le Cortex, lui, conseille — et « ni allié ni cible » est une réponse
+ * utile, alors que ranger un neutre parmi les cibles fait proposer de
+ * l'attaquer.
+ */
+export type PostureEnCombat = 'allie' | 'hostile' | 'neutre';
+
+/**
+ * **Le Cortex séparait alliés et cibles sur `c.faction === acteur.faction`.**
+ *
+ * Une égalité de factions n'est pas une alliance : un PNJ marqué `ally` n'est
+ * pas `player`, donc il tombait du côté des cibles — *le meneur déclarait un
+ * allié et le Cortex proposait de le tuer.* Le même écran d'alternance, lui,
+ * savait déjà le contraire, puisqu'il appelle `campDe`. **Deux écritures de
+ * « qui est de mon côté », et elles se contredisaient.**
+ *
+ * Ici, une seule : la posture se dérive du camp, et le camp d'un seul endroit.
+ */
+export function postureEnvers(combattant: Combatant, acteur: Combatant): PostureEnCombat {
+    // Un neutre n'est le camp de personne, même si l'ordre du tour doit lui en
+    // donner un pour le faire jouer.
+    if (combattant.faction === 'neutral') return 'neutre';
+    return campDe(combattant) === campDe(acteur) ? 'allie' : 'hostile';
+}
+
 /** Le round s'ouvre, et le meneur désigne qui commence. */
 export function ouvrirLeRound(camp: Camp, round = 1): EtatDuTour {
     return { round, campActif: camp, ontAgi: [], activationsConsecutives: 0, enAttenteDeDecision: false };

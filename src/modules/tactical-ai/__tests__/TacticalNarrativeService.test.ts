@@ -4,6 +4,14 @@ import type { Combatant } from '../../combat/useCombatStore';
 import type { MapToken, DangerZone } from '../../map/types';
 import type { TacticalConfig } from '../../../types/drivers';
 
+/** Les seules lignes de cibles du rapport — « * Nom à N unités […] ». */
+const lignesDeCibles = (rapport: string) => {
+    const apres = rapport.split('- Proximité Ennemi :')[1] ?? '';
+    return apres.split(String.fromCharCode(10))
+        .filter(l => l.trim().startsWith('*'))
+        .join(String.fromCharCode(10));
+};
+
 describe('TacticalNarrativeService', () => {
     const mockActor: Partial<Combatant> = {
         id: '1',
@@ -106,6 +114,65 @@ describe('TacticalNarrativeService', () => {
 
         expect(report).toContain('à 1 unités');
         expect(report).not.toContain('cases');
+    });
+
+    /**
+     * **Le défaut le plus severe du plan du 2026-08-07, et il était pire que
+     * décrit.**
+     *
+     * Le plan disait : « tout combattant non-joueur devient enemy par défaut ».
+     * Vrai — mais la séparation elle-même était fautive :
+     * `c.faction === actor.faction`. Un PNJ **explicitement marqué allié** n'est
+     * pas `player`, donc il tombait du côté des cibles. *Le meneur déclarait un
+     * allié, et le Cortex proposait de le tuer.*
+     *
+     * L'écran d'alternance, lui, savait déjà le contraire : il appelle `campDe`.
+     * **Deux écritures de « qui est de mon côté », et elles se contredisaient.**
+     */
+    it("range un PNJ allié du côté des alliés, et non des cibles", () => {
+        const allie = { id: '4', name: 'Sœur Maël', faction: 'ally', hp: 8, hpMax: 8, statuses: [] };
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, allie, ...mockEnemies] as Combatant[],
+            [...mockTokens, { id: 't4', name: 'Sœur Maël', x: 100, y: 150 }] as MapToken[],
+            [] as DangerZone[],
+            50,
+        );
+
+        expect(lignesDeCibles(report), "l'allié n'est pas une cible").not.toContain('Sœur Maël');
+    });
+
+    it("nomme un combattant sans camp établi au lieu d'en faire une cible", () => {
+        const inconnu = { id: '5', name: 'Silhouette', faction: 'neutral', hp: 6, hpMax: 6, statuses: [] };
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, inconnu, ...mockEnemies] as Combatant[],
+            [...mockTokens, { id: 't5', name: 'Silhouette', x: 100, y: 200 }] as MapToken[],
+            [] as DangerZone[],
+            50,
+        );
+
+        expect(report).toContain('Ni alliés ni cibles');
+        expect(report).toContain('Silhouette');
+        expect(report, 'et le modèle est prévenu').toContain('Ne propose pas de les attaquer');
+
+        expect(lignesDeCibles(report)).not.toContain('Silhouette');
+    });
+
+    it('ne compte pas un allié dans la santé du camp adverse', () => {
+        // La « Morphologie du Combat » est l'un des rares éléments stratégiques
+        // du rapport : la fausser fait conseiller une retraite devant ses
+        // propres renforts.
+        const allie = { id: '4', name: 'Sœur Maël', faction: 'ally', hp: 8, hpMax: 8, statuses: [] };
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, allie, ...mockEnemies] as Combatant[],
+            mockTokens as MapToken[],
+            [] as DangerZone[],
+        );
+
+        // Elara 20/20 + Maël 8/8 = 100 % ; les orcs restent à 15/20 = 75 %.
+        expect(report).toContain('Allies 100% vs Enemies 75%');
     });
 
     it('should calculate faction health correctly', () => {

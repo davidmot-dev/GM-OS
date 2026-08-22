@@ -3,6 +3,7 @@ import type { Combatant } from '../../combat/useCombatStore';
 import type { MapToken, DangerZone } from '../../map/types';
 import type { TacticalConfig } from '../../../types/drivers';
 import { decrireLaSante } from '../../combat/logic/SanteDuCombattant';
+import { postureEnvers } from '../../combat/logic/OrdreDuTour';
 
 export interface TacticalContext {
     actor: Combatant;
@@ -15,6 +16,14 @@ export interface TacticalContext {
      * rend testable sans pilote.
      */
     uniteDeDistance: string;
+    /**
+     * Ceux qui ne sont d'aucun camp — **nommés plutôt que rangés en cibles**.
+     *
+     * Le rapport les taisait en les comptant parmi les ennemis. Les dire permet
+     * au meneur de voir qu'une faction n'a pas été précisée, et au modèle de ne
+     * pas proposer de les attaquer.
+     */
+    neutres: { combatant: Combatant; token?: MapToken; distance: number }[];
     enemies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: string; rangeLabel: string }[];
     allies: { combatant: Combatant; token?: MapToken; distance: number }[];
     isFlanked: boolean;
@@ -85,6 +94,7 @@ export class TacticalNarrativeService {
         
         const allies: TacticalContext['allies'] = [];
         const enemies: TacticalContext['enemies'] = [];
+        const neutres: TacticalContext['neutres'] = [];
 
         if (actorToken) {
             const actorPoint: GridPoint = { x: actorToken.x, y: actorToken.y };
@@ -102,7 +112,22 @@ export class TacticalNarrativeService {
                 const distanceUnits = GridEngine.pxToUnits(distancePx, gridSize);
                 const rangeInfo = GridEngine.getRangeInfo(distanceUnits, tacticalConfig);
 
-                if (c.faction === actor.faction) {
+                /*
+                  **Une égalité de factions n'est pas une alliance.** Un PNJ
+                  marqué `ally` n'est pas `player` : il tombait donc du côté des
+                  cibles, et le Cortex proposait de tuer l'allié que le meneur
+                  venait de déclarer. La posture vient désormais de `campDe`,
+                  l'unique écriture de « qui est de mon côté » — celle que
+                  l'écran d'alternance utilisait déjà.
+                */
+                const posture = postureEnvers(c, actor);
+
+                if (posture === 'neutre') {
+                    // Ni allié ni cible : on le NOMME au lieu de le ranger
+                    // d'office parmi les adversaires. *Un neutre listé en cible
+                    // fait proposer de l'attaquer.*
+                    neutres.push({ combatant: c, token, distance: distanceUnits });
+                } else if (posture === 'allie') {
                     allies.push({ combatant: c, token, distance: distanceUnits });
                 } else {
                     enemies.push({ 
@@ -144,9 +169,15 @@ export class TacticalNarrativeService {
             return distUnits <= (dz.radius || 2) + 1;
         }) : [];
 
-        // Faction health
-        const myFaction = allCombatants.filter(c => c.faction === actor.faction);
-        const enemyFaction = allCombatants.filter(c => c.faction !== actor.faction);
+        /*
+          **La déroute se comptait sur la même égalité fautive**, donc un allié
+          déclaré gonflait la santé du camp d'en face. La « Morphologie du
+          Combat » est l'un des rares éléments stratégiques du rapport : la
+          fausser, c'est faire conseiller une retraite devant ses propres
+          renforts. Les neutres ne comptent dans aucun des deux camps.
+        */
+        const myFaction = allCombatants.filter(c => postureEnvers(c, actor) === 'allie');
+        const enemyFaction = allCombatants.filter(c => postureEnvers(c, actor) === 'hostile');
         
         const myHealth = GridEngine.checkFactionRout(myFaction);
         const enemyHealth = GridEngine.checkFactionRout(enemyFaction);
@@ -156,6 +187,7 @@ export class TacticalNarrativeService {
             actorToken,
             enemies,
             allies,
+            neutres,
             isFlanked,
             flankedBy,
             nearbyDangerZones,
@@ -175,7 +207,7 @@ export class TacticalNarrativeService {
      * Transforme le contexte en une chaîne de caractères narrative optimisée pour le prompt IA.
      */
     private static formatNarrativePrompt(ctx: TacticalContext): string {
-        const { actor, actorToken, enemies, allies, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
+        const { actor, actorToken, enemies, allies, neutres, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
         const unite = ctx.uniteDeDistance;
 
         let prompt = `## ANALYSE TACTIQUE MICRO : ${actor.name}\n`;
@@ -218,6 +250,18 @@ export class TacticalNarrativeService {
                 });
             } else {
                 prompt += `- Aucun ennemi sur carte.\n`;
+            }
+
+            /*
+              **Les nommer, et dire ce qu'on ne sait pas d'eux.** Un combattant
+              ajoute sans faction precisee arrive ici : le taire le laisserait
+              hors du conseil, le ranger en cible le ferait attaquer. La phrase
+              dit les deux — ils existent, et leur camp n'est pas etabli.
+            */
+            if (neutres.length > 0) {
+                prompt += `- Ni alliés ni cibles (faction non établie) : `
+                    + neutres.map(n => `${n.combatant.name} à ${n.distance} ${unite}`).join(', ')
+                    + '. Ne propose pas de les attaquer sans que le meneur ait tranché.' + String.fromCharCode(10);
             }
 
             if (allies.length > 0) {

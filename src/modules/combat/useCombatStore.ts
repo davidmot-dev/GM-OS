@@ -737,7 +737,25 @@ export const useCombatStore = create<CombatState>()(
                     combatants: [...state.combatants, {
                         ...combatant,
                         id: generateEffectId(),
-                        faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy'),
+                        /*
+                          **Un combattant dont personne n'a dit le camp n'est
+                          pas un ennemi.** Cette ligne rendait `enemy` par
+                          défaut : un PNJ allié, une créature neutre ou un PJ
+                          charmé arrivaient donc en CIBLE dans le rapport du
+                          Cortex, et faussaient au passage l'estimation de
+                          déroute — l'un des rares éléments stratégiques du
+                          rapport.
+
+                          `neutral` ne prétend rien : le Cortex le nomme sans le
+                          ranger d'aucun côté, et le meneur tranche d'un clic sur
+                          la carte du combattant. *L'absence n'est pas une
+                          hostilité, comme l'absence n'est pas un zéro.*
+
+                          Les écrans qui SAVENT continuent de dire ce qu'ils
+                          savent : `CombatControls` pose `enemy` en ajoutant un
+                          adversaire, le dossier de favori aussi.
+                        */
+                        faction: combatant.faction || (combatant.isPlayer ? 'player' : 'neutral'),
                         /*
                           **Le seul endroit qui garantisse l'invariant.** Huit
                           écrans ajoutent des combattants et `CombatCard` lit
