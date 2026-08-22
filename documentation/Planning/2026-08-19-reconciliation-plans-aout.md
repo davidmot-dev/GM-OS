@@ -204,12 +204,16 @@ compétence **déplace la colonne, donc elle multiplie** : Agilité 12 avec +3 v
 15 %. Dans le sens qui fait échouer les personnages compétents — et *les joueurs concluront que leurs
 personnages sont mauvais, jamais que l'outil se trompe.*
 
-Le chantier est défini et non commencé ; il vit dans la mémoire du projet. **Sa vraie forme n'est pas le
-calcul mais l'échelle** : `tagSuccess` est un **booléen** que six écrans rendent en trois vocabulaires, et
-ils ne divergent aujourd'hui que parce qu'un booléen n'a que deux valeurs. Il est **bloqué sur une
-question de livre** — l'échec particulier commence-t-il à 86 ou à 87 ?
+**Le code est fait le 2026-08-22** (`e8edd30` → `5f5ac10`, `da94e78`) : la cible multiplie, les deux
+tables du livre sont transcrites avec leur exception, la Forge sait produire une cible, et les six degrés
+arrivent aux écrans en disant tous le même mot — *ils étaient sept lecteurs à les rendre, pas six.* La
+question de livre est tranchée : **le livre imprime 86.**
 
-*C'est désormais le seul reste de la liste qui fausse une partie en cours.*
+**Il reste le geste** : *le pilote enregistré n'est pas reforgé*, et il porte encore ses douze
+composantes numérotées. Tant qu'il n'est pas repassé à l'atelier, **rien de tout ça ne se voit à la
+table.** C'est un geste d'atelier, pas un chantier de code.
+
+*C'est toujours le seul reste de la liste qui fausse une partie en cours.*
 
 ### ~~P3 — Le Cortex~~ ✅ CLOS le 2026-08-22
 
@@ -232,17 +236,19 @@ avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les
 > la fiabilité, et c'est pourquoi P4 passe après P1 et P2.
 
 - **`docs/commun/`** est reconnu par le moteur et **n'existe toujours pas** sur le disque.
-- **16 fiches à régénérer**, 4 doublons à fusionner à cette occasion.
+- ~~**16 fiches à régénérer**~~ — **4 au 22/08 au soir**, 4 doublons à fusionner à cette occasion.
+  *(Compté avec sa méthode : `a_regenerer: true` dans les `rules/`.)*
 - ~~**noc (4 fiches) et rêves de dragons (7)** sont très en dessous des autres~~ — **rêves de dragons est
-  reforgé le 21/08 (24 fiches v3, index compris)**. Restent **noc** (4), et **coc7, dnd-5e et star-trek**,
-  qui n'ont **aucune fiche v3**.
-- Le **« Chemin des Règles » est vide** pour les campagnes, qui utilisent toutes des systèmes
-  `custom-…` : le rattachement repose sur le repli par nom affiché, douteux pour « Rêve de Dragon » au
-  singulier contre le dossier `reves de dragons` au pluriel.
+  reforgé le 21/08** (21 fiches), **star-trek est né le 22/08** (19 fiches), et **noc est reforgé le 22/08**
+  (14 fiches, **pas encore commitées**). Restent **coc7 et dnd-5e**, qui n'ont **aucune fiche v3**.
+- ~~Le **« Chemin des Règles » est vide** pour les campagnes~~ — **la soirée du 22/08 a montré que le
+  problème était ailleurs, et bien plus grave.** Le moteur n'appelait pas `resoudreCorpus` du tout, le
+  chemin saisi à la main n'était pas déplié, et **le coffre Obsidian remplaçait la racine documentaire à
+  chaque question**. Corrigé (`1c6e0a1` → `454155d`) ; voir `2026-08-22-etat-et-reprise.md`, § 2.7.
 **Les deux qui sont du code :**
 
-- Le **réglage de langue d'un corpus n'a pas d'écran** — édition à la main dans `corpus.json`. Une UI
-  manquante, rien de plus.
+- ~~Le **réglage de langue d'un corpus n'a pas d'écran**~~ ✅ **22/08** (`4fd00bd`) — un corpus se
+  déclare depuis l'atelier : nature, moteur et langue, sans passer par un éditeur de texte.
 - Le **plafond du RAG**, `MAX_CONTEXT_TOKENS = 4000` (`electron/ragSelection.ts:39`, **revérifié le
   22/08**). À 5 800 caractères de moyenne par fiche, il n'en laisse passer que **deux entières**. Le plan
   du 10/08 disait « à réévaluer une fois l'iGPU en place » : il l'est depuis le 12/08. **Mais ça se
