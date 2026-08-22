@@ -328,8 +328,26 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'ajustement SUR UNE TABLE — la compétence et la difficulté déplacent une colonne au ' +
             'lieu de s\'ajouter, et le pourcentage obtenu est bien plus grand que leur somme —, ' +
             'alors remplis "jet.cible" et LAISSE "jet.seuil" VIDE. "jet.cible" porte "mecanique", ' +
-            '"caracteristique" (UNE composante, celle qu\'on lit en ordonnée) et "ajustement" ' +
-            '(les composantes lues sur la fiche qui déplacent la colonne). ' +
+            // **LE COMPTE, ICI ET PAS PLUS LOIN.** La premiere redaction
+            // decrivait le CONTENU de l'ajustement — « les composantes lues sur
+            // la fiche » — et laissait son COMPTE a l'exigence (1), donc trop
+            // tard : la derivation du 2026-08-22 a rendu ONZE composantes,
+            // « Competence 1 » a « Competence 12 », deplacees du seuil vers la
+            // cible sans rien perdre de leur defaut. C'est la regle de la veille,
+            // enfreinte dans la consigne ecrite pour l'appliquer.
+            '"caracteristique" et "ajustement" portent des composantes de la MÊME FORME que ' +
+            '"jet.seuil" : {"id","label","sectionId"}, où "sectionId" est OBLIGATOIRE et vaut ' +
+            'l\'un des IDENTIFIANTS DISPONIBLES listés plus haut — jamais un mot inventé, ' +
+            'jamais une phrase de règle. ' +
+            '"caracteristique" est UNE SEULE composante : celle qu\'on lit en ordonnée. Sans ' +
+            'elle la mécanique n\'a rien à croiser, et le jet vaut zéro pour cent. ' +
+            '"ajustement" porte UNE ENTRÉE PAR SECTION DE FICHE, jamais une par champ : si la ' +
+            'fiche compte douze compétences et que le joueur n\'en jette QU\'UNE à la fois, ' +
+            'cela fait UNE SEULE entrée — et non douze. ' +
+            'Forme attendue, avec des identifiants venus de TA liste : ' +
+            '"cible":{"mecanique":"…","caracteristique":{"id":"carac","label":"Caractéristique",' +
+            '"sectionId":"…"},"ajustement":[{"id":"competence","label":"Compétence",' +
+            '"sectionId":"…"}]}. ' +
             '"mecanique" vaut EXACTEMENT l\'un de : reves-de-dragons. ' +
             'SI AUCUN DE CES NOMS NE DÉSIGNE LE JEU QUE TU LIS, N\'EN INVENTE AUCUN et n\'écris ' +
             'pas "jet.cible" : une mécanique porte une table transcrite d\'un livre, elle ne se ' +

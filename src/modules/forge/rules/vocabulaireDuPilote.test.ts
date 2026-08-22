@@ -198,6 +198,41 @@ describe('la cible du groupe « jet »', () => {
     });
 
     /**
+     * **Le compte se dit LÀ OÙ le champ se décrit, et pas plus loin.**
+     *
+     * La première rédaction de la fourche décrivait le contenu de l'ajustement
+     * — « les composantes lues sur la fiche » — et laissait son compte à
+     * l'exigence (1). La dérivation du 2026-08-22 a rendu **onze** composantes,
+     * « Compétence 1 » à « Compétence 12 » : le défaut des douze compétences
+     * n'avait pas été corrigé, il avait DÉMÉNAGÉ du seuil vers la cible.
+     *
+     * *C'est la règle de la veille — ce qui décide du compte s'énonce avant ce
+     * qui décide du contenu — enfreinte dans la consigne écrite pour
+     * l'appliquer.*
+     */
+    it('dit le compte de la cible dans la fourche, avant l’exigence (1)', () => {
+        const rangCompte = jet.cible.indexOf('UNE ENTRÉE PAR SECTION DE FICHE, jamais une par champ');
+        const rangExigence1 = jet.cible.indexOf('**(1)');
+
+        expect(rangCompte).toBeGreaterThan(-1);
+        expect(rangCompte, 'le compte se lit avant l’exigence (1)').toBeLessThan(rangExigence1);
+        expect(jet.cible, 'et la caractéristique est unique').toContain('UNE SEULE composante');
+    });
+
+    /**
+     * **Un `sectionId` manquant ne calcule rien**, et un `sectionId` inventé ne
+     * désigne rien. La dérivation du 2026-08-22 a produit les deux : une
+     * caractéristique sans section, et un ajustement visant
+     * « juste_une_comp_par_action » — une phrase de règle prise pour un
+     * identifiant.
+     */
+    it('exige un sectionId, et interdit de l’inventer', () => {
+        expect(jet.cible).toContain('"sectionId" est OBLIGATOIRE');
+        expect(jet.cible).toContain('IDENTIFIANTS DISPONIBLES');
+        expect(jet.cible).toContain('jamais une phrase de règle');
+    });
+
+    /**
      * **Aucun nombre de table ne doit venir du modèle.** Les multiplicateurs et
      * les bandes sont saisis depuis le livre et protégés par des tests : une
      * Forge qui les « dérive » produirait des nombres plausibles et faux que
