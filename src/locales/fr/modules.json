@@ -609,6 +609,8 @@
       "export_journal": "Exporter le journal",
       "delete_session": "Supprimer la session",
       "delete_event": "Supprimer l'événement",
+      "delete_session_confirm": "Supprimer le journal « {{title}} » ? Ses événements partiront avec lui, et cela ne s'annule pas.",
+      "delete_event_confirm": "Supprimer cet événement du journal ? Cela ne s'annule pas.",
       "analyzing": "Analyse...",
       "final_note_title": "Note de Fin de Session",
       "final_note_desc": "Vos pensées personnelles pour enrichir le prochain résumé IA.",
@@ -1156,7 +1158,8 @@
       "clear_confirm": "Vider l'historique ?",
       "empty_title": "Mémos vides",
       "empty_desc": "Sauvegardez vos générations favorites ici.",
-      "delete_tooltip": "Supprimer du mémo"
+      "delete_tooltip": "Supprimer du mémo",
+      "delete_confirm": "Retirer « {{name}} » du mémo ? Le PNJ lui-même n'est pas supprimé."
     }
   },
   "projection": {

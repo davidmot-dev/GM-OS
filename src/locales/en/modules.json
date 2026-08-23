@@ -609,6 +609,8 @@
       "export_journal": "Export Journal",
       "delete_session": "Delete Session",
       "delete_event": "Delete Event",
+      "delete_session_confirm": "Delete the journal “{{title}}”? Its events go with it, and this cannot be undone.",
+      "delete_event_confirm": "Delete this journal event? This cannot be undone.",
       "analyzing": "Analyzing...",
       "final_note_title": "End of Session Note",
       "final_note_desc": "Your personal thoughts to enrich the next AI summary.",
@@ -1127,7 +1129,8 @@
       "clear_confirm": "Clear history?",
       "empty_title": "Memos are empty",
       "empty_desc": "Save your favorite generations here.",
-      "delete_tooltip": "Delete from memo"
+      "delete_tooltip": "Delete from memo",
+      "delete_confirm": "Remove “{{name}}” from the memo? The NPC itself is not deleted."
     }
   },
   "projection": {

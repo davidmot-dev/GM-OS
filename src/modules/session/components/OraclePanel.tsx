@@ -9,6 +9,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNotebookLM } from '../hooks/useNotebookLM';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
+import HorsDePortee from './HorsDePortee';
+import { gmConfirm } from '../../../stores/useModalStore';
 
 interface OraclePanelProps {
     isOpen: boolean;
@@ -19,6 +22,12 @@ interface OraclePanelProps {
 }
 
 const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNotebookUrl, templateNotebookUrl, driverNotebookUrl }) => {
+    /**
+     * **Axe N — ce qui est à portée de main.** L'Oracle est le quatrième des
+     * cinq modules dédoublés. « Vider la discussion » efface le fil entier
+     * **sans confirmation**, à côté des boutons de vue qu'on touche en séance.
+     */
+    const regime = useRegimeDInterface();
     const { t } = useTranslation(['settings', 'modules']);
     const { messages, isQuerying, queryNotebook, extractNotebookId, clearChat } = useNotebookLM();
     const { activeGemId, gems, setActiveGemId, syncGemsWithDefaults } = useGemStore();
@@ -319,13 +328,18 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             )}
 
                             {viewMode === 'chat' && (
-                                <button 
-                                    onClick={clearChat}
-                                    className="p-2 text-app-text/40 hover:text-red-400 transition-all animate-in fade-in duration-300"
-                                    title="Vider la discussion"
-                                >
-                                    <Trash2 size={16} />
-                                </button>
+                                <HorsDePortee regime={regime} libelle="Vider la discussion" compact>
+                                    <button 
+                                        onClick={() => gmConfirm(
+                                            'Vider toute la discussion avec l’Oracle ? Les questions et les réponses partent, et cela ne s’annule pas.',
+                                            clearChat,
+                                        )}
+                                        className="p-2 text-app-text/40 hover:text-red-400 transition-all animate-in fade-in duration-300"
+                                        title="Vider la discussion"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </HorsDePortee>
                             )}
                         </div>
 

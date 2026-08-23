@@ -14,8 +14,19 @@ import { useTranslation } from 'react-i18next';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import PanneauDAlternance from './PanneauDAlternance';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
+import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
+import { taille } from '../../session/logic/regimeDInterface';
+import HorsDePortee from '../../session/components/HorsDePortee';
 
 const CombatControls: React.FC = () => {
+    /**
+     * **Axe N, troisième temps.** Le combat est le premier des cinq modules
+     * dédoublés — c'est celui qu'on regarde de loin, debout, en parlant.
+     *
+     * *Une seule implémentation, deux compositions* : rien n'est dupliqué ici,
+     * seules la densité et la portée de main changent.
+     */
+    const regime = useRegimeDInterface();
     const {
         round,
         rollAutoInitiative,
@@ -291,13 +302,17 @@ const CombatControls: React.FC = () => {
             {/* Main Action: Next Turn */}
             <div className="bg-gm-crimson/10 border border-gm-crimson/30 p-4 rounded-xl mb-6 shadow-glow-crimson flex flex-col items-center">
                 <div className="text-app-text/70 text-sm uppercase tracking-wider mb-2">
-                    {t('modules:combat.controls.round')} <span className="text-app-text font-bold text-xl ml-1">{round.toString().padStart(2, '0')}</span>
+                    {t('modules:combat.controls.round')}{' '}
+                    <span className={`text-app-text font-bold ml-1 ${taille(regime, 'chiffre')}`}>
+                        {round.toString().padStart(2, '0')}
+                    </span>
                 </div>
                 <button
                     onClick={nextTurn}
-                    className="w-full bg-gm-crimson hover:bg-red-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-glow-crimson group"
+                    className={`w-full bg-gm-crimson hover:bg-red-500 text-white font-bold px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-glow-crimson group ${regime.aLaTable ? 'py-5' : 'py-3'}`}
                 >
-                    <span className="text-lg">{t('modules:combat.controls.next_turn')}</span>
+                    {/* Le geste le plus répété du module : c'est lui qui doit grossir en premier. */}
+                    <span className={taille(regime, 'nom')}>{t('modules:combat.controls.next_turn')}</span>
                     <Play fill="currentColor" size={20} className="group-hover:translate-x-1 transition-transform" />
                 </button>
             </div>
@@ -431,17 +446,27 @@ const CombatControls: React.FC = () => {
                     <span className="font-bold uppercase tracking-wider text-xs">{t('modules:combat.controls.end_combat')}</span>
                 </button>
 
-                 <button
-                    onClick={() => {
-                        gmConfirm(t('modules:combat.messages.reset_confirm'), () => {
-                            clearCombatants();
-                        });
-                    }}
-                    className="w-full mt-4 bg-red-500/10 hover:bg-red-500/20 text-red-600 py-2 border border-red-500/30 rounded-lg flex items-center justify-center gap-2 transition-colors"
-                >
-                    <Skull size={16} />
-                    <span>{t('modules:combat.controls.reset_combat')}</span>
-                </button>
+                {/*
+                    **Axe N — ce qui est à portée de main.**
+
+                    « Réinitialiser » efface tous les combattants, et il était
+                    **voisin immédiat** de « Terminer le combat » et du bouton
+                    qu'on presse à chaque tour. La confirmation ne suffisait pas :
+                    elle empêche le dégât, pas l'interruption.
+                */}
+                <HorsDePortee regime={regime} libelle={t('modules:combat.controls.reset_combat')}>
+                    <button
+                        onClick={() => {
+                            gmConfirm(t('modules:combat.messages.reset_confirm'), () => {
+                                clearCombatants();
+                            });
+                        }}
+                        className="w-full mt-4 bg-red-500/10 hover:bg-red-500/20 text-red-600 py-2 border border-red-500/30 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    >
+                        <Skull size={16} />
+                        <span>{t('modules:combat.controls.reset_combat')}</span>
+                    </button>
+                </HorsDePortee>
             </div>
         </aside>
     );

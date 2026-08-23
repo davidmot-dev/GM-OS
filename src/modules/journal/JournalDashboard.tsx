@@ -28,6 +28,9 @@ import { useTranslation } from 'react-i18next';
 import CompteRenduDeSeance from './CompteRenduDeSeance';
 import RevueDeSeance from './RevueDeSeance';
 import { leFichierDuCompteRendu } from './compteRendu';
+import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
+import HorsDePortee from '../session/components/HorsDePortee';
+import { gmConfirm } from '../../stores/useModalStore';
 
 const eventIcons: Record<string, React.ReactNode> = {
   AUDIO: <Music className="size-4 text-blue-400" />,
@@ -44,6 +47,18 @@ const eventIcons: Record<string, React.ReactNode> = {
 };
 
 const JournalDashboard: React.FC = () => {
+    /**
+     * **Axe N — ce qui est à portée de main.** Le journal est le troisième des
+     * cinq modules dédoublés.
+     *
+     * ⚠️ *Trouvé en chemin le 2026-08-23* : les deux suppressions de cet écran
+     * n'ont **aucune confirmation**, et elles sont invisibles jusqu'au survol.
+     * Un survol involontaire suivi d'un clic efface un journal de séance entier,
+     * sans un mot. *Une action qu'on ne voit pas venir ne peut pas s'éviter.*
+     * Le repli de séance n'y répond qu'à moitié — la confirmation manquante est
+     * un défaut à part, signalé à David.
+     */
+    const regime = useRegimeDInterface();
   const { t } = useTranslation();
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -214,13 +229,28 @@ const JournalDashboard: React.FC = () => {
                 <span className={`text-xs font-bold leading-tight ${activeJournalId === j.id ? 'text-accent' : 'text-slate-300'}`}>
                   {j.title}
                 </span>
+                <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_session')} compact>
                 <button 
-                   onClick={(e) => { e.stopPropagation(); deleteJournal(j.id); }}
+                   onClick={(e) => {
+                       e.stopPropagation();
+                       /*
+                         **La confirmation manquait entièrement.** Un survol
+                         involontaire suivi d'un clic effaçait un journal de
+                         séance et tous ses événements, sans un mot — et le
+                         bouton est `opacity-0` jusqu'au survol, donc *on ne
+                         pouvait ni le voir venir ni l'éviter.*
+                       */
+                       gmConfirm(
+                           t('modules:journal.dashboard.delete_session_confirm', { title: j.title }),
+                           () => deleteJournal(j.id),
+                       );
+                   }}
                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded text-red-400 transition-all"
                    title={t('modules:journal.dashboard.delete_session')}
                 >
                   <Trash2 className="size-3" />
                 </button>
+                </HorsDePortee>
               </div>
               <div className="flex items-center gap-3 mt-3 text-[9px] text-slate-500 font-mono uppercase tracking-tighter">
                 <span className="flex items-center gap-1"><Clock className="size-2.5" /> {j.duration || '--:--'}</span>
@@ -322,13 +352,18 @@ const JournalDashboard: React.FC = () => {
                         </p>
                       </div>
                       
+                      <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_event')} compact>
                       <button 
-                        onClick={() => removeEvent(activeJournalId, event.id)}
+                        onClick={() => gmConfirm(
+                          t('modules:journal.dashboard.delete_event_confirm'),
+                          () => removeEvent(activeJournalId, event.id),
+                        )}
                         className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 rounded-xl text-slate-600 hover:text-red-400 transition-all"
                         title={t('modules:journal.dashboard.delete_event')}
                       >
                         <Trash2 className="size-4" />
                       </button>
+                      </HorsDePortee>
                     </div>
                   </div>
                 ))}

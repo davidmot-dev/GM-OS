@@ -2,8 +2,19 @@ import React from 'react';
 import { useNPCStore } from '../useNPCStore';
 import { Trash2, Trash, User, MapPin, Package, Zap, Quote, ChevronRight, Skull } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
+import HorsDePortee from '../../session/components/HorsDePortee';
+import { gmConfirm } from '../../../stores/useModalStore';
 
 const NPCHistory: React.FC = () => {
+    /**
+     * **Axe N — ce qui est à portée de main.** Les PNJ sont le cinquième et
+     * dernier des modules dédoublés. Retirer un PNJ de l'historique se fait
+     * **sans confirmation**, et la corbeille est logée juste à côté du chevron
+     * qui ouvre la fiche — *deux gestes voisins dont l'un consulte et l'autre
+     * efface.*
+     */
+    const regime = useRegimeDInterface();
     const { t } = useTranslation(['modules', 'common']);
     const { savedEntities, deleteFromMemo, setCurrentEntity, clearHistory } = useNPCStore();
 
@@ -74,13 +85,29 @@ const NPCHistory: React.FC = () => {
                             <p className="text-[8px] text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
 
-                        <button
-                            onClick={(e) => { e.stopPropagation(); deleteFromMemo(entity.id); }}
-                            className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-slate-500"
-                            title={t('npc.history.delete_tooltip')}
-                        >
-                            <Trash2 size={12} />
-                        </button>
+                        <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    /*
+                                      **La confirmation manquait.** La corbeille
+                                      est logée juste à côté du chevron qui ouvre
+                                      la fiche — *deux gestes voisins dont l'un
+                                      consulte et l'autre efface* — et elle est
+                                      `opacity-0` jusqu'au survol, donc on ne la
+                                      voyait pas venir.
+                                    */
+                                    gmConfirm(
+                                        t('npc.history.delete_confirm', { name: entity.name }),
+                                        () => deleteFromMemo(entity.id),
+                                    );
+                                }}
+                                className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-slate-500"
+                                title={t('npc.history.delete_tooltip')}
+                            >
+                                <Trash2 size={12} />
+                            </button>
+                        </HorsDePortee>
 
                         <ChevronRight size={14} className="text-slate-700 group-hover:text-accent transition-colors" />
                     </div>

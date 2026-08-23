@@ -30,6 +30,8 @@ import { useJournalStore } from '../../journal/useJournalStore';
 import { useNarrativeGenerator } from '../hooks/useNarrativeGenerator';
 import MapPresetGallery from './MapPresetGallery';
 import MapLayersPanel from './MapLayersPanel';
+import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
+import HorsDePortee from '../../session/components/HorsDePortee';
 
 const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: MapTool, currentTool: MapTool, setTool: (t: MapTool) => void, icon: React.ElementType, label: string }) => {
     const isActive = currentTool === tool;
@@ -69,6 +71,11 @@ const ModeButton = ({ mode, fogMode, setFogMode, icon: Icon, label }: { mode: Fo
 };
 
 const MapControls: React.FC = () => {
+    /**
+     * **Axe N — ce qui est à portée de main.** La carte est le deuxième des
+     * cinq modules dédoublés : *une seule implémentation, deux compositions.*
+     */
+    const regime = useRegimeDInterface();
     const { t } = useTranslation(['modules', 'common']);
     const mapStore = useMapStore();
     const uiStore = useMapUIStore();
@@ -224,13 +231,15 @@ const MapControls: React.FC = () => {
                             <span>{t('map.sidebar.import.button')}</span>
                         </button>
                         {mapUrl && (
-                            <button
-                                className="bg-rose-500/10 hover:bg-rose-500/20 p-3 rounded-lg flex items-center justify-center border border-rose-500/30 transition-colors text-rose-500"
-                                onClick={handleClearMap}
-                                title={t('map.sidebar.import.remove')}
-                            >
-                                <Trash2 size={18} />
-                            </button>
+                            <HorsDePortee regime={regime} libelle={t('map.sidebar.import.remove')} compact>
+                                <button
+                                    className="bg-rose-500/10 hover:bg-rose-500/20 p-3 rounded-lg flex items-center justify-center border border-rose-500/30 transition-colors text-rose-500"
+                                    onClick={handleClearMap}
+                                    title={t('map.sidebar.import.remove')}
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                            </HorsDePortee>
                         )}
                     </div>
 
@@ -263,13 +272,21 @@ const MapControls: React.FC = () => {
                     <div className="flex justify-between items-end mb-3 px-1">
                         <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">{t('map.sidebar.fog.title')}</h3>
                         <div className="flex gap-1">
-                            <button
-                                className="text-gray-400 hover:text-green-500 transition-colors p-1 flex items-center gap-1"
-                                onClick={handleRevealAll}
-                                title={t('map.sidebar.fog.revealAll')}
-                            >
-                                <Eye size={16} />
-                            </button>
+                            {/*
+                                **Le geste le plus coûteux de tout le module.**
+                                Tout révéler montre la carte entière aux joueurs
+                                — ce qui ne se reprend pas : on peut recacher les
+                                pixels, pas ce qu'ils ont vu.
+                            */}
+                            <HorsDePortee regime={regime} libelle={t('map.sidebar.fog.revealAll')} compact>
+                                <button
+                                    className="text-gray-400 hover:text-green-500 transition-colors p-1 flex items-center gap-1"
+                                    onClick={handleRevealAll}
+                                    title={t('map.sidebar.fog.revealAll')}
+                                >
+                                    <Eye size={16} />
+                                </button>
+                            </HorsDePortee>
                             <button
                                 className="text-gray-400 hover:text-red-500 transition-colors p-1 flex items-center gap-1"
                                 onClick={handleHideAll}
@@ -761,14 +778,17 @@ const MapControls: React.FC = () => {
                 <section className="flex-1 flex flex-col min-h-[300px]">
                     <div className="flex justify-between items-center mb-3 px-1">
                         <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold text-gm-emerald">{t('map.sidebar.combatants.title')}</h3>
-                        <button
-                            onClick={handleClearTokens}
-                            className={`p-1 rounded transition-colors ${tokens.length > 0 ? 'text-gray-400 hover:text-rose-500' : 'text-gray-700 cursor-not-allowed'}`}
-                            title={t('map.sidebar.combatants.clear')}
-                            disabled={tokens.length === 0}
-                        >
-                            <Trash2 size={14} />
-                        </button>
+                        {/* Vider les jetons en plein combat efface la position de tout le monde. */}
+                        <HorsDePortee regime={regime} libelle={t('map.sidebar.combatants.clear')} compact>
+                            <button
+                                onClick={handleClearTokens}
+                                className={`p-1 rounded transition-colors ${tokens.length > 0 ? 'text-gray-400 hover:text-rose-500' : 'text-gray-700 cursor-not-allowed'}`}
+                                title={t('map.sidebar.combatants.clear')}
+                                disabled={tokens.length === 0}
+                            >
+                                <Trash2 size={14} />
+                            </button>
+                        </HorsDePortee>
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
