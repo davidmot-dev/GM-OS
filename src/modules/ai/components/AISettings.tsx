@@ -867,6 +867,42 @@ const AISettings: React.FC = () => {
                      </button>
                   </div>
 
+                  {/*
+                      **De quel côté ce cortex penche quand il cherche.**
+
+                      *Idée de David, 2026-08-23.* Il a un écran parce que c'est
+                      un réglage qu'il doit pouvoir reprendre : le découpage
+                      livré est un point de départ, pas un verdict. L'Alchimiste
+                      est le cas limite — il fabrique du butin, qui sort de
+                      tables de règles, et des PNJ, qui vivent dans la campagne.
+
+                      **« Campagne » n'inverse pas les rangs, il les égalise** :
+                      mesuré le 2026-08-23, aller au-delà ne gagnait rien et
+                      faisait tomber la moitié des questions de règle.
+                  */}
+                  <div className="space-y-1.5">
+                    <div className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
+                      {t('ai.gems.penchant.titre')}
+                    </div>
+                    <div className="flex p-1 bg-black/40 rounded-xl w-fit">
+                      {(['regles', 'campagne'] as const).map(valeur => (
+                        <button
+                          key={valeur}
+                          onClick={() => updateGem(gem.id, { penchant: valeur })}
+                          title={t(`ai.gems.penchant.${valeur}.aide`)}
+                          className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                            (gem.penchant ?? 'regles') === valeur ? 'bg-accent/20 text-accent' : 'text-app-text/40'
+                          }`}
+                        >
+                          {t(`ai.gems.penchant.${valeur}.nom`)}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-app-text/40 leading-relaxed max-w-lg">
+                      {t(`ai.gems.penchant.${gem.penchant ?? 'regles'}.aide`)}
+                    </p>
+                  </div>
+
                   <div className="flex p-1 bg-black/40 rounded-xl w-fit">
                     <button onClick={() => setIsEditingOverride(false)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${!isEditingOverride ? 'bg-white/10 text-white' : 'text-app-text/40'}`}>{t('ai.gems.base')}</button>
                     <button onClick={() => setIsEditingOverride(true)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isEditingOverride ? 'bg-accent/20 text-accent' : 'text-app-text/40'}`}>{t('ai.gems.override', { systemId })}</button>

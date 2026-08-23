@@ -267,6 +267,87 @@ describe('rang', () => {
     });
 });
 
+describe('penchant du cortex', () => {
+    /**
+     * **Idée de David, 2026-08-23** : *« le Sage privilégie les règles, le
+     * Scribe privilégierait la campagne. »*
+     *
+     * Ce qu'il corrige : `RANG.fiche` vaut 100, `RANG.campagne` 60, et le
+     * commentaire des rangs pose en principe que l'écart excède le bonus de
+     * pertinence maximal (27). Une note de campagne ne pouvait donc **jamais**
+     * doubler une fiche de règles, quelle que soit la question posée.
+     */
+    const REGLE = fiche('systems/alien/rules/interrogatoire.md', 'Interrogatoire', 'mener un interrogatoire');
+    const NOTE = brut('campaigns/anges-de-feu/scene-interrogatoire.md', 'la scène de l\'interrogatoire du suspect');
+
+    it('sans penchant, la fiche de règles passe devant — comme avant', () => {
+        const s = selectContext([REGLE, NOTE], { ...REQ, query: 'comment mener un interrogatoire ?' });
+        expect(s.retenus[0].provenance).toBe('fiche');
+    });
+
+    it('« règles » est le classement d\'avant, et ne le change pas', () => {
+        // Le classement par défaut ÉTAIT déjà un penchant règles : il n'avait
+        // simplement pas de nom. Le nommer ne devait rien déplacer.
+        const sans = selectContext([REGLE, NOTE], { ...REQ, query: 'comment mener un interrogatoire ?' });
+        const avec = selectContext([REGLE, NOTE], { ...REQ, query: 'comment mener un interrogatoire ?', penchant: 'regles' });
+        expect(avec.retenus.map(r => r.path)).toEqual(sans.retenus.map(r => r.path));
+    });
+
+    it('« campagne » met la note à PARITÉ, et la pertinence tranche', () => {
+        /*
+          La note porte le mot dans son NOM de fichier (+12) là où la fiche le
+          porte dans le sien aussi : à rang égal, c'est le bonus qui départage,
+          et la note gagne parce qu'elle emploie « interrogatoire » ET
+          « suspect ». *Parité ne veut pas dire « la campagne gagne » : ça veut
+          dire « la question décide ».*
+        */
+        const s = selectContext([REGLE, NOTE], {
+            ...REQ, query: 'comment se passe l\'interrogatoire du suspect ?', penchant: 'campagne',
+        });
+        expect(s.retenus[0].provenance).toBe('campagne');
+    });
+
+    it('mais une note HORS SUJET ne remonte pas pour autant', () => {
+        // Le seuil de pertinence garde la porte, quel que soit le rang : sans
+        // cela, « campagne » aurait fait passer n'importe quelle note devant
+        // n'importe quelle fiche.
+        const horsSujet = brut('campaigns/anges-de-feu/notes.md', 'la météo de Los Angeles');
+        const s = selectContext([REGLE, horsSujet], {
+            ...REQ, query: 'comment mener un interrogatoire ?', penchant: 'campagne',
+        });
+
+        expect(s.retenus.map(r => r.path)).toEqual(['systems/alien/rules/interrogatoire.md']);
+        expect(s.ecartes).toContainEqual({ path: 'campaigns/anges-de-feu/notes.md', raison: 'hors-sujet' });
+    });
+
+    it('une question de RÈGLE reste servie par les règles, même penché campagne', () => {
+        /*
+          **Mesuré le 2026-08-23, et c'est ce qui a fixé le déplacement à 40.**
+          Un palier plus haut a été essayé — la campagne DEVANT les fiches — :
+          il ne gagnait rien sur les quatre questions de campagne, qui
+          basculaient déjà à parité, et faisait tomber CINQ questions de règle
+          sur dix. *Un réglage qui ne gagne rien et casse la moitié de l'autre
+          sens n'est pas un réglage, c'est un dégât.*
+        */
+        const regle = fiche('systems/alien/rules/stress.md', 'Stress et panique', 'la jauge de stress monte de un');
+        const note = brut('campaigns/anges-de-feu/journal.md', 'le stress de la nuit');
+
+        const s = selectContext([regle, note], {
+            ...REQ, query: 'comment fonctionne la jauge de stress ?', penchant: 'campagne',
+        });
+        expect(s.retenus[0].provenance).toBe('fiche');
+    });
+
+    it('le penchant ne déplace QUE la campagne', () => {
+        // Un penchant qui déplacerait tout n'aurait déplacé personne.
+        const decharge = brut('systems/alien/_dump.md', 'un interrogatoire brut');
+        const sans = selectContext([decharge], { ...REQ, query: 'interrogatoire' });
+        const avec = selectContext([decharge], { ...REQ, query: 'interrogatoire', penchant: 'campagne' });
+
+        expect(avec.retenus[0].score).toBe(sans.retenus[0].score);
+    });
+});
+
 describe('budget', () => {
     const gros = (p: string, tokens: number, sujet?: string) => {
         const contenu = 'x'.repeat(Math.ceil(tokens * 3.5));

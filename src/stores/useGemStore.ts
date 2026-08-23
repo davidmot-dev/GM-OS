@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { Penchant } from '../../electron/ragSelection';
 
 export interface GemDefinition {
   id: string;
@@ -8,6 +9,25 @@ export interface GemDefinition {
   description: string;
   baseInstructions: string;
   systemOverrides?: Record<string, string>; // systemId -> specific instructions
+  /**
+   * **De quel côté ce cortex penche quand il cherche dans le corpus.**
+   *
+   * *Idée de David, 2026-08-23 : « le Sage privilégie les règles, le Scribe
+   * privilégierait la campagne. »* Les cortex sont déjà des rôles nommés, le
+   * meneur en choisit un explicitement, et **rien ne bascule tout seul** — la
+   * même forme que le choix du moteur par Forge (axe J).
+   *
+   * `campagne` monte les notes de la campagne à **parité** avec les fiches du
+   * corpus et laisse la pertinence trancher ; il ne les fait pas passer devant.
+   * Mesuré : aller au-delà ne gagnait rien et cassait la moitié des questions
+   * de règle.
+   *
+   * **Absent, rien ne change** — c'est le classement d'avant, qui était déjà un
+   * penchant « règles » sans avoir de nom. Un cortex écrit par le meneur en
+   * hérite donc, et c'est le bon défaut : on ne prête pas une intention à qui
+   * n'en a pas déclaré.
+   */
+  penchant?: Penchant;
 }
 
 interface GemState {
@@ -22,6 +42,8 @@ interface GemState {
 const defaultGems: GemDefinition[] = [
   {
     id: 'sage',
+    // « Expert en règles et mécaniques de jeu » — c'est sa définition même.
+    penchant: 'regles',
     name: 'settings:ai.gems.templates.sage.name',
     icon: 'BookOpen',
     description: 'settings:ai.gems.templates.sage.desc',
@@ -32,6 +54,8 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'scribe',
+    // Chroniqueur des aventures : ce qu'il raconte vit dans les notes.
+    penchant: 'campagne',
     name: 'settings:ai.gems.templates.scribe.name',
     icon: 'PenTool',
     description: 'settings:ai.gems.templates.scribe.desc',
@@ -42,6 +66,8 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'oracle',
+    // Narration et improvisation, donc la matière de la campagne.
+    penchant: 'campagne',
     name: 'settings:ai.gems.templates.oracle.name',
     icon: 'Sparkles',
     description: 'settings:ai.gems.templates.oracle.desc',
@@ -52,6 +78,8 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'bard',
+    // Le lore est du contenu de campagne, pas une règle.
+    penchant: 'campagne',
     name: 'settings:ai.gems.templates.bard.name',
     icon: 'Music',
     description: 'settings:ai.gems.templates.bard.desc',
@@ -62,6 +90,10 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'alchemist',
+    // Choix de David. Butin et potions sortent de tables de règles — mais
+    // il fabrique aussi des PNJ : si ses PNJ tombent à plat, c'est le premier à
+    // basculer sur « campagne », qui laisse de toute façon la question décider.
+    penchant: 'regles',
     name: 'settings:ai.gems.templates.alchemist.name',
     icon: 'Beaker',
     description: 'settings:ai.gems.templates.alchemist.desc',
@@ -72,6 +104,8 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'actor',
+    // Incarner un PNJ demande de savoir qui il est, et ça, c'est la campagne.
+    penchant: 'campagne',
     name: 'settings:ai.gems.templates.actor.name',
     icon: 'User',
     description: 'settings:ai.gems.templates.actor.desc',
@@ -82,6 +116,8 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'cartographer',
+    // Les lieux de la campagne, pas les règles de déplacement.
+    penchant: 'campagne',
     name: 'settings:ai.gems.templates.cartographer.name',
     icon: 'Map',
     description: 'settings:ai.gems.templates.cartographer.desc',
@@ -92,6 +128,8 @@ const defaultGems: GemDefinition[] = [
   },
   {
     id: 'strategist',
+    // Tactique et combat : des règles, et des règles exactes.
+    penchant: 'regles',
     name: 'settings:ai.gems.templates.strategist.name',
     icon: 'Sword',
     description: 'settings:ai.gems.templates.strategist.desc',
@@ -144,6 +182,22 @@ export const useGemStore = create<GemState>()(
                 description: dg.description,
                 baseInstructions: dg.baseInstructions
               };
+              changed = true;
+            }
+
+            /*
+              **Le penchant se REMPLIT quand il est absent, et ne se remplace
+              JAMAIS.** — né le 2026-08-23, donc aucun cortex enregistré avant
+              n'en porte, et sans ce rattrapage le réglage n'aurait servi à rien
+              tant que le meneur ne les aurait pas repris un par un.
+
+              Mais c'est un champ qu'il PEUT changer, et l'écraser à chaque
+              synchronisation le lui reprendrait en silence — au prochain
+              démarrage, sans un mot. *C'est la règle d'`enrichirLePilote` :
+              remplir ce qui est vide, ne jamais remplacer ce qui est rempli.*
+            */
+            if (newGems[idx].penchant === undefined && dg.penchant !== undefined) {
+              newGems[idx] = { ...newGems[idx], penchant: dg.penchant };
               changed = true;
             }
           }

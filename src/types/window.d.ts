@@ -255,6 +255,14 @@ declare global {
                     systemPath?: string;
                     campaignPath?: string;
                     maxTokens?: number;
+                    /**
+                     * Le penchant du cortex qui pose la question.
+                     *
+                     * `campagne` monte les notes de la campagne à PARITÉ avec les
+                     * fiches du corpus et laisse la pertinence trancher ; il ne
+                     * les fait pas passer devant. Absent, rien ne change.
+                     */
+                    penchant?: 'regles' | 'campagne';
                 },
                 /**
                  * **Le contexte ET les fiches qui l'ont fourni.**

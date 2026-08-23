@@ -298,6 +298,17 @@
             "dnd-5e": "Tu es un général vétéran de Waterdeep. Tu vois le champ de bataille comme un échiquier de sang et d'acier. Tes conseils sont directs, pragmatiques et toujours tournés vers la victoire narrative."
           }
         }
+      },
+      "penchant": {
+        "titre": "Penchant de la recherche",
+        "regles": {
+          "nom": "Règles",
+          "aide": "Les fiches du corpus priment, quelle que soit la question. C'est le classement d'origine."
+        },
+        "campagne": {
+          "nom": "Campagne",
+          "aide": "Les notes de la campagne montent à parité avec les fiches du corpus, et c'est la pertinence qui tranche — elles ne passent pas devant d'office."
+        }
       }
     }
   },

@@ -2,6 +2,7 @@
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { resoudreCorpus } from '../../../electron/corpusSysteme';
+import type { Penchant } from '../../../electron/ragSelection';
 
 export type DocEntry = {
   name: string;
@@ -61,7 +62,20 @@ export class RAGService {
 
   public dernieresSources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] | undefined = [];
 
-  public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
+  /**
+   * Le penchant du dernier appel, **pour que l'écran puisse le dire**.
+   *
+   * *Une même question qui donne deux réponses selon le cortex, sans cause
+   * visible, est exactement la classe de défaut que cette semaine a payée cinq
+   * fois.* Le panneau de l'Oracle le lit ; il n'est calculé qu'ici.
+   */
+  public dernierPenchant: Penchant | undefined = undefined;
+
+  public async getRelevantContext(options: {
+    systemOnly?: boolean; systemName?: string; limit?: number; query?: string;
+    /** Le penchant du cortex qui pose la question — voir `Penchant`. */
+    penchant?: Penchant;
+  } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();
 
     /*
@@ -87,6 +101,11 @@ export class RAGService {
     */
 
     if (options.systemOnly && options.systemName) {
+      // Le mode allégé ne cherche que dans le système : il n'y a aucune note de
+      // campagne à départager, donc aucun penchant à appliquer. On le remet à
+      // zéro plutôt que de laisser celui de la question précédente traîner —
+      // *un état qui survit à son tour est un état qui ment.*
+      this.dernierPenchant = undefined;
       return this.getContextForSpecificSystem(options.systemName, options.limit);
     }
 
@@ -167,6 +186,7 @@ export class RAGService {
         );
     }
     this.dernierCorpus = corpus.id;
+    this.dernierPenchant = options.penchant;
     const campaignName = activeCampaign?.name || 'unknown';
 
     if (!window.appBridge?.ai?.searchContext) {
@@ -188,6 +208,7 @@ export class RAGService {
             */
             systemPath: corpus.racine,
             campaignPath: activeCampaign?.campaignPath,
+            ...(options.penchant ? { penchant: options.penchant } : {}),
         });
 
         /*

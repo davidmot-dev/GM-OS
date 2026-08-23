@@ -13,7 +13,7 @@ import { describe, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { selectContext, estimateTokens, type IndexedFile, type RagRequest } from './ragSelection';
+import { selectContext, estimateTokens, type IndexedFile, type Penchant, type RagRequest } from './ragSelection';
 import { RAGIGNORE_FILENAME, isIgnored, parseRagIgnore, type IgnoreScope } from './ragIgnore';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -215,6 +215,58 @@ describe.runIf(SOUS_INTERRUPTEUR)('SONDE plafond RAG', () => {
         lignes.push('');
         lignes.push(`(cumul sur ${CAS.length} questions reelles ; « ejections » = documents presents au palier`);
         lignes.push(' precedent et DISPARUS a celui-ci — un plafond plus haut qui retire une fiche)');
+        console.log(String.fromCharCode(10) + lignes.join(String.fromCharCode(10)));
+    });
+    it('mesure ce que le penchant du cortex deplace', () => {
+        /*
+          **Idée de David, 2026-08-23** : le Sage privilégie les règles, le
+          Scribe la campagne. On mesure ici si le déplacement de rang fait ce
+          qu'on en attend — et surtout **s'il ne casse pas l'autre sens**.
+
+          Le juge est le PREMIER document retenu : c'est lui qui pèse le plus
+          dans la réponse, et c'est le seul qui tienne toujours dans 4 000
+          tokens.
+        */
+        const PENCHANTS: Array<Penchant | undefined> = [undefined, 'regles', 'campagne'];
+        const lignes: string[] = [];
+        lignes.push('nature de la question | penchant   | 1er doc est une FICHE | 1er doc est de la CAMPAGNE');
+
+        for (const nature of ['regle', 'campagne'] as const) {
+            const cas = CAS.filter(c => c.nature === nature);
+            for (const penchant of PENCHANTS) {
+                let fiche = 0, campagne = 0;
+                for (const c of cas) {
+                    const s2 = selectContext(index, {
+                        systemId: c.systeme, systemName: c.systeme,
+                        campaignName: c.campagne, query: c.question,
+                        maxTokens: 4000, ...(penchant ? { penchant } : {}),
+                    });
+                    const premier = s2.retenus[0];
+                    if (!premier) continue;
+                    if (premier.provenance === 'fiche') fiche++;
+                    if (premier.provenance === 'campagne') campagne++;
+                }
+                lignes.push(
+                    `${nature.padEnd(21)} | ${(penchant ?? '(absent)').padEnd(10)} | `
+                    + `${String(fiche).padStart(20)} | ${String(campagne).padStart(26)}`,
+                );
+            }
+            lignes.push('');
+        }
+
+        // Le detail du cas qui a motive le chantier.
+        const alien = CAS.find(c => c.nature === 'campagne' && c.systeme === 'alien')!;
+        for (const penchant of PENCHANTS) {
+            const s2 = selectContext(index, {
+                systemId: alien.systeme, systemName: alien.systeme,
+                campaignName: alien.campagne, query: alien.question,
+                maxTokens: 4000, ...(penchant ? { penchant } : {}),
+            });
+            lignes.push(
+                `alien « ${alien.question} » — ${(penchant ?? '(absent)').padEnd(10)} : `
+                + s2.retenus.map(r => `${r.path.split('/').pop()} [${r.score}]`).join(', '),
+            );
+        }
         console.log(String.fromCharCode(10) + lignes.join(String.fromCharCode(10)));
     });
 });

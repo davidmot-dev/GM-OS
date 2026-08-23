@@ -18,6 +18,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { marquerCommeRelue, marquerCommeSuspecte } from '../../forge/rules/marqueDeRelecture';
 import { regrouperLesLacunes, useJournalDesLacunes } from '../lacunes/useJournalDesLacunes';
 import { ETIQUETTE_DU_JUGEMENT } from '../lacunes/jugementDeTable';
+import type { Penchant } from '../../../../electron/ragSelection';
 import { aiService } from '../AIService';
 import { useFileDAttente, depuisQuand } from '../useFileDAttente';
 import { attenteAnnoncee, budgetDuMoment } from '../budgetsDeTemps';
@@ -86,6 +87,15 @@ const AIChatPanel: React.FC = () => {
    * produirait exactement le défaut que l'exigence existe pour empêcher.
    */
   const [jugement, setJugement] = useState(false);
+  /**
+   * **De quel côté le cortex a penché la recherche.**
+   *
+   * *Idée de David, 2026-08-23.* Il s'affiche parce que sans lui, la même
+   * question donnerait deux réponses selon le cortex **sans cause visible** —
+   * et le meneur conclurait que son corpus a changé. C'est la classe de défaut
+   * que cette semaine a payée cinq fois.
+   */
+  const [penchant, setPenchant] = useState<Penchant | undefined>(undefined);
 
   /**
    * La fiche qui a répondu **seule**, sans qu'aucun modèle soit invoqué.
@@ -219,6 +229,7 @@ const AIChatPanel: React.FC = () => {
           */
           setJugement(verdict.jugement);
           setDansLeLivre(verdict.leLivreEnParle);
+          setPenchant(verdict.penchant);
         },
       );
     } catch (error: unknown) {
@@ -398,6 +409,28 @@ const AIChatPanel: React.FC = () => {
 
         {sources.length > 0 && (
           <div className="flex flex-wrap gap-1.5 px-1 pb-2">
+            {/*
+                **Le penchant s'affiche toujours, pas seulement quand il dévie.**
+                Ne le montrer que sur « campagne » laisserait le meneur incapable
+                de dire si le cortex a compté — et c'est précisément la question
+                qu'il se posera devant une réponse inattendue.
+            */}
+            {penchant && (
+              <span
+                title={
+                  penchant === 'campagne'
+                    ? "Ce cortex met les notes de la campagne à parité avec les fiches de règles : c'est la pertinence qui a tranché."
+                    : 'Ce cortex donne la priorité aux fiches de règles du corpus.'
+                }
+                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-widest ${
+                  penchant === 'campagne'
+                    ? 'border-sky-400/30 bg-sky-500/10 text-sky-300/70'
+                    : 'border-app-border/30 bg-app-text/5 text-app-text/40'
+                }`}
+              >
+                {penchant === 'campagne' ? 'penché campagne' : 'penché règles'}
+              </span>
+            )}
             {sources.map(source => {
               const nom = source.path.split('/').pop() ?? source.path;
               return (

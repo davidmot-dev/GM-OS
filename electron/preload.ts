@@ -107,7 +107,12 @@ contextBridge.exposeInMainWorld('appBridge', {
         searchContext: (
             systemId: string,
             campaignName: string,
-            options?: { query?: string; systemName?: string; systemPath?: string; campaignPath?: string; maxTokens?: number },
+            options?: {
+                query?: string; systemName?: string; systemPath?: string; campaignPath?: string;
+                maxTokens?: number;
+                /** Le penchant du cortex qui pose la question — `regles` ou `campagne`. */
+                penchant?: 'regles' | 'campagne';
+            },
         ): Promise<{ context: string; sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] }> =>
             ipcRenderer.invoke('ai:search-context', systemId, campaignName, options),
         reindex: () => ipcRenderer.invoke('ai:reindex'),

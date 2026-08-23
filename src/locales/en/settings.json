@@ -298,6 +298,17 @@
             "dnd-5e": "You are a veteran general of Waterdeep. You see the battlefield as a chessboard of blood and steel. Your advice is direct, pragmatic and always narrative-focused."
           }
         }
+      },
+      "penchant": {
+        "titre": "Search leaning",
+        "regles": {
+          "nom": "Rules",
+          "aide": "Corpus rule sheets come first, whatever the question. This is the original ranking."
+        },
+        "campagne": {
+          "nom": "Campaign",
+          "aide": "Campaign notes rise to parity with the rule sheets, and relevance decides — they do not automatically come first."
+        }
       }
     }
   },

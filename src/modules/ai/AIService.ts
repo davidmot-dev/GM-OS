@@ -20,6 +20,7 @@ import { CONSIGNE_DE_JUGEMENT, doitJuger } from './lacunes/jugementDeTable';
 import { atteinteDeLaRecherche, estUneLacune } from './lacunes/atteinteDeLaRecherche';
 import { extraireLaRegle, laFicheRepondSeule } from './lacunes/ficheQuiRepond';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
+import type { Penchant } from '../../../electron/ragSelection';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 
 interface GeminiResponse {
@@ -124,6 +125,18 @@ export interface VerdictDeRecherche {
   jugement: boolean;
   /** Ce que l'index du livre a trouvé — étage 2 de l'axe M. */
   leLivreEnParle: { titre: string; page: number }[];
+  /**
+   * **De quel côté le cortex a penché la recherche**, et il faut le dire.
+   *
+   * *Une même question qui donne deux réponses selon le cortex, sans cause
+   * visible, est exactement la classe de défaut que cette semaine a payée cinq
+   * fois.* Le meneur doit pouvoir relier une réponse inattendue au réglage qui
+   * l'a produite — sinon il croira que le corpus a changé.
+   *
+   * Absent quand on n'a pas cherché : le mode allégé n'appelle pas le RAG, donc
+   * il n'a rien penché.
+   */
+  penchant?: Penchant;
 }
 
 export class AIService {
@@ -1276,9 +1289,25 @@ Use the names above verbatim. Do not invent a setting title.
     // La question sert à trier le corpus par sujet. Elle arrivait déjà jusqu'ici
     // sous le nom `_prompt` et n'allait pas plus loin : le moteur ne pouvait
     // sélectionner que par système, jamais par ce qui était demandé.
+    /*
+      **Le cortex se résout AVANT la recherche, parce que c'est lui qui la
+      penche.** Il était résolu cent lignes plus bas, pour sa seule persona ; le
+      remonter évite d'en chercher un second ici — *deux lectures de la même
+      vérité finissent par en dire deux*, et c'est le motif de la semaine.
+
+      Idée de David, 2026-08-23 : le Sage privilégie les règles, le Scribe la
+      campagne. `campagne` monte les notes de la campagne à PARITÉ avec les
+      fiches et laisse la pertinence trancher ; il ne les fait pas passer devant.
+    */
+    const gemStore = (await import('../../stores/useGemStore')).useGemStore.getState();
+    const gem = gemStore.gems.find(g => g.id === gemId) || gemStore.gems[0];
+
     const ragContext = isLite
       ? (ragOptions.systemOnly ? await ragService.getRelevantContext({ ...ragOptions, limit: 1 }) : "")
-      : await ragService.getRelevantContext({ ...ragOptions, query: prompt });
+      : await ragService.getRelevantContext({
+          ...ragOptions, query: prompt,
+          ...(gem?.penchant ? { penchant: gem.penchant } : {}),
+        });
 
     const liveContext = this.getLiveSessionContext(isLite);
 
@@ -1338,13 +1367,20 @@ Use the names above verbatim. Do not invent a setting title.
     }
 
     const jugement = atteinte !== undefined && doitJuger(atteinte, leLivreEnParle.length > 0);
-    this.verdictCourant = { aCherche: this.aCherche, jugement, leLivreEnParle };
+    /*
+      **Le penchant se lit sur le service, pas sur le cortex.** `gem.penchant`
+      dit ce qu'on a DEMANDÉ ; `ragService.dernierPenchant` dit ce qui a
+      réellement servi — et les deux diffèrent en mode allégé, où la recherche
+      n'a pas lieu. *Afficher l'intention à la place de l'effet est ce qui a
+      innocenté à tort la ligne du corpus le 2026-08-22.*
+    */
+    this.verdictCourant = {
+      aCherche: this.aCherche, jugement, leLivreEnParle,
+      penchant: ragService.dernierPenchant,
+    };
 
     const fullContext = assemblerLeContexte(ragContext, customContext, liveContext);
 
-    const gemStore = (await import('../../stores/useGemStore')).useGemStore.getState();
-    const gem = gemStore.gems.find(g => g.id === gemId) || gemStore.gems[0];
-    
     const activeCampaign = useSessionOSStore.getState().campaigns.find(c => c.id === useSessionOSStore.getState().activeCampaignId);
     const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
     // Accès défensif : la persona est un enrichissement du prompt, jamais une

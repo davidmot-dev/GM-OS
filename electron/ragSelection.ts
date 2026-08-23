@@ -75,6 +75,28 @@ const RANG = {
 /** Dossier toujours éligible, quel que soit le système actif. */
 export const DOSSIER_COMMUN = 'commun';
 
+/**
+ * De combien le penchant déplace le rang de la campagne.
+ *
+ * **Les deux valeurs sont mesurées, pas choisies** — voir
+ * `documentation/Planning/2026-08-23-penchant-du-cortex.md`. L'écart entre
+ * `fiche` (100) et `campagne` (60) vaut 40 : `equilibre` le comble exactement,
+ * ce qui rend les deux rangs indiscernables et laisse le bonus de pertinence
+ * trancher, comme il le fait déjà entre deux fiches.
+ *
+ * **Aller au-delà a été essayé et rejeté.** À +55 — la campagne devant les
+ * fiches — les quatre questions de campagne basculaient déjà à +40, donc rien
+ * n'était gagné, et **cinq questions de règle sur dix** partaient chercher leur
+ * réponse dans les notes de la campagne.
+ *
+ * Le seuil de pertinence garde la porte de toute façon : une note sans un mot
+ * de la question n'est plus candidate, quel que soit son rang.
+ */
+const DEPLACEMENT_DU_PENCHANT: Readonly<Record<Penchant, number>> = {
+    regles: 0,
+    campagne: 40,
+};
+
 const BONUS_TITRE = 12;
 const BONUS_CONTENU = 3;
 const BONUS_CONTENU_MAX = 15;
@@ -90,6 +112,28 @@ const BONUS_CONTENU_MAX = 15;
 const OCCURRENCES_QUI_COMPTENT = 3;
 
 export type Provenance = 'fiche' | 'campagne' | 'systeme' | 'commun';
+
+/**
+ * De quel côté penche le cortex qui pose la question.
+ *
+ * - `regles` — les fiches du corpus priment, quoi qu'on demande. C'est le
+ *   classement historique : celui du Sage, du Stratège.
+ * - `campagne` — la campagne monte à **PARITÉ** avec les fiches, et c'est la
+ *   pertinence qui tranche. Le Scribe, l'Oracle, le Barde, l'Acteur, le
+ *   Cartographe, l'Alchimiste.
+ *
+ * **`campagne` n'inverse pas les rangs, il les égalise — et c'est la mesure qui
+ * l'a décidé.** Un troisième palier a été écrit et essayé, qui faisait passer la
+ * campagne DEVANT les fiches (+55). Sur les quatorze questions réelles il ne
+ * gagnait **rien** — les quatre questions de campagne basculaient déjà à parité
+ * — et il faisait tomber **cinq questions de règle sur dix**. *Un réglage qui ne
+ * gagne rien et qui casse la moitié de l'autre sens n'est pas un réglage, c'est
+ * un dégât.*
+ *
+ * *Parité ne veut pas dire « la campagne gagne » : ça veut dire « la question
+ * décide ».*
+ */
+export type Penchant = 'regles' | 'campagne';
 
 export interface IndexedFile {
     /** Chemin relatif à la racine des docs, séparateurs '/'. */
@@ -137,6 +181,31 @@ export interface RagRequest {
     /** « Chemin des Notes » de la fiche de campagne, s'il est renseigné. */
     campaignPath?: string;
     maxTokens?: number;
+    /**
+     * **Le penchant du cortex qui pose la question** — idée de David, 2026-08-23.
+     *
+     * *« Le Sage privilégie les règles, le Scribe privilégierait la campagne. »*
+     * Les cortex sont déjà des rôles nommés — Sage, Scribe, Stratège,
+     * Cartographe —, le meneur en choisit un explicitement, et **rien ne
+     * bascule tout seul** : c'est exactement la forme qu'a prise l'axe J pour
+     * le choix du moteur.
+     *
+     * **Ce qu'il corrige.** `RANG.fiche` vaut 100, `RANG.campagne` 60, et le
+     * commentaire des rangs pose en principe que *« l'écart entre deux rangs
+     * excède le bonus de pertinence maximal »* — 27 au mieux. Une note de
+     * campagne ne peut donc **jamais** doubler une fiche de règles, quelle que
+     * soit la question. Mesuré le 2026-08-23 : sur « quelles sont les scènes
+     * prévues et les menaces ? », un index de mécaniques de 3 069 tokens raflait
+     * tout le budget et les fiches de la campagne n'entraient qu'à 6 000.
+     *
+     * Le principe a raison sur les questions de règle. **Il n'avait pas prévu
+     * les questions de campagne** — et le classement par défaut est donc déjà un
+     * penchant « règles » ; il n'avait simplement pas de nom.
+     *
+     * Absent, rien ne change : un appelant qui ne dit rien obtient le classement
+     * d'avant.
+     */
+    penchant?: Penchant;
 }
 
 export interface Retenu {
@@ -185,6 +254,17 @@ export interface RagSelection {
     totalTokens: number;
     /** Anomalies de configuration à faire remonter — un silence en cacherait une. */
     avertissements: string[];
+}
+
+/**
+ * Le rang d'une provenance **pour ce demandeur-là**.
+ *
+ * Seule la campagne bouge : les fiches gardent leur rang, et les décharges
+ * brutes aussi. *Un penchant qui déplacerait tout n'aurait déplacé personne.*
+ */
+function rang(provenance: Provenance, penchant?: Penchant): number {
+    if (provenance !== 'campagne' || !penchant) return RANG[provenance];
+    return RANG.campagne + DEPLACEMENT_DU_PENCHANT[penchant];
 }
 
 function sousChemin(relPath: string, base: string): boolean {
@@ -388,7 +468,7 @@ export function selectContext(
             continue;
         }
 
-        candidats.push({ file, provenance, score: RANG[provenance] + bonus });
+        candidats.push({ file, provenance, score: rang(provenance, req.penchant) + bonus });
     }
 
     // Score décroissant, puis chemin, pour que deux exécutions identiques
