@@ -442,6 +442,41 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                     On propose de vider plutôt qu'on ne vide : douze composantes
                     sont peut-être un travail, et c'est au meneur de le jeter.
                 */}
+                {/*
+                    **Le compte de réussites, quand une cible décide déjà.**
+
+                    `difficulte` compte des réussites à atteindre — un héritage
+                    de Dune. `cible` déplace la colonne d'une table. Les deux se
+                    nomment « difficulté » et n'ont aucun rapport ; le pilote de
+                    Rêves de Dragons redérivé portait les deux, et le panneau de
+                    jet affichait **deux réglages homonymes côte à côte**.
+
+                    Le moteur l'ignore désormais et le panneau ne l'affiche plus.
+                    Mais **`difficulte` n'avait aucun écran d'édition** : on le
+                    déclarait à la Forge et on ne pouvait plus jamais le retirer.
+                    Demander son retrait sans offrir le geste, c'était refaire le
+                    piège du 22/08 — *une chose qui n'a pas d'écran ne se corrige
+                    qu'en la refabriquant en entier.* Question de David, le
+                    2026-08-23 : « s'il est invisible, comment je le retire ? »
+
+                    On propose de retirer, on ne retire pas : c'est un réglage
+                    qu'un autre jeu emploierait légitimement.
+                */}
+                {cible && jet?.difficulte && (
+                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
+                        <p className="flex-1 text-[11px] text-amber-200/80 leading-relaxed">
+                            Un <b>compte de réussites</b> ({jet.difficulte.min} à {jet.difficulte.max},
+                            départ {jet.difficulte.defaut}) subsiste alors qu’une cible est déclarée.
+                            Les deux se nomment « difficulté » et n’ont aucun rapport : la cible décide,
+                            celui-ci est ignoré. Il ne sert plus à rien.
+                        </p>
+                        <button
+                            onClick={() => onUpdate({ jet: { ...jet, difficulte: undefined } })}
+                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-[10px] font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
+                        >Retirer le compte</button>
+                    </div>
+                )}
+
                 {cible && (jet?.seuil ?? []).length > 0 && (
                     <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
                         <p className="flex-1 text-[11px] text-amber-200/80 leading-relaxed">

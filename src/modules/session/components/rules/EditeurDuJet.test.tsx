@@ -167,6 +167,57 @@ describe('le seuil resté à côté de la cible', () => {
     });
 });
 
+describe('le compte de réussites resté à côté de la cible', () => {
+    /**
+     * **La question de David, le 2026-08-23 : « s'il est invisible, comment je
+     * le retire ? »**
+     *
+     * On venait de cacher `jet.difficulte` du panneau de jet et de faire
+     * réclamer son retrait par les contrôles du pilote — alors qu'**il n'avait
+     * aucun écran d'édition**. *Un contrôle qui réclame une action irréalisable
+     * est pire qu'aucun contrôle*, et c'est le piège du 22/08 refait à
+     * l'identique : une chose sans écran ne se corrige qu'en la refabriquant.
+     */
+    const avecCompte = {
+        sens: 'sous-ou-egal' as const,
+        difficulte: { min: 0, max: 5, defaut: 0 },
+        cible: {
+            mecanique: 'reves-de-dragons' as const,
+            caracteristique: { id: 'carac', label: 'Caractéristique', sectionId: 'caracteristiques' },
+            ajustement: [{ id: 'competence', label: 'Compétence', sectionId: 'competences' }],
+        },
+    };
+
+    it('se signale quand une cible décide déjà', () => {
+        render(<EditeurDuJet driver={pilote(avecCompte)} gabarit={GABARIT} onUpdate={vi.fn()} />);
+        expect(screen.getByText(/compte de réussites/i)).toBeTruthy();
+    });
+
+    it('se retire d’un geste, et la cible reste intacte', () => {
+        const onUpdate = vi.fn();
+        render(<EditeurDuJet driver={pilote(avecCompte)} gabarit={GABARIT} onUpdate={onUpdate} />);
+
+        fireEvent.click(screen.getByText('Retirer le compte'));
+
+        const jet = jetEcrit(onUpdate);
+        expect(jet.difficulte, 'le champ mort est parti').toBeUndefined();
+        expect(jet.cible?.mecanique, 'et la cible ne bouge pas').toBe('reves-de-dragons');
+        expect(jet.cible?.ajustement).toHaveLength(1);
+    });
+
+    /** Un jeu qui compte vraiment ses réussites n'a rien à se reprocher. */
+    it('ne se signale pas quand aucune cible ne décide', () => {
+        render(
+            <EditeurDuJet
+                driver={pilote({ sens: 'sous-ou-egal', seuil: DOUZE, difficulte: { min: 0, max: 5, defaut: 0 } })}
+                gabarit={GABARIT}
+                onUpdate={vi.fn()}
+            />,
+        );
+        expect(screen.queryByText('Retirer le compte')).toBeNull();
+    });
+});
+
 describe('les sous-groupes de compétences', () => {
     /**
      * *Le mur du 2026-08-23, signalé par David.* Chez Rêves de Dragons les

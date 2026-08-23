@@ -760,8 +760,23 @@ export function preparerLeJet(
           zéro — la difficulté 0 de Dune est une tâche automatiquement réussie.
           Un jeu qui ne les gradue pas en demande une : c'est la définition d'un
           compte de réussites.
+
+          **Sauf quand une cible est calculée, et le 2026-08-23 l'a montré sur
+          l'écran de David.** `cible` et `difficulte` portent le même mot et
+          n'ont aucun rapport : l'une déplace la colonne d'une table, l'autre
+          compte des réussites à atteindre. Son pilote de Rêves de Dragons
+          déclarait **les deux**, et le panneau affichait donc *deux réglages
+          nommés « difficulté » côte à côte* — le piège qu'un commentaire de
+          `PanneauDeJet` affirmait pourtant avoir défait. *Un commentaire qui
+          déclare un piège fermé est plus dangereux que pas de commentaire : il
+          dispense de vérifier.*
+
+          Le compte de réussites n'a aucun sens sur un d100 comparé à un
+          pourcentage — en exiger deux d'un seul dé condamnerait tous les jets.
+          Quand la cible décide, on en demande **une**, et le contrôle du pilote
+          réclame le retrait du champ inutile.
         */
-        reussitesRequises: bornes ? difficulte : 1,
+        reussitesRequises: descripteur.cible ? 1 : bornes ? difficulte : 1,
         faces: reserve?.faces ?? 0,
         sens: descripteur.sens,
         // La spécialisation élargit le critique ; sans elle, le critique ordinaire.

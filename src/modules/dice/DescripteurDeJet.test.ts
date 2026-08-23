@@ -690,6 +690,43 @@ describe('une cible qui se calcule', () => {
     const FICHE_RDD = { agilite: 12, discretion: 3, vue: 14 };
     const retenus = { champs: { carac: 'agilite', competence: 'discretion' } };
 
+    /**
+     * **Le piège des deux « difficulté », vu sur l'écran de David le 2026-08-23.**
+     *
+     * `cible` déplace la colonne d'une table, `difficulte` compte des réussites
+     * à atteindre — même mot, mécaniques sans rapport. Son pilote de Rêves de
+     * Dragons redérivé déclarait **les deux**, et le panneau affichait donc deux
+     * réglages homonymes côte à côte.
+     *
+     * Exiger deux réussites d'un seul d100 condamnerait tous les jets. Quand la
+     * cible décide, on en demande **une**, quoi que le pilote traîne.
+     */
+    it("ignore un compte de réussites quand une cible décide", () => {
+        const avecLesDeux: DescripteurDeJet = {
+            ...jetRdD,
+            difficulte: { min: 0, max: 5, defaut: 0 },
+        };
+
+        // Une difficulté que le meneur aurait poussée à deux : sans la garde,
+        // `reussitesRequises` vaudrait 2 pour un unique dé.
+        const jet = preparerLeJet(avecLesDeux, FICHE_RDD, { ...retenus, difficulte: 2 });
+
+        expect(jet.reussitesRequises, 'un seul d100, une seule réussite').toBe(1);
+        expect(jet.seuil, 'et la cible reste juste').toBe(78);
+    });
+
+    /** Sans cible, le compte de réussites reprend tous ses droits — Dune. */
+    it('garde le compte de réussites quand aucune cible ne décide', () => {
+        const compteur: DescripteurDeJet = {
+            seuil: [{ id: 'carac', label: 'Caractéristique', sectionId: 'caracs' }],
+            reserve: { base: 2, max: 5, faces: 20 },
+            sens: 'sous-ou-egal',
+            difficulte: { min: 0, max: 5, defaut: 0 },
+        };
+        const jet = preparerLeJet(compteur, FICHE_RDD, { champs: { carac: 'agilite' }, difficulte: 2 });
+        expect(jet.reussitesRequises).toBe(2);
+    });
+
     it('multiplie au lieu d’additionner — le défaut d’origine', () => {
         const jet = preparerLeJet(jetRdD, FICHE_RDD, retenus);
 

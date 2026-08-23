@@ -581,9 +581,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     </label>
                 )}
 
-                {/* Pas de champ pour ce que le jeu ne fixe pas : un sélecteur de
-                    difficulté sur un jeu qui n'en a pas invite à en inventer une. */}
-                {descripteur.difficulte && (
+                {/*
+                    Pas de champ pour ce que le jeu ne fixe pas : un sélecteur de
+                    difficulté sur un jeu qui n'en a pas invite à en inventer une.
+
+                    **Et pas non plus quand une cible est calculée.** Le
+                    commentaire de l'ajustement, plus haut, affirmait que « deux
+                    réglages nommés difficulté côte à côte » étaient le piège
+                    « que ce chantier a défait ». Il ne l'était pas : les deux
+                    gardes sont indépendants, et rien n'empêchait un pilote de
+                    déclarer `cible` **et** `difficulte`. Le pilote de Rêves de
+                    Dragons le faisait, et les deux s'affichaient — vu sur une
+                    capture de David le 2026-08-23.
+
+                    *L'exclusivité doit être écrite, pas supposée.* Ici la cible
+                    l'emporte, comme partout ailleurs.
+                */}
+                {descripteur.difficulte && !descripteur.cible && (
                     <label className="flex items-center gap-2">
                         <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
                         <input

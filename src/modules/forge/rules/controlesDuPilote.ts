@@ -351,6 +351,34 @@ export function controlerLePilote(
     }
 
     // ---- Le jet -------------------------------------------------------------
+
+    /*
+      **Une cible calculée et un compte de réussites ne cohabitent pas.**
+
+      Les deux portent le mot « difficulté » et n'ont aucun rapport : `cible`
+      déplace la colonne d'une table et change le pourcentage, `difficulte`
+      compte des réussites à atteindre — un héritage de Dune. Un pilote qui
+      déclare les deux fait s'afficher **deux réglages nommés « difficulté »
+      côte à côte** dans le panneau de jet.
+
+      *Constaté sur une capture d'écran de David le 2026-08-23*, sur le pilote de
+      Rêves de Dragons qu'il venait de redériver. Le moteur ignore désormais le
+      compte quand une cible décide, et le panneau ne l'affiche plus — mais le
+      champ reste dans le pilote, et **un champ mort qu'on laisse finit par être
+      rempli**. On demande donc son retrait.
+
+      Avertissement et non erreur : le pilote fonctionne, il est seulement
+      encombré. *On ne refuse pas un pilote jouable pour un champ inerte.*
+    */
+    if (driver.jet?.cible && driver.jet?.difficulte) {
+        avertir(
+            'jet.difficulte',
+            'Ce pilote déclare une cible calculée ET un compte de réussites. Les deux se nomment ' +
+            '« difficulté » et n’ont aucun rapport : la cible décide, le compte est ignoré. ' +
+            'Retirer « jet.difficulte » évite un réglage mort à côté de celui qui compte.',
+        );
+    }
+
     if (driver.jet?.sens && !SENS_CONNUS.includes(driver.jet.sens)) {
         erreur(
             'jet.sens',

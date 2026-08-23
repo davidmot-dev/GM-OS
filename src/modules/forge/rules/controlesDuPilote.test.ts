@@ -316,6 +316,48 @@ describe('ce qui vient de l\'exemple et non des fiches', () => {
         expect(constats[0].message).toContain('ne vient pas des fiches');
     });
 
+    /**
+     * **Deux réglages nommés « difficulté », vus sur l'écran de David le
+     * 2026-08-23.** `cible` déplace la colonne d'une table, `difficulte` compte
+     * des réussites — même mot, aucun rapport. Le moteur ignore désormais le
+     * second quand le premier décide, et le panneau ne l'affiche plus ; reste à
+     * réclamer le retrait du champ mort. *Un champ mort qu'on laisse finit par
+     * être rempli.*
+     */
+    it('signale un pilote qui déclare une cible ET un compte de réussites', () => {
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    cible: {
+                        mecanique: 'reves-de-dragons',
+                        caracteristique: { id: 'carac', label: 'Carac', sectionId: 'caracs' },
+                    },
+                    difficulte: { min: 0, max: 5, defaut: 0 },
+                },
+            } as never,
+            fiche,
+        );
+        const vise = constats.find(c => c.ou === 'jet.difficulte');
+        expect(vise, 'le conflit doit être signalé').toBeDefined();
+        expect(vise?.gravite, 'le pilote reste jouable : un avertissement, pas une erreur')
+            .toBe('avertissement');
+    });
+
+    it("ne signale rien quand la cible est seule", () => {
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    cible: {
+                        mecanique: 'reves-de-dragons',
+                        caracteristique: { id: 'carac', label: 'Carac', sectionId: 'caracs' },
+                    },
+                },
+            } as never,
+            fiche,
+        );
+        expect(constats.find(c => c.ou === 'jet.difficulte')).toBeUndefined();
+    });
+
     it('mais une couleur identique à celle d\'un exemple ne condamne rien', () => {
         /**
          * La première version de ce contrôle surveillait aussi `themeColor` —
