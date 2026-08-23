@@ -580,6 +580,37 @@ export function controlerLePilote(
             );
             return;
         }
+        /*
+          **Chaque section déclarée se vérifie, pas seulement la première.**
+          Depuis le 2026-08-23 une composante peut nommer plusieurs sous-groupes
+          — chez Rêves de Dragons les compétences y sont découpées. Ne contrôler
+          que `sectionId` laisserait un sous-groupe fantôme passer sans un mot :
+          le menu serait simplement plus court, et *un menu plus court qu'il ne
+          devrait est indiscernable d'un menu complet.*
+        */
+        (composante.sectionsSupplementaires ?? []).forEach((nom, j) => {
+            if (!nom) {
+                erreur(
+                    `${ou}[${i}].sectionsSupplementaires[${j}]`,
+                    "Cette entrée supplémentaire est vide : elle ne désigne aucun sous-groupe. "
+                    + 'Elle se retire, ou elle se nomme.',
+                );
+                return;
+            }
+            if (idsDeSections.has(nom)) return;
+            const trouvee = sectionDeLaComposante(
+                sections as SheetSection[], { ...composante, sectionId: nom, label: nom },
+            ).section;
+            erreur(
+                `${ou}[${i}].sectionsSupplementaires[${j}]`,
+                `« ${nom} » n'est pas une section de la fiche : ce sous-groupe de `
+                + `« ${composante.label} » n'apparaîtra pas dans le menu du joueur.`
+                + (trouvee
+                    ? ` La fiche nomme « ${trouvee.label || trouvee.id} » (${trouvee.id}) — c'est sans doute elle.`
+                    : ' Aucune section ne lui ressemble.'),
+            );
+        });
+
         if (idsDeSections.has(composante.sectionId)) return;
 
         const { section } = sectionDeLaComposante(sections as SheetSection[], composante);
@@ -644,10 +675,16 @@ export function controlerLePilote(
             // Même garde que la boucle précédente, et pour la même raison : une
             // entrée peut être vide. Elle y est déjà signalée — ici, on passe.
             if (!composante?.sectionId) continue;
-            parSection.set(
-                composante.sectionId,
-                [...(parSection.get(composante.sectionId) ?? []), composante.label || composante.id],
-            );
+            /*
+              **Toutes les sections déclarées comptent, pas seulement la
+              principale.** Deux composantes qui se recouvrent sur un
+              sous-groupe portent exactement le même défaut : le joueur pourrait
+              y prendre deux fois la même compétence, et elles s'ADDITIONNENT.
+            */
+            const declarees = [composante.sectionId, ...(composante.sectionsSupplementaires ?? [])];
+            for (const nom of new Set(declarees.filter(Boolean))) {
+                parSection.set(nom, [...(parSection.get(nom) ?? []), composante.label || composante.id]);
+            }
         }
         for (const [sectionId, labels] of parSection) {
             if (labels.length < 2) continue;

@@ -410,6 +410,7 @@ export class ForgeService {
       RÈGLES DE COHÉRENCE CRITIQUES :
       1. Les IDs des stats dans "driver.combat.statsToTrack" DOIVENT correspondre exactement aux IDs des champs dans "template.sections[].fields[]".
       2. Idem pour "ui_config.gauges[].fieldId", pour "jet.seuil[].sectionId" (qui vise une SECTION du template) et pour "combat.tacheDeDefaite.sectionDuSeuil".
+         Une composante peut se lire dans PLUSIEURS sections — des compétences découpées en sous-groupes : les autres vont dans "sectionsSupplementaires", un tableau d'identifiants de SECTIONS. C'est UNE entrée, jamais une par sous-groupe, car les entrées s'ADDITIONNENT.
       3. Une formule d'initiative, si tu en produis une, ne doit utiliser que des IDs de champs définis dans le template.
       4. Le "dice.logic" doit être choisi parmi : 'sum', 'highest', 'lowest', 'count-success', 'd100-low', 'd100-high'.
       5. Si "jet.reserve.ressource" est renseigné, la réserve nommée DOIT exister dans "driver.ressourcesDeTable".

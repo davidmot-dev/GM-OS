@@ -29,10 +29,33 @@ export interface ComposanteDeJet {
     id: string;
     label: string;
     /**
-     * Section de la fiche où choisir. Le joueur retient **un** champ de cette
-     * section, et c'est sa valeur qui entre dans le calcul.
+     * Section de la fiche où choisir. Le joueur retient **un** champ, et c'est
+     * sa valeur qui entre dans le calcul.
      */
     sectionId: string;
+    /**
+     * **Les autres sections où la même composante peut se choisir.**
+     *
+     * *Le mur du 2026-08-23, signalé par David sur Rêves de Dragons.* Les
+     * compétences y sont découpées en sous-groupes — et un sous-groupe **est**
+     * une section de la fiche. Une composante qui n'en nomme qu'une seule ne
+     * peut donc offrir qu'un sous-groupe : les autres compétences du personnage
+     * sont sur sa fiche, visibles, et le menu du jet ne les propose pas. Même
+     * chose pour les caractéristiques quand elles sont réparties.
+     *
+     * **Pourquoi un champ de plus plutôt qu'un `sectionId` devenu pluriel.**
+     * Renommer aurait fait repartir tous les pilotes existants d'une composante
+     * vide, sans que personne comprenne pourquoi — c'est exactement ce que
+     * l'axe N a évité en gardant `layoutConfig`. Ici `sectionId` reste la
+     * section principale, celle qu'un pilote d'avant continue de nommer seule.
+     *
+     * **Ce n'est pas un « ou » entre jeux de composantes.** Le meneur ne choisit
+     * pas un attelage caractéristique+compétence parmi plusieurs : il choisit
+     * une caractéristique, puis une compétence, chacune pouvant venir de
+     * plusieurs sous-groupes. Énumérer les attelages aurait multiplié les cas là
+     * où le produit croisé les donne tous.
+     */
+    sectionsSupplementaires?: string[];
 }
 
 export type SensDuJet = 'sous-ou-egal' | 'superieur-ou-egal';
@@ -377,13 +400,49 @@ function memeNom(a: string, b: string): boolean {
     return court.length < 5 ? court === long : long.startsWith(court);
 }
 
-/** La section où choisir cette composante, si la fiche en tient une. */
+/**
+ * Résout **un** nom de section contre la fiche.
+ *
+ * Extraite de `sectionDeLaComposante` le 2026-08-23 : une composante peut
+ * désormais en nommer plusieurs, et une section supplémentaire n'a pas
+ * d'intitulé de composante à offrir en secours. La règle de reconnaissance,
+ * elle, ne change pas — *deux façons de nommer la même chose ne peuvent pas se
+ * résoudre différemment selon l'appelant.*
+ */
+function resoudreUneSection(
+    toutes: readonly SheetSection[],
+    demande: string | undefined,
+    /** L'intitulé de la composante, quand il peut servir de second nom. */
+    labelDeSecours?: string,
+): SectionRetenue {
+    const parIdentifiant = toutes.find(s => s.id === demande);
+    if (parIdentifiant) return { section: parIdentifiant, par: 'id', ambigues: [] };
+
+    // L'intitulé de la composante compte autant que l'identifiant qu'elle vise :
+    // un pilote qui demande « Compétence » cherche la section des compétences,
+    // quel que soit le mot qu'il a mis dans `sectionId`.
+    const noms = [demande, labelDeSecours].map(normaliser).filter(Boolean);
+    if (noms.length === 0) return { section: null, par: null, ambigues: [] };
+
+    const repondent = toutes.filter(s => noms.some(nom =>
+        memeNom(nom, normaliser(s.id)) || memeNom(nom, normaliser(s.label ?? ''))));
+
+    if (repondent.length === 1) return { section: repondent[0], par: 'label', ambigues: [] };
+    return { section: null, par: null, ambigues: repondent.map(s => s.label || s.id) };
+}
+
+/**
+ * La section **principale** où choisir cette composante.
+ *
+ * Conservée telle quelle : elle répond à « quelle section ce pilote
+ * désigne-t-il ? », question qui garde un sens même quand la composante en
+ * nomme plusieurs. Qui veut *toutes* les sections où le joueur peut choisir
+ * appelle `sectionsDeLaComposante`.
+ */
 export function sectionDeLaComposante(
     sections: readonly SheetSection[] | undefined,
     composante: ComposanteDeJet | undefined,
 ): SectionRetenue {
-    const toutes = sections ?? [];
-
     /*
       **Une composante peut manquer entièrement.** Le type la déclare
       obligatoire ; le pilote, lui, vient d'un modèle. On rend « introuvable »
@@ -391,19 +450,73 @@ export function sectionDeLaComposante(
       pas, et c'est exactement ce qu'il faut annoncer.
     */
     if (!composante) return { section: null, par: null, ambigues: [] };
+    return resoudreUneSection(sections ?? [], composante.sectionId, composante.label);
+}
 
-    const parIdentifiant = toutes.find(s => s.id === composante.sectionId);
-    if (parIdentifiant) return { section: parIdentifiant, par: 'id', ambigues: [] };
+/**
+ * **Toutes** les sections où le joueur peut choisir cette composante.
+ *
+ * Une par nom déclaré — `sectionId` d'abord, puis `sectionsSupplementaires`
+ * dans leur ordre — dédoublonnées, et **dans l'ordre du pilote** : c'est lui qui
+ * sait quel sous-groupe le meneur regarde en premier.
+ *
+ * Ce qui n'a pas répondu est rendu **nommément**, jamais compté en bloc :
+ * « trois sections introuvables » n'aide personne, « la section *combat* est
+ * introuvable » se corrige.
+ */
+export interface SectionsRetenues {
+    /** Les sections où choisir, dans l'ordre déclaré, sans doublon. */
+    sections: SheetSection[];
+    /** Les noms déclarés auxquels aucune section ne répond. */
+    introuvables: string[];
+    /** Ce qui a été reconnu à l'intitulé plutôt qu'à l'identifiant. */
+    reconnues: { demande: string; section: SheetSection }[];
+    /** Les noms auxquels PLUSIEURS sections répondaient — une question pour un humain. */
+    ambigues: { demande: string; candidates: string[] }[];
+}
 
-    // L'intitulé de la composante compte autant que l'identifiant qu'elle vise :
-    // un pilote qui demande « Compétence » cherche la section des compétences,
-    // quel que soit le mot qu'il a mis dans `sectionId`.
-    const noms = [composante.sectionId, composante.label].map(normaliser).filter(Boolean);
-    const repondent = toutes.filter(s => noms.some(nom =>
-        memeNom(nom, normaliser(s.id)) || memeNom(nom, normaliser(s.label ?? ''))));
+export function sectionsDeLaComposante(
+    sections: readonly SheetSection[] | undefined,
+    composante: ComposanteDeJet | undefined,
+): SectionsRetenues {
+    const vide: SectionsRetenues = { sections: [], introuvables: [], reconnues: [], ambigues: [] };
+    if (!composante) return vide;
 
-    if (repondent.length === 1) return { section: repondent[0], par: 'label', ambigues: [] };
-    return { section: null, par: null, ambigues: repondent.map(s => s.label || s.id) };
+    const toutes = sections ?? [];
+    const resultat: SectionsRetenues = { sections: [], introuvables: [], reconnues: [], ambigues: [] };
+    const deja = new Set<string>();
+
+    /*
+      **La section principale garde son secours par l'intitulé, les autres non.**
+      « Compétence » peut désigner la section des compétences ; mais une section
+      supplémentaire est nommée exprès, et lui prêter l'intitulé de la composante
+      la ferait répondre au même endroit que la principale — *un doublon qui se
+      présenterait comme un second sous-groupe.*
+    */
+    const demandes: Array<{ nom: string | undefined; secours?: string }> = [
+        { nom: composante.sectionId, secours: composante.label },
+        ...(composante.sectionsSupplementaires ?? []).map(nom => ({ nom })),
+    ];
+
+    for (const { nom, secours } of demandes) {
+        // Un nom vide n'est pas une section introuvable : c'est un nom qu'on n'a
+        // pas. Le signaler comme un manque accuserait le pilote d'un tort qu'il
+        // n'a pas — et `sectionsSupplementaires` est facultatif par nature.
+        if (!nom) continue;
+
+        const { section, par, ambigues } = resoudreUneSection(toutes, nom, secours);
+        if (!section) {
+            if (ambigues.length > 1) resultat.ambigues.push({ demande: nom, candidates: ambigues });
+            else resultat.introuvables.push(nom);
+            continue;
+        }
+        if (deja.has(section.id)) continue;
+        deja.add(section.id);
+        resultat.sections.push(section);
+        if (par === 'label') resultat.reconnues.push({ demande: nom, section });
+    }
+
+    return resultat;
 }
 
 /** Le nombre lu sur la fiche, ou zéro si le champ n'y est pas. */
@@ -459,19 +572,45 @@ export function preparerLeJet(
               plutôt que lui.
             */
             if (sections) {
-                const { section, par, ambigues } = sectionDeLaComposante(sections, composante);
-                if (!section) {
-                    avertissements.push(ambigues.length > 1
-                        ? `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
-                            + `absente de cette fiche, et ${ambigues.length} sections pourraient y répondre `
-                            + `(${ambigues.join(', ')}). Au pilote de dire laquelle.`
-                        : `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
-                            + "qui n'existe pas dans cette fiche — il n'y a rien à y choisir.");
+                const trouvees = sectionsDeLaComposante(sections, composante);
+
+                const direIntrouvable = (nom: string) =>
+                    `${composante.label} : le pilote désigne la section « ${nom} », `
+                    + "qui n'existe pas dans cette fiche — il n'y a rien à y choisir.";
+                const direAmbigue = (nom: string, candidates: string[]) =>
+                    `${composante.label} : le pilote désigne la section « ${nom} », `
+                    + `absente de cette fiche, et ${candidates.length} sections pourraient y répondre `
+                    + `(${candidates.join(', ')}). Au pilote de dire laquelle.`;
+
+                /*
+                  **Aucune section ne répond : il n'y a nulle part où choisir**, et
+                  c'est ce qui empêche la composante d'entrer dans le calcul. Le
+                  message désigne le pilote, qui est le fautif, plutôt que le
+                  joueur — qui n'a rien eu à se reprocher, son menu était vide.
+                */
+                if (trouvees.sections.length === 0) {
+                    for (const { demande, candidates } of trouvees.ambigues) {
+                        avertissements.push(direAmbigue(demande, candidates));
+                    }
+                    for (const nom of trouvees.introuvables) avertissements.push(direIntrouvable(nom));
                     continue;
                 }
-                if (par === 'label') {
+
+                /*
+                  **Une section manquante PARMI plusieurs ne bloque pas, et se dit
+                  quand même.** Le joueur peut choisir dans les sous-groupes qui
+                  répondent — mais les compétences de celui qui manque sont sur sa
+                  fiche et n'apparaissent nulle part dans le menu. *Un menu plus
+                  court qu'il ne devrait est indiscernable d'un menu complet.*
+                */
+                for (const { demande, candidates } of trouvees.ambigues) {
+                    avertissements.push(direAmbigue(demande, candidates));
+                }
+                for (const nom of trouvees.introuvables) avertissements.push(direIntrouvable(nom));
+
+                for (const { demande, section } of trouvees.reconnues) {
                     remarques.push(
-                        `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                        `${composante.label} : le pilote désigne la section « ${demande} », `
                         + `que cette fiche nomme « ${section.label || section.id} » (${section.id}).`,
                     );
                 }

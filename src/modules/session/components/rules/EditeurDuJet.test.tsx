@@ -24,6 +24,10 @@ const GABARIT: SheetTemplate = {
     sections: [
         { id: 'caracteristiques', label: 'Caractéristiques', fields: [] },
         { id: 'competences', label: 'Compétences', fields: [] },
+        // Les sous-groupes de Rêves de Dragons : sans eux, la ligne « aussi
+        // dans » n'a rien à proposer et ne s'affiche pas du tout.
+        { id: 'competences_combat', label: 'Compétences de Combat', fields: [] },
+        { id: 'competences_draconiques', label: 'Compétences Draconiques', fields: [] },
     ],
 } as unknown as SheetTemplate;
 
@@ -160,5 +164,94 @@ describe('le seuil resté à côté de la cible', () => {
         render(<EditeurDuJet driver={pilote({ sens: 'sous-ou-egal', seuil: DOUZE })} gabarit={GABARIT} onUpdate={vi.fn()} />);
 
         expect(screen.queryByText('Vider le seuil')).toBeNull();
+    });
+});
+
+describe('les sous-groupes de compétences', () => {
+    /**
+     * *Le mur du 2026-08-23, signalé par David.* Chez Rêves de Dragons les
+     * compétences sont découpées en sous-groupes, et un sous-groupe **est** une
+     * section de la fiche : une composante qui n'en nommait qu'une n'offrait
+     * qu'une partie des compétences du personnage — les autres étaient sur sa
+     * fiche, visibles, et absentes du menu du jet.
+     *
+     * **Et la sortie n'était pas d'ajouter une composante par sous-groupe** :
+     * une composante est un terme d'une somme, donc elles se seraient
+     * additionnées. C'est le défaut des douze numérotées, refait d'un autre
+     * geste.
+     */
+    const avecUneCompetence = (sectionsSupplementaires?: string[]) => pilote({
+        seuil: [{
+            id: 'competence', label: 'Compétence', sectionId: 'competences',
+            ...(sectionsSupplementaires ? { sectionsSupplementaires } : {}),
+        }],
+        sens: 'sous-ou-egal',
+    });
+
+    it('ajouter un sous-groupe ne crée PAS une composante de plus', () => {
+        const onUpdate = vi.fn();
+        render(<EditeurDuJet driver={avecUneCompetence()} gabarit={GABARIT} onUpdate={onUpdate} />);
+
+        const ajout = screen.getByTitle(/Ajouter un sous-groupe/);
+        fireEvent.change(ajout, { target: { value: 'competences_combat' } });
+
+        const jet = jetEcrit(onUpdate);
+        expect(jet.seuil, 'toujours UNE composante').toHaveLength(1);
+        expect(jet.seuil![0].sectionsSupplementaires).toEqual(['competences_combat']);
+    });
+
+    it('retirer le DERNIER sous-groupe retire la clé, au lieu de la vider', () => {
+        /*
+          `estVide` traite un tableau vide et une clé absente pareil, mais pas
+          `JSON.stringify` ni la revue qui lit les clés : un pilote exporté
+          porterait une liste fantôme. Même règle que « revenir à aucune
+          mécanique retire la cible ».
+
+          **Dégradation à l'identique** : écrire naïvement
+          `onChange({ ...composante, sectionsSupplementaires: [] })` fait tomber
+          ce test, et lui seul.
+        */
+        const onUpdate = vi.fn();
+        render(
+            <EditeurDuJet
+                driver={avecUneCompetence(['competences_combat'])}
+                gabarit={GABARIT} onUpdate={onUpdate}
+            />,
+        );
+
+        fireEvent.click(screen.getByTitle('Retirer ce sous-groupe'));
+
+        const composante = jetEcrit(onUpdate).seuil![0];
+        expect('sectionsSupplementaires' in composante).toBe(false);
+    });
+
+    it('un sous-groupe devenu introuvable reste visible plutôt que effacé', () => {
+        // Même règle que le menu principal : c'est au meneur de le remplacer,
+        // pas à l'écran de le faire disparaître sans un mot.
+        render(
+            <EditeurDuJet
+                driver={avecUneCompetence(['competences_disparues'])}
+                gabarit={GABARIT} onUpdate={vi.fn()}
+            />,
+        );
+
+        expect(screen.getByText(/competences_disparues \(introuvable\)/)).toBeTruthy();
+    });
+
+    it('choisir comme principale un sous-groupe déjà listé ne le laisse pas en double', () => {
+        const onUpdate = vi.fn();
+        render(
+            <EditeurDuJet
+                driver={avecUneCompetence(['competences_combat'])}
+                gabarit={GABARIT} onUpdate={onUpdate}
+            />,
+        );
+
+        const principale = screen.getByTitle(/la première/);
+        fireEvent.change(principale, { target: { value: 'competences_combat' } });
+
+        const composante = jetEcrit(onUpdate).seuil![0];
+        expect(composante.sectionId).toBe('competences_combat');
+        expect(composante.sectionsSupplementaires ?? []).toEqual([]);
     });
 });

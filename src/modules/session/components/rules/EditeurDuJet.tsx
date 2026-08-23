@@ -43,8 +43,27 @@ const LigneDeComposante: React.FC<{
      * la cible par son menu, jamais en vidant une de ses deux moitiés.
      */
     onRetirer?: () => void;
-}> = ({ composante, sections, onChange, onRetirer }) => (
-    <div className="flex items-center gap-2">
+}> = ({ composante, sections, onChange, onRetirer }) => {
+    const autres = (composante.sectionsSupplementaires ?? []).filter(Boolean);
+    const disponibles = sections.filter(s => s.id !== composante.sectionId && !autres.includes(s.id));
+
+    /*
+      **Retirer le dernier sous-groupe RETIRE la clé**, au lieu de laisser un
+      tableau vide. `estVide` traite les deux pareil, mais pas `JSON.stringify`
+      ni la revue qui lit les clés : un pilote exporté porterait une liste
+      fantôme. Même règle que « revenir à aucune mécanique retire la cible »,
+      posée le 2026-08-23.
+    */
+    const ecrireLesAutres = (liste: string[]) => {
+        if (liste.length > 0) return onChange({ ...composante, sectionsSupplementaires: liste });
+        const sans = { ...composante };
+        delete sans.sectionsSupplementaires;
+        onChange(sans);
+    };
+
+    return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2">
         <input
             type="text"
             value={composante.label}
@@ -68,8 +87,16 @@ const LigneDeComposante: React.FC<{
         */}
         <select
             value={composante.sectionId}
-            onChange={e => onChange({ ...composante, sectionId: e.target.value })}
-            title="Section de la fiche où le joueur choisit sa valeur"
+            /* La nouvelle principale sort des supplémentaires : la garder
+               proposerait deux fois le même sous-groupe dans le menu du jet. */
+            onChange={e => onChange({
+                ...composante,
+                sectionId: e.target.value,
+                ...(autres.includes(e.target.value)
+                    ? { sectionsSupplementaires: autres.filter(x => x !== e.target.value) }
+                    : {}),
+            })}
+            title="Section de la fiche où le joueur choisit sa valeur — la première"
             className="w-56 bg-app-bg/40 px-3 py-2.5 rounded-xl border border-app-border/20 text-xs focus:border-accent/50 outline-none cursor-pointer"
         >
             <option value="">— section de la fiche —</option>
@@ -89,8 +116,70 @@ const LigneDeComposante: React.FC<{
                 title="Retirer cette composante"
             ><Trash2 size={16} /></button>
         )}
+      </div>
+
+      {/*
+          **Les autres sous-groupes où la même valeur se lit.**
+
+          *Le mur du 2026-08-23, signalé par David.* Chez Rêves de Dragons les
+          compétences sont découpées en sous-groupes, et un sous-groupe est une
+          SECTION de la fiche : une composante qui n'en nommait qu'une ne pouvait
+          offrir qu'une partie des compétences du personnage — les autres étaient
+          sur sa fiche, visibles, et absentes du menu du jet.
+
+          **Ce n'est pas une composante de plus.** Une composante est un TERME
+          D'UNE SOMME ; en ajouter une par sous-groupe les additionnerait, et le
+          panneau réclamerait une compétence de chacun. C'est le défaut exact des
+          douze composantes numérotées du pilote RdD, à ne pas refaire d'un autre
+          geste.
+
+          La ligne ne s'affiche que s'il reste quelque chose à ajouter ou à
+          retirer : sur un jeu à une section par composante — Dune —, elle
+          n'apparaît pas du tout.
+      */}
+      {(autres.length > 0 || (composante.sectionId !== '' && disponibles.length > 0)) && (
+        <div className="flex items-center gap-1.5 flex-wrap pl-1">
+          <span className="text-[9px] font-black uppercase tracking-widest text-app-text/25">
+            aussi dans
+          </span>
+          {autres.map(id => {
+            const connue = sections.some(s => s.id === id);
+            return (
+              <button
+                key={id}
+                onClick={() => ecrireLesAutres(autres.filter(x => x !== id))}
+                title="Retirer ce sous-groupe"
+                className={`group flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold border transition-all ${
+                  connue
+                    ? 'bg-app-bg/40 border-app-border/20 text-app-text/60 hover:border-red-400/40 hover:text-red-300'
+                    : 'bg-red-500/10 border-red-400/30 text-red-300'
+                }`}
+              >
+                {/* Une section devenue introuvable reste visible plutôt que
+                    d'être effacée en silence — même règle que le menu principal. */}
+                {connue ? (sections.find(s => s.id === id)?.label || id) : `⚠ ${id} (introuvable)`}
+                <span className="opacity-30 group-hover:opacity-100">×</span>
+              </button>
+            );
+          })}
+          {disponibles.length > 0 && composante.sectionId !== '' && (
+            <select
+              value=""
+              onChange={e => e.target.value && ecrireLesAutres([...autres, e.target.value])}
+              title="Ajouter un sous-groupe où cette même valeur se lit"
+              className="bg-transparent border border-dashed border-app-border/30 rounded-lg px-2 py-1 text-[10px] font-bold text-app-text/40 hover:border-accent/40 hover:text-accent outline-none cursor-pointer"
+            >
+              <option value="">+ sous-groupe</option>
+              {disponibles.map(s => (
+                <option key={s.id} value={s.id}>{s.label || s.id}</option>
+              ))}
+            </select>
+          )}
+        </div>
+      )}
     </div>
-);
+    );
+};
 
 const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }) => {
     const jet = driver.jet;

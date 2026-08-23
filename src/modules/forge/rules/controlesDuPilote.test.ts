@@ -109,6 +109,58 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats[0].message).toContain("c'est l'entrée elle-même qui est de trop");
     });
 
+    it('un SOUS-GROUPE supplementaire introuvable se signale aussi', () => {
+        /*
+          **Chaque section déclarée se vérifie, pas seulement la première.**
+          Depuis le 2026-08-23 une composante peut nommer plusieurs sous-groupes
+          — chez Rêves de Dragons les compétences y sont découpées. Ne contrôler
+          que `sectionId` laisserait un sous-groupe fantôme passer sans un mot :
+          le menu du joueur serait simplement plus court, et *un menu plus court
+          qu'il ne devrait est indiscernable d'un menu complet.*
+        */
+        const constats = controlerLePilote(
+            { jet: { seuil: [{
+                id: 'competence', label: 'Compétence', sectionId: 'competences',
+                sectionsSupplementaires: ['competences_draconiques'],
+            }] } } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats.map(c => c.ou)).toEqual(['jet.seuil[0].sectionsSupplementaires[0]']);
+        expect(constats[0].gravite).toBe('erreur');
+        expect(constats[0].message).toContain('competences_draconiques');
+        expect(constats[0].message).toContain("n'apparaîtra pas dans le menu");
+    });
+
+    it('un sous-groupe qui se raccorde ne dit rien', () => {
+        const constats = controlerLePilote(
+            { jet: { seuil: [{
+                id: 'competence', label: 'Compétence', sectionId: 'competences',
+                sectionsSupplementaires: ['jauges'],
+            }] } } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats).toEqual([]);
+    });
+
+    it('deux composantes qui se recouvrent sur un sous-groupe avertissent', () => {
+        /*
+          Le même défaut que « deux entrées sur la même section », vu par les
+          sous-groupes : le joueur pourrait prendre deux fois la même compétence,
+          et les deux composantes s'ADDITIONNENT.
+        */
+        const constats = controlerLePilote(
+            { jet: { seuil: [
+                { id: 'a', label: 'A', sectionId: 'competences' },
+                { id: 'b', label: 'B', sectionId: 'jauges', sectionsSupplementaires: ['competences'] },
+            ] } } as Partial<GameDriver>,
+            fiche,
+        );
+
+        expect(constats.some(c => c.gravite === 'avertissement' && c.message.includes('Compétences'))).toBe(true);
+    });
+
     it('mais quand une section ressemble, c\'est elle qu\'on propose', () => {
         const constats = controlerLePilote(
             { jet: { seuil: [{ id: 'competence', label: 'Compétence', sectionId: 'Les compétences' }] } } as Partial<GameDriver>,

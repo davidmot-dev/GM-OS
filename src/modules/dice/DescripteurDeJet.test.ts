@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-    preparerLeJet, sectionDeLaComposante, verdict, type DescripteurDeJet,
+    preparerLeJet, sectionDeLaComposante, sectionsDeLaComposante, verdict,
+    type ComposanteDeJet, type DescripteurDeJet,
 } from './DescripteurDeJet';
 import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { DiceEngine } from './DiceEngine';
@@ -749,5 +750,134 @@ describe('une cible qui se calcule', () => {
 
         expect(jet.remarques.join(' ')).toMatch(/s'arrête à \+10/);
         expect(jet.avertissements, 'une remarque n’empêche pas de lancer').toEqual([]);
+    });
+});
+
+describe('sous-groupes de la fiche', () => {
+    /**
+     * *Le mur du 2026-08-23, signalé par David sur Rêves de Dragons.* Les
+     * compétences y sont découpées en sous-groupes — et un sous-groupe **est**
+     * une section de la fiche. Une composante qui n'en nommait qu'une ne pouvait
+     * offrir qu'une partie des compétences du personnage : les autres étaient
+     * sur sa fiche, visibles, et absentes du menu du jet.
+     *
+     * La fixture est celle du test « ne tranche jamais entre deux sections »
+     * plus haut, complétée : c'est le même corpus, vu depuis la solution.
+     */
+    const FICHE_RDD: SheetSection[] = [
+        { id: 'caracteristiques', label: 'Caractéristiques', fields: [
+            { id: 'agilite', label: 'Agilité', type: 'number', defaultValue: 12 },
+        ] },
+        { id: 'competences_generales', label: 'Compétences Générales', fields: [
+            { id: 'esquive', label: 'Esquive', type: 'number', defaultValue: 3 },
+        ] },
+        { id: 'competences_particulieres', label: 'Compétences Particulières', fields: [
+            { id: 'acrobatie', label: 'Acrobatie', type: 'number', defaultValue: 5 },
+        ] },
+        { id: 'competences_combat', label: 'Compétences de Combat', fields: [
+            { id: 'melee', label: 'Mêlée', type: 'number', defaultValue: 7 },
+        ] },
+    ];
+
+    const COMPETENCE: ComposanteDeJet = {
+        id: 'competence', label: 'Compétence',
+        sectionId: 'competences_generales',
+        sectionsSupplementaires: ['competences_particulieres', 'competences_combat'],
+    };
+
+    // La réserve est déclarée : sans elle, chaque jet porterait en plus
+    // « le pilote ne décrit aucune réserve de dés », qui n'a rien à voir avec
+    // les sous-groupes et masquerait ce que ces tests mesurent.
+    const JET_RDD: DescripteurDeJet = {
+        seuil: [COMPETENCE], sens: 'sous-ou-egal',
+        reserve: { base: 1, max: 1, faces: 100 },
+    };
+
+    it('rend les sous-groupes dans l ordre declare, sans doublon', () => {
+        const trouvees = sectionsDeLaComposante(FICHE_RDD, COMPETENCE);
+
+        expect(trouvees.sections.map(s => s.id)).toEqual([
+            'competences_generales', 'competences_particulieres', 'competences_combat',
+        ]);
+        expect(trouvees.introuvables).toEqual([]);
+    });
+
+    it('ne rend pas deux fois la section quand elle est declaree deux fois', () => {
+        // Le pilote se corrige à la main : rien n'empêche d'y laisser un doublon,
+        // et le menu du jet proposerait alors deux fois le même sous-groupe.
+        const trouvees = sectionsDeLaComposante(FICHE_RDD, {
+            ...COMPETENCE, sectionsSupplementaires: ['competences_generales', 'competences_combat'],
+        });
+
+        expect(trouvees.sections.map(s => s.id)).toEqual([
+            'competences_generales', 'competences_combat',
+        ]);
+    });
+
+    it('nomme le sous-groupe introuvable, au lieu de les compter', () => {
+        // « trois sections introuvables » n'aide personne ; « la section combat
+        // est introuvable » se corrige.
+        const trouvees = sectionsDeLaComposante(FICHE_RDD, {
+            ...COMPETENCE, sectionsSupplementaires: ['competences_draconiques'],
+        });
+
+        expect(trouvees.sections.map(s => s.id)).toEqual(['competences_generales']);
+        expect(trouvees.introuvables).toEqual(['competences_draconiques']);
+    });
+
+    it('le jet se compose depuis N IMPORTE LEQUEL des sous-groupes', () => {
+        /*
+          Le cœur du chantier : avant, « Mêlée » n'était proposable nulle part
+          parce qu'elle vit dans un autre sous-groupe que celui que le pilote
+          nommait. Le joueur la voyait sur sa fiche et pas dans son menu.
+        */
+        const valeurs = { esquive: 3, acrobatie: 5, melee: 7 };
+
+        const enMelee = preparerLeJet(JET_RDD, valeurs, { champs: { competence: 'melee' } }, FICHE_RDD);
+        const enEsquive = preparerLeJet(JET_RDD, valeurs, { champs: { competence: 'esquive' } }, FICHE_RDD);
+
+        expect(enMelee.seuil).toBe(7);
+        expect(enEsquive.seuil).toBe(3);
+        expect(enMelee.avertissements).toEqual([]);
+    });
+
+    it('un sous-groupe manquant AVERTIT sans empecher de lancer', () => {
+        /*
+          **Un menu plus court qu'il ne devrait est indiscernable d'un menu
+          complet.** Le joueur peut choisir dans les sous-groupes qui répondent ;
+          les compétences de celui qui manque sont sur sa fiche et n'apparaissent
+          nulle part. Le taire serait le pire des deux.
+        */
+        const jet = preparerLeJet(
+            { ...JET_RDD, seuil: [{ ...COMPETENCE, sectionsSupplementaires: ['competences_draconiques'] }] },
+            { esquive: 3 }, { champs: { competence: 'esquive' } }, FICHE_RDD,
+        );
+
+        expect(jet.seuil, 'le jet se compose quand même').toBe(3);
+        expect(jet.avertissements).toHaveLength(1);
+        expect(jet.avertissements[0]).toContain('competences_draconiques');
+    });
+
+    it('aucun sous-groupe ne repond : la composante ne rentre pas dans le calcul', () => {
+        const jet = preparerLeJet(
+            { ...JET_RDD, seuil: [{
+                ...COMPETENCE, sectionId: 'inexistante', sectionsSupplementaires: ['inexistante_aussi'],
+            }] },
+            { esquive: 3 }, { champs: { competence: 'esquive' } }, FICHE_RDD,
+        );
+
+        expect(jet.seuil, "rien à additionner").toBe(0);
+        expect(jet.avertissements).toHaveLength(2);
+        expect(jet.avertissements.join(' ')).toContain('inexistante_aussi');
+    });
+
+    it('un pilote qui ne nomme QU UNE section se comporte comme avant', () => {
+        // La migration : `sectionId` reste la section principale, et un pilote
+        // écrit avant le 2026-08-23 ne porte aucun `sectionsSupplementaires`.
+        const seule: ComposanteDeJet = { id: 'competence', label: 'Compétence', sectionId: 'competences_generales' };
+
+        expect(sectionsDeLaComposante(FICHE_RDD, seule).sections.map(s => s.id))
+            .toEqual(['competences_generales']);
+        expect(sectionDeLaComposante(FICHE_RDD, seule).section?.id).toBe('competences_generales');
     });
 });

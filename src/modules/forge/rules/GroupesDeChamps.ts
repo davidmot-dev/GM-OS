@@ -339,6 +339,18 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             '"jet.seuil" : {"id","label","sectionId"}, où "sectionId" est OBLIGATOIRE et vaut ' +
             'l\'un des IDENTIFIANTS DISPONIBLES listés plus haut — jamais un mot inventé, ' +
             'jamais une phrase de règle. ' +
+            // **Le sous-groupe est une SECTION, pas une composante.** C'est le
+            // defaut du 2026-08-22 pris a sa racine : douze « Competence 1 » a
+            // « Competence 12 » sont nees parce que la fiche decoupe les
+            // competences en sous-groupes et qu'une composante ne pouvait en
+            // nommer qu'un. Le champ existe depuis le 2026-08-23 ; l'invite doit
+            // le dire, sinon le modele refera douze entrees pour douze sections.
+            'SI LA MÊME VALEUR SE LIT DANS PLUSIEURS SECTIONS — des compétences découpées en ' +
+            'sous-groupes, des caractéristiques réparties —, cela reste UNE SEULE ENTRÉE : mets ' +
+            'la première section dans "sectionId" et TOUTES LES AUTRES dans ' +
+            '"sectionsSupplementaires", un tableau d\'identifiants. Le joueur choisira dans ' +
+            'l\'ensemble, sous-groupe par sous-groupe. NE FAIS JAMAIS UNE ENTRÉE PAR SOUS-GROUPE : ' +
+            'elles s\'ADDITIONNERAIENT, et le panneau réclamerait une compétence de chaque. ' +
             '"caracteristique" est UNE SEULE composante : celle qu\'on lit en ordonnée. Sans ' +
             'elle la mécanique n\'a rien à croiser, et le jet vaut zéro pour cent. ' +
             '"ajustement" porte UNE ENTRÉE PAR SECTION DE FICHE, jamais une par champ : si la ' +
@@ -367,6 +379,11 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'Chaque entrée porte son "id", son "label" et le "sectionId" de la section où elle se ' +
             'lit. Chez Dune, une compétence PLUS un principe : deux entrées, DEUX SECTIONS. ' +
             'N\'écris jamais deux entrées portant le même "sectionId". ' +
+            'ET NE CONFONDS PAS « deux valeurs qui s\'AJOUTENT » avec « une valeur qu\'on peut lire ' +
+            'à PLUSIEURS ENDROITS ». Deux valeurs qui s\'ajoutent font deux entrées. Une valeur ' +
+            'répartie sur plusieurs sous-groupes fait UNE entrée, avec les autres sous-groupes ' +
+            'dans "sectionsSupplementaires" : chez Rêves de Dragons les compétences sont découpées ' +
+            'en sous-groupes, et le joueur n\'en jette QU\'UNE. ' +
             'Un jeu dont la réserve se compose depuis la fiche ' +
             'laisse "seuil" vide et remplit "reserve.composantes" à la place — l\'un ou l\'autre, ' +
             'jamais ni l\'un ni l\'autre. ' +
@@ -399,7 +416,7 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'sont des NOMBRES. Si la réserve se compose depuis la fiche — « autant de dés que la ' +
             'somme de ton attribut et de ta compétence » —, mets "base" à 0 et donne une entrée ' +
             'dans "reserve.composantes" PAR VALEUR INVOQUÉE, même forme que "jet.seuil"',
-        exemple: '{"driver":{"dice":{"defaultDice":"2d20","logic":"count-success","engine":"2d20"},"jet":{"seuil":[{"id":"competence","label":"Compétence","sectionId":"competences"},{"id":"principe","label":"Principe","sectionId":"principes"}],"reserve":{"base":2,"max":5,"faces":20,"cout":[1,2,3],"ressource":"impulsion"},"sens":"sous-ou-egal","critique":1,"complication":20,"difficulte":{"min":0,"max":5,"defaut":1}}}}',
+        exemple: '{"driver":{"dice":{"defaultDice":"2d20","logic":"count-success","engine":"2d20"},"jet":{"seuil":[{"id":"competence","label":"Compétence","sectionId":"competences","sectionsSupplementaires":["competences_combat"]},{"id":"principe","label":"Principe","sectionId":"principes"}],"reserve":{"base":2,"max":5,"faces":20,"cout":[1,2,3],"ressource":"impulsion"},"sens":"sous-ou-egal","critique":1,"complication":20,"difficulte":{"min":0,"max":5,"defaut":1}}}}',
     },
     {
         id: 'initiative',
@@ -606,7 +623,8 @@ export function blocDuVocabulaire(vocabulaire: VocabulaireDuPilote): string {
     }
 
     lignes.push(
-        'Un "sectionId" est l\'identifiant d\'une SECTION DE LA FICHE ci-dessus.',
+        'Un "sectionId" est l\'identifiant d\'une SECTION DE LA FICHE ci-dessus, et ' +
+        '"sectionsSupplementaires" en porte d\'autres, de la même liste.',
         'Un "fieldId" est l\'identifiant d\'un CHAMP ci-dessus.',
         'Une "ressource" est l\'identifiant d\'une RÉSERVE ci-dessus.',
         '',

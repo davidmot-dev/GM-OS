@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { Dices, AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
 import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
 import { consignerLeJet } from '../../../journal/consignerLeJet';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
 import {
-    preparerLeJet, sectionDeLaComposante, verdict,
+    preparerLeJet, sectionsDeLaComposante, verdict,
     type ComposanteDeJet, type DescripteurDeJet,
 } from '../../../dice/DescripteurDeJet';
 import { ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
@@ -109,15 +109,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     };
 
     /**
-     * Les champs proposés pour une composante : ceux de sa section.
+     * Les champs proposés pour une composante, **groupés par sous-groupe**.
      *
      * **La résolution est partagée avec `preparerLeJet`**, et c'est essentiel :
      * un menu rempli depuis une section que le calcul ignorerait — ou l'inverse
      * — rendrait un jet dont l'écran et le moteur ne parlent plus du même
      * endroit de la fiche.
+     *
+     * **On rend les sections, pas une liste à plat de champs.** Chez Rêves de
+     * Dragons une composante peut couvrir plusieurs sous-groupes de compétences,
+     * et fondre trente entrées en une seule liste rendrait le menu illisible là
+     * où il sert : à table, de loin, en parlant. Les sections deviennent des
+     * `optgroup`, ce qui garde le geste que le meneur connaît — le sous-groupe,
+     * puis la compétence — **en un seul menu au lieu de deux.**
      */
-    const champsDe = (composante: ComposanteDeJet) =>
-        sectionDeLaComposante(template.sections, composante).section?.fields ?? [];
+    const sousGroupesDe = (composante: ComposanteDeJet) =>
+        sectionsDeLaComposante(template.sections, composante).sections;
 
     const jet = useMemo(
         () => preparerLeJet(
@@ -347,7 +354,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 joueur désigne ce qu'il invoque, avant de lancer.
             */}
             <div className="grid grid-cols-2 gap-3">
-                {composantesARetenir.map(composante => (
+                {composantesARetenir.map(composante => {
+                  const sousGroupes = sousGroupesDe(composante);
+                  return (
                     <label key={composante.id} className="flex flex-col gap-1">
                         <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
                             {composante.label}
@@ -358,14 +367,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             className="bg-app-bg/60 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent/50"
                         >
                             <option value="">— choisir —</option>
-                            {champsDe(composante).map(f => (
-                                <option key={f.id} value={f.id}>
-                                    {f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
-                                </option>
-                            ))}
+                            {/*
+                                **Un seul sous-groupe ne s'annonce pas.** Coiffer
+                                une liste unique du nom de sa section ajouterait
+                                une ligne qui ne distingue rien — l'`optgroup` ne
+                                sert que là où il y a un choix de sous-groupe à
+                                faire, et c'est le cas de Rêves de Dragons, pas
+                                celui de Dune.
+                            */}
+                            {sousGroupes.map(section => {
+                                const options = section.fields.map(f => (
+                                    <option key={f.id} value={f.id}>
+                                        {f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
+                                    </option>
+                                ));
+                                return sousGroupes.length > 1
+                                    ? <optgroup key={section.id} label={section.label || section.id}>{options}</optgroup>
+                                    : <Fragment key={section.id}>{options}</Fragment>;
+                            })}
                         </select>
                     </label>
-                ))}
+                  );
+                })}
             </div>
 
             {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à

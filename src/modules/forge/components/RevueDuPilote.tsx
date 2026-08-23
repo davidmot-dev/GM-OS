@@ -63,6 +63,37 @@ const Id: React.FC<{ valeur?: string; resolu?: boolean }> = ({ valeur, resolu })
   );
 };
 
+/**
+ * Les sections où une composante se choisit — **toutes**, pas seulement la
+ * première.
+ *
+ * Depuis le 2026-08-23 une composante peut nommer plusieurs sous-groupes
+ * (`sectionsSupplementaires`). N'en montrer qu'un sur la revue laisserait les
+ * autres se raccorder — ou pas — sans que rien ne le dise, et *c'est
+ * exactement ce que cet écran existe pour empêcher.*
+ *
+ * Écrit une fois et appelé quatre : la cible, son ajustement, le seuil et la
+ * réserve montrent la même chose, et quatre rendus jumeaux auraient fini par
+ * diverger.
+ */
+const SectionsDeLaComposante: React.FC<{
+  composante?: { sectionId?: string; sectionsSupplementaires?: string[] };
+  idsDeSections: Set<string | undefined>;
+}> = ({ composante, idsDeSections }) => {
+  const autres = (composante?.sectionsSupplementaires ?? []).filter(Boolean);
+  return (
+    <>
+      <Id valeur={composante?.sectionId} resolu={idsDeSections.has(composante?.sectionId)} />
+      {autres.map(nom => (
+        <React.Fragment key={nom}>
+          {' ou '}
+          <Id valeur={nom} resolu={idsDeSections.has(nom)} />
+        </React.Fragment>
+      ))}
+    </>
+  );
+};
+
 const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constats }) => {
   if (constats.length === 0) {
     return (
@@ -198,15 +229,15 @@ export const RevueDuPilote: React.FC<{
               </Ligne>
               <Ligne clef="Caractéristique">
                 <Id valeur={jet.cible.caracteristique?.id} /> pris dans la section{' '}
-                <Id
-                  valeur={jet.cible.caracteristique?.sectionId}
-                  resolu={idsDeSections.has(jet.cible.caracteristique?.sectionId)}
+                <SectionsDeLaComposante
+                  composante={jet.cible.caracteristique}
+                  idsDeSections={idsDeSections}
                 />
               </Ligne>
               {(jet.cible.ajustement ?? []).map((composante, i) => (
                 <Ligne key={`ajustement-${i}`} clef={`${composante?.label ?? '—'} (ajustement)`}>
                   <Id valeur={composante?.id} /> pris dans la section{' '}
-                  <Id valeur={composante?.sectionId} resolu={idsDeSections.has(composante?.sectionId)} />
+                  <SectionsDeLaComposante composante={composante} idsDeSections={idsDeSections} />
                 </Ligne>
               ))}
             </>
@@ -214,7 +245,7 @@ export const RevueDuPilote: React.FC<{
           {(jet.seuil ?? []).map((composante, i) => (
             <Ligne key={i} clef={composante.label}>
               <Id valeur={composante.id} /> pris dans la section{' '}
-              <Id valeur={composante.sectionId} resolu={idsDeSections.has(composante.sectionId)} />
+              <SectionsDeLaComposante composante={composante} idsDeSections={idsDeSections} />
             </Ligne>
           ))}
           {/* Les composantes de la réserve se montrent comme celles du seuil :
@@ -223,7 +254,7 @@ export const RevueDuPilote: React.FC<{
           {(jet.reserve?.composantes ?? []).map((composante, i) => (
             <Ligne key={`reserve-${i}`} clef={`${composante.label} (dés)`}>
               <Id valeur={composante.id} /> pris dans la section{' '}
-              <Id valeur={composante.sectionId} resolu={idsDeSections.has(composante.sectionId)} />
+              <SectionsDeLaComposante composante={composante} idsDeSections={idsDeSections} />
             </Ligne>
           ))}
           {jet.reserve && (
