@@ -1,0 +1,198 @@
+# Le plafond du RAG — la mesure, enfin
+
+**Nature de ce document : un relevé.** Il ne propose rien qu'il n'ait mesuré, et il dit sa méthode
+pour qu'on puisse le contredire. Les chiffres sont du **2026-08-23**, sur le corpus et la machine de
+ce jour-là.
+
+**Ce qui attendait.** `MAX_CONTEXT_TOKENS = 4000` est posé dans `electron/ragSelection.ts` depuis le
+10/08. Le plan disait *« à réévaluer une fois l'iGPU en place »* ; l'iGPU tourne depuis le 12/08, le
+combat a eu lieu le 21, et l'axe C a changé le prix d'un plafond plus haut. La condition était donc
+remplie deux fois. **Mais ça se mesure, ça ne s'intuite pas** — c'est ce que le reste disait, et
+c'est ce qui est fait ici.
+
+---
+
+## 1. La méthode, en deux sondes
+
+La question se coupe en deux, et les deux moitiés se mesurent séparément.
+
+| Sonde | Ce qu'elle mesure | Où |
+| --- | --- | --- |
+| `electron/sondePlafondRag.test.ts` | ce qu'un palier **achète** | hors modèle, exact |
+| `documentation/Planning/sondes/sonde_cout_du_plafond.py` | ce qu'un palier **coûte** | sur le vrai modèle |
+
+**La première ne demande rien à Ollama, et c'est ce qui la rend exacte.** `selectContext` est pure :
+ce qui entre dans le prompt se calcule, il n'y a pas à le deviner ni à l'observer. Elle rejoue
+**dix questions réelles** — les quatre du protocole de reprise et celles qui ont servi à déboguer la
+soirée du 22 — sur cinq systèmes, contre l'index réel : **273 documents, dont 235 fiches**.
+
+Elle est **sous interrupteur** (`SONDE=1`) : une sonde n'affirme rien, elle imprime. La laisser
+courir avec la suite ajouterait trois lignes vertes qui ne gardent rien, et *un contrôle qui ne
+contrôle rien est pire qu'un contrôle absent, parce qu'il se compte.*
+
+```
+SONDE=1 npx vitest run --project electron electron/sondePlafondRag.test.ts --reporter=verbose
+python documentation/Planning/sondes/sonde_cout_du_plafond.py
+```
+
+---
+
+## 2. Ce qu'un palier achète
+
+Le score dit la pertinence : `100` tout rond, c'est le rang de base d'une fiche du système actif —
+**pas un seul mot de la question dans son sujet, son titre ni son corps**. Au-dessus de 100, un mot
+au moins a été trouvé.
+
+Cumul sur les dix questions :
+
+| budget | fiches **pertinentes** | fiches muettes | hors-fiches | sauts de file | éjections |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| **4 000** | 18 | 2 | 11 | 13 | 0 |
+| 6 000 | 28 | 4 | 11 | 12 | 2 |
+| **8 000** | 37 | 8 | 9 | 10 | 3 |
+| 10 000 | 43 | 14 | 10 | 10 | 4 |
+| 12 000 | 50 | 20 | 9 | 10 | 4 |
+
+**Le genou est à 8 000, et il est net.** De 4 000 à 8 000, la pertinence double — 18 fiches à 37 —
+pendant que le bruit passe de 2 à 8. Après 8 000, chaque fiche pertinente gagnée coûte une fiche
+muette : +6 contre +6 au palier suivant, +7 contre +6 au dernier. *Le plafond cesse d'acheter de la
+règle et se met à acheter du remplissage.*
+
+### La taille des fiches explique le palier
+
+| Système | fiches | médiane | max | tiennent à 4 000 / 8 000 |
+| --- | ---: | ---: | ---: | :---: |
+| 2d20 | 19 | 1 418 | 3 390 | 3 / 5 |
+| alien | 24 | 1 450 | 3 052 | 3 / 5 |
+| blade-runner | 23 | 1 456 | 3 273 | 3 / 5 |
+| cthulhu hack | 18 | 1 459 | 2 610 | 2 / 5 |
+| dune | 20 | 1 456 | 2 739 | 2 / 5 |
+| noc | 18 | 1 446 | 3 636 | 2 / 5 |
+| rêves de dragons | 22 | 1 434 | 3 598 | 2 / 5 |
+| srd-yze | 17 | 1 448 | 4 106 | 2 / 5 |
+| star-trek | 19 | 1 441 | 2 852 | 2 / 5 |
+
+Une fiche v3 fait **~1 450 tokens**, remarquablement stable d'un système à l'autre — le gabarit fait
+son travail. **4 000 tokens, ce sont donc deux fiches**, et le reste part en miettes. Le constat du
+22/08 est confirmé au chiffre près.
+
+Et les index font exception : `inventaire-des-mecaniques.md` pèse **3 755 tokens chez rêves de
+dragons**, soit 94 % du budget à lui seul. Quand il est retenu, il ne reste de la place pour
+personne.
+
+---
+
+## 3. Ce qu'un palier coûte
+
+`gemma4:12b`, **100 % GPU**, `n_ctx 16384` — la configuration réelle, vérifiée à `ollama ps` pendant
+la mesure. Invite salée à chaque appel.
+
+| palier | invite traitée | prefill | débit | TOTAL | surcoût |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 55 tok | 0,8 s | — | *(chargement du modèle)* | |
+| **4 000** | 3 850 tok | 35,2 s | 109 tok/s | **38,3 s** | référence |
+| 6 000 | 5 608 tok | 55,3 s | 102 tok/s | 61,8 s | **+23,5 s** |
+| **8 000** | 7 510 tok | 81,9 s | 92 tok/s | **89,3 s** | **+51,0 s** |
+| 10 000 | 9 446 tok | 110,2 s | 86 tok/s | 124,2 s | +85,9 s |
+| 12 000 | 11 411 tok | 130,1 s | 88 tok/s | 143,3 s | +105,0 s |
+
+**Seconde passe, à froid** : 4 000 → 40,9 s ; 8 000 → 76,9 s. L'écart 4 000 → 8 000 vaut donc
+**entre +36 et +51 secondes**, et le débit de prefill tient entre 106 et 115 tok/s. Les deux passes
+concordent : ce n'est pas un accident de mesure.
+
+### Le coût se paie en entier, à chaque question
+
+**Le bloc RAG vit dans le prompt système.** `AIService.prepareSystemPrompt` rend
+`persona + consignes + « CONTEXTE RÉCUPÉRÉ » + fullContext`, et `fullContext` change à chaque
+question. Le cache de préfixe d'Ollama ne couvre donc que la persona et les consignes — quelques
+centaines de tokens. **Tout le reste est re-préfillé, à chaque fois.**
+
+Ce que la seconde passe a montré par accident, et qui vaut d'être noté : rejouer le **même** palier
+avec le **même** sel dans la même exécution rend **722 puis 1 331 tok/s** au lieu de 110. Le cache
+est bien là, il est énorme, et il ne sert à rien ici parce que rien ne se répète. *C'est le piège du
+2026-08-11 à l'identique — la sonde sale désormais chaque appel, pas chaque exécution.*
+
+---
+
+## 4. Le verdict
+
+> **Le plafond reste à 4 000.**
+
+Monter à 8 000 ferait passer une question de règle de **38 à 89 secondes**. À la table, ce n'est pas
+une réponse plus complète : c'est une réponse qu'on n'attend pas. *Le plafond n'est pas un réglage
+de qualité, c'est un réglage de temps d'attente* — et personne ne l'avait formulé ainsi parce que
+personne ne l'avait mesuré.
+
+**Ce reste est donc clos, et il ne se rouvre qu'à une condition mesurable** : un prefill notablement
+plus rapide. À 300 tok/s, 8 000 tokens coûteraient 27 s au lieu de 82, et la question se reposerait.
+Tant que le débit tient autour de 110 tok/s, elle ne se repose pas.
+
+---
+
+## 5. Ce que la mesure a trouvé d'autre, et qui vaut plus que le plafond
+
+Le plafond n'était pas le vrai sujet. **Trois défauts habitent les 4 000 tokens qu'on paie déjà**, et
+les corriger ne coûte pas une seconde de plus au modèle — ça change *lesquels* des 4 000 tokens on
+envoie, pas combien.
+
+### 5.1 Le budget tranche sur la TAILLE, pas sur la pertinence
+
+**13 des 31 documents retenus à 4 000 — 42 % — ont un score inférieur à celui d'un document écarté
+faute de place.** La boucle est gloutonne et ordonnée par score : quand une fiche à 1 450 tokens ne
+tient plus dans le reste du budget, elle est écartée, **et la boucle continue** — un petit document
+moins bien classé se glisse derrière elle.
+
+L'exemple qui le montre le mieux, question *« comment se résolvent les jets ? »* sur rêves de
+dragons :
+
+| budget | ce qui entre |
+| ---: | --- |
+| 4 000 | `jets-opposes` **[112]**, `resolution-des-jets` **[112]**, *et une fiche de PNJ de scénario* **[63]** |
+| 8 000 | … enfin `degres-de-reussite-et-critiques` **[103]** |
+
+La troisième place va à un document de campagne à 63 pendant qu'une fiche de règle à 103 attend le
+palier suivant. **Elle n'a pas perdu sur sa pertinence : elle a perdu sur son poids.**
+
+### 5.2 Un tiers du budget part hors des fiches
+
+**11 des 31 documents retenus à 4 000 ne sont pas des fiches** — notes de campagne, décharges brutes,
+index de livre. Sur des questions de **règle**. Le rang les classe pourtant en dessous (60 contre
+100) ; c'est le § 5.1 qui les fait passer.
+
+### 5.3 À égalité de score, c'est le nom de fichier qui décide
+
+Le bonus est grossier : **+12** pour un mot trouvé dans le sujet ou le titre, **+3** pour un mot
+trouvé dans le corps. Passé la fiche qui porte le mot dans son titre, tout le reste s'agglutine à
+**103** — un mot mentionné quelque part — et le départage se fait *à l'ordre alphabétique du chemin*.
+
+Sur *« comment se résolvent les jets ? »*, trois fiches à 103 : `composition-de-la-fiche-de-
+personnage`, `degats-et-types-de-degats`, `degres-de-reussite-et-critiques`. Elles entrent dans cet
+ordre-là. Le commentaire du code affirme que *« le sujet dit de quoi le document traite, le corps dit
+seulement ce qu'il mentionne »* — c'est vrai du saut 12 contre 3, et **faux dès qu'aucun titre ne
+répond** : il n'y a plus alors aucune façon de distinguer la fiche qui traite du sujet de celle qui
+l'effleure.
+
+### 5.4 Et le plafond n'est pas monotone
+
+**Monter de 4 000 à 6 000 ÉJECTE deux documents** qui étaient retenus à 4 000 ; 4 éjections au total
+à 12 000. Conséquence de la boucle gloutonne : un budget plus large fait entrer une grosse fiche plus
+tôt, qui décale tout ce qui suit. *Un plafond plus haut peut retirer une fiche — personne ne s'y
+attend, et rien ne le dit.*
+
+---
+
+## 6. Ce qui attend une décision, et ce n'est plus le plafond
+
+Aucune des trois n'a été faite : ce document mesure, il ne corrige pas.
+
+1. **Ne pas laisser un petit document doubler une fiche mieux classée.** Deux façons : arrêter la
+   boucle au premier écart de budget, ou n'autoriser le dépassement qu'à rang égal. *Gratuit en
+   temps de réponse.*
+2. **Un seuil de pertinence.** Une fiche à 100 tout rond n'a aucun mot commun avec la question :
+   elle occupe 1 450 tokens pour rien. C'est aussi ce qui rend `rien` inatteignable, déjà consigné le
+   22/08 — **une seule correction pour deux défauts.**
+3. **Départager mieux à 103.** Le bonus de corps ne compte pas les occurrences ; une fiche qui
+   emploie le mot vingt fois vaut exactement celle qui l'emploie une.
+
+*Le plafond, lui, est tranché : il reste à 4 000, et la mesure est là pour qu'on n'y revienne pas
+sans chiffre.*

@@ -249,16 +249,32 @@ avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les
 
 - ~~Le **réglage de langue d'un corpus n'a pas d'écran**~~ ✅ **22/08** (`4fd00bd`) — un corpus se
   déclare depuis l'atelier : nature, moteur et langue, sans passer par un éditeur de texte.
-- Le **plafond du RAG**, `MAX_CONTEXT_TOKENS = 4000` (`electron/ragSelection.ts:39`, **revérifié le
-  22/08**). À 5 800 caractères de moyenne par fiche, il n'en laisse passer que **deux entières**. Le plan
-  du 10/08 disait « à réévaluer une fois l'iGPU en place » : il l'est depuis le 12/08. **Mais ça se
-  mesure, ça ne s'intuite pas** — monter le plafond coûte du temps de réponse, et le plan d'accélération
-  porte un banc pour ça. À faire **après** le combat de test, quand l'iGPU aura tourné en conditions
-  réelles.
+- ~~Le **plafond du RAG**, `MAX_CONTEXT_TOKENS = 4000`~~ — ✅ **mesuré et TRANCHÉ le 2026-08-23**
+  (`2026-08-23-plafond-rag-mesure.md`, qui porte les chiffres et la méthode). **Il reste à 4 000.**
 
-  > **Sa condition est remplie depuis le 2026-08-21** : le combat a eu lieu, l'iGPU a tourné, et l'axe C a
-  > supprimé le repaiement du prefill à chaque question — ce qui change le prix d'un plafond plus haut.
-  > **La mesure est donc à faire, et c'est un geste, pas un chantier.**
+  Deux sondes, l'une hors modèle et exacte, l'autre sur `gemma4:12b` à 100 % GPU. Ce qu'un palier
+  achète : de 4 000 à 8 000, la pertinence double — 18 fiches à 37 sur dix questions réelles — pendant
+  que le bruit passe de 2 à 8 ; au-delà de 8 000, chaque fiche gagnée coûte une fiche muette. Ce qu'il
+  coûte : **+51 s par question**, soit 38 s qui deviennent 89 s, deux passes concordantes.
+  *Le plafond n'est pas un réglage de qualité, c'est un réglage de temps d'attente.*
+
+  > **Il ne se rouvre qu'à une condition mesurable** : un prefill notablement plus rapide. Le débit
+  > tient aujourd'hui entre 106 et 115 tok/s ; à 300 tok/s la question se reposerait.
+
+  **Mais la mesure a ouvert trois restes qui valent plus que le plafond**, et qui ne coûtent pas une
+  seconde de plus au modèle — ils changent *lesquels* des 4 000 tokens partent, pas combien :
+
+  - **Le budget tranche sur la taille, pas sur la pertinence.** 13 des 31 documents retenus à 4 000
+    ont un score inférieur à celui d'un document écarté faute de place : la boucle gloutonne écarte une
+    fiche trop grosse **et continue**, laissant un petit document moins bien classé se glisser derrière.
+    Sur « comment se résolvent les jets ? », la troisième place va à une fiche de PNJ de scénario [63]
+    pendant que `degres-de-reussite-et-critiques` [103] attend le palier 8 000.
+  - **Aucun seuil de pertinence.** Une fiche à 100 tout rond n'a aucun mot commun avec la question et
+    occupe pourtant 1 450 tokens. C'est aussi ce qui rend `rien` inatteignable, déjà consigné le 22/08 —
+    **une seule correction pour deux défauts.**
+  - **À égalité de score, c'est le nom de fichier qui décide.** +12 pour un mot dans le titre, +3 pour un
+    mot dans le corps, sans compter les occurrences : passé la fiche qui porte le mot dans son titre,
+    tout s'agglutine à 103 et le départage se fait à l'ordre alphabétique du chemin.
 
 *Note sur le « Chemin des Règles » : le repli échoue vraiment.* `memeIdentite` ne rapproche que des
 identifiants égaux ou préfixés d'un tiret — il compare donc `reve-de-dragon` à `reves-de-dragons` et ne
