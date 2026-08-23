@@ -78,6 +78,16 @@ export const DOSSIER_COMMUN = 'commun';
 const BONUS_TITRE = 12;
 const BONUS_CONTENU = 3;
 const BONUS_CONTENU_MAX = 15;
+/**
+ * Combien de fois un même mot du corps compte encore.
+ *
+ * Un mot **répété** dit que le document traite du sujet ; un mot mentionné une
+ * fois ne dit rien. Mais le compte brut favoriserait les gros documents — un
+ * index de treize mille caractères mentionne tout plusieurs fois. Le plafond
+ * borne l'avantage à trois occurrences, et `BONUS_CONTENU_MAX` borne le total :
+ * **le corps ne peut jamais doubler deux mots trouvés dans un titre.**
+ */
+const OCCURRENCES_QUI_COMPTENT = 3;
 
 export type Provenance = 'fiche' | 'campagne' | 'systeme' | 'commun';
 
@@ -151,7 +161,21 @@ export interface Retenu {
 
 export interface Ecarte {
     path: string;
-    raison: 'hors-perimetre' | 'budget';
+    /**
+     * Pourquoi ce document n'est pas parti — **et les quatre raisons se
+     * distinguent**, parce qu'elles appellent des gestes différents.
+     *
+     * - `hors-perimetre` : il n'appartient ni au système actif, ni à la
+     *   campagne, ni au fonds commun. Rien à faire, c'est le tri normal.
+     * - `hors-sujet` : la question porte des mots, et **pas un seul** ne se
+     *   trouve dans ce document. *Mesuré le 2026-08-23 : deux documents sur
+     *   trente-et-un partaient ainsi, à 1 450 tokens pièce.*
+     * - `budget` : il aurait servi, il ne tenait plus.
+     * - `double-par-le-rang` : il tenait, mais un document **mieux classé**
+     *   avait déjà été écarté faute de place. Le laisser passer ferait trancher
+     *   la TAILLE au lieu de la pertinence.
+     */
+    raison: 'hors-perimetre' | 'hors-sujet' | 'budget' | 'double-par-le-rang';
 }
 
 export interface RagSelection {
@@ -187,6 +211,37 @@ export function motsDeRecherche(query: string): string[] {
 }
 
 /**
+ * Les mots d'un texte, comptés — **sans accents, et entiers.**
+ *
+ * **Deux défauts d'un coup, mesurés le 2026-08-23.**
+ *
+ * 1. **Le mot cherché était déplié, le corps ne l'était pas.** `motsDeRecherche`
+ *    passe la question par `slug`, qui retire les accents : « résolvent »
+ *    devient `resolvent`. Le corps, lui, n'était que passé en minuscules — et
+ *    `corps.includes('resolvent')` ne trouvait jamais « résolvent ».
+ *    `degres-de-reussite-et-critiques.md` emploie « réussite » **vingt-trois
+ *    fois** et le moteur en voyait **zéro**. Le mot est invisible dans treize
+ *    des vingt-et-une fiches de Rêves de Dragons. *Deux textes qu'on compare
+ *    doivent être normalisés pareil — c'est le même défaut que « deux champs qui
+ *    désignent la même chose ne peuvent pas se normaliser différemment ».*
+ * 2. **La comparaison portait sur des SOUS-CHAÎNES.** `includes('jets')`
+ *    répondait vrai pour « objets » et « projets ». C'est exactement ce que la
+ *    recherche dans le livre a payé le 2026-08-22, où « le rêve » renvoyait vers
+ *    *Acrève* et *Blurêve*. On découpe donc en mots au lieu de chercher dedans.
+ *
+ * Le compte sert au départage : un mot **répété** distingue le document qui
+ * traite du sujet de celui qui l'effleure. *Avant, les deux valaient pareil, et
+ * c'est l'ordre alphabétique du chemin qui tranchait.*
+ */
+function motsDuTexte(texte: string): Map<string, number> {
+    const compte = new Map<string, number>();
+    for (const mot of slug(texte).split('-')) {
+        if (mot) compte.set(mot, (compte.get(mot) ?? 0) + 1);
+    }
+    return compte;
+}
+
+/**
  * Bonus de pertinence d'un document pour une question.
  *
  * Un mot trouvé dans le sujet, le titre ou le nom de fichier pèse quatre fois
@@ -198,15 +253,18 @@ export function motsDeRecherche(query: string): string[] {
 function bonusPertinence(file: IndexedFile, mots: readonly string[]): number {
     if (mots.length === 0) return 0;
 
-    const entete = slug([file.sujet ?? '', file.titre ?? '', file.path].join(' '));
-    const corps = file.content.toLowerCase();
+    const entete = motsDuTexte([file.sujet ?? '', file.titre ?? '', file.path].join(' '));
+    const corps = motsDuTexte(file.content);
 
     let bonus = 0;
     let bonusCorps = 0;
 
     for (const mot of mots) {
-        if (entete.includes(mot)) bonus += BONUS_TITRE;
-        else if (corps.includes(mot)) bonusCorps += BONUS_CONTENU;
+        if (entete.has(mot)) bonus += BONUS_TITRE;
+        else {
+            const fois = corps.get(mot) ?? 0;
+            if (fois > 0) bonusCorps += BONUS_CONTENU * Math.min(fois, OCCURRENCES_QUI_COMPTENT);
+        }
     }
 
     return bonus + Math.min(bonusCorps, BONUS_CONTENU_MAX);
@@ -302,22 +360,85 @@ export function selectContext(
             ecartes.push({ path: file.path, raison: 'hors-perimetre' });
             continue;
         }
-        candidats.push({
-            file,
-            provenance,
-            score: RANG[provenance] + bonusPertinence(file, mots),
-        });
+
+        const bonus = bonusPertinence(file, mots);
+
+        /*
+          **Le seuil de pertinence, et il n'existait pas.**
+
+          Tout document du périmètre devenait candidat, et le budget seul
+          tranchait : une fiche sans **un seul** mot commun avec la question
+          occupait ses 1 450 tokens comme une autre. La mesure du 2026-08-23 en
+          a compté deux sur trente-et-un retenus à 4 000 — et vingt sur les
+          soixante-dix-neuf retenus à 12 000, ce qui est ce qui rendait un
+          plafond plus haut inutile.
+
+          C'est **la même correction pour deux défauts** : sans seuil, il y avait
+          toujours au moins une source, donc l'état `rien` était inatteignable et
+          le jugement de table ne se déclenchait jamais. *L'étiquette qui
+          « marchait » ne marchait que parce que le corpus était cassé.*
+
+          **La garde compte.** Sans question — ou avec une question qui ne
+          contient que des mots sans portée — le bonus vaut zéro pour tout le
+          monde : appliquer le seuil viderait la sélection au lieu de la trier.
+          On ne sait alors rien, et *une liste vide dirait qu'on a cherché.*
+        */
+        if (mots.length > 0 && bonus === 0) {
+            ecartes.push({ path: file.path, raison: 'hors-sujet' });
+            continue;
+        }
+
+        candidats.push({ file, provenance, score: RANG[provenance] + bonus });
     }
 
     // Score décroissant, puis chemin, pour que deux exécutions identiques
     // produisent le même prompt — un contexte instable rend le KV-cache inutile.
     candidats.sort((a, b) => b.score - a.score || a.file.path.localeCompare(b.file.path));
 
+    /**
+     * Le meilleur **score** écarté faute de place.
+     *
+     * *Le défaut mesuré le 2026-08-23 : le budget tranchait sur la TAILLE.* La
+     * boucle est gloutonne et ordonnée par score ; quand une fiche de 1 450
+     * tokens ne tenait plus, elle était écartée **et la boucle continuait** —
+     * un petit document moins bien classé se glissait derrière elle. **13 des
+     * 31 documents retenus à 4 000 en venaient**, soit 42 %.
+     *
+     * Sur « comment se résolvent les jets ? », la troisième place allait à une
+     * fiche de PNJ de scénario (rang 60) pendant qu'une fiche de règle (rang
+     * 100) attendait le palier 8 000. *Elle n'avait pas perdu sur sa
+     * pertinence : elle avait perdu sur son poids.*
+     *
+     * **On garde le dépassement à score ÉGAL**, et c'est délibéré : une fiche
+     * plus courte qui prend la place d'une fiche trop grosse est le meilleur
+     * usage du budget restant — les deux répondent aussi bien. Ce qu'on
+     * interdit, c'est qu'un moins bon double un meilleur.
+     *
+     * **C'est le SCORE qui compte, pas le rang de provenance**, et la mesure l'a
+     * tranché. Un premier jet comparait les rangs : sur « quelles sont les
+     * scènes prévues et les menaces ? », un index système de 3 069 tokens
+     * mangeait le budget, la fiche suivante était refusée, et le rang 100 ainsi
+     * posé **verrouillait toutes les fiches de campagne** — qui étaient
+     * pourtant la réponse. *Un document de campagne à 84 vaut mieux qu'une
+     * fiche à 60 : c'est le score qui dit lequel répond, pas le dossier d'où il
+     * vient.*
+     *
+     * Le budget peut donc rester partiellement inemployé, et **c'est voulu** :
+     * si le meilleur candidat restant ne tient pas, remplir la place avec du
+     * moins bon est exactement ce qu'on cherche à empêcher.
+     */
+    let meilleurScoreEcarte = 0;
+
     const retenus: Retenu[] = [];
     const blocs: string[] = [];
     let total = 0;
 
     for (const candidat of candidats) {
+        if (candidat.score < meilleurScoreEcarte) {
+            ecartes.push({ path: candidat.file.path, raison: 'double-par-le-rang' });
+            continue;
+        }
+
         // L'en-tête et le séparateur partent aussi dans le prompt : les
         // exclure du calcul laisserait le bloc dépasser le plafond annoncé.
         const habillage = `[Source: ${candidat.file.path}]\n` + (blocs.length > 0 ? SEPARATEUR : '');
@@ -326,12 +447,14 @@ export function selectContext(
 
         if (restant <= 0) {
             ecartes.push({ path: candidat.file.path, raison: 'budget' });
+            meilleurScoreEcarte = Math.max(meilleurScoreEcarte, candidat.score);
             continue;
         }
 
         const { texte, tokens, tronque: coupe } = tronque(candidat.file, candidat.provenance, restant);
         if (tokens === 0) {
             ecartes.push({ path: candidat.file.path, raison: 'budget' });
+            meilleurScoreEcarte = Math.max(meilleurScoreEcarte, candidat.score);
             continue;
         }
 

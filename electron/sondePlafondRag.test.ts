@@ -54,18 +54,38 @@ const FICHE_SANS_LE_MOINDRE_RAPPORT = 100;
 
 const BUDGETS = [4000, 6000, 8000, 10000, 12000];
 
-/** Questions réelles : celles du protocole de reprise et celles qui ont servi à déboguer. */
-const CAS: Array<{ systeme: string; campagne: string; question: string }> = [
-    { systeme: 'reves de dragons', campagne: 'Le secret de Milo', question: "quelles sont les règles de l'éthylisme ?" },
-    { systeme: 'reves de dragons', campagne: 'Le secret de Milo', question: 'peut-on parer avec sa monture ?' },
-    { systeme: 'reves de dragons', campagne: 'Le secret de Milo', question: 'comment gérer la noyade ?' },
-    { systeme: 'reves de dragons', campagne: 'Le secret de Milo', question: 'comment se calculent les dégâts de chute ?' },
-    { systeme: 'reves de dragons', campagne: 'Le secret de Milo', question: 'comment se résolvent les jets ?' },
-    { systeme: 'alien', campagne: 'Hadley Hope', question: 'comment fonctionne le stress ?' },
-    { systeme: 'alien', campagne: 'Hadley Hope', question: 'combien de temps dure une panique ?' },
-    { systeme: 'blade-runner', campagne: 'Anges de feu', question: 'comment se déroule un interrogatoire ?' },
-    { systeme: 'cthulhu hack', campagne: 'A la claire fontaine', question: 'comment marchent les sauvegardes ?' },
-    { systeme: 'dune', campagne: 'Dune', question: "comment fonctionne le duel de lames ?" },
+/**
+ * Questions réelles, **et leur campagne réellement appariée**.
+ *
+ * Le premier jet appariait « Le secret de Milo » — une campagne *Cthulhu Hack* —
+ * à des questions de Rêves de Dragons. Les documents de campagne entraient
+ * quand même, ce qui gonflait la colonne « hors-fiches » d'un attelage qui
+ * n'existe pas à la table. *Une fixture mal appariée mesure quelque chose,
+ * mais pas ce qu'on croit.*
+ *
+ * Les questions de RÈGLE et les questions de CAMPAGNE sont distinguées : la
+ * garde de rang interdit à un document de campagne de doubler une fiche, et il
+ * faut vérifier qu'elle ne les rend pas pour autant inatteignables.
+ */
+type Cas = { systeme: string; campagne: string; question: string; nature: 'regle' | 'campagne' };
+
+const CAS: Cas[] = [
+    { systeme: 'reves de dragons', campagne: 'Reves de Dragons', nature: 'regle', question: "quelles sont les règles de l'éthylisme ?" },
+    { systeme: 'reves de dragons', campagne: 'Reves de Dragons', nature: 'regle', question: 'peut-on parer avec sa monture ?' },
+    { systeme: 'reves de dragons', campagne: 'Reves de Dragons', nature: 'regle', question: 'comment gérer la noyade ?' },
+    { systeme: 'reves de dragons', campagne: 'Reves de Dragons', nature: 'regle', question: 'comment se calculent les dégâts de chute ?' },
+    { systeme: 'reves de dragons', campagne: 'Reves de Dragons', nature: 'regle', question: 'comment se résolvent les jets ?' },
+    { systeme: 'alien', campagne: 'Hadley Hope', nature: 'regle', question: 'comment fonctionne le stress ?' },
+    { systeme: 'alien', campagne: 'Hadley Hope', nature: 'regle', question: 'combien de temps dure une panique ?' },
+    { systeme: 'blade-runner', campagne: 'Anges de feu', nature: 'regle', question: 'comment se déroule un interrogatoire ?' },
+    { systeme: 'cthulhu hack', campagne: 'Le secret de Milo', nature: 'regle', question: 'comment marchent les sauvegardes ?' },
+    { systeme: 'dune', campagne: 'Dune', nature: 'regle', question: "comment fonctionne le duel de lames ?" },
+
+    // Questions de CAMPAGNE — c'est ici qu'un document de campagne doit gagner.
+    { systeme: 'cthulhu hack', campagne: 'Le secret de Milo', nature: 'campagne', question: 'quelles sont les amorces du scénario en Italie ?' },
+    { systeme: 'cthulhu hack', campagne: 'Le secret de Milo', nature: 'campagne', question: 'quelles factions interviennent dans la campagne ?' },
+    { systeme: 'cthulhu hack', campagne: 'Le secret de Milo', nature: 'campagne', question: 'quels sont les lieux majeurs et les secrets à révéler ?' },
+    { systeme: 'alien', campagne: 'Hadley Hope', nature: 'campagne', question: 'quelles sont les scènes prévues et les menaces ?' },
 ];
 
 /**

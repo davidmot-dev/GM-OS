@@ -10,6 +10,7 @@ import {
     type IndexedFile as SelectableFile,
     type RagRequest,
     type RagSelection,
+    type Ecarte,
 } from './ragSelection';
 import { chargerIndex, chercherDansLIndex, verifierLesCitations } from './bookIndex';
 
@@ -227,8 +228,20 @@ export class RAGEngine {
      */
     private journaliser(req: RagRequest, s: RagSelection) {
         const plafond = req.maxTokens ?? MAX_CONTEXT_TOKENS;
-        const horsPerimetre = s.ecartes.filter(e => e.raison === 'hors-perimetre').length;
-        const budget = s.ecartes.filter(e => e.raison === 'budget').length;
+        /*
+          **Les quatre raisons se comptent séparément.** Elles appellent des
+          gestes différents : « hors sujet » nomme une lacune du corpus,
+          « faute de budget » un plafond trop bas, « doublé par le rang » un
+          document qui aurait tenu mais qui n'a pas le rang pour doubler. Les
+          confondre rendrait le journal muet sur celle qui compte — et *un
+          journal qui n'imprime pas le champ dont dépend le résultat innocente
+          à tort.*
+        */
+        const compter = (raison: Ecarte['raison']) => s.ecartes.filter(e => e.raison === raison).length;
+        const horsPerimetre = compter('hors-perimetre');
+        const budget = compter('budget');
+        const horsSujet = compter('hors-sujet');
+        const doubles = compter('double-par-le-rang');
 
         const lignes = [
             `${req.systemId} / ${req.campaignName}`
@@ -238,6 +251,8 @@ export class RAGEngine {
                 `  ✓ ${r.provenance.padEnd(9)} ${String(r.score).padStart(3)}  ${r.path}`
                 + `  (~${r.tokens} tok${r.tronque ? ', tronqué' : ''})`),
             ...(budget > 0 ? [`  … ${budget} candidat(s) écarté(s) faute de budget`] : []),
+            ...(doubles > 0 ? [`  … ${doubles} candidat(s) écarté(s) : rang inférieur à un candidat déjà refusé`] : []),
+            ...(horsSujet > 0 ? [`  ∅ ${horsSujet} document(s) sans un mot de la question`] : []),
             ...(horsPerimetre > 0 ? [`  · ${horsPerimetre} document(s) hors périmètre`] : []),
         ];
 

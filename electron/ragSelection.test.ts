@@ -158,12 +158,112 @@ describe('rang', () => {
     });
 
     it('ne laisse pas la question renverser l\'écart entre rangs', () => {
+        /*
+          **Les deux documents doivent passer le seuil de pertinence**, sinon le
+          test ne mesure plus ce qu'il croit. Sa version d'origine opposait une
+          décharge truffée des mots de la question à une fiche « Initiative et
+          tour » qui n'en portait **aucun** : depuis le 2026-08-23, cette fiche
+          n'est plus candidate du tout, et le test tombait en annonçant un
+          renversement de rang qui n'avait pas eu lieu. *Une fixture qui cesse
+          d'illustrer son invariant accuse le mauvais coupable.*
+
+          Ici la fiche porte un mot dans son CORPS et la décharge les porte tous :
+          l'écart de rang — 100 contre 40 — reste hors d'atteinte, et c'est tout
+          ce qu'on veut prouver.
+        */
         const s = selectContext([
             brut('systems/alien/core_mechanics.md', 'jets dés réserve stress panique difficulté'),
-            fiche('systems/alien/rules/initiative-et-tour.md', 'Initiative et tour'),
+            fiche('systems/alien/rules/initiative-et-tour.md', 'Initiative et tour', 'le tour et les jets'),
         ], { ...REQ, query: 'jets dés réserve stress panique difficulté' });
 
         expect(s.retenus[0].provenance).toBe('fiche');
+    });
+
+    it('écarte un document sans un seul mot de la question', () => {
+        /*
+          **Le seuil de pertinence, mesuré le 2026-08-23.** Sans lui, tout
+          document du périmètre devenait candidat et le budget seul tranchait :
+          une fiche sans aucun rapport occupait ses 1 450 tokens comme une autre.
+          C'est aussi ce qui rendait l'état `rien` inatteignable — il y avait
+          toujours au moins une source.
+        */
+        const s = selectContext([
+            fiche('systems/alien/rules/stress.md', 'Stress et panique', 'la jauge de stress monte'),
+            fiche('systems/alien/rules/vaisseaux.md', 'Vaisseaux', 'coques et moteurs'),
+        ], { ...REQ, query: 'comment fonctionne le stress ?' });
+
+        expect(s.retenus.map(r => r.path)).toEqual(['systems/alien/rules/stress.md']);
+        expect(s.ecartes).toContainEqual({ path: 'systems/alien/rules/vaisseaux.md', raison: 'hors-sujet' });
+    });
+
+    it('ne juge personne hors sujet quand la question n\'a aucun mot porteur', () => {
+        /*
+          **La garde du seuil.** « Comment fait-on ? » ne laisse que des mots
+          sans portée — `comment` et `fait` sont dans la liste, `on` est trop
+          court : le bonus vaut alors zéro pour tout le monde, et appliquer
+          le seuil viderait la sélection au lieu de la trier. *Une liste vide
+          dirait qu'on a cherché et rien trouvé, alors qu'on n'a pas su chercher.*
+        */
+        const s = selectContext([
+            fiche('systems/alien/rules/stress.md', 'Stress et panique'),
+            fiche('systems/alien/rules/vaisseaux.md', 'Vaisseaux'),
+        ], { ...REQ, query: 'comment fait-on ?' });
+
+        expect(s.retenus).toHaveLength(2);
+        expect(s.ecartes.some(e => e.raison === 'hors-sujet')).toBe(false);
+    });
+
+    it('compte les mots ACCENTUÉS du corps, qui étaient invisibles', () => {
+        /*
+          **Le défaut du 2026-08-23, et il coûtait cher.** `motsDeRecherche`
+          déplie la question par `slug` — « réussite » devient `reussite` — mais
+          le corps n'était que passé en minuscules. `corps.includes('reussite')`
+          ne trouvait donc jamais « réussite ». Le mot est employé vingt-trois
+          fois dans une seule fiche de Rêves de Dragons et le moteur en voyait
+          zéro ; il est invisible dans treize des vingt-et-une fiches.
+
+          **Dégradation à l'identique du code d'origine** : remettre
+          `file.content.toLowerCase()` fait tomber ce test, et lui seul.
+        */
+        const s = selectContext([
+            fiche('systems/alien/rules/a.md', 'Alpha', 'la réussite se mesure ici'),
+        ], { ...REQ, query: 'comment juger une réussite ?' });
+
+        expect(s.retenus).toHaveLength(1);
+    });
+
+    it('ne prend pas un mot pour un autre dont il est le début', () => {
+        /*
+          **La comparaison portait sur des sous-chaînes** : `includes('jets')`
+          répondait vrai pour « objets ». Même défaut que la recherche dans le
+          livre, payé le 2026-08-22, où « le rêve » renvoyait vers *Acrève*.
+        */
+        const s = selectContext([
+            fiche('systems/alien/rules/a.md', 'Alpha', 'un inventaire d\'objets et de projets'),
+        ], { ...REQ, query: 'comment lancer les jets ?' });
+
+        expect(s.retenus).toHaveLength(0);
+    });
+
+    it('départage deux fiches par le nombre d\'occurrences', () => {
+        /*
+          **Avant, c'était l'ordre alphabétique du chemin qui tranchait.** Le
+          bonus de corps ne comptait pas les occurrences : une fiche qui emploie
+          le mot vingt fois valait exactement celle qui l'emploie une.
+        */
+        /*
+          **Le document qui traite du sujet est nommé pour PERDRE le départage
+          alphabétique.** Le premier jet l'appelait `a-en-traite.md` : il gagnait
+          déjà sans compter une seule occurrence, et la dégradation à l'identique
+          n'a fait tomber aucun test. *Une fixture qui donne raison au correctif
+          pour une autre raison que le correctif ne prouve rien.*
+        */
+        const s = selectContext([
+            fiche('systems/alien/rules/a-effleure.md', 'Alpha', 'on parle une fois de stress'),
+            fiche('systems/alien/rules/z-en-traite.md', 'Zoulou', 'stress, stress et encore stress'),
+        ], { ...REQ, query: 'comment fonctionne le stress ?' });
+
+        expect(s.retenus[0].path).toBe('systems/alien/rules/z-en-traite.md');
     });
 });
 
@@ -209,6 +309,32 @@ describe('budget', () => {
             'systems/alien/rules/c.md',
         ]);
         expect(s.ecartes).toContainEqual({ path: 'systems/alien/rules/b.md', raison: 'budget' });
+    });
+
+    it('interdit à un moins bon de doubler un meilleur refusé faute de place', () => {
+        /*
+          **Le défaut mesuré le 2026-08-23 : le budget tranchait sur la TAILLE.**
+          La boucle est gloutonne et ordonnée par score ; quand une fiche ne
+          tenait plus, elle était écartée **et la boucle continuait**, laissant un
+          document moins bien classé se glisser derrière elle. 13 des 31
+          documents retenus à 4 000 en venaient — 42 %.
+
+          Ici la seconde fiche (112) ne tient pas dans ce qui reste, et la note de
+          campagne (63) tiendrait. Elle ne doit pas passer : *elle n'aurait pas
+          gagné sur sa pertinence, elle aurait gagné sur son poids.* Le budget
+          reste donc partiellement inemployé, et c'est voulu.
+        */
+        const s = selectContext([
+            gros('systems/alien/rules/stress-a.md', 2_000, 'Stress un'),
+            gros('systems/alien/rules/stress-b.md', 2_000, 'Stress deux'),
+            brut('campaigns/anges-de-feu/notes.md', 'une note qui parle de stress'),
+        ], { ...REQ, query: 'comment fonctionne le stress ?', maxTokens: 3_000 });
+
+        expect(s.retenus.map(r => r.path)).toEqual(['systems/alien/rules/stress-a.md']);
+        expect(s.ecartes).toContainEqual({ path: 'systems/alien/rules/stress-b.md', raison: 'budget' });
+        expect(s.ecartes).toContainEqual({
+            path: 'campaigns/anges-de-feu/notes.md', raison: 'double-par-le-rang',
+        });
     });
 
     it('respecte un plafond passé en argument', () => {

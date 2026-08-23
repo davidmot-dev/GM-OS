@@ -22,9 +22,15 @@ La question se coupe en deux, et les deux moitiés se mesurent séparément.
 | `documentation/Planning/sondes/sonde_cout_du_plafond.py` | ce qu'un palier **coûte** | sur le vrai modèle |
 
 **La première ne demande rien à Ollama, et c'est ce qui la rend exacte.** `selectContext` est pure :
-ce qui entre dans le prompt se calcule, il n'y a pas à le deviner ni à l'observer. Elle rejoue
-**dix questions réelles** — les quatre du protocole de reprise et celles qui ont servi à déboguer la
+ce qui entre dans le prompt se calcule, il n'y a pas à le deviner ni à l'observer. Elle rejoue des
+**questions réelles** — les quatre du protocole de reprise et celles qui ont servi à déboguer la
 soirée du 22 — sur cinq systèmes, contre l'index réel : **273 documents, dont 235 fiches**.
+
+> **Elle en porte quatorze depuis le § 6**, dix de règle et quatre de campagne, et ses campagnes sont
+> désormais **appariées à leur jeu**. Les tableaux du § 2 et du § 5, eux, sont ceux de la première
+> passe — dix questions, appariement approximatif — et **on ne les réécrit pas** : ce sont eux qui ont
+> produit le verdict du § 4, et un relevé qu'on retouche après coup ne prouve plus rien. Le § 6.2
+> refait l'avant/après proprement, sur les mêmes quatorze.
 
 Elle est **sous interrupteur** (`SONDE=1`) : une sonde n'affirme rien, elle imprime. La laisser
 courir avec la suite ajouterait trois lignes vertes qui ne gardent rien, et *un contrôle qui ne
@@ -43,7 +49,7 @@ Le score dit la pertinence : `100` tout rond, c'est le rang de base d'une fiche 
 **pas un seul mot de la question dans son sujet, son titre ni son corps**. Au-dessus de 100, un mot
 au moins a été trouvé.
 
-Cumul sur les dix questions :
+Cumul sur les dix questions de la première passe :
 
 | budget | fiches **pertinentes** | fiches muettes | hors-fiches | sauts de file | éjections |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -181,18 +187,121 @@ attend, et rien ne le dit.*
 
 ---
 
-## 6. Ce qui attend une décision, et ce n'est plus le plafond
+## 6. Ce que la correction a donné — le même jour
 
-Aucune des trois n'a été faite : ce document mesure, il ne corrige pas.
+Les trois défauts du § 5 sont corrigés, **et la mesure en a découvert deux autres en chemin, plus
+graves que ceux qu'elle cherchait.**
 
-1. **Ne pas laisser un petit document doubler une fiche mieux classée.** Deux façons : arrêter la
-   boucle au premier écart de budget, ou n'autoriser le dépassement qu'à rang égal. *Gratuit en
-   temps de réponse.*
-2. **Un seuil de pertinence.** Une fiche à 100 tout rond n'a aucun mot commun avec la question :
-   elle occupe 1 450 tokens pour rien. C'est aussi ce qui rend `rien` inatteignable, déjà consigné le
-   22/08 — **une seule correction pour deux défauts.**
-3. **Départager mieux à 103.** Le bonus de corps ne compte pas les occurrences ; une fiche qui
-   emploie le mot vingt fois vaut exactement celle qui l'emploie une.
+### 6.0 Le défaut qu'on ne cherchait pas : les accents
+
+**Le mot cherché était déplié, le corps ne l'était pas.** `motsDeRecherche` passe la question par
+`slug`, qui retire les accents — « résolvent » devient `resolvent`. Le corps, lui, n'était que passé
+en minuscules, et `corps.includes('resolvent')` ne trouvait **jamais** « résolvent ».
+
+Mesuré sur le corpus réel : `degres-de-reussite-et-critiques.md` emploie **« réussite »
+vingt-trois fois**, et le moteur en voyait **zéro**. Le mot est invisible dans **treize des
+vingt-et-une fiches** de Rêves de Dragons.
+
+*Deux textes qu'on compare doivent être normalisés pareil* — c'est mot pour mot le défaut du 22/08,
+*« deux champs qui désignent la même chose ne peuvent pas se normaliser différemment »*, à un autre
+étage. **Et c'était la cause du § 5.3** : les corps ne correspondaient presque jamais, donc les
+scores s'agglutinaient et l'ordre alphabétique tranchait.
+
+Second défaut du même geste : **la comparaison portait sur des sous-chaînes**, donc `jets`
+répondait vrai pour « objets » et « projets ». *Exactement ce que la recherche dans le livre a payé
+le 22/08, où « le rêve » renvoyait vers Acrève.* Le texte se découpe désormais en mots.
+
+### 6.1 Les cinq correctifs
+
+| # | Ce qui change | Défaut visé |
+| --- | --- | --- |
+| 1 | Le corps est déplié comme l'en-tête | § 6.0 |
+| 2 | Les mots se comparent **entiers**, plus en sous-chaîne | § 6.0 |
+| 3 | Un document **sans un seul mot** de la question n'est plus candidat | § 5.2 |
+| 4 | Un moins bon **ne double plus** un meilleur refusé faute de place | § 5.1 |
+| 5 | Les **occurrences** comptent, plafonnées à trois | § 5.3 |
+
+**Le garde du 4 porte sur le SCORE, pas sur le rang de provenance, et la mesure l'a tranché.** Un
+premier jet comparait les rangs : sur *« quelles sont les scènes prévues et les menaces ? »*, un
+index système mangeait le budget, la fiche suivante était refusée, et le rang 100 ainsi posé
+**verrouillait toutes les fiches de campagne** — qui étaient pourtant la réponse. *Un document de
+campagne à 84 vaut mieux qu'une fiche à 60 : c'est le score qui dit lequel répond, pas le dossier
+d'où il vient.*
+
+Conséquence assumée : **le budget peut rester partiellement inemployé.** Si le meilleur candidat
+restant ne tient pas, remplir la place avec du moins bon est précisément ce qu'on cherche à
+empêcher.
+
+### 6.2 Ce que ça change, mesuré sur les mêmes quatorze questions
+
+Dix questions de règle et quatre de campagne — *le premier jet appariait « Le secret de Milo », une
+campagne Cthulhu Hack, à des questions de Rêves de Dragons ; une fixture mal appariée mesure
+quelque chose, mais pas ce qu'on croit.*
+
+| | fiches **pertinentes** | fiches muettes | hors-fiches | sauts de file |
+| --- | ---: | ---: | ---: | ---: |
+| **à 4 000, avant** | 23 | 4 | 16 | 18 |
+| **à 4 000, après** | **25** | **0** | **2** | **0** |
+
+**Quarante-trois documents partaient, vingt-sept partent.** Et il en part *plus* de pertinents
+qu'avant : le déaccentuage en a fait apparaître deux que le moteur ne voyait pas. Le reste était du
+bruit — dont dix-huit documents qui doublaient un mieux classé, et quatre fiches sans un mot commun
+avec la question.
+
+**Le coût : 8,4 ms par question contre 2,2** — le corps de chaque document est déplié à chaque
+question, sur un index de 8,7 Mio. *Face à 35 000 ms de prefill, c'est deux centièmes de pour cent.*
+Il n'y a pas de cache à ajouter, et en ajouter un serait une optimisation qui ne se mesure pas.
+
+### 6.3 Vérifié par dégradation, à l'identique du code d'origine
+
+*Un correctif qu'aucun test ne tient n'est pas un correctif.* Les cinq ont été remis dans leur état
+défectueux, un par un :
+
+| Dégradation | Tests qui tombent |
+| --- | ---: |
+| seuil de pertinence retiré | 2 |
+| garde de score retirée | 1 |
+| corps ré-accentué | 1 |
+| occurrences non comptées | 1 |
+| mots cherchés en sous-chaîne | 1 |
+
+**Deux d'entre eux ne tenaient à rien au premier passage.** La fixture des occurrences nommait le
+bon document `a-en-traite.md` : il gagnait déjà par l'ordre alphabétique, sans compter une seule
+occurrence. *Une fixture qui donne raison au correctif pour une autre raison que le correctif ne
+prouve rien.* Renommée en `z-en-traite.md`, elle tombe.
+
+Un test existant a dû changer de fixture — *« ne laisse pas la question renverser l'écart entre
+rangs »* opposait une décharge à une fiche qui ne portait **aucun** mot de la question : cette fiche
+n'est plus candidate, et le test accusait un renversement de rang qui n'avait pas eu lieu.
+L'invariant, lui, n'a pas bougé.
+
+---
+
+## 7. Ce qui attend une décision de David — une seule, et ce n'est pas le plafond
+
+**L'écart entre les rangs est hors d'atteinte de la pertinence, et c'est écrit dans le code comme un
+principe** : `RANG.fiche` vaut 100, `RANG.campagne` 60, et le commentaire dit que *« l'écart entre
+deux rangs excède le bonus de pertinence maximal »* — 27 au mieux.
+
+Conséquence, encore visible après les cinq correctifs, sur *« quelles sont les scènes prévues et
+les menaces ? »* en campagne Alien :
+
+```
+4 000 : 1 doc — inventaire-des-mecaniques.md [103]
+```
+
+Un index de mécaniques de 3 069 tokens, qui mentionne un mot de la question, **rafle tout le budget
+d'une question de campagne** ; les fiches `scenes-prevues--*` de Hadley Hope, à 84, n'entrent qu'à
+partir de 6 000.
+
+Le principe a été posé pour que *« une fiche du corpus passe devant une décharge brute du même
+système, quelle que soit la question »* — et il a raison sur les questions de règle. Il n'avait pas
+prévu les questions de campagne. **Trois sorties possibles, et c'est un choix de comportement, pas
+un correctif** :
+
+1. **Rapprocher les rangs** pour que la pertinence puisse les renverser.
+2. **Traiter les gros index à part**, comme les décharges le sont déjà par `MAX_RAW_FILE_TOKENS`.
+3. **Ne rien changer** et accepter que les notes de campagne passent après les règles.
 
 *Le plafond, lui, est tranché : il reste à 4 000, et la mesure est là pour qu'on n'y revienne pas
 sans chiffre.*
