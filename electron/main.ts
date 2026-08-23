@@ -331,14 +331,44 @@ ipcMain.on('log:message', (_event, level: string, message: string, ...args: unkn
 });
 
 // --- Light OS Handlers ---
-ipcMain.handle('light:request', async (_event, url: string, method: string, body?: unknown) => {
+/**
+ * Relais HTTP vers le matériel du réseau local.
+ *
+ * **Il ne sert plus seulement au Light OS.** L'afficheur Ulanzi passe par le
+ * même chemin — en écrire un second aurait donné deux relais à tenir, et le
+ * motif des « plusieurs écrivains » a déjà coûté assez cher à ce projet.
+ *
+ * `headers` a été ajouté le 2026-08-23 : **AWTRIX exige
+ * `Content-Type: application/json` et refuse la requête EN SILENCE sans lui** —
+ * pas d'erreur, pas de refus visible, l'application n'apparaît simplement
+ * jamais. Le pont Hue, lui, s'en passait ; d'où l'oubli, et d'où le paramètre
+ * facultatif qui ne change rien aux appels existants.
+ */
+ipcMain.handle('light:request', async (_event, url: string, method: string, body?: unknown, headers?: Record<string, string>) => {
     return new Promise((resolve, reject) => {
         try {
             const parsedUrl = new URL(url);
             const lib = parsedUrl.protocol === 'https:' ? https : http;
 
+            /*
+              **`Content-Length` n'est pas facultatif ici.** Sans lui, Node bascule
+              en `Transfer-Encoding: chunked` — et le serveur web de l'ESP32
+              d'AWTRIX **raccroche sans répondre** (`socket hang up`). Mesuré le
+              2026-08-23 : la même requête passe en 200 avec l'en-tête, échoue
+              sans. Le pont Hue tolérait le chunked, d'où quinze mois sans que le
+              défaut se voie.
+
+              *Un relais partagé hérite des tolérances de son premier client.*
+            */
+            const charge = body !== undefined && body !== null ? JSON.stringify(body) : null;
+            const enTetes: Record<string, string> = { ...(headers ?? {}) };
+            if (charge !== null && !Object.keys(enTetes).some(k => k.toLowerCase() === 'content-length')) {
+                enTetes['Content-Length'] = String(Buffer.byteLength(charge));
+            }
+
             const options: https.RequestOptions = {
                 method,
+                headers: Object.keys(enTetes).length ? enTetes : undefined,
                 // Le pont Hue s'annonce avec un certificat auto-signé, mais ce
                 // handler accepte n'importe quelle URL venant du rendu : la
                 // tolérance ne vaut que pour le réseau local.
@@ -370,8 +400,10 @@ ipcMain.handle('light:request', async (_event, url: string, method: string, body
                 reject(new Error('Request timed out'));
             });
 
-            if (body) {
-                req.write(JSON.stringify(body));
+            // On écrit la charge déjà sérialisée : la re-sérialiser risquerait de
+            // produire un corps dont la longueur ne serait plus celle annoncée.
+            if (charge !== null) {
+                req.write(charge);
             }
             req.end();
 

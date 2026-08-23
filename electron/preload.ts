@@ -66,7 +66,18 @@ contextBridge.exposeInMainWorld('appBridge', {
         listSounds: () => ipcRenderer.invoke('tactical:list-sounds')
     },
     light: {
-        request: (url: string, method: string, body?: unknown) => ipcRenderer.invoke('light:request', url, method, body)
+        request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) =>
+            ipcRenderer.invoke('light:request', url, method, body, headers)
+    },
+    /**
+     * L'afficheur Ulanzi emprunte le relais HTTP du Light OS.
+     *
+     * C'est un alias, pas un second canal : un nom juste côté rendu, et un seul
+     * relais à tenir côté principal. Voir `light:request` dans `main.ts`.
+     */
+    ulanzi: {
+        request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) =>
+            ipcRenderer.invoke('light:request', url, method, body, headers)
     },
     clock: {
         listCalendars: () => ipcRenderer.invoke('clock:list-calendars'),

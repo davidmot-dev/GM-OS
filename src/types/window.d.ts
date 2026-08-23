@@ -311,7 +311,11 @@ declare global {
             listSounds: () => Promise<string[]>;
         };
         light?: {
-            request: (url: string, method: string, body?: unknown) => Promise<any>;
+            request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<any>;
+        };
+        /** Alias du relais ci-dessus, pour l'afficheur Ulanzi. Un seul canal. */
+        ulanzi?: {
+            request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<any>;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;
