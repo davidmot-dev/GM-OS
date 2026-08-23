@@ -182,8 +182,16 @@ La partition existe **déjà de fait** dans `CurrentView`, et un module l'appliq
       **Le 2026-08-23, sur ses deux axes objectifs** — `regimeDInterface.ts` (un seul fait, trois
       conséquences, une table de tailles partagée par les cinq) et `HorsDePortee.tsx` (le geste de plus
       qui éloigne le destructif en séance). Les **cinq** modules sont traités pour *« ce qui est à
-      portée de main »* ; la **densité n'est calibrée que sur le combat**, et attend l'œil de David à
-      sa table. *Comme les tailles vivent dans une seule table, la recalibrer coûtera une édition, pas
+      portée de main »* ; la **densité n'est calibrée que sur le combat**.
+
+      ✅ **Jugée par David le 2026-08-24** : *« cela me convient pour l'instant, c'est clair et cela
+      évite les erreurs. Pour moi, dans l'état c'est jouable. »* Les **tailles** sont donc validées —
+      et *« ça évite les erreurs »* dit que la règle du destructif fait ce pour quoi elle existe.
+
+      **Mais les quatre autres modules attendent la séance, délibérément.** Ce qui reste à décider
+      pour eux n'est pas la taille — elle est partagée — c'est **quels éléments grossissent** dans
+      chacun, et ça ne se devine pas depuis une vérification : *une densité se juge en jouant, pas en
+      regardant.* Choisir maintenant, ce serait deviner quatre fois pour économiser une séance. *Comme les tailles vivent dans une seule table, la recalibrer coûtera une édition, pas
       cinq.*
 
       ⚠️ **Trois défauts trouvés en chemin, et ce ne sont pas des questions de densité** : supprimer un
