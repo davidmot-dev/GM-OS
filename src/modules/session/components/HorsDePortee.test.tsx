@@ -55,6 +55,27 @@ describe('ce qui détruit s’éloigne', () => {
         expect(declencheur.className).toContain('group-hover:opacity-100');
     });
 
+    /**
+     * **« Pas hyper clair » — David, le 2026-08-24.** Trois points ne disent
+     * rien de ce qu'ils cachent : on perdait la corbeille qu'on reconnaissait
+     * pour un symbole qu'il faut apprendre. *Une commande qui ne s'annonce plus
+     * n'est pas éloignée, elle est déguisée.*
+     */
+    it("montre l'icône d'origine quand on la lui donne", () => {
+        render(
+            <HorsDePortee regime={TABLE} libelle="Tout effacer" compact icone={<span>🗑</span>}>
+                {bouton}
+            </HorsDePortee>,
+        );
+        expect(screen.getByText('🗑')).toBeTruthy();
+        expect(screen.queryByText('···'), "plus de symbole à apprendre").toBeNull();
+    });
+
+    it('retombe sur les trois points sans icône', () => {
+        render(<HorsDePortee regime={TABLE} libelle="Tout effacer" compact>{bouton}</HorsDePortee>);
+        expect(screen.getByText('···')).toBeTruthy();
+    });
+
     it('révèle aussi en compact, et rend alors l’action d’origine', () => {
         render(<HorsDePortee regime={TABLE} libelle="Tout effacer" compact>{bouton}</HorsDePortee>);
 

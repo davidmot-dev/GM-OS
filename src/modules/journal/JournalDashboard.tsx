@@ -229,7 +229,7 @@ const JournalDashboard: React.FC = () => {
                 <span className={`text-xs font-bold leading-tight ${activeJournalId === j.id ? 'text-accent' : 'text-slate-300'}`}>
                   {j.title}
                 </span>
-                <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_session')} compact surInvitation>
+                <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_session')} compact surInvitation icone={<Trash2 className="size-3" />}>
                 <button 
                    onClick={(e) => {
                        e.stopPropagation();
@@ -352,7 +352,7 @@ const JournalDashboard: React.FC = () => {
                         </p>
                       </div>
                       
-                      <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_event')} compact surInvitation>
+                      <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_event')} compact surInvitation icone={<Trash2 className="size-4" />}>
                       <button 
                         onClick={() => gmConfirm(
                           t('modules:journal.dashboard.delete_event_confirm'),

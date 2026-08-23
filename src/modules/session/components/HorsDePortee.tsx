@@ -26,6 +26,19 @@ interface Props {
      * remplace pas, il efface.*
      */
     surInvitation?: boolean;
+    /**
+     * L'icône du bouton replié, rendue **en sourdine**.
+     *
+     * David, le 2026-08-24 : *« c'est pas hyper clair, mais quand on le sait
+     * c'est bien »*. Trois points ne disent rien de ce qu'ils cachent : on
+     * perdait la corbeille qu'on reconnaissait, pour un symbole qu'il faut
+     * apprendre. *Une commande qui ne s'annonce plus n'est pas éloignée, elle
+     * est déguisée.*
+     *
+     * L'icône revient donc, atténuée : on reconnaît l'action, et il faut
+     * toujours deux gestes. Absente, on retombe sur les trois points.
+     */
+    icone?: React.ReactNode;
 }
 
 /**
@@ -61,7 +74,7 @@ interface Props {
  * comportements au premier ajustement, et **on ne s'en apercevrait qu'à la
  * table**.
  */
-const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact, surInvitation }) => {
+const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact, surInvitation, icone }) => {
     const [revele, setRevele] = useState(false);
 
     if (regime.destructifAPortee || revele) return <>{children}</>;
@@ -73,10 +86,11 @@ const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact, sur
                 onClick={e => { e.stopPropagation(); setRevele(true); }}
                 title={`${libelle} — un geste de plus pendant la séance`}
                 aria-label={libelle}
-                className={`px-1.5 py-1 rounded text-app-text/30 hover:text-app-text/70 transition-all text-[11px] leading-none font-bold tracking-widest `
+                className={`px-1.5 py-1 rounded text-app-text/30 hover:text-app-text/70 transition-all `
+                    + `text-[11px] leading-none font-bold tracking-widest opacity-60 hover:opacity-100 `
                     + (surInvitation ? 'opacity-0 group-hover:opacity-100' : '')}
             >
-                ···
+                {icone ?? '···'}
             </button>
         );
     }

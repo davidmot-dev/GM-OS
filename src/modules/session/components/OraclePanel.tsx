@@ -328,7 +328,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             )}
 
                             {viewMode === 'chat' && (
-                                <HorsDePortee regime={regime} libelle="Vider la discussion" compact>
+                                <HorsDePortee regime={regime} libelle="Vider la discussion" compact icone={<Trash2 size={16} />}>
                                     <button 
                                         onClick={() => gmConfirm(
                                             'Vider toute la discussion avec l’Oracle ? Les questions et les réponses partent, et cela ne s’annule pas.',

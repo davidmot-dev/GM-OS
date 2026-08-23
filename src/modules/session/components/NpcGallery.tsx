@@ -27,6 +27,8 @@ import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { motion } from 'framer-motion';
+import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
+import HorsDePortee from './HorsDePortee';
 
 /**
  * Le gabarit d'une carte dans la grille — **et il n'existe que pour la case
@@ -51,6 +53,7 @@ const ROLE_COLORS = {
 };
 
 const NpcGallery: React.FC = () => {
+    const regime = useRegimeDInterface();
     const { t } = useTranslation();
     const { 
         entities, 
@@ -239,6 +242,7 @@ const NpcGallery: React.FC = () => {
                                     }
                                 );
                             }}
+                            regime={regime}
                             t={t}
                         />
                     ))}
@@ -326,8 +330,9 @@ const NpcGalleryItem: React.FC<{
     onGenerateImage: () => void,
     onPickImage: () => void,
     onDelete: () => void,
+    regime: import('../logic/regimeDInterface').RegimeDInterface,
     t: any
-}> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete, t }) => {
+}> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete, regime, t }) => {
     
     return (
         <motion.div
@@ -383,13 +388,30 @@ const NpcGalleryItem: React.FC<{
                     </button>
 
                     <div className="flex gap-2">
-                        <button
-                            onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                            className="p-2.5 bg-red-500/20 backdrop-blur-md rounded-xl text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 transition-all"
-                            title={t('modules:session.npc_gallery.delete_tooltip')}
+                        {/*
+                            **Axe N — celui-ci supprime le PNJ pour de bon.**
+
+                            `deleteEntity`, et il est voisin de « Fiche » et de
+                            l'œil qu'on touche pour consulter. *J'avais protégé
+                            la corbeille du générateur — qui ne retire qu'un
+                            mémo, « le PNJ lui-même n'est pas supprimé » — et
+                            laissé celle-ci à portée.* Signalé par David le
+                            2026-08-24, capture à l'appui.
+                        */}
+                        <HorsDePortee
+                            regime={regime}
+                            libelle={t('modules:session.npc_gallery.delete_tooltip')}
+                            compact
+                            icone={<Trash2 size={18} />}
                         >
-                            <Trash2 size={18} />
-                        </button>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                                className="p-2.5 bg-red-500/20 backdrop-blur-md rounded-xl text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 transition-all"
+                                title={t('modules:session.npc_gallery.delete_tooltip')}
+                            >
+                                <Trash2 size={18} />
+                            </button>
+                        </HorsDePortee>
                         <button
                             onClick={(e) => { e.stopPropagation(); onPickImage(); }}
                             className="p-2.5 bg-black/40 backdrop-blur-md rounded-xl text-slate-300 hover:text-accent border border-white/10 transition-all"

@@ -45,13 +45,27 @@ const NPCHistory: React.FC = () => {
         <div className="h-full flex flex-col">
             <div className="p-4 flex items-center justify-between border-b border-app-border bg-app-bg/30">
                 <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{t('npc.history.title')}</span>
-                <button
-                    onClick={() => { if (window.confirm(t('npc.history.clear_confirm'))) clearHistory(); }}
-                    className="p-1 hover:bg-rose-500/10 hover:text-rose-500 rounded transition-colors text-slate-600"
-                    title={t('npc.history.clear')}
-                >
-                    <Trash size={14} />
-                </button>
+                {/*
+                    **Le massif était nu, et j'avais protégé le détail.**
+
+                    « Tout effacer » vide l'historique **entier**, et il est
+                    toujours visible en haut du panneau — alors que la corbeille
+                    par ligne, qui ne retire qu'un mémo, était déjà repliée.
+
+                    Il passait aussi par `window.confirm` : une boîte native au
+                    milieu d'une séance, qui ne ressemble à rien de ce que
+                    l'application montre par ailleurs. *Une alerte qu'on ne
+                    reconnaît pas se clique sans se lire.*
+                */}
+                <HorsDePortee regime={regime} libelle={t('npc.history.clear')} compact icone={<Trash size={14} />}>
+                    <button
+                        onClick={() => gmConfirm(t('npc.history.clear_confirm'), clearHistory)}
+                        className="p-1 hover:bg-rose-500/10 hover:text-rose-500 rounded transition-colors text-slate-600"
+                        title={t('npc.history.clear')}
+                    >
+                        <Trash size={14} />
+                    </button>
+                </HorsDePortee>
             </div>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar p-2 flex flex-col gap-1">
@@ -85,7 +99,7 @@ const NPCHistory: React.FC = () => {
                             <p className="text-[8px] text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
 
-                        <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact surInvitation>
+                        <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact surInvitation icone={<Trash2 size={12} />}>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();

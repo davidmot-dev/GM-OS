@@ -243,7 +243,7 @@ const MapControls: React.FC = () => {
                             <span>{t('map.sidebar.import.button')}</span>
                         </button>
                         {mapUrl && (
-                            <HorsDePortee regime={regime} libelle={t('map.sidebar.import.remove')} compact>
+                            <HorsDePortee regime={regime} libelle={t('map.sidebar.import.remove')} compact icone={<Trash2 size={18} />}>
                                 <button
                                     className="bg-rose-500/10 hover:bg-rose-500/20 p-3 rounded-lg flex items-center justify-center border border-rose-500/30 transition-colors text-rose-500"
                                     onClick={handleClearMap}
@@ -290,7 +290,7 @@ const MapControls: React.FC = () => {
                                 — ce qui ne se reprend pas : on peut recacher les
                                 pixels, pas ce qu'ils ont vu.
                             */}
-                            <HorsDePortee regime={regime} libelle={t('map.sidebar.fog.revealAll')} compact>
+                            <HorsDePortee regime={regime} libelle={t('map.sidebar.fog.revealAll')} compact icone={<Eye size={16} />}>
                                 <button
                                     className="text-gray-400 hover:text-green-500 transition-colors p-1 flex items-center gap-1"
                                     onClick={handleRevealAll}
@@ -791,7 +791,7 @@ const MapControls: React.FC = () => {
                     <div className="flex justify-between items-center mb-3 px-1">
                         <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold text-gm-emerald">{t('map.sidebar.combatants.title')}</h3>
                         {/* Vider les jetons en plein combat efface la position de tout le monde. */}
-                        <HorsDePortee regime={regime} libelle={t('map.sidebar.combatants.clear')} compact>
+                        <HorsDePortee regime={regime} libelle={t('map.sidebar.combatants.clear')} compact icone={<Trash2 size={14} />}>
                             <button
                                 onClick={handleClearTokens}
                                 className={`p-1 rounded transition-colors ${tokens.length > 0 ? 'text-gray-400 hover:text-rose-500' : 'text-gray-700 cursor-not-allowed'}`}
