@@ -210,11 +210,29 @@ position n'est pas fiable — ce qui manque aujourd'hui (§ 2.6).
 
 ## 5. Reste à décider
 
-- **Fusionner les deux appels du Cortex en un seul ?** Non évalué. Le module lance une narration en
-  streaming et une génération de conseils en JSON (`useTacticalAIStore.ts:89-114`), séquentialisées de
-  fait par `OLLAMA_NUM_PARALLEL=1`. Une passe unique rendant les deux à la fois diviserait le temps par
-  deux, au prix de la disparition du retour progressif. **C'est peut-être le vrai levier de performance
-  du Cortex**, plus que les réglages traités dans le plan jumeau.
+- ✅ **Fusionner les deux appels du Cortex en un seul ?** **MESURÉ ET TRANCHÉ le 2026-08-23 : NON —
+  on borne, on ne fusionne pas.** Deux sondes concordantes sur `gemma4:12b`
+  (`sondes/sonde_cortex_fusion.js`, `sondes/sonde_cortex_brievete.js`) :
+
+  | | mur (deux passes) |
+  | --- | --- |
+  | les deux appels, tels quels | **67 à 75 s** |
+  | un seul appel fusionné | 46 à 54 s (−30 %) |
+  | **les deux appels, simplement bornés** | **41 à 44 s (−41 %)** |
+
+  **Borner bat fusionner, et garde le retour progressif** que la fusion supprimait.
+
+  > **L'hypothèse de ce paragraphe était fausse, et c'est la mesure qui l'a dit.** Il pariait sur le
+  > double prefill — *« peut-être le vrai levier de performance du Cortex »*. Le prefill du rapport
+  > coûte **2,8 s sur 67**, soit **quatre pour cent** ; les quatre-vingt-huit autres sont de la
+  > rédaction. *Le Cortex n'était pas lent parce qu'il lisait deux fois, il était lent parce qu'il
+  > écrivait trop.* Même leçon que le plafond RAG : le levier n'était pas où le nom du problème le
+  > suggérait.
+
+  **Et la borne améliore la sortie.** La narration tombe de 264 tokens à 65, et cesse de commencer par
+  « Voici l'analyse et la narration stratégique pour X : **Analyse tactique rapide** » — du brouillon
+  que personne ne lit. *Un modèle à qui on ne dit pas de s'arrêter écrit son brouillon en même temps
+  que sa réponse.*
 - ✅ **Quel comportement quand les entrées ne sont pas fiables ?** **Tranchée le 2026-08-22 : conseiller
   en restreignant le propos.** Sans position connue, le rapport écrit désormais *« AUCUNE POSITION
   CONNUE : ne conseille aucun déplacement ni aucune portée. Tiens-toi à ce qui ne dépend pas du terrain —

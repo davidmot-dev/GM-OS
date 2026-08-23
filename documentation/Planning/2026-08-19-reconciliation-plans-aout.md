@@ -209,11 +209,24 @@ tables du livre sont transcrites avec leur exception, la Forge sait produire une
 arrivent aux écrans en disant tous le même mot — *ils étaient sept lecteurs à les rendre, pas six.* La
 question de livre est tranchée : **le livre imprime 86.**
 
-**Il reste le geste** : *le pilote enregistré n'est pas reforgé*, et il porte encore ses douze
-composantes numérotées. Tant qu'il n'est pas repassé à l'atelier, **rien de tout ça ne se voit à la
-table.** C'est un geste d'atelier, pas un chantier de code.
+~~**Il reste le geste**~~ ✅ **FAIT le 2026-08-23, rapporté par David** : il a redérivé le pilote, vidé
+le seuil de ses douze composantes, et **vérifié à l'écran — Agilité 12, compétence +3, difficulté
+moyenne → 78 %**, avec le calcul affiché (`12 × 6,5`). Le panneau ne réclame plus que deux menus.
 
-*C'est toujours le seul reste de la liste qui fausse une partie en cours.*
+> **Deux défauts trouvés grâce à ses captures d'écran, et aucun ne se lisait dans le code :**
+>
+> 1. **Son pilote déclarait `cible` ET `difficulte`** — deux réglages nommés « difficulté » côte à côte,
+>    mécaniques sans rapport. Un commentaire de `PanneauDeJet` affirmait pourtant que ce piège était
+>    « défait » : les deux gardes étaient indépendants. *Un commentaire qui déclare un piège fermé
+>    dispense de vérifier.* Corrigé sur trois couches — le panneau ne l'affiche plus, le moteur force
+>    `reussitesRequises` à 1 quand une cible décide, le contrôle du pilote le signale.
+> 2. **Et `jet.difficulte` n'avait AUCUN écran d'édition** — on réclamait donc un retrait irréalisable.
+>    *Un contrôle qui réclame une action impossible est pire qu'aucun contrôle*, et c'était **le piège du
+>    22/08 refait à l'identique** : une chose sans écran ne se corrige qu'en la refabriquant. Question de
+>    David : *« s'il est invisible, comment je le retire ? »* → `EditeurDuJet` porte désormais
+>    « Retirer le compte », comme il portait déjà « Vider le seuil ».
+
+*P1 bis était le seul reste de la liste qui faussait une partie en cours. Il ne l'est plus.*
 
 ### ~~P3 — Le Cortex~~ ✅ CLOS le 2026-08-22
 
@@ -235,12 +248,21 @@ avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les
 > sont du **code**. Aucun des six ne bloque quoi que ce soit — c'est de la justesse de réponse, pas de
 > la fiabilité, et c'est pourquoi P4 passe après P1 et P2.
 
-- **`docs/commun/`** est reconnu par le moteur et **n'existe toujours pas** sur le disque.
-- ~~**16 fiches à régénérer**~~ — **4 au 22/08 au soir**, 4 doublons à fusionner à cette occasion.
+- ~~**`docs/commun/`** est reconnu par le moteur et **n'existe toujours pas** sur le disque.~~
+  ✅ **Créé par David le 2026-08-23.** C'est le fonds valable pour **tous les jeux** — la seule
+  provenance que `resolveProvenance` accepte quel que soit le système actif, au rang **30**, sous les
+  fiches (100), la campagne (60) et le système (40). *Il complète, il ne contredit jamais une règle du
+  jeu.* Reste à le remplir de ce qui est transversal : conventions de maîtrise, règles maison, glossaire
+  de table.
+- ~~**16 fiches à régénérer**~~ — **3 au 2026-08-23**, et **les trois sont du Blade Runner** :
+  `gestion-quarts-pauses`, `mecanique-forcer-un-jet`, `souvenir-cle`. La première est en **doublon** avec
+  `structure-temporelle-par-quarts-et-pauses` (v3, huit sections citées) alors qu'elle-même n'a **aucune
+  source** : *l'Oracle peut répondre depuis celle qui ne cite rien.* **À traiter avant la prochaine
+  séance, qui est du Blade Runner.**
   *(Compté avec sa méthode : `a_regenerer: true` dans les `rules/`.)*
 - ~~**noc (4 fiches) et rêves de dragons (7)** sont très en dessous des autres~~ — **rêves de dragons est
   reforgé le 21/08** (21 fiches), **star-trek est né le 22/08** (19 fiches), et **noc est reforgé le 22/08**
-  (14 fiches, **pas encore commitées**). Restent **coc7 et dnd-5e**, qui n'ont **aucune fiche v3**.
+  (18 fiches, **commitées** — `6cee139`). Restent **coc7 et dnd-5e**, qui n'ont **aucune fiche v3**.
 - ~~Le **« Chemin des Règles » est vide** pour les campagnes~~ — **la soirée du 22/08 a montré que le
   problème était ailleurs, et bien plus grave.** Le moteur n'appelait pas `resoudreCorpus` du tout, le
   chemin saisi à la main n'était pas déplié, et **le coffre Obsidian remplaçait la racine documentaire à
@@ -261,18 +283,30 @@ avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les
   > **Il ne se rouvre qu'à une condition mesurable** : un prefill notablement plus rapide. Le débit
   > tient aujourd'hui entre 106 et 115 tok/s ; à 300 tok/s la question se reposerait.
 
-  **Mais la mesure a ouvert trois restes qui valent plus que le plafond**, et qui ne coûtent pas une
-  seconde de plus au modèle — ils changent *lesquels* des 4 000 tokens partent, pas combien :
+  **La mesure avait ouvert trois restes qui valaient plus que le plafond** — ✅ **les trois sont CLOS le
+  2026-08-23**, le jour même, avec deux autres qu'on ne cherchait pas (les accents, la comparaison en
+  sous-chaîne). Mesuré après coup sur les mêmes quatorze questions : **43 documents partaient, 27
+  partent**, et il en part *plus* de pertinents — 25 contre 23, **zéro fiche muette, zéro saut de file**.
+  Voir `2026-08-23-plafond-rag-mesure.md`, § 6.
 
-  - **Le budget tranche sur la taille, pas sur la pertinence.** 13 des 31 documents retenus à 4 000
+  > ⚠️ **Ce paragraphe était périmé jusqu'au 2026-08-23 au soir**, et il a fait annoncer à David trois
+  > chantiers déjà faits. *Une liste de restes qui vit à deux endroits en désigne un faux* — la règle 2
+  > du § 7 s'applique à ce document lui-même.
+
+  Les trois, et où ils sont corrigés dans `electron/ragSelection.ts` :
+
+  - ~~**Le budget tranche sur la taille, pas sur la pertinence.**~~ ✅ — `meilleurScoreEcarte` et
+    la raison `double-par-le-rang`. 13 des 31 documents retenus à 4 000
     ont un score inférieur à celui d'un document écarté faute de place : la boucle gloutonne écarte une
     fiche trop grosse **et continue**, laissant un petit document moins bien classé se glisser derrière.
     Sur « comment se résolvent les jets ? », la troisième place va à une fiche de PNJ de scénario [63]
     pendant que `degres-de-reussite-et-critiques` [103] attend le palier 8 000.
-  - **Aucun seuil de pertinence.** Une fiche à 100 tout rond n'a aucun mot commun avec la question et
+  - ~~**Aucun seuil de pertinence.**~~ ✅ — la raison `hors-sujet`, avec la garde du cas « question
+    sans mots porteurs ». *Une seule correction pour deux défauts : `rien` redevient atteignable.* Une fiche à 100 tout rond n'a aucun mot commun avec la question et
     occupe pourtant 1 450 tokens. C'est aussi ce qui rend `rien` inatteignable, déjà consigné le 22/08 —
     **une seule correction pour deux défauts.**
-  - **À égalité de score, c'est le nom de fichier qui décide.** +12 pour un mot dans le titre, +3 pour un
+  - ~~**À égalité de score, c'est le nom de fichier qui décide.**~~ ✅ — les occurrences comptent,
+    plafonnées à trois (`OCCURRENCES_QUI_COMPTENT`). +12 pour un mot dans le titre, +3 pour un
     mot dans le corps, sans compter les occurrences : passé la fiche qui porte le mot dans son titre,
     tout s'agglutine à 103 et le départage se fait à l'ordre alphabétique du chemin.
 

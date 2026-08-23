@@ -39,9 +39,11 @@ Une ligne `[RAG Service]` nomme le corpus retenu **et sa racine** ; une ligne `[
 fiches ont répondu et **pourquoi l'étage 1 n'a pas joué**. C'est ce qui manquait toute la journée : la
 recherche échouait en silence et l'Oracle répondait quand même, avec aplomb.
 
-**Une réparation de données à faire à la main**, toujours en attente : les combattants nés du défaut
-`gmPrompt` — nommés **« Ajouter un Combattant »** — sont encore en base. Ils se renomment ou se retirent
-depuis l'écran de combat.
+~~**Une réparation de données à faire à la main**, toujours en attente : les combattants nés du défaut
+`gmPrompt` — nommés **« Ajouter un Combattant »**.~~ ✅ **Rapporté supprimé par David le 2026-08-23**
+(*« supprimés depuis longtemps »*). **Lui seul pouvait le vérifier** : ces combattants vivent dans
+IndexedDB, à l'intérieur de l'application, et aucune lecture du dépôt n'y donne accès. *Un reste que
+seul l'utilisateur peut constater doit lui être demandé, pas reporté indéfiniment.*
 
 ---
 

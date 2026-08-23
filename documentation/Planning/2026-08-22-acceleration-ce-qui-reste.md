@@ -178,8 +178,19 @@ La partition existe **déjà de fait** dans `CurrentView`, et un module l'appliq
       **exhaustif par le typage** : une vue neuve ne peut pas naître sans être classée
 - [x] 2 — **dédoubler `LayoutConfig`** par mode — `layoutConfigPartie`, et la restauration se déclenche
       désormais **au changement de moment**, pas seulement de campagne
-- [ ] 3 — deux vues **seulement là où c'est justifié** : combat, carte, PNJ, Oracle, journal. Pas 24
-      modules
+- [x] 3 — deux vues **seulement là où c'est justifié** : combat, carte, PNJ, Oracle, journal.
+      **Le 2026-08-23, sur ses deux axes objectifs** — `regimeDInterface.ts` (un seul fait, trois
+      conséquences, une table de tailles partagée par les cinq) et `HorsDePortee.tsx` (le geste de plus
+      qui éloigne le destructif en séance). Les **cinq** modules sont traités pour *« ce qui est à
+      portée de main »* ; la **densité n'est calibrée que sur le combat**, et attend l'œil de David à
+      sa table. *Comme les tailles vivent dans une seule table, la recalibrer coûtera une édition, pas
+      cinq.*
+
+      ⚠️ **Trois défauts trouvés en chemin, et ce ne sont pas des questions de densité** : supprimer un
+      journal de séance, supprimer un événement et vider la discussion de l'Oracle se font **sans la
+      moindre confirmation**, depuis des boutons **invisibles jusqu'au survol**. *Une action qu'on ne
+      voit pas venir ne peut pas s'éviter.* Le repli de séance n'y répond qu'à moitié — la confirmation
+      manquante reste à décider.
 
 > **Ce qui reste n'est pas de la plomberie, c'est du dessin.** Le plan le dit lui-même : *« ce qui change
 > vraiment entre les deux modes n'est pas la liste des boutons : la densité (à table on regarde de loin,
