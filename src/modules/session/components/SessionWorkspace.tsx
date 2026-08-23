@@ -9,6 +9,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 import SessionClueDeck from './SessionClueDeck';
 import PanneauDeTrameEnCours from './PanneauDeTrameEnCours';
+import PanneauDesQuarts from '../../ulanzi/PanneauDesQuarts';
 
 const SessionWorkspace: React.FC = () => {
     const { t } = useTranslation();
@@ -160,6 +161,15 @@ const SessionWorkspace: React.FC = () => {
 
                 </div>
             </div>
+
+            {/*
+                **Le défilé des quarts**, sous le groupe et les PNJ actifs.
+
+                Placé là à la demande de David le 2026-08-23 : il vivait dans la
+                colonne du cockpit, où l'on ne regarde pas pendant qu'on joue.
+                Ici il est dans le champ de vision de la table.
+            */}
+            <PanneauDesQuarts seanceOuverte jeuDeLaCampagne={campaign?.system} />
 
             {/*
                 **Où on en est dans l'histoire, pendant qu'on joue.**

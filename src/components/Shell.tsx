@@ -33,6 +33,8 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
+import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
+import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
@@ -78,6 +80,20 @@ interface ShellProps {
 }
 
 const Shell: React.FC<ShellProps> = ({ children }) => {
+    /**
+     * **Le battement de l'afficheur Ulanzi vit ici, pas dans son panneau.**
+     *
+     * Accroché au panneau, il se serait arrêté dès qu'on quitte l'écran du
+     * cockpit : plus de republication, donc le widget aurait expiré en pleine
+     * séance, et surtout **plus de restitution ni de rattrapage au démarrage**.
+     * Monté ici, il est unique et permanent — *un émetteur attaché à une vue
+     * émet ce que la vue veut bien.*
+     */
+    const seanceOuverte = useSessionOSStore(s =>
+        uneSeanceEstOuverte(s.campaigns, s.sessions, s.activeCampaignId),
+    );
+    useBattementUlanzi(seanceOuverte);
+
     // Activate Tactical AI listeners
     useHardwareBridge();
     useAudioTactical();
