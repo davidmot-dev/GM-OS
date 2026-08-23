@@ -195,8 +195,20 @@ const MapControls: React.FC = () => {
     };
 
 
+    /*
+      **Le panneau était plus étroit que son nom.**
+
+      `:root { font-size: 85% }` (`index.css`) fait qu'un `rem` vaut 13,6 px et
+      non 16 : `w-80` — vingt rem — s'affichait à **272 px** au lieu de 320.
+      *Toute taille en `rem` de cette application est quinze pour cent plus
+      petite que son nom ne le dit*, et c'est ce qui serrait les contrôles.
+
+      On l'élargit, et davantage sur un grand écran. La zone centrale n'y perd
+      rien de visible : l'image de la carte y est **contenue**, donc l'espace
+      repris était déjà des bandes noires.
+    */
     return (
-        <aside className="w-80 bg-app-surface border-l border-app-border flex flex-col h-full overflow-y-auto custom-scrollbar">
+        <aside className="w-[22rem] 2xl:w-[26rem] shrink-0 bg-app-surface border-l border-app-border flex flex-col h-full overflow-y-auto custom-scrollbar">
             {/* Header */}
             <div className="p-4 border-b border-app-border bg-app-bg/30">
                 <h2 className="text-accent font-display font-bold text-xl flex items-center gap-2">

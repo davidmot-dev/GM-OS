@@ -12,6 +12,20 @@ interface Props {
      * bouton pleine largeur.
      */
     compact?: boolean;
+    /**
+     * Ne se montrer qu'au survol de la ligne qui le contient.
+     *
+     * **À n'activer que là où l'original se comportait déjà ainsi** — les
+     * corbeilles du journal et des PNJ, logées dans une ligne `.group`. Ailleurs
+     * c'est un piège : les trois commandes de la carte étaient **toujours
+     * visibles** et n'ont aucun parent `.group`, donc `opacity-0` les a rendues
+     * introuvables en séance. Signalé par David le 2026-08-24 :
+     * *« je ne vois pas les boutons »*.
+     *
+     * *Un remplaçant qui hérite d'un style que l'original n'avait pas ne
+     * remplace pas, il efface.*
+     */
+    surInvitation?: boolean;
 }
 
 /**
@@ -47,7 +61,7 @@ interface Props {
  * comportements au premier ajustement, et **on ne s'en apercevrait qu'à la
  * table**.
  */
-const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact }) => {
+const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact, surInvitation }) => {
     const [revele, setRevele] = useState(false);
 
     if (regime.destructifAPortee || revele) return <>{children}</>;
@@ -59,7 +73,8 @@ const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact }) =
                 onClick={e => { e.stopPropagation(); setRevele(true); }}
                 title={`${libelle} — un geste de plus pendant la séance`}
                 aria-label={libelle}
-                className="opacity-0 group-hover:opacity-100 px-1.5 py-1 rounded text-app-text/25 hover:text-app-text/60 transition-all text-[11px] leading-none font-bold tracking-widest"
+                className={`px-1.5 py-1 rounded text-app-text/30 hover:text-app-text/70 transition-all text-[11px] leading-none font-bold tracking-widest `
+                    + (surInvitation ? 'opacity-0 group-hover:opacity-100' : '')}
             >
                 ···
             </button>

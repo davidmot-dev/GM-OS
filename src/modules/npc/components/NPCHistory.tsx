@@ -85,7 +85,7 @@ const NPCHistory: React.FC = () => {
                             <p className="text-[8px] text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
 
-                        <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact>
+                        <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact surInvitation>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
