@@ -93,7 +93,36 @@ export const useTacticalAIStore = create<TacticalAIState>()(
           );
 
           // 1. PHASE NARRATION (Streaming)
-          const narrationPrompt = `Analyse la situation suivante pour ${actor.name} et donne une brève "narration stratégique" (2-3 phrases) décrivant l'ambiance et l'opportunité tactique principale.
+          /*
+            **La borne, et c'est elle qui fait la vitesse — mesuré le 2026-08-23.**
+
+            Le plan du 07/08 pariait sur la fusion des deux appels : *« c'est
+            peut-être le vrai levier de performance du Cortex »*. Deux sondes
+            concordantes disent le contraire.
+
+            | | mur |
+            | --- | --- |
+            | les deux appels, tels quels | 67 à 75 s |
+            | un seul appel fusionné | 46 à 54 s |
+            | **les deux appels, simplement bornés** | **41 à 44 s** |
+
+            **Le double prefill coûtait 2,8 s sur 67** — quatre pour cent. Les
+            quatre-vingt-huit autres sont de la rédaction. *Le Cortex n'était pas
+            lent parce qu'il lisait deux fois, il était lent parce qu'il écrivait
+            trop.*
+
+            Borner bat donc fusionner, **et garde le retour progressif** que la
+            fusion supprimait. La narration tombe de 264 tokens à 65 — et gagne
+            en qualité au passage : elle commençait par « Voici l'analyse et la
+            narration stratégique pour X : **Analyse tactique rapide** », du
+            brouillon que personne ne lit. *Un modèle à qui on ne dit pas de
+            s'arrêter écrit son brouillon en même temps que sa réponse.*
+
+            Sondes : `documentation/Planning/sondes/sonde_cortex_fusion.js` et
+            `sonde_cortex_brievete.js`.
+          */
+          const narrationPrompt = `Analyse la situation suivante pour ${actor.name} et donne une brève "narration stratégique" décrivant l'ambiance et l'opportunité tactique principale.
+          CONTRAINTE : deux phrases, quarante mots au maximum. Pas de titre, pas de liste, pas d'analyse préalable — la narration seule.
           SITUATION : ${narrativeReport}`;
 
           const narrationPromise = aiService.generateTextStream(
@@ -112,7 +141,9 @@ export const useTacticalAIStore = create<TacticalAIState>()(
              // Get the full system prompt for proper grounding
              const fullSystemPrompt = await aiService.prepareSystemPrompt(
                advicePrompt, 
-               `Tu es "Le Stratège", expert en JDR. Réponds exclusivement en JSON valide avec ce format exact : [ { "id": "...", "type": "attack|move|spell|defense", "message": "...", "priority": 1-5 } ]. Ne parle pas avant ni après le JSON.`,
+               // La même borne que la narration, pour la même raison : ce qui
+               // coûte, c'est ce qui s'écrit. Voir le commentaire ci-dessus.
+               `Tu es "Le Stratège", expert en JDR. Réponds exclusivement en JSON valide avec ce format exact : [ { "id": "...", "type": "attack|move|spell|defense", "message": "...", "priority": 1-5 } ]. Ne parle pas avant ni après le JSON. Chaque "message" fait vingt-cinq mots au maximum. Exactement trois conseils.`,
                'oracle',
                /*
                  **Les règles du système, et rien du lore — axe C.3 du plan du

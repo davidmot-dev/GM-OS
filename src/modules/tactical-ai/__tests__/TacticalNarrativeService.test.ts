@@ -53,7 +53,14 @@ describe('TacticalNarrativeService', () => {
         expect(report).toContain('RISQUES TERRAIN : Feu');
     });
 
-    it('should handle missing tokens gracefully', () => {
+    /**
+     * **Cette fixture décrivait en réalité un combat SANS CARTE** — aucun jeton,
+     * pour personne — et non un acteur oublié sur une carte peuplée. La
+     * distinction date du 2026-08-23 : *une absence isolée est un oubli, une
+     * absence universelle est un choix.* Les deux cas sont couverts, chacun par
+     * son test.
+     */
+    it('traite un combat sans aucun jeton comme un combat sans carte', () => {
         const report = TacticalNarrativeService.getSituationalReport(
             mockActor as Combatant,
             [mockActor] as Combatant[],
@@ -61,7 +68,8 @@ describe('TacticalNarrativeService', () => {
             [] as DangerZone[]
         );
 
-        expect(report).toContain("Absent de la carte Atlas");
+        expect(report).toContain('SANS CARTE');
+        expect(report, "il ne s'excuse pas d'une absence").not.toContain('Absent de la carte Atlas');
     });
 
     /**
@@ -247,16 +255,74 @@ describe('TacticalNarrativeService', () => {
     it("interdit tout conseil de placement quand l'acteur n'est pas sur la carte", () => {
         // L'information était là — « Absent de la carte » — et rien n'interdisait
         // au modèle de conseiller un déplacement quand même.
+        //
+        // **La carte est PEUPLÉE ici** : les ennemis ont leurs jetons, l'acteur
+        // non. C'est un défaut, et il se distingue du combat mené sans carte.
+        const jetonsDesEnnemis = mockEnemies.map((e, i) => ({
+            id: `t-${i}`, name: e.name, x: 100 + i * 50, y: 100, linkedCombatantId: e.id,
+        }));
         const report = TacticalNarrativeService.getSituationalReport(
             mockActor as Combatant,
-            [mockActor] as Combatant[],
-            [] as MapToken[],
+            [mockActor, ...mockEnemies] as Combatant[],
+            jetonsDesEnnemis as MapToken[],
             [] as DangerZone[],
         );
 
         expect(report).toContain('AUCUNE POSITION CONNUE');
         expect(report).toContain('ne conseille aucun déplacement');
         expect(report, 'et il reste quelque chose à dire').toContain('santé, états, moral');
+        expect(report, "ce n'est pas le mode sans carte").not.toContain('SANS CARTE');
+    });
+
+    /**
+     * **Le mode hors carte doit NOMMER les adversaires.**
+     *
+     * David, le 2026-08-23 : *« oui je joue souvent des combats sans cartes »*.
+     * Le rapport devait conseiller « sur la seule base des PV, des états et du
+     * moral » — mais les listes d'ennemis ne se remplissaient que si l'acteur
+     * avait un jeton : **il ne recevait pas les PV des autres.** Le Cortex
+     * ignorait jusqu'à leur existence.
+     */
+    /**
+     * **Un jeton sans nom faisait planter le rapport entier.** `name` est
+     * facultatif sur `MapToken` et le repli par nom l'appelait sans garde :
+     * pas une analyse dégradée, une exception. *Un repli qui suppose ce qu'il
+     * cherche n'est pas un repli.*
+     */
+    it('survit à un jeton anonyme sur la carte', () => {
+        const anonyme = [{ id: 't-x', x: 10, y: 10 }];
+        expect(() => TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            anonyme as MapToken[],
+            [] as DangerZone[],
+        )).not.toThrow();
+    });
+
+    it('nomme les adversaires et leur état quand il n’y a pas de carte', () => {
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            [] as MapToken[],
+            [] as DangerZone[],
+        );
+
+        expect(report).toContain('Adversaires');
+        for (const e of mockEnemies) {
+            expect(report, `${e.name} doit être nommé`).toContain(e.name);
+        }
+        expect(report, 'aucune notion de terrain').not.toContain('Portée');
+        expect(report, 'le rapport de force reste dit').toContain('Morphologie du Combat');
+    });
+
+    it("ne se justifie d'aucune fiabilité de position quand il n'y a pas de carte", () => {
+        const report = TacticalNarrativeService.getSituationalReport(
+            mockActor as Combatant,
+            [mockActor, ...mockEnemies] as Combatant[],
+            [] as MapToken[],
+            [] as DangerZone[],
+        );
+        expect(report).not.toContain('FIABILITÉ DES ENTRÉES');
     });
 
     it('should calculate faction health correctly', () => {

@@ -32,6 +32,34 @@ export interface TacticalContext {
      * 50 px s'y lisaient pareil. *Un conseil de placement fondé sur une unité
      * arbitraire est faux sans jamais se plaindre.*
      */
+    /**
+     * **Qui est là, indépendamment de toute carte.**
+     *
+     * Les listes `enemies`, `allies` et `neutres` ne se remplissent que si
+     * l'acteur a un jeton : sans carte, le rapport ne nommait **personne**. Le
+     * Cortex ignorait jusqu'à l'existence des adversaires, et ne pouvait donc
+     * pas conseiller « sur la seule base des PV, des états et du moral » —
+     * il n'avait pas les PV des autres.
+     *
+     * Cet effectif se construit toujours, et ne porte **aucune distance**.
+     */
+    effectifs: {
+        hostiles: Combatant[];
+        allies: Combatant[];
+        neutres: Combatant[];
+    };
+    /**
+     * **Le combat se joue-t-il sans carte ?**
+     *
+     * Vrai quand *aucun* combattant n'a de jeton. À distinguer d'un acteur seul
+     * absent de la carte, qui est un **défaut** : ici rien ne manque, c'est une
+     * façon de jouer — David, le 2026-08-23 : *« oui je joue souvent des combats
+     * sans cartes »*.
+     *
+     * *Un mode assumé ne s'excuse pas.* Le rapport cesse alors d'annoncer une
+     * absence et se contente de dire ce qu'il sait.
+     */
+    sansCarte: boolean;
     fiabilite: {
         /** Comment le jeton de l'acteur a été trouvé — ou pas du tout. */
         acteurResoluPar: 'identifiant' | 'nom' | null;
@@ -121,8 +149,15 @@ export class TacticalNarrativeService {
         const parIdentifiant = tokens.find(t => t.linkedCombatantId === combattant.id);
         if (parIdentifiant) return { token: parIdentifiant, par: 'identifiant' };
 
+        /*
+          **Un jeton sans nom faisait planter tout le rapport.** `t.name` est
+          facultatif sur `MapToken`, et le repli par nom l'appelait sans garde :
+          un seul jeton anonyme sur la carte, et le Cortex ne rendait plus rien
+          — pas une analyse dégradée, une exception. *Un repli qui suppose ce
+          qu'il cherche n'est pas un repli.* Trouvé le 2026-08-23.
+        */
         const parNom = tokens.find(t =>
-            t.name.toLowerCase().trim() === combattant.name.toLowerCase().trim());
+            (t.name ?? '').toLowerCase().trim() === combattant.name.toLowerCase().trim());
         if (parNom) return { token: parNom, par: 'nom' };
 
         return { token: undefined, par: null };
@@ -144,6 +179,30 @@ export class TacticalNarrativeService {
         const enemies: TacticalContext['enemies'] = [];
         const neutres: TacticalContext['neutres'] = [];
         const sansJeton: Combatant[] = [];
+
+        /*
+          **L'effectif se relève avant toute question de carte.** Il ne dépend
+          d'aucun jeton, et c'est tout l'intérêt : sans carte, il est la seule
+          chose que le rapport puisse dire des autres.
+        */
+        const effectifs: TacticalContext['effectifs'] = { hostiles: [], allies: [], neutres: [] };
+        let combattantsSurLaCarte = actorToken ? 1 : 0;
+
+        allCombatants.forEach(c => {
+            if (c.id === actor.id) return;
+            if (this.jetonDe(allTokens, c).token) combattantsSurLaCarte++;
+            const posture = postureEnvers(c, actor);
+            if (posture === 'neutre') effectifs.neutres.push(c);
+            else if (posture === 'allie') effectifs.allies.push(c);
+            else effectifs.hostiles.push(c);
+        });
+
+        /*
+          Personne sur la carte — pas même l'acteur — signifie qu'il n'y a pas
+          de carte, et non que tout le monde a été oublié. *Une absence
+          universelle est une intention, une absence isolée est un oubli.*
+        */
+        const sansCarte = combattantsSurLaCarte === 0;
 
         if (actorToken) {
             const actorPoint: GridPoint = { x: actorToken.x, y: actorToken.y };
@@ -253,6 +312,8 @@ export class TacticalNarrativeService {
                 enemiesHealthPercent: Math.round(enemyHealth.currentPercent)
             },
             macroContext,
+            effectifs,
+            sansCarte,
             // Sans déclaration, « unités » : le mot ne prétend ni grille, ni
             // mètre, ni zone. *On ne remplace pas une convention inventée par
             // une autre.*
@@ -270,7 +331,7 @@ export class TacticalNarrativeService {
      * Transforme le contexte en une chaîne de caractères narrative optimisée pour le prompt IA.
      */
     private static formatNarrativePrompt(ctx: TacticalContext): string {
-        const { actor, actorToken, enemies, allies, neutres, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
+        const { actor, actorToken, enemies, allies, neutres, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext, effectifs, sansCarte } = ctx;
         const unite = ctx.uniteDeDistance;
         const fiabilite = ctx.fiabilite;
 
@@ -285,13 +346,60 @@ export class TacticalNarrativeService {
             prompt += `- États actifs : ${actor.statuses.map(s => s.name).join(', ')}.\n`;
         }
 
-        if (!actorToken) {
+        if (sansCarte) {
+            /*
+              **Le combat sans carte est une façon de jouer, pas une panne.**
+
+              David, le 2026-08-23 : *« oui je joue souvent des combats sans
+              cartes »*. Le rapport traitait pourtant ce cas comme N absences
+              individuelles, et **taisait tout le monde** : les listes d'ennemis
+              et d'alliés ne se remplissent que si l'acteur a un jeton. Le Cortex
+              devait « conseiller sur la seule base des PV, des états et du
+              moral » — sans jamais recevoir les PV des autres.
+
+              *Un mode assumé ne s'excuse pas.* On ne dit plus ce qui manque, on
+              dit ce qu'on sait : qui est là, dans quel état, de quel côté.
+            */
+            prompt += `- Combat SANS CARTE : les positions ne sont pas suivies. `
+                + `Ne conseille ni déplacement, ni portée, ni couvert, ni flanquement — `
+                + `ces notions n'existent pas ici. Conseille sur la santé, les états, `
+                + `le rapport de force et le moral.` + String.fromCharCode(10);
+
+            const decrire = (c: Combatant) => {
+                const sante = decrireLaSante(c);
+                const etats = c.statuses.length > 0 ? ` [${c.statuses.map(st => st.name).join(', ')}]` : '';
+                return `${c.name}${sante ? ` — ${sante}` : ''}${etats}`;
+            };
+
+            if (effectifs.hostiles.length > 0) {
+                prompt += `- Adversaires : ${effectifs.hostiles.map(decrire).join(' ; ')}.
+`;
+            } else {
+                prompt += `- Aucun adversaire déclaré.
+`;
+            }
+            if (effectifs.allies.length > 0) {
+                prompt += `- Alliés : ${effectifs.allies.map(decrire).join(' ; ')}.
+`;
+            }
+            if (effectifs.neutres.length > 0) {
+                prompt += `- Ni alliés ni cibles (faction non établie) : `
+                    + effectifs.neutres.map(n => n.name).join(', ')
+                    + `. Ne propose pas de les attaquer sans que le meneur ait tranché.
+`;
+            }
+        } else if (!actorToken) {
             /*
               **L'information etait la, la consigne manquait.** Le rapport
               ecrivait bien « Absent de la carte » — une ligne discrete parmi
               d'autres — et RIEN n'interdisait au modele de conseiller un
               deplacement quand meme. *Le defaut n'etait pas l'absence
               d'information, c'etait l'absence d'instruction.*
+
+              **Ce cas-ci reste un DÉFAUT** — les autres sont sur la carte, pas
+              lui — et se distingue depuis le 2026-08-23 du combat mené sans
+              carte, qui est une intention. *Une absence isolée est un oubli, une
+              absence universelle est un choix.*
             */
             prompt += `- Note : Absent de la carte Atlas. AUCUNE POSITION CONNUE : `
                 + `ne conseille aucun déplacement ni aucune portée. `
@@ -360,6 +468,19 @@ export class TacticalNarrativeService {
           ligne finit non lu, et la ligne qui compte s'y noie.
         */
         const doutes: string[] = [];
+        /*
+          **Aucun doute à lever quand il n'y a pas de carte.** Ces trois lignes
+          parlent toutes de la fiabilité des POSITIONS : sans carte, elles
+          n'auraient rien à qualifier, et une liste d'absents comptant tout le
+          monde ferait passer une intention pour une avarie. *Un rapport qui se
+          justifie de ce qu'il n'a jamais prétendu finit non lu.*
+
+          On saute les doutes, **pas la suite** : la morphologie du combat et le
+          contexte global sont justement la matière du mode hors carte. Un
+          `return` ici les aurait emportés — c'est-à-dire tout ce qui restait.
+        */
+        if (!sansCarte) {
+
         if (fiabilite.acteurResoluPar === 'nom') {
             doutes.push("la position de l'acteur est appariée par son NOM et non par un lien : "
                 + 'un homonyme la rendrait fausse');
@@ -374,6 +495,8 @@ export class TacticalNarrativeService {
         }
         if (doutes.length > 0) {
             prompt += `- FIABILITÉ DES ENTRÉES — ${doutes.join(' ; ')}.` + String.fromCharCode(10);
+        }
+
         }
 
         prompt += `- Morphologie du Combat : Allies ${factionStatus.alliesHealthPercent}% vs Enemies ${factionStatus.enemiesHealthPercent}%\n`;
