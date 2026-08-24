@@ -21,7 +21,8 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 | --- | --- | --- | --- | --- |
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
-| 3 | **Thème par jeu & fiche HTML** | Plan **écrit**, sujet 2 renversé | Réconcilier les deux tables de thèmes | Rien — prêt à partir |
+| 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
+| 3b | **Fiche HTML** | Plan **écrit**, sujet 2 renversé | Commiter le fichier HTML, puis l'hôte iframe | Rien — prêt à partir |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -206,7 +207,22 @@ fichier HTML, un par PJ** · elle s'affiche sur les **deux** écrans, en bascule
 
 **Aucune question ouverte. Le chantier est prêt à partir.**
 
-## 3a · Le thème — les TODO
+## 3a · Le thème — ✅ LIVRÉ le 2026-08-24
+
+**Les six étapes sont faites**, et le résultat dépasse le plan : au lieu d'une
+palette déclarée dans le pilote, **un jeu dépose `docs/systems/<jeu>/theme/theme.css`
+et l'interface suit** — aucun registre, aucun code, aucune recompilation. Quatre
+thèmes en place (Alien, NOC, Star Trek, Blade Runner), construits par David sur
+son propre SDK de thèmes normalisé.
+
+Ce qui a changé par rapport au plan : on **extrait les 22 jetons** au lieu
+d'injecter la CSS, parce que le vocabulaire de composants du SDK est celui d'une
+page de livre et n'a pas de correspondant dans le cockpit. Les composants
+serviront au chantier 3b, dans l'iframe des fiches.
+
+Détail des pièges rencontrés : mémoire `gm-os-theme-de-jeu-et-fiche-calque`.
+
+### Ce que le plan demandait, pour mémoire
 
 1. **Réconcilier les deux tables de thèmes.** `THEME_PALETTES`
    (`useSessionStore.ts:48`) et `:root[data-theme=…]` (`index.css:184-260`) se
