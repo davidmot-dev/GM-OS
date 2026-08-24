@@ -17,7 +17,7 @@ la mesure qui doit trancher, pas l'intuition.
 | Clés distinctes de la fiche | **74** |
 | Champs GM-OS **sans correspondance** | **0** — la fiche est un sur-ensemble strict |
 | Renommages simples | **16 sur 33 — 48 %** |
-| Compositions `level` + `base_die` | **17 sur 33 — 52 %** |
+| Compositions `level` + `base_die` | **17 sur 33 — 52 %** — *mécaniques, une seule fonction* |
 | Champs de la fiche sans équivalent GM-OS | 24 (dont **18 pour les armes**) |
 
 **Il n'y a pas trois natures de correspondance, il y en a deux** — et la seconde
@@ -99,23 +99,38 @@ La fiche stocke **deux champs** : `level` (nombre) et `base_die` (texte).
 | `psychologie` | `skills.psychology.level` + `.base_die` |
 | `conduite` | `skills.driving.level` + `.base_die` |
 
-### ⚠ La seule chose que je n'ai pas pu vérifier
+### ✅ Tranché le 2026-08-24 — la composition est mécanique
 
-**Que contient `level` ?** Le gestionnaire ne porte aucun personnage rempli,
-donc aucune valeur à observer. Deux lectures possibles :
+**La fiche officielle a bien deux colonnes**, « NIVEAU » et « DÉ DE BASE »,
+imprimées pour chaque attribut et chaque compétence sous le titre *ATTRIBUTS ET
+COMPÉTENCES*. Vérifié sur le fond de page par David. Le découpage n'est donc pas
+une invention du gabarit, il est **fidèle à la source** — l'hypothèse inverse
+(réduire la paire à un seul champ) est écartée.
 
-- `level` vaut **1 à 4** et `base_die` vaut `"D12"…"D6"` — alors la composition
-  est mécanique : `A (D12)` ↔ `level 1` + `D12` ;
-- ou `level` compte des points et `base_die` en dérive.
-
-**C'est toi qui peux trancher en ouvrant une fiche.** Si c'est la première
-lecture, la table est déterministe dans les deux sens :
+Et puisque **la lettre détermine le dé** — c'est la règle du jeu, pas une
+convention de fiche — la correspondance est déterministe dans les deux sens :
 
 ```
 A ↔ D12    B ↔ D10    C ↔ D8    D ↔ D6
 ```
 
-Et alors **une seule fonction de composition suffit pour les 17**.
+`"C (D8)"` se décompose en `level: "C"` + `base_die: "D8"`, et se recompose sans
+ambiguïté. **Une seule fonction couvre les 17 cas, et elle n'a besoin d'aucune
+donnée** : la table est dans les règles.
+
+### ⚠ Un défaut de typage à corriger dans le gabarit de fiche
+
+Les 17 champs `.level` sont déclarés **`type: "number"`**. Or le niveau est une
+**lettre** — `A`, `B`, `C`, `D` — comme le gabarit GM-OS le déclare lui-même
+(`select` à quatre options) et comme les quatre PJ le portent (`C (D8)` chez
+Willem Novak).
+
+**Un champ `number` ne peut pas contenir `C`.** Soit la saisie est impossible,
+soit le joueur y met un chiffre qui ne correspondra à rien côté GM-OS.
+
+À passer en `text`, ou mieux en type contraint aux quatre lettres si le moteur
+sait faire un `select`. *`protection.level` est d'ailleurs déjà en `text`* — le
+type n'a pas été choisi uniformément.
 
 ---
 
@@ -203,3 +218,62 @@ la fiche la porte déjà (`points.humanity`, 20 hotspots).
 > d'identifiants devrait **migrer les données en même temps** — renommer
 > `vigueur` sans toucher aux quatre PJ les rendrait orphelins. C'est
 > probablement pourquoi la capacité n'existe pas.
+
+---
+
+## Ce qu'il reste à faire, quand on reprendra
+
+Rangé par ordre de dépendance : chaque étape suppose la précédente.
+
+**1. Corriger le typage de `.level`** — 17 champs à passer de `number` à `text`
+dans `docs/fiches/Character_Sheet_Manager.html`. Sans ça, aucune saisie de
+niveau n'est possible et la table ne peut rien vérifier.
+
+**2. Publier la couture.** C'est **le seul vrai blocage**, et il n'a pas bougé :
+les cinq fiches n'exposent **rien** sur `window` et n'utilisent **aucun**
+`postMessage`. GM-OS ne peut donc ni lire ni écrire une fiche, quel que soit le
+nommage. Le moteur a pourtant tout en interne — `getByPath`, `setByPath`,
+`saveCharacter`, `scheduleSave` : il ne manque que de les publier.
+
+```js
+window.RPGSheet = { getData, setData, onChange };
+```
+
+**Trois lignes, une seule fois** — puisqu'il n'y a plus qu'un moteur au lieu de
+quatre fiches. C'est le gain caché de la refonte de David.
+
+**3. Écrire la table en données**, avec ses trois capacités : composer /
+décomposer, traduire une valeur, viser une autre destination que `sheetData`
+(l'`inventory`, pour les 18 champs d'armes). Une par jeu, déposée à côté de la
+fiche — même motif que les thèmes.
+
+**4. Un contrôle qui la garde vraie.** Une table de correspondance est **une
+deuxième déclaration de la même vérité** : si le GPT régénère une fiche et
+renomme une clé, la table pointe dans le vide, en silence. Il faut un test qui
+charge la fiche et la table et vérifie que chaque clé citée existe — comme celui
+qui vérifie que chaque police déclarée est bien importée.
+
+**5. Converger sur le `hotspot`.** Alien, NOC et Star Trek encodent encore leurs
+pistes en `checkbox` indépendantes — 182 au total. Chacune rendrait la
+transformation « série contre scalaire » nécessaire, alors que le `hotspot` la
+supprime. **C'est 20 % du coût du mapping, sur trois jeux.**
+
+**6. Faire revenir `humanite` par la Forge.** Le gabarit GM-OS a `pointsPromotion`
+et `pointsChinyen`, pas l'Humanité — alors que la fiche la porte
+(`points.humanity`, 20 hotspots) et que c'est une jauge du jeu au même titre.
+Elle ne peut pas être créée à la main : l'éditeur de gabarit fabrique les
+identifiants (`field-<horodatage>`) et ne laisse modifier que le libellé.
+
+### Deux réserves à garder en tête
+
+**Le poids.** 6,9 des 7,1 Mo du gestionnaire sont des fonds de page en base64,
+dans le même fichier que le moteur — chaque correction réécrit sept mégaoctets,
+et à dix jeux on serait à vingt. Séparer les fonds rendrait le moteur éditable et
+les gabarits déposables un par un.
+
+**La gouvernance.** La fiche porte `key`, `label`, `type` — exactement ce qu'un
+gabarit GM-OS demande. La Forge pourrait **dériver** l'un de l'autre, et la table
+disparaîtrait au lieu d'être maintenue. Le coût n'est pas technique : *qui
+détient la vérité ?* Aujourd'hui la Forge écrit le gabarit depuis les règles, et
+le GPT écrit la fiche depuis le PDF. Dériver veut dire que l'un des deux devient
+la source.

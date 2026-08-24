@@ -22,7 +22,7 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
-| 3b | **Fiche HTML** | Plan **écrit**, sujet 2 renversé | Commiter le fichier HTML, puis l'hôte iframe | Rien — prêt à partir |
+| 3b | **Fiche HTML** | **Étude faite le 24/08**, rien de codé | **Publier la couture** — `window.RPGSheet` | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -246,7 +246,31 @@ Détail des pièges rencontrés : mémoire `gm-os-theme-de-jeu-et-fiche-calque`.
 polices en **liste close** (Google Fonts, liste fixe — un nom libre échoue en
 silence) · le thème doit passer par la synchronisation vers la tablette.
 
-## 3b · La fiche — les TODO
+## 3b · La fiche — étude faite le 2026-08-24, plan d'origine PÉRIMÉ
+
+⚠️ **Le plan ci-dessous a été écrit sur la fiche Alien et ne tient plus.** David
+a depuis construit un **gestionnaire de fiches** — un moteur unique qui rend
+quatre gabarits déclarés en JSON, avec géométrie, champs typés et bibliothèque
+IndexedDB. Il vit dans `docs/fiches/Character_Sheet_Manager.html`.
+
+Ce que ça change :
+
+- **« Détourner `save()` » n'a plus de sens** : il n'y a plus quatre fiches avec
+  chacune sa convention, mais un moteur. La couture se publie **une fois**.
+- **Le typage et l'auto-déclaration sont acquis** — `text`, `number`, `textarea`,
+  `checkbox`, `hotspot`, plus `system` et `schemaVersion`.
+- **Le `hotspot` a supprimé le cas de correspondance le plus coûteux** : dix
+  bulles portant chacune sa valeur SONT un scalaire.
+
+📄 **Fait foi désormais :**
+`documentation/Planning/2026-08-24-correspondance-fiche-blade-runner.md` — la
+table écrite à la main sur les 33 champs, comptée, et les six étapes qui restent.
+
+**Le seul blocage : aucune fiche n'expose quoi que ce soit sur `window`, aucune
+n'utilise `postMessage`.** GM-OS ne peut ni lire ni écrire, quel que soit le
+nommage. Tout le reste est prêt.
+
+### Le plan d'origine, conservé pour ce qu'il garde de vrai
 
 0. ⚠️ **METTRE LE FICHIER À L'ABRI — trouvé le 2026-08-24.** `alien_character_sheet_v2.html`
    (1,6 Mo, 85 lignes, images embarquées) est posé **à la racine du dépôt et n'est pas suivi par git**.
