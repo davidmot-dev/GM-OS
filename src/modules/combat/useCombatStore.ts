@@ -9,6 +9,7 @@ import {
 import { raconterLImpact } from './logic/RecitDeLImpact';
 import { observerLesChutes, raconterLeDeces } from './logic/DecesAuJournal';
 import { isMainWindow } from '../../utils/windowRole';
+import { stockageLocalDuMJ } from '../../utils/ecritureReserveeAuMJ';
 import type { Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
 import { 
     type Combatant, 
@@ -1304,6 +1305,39 @@ export const useCombatStore = create<CombatState>()(
         }),
         {
             name: 'gmos-combat-storage',
+            /*
+              **Seule la fenêtre MJ écrit ce plateau.**
+
+              Le Player Hub importe ce store, appelle `persist.rehydrate()`
+              (`PlayerHub.tsx`) et reçoit du combat par **deux** chemins —
+              `useHubSync` sur le WebSocket et `CrossWindowEventService` sur le
+              relais. Les deux font un `setState`, et un `setState` sur un store
+              persisté écrit. Or le hub tourne sur la **même origine** que le MJ,
+              donc dans le **même `localStorage`**, sous cette même clé.
+
+              Deux dégâts, et aucun ne se voit sur le moment parce que le MJ
+              garde tout en mémoire :
+
+              1. **Ce que le hub ne reçoit jamais, il l'écrase.** La charge
+                 diffusée ne porte que quatre champs — `combatants`,
+                 `currentTurnIdx`, `round`, `isCombatProjected` — quand
+                 `partialize` en persiste neuf. `sceneId`, `combatsGares`,
+                 `dejaConsigne`, `ouvertureConsignee` et `faitsDArmes` repartent
+                 donc tels que le hub les avait à SON démarrage. *Un combat garé
+                 le samedi soir disparaît parce qu'une fenêtre d'affichage a
+                 réécrit par-dessus ce qu'elle n'avait pas.*
+              2. **La liste elle-même arrive dégradée.** `broadcastSync` retire
+                 les combattants invisibles et remplace les `avatar` par leur
+                 forme résolue. Persistée, cette liste rend les adversaires
+                 cachés **définitivement absents** du plateau, et grave du base64
+                 là où la médiathèque avait un identifiant — le dégât exact que
+                 `utils/windowRole.ts` annonce depuis le 2026-08-07.
+
+              Aucune fenêtre secondaire n'a besoin d'écrire : les commandes de la
+              télécommande sont dispatchées **sur le MJ seul** (`App.tsx`, garde
+              `isMainPC`). La lecture reste ouverte à toutes.
+            */
+            storage: stockageLocalDuMJ(),
             /*
               **Réparer ce qui est DÉJÀ écrit.**
 
