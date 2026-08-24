@@ -1,0 +1,163 @@
+/* ==========================================================================
+   RPG THEME — ALIEN
+   Compatible avec rpg-core.css
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap');
+
+:root[data-theme="alien"] {
+  color-scheme: dark;
+
+  --rpg-bg: #060909;
+  --rpg-surface: #0b0f10;
+  --rpg-surface-2: #12191b;
+  --rpg-paper: #a8b8b3;
+
+  --rpg-ink: #101516;
+  --rpg-text: #f0f3f1;
+  --rpg-muted: #81918e;
+
+  --rpg-accent: #8fb7b1;
+  --rpg-accent-2: #335e5a;
+  --rpg-accent-contrast: #07100f;
+
+  --rpg-border: rgba(143, 183, 177, 0.72);
+  --rpg-border-soft: rgba(143, 183, 177, 0.28);
+
+  --rpg-font-display: "Montserrat", "Arial Narrow", Arial, sans-serif;
+  --rpg-font-body: "Helvetica Neue", Arial, sans-serif;
+  --rpg-font-ui: "Montserrat", Arial, sans-serif;
+  --rpg-font-mono: "IBM Plex Mono", "OCR A Std", monospace;
+
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 0px;
+  --rpg-radius-lg: 0px;
+
+  --rpg-shadow: 0 18px 55px rgba(0, 0, 0, 0.50);
+  --rpg-title-tracking: 0.34em;
+  --rpg-kicker-tracking: 0.48em;
+}
+
+:root[data-theme="alien"] .rpg-app {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(66, 121, 113, 0.14), transparent 26rem),
+    radial-gradient(circle at 74% 62%, rgba(65, 102, 100, 0.10), transparent 34rem),
+    #060909;
+}
+
+:root[data-theme="alien"] .rpg-page {
+  color: var(--rpg-text);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(70, 110, 105, 0.08), transparent 35%),
+    #060909;
+}
+
+:root[data-theme="alien"] .rpg-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.18;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(111, 159, 153, 0.12) 0 1px,
+      transparent 1px 4px
+    );
+  mix-blend-mode: soft-light;
+}
+
+:root[data-theme="alien"] .rpg-header {
+  border-bottom: 1px solid rgba(143, 183, 177, 0.18);
+}
+
+:root[data-theme="alien"] .rpg-title {
+  text-indent: var(--rpg-title-tracking);
+}
+
+:root[data-theme="alien"] .rpg-kicker::before,
+:root[data-theme="alien"] .rpg-section-title::before {
+  content: "[ ";
+}
+
+:root[data-theme="alien"] .rpg-kicker::after,
+:root[data-theme="alien"] .rpg-section-title::after {
+  content: " ]";
+}
+
+:root[data-theme="alien"] .rpg-panel {
+  color: var(--rpg-ink);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(43, 105, 99, 0.08) 0 1px,
+      transparent 1px 3px
+    ),
+    #a8b8b3;
+  border: 2px solid #e9eeeb;
+  border-radius: 0;
+  clip-path: polygon(
+    18px 0,
+    30% 0,
+    calc(30% + 18px) 18px,
+    calc(100% - 18px) 18px,
+    100% 36px,
+    100% calc(100% - 24px),
+    calc(100% - 18px) 100%,
+    80% 100%,
+    calc(80% - 18px) calc(100% - 18px),
+    18px calc(100% - 18px),
+    0 calc(100% - 36px),
+    0 18px
+  );
+}
+
+:root[data-theme="alien"] .rpg-callout {
+  background: rgba(2, 7, 8, 0.84);
+  border-radius: 0;
+}
+
+:root[data-theme="alien"] .rpg-callout__cap {
+  color: var(--rpg-accent);
+  background: transparent;
+  border-bottom: 1px solid var(--rpg-border);
+  letter-spacing: 0.16em;
+}
+
+:root[data-theme="alien"] .rpg-list li::before {
+  width: 0;
+  height: 0;
+  top: 0.5em;
+  background: none;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid var(--rpg-accent);
+}
+
+:root[data-theme="alien"] .rpg-button {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+}
+
+:root[data-theme="alien"] .rpg-input,
+:root[data-theme="alien"] .rpg-select,
+:root[data-theme="alien"] .rpg-textarea {
+  color: var(--rpg-text);
+  background: rgba(6, 12, 13, 0.86);
+}
+
+:root[data-theme="alien"] .rpg-stat {
+  background: rgba(8, 17, 18, 0.88);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+}
+
+:root[data-theme="alien"] .rpg-footer {
+  border-top: 1px solid rgba(143, 183, 177, 0.18);
+}

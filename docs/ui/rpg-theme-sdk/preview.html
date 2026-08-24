@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr" data-theme="alien">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RPG Theme SDK — Preview</title>
+
+  <!-- Core -->
+  <link rel="stylesheet" href="../core/rpg-core.css">
+
+  <!-- Les thèmes sont préchargés : changer `data-theme` suffit, sans rechargement.
+
+       `data-rpg-theme` fait FOI : le switcher construit sa liste et remplit le
+       sélecteur à partir de ces balises, et de rien d'autre. Ajouter un jeu =
+       ajouter une ligne ici. En v1 la liste vivait à quatre endroits, et en
+       oublier un échouait en silence. -->
+  <link rel="stylesheet" href="../themes/alien.css"     data-rpg-theme="alien"    data-rpg-name="ALIEN">
+  <link rel="stylesheet" href="../themes/noc.css"       data-rpg-theme="noc"      data-rpg-name="NOC">
+  <link rel="stylesheet" href="../themes/star-trek.css" data-rpg-theme="startrek" data-rpg-name="Star Trek Adventures">
+
+  <script src="../core/rpg-theme-switcher.js" defer></script>
+
+  <style>
+    .sdk-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(26, 26, 26, .95);
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      font: 600 13px/1.2 system-ui, sans-serif;
+      backdrop-filter: blur(10px);
+    }
+
+    .sdk-toolbar select {
+      min-width: 210px;
+      padding: 8px 10px;
+      border: 1px solid #555;
+      border-radius: 7px;
+      color: #fff;
+      background: #242424;
+      font: inherit;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sdk-toolbar">
+    <label for="themeSelect">Thème :</label>
+    <!-- Vide à dessein : le switcher le remplit depuis les <link> ci-dessus. -->
+    <select id="themeSelect" data-rpg-theme-selector></select>
+  </div>
+
+  <div class="rpg-app">
+    <div class="rpg-shell">
+
+      <!-- EXACTEMENT LE MEME DOM POUR LES 3 THEMES -->
+      <article class="rpg-page">
+
+        <header class="rpg-header">
+          <p class="rpg-kicker">Dossier personnel</p>
+          <h1 class="rpg-title">Personnage</h1>
+        </header>
+
+        <main class="rpg-content rpg-stack">
+
+          <p class="rpg-mono">
+            Entrée de journal — données de personnage — accès autorisé.
+          </p>
+
+          <section class="rpg-panel">
+            <div class="rpg-grid">
+              <div class="rpg-stack">
+                <div>
+                  <h2 class="rpg-section-title">Identité</h2>
+                  <div class="rpg-field">
+                    <label class="rpg-subtitle" for="name">Nom</label>
+                    <input id="name" class="rpg-input" value="Alex Morgan">
+                  </div>
+                </div>
+
+                <div class="rpg-field">
+                  <label class="rpg-subtitle" for="role">Rôle</label>
+                  <select id="role" class="rpg-select">
+                    <option>Commandement</option>
+                    <option>Science</option>
+                    <option>Technique</option>
+                    <option>Sécurité</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <h2 class="rpg-section-title">Profil</h2>
+                <p class="rpg-body">
+                  Cette page utilise un DOM unique. ALIEN, NOC et Star Trek
+                  ne changent que la couche visuelle.
+                </p>
+
+                <ul class="rpg-list">
+                  <li>Composants communs</li>
+                  <li>Markup identique</li>
+                  <li>Changement sans rechargement</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="rpg-section-title">Caractéristiques</h2>
+            <div class="rpg-grid rpg-grid--3">
+              <div class="rpg-stat">
+                <span class="rpg-stat__label">Force</span>
+                <span class="rpg-stat__value">4</span>
+              </div>
+              <div class="rpg-stat">
+                <span class="rpg-stat__label">Esprit</span>
+                <span class="rpg-stat__value">3</span>
+              </div>
+              <div class="rpg-stat">
+                <span class="rpg-stat__label">Présence</span>
+                <span class="rpg-stat__value">5</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="rpg-callout">
+            <div class="rpg-callout__cap">Information</div>
+            <p class="rpg-body">
+              L'apparence de cet encadré est entièrement définie par le thème.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="rpg-section-title">Stress / progression</h2>
+            <div class="rpg-meter" style="--rpg-meter-value: 62%">
+              <div class="rpg-meter__fill"></div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="rpg-section-title">Notes</h2>
+            <textarea class="rpg-textarea" rows="5">Texte libre de démonstration.</textarea>
+          </section>
+
+          <div class="rpg-row">
+            <button class="rpg-button" type="button">Enregistrer</button>
+            <label class="rpg-check">
+              <input type="checkbox" checked>
+              <span>Actif</span>
+            </label>
+          </div>
+
+        </main>
+
+        <footer class="rpg-footer">
+          <span>Fiche de personnage</span>
+          <span class="rpg-page-chip">01</span>
+        </footer>
+
+      </article>
+    </div>
+  </div>
+</body>
+</html>

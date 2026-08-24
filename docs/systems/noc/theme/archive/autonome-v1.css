@@ -1,0 +1,650 @@
+/* ==========================================================================
+   NOC — CSS theme reconstructed from the supplied screenshots
+   --------------------------------------------------------------------------
+   Visual language:
+   - black / charcoal / parchment
+   - burgundy editorial headings
+   - oxidized copper accents
+   - distressed paper + industrial/art-deco geometry
+   - strong condensed display type + literary serif body text
+
+   Fonts are freely available approximations, not claims about the original
+   commercial typefaces used in the book.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Oswald:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Core */
+  --noc-black: #070706;
+  --noc-black-soft: #10100f;
+  --noc-charcoal: #1c1a18;
+  --noc-charcoal-2: #292622;
+
+  /* Paper */
+  --noc-paper: #d5d0cd;
+  --noc-paper-light: #e0dcda;
+  --noc-paper-mid: #beb8b5;
+  --noc-paper-dark: #9b9693;
+
+  /* Ink */
+  --noc-ink: #2a2421;
+  --noc-ink-soft: #49413d;
+
+  /* Accents */
+  --noc-burgundy: #702d34;
+  --noc-burgundy-dark: #4f1d24;
+  --noc-copper: #9b5a3c;
+  --noc-copper-bright: #b87551;
+  --noc-rust: #74412f;
+
+  /* Utility */
+  --noc-white: #f2efec;
+  --noc-shadow: 0 18px 50px rgba(0, 0, 0, .42);
+
+  /* Typography */
+  --noc-font-display: "Oswald", "Arial Narrow", "Helvetica Neue Condensed", sans-serif;
+  --noc-font-body: "Crimson Pro", Georgia, "Times New Roman", serif;
+
+  /* Layout */
+  --noc-content: 1120px;
+  --noc-gutter: clamp(24px, 5vw, 64px);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: #2f2f2f;
+}
+
+body.noc-theme {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--noc-ink);
+  font-family: var(--noc-font-body);
+  font-size: 18px;
+  line-height: 1.38;
+  background: #333;
+}
+
+.noc-page {
+  position: relative;
+  width: min(100%, 1180px);
+  min-height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.04), var(--noc-shadow);
+}
+
+/* ==========================================================================
+   PAPER
+   ========================================================================== */
+
+.noc-paper {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 18% 23%, rgba(255,255,255,.25), transparent 24%),
+    radial-gradient(circle at 79% 61%, rgba(86,75,69,.06), transparent 31%),
+    linear-gradient(90deg, rgba(64,52,47,.035), transparent 17%, rgba(255,255,255,.06) 51%, transparent 80%),
+    var(--noc-paper);
+}
+
+.noc-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: .66;
+  background:
+    repeating-radial-gradient(
+      circle at 12% 18%,
+      rgba(64, 56, 52, .09) 0 1px,
+      transparent 1px 5px
+    ),
+    repeating-linear-gradient(
+      87deg,
+      rgba(255,255,255,.025) 0 2px,
+      rgba(60,50,45,.02) 2px 4px,
+      transparent 4px 10px
+    );
+  mix-blend-mode: multiply;
+}
+
+.noc-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow:
+    inset 26px 0 42px rgba(45, 38, 34, .08),
+    inset -18px 0 32px rgba(45, 38, 34, .05),
+    inset 0 12px 22px rgba(255,255,255,.08),
+    inset 0 -24px 35px rgba(50,42,38,.07);
+}
+
+/* ==========================================================================
+   BLACK / DISTRESSED ZONES
+   ========================================================================== */
+
+.noc-black {
+  position: relative;
+  isolation: isolate;
+  color: var(--noc-white);
+  background:
+    radial-gradient(circle at 78% 28%, rgba(255,255,255,.035), transparent 20%),
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.28)),
+    var(--noc-black);
+}
+
+.noc-black::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: .7;
+  background:
+    repeating-linear-gradient(
+      174deg,
+      transparent 0 34px,
+      rgba(255,255,255,.025) 35px 36px,
+      transparent 37px 91px
+    ),
+    radial-gradient(ellipse at 70% 84%, rgba(255,255,255,.08), transparent 28%),
+    radial-gradient(ellipse at 13% 45%, rgba(255,255,255,.035), transparent 23%);
+}
+
+.noc-black::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(174deg, transparent 0 38%, rgba(235,231,227,.90) 39% 46%, transparent 47%),
+    linear-gradient(184deg, transparent 0 54%, rgba(235,231,227,.92) 55% 61%, transparent 62%);
+  opacity: .50;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+.noc-display {
+  margin: 0;
+  font-family: var(--noc-font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  line-height: .95;
+}
+
+.noc-title-xl {
+  font-size: clamp(3rem, 7vw, 6.6rem);
+}
+
+.noc-title-lg {
+  font-size: clamp(2.5rem, 5vw, 4.6rem);
+}
+
+.noc-section-title {
+  margin: 0 0 .55em;
+  color: var(--noc-burgundy);
+  font-family: var(--noc-font-body);
+  font-weight: 600;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.noc-chapter-label {
+  color: var(--noc-white);
+  font-family: var(--noc-font-display);
+  font-size: 1.02rem;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+.noc-brandline {
+  color: var(--noc-white);
+  font-family: var(--noc-font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.noc-body {
+  margin: 0 0 .72em;
+  color: var(--noc-ink);
+  font-family: var(--noc-font-body);
+  font-size: 1rem;
+  line-height: 1.34;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.noc-body--light {
+  color: var(--noc-white);
+}
+
+.noc-lead {
+  font-size: 1.08rem;
+  line-height: 1.36;
+}
+
+.noc-quote {
+  color: #9a5f55;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+/* ==========================================================================
+   PAGE HEADER
+   ========================================================================== */
+
+.noc-running-header {
+  position: relative;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  padding: 10px var(--noc-gutter);
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.96), rgba(18,16,14,.94)),
+    var(--noc-black);
+  color: var(--noc-white);
+  overflow: hidden;
+}
+
+.noc-running-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .35;
+  background:
+    repeating-linear-gradient(120deg, transparent 0 16px, rgba(155,90,60,.22) 17px 18px, transparent 19px 35px),
+    radial-gradient(circle at 70% 50%, rgba(255,255,255,.09), transparent 2px);
+}
+
+.noc-running-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   HERO / CHAPTER OPENING
+   ========================================================================== */
+
+.noc-hero {
+  min-height: 560px;
+  padding: 34px var(--noc-gutter) 70px;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 25% 48%, rgba(255,255,255,.035), transparent 28%),
+    linear-gradient(180deg, #050505, #070706);
+}
+
+.noc-hero__brand {
+  margin-bottom: 68px;
+}
+
+.noc-hero__content {
+  width: min(78%, 720px);
+  margin: 0 auto;
+}
+
+.noc-hero__title {
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.noc-hero__text {
+  font-size: 1.12rem;
+}
+
+/* ==========================================================================
+   ARTICLE / COLUMNS
+   ========================================================================== */
+
+.noc-content {
+  padding: clamp(42px, 6vw, 74px) var(--noc-gutter) 82px;
+}
+
+.noc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 5vw, 58px);
+}
+
+.noc-grid--wide-left {
+  grid-template-columns: 1.08fr .92fr;
+}
+
+.noc-column {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   WARNING BOX
+   ========================================================================== */
+
+.noc-warning {
+  position: relative;
+  margin: 18px 0 50px;
+  padding: 30px 30px 32px;
+  color: var(--noc-white);
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255,255,255,.025), transparent 24%),
+    #070809;
+  border: 1px solid rgba(141, 91, 62, .66);
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.20),
+    inset 0 0 26px rgba(0,0,0,.45);
+}
+
+.noc-warning::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -37px;
+  width: 150px;
+  height: 38px;
+  transform: translateX(-50%);
+  border-top: 3px solid var(--noc-copper);
+  border-left: 2px solid var(--noc-copper);
+  border-right: 2px solid var(--noc-copper);
+  clip-path: polygon(0 100%, 18% 100%, 50% 0, 82% 100%, 100% 100%, 100% 86%, 84% 86%, 50% 16%, 16% 86%, 0 86%);
+  opacity: .86;
+}
+
+.noc-warning::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -34px;
+  width: 130px;
+  height: 34px;
+  transform: translateX(-50%) rotate(180deg);
+  border-top: 2px solid var(--noc-copper);
+  clip-path: polygon(0 100%, 18% 100%, 50% 0, 82% 100%, 100% 100%, 100% 86%, 84% 86%, 50% 16%, 16% 86%, 0 86%);
+  background: linear-gradient(var(--noc-copper), var(--noc-copper)) center top / 2px 100% no-repeat;
+  opacity: .75;
+}
+
+.noc-warning__title {
+  margin: 0 0 20px;
+  color: var(--noc-white);
+  font-family: var(--noc-font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.noc-warning p {
+  color: var(--noc-white);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: .92rem;
+  line-height: 1.48;
+  text-align: left;
+}
+
+/* ==========================================================================
+   ART-DECO / OCCULT GEOMETRY
+   ========================================================================== */
+
+.noc-deco-frame {
+  position: relative;
+  min-height: 520px;
+  padding: 40px;
+  background:
+    linear-gradient(rgba(3,3,3,.40), rgba(3,3,3,.65)),
+    radial-gradient(circle at center, rgba(80,93,88,.18), transparent 36%),
+    #080807;
+  overflow: hidden;
+}
+
+.noc-deco-frame::before,
+.noc-deco-frame::after {
+  content: "";
+  position: absolute;
+  inset: 28px;
+  pointer-events: none;
+}
+
+.noc-deco-frame::before {
+  border: 1px solid rgba(155,90,60,.70);
+  box-shadow:
+    inset 10px 0 0 -9px rgba(155,90,60,.55),
+    inset -10px 0 0 -9px rgba(155,90,60,.55),
+    inset 0 10px 0 -9px rgba(155,90,60,.35),
+    inset 0 -10px 0 -9px rgba(155,90,60,.35);
+}
+
+.noc-deco-frame::after {
+  inset: 52px;
+  border-left: 1px solid rgba(155,90,60,.42);
+  border-right: 1px solid rgba(155,90,60,.42);
+  clip-path: polygon(0 0, 25% 0, 50% 12%, 75% 0, 100% 0, 100% 100%, 72% 100%, 50% 88%, 28% 100%, 0 100%);
+}
+
+/* ==========================================================================
+   LISTS
+   ========================================================================== */
+
+.noc-list {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.noc-list li {
+  margin: .25em 0;
+}
+
+.noc-list--diamond {
+  list-style: none;
+  padding-left: 0;
+}
+
+.noc-list--diamond li {
+  position: relative;
+  padding-left: 1.1em;
+}
+
+.noc-list--diamond li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: .06em;
+  color: var(--noc-burgundy);
+  font-size: .48em;
+}
+
+/* ==========================================================================
+   DIVIDERS
+   ========================================================================== */
+
+.noc-rule {
+  height: 3px;
+  margin: 10px 0 18px;
+  border: 0;
+  background:
+    linear-gradient(90deg, var(--noc-ink) 0 58%, transparent 58% 61%, var(--noc-ink) 61% 100%);
+  opacity: .75;
+}
+
+.noc-copper-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--noc-copper), transparent);
+}
+
+/* ==========================================================================
+   PAGE NUMBER / FOOTER
+   ========================================================================== */
+
+.noc-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52px;
+  pointer-events: none;
+}
+
+.noc-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 220px;
+  height: 52px;
+  background:
+    radial-gradient(circle at 45% 50%, rgba(255,255,255,.08), transparent 2px),
+    #080808;
+  clip-path: polygon(0 0, 77% 0, 100% 100%, 0 100%);
+}
+
+.noc-page-number {
+  position: absolute;
+  left: 24px;
+  bottom: 14px;
+  z-index: 2;
+  color: var(--noc-white);
+  font-family: var(--noc-font-display);
+  font-size: .94rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   UI COMPONENTS
+   ========================================================================== */
+
+.noc-button {
+  appearance: none;
+  border: 1px solid var(--noc-burgundy);
+  background: var(--noc-black);
+  color: var(--noc-white);
+  padding: 11px 18px;
+  font-family: var(--noc-font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.noc-button:hover {
+  background: var(--noc-burgundy);
+  border-color: var(--noc-burgundy);
+}
+
+.noc-button--copper {
+  border-color: var(--noc-copper);
+}
+
+.noc-button--copper:hover {
+  background: var(--noc-copper);
+  color: #0c0908;
+}
+
+.noc-input,
+.noc-select,
+.noc-textarea {
+  width: 100%;
+  border: 1px solid rgba(68,57,52,.45);
+  border-radius: 0;
+  outline: 0;
+  padding: 10px 12px;
+  background: rgba(238,234,231,.64);
+  color: var(--noc-ink);
+  font-family: var(--noc-font-body);
+  font-size: 1rem;
+}
+
+.noc-input:focus,
+.noc-select:focus,
+.noc-textarea:focus {
+  border-color: var(--noc-burgundy);
+  box-shadow: 0 0 0 2px rgba(112,45,52,.10);
+}
+
+/* ==========================================================================
+   COVER-LIKE BLOCK
+   ========================================================================== */
+
+.noc-cover {
+  position: relative;
+  min-height: 88vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--noc-white);
+  background:
+    radial-gradient(circle at 50% 47%, rgba(79,102,98,.23), transparent 26%),
+    radial-gradient(circle at 50% 48%, rgba(116,65,47,.14), transparent 47%),
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.45)),
+    #080807;
+}
+
+.noc-cover__sigil {
+  width: min(58vw, 520px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  color: rgba(235,229,224,.78);
+  font-family: var(--noc-font-display);
+  font-size: clamp(4rem, 13vw, 9rem);
+  font-weight: 700;
+  letter-spacing: -.06em;
+  border: 1px solid rgba(155,90,60,.50);
+  transform: rotate(45deg);
+  box-shadow:
+    0 0 0 18px rgba(155,90,60,.06),
+    inset 0 0 60px rgba(0,0,0,.75);
+}
+
+.noc-cover__sigil > span {
+  transform: rotate(-45deg);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 800px) {
+  body.noc-theme {
+    font-size: 16px;
+  }
+
+  .noc-grid,
+  .noc-grid--wide-left {
+    grid-template-columns: 1fr;
+  }
+
+  .noc-hero__content {
+    width: 100%;
+  }
+
+  .noc-content {
+    padding-inline: 24px;
+  }
+
+  .noc-running-header {
+    padding-inline: 24px;
+  }
+}

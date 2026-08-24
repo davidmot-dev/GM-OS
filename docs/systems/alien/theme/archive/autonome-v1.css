@@ -1,0 +1,600 @@
+/* ALIEN-inspired UI theme reconstructed from the supplied screenshots.
+   Uses only CSS + freely available webfont fallbacks.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap');
+
+:root {
+  /* Core palette */
+  --alien-black: #060909;
+  --alien-black-2: #0b0f10;
+  --alien-charcoal: #12191b;
+  --alien-charcoal-soft: #1b2527;
+
+  --alien-teal: #6f9f99;
+  --alien-teal-soft: #8fb7b1;
+  --alien-teal-bright: #a9d1ca;
+  --alien-teal-deep: #335e5a;
+
+  --alien-panel: #a4b5af;
+  --alien-panel-light: #c2ccc7;
+  --alien-panel-dark: #889d97;
+
+  --alien-white: #f2f4f2;
+  --alien-ink: #101516;
+  --alien-muted: #81918e;
+
+  /* Typography */
+  --font-display: "Montserrat", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Helvetica Neue", Arial, sans-serif;
+  --font-terminal: "IBM Plex Mono", "OCR A Std", "Lucida Console", monospace;
+
+  /* Shape language */
+  --cut-sm: 8px;
+  --cut-md: 18px;
+  --cut-lg: 28px;
+
+  --hairline: 1px;
+  --panel-border: 2px;
+
+  --shadow-deep: 0 18px 55px rgba(0, 0, 0, .50);
+  --glow-teal: 0 0 12px rgba(132, 191, 183, .16);
+
+  --content-width: 1180px;
+}
+
+/* ---------- BASE ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  background: var(--alien-black);
+}
+
+body.alien-theme {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--alien-white);
+  font-family: var(--font-body);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(66, 121, 113, .14), transparent 26rem),
+    radial-gradient(circle at 74% 62%, rgba(65, 102, 100, .10), transparent 34rem),
+    linear-gradient(180deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .72)),
+    var(--alien-black);
+  overflow-x: hidden;
+}
+
+body.alien-theme::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: .62;
+  background-image:
+    radial-gradient(circle, rgba(229, 240, 236, .72) 0 1px, transparent 1.35px),
+    radial-gradient(circle, rgba(160, 199, 191, .42) 0 1px, transparent 1.2px),
+    radial-gradient(circle, rgba(230, 238, 236, .34) 0 .8px, transparent 1.1px);
+  background-size: 173px 157px, 263px 229px, 347px 311px;
+  background-position: 17px 31px, 91px 113px, 203px 37px;
+}
+
+body.alien-theme::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: .22;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(111, 159, 153, .10) 0,
+      rgba(111, 159, 153, .10) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  mix-blend-mode: soft-light;
+}
+
+.alien-shell {
+  width: min(calc(100% - 48px), var(--content-width));
+  margin: 0 auto;
+  padding: 38px 0 72px;
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+
+.alien-title,
+.alien-heading,
+.alien-subheading,
+.alien-kicker {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+
+.alien-title {
+  margin: 0;
+  font-size: clamp(2.6rem, 8vw, 6.8rem);
+  line-height: .95;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-indent: .42em;
+  color: var(--alien-white);
+}
+
+.alien-heading {
+  margin: 0 0 18px;
+  color: #0e6560;
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+
+.alien-subheading {
+  color: var(--alien-teal-bright);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+
+.alien-kicker {
+  color: var(--alien-teal-bright);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .62em;
+  white-space: nowrap;
+}
+
+.alien-body {
+  color: var(--alien-ink);
+  font-size: 1rem;
+  line-height: 1.48;
+}
+
+.alien-body strong {
+  color: #075f59;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.alien-terminal {
+  color: var(--alien-teal-bright);
+  font-family: var(--font-terminal);
+  font-size: clamp(.95rem, 1.9vw, 1.22rem);
+  line-height: 1.54;
+  letter-spacing: .06em;
+  text-shadow: 0 0 7px rgba(143, 183, 177, .12);
+}
+
+.alien-terminal::after {
+  content: "■";
+  display: inline-block;
+  margin-left: .45em;
+  color: var(--alien-teal-bright);
+  font-size: .66em;
+  transform: translateY(-.08em);
+}
+
+/* ---------- CHAPTER / SECTION LABEL ---------- */
+
+.alien-section-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  position: relative;
+  color: var(--alien-teal-bright);
+  font-family: var(--font-display);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .58em;
+  text-transform: uppercase;
+}
+
+.alien-section-tag::before,
+.alien-section-tag::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 9px;
+  border-top: 1px solid var(--alien-teal-soft);
+  border-bottom: 1px solid var(--alien-teal-soft);
+}
+
+.alien-section-tag::before {
+  left: 0;
+  border-left: 1px solid var(--alien-teal-soft);
+}
+
+.alien-section-tag::after {
+  right: 0;
+  border-right: 1px solid var(--alien-teal-soft);
+}
+
+/* ---------- PANELS ---------- */
+
+.alien-panel {
+  position: relative;
+  isolation: isolate;
+  color: var(--alien-ink);
+  padding: clamp(26px, 4vw, 48px);
+  background:
+    linear-gradient(90deg, rgba(119, 170, 162, .10), transparent 30%, rgba(255,255,255,.10)),
+    var(--alien-panel);
+  clip-path: polygon(
+    20px 0,
+    27% 0,
+    calc(27% + 18px) 18px,
+    calc(100% - 20px) 18px,
+    100% 38px,
+    100% calc(100% - 28px),
+    calc(100% - 20px) 100%,
+    78% 100%,
+    calc(78% - 18px) calc(100% - 18px),
+    20px calc(100% - 18px),
+    0 calc(100% - 38px),
+    0 20px
+  );
+  filter: drop-shadow(var(--shadow-deep));
+}
+
+.alien-panel::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(100deg, rgba(255,255,255,.08), transparent 40%),
+    var(--alien-panel);
+  clip-path: inherit;
+}
+
+.alien-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .52;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(43, 105, 99, .12) 0,
+      rgba(43, 105, 99, .12) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.025) 0,
+      rgba(255,255,255,.025) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+}
+
+.alien-panel--compact {
+  padding: 28px 34px;
+}
+
+.alien-panel--simple {
+  clip-path: polygon(
+    16px 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% calc(100% - 16px),
+    calc(100% - 18px) 100%,
+    18px 100%,
+    0 calc(100% - 18px),
+    0 18px
+  );
+}
+
+/* white technical edge */
+.alien-panel-frame {
+  position: relative;
+  background: rgba(238, 244, 241, .92);
+  padding: 2px;
+  clip-path: polygon(
+    20px 0,
+    27% 0,
+    calc(27% + 18px) 18px,
+    calc(100% - 20px) 18px,
+    100% 38px,
+    100% calc(100% - 28px),
+    calc(100% - 20px) 100%,
+    78% 100%,
+    calc(78% - 18px) calc(100% - 18px),
+    20px calc(100% - 18px),
+    0 calc(100% - 38px),
+    0 20px
+  );
+}
+
+.alien-panel-frame > .alien-panel {
+  filter: none;
+}
+
+/* ---------- DECORATIVE TECH LINES ---------- */
+
+.alien-tech-line {
+  height: 12px;
+  margin: 8px 6% 0 24%;
+  background:
+    linear-gradient(
+      90deg,
+      var(--alien-teal-deep) 0 79%,
+      transparent 79% 81%,
+      var(--alien-teal-deep) 81% 84%,
+      transparent 84% 86%,
+      var(--alien-teal-deep) 86% 89%,
+      transparent 89%
+    );
+  clip-path: polygon(0 0, 96% 0, 100% 100%, 4% 100%);
+  opacity: .92;
+}
+
+.alien-rule {
+  height: 1px;
+  border: 0;
+  margin: 30px 0;
+  background: linear-gradient(90deg, transparent, var(--alien-teal-soft) 10%, var(--alien-teal-soft) 90%, transparent);
+  opacity: .68;
+}
+
+/* ---------- DARK INFO BOX ---------- */
+
+.alien-darkbox {
+  position: relative;
+  padding: 28px 34px;
+  border: 1px solid rgba(143, 183, 177, .78);
+  background: rgba(1, 5, 6, .72);
+  box-shadow: inset 0 0 30px rgba(0,0,0,.42);
+}
+
+.alien-darkbox::before,
+.alien-darkbox::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.alien-darkbox::before {
+  left: -1px;
+  top: -1px;
+  border-top: 3px solid var(--alien-black);
+  border-left: 3px solid var(--alien-black);
+}
+
+.alien-darkbox::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 3px solid var(--alien-black);
+  border-bottom: 3px solid var(--alien-black);
+}
+
+.alien-darkbox h2,
+.alien-darkbox h3 {
+  color: var(--alien-teal-bright);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.alien-darkbox p,
+.alien-darkbox li {
+  color: #c0d6d1;
+}
+
+/* ---------- GRID ---------- */
+
+.alien-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.alien-grid--asymmetric {
+  grid-template-columns: .95fr 1.05fr;
+}
+
+.alien-stack {
+  display: grid;
+  gap: 28px;
+}
+
+/* ---------- BUTTONS / FORM ELEMENTS ---------- */
+
+.alien-button {
+  appearance: none;
+  border: 1px solid var(--alien-teal-soft);
+  background: rgba(8, 17, 18, .90);
+  color: var(--alien-teal-bright);
+  padding: 12px 18px;
+  font-family: var(--font-display);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.alien-button:hover {
+  color: var(--alien-black);
+  background: var(--alien-teal-bright);
+  box-shadow: var(--glow-teal);
+}
+
+.alien-input,
+.alien-select,
+.alien-textarea {
+  width: 100%;
+  border: 1px solid rgba(143, 183, 177, .58);
+  border-radius: 0;
+  outline: 0;
+  background: rgba(6, 12, 13, .86);
+  color: var(--alien-white);
+  padding: 12px 14px;
+  font-family: var(--font-terminal);
+  letter-spacing: .04em;
+}
+
+.alien-input:focus,
+.alien-select:focus,
+.alien-textarea:focus {
+  border-color: var(--alien-teal-bright);
+  box-shadow: 0 0 0 2px rgba(143, 183, 177, .12);
+}
+
+/* ---------- BULLETS ---------- */
+
+.alien-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alien-list li {
+  position: relative;
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.alien-list li::before {
+  content: "";
+  position: absolute;
+  top: .55em;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid var(--alien-teal-bright);
+}
+
+/* ---------- COVER / HERO ---------- */
+
+.alien-hero {
+  position: relative;
+  min-height: 76vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(40, 110, 102, .42), transparent 26%),
+    radial-gradient(circle at 50% 48%, rgba(21, 55, 53, .36), transparent 45%),
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.76));
+}
+
+.alien-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 22%, rgba(0,0,0,.30) 64%, rgba(0,0,0,.80) 100%);
+}
+
+.alien-hero__content {
+  position: relative;
+  z-index: 2;
+  width: min(92%, 1080px);
+  text-align: center;
+}
+
+.alien-hero__publisher {
+  margin-bottom: 42px;
+  color: #a2a6a5;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* ---------- PAGE NUMBER ---------- */
+
+.alien-page-number {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 24px;
+  color: var(--alien-white);
+  font-family: var(--font-display);
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.alien-page-number::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-left: 1px solid var(--alien-teal-soft);
+  border-top: 1px solid var(--alien-teal-soft);
+}
+
+/* ---------- UTILITIES ---------- */
+
+.alien-on-dark {
+  color: var(--alien-white);
+}
+
+.alien-muted {
+  color: var(--alien-muted);
+}
+
+.alien-teal {
+  color: var(--alien-teal-bright);
+}
+
+.alien-spacer {
+  height: clamp(40px, 8vw, 110px);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 760px) {
+  .alien-shell {
+    width: min(calc(100% - 28px), var(--content-width));
+    padding-top: 22px;
+  }
+
+  .alien-grid,
+  .alien-grid--asymmetric {
+    grid-template-columns: 1fr;
+  }
+
+  .alien-title {
+    letter-spacing: .24em;
+    text-indent: .24em;
+  }
+
+  .alien-kicker,
+  .alien-section-tag {
+    letter-spacing: .34em;
+  }
+
+  .alien-panel {
+    padding: 28px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

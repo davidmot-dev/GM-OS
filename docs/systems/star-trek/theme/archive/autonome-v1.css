@@ -1,0 +1,675 @@
+/* ==========================================================================
+   STAR TREK ADVENTURES — CSS theme reconstructed from supplied screenshots
+   --------------------------------------------------------------------------
+   Visual cues:
+   - bright white editorial background
+   - blue / teal interface accents
+   - thin orbital / LCARS-adjacent geometry
+   - squared futuristic display typography
+   - restrained black body copy
+   - rounded technical callout boxes
+   - subtle timeline / nav markers
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --sta-white: #fdfdfd;
+  --sta-offwhite: #f5f7f7;
+  --sta-paper: #ffffff;
+  --sta-ink: #17191a;
+  --sta-ink-soft: #4f5558;
+
+  --sta-blue: #5f93b5;
+  --sta-blue-deep: #3d7397;
+  --sta-blue-soft: #8bb1c8;
+
+  --sta-teal: #77bbb9;
+  --sta-teal-deep: #4f9794;
+  --sta-teal-soft: #a7d1cf;
+
+  --sta-line: #b8bec1;
+  --sta-line-soft: #d9dde0;
+  --sta-dark: #25282a;
+
+  --sta-font-display: "Rajdhani", "Eurostile", "Microgramma", "Arial Narrow", sans-serif;
+  --sta-font-ui: "Exo 2", "Eurostile", Arial, sans-serif;
+  --sta-font-body: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+  --sta-radius: 22px;
+  --sta-radius-lg: 32px;
+  --sta-content: 1120px;
+  --sta-gutter: clamp(28px, 5.5vw, 68px);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: #333;
+}
+
+body.sta-theme {
+  margin: 0;
+  color: var(--sta-ink);
+  font-family: var(--sta-font-body);
+  background: #333;
+}
+
+.sta-page {
+  position: relative;
+  width: min(100%, 1180px);
+  min-height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--sta-paper);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 16px 45px rgba(0,0,0,.22);
+}
+
+.sta-content {
+  padding: 68px var(--sta-gutter) 90px;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+.sta-kicker,
+.sta-display,
+.sta-section-title,
+.sta-ui-label,
+.sta-footer-label {
+  font-family: var(--sta-font-display);
+  text-transform: uppercase;
+}
+
+.sta-kicker {
+  margin-bottom: 2px;
+  color: var(--sta-blue-deep);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+.sta-kicker::before {
+  content: "::";
+  margin-right: .2em;
+  font-weight: 700;
+}
+
+.sta-display {
+  margin: 0;
+  color: var(--sta-ink);
+  font-size: clamp(3.2rem, 7vw, 6.7rem);
+  line-height: .92;
+  font-weight: 500;
+  letter-spacing: .045em;
+}
+
+.sta-section-title {
+  margin: 0 0 18px;
+  color: var(--sta-ink);
+  font-size: clamp(1.6rem, 2.7vw, 2.25rem);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.sta-section-title--blue {
+  color: var(--sta-blue-deep);
+}
+
+.sta-section-title::before {
+  content: "::";
+  margin-right: .2em;
+}
+
+.sta-body {
+  margin: 0 0 1.15em;
+  font-size: 1rem;
+  line-height: 1.48;
+  color: var(--sta-ink);
+}
+
+.sta-body strong {
+  font-weight: 700;
+}
+
+.sta-body em {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   TOP ORBITAL DECORATION
+   ========================================================================== */
+
+.sta-orbit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 54%;
+  height: 260px;
+  pointer-events: none;
+  opacity: .95;
+}
+
+.sta-orbit::before,
+.sta-orbit::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--sta-blue);
+}
+
+.sta-orbit::before {
+  width: 280px;
+  height: 280px;
+  left: -210px;
+  top: -155px;
+}
+
+.sta-orbit::after {
+  width: 340px;
+  height: 340px;
+  left: -230px;
+  top: -185px;
+  border-color: rgba(92,147,181,.52);
+}
+
+.sta-orbit__line {
+  position: absolute;
+  left: 0;
+  top: 199px;
+  width: 100%;
+  height: 74px;
+  border-top: 1px solid var(--sta-line);
+  border-left: 1px solid var(--sta-line);
+  clip-path: polygon(0 0, 20% 0, 27% 18%, 56% 18%, 100% 18%, 100% 20%, 56% 20%, 27% 20%, 20% 2%, 0 2%);
+}
+
+.sta-orbit__line::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  top: 34px;
+  width: 150px;
+  border-top: 2px solid var(--sta-blue);
+  transform: rotate(-18deg);
+  transform-origin: left center;
+}
+
+/* ==========================================================================
+   HEADER / INTRO PAGE
+   ========================================================================== */
+
+.sta-intro-header {
+  position: relative;
+  padding: 86px var(--sta-gutter) 0;
+}
+
+.sta-title-rule {
+  width: 45%;
+  height: 1px;
+  margin: 26px 0 0;
+  background: var(--sta-line);
+}
+
+.sta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: clamp(34px, 6vw, 70px);
+}
+
+.sta-grid--wide-left {
+  grid-template-columns: 1.06fr .94fr;
+}
+
+/* ==========================================================================
+   TECH HEADER LINE
+   ========================================================================== */
+
+.sta-tech-topline {
+  position: relative;
+  height: 58px;
+  border-top: 2px solid var(--sta-blue);
+}
+
+.sta-tech-topline::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 56%;
+  height: 58px;
+  border-top: 2px solid var(--sta-blue);
+  border-right: 1px solid var(--sta-line);
+  border-radius: 0 0 0 35px;
+  transform: skewX(16deg);
+  transform-origin: right top;
+}
+
+/* ==========================================================================
+   SECTION HEADER WITH EMBLEM SLOT
+   ========================================================================== */
+
+.sta-section-header {
+  display: grid;
+  grid-template-columns: 44px 1fr 36px;
+  align-items: start;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sta-line);
+}
+
+.sta-emblem {
+  width: 32px;
+  height: 48px;
+  position: relative;
+  margin-top: -5px;
+}
+
+.sta-emblem::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 1px;
+  width: 18px;
+  height: 38px;
+  border: 1.5px solid var(--sta-ink-soft);
+  border-radius: 60% 60% 45% 45% / 82% 82% 18% 18%;
+  transform: rotate(20deg);
+}
+
+.sta-emblem::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 14px;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--sta-blue);
+  border-radius: 50%;
+}
+
+.sta-section-header__title {
+  margin: 0;
+  font-family: var(--sta-font-ui);
+  font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+  line-height: 1.03;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .015em;
+}
+
+/* ==========================================================================
+   CALLOUTS
+   ========================================================================== */
+
+.sta-callout {
+  position: relative;
+  border: 1.5px solid var(--sta-teal);
+  border-radius: 26px 26px 26px 26px;
+  padding: 78px 28px 28px;
+  background: rgba(255,255,255,.94);
+  overflow: hidden;
+}
+
+.sta-callout__cap {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  min-width: 74%;
+  padding: 13px 24px 14px;
+  border-radius: 24px 0 26px 0;
+  background: var(--sta-teal);
+  color: white;
+  font-family: var(--sta-font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+.sta-callout__cap::before {
+  content: "::";
+  margin-right: .25em;
+}
+
+.sta-callout__meta {
+  margin-bottom: 12px;
+  color: var(--sta-teal-deep);
+  font-family: var(--sta-font-ui);
+  font-size: .95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sta-callout--blue {
+  border-color: var(--sta-blue);
+}
+
+.sta-callout--blue .sta-callout__cap {
+  background: var(--sta-blue);
+}
+
+/* ==========================================================================
+   SIDE TECH TRACK
+   ========================================================================== */
+
+.sta-side-track {
+  position: absolute;
+  top: 20%;
+  right: -48px;
+  width: 56px;
+  height: 64%;
+  border: 1px solid var(--sta-line);
+  border-left: none;
+  border-radius: 0 24px 24px 0;
+}
+
+.sta-side-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 35%;
+  width: 12px;
+  height: 28%;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      var(--sta-teal) 0 1px,
+      transparent 1px 8px
+    );
+}
+
+.sta-side-track::after {
+  content: "◀\A▶";
+  white-space: pre;
+  position: absolute;
+  right: 10px;
+  top: 48%;
+  color: var(--sta-blue);
+  font-size: .75rem;
+  line-height: 2.6;
+}
+
+/* ==========================================================================
+   CHECKLIST / ERA BOX
+   ========================================================================== */
+
+.sta-era-box {
+  position: relative;
+  margin-top: 42px;
+  padding: 58px 24px 22px;
+  border: 1.5px solid var(--sta-blue);
+  border-radius: 22px;
+  background: white;
+}
+
+.sta-era-box__cap {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  width: 76%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  color: white;
+  background: var(--sta-blue);
+  border-radius: 20px 22px 0 0;
+  font-family: var(--sta-font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.sta-era-box__cap::before {
+  content: "▷";
+  margin-right: .45em;
+}
+
+.sta-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sta-checklist li {
+  position: relative;
+  margin: 9px 0;
+  padding-left: 22px;
+}
+
+.sta-checklist li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 8px;
+  height: 8px;
+  background: var(--sta-ink);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   SIGNATURE
+   ========================================================================== */
+
+.sta-signature {
+  margin-top: 40px;
+  color: var(--sta-teal-deep);
+  font-family: var(--sta-font-display);
+  font-size: 1.08rem;
+  line-height: 1.15;
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* ==========================================================================
+   FOOTER NAV
+   ========================================================================== */
+
+.sta-footer {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 18px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.sta-footer__left,
+.sta-footer__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sta-page-chip {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--sta-line);
+  border-radius: 50%;
+  color: var(--sta-blue-deep);
+  font-family: var(--sta-font-ui);
+  font-size: .82rem;
+  font-weight: 700;
+  background: white;
+}
+
+.sta-page-chip::before,
+.sta-page-chip::after {
+  content: "";
+  position: absolute;
+}
+
+.sta-footer-label {
+  padding: 3px 18px 4px;
+  border: 1.5px solid var(--sta-line);
+  border-radius: 999px;
+  color: var(--sta-blue-deep);
+  font-size: .77rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+.sta-nav-dashes {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  opacity: .75;
+}
+
+.sta-nav-dashes span {
+  width: 3px;
+  height: 13px;
+  border-radius: 2px;
+  background: #777;
+}
+
+.sta-nav-dashes span:nth-child(3n) {
+  height: 7px;
+}
+
+.sta-dot-pair {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.sta-dot-pair::before,
+.sta-dot-pair::after {
+  content: "";
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid var(--sta-line);
+}
+
+.sta-dot-pair::before {
+  border-color: var(--sta-blue);
+  background: var(--sta-blue);
+}
+
+/* ==========================================================================
+   FORMS / BUTTONS
+   ========================================================================== */
+
+.sta-button {
+  appearance: none;
+  border: 1.5px solid var(--sta-blue);
+  border-radius: 999px;
+  padding: 10px 18px 11px;
+  color: var(--sta-blue-deep);
+  background: white;
+  font-family: var(--sta-font-display);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sta-button:hover {
+  color: white;
+  background: var(--sta-blue);
+}
+
+.sta-input,
+.sta-select,
+.sta-textarea {
+  width: 100%;
+  border: 1.5px solid var(--sta-line);
+  border-radius: 14px;
+  padding: 11px 13px;
+  outline: none;
+  color: var(--sta-ink);
+  background: white;
+  font: inherit;
+}
+
+.sta-input:focus,
+.sta-select:focus,
+.sta-textarea:focus {
+  border-color: var(--sta-blue);
+  box-shadow: 0 0 0 3px rgba(95,147,181,.10);
+}
+
+/* ==========================================================================
+   COVER-LIKE HERO
+   ========================================================================== */
+
+.sta-cover {
+  min-height: 88vh;
+  display: grid;
+  place-items: start center;
+  padding: 72px 20px;
+  color: white;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(120,190,180,.40), transparent 27%),
+    linear-gradient(180deg, #53615f 0 18%, #a9bea0 45%, #c99154 78%, #775137 100%);
+}
+
+.sta-cover__logo {
+  font-family: var(--sta-font-display);
+  font-size: clamp(4rem, 12vw, 9rem);
+  line-height: .72;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -.03em;
+  text-shadow: 0 5px 8px rgba(0,0,0,.16);
+}
+
+.sta-cover__logo small {
+  display: block;
+  margin-top: .28em;
+  color: #f1c633;
+  font-size: .55em;
+  letter-spacing: .02em;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 800px) {
+  .sta-grid,
+  .sta-grid--wide-left {
+    grid-template-columns: 1fr;
+  }
+
+  .sta-intro-header,
+  .sta-content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .sta-display {
+    font-size: clamp(2.8rem, 15vw, 5rem);
+  }
+
+  .sta-footer-label {
+    display: none;
+  }
+
+  .sta-nav-dashes {
+    gap: 10px;
+  }
+}

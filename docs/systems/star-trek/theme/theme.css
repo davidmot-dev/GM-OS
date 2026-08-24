@@ -1,0 +1,125 @@
+/* ==========================================================================
+   RPG THEME — STAR TREK ADVENTURES
+   Compatible avec rpg-core.css
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root[data-theme="startrek"] {
+  color-scheme: light;
+
+  --rpg-bg: #343434;
+  --rpg-surface: #ffffff;
+  --rpg-surface-2: #f5f7f7;
+  --rpg-paper: #ffffff;
+
+  --rpg-ink: #17191a;
+  --rpg-text: #17191a;
+  --rpg-muted: #5f676b;
+
+  --rpg-accent: #5f93b5;
+  --rpg-accent-2: #77bbb9;
+  --rpg-accent-contrast: #ffffff;
+
+  --rpg-border: #b8bec1;
+  --rpg-border-soft: #d9dde0;
+
+  --rpg-font-display: "Rajdhani", "Eurostile", "Microgramma", sans-serif;
+  --rpg-font-body: Arial, "Helvetica Neue", sans-serif;
+  --rpg-font-ui: "Exo 2", "Eurostile", Arial, sans-serif;
+  --rpg-font-mono: "Exo 2", ui-monospace, monospace;
+
+  --rpg-radius-sm: 12px;
+  --rpg-radius-md: 20px;
+  --rpg-radius-lg: 28px;
+
+  --rpg-shadow: 0 16px 45px rgba(0, 0, 0, 0.20);
+  --rpg-title-tracking: 0.035em;
+  --rpg-kicker-tracking: 0.04em;
+}
+
+:root[data-theme="startrek"] .rpg-page {
+  background: #ffffff;
+}
+
+:root[data-theme="startrek"] .rpg-header {
+  padding-top: 76px;
+  border-bottom: 1px solid var(--rpg-border-soft);
+}
+
+:root[data-theme="startrek"] .rpg-header::before {
+  content: "";
+  position: absolute;
+  left: -165px;
+  top: -165px;
+  width: 280px;
+  height: 280px;
+  border: 1.5px solid var(--rpg-accent);
+  border-radius: 50%;
+  box-shadow: 22px 0 0 -21px rgba(95, 147, 181, 0.52);
+}
+
+:root[data-theme="startrek"] .rpg-kicker::before,
+:root[data-theme="startrek"] .rpg-section-title::before {
+  content: "::";
+  margin-right: 0.18em;
+}
+
+:root[data-theme="startrek"] .rpg-title {
+  font-weight: 500;
+}
+
+:root[data-theme="startrek"] .rpg-panel {
+  border-radius: 26px;
+  box-shadow: none;
+}
+
+:root[data-theme="startrek"] .rpg-callout {
+  color: var(--rpg-ink);
+  background: #ffffff;
+  border: 1.5px solid var(--rpg-accent-2);
+  border-radius: 26px;
+}
+
+:root[data-theme="startrek"] .rpg-callout__cap {
+  width: calc(78% + 28px);
+  margin-top: -27px;
+  border-radius: 24px 0 26px 0;
+  background: var(--rpg-accent-2);
+}
+
+:root[data-theme="startrek"] .rpg-callout__cap::before {
+  content: "::";
+  margin-right: 0.20em;
+}
+
+:root[data-theme="startrek"] .rpg-button {
+  border-radius: 999px;
+}
+
+:root[data-theme="startrek"] .rpg-list li::before {
+  border-radius: 2px;
+  background: var(--rpg-ink);
+}
+
+:root[data-theme="startrek"] .rpg-stat {
+  background: #f5f7f7;
+}
+
+:root[data-theme="startrek"] .rpg-stat__value {
+  color: var(--rpg-ink);
+}
+
+:root[data-theme="startrek"] .rpg-footer {
+  color: var(--rpg-accent);
+  background: #ffffff;
+  border-top: 1px solid var(--rpg-border-soft);
+}
+
+:root[data-theme="startrek"] .rpg-page-chip {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+}
