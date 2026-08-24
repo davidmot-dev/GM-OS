@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
 import { consignerLeJet } from '../modules/journal/consignerLeJet';
 import type { RollResult } from '../modules/dice/DiceEngine';
 
@@ -84,6 +85,33 @@ export const useDiceStore = create<DiceState>()(
         }),
         {
             name: 'gmos-dice-storage',
+            /*
+              **Seule la fenêtre MJ écrit ce store.**
+
+              Le hub reçoit les jets par `useHubSync` et les applique en
+              `setState`.
+              Or le hub et le projecteur tournent sur la **même origine** que le
+              MJ (`electron/main.ts` ne change que la chaîne de requête), donc
+              dans le **même `localStorage`**, sous cette même clé. Un `setState`
+              sur un store persisté écrit : la fenêtre secondaire réécrivait le
+              magasin du MJ avec **sa** vue, qui est partielle — ce qu'elle n'a
+              jamais reçu repart tel qu'elle l'avait à SON démarrage.
+
+              **Rien n'est perdu pour autant, et c'est ce qui rend la garde sûre
+              ici** : la synchronisation entre fenêtres est
+              **bidirectionnelle** (`CrossWindowEventService.init` — *« everyone
+              subscribes to their local store to broadcast changes »*). Ce que la
+              fenêtre secondaire change part au MJ, qui l'applique
+              (`applyRemoteUpdate`) puis rediffuse la version qui fait autorité.
+              **C'est donc le MJ qui écrit sur le disque, et lui seul** ;
+              l'écriture du hub n'était qu'un doublon — un doublon partiel, donc
+              destructeur.
+
+              Même garde que `PersistenceService` depuis la perte des campagnes
+              du 2026-08-07, et que `useCombatStore` depuis le 2026-08-24.
+              Détail et liste complète : `utils/ecritureReserveeAuMJ.ts`.
+            */
+            storage: stockageLocalDuMJ(),
             version: 1,
             migrate: (persistedState: any, version: number) => {
                 if (version === 0 && persistedState.quickRolls) {

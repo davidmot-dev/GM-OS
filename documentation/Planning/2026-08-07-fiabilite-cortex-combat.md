@@ -239,9 +239,18 @@ position n'est pas fiable — ce qui manque aujourd'hui (§ 2.6).
   santé, états, moral. »* Il n'a pas fallu segmenter le prompt : une consigne à l'endroit où l'absence
   est déjà annoncée a suffi. *Le défaut n'était pas l'absence d'information, c'était l'absence
   d'instruction* — le § 2.6 le disait, et c'était la bonne lecture.
-- **Faut-il un mode « hors carte » assumé ?** Beaucoup de combats se jouent sans carte. Le Cortex y est
-  aujourd'hui dégradé par accident plutôt que conçu pour, alors que conseiller sur la seule base des PV,
-  des états et du moral reste parfaitement possible.
+- ✅ **Faut-il un mode « hors carte » assumé ?** **OUI, et il est CONSTRUIT le 2026-08-23** —
+  `TacticalNarrativeService`, drapeau `sansCarte`. Beaucoup de combats se jouent sans carte ; le Cortex y
+  était **dégradé par accident plutôt que conçu pour**, alors que conseiller sur la seule base des PV, des
+  états et du moral reste parfaitement possible.
+
+  **Ce que le mode change, et le piège qu'il a fallu éviter :** sans carte, les trois « doutes » de
+  fiabilité sont **tus** — ils ne parlent que de la fiabilité des POSITIONS, et une liste d'absents
+  comptant tout le monde ferait passer une intention pour une avarie. Mais on saute **les doutes, pas la
+  suite** : la morphologie du combat et le contexte global sont justement la matière du mode hors carte,
+  et un `return` à cet endroit les aurait emportés — *c'est-à-dire tout ce qui restait.*
+
+  **Les trois questions du § 5 sont donc closes.** *(Vérifié dans le code le 2026-08-24.)*
 
 ---
 
@@ -252,6 +261,57 @@ position n'est pas fiable — ce qui manque aujourd'hui (§ 2.6).
 - Les constats ci-dessus sont **lus dans le code, non observés en séance**. Une partie réelle avec un
   système autre qu'Alien confirmerait 2.1 et 2.3 en quelques minutes — c'est la vérification la moins
   coûteuse et la plus concluante.
-- `useCombatStore` est persisté sous `gmos-combat-storage` et écrit par toutes les fenêtres — même
-  configuration que le bug de persistance corrigé le 2026-08-07 sur un autre store. **Sans rapport avec
-  le Cortex, mais dans le même module**, et toujours non traité.
+- ✅ **CLOS le 2026-08-24.** ~~`useCombatStore` est persisté sous `gmos-combat-storage` et écrit par
+  toutes les fenêtres — même configuration que le bug de persistance corrigé le 2026-08-07 sur un autre
+  store. **Sans rapport avec le Cortex, mais dans le même module**, et toujours non traité.~~
+
+  **Le soupçon était juste, et le dégât plus large que ce que la note disait.** Le Player Hub importe le
+  store, appelle `persist.rehydrate()`, et reçoit du combat par **deux** chemins — `useHubSync` (WebSocket)
+  et `CrossWindowEventService` (relais). Les deux font un `setState`, et un `setState` sur un store
+  persisté écrit. Le hub tourne sur la **même origine** que le MJ (`electron/main.ts` ne change que la
+  chaîne de requête), donc dans le **même `localStorage`**, sous la même clé.
+
+  **Deux dégâts, invisibles sur le moment parce que le MJ garde tout en mémoire :**
+
+  1. **Ce que le hub ne reçoit jamais, il l'écrase.** La charge diffusée porte **quatre** champs quand
+     `partialize` en persiste **neuf** : `sceneId`, `combatsGares`, `dejaConsigne`, `ouvertureConsignee`
+     et `faitsDArmes` repartent tels que le hub les avait à SON démarrage. *Un combat garé disparaît
+     parce qu'une fenêtre d'affichage a réécrit par-dessus ce qu'elle n'avait pas.*
+  2. **La liste arrive dégradée.** `broadcastSync` retire les combattants **invisibles** et remplace les
+     `avatar` par leur forme résolue. Persistée, elle rend les adversaires cachés **définitivement
+     absents**, et grave du base64 là où la médiathèque avait un identifiant — le dégât que
+     `utils/windowRole.ts` annonce mot pour mot depuis le 07/08.
+
+  **Le correctif est celui de `PersistenceService`, extrait pour être partagé** :
+  `utils/ecritureReserveeAuMJ.ts` — `getItem` ouvert à toutes les fenêtres, `setItem` et `removeItem`
+  muets hors fenêtre MJ. Posé à l'écriture et non dans `partialize` : *une charge réduite reste une
+  charge, et c'est la charge elle-même qui détruit.* Aucune fenêtre secondaire n'y perd quoi que ce
+  soit — les commandes de la télécommande sont dispatchées **sur le MJ seul** (`App.tsx`, garde
+  `isMainPC`).
+
+  **La dégradation le prouve** : retirer la ligne `storage:` fait tomber 4 des 5 tests de
+  `persistanceEntreFenetres.test.ts`, dont « un combat garé survit à ce que le hub reçoive de la
+  synchronisation ».
+
+  > ✅ **Le même défaut valait pour CINQ autres stores — tous corrigés le 2026-08-24**, dans la foulée :
+  > `useMapStore`, `useClockStore`, `useWhiteboardStore`, `useDiceStore` et `useFavoriteStore` portent
+  > la même garde. **Dégradation vérifiée sur les cinq** : gardes retirées, 15 tests sur 20 tombent
+  > (`utils/persistanceDesStoresPartages.test.ts`), trois par store.
+  >
+  > **Ce qui rendait la garde sûre sur la carte et le tableau blanc, et qu'il fallait établir avant de
+  > la poser** : les joueurs y agissent vraiment — `PlayerDrawingCanvas` appelle `finishDrawing`, et le
+  > hub déplace des jetons. Mais la synchronisation entre fenêtres est **bidirectionnelle**
+  > (`CrossWindowEventService.init`) : ce que la fenêtre secondaire change part au MJ, qui l'applique
+  > (`applyRemoteUpdate`) **puis rediffuse la version qui fait autorité**. C'est donc le MJ qui écrit sur
+  > le disque, et lui seul ; l'écriture du hub n'était qu'un doublon — *un doublon partiel, donc
+  > destructeur.* Sans cette vérification, la garde aurait effacé le dessin des joueurs.
+  >
+  > ⚠️ **Reste un huitième store, et il ne peut PAS prendre cette garde telle quelle** :
+  > `useRessourcesDeTableStore` (`gmos-ressources-de-table`). `useHubSync` l'écrit comme les autres,
+  > mais **la tablette est censée le persister** — son propre commentaire dit qu'écraser sa carte de
+  > réserves *« effacerait ce qu'une tablette sait d'une partie en sommeil »*, et `isMainWindow()`
+  > refuse aussi `tablet`. *Refuser ne protégerait d'ailleurs rien là-bas* : la tablette est servie
+  > depuis `http://<ip>:3001/`, donc sur une **autre origine** — son magasin ne peut pas atteindre celui
+  > du MJ. Seuls `hub` et `projector` le partagent. Il lui faut une garde plus fine : bloquer les
+  > fenêtres de **même origine**, pas toutes les fenêtres secondaires. **Non fait, et à ne pas faire à
+  > l'aveugle.**
