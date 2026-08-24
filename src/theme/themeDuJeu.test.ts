@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { extraireJetons, pontVersLInterface, cheminDuTheme } from './jetonsDeTheme';
+import { describe, it, expect, vi } from 'vitest';
+import {
+    extraireJetons, pontVersLInterface, cheminDuTheme,
+    extraireImportsDePolice, premiereFamille,
+} from './jetonsDeTheme';
 
 /**
  * **Le thème du jeu — déposer un fichier doit suffire.**
@@ -73,4 +76,64 @@ describe('cheminDuTheme', () => {
         expect(cheminDuTheme('systems/alien')).toBe('systems/alien/theme/theme.css');
     });
 
+});
+
+/**
+ * **La police déclarée doit être téléchargée, pas seulement nommée.**
+ *
+ * Signalé par David le 2026-08-24 : *« en réalité les thèmes ne changent pas la
+ * police »*. `--font-display` valait bien `"Montserrat", …`, mais Montserrat
+ * n'était jamais chargée — on extrait les jetons SANS charger la CSS, donc
+ * l'`@import` du thème ne s'exécutait pas. Le navigateur retombait en silence
+ * sur `Arial Narrow`.
+ */
+describe('extraireImportsDePolice', () => {
+    it('relève l’import d’un thème', () => {
+        const css = "@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');"
+            + ':root{}';
+        expect(extraireImportsDePolice(css))
+            .toEqual(['https://fonts.googleapis.com/css2?family=Montserrat&display=swap']);
+    });
+
+    it('accepte les guillemets doubles et l’absence de guillemets', () => {
+        expect(extraireImportsDePolice('@import url("https://fonts.googleapis.com/a");')).toHaveLength(1);
+        expect(extraireImportsDePolice('@import url(https://fonts.googleapis.com/b);')).toHaveLength(1);
+    });
+
+    /**
+     * Un fichier de thème est du code exécuté par l'interface : on n'y suit pas
+     * n'importe quelle URL.
+     */
+    it('refuse un hôte non autorisé et le dit', () => {
+        const avert = vi.spyOn(console, 'warn').mockImplementation(() => { /* silence */ });
+        expect(extraireImportsDePolice('@import url("https://exemple.test/polices.css");')).toEqual([]);
+        expect(avert).toHaveBeenCalledOnce();
+        avert.mockRestore();
+    });
+
+    it('refuse ce qui n’est pas https', () => {
+        expect(extraireImportsDePolice('@import url("http://fonts.googleapis.com/a");')).toEqual([]);
+    });
+
+    it('ignore un import relatif, qui n’a rien à charger', () => {
+        expect(extraireImportsDePolice("@import url('./autre.css');")).toEqual([]);
+    });
+
+    it('ne rend pas deux fois le même', () => {
+        const u = 'https://fonts.googleapis.com/css2?family=Oswald';
+        expect(extraireImportsDePolice(`@import url('${u}');@import url('${u}');`)).toHaveLength(1);
+    });
+});
+
+describe('premiereFamille', () => {
+    it('rend la police voulue, pas ses replis', () => {
+        expect(premiereFamille('"Montserrat", "Arial Narrow", Arial, sans-serif')).toBe('Montserrat');
+        expect(premiereFamille("'IBM Plex Mono', monospace")).toBe('IBM Plex Mono');
+        expect(premiereFamille('sans-serif')).toBe('sans-serif');
+    });
+
+    it('rend null sur rien', () => {
+        expect(premiereFamille(undefined)).toBeNull();
+        expect(premiereFamille('  ')).toBeNull();
+    });
 });

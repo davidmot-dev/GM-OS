@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { extraireJetons, pontVersLInterface, cheminDuTheme } from '../src/theme/jetonsDeTheme';
+import {
+    extraireJetons, pontVersLInterface, cheminDuTheme,
+    extraireImportsDePolice, premiereFamille,
+} from '../src/theme/jetonsDeTheme';
 
 /**
  * **Les thèmes de jeu réellement présents dans le dépôt.**
@@ -94,5 +97,51 @@ describe('les thèmes de jeu du dépôt', () => {
     it('deux thèmes ne rendent pas le même accent', () => {
         const accents = AVEC_THEME.map(j => extraireJetons(lire(j)).jetons.accent);
         expect(new Set(accents).size).toBe(accents.length);
+    });
+});
+
+/**
+ * **Un thème doit APPORTER les polices qu'il déclare.**
+ *
+ * Signalé par David le 2026-08-24 : *« en réalité les thèmes ne changent pas la
+ * police »*. Les quatre demandaient Montserrat, Oswald, Rajdhani et Barlow
+ * Condensed — dont **aucune** n'est dans la liste chargée par `index.css`. La
+ * variable était posée, la police jamais téléchargée, et le navigateur
+ * retombait en silence sur `Arial Narrow`.
+ *
+ * Le remède refusé, et il faut dire pourquoi : ajouter ces quatre polices à la
+ * liste globale marcherait aujourd'hui et casserait au cinquième thème, puisque
+ * ça redemanderait d'éditer du code. *On ne répare pas une liste close en
+ * l'allongeant.*
+ */
+describe('les polices des thèmes', () => {
+    it.each(AVEC_THEME)('%s apporte au moins une feuille de police', (jeu) => {
+        expect(extraireImportsDePolice(lire(jeu)).length).toBeGreaterThan(0);
+    });
+
+    it.each(AVEC_THEME)('%s importe bien la famille qu’il déclare', (jeu) => {
+        const css = lire(jeu);
+        const imports = extraireImportsDePolice(css).join(' ');
+        const { jetons } = extraireJetons(css);
+
+        for (const jeton of ['font-display', 'font-body', 'font-ui', 'font-mono']) {
+            const famille = premiereFamille(jetons[jeton]);
+            // Les piles génériques (`sans-serif`, `monospace`) n'ont rien à importer.
+            if (!famille || !/[A-Z]/.test(famille)) continue;
+
+            /*
+              Google Fonts encode les espaces en `+`. On cherche la famille dans
+              l'URL plutôt que de faire confiance au nom du fichier : c'est le
+              lien entre ce que le thème DEMANDE et ce qu'il TÉLÉCHARGE, et
+              c'est précisément ce lien qui manquait.
+            */
+            const dansLUrl = famille.replace(/\s+/g, '+');
+            const generique = ['Arial', 'Helvetica', 'Georgia', 'Times', 'Courier', 'Verdana']
+                .some(g => famille.startsWith(g));
+            if (generique) continue;
+
+            expect(imports, `${jeu} : ${jeton} = « ${famille} » n’est importée nulle part`)
+                .toContain(dansLUrl);
+        }
     });
 });

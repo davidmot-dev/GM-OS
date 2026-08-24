@@ -142,3 +142,69 @@ export function pontVersLInterface(jetons: Record<string, string>): Record<strin
 export function cheminDuTheme(racine: string): string {
     return `${racine}/theme/theme.css`;
 }
+
+/**
+ * Les hôtes autorisés pour les polices d'un thème.
+ *
+ * Un fichier de thème est du code exécuté par l'interface : on n'y suit pas
+ * n'importe quelle URL. La liste reste courte à dessein — l'ouvrir demandera
+ * une décision, pas un oubli.
+ */
+const HOTES_DE_POLICES = ['fonts.googleapis.com', 'fonts.bunny.net'];
+
+const IMPORT_CSS = /@import\s+url\(\s*['"]?([^'")]+)['"]?\s*\)/g;
+
+/**
+ * **Les `@import` de polices d'un thème, à charger séparément.**
+ *
+ * Signalé par David le 2026-08-24 : *« en réalité les thèmes ne changent pas la
+ * police »*. La variable était bien posée — `--font-display: "Montserrat", …` —
+ * mais **Montserrat n'était jamais téléchargée**, donc le navigateur retombait
+ * en silence sur `Arial Narrow`.
+ *
+ * La cause tient à la conception : on extrait les jetons **sans charger la
+ * CSS**, donc l'`@import` que chaque thème porte n'était jamais exécuté. La
+ * police était déclarée, jamais fournie.
+ *
+ * *Une police absente n'échoue pas, elle se remplace* — c'est le piège que le
+ * plan du 23/08 annonçait sous « polices en liste close ». On refuse d'ailleurs
+ * le remède évident, qui serait d'ajouter ces polices à la liste globale
+ * d'`index.css` : ça marcherait aujourd'hui et casserait au cinquième thème,
+ * puisqu'il faudrait de nouveau éditer du code. **La promesse « déposer un
+ * fichier suffit » ne survit qu'en lisant ce que le fichier déclare.**
+ */
+export function extraireImportsDePolice(css: string): string[] {
+    const urls: string[] = [];
+
+    for (const m of css.matchAll(IMPORT_CSS)) {
+        const brut = m[1].trim();
+        let url: URL;
+        try {
+            url = new URL(brut);
+        } catch {
+            continue; // un chemin relatif : rien à charger depuis le document
+        }
+        if (url.protocol !== 'https:') continue;
+        if (!HOTES_DE_POLICES.includes(url.hostname)) {
+            console.warn(
+                `[ThèmeDuJeu] Import ignoré, hôte non autorisé : ${url.hostname}. ` +
+                `Hôtes acceptés : ${HOTES_DE_POLICES.join(', ')}.`,
+            );
+            continue;
+        }
+        if (!urls.includes(url.href)) urls.push(url.href);
+    }
+
+    return urls;
+}
+
+/**
+ * Le premier nom de famille d'une pile de polices — celui que le thème veut
+ * vraiment, les suivants étant ses replis.
+ */
+export function premiereFamille(pile: string | undefined): string | null {
+    if (!pile) return null;
+    const premier = pile.split(',')[0]?.trim();
+    if (!premier) return null;
+    return premier.replace(/^['"]|['"]$/g, '') || null;
+}

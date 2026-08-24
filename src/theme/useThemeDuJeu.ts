@@ -3,7 +3,9 @@ import { resoudreCorpus } from '../../electron/corpusSysteme';
 import { useSessionStore } from '../store/useSessionStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { appliquerLeTheme, type ThemeDuJeuApplique } from './themeDeLInterface';
-import { chargerLeThemeDuJeu, pontVersLInterface } from './themeDuJeu';
+import {
+    chargerLeThemeDuJeu, pontVersLInterface, poserLesPolices, verifierLesPolices,
+} from './themeDuJeu';
 
 /**
  * **L'interface suit le jeu de la campagne ouverte.**
@@ -48,6 +50,7 @@ export function useThemeDuJeu(): void {
             if (!campagne) {
                 duJeu.current = null;
                 campagneLue.current = null;
+                poserLesPolices([]);
                 appliquerLeTheme(theme, themeColor, undefined);
                 return;
             }
@@ -89,7 +92,22 @@ export function useThemeDuJeu(): void {
                 );
             }
 
+            /*
+              **Les polices AVANT le thème.** La feuille se télécharge en
+              parallèle du rendu ; la poser d'abord évite qu'on voie le texte
+              basculer d'un repli vers la vraie police une fois la couleur déjà
+              changée.
+            */
+            poserLesPolices(releve?.polices ?? []);
             appliquerLeTheme(theme, themeColor, duJeu.current ?? undefined);
+
+            /*
+              Et on dit si elles ne sont pas arrivées. Une police absente ne
+              lève pas : le navigateur prend le repli suivant, et le thème
+              paraît appliqué alors que sa typographie ne l'est pas. Hors ligne,
+              c'est le cas garanti.
+            */
+            if (releve) void verifierLesPolices(releve.jetons);
         };
 
         void relire();
