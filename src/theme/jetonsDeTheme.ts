@@ -110,6 +110,20 @@ const PONT: Record<string, string> = {
     'font-mono': '--font-mono',
 };
 
+/**
+ * Les jetons de police que le pont applique **réellement** à l'interface.
+ *
+ * Deux sur quatre : `font-body` et `font-ui` n'ont aucun équivalent dans GM-OS,
+ * ils appartiennent aux fiches. **Il ne faut donc pas vérifier leur
+ * disponibilité** — une police que rien n'emploie n'est jamais téléchargée par
+ * le navigateur, et la déclarer manquante serait crier sur le cas normal.
+ *
+ * **Dérivée de `PONT`, jamais recopiée.** Une seconde liste écrite à la main
+ * dériverait au premier jeton ajouté — c'est le motif que ce dépôt a payé cinq
+ * fois le 2026-08-24.
+ */
+export const POLICES_APPLIQUEES = Object.keys(PONT).filter(j => j.startsWith('font-'));
+
 export function pontVersLInterface(jetons: Record<string, string>): Record<string, string> {
     const vars: Record<string, string> = {};
 

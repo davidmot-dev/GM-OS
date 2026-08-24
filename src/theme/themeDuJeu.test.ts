@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
     extraireJetons, pontVersLInterface, cheminDuTheme,
-    extraireImportsDePolice, premiereFamille,
+    extraireImportsDePolice, premiereFamille, POLICES_APPLIQUEES,
 } from './jetonsDeTheme';
 
 /**
@@ -135,5 +135,38 @@ describe('premiereFamille', () => {
     it('rend null sur rien', () => {
         expect(premiereFamille(undefined)).toBeNull();
         expect(premiereFamille('  ')).toBeNull();
+    });
+});
+
+/**
+ * **On ne vérifie la disponibilité que des polices qu'on applique.**
+ *
+ * Signalé par David le 2026-08-24 : le thème Torg déclarait Libre Baskerville
+ * absente alors qu'elle était correctement importée. Elle est affectée à
+ * `font-body`, que le pont ne transporte pas — donc rien ne l'emploie, donc le
+ * navigateur ne la télécharge jamais. Oswald, du même import mais affectée à
+ * `font-display`, ne posait aucun problème.
+ */
+describe('POLICES_APPLIQUEES', () => {
+    it('ne retient que les polices que le pont transporte', () => {
+        expect([...POLICES_APPLIQUEES].sort()).toEqual(['font-display', 'font-mono']);
+    });
+
+    /**
+     * **Dérivée, jamais recopiée.** Une seconde liste écrite à la main
+     * dériverait au premier jeton ajouté — le motif que ce dépôt a payé cinq
+     * fois dans la même journée.
+     */
+    it('reste d’accord avec le pont, par construction', () => {
+        const duPont = Object.keys(pontVersLInterface({
+            'font-display': 'X', 'font-body': 'X', 'font-ui': 'X', 'font-mono': 'X',
+        }));
+        expect(duPont.sort()).toEqual(['--font-display', '--font-mono']);
+        expect(POLICES_APPLIQUEES).toHaveLength(duPont.length);
+    });
+
+    it('n’inclut ni font-body ni font-ui, qui appartiennent aux fiches', () => {
+        expect(POLICES_APPLIQUEES).not.toContain('font-body');
+        expect(POLICES_APPLIQUEES).not.toContain('font-ui');
     });
 });

@@ -1,0 +1,228 @@
+# Table des matières — Torg Eternity
+
+- Avant-propos — 8
+- Notes du concepteur — 11
+- Chapitre 1 — LES GUERRES DES POSSIBILITÉS — 12
+- Les Seigneurs de Réalité — 12
+- Le Torg — 13
+- Les Chevaliers des Tempêtes — 13
+- Le Conseil de Delphes — 13
+- Votre mission — 13
+- Chapitre 2 — LES COSMS — 14
+- La Prime Terre — 18
+- Un monde en guerre — 18
+- Le Conseil de Delphes — 19
+- L’état du monde — 20
+- Les Lois du Monde — 25
+- Aysle — 26
+- Les Lois du Monde — 30
+- Cyberpapauté — 32
+- Les Lois du Monde — 37
+- L’Empire du Nil — 38
+- Les Lois du Monde — 42
+- La science étrange — 43
+- La Terre Vivante — 44
+- Les Lois du Monde — 48
+- Orrorsh — 50
+- Les Lois du Monde — 55
+- Pan-Pacifica — 56
+- Kanawa Corporation — 57
+- Une invasion secrète ? — 60
+- Les Lois du Monde — 60
+- Tharkold — 62
+- Les Lois du Monde — 66
+- Chapitre 3 — CHEVALIERS DES TEMPÊTES — 68
+- Progression — 71
+- Dramatis Personae — 72
+- Races — 74
+- Edeinos — 74
+- Elfe — 75
+- Nain — 76
+- Compétences — 77
+- Atouts — 84
+- Arts magiques — 84
+- Commandement — 85
+- Cybertechnologie — 86
+- Edeinos — 86
+- Elfe — 87
+- Foi — 88
+- Lumière — 89
+- Nain — 89
+- Occulte — 91
+- Occultech — 94
+- Paria — 94
+- Pouvoirs du ki — 95
+- Pouvoirs Pulps — 95
+- Prouesses — 99
+- Psioniques — 101
+- Réalité — 101
+- Samouraï électrique — 103
+- Sauvagerie — 104
+- Sociaux — 105
+- Ténèbres — 105
+- Liste des Atouts — 106
+- Chapitre 4 — LES RÈGLES DU JEU — 108
+- Niveaux de succès — 109
+- Possibilités — 110
+- Le Paquet d’Action — 111
+- Initiative — 111
+- Actions approuvées — 111
+- La Ligne de Conflit — 112
+- Cartes du Destin — 112
+- Cartes de Cosm — 113
+- Actions — 114
+- Interactions offensives — 115
+- Attaques physiques — 115
+- Dommages — 116
+- Choc — 117
+- Blessures — 117
+- Annulation des dommages — 117
+- Défaite — 117
+- Guérison — 118
+- Options d’action et de combat — 119
+- Exemple détaillé — 128
+- Résumé des actions et des options de combat — 129
+- Résolution dramatique d’une tâche — 130
+- Dilemme — 130
+- Exemple détaillé — 131
+- Véhicules — 132
+- Combat — 132
+- Manœuvres — 132
+- Collisions — 133
+- Poursuites — 134
+- Dangers environnementaux — 135
+- Chaleur/froid extrême — 135
+- Chute — 135
+- Électricité — 136
+- Feu — 136
+- Noyade — 136
+- Radiations — 137
+- Survie — 137
+- Chapitre 5 — ÉQUIPEMENTS — 138
+- Acheter de l’équipement — 138
+- Requêtes adressées au Conseil de Delphes — 138
+- Ressources personnelles — 139
+- Équipements généraux — 139
+- Armure — 144
+- Boucliers — 146
+- Armes de mêlée — 148
+- Armes de jet — 150
+- Armes à feu — 155
+- Implants cybernétiques — 160
+- Occultechs — 161
+- Armes lourdes — 164
+- Munitions spéciales — 165
+- Explosifs — 166
+- Véhicules — 167
+- Chapitre 6 — RÉALITÉ — 176
+- Les Pillards de Réalité — 176
+- Zones — 177
+- Têtes de pont — 178
+- Contradictions — 178
+- Transformation — 180
+- Instant fatidique — 181
+- Rôle du Chevalier des Tempêtes — 182
+- Gloire — 183
+- Retirer des stelae — 183
+- Chapitre 7 — MAGIE — 184
+- Incantation — 185
+- Sorts accessibles — 186
+- Description des sorts — 187
+- Ciblage — 188
+- Chapitre 8 — MIRACLES — 196
+- Invoquer des miracles — 197
+- Religions — 198
+- Description des miracles — 199
+- Exemple de Listes de miracles — 199
+- Chapitre 9 — PSIONIQUES — 204
+- Activer un pouvoir — 205
+- Pouvoirs accessibles — 206
+- Pouvoirs psioniques — 207
+- Chapitre 10 — GUIDE DU MJ DES GUERRES DES POSSIBILITÉS — 212
+- L’Éternité et le Néant — 213
+- Obscurificateurs — 213
+- Les Pillards de Réalité — 213
+- Invasion ! — 214
+- Destruction des stelae — 215
+- Taux de transformation — 215
+- Stelae des Royaumes — 216
+- Le courroux des Obscurificateurs — 218
+- Obscurificateurs — 218
+- Lois Éternelles — 220
+- Les tempêtes de réalité — 220
+- Invoquer des tempêtes — 221
+- Axiomes et Lois du monde — 222
+- Fragments d’Éternité — 223
+- Exemples de Fragments d’Éternité — 224
+- Les Axiomes — 228
+- Axiomes des cosms — 228
+- Magie — 229
+- Social — 230
+- Spirituel — 232
+- Technologie — 233
+- Les secrets de la guerre — 235
+- La Prime Terre — 235
+- Aysle — 237
+- Trésors magiques — 239
+- Cyberpapauté — 240
+- Scores de Piété — 241
+- L’Empire du Nil — 242
+- La Terre Vivante — 244
+- Orrorsh — 245
+- Pan-Pacifica — 247
+- Tharkold — 250
+- Aventures — 252
+- Ambiance — 252
+- Idées d’intrigues — 252
+- Le mélange des cosms — 256
+- Gestion des joueurs — 257
+- Structure d’un Acte — 257
+- Structure d’une Scène — 257
+- Les personnages du meneur de jeu — 258
+- Accessoires — 260
+- Rythme — 261
+- Récompenses en Possibilités — 261
+- Récompenses d’expérience — 261
+- Chapitre 11 — PERSONNAGES ET CRÉATURES — 262
+- Capacités spéciales — 262
+- Tous les cosms — 266
+- Gospog de la Première Récolte — 266
+- Ravagon — 266
+- Prime Terre — 266
+- Officier de police — 266
+- Soldat — 266
+- Soldat (Officier) — 266
+- Aysle — 267
+- Dragon — 267
+- Rôdeur — 267
+- Wights — 267
+- L’Empire du Nil — 268
+- Crocodile — 268
+- Maraudeur masqué — 268
+- Soldat de choc de l’Empire du Nil — 268
+- La Cyberpapauté — 268
+- Arpenteur des rues de la Police de l’Église — 268
+- Cyberprêtre — 269
+- Démon (Mineur) — 269
+- Hôte — 269
+- La Terre Vivante — 269
+- Guerrier edeinos — 269
+- Tricératops — 270
+- Tyrannosaurus Rex — 270
+- Orrorsh — 270
+- Fantôme — 270
+- Loup-garou — 271
+- Soldat victorien — 271
+- Pan-Pacifica — 271
+- Agent de sécurité de Kanawa — 271
+- Humain infecté — 271
+- Jiangshi — 272
+- Tharkold — 272
+- Abomination — 272
+- Ghul — 272
+- Technodémon — 273
+- Thralls — 273
+- Tables des Valeurs dans Torg — 274
+- Convertir la table — 274
+- Conversion des mesures — 274
+- INDEX — 276

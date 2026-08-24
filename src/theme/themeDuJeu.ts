@@ -1,6 +1,6 @@
 import {
     extraireJetons, cheminDuTheme, extraireImportsDePolice, premiereFamille,
-    type JetonsDuJeu,
+    POLICES_APPLIQUEES, type JetonsDuJeu,
 } from './jetonsDeTheme';
 
 export {
@@ -103,8 +103,23 @@ export async function verifierLesPolices(jetons: Record<string, string>): Promis
         return [];
     }
 
+    /*
+      **On ne vérifie QUE les polices que le pont applique.**
+
+      Signalé par David le 2026-08-24 : le thème Torg déclarait Libre Baskerville
+      absente, alors qu'elle était correctement importée. Elle est affectée à
+      `font-body`, que le pont ne transporte pas — donc **rien dans l'interface
+      ne l'emploie, donc le navigateur ne la télécharge jamais**, et `check()`
+      la déclarait manquante. Oswald, du même import mais affectée à
+      `font-display`, ne posait aucun problème.
+
+      Vérifier les quatre revenait à crier sur le cas normal, pour les cinq
+      thèmes. *Un avertissement qui se déclenche sur le cas normal apprend à
+      ignorer les avertissements* — la leçon du `GridEngine`, réapprise le même
+      jour sur mon propre contrôle.
+    */
     const manquantes: string[] = [];
-    for (const jeton of ['font-display', 'font-body', 'font-ui', 'font-mono']) {
+    for (const jeton of POLICES_APPLIQUEES) {
         const famille = premiereFamille(jetons[jeton]);
         if (!famille) continue;
         // `check` veut une police complète ; la taille n'a aucune importance.
