@@ -2,18 +2,10 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import i18n from '../i18n';
 import { DEFAULT_LANGUAGE } from '../config/languages';
+import { PALETTES, type ThemeID } from '../theme/themeDeLInterface';
 
-export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
+export type { ThemeID };
 export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal' | 'forge';
-
-interface ThemePalette {
-    accent: string;
-    bg: string;
-    surface: string;
-    border: string;
-    fonts: string;
-    palettes: string[];
-}
 
 interface SessionState {
     activeModule: ModuleID;
@@ -45,42 +37,13 @@ interface SessionState {
     };
 }
 
-export const THEME_PALETTES: Record<ThemeID, ThemePalette> = {
-
-    'cyberpunk': {
-        accent: '#06b6d4',
-        bg: '#020617',
-        surface: '#0f172a',
-        border: '#1e293b',
-        fonts: '"Orbitron", "JetBrains Mono", sans-serif',
-        palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444']
-    },
-    'medieval': {
-        accent: '#d4af37',
-        bg: '#181411', // Slightly lighter brown
-        surface: '#24201c',
-        border: '#332c26',
-        fonts: '"Cinzel", "MedievalSharp", serif',
-        palettes: ['#d4af37', '#b91c1c', '#7c2d12', '#4c1d95', '#1e40af']
-    },
-
-    'modern': {
-        accent: '#3b82f6',
-        bg: '#0f172a',
-        surface: '#1e293b',
-        border: '#334155',
-        fonts: '"Outfit", "Inter", sans-serif',
-        palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b']
-    },
-    'claire': {
-        accent: '#c2410c',
-        bg: '#fbfbf9',
-        surface: '#ffffff',
-        border: '#e7e5e4',
-        fonts: '"Inter", sans-serif',
-        palettes: ['#c2410c', '#0369a1', '#15803d', '#a21caf', '#374151']
-    }
-};
+/**
+ * **La table des thèmes a déménagé** vers `theme/themeDeLInterface.ts`, le
+ * 2026-08-24 : elle était déclarée ici ET dans `index.css`, et les deux se
+ * contredisaient. Cet alias reste pour les appelants qui n'ont besoin que des
+ * pastilles de couleur — voir `GlobalSettingsModal`.
+ */
+export const THEME_PALETTES = PALETTES;
 
 
 export const useSessionStore = create<SessionState>()(

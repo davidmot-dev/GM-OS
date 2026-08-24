@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Music,
     Volume2,
@@ -32,7 +32,7 @@ import {
     Hammer
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
+import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
 import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
 import type { ThemeID } from '../store/useSessionStore';
@@ -107,7 +107,6 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         setActiveModule,
         theme,
         setTheme,
-        themeColor,
         isAIPanelOpen,
         toggleAIPanel,
     } = useSessionStore();
@@ -116,22 +115,20 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     const { t } = useTranslation(['common', 'modules']);
     const tacticalStatus = useTacticalAIStore((state) => state.status);
 
-    // Appliquer le thème et la couleur d'accentuation au document
-    useEffect(() => {
-        const root = document.documentElement;
-        const palette = THEME_PALETTES[theme] || THEME_PALETTES['cyberpunk'];
-        
-        root.setAttribute('data-theme', theme);
-        root.style.setProperty('--app-accent', themeColor);
-        root.style.setProperty('--app-bg', palette.bg);
-        root.style.setProperty('--app-surface', palette.surface);
-        root.style.setProperty('--app-border', palette.border);
-        root.style.setProperty('--font-display', palette.fonts);
+    /*
+      **Shell n'écrit plus le thème.** `main.tsx` s'en charge, seul, en suivant
+      le store — voir `theme/themeDeLInterface.ts`.
 
-        // Mise à jour des classes de thème pour des ajustements CSS fins
-        root.classList.remove('theme-cyberpunk', 'theme-medieval', 'theme-modern');
-        root.classList.add(`theme-${theme}`);
-    }, [theme, themeColor]);
+      Ce qui vivait ici posait `data-theme` une seconde fois et cinq variables
+      en style **inline**. Un style inline bat toute règle de feuille : la table
+      CSS des thèmes n'était donc lue que pour la moitié que cet effet ne
+      réécrivait pas, et la lueur d'accent — qu'il ne posait pas — restait figée
+      sur une couleur qui n'était plus celle de l'accent.
+
+      Il ajoutait aussi des classes `theme-cyberpunk` / `-medieval` / `-modern`
+      qu'**aucune feuille et aucun composant n'utilisait**, et qui oubliaient
+      `claire` au passage.
+    */
 
     const cycleTheme = () => {
         const themes: ThemeID[] = ['cyberpunk', 'medieval', 'modern', 'claire'];

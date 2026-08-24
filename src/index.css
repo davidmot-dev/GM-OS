@@ -201,65 +201,29 @@
   --glass-highlight: rgba(255, 255, 255, 0.15);
 }
 
-:root[data-theme='cyberpunk'] {
-  --app-accent: #22d3ee;
-  --app-accent-rgb: 34, 211, 238;
-  --app-bg: #020617;
-  --app-surface: #0f172a;
-  --app-border: #1e293b;
-  --app-text: #f8fafc;
-  --app-accent-glow: rgba(34, 211, 238, 0.45);
-  --font-display: 'Orbitron', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --glass-bg: rgba(2, 6, 23, 0.6);
-  --glass-border: rgba(34, 211, 238, 0.15);
-  --glass-highlight: rgba(34, 211, 238, 0.25);
-}
+/*
+  **Les quatre palettes ont déménagé le 2026-08-24** vers
+  `src/theme/themeDeLInterface.ts`, seule table désormais.
 
-:root[data-theme='medieval'] {
-  --app-accent: #d97706; /* Amber 600 */
-  --app-accent-rgb: 217, 119, 6;
-  --app-bg: #1c1917;     /* Stone 950/900 */
-  --app-surface: #292524; /* Stone 800 */
-  --app-border: #44403c;  /* Stone 700 */
-  --app-text: #e7e5e4;   /* Stone 200 */
-  --app-accent-glow: rgba(212, 175, 55, 0.45);
-  --font-display: 'Cinzel', 'MedievalSharp', serif;
-  --font-mono: 'UnifrakturMaguntia', cursive;
-  --glass-bg: rgba(28, 25, 23, 0.65);
-  --glass-border: rgba(217, 119, 6, 0.12);
-  --glass-highlight: rgba(217, 119, 6, 0.2);
-}
+  Elles vivaient ici ET dans `THEME_PALETTES`, et les deux se contredisaient —
+  `medieval` valait `#d4af37` d'un côté, `#d97706` de l'autre. Aucune n'était
+  jamais visiblement fausse parce que chacune n'était lue que pour une moitié
+  d'elle-même : `Shell` posait accent, fond, surface, bordure et police en style
+  inline, ce qui battait ces règles-ci ; ne survivaient donc ici que les
+  variables que personne ne réécrivait — dont `--app-accent-glow`, resté figé
+  sur une couleur qui n'était plus celle de l'accent.
 
-:root[data-theme='modern'] {
-  --app-accent: #22d3ee;
-  --app-accent-rgb: 34, 211, 238;
-  --app-bg: #020617;
-  --app-surface: #0f172a;
-  --app-border: #1e293b;
-  --app-text: #f8fafc;
-  --app-accent-glow: rgba(34, 211, 238, 0.45);
-  --font-display: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --glass-bg: rgba(15, 23, 42, 0.5);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-highlight: rgba(255, 255, 255, 0.2);
-}
+  Le `:root` de base ci-dessus reste : il peint la page avant que le script ne
+  tourne, et sert de repli si jamais il ne tourne pas.
 
-:root[data-theme='claire'] {
-  /* Le seul thème clair : ses menus natifs doivent l'être aussi, sinon le
-     défaut s'inverse au lieu de disparaître. */
-  color-scheme: light;
-  --app-accent: #3b82f6;
-  --app-text: #2c2420;
-  --app-bg: #fbfbf9;
-  --app-surface: #ffffff;
-  --app-border: #e7e5e4;
-  --font-display: 'Inter', sans-serif;
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-highlight: rgba(255, 255, 255, 0.5);
-}
+  `data-theme` continue d'être posé sur la racine — il porte les textures par
+  thème et toute la couche de rattrapage du thème clair, plus bas. Seules les
+  déclarations de palette sont parties.
+
+  ⚠️ `color-scheme` du thème clair est désormais posé par `appliquerLeTheme` :
+  sans lui les `<select>` natifs se trompent, et c'est un défaut déjà payé une
+  fois.
+*/
 
 /* Force Font Theme on all text */
 * {
