@@ -254,15 +254,22 @@ avant les axes A à C du plan jumeau* — est levé depuis le 2026-08-21** : les
   fiches (100), la campagne (60) et le système (40). *Il complète, il ne contredit jamais une règle du
   jeu.* Reste à le remplir de ce qui est transversal : conventions de maîtrise, règles maison, glossaire
   de table.
-- ~~**16 fiches à régénérer**~~ — **3 au 2026-08-23**, et **les trois sont du Blade Runner** :
-  `gestion-quarts-pauses`, `mecanique-forcer-un-jet`, `souvenir-cle`. La première est en **doublon** avec
-  `structure-temporelle-par-quarts-et-pauses` (v3, huit sections citées) alors qu'elle-même n'a **aucune
-  source** : *l'Oracle peut répondre depuis celle qui ne cite rien.* **À traiter avant la prochaine
-  séance, qui est du Blade Runner.**
-  *(Compté avec sa méthode : `a_regenerer: true` dans les `rules/`.)*
+- ~~**16 fiches à régénérer**~~ — ~~**3 au 2026-08-23**~~ ✅ **ZÉRO au 2026-08-24, le point est CLOS**
+  (`2db76db`). Les trois derniers étaient du Blade Runner : `gestion-quarts-pauses`,
+  `mecanique-forcer-un-jet`, `souvenir-cle`. Le premier était en **doublon** avec
+  `structure-temporelle-par-quarts-et-pauses` (v3, huit sections citées) alors qu'il n'avait **aucune
+  source** — *l'Oracle peut répondre depuis celle qui ne cite rien* — et il a été **supprimé** ; les deux
+  autres ont reçu leurs sources. **Rien à traiter avant la séance de Blade Runner.**
+  *(Recompté avec sa méthode le 2026-08-24 : `a_regenerer: true` dans les `rules/` — aucun résultat, pour
+  aucun système. Les 12 occurrences restantes sont toutes dans des `rules-v1/` archivés, hors index.)*
 - ~~**noc (4 fiches) et rêves de dragons (7)** sont très en dessous des autres~~ — **rêves de dragons est
   reforgé le 21/08** (21 fiches), **star-trek est né le 22/08** (19 fiches), et **noc est reforgé le 22/08**
-  (18 fiches, **commitées** — `6cee139`). Restent **coc7 et dnd-5e**, qui n'ont **aucune fiche v3**.
+  (18 fiches, **commitées** — `6cee139`). ~~Restent **coc7 et dnd-5e**, qui n'ont **aucune fiche v3**.~~
+  ✅ **CLOS le 2026-08-24 : les deux sont SUPPRIMÉS, sur décision de David.** Ce n'étaient pas des
+  corpus incomplets mais des reliquats d'avril : **ni l'un ni l'autre n'avait de dossier `rules/`**, donc
+  l'Oracle n'y résolvait rien ; aucune campagne et aucun pilote ne les déclarait. Partis avec eux : les
+  66 Ko de `coc7_rag_extraction_final.md` — récupérables dans git si un jour le jeu revient. **Le P4 du
+  corpus n'a donc plus de reste.**
 - ~~Le **« Chemin des Règles » est vide** pour les campagnes~~ — **la soirée du 22/08 a montré que le
   problème était ailleurs, et bien plus grave.** Le moteur n'appelait pas `resoudreCorpus` du tout, le
   chemin saisi à la main n'était pas déplié, et **le coffre Obsidian remplaçait la racine documentaire à

@@ -6,6 +6,13 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 
 **Ouvert le 2026-08-23.** Trois chantiers — **le n° 1 est construit le jour même**, les deux autres attendent.
 
+> **Revérifié dans le code le 2026-08-24**, chantier par chantier, sans rien recopier d'un document.
+> Base saine : `tsc -b` propre, **2 321 tests au vert** (190 fichiers, 1 ignoré). Les trois états
+> ci-dessous sont confirmés. **Quatre documents disaient faux et ont été corrigés le même jour** — le
+> doublon des Quarts (supprimé), les confirmations de suppression (posées), le mode hors carte du Cortex
+> (construit), et les chiffres du corpus. *Une liste de restes qui vit à deux endroits en désigne un
+> faux* — c'est la troisième fois que ce document paie cette règle.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -133,13 +140,14 @@ sans que les joueurs sachent pourquoi »* **est** le référentiel, littéraleme
 > dessinera seule ensuite, puisqu'on saura quelle jauge on a *voulu* pousser en
 > jouant.
 
-**🔧 Trouvé en préparant ce test, sans rapport avec l'afficheur :** deux fiches du
-corpus Blade Runner traitent du même sujet — `gestion-quarts-pauses.md` (**v1**,
-`a_regenerer: true`, sources **« non capturées »**) et
-`structure-temporelle-par-quarts-et-pauses.md` (**v3**, 8 sections citées du livre).
-C'est le motif corrigé sur Rêves de Dragons le 21/08 : **l'Oracle peut répondre
-depuis celle qui ne cite rien.** À reforger avant la séance si on veut poser des
-questions de règle sur les Quarts.
+**🔧 ✅ RÉGLÉ le 2026-08-23 (`2db76db`) — trouvé en préparant ce test, sans rapport
+avec l'afficheur :** deux fiches du corpus Blade Runner traitaient du même sujet —
+`gestion-quarts-pauses.md` (**v1**, `a_regenerer: true`, sources **« non
+capturées »**) et `structure-temporelle-par-quarts-et-pauses.md` (**v3**, 8 sections
+citées du livre). C'était le motif corrigé sur Rêves de Dragons le 21/08 :
+**l'Oracle peut répondre depuis celle qui ne cite rien.** La v1 est **supprimée** ;
+**vérifié le 2026-08-24 — plus aucun `a_regenerer: true` dans un seul `rules/` du
+dépôt**. Rien à reforger avant la séance.
 
 ---
 
@@ -224,6 +232,11 @@ silence) · le thème doit passer par la synchronisation vers la tablette.
 
 ## 3b · La fiche — les TODO
 
+0. ⚠️ **METTRE LE FICHIER À L'ABRI — trouvé le 2026-08-24.** `alien_character_sheet_v2.html`
+   (1,6 Mo, 85 lignes, images embarquées) est posé **à la racine du dépôt et n'est pas suivi par git**.
+   C'est la **seule copie** de la matière de tout ce chantier, et un `git clean` la détruirait sans un
+   mot. *Le premier geste n'est pas de coder l'hôte, c'est de commiter le fichier* — et de décider où
+   vivent les fiches (`docs/fiches/<systeme>/` ?), puisque le plan en veut **une par PJ**.
 1. **L'hôte** — une iframe qui affiche le fichier d'un PJ, côté MJ, en bascule.
 2. **L'adaptateur** — ⚠️ **détourner `save()` EN PREMIER**, avant d'ajouter quoi
    que ce soit. En iframe sandbox, `localStorage.setItem` **lève**, et l'écriture

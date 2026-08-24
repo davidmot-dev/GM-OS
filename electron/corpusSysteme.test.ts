@@ -14,10 +14,22 @@ import {
     deplierLigatures,
 } from './corpusSysteme';
 
-/** Les dossiers réellement présents sous `docs/systems/` au 2026-08-10. */
+/**
+ * Les dossiers réellement présents sous `docs/systems/`, au 2026-08-24.
+ *
+ * **Relevé sur le disque, jamais recopié.** La version précédente datait du
+ * 2026-08-10 et avait dérivé dans les deux sens : elle citait `nephilim`, qui
+ * n'existe plus, et ignorait les quatre corpus nés depuis — `torg`, `2d20`,
+ * `srd-yze` et `star-trek`. *Un fixture qui prétend décrire le disque doit être
+ * relu quand le disque bouge, sinon il teste un monde qui n'existe pas.*
+ *
+ * `coc7` et `dnd-5e` en sont sortis le 2026-08-24 : ils n'ont jamais eu de
+ * dossier `rules/`, donc l'Oracle n'y trouvait rien, et aucune campagne ni aucun
+ * pilote ne les déclarait.
+ */
 const DOSSIERS = [
-    'alien', 'blade-runner', 'coc7', 'cthulhu hack',
-    'dnd-5e', 'dune', 'nephilim', 'noc', 'reves de dragons',
+    '2d20', 'alien', 'blade-runner', 'cthulhu hack', 'dune',
+    'noc', 'reves de dragons', 'srd-yze', 'star-trek', 'torg',
 ];
 
 describe('slug et memeIdentite', () => {

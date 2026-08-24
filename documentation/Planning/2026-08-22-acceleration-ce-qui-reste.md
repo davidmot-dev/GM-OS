@@ -194,11 +194,12 @@ La partition existe **déjà de fait** dans `CurrentView`, et un module l'appliq
       regardant.* Choisir maintenant, ce serait deviner quatre fois pour économiser une séance. *Comme les tailles vivent dans une seule table, la recalibrer coûtera une édition, pas
       cinq.*
 
-      ⚠️ **Trois défauts trouvés en chemin, et ce ne sont pas des questions de densité** : supprimer un
-      journal de séance, supprimer un événement et vider la discussion de l'Oracle se font **sans la
-      moindre confirmation**, depuis des boutons **invisibles jusqu'au survol**. *Une action qu'on ne
-      voit pas venir ne peut pas s'éviter.* Le repli de séance n'y répond qu'à moitié — la confirmation
-      manquante reste à décider.
+      ⚠️ ✅ **CLOS le 2026-08-23 — trois défauts trouvés en chemin, et ce n'étaient pas des questions
+      de densité** : supprimer un journal de séance, supprimer un événement et vider la discussion de
+      l'Oracle se faisaient **sans la moindre confirmation**, depuis des boutons **invisibles jusqu'au
+      survol**. *Une action qu'on ne voit pas venir ne peut pas s'éviter.* Le repli de séance n'y
+      répondait qu'à moitié ; **la confirmation a été posée** — `gmConfirm` aux quatre endroits
+      (journal ×2, Oracle, PNJ), **vérifié dans le code le 2026-08-24**.
 
 > **Ce qui reste n'est pas de la plomberie, c'est du dessin.** Le plan le dit lui-même : *« ce qui change
 > vraiment entre les deux modes n'est pas la liste des boutons : la densité (à table on regarde de loin,
@@ -244,6 +245,11 @@ jouant — aucun à la lecture du code.*
 
 - **Le plafond du RAG à mesurer** (`MAX_CONTEXT_TOKENS = 4000`) — sa condition est remplie depuis le
   21/08. Il vit au § 5 de `2026-08-19-reconciliation-plans-aout.md`, avec le reste des restes.
-- **Le corpus** — 194 fiches `relu: false`, 16 à régénérer, coc7 et dnd-5e vides. Même endroit.
+- **Le corpus** — ~~194 fiches `relu: false`, 16 à régénérer, coc7 et dnd-5e vides~~. Même endroit.
+  *Recompté le 2026-08-24 : **210** `relu: false` (le nombre monte parce qu'on forge, ce n'est pas une
+  dette qui s'aggrave) et **zéro** `a_regenerer: true` dans un `rules/` — les 12 restants sont tous
+  dans des `rules-v1/` archivés, hors index. **coc7 et dnd-5e ont été SUPPRIMÉS le 2026-08-24** — ils
+  n'avaient pas de dossier `rules/`, donc rien à indexer, et personne ne les déclarait. **Le corpus n'a
+  plus de reste.***
 - **Le Cortex** — ses cinq axes sont faits ; restent deux questions, dont *« fusionner les deux appels »*.
   Elles vivent dans `2026-08-07-fiabilite-cortex-combat.md`, § 5.
