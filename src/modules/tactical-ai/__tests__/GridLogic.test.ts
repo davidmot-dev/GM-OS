@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { GridEngine } from '../logic/GridEngine';
 import type { Combatant } from '../../combat/useCombatStore';
 import { tacticalService } from '../../map/TacticalService';
@@ -102,5 +102,105 @@ describe('les appelants s’accordent sur la même distance', () => {
         expect(GridEngine.getRangeInfo(1, config).label).toBe('au toucher');
         // Sans pilote, le nom canonique — jamais un vide.
         expect(GridEngine.getRangeInfo(1).label).toBe('Contact');
+    });
+});
+
+
+/**
+ * **Un pilote qui ne déclare pas toutes ses bandes faisait planter le Cortex.**
+ *
+ * Trouvé par David le 2026-08-24, en relançant l'application après la
+ * restauration de sa base : `Cannot read properties of undefined (reading
+ * 'maxUnits')`, à chaque passe, sur la campagne « A la claire fontaine ».
+ *
+ * `config?.ranges || defaults` ne se déclenchait que si `ranges` manquait **en
+ * entier**. Quatre bandes sur cinq passaient donc à travers, et la cinquième
+ * restait `undefined`.
+ *
+ * *Il fallait deux conditions pour le voir*, et c'est pourquoi il a dormi : un
+ * pilote incomplet, **et** une distance qui tombe pile dans la bande absente.
+ */
+describe('un pilote qui ne déclare pas toutes ses bandes', () => {
+    /** Le pilote « Rêve de Dragon » tel qu'il est dans les données de David : sans `longue`. */
+    const sansLongue = {
+        useTacticalAI: true,
+        ranges: {
+            contact: { label: 'au contact', maxUnits: 1, modifier: 0 },
+            courte: { label: 'courte', maxUnits: 3, modifier: 0 },
+            moyenne: { label: 'moyenne', maxUnits: 12.5, modifier: -1 },
+            extreme: { label: 'extrême', maxUnits: 200, modifier: -3 },
+        },
+    } as unknown as TacticalConfig;
+
+    /** Le pilote « Cthulhu Hack », lui, n'a pas d'`extreme`. */
+    const sansExtreme = {
+        useTacticalAI: true,
+        ranges: {
+            contact: { label: 'contact', maxUnits: 1, modifier: 0 },
+            courte: { label: 'courte', maxUnits: 3, modifier: 0 },
+            moyenne: { label: 'moyenne', maxUnits: 10, modifier: -1 },
+            longue: { label: 'longue', maxUnits: 30, modifier: -2 },
+        },
+    } as unknown as TacticalConfig;
+
+    it('ne lève plus — c’est le plantage exact du 2026-08-24, à 13,9 unités', () => {
+        expect(() => GridEngine.getRangeInfo(13.9, sansLongue)).not.toThrow();
+        expect(GridEngine.getRangeInfo(13.9, sansLongue).category).toBe('Longue');
+    });
+
+    it('ne lève pas non plus sur la bande la plus lointaine', () => {
+        expect(() => GridEngine.getRangeInfo(500, sansExtreme)).not.toThrow();
+        expect(GridEngine.getRangeInfo(500, sansExtreme).category).toBe('Extrême');
+    });
+
+    /**
+     * **La fusion ne doit pas coûter les bandes que le pilote déclare.** Un
+     * repli qui remplacerait tout le bloc rendrait « Moyenne » jusqu'à 12,5 —
+     * la valeur d'Alien — au lieu des 10 que ce pilote-ci annonce.
+     */
+    it('garde les bandes DÉCLARÉES et ne supplée que celle qui manque', () => {
+        expect(GridEngine.getRangeInfo(11, sansExtreme).category).toBe('Longue');
+        expect(GridEngine.getRangeInfo(9, sansExtreme).label).toBe('moyenne');
+        expect(GridEngine.getRangeInfo(2, sansLongue).label).toBe('courte');
+    });
+
+    it('le dit à la console — une bande suppléée en silence ne se corrige jamais', async () => {
+        vi.resetModules();
+        const { GridEngine: Moteur } = await import('../logic/GridEngine');
+        const avert = vi.spyOn(console, 'warn').mockImplementation(() => { /* silence */ });
+
+        Moteur.getRangeInfo(13.9, sansLongue);
+
+        expect(avert).toHaveBeenCalledTimes(1);
+        expect(avert.mock.calls[0][0]).toContain('longue');
+
+        // Et une seule fois : le Cortex appelle ceci pour chaque adversaire, à
+        // chaque passe. Un avertissement par appel noierait la console.
+        Moteur.getRangeInfo(20, sansLongue);
+        expect(avert).toHaveBeenCalledTimes(1);
+
+        avert.mockRestore();
+    });
+
+    it('reste muet quand le pilote est complet', async () => {
+        vi.resetModules();
+        const { GridEngine: Moteur } = await import('../logic/GridEngine');
+        const avert = vi.spyOn(console, 'warn').mockImplementation(() => { /* silence */ });
+
+        const complet = {
+            useTacticalAI: true,
+            ranges: {
+                contact: { label: 'contact', maxUnits: 1, modifier: 0 },
+                courte: { label: 'courte', maxUnits: 3, modifier: 0 },
+                moyenne: { label: 'moyenne', maxUnits: 10, modifier: -1 },
+                longue: { label: 'longue', maxUnits: 30, modifier: -2 },
+                extreme: { label: 'extrême', maxUnits: 200, modifier: -3 },
+            },
+        } as unknown as TacticalConfig;
+
+        Moteur.getRangeInfo(3, complet);
+
+        expect(avert).not.toHaveBeenCalled();
+        avert.mockRestore();
     });
 });

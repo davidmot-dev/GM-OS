@@ -31,6 +31,12 @@ export interface RangeInfo {
   distanceUnits: number;
 }
 
+/**
+ * Les jeux de bandes manquantes déjà signalés, pour n'avertir qu'une fois
+ * chacun — voir `getRangeInfo`.
+ */
+const bandesDejaSignalees = new Set<string>();
+
 export class GridEngine {
   /**
    * Calculates Euclidean distance between two points (grid centers)
@@ -61,7 +67,58 @@ export class GridEngine {
       extreme: { label: 'Extrême', maxUnits: 200, modifier: -3 }
     };
 
-    const ranges = config?.ranges || defaults;
+    /*
+      **Une configuration PARTIELLE passait à travers le repli.**
+
+      `config?.ranges || defaults` ne se déclenche que si `ranges` manque **en
+      entier**. Un pilote qui déclare quatre bandes sur cinq gardait donc les
+      quatre siennes *et* laissait la cinquième à `undefined` — et la ligne qui
+      la lit levait « Cannot read properties of undefined (reading 'maxUnits') ».
+
+      Signalé par David le 2026-08-24 : le pilote **Rêve de Dragon** n'a pas de
+      bande `longue`, et deux combattants à **13,9 unités** — au-delà de
+      `moyenne` (12,5) — atteignaient justement cette ligne. **Cthulhu Hack** est
+      dans le même cas, sans sa bande `extreme`.
+
+      *Le défaut est resté invisible parce qu'il demande deux conditions à la
+      fois* : un pilote incomplet, et une distance qui tombe pile dans la bande
+      qui manque. Un combat plus serré sur la même campagne ne montrait rien.
+
+      **Le type ne protégeait pas non plus, il rassurait** : `TacticalConfig`
+      (`types/drivers.ts`) déclare les cinq bandes obligatoires, donc le code les
+      croyait acquises. Ce que le type promet du modèle, il ne le promet pas des
+      données déjà écrites — c'est la même leçon que les combattants sans
+      `statuses` du 17/08.
+
+      On fusionne donc **bande par bande** : la bande absente retombe sur son
+      défaut sans emporter les quatre que le pilote a bel et bien déclarées.
+    */
+    const declarees = config?.ranges ?? {};
+    const ranges = { ...defaults, ...declarees };
+
+    /*
+      **Et on le DIT.** Sans ça, un pilote incomplet se comporte comme Alien et
+      personne ne l'apprend : le rapport annoncerait « Longue, modificateur -2 »
+      sur un jeu qui n'a jamais déclaré cette portée. *Une dégradation muette
+      est une dégradation qu'on ne corrige jamais.*
+
+      Averti une seule fois par jeu de bandes manquantes : `getRangeInfo` est
+      appelée pour chaque adversaire à chaque passe du Cortex, et l'avertissement
+      noierait la console qu'il cherche à alerter.
+    */
+    const manquantes = (Object.keys(defaults) as (keyof typeof defaults)[])
+        .filter(bande => !(bande in declarees));
+    if (manquantes.length > 0) {
+        const signature = manquantes.join(',');
+        if (!bandesDejaSignalees.has(signature)) {
+            bandesDejaSignalees.add(signature);
+            console.warn(
+                `[GridEngine] Le pilote ne déclare pas la ou les portées « ${manquantes.join(' », « ')} » : `
+                + 'les valeurs par défaut (Alien) sont employées pour celles-là. '
+                + 'Les distances de ces bandes ne viennent donc pas du jeu.',
+            );
+        }
+    }
 
     // Safety: In most grid games, < 1 unit IS Contact.
     // We force this if the custom config is too restrictive (e.g. old 0.45 value)
