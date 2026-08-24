@@ -105,9 +105,17 @@ export class GridEngine {
       Averti une seule fois par jeu de bandes manquantes : `getRangeInfo` est
       appelée pour chaque adversaire à chaque passe du Cortex, et l'avertissement
       noierait la console qu'il cherche à alerter.
+
+      **Et seulement si le pilote déclare un bloc `ranges`.** Ne rien déclarer
+      du tout est un cas LÉGITIME — un jeu sans portées chiffrées, ou un appel
+      sans pilote — et le repli complet y est le comportement voulu depuis
+      toujours. Ce qu'on signale, c'est l'écart entre ce que le pilote *prétend*
+      décrire et ce qu'il décrit vraiment. *Un avertissement qui se déclenche sur
+      le cas normal apprend à ignorer les avertissements.*
     */
-    const manquantes = (Object.keys(defaults) as (keyof typeof defaults)[])
-        .filter(bande => !(bande in declarees));
+    const manquantes = config?.ranges
+        ? (Object.keys(defaults) as (keyof typeof defaults)[]).filter(b => !(b in declarees))
+        : [];
     if (manquantes.length > 0) {
         const signature = manquantes.join(',');
         if (!bandesDejaSignalees.has(signature)) {

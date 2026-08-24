@@ -182,6 +182,20 @@ describe('un pilote qui ne déclare pas toutes ses bandes', () => {
         avert.mockRestore();
     });
 
+    it('reste muet quand le pilote ne declare AUCUNE portee — cas legitime', async () => {
+        vi.resetModules();
+        const { GridEngine: Moteur } = await import('../logic/GridEngine');
+        const avert = vi.spyOn(console, 'warn').mockImplementation(() => { /* silence */ });
+
+        // Un jeu sans portees chiffrees, ou un appel sans pilote : le repli
+        // complet est le comportement voulu, il n'y a rien a signaler.
+        Moteur.getRangeInfo(13.9);
+        Moteur.getRangeInfo(13.9, { useTacticalAI: true } as never);
+
+        expect(avert).not.toHaveBeenCalled();
+        avert.mockRestore();
+    });
+
     it('reste muet quand le pilote est complet', async () => {
         vi.resetModules();
         const { GridEngine: Moteur } = await import('../logic/GridEngine');
