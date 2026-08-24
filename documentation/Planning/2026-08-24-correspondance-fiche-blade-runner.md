@@ -118,19 +118,23 @@ A ↔ D12    B ↔ D10    C ↔ D8    D ↔ D6
 ambiguïté. **Une seule fonction couvre les 17 cas, et elle n'a besoin d'aucune
 donnée** : la table est dans les règles.
 
-### ⚠ Un défaut de typage à corriger dans le gabarit de fiche
+### ✅ Le typage est corrigé le 2026-08-24
 
-Les 17 champs `.level` sont déclarés **`type: "number"`**. Or le niveau est une
-**lettre** — `A`, `B`, `C`, `D` — comme le gabarit GM-OS le déclare lui-même
-(`select` à quatre options) et comme les quatre PJ le portent (`C (D8)` chez
-Willem Novak).
+Les 17 champs `.level` étaient déclarés **`type: "number"`** alors que le niveau
+est une **lettre**. Un champ `number` ne peut pas contenir `C` : la saisie était
+impossible. **David les a passés en `text`**, et le fichier corrigé est commité
+(`71c42a2`).
 
-**Un champ `number` ne peut pas contenir `C`.** Soit la saisie est impossible,
-soit le joueur y met un chiffre qui ne correspondra à rien côté GM-OS.
-
-À passer en `text`, ou mieux en type contraint aux quatre lettres si le moteur
-sait faire un `select`. *`protection.level` est d'ailleurs déjà en `text`* — le
-type n'a pas été choisi uniformément.
+> ⚠️ **Le générateur fait évoluer le format, et c'est un signal.** La même
+> régénération a ajouté `hotspotStyle: "cell"` sur les 82 hotspots et décalé un
+> champ de 3 px. Rien de nuisible — mais **un générateur qui évolue est
+> exactement ce qui fera dériver la table de correspondance en silence**. C'est
+> ce que l'étape 4 ci-dessous existe pour attraper.
+>
+> Cette régénération avait aussi embarqué le gabarit **deux fois** dans le même
+> fichier — une copie en `<script type="application/json">` jamais lue, une autre
+> dans `const MODEL` — doublant son poids à 8,2 Mo. Nettoyé, retour à 4,13 Mo.
+> *Le motif du jour, pour la cinquième fois.*
 
 ---
 
