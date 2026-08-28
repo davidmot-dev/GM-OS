@@ -24,7 +24,7 @@ de David, le n° 5 attend seulement son tour.
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
-| 3b | **Fiche HTML** | ✅ **TABLE, CONTRÔLE ET COUTURE v2 le 28/08** | **L'hôte iframe** — plus rien ne le précède | Rien |
+| 3b | **Fiche HTML** | ✅ **LIVRÉE CÔTÉ MENEUR le 28/08** | **Le second écran** — trancher où servir le moteur pour la tablette | **Une décision de David** |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
 | 5 | **Sauvegarde de la bibliothèque des fiches** | **Rien codé** — ouvert le 28/08 | Attendre que l'hôte existe, puis reprendre la plomberie du 28/08 | Rien — mais sans objet tant que le n° 3b n'a pas d'hôte |
 
@@ -387,10 +387,49 @@ Combiné à la règle ci-dessus — *la fiche fait foi* — cela veut dire que *
 magasin qui détient la vérité est le seul qui ne soit pas protégé**. C'est le
 chantier n° 5.
 
-Puis : l'hôte lui-même (iframe `gmos://media/docs/fiches/…`, bascule sur les deux
-écrans), le chemin d'écriture de la tablette, et les étapes 5 et 6 du document de
-correspondance — la convergence sur le `hotspot` et le retour de `humanite` par
-la Forge.
+### ✅ L'hôte est livré le 2026-08-28 — côté meneur
+
+Une bascule **Fiche du jeu / Formulaire** dans `CharacterSheetEditor`, qui
+n'apparaît que si le jeu a une `correspondance.json` : proposer un écran vide
+serait pire que ne rien proposer. Quatre modules dans `src/modules/fiches/`,
+54 tests, et **aucun ne touche le store** — l'hôte rend ses conclusions par
+rappel, et le seul endroit qui écrit reste celui qui écrivait déjà.
+
+| | |
+| --- | --- |
+| `pontDeLaFiche.ts` | Le contrat par messages en promesses. Vérifie l'**émetteur** (`event.source`, la seule preuve incontrefaisable — le canal seul ne prouve rien), rend la main au bout de 15 s, et corrèle **par identifiant** puisque le moteur diffuse un `change` *avant* de répondre à un `set`. |
+| `rapprochementDeLaFiche.ts` | La fiche fait foi. **`16` et `"16"` ne sont pas une divergence** — comparer strictement crierait sur chaque champ numérique à chaque ouverture, et on apprendrait à ignorer le journal. **Remplir n'est pas écraser.** |
+| `journalDesDivergences.ts` | Par `appBridge.logger` → `main.log`. Le chemin existait de bout en bout : **aucun IPC nouveau**, et c'est le seul qui survive à la fermeture. Pas `auditNotice` — une donnée écrasée n'est pas un incident de sécurité. |
+| `FicheHote.tsx` | L'iframe et la liaison. **GM-OS ne pousse qu'à la création** : semer ailleurs rouvrirait la question de qui gagne à chaque frappe. Une fiche liée disparue n'est pas recréée d'office — ce serait un doublon silencieux. |
+
+`ficheId` est posé sur `PlayerCharacter` : c'est le seul lien entre les deux
+bases, et il pointe vers une base que GM-OS ne détient pas. L'iframe est montée
+à la première bascule puis **gardée montée et masquée** — elle charge sept
+mégaoctets de fonds de page.
+
+### ⛔ Le second écran ne peut PAS suivre le même chemin — trouvé le 28/08
+
+L'écran du meneur marche parce que `gmos://media/…` est une **autre origine** que
+le cockpit : c'est cette séparation qui impose `postMessage`, et c'est elle qui
+protège les données du cockpit d'un fichier HTML régénéré par un GPT.
+
+**La tablette n'a rien de tout ça.** Elle est un navigateur sur le réseau, servi
+par le `SyncServer` : pas de `gmos://`, pas d'`appBridge` — donc **pas même la
+lecture de la table**, qui passe par `readDoc`. Et `/media/` ne sert que des
+images, du son et de la vidéo : `.html` n'est pas dans `MEDIA_MIME_TYPES`
+(`SyncServer.ts:21`).
+
+> **⛔ La décision, et elle n'est pas technique.** Servir le moteur par le
+> `SyncServer` le mettrait **sur la même origine que le Player Hub** — donc avec
+> accès à son stockage. Toute l'isolation que l'écran du meneur obtient
+> gratuitement disparaîtrait, pour un fichier que GM-OS n'écrit pas lui-même.
+> Trois issues : un port ou un sous-domaine distinct pour les fiches ; un
+> `sandbox` sur l'iframe (qui casse l'IndexedDB dont le moteur a besoin) ; ou
+> **la tablette ne montre pas la fiche HTML** et garde son écran actuel.
+
+Restent aussi : le chemin d'écriture de la tablette, et les étapes 5 et 6 du
+document de correspondance — la convergence sur le `hotspot` et le retour de
+`humanite` par la Forge.
 
 ### Le plan d'origine, conservé pour ce qu'il garde de vrai
 

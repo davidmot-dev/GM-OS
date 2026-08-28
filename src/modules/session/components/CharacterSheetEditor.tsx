@@ -15,6 +15,9 @@ import PanneauDeJet from './fields/PanneauDeJet';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
+import FicheHote from '../../fiches/FicheHote';
+import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
+import type { Rapprochement } from '../../fiches/rapprochementDeLaFiche';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import type { PlayerCharacter } from '../store/types';
 
@@ -48,7 +51,7 @@ const CharacterSheetEditor: React.FC = () => {
      * système sans descripteur garde sa fiche telle quelle : mieux vaut pas de
      * bouton qu'un bouton qui lancerait n'importe quoi.
      */
-    const { campaigns, activeCampaignId, customGameDrivers } = useSessionOSStore();
+    const { campaigns, activeCampaignId, customGameDrivers, updateCharacter } = useSessionOSStore();
 
     /**
      * **Le pilote du PERSONNAGE, pas celui de la campagne ouverte.**
@@ -75,6 +78,40 @@ const CharacterSheetEditor: React.FC = () => {
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);
     const [newItemName, setNewItemName] = React.useState('');
+
+    /**
+     * **La bascule vers la fiche HTML du jeu.**
+     *
+     * Deux façons de voir le même personnage, jamais deux vérités : la fiche
+     * fait foi, et ce qu'elle impose redescend dans `sheetData` par
+     * `updateCharacter`. Le formulaire ci-dessous se réaligne tout seul —
+     * `useCharacterEditor` relit ses valeurs quand le personnage change.
+     */
+    const [surLaFiche, setSurLaFiche] = React.useState(false);
+    const [ficheDejaOuverte, setFicheDejaOuverte] = React.useState(false);
+    const correspondance = useCorrespondanceDuJeu(editor.character as PlayerCharacter | null);
+
+    const basculer = () => {
+        setSurLaFiche(v => !v);
+        setFicheDejaOuverte(true);
+    };
+
+    const lierLaFiche = (ficheId: string) => {
+        if (editor.character && editor.selectedPlayer) {
+            updateCharacter(editor.selectedPlayer.id, editor.character.id, { ficheId });
+        }
+    };
+
+    /** Ce que la fiche impose. Une seule écriture, pour que le store ne tourne qu'une fois. */
+    const appliquerLeRapprochement = (releve: Rapprochement) => {
+        const pj = editor.character;
+        if (!pj || !editor.selectedPlayer) return;
+        updateCharacter(editor.selectedPlayer.id, pj.id, {
+            sheetData: { ...pj.sheetData, ...releve.aEcrire },
+            ...(releve.inventoryItems ? { inventoryItems: releve.inventoryItems } : {}),
+        });
+    };
+
     const hpBarRef = React.useRef<HTMLDivElement>(null);
     React.useEffect(() => {
         // `null` sans jauge : la barre n'est pas redimensionnée plutôt que de
@@ -127,21 +164,67 @@ const CharacterSheetEditor: React.FC = () => {
                         <p className="text-[10px] text-app-text/20">Fiche de {character.name}</p>
                     </div>
                 </div>
-                <button
-                    onClick={handleSave}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
-                        saved
-                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                            : 'bg-accent hover:opacity-90 text-app-bg shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
-                    }`}
-                >
-                    <Save size={14} />
-                    {saved ? 'Sauvegardé ✓' : 'Sauvegarder'}
-                </button>
+                <div className="flex items-center gap-2">
+                    {/*
+                        **La bascule.** Elle n'apparaît que si le jeu a une fiche
+                        HTML branchable : proposer un écran vide serait pire que
+                        ne rien proposer. Le formulaire reste le repli, et il
+                        reste vrai — c'est le même `sheetData` des deux côtés.
+                    */}
+                    {correspondance && (
+                        <button
+                            onClick={basculer}
+                            title={surLaFiche ? 'Revenir au formulaire' : 'Afficher la fiche du jeu'}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-black text-xs tracking-widest transition-all border ${
+                                surLaFiche
+                                    ? 'bg-accent/20 border-accent/40 text-accent'
+                                    : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
+                            }`}
+                        >
+                            <FileText size={14} />
+                            {surLaFiche ? 'Formulaire' : 'Fiche du jeu'}
+                        </button>
+                    )}
+                    <button
+                        onClick={handleSave}
+                        className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
+                            saved
+                                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                                : 'bg-accent hover:opacity-90 text-app-bg shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
+                        }`}
+                    >
+                        <Save size={14} />
+                        {saved ? 'Sauvegardé ✓' : 'Sauvegarder'}
+                    </button>
+                </div>
             </div>
 
-            {/* Main Content */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
+            {/*
+                Montée à la première bascule, puis **gardée montée et masquée**.
+                L'iframe charge sept mégaoctets de fonds de page : la démonter à
+                chaque aller-retour les rechargerait, et rouvrirait le pont pour
+                rien. Mais on ne la monte pas d'avance non plus — la plupart des
+                personnages ne seront jamais regardés par cet écran-là.
+            */}
+            {ficheDejaOuverte && (
+                <div className={`flex-1 overflow-hidden p-4 ${surLaFiche ? '' : 'hidden'}`}>
+                    <FicheHote
+                        personnage={{
+                            id: character.id,
+                            name: character.name,
+                            ficheId: character.ficheId,
+                            sheetData: character.sheetData ?? {},
+                            inventoryItems: character.inventoryItems,
+                        }}
+                        table={correspondance}
+                        onFicheLiee={lierLaFiche}
+                        onRapprochement={appliquerLeRapprochement}
+                    />
+                </div>
+            )}
+
+            {/* Main Content — masqué, pas démonté : la saisie en cours survit à la bascule. */}
+            <div className={`flex-1 overflow-y-auto custom-scrollbar ${surLaFiche ? 'hidden' : ''}`}>
                 <div className="max-w-5xl mx-auto p-8 grid grid-cols-12 gap-8">
 
                     {/* Left Col: Visuals */}

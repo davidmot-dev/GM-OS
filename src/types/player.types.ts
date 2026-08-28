@@ -105,6 +105,15 @@ export interface PlayerCharacter {
     systemId?: string;
     /** Le gabarit de fiche. Il découle du pilote (`driver.templateId`). */
     templateId: string;
+    /**
+     * L'identifiant de sa fiche HTML dans la bibliothèque du moteur.
+     *
+     * Absent tant que le PJ n'a pas été relié à une fiche — et c'est le cas de
+     * l'immense majorité. Le moteur **garde sa bibliothèque** et GM-OS s'y
+     * branche (tranché le 2026-08-28) : ce champ est le seul lien entre les
+     * deux, et il pointe vers une base que GM-OS ne détient pas.
+     */
+    ficheId?: string;
     sheetData: Record<string, unknown>;
     description?: string;
     gmNotes?: string;
