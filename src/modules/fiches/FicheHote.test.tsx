@@ -190,7 +190,7 @@ describe('FicheHote', () => {
         render(<FicheHote personnage={PERSONNAGE} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
         charger();
 
-        expect(await screen.findByText(/ne répond pas/)).toBeTruthy();
+        expect(await screen.findByText(/n'a pas pu s'ouvrir/)).toBeTruthy();
     });
 
     it('ferme le pont en partant', async () => {

@@ -255,9 +255,10 @@ const FicheHote: React.FC<FicheHoteProps> = ({
 
                         {etat.nom === 'erreur' && (
                             <div className="space-y-2">
+                                {/* Elle a peut-être très bien répondu — pour refuser. Le motif le dit. */}
                                 <div className="flex items-center gap-2 text-amber-500">
                                     <AlertTriangle size={16} />
-                                    <span className="text-[11px] font-black uppercase tracking-widest">La fiche ne répond pas</span>
+                                    <span className="text-[11px] font-black uppercase tracking-widest">La fiche n'a pas pu s'ouvrir</span>
                                 </div>
                                 <p className="text-xs text-app-text/50 font-mono">{etat.motif}</p>
                             </div>

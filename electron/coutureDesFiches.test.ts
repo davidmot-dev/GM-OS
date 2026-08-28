@@ -112,6 +112,47 @@ describe('la couture est présente dans le fichier', () => {
     });
 });
 
+/**
+ * **Le défaut vu en réel le 2026-08-28, à la première ouverture sur tablette.**
+ *
+ * `db` est affecté à la fin d'une chaîne asynchrone ; l'hôte, lui, parle dès que
+ * l'iframe a fini de charger. Il arrivait **avant**, et tout ce qui touche au
+ * stockage passait par `tx()` sur un `db` encore `undefined` — *« Cannot read
+ * properties of undefined (reading 'transaction') »*.
+ *
+ * `hello` annonçait pourtant `ready: false`. Personne ne le lisait. *Un contrat
+ * qu'il faut se rappeler de respecter finit par ne pas l'être* — d'où l'attente
+ * côté moteur, qui vaut pour tous les appelants d'un coup.
+ */
+describe('l’hôte qui parle avant que la base soit ouverte', () => {
+    it('attend le stockage au lieu de casser', async () => {
+        const virtualConsole = new VirtualConsole();
+        const dom = new JSDOM(pageDeControle(), {
+            runScripts: 'dangerously', virtualConsole,
+            beforeParse(window) {
+                poserIndexedDB(window);
+                const css = (window as any).CSS;
+                if (!css?.escape) (window as any).CSS = { ...css, escape: (s: string) => String(s) };
+            },
+        });
+        const win: any = dom.window;
+
+        // Le tout premier instant : la couture est publiée, la base ne l'est pas.
+        expect(typeof win.RPGSheet?.list, 'la couture est là avant la base').toBe('function');
+        expect(win.RPGSheet.getData(), 'aucun personnage ouvert').toBeNull();
+
+        // C'est CET appel qui levait « ... reading 'transaction' ».
+        const bibliotheque = await win.RPGSheet.list();
+        expect(bibliotheque.templates.map((t: any) => t.id)).toEqual(['gabarit-de-controle']);
+        expect(bibliotheque.characters).toEqual([]);
+
+        // Et créer juste après doit marcher, sans attente de l'appelant.
+        const cree = await win.RPGSheet.create('Pris', 'gabarit-de-controle', { nom: 'Pris' });
+        expect(cree.name).toBe('Pris');
+        dom.window.close();
+    }, 30_000);
+});
+
 describe('le moteur réel, chargé et piloté', () => {
     let dom: JSDOM;
     let win: any;

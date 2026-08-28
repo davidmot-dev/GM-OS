@@ -142,6 +142,8 @@ const DB_NAME="character-sheet-manager";
 const DB_VERSION=1;
 const BUILTIN_VERSION=3;
 let db,templates=[],characters=[],activeTemplate=null,activeCharacter=null,activePage=0,zoom=1,zones=false,saveTimer=null;
+/* L'ouverture de la base, en cours. Voir `prete()` : l hote peut appeler avant. */
+let ouvertureDeLaBase=null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const builtinTemplates=JSON.parse($("#builtinTemplates").textContent);
 
@@ -277,6 +279,7 @@ async function saveCharacter(){if(!activeCharacter)return;activeCharacter.update
    chemin que la barre latérale, et une `alert()` dans une iframe est un cul-de-sac
    pour lui. C'est l'appelant qui décide quoi montrer — la barre latérale alerte. */
 async function openCharacter(id){
+ await prete();
  const c=await getOne("characters",id);if(!c)throw new Error("Personnage introuvable : "+id);
  const t=await getOne("templates",c.templateId);if(!t)throw new Error("Le modèle de ce personnage n’est plus installé.");
  activeCharacter=c;activeTemplate=t;activePage=0;renderSidebar();buildPages();announceOpen();
@@ -421,12 +424,26 @@ function applyData(patch){
    il reste utilisable seul. Et quand les deux bases divergent, LA FICHE FAIT FOI.
    D'où `sauvegardePourLHote` : le magasin qui détient la vérité ne peut pas être
    le seul que personne ne sauvegarde. */
+/* **La base n'est pas ouverte a la premiere image.** `db` est affecte a la fin
+   d'une chaine asynchrone, et l'hote, lui, parle des que l'iframe a fini de
+   charger : il arrivait AVANT. Tout ce qui touche au stockage passait alors par
+   `tx()` sur un `db` encore `undefined` -- « Cannot read properties of undefined
+   (reading 'transaction') », vu en reel le 2026-08-28.
+
+   `hello` annoncait pourtant `ready:false` ; personne ne le lisait. On attend ici
+   plutot que de compter sur chaque appelant : un contrat qu'il faut se rappeler
+   de respecter finit par ne pas l'etre. */
+async function prete(){
+ if(ouvertureDeLaBase) await ouvertureDeLaBase;
+ if(!db) throw new Error("Le stockage local du navigateur n’est pas disponible.");
+}
 function apercuDuPersonnage(c){
  return {id:c.id,name:c.name,templateId:c.templateId,templateName:c.templateName||"",
   system:c.system||"",updatedAt:c.updatedAt||null};
 }
 /** La bibliothèque relue du disque, jamais celle qu'on avait en mémoire. */
 async function bibliotheque(){
+ await prete();
  await refreshLibrary();
  return {
   characters:characters.map(apercuDuPersonnage),
@@ -434,6 +451,7 @@ async function bibliotheque(){
  };
 }
 async function creerPourLHote(nom,templateId,donnees){
+ await prete();
  const t=await getOne("templates",templateId);
  if(!t)throw new Error("Modèle inconnu : "+templateId);
  const now=Date.now();
@@ -445,6 +463,7 @@ async function creerPourLHote(nom,templateId,donnees){
 /* Une copie, pour la même raison que `getData` en rend une : l'hôte qui bricole
    ce qu'il reçoit ne doit pas pouvoir toucher la bibliothèque. */
 async function sauvegardePourLHote(){
+ await prete();
  await refreshLibrary();
  return JSON.parse(JSON.stringify(contenuDeSauvegarde()));
 }
@@ -489,7 +508,10 @@ window.RPGSheet={
  backup:()=>sauvegardePourLHote()
 };
 
-(async()=>{try{db=await openDB();await seedBuiltins();await refreshLibrary();}catch(e){console.error(e);alert("IndexedDB est indisponible. Cette application a besoin du stockage local du navigateur pour gérer plusieurs personnages.");}})();
+/* On garde la promesse : `prete()` s'y accroche. Le `.catch` sert l'usage
+   autonome — il ne consomme pas l'echec, l'hote le recoit toujours. */
+ouvertureDeLaBase=(async()=>{db=await openDB();await seedBuiltins();await refreshLibrary();})();
+ouvertureDeLaBase.catch(e=>{console.error(e);alert("IndexedDB est indisponible. Cette application a besoin du stockage local du navigateur pour gérer plusieurs personnages.");});
 })();
 </script>
 </body>
