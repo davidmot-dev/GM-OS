@@ -45,7 +45,8 @@ import { SessionManager } from '../logic/SessionManager';
 import { fusionnerDeuxScenes, scinderLaSceneAuTemps } from '../logic/curationDeLaTrame';
 import { SnapshotService } from '../logic/SnapshotService';
 import { PersistenceService, syncStorageAcrossWindows } from '../logic/PersistenceService';
-import { lesDonneesDeLaSession } from '../logic/donneesDeLaSession';
+import { lesDonneesDeLaSession, CHAMPS_DURABLES } from '../logic/donneesDeLaSession';
+import { sessionBackupManager } from '../logic/SessionBackupManager';
 
 // ─────────────────────────────────────────────
 // Cross-domain actions type
@@ -345,4 +346,23 @@ export const useSessionOSStore = create<SessionOSStore>()(
 // ── Cross-Window Sync ───────────────────────────
 syncStorageAcrossWindows(async () => {
     await useSessionOSStore.persist.rehydrate();
+});
+
+// ── Sauvegarde automatique ──────────────────────
+/*
+  Un changement des données durables **arme** la sauvegarde ; ce sont deux
+  minutes sans nouveau changement qui la déclenchent. Un intervalle fixe serait
+  soit trop fréquent quand rien ne bouge, soit trop tard quand tout bouge.
+
+  La liste des champs surveillés n'est pas recopiée ici : c'est `CHAMPS_DURABLES`,
+  déduite de `lesDonneesDeLaSession`. Ajouter un champ au store le met donc sous
+  surveillance sans qu'on ait à y penser — *une liste recopiée ne protège que
+  d'elle-même.*
+*/
+useSessionOSStore.subscribe((etat, precedent) => {
+    const apres = lesDonneesDeLaSession(etat);
+    const avant = lesDonneesDeLaSession(precedent);
+    if (CHAMPS_DURABLES.some(champ => apres[champ] !== avant[champ])) {
+        sessionBackupManager.signalerUnChangement();
+    }
 });

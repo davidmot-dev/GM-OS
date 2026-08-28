@@ -52,7 +52,7 @@ import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTar
 import { type RelayRole } from './relayPolicy'
 import { auditDenied } from './auditLog'
 import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
-// import { GitBackupService } from './GitBackupService'
+import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const APP_ROOT = path.join(__dirname, '..')
@@ -103,8 +103,6 @@ protocol.registerSchemesAsPrivileged([
 // La tolérance aux certificats auto-signés est désormais accordée hôte par hôte,
 // aux seules adresses privées — voir netTrust.ts.
 
-// const gitBackupService = new GitBackupService(process.env.APP_ROOT);
-
 // 🚧 Use ['ENV_NAME'] avoid vite:define dev replacement
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 export const MAIN_DIST = __dirname
@@ -143,6 +141,14 @@ function createWindow() {
     // Test active push message to Renderer-process.
     win.webContents.on('did-finish-load', () => {
         win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    })
+
+    // La croix de la fenêtre : l'autre porte de sortie, celle qui ne passe pas
+    // par `before-quit`. Voir le bloc de la sauvegarde de sortie, plus bas.
+    win.on('close', (event) => {
+        if (sortieDejaTraitee || !leRenduRepond()) return;
+        event.preventDefault();
+        sauvegarderAvantDeSortir(() => win?.close());
     })
 
     // Open DevTools automatically to help debugging (at User's request)
@@ -700,27 +706,117 @@ ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, h
     });
 });
 
-// --- Git Backup Handlers (REMOVED) ---
 /*
-ipcMain.handle('git:status', async () => {
-    return await gitBackupService.checkStatus();
-});
+  --- Sauvegarde automatique ---
 
-ipcMain.handle('git:setup-branch', async (_event, branchName: string) => {
-    return await gitBackupService.setupBackupBranch(branchName);
-});
+  Ce qui vivait ici s'appelait `git:sync`, et exécutait `git stash`,
+  `git checkout data-sync` puis `git push` **dans le dépôt de GM-OS lui-même**.
+  `data-sync` étant une branche orpheline, la bascule supprimait du disque tous
+  les fichiers suivis absents de cette branche : l'application entière. Les
+  gestionnaires ont été commentés en mars 2026, et sont **supprimés** ici.
 
-ipcMain.handle('git:sync', async (_event, targetDir: string, branchName: string, message: string) => {
-    return await gitBackupService.syncData(targetDir, branchName, message);
-});
+  Ce qui les remplace n'écrit qu'un fichier, sous `userData/backups`, sans
+  dialogue et sans jamais invoquer git. Les trois règles et leurs contrôles :
+  `electron/sauvegardeAutomatique.ts` et son fichier de tests.
 */
+ipcMain.handle('backup:auto-write', async (_event, donnees: unknown, options?: { baisseAttendue?: boolean }) => {
+    try {
+        return await ecrireSauvegarde(donnees, options ?? {});
+    } catch (err) {
+        // Une panne de disque ou une destination refusée : l'appelant doit le savoir,
+        // pas le deviner d'un `false`.
+        const raison = err instanceof Error ? err.message : String(err);
+        console.error('[Sauvegarde] Échec :', raison);
+        return { statut: 'echec' as const, raison };
+    }
+});
 
-// --- Backup Save Handler (REMOVED) ---
+ipcMain.handle('backup:list', async () => sauvegardesConnues());
+
+ipcMain.handle('backup:reveal', async () => {
+    const dossier = dossierDesSauvegardes();
+    await fs.ensureDir(dossier);
+    shell.openPath(dossier);
+});
+
 /*
-ipcMain.handle('backup:save-data', async (_event, data: unknown) => {
-...
-});
+  **La sauvegarde de sortie — le moment où tout se perd.**
+
+  Le rendu seul sait construire la charge, donc il faut lui laisser le temps.
+  Mais **rien ici ne doit pouvoir empêcher GM-OS de se fermer** : une
+  application qui refuse de quitter serait un défaut plus grave que celui qu'on
+  répare. Trois filets, dans cet ordre :
+
+  1. le drapeau est posé **avant** de demander quoi que ce soit — donc un échec,
+     une exception ou une fenêtre morte laissent la fermeture suivante passer ;
+  2. un délai dur de quatre secondes ferme de toute façon ;
+  3. le rendu répond dès qu'il a fini, et on n'attend pas la fin du délai.
 */
+let sortieDejaTraitee = false;
+
+/** Le rendu peut-il encore construire une charge ? */
+function leRenduRepond(): boolean {
+    return !!win && !win.isDestroyed() && !!win.webContents && !win.webContents.isDestroyed();
+}
+
+/**
+ * Demande au rendu d'écrire une dernière sauvegarde, puis `reprendre()`.
+ *
+ * `sortieDejaTraitee` est posé **avant** toute demande : quoi qu'il arrive
+ * ensuite — exception, rendu muet, sauvegarde en échec — la tentative de sortie
+ * suivante passe sans repasser par ici.
+ */
+function sauvegarderAvantDeSortir(reprendre: () => void) {
+    sortieDejaTraitee = true;
+    let fini = false;
+
+    const finir = () => {
+        if (fini) return;
+        fini = true;
+        clearTimeout(delai);
+        ipcMain.removeListener('backup:before-quit-done', finir);
+        reprendre();
+    };
+
+    const delai = setTimeout(finir, 4000); // le filet dur : on sort de toute façon
+    ipcMain.once('backup:before-quit-done', finir);
+
+    try {
+        win!.webContents.send('backup:before-quit');
+    } catch {
+        finir();
+    }
+}
+
+/**
+ * **Le bouton « Quitter GM-OS » n'avait aucun destinataire.**
+ *
+ * `preload.ts` envoie `app:quit` depuis le 2026-… et **aucun `ipcMain.on` ne
+ * l'écoutait** — vérifié dans l'historique : le gestionnaire n'a jamais existé.
+ * Le bouton demandait confirmation, puis ne faisait rien. Le voici.
+ */
+ipcMain.on('app:quit', () => app.quit());
+
+/*
+  **Les deux portes de sortie, et elles ne sont pas la même.**
+
+  `before-quit` couvre le bouton « Quitter » et le menu. **La croix de la fenêtre
+  ne passe pas par là** : elle déclenche `close`, puis `window-all-closed`, qui
+  appelle `app.quit()` alors que la fenêtre est déjà détruite — donc plus
+  personne pour construire la sauvegarde. Or la croix est le geste le plus
+  courant. Les deux portes sont donc gardées, par la même fonction et le même
+  drapeau.
+
+  **Rien ici ne doit pouvoir empêcher GM-OS de se fermer** : une application qui
+  refuse de quitter serait un défaut plus grave que celui qu'on répare. Trois
+  filets — le drapeau posé d'avance, le délai dur de quatre secondes, et la
+  réponse du rendu qui n'attend pas ce délai.
+*/
+app.on('before-quit', (event) => {
+    if (sortieDejaTraitee || !leRenduRepond()) return;
+    event.preventDefault();
+    sauvegarderAvantDeSortir(() => app.quit());
+});
 
 ipcMain.handle('npc:select-avatar', async () => {
     const { filePaths } = await dialog.showOpenDialog({

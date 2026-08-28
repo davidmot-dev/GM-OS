@@ -12,48 +12,60 @@ import { withTimeout } from '../utils/promiseUtils';
 import { Logger } from '../utils/logger';
 import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSession';
 
+/**
+ * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
+ *
+ * La sauvegarde manuelle (avec son dialogue) et la sauvegarde automatique (sans)
+ * doivent porter exactement la même chose. Deux constructions donneraient deux
+ * idées de ce qu'est une session, et l'écart ne se verrait **que le jour où l'on
+ * relit** — c'est déjà arrivé, voir `donneesDeLaSession.ts`.
+ */
+export function construireLaSauvegarde() {
+    const sessionState = useSessionStore.getState();
+    const osState = useSessionOSStore.getState();
+    const npcState = useNPCStore.getState();
+    const webState = useWebStore.getState();
+    const ambientState = useAmbientStore.getState();
+    const clockState = useClockStore.getState();
+    const whiteboardState = useWhiteboardStore.getState();
+
+    return {
+        version: '5.1.0',
+        timestamp: new Date().toISOString(),
+        global: {
+            theme: sessionState.theme,
+            themeColor: sessionState.themeColor,
+            activeModule: sessionState.activeModule,
+        },
+        modules: {
+            // Une seule liste de ce qu'une session contient, partagée avec
+            // la persistance vivante : voir `donneesDeLaSession.ts`. Elle
+            // était recopiée ici, et il y manquait `entities`, `clues` et
+            // `sessions` — les PNJ, les indices et l'historique des séances
+            // n'étaient donc dans aucune sauvegarde.
+            sessionOS: lesDonneesDeLaSession(osState),
+            npc: {
+                savedEntities: npcState.savedEntities,
+            },
+            web: {
+                links: webState.links,
+            },
+            ambient: {
+                tracks: ambientState.tracks,
+            },
+            clock: {
+                timestamp: clockState.timestamp,
+            },
+            whiteboard: {
+                paths: whiteboardState.paths,
+            }
+        }
+    };
+}
+
 export const SessionService = {
     async saveFullSession(silent = false) {
-        const sessionState = useSessionStore.getState();
-        const osState = useSessionOSStore.getState();
-        const npcState = useNPCStore.getState();
-        const webState = useWebStore.getState();
-        const ambientState = useAmbientStore.getState();
-        const clockState = useClockStore.getState();
-        const whiteboardState = useWhiteboardStore.getState();
-
-        const fullData = {
-            version: '5.1.0',
-            timestamp: new Date().toISOString(),
-            global: {
-                theme: sessionState.theme,
-                themeColor: sessionState.themeColor,
-                activeModule: sessionState.activeModule,
-            },
-            modules: {
-                // Une seule liste de ce qu'une session contient, partagée avec
-                // la persistance vivante : voir `donneesDeLaSession.ts`. Elle
-                // était recopiée ici, et il y manquait `entities`, `clues` et
-                // `sessions` — les PNJ, les indices et l'historique des séances
-                // n'étaient donc dans aucune sauvegarde.
-                sessionOS: lesDonneesDeLaSession(osState),
-                npc: {
-                    savedEntities: npcState.savedEntities,
-                },
-                web: {
-                    links: webState.links,
-                },
-                ambient: {
-                    tracks: ambientState.tracks,
-                },
-                clock: {
-                    timestamp: clockState.timestamp,
-                },
-                whiteboard: {
-                    paths: whiteboardState.paths,
-                }
-            }
-        };
+        const fullData = construireLaSauvegarde();
 
         const { setLoading } = useLoadingStore.getState();
         setLoading(true, 'Sauvegarde de la session en cours...');
@@ -84,7 +96,10 @@ export const SessionService = {
                 gmToast(`Erreur: ${error instanceof Error ? error.message : 'Échec de la sauvegarde'} ❌`);
             }
         } finally {
-            if (!silent) setLoading(false);
+            // `setLoading(true)` est posé sans condition plus haut : ne le retirer
+            // que si `!silent` laissait le voile de chargement collé à l'écran
+            // pour toujours dès qu'une sauvegarde était silencieuse.
+            setLoading(false);
         }
     },
 

@@ -105,11 +105,23 @@ declare global {
             saveSession: (data: Record<string, unknown>) => Promise<boolean>;
             loadSession: () => Promise<Record<string, unknown> | null>;
         };
-        git?: {
-          getStatus: () => Promise<{ available: boolean; isRepo: boolean; branch: string; exists: boolean }>;
-          setupBranch: (branch: string) => Promise<{ success: boolean; branch: string }>;
-          syncData: (directory: string, branch: string, message: string) => Promise<{ success: boolean; timestamp: string; error?: string }>;
-          saveData: (data: any) => Promise<{ success: boolean; error?: string }>;
+        /**
+         * La sauvegarde automatique. Elle écrit un fichier, sans dialogue et
+         * **sans jamais invoquer git** — le pont `git` qui vivait ici a vidé
+         * l'application en mars 2026. Voir `electron/sauvegardeAutomatique.ts`.
+         */
+        sauvegarde?: {
+            ecrire: (
+                donnees: unknown,
+                options?: { baisseAttendue?: boolean },
+            ) => Promise<
+                | { statut: 'ecrite'; chemin: string; octets: number }
+                | { statut: 'refusee'; raison: string; octets: number; octetsPrecedents?: number }
+            >;
+            lister: () => Promise<{ nom: string; chemin: string; octets: number }[]>;
+            ouvrirLeDossier: () => Promise<void>;
+            surDemandeDeFermeture: (rappel: () => void) => void;
+            fermetureTerminee: () => void;
         };
         openFile?: (path: string) => void;
         openExternal?: (url: string) => void;

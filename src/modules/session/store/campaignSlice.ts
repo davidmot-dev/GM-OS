@@ -80,15 +80,29 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
 
     deleteCampaign: async (id) => {
         const campaign = get().campaigns.find((c) => c.id === id);
-        
-        // Safety Backup before deletion
-        await sessionBackupManager.triggerImmediateBackup();
+
+        // Le filet, pris pendant que la campagne est encore là.
+        await sessionBackupManager.sauvegarderMaintenant('avant suppression de campagne');
 
         set((state) => ({
             campaigns: state.campaigns.filter((c) => c.id !== id),
             activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId,
         }));
         if (campaign) gmToast(`Campagne "${campaign.name}" supprimée.`, 'info');
+
+        /*
+          **Et on réétalonne aussitôt, en déclarant la baisse.**
+
+          Sans ça, la sauvegarde qui suit une suppression est plus petite que la
+          précédente — et le garde-fou du rétrécissement, qui existe pour
+          repérer une perte, refuserait **toutes** les sauvegardes suivantes, en
+          silence et pour toujours. Une suppression voulue est le seul moment où
+          l'application sait que la baisse est normale : c'est donc ici, et
+          nulle part ailleurs, qu'on a le droit de le dire.
+        */
+        await sessionBackupManager.sauvegarderMaintenant(
+            'après suppression de campagne', { baisseAttendue: true },
+        );
     },
 
     /*

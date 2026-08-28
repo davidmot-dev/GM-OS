@@ -1,19 +1,91 @@
+import { construireLaSauvegarde } from '../../../store/SessionService';
+import { useSessionOSStore } from '../useSessionOSStore';
+import { lEcritureEstOuverte } from './PersistenceService';
+import { isMainWindow } from '../../../utils/windowRole';
+import { Logger } from '../../../utils/logger';
+
 /**
- * SessionBackupManager
- * 
- * Orchestrates the 15-minute automatic background backup system.
- * Only active in Electron environments.
+ * **La sauvegarde automatique — côté rendu.**
+ *
+ * Le process principal porte les règles qui protègent **l'application** (ne
+ * jamais invoquer git, ne jamais écrire dans le dépôt, ne supprimer que ses
+ * propres fichiers) : voir `electron/sauvegardeAutomatique.ts`.
+ *
+ * Ce module-ci porte celles qui protègent **les données**. Elles viennent d'une
+ * leçon payée deux fois : *une sauvegarde automatique qui tourne pendant que le
+ * store porte les mocks écrase les bonnes sauvegardes par des copies de « The
+ * Eternal Quest ».* Le filet deviendrait alors le second mécanisme de perte.
+ *
+ * **Ce que ce module ne fait pas, et ne doit jamais faire :** ouvrir un
+ * dialogue, poser un voile de chargement, ou restaurer. Restaurer reste un
+ * geste du MJ, qui choisit son fichier.
  */
 
-import { SessionService } from '../../../store/SessionService';
-import { useSessionOSStore } from '../useSessionOSStore';
-import { Logger } from '../../../utils/logger';
+/** Les campagnes de `INITIAL_DATA` — si on les voit, la base n'a pas été relue. */
+const CAMPAGNES_DE_DEMONSTRATION = new Set(['c-1', 'c-2']);
+
+export type RaisonDeRefus =
+    | 'fenetre-secondaire'
+    | 'ecriture-fermee'
+    | 'donnees-de-demonstration'
+    | 'aucune-campagne'
+    | 'pont-absent';
+
+export type Verdict =
+    | { ecrire: true }
+    | { ecrire: false; raison: RaisonDeRefus; details: string };
+
+/**
+ * **Le seul juge, et il est pur.** Séparé de l'écriture pour être éprouvable
+ * sans disque ni Electron : c'est lui qui empêche l'incident, il ne doit pas
+ * dépendre d'un environnement pour être vérifié.
+ */
+export function fautIlSauvegarder(etat: {
+    campaigns?: { id: string }[];
+}): Verdict {
+    if (!isMainWindow()) {
+        return { ecrire: false, raison: 'fenetre-secondaire', details: 'Seule la fenêtre MJ sauvegarde.' };
+    }
+
+    if (!lEcritureEstOuverte()) {
+        return {
+            ecrire: false,
+            raison: 'ecriture-fermee',
+            details:
+                'La base n’a pas été relue : ce que le store porte en mémoire n’est pas digne de ' +
+                'confiance. Sauvegarder maintenant, c’est archiver les données de démonstration.',
+        };
+    }
+
+    const campagnes = etat.campaigns ?? [];
+    if (campagnes.length === 0) {
+        return {
+            ecrire: false,
+            raison: 'aucune-campagne',
+            details: 'Aucune campagne. Une sauvegarde vide n’a rien à remplacer.',
+        };
+    }
+
+    if (campagnes.every(c => CAMPAGNES_DE_DEMONSTRATION.has(c.id))) {
+        return {
+            ecrire: false,
+            raison: 'donnees-de-demonstration',
+            details:
+                `L’état ne contient que les campagnes de démonstration (${campagnes.map(c => c.id).join(', ')}). ` +
+                'C’est la signature d’un store qui n’a pas fini de se réhydrater.',
+        };
+    }
+
+    return { ecrire: true };
+}
 
 class SessionBackupManager {
     private static instance: SessionBackupManager;
-    private timer: ReturnType<typeof setInterval> | null = null;
-    private readonly INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
-    private readonly IS_AUTO_BACKUP_ENABLED = false; // Désactivé à la demande de l'utilisateur
+    private enCours = false;
+    private minuterie: ReturnType<typeof setTimeout> | null = null;
+
+    /** Le délai d'apaisement après le dernier changement — pas un battement d'horloge. */
+    private readonly REPOS_MS = 2 * 60 * 1000;
 
     public static getInstance(): SessionBackupManager {
         if (!SessionBackupManager.instance) {
@@ -23,71 +95,73 @@ class SessionBackupManager {
     }
 
     /**
-     * Starts the automatic backup cycle.
+     * Un changement vient d'avoir lieu : on sauvegarde **deux minutes après le
+     * dernier**, pas toutes les deux minutes. Un intervalle fixe est soit trop
+     * fréquent quand rien ne bouge, soit trop tard quand tout bouge.
      */
-    public start() {
-        if (!this.IS_AUTO_BACKUP_ENABLED) {
-            Logger.info('[BackupManager] Auto-backup is disabled by configuration');
-            return;
-        }
-
-        if (this.timer) {
-            Logger.info('[BackupManager] Already started');
-            return;
-        }
-
-        if (!window.appBridge?.session?.saveSession) {
-            Logger.warn('[BackupManager] Auto-backup disabled: Bridge not available (Tablet/Browser)');
-            return;
-        }
-
-        Logger.info(`[BackupManager] Starting auto-backup cycle (Every 15 minutes)`);
-        
-        // Setup the interval
-        this.timer = setInterval(() => {
-            this.performBackup(true);
-        }, this.INTERVAL_MS);
+    public signalerUnChangement() {
+        if (this.minuterie) clearTimeout(this.minuterie);
+        this.minuterie = setTimeout(() => {
+            this.minuterie = null;
+            void this.sauvegarder('repos');
+        }, this.REPOS_MS);
     }
 
-    /**
-     * Stops the automatic backup cycle.
-     */
-    public stop() {
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-            Logger.info('[BackupManager] Stopped');
-        }
+    /** À la fermeture, à la clôture d'une séance : maintenant, sans attendre le repos. */
+    public async sauvegarderMaintenant(motif: string, options: { baisseAttendue?: boolean } = {}) {
+        if (this.minuterie) { clearTimeout(this.minuterie); this.minuterie = null; }
+        return this.sauvegarder(motif, options);
     }
 
-    /**
-     * Performs a backup.
-     * @param silent If true, no toast will be shown.
-     */
-    public async performBackup(silent = false) {
+    public arreter() {
+        if (this.minuterie) { clearTimeout(this.minuterie); this.minuterie = null; }
+    }
+
+    private async sauvegarder(motif: string, options: { baisseAttendue?: boolean } = {}) {
+        if (this.enCours) return;
+
+        const verdict = fautIlSauvegarder(useSessionOSStore.getState());
+        if (!verdict.ecrire) {
+            Logger.warn(`[Sauvegarde] Refusée (${motif}) — ${verdict.raison} : ${verdict.details}`);
+            return;
+        }
+
+        const pont = window.appBridge?.sauvegarde;
+        if (!pont) return; // tablette, navigateur : pas de disque à écrire
+
+        this.enCours = true;
         try {
-            Logger.info('[BackupManager] Triggering background backup...');
-            await SessionService.saveFullSession(silent);
-            
-            // Update the last backup timestamp in the store
-            const timestamp = new Date().toISOString();
-            useSessionOSStore.getState().setLastBackupAt(timestamp);
-            
-            if (!silent) {
-                Logger.info(`[BackupManager] Backup completed at ${timestamp}`);
-            }
-        } catch (error) {
-            Logger.error('[BackupManager] Backup failed', error);
-        }
-    }
+            const resultat = await pont.ecrire(construireLaSauvegarde(), options);
 
-    /**
-     * Trigger a mandatory backup immediately (e.g. before deleting a campaign).
-     */
-    public async triggerImmediateBackup() {
-        Logger.info('[BackupManager] Triggering immediate safety backup');
-        await this.performBackup(false);
+            if (resultat.statut === 'ecrite') {
+                useSessionOSStore.getState().setLastBackupAt(new Date().toISOString());
+                Logger.info(`[Sauvegarde] ${motif} — ${resultat.octets} octets → ${resultat.chemin}`);
+            } else {
+                // Un refus du process principal (rétrécissement, destination) n'est
+                // pas une panne : il se journalise et la précédente reste en place.
+                Logger.warn(`[Sauvegarde] Refusée par le disque (${motif}) : ${resultat.raison}`);
+            }
+        } catch (err) {
+            Logger.error(`[Sauvegarde] Échec (${motif})`, err);
+        } finally {
+            this.enCours = false;
+        }
     }
 }
 
 export const sessionBackupManager = SessionBackupManager.getInstance();
+
+/*
+  Branché au module et non dans un composant : la sauvegarde de sortie ne doit
+  pas dépendre du fait qu'un écran soit monté. Et on répond **toujours**, même
+  en cas d'échec — sinon la fermeture attend le délai de sécurité de quatre
+  secondes pour rien.
+*/
+if (typeof window !== 'undefined' && isMainWindow()) {
+    window.appBridge?.sauvegarde?.surDemandeDeFermeture(() => {
+        void sessionBackupManager
+            .sauvegarderMaintenant('fermeture')
+            .catch(err => Logger.error('[Sauvegarde] Échec à la fermeture', err))
+            .finally(() => window.appBridge?.sauvegarde?.fermetureTerminee());
+    });
+}

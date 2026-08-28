@@ -178,10 +178,20 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     const { isPanelOpen, setIsPanelOpen, status: tacticalAIStatus, settings: tacticalSettings } = useTacticalAIStore();
     const lastBackupAt = useSessionOSStore((state) => state.lastBackupAt);
 
-    // Formatter pour le backup
-    const backupLabel = lastBackupAt 
-        ? new Date(lastBackupAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+    /*
+      L'heure de la dernière sauvegarde. Elle affichait `--:--` depuis toujours :
+      `setLastBackupAt` n'était appelé que par un gestionnaire éteint. Il est
+      rallumé, et chaque écriture vérifiée la met à jour.
+    */
+    const backupLabel = lastBackupAt
+        ? new Date(lastBackupAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         : '--:--';
+
+    /** Un clic droit ouvre le dossier des sauvegardes automatiques. */
+    const ouvrirLesSauvegardes = (e: React.MouseEvent) => {
+        e.preventDefault();
+        void window.appBridge?.sauvegarde?.ouvrirLeDossier();
+    };
 
     return (
         <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30 bg-texture-overlay theme-root">
@@ -399,8 +409,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </button>
                         <button 
                             onClick={() => SessionService.saveFullSession()}
+                            onContextMenu={ouvrirLesSauvegardes}
                             className="flex-1 py-3 flex flex-col items-center justify-center text-app-text/50 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-app-border/50 transition-all duration-300 relative group"
-                            title={t('modules:tooltips.save_session')}
+                            title={`${t('modules:tooltips.save_session')}\nDernière sauvegarde automatique : ${backupLabel}\nClic droit : ouvrir le dossier des sauvegardes`}
                         >
                             <Save size={18} className="group-hover:scale-110 transition-transform" />
                             <span className="text-[7px] mt-0.5 opacity-50 font-mono tracking-tighter">

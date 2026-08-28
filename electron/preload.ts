@@ -241,12 +241,32 @@ contextBridge.exposeInMainWorld('appBridge', {
         /** L'état du coffre et les noms de ses entrées — jamais les valeurs. */
         etatDuCoffre: () => ipcRenderer.invoke('security:etat'),
     },
-    git: {
-        getStatus: () => ipcRenderer.invoke('git:status'),
-        setupBranch: (branchName: string) => ipcRenderer.invoke('git:setup-branch', branchName),
-        syncData: (targetDir: string, branchName: string, message?: string) => 
-            ipcRenderer.invoke('git:sync', targetDir, branchName, message),
-        saveData: (data: unknown) => ipcRenderer.invoke('backup:save-data', data)
+    /*
+      **`git` a été retiré ici le 2026-08-27, et ne doit pas revenir.**
+
+      Ce pont exposait `git:status`, `git:setup-branch` et `git:sync`. Leurs
+      gestionnaires étaient déjà commentés dans `main.ts` — mais le levier
+      restait sur le tableau de bord, et il s'appelait `syncData`. Ce qu'il
+      commandait autrefois : `git stash`, `git checkout data-sync`, `git push`,
+      dans le dépôt de GM-OS lui-même. **Il vidait l'application.**
+
+      Une sauvegarde écrit un fichier ; elle n'exécute aucune commande de
+      gestion de version. Voir `sauvegardeAutomatique.ts`.
+    */
+    sauvegarde: {
+        /** Écrit une sauvegarde automatique, sans dialogue, sous `userData/backups`. */
+        ecrire: (donnees: unknown, options?: { baisseAttendue?: boolean }) =>
+            ipcRenderer.invoke('backup:auto-write', donnees, options),
+        /** Ce que le dossier contient déjà — la plus récente d'abord. */
+        lister: () => ipcRenderer.invoke('backup:list'),
+        /** Ouvre le dossier des sauvegardes dans l'explorateur. */
+        ouvrirLeDossier: () => ipcRenderer.invoke('backup:reveal'),
+        /** GM-OS va se fermer : dernière occasion d'écrire. */
+        surDemandeDeFermeture: (rappel: () => void) => {
+            ipcRenderer.on('backup:before-quit', () => rappel());
+        },
+        /** « J'ai fini » — sans quoi la fermeture attend le délai de sécurité. */
+        fermetureTerminee: () => ipcRenderer.send('backup:before-quit-done'),
     },
     nexus: {
         selectExportPath: (bundleType?: 'campaign' | 'driver') => ipcRenderer.invoke('nexus:select-export-path', bundleType),

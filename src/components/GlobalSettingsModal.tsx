@@ -12,7 +12,6 @@ import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { mediaCleanupService } from '../services/MediaCleanupService';
 import { gmToast } from '../stores/useToastStore';
 import { Trash2, RefreshCw } from 'lucide-react';
-// import { useBackupSync } from '../hooks/useBackupSync';
 import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import { QRCodeSVG } from 'qrcode.react';
