@@ -108,6 +108,8 @@ const CharacterSheetEditor: React.FC = () => {
         if (!pj || !editor.selectedPlayer) return;
         updateCharacter(editor.selectedPlayer.id, pj.id, {
             sheetData: { ...pj.sheetData, ...releve.aEcrire },
+            // Description, notes : ils vivent sur le personnage, pas dans la fiche.
+            ...(releve.narratifAEcrire ?? {}),
             ...(releve.inventoryItems ? { inventoryItems: releve.inventoryItems } : {}),
         });
     };
@@ -214,6 +216,12 @@ const CharacterSheetEditor: React.FC = () => {
                             name: character.name,
                             ficheId: character.ficheId,
                             sheetData: character.sheetData ?? {},
+                            narratif: {
+                                description: character.description ?? '',
+                                gmNotes: character.gmNotes ?? '',
+                                playerNotes: character.playerNotes ?? '',
+                                inventory: character.inventory ?? '',
+                            },
                             inventoryItems: character.inventoryItems,
                         }}
                         table={correspondance}

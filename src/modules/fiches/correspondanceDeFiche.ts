@@ -109,12 +109,35 @@ export const TRANSFORMATIONS: Record<string, Transformation> = {
     niveauEtDe: NIVEAU_ET_DE,
 };
 
+/**
+ * **Les champs du personnage qu'une table a le droit de viser.**
+ *
+ * Tout ce que GM-OS sait d'un PJ ne vit pas dans `sheetData` : la Description,
+ * les notes et l'inventaire en texte libre sont posés **sur le personnage
+ * lui-même**. Une fiche qui porte « Apparence » doit pouvoir y descendre.
+ *
+ * **C'est une liste close, et ce n'est pas de la prudence décorative.** Sans
+ * elle, un `correspondance.json` — un fichier de données, pas du code relu —
+ * pourrait écrire dans `id`, `hp` ou `campaignId` et rendre un personnage
+ * incohérent sans qu'aucune erreur ne soit levée. Ces quatre-là sont du texte
+ * libre : les écraser est réparable, pas les autres.
+ */
+export const CHAMPS_DU_PERSONNAGE = ['description', 'gmNotes', 'playerNotes', 'inventory'] as const;
+
+/** Où GM-OS range la valeur : dans la fiche, ou sur le personnage. */
+export type DestinationGmOs = 'sheetData' | 'personnage';
+
 /** Une correspondance de champ à champ. */
 export interface ChampCorrespondu {
     /** L'identifiant du champ dans le gabarit de GM-OS. */
     gmos: string;
     /** La clé de la fiche, ou **deux** clés quand une transformation les compose. */
     fiche: string | [string, string];
+    /**
+     * `sheetData` par défaut — un champ du gabarit. `personnage` vise un des
+     * `CHAMPS_DU_PERSONNAGE`, qui vivent en dehors de la fiche.
+     */
+    destination?: DestinationGmOs;
     /** Le nom d'une entrée de `TRANSFORMATIONS`. Obligatoire si `fiche` est une paire. */
     transforme?: string;
     /** Traduction des valeurs, **de la fiche vers GM-OS**. Inversée pour l'autre sens. */
@@ -250,10 +273,23 @@ export function verifierLaCorrespondance(
 
     for (const champ of table.champs) {
         const ou = `champ « ${champ.gmos} »`;
+        const destination = champ.destination ?? 'sheetData';
 
         if (!champ.gmos) erreur(`${ou} : identifiant GM-OS manquant.`);
-        if (vues.has(champ.gmos)) erreur(`${ou} : cet identifiant GM-OS est déclaré deux fois.`);
-        vues.add(champ.gmos);
+        // Deux destinations différentes peuvent porter le même nom sans se gêner.
+        const signature = `${destination}:${champ.gmos}`;
+        if (vues.has(signature)) erreur(`${ou} : cet identifiant GM-OS est déclaré deux fois.`);
+        vues.add(signature);
+
+        if (destination !== 'sheetData' && destination !== 'personnage') {
+            erreur(`${ou} : destination « ${destination} » inconnue.`);
+        }
+        if (destination === 'personnage' && !(CHAMPS_DU_PERSONNAGE as readonly string[]).includes(champ.gmos)) {
+            erreur(
+                `${ou} : « ${champ.gmos} » n'est pas un champ du personnage. `
+                + `Les seuls autorisés sont ${CHAMPS_DU_PERSONNAGE.join(', ')}.`,
+            );
+        }
 
         const paire = Array.isArray(champ.fiche);
         if (paire && !champ.transforme) erreur(`${ou} : deux clés de fiche sans transformation.`);
@@ -306,6 +342,8 @@ export function verifierLaCorrespondance(
 /** Ce qu'une conversion lit et écrit côté GM-OS. */
 export interface CotesGmOs {
     sheetData: Record<string, unknown>;
+    /** Les `CHAMPS_DU_PERSONNAGE` — Description, notes, inventaire en texte. */
+    narratif?: Record<string, unknown>;
     inventoryItems?: InventoryItem[];
 }
 
@@ -325,7 +363,8 @@ export function versLaFiche(personnage: CotesGmOs, table: CorrespondanceDeFiche)
     const lot: Record<string, unknown> = {};
 
     for (const champ of table.champs) {
-        let valeur = personnage.sheetData?.[champ.gmos];
+        const source = champ.destination === 'personnage' ? personnage.narratif : personnage.sheetData;
+        let valeur = source?.[champ.gmos];
         if (champ.valeurs) {
             const versFiche = inverser(champ.valeurs);
             valeur = versFiche[String(valeur ?? '')] ?? valeur;
@@ -369,6 +408,8 @@ export function versGmOs(
     inventaireActuel: InventoryItem[] = [],
 ): CotesGmOs {
     const sheetData: Record<string, unknown> = {};
+    const narratif: Record<string, unknown> = {};
+    let ilYADuNarratif = false;
 
     for (const champ of table.champs) {
         let valeur: unknown;
@@ -382,11 +423,24 @@ export function versGmOs(
         }
 
         if (champ.valeurs) valeur = champ.valeurs[String(valeur ?? '')] ?? valeur;
-        sheetData[champ.gmos] = valeur ?? '';
+
+        if (champ.destination === 'personnage') {
+            narratif[champ.gmos] = valeur ?? '';
+            ilYADuNarratif = true;
+        } else {
+            sheetData[champ.gmos] = valeur ?? '';
+        }
     }
 
+    /*
+      `narratif` n'est rendu que si la table en parle — même règle que
+      `inventoryItems`, et pour la même raison : l'appelant doit pouvoir
+      distinguer « rien à dire » de « tout est vide ».
+    */
+    const cote: CotesGmOs = ilYADuNarratif ? { sheetData, narratif } : { sheetData };
+
     const groupes = table.objets ?? [];
-    if (groupes.length === 0) return { sheetData };
+    if (groupes.length === 0) return cote;
 
     /*
       On reconstruit **par type**, en place. Les objets d'un autre type ne
@@ -431,5 +485,5 @@ export function versGmOs(
         inventaire = [...autres, ...refaits, ...survivants];
     }
 
-    return { sheetData, inventoryItems: inventaire };
+    return { ...cote, inventoryItems: inventaire };
 }

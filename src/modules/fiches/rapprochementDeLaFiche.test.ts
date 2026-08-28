@@ -106,6 +106,39 @@ describe('rapprocher', () => {
         expect(divergences).toEqual([{ cle: 'inventoryItems', ancienne: 'Matraque', nouvelle: '' }]);
     });
 
+    /**
+     * **Le cas qui aurait coûté cher.** Relier un PJ déjà rempli à une fiche
+     * vierge : sans ce garde-fou, sa Description, son objet fétiche et ses
+     * spécialités partaient d'un coup, à la seconde du clic.
+     */
+    it('une case vide de la fiche n’efface JAMAIS une valeur de GM-OS', () => {
+        const { aEcrire, divergences } = rapprocher(
+            { 'identity.name': '' },
+            { sheetData: { nom: 'Rick Deckard' } },
+            TABLE,
+        );
+        expect(aEcrire).not.toHaveProperty('nom');
+        expect(divergences).toEqual([]);
+    });
+
+    it('écrit dans les champs du personnage quand la table les vise', () => {
+        const avecNarratif = {
+            ...TABLE,
+            champs: [{ gmos: 'description', destination: 'personnage' as const, fiche: 'identity.appearance' }],
+            objets: undefined,
+        };
+        const { narratifAEcrire, divergences } = rapprocher(
+            { 'identity.appearance': 'Manteau gris, col relevé.' },
+            { sheetData: {}, narratif: { description: 'Trench mouillé.' } },
+            avecNarratif,
+        );
+
+        expect(narratifAEcrire).toEqual({ description: 'Manteau gris, col relevé.' });
+        expect(divergences).toEqual([
+            { cle: 'description', ancienne: 'Trench mouillé.', nouvelle: 'Manteau gris, col relevé.' },
+        ]);
+    });
+
     it('ne parle pas d’inventaire quand la table n’en parle pas', () => {
         const sansObjets = { ...TABLE, objets: undefined };
         expect(rapprocher({}, { sheetData: {}, inventoryItems: [arme('a0', 'Blaster')] }, sansObjets))

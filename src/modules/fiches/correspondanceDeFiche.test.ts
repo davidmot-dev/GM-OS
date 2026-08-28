@@ -156,6 +156,63 @@ describe('verifierLaCorrespondance', () => {
     });
 });
 
+describe('viser un champ du personnage plutôt que la fiche', () => {
+    /**
+     * La Description de GM-OS ne vit pas dans `sheetData` : elle est posée sur le
+     * personnage, à côté des notes et de l'inventaire en texte. Sans destination,
+     * une fiche portant « Apparence » n'avait nulle part où descendre.
+     */
+    const AVEC_NARRATIF: CorrespondanceDeFiche = {
+        version: 1, gabaritDeLaFiche: 'controle',
+        champs: [
+            { gmos: 'nom', fiche: 'identity.name' },
+            { gmos: 'description', destination: 'personnage', fiche: 'identity.appearance' },
+        ],
+    };
+
+    it('lit et écrit du bon côté', () => {
+        const lot = versLaFiche(
+            { sheetData: { nom: 'Rick' }, narratif: { description: 'Trench mouillé.' } },
+            AVEC_NARRATIF,
+        );
+        expect(lot['identity.appearance']).toBe('Trench mouillé.');
+
+        const retour = versGmOs({ 'identity.name': 'Rick', 'identity.appearance': 'Manteau gris.' }, AVEC_NARRATIF);
+        expect(retour.sheetData).toEqual({ nom: 'Rick' });
+        expect(retour.narratif).toEqual({ description: 'Manteau gris.' });
+    });
+
+    /** Même règle que l'inventaire : « rien à dire » n'est pas « tout est vide ». */
+    it('ne parle pas du personnage quand la table n’en parle pas', () => {
+        expect(versGmOs({}, TABLE)).not.toHaveProperty('narratif');
+    });
+
+    /**
+     * Une table est un fichier de données, pas du code relu. Sans liste close,
+     * elle pourrait écrire dans `id` ou `hp` et rendre un personnage incohérent
+     * sans qu'aucune erreur ne soit levée.
+     */
+    it('refuse un champ du personnage qui n’est pas de la liste close', () => {
+        const interdit = {
+            ...AVEC_NARRATIF,
+            champs: [{ gmos: 'hp', destination: 'personnage' as const, fiche: 'identity.appearance' }],
+        };
+        const defauts = verifierLaCorrespondance(interdit, ['identity.appearance']);
+        expect(defauts[0].message).toContain("n'est pas un champ du personnage");
+    });
+
+    it('laisse deux destinations porter le même nom', () => {
+        const homonymes = {
+            ...AVEC_NARRATIF,
+            champs: [
+                { gmos: 'description', fiche: 'a' },
+                { gmos: 'description', destination: 'personnage' as const, fiche: 'b' },
+            ],
+        };
+        expect(verifierLaCorrespondance(homonymes, ['a', 'b'])).toEqual([]);
+    });
+});
+
 describe('versLaFiche', () => {
     it('renomme, traduit et décompose', () => {
         const lot = versLaFiche({ sheetData: { nom: 'Rick', nature: 'Réplicant', vigueur: 'C (D8)' } }, TABLE);

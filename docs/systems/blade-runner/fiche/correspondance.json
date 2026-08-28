@@ -26,6 +26,13 @@
       "valeurs": { "human": "Humain", "replicant": "Réplicant" }
     },
 
+    {
+      "commentaire": "La Description de GM-OS ne vit pas dans sheetData mais sur le personnage : d'ou la destination.",
+      "gmos": "description",
+      "destination": "personnage",
+      "fiche": "identity.appearance"
+    },
+
     { "gmos": "vigueur", "fiche": ["attributes.vigor.level", "attributes.vigor.base_die"], "transforme": "niveauEtDe" },
     { "gmos": "agilite", "fiche": ["attributes.agility.level", "attributes.agility.base_die"], "transforme": "niveauEtDe" },
     { "gmos": "intelligence", "fiche": ["attributes.intelligence.level", "attributes.intelligence.base_die"], "transforme": "niveauEtDe" },
@@ -64,7 +71,6 @@
   ],
 
   "absents": [
-    { "fiche": "identity.appearance", "pourquoi": "N'existait que dans la moitie morte du gabarit GM-OS, supprimee le 2026-08-24." },
     { "fiche": "health.critical_injuries", "pourquoi": "GM-OS n'a pas de champ de blessure grave." },
     { "fiche": "cool.critical_stress", "pourquoi": "GM-OS n'a pas de champ de stress critique." },
     { "fiche": "protection.name", "pourquoi": "L'armure vit dans l'inventaire de GM-OS, pas dans la fiche." },

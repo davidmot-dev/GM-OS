@@ -20,7 +20,10 @@
   --rpg-text: #edf1ef;
   --rpg-muted: #84919a;
 
-  --rpg-accent: #c5524c;
+  /* Corail néon plutôt que bordeaux : sur le fond #020711, l'ancien #c5524c
+     tombait à 4,5:1 — et les titres de GM-OS l'affichent en transparence, donc
+     bien plus bas encore. Celui-ci monte à 6,7:1 et reste dans la palette. */
+  --rpg-accent: #ff5f56;
   --rpg-accent-2: #c39a58;
   --rpg-accent-contrast: #080b10;
 
@@ -185,7 +188,7 @@
   right: 10px;
   top: 10px;
   height: 1px;
-  background: rgba(197, 82, 76, 0.34);
+  background: rgba(255, 95, 86, 0.34);
   pointer-events: none;
 }
 
@@ -244,7 +247,7 @@
   border-color: var(--rpg-accent);
   box-shadow:
     0 0 0 1px var(--rpg-accent),
-    0 0 0 4px rgba(197, 82, 76, 0.15);
+    0 0 0 4px rgba(255, 95, 86, 0.15);
 }
 
 :root[data-theme="blade-runner"] .rpg-button {

@@ -50,6 +50,8 @@ export interface Divergence {
 export interface Rapprochement {
     /** Les seules clés qui changent — écrire les autres ferait tourner le store pour rien. */
     aEcrire: Record<string, unknown>;
+    /** Les champs du personnage à changer — Description, notes. Absent si la table n'en parle pas. */
+    narratifAEcrire?: Record<string, unknown>;
     /** L'inventaire tel qu'il doit devenir. Absent si la table ne parle pas d'objets. */
     inventoryItems?: InventoryItem[];
     /** Les valeurs écrasées. Vide est le cas normal. */
@@ -91,18 +93,49 @@ export function rapprocher(
     const impose = versGmOs(donneesDeLaFiche, table, personnage.inventoryItems ?? []);
 
     const aEcrire: Record<string, unknown> = {};
+    const narratifAEcrire: Record<string, unknown> = {};
     const divergences: Divergence[] = [];
 
-    for (const [cle, nouvelle] of Object.entries(impose.sheetData)) {
-        const ancienne = personnage.sheetData?.[cle];
-        if (memeValeur(ancienne, nouvelle)) continue;
+    /**
+     * **Le vide n'est pas une valeur.**
+     *
+     * « La fiche fait foi » veut dire qu'elle gagne quand les deux ont quelque
+     * chose à dire et ne disent pas la même chose. **Une case jamais remplie ne
+     * dit rien** — et propager ce silence effacerait, à la seconde où on relie
+     * un PJ à une fiche existante, tout ce que le meneur avait déjà saisi.
+     *
+     * Le cas est réel et pas théorique : relier un PJ à une fiche vierge viderait
+     * sa Description, son objet fétiche et ses spécialités d'un coup. *Dans une
+     * application qui a perdu ses campagnes deux fois, un effacement automatique
+     * ne peut pas être le comportement par défaut.*
+     *
+     * Effacer reste possible — depuis GM-OS, où le champ est éditable.
+     */
+    const remplir = (
+        cible: Record<string, unknown>,
+        cle: string,
+        ancienne: unknown,
+        nouvelle: unknown,
+    ) => {
+        if (memeValeur(ancienne, nouvelle)) return;
+        if (estVide(nouvelle)) return;
 
-        aEcrire[cle] = nouvelle;
+        cible[cle] = nouvelle;
         // Remplir un champ vide n'est pas écraser : ce n'est pas une divergence.
         if (!estVide(ancienne)) divergences.push({ cle, ancienne, nouvelle });
+    };
+
+    for (const [cle, nouvelle] of Object.entries(impose.sheetData)) {
+        remplir(aEcrire, cle, personnage.sheetData?.[cle], nouvelle);
     }
 
-    if (!impose.inventoryItems) return { aEcrire, divergences };
+    for (const [cle, nouvelle] of Object.entries(impose.narratif ?? {})) {
+        remplir(narratifAEcrire, cle, personnage.narratif?.[cle], nouvelle);
+    }
+
+    const narratif = impose.narratif ? { narratifAEcrire } : {};
+
+    if (!impose.inventoryItems) return { aEcrire, ...narratif, divergences };
 
     /*
       Les objets disparus se disent aussi, et un par un. La fiche n'imprime que
@@ -117,5 +150,5 @@ export function rapprocher(
         }
     }
 
-    return { aEcrire, inventoryItems: impose.inventoryItems, divergences };
+    return { aEcrire, ...narratif, inventoryItems: impose.inventoryItems, divergences };
 }

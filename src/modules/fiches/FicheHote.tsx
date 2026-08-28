@@ -94,7 +94,11 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             { personnage: pj.name, gabarit: t.gabaritDeLaFiche },
             releve.divergences,
         );
-        if (Object.keys(releve.aEcrire).length > 0 || releve.inventoryItems) rendre(releve);
+
+        const quelqueChoseADire = Object.keys(releve.aEcrire).length > 0
+            || Object.keys(releve.narratifAEcrire ?? {}).length > 0
+            || !!releve.inventoryItems;
+        if (quelqueChoseADire) rendre(releve);
     }, []);
 
     const brancher = React.useCallback(async (p: PontDeLaFiche) => {
