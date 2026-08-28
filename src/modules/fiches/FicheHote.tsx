@@ -236,7 +236,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         <div className="relative w-full h-full min-h-[24rem] rounded-3xl overflow-hidden border border-app-border/20 bg-app-surface">
             <iframe
                 ref={cadre}
-                src={adresseDuMoteur()}
+                src={adresseDuMoteur({ epuree: liaison === 'locale' })}
                 title={`Fiche de ${personnage.name}`}
                 onLoad={surCharge}
                 className="w-full h-full border-0 bg-white"

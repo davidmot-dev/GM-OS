@@ -153,6 +153,69 @@ describe('l’hôte qui parle avant que la base soit ouverte', () => {
     }, 30_000);
 });
 
+/**
+ * **La vue épurée — la fiche sur la tablette d'un joueur.**
+ *
+ * Il ne gère pas une bibliothèque, il regarde sa fiche : la barre latérale et les
+ * boutons Zones / Exporter / Importer / Imprimer n'ont rien à faire là, et *un
+ * bouton qu'on ne doit pas toucher finit par être touché.* L'écran du meneur
+ * garde tout — c'est lui qui gère la bibliothèque.
+ *
+ * Ce test existe parce que le GPT régénère ce fichier : la règle CSS et le petit
+ * script du `<head>` sont exactement le genre de chose qu'une régénération
+ * emporte sans le dire.
+ */
+describe('la vue épurée', () => {
+    const ouvrir = (url: string) => {
+        const dom = new JSDOM(pageDeControle(), {
+            url, runScripts: 'dangerously', virtualConsole: new VirtualConsole(),
+            beforeParse(window) {
+                poserIndexedDB(window);
+                const css = (window as any).CSS;
+                if (!css?.escape) (window as any).CSS = { ...css, escape: (s: string) => String(s) };
+            },
+        });
+        return dom.window;
+    };
+
+    it('se déclenche sur ?vue=epuree, et jamais sans', () => {
+        expect(ouvrir('https://fiche.test/?vue=epuree').document.documentElement.dataset.vue).toBe('epuree');
+        expect(ouvrir('https://fiche.test/').document.documentElement.dataset.vue).toBeUndefined();
+        expect(ouvrir('https://fiche.test/?vue=autre').document.documentElement.dataset.vue).toBeUndefined();
+    });
+
+    it('cache la barre latérale et les quatre boutons', () => {
+        const win: any = ouvrir('https://fiche.test/?vue=epuree');
+        const cache = (sel: string) => {
+            const el = win.document.querySelector(sel);
+            expect(el, sel).not.toBeNull();
+            return win.getComputedStyle(el).display === 'none';
+        };
+
+        expect(cache('.sidebar'), 'la barre latérale').toBe(true);
+        for (const sel of ['#zonesBtn', '#exportCharBtn', '#printBtn', '.filebtn']) {
+            expect(cache(sel), sel).toBe(true);
+        }
+    });
+
+    /** Ce qui sert à LIRE sa fiche reste : pages, zoom, ajustement. */
+    it('garde de quoi lire la fiche', () => {
+        const win: any = ouvrir('https://fiche.test/?vue=epuree');
+        for (const sel of ['#zoomIn', '#zoomOut', '#fitBtn', '#viewer', '#pagesHost']) {
+            const el = win.document.querySelector(sel);
+            expect(win.getComputedStyle(el).display, sel).not.toBe('none');
+        }
+    });
+
+    it('l’écran du meneur garde tout', () => {
+        const win: any = ouvrir('https://fiche.test/');
+        for (const sel of ['.sidebar', '#zonesBtn', '#exportCharBtn', '#printBtn', '.filebtn']) {
+            const el = win.document.querySelector(sel);
+            expect(win.getComputedStyle(el).display, sel).not.toBe('none');
+        }
+    });
+});
+
 describe('le moteur réel, chargé et piloté', () => {
     let dom: JSDOM;
     let win: any;

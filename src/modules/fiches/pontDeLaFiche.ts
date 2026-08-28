@@ -236,7 +236,16 @@ export function origineDesFiches(): string {
     return `http://${hote}:${PORT_DES_FICHES}`;
 }
 
-/** L'adresse du moteur de fiches, pour l'écran où l'on se trouve. */
-export function adresseDuMoteur(): string {
-    return `${origineDesFiches()}/fiches/Character_Sheet_Manager.html`;
+/**
+ * L'adresse du moteur de fiches, pour l'écran où l'on se trouve.
+ *
+ * `epuree` retire la barre latérale et les boutons de bibliothèque — Zones,
+ * Exporter, Importer, Imprimer. C'est la vue de la **tablette d'un joueur** : il
+ * ne gère pas une bibliothèque, il regarde sa fiche. *Un bouton qu'on ne doit
+ * pas toucher finit par être touché.* L'écran du meneur garde tout, puisque
+ * c'est lui qui gère la bibliothèque.
+ */
+export function adresseDuMoteur(options: { epuree?: boolean } = {}): string {
+    const base = `${origineDesFiches()}/fiches/Character_Sheet_Manager.html`;
+    return options.epuree ? `${base}?vue=epuree` : base;
 }

@@ -21,6 +21,16 @@ describe('adresseDuMoteur', () => {
     });
 
     /**
+     * Le joueur ne gère pas une bibliothèque, il regarde sa fiche. Le meneur, si
+     * — il garde donc la barre latérale et les boutons d'export.
+     */
+    it('ne demande la vue épurée que pour la tablette', () => {
+        expect(adresseDuMoteur({ epuree: true })).toContain('?vue=epuree');
+        expect(adresseDuMoteur()).not.toContain('vue=');
+        expect(adresseDuMoteur({ epuree: false })).not.toContain('vue=');
+    });
+
+    /**
      * Sur une tablette il n'y a pas de `gmos://`. Servir la fiche par le
      * `SyncServer` la mettrait sur l'origine du Player Hub, avec accès à son
      * stockage — d'où un port à elle.

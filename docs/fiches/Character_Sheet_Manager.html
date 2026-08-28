@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Character Sheet Manager — Bibliothèque JdR</title>
+<script>
+/* Dans le <head>, et AVANT la feuille de style : pose sur <html> de quoi choisir
+   la vue. Plus bas, on verrait la barre laterale apparaitre puis disparaitre. */
+if(new URLSearchParams(location.search).get("vue")==="epuree")document.documentElement.dataset.vue="epuree";
+</script>
 <style>
 :root{--accent:#5ea79d;--bg:#0d1212;--panel:#141c1b;--panel2:#1b2523;--line:#30433f;--ink:#edf6f4;--muted:#9db7b1;--scale:1}
 *{box-sizing:border-box}
@@ -11,6 +16,19 @@ html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-fa
 body{height:100vh;overflow:hidden}
 button,input,select{font:inherit}
 .app{display:grid;grid-template-columns:310px 1fr;height:100vh}
+
+/* ── Vue épurée — la fiche sur la tablette d'un joueur ────────────────────────
+   Il ne gère pas une bibliotheque : il regarde SA fiche. Tout ce qui sert a
+   choisir, exporter, importer ou imprimer un autre personnage n'a rien a faire
+   la, et un bouton qu'on ne doit pas toucher finit par etre touche.
+   L'ecran du meneur, lui, garde tout : c'est lui qui gere la bibliotheque.
+   Declenchee par `?vue=epuree`, pose par l'hote. */
+html[data-vue="epuree"] .app{grid-template-columns:1fr}
+html[data-vue="epuree"] .sidebar{display:none}
+html[data-vue="epuree"] #zonesBtn,
+html[data-vue="epuree"] #exportCharBtn,
+html[data-vue="epuree"] #printBtn,
+html[data-vue="epuree"] .filebtn{display:none}
 .sidebar{background:#111817;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .brand{padding:15px 16px 12px;border-bottom:1px solid var(--line)}
 .brand h1{margin:0;font-size:14px;letter-spacing:.08em;text-transform:uppercase}

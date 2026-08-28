@@ -72,6 +72,18 @@ describe('FicheHote', () => {
             .toBe('gmos://media/docs/fiches/Character_Sheet_Manager.html');
     });
 
+    /** Le joueur regarde sa fiche ; le meneur gère une bibliothèque. */
+    it('n’épure la fiche que sur une tablette', () => {
+        const src = () => document.querySelector('iframe')!.getAttribute('src')!;
+
+        render(<FicheHote personnage={PERSONNAGE} table={TABLE} liaison="locale" onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => faireUnPont().pont} />);
+        expect(src()).toContain('?vue=epuree');
+
+        cleanup();
+        render(<FicheHote personnage={PERSONNAGE} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => faireUnPont().pont} />);
+        expect(src()).not.toContain('vue=');
+    });
+
     it('ouvre directement la fiche déjà liée', async () => {
         const { pont, appels } = faireUnPont();
         render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1' }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
