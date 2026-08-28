@@ -99,13 +99,34 @@ const SessionPrep: React.FC = () => {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {campaignSessions.sort((a, b) => b.number - a.number).map(s => (
-                                <button
+                                /*
+                                  **La carte n'est pas un `<button>`, et ne peut pas l'être :**
+                                  elle en contient un — la corbeille. Un bouton dans un bouton est
+                                  interdit par le HTML, et le navigateur défait l'imbrication à sa
+                                  façon : la corbeille sortait de la carte dans l'arbre réel, ce qui
+                                  rendait son `stopPropagation` incertain.
+
+                                  Une zone cliquable avec son rôle et son clavier donne le même
+                                  comportement sans l'imbrication. `role`, `tabIndex` et `onKeyDown`
+                                  vont ensemble : les retirer laisserait une carte que seule la
+                                  souris peut ouvrir.
+                                */
+                                <div
                                     key={s.id}
+                                    role="button"
+                                    tabIndex={0}
                                     onClick={() => {
                                         setSelectedSession(s.id);
                                         setCurrentView('session-focus');
                                     }}
-                                    className="flex flex-col text-left p-8 bg-app-surface/40 border border-app-border/20 rounded-[2rem] hover:border-accent/40 hover:bg-app-surface/60 transition-all group relative overflow-hidden active:scale-[0.98] shadow-2xl"
+                                    onKeyDown={(e) => {
+                                        if (e.key !== 'Enter' && e.key !== ' ') return;
+                                        if (e.target !== e.currentTarget) return; // la corbeille gère ses propres touches
+                                        e.preventDefault(); // sinon l'espace fait défiler la page
+                                        setSelectedSession(s.id);
+                                        setCurrentView('session-focus');
+                                    }}
+                                    className="flex flex-col text-left p-8 bg-app-surface/40 border border-app-border/20 rounded-[2rem] hover:border-accent/40 hover:bg-app-surface/60 transition-all group relative overflow-hidden active:scale-[0.98] shadow-2xl cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-lg uppercase tracking-widest border border-accent/20">
@@ -145,7 +166,7 @@ const SessionPrep: React.FC = () => {
 
                                     {/* Decorative subtle background elements */}
                                     <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-accent/5 blur-[60px] rounded-full group-hover:bg-accent/10 transition-all"></div>
-                                </button>
+                                </div>
                             ))}
                         </div>
                     )}
