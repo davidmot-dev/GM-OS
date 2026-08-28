@@ -118,12 +118,20 @@ A ↔ D12    B ↔ D10    C ↔ D8    D ↔ D6
 ambiguïté. **Une seule fonction couvre les 17 cas, et elle n'a besoin d'aucune
 donnée** : la table est dans les règles.
 
-### ✅ Le typage est corrigé le 2026-08-24
+### ⚠️ Le typage a été corrigé le 2026-08-24 — **dans le mauvais fichier**
 
 Les 17 champs `.level` étaient déclarés **`type: "number"`** alors que le niveau
 est une **lettre**. Un champ `number` ne peut pas contenir `C` : la saisie était
-impossible. **David les a passés en `text`**, et le fichier corrigé est commité
-(`71c42a2`).
+impossible. David les a passés en `text` — mais `71c42a2` ne touche que
+`docs/fiches/Blade Runner/BRN-Fiche-de-personnage-interactive.html`, **la fiche
+autonome**. Le gabarit `blade-runner-fr` intégré au **moteur** — celui que la
+couture publie et que GM-OS affichera — est resté en `number`.
+
+**Corrigé dans le moteur le 2026-08-28.** Quatre jours durant, deux fichiers du
+même dépôt ont dit le contraire l'un de l'autre, sans qu'aucun test ne puisse le
+voir : *le motif qui a fait écrire l'étape 4 s'était déjà produit avant qu'elle
+soit écrite.* Le dernier `it` de `electron/correspondanceDesFiches.test.ts` garde
+désormais ce point.
 
 > ⚠️ **Le générateur fait évoluer le format, et c'est un signal.** La même
 > régénération a ajouté `hotspotStyle: "cell"` sur les 82 hotspots et décalé un
@@ -229,9 +237,9 @@ la fiche la porte déjà (`points.humanity`, 20 hotspots).
 
 Rangé par ordre de dépendance : chaque étape suppose la précédente.
 
-**1. Corriger le typage de `.level`** — 17 champs à passer de `number` à `text`
-dans `docs/fiches/Character_Sheet_Manager.html`. Sans ça, aucune saisie de
-niveau n'est possible et la table ne peut rien vérifier.
+**1. ✅ FAIT le 2026-08-28 — le typage de `.level` dans le moteur.** 17 champs
+passés de `number` à `text` dans `docs/fiches/Character_Sheet_Manager.html`. La
+correction du 24/08 avait visé la fiche autonome ; voir l'encadré plus haut.
 
 **2. ✅ FAIT le 2026-08-27 — la couture est publiée.** C'était le seul vrai
 blocage. Le moteur expose maintenant :
@@ -254,16 +262,42 @@ hotspots et les champs dérivés ; sans ça la donnée est juste et l'écran men
 Éprouvé par `electron/coutureDesFiches.test.ts` — le vrai moteur chargé du
 disque, l'aller-retour complet, 9 tests.
 
-**3. Écrire la table en données**, avec ses trois capacités : composer /
-décomposer, traduire une valeur, viser une autre destination que `sheetData`
-(l'`inventory`, pour les 18 champs d'armes). Une par jeu, déposée à côté de la
-fiche — même motif que les thèmes.
+**3. ✅ FAIT le 2026-08-28 — la table est en données.**
+`docs/systems/blade-runner/fiche/correspondance.json`, déposée à côté du thème et
+résolue par `resoudreCorpus` : **déposer un fichier suffit**, aucun registre,
+aucune recompilation. Les 74 clés de la fiche y sont toutes rangées — 16
+renommages, 17 compositions, 18 champs d'armes, 6 absents motivés, et la
+traduction `human` ↔ `Humain`.
 
-**4. Un contrôle qui la garde vraie.** Une table de correspondance est **une
-deuxième déclaration de la même vérité** : si le GPT régénère une fiche et
-renomme une clé, la table pointe dans le vide, en silence. Il faut un test qui
-charge la fiche et la table et vérifie que chaque clé citée existe — comme celui
-qui vérifie que chaque police déclarée est bien importée.
+Les trois capacités vivent dans `src/modules/fiches/correspondanceDeFiche.ts`,
+pur et sans entrée/sortie (le chargement est dans `chargerLaCorrespondance.ts`) :
+
+| Capacité | Ce qui a été tranché en l'écrivant |
+| --- | --- |
+| Composer / décomposer | **La lettre détermine le dé, jamais l'inverse** — c'est la règle du jeu. Une fiche portant « B (D8) » est corrigée au passage plutôt que propagée. Le dé sert de repli quand la lettre manque. |
+| Traduire une valeur | La table déclare le sens **fiche → GM-OS** et s'inverse ; une traduction non inversible est refusée par le contrôle. |
+| Viser `inventoryItems` | **L'ordre décide, et la fiche fait foi** pour le type déclaré. Ce qui est d'un autre type, et ce qui dépasse les trois lignes imprimées, n'est jamais touché — une quatrième arme ramassée en jeu ne disparaît pas. L'identifiant du n-ième objet est conservé. |
+
+Deux décisions de sûreté qui ne se devinent pas : **on écrit vide plutôt que
+d'omettre** (sinon effacer un champ dans GM-OS laisse l'ancienne valeur affichée
+sur la fiche), et **une table sans bloc `objets` ne rend pas d'inventaire** —
+rendre une liste vide l'effacerait à chaque remontée.
+
+**4. ✅ FAIT le 2026-08-28 — le contrôle la garde vraie.**
+`electron/correspondanceDesFiches.test.ts` lit les vraies tables du dépôt et le
+vrai moteur, et regarde **dans les deux sens** :
+
+- aucune clé citée qui n'existe pas — sinon la table écrit dans le vide ;
+- **aucune clé de la fiche qui ne soit citée**, ni en champ, ni en objet, ni en
+  absent motivé. *C'est ce sens-là qui attrape un champ ajouté par une
+  régénération, le seul cas qu'on ne peut pas voir autrement.*
+- et les champs composés acceptent ce qu'on y écrit — le contrôle qui aurait
+  attrapé le typage resté en `number` pendant quatre jours.
+
+Le côté GM-OS n'est pas vérifiable dans le dépôt : **le gabarit Blade Runner
+vient de la Forge et n'existe que dans la base de session**. `annoncerLesDefauts`
+ferme cette moitié à l'exécution, en **avertissement** — un gabarit qu'on est en
+train d'enrichir (`humanite`) n'est pas une panne.
 
 **5. Converger sur le `hotspot`.** Alien, NOC et Star Trek encodent encore leurs
 pistes en `checkbox` indépendantes — 182 au total. Chacune rendrait la

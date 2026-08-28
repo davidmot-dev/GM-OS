@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "blade-runner-fr",
+  "commentaire": "Correspondance entre le gabarit de fiche de GM-OS et le gabarit du gestionnaire de fiches. Deposer ce fichier suffit : aucun code ne connait la liste des jeux. Le controle electron/correspondanceDesFiches.test.ts verifie que chaque cle citee existe, et qu'aucune cle de la fiche n'est passee sous silence.",
+
+  "champs": [
+    { "gmos": "nom", "fiche": "identity.name" },
+    { "gmos": "archetype", "fiche": "identity.archetype" },
+    { "gmos": "anneesService", "fiche": "identity.years_service" },
+    { "gmos": "domicile", "fiche": "identity.home" },
+    { "gmos": "souvenirCle", "fiche": "identity.key_memory" },
+    { "gmos": "relationCle", "fiche": "identity.key_relationship" },
+    { "gmos": "objetFetiche", "fiche": "profile.signature_item" },
+    { "gmos": "listeSpecialites", "fiche": "profile.specialties" },
+    { "gmos": "inventaire", "fiche": "profile.equipment" },
+    { "gmos": "santeMax", "fiche": "health.maximum" },
+    { "gmos": "sangFroidMax", "fiche": "cool.maximum" },
+    { "gmos": "sante", "fiche": "health.current" },
+    { "gmos": "sangFroid", "fiche": "cool.current" },
+    { "gmos": "pointsPromotion", "fiche": "points.promotion" },
+    { "gmos": "pointsChinyen", "fiche": "points.chinyen" },
+
+    {
+      "gmos": "nature",
+      "fiche": "identity.type",
+      "valeurs": { "human": "Humain", "replicant": "Réplicant" }
+    },
+
+    { "gmos": "vigueur", "fiche": ["attributes.vigor.level", "attributes.vigor.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "agilite", "fiche": ["attributes.agility.level", "attributes.agility.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "intelligence", "fiche": ["attributes.intelligence.level", "attributes.intelligence.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "empathie", "fiche": ["attributes.empathy.level", "attributes.empathy.base_die"], "transforme": "niveauEtDe" },
+
+    { "gmos": "corpsACorps", "fiche": ["skills.melee.level", "skills.melee.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "endurance", "fiche": ["skills.endurance.level", "skills.endurance.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "force", "fiche": ["skills.strength.level", "skills.strength.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "armesAFeu", "fiche": ["skills.firearms.level", "skills.firearms.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "discretion", "fiche": ["skills.stealth.level", "skills.stealth.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "mobilite", "fiche": ["skills.mobility.level", "skills.mobility.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "assistanceMedicale", "fiche": ["skills.medical_assistance.level", "skills.medical_assistance.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "observation", "fiche": ["skills.observation.level", "skills.observation.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "technologie", "fiche": ["skills.technology.level", "skills.technology.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "contacts", "fiche": ["skills.contacts.level", "skills.contacts.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "manipulation", "fiche": ["skills.manipulation.level", "skills.manipulation.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "psychologie", "fiche": ["skills.psychology.level", "skills.psychology.base_die"], "transforme": "niveauEtDe" },
+    { "gmos": "conduite", "fiche": ["skills.driving.level", "skills.driving.base_die"], "transforme": "niveauEtDe" }
+  ],
+
+  "objets": [
+    {
+      "destination": "inventoryItems",
+      "prefixe": "weapons",
+      "emplacements": [0, 1, 2],
+      "type": "weapon",
+      "nom": "name",
+      "proprietes": {
+        "type": "categorie",
+        "damage": "degats",
+        "critical_die": "deCritique",
+        "min_range": "porteeMin",
+        "max_range": "porteeMax"
+      }
+    }
+  ],
+
+  "absents": [
+    { "fiche": "identity.appearance", "pourquoi": "N'existait que dans la moitie morte du gabarit GM-OS, supprimee le 2026-08-24." },
+    { "fiche": "health.critical_injuries", "pourquoi": "GM-OS n'a pas de champ de blessure grave." },
+    { "fiche": "cool.critical_stress", "pourquoi": "GM-OS n'a pas de champ de stress critique." },
+    { "fiche": "protection.name", "pourquoi": "L'armure vit dans l'inventaire de GM-OS, pas dans la fiche." },
+    { "fiche": "protection.level", "pourquoi": "Idem protection.name." },
+    { "fiche": "points.humanity", "pourquoi": "Vrai manque du gabarit GM-OS. Il doit revenir par la Forge (etape 6) : les identifiants ne sont pas autorables a la main." }
+  ]
+}

@@ -23,7 +23,7 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
-| 3b | **Fiche HTML** | ✅ **COUTURE PUBLIÉE le 27/08** | **Écrire la table de correspondance** (étape 3) | Rien |
+| 3b | **Fiche HTML** | ✅ **TABLE ET CONTRÔLE FAITS le 28/08** | **L'hôte iframe** — et d'abord `open` dans la couture | Rien |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
@@ -309,10 +309,47 @@ vérifiée en rouvrant le personnage. **9 tests.** Le premier garde les trois
 points ci-dessus présents dans le fichier : *le jour où le GPT régénère la fiche
 et emporte la couture, c'est ce test qui le dit.*
 
-**Ce qui reste du chantier 3b :** les étapes 3 à 6 du document de
-correspondance — la table en données, son contrôle, la convergence sur le
-`hotspot`, et le retour de `humanite` par la Forge. Plus l'hôte côté GM-OS
-(iframe, bascule sur les deux écrans) et le chemin d'écriture de la tablette.
+### ✅ La table et son contrôle sont faits le 2026-08-28 — étapes 3 et 4
+
+`docs/systems/blade-runner/fiche/correspondance.json` range les **74 clés** de la
+fiche : 16 renommages, 17 compositions, 18 champs d'armes, 6 absents motivés.
+Déposée à côté du thème, résolue par `resoudreCorpus` — *déposer un fichier
+suffit*. Les trois capacités sont dans `src/modules/fiches/`, et
+`electron/correspondanceDesFiches.test.ts` regarde **dans les deux sens** :
+aucune clé citée qui n'existe pas, **et aucune clé de la fiche qui ne soit
+citée**. Détail et décisions : `2026-08-24-correspondance-fiche-blade-runner.md`.
+
+⚠️ **Trouvé en écrivant la table, et c'est le motif du chantier :** le typage des
+17 `.level` corrigé le 24/08 l'avait été **dans la fiche autonome**, jamais dans
+le gabarit intégré au **moteur** — celui que GM-OS affichera. Quatre jours, deux
+fichiers du même dépôt qui se contredisent, aucun test capable de le voir.
+Corrigé, et gardé par le contrôle. *Le défaut que l'étape 4 devait empêcher
+s'était produit avant qu'elle existe.*
+
+### ⛔ Ce qui reste, et ce qu'il faut savoir avant de s'y mettre
+
+**Le premier geste de l'hôte n'est pas l'iframe, c'est `open`.** Le contrat
+`postMessage` a `hello`, `get`, `template`, `set` — **il n'a pas `open`**.
+`openCharacter` n'est appelé que par la barre latérale du moteur
+(`Character_Sheet_Manager.html:312`). L'hôte peut donc lire et écrire *la fiche
+que le moteur a ouverte*, mais **il ne peut pas lui dire quel PJ ouvrir**.
+
+**✅ Tranché par David le 2026-08-28 — le moteur garde sa bibliothèque, GM-OS s'y
+branche.** Donc : étendre la couture avec `open(id)`, `list` et `create`, et
+ranger sur chaque PJ de GM-OS l'identifiant de sa fiche. Le moteur reste
+utilisable seul, hors GM-OS.
+
+> **Ce que cette décision oblige à poser en même temps**, et ce n'est pas
+> optionnel : deux bases décrivent désormais le même personnage, donc il faut
+> dire **qui gagne à chaque désaccord**. Et la base du moteur vit sur l'origine
+> `gmos://` — elle n'est **sauvegardée par personne** (la sauvegarde du 28/08 ne
+> couvre que `gmos-state-db`). C'est un cinquième magasin non protégé : à
+> rattacher au chantier n° 4.
+
+Puis : l'hôte lui-même (iframe `gmos://media/docs/fiches/…`, bascule sur les deux
+écrans), le chemin d'écriture de la tablette, et les étapes 5 et 6 du document de
+correspondance — la convergence sur le `hotspot` et le retour de `humanite` par
+la Forge.
 
 ### Le plan d'origine, conservé pour ce qu'il garde de vrai
 
