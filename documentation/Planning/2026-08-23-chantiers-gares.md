@@ -24,7 +24,7 @@ de David, le n° 5 attend seulement son tour.
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
-| 3b | **Fiche HTML** | ✅ **TABLE ET CONTRÔLE FAITS le 28/08** | **L'hôte iframe** — et d'abord `open` dans la couture | Rien |
+| 3b | **Fiche HTML** | ✅ **TABLE, CONTRÔLE ET COUTURE v2 le 28/08** | **L'hôte iframe** — plus rien ne le précède | Rien |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
 | 5 | **Sauvegarde de la bibliothèque des fiches** | **Rien codé** — ouvert le 28/08 | Attendre que l'hôte existe, puis reprendre la plomberie du 28/08 | Rien — mais sans objet tant que le n° 3b n'a pas d'hôte |
 
@@ -330,11 +330,26 @@ s'était produit avant qu'elle existe.*
 
 ### ⛔ Ce qui reste, et ce qu'il faut savoir avant de s'y mettre
 
-**Le premier geste de l'hôte n'est pas l'iframe, c'est `open`.** Le contrat
-`postMessage` a `hello`, `get`, `template`, `set` — **il n'a pas `open`**.
-`openCharacter` n'est appelé que par la barre latérale du moteur
-(`Character_Sheet_Manager.html:312`). L'hôte peut donc lire et écrire *la fiche
-que le moteur a ouverte*, mais **il ne peut pas lui dire quel PJ ouvrir**.
+**Le premier geste de l'hôte n'était pas l'iframe, c'était `open`.** Le contrat
+`postMessage` de la v1 avait `hello`, `get`, `template`, `set` — et pas de quoi
+dire **quel PJ ouvrir** : `openCharacter` n'était appelé que par la barre
+latérale du moteur.
+
+### ✅ La couture v2 est publiée le 2026-08-28 — la bibliothèque est ouverte
+
+Quatre verbes de plus, **un seul passage dans le moteur** :
+`list`, `openCharacter`, `create`, `backup` — par `window.RPGSheet` **et** par
+`postMessage`, comme les quatre premiers. `hello` annonce désormais `version: 2`.
+Éprouvés dans `electron/coutureDesFiches.test.ts` : **18 tests** sur le vrai
+moteur chargé du disque (9 avant).
+
+**Trois choses tranchées en l'écrivant, dont deux qui ne se devinent pas :**
+
+| | |
+| --- | --- |
+| **`openCharacter`, jamais `open`** | `open` est **déjà une diffusion** du moteur vers l'hôte, et le garde-fou du gestionnaire jette les messages qui la portent. Un verbe nommé `open` serait ignoré **en silence** — pas refusé : sans réponse, l'hôte attendant pour toujours. Le nom est le même des deux côtés, pour qu'on ne puisse pas se tromper en changeant de chemin. |
+| **`openCharacter` lève, il n'alerte plus** | Une `alert()` dans une iframe est un cul-de-sac : l'hôte attend une réponse, pas une boîte que personne ne verra. C'est l'appelant qui décide quoi montrer — la barre latérale alerte, l'hôte reçoit `ok: false`. |
+| **`backup` est le contenu, pas le téléchargement** | Une seule fabrication (`contenuDeSauvegarde`) sert le bouton *et* la couture. Deux formats auraient fini par ne plus se restaurer l'un l'autre. L'hôte en reçoit une **copie**, pour la même raison que `getData`. C'est l'étape 1 du chantier n° 5, faite d'avance parce qu'elle tenait dans le même passage. |
 
 **✅ Tranché par David le 2026-08-28 — le moteur garde sa bibliothèque, GM-OS s'y
 branche.** Donc : étendre la couture avec `open(id)`, `list` et `create`, et
@@ -508,8 +523,9 @@ tenir à part :**
 
 **Les TODO, dans l'ordre :**
 
-1. **Ajouter `backup` au contrat `postMessage`** — en même temps que `open`,
-   `list` et `create`, tant qu'on y est. Un seul passage dans le moteur.
+1. ✅ **FAIT le 2026-08-28 — `backup` est au contrat `postMessage`**, publié dans
+   le même passage que `list`, `openCharacter` et `create`. Il rend le contenu
+   exact que `restore()` sait relire, et une copie.
 2. **Faire tomber son résultat dans la sauvegarde automatique**, à côté de
    l'état de session.
 3. **Vérifier la restauration en réel** — sur un profil neuf, comme la

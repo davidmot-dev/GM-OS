@@ -273,9 +273,14 @@ function fit(){
 }
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveCharacter,180);}
 async function saveCharacter(){if(!activeCharacter)return;activeCharacter.updatedAt=Date.now();await put("characters",activeCharacter);say("Sauvegardé");await refreshLibrary();}
+/* Lève au lieu d'alerter, et rend le personnage ouvert : l'hôte appelle le même
+   chemin que la barre latérale, et une `alert()` dans une iframe est un cul-de-sac
+   pour lui. C'est l'appelant qui décide quoi montrer — la barre latérale alerte. */
 async function openCharacter(id){
- const c=await getOne("characters",id);if(!c)return;const t=await getOne("templates",c.templateId);if(!t){alert("Le modèle de ce personnage n’est plus installé.");return;}
+ const c=await getOne("characters",id);if(!c)throw new Error("Personnage introuvable : "+id);
+ const t=await getOne("templates",c.templateId);if(!t)throw new Error("Le modèle de ce personnage n’est plus installé.");
  activeCharacter=c;activeTemplate=t;activePage=0;renderSidebar();buildPages();announceOpen();
+ return snapshot();
 }
 function showCreate(tid){activeTemplate=templates.find(t=>t.id===tid)||activeTemplate;if(!activeTemplate)return;$("#createTemplateName").textContent=activeTemplate.name+" — "+(activeTemplate.system||"");$("#newCharacterName").value="";$("#createModal").classList.add("show");setTimeout(()=>$("#newCharacterName").focus(),50);renderSidebar();}
 async function createCharacter(){
@@ -298,9 +303,16 @@ async function importCharacterFile(file){
  const now=Date.now(),name=obj.character?.name||obj.data["identity.name"]||"Personnage importé";const c={id:uid(),name,templateId:tid,templateName:t.name,system:t.system||"",data:obj.data,createdAt:now,updatedAt:now};await put("characters",c);await refreshLibrary();await openCharacter(c.id);say("Personnage importé");
  }catch(e){alert("Import impossible : "+e.message);}
 }
-async function backup(){
- const custom=templates.filter(t=>!t._builtin);download("character-sheet-manager-backup.json",{format:"character-sheet-manager-backup",version:1,createdAt:new Date().toISOString(),templates:custom,characters});
+/* Le contenu d'une sauvegarde, séparé du téléchargement : c'est ce que le bouton
+   écrit dans un fichier, et c'est mot pour mot ce que l'hôte récupère par la
+   couture pour le confier à la sauvegarde automatique de GM-OS. Une seule
+   fabrication — deux formats auraient fini par ne plus se restaurer l'un l'autre.
+   Les gabarits intégrés sont exclus : ils reviennent avec le fichier. */
+function contenuDeSauvegarde(){
+ return {format:"character-sheet-manager-backup",version:1,createdAt:new Date().toISOString(),
+  templates:templates.filter(t=>!t._builtin),characters};
 }
+async function backup(){download("character-sheet-manager-backup.json",contenuDeSauvegarde());}
 async function restore(file){
  try{const obj=JSON.parse(await file.text());if(obj.format!=="character-sheet-manager-backup")throw new Error("Sauvegarde non reconnue");for(const t of (obj.templates||[])){t._builtin=false;await put("templates",t);}for(const c of (obj.characters||[]))await put("characters",c);await refreshLibrary();say("Bibliothèque restaurée");}
  catch(e){alert("Restauration impossible : "+e.message);}
@@ -309,7 +321,7 @@ $("#templatesList").onclick=e=>{const n=e.target.closest("[data-new]");if(n)retu
 $("#charactersList").onclick=async e=>{const d=e.target.closest("[data-delete]");if(d){if(confirm("Supprimer définitivement ce personnage ?")){const id=d.dataset.delete;await del("characters",id);if(activeCharacter?.id===id){activeCharacter=null;activeTemplate=null;$("#pagesHost").innerHTML="";$("#emptyState").classList.remove("hidden");$("#docTitle").textContent="Aucun personnage ouvert";}await refreshLibrary();}return;}
  const dup=e.target.closest("[data-duplicate]");if(dup){const c=await getOne("characters",dup.dataset.duplicate);const n={...c,id:uid(),name:(c.name||"Sans nom")+" — copie",data:JSON.parse(JSON.stringify(c.data||{})),createdAt:Date.now(),updatedAt:Date.now()};await put("characters",n);await refreshLibrary();await openCharacter(n.id);return;}
  const ren=e.target.closest("[data-rename]");if(ren){const c=await getOne("characters",ren.dataset.rename),name=prompt("Nouveau nom :",c.name);if(name?.trim()){c.name=name.trim();c.updatedAt=Date.now();await put("characters",c);await refreshLibrary();if(activeCharacter?.id===c.id){activeCharacter=c;$("#docTitle").textContent=`${c.name} — ${activeTemplate.name}`;}}return;}
- const it=e.target.closest("[data-char]");if(it)openCharacter(it.dataset.char);
+ const it=e.target.closest("[data-char]");if(it)openCharacter(it.dataset.char).catch(err=>alert(err.message));
 };
 $("#createCharacterBtn").onclick=createCharacter;$("#newCharacterName").addEventListener("keydown",e=>{if(e.key==="Enter")createCharacter();});
 $$("[data-close]").forEach(b=>b.onclick=()=>$("#"+b.dataset.close).classList.remove("show"));
@@ -400,26 +412,81 @@ function applyData(patch){
  } finally { writingFromHost=false; }
  return snapshot();
 }
+/* ── La bibliothèque, ouverte à l'hôte ───────────────────────────────────────
+   La couture de la v1 savait lire et écrire LA FICHE OUVERTE, et rien d'autre :
+   `openCharacter` n'était appelé que par la barre latérale, donc GM-OS ne pouvait
+   pas dire QUEL PJ ouvrir. C'était le premier geste de l'hôte, pas l'iframe.
+
+   Tranché le 2026-08-28 : le moteur GARDE sa bibliothèque et GM-OS s'y branche —
+   il reste utilisable seul. Et quand les deux bases divergent, LA FICHE FAIT FOI.
+   D'où `sauvegardePourLHote` : le magasin qui détient la vérité ne peut pas être
+   le seul que personne ne sauvegarde. */
+function apercuDuPersonnage(c){
+ return {id:c.id,name:c.name,templateId:c.templateId,templateName:c.templateName||"",
+  system:c.system||"",updatedAt:c.updatedAt||null};
+}
+/** La bibliothèque relue du disque, jamais celle qu'on avait en mémoire. */
+async function bibliotheque(){
+ await refreshLibrary();
+ return {
+  characters:characters.map(apercuDuPersonnage),
+  templates:templates.map(t=>({id:t.id,name:t.name,system:t.system||"",builtin:!!t._builtin})),
+ };
+}
+async function creerPourLHote(nom,templateId,donnees){
+ const t=await getOne("templates",templateId);
+ if(!t)throw new Error("Modèle inconnu : "+templateId);
+ const now=Date.now();
+ const c={id:uid(),name:String(nom||"").trim()||"Sans nom",templateId:t.id,templateName:t.name,
+  system:t.system||"",data:donnees&&typeof donnees==="object"?{...donnees}:{},createdAt:now,updatedAt:now};
+ await put("characters",c);await refreshLibrary();
+ return openCharacter(c.id);
+}
+/* Une copie, pour la même raison que `getData` en rend une : l'hôte qui bricole
+   ce qu'il reçoit ne doit pas pouvoir toucher la bibliothèque. */
+async function sauvegardePourLHote(){
+ await refreshLibrary();
+ return JSON.parse(JSON.stringify(contenuDeSauvegarde()));
+}
 window.addEventListener("message",e=>{
  const m=e.data;
  if(!m||m.channel!==CHANNEL||!m.type||m.type==="reply"||m.type==="change"||m.type==="open")return;
  if(e.source&&!hosts.some(h=>h.source===e.source))hosts.push({source:e.source,origin:e.origin});
  const target=e.origin&&e.origin!=="null"?e.origin:"*";
  const reply=(ok,result)=>{try{e.source?.postMessage({channel:CHANNEL,type:"reply",id:m.id,ok,result},target);}catch(err){}};
+ /* Les quatre verbes de la bibliothèque touchent IndexedDB : ils répondent quand
+    la promesse est tenue, jamais avant. Un échec devient une réponse `ok:false`
+    et non un rejet perdu — l'hôte attend une réponse par message, toujours. */
+ const repondre=faire=>{Promise.resolve().then(faire).then(r=>reply(true,r),err=>reply(false,String(err&&err.message||err)));};
  try{
-  if(m.type==="hello")reply(true,{version:1,ready:!!db,character:snapshot(),template:templateInfo()});
+  if(m.type==="hello")reply(true,{version:2,ready:!!db,character:snapshot(),template:templateInfo()});
   else if(m.type==="get")reply(true,snapshot());
   else if(m.type==="template")reply(true,templateInfo());
   else if(m.type==="set")reply(true,applyData(m.data));
+  else if(m.type==="list")repondre(()=>bibliotheque());
+  /* `openCharacter` et pas `open` : `open` est déjà le nom d'une DIFFUSION du
+     moteur vers l'hôte, et le garde-fou trois lignes plus haut jette les messages
+     qui le portent. Un verbe qui s'appellerait `open` serait ignoré en silence. */
+  else if(m.type==="openCharacter")repondre(()=>openCharacter(m.characterId));
+  else if(m.type==="create")repondre(()=>creerPourLHote(m.name,m.templateId,m.data));
+  else if(m.type==="backup")repondre(()=>sauvegardePourLHote());
   else reply(false,"Type inconnu : "+m.type);
  }catch(err){reply(false,String(err&&err.message||err));}
 });
 window.RPGSheet={
- version:1,
+ version:2,
  getData:()=>snapshot(),
  setData:patch=>applyData(patch),
  getTemplate:()=>templateInfo(),
- onChange(fn){listeners.add(fn);return()=>listeners.delete(fn);}
+ onChange(fn){listeners.add(fn);return()=>listeners.delete(fn);},
+ /* La bibliothèque — v2. Les quatre rendent des promesses : IndexedDB.
+    `openCharacter` et non `open`, pour porter le MÊME nom que par postMessage,
+    où `open` est déjà une diffusion. Deux noms pour un verbe, et le jour où
+    quelqu'un passe d'un chemin à l'autre, il écrit un message ignoré en silence. */
+ list:()=>bibliotheque(),
+ openCharacter:id=>openCharacter(id),
+ create:(name,templateId,data)=>creerPourLHote(name,templateId,data),
+ backup:()=>sauvegardePourLHote()
 };
 
 (async()=>{try{db=await openDB();await seedBuiltins();await refreshLibrary();}catch(e){console.error(e);alert("IndexedDB est indisponible. Cette application a besoin du stockage local du navigateur pour gérer plusieurs personnages.");}})();

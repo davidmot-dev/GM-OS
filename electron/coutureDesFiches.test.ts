@@ -142,10 +142,13 @@ describe('le moteur réel, chargé et piloté', () => {
 
     const champ = (cle: string) => win.document.querySelector('.sheet [data-key="' + cle + '"]');
 
-    it('publie les quatre fonctions', () => {
-        for (const nom of ['getData', 'setData', 'getTemplate', 'onChange']) {
+    it('publie les huit fonctions', () => {
+        const lecture = ['getData', 'setData', 'getTemplate', 'onChange'];
+        const bibliotheque = ['list', 'openCharacter', 'create', 'backup'];
+        for (const nom of [...lecture, ...bibliotheque]) {
             expect(typeof win.RPGSheet[nom], nom).toBe('function');
         }
+        expect(win.RPGSheet.version).toBe(2);
     });
 
     it('getData rend le personnage ouvert, et une copie', () => {
@@ -253,5 +256,135 @@ describe('le moteur réel, chargé et piloté', () => {
         win.document.querySelector('[data-char="' + id + '"]').click();
         await attendre(() => win.RPGSheet.getData()?.data.nom === 'Gaff');
         expect(win.RPGSheet.getData().data.sante).toBe(2);
+    });
+
+    /**
+     * **La bibliothèque, ouverte à l'hôte — v2.**
+     *
+     * La v1 savait lire et écrire *la fiche ouverte*, et rien d'autre : GM-OS ne
+     * pouvait pas dire **quel** PJ ouvrir. C'était le premier geste de l'hôte,
+     * pas l'iframe.
+     */
+    describe('la bibliothèque', () => {
+        it('list rend les personnages et les gabarits', async () => {
+            const { characters, templates } = await win.RPGSheet.list();
+
+            expect(templates).toEqual([{ id: 'gabarit-de-controle', name: 'Gabarit de contrôle', system: 'Contrôle', builtin: true }]);
+            expect(characters.some((c: any) => c.name === 'Rick')).toBe(true);
+            // Un aperçu, pas la fiche : les données ne voyagent pas dans une liste.
+            expect(characters[0]).not.toHaveProperty('data');
+            expect(characters[0]).toMatchObject({ templateId: 'gabarit-de-controle' });
+        });
+
+        it('create crée, ouvre, et accepte des données de départ', async () => {
+            const cree = await win.RPGSheet.create('Roy Batty', 'gabarit-de-controle', { nom: 'Roy Batty', sante: 3 });
+
+            expect(cree.name).toBe('Roy Batty');
+            expect(win.RPGSheet.getData().id).toBe(cree.id);
+            // Ouvert veut dire dessiné, pas seulement chargé.
+            expect(champ('nom').value).toBe('Roy Batty');
+            expect(champ('santeMoitie').value).toBe('1');
+        });
+
+        it('openCharacter rouvre un autre personnage et le redessine', async () => {
+            const { characters } = await win.RPGSheet.list();
+            const rick = characters.find((c: any) => c.name === 'Rick');
+
+            const vu = await win.RPGSheet.openCharacter(rick.id);
+            expect(vu.id).toBe(rick.id);
+            expect(champ('nom').value).toBe('Gaff'); // le nom du champ, pas celui du personnage
+            expect(win.RPGSheet.getData().data.sante).toBe(2);
+        });
+
+        /**
+         * Une `alert()` dans une iframe est un cul-de-sac pour l'hôte : il attend
+         * une réponse, pas une boîte de dialogue que personne ne verra.
+         */
+        it('openCharacter lève sur un inconnu, au lieu d’alerter', async () => {
+            await expect(win.RPGSheet.openCharacter('personne')).rejects.toThrow(/introuvable/);
+            await expect(win.RPGSheet.create('X', 'gabarit-absent')).rejects.toThrow(/Modèle inconnu/);
+        });
+
+        /**
+         * Le magasin qui détient la vérité ne peut pas être le seul que personne
+         * ne sauvegarde — c'est le chantier n° 5, et voici sa matière.
+         */
+        it('backup rend exactement ce que restore sait relire', async () => {
+            const sauvegarde = await win.RPGSheet.backup();
+
+            expect(sauvegarde.format).toBe('character-sheet-manager-backup');
+            expect(sauvegarde.characters.some((c: any) => c.name === 'Roy Batty')).toBe(true);
+            // Les gabarits intégrés reviennent avec le fichier : les emporter serait du poids mort.
+            expect(sauvegarde.templates).toEqual([]);
+
+            sauvegarde.characters[0].name = 'écriture sauvage';
+            expect((await win.RPGSheet.backup()).characters.some((c: any) => c.name === 'écriture sauvage')).toBe(false);
+        });
+    });
+
+    /**
+     * Le chemin qui comptera vraiment : l'hôte sera une iframe sur une autre
+     * origine, et `window.RPGSheet` ne traverse pas une origine.
+     */
+    describe('la bibliothèque par postMessage', () => {
+        let recus: any[];
+        let envoyer: (data: unknown) => void;
+        const reponse = (id: number) => recus.find(m => m.type === 'reply' && m.id === id);
+
+        beforeAll(async () => {
+            await calme();
+            recus = [];
+            const hote = { postMessage: (msg: any) => recus.push(msg) };
+            envoyer = (data: unknown) => {
+                const ev: any = new win.Event('message');
+                ev.data = data; ev.origin = 'null'; ev.source = hote;
+                win.dispatchEvent(ev);
+            };
+        });
+
+        it('hello annonce la version 2', async () => {
+            envoyer({ channel: 'rpg-sheet', type: 'hello', id: 10 });
+            expect(reponse(10).result.version).toBe(2);
+        });
+
+        it('sert list, openCharacter, create et backup', async () => {
+            envoyer({ channel: 'rpg-sheet', type: 'list', id: 11 });
+            await attendre(() => !!reponse(11));
+            const rick = reponse(11).result.characters.find((c: any) => c.name === 'Rick');
+
+            envoyer({ channel: 'rpg-sheet', type: 'create', id: 12, name: 'Gaff II', templateId: 'gabarit-de-controle', data: { nom: 'Gaff II' } });
+            await attendre(() => !!reponse(12));
+            expect(reponse(12).ok).toBe(true);
+            expect(champ('nom').value).toBe('Gaff II');
+
+            envoyer({ channel: 'rpg-sheet', type: 'openCharacter', id: 13, characterId: rick.id });
+            await attendre(() => !!reponse(13));
+            expect(reponse(13).result.id).toBe(rick.id);
+
+            envoyer({ channel: 'rpg-sheet', type: 'backup', id: 14 });
+            await attendre(() => !!reponse(14));
+            expect(reponse(14).result.format).toBe('character-sheet-manager-backup');
+        });
+
+        /** Un échec devient une réponse, jamais un rejet perdu : l'hôte attend toujours. */
+        it('un échec revient en réponse ok:false', async () => {
+            envoyer({ channel: 'rpg-sheet', type: 'openCharacter', id: 15, characterId: 'personne' });
+            await attendre(() => !!reponse(15));
+            expect(reponse(15)).toMatchObject({ ok: false });
+            expect(String(reponse(15).result)).toMatch(/introuvable/);
+        });
+
+        /**
+         * **Le piège du nom.** `open` est déjà une DIFFUSION du moteur vers
+         * l'hôte, et le garde-fou du gestionnaire jette les messages qui le
+         * portent. Un verbe nommé `open` serait ignoré **en silence** — pas
+         * refusé : ignoré, sans réponse, l'hôte attendant pour toujours.
+         */
+        it('« open » reste une diffusion et n’est jamais un verbe', async () => {
+            const avant = recus.length;
+            envoyer({ channel: 'rpg-sheet', type: 'open', id: 16, characterId: 'peu importe' });
+            await souffler();
+            expect(recus).toHaveLength(avant);
+        });
     });
 });
