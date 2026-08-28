@@ -4,8 +4,9 @@
 aux `etat-et-reprise`, celui-ci **se met à jour** — on y coche, on y ajoute, on
 en retire ce qui est fait. C'est le seul endroit où vit la liste des idées garées.
 
-**Ouvert le 2026-08-23** avec trois chantiers. **Au 2026-08-28 ils sont quatre**, et
-**seuls les n° 2 et 4 n'ont rien de codé** — tous deux attendent une décision de David.
+**Ouvert le 2026-08-23** avec trois chantiers. **Au 2026-08-28 ils sont cinq**, et
+**les n° 2, 4 et 5 n'ont rien de codé** — le n° 2 et le n° 4 attendent une décision
+de David, le n° 5 attend seulement son tour.
 
 > **Revérifié dans le code le 2026-08-24**, chantier par chantier, sans rien recopier d'un document.
 > Base saine : `tsc -b` propre, **2 321 tests au vert** (190 fichiers, 1 ignoré). Les trois états
@@ -25,6 +26,7 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **TABLE ET CONTRÔLE FAITS le 28/08** | **L'hôte iframe** — et d'abord `open` dans la couture | Rien |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
+| 5 | **Sauvegarde de la bibliothèque des fiches** | **Rien codé** — ouvert le 28/08 | Attendre que l'hôte existe, puis reprendre la plomberie du 28/08 | Rien — mais sans objet tant que le n° 3b n'a pas d'hôte |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -339,12 +341,36 @@ branche.** Donc : étendre la couture avec `open(id)`, `list` et `create`, et
 ranger sur chaque PJ de GM-OS l'identifiant de sa fiche. Le moteur reste
 utilisable seul, hors GM-OS.
 
-> **Ce que cette décision oblige à poser en même temps**, et ce n'est pas
-> optionnel : deux bases décrivent désormais le même personnage, donc il faut
-> dire **qui gagne à chaque désaccord**. Et la base du moteur vit sur l'origine
-> `gmos://` — elle n'est **sauvegardée par personne** (la sauvegarde du 28/08 ne
-> couvre que `gmos-state-db`). C'est un cinquième magasin non protégé : à
-> rattacher au chantier n° 4.
+### ✅ Qui gagne quand les deux bases divergent — tranché le 2026-08-28
+
+**La fiche fait foi. GM-OS s'aligne.** *« C'est la tablette qui gagne »* — donc
+l'écran où le joueur remplit sa fiche l'emporte sur ce que le meneur en a fait.
+
+C'est la même règle que la table de correspondance applique déjà aux armes, et
+elle a le mérite d'être **énonçable en une phrase** : une règle d'arbitrage qu'on
+ne peut pas dire à voix haute finit toujours par être appliquée à moitié.
+
+**Mais elle ne se pose pas silencieusement.** *« Il faut garder un log si
+possible »* : chaque divergence écrasée doit laisser une trace — quel PJ, quelle
+clé, quelle valeur perdue, quand. Sans ça, un champ écrasé par une resynchro se
+découvre en séance, et on ne peut plus dire ce qu'il contenait.
+
+> **Deux choses à décider en écrivant le journal, pas avant :** le rapprochement
+> se fait dans le *renderer*, or `auditNotice` (`electron/auditLog.ts`) vit dans
+> le process principal et écrit dans `main.log` sous le préfixe `[Sécurité]` —
+> il faut soit un chemin IPC vers lui, soit un journal propre à ce sujet. Et un
+> journal de divergences doit **tourner**, sinon il grossit à chaque frappe.
+>
+> Trois précédents disent que c'est ce journal qui fera gagner du temps :
+> `~/ollama_debug.log` a tranché toutes les questions de contexte, le journal du
+> thème a rendu bruyant un absent muet, et *un refus qui ne laisse aucune trace
+> ne vaut pas grand-chose* — la phrase est déjà dans `auditLog.ts`.
+
+⚠️ **La bibliothèque du moteur n'est sauvegardée par personne.** Elle vit sur
+l'origine `gmos://`, et la sauvegarde du 28/08 ne couvre que `gmos-state-db`.
+Combiné à la règle ci-dessus — *la fiche fait foi* — cela veut dire que **le
+magasin qui détient la vérité est le seul qui ne soit pas protégé**. C'est le
+chantier n° 5.
 
 Puis : l'hôte lui-même (iframe `gmos://media/docs/fiches/…`, bascule sur les deux
 écrans), le chemin d'écriture de la tablette, et les étapes 5 et 6 du document de
@@ -440,3 +466,56 @@ C'est ce qui rend la séparation efficace plutôt qu'artificielle.
 construction (aucun git · jamais sous `APP_ROOT` · ne supprime que ses propres
 fichiers), l'écriture atomique relue, et la rotation. Un instantané des médias
 réutilise tout ça — il ne change que **la source** et **la cadence**.
+
+---
+
+# 5 · Sauvegarde de la bibliothèque des fiches
+
+📄 **Fait foi :** ce document, plus `2026-08-27-sauvegarde-automatique.md` pour la
+plomberie
+🧠 **Mémoire :** `gm-os-sauvegarde-automatique`, `gm-os-fiches-de-personnage`
+
+**Ouvert le 2026-08-28**, à la demande de David : *« rattache sur un chantier de
+sauvegarde à part »*. Tenu séparément du n° 4 **parce qu'il n'attend aucune
+décision** — le n° 4 est bloqué, celui-ci attend seulement que l'hôte existe.
+
+**Ce qui l'ouvre.** La décision du 28/08 sur le chantier 3b : le moteur de fiches
+garde sa bibliothèque, et **la fiche fait foi**. Or cette bibliothèque vit dans
+l'IndexedDB de l'origine `gmos://` — pas dans `gmos-state-db`. **Le magasin qui
+détient la vérité d'une fiche de personnage serait donc le seul qui ne soit pas
+sauvegardé**, dans une application qui a déjà perdu ses campagnes deux fois.
+
+| Base | Contenu | Sauvegardée ? |
+| --- | --- | --- |
+| `gmos-state-db` | l'état de session | ✅ depuis le 28/08 |
+| `gmos-media-db` | les images — ~263 Mo | ❌ chantier n° 4 |
+| `gmos-fog-data` | le brouillard de guerre | ❌ chantier n° 4 |
+| **la base du moteur de fiches** | **personnages ET gabarits importés** | ❌ **celui-ci** |
+
+**Ce qui rend ce chantier plus facile que le n° 4, et c'est la raison de le
+tenir à part :**
+
+- **Le moteur sait déjà s'exporter.** `backup()` rend un JSON
+  `character-sheet-manager-backup` avec les gabarits non intégrés et tous les
+  personnages, et `restore()` le relit. Il n'y a **rien à inventer** — juste à
+  appeler ça depuis la couture plutôt que depuis un bouton.
+- **C'est du texte, pas des octets.** Aucun problème de volume, donc aucune
+  question de cadence ni de déduplication : c'est précisément ce qui bloque le
+  n° 4.
+- **La plomberie du 28/08 se réutilise telle quelle** — les trois règles,
+  l'écriture atomique relue, la rotation. Comme pour le n° 4, seule **la source**
+  change.
+
+**Les TODO, dans l'ordre :**
+
+1. **Ajouter `backup` au contrat `postMessage`** — en même temps que `open`,
+   `list` et `create`, tant qu'on y est. Un seul passage dans le moteur.
+2. **Faire tomber son résultat dans la sauvegarde automatique**, à côté de
+   l'état de session.
+3. **Vérifier la restauration en réel** — sur un profil neuf, comme la
+   sauvegarde du 28/08 l'a été. *Une sauvegarde qu'on n'a jamais restaurée n'est
+   pas une sauvegarde.*
+
+> **Sans objet tant que le n° 3b n'a pas d'hôte** : aucune fiche ne vit encore
+> dans cette base. C'est ce qui le rend urgent **le jour où** l'hôte existe, et
+> pas avant — mais c'est aussi ce qui le rend facile à oublier ce jour-là.
