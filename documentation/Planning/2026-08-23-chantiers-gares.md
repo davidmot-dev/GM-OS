@@ -4,7 +4,8 @@
 aux `etat-et-reprise`, celui-ci **se met à jour** — on y coche, on y ajoute, on
 en retire ce qui est fait. C'est le seul endroit où vit la liste des idées garées.
 
-**Ouvert le 2026-08-23.** Trois chantiers — **le n° 1 est construit le jour même**, les deux autres attendent.
+**Ouvert le 2026-08-23** avec trois chantiers. **Au 2026-08-28 ils sont quatre**, et
+**seuls les n° 2 et 4 n'ont rien de codé** — tous deux attendent une décision de David.
 
 > **Revérifié dans le code le 2026-08-24**, chantier par chantier, sans rien recopier d'un document.
 > Base saine : `tsc -b` propre, **2 321 tests au vert** (190 fichiers, 1 ignoré). Les trois états
@@ -23,6 +24,7 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **COUTURE PUBLIÉE le 27/08** | **Écrire la table de correspondance** (étape 3) | Rien |
+| 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -362,3 +364,42 @@ pas de la même couleur), et c'est borné.
 **Le n° 2 ne peut pas commencer** tant que ses deux questions ne sont pas
 tranchées : elles mènent à deux codes différents, et se tromper coûterait tout le
 module.
+
+---
+
+# 4 · Sauvegarde des images
+
+📄 **Fait foi :** `documentation/Planning/2026-08-27-sauvegarde-automatique.md`, § 7
+🧠 **Mémoire :** `gm-os-sauvegarde-automatique`
+
+**Ouvert le 2026-08-28**, découvert en mesurant, pas en cherchant.
+
+**Ce que la mesure dit.** La sauvegarde automatique livrée le 28/08 est une
+**sauvegarde de pointeurs**. Une carte de l'atlas porte
+`"fileUrl": "m-<uuid>"` — un identifiant, dont les octets vivent ailleurs. Il y a
+**trois** bases IndexedDB, et une seule est sauvegardée :
+
+| Base | Contenu | Sauvegardée ? |
+| --- | --- | --- |
+| `gmos-state-db` | l'état de session | ✅ depuis le 28/08 |
+| **`gmos-media-db`** | **les images** (`useMediaStore`) — ~263 Mo | ❌ **par personne** |
+| `gmos-fog-data` | le brouillard de guerre | ❌ |
+
+L'export du 7 août fait 498 Ko, porte **0 image** et **29 références**. Celui
+d'avril faisait 33,8 Mo parce que les images y étaient encore en base64 dans
+l'état : le facteur 66 est un **changement de modèle**, pas une optimisation.
+
+> **Ce n'est pas une régression** — rien ne sauvegardait les images avant non
+> plus. Mais restaurer sur un profil neuf rendrait les campagnes complètes avec
+> **des cartes mortes**. C'est ce que ce chantier existe pour éviter.
+
+**⛔ La décision qui bloque, et elle est à David.** Que doit contenir une
+restauration ? Recommandation : **un instantané des médias, séparé et rare** —
+une fois par jour et à la clôture d'une campagne — avec déduplication par
+identifiant, puisque les images changent beaucoup moins souvent que le texte.
+C'est ce qui rend la séparation efficace plutôt qu'artificielle.
+
+**Ce qui est déjà acquis et ne sera pas à refaire :** les trois règles de
+construction (aucun git · jamais sous `APP_ROOT` · ne supprime que ses propres
+fichiers), l'écriture atomique relue, et la rotation. Un instantané des médias
+réutilise tout ça — il ne change que **la source** et **la cadence**.
