@@ -114,6 +114,7 @@ export interface EntitySliceActions {
     updateCharacterVisuals: (playerId: string, characterId: string, updates: { portraitUrl?: string; tokenUrl?: string }) => void;
     updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; playerNotes?: string; linkedDocumentIds?: string[]; inventory?: string }) => void;
     remoteUpdateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; playerNotes?: string; inventory?: string }) => void;
+    remoteUpdateCharacterSheetData: (playerId: string, characterId: string, updates: { sheetData?: Record<string, unknown>; description?: string; playerNotes?: string; inventory?: string; inventoryItems?: import('./types').InventoryItem[] }) => void;
     addLootToCharacter: (playerId: string, characterId: string, item: string) => void;
     updateCharacterHubOptions: (playerId: string, characterId: string, options: Partial<PlayerCharacter['hubOptions']>) => void;
     remoteUpdateCharacterVitals: (playerId: string, characterId: string, updates: { hp?: number; mp?: number; ap?: number }) => void;
@@ -497,6 +498,60 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                     detail: { playerId, characterId, updates }
                 }));
             }
+        }
+    },
+
+    /**
+     * **Ce que la fiche du joueur impose, remonté au meneur.**
+     *
+     * Le chemin qui manquait depuis le début du chantier des fiches : la tablette
+     * savait afficher, elle ne savait pas écrire. Sans lui, un joueur remplit sa
+     * fiche sur sa tablette et **rien n'arrive** — la pire des issues, parce qu'il
+     * ne l'apprend qu'à la séance suivante.
+     *
+     * Calqué sur `remoteUpdateCharacterNarrative` et **pas** sur
+     * `remoteUpdateCharacterVitals`, qui ne diffuse rien du tout.
+     *
+     * Il écrit d'abord chez lui pour que l'écran suive tout de suite, puis
+     * diffuse. Sur la tablette, `useHubSync` capte l'événement et le passe au
+     * meneur ; dans une fenêtre Electron, le pont s'en charge.
+     */
+    remoteUpdateCharacterSheetData: (playerId, characterId, updates) => {
+        // `sheetData` se FUSIONNE, il ne se remplace pas : la fiche ne connaît
+        // que les champs de la table, et écraser l'objet entier perdrait tout ce
+        // que le meneur tient à côté.
+        set((state) => ({
+            players: state.players.map((p) =>
+                p.id === playerId
+                    ? {
+                        ...p,
+                        characters: p.characters.map((c) =>
+                            c.id === characterId
+                                ? {
+                                    ...c,
+                                    ...(updates.description !== undefined ? { description: updates.description } : {}),
+                                    ...(updates.playerNotes !== undefined ? { playerNotes: updates.playerNotes } : {}),
+                                    ...(updates.inventory !== undefined ? { inventory: updates.inventory } : {}),
+                                    ...(updates.inventoryItems ? { inventoryItems: updates.inventoryItems } : {}),
+                                    sheetData: { ...c.sheetData, ...(updates.sheetData ?? {}) },
+                                }
+                                : c
+                        ),
+                    }
+                    : p
+            ),
+        }));
+
+        if (typeof window === 'undefined') return;
+        if (window.appBridge?.remote?.broadcastToTablets) {
+            window.appBridge.remote.broadcastToTablets(
+                'session:update-character-sheet-data',
+                { playerId, characterId, updates }
+            );
+        } else {
+            window.dispatchEvent(new CustomEvent('session:update-character-sheet-data', {
+                detail: { playerId, characterId, updates }
+            }));
         }
     },
 

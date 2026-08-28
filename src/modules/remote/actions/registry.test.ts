@@ -22,6 +22,7 @@ const EXPECTED_TYPES = [
     'combat:next-turn', 'remote:combat:next',
     // Session
     'session:update-character-narrative', 'remote:session:update-character-narrative',
+    'session:update-character-sheet-data', 'remote:session:update-character-sheet-data',
     'session:submit-feedback', 'remote:session:submit-feedback',
     'session:send-message', 'session:receive-message',
     'session:request-item-transfer', 'remote:session:request-item-transfer',

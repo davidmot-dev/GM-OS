@@ -24,7 +24,7 @@ de David, le n° 5 attend seulement son tour.
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
-| 3b | **Fiche HTML** | ✅ **LIVRÉE CÔTÉ MENEUR le 28/08** | **Le second écran** — trancher où servir le moteur pour la tablette | **Une décision de David** |
+| 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
 | 5 | **Sauvegarde de la bibliothèque des fiches** | **Rien codé** — ouvert le 28/08 | Attendre que l'hôte existe, puis reprendre la plomberie du 28/08 | Rien — mais sans objet tant que le n° 3b n'a pas d'hôte |
 
@@ -407,29 +407,51 @@ bases, et il pointe vers une base que GM-OS ne détient pas. L'iframe est monté
 à la première bascule puis **gardée montée et masquée** — elle charge sept
 mégaoctets de fonds de page.
 
-### ⛔ Le second écran ne peut PAS suivre le même chemin — trouvé le 28/08
+### ✅ Le second écran est livré le 2026-08-28 — la tablette a sa fiche
 
-L'écran du meneur marche parce que `gmos://media/…` est une **autre origine** que
-le cockpit : c'est cette séparation qui impose `postMessage`, et c'est elle qui
-protège les données du cockpit d'un fichier HTML régénéré par un GPT.
+⚠️ **Recadrage de David, et il change la priorité :** *« la fiche HTML n'est pas
+un outil du meneur, c'est un outil d'immersion des joueurs, d'où l'importance
+qu'ils puissent le voir sur leurs tablettes. »* L'option « la tablette garde son
+écran actuel », que j'avais recommandée comme la plus sage, enlevait exactement
+ce à quoi la fiche sert. Elle est écartée.
 
-**La tablette n'a rien de tout ça.** Elle est un navigateur sur le réseau, servi
-par le `SyncServer` : pas de `gmos://`, pas d'`appBridge` — donc **pas même la
-lecture de la table**, qui passe par `readDoc`. Et `/media/` ne sert que des
-images, du son et de la vidéo : `.html` n'est pas dans `MEDIA_MIME_TYPES`
-(`SyncServer.ts:21`).
+**Le port distinct — `electron/serveurDesFiches.ts`, port 3002.** L'écran du
+meneur marche parce que `gmos://media/…` est une **autre origine** que le
+cockpit : c'est cette séparation qui impose `postMessage`, et c'est elle qui
+protège les données du cockpit d'un HTML régénéré par un GPT. Ajouter `.html` aux
+types servis par le `SyncServer` aurait été **une ligne** — et aurait mis la fiche
+sur l'origine du Player Hub, avec accès à son stockage. *L'isolation ne vient pas
+du protocole, elle vient de la différence d'origine* : un second port la rend à
+la tablette pour le même prix.
 
-> **⛔ La décision, et elle n'est pas technique.** Servir le moteur par le
-> `SyncServer` le mettrait **sur la même origine que le Player Hub** — donc avec
-> accès à son stockage. Toute l'isolation que l'écran du meneur obtient
-> gratuitement disparaîtrait, pour un fichier que GM-OS n'écrit pas lui-même.
-> Trois issues : un port ou un sous-domaine distinct pour les fiches ; un
-> `sandbox` sur l'iframe (qui casse l'IndexedDB dont le moteur a besoin) ; ou
-> **la tablette ne montre pas la fiche HTML** et garde son écran actuel.
+Le serveur ne sert que deux formes d'adresse — `/fiches/….html` et
+`/systems/<jeu>/fiche/….json` (la tablette n'a pas `readDoc`) — ne liste jamais un
+dossier, n'écrit jamais, et ne sort jamais de `docs/`. `cheminServi` est pure et
+éprouvée seule : *un serveur sur `0.0.0.0` voit passer ce que le réseau lui
+envoie, pas ce qu'on avait prévu.*
 
-Restent aussi : le chemin d'écriture de la tablette, et les étapes 5 et 6 du
-document de correspondance — la convergence sur le `hotspot` et le retour de
-`humanite` par la Forge.
+**⚠️ La bibliothèque du moteur vit PAR APPAREIL**, et ça ne se devine pas : une
+base IndexedDB appartient à une origine **et** à un navigateur. Les fiches du
+meneur n'existent pas sur la tablette du joueur, et aucun réglage n'y changera
+rien. D'où deux modes de liaison dans `FicheHote` :
+
+| Mode | Où | Ce qu'il fait |
+| --- | --- | --- |
+| `bibliotheque` | Meneur | Choisit dans la bibliothèque du moteur ; l'identifiant se range sur le PJ. |
+| `locale` | Tablette | **Rien à choisir.** Sème une fiche depuis ce que GM-OS sait du PJ, et retient son identifiant sur l'appareil. *La vérité reste celle de GM-OS, la tablette la redessine.* |
+
+**Le chemin d'écriture de la tablette est posé** —
+`remoteUpdateCharacterSheetData`, calqué sur `remoteUpdateCharacterNarrative` et
+**pas** sur `remoteUpdateCharacterVitals` qui ne diffuse rien. Sans lui, un joueur
+remplissait sa fiche et **rien n'arrivait** : la pire des issues, parce qu'il ne
+l'aurait appris qu'à la séance suivante. `sheetData` s'y **fusionne** et ne se
+remplace jamais — la fiche ne connaît que les champs de la table, et remplacer
+l'objet entier perdrait tout ce que le meneur tient à côté. Côté réception,
+l'action passe par `updateCharacter` et **pas** par la variante `remote`, sinon
+elle rediffuserait à l'envoyeur — un aller-retour sans fin.
+
+Restent les étapes 5 et 6 du document de correspondance : la convergence sur le
+`hotspot` et le retour de `humanite` par la Forge.
 
 ### Le plan d'origine, conservé pour ce qu'il garde de vrai
 

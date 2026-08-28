@@ -109,6 +109,8 @@ export type RemoteActionType =
     | 'whiteboard:set-color'
     | 'whiteboard:set-width'
     | 'session:update-character-narrative'
+    /** Ce que la fiche HTML d'un joueur impose : champs du gabarit, notes, inventaire. */
+    | 'session:update-character-sheet-data'
     | 'session:send-message';
 
 export interface RemoteAction {

@@ -7,6 +7,34 @@ const updateCharacterNarrative = (payload: any) => {
     useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
 };
 
+/**
+ * La fiche d'un joueur a imposé quelque chose : on l'applique **sans rediffuser**.
+ *
+ * On passe donc par `updateCharacter` et pas par `remoteUpdateCharacterSheetData`,
+ * qui rediffuserait l'action à celui qui vient de l'envoyer — un aller-retour
+ * sans fin entre les deux écrans.
+ */
+const updateCharacterSheetData = (payload: any) => {
+    const { playerId, characterId, updates } = payload as {
+        playerId: string; characterId: string;
+        updates: { sheetData?: Record<string, unknown>; description?: string; playerNotes?: string; inventory?: string; inventoryItems?: any[] };
+    };
+    const store = useSessionOSStore.getState();
+    const perso = store.players
+        .find(p => p.id === playerId)?.characters
+        .find(c => c.id === characterId);
+    if (!perso) return;
+
+    store.updateCharacter(playerId, characterId, {
+        ...(updates.description !== undefined ? { description: updates.description } : {}),
+        ...(updates.playerNotes !== undefined ? { playerNotes: updates.playerNotes } : {}),
+        ...(updates.inventory !== undefined ? { inventory: updates.inventory } : {}),
+        ...(updates.inventoryItems ? { inventoryItems: updates.inventoryItems } : {}),
+        // Fusion, jamais remplacement : la fiche ne connaît que les champs de la table.
+        sheetData: { ...perso.sheetData, ...(updates.sheetData ?? {}) },
+    });
+};
+
 const submitFeedback = (payload: any) => {
     const { sessionId, feedback } = payload as { sessionId: string; feedback: any };
     useSessionOSStore.getState().submitSessionFeedback(sessionId, feedback);
@@ -41,6 +69,8 @@ const removeInventoryItem = (payload: any) => {
 export const sessionActions: ActionRegistry = {
     'session:update-character-narrative': updateCharacterNarrative,
     'remote:session:update-character-narrative': updateCharacterNarrative,
+    'session:update-character-sheet-data': updateCharacterSheetData,
+    'remote:session:update-character-sheet-data': updateCharacterSheetData,
     'session:submit-feedback': submitFeedback,
     'remote:session:submit-feedback': submitFeedback,
     // Les deux sens aboutissent au même ajout dans le journal de session.

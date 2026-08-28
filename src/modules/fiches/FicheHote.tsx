@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileText, Link2, Plus, RefreshCw, AlertTriangle } from 'lucide-react';
 import {
-    ouvrirLePont, ADRESSE_DU_MOTEUR,
+    ouvrirLePont, adresseDuMoteur,
     type PontDeLaFiche, type ApercuDeFiche, type InstantaneDeFiche,
 } from './pontDeLaFiche';
 import { versLaFiche, type CorrespondanceDeFiche, type CotesGmOs } from './correspondanceDeFiche';
@@ -46,16 +46,55 @@ export interface PersonnageDeLHote extends CotesGmOs {
     ficheId?: string;
 }
 
+/**
+ * **Comment ce PJ trouve sa fiche.**
+ *
+ * `bibliotheque` — l'écran du meneur. Il choisit dans la bibliothèque du moteur,
+ * et l'identifiant retenu se range sur le PJ. C'est la décision du 2026-08-28 :
+ * le moteur garde sa bibliothèque, GM-OS s'y branche.
+ *
+ * `locale` — une tablette. **La bibliothèque du moteur est propre à chaque
+ * appareil** : une base IndexedDB vit par origine ET par navigateur, donc les
+ * fiches du meneur n'existent tout simplement pas sur la tablette du joueur. Il
+ * n'y a rien à y choisir. La fiche y est une **surface d'affichage**, semée
+ * depuis ce que GM-OS sait du PJ, et l'identifiant local est mémorisé sur
+ * l'appareil pour ne pas en refabriquer une à chaque ouverture.
+ *
+ * *Ce n'est pas une deuxième vérité : la vérité reste celle de GM-OS, et la
+ * tablette la redessine.*
+ */
+export type ModeDeLiaison = 'bibliotheque' | 'locale';
+
 export interface FicheHoteProps {
     personnage: PersonnageDeLHote;
     /** La correspondance du jeu. Sans elle, on affiche la fiche sans la brancher. */
     table: CorrespondanceDeFiche | null;
+    /** Où ce PJ trouve sa fiche. `bibliotheque` par défaut — l'écran du meneur. */
+    liaison?: ModeDeLiaison;
     /** Appelé quand le PJ vient d'être lié à une fiche — à ranger sur le PJ. */
     onFicheLiee: (ficheId: string) => void;
     /** Appelé chaque fois que la fiche impose quelque chose à GM-OS. */
     onRapprochement: (rapprochement: Rapprochement) => void;
     /** Fabrique le pont — remplacée dans les tests. */
     fabriquerLePont?: typeof ouvrirLePont;
+}
+
+/** Où l'appareil se souvient de la fiche qu'il a fabriquée pour ce PJ. */
+const clefLocale = (idDuPersonnage: string) => `gmos:fiche-locale:${idDuPersonnage}`;
+
+/**
+ * Ce que cet appareil a déjà fabriqué pour ce PJ, s'il s'en souvient.
+ *
+ * Une mémoire perdue — navigation privée, données effacées — ne coûte rien
+ * d'autre qu'une fiche de plus dans la bibliothèque locale : la vérité est
+ * ailleurs, et on la resème.
+ */
+function ficheLocaleConnue(idDuPersonnage: string): string | null {
+    try { return localStorage.getItem(clefLocale(idDuPersonnage)); } catch { return null; }
+}
+
+function retenirLaFicheLocale(idDuPersonnage: string, ficheId: string): void {
+    try { localStorage.setItem(clefLocale(idDuPersonnage), ficheId); } catch { /* stockage refusé : tant pis */ }
 }
 
 type Etat =
@@ -65,7 +104,8 @@ type Etat =
     | { nom: 'erreur'; motif: string };
 
 const FicheHote: React.FC<FicheHoteProps> = ({
-    personnage, table, onFicheLiee, onRapprochement, fabriquerLePont = ouvrirLePont,
+    personnage, table, liaison = 'bibliotheque', onFicheLiee, onRapprochement,
+    fabriquerLePont = ouvrirLePont,
 }) => {
     const cadre = React.useRef<HTMLIFrameElement>(null);
     const pont = React.useRef<PontDeLaFiche | null>(null);
@@ -101,8 +141,33 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         if (quelqueChoseADire) rendre(releve);
     }, []);
 
+    /** Fabrique une fiche semée avec ce que GM-OS sait déjà — la seule poussée. */
+    const semer = React.useCallback(async (p: PontDeLaFiche): Promise<InstantaneDeFiche> => {
+        const { personnage: pj, table: t } = dernier.current;
+        if (!t) throw new Error("Ce jeu n'a pas de correspondance : GM-OS ne saurait pas quoi écrire.");
+        return p.creer(pj.name, t.gabaritDeLaFiche, versLaFiche(pj, t));
+    }, []);
+
     const brancher = React.useCallback(async (p: PontDeLaFiche) => {
         const { personnage: pj } = dernier.current;
+
+        /*
+          **Sur une tablette il n'y a rien à choisir.** La bibliothèque du moteur
+          vit par appareil : les fiches du meneur n'existent pas ici. On rouvre
+          celle que cet appareil a déjà fabriquée, sinon on en sème une — sans
+          jamais demander, parce que la question n'aurait aucun sens pour un
+          joueur qui veut juste voir sa fiche.
+        */
+        if (liaison === 'locale') {
+            const connue = ficheLocaleConnue(pj.id);
+            if (connue) {
+                try { accueillir(await p.ouvrirPersonnage(connue)); return; } catch { /* effacée : on resème */ }
+            }
+            const neuve = await semer(p);
+            retenirLaFicheLocale(pj.id, neuve.id);
+            setEtat({ nom: 'branchee', fiche: neuve });
+            return;
+        }
 
         if (pj.ficheId) {
             try {
@@ -117,7 +182,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             }
         }
         setEtat({ nom: 'a-lier', bibliotheque: (await p.bibliotheque()).characters });
-    }, [accueillir]);
+    }, [accueillir, liaison, semer]);
 
     const surCharge = React.useCallback(() => {
         const fenetre = cadre.current?.contentWindow;
@@ -154,15 +219,12 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         } finally { setOccupe(false); }
     };
 
-    /** Semer la fiche neuve avec ce que GM-OS sait déjà — la seule poussée. */
     const creer = async () => {
         const p = pont.current;
-        const { personnage: pj, table: t } = dernier.current;
-        if (!p || !t) return;
+        if (!p) return;
         setOccupe(true);
         try {
-            const graine = versLaFiche(pj, t);
-            const fiche = await p.creer(pj.name, t.gabaritDeLaFiche, graine);
+            const fiche = await semer(p);
             setEtat({ nom: 'branchee', fiche });
             dernier.current.onFicheLiee(fiche.id);
         } catch (err) {
@@ -174,7 +236,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         <div className="relative w-full h-full min-h-[24rem] rounded-3xl overflow-hidden border border-app-border/20 bg-app-surface">
             <iframe
                 ref={cadre}
-                src={ADRESSE_DU_MOTEUR}
+                src={adresseDuMoteur()}
                 title={`Fiche de ${personnage.name}`}
                 onLoad={surCharge}
                 className="w-full h-full border-0 bg-white"

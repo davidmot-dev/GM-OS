@@ -208,5 +208,35 @@ export function ouvrirLePont(cible: Window, options: OptionsDuPont = {}): PontDe
     };
 }
 
-/** L'adresse du moteur, servie par le protocole interne. */
-export const ADRESSE_DU_MOTEUR = 'gmos://media/docs/fiches/Character_Sheet_Manager.html';
+/** Le port du serveur des fiches. Doit rester d'accord avec `electron/serveurDesFiches.ts`. */
+export const PORT_DES_FICHES = 3002;
+
+/** Vrai dans une fenêtre Electron — meneur, Player Hub, projecteur. */
+function dansElectron(): boolean {
+    return typeof window !== 'undefined' && !!window.appBridge;
+}
+
+/**
+ * **L'origine des fiches — et pourquoi elle n'est pas la même partout.**
+ *
+ * Dans Electron, le protocole interne `gmos://` est déjà une origine distincte de
+ * celle du cockpit : la fiche y est isolée sans rien faire.
+ *
+ * Sur une tablette, il n'existe pas. Servir la fiche par le `SyncServer` la
+ * mettrait sur **l'origine du Player Hub**, donc avec accès à son stockage — pour
+ * un fichier HTML que GM-OS n'écrit pas et ne relit pas. D'où un **port
+ * distinct** : la tablette est sur `:3001`, les fiches sur `:3002`, et le
+ * navigateur les sépare exactement comme il sépare `gmos://` du cockpit.
+ *
+ * *L'isolation ne vient pas du protocole, elle vient de la différence d'origine.*
+ */
+export function origineDesFiches(): string {
+    if (dansElectron()) return 'gmos://media/docs';
+    const hote = typeof window === 'undefined' ? 'localhost' : window.location.hostname;
+    return `http://${hote}:${PORT_DES_FICHES}`;
+}
+
+/** L'adresse du moteur de fiches, pour l'écran où l'on se trouve. */
+export function adresseDuMoteur(): string {
+    return `${origineDesFiches()}/fiches/Character_Sheet_Manager.html`;
+}

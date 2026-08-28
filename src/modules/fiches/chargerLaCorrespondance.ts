@@ -2,6 +2,7 @@ import {
     cheminDeLaCorrespondance, lireLaCorrespondance, verifierLaCorrespondance,
     type CorrespondanceDeFiche,
 } from './correspondanceDeFiche';
+import { origineDesFiches } from './pontDeLaFiche';
 
 export * from './correspondanceDeFiche';
 
@@ -18,21 +19,36 @@ export * from './correspondanceDeFiche';
  * nouveau, comme pour les thèmes.
  */
 export async function chargerLaCorrespondance(racine: string): Promise<CorrespondanceDeFiche | null> {
+    const chemin = cheminDeLaCorrespondance(racine);
+
     // Le type vient de `types/window.d.ts` : si la signature du pont change, ce
     // fichier cesse de compiler au lieu de rendre `null` en silence.
     const lire = typeof window === 'undefined' ? undefined : window.appBridge?.ai?.readDoc;
-    if (!lire) return null;
-
-    const chemin = cheminDeLaCorrespondance(racine);
 
     try {
-        const json = await lire(chemin);
+        const json = lire ? await lire(chemin) : await lireParLeReseau(chemin);
         if (!json) return null;
         return lireLaCorrespondance(json, `docs/${chemin}`);
     } catch (err) {
         console.error(`[Correspondance] Lecture de « docs/${chemin} » impossible :`, err);
         return null;
     }
+}
+
+/**
+ * **Le même fichier, vu depuis une tablette.**
+ *
+ * Elle n'a pas `readDoc` — pas de pont Electron du tout. Le serveur des fiches
+ * sert la table à côté du moteur, sur son port à lui.
+ *
+ * Un 404 rend `null` **sans crier** : un jeu sans table est le cas normal, et
+ * c'est la réponse que le serveur donne alors. Seule une vraie panne parle.
+ */
+async function lireParLeReseau(chemin: string): Promise<string | null> {
+    const reponse = await fetch(`${origineDesFiches()}/${chemin}`);
+    if (reponse.status === 404) return null;
+    if (!reponse.ok) throw new Error(`Le serveur des fiches a répondu ${reponse.status}.`);
+    return reponse.text();
 }
 
 /**

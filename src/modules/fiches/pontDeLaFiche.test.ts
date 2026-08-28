@@ -1,5 +1,39 @@
-import { describe, it, expect, vi } from 'vitest';
-import { ouvrirLePont, CANAL, type ChangementDeFiche } from './pontDeLaFiche';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import {
+    ouvrirLePont, adresseDuMoteur, origineDesFiches, PORT_DES_FICHES, CANAL,
+    type ChangementDeFiche,
+} from './pontDeLaFiche';
+
+/**
+ * **L'origine des fiches — c'est elle qui isole, pas le protocole.**
+ *
+ * Une fiche sur la même origine que la page qui l'affiche peut lire son
+ * stockage. Le fichier HTML est régénéré par un GPT et n'est jamais relu ligne à
+ * ligne : cette séparation est tout ce qui protège les données.
+ */
+describe('adresseDuMoteur', () => {
+    const pontDOrigine = window.appBridge;
+    afterEach(() => { (window as { appBridge?: unknown }).appBridge = pontDOrigine; });
+
+    it('dans Electron, passe par le protocole interne', () => {
+        expect(origineDesFiches()).toBe('gmos://media/docs');
+        expect(adresseDuMoteur()).toBe('gmos://media/docs/fiches/Character_Sheet_Manager.html');
+    });
+
+    /**
+     * Sur une tablette il n'y a pas de `gmos://`. Servir la fiche par le
+     * `SyncServer` la mettrait sur l'origine du Player Hub, avec accès à son
+     * stockage — d'où un port à elle.
+     */
+    it('sur une tablette, passe par le port des fiches — jamais celui de la page', () => {
+        delete (window as { appBridge?: unknown }).appBridge;
+
+        const attendue = `http://${window.location.hostname}:${PORT_DES_FICHES}`;
+        expect(origineDesFiches()).toBe(attendue);
+        expect(adresseDuMoteur()).toBe(`${attendue}/fiches/Character_Sheet_Manager.html`);
+        expect(PORT_DES_FICHES).not.toBe(3001);
+    });
+});
 
 /**
  * **Le pont vers la fiche, éprouvé contre un faux moteur.**

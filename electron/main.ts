@@ -53,6 +53,7 @@ import { type RelayRole } from './relayPolicy'
 import { auditDenied } from './auditLog'
 import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
+import { ServeurDesFiches, PORT_DES_FICHES } from './serveurDesFiches'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const APP_ROOT = path.join(__dirname, '..')
@@ -112,6 +113,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 
 let win: BrowserWindow | null
 let syncServer: SyncServer | null = null;
+let serveurDesFiches: ServeurDesFiches | null = null;
 const REMOTE_PORT = 3001;
 const TEMP_MEDIA_DIR = path.join(app.getPath('userData'), 'temp-media');
 
@@ -163,6 +165,18 @@ function createWindow() {
     // Initialize Nexus Sync Engine
     syncServer = new SyncServer(win, REMOTE_PORT, TEMP_MEDIA_DIR);
     syncServer.start();
+
+    /*
+      **Les fiches ont leur propre port, et c'est le sujet.**
+
+      Sur l'écran du meneur, la fiche est isolée parce que `gmos://` est une autre
+      origine que le cockpit. La servir depuis le `SyncServer` la mettrait sur
+      **l'origine du Player Hub**, avec accès à son stockage — pour un fichier
+      HTML que GM-OS n'écrit pas et ne relit pas. Un port distinct rend la même
+      séparation aux tablettes.
+    */
+    serveurDesFiches = new ServeurDesFiches(path.join(APP_ROOT, 'docs'), PORT_DES_FICHES);
+    serveurDesFiches.start();
 }
 
 // --- Session Management Handlers ---
@@ -624,6 +638,9 @@ ipcMain.handle('remote:get-connection-info', () => {
         // Vite, qui ne sert ni /media/ ni /temp/ et répond son index.html à leur
         // place — une image qui arrive en text/html ne s'affiche pas.
         mediaPort: REMOTE_PORT,
+        // Port des fiches. Volontairement DIFFÉRENT du port applicatif : c'est
+        // cette différence qui isole la fiche du stockage du Player Hub.
+        fichesPort: PORT_DES_FICHES,
         // Identifie le contenu courant de temp-media, vidé à chaque démarrage.
         // Le renderer mémorise les médias qu'il y a déposés ; si cette valeur
         // change, sa mémoire ne vaut plus rien et il doit redéposer, sans quoi

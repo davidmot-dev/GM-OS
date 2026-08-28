@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout } from 'lucide-react';
+import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout, FileText } from 'lucide-react';
 import { pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
 import EtatDeSante from '../../modules/combat/components/EtatDeSante';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
@@ -7,7 +7,10 @@ import { useClientStore } from '../../stores/useClientStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { ResolvedImage } from '../ResolvedImage';
 import type { SheetSection, SheetField } from '../../data/defaultSheetTemplates';
-import type { PlayerCharacter, Campaign, SheetTemplate } from '../../modules/session/store/types';
+import FicheHote from '../../modules/fiches/FicheHote';
+import { useCorrespondanceDuJeu } from '../../modules/fiches/useCorrespondanceDuJeu';
+import type { Rapprochement } from '../../modules/fiches/rapprochementDeLaFiche';
+import type { PlayerCharacter, Campaign, SheetTemplate, InventoryItem } from '../../modules/session/store/types';
 import { resolveSheetTemplate } from '../../modules/session/logic/templateResolver';
 import { piloteDuPersonnage } from '../../modules/session/logic/piloteDuPersonnage';
 import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
@@ -24,7 +27,7 @@ interface HubCharacterSheetProps {
  */
 const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose }) => {
     const { characterId } = useClientStore();
-    const { players, campaigns, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, customGameDrivers, activeCampaignId } = useSessionOSStore();
+    const { players, campaigns, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, remoteUpdateCharacterSheetData, customGameDrivers, activeCampaignId } = useSessionOSStore();
 
     const playerWithChar = players.find(p => p.characters.some(c => c.id === characterId));
     const character = playerWithChar?.characters.find(c => c.id === characterId);
@@ -40,6 +43,7 @@ const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose }) => {
             remoteUpdateCharacterVitals={remoteUpdateCharacterVitals}
             customSheetTemplates={customSheetTemplates}
             remoteUpdateCharacterNarrative={remoteUpdateCharacterNarrative}
+            remoteUpdateCharacterSheetData={remoteUpdateCharacterSheetData}
             campaigns={campaigns}
             customGameDrivers={customGameDrivers}
             campaignId={character.campaignId ?? activeCampaignId ?? null}
@@ -54,14 +58,16 @@ interface ContentProps {
     remoteUpdateCharacterVitals: (playerId: string, charId: string, updates: { hp?: number; mp?: number; ap?: number }) => void;
     customSheetTemplates: SheetTemplate[];
     remoteUpdateCharacterNarrative: (playerId: string, charId: string, updates: { description?: string; playerNotes?: string; inventory?: string }) => void;
+    /** Ce que la fiche HTML impose depuis la tablette, remonté au meneur. */
+    remoteUpdateCharacterSheetData: (playerId: string, charId: string, updates: { sheetData?: Record<string, unknown>; description?: string; playerNotes?: string; inventory?: string; inventoryItems?: InventoryItem[] }) => void;
     campaigns: Campaign[];
     customGameDrivers: GameDriver[];
     /** Table à laquelle ce personnage joue — celle dont les réserves comptent. */
     campaignId: string | null;
 }
 
-const HubCharacterSheetContent: React.FC<ContentProps> = ({ 
-    character, playerId, onClose, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, campaigns, customGameDrivers, campaignId
+const HubCharacterSheetContent: React.FC<ContentProps> = ({
+    character, playerId, onClose, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, remoteUpdateCharacterSheetData, campaigns, customGameDrivers, campaignId
 }) => {
     // État local pour une saisie fluide
     const [localDescription, setLocalDescription] = useState(character.description ?? '');
@@ -87,6 +93,30 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
     const pilote = piloteDuPersonnage(character, campaigns, customGameDrivers);
 
     const hubOptions = character.hubOptions ?? { showHP: true, showMP: true, showAP: true, showInventory: true, showRelations: true };
+
+    /**
+     * **La fiche du jeu, sur la tablette du joueur.**
+     *
+     * C'est ici qu'elle sert le plus : la fiche HTML n'est pas un outil de
+     * meneur, c'est un objet d'immersion. Le joueur regarde SA fiche, avec le
+     * fond de page du jeu, pas un formulaire.
+     *
+     * `liaison="locale"` parce que la bibliothèque du moteur vit **par appareil** :
+     * les fiches du meneur n'existent pas sur cette tablette. Celle-ci en sème
+     * une, semée depuis ce que GM-OS sait du PJ. *La vérité reste celle de GM-OS,
+     * la tablette la redessine* — et ce que le joueur y écrit remonte au meneur.
+     */
+    const correspondance = useCorrespondanceDuJeu(character);
+    const [surLaFiche, setSurLaFiche] = useState(false);
+    const [ficheDejaOuverte, setFicheDejaOuverte] = useState(false);
+
+    const appliquerLeRapprochement = (releve: Rapprochement) => {
+        remoteUpdateCharacterSheetData(playerId, character.id, {
+            sheetData: releve.aEcrire,
+            ...(releve.narratifAEcrire ?? {}),
+            ...(releve.inventoryItems ? { inventoryItems: releve.inventoryItems } : {}),
+        });
+    };
 
     const handleUpdateHP = (delta: number) => {
         // Sans jauge, il n'y a rien à ajuster : `pointsDeVieApres` rend `null`
@@ -119,6 +149,22 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 >
                     <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Retour
                 </button>
+
+                {/* La bascule n'apparaît que si le jeu a une fiche branchable. */}
+                {correspondance && (
+                    <button
+                        onClick={() => { setSurLaFiche(v => !v); setFicheDejaOuverte(true); }}
+                        title={surLaFiche ? 'Revenir à la vue synthétique' : 'Afficher ma fiche'}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                            surLaFiche
+                                ? 'bg-accent/20 border-accent/40 text-accent'
+                                : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
+                        }`}
+                    >
+                        <FileText size={14} />
+                        {surLaFiche ? 'Vue synthétique' : 'Ma fiche'}
+                    </button>
+                )}
                 <div className="text-right">
                     <h2 className="text-3xl font-black text-app-text uppercase tracking-tighter leading-none mb-1">{character.name}</h2>
                     <div className="flex items-center justify-end gap-2">
@@ -155,7 +201,33 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 </div>
             )}
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12">
+            {/*
+                Montée à la première bascule puis gardée montée et masquée :
+                l'iframe charge sept mégaoctets de fonds de page.
+            */}
+            {ficheDejaOuverte && (
+                <div className={`flex-1 overflow-hidden pb-4 ${surLaFiche ? '' : 'hidden'}`}>
+                    <FicheHote
+                        personnage={{
+                            id: character.id,
+                            name: character.name,
+                            sheetData: character.sheetData ?? {},
+                            narratif: {
+                                description: character.description ?? '',
+                                playerNotes: character.playerNotes ?? '',
+                                inventory: character.inventory ?? '',
+                            },
+                            inventoryItems: character.inventoryItems,
+                        }}
+                        table={correspondance}
+                        liaison="locale"
+                        onFicheLiee={() => { /* la fiche est locale à l'appareil : rien à ranger sur le PJ */ }}
+                        onRapprochement={appliquerLeRapprochement}
+                    />
+                </div>
+            )}
+
+            <div className={`flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12 ${surLaFiche ? 'hidden' : ''}`}>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
                     
                     {/* Portrait & Vitals */}
