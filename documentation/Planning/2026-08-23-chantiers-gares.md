@@ -22,7 +22,7 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
-| 3b | **Fiche HTML** | **Étude faite le 24/08**, rien de codé | **Publier la couture** — `window.RPGSheet` | Rien |
+| 3b | **Fiche HTML** | ✅ **COUTURE PUBLIÉE le 27/08** | **Écrire la table de correspondance** (étape 3) | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -266,9 +266,51 @@ Ce que ça change :
 `documentation/Planning/2026-08-24-correspondance-fiche-blade-runner.md` — la
 table écrite à la main sur les 33 champs, comptée, et les six étapes qui restent.
 
-**Le seul blocage : aucune fiche n'expose quoi que ce soit sur `window`, aucune
-n'utilise `postMessage`.** GM-OS ne peut ni lire ni écrire, quel que soit le
-nommage. Tout le reste est prêt.
+### ✅ La couture est publiée le 2026-08-27 — le blocage est levé
+
+*Il était le seul : aucune fiche n'exposait quoi que ce soit sur `window`, aucune
+n'utilisait `postMessage`.* `docs/fiches/Character_Sheet_Manager.html` expose
+désormais, **une fois pour les quatre gabarits** :
+
+```js
+window.RPGSheet = { version, getData, setData, getTemplate, onChange }
+```
+
+…et **le même contrat par `postMessage`** (canal `rpg-sheet` : `hello`, `get`,
+`set`, `template`, plus les diffusions `change` et `open`), parce que l'hôte sera
+une iframe et que `window.*` ne traverse pas une origine.
+
+**Trois points, et les deux derniers ne se devinent pas :**
+
+| Où | Quoi |
+| --- | --- |
+| `setByPath` | signale la clé écrite — **tous** les chemins d'édition y passent (champ, case, hotspot, piste, portrait, et l'écriture de l'hôte) : *un seul point, pas cinq* |
+| `openCharacter` | annonce l'ouverture, sinon l'hôte ne sait jamais qu'on a changé de PJ |
+| le bloc publié | `setData` **redessine les champs** en plus d'écrire — sans ça la donnée est juste et l'écran ment |
+
+**Deux décisions prises en écrivant :**
+
+- **Un lot ne porte qu'une origine** (`sheet` / `host` / `open`). Les changements
+  sont groupés sur 60 ms ; avant d'appliquer une écriture de l'hôte, on **vide**
+  ce qui restait de la saisie locale. Sans ça l'hôte se voit renvoyer sa propre
+  écriture mêlée à celle du joueur, et la réapplique.
+- **`getData` rend une copie.** L'hôte qui bricole l'objet reçu ne touche pas la
+  fiche.
+
+**Éprouvé, et pas seulement relu :** `electron/coutureDesFiches.test.ts` charge
+**le vrai moteur du disque** dans un DOM — seuls les gabarits intégrés sont
+remplacés par un gabarit de contrôle, les vrais pesant sept mégaoctets de fonds
+de page — crée un personnage par le chemin normal de l'application, puis fait
+l'aller-retour complet : écriture de l'hôte → écran redessiné (texte, case,
+`select`, hotspots, champ dérivé) → saisie du joueur → remontée → persistance
+vérifiée en rouvrant le personnage. **9 tests.** Le premier garde les trois
+points ci-dessus présents dans le fichier : *le jour où le GPT régénère la fiche
+et emporte la couture, c'est ce test qui le dit.*
+
+**Ce qui reste du chantier 3b :** les étapes 3 à 6 du document de
+correspondance — la table en données, son contrôle, la convergence sur le
+`hotspot`, et le retour de `humanite` par la Forge. Plus l'hôte côté GM-OS
+(iframe, bascule sur les deux écrans) et le chemin d'écriture de la tablette.
 
 ### Le plan d'origine, conservé pour ce qu'il garde de vrai
 

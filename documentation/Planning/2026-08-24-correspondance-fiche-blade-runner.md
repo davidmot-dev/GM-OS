@@ -233,18 +233,26 @@ Rangé par ordre de dépendance : chaque étape suppose la précédente.
 dans `docs/fiches/Character_Sheet_Manager.html`. Sans ça, aucune saisie de
 niveau n'est possible et la table ne peut rien vérifier.
 
-**2. Publier la couture.** C'est **le seul vrai blocage**, et il n'a pas bougé :
-les cinq fiches n'exposent **rien** sur `window` et n'utilisent **aucun**
-`postMessage`. GM-OS ne peut donc ni lire ni écrire une fiche, quel que soit le
-nommage. Le moteur a pourtant tout en interne — `getByPath`, `setByPath`,
-`saveCharacter`, `scheduleSave` : il ne manque que de les publier.
+**2. ✅ FAIT le 2026-08-27 — la couture est publiée.** C'était le seul vrai
+blocage. Le moteur expose maintenant :
 
 ```js
-window.RPGSheet = { getData, setData, onChange };
+window.RPGSheet = { version, getData, setData, getTemplate, onChange };
 ```
 
-**Trois lignes, une seule fois** — puisqu'il n'y a plus qu'un moteur au lieu de
-quatre fiches. C'est le gain caché de la refonte de David.
+…et le même contrat par `postMessage` (canal `rpg-sheet`), parce que l'hôte sera
+une iframe et que `window.*` ne traverse pas une origine.
+
+**`getTemplate()` a été ajouté en route, et c'est pour l'étape 4 :** il rend
+`{ key, label, type, page }` pour chaque champ. Le contrôle qui garde la table
+vraie n'aura donc rien à ré-analyser du HTML — il demandera à la fiche.
+
+Ce que la publication a appris et que le plan n'avait pas prévu : **écrire ne
+suffit pas, il faut redessiner**. `setData` met à jour les champs visés, les
+hotspots et les champs dérivés ; sans ça la donnée est juste et l'écran ment.
+
+Éprouvé par `electron/coutureDesFiches.test.ts` — le vrai moteur chargé du
+disque, l'aller-retour complet, 9 tests.
 
 **3. Écrire la table en données**, avec ses trois capacités : composer /
 décomposer, traduire une valeur, viser une autre destination que `sheetData`

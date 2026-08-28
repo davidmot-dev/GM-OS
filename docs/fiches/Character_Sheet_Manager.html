@@ -193,7 +193,7 @@ function renderSidebar(){
   </div>`).join(""):'<div class="item-sub" style="padding:8px 10px">Aucun personnage.</div>';
 }
 function rect(el,f){el.style.left=f.x+"px";el.style.top=f.y+"px";el.style.width=f.w+"px";el.style.height=f.h+"px";}
-function setByPath(obj,path,val){obj[path]=val;}
+function setByPath(obj,path,val){obj[path]=val;if(activeCharacter&&obj===activeCharacter.data)markChange(path);}
 function getByPath(obj,path){return obj?.[path];}
 function deriveValue(f,data){
  const d=f.derive;if(!d)return undefined;const src=Number(getByPath(data,d.source)||0);
@@ -275,7 +275,7 @@ function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveCharact
 async function saveCharacter(){if(!activeCharacter)return;activeCharacter.updatedAt=Date.now();await put("characters",activeCharacter);say("Sauvegardé");await refreshLibrary();}
 async function openCharacter(id){
  const c=await getOne("characters",id);if(!c)return;const t=await getOne("templates",c.templateId);if(!t){alert("Le modèle de ce personnage n’est plus installé.");return;}
- activeCharacter=c;activeTemplate=t;activePage=0;renderSidebar();buildPages();
+ activeCharacter=c;activeTemplate=t;activePage=0;renderSidebar();buildPages();announceOpen();
 }
 function showCreate(tid){activeTemplate=templates.find(t=>t.id===tid)||activeTemplate;if(!activeTemplate)return;$("#createTemplateName").textContent=activeTemplate.name+" — "+(activeTemplate.system||"");$("#newCharacterName").value="";$("#createModal").classList.add("show");setTimeout(()=>$("#newCharacterName").focus(),50);renderSidebar();}
 async function createCharacter(){
@@ -323,6 +323,105 @@ $("#printBtn").onclick=()=>{if(activeCharacter)window.print();};
 $("#viewer").addEventListener("wheel",e=>{if(!e.ctrlKey||!activeTemplate)return;e.preventDefault();setZoom(zoom+(e.deltaY<0?.1:-.1));},{passive:false});
 window.addEventListener("keydown",e=>{if(!e.ctrlKey||!activeTemplate)return;if(e.key==="+"||e.key==="="){e.preventDefault();setZoom(zoom+.1);}else if(e.key==="-"){e.preventDefault();setZoom(zoom-.1);}else if(e.key==="0"){e.preventDefault();fit();}});
 window.addEventListener("resize",()=>{});
+/* ── La couture — GM-OS lit et écrit la fiche ouverte ────────────────────
+   Le moteur avait déjà tout en interne (getByPath, setByPath, scheduleSave)
+   et n'exposait rien : ni window, ni postMessage. On publie ici, UNE fois
+   pour les quatre gabarits, le même contrat par les deux chemins.
+   window.RPGSheet quand l'hôte est de même origine, postMessage sinon. */
+const CHANNEL="rpg-sheet";
+const listeners=new Set();
+const hosts=[];
+let pendingKeys=new Set(),notifyTimer=null,writingFromHost=false;
+
+function snapshot(){
+ if(!activeCharacter)return null;
+ return {id:activeCharacter.id,name:activeCharacter.name,templateId:activeCharacter.templateId,
+  templateName:activeCharacter.templateName||"",system:activeCharacter.system||"",
+  updatedAt:activeCharacter.updatedAt||null,data:{...activeCharacter.data}};
+}
+function templateInfo(){
+ if(!activeTemplate)return null;
+ const fields=[];
+ (activeTemplate.pages||[]).forEach((pg,page)=>(pg.fields||[]).forEach(f=>fields.push({key:f.key,label:f.label||f.key,type:normalizeFieldType(f.type||"text"),page})));
+ return {id:activeTemplate.id,name:activeTemplate.name,system:activeTemplate.system||"",fields};
+}
+function templateKeys(){return new Set((activeTemplate?.pages||[]).flatMap(pg=>(pg.fields||[]).map(f=>f.key)));}
+function notify(ev){listeners.forEach(fn=>{try{fn(ev);}catch(e){console.error("[RPGSheet] abonné en échec",e);}});}
+function postToHosts(msg){
+ for(const h of hosts){try{h.source.postMessage({channel:CHANNEL,...msg},h.origin&&h.origin!=="null"?h.origin:"*");}catch(e){}}
+}
+/* Appelé par setByPath, donc par TOUS les chemins d'édition — la case, le
+   hotspot, le curseur, le portrait, et l'écriture de l'hôte. Un seul point. */
+function markChange(key){pendingKeys.add(key);clearTimeout(notifyTimer);notifyTimer=setTimeout(flushChanges,60);}
+function flushChanges(){
+ clearTimeout(notifyTimer);notifyTimer=null;
+ if(!pendingKeys.size)return;
+ const ev={origin:writingFromHost?"host":"sheet",keys:[...pendingKeys],character:snapshot()};
+ pendingKeys=new Set();
+ notify(ev);postToHosts({type:"change",...ev});
+}
+function announceOpen(){
+ flushChanges();
+ const character=snapshot();
+ const ev={origin:"open",keys:character?Object.keys(character.data):[],character};
+ notify(ev);postToHosts({type:"open",...ev,template:templateInfo()});
+}
+/* Redessine les champs que l'hôte vient d'écrire. Sans ça la donnée est juste
+   et l'écran ment — le défaut le plus cher de ce projet. */
+function refreshFields(keys){
+ const host=$("#pagesHost");if(!host)return;
+ host.querySelectorAll(".sheet").forEach(sheet=>{
+  for(const key of keys){
+   const value=getByPath(activeCharacter.data,key);
+   sheet.querySelectorAll(`[data-key="${CSS.escape(key)}"]`).forEach(el=>{
+    if(el.classList.contains("hotspot")||el.classList.contains("tracker"))return; // updateDynamic s'en charge
+    if(el.classList.contains("portrait")){
+     const img=el.querySelector("img");if(img)img.src=value||"";
+     const span=el.querySelector("span");if(span)span.textContent=value?"Changer":"Ajouter une image";
+     return;
+    }
+    if(el.type==="checkbox")el.checked=!!value; else el.value=value??"";
+   });
+   updateDynamic(sheet,key);updateDerived(sheet,key);
+  }
+ });
+}
+function applyData(patch){
+ if(!activeCharacter)throw new Error("Aucun personnage n’est ouvert");
+ const keys=Object.keys(patch||{});
+ if(!keys.length)return snapshot();
+ flushChanges(); // vider la saisie locale d'abord : un lot ne porte qu'une origine
+ const known=templateKeys(),unknown=keys.filter(k=>!known.has(k));
+ if(unknown.length)console.warn("[RPGSheet] clés absentes du gabarit :",unknown.join(", "));
+ writingFromHost=true;
+ try{
+  for(const k of keys)setByPath(activeCharacter.data,k,patch[k]);
+  refreshFields(keys);scheduleSave();flushChanges();
+ } finally { writingFromHost=false; }
+ return snapshot();
+}
+window.addEventListener("message",e=>{
+ const m=e.data;
+ if(!m||m.channel!==CHANNEL||!m.type||m.type==="reply"||m.type==="change"||m.type==="open")return;
+ if(e.source&&!hosts.some(h=>h.source===e.source))hosts.push({source:e.source,origin:e.origin});
+ const target=e.origin&&e.origin!=="null"?e.origin:"*";
+ const reply=(ok,result)=>{try{e.source?.postMessage({channel:CHANNEL,type:"reply",id:m.id,ok,result},target);}catch(err){}};
+ try{
+  if(m.type==="hello")reply(true,{version:1,ready:!!db,character:snapshot(),template:templateInfo()});
+  else if(m.type==="get")reply(true,snapshot());
+  else if(m.type==="template")reply(true,templateInfo());
+  else if(m.type==="set")reply(true,applyData(m.data));
+  else reply(false,"Type inconnu : "+m.type);
+ }catch(err){reply(false,String(err&&err.message||err));}
+});
+window.RPGSheet={
+ version:1,
+ getData:()=>snapshot(),
+ setData:patch=>applyData(patch),
+ getTemplate:()=>templateInfo(),
+ onChange(fn){listeners.add(fn);return()=>listeners.delete(fn);}
+};
+
 (async()=>{try{db=await openDB();await seedBuiltins();await refreshLibrary();}catch(e){console.error(e);alert("IndexedDB est indisponible. Cette application a besoin du stockage local du navigateur pour gérer plusieurs personnages.");}})();
 })();
 </script>
