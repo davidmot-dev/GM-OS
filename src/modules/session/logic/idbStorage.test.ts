@@ -7,12 +7,16 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
  */
 const store = vi.hoisted(() => new Map<string, string>());
 const putSpy = vi.hoisted(() => vi.fn());
+const panne = vi.hoisted(() => ({ enLecture: false }));
 
 vi.mock('idb', () => ({
     openDB: vi.fn(async () => ({
         objectStoreNames: { contains: () => true },
         createObjectStore: vi.fn(),
-        get: async (_s: string, key: string) => store.get(key),
+        get: async (_s: string, key: string) => {
+            if (panne.enLecture) throw new Error('IndexedDB indisponible');
+            return store.get(key);
+        },
         put: async (_s: string, value: string, key: string) => {
             putSpy(key, value);
             store.set(key, value);
@@ -28,6 +32,7 @@ const KEY = 'gmos-v5-session-os-storage';
 beforeEach(() => {
     store.clear();
     putSpy.mockClear();
+    panne.enLecture = false;
     window.localStorage.clear();
     __resetIdbStorageForTests();
 });
@@ -111,5 +116,25 @@ describe('idbStateStorage — reprise depuis localStorage', () => {
         await idbStateStorage.setItem(KEY, read!);
 
         expect(putSpy).not.toHaveBeenCalled();
+    });
+});
+
+/**
+ * **Une lecture qui échoue ne doit pas se faire passer pour une base vide.**
+ *
+ * `getItem` rendait `null` dans les deux cas. L'appelant repartait alors sur les
+ * mocks — et les persistait par-dessus la base qu'il venait de ne pas savoir
+ * lire. C'est la moitié silencieuse de la perte du 2026-08-24.
+ */
+describe('idbStateStorage — une lecture ratée se dit', () => {
+    it('remonte l’erreur au lieu de rendre null', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { /* attendu */ });
+        panne.enLecture = true;
+
+        await expect(idbStateStorage.getItem(KEY)).rejects.toThrow('IndexedDB indisponible');
+    });
+
+    it('une clé absente reste un fait, pas une erreur', async () => {
+        await expect(idbStateStorage.getItem('jamais-ecrite')).resolves.toBeNull();
     });
 });

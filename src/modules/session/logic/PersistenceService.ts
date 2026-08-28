@@ -28,17 +28,74 @@ export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
  * L'interdiction est posée ici, au seul point qui écrit, et non dans
  * `partialize` : une charge réduite reste une charge, et c'est la charge
  * elle-même qui détruisait les données.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ET LA SECONDE MOITIÉ : ON N'ÉCRIT PAS AVANT D'AVOIR LU
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * La garde ci-dessus ne ferme que les fenêtres secondaires. **La fenêtre MJ,
+ * elle, pouvait écrire avant la fin de sa propre relecture** — et ce qu'elle
+ * avait alors en mémoire, c'était `INITIAL_DATA` : les mocks.
+ *
+ * Le trou vient de la nature du magasin. `localStorage` se lit de façon
+ * synchrone : entre la création du store et son hydratation, il n'y a aucun
+ * instant. IndexedDB se lit **de façon asynchrone**, donc il existe une fenêtre
+ * réelle — quelques dizaines de millisecondes au démarrage, et à nouveau à
+ * chaque rechargement à chaud du module pendant le développement. *N'importe
+ * quel `set()` pendant cette fenêtre persiste les mocks par-dessus la base.*
+ *
+ * C'est le mécanisme de la **seconde perte de campagnes, le 2026-08-24**. Il
+ * restait ouvert après le correctif du 07/08, qui ne visait que les fenêtres
+ * secondaires.
+ *
+ * On n'ouvre donc l'écriture qu'une fois la base **relue pour de bon** — et
+ * « relue » veut dire *lue sans erreur*, une base vide comprise : une base vide
+ * se lit très bien, c'est un premier démarrage. Une lecture qui échoue, elle,
+ * est indiscernable d'une base vide une fois qu'on l'a réduite à `null` ;
+ * c'est pourquoi `idbStorage` la remonte désormais au lieu de l'avaler.
+ *
+ * **En cas d'échec de lecture, GM-OS tourne en mémoire et n'écrit rien.**
+ * Perdre le travail d'une séance est réparable ; écraser la base ne l'est pas.
  */
+let laLectureAReussi = false;
+let laBaseAEteRelue = false;
+
+/** L'écriture est-elle ouverte ? Réservé aux tests et au diagnostic. */
+export const lEcritureEstOuverte = () => laBaseAEteRelue;
+
+/** Réservé aux tests : referme la garde comme au démarrage. */
+export function __refermerLEcriturePourTests() {
+    laLectureAReussi = false;
+    laBaseAEteRelue = false;
+}
+
 const gmOnlyStateStorage: StateStorage = {
-    getItem: (name) => idbStateStorage.getItem(name),
+    getItem: async (name) => {
+        try {
+            const lu = await idbStateStorage.getItem(name);
+            laLectureAReussi = true;
+            return lu;
+        } catch (err) {
+            laLectureAReussi = false;
+            console.error(
+                `[Persistence] Relecture de « ${name} » impossible. GM-OS démarre en ` +
+                'MÉMOIRE SEULE : rien ne sera persisté tant que la base n’aura pas été lue. ' +
+                'Exportez votre travail avant de fermer.',
+                err,
+            );
+            return null;
+        }
+    },
 
     setItem: async (name, value) => {
         if (!isMainWindow()) return;
+        if (!laBaseAEteRelue) return;
         await idbStateStorage.setItem(name, value);
     },
 
     removeItem: async (name) => {
         if (!isMainWindow()) return;
+        if (!laBaseAEteRelue) return;
         await idbStateStorage.removeItem(name);
     },
 };
@@ -64,7 +121,27 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
     // NOTE: on n'appelle volontairement pas sanitizeAllSessions() ici — cela
     // provoquait des boucles de synchronisation sans fin. L'assainissement des
     // sessions se fait à l'ajout, ou explicitement via SessionManager.
-    onRehydrateStorage: () => (state) => {
+    onRehydrateStorage: () => (state, error) => {
+        /*
+          **Le seul endroit qui ouvre l'écriture.** Zustand appelle ce rappel
+          quand la relecture est finie — réussie (`state`) ou non (`error`).
+
+          Il est ouvert AVANT les reprises ci-dessous, et pas après : la
+          dernière d'entre elles, `reconcileTemplates`, appelle `set()`, et son
+          travail doit être persisté. Les autres ne font que corriger l'objet
+          d'état en place, sans écrire.
+        */
+        if (error || !laLectureAReussi) {
+            console.error(
+                '[Persistence] La base n’a pas été relue : GM-OS ne persistera RIEN ' +
+                'de cette session. C’est délibéré — écrire sans avoir lu, c’est ' +
+                'écraser la base avec les données de démonstration.',
+                error,
+            );
+            return;
+        }
+        laBaseAEteRelue = true;
+
         if (state) {
             // Sanitize stale blob URLs
             (state.atlasMaps || []).forEach(m => {

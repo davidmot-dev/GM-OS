@@ -120,8 +120,22 @@ export const idbStateStorage: StateStorage = {
             lastSeen.set(name, value as string);
             return value as string;
         } catch (err) {
+            /*
+              **On remonte l'échec au lieu de l'avaler.**
+
+              Rendre `null` disait « cette clé n'existe pas » — exactement ce que
+              répond un premier démarrage. L'appelant ne pouvait donc pas
+              distinguer *une base vide* d'*une base illisible*, et dans le second
+              cas il repartait sur les mocks, qu'il persistait ensuite par-dessus
+              la vraie base. **Une lecture ratée qui se fait passer pour une base
+              vide est un effacement à retardement.**
+
+              La clé absente, elle, continue de rendre `null` : c'est un fait, pas
+              une erreur. Qui décide quoi faire de l'échec, c'est
+              `PersistenceService` — il referme l'écriture.
+            */
             console.error(`[IdbStorage] Lecture de "${name}" impossible:`, err);
-            return null;
+            throw err;
         }
     },
 
