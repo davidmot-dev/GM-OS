@@ -26,7 +26,7 @@ de David, le n° 5 attend seulement son tour.
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
-| 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **CONSTRUITE le 29/08** | **L'éprouver en réel** — restaurer sur un profil neuf | Rien |
+| 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -588,8 +588,15 @@ tenir à part :**
    le même passage que `list`, `openCharacter` et `create`.
 2. ✅ **FAIT le 2026-08-29 — la copie entre dans la sauvegarde automatique**, sous
    `modules.fiches`, avec la date de sa prise.
-3. ⏳ **L'éprouver en réel** — restaurer sur un profil neuf. *Une sauvegarde qu'on
-   n'a jamais restaurée n'est pas une sauvegarde.*
+3. ✅ **ÉPROUVÉE EN RÉEL le 2026-08-29, ALLER ET RETOUR.**
+   **L'aller**, lu dans le fichier : `gmos-auto-2026-08-29T16-12-54.json` porte
+   `modules.fiches` — **4 personnages, 69 champs chacun**, gabarit
+   *Blade Runner FR*, copie prise à 18h11 et sauvegarde écrite à 18h12 en
+   fermant l'application. Zéro gabarit embarqué, comme prévu : les intégrés
+   reviennent avec le fichier du moteur.
+   **Le retour**, par David : bibliothèque vidée, bouton cliqué, fiches revenues.
+   *Une sauvegarde qu'on n'a jamais restaurée n'est pas une sauvegarde* — celle-ci
+   l'a été.
 
 ### ✅ Construite le 2026-08-29
 

@@ -247,6 +247,30 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             .catch(err => setEtat({ nom: 'erreur', motif: String(err?.message ?? err) }));
     }, [fabriquerLePont, accueillir, brancher]);
 
+    /**
+     * **Changer de personnage doit changer de fiche.**
+     *
+     * *Trouvé le 2026-08-29 en cherchant où était passé le bouton de
+     * restauration.* `brancher` ne tournait qu'au **chargement de l'iframe**, et
+     * l'iframe est gardée montée d'un personnage à l'autre — elle pèse sept
+     * mégaoctets. Sélectionner un autre PJ laissait donc **la fiche du précédent
+     * à l'écran**, sous le nom du nouveau : *la donnée juste et l'écran menteur*,
+     * une fois de plus, et sans la moindre erreur.
+     *
+     * Le même effet rend l'écran de liaison atteignable de nouveau : quitter le
+     * personnage et y revenir redemande au moteur ce qu'il porte, ce qui est
+     * exactement ce qu'il faut après avoir vidé ou restauré une bibliothèque.
+     */
+    React.useEffect(() => {
+        const p = pont.current;
+        // Au tout premier rendu le pont n'existe pas encore : c'est `surCharge`
+        // qui branchera, une fois l'iframe chargée.
+        if (!p) return;
+        setEtat({ nom: 'chargement' });
+        void brancher(p);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [personnage.id]);
+
     React.useEffect(() => () => {
         // La copie groupée part avec le pont : la laisser vivre appellerait un
         // `sauvegarde()` sur une iframe démontée, qui échouerait pour rien.

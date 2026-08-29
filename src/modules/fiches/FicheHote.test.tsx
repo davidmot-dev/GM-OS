@@ -303,6 +303,37 @@ describe('FicheHote', () => {
         });
     });
 
+    /**
+     * **Changer de personnage doit changer de fiche.**
+     *
+     * L'iframe est gardée montée d'un PJ à l'autre — sept mégaoctets — et
+     * `brancher` ne tournait qu'à son chargement. Le second PJ affichait donc la
+     * fiche du premier, sous son propre nom : *la donnée juste et l'écran
+     * menteur*, sans la moindre erreur.
+     */
+    it('rouvre la fiche quand on change de personnage', async () => {
+        const { pont, appels } = faireUnPont();
+        const vue = render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1' }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+        charger();
+        await waitFor(() => expect(appels).toContain('open:f-1'));
+
+        vue.rerender(<FicheHote personnage={{ id: 'pj-2', name: 'Roy', sheetData: {}, ficheId: 'f-2' }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+        await waitFor(() => expect(appels).toContain('open:f-2'));
+    });
+
+    /** Le même PJ ne se rouvre pas à chaque frappe : seul son identifiant compte. */
+    it('ne rouvre rien quand le personnage ne change pas', async () => {
+        const { pont } = faireUnPont();
+        const props = { table: TABLE, onFicheLiee: vi.fn(), onRapprochement: vi.fn(), fabriquerLePont: () => pont };
+        const vue = render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1' }} {...props} />);
+        charger();
+        await waitFor(() => expect(pont.ouvrirPersonnage).toHaveBeenCalledTimes(1));
+
+        vue.rerender(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1', sheetData: { nom: 'Autre' } }} {...props} />);
+        await new Promise(r => setTimeout(r, 0));
+        expect(pont.ouvrirPersonnage).toHaveBeenCalledTimes(1);
+    });
+
     it('ferme le pont en partant', async () => {
         const { pont } = faireUnPont();
         const vue = render(<FicheHote personnage={PERSONNAGE} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
