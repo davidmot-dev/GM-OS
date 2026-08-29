@@ -30,6 +30,8 @@ interface MediaStoreState {
     initDB: () => Promise<void>;
     clearDB: () => Promise<void>;
     addMedia: (file: File, tags?: string[], campaignIds?: string[]) => Promise<string>;
+    /** Remet un média du miroir, sous son identifiant d'origine. Rend `false` s'il existe déjà. */
+    restaurerUnMedia: (metadata: MediaItem, blob: Blob) => Promise<boolean>;
     deleteMedia: (id: string) => Promise<void>;
     updateMediaTags: (id: string, tags: string[]) => Promise<void>;
     renameMedia: (id: string, newName: string) => Promise<void>;
@@ -208,6 +210,29 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
             console.error('Failed to add media:', err);
             throw new Error('Failed to save media file.');
         }
+    },
+
+    /**
+     * **Remet un média en base SOUS SON IDENTIFIANT D'ORIGINE.**
+     *
+     * `addMedia` en fabrique un neuf (`m-${crypto.randomUUID()}`), ce qui est
+     * juste pour un ajout et **ruineux pour une restauration** : une carte de
+     * l'atlas porte `"fileUrl": "m-<uuid>"`, et remettre les octets sous un autre
+     * identifiant rendrait des images présentes et des cartes toujours mortes.
+     * *Le pire des résultats : le disque est plein et rien ne s'affiche.*
+     *
+     * **Ne remplace jamais un média existant.** Le vivant est plus récent que la
+     * copie ; écraser reviendrait à faire du filet un mécanisme de perte. Rend
+     * `false` quand l'identifiant est déjà pris.
+     */
+    restaurerUnMedia: async (metadata: MediaItem, blob: Blob) => {
+        const db = await getDB();
+        const existant = await db.get(STORE_NAME, metadata.id);
+        if (existant) return false;
+
+        await db.put(STORE_NAME, { ...metadata, blob });
+        set((state) => ({ mediaList: [metadata, ...state.mediaList] }));
+        return true;
     },
 
     deleteMedia: async (id: string) => {

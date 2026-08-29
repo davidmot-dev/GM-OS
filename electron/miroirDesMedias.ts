@@ -168,6 +168,41 @@ export async function copierUnMedia(id: string, octets: Uint8Array): Promise<Res
 }
 
 /**
+ * **Le retour — sans lui, le miroir n'est qu'un dossier plein d'octets.**
+ *
+ * *Une sauvegarde qu'on n'a jamais restaurée n'est pas une sauvegarde.* Ces deux
+ * fonctions ne font que **lire** : c'est le rendu qui décide ce qui manque et
+ * qui le remet dans la base — lui seul sait ce que sa bibliothèque contient.
+ *
+ * Rend un catalogue vide quand il n'y a rien : un miroir jamais rempli est le
+ * cas normal d'une installation neuve, pas une panne.
+ */
+export async function lireLeCatalogue(): Promise<Record<string, FicheDeMedia>> {
+    const chemin = path.join(dossierDuMiroir(), CATALOGUE);
+    if (!(await fs.pathExists(chemin))) return {};
+    try {
+        const lu = await fs.readJson(chemin);
+        return (lu && typeof lu === 'object' && lu.medias) ? lu.medias : {};
+    } catch (err) {
+        console.error('[Miroir] Catalogue illisible :', err);
+        return {};
+    }
+}
+
+/**
+ * Les octets d'un média copié, ou `null` s'il n'y en a pas.
+ *
+ * Passe par `cheminDuMedia`, donc par la même validation que l'écriture : *un
+ * chemin de LECTURE fabriqué autrement serait la porte qu'on vient de fermer,
+ * ouverte de l'autre côté.*
+ */
+export async function lireUnMedia(id: string): Promise<Uint8Array | null> {
+    const chemin = cheminDuMedia(id);
+    if (!(await fs.pathExists(chemin))) return null;
+    return fs.readFile(chemin);
+}
+
+/**
  * Le catalogue, **fusionné et jamais remplacé**.
  *
  * Puisque le miroir garde tout, une fiche déjà connue ne doit pas disparaître

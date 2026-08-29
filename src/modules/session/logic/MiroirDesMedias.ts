@@ -130,6 +130,107 @@ export async function refletterLesMedias(): Promise<BilanDuMiroir> {
     return bilan;
 }
 
+/** Ce qu'une restauration a rendu — et ce qu'elle n'a pas pu rendre. */
+export interface BilanDuRetour {
+    /** Médias remis en base sous leur identifiant d'origine. */
+    rendus: number;
+    /** Déjà présents : le vivant gagne, on ne l'écrase jamais. */
+    dejaLa: number;
+    /** Octets introuvables dans le miroir, ou refusés par la base. */
+    echecs: number;
+    /** Le brouillard a-t-il été remis ? */
+    brouillard: boolean;
+}
+
+/**
+ * **Ce que le miroir peut rendre, et que la bibliothèque n'a plus.**
+ *
+ * On ne propose pas une restauration à l'aveugle : on dit combien de médias
+ * manquent. *Un bouton qui ne dit pas ce qu'il va faire n'est pas cliqué le jour
+ * où il faudrait, et il est cliqué le jour où il ne faudrait pas.*
+ */
+export async function mediasRestituables(): Promise<string[]> {
+    const pont = typeof window === 'undefined' ? undefined : window.appBridge?.sauvegarde;
+    if (!pont?.lireLeCatalogue) return [];
+
+    const catalogue = await pont.lireLeCatalogue();
+    const presents = new Set(useMediaStore.getState().mediaList.map(m => m.id));
+    return Object.keys(catalogue).filter(id => !presents.has(id));
+}
+
+/**
+ * **Remet dans la base ce que le miroir a et qu'elle n'a plus.**
+ *
+ * Deux règles, et la seconde est celle qui fait qu'une restauration sert à
+ * quelque chose :
+ *
+ * 1. **Jamais d'écrasement.** Un média déjà présent est plus récent que la
+ *    copie ; le remplacer ferait du filet un mécanisme de perte.
+ * 2. **L'identifiant d'origine est conservé.** Une carte de l'atlas porte
+ *    `"fileUrl": "m-<uuid>"` : remettre les octets sous un identifiant neuf
+ *    donnerait un disque plein et des cartes toujours mortes — *le pire des
+ *    résultats, parce qu'il a l'air d'une réussite.*
+ */
+export async function restaurerLesMedias(): Promise<BilanDuRetour> {
+    const bilan: BilanDuRetour = { rendus: 0, dejaLa: 0, echecs: 0, brouillard: false };
+    const pont = typeof window === 'undefined' ? undefined : window.appBridge?.sauvegarde;
+    if (!pont?.lireLeCatalogue || !pont.lireUnMedia) return bilan;
+
+    const catalogue = await pont.lireLeCatalogue();
+    const { restaurerUnMedia } = useMediaStore.getState();
+
+    for (const [id, fiche] of Object.entries(catalogue)) {
+        try {
+            const octets = await pont.lireUnMedia(id);
+            if (!octets) { bilan.echecs++; continue; }
+
+            const rendu = await restaurerUnMedia(
+                {
+                    id, name: fiche.name, type: fiche.type as MediaItem['type'],
+                    size: fiche.size, createdAt: fiche.createdAt ?? Date.now(),
+                    tags: fiche.tags ?? [], campaignIds: fiche.campaignIds ?? [],
+                },
+                new Blob([octets]),
+            );
+            if (rendu) bilan.rendus++; else bilan.dejaLa++;
+        } catch (err) {
+            Logger.warn(`[Miroir] Restauration impossible pour « ${fiche.name} » :`, err);
+            bilan.echecs++;
+        }
+    }
+
+    bilan.brouillard = await restaurerLeBrouillard(pont);
+    return bilan;
+}
+
+/**
+ * Le brouillard, remis **clé par clé et seulement s'il manque**.
+ *
+ * Le remettre en bloc écraserait ce que le meneur a dévoilé depuis — et sur une
+ * base vide, il n'y a rien à écraser. *La même règle que pour les médias, pour
+ * la même raison.*
+ */
+async function restaurerLeBrouillard(
+    pont: NonNullable<NonNullable<Window['appBridge']>['sauvegarde']>,
+): Promise<boolean> {
+    try {
+        const octets = await pont.lireUnMedia!(ID_DU_BROUILLARD);
+        if (!octets) return false;
+
+        const contenu = JSON.parse(new TextDecoder().decode(octets)) as Record<string, string>;
+        let remis = 0;
+        for (const [cle, valeur] of Object.entries(contenu)) {
+            if (await fogDB.getItem(cle)) continue;
+            await fogDB.setItem(cle, valeur);
+            remis++;
+        }
+        return remis > 0;
+    } catch (err) {
+        Logger.warn('[Miroir] Brouillard non restauré :', err);
+        return false;
+    }
+}
+
 /**
  * Le brouillard de guerre, copié **à chaque passage** et non une seule fois.
  *

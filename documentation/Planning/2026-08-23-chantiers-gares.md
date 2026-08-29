@@ -566,8 +566,36 @@ partie irremplaçable et la plus rapide à écrire. Et le miroir **ne lève jama
 une image illisible se compte et le passage continue — *un filet qui refuse de
 poser la moitié qu'il peut poser ne vaut pas mieux qu'un filet absent.*
 
-⏳ **Reste : l'éprouver en réel**, et écrire la restauration — le miroir sait
-copier, rien ne sait encore reverser.
+### ✅ Le premier passage, mesuré sur le disque le 2026-08-29
+
+**116 fichiers, 260,8 Mo, zéro partiel**, catalogue présent. Par nature : 100
+images, 14 sons, 1 vidéo — plus le **brouillard de guerre, 219 Ko**. Le catalogue
+nomme chaque octet (`m-94211ee4-…` → `lieu-hotel-artemide.jpg`) : sans lui, une
+restauration rendrait des fichiers anonymes.
+
+*Les campagnes de David ne sont plus une sauvegarde de pointeurs.*
+
+### ✅ Le retour, écrit le 2026-08-29
+
+`mediasRestituables()` dit **combien** avant de proposer quoi que ce soit — *un
+bouton qui ne dit pas ce qu'il va faire n'est pas cliqué le jour où il faudrait,
+et il est cliqué le jour où il ne faudrait pas.* Le bandeau vit dans la
+bibliothèque des médias et n'apparaît que si le miroir porte ce qu'elle n'a plus.
+
+**Deux règles, et la seconde est celle qui fait qu'une restauration sert :**
+
+1. **Jamais d'écrasement.** Un média déjà présent est plus récent que la copie.
+2. **L'identifiant d'origine est conservé.** `addMedia` en fabrique un neuf, ce
+   qui est juste pour un ajout et **ruineux pour une restauration** : une carte
+   porte `"fileUrl": "m-<uuid>"`, et remettre les octets sous un autre
+   identifiant donnerait un disque plein et des cartes toujours mortes — *le pire
+   des résultats, parce qu'il a l'air d'une réussite.* D'où
+   `restaurerUnMedia`, qui écrit sous l'identifiant reçu.
+
+Le brouillard se remet **clé par clé et seulement s'il manque** : le remettre en
+bloc écraserait ce que le meneur a dévoilé depuis.
+
+⏳ **Reste : l'éprouver en réel**, comme la bibliothèque des fiches l'a été.
 
 **Ce qui est déjà acquis et ne sera pas à refaire :** les trois règles de
 construction (aucun git · jamais sous `APP_ROOT` · ne supprime que ses propres

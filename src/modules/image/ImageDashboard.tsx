@@ -11,6 +11,8 @@ import ImagePad from './components/ImagePad';
 import { MediaBrowser } from '../../components/MediaBrowser';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { gmConfirm, gmPrompt } from '../../stores/useModalStore';
+import { gmToast } from '../../stores/useToastStore';
+import { mediasRestituables, restaurerLesMedias } from '../session/logic/MiroirDesMedias';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useTranslation } from 'react-i18next';
 
@@ -30,6 +32,38 @@ const ImageDashboard: React.FC = () => {
 
     const { mediaList: storeMediaList } = useMediaStore();
     const [isBrowserOpen, setIsBrowserOpen] = React.useState(false);
+
+    /**
+     * **Ce que le miroir peut rendre — chantier n° 4.**
+     *
+     * On recompte à chaque changement de la bibliothèque : après une
+     * restauration le compte tombe à zéro et le bandeau disparaît de lui-même,
+     * plutôt que de rester à proposer un geste déjà fait.
+     */
+    const [aRestituer, setARestituer] = React.useState(0);
+    const [restauration, setRestauration] = React.useState(false);
+
+    React.useEffect(() => {
+        let annule = false;
+        void mediasRestituables()
+            .then(ids => { if (!annule) setARestituer(ids.length); })
+            .catch(() => { /* pas de miroir joignable : rien à proposer */ });
+        return () => { annule = true; };
+    }, [storeMediaList.length]);
+
+    const lancerLaRestauration = async () => {
+        setRestauration(true);
+        try {
+            const bilan = await restaurerLesMedias();
+            gmToast(
+                bilan.rendus > 0
+                    ? `${bilan.rendus} média(s) restauré(s)`
+                        + (bilan.brouillard ? ', brouillard compris' : '')
+                        + (bilan.echecs > 0 ? ` — ${bilan.echecs} échec(s)` : '')
+                    : 'Rien à restaurer : la bibliothèque a déjà tout.',
+            );
+        } finally { setRestauration(false); }
+    };
 
     const handleUploadClick = () => {
         setIsBrowserOpen(true);
@@ -174,6 +208,35 @@ const ImageDashboard: React.FC = () => {
                         <span>{t('image.sidebar.localStorage')}</span>
                         <span>{t('image.storage.itemsCount', { count: mediaList.length })}</span>
                     </div>
+
+                    {/*
+                        **Le retour du miroir — chantier n° 4.**
+
+                        Il n'apparaît que quand le miroir porte des médias que
+                        cette bibliothèque n'a plus : le profil neuf, l'ordinateur
+                        changé, la base effacée. *Un bouton qui ne dit pas ce
+                        qu'il va faire n'est pas cliqué le jour où il faudrait, et
+                        il est cliqué le jour où il ne faudrait pas* — d'où le
+                        compte, annoncé avant.
+                    */}
+                    {aRestituer > 0 && (
+                        <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl space-y-2">
+                            <p className="text-[11px] text-emerald-300/80 leading-relaxed normal-case">
+                                {aRestituer} média{aRestituer > 1 ? 's' : ''} présent
+                                {aRestituer > 1 ? 's' : ''} dans la sauvegarde et absent
+                                {aRestituer > 1 ? 's' : ''} d'ici.
+                            </p>
+                            <button
+                                type="button"
+                                disabled={restauration}
+                                onClick={lancerLaRestauration}
+                                className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
+                            >
+                                <RotateCcw size={13} />
+                                {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </aside>
 

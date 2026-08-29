@@ -54,7 +54,10 @@ import { auditDenied } from './auditLog'
 import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
 import { ServeurDesFiches, PORT_DES_FICHES } from './serveurDesFiches'
-import { mediasCopies, copierUnMedia, inscrireAuCatalogue, type FicheDeMedia } from './miroirDesMedias'
+import {
+    mediasCopies, copierUnMedia, inscrireAuCatalogue,
+    lireLeCatalogue, lireUnMedia, type FicheDeMedia,
+} from './miroirDesMedias'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const APP_ROOT = path.join(__dirname, '..')
@@ -776,6 +779,21 @@ ipcMain.handle('miroir:copier-media', async (_event, id: string, octets: ArrayBu
         const raison = err instanceof Error ? err.message : String(err);
         console.error(`[Miroir] Copie refusée pour « ${id} » :`, raison);
         return { statut: 'echec' as const, raison };
+    }
+});
+
+/* Le retour. Ces deux-là ne font que LIRE : c'est le rendu qui décide ce qui
+   manque et qui le remet en base — lui seul sait ce que sa bibliothèque porte. */
+ipcMain.handle('miroir:lire-catalogue', async () => lireLeCatalogue());
+
+ipcMain.handle('miroir:lire-media', async (_event, id: string) => {
+    try {
+        const octets = await lireUnMedia(id);
+        // Le tampon voyage tel quel : le rendu en refait un Blob.
+        return octets ? octets.buffer.slice(octets.byteOffset, octets.byteOffset + octets.byteLength) : null;
+    } catch (err) {
+        console.error(`[Miroir] Lecture refusée pour « ${id} » :`, err);
+        return null;
     }
 });
 

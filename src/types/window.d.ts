@@ -140,6 +140,12 @@ declare global {
                 | { statut: 'ecrit'; medias: number }
                 | { statut: 'echec'; raison: string }
             >;
+            /** Le retour : sans lui, le miroir n'est qu'un dossier plein d'octets. */
+            lireLeCatalogue?: () => Promise<Record<string, {
+                id: string; name: string; type: string; size: number;
+                createdAt?: number; tags?: string[]; campaignIds?: string[]; copieLe: string;
+            }>>;
+            lireUnMedia?: (id: string) => Promise<ArrayBuffer | null>;
         };
         openFile?: (path: string) => void;
         openExternal?: (url: string) => void;

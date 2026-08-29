@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { refletterLesMedias, ID_DU_BROUILLARD } from './MiroirDesMedias';
+import {
+    refletterLesMedias, restaurerLesMedias, mediasRestituables, ID_DU_BROUILLARD,
+} from './MiroirDesMedias';
 import { useMediaStore, type MediaItem } from '../../../stores/useMediaStore';
 import { fogDB } from '../../../utils/indexedDB';
 
@@ -124,6 +126,115 @@ describe('refletterLesMedias', () => {
     it('se sait hors service sans pont', async () => {
         delete (window as { appBridge?: unknown }).appBridge;
         expect(await refletterLesMedias()).toMatchObject({ horsService: true, copiees: 0 });
+    });
+});
+
+describe('le retour — sans lui le miroir n’est qu’un dossier plein d’octets', () => {
+    const catalogue = {
+        'm-1': { id: 'm-1', name: 'Hadley Hope', type: 'image', size: 8, copieLe: 'x', tags: ['carte'], campaignIds: ['c-7'] },
+        'm-2': { id: 'm-2', name: 'Le bar', type: 'image', size: 8, copieLe: 'x' },
+    };
+
+    function poserLeRetour(octetsConnus: Record<string, ArrayBuffer | null> = {}) {
+        const pont = {
+            lireLeCatalogue: vi.fn(async () => catalogue),
+            lireUnMedia: vi.fn(async (id: string) =>
+                id in octetsConnus ? octetsConnus[id] : new Uint8Array(8).buffer),
+        };
+        (window as unknown as { appBridge: unknown }).appBridge = { sauvegarde: pont };
+        return pont;
+    }
+
+    it('dit ce qu’il peut rendre, avant de le rendre', async () => {
+        poserLeRetour();
+        poserLaBibliotheque([media('m-1', 'Hadley Hope')]);
+        expect(await mediasRestituables()).toEqual(['m-2']);
+    });
+
+    /**
+     * **L'identifiant d'origine est conservé, et c'est tout l'enjeu.** Une carte
+     * de l'atlas porte `"fileUrl": "m-<uuid>"` : remettre les octets sous un
+     * identifiant neuf donnerait un disque plein et des cartes toujours mortes —
+     * *le pire des résultats, parce qu'il a l'air d'une réussite.*
+     */
+    it('remet les médias sous leur identifiant d’origine', async () => {
+        poserLeRetour();
+        const rendus: string[] = [];
+        poserLaBibliotheque([]);
+        useMediaStore.setState({
+            restaurerUnMedia: async (meta: MediaItem) => { rendus.push(meta.id); return true; },
+        } as never);
+
+        const bilan = await restaurerLesMedias();
+        expect(rendus.sort()).toEqual(['m-1', 'm-2']);
+        expect(bilan.rendus).toBe(2);
+    });
+
+    /** Le vivant est plus récent que la copie : l'écraser ferait du filet une perte. */
+    it('n’écrase jamais un média déjà présent', async () => {
+        poserLeRetour();
+        poserLaBibliotheque([]);
+        useMediaStore.setState({
+            restaurerUnMedia: async (meta: MediaItem) => meta.id !== 'm-1',
+        } as never);
+
+        const bilan = await restaurerLesMedias();
+        expect(bilan.rendus).toBe(1);
+        expect(bilan.dejaLa, 'm-1 était là et n’a pas bougé').toBe(1);
+    });
+
+    it('rend les étiquettes et les campagnes avec les octets', async () => {
+        poserLeRetour();
+        const vus: MediaItem[] = [];
+        poserLaBibliotheque([]);
+        useMediaStore.setState({
+            restaurerUnMedia: async (meta: MediaItem) => { vus.push(meta); return true; },
+        } as never);
+
+        await restaurerLesMedias();
+        const carte = vus.find(m => m.id === 'm-1')!;
+        expect(carte.tags).toEqual(['carte']);
+        expect(carte.campaignIds).toEqual(['c-7']);
+    });
+
+    /** Une fiche au catalogue sans octets : on le compte, et on continue. */
+    it('continue quand des octets manquent', async () => {
+        poserLeRetour({ 'm-1': null });
+        poserLaBibliotheque([]);
+        useMediaStore.setState({ restaurerUnMedia: async () => true } as never);
+
+        const bilan = await restaurerLesMedias();
+        expect(bilan.echecs).toBe(1);
+        expect(bilan.rendus, 'm-2 est passé quand même').toBe(1);
+    });
+
+    it('ne fait rien sans miroir joignable', async () => {
+        delete (window as { appBridge?: unknown }).appBridge;
+        expect(await restaurerLesMedias()).toMatchObject({ rendus: 0, echecs: 0 });
+        expect(await mediasRestituables()).toEqual([]);
+    });
+
+    /**
+     * Le brouillard se remet **clé par clé et seulement s'il manque** : le
+     * remettre en bloc écraserait ce que le meneur a dévoilé depuis.
+     */
+    it('ne recouvre pas le brouillard déjà dévoilé', async () => {
+        const pont = poserLeRetour();
+        pont.lireUnMedia.mockImplementation(async (id: string) =>
+            id === ID_DU_BROUILLARD
+                ? new TextEncoder().encode(JSON.stringify({ 'carte-1': 'ancien', 'carte-2': 'neuf' })).buffer
+                : new Uint8Array(8).buffer);
+
+        vi.spyOn(fogDB, 'getItem').mockImplementation(async (cle: string) => (cle === 'carte-1' ? 'déjà là' : null));
+        const poser = vi.spyOn(fogDB, 'setItem').mockResolvedValue(undefined);
+
+        poserLaBibliotheque([]);
+        useMediaStore.setState({ restaurerUnMedia: async () => true } as never);
+
+        const bilan = await restaurerLesMedias();
+        expect(bilan.brouillard).toBe(true);
+        expect(poser).toHaveBeenCalledTimes(1);
+        expect(poser.mock.calls[0][0], 'seule la carte absente est remise').toBe('carte-2');
     });
 });
 

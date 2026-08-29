@@ -282,6 +282,11 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.invoke('miroir:copier-media', id, octets),
         inscrireAuCatalogue: (fiches: unknown[]) =>
             ipcRenderer.invoke('miroir:catalogue', fiches),
+
+        /* Le retour. Sans lui, le miroir n'est qu'un dossier plein d'octets. */
+        lireLeCatalogue: () => ipcRenderer.invoke('miroir:lire-catalogue'),
+        lireUnMedia: (id: string): Promise<ArrayBuffer | null> =>
+            ipcRenderer.invoke('miroir:lire-media', id),
     },
     nexus: {
         selectExportPath: (bundleType?: 'campaign' | 'driver') => ipcRenderer.invoke('nexus:select-export-path', bundleType),
