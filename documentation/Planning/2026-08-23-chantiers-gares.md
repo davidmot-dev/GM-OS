@@ -4,9 +4,12 @@
 aux `etat-et-reprise`, celui-ci **se met à jour** — on y coche, on y ajoute, on
 en retire ce qui est fait. C'est le seul endroit où vit la liste des idées garées.
 
-**Ouvert le 2026-08-23** avec trois chantiers. **Au 2026-08-28 ils sont cinq**, et
-**les n° 2, 4 et 5 n'ont rien de codé** — le n° 2 et le n° 4 attendent une décision
-de David, le n° 5 attend seulement son tour.
+**Ouvert le 2026-08-23** avec trois chantiers. **Au 2026-08-29 ils sont cinq, et
+quatre sont clos** — thème, fiche HTML, sauvegarde des images, sauvegarde des
+fiches, les trois derniers **éprouvés en réel, aller et retour**.
+
+**Il ne reste que le n° 2, Deck-OS**, bloqué par ses deux décisions. Et l'essai
+en conditions de l'afficheur Ulanzi, qui attend la séance de Blade Runner.
 
 > **Revérifié dans le code le 2026-08-24**, chantier par chantier, sans rien recopier d'un document.
 > Base saine : `tsc -b` propre, **2 321 tests au vert** (190 fichiers, 1 ignoré). Les trois états
@@ -25,7 +28,7 @@ de David, le n° 5 attend seulement son tour.
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
-| 4 | **Sauvegarde des images** | ✅ **MIROIR CONSTRUIT le 29/08** | **L'éprouver**, puis écrire la restauration | Rien |
+| 4 | **Sauvegarde des images** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
@@ -595,7 +598,17 @@ bibliothèque des médias et n'apparaît que si le miroir porte ce qu'elle n'a p
 Le brouillard se remet **clé par clé et seulement s'il manque** : le remettre en
 bloc écraserait ce que le meneur a dévoilé depuis.
 
-⏳ **Reste : l'éprouver en réel**, comme la bibliothèque des fiches l'a été.
+✅ **ÉPROUVÉ EN RÉEL par David le 2026-08-29.** Image supprimée, application
+relancée, bandeau apparu, image revenue **et réaffichée là où elle servait** —
+c'est cette dernière ligne qui prouve que l'identifiant d'origine a été conservé,
+et c'était le seul vrai risque.
+
+⚠️ **Le bandeau avait d'abord été posé dans `ImageDashboard`** — Image-OS —
+alors que David gère ses médias dans le **Media Hub** (`MediaBrowser`). Il a
+supprimé une image et n'a rien vu. *Un filet rangé là où personne ne regarde
+n'est pas un filet.* Il vit désormais dans les deux, et dans le Media Hub il est
+**juste au-dessus de « Purger le hub global »** : au-dessus du geste après lequel
+on en aura précisément besoin.
 
 **Ce qui est déjà acquis et ne sera pas à refaire :** les trois règles de
 construction (aucun git · jamais sous `APP_ROOT` · ne supprime que ses propres
