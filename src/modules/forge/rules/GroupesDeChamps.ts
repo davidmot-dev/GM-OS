@@ -322,12 +322,26 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             // pourcentage rempli en « seuil » rend une cible cinq fois trop
             // basse, et rien ne le dit. C'est donc la première question, et
             // elle tient en trois lignes — le reste ne s'applique qu'ensuite.
-            '**(0) LA CIBLE SE COMPOSE-T-ELLE PAR ADDITION, OU SE LIT-ELLE SUR UNE TABLE ?** ' +
-            'Si les valeurs de la fiche S\'AJOUTENT pour former le nombre à comparer, remplis ' +
-            '"jet.seuil" et n\'écris PAS "jet.cible". Si le jeu croise une caractéristique et un ' +
-            'ajustement SUR UNE TABLE — la compétence et la difficulté déplacent une colonne au ' +
-            'lieu de s\'ajouter, et le pourcentage obtenu est bien plus grand que leur somme —, ' +
-            'alors remplis "jet.cible" et LAISSE "jet.seuil" VIDE. "jet.cible" porte "mecanique", ' +
+            // **LA FOURCHE A TROIS VOIES depuis le 2026-08-29, et elle n'en avait
+            // que deux.** David a redérivé son pilote Blade Runner APRÈS que le
+            // moteur ait appris les dés échelonnés, et il est ressorti avec un
+            // `jet.seuil` : l'invite ne proposait que « additionner » ou
+            // « croiser sur une table », donc le modèle a additionné des valeurs
+            // qui sont des LETTRES. *Une voie qu'on n'offre pas est une voie que
+            // le modèle ne prend pas* — et le défaut ressemble alors à un
+            // manquement du modèle, alors qu'on ne lui avait rien demandé.
+            '**(0) COMMENT LE JET SE RÉSOUT-IL ? TROIS VOIES, UNE SEULE À REMPLIR.** ' +
+            '(a) Les valeurs de la fiche S\'AJOUTENT pour former le nombre à comparer → remplis ' +
+            '"jet.seuil". ' +
+            '(b) Le jeu CROISE une caractéristique et un ajustement SUR UNE TABLE — ils déplacent ' +
+            'une colonne au lieu de s\'ajouter, et le pourcentage obtenu est bien plus grand que ' +
+            'leur somme → remplis "jet.cible". ' +
+            '(c) La valeur d\'un attribut ou d\'une compétence est une LETTRE ou un RANG qui ' +
+            'DÉSIGNE UNE TAILLE DE DÉ — « A » vaut un dé à douze faces, « B » un dé à dix —, et ' +
+            'l\'on lance UN DÉ PAR VALEUR au lieu d\'additionner quoi que ce soit → remplis ' +
+            '"jet.desEchelonnes". ' +
+            '**REMPLIS UNE SEULE DES TROIS ET LAISSE LES DEUX AUTRES VIDES.** ' +
+            '"jet.cible" porte "mecanique", ' +
             // **LE COMPTE, ICI ET PAS PLUS LOIN.** La premiere redaction
             // decrivait le CONTENU de l'ajustement — « les composantes lues sur
             // la fiche » — et laissait son COMPTE a l'exigence (1), donc trop
@@ -366,6 +380,24 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'déduit pas d\'un nom. NE METS JAMAIS DE NOMBRES DE CETTE TABLE dans le pilote — ' +
             'ni multiplicateurs, ni seuils de réussite particulière : ils sont déjà dans le code, ' +
             'saisis depuis le livre et protégés par des tests. ' +
+            // La voie (c), détaillée ici et pas en tête : la fourche se lit
+            // d'abord, le remplissage ensuite. Même découpe que pour la cible.
+            '"jet.desEchelonnes" porte "echelle" et "composantes". "echelle" vaut EXACTEMENT ' +
+            'l\'un de : yze-lettres. SI AUCUN NE CORRESPOND AU JEU QUE TU LIS, N\'EN INVENTE ' +
+            'AUCUN et n\'écris pas "jet.desEchelonnes". ' +
+            'NE METS JAMAIS LA TABLE DES LETTRES dans le pilote — ni « A vaut douze », ni aucune ' +
+            'taille de dé : elle est déjà dans le code, transcrite du livre et protégée par des ' +
+            'tests. "composantes" a la MÊME FORME que "jet.seuil" et suit LA MÊME RÈGLE DE ' +
+            'COMPTE — UNE ENTRÉE PAR SECTION DE FICHE LUE, jamais une par champ —, mais chaque ' +
+            'entrée donne UN DÉ au lieu d\'un terme d\'addition. Chez un jeu où l\'on lance un dé ' +
+            'd\'attribut et un dé de compétence : DEUX entrées, DEUX SECTIONS. ' +
+            'Forme attendue, avec des identifiants venus de TA liste : ' +
+            '"desEchelonnes":{"echelle":"yze-lettres","composantes":[{"id":"attribut",' +
+            '"label":"Attribut","sectionId":"…"},{"id":"competence","label":"Compétence",' +
+            '"sectionId":"…"}]}. ' +
+            'CES JEUX N\'ONT AUCUN SEUIL : ils comptent les dés qui atteignent une valeur, et ce ' +
+            'compte est dans le code. N\'écris donc NI "jet.seuil" NI "jet.cible" avec eux, et ' +
+            'ne remplis pas "jet.reserve" — la poignée vient des composantes, pas d\'un nombre. ' +
             '**(1) "jet.seuil" ET "jet.cible.ajustement" : UNE ENTRÉE PAR SECTION DE FICHE LUE, ' +
             'JAMAIS UNE PAR CHAMP.** Le ' +
             'nombre d\'entrées est le nombre de SECTIONS différentes où le joueur va lire une ' +

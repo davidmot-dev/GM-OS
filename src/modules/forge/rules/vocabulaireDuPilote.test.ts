@@ -189,12 +189,50 @@ describe('la cible du groupe « jet »', () => {
      * ce qui décide du CONTENU* — ici, avant même de dire comment remplir le
      * seuil, il faut savoir s'il y en a un.
      */
-    it('demande de choisir entre addition et table AVANT de remplir le seuil', () => {
-        const rangFourche = jet.cible.indexOf('LA CIBLE SE COMPOSE-T-ELLE PAR ADDITION');
+    it('demande COMMENT le jet se résout AVANT de remplir le seuil', () => {
+        const rangFourche = jet.cible.indexOf('COMMENT LE JET SE RÉSOUT-IL ?');
         const rangSeuil = jet.cible.indexOf('"jet.seuil"');
 
         expect(rangFourche).toBeGreaterThan(-1);
         expect(rangFourche, 'la fourche ouvre la cible').toBeLessThan(rangSeuil);
+    });
+
+    /**
+     * **La fourche a TROIS voies, et elle n'en avait que deux.**
+     *
+     * *Le défaut du 2026-08-29 :* David a redérivé son pilote Blade Runner
+     * **après** que le moteur ait appris les dés échelonnés, et il est ressorti
+     * avec un `jet.seuil` — donc une addition de valeurs qui sont des lettres.
+     * L'invite ne proposait que « additionner » ou « croiser sur une table ».
+     *
+     * *Une voie qu'on n'offre pas est une voie que le modèle ne prend pas* — et
+     * le défaut ressemble alors à un manquement du modèle, alors qu'on ne lui
+     * avait rien demandé. C'est la troisième fois que ce fichier paie l'écart
+     * entre ce que le code sait faire et ce que l'invite sait demander.
+     */
+    it('offre les trois voies, et exige qu’une seule soit remplie', () => {
+        const rangFourche = jet.cible.indexOf('COMMENT LE JET SE RÉSOUT-IL ?');
+        const rangDetail = jet.cible.indexOf('"jet.desEchelonnes" porte');
+
+        for (const voie of ['"jet.seuil"', '"jet.cible"', '"jet.desEchelonnes"']) {
+            expect(jet.cible.indexOf(voie), voie).toBeGreaterThan(-1);
+        }
+        expect(jet.cible).toContain('UNE SEULE DES TROIS');
+
+        // La fourche se lit d'abord, le remplissage ensuite — la règle du 21/08.
+        expect(rangDetail, 'le détail des dés échelonnés vient APRÈS la fourche')
+            .toBeGreaterThan(rangFourche);
+    });
+
+    /**
+     * Même règle que pour `cible` : le pilote **nomme** l'échelle, il ne la
+     * transcrit pas. Un pilote est forgé par un modèle de langage, et une table
+     * qu'il recopie est une table qu'il peut recopier de travers.
+     */
+    it('interdit de recopier la table des lettres dans le pilote', () => {
+        expect(jet.cible).toContain('yze-lettres');
+        expect(jet.cible).toContain('NE METS JAMAIS LA TABLE DES LETTRES');
+        expect(jet.cible, 'aucune taille de dé ne doit être dictée').not.toMatch(/A\s*(vaut|=)\s*12/);
     });
 
     /**
