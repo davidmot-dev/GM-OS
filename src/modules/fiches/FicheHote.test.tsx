@@ -3,6 +3,7 @@ import { render, screen, waitFor, cleanup, fireEvent } from '@testing-library/re
 import FicheHote from './FicheHote';
 import type { PontDeLaFiche, ChangementDeFiche, InstantaneDeFiche } from './pontDeLaFiche';
 import type { CorrespondanceDeFiche } from './correspondanceDeFiche';
+import { useBibliothequeDesFiches } from './useBibliothequeDesFiches';
 
 /**
  * **L'hôte — le sens dans lequel coulent les données.**
@@ -46,7 +47,12 @@ function faireUnPont() {
             appels.push('create:' + JSON.stringify({ name, templateId, data }));
             return fiche('f-neuve', data ?? {});
         }),
-        sauvegarde: vi.fn(async () => ({})),
+        sauvegarde: vi.fn(async () => ({ format: 'character-sheet-manager-backup', version: 1, templates: [], characters: [{ id: 'f-1', name: 'Rick Deckard' }] })),
+        restaurer: vi.fn(async (contenu: unknown) => {
+            appels.push('restore');
+            const c = (contenu as { characters?: unknown[] })?.characters ?? [];
+            return { templates: 0, characters: c.length };
+        }),
         surChangement: fn => { diffuser = fn; return () => { diffuser = () => {}; }; },
         fermer: vi.fn(),
     };
@@ -203,6 +209,98 @@ describe('FicheHote', () => {
         charger();
 
         expect(await screen.findByText(/n'a pas pu s'ouvrir/)).toBeTruthy();
+    });
+
+    /**
+     * **La copie de sauvegarde — chantier n° 5.**
+     *
+     * La bibliothèque du moteur vit dans l'IndexedDB de l'iframe, que la
+     * sauvegarde automatique ne voit pas. Une fiche ouverte sur l'écran du meneur
+     * est le seul moment où GM-OS peut la demander.
+     */
+    describe('la copie de la bibliothèque', () => {
+        beforeEach(() => useBibliothequeDesFiches.getState().oublier());
+
+        it('l’emporte quand une fiche s’ouvre sur l’écran du meneur', async () => {
+            const { pont } = faireUnPont();
+            render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1' }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+            charger();
+
+            await waitFor(() => expect(pont.sauvegarde).toHaveBeenCalled(), { timeout: 4000 });
+            await waitFor(() => expect(useBibliothequeDesFiches.getState().instantane).not.toBeNull());
+            expect(useBibliothequeDesFiches.getState().instantane?.personnages).toBe(1);
+        });
+
+        /**
+         * Sur une tablette, la bibliothèque locale n'est qu'une surface
+         * d'affichage semée depuis GM-OS : la sauvegarder archiverait un reflet,
+         * et l'écrirait par-dessus l'original.
+         */
+        it('ne l’emporte JAMAIS depuis une tablette', async () => {
+            const { pont } = faireUnPont();
+            render(<FicheHote personnage={PERSONNAGE} table={TABLE} liaison="locale" onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+            charger();
+
+            await waitFor(() => expect(pont.creer).toHaveBeenCalled());
+            await new Promise(r => setTimeout(r, 2500));
+            expect(pont.sauvegarde).not.toHaveBeenCalled();
+            expect(useBibliothequeDesFiches.getState().instantane).toBeNull();
+        });
+
+        /**
+         * **Le retour du filet.** Une bibliothèque vide alors que GM-OS en garde
+         * une copie, c'est le profil neuf ou l'appareil changé — le cas exact
+         * que le chantier n° 5 existe pour rattraper. *Une sauvegarde qu'on ne
+         * peut pas restaurer n'est pas une sauvegarde.*
+         */
+        it('propose de restaurer quand la bibliothèque est vide', async () => {
+            useBibliothequeDesFiches.getState().retenirLInstantane({
+                format: 'character-sheet-manager-backup', version: 1, templates: [],
+                characters: [{ id: 'f-1', name: 'Rick' }, { id: 'f-2', name: 'Roy' }],
+            });
+
+            const { pont, appels } = faireUnPont();
+            (pont.bibliotheque as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ characters: [], templates: [] });
+            render(<FicheHote personnage={PERSONNAGE} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+            charger();
+
+            fireEvent.click(await screen.findByRole('button', { name: /Restaurer la bibliothèque/ }));
+            await waitFor(() => expect(appels).toContain('restore'));
+            expect((pont.restaurer as ReturnType<typeof vi.fn>).mock.calls[0][0])
+                .toMatchObject({ format: 'character-sheet-manager-backup' });
+        });
+
+        /**
+         * *Proposer la restauration sur une bibliothèque garnie inviterait à
+         * écraser des fiches vivantes par une copie plus ancienne.*
+         */
+        it('ne la propose pas quand la bibliothèque porte déjà des fiches', async () => {
+            useBibliothequeDesFiches.getState().retenirLInstantane({
+                format: 'character-sheet-manager-backup', version: 1, templates: [],
+                characters: [{ id: 'f-1', name: 'Rick' }],
+            });
+
+            const { pont } = faireUnPont();
+            render(<FicheHote personnage={PERSONNAGE} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+            charger();
+
+            expect(await screen.findByText(/Rick Deckard/)).toBeTruthy();
+            expect(screen.queryByRole('button', { name: /Restaurer la bibliothèque/ })).toBeNull();
+        });
+
+        /** Une copie ratée n'empêche personne de jouer : la précédente reste. */
+        it('ne casse rien quand le moteur refuse', async () => {
+            const { pont } = faireUnPont();
+            (pont.sauvegarde as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('base fermée'));
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1' }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+            charger();
+
+            await waitFor(() => expect(warn).toHaveBeenCalled(), { timeout: 4000 });
+            expect(useBibliothequeDesFiches.getState().instantane).toBeNull();
+            warn.mockRestore();
+        });
     });
 
     it('ferme le pont en partant', async () => {

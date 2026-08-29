@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Link2, Plus, RefreshCw, AlertTriangle } from 'lucide-react';
+import { FileText, Link2, Plus, RefreshCw, AlertTriangle, RotateCcw } from 'lucide-react';
 import {
     ouvrirLePont, adresseDuMoteur,
     type PontDeLaFiche, type ApercuDeFiche, type InstantaneDeFiche,
@@ -7,6 +7,7 @@ import {
 import { versLaFiche, type CorrespondanceDeFiche, type CotesGmOs } from './correspondanceDeFiche';
 import { rapprocher, type Rapprochement } from './rapprochementDeLaFiche';
 import { journaliserLesDivergences } from './journalDesDivergences';
+import { useBibliothequeDesFiches } from './useBibliothequeDesFiches';
 
 /**
  * **L'hôte : la fiche HTML affichée dans GM-OS, et branchée.**
@@ -121,6 +122,36 @@ const FicheHote: React.FC<FicheHoteProps> = ({
     const dernier = React.useRef({ personnage, table, onFicheLiee, onRapprochement });
     dernier.current = { personnage, table, onFicheLiee, onRapprochement };
 
+    /**
+     * **Emporter une copie de la bibliothèque — chantier n° 5.**
+     *
+     * Elle vit dans l'IndexedDB de l'iframe, que la sauvegarde automatique ne
+     * voit pas : *le magasin qui détient la vérité d'une fiche serait le seul non
+     * protégé.* Ce moment-ci — une fiche ouverte sur l'écran du meneur — est le
+     * seul où GM-OS peut la demander.
+     *
+     * **Seulement en liaison `bibliotheque`.** Sur une tablette, la bibliothèque
+     * locale n'est qu'une surface d'affichage semée depuis GM-OS : la sauvegarder
+     * archiverait un reflet, et l'écrirait par-dessus l'original.
+     *
+     * Groupée sur deux secondes, parce que la saisie arrive frappe par frappe et
+     * que chaque copie traverse le pont avec toute la bibliothèque.
+     */
+    const copieEnAttente = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const emporterUneCopie = React.useCallback(() => {
+        if (liaison !== 'bibliotheque') return;
+        if (copieEnAttente.current) clearTimeout(copieEnAttente.current);
+
+        copieEnAttente.current = setTimeout(() => {
+            copieEnAttente.current = null;
+            pont.current?.sauvegarde()
+                .then(contenu => useBibliothequeDesFiches.getState().retenirLInstantane(contenu))
+                // Une copie ratée n'empêche personne de jouer : elle se dit et
+                // la précédente reste en place.
+                .catch(err => console.warn('[Fiche] copie de la bibliothèque impossible :', err));
+        }, 2_000);
+    }, [liaison]);
+
     /** La fiche vient de parler : elle fait foi, et on dit ce qu'elle écrase. */
     const accueillir = React.useCallback((fiche: InstantaneDeFiche | null) => {
         if (!fiche) return;
@@ -140,6 +171,17 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             || !!releve.inventoryItems;
         if (quelqueChoseADire) rendre(releve);
     }, []);
+
+    /*
+      La copie suit **la fiche**, pas GM-OS : `accueillir` est appelé à chaque
+      ouverture et à chaque saisie du joueur, c'est-à-dire exactement quand la
+      bibliothèque du moteur a changé. La brancher sur le store de GM-OS aurait
+      copié à contretemps — après coup, ou pour rien.
+    */
+    const accueillirEtCopier = React.useCallback((fiche: InstantaneDeFiche | null) => {
+        accueillir(fiche);
+        if (fiche) emporterUneCopie();
+    }, [accueillir, emporterUneCopie]);
 
     /** Fabrique une fiche semée avec ce que GM-OS sait déjà — la seule poussée. */
     const semer = React.useCallback(async (p: PontDeLaFiche): Promise<InstantaneDeFiche> => {
@@ -161,7 +203,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         if (liaison === 'locale') {
             const connue = ficheLocaleConnue(pj.id);
             if (connue) {
-                try { accueillir(await p.ouvrirPersonnage(connue)); return; } catch { /* effacée : on resème */ }
+                try { accueillirEtCopier(await p.ouvrirPersonnage(connue)); return; } catch { /* effacée : on resème */ }
             }
             const neuve = await semer(p);
             retenirLaFicheLocale(pj.id, neuve.id);
@@ -171,7 +213,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
 
         if (pj.ficheId) {
             try {
-                accueillir(await p.ouvrirPersonnage(pj.ficheId));
+                accueillirEtCopier(await p.ouvrirPersonnage(pj.ficheId));
                 return;
             } catch {
                 /*
@@ -197,7 +239,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             // ferait une boucle. `sheet` est la saisie du joueur, `open` un
             // changement de PJ — les deux nous concernent.
             if (ev.origin === 'host') return;
-            accueillir(ev.character);
+            accueillirEtCopier(ev.character);
         });
 
         p.bonjour()
@@ -205,15 +247,38 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             .catch(err => setEtat({ nom: 'erreur', motif: String(err?.message ?? err) }));
     }, [fabriquerLePont, accueillir, brancher]);
 
-    React.useEffect(() => () => { pont.current?.fermer(); pont.current = null; }, []);
+    React.useEffect(() => () => {
+        // La copie groupée part avec le pont : la laisser vivre appellerait un
+        // `sauvegarde()` sur une iframe démontée, qui échouerait pour rien.
+        if (copieEnAttente.current) clearTimeout(copieEnAttente.current);
+        pont.current?.fermer();
+        pont.current = null;
+    }, []);
 
     const lier = async (ficheId: string) => {
         const p = pont.current;
         if (!p) return;
         setOccupe(true);
         try {
-            accueillir(await p.ouvrirPersonnage(ficheId));
+            accueillirEtCopier(await p.ouvrirPersonnage(ficheId));
             dernier.current.onFicheLiee(ficheId);
+        } catch (err) {
+            setEtat({ nom: 'erreur', motif: String((err as Error)?.message ?? err) });
+        } finally { setOccupe(false); }
+    };
+
+    /** La copie que GM-OS garde, s'il en a une — le filet du chantier n° 5. */
+    const enReserve = useBibliothequeDesFiches(s => s.instantane);
+
+    const restaurer = async () => {
+        const p = pont.current;
+        if (!p || !enReserve) return;
+        setOccupe(true);
+        try {
+            await p.restaurer(enReserve.contenu);
+            // On rouvre la bibliothèque plutôt que de la deviner : c'est le
+            // moteur qui dit ce qu'il porte après avoir écrit.
+            setEtat({ nom: 'a-lier', bibliotheque: (await p.bibliotheque()).characters });
         } catch (err) {
             setEtat({ nom: 'erreur', motif: String((err as Error)?.message ?? err) });
         } finally { setOccupe(false); }
@@ -226,6 +291,9 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         try {
             const fiche = await semer(p);
             setEtat({ nom: 'branchee', fiche });
+            // Une fiche neuve est un changement de bibliothèque : c'est le
+            // moment où la copie a le plus de raisons d'être reprise.
+            emporterUneCopie();
             dernier.current.onFicheLiee(fiche.id);
         } catch (err) {
             setEtat({ nom: 'erreur', motif: String((err as Error)?.message ?? err) });
@@ -300,6 +368,37 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                         <p className="text-xs text-app-text/40 italic">La bibliothèque du moteur est vide.</p>
                                     )}
                                 </div>
+
+                                {/*
+                                    **La restauration, offerte là où elle a du sens et nulle part
+                                    ailleurs.**
+
+                                    Une bibliothèque vide alors que GM-OS en garde une copie, c'est
+                                    exactement le profil neuf ou l'appareil changé — le cas que le
+                                    chantier n° 5 existe pour rattraper. La proposer sur une
+                                    bibliothèque garnie inviterait à écraser des fiches vivantes par
+                                    une copie plus ancienne.
+
+                                    *Une sauvegarde qu'on ne peut pas restaurer n'est pas une
+                                    sauvegarde* — et celle-ci ne se restaure que d'ici.
+                                */}
+                                {liaison === 'bibliotheque' && etat.bibliotheque.length === 0 && enReserve && (
+                                    <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-2">
+                                        <p className="text-xs text-emerald-300/80 leading-relaxed">
+                                            GM-OS garde une copie de {enReserve.personnages} fiche
+                                            {enReserve.personnages > 1 ? 's' : ''}, prise le{' '}
+                                            {new Date(enReserve.priseLe).toLocaleString()}.
+                                        </p>
+                                        <button
+                                            type="button"
+                                            disabled={occupe}
+                                            onClick={restaurer}
+                                            className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
+                                        >
+                                            <RotateCcw size={13} /> Restaurer la bibliothèque
+                                        </button>
+                                    </div>
+                                )}
 
                                 <button
                                     type="button"

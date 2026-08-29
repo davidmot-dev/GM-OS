@@ -334,8 +334,22 @@ function contenuDeSauvegarde(){
   templates:templates.filter(t=>!t._builtin),characters};
 }
 async function backup(){download("character-sheet-manager-backup.json",contenuDeSauvegarde());}
+/* Le CONTENU d'une restauration, separe du fichier -- symetrique de
+   `contenuDeSauvegarde`. Le bouton lit un fichier, l'hote passe l'objet qu'il
+   avait garde ; les deux aboutissent au meme ecrit, une seule fois.
+   Elle AJOUTE et REMPLACE par identifiant, elle ne vide jamais : ce qui n'est
+   pas dans la sauvegarde reste en place. Une restauration qui effacerait
+   d'abord ferait perdre ce qu'on avait creee depuis. */
+async function restaurerContenu(obj){
+ await prete();
+ if(!obj||obj.format!=="character-sheet-manager-backup")throw new Error("Sauvegarde non reconnue");
+ for(const t of (obj.templates||[])){t._builtin=false;await put("templates",t);}
+ for(const c of (obj.characters||[]))await put("characters",c);
+ await refreshLibrary();say("Bibliothèque restaurée");
+ return {templates:(obj.templates||[]).length,characters:(obj.characters||[]).length};
+}
 async function restore(file){
- try{const obj=JSON.parse(await file.text());if(obj.format!=="character-sheet-manager-backup")throw new Error("Sauvegarde non reconnue");for(const t of (obj.templates||[])){t._builtin=false;await put("templates",t);}for(const c of (obj.characters||[]))await put("characters",c);await refreshLibrary();say("Bibliothèque restaurée");}
+ try{await restaurerContenu(JSON.parse(await file.text()));}
  catch(e){alert("Restauration impossible : "+e.message);}
 }
 $("#templatesList").onclick=e=>{const n=e.target.closest("[data-new]");if(n)return showCreate(n.dataset.new);const r=e.target.closest("[data-remove-template]");if(r){const id=r.dataset.removeTemplate;const used=characters.some(c=>c.templateId===id);if(used)return alert("Ce modèle est utilisé par au moins un personnage. Supprimez ou exportez ces personnages d’abord.");if(confirm("Retirer ce modèle de la bibliothèque ?"))del("templates",id).then(refreshLibrary);return;}const it=e.target.closest("[data-template]");if(it)showCreate(it.dataset.template);};
@@ -507,6 +521,10 @@ window.addEventListener("message",e=>{
   else if(m.type==="openCharacter")repondre(()=>openCharacter(m.characterId));
   else if(m.type==="create")repondre(()=>creerPourLHote(m.name,m.templateId,m.data));
   else if(m.type==="backup")repondre(()=>sauvegardePourLHote());
+  /* Le retour de `backup`. Sans lui, la sauvegarde de la bibliotheque n aurait
+     aucun chemin de restauration depuis GM-OS -- et une sauvegarde qu on ne
+     peut pas restaurer n est pas une sauvegarde. */
+  else if(m.type==="restore")repondre(()=>restaurerContenu(m.data));
   else reply(false,"Type inconnu : "+m.type);
  }catch(err){reply(false,String(err&&err.message||err));}
 });
@@ -523,7 +541,8 @@ window.RPGSheet={
  list:()=>bibliotheque(),
  openCharacter:id=>openCharacter(id),
  create:(name,templateId,data)=>creerPourLHote(name,templateId,data),
- backup:()=>sauvegardePourLHote()
+ backup:()=>sauvegardePourLHote(),
+ restore:contenu=>restaurerContenu(contenu)
 };
 
 /* On garde la promesse : `prete()` s'y accroche. Le `.catch` sert l'usage

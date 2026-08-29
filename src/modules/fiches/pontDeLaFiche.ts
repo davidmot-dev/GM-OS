@@ -91,6 +91,14 @@ export interface PontDeLaFiche {
     creer(name: string, templateId: string, data?: Record<string, unknown>): Promise<InstantaneDeFiche>;
     /** Le contenu que `restore()` sait relire — la matière du chantier n° 5. */
     sauvegarde(): Promise<unknown>;
+    /**
+     * Reverse une sauvegarde dans la bibliothèque du moteur.
+     *
+     * Elle **ajoute et remplace par identifiant, elle ne vide jamais** : ce qui
+     * n'est pas dans la sauvegarde reste en place. *Une restauration qui
+     * effacerait d'abord ferait perdre ce qu'on a créé depuis.*
+     */
+    restaurer(contenu: unknown): Promise<{ templates: number; characters: number }>;
     /** S'abonner aux diffusions du moteur. Rend de quoi se désabonner. */
     surChangement(fn: (ev: ChangementDeFiche) => void): () => void;
     /** Retire l'écouteur et fait échouer ce qui attendait encore. */
@@ -188,6 +196,7 @@ export function ouvrirLePont(cible: Window, options: OptionsDuPont = {}): PontDe
         ouvrirPersonnage: characterId => demander('openCharacter', { characterId }),
         creer: (name, templateId, data) => demander('create', { name, templateId, data }),
         sauvegarde: () => demander('backup'),
+        restaurer: contenu => demander('restore', { data: contenu }),
 
         surChangement(fn) {
             abonnes.add(fn);

@@ -248,7 +248,7 @@ describe('le moteur réel, chargé et piloté', () => {
 
     it('publie les huit fonctions', () => {
         const lecture = ['getData', 'setData', 'getTemplate', 'onChange'];
-        const bibliotheque = ['list', 'openCharacter', 'create', 'backup'];
+        const bibliotheque = ['list', 'openCharacter', 'create', 'backup', 'restore'];
         for (const nom of [...lecture, ...bibliotheque]) {
             expect(typeof win.RPGSheet[nom], nom).toBe('function');
         }
@@ -423,6 +423,39 @@ describe('le moteur réel, chargé et piloté', () => {
 
             sauvegarde.characters[0].name = 'écriture sauvage';
             expect((await win.RPGSheet.backup()).characters.some((c: any) => c.name === 'écriture sauvage')).toBe(false);
+        });
+
+        /**
+         * **Le retour, sans lequel la sauvegarde ne vaut rien.**
+         *
+         * Elle **ajoute et remplace par identifiant, elle ne vide jamais** : ce
+         * qui n'est pas dans la sauvegarde reste en place. *Une restauration qui
+         * effacerait d'abord ferait perdre ce qu'on a créé depuis.*
+         */
+        it('restore reverse une sauvegarde sans rien effacer', async () => {
+            const avant = await win.RPGSheet.backup();
+            const noms = avant.characters.map((c: any) => c.name);
+
+            const compte = await win.RPGSheet.restore({
+                format: 'character-sheet-manager-backup', version: 1, templates: [],
+                characters: [{
+                    id: 'venu-de-la-sauvegarde', name: 'Zhora', templateId: 'gabarit-de-controle',
+                    templateName: 'Gabarit de contrôle', system: 'Contrôle',
+                    data: { nom: 'Zhora' }, createdAt: 1, updatedAt: 1,
+                }],
+            });
+            expect(compte).toEqual({ templates: 0, characters: 1 });
+
+            const apres = await win.RPGSheet.backup();
+            expect(apres.characters.map((c: any) => c.name)).toContain('Zhora');
+            for (const nom of noms) {
+                expect(apres.characters.map((c: any) => c.name), nom).toContain(nom);
+            }
+        });
+
+        it('restore refuse ce qui n’est pas une sauvegarde', async () => {
+            await expect(win.RPGSheet.restore({ format: 'autre-chose' })).rejects.toThrow(/non reconnue/);
+            await expect(win.RPGSheet.restore(null)).rejects.toThrow(/non reconnue/);
         });
     });
 

@@ -11,6 +11,7 @@ import { useLoadingStore } from '../stores/useLoadingStore';
 import { withTimeout } from '../utils/promiseUtils';
 import { Logger } from '../utils/logger';
 import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSession';
+import { useBibliothequeDesFiches } from '../modules/fiches/useBibliothequeDesFiches';
 
 /**
  * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
@@ -28,6 +29,7 @@ export function construireLaSauvegarde() {
     const ambientState = useAmbientStore.getState();
     const clockState = useClockStore.getState();
     const whiteboardState = useWhiteboardStore.getState();
+    const bibliotheque = useBibliothequeDesFiches.getState().instantane;
 
     return {
         version: '5.1.0',
@@ -58,7 +60,21 @@ export function construireLaSauvegarde() {
             },
             whiteboard: {
                 paths: whiteboardState.paths,
-            }
+            },
+            /*
+              **La bibliothèque du moteur de fiches — chantier n° 5.**
+
+              Elle vit dans l'IndexedDB de l'origine `gmos://`, que rien d'autre
+              ne sauvegarde : *le magasin qui détient la vérité d'une fiche
+              serait le seul non protégé.* La copie est prise quand une fiche est
+              ouverte sur l'écran du meneur, et `priseLe` voyage avec elle — une
+              sauvegarde dont on ignore la fraîcheur est pire qu'une sauvegarde
+              absente.
+
+              Absente quand aucune fiche n'a jamais été ouverte : c'est le cas
+              normal, et une clé vide dirait la même chose en occupant de la place.
+            */
+            ...(bibliotheque ? { fiches: bibliotheque } : {}),
         }
     };
 }

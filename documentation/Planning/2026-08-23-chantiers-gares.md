@@ -26,7 +26,7 @@ de David, le n° 5 attend seulement son tour.
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
 | 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
-| 5 | **Sauvegarde de la bibliothèque des fiches** | **Rien codé** — ouvert le 28/08 | Attendre que l'hôte existe, puis reprendre la plomberie du 28/08 | Rien — mais sans objet tant que le n° 3b n'a pas d'hôte |
+| 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **CONSTRUITE le 29/08** | **L'éprouver en réel** — restaurer sur un profil neuf | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -585,14 +585,38 @@ tenir à part :**
 **Les TODO, dans l'ordre :**
 
 1. ✅ **FAIT le 2026-08-28 — `backup` est au contrat `postMessage`**, publié dans
-   le même passage que `list`, `openCharacter` et `create`. Il rend le contenu
-   exact que `restore()` sait relire, et une copie.
-2. **Faire tomber son résultat dans la sauvegarde automatique**, à côté de
-   l'état de session.
-3. **Vérifier la restauration en réel** — sur un profil neuf, comme la
-   sauvegarde du 28/08 l'a été. *Une sauvegarde qu'on n'a jamais restaurée n'est
-   pas une sauvegarde.*
+   le même passage que `list`, `openCharacter` et `create`.
+2. ✅ **FAIT le 2026-08-29 — la copie entre dans la sauvegarde automatique**, sous
+   `modules.fiches`, avec la date de sa prise.
+3. ⏳ **L'éprouver en réel** — restaurer sur un profil neuf. *Une sauvegarde qu'on
+   n'a jamais restaurée n'est pas une sauvegarde.*
 
-> **Sans objet tant que le n° 3b n'a pas d'hôte** : aucune fiche ne vit encore
-> dans cette base. C'est ce qui le rend urgent **le jour où** l'hôte existe, et
-> pas avant — mais c'est aussi ce qui le rend facile à oublier ce jour-là.
+### ✅ Construite le 2026-08-29
+
+**Quand la copie est prise — tranché par David.** *Quand une fiche est ouverte
+sur l'écran du meneur*, contre l'autre option : une iframe cachée en permanence,
+sept mégaoctets tenus en mémoire pour un service rendu deux fois par séance.
+
+| | |
+| --- | --- |
+| `useBibliothequeDesFiches` | Le magasin de la copie, persisté avec la **garde d'écriture du MJ** — c'est le huitième store à la recevoir. `priseLe` voyage avec le contenu : *une sauvegarde dont on ignore la fraîcheur est pire qu'une sauvegarde absente.* |
+| `FicheHote` | Emporte la copie à chaque ouverture et à chaque saisie, groupée sur deux secondes. **Jamais en liaison `locale`** : la bibliothèque d'une tablette n'est qu'un reflet semé depuis GM-OS, et la sauvegarder l'écrirait par-dessus l'original. |
+| `construireLaSauvegarde` | La range sous `modules.fiches`. Absente quand aucune fiche n'a jamais été ouverte — le cas normal. |
+| couture v2 | `restore` rejoint `backup`. Il **ajoute et remplace par identifiant, il ne vide jamais** : ce qui n'est pas dans la sauvegarde reste en place. |
+
+**⚠️ Le garde-fou qui empêche ce filet de devenir le second mécanisme de perte :
+un instantané vide n'en remplace jamais un plein.** Le moteur répond aussi sur un
+profil neuf, ou quand la bibliothèque a été vidée à la main — écraser une copie
+de quatre personnages par une copie vide archiverait le vide. *C'est le refus de
+rétrécissement de la sauvegarde automatique, appliqué ici mot pour mot.* Un
+rétrécissement qui ne vide pas passe : c'est une suppression voulue.
+
+**La restauration est offerte là où elle a du sens et nulle part ailleurs** : une
+bibliothèque vide alors que GM-OS en garde une copie — le profil neuf, l'appareil
+changé. La proposer sur une bibliothèque garnie inviterait à écraser des fiches
+vivantes par une copie plus ancienne.
+
+> **Ce que la copie ne voit pas, et il faut le dire :** une fiche modifiée en
+> ouvrant le fichier HTML **hors de GM-OS**. La copie date de la dernière fois
+> qu'une fiche a été ouverte dans le cockpit, et `priseLe` est là pour qu'on
+> puisse le constater.

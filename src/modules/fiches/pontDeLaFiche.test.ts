@@ -102,8 +102,10 @@ describe('ouvrirLePont', () => {
         pont.creer('Roy', 'blade-runner-fr', { nom: 'Roy' }).catch(ignorer);
         pont.ecrire({ nom: 'Rick' }).catch(ignorer);
         pont.sauvegarde().catch(ignorer);
+        pont.restaurer({ format: 'character-sheet-manager-backup' }).catch(ignorer);
 
-        expect(recus.map(m => m.type)).toEqual(['openCharacter', 'create', 'set', 'backup']);
+        expect(recus.map(m => m.type)).toEqual(['openCharacter', 'create', 'set', 'backup', 'restore']);
+        expect(recus[4].data).toMatchObject({ format: 'character-sheet-manager-backup' });
         // `characterId` et non `id` : `id` est déjà l'identifiant du message.
         expect(recus[0]).toMatchObject({ characterId: 'c-1' });
         expect(recus[0].id).not.toBe('c-1');
