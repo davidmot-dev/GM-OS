@@ -74,6 +74,15 @@ export function requalifierEnDesEchelonnes(driver: Partial<GameDriver>): Requali
     return {
         driver: {
             ...driver,
+            /*
+              **Le moteur du pupitre suit, sinon la moitié des écrans reste
+              fausse.** Le panneau de fiche lit `jet.desEchelonnes` ; Dice-OS et
+              la tablette, eux, ne connaissent que `dice.engine`. Requalifier
+              l'un sans l'autre laisserait un jet lancé depuis le pupitre rendre
+              une poignée de d6 — *des réussites plausibles, et le dé à douze
+              faces du personnage nulle part.*
+            */
+            dice: { ...(driver.dice ?? { defaultDice: '2d10', logic: 'count-success' }), engine: 'yze-echelonne' as const },
             jet: {
                 ...resteDuJet,
                 desEchelonnes: {

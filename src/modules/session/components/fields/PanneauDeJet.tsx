@@ -288,19 +288,27 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           rend pas.
         */
         /*
-          **Les dés échelonnés se lancent par leur propre porte.**
+          **Les dés échelonnés passent par `rollFromConfig`, comme tout le reste.**
 
-          `rollFromConfig` prend UN nombre de dés et UNE taille — c'est tout ce
-          qu'il a jamais eu. Ici la poignée n'a pas de taille commune : chaque dé
-          la tient de sa lettre sur la fiche. Lui passer `jet.faces` lancerait
-          deux D10 là où le personnage a un D10 et un D6, et *le total aurait
-          l'air juste.*
-          L'avantage et le désavantage sont déjà appliqués à la poignée par
+          *Question de David, le 2026-08-29 : « ne faudrait-il pas construire un
+          nouveau moteur dans Dice-OS ? »* Ce panneau appelait `rollYZEEchelonne`
+          en direct, et ça marchait — pour lui seul. Le pupitre et la tablette
+          passent par `rollFromConfig` : un raccourci ici aurait laissé les deux
+          autres lancer des d6 pour Blade Runner, sans que rien ne le dise.
+          *C'est le motif que ce fichier a déjà payé quatre fois : le chemin
+          s'arrête avant le moteur, et le résultat reste plausible.*
+
+          La poignée voyage par `taillesDeBase` : elle n'a pas de taille commune,
+          et `jet.faces` seul ferait lancer deux D10 là où le personnage a un D10
+          et un D6. L'avantage et le désavantage sont déjà appliqués par
           `preparerLeJet` — ils ajoutent ou retirent un dé, ils n'en gardent pas
           un sur deux comme `rollAdvantage`.
         */
         const res = jet.desEchelonnes.length > 0
-            ? DiceEngine.rollYZEEchelonne(jet.desEchelonnes.map(d => d.faces))
+            ? DiceEngine.rollFromConfig(
+                { ...dice, engine: 'yze-echelonne' },
+                { taillesDeBase: jet.desEchelonnes.map(d => d.faces) },
+            )
             : modificateur !== 'aucun' && avantagePossible
             ? (() => {
                 const brut = DiceEngine.rollAdvantage(

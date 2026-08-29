@@ -450,7 +450,13 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'une valeur de la fiche prend "count-success" avec "defaultDice" à "1d20". ' +
             '"dice.engine" NOMME LA FAMILLE et vaut EXACTEMENT : standard, formula, pool, ' +
             'pool_explode, threshold, advantage, disadvantage, exploding, fate, rolemaster, yze, ' +
-            '2d20. "2d20" désigne la FAMILLE MODIPHIUS — Dune, Star Trek, Conan —, où l\'on lance ' +
+            // Les deux variantes Year Zero se confondent au nom près, et les
+            // confondre donne des réussites plausibles avec le meilleur dé du
+            // personnage nulle part. Le rappel tient sur une ligne.
+            'yze-echelonne, ' +
+            '2d20. "yze" est la variante à POOLS — des dés tous à six faces. Si tu as rempli ' +
+            '"jet.desEchelonnes", le moteur est "yze-echelonne" et JAMAIS "yze". ' +
+            '"2d20" désigne la FAMILLE MODIPHIUS — Dune, Star Trek, Conan —, où l\'on lance ' +
             'PLUSIEURS d20 en comptant les réussites ; ce n\'est pas « le jeu utilise un d20 ». ' +
             'Un jeu qui n\'en lance qu\'un prend "standard". Dans le doute, "standard". ' +
             '"jet.reserve" décrit le nombre de dés lancés ; ses bornes ("base", "max", "faces") ' +

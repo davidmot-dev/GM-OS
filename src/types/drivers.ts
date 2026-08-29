@@ -24,7 +24,14 @@ export interface LootTable {
 export interface DiceConfig {
     defaultDice: string; // e.g. "1d20", "3d6"
     logic: DiceRollLogic;
-    engine?: 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | '2d20'; // Specific specialized logic
+    /**
+     * `yze` est la variante à **pools** : des dés tous à six faces, seul un six
+     * réussit. `yze-echelonne` est celle à **dés échelonnés** : deux dés de
+     * tailles différentes, lues sur les lettres de la fiche, six ou plus réussit
+     * et dix ou plus vaut deux réussites. *Les confondre donne des réussites
+     * plausibles et le meilleur dé du personnage nulle part.*
+     */
+    engine?: 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne' | '2d20'; // Specific specialized logic
     successThreshold?: number; // e.g. 8 for WoD, or dynamic
 }
 

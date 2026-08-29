@@ -517,6 +517,35 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
     });
 
     /**
+     * **« Qui d'autre lance ce jet ? »** — la question de David du 2026-08-29.
+     *
+     * Le panneau de fiche lit `jet.desEchelonnes` ; Dice-OS et la tablette ne
+     * connaissent que `dice.engine`. Un pilote qui déclare l'un sans l'autre
+     * marche depuis une fiche de personnage et rend une poignée de d6 depuis le
+     * pupitre — *des réussites plausibles, et le meilleur dé du personnage nulle
+     * part.*
+     */
+    it('exige que le moteur du pupitre suive les dés échelonnés', () => {
+        const avec = (engine: string) => controlerLePilote(
+            {
+                dice: { defaultDice: '2d10', logic: 'count-success', engine },
+                jet: { sens: 'superieur-ou-egal', desEchelonnes: { echelle: 'yze-lettres', composantes: [] } },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou === 'dice.engine');
+
+        const surLaVariante = (engine: string) =>
+            avec(engine).filter(c => c.message.includes('yze-echelonne'));
+
+        // `yze` en récolte deux : celui-ci, et le contrôle des faces — cette
+        // variante lance des d6, et le pilote en compose à dix.
+        expect(surLaVariante('yze'), 'la variante à pools n\'est pas celle-ci').toHaveLength(1);
+        expect(surLaVariante('yze')[0].gravite).toBe('erreur');
+        expect(surLaVariante('standard')).toHaveLength(1);
+        expect(avec('yze-echelonne'), 'le bon moteur ne dit rien').toEqual([]);
+    });
+
+    /**
      * *Un contrôle qui se trompe est pire qu'un contrôle absent.* Sur un jeu à
      * dés échelonnés, une réserve vide est un champ mort — pas une panne, et
      * surtout pas « rien à lancer » : le panneau a exactement ses deux dés.

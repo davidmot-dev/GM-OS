@@ -162,6 +162,77 @@ describe('le lancer', () => {
     });
 });
 
+/**
+ * **Le moteur de Dice-OS — « qui d'autre lance ce jet ? »**
+ *
+ * *Question de David, le 2026-08-29.* Le panneau de fiche appelait
+ * `rollYZEEchelonne` en direct, et ça marchait — pour lui seul. Le pupitre et la
+ * tablette passent tous par `rollFromConfig` : sans une famille de moteur à eux,
+ * un pilote Blade Runner y aurait lancé une poignée de **d6**. *Le chemin
+ * s'arrête avant le moteur, et le résultat reste plausible* — quatre fois le même
+ * motif dans ce fichier.
+ */
+describe('le moteur « yze-echelonne » dans Dice-OS', () => {
+    const config = { defaultDice: '2d10', logic: 'count-success', engine: 'yze-echelonne' };
+    const rendre = (...valeurs: number[]) => {
+        let i = 0;
+        vi.spyOn(DiceEngine, 'roll').mockImplementation(() => valeurs[i++] ?? 1);
+    };
+    afterEach(() => vi.restoreAllMocks());
+
+    it('lance les tailles qu’on lui donne', () => {
+        rendre(6, 6);
+        const r = DiceEngine.rollFromConfig(config, { taillesDeBase: [12, 6] });
+        expect(r.rolls.map(x => x.sides)).toEqual([12, 6]);
+        expect(r.successes).toBe(2);
+    });
+
+    /**
+     * Le pupitre n'a pas de fiche : il n'a qu'un nombre de dés. On lui rend la
+     * plus PETITE taille de l'échelle — *inventer un dé plus gros donnerait un
+     * jet trop généreux qui a l'air d'un jet.*
+     */
+    it('sans tailles, retombe sur le plus petit dé — jamais sur un plus gros', () => {
+        rendre(1, 1, 1);
+        const r = DiceEngine.rollFromConfig(config, { baseCount: 3 });
+        expect(r.rolls.map(x => x.sides)).toEqual([6, 6, 6]);
+        expect(Math.min(...taillesDe('yze-lettres'))).toBe(6);
+    });
+
+    it('ne lance jamais zéro dé', () => {
+        rendre(6);
+        expect(DiceEngine.rollFromConfig(config, { baseCount: 0 }).rolls).toHaveLength(1);
+    });
+
+    it('compte les dés d’équipement à part', () => {
+        rendre(6, 1);
+        const r = DiceEngine.rollFromConfig(config, { taillesDeBase: [10], gearCount: 1 });
+        expect(r.rolls.filter(x => x.source === 'gear')).toHaveLength(1);
+        expect(r.fails).toBe(1);
+    });
+
+    /**
+     * L'Avantage du pupitre — *lancer un dé de plus et garder le meilleur* —
+     * suppose qu'UN SEUL dé tranche. Ici on compte des réussites : le proposer
+     * inviterait à une règle que le jeu n'a pas.
+     */
+    it('résout lui-même, donc le pupitre ne propose pas son avantage', () => {
+        expect(DiceEngine.MOTEURS_A_RESOLUTION_PROPRE).toContain('yze-echelonne');
+        expect(DiceEngine.unSeulDeDecide('yze-echelonne', 1)).toBe(false);
+    });
+
+    /** Les deux variantes Year Zero ne doivent pas se confondre. */
+    it('ne se comporte pas comme « yze »', () => {
+        rendre(10, 10);
+        const echelonne = DiceEngine.rollFromConfig(config, { taillesDeBase: [12, 12] });
+        rendre(10, 10);
+        const pool = DiceEngine.rollFromConfig({ ...config, engine: 'yze' }, { baseCount: 2 });
+
+        expect(echelonne.successes, 'deux 10 sur des D12 : deux réussites chacun').toBe(4);
+        expect(pool.successes, 'un pool ne lance que des d6 : aucun 10 possible').toBe(0);
+    });
+});
+
 describe('de la fiche aux dés, bout en bout', () => {
     const SECTIONS: SheetSection[] = [
         { id: 'attributs', label: 'Attributs', fields: [] },

@@ -68,6 +68,22 @@ describe('requalifierEnDesEchelonnes', () => {
         expect(cibleRetiree).toBe(true);
     });
 
+    /**
+     * **Le moteur du pupitre suit, sinon la moitié des écrans reste fausse.**
+     *
+     * Le panneau de fiche lit `jet.desEchelonnes` ; Dice-OS et la tablette ne
+     * connaissent que `dice.engine`. Requalifier l'un sans l'autre laisserait un
+     * jet lancé depuis le pupitre rendre une poignée de d6.
+     */
+    it('bascule aussi le moteur de Dice-OS', () => {
+        expect(requalifierEnDesEchelonnes(AVEC_SEUIL).driver.dice?.engine).toBe('yze-echelonne');
+
+        const avecYze = { ...AVEC_SEUIL, dice: { defaultDice: '2d6', logic: 'count-success', engine: 'yze' } } as unknown as Partial<GameDriver>;
+        const apres = requalifierEnDesEchelonnes(avecYze).driver;
+        expect(apres.dice?.engine).toBe('yze-echelonne');
+        expect(apres.dice?.logic, 'le reste du bloc dés survit').toBe('count-success');
+    });
+
     /** Le reste du descripteur survit : on requalifie, on ne réécrit pas. */
     it('ne touche à rien d’autre', () => {
         const { driver } = requalifierEnDesEchelonnes(AVEC_SEUIL);

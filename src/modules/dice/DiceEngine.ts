@@ -634,7 +634,7 @@ export class DiceEngine {
      * option que le moteur n'appliquerait pas.
      */
     static readonly MOTEURS_A_RESOLUTION_PROPRE: readonly string[] = [
-        'year-zero', 'yze', 'd100', 'rolemaster', '2d20',
+        'year-zero', 'yze', 'yze-echelonne', 'd100', 'rolemaster', '2d20',
     ];
 
     /**
@@ -674,6 +674,18 @@ export class DiceEngine {
             modifier?: number; baseCount?: number; gearCount?: number;
             targetOverwrite?: number; doubleSous?: number;
             /**
+             * Les tailles des dés de base, quand elles ne sont pas toutes les
+             * mêmes — la poignée d'un jeu à dés échelonnés, lue sur la fiche.
+             *
+             * Absentes, `baseCount` décide du nombre et le moteur prend la plus
+             * petite taille de l'échelle : le pupitre n'a pas de fiche, et
+             * *inventer un dé plus gros donnerait un jet trop généreux qui a
+             * l'air d'un jet.*
+             */
+            taillesDeBase?: number[];
+            /** Idem pour les dés d'équipement, comptés à part. */
+            taillesSecondaires?: number[];
+            /**
              * Les bornes des six degrés, quand le pilote décrit un jeu qui
              * gradue. Elles viennent de `preparerLeJet`, qui les tient de la
              * mécanique du système — le moteur ne connaît aucune table.
@@ -681,6 +693,33 @@ export class DiceEngine {
             echelle?: EchelleDuJet;
         },
     ): RollResult {
+        /**
+         * **Year Zero à dés échelonnés — le pupitre le lance aussi.**
+         *
+         * *Question de David, le 2026-08-29 : « ne faudrait-il pas construire un
+         * nouveau moteur dans Dice-OS ? »* Oui, et c'est la question qui a déjà
+         * trouvé quatre défauts dans ce fichier : **qui d'autre lance ce jet ?**
+         * Le panneau de fiche appelait `rollYZEEchelonne` directement ; le
+         * pupitre et la tablette, eux, passent tous par ici. Sans cette branche,
+         * un pilote Blade Runner déclarant `yze` y aurait lancé une poignée de
+         * **d6** — des réussites plausibles, et le dé à douze faces du
+         * personnage nulle part. *Un jet faux ne se voit jamais en séance.*
+         *
+         * Les tailles arrivent par `taillesDeBase` quand l'appelant les connaît
+         * — le panneau les tient de la fiche. Le pupitre, qui n'a pas de fiche,
+         * n'a que son nombre de dés : on lui rend des dés à six faces, le plus
+         * petit de l'échelle, **jamais un dé inventé plus gros**. Un meneur qui
+         * veut la vraie poignée la lance depuis la fiche du personnage.
+         */
+        if (config.engine === 'yze-echelonne') {
+            const tailles = options?.taillesDeBase?.length
+                ? options.taillesDeBase
+                : Array.from({ length: Math.max(1, options?.baseCount ?? 2) }, () => 6);
+            const equipement = options?.taillesSecondaires
+                ?? Array.from({ length: options?.gearCount ?? 0 }, () => 6);
+            return this.rollYZEEchelonne(tailles, equipement);
+        }
+
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
             const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);

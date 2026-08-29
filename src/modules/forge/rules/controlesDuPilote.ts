@@ -68,7 +68,7 @@ const MODELES_DE_SANTE: readonly HealthSystemType[] = ['hp', 'clocks', 'anatomy'
 type MoteurDeDes = NonNullable<DiceConfig['engine']>;
 const MOTEURS_CONNUS: readonly MoteurDeDes[] = [
     'standard', 'formula', 'pool', 'pool_explode', 'threshold', 'advantage',
-    'disadvantage', 'exploding', 'fate', 'rolemaster', 'yze', '2d20',
+    'disadvantage', 'exploding', 'fate', 'rolemaster', 'yze', 'yze-echelonne', '2d20',
 ];
 
 /**
@@ -385,6 +385,24 @@ export function controlerLePilote(
       atteindre, ils comptent les six. *Déclarer les deux, c'est déclarer deux
       mécaniques dont une seule s'appliquera.*
     */
+    /*
+      **Le panneau de fiche et le pupitre lisent DEUX champs différents.**
+
+      *La question de David, le 2026-08-29 : « qui d'autre lance ce jet ? »* Le
+      panneau lit `jet.desEchelonnes` ; Dice-OS et la tablette ne connaissent que
+      `dice.engine`. Un pilote qui déclare l'un sans l'autre marche depuis la
+      fiche d'un personnage et rend une poignée de d6 depuis le pupitre — *des
+      réussites plausibles, et le dé à douze faces du personnage nulle part.*
+    */
+    if (driver.jet?.desEchelonnes && driver.dice && driver.dice.engine !== 'yze-echelonne') {
+        erreur(
+            'dice.engine',
+            `Ce pilote lance des dés échelonnés, mais son moteur est « ${driver.dice.engine ?? 'absent'} ». `
+            + 'Le panneau de fiche lira bien la poignée ; le pupitre et la tablette, qui ne lisent que '
+            + '« dice.engine », lanceront autre chose. Le moteur doit valoir « yze-echelonne ».',
+        );
+    }
+
     if (driver.jet?.desEchelonnes && (driver.jet?.seuil?.length || driver.jet?.cible)) {
         avertir(
             'jet.seuil',
