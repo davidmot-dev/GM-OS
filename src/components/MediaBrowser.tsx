@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useMediaStore } from '../stores/useMediaStore';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
-import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock } from 'lucide-react';
+import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw } from 'lucide-react';
 import { gmPrompt } from '../stores/useModalStore';
+import { gmToast } from '../stores/useToastStore';
+import { mediasRestituables, restaurerLesMedias } from '../modules/session/logic/MiroirDesMedias';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useTranslation } from 'react-i18next';
 
@@ -55,6 +57,38 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     } = useMediaStore();
 
     const { activeCampaignId, campaigns } = useSessionOSStore();
+
+    /**
+     * **Ce que le miroir peut rendre — chantier n° 4.**
+     *
+     * Recompté à chaque changement de la bibliothèque : après une restauration
+     * le compte tombe à zéro et le bandeau disparaît de lui-même, plutôt que de
+     * rester à proposer un geste déjà fait.
+     */
+    const [aRestituer, setARestituer] = useState(0);
+    const [restauration, setRestauration] = useState(false);
+
+    useEffect(() => {
+        let annule = false;
+        void mediasRestituables()
+            .then(ids => { if (!annule) setARestituer(ids.length); })
+            .catch(() => { /* pas de miroir joignable : rien à proposer */ });
+        return () => { annule = true; };
+    }, [mediaList.length, isInitialized]);
+
+    const lancerLaRestauration = async () => {
+        setRestauration(true);
+        try {
+            const bilan = await restaurerLesMedias();
+            gmToast(
+                bilan.rendus > 0
+                    ? `${bilan.rendus} média(s) restauré(s)`
+                        + (bilan.brouillard ? ', brouillard compris' : '')
+                        + (bilan.echecs > 0 ? ` — ${bilan.echecs} échec(s)` : '')
+                    : 'Rien à restaurer : la bibliothèque a déjà tout.',
+            );
+        } finally { setRestauration(false); }
+    };
 
     const [search, setSearch] = useState('');
     const [typeFilter, setTypeFilter] = useState<MediaType | 'all'>('all');
@@ -353,7 +387,40 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                     </div>
                     
                     {/* Bottom Status & Actions */}
-                    <div className="p-6 border-t border-app-border/10 bg-app-bg/20">
+                    <div className="p-6 border-t border-app-border/10 bg-app-bg/20 space-y-3">
+                        {/*
+                            **Le retour du miroir — chantier n° 4.**
+
+                            Il vit ici parce que c'est ici qu'on gère les médias :
+                            posé sur l'autre écran le 2026-08-29, il était
+                            invisible depuis celui que David ouvre réellement.
+                            *Un filet rangé là où personne ne regarde n'est pas
+                            un filet.*
+
+                            Il n'apparaît que si le miroir porte ce que cette
+                            bibliothèque n'a plus, et il annonce le compte avant
+                            de proposer quoi que ce soit — juste au-dessus du
+                            bouton qui purge, qui est précisément le geste après
+                            lequel on en aura besoin.
+                        */}
+                        {aRestituer > 0 && (
+                            <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-3">
+                                <p className="text-[11px] text-emerald-300/80 leading-relaxed">
+                                    {aRestituer} média{aRestituer > 1 ? 's' : ''} dans la sauvegarde,
+                                    absent{aRestituer > 1 ? 's' : ''} d'ici.
+                                </p>
+                                <button
+                                    type="button"
+                                    disabled={restauration}
+                                    onClick={lancerLaRestauration}
+                                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-500/30 transition-all duration-300 disabled:opacity-30"
+                                >
+                                    <RotateCcw size={15} />
+                                    {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
+                                </button>
+                            </div>
+                        )}
+
                         <button
                             onClick={() => {
                                 if (confirm(t('mediaBrowser.purgeConfirm'))) {
