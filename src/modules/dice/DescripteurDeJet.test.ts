@@ -75,6 +75,44 @@ describe('ce qui manque se dit, et n\'empêche pas de lancer', () => {
 
         expect(jet.avertissements[0]).toContain('Principe');
     });
+
+    /**
+     * **Absent et « pas un nombre » ne sont pas la même panne**, et le message
+     * les confondait — signalé en réel par David le 2026-08-29 sur Blade Runner.
+     *
+     * Le menu du jet affichait « Agilité (B (D10)) », le champ était donc là et
+     * rempli, et le panneau répondait *« agilite est absent de la fiche »*. Il
+     * envoyait chercher un oubli du joueur alors que le fautif est le pilote :
+     * il compose un seuil là où ce jeu lance une réserve de dés dont la TAILLE
+     * vient de la lettre. *Un message qui désigne le mauvais fautif coûte plus
+     * cher qu'un message absent.*
+     */
+    it('distingue un champ absent d\'un champ qui n\'est pas un nombre', () => {
+        const absent = preparerLeJet(jetDune, FICHE, { champs: { competence: 'combat', principe: 'sagesse' } });
+        expect(absent.avertissements[0]).toContain('est absent de la fiche');
+
+        const bladeRunner = preparerLeJet(
+            jetDune,
+            { combat: 'B (D10)', devoir: 'D (D6)' },
+            { champs: { competence: 'combat', principe: 'devoir' } },
+        );
+
+        expect(bladeRunner.avertissements).toHaveLength(2);
+        for (const dit of bladeRunner.avertissements) {
+            expect(dit, 'le champ est là : ne pas dire qu\'il manque').not.toContain('est absent');
+            expect(dit).toContain("n'est pas un nombre");
+            // La valeur elle-même dit de quelle mécanique il s'agit.
+            expect(dit).toMatch(/« [BD] \(D\d+\) »/);
+        }
+        expect(bladeRunner.seuil, 'rien de lisible : aucun seuil inventé').toBe(0);
+    });
+
+    /** Zéro se lit, et ne doit surtout pas passer pour une absence. */
+    it('ne confond pas zéro avec un manque', () => {
+        const jet = preparerLeJet(jetDune, { combat: 0, devoir: 5 }, { champs: { competence: 'combat', principe: 'devoir' } });
+        expect(jet.avertissements).toEqual([]);
+        expect(jet.composantes).toContainEqual({ label: 'Compétence', champ: 'combat', valeur: 0 });
+    });
 });
 
 describe('réserve de dés', () => {

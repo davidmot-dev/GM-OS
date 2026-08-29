@@ -519,12 +519,33 @@ export function sectionsDeLaComposante(
     return resultat;
 }
 
-/** Le nombre lu sur la fiche, ou zéro si le champ n'y est pas. */
-function valeurDuChamp(valeurs: Record<string, unknown>, champ: string): number | null {
+/**
+ * Ce que la fiche porte pour ce champ, et **pourquoi** ça n'est pas un nombre.
+ *
+ * *Deux causes que le message confondait, signalées en réel par David le
+ * 2026-08-29 sur Blade Runner.* La fiche affichait « Agilité (B (D10)) » dans le
+ * menu, et le panneau répondait **« agilite est absent de la fiche »** : il
+ * envoie chercher un champ manquant alors que le champ est là, rempli, et que
+ * c'est sa **forme** qui ne convient pas.
+ *
+ * Chez Blade Runner un attribut vaut une lettre et un dé — `"B (D10)"` — jamais
+ * un nombre : rien à corriger sur la fiche, c'est le pilote qui compose un seuil
+ * là où le jeu lance une réserve de dés. *Un message qui désigne le mauvais
+ * fautif coûte plus cher qu'un message absent.*
+ */
+type LectureDuChamp =
+    | { valeur: number }
+    | { valeur: null; cause: 'absent' }
+    | { valeur: null; cause: 'pas-un-nombre'; brut: string };
+
+function lireLeChamp(valeurs: Record<string, unknown>, champ: string): LectureDuChamp {
     const brut = valeurs[champ];
-    if (brut === undefined || brut === null || brut === '') return null;
+    if (brut === undefined || brut === null || brut === '') return { valeur: null, cause: 'absent' };
+
     const n = typeof brut === 'number' ? brut : Number(brut);
-    return Number.isFinite(n) ? n : null;
+    if (Number.isFinite(n)) return { valeur: n };
+
+    return { valeur: null, cause: 'pas-un-nombre', brut: String(brut) };
 }
 
 /**
@@ -621,15 +642,28 @@ export function preparerLeJet(
                 avertissements.push(`${composante.label} : aucun champ retenu.`);
                 continue;
             }
-            const valeur = valeurDuChamp(valeursDeLaFiche, champ);
-            if (valeur === null) {
-                // Le cas exact que le contrôle de cohérence attrape sur le
-                // pilote : un identifiant qui ne correspond à aucun champ.
-                avertissements.push(`${composante.label} : « ${champ} » est absent de la fiche.`);
+            const lu = lireLeChamp(valeursDeLaFiche, champ);
+            if (lu.valeur === null) {
+                if (lu.cause === 'absent') {
+                    // Le cas exact que le contrôle de cohérence attrape sur le
+                    // pilote : un identifiant qui ne correspond à aucun champ.
+                    avertissements.push(`${composante.label} : « ${champ} » est absent de la fiche.`);
+                } else {
+                    /*
+                      Le champ est là et rempli : c'est le pilote qui se trompe de
+                      mécanique, pas le joueur qui a oublié une case. Le message
+                      doit donc désigner le pilote — et montrer la valeur, qui dit
+                      à elle seule de quelle mécanique il s'agit.
+                    */
+                    avertissements.push(
+                        `${composante.label} : « ${champ} » vaut « ${lu.brut} » sur la fiche, `
+                        + "qui n'est pas un nombre — ce pilote compose un seuil, ce jeu n'en compose pas.",
+                    );
+                }
                 continue;
             }
-            total += valeur;
-            retenues.push({ label: composante.label, champ, valeur });
+            total += lu.valeur;
+            retenues.push({ label: composante.label, champ, valeur: lu.valeur });
         }
 
         return { total, retenues };
