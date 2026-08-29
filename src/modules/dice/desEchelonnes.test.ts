@@ -236,6 +236,39 @@ describe('de la fiche aux dés, bout en bout', () => {
         expect(jet.nombreDeDes).toBe(3);
     });
 
+    /**
+     * **Le cas qui décide si le correctif sert à quelque chose.**
+     *
+     * La Forge **enrichit** : « on remplit ce qui est vide, on ne remplace jamais
+     * ce qui est rempli ». Un pilote qui portait déjà un `seuil` le garde donc
+     * après une nouvelle dérivation, même parfaite — `desEchelonnes` s'ajoute à
+     * côté. Si le seuil continuait de composer, il crierait « ce n'est pas un
+     * nombre » sur chaque attribut et le bouton resterait gris.
+     *
+     * *Une dérivation juste qui ne change rien à l'écran est le pire des cas :
+     * on croit que la correction a échoué.*
+     */
+    it('l’emporte sur un seuil resté dans le pilote', () => {
+        const cohabitation: DescripteurDeJet = {
+            ...BLADE_RUNNER,
+            seuil: [
+                { id: 'attribut', label: 'Attribut', sectionId: 'attributs' },
+                { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+            ],
+        };
+
+        const jet = preparerLeJet(
+            cohabitation, WILLEM,
+            { champs: { attribut: 'agilite', competence: 'endurance' } },
+            SECTIONS,
+        );
+
+        expect(jet.avertissements, 'le seuil ne compose plus, donc ne crie plus').toEqual([]);
+        expect(jet.desEchelonnes.map(d => d.faces)).toEqual([10, 6]);
+        expect(jet.composantes, 'aucun terme de somme').toEqual([]);
+        expect(jet.seuil).toBe(0);
+    });
+
     /** Les autres jeux ne doivent rien voir changer. */
     it('reste vide sur un jeu qui n’en déclare pas', () => {
         const jet = preparerLeJet(

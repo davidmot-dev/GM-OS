@@ -723,7 +723,22 @@ export function preparerLeJet(
       chaque six est une réussite quelle que soit la valeur du personnage — mais
       où le NOMBRE de dés, lui, vient de la fiche.
     */
-    const additionnees = additionner(descripteur.seuil ?? []);
+    /*
+      **Les dés échelonnés l'emportent sur le seuil, et ce n'est pas un détail
+      de préséance : c'est ce qui rend le correctif applicable.**
+
+      *Trouvé le 2026-08-29 en répondant à David.* La Forge **enrichit** — « on
+      remplit ce qui est vide, on ne remplace jamais ce qui est rempli ». Un
+      pilote qui portait déjà `jet.seuil` le gardera donc **après** une nouvelle
+      dérivation, même parfaite : `desEchelonnes` s'ajoute à côté.
+
+      Sans cette ligne, le seuil continuerait de composer, de crier « ce n'est
+      pas un nombre » sur chaque attribut, et le bouton resterait gris — *une
+      dérivation juste qui ne change rien à l'écran est le pire des cas, parce
+      qu'on croit que la correction a échoué.* Le contrôle du pilote demande
+      quand même le retrait du champ mort.
+    */
+    const additionnees = additionner(descripteur.desEchelonnes ? [] : descripteur.seuil ?? []);
     let seuil = additionnees.total;
     let composantes = additionnees.retenues;
     let explicationDuSeuil: string | undefined;
@@ -738,7 +753,7 @@ export function preparerLeJet(
       Les composantes restent celles qu'on a lues sur la fiche — le joueur doit
       voir d'où sortent les nombres, même quand ils ne s'additionnent pas.
     */
-    if (descripteur.cible) {
+    if (descripteur.cible && !descripteur.desEchelonnes) {
         const caracteristique = additionner([descripteur.cible.caracteristique]);
         const depuisLaFiche = additionner(descripteur.cible.ajustement ?? []);
         const ajustement = depuisLaFiche.total + (choix.ajustementDeDifficulte ?? 0);

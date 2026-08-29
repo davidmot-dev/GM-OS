@@ -187,14 +187,24 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * bouton qui part sans caractéristique.
      */
     const composantesARetenir = useMemo(() => [
-        ...(descripteur.cible ? [descripteur.cible.caracteristique] : []),
-        ...(descripteur.cible?.ajustement ?? []),
+        /*
+          **Ce que les dés échelonnés décident, ils le décident seuls.**
+
+          La Forge enrichit sans jamais remplacer : un pilote qui portait déjà un
+          `seuil` le garde après une nouvelle dérivation. Continuer à réclamer
+          ses composantes demanderait au joueur de choisir deux fois la même
+          chose — et le bouton resterait gris sur un pilote pourtant corrigé.
+          `preparerLeJet` applique la même préséance.
+        */
+        ...(descripteur.desEchelonnes
+            ? descripteur.desEchelonnes.composantes
+            : [
+                ...(descripteur.cible ? [descripteur.cible.caracteristique] : []),
+                ...(descripteur.cible?.ajustement ?? []),
+                ...(descripteur.seuil ?? []),
+            ]),
         ...(descripteur.reserve?.composantes ?? []),
         ...(descripteur.reserve?.secondaire?.composantes ?? []),
-        // Une composante à dés échelonnés se retient comme les autres : le
-        // joueur choisit son attribut et sa compétence, et chacun donne un dé.
-        ...(descripteur.desEchelonnes?.composantes ?? []),
-        ...(descripteur.seuil ?? []),
     ], [descripteur]);
 
     /** Rien ne part tant que chaque composante n'a pas son champ. */
