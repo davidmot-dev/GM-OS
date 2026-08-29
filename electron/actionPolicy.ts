@@ -25,6 +25,26 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
     'session:request-item-transfer',
     'session:remove-inventory-item',
     'session:submit-feedback',
+    /*
+      **La fiche du joueur, remplie sur sa tablette.**
+
+      *Trouvé le 2026-08-29 en répondant à la question de David : « quand je fais
+      une mise à jour sur la fiche HTML de la tablette, comment cela se
+      répercute-t-il dans GM-OS ? »* La réponse était : pas du tout. Trois
+      maillons manquaient d'un coup — l'écoute côté tablette, et cette
+      autorisation-ci. Le joueur voyait pourtant sa saisie chez lui : *le chemin
+      s'arrête avant le moteur, et rien ne se plaint.*
+
+      `update-character-narrative` était dans le même cas depuis toujours : la
+      description et les notes saisies sur une **vraie** tablette n'atteignaient
+      pas le meneur. Le Player Hub s'en tirait par le pont Electron, ce qui rendait
+      le défaut invisible tant qu'on essayait depuis la même machine.
+
+      Les deux portent un `characterId` : le contrôle de propriété ci-dessous
+      empêche un joueur d'écrire dans la fiche d'un autre.
+    */
+    'session:update-character-sheet-data',
+    'session:update-character-narrative',
     // Envoyée par le Tablet Hub juste après son enregistrement (useHubSync).
     // Elle ne demande que la rediffusion d'un état auquel le client a déjà
     // droit, caviardé selon son rôle : aucun gain de privilège.
@@ -63,6 +83,10 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     'session:remove-inventory-item': 'characterId',
     'session:request-item-transfer': 'fromCharId',
     'session:send-message': 'fromId',
+    // Sans ces deux lignes, un joueur remplirait la fiche d'un autre depuis sa
+    // propre tablette — et la fiche fait foi, donc GM-OS le croirait.
+    'session:update-character-sheet-data': 'characterId',
+    'session:update-character-narrative': 'characterId',
 };
 
 export type DenialReason = 'role' | 'ownership';

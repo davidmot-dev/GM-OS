@@ -395,11 +395,46 @@ export const useHubSync = () => {
             socketRef.current?.send(JSON.stringify({ type: 'table:ajuster', payload: detail }));
         };
 
+        /*
+          **Ce que la tablette a déjà appliqué chez elle, et qu'il ne reste qu'à
+          dire au MJ.**
+
+          *Le défaut trouvé le 2026-08-29, en répondant à la question de David :
+          « quand je fais une mise à jour sur la fiche HTML de la tablette,
+          comment cela se répercute-t-il dans GM-OS ? »* La réponse était : **ça
+          ne se répercutait pas.** Le store de la tablette diffusait bien son
+          `CustomEvent`, le MJ savait bien le recevoir et l'appliquer — et
+          personne, entre les deux, ne le mettait sur la socket. *Le chemin
+          s'arrête avant le moteur*, une fois de plus, et sans rien casser : le
+          joueur voyait sa saisie chez lui.
+
+          `session:update-character-narrative` était dans le même cas depuis
+          toujours : la description et les notes saisies sur une **vraie**
+          tablette n'atteignaient pas le meneur. Le Player Hub, lui, s'en tirait
+          par le pont Electron — d'où un défaut invisible tant qu'on essayait
+          depuis la même machine.
+
+          Ces deux-là n'appliquent RIEN localement ici : leur store l'a déjà fait
+          avant de diffuser. Les rejouer doublerait l'écriture.
+        */
+        const AREACHEMINER = [
+            'session:update-character-sheet-data',
+            'session:update-character-narrative',
+        ] as const;
+
+        const acheminer = (e: Event) => {
+            socketRef.current?.send(JSON.stringify({
+                type: e.type,
+                payload: (e as CustomEvent).detail,
+            }));
+        };
+
         window.addEventListener('session:send-message', handleSendMessage);
         window.addEventListener('session:request-item-transfer', handleRequestTransfer);
         window.addEventListener('session:remove-inventory-item', handleRemoveItem);
         window.addEventListener('session:submit-feedback', handleSubmitFeedback);
         window.addEventListener('table:ajuster', handleAjusterReserve);
+        for (const nom of AREACHEMINER) window.addEventListener(nom, acheminer);
 
         return () => {
             window.removeEventListener('session:send-message', handleSendMessage);
@@ -407,6 +442,7 @@ export const useHubSync = () => {
             window.removeEventListener('session:remove-inventory-item', handleRemoveItem);
             window.removeEventListener('session:submit-feedback', handleSubmitFeedback);
             window.removeEventListener('table:ajuster', handleAjusterReserve);
+            for (const nom of AREACHEMINER) window.removeEventListener(nom, acheminer);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
                 window.appBridge.off('map:ping', handleIpcUpdate);

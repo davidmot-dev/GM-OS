@@ -109,8 +109,30 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'session:request-item-transfer',
             'session:send-message',
             'session:submit-feedback',
+            'session:update-character-narrative',
+            'session:update-character-sheet-data',
             'table:ajuster',
         ]);
+    });
+
+    /**
+     * **La fiche remplie sur la tablette du joueur.**
+     *
+     * *Trouvé le 2026-08-29 :* trois maillons manquaient entre la saisie et le
+     * meneur, et celui-ci en était un. Le joueur voyait pourtant sa saisie chez
+     * lui — *le chemin s'arrête avant le moteur, et rien ne se plaint.*
+     */
+    it('laisse un joueur remplir SA fiche, et seulement la sienne', () => {
+        for (const type of ['session:update-character-sheet-data', 'session:update-character-narrative']) {
+            expect(
+                evaluateAction(type, { characterId: CHAR, updates: {} }, 'player', CHAR).allowed,
+                `${type} sur son propre personnage`,
+            ).toBe(true);
+
+            const verdict = evaluateAction(type, { characterId: 'char-d-un-autre', updates: {} }, 'player', CHAR);
+            expect(verdict.allowed, `${type} sur le personnage d'un autre`).toBe(false);
+            expect(verdict.reason).toBe('ownership');
+        }
     });
 });
 
