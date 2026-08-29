@@ -3,6 +3,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { lEcritureEstOuverte } from './PersistenceService';
 import { isMainWindow } from '../../../utils/windowRole';
 import { Logger } from '../../../utils/logger';
+import { refletterLesMedias } from './MiroirDesMedias';
 
 /**
  * **La sauvegarde automatique — côté rendu.**
@@ -136,6 +137,27 @@ class SessionBackupManager {
             if (resultat.statut === 'ecrite') {
                 useSessionOSStore.getState().setLastBackupAt(new Date().toISOString());
                 Logger.info(`[Sauvegarde] ${motif} — ${resultat.octets} octets → ${resultat.chemin}`);
+
+                /*
+                  **Les images APRÈS l'état de session, et jamais avant.**
+
+                  L'état est la partie irremplaçable et la plus rapide à écrire ;
+                  les images sont volumineuses et déjà présentes à 99 % dès le
+                  second passage. Les mettre devant ferait risquer à la
+                  sauvegarde de sortie — quatre secondes — de manquer l'essentiel
+                  pour recopier des octets qui, eux, ne sont perdus par personne
+                  tant que la base des médias tient.
+
+                  Le miroir ne lève jamais : un échec de copie se journalise et
+                  l'état de session reste écrit.
+                */
+                const miroir = await refletterLesMedias();
+                if (!miroir.horsService && (miroir.copiees > 0 || miroir.echecs > 0)) {
+                    Logger.info(
+                        `[Miroir] ${miroir.copiees} média(s) copié(s), ${Math.round(miroir.octets / 1024)} Ko`
+                        + (miroir.echecs > 0 ? ` — ${miroir.echecs} échec(s)` : ''),
+                    );
+                }
             } else {
                 // Un refus du process principal (rétrécissement, destination) n'est
                 // pas une panne : il se journalise et la précédente reste en place.

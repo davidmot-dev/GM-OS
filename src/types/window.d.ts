@@ -122,6 +122,24 @@ declare global {
             ouvrirLeDossier: () => Promise<void>;
             surDemandeDeFermeture: (rappel: () => void) => void;
             fermetureTerminee: () => void;
+
+            /**
+             * **Le miroir des médias.** Les images ne voyagent pas dans la
+             * sauvegarde de session : 261 Mo mesurés, et la rotation de douze en
+             * ferait trois gigaoctets. Chaque image est copiée **une fois**.
+             *
+             * `mediasCopies` est ce qui rend l'incrément possible : sans elle il
+             * faudrait relire 261 Mo à chaque passage.
+             */
+            mediasCopies?: () => Promise<string[]>;
+            copierUnMedia?: (id: string, octets: ArrayBuffer) => Promise<
+                | { ecrit: boolean; octets: number }
+                | { statut: 'echec'; raison: string }
+            >;
+            inscrireAuCatalogue?: (fiches: unknown[]) => Promise<
+                | { statut: 'ecrit'; medias: number }
+                | { statut: 'echec'; raison: string }
+            >;
         };
         openFile?: (path: string) => void;
         openExternal?: (url: string) => void;

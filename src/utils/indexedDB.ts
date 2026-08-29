@@ -101,6 +101,42 @@ class IndexedDBService {
             this.memoryFallback.delete(key);
         }
     }
+
+    /**
+     * **Tout le brouillard, clé par clé — pour le miroir de sauvegarde.**
+     *
+     * `gmos-fog-data` était la troisième base que personne ne sauvegardait.
+     * Ajoutée au miroir le 2026-08-29, à la demande de David : le brouillard
+     * peint carte par carte est du travail de préparation, et il se perdait avec
+     * le reste sur un profil neuf.
+     *
+     * Rend un objet vide plutôt que de lever — l'appelant est la sauvegarde
+     * automatique, et *rien ne doit pouvoir l'empêcher d'écrire l'état de
+     * session*, qui est la partie irremplaçable.
+     */
+    public async exporterTout(): Promise<Record<string, string>> {
+        if (!this.isSupported) return Object.fromEntries(this.memoryFallback);
+        try {
+            const db = await this.getDB();
+            return await new Promise((resolve, reject) => {
+                const transaction = db.transaction(this.storeName, 'readonly');
+                const store = transaction.objectStore(this.storeName);
+                const cles = store.getAllKeys();
+                const valeurs = store.getAll();
+                transaction.oncomplete = () => {
+                    const sortie: Record<string, string> = {};
+                    (cles.result ?? []).forEach((cle, i) => {
+                        sortie[String(cle)] = valeurs.result?.[i];
+                    });
+                    resolve(sortie);
+                };
+                transaction.onerror = () => reject(transaction.error);
+            });
+        } catch (err) {
+            console.warn('[IndexedDB] Export du brouillard impossible :', err);
+            return {};
+        }
+    }
 }
 
 export const fogDB = new IndexedDBService();

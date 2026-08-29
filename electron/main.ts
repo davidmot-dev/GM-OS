@@ -54,6 +54,7 @@ import { auditDenied } from './auditLog'
 import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
 import { ServeurDesFiches, PORT_DES_FICHES } from './serveurDesFiches'
+import { mediasCopies, copierUnMedia, inscrireAuCatalogue, type FicheDeMedia } from './miroirDesMedias'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const APP_ROOT = path.join(__dirname, '..')
@@ -754,6 +755,38 @@ ipcMain.handle('backup:reveal', async () => {
     const dossier = dossierDesSauvegardes();
     await fs.ensureDir(dossier);
     shell.openPath(dossier);
+});
+
+/*
+  **Le miroir des médias — chantier n° 4.**
+
+  Les 261 Mo d'images ne peuvent pas voyager dans la sauvegarde de session : avec
+  la rotation de douze, cela ferait trois gigaoctets pour des fichiers qui ne
+  changent jamais. Le miroir en copie chacun UNE fois.
+
+  Les échecs sont rendus, jamais levés : une image qui refuse de se copier ne
+  doit pas empêcher les autres de partir, ni la sauvegarde de session d'aboutir.
+*/
+ipcMain.handle('miroir:medias-copies', async () => mediasCopies());
+
+ipcMain.handle('miroir:copier-media', async (_event, id: string, octets: ArrayBuffer) => {
+    try {
+        return await copierUnMedia(id, new Uint8Array(octets));
+    } catch (err) {
+        const raison = err instanceof Error ? err.message : String(err);
+        console.error(`[Miroir] Copie refusée pour « ${id} » :`, raison);
+        return { statut: 'echec' as const, raison };
+    }
+});
+
+ipcMain.handle('miroir:catalogue', async (_event, fiches: FicheDeMedia[]) => {
+    try {
+        return { statut: 'ecrit' as const, medias: await inscrireAuCatalogue(fiches ?? []) };
+    } catch (err) {
+        const raison = err instanceof Error ? err.message : String(err);
+        console.error('[Miroir] Catalogue non écrit :', raison);
+        return { statut: 'echec' as const, raison };
+    }
 });
 
 /*

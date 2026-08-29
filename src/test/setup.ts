@@ -145,6 +145,10 @@ vi.mock('../utils/indexedDB', () => {
             getItem: vi.fn().mockImplementation(async (key: string) => memory.get(key) || null),
             setItem: vi.fn().mockImplementation(async (key: string, value: string) => { memory.set(key, value); }),
             removeItem: vi.fn().mockImplementation(async (key: string) => { memory.delete(key); }),
+            // Ajoutée le 2026-08-29 avec le miroir des médias : une imitation à
+            // laquelle il manque une méthode du vrai service ne dit plus la
+            // vérité sur ce que le code peut appeler.
+            exporterTout: vi.fn().mockImplementation(async () => Object.fromEntries(memory)),
         }
     };
 });

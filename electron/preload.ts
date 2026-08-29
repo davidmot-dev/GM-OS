@@ -267,6 +267,21 @@ contextBridge.exposeInMainWorld('appBridge', {
         },
         /** « J'ai fini » — sans quoi la fermeture attend le délai de sécurité. */
         fermetureTerminee: () => ipcRenderer.send('backup:before-quit-done'),
+
+        /*
+          **Le miroir des médias — chantier n° 4.**
+
+          Les images ne passent pas par `ecrire` : 261 Mo mesurés chez David, et
+          la sauvegarde de session en porterait une copie complète à chaque fois.
+          Le miroir écrit CHAQUE image UNE fois. `mediasCopies` est ce qui rend
+          l'incrément possible — sans elle il faudrait relire 261 Mo à chaque
+          passage, et la sauvegarde de sortie n'en aurait jamais le temps.
+        */
+        mediasCopies: (): Promise<string[]> => ipcRenderer.invoke('miroir:medias-copies'),
+        copierUnMedia: (id: string, octets: ArrayBuffer) =>
+            ipcRenderer.invoke('miroir:copier-media', id, octets),
+        inscrireAuCatalogue: (fiches: unknown[]) =>
+            ipcRenderer.invoke('miroir:catalogue', fiches),
     },
     nexus: {
         selectExportPath: (bundleType?: 'campaign' | 'driver') => ipcRenderer.invoke('nexus:select-export-path', bundleType),

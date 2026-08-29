@@ -25,7 +25,7 @@ de David, le n° 5 attend seulement son tour.
 | 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
-| 4 | **Sauvegarde des images** | **Rien décidé** — ouvert le 28/08 | Trancher la question ci-dessous | **Une décision de David** |
+| 4 | **Sauvegarde des images** | ✅ **MIROIR CONSTRUIT le 29/08** | **L'éprouver**, puis écrire la restauration | Rien |
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
@@ -532,11 +532,42 @@ l'état : le facteur 66 est un **changement de modèle**, pas une optimisation.
 > plus. Mais restaurer sur un profil neuf rendrait les campagnes complètes avec
 > **des cartes mortes**. C'est ce que ce chantier existe pour éviter.
 
-**⛔ La décision qui bloque, et elle est à David.** Que doit contenir une
-restauration ? Recommandation : **un instantané des médias, séparé et rare** —
-une fois par jour et à la clôture d'une campagne — avec déduplication par
-identifiant, puisque les images changent beaucoup moins souvent que le texte.
-C'est ce qui rend la séparation efficace plutôt qu'artificielle.
+## ✅ CONSTRUIT le 2026-08-29 — un miroir, pas des instantanés
+
+**La mesure a changé la réponse.** Comptés sur la machine de David : **115
+images, 261 Mo**, ~2,3 Mo pièce, 506 Go libres. Ma recommandation du 28 — « un
+instantané séparé et rare » — coûtait **trois gigaoctets** avec la rotation de
+douze, pour des fichiers qui ne changent jamais : *une carte ne change pas, on en
+ajoute.* D'où un **miroir** : chaque image écrite **une seule fois**, jamais
+réécrite. Premier passage 261 Mo, les suivants ne coûtent que les nouveautés.
+
+**✅ Décision de David : le miroir GARDE TOUT.** Une image supprimée dans GM-OS
+reste dans le miroir. *Une suppression accidentelle qui se propage au filet le
+rend inutile le jour où il servirait.* Prix assumé : l'espace ne redescend jamais
+seul — un geste de nettoyage explicite, qui dira ce qu'il s'apprête à supprimer,
+viendra plus tard. Il n'y a donc **aucune rotation** ici, et c'est délibéré : la
+rotation existe pour des copies complètes interchangeables ; ici chaque fichier
+est unique.
+
+**✅ Décision de David : le brouillard de guerre part avec.** C'était la
+troisième base non sauvegardée. Il est copié **à chaque passage** et non une
+seule fois — une image ne change pas, un brouillard si, et le figer au premier
+passage archiverait une carte entièrement masquée.
+
+| | |
+| --- | --- |
+| `electron/miroirDesMedias.ts` | Les trois règles du 28/08 tiennent : aucun git, jamais sous `APP_ROOT`, ne touche que ses fichiers. Un seul point fabrique un chemin, valide l'entrée **et** vérifie la sortie. Écriture atomique **et relue** — *une copie tronquée est pire qu'une absence, elle a l'air d'une copie.* |
+| `mediasCopies()` | Ce qui rend l'incrément possible. **Sans elle il faudrait relire 261 Mo à chaque passage**, et la sauvegarde de sortie — quatre secondes — n'en aurait jamais le temps. |
+| `catalogue.json` | Ce que chaque octet représente. **Fusionné, jamais remplacé** : une image oubliée par GM-OS garde sa fiche, sinon on conserverait un fichier dont on ne saurait plus le nom. |
+| `MiroirDesMedias.ts` | Une copie à la fois — 115 blobs en parallèle, c'est un quart de gigaoctet en mémoire pour un travail que le disque sérialise. |
+
+**Les images passent APRÈS l'état de session, jamais avant.** L'état est la
+partie irremplaçable et la plus rapide à écrire. Et le miroir **ne lève jamais** :
+une image illisible se compte et le passage continue — *un filet qui refuse de
+poser la moitié qu'il peut poser ne vaut pas mieux qu'un filet absent.*
+
+⏳ **Reste : l'éprouver en réel**, et écrire la restauration — le miroir sait
+copier, rien ne sait encore reverser.
 
 **Ce qui est déjà acquis et ne sera pas à refaire :** les trois règles de
 construction (aucun git · jamais sous `APP_ROOT` · ne supprime que ses propres
