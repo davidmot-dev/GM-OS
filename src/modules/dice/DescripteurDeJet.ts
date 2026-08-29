@@ -22,6 +22,10 @@
 import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
+import {
+    facesDuNiveau, appliquerLeModificateur, bornerLaPoignee,
+    type NomDEchelle, type DeEchelonne, type ModificateurDeDes,
+} from './desEchelonnes';
 
 /** Un choix que le joueur fait sur sa fiche au moment de lancer. */
 export interface ComposanteDeJet {
@@ -188,6 +192,33 @@ export interface DescripteurDeJet {
             libelleDuUn?: string;
         };
     };
+    /**
+     * **Chaque composante donne UN dé, dont la TAILLE se lit sur la fiche.**
+     *
+     * *Le mur du 2026-08-29, signalé par David à l'écran sur Blade Runner.* Ni
+     * `seuil` ni `reserve` ne pouvaient exprimer ce jeu : le premier additionne
+     * des nombres — or un attribut y vaut `"B (D10)"` —, le second lance des dés
+     * **tous de la même taille**. Le panneau annonçait donc « agilite est absent
+     * de la fiche » sur un champ parfaitement rempli.
+     *
+     * **Exclusif de `seuil` et de `cible`** : il n'y a aucun seuil dans cette
+     * famille de jeux. On lance, et on compte les six.
+     *
+     * L'échelle est **nommée, jamais transcrite ici** — même règle que `cible`,
+     * et pour la même raison : un pilote est forgé par un modèle de langage, et
+     * une table qu'il recopie est une table qu'il peut recopier de travers.
+     */
+    desEchelonnes?: {
+        /** L'échelle qui traduit la valeur de la fiche en nombre de faces. */
+        echelle: NomDEchelle;
+        /** Une composante, un dé. Chez Blade Runner : l'attribut et la compétence. */
+        composantes: ComposanteDeJet[];
+        /**
+         * Dés comptés à part, dont les 1 usent le matériel — équipement,
+         * artefact. Même rôle que `reserve.secondaire`, autre variante.
+         */
+        secondaire?: { label: string; libelleDuUn?: string };
+    };
     /** Chaque dé est-il une réussite en dessous ou au-dessus du seuil ? */
     sens: SensDuJet;
     /** Un dé à cette valeur ou en deçà compte double. Chez Dune, le 1 naturel. */
@@ -237,6 +268,14 @@ export interface ChoixDuJoueur {
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
      */
     critiqueEtendu?: number;
+    /**
+     * Avantage ou désavantage, sur un jeu à dés échelonnés.
+     *
+     * Distinct de `desSupplementaires`, qui achète des dés identiques : ici on
+     * ajoute une copie du **plus petit** dé, ou on le retire. *Même mot d'usage,
+     * mécanique sans rapport* — le piège relevé sur `difficulte`.
+     */
+    modificateurDeDes?: ModificateurDeDes;
 }
 
 /** Un jet prêt à partir, et de quoi expliquer d'où il sort. */
@@ -263,6 +302,15 @@ export interface JetPrepare {
      */
     echelle?: EchelleDuJet;
     nombreDeDes: number;
+    /**
+     * **Les dés de base quand ils n'ont pas tous la même taille.**
+     *
+     * Vide sur tous les autres jeux, et c'est la façon de savoir : quand il est
+     * rempli, `faces` et `nombreDeDes` ne suffisent plus à décrire le lancer, et
+     * c'est cette liste qui fait foi. Elle vaut détail affichable aussi — le
+     * joueur voit d'où vient chacun de ses dés.
+     */
+    desEchelonnes: DeEchelonne[];
     /**
      * Le détail de la réserve, quand elle se compose depuis la fiche.
      *
@@ -730,7 +778,14 @@ export function preparerLeJet(
       contrôle du pilote signale déjà à la revue.
     */
     const reserve = descripteur.reserve;
-    if (!reserve) {
+    /*
+      **Un jeu à dés échelonnés n'a pas de réserve, et n'en manque pas.** Sa
+      poignée se compose autrement — une composante, un dé. Réclamer une réserve
+      qu'il n'aura jamais ferait crier l'écran sur le cas normal, et *un
+      avertissement qui se déclenche sur le cas normal apprend à ignorer les
+      avertissements.*
+    */
+    if (!reserve && !descripteur.desEchelonnes) {
         avertissements.push('Le pilote ne décrit aucune réserve de dés : rien à lancer.');
     }
 
@@ -759,6 +814,51 @@ export function preparerLeJet(
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
     /*
+      **Les dés échelonnés : une composante, un dé, une taille lue sur la fiche.**
+
+      Ils ne passent ni par `seuil` — qui additionne des nombres, et un attribut
+      de Blade Runner vaut « B (D10) » — ni par `reserve`, qui lance des dés tous
+      identiques. Les sections se résolvent exactement comme ailleurs : c'est la
+      **valeur** qui se lit autrement, pas l'endroit où on la choisit.
+    */
+    const desEchelonnes: DeEchelonne[] = [];
+    if (descripteur.desEchelonnes) {
+        for (const composante of descripteur.desEchelonnes.composantes) {
+            const champ = choix.champs[composante.id];
+            if (!champ) {
+                avertissements.push(`${composante.label} : aucun champ retenu.`);
+                continue;
+            }
+
+            const brut = valeursDeLaFiche[champ];
+            const faces = facesDuNiveau(brut, descripteur.desEchelonnes.echelle);
+            if (faces === null) {
+                avertissements.push(
+                    brut === undefined || brut === null || brut === ''
+                        ? `${composante.label} : « ${champ} » est absent de la fiche.`
+                        : `${composante.label} : « ${champ} » vaut « ${String(brut)} », `
+                          + "qui ne désigne aucun niveau connu (A, B, C ou D).",
+                );
+                continue;
+            }
+
+            desEchelonnes.push({ label: composante.label, champ, niveau: String(brut), faces });
+        }
+    }
+
+    /*
+      L'ordre n'est pas interchangeable : le modificateur d'abord, les bornes
+      ensuite. Borner avant laisserait un désavantage vider la poignée — et un
+      jet sans dé n'échoue pas, il ne se lance pas.
+    */
+    const apresModificateur = appliquerLeModificateur(
+        desEchelonnes,
+        choix.modificateurDeDes ?? 'aucun',
+    );
+    const poignee = bornerLaPoignee(apresModificateur);
+    remarques.push(...poignee.remarques);
+
+    /*
       Sans bornes déclarées, il n'y a rien à borner : la difficulté vaut ce que
       le meneur demande, et zéro à défaut. Un jeu qui compte les réussites sans
       seuil — Alien, où un seul six suffit — n'a pas à se voir imposer celui de
@@ -778,7 +878,14 @@ export function preparerLeJet(
         composantes,
         explicationDuSeuil,
         echelle,
-        nombreDeDes,
+        /*
+          Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne
+          passent pas par la réserve, et `reserve.max` vaut zéro faute de réserve
+          déclarée — un `Math.min` avec zéro aurait rendu « 0 dé » sur un jet
+          parfaitement composé.
+        */
+        nombreDeDes: descripteur.desEchelonnes ? poignee.des.length : nombreDeDes,
+        desEchelonnes: poignee.des,
         composantesDeLaReserve: deLaReserve.retenues,
         /*
           La seconde poule échappe au plafond de la première : chez Alien le
@@ -811,7 +918,15 @@ export function preparerLeJet(
           réclame le retrait du champ inutile.
         */
         reussitesRequises: descripteur.cible ? 1 : bornes ? difficulte : 1,
-        faces: reserve?.faces ?? 0,
+        /*
+          Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
+          dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de
+          vrai plutôt que « 2d0 » — le détail exact vit dans `desEchelonnes`,
+          qui est le seul endroit où la poignée est décrite fidèlement.
+        */
+        faces: descripteur.desEchelonnes
+            ? Math.max(0, ...poignee.des.map(d => d.faces))
+            : reserve?.faces ?? 0,
         sens: descripteur.sens,
         // La spécialisation élargit le critique ; sans elle, le critique ordinaire.
         doubleSous: Math.max(choix.critiqueEtendu ?? 0, descripteur.critique ?? 0),

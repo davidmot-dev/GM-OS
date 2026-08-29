@@ -129,10 +129,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => preparerLeJet(
             descripteur, valeurs,
-            { champs: choix, desSupplementaires: desAchetes, difficulte, ajustementDeDifficulte },
+            {
+                champs: choix, desSupplementaires: desAchetes, difficulte, ajustementDeDifficulte,
+                /*
+                  Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
+                  ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
+                  poignée. Ailleurs, ils font garder un dé sur deux, et c'est
+                  `rollAdvantage` — deux mécaniques, un seul sélecteur à l'écran.
+                */
+                modificateurDeDes: descripteur.desEchelonnes ? modificateur : 'aucun',
+            },
             template.sections,
         ),
-        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, template.sections],
+        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateur, template.sections],
     );
 
     /*
@@ -162,8 +171,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * La liste des moteurs qui résolvent eux-mêmes vit dans `DiceEngine`, et
      * nulle part ailleurs : recopiée ici, elle dériverait.
      */
-    const avantagePossible = DiceEngine.unSeulDeDecide(dice.engine, jet.nombreDeDes)
-        && !!seuilDuMoteur;
+    const avantagePossible = descripteur.desEchelonnes
+        // Sur les dés échelonnés, le livre les décrit explicitement : un
+        // troisième dé copié du plus petit, ou le plus petit retiré.
+        ? jet.desEchelonnes.length > 0
+        : DiceEngine.unSeulDeDecide(dice.engine, jet.nombreDeDes) && !!seuilDuMoteur;
 
     /**
      * **Tout ce que le joueur doit retenir sur sa fiche, en une seule liste.**
@@ -179,6 +191,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ...(descripteur.cible?.ajustement ?? []),
         ...(descripteur.reserve?.composantes ?? []),
         ...(descripteur.reserve?.secondaire?.composantes ?? []),
+        // Une composante à dés échelonnés se retient comme les autres : le
+        // joueur choisit son attribut et sa compétence, et chacun donne un dé.
+        ...(descripteur.desEchelonnes?.composantes ?? []),
         ...(descripteur.seuil ?? []),
     ], [descripteur]);
 
@@ -218,9 +233,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          * pourquoi ne renseigne sur rien.
          */
         const dit = modificateur === 'aucun' ? '' : ` avec ${LIBELLES[modificateur]}`;
+        /*
+          Une poignée échelonnée se dit dé par dé — « D10 + D6 » —, jamais
+          « 2d10 » : les deux dés n'ont pas la même taille, et c'est justement
+          ce que le joueur doit retrouver en relisant sa séance.
+        */
+        const poigneeDite = jet.desEchelonnes.map(d => `D${d.faces}`).join(' + ');
         const enTete = (jet.composantes.length > 0
             ? `Jet : ${jet.composantes.map(c => c.label).join(' + ')} (seuil ${jet.seuil})`
-            : `Jet : ${jet.nombreDeDes}d${jet.faces}`) + dit;
+            : jet.desEchelonnes.length > 0
+                ? `Jet : ${poigneeDite}`
+                : `Jet : ${jet.nombreDeDes}d${jet.faces}`) + dit;
 
         if (monnaie && jet.cout.ressource && jet.cout.total > 0) {
             dits.push(...mouvoir(
@@ -254,7 +277,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           qui passe : `verdict` compte des réussites, et `rollAdvantage` n'en
           rend pas.
         */
-        const res = modificateur !== 'aucun' && avantagePossible
+        /*
+          **Les dés échelonnés se lancent par leur propre porte.**
+
+          `rollFromConfig` prend UN nombre de dés et UNE taille — c'est tout ce
+          qu'il a jamais eu. Ici la poignée n'a pas de taille commune : chaque dé
+          la tient de sa lettre sur la fiche. Lui passer `jet.faces` lancerait
+          deux D10 là où le personnage a un D10 et un D6, et *le total aurait
+          l'air juste.*
+          L'avantage et le désavantage sont déjà appliqués à la poignée par
+          `preparerLeJet` — ils ajoutent ou retirent un dé, ils n'en gardent pas
+          un sur deux comme `rollAdvantage`.
+        */
+        const res = jet.desEchelonnes.length > 0
+            ? DiceEngine.rollYZEEchelonne(jet.desEchelonnes.map(d => d.faces))
+            : modificateur !== 'aucun' && avantagePossible
             ? (() => {
                 const brut = DiceEngine.rollAdvantage(
                     jet.faces,
@@ -298,7 +335,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         consignerLeJet({
             titre: jet.composantes.length > 0
                 ? jet.composantes.map(c => c.label).join(' + ')
-                : `${jet.nombreDeDes}d${jet.faces}`,
+                : jet.desEchelonnes.length > 0
+                    ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
+                    : `${jet.nombreDeDes}d${jet.faces}`,
             totalDisplay: res.totalDisplay,
             degre: res.degre,
             tagSuccess: res.tagSuccess,
@@ -457,6 +496,27 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 plus bas, et pas ici : le panneau en a déjà un endroit, et deux
                 listes de la même chose finissent par diverger.
             */}
+
+            {/*
+                **La poignée échelonnée se montre dé par dé.**
+
+                Un nombre seul — « 2 dés » — ne dirait rien ici : deux D6 et deux
+                D12 ne sont pas le même jet, et c'est la fiche qui décide. Le
+                joueur doit voir « Attribut D10 + Compétence D6 » pour reconnaître
+                son personnage dans ce qu'il lance.
+            */}
+            {jet.desEchelonnes.length > 0 && (
+                <div className="flex items-baseline gap-2 text-xs flex-wrap">
+                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">Dés</span>
+                    {jet.desEchelonnes.map((d, i) => (
+                        <span key={`${d.champ}-${i}`} className="font-mono">
+                            {i > 0 && <span className="text-app-text/30 mr-2">+</span>}
+                            <span className="text-lg font-black text-accent">D{d.faces}</span>
+                            <span className="text-app-text/30 ml-1">({d.label})</span>
+                        </span>
+                    ))}
+                </div>
+            )}
 
             {/* La seconde poule, nommée par le jeu. Elle se montre à part parce
                 qu'elle se compte à part : chez Alien, un 1 sur un dé de stress

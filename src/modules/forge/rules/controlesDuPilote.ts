@@ -370,6 +370,30 @@ export function controlerLePilote(
       Avertissement et non erreur : le pilote fonctionne, il est seulement
       encombré. *On ne refuse pas un pilote jouable pour un champ inerte.*
     */
+    /*
+      **Un seuil composé de valeurs qui ne sont pas des nombres.**
+
+      *Le défaut vu à l'écran par David le 2026-08-29*, sur Blade Runner : le
+      pilote déclarait un `seuil` — donc une addition — alors qu'un attribut y
+      vaut `"B (D10)"`. Le panneau annonçait « agilite est absent de la fiche »
+      sur un champ parfaitement rempli, et le bouton restait gris sans que rien
+      n'explique pourquoi.
+
+      On ne peut pas le détecter ici sans la fiche d'un personnage. Ce qu'on
+      **peut** dire, c'est qu'un pilote de la famille Year Zero à dés échelonnés
+      n'a rien à faire d'un seuil : ces jeux ne composent aucune valeur à
+      atteindre, ils comptent les six. *Déclarer les deux, c'est déclarer deux
+      mécaniques dont une seule s'appliquera.*
+    */
+    if (driver.jet?.desEchelonnes && (driver.jet?.seuil?.length || driver.jet?.cible)) {
+        avertir(
+            'jet.seuil',
+            'Ce pilote lance des dés échelonnés ET compose un seuil. Un jeu à dés échelonnés ' +
+            'ne compose aucune valeur à atteindre : il compte les six. Retirer « jet.seuil » ' +
+            '(et « jet.cible ») évite un calcul mort à côté de celui qui compte.',
+        );
+    }
+
     if (driver.jet?.cible && driver.jet?.difficulte) {
         avertir(
             'jet.difficulte',

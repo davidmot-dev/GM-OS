@@ -470,6 +470,69 @@ export class DiceEngine {
         };
     }
 
+    /**
+     * **Year Zero, variante « dés échelonnés » — Blade Runner, Twilight 2000.**
+     *
+     * `rollYZE` juste au-dessus est l'autre variante, celle des **pools** : une
+     * poignée de dés tous à six faces, et seul un six réussit. Elle ne pouvait
+     * pas servir ici, et deux règles l'en empêchent :
+     *
+     * 1. **Les dés n'ont pas la même taille.** On en lance deux — un pour
+     *    l'attribut, un pour la compétence — et la **lettre** de chacun donne son
+     *    nombre de faces : A → D12, B → D10, C → D8, D → D6. Toutes les fonctions
+     *    de ce moteur prenaient *une* taille pour toute la réserve.
+     * 2. **Dix ou plus vaut DEUX réussites** — impossible sur un D6 ou un D8,
+     *    donc c'est bien la taille du dé qui décide de ce qu'il peut rapporter.
+     *    Compter les six et s'arrêter là volerait au personnage compétent
+     *    exactement ce que son meilleur dé lui apporte, *et le total aurait l'air
+     *    juste.*
+     *
+     * Les Écueils — les 1 — sont relevés sur **tous** les dés : sur les dés de
+     * base, ils ne coûtent qu'après une poussée ; sur les dés secondaires
+     * (équipement), ils usent le matériel. Ce moteur les **compte** et ne
+     * prélève rien : la poussée est une décision du joueur, prise après avoir vu
+     * le résultat, et elle n'appartient pas au lancer.
+     *
+     * @param taillesDeBase Nombre de faces de chaque dé de base, dans l'ordre.
+     * @param taillesSecondaires Dés d'équipement ou d'artefact, comptés à part.
+     */
+    static rollYZEEchelonne(taillesDeBase: number[], taillesSecondaires: number[] = []): RollResult {
+        const rolls: RollResult['rolls'] = [];
+        let successes = 0;
+        let banes = 0;
+
+        const lancerUn = (faces: number, source: 'base' | 'gear') => {
+            const v = this.roll(faces);
+            // Six ou plus : une réussite. Dix ou plus : une seconde par-dessus.
+            if (v >= 6) successes += v >= 10 ? 2 : 1;
+            if (v === 1) banes++;
+
+            rolls.push({
+                val: v,
+                sides: faces,
+                isCritMax: v >= 10,
+                isCritMin: v === 1,
+                source,
+            });
+        };
+
+        for (const faces of taillesDeBase) lancerUn(faces, 'base');
+        for (const faces of taillesSecondaires) lancerUn(faces, 'gear');
+
+        const tagSuccess = successes > 0;
+
+        return {
+            total: successes,
+            rolls,
+            modifier: 0,
+            successes,
+            fails: banes,
+            tagSuccess,
+            degre: degreDepuisLeBooleen(tagSuccess),
+            totalDisplay: `${successes} Succès${banes > 0 ? ` / ${banes} Écueils` : ''}`,
+        };
+    }
+
     // --- 9. PARSEUR DE FORMULE LIBRE (ex: 2d6-1d4+5) ---
     /**
      * Tokenise une formule de dés (ex: "2d6-1d4+5").
