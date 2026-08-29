@@ -1563,6 +1563,15 @@ const ForgeDashboard: React.FC = () => {
                   driver={forgeStore.analysisResult.driver}
                   template={forgeStore.analysisResult.template}
                   corpusId={corpusDeDestination(forgeStore.analysisResult.driver.name)?.id}
+                  /*
+                    La requalification s'applique au résultat AVANT enregistrement :
+                    c'est le même endroit où le corpus se corrige, et pour la même
+                    raison — après, il faut supprimer le pilote et recommencer.
+                  */
+                  onRequalifier={driver => {
+                    forgeStore.completeAnalysis({ ...forgeStore.analysisResult!, driver });
+                    gmToast('Jet requalifié en dés échelonnés.');
+                  }}
                 />
 
                 {/* Un pilote sans nom n'est pas enregistrable : on dit laquelle

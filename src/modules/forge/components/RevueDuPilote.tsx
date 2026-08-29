@@ -4,6 +4,7 @@ import { MECANIQUES_DE_CIBLE } from '../../dice/systemes';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { controlerLePilote, type ConstatDuPilote } from '../rules/controlesDuPilote';
+import { peutEtreRequalifie, requalifierEnDesEchelonnes } from '../rules/convertirEnDesEchelonnes';
 import LienAuCorpus from '../corpus/LienAuCorpus';
 
 /**
@@ -149,7 +150,14 @@ export const RevueDuPilote: React.FC<{
    * pouvoir le corriger — après, il faut supprimer le pilote et recommencer.
    */
   corpusId?: string;
-}> = ({ driver, template, corpusId }) => {
+  /**
+   * Appelé quand le meneur requalifie le jet en dés échelonnés.
+   *
+   * Absent, le bouton ne s'affiche pas : une revue qui propose un geste sans
+   * destinataire est pire qu'une revue qui n'en propose aucun.
+   */
+  onRequalifier?: (driver: Partial<GameDriver>) => void;
+}> = ({ driver, template, corpusId, onRequalifier }) => {
   const constats = controlerLePilote(driver, template);
   const sections = template.sections ?? [];
   const idsDeSections = new Set(sections.map(s => s.id));
@@ -162,6 +170,46 @@ export const RevueDuPilote: React.FC<{
   return (
     <div className="space-y-6">
       <JournalDesConstats constats={constats} />
+
+      {/*
+        **Requalifier le jet, à la main — parce que la consigne a échoué trois
+        fois.**
+
+        Le 2026-08-29, David a dérivé son pilote Blade Runner trois fois, avec
+        une consigne corrigée entre chaque, et il est ressorti trois fois avec un
+        seuil. `desEchelonnes` est une clé que le modèle n'a jamais vue ; `seuil`
+        lui est familier depuis toujours. *Quand une consigne échoue trois fois,
+        ce n'est plus la consigne qu'il faut réécrire.*
+
+        Le modèle a fait la moitié difficile correctement — les bonnes
+        composantes, dans les bonnes sections. Ce bouton ne crée rien : il
+        DÉPLACE ce qu'il a trouvé vers la mécanique que le meneur, lui, connaît.
+      */}
+      {onRequalifier && peutEtreRequalifie(driver) && (
+        <div className="bg-app-text/5 border border-app-border/20 rounded-2xl p-5 space-y-3">
+          <p className="text-[10px] uppercase font-black text-accent tracking-[0.2em] font-display">
+            Ce jeu lance-t-il des dés échelonnés ?
+          </p>
+          <p className="text-xs text-app-text/60 leading-relaxed">
+            Si les attributs et compétences de ce jeu valent une <strong>lettre</strong> — A, B, C, D —
+            qui désigne une taille de dé, et qu'on lance <strong>un dé par valeur</strong> au lieu de
+            les additionner, ce pilote se trompe de mécanique. C'est le cas de Blade Runner et de la
+            famille Year Zero à dés échelonnés.
+          </p>
+          <button
+            type="button"
+            onClick={() => onRequalifier(requalifierEnDesEchelonnes(driver).driver)}
+            className="px-4 py-2 rounded-xl bg-accent/15 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/25 transition-colors"
+          >
+            Requalifier en dés échelonnés
+          </button>
+          <p className="text-[10px] text-app-text/40 leading-relaxed">
+            Rien n'est inventé : les {driver.jet?.seuil?.length ?? 0} composantes trouvées par la
+            Forge sont déplacées telles quelles, avec leurs sections. Le seuil, qui n'a pas de sens
+            ici, est retiré.
+          </p>
+        </div>
+      )}
 
       {/*
         **Le corpus, avant le reste.** Un pilote rattaché au mauvais dossier
