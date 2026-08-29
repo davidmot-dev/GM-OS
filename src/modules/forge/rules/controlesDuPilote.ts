@@ -559,10 +559,42 @@ export function controlerLePilote(
     }
 
     if (driver.jet?.reserve && driver.jet.reserve.max < 1) {
+        /*
+          **Une réserve vide ne veut pas dire la même chose partout.**
+
+          *Relevé sur la revue de David le 2026-08-29.* Un jeu à dés échelonnés
+          n'a pas de réserve : sa poignée vient des composantes, une par dé. Une
+          réserve à zéro y est un **champ mort**, pas une panne — et lui dire
+          « le panneau n'aurait rien à lancer » est faux, il a exactement ses
+          deux dés. *Un contrôle qui se trompe est pire qu'un contrôle absent* :
+          il envoie corriger ce qui marche.
+        */
         avertir(
             'jet.reserve',
-            `Réserve de ${driver.jet.reserve.base} à ${driver.jet.reserve.max} dés : le panneau de ` +
-            'jet n\'aurait rien à lancer.',
+            driver.jet.desEchelonnes
+                ? 'Réserve vide à côté de dés échelonnés : ces jeux n\'ont pas de réserve, leur '
+                  + 'poignée vient des composantes. Le jet fonctionne ; retirer « jet.reserve » '
+                  + 'évite un champ mort — et un champ mort qu\'on laisse finit par être rempli.'
+                : `Réserve de ${driver.jet.reserve.base} à ${driver.jet.reserve.max} dés : le panneau de `
+                  + 'jet n\'aurait rien à lancer.',
+        );
+    }
+
+    /*
+      **Aucune voie de résolution : le panneau ne saura pas quoi faire.**
+
+      Les trois voies — additionner un seuil, croiser une table, lancer des dés
+      échelonnés — plus la réserve pure d'Alien : un pilote qui n'en déclare
+      aucune n'a rien à lancer, et l'écran le montrera vide sans dire pourquoi.
+      *C'est le contrôle qui manquait pour répondre « la dérivation a-t-elle
+      pris ? » d'un coup d'œil, au lieu d'ouvrir une fiche de personnage.*
+    */
+    if (driver.jet && !driver.jet.seuil?.length && !driver.jet.cible
+        && !driver.jet.desEchelonnes && !driver.jet.reserve) {
+        erreur(
+            'jet',
+            'Ce pilote ne dit pas COMMENT un jet se résout : ni seuil additionné, ni cible '
+            + 'calculée, ni dés échelonnés, ni réserve. Le panneau de jet n\'aura rien à composer.',
         );
     }
 

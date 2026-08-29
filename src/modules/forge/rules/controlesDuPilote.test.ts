@@ -455,7 +455,9 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
             { jet: { seuil: [], sens: 'none' } } as unknown as Partial<GameDriver>,
             fiche,
         );
-        expect(constats.map(c => c.ou)).toEqual(['jet.sens']);
+        // « jet » s'ajoute à juste titre : ce pilote de test ne déclare AUCUNE
+        // voie de résolution — ni seuil, ni cible, ni dés échelonnés, ni réserve.
+        expect(constats.map(c => c.ou)).toEqual(['jet.sens', 'jet']);
     });
 
     it('un jet par défaut qui ne lance aucun dé', () => {
@@ -479,8 +481,61 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
             { jet: { seuil: [], sens: 'sous-ou-egal' } } as unknown as Partial<GameDriver>,
             fiche,
         );
-        expect(constats.map(c => c.ou)).toEqual(['jet.sens']);
+        expect(constats.map(c => c.ou)).toEqual(['jet.sens', 'jet']);
         expect(constats[0].message).toContain('superieur-ou-egal');
+    });
+
+    /**
+     * **Le contrôle qui répond « la dérivation a-t-elle pris ? » d'un coup d'œil.**
+     *
+     * *Écrit le 2026-08-29 :* David a redérivé son pilote Blade Runner deux fois
+     * de suite sans pouvoir savoir, depuis la revue, si la mécanique attendue
+     * était arrivée — il fallait rouvrir une fiche de personnage pour le
+     * découvrir. Un pilote sans voie de résolution n'a rien à composer, et
+     * l'écran le montrait vide sans dire pourquoi.
+     */
+    it('un pilote qui ne dit pas comment un jet se résout', () => {
+        const constats = controlerLePilote(
+            { jet: { sens: 'superieur-ou-egal' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['jet']);
+        expect(constats[0].message).toContain('dés échelonnés');
+    });
+
+    /** Chacune des quatre voies suffit à le faire taire. */
+    it('se tait dès qu’une voie de résolution existe', () => {
+        const avec = (jet: Record<string, unknown>) => controlerLePilote(
+            { jet: { sens: 'superieur-ou-egal', ...jet } } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou === 'jet');
+
+        expect(avec({ seuil: [{ id: 'c', label: 'C', sectionId: 'competences' }] })).toEqual([]);
+        expect(avec({ cible: { mecanique: 'reves-de-dragons', caracteristique: { id: 'c', label: 'C', sectionId: 'competences' } } })).toEqual([]);
+        expect(avec({ desEchelonnes: { echelle: 'yze-lettres', composantes: [] } })).toEqual([]);
+        expect(avec({ reserve: { base: 1, max: 5, faces: 6 } })).toEqual([]);
+    });
+
+    /**
+     * *Un contrôle qui se trompe est pire qu'un contrôle absent.* Sur un jeu à
+     * dés échelonnés, une réserve vide est un champ mort — pas une panne, et
+     * surtout pas « rien à lancer » : le panneau a exactement ses deux dés.
+     */
+    it('ne dit pas « rien à lancer » à un jeu qui lance des dés échelonnés', () => {
+        const constats = controlerLePilote(
+            {
+                jet: {
+                    sens: 'superieur-ou-egal',
+                    desEchelonnes: { echelle: 'yze-lettres', composantes: [] },
+                    reserve: { base: 0, max: 0, faces: 6 },
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou === 'jet.reserve');
+
+        expect(constats).toHaveLength(1);
+        expect(constats[0].message).not.toContain('rien à lancer');
+        expect(constats[0].message).toContain('champ mort');
     });
 
     it('mais « sous un seuil » avec un seuil composé ne dit rien — c\'est Dune', () => {
