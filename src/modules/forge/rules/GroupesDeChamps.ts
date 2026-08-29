@@ -339,8 +339,17 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             '(c) La valeur d\'un attribut ou d\'une compétence est une LETTRE ou un RANG qui ' +
             'DÉSIGNE UNE TAILLE DE DÉ — « A » vaut un dé à douze faces, « B » un dé à dix —, et ' +
             'l\'on lance UN DÉ PAR VALEUR au lieu d\'additionner quoi que ce soit → remplis ' +
-            '"jet.desEchelonnes". ' +
+            // **La forme, tout de suite.** `desEchelonnes` est une clé que le
+            // modèle n'a jamais vue ; `seuil` lui est familier. Décrire (c) sans
+            // la montrer, puis n'en donner la forme que quarante lignes plus
+            // bas, c'est laisser le familier gagner — le défaut exact du
+            // 2026-08-16, où une consigne éloignée de son exemple s'est perdue.
+            '"jet.desEchelonnes", de la forme ' +
+            '{"echelle":"yze-lettres","composantes":[{"id":"attribut","label":"Attribut",' +
+            '"sectionId":"…"},{"id":"competence","label":"Compétence","sectionId":"…"}]}. ' +
             '**REMPLIS UNE SEULE DES TROIS ET LAISSE LES DEUX AUTRES VIDES.** ' +
+            'Blade Runner, Twilight 2000 et les jeux « Year Zero » à dés échelonnés sont dans le ' +
+            'cas (c) : leurs attributs valent A, B, C ou D et NON un nombre. ' +
             '"jet.cible" porte "mecanique", ' +
             // **LE COMPTE, ICI ET PAS PLUS LOIN.** La premiere redaction
             // decrivait le CONTENU de l'ajustement — « les composantes lues sur

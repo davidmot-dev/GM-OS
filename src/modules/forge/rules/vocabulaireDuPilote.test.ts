@@ -225,6 +225,26 @@ describe('la cible du groupe « jet »', () => {
     });
 
     /**
+     * **La forme de la voie neuve se montre dans la fourche, pas quarante lignes
+     * plus bas.**
+     *
+     * `desEchelonnes` est une clé que le modèle n'a jamais vue ; `seuil` lui est
+     * familier depuis toujours. Décrire la voie (c) sans la montrer laisse le
+     * familier gagner — c'est le défaut du 2026-08-16, où une consigne éloignée
+     * de son exemple s'est perdue, et c'est ce que la première dérivation de
+     * Blade Runner du 2026-08-29 a refait.
+     */
+    it('montre la forme des dés échelonnés DANS la fourche', () => {
+        const fourche = jet.cible.slice(
+            jet.cible.indexOf('COMMENT LE JET SE RÉSOUT-IL ?'),
+            jet.cible.indexOf('UNE SEULE DES TROIS'),
+        );
+
+        expect(fourche).toContain('"echelle":"yze-lettres"');
+        expect(fourche).toContain('"composantes"');
+    });
+
+    /**
      * Même règle que pour `cible` : le pilote **nomme** l'échelle, il ne la
      * transcrit pas. Un pilote est forgé par un modèle de langage, et une table
      * qu'il recopie est une table qu'il peut recopier de travers.
