@@ -127,6 +127,17 @@ contextBridge.exposeInMainWorld('appBridge', {
         ): Promise<{ context: string; sources: { path: string; relu?: boolean; aRegenerer?: boolean; provenance: string; sujet?: string }[] }> =>
             ipcRenderer.invoke('ai:search-context', systemId, campaignName, options),
         reindex: () => ipcRenderer.invoke('ai:reindex'),
+        /**
+         * Le coffre Obsidian, **en plus** de `docs/`. `null` l'éteint.
+         *
+         * Volontairement séparé de `reindex`, qui n'accepte aucun argument et
+         * ne doit jamais en accepter : c'est par là que la racine du corpus
+         * s'était fait remplacer.
+         */
+        coffreBrancher: (chemin: string | null): Promise<{ accepte: boolean; raison?: string }> =>
+            ipcRenderer.invoke('ai:coffre-brancher', chemin),
+        coffreEtat: (): Promise<{ chemin: string | null; fichiers: number }> =>
+            ipcRenderer.invoke('ai:coffre-etat'),
         // Ollama Local AI
         ollamaChat: (
             model: string,
@@ -184,11 +195,25 @@ contextBridge.exposeInMainWorld('appBridge', {
             return () => ipcRenderer.off('mcp:activity', listener);
         }
     },
+    /**
+     * Le verrou de la souris des joueurs (Windows). Voir `sourisDesJoueurs.ts` :
+     * toute coupure se rend d'elle-même si elle n'est pas confirmée.
+     */
+    souris: {
+        inventaire: (): Promise<{ id: string; nom: string; active: boolean }[]> =>
+            ipcRenderer.invoke('souris:inventaire'),
+        couper: (id: string): Promise<{ ok: boolean; message?: string; retourDans?: number }> =>
+            ipcRenderer.invoke('souris:couper', id),
+        confirmer: (id: string): Promise<{ ok: boolean }> => ipcRenderer.invoke('souris:confirmer', id),
+        rendre: (id: string): Promise<{ ok: boolean; message?: string }> =>
+            ipcRenderer.invoke('souris:rendre', id),
+    },
     obsidian: {
         listNotes: (vaultPath?: string) => ipcRenderer.invoke('obsidian:list-notes', vaultPath),
         readNote: (relativePath: string, vaultPath?: string) => ipcRenderer.invoke('obsidian:read-note', relativePath, vaultPath),
         writeNote: (relativePath: string, content: string, vaultPath?: string) => ipcRenderer.invoke('obsidian:write-note', relativePath, content, vaultPath),
         ensureDirectory: (relativePath: string, vaultPath?: string) => ipcRenderer.invoke('obsidian:ensure-directory', relativePath, vaultPath),
+        vaultExists: (vaultPath?: string) => ipcRenderer.invoke('obsidian:vault-exists', vaultPath),
         selectVault: () => ipcRenderer.invoke('obsidian:select-vault')
     },
     remote: {

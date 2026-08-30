@@ -627,3 +627,84 @@ describe('corpus réel', () => {
         expect(estimateTokens(s.context)).toBeLessThan(93_000 / 10);
     });
 });
+
+/**
+ * **Le coffre Obsidian — le « Nexus Wiki » du meneur, indexé sous `coffre/`.**
+ *
+ * Son rang (50) est un arbitrage, pas un chiffre par défaut : au-dessus d'une
+ * décharge brute du système (40), en dessous des notes de la campagne en cours
+ * (60) et loin d'une fiche du corpus (100). Une note écrite à la main et non
+ * relue ne doit jamais doubler les règles du jeu.
+ */
+describe('le coffre du Nexus Wiki', () => {
+    const REQ_COFFRE = { systemId: 'alien', campaignName: 'Anges de Feu' };
+
+    it('est éligible quel que soit le système actif', () => {
+        const s = selectContext([brut('coffre/Campagnes/Hadley Hope.md')], REQ_COFFRE);
+        expect(s.retenus.map(r => r.provenance)).toEqual(['coffre']);
+    });
+
+    /**
+     * *Le défaut du 2026-08-22 sous une autre forme.* Une note rangée dans un
+     * dossier `systems/` du coffre ne doit pas hériter du rang d'une fiche —
+     * elle n'a été relue par personne.
+     */
+    it('ne peut jamais se faire passer pour une fiche du corpus', () => {
+        const note = fiche('coffre/systems/alien/rules/le-stress.md', 'le stress');
+        expect(selectContext([note], REQ_COFFRE).retenus[0].provenance).toBe('coffre');
+    });
+
+    /** Même un « Chemin des Notes » ne peut pas le revendiquer : le coffre est reconnu en premier. */
+    it('résiste à un chemin de campagne qui le recouvrirait', () => {
+        const s = selectContext([brut('coffre/Notes/scene.md')], { ...REQ_COFFRE, campaignPath: 'coffre' });
+        expect(s.retenus[0].provenance).toBe('coffre');
+    });
+
+    it('passe devant une décharge brute du système, derrière une note de campagne', () => {
+        const s = selectContext([
+            brut('coffre/Le Nexus.md', 'le stress monte'),
+            brut('systems/alien/decharge.md', 'le stress monte'),
+            brut('campaigns/Anges de Feu/notes.md', 'le stress monte'),
+        ], { ...REQ_COFFRE, query: 'le stress' });
+
+        expect(s.retenus.map(r => r.provenance)).toEqual(['campagne', 'coffre', 'systeme']);
+    });
+
+    /**
+     * **Le rang empêche l'inversion ; la pertinence tranche entre voisins.**
+     * L'écart coffre/campagne (10) est inférieur au bonus d'un titre, donc une
+     * note dont le titre PORTE la question passe devant une note de campagne
+     * qui ne fait que la mentionner.
+     *
+     * *Mesuré en écrivant ce test, et ce n'est pas évident à la lecture :* un
+     * mot trouvé dans l'en-tête **remplace** le bonus du corps au lieu de s'y
+     * ajouter (`if (entete.has(mot)) … else …`). Sur un seul mot de question,
+     * un titre du coffre vaut donc 62 contre 63 à une simple mention en
+     * campagne — la campagne gagne d'un point. Il en faut deux pour trancher,
+     * ce qui est aussi le cas réel : on ne pose pas une question d'un mot.
+     */
+    it('une note du coffre qui porte la question dans son titre passe devant', () => {
+        const s = selectContext([
+            fiche('coffre/Le Quart des Veilleurs.md', 'Le Quart des Veilleurs', 'La jauge de la table.'),
+            brut('campaigns/Anges de Feu/notes.md', 'On parle du quart et des veilleurs ici.'),
+        ], { ...REQ_COFFRE, query: 'comment marche le quart des veilleurs ?' });
+
+        expect(s.retenus[0].path).toBe('coffre/Le Quart des Veilleurs.md');
+    });
+
+    /**
+     * **Le coffre n'a pas le passe-droit du corpus, même avec un `sujet:`.**
+     * Une fiche du corpus passe entière parce qu'elle est écrite bornée ; une
+     * note d'Obsidian ne l'est sous aucune contrainte, et une note de trente
+     * mille caractères avalerait le budget à elle seule.
+     */
+    it('est tronqué comme un document brut, sujet ou pas', () => {
+        const enorme = 'le stress '.repeat(3000);
+        const s = selectContext([fiche('coffre/Tout mon lore.md', 'le stress', enorme)], {
+            ...REQ_COFFRE, query: 'le stress',
+        });
+
+        expect(s.retenus[0].tronque).toBe(true);
+        expect(s.retenus[0].tokens).toBeLessThanOrEqual(MAX_RAW_FILE_TOKENS);
+    });
+});

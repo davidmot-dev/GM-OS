@@ -16,12 +16,32 @@ interface ObsidianState {
     isLoading: boolean;
     error: string | null;
 
+    /**
+     * Le coffre est-il indexé par l'Oracle, **en plus** de `docs/` ?
+     *
+     * **Faux par défaut, et c'est la leçon du 2026-08-22.** Ce jour-là le coffre
+     * remplaçait la racine documentaire de l'Oracle, et le désastre a été
+     * silencieux **parce que `vaultPath` était renseigné en dur** : personne
+     * n'avait rien demandé, et pourtant tout `docs/` sortait de l'index.
+     *
+     * Le chemin ci-dessus garde donc sa valeur par défaut — il sert au panneau
+     * Nexus Wiki et aux exports — mais il ne franchit jamais la porte de
+     * l'Oracle tant que ce drapeau n'a pas été posé **à la main**.
+     */
+    indexerDansLOracle: boolean;
+    /** Le verdict du dernier branchement, pour que l'écran dise ce qui s'est passé. */
+    coffreDeLOracle: { fichiers: number; raison?: string } | null;
+
     // Actions
     setVaultPath: (path: string) => void;
     browseVaultPath: () => Promise<void>;
     fetchNotes: () => Promise<void>;
     selectNote: (path: string) => Promise<void>;
     syncActiveNoteToOracle: (notebookId: string) => Promise<boolean>;
+    /** Allume ou éteint la deuxième racine de l'Oracle. */
+    brancherLeCoffreDeLOracle: (actif: boolean) => Promise<void>;
+    /** Rebranche le coffre au démarrage — le moteur repart vierge à chaque lancement. */
+    appliquerLeCoffreAuDemarrage: () => Promise<void>;
 }
 
 export const useObsidianStore = create<ObsidianState>()(
@@ -33,6 +53,8 @@ export const useObsidianStore = create<ObsidianState>()(
             activeNoteContent: null,
             isLoading: false,
             error: null,
+            indexerDansLOracle: false,
+            coffreDeLOracle: null,
 
             setVaultPath: (path) => set({ vaultPath: path }),
 
@@ -106,11 +128,48 @@ export const useObsidianStore = create<ObsidianState>()(
                     set({ error: "Échec de la synchronisation vers l'Oracle" });
                     return false;
                 }
-            }
+            },
+
+            brancherLeCoffreDeLOracle: async (actif) => {
+                const brancher = window.appBridge?.ai?.coffreBrancher;
+                if (!brancher) {
+                    set({ coffreDeLOracle: { fichiers: 0, raison: "Disponible seulement dans l'application de bureau." } });
+                    return;
+                }
+
+                const { vaultPath } = get();
+                const verdict = await brancher(actif ? vaultPath : null);
+
+                if (!verdict.accepte) {
+                    // **On n'allume pas le drapeau sur un refus.** Sinon le
+                    // prochain démarrage rejouerait le même refus, et l'écran
+                    // afficherait « actif » pour un coffre que l'Oracle ne lit
+                    // pas — l'exact mensonge d'août.
+                    set({ indexerDansLOracle: false, coffreDeLOracle: { fichiers: 0, raison: verdict.raison } });
+                    return;
+                }
+
+                const etat = await window.appBridge?.ai?.coffreEtat?.();
+                set({ indexerDansLOracle: actif, coffreDeLOracle: { fichiers: etat?.fichiers ?? 0 } });
+            },
+
+            /**
+             * L'index du moteur vit en mémoire : il repart vide à chaque
+             * lancement. Sans ce rappel, le coffre serait branché *une fois*, et
+             * muet tous les jours suivants — **avec l'écran qui continue de dire
+             * « actif »**, parce que la préférence, elle, est persistée.
+             */
+            appliquerLeCoffreAuDemarrage: async () => {
+                if (!get().indexerDansLOracle) return;
+                await get().brancherLeCoffreDeLOracle(true);
+            },
         }),
         {
             name: 'obsidian-storage',
-            partialize: (state) => ({ vaultPath: state.vaultPath }),
+            partialize: (state) => ({
+                vaultPath: state.vaultPath,
+                indexerDansLOracle: state.indexerDansLOracle,
+            }),
         }
     )
 );

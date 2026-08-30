@@ -198,15 +198,6 @@
       "reconnect": "Reconnecter l'Oracle",
       "reconnect_note": "Un redémarrage peut être nécessaire si l'authentification est perdue."
     },
-    "obsidian": {
-      "title": "OBSIDIAN",
-      "subtitle": "Intégration du Vault & Graphe de Connaissance",
-      "status_offline": "Vault Hors-ligne",
-      "status_active": "Vault Connecté",
-      "sync_button": "Synchroniser",
-      "open_vault": "Ouvrir le Vault",
-      "config_hint": "Configuration requise dans external-mcp-obsidian"
-    },
     "audio": {
       "title": "Périphériques Audio",
       "subtitle": "E/S pour l'Analyse Vocale & Ambiante",

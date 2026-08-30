@@ -12,6 +12,7 @@ import LoadingOverlay from './components/common/LoadingOverlay';
 import { useMapStore } from './modules/map/useMapStore';
 import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
+import { useObsidianStore } from './modules/session/useObsidianStore';
 import { useAIStore } from './stores/useAIStore';
 import { useLightStore } from './modules/light/useLightStore';
 import { BootstrapService } from './modules/system/logic/BootstrapService';
@@ -126,6 +127,23 @@ function App() {
       BootstrapService.bootstrap();
     }
   }, [isMainPC, isHydrated, isSystemReady]);
+
+  /*
+    **Le coffre du Nexus Wiki se rebranche à chaque lancement.**
+
+    L'index de l'Oracle vit en mémoire dans le process principal : il repart
+    vide au démarrage. Sans ce rappel, le meneur aurait branché son coffre une
+    fois, et l'aurait cru branché tous les jours suivants — la préférence est
+    persistée, l'écran dirait « actif », et l'Oracle répondrait sans les notes.
+    *Le mensonge d'écran est le mode d'échec que ce chemin a déjà payé.*
+
+    Fenêtre du MJ seulement : c'est la seule qui parle au process principal.
+  */
+  useEffect(() => {
+    if (isMainPC && isHydrated) {
+      void useObsidianStore.getState().appliquerLeCoffreAuDemarrage();
+    }
+  }, [isMainPC, isHydrated]);
 
   // --- CROSS-WINDOW SYNC (relais du process principal ; BroadcastChannel hors Electron) ---
   useEffect(() => {

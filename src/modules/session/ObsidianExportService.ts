@@ -1,4 +1,5 @@
 import type { Campaign, Entity, AtlasMap, WikiEntry } from './useSessionOSStore';
+import { useObsidianStore } from './useObsidianStore';
 
 export class ObsidianExportService {
     private static instance: ObsidianExportService;
@@ -11,6 +12,48 @@ export class ObsidianExportService {
     }
 
     /**
+     * **Où écrire — et le service le décide, pas ses appelants.**
+     *
+     * Le paramètre `vaultPath` existait sur les deux exports et **aucun des deux
+     * appelants ne le passait** : `handleExportActiveCampaignToObsidian` et
+     * l'atelier des règles appelaient sans rien. Tout retombait donc sur le
+     * `DEFAULT_VAULT_PATH` écrit en dur dans la passerelle, et **le coffre choisi
+     * dans les réglages — ou déclaré sur la fiche de campagne — était ignoré.**
+     *
+     * Chez David les deux chemins coïncident, donc rien ne se voyait ; le jour où
+     * il change de coffre, l'export continue d'écrire dans l'ancien en annonçant
+     * une réussite.
+     *
+     * *Un argument facultatif que personne ne passe est un argument qui n'existe
+     * pas.* On le résout ici, une fois : un troisième appelant ne pourra pas
+     * refaire l'oubli. Le magasin fait foi — il reçoit déjà `campaign.obsidianPath`
+     * à l'activation d'une campagne comme à sa modification, donc il n'y a
+     * qu'**une** règle et pas deux.
+     */
+    private coffre(vaultPath?: string): string | undefined {
+        return vaultPath ?? useObsidianStore.getState().vaultPath ?? undefined;
+    }
+
+    /**
+     * Refuse d'écrire dans un coffre qui n'existe pas.
+     *
+     * `writeNote` appelle `ensureDir` : un chemin erroné ne lève pas, il crée
+     * une arborescence vide ailleurs et l'export s'annonce réussi. Sans cette
+     * porte, le correctif ci-dessus serait invérifiable.
+     *
+     * Quand la passerelle ne sait pas répondre (test, navigateur), on laisse
+     * passer : refuser sur une absence d'information bloquerait plus qu'elle ne
+     * protège.
+     */
+    private async coffreAbsent(vaultPath?: string): Promise<string | null> {
+        const verifier = window.appBridge?.obsidian?.vaultExists;
+        if (!verifier) return null;
+        return (await verifier(vaultPath))
+            ? null
+            : `Coffre Obsidian introuvable : ${vaultPath ?? '(aucun chemin)'}. Rien n'a été écrit.`;
+    }
+
+    /**
      * Exports a campaign and its associated data to Obsidian.
      */
     public async exportCampaign(
@@ -18,11 +61,15 @@ export class ObsidianExportService {
         entities: Entity[],
         locations: AtlasMap[],
         lore: WikiEntry[],
-        vaultPath?: string
+        vaultPathDemande?: string
     ): Promise<{ success: boolean; message: string }> {
         if (!window.appBridge?.obsidian?.writeNote) {
             return { success: false, message: "Obsidian Bridge non disponible." };
         }
+
+        const vaultPath = this.coffre(vaultPathDemande);
+        const absent = await this.coffreAbsent(vaultPath);
+        if (absent) return { success: false, message: absent };
 
         const rootDir = campaign.name.replace(/[<>:"/\\|?*]/g, ''); // Basic sanitization
 
@@ -75,11 +122,15 @@ export class ObsidianExportService {
         content: string,
         category: string = 'Règle',
         tags: string[] = [],
-        vaultPath?: string
+        vaultPathDemande?: string
     ): Promise<{ success: boolean; message: string }> {
         if (!window.appBridge?.obsidian?.writeNote) {
             return { success: false, message: "Obsidian Bridge non disponible." };
         }
+
+        const vaultPath = this.coffre(vaultPathDemande);
+        const absent = await this.coffreAbsent(vaultPath);
+        if (absent) return { success: false, message: absent };
 
         const sanitizedTitle = title.replace(/[<>:"/\\|?*]/g, '');
         const path = `Règles/${sanitizedTitle}.md`;

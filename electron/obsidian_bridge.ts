@@ -133,6 +133,26 @@ export function registerObsidianHandlers() {
         }
     });
 
+    /**
+     * Le coffre est-il là ?
+     *
+     * **`write-note` ne pouvait pas répondre à cette question, et c'est ce qui
+     * rendait un mauvais chemin invisible** : il appelle `ensureDir`, donc un
+     * chemin de coffre erroné ne provoquait pas d'échec — il *fabriquait* une
+     * arborescence vide ailleurs sur le disque, et l'export s'annonçait réussi.
+     *
+     * *Un export qui écrit quelque part est indiscernable d'un export qui écrit
+     * au bon endroit, tant que personne ne demande si le bon endroit existe.*
+     */
+    ipcMain.handle('obsidian:vault-exists', async (_event, vaultPath?: string) => {
+        const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+        try {
+            return (await fs.pathExists(rootPath)) && (await fs.stat(rootPath)).isDirectory();
+        } catch {
+            return false;
+        }
+    });
+
     ipcMain.handle('obsidian:select-vault', async (_event) => {
         const { filePaths } = await dialog.showOpenDialog({
             title: 'Sélectionner le coffre Obsidian',

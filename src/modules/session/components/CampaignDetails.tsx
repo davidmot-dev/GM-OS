@@ -54,6 +54,21 @@ const CampaignDetails: React.FC = () => {
         setTimeout(() => setNexusProgress(null), 3000);
     };
 
+    /**
+     * L'export vers le coffre **dit ce qu'il a fait**.
+     *
+     * Le bouton lançait l'export et jetait le verdict : un coffre introuvable
+     * était indiscernable d'une réussite. Le message vient du service, il n'est
+     * pas reconstruit ici.
+     */
+    const [verdictObsidian, setVerdictObsidian] = useState<{ success: boolean; message: string } | null>(null);
+    const handleExportObsidian = async () => {
+        setVerdictObsidian(null);
+        const verdict = await useSessionOSStore.getState().exportActiveCampaignToObsidian();
+        setVerdictObsidian(verdict);
+        setTimeout(() => setVerdictObsidian(null), 6000);
+    };
+
     // Handler résolution : appelé par NexusConflictResolver au clic
     const handleConflictResolve = (resolution: NexusConflictResolution) => {
         setConflictState(null);
@@ -88,9 +103,16 @@ const CampaignDetails: React.FC = () => {
                     <p className="text-app-text/40 text-sm tracking-widest uppercase font-semibold">{t('modules:session.campaign_details.subtitle')}</p>
                 </div>
                 <div className="ml-auto flex gap-2">
-                    <button 
-                        onClick={() => useSessionOSStore.getState().exportActiveCampaignToObsidian()}
-                        className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-sm text-purple-400 transition-all font-bold"
+                    <button
+                        onClick={handleExportObsidian}
+                        title={verdictObsidian?.message}
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm transition-all font-bold ${
+                            verdictObsidian === null
+                                ? 'bg-purple-500/20 hover:bg-purple-500/30 border-purple-500/30 text-purple-400'
+                                : verdictObsidian.success
+                                ? 'bg-green-500/20 border-green-500/30 text-green-400'
+                                : 'bg-rose-500/20 border-rose-500/30 text-rose-400'
+                        }`}
                     >
                         <Share2 size={16} />
                         {t('modules:session.campaign_details.actions.export_obsidian')}
@@ -104,6 +126,15 @@ const CampaignDetails: React.FC = () => {
                     </button>
                 </div>
             </div>
+
+            {verdictObsidian && (
+                <p
+                    role="status"
+                    className={`-mt-3 text-xs font-semibold ${verdictObsidian.success ? 'text-green-400' : 'text-rose-400'}`}
+                >
+                    {verdictObsidian.message}
+                </p>
+            )}
 
             <div className="grid grid-cols-12 gap-6">
                 {/* Left: General Info & Stats */}

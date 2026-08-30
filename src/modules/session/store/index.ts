@@ -118,7 +118,7 @@ interface CrossDomainActions {
      * connaissait ni actes ni scènes, a été retirée le même jour.
      */
     appliquerLaCampagneForgee: (ecriture: CampagneForgee) => void;
-    exportActiveCampaignToObsidian: () => Promise<void>;
+    exportActiveCampaignToObsidian: () => Promise<{ success: boolean; message: string }>;
     reconcileTemplates: () => void;
     generateEncounter: (templateId: string) => Entity[];
 }

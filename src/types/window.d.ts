@@ -312,6 +312,13 @@ declare global {
             /** Reindexe `docs/`. La racine est fixe : rien ne la deplace. */
             reindex: () => Promise<boolean>;
             /**
+             * Branche le coffre Obsidian **en plus** de `docs/` ; `null` l'éteint.
+             * Rend toujours un verdict — un refus muet laisserait croire les
+             * notes indexées alors que l'Oracle répondrait de sa mémoire.
+             */
+            coffreBrancher: (chemin: string | null) => Promise<{ accepte: boolean; raison?: string }>;
+            coffreEtat: () => Promise<{ chemin: string | null; fichiers: number }>;
+            /**
              * `options.json` pose `format: 'json'` côté Ollama — le décodage
              * est alors contraint par une grammaire, et la sortie ne peut plus
              * être autre chose que du JSON valide.
@@ -358,15 +365,40 @@ declare global {
             callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<MCPCallResult>;
             reauthenticate: () => Promise<{ success: boolean; message: string }>;
             restart: () => Promise<{ success: boolean; message: string }>;
-            checkStatus?: (serverName: string) => Promise<boolean>;
+            /*
+              `checkStatus` a été retiré le 2026-08-29 : **il était déclaré ici
+              et implémenté nulle part.** `preload.ts` n'expose que `listTools`,
+              `callTool`, `reauthenticate`, `restart` et `onActivity`. Son seul
+              lecteur — le voyant de la carte OBSIDIAN — testait donc une
+              fonction absente, et affichait « hors-ligne » pour toujours.
+
+              *Un type qui décrit une méthode inexistante est pire qu'un type
+              manquant : le compilateur bénit l'appel qui ne marchera jamais.*
+            */
             /** S'abonne au journal d'activité du pont. Rend la fonction de désabonnement. */
             onActivity?: (callback: (evenement: EvenementMcp) => void) => () => void;
+        };
+        /**
+         * Le verrou de la souris des joueurs (Windows uniquement).
+         *
+         * `couper` rend `retourDans` : le nombre de millisecondes au bout
+         * desquelles la coupure **se rend d'elle-même** si `confirmer` n'a pas
+         * été appelé. C'est le filet qui rend l'erreur sans conséquence quand
+         * deux souris portent le même nom.
+         */
+        souris?: {
+            inventaire: () => Promise<{ id: string; nom: string; active: boolean }[]>;
+            couper: (id: string) => Promise<{ ok: boolean; message?: string; retourDans?: number }>;
+            confirmer: (id: string) => Promise<{ ok: boolean }>;
+            rendre: (id: string) => Promise<{ ok: boolean; message?: string }>;
         };
         obsidian?: {
             listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;
             readNote: (relativePath: string, vaultPath?: string) => Promise<string | null>;
             writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
             ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
+            /** Le dossier existe-t-il ? `write-note` crée l'arborescence, donc il ne peut pas le dire. */
+            vaultExists: (vaultPath?: string) => Promise<boolean>;
             selectVault: () => Promise<string | null>;
         };
         /**
@@ -456,7 +488,9 @@ declare global {
         musicEngine?: {
             setMasterVolume: (v: number) => void;
             setCrossfader: (v: number) => void;
-            performAutoFade: (target: 'A' | 'B', durationMs: number) => void;
+            /** Mène la transition entière : fondu à puissance égale ET arrêt de la platine sortante. */
+            crossfadeTo: (target: 'A' | 'B', durationMs: number) => void;
+            positionDuCrossfader: () => number;
             resume: () => Promise<void>;
             deckA: any;
             deckB: any;

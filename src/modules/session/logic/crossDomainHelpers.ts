@@ -167,12 +167,24 @@ export const handleGeneratePlayerPortrait = async (
     }
 };
 
+/**
+ * **Le verdict de l'export remonte, désormais.**
+ *
+ * `exportCampaign` rend `{ success, message }` depuis toujours, et ce chemin le
+ * jetait : un coffre introuvable, une passerelle absente, une erreur d'écriture
+ * — le bouton se comportait à l'identique dans les quatre cas. *Le même motif
+ * que la sélection RAG : une donnée calculée puis jetée au dernier étage coûte
+ * deux fois.*
+ *
+ * Le chemin du coffre n'est plus passé d'ici : le service le résout lui-même,
+ * pour que l'atelier des règles en bénéficie sans qu'on ait à y penser.
+ */
 export const handleExportActiveCampaignToObsidian = async (
     get: () => SessionOSStore
-) => {
+): Promise<{ success: boolean; message: string }> => {
     const { obsidianExportService } = await import('../ObsidianExportService');
     const state = get();
     const campaign = state.campaigns.find((c) => c.id === state.activeCampaignId);
-    if (!campaign) return;
-    await obsidianExportService.exportCampaign(campaign, state.entities, state.atlasMaps, state.wikiEntries);
+    if (!campaign) return { success: false, message: 'Aucune campagne active.' };
+    return obsidianExportService.exportCampaign(campaign, state.entities, state.atlasMaps, state.wikiEntries);
 };

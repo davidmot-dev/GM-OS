@@ -4,6 +4,7 @@ import { Brain, Key, Cpu, ShieldCheck, Eye, EyeOff, Sparkles, RefreshCw, BookOpe
 import { useAIStore } from '../../../stores/useAIStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useObsidianStore } from '../../session/useObsidianStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { Select } from '../../../components/common/Select';
 import type { AIProvider } from '../types';
@@ -33,7 +34,17 @@ const AISettings: React.FC = () => {
   const [isEditingOverride, setIsEditingOverride] = useState(false);
   const [isReindexing, setIsReindexing] = useState(false);
   
-  const [isObsidianActive, setIsObsidianActive] = useState(false);
+  /*
+    **Le Nexus Wiki comme deuxième racine de l'Oracle.**
+
+    Nommé `nexus…` et non `coffre…` : dans cet écran, « coffre » désigne déjà le
+    trousseau de clés (`etatDuCoffre`, juste dessous). *Deux sens sur un même mot
+    dans un même fichier finissent par se confondre à la relecture.*
+  */
+  const nexusBranche = useObsidianStore(s => s.indexerDansLOracle);
+  const verdictDuNexus = useObsidianStore(s => s.coffreDeLOracle);
+  const cheminDuNexus = useObsidianStore(s => s.vaultPath);
+  const [nexusEnCours, setNexusEnCours] = useState(false);
 
   /** Ce que le coffre porte — noms des entrées seulement, jamais les valeurs. */
   const [etatDuCoffre, setEtatDuCoffre] = useState<{
@@ -57,12 +68,6 @@ const AISettings: React.FC = () => {
 
   useEffect(() => {
     syncGemsWithDefaults();
-    
-    // Check Obsidian status via bridge
-    if (window.appBridge?.mcp?.checkStatus) {
-      window.appBridge.mcp.checkStatus('obsidian').then((active: boolean) => setIsObsidianActive(active));
-    }
-    
     syncWithKeychain();
   }, [syncGemsWithDefaults, syncWithKeychain]);
 
@@ -591,36 +596,23 @@ const AISettings: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Obsidian Section */}
-        <div className="p-4 rounded-2xl bg-gm-emerald/5 border border-gm-emerald/20 flex flex-col gap-4">
-          <div className="flex gap-4">
-            <div className="p-3 rounded-xl bg-gm-emerald/10 text-gm-emerald">
-              <BookOpen size={24} />
-            </div>
-            <div>
-              <p className="text-white text-xs font-black uppercase tracking-widest leading-none">{t('ai.obsidian.title')}</p>
-              <p className="text-white/40 text-[9px] font-bold uppercase tracking-tight mt-1">{t('ai.obsidian.subtitle')}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gm-emerald text-[10px] font-bold uppercase tracking-widest">
-              <div className={`w-2 h-2 rounded-full ${isObsidianActive ? 'bg-gm-emerald animate-pulse' : 'bg-slate-800'}`} />
-              {isObsidianActive ? t('ai.obsidian.status_active') : t('ai.obsidian.status_offline')}
-            </div>
-            <div className="flex gap-2">
-              <button className="text-[10px] font-black uppercase tracking-widest text-gm-emerald bg-gm-emerald/10 px-3 py-1.5 rounded-lg border border-gm-emerald/20 hover:bg-gm-emerald/20 transition-all">
-                {t('ai.obsidian.sync_button')}
-              </button>
-              <button className="text-[10px] font-black uppercase tracking-widest text-gm-emerald bg-gm-emerald/10 px-3 py-1.5 rounded-lg border border-gm-emerald/20 hover:bg-gm-emerald/20 transition-all">
-                {t('ai.obsidian.open_vault')}
-              </button>
-            </div>
-          </div>
-          <p className="text-[10px] font-medium text-slate-500 italic">{t('ai.obsidian.config_hint')}</p>
-        </div>
+      {/*
+        **La carte OBSIDIAN a été retirée le 2026-08-29, et elle n'a jamais rien
+        fait.** Ses deux boutons n'avaient aucun `onClick` — du décor. Son voyant
+        lisait `mcp.checkStatus`, que `preload.ts` **n'expose pas** : il affichait
+        donc « Vault hors-ligne » pour toujours, quel que soit l'état du coffre.
+        Et sa mention `external-mcp-obsidian` désignait un serveur MCP inexistant.
 
+        Réparée, elle aurait redit trois choses qui vivent déjà ailleurs, mieux :
+        le chemin du coffre et son test dans Réglages → Intégration Obsidian ;
+        l'ouverture d'une note dans le module Nexus Wiki ; et la lecture par
+        l'Oracle dans la carte « Nexus Wiki dans l'Oracle », plus bas.
+
+        *Plusieurs écrans pour une même vérité* — le motif que ce projet paie en
+        boucle. Deux voyants de connexion peuvent se contredire ; un seul ne le
+        peut pas. Remarqué par David sur capture d'écran.
+      */}
+      <div className="grid grid-cols-1 gap-4">
         {/* Audio Section */}
         <div className="p-4 rounded-2xl bg-gm-cyan/5 border border-gm-cyan/20 flex flex-col gap-4">
           <div className="flex gap-4">
@@ -757,6 +749,58 @@ const AISettings: React.FC = () => {
           <RefreshCw size={16} className={isReindexing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'} />
           {isReindexing ? t('ai.actions.reindexing') : t('ai.actions.reindex_docs')}
         </button>
+      </div>
+
+      {/*
+        **Le Nexus Wiki dans l'Oracle — la deuxième racine.**
+
+        Éteint par défaut, et allumé à la main. C'est l'inverse exact du défaut
+        du 2026-08-22 : ce jour-là le coffre remplaçait `docs/` sans que
+        personne ne l'ait demandé, parce que son chemin était écrit en dur.
+      */}
+      <div className="p-4 rounded-2xl bg-purple-500/5 border border-purple-500/20 space-y-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex gap-4">
+            <div className="p-3 rounded-xl bg-purple-500/10 text-purple-400">
+              <Sparkles size={24} />
+            </div>
+            <div>
+              <h4 className="text-sm font-black uppercase tracking-tight text-app-text">Nexus Wiki dans l’Oracle</h4>
+              <p className="text-xs text-app-text/60 mt-1">
+                Indexe vos notes Obsidian <strong>en plus</strong> du corpus, jamais à sa place.
+                Elles passent derrière les fiches de règles et les notes de la campagne active.
+              </p>
+              <p className="text-[10px] text-app-text/30 mt-1 font-mono break-all">{cheminDuNexus}</p>
+            </div>
+          </div>
+
+          <button
+            onClick={async () => {
+              if (nexusEnCours) return;
+              setNexusEnCours(true);
+              try {
+                await useObsidianStore.getState().brancherLeCoffreDeLOracle(!nexusBranche);
+              } finally {
+                setNexusEnCours(false);
+              }
+            }}
+            disabled={nexusEnCours}
+            className={`shrink-0 px-6 py-3 rounded-xl border transition-all font-black uppercase tracking-widest text-[10px] ${
+              nexusBranche
+                ? 'bg-purple-500 text-white border-purple-500 shadow-glow-accent/20'
+                : 'bg-app-surface text-app-text/60 border-app-border hover:text-app-text'
+            } ${nexusEnCours ? 'opacity-50 cursor-wait' : ''}`}
+          >
+            {nexusEnCours ? 'Indexation…' : nexusBranche ? 'Branché' : 'Brancher'}
+          </button>
+        </div>
+
+        {/* Le verdict, toujours : un refus muet laisserait croire les notes indexées. */}
+        {verdictDuNexus && (
+          <p className={`text-[11px] font-semibold ${verdictDuNexus.raison ? 'text-rose-400' : 'text-purple-300'}`}>
+            {verdictDuNexus.raison ?? `${verdictDuNexus.fichiers} note(s) indexée(s) depuis le coffre.`}
+          </p>
+        )}
       </div>
 
       {/* Performance & Streaming Section */}

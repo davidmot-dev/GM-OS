@@ -198,15 +198,6 @@
       "reconnect": "Reconnect Oracle",
       "reconnect_note": "A restart might be required if authentication is lost."
     },
-    "obsidian": {
-      "title": "OBSIDIAN",
-      "subtitle": "Vault Integration & Knowledge Graph",
-      "status_offline": "Vault Offline",
-      "status_active": "Vault Active",
-      "sync_button": "Sync",
-      "open_vault": "Open Vault",
-      "config_hint": "Configuration required in external-mcp-obsidian"
-    },
     "audio": {
       "title": "Audio Devices",
       "subtitle": "I/O for Voice & Ambient Analysis",

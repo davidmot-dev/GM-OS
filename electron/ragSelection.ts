@@ -66,6 +66,20 @@ const RANG = {
     fiche: 100,
     /** Document de la campagne active. */
     campagne: 60,
+    /**
+     * Note du coffre Obsidian — le « Nexus Wiki » du meneur.
+     *
+     * **Entre le système (40) et la campagne (60), et c'est un arbitrage, pas
+     * un chiffre par défaut.** Le coffre est un savoir *écrit à la main et non
+     * relu* : il mérite de doubler une décharge brute du système, il ne doit
+     * jamais doubler les notes de la campagne en cours ni une fiche du corpus.
+     *
+     * L'écart de 10 avec la campagne est **volontairement inférieur au bonus de
+     * pertinence** : une note du coffre qui parle exactement de la question peut
+     * passer devant une note de campagne qui n'en parle pas. *C'est la question
+     * qui tranche entre voisins ; c'est le rang qui empêche l'inversion.*
+     */
+    coffre: 50,
     /** Autre document du système actif. */
     systeme: 40,
     /** Fonds commun, valable pour tous les jeux. */
@@ -74,6 +88,21 @@ const RANG = {
 
 /** Dossier toujours éligible, quel que soit le système actif. */
 export const DOSSIER_COMMUN = 'commun';
+
+/**
+ * Le segment réservé sous lequel le coffre Obsidian entre dans l'index.
+ *
+ * **Les deux arbres partagent un index, donc ils ne peuvent pas partager un
+ * espace de noms.** Sans ce préfixe, une note du coffre rangée dans
+ * `systems/alien/` porterait la même clé qu'une fiche du corpus — elle
+ * l'écraserait dans l'index, et `classe()` lui donnerait le rang d'une fiche.
+ * *Le coffre se ferait passer pour le corpus, ce qui est exactement le défaut
+ * du 2026-08-22 sous une autre forme.*
+ *
+ * Il est **reconnu avant tout le reste** dans `classe()` : aucun « Chemin des
+ * Notes » ni « Chemin des Règles » ne peut revendiquer un fichier du coffre.
+ */
+export const RACINE_DU_COFFRE = 'coffre';
 
 /**
  * De combien le penchant déplace le rang de la campagne.
@@ -111,7 +140,7 @@ const BONUS_CONTENU_MAX = 15;
  */
 const OCCURRENCES_QUI_COMPTENT = 3;
 
-export type Provenance = 'fiche' | 'campagne' | 'systeme' | 'commun';
+export type Provenance = 'fiche' | 'campagne' | 'systeme' | 'commun' | 'coffre';
 
 /**
  * De quel côté penche le cortex qui pose la question.
@@ -358,6 +387,11 @@ function classe(file: IndexedFile, req: RagRequest): Provenance | null {
     const systemPath = req.systemPath ? normaliseChemin(req.systemPath) : '';
     const campaignPath = req.campaignPath ? normaliseChemin(req.campaignPath) : '';
 
+    // 0. Le coffre d'abord, et rien ne peut le lui disputer. Une note écrite à
+    //    la main ne doit jamais hériter du rang d'une fiche du corpus, quel que
+    //    soit le dossier où le meneur l'a rangée dans son Obsidian.
+    if (racine === RACINE_DU_COFFRE) return 'coffre';
+
     // 1. Les chemins déclarés sur la fiche de campagne l'emportent : ils sont
     //    explicites, là où la déduction par nom de dossier est une supposition.
     if (campaignPath && sousChemin(relPath, campaignPath)) return 'campagne';
@@ -399,6 +433,11 @@ function tronque(file: IndexedFile, provenance: Provenance, budgetRestant: numbe
     // Une fiche passe entière ou pas du tout. La couper trancherait une règle
     // au milieu — le défaut même qu'on corrige — et il vaut mieux laisser la
     // place à la fiche suivante, plus courte, qu'en livrer une amputée.
+    //
+    // **Le coffre n'a délibérément pas ce privilège**, même si une note y porte
+    // un `sujet:` : une note d'Obsidian n'est écrite sous aucune contrainte de
+    // taille, et le passe-droit du corpus tient précisément à ce que ses fiches
+    // sont bornées. Une note de trente mille caractères avalerait le budget.
     if (provenance === 'fiche') {
         return tokens <= budgetRestant
             ? { texte: file.content, tokens, tronque: false }

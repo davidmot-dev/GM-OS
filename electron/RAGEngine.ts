@@ -6,6 +6,7 @@ import log from 'electron-log';
 import { RAGIGNORE_FILENAME, isIgnored, parseRagIgnore, type IgnoreScope } from './ragIgnore';
 import {
     MAX_CONTEXT_TOKENS,
+    RACINE_DU_COFFRE,
     selectContext,
     type IndexedFile as SelectableFile,
     type RagRequest,
@@ -29,6 +30,15 @@ interface IndexedFile extends SelectableFile {
 
 /** Extensions retenues à l'indexation. Les `.jsonl` sont déjà découpés et annotés. */
 const EXTENSIONS_INDEXEES = ['.md', '.txt', '.pdf', '.jsonl'];
+
+/** Le préfixe des clés du coffre dans l'index — voir `RACINE_DU_COFFRE`. */
+const PREFIXE_DU_COFFRE = `${RACINE_DU_COFFRE}/`;
+
+/** `enfant` est-il `parent` ou dessous ? Comparaison de chemins de disque, pas de chaînes. */
+function sousChemin(enfant: string, parent: string): boolean {
+    const rel = path.relative(path.resolve(parent), path.resolve(enfant));
+    return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
+}
 
 /**
  * Écrit dans `main.log` via electron-log, avec repli console si le module est
@@ -102,6 +112,78 @@ export class RAGEngine {
       recoit son chemin en argument et n'a jamais eu besoin de cette racine.
     */
 
+    /**
+     * **La deuxième racine — le coffre Obsidian, EN PLUS de `docs/`, jamais à la
+     * place.**
+     *
+     * C'est la réponse au défaut du 2026-08-22, et elle en est l'exact inverse.
+     * Ce qui avait fait le dégât n'était pas que le coffre soit indexé : c'est
+     * qu'**une seule variable** portait la racine, si bien qu'ajouter le coffre
+     * retirait le corpus. Deux champs distincts rendent l'échange impossible —
+     * *on ne se protège pas d'un écrasement en le déconseillant, on supprime la
+     * case où il pouvait avoir lieu.*
+     *
+     * Quatre propriétés tiennent l'ensemble :
+     *
+     * 1. **Éteint par défaut.** `null` tant que le meneur ne l'a pas demandé.
+     *    Le chemin de coffre écrit en dur dans `useObsidianStore` n'arrive
+     *    jamais jusqu'ici tout seul — *c'est ce défaut par défaut qui avait
+     *    rendu la catastrophe silencieuse : personne n'avait rien demandé.*
+     * 2. **Disjoint de `docs/`.** Un coffre qui contiendrait la racine, ou qui
+     *    serait dedans, indexerait les mêmes fichiers deux fois sous deux
+     *    provenances. Refusé dans les deux sens.
+     * 3. **Espace de noms réservé.** Les clés du coffre commencent par
+     *    `coffre/`, donc aucune note ne peut prendre la place d'une fiche.
+     * 4. **Additif seulement.** Un coffre illisible — OneDrive hors ligne, clé
+     *    USB retirée — n'enlève rien à l'index de `docs/`.
+     */
+    private coffrePath: string | null = null;
+
+    /** Ce que le dernier passage a lu dans le coffre, pour que l'écran puisse le dire. */
+    private fichiersDuCoffre = 0;
+
+    /**
+     * Branche ou débranche le coffre. `null` (ou chaîne vide) l'éteint.
+     *
+     * Rend toujours un verdict : **un refus muet serait pire que pas de coffre
+     * du tout** — le meneur croirait ses notes indexées et l'Oracle répondrait
+     * de sa propre mémoire, exactement comme en août.
+     */
+    public async brancherLeCoffre(chemin: string | null): Promise<{ accepte: boolean; raison?: string }> {
+        if (!chemin) {
+            this.coffrePath = null;
+            this.fichiersDuCoffre = 0;
+            ecrire('info', 'coffre débranché — l’index ne gardera que docs/');
+            await this.updateIndex();
+            return { accepte: true };
+        }
+
+        const vise = path.resolve(chemin);
+
+        if (!await fs.pathExists(vise) || !(await fs.stat(vise)).isDirectory()) {
+            return { accepte: false, raison: `Dossier introuvable : ${vise}` };
+        }
+        if (sousChemin(vise, this.docsPath) || sousChemin(this.docsPath, vise)) {
+            return {
+                accepte: false,
+                raison: 'Ce dossier recouvre le corpus de GM-OS : les mêmes fichiers seraient indexés deux fois, sous deux rangs différents.',
+            };
+        }
+        if (process.env.APP_ROOT && sousChemin(vise, path.resolve(process.env.APP_ROOT))) {
+            return { accepte: false, raison: 'Ce dossier est à l’intérieur de l’installation de GM-OS.' };
+        }
+
+        this.coffrePath = vise;
+        ecrire('info', `coffre branché : ${vise}`);
+        await this.updateIndex();
+        return { accepte: true };
+    }
+
+    /** Ce que l'écran des réglages affiche : le coffre branché et ce qu'il a rendu. */
+    public etatDuCoffre(): { chemin: string | null; fichiers: number } {
+        return { chemin: this.coffrePath, fichiers: this.fichiersDuCoffre };
+    }
+
     public static getInstance(): RAGEngine {
         if (!RAGEngine.instance) {
             RAGEngine.instance = new RAGEngine();
@@ -124,32 +206,47 @@ export class RAGEngine {
                 return;
             }
 
-            const files = await this.getAllFiles(this.docsPath);
-            let updatedCount = 0;
             const vus = new Set<string>();
+            let updatedCount = await this.indexerUnArbre(this.docsPath, '', vus, false);
 
-            for (const filePath of files) {
-                const stats = await fs.stat(filePath);
-                const mtime = stats.mtimeMs;
-                const relativePath = path.relative(this.docsPath, filePath).replace(/\\/g, '/');
-                vus.add(relativePath);
-
-                const existing = this.index.get(relativePath);
-                if (!existing || existing.mtime !== mtime) {
-                    const content = await this.readFileContent(filePath);
-                    if (content) {
-                        const ext = path.extname(filePath).toLowerCase();
-                        this.index.set(relativePath, {
-                            mtime,
-                            content,
-                            path: relativePath,
-                            type: ext === '.pdf' ? 'pdf'
-                                : ext === '.md' ? 'markdown'
-                                : ext === '.jsonl' ? 'jsonl'
-                                : 'text',
-                            ...(ext === '.md' ? lireEntete(content) : {}),
-                        });
-                        updatedCount++;
+            /*
+              **Le coffre passe en second, et sous garde.** L'ordre n'est pas
+              cosmétique : `docs/` est l'irremplaçable, et il est entièrement
+              relu avant qu'on aille voir un dossier qui vit peut-être sur
+              OneDrive ou sur une clé retirée. *Même principe que le miroir des
+              médias, qui passe après l'état de session.*
+            */
+            if (this.coffrePath) {
+                if (await fs.pathExists(path.join(this.docsPath, RACINE_DU_COFFRE))) {
+                    /*
+                      Un vrai dossier `docs/coffre/` porterait les mêmes clés que
+                      le coffre Obsidian, et prendrait donc son rang. Le corpus
+                      était là le premier : c'est le coffre qui s'efface, et il
+                      le dit. *Un conflit d'espace de noms qui se résout en
+                      silence est un mélange de deux corpus.*
+                    */
+                    ecrire('warn', `docs/${RACINE_DU_COFFRE}/ existe : le coffre Obsidian n’est pas indexé tant qu’il est là`);
+                    this.fichiersDuCoffre = 0;
+                } else {
+                    try {
+                        const avant = vus.size;
+                        updatedCount += await this.indexerUnArbre(this.coffrePath, PREFIXE_DU_COFFRE, vus, true);
+                        this.fichiersDuCoffre = vus.size - avant;
+                    } catch (error) {
+                        /*
+                          **Le coffre n'enlève jamais rien.** Sans ce rattrapage,
+                          un coffre momentanément illisible sortirait de `vus`,
+                          et la purge plus bas effacerait de l'index des notes
+                          parfaitement valides — l'Oracle deviendrait plus pauvre
+                          à cause d'un dossier hors ligne. On garde ce qu'on
+                          avait, et on le dit.
+                        */
+                        for (const cle of this.index.keys()) {
+                            if (cle.startsWith(PREFIXE_DU_COFFRE)) vus.add(cle);
+                        }
+                        ecrire('warn',
+                            `coffre illisible (${this.coffrePath}) : ${(error as Error).message}`
+                            + ` — docs/ est intact, les notes déjà lues sont conservées`);
                     }
                 }
             }
@@ -166,9 +263,13 @@ export class RAGEngine {
             }
 
             if (updatedCount > 0 || retirees > 0) {
-                console.log(
-                    `[RAG Engine] Index mis à jour : ${updatedCount} rechargé(s), ${retirees} retiré(s). Total : ${this.index.size}`,
-                );
+                // `ecrire` et non `console` : rien ne collecte la sortie standard
+                // du process principal, et c'est ce compte qui dira si le coffre
+                // a réellement rendu quelque chose.
+                ecrire('info',
+                    `Index mis à jour : ${updatedCount} rechargé(s), ${retirees} retiré(s).`
+                    + ` Total : ${this.index.size}`
+                    + (this.coffrePath ? ` (dont ${this.fichiersDuCoffre} du coffre)` : ''));
             }
         } catch (error) {
             console.error('[RAG Engine] Indexing error:', error);
@@ -261,31 +362,91 @@ export class RAGEngine {
     }
 
     /**
-     * Parcourt `docs/` en respectant les `.ragignore` rencontrés en chemin.
+     * Lit un arbre entier et le range dans l'index sous `prefixe`.
+     *
+     * Extrait de `updateIndex` le jour où une deuxième racine est apparue : le
+     * corps était déjà générique, seule la racine était supposée. **La clé
+     * d'index porte le préfixe** — c'est elle qui range la note du coffre du bon
+     * côté, et c'est aussi elle qui s'affiche en `[Source: …]` dans le prompt.
+     *
+     * Rend le nombre de fichiers *rechargés*, et remplit `vus` avec les clés
+     * rencontrées, dont dépend la purge.
+     */
+    private async indexerUnArbre(
+        racine: string,
+        prefixe: string,
+        vus: Set<string>,
+        ignorerLesDossiersCaches: boolean,
+    ): Promise<number> {
+        const files = await this.getAllFiles(racine, racine, [], ignorerLesDossiersCaches);
+        let recharges = 0;
+
+        for (const filePath of files) {
+            const stats = await fs.stat(filePath);
+            const mtime = stats.mtimeMs;
+            const cle = prefixe + path.relative(racine, filePath).replace(/\\/g, '/');
+            vus.add(cle);
+
+            const existing = this.index.get(cle);
+            if (!existing || existing.mtime !== mtime) {
+                const content = await this.readFileContent(filePath);
+                if (content) {
+                    const ext = path.extname(filePath).toLowerCase();
+                    this.index.set(cle, {
+                        mtime,
+                        content,
+                        path: cle,
+                        type: ext === '.pdf' ? 'pdf'
+                            : ext === '.md' ? 'markdown'
+                            : ext === '.jsonl' ? 'jsonl'
+                            : 'text',
+                        ...(ext === '.md' ? lireEntete(content) : {}),
+                    });
+                    recharges++;
+                }
+            }
+        }
+        return recharges;
+    }
+
+    /**
+     * Parcourt un arbre en respectant les `.ragignore` rencontrés en chemin.
      *
      * Seul l'index de l'Oracle passe par ici : `ai:list-docs`, `ai:read-doc` et
      * `ai:extract-pdf` lisent le disque directement, donc les Forges et le
      * lecteur de documents continuent de voir les livres bruts.
+     *
+     * `ignorerLesDossiersCaches` sert au coffre, et **il aligne l'index sur ce
+     * que le panneau Nexus Wiki montre déjà** : sans lui, `.trash/` et les
+     * greffons d'`.obsidian/` entreraient dans le corpus de l'Oracle. *Une note
+     * supprimée qui continue de répondre est pire qu'une note absente.* On ne
+     * l'applique pas à `docs/`, dont le comportement ne doit pas changer.
      */
-    private async getAllFiles(dir: string, scopes: IgnoreScope[] = []): Promise<string[]> {
+    private async getAllFiles(
+        dir: string,
+        racine: string,
+        scopes: IgnoreScope[] = [],
+        ignorerLesDossiersCaches = false,
+    ): Promise<string[]> {
         const results: string[] = [];
         const list = await fs.readdir(dir, { withFileTypes: true });
 
         const ignoreFile = list.find(e => e.isFile() && e.name === RAGIGNORE_FILENAME);
         let portees = scopes;
         if (ignoreFile) {
-            const base = path.relative(this.docsPath, dir).replace(/\\/g, '/');
+            const base = path.relative(racine, dir).replace(/\\/g, '/');
             const contenu = await fs.readFile(path.join(dir, RAGIGNORE_FILENAME), 'utf-8');
             portees = [...scopes, { base, rules: parseRagIgnore(contenu) }];
         }
 
         for (const entry of list) {
             const filePath = path.join(dir, entry.name);
-            const relPath = path.relative(this.docsPath, filePath).replace(/\\/g, '/');
+            const relPath = path.relative(racine, filePath).replace(/\\/g, '/');
 
             if (entry.isDirectory()) {
+                if (ignorerLesDossiersCaches && entry.name.startsWith('.')) continue;
                 if (isIgnored(relPath, portees, true)) continue;
-                results.push(...await this.getAllFiles(filePath, portees));
+                results.push(...await this.getAllFiles(filePath, racine, portees, ignorerLesDossiersCaches));
             } else {
                 const ext = path.extname(entry.name).toLowerCase();
                 if (!EXTENSIONS_INDEXEES.includes(ext)) continue;
@@ -336,6 +497,20 @@ export function registerRagHandlers() {
         await engine.updateIndex();
         return true;
     });
+
+    /**
+     * Branche le coffre Obsidian **en plus** de la racine. `null` l'éteint.
+     *
+     * Deux passerelles distinctes de `ai:reindex`, et c'est délibéré : le
+     * handler de réindexation n'accepte aucun chemin, et un test le vérifie.
+     * *Lui en redonner un — même pour un usage légitime — rouvrirait la porte
+     * exacte par laquelle le corpus était sorti de l'index.*
+     */
+    ipcMain.handle('ai:coffre-brancher', async (_event, chemin: string | null) => {
+        return engine.brancherLeCoffre(chemin);
+    });
+
+    ipcMain.handle('ai:coffre-etat', async () => engine.etatDuCoffre());
 
     ipcMain.handle('ai:list-docs', async () => {
         const root = RAGEngine.getInstance()['docsPath'];
