@@ -150,3 +150,59 @@ export function bornerLaPoignee(des: DeEchelonne[]): { des: DeEchelonne[]; remar
     );
     return { des: bornes, remarques };
 }
+
+/**
+ * **La poignée finale : le modificateur, puis les bornes. Dans cet ordre.**
+ *
+ * Ces deux appels vivaient dans `preparerLeJet`, au milieu d'une fonction qui a
+ * besoin d'une fiche de personnage. Dice-OS n'en a pas — le meneur y saisit les
+ * lettres à la main — et aurait donc dû réécrire la même séquence.
+ *
+ * *Deux endroits qui appliquent la même règle finissent par ne plus l'appliquer
+ * pareil,* et l'écart ne se verrait qu'à un désavantage ou à un troisième D12 :
+ * deux cas assez rares pour n'être découverts qu'en séance.
+ *
+ * L'ordre n'est pas interchangeable. Borner d'abord laisserait un désavantage
+ * vider la poignée d'un personnage qui n'a qu'un dé — *et un jet sans dé
+ * n'échoue pas, il ne se lance pas.*
+ */
+export function composerLaPoignee(
+    des: DeEchelonne[],
+    modificateur: ModificateurDeDes = 'aucun',
+): { des: DeEchelonne[]; remarques: string[] } {
+    return bornerLaPoignee(appliquerLeModificateur(des, modificateur));
+}
+
+/**
+ * Une poignée composée à partir de **lettres saisies à la main**, pour un
+ * pupitre qui n'a pas de fiche à lire.
+ *
+ * *Demandé par David le 2026-08-30 : « le système Blade Runner ne se retrouve
+ * pas dans Dice-OS ».* Il s'y retrouvait à moitié — le moteur savait résoudre
+ * les dés échelonnés, mais faute de fiche, le pupitre lui passait une poignée
+ * de **d6**, le plus petit dé de l'échelle. Des réussites plausibles, et le dé
+ * à douze faces nulle part. Le meneur nomme désormais les niveaux lui-même.
+ *
+ * Une lettre inconnue est **écartée en le disant** : une poignée silencieusement
+ * amputée lancerait un dé de moins sans que personne ne s'en aperçoive.
+ */
+export function poigneeDepuisLesLettres(
+    niveaux: { label: string; lettre: string }[],
+    modificateur: ModificateurDeDes = 'aucun',
+    echelle: NomDEchelle = 'yze-lettres',
+): { des: DeEchelonne[]; remarques: string[] } {
+    const remarques: string[] = [];
+    const des: DeEchelonne[] = [];
+
+    for (const { label, lettre } of niveaux) {
+        const faces = facesDuNiveau(lettre, echelle);
+        if (faces === null) {
+            remarques.push(`${label} : « ${lettre} » ne désigne aucun niveau connu (A, B, C ou D).`);
+            continue;
+        }
+        des.push({ label, champ: label, niveau: String(lettre).trim().toUpperCase(), faces });
+    }
+
+    const poignee = composerLaPoignee(des, modificateur);
+    return { des: poignee.des, remarques: [...remarques, ...poignee.remarques] };
+}

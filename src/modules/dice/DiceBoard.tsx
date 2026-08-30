@@ -9,6 +9,7 @@ import { tacticalService } from '../map/TacticalService';
 import { useDiceStore } from '../../stores/useDiceStore';
 import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
+import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -19,7 +20,16 @@ interface RollRecord extends RollResult {
     batchId?: string;
 }
 
-type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze';
+type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne';
+
+/**
+ * Les niveaux que le pupitre propose, du meilleur au pire.
+ *
+ * L'échelle elle-même — A vaut D12, B vaut D10… — vit dans `desEchelonnes`, et
+ * n'est transcrite nulle part ailleurs. Ici on ne nomme que **les lettres
+ * saisissables**, et le dé affiché à côté vient de la table.
+ */
+const LETTRES_ECHELONNEES = ['A', 'B', 'C', 'D'] as const;
 
 interface RemoteDiceOptions {
     sides?: number;
@@ -92,6 +102,45 @@ const DiceBoard: React.FC = () => {
     const activeDriver = getActiveDriver();
     const [useSystemDriver, setUseSystemDriver] = useState(false);
 
+    /*
+      **Les dés échelonnés au pupitre — David, 2026-08-30.**
+
+      Le moteur savait les résoudre depuis le 29 ; c'est l'entrée qui manquait.
+      Faute de fiche, `rollFromConfig` retombait sur une poignée de d6 — le plus
+      petit dé de l'échelle, choisi exprès pour ne jamais *inventer* un dé plus
+      gros. Prudent, et faux dès qu'on veut le vrai jet d'un PNJ.
+
+      Le meneur nomme donc les deux niveaux lui-même. Les valeurs par défaut
+      décrivent un personnage ordinaire — ni le meilleur, ni le pire.
+    */
+    const [niveauAttribut, setNiveauAttribut] = useState('B');
+    const [niveauCompetence, setNiveauCompetence] = useState('C');
+    /*
+      L'équipement est **facultatif et échelonné lui aussi**. Le lui donner un
+      compte de d6, comme le faisait le repli, referait exactement le défaut
+      qu'on corrige : un dé d'arme trop petit, et personne pour le voir.
+    */
+    const [niveauEquipement, setNiveauEquipement] = useState('');
+    const [modificateurEchelonne, setModificateurEchelonne] = useState<ModificateurDeDes>('aucun');
+
+    /**
+     * La poignée telle que le pupitre la lancera — modificateur et bornes du
+     * livre compris. C'est la **même** composition que celle du panneau de
+     * fiche : voir `composerLaPoignee`.
+     */
+    const poigneeEchelonnee = React.useMemo(
+        () => poigneeDepuisLesLettres(
+            [
+                { label: 'Attribut', lettre: niveauAttribut },
+                { label: 'Compétence', lettre: niveauCompetence },
+            ],
+            modificateurEchelonne,
+        ),
+        [niveauAttribut, niveauCompetence, modificateurEchelonne],
+    );
+
+    const facesDeLEquipement = facesDuNiveau(niveauEquipement);
+
     // Auto-sync with active system driver
     React.useEffect(() => {
         if (activeDriver) {
@@ -100,7 +149,18 @@ const DiceBoard: React.FC = () => {
             // Map engine to local mode
             const engine = activeDriver.dice.engine as string | undefined;
             
-            if (engine === 'yze' || engine === 'year-zero') {
+            if (engine === 'yze-echelonne') {
+                /*
+                  **La variante à dés échelonnés n'était reconnue nulle part
+                  ici.** Elle tombait dans le `else`, n'y trouvait aucun nom
+                  connu et finissait en `standard` : le bandeau annonçait
+                  « Système : Blade Runner » au-dessus des réglages d'un d20.
+                  Le jet, lui, partait bien vers le bon moteur — *l'écran
+                  mentait, le résultat était juste, et les deux étaient
+                  invérifiables l'un par l'autre.*
+                */
+                setMode('yze-echelonne');
+            } else if (engine === 'yze' || engine === 'year-zero') {
                 setMode('yze');
                 const dCount = parseInt(activeDriver.dice.defaultDice) || 6;
                 setDiceCount(dCount);
@@ -156,6 +216,14 @@ const DiceBoard: React.FC = () => {
             const modVal = typeof finalModifier === 'string' ? (parseInt(finalModifier.replace('+', ''), 10) || 0) : finalModifier;
             // Le sens du comptage vit sur `jet`, pas sur `dice` : sans ce
             // passage, une réserve « sous le seuil » se résolvait à l'envers.
+            /*
+              **Les tailles, quand le jeu en a.** Sans elles, la branche
+              `yze-echelonne` du moteur retombe sur des d6 — un repli voulu pour
+              ne jamais inventer un dé plus gros, mais qui rendait le pupitre
+              inutilisable sur Blade Runner : le meneur y lançait toujours la
+              poignée d'un débutant.
+            */
+            const echelonne = activeDriver.dice.engine === 'yze-echelonne';
             result = DiceEngine.rollFromConfig(
                 { ...activeDriver.dice, ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}) },
                 {
@@ -163,6 +231,10 @@ const DiceBoard: React.FC = () => {
                     baseCount: finalCount,
                     gearCount: finalGearCount,
                     targetOverwrite: finalTarget,
+                    ...(echelonne ? {
+                        taillesDeBase: poigneeEchelonnee.des.map(d => d.faces),
+                        taillesSecondaires: facesDeLEquipement !== null ? [facesDeLEquipement] : [],
+                    } : {}),
                 },
             );
             return { result, title: t('dice.results.system', { name: activeDriver.name }) };
@@ -233,12 +305,28 @@ const DiceBoard: React.FC = () => {
                     result = DiceEngine.rollYZE(finalCount, finalGearCount);
                     title = t('dice.results.yze', { base: finalCount, gear: finalGearCount });
                     break;
+                /*
+                  Le même jet **sans pilote actif** : le meneur choisit le mode
+                  à la main pour un PNJ improvisé. Rien n'oblige à avoir ouvert
+                  une campagne Blade Runner pour lancer deux dés échelonnés.
+                */
+                case 'yze-echelonne':
+                    result = DiceEngine.rollYZEEchelonne(
+                        poigneeEchelonnee.des.map(d => d.faces),
+                        facesDeLEquipement !== null ? [facesDeLEquipement] : [],
+                    );
+                    title = poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ')
+                        + (facesDeLEquipement !== null ? ` + D${facesDeLEquipement}` : '');
+                    break;
                 default:
                     result = DiceEngine.rollStandard(sides, finalCount, modVal);
             }
         }
         return { result, title };
-    }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule]);
+    }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
+        // Sans elles, un changement de niveau ne serait pas relu : le pupitre
+        // lancerait la poignée d'avant, et le résultat resterait plausible.
+        poigneeEchelonnee, facesDeLEquipement]);
 
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions) => {
         try {
@@ -369,6 +457,7 @@ const DiceBoard: React.FC = () => {
                                 <option value="advantage">{t('dice.modes.advantage')}</option>
                                 <option value="disadvantage">{t('dice.modes.disadvantage')}</option>
                                 <option value="yze">{t('dice.modes.yze')}</option>
+                                <option value="yze-echelonne">Year Zero — dés échelonnés</option>
                                 <option value="fate">{t('dice.modes.fate')}</option>
                                 <option value="rolemaster">{t('dice.modes.rolemaster')}</option>
                             </select>
@@ -388,7 +477,83 @@ const DiceBoard: React.FC = () => {
                         ) : (
                             <>
                                 {/* Qty & Mod */}
-                                {mode === 'yze' ? (
+                                {mode === 'yze-echelonne' ? (
+                                    /*
+                                      **Le meneur nomme les niveaux ; l'échelle
+                                      reste dans `desEchelonnes`.** Le dé écrit
+                                      à côté de chaque lettre vient de la table
+                                      et n'est jamais saisi — une fiche où
+                                      quelqu'un a tapé « B (D8) » est corrigée
+                                      au passage plutôt que propagée.
+                                    */
+                                    <div className="space-y-2 col-span-3">
+                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">
+                                            Attribut / Compétence / Équipement
+                                        </label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {([
+                                                { cle: 'attribut', titre: 'Attribut', valeur: niveauAttribut, poser: setNiveauAttribut, facultatif: false },
+                                                { cle: 'competence', titre: 'Compétence', valeur: niveauCompetence, poser: setNiveauCompetence, facultatif: false },
+                                                { cle: 'equipement', titre: 'Équipement', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
+                                            ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
+                                                <div key={cle} className="flex flex-1 min-w-[8rem] bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
+                                                    <span className="bg-app-surface text-app-text/60 text-[10px] px-2 flex items-center border-r border-app-border uppercase tracking-wider">
+                                                        {titre}
+                                                    </span>
+                                                    <select
+                                                        value={valeur}
+                                                        onChange={(e) => poser(e.target.value)}
+                                                        title={titre}
+                                                        aria-label={titre}
+                                                        className="w-full bg-transparent text-center font-semibold text-app-text outline-none text-sm"
+                                                    >
+                                                        {facultatif && <option value="">—</option>}
+                                                        {LETTRES_ECHELONNEES.map(lettre => (
+                                                            <option key={lettre} value={lettre}>
+                                                                {lettre} (D{facesDuNiveau(lettre)})
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-2 pt-1">
+                                            {([
+                                                { cle: 'aucun', titre: 'Normal' },
+                                                { cle: 'avantage', titre: 'Avantage' },
+                                                { cle: 'desavantage', titre: 'Désavantage' },
+                                            ] as const).map(({ cle, titre }) => (
+                                                <button
+                                                    key={cle}
+                                                    onClick={() => setModificateurEchelonne(cle)}
+                                                    aria-pressed={modificateurEchelonne === cle}
+                                                    className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-widest transition-all ${modificateurEchelonne === cle
+                                                        ? 'bg-accent/20 border-accent/60 text-accent'
+                                                        : 'bg-app-bg border-app-border text-app-text/50 hover:text-app-text'}`}
+                                                >
+                                                    {titre}
+                                                </button>
+                                            ))}
+
+                                            <span className="text-[11px] font-mono text-app-text/60 ml-auto">
+                                                {poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ') || '—'}
+                                                {facesDeLEquipement !== null && ` + D${facesDeLEquipement}`}
+                                            </span>
+                                        </div>
+
+                                        {/*
+                                          *Une correction muette est une règle
+                                          perdue.* Le livre plafonne à deux D12
+                                          et un désavantage ne vide jamais la
+                                          poignée : quand la composition corrige
+                                          quelque chose, elle le dit.
+                                        */}
+                                        {poigneeEchelonnee.remarques.map((remarque, i) => (
+                                            <p key={i} className="text-[10px] italic text-amber-500/80">{remarque}</p>
+                                        ))}
+                                    </div>
+                                ) : mode === 'yze' ? (
                                     <div className="space-y-2">
                                         <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.base_dice')} / {t('dice.inputs.gear_dice')}</label>
                                         <div className="flex space-x-2">

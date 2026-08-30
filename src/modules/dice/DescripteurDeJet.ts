@@ -23,7 +23,7 @@ import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
-    facesDuNiveau, appliquerLeModificateur, bornerLaPoignee,
+    facesDuNiveau, composerLaPoignee,
     type NomDEchelle, type DeEchelonne, type ModificateurDeDes,
 } from './desEchelonnes';
 
@@ -862,15 +862,12 @@ export function preparerLeJet(
     }
 
     /*
-      L'ordre n'est pas interchangeable : le modificateur d'abord, les bornes
-      ensuite. Borner avant laisserait un désavantage vider la poignée — et un
-      jet sans dé n'échoue pas, il ne se lance pas.
+      Le modificateur d'abord, les bornes ensuite — un ordre qui ne s'invente
+      pas et ne se recopie donc pas : il vit dans `composerLaPoignee`, que
+      Dice-OS emploie aussi depuis qu'il sait lancer des dés échelonnés sans
+      fiche à lire.
     */
-    const apresModificateur = appliquerLeModificateur(
-        desEchelonnes,
-        choix.modificateurDeDes ?? 'aucun',
-    );
-    const poignee = bornerLaPoignee(apresModificateur);
+    const poignee = composerLaPoignee(desEchelonnes, choix.modificateurDeDes ?? 'aucun');
     remarques.push(...poignee.remarques);
 
     /*
