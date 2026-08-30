@@ -31,19 +31,17 @@ import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
 import HorsDePortee from './HorsDePortee';
 
 /**
- * Le gabarit d'une carte dans la grille — **et il n'existe que pour la case
- * vide**.
+ * Le gabarit **minimal** de la case vide — et il n'existe que pour elle.
  *
- * Une carte de PNJ ne déclare plus sa hauteur : elle est la somme du portrait
- * (`h-56`) et du contenu (`h-48`), ce qui la rend incapable de rogner ses
- * propres boutons. La case « initialiser une entité », elle, n'a pas de
- * contenu à mesurer et doit pourtant tenir le même rang dans la grille : c'est
- * la seule raison pour laquelle ce nombre est écrit quelque part.
+ * Une carte de PNJ ne déclare aucune hauteur, ni en entier ni par moitié : le
+ * portrait est fixe, le contenu prend ce qu'il lui faut, et la grille aligne le
+ * tout. La case « initialiser une entité » n'a pas de contenu à mesurer et doit
+ * pourtant tenir son rang ; seule elle a besoin d'un nombre écrit quelque part.
  *
- * 26rem = 416px = 224 + 192. S'il faut le changer, ce sont les deux moitiés
- * qu'on change, et celui-ci suit.
+ * `min-h` et non `h` : seule dans sa rangée, elle garde cette taille ; entourée
+ * de cartes plus hautes, la grille l'étire au lieu de la rogner.
  */
-const HAUTEUR_DE_CARTE = 'h-[26rem]';
+const HAUTEUR_DE_CARTE = 'min-h-[26rem]';
 
 const ROLE_COLORS = {
     ally: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
@@ -202,8 +200,15 @@ const NpcGallery: React.FC = () => {
                        largeur : sur un écran large, vingt-huit fiches
                        défilaient sur trois rangs étroits pendant qu'un tiers de
                        la place restait vide. L'écart entre cartes se resserre
-                       aussi — huit unités séparaient plus qu'elles n'aéraient. */
-                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 [@media(min-width:1900px)]:grid-cols-5 gap-6"
+                       aussi — huit unités séparaient plus qu'elles n'aéraient.
+
+                       **Plafond ramené à quatre le 2026-08-30, demandé par
+                       David.** La cinquième colonne au-delà de 1900 px ramenait
+                       chaque carte sous 250 px, et un nom un peu long y passait
+                       systématiquement sur deux lignes — ce qui était la moitié
+                       du défaut des boutons rognés. Remplir l'écran reste le
+                       but ; le remplir de cartes illisibles ne l'était pas. */
+                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6"
                 >
                     {filteredEntities.map((npc) => (
                         <NpcGalleryItem
@@ -357,8 +362,17 @@ const NpcGalleryItem: React.FC<{
               hauteurs pour une seule vérité, et elles ont divergé** — le motif
               de la semaine, appliqué cette fois à du CSS.
 
-              `flex flex-col` sans hauteur imposée : le total suit ses parties
-              par construction, et la même erreur ne peut plus se reproduire.
+              ⚠ **« La même erreur ne peut plus se reproduire » était faux**, et
+              elle s'est reproduite le 2026-08-30. Retirer la hauteur de la
+              CARTE ne disait rien de celles de ses moitiés : `h-48` est resté
+              sur le contenu, trop court pour lui-même, et les boutons ont été
+              rognés une seconde fois. *Enlever une des trois hauteurs laissait
+              deux vérités concurrentes, ce qui suffit à diverger.*
+
+              Il n'en reste plus qu'une, le portrait — et `tuilesDePNJ.test.ts`
+              tient désormais la garde, parce qu'un commentaire qui affirme une
+              propriété ne la vérifie pas.
+
               `HAUTEUR_DE_CARTE` n'existe que pour que la case « ajouter » garde
               le même gabarit dans la grille.
             */
@@ -430,8 +444,31 @@ const NpcGalleryItem: React.FC<{
                 </div>
             </div>
 
-            {/* Content Area */}
-            <div className="p-5 h-48 shrink-0 flex flex-col relative text-app-text">
+            {/*
+              **Le contenu n'a plus de hauteur imposée, et c'est la suite du
+              correctif du 2026-08-21.**
+
+              Ce jour-là, la CARTE valait `h-96` pendant que ses deux moitiés en
+              réclamaient 416 : on lui a retiré sa hauteur. Mais `h-48` est resté
+              ici, et **la moitié basse était trop courte pour son propre
+              contenu** — signalé de nouveau par David le 2026-08-30, même
+              symptôme, un cran plus bas.
+
+              L'arithmétique, avec `:root { font-size: 85% }` où 1rem vaut
+              13,6 px : `h-48` donne **163 px**, moins 34 de `p-5` = 129
+              utilisables. Un nom sur UNE ligne en demande déjà ~138. Un nom sur
+              deux — *Miranda Reynolds*, *Theodora Komiskey* — ajoute 21 px, et
+              c'est exactement la rangée de boutons qui passe par-dessus bord.
+              **Les cartes à nom court n'étaient pas épargnées, elles étaient
+              rognées de neuf pixels au lieu de trente.**
+
+              `flex-1` sans hauteur : le contenu prend ce qu'il lui faut, la
+              grille étire toutes les cartes d'une rangée à la même hauteur, et
+              `mb-auto` plus bas colle les boutons au bas de chacune — donc
+              alignés d'une carte à l'autre. *Une hauteur qu'on n'écrit pas ne
+              peut pas devenir fausse.*
+            */}
+            <div className="p-5 flex-1 flex flex-col relative text-app-text">
                 {/* Role Badge */}
                 <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-slate-400 border-white/10'}`}>
                     {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
