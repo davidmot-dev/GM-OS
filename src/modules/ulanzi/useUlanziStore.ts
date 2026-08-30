@@ -62,6 +62,22 @@ interface EtatUlanzi {
     pause: () => void;
     reinitialiserLesQuarts: () => void;
     setRoutine: (routine: RoutineSauvegardee | null) => void;
+    /**
+     * **Mémorise la routine — une seule fois, et c'est tout le sujet.**
+     *
+     * *Défaut trouvé le 2026-08-30, écran noir chez David, appareil
+     * irrécupérable par l'application elle-même.* `prendreLaMain` fabrique la
+     * routine en **relisant les réglages de l'appareil**. Elle n'est donc vraie
+     * qu'au premier contact, quand on le trouve dans son propre état. Une
+     * seconde prise — GM-OS relancé pendant une séance ouverte, rechargement à
+     * chaud, changement d'hôte — relit un appareil **déjà muet** et enregistre
+     * « tout était éteint ». La restitution n'a alors plus rien à rendre, et
+     * l'écran reste noir.
+     *
+     * *Une sauvegarde qu'on réécrit avec l'état qu'elle servait à réparer n'est
+     * plus une sauvegarde.* Elle ne s'efface qu'à une restitution réussie.
+     */
+    memoriserLaRoutine: (routine: RoutineSauvegardee) => void;
     setJoignable: (joignable: boolean | null, pourquoi?: string | null) => void;
 }
 
@@ -93,6 +109,9 @@ export const useUlanziStore = create<EtatUlanzi>()(
             reinitialiserLesQuarts: () => set({ quarts: ETAT_INITIAL }),
 
             setRoutine: (routine) => set({ routine }),
+            // Écrire seulement si l'on ne tient rien : une routine déjà
+            // mémorisée est la seule qui ait vu l'appareil intact.
+            memoriserLaRoutine: (routine) => set((s) => (s.routine ? {} : { routine })),
             setJoignable: (joignable, pourquoi = null) => set({ joignable, pourquoi }),
         }),
         {

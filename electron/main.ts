@@ -842,19 +842,48 @@ function sauvegarderAvantDeSortir(reprendre: () => void) {
     sortieDejaTraitee = true;
     let fini = false;
 
+    /*
+      **Deux travaux à la sortie, et un seul délai pour les deux.**
+
+      *Signalé par David le 2026-08-30 : « quand je ferme l'application, le
+      Ulanzi ne reprend pas sa routine ».* La restitution de l'afficheur vivait
+      dans un nettoyage d'effet React — or **fermer une fenêtre Electron ne
+      démonte pas l'arbre React**, donc ce nettoyage n'était jamais appelé.
+
+      Elle rejoint donc la sauvegarde sur ce rail : le rendu est encore vivant
+      ici (`leRenduRepond`), et c'est tout l'intérêt de cette fonction. Les deux
+      partent **en parallèle** et l'on repart quand les deux ont répondu.
+
+      **Un seul mécanisme retient la fermeture, et c'est délibéré.** Un second
+      `preventDefault` sur `before-quit`, posé à côté de celui-ci, finirait par
+      produire une application qui ne se ferme plus — un défaut plus grave que
+      celui qu'on répare. Le délai dur reste donc unique et partagé.
+    */
+    const attendus = new Set(['sauvegarde', 'ulanzi']);
+
     const finir = () => {
         if (fini) return;
         fini = true;
         clearTimeout(delai);
-        ipcMain.removeListener('backup:before-quit-done', finir);
+        ipcMain.removeListener('backup:before-quit-done', sauvegardeFinie);
+        ipcMain.removeListener('ulanzi:before-quit-done', ulanziRendu);
         reprendre();
     };
 
+    const aFini = (qui: string) => {
+        attendus.delete(qui);
+        if (attendus.size === 0) finir();
+    };
+    const sauvegardeFinie = () => aFini('sauvegarde');
+    const ulanziRendu = () => aFini('ulanzi');
+
     const delai = setTimeout(finir, 4000); // le filet dur : on sort de toute façon
-    ipcMain.once('backup:before-quit-done', finir);
+    ipcMain.once('backup:before-quit-done', sauvegardeFinie);
+    ipcMain.once('ulanzi:before-quit-done', ulanziRendu);
 
     try {
         win!.webContents.send('backup:before-quit');
+        win!.webContents.send('ulanzi:before-quit');
     } catch {
         finir();
     }

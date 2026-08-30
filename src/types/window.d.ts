@@ -359,6 +359,10 @@ declare global {
         /** Alias du relais ci-dessus, pour l'afficheur Ulanzi. Un seul canal. */
         ulanzi?: {
             request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<any>;
+            /** GM-OS va se fermer : dernière occasion de rendre l'afficheur. */
+            surDemandeDeFermeture?: (rappel: () => void) => void;
+            /** « J'ai rendu » — la fermeture n'attend pas le délai de sécurité. */
+            fermetureTerminee?: () => void;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;

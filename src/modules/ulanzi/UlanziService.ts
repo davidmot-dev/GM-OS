@@ -239,10 +239,26 @@ export class UlanziService {
             }
         }
 
-        // Sans routine connue, on rend l'appareil à ses valeurs d'usine plutôt
-        // que de le laisser amputé : mieux vaut rendre trop que pas assez.
-        const aRemettre: RoutineSauvegardee =
-            routine ?? { ATIME: 7, TIM: true, HUM: true, TEMP: true, BAT: true };
+        /*
+          **Une routine « tout éteint » n'est pas crue, et c'est le filet qui
+          manquait.**
+
+          *Écran noir chez David le 2026-08-30.* `prendreLaMain` fabrique la
+          routine en relisant l'appareil : reprise sur un appareil **déjà muet**,
+          elle enregistre « tout était éteint ». On n'avait alors rien à rendre,
+          l'écran restait noir, et **l'application ne pouvait plus s'en sortir
+          seule** — un redémarrage n'y fait rien, ces réglages sont en flash.
+
+          Une telle routine est **indiscernable d'une routine empoisonnée**. On
+          choisit donc de ne pas la croire, parce que l'asymétrie est brutale :
+          d'un côté une horloge qui revient alors qu'on l'avait coupée, de
+          l'autre un afficheur noir toute la nuit. *Mieux vaut rendre trop que
+          pas assez* — la même règle que pour une routine absente, appliquée au
+          seul cas où elle ne dit rien d'utile.
+        */
+        const USINE: RoutineSauvegardee = { ATIME: 7, TIM: true, HUM: true, TEMP: true, BAT: true };
+        const toutEtaitEteint = !!routine && NATIVES_A_COUPER.every(clef => routine[clef] === false);
+        const aRemettre: RoutineSauvegardee = (!routine || toutEtaitEteint) ? USINE : routine;
         const actuel = await this.reglages().catch(() => ({}) as Record<string, unknown>);
 
         const patch: Record<string, unknown> = {};

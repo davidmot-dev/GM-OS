@@ -77,7 +77,35 @@ contextBridge.exposeInMainWorld('appBridge', {
      */
     ulanzi: {
         request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) =>
-            ipcRenderer.invoke('light:request', url, method, body, headers)
+            ipcRenderer.invoke('light:request', url, method, body, headers),
+
+        /*
+          **Rendre l'appareil à la fermeture — signalé par David le 2026-08-30 :**
+          *« quand je ferme l'application, le Ulanzi ne reprend pas sa routine »*.
+
+          La restitution vivait dans un nettoyage d'effet React, et **fermer une
+          fenêtre Electron ne démonte pas l'arbre React** : le nettoyage n'était
+          même pas appelé. Quand bien même, il tirait quatre requêtes HTTP sans
+          les attendre dans un rendu qu'on détruisait. *Une restitution ne peut
+          pas vivre dans un processus qui meurt avant elle.*
+
+          D'où ce rail, le même que la sauvegarde de sortie : le principal
+          **retient la fermeture** pendant que le rendu, encore vivant, rend la
+          main — et le rendu dit quand il a fini.
+        */
+        surDemandeDeFermeture: (rappel: () => void) => {
+            /*
+              **Un seul abonné, quoi qu'il arrive.** React tourne en
+              `StrictMode` : il monte chaque effet **deux fois** en
+              développement. Deux abonnements, donc deux réponses — et le
+              principal ne retient la fermeture que jusqu'à la **première**.
+              La plus rapide gagnait, et c'était celle qui n'avait rien fait.
+            */
+            ipcRenderer.removeAllListeners('ulanzi:before-quit');
+            ipcRenderer.on('ulanzi:before-quit', () => rappel());
+        },
+        /** « J'ai rendu » — sans quoi la fermeture attend le délai de sécurité. */
+        fermetureTerminee: () => ipcRenderer.send('ulanzi:before-quit-done'),
     },
     clock: {
         listCalendars: () => ipcRenderer.invoke('clock:list-calendars'),

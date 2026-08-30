@@ -37,10 +37,12 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
     // le store au moment de rendre la main, pour ne jamais rendre une valeur
     // capturée par une fermeture devenue périmée.
     const { hote, actif, secondesParWidget, seuilSansPause, quarts, silencerLesNatives } = useUlanziStore();
-    const { setRoutine, setJoignable } = useUlanziStore.getState();
+    const { setRoutine, memoriserLaRoutine, setJoignable } = useUlanziStore.getState();
 
     /** Vrai pendant que l'afficheur nous appartient. */
     const enMain = useRef(false);
+    /** La restitution de sortie, partagée : plusieurs abonnés, un seul travail. */
+    const restitutionDeSortie = useRef<Promise<void> | null>(null);
     /** Les valeurs les plus fraîches, pour que le battement ne serve pas du périmé. */
     const dernier = useRef({ quarts, seuilSansPause, hote });
     dernier.current = { quarts, seuilSansPause, hote };
@@ -73,6 +75,66 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
             .catch(() => undefined);
     }, [doitAfficher, setRoutine]);
 
+    /**
+     * **Rendre l'afficheur quand GM-OS se ferme.**
+     *
+     * *Signalé par David le 2026-08-30, après l'essai en conditions :* **« quand
+     * je ferme l'application, le Ulanzi ne reprend pas sa routine »**.
+     *
+     * Le nettoyage d'effet ci-dessous ne pouvait pas s'en charger, et pour deux
+     * raisons qui se cumulent : **fermer une fenêtre Electron ne démonte pas
+     * l'arbre React**, donc il n'était même pas appelé ; et quand bien même, il
+     * tire quatre requêtes HTTP *sans les attendre* dans un rendu qu'on est en
+     * train de détruire. D'où le symptôme exact — fermer la **séance**
+     * fonctionnait, fermer l'**application** non.
+     *
+     * *Une restitution ne peut pas vivre dans un processus qui meurt avant elle.*
+     * Le process principal retient donc la fermeture pendant qu'on rend la main.
+     *
+     * **On répond toujours, même sans rien à rendre** : sans réponse, chaque
+     * fermeture de GM-OS attendrait le délai de sécurité de quatre secondes.
+     */
+    useEffect(() => {
+        const pont = window.appBridge?.ulanzi;
+        if (!pont?.surDemandeDeFermeture) return;
+
+        pont.surDemandeDeFermeture(() => {
+            /*
+              **Un seul travail, et personne ne répond avant qu'il soit fini.**
+
+              *L'écran noir du 2026-08-30, deuxième round.* React tourne en
+              `StrictMode` et monte cet effet **deux fois** : deux abonnés
+              recevaient la demande. Le premier partait rendre la main et posait
+              `enMain` à faux ; le second voyait ce faux, croyait n'avoir rien à
+              faire et **répondait aussitôt**. Le principal ne retient la
+              fermeture que jusqu'à la première réponse — il quittait donc
+              pendant que la restitution était encore en vol, et la tuait.
+              *Quand plusieurs répondent pour un seul travail, c'est le plus
+              rapide qui décide, et le plus rapide est celui qui n'a rien fait.*
+
+              La promesse est partagée : quel que soit le nombre d'abonnés, le
+              travail n'a lieu qu'une fois et **tous** attendent sa fin.
+            */
+            restitutionDeSortie.current ??= (async () => {
+                if (!enMain.current) return;
+                enMain.current = false;
+                try {
+                    await new UlanziService(dernier.current.hote)
+                        .rendreLaMain(useUlanziStore.getState().routine, [NOM_DU_WIDGET]);
+                    setRoutine(null);
+                } catch {
+                    // Un échec ne retient pas la fermeture : le rattrapage au
+                    // démarrage suivant reste le filet, et la routine reste
+                    // persistée pour qu'il ait de quoi rendre.
+                }
+            })();
+
+            void restitutionDeSortie.current.finally(() => pont.fermetureTerminee?.());
+        });
+        // Enregistré une seule fois : ce crochet est monté en permanence dans
+        // `Shell`, et le pont n'offre pas de désabonnement.
+    }, [setRoutine]);
+
     // ── Prise et restitution de la main ──────────────────────────────────────
     useEffect(() => {
         let annule = false;
@@ -90,7 +152,10 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
 
                 const avant = await service.prendreLaMain(silencerLesNatives);
                 if (annule) return;
-                setRoutine(avant);
+                // **Mémoriser, pas écraser.** Une reprise sur un appareil déjà
+                // muet enregistrerait « tout était éteint », et la restitution
+                // n'aurait plus rien à rendre. Voir `memoriserLaRoutine`.
+                memoriserLaRoutine(avant);
                 enMain.current = true;
             })().catch((e: unknown) =>
                 setJoignable(false, e instanceof Error ? e.message : String(e)),
@@ -110,7 +175,7 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
         };
         // `secondesParWidget` volontairement dans les dépendances : changer la
         // cadence doit reprendre la main pour réécrire `ATIME`.
-    }, [doitAfficher, hote, silencerLesNatives, setRoutine, setJoignable]);
+    }, [doitAfficher, hote, silencerLesNatives, setRoutine, memoriserLaRoutine, setJoignable]);
 
     // ── Le battement, et la publication immédiate à chaque changement ────────
     useEffect(() => {
@@ -134,7 +199,9 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
             try {
                 if (!enMain.current) {
                     const avant = await service.prendreLaMain(silencerLesNatives);
-                    setRoutine(avant);
+                    // Même règle qu'à la prise : ce rattrapage s'exécute
+                    // justement quand l'appareil peut déjà être muet.
+                    memoriserLaRoutine(avant);
                     enMain.current = true;
                 }
                 await service.pousserWidget(NOM_DU_WIDGET, {
@@ -157,5 +224,5 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
         return () => clearInterval(minuteur);
         // `quarts` en dépendance : un Quart poussé depuis le cockpit doit se
         // voir tout de suite, pas au prochain battement.
-    }, [doitAfficher, hote, quarts, seuilSansPause, secondesParWidget, silencerLesNatives, setJoignable, setRoutine]);
+    }, [doitAfficher, hote, quarts, seuilSansPause, secondesParWidget, silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
 }
