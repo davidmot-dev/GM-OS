@@ -15,6 +15,7 @@ import { Trash2, RefreshCw } from 'lucide-react';
 import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import VerrouDeLaSouris from './settings/VerrouDeLaSouris';
+import RaccourcisDeNavigation from './settings/RaccourcisDeNavigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { measureLocalStorageUsage, formatBytes, type StorageUsage } from '../modules/session/logic/storageDiagnostics';
 import { InlinedMediaPanel } from './settings/InlinedMediaPanel';
@@ -367,6 +368,17 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     */}
                                     <div className="md:col-span-2">
                                         <VerrouDeLaSouris />
+                                    </div>
+
+                                    {/*
+                                      Les neuf places de Ctrl+1 à Ctrl+9. Elles
+                                      sont ici et non dans l'apparence : le
+                                      clavier est du matériel, et c'est déjà où
+                                      vivent le Key Learn des pastilles et la
+                                      souris des joueurs.
+                                    */}
+                                    <div className="md:col-span-2">
+                                        <RaccourcisDeNavigation />
                                     </div>
                                 </div>
                             </section>

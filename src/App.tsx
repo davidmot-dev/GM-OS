@@ -19,6 +19,7 @@ import { BootstrapService } from './modules/system/logic/BootstrapService';
 import { useHydration } from './hooks/useHydration';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
+import { useRaccourcisDeNavigation } from './hooks/useRaccourcisDeNavigation';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
 import { crossWindowSync } from './services/CrossWindowEventService';
 import { dispatchRemoteAction } from './modules/remote/actions';
@@ -106,6 +107,13 @@ function App() {
   const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
 
   useDisplayDetection(isMainPC);
+
+  /*
+    **`Ctrl+1` à `Ctrl+9` ouvrent un module** — demandé par David le 2026-08-30.
+    Fenêtre du MJ seulement : les autres n'ont pas de barre latérale, et un
+    raccourci de navigation y donnerait à un joueur prise sur ce qu'on montre.
+  */
+  useRaccourcisDeNavigation(isMainPC);
   
   // --- AUTO-CONNECT HUE BRIDGES (GM SEULEMENT) ---
   useHueAutoConnect(isMainPC);

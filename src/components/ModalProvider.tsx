@@ -3,7 +3,8 @@ import { useModalStore } from '../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare
+    History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare,
+    Keyboard
 } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
@@ -28,6 +29,7 @@ import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEd
 import NarrativeModal from '../modules/map/components/NarrativeModal';
 // Secondary imports consolidated above
 import LootOS from '../modules/session/components/LootOS';
+import AideDuMeneur from './AideDuMeneur';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 
 const ModalProvider: React.FC = () => {
@@ -182,8 +184,8 @@ const ModalProvider: React.FC = () => {
                     <div className={`bg-slate-900 border border-slate-800/50 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
                         customVariant === 'campaign-add' || customVariant === 'campaign-edit'
                             ? 'w-full h-full rounded-none'
-                            : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os'
-                                ? 'max-w-6xl w-full h-[90vh] rounded-[2rem]' 
+                            : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os' || customVariant === 'aide-du-meneur'
+                                ? 'max-w-6xl w-full h-[90vh] rounded-[2rem]'
                                 : 'max-w-2xl w-full max-h-[90vh] rounded-[2rem]'
                     }`}>
                         {/* Header unifié pour les modals custom */}
@@ -212,6 +214,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'danger-preset-editor' && <Settings2 size={18} />}
                                         {customVariant === 'narrative-display' && <Sparkles size={18} />}
                                         {customVariant === 'loot-os' && <Package size={18} />}
+                                        {customVariant === 'aide-du-meneur' && <Keyboard size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
@@ -235,6 +238,8 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'danger-preset-editor' && t('common:modals.danger_preset_editor')}
                                         {customVariant === 'narrative-display' && t('common:modals.narrative_oracle')}
                                         {customVariant === 'loot-os' && t('common:modals.loot_os')}
+                                        {/* Littéral, comme le reste de l'écran d'aide : il n'a qu'un lecteur. */}
+                                        {customVariant === 'aide-du-meneur' && 'Écran du Meneur'}
                                     </h3>
                                 </div>
                                 <button 
@@ -277,6 +282,7 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'danger-preset-editor' && <DangerZonePresetEditor />}
                             {customVariant === 'narrative-display' && <NarrativeModal />}
                             {customVariant === 'loot-os' && <LootOS />}
+                            {customVariant === 'aide-du-meneur' && <AideDuMeneur />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>

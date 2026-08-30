@@ -15,8 +15,12 @@ import {
   Volume2,
   Settings,
   Hammer,
+  LayoutGrid,
   type LucideIcon
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { CATALOGUE_DES_MODULES, MODULES_ATTEIGNABLES } from '../data/catalogueDesModules';
+import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 
 export type SpotlightCategory = 'entity' | 'audio' | 'map' | 'rule' | 'action';
 
@@ -34,6 +38,9 @@ export const useSpotlight = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const { t } = useTranslation(['modules']);
+  const places = useRaccourcisStore(s => s.places);
 
   const { setActiveModule } = useSessionStore();
   const { 
@@ -73,8 +80,49 @@ export const useSpotlight = () => {
   const { presets, scenes, loadTheme, applyScene } = useAmbientStore();
   const { atmospheres } = useSoundStore();
 
+  /**
+   * **Les vingt modules, en tête de palette.**
+   *
+   * *« L'application devient très complexe »* — David, 2026-08-30. La palette
+   * cherchait du **contenu** : des PNJ, des lieux, des entrées de wiki. Elle ne
+   * savait pas ouvrir un module, et surtout elle ne rendait **rien** tant qu'on
+   * n'avait pas tapé quelque chose : ouverte, elle était vide, donc elle
+   * n'apprenait rien à personne.
+   *
+   * Elle liste maintenant les destinations dès l'ouverture, et les filtre au
+   * fil de la frappe comme le reste. Les noms viennent de `modules:names.<id>`,
+   * la clé de la barre latérale — un module renommé l'est aux deux endroits.
+   */
+  const destinations = useMemo<SpotlightResult[]>(
+    () => MODULES_ATTEIGNABLES.map(id => ({
+      id: `module-${id}`,
+      type: 'action' as const,
+      title: t(CATALOGUE_DES_MODULES[id].cle),
+      subtitle: 'Aller à',
+      icon: LayoutGrid,
+      action: () => {
+        setActiveModule(id);
+        setIsOpen(false);
+      },
+      /*
+        La place assignée s'affiche à côté du nom : la palette devient ainsi
+        l'endroit où l'on apprend ses propres raccourcis, au lieu d'un écran de
+        réglages qu'on ne rouvre jamais.
+      */
+      shortcut: places.indexOf(id) >= 0 ? `Ctrl+${places.indexOf(id) + 1}` : undefined,
+    })),
+    [t, setActiveModule, places],
+  );
+
   const results = useMemo(() => {
-    if (!query.trim()) return [];
+    const recherche = query.trim().toLowerCase();
+
+    // À vide, on montre où l'on peut aller — et rien d'autre : chercher du
+    // contenu sans critère renverrait toute la campagne.
+    if (!recherche) return destinations;
+
+    const destinationsFiltrees = destinations.filter(d =>
+      d.title.toLowerCase().includes(recherche));
 
     const searchStr = query.toLowerCase();
     const matches: SpotlightResult[] = [];
@@ -257,8 +305,14 @@ export const useSpotlight = () => {
       });
     }
 
-    return matches; // Show all results as requested
-  }, [query, entities, atlasMaps, wikiEntries, customGameDrivers, ruleForgeDocs, playlists, presets, scenes, atmospheres, setActiveModule, setCurrentView, setSelectedAtlasMap, setSelectedEntity, setSelectedWikiEntryId, playPad, loadTheme, applyScene]);
+    /*
+      Les destinations passent devant. Taper « com » doit d'abord proposer
+      d'ouvrir Combat-OS, pas de dérouler les quarante PNJ dont le nom contient
+      ces trois lettres — *ce qu'on cherche le plus souvent doit se trouver sans
+      viser.*
+    */
+    return [...destinationsFiltrees, ...matches];
+  }, [query, destinations, entities, atlasMaps, wikiEntries, customGameDrivers, ruleForgeDocs, playlists, presets, scenes, atmospheres, setActiveModule, setCurrentView, setSelectedAtlasMap, setSelectedEntity, setSelectedWikiEntryId, playPad, loadTheme, applyScene]);
 
   const toggle = useCallback(() => setIsOpen(prev => !prev), []);
 
