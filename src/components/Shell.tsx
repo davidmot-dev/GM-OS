@@ -34,6 +34,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
+import { useCorpusDeLaCampagne } from '../modules/session/hooks/useCorpusDeLaCampagne';
 import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
@@ -94,13 +95,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     );
     /*
       **Le jeu de la campagne décide de ce qui défile**, depuis le 2026-08-30 :
-      c'est la librairie de widgets qui remplace la couture provisoire du 23/08
-      (« si le nom du jeu contient *blade* »). Un identifiant de système, pas une
-      sous-chaîne devinée.
+      la librairie de widgets remplace la couture provisoire du 23/08 (« si le
+      nom du jeu contient *blade* »).
+
+      ⚠️ **Et c'est le corpus, pas `campaign.system`.** L'identifiant d'un pilote
+      est fabriqué par la Forge avec `custom-${Date.now()}` : il ne dit rien du
+      jeu, et une comparaison stricte dessus n'aurait jamais correspondu — un
+      défaut muet, puisqu'elle rend simplement une liste vide.
     */
-    const jeuDeLaCampagne = useSessionOSStore(s =>
-        s.campaigns.find(c => c.id === s.activeCampaignId)?.system ?? null,
-    );
+    const jeuDeLaCampagne = useCorpusDeLaCampagne();
     useBattementUlanzi(seanceOuverte, jeuDeLaCampagne);
 
     // Activate Tactical AI listeners

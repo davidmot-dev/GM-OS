@@ -3,6 +3,7 @@ import { Coffee, MonitorSmartphone, ChevronRight, WifiOff, RotateCcw } from 'luc
 import { useUlanziStore } from './useUlanziStore';
 import { QUARTS, composerDefile, stressDuQuart } from './widgets/defileDesQuarts';
 import { widgetsActifs, widgetsDuJeu, estActif } from './widgets/librairie';
+import { useCorpusDeLaCampagne } from '../session/hooks/useCorpusDeLaCampagne';
 
 /** Les noms des Quarts, tels que le livre les nomme — accents compris. */
 const LIBELLES: Record<(typeof QUARTS)[number], string> = {
@@ -14,8 +15,6 @@ const LIBELLES: Record<(typeof QUARTS)[number], string> = {
 
 interface Props {
     seanceOuverte: boolean;
-    /** L'identifiant du jeu de la campagne active. C'est lui qui décide des widgets. */
-    jeuDeLaCampagne?: string;
 }
 
 /**
@@ -46,7 +45,7 @@ interface Props {
  * l'écran — donc plus de restitution, plus de rattrapage au démarrage.
  * *Un émetteur attaché à une vue émet ce que la vue veut bien.*
  */
-const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte, jeuDeLaCampagne }) => {
+const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     const {
         actif, basculerActif, quarts, seuilSansPause, joignable, pourquoi,
         selection, basculerLeWidget, setSecondesDuWidget,
@@ -54,7 +53,13 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte, jeuDeLaCampagne }
         quartSuivant, pause, reinitialiserLesQuarts,
     } = useUlanziStore();
 
-    const jeu = jeuDeLaCampagne ?? null;
+    /*
+      **Le panneau résout le jeu lui-même**, plutôt que de le recevoir en
+      propriété. Le battement le résout de son côté, par le même crochet : deux
+      chemins qui se répondent, au lieu d'une valeur transmise qui pourrait un
+      jour ne plus être la même que celle qui décide de ce qui est poussé.
+    */
+    const jeu = useCorpusDeLaCampagne();
     const disponibles = widgetsDuJeu(jeu);
     const actifs = widgetsActifs(jeu, selection);
     const defileActif = estActif('quarts', jeu, selection);

@@ -169,7 +169,7 @@ const SessionWorkspace: React.FC = () => {
                 colonne du cockpit, où l'on ne regarde pas pendant qu'on joue.
                 Ici il est dans le champ de vision de la table.
             */}
-            <TableauDeBordUlanzi seanceOuverte jeuDeLaCampagne={campaign?.system} />
+            <TableauDeBordUlanzi seanceOuverte />
 
             {/*
                 **Où on en est dans l'histoire, pendant qu'on joue.**
