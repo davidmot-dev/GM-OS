@@ -1,6 +1,7 @@
 import { useSoundStore } from './useSoundStore';
 import { soundController } from './SoundController';
 import type { SoundPad } from './useSoundStore';
+import { estUneFrappeDePastille } from '../../utils/frappeDePastille';
 
 export class KeyboardEngine {
     private static instance: KeyboardEngine;
@@ -24,15 +25,13 @@ export class KeyboardEngine {
     }
 
     private handleKeyDown(e: KeyboardEvent) {
-        // Ignore events if user is typing in an input or textarea
-        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-            return;
-        }
-
-        // Ignore if a modal is open
-        if (document.querySelectorAll('[role="dialog"]').length > 0) {
-            return;
-        }
+        /*
+          La garde vit dans `estUneFrappeDePastille` — la même que celle de
+          Music-OS, qui la recopiait. Elle écarte désormais aussi les frappes
+          tenues avec Ctrl, Alt ou Cmd : `e.code` ignore les modificateurs, donc
+          `Ctrl+C` produisait `KeyC` et **lançait le son lié à la touche C**.
+        */
+        if (!estUneFrappeDePastille(e)) return;
 
         const currentState = useSoundStore.getState();
         const activeAtmos = currentState.atmospheres.find(a => a.id === currentState.activeAtmosphereId) || currentState.atmospheres[0];

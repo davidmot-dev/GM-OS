@@ -2,13 +2,18 @@ import { useEffect } from 'react';
 import { useMusicStore } from './useMusicStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { padDuRaccourci } from './logic/playlistsDeLaCampagne';
+import { estUneFrappeDePastille } from '../../utils/frappeDePastille';
 
 export const useMusicKeyboardControls = () => {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Ignore if in an input or modal
-            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-            if (document.querySelectorAll('[role="dialog"]').length > 0) return;
+            /*
+              La garde est partagée avec Sound-OS, qui portait la même à
+              l'identique. Elle écarte maintenant les frappes tenues avec Ctrl,
+              Alt ou Cmd : `e.code` ignore les modificateurs, donc `Ctrl+C`
+              produisait `KeyC` et lançait la pastille liée à la touche C.
+            */
+            if (!estUneFrappeDePastille(e)) return;
 
             const currentState = useMusicStore.getState();
             const keyCode = e.code; // e.g., "KeyA", "Numpad1"
