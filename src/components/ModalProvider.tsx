@@ -60,8 +60,15 @@ const ModalProvider: React.FC = () => {
                             <h3 className="text-lg font-bold text-white">{t('common:attention')}</h3>
                         </div>
                         <p className="text-slate-300 mb-6 leading-relaxed">{message}</p>
+                        {/*
+                          Même piège que celui du bouton d'annulation ci-dessous,
+                          et corrigé en même temps : aucun appelant ne passe
+                          aujourd'hui d'`onConfirm` à `gmAlert`, donc personne ne
+                          l'a jamais rencontré. Le premier qui le ferait
+                          obtiendrait une alerte qu'on ne peut plus fermer.
+                        */}
                         <button
-                            onClick={onConfirm || closeModal}
+                            onClick={() => { closeModal(); onConfirm?.(); }}
                             className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-600/20"
                         >
                             {confirmLabel || t('common:ok')}
@@ -81,8 +88,29 @@ const ModalProvider: React.FC = () => {
                         </div>
                         <p className="text-slate-300 mb-6 leading-relaxed">{message}</p>
                         <div className="flex gap-3">
+                            {/*
+                              **`onCancel || closeModal` : ou l'un, ou l'autre — jamais les deux.**
+
+                              Un appelant qui fournissait un `onCancel` obtenait
+                              un bouton d'annulation qui n'annulait rien : la
+                              boîte restait à l'écran pour toujours. Signalé par
+                              David le 2026-08-30 sur la suppression d'une
+                              atmosphère de Music-OS, dont l'`onCancel` est un
+                              `() => {}` — le cas le plus pur : ne rien faire, et
+                              ne pas fermer non plus.
+
+                              Le second appelant touché était le garde-fou de
+                              reprise de séance : « Reprendre et abandonner »
+                              abandonnait bien les requêtes du Cortex, puis
+                              laissait la boîte plantée devant le meneur.
+
+                              **On ferme AVANT d'exécuter le rappel**, et l'ordre
+                              n'est pas indifférent : l'`onCancel` du choix de
+                              source dans `PlaylistManager` ouvre une autre boîte.
+                              Fermer après l'aurait effacée aussitôt ouverte.
+                            */}
                             <button
-                                onClick={onCancel || closeModal}
+                                onClick={() => { closeModal(); onCancel?.(); }}
                                 className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-colors"
                             >
                                 {cancelLabel || t('common:cancel')}
