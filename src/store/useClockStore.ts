@@ -59,6 +59,23 @@ export interface TensionClock {
      * migration, et rien à redessiner.*
      */
     forme?: FormeDeJauge;
+    /**
+     * **Cette jauge part-elle sur l'afficheur de table ?**
+     *
+     * *Demandé par David le 2026-08-31, pour l'instrument du § 4 — le
+     * Voight-Kampff.* `isClockProjected` est tout-ou-rien : les jauges partaient
+     * toutes sur l'Ulanzi, ou aucune. Or l'instrument est justement le cas où
+     * l'on veut **celle-là** au milieu de la table et pas les cinq autres.
+     *
+     * **Absent = elle part**, comme avant ce champ. Aucune migration, et une
+     * jauge créée hier se comporte exactement comme hier. C'est aussi le
+     * défaut le moins surprenant : on retire une jauge de l'afficheur, on ne
+     * l'y ajoute pas.
+     *
+     * ⚠️ Ne remplace pas `isClockProjected`, qui reste l'interrupteur général :
+     * *le drapeau choisit lesquelles, l'interrupteur décide si.*
+     */
+    surLAfficheur?: boolean;
 }
 
 /**
@@ -158,6 +175,16 @@ interface ClockState {
     updateTensionSegments: (id: string, delta: number) => void;
     /** Remet une jauge à zéro */
     resetTensionClock: (id: string) => void;
+    /**
+     * **Remplit une jauge d'un coup.**
+     *
+     * *Demandé le 2026-08-31 :* un instrument qui **se vide** — le
+     * Voight-Kampff — part de son maximum. Sans ce geste il fallait six clics
+     * sur `+1` avant de pouvoir commencer à le descendre.
+     */
+    remplirLaJauge: (id: string) => void;
+    /** Cette jauge part-elle sur l'afficheur de table ? */
+    basculerSurLAfficheur: (id: string) => void;
 
     // Calendar Actions
     /** Charge les données d'un calendrier en mémoire */
@@ -242,6 +269,18 @@ export const useClockStore = create<ClockState>()(
                         forme
                     }
                 ]
+            })),
+
+            remplirLaJauge: (id) => set((state) => ({
+                tensions: state.tensions.map((c) =>
+                    (c.id === id ? { ...c, filledSegments: c.totalSegments } : c)),
+            })),
+
+            basculerSurLAfficheur: (id) => set((state) => ({
+                // `?? true` : une jauge sans le drapeau part sur l'afficheur,
+                // donc le premier clic l'en retire — jamais l'inverse.
+                tensions: state.tensions.map((c) =>
+                    (c.id === id ? { ...c, surLAfficheur: !(c.surLAfficheur ?? true) } : c)),
             })),
 
             changerLaCouleurDeLaJauge: (id, couleur) => set((state) => ({

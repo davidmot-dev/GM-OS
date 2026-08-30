@@ -498,11 +498,22 @@ export function minuteurPourLaTable(etat: {
  */
 export function horlogesPourLaTable(etat: {
     isClockProjected?: boolean;
-    tensions?: { id: string; name: string; totalSegments: number; filledSegments: number; color?: string }[];
+    tensions?: {
+        id: string; name: string; totalSegments: number; filledSegments: number;
+        color?: string; surLAfficheur?: boolean;
+    }[];
 }): HorlogeAAfficher[] {
     if (!etat.isClockProjected) return [];
 
-    return (etat.tensions ?? []).map(t => ({
+    return (etat.tensions ?? [])
+        /*
+          **Le drapeau choisit lesquelles, l'interrupteur décide si.** Deux
+          questions différentes : `isClockProjected` dit si la table voit les
+          jauges, `surLAfficheur` dit lesquelles vont sur les 32 pixels. Absent,
+          elle y va — comme avant ce champ.
+        */
+        .filter(t => t.surLAfficheur ?? true)
+        .map(t => ({
         id: t.id,
         nom: t.name,
         remplis: t.filledSegments,

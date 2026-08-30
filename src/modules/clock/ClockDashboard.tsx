@@ -11,7 +11,9 @@ import {
     Pause,
     RotateCcw,
     Monitor,
-    LayoutGrid
+    LayoutGrid,
+    ChevronsUp,
+    MonitorSmartphone
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
@@ -69,6 +71,8 @@ const ClockDashboard: React.FC = () => {
         updateTensionSegments,
         changerLaFormeDeLaJauge,
         changerLaCouleurDeLaJauge,
+        remplirLaJauge,
+        basculerSurLAfficheur,
         setTimer,
         setTimerLabel,
         timerDuration,
@@ -503,6 +507,43 @@ const ClockDashboard: React.FC = () => {
                                                 ×
                                             </button>
                                         )}
+
+                                        {/*
+                                          **Remplir d'un coup.** Un instrument qui *se
+                                          vide* — le Voight-Kampff — part de son
+                                          maximum ; sans ce geste il fallait six clics
+                                          sur `+1` avant de pouvoir le descendre.
+                                        */}
+                                        <button
+                                            type="button"
+                                            onClick={() => remplirLaJauge(clock.id)}
+                                            title={t('clock.gauge_fill')}
+                                            aria-label={t('clock.gauge_fill')}
+                                            className="shrink-0 text-slate-600 hover:text-slate-200"
+                                        >
+                                            <ChevronsUp size={14} />
+                                        </button>
+
+                                        {/*
+                                          **Sur l'afficheur, ou non.** `isClockProjected`
+                                          est tout-ou-rien ; ce drapeau choisit LESQUELLES
+                                          des jauges vont sur les 32 pixels. Absent, elle
+                                          y va — on retire une jauge de l'afficheur, on
+                                          ne l'y ajoute pas.
+                                        */}
+                                        <button
+                                            type="button"
+                                            onClick={() => basculerSurLAfficheur(clock.id)}
+                                            title={(clock.surLAfficheur ?? true)
+                                                ? t('clock.gauge_display_off')
+                                                : t('clock.gauge_display_on')}
+                                            aria-label={t('clock.gauge_display')}
+                                            className={`shrink-0 transition-colors ${(clock.surLAfficheur ?? true)
+                                                ? 'text-gm-gold/70 hover:text-gm-gold'
+                                                : 'text-slate-700 hover:text-slate-500'}`}
+                                        >
+                                            <MonitorSmartphone size={14} />
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -240,6 +240,29 @@ describe('ce que la table a le droit de voir', () => {
         expect(minuteurPourLaTable({ isClockProjected: true })).toBeNull();
     });
 
+    /**
+     * **Le drapeau choisit lesquelles, l'interrupteur décide si.**
+     *
+     * *Demandé le 2026-08-31 pour l'instrument du § 4 — le Voight-Kampff.* On
+     * veut **celle-là** au milieu de la table et pas les cinq autres.
+     */
+    it('n’envoie que les jauges marquées pour l’afficheur', () => {
+        const vues = horlogesPourLaTable({
+            isClockProjected: true,
+            tensions: [
+                { ...TENSIONS[0], surLAfficheur: false },
+                { ...TENSIONS[1], surLAfficheur: true },
+            ],
+        });
+
+        expect(vues.map(h => h.id)).toEqual(['c2']);
+    });
+
+    /** *Absent = elle part*, comme avant ce champ. Aucune migration. */
+    it('envoie une jauge qui n’a pas le drapeau', () => {
+        expect(horlogesPourLaTable({ isClockProjected: true, tensions: TENSIONS })).toHaveLength(2);
+    });
+
     it('traduit les horloges projetées sans rien inventer', () => {
         expect(horlogesPourLaTable({ isClockProjected: true, tensions: TENSIONS })).toEqual([
             { id: 'c1', nom: 'Alerte', remplis: 1, total: 4, couleur: '#00C853' },
