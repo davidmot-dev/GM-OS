@@ -149,6 +149,8 @@ describe('ce qui part vers l’appareil', () => {
         instruments: { quarts: { quartDuJour: 0, consecutifs: 1 }, seuilSansPause: 3 },
         horloges,
         minuteur,
+        temps: null,
+        maintenant: 0,
     });
 
     const AVEC_HORLOGES = { 'blade-runner': [
@@ -260,8 +262,37 @@ describe('les noms sur l’appareil', () => {
 });
 
 describe('le catalogue livré', () => {
-    it('porte le défilé, les horloges de tension et le minuteur', () => {
-        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts', 'horloges', 'minuteur']);
+    it('porte les quatre widgets', () => {
+        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts', 'horloges', 'minuteur', 'heure']);
+    });
+
+    /**
+     * ⚠️ **Un seul widget déroge au § 1 du plan.** Tous les autres posent
+     * `noScroll` ; l'heure du monde défile, sur décision de David. Ce test
+     * existe pour que la dérogation reste **une**, et se remarque si elle se
+     * répand.
+     */
+    it('un seul widget défile, et c’est l’heure du monde', () => {
+        const monde = {
+            instruments: { quarts: { quartDuJour: 0, consecutifs: 0 }, seuilSansPause: 3 },
+            horloges: [{ id: 'c1', nom: 'A', remplis: 1, total: 4 }],
+            minuteur: { restant: 60, duree: 120 },
+            temps: { mode: 'static' as const, timestamp: 0 },
+            maintenant: 0,
+        };
+        const tout = { blade: LIBRAIRIE.map(w => ({ widgetId: w.id, secondes: 10 })) };
+
+        /*
+          On regarde la VALEUR, pas la présence de la clé. Un premier jet
+          testait `'noScroll' in charge` : un widget qui l'aurait posé à
+          `undefined` ou `false` aurait défilé sur l'appareil **en passant le
+          test**. La dégradation l'a montré, et c'est exactement le genre
+          d'assertion creuse que ce projet paie.
+        */
+        const defilent = applicationsAPousser('blade', tout, monde)
+            .filter(a => (a.charge as Record<string, unknown>).noScroll !== true);
+
+        expect(defilent.map(a => a.nom)).toEqual(['gmos_heure']);
     });
 
     /**

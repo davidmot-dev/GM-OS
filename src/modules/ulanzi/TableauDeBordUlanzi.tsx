@@ -7,6 +7,14 @@ import { useCorpusDeLaCampagne } from '../session/hooks/useCorpusDeLaCampagne';
 import { useClockStore } from '../../store/useClockStore';
 import { enMinutesSecondes } from './widgets/minuteur';
 
+/** Ce que le widget « Heure du monde » suit — le mode de Clock-OS. */
+const LIBELLES_DE_MODE: Record<string, string> = {
+    realtime: 'temps réel',
+    static: 'heure posée',
+    timer: 'minuteur',
+    fantasy: 'fantastique',
+};
+
 /** Les noms des Quarts, tels que le livre les nomme — accents compris. */
 const LIBELLES: Record<(typeof QUARTS)[number], string> = {
     matin: 'Matin',
@@ -71,6 +79,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     const timerRemaining = useClockStore(s => s.timerRemaining);
     const timerDuration = useClockStore(s => s.timerDuration);
     const minuteurMontre = isClockProjected && (timerDuration ?? 0) > 0;
+    const modeDeLHorloge = useClockStore(s => s.mode);
     const actifs = widgetsActifs(jeu, selection);
     const defileActif = estActif('quarts', jeu, selection);
 
@@ -178,6 +187,11 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                             : horlogesMontrees === 0
                                                 ? 'aucune horloge'
                                                 : `${horlogesMontrees} affichée${horlogesMontrees > 1 ? 's' : ''}`}
+                                    </span>
+                                )}
+                                {coche && widget.source.de === 'temps' && (
+                                    <span className={`shrink-0 text-[10px] ${isClockProjected ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                        {isClockProjected ? LIBELLES_DE_MODE[modeDeLHorloge] : 'non projetée'}
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'minuteur' && (

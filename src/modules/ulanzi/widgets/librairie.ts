@@ -5,6 +5,7 @@ import {
 } from './defileDesQuarts';
 import { composerCompteARebours } from './compteARebours';
 import { composerMinuteur, ilYAUnMinuteur, type MinuteurAAfficher } from './minuteur';
+import { composerLHeure, type TempsAAfficher } from './heureDuMonde';
 import type { ChargeDeWidget } from '../UlanziService';
 
 /**
@@ -70,6 +71,8 @@ export type SourceDeWidget =
     | { de: 'horloge' }
     /** Miroir du minuteur de Clock-OS. Le seul qui change à la seconde. */
     | { de: 'minuteur' }
+    /** Miroir de l'heure de Clock-OS — réelle, statique ou fantastique. */
+    | { de: 'temps' }
     | { de: 'main' };
 
 export interface WidgetDeTable {
@@ -148,6 +151,19 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Minuteur',
         type: 'compte-a-rebours',
         source: { de: 'minuteur' },
+    },
+    {
+        /*
+          ⚠️ **Le seul widget qui défile**, et donc le seul qui déroge au § 1.
+          Décision de David le 2026-08-30 : *« l'heure ne suffit pas, alors fais
+          défiler la date et l'heure »*. Une date fantastique ne tiendra jamais
+          sur 32 pixels, et c'est l'information qu'aucun autre écran de la table
+          ne porte.
+        */
+        id: 'heure',
+        nom: 'Heure du monde',
+        type: 'rang',
+        source: { de: 'temps' },
     },
 ] as const;
 
@@ -246,7 +262,13 @@ export function demandeUneCadenceRapide(
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): boolean {
     return widgetsActifs(systemId, selection, catalogue)
-        .some(({ widget }) => widget.source.de === 'minuteur');
+        /*
+          L'heure y figure aussi : sa minute changerait avec jusqu'à trente
+          secondes de retard au battement lent. Elle ne coûte pourtant qu'**une
+          requête par minute**, puisque le battement ne republie que ce qui a
+          changé — la cadence rapide fait tourner une boucle, pas le réseau.
+        */
+        .some(({ widget }) => widget.source.de === 'minuteur' || widget.source.de === 'temps');
 }
 
 /** Le widget est-il actif pour ce jeu ? Répond aussi quand rien n'est choisi. */
@@ -324,6 +346,63 @@ export interface MondeDesWidgets {
     horloges: HorlogeAAfficher[];
     /** Le minuteur, ou `null` s'il n'y en a pas de posé. Caviardé en amont aussi. */
     minuteur: MinuteurAAfficher | null;
+    /** L'heure du monde, ou `null` si elle n'est pas montrable. */
+    temps: TempsAAfficher | null;
+    /**
+     * L'heure système, pour le mode temps réel **uniquement**.
+     *
+     * Passée plutôt que lue, pour que tout ce fichier reste pur — et parce que
+     * le `timestamp` du magasin ne fait pas foi dans ce mode-là.
+     */
+    maintenant: number;
+}
+
+/**
+ * **L'heure que la table a le droit de voir.**
+ *
+ * Même interrupteur que les horloges et le minuteur : `isClockProjected`.
+ * L'afficheur est public par construction, et une heure de jeu que le meneur ne
+ * projette pas n'a pas à paraître au milieu de la table.
+ */
+export function tempsPourLaTable(etat: {
+    isClockProjected?: boolean;
+    mode?: TempsAAfficher['mode'];
+    timestamp?: number;
+    getFantasyDate?: () => {
+        day: number; monthIndex: number; year: number;
+        hour: number; minute: number; dayOfWeek?: string;
+    } | null;
+    activeCalendarId?: string | null;
+    calendars?: Record<string, { months: { name: string; displayName?: string; isIntercalary?: boolean }[] }>;
+}): TempsAAfficher | null {
+    if (!etat.isClockProjected) return null;
+
+    const mode = etat.mode ?? 'realtime';
+    const temps: TempsAAfficher = { mode, timestamp: etat.timestamp ?? 0, dateFantastique: null };
+    if (mode !== 'fantasy') return temps;
+
+    /*
+      Le nom du mois vit dans le calendrier, pas dans la date : `getFantasyDate`
+      rend un `monthIndex`. On le résout ici plutôt que dans le rendu, qui n'a
+      pas à connaître la forme d'un calendrier.
+    */
+    const date = etat.getFantasyDate?.();
+    const calendrier = etat.activeCalendarId ? etat.calendars?.[etat.activeCalendarId] : undefined;
+    const mois = date && calendrier ? calendrier.months[date.monthIndex] : undefined;
+    if (!date || !mois) return temps;
+
+    return {
+        ...temps,
+        dateFantastique: {
+            jour: date.day,
+            mois: mois.displayName || mois.name,
+            annee: date.year,
+            heure: date.hour,
+            minute: date.minute,
+            jourDeLaSemaine: date.dayOfWeek,
+            intercalaire: mois.isIntercalary,
+        },
+    };
 }
 
 /**
@@ -397,6 +476,16 @@ export function applicationsAPousser(
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): ApplicationAPousser[] {
     return widgetsActifs(systemId, selection, catalogue).flatMap(({ widget, secondes }) => {
+        if (widget.source.de === 'temps') {
+            return monde.temps
+                ? [{
+                    nom: nomAwtrix(widget.id),
+                    charge: composerLHeure(monde.temps, monde.maintenant) as unknown as ChargeDeWidget,
+                    secondes,
+                }]
+                : [];
+        }
+
         if (widget.source.de === 'minuteur') {
             return monde.minuteur
                 ? [{

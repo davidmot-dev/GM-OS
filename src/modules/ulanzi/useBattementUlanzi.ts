@@ -8,6 +8,7 @@ import {
     horlogesPourLaTable,
     minuteurPourLaTable,
     nomsAwtrixDeTousLesWidgets,
+    tempsPourLaTable,
 } from './widgets/librairie';
 
 /**
@@ -68,6 +69,9 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
     */
     const tensions = useClockStore(s => s.tensions);
     const isClockProjected = useClockStore(s => s.isClockProjected);
+    /* Le mode et l'heure posée : changer de mode doit se voir tout de suite. */
+    const modeDeLHorloge = useClockStore(s => s.mode);
+    const horodatage = useClockStore(s => s.timestamp);
     const { setRoutine, memoriserLaRoutine, setJoignable } = useUlanziStore.getState();
 
     /** Vrai pendant que l'afficheur nous appartient. */
@@ -279,6 +283,10 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                     instruments: { quarts: q, seuilSansPause: s },
                     horloges: horlogesPourLaTable(etatDeLHorloge),
                     minuteur: minuteurPourLaTable(etatDeLHorloge),
+                    temps: tempsPourLaTable(etatDeLHorloge),
+                    // L'heure système, pour le mode temps réel : le `timestamp`
+                    // du magasin y est celui de la dernière pose manuelle.
+                    maintenant: Date.now(),
                 });
 
                 /*
@@ -365,5 +373,6 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
         // doit se voir tout de suite. `tensions` et `isClockProjected` : un
         // segment rempli aussi — c'est un miroir, personne ne le pousse.
     }, [doitAfficher, hote, quarts, seuilSansPause, selection, systemId, tensions, isClockProjected,
+        modeDeLHorloge, horodatage,
         silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
 }
