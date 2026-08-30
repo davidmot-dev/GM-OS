@@ -38,7 +38,36 @@ import fs from 'fs-extra';
  * | **R3** | Ne supprime et n'écrase que des fichiers qu'il a écrits : son motif de nom, dans son dossier, un à la fois. |
  */
 
-/** Le dossier, sous `userData` — jamais sous `APP_ROOT`. Précédent : `PairingManager`, `SecurityManager`. */
+/**
+ * **Où les sauvegardes atterrissent.**
+ *
+ * Demandé par David le 2026-08-30, au sortir d'une alerte : *« mets les
+ * sauvegardes à un autre endroit plus rapide à chercher »*. `userData/backups`
+ * vivait sous `%APPDATA%\gm-os-v5\` — introuvable sans copier un chemin, ce qui
+ * est précisément ce qu'on n'a pas envie de faire quand on croit avoir perdu ses
+ * campagnes.
+ *
+ * ⚠️ **Ce dossier ne doit JAMAIS tomber sous `APP_ROOT`.** `cheminDeSauvegarde`
+ * le vérifie et refuse d'écrire quoi que ce soit dans le cas contraire (R2) —
+ * c'est cette configuration-là qui a détruit l'installation en mars 2026.
+ * `C:\Projet_David\Security_Backup_GMOS` est **à côté** de `GM-OS-v5`, pas
+ * dedans : le contrôle passe, et il reste en place.
+ */
+const DOSSIER_PAR_DEFAUT = 'C:\\Projet_David\\Security_Backup_GMOS';
+
+/**
+ * La couture qui permet de viser ailleurs — **et elle a été payée cash.**
+ *
+ * Sans elle, le dossier était une constante en dur : la première exécution de
+ * la suite de tests après le changement a écrit **neuf fichiers parasites dans
+ * le vrai dossier de sauvegardes de David**. Ils portaient le motif du module,
+ * donc la rotation les aurait comptés comme de vraies sauvegardes.
+ *
+ * *Un chemin de production écrit en dur est un chemin que les tests viseront.*
+ */
+const VARIABLE_DE_DOSSIER = 'GMOS_DOSSIER_SAUVEGARDES';
+
+/** Le repli, si le dossier choisi tombe sous celui de l'application. Sous `userData`, comme avant. */
 const DOSSIER = 'backups';
 
 /**
@@ -71,7 +100,20 @@ function estSous(enfant: string, parent: string): boolean {
 }
 
 export function dossierDesSauvegardes(): string {
-    return path.join(app.getPath('userData'), DOSSIER);
+    /*
+      Le dossier choisi l'emporte, **sauf s'il tombe sous celui de
+      l'application** — auquel cas on retombe sur `userData`, plutôt que de
+      laisser `cheminDeSauvegarde` refuser toute écriture et priver David de
+      sauvegardes sans qu'il l'ait demandé. *Le repli protège l'installation
+      ET le filet ; refuser les deux ne protégerait que l'installation.*
+    */
+    const choisi = process.env[VARIABLE_DE_DOSSIER] || DOSSIER_PAR_DEFAUT;
+
+    const appRoot = process.env.APP_ROOT;
+    if (appRoot && estSous(choisi, appRoot)) {
+        return path.join(app.getPath('userData'), DOSSIER);
+    }
+    return choisi;
 }
 
 /**

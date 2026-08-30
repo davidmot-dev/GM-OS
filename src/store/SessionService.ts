@@ -8,7 +8,6 @@ import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
 import { gmToast } from '../stores/useToastStore';
 import { validateSession, type FullSession } from '../types/schemas';
 import { useLoadingStore } from '../stores/useLoadingStore';
-import { withTimeout } from '../utils/promiseUtils';
 import { Logger } from '../utils/logger';
 import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSession';
 import { useBibliothequeDesFiches } from '../modules/fiches/useBibliothequeDesFiches';
@@ -110,9 +109,22 @@ export const SessionService = {
         try {
             if (window.appBridge?.session?.saveSession) {
                 if (!silent) Logger.info('[Session] Starting save session');
-                const savePromise = window.appBridge.session.saveSession(fullData as Record<string, unknown>);
-                const success = await withTimeout(savePromise, 30000, 'La sauvegarde a pris trop de temps');
-                
+                /*
+                  **Aucun minuteur ici : cet appel contient une décision humaine.**
+
+                  `save-session` ouvre le sélecteur de fichier **puis** écrit —
+                  un seul aller-retour. Le chronomètre de trente secondes courait
+                  donc pendant que David cherchait son dossier, et c'est la seule
+                  chose qu'il ait jamais attrapée : le 2026-08-30, il a fait
+                  échouer une **restauration**, au moment précis où l'on croyait
+                  les campagnes perdues.
+
+                  Il ne protégeait de rien : un dialogue Electron se termine
+                  toujours — annuler rend `null`. *Un garde-fou qui n'attrape que
+                  des humains n'est pas un garde-fou, c'est un piège.*
+                */
+                const success = await window.appBridge.session.saveSession(fullData as Record<string, unknown>);
+
                 if (success) {
                     if (!silent) {
                         Logger.info('[Session] Session saved successfully');
@@ -147,9 +159,11 @@ export const SessionService = {
         try {
             if (window.appBridge?.session?.loadSession) {
                 Logger.info('[Session] Starting load session');
-                const loadPromise = window.appBridge.session.loadSession();
-                const data = await withTimeout(loadPromise, 30000, 'Le chargement a pris trop de temps');
-                
+                // Même raison qu'à la sauvegarde : le sélecteur de fichier est
+                // dans l'appel, et on ne met pas un chronomètre sur quelqu'un
+                // qui cherche un fichier — surtout pas celui qui restaure.
+                const data = await window.appBridge.session.loadSession();
+
                 if (data) {
                     const validatedData = validateSession(data);
                     this.distributeData(validatedData);

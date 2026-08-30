@@ -32,6 +32,18 @@ const {
 } = await import('./sauvegardeAutomatique');
 
 const BACKUPS = path.join(dirs.userData, 'backups');
+
+/*
+  **Posé au chargement du module, pas dans un `beforeEach`.**
+
+  Le dossier de production est un chemin réel du disque de David. La première
+  exécution de cette suite après le changement de dossier y a écrit neuf
+  fichiers parasites, au motif du module — que la rotation aurait comptés comme
+  de vraies sauvegardes. *Un test qui vise le vrai dossier n'est pas un test,
+  c'est un incident.* La variable est donc posée avant que la moindre
+  assertion puisse s'exécuter.
+*/
+process.env.GMOS_DOSSIER_SAUVEGARDES = BACKUPS;
 const ETAT = { modules: { sessionOS: { campaigns: [{ id: 'c-1774865486579', name: 'Anges de Feu' }] } } };
 
 beforeEach(async () => {
@@ -59,8 +71,24 @@ describe('R1 · aucune commande de gestion de version', () => {
 });
 
 describe('R2 · jamais dans le dépôt ni dans le dossier de l’application', () => {
-    it('écrit sous userData/backups', () => {
+    it('écrit dans le dossier désigné', () => {
         expect(dossierDesSauvegardes()).toBe(BACKUPS);
+    });
+
+    /**
+     * **Le dossier choisi ne doit jamais tomber sous celui de l'application.**
+     * C'est cette configuration-là qui a détruit l'installation en mars 2026 :
+     * on retombe alors sur `userData`, plutôt que de refuser toute écriture et
+     * de priver David de sauvegardes sans qu'il l'ait demandé.
+     */
+    it('retombe sous userData si le dossier désigné est dans l’application', () => {
+        const dedans = path.join(dirs.appRoot, 'Security_Backup_GMOS');
+        process.env.GMOS_DOSSIER_SAUVEGARDES = dedans;
+        try {
+            expect(dossierDesSauvegardes()).toBe(BACKUPS);
+        } finally {
+            process.env.GMOS_DOSSIER_SAUVEGARDES = BACKUPS;
+        }
     });
 
     it.each([
