@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
+import type { FormeDeJauge } from '../modules/clock/components/formesDeJauge';
 
 /** Mode de fonctionnement de l'horloge */
 export type ClockMode = 'realtime' | 'static' | 'timer' | 'fantasy';
@@ -48,6 +49,16 @@ export interface TensionClock {
     filledSegments: number;
     /** Couleur personnalisée pour le rendu */
     color?: string;
+    /**
+     * **La forme sous laquelle la jauge se dessine** — anneau, barre, points ou
+     * aiguille. Choisie par jauge : une alerte des gardes n'a pas la même voix
+     * que des provisions qui s'épuisent (David, 2026-08-30).
+     *
+     * Absente : c'est un anneau. Les jauges créées avant ce champ n'en ont pas
+     * et continuent donc de s'afficher exactement comme hier — *aucune
+     * migration, et rien à redessiner.*
+     */
+    forme?: FormeDeJauge;
 }
 
 /**
@@ -129,7 +140,9 @@ interface ClockState {
 
     // Tension Actions
     /** Ajoute une nouvelle jauge de tension */
-    addTensionClock: (name: string, totalSegments: number) => void;
+    addTensionClock: (name: string, totalSegments: number, forme?: FormeDeJauge) => void;
+    /** Change la forme sous laquelle une jauge se dessine. */
+    changerLaFormeDeLaJauge: (id: string, forme: FormeDeJauge) => void;
     /** Supprime une jauge */
     removeTensionClock: (id: string) => void;
     /** Ajoute ou retire des segments à une jauge */
@@ -209,16 +222,21 @@ export const useClockStore = create<ClockState>()(
                 return { timerRemaining: newRemaining, timerIsRunning: newRemaining > 0 };
             }),
 
-            addTensionClock: (name, totalSegments) => set((state) => ({
+            addTensionClock: (name, totalSegments, forme) => set((state) => ({
                 tensions: [
                     ...state.tensions,
                     {
                         id: crypto.randomUUID(),
                         name,
                         totalSegments,
-                        filledSegments: 0
+                        filledSegments: 0,
+                        forme
                     }
                 ]
+            })),
+
+            changerLaFormeDeLaJauge: (id, forme) => set((state) => ({
+                tensions: state.tensions.map((c) => (c.id === id ? { ...c, forme } : c))
             })),
 
             removeTensionClock: (id) => set((state) => ({

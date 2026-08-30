@@ -15,10 +15,18 @@ import {
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
+import ChoixDeLaForme from './components/ChoixDeLaForme';
+import { FORME_PAR_DEFAUT, type FormeDeJauge } from './components/formesDeJauge';
 import { useTranslation } from 'react-i18next';
 
 
 const ClockDashboard: React.FC = () => {
+    /*
+      La forme que prendront les **prochaines** jauges créées. Un état d'écran
+      et non de magasin : c'est une intention du moment, pas une donnée de
+      campagne, et la forme réelle est portée par chaque jauge.
+    */
+    const [formeDesNouvelles, setFormeDesNouvelles] = React.useState<FormeDeJauge>(FORME_PAR_DEFAUT);
     const {
         mode,
         theme,
@@ -37,6 +45,7 @@ const ClockDashboard: React.FC = () => {
         addTensionClock,
         removeTensionClock,
         updateTensionSegments,
+        changerLaFormeDeLaJauge,
         setTimer,
         setTimerLabel,
         timerDuration,
@@ -327,17 +336,18 @@ const ClockDashboard: React.FC = () => {
                                 if (e.key === 'Enter') {
                                     const val = e.currentTarget.value.trim();
                                     if (val) {
-                                        addTensionClock(val, 6);
+                                        addTensionClock(val, 6, formeDesNouvelles);
                                         e.currentTarget.value = '';
                                     }
                                 }
                             }}
                         />
+                        <ChoixDeLaForme valeur={formeDesNouvelles} onChoisir={setFormeDesNouvelles} />
                         <div className="flex gap-2 flex-wrap">
                             {[4, 6, 8, 10, 12].map(s => (
                                 <button
                                     key={s}
-                                    onClick={() => addTensionClock(t('clock.gauge_default', { segments: s }), s)}
+                                    onClick={() => addTensionClock(t('clock.gauge_default', { segments: s }), s, formeDesNouvelles)}
                                     className="bg-app-bg/50 border border-app-border text-app-text/50 px-2 py-1 rounded text-[10px] font-bold hover:bg-app-surface hover:text-accent transition-all"
                                 >
                                     +{s}
@@ -408,6 +418,21 @@ const ClockDashboard: React.FC = () => {
                                         <p className="text-[10px] text-slate-500 font-mono italic">
                                             {clock.filledSegments} / {clock.totalSegments} {t('clock.segments')}
                                         </p>
+                                    </div>
+
+                                    {/*
+                                      Changer d'avis sur une jauge déjà posée.
+                                      Discret au repos, franc au survol : quatre
+                                      boutons toujours allumés sur chaque carte
+                                      disputeraient l'œil à la jauge elle-même,
+                                      qui est la seule chose à lire en séance.
+                                    */}
+                                    <div className="opacity-30 group-hover:opacity-100 transition-opacity">
+                                        <ChoixDeLaForme
+                                            compact
+                                            valeur={clock.forme ?? FORME_PAR_DEFAUT}
+                                            onChoisir={(f) => changerLaFormeDeLaJauge(clock.id, f)}
+                                        />
                                     </div>
                                 </div>
                             </div>
