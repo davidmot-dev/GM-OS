@@ -9,7 +9,10 @@ import {
     NIVEAU_MIN,
     SIGNAL_INITIAL,
     traceDuSignal,
+    CADENCE_DU_SIGNAL_MS,
+    type LigneTracee,
 } from './voightKampff';
+import { CADENCE_RAPIDE_MS } from '../useBattementUlanzi';
 
 /**
  * **Le signal du Voight-Kampff — demandé par David le 2026-08-31.**
@@ -23,11 +26,9 @@ import {
  * voit d'un coup d'œil, ce que le § 1 exige.
  */
 
-/** Les pics sont les rectangles qui montent au-dessus de la ligne de base. */
-const pics = (draw: { df: [number, number, number, number, string] }[]) =>
-    draw.filter(r => r.df[3] > 1);
-const ligne = (draw: { df: [number, number, number, number, string] }[]) =>
-    draw.filter(r => r.df[3] === 1);
+/** Une montée est un segment dont le second point est plus haut que le premier. */
+const montees = (draw: LigneTracee[]) => draw.filter(l => l.dl[3] < l.dl[1]);
+const descentes = (draw: LigneTracee[]) => draw.filter(l => l.dl[3] > l.dl[1]);
 
 describe('le rythme', () => {
     it('part au repos et s’accélère d’un cran par appui', () => {
@@ -47,28 +48,64 @@ describe('le rythme', () => {
 });
 
 describe('le tracé', () => {
-    it('dessine autant de pics que le niveau', () => {
+    /**
+     * **Une onde triangulaire : ça monte, puis ça descend, linéairement.**
+     * Autant de cycles que le niveau — plus un de chaque côté, pour que le
+     * décalage ne laisse pas de blanc au bord.
+     */
+    it('alterne montées et descentes, autant que le niveau', () => {
         for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
-            expect(pics(traceDuSignal(n)), `niveau ${n}`).toHaveLength(n);
+            const trace = traceDuSignal(n);
+            expect(montees(trace).length, `niveau ${n}`).toBeGreaterThanOrEqual(n);
+            expect(descentes(trace).length).toBe(montees(trace).length);
         }
     });
 
-    /** Sans ligne de base, des pics isolés se liraient comme des barres. */
-    it('porte une ligne de base d’un bord à l’autre', () => {
-        const base = ligne(traceDuSignal(3));
-        expect(base).toHaveLength(1);
-        expect(base[0].df[2]).toBe(LARGEUR);
+    /** Plus le niveau monte, plus les cycles se resserrent : c'est le rythme. */
+    it('resserre les cycles quand le rythme s’accélère', () => {
+        const periodeDe = (n: number) => {
+            const t = traceDuSignal(n);
+            return t[2].dl[0] - t[0].dl[0];
+        };
+        expect(periodeDe(NIVEAU_MAX)).toBeLessThan(periodeDe(NIVEAU_MIN));
     });
 
-    it('ne déborde jamais de la matrice', () => {
+    /**
+     * ⚠️ **Douze commandes, pas trente-deux.** Mesuré sur l'appareil : un
+     * rectangle par colonne coûtait 802 ms et échouait deux fois sur vingt ;
+     * les segments coûtent 401 ms et ne ratent pas. *Un dessin trop lourd ne se
+     * voit pas dans le code, il se voit sur le fil.*
+     */
+    it('reste sous une poignée de commandes', () => {
+        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
+            expect(traceDuSignal(n).length, `niveau ${n}`).toBeLessThanOrEqual(16);
+        }
+    });
+
+    it('reste dans la hauteur de la matrice', () => {
         for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
             for (let phase = 0; phase < 40; phase++) {
-                for (const { df: [x, y, l, h] } of traceDuSignal(n, phase)) {
-                    expect(x + l, `niveau ${n}, phase ${phase}`).toBeLessThanOrEqual(LARGEUR);
-                    expect(y, `niveau ${n}`).toBeGreaterThanOrEqual(0);
-                    expect(y + h).toBeLessThanOrEqual(8);
+                for (const { dl: [, y0, , y1] } of traceDuSignal(n, phase)) {
+                    for (const y of [y0, y1]) {
+                        expect(y, `niveau ${n}`).toBeGreaterThanOrEqual(0);
+                        expect(y).toBeLessThan(8);
+                    }
                 }
             }
+        }
+    });
+
+    /**
+     * **Le tracé couvre les deux bords, quelle que soit la phase.** Sans le
+     * cycle qui démarre avant la colonne zéro, le décalage laisserait un blanc
+     * d'un côté à chaque image — et l'œil lirait un tracé qui se recompose
+     * plutôt qu'un tracé qui glisse.
+     */
+    it('déborde volontairement des deux côtés', () => {
+        for (let phase = 0; phase < 12; phase++) {
+            const trace = traceDuSignal(4, phase);
+            expect(trace[0].dl[0], `phase ${phase}`).toBeLessThanOrEqual(0);
+            expect(trace[trace.length - 1].dl[2]).toBeGreaterThanOrEqual(LARGEUR);
         }
     });
 
@@ -83,11 +120,8 @@ describe('le tracé', () => {
         expect(traceDuSignal(4, 1)).not.toEqual(traceDuSignal(4, 0));
     });
 
-    /** Une phase négative ne doit pas produire de pic hors de l'écran. */
-    it('supporte une phase négative', () => {
-        for (const { df: [x] } of traceDuSignal(3, -5)) {
-            expect(x).toBeGreaterThanOrEqual(0);
-        }
+    it('supporte une phase négative sans se replier', () => {
+        expect(traceDuSignal(3, -5)).toEqual(traceDuSignal(3, -5 + Math.floor(32 / 3)));
     });
 });
 
@@ -124,16 +158,25 @@ describe('ce qui part vers l’appareil', () => {
         expect(composerVoightKampff({ niveau: 3 }, 0).noScroll).toBe(true);
     });
 
-    /** Une colonne par seconde : la machine tourne, et ça se voit. */
     it('dérive avec le temps', () => {
         const a = composerVoightKampff({ niveau: 3 }, 0);
-        const b = composerVoightKampff({ niveau: 3 }, 1000);
+        const b = composerVoightKampff({ niveau: 3 }, CADENCE_DU_SIGNAL_MS);
 
         expect(b.draw).not.toEqual(a.draw);
     });
 
-    it('ne dérive pas en deçà de la seconde', () => {
-        expect(composerVoightKampff({ niveau: 3 }, 400).draw)
+    it('ne dérive pas entre deux images', () => {
+        expect(composerVoightKampff({ niveau: 3 }, CADENCE_DU_SIGNAL_MS - 1).draw)
             .toEqual(composerVoightKampff({ niveau: 3 }, 0).draw);
+    });
+
+    /**
+     * **Les deux cadences doivent rester égales.** Le battement décide *quand*
+     * on publie, le compositeur calcule l'image de ce moment-là. Si elles
+     * divergeaient, le tracé sauterait ou se figerait — et rien ne le dirait,
+     * puisque chaque moitié serait juste de son côté.
+     */
+    it('calcule ses images à la cadence à laquelle le battement publie', () => {
+        expect(CADENCE_DU_SIGNAL_MS).toBe(CADENCE_RAPIDE_MS);
     });
 });

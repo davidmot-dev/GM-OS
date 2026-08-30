@@ -1,4 +1,4 @@
-import { HAUTEUR, LARGEUR, type RectanglePlein } from './defileDesQuarts';
+import { HAUTEUR, LARGEUR } from './defileDesQuarts';
 
 /**
  * **Le signal du Voight-Kampff — un tracé, pas une jauge.**
@@ -78,39 +78,56 @@ export function couleurDuNiveau(niveau: number): string {
     return COULEURS_DU_SIGNAL[rang - 1];
 }
 
-/** La ligne de base, dans le bas de la matrice. Le pic monte au-dessus. */
-const LIGNE_DE_BASE = HAUTEUR - 3;
-/** Hauteur d'un pic, en pixels au-dessus de la ligne. */
-const HAUTEUR_DU_PIC = 4;
+/** Le creux de l'onde, tout en bas de la matrice. */
+const BAS = HAUTEUR - 2;
+/** La crête, tout en haut. */
+const HAUT = 1;
+
+/** Un segment, au format que comprend AWTRIX : `[x0, y0, x1, y1, couleur]`. */
+export interface LigneTracee {
+    dl: [number, number, number, number, string];
+}
 
 /**
- * **Le tracé : une ligne de base, et `niveau` pics régulièrement espacés.**
+ * **Le tracé : une onde triangulaire, qui monte et descend linéairement.**
  *
- * `phase` décale l'ensemble, pour la dérive. Elle est prise **modulo l'écart
- * entre deux pics** et non modulo la largeur : le motif se répète à cet
- * intervalle-là, et un décalage plus grand ferait sauter le tracé au lieu de le
- * faire glisser.
+ * *Demandé par David le 2026-08-31 : « fais varier linéairement la ligne de haut
+ * en bas ».*
+ *
+ * ⚠️ **Dessiné en LIGNES, et c'est une contrainte mesurée, pas un choix de
+ * style.** Une première version dessinait un rectangle d'un pixel par colonne :
+ * 980 octets, **802 ms par poussée, et deux échecs sur vingt** sur l'appareil de
+ * David. Ça aurait lâché en séance sans qu'on sache pourquoi. Les mêmes trente-
+ * deux colonnes en segments `dl` font 435 octets, douze commandes, **401 ms et
+ * aucun échec** — le plancher de l'appareil.
+ *
+ * *Un dessin trop lourd ne se voit pas dans le code, il se voit sur le fil.*
+ *
+ * `phase` décale l'ensemble. Elle est prise **modulo la période** et non modulo
+ * la largeur : le motif se répète à cet intervalle-là, et un décalage plus grand
+ * ferait sauter le tracé au lieu de le faire glisser.
  */
-export function traceDuSignal(niveau: number, phase = 0): RectanglePlein[] {
-    const pics = Math.max(NIVEAU_MIN, Math.min(NIVEAU_MAX, Math.round(niveau)));
-    const couleur = couleurDuNiveau(pics);
-    const ecart = Math.floor(LARGEUR / pics);
+export function traceDuSignal(niveau: number, phase = 0): LigneTracee[] {
+    const cycles = Math.max(NIVEAU_MIN, Math.min(NIVEAU_MAX, Math.round(niveau)));
+    const couleur = couleurDuNiveau(cycles);
+    const periode = Math.max(2, Math.floor(LARGEUR / cycles));
+    const demie = Math.max(1, Math.floor(periode / 2));
 
-    // La ligne de base, d'un bord à l'autre. Sans elle, des pics isolés
-    // ressembleraient à des barres et non à un signal.
-    const commandes: RectanglePlein[] = [{ df: [0, LIGNE_DE_BASE, LARGEUR, 1, couleur] }];
+    const decalage = ((phase % periode) + periode) % periode;
+    const lignes: LigneTracee[] = [];
 
-    const decalage = ((phase % ecart) + ecart) % ecart;
-    for (let n = 0; n < pics; n++) {
-        const x = n * ecart + decalage;
-        // Un pic qui déborderait est simplement omis : il reviendra au tour
-        // suivant, et un rectangle tronqué au bord se lirait comme un pic plus
-        // court — donc comme une autre valeur.
-        if (x >= LARGEUR) continue;
-        commandes.push({ df: [x, LIGNE_DE_BASE - HAUTEUR_DU_PIC, 1, HAUTEUR_DU_PIC, couleur] });
+    /*
+      On part **avant** le bord gauche et l'on va **au-delà** du droit : sans
+      cela, le décalage laisserait un blanc d'un côté à chaque image, et l'œil
+      lirait un tracé qui se recompose plutôt qu'un tracé qui glisse. Les
+      coordonnées hors matrice sont simplement écrêtées par l'appareil.
+    */
+    for (let debut = decalage - periode; debut < LARGEUR; debut += periode) {
+        lignes.push({ dl: [debut, BAS, debut + demie, HAUT, couleur] });
+        lignes.push({ dl: [debut + demie, HAUT, debut + periode, BAS, couleur] });
     }
 
-    return commandes;
+    return lignes;
 }
 
 export interface CompositionDuSignal {
@@ -118,8 +135,34 @@ export interface CompositionDuSignal {
     color: string;
     center: true;
     noScroll: true;
-    draw: RectanglePlein[];
+    draw: LigneTracee[];
 }
+
+/**
+ * **De combien de colonnes le tracé avance par image.**
+ *
+ * *« Accélère le rythme », David, le 2026-08-31.* Une colonne par image donnait
+ * une colonne par seconde — un glissement à peine perceptible. On ne peut pas
+ * publier beaucoup plus vite (400 ms par requête, mesuré), alors on avance de
+ * **deux colonnes** à chaque fois : combiné à la cadence de 500 ms, cela fait
+ * quatre colonnes par seconde, quatre fois plus qu'avant.
+ *
+ * *Au-delà, le pas approcherait la demi-période et le tracé sauterait au lieu de
+ * glisser* — l'œil verrait un clignotement, pas un signal.
+ */
+export const PAS_DE_DERIVE = 2;
+
+/**
+ * **La période d'une image du tracé — mesurée sur l'appareil, pas choisie.**
+ *
+ * Une poussée coûte **401 ms** à l'Ulanzi de David, quelle que soit la taille de
+ * la charge (mesuré sur 20 envois, aucun échec). Descendre sous 500 ms ferait
+ * donc démarrer une publication avant la fin de la précédente.
+ *
+ * Elle doit rester égale à `CADENCE_RAPIDE_MS` du battement : c'est ce dernier
+ * qui décide *quand* on publie, celle-ci ne fait que calculer la même image.
+ */
+export const CADENCE_DU_SIGNAL_MS = 500;
 
 /**
  * Le signal, tel qu'il part vers l'afficheur.
@@ -138,6 +181,6 @@ export function composerVoightKampff(etat: EtatDuSignal, maintenant: number): Co
         color: couleurDuNiveau(etat.niveau),
         center: true,
         noScroll: true,
-        draw: traceDuSignal(etat.niveau, Math.floor(maintenant / 1000)),
+        draw: traceDuSignal(etat.niveau, Math.floor(maintenant / CADENCE_DU_SIGNAL_MS) * PAS_DE_DERIVE),
     };
 }

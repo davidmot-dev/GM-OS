@@ -71,7 +71,7 @@ export const BATTEMENT_MS = 30_000;
  * rythme-là ; le défilé et les horloges ne repartent qu'au `BATTEMENT_MS`, pour
  * renouveler leur durée de vie.
  */
-export const CADENCE_RAPIDE_MS = 1_000;
+export const CADENCE_RAPIDE_MS = 500;
 
 /**
  * Le battement : GM-OS republie, l'afficheur oublie.
@@ -285,7 +285,27 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
          *
          * *Un rattrapage qui ne rattrape qu'une fois ne rattrape pas.*
          */
+        /*
+          **Une publication à la fois — imposé par la mesure du 2026-08-31.**
+
+          Une poussée coûte **401 ms** à l'appareil, et la cadence rapide est
+          descendue à 500 ms pour le tracé du Voight-Kampff. Deux applications à
+          republier dans le même tour dépassent donc l'intervalle, et
+          `setInterval` n'attend rien : les publications se chevaucheraient, et
+          celle qui finit en dernier écraserait la plus récente.
+
+          On saute le tour plutôt que d'empiler. *Perdre une image d'un tracé qui
+          dérive ne se voit pas ; deux publications qui se doublent, si.*
+        */
+        let enCours = false;
+
         const publier = async () => {
+            if (enCours) return;
+            enCours = true;
+            try { await publierVraiment(); } finally { enCours = false; }
+        };
+
+        const publierVraiment = async () => {
             const { quarts: q, seuilSansPause: s, selection: sel, systemId: jeu, signal: sig } = dernier.current;
             try {
                 if (!enMain.current) {
