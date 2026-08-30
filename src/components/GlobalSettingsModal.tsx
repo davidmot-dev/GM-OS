@@ -14,6 +14,7 @@ import { gmToast } from '../stores/useToastStore';
 import { Trash2, RefreshCw } from 'lucide-react';
 import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
+import VerrouDeLaSouris from './settings/VerrouDeLaSouris';
 import { QRCodeSVG } from 'qrcode.react';
 import { measureLocalStorageUsage, formatBytes, type StorageUsage } from '../modules/session/logic/storageDiagnostics';
 import { InlinedMediaPanel } from './settings/InlinedMediaPanel';
@@ -356,6 +357,16 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 </div>
                                             ))}
                                         </div>
+                                    </div>
+
+                                    {/*
+                                      Le verrou de la souris des joueurs — même
+                                      section que les sorties audio et les
+                                      écrans : c'est du matériel de table, et
+                                      c'est là que le meneur vient le chercher.
+                                    */}
+                                    <div className="md:col-span-2">
+                                        <VerrouDeLaSouris />
                                     </div>
                                 </div>
                             </section>
