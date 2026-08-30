@@ -8,6 +8,11 @@ import {
     type EtatDesQuarts,
 } from './widgets/defileDesQuarts';
 import { HOTE_PAR_DEFAUT, type RoutineSauvegardee } from './UlanziService';
+import {
+    basculer,
+    reglerLesSecondes,
+    type SelectionParJeu,
+} from './widgets/librairie';
 
 /**
  * L'état de l'afficheur Ulanzi.
@@ -27,8 +32,13 @@ interface EtatUlanzi {
     hote: string;
     /** L'option : l'afficheur est-il enrôlé pour la séance ? */
     actif: boolean;
-    /** Combien de secondes le défilé reste à l'écran. Écrit dans `duration`. */
-    secondesParWidget: number;
+    /*
+      ⚠️ `secondesParWidget` a été retiré le 2026-08-30. La part d'écran est
+      désormais **par widget**, dans `selection` — la garder ici aurait laissé
+      deux écrivains pour la même décision, et celui-ci n'avait plus de lecteur.
+      La clé persistée subsiste chez les installations existantes ; elle est
+      simplement ignorée, et `SECONDES_PAR_DEFAUT` de la librairie fait foi.
+    */
     /**
      * Couper les applications natives bavardes pendant la séance.
      *
@@ -38,6 +48,17 @@ interface EtatUlanzi {
      * batterie — mais rien ne redémarre.
      */
     silencerLesNatives: boolean;
+    /**
+     * **Le tableau de bord : ce qui défile, par jeu.**
+     *
+     * Demandé par David le 2026-08-23, construit le 2026-08-30. La règle vit
+     * dans `widgets/librairie`, qui est pure ; ce champ n'en est que le dépôt.
+     *
+     * **Un jeu absent de cette carte n'est pas un jeu sans widgets** : c'est un
+     * jeu qui n'a rien choisi, et l'on suit alors les `parDefaut` du catalogue.
+     * Un tableau **vide**, lui, est un choix — on ne pousse rien.
+     */
+    selection: SelectionParJeu;
     /** Trois par défaut ; quatre avec la spécialité « Bourreau de travail ». */
     seuilSansPause: number;
     quarts: EtatDesQuarts;
@@ -55,7 +76,10 @@ interface EtatUlanzi {
 
     setHote: (hote: string) => void;
     basculerActif: (force?: boolean) => void;
-    setCadence: (secondes: number) => void;
+    /** Allume ou éteint un widget pour un jeu. Le premier geste fige l'implicite. */
+    basculerLeWidget: (systemId: string, widgetId: string) => void;
+    /** La part d'écran d'un widget, en secondes. Bornée par la librairie. */
+    setSecondesDuWidget: (systemId: string, widgetId: string, secondes: number) => void;
     setSeuil: (seuil: number) => void;
     basculerSilence: () => void;
     quartSuivant: () => void;
@@ -86,9 +110,9 @@ export const useUlanziStore = create<EtatUlanzi>()(
         (set) => ({
             hote: HOTE_PAR_DEFAUT,
             actif: false,
-            secondesParWidget: 25,
             silencerLesNatives: true,
             seuilSansPause: SEUIL_SANS_PAUSE,
+            selection: {},
             quarts: ETAT_INITIAL,
             routine: null,
             joignable: null,
@@ -99,8 +123,20 @@ export const useUlanziStore = create<EtatUlanzi>()(
                 set((s) => ({ actif: force !== undefined ? force : !s.actif })),
             // Une cadence trop courte rend l'objet illisible, trop longue le rend
             // absent : on borne plutôt que de laisser saisir n'importe quoi.
-            setCadence: (secondes) =>
-                set({ secondesParWidget: Math.max(3, Math.min(60, Math.round(secondes))) }),
+            /*
+              Les deux gestes du tableau de bord passent par la librairie, qui
+              tient la règle et la teste. Le magasin ne fait que déposer le
+              résultat — *une seule façon de décider ce qui défile.*
+            */
+            basculerLeWidget: (systemId, widgetId) => set(s => ({
+                selection: { ...s.selection, [systemId]: basculer(widgetId, systemId, s.selection) },
+            })),
+            setSecondesDuWidget: (systemId, widgetId, secondes) => set(s => ({
+                selection: {
+                    ...s.selection,
+                    [systemId]: reglerLesSecondes(widgetId, secondes, systemId, s.selection),
+                },
+            })),
             setSeuil: (seuil) => set({ seuilSansPause: Math.max(1, Math.min(6, Math.round(seuil))) }),
             basculerSilence: () => set(s => ({ silencerLesNatives: !s.silencerLesNatives })),
 
@@ -122,9 +158,9 @@ export const useUlanziStore = create<EtatUlanzi>()(
             partialize: (s) => ({
                 hote: s.hote,
                 actif: s.actif,
-                secondesParWidget: s.secondesParWidget,
                 silencerLesNatives: s.silencerLesNatives,
                 seuilSansPause: s.seuilSansPause,
+                selection: s.selection,
                 quarts: s.quarts,
                 routine: s.routine,
             }),

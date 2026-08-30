@@ -9,7 +9,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 import SessionClueDeck from './SessionClueDeck';
 import PanneauDeTrameEnCours from './PanneauDeTrameEnCours';
-import PanneauDesQuarts from '../../ulanzi/PanneauDesQuarts';
+import TableauDeBordUlanzi from '../../ulanzi/TableauDeBordUlanzi';
 
 const SessionWorkspace: React.FC = () => {
     const { t } = useTranslation();
@@ -169,7 +169,7 @@ const SessionWorkspace: React.FC = () => {
                 colonne du cockpit, où l'on ne regarde pas pendant qu'on joue.
                 Ici il est dans le champ de vision de la table.
             */}
-            <PanneauDesQuarts seanceOuverte jeuDeLaCampagne={campaign?.system} />
+            <TableauDeBordUlanzi seanceOuverte jeuDeLaCampagne={campaign?.system} />
 
             {/*
                 **Où on en est dans l'histoire, pendant qu'on joue.**

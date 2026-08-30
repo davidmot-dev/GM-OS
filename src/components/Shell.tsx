@@ -92,7 +92,16 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     const seanceOuverte = useSessionOSStore(s =>
         uneSeanceEstOuverte(s.campaigns, s.sessions, s.activeCampaignId),
     );
-    useBattementUlanzi(seanceOuverte);
+    /*
+      **Le jeu de la campagne décide de ce qui défile**, depuis le 2026-08-30 :
+      c'est la librairie de widgets qui remplace la couture provisoire du 23/08
+      (« si le nom du jeu contient *blade* »). Un identifiant de système, pas une
+      sous-chaîne devinée.
+    */
+    const jeuDeLaCampagne = useSessionOSStore(s =>
+        s.campaigns.find(c => c.id === s.activeCampaignId)?.system ?? null,
+    );
+    useBattementUlanzi(seanceOuverte, jeuDeLaCampagne);
 
     // Activate Tactical AI listeners
     useHardwareBridge();

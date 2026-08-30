@@ -1,10 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { useUlanziStore } from './useUlanziStore';
 import { UlanziService } from './UlanziService';
-import { composerDefile } from './widgets/defileDesQuarts';
+import {
+    COMPOSITEURS,
+    nomsAwtrixDeTousLesWidgets,
+    nomAwtrix,
+    widgetsActifs,
+} from './widgets/librairie';
 
-/** Le nom de l'application côté AWTRIX. Stable : republier remplace. */
-export const NOM_DU_WIDGET = 'gmos_quarts';
+/**
+ * **Tout ce que GM-OS a pu poser sur l'appareil**, et donc tout ce que la
+ * restitution doit retirer — pas seulement ce qui est actif.
+ *
+ * Un widget éteint en cours de séance reste sur l'appareil jusqu'à l'expiration
+ * de sa durée de vie : le laisser reviendrait à rendre un afficheur qui montre
+ * encore quelque chose que GM-OS ne pousse plus.
+ */
+export const NOMS_DES_WIDGETS = nomsAwtrixDeTousLesWidgets();
 
 /**
  * Combien de temps un widget survit sans être republié.
@@ -32,11 +44,11 @@ export const BATTEMENT_MS = 30_000;
  * doit jamais emporter ce qu'il décrivait* — vue de l'autre côté :
  * **l'absence de GM-OS ne doit rien laisser derrière.**
  */
-export function useBattementUlanzi(seanceOuverte: boolean): void {
+export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | null): void {
     // `routine` n'est volontairement pas lu ici : la restitution la relit dans
     // le store au moment de rendre la main, pour ne jamais rendre une valeur
     // capturée par une fermeture devenue périmée.
-    const { hote, actif, secondesParWidget, seuilSansPause, quarts, silencerLesNatives } = useUlanziStore();
+    const { hote, actif, selection, seuilSansPause, quarts, silencerLesNatives } = useUlanziStore();
     const { setRoutine, memoriserLaRoutine, setJoignable } = useUlanziStore.getState();
 
     /** Vrai pendant que l'afficheur nous appartient. */
@@ -44,8 +56,8 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
     /** La restitution de sortie, partagée : plusieurs abonnés, un seul travail. */
     const restitutionDeSortie = useRef<Promise<void> | null>(null);
     /** Les valeurs les plus fraîches, pour que le battement ne serve pas du périmé. */
-    const dernier = useRef({ quarts, seuilSansPause, hote });
-    dernier.current = { quarts, seuilSansPause, hote };
+    const dernier = useRef({ quarts, seuilSansPause, hote, selection, systemId });
+    dernier.current = { quarts, seuilSansPause, hote, selection, systemId };
 
     const doitAfficher = actif && seanceOuverte;
 
@@ -70,7 +82,7 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
         if (!perdue) return;
         rattrapageFait.current = true;
         void new UlanziService(adresse)
-            .rendreLaMain(perdue, [NOM_DU_WIDGET])
+            .rendreLaMain(perdue, NOMS_DES_WIDGETS)
             .then(() => setRoutine(null))
             .catch(() => undefined);
     }, [doitAfficher, setRoutine]);
@@ -120,7 +132,7 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
                 enMain.current = false;
                 try {
                     await new UlanziService(dernier.current.hote)
-                        .rendreLaMain(useUlanziStore.getState().routine, [NOM_DU_WIDGET]);
+                        .rendreLaMain(useUlanziStore.getState().routine, NOMS_DES_WIDGETS);
                     setRoutine(null);
                 } catch {
                     // Un échec ne retient pas la fermeture : le rattrapage au
@@ -169,12 +181,12 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
             // La restitution part sans qu'on l'attende : React ne patiente pas
             // sur un nettoyage. Si elle échoue, `lifetime` reste le filet.
             void new UlanziService(dernier.current.hote)
-                .rendreLaMain(useUlanziStore.getState().routine, [NOM_DU_WIDGET])
+                .rendreLaMain(useUlanziStore.getState().routine, NOMS_DES_WIDGETS)
                 .then(() => setRoutine(null))
                 .catch(() => undefined);
         };
-        // `secondesParWidget` volontairement dans les dépendances : changer la
-        // cadence doit reprendre la main pour réécrire `ATIME`.
+        // La cadence n'est plus dans ces dépendances : elle ne passe plus par
+        // `ATIME`, donc la changer ne demande plus de reprendre la main.
     }, [doitAfficher, hote, silencerLesNatives, setRoutine, memoriserLaRoutine, setJoignable]);
 
     // ── Le battement, et la publication immédiate à chaque changement ────────
@@ -195,7 +207,7 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
          * *Un rattrapage qui ne rattrape qu'une fois ne rattrape pas.*
          */
         const publier = async () => {
-            const { quarts: q, seuilSansPause: s } = dernier.current;
+            const { quarts: q, seuilSansPause: s, selection: sel, systemId: jeu } = dernier.current;
             try {
                 if (!enMain.current) {
                     const avant = await service.prendreLaMain(silencerLesNatives);
@@ -204,15 +216,33 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
                     memoriserLaRoutine(avant);
                     enMain.current = true;
                 }
-                await service.pousserWidget(NOM_DU_WIDGET, {
-                    ...composerDefile(q, s),
-                    lifetime: DUREE_DE_VIE,
-                    lifetimeMode: 0,
-                    // Combien de temps le défilé reste à l'écran. C'est ce
-                    // réglage, et non `ATIME`, qui décide de sa part : l'horloge
-                    // garde sa cadence d'origine, qu'on n'a donc pas à rendre.
-                    duration: secondesParWidget,
-                });
+
+                /*
+                  **N widgets, et la part d'écran se règle sur CHACUN.**
+
+                  Le § 12 du plan disait « pousser N applications, écrire
+                  `ATIME` ». On ne touche plus à `ATIME` : `duration` posé sur
+                  le widget lui-même laisse l'horloge native à sa cadence
+                  d'origine — *un réglage de moins à rendre* — et donne au
+                  passage une cadence **par widget** au lieu d'une seule pour
+                  tout le monde. Le plan est corrigé en conséquence.
+
+                  Un widget sans compositeur est **sauté en silence** : le
+                  catalogue peut annoncer une entrée générique avant que son
+                  rendu par type n'existe, et une exception ici arrêterait la
+                  publication de tous les autres.
+                */
+                for (const { widget, secondes } of widgetsActifs(jeu, sel)) {
+                    const composer = COMPOSITEURS[widget.id];
+                    if (!composer) continue;
+
+                    await service.pousserWidget(nomAwtrix(widget.id), {
+                        ...composer({ quarts: q, seuilSansPause: s }),
+                        lifetime: DUREE_DE_VIE,
+                        lifetimeMode: 0,
+                        duration: secondes,
+                    });
+                }
                 setJoignable(true, null);
             } catch (e: unknown) {
                 setJoignable(false, e instanceof Error ? e.message : String(e));
@@ -224,5 +254,7 @@ export function useBattementUlanzi(seanceOuverte: boolean): void {
         return () => clearInterval(minuteur);
         // `quarts` en dépendance : un Quart poussé depuis le cockpit doit se
         // voir tout de suite, pas au prochain battement.
-    }, [doitAfficher, hote, quarts, seuilSansPause, secondesParWidget, silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
+        // `selection` et `systemId` en dépendances : cocher un widget ou changer
+        // de campagne doit se voir tout de suite, pas au prochain battement.
+    }, [doitAfficher, hote, quarts, seuilSansPause, selection, systemId, silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
 }

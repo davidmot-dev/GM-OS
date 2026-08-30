@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useUlanziStore } from './useUlanziStore';
-import { useBattementUlanzi, NOM_DU_WIDGET } from './useBattementUlanzi';
+import { useBattementUlanzi, NOMS_DES_WIDGETS } from './useBattementUlanzi';
 
 /**
  * **Rendre l'afficheur quand GM-OS se ferme.**
@@ -92,7 +92,10 @@ describe('GM-OS se ferme', () => {
         demanderLaFermeture!();
         await waitFor(() => expect(rendreLaMain).toHaveBeenCalled());
 
-        expect(rendreLaMain).toHaveBeenCalledWith(expect.anything(), [NOM_DU_WIDGET]);
+        // Tous les noms du catalogue, pas seulement les actifs : un widget
+        // éteint en séance reste sur l'appareil jusqu'à expiration.
+        expect(rendreLaMain).toHaveBeenCalledWith(expect.anything(), NOMS_DES_WIDGETS);
+        expect(NOMS_DES_WIDGETS).toContain('gmos_quarts');
         await waitFor(() => expect(fermetureTerminee).toHaveBeenCalled());
     });
 

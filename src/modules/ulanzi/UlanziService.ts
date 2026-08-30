@@ -229,15 +229,20 @@ export class UlanziService {
      * plutôt que de laisser l'afficheur amputé.
      */
     async rendreLaMain(routine: RoutineSauvegardee | null, widgets: string[]): Promise<void> {
-        for (const nom of widgets) {
-            try {
-                await this.retirerWidget(nom);
-            } catch {
-                // Un widget qu'on n'arrive pas à retirer expirera de lui-même :
-                // `lifetime` est là pour ça. On continue plutôt que d'abandonner
-                // la restitution des réglages, qui elle n'a pas de filet.
-            }
-        }
+        /*
+          **En parallèle, et c'est devenu nécessaire le 2026-08-30.**
+
+          Une boucle séquentielle suffisait pour un widget. La librairie en
+          apporte N, et **la sortie de GM-OS est bornée par un délai dur de
+          quatre secondes partagé avec la sauvegarde** : six retraits à la file
+          y passeraient l'essentiel du budget, et les réglages — qui n'ont pas
+          de filet, eux — ne seraient jamais réécrits.
+
+          Un widget qu'on n'arrive pas à retirer expirera de lui-même :
+          `lifetime` est là pour ça. On ne laisse donc jamais un échec
+          interrompre la restitution des réglages.
+        */
+        await Promise.all(widgets.map(nom => this.retirerWidget(nom).catch(() => undefined)));
 
         /*
           **Une routine « tout éteint » n'est pas crue, et c'est le filet qui
