@@ -31,6 +31,27 @@ type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' |
  */
 const LETTRES_ECHELONNEES = ['A', 'B', 'C', 'D'] as const;
 
+/**
+ * **Les modes dont le dé est déjà décidé — ils reçoivent un bouton « Lancer ».**
+ *
+ * Les autres affichent la grille des faces (d4, d6, d20…), et c'est le clic sur
+ * une face qui lance. Un mode absent de cette liste tombe donc dans la grille :
+ * il propose de choisir un nombre de faces que son moteur ignore, et **il n'a
+ * aucun bouton pour lancer**. C'est exactement ce qui est arrivé à
+ * `yze-echelonne` le 2026-08-30 — signalé par David, une heure après avoir
+ * signalé le même oubli un cran plus haut, dans la reconnaissance du moteur.
+ *
+ * *Une liste de noms recopiée à la main dérive le jour où un nom s'ajoute.*
+ * Elle est nommée ici, une fois, plutôt qu'écrite dans le JSX — et elle répond
+ * à une question qui lui est propre : **« ce mode a-t-il une face à choisir ? »**
+ * Ce n'est pas celle de `DiceEngine.MOTEURS_A_RESOLUTION_PROPRE`, qui demande
+ * si le moteur impose sa propre résolution ; les deux ensembles se croisent
+ * sans se confondre — `formula` et `fate` sont ici et pas là-bas.
+ */
+const MODES_SANS_CHOIX_DE_FACES: readonly DiceMode[] = [
+    'formula', 'fate', 'rolemaster', 'yze', 'yze-echelonne',
+];
+
 interface RemoteDiceOptions {
     sides?: number;
     die?: number;
@@ -681,7 +702,7 @@ const DiceBoard: React.FC = () => {
 
                 {/* Center: Dices Grid */}
                 <div className="bg-app-surface/60 p-5 rounded-2xl border border-app-border backdrop-blur-md shadow-xl flex flex-col items-center justify-center min-h-[160px]">
-                    {['formula', 'fate', 'rolemaster', 'yze'].includes(mode) ? (
+                    {MODES_SANS_CHOIX_DE_FACES.includes(mode) ? (
                         <button onClick={() => handleRoll(0, mode === 'formula')} className="px-8 py-4 bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 rounded-xl text-xl font-bold uppercase tracking-widest transition-transform active:scale-95">
                             {t('dice.actions.roll')}
                         </button>
