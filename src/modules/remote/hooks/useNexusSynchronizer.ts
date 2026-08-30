@@ -16,7 +16,7 @@ import { useRessourcesDeTableStore } from '../../table/useRessourcesDeTableStore
 import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
-import { mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
+import { cartesRestantesPourLaTable, mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -374,6 +374,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     */
                     demandesDeCarte: (freshSessionOS.demandesDeCarte ?? [])
                         .filter(d => d.statut === 'en-attente'),
+                    /*
+                      **Le compte des pioches, et rien de plus.** Sans lui, la
+                      tablette d'un paquet ouvert ne saurait ni annoncer ce
+                      qu'il reste ni éteindre son bouton sur un paquet vide.
+                      `cartesRestantesPourLaTable` n'en sort que des nombres :
+                      `remainingIndices` est le paquet **dans l'ordre où il sera
+                      tiré**, et le diffuser livrerait la suite de la partie.
+                    */
+                    cartesRestantes: cartesRestantesPourLaTable(freshSessionOS.deckStates ?? {}),
                     mainsDesPaquets: Object.fromEntries(
                         Object.entries(freshSessionOS.deckStates ?? {})
                             .map(([deckId, etat]) => [deckId, mainsPourLaTable(etat)])

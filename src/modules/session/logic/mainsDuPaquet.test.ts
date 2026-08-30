@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import type { DeckSessionState } from '../../../types/deck.types';
 import {
+    cartesRestantesPourLaTable,
     changerLePorteur,
     garderLaCarteRetournee,
+    piocherEnMain,
     jouerUneCarteTenue,
     mainDuPorteur,
     mainsPourLaTable,
@@ -64,6 +66,74 @@ describe('garder la carte retournée', () => {
 
         expect(total(apres)).toBe(10);
         expect(doublons(apres)).toEqual([]);
+    });
+});
+
+/**
+ * **Piocher directement en main — le geste du joueur, demandé le 2026-08-30.**
+ *
+ * Le point qui compte, et qui n'est pas évident : ce chemin ne touche **pas** à
+ * la carte retournée. Elle est ce que le meneur regarde, et parfois ce qu'il
+ * projette à la table ; un joueur qui tire depuis sa tablette ne doit pas la
+ * faire disparaître de l'écran de tout le monde.
+ */
+describe('piocher en main', () => {
+    it('sort la carte de la pioche et la pose dans une main', () => {
+        const apres = piocherEnMain(paquetDe(10), 4, 'pc-rick');
+
+        expect(apres.enMain).toEqual([{ index: 4, porteur: 'pc-rick', face: 'revelee' }]);
+        expect(apres.remainingIndices).not.toContain(4);
+    });
+
+    /** Le joueur voit ce qu'il vient de tirer — le sceller le lui cacherait. */
+    it('révèle la carte à son porteur par défaut', () => {
+        expect(piocherEnMain(paquetDe(10), 4, 'pc-rick').enMain?.[0].face).toBe('revelee');
+    });
+
+    /**
+     * **Le test qui garde la règle.** Sans lui, une pioche de joueur pourrait un
+     * jour repasser par `currentCardIndex` — ce qui marcherait, jusqu'à ce que
+     * quelqu'un tire une carte pendant que le meneur en projette une autre.
+     */
+    it('ne touche pas à la carte retournée du meneur', () => {
+        const apres = piocherEnMain(paquetDe(10, 7), 4, 'pc-rick');
+        expect(apres.currentCardIndex).toBe(7);
+    });
+
+    /** *Piocher ne crée jamais de carte.* */
+    it('ne fait rien si l’index n’est pas dans la pioche', () => {
+        const avant = paquetDe(10, 7);
+        expect(piocherEnMain(avant, 7, 'pc-rick')).toBe(avant);
+        expect(piocherEnMain(avant, 99, 'pc-rick')).toBe(avant);
+    });
+
+    it('ne perd ni ne duplique aucune carte', () => {
+        const apres = piocherEnMain(paquetDe(10, 7), 4, 'pc-rick');
+
+        expect(total(apres)).toBe(10);
+        expect(doublons(apres)).toEqual([]);
+    });
+});
+
+/**
+ * **Ce que la tablette apprend d'une pioche : un nombre.**
+ *
+ * `remainingIndices` est le paquet **dans l'ordre où il sera tiré**. Le
+ * diffuser déposerait la suite de la partie sur l'appareil de chaque joueur.
+ */
+describe('le compte des pioches', () => {
+    it('rend un nombre par paquet, et rien d’autre', () => {
+        const comptes = cartesRestantesPourLaTable({
+            'd-1': paquetDe(10, 7),
+            'd-2': paquetDe(3),
+        });
+
+        expect(comptes).toEqual({ 'd-1': 9, 'd-2': 3 });
+    });
+
+    it('ne laisse échapper aucun indice de carte', () => {
+        const charge = JSON.stringify(cartesRestantesPourLaTable({ 'd-1': paquetDe(4) }));
+        expect(charge).toBe('{"d-1":4}');
     });
 });
 

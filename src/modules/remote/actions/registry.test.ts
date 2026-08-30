@@ -49,6 +49,7 @@ const EXPECTED_TYPES = [
       carte : le `characterId` arrive du réseau, et le croire sur parole
       laisserait jouer la carte du voisin. Voir `deckActions.ts`.
     */
+    'deck:piocher', 'remote:deck:piocher',
     'deck:jouer-carte', 'remote:deck:jouer-carte',
     'deck:demander-don', 'remote:deck:demander-don',
     'deck:accepter-don', 'remote:deck:accepter-don',

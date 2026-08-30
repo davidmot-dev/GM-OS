@@ -10,7 +10,9 @@ import {
     Monitor,
     Smartphone,
     X,
-    FolderOpen
+    FolderOpen,
+    Users,
+    Lock
 } from 'lucide-react';
 import type { CardFormat, CardOrientation } from '../store/types';
 import { useDeckLibrary } from '../hooks/useDeckLibrary';
@@ -32,6 +34,7 @@ const DeckLibrary: React.FC = () => {
         handleSave,
         handleDelete,
         handleSelect,
+        handleToggleOuverture,
         resetForm
     } = useDeckLibrary();
 
@@ -128,6 +131,31 @@ const DeckLibrary: React.FC = () => {
                                         {t('modules:session.deck_module.library.card_count', { count: deck.cardCount })}
                                     </span>
                                 </div>
+                                {/*
+                                  **Ouvert aux joueurs, ou meneur seul.**
+
+                                  Demandé par David le 2026-08-30. C'est à la
+                                  fois le témoin et l'interrupteur : un réglage
+                                  qu'il faudrait ouvrir le formulaire d'édition
+                                  pour lire ne dirait rien de la grille. Le
+                                  libellé annonce **l'état**, l'infobulle dit ce
+                                  que le clic va produire.
+                                */}
+                                <button
+                                    type="button"
+                                    onClick={() => handleToggleOuverture(deck)}
+                                    title={deck.ouvertAuxJoueurs
+                                        ? t('modules:session.deck_module.library.close_to_players')
+                                        : t('modules:session.deck_module.library.open_to_players')}
+                                    className={`mt-2 flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[8px] font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-1 ${deck.ouvertAuxJoueurs
+                                        ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 focus:ring-emerald-500/40'
+                                        : 'border-white/10 bg-white/5 text-white/30 hover:text-white/60 focus:ring-white/20'}`}
+                                >
+                                    {deck.ouvertAuxJoueurs ? <Users size={10} /> : <Lock size={10} />}
+                                    {deck.ouvertAuxJoueurs
+                                        ? t('modules:session.deck_module.library.players_can_draw')
+                                        : t('modules:session.deck_module.library.gm_only')}
+                                </button>
                             </div>
                             <div className="flex gap-2">
                                 <button 

@@ -23,6 +23,21 @@ export interface DeckManifest {
     startAtZero?: boolean;  // Si vrai, l'index commence à 0 (default: false = 1)
     padding?: number;       // Optionnel : nombre de chiffres (ex: 2 pour "01")
     cardMetadata?: Record<number, { name?: string; description?: string }>; // Optionnel : métadonnées par index
+    /**
+     * **Les joueurs peuvent-ils piocher eux-mêmes dans ce paquet ?**
+     *
+     * Question de David le 2026-08-30 : *« voir comment un joueur peut tirer
+     * lui-même une carte dans un paquet — peut-être dire les paquets qui sont
+     * accessibles ou non aux joueurs ? »*. Oui, et il faut le dire à deux
+     * endroits : sur la fiche du paquet chez le meneur, et sur la tablette, qui
+     * ne montre que les paquets ouverts.
+     *
+     * **Fermé par défaut, et l'absence vaut fermé.** Les paquets créés avant ce
+     * jour n'ont pas ce champ : ils restent au meneur, exactement comme hier,
+     * sans migration. *Un défaut qui ouvre est un défaut qu'on découvre en
+     * séance, quand un joueur a déjà vu l'oracle du meneur.*
+     */
+    ouvertAuxJoueurs?: boolean;
 }
 
 /**

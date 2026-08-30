@@ -189,6 +189,10 @@ export const useHubSync = () => {
                 if (session.decks !== undefined) updates.decks = session.decks;
                 if (session.mainsDesPaquets !== undefined) updates.mainsDesPaquets = session.mainsDesPaquets;
                 if (session.demandesDeCarte !== undefined) updates.demandesDeCarte = session.demandesDeCarte;
+                // Le compte des pioches, pour que la tablette dise ce qu'il
+                // reste et éteigne un paquet vide. Des nombres, jamais des
+                // indices : l'ordre de la pioche ne sort pas de chez le meneur.
+                if (session.cartesRestantes !== undefined) updates.cartesRestantes = session.cartesRestantes;
                 // 🛡️ NexusSynchronizer sends locks as `characterLocks`, accept both keys
                 if (session.characterLocks !== undefined) updates.connectedCharacters = session.characterLocks;
                 if (session.connectedCharacters !== undefined) updates.connectedCharacters = session.connectedCharacters;
@@ -442,6 +446,7 @@ export const useHubSync = () => {
               Ces quatre-là n'appliquent RIEN localement : la tablette ne
               possède pas le paquet, elle en reçoit un reflet.
             */
+            'deck:piocher',
             'deck:jouer-carte',
             'deck:demander-don',
             'deck:accepter-don',

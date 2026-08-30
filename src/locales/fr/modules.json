@@ -2625,7 +2625,11 @@
         "delete_tooltip": "Supprimer le paquet",
         "load_btn": "Charger",
         "card_count_one": "1 carte",
-        "card_count_other": "{{count}} cartes"
+        "card_count_other": "{{count}} cartes",
+        "players_can_draw": "Ouvert aux joueurs",
+        "gm_only": "Meneur seul",
+        "open_to_players": "Ouvrir ce paquet : les joueurs pourront y piocher depuis leur tablette",
+        "close_to_players": "Fermer ce paquet : seul le meneur y piochera"
       },
       "editor": {
         "title_edit": "Modification Deck",
@@ -2702,7 +2706,12 @@
           "pending": "Proposition en attente",
           "accept": "Accepter",
           "refuse": "Refuser",
-          "offered": "{{qui}} vous propose une carte"
+          "offered": "{{qui}} vous propose une carte",
+          "open_decks": "Paquets ouverts",
+          "draw": "Piocher",
+          "deck_empty": "Paquet vide",
+          "empty": "Vous ne tenez aucune carte.",
+          "tap_to_close": "Touchez pour fermer"
         },
         "projection": {
           "hidden_name": "▪▪▪ Carte Cachée ▪▪▪",

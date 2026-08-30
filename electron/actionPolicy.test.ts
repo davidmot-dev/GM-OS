@@ -61,10 +61,30 @@ describe('evaluateAction — les cartes d’un joueur', () => {
             .toBe(false);
     });
 
-    it('les quatre actions sont declarées', () => {
-        for (const type of ['deck:jouer-carte', 'deck:demander-don', 'deck:accepter-don', 'deck:refuser-don']) {
+    it('les cinq actions sont declarées', () => {
+        for (const type of ['deck:jouer-carte', 'deck:demander-don', 'deck:accepter-don', 'deck:refuser-don', 'deck:piocher']) {
             expect(PLAYER_ALLOWED_ACTIONS.has(type), type).toBe(true);
         }
+    });
+
+    /**
+     * **Piocher soi-même — demandé par David le 2026-08-30.**
+     *
+     * Cette couche vérifie une seule chose : que le client est bien le
+     * personnage qu'il prétend. Elle ne connaît **pas les manifestes** et ne
+     * peut donc pas savoir si ce paquet est ouvert aux joueurs ; c'est
+     * `deckSlice` qui le refuse. Deux barrières, deux questions différentes.
+     */
+    it('laisse un joueur piocher en son propre nom', () => {
+        expect(evaluateAction('deck:piocher', { deckId: 'd-1', characterId: CHAR }, 'hub', CHAR).allowed)
+            .toBe(true);
+    });
+
+    it('refuse de piocher au nom d’un autre', () => {
+        const verdict = evaluateAction('deck:piocher', { deckId: 'd-1', characterId: 'perso-bob' }, 'hub', CHAR);
+
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
     });
 });
 
@@ -159,6 +179,8 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'deck:accepter-don',
             'deck:demander-don',
             'deck:jouer-carte',
+            // Piocher soi-même — ajouté le 2026-08-30.
+            'deck:piocher',
             'deck:refuser-don',
             'remote:request-sync',
             'session:remove-inventory-item',

@@ -90,6 +90,16 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
     'deck:demander-don',
     'deck:accepter-don',
     'deck:refuser-don',
+    /*
+      **Piocher soi-même**, ajouté le 2026-08-30 sur demande de David. Même
+      partage qu'au-dessus, et il faut le dire parce que la tentation est de
+      croire cette liste suffisante : elle vérifie l'identité de l'émetteur,
+      **pas le droit de piocher dans ce paquet-là**. Elle ne connaît pas les
+      manifestes ; c'est `deckSlice` qui refuse un paquet sans
+      `ouvertAuxJoueurs`, sans quoi un message fabriqué tirerait dans l'oracle
+      du meneur.
+    */
+    'deck:piocher',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */
@@ -113,7 +123,9 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     // propre tablette — et la fiche fait foi, donc GM-OS le croirait.
     'session:update-character-sheet-data': 'characterId',
     'session:update-character-narrative': 'characterId',
-    // Un joueur ne joue que ses cartes, et ne propose que les siennes.
+    // Un joueur ne joue que ses cartes, ne propose que les siennes, et ne
+    // pioche qu'en son propre nom — sans quoi il remplirait la main d'un autre.
+    'deck:piocher': 'characterId',
     'deck:jouer-carte': 'characterId',
     'deck:demander-don': 'deQui',
     // Répondre à une proposition : l'identité est authentifiée ici, et c'est le

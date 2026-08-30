@@ -2596,7 +2596,11 @@
         "delete_tooltip": "Delete deck",
         "load_btn": "Load",
         "card_count_one": "1 card",
-        "card_count_other": "{{count}} cards"
+        "card_count_other": "{{count}} cards",
+        "players_can_draw": "Open to players",
+        "gm_only": "GM only",
+        "open_to_players": "Open this deck: players will be able to draw from their tablet",
+        "close_to_players": "Close this deck: only the GM draws from it"
       },
       "editor": {
         "title_edit": "Edit Deck",
@@ -2672,7 +2676,12 @@
           "pending": "Offer pending",
           "accept": "Accept",
           "refuse": "Decline",
-          "offered": "{{qui}} offers you a card"
+          "offered": "{{qui}} offers you a card",
+          "open_decks": "Open decks",
+          "draw": "Draw",
+          "deck_empty": "Deck empty",
+          "empty": "You are not holding any card.",
+          "tap_to_close": "Tap to close"
         },
         "projection": {
           "hidden_name": "▪▪▪ Hidden Card ▪▪▪",

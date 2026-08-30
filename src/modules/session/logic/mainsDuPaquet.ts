@@ -88,6 +88,31 @@ export function garderLaCarteRetournee(
     return { ...propre, enMain: [...mains(propre), { index, porteur, face }] };
 }
 
+/**
+ * **Une carte quitte la pioche pour aller directement dans une main.**
+ *
+ * C'est le geste du joueur qui tire lui-même — demandé par David le 2026-08-30.
+ * Il ne passe **pas** par `currentCardIndex`, et c'est tout l'intérêt : la carte
+ * retournée est celle que le meneur regarde et projette éventuellement à la
+ * table. *Un joueur qui pioche depuis sa tablette ne doit pas faire disparaître
+ * de l'écran ce que le meneur venait de montrer à tout le monde.*
+ *
+ * L'index doit venir de la pioche. S'il n'y est pas — carte déjà sortie, paquet
+ * remélangé entre-temps — l'état revient inchangé plutôt que de recopier une
+ * carte dans une main : *piocher ne crée jamais de carte.*
+ */
+export function piocherEnMain(
+    etat: DeckSessionState,
+    index: number,
+    porteur: string | null,
+    face: FaceDeCarte = 'revelee',
+): DeckSessionState {
+    if (!etat.remainingIndices.includes(index)) return etat;
+
+    const propre = retirerDePartout(etat, index);
+    return { ...propre, enMain: [...mains(propre), { index, porteur, face }] };
+}
+
 /** Donne une carte tenue à quelqu'un d'autre — ou au meneur, avec `null`. */
 export function changerLePorteur(
     etat: DeckSessionState,
@@ -228,4 +253,24 @@ export function mainsPourLaTable(etat: DeckSessionState): MainDiffusee[] {
             scellees: tenues.filter(c => c.face === 'scellee').length,
         };
     });
+}
+
+/**
+ * **Combien de cartes restent dans chaque pioche — un nombre, jamais les
+ * indices.**
+ *
+ * La tablette en a besoin pour dire « il en reste 12 » et pour éteindre le
+ * bouton de pioche sur un paquet vide. Elle n'a **aucun** besoin de savoir
+ * lesquelles, et surtout pas dans quel ordre : `remainingIndices` est le paquet
+ * déjà mélangé, dans l'ordre où il sera tiré. L'envoyer déposerait la suite de
+ * la partie sur l'appareil de chaque joueur, lisible par quiconque ouvre les
+ * outils du navigateur. *Ce n'est pas un secret caviardé à l'affichage, c'est un
+ * secret qu'on n'envoie pas.*
+ */
+export function cartesRestantesPourLaTable(
+    etats: Record<string, DeckSessionState>,
+): Record<string, number> {
+    return Object.fromEntries(
+        Object.entries(etats).map(([deckId, etat]) => [deckId, etat.remainingIndices.length]),
+    );
 }

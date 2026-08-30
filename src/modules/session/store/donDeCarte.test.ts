@@ -56,6 +56,73 @@ beforeEach(() => {
     });
 });
 
+/**
+ * **Un joueur pioche lui-même — demandé par David le 2026-08-30 :** *« voir
+ * comment un joueur peut tirer lui-même une carte dans un paquet — peut-être
+ * dire les paquets qui sont accessibles ou non aux joueurs ? »*
+ *
+ * Le droit de piocher tient au **manifeste** du paquet, et ce contrôle ne peut
+ * vivre qu'ici : `actionPolicy`, dans le process principal, authentifie
+ * l'émetteur mais ne connaît pas les paquets. Sans cette barrière, un message
+ * fabriqué tirerait dans l'oracle du meneur.
+ */
+describe('un joueur pioche lui-même', () => {
+    const ouvrirLePaquet = (ouvert: boolean) =>
+        useSessionOSStore.setState({ decks: [{ ...PAQUET, ouvertAuxJoueurs: ouvert }] });
+
+    it('prend une carte dans la pioche et la pose dans sa main', () => {
+        ouvrirLePaquet(true);
+        useSessionOSStore.getState().piocherUneCarte('d-1', 'pc-willem');
+
+        const sienne = mains().filter(c => c.porteur === 'pc-willem');
+        expect(sienne).toHaveLength(1);
+        // Il vient de la tirer : il doit la voir.
+        expect(sienne[0].face).toBe('revelee');
+        expect(paquet().remainingIndices).not.toContain(sienne[0].index);
+    });
+
+    /** **Le contrôle qui compte.** L'absence du drapeau vaut « fermé ». */
+    it('ne pioche pas dans un paquet fermé aux joueurs', () => {
+        ouvrirLePaquet(false);
+        useSessionOSStore.getState().piocherUneCarte('d-1', 'pc-willem');
+
+        expect(mains()).toHaveLength(1);
+        expect(paquet().remainingIndices).toHaveLength(9);
+    });
+
+    it('traite un paquet sans drapeau comme fermé', () => {
+        useSessionOSStore.setState({ decks: [PAQUET] });
+        useSessionOSStore.getState().piocherUneCarte('d-1', 'pc-willem');
+
+        expect(paquet().remainingIndices).toHaveLength(9);
+    });
+
+    /** Le meneur pioche dans ce qu'il veut : ce sont ses paquets. */
+    it('laisse le meneur piocher dans un paquet fermé', () => {
+        ouvrirLePaquet(false);
+        useSessionOSStore.getState().piocherUneCarte('d-1', null);
+
+        expect(mains().filter(c => c.porteur === null)).toHaveLength(1);
+    });
+
+    it('ne fait rien sur une pioche vide', () => {
+        ouvrirLePaquet(true);
+        useSessionOSStore.setState({
+            deckStates: { 'd-1': { ...etatInitial(), remainingIndices: [] } },
+        });
+        useSessionOSStore.getState().piocherUneCarte('d-1', 'pc-willem');
+
+        expect(mains()).toHaveLength(1);
+    });
+
+    it('ignore un paquet qui n’existe pas', () => {
+        ouvrirLePaquet(true);
+        useSessionOSStore.getState().piocherUneCarte('d-inconnu', 'pc-willem');
+
+        expect(mains()).toHaveLength(1);
+    });
+});
+
 describe('un joueur joue sa carte', () => {
     it('l’envoie à la défausse', () => {
         useSessionOSStore.getState().jouerSaCarte('d-1', 7, 'pc-rick');

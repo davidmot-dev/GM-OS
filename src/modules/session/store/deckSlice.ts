@@ -18,6 +18,7 @@ import {
     changerLePorteur,
     garderLaCarteRetournee,
     jouerUneCarteTenue,
+    piocherEnMain,
     rendreUneCarteAuPaquet,
     reprendreToutesLesMains,
     retournerUneCarte,
@@ -40,6 +41,17 @@ export interface DeckSliceState {
      * toutes les tablettes.
      */
     mainsDesPaquets?: Record<string, MainDiffusee[]>;
+    /**
+     * **Ce qu'il reste dans chaque pioche — un miroir, comme les mains.**
+     *
+     * Rempli par la synchronisation sur les écrans joueurs, pour que la tablette
+     * puisse annoncer le compte et éteindre la pioche d'un paquet vide. La
+     * fenêtre du meneur ne s'en sert pas : elle a `deckStates`, qui fait foi.
+     *
+     * On n'y trouve **que des nombres** : `remainingIndices` est le paquet dans
+     * l'ordre où il sera tiré, et le diffuser livrerait la suite de la partie.
+     */
+    cartesRestantes?: Record<string, number>;
     /** Les cartes proposées d'un joueur à un autre, en attente de réponse. */
     demandesDeCarte: DemandeDeCarte[];
 }
@@ -80,6 +92,15 @@ export interface DeckSliceActions {
        d'un message vient du client, et sans ce contrôle un message fabriqué
        jouerait la carte du voisin.                                          */
 
+    /**
+     * **Un joueur pioche lui-même dans un paquet ouvert.**
+     *
+     * Demandé par David le 2026-08-30. Le paquet doit porter `ouvertAuxJoueurs`
+     * — ce contrôle-là ne peut vivre qu'ici, la politique du process principal
+     * ne connaît pas les manifestes. `parQui` à `null` : c'est le meneur, qui
+     * pioche dans ce qu'il veut.
+     */
+    piocherUneCarte: (deckId: string, parQui: string | null) => void;
     /** Un joueur joue sa propre carte : elle part en défausse. */
     jouerSaCarte: (deckId: string, index: number, parQui: string | null) => void;
     /** Un joueur propose sa carte à un autre. Le destinataire tranche. */
@@ -349,6 +370,46 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
         get().appliquerAuPaquet(deckId, e => rendreUneCarteAuPaquet(e, index)),
 
     /* ── Ce qui arrive des tablettes ─────────────────────────────────────── */
+
+    piocherUneCarte: (deckId, parQui) => {
+        const deck = get().decks.find(d => d.id === deckId);
+        const etat = get().deckStates[deckId];
+        if (!deck || !etat) return;
+
+        /*
+          **Le contrôle que cette couche est seule à pouvoir faire.**
+
+          `actionPolicy` a vérifié que l'émetteur est bien le personnage qu'il
+          prétend, mais elle ne connaît pas les manifestes et ne peut donc pas
+          dire si ce paquet est ouvert. Sans cette ligne, un message fabriqué
+          piocherait dans l'oracle du meneur. Le meneur, lui (`null`), pioche
+          partout — c'est son paquet.
+        */
+        if (parQui !== null && !deck.ouvertAuxJoueurs) return;
+
+        const { card } = DeckInterpreter.draw(etat.remainingIndices);
+        if (card === null) return;
+
+        /*
+          **Face révélée, et ce n'est pas le même défaut que « Garder ».** Une
+          carte que le meneur confie arrive scellée, parce qu'il choisit le
+          moment où elle paraît. Une carte que le joueur tire lui-même est déjà
+          dans sa main : la sceller lui cacherait ce qu'il vient de piocher.
+          « Révélée » veut dire *son porteur la voit*, pas *la table la voit*.
+        */
+        get().appliquerAuPaquet(deckId, e => piocherEnMain(e, card, parQui, 'revelee'));
+
+        /*
+          **Le meneur doit savoir qu'une carte est sortie du paquet.** Elle
+          apparaît bien dans la rangée « cartes en main », mais un tirage fait à
+          l'autre bout de la table, pendant qu'il regarde ailleurs, passerait
+          inaperçu. *Une carte qui bouge sans que personne ne le dise est une
+          carte qu'on cherchera au remélange.*
+        */
+        if (parQui !== null) {
+            gmToast(`Un joueur a pioché dans « ${deck.name} ».`, 'info');
+        }
+    },
 
     jouerSaCarte: (deckId, index, parQui) => {
         const etat = get().deckStates[deckId];

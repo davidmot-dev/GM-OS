@@ -109,6 +109,21 @@ export const useDeckLibrary = () => {
         resetForm();
     };
 
+    /**
+     * **Ouvrir ou fermer un paquet aux joueurs.**
+     *
+     * Le geste vit sur la carte du paquet, pas dans le formulaire d'édition :
+     * David a demandé *« peut-être dire les paquets qui sont accessibles ou non
+     * aux joueurs »*, et un réglage qu'il faut ouvrir un formulaire pour lire ne
+     * dit rien. Ici, l'état se voit dans la grille et se change d'un clic.
+     *
+     * `updateDeck` fusionne : le reste du manifeste — métadonnées de cartes
+     * comprises — n'est pas touché.
+     */
+    const handleToggleOuverture = (deck: DeckManifest) => {
+        updateDeck(deck.id, { ouvertAuxJoueurs: !deck.ouvertAuxJoueurs });
+    };
+
     return {
         // State
         isAdding,
@@ -140,6 +155,7 @@ export const useDeckLibrary = () => {
         handleSave,
         handleDelete: deleteDeck,
         handleSelect: selectDeck,
+        handleToggleOuverture,
         resetForm
     };
 };

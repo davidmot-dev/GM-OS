@@ -20,6 +20,19 @@ import type { ActionRegistry } from './types';
  * entre-temps — ne mérite pas une alarme.
  */
 
+/*
+  **Piocher soi-même.** Le paquet doit porter `ouvertAuxJoueurs` — le magasin le
+  vérifie, parce qu'il est le seul à connaître les manifestes. `characterId ??
+  null` : `null` veut dire *le meneur*, et ce chemin-ci vient toujours du réseau,
+  donc un message sans personnage n'obtiendra rien d'un paquet fermé.
+*/
+const piocherUneCarte = (payload: unknown) => {
+    const { deckId, characterId } = (payload ?? {}) as { deckId?: string; characterId?: string | null };
+    if (!deckId) return;
+
+    useSessionOSStore.getState().piocherUneCarte(deckId, characterId ?? null);
+};
+
 const jouerSaCarte = (payload: unknown) => {
     const { deckId, index, characterId } = (payload ?? {}) as
         { deckId?: string; index?: number; characterId?: string | null };
@@ -66,6 +79,8 @@ const refuserLeDon = (payload: unknown) => {
   télécommande, sans que rien ne le dise.
 */
 export const deckActions: ActionRegistry = {
+    'deck:piocher': piocherUneCarte,
+    'remote:deck:piocher': piocherUneCarte,
     'deck:jouer-carte': jouerSaCarte,
     'remote:deck:jouer-carte': jouerSaCarte,
     'deck:demander-don': demanderLeDon,
