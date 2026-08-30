@@ -593,7 +593,12 @@ donné deux chemins réseau à tenir.
    rien ne proteste, l'application n'apparaît jamais. Le relais du Light OS n'en posait pas — le pont Hue
    s'en passe. *C'est le défaut qu'on aurait cherché une soirée.*
 2. **`lifetime` marche** (`lifetime: 25`, `lifetimeMode: 0` → retrait automatique vérifié).
-3. **Mais il rend les pixels, pas la routine** — d'où `NATIVES_A_COUPER`, qui **ne contient jamais `TIM`**.
+3. **Mais il rend les pixels, pas la routine** — d'où `NATIVES_A_COUPER`.
+   ⚠️ *Corrigé le 2026-08-30 : cette ligne disait « qui ne contient jamais `TIM` ». C'est faux depuis le
+   23/08 même — David a demandé de couper l'horloge aussi (« on ne sait pas enlever Time aussi ? »), et
+   le filet a changé de nature : ce n'est plus l'horloge laissée allumée, c'est la restitution rejouée
+   au démarrage suivant. Une horloge laissée par un GM-OS mort est indiscernable d'un fonctionnement
+   normal — elle **cache** la panne.*
 
 ### Ce qui reste avant la séance
 
@@ -603,3 +608,160 @@ donné deux chemins réseau à tenir.
   une horloge**.
 - Le panneau n'apparaît que si le jeu de la campagne contient « blade », ou tant que l'option reste
   allumée. **Couture provisoire**, remplacée plus tard par la librairie du § 12.
+
+---
+
+## 14. La suite — les quatre directions et leur ordre
+
+**Écrit le 2026-08-30, après l'essai en conditions.** David : *« maintenant que l'utilisation d'Ulanzi
+est validée, est-ce qu'on peut aller un peu plus loin ? »* — puis, devant les quatre options :
+*« est-ce qu'on peut prévoir les 4 options ? »*.
+
+**L'ordre n'est pas libre.** Deux directions dépendent d'une troisième, et la quatrième reposait sur un
+fait jamais vérifié — qui l'est maintenant.
+
+| | Direction | Dépend de | Coût par jeu ensuite |
+| --- | --- | --- | --- |
+| **A** | La librairie et son tableau de bord | — | — |
+| **B** | Clock-OS, le premier **miroir** | A | zéro ligne |
+| **C** | Les jauges déclarées par les pilotes | A | zéro ligne |
+| **D** | Les boutons physiques | un courtier MQTT | sans objet |
+
+### Ce qui a changé depuis l'écriture du § 12, et qui rend A, B et C bien moins chers
+
+**Le pilote sait déjà déclarer des jauges.** `GameDriver.ressourcesDeTable` et `RessourceDeTable`
+(`src/modules/table/`) portent **exactement** ce qu'un widget « jauge » demande : `id`, `label`,
+`depart`, `min`, `max`, le propriétaire et la visibilité. Ça n'existait pas le 23/08 — c'est arrivé par
+le chantier des réserves de table du 15/08. **La source du miroir est donc déjà construite**, et le § 3
+(« la correspondance existe déjà, ne pas la réécrire ») se trouve vérifié sans qu'on ait rien fait.
+
+### ⚠️ Correction au § 12 : la cadence ne passe plus par `ATIME`
+
+Le § 12 dit « pousser N applications, écrire `ATIME` », et `ReglageUlanzi.secondesParWidget` en découle.
+**Le code livré a délibérément abandonné `ATIME`** au profit de `duration`, posé sur chaque widget — ce
+qui laisse l'horloge native à sa cadence d'origine et fait *un réglage de moins à rendre*.
+
+Conséquence, et elle est meilleure que ce que le plan prévoyait : **la cadence est par widget, pas
+globale.** `ReglageUlanzi` doit donc porter une durée **par entrée**, pas une seule pour tout le monde.
+
+### A · La librairie et son tableau de bord — le préalable
+
+Le § 12 tient : un widget est **une donnée**, pas du code. Le travail est de sortir le défilé des Quarts
+de son câblage en dur et de le faire entrer dans la librairie comme une entrée parmi d'autres.
+
+*Pourquoi d'abord.* Le § 13 le disait déjà : **c'est le second widget qui force la librairie à
+exister** — deux widgets, c'est un choix, et un choix, c'est un tableau de bord. Brancher Clock-OS en
+dur avant de faire A donnerait deux câblages à défaire au lieu d'un.
+
+À traiter dans A, et qui n'est pas dans le § 12 :
+
+- **La couture provisoire disparaît.** Le panneau n'apparaît aujourd'hui que si le jeu contient
+  « blade » ; c'est la librairie qui doit décider ce qui s'affiche, par `systemId`.
+- **Un widget dont la source disparaît s'affiche INDISPONIBLE**, jamais ne s'évapore (§ 12).
+
+### B · Clock-OS — le premier miroir
+
+`TensionClock` (`src/store/useClockStore.ts`) porte déjà `name`, `totalSegments`, `filledSegments` :
+c'est un widget « compte à rebours » sans rien à ajouter au moteur.
+
+C'est le **premier miroir** au sens du § 4, et il change la nature de l'objet : jusqu'ici l'afficheur ne
+reflétait rien. **S'il ment désormais, c'est un bug** — et il faut donc que la disparition d'une horloge
+retire son widget, ce qu'un instrument n'avait jamais à gérer.
+
+Choisi avant C parce qu'il est **universel** : toute campagne peut avoir une horloge de tension, alors
+qu'une réserve de table appartient à un jeu.
+
+### C · Les jauges des pilotes — le second miroir, qui prouve la librairie
+
+L'Impulsion et la Menace de Dune, et tout ce qu'un pilote déclarera ensuite. **C'est l'étape qui
+démontre la thèse du § 12** : si ajouter Dune coûte zéro ligne de code, la librairie est juste ; s'il
+faut écrire quoi que ce soit, elle ne l'est pas.
+
+Un point de vigilance venu du modèle : `RessourceDeTable` distingue **`proprietaire`** et
+**`visibleAuxJoueurs`**. L'afficheur est **public par construction** (§ 1) — il ne doit donc jamais
+montrer une réserve que le pilote déclare invisible aux joueurs. *Le caviardage se fait à la source, pas
+à l'affichage* : c'est la même règle que les cartes scellées de Deck-OS.
+
+### D · Les boutons physiques — mesuré le 2026-08-30, et la réponse est non
+
+La question du § 10.2 est **tranchée**. Sur le firmware 0.98 de l'appareil de David :
+
+```text
+/api/buttons        → 404
+/api/stats/buttons  → 404
+/api/stats          → aucun état de bouton (indicator1/2/3 sont des LED de SORTIE)
+```
+
+**Les boutons ne remontent pas en HTTP.** MQTT, donc, ou rien — et un courtier est un service de plus à
+faire vivre, à démarrer avec GM-OS et à rendre en partant. *Cette direction est la seule des quatre dont
+le coût est une dépendance d'infrastructure et non du code.*
+
+Recommandation : **la garer explicitement** jusqu'à ce qu'un besoin la réclame. La télécommande
+d'initiative est séduisante, mais le cockpit fait déjà le geste, et l'objet vaut surtout par ce qu'il
+**montre** sans qu'on le touche.
+
+### Ce que l'incident du 2026-08-30 impose à toute la suite
+
+La restitution a coûté trois défauts (§ 15). Elle devient **plus lourde avec N widgets** :
+
+- `rendreLaMain` doit retirer **N applications**, pas une — et la sortie de GM-OS est bornée par un
+  délai dur de **4 secondes partagé avec la sauvegarde**. Au-delà d'une poignée de widgets, il faudra
+  retirer en parallèle plutôt qu'en boucle, ou s'appuyer sur `lifetime` et ne rendre que les réglages.
+- Le **battement** republie chaque widget toutes les 30 s : N widgets = N requêtes par battement.
+- *Un widget qui ment est pire qu'un widget absent, parce qu'il est crédible.* Avec des miroirs, cette
+  règle cesse d'être théorique.
+
+---
+
+## 15. L'essai en conditions — 2026-08-30
+
+**Le widget n'a rien eu.** David : *« le défilé des quarts est très bon »*. Les **trois** défauts
+trouvés étaient tous dans **la restitution**, c'est-à-dire dans le seul cas qu'aucun test ni aucune
+lecture de code n'atteignait : fermer une vraie application devant un vrai appareil.
+
+### ⛔ Si l'écran est noir, le diagnostic tient en deux requêtes
+
+Il a tranché **les trois fois** :
+
+```text
+Invoke-RestMethod http://awtrix_73f7a4.local/api/settings
+Invoke-RestMethod http://awtrix_73f7a4.local/api/loop
+```
+
+**`loop={}` veut dire « rien à afficher », jamais « en panne ».** Et un redémarrage n'y peut **rien** :
+`TIM/HUM/TEMP/BAT` vivent en flash. La sortie est un POST
+`{"TIM":true,"HUM":true,"TEMP":true,"BAT":true}` sur `/api/settings`, puis `/api/reboot`.
+
+### Les trois défauts
+
+**1. La restitution vivait dans un nettoyage d'effet React.** *Fermer une fenêtre Electron ne démonte
+pas l'arbre React* : elle n'était jamais appelée. Et même appelée, elle tire quatre requêtes HTTP **sans
+les attendre** dans un rendu qu'on détruit. D'où le symptôme exact — fermer la **séance** marchait,
+fermer l'**application** non. → passée sur le rail de sortie du process principal, le seul endroit où le
+rendu est encore vivant **et attendu**. *Une restitution ne peut pas vivre dans un processus qui meurt
+avant elle.*
+
+**2. La routine était empoisonnée par une seconde prise de main.** `prendreLaMain` la fabrique **en
+relisant les réglages de l'appareil** : reprise sur un appareil déjà muet, elle mémorisait « tout était
+éteint ». Il n'y avait alors plus rien à rendre, et la restitution effaçait la routine en partant —
+**l'appareil devenait irrécupérable par l'application elle-même**. → `memoriserLaRoutine` n'écrit
+qu'**une fois**, et `rendreLaMain` **ne croit plus** une routine « tout éteint ». *Une sauvegarde qu'on
+réécrit avec l'état qu'elle servait à réparer n'est plus une sauvegarde.*
+
+**3. `StrictMode` monte chaque effet deux fois.** Deux abonnés recevaient la demande de fermeture ; le
+premier partait rendre la main et posait `enMain` à faux, le second voyait ce faux, croyait n'avoir rien
+à faire et **répondait aussitôt**. Le principal ne retient la fermeture que jusqu'à la **première**
+réponse : il quittait en pleine restitution. → promesse **partagée** et un seul abonné. *Quand plusieurs
+répondent pour un seul travail, c'est le plus rapide qui décide, et le plus rapide est celui qui n'a
+rien fait.*
+
+> **La leçon commune aux trois** : deux de ces corrections ont été livrées **sans jamais être
+> exécutées**, données à tester sur du matériel. Les tests qui les accompagnaient sollicitaient
+> l'abonnement **une seule fois** — ils validaient un scénario qui n'existe pas en développement, alors
+> que `StrictMode` est dans le dépôt depuis toujours. *Un test qui ne reproduit pas les conditions
+> réelles confirme surtout l'idée qu'on se fait du code.*
+
+### Ce qui reste à savoir, et que seule la table dira
+
+Les joueurs le regardent-ils, et **cessent-ils de tenir le compte des Quarts au crayon** sur leur fiche
+d'Agenda. C'est la seule mesure qui dise si l'objet retire du travail ou en ajoute.
