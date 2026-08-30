@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw, Keyboard, Activity } from 'lucide-react';
+import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw, Keyboard, Activity, Globe, Bookmark, Unlink } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
+import { usePlaylistsVisibles } from '../usePlaylistsVisibles';
 import { musicEngine } from '../MusicEngine';
 import { gmPrompt, gmConfirm } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 const MusicHeader: React.FC = () => {
-    const { 
-        playlists, 
-        activePlaylistId, 
-        setActivePlaylistId, 
-        addPlaylist, 
-        removePlaylist, 
+    const {
+        setActivePlaylistId,
+        addPlaylist,
+        removePlaylist,
         renamePlaylist,
-        stopAll, 
-        outputDeviceId, 
-        setOutputDevice, 
-        isKeyLearnActive, 
+        assignerLaPlaylist,
+        stopAll,
+        outputDeviceId,
+        setOutputDevice,
+        isKeyLearnActive,
         toggleKeyLearn,
         reset
     } = useMusicStore();
     const { getAudioLabel, fetchAudioDevices: fetchAliases } = useHardwareStore();
 
-    const currentId = activePlaylistId || playlists[0]?.id;
+    /*
+      **Les onglets ne montrent plus toute la bibliothèque** — seulement les
+      atmosphères de la campagne ouverte, les communes, et les orphelines.
+      Le tri et la re-sélection viennent d'un seul endroit : voir
+      `usePlaylistsVisibles`.
+    */
+    const { classees, visibles, active, campagneId } = usePlaylistsVisibles();
+    const currentId = active?.id;
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
     const [isDeviceMenuOpen, setIsDeviceMenuOpen] = useState(false);
 
@@ -68,39 +75,109 @@ const MusicHeader: React.FC = () => {
 
     const currentDeviceLabel = getAudioLabel(outputDeviceId);
 
+    /*
+      Un seul parcours d'onglets, avec le genre porté à côté : sans campagne
+      ouverte il n'y a rien à distinguer, et trois listes rendues séparément
+      auraient trois fois la même trentaine de lignes de classes.
+    */
+    type Genre = 'libre' | 'campagne' | 'commune' | 'orpheline';
+    const onglets: { p: typeof visibles[number]; genre: Genre }[] = campagneId === null
+        ? visibles.map(p => ({ p, genre: 'libre' as const }))
+        : [
+            ...classees.deLaCampagne.map(p => ({ p, genre: 'campagne' as const })),
+            ...classees.communes.map(p => ({ p, genre: 'commune' as const })),
+            ...classees.orphelines.map(p => ({ p, genre: 'orpheline' as const })),
+        ];
+
+    const infobulleDuGenre: Record<Genre, string> = {
+        libre: 'Aucune campagne ouverte — toute la bibliothèque est visible',
+        campagne: 'Atmosphère de cette campagne',
+        commune: 'Atmosphère commune — visible dans toutes les campagnes',
+        orpheline: 'Rattachée à une campagne qui n’existe plus. Rendez-la commune ou rattachez-la.',
+    };
+
+    /*
+      **Le rattachement de l'atmosphère sélectionnée.** Un aller-retour : la
+      rendre commune, ou la rattacher à la campagne ouverte. Rien d'autre —
+      lier une atmosphère à une campagne qu'on ne joue pas la ferait
+      disparaître de l'écran dans le même geste.
+    */
+    const estCommune = active ? (active.campagneId ?? null) === null : false;
+    const basculerLeRattachement = () => {
+        if (!active || campagneId === null) return;
+        assignerLaPlaylist(active.id, estCommune ? campagneId : null);
+    };
+
     return (
         <header className="relative z-50 flex flex-col gap-2">
             <div className="flex items-center justify-between bg-app-bg/40 backdrop-blur-3xl border border-app-border/50 p-2 px-4 rounded-2xl shadow-2xl">
                 {/* Left: Atmosphere Tabs */}
                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-                    <div className="flex bg-app-surface/40 p-1 rounded-xl border border-app-border/50 shadow-inner">
-                        {playlists.map(p => (
-                            <button
-                                key={p.id}
-                                onClick={() => setActivePlaylistId(p.id)}
-                                onDoubleClick={() => gmPrompt(`Renommer "${p.name}" :`, p.name, (newName) => {
-                                    if (newName && newName.trim()) renamePlaylist(p.id, newName.trim());
-                                })}
-                                onContextMenu={(e) => {
-                                    e.preventDefault();
-                                    gmConfirm(`Supprimer "${p.name}" ?`, () => removePlaylist(p.id), () => {}, "Supprimer", "Annuler");
-                                }}
-                                className={`flex items-center gap-2.5 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all relative ${currentId === p.id 
-                                    ? 'bg-accent text-white shadow-glow-accent' 
-                                    : 'text-slate-500 hover:text-slate-300 hover:bg-app-surface/5'}`}
-                                title="Double-clic pour renommer, Clic-droit pour supprimer"
-                            >
-                                {getIcon(p.name)}
-                                <span>{p.name}</span>
-                            </button>
+                    <div className="flex items-center bg-app-surface/40 p-1 rounded-xl border border-app-border/50 shadow-inner">
+                        {onglets.length === 0 && (
+                            <span className="px-4 py-2 text-[9px] font-black uppercase tracking-widest text-slate-600">
+                                Aucune atmosphère ici
+                            </span>
+                        )}
+                        {onglets.map(({ p, genre }, rang) => (
+                            <React.Fragment key={p.id}>
+                                {/* Le trait ne sépare que des genres différents. */}
+                                {rang > 0 && onglets[rang - 1].genre !== genre && (
+                                    <div className="w-px self-stretch my-1 mx-1.5 bg-app-border/60 shrink-0" />
+                                )}
+                                <button
+                                    onClick={() => setActivePlaylistId(p.id)}
+                                    onDoubleClick={() => gmPrompt(`Renommer "${p.name}" :`, p.name, (newName) => {
+                                        if (newName && newName.trim()) renamePlaylist(p.id, newName.trim());
+                                    })}
+                                    onContextMenu={(e) => {
+                                        e.preventDefault();
+                                        gmConfirm(`Supprimer "${p.name}" ?`, () => removePlaylist(p.id), () => {}, "Supprimer", "Annuler");
+                                    }}
+                                    className={`flex items-center gap-2.5 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all relative ${currentId === p.id
+                                        ? 'bg-accent text-white shadow-glow-accent'
+                                        : 'text-slate-500 hover:text-slate-300 hover:bg-app-surface/5'}`}
+                                    title={`${infobulleDuGenre[genre]}\nDouble-clic pour renommer, Clic-droit pour supprimer`}
+                                >
+                                    {getIcon(p.name)}
+                                    <span>{p.name}</span>
+                                    {genre === 'commune' && <Globe size={9} className="opacity-50 shrink-0" />}
+                                    {genre === 'orpheline' && <Unlink size={9} className="text-amber-500 shrink-0" />}
+                                </button>
+                            </React.Fragment>
                         ))}
                     </div>
                     <button
-                        onClick={() => gmPrompt("Nom de l'atmosphère :", "", (n) => n && addPlaylist(n))}
+                        onClick={() => gmPrompt("Nom de l'atmosphère :", "", (n) => n && addPlaylist(n, campagneId))}
+                        title={campagneId
+                            ? "Nouvelle atmosphère, rattachée à la campagne ouverte"
+                            : "Nouvelle atmosphère commune (aucune campagne ouverte)"}
                         className="size-9 shrink-0 flex items-center justify-center rounded-xl bg-app-surface/5 border border-app-border/50 text-slate-500 hover:text-white hover:bg-accent/20 hover:border-accent/30 transition-all"
                     >
                         <Plus size={14} />
                     </button>
+
+                    {/*
+                      **Le rattachement de l'atmosphère sélectionnée.**
+
+                      Sans campagne ouverte, il n'y a rien à rattacher *à* quoi
+                      que ce soit : le bouton disparaît plutôt que de proposer
+                      un geste sans effet. — David, 2026-08-30.
+                    */}
+                    {campagneId !== null && active && (
+                        <button
+                            onClick={basculerLeRattachement}
+                            title={estCommune
+                                ? `Rattacher "${active.name}" à la campagne ouverte — elle n'apparaîtra plus ailleurs`
+                                : `Rendre "${active.name}" commune — elle apparaîtra dans toutes les campagnes`}
+                            className={`h-9 shrink-0 flex items-center gap-2 px-3 rounded-xl border text-[8px] font-black uppercase tracking-widest transition-all ${estCommune
+                                ? 'bg-app-surface/5 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'
+                                : 'bg-accent/10 border-accent/30 text-accent hover:bg-accent hover:text-white'}`}
+                        >
+                            {estCommune ? <Globe size={12} /> : <Bookmark size={12} />}
+                            <span>{estCommune ? 'Commune' : 'Campagne'}</span>
+                        </button>
+                    )}
                 </div>
 
                 {/* Right: Essential Controls */}

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { musicEngine } from './MusicEngine';
+import { platineDeDestination, positionDeLaPlatine } from './logic/fonduCroise';
 import { useJournalStore } from '../journal/useJournalStore';
 // Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
@@ -21,6 +22,20 @@ export interface Playlist {
     id: string;
     name: string;
     pads: MusicPad[];
+    /**
+     * **La campagne propriétaire — étiquette, pas cloison.** Demandé par David
+     * le 2026-08-30.
+     *
+     * Absent ou `null` : la playlist est **commune**, visible dans toutes les
+     * campagnes. C'est le défaut, et c'est ce qui rend la bascule indolore —
+     * les atmosphères écrites avant ce champ n'ont pas d'étiquette et restent
+     * donc toutes visibles. *Aucune migration : une migration est l'endroit où
+     * les données de ce projet sont déjà mortes deux fois.*
+     *
+     * Le tri lui-même vit dans `logic/playlistsDeLaCampagne.ts`, parce qu'il
+     * sert à l'écran **et au clavier**.
+     */
+    campagneId?: string | null;
 }
 
 interface MusicState {
@@ -57,8 +72,13 @@ interface MusicState {
     setAutoFadeDuration: (value: number) => void;
     setOutputDevice: (deviceId: string) => void;
 
-    addPlaylist: (name: string) => void;
+    addPlaylist: (name: string, campagneId?: string | null) => void;
     removePlaylist: (id: string) => void;
+    /**
+     * Change le propriétaire d'une playlist : une campagne, ou `null` pour la
+     * rendre commune. Le seul écrivain de `campagneId`.
+     */
+    assignerLaPlaylist: (id: string, campagneId: string | null) => void;
     updatePad: (playlistId: string, padIndex: number, pad: Partial<MusicPad>) => void;
     reorderPads: (playlistId: string, oldIndex: number, newIndex: number) => void;
     clearPlaylistPads: (playlistId: string) => void;
@@ -70,9 +90,14 @@ interface MusicState {
     stopAll: () => Promise<void>;
     toggleLoop: (deck: 'A' | 'B') => void;
 
-    // V3 Auto-Logic
-    autoFadeTarget: 'A' | 'B' | null;
-    clearAutoFadeTarget: () => void;
+    /*
+      `autoFadeTarget` / `clearAutoFadeTarget` ont été retirés le 2026-08-30.
+      C'était un drapeau que le magasin posait et qu'un `useEffect` du `Mixer`
+      devait consommer pour exécuter *le vrai* travail. Écran fermé, personne ne
+      le consommait — et il restait posé, faussant le choix de la platine
+      suivante. **Un drapeau qu'il faut penser à effacer finira par ne pas
+      l'être** ; la position du crossfader se dérive et ne se périme pas.
+    */
     triggerAutoFade: (target: 'A' | 'B') => Promise<void>;
 
     playPad: (pad: MusicPad) => Promise<void>;
@@ -135,14 +160,24 @@ export const useMusicStore = create<MusicState>()(
                 toggleKeyLearn: () => set((state) => ({ isKeyLearnActive: !state.isKeyLearnActive, activePadLearnInfo: null })),
                 setActiveLearnPad: (playlistId, padIndex) => set({ activePadLearnInfo: playlistId && padIndex !== null ? { playlistId, padIndex } : null }),
 
-                autoFadeTarget: null,
-                clearAutoFadeTarget: () => set({ autoFadeTarget: null }),
+                /**
+                 * **La transition, désormais d'un seul tenant dans le moteur.**
+                 *
+                 * `autoFadeTarget` était un drapeau que le magasin posait et
+                 * qu'un `useEffect` du composant `Mixer` consommait pour lancer
+                 * *le vrai* travail : animer le curseur, puis arrêter la platine
+                 * sortante. **Écran fermé, personne ne le consommait** — la
+                 * platine sortante jouait indéfiniment, et le drapeau périmé
+                 * faussait ensuite le choix de la platine suivante.
+                 *
+                 * Il ne reste ici que ce qui appartient au magasin : lancer la
+                 * lecture, demander la transition, tenir le journal.
+                 */
                 triggerAutoFade: async (target) => {
-
                     await musicEngine.resume();
                     await get().playDeck(target);
-                    musicEngine.performAutoFade(target, get().autoFadeDuration);
-                    set({ autoFadeTarget: target });
+                    musicEngine.crossfadeTo(target, get().autoFadeDuration);
+                    set({ crossfader: positionDeLaPlatine(target) });
                     get().addLog(`Transition auto vers Deck ${target}`);
                 },
 
@@ -171,10 +206,21 @@ export const useMusicStore = create<MusicState>()(
                     set({ outputDeviceId: deviceId });
                 },
 
-                addPlaylist: (name) => set((state) => ({
+                /**
+                 * `campagneId` non fourni : la playlist naît **commune**.
+                 *
+                 * L'écran, lui, passe la campagne ouverte — une atmosphère
+                 * créée pendant qu'on prépare Hadley Hope lui appartient. Mais
+                 * le magasin ne va pas la chercher lui-même : il ignore
+                 * `useSessionOSStore`, et doit continuer à l'ignorer (ce
+                 * fichier porte déjà deux imports différés pour cause de
+                 * cycle).
+                 */
+                addPlaylist: (name, campagneId = null) => set((state) => ({
                     playlists: [...state.playlists, {
                         id: crypto.randomUUID(),
                         name,
+                        campagneId,
                         pads: Array(5).fill(null).map((_, i) => ({
                             id: crypto.randomUUID(),
                             label: `Pad ${i + 1}`,
@@ -189,6 +235,10 @@ export const useMusicStore = create<MusicState>()(
 
                 removePlaylist: (id) => set((state) => ({
                     playlists: state.playlists.filter(p => p.id !== id)
+                })),
+
+                assignerLaPlaylist: (id, campagneId) => set((state) => ({
+                    playlists: state.playlists.map(p => p.id === id ? { ...p, campagneId } : p)
                 })),
 
                 updatePad: (playlistId, padIndex, padData) => set((state) => {
@@ -371,13 +421,17 @@ export const useMusicStore = create<MusicState>()(
                         return;
                     }
 
-                    // 2. Choisir la platine de destination - on alterne !
-                    let targetDeck: 'A' | 'B' = 'A';
-                    if (state.autoFadeTarget) {
-                        targetDeck = state.autoFadeTarget === 'A' ? 'B' : 'A';
-                    } else {
-                        targetDeck = state.crossfader < 0.5 ? 'B' : 'A';
-                    }
+                    /*
+                      2. La platine qui accueille : celle qu'on n'entend pas.
+
+                      La position vient du **moteur**, pas du magasin : pendant
+                      un fondu elle se calcule sur l'horloge audio, et c'est la
+                      seule qui dise où en est réellement le son. L'ancien code
+                      consultait d'abord `autoFadeTarget`, un drapeau qu'un
+                      composant devait penser à effacer — périmé, il choisissait
+                      la platine à l'envers.
+                    */
+                    const targetDeck = platineDeDestination(musicEngine.positionDuCrossfader());
 
                     // 3. Charger et déclencher
                     await get().loadToDeck(targetDeck, pad);
@@ -477,7 +531,6 @@ export const useMusicStore = create<MusicState>()(
                         crossfader: 0.5,
                         history: [],
                         consoleLogs: [],
-                        autoFadeTarget: null
                     });
                     get().addLog("Module réinitialisé");
                 }

@@ -345,6 +345,10 @@ body {
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
+/* Le thème clair éteint les halos ; le souffle du morceau en est un, et il
+   suit la même règle. Le `!important` l'emporte sur l'animation — la tuile en
+   cours reste alors reconnaissable à sa bordure, son fond et sa taille. */
+:root[data-theme='claire'] .animate-souffle-du-morceau,
 :root[data-theme='claire'] .shadow-glow-accent,
 :root[data-theme='claire'] .shadow-glow-gold,
 :root[data-theme='claire'] .shadow-glow-cyan {
@@ -437,6 +441,36 @@ input[type=number] {
 
 .animate-jitter {
   animation: jitter 0.4s ease-in-out infinite;
+}
+
+/*
+  Le morceau en cours — **visible sans agiter la tuile.**
+
+  `animate-jitter` était appliqué à la pastille entière du Playlist Manager :
+  30 % d'étirement vertical, deux fois et demie par seconde, sur une tuile de
+  trois cents pixels. *L'animation n'était pas fautive — son emploi l'était* :
+  elle est faite pour les barres fines de la forme d'onde du Deck, où ce même
+  étirement se lit comme un vumètre. Signalé par David le 2026-08-30.
+
+  Ici, rien ne bouge : seule la portée du halo respire, sur près de trois
+  secondes. On perçoit le changement sans que l'œil y soit tiré — *c'est le
+  mouvement en vision périphérique qui envahit, pas la couleur.*
+
+  La couleur vient de `--app-accent-glow`, la même que `shadow-glow-accent`, pour
+  que le halo suive le thème du jeu au lieu d'en inventer un second.
+
+  **Aucun `transform` : c'est délibéré.** Un keyframe qui écrit `transform`
+  remplace celui de l'élément — le `scale-[1.05]` de la tuile était donc inerte
+  tant que le jitter tournait. Il redevient ce qu'il devait être : la marque
+  fixe et immédiate du morceau en cours.
+*/
+@keyframes souffle-du-morceau {
+  0%, 100% { box-shadow: 0 0 10px 0 var(--app-accent-glow, rgba(59, 130, 246, 0.45)); }
+  50%      { box-shadow: 0 0 24px 4px var(--app-accent-glow, rgba(59, 130, 246, 0.45)); }
+}
+
+.animate-souffle-du-morceau {
+  animation: souffle-du-morceau 2.8s ease-in-out infinite;
 }
 
 /* Cinematic Health Animations */

@@ -1,52 +1,50 @@
 import React, { useState } from 'react';
 import { Activity } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
+import { musicEngine } from '../MusicEngine';
 
 const Mixer: React.FC = () => {
-    const { crossfader, setCrossfader, setCrossfaderVisualOnly, masterVolume, setMasterVolume, stopDeck, autoFadeDuration, setAutoFadeDuration, autoFadeTarget, clearAutoFadeTarget, triggerAutoFade } = useMusicStore();
-
+    const { crossfader, setCrossfader, masterVolume, setMasterVolume, autoFadeDuration, setAutoFadeDuration, triggerAutoFade } = useMusicStore();
+    const setCrossfaderVisualOnly = useMusicStore(s => s.setCrossfaderVisualOnly);
 
     const [isFading, setIsFading] = useState<null | 'A' | 'B'>(null);
-    const animationRef = React.useRef<number | null>(null);
 
-    const handleAutoFade = (target: 'A' | 'B') => {
-        if (isFading) return;
-        const startValue = crossfader;
+    /*
+      **Ce composant ne fait plus d'audio — il regarde.**
 
-        const targetValue = target === 'A' ? 0 : 1;
-        const sourceDeck = target === 'A' ? 'B' : 'A';
-        setIsFading(target);
-        const duration = Math.max(100, autoFadeDuration);
-        const startTime = performance.now();
+      Il portait auparavant un tiers du mécanisme de transition : une boucle
+      `requestAnimationFrame` qui calculait sa propre courbe pour le curseur, et
+      surtout, **à la fin, l'arrêt de la platine sortante**. Une décision de
+      lecture prise dans un `useEffect` — donc **rien ne se passait quand
+      Music-OS n'était pas à l'écran** : la platine sortante jouait
+      indéfiniment, sa pastille restait allumée, et le drapeau qui déclenchait
+      tout ça, jamais effacé, faussait ensuite le choix de la platine suivante.
 
-        const animate = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const newValue = startValue + (targetValue - startValue) * progress;
-            setCrossfaderVisualOnly(newValue);
+      *Un composant démonté n'exécute rien ; ce qui doit se produire même écran
+      fermé n'a rien à faire dans un composant.*
 
-            if (progress < 1) {
-                animationRef.current = requestAnimationFrame(animate);
-            } else {
-                stopDeck(sourceDeck);
-                setIsFading(null);
-                animationRef.current = null;
+      Le moteur mène désormais le fondu sur l'horloge audio ; on se contente de
+      lire sa position à chaque image. La dernière écriture a lieu **une image
+      après la fin**, pour que le curseur se pose exactement sur la valeur
+      d'arrivée au lieu de s'arrêter à 0,98.
+    */
+    React.useEffect(() => {
+        let image = 0;
+        let suivait = false;
+
+        const suivre = () => {
+            const enFondu = musicEngine.fonduEnCours;
+            if (enFondu || suivait) {
+                setCrossfaderVisualOnly(musicEngine.positionDuCrossfader());
+                setIsFading(musicEngine.cibleDuFondu);
             }
+            suivait = enFondu;
+            image = requestAnimationFrame(suivre);
         };
-        animationRef.current = requestAnimationFrame(animate);
-    };
 
-    React.useEffect(() => {
-        return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); };
-    }, []);
-
-    React.useEffect(() => {
-        if (autoFadeTarget) {
-            handleAutoFade(autoFadeTarget);
-            clearAutoFadeTarget();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [autoFadeTarget]);
+        image = requestAnimationFrame(suivre);
+        return () => cancelAnimationFrame(image);
+    }, [setCrossfaderVisualOnly]);
 
     return (
         <div className="w-full bg-app-bg/30 backdrop-blur-[32px] rounded-[1.5rem] border border-app-border/50 p-3 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.6)] relative overflow-hidden group/mixer transition-all duration-700 hover:border-accent/20 hover:bg-app-bg/40">

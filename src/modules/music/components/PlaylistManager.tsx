@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Music, Link, Edit3, Trash2, GripVertical, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
+import { usePlaylistsVisibles } from '../usePlaylistsVisibles';
 import type { MusicPad as MusicPadType } from '../useMusicStore';
 import { gmPrompt, gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -22,7 +23,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRequestMediaBrowser: () => void }> = ({ pad, index, playlistId, onRequestMediaBrowser }) => {
-    const { playPad, updatePad, deckA, deckB, isKeyLearnActive, activePadLearnInfo, setActiveLearnPad } = useMusicStore();
+    const { playPad, loadToDeck, updatePad, deckA, deckB, isKeyLearnActive, activePadLearnInfo, setActiveLearnPad } = useMusicStore();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isOver, setIsOver] = useState(false);
 
@@ -119,7 +120,13 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 ${isLearningThis
                     ? 'border-cyan-500 bg-cyan-900/40 shadow-glow-cyan'
                     : isPlaying
-                        ? 'bg-accent/40 border-accent shadow-glow-accent animate-jitter scale-[1.05]'
+                        /* `animate-jitter` étirait la tuile entière de 30 % deux
+                           fois par seconde — l'animation des barres du Deck,
+                           appliquée à un carré de 300 px. Remplacée par un halo
+                           qui respire : voir `souffle-du-morceau` dans
+                           `index.css`. Le `scale-[1.05]`, jusqu'ici annulé par
+                           le `transform` du jitter, devient la marque fixe. */
+                        ? 'bg-accent/40 border-accent animate-souffle-du-morceau scale-[1.05]'
                         : 'bg-app-bg/40 border-app-border/50 hover:bg-app-surface/60 hover:border-accent/40 hover:shadow-glow-accent/20 hover:scale-[1.02]'
                 } ${isOver && !isLearningThis ? 'border-accent bg-accent/10' : ''} cursor-pointer`}
         >
@@ -203,13 +210,59 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                     >
                         <Trash2 size={12} /> VIDER
                     </button>
+                    {/*
+                      **Précharger sans lancer — demandé par David le 2026-08-30.**
+
+                      Le clic sur une pastille charge ET enchaîne la transition ;
+                      il n'existait aucun moyen de préparer un morceau. La
+                      brique, elle, existait depuis toujours : `loadToDeck` ne
+                      fait que charger. *Il manquait le geste, pas le moteur.*
+
+                      Avec la barre de position devenue manipulable, les deux se
+                      complètent : on charge sur la platine libre, on cale
+                      l'endroit, puis on lance quand la scène le demande.
+
+                      ⚠ **Une platine en lecture le dit.** Charger dessus coupe
+                      net ce qu'elle joue — irrattrapable en pleine séance. On ne
+                      l'interdit pas : le meneur a parfois de bonnes raisons de
+                      remplacer. Mais il le sait **avant** de cliquer, et pas
+                      après.
+                    */}
+                    <div className="w-full flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 shrink-0">Charger</span>
+                        {(['A', 'B'] as const).map((platine) => {
+                            const occupee = platine === 'A' ? isPlayingOnA : isPlayingOnB;
+                            const enLecture = platine === 'A' ? deckA.isPlaying : deckB.isPlaying;
+                            return (
+                                <button
+                                    key={platine}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        void loadToDeck(platine, pad);
+                                        setIsMenuOpen(false);
+                                    }}
+                                    title={enLecture
+                                        ? `Charger sur la platine ${platine} — elle joue : la piste en cours sera coupée`
+                                        : `Charger sur la platine ${platine} sans lancer la lecture`}
+                                    className={`flex-1 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                                        enLecture
+                                            ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black'
+                                            : 'bg-app-surface border-app-border/50 hover:bg-accent hover:border-accent'
+                                    } ${occupee ? 'ring-1 ring-accent/40' : ''}`}
+                                >
+                                    {platine}
+                                </button>
+                            );
+                        })}
+                    </div>
+
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            gmCustom('light-scene-select', { 
-                                type: 'music', 
-                                playlistId, 
-                                padIndex: index 
+                            gmCustom('light-scene-select', {
+                                type: 'music',
+                                playlistId,
+                                padIndex: index
                             });
                             setIsMenuOpen(false);
                         }}
@@ -225,16 +278,15 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
 
 const PlaylistManager: React.FC = () => {
-    const { playlists, activePlaylistId, setActivePlaylistId, reorderPads, updatePad } = useMusicStore();
-    const currentPlaylistId = activePlaylistId || playlists[0]?.id;
-    const activePlaylist = playlists.find(p => p.id === currentPlaylistId) || playlists[0];
+    const { reorderPads, updatePad } = useMusicStore();
 
-    // Auto-select first playlist if none is active
-    useEffect(() => {
-        if (!activePlaylistId && activePlaylist) {
-            setActivePlaylistId(activePlaylist.id);
-        }
-    }, [activePlaylistId, activePlaylist, setActivePlaylistId]);
+    /*
+      La sélection et le filtrage par campagne vivent dans un seul endroit
+      (`usePlaylistsVisibles`) — cet écran en tenait auparavant sa propre
+      copie, à l'identique de celle du `MusicHeader`. Deux copies ne
+      divergeaient pas tant que la liste ne rétrécissait jamais.
+    */
+    const { active: activePlaylist, campagneId } = usePlaylistsVisibles();
 
     // Media Browser State
     const [browserTarget, setBrowserTarget] = useState<{ index: number, playlistId: string } | null>(null);
@@ -256,7 +308,7 @@ const PlaylistManager: React.FC = () => {
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        if (over && active.id !== over.id) {
+        if (activePlaylist && over && active.id !== over.id) {
             const oldIndex = activePlaylist.pads.findIndex(p => p.id === active.id);
             const newIndex = activePlaylist.pads.findIndex(p => p.id === over.id);
             reorderPads(activePlaylist.id, oldIndex, newIndex);
@@ -265,7 +317,29 @@ const PlaylistManager: React.FC = () => {
 
     const padIds = useMemo(() => activePlaylist?.pads.map(p => p.id) || [], [activePlaylist]);
 
-    if (!activePlaylist) return null;
+    /*
+      **L'écran vide se nomme.** Une campagne neuve n'a aucune atmosphère à
+      elle, et il peut n'exister aucune commune : le composant rendait alors
+      `null`, c'est-à-dire un panneau vide sans la moindre explication. Depuis
+      que les atmosphères appartiennent à une campagne, ce vide-là est un cas
+      normal, et un vide normal qui ressemble à une panne finit par être
+      signalé comme une panne.
+    */
+    if (!activePlaylist) {
+        return (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                <Music size={32} strokeWidth={1} className="text-slate-700" />
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                    Aucune atmosphère pour cette campagne
+                </p>
+                <p className="text-[10px] text-slate-600 max-w-sm leading-relaxed">
+                    {campagneId === null
+                        ? 'Créez-en une avec le + du bandeau.'
+                        : 'Créez-en une avec le + du bandeau, ou rendez une atmosphère existante « commune » depuis la campagne qui la détient — elle apparaîtra alors partout.'}
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-full">

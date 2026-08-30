@@ -2,13 +2,15 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Play, Pause, Square, Repeat, Activity } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import { musicEngine } from '../MusicEngine';
+import { secondesAuPointeur, pasDuClavier } from '../logic/pointageDeLecture';
+import { gainsALaPosition } from '../logic/fonduCroise';
 
 interface DeckProps {
     side: 'A' | 'B';
 }
 
 const Deck: React.FC<DeckProps> = ({ side }) => {
-    const { deckA, deckB, playDeck, stopDeck, toggleLoop } = useMusicStore();
+    const { deckA, deckB, playDeck, stopDeck, toggleLoop, triggerAutoFade } = useMusicStore();
     const deckState = side === 'A' ? deckA : deckB;
     const engineDeck = side === 'A' ? musicEngine.deckA : musicEngine.deckB;
 
@@ -16,14 +18,33 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
     const [duration, setDuration] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
 
+    /**
+     * **Cette platine joue-t-elle sans qu'on l'entende ?**
+     *
+     * Le cas arrive dès qu'on précharge : platine A à l'antenne, on charge B, on
+     * appuie sur Lecture de B — et rien ne sort, parce que le crossfader est
+     * resté sur A. La platine tourne, le disque tourne à l'écran, le temps
+     * défile : **tout dit que ça marche, et on n'entend rien.**
+     *
+     * *C'est le motif que ce projet paie le plus souvent : la donnée est juste
+     * et l'écran ment par omission.* On le nomme, et on offre le geste qui le
+     * corrige plutôt que de laisser chercher.
+     */
+    const [inaudible, setInaudible] = useState(false);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(engineDeck.currentTime);
             setDuration(engineDeck.duration);
             setIsPlaying(engineDeck.isPlaying);
+
+            // Le gain vient de la même conversion que le fondu : deux formules
+            // se contrediraient au bord, précisément là où on décide « muet ».
+            const gains = gainsALaPosition(musicEngine.positionDuCrossfader());
+            setInaudible(engineDeck.isPlaying && (side === 'A' ? gains.a : gains.b) < 0.05);
         }, 100);
         return () => clearInterval(interval);
-    }, [engineDeck]);
+    }, [engineDeck, side]);
 
     const formatTime = (time: number) => {
         const mins = Math.floor(time / 60);
@@ -31,7 +52,42 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+    /*
+      **Se placer dans le morceau — demandé par David le 2026-08-30.**
+
+      La barre n'était qu'un décor : son voile de progression portait
+      `pointer-events-none`, et rien n'écoutait le clic. Elle devient un curseur
+      de position, utilisable **à l'arrêt comme en lecture** — c'est tout
+      l'intérêt : on cale son passage pendant que le morceau précédent tourne,
+      puis on lance.
+
+      `pointageEnCours` tient la position pendant le glissement. Sans elle, le
+      relevé périodique de 100 ms réécrirait la position sous le doigt du meneur
+      et le curseur reviendrait en arrière entre deux images. *Deux écrivains
+      pour une même valeur, à cent millisecondes d'intervalle.*
+
+      **On ne déplace la lecture qu'au relâchement**, pas à chaque mouvement :
+      repositionner un élément audio trente fois par seconde le fait hoqueter, et
+      un simple clic — appui puis relâchement sans bouger — donne exactement le
+      même geste.
+    */
+    const barreRef = React.useRef<HTMLDivElement>(null);
+    const [pointageEnCours, setPointageEnCours] = useState<number | null>(null);
+
+    const positionDuPointeur = (clientX: number): number => {
+        const cadre = barreRef.current?.getBoundingClientRect();
+        if (!cadre) return 0;
+        return secondesAuPointeur(clientX, cadre, duration);
+    };
+
+    const deplacerLaLecture = (secondes: number) => {
+        if (!engineDeck.seek(secondes)) return;
+        setCurrentTime(secondes);
+    };
+
+    /** La position montrée : celle du doigt s'il y en a un, sinon celle du moteur. */
+    const positionAffichee = pointageEnCours ?? currentTime;
+    const progress = duration > 0 ? (positionAffichee / duration) * 100 : 0;
 
     const waveformHeights = useMemo(() => {
         // Use a static "random-looking" sequence for the visualizer to avoid lint issues
@@ -61,6 +117,17 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                         <span className={`px-1.5 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-white shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-slate-500'}`}>
                             DRK {side}
                         </span>
+
+                        {/* Le bandeau nomme le silence ET porte le geste qui le lève. */}
+                        {inaudible && (
+                            <button
+                                onClick={() => void triggerAutoFade(side)}
+                                title={`La platine ${side} joue mais le crossfader est sur l’autre — cliquer pour l’amener à l’antenne`}
+                                className="px-1.5 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest border bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black transition-all"
+                            >
+                                Muet → à l’antenne
+                            </button>
+                        )}
                     </div>
                     <div>
                         <h3 className="text-sm font-black text-white truncate tracking-tight transition-colors group-hover:text-accent/90">
@@ -72,7 +139,50 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
 
             {/* Waveform & Progress */}
             <div className="space-y-2 relative z-10">
-                <div className="h-4 bg-app-bg/60 rounded-lg border border-app-border/50 relative overflow-hidden flex items-end px-1 pb-0.5 gap-0.5 group-hover:border-accent/10 transition-colors shadow-inner">
+                <div
+                    ref={barreRef}
+                    role="slider"
+                    tabIndex={duration > 0 ? 0 : -1}
+                    aria-label={`Position dans la piste — platine ${side}`}
+                    aria-valuemin={0}
+                    aria-valuemax={Math.round(duration)}
+                    aria-valuenow={Math.round(positionAffichee)}
+                    aria-valuetext={formatTime(positionAffichee)}
+                    aria-disabled={duration <= 0}
+                    title={duration > 0 ? 'Cliquer ou glisser pour se placer dans le morceau' : undefined}
+                    onPointerDown={(e) => {
+                        if (duration <= 0) return;
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        setPointageEnCours(positionDuPointeur(e.clientX));
+                    }}
+                    onPointerMove={(e) => {
+                        if (pointageEnCours === null) return;
+                        setPointageEnCours(positionDuPointeur(e.clientX));
+                    }}
+                    onPointerUp={(e) => {
+                        if (pointageEnCours === null) return;
+                        e.currentTarget.releasePointerCapture(e.pointerId);
+                        deplacerLaLecture(positionDuPointeur(e.clientX));
+                        setPointageEnCours(null);
+                    }}
+                    /* Capture perdue — fenêtre qui perd le focus, geste interrompu :
+                       on relâche l'état plutôt que de laisser le curseur collé au
+                       doigt d'un pointeur qui n'existe plus. */
+                    onPointerCancel={() => setPointageEnCours(null)}
+                    onKeyDown={(e) => {
+                        if (duration <= 0) return;
+                        const pas = pasDuClavier(e.shiftKey);
+                        if (e.key === 'ArrowLeft') { e.preventDefault(); deplacerLaLecture(currentTime - pas); }
+                        else if (e.key === 'ArrowRight') { e.preventDefault(); deplacerLaLecture(currentTime + pas); }
+                        else if (e.key === 'Home') { e.preventDefault(); deplacerLaLecture(0); }
+                        else if (e.key === 'End') { e.preventDefault(); deplacerLaLecture(duration); }
+                    }}
+                    className={`h-4 bg-app-bg/60 rounded-lg border border-app-border/50 relative overflow-hidden flex items-end px-1 pb-0.5 gap-0.5 transition-colors shadow-inner outline-none focus-visible:border-accent ${
+                        duration > 0
+                            ? 'cursor-pointer hover:border-accent/40 group-hover:border-accent/20'
+                            : 'group-hover:border-accent/10'
+                    }`}
+                >
                     {waveformHeights.map((h, i) => (
                         <div
                             key={i}
@@ -84,13 +194,25 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                         />
                     ))}
                     
+                    {/* Le voile de progression laisse passer les clics : c'est le
+                        cadre au-dessus qui écoute. Pendant un glissement, le trait
+                        se fige sur le doigt et cesse de suivre la lecture. */}
                     <div className="absolute inset-0 flex items-center px-0 pointer-events-none">
-                        <div className="h-full bg-accent/5 border-r border-accent/40 transition-all duration-100 ease-linear" style={{ width: `${progress}%` }} />
+                        <div
+                            className={`h-full bg-accent/5 border-r ease-linear ${
+                                pointageEnCours !== null
+                                    ? 'border-accent shadow-glow-accent'
+                                    : 'border-accent/40 transition-all duration-100'
+                            }`}
+                            style={{ width: `${progress}%` }}
+                        />
                     </div>
                 </div>
 
                 <div className="flex items-center justify-between text-[8px] font-black font-mono tracking-tighter text-slate-600 px-0.5 uppercase">
-                    <span className={isPlaying ? 'text-accent' : ''}>{formatTime(currentTime)}</span>
+                    <span className={pointageEnCours !== null ? 'text-accent' : isPlaying ? 'text-accent' : ''}>
+                        {formatTime(positionAffichee)}
+                    </span>
                     <span>{formatTime(duration)}</span>
                 </div>
             </div>

@@ -3,6 +3,14 @@
  * Gère le mixage, les platines, les boucles A/B et le routage via Streaming HTML5.
  */
 import { useMediaStore } from '../../stores/useMediaStore';
+import {
+    courbeDuFonduCroise,
+    gainsALaPosition,
+    platineOpposee,
+    positionDeLaPlatine,
+    positionDuFondu,
+    type FonduEnCours,
+} from './logic/fonduCroise';
 
 export interface DeckState {
     isPlaying: boolean;
@@ -21,6 +29,8 @@ class MusicDeck {
     private audioElement: HTMLAudioElement;
     private sourceNode: MediaElementAudioSourceNode;
     private gainNode: GainNode;
+    /** L'arrêt programmé par `fadeOut` — annulable, voir `annulerLArretDiffere`. */
+    private arretDiffere: ReturnType<typeof setTimeout> | null = null;
     private state: DeckState;
     private onStateChange: (state: DeckState) => void;
     private objectUrl: string | null = null;
@@ -71,6 +81,10 @@ class MusicDeck {
      */
     async loadTrack(url: string) {
         console.log(`[MusicDeck] loadTrack(url: "${url}", type: ${typeof url}, length: ${url?.length})`);
+
+        // Une minuterie d'arrêt visait la piste précédente : elle n'a plus de
+        // sujet, et laissée en vie elle arrêterait celle qu'on charge.
+        this.annulerLArretDiffere();
 
         // On libère l'ancien handle avant de charger
         this.audioElement.pause();
@@ -149,7 +163,9 @@ class MusicDeck {
             return;
         }
 
-        // Restore volume in case a fade was in progress
+        // Restore volume in case a fade was in progress — et surtout, désarmer
+        // l'arrêt qu'il avait programmé : il couperait ce qu'on démarre ici.
+        this.annulerLArretDiffere();
         const now = this.context.currentTime;
         this.gainNode.gain.cancelScheduledValues(now);
         this.gainNode.gain.setValueAtTime(this.state.volume, now);
@@ -201,15 +217,34 @@ class MusicDeck {
         const now = this.context.currentTime;
         const durationSec = durationMs / 1000;
 
+        this.annulerLArretDiffere();
+
         this.gainNode.gain.cancelScheduledValues(now);
         this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
         this.gainNode.gain.linearRampToValueAtTime(0, now + durationSec);
 
-        setTimeout(() => {
+        this.arretDiffere = setTimeout(() => {
+            this.arretDiffere = null;
             this.stop();
             // Reset gain for next usage
             this.gainNode.gain.setValueAtTime(this.state.volume, this.context.currentTime);
         }, durationMs + 100);
+    }
+
+    /**
+     * Désarme l'arrêt programmé par un `fadeOut`.
+     *
+     * ⚠ **Sans ça, la minuterie survivait à ce qu'elle devait arrêter.** Relancer
+     * la même platine avant la fin d'un fondu de sortie — le meneur qui change
+     * d'avis, ce qui arrive en séance — laissait courir l'ancienne minuterie,
+     * qui **coupait le morceau tout juste démarré** quelques secondes plus tard.
+     * Sans rien dire, et sans qu'un second clic n'y change quoi que ce soit.
+     */
+    private annulerLArretDiffere() {
+        if (this.arretDiffere) {
+            clearTimeout(this.arretDiffere);
+            this.arretDiffere = null;
+        }
     }
 
     /**
@@ -230,6 +265,28 @@ class MusicDeck {
     getCurrentTime(): number {
         return this.audioElement.currentTime;
     }
+
+    /**
+     * Place la tête de lecture à un instant précis de la piste.
+     *
+     * **Fonctionne à l'arrêt comme en lecture**, et c'est le point : le meneur
+     * cale son passage pendant que le morceau précédent tourne encore, puis
+     * lance. `play()` ne remet pas à zéro — seul `stop()` le fait — donc la
+     * position choisie survit jusqu'au démarrage.
+     *
+     * Refuse tant que la durée est inconnue : `audioElement.currentTime` posé
+     * avant que les métadonnées soient lues est ignoré en silence par le
+     * navigateur, ce qui donnerait un curseur qui bouge et une lecture qui
+     * repart du début.
+     */
+    seek(secondes: number): boolean {
+        const duree = this.audioElement.duration;
+        if (!Number.isFinite(duree) || duree <= 0) return false;
+
+        this.audioElement.currentTime = Math.min(duree, Math.max(0, secondes));
+        this.updateState();
+        return true;
+    }
 }
 
 /**
@@ -249,6 +306,10 @@ export class MusicEngine {
     public deckB: MusicDeck;
 
     private crossfaderValue: number = 0.5;
+    /** Le fondu en cours, s'il y en a un — voir `positionDuCrossfader`. */
+    private fondu: FonduEnCours | null = null;
+    /** L'arrêt programmé de la platine sortante, annulable. */
+    private arretDeLaSortante: ReturnType<typeof setTimeout> | null = null;
     private useRescueRoute: boolean = true; // HACK Tauri: Direct routing if MediaStream is blocked
 
     constructor() {
@@ -329,50 +390,127 @@ export class MusicEngine {
     }
 
     /**
-     * Positionne le crossfader entre les platines A et B.
-     * @param value Valeur entre 0.0 (Deck A uniquement) et 1.0 (Deck B uniquement).
+     * **Où en est le crossfader, maintenant.**
+     *
+     * L'unique vérité : pendant un fondu elle se calcule sur l'horloge audio,
+     * celle qui fait réellement le son. L'écran la lit au lieu d'en animer une
+     * deuxième de son côté.
+     */
+    positionDuCrossfader(): number {
+        if (!this.fondu) return this.crossfaderValue;
+        return positionDuFondu(this.fondu, this.context.currentTime);
+    }
+
+    /** Un fondu est-il en cours ? */
+    get fonduEnCours(): boolean {
+        return this.fondu !== null && this.context.currentTime < this.fondu.debutSec + this.fondu.dureeSec;
+    }
+
+    /**
+     * Vers quelle platine le fondu se dirige, ou `null` s'il n'y en a pas.
+     *
+     * Pour l'écran seulement — et **lu sur le moteur** : la déduire de la
+     * position du curseur la ferait basculer au milieu du trajet, puisque celle-ci
+     * traverse 0,5 en chemin.
+     */
+    get cibleDuFondu(): 'A' | 'B' | null {
+        if (!this.fonduEnCours || !this.fondu) return null;
+        return this.fondu.cible < 0.5 ? 'A' : 'B';
+    }
+
+    /**
+     * Positionne le crossfader à la main.
+     *
+     * **Annule le fondu en cours ET l'arrêt qu'il avait programmé.** Sans ça,
+     * ramener le crossfader vers la platine sortante la faisait revenir… puis
+     * s'arrêter net quelques secondes plus tard, quand la minuterie du fondu
+     * abandonné se réveillait.
      */
     setCrossfader(value: number) {
+        this.annulerLeFondu();
         this.crossfaderValue = Math.max(0, Math.min(1, value));
-        const now = this.context.currentTime;
-        this.updateCrossfaderGains(now);
+        this.updateCrossfaderGains(this.context.currentTime);
     }
 
     /**
-     * Met à jour les gains individuels des platines en fonction de la position du crossfader.
-     * @param time Timestamp Web Audio optionnel pour le changement.
+     * Applique les gains d'une position, **à puissance égale**.
+     *
+     * La conversion vit dans `fonduCroise.gainsALaPosition`, partagée avec la
+     * courbe du fondu automatique : deux formules différentes s'entendraient à
+     * l'instant où l'un prend la suite de l'autre.
      */
     private updateCrossfaderGains(time?: number) {
-        const gainA = 1 - this.crossfaderValue;
-        const gainB = this.crossfaderValue;
-        const scheduledTime = time || this.context.currentTime;
+        const { a, b } = gainsALaPosition(this.crossfaderValue);
+        const quand = time ?? this.context.currentTime;
 
-        // Curve optimization: use setTargetAtTime for smooth manual sliding
-        this.crossfaderGainA.gain.setTargetAtTime(gainA, scheduledTime, 0.02);
-        this.crossfaderGainB.gain.setTargetAtTime(gainB, scheduledTime, 0.02);
+        this.crossfaderGainA.gain.setTargetAtTime(a, quand, 0.02);
+        this.crossfaderGainB.gain.setTargetAtTime(b, quand, 0.02);
+    }
+
+    /** Oublie le fondu courant et désarme l'arrêt de la platine sortante. */
+    private annulerLeFondu() {
+        if (this.arretDeLaSortante) {
+            clearTimeout(this.arretDeLaSortante);
+            this.arretDeLaSortante = null;
+        }
+        if (this.fondu) {
+            this.crossfaderValue = this.positionDuCrossfader();
+            this.fondu = null;
+        }
+        const now = this.context.currentTime;
+        for (const g of [this.crossfaderGainA, this.crossfaderGainB]) {
+            g.gain.cancelScheduledValues(now);
+            g.gain.setValueAtTime(g.gain.value, now);
+        }
     }
 
     /**
-     * Effectue une transition automatique (auto-fade) vers une platine cible.
-     * @param target Platine cible ('A' ou 'B').
-     * @param durationMs Durée de la transition en millisecondes.
+     * **La transition d'un morceau à l'autre, d'un seul tenant.**
+     *
+     * Ce qu'elle remplace — `performAutoFade` — n'était qu'un tiers du
+     * mécanisme. Les deux autres vivaient dans le magasin et, surtout, **dans un
+     * `useEffect` du composant `Mixer`** : c'est lui qui animait le curseur et
+     * qui, à la fin, arrêtait la platine sortante. Trois conséquences, toutes
+     * signalées par David le 2026-08-30 sous *« ça ne fonctionne pas bien »* :
+     *
+     * 1. **Écran de Music-OS fermé, la platine sortante ne s'arrêtait jamais.**
+     *    Elle continuait à jouer, inaudible, et sa pastille restait allumée —
+     *    deux morceaux « en cours » à l'écran. *Le chemin s'arrêtait avant le
+     *    moteur, et le résultat restait plausible.*
+     * 2. **Le drapeau `autoFadeTarget` n'était effacé que par ce même effet.**
+     *    Périmé, il choisissait ensuite la platine à l'envers.
+     * 3. **L'arrêt arrivait après un SECOND fondu de même durée** (`stopDeck`
+     *    enchaînait un `fadeOut` sur une platine déjà à zéro) : douze secondes
+     *    pour une transition de six.
+     *
+     * Tout se décide donc ici, avec l'horloge audio pour seule référence.
      */
-    performAutoFade(target: 'A' | 'B', durationMs: number) {
+    crossfadeTo(target: 'A' | 'B', durationMs: number) {
+        this.annulerLeFondu();
+
+        const depart = this.crossfaderValue;
+        const cible = positionDeLaPlatine(target);
+        const dureeSec = Math.max(0.05, durationMs / 1000);
         const now = this.context.currentTime;
-        const durationSec = durationMs / 1000;
-        const targetA = target === 'A' ? 1 : 0;
-        const targetB = target === 'B' ? 1 : 0;
 
-        this.crossfaderGainA.gain.cancelScheduledValues(now);
-        this.crossfaderGainB.gain.cancelScheduledValues(now);
+        const { a, b } = courbeDuFonduCroise(depart, cible);
+        this.crossfaderGainA.gain.setValueCurveAtTime(a, now, dureeSec);
+        this.crossfaderGainB.gain.setValueCurveAtTime(b, now, dureeSec);
 
-        this.crossfaderGainA.gain.setValueAtTime(this.crossfaderGainA.gain.value, now);
-        this.crossfaderGainA.gain.linearRampToValueAtTime(targetA, now + durationSec);
+        this.fondu = { depart, cible, debutSec: now, dureeSec };
+        this.crossfaderValue = cible;
 
-        this.crossfaderGainB.gain.setValueAtTime(this.crossfaderGainB.gain.value, now);
-        this.crossfaderGainB.gain.linearRampToValueAtTime(targetB, now + durationSec);
-
-        this.crossfaderValue = target === 'A' ? 0 : 1;
+        /*
+          La platine sortante s'arrête **quand le fondu est fini**, pas avant et
+          pas deux fondus plus tard. La marge couvre l'écart entre l'horloge
+          audio et celle des minuteries ; arrêter un peu trop tard n'a aucune
+          conséquence, un peu trop tôt couperait la fin du morceau.
+        */
+        const sortante = platineOpposee(target);
+        this.arretDeLaSortante = setTimeout(() => {
+            this.arretDeLaSortante = null;
+            (sortante === 'A' ? this.deckA : this.deckB).stop();
+        }, dureeSec * 1000 + 120);
     }
 
     /**
