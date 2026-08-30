@@ -17,6 +17,7 @@ import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
 import ChoixDeLaForme from './components/ChoixDeLaForme';
 import { FORME_PAR_DEFAUT, type FormeDeJauge } from './components/formesDeJauge';
+import { nomDeLaJauge, SEGMENTS_PROPOSES, SEGMENTS_PAR_DEFAUT } from './logic/nomDeLaJauge';
 import { useTranslation } from 'react-i18next';
 
 
@@ -27,6 +28,24 @@ const ClockDashboard: React.FC = () => {
       campagne, et la forme réelle est portée par chaque jauge.
     */
     const [formeDesNouvelles, setFormeDesNouvelles] = React.useState<FormeDeJauge>(FORME_PAR_DEFAUT);
+    const [nomDeLaNouvelle, setNomDeLaNouvelle] = React.useState('');
+
+    /**
+     * **Le seul chemin de création d'une jauge**, quel que soit le geste.
+     *
+     * Le bouton `+N` et la touche `Entrée` passent tous deux par ici : c'est ce
+     * qui garantit qu'ils ne peuvent plus diverger sur le nom, comme ils l'ont
+     * fait jusqu'au 2026-08-30. Le champ se vide après coup — sans quoi le nom
+     * resterait et la jauge suivante le reprendrait sans qu'on l'ait voulu.
+     */
+    const creerLaJauge = (segments: number) => {
+        addTensionClock(
+            nomDeLaJauge(nomDeLaNouvelle, t('clock.gauge_default', { segments })),
+            segments,
+            formeDesNouvelles,
+        );
+        setNomDeLaNouvelle('');
+    };
     const {
         mode,
         theme,
@@ -328,26 +347,41 @@ const ClockDashboard: React.FC = () => {
                         <Plus size={16} /> {t('clock.new_gauge')}
                     </h3>
                     <div className="flex flex-col gap-3">
+                        {/*
+                          **Un seul chemin de création, et c'est tout le
+                          correctif.**
+
+                          *Signalé par David le 2026-08-30 : « quand j'ajoute une
+                          jauge, son nom est toujours Jauge 6, alors que je l'ai
+                          déclarée Impulsion ».* Le champ était **non contrôlé**
+                          et n'agissait que sur `Entrée` ; les boutons `+N`, eux,
+                          ne l'avaient jamais lu et fabriquaient toujours le
+                          libellé par défaut. Or le champ est posé juste au-dessus
+                          d'eux, dans le même bloc : tout dit qu'il leur
+                          appartient.
+
+                          `Entrée` avait sa propre règle en prime — six segments,
+                          quel que soit le bouton qu'on aurait choisi. *Deux
+                          chemins pour un même geste, et un seul lisait ce que
+                          l'utilisateur avait écrit.*
+                        */}
                         <input
                             type="text"
+                            value={nomDeLaNouvelle}
+                            onChange={(e) => setNomDeLaNouvelle(e.target.value)}
                             placeholder={t('clock.gauge_placeholder')}
                             className="bg-app-surface/80 border border-app-border rounded-lg p-2 text-xs text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-accent"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    const val = e.currentTarget.value.trim();
-                                    if (val) {
-                                        addTensionClock(val, 6, formeDesNouvelles);
-                                        e.currentTarget.value = '';
-                                    }
-                                }
-                            }}
+                            onKeyDown={(e) => { if (e.key === 'Enter') creerLaJauge(SEGMENTS_PAR_DEFAUT); }}
                         />
                         <ChoixDeLaForme valeur={formeDesNouvelles} onChoisir={setFormeDesNouvelles} />
                         <div className="flex gap-2 flex-wrap">
-                            {[4, 6, 8, 10, 12].map(s => (
+                            {SEGMENTS_PROPOSES.map(s => (
                                 <button
                                     key={s}
-                                    onClick={() => addTensionClock(t('clock.gauge_default', { segments: s }), s, formeDesNouvelles)}
+                                    onClick={() => creerLaJauge(s)}
+                                    title={nomDeLaNouvelle.trim()
+                                        ? t('clock.gauge_add_named', { nom: nomDeLaNouvelle.trim(), segments: s })
+                                        : t('clock.gauge_add_default', { segments: s })}
                                     className="bg-app-bg/50 border border-app-border text-app-text/50 px-2 py-1 rounded text-[10px] font-bold hover:bg-app-surface hover:text-accent transition-all"
                                 >
                                     +{s}

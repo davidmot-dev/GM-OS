@@ -103,6 +103,8 @@
     "new_gauge": "Nouvelle Jauge",
     "gauge_placeholder": "Nom de la jauge...",
     "gauge_default": "Jauge {{segments}} seg",
+    "gauge_add_named": "Créer « {{nom}} » — {{segments}} segments",
+    "gauge_add_default": "Créer une jauge de {{segments}} segments (nommez-la ci-dessus pour la reconnaître)",
     "segments": "Segments",
     "projection": {
       "show": "Affiché sur le Player Hub",
