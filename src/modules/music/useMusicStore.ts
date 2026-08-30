@@ -67,7 +67,17 @@ interface MusicState {
 
     // Actions
     setCrossfader: (value: number) => void;
-    setCrossfaderVisualOnly: (value: number) => void;
+    /*
+      `setCrossfaderVisualOnly` a été retiré le 2026-08-30, avec son seul
+      appelant. Il servait au `Mixer` à écrire la position animée du fondu dans
+      le magasin, soixante fois par seconde — et `useNexusSynchronizer`, abonné
+      à ce magasin, reportait alors sa diffusion d'image en image : **pendant
+      toute une transition, plus rien ne partait vers le Player Hub, le
+      projecteur ni les tablettes.**
+
+      Une position d'agrément vit désormais dans l'état du composant. *Laisser
+      la méthode en place aurait invité à refaire exactement la même chose.*
+    */
     setMasterVolume: (value: number) => void;
     setAutoFadeDuration: (value: number) => void;
     setOutputDevice: (deviceId: string) => void;
@@ -187,10 +197,6 @@ export const useMusicStore = create<MusicState>()(
                     const val = Math.max(0, Math.min(1, value));
                     musicEngine.setCrossfader(val);
                     set({ crossfader: val });
-                },
-
-                setCrossfaderVisualOnly: (value) => {
-                    set({ crossfader: Math.max(0, Math.min(1, value)) });
                 },
 
                 setMasterVolume: (value) => {

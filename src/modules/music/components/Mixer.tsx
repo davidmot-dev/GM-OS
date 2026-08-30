@@ -5,9 +5,26 @@ import { musicEngine } from '../MusicEngine';
 
 const Mixer: React.FC = () => {
     const { crossfader, setCrossfader, masterVolume, setMasterVolume, autoFadeDuration, setAutoFadeDuration, triggerAutoFade } = useMusicStore();
-    const setCrossfaderVisualOnly = useMusicStore(s => s.setCrossfaderVisualOnly);
 
     const [isFading, setIsFading] = useState<null | 'A' | 'B'>(null);
+
+    /*
+      **La position animée pendant un fondu vit ICI, et non dans le magasin.**
+
+      Elle y écrivait, soixante fois par seconde, par `setCrossfaderVisualOnly`.
+      Or `useNexusSynchronizer` est abonné au magasin de musique, et son frein
+      **reporte** la diffusion à chaque nouvelle écriture au lieu de l'empiler :
+      pendant les cinq secondes d'une transition, la synchronisation vers le
+      Player Hub, le projecteur et les tablettes était donc repoussée d'image en
+      image, et **n'avait pas lieu du tout**.
+
+      *Une animation d'agrément n'a rien à faire dans un magasin qui nourrit la
+      persistance et le réseau.* Le magasin garde la valeur d'arrivée, posée une
+      seule fois par `triggerAutoFade` ; l'image intermédiaire ne regarde que cet
+      écran, et disparaît avec lui.
+    */
+    const [positionAnimee, setPositionAnimee] = useState<number | null>(null);
+    const positionAffichee = positionAnimee ?? crossfader;
 
     /*
       **Ce composant ne fait plus d'audio — il regarde.**
@@ -34,9 +51,17 @@ const Mixer: React.FC = () => {
 
         const suivre = () => {
             const enFondu = musicEngine.fonduEnCours;
-            if (enFondu || suivait) {
-                setCrossfaderVisualOnly(musicEngine.positionDuCrossfader());
+            if (enFondu) {
+                setPositionAnimee(musicEngine.positionDuCrossfader());
                 setIsFading(musicEngine.cibleDuFondu);
+            } else if (suivait) {
+                /*
+                  Une image après la fin : on rend la main au magasin, qui porte
+                  déjà la valeur d'arrivée. Le curseur se pose donc exactement
+                  dessus au lieu de s'arrêter à 0,98.
+                */
+                setPositionAnimee(null);
+                setIsFading(null);
             }
             suivait = enFondu;
             image = requestAnimationFrame(suivre);
@@ -44,7 +69,7 @@ const Mixer: React.FC = () => {
 
         image = requestAnimationFrame(suivre);
         return () => cancelAnimationFrame(image);
-    }, [setCrossfaderVisualOnly]);
+    }, []);
 
     return (
         <div className="w-full bg-app-bg/30 backdrop-blur-[32px] rounded-[1.5rem] border border-app-border/50 p-3 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.6)] relative overflow-hidden group/mixer transition-all duration-700 hover:border-accent/20 hover:bg-app-bg/40">
@@ -117,7 +142,7 @@ const Mixer: React.FC = () => {
                         {/* Premium Fader Handle */}
                         <div
                             className="absolute h-6 w-10 bg-slate-100 rounded-lg shadow-xl border-y border-white z-10 pointer-events-none transition-all duration-150 flex items-center justify-center after:content-[''] after:w-[1px] after:h-3 after:bg-slate-300 after:rounded-full"
-                            style={{ left: `calc(${10 + (crossfader * 80)}% - 1.25rem)` }}
+                            style={{ left: `calc(${10 + (positionAffichee * 80)}% - 1.25rem)` }}
                         >
                             <div className="absolute inset-x-0 -top-0.5 h-[1px] bg-accent/20 blur-[1px]" />
                         </div>
@@ -127,8 +152,13 @@ const Mixer: React.FC = () => {
                             min="0"
                             max="1"
                             step="0.01"
-                            value={crossfader}
-                            onChange={(e) => setCrossfader(parseFloat(e.target.value))}
+                            value={positionAffichee}
+                            onChange={(e) => {
+                                // Le meneur reprend la main : le fondu en cours
+                                // n'a plus à piloter le curseur.
+                                setPositionAnimee(null);
+                                setCrossfader(parseFloat(e.target.value));
+                            }}
                             className="absolute inset-x-0 w-full h-full opacity-0 cursor-pointer z-20"
                         />
                         
