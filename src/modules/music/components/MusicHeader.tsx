@@ -101,12 +101,17 @@ const MusicHeader: React.FC = () => {
       rendre commune, ou la rattacher à la campagne ouverte. Rien d'autre —
       lier une atmosphère à une campagne qu'on ne joue pas la ferait
       disparaître de l'écran dans le même geste.
+
+      **C'était un bouton-bascule, et David ne l'a pas vu.** Il affichait l'état
+      courant et faisait l'inverse au clic ; dans l'état « commune » il était
+      gris, donc impossible à distinguer d'une étiquette d'état. On regarde un
+      badge, on ne clique pas dessus.
+
+      Deux boutons montrent l'état ET l'action au même endroit : celui qui est
+      allumé dit où l'on est, l'autre dit où l'on peut aller. *Un bouton dont
+      le libellé décrit l'état ne dit jamais ce qu'un clic va produire.*
     */
     const estCommune = active ? (active.campagneId ?? null) === null : false;
-    const basculerLeRattachement = () => {
-        if (!active || campagneId === null) return;
-        assignerLaPlaylist(active.id, estCommune ? campagneId : null);
-    };
 
     return (
         <header className="relative z-50 flex flex-col gap-2">
@@ -165,18 +170,37 @@ const MusicHeader: React.FC = () => {
                       un geste sans effet. — David, 2026-08-30.
                     */}
                     {campagneId !== null && active && (
-                        <button
-                            onClick={basculerLeRattachement}
-                            title={estCommune
-                                ? `Rattacher "${active.name}" à la campagne ouverte — elle n'apparaîtra plus ailleurs`
-                                : `Rendre "${active.name}" commune — elle apparaîtra dans toutes les campagnes`}
-                            className={`h-9 shrink-0 flex items-center gap-2 px-3 rounded-xl border text-[8px] font-black uppercase tracking-widest transition-all ${estCommune
-                                ? 'bg-app-surface/5 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'
-                                : 'bg-accent/10 border-accent/30 text-accent hover:bg-accent hover:text-white'}`}
-                        >
-                            {estCommune ? <Globe size={12} /> : <Bookmark size={12} />}
-                            <span>{estCommune ? 'Commune' : 'Campagne'}</span>
-                        </button>
+                        <div className="flex items-center gap-2 shrink-0">
+                            <span
+                                className="text-[8px] font-black uppercase tracking-widest text-slate-600 truncate max-w-[9rem]"
+                                title={active.name}
+                            >
+                                « {active.name} »
+                            </span>
+                            <div className="flex bg-app-surface/40 p-1 rounded-xl border border-app-border/50 shadow-inner">
+                                {([
+                                    { pour: null, icone: <Globe size={11} />, texte: 'Commune', actif: estCommune },
+                                    { pour: campagneId, icone: <Bookmark size={11} />, texte: 'Cette campagne', actif: !estCommune },
+                                ] as const).map(({ pour, icone, texte, actif }) => (
+                                    <button
+                                        key={texte}
+                                        onClick={() => assignerLaPlaylist(active.id, pour)}
+                                        aria-pressed={actif}
+                                        title={actif
+                                            ? `"${active.name}" est déjà ${pour === null ? 'commune' : 'rattachée à cette campagne'}`
+                                            : pour === null
+                                                ? `Rendre "${active.name}" commune — elle apparaîtra dans toutes les campagnes`
+                                                : `Rattacher "${active.name}" à la campagne ouverte — elle n'apparaîtra plus ailleurs`}
+                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${actif
+                                            ? 'bg-accent text-white shadow-glow-accent'
+                                            : 'text-slate-500 hover:text-slate-200 hover:bg-app-surface/60'}`}
+                                    >
+                                        {icone}
+                                        <span>{texte}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     )}
                 </div>
 
