@@ -6,6 +6,8 @@ import {
 import { composerCompteARebours } from './compteARebours';
 import { composerMinuteur, ilYAUnMinuteur, type MinuteurAAfficher } from './minuteur';
 import { composerLHeure, type TempsAAfficher } from './heureDuMonde';
+import { composerJaugeDeTable, type ReserveAAfficher } from './jaugeDeTable';
+import { visiblePourUnJoueur, type RessourceDeTable } from '../../table/RessourcesDeTable';
 import type { ChargeDeWidget } from '../UlanziService';
 
 /**
@@ -164,6 +166,17 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Heure du monde',
         type: 'rang',
         source: { de: 'temps' },
+    },
+    {
+        /*
+          **Étape C — celle qui démontre la thèse du § 12.** Si ajouter Dune
+          coûte zéro ligne de code, la librairie est juste. Universel : ce sont
+          les **pilotes** qui déclarent leurs réserves, pas ce catalogue.
+        */
+        id: 'reserves',
+        nom: 'Réserves de table',
+        type: 'jauge',
+        source: { de: 'pilote', champ: 'ressourcesDeTable' },
     },
 ] as const;
 
@@ -348,6 +361,8 @@ export interface MondeDesWidgets {
     minuteur: MinuteurAAfficher | null;
     /** L'heure du monde, ou `null` si elle n'est pas montrable. */
     temps: TempsAAfficher | null;
+    /** Les réserves de table **que la table a le droit de voir**. Caviardé en amont. */
+    reserves: ReserveAAfficher[];
     /**
      * L'heure système, pour le mode temps réel **uniquement**.
      *
@@ -449,6 +464,36 @@ export function horlogesPourLaTable(etat: {
     }));
 }
 
+/**
+ * **Les réserves que la table a le droit de voir — étape C.**
+ *
+ * ⚠️ **Le point sensible de toute l'étape.** L'afficheur est **public par
+ * construction** (§ 1) : il est posé au milieu de la table et tout le monde le
+ * lit. Le modèle des réserves distingue justement `proprietaire` — à qui elle
+ * appartient — et `visibleAuxJoueurs` — qui a le droit de la lire. Chez Dune la
+ * Menace est **celle du meneur et pourtant publique** ; une table qui la joue à
+ * couvert existe aussi, et c'est le pilote qui tranche.
+ *
+ * On s'en remet donc à `visiblePourUnJoueur`, la règle du module des réserves,
+ * plutôt que d'en réécrire une ici. *Le caviardage se fait à la source, pas à
+ * l'affichage* — et deux règles pour la même question finiraient par diverger,
+ * cette fois sur un secret du meneur affiché au milieu de la table.
+ */
+export function reservesPourLaTable(
+    declarees: readonly RessourceDeTable[] | undefined,
+    valeurs: Record<string, number> | undefined,
+): ReserveAAfficher[] {
+    return (declarees ?? [])
+        .filter(visiblePourUnJoueur)
+        .map(r => ({
+            id: r.id,
+            nom: r.label,
+            valeur: valeurs?.[r.id] ?? r.depart,
+            min: r.min,
+            max: r.max,
+        }));
+}
+
 /** Une application AWTRIX prête à pousser. */
 export interface ApplicationAPousser {
     nom: string;
@@ -476,6 +521,16 @@ export function applicationsAPousser(
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): ApplicationAPousser[] {
     return widgetsActifs(systemId, selection, catalogue).flatMap(({ widget, secondes }) => {
+        if (widget.source.de === 'pilote') {
+            // Une application par réserve, comme pour les horloges : 32 × 8
+            // n'en montre qu'une, et la rotation native fait le reste.
+            return monde.reserves.map(reserve => ({
+                nom: nomAwtrixDeLaReserve(reserve.id),
+                charge: composerJaugeDeTable(reserve) as unknown as ChargeDeWidget,
+                secondes,
+            }));
+        }
+
         if (widget.source.de === 'temps') {
             return monde.temps
                 ? [{
@@ -535,8 +590,23 @@ export function nomAwtrix(widgetId: string): string {
  * republication remplace au lieu d'empiler.
  */
 export function nomAwtrixDeLHorloge(horlogeId: string): string {
-    const propre = horlogeId.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-    return `${PREFIXE}h_${propre || 'sans_id'}`;
+    return `${PREFIXE}h_${assainir(horlogeId)}`;
+}
+
+/**
+ * Le nom de l'application d'**une** réserve.
+ *
+ * Préfixe distinct de celui des horloges : deux identifiants pourraient se
+ * ressembler, et *deux widgets qui se disputent un nom d'application se
+ * remplacent l'un l'autre en silence.*
+ */
+export function nomAwtrixDeLaReserve(reserveId: string): string {
+    return `${PREFIXE}r_${assainir(reserveId)}`;
+}
+
+/** Réduit un identifiant à ce qu'une URL et l'appareil acceptent sans surprise. */
+function assainir(id: string): string {
+    return id.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'sans_id';
 }
 
 /**

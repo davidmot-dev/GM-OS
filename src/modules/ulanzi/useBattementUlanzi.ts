@@ -2,12 +2,17 @@ import { useEffect, useRef } from 'react';
 import { useUlanziStore } from './useUlanziStore';
 import { UlanziService } from './UlanziService';
 import { useClockStore } from '../../store/useClockStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
+import { useRessourcesDeTableStore } from '../table/useRessourcesDeTableStore';
+import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
+import type { ReserveAAfficher } from './widgets/jaugeDeTable';
 import {
     applicationsAPousser,
     demandeUneCadenceRapide,
     horlogesPourLaTable,
     minuteurPourLaTable,
     nomsAwtrixDeTousLesWidgets,
+    reservesPourLaTable,
     tempsPourLaTable,
 } from './widgets/librairie';
 
@@ -20,6 +25,31 @@ import {
  * encore quelque chose que GM-OS ne pousse plus.
  */
 export const NOMS_DES_WIDGETS = nomsAwtrixDeTousLesWidgets();
+
+/**
+ * **Les réserves de la campagne ouverte — étape C.**
+ *
+ * Le pilote déclare *quelles* réserves existent, le magasin de table dit *où
+ * elles en sont* : deux questions différentes, donc deux sources, et c'est déjà
+ * le partage du § 12 entre disponibilité et état.
+ *
+ * On cherche le pilote parmi ceux que la Forge a produits **et** ceux livrés
+ * avec l'application : Dune est le seul du second groupe, et c'est justement
+ * celui qui déclare des réserves aujourd'hui.
+ */
+function reservesDeLaCampagne(): ReserveAAfficher[] {
+    const session = useSessionOSStore.getState();
+    const campagne = session.campaigns?.find(c => c.id === session.activeCampaignId);
+    if (!campagne) return [];
+
+    const pilote = [...(session.customGameDrivers ?? []), ...DEFAULT_GAME_DRIVERS]
+        .find(d => d.id === campagne.system);
+
+    return reservesPourLaTable(
+        pilote?.ressourcesDeTable,
+        useRessourcesDeTableStore.getState().reserves[campagne.id],
+    );
+}
 
 /**
  * Combien de temps un widget survit sans être republié.
@@ -72,6 +102,9 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
     /* Le mode et l'heure posée : changer de mode doit se voir tout de suite. */
     const modeDeLHorloge = useClockStore(s => s.mode);
     const horodatage = useClockStore(s => s.timestamp);
+    /* Une réserve dépensée doit se voir tout de suite : c'est un miroir aussi. */
+    const reservesDeTable = useRessourcesDeTableStore(s => s.reserves);
+    const campagneOuverte = useSessionOSStore(s => s.activeCampaignId);
     const { setRoutine, memoriserLaRoutine, setJoignable } = useUlanziStore.getState();
 
     /** Vrai pendant que l'afficheur nous appartient. */
@@ -284,6 +317,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                     horloges: horlogesPourLaTable(etatDeLHorloge),
                     minuteur: minuteurPourLaTable(etatDeLHorloge),
                     temps: tempsPourLaTable(etatDeLHorloge),
+                    reserves: reservesDeLaCampagne(),
                     // L'heure système, pour le mode temps réel : le `timestamp`
                     // du magasin y est celui de la dernière pose manuelle.
                     maintenant: Date.now(),
@@ -373,6 +407,6 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
         // doit se voir tout de suite. `tensions` et `isClockProjected` : un
         // segment rempli aussi — c'est un miroir, personne ne le pousse.
     }, [doitAfficher, hote, quarts, seuilSansPause, selection, systemId, tensions, isClockProjected,
-        modeDeLHorloge, horodatage,
+        modeDeLHorloge, horodatage, reservesDeTable, campagneOuverte,
         silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
 }

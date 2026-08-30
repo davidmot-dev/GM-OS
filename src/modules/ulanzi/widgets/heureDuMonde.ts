@@ -59,9 +59,28 @@ export interface CompositionDeLHeure {
     text: string;
     color: string;
     center: true;
+    /** Pourcentage de la vitesse de défilement d'origine. */
+    scrollSpeed: number;
     /** Absent : **le texte défile**, et c'est le seul widget dans ce cas. */
     draw?: never;
 }
+
+/**
+ * **La vitesse de défilement, en pourcentage de celle de l'appareil.**
+ *
+ * *Demandé par David le 2026-08-31, après l'avoir vu tourner : « diminue la
+ * vitesse de défilement de l'horloge ».* La valeur d'usine (`SSPEED: 100` dans
+ * les réglages de l'appareil) fait passer une date fantastique trop vite pour
+ * qu'on la lise en levant les yeux une seconde.
+ *
+ * ⚠️ **Le sens de ce réglage n'a pas été mesuré sur l'appareil.** AWTRIX le
+ * documente comme *« un pourcentage de la vitesse d'origine »*, ce qui se lit
+ * naturellement comme « 50 % = deux fois plus lent » — mais la même formulation
+ * couvrirait un multiplicateur de délai, où 50 % irait plus vite. *Un réglage
+ * dont on n'a pas vérifié le sens ressemble à un réglage qui marche.* Une seule
+ * ligne à changer si l'objet dit le contraire.
+ */
+export const VITESSE_DE_DEFILEMENT = 50;
 
 /** Une couleur froide, pour ne pas se confondre avec un compteur qui alerte. */
 export const COULEUR_DE_L_HEURE = '#8AB4F8';
@@ -114,5 +133,6 @@ export function composerLHeure(temps: TempsAAfficher, maintenant: number): Compo
         text: texteDuTemps(temps, maintenant),
         color: COULEUR_DE_L_HEURE,
         center: true,
+        scrollSpeed: VITESSE_DE_DEFILEMENT,
     };
 }

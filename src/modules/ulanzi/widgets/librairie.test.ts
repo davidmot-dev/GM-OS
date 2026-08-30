@@ -9,6 +9,7 @@ import {
     estActif,
     horlogesPourLaTable,
     minuteurPourLaTable,
+    reservesPourLaTable,
     nomAwtrix,
     nomsAwtrixDeTousLesWidgets,
     reglerLesSecondes,
@@ -150,6 +151,7 @@ describe('ce qui part vers l’appareil', () => {
         horloges,
         minuteur,
         temps: null,
+        reserves: [],
         maintenant: 0,
     });
 
@@ -244,6 +246,42 @@ describe('ce que la table a le droit de voir', () => {
     });
 });
 
+/**
+ * **Le point sensible de l'étape C.** L'afficheur est posé au milieu de la
+ * table : montrer une réserve que le pilote déclare invisible aux joueurs
+ * révélerait un secret du meneur à tout le monde, sans que rien ne le dise.
+ */
+describe('les réserves que la table a le droit de voir', () => {
+    const IMPULSION = { id: 'impulsion', label: 'Impulsion', proprietaire: 'joueurs' as const, depart: 2, min: 0, max: 6 };
+    const SECRETE = { id: 'complot', label: 'Complot', proprietaire: 'meneur' as const, depart: 0, min: 0, visibleAuxJoueurs: false };
+    const MENACE = { id: 'menace', label: 'Menace', proprietaire: 'meneur' as const, depart: 0, min: 0, visibleAuxJoueurs: true };
+
+    it('écarte une réserve déclarée invisible aux joueurs', () => {
+        const vues = reservesPourLaTable([IMPULSION, SECRETE], {});
+        expect(vues.map(r => r.id)).toEqual(['impulsion']);
+    });
+
+    /** Chez Dune la Menace est celle du meneur **et pourtant publique**. */
+    it('garde une réserve du meneur que le pilote déclare publique', () => {
+        expect(reservesPourLaTable([MENACE], {}).map(r => r.id)).toEqual(['menace']);
+    });
+
+    it('prend la valeur courante, et le départ tant qu’elle n’a pas bougé', () => {
+        expect(reservesPourLaTable([IMPULSION], { impulsion: 5 })[0].valeur).toBe(5);
+        expect(reservesPourLaTable([IMPULSION], {})[0].valeur).toBe(2);
+    });
+
+    /** Un pilote sans réserves est le cas NORMAL — la plupart des jeux n'en ont pas. */
+    it('ne rend rien quand le pilote n’en déclare aucune', () => {
+        expect(reservesPourLaTable(undefined, {})).toEqual([]);
+    });
+
+    it('conserve l’absence de plafond, qui est une différence de nature', () => {
+        expect(reservesPourLaTable([MENACE], {})[0].max).toBeUndefined();
+        expect(reservesPourLaTable([IMPULSION], {})[0].max).toBe(6);
+    });
+});
+
 describe('les noms sur l’appareil', () => {
     /** Le nom historique ne change pas : deux applications se seraient superposées. */
     it('garde gmos_quarts au défilé', () => {
@@ -262,8 +300,9 @@ describe('les noms sur l’appareil', () => {
 });
 
 describe('le catalogue livré', () => {
-    it('porte les quatre widgets', () => {
-        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts', 'horloges', 'minuteur', 'heure']);
+    it('porte les cinq widgets', () => {
+        expect(LIBRAIRIE.map(w => w.id))
+            .toEqual(['quarts', 'horloges', 'minuteur', 'heure', 'reserves']);
     });
 
     /**
@@ -278,6 +317,7 @@ describe('le catalogue livré', () => {
             horloges: [{ id: 'c1', nom: 'A', remplis: 1, total: 4 }],
             minuteur: { restant: 60, duree: 120 },
             temps: { mode: 'static' as const, timestamp: 0 },
+            reserves: [{ id: 'impulsion', nom: 'Impulsion', valeur: 3, min: 0, max: 6 }],
             maintenant: 0,
         };
         const tout = { blade: LIBRAIRIE.map(w => ({ widgetId: w.id, secondes: 10 })) };

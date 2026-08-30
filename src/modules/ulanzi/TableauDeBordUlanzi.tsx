@@ -2,7 +2,10 @@ import React from 'react';
 import { Coffee, MonitorSmartphone, ChevronRight, WifiOff, RotateCcw } from 'lucide-react';
 import { useUlanziStore } from './useUlanziStore';
 import { QUARTS, composerDefile, stressDuQuart } from './widgets/defileDesQuarts';
-import { widgetsActifs, widgetsDuJeu, estActif } from './widgets/librairie';
+import { widgetsActifs, widgetsDuJeu, estActif, reservesPourLaTable } from './widgets/librairie';
+import { useSessionOSStore } from '../session/useSessionOSStore';
+import { useRessourcesDeTableStore } from '../table/useRessourcesDeTableStore';
+import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
 import { useCorpusDeLaCampagne } from '../session/hooks/useCorpusDeLaCampagne';
 import { useClockStore } from '../../store/useClockStore';
 import { enMinutesSecondes } from './widgets/minuteur';
@@ -80,6 +83,23 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     const timerDuration = useClockStore(s => s.timerDuration);
     const minuteurMontre = isClockProjected && (timerDuration ?? 0) > 0;
     const modeDeLHorloge = useClockStore(s => s.mode);
+
+    /*
+      **Combien de réserves la table verra.** Un pilote sans réserves est le cas
+      normal — la plupart des jeux n'en ont pas — et une case cochée sans rien
+      derrière ressemblerait à une panne.
+    */
+    const campagnes = useSessionOSStore(s => s.campaigns);
+    const campagneOuverte = useSessionOSStore(s => s.activeCampaignId);
+    const pilotesForges = useSessionOSStore(s => s.customGameDrivers);
+    const valeursDesReserves = useRessourcesDeTableStore(s => s.reserves);
+    const reservesMontrees = React.useMemo(() => {
+        const campagne = campagnes?.find(c => c.id === campagneOuverte);
+        if (!campagne) return 0;
+        const pilote = [...(pilotesForges ?? []), ...DEFAULT_GAME_DRIVERS]
+            .find(d => d.id === campagne.system);
+        return reservesPourLaTable(pilote?.ressourcesDeTable, valeursDesReserves[campagne.id]).length;
+    }, [campagnes, campagneOuverte, pilotesForges, valeursDesReserves]);
     const actifs = widgetsActifs(jeu, selection);
     const defileActif = estActif('quarts', jeu, selection);
 
@@ -187,6 +207,13 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                             : horlogesMontrees === 0
                                                 ? 'aucune horloge'
                                                 : `${horlogesMontrees} affichée${horlogesMontrees > 1 ? 's' : ''}`}
+                                    </span>
+                                )}
+                                {coche && widget.source.de === 'pilote' && (
+                                    <span className={`shrink-0 text-[10px] ${reservesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                        {reservesMontrees > 0
+                                            ? `${reservesMontrees} affichée${reservesMontrees > 1 ? 's' : ''}`
+                                            : 'aucune réserve'}
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'temps' && (
