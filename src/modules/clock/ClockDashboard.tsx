@@ -59,7 +59,6 @@ const ClockDashboard: React.FC = () => {
         startTimer,
         pauseTimer,
         resetTimer,
-        tickTimer,
         tensions,
         addTensionClock,
         removeTensionClock,
@@ -92,17 +91,17 @@ const ClockDashboard: React.FC = () => {
 
 
 
-    // Timer interval
-    useEffect(() => {
-        let interval: ReturnType<typeof setInterval> | undefined;
+    /*
+      **Le battement du minuteur n'est plus ici.**
 
-        if (timerIsRunning && timerRemaining > 0) {
-            interval = setInterval(() => {
-                tickTimer();
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [timerIsRunning, timerRemaining, tickTimer]);
+      Il vivait dans cet effet, donc dans **la vue** : quitter Clock-OS pour le
+      cockpit le démontait, et le minuteur cessait de descendre — y compris pour
+      les tablettes, qui reçoivent `timerRemaining`. Il est monté dans `Shell`,
+      comme le battement de l'afficheur et pour la même raison : *un émetteur
+      attaché à une vue émet ce que la vue veut bien.*
+
+      Voir `useBattementDuMinuteur`.
+    */
 
     const themes: { id: typeof theme; label: string }[] = [
         { id: 'modern', label: t('clock.themes.modern') },

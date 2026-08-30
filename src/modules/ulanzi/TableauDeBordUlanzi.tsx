@@ -5,6 +5,7 @@ import { QUARTS, composerDefile, stressDuQuart } from './widgets/defileDesQuarts
 import { widgetsActifs, widgetsDuJeu, estActif } from './widgets/librairie';
 import { useCorpusDeLaCampagne } from '../session/hooks/useCorpusDeLaCampagne';
 import { useClockStore } from '../../store/useClockStore';
+import { enMinutesSecondes } from './widgets/minuteur';
 
 /** Les noms des Quarts, tels que le livre les nomme — accents compris. */
 const LIBELLES: Record<(typeof QUARTS)[number], string> = {
@@ -67,6 +68,9 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     const tensions = useClockStore(s => s.tensions);
     const isClockProjected = useClockStore(s => s.isClockProjected);
     const horlogesMontrees = isClockProjected ? (tensions?.length ?? 0) : 0;
+    const timerRemaining = useClockStore(s => s.timerRemaining);
+    const timerDuration = useClockStore(s => s.timerDuration);
+    const minuteurMontre = isClockProjected && (timerDuration ?? 0) > 0;
     const actifs = widgetsActifs(jeu, selection);
     const defileActif = estActif('quarts', jeu, selection);
 
@@ -174,6 +178,15 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                             : horlogesMontrees === 0
                                                 ? 'aucune horloge'
                                                 : `${horlogesMontrees} affichée${horlogesMontrees > 1 ? 's' : ''}`}
+                                    </span>
+                                )}
+                                {coche && widget.source.de === 'minuteur' && (
+                                    <span className={`shrink-0 text-[10px] ${minuteurMontre ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                        {!isClockProjected
+                                            ? 'non projeté'
+                                            : minuteurMontre
+                                                ? enMinutesSecondes(timerRemaining ?? 0)
+                                                : 'aucun minuteur'}
                                     </span>
                                 )}
                                 {coche && (

@@ -5,8 +5,10 @@ import {
     applicationsAPousser,
     basculer,
     bornerLesSecondes,
+    demandeUneCadenceRapide,
     estActif,
     horlogesPourLaTable,
+    minuteurPourLaTable,
     nomAwtrix,
     nomsAwtrixDeTousLesWidgets,
     reglerLesSecondes,
@@ -143,9 +145,10 @@ describe('ce qui part vers l’appareil', () => {
         { id: 'clock-1', nom: 'Alerte', remplis: 1, total: 4 },
         { id: 'clock-2', nom: 'Fuite', remplis: 3, total: 6 },
     ];
-    const monde = (horloges = HORLOGES) => ({
+    const monde = (horloges = HORLOGES, minuteur = null) => ({
         instruments: { quarts: { quartDuJour: 0, consecutifs: 1 }, seuilSansPause: 3 },
         horloges,
+        minuteur,
     });
 
     const AVEC_HORLOGES = { 'blade-runner': [
@@ -219,6 +222,18 @@ describe('ce que la table a le droit de voir', () => {
         expect(horlogesPourLaTable({})).toEqual([]);
     });
 
+    /** Le minuteur suit exactement la même règle et le même interrupteur. */
+    it('cache aussi le minuteur quand rien n’est projeté', () => {
+        expect(minuteurPourLaTable({ isClockProjected: false, timerDuration: 900, timerRemaining: 300 }))
+            .toBeNull();
+    });
+
+    it('montre le minuteur posé, et rien quand il n’y en a pas', () => {
+        expect(minuteurPourLaTable({ isClockProjected: true, timerDuration: 900, timerRemaining: 300 }))
+            .toEqual({ restant: 300, duree: 900 });
+        expect(minuteurPourLaTable({ isClockProjected: true })).toBeNull();
+    });
+
     it('traduit les horloges projetées sans rien inventer', () => {
         expect(horlogesPourLaTable({ isClockProjected: true, tensions: TENSIONS })).toEqual([
             { id: 'c1', nom: 'Alerte', remplis: 1, total: 4, couleur: '#00C853' },
@@ -245,8 +260,23 @@ describe('les noms sur l’appareil', () => {
 });
 
 describe('le catalogue livré', () => {
-    it('porte le défilé et les horloges de tension', () => {
-        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts', 'horloges']);
+    it('porte le défilé, les horloges de tension et le minuteur', () => {
+        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts', 'horloges', 'minuteur']);
+    });
+
+    /**
+     * **Seul le minuteur demande la seconde.** Faire battre l'afficheur à 1 Hz
+     * en permanence coûterait un tour de boucle par seconde pour ne rien
+     * publier la plupart du temps.
+     */
+    it('seul le minuteur impose une cadence rapide', () => {
+        const avec = { 'blade-runner': [{ widgetId: 'minuteur', secondes: 20 }] };
+        const sans = { 'blade-runner': [{ widgetId: 'quarts', secondes: 20 }] };
+
+        expect(demandeUneCadenceRapide('blade-runner', avec)).toBe(true);
+        expect(demandeUneCadenceRapide('blade-runner', sans)).toBe(false);
+        // Sans rien de choisi, on suit les `parDefaut` — donc le défilé seul.
+        expect(demandeUneCadenceRapide('blade-runner', undefined)).toBe(false);
     });
 
     /**

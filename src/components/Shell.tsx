@@ -35,6 +35,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
 import { useCorpusDeLaCampagne } from '../modules/session/hooks/useCorpusDeLaCampagne';
+import { useBattementDuMinuteur } from '../modules/clock/useBattementDuMinuteur';
 import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
@@ -105,6 +106,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     */
     const jeuDeLaCampagne = useCorpusDeLaCampagne();
     useBattementUlanzi(seanceOuverte, jeuDeLaCampagne);
+
+    /*
+      **Et le minuteur bat ici pour exactement la même raison.** Il descendait
+      dans un effet de `ClockDashboard` : quitter l'écran l'arrêtait, et la
+      valeur diffusée aux tablettes gelait avec lui.
+    */
+    useBattementDuMinuteur();
 
     // Activate Tactical AI listeners
     useHardwareBridge();

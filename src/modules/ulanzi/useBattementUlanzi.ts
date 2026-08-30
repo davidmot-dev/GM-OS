@@ -4,7 +4,9 @@ import { UlanziService } from './UlanziService';
 import { useClockStore } from '../../store/useClockStore';
 import {
     applicationsAPousser,
+    demandeUneCadenceRapide,
     horlogesPourLaTable,
+    minuteurPourLaTable,
     nomsAwtrixDeTousLesWidgets,
 } from './widgets/librairie';
 
@@ -29,6 +31,16 @@ export const DUREE_DE_VIE = 90;
 
 /** On republie trois fois par durée de vie : deux pertes d'affilée pardonnées. */
 export const BATTEMENT_MS = 30_000;
+
+/**
+ * La cadence quand un widget affiche des secondes.
+ *
+ * **Elle ne fait pas six requêtes par seconde** : le battement ne republie que
+ * les applications dont la charge a changé. Seul le minuteur bouge à ce
+ * rythme-là ; le défilé et les horloges ne repartent qu'au `BATTEMENT_MS`, pour
+ * renouveler leur durée de vie.
+ */
+export const CADENCE_RAPIDE_MS = 1_000;
 
 /**
  * Le battement : GM-OS republie, l'afficheur oublie.
@@ -69,7 +81,9 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
      * identifiant fabriqué à l'exécution. C'est donc cette trace, et elle seule,
      * qui sait ce qu'il y a à reprendre.
      */
-    const poussees = useRef<Set<string>>(new Set());
+    const posees = useRef<Map<string, { signature: string; quand: number }>>(new Map());
+    /** Le dernier état de contact écrit dans le magasin, pour ne pas le réécrire. */
+    const joignableConnu = useRef<boolean | null>(null);
 
     /**
      * **Tout ce qu'il faut retirer pour rendre l'appareil.**
@@ -82,7 +96,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
      * Ne lit que `poussees.current`, une référence stable : une fermeture
      * capturée au premier rendu reste donc juste.
      */
-    const toutARendre = () => [...new Set([...NOMS_DES_WIDGETS, ...poussees.current])];
+    const toutARendre = () => [...new Set([...NOMS_DES_WIDGETS, ...posees.current.keys()])];
     /** Les valeurs les plus fraîches, pour que le battement ne serve pas du périmé. */
     const dernier = useRef({ quarts, seuilSansPause, hote, selection, systemId });
     dernier.current = { quarts, seuilSansPause, hote, selection, systemId };
@@ -260,18 +274,42 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                   rendu par type n'existe, et une exception ici arrêterait la
                   publication de tous les autres.
                 */
+                const etatDeLHorloge = useClockStore.getState();
                 const aPousser = applicationsAPousser(jeu, sel, {
                     instruments: { quarts: q, seuilSansPause: s },
-                    horloges: horlogesPourLaTable(useClockStore.getState()),
+                    horloges: horlogesPourLaTable(etatDeLHorloge),
+                    minuteur: minuteurPourLaTable(etatDeLHorloge),
                 });
 
+                /*
+                  **On ne republie que ce qui a changé** — imposé par le minuteur.
+
+                  David a tranché le 2026-08-30 : `MM:SS` en permanence. Le
+                  battement doit donc tourner à la seconde. Republier les six
+                  applications à chaque tour ferait six requêtes par seconde vers
+                  un ESP32 pour n'en changer qu'une.
+
+                  On compare donc la charge à celle du tour précédent. Et on
+                  republie quand même toutes les `BATTEMENT_MS` : `lifetime` est
+                  ce qui rend l'afficheur à sa routine quand GM-OS meurt, et une
+                  application qu'on cesse de republier expire — *le silence est
+                  le filet, il ne faut pas le déclencher par inadvertance.*
+                */
+                const maintenant = Date.now();
                 for (const { nom, charge, secondes } of aPousser) {
+                    const signature = JSON.stringify(charge);
+                    const posee = posees.current.get(nom);
+                    const perime = !posee || maintenant - posee.quand >= BATTEMENT_MS;
+
+                    if (posee && posee.signature === signature && !perime) continue;
+
                     await service.pousserWidget(nom, {
                         ...charge,
                         lifetime: DUREE_DE_VIE,
                         lifetimeMode: 0,
                         duration: secondes,
                     });
+                    posees.current.set(nom, { signature, quand: maintenant });
                 }
 
                 /*
@@ -290,19 +328,36 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                   donc aussi un widget décoché, sans qu'on ait à le prévoir.
                 */
                 const noms = new Set(aPousser.map(a => a.nom));
-                const aRetirer = [...poussees.current].filter(n => !noms.has(n));
+                const aRetirer = [...posees.current.keys()].filter(n => !noms.has(n));
                 await Promise.all(
                     aRetirer.map(n => service.retirerWidget(n).catch(() => undefined)));
-                poussees.current = noms;
+                for (const n of aRetirer) posees.current.delete(n);
 
-                setJoignable(true, null);
+                // On n'écrit dans le magasin que si l'état change : à la
+                // seconde, une écriture par tour repeindrait le pupitre en
+                // permanence pour dire la même chose.
+                if (joignableConnu.current !== true) {
+                    joignableConnu.current = true;
+                    setJoignable(true, null);
+                }
             } catch (e: unknown) {
-                setJoignable(false, e instanceof Error ? e.message : String(e));
+                const raison = e instanceof Error ? e.message : String(e);
+                if (joignableConnu.current !== false) {
+                    joignableConnu.current = false;
+                    setJoignable(false, raison);
+                }
             }
         };
 
         void publier();
-        const minuteur = setInterval(() => void publier(), BATTEMENT_MS);
+        /*
+          **La cadence suit ce qui est affiché.** Seul le minuteur demande la
+          seconde ; le reste se contente du battement. Faire tourner l'afficheur
+          à 1 Hz en permanence coûterait un tour de boucle par seconde pour ne
+          rien publier la plupart du temps.
+        */
+        const periode = demandeUneCadenceRapide(systemId, selection) ? CADENCE_RAPIDE_MS : BATTEMENT_MS;
+        const minuteur = setInterval(() => void publier(), periode);
         return () => clearInterval(minuteur);
         // `quarts` en dépendance : un Quart poussé depuis le cockpit doit se
         // voir tout de suite, pas au prochain battement.

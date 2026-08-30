@@ -4,6 +4,7 @@ import {
     type EtatDesQuarts,
 } from './defileDesQuarts';
 import { composerCompteARebours } from './compteARebours';
+import { composerMinuteur, ilYAUnMinuteur, type MinuteurAAfficher } from './minuteur';
 import type { ChargeDeWidget } from '../UlanziService';
 
 /**
@@ -67,6 +68,8 @@ export type SourceDeWidget =
      * visible ».
      */
     | { de: 'horloge' }
+    /** Miroir du minuteur de Clock-OS. Le seul qui change à la seconde. */
+    | { de: 'minuteur' }
     | { de: 'main' };
 
 export interface WidgetDeTable {
@@ -133,6 +136,18 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Horloges de tension',
         type: 'compte-a-rebours',
         source: { de: 'horloge' },
+    },
+    {
+        /*
+          **Le widget que le § 8.1 classait premier**, arrivé en dernier parce
+          qu'il demandait ce que les deux autres n'ont pas demandé : que le
+          minuteur descende hors de son écran, et que l'afficheur sache
+          rafraîchir à la seconde. Universel — tout jeu peut poser un minuteur.
+        */
+        id: 'minuteur',
+        nom: 'Minuteur',
+        type: 'compte-a-rebours',
+        source: { de: 'minuteur' },
     },
 ] as const;
 
@@ -214,6 +229,26 @@ export function widgetsActifs(
     });
 }
 
+/**
+ * **Un widget actif demande-t-il une seconde de fraîcheur ?**
+ *
+ * Le minuteur affiche `MM:SS` : republié toutes les trente secondes, il serait
+ * faux vingt-neuf secondes sur trente. Rien d'autre n'a ce besoin — un Quart et
+ * une horloge de tension ne bougent que quand le meneur les pousse.
+ *
+ * *La cadence est une propriété de ce qu'on affiche, pas un réglage global* :
+ * faire battre l'afficheur à la seconde en permanence coûterait un tour de
+ * boucle par seconde pour ne rien publier la plupart du temps.
+ */
+export function demandeUneCadenceRapide(
+    systemId: string | null | undefined,
+    selection: SelectionParJeu | undefined,
+    catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
+): boolean {
+    return widgetsActifs(systemId, selection, catalogue)
+        .some(({ widget }) => widget.source.de === 'minuteur');
+}
+
 /** Le widget est-il actif pour ce jeu ? Répond aussi quand rien n'est choisi. */
 export function estActif(
     widgetId: string,
@@ -287,6 +322,25 @@ export interface HorlogeAAfficher {
 export interface MondeDesWidgets {
     instruments: EtatDesInstruments;
     horloges: HorlogeAAfficher[];
+    /** Le minuteur, ou `null` s'il n'y en a pas de posé. Caviardé en amont aussi. */
+    minuteur: MinuteurAAfficher | null;
+}
+
+/**
+ * **Le minuteur que la table a le droit de voir.**
+ *
+ * Même règle et même interrupteur que les horloges : l'afficheur est public par
+ * construction, et `isClockProjected` décide déjà de ce que les tablettes
+ * voient. Un minuteur non posé ne se montre pas — un `00:00` permanent
+ * occuperait un tour de rotation pour ne rien dire.
+ */
+export function minuteurPourLaTable(etat: {
+    isClockProjected?: boolean;
+    timerRemaining?: number;
+    timerDuration?: number;
+}): MinuteurAAfficher | null {
+    if (!etat.isClockProjected || !ilYAUnMinuteur(etat)) return null;
+    return { restant: etat.timerRemaining ?? 0, duree: etat.timerDuration ?? 0 };
 }
 
 /**
@@ -343,6 +397,16 @@ export function applicationsAPousser(
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): ApplicationAPousser[] {
     return widgetsActifs(systemId, selection, catalogue).flatMap(({ widget, secondes }) => {
+        if (widget.source.de === 'minuteur') {
+            return monde.minuteur
+                ? [{
+                    nom: nomAwtrix(widget.id),
+                    charge: composerMinuteur(monde.minuteur) as unknown as ChargeDeWidget,
+                    secondes,
+                }]
+                : [];
+        }
+
         if (widget.source.de === 'horloge') {
             return monde.horloges.map(horloge => ({
                 nom: nomAwtrixDeLHorloge(horloge.id),
