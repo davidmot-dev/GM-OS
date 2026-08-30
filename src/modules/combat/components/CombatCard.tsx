@@ -328,13 +328,33 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                 {/* Modular Health Manager - Expanded to fill void */}
                 <div className="mx-6 flex-1 min-w-[200px] transition-all duration-500">
-                  <HealthManager 
-                    id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!} 
-                    type={combatant.isPlayer ? 'pc' : 'npc'} 
+                  <HealthManager
+                    id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!}
+                    type={combatant.isPlayer ? 'pc' : 'npc'}
                     initialHealthSystem={combatant.healthSystem}
                     onHealthChange={(newHealth) => {
                       updateCombatant(combatant.id, { healthSystem: newHealth });
                     }}
+                    /*
+                      **Les boutons Dégâts / Soins de cette ligne partent sur la
+                      cible** (décision de David, 2026-08-29) : Tom vise Henri,
+                      c'est Henri qui encaisse. Sans cible, ils retombent sur le
+                      porteur de la ligne, comme avant — la liste des cibles
+                      exclut le porteur, donc l'interdire rendrait un combattant
+                      intouchable depuis sa propre ligne.
+
+                      La barre de vie, elle, ne suit pas : elle appartient au
+                      porteur, et la cliquer parle de lui.
+                    */
+                    cibleDesCoups={currentTarget ? {
+                      id: (currentTarget.isPlayer ? currentTarget.sourcePlayerId : currentTarget.sourceEntityId) ?? currentTarget.id,
+                      type: currentTarget.isPlayer ? 'pc' : 'npc',
+                      nom: currentTarget.name,
+                      healthSystem: currentTarget.healthSystem,
+                      onHealthChange: (newHealth) => {
+                        updateCombatant(currentTarget.id, { healthSystem: newHealth });
+                      },
+                    } : null}
                   />
                 </div>
 

@@ -8,18 +8,65 @@ import { WoundLevelsDriver } from './WoundLevelsDriver';
 import { HarmBoxesDriver } from './HarmBoxesDriver';
 import { AnatomicalSilhouette, type PartStatus } from './AnatomicalSilhouette';
 import { typesDeDegats, nommerLeType } from '../../../combat/logic/TypesDeDegats';
-import { Plus, Minus, Heart, Settings2, Swords } from 'lucide-react';
+import { Plus, Minus, Heart, Settings2, Swords, Crosshair } from 'lucide-react';
+
+/**
+ * **Où partent les coups, quand ce n'est pas sur le porteur de la barre.**
+ *
+ * Décision de David, 2026-08-29 : sur une ligne de Combat-OS, « Dégâts » et
+ * « Soins » frappent **la cible choisie sur cette ligne**, pas le combattant
+ * qui la porte. Tom vise Henri : c'est Henri qui encaisse.
+ *
+ * Deux garde-fous décidés avec lui, et ils tiennent ensemble :
+ *
+ * 1. **Sans cible, on retombe sur le porteur** — le comportement d'avant. Rien
+ *    ne devient inatteignable : la liste des cibles exclut le porteur de la
+ *    ligne, donc l'interdire rendrait un combattant intouchable depuis sa
+ *    propre ligne.
+ * 2. **Le panneau écrit toujours qui il va toucher.** *Une redirection qui ne se
+ *    voit pas est un coup porté au mauvais personnage sans que rien ne le dise*
+ *    — et c'est irrattrapable en séance, parce qu'on ne le découvre qu'au
+ *    prochain regard sur la barre du voisin.
+ *
+ * La barre de vie, elle, **ne suit pas** : cliquer la barre de Tom touche Tom.
+ * C'est sa barre ; le geste dit déjà de qui il parle.
+ */
+export interface CibleDesCoups {
+  /**
+   * L'identifiant de la **fiche** visée — personnage ou entité — et non celui
+   * du combattant. C'est ce que `storeApplyImpact` attend, et ce que le Combat-OS
+   * range dans `sourcePlayerId` / `sourceEntityId`.
+   *
+   * ⚠ `sourcePlayerId` porte l'identifiant du **personnage**, pas du joueur,
+   * malgré son nom. Vérifié dans `useCombatStore` (`sourcePlayerId: pj.id`).
+   */
+  id: string;
+  type: 'pc' | 'npc';
+  /** Le nom, écrit à l'écran : voir le garde-fou 2 ci-dessus. */
+  nom: string;
+  /** Sa santé, quand la cible vit hors du magasin (combattant autonome). */
+  healthSystem?: HealthSystem;
+  /** Où réécrire sa santé après le coup. */
+  onHealthChange?: (newHealth: HealthSystem) => void;
+}
 
 interface HealthManagerProps {
   id: string;
   type: 'pc' | 'npc';
-  /** Optional: Initial health system if target entity is not in store (standalone mode) */
+  /** Optional: Initial health system if the bearer is not in store (standalone mode) */
   initialHealthSystem?: HealthSystem;
   /** Callback for when health changes (useful for standalone mode updates) */
   onHealthChange?: (newHealth: HealthSystem) => void;
+  /**
+   * La cible vers qui rediriger les **boutons** Dégâts / Soins.
+   *
+   * Absente — c'est le cas de la fiche de PNJ, qui n'a pas de notion de cible —
+   * le panneau se comporte exactement comme avant.
+   */
+  cibleDesCoups?: CibleDesCoups | null;
 }
 
-export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange }) => {
+export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, cibleDesCoups }) => {
   const { 
     players, 
     entities, 
@@ -49,6 +96,8 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   const [impactType, setImpactType] = useState<string | undefined>(undefined);
   const [isHealing, setIsHealing] = useState(false);
   const [isDamaged, setIsDamaged] = useState(false);
+  /** Ce que le dernier coup n'a pas changé, quand il n'a rien changé. */
+  const [sansEffet, setSansEffet] = useState<string | null>(null);
 
   // Reactive Driver Selector
   const activeDriver = useSessionOSStore(state => {
@@ -56,9 +105,24 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     return campaign ? state.getGameDriver(campaign.system) : null;
   });
 
-  const target = type === 'pc'
+  /**
+   * **Le porteur de la barre** — celui dont ce panneau montre la santé.
+   *
+   * Il s'appelait `target`, ce qui devient franchement dangereux depuis qu'une
+   * vraie cible existe : deux sens opposés sur le même mot, dans le fichier qui
+   * décide qui encaisse. *C'est exactement la classe de confusion que ce projet
+   * paie en boucle.* Renommé le 2026-08-29.
+   */
+  const porteur = type === 'pc'
     ? players.flatMap(p => p.characters).find(c => c.id === id)
     : entities.find(e => e.id === id);
+
+  /** La fiche visée, quand elle existe dans le magasin. */
+  const ficheDeLaCible = cibleDesCoups
+    ? (cibleDesCoups.type === 'pc'
+        ? players.flatMap(p => p.characters).find(c => c.id === cibleDesCoups.id)
+        : entities.find(e => e.id === cibleDesCoups.id))
+    : undefined;
 
   /*
     Le choix du meneur est confronté à la liste du jeu courant : changer de
@@ -70,6 +134,29 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     ? impactType
     : typesDisponibles[0];
 
+  /**
+   * **L'affichage local s'efface dès que le magasin parle.**
+   *
+   * ⚠ Défaut **préexistant**, trouvé le 2026-08-30 en cherchant pourquoi un soin
+   * semblait sans effet. `internalHealth` a la priorité sur la santé du magasin
+   * et **n'était jamais remis à zéro** : dès qu'on avait touché une ligne une
+   * fois, sa barre cessait définitivement de suivre la fiche.
+   *
+   * Inoffensif tant que chaque ligne n'était modifiée que par elle-même — le
+   * cache local disait alors la même chose que le magasin. **Il ne l'est plus
+   * depuis que les coups arrivent d'une autre ligne** : Russ soigne Tom, la
+   * fiche de Tom monte, et la barre de Tom reste figée sur sa dernière valeur
+   * locale. *La donnée juste et l'écran menteur, encore.*
+   *
+   * On compare la référence : `handleApplyImpact` construit un nouvel objet à
+   * chaque coup. Sans porteur — combattant autonome — rien ne change jamais ici,
+   * et le cache local reste seul maître, ce qui est le bon comportement.
+   */
+  const santeDuMagasin = porteur?.healthSystem;
+  React.useEffect(() => {
+    if (santeDuMagasin) setInternalHealth(null);
+  }, [santeDuMagasin]);
+
   // 1. Resolve Current Health State
   // Priority: Internal State (Immediate Feedback) > Store Target > initialHealthSystem > Default
   const defaultType = activeDriver?.combat?.defaultHealthType || 'hp';
@@ -77,20 +164,20 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   let health: HealthSystem;
   if (internalHealth) {
     health = internalHealth;
-  } else if (target?.healthSystem) {
-    health = target.healthSystem;
+  } else if (porteur?.healthSystem) {
+    health = porteur.healthSystem;
   } else if (initialHealthSystem) {
     health = initialHealthSystem;
-  } else if (target) {
+  } else if (porteur) {
      health = HealthInterpreter.createDefault(defaultType);
   } else {
      health = HealthInterpreter.createDefault(defaultType);
   }
 
-  // NOTE: We don't return null if target is missing, to allow standalone combatants.
-  // if (!target) return null; // Removed to fix standalone bug
+  // NOTE: We don't return null if the bearer is missing, to allow standalone combatants.
+  // if (!porteur) return null; // Removed to fix standalone bug
 
-  const triggerImpact = (isRecovery: boolean, partId?: string) => {
+  const triggerImpact = (isRecovery: boolean, partId?: string, versLaCible = false) => {
     /*
       **Le type de dégâts part avec le coup, et il n'est pas décoratif.**
 
@@ -109,17 +196,76 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
       **Jamais sur un soin.** `processResistances` l'ignore déjà, mais le récit
       de l'impact, lui, écrirait « Récupère **2** (Physique) ».
     */
+    /** Deux états de santé disent-ils la même chose ? Vaut pour les cinq moteurs. */
+    const memeEtat = (a: HealthSystem, b: HealthSystem) => JSON.stringify(a) === JSON.stringify(b);
+
     const impact = DamageCalculator.translateRoll(impactValue, activeDriver?.id || 'generic', {
         isRecovery,
         location: partId,
         ...(isRecovery ? {} : { type: typeChoisi }),
     });
     
-    // 1. Update Persistent Store if target exists
-    if (target) {
+    /*
+      **Le coup part sur la cible, et alors il ne touche RIEN d'ici.**
+
+      Ni `internalHealth`, ni `onHealthChange`, ni l'animation : ce sont les
+      trois choses qui décrivent la barre visible, celle du porteur, et il
+      n'encaisse pas. *La donnée juste et l'écran menteur* est le défaut que ce
+      projet répare le plus souvent ; le faire exprès serait pire.
+
+      Le retour visuel a bien lieu — **sur la ligne de la cible**, dont la barre
+      change parce que le magasin a changé. C'est le bon endroit : on regarde
+      celui qui prend le coup.
+    */
+    if (versLaCible && cibleDesCoups) {
+        const avant = ficheDeLaCible?.healthSystem
+            ?? cibleDesCoups.healthSystem
+            ?? HealthInterpreter.createDefault(defaultType);
+        const apres = HealthInterpreter.calculateNextState(avant, impact);
+
+        /*
+          **Un seul écrivain, et c'est le magasin quand la cible a une fiche.**
+
+          `handleApplyImpact` met la fiche à jour **et** reflète le résultat sur
+          le plateau (`refleterLaFiche`) — c'est précisément ce qui a été ajouté
+          le 2026-08-19. Y ajouter un `updateCombatant` rappellerait
+          `syncCombatantToSession`, c'est-à-dire *la fonction qui annulait les
+          soins ce jour-là* en réécrivant les points de vie périmés du plateau
+          par-dessus la fiche.
+
+          Ma première version faisait les deux. Elle ne se voyait pas sur une
+          fiche présente — les deux calculs partent de la même base et
+          concordent — mais c'était **deux écrivains pour une même vérité**, et
+          ce projet n'a jamais gagné à en garder deux.
+
+          `onHealthChange` ne sert donc plus qu'au combattant **autonome**, celui
+          qui n'a pas de fiche : là, personne d'autre n'enregistrerait le coup.
+        */
+        if (ficheDeLaCible) {
+            storeApplyImpact(cibleDesCoups.id, cibleDesCoups.type, impact);
+        } else {
+            cibleDesCoups.onHealthChange?.(apres);
+        }
+
+        /*
+          **Dire quand le coup ne change rien.** Un soin sur une cible déjà au
+          maximum est un `Math.min` qui fait son travail — et à l'écran c'est
+          indiscernable d'une panne. *Le silence est ce qui transforme une borne
+          correcte en bogue apparent.*
+        */
+        const sansRien = memeEtat(avant, apres);
+        setSansEffet(sansRien
+            ? `${cibleDesCoups.nom} : aucun changement — ${isRecovery ? 'déjà au maximum' : 'déjà au plus bas'}`
+            : null);
+        if (sansRien) setTimeout(() => setSansEffet(null), 5000);
+        return;
+    }
+
+    // 1. Update Persistent Store if the bearer exists
+    if (porteur) {
         storeApplyImpact(id, type, impact);
-    } 
-    
+    }
+
     // 2. Local Logic for immediate feedback and standalone mode
     const nextHealth = HealthInterpreter.calculateNextState(health, impact);
     setInternalHealth(nextHealth);
@@ -145,8 +291,8 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     const nextType = engines[(currentIndex + 1) % engines.length];
     
     const nextHealth = HealthInterpreter.createDefault(nextType);
-    
-    if (target) {
+
+    if (porteur) {
         if (type === 'pc') {
             const player = players.find(p => p.characters.some(c => c.id === id));
             if (player) updateCharacterHealth(player.id, id, nextHealth);
@@ -207,12 +353,14 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                 e.preventDefault();
                 triggerImpact(true);
             }}
-            title="L-Click: Dégâts | R-Click: Soins"
+            title={cibleDesCoups
+                ? `Clic : dégâts sur ${porteur?.name ?? 'ce personnage'} · Clic droit : soins — la barre ne suit PAS la cible`
+                : 'Clic gauche : dégâts | Clic droit : soins'}
         >
             {health.type === 'hp' && (
                 <HealthBarDriver 
-                    current={Number(health.data.current) ?? (target as any)?.hp ?? 0} 
-                    max={Number(health.data.max) ?? (target as any)?.maxHp ?? 10} 
+                    current={Number(health.data.current) ?? (porteur as any)?.hp ?? 0}
+                    max={Number(health.data.max) ?? (porteur as any)?.maxHp ?? 10}
                     onCurrentChange={(val) => {
                         if (type === 'pc') {
                             const player = players.find(p => p.characters.some(c => c.id === id));
@@ -273,13 +421,39 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
         <div className="w-[1px] h-10 bg-white/5 shrink-0" />
 
         {/* MJ Direct Controls area (Readable & Compact) */}
-        <div className="flex-1 flex items-center justify-end gap-2 px-2">
+        <div className="flex-1 flex flex-col items-end justify-center gap-1 px-2">
+            {/*
+              **Qui va encaisser, écrit noir sur blanc.** Les boutons font 44 px
+              et ne peuvent pas porter un nom ; la ligne, si. Sans elle, le
+              meneur cliquerait « Dégâts » sur la ligne de Tom en croyant frapper
+              Tom, et ne s'en apercevrait qu'au prochain regard sur Henri.
+            */}
+            {cibleDesCoups && (
+                <div
+                    className="flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-primary/90 pr-1"
+                    title={`Les dégâts et les soins de cette ligne partent sur ${cibleDesCoups.nom}`}
+                >
+                    <Crosshair size={9} className="shrink-0" />
+                    <span className="truncate max-w-[120px]">→ {cibleDesCoups.nom}</span>
+                </div>
+            )}
+
+            {/*
+              *Un coup borné à zéro reste un coup sans effet, et le silence le
+              fait passer pour une panne.* C'est ce message qui manquait.
+            */}
+            {sansEffet && (
+                <p role="status" className="text-[8px] font-black uppercase tracking-widest text-amber-400 text-right max-w-[190px] leading-tight">
+                    {sansEffet}
+                </p>
+            )}
+
             {/* Action buttons (Stacked Icon + Value) */}
             <div className="flex items-center gap-3 bg-black/40 p-1 px-2 rounded-xl border border-white/10">
-                <button 
-                  onClick={() => triggerImpact(false)}
+                <button
+                  onClick={() => triggerImpact(false, undefined, true)}
                   className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-rose-500/20 transition-all group/dmg"
-                  title="Infliger dégâts"
+                  title={cibleDesCoups ? `Infliger dégâts à ${cibleDesCoups.nom}` : 'Infliger dégâts'}
                 >
                     <Swords size={18} className="text-rose-500 group-hover/dmg:rotate-12 transition-transform" />
                     <span className="text-[7px] font-black uppercase tracking-widest text-rose-500/80">Dégats</span>
@@ -332,9 +506,9 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                 </select>
 
                 <button
-                  onClick={() => triggerImpact(true)}
+                  onClick={() => triggerImpact(true, undefined, true)}
                   className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-emerald-500/20 transition-all group/heal"
-                  title="Soigner"
+                  title={cibleDesCoups ? `Soigner ${cibleDesCoups.nom}` : 'Soigner'}
                 >
                     <Heart size={18} className="text-emerald-400 group-hover/heal:scale-110 transition-transform" />
                     <span className="text-[7px] font-black uppercase tracking-widest text-emerald-400/80">Soins</span>
