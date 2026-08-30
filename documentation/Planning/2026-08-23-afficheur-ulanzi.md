@@ -620,12 +620,17 @@ est validée, est-ce qu'on peut aller un peu plus loin ? »* — puis, devant le
 **L'ordre n'est pas libre.** Deux directions dépendent d'une troisième, et la quatrième reposait sur un
 fait jamais vérifié — qui l'est maintenant.
 
-| | Direction | Dépend de | Coût par jeu ensuite |
+| | Direction | Dépend de | État au 2026-08-31 |
 | --- | --- | --- | --- |
-| **A** | La librairie et son tableau de bord | — | — |
-| **B** | Clock-OS, le premier **miroir** | A | zéro ligne |
-| **C** | Les jauges déclarées par les pilotes | A | zéro ligne |
-| **D** | Les boutons physiques | un courtier MQTT | sans objet |
+| **A** | La librairie et son tableau de bord | — | ✅ **faite** |
+| **B** | Clock-OS, le premier **miroir** | A | ✅ **faite** |
+| **C** | Les jauges déclarées par les pilotes | A | ✅ **faite** |
+| **D** | Les boutons physiques | un courtier MQTT | ⛔ **garée par David** — voir § D |
+
+> **Les trois premières sont livrées, et deux widgets sont venus en plus** : le
+> **minuteur** (§ 8.1, celui que ce plan classait premier) et le **signal du
+> Voight-Kampff**, second widget composé. Six widgets au catalogue, dont trois
+> miroirs. Voir le § 16 pour ce que l'appareil a appris à ce plan en route.
 
 ### Ce qui a changé depuis l'écriture du § 12, et qui rend A, B et C bien moins chers
 
@@ -765,3 +770,47 @@ rien fait.*
 
 Les joueurs le regardent-ils, et **cessent-ils de tenir le compte des Quarts au crayon** sur leur fiche
 d'Agenda. C'est la seule mesure qui dise si l'objet retire du travail ou en ajoute.
+
+---
+
+## 16. Ce que l'appareil a appris à ce plan — 2026-08-30/31
+
+### ⚠️ Le débit, mesuré
+
+| Ce qu'on envoie | Commandes | Temps par poussée | Échecs |
+| --- | --- | --- | --- |
+| `df`, un rectangle par colonne (980 o) | 32 | **802 ms** | **2 / 20** |
+| `dl`, segments (435 o) | 12 | **401 ms** | 0 / 20 |
+| petite charge témoin | 4 | 395 ms | 0 / 24 |
+
+**~400 ms est le plancher de l'appareil**, quelle que soit la charge. Deux conséquences qui ont décidé
+du code : la cadence rapide ne peut pas descendre sous **500 ms**, et **un tracé pixel par pixel est
+inutilisable** — il aurait lâché en séance sans qu'on sache pourquoi. *Un dessin trop lourd ne se voit
+pas dans le code, il se voit sur le fil.*
+
+`dl` (lignes) fonctionne sur le firmware 0.98. Les **19 effets natifs** (`Radar`, `MovingLine`,
+`LookingEyes`, `Matrix`…) ne contiennent **aucun tracé** : l'appareil n'animera pas un signal seul.
+
+### Les règles que la librairie a posées
+
+- **Sélection absente ≠ sélection vide.** Absente → les `parDefaut` ; vide → on ne pousse rien, *c'est
+  un choix*. Sans la nuance, ajouter une entrée au catalogue **allumerait un widget chez quelqu'un qui
+  ne l'a jamais demandé.**
+- **On ne rend pas réglable ce qui dit quelque chose** — ni les couleurs des Quarts (le moment du
+  jour), ni celle du signal (le rythme), ni **jamais l'alerte**.
+- **La plus précise gagne** : couleur de l'horloge > couleur du widget > origine.
+- **Le caviardage se fait à la source**, jamais à l'affichage : `isClockProjected` et
+  `visiblePourUnJoueur`, qui est la règle du module des réserves et non une seconde écrite à côté.
+- **Le battement ne republie que ce qui a changé**, et renouvelle quand même `lifetime` toutes les
+  30 s — *le silence est le filet qui rend l'appareil, il ne faut pas le déclencher par inadvertance.*
+- **Une seule publication à la fois** : à 500 ms, deux applications à republier dépassent l'intervalle
+  et `setInterval` n'attend rien.
+
+### Deux pièges trouvés en branchant, sans rapport avec l'afficheur
+
+**`campaign.system` ne dit rien du jeu** — la Forge fabrique `custom-${Date.now()}`. La couture qui
+cherchait la sous-chaîne « blade » était un bricolage **qui marchait** ; la remplacer par une
+comparaison stricte aurait été une régression déguisée en propreté. → `useCorpusDeLaCampagne`.
+
+**Le minuteur ne descendait que sur son propre écran** : son battement vivait dans un effet de
+`ClockDashboard`, et la valeur diffusée aux tablettes gelait avec lui. → monté dans `Shell`.
