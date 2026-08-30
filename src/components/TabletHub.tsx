@@ -14,7 +14,8 @@ import {
     Globe,
     Package,
     Swords,
-    ChevronRight
+    ChevronRight,
+    Layers
 } from 'lucide-react';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { ResolvedImage } from './ResolvedImage';
@@ -85,7 +86,7 @@ const TabletHub: React.FC = () => {
     const performance = usePerformanceControl();
     const { setLowGraphics } = usePerformanceStore();
 
-    const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory'>('live');
+    const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory' | 'cartes'>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
@@ -112,6 +113,23 @@ const TabletHub: React.FC = () => {
         ).length;
     }, [messages, lastReadMessageTime, characterId]);
  
+    /**
+     * **Les cartes qu'on me propose, comptées pour la pastille de l'onglet.**
+     *
+     * Les propositions étaient dans la colonne de gauche, donc toujours sous
+     * les yeux. Les ranger dans un onglet les cache : sans ce compte, un joueur
+     * à qui l'on tend une carte ne l'apprendrait qu'en ouvrant l'onglet par
+     * hasard, et le donneur attendrait une réponse qui ne vient pas. *Déplacer
+     * une décision en attente derrière un onglet oblige à la signaler devant.*
+     */
+    const demandesDeCarte = useSessionOSStore((state) => state.demandesDeCarte);
+    const cartesProposees = useMemo(
+        () => (demandesDeCarte ?? []).filter(
+            (d: { versQui: string | null; statut: string }) =>
+                d.versQui === characterId && d.statut === 'en-attente').length,
+        [demandesDeCarte, characterId]
+    );
+
     const playerWithChar = useMemo(() => players.find((p: { characters: { id: string }[] }) => p.characters.some((c: { id: string }) => c.id === characterId)), [players, characterId]);
     const characterName = playerWithChar?.characters.find((c: { id: string }) => c.id === characterId)?.name || 'Joueur';
     const playerId = playerWithChar?.id;
@@ -278,16 +296,6 @@ const TabletHub: React.FC = () => {
                         </div>
                     )}
 
-                    {/*
-                      **Les cartes que ce joueur tient.** Dans la colonne de
-                      gauche, avec l'horloge et les jauges : ce sont les choses
-                      qu'on garde sous les yeux toute la partie, par opposition
-                      à ce que le meneur projette au centre.
-
-                      Le composant ne s'affiche pas de lui-même quand la main
-                      est vide — pas de cadre en attente.
-                    */}
-                    <HubMainDeCartes characterId={characterId} />
                 </div>
 
                 {/* Centered Content Area */}
@@ -334,8 +342,19 @@ const TabletHub: React.FC = () => {
                     {currentTab === 'archives' && <HubArchives clues={clues} activeCampaignId={activeCampaignId} onSelectClue={setSelectedClue} />}
                     {currentTab === 'trombinoscope' && <HubTrombinoscope npcs={resolvedNpcs} onSelectNpc={setSelectedNpc} />}
                     {currentTab === 'atlas' && <HubAtlas atlasMaps={resolvedAtlasMaps} onSelectMap={setSelectedAtlasMap} />}
+                    {/*
+                      **Les cartes ont leur propre onglet depuis le 2026-08-30.**
+
+                      Elles vivaient dans la colonne de gauche, avec l'horloge
+                      et les jauges. David l'a vu à l'écran et a demandé un menu
+                      à part : cette colonne fait 460 px et partage sa hauteur
+                      avec le minuteur — une main de cinq cartes n'y tient pas,
+                      et une pioche encore moins. *Un panneau qu'on ne peut pas
+                      agrandir finit par cacher ce qu'il montre.*
+                    */}
+                    {currentTab === 'cartes' && <HubMainDeCartes characterId={characterId} />}
                     {currentTab === 'inventory' && (
-                        <HubInventory 
+                        <HubInventory
                             items={inventoryItems} 
                             structuredItems={playerWithChar?.characters.find(c => c.id === characterId)?.inventoryItems || []}
                             characters={players.flatMap(p => p.characters.map(c => ({ ...c, playerId: p.id }))).filter(c => c.campaignId === activeCampaignId)}
@@ -371,21 +390,30 @@ const TabletHub: React.FC = () => {
                             { id: 'archives', icon: Archive, label: 'Archives', color: undefined },
                             { id: 'trombinoscope', icon: Users, label: 'PNJ', color: 'indigo' },
                             { id: 'atlas', icon: Globe, label: 'Lieux', color: 'emerald' },
-                            { id: 'inventory', icon: Package, label: 'Inventaire', color: 'amber' }
+                            { id: 'inventory', icon: Package, label: 'Inventaire', color: 'amber' },
+                            { id: 'cartes', icon: Layers, label: 'Cartes', color: 'indigo' }
                         ] as const
                     ).map((tab) => (
-                        <button 
+                        <button
                             key={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
-                            className={`flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                                currentTab === tab.id 
-                                    ? `bg-${tab.color || 'accent'}${tab.color ? '-600 text-white' : ' text-app-bg'}` 
+                            className={`relative flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                                currentTab === tab.id
+                                    ? `bg-${tab.color || 'accent'}${tab.color ? '-600 text-white' : ' text-app-bg'}`
                                     : 'text-app-text/40 hover:text-app-text'
                             }`}
                             title={tab.label}
                         >
                             <tab.icon className="w-5 h-5 md:w-3.5 md:h-3.5" />
                             <span className="hidden md:inline">{tab.label}</span>
+                            {/* Une carte qu'on me tend attend une réponse : elle
+                                se signale même onglet fermé. */}
+                            {tab.id === 'cartes' && cartesProposees > 0 && currentTab !== 'cartes' && (
+                                <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-[9px] items-center justify-center font-bold text-white">{cartesProposees}</span>
+                                </span>
+                            )}
                         </button>
                     ))}
                     <div className="w-[1px] h-4 bg-app-border/40 mx-1 md:mx-2" />
