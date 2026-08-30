@@ -43,6 +43,16 @@ const EXPECTED_TYPES = [
     // commune se manipule par décision collective et non par le meneur. Le
     // handler vérifie que le pilote la déclare manipulable.
     'table:ajuster', 'remote:table:ajuster',
+    /*
+      Paquets de cartes — ce qu'un joueur fait de SES cartes. Chacune de ces
+      quatre actions vérifie, côté meneur, que le personnage nommé tient bien la
+      carte : le `characterId` arrive du réseau, et le croire sur parole
+      laisserait jouer la carte du voisin. Voir `deckActions.ts`.
+    */
+    'deck:jouer-carte', 'remote:deck:jouer-carte',
+    'deck:demander-don', 'remote:deck:demander-don',
+    'deck:accepter-don', 'remote:deck:accepter-don',
+    'deck:refuser-don', 'remote:deck:refuser-don',
 ];
 
 describe('actionRegistry', () => {

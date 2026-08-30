@@ -16,6 +16,7 @@ import { useRessourcesDeTableStore } from '../../table/useRessourcesDeTableStore
 import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
+import { mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -350,6 +351,34 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                       dont le report l'alimente — la Menace, précisément.
                     */
                     reservesDeTable: currentCampaignId ? (reservesStore.reserves[currentCampaignId] ?? {}) : {},
+                    /*
+                      **Les cartes tenues en main — décidé par David le 2026-08-30.**
+
+                      Le paquet détient la vérité ; la tablette n'en reçoit que
+                      ce qu'elle a le droit de montrer. `mainsPourLaTable`
+                      **retire l'index de toute carte face cachée** et n'en
+                      laisse que le compte : la diffusion est un seul message
+                      pour toutes les tablettes, et un secret caviardé à
+                      l'affichage serait déposé sur l'appareil de chaque joueur.
+
+                      Les manifestes suivent, sans quoi la tablette recevrait
+                      des numéros de carte et aucun moyen d'en tirer une image.
+                    */
+                    decks: freshSessionOS.decks ?? [],
+                    /*
+                      Les propositions de carte, pour que le destinataire les
+                      voie et puisse répondre. Seules celles **en attente**
+                      partent : une demande acceptée ou refusée n'a plus rien à
+                      dire, et l'historique complet grossirait la charge à
+                      chaque diffusion.
+                    */
+                    demandesDeCarte: (freshSessionOS.demandesDeCarte ?? [])
+                        .filter(d => d.statut === 'en-attente'),
+                    mainsDesPaquets: Object.fromEntries(
+                        Object.entries(freshSessionOS.deckStates ?? {})
+                            .map(([deckId, etat]) => [deckId, mainsPourLaTable(etat)])
+                            .filter(([, mains]) => (mains as unknown[]).length > 0),
+                    ),
                 },
             };
 

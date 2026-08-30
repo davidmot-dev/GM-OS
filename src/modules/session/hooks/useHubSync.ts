@@ -176,6 +176,19 @@ export const useHubSync = () => {
                 */
                 if (session.customSheetTemplates !== undefined) updates.customSheetTemplates = session.customSheetTemplates;
                 if (session.customGameDrivers !== undefined) updates.customGameDrivers = session.customGameDrivers;
+                /*
+                  **Les cartes tenues en main, et les manifestes qui les
+                  dessinent.** Envoyés depuis le 2026-08-30, et il faut les
+                  appliquer : le MJ paierait sinon le coût de les diffuser pour
+                  que la tablette les jette — c'est exactement ce qui est arrivé
+                  aux gabarits de fiche, et rien ne l'avait signalé.
+
+                  Les indices des cartes face cachée ne sont pas dans la charge :
+                  `mainsPourLaTable` les retire à la source.
+                */
+                if (session.decks !== undefined) updates.decks = session.decks;
+                if (session.mainsDesPaquets !== undefined) updates.mainsDesPaquets = session.mainsDesPaquets;
+                if (session.demandesDeCarte !== undefined) updates.demandesDeCarte = session.demandesDeCarte;
                 // 🛡️ NexusSynchronizer sends locks as `characterLocks`, accept both keys
                 if (session.characterLocks !== undefined) updates.connectedCharacters = session.characterLocks;
                 if (session.connectedCharacters !== undefined) updates.connectedCharacters = session.connectedCharacters;
@@ -420,6 +433,19 @@ export const useHubSync = () => {
         const AREACHEMINER = [
             'session:update-character-sheet-data',
             'session:update-character-narrative',
+            /*
+              **Ce qu'un joueur fait de ses cartes.** Même rail : le magasin du
+              meneur détient la vérité du paquet, la tablette n'a qu'à dire ce
+              qu'elle demande. Chaque action y vérifie que le demandeur tient
+              bien la carte — le `characterId` vient du client.
+
+              Ces quatre-là n'appliquent RIEN localement : la tablette ne
+              possède pas le paquet, elle en reçoit un reflet.
+            */
+            'deck:jouer-carte',
+            'deck:demander-don',
+            'deck:accepter-don',
+            'deck:refuser-don',
         ] as const;
 
         const acheminer = (e: Event) => {

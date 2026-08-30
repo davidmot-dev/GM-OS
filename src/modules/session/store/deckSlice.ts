@@ -12,13 +12,36 @@ import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import type { DeckManifest, DeckSessionState } from './types';
+import type { DemandeDeCarte, FaceDeCarte } from '../../../types/deck.types';
 import { gmToast } from '../../../stores/useToastStore';
+import {
+    changerLePorteur,
+    garderLaCarteRetournee,
+    jouerUneCarteTenue,
+    rendreUneCarteAuPaquet,
+    reprendreToutesLesMains,
+    retournerUneCarte,
+    tientLaCarte,
+    type MainDiffusee,
+} from '../logic/mainsDuPaquet';
 
 export interface DeckSliceState {
     decks: DeckManifest[];
     deckStates: Record<string, DeckSessionState>;
     selectedDeckId: string | null;
     isProjecting: boolean;
+    /**
+     * **Ce que la tablette reçoit des mains — un miroir, jamais une source.**
+     *
+     * Rempli par la synchronisation sur les écrans joueurs ; la fenêtre du
+     * meneur ne l'écrit ni ne le lit, elle a `deckStates` qui fait foi. Les
+     * cartes face cachée n'y portent pas leur index : `mainsPourLaTable` le
+     * retire avant l'envoi, parce que la diffusion est un seul message pour
+     * toutes les tablettes.
+     */
+    mainsDesPaquets?: Record<string, MainDiffusee[]>;
+    /** Les cartes proposées d'un joueur à un autre, en attente de réponse. */
+    demandesDeCarte: DemandeDeCarte[];
 }
 
 export interface DeckSliceActions {
@@ -33,6 +56,36 @@ export interface DeckSliceActions {
     resetDeck: (deckId: string) => void;
     selectDeck: (id: string | null) => void;
     toggleProjection: () => void;
+
+    /* ── Le quatrième tas : les cartes tenues en main ─────────────────────
+       Décidé par David le 2026-08-30. La règle vit dans `logic/mainsDuPaquet`,
+       qui est pure et testée ; ces actions ne font que la poser sur le magasin.
+       Le paquet détient la vérité, la fiche du personnage l'affiche.          */
+
+    /** La carte retournée passe en main. `porteur` à `null` : le meneur la garde. */
+    garderLaCarte: (deckId: string, porteur: string | null, face?: FaceDeCarte) => void;
+    /** Donne une carte tenue à quelqu'un d'autre. */
+    donnerLaCarte: (deckId: string, index: number, porteur: string | null) => void;
+    /** Face visible ↔ face cachée. */
+    retournerLaCarte: (deckId: string, index: number) => void;
+    /** La carte tenue est jouée : défausse, ou pioche si le paquet n'a pas de défausse. */
+    jouerLaCarteTenue: (deckId: string, index: number) => void;
+    /** La carte tenue revient dans la pioche sans avoir été jouée. */
+    rendreLaCarteAuPaquet: (deckId: string, index: number) => void;
+    /** Le seul chemin d'écriture du quatrième tas. Interne. */
+    appliquerAuPaquet: (deckId: string, transformer: (etat: DeckSessionState) => DeckSessionState) => void;
+
+    /* ── Les gestes que les joueurs font depuis leur tablette ──────────────
+       Chacun vérifie que le demandeur tient bien la carte : le `characterId`
+       d'un message vient du client, et sans ce contrôle un message fabriqué
+       jouerait la carte du voisin.                                          */
+
+    /** Un joueur joue sa propre carte : elle part en défausse. */
+    jouerSaCarte: (deckId: string, index: number, parQui: string | null) => void;
+    /** Un joueur propose sa carte à un autre. Le destinataire tranche. */
+    demanderLeDonDeCarte: (deckId: string, index: number, deQui: string | null, versQui: string | null) => void;
+    accepterLeDonDeCarte: (demandeId: string) => void;
+    refuserLeDonDeCarte: (demandeId: string) => void;
 }
 
 export type DeckSlice = DeckSliceState & DeckSliceActions;
@@ -42,6 +95,7 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
     decks: [],
     deckStates: {},
     selectedDeckId: null,
+    demandesDeCarte: [],
     isProjecting: false,
 
     // Actions
@@ -190,6 +244,19 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
         const deck = get().decks.find(d => d.id === deckId);
         if (!deck) return;
 
+        /*
+          **Un remélange reprend les cartes des joueurs, et doit le dire.**
+
+          Cette action reconstruit l'état de zéro : les mains disparaissent donc
+          d'elles-mêmes, ce qui est le bon comportement — tout revient au
+          paquet. Mais un joueur qui tenait un atout le verrait s'évaporer sans
+          explication, croirait à un bug, et compterait lui-même. *Une
+          correction muette est une règle perdue.*
+        */
+        const { reprises } = reprendreToutesLesMains(get().deckStates[deckId] ?? {
+            deckId, remainingIndices: [], discardedIndices: [], currentCardIndex: null,
+        });
+
         set((store) => ({
             deckStates: {
                 ...store.deckStates,
@@ -197,11 +264,18 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                     deckId,
                     remainingIndices: DeckInterpreter.initializeIndices(deck),
                     discardedIndices: [],
-                    currentCardIndex: null
+                    currentCardIndex: null,
+                    enMain: []
                 }
             }
         }));
-        gmToast(i18next.t('modules:session.toasts.deck_shuffled'), "info");
+
+        gmToast(
+            reprises > 0
+                ? `${i18next.t('modules:session.toasts.deck_shuffled')} ${reprises} carte(s) reprise(s) des mains.`
+                : i18next.t('modules:session.toasts.deck_shuffled'),
+            'info',
+        );
     },
 
     resetDeck: (deckId) => {
@@ -215,11 +289,125 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                     deckId,
                     remainingIndices: DeckInterpreter.initializeIndices(deck),
                     discardedIndices: [],
-                    currentCardIndex: null
+                    currentCardIndex: null,
+                    enMain: []
                 }
             }
         }));
     },
+
+    /* ── Les cartes tenues en main ───────────────────────────────────────── */
+
+    /**
+     * Applique une transformation pure de `mainsDuPaquet` à un paquet.
+     *
+     * Toutes les actions du quatrième tas passent par ici : *une seule façon
+     * d'écrire l'état, et la règle reste dans le module pur* — sans quoi la
+     * cinquième action oublierait un jour de recopier ce que les quatre autres
+     * font, et le paquet perdrait une carte sans le dire.
+     */
+    appliquerAuPaquet: (deckId: string, transformer: (etat: DeckSessionState) => DeckSessionState) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return;
+
+        const suivant = transformer(etat);
+        if (suivant === etat) return;
+
+        set((store) => ({ deckStates: { ...store.deckStates, [deckId]: suivant } }));
+    },
+
+    garderLaCarte: (deckId, porteur, face = 'scellee') => {
+        const etat = get().deckStates[deckId];
+        if (!etat || etat.currentCardIndex === null) return;
+
+        get().appliquerAuPaquet(deckId, e => garderLaCarteRetournee(e, porteur, face));
+        gmToast(
+            porteur === null
+                ? 'Carte gardée en main.'
+                : 'Carte confiée à un personnage.',
+            'success',
+        );
+    },
+
+    donnerLaCarte: (deckId, index, porteur) =>
+        get().appliquerAuPaquet(deckId, e => changerLePorteur(e, index, porteur)),
+
+    retournerLaCarte: (deckId, index) =>
+        get().appliquerAuPaquet(deckId, e => retournerUneCarte(e, index)),
+
+    jouerLaCarteTenue: (deckId, index) => {
+        const avecDefausse = get().decks.find(d => d.id === deckId)?.useDiscard ?? false;
+        get().appliquerAuPaquet(deckId, e => jouerUneCarteTenue(e, index, avecDefausse));
+    },
+
+    rendreLaCarteAuPaquet: (deckId, index) =>
+        get().appliquerAuPaquet(deckId, e => rendreUneCarteAuPaquet(e, index)),
+
+    /* ── Ce qui arrive des tablettes ─────────────────────────────────────── */
+
+    jouerSaCarte: (deckId, index, parQui) => {
+        const etat = get().deckStates[deckId];
+        /*
+          **Le contrôle qui compte.** Le `characterId` vient du client : sans
+          lui, un message fabriqué jouerait la carte du voisin. On se tait
+          plutôt que de renvoyer une erreur — un refus détaillé apprendrait à
+          qui tâtonne ce qui existe.
+        */
+        if (!etat || !tientLaCarte(etat, index, parQui)) return;
+        get().jouerLaCarteTenue(deckId, index);
+    },
+
+    demanderLeDonDeCarte: (deckId, index, deQui, versQui) => {
+        const etat = get().deckStates[deckId];
+        if (!etat || !tientLaCarte(etat, index, deQui)) return;
+
+        // Une seule demande en attente par carte : sans quoi deux clics
+        // pressés créeraient deux demandes, et accepter la seconde après la
+        // première déplacerait une carte qui a déjà changé de main.
+        const dejaDemandee = get().demandesDeCarte.some(
+            d => d.deckId === deckId && d.index === index && d.statut === 'en-attente');
+        if (dejaDemandee) return;
+
+        set((store) => ({
+            demandesDeCarte: [...store.demandesDeCarte, {
+                id: crypto.randomUUID(),
+                deckId, index, deQui, versQui,
+                statut: 'en-attente' as const,
+                quand: Date.now(),
+            }],
+        }));
+    },
+
+    accepterLeDonDeCarte: (demandeId) => {
+        const demande = get().demandesDeCarte.find(d => d.id === demandeId);
+        if (!demande || demande.statut !== 'en-attente') return;
+
+        const etat = get().deckStates[demande.deckId];
+        /*
+          La carte a pu bouger entre la demande et la réponse — jouée, rendue,
+          reprise par un remélange. On refuse alors plutôt que de la faire
+          réapparaître dans la main du destinataire.
+        */
+        if (!etat || !tientLaCarte(etat, demande.index, demande.deQui)) {
+            set((store) => ({
+                demandesDeCarte: store.demandesDeCarte.map(
+                    d => (d.id === demandeId ? { ...d, statut: 'refusee' as const } : d)),
+            }));
+            gmToast('La carte proposée n’est plus dans cette main.', 'info');
+            return;
+        }
+
+        get().appliquerAuPaquet(demande.deckId, e => changerLePorteur(e, demande.index, demande.versQui));
+        set((store) => ({
+            demandesDeCarte: store.demandesDeCarte.map(
+                d => (d.id === demandeId ? { ...d, statut: 'acceptee' as const } : d)),
+        }));
+    },
+
+    refuserLeDonDeCarte: (demandeId) => set((store) => ({
+        demandesDeCarte: store.demandesDeCarte.map(
+            d => (d.id === demandeId && d.statut === 'en-attente' ? { ...d, statut: 'refusee' as const } : d)),
+    })),
 
     selectDeck: (id) => {
         set({ selectedDeckId: id });

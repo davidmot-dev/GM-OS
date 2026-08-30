@@ -9,7 +9,8 @@ import {
     ChevronLeft,
     Infinity as InfinityIcon,
     Eye,
-    EyeOff
+    EyeOff,
+    Hand
 } from 'lucide-react';
 import { useDeckPlayer } from '../hooks/useDeckPlayer';
 
@@ -17,6 +18,16 @@ const DeckPlayer: React.FC = () => {
     const { t } = useTranslation();
     const { setCurrentView, decks } = useSessionOSStore();
     const {
+        propositionsEnAttente,
+        accepterLeDonDeCarte,
+        refuserLeDonDeCarte,
+        porteursPossibles,
+        mainsOuvertes,
+        handleGarder,
+        handleDonner,
+        handleRetourner,
+        handleJouer,
+        handleRendre,
         activeDeck,
         activeState,
         activeDeckId,
@@ -211,7 +222,34 @@ const DeckPlayer: React.FC = () => {
                             <span className="text-[9px] font-black uppercase tracking-widest">{t('modules:session.deck_module.player.discard_btn')}</span>
                         </button>
                         <div className="w-px h-12 self-center bg-white/5" />
-                        <button 
+                        {/*
+                          **Garder la carte tirée** — le quatrième tas, décidé
+                          le 2026-08-30. On choisit d'abord à qui elle va : le
+                          meneur, ou un personnage de la campagne ouverte. Une
+                          carte gardée arrive **face cachée**, parce que
+                          l'inverse ne se rattrape pas — on peut toujours la
+                          retourner, on ne peut pas la faire oublier.
+                        */}
+                        <div className="flex flex-col items-center justify-center gap-1.5 p-4">
+                            <Hand size={24} className={activeState.currentCardIndex === null ? 'text-white/10' : 'text-white/40'} />
+                            <select
+                                value=""
+                                disabled={activeState.currentCardIndex === null}
+                                onChange={(e) => handleGarder(e.target.value === 'mj' ? null : e.target.value)}
+                                title={t('modules:session.deck_module.player.hands.keep')}
+                                aria-label={t('modules:session.deck_module.player.hands.keep')}
+                                className="bg-transparent text-[9px] font-black uppercase tracking-widest text-white/40 outline-none disabled:opacity-20 hover:text-gm-gold cursor-pointer"
+                            >
+                                <option value="">{t('modules:session.deck_module.player.hands.keep')}</option>
+                                {porteursPossibles.map(p => (
+                                    <option key={p.id ?? 'mj'} value={p.id ?? 'mj'} className="bg-slate-900 text-white">
+                                        {p.nom}{p.joueur ? ` · ${p.joueur}` : ''}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="w-px h-12 self-center bg-white/5" />
+                        <button
                             type="button"
                             onClick={handleShuffle}
                             className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-purple transition-all focus:outline-none"
@@ -241,6 +279,142 @@ const DeckPlayer: React.FC = () => {
                     <span className="text-[10px] font-black uppercase tracking-tighter text-white/20">{t('modules:session.deck_module.player.discard_pile')}</span>
                 </div>
             </div>
+
+            {/*
+              **Les cartes tenues — le quatrième tas.**
+
+              Il ne s'affiche que lorsqu'il contient quelque chose : un cadre
+              vide en permanence prendrait la place du paquet, qui est ce qu'on
+              regarde. Chaque porteur a sa rangée, parce que la question posée
+              en séance est *« qui a quoi »* et non *« combien de cartes sont
+              sorties »*.
+            */}
+            {/*
+              **Les propositions en attente.** Le destinataire tranche, mais le
+              meneur doit pouvoir trancher aussi : un joueur parti de table ne
+              doit pas bloquer une carte pendant tout un combat.
+            */}
+            {propositionsEnAttente.length > 0 && (
+                <div className="shrink-0 border-t border-accent/30 bg-accent/5 px-8 py-4">
+                    {propositionsEnAttente.map(d => (
+                        <div key={d.id} className="flex flex-wrap items-center gap-4 py-1.5">
+                            <span className="text-xs text-white/70">
+                                <strong className="text-white">{d.deNom}</strong> propose{' '}
+                                <strong className="text-gm-gold">{d.nomDeLaCarte}</strong> à{' '}
+                                <strong className="text-white">{d.versNom}</strong>
+                            </span>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => accepterLeDonDeCarte(d.id)}
+                                    className="rounded-lg bg-gm-gold px-3 py-1 text-[9px] font-black uppercase tracking-widest text-black"
+                                >
+                                    {t('modules:session.deck_module.player.hands.accept')}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => refuserLeDonDeCarte(d.id)}
+                                    className="rounded-lg border border-white/20 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-white/50 hover:text-white"
+                                >
+                                    {t('modules:session.deck_module.player.hands.refuse')}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {mainsOuvertes.length > 0 && (
+                <div className="shrink-0 border-t border-white/5 bg-black/30 backdrop-blur-xl px-8 py-5">
+                    <p className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-white/25">
+                        {t('modules:session.deck_module.player.hands.title')}
+                    </p>
+                    <div className="flex flex-wrap gap-8">
+                        {mainsOuvertes.map(main => (
+                            <div key={main.porteur ?? 'mj'} className="flex flex-col gap-2">
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${main.porteur === null ? 'text-gm-gold/70' : 'text-white/50'}`}>
+                                    {main.nom}
+                                </span>
+                                <div className="flex gap-3">
+                                    {main.cartes.map(carte => (
+                                        <div key={carte.index} className="group relative">
+                                            {/*
+                                              Le meneur voit toujours la carte,
+                                              même face cachée : c'est lui qui
+                                              arbitre. Le voile dit seulement ce
+                                              que la table, elle, ne voit pas.
+                                            */}
+                                            <img
+                                                src={carte.face === 'scellee' ? `/${cardBackUrl}` : `/${carte.url}`}
+                                                alt={carte.nomDeLaCarte}
+                                                title={`${carte.nomDeLaCarte} — ${carte.face === 'scellee' ? t('modules:session.deck_module.player.hands.hidden') : t('modules:session.deck_module.player.hands.shown')}`}
+                                                className={`h-24 rounded-lg border object-cover shadow-lg transition-all ${carte.face === 'scellee'
+                                                    ? 'border-white/10 opacity-60'
+                                                    : 'border-gm-gold/40'}`}
+                                                style={{ aspectRatio }}
+                                            />
+                                            <div className="absolute inset-x-0 -bottom-1 flex justify-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRetourner(carte.index)}
+                                                    /*
+                                                      L'infobulle dit **l'action**, pas l'état : « Révéler »
+                                                      sur une carte scellée, « Remettre sous scellé » sur
+                                                      une carte révélée. C'est la leçon du bouton de
+                                                      rattachement des atmosphères, payée le matin même —
+                                                      un libellé qui décrit l'état ne dit jamais ce qu'un
+                                                      clic va produire.
+                                                    */
+                                                    title={carte.face === 'scellee'
+                                                        ? t('modules:session.deck_module.player.hands.reveal')
+                                                        : t('modules:session.deck_module.player.hands.seal')}
+                                                    className="rounded-md bg-slate-900 p-1 text-white/60 shadow-lg hover:text-gm-gold"
+                                                >
+                                                    {carte.face === 'scellee' ? <Eye size={12} /> : <EyeOff size={12} />}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRendre(carte.index)}
+                                                    title={t('modules:session.deck_module.player.hands.return')}
+                                                    className="rounded-md bg-slate-900 p-1 text-white/60 shadow-lg hover:text-gm-purple"
+                                                >
+                                                    <RotateCcw size={12} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleJouer(carte.index)}
+                                                    title={t('modules:session.deck_module.player.hands.play')}
+                                                    className="rounded-md bg-slate-900 p-1 text-white/60 shadow-lg hover:text-red-400"
+                                                >
+                                                    <Trash2 size={12} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Donner la main entière à quelqu'un d'autre. */}
+                                <select
+                                    value=""
+                                    onChange={(e) => main.cartes.forEach(c =>
+                                        handleDonner(c.index, e.target.value === 'mj' ? null : e.target.value))}
+                                    title={t('modules:session.deck_module.player.hands.give')}
+                                    aria-label={t('modules:session.deck_module.player.hands.give')}
+                                    className="cursor-pointer bg-transparent text-[9px] font-black uppercase tracking-widest text-white/25 outline-none hover:text-white/60"
+                                >
+                                    <option value="">{t('modules:session.deck_module.player.hands.give')}</option>
+                                    {porteursPossibles
+                                        .filter(p => p.id !== main.porteur)
+                                        .map(p => (
+                                            <option key={p.id ?? 'mj'} value={p.id ?? 'mj'} className="bg-slate-900 text-white">
+                                                {p.nom}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

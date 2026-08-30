@@ -33,6 +33,7 @@ import { HubTrombinoscope } from './hub/HubTrombinoscope';
 import { HubAtlas } from './hub/HubAtlas';
 import { getDieCssClass } from '../modules/dice/DiceUIUtils';
 import { HubInventory } from './hub/HubInventory';
+import HubMainDeCartes from './hub/HubMainDeCartes';
 import { HubProjectionCard } from './hub/HubProjectionCard';
 import { HubRuleViewer } from './hub/HubRuleViewer';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
@@ -276,6 +277,17 @@ const TabletHub: React.FC = () => {
                             ))}
                         </div>
                     )}
+
+                    {/*
+                      **Les cartes que ce joueur tient.** Dans la colonne de
+                      gauche, avec l'horloge et les jauges : ce sont les choses
+                      qu'on garde sous les yeux toute la partie, par opposition
+                      à ce que le meneur projette au centre.
+
+                      Le composant ne s'affiche pas de lui-même quand la main
+                      est vide — pas de cadre en attente.
+                    */}
+                    <HubMainDeCartes characterId={characterId} />
                 </div>
 
                 {/* Centered Content Area */}
