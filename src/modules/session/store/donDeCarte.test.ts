@@ -168,6 +168,55 @@ describe('la réponse du destinataire', () => {
         expect(demandes()[0].statut).toBe('acceptee');
     });
 
+    /**
+     * **Le trou trouvé le 2026-08-30, en réparant le refus d'autorisation.**
+     *
+     * Une demande ne porte que son identifiant. La politique du process
+     * principal authentifie bien l'émetteur, mais elle ne connaît pas les
+     * demandes et ne peut donc pas dire à qui celle-ci s'adressait — **c'est
+     * ici, et nulle part ailleurs, qu'on peut l'empêcher.** Sans ce contrôle,
+     * n'importe quel joueur accepterait la proposition faite à un autre et
+     * récupérerait sa carte.
+     */
+    it('un tiers ne peut pas accepter une proposition adressée à un autre', () => {
+        const id = proposer();
+        useSessionOSStore.getState().accepterLeDonDeCarte(id, 'pc-intrus');
+
+        expect(demandes()[0].statut).toBe('en-attente');
+        expect(mains()[0].porteur).toBe('pc-rick');
+    });
+
+    it('le destinataire, lui, accepte', () => {
+        const id = proposer();
+        useSessionOSStore.getState().accepterLeDonDeCarte(id, 'pc-willem');
+
+        expect(mains()[0].porteur).toBe('pc-willem');
+    });
+
+    /** Sans `parQui`, l'appel vient de l'écran du meneur, qui arbitre. */
+    it('le meneur tranche depuis son écran', () => {
+        const id = proposer();
+        useSessionOSStore.getState().accepterLeDonDeCarte(id);
+
+        expect(mains()[0].porteur).toBe('pc-willem');
+    });
+
+    /** *Rendre une carte à celui qui la tenait déjà ne peut rien casser.* */
+    it('l’auteur d’une proposition peut se raviser', () => {
+        const id = proposer();
+        useSessionOSStore.getState().refuserLeDonDeCarte(id, 'pc-rick');
+
+        expect(demandes()[0].statut).toBe('refusee');
+        expect(mains()[0].porteur).toBe('pc-rick');
+    });
+
+    it('un tiers ne peut pas refuser à la place des intéressés', () => {
+        const id = proposer();
+        useSessionOSStore.getState().refuserLeDonDeCarte(id, 'pc-intrus');
+
+        expect(demandes()[0].statut).toBe('en-attente');
+    });
+
     it('ignore un identifiant de demande inconnu', () => {
         proposer();
         useSessionOSStore.getState().accepterLeDonDeCarte('inexistant');

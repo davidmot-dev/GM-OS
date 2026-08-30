@@ -36,14 +36,27 @@ const demanderLeDon = (payload: unknown) => {
     useSessionOSStore.getState().demanderLeDonDeCarte(deckId, index, deQui ?? null, versQui ?? null);
 };
 
+/*
+  **Le `characterId` est passé, et il n'est pas décoratif.**
+
+  Une demande ne porte que son identifiant : la politique du process principal
+  a authentifié l'émetteur, mais elle ne connaît pas les demandes et ne peut pas
+  dire à qui celle-ci s'adressait. Sans le transmettre, **n'importe quel joueur
+  accepterait une proposition faite à un autre** et récupérerait sa carte.
+
+  `null` plutôt qu'absent : absent signifie « le meneur, depuis son écran », et
+  ce chemin-ci vient toujours du réseau.
+*/
 const accepterLeDon = (payload: unknown) => {
-    const { demandeId } = (payload ?? {}) as { demandeId?: string };
-    if (demandeId) useSessionOSStore.getState().accepterLeDonDeCarte(demandeId);
+    const { demandeId, characterId } = (payload ?? {}) as
+        { demandeId?: string; characterId?: string | null };
+    if (demandeId) useSessionOSStore.getState().accepterLeDonDeCarte(demandeId, characterId ?? null);
 };
 
 const refuserLeDon = (payload: unknown) => {
-    const { demandeId } = (payload ?? {}) as { demandeId?: string };
-    if (demandeId) useSessionOSStore.getState().refuserLeDonDeCarte(demandeId);
+    const { demandeId, characterId } = (payload ?? {}) as
+        { demandeId?: string; characterId?: string | null };
+    if (demandeId) useSessionOSStore.getState().refuserLeDonDeCarte(demandeId, characterId ?? null);
 };
 
 /*

@@ -17,6 +17,57 @@ describe('isPrivilegedRole', () => {
     });
 });
 
+/**
+ * **Les cartes tenues en main — signalé par David à l'écran le 2026-08-30 :**
+ * *« je joue une carte et je reçois : réservé aux rôles appairés »*.
+ *
+ * Le refus était juste : cette liste refuse par défaut, et quatre actions
+ * arrivées sans avoir été déclarées ici devaient être refusées. Le défaut
+ * n'était pas le refus, c'était l'oubli de la déclaration.
+ */
+describe('evaluateAction — les cartes d’un joueur', () => {
+    it('laisse un joueur jouer SA carte', () => {
+        expect(evaluateAction('deck:jouer-carte', { deckId: 'd-1', index: 7, characterId: CHAR }, 'hub', CHAR).allowed)
+            .toBe(true);
+    });
+
+    /** Le `characterId` vient du client ; c'est ici qu'on le confronte à la socket. */
+    it('refuse de jouer la carte d’un autre', () => {
+        const verdict = evaluateAction(
+            'deck:jouer-carte', { deckId: 'd-1', index: 7, characterId: 'perso-bob' }, 'hub', CHAR);
+
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    it('refuse de proposer la carte d’un autre', () => {
+        const verdict = evaluateAction(
+            'deck:demander-don', { deckId: 'd-1', index: 7, deQui: 'perso-bob', versQui: CHAR }, 'hub', CHAR);
+
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    /**
+     * Répondre à une proposition passe le contrôle d'identité ici — mais cette
+     * couche **ne connaît pas les demandes** et ne peut pas dire à qui
+     * celle-ci s'adressait. C'est `deckSlice` qui le vérifie ; voir
+     * `donDeCarte.test.ts`.
+     */
+    it('authentifie celui qui répond, sans juger de la demande', () => {
+        expect(evaluateAction('deck:accepter-don', { demandeId: 'x', characterId: CHAR }, 'hub', CHAR).allowed)
+            .toBe(true);
+        expect(evaluateAction('deck:accepter-don', { demandeId: 'x', characterId: 'perso-bob' }, 'hub', CHAR).allowed)
+            .toBe(false);
+    });
+
+    it('les quatre actions sont declarées', () => {
+        for (const type of ['deck:jouer-carte', 'deck:demander-don', 'deck:accepter-don', 'deck:refuser-don']) {
+            expect(PLAYER_ALLOWED_ACTIONS.has(type), type).toBe(true);
+        }
+    });
+});
+
 describe('evaluateAction — rôles privilégiés', () => {
     it('laisse tout passer pour gm et remote', () => {
         for (const role of ['gm', 'remote'] as const) {
@@ -104,6 +155,11 @@ describe('evaluateAction — actions permises aux joueurs', () => {
 
     it('couvre exactement la liste déclarée', () => {
         expect([...PLAYER_ALLOWED_ACTIONS].sort()).toEqual([
+            // Les cartes qu'un joueur tient en main — ajoutées le 2026-08-30.
+            'deck:accepter-don',
+            'deck:demander-don',
+            'deck:jouer-carte',
+            'deck:refuser-don',
             'remote:request-sync',
             'session:remove-inventory-item',
             'session:request-item-transfer',

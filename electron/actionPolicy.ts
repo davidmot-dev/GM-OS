@@ -64,6 +64,32 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
       `stripProjectionTarget` : le rôle en amont, le champ en aval.
     */
     'table:ajuster',
+    /*
+      **Ce qu'un joueur fait de SES cartes.**
+
+      *Trouvé le 2026-08-30 par David, à l'écran : « je joue une carte et je
+      reçois — réservé aux rôles appairés ».* Le refus était juste : cette liste
+      refuse par défaut, et c'est ce qui doit se produire quand quatre actions
+      arrivent sans avoir été déclarées ici. Le défaut n'était pas le refus,
+      c'était l'oubli de la déclaration.
+
+      Le contrôle de propriété ci-dessous en fait deux barrières qui ne disent
+      pas la même chose : **celle-ci vérifie qu'un client est bien le personnage
+      qu'il prétend** — elle compare au personnage enregistré sur la socket —,
+      tandis que `deckSlice` vérifie que ce personnage **tient réellement la
+      carte**. La première ne peut pas savoir la seconde, et la seconde croit le
+      message sur parole. Il faut les deux.
+
+      `deck:accepter-don` et `deck:refuser-don` ne portent que l'identifiant de
+      la demande : cette couche ne peut donc pas dire à qui elle s'adresse — elle
+      ne connaît pas les demandes. C'est le magasin qui vérifie que celui qui
+      répond est bien le destinataire. Le `characterId` est quand même exigé
+      ici, pour que le magasin reçoive une identité déjà authentifiée.
+    */
+    'deck:jouer-carte',
+    'deck:demander-don',
+    'deck:accepter-don',
+    'deck:refuser-don',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */
@@ -87,6 +113,13 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     // propre tablette — et la fiche fait foi, donc GM-OS le croirait.
     'session:update-character-sheet-data': 'characterId',
     'session:update-character-narrative': 'characterId',
+    // Un joueur ne joue que ses cartes, et ne propose que les siennes.
+    'deck:jouer-carte': 'characterId',
+    'deck:demander-don': 'deQui',
+    // Répondre à une proposition : l'identité est authentifiée ici, et c'est le
+    // magasin qui dira si cette proposition lui était bien adressée.
+    'deck:accepter-don': 'characterId',
+    'deck:refuser-don': 'characterId',
 };
 
 export type DenialReason = 'role' | 'ownership';

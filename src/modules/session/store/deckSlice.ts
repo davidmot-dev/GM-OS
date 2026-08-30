@@ -84,8 +84,13 @@ export interface DeckSliceActions {
     jouerSaCarte: (deckId: string, index: number, parQui: string | null) => void;
     /** Un joueur propose sa carte à un autre. Le destinataire tranche. */
     demanderLeDonDeCarte: (deckId: string, index: number, deQui: string | null, versQui: string | null) => void;
-    accepterLeDonDeCarte: (demandeId: string) => void;
-    refuserLeDonDeCarte: (demandeId: string) => void;
+    /**
+     * `parQui` absent : l'appel vient de l'écran du meneur, qui arbitre.
+     * Fourni, il doit correspondre au destinataire — sans quoi un joueur
+     * accepterait une proposition faite à un autre.
+     */
+    accepterLeDonDeCarte: (demandeId: string, parQui?: string | null) => void;
+    refuserLeDonDeCarte: (demandeId: string, parQui?: string | null) => void;
 }
 
 export type DeckSlice = DeckSliceState & DeckSliceActions;
@@ -378,9 +383,24 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
         }));
     },
 
-    accepterLeDonDeCarte: (demandeId) => {
+    accepterLeDonDeCarte: (demandeId, parQui) => {
         const demande = get().demandesDeCarte.find(d => d.id === demandeId);
         if (!demande || demande.statut !== 'en-attente') return;
+
+        /*
+          **Seul le destinataire répond — ou le meneur.**
+
+          Une demande ne porte que son identifiant : la politique du process
+          principal authentifie bien l'émetteur, mais elle ne connaît pas les
+          demandes et ne peut donc pas dire à qui celle-ci s'adressait. Sans ce
+          contrôle, **n'importe quel joueur accepterait une proposition faite à
+          un autre** et récupérerait sa carte.
+
+          `parQui` non fourni : l'appel vient de l'écran du meneur, qui arbitre —
+          un joueur parti de table ne doit pas bloquer une carte pendant tout un
+          combat.
+        */
+        if (parQui !== undefined && parQui !== demande.versQui) return;
 
         const etat = get().deckStates[demande.deckId];
         /*
@@ -404,9 +424,17 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
         }));
     },
 
-    refuserLeDonDeCarte: (demandeId) => set((store) => ({
-        demandesDeCarte: store.demandesDeCarte.map(
-            d => (d.id === demandeId && d.statut === 'en-attente' ? { ...d, statut: 'refusee' as const } : d)),
+    /*
+      Refuser est ouvert au destinataire, à l'auteur de la proposition — qui a
+      le droit de se raviser — et au meneur. *Rendre une carte à celui qui la
+      tenait déjà ne peut rien casser* ; l'accepter, si.
+    */
+    refuserLeDonDeCarte: (demandeId, parQui) => set((store) => ({
+        demandesDeCarte: store.demandesDeCarte.map(d => {
+            if (d.id !== demandeId || d.statut !== 'en-attente') return d;
+            if (parQui !== undefined && parQui !== d.versQui && parQui !== d.deQui) return d;
+            return { ...d, statut: 'refusee' as const };
+        }),
     })),
 
     selectDeck: (id) => {

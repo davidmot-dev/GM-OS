@@ -37,6 +37,11 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
     const demandesDeCarte = useSessionOSStore(s => s.demandesDeCarte);
     const players = useSessionOSStore(s => s.players);
 
+    /** La carte ouverte en grand, ou `null`. Purement local à cet appareil. */
+    const [carteEnGrand, setCarteEnGrand] = React.useState<
+        { url: string; nom: string; texte: string } | null
+    >(null);
+
     /** Les autres personnages, à qui l'on peut proposer une carte. */
     const voisins = React.useMemo(
         () => (players ?? [])
@@ -73,6 +78,42 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
     if (mesCartes.length === 0 && proposeesAMoi.length === 0) return null;
 
     return (
+        <>
+        {/*
+          **La carte en grand, par-dessus tout le reste.**
+
+          Elle se ferme d'un clic n'importe où : sur une tablette, chercher une
+          petite croix pendant qu'on lit est le geste qu'on rate. `Échap` marche
+          aussi pour ceux qui ont un clavier.
+        */}
+        {carteEnGrand && (
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label={carteEnGrand.nom}
+                onClick={() => setCarteEnGrand(null)}
+                onKeyDown={(e) => { if (e.key === 'Escape') setCarteEnGrand(null); }}
+                tabIndex={-1}
+                ref={(n) => n?.focus()}
+                className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-black/90 p-6 backdrop-blur-md"
+            >
+                <ResolvedImage
+                    src={carteEnGrand.url}
+                    alt={carteEnGrand.nom}
+                    className="max-h-[75vh] max-w-full rounded-2xl border border-accent/40 object-contain shadow-2xl"
+                />
+                <p className="text-center text-lg font-bold text-white">{carteEnGrand.nom}</p>
+                {carteEnGrand.texte && (
+                    <p className="max-w-xl text-center text-sm leading-relaxed text-white/70">
+                        {carteEnGrand.texte}
+                    </p>
+                )}
+                <p className="text-[10px] uppercase tracking-[0.2em] text-white/30">
+                    Touchez pour fermer
+                </p>
+            </div>
+        )}
+
         <div className="rounded-2xl border border-app-border/40 bg-app-surface/50 p-4 backdrop-blur-xl">
             <p className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">
                 <Layers size={12} /> {t('modules:session.deck_module.player.hands.title')}
@@ -90,13 +131,13 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                     </p>
                     <div className="flex gap-2">
                         <button
-                            onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id })}
+                            onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })}
                             className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white"
                         >
                             <Check size={12} /> {t('modules:session.deck_module.player.hands.accept')}
                         </button>
                         <button
-                            onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id })}
+                            onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id, characterId })}
                             className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-app-border px-3 py-2 text-[10px] font-black uppercase tracking-widest text-app-text/60"
                         >
                             <X size={12} /> {t('modules:session.deck_module.player.hands.refuse')}
@@ -118,13 +159,31 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                     d => d.deckId === paquet.id && d.index === index);
                                 return (
                                     <div key={index} className="flex flex-col gap-1">
-                                        <ResolvedImage
-                                            src={DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet)}
-                                            alt={DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`}
-                                            className={`h-28 rounded-lg border object-cover shadow-lg ${enAttente
-                                                ? 'border-app-border opacity-40 grayscale'
-                                                : 'border-accent/40'}`}
-                                        />
+                                        {/*
+                                          **Un clic agrandit la carte.** Demandé
+                                          par David le 2026-08-30 : à 112 px de
+                                          haut sur une tablette, le texte d'une
+                                          carte ne se lit pas. Une vignette
+                                          qu'on ne peut pas lire ne sert qu'à
+                                          rappeler qu'on a une carte.
+                                        */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setCarteEnGrand({
+                                                url: DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet),
+                                                nom: DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`,
+                                                texte: DeckInterpreter.getCardMetadata(paquet, index)?.description ?? '',
+                                            })}
+                                            className="rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                                        >
+                                            <ResolvedImage
+                                                src={DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet)}
+                                                alt={DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`}
+                                                className={`h-28 rounded-lg border object-cover shadow-lg transition-transform active:scale-95 ${enAttente
+                                                    ? 'border-app-border opacity-40 grayscale'
+                                                    : 'border-accent/40'}`}
+                                            />
+                                        </button>
 
                                         {/*
                                           Une carte déjà proposée n'offre plus
@@ -191,6 +250,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                 ))}
             </div>
         </div>
+        </>
     );
 };
 
