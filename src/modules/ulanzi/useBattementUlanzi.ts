@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useUlanziStore } from './useUlanziStore';
 import { UlanziService } from './UlanziService';
+import { useClockStore } from '../../store/useClockStore';
 import {
-    COMPOSITEURS,
+    applicationsAPousser,
+    horlogesPourLaTable,
     nomsAwtrixDeTousLesWidgets,
-    nomAwtrix,
-    widgetsActifs,
 } from './widgets/librairie';
 
 /**
@@ -49,12 +49,40 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
     // le store au moment de rendre la main, pour ne jamais rendre une valeur
     // capturée par une fermeture devenue périmée.
     const { hote, actif, selection, seuilSansPause, quarts, silencerLesNatives } = useUlanziStore();
+    /*
+      Abonnés, et pas seulement lus : un segment rempli doit se voir sur
+      l'afficheur tout de suite, pas au prochain battement. C'est ce qui
+      distingue un miroir d'un instrument — personne ne pousse le miroir.
+    */
+    const tensions = useClockStore(s => s.tensions);
+    const isClockProjected = useClockStore(s => s.isClockProjected);
     const { setRoutine, memoriserLaRoutine, setJoignable } = useUlanziStore.getState();
 
     /** Vrai pendant que l'afficheur nous appartient. */
     const enMain = useRef(false);
     /** La restitution de sortie, partagée : plusieurs abonnés, un seul travail. */
     const restitutionDeSortie = useRef<Promise<void> | null>(null);
+    /**
+     * **Les applications réellement posées sur l'appareil au dernier tour.**
+     *
+     * Le catalogue ne suffit plus à les nommer : une horloge de tension porte un
+     * identifiant fabriqué à l'exécution. C'est donc cette trace, et elle seule,
+     * qui sait ce qu'il y a à reprendre.
+     */
+    const poussees = useRef<Set<string>>(new Set());
+
+    /**
+     * **Tout ce qu'il faut retirer pour rendre l'appareil.**
+     *
+     * Les noms du catalogue **et** les applications réellement posées : une
+     * horloge de tension porte un identifiant fabriqué à l'exécution, que le
+     * catalogue ne peut pas nommer. Ne rendre que le catalogue laisserait ses
+     * compteurs sur l'objet jusqu'à leur expiration.
+     *
+     * Ne lit que `poussees.current`, une référence stable : une fermeture
+     * capturée au premier rendu reste donc juste.
+     */
+    const toutARendre = () => [...new Set([...NOMS_DES_WIDGETS, ...poussees.current])];
     /** Les valeurs les plus fraîches, pour que le battement ne serve pas du périmé. */
     const dernier = useRef({ quarts, seuilSansPause, hote, selection, systemId });
     dernier.current = { quarts, seuilSansPause, hote, selection, systemId };
@@ -82,7 +110,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
         if (!perdue) return;
         rattrapageFait.current = true;
         void new UlanziService(adresse)
-            .rendreLaMain(perdue, NOMS_DES_WIDGETS)
+            .rendreLaMain(perdue, toutARendre())
             .then(() => setRoutine(null))
             .catch(() => undefined);
     }, [doitAfficher, setRoutine]);
@@ -132,7 +160,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                 enMain.current = false;
                 try {
                     await new UlanziService(dernier.current.hote)
-                        .rendreLaMain(useUlanziStore.getState().routine, NOMS_DES_WIDGETS);
+                        .rendreLaMain(useUlanziStore.getState().routine, toutARendre());
                     setRoutine(null);
                 } catch {
                     // Un échec ne retient pas la fermeture : le rattrapage au
@@ -181,7 +209,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
             // La restitution part sans qu'on l'attende : React ne patiente pas
             // sur un nettoyage. Si elle échoue, `lifetime` reste le filet.
             void new UlanziService(dernier.current.hote)
-                .rendreLaMain(useUlanziStore.getState().routine, NOMS_DES_WIDGETS)
+                .rendreLaMain(useUlanziStore.getState().routine, toutARendre())
                 .then(() => setRoutine(null))
                 .catch(() => undefined);
         };
@@ -232,17 +260,41 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                   rendu par type n'existe, et une exception ici arrêterait la
                   publication de tous les autres.
                 */
-                for (const { widget, secondes } of widgetsActifs(jeu, sel)) {
-                    const composer = COMPOSITEURS[widget.id];
-                    if (!composer) continue;
+                const aPousser = applicationsAPousser(jeu, sel, {
+                    instruments: { quarts: q, seuilSansPause: s },
+                    horloges: horlogesPourLaTable(useClockStore.getState()),
+                });
 
-                    await service.pousserWidget(nomAwtrix(widget.id), {
-                        ...composer({ quarts: q, seuilSansPause: s }),
+                for (const { nom, charge, secondes } of aPousser) {
+                    await service.pousserWidget(nom, {
+                        ...charge,
                         lifetime: DUREE_DE_VIE,
                         lifetimeMode: 0,
                         duration: secondes,
                     });
                 }
+
+                /*
+                  **Ce qu'on a poussé, on sait le reprendre.**
+
+                  *Nouveau avec le premier miroir.* Un instrument ne disparaît
+                  pas : le défilé est là ou n'est pas coché. Une horloge de
+                  tension, elle, **peut être supprimée en pleine séance** — et
+                  son application resterait alors sur l'appareil jusqu'à
+                  l'expiration de sa durée de vie, à montrer un compteur qui
+                  n'existe plus. *Un miroir qui ment est un bug, et il ment de
+                  façon crédible.*
+
+                  Le mécanisme est volontairement générique : on retire tout ce
+                  qui était poussé au tour précédent et ne l'est plus. Il couvre
+                  donc aussi un widget décoché, sans qu'on ait à le prévoir.
+                */
+                const noms = new Set(aPousser.map(a => a.nom));
+                const aRetirer = [...poussees.current].filter(n => !noms.has(n));
+                await Promise.all(
+                    aRetirer.map(n => service.retirerWidget(n).catch(() => undefined)));
+                poussees.current = noms;
+
                 setJoignable(true, null);
             } catch (e: unknown) {
                 setJoignable(false, e instanceof Error ? e.message : String(e));
@@ -254,7 +306,9 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
         return () => clearInterval(minuteur);
         // `quarts` en dépendance : un Quart poussé depuis le cockpit doit se
         // voir tout de suite, pas au prochain battement.
-        // `selection` et `systemId` en dépendances : cocher un widget ou changer
-        // de campagne doit se voir tout de suite, pas au prochain battement.
-    }, [doitAfficher, hote, quarts, seuilSansPause, selection, systemId, silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
+        // `selection` et `systemId` : cocher un widget ou changer de campagne
+        // doit se voir tout de suite. `tensions` et `isClockProjected` : un
+        // segment rempli aussi — c'est un miroir, personne ne le pousse.
+    }, [doitAfficher, hote, quarts, seuilSansPause, selection, systemId, tensions, isClockProjected,
+        silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
 }

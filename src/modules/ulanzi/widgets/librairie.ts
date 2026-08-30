@@ -3,6 +3,7 @@ import {
     SEUIL_SANS_PAUSE,
     type EtatDesQuarts,
 } from './defileDesQuarts';
+import { composerCompteARebours } from './compteARebours';
 import type { ChargeDeWidget } from '../UlanziService';
 
 /**
@@ -56,6 +57,16 @@ export type TypeDeWidget = 'jauge' | 'compte-a-rebours' | 'rang' | 'icone-etat';
  */
 export type SourceDeWidget =
     | { de: 'pilote'; champ: string }
+    /**
+     * **Miroir d'un module de GM-OS** — les horloges de tension de Clock-OS.
+     *
+     * Ajouté à l'étape B. Le § 12 n'avait prévu que `pilote` et `main`, mais un
+     * moteur de GM-OS n'est ni l'un ni l'autre : il n'est pas déclaré par un jeu,
+     * et personne ne le pousse à la main. *Le nommer plutôt que le faire passer
+     * pour l'un des deux* — c'est la même exigence que « scellée » contre « face
+     * visible ».
+     */
+    | { de: 'horloge' }
     | { de: 'main' };
 
 export interface WidgetDeTable {
@@ -105,6 +116,23 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         systemId: 'blade-runner',
         source: { de: 'main' },
         parDefaut: true,
+    },
+    {
+        /*
+          **Le premier miroir — étape B, le 2026-08-30.**
+
+          Universel : toute campagne peut porter des horloges de tension, alors
+          qu'une réserve de table appartient à un jeu. C'est ce qui l'a fait
+          passer avant les jauges des pilotes.
+
+          **Pas `parDefaut`.** Il ne s'allumera donc chez personne sans qu'on le
+          coche — *ajouter une entrée au catalogue ne doit jamais allumer un
+          widget chez quelqu'un qui ne l'a pas demandé.*
+        */
+        id: 'horloges',
+        nom: 'Horloges de tension',
+        type: 'compte-a-rebours',
+        source: { de: 'horloge' },
     },
 ] as const;
 
@@ -236,6 +264,105 @@ export function reglerLesSecondes(
         }));
 }
 
+/* ──────────────── Ce qui part vers l'appareil : N applications ─────────────── */
+
+/** Une horloge de tension, réduite à ce que l'afficheur en montre. */
+export interface HorlogeAAfficher {
+    id: string;
+    nom: string;
+    remplis: number;
+    total: number;
+    couleur?: string;
+}
+
+/**
+ * L'état du monde que les widgets reflètent ou poussent.
+ *
+ * ⚠️ **`horloges` ne contient que ce que la table a le droit de voir.** Le
+ * caviardage se fait **en amont**, chez l'appelant qui lit `isClockProjected` :
+ * l'afficheur est public par construction (§ 1), et filtrer au dessin
+ * reviendrait à envoyer un secret en comptant sur l'affichage pour le taire —
+ * la faute déjà refusée sur les cartes scellées de Deck-OS.
+ */
+export interface MondeDesWidgets {
+    instruments: EtatDesInstruments;
+    horloges: HorlogeAAfficher[];
+}
+
+/**
+ * **Les horloges que la table a le droit de voir.**
+ *
+ * L'afficheur est **public par construction** (§ 1) : il ne doit jamais montrer
+ * une horloge que le meneur garde pour lui. On suit donc `isClockProjected`, le
+ * même interrupteur qui décide de ce que les tablettes voient.
+ *
+ * *Le caviardage se fait à la source, pas à l'affichage* — la règle déjà payée
+ * sur les cartes scellées de Deck-OS. Elle vit ici, pure et testée, parce que
+ * cachée dans le crochet **elle n'était couverte par rien** : la dégradation a
+ * montré qu'on pouvait la supprimer sans faire tomber un seul test.
+ */
+export function horlogesPourLaTable(etat: {
+    isClockProjected?: boolean;
+    tensions?: { id: string; name: string; totalSegments: number; filledSegments: number; color?: string }[];
+}): HorlogeAAfficher[] {
+    if (!etat.isClockProjected) return [];
+
+    return (etat.tensions ?? []).map(t => ({
+        id: t.id,
+        nom: t.name,
+        remplis: t.filledSegments,
+        total: t.totalSegments,
+        couleur: t.color,
+    }));
+}
+
+/** Une application AWTRIX prête à pousser. */
+export interface ApplicationAPousser {
+    nom: string;
+    charge: ChargeDeWidget;
+    secondes: number;
+}
+
+/**
+ * **Un widget, plusieurs applications — et c'est le cœur de l'étape B.**
+ *
+ * Le catalogue reste **statique** : une entrée « Horloges de tension », cochée
+ * ou non. Mais une campagne peut en porter six, et 32 × 8 n'en montre qu'une à
+ * la fois. On déplie donc l'entrée en **une application par horloge**, et la
+ * rotation native de l'appareil fait le reste — *toujours aucun ordonnanceur à
+ * écrire*, ce qui était déjà la bonne nouvelle du § 12.
+ *
+ * Chaque application hérite de la part d'écran réglée sur son widget : six
+ * horloges à 8 s font 48 s de tour, ce qui se règle depuis le tableau de bord
+ * sans rien changer ici.
+ */
+export function applicationsAPousser(
+    systemId: string | null | undefined,
+    selection: SelectionParJeu | undefined,
+    monde: MondeDesWidgets,
+    catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
+): ApplicationAPousser[] {
+    return widgetsActifs(systemId, selection, catalogue).flatMap(({ widget, secondes }) => {
+        if (widget.source.de === 'horloge') {
+            return monde.horloges.map(horloge => ({
+                nom: nomAwtrixDeLHorloge(horloge.id),
+                charge: composerCompteARebours(horloge) as unknown as ChargeDeWidget,
+                secondes,
+            }));
+        }
+
+        /*
+          Un widget sans compositeur est **sauté en silence** : le catalogue peut
+          annoncer une entrée dont le rendu par type n'existe pas encore, et une
+          exception ici arrêterait la publication de toutes les autres.
+        */
+        const composer = COMPOSITEURS[widget.id];
+        if (!composer) return [];
+
+        return [{ nom: nomAwtrix(widget.id), charge: composer(monde.instruments), secondes }];
+    });
+}
+
 /* ────────────────────────── Le nom sur l'appareil ──────────────────────────── */
 
 /** Le préfixe de toutes nos applications AWTRIX. Sert aussi à les reprendre. */
@@ -244,6 +371,19 @@ const PREFIXE = 'gmos_';
 /** Le nom de l'application AWTRIX d'un widget. Stable : republier remplace. */
 export function nomAwtrix(widgetId: string): string {
     return `${PREFIXE}${widgetId}`;
+}
+
+/**
+ * Le nom de l'application d'**une** horloge.
+ *
+ * L'identifiant vient du magasin (`clock-1754…`) et sert de nom d'application :
+ * on le réduit à ce qu'une URL et l'appareil acceptent sans surprise. Il doit
+ * rester **stable pour une même horloge** — c'est ce qui fait qu'une
+ * republication remplace au lieu d'empiler.
+ */
+export function nomAwtrixDeLHorloge(horlogeId: string): string {
+    const propre = horlogeId.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    return `${PREFIXE}h_${propre || 'sans_id'}`;
 }
 
 /**

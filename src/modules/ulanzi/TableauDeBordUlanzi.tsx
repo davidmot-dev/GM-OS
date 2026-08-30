@@ -4,6 +4,7 @@ import { useUlanziStore } from './useUlanziStore';
 import { QUARTS, composerDefile, stressDuQuart } from './widgets/defileDesQuarts';
 import { widgetsActifs, widgetsDuJeu, estActif } from './widgets/librairie';
 import { useCorpusDeLaCampagne } from '../session/hooks/useCorpusDeLaCampagne';
+import { useClockStore } from '../../store/useClockStore';
 
 /** Les noms des Quarts, tels que le livre les nomme — accents compris. */
 const LIBELLES: Record<(typeof QUARTS)[number], string> = {
@@ -61,6 +62,11 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     */
     const jeu = useCorpusDeLaCampagne();
     const disponibles = widgetsDuJeu(jeu);
+
+    /** Ce que le miroir des horloges montre réellement — voir plus bas. */
+    const tensions = useClockStore(s => s.tensions);
+    const isClockProjected = useClockStore(s => s.isClockProjected);
+    const horlogesMontrees = isClockProjected ? (tensions?.length ?? 0) : 0;
     const actifs = widgetsActifs(jeu, selection);
     const defileActif = estActif('quarts', jeu, selection);
 
@@ -151,6 +157,25 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                   moins à rendre — et permet de donner plus de
                                   temps au widget qui en demande.
                                 */}
+                                {/*
+                                  **Ce que le miroir montre vraiment, dit ici.**
+
+                                  Un widget coché dont rien ne paraît à l'écran
+                                  ressemble à une panne. Les horloges peuvent
+                                  n'être aucune, ou n'être pas projetées — et
+                                  l'afficheur est public, donc il ne montre que
+                                  ce que la table a le droit de voir. *Un absent
+                                  silencieux se cherche une heure.*
+                                */}
+                                {coche && widget.source.de === 'horloge' && (
+                                    <span className={`shrink-0 text-[10px] ${horlogesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                        {!isClockProjected
+                                            ? 'non projetées'
+                                            : horlogesMontrees === 0
+                                                ? 'aucune horloge'
+                                                : `${horlogesMontrees} affichée${horlogesMontrees > 1 ? 's' : ''}`}
+                                    </span>
+                                )}
                                 {coche && (
                                     <label className="flex shrink-0 items-center gap-1 text-[10px] text-app-text/40">
                                         <input

@@ -2,9 +2,11 @@ import { describe, it, expect } from 'vitest';
 import {
     LIBRAIRIE,
     COMPOSITEURS,
+    applicationsAPousser,
     basculer,
     bornerLesSecondes,
     estActif,
+    horlogesPourLaTable,
     nomAwtrix,
     nomsAwtrixDeTousLesWidgets,
     reglerLesSecondes,
@@ -129,6 +131,102 @@ describe('allumer et éteindre', () => {
     });
 });
 
+/**
+ * **Un widget, plusieurs applications — le cœur de l'étape B.**
+ *
+ * Le catalogue reste statique : une entrée « Horloges de tension ». Mais une
+ * campagne peut en porter six, et 32 × 8 n'en montre qu'une à la fois. On déplie
+ * donc à la publication, et la rotation native de l'appareil fait le reste.
+ */
+describe('ce qui part vers l’appareil', () => {
+    const HORLOGES = [
+        { id: 'clock-1', nom: 'Alerte', remplis: 1, total: 4 },
+        { id: 'clock-2', nom: 'Fuite', remplis: 3, total: 6 },
+    ];
+    const monde = (horloges = HORLOGES) => ({
+        instruments: { quarts: { quartDuJour: 0, consecutifs: 1 }, seuilSansPause: 3 },
+        horloges,
+    });
+
+    const AVEC_HORLOGES = { 'blade-runner': [
+        { widgetId: 'quarts', secondes: 20 },
+        { widgetId: 'tension', secondes: 8 },
+    ] };
+    /** Le catalogue de laboratoire, dont `tension` est la source « horloge ». */
+    const CAT: WidgetDeTable[] = [
+        CATALOGUE[0],
+        { id: 'tension', nom: 'Tension', type: 'compte-a-rebours', source: { de: 'horloge' } },
+    ];
+
+    it('déplie une entrée en une application par horloge', () => {
+        const apps = applicationsAPousser('blade-runner', AVEC_HORLOGES, monde(), CAT);
+
+        expect(apps.map(a => a.nom)).toEqual(['gmos_quarts', 'gmos_h_clock_1', 'gmos_h_clock_2']);
+    });
+
+    /** Chaque horloge hérite de la part d'écran réglée sur son widget. */
+    it('donne à chaque horloge la durée du widget', () => {
+        const apps = applicationsAPousser('blade-runner', AVEC_HORLOGES, monde(), CAT);
+        expect(apps.filter(a => a.nom.startsWith('gmos_h_')).map(a => a.secondes)).toEqual([8, 8]);
+    });
+
+    /**
+     * **Aucune horloge n'est un cas normal**, pas une erreur : le meneur n'en a
+     * pas encore créé, ou ne les projette pas. On ne pousse simplement rien.
+     */
+    it('ne pousse rien quand il n’y a aucune horloge à montrer', () => {
+        const apps = applicationsAPousser('blade-runner', AVEC_HORLOGES, monde([]), CAT);
+        expect(apps.map(a => a.nom)).toEqual(['gmos_quarts']);
+    });
+
+    it('ne pousse rien pour un widget décoché', () => {
+        const seul = { 'blade-runner': [{ widgetId: 'tension', secondes: 8 }] };
+        const apps = applicationsAPousser('blade-runner', seul, monde(), CAT);
+
+        expect(apps.every(a => a.nom.startsWith('gmos_h_'))).toBe(true);
+    });
+
+    it('compose vraiment la charge de chaque horloge', () => {
+        const apps = applicationsAPousser('blade-runner', AVEC_HORLOGES, monde(), CAT);
+        const premiere = apps[1].charge as unknown as { text: string; draw: unknown[] };
+
+        expect(premiere.text).toBe('ALERTE');
+        expect(premiere.draw).toHaveLength(4);
+    });
+});
+
+/**
+ * **L'afficheur est public par construction.**
+ *
+ * ⚠️ Cette règle vivait d'abord dans le crochet, et **rien ne la couvrait** : la
+ * dégradation a montré qu'on pouvait la supprimer sans faire tomber un seul
+ * test. Elle est donc descendue ici, pure. *Un garde-fou qu'aucun test ne tient
+ * n'est pas un garde-fou, c'est une intention.*
+ */
+describe('ce que la table a le droit de voir', () => {
+    const TENSIONS = [
+        { id: 'c1', name: 'Alerte', totalSegments: 4, filledSegments: 1, color: '#00C853' },
+        { id: 'c2', name: 'Fuite', totalSegments: 6, filledSegments: 3 },
+    ];
+
+    it('ne montre RIEN quand les horloges ne sont pas projetées', () => {
+        expect(horlogesPourLaTable({ isClockProjected: false, tensions: TENSIONS })).toEqual([]);
+    });
+
+    /** Un état incomplet — magasin en cours de réhydratation — vaut « non projeté ». */
+    it('ne montre rien quand la projection n’est pas déclarée', () => {
+        expect(horlogesPourLaTable({ tensions: TENSIONS })).toEqual([]);
+        expect(horlogesPourLaTable({})).toEqual([]);
+    });
+
+    it('traduit les horloges projetées sans rien inventer', () => {
+        expect(horlogesPourLaTable({ isClockProjected: true, tensions: TENSIONS })).toEqual([
+            { id: 'c1', nom: 'Alerte', remplis: 1, total: 4, couleur: '#00C853' },
+            { id: 'c2', nom: 'Fuite', remplis: 3, total: 6, couleur: undefined },
+        ]);
+    });
+});
+
 describe('les noms sur l’appareil', () => {
     /** Le nom historique ne change pas : deux applications se seraient superposées. */
     it('garde gmos_quarts au défilé', () => {
@@ -147,10 +245,25 @@ describe('les noms sur l’appareil', () => {
 });
 
 describe('le catalogue livré', () => {
-    it('n’a qu’une entrée, et c’est le défilé', () => {
-        // A ne livre AUCUN widget nouveau : si un second entrait ici maintenant,
-        // on ne saurait plus lequel des deux a validé la librairie.
-        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts']);
+    it('porte le défilé et les horloges de tension', () => {
+        expect(LIBRAIRIE.map(w => w.id)).toEqual(['quarts', 'horloges']);
+    });
+
+    /**
+     * **L'invariant qui remplace celui de l'étape A.**
+     *
+     * A gardait « une seule entrée » pour qu'on sache laquelle avait validé la
+     * librairie. B en ajoute une, et la règle qui compte devient : *ajouter une
+     * entrée au catalogue ne doit jamais allumer un widget chez quelqu'un qui ne
+     * l'a pas demandé.* Seul le défilé est allumé d'office, parce qu'il
+     * fonctionnait déjà avant qu'un tableau de bord existe.
+     */
+    it('n’allume d’office que ce qui marchait déjà sans tableau de bord', () => {
+        expect(LIBRAIRIE.filter(w => w.parDefaut).map(w => w.id)).toEqual(['quarts']);
+    });
+
+    it('les horloges sont universelles — toute campagne peut en porter', () => {
+        expect(LIBRAIRIE.find(w => w.id === 'horloges')?.systemId).toBeUndefined();
     });
 
     it('chaque widget composé a son compositeur', () => {
