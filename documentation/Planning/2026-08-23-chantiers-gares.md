@@ -8,8 +8,9 @@ en retire ce qui est fait. C'est le seul endroit où vit la liste des idées gar
 quatre sont clos** — thème, fiche HTML, sauvegarde des images, sauvegarde des
 fiches, les trois derniers **éprouvés en réel, aller et retour**.
 
-**Il ne reste que le n° 2, Deck-OS**, bloqué par ses deux décisions. Et l'essai
-en conditions de l'afficheur Ulanzi, qui attend la séance de Blade Runner.
+**Au 2026-08-30, Deck-OS tombe à son tour — construit ET éprouvé en réel le jour
+même, David : *« tout fonctionne bien »*. Les cinq chantiers sont clos.** Ne
+reste que l'essai en conditions de l'afficheur Ulanzi.
 
 > **Revérifié dans le code le 2026-08-24**, chantier par chantier, sans rien recopier d'un document.
 > Base saine : `tsc -b` propre, **2 321 tests au vert** (190 fichiers, 1 ignoré). Les trois états
@@ -24,8 +25,8 @@ en conditions de l'afficheur Ulanzi, qui attend la séance de Blade Runner.
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08** | **L'essayer en séance** — et surtout vérifier la **restitution** en la fermant | Rien |
-| 2 | **Deck-OS — garder la carte** | **Rien décidé** | Trancher les deux questions ci-dessous | Deux décisions de David |
+| 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08, ÉPROUVÉ EN RÉEL le 30/08** — trois défauts de restitution trouvés et corrigés | La séance de Blade Runner elle-même | Rien |
+| 2 | **Deck-OS — garder la carte** | ✅ **CONSTRUIT et ÉPROUVÉ EN RÉEL le 30/08** — quatrième tas, don entre joueurs, pioche par le joueur, onglet Cartes | — | Rien |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |
 | 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
 | 4 | **Sauvegarde des images** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
