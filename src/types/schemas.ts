@@ -97,6 +97,16 @@ export const FullSessionSchema = z.object({
         clock: z.object({ timestamp: z.number() }).optional(),
         ambient: z.object({ tracks: z.array(z.any()) }).optional(),
         whiteboard: z.object({ paths: z.array(z.any()) }).optional(),
+        /*
+          **Sans cette ligne, la clé serait écrite puis jetée à la relecture.**
+
+          `modules` est un `z.object` simple — pas `.passthrough()` comme les
+          schémas au-dessus — et Zod retire les clés qu'il ne nomme pas. La
+          sauvegarde aurait donc emporté les atmosphères, et le chargement les
+          aurait supprimées sans un mot : le défaut idéal, invisible partout
+          sauf le jour où l'on a besoin de la sauvegarde.
+        */
+        music: z.object({ playlists: z.array(z.any()) }).optional(),
     }).default({}),
 }).passthrough();
 

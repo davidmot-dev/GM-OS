@@ -12,6 +12,7 @@ import { withTimeout } from '../utils/promiseUtils';
 import { Logger } from '../utils/logger';
 import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSession';
 import { useBibliothequeDesFiches } from '../modules/fiches/useBibliothequeDesFiches';
+import { useMusicStore } from '../modules/music/useMusicStore';
 
 /**
  * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
@@ -29,6 +30,7 @@ export function construireLaSauvegarde() {
     const ambientState = useAmbientStore.getState();
     const clockState = useClockStore.getState();
     const whiteboardState = useWhiteboardStore.getState();
+    const musicState = useMusicStore.getState();
     const bibliotheque = useBibliothequeDesFiches.getState().instantane;
 
     return {
@@ -60,6 +62,25 @@ export function construireLaSauvegarde() {
             },
             whiteboard: {
                 paths: whiteboardState.paths,
+            },
+            /*
+              **Music-OS n'était dans aucune sauvegarde** — ni la manuelle, ni
+              l'automatique. Trouvé le 2026-08-30 en cherchant où rattacher les
+              atmosphères à une campagne.
+
+              Une playlist n'est pas un réglage : ce sont des chemins de
+              fichiers, des libellés, des points de boucle, des scènes
+              lumineuses liées et des raccourcis clavier. Tout cela ne vivait
+              que dans le `localStorage` d'une application qui a déjà perdu ses
+              données deux fois.
+
+              **Les playlists seulement.** La sortie audio, le volume général
+              et la durée de fondu décrivent la pièce où l'on joue, pas
+              l'univers : rouvrir une sauvegarde d'il y a six mois ne doit pas
+              renvoyer le son sur la mauvaise carte au milieu d'une séance.
+            */
+            music: {
+                playlists: musicState.playlists,
             },
             /*
               **La bibliothèque du moteur de fiches — chantier n° 5.**
@@ -192,6 +213,22 @@ export const SessionService = {
             if (data.modules.web) useWebStore.setState(data.modules.web as any);
             if (data.modules.clock) {
                 useClockStore.setState(data.modules.clock as any);
+            }
+            /*
+              **Une bibliothèque vide n'en remplace jamais une pleine.** Une
+              sauvegarde antérieure au 2026-08-30 n'a pas de clé `music` du
+              tout — c'est le `if` qui l'écarte. Mais une sauvegarde prise
+              avant que le magasin n'ait fini de se réhydrater en porterait
+              une, vide, et l'appliquer effacerait le travail du meneur en
+              silence. La leçon est payée : voir `SessionBackupManager`.
+
+              Seules les playlists reviennent. Le reste de Music-OS décrit la
+              pièce où l'on joue, pas la campagne.
+            */
+            const music = (data.modules as { music?: { playlists?: unknown[] } }).music;
+            if (music?.playlists?.length) {
+                useMusicStore.setState({ playlists: music.playlists as never });
+                Logger.info(`[Session] ${music.playlists.length} atmosphères restaurées`);
             }
             // Ambient and Whiteboard might need more careful hydration if they have active engines
         }

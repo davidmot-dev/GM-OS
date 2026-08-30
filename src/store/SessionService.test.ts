@@ -25,6 +25,7 @@ type ChargeSauvegardee = {
             actes?: Acte[];
             scenes?: Scene[];
         };
+        music?: { playlists?: { id: string; campagneId?: string | null }[] };
     };
 };
 
@@ -37,6 +38,8 @@ vi.mock('../modules/session/logic/idbStorage', () => ({
 
 const { SessionService } = await import('./SessionService');
 const { useSessionOSStore } = await import('../modules/session/store/index');
+const { useMusicStore } = await import('../modules/music/useMusicStore');
+const { FullSessionSchema } = await import('../types/schemas');
 
 /** Le pont d'Electron, réduit à ce que la sauvegarde en appelle. */
 const poserLePont = () => {
@@ -85,5 +88,48 @@ describe('saveFullSession', () => {
 
         expect(laCharge().actes?.[0].id).toBe('a-1');
         expect(laCharge().scenes?.[0].id).toBe('sc-1');
+    });
+
+    /**
+     * **Music-OS n'était dans aucune sauvegarde.** Trouvé le 2026-08-30.
+     *
+     * Une playlist n'est pas un réglage : chemins de fichiers, points de
+     * boucle, scènes lumineuses liées, raccourcis clavier — et depuis ce jour,
+     * la campagne à laquelle elle appartient. Tout cela ne vivait que dans le
+     * `localStorage`.
+     */
+    it('emporte les atmosphères de Music-OS, et leur rattachement', async () => {
+        useMusicStore.setState({
+            playlists: [
+                { id: 'pl-colonie', name: 'Colonie', pads: [], campagneId: 'c-hadley' },
+                { id: 'pl-tension', name: 'Tension', pads: [] },
+            ],
+        });
+
+        await SessionService.saveFullSession(true);
+
+        const music = chargesEnvoyees[0].modules.music;
+        expect(music?.playlists).toHaveLength(2);
+        expect(music?.playlists?.[0].campagneId).toBe('c-hadley');
+    });
+
+    /**
+     * *Le défaut idéal : écrire la clé, puis la jeter à la relecture.*
+     *
+     * `modules` est un `z.object` simple — Zod retire les clés qu'il ne nomme
+     * pas. Sans la ligne ajoutée au schéma, la sauvegarde aurait emporté les
+     * atmosphères et le chargement les aurait supprimées sans un mot. Ce test
+     * regarde le schéma sur la charge réelle, seul endroit d'où l'aller-retour
+     * se voit.
+     */
+    it('les fait survivre au schéma qui relit la sauvegarde', async () => {
+        useMusicStore.setState({
+            playlists: [{ id: 'pl-nid', name: 'Nid', pads: [], campagneId: 'c-hadley' }],
+        });
+
+        await SessionService.saveFullSession(true);
+        const relu = FullSessionSchema.parse(chargesEnvoyees[0]);
+
+        expect((relu.modules as { music?: { playlists: unknown[] } }).music?.playlists).toHaveLength(1);
     });
 });
