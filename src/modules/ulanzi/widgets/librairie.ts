@@ -8,6 +8,7 @@ import { composerMinuteur, ilYAUnMinuteur, type MinuteurAAfficher } from './minu
 import { composerLHeure, type TempsAAfficher } from './heureDuMonde';
 import { composerJaugeDeTable, type ReserveAAfficher } from './jaugeDeTable';
 import { visiblePourUnJoueur, type RessourceDeTable } from '../../table/RessourcesDeTable';
+import { composerVoightKampff, SIGNAL_INITIAL, type EtatDuSignal } from './voightKampff';
 import type { ChargeDeWidget } from '../UlanziService';
 
 /**
@@ -104,6 +105,18 @@ export interface WidgetDeTable {
      * *On ne rend pas réglable ce qui dit quelque chose.*
      */
     couleurReglable?: boolean;
+    /**
+     * **Ce widget demande-t-il une seconde de fraîcheur ?**
+     *
+     * Le minuteur affiche `MM:SS`, l'heure change de minute, le signal du
+     * Voight-Kampff dérive. Les autres ne bougent que quand le meneur les
+     * pousse.
+     *
+     * Déclaré ici plutôt que déduit de la source : *une propriété qu'on devine
+     * en énumérant des cas se trompe le jour où un cas s'ajoute*, et c'est déjà
+     * ce qui a failli arriver en ajoutant l'heure à côté du minuteur.
+     */
+    cadenceRapide?: boolean;
 }
 
 /**
@@ -115,6 +128,8 @@ export interface WidgetDeTable {
 export interface EtatDesInstruments {
     quarts: EtatDesQuarts;
     seuilSansPause: number;
+    /** Le rythme du Voight-Kampff, poussé à la main lui aussi. */
+    signal: EtatDuSignal;
 }
 
 /**
@@ -164,6 +179,7 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         type: 'compte-a-rebours',
         source: { de: 'minuteur' },
         couleurReglable: true,
+        cadenceRapide: true,
     },
     {
         /*
@@ -178,6 +194,7 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         type: 'rang',
         source: { de: 'temps' },
         couleurReglable: true,
+        cadenceRapide: true,
     },
     {
         /*
@@ -191,6 +208,23 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         source: { de: 'pilote', champ: 'ressourcesDeTable' },
         couleurReglable: true,
     },
+    {
+        /*
+          **Le second widget composé** — demandé par David le 2026-08-31, et le
+          seul autre à mériter son propre dessin. Un tracé n'est aucun des quatre
+          types du § 2 ; l'étagère composée existe pour ça, et doit rester rare.
+
+          **Pas `couleurReglable`** : la couleur monte avec le rythme, du vert au
+          rouge. *On ne rend pas réglable ce qui dit quelque chose* — la même
+          raison que pour les Quarts.
+        */
+        id: 'vk',
+        nom: 'Signal Voight-Kampff',
+        type: 'icone-etat',
+        systemId: 'blade-runner',
+        source: { de: 'main' },
+        cadenceRapide: true,
+    },
 ] as const;
 
 /**
@@ -200,9 +234,15 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
  * générique n'apparaîtra jamais ici — il sera dessiné par un rendu **par type**,
  * et c'est toute la différence entre les deux étagères.
  */
-export const COMPOSITEURS: Record<string, (etat: EtatDesInstruments) => ChargeDeWidget> = {
+export const COMPOSITEURS: Record<
+    string,
+    (etat: EtatDesInstruments, maintenant: number) => ChargeDeWidget
+> = {
     quarts: ({ quarts, seuilSansPause }) =>
         composerDefile(quarts, seuilSansPause ?? SEUIL_SANS_PAUSE) as unknown as ChargeDeWidget,
+    // `maintenant` porte la dérive du tracé : une colonne par seconde.
+    vk: ({ signal }, maintenant) =>
+        composerVoightKampff(signal ?? SIGNAL_INITIAL, maintenant) as unknown as ChargeDeWidget,
 };
 
 /** Une entrée du tableau de bord : un widget choisi, et sa part d'écran. */
@@ -298,14 +338,14 @@ export function demandeUneCadenceRapide(
     selection: SelectionParJeu | undefined,
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): boolean {
+    /*
+      Elle ne coûte pas ce qu'elle en a l'air : le battement ne republie que ce
+      qui a **changé**. L'heure ne part qu'une fois par minute, le défilé qu'au
+      renouvellement de sa durée de vie. *La cadence rapide fait tourner une
+      boucle, pas le réseau.*
+    */
     return widgetsActifs(systemId, selection, catalogue)
-        /*
-          L'heure y figure aussi : sa minute changerait avec jusqu'à trente
-          secondes de retard au battement lent. Elle ne coûte pourtant qu'**une
-          requête par minute**, puisque le battement ne republie que ce qui a
-          changé — la cadence rapide fait tourner une boucle, pas le réseau.
-        */
-        .some(({ widget }) => widget.source.de === 'minuteur' || widget.source.de === 'temps');
+        .some(({ widget }) => widget.cadenceRapide);
 }
 
 /** Le widget est-il actif pour ce jeu ? Répond aussi quand rien n'est choisi. */
@@ -635,7 +675,11 @@ export function applicationsAPousser(
         const composer = COMPOSITEURS[widget.id];
         if (!composer) return [];
 
-        return [{ nom: nomAwtrix(widget.id), charge: composer(monde.instruments), secondes }];
+        return [{
+            nom: nomAwtrix(widget.id),
+            charge: composer(monde.instruments, monde.maintenant),
+            secondes,
+        }];
     });
 }
 

@@ -91,7 +91,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
     // `routine` n'est volontairement pas lu ici : la restitution la relit dans
     // le store au moment de rendre la main, pour ne jamais rendre une valeur
     // capturée par une fermeture devenue périmée.
-    const { hote, actif, selection, seuilSansPause, quarts, silencerLesNatives } = useUlanziStore();
+    const { hote, actif, selection, seuilSansPause, quarts, signal, silencerLesNatives } = useUlanziStore();
     /*
       Abonnés, et pas seulement lus : un segment rempli doit se voir sur
       l'afficheur tout de suite, pas au prochain battement. C'est ce qui
@@ -135,8 +135,8 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
      */
     const toutARendre = () => [...new Set([...NOMS_DES_WIDGETS, ...posees.current.keys()])];
     /** Les valeurs les plus fraîches, pour que le battement ne serve pas du périmé. */
-    const dernier = useRef({ quarts, seuilSansPause, hote, selection, systemId });
-    dernier.current = { quarts, seuilSansPause, hote, selection, systemId };
+    const dernier = useRef({ quarts, seuilSansPause, hote, selection, systemId, signal });
+    dernier.current = { quarts, seuilSansPause, hote, selection, systemId, signal };
 
     const doitAfficher = actif && seanceOuverte;
 
@@ -286,7 +286,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
          * *Un rattrapage qui ne rattrape qu'une fois ne rattrape pas.*
          */
         const publier = async () => {
-            const { quarts: q, seuilSansPause: s, selection: sel, systemId: jeu } = dernier.current;
+            const { quarts: q, seuilSansPause: s, selection: sel, systemId: jeu, signal: sig } = dernier.current;
             try {
                 if (!enMain.current) {
                     const avant = await service.prendreLaMain(silencerLesNatives);
@@ -313,7 +313,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                 */
                 const etatDeLHorloge = useClockStore.getState();
                 const aPousser = applicationsAPousser(jeu, sel, {
-                    instruments: { quarts: q, seuilSansPause: s },
+                    instruments: { quarts: q, seuilSansPause: s, signal: sig },
                     horloges: horlogesPourLaTable(etatDeLHorloge),
                     minuteur: minuteurPourLaTable(etatDeLHorloge),
                     temps: tempsPourLaTable(etatDeLHorloge),
@@ -406,7 +406,7 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
         // `selection` et `systemId` : cocher un widget ou changer de campagne
         // doit se voir tout de suite. `tensions` et `isClockProjected` : un
         // segment rempli aussi — c'est un miroir, personne ne le pousse.
-    }, [doitAfficher, hote, quarts, seuilSansPause, selection, systemId, tensions, isClockProjected,
+    }, [doitAfficher, hote, quarts, signal, seuilSansPause, selection, systemId, tensions, isClockProjected,
         modeDeLHorloge, horodatage, reservesDeTable, campagneOuverte,
         silencerLesNatives, setJoignable, setRoutine, memoriserLaRoutine]);
 }

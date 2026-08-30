@@ -9,6 +9,12 @@ import {
 } from './widgets/defileDesQuarts';
 import { HOTE_PAR_DEFAUT, type RoutineSauvegardee } from './UlanziService';
 import {
+    accelerer,
+    calmer,
+    SIGNAL_INITIAL,
+    type EtatDuSignal,
+} from './widgets/voightKampff';
+import {
     basculer,
     reglerLaCouleur,
     reglerLesSecondes,
@@ -64,6 +70,12 @@ interface EtatUlanzi {
     seuilSansPause: number;
     quarts: EtatDesQuarts;
     /**
+     * **Le rythme du Voight-Kampff.** Un instrument au sens du § 4 : il ne
+     * reflète aucun moteur, c'est le meneur qui le pousse — et *les joueurs
+     * voient le rythme monter sans savoir pourquoi.*
+     */
+    signal: EtatDuSignal;
+    /**
      * Ce qu'affichait l'appareil avant qu'on lui emprunte ses pixels.
      *
      * Persistée : si GM-OS redémarre en cours de séance, c'est la seule trace
@@ -88,6 +100,10 @@ interface EtatUlanzi {
     quartSuivant: () => void;
     pause: () => void;
     reinitialiserLesQuarts: () => void;
+    /** Le rythme monte d'un cran. C'est le geste que David a demandé. */
+    accelererLeSignal: () => void;
+    calmerLeSignal: () => void;
+    reposerLeSignal: () => void;
     setRoutine: (routine: RoutineSauvegardee | null) => void;
     /**
      * **Mémorise la routine — une seule fois, et c'est tout le sujet.**
@@ -117,6 +133,7 @@ export const useUlanziStore = create<EtatUlanzi>()(
             seuilSansPause: SEUIL_SANS_PAUSE,
             selection: {},
             quarts: ETAT_INITIAL,
+            signal: SIGNAL_INITIAL,
             routine: null,
             joignable: null,
             pourquoi: null,
@@ -153,6 +170,10 @@ export const useUlanziStore = create<EtatUlanzi>()(
             pause: () => set((s) => ({ quarts: prendreUnePause(s.quarts) })),
             reinitialiserLesQuarts: () => set({ quarts: ETAT_INITIAL }),
 
+            accelererLeSignal: () => set((s) => ({ signal: accelerer(s.signal ?? SIGNAL_INITIAL) })),
+            calmerLeSignal: () => set((s) => ({ signal: calmer(s.signal ?? SIGNAL_INITIAL) })),
+            reposerLeSignal: () => set({ signal: SIGNAL_INITIAL }),
+
             setRoutine: (routine) => set({ routine }),
             // Écrire seulement si l'on ne tient rien : une routine déjà
             // mémorisée est la seule qui ait vu l'appareil intact.
@@ -171,6 +192,7 @@ export const useUlanziStore = create<EtatUlanzi>()(
                 seuilSansPause: s.seuilSansPause,
                 selection: s.selection,
                 quarts: s.quarts,
+                signal: s.signal,
                 routine: s.routine,
             }),
         },

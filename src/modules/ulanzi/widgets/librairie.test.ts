@@ -22,6 +22,7 @@ import {
     type WidgetDeTable,
 } from './librairie';
 import { COULEURS_DU_COMPTE } from './compteARebours';
+import { SIGNAL_INITIAL } from './voightKampff';
 
 /**
  * **La librairie de widgets — § 12 du plan, construite le 2026-08-30.**
@@ -149,7 +150,7 @@ describe('ce qui part vers l’appareil', () => {
         { id: 'clock-2', nom: 'Fuite', remplis: 3, total: 6 },
     ];
     const monde = (horloges = HORLOGES, minuteur = null) => ({
-        instruments: { quarts: { quartDuJour: 0, consecutifs: 1 }, seuilSansPause: 3 },
+        instruments: { quarts: { quartDuJour: 0, consecutifs: 1 }, seuilSansPause: 3, signal: SIGNAL_INITIAL },
         horloges,
         minuteur,
         temps: null,
@@ -320,7 +321,7 @@ describe('les couleurs', () => {
         { id: 'horloges', nom: 'Horloges', type: 'compte-a-rebours', source: { de: 'horloge' }, couleurReglable: true },
     ];
     const monde = (horloges: { id: string; nom: string; remplis: number; total: number; couleur?: string }[]) => ({
-        instruments: { quarts: { quartDuJour: 0, consecutifs: 0 }, seuilSansPause: 3 },
+        instruments: { quarts: { quartDuJour: 0, consecutifs: 0 }, seuilSansPause: 3, signal: SIGNAL_INITIAL },
         horloges,
         minuteur: null,
         temps: null,
@@ -398,9 +399,19 @@ describe('les noms sur l’appareil', () => {
 });
 
 describe('le catalogue livré', () => {
-    it('porte les cinq widgets', () => {
+    it('porte les six widgets', () => {
         expect(LIBRAIRIE.map(w => w.id))
-            .toEqual(['quarts', 'horloges', 'minuteur', 'heure', 'reserves']);
+            .toEqual(['quarts', 'horloges', 'minuteur', 'heure', 'reserves', 'vk']);
+    });
+
+    /**
+     * **L'étagère composée doit rester rare.** Un dessin propre coûte du code à
+     * chaque fois ; la promesse « ajouter un jeu ne coûte aucune ligne » ne vaut
+     * que pour l'étagère générique. Ce test se remarque si elle enfle.
+     */
+    it('n’a que deux widgets composés — le défilé et le signal', () => {
+        expect(LIBRAIRIE.filter(w => w.source.de === 'main').map(w => w.id))
+            .toEqual(['quarts', 'vk']);
     });
 
     /**
@@ -411,7 +422,7 @@ describe('le catalogue livré', () => {
      */
     it('un seul widget défile, et c’est l’heure du monde', () => {
         const monde = {
-            instruments: { quarts: { quartDuJour: 0, consecutifs: 0 }, seuilSansPause: 3 },
+            instruments: { quarts: { quartDuJour: 0, consecutifs: 0 }, seuilSansPause: 3, signal: SIGNAL_INITIAL },
             horloges: [{ id: 'c1', nom: 'A', remplis: 1, total: 4 }],
             minuteur: { restant: 60, duree: 120 },
             temps: { mode: 'static' as const, timestamp: 0 },
@@ -477,9 +488,33 @@ describe('le catalogue livré', () => {
         const charge = COMPOSITEURS.quarts({
             quarts: { quartDuJour: 1, consecutifs: 4 },
             seuilSansPause: 3,
-        }) as unknown as { text: string; draw: unknown[] };
+            signal: SIGNAL_INITIAL,
+        }, 0) as unknown as { text: string; draw: unknown[] };
 
         expect(charge.text).toBe('JOURNEE');
         expect(charge.draw.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * **Le signal du Voight-Kampff dérive avec le temps** — une colonne par
+     * seconde. C'est ce qui distingue une machine qui tourne d'un dessin figé,
+     * et c'est pour ça que ce widget demande la cadence rapide.
+     */
+    it('le compositeur du signal dérive avec le temps', () => {
+        const instruments = {
+            quarts: { quartDuJour: 0, consecutifs: 0 },
+            seuilSansPause: 3,
+            signal: { niveau: 3 },
+        };
+        const a = COMPOSITEURS.vk(instruments, 0) as unknown as { draw: unknown[] };
+        const b = COMPOSITEURS.vk(instruments, 1000) as unknown as { draw: unknown[] };
+
+        expect(b.draw).not.toEqual(a.draw);
+    });
+
+    /** *Une propriété qu'on devine en énumérant des cas se trompe.* */
+    it('déclare la cadence rapide plutôt que de la déduire de la source', () => {
+        expect(LIBRAIRIE.filter(w => w.cadenceRapide).map(w => w.id))
+            .toEqual(['minuteur', 'heure', 'vk']);
     });
 });

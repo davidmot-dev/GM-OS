@@ -1,5 +1,5 @@
 import React from 'react';
-import { Coffee, MonitorSmartphone, ChevronRight, WifiOff, RotateCcw } from 'lucide-react';
+import { Coffee, MonitorSmartphone, ChevronRight, ChevronDown, WifiOff, RotateCcw, Activity } from 'lucide-react';
 import { useUlanziStore } from './useUlanziStore';
 import { QUARTS, composerDefile, stressDuQuart } from './widgets/defileDesQuarts';
 import { widgetsActifs, widgetsDuJeu, estActif, reservesPourLaTable } from './widgets/librairie';
@@ -12,6 +12,7 @@ import { enMinutesSecondes, COULEURS_DU_MINUTEUR } from './widgets/minuteur';
 import { COULEURS_DU_COMPTE } from './widgets/compteARebours';
 import { COULEUR_DE_L_HEURE } from './widgets/heureDuMonde';
 import { COULEUR_DE_LA_RESERVE } from './widgets/jaugeDeTable';
+import { couleurDuNiveau, NIVEAU_MAX, NIVEAU_MIN } from './widgets/voightKampff';
 
 /**
  * Ce que chaque widget affiche quand aucune couleur n'a été choisie.
@@ -82,6 +83,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
         selection, basculerLeWidget, setSecondesDuWidget, setCouleurDuWidget,
         hote, setHote, silencerLesNatives, basculerSilence,
         quartSuivant, pause, reinitialiserLesQuarts,
+        signal, accelererLeSignal, calmerLeSignal, reposerLeSignal,
     } = useUlanziStore();
 
     /*
@@ -120,6 +122,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     }, [campagnes, campagneOuverte, pilotesForges, valeursDesReserves]);
     const actifs = widgetsActifs(jeu, selection);
     const defileActif = estActif('quarts', jeu, selection);
+    const signalActif = estActif('vk', jeu, selection);
 
     const moment = QUARTS[quarts.quartDuJour];
     const coute = stressDuQuart(quarts, seuilSansPause) > 0;
@@ -387,6 +390,62 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                             </button>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/*
+              **Le pupitre du Voight-Kampff — demandé par David le 2026-08-31 :**
+              *« quand j'appuie sur un bouton le rythme s'accélère »*.
+
+              Visible seulement quand le signal est coché, comme les boutons du
+              défilé : ils poussent un instrument, et n'ont aucun sens quand la
+              table ne le voit pas.
+
+              ⚠️ **Le niveau est ici, pas sur l'afficheur.** Les joueurs voient
+              le rythme monter et ne savent pas pourquoi — c'est tout l'objet du
+              § 4, et c'est aussi pourquoi le tracé ne porte aucun texte.
+            */}
+            {signalActif && (
+                <div className="flex items-center gap-2">
+                    <div className="flex flex-1 items-center gap-1" aria-label="Rythme du signal">
+                        {Array.from({ length: NIVEAU_MAX }, (_, i) => (
+                            <span
+                                key={i}
+                                className="h-1.5 flex-1 rounded-sm transition-colors"
+                                style={{
+                                    backgroundColor: i < signal.niveau
+                                        ? couleurDuNiveau(signal.niveau)
+                                        : 'var(--app-border)',
+                                }}
+                            />
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={calmerLeSignal}
+                        disabled={signal.niveau <= NIVEAU_MIN}
+                        title="Calmer le sujet"
+                        className="rounded-lg border border-app-border/40 px-2 py-1 text-[11px] font-bold text-app-text/60 hover:text-app-text disabled:opacity-20"
+                    >
+                        <ChevronDown size={12} />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={accelererLeSignal}
+                        disabled={signal.niveau >= NIVEAU_MAX}
+                        title="Le rythme s’accélère"
+                        className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-[11px] font-bold text-rose-300 hover:bg-rose-500/20 disabled:opacity-20"
+                    >
+                        <Activity size={12} /> Accélérer
+                    </button>
+                    <button
+                        type="button"
+                        onClick={reposerLeSignal}
+                        title="Retour au repos"
+                        className="rounded-lg border border-app-border/40 px-2 py-1 text-app-text/40 hover:text-app-text/70"
+                    >
+                        <RotateCcw size={11} />
+                    </button>
                 </div>
             )}
 
