@@ -103,6 +103,8 @@
     "new_gauge": "New Gauge",
     "gauge_placeholder": "Gauge name...",
     "gauge_default": "Gauge {{segments}} seg",
+    "gauge_color": "Colour of this gauge on the Ulanzi display",
+    "gauge_color_reset": "Back to the original colour",
     "gauge_add_named": "Create \"{{nom}}\" — {{segments}} segments",
     "gauge_add_default": "Create a {{segments}}-segment gauge (name it above to recognise it)",
     "segments": "Segments",

@@ -124,6 +124,9 @@ export function composerCompteARebours(compte: CompteAAfficher): CompositionDuCo
     const total = Math.max(0, Math.round(compte.total));
     const remplis = Math.max(0, Math.min(total, Math.round(compte.remplis)));
     const pleine = total > 0 && remplis >= total;
+    // Pleine, elle passe au rouge quelle que soit la couleur choisie — voir
+    // plus bas : la couleur distingue les horloges, elle ne masque pas
+    // l'échéance.
     const couleur = pleine
         ? COULEURS_DU_COMPTE.pleine
         : (compte.couleur || COULEURS_DU_COMPTE.plein);

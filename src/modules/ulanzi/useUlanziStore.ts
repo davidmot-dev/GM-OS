@@ -10,6 +10,7 @@ import {
 import { HOTE_PAR_DEFAUT, type RoutineSauvegardee } from './UlanziService';
 import {
     basculer,
+    reglerLaCouleur,
     reglerLesSecondes,
     type SelectionParJeu,
 } from './widgets/librairie';
@@ -80,6 +81,8 @@ interface EtatUlanzi {
     basculerLeWidget: (systemId: string, widgetId: string) => void;
     /** La part d'écran d'un widget, en secondes. Bornée par la librairie. */
     setSecondesDuWidget: (systemId: string, widgetId: string, secondes: number) => void;
+    /** La couleur d'un widget. `null` l'efface, et le widget reprend la sienne. */
+    setCouleurDuWidget: (systemId: string, widgetId: string, couleur: string | null) => void;
     setSeuil: (seuil: number) => void;
     basculerSilence: () => void;
     quartSuivant: () => void;
@@ -135,6 +138,12 @@ export const useUlanziStore = create<EtatUlanzi>()(
                 selection: {
                     ...s.selection,
                     [systemId]: reglerLesSecondes(widgetId, secondes, systemId, s.selection),
+                },
+            })),
+            setCouleurDuWidget: (systemId, widgetId, couleur) => set(s => ({
+                selection: {
+                    ...s.selection,
+                    [systemId]: reglerLaCouleur(widgetId, couleur, systemId, s.selection),
                 },
             })),
             setSeuil: (seuil) => set({ seuilSansPause: Math.max(1, Math.min(6, Math.round(seuil))) }),

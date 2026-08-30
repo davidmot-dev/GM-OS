@@ -68,10 +68,15 @@ export function nomEtValeur(nom: string, valeur: number): string {
  * droit de faire — chez Dune, à zéro d'Impulsion l'achat d'un dé se paie en
  * Menace. C'est la seule chose que la table doit voir de loin.
  */
-export function composerJaugeDeTable(reserve: ReserveAAfficher): CompositionDeLaReserve {
+export function composerJaugeDeTable(
+    reserve: ReserveAAfficher,
+    couleurChoisie?: string,
+): CompositionDeLaReserve {
     const valeur = Math.round(reserve.valeur);
     const aSec = valeur <= reserve.min;
-    const couleur = aSec ? COULEUR_A_SEC : COULEUR_DE_LA_RESERVE;
+    // À sec, la couleur choisie s'efface : c'est la seule chose que la table
+    // doit voir de loin, et la rendre réglable permettrait de la rendre muette.
+    const couleur = aSec ? COULEUR_A_SEC : (couleurChoisie || COULEUR_DE_LA_RESERVE);
 
     if (reserve.max === undefined) {
         return {

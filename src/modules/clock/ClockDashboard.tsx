@@ -18,6 +18,10 @@ import NarrativeClock from './components/NarrativeClock';
 import ChoixDeLaForme from './components/ChoixDeLaForme';
 import { FORME_PAR_DEFAUT, type FormeDeJauge } from './components/formesDeJauge';
 import { nomDeLaJauge, SEGMENTS_PROPOSES, SEGMENTS_PAR_DEFAUT } from './logic/nomDeLaJauge';
+import { COULEURS_DU_COMPTE } from '../ulanzi/widgets/compteARebours';
+
+/** Ce que l'afficheur montre quand une jauge n'a pas de couleur choisie. */
+const COULEUR_DE_JAUGE_PAR_DEFAUT = COULEURS_DU_COMPTE.plein;
 import { useTranslation } from 'react-i18next';
 
 
@@ -64,6 +68,7 @@ const ClockDashboard: React.FC = () => {
         removeTensionClock,
         updateTensionSegments,
         changerLaFormeDeLaJauge,
+        changerLaCouleurDeLaJauge,
         setTimer,
         setTimerLabel,
         timerDuration,
@@ -460,12 +465,44 @@ const ClockDashboard: React.FC = () => {
                                       disputeraient l'œil à la jauge elle-même,
                                       qui est la seule chose à lire en séance.
                                     */}
-                                    <div className="opacity-30 group-hover:opacity-100 transition-opacity">
+                                    <div className="opacity-30 group-hover:opacity-100 transition-opacity flex items-center gap-2">
                                         <ChoixDeLaForme
                                             compact
                                             valeur={clock.forme ?? FORME_PAR_DEFAUT}
                                             onChoisir={(f) => changerLaFormeDeLaJauge(clock.id, f)}
                                         />
+                                        {/*
+                                          **La couleur de cette jauge SUR L'AFFICHEUR.**
+
+                                          Demandé par David le 2026-08-31. Le champ
+                                          `color` existait depuis toujours et **rien ne
+                                          le renseignait** — aucune interface ne le
+                                          posait, aucun rendu ne le lisait. L'Ulanzi le
+                                          lit désormais, jauge par jauge, ce qui lui
+                                          donne enfin un usage.
+
+                                          Les jauges de CET écran gardent leur habillage
+                                          de thème : ce réglage-ci ne parle qu'à l'objet
+                                          de la table.
+                                        */}
+                                        <input
+                                            type="color"
+                                            value={clock.color ?? COULEUR_DE_JAUGE_PAR_DEFAUT}
+                                            onChange={(e) => changerLaCouleurDeLaJauge(clock.id, e.target.value)}
+                                            title={t('clock.gauge_color')}
+                                            aria-label={t('clock.gauge_color')}
+                                            className="h-5 w-5 shrink-0 cursor-pointer rounded border border-slate-700 bg-transparent p-0"
+                                        />
+                                        {clock.color && (
+                                            <button
+                                                type="button"
+                                                onClick={() => changerLaCouleurDeLaJauge(clock.id, null)}
+                                                title={t('clock.gauge_color_reset')}
+                                                className="text-xs leading-none text-slate-600 hover:text-slate-300"
+                                            >
+                                                ×
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

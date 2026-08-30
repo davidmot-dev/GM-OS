@@ -8,7 +8,25 @@ import { useRessourcesDeTableStore } from '../table/useRessourcesDeTableStore';
 import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
 import { useCorpusDeLaCampagne } from '../session/hooks/useCorpusDeLaCampagne';
 import { useClockStore } from '../../store/useClockStore';
-import { enMinutesSecondes } from './widgets/minuteur';
+import { enMinutesSecondes, COULEURS_DU_MINUTEUR } from './widgets/minuteur';
+import { COULEURS_DU_COMPTE } from './widgets/compteARebours';
+import { COULEUR_DE_L_HEURE } from './widgets/heureDuMonde';
+import { COULEUR_DE_LA_RESERVE } from './widgets/jaugeDeTable';
+
+/**
+ * Ce que chaque widget affiche quand aucune couleur n'a été choisie.
+ *
+ * **Un sélecteur de couleur natif n'a pas d'état « rien ».** Sans ces valeurs, il
+ * montrerait du noir sur un widget qui sort en bleu — et le premier clic
+ * figerait ce noir. *Un contrôle qui ment sur ce qu'il commande fait poser un
+ * geste qu'on n'a pas voulu.*
+ */
+const COULEURS_D_ORIGINE: Record<string, string> = {
+    horloges: COULEURS_DU_COMPTE.plein,
+    minuteur: COULEURS_DU_MINUTEUR.encours,
+    heure: COULEUR_DE_L_HEURE,
+    reserves: COULEUR_DE_LA_RESERVE,
+};
 
 /** Ce que le widget « Heure du monde » suit — le mode de Clock-OS. */
 const LIBELLES_DE_MODE: Record<string, string> = {
@@ -61,7 +79,7 @@ interface Props {
 const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     const {
         actif, basculerActif, quarts, seuilSansPause, joignable, pourquoi,
-        selection, basculerLeWidget, setSecondesDuWidget,
+        selection, basculerLeWidget, setSecondesDuWidget, setCouleurDuWidget,
         hote, setHote, silencerLesNatives, basculerSilence,
         quartSuivant, pause, reinitialiserLesQuarts,
     } = useUlanziStore();
@@ -109,6 +127,10 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
 
     /** La part d'écran enregistrée pour un widget actif. */
     const secondesDe = (id: string) => actifs.find(a => a.widget.id === id)?.secondes ?? 0;
+    /** La couleur choisie, ou `undefined` si le widget garde la sienne. */
+    const couleurDe = (id: string) => actifs.find(a => a.widget.id === id)?.couleur;
+    /** Ce que le sélecteur natif montre quand rien n'a été choisi. */
+    const couleurParDefautDe = (id: string) => COULEURS_D_ORIGINE[id] ?? '#FFFFFF';
 
     const interrupteur = (
         <button
@@ -228,6 +250,39 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                             : minuteurMontre
                                                 ? enMinutesSecondes(timerRemaining ?? 0)
                                                 : 'aucun minuteur'}
+                                    </span>
+                                )}
+                                {/*
+                                  **La couleur, pour les widgets qui en ont une
+                                  seule.** Le défilé des Quarts n'en a pas :
+                                  il se colore par moment du jour, et *on ne
+                                  rend pas réglable ce qui dit quelque chose.*
+
+                                  Le bouton à droite efface le choix — sans lui,
+                                  un sélecteur natif ne sait pas revenir à
+                                  « aucune couleur choisie », il ne sait que
+                                  poser une valeur.
+                                */}
+                                {coche && widget.couleurReglable && (
+                                    <span className="flex shrink-0 items-center gap-1">
+                                        <input
+                                            type="color"
+                                            value={couleurDe(widget.id) ?? couleurParDefautDe(widget.id)}
+                                            onChange={e => jeu && setCouleurDuWidget(jeu, widget.id, e.target.value)}
+                                            title={`Couleur de « ${widget.nom} » sur l'afficheur`}
+                                            aria-label={`Couleur de ${widget.nom}`}
+                                            className="h-4 w-6 cursor-pointer rounded border border-app-border/40 bg-transparent p-0"
+                                        />
+                                        {couleurDe(widget.id) && (
+                                            <button
+                                                type="button"
+                                                onClick={() => jeu && setCouleurDuWidget(jeu, widget.id, null)}
+                                                title="Revenir à la couleur d'origine"
+                                                className="text-[10px] leading-none text-app-text/30 hover:text-app-text/70"
+                                            >
+                                                ×
+                                            </button>
+                                        )}
                                     </span>
                                 )}
                                 {coche && (

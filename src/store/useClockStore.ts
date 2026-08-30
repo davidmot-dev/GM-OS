@@ -143,6 +143,15 @@ interface ClockState {
     addTensionClock: (name: string, totalSegments: number, forme?: FormeDeJauge) => void;
     /** Change la forme sous laquelle une jauge se dessine. */
     changerLaFormeDeLaJauge: (id: string, forme: FormeDeJauge) => void;
+    /**
+     * Change la couleur d'une jauge.
+     *
+     * **Le champ `color` existait depuis toujours et rien ne le renseignait** —
+     * relevé le 2026-08-31 : aucune interface ne le posait, et aucun rendu ne le
+     * lisait. L'afficheur Ulanzi le lit désormais, jauge par jauge, ce qui lui
+     * donne enfin un usage. `null` l'efface.
+     */
+    changerLaCouleurDeLaJauge: (id: string, couleur: string | null) => void;
     /** Supprime une jauge */
     removeTensionClock: (id: string) => void;
     /** Ajoute ou retire des segments à une jauge */
@@ -233,6 +242,13 @@ export const useClockStore = create<ClockState>()(
                         forme
                     }
                 ]
+            })),
+
+            changerLaCouleurDeLaJauge: (id, couleur) => set((state) => ({
+                // `undefined` plutôt que `null` : une jauge sans couleur choisie
+                // doit reprendre celle de son widget, pas en figer une.
+                tensions: state.tensions.map((c) =>
+                    (c.id === id ? { ...c, color: couleur || undefined } : c)),
             })),
 
             changerLaFormeDeLaJauge: (id, forme) => set((state) => ({

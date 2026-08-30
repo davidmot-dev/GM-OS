@@ -10,6 +10,7 @@ import {
     horlogesPourLaTable,
     minuteurPourLaTable,
     reservesPourLaTable,
+    reglerLaCouleur,
     nomAwtrix,
     nomsAwtrixDeTousLesWidgets,
     reglerLesSecondes,
@@ -20,6 +21,7 @@ import {
     widgetsDuJeu,
     type WidgetDeTable,
 } from './librairie';
+import { COULEURS_DU_COMPTE } from './compteARebours';
 
 /**
  * **La librairie de widgets — § 12 du plan, construite le 2026-08-30.**
@@ -279,6 +281,79 @@ describe('les réserves que la table a le droit de voir', () => {
     it('conserve l’absence de plafond, qui est une différence de nature', () => {
         expect(reservesPourLaTable([MENACE], {})[0].max).toBeUndefined();
         expect(reservesPourLaTable([IMPULSION], {})[0].max).toBe(6);
+    });
+});
+
+/**
+ * **Les couleurs, réglables par widget ET par horloge — demandé le 2026-08-31.**
+ *
+ * Ce que ces tests gardent : **la couleur choisie n'efface jamais l'alerte**.
+ * Rouge à zéro, rouge à sec, rouge une fois plein — c'est la seule chose que la
+ * table lit de l'autre bout de la pièce, et la rendre réglable reviendrait à
+ * permettre de la rendre muette.
+ */
+describe('les couleurs', () => {
+    const CAT: WidgetDeTable[] = [
+        { id: 'horloges', nom: 'Horloges', type: 'compte-a-rebours', source: { de: 'horloge' }, couleurReglable: true },
+    ];
+    const monde = (horloges: { id: string; nom: string; remplis: number; total: number; couleur?: string }[]) => ({
+        instruments: { quarts: { quartDuJour: 0, consecutifs: 0 }, seuilSansPause: 3 },
+        horloges,
+        minuteur: null,
+        temps: null,
+        reserves: [],
+        maintenant: 0,
+    });
+    const couleurDe = (apps: { charge: unknown }[]) => (apps[0].charge as { color: string }).color;
+
+    it('applique la couleur du widget à ses horloges', () => {
+        const sel = { j: [{ widgetId: 'horloges', secondes: 10, couleur: '#00FF00' }] };
+        const apps = applicationsAPousser('j', sel, monde([{ id: 'c', nom: 'A', remplis: 1, total: 4 }]), CAT);
+
+        expect(couleurDe(apps)).toBe('#00FF00');
+    });
+
+    /**
+     * **La plus précise gagne.** *Le réglage le plus proche de l'objet l'emporte
+     * sur le réglage collectif*, sinon le second effacerait le premier sans
+     * qu'on comprenne pourquoi.
+     */
+    it('la couleur de l’horloge l’emporte sur celle du widget', () => {
+        const sel = { j: [{ widgetId: 'horloges', secondes: 10, couleur: '#00FF00' }] };
+        const apps = applicationsAPousser('j', sel,
+            monde([{ id: 'c', nom: 'A', remplis: 1, total: 4, couleur: '#0000FF' }]), CAT);
+
+        expect(couleurDe(apps)).toBe('#0000FF');
+    });
+
+    /** **Le test qui compte.** Pleine, elle passe au rouge quoi qu'on ait choisi. */
+    it('l’alerte n’est jamais remplacée par la couleur choisie', () => {
+        const sel = { j: [{ widgetId: 'horloges', secondes: 10, couleur: '#00FF00' }] };
+        const apps = applicationsAPousser('j', sel,
+            monde([{ id: 'c', nom: 'A', remplis: 4, total: 4, couleur: '#0000FF' }]), CAT);
+
+        expect(couleurDe(apps)).toBe(COULEURS_DU_COMPTE.pleine);
+    });
+
+    it('sans couleur choisie, le widget garde la sienne', () => {
+        const sel = { j: [{ widgetId: 'horloges', secondes: 10 }] };
+        const apps = applicationsAPousser('j', sel, monde([{ id: 'c', nom: 'A', remplis: 1, total: 4 }]), CAT);
+
+        expect(couleurDe(apps)).toBe(COULEURS_DU_COMPTE.plein);
+    });
+
+    it('effacer la couleur la retire, plutôt que d’enregistrer du noir', () => {
+        const sel = { j: [{ widgetId: 'horloges', secondes: 10, couleur: '#00FF00' }] };
+        const apres = reglerLaCouleur('horloges', null, 'j', sel, CAT);
+
+        expect(apres[0].couleur).toBeUndefined();
+    });
+
+    /** *On ne rend pas réglable ce qui dit quelque chose.* */
+    it('le défilé des Quarts n’est pas réglable — il se colore par moment du jour', () => {
+        expect(LIBRAIRIE.find(w => w.id === 'quarts')?.couleurReglable).toBeUndefined();
+        expect(LIBRAIRIE.filter(w => w.couleurReglable).map(w => w.id))
+            .toEqual(['horloges', 'minuteur', 'heure', 'reserves']);
     });
 });
 

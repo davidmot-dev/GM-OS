@@ -95,6 +95,15 @@ export interface WidgetDeTable {
      * déjà sans tableau de bord : le lui retirer serait une régression.
      */
     parDefaut?: boolean;
+    /**
+     * **Sa couleur se règle-t-elle depuis le tableau de bord ?**
+     *
+     * Absent pour le défilé des Quarts, et c'est délibéré : **il se colore par
+     * moment du jour** — chaud le matin, froid la nuit. C'est de l'information,
+     * pas de la décoration ; l'aplatir sous une couleur unique la perdrait.
+     * *On ne rend pas réglable ce qui dit quelque chose.*
+     */
+    couleurReglable?: boolean;
 }
 
 /**
@@ -141,6 +150,7 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Horloges de tension',
         type: 'compte-a-rebours',
         source: { de: 'horloge' },
+        couleurReglable: true,
     },
     {
         /*
@@ -153,6 +163,7 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Minuteur',
         type: 'compte-a-rebours',
         source: { de: 'minuteur' },
+        couleurReglable: true,
     },
     {
         /*
@@ -166,6 +177,7 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Heure du monde',
         type: 'rang',
         source: { de: 'temps' },
+        couleurReglable: true,
     },
     {
         /*
@@ -177,6 +189,7 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         nom: 'Réserves de table',
         type: 'jauge',
         source: { de: 'pilote', champ: 'ressourcesDeTable' },
+        couleurReglable: true,
     },
 ] as const;
 
@@ -197,6 +210,15 @@ export interface EntreeActive {
     widgetId: string;
     /** Secondes pendant lesquelles il reste à l'écran. Écrit dans `duration`. */
     secondes: number;
+    /**
+     * La couleur choisie, ou absente pour celle du widget.
+     *
+     * **Absente n'est pas noire.** Un widget dont on n'a jamais touché la
+     * couleur doit garder la sienne, et non recevoir une valeur par défaut
+     * enregistrée — sans quoi changer la couleur d'usine d'un widget ne
+     * changerait rien chez qui ne l'a jamais réglée.
+     */
+    couleur?: string;
 }
 
 /** La sélection du meneur, par jeu. Absente pour un jeu : on suit `parDefaut`. */
@@ -242,7 +264,7 @@ export function widgetsActifs(
     systemId: string | null | undefined,
     selection: SelectionParJeu | undefined,
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
-): { widget: WidgetDeTable; secondes: number }[] {
+): { widget: WidgetDeTable; secondes: number; couleur?: string }[] {
     const disponibles = widgetsDuJeu(systemId, catalogue);
     const choisis = systemId ? selection?.[systemId] : undefined;
 
@@ -254,7 +276,9 @@ export function widgetsActifs(
 
     return choisis.flatMap(entree => {
         const widget = disponibles.find(w => w.id === entree.widgetId);
-        return widget ? [{ widget, secondes: bornerLesSecondes(entree.secondes) }] : [];
+        return widget
+            ? [{ widget, secondes: bornerLesSecondes(entree.secondes), couleur: entree.couleur }]
+            : [];
     });
 }
 
@@ -328,9 +352,32 @@ export function reglerLesSecondes(
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): EntreeActive[] {
     return widgetsActifs(systemId, selection, catalogue)
-        .map(({ widget, secondes: actuelles }) => ({
+        .map(({ widget, secondes: actuelles, couleur }) => ({
             widgetId: widget.id,
             secondes: widget.id === widgetId ? bornerLesSecondes(secondes) : actuelles,
+            couleur,
+        }));
+}
+
+/**
+ * Change la couleur d'un widget actif.
+ *
+ * Rendre la couleur **vide** l'efface plutôt que d'enregistrer du noir : un
+ * widget sans couleur choisie doit garder la sienne, et non figer la valeur
+ * d'usine du jour où on l'a effleuré.
+ */
+export function reglerLaCouleur(
+    widgetId: string,
+    couleur: string | null,
+    systemId: string,
+    selection: SelectionParJeu | undefined,
+    catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
+): EntreeActive[] {
+    return widgetsActifs(systemId, selection, catalogue)
+        .map(({ widget, secondes, couleur: actuelle }) => ({
+            widgetId: widget.id,
+            secondes,
+            couleur: widget.id === widgetId ? (couleur || undefined) : actuelle,
         }));
 }
 
@@ -520,13 +567,13 @@ export function applicationsAPousser(
     monde: MondeDesWidgets,
     catalogue: readonly WidgetDeTable[] = LIBRAIRIE,
 ): ApplicationAPousser[] {
-    return widgetsActifs(systemId, selection, catalogue).flatMap(({ widget, secondes }) => {
+    return widgetsActifs(systemId, selection, catalogue).flatMap(({ widget, secondes, couleur }) => {
         if (widget.source.de === 'pilote') {
             // Une application par réserve, comme pour les horloges : 32 × 8
             // n'en montre qu'une, et la rotation native fait le reste.
             return monde.reserves.map(reserve => ({
                 nom: nomAwtrixDeLaReserve(reserve.id),
-                charge: composerJaugeDeTable(reserve) as unknown as ChargeDeWidget,
+                charge: composerJaugeDeTable(reserve, couleur) as unknown as ChargeDeWidget,
                 secondes,
             }));
         }
@@ -535,7 +582,7 @@ export function applicationsAPousser(
             return monde.temps
                 ? [{
                     nom: nomAwtrix(widget.id),
-                    charge: composerLHeure(monde.temps, monde.maintenant) as unknown as ChargeDeWidget,
+                    charge: composerLHeure(monde.temps, monde.maintenant, couleur) as unknown as ChargeDeWidget,
                     secondes,
                 }]
                 : [];
@@ -545,16 +592,26 @@ export function applicationsAPousser(
             return monde.minuteur
                 ? [{
                     nom: nomAwtrix(widget.id),
-                    charge: composerMinuteur(monde.minuteur) as unknown as ChargeDeWidget,
+                    charge: composerMinuteur(monde.minuteur, couleur) as unknown as ChargeDeWidget,
                     secondes,
                 }]
                 : [];
         }
 
         if (widget.source.de === 'horloge') {
+            /*
+              **La plus précise gagne.** L'horloge porte sa propre couleur,
+              posée jauge par jauge dans Clock-OS ; le widget en porte une pour
+              toutes celles qui n'en ont pas. *Le réglage le plus proche de
+              l'objet l'emporte sur le réglage collectif*, sinon le second
+              effacerait le premier sans qu'on comprenne pourquoi.
+            */
             return monde.horloges.map(horloge => ({
                 nom: nomAwtrixDeLHorloge(horloge.id),
-                charge: composerCompteARebours(horloge) as unknown as ChargeDeWidget,
+                charge: composerCompteARebours({
+                    ...horloge,
+                    couleur: horloge.couleur || couleur,
+                }) as unknown as ChargeDeWidget,
                 secondes,
             }));
         }

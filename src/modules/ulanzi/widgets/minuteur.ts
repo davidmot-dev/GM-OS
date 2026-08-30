@@ -84,15 +84,24 @@ export function enMinutesSecondes(secondes: number): string {
  * déjà pour les horloges trop finement découpées — *une seule façon de dessiner
  * une barre.*
  */
-export function composerMinuteur(minuteur: MinuteurAAfficher): CompositionDuMinuteur {
+export function composerMinuteur(
+    minuteur: MinuteurAAfficher,
+    couleurChoisie?: string,
+): CompositionDuMinuteur {
     const restant = Math.max(0, Math.floor(minuteur.restant));
     const duree = Math.max(0, Math.floor(minuteur.duree));
 
+    /*
+      **La couleur choisie ne vaut que pour le temps qui coule.** Les dix
+      dernières secondes et le zéro gardent les leurs : ce sont les seules
+      choses que la table doit lire de l'autre bout de la pièce, et les rendre
+      réglables reviendrait à permettre de les rendre indistinctes.
+    */
     const couleur = restant <= 0
         ? COULEURS_DU_MINUTEUR.fini
         : restant <= SECONDES_CRITIQUES
             ? COULEURS_DU_MINUTEUR.critique
-            : COULEURS_DU_MINUTEUR.encours;
+            : (couleurChoisie || COULEURS_DU_MINUTEUR.encours);
 
     /*
       La barre se remplit avec ce qui RESTE, et se vide en avançant. Une barre

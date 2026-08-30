@@ -128,10 +128,14 @@ export function texteDuTemps(temps: TempsAAfficher, maintenant: number): string 
  * **`noScroll` est absent, et c'est tout l'objet de ce widget.** Son absence est
  * ce qui autorise AWTRIX à faire défiler un texte plus long que la matrice.
  */
-export function composerLHeure(temps: TempsAAfficher, maintenant: number): CompositionDeLHeure {
+export function composerLHeure(
+    temps: TempsAAfficher,
+    maintenant: number,
+    couleurChoisie?: string,
+): CompositionDeLHeure {
     return {
         text: texteDuTemps(temps, maintenant),
-        color: COULEUR_DE_L_HEURE,
+        color: couleurChoisie || COULEUR_DE_L_HEURE,
         center: true,
         scrollSpeed: VITESSE_DE_DEFILEMENT,
     };
