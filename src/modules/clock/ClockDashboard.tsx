@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { dateDuChamp, heureDuChamp } from './logic/champsDeDate';
+import { horodatageValide } from '../../store/useClockStore';
 import { useClockStore } from '../../store/useClockStore';
 import {
     Clock,
@@ -260,9 +262,20 @@ const ClockDashboard: React.FC = () => {
                                     <input
                                         type="date"
                                         className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
-                                        value={new Date(timestamp).toISOString().split('T')[0]}
+                                        value={dateDuChamp(timestamp)}
                                         onChange={(e) => {
+                                            /*
+                                              **Un champ vidé ne pose plus rien.**
+                                              `new Date('')` rend une date
+                                              invalide, dont `getTime()` vaut
+                                              `NaN` — et c'est par là que le
+                                              tableau de bord tombait. Le magasin
+                                              le refuse désormais aussi ; on
+                                              s'arrête ici pour ne pas même le
+                                              lui proposer.
+                                            */
                                             const newDate = new Date(e.target.value);
+                                            if (Number.isNaN(newDate.getTime())) return;
                                             const currentDate = new Date(timestamp);
                                             newDate.setHours(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
                                             setTimestamp(newDate.getTime());
@@ -272,11 +285,22 @@ const ClockDashboard: React.FC = () => {
                                         type="time"
                                         step="1"
                                         className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
-                                        value={new Date(timestamp).toTimeString().split(' ')[0]}
+                                        value={heureDuChamp(timestamp)}
                                         onChange={(e) => {
+                                            /*
+                                              Même garde que le champ de date :
+                                              vidé, `''.split(':')` rend `[NaN]`,
+                                              et `setHours(NaN)` invalide la
+                                              date. Ce champ-ci ne plantait pas
+                                              — `toTimeString()` ne lève pas —
+                                              mais il posait la **même** valeur
+                                              fausse, qui allait ensuite tuer
+                                              son voisin.
+                                            */
                                             const [hours, minutes, seconds] = e.target.value.split(':').map(Number);
-                                            const newDate = new Date(timestamp);
-                                            newDate.setHours(hours, minutes, seconds || 0);
+                                            if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return;
+                                            const newDate = new Date(horodatageValide(timestamp) ? timestamp : Date.now());
+                                            newDate.setHours(hours, minutes, Number.isFinite(seconds) ? seconds : 0);
                                             setTimestamp(newDate.getTime());
                                         }}
                                     />

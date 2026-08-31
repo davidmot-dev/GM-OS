@@ -3,6 +3,26 @@ import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
 import type { FormeDeJauge } from '../modules/clock/components/formesDeJauge';
 
+/**
+ * **Un horodatage est-il utilisable ?**
+ *
+ * `Number.isFinite` écarte `NaN`, les infinis, et tout ce qui n'est pas un
+ * nombre — `null` et `undefined` compris, que `typeof` seul laisserait passer
+ * après un aller-retour par JSON (`JSON.stringify(NaN)` rend `null`).
+ *
+ * La borne haute est celle de l'objet `Date` lui-même : au-delà de
+ * ±8 640 000 000 000 000 ms, une date est invalide et `toISOString()` lève.
+ * *Le contrôle doit refuser exactement ce que `Date` refuse, sinon il rassure
+ * sans protéger.*
+ */
+export const HORODATAGE_MAX = 8_640_000_000_000_000;
+
+export function horodatageValide(valeur: unknown): valeur is number {
+    return typeof valeur === 'number'
+        && Number.isFinite(valeur)
+        && Math.abs(valeur) <= HORODATAGE_MAX;
+}
+
 /** Mode de fonctionnement de l'horloge */
 export type ClockMode = 'realtime' | 'static' | 'timer' | 'fantasy';
 /** Thèmes visuels disponibles pour l'affichage */
@@ -228,11 +248,52 @@ export const useClockStore = create<ClockState>()(
 
             setMode: (mode) => set({ mode }),
             setTheme: (theme) => set({ theme }),
-            setTimestamp: (timestamp) => set({ timestamp }),
+            /*
+              **Le magasin refuse un horodatage qui n'en est pas un.**
 
-            addTime: (seconds) => set((state) => ({
-                timestamp: state.timestamp + (seconds * 1000)
-            })),
+              *Signalé par David le 2026-08-31, à l'écran* : vider le champ de
+              date faisait tomber tout le tableau de bord sur
+              `RangeError: Invalid time value`.
+
+              Le chemin tenait en trois pas. `new Date('')` sur un champ vidé
+              rend une date invalide, `getTime()` rend `NaN`, et ce `NaN`
+              entrait ici **sans que rien ne le regarde**. Au rendu suivant,
+              `toISOString()` — qui *lève* au lieu de rendre une chaîne, là où
+              `toTimeString()` se contente d'un « Invalid Date » — emportait le
+              composant entier.
+
+              **Le contrôle est ici et pas à l'affichage**, parce que ce magasin
+              a d'autres écrivains que ce champ : la synchro entre fenêtres, un
+              import Nexus, la date fantastique. *Une valeur fausse gardée en
+              mémoire finit toujours par ressortir par une porte qu'on n'a pas
+              gardée* — et celle-ci ressort jusque sur l'afficheur Ulanzi, dont
+              le widget « heure du monde » lit ce champ. Un `NaN` y écrirait
+              `NaN:NaN` en pleine séance, et *un widget qui ment est pire qu'un
+              widget absent.*
+
+              On garde la valeur précédente plutôt que de retomber sur l'heure
+              courante : refuser une saisie ne doit pas déplacer une horloge que
+              le meneur avait posée.
+            */
+            setTimestamp: (timestamp) => set((state) =>
+                horodatageValide(timestamp) ? { timestamp } : state),
+
+            addTime: (seconds) => set((state) => {
+                /*
+                  **On répare l'horloge au lieu de rester bloqué dessus.**
+
+                  Le contrôle de `setTimestamp` ne couvre pas tout : la synchro
+                  entre fenêtres écrit par `setState` et le contourne donc. Si
+                  une valeur fausse entre par là, refuser tous les décalages
+                  laisserait l'horloge morte jusqu'au prochain démarrage — *un
+                  garde qui ne fait que refuser transforme une donnée fausse en
+                  panne définitive.* Un décalage repart donc de l'heure courante
+                  quand il n'y a rien de valable à décaler.
+                */
+                const base = horodatageValide(state.timestamp) ? state.timestamp : Date.now();
+                const suivant = base + (seconds * 1000);
+                return horodatageValide(suivant) ? { timestamp: suivant } : state;
+            }),
 
             setTimeMultiplier: (timeMultiplier) => set({ timeMultiplier }),
 
@@ -451,7 +512,10 @@ export const useClockStore = create<ClockState>()(
                 totalSeconds += next.minute * secondsPerMin;
                 totalSeconds += next.second;
 
-                set({ timestamp: totalSeconds * 1000 });
+                // Un calendrier mal formé — un mois sans `days`, une année à
+                // zéro — produirait un `NaN` par cette porte-ci.
+                const enMillisecondes = totalSeconds * 1000;
+                if (horodatageValide(enMillisecondes)) set({ timestamp: enMillisecondes });
             }
         }),
         {
@@ -496,7 +560,34 @@ export const useClockStore = create<ClockState>()(
                 calendars: state.calendars,
                 availableCalendars: state.availableCalendars,
                 isClockProjected: state.isClockProjected
-            })
+            }),
+            /*
+              **Un horodatage déjà corrompu ne doit pas revenir au démarrage.**
+
+              Le correctif des écritures ne suffit pas : au moment où il est
+              posé, la mauvaise valeur est **déjà sur le disque**. Sans ce
+              rattrapage, l'écran resterait cassé après la correction et on
+              chercherait le défaut dans le code neuf.
+
+              *Corriger l'écriture ne répare pas ce qui est déjà écrit* — c'est
+              la leçon de la routine de l'afficheur Ulanzi, qui restait
+              irrécupérable par l'application elle-même tant qu'on ne rattrapait
+              pas au lancement.
+
+              Ici, et contrairement aux écritures, on retombe sur l'heure
+              courante : au démarrage il n'y a pas de « valeur précédente » à
+              garder, et une horloge à 1970 n'est pas plus juste qu'une horloge
+              à maintenant — elle est seulement plus surprenante.
+            */
+            onRehydrateStorage: () => (etat) => {
+                if (etat && !horodatageValide(etat.timestamp)) {
+                    console.warn(
+                        `[Clock-OS] Horodatage persisté inutilisable (${String(etat.timestamp)}) — `
+                        + "remis à l’heure courante.",
+                    );
+                    etat.timestamp = Date.now();
+                }
+            },
         }
     )
 );
