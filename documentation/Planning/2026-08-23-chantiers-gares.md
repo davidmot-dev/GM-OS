@@ -83,7 +83,7 @@ documents d'août. Onze cases vides ; **cinq étaient déjà faites, une était 
 | | Reste, mesuré | Où |
 | --- | --- | --- |
 | **e** | ✅ **FAIT le 31/08.** Écart ramené à **zéro**, et un test le tient dans les deux sens (`src/locales/deuxLangues.test.ts`). ⚠️ *Le défaut le plus visible était dans le sens qu'on ne regardait pas* : **3 clés manquaient au FRANÇAIS**, employées à cinq endroits par `NexusService` — un export Nexus affichait donc la clé brute dans la langue par défaut | `src/locales/` |
-| **f** | ⏸ **EN ATTENTE DE TON ŒIL, 30 secondes.** 37 fichiers en `<select>` natif contre 5. Le motif d'avril était un **bug** — listes ouvertes hors du container Electron — pas l'esthétique. La fenêtre MJ n'est **pas** *frameless* et on est passé à **Electron 34** : il a de bonnes chances d'avoir disparu seul, auquel cas le chantier se ferme gratuitement | `src/**/*.tsx` |
+| **f** | ✅ **CLOS le 31/08 SANS UNE LIGNE DE CODE — vérifié à l'écran par David.** Les listes déroulantes natives s'ouvrent bien **dans** la fenêtre : le bug d'avril 2026 a disparu avec les versions d'Electron (34 aujourd'hui, et la fenêtre MJ n'est pas *frameless*). Le motif du chantier était **ce bug**, pas l'esthétique — donc les **37 fichiers en `<select>` natif restent tels quels**. *Reprendre trente-sept fichiers pour l'apparence, c'est du risque de régression payé comptant contre un bénéfice que personne n'a demandé.* Le composant `Select` garde sa place pour les écrans neufs et pour les listes qui ont besoin d'icônes ou d'en-têtes | — |
 | **g** | ✅ **FAIT le 31/08** (`d666f69`) — et deux défauts plus graves attendaient dessous : le formulaire **enregistrait autre chose qu'il n'affichait** (« Ami » posait `romantic`, « Neutre » deux fois, `other` inchoisissable), et la physique du graphe **n'existait pas** (même distance pour tous les liens). Une seule écriture là où il y en avait quatre, exhaustive par le typage | `session/logic/relationsSociales.ts` |
 | **h** | ✅ **CONSTRUIT le 31/08** (`2b9a195`), ⏸ **à éprouver au pont Hue**. Cadence 120 ms et **commande de groupe** — une par lampe aurait fait 48 requêtes/s sur un pont qui en tient 10. La règle est testée sans micro ni pont ; le matériel attend la séance | `light/logic/suivreLaVoix.ts` |
 
@@ -103,6 +103,16 @@ coopération, états codés en dur, poursuites, environnement et dangers, jauges
 `2d20` non implémenté. **David a tranché le 31/08 : on rafraîchit la table, on ne la vide pas.** Deux de
 ses lignes avaient d'ailleurs vieilli — les portées atteignent le Cortex depuis le 22/08, et la monnaie
 de table existe depuis le 15/08.
+
+> ## ⭐ Au 2026-08-31 au soir, **plus rien de ce registre ne se code.**
+>
+> Les sections 3 et 3 bis sont closes en entier. Ce qui subsiste tient en trois lignes : **la catégorie
+> P6** (§ 1), qui se joue ; **l'axe N.3** (§ 2), qui se décide à la table ; et **Ulanzi D** (§ 4), garé
+> par décision.
+>
+> *Sur les quinze points ouverts ce matin, six n'ont demandé aucun code* — cinq étaient faits sans que la
+> case soit cochée, un était devenu un piège, un s'est fermé en trente secondes de vérification à
+> l'écran. **Vérifier un reste coûte moins cher que le traiter, et souvent il n'y a rien à traiter.**
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
