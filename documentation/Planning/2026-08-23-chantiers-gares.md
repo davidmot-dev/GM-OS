@@ -52,7 +52,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | La **fusion et la scission de scènes** | 21/08 | À la revue de fin de séance. Livrées, jamais employées sur une vraie soirée. |
 | L'**aller-retour d'image** d'une ambiance | — | Déclencher un moment de storyboard qui porte une image, la voir partir au projecteur **et revenir**. |
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
-| Le **dépôt des icônes par GM-OS** | 31/08 | Les six GIF ont été éprouvés **à la main** depuis un terminal, puis l'appareil a été nettoyé. Ce qui n'a jamais tourné, c'est le dépôt par l'application : *à la première prise de main, les six icônes arrivent-elles, et le widget les trouve-t-il ?* |
+| Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 2 · Ce qui se décide à la table — axe N.3

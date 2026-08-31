@@ -108,14 +108,17 @@ contextBridge.exposeInMainWorld('appBridge', {
         fermetureTerminee: () => ipcRenderer.send('ulanzi:before-quit-done'),
 
         /**
-         * Dépose les icônes animées du signal, et rend celles qui ont été
-         * écrites. Ne dépose que ce qui manque : le cas courant est donc une
-         * seule lecture.
+         * Dépose les icônes animées du signal, et dit **ce qui manque encore**.
+         * Ne dépose que ce qui manque : le cas courant est donc une seule
+         * lecture.
          *
          * **Le seul envoi binaire du projet**, et il ne passe pas par le relais
          * JSON : `light:request` sérialise son corps, ce qui détruirait un GIF.
+         *
+         * `manquantes` vide est la seule preuve que le signal peut s'afficher —
+         * c'est ce qui règle la veille du battement.
          */
-        deposerLesIcones: (hote: string): Promise<string[]> =>
+        deposerLesIcones: (hote: string): Promise<{ deposees: string[]; manquantes: string[] }> =>
             ipcRenderer.invoke('ulanzi:deposer-icones', hote),
     },
     clock: {

@@ -907,8 +907,56 @@ nommé `gmosvk1.gif"; filename*=utf-8''%2FICONS%2F…`. Deux fichiers illisibles
 la main. *Un serveur embarqué lit rarement toute la norme : on lui envoie le strict nécessaire* — d'où
 un corps multipart écrit à la main, et isolé pour être vérifiable.
 
-### Ce qui reste à voir en séance
+### ⛔ Ce qui s'est passé le soir même : « le signal ne fonctionne pas »
 
-Le dépôt **par GM-OS** n'a jamais tourné : je l'ai éprouvé en déposant les fichiers à la main depuis un
-terminal, puis j'ai nettoyé l'appareil. Ce qui reste à vérifier tient en une phrase — *à la première
-prise de main, les six icônes arrivent-elles, et le widget les trouve-t-il ?*
+*Le § précédent se terminait sur une question — « à la première prise de main, les six icônes
+arrivent-elles ? ». La réponse est venue le soir même, et c'est **non**.*
+
+Relevé sur l'appareil, avant de toucher à une ligne :
+
+```text
+GET /api/loop        → {"gmos_vk":0}          ← le widget est bien poussé
+GET /list?dir=/ICONS → []                     ← et il n'y a AUCUNE icône
+```
+
+**Un widget qui pointe vers une icône absente, c'est un cadre noir.** Rien dans le journal : les
+`console.log` du processus principal **n'arrivent pas dans `main.log`** — zéro ligne `[Main]` dans un
+fichier qui en contient des milliers. *Une trace qu'on ne peut pas relire est une trace qui n'existe
+pas* ; tout est passé à `log` d'electron-log.
+
+**La déduction fausse tient en une phrase.** « Elles vivent en flash et y restent » m'avait fait
+conclure qu'un dépôt **à la prise de main** suffisait. *« Elles restent » ne veut pas dire « elles
+seront là »* — et deux chemins le démentent :
+
+1. **Le flash s'efface** : remise à zéro, mise à jour du micrologiciel, ménage dans le portail de
+   l'appareil. GM-OS ne le sait pas.
+2. **La prise de main peut rater.** Mesuré ce soir-là : un appareil qui vient de démarrer répond
+   `500 CREATE FAILED` à une écriture pendant quelques minutes, puis accepte **le même fichier** sans
+   que rien d'autre ait changé (taille, extension et contenu écartés un par un par bissection). Or
+   l'afficheur avait redémarré trente secondes avant GM-OS. Et le rattrapage du battement, lui,
+   reprend bien la main — **mais ne déposait rien**.
+
+*Un geste d'ouverture ne répare que ce qui casse avant l'ouverture.*
+
+### Le dépôt est devenu une veille
+
+| Règle | Pourquoi |
+|---|---|
+| **Seulement quand le signal est affiché** | une table qui ne coche pas le widget n'a pas à recevoir six GIF |
+| **Sans jamais attendre la publication** | au pire le cadre reste noir un tour de plus |
+| **Toutes les 30 s tant qu'il en manque** | c'est le moment où le meneur regarde un cadre noir |
+| **Toutes les 5 min une fois les six vues** | le cas courant ne coûte qu'une lecture, et rattrape un effacement |
+| **Chaque icône tentée pour elle-même** | une écriture refusée ne doit pas emporter les cinq suivantes |
+| **Injoignable = « tout manque »** | sans quoi la veille s'endormirait sur un appareil éteint |
+
+Ce qui l'autorise à s'espacer, c'est que le dépôt rend désormais **ce qui manque encore**, et non la
+liste de ce qu'il a écrit — *celle-ci était vide quand tout allait bien **et** vide quand tout avait
+échoué.*
+
+**Mesuré pendant la réparation** : dépôt d'une icône **117 à 158 ms** (et non 253), lecture du
+listing immédiate — mais **3,5 s à la première résolution du nom `.local`** depuis le processus
+principal, ce qui suffirait à faire croire à une panne si la veille attendait. L'hôte accepte
+maintenant un port (`machine:8080`), comme `UlanziService` le faisait déjà : les deux chemins ne
+divergent plus, et le module s'essaie contre un serveur local.
+
+✅ **Éprouvé en réel le 2026-08-31** : six icônes redéposées, le tracé est revenu à l'écran de David.

@@ -37,7 +37,7 @@ interface AIProxyResponse {
     data: unknown;
 }
 
-import { deposerLesIcones } from './ulanziIcones'
+import { deposerLesIcones, ICONES_DU_SIGNAL } from './ulanziIcones'
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
@@ -383,6 +383,10 @@ ipcMain.on('log:message', (_event, level: string, message: string, ...args: unkn
  * Ne dépose que ce qui manque, et les icônes **restent sur l'appareil** —
  * décision de David le 2026-08-31 : elles vivent en flash, ne s'affichent pas
  * d'elles-mêmes, et les redéposer chaque séance coûterait huit envois pour rien.
+ *
+ * ⚠️ **Un appareil injoignable rend « tout manque », et non « tout va bien ».**
+ * C'est ce qui fait retenter la veille du battement : le soir du 2026-08-31, le
+ * dossier `/ICONS` s'était vidé et rien ne s'en apercevait plus.
  */
 ipcMain.handle('ulanzi:deposer-icones', async (_event, hote: string) => {
     const dossier = path.join(process.env.VITE_PUBLIC || '', 'ulanzi');
@@ -392,7 +396,7 @@ ipcMain.handle('ulanzi:deposer-icones', async (_event, hote: string) => {
         // Un échec ne remonte pas à l'écran : sans icône le widget montre un
         // cadre vide, ce qui se voit, et le meneur n'y peut rien sur le moment.
         log.warn('[Ulanzi] dépôt des icônes impossible :', e);
-        return [];
+        return { deposees: [], manquantes: ICONES_DU_SIGNAL };
     }
 });
 

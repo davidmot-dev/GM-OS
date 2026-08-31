@@ -369,11 +369,15 @@ declare global {
             /** « J'ai rendu » — la fermeture n'attend pas le délai de sécurité. */
             fermetureTerminee?: () => void;
             /**
-             * Dépose les icônes animées du signal sur l'afficheur, et rend
-             * celles qui ont été écrites. Ne dépose que ce qui manque.
+             * Dépose les icônes animées du signal sur l'afficheur, et dit **ce
+             * qui manque encore**. Ne dépose que ce qui manque.
+             *
+             * `manquantes` vide est la seule preuve que le signal peut
+             * s'afficher : c'est elle qui espace la veille du battement.
+             *
              * **Facultatif** : un pont plus ancien ne l'expose pas.
              */
-            deposerLesIcones?: (hote: string) => Promise<string[]>;
+            deposerLesIcones?: (hote: string) => Promise<{ deposees: string[]; manquantes: string[] }>;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;

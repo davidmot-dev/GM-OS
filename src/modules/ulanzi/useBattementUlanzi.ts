@@ -9,6 +9,7 @@ import type { ReserveAAfficher } from './widgets/jaugeDeTable';
 import {
     applicationsAPousser,
     demandeUneCadenceRapide,
+    estActif,
     horlogesPourLaTable,
     minuteurPourLaTable,
     nomsAwtrixDeTousLesWidgets,
@@ -74,6 +75,17 @@ export const BATTEMENT_MS = 30_000;
 export const CADENCE_RAPIDE_MS = 500;
 
 /**
+ * **Tous les combien on revérifie que les icônes du signal sont là**, une fois
+ * qu'on les a vues au complet.
+ *
+ * Tant qu'il en manque, on retente au `BATTEMENT_MS` : c'est le cas où le
+ * meneur regarde un cadre noir. Une fois toutes présentes, une lecture toutes
+ * les cinq minutes suffit à rattraper un effacement — *ce n'est pas un incident
+ * qui arrive au milieu d'une phrase.*
+ */
+export const VEILLE_DES_ICONES_MS = 5 * 60_000;
+
+/**
  * Le battement : GM-OS republie, l'afficheur oublie.
  *
  * **Pourquoi une horloge et non un envoi.** Un widget poussé une fois resterait
@@ -121,6 +133,13 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
     const posees = useRef<Map<string, { signature: string; quand: number }>>(new Map());
     /** Le dernier état de contact écrit dans le magasin, pour ne pas le réécrire. */
     const joignableConnu = useRef<boolean | null>(null);
+    /**
+     * **La veille des icônes du signal.** Une référence, et non une variable de
+     * l'effet : le battement se remonte à chaque changement de niveau, et une
+     * veille remise à zéro à chaque bouton pressé redemanderait le listing à
+     * l'appareil pour rien.
+     */
+    const veilleDesIcones = useRef({ derniere: 0, completes: false, enCours: false });
 
     /**
      * **Tout ce qu'il faut retirer pour rendre l'appareil.**
@@ -248,22 +267,9 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                 // n'aurait plus rien à rendre. Voir `memoriserLaRoutine`.
                 memoriserLaRoutine(avant);
                 enMain.current = true;
-
-                /*
-                  **Les icônes animées du signal, déposées une fois pour toutes.**
-
-                  Ici et pas ailleurs : c'est le seul endroit où l'on sait que
-                  l'appareil a répondu. Le dépôt ne fait qu'une lecture quand
-                  elles sont déjà là — le cas courant après la première séance,
-                  puisqu'elles vivent en flash et **y restent** (décision de
-                  David le 2026-08-31).
-
-                  Sans `await` : un widget dont l'icône manque montre un cadre
-                  vide pendant quelques secondes, ce qui est très préférable à
-                  retarder la prise de main de tout l'afficheur.
-                */
-                void window.appBridge?.ulanzi?.deposerLesIcones?.(dernier.current.hote)
-                    .catch(() => undefined);
+                // Les icônes du signal ne se déposent plus ici : c'était un
+                // geste d'ouverture, c'est devenu une veille. Voir
+                // `veillerAuxIcones`, dans le battement.
             })().catch((e: unknown) =>
                 setJoignable(false, e instanceof Error ? e.message : String(e)),
             );
@@ -321,6 +327,48 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
             try { await publierVraiment(); } finally { enCours = false; }
         };
 
+        /**
+         * **Les icônes du signal sont-elles toujours sur l'appareil ?**
+         *
+         * *Le défaut de David, le 2026-08-31 au soir : « le signal Voight-Kampff
+         * ne fonctionne pas ».* Le dossier `/ICONS` était **vide**, alors que
+         * `gmos_vk` était bien poussé : l'application publiait un widget qui
+         * pointe vers une icône absente, donc un cadre noir.
+         *
+         * Le dépôt était un geste d'ouverture — une fois, à la prise de main. Or
+         * *« elles restent en flash » ne veut pas dire « elles seront là »* : une
+         * remise à zéro les efface, et surtout **la prise de main peut rater**
+         * (l'appareil qui démarre refuse les écritures pendant quelques
+         * minutes, ce qui est exactement ce qui s'était produit). Rien ne
+         * reprenait ensuite.
+         *
+         * C'est donc une veille, et elle porte trois précautions :
+         *
+         * - **Seulement quand le signal est affiché.** Une table qui ne coche pas
+         *   le widget n'a aucune raison de recevoir six GIF.
+         * - **Sans `await`.** Elle ne retarde jamais la publication ; au pire le
+         *   cadre reste noir un tour de plus.
+         * - **Espacée une fois les six vues.** Tant qu'il en manque, on retente
+         *   au battement — c'est le moment où le meneur regarde un cadre noir.
+         */
+        const veillerAuxIcones = () => {
+            const veille = veilleDesIcones.current;
+            if (veille.enCours) return;
+            const delai = veille.completes ? VEILLE_DES_ICONES_MS : BATTEMENT_MS;
+            if (Date.now() - veille.derniere < delai) return;
+
+            const deposer = window.appBridge?.ulanzi?.deposerLesIcones;
+            if (!deposer) return;
+
+            veille.enCours = true;
+            veille.derniere = Date.now();
+            void deposer(dernier.current.hote)
+                // Un appareil injoignable rend « tout manque » : on retentera.
+                .then(depot => { veille.completes = depot.manquantes.length === 0; })
+                .catch(() => { veille.completes = false; })
+                .finally(() => { veille.enCours = false; });
+        };
+
         const publierVraiment = async () => {
             const { quarts: q, seuilSansPause: s, selection: sel, systemId: jeu, signal: sig } = dernier.current;
             try {
@@ -331,6 +379,10 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                     memoriserLaRoutine(avant);
                     enMain.current = true;
                 }
+
+                // Les icônes du signal, vérifiées tant qu'il est affiché — et
+                // seulement s'il l'est. Ne retarde pas la publication.
+                if (estActif('vk', jeu, sel)) veillerAuxIcones();
 
                 /*
                   **N widgets, et la part d'écran se règle sur CHACUN.**
