@@ -195,6 +195,14 @@ contextBridge.exposeInMainWorld('appBridge', {
         ollamaAbort: (requeteId: string): Promise<boolean> => ipcRenderer.invoke('ai:ollama-abort', requeteId),
         /** Ce qui tourne, nommé et daté — de quoi montrer le verrou. */
         ollamaEnVol: (): Promise<{ id: string; libelle: string; depuis: number }[]> => ipcRenderer.invoke('ai:ollama-en-vol'),
+        /**
+         * Charge le modèle d'avance, à l'ouverture de la séance.
+         *
+         * Rend `false` sans bruit si Ollama ne répond pas : un préchauffage
+         * raté ne coûte que le démarrage qu'on payait déjà.
+         */
+        ollamaPrechauffer: (model: string, endpoint?: string): Promise<boolean> =>
+            ipcRenderer.invoke('ai:ollama-prechauffer', model, endpoint),
         ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),
         ollamaListModels: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-list-models', endpoint),
         ollamaPull: (model: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-pull', model, endpoint),

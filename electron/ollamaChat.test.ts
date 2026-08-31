@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { corpsDeChat, DUREE_DE_CHARGE, OPTIONS_PAR_DEFAUT, OPTIONS_JSON } from './OllamaService';
+import { corpsDeChat, corpsDePrechauffage, DUREE_DE_CHARGE, OPTIONS_PAR_DEFAUT, OPTIONS_JSON } from './OllamaService';
 
 /**
  * Ce que ces tests protègent : **la requête dit ce qu'elle attend**.
@@ -156,4 +156,37 @@ describe('le corps de requête en flux', () => {
 
         expect({ ...flux, stream: undefined }).toEqual({ ...bloquant, stream: undefined });
     });
+});
+
+/**
+ * **Le préchauffage — mesuré le 2026-08-31.**
+ *
+ * À froid, la première question d'une soirée coûte 45 à 58 s ; à chaud, ~10 s.
+ * L'écart est la montée du modèle sur l'iGPU, que `prompt_eval_duration`
+ * facture et que `load_duration` ne dit pas. Une requête sans invite la provoque
+ * d'avance, à l'ouverture de la séance.
+ */
+describe('le corps du préchauffage', () => {
+  it('ne demande aucune génération — c’est ce qui en fait un préchauffage', () => {
+    expect(corpsDePrechauffage('gemma4:12b')).not.toHaveProperty('prompt');
+    expect(corpsDePrechauffage('gemma4:12b')).not.toHaveProperty('messages');
+  });
+
+  it('garde le modèle chargé aussi longtemps qu’une vraie requête', () => {
+    // Et au premier niveau : dans `options`, Ollama l'ignore en silence.
+    const corps = corpsDePrechauffage('gemma4:12b');
+    expect(corps.keep_alive).toBe(DUREE_DE_CHARGE);
+    expect(corps.options).not.toHaveProperty('keep_alive');
+  });
+
+  /**
+   * **Le piège qui viderait ce travail de son sens.** La fenêtre décide de la
+   * taille du cache clé-valeur, donc de l'occupation mémoire : charger sur une
+   * fenêtre puis demander l'autre fait **recharger** le modèle, et le
+   * préchauffage n'aura fait qu'ajouter une montée de plus.
+   */
+  it('charge sur la fenêtre des vraies requêtes, sans quoi le modèle recharge', () => {
+    expect(corpsDePrechauffage('gemma4:12b').options)
+      .toMatchObject({ num_ctx: OPTIONS_PAR_DEFAUT.num_ctx });
+  });
 });

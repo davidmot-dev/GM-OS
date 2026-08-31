@@ -1094,8 +1094,7 @@ le × 4,7 du § 2.
 **Conséquence pour la table, et c'est la seule qui compte** : la **première** question d'une séance coûte
 ~50 s, toutes les suivantes ~10 s. Le serveur retombe à `OLLAMA_KEEP_ALIVE:5m0s` ; le chemin `/api/chat`
 impose bien `keep_alive: '30m'` (`OllamaService.ts:170`), mais **rien ne préchauffe** — la première
-question de la soirée paie donc toujours la mise en route. → *piste : une passe à vide au démarrage de
-GM-OS, ou à l'ouverture de la séance.*
+question de la soirée paie donc toujours la mise en route. → **construit le jour même, § 12.**
 
 ### ⛔ `OLLAMA_FLASH_ATTENTION` ne sert à rien ici — la prescription de l'axe A est caduque
 
@@ -1119,3 +1118,62 @@ Le plafond RAG a été **tranché à 4 000 le 23/08** au motif que le doubler co
 d'ailleurs (lecture et scoring du corpus, ou décodage rallongé), **pas du prefill**. La décision de David
 tient tant que ce n'est pas remesuré — mais *le motif qui la portait n'est plus le bon*, et c'est
 exactement le genre d'écart qui fait rejeter une bonne idée pour une mauvaise raison.
+
+
+---
+
+## 12. Le préchauffage — construit le 2026-08-31
+
+**Ce que le § 11 a laissé sur la table.** `keep_alive` garde le modèle trente minutes **après une
+réponse** ; rien ne le chargeait *avant la première*. Le meneur payait donc la montée sur l'iGPU au pire
+moment : sa première question, devant la table qui attend.
+
+Le remède ne demande ni un modèle plus rapide ni un réglage : **une requête sans invite**.
+
+```text
+POST /api/generate  { model, keep_alive: '30m', options: { num_ctx: 16384 } }
+→ done_reason=load · response vide · 14,6 s · ollama ps : 100% GPU, contexte 16384
+```
+
+| | où | quoi |
+| --- | --- | --- |
+| `OllamaService.prechauffer` | processus principal | le **comment** : le corps, le journal, l'échec muet |
+| `prechauffage.ts` | renderer | le **quand** : à l'ouverture de la séance, renouvelé toutes les 20 min |
+| `Shell` | renderer | le montage, à côté des deux autres battements |
+
+### Les quatre décisions, et ce qui les impose
+
+**1. ⚠️ `num_ctx` doit être celui des vraies requêtes.** La fenêtre décide de la taille du cache
+clé-valeur, donc de l'occupation mémoire : charger sur une fenêtre puis en demander une autre fait
+**recharger** le modèle, et le préchauffage n'aurait fait qu'ajouter une montée de plus. Il lit donc
+`OPTIONS_PAR_DEFAUT`, seule écriture de cette valeur. *Un préchauffage qui charge autre chose que ce qu'on
+va demander est plus coûteux que pas de préchauffage du tout.* Un test le tient.
+
+**2. La séance, pas le lancement de GM-OS.** Le § 1.1 pose deux moments et deux budgets : en préparation,
+une Forge de quarante-cinq minutes est normale et cinquante secondes de montée ne se remarquent pas.
+Charger 8,4 Gio de mémoire partagée pour une soirée d'écriture de notes serait les prendre pour rien.
+
+**3. Ollama local seulement, jamais `ollama_cloud`.** Le coût qu'on évite est la montée d'un modèle sur
+*cet* iGPU. Une instance distante a son propre cycle, et lui envoyer une requête à chaque ouverture de
+séance serait agir sur une machine qui ne nous a rien demandé. *On ne préchauffe que ce qu'on héberge.*
+
+**4. Un échec ne se remonte pas à l'écran.** Un préchauffage raté ne casse rien : la question suivante
+rechargera le modèle comme avant. *Prévenir le meneur qu'une optimisation n'a pas eu lieu, c'est lui
+donner un souci qu'il ne peut pas traiter.* Le journal garde la trace.
+
+### Le renouvellement, et pourquoi il n'est pas décoratif
+
+`DUREE_DE_CHARGE` vaut trente minutes, et une séance dure des heures. Entre l'ouverture et la première
+question de règle, il peut s'écouler une heure de mise en place : sans renouvellement, le préchauffage ne
+couvrirait que la demi-heure suivant l'ouverture — *un filet qui ne tient que pendant qu'on le regarde.*
+**Vingt minutes**, donc, ce qui laisse dix minutes de marge pour reprendre un préchauffage manqué.
+
+Un garde d'une minute empêche le double chargement de `StrictMode`, qui monte chaque effet deux fois.
+*C'est le piège payé le 30/08 sur la restitution de l'afficheur, en beaucoup moins cher — mais le motif
+se répète, et il faut le prévoir à chaque battement.*
+
+### Ce qui reste à voir en séance
+
+Le gain est mesuré au banc, pas à la table. Ce qu'on saura le lendemain : si la première question part
+bien en ~10 s, et si les 8,4 Gio tenus pendant toute la séance gênent quoi que ce soit d'autre — la
+génération d'image locale au premier chef, qui charge son propre modèle sur la même mémoire partagée.

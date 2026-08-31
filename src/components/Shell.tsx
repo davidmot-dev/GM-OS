@@ -34,6 +34,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
+import { usePrechauffageDuModele } from '../modules/ai/prechauffage';
 import { useCorpusDeLaCampagne } from '../modules/session/hooks/useCorpusDeLaCampagne';
 import { useBattementDuMinuteur } from '../modules/clock/useBattementDuMinuteur';
 import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
@@ -113,6 +114,20 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
       valeur diffusée aux tablettes gelait avec lui.
     */
     useBattementDuMinuteur();
+
+    /*
+      **Et le modèle chauffe ici, pour une troisième raison qui est la même.**
+
+      Mesuré le 2026-08-31 : la première question d'une soirée coûte 45 à 58 s
+      contre ~10 s ensuite, parce que la montée du modèle sur l'iGPU est
+      facturée au premier prefill. `keep_alive` garde le modèle chaud *après*
+      une réponse ; rien ne le chargeait avant la première.
+
+      Il suit la séance et non le lancement de GM-OS : en préparation, les
+      cinquante secondes ne se remarquent pas, et charger 8,4 Gio pour une
+      soirée de notes serait les prendre pour rien.
+    */
+    usePrechauffageDuModele(seanceOuverte);
 
     // Activate Tactical AI listeners
     useHardwareBridge();

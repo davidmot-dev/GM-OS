@@ -341,6 +341,11 @@ declare global {
             ollamaAbort?: (requeteId: string) => Promise<boolean>;
             /** Combien de requêtes tournent chez Ollama. */
             ollamaEnVol?: () => Promise<{ id: string; libelle: string; depuis: number }[]>;
+            /**
+             * Charge le modèle d'avance. **Facultatif** : un pont plus ancien
+             * ne l'expose pas, et l'appelant doit le vérifier avant d'appeler.
+             */
+            ollamaPrechauffer?: (model: string, endpoint?: string) => Promise<boolean>;
             ollamaStatus: (endpoint?: string) => Promise<boolean>;
             ollamaListModels: (endpoint?: string) => Promise<string[]>;
             ollamaPull: (model: string, endpoint?: string) => Promise<boolean>;

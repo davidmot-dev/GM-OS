@@ -181,6 +181,35 @@ export function corpsDeChat(
 }
 
 /**
+ * Le corps d'un **préchauffage** : on charge le modèle et on n'engendre rien.
+ *
+ * **Ce que ça achète — mesuré le 2026-08-31.** À froid, la première question
+ * d'une soirée coûte **45 à 58 s** ; à chaud, la même en coûte ~10. L'écart
+ * n'est pas du calcul, c'est la montée du modèle sur l'iGPU — et rien ne
+ * l'avait jamais provoquée à l'avance. *Le meneur payait donc le démarrage
+ * d'Ollama au pire moment : sa première question devant la table.*
+ *
+ * **Aucun `prompt` : c'est ce qui distingue un préchauffage d'une requête.**
+ * Ollama charge le modèle, répond aussitôt, et ne décode pas un token.
+ *
+ * ⚠️ **`num_ctx` doit être celui des vraies requêtes, sinon tout est perdu.**
+ * La fenêtre décide de la taille du cache clé-valeur, donc de l'occupation
+ * mémoire : demander 16 384 après avoir chargé sur 4 096 fait **recharger** le
+ * modèle, et le préchauffage n'aura fait qu'ajouter une montée de plus. Il lit
+ * donc `OPTIONS_PAR_DEFAUT`, la seule écriture de cette valeur.
+ *
+ * `keep_alive` est ici pour la même raison que dans `corpsDeChat` : de premier
+ * niveau, jamais dans `options`, où Ollama l'ignore en silence.
+ */
+export function corpsDePrechauffage(model: string): Record<string, unknown> {
+    return {
+        model,
+        keep_alive: DUREE_DE_CHARGE,
+        options: { num_ctx: OPTIONS_PAR_DEFAUT.num_ctx },
+    };
+}
+
+/**
  * Ce qu'on impose à Ollama, plutôt que de le subir.
  *
  * **Le défaut que cela corrige.** Aucune requête n'envoyait de bloc `options` :
@@ -386,6 +415,43 @@ export class OllamaService {
             return response.ok;
         } catch (error) {
             console.error(`[Ollama] Erreur de vérification du statut sur ${url}:`, error);
+            return false;
+        }
+    }
+
+    /**
+     * **Charge le modèle avant qu'on en ait besoin.**
+     *
+     * Appelé à l'ouverture de la séance, puis renouvelé tant qu'elle dure —
+     * voir `src/modules/ai/prechauffage.ts`, qui décide *quand*. Ce service ne
+     * décide que du *comment*.
+     *
+     * **Un échec ne se remonte pas à l'écran, et c'est voulu.** Un
+     * préchauffage raté ne casse rien : la question suivante rechargera le
+     * modèle comme avant. *Prévenir le meneur qu'une optimisation n'a pas eu
+     * lieu, c'est lui donner un souci qu'il ne peut pas traiter.* Le journal
+     * garde la trace pour qui la cherche.
+     */
+    async prechauffer(model: string, endpoint?: string): Promise<boolean> {
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
+        const depart = Date.now();
+        try {
+            const reponse = await net.fetch(`${url}/api/generate`, {
+                method: 'POST',
+                body: JSON.stringify(corpsDePrechauffage(model)),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const secondes = ((Date.now() - depart) / 1000).toFixed(1);
+            const ligne = reponse.ok
+                ? `[Ollama] préchauffage de ${model} — chargé en ${secondes} s`
+                : `[Ollama] préchauffage de ${model} — refusé (${reponse.status} ${reponse.statusText})`;
+            console.log(ligne);
+            journaliser(ligne);
+            return reponse.ok;
+        } catch (error) {
+            const ligne = `[Ollama] préchauffage de ${model} impossible sur ${url} : ${error instanceof Error ? error.message : String(error)}`;
+            console.log(ligne);
+            journaliser(ligne);
             return false;
         }
     }
@@ -801,6 +867,11 @@ export class OllamaService {
                 console.error('[Ollama Bridge] Streaming error:', error);
                 throw error;
             }
+        });
+
+        /** Charger le modèle d'avance — sans requête, sans réponse à attendre. */
+        ipcMain.handle('ai:ollama-prechauffer', async (_event, model: string, endpoint?: string) => {
+            return await service.prechauffer(model, endpoint);
         });
 
         ipcMain.handle('ai:ollama-list-models', async (_event, endpoint?: string) => {
