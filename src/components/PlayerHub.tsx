@@ -22,6 +22,7 @@ import { useMediaUrl } from '../hooks/useMediaUrl';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
 import { HubClockWidgets } from './hub/HubClockWidgets';
 import { HubProjectionCard } from './hub/HubProjectionCard';
+import { TitreProjete } from './TitreProjete';
 import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 
@@ -109,6 +110,9 @@ const PlayerHub: React.FC = React.memo(() => {
             }`}>
                 <PlayerDrawingCanvas />
             </div>
+
+            {/* LAYER 35 : LE TITRE DU MOMENT — au-dessus du décor, sous l'interface */}
+            <TitreProjete cible="hub" />
 
             {/* LAYER 40: CONTENT & UI */}
             <div className={`relative z-40 flex h-screen w-full flex-col overflow-hidden pointer-events-none transition-all duration-1000 blur-0 opacity-100 scale-100`}>

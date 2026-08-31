@@ -2800,7 +2800,12 @@
       "output_module": "Module output",
       "screen_label": "Projection screen",
       "screen_current": "Image-OS current screen",
-      "screen_hub": "Player Hub"
+      "screen_hub": "Player Hub",
+      "title_label": "Title shown on screen",
+      "title_placeholder": "On-screen title (optional)",
+      "title_fade": "Fade (s)",
+      "title_duration": "Duration (s)",
+      "title_permanent": "Permanent"
     },
     "actions": {
       "duplicate": "Duplicate",

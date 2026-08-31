@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { laSceneQueLAmbianceOuvre } from '../session/logic/trame';
+import { envoyerLeTitre, normaliserLeTitre } from './titreProjete';
 import type { Scene } from '../../types/trame.types';
 import { persist } from 'zustand/middleware';
 
@@ -42,6 +43,22 @@ export interface StoryboardMoment {
     ambientOutputId?: string;
     /** Écran de projection de l'image. Absent : la cible courante d'Image-OS. */
     imageTarget?: string;
+
+    /*
+      **Le titre du moment — demandé par David le 2026-08-31.**
+
+      *« Un texte qui s'affichera en titre sur l'écran choisi pour l'image, avec
+      un fade-in / fade-out configurable (en seconde ou permanent). »*
+
+      Il part sur **le même écran que l'image** : c'est un titre *sur* ce qu'on
+      montre, pas une notification. Voir `titreProjete.ts`.
+    */
+    /** Le texte affiché en titre. Absent ou vide : aucun titre. */
+    titre?: string;
+    /** Durée du fondu, d'entrée comme de sortie, en secondes. */
+    titreFondu?: number;
+    /** Combien de temps il reste. **Absent ou nul : permanent.** */
+    titreDuree?: number;
 
     campaignId: string;
 }
@@ -97,9 +114,22 @@ export const useStoryboardStore = create<StoryboardState>()(
             imageAvantLeMoment: null,
 
             arreterLeMoment: () => {
-                const { imageAvantLeMoment } = get();
+                const { imageAvantLeMoment, activeMomentId, moments } = get();
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const gWindow = window as any;
+
+                /*
+                  **Un titre permanent s'en va avec son moment.** C'est ce qui le
+                  rend utilisable : sans cette ligne, « permanent » voudrait dire
+                  « jusqu'à ce que le meneur trouve comment l'enlever ».
+                */
+                const finissant = moments.find(m => m.id === activeMomentId);
+                if (finissant?.titre) {
+                    const cible = finissant.imageTarget
+                        || (gWindow.useImageStore?.getState()?.projectionTarget as string)
+                        || 'hub';
+                    envoyerLeTitre(normaliserLeTitre({ cible, texte: '' }));
+                }
 
                 if (imageAvantLeMoment && gWindow.useMapStore) {
                     gWindow.useMapStore.getState().setMap(
@@ -242,6 +272,30 @@ export const useStoryboardStore = create<StoryboardState>()(
                     } else {
                         console.warn(`[Storyboard] Image: Media ID ${moment.imageMediaId} NOT FOUND.`);
                     }
+                }
+
+                /*
+                  **4 bis. Le titre, sur le même écran que l'image.**
+
+                  Envoyé même sans image : un titre sur un décor déjà en place est
+                  un usage légitime — *« Trois jours plus tard »* n'a pas besoin
+                  d'une nouvelle photo.
+
+                  La cible se lit comme celle de l'image : celle du moment, ou
+                  celle qu'Image-OS pointe. Un titre vide **retire** celui qui est
+                  affiché, ce qui rend le cas « ce moment n'a pas de titre »
+                  identique au cas « ce moment efface le titre précédent ».
+                */
+                {
+                    const cible = moment.imageTarget
+                        || (gWindow.useImageStore?.getState()?.projectionTarget as string)
+                        || 'hub';
+                    envoyerLeTitre(normaliserLeTitre({
+                        cible,
+                        texte: moment.titre ?? '',
+                        fondu: moment.titreFondu,
+                        duree: moment.titreDuree,
+                    }));
                 }
 
                 // 5. Sound-OS (SFX)

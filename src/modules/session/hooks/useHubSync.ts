@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { openDB } from 'idb';
+import { lireLeTitre, useTitreProjeteStore } from '../../storyboard/titreProjete';
 
 // 🛡️ Safe Dynamic Store Access Helpers
 const getStore = (name: string) => (typeof window !== 'undefined' ? (window as any)[name] : null);
@@ -298,6 +299,13 @@ export const useHubSync = () => {
                         const { type, data: payload } = data.payload;
                         if (type === 'image') setLiveImagePath(payload || null);
                         if (type === 'entity') setLiveEntity(payload ? JSON.parse(payload) : null);
+                        /*
+                          **Le titre du moment arrive par le même canal.** La
+                          tablette n'a pas de pont Electron : sans cette ligne,
+                          elle serait le seul écran de projection à ne jamais
+                          voir le titre — et personne ne saurait pourquoi.
+                        */
+                        if (type === 'titre') useTitreProjeteStore.getState().poserLeTitre(lireLeTitre(payload));
                     }
                     if (data.type === 'session:receive-message' && data.payload) {
                         const sSession = getStore('useSessionOSStore');

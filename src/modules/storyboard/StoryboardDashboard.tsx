@@ -27,6 +27,7 @@ import { useAmbientStore } from '../ambient/useAmbientStore';
 import { useImageStore } from '../image/useImageStore';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useSortiesAudioDisponibles } from '../../hooks/useSortiesAudioDisponibles';
+import { FONDU_MAX, FONDU_MIN, FONDU_PAR_DEFAUT, DUREE_MAX } from './titreProjete';
 
 // DND Kit Imports
 import {
@@ -239,6 +240,10 @@ const StoryboardDashboard: React.FC = () => {
     const [soundOutputId, setSoundOutputId] = useState('');
     const [ambientOutputId, setAmbientOutputId] = useState('');
     const [imageTarget, setImageTarget] = useState('');
+    /* Le titre du moment, et ses deux réglages. Voir `titreProjete.ts`. */
+    const [titre, setTitre] = useState('');
+    const [titreFondu, setTitreFondu] = useState(String(FONDU_PAR_DEFAUT));
+    const [titreDuree, setTitreDuree] = useState('');
 
     const { scenes: ambientScenes } = useAmbientStore();
     const sortiesAudio = useSortiesAudioDisponibles();
@@ -298,6 +303,9 @@ const StoryboardDashboard: React.FC = () => {
         setSoundOutputId(moment.soundOutputId || '');
         setAmbientOutputId(moment.ambientOutputId || '');
         setImageTarget(moment.imageTarget || '');
+        setTitre(moment.titre || '');
+        setTitreFondu(String(moment.titreFondu ?? FONDU_PAR_DEFAUT));
+        setTitreDuree(moment.titreDuree ? String(moment.titreDuree) : '');
         setIsEditing(true);
     };
 
@@ -314,6 +322,9 @@ const StoryboardDashboard: React.FC = () => {
         setSoundOutputId('');
         setAmbientOutputId('');
         setImageTarget('');
+        setTitre('');
+        setTitreFondu(String(FONDU_PAR_DEFAUT));
+        setTitreDuree('');
         setIsEditing(true);
     };
 
@@ -383,6 +394,10 @@ const StoryboardDashboard: React.FC = () => {
             soundOutputId: soundOutputId || undefined,
             ambientOutputId: ambientOutputId || undefined,
             imageTarget: imageTarget || undefined,
+            titre: titre.trim() || undefined,
+            // Vide veut dire permanent : on n'enregistre alors aucune durée.
+            titreFondu: titre.trim() ? Number(titreFondu) || 0 : undefined,
+            titreDuree: titre.trim() && Number(titreDuree) > 0 ? Number(titreDuree) : undefined,
             campaignId: activeCampaignId,
             description: '',
             color: 'var(--accent)',
@@ -706,6 +721,50 @@ const StoryboardDashboard: React.FC = () => {
                                             <option key={ecran.id} value={ecran.id}>{ecran.label}</option>
                                         ))}
                                     </select>
+
+                                    {/*
+                                      **Le titre part sur le même écran que
+                                      l'image** — c'est un titre SUR ce qu'on
+                                      montre, pas une notification. Il s'affiche
+                                      aussi sans image : « Trois jours plus tard »
+                                      n'a pas besoin d'une nouvelle photo.
+                                    */}
+                                    <input
+                                        type="text"
+                                        value={titre}
+                                        onChange={e => setTitre(e.target.value)}
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
+                                        placeholder={t('modules:storyboard.editor.title_placeholder')}
+                                        title={t('modules:storyboard.editor.title_label')}
+                                    />
+
+                                    {titre.trim() && (
+                                        <div className="flex gap-3">
+                                            <label className="flex-1 flex flex-col gap-1">
+                                                <span className="text-[9px] uppercase tracking-widest text-purple-400/60">
+                                                    {t('modules:storyboard.editor.title_fade')}
+                                                </span>
+                                                <input
+                                                    type="number" min={FONDU_MIN} max={FONDU_MAX} step={0.5}
+                                                    value={titreFondu}
+                                                    onChange={e => setTitreFondu(e.target.value)}
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold outline-none focus:border-purple-400"
+                                                />
+                                            </label>
+                                            <label className="flex-1 flex flex-col gap-1">
+                                                <span className="text-[9px] uppercase tracking-widest text-purple-400/60">
+                                                    {t('modules:storyboard.editor.title_duration')}
+                                                </span>
+                                                <input
+                                                    type="number" min={0} max={DUREE_MAX} step={1}
+                                                    value={titreDuree}
+                                                    onChange={e => setTitreDuree(e.target.value)}
+                                                    placeholder={t('modules:storyboard.editor.title_permanent')}
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold outline-none focus:border-purple-400"
+                                                />
+                                            </label>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

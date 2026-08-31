@@ -2800,7 +2800,12 @@
       "output_module": "Sortie du module",
       "screen_label": "Écran de projection",
       "screen_current": "Écran courant d'Image-OS",
-      "screen_hub": "Player Hub"
+      "screen_hub": "Player Hub",
+      "title_label": "Titre affiché sur l'écran",
+      "title_placeholder": "Titre à l'écran (facultatif)",
+      "title_fade": "Fondu (s)",
+      "title_duration": "Durée (s)",
+      "title_permanent": "Permanent"
     },
     "actions": {
       "duplicate": "Dupliquer",

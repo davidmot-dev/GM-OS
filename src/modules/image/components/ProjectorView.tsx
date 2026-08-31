@@ -7,6 +7,7 @@ import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
 import { useImageStore } from '../useImageStore';
 import { useTranslation } from 'react-i18next';
+import { TitreProjete } from '../../../components/TitreProjete';
 
 /**
  * ProjectorView - VERSION DEBUG ROBUSTE
@@ -161,6 +162,9 @@ const ProjectorView: React.FC = () => {
                     ) : null}
                 </>
             )}
+
+            {/* LAYER 3 : LE TITRE DU MOMENT — au-dessus de l'image, jamais de la carte */}
+            <TitreProjete cible={targetId} />
 
             {/* Subtle overlay for identity */}
             <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 z-50">
