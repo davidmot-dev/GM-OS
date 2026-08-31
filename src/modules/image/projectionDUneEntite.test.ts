@@ -234,3 +234,41 @@ describe('revenir à l’image précédente', () => {
         await vi.waitFor(() => expect(versLeHub[2]).toEqual({ type: 'image', data: DECOR }));
     });
 });
+
+/**
+ * **Modifier une fiche affichée la rafraîchit, elle ne l'éteint pas.**
+ *
+ * *Verrue trouvée le 2026-08-31 en réparant le décor.* `useFavoriteStore` rejoue
+ * la projection d'un favori qu'on vient de modifier — l'intention était écrite
+ * dans le code depuis toujours, « même si l'ID est identique » — mais elle
+ * retombait sur la bascule : enregistrer une retouche **coupait** la projection.
+ *
+ * *Un commentaire ne force rien ; il dit seulement ce qu'on croyait faire.*
+ */
+describe('rejouer la projection d’une fiche', () => {
+    it('renvoie le nouveau portrait au lieu d’arrêter', async () => {
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(1));
+
+        const retouchee = { ...RACHAEL, avatar: 'http://192.168.0.10:3001/temp/rachael-v2.png' };
+        await useImageStore.getState().projectEntity(retouchee, { forcer: true });
+
+        await vi.waitFor(() => expect(versLeHub[1]).toEqual({
+            type: 'image', data: 'http://192.168.0.10:3001/temp/rachael-v2.png',
+        }));
+        expect(useImageStore.getState().projectedEntity?.id).toBe('pnj-1');
+    });
+
+    /** Forcer ne mange pas le décor : la fiche était déjà devant lui. */
+    it('garde le décor mis de côté', async () => {
+        await useImageStore.getState().projectSolo(media(DECOR));
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await useImageStore.getState().projectEntity({ ...RACHAEL, name: 'Rachael Tyrell' }, { forcer: true });
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(3));
+
+        expect(useImageStore.getState().imagePrecedente.hub).toBe(DECOR);
+
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await vi.waitFor(() => expect(versLeHub[3]).toEqual({ type: 'image', data: DECOR }));
+    });
+});

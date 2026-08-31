@@ -157,7 +157,7 @@ export const useFavoriteStore = create<FavoriteState>()(
                     const imageStore = (window as unknown as { useImageStore?: { 
                         getState: () => { 
                             projectedEntity?: { id: string }, 
-                            projectEntity: (e: any) => Promise<void> 
+                            projectEntity: (e: any, options?: { forcer?: boolean }) => Promise<void> 
                         } 
                     } }).useImageStore;
                     
@@ -166,9 +166,18 @@ export const useFavoriteStore = create<FavoriteState>()(
                         const isNowSynced = updates.isSyncedToPlayerHub ?? favBefore.isSyncedToPlayerHub;
                         
                         if (isNowSynced) {
-                            // On force la mise à jour (UPDATE) même si l'ID est identique
+                            /*
+                              **La mise à jour est forcée, et il a fallu que le
+                              magasin sache la distinguer.** L'intention était
+                              écrite ici depuis toujours — « même si l'ID est
+                              identique » — mais elle retombait sur la bascule :
+                              enregistrer une retouche d'un favori affiché
+                              *coupait* sa projection au lieu de la rafraîchir.
+                              *Un commentaire ne force rien ; il dit seulement ce
+                              qu'on croyait faire.*
+                            */
                             const updatedFav = { ...favBefore, ...updates };
-                            imageStore.getState().projectEntity(updatedFav);
+                            imageStore.getState().projectEntity(updatedFav, { forcer: true });
                         } else if (isCurrentlyProjected) {
                             // Si on vient de couper la synchro ET que c'était projeté, on blackout
                             imageStore.getState().projectEntity(null); 

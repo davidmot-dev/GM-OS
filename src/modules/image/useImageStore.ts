@@ -74,12 +74,24 @@ interface ImageState {
     setActiveFolderId: (id: string | null) => void;
     moveMediaToFolder: (mediaId: string, folderId: string | null) => void;
 
-    /** Projette un média (Optimistic) */
-    projectSolo: (media: ImageMedia) => Promise<void>;
+    /**
+     * Projette un média (Optimistic).
+     *
+     * `cible` **choisit l'écran pour cette projection-là**, sans changer celui
+     * qu'Image-OS a sélectionné : c'est ce qui permet à un moment de storyboard
+     * de viser un moniteur nommé. Absente, on projette là où le meneur pointe.
+     */
+    projectSolo: (media: ImageMedia, cible?: string) => Promise<void>;
     /** Projette une URL (Optimistic) */
     projectUrl: (url: string) => Promise<void>;
-    /** Projette une entité (Optimistic) */
-    projectEntity: (entity: ProjectedEntity | null) => Promise<void>;
+    /**
+     * Projette une entité (Optimistic).
+     *
+     * `forcer` **rejoue la projection au lieu de la basculer**, quand l'entité
+     * affichée est celle qu'on repasse. C'est ce dont a besoin qui *modifie* une
+     * fiche déjà à l'écran : sans lui, enregistrer un changement l'efface.
+     */
+    projectEntity: (entity: ProjectedEntity | null, options?: { forcer?: boolean }) => Promise<void>;
     /**
      * Termine la projection d'une fiche : **le décor revient**, ou le noir s'il
      * n'y en avait pas. C'est ce que fait la bascule du bouton, et c'est ce qui
@@ -175,8 +187,8 @@ export const useImageStore = create<ImageState>()(
             setActiveFolderId: (activeFolderId) => set({ activeFolderId }),
             moveMediaToFolder: (mediaId, folderId) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === mediaId ? { ...m, folderId } : m) })),
 
-            projectSolo: async (media) => {
-                const target = get().projectionTarget as string;
+            projectSolo: async (media, cible) => {
+                const target = (cible || get().projectionTarget) as string;
                 
                 // 🔌 Appel Service (arrière-plan)
                 // Le service ImageService se charge de :
@@ -257,11 +269,20 @@ export const useImageStore = create<ImageState>()(
                 });
             },
 
-            projectEntity: async (entity) => {
+            projectEntity: async (entity, options) => {
                 const target = get().projectionTarget as string;
-                // Rappuyer sur la fiche affichée, ou passer `null` : dans les deux
-                // cas la fiche s'en va, et le décor revient s'il y en avait un.
-                if (entity === null || get().projectedEntity?.id === entity.id) {
+                /*
+                  Rappuyer sur la fiche affichée, ou passer `null` : dans les deux
+                  cas la fiche s'en va, et le décor revient s'il y en avait un.
+
+                  **Sauf quand l'appelant force**, et c'est un vrai geste, pas une
+                  échappatoire : `useFavoriteStore` rejoue la projection d'un
+                  favori qu'on vient de **modifier**, pour que le nouveau portrait
+                  parte à l'écran. Le même identifiant y signifie « la même fiche,
+                  en mieux » et non « on a fini avec elle » — sans cette
+                  distinction, enregistrer une retouche coupait la projection.
+                */
+                if (entity === null || (!options?.forcer && get().projectedEntity?.id === entity.id)) {
                     await get().terminerLaFiche();
                     return;
                 }
