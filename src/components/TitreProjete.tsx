@@ -46,7 +46,7 @@ const TexteDuTitre: React.FC<{ titre: Titre; surRetrait: () => void }> = ({ titr
                     transitionDuration: `${titre.fondu}s`,
                     animationDuration: `${titre.fondu}s`,
                 }}
-                className="max-w-[90%] text-center text-4xl sm:text-6xl font-black uppercase tracking-[0.2em]
+                className="max-w-[90%] text-center text-4xl sm:text-6xl font-black italic uppercase tracking-[0.2em]
                            text-white transition-opacity ease-in-out animate-in fade-in
                            [text-shadow:0_2px_24px_rgba(0,0,0,0.9),0_0_60px_rgba(0,0,0,0.7)]"
             >

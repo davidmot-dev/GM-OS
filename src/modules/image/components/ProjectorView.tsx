@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -8,6 +8,14 @@ import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCa
 import { useImageStore } from '../useImageStore';
 import { useTranslation } from 'react-i18next';
 import { TitreProjete } from '../../../components/TitreProjete';
+
+/**
+ * Le fondu de l'image projetée, à l'entrée comme à la sortie.
+ *
+ * Une seule durée pour les deux : *ce qui s'allume et ce qui s'éteint au même
+ * rythme se lit comme un seul geste.*
+ */
+export const FONDU_DE_LIMAGE_MS = 700;
 
 /**
  * ProjectorView - VERSION DEBUG ROBUSTE
@@ -28,9 +36,44 @@ const ProjectorView: React.FC = () => {
     const resolvedUrl = useMediaUrl(imagePath && !imagePath.startsWith('__') ? imagePath : undefined);
     const { initDB, getMediaBlob } = useMediaStore();
     const [mediaType, setMediaType] = useState<'image' | 'video' | 'unknown'>('unknown');
+    /* Le même fait que `mediaType`, lisible depuis un rappel qui ne re-rend pas. */
+    const estUneVideo = useRef(false);
+
+    /*
+      **L'image s'éteint en fondu, elle ne disparaît pas d'un coup.**
+
+      *Demandé par David le 2026-08-31 : « quand je lance une autre séquence, tu
+      dois aussi éteindre l'image en fade out de la séquence précédente ».*
+
+      Effacer le chemin dès l'ordre reçu démonterait le nœud, et **supprimerait
+      le fondu au lieu de le jouer** — la même leçon que le titre, une heure plus
+      tôt. On garde donc le chemin le temps du fondu, et on ne pilote que
+      l'opacité ; le chemin ne part qu'ensuite.
+
+      ⚠️ **Une vidéo, elle, part tout de suite** : la garder montée en la rendant
+      transparente la laisserait **jouer son son**. Une image muette peut
+      s'attarder, pas une vidéo.
+    */
+    const [enSortie, setEnSortie] = useState(false);
+    const sortieEnCours = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const updateImageSource = useCallback((newSource: string | null) => {
         console.log(`[ProjectorView] [${targetId}] Updating Source:`, newSource);
+        if (sortieEnCours.current) {
+            clearTimeout(sortieEnCours.current);
+            sortieEnCours.current = null;
+        }
+
+        if (newSource === null && !estUneVideo.current) {
+            setEnSortie(true);
+            sortieEnCours.current = setTimeout(() => {
+                setImagePath(null);
+                setEnSortie(false);
+            }, FONDU_DE_LIMAGE_MS);
+            return;
+        }
+
+        setEnSortie(false);
         setImagePath(newSource);
     }, [targetId]);
 
@@ -85,8 +128,11 @@ const ProjectorView: React.FC = () => {
         const detectType = async () => {
             if (imagePath.startsWith('m-')) {
                 const blob = await getMediaBlob(imagePath);
-                setMediaType(blob?.type.startsWith('video/') ? 'video' : 'image');
+                const type = blob?.type.startsWith('video/') ? 'video' : 'image';
+                estUneVideo.current = type === 'video';
+                setMediaType(type);
             } else {
+                estUneVideo.current = false;
                 setMediaType('image');
             }
         };
@@ -142,17 +188,38 @@ const ProjectorView: React.FC = () => {
                             className="w-full h-full object-contain animate-in fade-in duration-500" 
                         />
                     ) : resolvedUrl ? (
-                        <div key={imagePath || 'img'} className="w-full h-full relative flex items-center justify-center animate-in fade-in duration-700">
-                            <img 
-                                src={resolvedUrl} 
-                                alt="" 
-                                className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-30 transform scale-110" 
-                            />
-                            <img 
-                                src={resolvedUrl} 
-                                alt="GM-OS Projector" 
-                                className="relative z-10 max-w-[95%] max-h-[95%] object-contain shadow-2xl" 
-                            />
+                        <div
+                            className="w-full h-full relative flex items-center justify-center transition-opacity ease-in-out"
+                            style={{
+                                opacity: enSortie ? 0 : 1,
+                                transitionDuration: `${FONDU_DE_LIMAGE_MS}ms`,
+                            }}
+                        >
+                            {/*
+                              **Deux couches, deux rôles.** Celle du dessus, avec
+                              sa clé, rejoue le fondu d'ENTRÉE à chaque nouvelle
+                              image ; celle du dessous ne pilote que l'opacité, et
+                              c'est elle qui joue le fondu de SORTIE en gardant le
+                              nœud monté. Une seule couche ne pourrait pas faire
+                              les deux : la clé qui rejoue l'entrée démonte la
+                              sortie.
+                            */}
+                            <div
+                                key={resolvedUrl}
+                                className="w-full h-full relative flex items-center justify-center animate-in fade-in"
+                                style={{ animationDuration: `${FONDU_DE_LIMAGE_MS}ms` }}
+                            >
+                                <img 
+                                    src={resolvedUrl} 
+                                    alt="" 
+                                    className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-30 transform scale-110" 
+                                />
+                                <img 
+                                    src={resolvedUrl} 
+                                    alt="GM-OS Projector" 
+                                    className="relative z-10 max-w-[95%] max-h-[95%] object-contain shadow-2xl" 
+                                />
+                            </div>
                         </div>
                     ) : (imagePath || isMapWindow) ? (
                         <div className="flex flex-col items-center gap-4 text-accent/20">

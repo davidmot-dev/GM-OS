@@ -55,8 +55,10 @@ beforeEach(() => {
     g.soundEngine = { loadAudio, play };
     g.useAmbientStore = { getState: () => ({ applyScene }) };
     g.useImageStore = { getState: () => ({
+        projectionTarget: 'hub',
         mediaList: [{ id: 'media-1', name: 'Rue sous la pluie' }],
         projectSolo,
+        setProjection: vi.fn(),
     }) };
     useStoryboardStore.setState({ moments: [], activeMomentId: null, imageAvantLeMoment: null });
 });

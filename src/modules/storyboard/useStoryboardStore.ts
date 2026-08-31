@@ -87,6 +87,22 @@ interface StoryboardState {
      */
     imageAvantLeMoment: ImageAvantLeMoment | null;
 
+    /**
+     * **L'écran sur lequel le moment en cours a posé son image.**
+     *
+     * *Demandé par David le 2026-08-31 : « quand je lance une autre séquence, tu
+     * dois aussi éteindre l'image en fade out de la séquence précédente ».*
+     *
+     * Sans cette trace, on saurait qu'une image traîne mais pas **où** : un
+     * moment peut viser le Player Hub, le suivant un moniteur, et éteindre le
+     * mauvais écran laisserait la table sur l'image d'avant. *Retenir la cible
+     * coûte un champ ; la deviner coûte un écran faux en pleine scène.*
+     *
+     * Volatile à dessein : elle ne décrit pas le moment, elle décrit ce qui est
+     * affiché maintenant.
+     */
+    cibleDeLImageDuMoment: string | null;
+
     // Actions
     addMoment: (moment: Omit<StoryboardMoment, 'id'>) => void;
     updateMoment: (id: string, updates: Partial<StoryboardMoment>) => void;
@@ -112,6 +128,7 @@ export const useStoryboardStore = create<StoryboardState>()(
             moments: [],
             activeMomentId: null,
             imageAvantLeMoment: null,
+            cibleDeLImageDuMoment: null,
 
             arreterLeMoment: () => {
                 const { imageAvantLeMoment, activeMomentId, moments } = get();
@@ -123,6 +140,17 @@ export const useStoryboardStore = create<StoryboardState>()(
                   rend utilisable : sans cette ligne, « permanent » voudrait dire
                   « jusqu'à ce que le meneur trouve comment l'enlever ».
                 */
+                /*
+                  **L'image du moment s'en va avec lui.** Même règle que le titre
+                  et que l'image de scène : *un moment est une parenthèse.*
+                */
+                const cibleDeLImage = get().cibleDeLImageDuMoment;
+                if (cibleDeLImage) {
+                    void import('../image/logic/ImageService')
+                        .then(({ ImageService }) => ImageService.blackout(cibleDeLImage))
+                        .catch(e => console.warn('[Storyboard] extinction de l’image impossible :', e));
+                }
+
                 const finissant = moments.find(m => m.id === activeMomentId);
                 if (finissant?.titre) {
                     const cible = finissant.imageTarget
@@ -138,7 +166,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                         imageAvantLeMoment.mapName ?? 'Sans titre',
                     );
                 }
-                set({ activeMomentId: null, imageAvantLeMoment: null });
+                set({ activeMomentId: null, imageAvantLeMoment: null, cibleDeLImageDuMoment: null });
             },
 
             addMoment: (momentData) => set((state) => ({
@@ -262,7 +290,44 @@ export const useStoryboardStore = create<StoryboardState>()(
                     mapStore.setMap(moment.mapUrl, moment.isMapVideo || false);
                 }
 
-                // 4. Image-OS
+                /*
+                  **4. Image-OS — et l'image du moment précédent s'éteint.**
+
+                  *Demandé par David le 2026-08-31 : « quand je lance une autre
+                  séquence, tu dois aussi éteindre l'image en fade out de la
+                  séquence précédente ».*
+
+                  Une séquence est une **parenthèse**, comme l'image de scène que
+                  `imageAvantLeMoment` rend déjà : ce que le moment a posé s'en va
+                  quand un autre prend la main. Sans ça, un moment sans image
+                  laissait à l'écran celle du précédent, et le meneur devait
+                  l'éteindre à la main au milieu de sa scène.
+
+                  **On n'éteint que si le nouveau ne reprend pas le même écran** :
+                  quand il le reprend, sa propre image remplace l'autre, et
+                  éteindre d'abord ferait clignoter la table.
+
+                  Le fondu, lui, vit dans les écrans — voir `ProjectorView`.
+                */
+                const cibleDeLImage = moment.imageMediaId
+                    ? (moment.imageTarget || (gWindow.useImageStore?.getState()?.projectionTarget as string) || 'hub')
+                    : null;
+                const cibleAEteindre = get().cibleDeLImageDuMoment;
+                if (cibleAEteindre && cibleAEteindre !== cibleDeLImage) {
+                    /*
+                      **Un écran qui refuse de s'éteindre n'emporte pas le reste
+                      du moment.** Relevé par l'essai : sans ce filet, l'échec
+                      remontait dans `triggerMoment` et sautait tout ce qui vient
+                      après — le titre, le bruitage, l'ambiance. *Le même principe
+                      que la scène qu'une ambiance ouvre : ce qui accompagne ne
+                      doit jamais faire tomber ce qui est demandé.*
+                    */
+                    const { ImageService } = await import('../image/logic/ImageService');
+                    void ImageService.blackout(cibleAEteindre).catch(e =>
+                        console.warn('[Storyboard] extinction de l’image impossible :', e));
+                }
+                set({ cibleDeLImageDuMoment: cibleDeLImage });
+
                 if (moment.imageMediaId && gWindow.useImageStore) {
                     const imageStore = gWindow.useImageStore.getState();
                     const media = imageStore.mediaList.find((m: { id: string, name: string }) => m.id === moment.imageMediaId);
@@ -271,6 +336,8 @@ export const useStoryboardStore = create<StoryboardState>()(
                         imageStore.projectSolo(media, moment.imageTarget);
                     } else {
                         console.warn(`[Storyboard] Image: Media ID ${moment.imageMediaId} NOT FOUND.`);
+                        // Rien n'a été posé : la trace mentirait au prochain moment.
+                        set({ cibleDeLImageDuMoment: null });
                     }
                 }
 
