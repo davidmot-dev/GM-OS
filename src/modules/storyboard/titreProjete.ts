@@ -9,18 +9,23 @@ import { create } from 'zustand';
  * campagne en cours. »*
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * TROIS SURFACES, UN SEUL MESSAGE
+ * DEUX SURFACES, UN SEUL MESSAGE
  * ─────────────────────────────────────────────────────────────────────────────
  *
- * L'image projetée s'affiche à trois endroits qui ne partagent rien : la fenêtre
- * de projection (`ProjectorView`), le Player Hub, et la tablette — qui est au
- * bout d'un réseau et n'a pas de pont Electron.
+ * L'image projetée s'affiche sur deux surfaces qui ne partagent rien : la
+ * fenêtre de projection (`ProjectorView`) et le Player Hub.
  *
- * Le titre emprunte donc **le canal qui les atteint déjà tous les trois**,
+ * Le titre emprunte donc **le canal qui les atteint déjà toutes les deux**,
  * `image:sync-hub-data`, avec un type de plus. Le processus principal le diffuse
  * sans savoir à qui il s'adresse ; **chaque surface filtre sur sa propre cible**.
  * *Diffuser puis filtrer est plus sûr qu'adresser : une fenêtre qui s'ouvre en
  * retard n'a pas à être connue de l'émetteur.*
+ *
+ * ⛔ **La tablette est hors sujet — tranché par David le 2026-08-31 :** *« le
+ * storyboard n'est pas destiné aux tablettes »*. Le message y arrive bien par la
+ * liaison réseau, mais rien ne le lit : ce n'est pas un oubli, c'est le
+ * périmètre. *La contrainte de police que j'allais documenter n'en était donc
+ * pas une — je décrivais un défaut sur un écran qui n'était pas concerné.*
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * LA POLICE VIENT DU THÈME, PAS D'UN RÉGLAGE
@@ -30,9 +35,8 @@ import { create } from 'zustand';
  * depuis `docs/systems/<jeu>/theme/theme.css`. Rien à choisir, rien à retenir :
  * *changer de campagne change le titre*, comme le reste de l'interface.
  *
- * ⚠️ La tablette n'a pas de pont Electron et ne lit donc pas le thème du jeu :
- * elle retombe sur la police de titre de GM-OS. Le titre s'y affiche, dans une
- * autre fonte.
+ * Les deux surfaces qui l'affichent sont des fenêtres Electron : elles portent
+ * le thème du jeu, donc la bonne police, sans rien de plus à faire.
  */
 
 /** Ce qui part vers les écrans. Sérialisé en JSON dans le canal existant. */
@@ -102,9 +106,9 @@ export function estPourCetEcran(titre: TitreProjete | null, cible: string): bool
 /**
  * Le dernier titre reçu par **cette fenêtre**.
  *
- * Un magasin plutôt qu'un état local : deux chemins l'alimentent — le pont
- * Electron pour les fenêtres, la liaison réseau pour la tablette — et l'écran
- * n'a pas à savoir duquel il vient.
+ * Un magasin plutôt qu'un état local : l'écran lit un état, il ne s'abonne pas à
+ * un canal. La fenêtre de projection et le Player Hub y posent ce que le pont
+ * Electron leur apporte.
  */
 interface EtatDuTitre {
     titre: TitreProjete | null;

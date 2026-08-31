@@ -36,7 +36,6 @@ import { getDieCssClass } from '../modules/dice/DiceUIUtils';
 import { HubInventory } from './hub/HubInventory';
 import HubMainDeCartes from './hub/HubMainDeCartes';
 import { HubProjectionCard } from './hub/HubProjectionCard';
-import { TitreProjete } from './TitreProjete';
 import { HubRuleViewer } from './hub/HubRuleViewer';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
 import PlayerPrivateNotes from '../modules/session/components/PlayerPrivateNotes';
@@ -298,9 +297,6 @@ const TabletHub: React.FC = () => {
                     )}
 
                 </div>
-
-                {/* Le titre du moment — même canal, même cible que le Player Hub. */}
-                <TitreProjete cible="hub" />
 
                 {/* Centered Content Area */}
                 <div className={`flex-1 flex items-center justify-center transition-all duration-1000 pt-16 md:pt-0 ${hasCombatants ? 'pr-0 md:pr-72' : ''} md:pl-32 pointer-events-none overflow-hidden`}>

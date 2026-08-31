@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { openDB } from 'idb';
-import { lireLeTitre, useTitreProjeteStore } from '../../storyboard/titreProjete';
 
 // 🛡️ Safe Dynamic Store Access Helpers
 const getStore = (name: string) => (typeof window !== 'undefined' ? (window as any)[name] : null);
@@ -300,12 +299,11 @@ export const useHubSync = () => {
                         if (type === 'image') setLiveImagePath(payload || null);
                         if (type === 'entity') setLiveEntity(payload ? JSON.parse(payload) : null);
                         /*
-                          **Le titre du moment arrive par le même canal.** La
-                          tablette n'a pas de pont Electron : sans cette ligne,
-                          elle serait le seul écran de projection à ne jamais
-                          voir le titre — et personne ne saurait pourquoi.
+                          Le canal porte aussi un type `titre`, qui n'est pas lu
+                          ici : **le storyboard ne vise pas les tablettes**
+                          (décision de David le 2026-08-31). Le titre s'affiche
+                          sur les écrans de projection et le Player Hub.
                         */
-                        if (type === 'titre') useTitreProjeteStore.getState().poserLeTitre(lireLeTitre(payload));
                     }
                     if (data.type === 'session:receive-message' && data.payload) {
                         const sSession = getStore('useSessionOSStore');

@@ -59,20 +59,19 @@ const TexteDuTitre: React.FC<{ titre: Titre; surRetrait: () => void }> = ({ titr
 /**
  * **Le titre, par-dessus l'image projetée.**
  *
- * *Demandé par David le 2026-08-31.* Monté par les trois surfaces qui montrent
- * une projection — la fenêtre de projection, le Player Hub, la tablette — et
- * chacune passe **sa** cible : le titre d'un moment envoyé sur le moniteur 2 ne
- * doit pas apparaître sur la tablette des joueurs.
+ * *Demandé par David le 2026-08-31.* Monté par les deux surfaces qui montrent
+ * une projection — la fenêtre de projection et le Player Hub —, et chacune passe
+ * **sa** cible : le titre d'un moment envoyé sur le moniteur 2 ne doit pas
+ * apparaître sur l'écran de la table.
+ *
+ * *Le storyboard ne vise pas les tablettes (décision de David) : elles reçoivent
+ * le message et ne le lisent pas.*
  */
 export const TitreProjete: React.FC<{ cible: string }> = ({ cible }) => {
     const titre = useTitreProjeteStore(e => e.titre);
     const poserLeTitre = useTitreProjeteStore(e => e.poserLeTitre);
 
-    /*
-      **Le pont Electron alimente les fenêtres.** La tablette, elle, reçoit le
-      même message par la liaison réseau (`useHubSync`) et le pose dans le même
-      magasin : cet écran n'a pas à savoir d'où il vient.
-    */
+    /* Le pont Electron alimente les fenêtres, et c'est le seul chemin. */
     useEffect(() => {
         const surMessage = (_e: unknown, ...args: unknown[]) => {
             const [type, charge] = args as [string, string];
