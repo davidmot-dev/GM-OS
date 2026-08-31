@@ -6,9 +6,10 @@ import type { AIModelConfig, AIProvider } from './types';
  * Ce que ces tests protègent : **on ne préchauffe que ce qu'on héberge, et
  * assez souvent pour que ça serve.**
  *
- * Mesuré le 2026-08-31 sur l'iGPU Arc 140T : première question d'une soirée
- * 45 à 58 s, les suivantes ~10 s. L'écart est la montée du modèle, facturée au
- * premier prefill — voir § 11 de `2026-08-07-acceleration-ia.md`.
+ * Mesuré le 2026-08-31 sur l'iGPU Arc 140T : le chargement du modèle coûte 13 à
+ * 20 s, payés par la première question de la soirée (~62 s, contre ~50 s ensuite).
+ * *C'est tout ce que le préchauffage retire* — voir les § 11 à 13 de
+ * `2026-08-07-acceleration-ia.md`.
  */
 
 const configs: Partial<Record<AIProvider, AIModelConfig>> = {

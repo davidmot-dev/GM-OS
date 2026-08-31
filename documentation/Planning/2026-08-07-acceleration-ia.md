@@ -1052,7 +1052,21 @@ confort, plus la vitesse.
 
 ---
 
-## 11. Le banc refait — 2026-08-31, et l'axe A a beaucoup mieux tenu que promis
+## 11. Le banc refait — 2026-08-31
+
+> ## ⛔ CORRIGÉ LE MÊME JOUR — le « 660 tok/s » ci-dessous est un **cache de préfixe**, pas un prefill
+>
+> Les trois passes de ce banc partageaient **le même bloc de 13 000 caractères**, seule la question
+> finale changeait : Ollama a donc réutilisé le préfixe déjà calculé. Le § 3 du
+> `2026-08-23-plafond-rag-mesure.md` le disait, et disait aussi comment l'éviter — *« invite salée à
+> chaque appel »*. Je ne l'ai pas fait.
+>
+> **Remesuré avec du sel en tête d'invite, modèle déjà chargé : 88 et 96 tok/s à 4 000 tokens, 82 à
+> 8 000.** C'est-à-dire **exactement** ce que le 23/08 avait mesuré (109 et 92). Voir le § 13.
+>
+> *Un banc qui répète son invite mesure le cache et croit mesurer le modèle* — c'est le pendant exact
+> du piège que ce même § 11 dénonçait pour le chargement à froid, et je suis tombé dedans en le
+> dénonçant.
 
 **Pourquoi le refaire.** Le § 2 date du 07/08 et l'axe A a été posé le 12/08 ; entre-temps Ollama est
 passé en **0.33.2**. Le plan disait *« à éprouver sur une séance complète, pas seulement au banc »* — ceci
@@ -1068,23 +1082,26 @@ ollama ps → gemma4:12b … 8,4 GB … 100% GPU … 16384
 
 ### Les chiffres, et l'écart avec le § 2
 
-| | § 2 · CPU seul (07/08) | § 2 · iGPU annoncé | **mesuré le 31/08, à chaud** |
-| --- | --- | --- | --- |
-| prefill | 15,3 tok/s | ~72 tok/s (× 4,7) | **660 tok/s** |
-| décodage | 5,5 tok/s | ~6 tok/s (× 1,1) | **7,4 – 8,4 tok/s** |
+| | § 2 · CPU seul (07/08) | § 2 · iGPU annoncé | 31/08, invite **répétée** | **31/08, invite SALÉE** |
+| --- | --- | --- | --- | --- |
+| prefill | 15,3 tok/s | ~72 tok/s (× 4,7) | ⛔ 660 tok/s *(cache)* | **88 – 96 tok/s** |
+| décodage | 5,5 tok/s | ~6 tok/s (× 1,1) | 7,4 – 8,4 tok/s | 7,4 – 8,4 tok/s |
 
-**Prefiller les 4 000 tokens du RAG coûte 6,2 s**, pas les minutes que le chiffrage du § 5 supposait.
-Le × 4,7 du banc du 07/08 était mesuré à froid, donc **il facturait la mise en route au débit** (voir
-ci-dessous) ; à chaud, le rapport réel est de l'ordre de **× 43**. *Le prefill a cessé d'être le sujet.*
-**Le mur est désormais le décodage**, et il l'est pour la raison que le § 2 avait correctement identifiée
-— la bande passante mémoire, partagée — donc aucun réglage ne l'enlèvera.
+~~**Prefiller les 4 000 tokens du RAG coûte 6,2 s.**~~ ⛔ **FAUX** : 6,2 s est le coût d'un préfixe
+**déjà calculé**. Un contexte RAG neuf — le seul cas qui existe en séance — coûte **43 à 48 s**. Voir le
+§ 13.
+
+Ce qui reste vrai du § 2 : **le mur est le décodage**, pour la raison qu'il avait correctement
+identifiée — la bande passante mémoire, partagée — donc aucun réglage ne l'enlèvera. Et le × 4,7 du
+07/08 était bien mesuré à froid, donc il facturait la mise en route au débit.
 
 ### ⚠️ La mise en route est facturée au prefill, pas au chargement
 
-| | `load_duration` | prefill annoncé | coût réel de la question |
+| | `load_duration` | prefill | coût réel de la question |
 | --- | --- | --- | --- |
-| **à froid** | 9,8 – 20 s | **120 tok/s** (33 – 37 s) | **45 – 58 s** |
-| à chaud | 0,0 s | 660 tok/s (6,2 s) | ~10 s |
+| **à froid**, contexte neuf | 13 – 20 s | 88 tok/s (47,5 s) | **~62 s** |
+| à chaud, contexte neuf | 0,0 s | 96 tok/s (43,4 s) | **~50 s** |
+| à chaud, préfixe déjà vu | 0,0 s | ⛔ 660 tok/s (6,2 s) | ~10 s — *n'arrive jamais en séance* |
 
 `load_duration` ne dit **pas** ce que coûte le démarrage : le reste — la montée du modèle sur l'iGPU — est
 compté dans `prompt_eval_duration`, qui affiche alors un débit cinq fois trop bas. *Un banc qui ne fait
@@ -1092,7 +1109,7 @@ qu'une passe mesure la mise en route et croit mesurer le débit.* C'est très pr
 le × 4,7 du § 2.
 
 **Conséquence pour la table, et c'est la seule qui compte** : la **première** question d'une séance coûte
-~50 s, toutes les suivantes ~10 s. Le serveur retombe à `OLLAMA_KEEP_ALIVE:5m0s` ; le chemin `/api/chat`
+~62 s, toutes les suivantes ~50 s — *le préchauffage retire le chargement, pas le prefill.* Le serveur retombe à `OLLAMA_KEEP_ALIVE:5m0s` ; le chemin `/api/chat`
 impose bien `keep_alive: '30m'` (`OllamaService.ts:170`), mais **rien ne préchauffe** — la première
 question de la soirée paie donc toujours la mise en route. → **construit le jour même, § 12.**
 
@@ -1127,6 +1144,13 @@ exactement le genre d'écart qui fait rejeter une bonne idée pour une mauvaise 
 **Ce que le § 11 a laissé sur la table.** `keep_alive` garde le modèle trente minutes **après une
 réponse** ; rien ne le chargeait *avant la première*. Le meneur payait donc la montée sur l'iGPU au pire
 moment : sa première question, devant la table qui attend.
+
+> ⚠️ **Le gain a été annoncé trop grand le jour même, et il est corrigé ici.** J'ai écrit « de ~50 s à
+> ~10 s » sur la foi d'un banc à invite répétée. **Le préchauffage retire le CHARGEMENT — 13 à 20 s — et
+> rien d'autre** : le prefill du contexte RAG, lui, se paie à chaque question parce que ce contexte est
+> neuf à chaque question. Une première question passe donc de **~62 s à ~50 s**. *Le geste reste juste,
+> c'est sa mesure qui était fausse* — et treize secondes rendues au premier moment d'une soirée valent
+> qu'on les prenne.
 
 Le remède ne demande ni un modèle plus rapide ni un réglage : **une requête sans invite**.
 
@@ -1177,3 +1201,51 @@ se répète, et il faut le prévoir à chaque battement.*
 Le gain est mesuré au banc, pas à la table. Ce qu'on saura le lendemain : si la première question part
 bien en ~10 s, et si les 8,4 Gio tenus pendant toute la séance gênent quoi que ce soit d'autre — la
 génération d'image locale au premier chef, qui charge son propre modèle sur la même mémoire partagée.
+
+
+---
+
+## 13. Le « +51 s » du plafond RAG, remesuré — 2026-08-31 (point 3d du registre)
+
+**La question posée.** Le plafond `MAX_CONTEXT_TOKENS = 4000` a été tranché le 23/08 au motif que le
+doubler coûtait **+51 s par question**. Le § 11 semblait dire que le prefill n'en expliquait que ~6, ce
+qui aurait laissé 45 secondes sans cause. **Il n'y a pas de secondes sans cause : c'est le § 11 qui
+mesurait mal.**
+
+### La mesure, avec du sel en tête d'invite
+
+Modèle déjà chargé, `num_ctx 16384`, `num_predict 48`, quatre cents caractères aléatoires **en tête**
+pour qu'aucun préfixe ne puisse être réutilisé :
+
+| Invite | prefill | débit | chargement | TOTAL |
+| --- | ---: | ---: | ---: | ---: |
+| ~4 000 tokens (sel A) | 4 185 tok en 47,5 s | **88 tok/s** | 13,4 s | 62,0 s |
+| ~4 000 tokens (sel B) | 4 189 tok en 43,4 s | **96 tok/s** | 0,0 s | 50,6 s |
+| ~8 000 tokens (sel C) | 8 150 tok en 99,7 s | **82 tok/s** | 0,0 s | 106,6 s |
+
+**Le 23/08 mesurait 109 et 92 tok/s. Nous mesurons 88 à 96 et 82. Les deux campagnes concordent**, à
+huit jours et une version d'Ollama d'écart.
+
+### Le verdict : la décision tient, **et son motif aussi**
+
+Doubler le plafond coûte **+56 s** ici (43,4 → 99,7 s de prefill), contre les +51 s du 23/08. *Le
+prefill l'explique en entier* — il n'y a jamais eu de secondes manquantes.
+
+**Le § 4 du document du 23/08 avait posé la condition de réouverture, et elle est chiffrée** : *« un
+prefill notablement plus rapide. À 300 tok/s, 8 000 tokens coûteraient 27 s au lieu de 82. »* Nous
+sommes à **90**. La condition n'est pas remplie, le point est clos, et il le reste jusqu'à ce qu'un
+changement de moteur ou de matériel la remplisse.
+
+### Ce que cet aller-retour a coûté, et la règle qui en sort
+
+Le piège est **exactement** celui que le § 11 dénonçait pour le chargement à froid : une mesure prise
+dans des conditions qui n'existent pas en usage. Ici, un préfixe identique d'une passe à l'autre.
+
+> **Le cache de préfixe d'Ollama est énorme et ne sert à rien pour l'Oracle.** Le bloc RAG vit dans le
+> prompt système et **change à chaque question** ; seules la persona et les consignes se répètent,
+> quelques centaines de tokens. Mesurer avec une invite répétée, c'est donc mesurer un régime que la
+> table ne connaît jamais.
+
+**La règle, à appliquer à tout banc futur sur Ollama : saler l'invite EN TÊTE, à chaque appel.** En
+queue, le préfixe reste réutilisable et le cache travaille quand même. Le document du 23/08 le disait
+déjà — *un document qui porte la méthode ne sert que si on l'ouvre avant de mesurer, pas après.*

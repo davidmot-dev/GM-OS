@@ -56,14 +56,19 @@ Les **tailles** sont validées par David le 24/08 et vivent dans une seule table
 *Une densité se juge en jouant, pas en regardant* — choisir maintenant serait deviner quatre fois pour
 économiser une séance.
 
-### 3 · Ce qui se code, et c'est court
+### 3 · Ce qui se code, et c'est court — ✅ **les quatre points sont traités le 2026-08-31**
+
+> **Trois des quatre n'ont pas demandé le code qu'on croyait.** 3a était un vrai défaut ; 3b était un
+> bandeau qui pointait au mauvais endroit ; 3c était **déjà fait** et je l'avais recopié sans vérifier ;
+> 3d était une mesure — qui a surtout corrigé **la mienne**. *Vérifier un reste coûte moins cher que le
+> traiter, et parfois il n'y a rien à traiter.*
 
 | | Quoi | Où |
 | --- | --- | --- |
 | a | ✅ **FAIT le 31/08.** La ligne du soutien direct disait « cases » et son seuil `<= 2` comptait en unités de grille. Elle lit maintenant la **bande déclarée par le pilote** (`Contact` ou `Courte`) et annonce l'allié comme les cibles : `Kaï à 1 zones [Portée au toucher]`. **La bande était déjà calculée pour les alliés, puis jetée.** Deux tests interdisaient le mot « cases » depuis le 22/08 — ils passaient parce qu'ils **ne mettaient aucun allié en scène** ; *un test qui interdit un mot ne vaut que sur les lignes qu'il fait écrire* | `TacticalNarrativeService.ts:448` |
-| b | **`roadmap-v6.md` n'a pas bougé depuis le 16 avril.** *Une roadmap fausse coûte plus qu'une roadmap absente* — à réconcilier ou à archiver | `documentation/Architecture/` |
-| c | **L'étape 9 du plan de trame est caduque** (la Forge Chronique a été retirée le 17/08) et reste écrite comme si elle tenait | `2026-08-08-trame-narrative-cycle-seance.md` |
-| d | **Remesurer le « +51 s pour doubler le plafond RAG ».** Une **mesure**, pas une décision : celle de David tient, mais son motif ne peut plus être le prefill, qui n'en explique que ~6 à 660 tok/s | § 11 de `2026-08-07-acceleration-ia.md` |
+| b | ✅ **FAIT le 31/08.** `roadmap-v6.md` portait déjà un bandeau « périmé » — le défaut était qu'**il renvoyait vers une liste de restes qui n'était plus la bonne**, et vers un `etat-et-reprise` nommé par sa date. Elle renvoie maintenant ici, l'index utilisateur ne l'annonce plus comme « Source de Vérité » (son lien était cassé), et `amélioration.md` non plus. *Un avertissement qui oriente vers un document périmé déplace le problème au lieu de le régler* | `documentation/Architecture/` |
+| c | ✅ **RIEN À FAIRE, vérifié le 31/08 — et c'est moi qui avais recopié un reste mort.** L'étape 9 n'a pas été abandonnée : **son travail était déjà fait par la Forge de campagne** (15-16/08). Le plan de trame le dit depuis le 20/08, § 6 et § 8. J'avais copié la ligne du § 6 de la réconciliation sans l'ouvrir — *un reste recopié survit à sa correction*, la règle que ce même document énonce | `2026-08-08-trame-narrative-cycle-seance.md` |
+| d | ✅ **MESURÉ le 31/08, la décision ET son motif tiennent.** Avec du sel en tête d'invite : **88-96 tok/s** à 4 000 tokens, **82** à 8 000 — soit **+56 s** pour doubler, contre les +51 s du 23/08. *Le prefill l'explique en entier ; il n'y a jamais eu de secondes manquantes.* ⛔ C'est mon banc du matin qui était faux : invite répétée, donc **cache de préfixe**. La condition de réouverture posée le 23/08 (300 tok/s) n'est pas remplie | § 13 de `2026-08-07-acceleration-ia.md` |
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

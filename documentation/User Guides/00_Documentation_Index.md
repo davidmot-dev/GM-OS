@@ -3,7 +3,10 @@
 Bienvenue dans le centre de documentation de **GM-OS v6**. Ce guide centralise toutes les ressources nécessaires pour maîtriser votre système d'exploitation de Maître de Jeu.
 
 > [!IMPORTANT]
-> **Source de Vérité v6** : Pour le suivi de la refonte actuelle, consultez la **[Roadmap v6 Master](../../doc./architecture/roadmap-v6.md)**.
+> **Source de Vérité** : tout ce qui reste à faire vit dans la **section ⭐** de
+> **[2026-08-23-chantiers-gares.md](../Planning/2026-08-23-chantiers-gares.md)**.
+> *(L'ancienne « Roadmap v6 Master » est une **archive** figée au 16 avril 2026 — et son lien était de
+> surcroît cassé, `doc./architecture/` n'existe pas.)*
 
 ---
 
@@ -56,7 +59,7 @@ Bienvenue dans le centre de documentation de **GM-OS v6**. Ce guide centralise t
 ## 🛠️ Documentation Technique (Blueprints)
 - [**Architecture des Modules Session-OS**](../../docs/technical/session-os-modular-architecture.md)
 - [**Spécification Nexus-OS v2.0**](../../docs/blueprints/nexus_os_specification.md)
-- [**Roadmap Technique v6**](../../doc./architecture/roadmap-v6.md)
+- [**Roadmap Technique v6**](../Architecture/roadmap-v6.md) — 🗃️ **archive du printemps 2026**, ne dit plus ce qui reste
 - [**Remote Control Architecture**](../technical/Remote_Control_Technical_Doc.md)
 - [**NPC Live Generator (Architecture IA)**](../technical/NPC_Live_Generator_Technical_Doc.md)
 - [**Combat Projection (Système de Visibilité)**](../technical/Combat_Projection_Technical_Doc.md)

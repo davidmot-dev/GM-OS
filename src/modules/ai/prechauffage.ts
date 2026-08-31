@@ -5,22 +5,24 @@ import type { AIProvider, AIModelConfig } from './types';
 /**
  * **Charger le modèle avant la première question — mesuré le 2026-08-31.**
  *
- * Le banc refait ce jour-là a trouvé ce que le banc du 07/08 ne pouvait pas
- * voir : **la mise en route d'Ollama est facturée au `prompt_eval_duration`, pas
- * au `load_duration`**. Un modèle froid annonce donc 120 tok/s de prefill là où
- * il en fait 660 à chaud — et un banc à une seule passe mesure le démarrage en
- * croyant mesurer le débit.
- *
- * Traduit en séance, l'écart est celui-ci :
- *
- * | | coût de la question |
- * | --- | --- |
- * | modèle froid | **45 – 58 s** |
- * | modèle chaud | ~10 s |
- *
  * `keep_alive` garde le modèle trente minutes **après une réponse** ; rien ne le
  * chargeait *avant* la première. Le meneur payait donc la montée sur l'iGPU au
  * pire moment possible : sa première question, devant la table qui attend.
+ *
+ * | | chargement | prefill du RAG | coût de la question |
+ * | --- | --- | --- | --- |
+ * | modèle froid | 13 – 20 s | 47,5 s | **~62 s** |
+ * | modèle chaud | 0 s | 43,4 s | **~50 s** |
+ *
+ * **Ce que ce crochet retire, c'est la colonne du chargement, et elle seule.**
+ * Le prefill se paie à chaque question parce que le contexte RAG est neuf à
+ * chaque question — le cache de préfixe d'Ollama ne couvre que la persona et
+ * les consignes.
+ *
+ * ⚠️ *Annoncé « de ~50 s à ~10 s » le jour même, sur la foi d'un banc dont
+ * l'invite se répétait : 660 tok/s de prefill était un cache, pas un débit. Le
+ * geste reste juste, sa mesure était fausse.* Treize secondes rendues au premier
+ * moment d'une soirée valent qu'on les prenne — mais ce sont treize secondes.
  *
  * Le remède ne demande aucun modèle plus rapide ni aucun réglage : une requête
  * sans invite, à l'ouverture de la séance.

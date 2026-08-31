@@ -183,11 +183,15 @@ export function corpsDeChat(
 /**
  * Le corps d'un **préchauffage** : on charge le modèle et on n'engendre rien.
  *
- * **Ce que ça achète — mesuré le 2026-08-31.** À froid, la première question
- * d'une soirée coûte **45 à 58 s** ; à chaud, la même en coûte ~10. L'écart
- * n'est pas du calcul, c'est la montée du modèle sur l'iGPU — et rien ne
- * l'avait jamais provoquée à l'avance. *Le meneur payait donc le démarrage
- * d'Ollama au pire moment : sa première question devant la table.*
+ * **Ce que ça achète — mesuré le 2026-08-31.** Le chargement du modèle sur
+ * l'iGPU, soit **13 à 20 s**, retirés de la première question de la soirée
+ * (~62 s à froid, ~50 s à chaud). Rien ne le provoquait à l'avance : *le meneur
+ * payait le démarrage d'Ollama au pire moment, sa première question devant la
+ * table.*
+ *
+ * ⚠️ **Et rien de plus.** Le prefill du contexte RAG — 43 s pour 4 000 tokens à
+ * ~90 tok/s — se paie à chaque question, parce que ce contexte est neuf à chaque
+ * question.
  *
  * **Aucun `prompt` : c'est ce qui distingue un préchauffage d'une requête.**
  * Ollama charge le modèle, répond aussitôt, et ne décode pas un token.

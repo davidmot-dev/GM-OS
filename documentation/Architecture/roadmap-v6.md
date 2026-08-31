@@ -1,4 +1,4 @@
-# 🛣️ Roadmap : Transition vers GM-OS v6 (Next-Gen Hub)
+# 🗃️ ARCHIVE — Roadmap « Transition vers GM-OS v6 », printemps 2026
 
 > ## ⚠️ DOCUMENT PÉRIMÉ — ne pas s'en servir pour savoir quoi faire
 >
@@ -10,15 +10,20 @@
 > *Une roadmap fausse coûte plus qu'une roadmap absente* : celle-ci décrit des orientations qui ont été
 > soit dépassées, soit abandonnées, soit accomplies autrement.
 >
-> **Où regarder à la place :**
+> **Où regarder à la place — et il n'y a qu'une adresse :**
 >
-> - **L'état du jour et le geste de reprise** → le `etat-et-reprise` le plus récent de
->   `documentation/Planning/` (au 2026-08-22 : `2026-08-22-etat-et-reprise.md`).
-> - **La liste consolidée des restes, et le seul endroit où elle vit** →
->   `documentation/Planning/2026-08-19-reconciliation-plans-aout.md`, § 5.
-> - **Quel document fait autorité sur quoi** → le § 1 du même document.
+> - **Tout ce qui reste, tout plan confondu** → la **section ⭐** de
+>   `documentation/Planning/2026-08-23-chantiers-gares.md`. Elle absorbe le plan IA, le plan du Cortex,
+>   la réconciliation d'août et la feuille de route Ulanzi, et porte les **ancres de code** de ce qui
+>   est clos.
+> - **L'état du jour** → le `etat-et-reprise` **le plus récent** de `documentation/Planning/`. *On ne
+>   nomme pas lequel : un renvoi daté vieillit exactement comme le document qu'il remplace* — c'est
+>   d'ailleurs ce que ce bandeau faisait, en pointant encore le 22/08 le 31/08.
 >
 > Conservé pour l'histoire : il dit ce qu'on visait au printemps 2026, et c'est sa seule valeur.
+> **Corrigé le 2026-08-31** : le bandeau existait déjà, mais il renvoyait vers une liste de restes qui
+> n'était plus la bonne. *Un avertissement qui oriente vers un document périmé déplace le problème au
+> lieu de le régler.*
 
 Ce document trace les grandes orientations du projet suite à la stabilisation de la v6.2.0.
 

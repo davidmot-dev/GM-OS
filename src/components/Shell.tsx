@@ -118,10 +118,10 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     /*
       **Et le modèle chauffe ici, pour une troisième raison qui est la même.**
 
-      Mesuré le 2026-08-31 : la première question d'une soirée coûte 45 à 58 s
-      contre ~10 s ensuite, parce que la montée du modèle sur l'iGPU est
-      facturée au premier prefill. `keep_alive` garde le modèle chaud *après*
-      une réponse ; rien ne le chargeait avant la première.
+      Mesuré le 2026-08-31 : le chargement du modèle sur l'iGPU coûte 13 à 20 s,
+      et `keep_alive` ne garde le modèle chaud qu'*après* une réponse — rien ne
+      le chargeait avant la première. Ce sont ces secondes-là qu'on retire, et
+      elles seules : le prefill du RAG, lui, est neuf à chaque question.
 
       Il suit la séance et non le lancement de GM-OS : en préparation, les
       cinquante secondes ne se remarquent pas, et charger 8,4 Gio pour une

@@ -161,10 +161,10 @@ describe('le corps de requête en flux', () => {
 /**
  * **Le préchauffage — mesuré le 2026-08-31.**
  *
- * À froid, la première question d'une soirée coûte 45 à 58 s ; à chaud, ~10 s.
- * L'écart est la montée du modèle sur l'iGPU, que `prompt_eval_duration`
- * facture et que `load_duration` ne dit pas. Une requête sans invite la provoque
- * d'avance, à l'ouverture de la séance.
+ * Le chargement du modèle sur l'iGPU coûte 13 à 20 s, et rien ne le provoquait
+ * avant la première question de la soirée. Une requête sans invite le fait
+ * d'avance, à l'ouverture de la séance. *Elle ne retire que ça* : le prefill du
+ * contexte RAG est neuf à chaque question.
  */
 describe('le corps du préchauffage', () => {
   it('ne demande aucune génération — c’est ce qui en fait un préchauffage', () => {

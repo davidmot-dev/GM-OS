@@ -10,8 +10,10 @@
 Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, le projet est entré dans sa phase **v6 (Refonte Architecturale & I18n)**.
 
 > [!IMPORTANT]
-> **Source de Vérité Technique** : Pour le détail des chantiers TypeScript et la modularisation des stores, veuillez consulter la nouvelle :
-> **[Roadmap v6 Master](../architecture/roadmap-v6.md)**
+> **Source de Vérité** : la **section ⭐** de
+> **[2026-08-23-chantiers-gares.md](2026-08-23-chantiers-gares.md)**.
+> *(Ce document renvoyait vers la « Roadmap v6 Master », **archive** figée au 16 avril 2026 ; le lien
+> était en outre cassé.)*
 
 ---
 

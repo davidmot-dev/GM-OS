@@ -354,14 +354,22 @@ scènes** à la revue, livrées le 21/08, et le journal de contexte d'Ollama, po
 
 ---
 
-## 6. Ce qui est caduc
+## 6. Ce qui est caduc — ✅ **les trois points sont traités, vérifié le 2026-08-31**
 
-- **L'étape 9 du plan de trame** (« la Forge Chronique génère la trame ») : la Forge de chronique a été
-  retirée le 17/08. L'étape doit être réécrite ou abandonnée — elle ne peut pas rester en l'état.
-- **`documentation/Architecture/roadmap-v6.md`** n'a pas bougé depuis le **16 avril**. Tout ce qui compte
-  vit dans `Planning/`. *Une roadmap fausse coûte plus qu'une roadmap absente* : à réconcilier ou à
-  archiver.
-- Les **comptes de fiches** cités dans les documents des 8, 9 et 10 août : dépassés, voir le § 4.
+> ⚠️ **Cette section n'est plus un reste, et elle ne doit plus être recopiée comme tel.** Elle l'a été le
+> 31/08 dans le registre consolidé, sans vérification : deux de ses trois points étaient déjà réglés.
+> *Un reste recopié survit à sa correction* — c'est la règle 2 du § 7, payée une fois de plus par celui
+> qui l'a écrite.
+
+- ~~**L'étape 9 du plan de trame**~~ ✅ **traitée**, et par le meilleur des dénouements : elle n'a pas
+  été abandonnée, **son travail était déjà fait par la Forge de campagne** (15-16/08), découvert le
+  20/08. Le § 6 du plan de trame porte le bandeau et le § 8 raye la ligne. *Vérifier qu'une chose a
+  disparu n'est pas vérifier que son travail n'a pas été fait.*
+- ~~**`documentation/Architecture/roadmap-v6.md`**~~ ✅ **archivée le 31/08.** Le bandeau « document
+  périmé » existait déjà ; ce qu'il fallait corriger, c'est qu'**il renvoyait vers une liste de restes
+  qui n'était plus la bonne** — celle-ci, § 5. Il pointe désormais la section ⭐ du registre, et l'index
+  utilisateur ne l'annonce plus comme « Source de Vérité » (son lien était en outre cassé).
+- ~~Les **comptes de fiches** des documents des 8, 9 et 10 août~~ ✅ corrigés au § 4.
 
 ---
 
