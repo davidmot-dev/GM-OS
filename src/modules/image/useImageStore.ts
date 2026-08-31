@@ -37,7 +37,23 @@ interface ImageState {
     folders: ImageFolder[];
     projectedEntity: ProjectedEntity | null;
     projectionTarget: ProjectionTarget;
-    projections: Record<string, string | null>; 
+    projections: Record<string, string | null>;
+    /**
+     * **Le décor, mis de côté pendant qu'une fiche passe devant.**
+     *
+     * *Demandé par David le 2026-08-31 :* « quand je projette un PNJ et qu'il y
+     * avait une image avant, lorsque j'arrête de projeter le PNJ, l'image
+     * précédente doit revenir ».
+     *
+     * **On ne retient qu'une image, jamais une fiche** — décision de David le
+     * même jour. Deux fiches montrées coup sur coup ne s'empilent pas : *l'image
+     * est le décor de la scène, les fiches passent devant*, et arrêter une fiche
+     * ramène toujours le décor. Une pile aurait demandé deux gestes pour revenir
+     * à ce qui était affiché depuis le début.
+     *
+     * Une par cible : le hub et un projecteur ne montrent pas la même chose.
+     */
+    imagePrecedente: Record<string, string | null>;
     displays: DisplayInfo[];
     activeFolderId: string | null; 
     currentView: 'library' | 'favorites' | 'recent';
@@ -64,7 +80,13 @@ interface ImageState {
     projectUrl: (url: string) => Promise<void>;
     /** Projette une entité (Optimistic) */
     projectEntity: (entity: ProjectedEntity | null) => Promise<void>;
-    
+    /**
+     * Termine la projection d'une fiche : **le décor revient**, ou le noir s'il
+     * n'y en avait pas. C'est ce que fait la bascule du bouton, et c'est ce qui
+     * distingue « j'ai fini avec cette fiche » de « je veux du noir ».
+     */
+    terminerLaFiche: () => Promise<void>;
+
     projectSequence: () => void;
     blackout: () => void;
     blackoutAll: () => void;
@@ -86,6 +108,7 @@ export const useImageStore = create<ImageState>()(
             mediaList: [],
             projectionTarget: 'hub',
             projections: {},
+            imagePrecedente: {},
             displays: [],
             folders: [],
             activeFolderId: null,
@@ -165,6 +188,17 @@ export const useImageStore = create<ImageState>()(
                 
                 if (success) {
                     /*
+                      **Une image choisie à la main devient le nouveau décor.** La
+                      fiche ne tient plus la cible — la laisser « projetée » ferait
+                      mentir les écrans qui la surlignent — et le décor mis de côté
+                      n'a plus de sens : celui qui vient d'être choisi le remplace.
+                    */
+                    set((s) => ({
+                        projectedEntity: null,
+                        imagePrecedente: { ...s.imagePrecedente, [target]: null },
+                    }));
+
+                    /*
                       **Il n'avait pas de titre, et il parlait français en dur.**
                       `title` est pourtant obligatoire sur un `JournalEvent` : le
                       `(window as any)` éteignait la vérification, et le fil
@@ -196,7 +230,13 @@ export const useImageStore = create<ImageState>()(
                     return;
                 }
 
-                set((state) => ({ projections: { ...state.projections, [target]: url } }));
+                // Même règle que pour un média de la bibliothèque : l'URL posée à
+                // la main devient le décor, et remplace celui qu'on gardait.
+                set((state) => ({
+                    projections: { ...state.projections, [target]: url },
+                    imagePrecedente: { ...state.imagePrecedente, [target]: null },
+                    projectedEntity: null,
+                }));
                 import('./logic/ImageService').then(({ ImageService }) => {
                     ImageService.projectMedia(url, target as any).then(() => {
                         /*
@@ -219,8 +259,10 @@ export const useImageStore = create<ImageState>()(
 
             projectEntity: async (entity) => {
                 const target = get().projectionTarget as string;
-                if (get().projectedEntity?.id === entity?.id && entity !== null) {
-                    get().blackout();
+                // Rappuyer sur la fiche affichée, ou passer `null` : dans les deux
+                // cas la fiche s'en va, et le décor revient s'il y en avait un.
+                if (entity === null || get().projectedEntity?.id === entity.id) {
+                    await get().terminerLaFiche();
                     return;
                 }
 
@@ -249,6 +291,20 @@ export const useImageStore = create<ImageState>()(
                 if (entity && !portrait) {
                     gmToast(i18n.t('modules:image.notifications.noPortrait', { name: entity.name }), 'warning');
                     return;
+                }
+
+                /*
+                  **Le décor est mis de côté avant que la fiche passe devant.**
+
+                  On ne retient que ce qui n'est pas une fiche : si une fiche
+                  occupe déjà la cible, c'est qu'elle est elle-même passée devant
+                  le décor, et **c'est ce décor-là qu'il faut garder**. Sans cette
+                  condition, montrer deux PNJ de suite effacerait l'image de la
+                  scène au profit du premier PNJ.
+                */
+                const occupant = get().projections[target];
+                if (occupant && occupant !== get().projectedEntity?.id) {
+                    set((s) => ({ imagePrecedente: { ...s.imagePrecedente, [target]: occupant } }));
                 }
 
                 // Optimiste : On pose l'entité
@@ -302,6 +358,42 @@ export const useImageStore = create<ImageState>()(
                 });
             },
 
+            /**
+             * **La fiche s'en va, le décor revient.**
+             *
+             * *Demandé par David le 2026-08-31, en séance.* Avant, la bascule
+             * appelait `blackout` : montrer un PNJ par-dessus le plan d'un lieu
+             * coûtait donc le plan, et il fallait le reprojeter à la main. *Le
+             * geste « j'ai fini avec cette fiche » n'est pas le geste « je veux
+             * du noir »* — et c'est toute la raison d'être de cette action.
+             *
+             * Le noir reste le repli, et il reste **volontaire** : sans décor mis
+             * de côté, on éteint comme avant.
+             */
+            terminerLaFiche: async () => {
+                const target = get().projectionTarget as string;
+                const decor = get().imagePrecedente[target];
+
+                if (!decor) {
+                    get().blackout();
+                    return;
+                }
+
+                // Le décor est repris **avant** d'être renvoyé à l'écran : le
+                // rendre deux fois de suite reviendrait à le laisser en réserve
+                // pour une fiche qu'on n'a pas encore montrée.
+                set((s) => ({
+                    projectedEntity: null,
+                    imagePrecedente: { ...s.imagePrecedente, [target]: null },
+                }));
+
+                const { ImageService } = await import('./logic/ImageService');
+                const revenu = await ImageService.projectMedia(decor, target as ProjectionTarget);
+                // Un décor devenu introuvable — média supprimé entre-temps — ne
+                // doit pas laisser la fiche à l'écran : on retombe sur le noir.
+                if (!revenu) get().blackout();
+            },
+
             projectSequence: () => {
                 const activeMedia = get().mediaList.filter(m => m.active);
                 if (activeMedia.length === 0) return;
@@ -329,7 +421,17 @@ export const useImageStore = create<ImageState>()(
 
             blackout: () => {
                 const target = get().projectionTarget as string;
-                set((s) => ({ projections: { ...s.projections, [target]: null }, projectedEntity: target === 'hub' ? null : s.projectedEntity }));
+                /*
+                  **Le noir voulu efface aussi le décor mis de côté.** Sinon une
+                  image éteinte à la main ressusciterait à la fin de la prochaine
+                  fiche, des heures plus tard — un fantôme que personne ne
+                  rattacherait à son geste.
+                */
+                set((s) => ({
+                    projections: { ...s.projections, [target]: null },
+                    imagePrecedente: { ...s.imagePrecedente, [target]: null },
+                    projectedEntity: target === 'hub' ? null : s.projectedEntity,
+                }));
                 import('./logic/ImageService').then(({ ImageService }) => {
                     ImageService.blackout(target as any);
                 });
@@ -337,7 +439,7 @@ export const useImageStore = create<ImageState>()(
 
             blackoutAll: () => {
                 const targets = Object.keys(get().projections);
-                set({ projections: {}, projectedEntity: null });
+                set({ projections: {}, imagePrecedente: {}, projectedEntity: null });
                 import('./logic/ImageService').then(({ ImageService }) => {
                     ImageService.blackoutAll(targets);
                 });
@@ -371,25 +473,31 @@ export const useImageStore = create<ImageState>()(
                 }
             },
 
-            reset: () => { get().blackoutAll(); set({ mediaList: [], projections: {}, folders: [], activeFolderId: null, projectedEntity: null }); },
+            reset: () => { get().blackoutAll(); set({ mediaList: [], projections: {}, imagePrecedente: {}, folders: [], activeFolderId: null, projectedEntity: null }); },
             clearActiveProjections: () => {
-                set({ projections: {}, projectedEntity: null });
+                set({ projections: {}, imagePrecedente: {}, projectedEntity: null });
             }
         }),
         {
             name: 'gmos-image-storage',
-            partialize: (s) => ({ mediaList: s.mediaList, projectionTarget: s.projectionTarget, folders: s.folders, projections: s.projections }),
+            // `imagePrecedente` accompagne `projections` : garder l'un sans
+            // l'autre ferait revenir un décor sur un écran qui a changé, ou
+            // perdre le décor d'une projection qui, elle, a survécu.
+            partialize: (s) => ({ mediaList: s.mediaList, projectionTarget: s.projectionTarget, folders: s.folders, projections: s.projections, imagePrecedente: s.imagePrecedente }),
             onRehydrateStorage: () => (s) => {
                 if (!s) return;
                 // On vérifie dorénavant par "path" (m-127...) car les projections stockent les chemins
                 const validPaths = new Set(s.mediaList.map(m => m.path));
-                const cleaned = Object.fromEntries(
-                    Object.entries(s.projections).map(([t, v]) => [
-                        t, 
+                const nettoyer = (table: Record<string, string | null>) => Object.fromEntries(
+                    Object.entries(table ?? {}).map(([t, v]) => [
+                        t,
                         (v && v.startsWith('m-') && !validPaths.has(v)) ? null : v
                     ])
                 );
-                s.projections = cleaned;
+                s.projections = nettoyer(s.projections);
+                // Un décor dont le média a disparu ne doit pas être proposé au
+                // retour : il rendrait la fin d'une fiche indistincte d'une panne.
+                s.imagePrecedente = nettoyer(s.imagePrecedente);
             }
         }
     )

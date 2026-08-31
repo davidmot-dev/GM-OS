@@ -33,7 +33,9 @@ let versLeHub: { type: string; data: string }[];
 
 beforeEach(() => {
     versLeHub = [];
-    useImageStore.setState({ projectionTarget: 'hub', projections: {}, projectedEntity: null });
+    useImageStore.setState({
+        projectionTarget: 'hub', projections: {}, imagePrecedente: {}, projectedEntity: null,
+    });
     (window as unknown as { appBridge: unknown }).appBridge = {
         image: {
             syncHubData: (type: string, data: string) => { versLeHub.push({ type, data }); },
@@ -44,8 +46,18 @@ beforeEach(() => {
 
 afterEach(() => {
     delete (window as unknown as { appBridge?: unknown }).appBridge;
-    useImageStore.setState({ projectionTarget: 'hub', projections: {}, projectedEntity: null });
+    useImageStore.setState({
+        projectionTarget: 'hub', projections: {}, imagePrecedente: {}, projectedEntity: null,
+    });
 });
+
+/** Une image du décor, posée comme le meneur la poserait. */
+const DECOR = 'http://192.168.0.10:3001/temp/rue-sous-la-pluie.png';
+/** Ce qu'il faut pour projeter une image de la bibliothèque. */
+const media = (path: string) => ({ id: `m-${path}`, name: 'Décor', path, active: true });
+
+const RACHAEL = { id: 'pnj-1', name: 'Rachael', avatar: 'http://192.168.0.10:3001/temp/rachael.png' };
+const LEON = { id: 'pnj-2', name: 'Leon', avatar: 'http://192.168.0.10:3001/temp/leon.png' };
 
 describe('le portrait d’une entité', () => {
     /**
@@ -129,5 +141,96 @@ describe('projeter une entité', () => {
 
         await vi.waitFor(() => expect(versLeHub).toEqual([{ type: 'image', data: '' }]));
         expect(useImageStore.getState().projectedEntity).toBeNull();
+    });
+});
+
+/**
+ * **Le décor revient quand la fiche s'en va.**
+ *
+ * *Demandé par David le 2026-08-31, en séance :* « quand je projette un PNJ et
+ * qu'il y avait une image avant, lorsque j'arrête de projeter le PNJ, l'image
+ * précédente doit revenir ».
+ *
+ * La bascule appelait `blackout` : montrer un PNJ par-dessus le plan d'un lieu
+ * coûtait le plan, et il fallait le reprojeter à la main. *Le geste « j'ai fini
+ * avec cette fiche » n'est pas le geste « je veux du noir ».*
+ */
+describe('revenir à l’image précédente', () => {
+    /** **Le test qui garde la demande de David.** */
+    it('ramène l’image quand on arrête la fiche', async () => {
+        await useImageStore.getState().projectSolo(media(DECOR));
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(2));
+
+        await useImageStore.getState().projectEntity(RACHAEL); // la même : on arrête
+
+        await vi.waitFor(() => expect(versLeHub[2]).toEqual({ type: 'image', data: DECOR }));
+        expect(useImageStore.getState().projections.hub).toBe(DECOR);
+        expect(useImageStore.getState().projectedEntity).toBeNull();
+    });
+
+    /**
+     * *Décision de David : l'image est le décor, les fiches passent devant.* Deux
+     * PNJ de suite ne s'empilent pas — sans quoi revenir au plan de la scène
+     * demanderait autant de gestes qu'on a montré de fiches.
+     */
+    it('ramène l’image, et non la fiche d’avant, après deux fiches', async () => {
+        await useImageStore.getState().projectSolo(media(DECOR));
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await useImageStore.getState().projectEntity(LEON);
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(3));
+
+        await useImageStore.getState().projectEntity(LEON);
+
+        await vi.waitFor(() => expect(versLeHub[3]).toEqual({ type: 'image', data: DECOR }));
+    });
+
+    it('éteint quand il n’y avait rien avant la fiche', async () => {
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(1));
+
+        await useImageStore.getState().projectEntity(RACHAEL);
+
+        await vi.waitFor(() => expect(versLeHub[1]).toEqual({ type: 'image', data: '' }));
+        expect(useImageStore.getState().projectedEntity).toBeNull();
+    });
+
+    /**
+     * *Le noir voulu est le noir.* Un décor éteint à la main ne doit pas
+     * ressusciter à la fin de la prochaine fiche, des heures plus tard.
+     */
+    it('oublie le décor que le meneur a éteint lui-même', async () => {
+        await useImageStore.getState().projectSolo(media(DECOR));
+        useImageStore.getState().blackout();
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(2));
+
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(3));
+        await useImageStore.getState().projectEntity(RACHAEL);
+
+        await vi.waitFor(() => expect(versLeHub[3]).toEqual({ type: 'image', data: '' }));
+    });
+
+    /** Une image choisie pendant qu'une fiche est à l'écran devient le décor. */
+    it('remplace le décor quand le meneur projette une autre image', async () => {
+        const AUTRE = 'http://192.168.0.10:3001/temp/toit-du-bradbury.png';
+        await useImageStore.getState().projectSolo(media(DECOR));
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await useImageStore.getState().projectSolo(media(AUTRE));
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(3));
+
+        expect(useImageStore.getState().projectedEntity).toBeNull();
+        expect(useImageStore.getState().imagePrecedente.hub).toBeNull();
+    });
+
+    /** `projectEntity(null)` — la bascule de projection des paquets. */
+    it('ramène le décor aussi quand la fiche est retirée par null', async () => {
+        await useImageStore.getState().projectSolo(media(DECOR));
+        await useImageStore.getState().projectEntity(RACHAEL);
+        await vi.waitFor(() => expect(versLeHub).toHaveLength(2));
+
+        await useImageStore.getState().projectEntity(null);
+
+        await vi.waitFor(() => expect(versLeHub[2]).toEqual({ type: 'image', data: DECOR }));
     });
 });
