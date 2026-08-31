@@ -125,6 +125,77 @@ describe('TacticalNarrativeService', () => {
     });
 
     /**
+     * **La ligne du soutien direct, restée en « cases » jusqu'au 2026-08-31.**
+     *
+     * Les deux tests ci-dessus interdisent le mot depuis le 22/08 — et ils
+     * passaient, parce qu'ils **ne mettaient aucun allié en scène**. *Un test
+     * qui interdit un mot ne vaut que sur les lignes qu'il fait écrire.*
+     *
+     * Le mot n'était d'ailleurs pas le pire : le seuil `<= 2` comptait en
+     * unités de grille, ce qui ne désigne rien sur un jeu en zones. Le soutien
+     * se lit désormais sur la **bande déclarée par le pilote**.
+     */
+    describe('le soutien direct', () => {
+        /** Un allié à une unité — donc « au toucher » sur le pilote en zones. */
+        const alliePresent = { id: '5', name: 'Kaï', faction: 'ally', hp: 9, hpMax: 9, statuses: [] };
+        const tokensAvecAllie = [...mockTokens, { id: 't5', name: 'Kaï', x: 100, y: 150 }];
+
+        const rapportAvecAllie = (config?: TacticalConfig) =>
+            TacticalNarrativeService.getSituationalReport(
+                mockActor as Combatant,
+                [mockActor, alliePresent, ...mockEnemies] as Combatant[],
+                tokensAvecAllie as MapToken[],
+                [] as DangerZone[],
+                50,
+                undefined,
+                config,
+            );
+
+        it("annonce l'allié dans l'unité du jeu, et plus jamais en « cases »", () => {
+            const rapport = rapportAvecAllie(configZones);
+
+            expect(rapport).toContain('- Soutien direct : Kaï à 1 zones [Portée au toucher]');
+            expect(rapport, 'la grille de personne').not.toContain('cases');
+        });
+
+        it('sans pilote, dit « unités » comme le reste du rapport', () => {
+            expect(rapportAvecAllie()).toContain('- Soutien direct : Kaï à 1 unités [Portée Contact]');
+        });
+
+        /**
+         * **Le vrai défaut était le seuil, pas le mot.** `<= 2` unités de
+         * grille laissait passer un allié que le pilote place hors de sa bande
+         * courte — et en écartait un qu'il y met. Ici, un pilote dont la bande
+         * courte s'arrête à 1 unité : l'allié à 2 unités n'est plus un soutien
+         * direct, alors que l'ancien seuil l'aurait compté.
+         */
+        it('suit la bande du pilote, et non un nombre de cases', () => {
+            const serre: TacticalConfig = {
+                ...configZones,
+                ranges: {
+                    ...configZones.ranges!,
+                    contact: { label: 'au toucher', maxUnits: 0.5, modifier: 0 },
+                    courte: { label: 'tranche courte', maxUnits: 1, modifier: 0 },
+                    moyenne: { label: 'tranche moyenne', maxUnits: 3, modifier: -1 },
+                },
+            };
+            const loin = [...mockTokens, { id: 't5', name: 'Kaï', x: 100, y: 200 }]; // 2 unités
+
+            const rapport = TacticalNarrativeService.getSituationalReport(
+                mockActor as Combatant,
+                [mockActor, alliePresent, ...mockEnemies] as Combatant[],
+                loin as MapToken[],
+                [] as DangerZone[],
+                50,
+                undefined,
+                serre,
+            );
+
+            expect(rapport, "l'ancien seuil de 2 l'aurait compté").not.toContain('Soutien direct');
+        });
+    });
+
+    /**
      * **Le défaut le plus severe du plan du 2026-08-07, et il était pire que
      * décrit.**
      *

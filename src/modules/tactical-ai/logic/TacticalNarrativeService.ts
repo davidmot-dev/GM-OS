@@ -1,4 +1,4 @@
-import { GridEngine, type GridPoint } from './GridEngine';
+import { GridEngine, type GridPoint, type RangeCategory } from './GridEngine';
 import type { Combatant } from '../../combat/useCombatStore';
 import type { MapToken, DangerZone } from '../../map/types';
 import type { TacticalConfig } from '../../../types/drivers';
@@ -69,8 +69,17 @@ export interface TacticalContext {
         grilleActivee?: boolean;
         gridSize: number;
     };
-    enemies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: string; rangeLabel: string }[];
-    allies: { combatant: Combatant; token?: MapToken; distance: number }[];
+    enemies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: RangeCategory; rangeLabel: string }[];
+    /**
+     * **Les alliés portent leur bande, exactement comme les cibles.**
+     *
+     * Elle était calculée pour eux aussi — `getRangeInfo` tourne une fois par
+     * combattant — puis **jetée**, et la ligne du soutien retombait alors sur
+     * un seuil chiffré (`< 2 cases`) qui ne veut rien dire hors d'une grille.
+     * *Une valeur déjà calculée qu'on jette se remplace toujours par une
+     * approximation, et l'approximation, elle, n'a pas de pilote.*
+     */
+    allies: { combatant: Combatant; token?: MapToken; distance: number; rangeCategory: RangeCategory; rangeLabel: string }[];
     isFlanked: boolean;
     flankedBy: string[];
     nearbyDangerZones: DangerZone[];
@@ -244,7 +253,13 @@ export class TacticalNarrativeService {
                     // fait proposer de l'attaquer.*
                     neutres.push({ combatant: c, token, distance: distanceUnits });
                 } else if (posture === 'allie') {
-                    allies.push({ combatant: c, token, distance: distanceUnits });
+                    allies.push({
+                        combatant: c,
+                        token,
+                        distance: distanceUnits,
+                        rangeCategory: rangeInfo.category,
+                        rangeLabel: rangeInfo.label,
+                    });
                 } else {
                     enemies.push({ 
                         combatant: c, 
@@ -446,9 +461,35 @@ export class TacticalNarrativeService {
             }
 
             if (allies.length > 0) {
-                const closeAllies = allies.filter(a => a.distance <= 2);
+                /*
+                  **La dernière ligne qui parlait en « cases ».**
+
+                  La correction du 22/08 a donné aux cibles et aux neutres
+                  l'unité déclarée par le pilote ; celle-ci est restée en dur.
+                  *Une correction appliquée à trois lignes sur quatre laisse la
+                  quatrième mentir avec l'autorité des trois autres.* Le test
+                  qui interdit le mot « cases » existait pourtant depuis ce
+                  jour-là : il ne mettait simplement **aucun allié en scène**.
+
+                  Et le mot n'était pas le pire : `<= 2` est un nombre d'unités
+                  de GRILLE, qui ne désigne rien sur un jeu comptant en zones ou
+                  en mètres. **Le soutien direct se lit donc sur la BANDE**,
+                  celle que le pilote déclare et qui sert déjà à annoncer les
+                  cibles. `category` est canonique et ne change jamais d'un
+                  système à l'autre : c'est exactement ce pour quoi elle existe.
+
+                  *On ne remplace pas une convention inventée par une autre, on
+                  lit celle du jeu.*
+                */
+                const closeAllies = allies.filter(
+                    a => a.rangeCategory === 'Contact' || a.rangeCategory === 'Courte',
+                );
                 if (closeAllies.length > 0) {
-                    prompt += `- Soutien direct (alliés < 2 cases) : ${closeAllies.map(a => a.combatant.name).join(', ')}.\n`;
+                    prompt += `- Soutien direct : `
+                        + closeAllies
+                            .map(a => `${a.combatant.name} à ${a.distance} ${unite} [Portée ${a.rangeLabel}]`)
+                            .join(', ')
+                        + '.\n';
                 }
             }
 

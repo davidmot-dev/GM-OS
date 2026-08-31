@@ -60,7 +60,7 @@ Les **tailles** sont validées par David le 24/08 et vivent dans une seule table
 
 | | Quoi | Où |
 | --- | --- | --- |
-| a | ⚠️ **« alliés < 2 cases » est resté en dur** — résidu de l'unité de distance corrigée le 22/08 : les ennemis et les neutres s'annoncent en `${unite}` déclarée par le pilote, cette ligne non. **Le seuil de 2 est lui aussi en unités de grille.** *Une correction appliquée à trois lignes sur quatre laisse la quatrième mentir avec l'autorité des trois autres.* | `TacticalNarrativeService.ts:451` |
+| a | ✅ **FAIT le 31/08.** La ligne du soutien direct disait « cases » et son seuil `<= 2` comptait en unités de grille. Elle lit maintenant la **bande déclarée par le pilote** (`Contact` ou `Courte`) et annonce l'allié comme les cibles : `Kaï à 1 zones [Portée au toucher]`. **La bande était déjà calculée pour les alliés, puis jetée.** Deux tests interdisaient le mot « cases » depuis le 22/08 — ils passaient parce qu'ils **ne mettaient aucun allié en scène** ; *un test qui interdit un mot ne vaut que sur les lignes qu'il fait écrire* | `TacticalNarrativeService.ts:448` |
 | b | **`roadmap-v6.md` n'a pas bougé depuis le 16 avril.** *Une roadmap fausse coûte plus qu'une roadmap absente* — à réconcilier ou à archiver | `documentation/Architecture/` |
 | c | **L'étape 9 du plan de trame est caduque** (la Forge Chronique a été retirée le 17/08) et reste écrite comme si elle tenait | `2026-08-08-trame-narrative-cycle-seance.md` |
 | d | **Remesurer le « +51 s pour doubler le plafond RAG ».** Une **mesure**, pas une décision : celle de David tient, mais son motif ne peut plus être le prefill, qui n'en explique que ~6 à 660 tok/s | § 11 de `2026-08-07-acceleration-ia.md` |
