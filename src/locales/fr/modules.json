@@ -1820,7 +1820,10 @@
         "rival": "Rival",
         "hostile": "Hostile",
         "subordinate": "Subordonné",
-        "superior": "Supérieur"
+        "superior": "Supérieur",
+        "romantic": "Amour",
+        "mentor": "Mentor",
+        "other": "Autre"
       },
       "filters": {
         "search_placeholder": "Rechercher un personnage ou une faction...",
@@ -1878,7 +1881,9 @@
         "type_label": "Type de lien",
         "desc_label": "Description",
         "desc_placeholder": "Décrivez le lien...",
-        "add_btn": "Forger le lien"
+        "add_btn": "Forger le lien",
+        "libelle_label": "Nom de la relation (facultatif)",
+        "libelle_placeholder": "Ex : Serment de sang, Dette de jeu…"
       },
       "notifications": {
         "link_created": "Lien créé entre {{source}} et {{target}}",

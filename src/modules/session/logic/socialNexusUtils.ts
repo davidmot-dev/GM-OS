@@ -15,7 +15,10 @@ export interface GraphNode {
 export interface GraphLink {
     source: string | GraphNode;
     target: string | GraphNode;
+    /** La nature canonique — elle décide couleur et distance. */
     type: string;
+    /** Le nom propre de la relation, s'il y en a un. */
+    libelle?: string;
     description: string;
 }
 
@@ -96,6 +99,7 @@ export const prepareSocialGraphData = (
                     source: sourceId,
                     target: rel.targetId,
                     type: rel.type,
+                    libelle: rel.libelle,
                     description: rel.description
                 });
             }

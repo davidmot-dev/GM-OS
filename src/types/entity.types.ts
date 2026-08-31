@@ -51,7 +51,23 @@ export interface HealthSystem {
 export interface EntityRelation {
     targetId: string;
     targetType: 'pc' | 'npc';
+    /**
+     * **La nature du lien, sous son nom canonique.** Elle décide de la couleur
+     * et de la physique du graphe, et ne change jamais d'une campagne à
+     * l'autre — voir `session/logic/relationsSociales.ts`.
+     */
     type: 'ally' | 'neutral' | 'hostile' | 'family' | 'romantic' | 'mentor' | 'rival' | 'other';
+    /**
+     * **Le nom que le meneur donne à CETTE relation** — « Serment de sang »,
+     * « Dette de jeu ». Facultatif : sans lui, on affiche le nom de la nature.
+     *
+     * *C'est le patron de `RangeInfo` du Cortex* : un canonique qui sert à
+     * comparer, un libellé qui sert à lire. Un type entièrement libre aurait
+     * rendu la palette et la physique indécidables ; ici « Serment de sang »
+     * fondé sur `ally` s'attire et se colore comme une alliance, et porte son
+     * nom. Aucune donnée existante n'est invalidée.
+     */
+    libelle?: string;
     description: string;
 }
 

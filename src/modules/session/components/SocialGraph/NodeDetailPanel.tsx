@@ -1,4 +1,5 @@
 import React from 'react';
+import { couleurDeRelation, libelleDeRelation } from '../../logic/relationsSociales';
 import { useTranslation } from 'react-i18next';
 
 import { 
@@ -50,18 +51,12 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
     renderRelationForm
 }) => {
     const { t } = useTranslation();
-    const getRelationColor = (type: string) => {
-
-        switch (type) {
-            case 'ally': return '#22c55e';
-            case 'hostile': return '#ef4444';
-            case 'family': return '#eab308';
-            case 'romantic': return '#d946ef';
-            case 'mentor': return '#3b82f6';
-            case 'rival': return '#f97316';
-            default: return '#94a3b8';
-        }
-    };
+    /*
+      **La palette vivait ici en double**, recopiée depuis `SocialGraph`. Elles
+      avaient divergé de la liste du formulaire au point qu'« Ami » enregistrait
+      `romantic` — voir `logic/relationsSociales.ts`, désormais seule écriture.
+    */
+    const getRelationColor = couleurDeRelation;
 
     return (
         <div className="absolute top-6 bottom-6 right-6 w-96 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 flex flex-col shadow-2xl animate-fade-in z-50">
@@ -177,7 +172,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
 
                                             </div>
                                             <span className="text-[9px] font-black uppercase px-2 py-1 rounded-md border shrink-0" style={{ color: getRelationColor(rel.type), borderColor: `${getRelationColor(rel.type)}44`, backgroundColor: `${getRelationColor(rel.type)}11` }}>
-                                                {t(`modules:session.social_graph.legend.${rel.type}`)}
+                                                {libelleDeRelation(rel, t)}
                                             </span>
 
                                         </div>
@@ -210,7 +205,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                                 </div>
                                                 <div>
                                                     <div className="text-[11px] font-bold text-white">{otherNode?.name}</div>
-                                                    <div className="text-[9px] uppercase tracking-wider opacity-60" style={{ color: getRelationColor(rel.type) }}>{t(`modules:session.social_graph.legend.${rel.type}`)}</div>
+                                                    <div className="text-[9px] uppercase tracking-wider opacity-60" style={{ color: getRelationColor(rel.type) }}>{libelleDeRelation(rel, t)}</div>
                                                 </div>
 
                                             </div>

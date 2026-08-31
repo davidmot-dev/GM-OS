@@ -1820,7 +1820,10 @@
         "rival": "Rival",
         "hostile": "Hostile",
         "subordinate": "Subordinate",
-        "superior": "Superior"
+        "superior": "Superior",
+        "romantic": "Romance",
+        "mentor": "Mentor",
+        "other": "Other"
       },
       "filters": {
         "search_placeholder": "Search for a character or faction...",
@@ -1878,7 +1881,9 @@
         "type_label": "Link Type",
         "desc_label": "Description",
         "desc_placeholder": "Describe the link...",
-        "add_btn": "Forge Link"
+        "add_btn": "Forge Link",
+        "libelle_label": "Relation name (optional)",
+        "libelle_placeholder": "E.g. Blood oath, Gambling debt…"
       },
       "notifications": {
         "link_created": "Link created between {{source}} and {{target}}",

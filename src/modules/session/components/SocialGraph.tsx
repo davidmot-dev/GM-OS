@@ -9,6 +9,13 @@ import * as d3 from 'd3';
 
 // Logic & Utils
 import { prepareSocialGraphData, getUniqueFactions, type GraphNode, type GraphLink } from '../logic/socialNexusUtils';
+/*
+  **La palette et la physique viennent d'ici, et de nulle part ailleurs.**
+  Ce fichier en portait une copie, `NodeDetailPanel` une seconde, et le
+  formulaire une troisième liste de types : elles avaient divergé au point
+  qu'« Ami » enregistrait `romantic`.
+*/
+import { couleurDeRelation, distanceDeRelation } from '../logic/relationsSociales';
 
 // Hooks
 import { useAvatarResolver } from '../hooks/useAvatarResolver';
@@ -93,6 +100,8 @@ const SocialGraph: React.FC = () => {
     const [newRelTarget, setNewRelTarget] = useState<string>('');
     const [newRelType, setNewRelType] = useState<string>('ally');
     const [newRelDesc, setNewRelDesc] = useState<string>('');
+    /** Le nom propre de la relation en cours de saisie — facultatif. */
+    const [newRelLibelle, setNewRelLibelle] = useState<string>('');
 
     const imgCache = useRef<Record<string, HTMLImageElement>>({});
 
@@ -128,7 +137,18 @@ const SocialGraph: React.FC = () => {
             // Mise à jour des forces via l'API du composant
             try {
                 if (fg.d3Force('charge')) fg.d3Force('charge').strength(graphCharge).distanceMax(1000);
-                if (fg.d3Force('link')) fg.d3Force('link').distance(graphDistance);
+                /*
+                  **La distance suit la nature du lien** — l'« influence sur la
+                  physique du graphe » du jalon d'avril 2026, qui n'avait jamais
+                  existé : la même distance valait pour tout le monde, et la
+                  disposition ne disait donc rien que les couleurs ne disaient
+                  déjà. Le curseur du meneur reste la référence, la nature ne
+                  fait que la moduler.
+                */
+                if (fg.d3Force('link')) {
+                    fg.d3Force('link').distance((lien: GraphLink) =>
+                        distanceDeRelation(lien.type, graphDistance));
+                }
                 fg.d3Force('collide', d3.forceCollide(graphCollision));
                 
                 const sim = fg.d3Simulation();
@@ -183,18 +203,6 @@ const SocialGraph: React.FC = () => {
             }
         }, 150);
     }, [activeCampaignId, resetGraphLayout]);
-
-    const getRelationColor = useCallback((type: string) => {
-        switch (type) {
-            case 'ally': return '#22c55e';
-            case 'hostile': return '#ef4444';
-            case 'family': return '#eab308';
-            case 'romantic': return '#d946ef';
-            case 'mentor': return '#3b82f6';
-            case 'rival': return '#f97316';
-            default: return '#94a3b8';
-        }
-    }, []);
 
     const handleSaveFaction = useCallback(() => {
         const node = data.nodes.find(n => n.id === selectedNodeId);
@@ -289,12 +297,17 @@ const SocialGraph: React.FC = () => {
             targetId: newRelTarget,
             targetType: 'npc',
             type: newRelType as EntityRelation['type'],
+            // Vide veut dire « pas de nom propre », et non « nom vide » : on ne
+            // pose pas la clé plutôt que d'en écrire une chaîne blanche, qui
+            // masquerait ensuite le libellé de la nature.
+            ...(newRelLibelle.trim() ? { libelle: newRelLibelle.trim() } : {}),
             description: newRelDesc || t('modules:session.social_graph.relation_form.desc_placeholder')
         });
 
         setNewRelTarget('');
         setNewRelDesc('');
-    }, [selectedNodeId, data.nodes, newRelTarget, newRelType, newRelDesc, addRelation, t]);
+        setNewRelLibelle('');
+    }, [selectedNodeId, data.nodes, newRelTarget, newRelType, newRelDesc, newRelLibelle, addRelation, t]);
 
 
     const handleRemoveRelation = useCallback((targetId: string) => {
@@ -366,11 +379,11 @@ const SocialGraph: React.FC = () => {
                         linkDirectionalParticles={2}
                         linkDirectionalParticleSpeed={() => 0.005}
                         linkDirectionalParticleWidth={2}
-                        linkDirectionalParticleColor={(link: GraphLink) => getRelationColor(link.type)}
+                        linkDirectionalParticleColor={(link: GraphLink) => couleurDeRelation(link.type)}
                         linkDirectionalArrowLength={3.5}
                         linkDirectionalArrowRelPos={1}
                         linkCurvature={0.25}
-                        linkColor={(link: GraphLink) => `${getRelationColor(link.type)}66`}
+                        linkColor={(link: GraphLink) => `${couleurDeRelation(link.type)}66`}
                         linkWidth={2}
                         onNodeClick={handleNodeClick}
                         onBackgroundClick={() => setSelectedNodeId(null)}
@@ -419,6 +432,8 @@ const SocialGraph: React.FC = () => {
                             setNewRelType={setNewRelType}
                             newRelDesc={newRelDesc}
                             setNewRelDesc={setNewRelDesc}
+                            newRelLibelle={newRelLibelle}
+                            setNewRelLibelle={setNewRelLibelle}
                             potentialTargets={potentialTargets}
                             onAddRelation={handleAddRelation}
                         />
