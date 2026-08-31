@@ -52,7 +52,15 @@ interface AmbientState {
     fadeOutAll: () => void;
     setTrackLightLink: (index: number, sceneId: string | null) => void;
     handleLightReversion: (stoppedIndex: number) => void;
-    applyScene: (sceneId: string) => Promise<void>;
+    /**
+     * Applique une scène d'ambiance.
+     *
+     * `sortie` envoie **les pistes que cette scène allume** sur l'enceinte
+     * demandée, sans toucher à celles qui tournaient déjà ailleurs — c'est le
+     * routage par son demandé par David le 2026-08-31. Absent, tout suit la
+     * sortie du module comme avant.
+     */
+    applyScene: (sceneId: string, sortie?: string) => Promise<void>;
     applySnapshot: (snapshot: {
         activeTracks?: { id: string; url: string; volume: number; isPlaying: boolean }[];
         masterVolume?: number;
@@ -311,7 +319,7 @@ export const useAmbientStore = create<AmbientState>()(
                 }
             },
 
-            applyScene: async (sceneId) => {
+            applyScene: async (sceneId, sortie) => {
                 const scene = get().scenes.find(s => s.id === sceneId);
                 if (!scene) return;
 
@@ -324,6 +332,14 @@ export const useAmbientStore = create<AmbientState>()(
                     const t = currentTracks[i];
                     const shouldBePlaying = scene.activeTracks[i];
                     const targetVolume = scene.trackVolumes[i];
+
+                    /*
+                      **La sortie se pose sur les pistes que la scène allume**, et
+                      sur elles seules. Router les huit déplacerait ce qu'une autre
+                      scène fait sonner ailleurs — or le sujet est justement de ne
+                      plus déplacer ce qu'on n'a pas demandé.
+                    */
+                    if (shouldBePlaying) ambientEngine.routerLaPiste(i, sortie);
 
                     if (shouldBePlaying && !t.isPlaying && t.url) {
                         await ambientEngine.tracks[i].load(t.url);

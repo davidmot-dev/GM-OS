@@ -1,4 +1,5 @@
 import { useMediaStore } from '../../stores/useMediaStore';
+import { SortiesAudio } from '../../utils/sortiesAudio';
 
 /**
  * Représente une piste d'ambiance individuelle.
@@ -15,6 +16,8 @@ class AmbientTrack {
     private buffer: AudioBuffer | null = null;
     private isPlaying: boolean = false;
     private currentUrl: string | null = null;
+    /** Là où la piste sort en ce moment — voir `router`. */
+    private destination: AudioNode;
 
     constructor(context: AudioContext, destination: AudioNode) {
         this.context = context;
@@ -36,6 +39,23 @@ class AmbientTrack {
         this.merger.connect(this.gainNode);
         this.gainNode.connect(this.analyser);
         this.analyser.connect(destination);
+        this.destination = destination;
+    }
+
+    /**
+     * **Envoie cette piste ailleurs, sans toucher aux sept autres.**
+     *
+     * *Demande de David du 2026-08-31.* La pluie peut sortir des enceintes de la
+     * table pendant que le grondement du métro reste au casque du meneur.
+     *
+     * On rebranche l'analyseur : tout ce qui est en amont — sommation mono,
+     * volume de la piste, fondus en cours — continue sans savoir où ça sort.
+     */
+    router(destination: AudioNode) {
+        if (destination === this.destination) return;
+        this.analyser.disconnect();
+        this.analyser.connect(destination);
+        this.destination = destination;
     }
 
 
@@ -162,6 +182,11 @@ export class AmbientEngine {
     private compressor: DynamicsCompressorNode;
     private analyser: AnalyserNode;
     public tracks: AmbientTrack[] = [];
+    /** Les sorties détournées, une par enceinte demandée. */
+    private sorties!: SortiesAudio;
+    /** Ce que valent le ducking de la voix et le réglage global, séparément. */
+    private valeurDucking = 1.0;
+    private valeurGlobale = 1.0;
 
     constructor() {
         // @ts-expect-error - Support for legacy browsers
@@ -195,6 +220,8 @@ export class AmbientEngine {
         this.globalSyncGain.connect(this.analyser);
         this.analyser.connect(this.context.destination);
 
+        this.sorties = new SortiesAudio(this.context, 'AmbientEngine');
+
         // Init 8 tracks
         for (let i = 0; i < 8; i++) {
             this.tracks.push(new AmbientTrack(this.context, this.compressor));
@@ -217,6 +244,8 @@ export class AmbientEngine {
             const targetGain = masterVolume * (isFocusMode ? focusDuckingRatio : 1.0);
             
             this.globalSyncGain.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.1);
+            this.valeurGlobale = targetGain;
+            this.menerLesVoiesDetournees(0.1);
         });
     }
 
@@ -243,7 +272,47 @@ export class AmbientEngine {
                 this.context.currentTime, 
                 timeConstant
             );
+            this.valeurDucking = targetGain;
+            this.menerLesVoiesDetournees(timeConstant);
         });
+    }
+
+    /**
+     * **Les voies détournées suivent les deux réglages de la voie normale.**
+     *
+     * La chaîne principale les porte sur deux gains distincts — le ducking de la
+     * voix et le réglage global — que la voie détournée n'a pas ; elle en porte
+     * un seul, et reçoit donc leur produit. *Deux atténuations en série, c'est
+     * une multiplication : la reproduire est exact, pas approché.*
+     */
+    private menerLesVoiesDetournees(timeConstant: number) {
+        const cible = this.valeurDucking * this.valeurGlobale;
+        for (const canal of this.sorties.canaux) {
+            canal.ducking.gain.setTargetAtTime(cible, this.context.currentTime, Math.max(0.001, timeConstant));
+        }
+    }
+
+    /**
+     * **Envoie une piste sur une sortie choisie**, ou la ramène à la sortie du
+     * module. *Demande de David du 2026-08-31 : une ambiance de moment peut
+     * sonner ailleurs que celle qui tournait déjà.*
+     *
+     * ⚠️ La voie détournée reprend la **compensation de gain** du master
+     * d'ambiance (1,3) : sans elle, la même piste sortirait plus bas d'un côté
+     * que de l'autre, et on croirait à un réglage de volume qui a bougé.
+     */
+    public routerLaPiste(index: number, deviceId: string | null | undefined) {
+        const piste = this.tracks[index];
+        if (!piste) return;
+
+        const canal = this.sorties.canal(deviceId);
+        if (!canal) {
+            piste.router(this.compressor);
+            return;
+        }
+        canal.entree.gain.value = this.masterGain.gain.value;
+        canal.ducking.gain.value = this.valeurDucking * this.valeurGlobale;
+        piste.router(canal.entree);
     }
 
     /**

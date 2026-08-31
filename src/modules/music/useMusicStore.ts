@@ -110,7 +110,14 @@ interface MusicState {
     */
     triggerAutoFade: (target: 'A' | 'B') => Promise<void>;
 
-    playPad: (pad: MusicPad) => Promise<void>;
+    /**
+     * Lance une piste sur la platine libre.
+     *
+     * `sortie` envoie **cette piste-là** sur l'enceinte demandée, sans déplacer
+     * ce qui joue déjà ailleurs — routage par son demandé par David le
+     * 2026-08-31. Absent, la musique suit la sortie du module comme avant.
+     */
+    playPad: (pad: MusicPad, sortie?: string) => Promise<void>;
     addLog: (message: string) => void;
     setActivePlaylistId: (id: string) => void;
 
@@ -390,7 +397,7 @@ export const useMusicStore = create<MusicState>()(
                         : { deckB: { ...state.deckB, isLooping: newValue } };
                 }),
 
-                playPad: async (pad: MusicPad) => {
+                playPad: async (pad: MusicPad, sortie?: string) => {
                     if (!pad.url) {
                         get().addLog(`Piste ignorée : pas de fichier pour "${pad.label}"`);
                         return;
@@ -439,8 +446,11 @@ export const useMusicStore = create<MusicState>()(
                     */
                     const targetDeck = platineDeDestination(musicEngine.positionDuCrossfader());
 
-                    // 3. Charger et déclencher
+                    // 3. Charger, router, déclencher
                     await get().loadToDeck(targetDeck, pad);
+                    // La sortie se pose avant le fondu : la platine doit déjà
+                    // viser la bonne enceinte quand le crossfader la fait monter.
+                    musicEngine.routerLaPlatine(targetDeck, sortie);
                     await get().triggerAutoFade(targetDeck);
 
                     useJournalStore.getState().addEvent({

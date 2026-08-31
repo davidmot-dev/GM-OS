@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStoryboardStore } from './useStoryboardStore';
 import type { StoryboardMoment } from './useStoryboardStore';
@@ -24,6 +24,9 @@ import {
     Copy
 } from 'lucide-react';
 import { useAmbientStore } from '../ambient/useAmbientStore';
+import { useImageStore } from '../image/useImageStore';
+import { useHardwareStore } from '../../stores/useHardwareStore';
+import { useSortiesAudioDisponibles } from '../../hooks/useSortiesAudioDisponibles';
 
 // DND Kit Imports
 import {
@@ -227,8 +230,26 @@ const StoryboardDashboard: React.FC = () => {
     const [imageMediaId, setImageMediaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
     const [ambientSceneId, setAmbientSceneId] = useState('');
+    /*
+      **Où ça sort — demandé par David le 2026-08-31.** Vide veut dire « comme
+      avant » : le module garde sa sortie, l'image part sur l'écran choisi dans
+      Image-OS. C'est ce qui fait qu'un moment écrit hier se joue à l'identique.
+    */
+    const [musicOutputId, setMusicOutputId] = useState('');
+    const [soundOutputId, setSoundOutputId] = useState('');
+    const [ambientOutputId, setAmbientOutputId] = useState('');
+    const [imageTarget, setImageTarget] = useState('');
 
     const { scenes: ambientScenes } = useAmbientStore();
+    const sortiesAudio = useSortiesAudioDisponibles();
+    const { getAudioLabel } = useHardwareStore();
+    const ecrans = useImageStore(e => e.displays);
+    /*
+      **Les écrans se relèvent en entrant ici.** La liste vit dans Image-OS et ne
+      se remplit qu'à l'ouverture de son tableau de bord : sans ce relevé, régler
+      un moment sans être passé par Image-OS n'offrirait que le Player Hub.
+    */
+    useEffect(() => { void useImageStore.getState().fetchDisplays(); }, []);
 
     const campaignMoments = moments.filter(m => m.campaignId === activeCampaignId);
 
@@ -273,6 +294,10 @@ const StoryboardDashboard: React.FC = () => {
         setImageMediaId(moment.imageMediaId || '');
         setSoundPadId(moment.soundPadId || '');
         setAmbientSceneId(moment.ambientSceneId || '');
+        setMusicOutputId(moment.musicOutputId || '');
+        setSoundOutputId(moment.soundOutputId || '');
+        setAmbientOutputId(moment.ambientOutputId || '');
+        setImageTarget(moment.imageTarget || '');
         setIsEditing(true);
     };
 
@@ -285,6 +310,10 @@ const StoryboardDashboard: React.FC = () => {
         setImageMediaId('');
         setSoundPadId('');
         setAmbientSceneId('');
+        setMusicOutputId('');
+        setSoundOutputId('');
+        setAmbientOutputId('');
+        setImageTarget('');
         setIsEditing(true);
     };
 
@@ -350,6 +379,10 @@ const StoryboardDashboard: React.FC = () => {
             imageMediaId: imageMediaId || undefined,
             soundPadId: soundPadId || undefined,
             ambientSceneId: ambientSceneId || undefined,
+            musicOutputId: musicOutputId || undefined,
+            soundOutputId: soundOutputId || undefined,
+            ambientOutputId: ambientOutputId || undefined,
+            imageTarget: imageTarget || undefined,
             campaignId: activeCampaignId,
             description: '',
             color: 'var(--accent)',
@@ -506,6 +539,25 @@ const StoryboardDashboard: React.FC = () => {
                                             </optgroup>
                                         ))}
                                     </select>
+
+                                    {/*
+                                      **La sortie de ce son-là, et de lui seul.**
+                                      Vide = la sortie du module, c'est-à-dire le
+                                      comportement d'avant le 2026-08-31.
+                                    */}
+                                    <select
+                                        value={musicOutputId}
+                                        onChange={e => setMusicOutputId(e.target.value)}
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-blue-400/80 focus:border-blue-400 outline-none"
+                                        title={t('modules:storyboard.editor.output_label')}
+                                    >
+                                        <option value="">{t('modules:storyboard.editor.output_module')}</option>
+                                        {sortiesAudio.map(appareil => (
+                                            <option key={appareil.deviceId} value={appareil.deviceId}>
+                                                {getAudioLabel(appareil.deviceId)}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 <div className="space-y-3">
@@ -521,6 +573,25 @@ const StoryboardDashboard: React.FC = () => {
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
                                         {ambientScenes.map((s) => (
                                             <option key={s.id} value={s.id}>{s.name}</option>
+                                        ))}
+                                    </select>
+
+                                    {/*
+                                      **La sortie de ce son-là, et de lui seul.**
+                                      Vide = la sortie du module, c'est-à-dire le
+                                      comportement d'avant le 2026-08-31.
+                                    */}
+                                    <select
+                                        value={ambientOutputId}
+                                        onChange={e => setAmbientOutputId(e.target.value)}
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-cyan-400/80 focus:border-cyan-400 outline-none"
+                                        title={t('modules:storyboard.editor.output_label')}
+                                    >
+                                        <option value="">{t('modules:storyboard.editor.output_module')}</option>
+                                        {sortiesAudio.map(appareil => (
+                                            <option key={appareil.deviceId} value={appareil.deviceId}>
+                                                {getAudioLabel(appareil.deviceId)}
+                                            </option>
                                         ))}
                                     </select>
                                 </div>
@@ -544,6 +615,21 @@ const StoryboardDashboard: React.FC = () => {
                                                 <option key={p.id} value={p.id}>{p.title || p.id}</option>
                                             )) : null;
                                         })()}
+                                    </select>
+
+                                    {/* La sortie de ce bruitage-là. Vide : celle de Sound-OS. */}
+                                    <select
+                                        value={soundOutputId}
+                                        onChange={e => setSoundOutputId(e.target.value)}
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-rose-400/80 focus:border-rose-400 outline-none"
+                                        title={t('modules:storyboard.editor.output_label')}
+                                    >
+                                        <option value="">{t('modules:storyboard.editor.output_module')}</option>
+                                        {sortiesAudio.map(appareil => (
+                                            <option key={appareil.deviceId} value={appareil.deviceId}>
+                                                {getAudioLabel(appareil.deviceId)}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -600,6 +686,24 @@ const StoryboardDashboard: React.FC = () => {
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
                                         {((window as unknown as Record<string, unknown>).useImageStore as { getState: () => { mediaList: Array<{ id: string, name: string }> } })?.getState()?.mediaList?.map((m) => (
                                             <option key={m.id} value={m.id}>{m.name}</option>
+                                        ))}
+                                    </select>
+
+                                    {/*
+                                      **Sur quel écran.** Vide : la cible choisie
+                                      dans Image-OS au moment du déclenchement —
+                                      le comportement d'avant le 2026-08-31.
+                                    */}
+                                    <select
+                                        value={imageTarget}
+                                        onChange={e => setImageTarget(e.target.value)}
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-purple-400/80 focus:border-purple-400 outline-none"
+                                        title={t('modules:storyboard.editor.screen_label')}
+                                    >
+                                        <option value="">{t('modules:storyboard.editor.screen_current')}</option>
+                                        <option value="hub">{t('modules:storyboard.editor.screen_hub')}</option>
+                                        {ecrans.map(ecran => (
+                                            <option key={ecran.id} value={ecran.id}>{ecran.label}</option>
                                         ))}
                                     </select>
                                 </div>

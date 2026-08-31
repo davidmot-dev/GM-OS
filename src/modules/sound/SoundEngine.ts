@@ -1,4 +1,5 @@
 import { useMediaStore } from '../../stores/useMediaStore';
+import { SortiesAudio } from '../../utils/sortiesAudio';
 
 export class SoundEngine {
     private static instance: SoundEngine;
@@ -8,6 +9,14 @@ export class SoundEngine {
     private padSources: Map<string, AudioBufferSourceNode> = new Map();
     private padGains: Map<string, GainNode> = new Map();
     private audioBuffers: Map<string, AudioBuffer> = new Map();
+    /**
+     * **Les sorties détournées, une par enceinte demandée.**
+     *
+     * Le module en a l'usage le plus évident : plusieurs pads sonnent en même
+     * temps, et rien n'oblige la porte qui grince et le tonnerre à sortir du
+     * même haut-parleur. Voir `sortiesAudio.ts`.
+     */
+    private sorties!: SortiesAudio;
 
     private constructor() {
         // Initialize Web Audio API
@@ -23,6 +32,8 @@ export class SoundEngine {
 
         this.masterGain.connect(this.globalSyncGain);
         this.globalSyncGain.connect(this.context.destination);
+
+        this.sorties = new SortiesAudio(this.context, 'SoundEngine');
 
         this.setupGlobalSync();
 
@@ -50,6 +61,15 @@ export class SoundEngine {
             const targetGain = masterVolume * (isFocusMode ? sfxDuckingRatio : 1.0);
             
             this.globalSyncGain.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.1);
+            /*
+              **Le même geste sur les voies détournées.** Un son routé vers une
+              autre enceinte doit baisser quand le meneur parle, comme les
+              autres : *un réglage qui ne vaut que pour une partie de ce qu'on
+              entend est pire qu'un réglage absent.*
+            */
+            for (const canal of this.sorties.canaux) {
+                canal.ducking.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.1);
+            }
         });
     }
 
@@ -135,7 +155,7 @@ export class SoundEngine {
      * @param volume Volume initial (0.0 à 1.0).
      * @param onEndedCallback Callback optionnel appelé à la fin de la lecture.
      */
-    public play(padId: string, volume: number = 1.0, onEndedCallback?: () => void) {
+    public play(padId: string, volume: number = 1.0, onEndedCallback?: () => void, sortie?: string) {
         const buffer = this.audioBuffers.get(padId);
         if (!buffer) {
             console.warn(`[SoundEngine] Cannot play ${padId}, buffer not loaded.`);
@@ -153,7 +173,15 @@ export class SoundEngine {
         // Create individual gain node
         const gainNode = this.context.createGain();
         gainNode.gain.value = volume;
-        gainNode.connect(this.masterGain);
+        /*
+          **La sortie se choisit au moment de brancher, et pas avant.** Sans
+          `sortie`, `canal` rend `null` et on branche sur le master comme
+          toujours — c'est ce qui rend le routage sans effet sur tout ce qui
+          existait. Avec, le pad part sur sa propre voie, et les autres pads
+          continuent où ils étaient.
+        */
+        const canal = this.sorties.canal(sortie);
+        gainNode.connect(canal ? canal.entree : this.masterGain);
         this.padGains.set(padId, gainNode);
 
         // Create buffer source
@@ -213,9 +241,13 @@ export class SoundEngine {
 
         // 1. Fade out the master gain over 3 seconds
         const currentTime = this.context.currentTime;
-        this.masterGain.gain.cancelScheduledValues(currentTime);
-        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, currentTime);
-        this.masterGain.gain.linearRampToValueAtTime(0, currentTime + 3);
+        // Les voies détournées descendent avec le master : sans ça, « tout
+        // arrêter » laisserait sonner ce qu'un moment avait envoyé ailleurs.
+        for (const gain of [this.masterGain, ...this.sorties.canaux.map(c => c.entree)]) {
+            gain.gain.cancelScheduledValues(currentTime);
+            gain.gain.setValueAtTime(gain.gain.value, currentTime);
+            gain.gain.linearRampToValueAtTime(0, currentTime + 3);
+        }
 
         // 2. Schedule actual stop and disconnect for all sources after 3.1s
         setTimeout(() => {
@@ -233,8 +265,10 @@ export class SoundEngine {
             this.padGains.clear();
 
             // 3. Reset Master Gain instantly back to original setting (default 1.0) for future playbacks
-            this.masterGain.gain.cancelScheduledValues(this.context.currentTime);
-            this.masterGain.gain.setValueAtTime(1.0, this.context.currentTime);
+            for (const gain of [this.masterGain, ...this.sorties.canaux.map(c => c.entree)]) {
+                gain.gain.cancelScheduledValues(this.context.currentTime);
+                gain.gain.setValueAtTime(1.0, this.context.currentTime);
+            }
 
             console.log('[SoundEngine] All sources stopped. Engine ready.');
         }, 3100);
@@ -259,6 +293,10 @@ export class SoundEngine {
      */
     public setMasterVolume(volume: number) {
         this.masterGain.gain.setTargetAtTime(volume, this.context.currentTime, 0.05);
+        // Le volume général mène les voies détournées avec les autres.
+        for (const canal of this.sorties.canaux) {
+            canal.entree.gain.setTargetAtTime(volume, this.context.currentTime, 0.05);
+        }
     }
 
     /**

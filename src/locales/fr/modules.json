@@ -2795,7 +2795,12 @@
       "image_label": "Image (Image-OS)",
       "none": "Aucun(e)",
       "save": "Sauvegarder la Séquence",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "output_label": "Sortie audio",
+      "output_module": "Sortie du module",
+      "screen_label": "Écran de projection",
+      "screen_current": "Écran courant d'Image-OS",
+      "screen_hub": "Player Hub"
     },
     "actions": {
       "duplicate": "Dupliquer",

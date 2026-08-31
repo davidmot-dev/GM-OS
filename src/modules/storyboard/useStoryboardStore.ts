@@ -18,7 +18,31 @@ export interface StoryboardMoment {
     imageMediaId?: string;     // Image-OS Media ID
     soundPadId?: string;       // Sound-OS Pad ID
     ambientSceneId?: string;   // Ambient-OS Scene ID
-    
+
+    /*
+      **Où ça sort — demandé par David le 2026-08-31.**
+
+      *« Dans une séquence de storyboard, est-ce qu'on peut choisir sur quelle
+      sortie une musique, un son, une ambiance doit être jouée ? Même chose pour
+      la projection d'image, sur quel écran je la projette. »*
+
+      Quatre champs facultatifs, et **l'absence veut dire « comme avant »** : le
+      module joue sur sa sortie, l'image part sur l'écran choisi dans Image-OS.
+      Un moment écrit avant ce jour se comporte donc exactement comme la veille.
+
+      Ce ne sont pas des réglages de module déguisés : ils appartiennent au
+      **moment**, parce que c'est le moment qui sait que ce grondement-là doit
+      sortir sous la table pendant que la musique reste devant.
+    */
+    /** Sortie audio de la musique du moment. Absent : celle de Music-OS. */
+    musicOutputId?: string;
+    /** Sortie audio du bruitage. Absent : celle de Sound-OS. */
+    soundOutputId?: string;
+    /** Sortie audio de l'ambiance. Absent : celle d'Ambient-OS. */
+    ambientOutputId?: string;
+    /** Écran de projection de l'image. Absent : la cible courante d'Image-OS. */
+    imageTarget?: string;
+
     campaignId: string;
 }
 
@@ -171,7 +195,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                     
                     if (pad) {
                         console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
-                        await musicStore.playPad(pad);
+                        await musicStore.playPad(pad, moment.musicOutputId);
                     } else {
                         console.warn(`[Storyboard] Music: Pad ID ${moment.musicPadId} NOT FOUND in any playlist.`);
                         if (gmToast) gmToast('warning', `Musique introuvable: ${moment.musicPadId}`);
@@ -214,7 +238,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                     const media = imageStore.mediaList.find((m: { id: string, name: string }) => m.id === moment.imageMediaId);
                     if (media) {
                         console.log(`[Storyboard] Image: Projecting solo ${media.name}`);
-                        imageStore.projectSolo(media);
+                        imageStore.projectSolo(media, moment.imageTarget);
                     } else {
                         console.warn(`[Storyboard] Image: Media ID ${moment.imageMediaId} NOT FOUND.`);
                     }
@@ -230,7 +254,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                     if (pad && pad.filePath) {
                         console.log(`[Storyboard] Sound: Playing SFX ${pad.title} (${pad.id})`);
                         await gWindow.soundEngine.loadAudio(pad.id, pad.filePath);
-                        gWindow.soundEngine.play(pad.id, pad.volume);
+                        gWindow.soundEngine.play(pad.id, pad.volume, undefined, moment.soundOutputId);
                         soundStore.setPadActive(pad.id, true);
                     } else {
                         console.warn(`[Storyboard] Sound: Pad ID ${moment.soundPadId} NOT FOUND or no file.`);
@@ -241,7 +265,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                 if (moment.ambientSceneId && gWindow.useAmbientStore) {
                     console.log(`[Storyboard] Ambient: Applying scene ${moment.ambientSceneId}`);
                     const ambientStore = gWindow.useAmbientStore.getState();
-                    await ambientStore.applyScene(moment.ambientSceneId);
+                    await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId);
                 }
 
                 if (gmToast) gmToast('info', `Moment activé : ${moment.name}`);

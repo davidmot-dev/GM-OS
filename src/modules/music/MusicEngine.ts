@@ -3,6 +3,7 @@
  * Gère le mixage, les platines, les boucles A/B et le routage via Streaming HTML5.
  */
 import { useMediaStore } from '../../stores/useMediaStore';
+import { SortiesAudio } from '../../utils/sortiesAudio';
 import {
     courbeDuFonduCroise,
     gainsALaPosition,
@@ -306,6 +307,11 @@ export class MusicEngine {
     public deckB: MusicDeck;
 
     private crossfaderValue: number = 0.5;
+    /** Les sorties détournées, une par enceinte demandée. */
+    private sorties!: SortiesAudio;
+    /** Ce que valent le ducking de la voix et le réglage global, séparément. */
+    private valeurDucking = 1.0;
+    private valeurGlobale = 1.0;
     /** Le fondu en cours, s'il y en a un — voir `positionDuCrossfader`. */
     private fondu: FonduEnCours | null = null;
     /** L'arrêt programmé de la platine sortante, annulable. */
@@ -340,6 +346,8 @@ export class MusicEngine {
         this.crossfaderGainA.connect(this.masterGain);
         this.crossfaderGainB.connect(this.masterGain);
 
+        this.sorties = new SortiesAudio(this.context, 'MusicEngine');
+
         this.deckA = new MusicDeck(this.context, this.crossfaderGainA, () => { });
         this.deckB = new MusicDeck(this.context, this.crossfaderGainB, () => { });
 
@@ -361,6 +369,8 @@ export class MusicEngine {
             const targetGain = masterVolume * (isFocusMode ? focusDuckingRatio : 1.0);
             
             this.globalSyncGain.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.1);
+            this.valeurGlobale = targetGain;
+            this.menerLesVoiesDetournees(0.1);
         });
     }
 
@@ -378,7 +388,45 @@ export class MusicEngine {
             
             // Smooth transition for ducking using dynamic attack
             this.duckingGain.gain.setTargetAtTime(targetGain, this.context.currentTime, currentEffects.duckingAttack / 1000);
+            this.valeurDucking = targetGain;
+            this.menerLesVoiesDetournees(currentEffects.duckingAttack / 1000);
         });
+    }
+
+    /**
+     * **Les voies détournées suivent les deux réglages de la voie normale** — le
+     * ducking de la voix et le réglage global. Elles n'ont qu'un gain là où la
+     * chaîne principale en a deux, et reçoivent donc leur produit.
+     */
+    private menerLesVoiesDetournees(timeConstant: number) {
+        const cible = this.valeurDucking * this.valeurGlobale;
+        for (const canal of this.sorties.canaux) {
+            canal.ducking.gain.setTargetAtTime(cible, this.context.currentTime, Math.max(0.001, timeConstant));
+        }
+    }
+
+    /**
+     * **Envoie une platine sur une sortie choisie**, ou la ramène à celle du
+     * module. *Demande de David du 2026-08-31.*
+     *
+     * ⚠️ **Le détournement se fait APRÈS le crossfader, et c'est tout le
+     * point.** Router la platine elle-même l'aurait sortie du fondu : elle
+     * démarrerait à plein volume, et le crossfader ne pourrait plus l'arrêter.
+     * Pris ici, le fondu continue de la mener — *et croiser deux platines
+     * envoyées sur deux enceintes fait exactement ce qu'on attend : l'une
+     * s'éteint d'un côté pendant que l'autre monte de l'autre.*
+     */
+    public routerLaPlatine(deck: 'A' | 'B', deviceId: string | null | undefined) {
+        const gain = deck === 'A' ? this.crossfaderGainA : this.crossfaderGainB;
+        const canal = this.sorties.canal(deviceId);
+        gain.disconnect();
+        if (!canal) {
+            gain.connect(this.masterGain);
+            return;
+        }
+        canal.entree.gain.value = this.masterGain.gain.value;
+        canal.ducking.gain.value = this.valeurDucking * this.valeurGlobale;
+        gain.connect(canal.entree);
     }
 
     /**
@@ -387,6 +435,10 @@ export class MusicEngine {
      */
     setMasterVolume(value: number) {
         this.masterGain.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+        // Le volume de la musique mène les voies détournées avec la voie normale.
+        for (const canal of this.sorties.canaux) {
+            canal.entree.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+        }
     }
 
     /**
