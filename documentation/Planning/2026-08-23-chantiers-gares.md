@@ -45,13 +45,14 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | Jamais vu tourner | Depuis | Ce qui se voit, ou pas |
 | --- | --- | --- |
 | La **bascule de combat entre deux scènes** | 20/08 | Ouvrir un combat dans une scène, changer de scène, revenir. Combattants, round, compteurs **et jetons de la carte** doivent tous revenir — ils voyagent dans `combatsGares`. *Un combat garé qui ne revient pas est un affrontement perdu en pleine séance.* |
-| Les **six widgets Ulanzi ensemble** | 30-31/08 | Un seul a été éprouvé. Le plancher de ~400 ms tient-il à six ; la **restitution** rend-elle les six en quittant (délai dur de 4 s, partagé avec la sauvegarde) ; et un miroir ment-il — supprimer une horloge de tension doit retirer son widget. |
+| Les **six widgets Ulanzi ensemble** | 30-31/08 | Un seul a été éprouvé. Le plancher de ~250 ms tient-il à six ; la **restitution** rend-elle les six en quittant (délai dur de 4 s, partagé avec la sauvegarde) ; et un miroir ment-il — supprimer une horloge de tension doit retirer son widget. |
 | **Voice-to-Light** | 31/08 | Le pont Hue tient-il huit commandes par seconde une soirée durant. Et l'aplatissement du contraste de brillance est-il acceptable, ou abîme-t-il les scènes. L'arrêt doit rendre la scène telle qu'elle était. |
 | Le **préchauffage du modèle** | 31/08 | La première question doit coûter ~50 s au lieu de ~62. Et voir si les 8,4 Gio tenus toute la soirée gênent la **génération d'image locale**, qui charge son modèle sur la même mémoire partagée. |
 | La **physique du graphe social** | 31/08 | Familles et alliances se regroupent-elles visiblement, rivalités s'écartent-elles — ou n'est-ce que du bruit ? *Les valeurs d'affinité sont une estimation, pas une mesure.* |
 | La **fusion et la scission de scènes** | 21/08 | À la revue de fin de séance. Livrées, jamais employées sur une vraie soirée. |
 | L'**aller-retour d'image** d'une ambiance | — | Déclencher un moment de storyboard qui porte une image, la voir partir au projecteur **et revenir**. |
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
+| Le **dépôt des icônes par GM-OS** | 31/08 | Les six GIF ont été éprouvés **à la main** depuis un terminal, puis l'appareil a été nettoyé. Ce qui n'a jamais tourné, c'est le dépôt par l'application : *à la première prise de main, les six icônes arrivent-elles, et le widget les trouve-t-il ?* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 2 · Ce qui se décide à la table — axe N.3

@@ -783,13 +783,18 @@ d'Agenda. C'est la seule mesure qui dise si l'objet retire du travail ou en ajou
 | `dl`, segments (435 o) | 12 | **401 ms** | 0 / 20 |
 | petite charge témoin | 4 | 395 ms | 0 / 24 |
 
-**~400 ms est le plancher de l'appareil**, quelle que soit la charge. Deux conséquences qui ont décidé
-du code : la cadence rapide ne peut pas descendre sous **500 ms**, et **un tracé pixel par pixel est
+> ⚠️ **CORRIGÉ LE 2026-08-31 : c'est 253 ms, pas 400 — et la conclusion « l'appareil n'animera pas »
+> était fausse.** Remesuré sur le même appareil : lecture 34 ms, écriture **253 ms**, et le même temps
+> pour 59 octets que pour 398. Voir le § 17, qui refait le banc et change la conception du signal.
+
+**Le coût est FIXE par écriture**, quelle que soit la charge. Deux conséquences qui ont décidé du code :
+la cadence rapide ne peut pas descendre sous **500 ms**, et **un tracé pixel par pixel est
 inutilisable** — il aurait lâché en séance sans qu'on sache pourquoi. *Un dessin trop lourd ne se voit
 pas dans le code, il se voit sur le fil.*
 
 `dl` (lignes) fonctionne sur le firmware 0.98. Les **19 effets natifs** (`Radar`, `MovingLine`,
-`LookingEyes`, `Matrix`…) ne contiennent **aucun tracé** : l'appareil n'animera pas un signal seul.
+`LookingEyes`, `Matrix`…) ne contiennent **aucun tracé** — ~~l'appareil n'animera pas un signal seul~~
+⛔ **et c'est la conclusion qui était fausse : il l'anime, par une icône. Voir le § 17.**
 
 ### Les règles que la librairie a posées
 
@@ -814,3 +819,96 @@ comparaison stricte aurait été une régression déguisée en propreté. → `u
 
 **Le minuteur ne descendait que sur son propre écran** : son battement vivait dans un effet de
 `ClockDashboard`, et la valeur diffusée aux tablettes gelait avec lui. → monté dans `Shell`.
+
+
+---
+
+## 17. L'appareil sait animer — 2026-08-31, et ça défait une conception entière
+
+*David montre une référence : un tracé d'électro animé sur un Ulanzi. « Est-ce qu'on pourrait
+reproduire cela ? »* En mesurant pour répondre, **deux choses ont changé la réponse**, et la seconde
+a défait le widget que je venais de livrer.
+
+### Le banc du 30/08 était pessimiste, et il posait la mauvaise question
+
+| | 30/08 | **31/08, remesuré** |
+| --- | --- | --- |
+| Lecture `/api/stats` | — | **34 ms** (médiane sur 12) |
+| Écriture, charge de 59 o | 395 ms | **258 ms** |
+| Écriture, charge de 398 o | 401 ms | **253 ms** |
+
+Le coût est **fixe par requête** — la charge n'y change rien —, donc pousser des images plafonne à
+**quatre par seconde**. Ce n'est pas une animation, c'est une succession de photos. Jusque-là, le § 16
+avait raison sur le fond et faux sur le chiffre.
+
+### ⭐ Mais l'appareil expose un SYSTÈME DE FICHIERS, et je ne l'avais jamais demandé
+
+```text
+GET /list?dir=/        → CUSTOMAPPS, DoNotTouch.json, ICONS, MELODIES, PALETTES
+GET /edit              → un gestionnaire de fichiers complet
+POST /edit  (multipart)→ dépose un fichier
+DELETE /edit (path=…)  → en retire un
+```
+
+**Une icône animée déposée dans `ICONS` est jouée par l'appareil lui-même**, à pleine vitesse et
+**sans un octet de trafic**. Vérifié en réel le jour même : un GIF **32 × 8** s'affiche sur toute la
+largeur et s'anime. David : *« je vois un tracé animé sur toute la largeur »*.
+
+> **La leçon, et elle est chère** : le § 16 conclut « l'appareil n'animera pas un signal seul » à partir
+> de la liste des dix-neuf effets natifs. C'était une conclusion tirée d'un inventaire **partiel** — je
+> n'avais pas demandé à l'appareil ce qu'il savait faire d'autre. *J'ai conçu tout un widget autour d'une
+> contrainte que je n'avais pas fini de mesurer.*
+
+### Ce que ça change, et ça dépasse le signal
+
+| | Tracé en segments *(30-31/08)* | Icône animée *(31/08)* |
+| --- | --- | --- |
+| Fluidité | 2 images/s | **pleine vitesse, jouée localement** |
+| Trafic en séance | une écriture / 500 ms, en permanence | **une par changement de niveau** |
+| Cadence rapide | imposée à tout le battement | **rendue** |
+| Budget de 16 segments | toute la conception | **disparu** |
+
+*Une contrainte qu'on croyait structurelle — la cadence rapide de 500 ms de tout le battement — tenait
+à un seul widget.*
+
+### Les six icônes, et pourquoi le rythme monte de deux façons
+
+`scripts/fabriquerLesIcones.py` produit `public/ulanzi/gmosvk1..6.gif`. **Un GIF dans un dépôt est
+illisible** : on ne peut ni voir ce qui a changé, ni retoucher une courbe sans tout refaire. *La vérité
+est dans le script ; les GIF n'en sont que la sortie.*
+
+| Niveau | Battements | ms/image | Balayage |
+| ---: | ---: | ---: | ---: |
+| 1 | 1 | 90 | 2,9 s |
+| 2 | 1 | 60 | 1,9 s |
+| 3 | 2 | 60 | 1,9 s |
+| 4 | 3 | 50 | 1,6 s |
+| 5 | 4 | 40 | 1,3 s |
+| 6 | 5 | 30 | 1,0 s |
+
+Plus de battements **et** plus vite : une seule des deux ne suffisait pas. *Plus de battements sans
+accélérer donne un tracé dense mais placide ; accélérer sans en ajouter donne un balayage pressé qui ne
+dit rien du cœur.*
+
+### Deux décisions de David, et un piège payé
+
+**1. Les icônes restent sur l'appareil.** Elles vivent en flash et survivent aux redémarrages — c'est
+exactement ce qui rend l'idée gratuite en séance. La restitution ne les efface pas : *elles ne
+s'affichent pas d'elles-mêmes, et les redéposer chaque séance coûterait huit envois pour rien.*
+
+⚠️ **C'est la première fois que GM-OS écrit durablement sur l'afficheur.** Tout le reste — widgets,
+réglages — est temporaire par construction, et c'est ce qui fait tout le filet du § 11.
+
+**2. Le tracé en segments est retiré**, pas gardé en repli.
+
+**Le piège** : les fabricants de `multipart/form-data` ajoutent volontiers un paramètre `filename*`
+(RFC 5987) à côté de `filename`. Le serveur embarqué **avale la ligne entière** et crée un fichier
+nommé `gmosvk1.gif"; filename*=utf-8''%2FICONS%2F…`. Deux fichiers illisibles ont dû être supprimés à
+la main. *Un serveur embarqué lit rarement toute la norme : on lui envoie le strict nécessaire* — d'où
+un corps multipart écrit à la main, et isolé pour être vérifiable.
+
+### Ce qui reste à voir en séance
+
+Le dépôt **par GM-OS** n'a jamais tourné : je l'ai éprouvé en déposant les fichiers à la main depuis un
+terminal, puis j'ai nettoyé l'appareil. Ce qui reste à vérifier tient en une phrase — *à la première
+prise de main, les six icônes arrivent-elles, et le widget les trouve-t-il ?*
