@@ -136,7 +136,7 @@ là pour que la vérification prenne dix secondes la prochaine fois.*
 | `activeDriver.tactical` non transmis | ✅ `tacticalConfig` est un paramètre — `TacticalNarrativeService.ts:103` |
 | `faction` dérivée à `enemy` | ✅ `faction \|\| (isPlayer ? 'player' : 'neutral')` — `useCombatStore.ts:759` |
 | Contexte RAG envoyé en double | ✅ `sansPersona: true` + `{ systemOnly, limit: 2 }` — `useTacticalAIStore.ts:176` |
-| Unité « cases » en dur | ✅ `${unite}` déclarée par le pilote — **sauf le point 3a ci-dessus** |
+| Unité « cases » en dur | ✅ `${unite}` déclarée par le pilote — **y compris la ligne du soutien direct, corrigée le 31/08** (`d5…`, voir 3a) |
 | Axe O — `relu: false` lu par personne | ✅ mention « non relue » et déclaration en un clic — `AIChatPanel.tsx:443` |
 
 **Et pour mémoire, tous les axes A → O du plan IA sont clos**, le Cortex avec eux (ses 5 axes le 22/08,
