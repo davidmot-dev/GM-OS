@@ -37,6 +37,7 @@ interface AIProxyResponse {
     data: unknown;
 }
 
+import { deposerLesIcones } from './ulanziIcones'
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
@@ -372,6 +373,29 @@ ipcMain.on('log:message', (_event, level: string, message: string, ...args: unkn
  * jamais. Le pont Hue, lui, s'en passait ; d'où l'oubli, et d'où le paramètre
  * facultatif qui ne change rien aux appels existants.
  */
+/**
+ * **Le seul envoi binaire vers l'afficheur** — les icônes animées du signal.
+ *
+ * Il ne passe pas par `light:request`, qui sérialise son corps en JSON : un GIF
+ * n'y survivrait pas. Les fichiers sont lus dans `VITE_PUBLIC`, donc `public/`
+ * en développement et `dist/` une fois empaqueté.
+ *
+ * Ne dépose que ce qui manque, et les icônes **restent sur l'appareil** —
+ * décision de David le 2026-08-31 : elles vivent en flash, ne s'affichent pas
+ * d'elles-mêmes, et les redéposer chaque séance coûterait huit envois pour rien.
+ */
+ipcMain.handle('ulanzi:deposer-icones', async (_event, hote: string) => {
+    const dossier = path.join(process.env.VITE_PUBLIC || '', 'ulanzi');
+    try {
+        return await deposerLesIcones(hote, dossier);
+    } catch (e) {
+        // Un échec ne remonte pas à l'écran : sans icône le widget montre un
+        // cadre vide, ce qui se voit, et le meneur n'y peut rien sur le moment.
+        log.warn('[Ulanzi] dépôt des icônes impossible :', e);
+        return [];
+    }
+});
+
 ipcMain.handle('light:request', async (_event, url: string, method: string, body?: unknown, headers?: Record<string, string>) => {
     return new Promise((resolve, reject) => {
         try {

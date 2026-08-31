@@ -368,6 +368,12 @@ declare global {
             surDemandeDeFermeture?: (rappel: () => void) => void;
             /** « J'ai rendu » — la fermeture n'attend pas le délai de sécurité. */
             fermetureTerminee?: () => void;
+            /**
+             * Dépose les icônes animées du signal sur l'afficheur, et rend
+             * celles qui ont été écrites. Ne dépose que ce qui manque.
+             * **Facultatif** : un pont plus ancien ne l'expose pas.
+             */
+            deposerLesIcones?: (hote: string) => Promise<string[]>;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;

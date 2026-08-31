@@ -223,7 +223,17 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
         type: 'icone-etat',
         systemId: 'blade-runner',
         source: { de: 'main' },
-        cadenceRapide: true,
+        /*
+          **Plus de cadence rapide depuis le 2026-08-31**, et c'est le gain caché
+          des icônes animées. Le tracé se redessinait toutes les 500 ms pour
+          dériver d'une colonne ; l'animation vit désormais dans l'appareil, qui
+          la joue seul. Le signal n'a plus rien à republier entre deux
+          changements de niveau.
+
+          *Une contrainte qu'on croyait structurelle — la cadence rapide de tout
+          le battement — tenait à un seul widget.*
+        */
+        cadenceRapide: false,
     },
 ] as const;
 
@@ -241,8 +251,8 @@ export const COMPOSITEURS: Record<
     quarts: ({ quarts, seuilSansPause }) =>
         composerDefile(quarts, seuilSansPause ?? SEUIL_SANS_PAUSE) as unknown as ChargeDeWidget,
     // `maintenant` porte la dérive du tracé : une colonne par seconde.
-    vk: ({ signal }, maintenant) =>
-        composerVoightKampff(signal ?? SIGNAL_INITIAL, maintenant) as unknown as ChargeDeWidget,
+    vk: ({ signal }) =>
+        composerVoightKampff(signal ?? SIGNAL_INITIAL) as unknown as ChargeDeWidget,
 };
 
 /** Une entrée du tableau de bord : un widget choisi, et sa part d'écran. */

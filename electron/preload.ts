@@ -106,6 +106,17 @@ contextBridge.exposeInMainWorld('appBridge', {
         },
         /** « J'ai rendu » — sans quoi la fermeture attend le délai de sécurité. */
         fermetureTerminee: () => ipcRenderer.send('ulanzi:before-quit-done'),
+
+        /**
+         * Dépose les icônes animées du signal, et rend celles qui ont été
+         * écrites. Ne dépose que ce qui manque : le cas courant est donc une
+         * seule lecture.
+         *
+         * **Le seul envoi binaire du projet**, et il ne passe pas par le relais
+         * JSON : `light:request` sérialise son corps, ce qui détruirait un GIF.
+         */
+        deposerLesIcones: (hote: string): Promise<string[]> =>
+            ipcRenderer.invoke('ulanzi:deposer-icones', hote),
     },
     clock: {
         listCalendars: () => ipcRenderer.invoke('clock:list-calendars'),

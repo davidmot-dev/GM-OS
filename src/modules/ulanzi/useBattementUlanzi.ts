@@ -248,6 +248,22 @@ export function useBattementUlanzi(seanceOuverte: boolean, systemId?: string | n
                 // n'aurait plus rien à rendre. Voir `memoriserLaRoutine`.
                 memoriserLaRoutine(avant);
                 enMain.current = true;
+
+                /*
+                  **Les icônes animées du signal, déposées une fois pour toutes.**
+
+                  Ici et pas ailleurs : c'est le seul endroit où l'on sait que
+                  l'appareil a répondu. Le dépôt ne fait qu'une lecture quand
+                  elles sont déjà là — le cas courant après la première séance,
+                  puisqu'elles vivent en flash et **y restent** (décision de
+                  David le 2026-08-31).
+
+                  Sans `await` : un widget dont l'icône manque montre un cadre
+                  vide pendant quelques secondes, ce qui est très préférable à
+                  retarder la prise de main de tout l'afficheur.
+                */
+                void window.appBridge?.ulanzi?.deposerLesIcones?.(dernier.current.hote)
+                    .catch(() => undefined);
             })().catch((e: unknown) =>
                 setJoignable(false, e instanceof Error ? e.message : String(e)),
             );

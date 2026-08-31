@@ -496,25 +496,32 @@ describe('le catalogue livré', () => {
     });
 
     /**
-     * **Le signal du Voight-Kampff dérive avec le temps** — une colonne par
-     * seconde. C'est ce qui distingue une machine qui tourne d'un dessin figé,
-     * et c'est pour ça que ce widget demande la cadence rapide.
+     * **Le signal ne dépend plus du temps depuis le 2026-08-31**, et c'est ce
+     * qui lui a fait rendre la cadence rapide.
+     *
+     * Il dérivait d'une colonne par image, donc sa charge changeait à chaque
+     * tour et imposait une écriture toutes les 500 ms. L'animation vit désormais
+     * dans une icône que **l'appareil joue lui-même** : deux tours de battement
+     * produisent la même charge, donc zéro requête.
      */
-    it('le compositeur du signal dérive avec le temps', () => {
+    it('le compositeur du signal ne change pas tant que le niveau tient', () => {
         const instruments = {
             quarts: { quartDuJour: 0, consecutifs: 0 },
             seuilSansPause: 3,
             signal: { niveau: 3 },
         };
-        const a = COMPOSITEURS.vk(instruments, 0) as unknown as { draw: unknown[] };
-        const b = COMPOSITEURS.vk(instruments, 1000) as unknown as { draw: unknown[] };
+        expect(COMPOSITEURS.vk(instruments, 1000)).toEqual(COMPOSITEURS.vk(instruments, 0));
 
-        expect(b.draw).not.toEqual(a.draw);
+        const plusVite = { ...instruments, signal: { niveau: 4 } };
+        expect(COMPOSITEURS.vk(plusVite, 0)).not.toEqual(COMPOSITEURS.vk(instruments, 0));
     });
 
     /** *Une propriété qu'on devine en énumérant des cas se trompe.* */
     it('déclare la cadence rapide plutôt que de la déduire de la source', () => {
+        // Le signal a quitté cette liste le 2026-08-31 : son animation est
+        // jouée par l'appareil, il n'a plus rien à republier entre deux
+        // changements de niveau.
         expect(LIBRAIRIE.filter(w => w.cadenceRapide).map(w => w.id))
-            .toEqual(['minuteur', 'heure', 'vk']);
+            .toEqual(['minuteur', 'heure']);
     });
 });

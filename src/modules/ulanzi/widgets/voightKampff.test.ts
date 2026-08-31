@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { LARGEUR } from './defileDesQuarts';
 import {
     accelerer,
     calmer,
@@ -8,12 +7,11 @@ import {
     NIVEAU_MAX,
     NIVEAU_MIN,
     SIGNAL_INITIAL,
-    traceDuSignal,
-    formeDuBattement,
-    BUDGET_DE_SEGMENTS,
-    CADENCE_DU_SIGNAL_MS,
+    iconeDuNiveau,
 } from './voightKampff';
-import { CADENCE_RAPIDE_MS } from '../useBattementUlanzi';
+
+/** Les six fichiers livrés dans `public/ulanzi/`, déposés sur l'appareil. */
+const ICONES_ATTENDUES = ['gmosvk1', 'gmosvk2', 'gmosvk3', 'gmosvk4', 'gmosvk5', 'gmosvk6'];
 
 /**
  * **Le signal du Voight-Kampff — demandé par David le 2026-08-31.**
@@ -49,128 +47,42 @@ describe('le rythme', () => {
     });
 });
 
-describe('le tracé', () => {
+describe('l’icône animée', () => {
     /**
-     * **Une ligne de repos, ponctuée de battements.** C'est elle qui distingue
-     * l'électro de l'onde triangulaire qu'il remplace — et elle ne coûte qu'un
-     * segment pour toute la largeur, ce qui est exactement ce qui rend le
-     * dessin payable.
-     */
-    it('pose une ligne de repos d’un bord à l’autre', () => {
-        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
-            const [{ dl: [x0, y0, x1, y1] }] = traceDuSignal(n);
-            expect([x0, x1], `niveau ${n}`).toEqual([0, LARGEUR - 1]);
-            expect(y0, 'plate, donc de même hauteur aux deux bouts').toBe(y1);
-        }
-    });
-
-    /** Le pic monte au-dessus de la ligne, à chaque niveau. */
-    it('bat au-dessus de la ligne de repos', () => {
-        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
-            const trace = traceDuSignal(n);
-            const ligne = trace[0].dl[1];
-            const plusHaut = Math.min(...trace.flatMap(({ dl: [, y0, , y1] }) => [y0, y1]));
-            expect(plusHaut, `niveau ${n}`).toBeLessThan(ligne);
-        }
-    });
-
-    /** Plus le niveau monte, plus les battements se resserrent : c'est le rythme. */
-    it('resserre les battements quand le rythme s’accélère', () => {
-        const debuts = (n: number) => traceDuSignal(n).slice(1).map(l => l.dl[0]);
-        const ecart = (n: number) => Math.max(...debuts(n)) - Math.min(...debuts(n));
-        // À rythme égal on couvre la même largeur ; c'est le NOMBRE de
-        // battements qui change, donc le compte de segments qui monte.
-        expect(traceDuSignal(NIVEAU_MAX).length).toBeGreaterThan(traceDuSignal(NIVEAU_MIN).length);
-        expect(ecart(NIVEAU_MAX)).toBeGreaterThan(0);
-    });
-
-    /**
-     * **Le budget mesuré choisit la forme du battement.**
+     * **Le tracé dessiné segment par segment a disparu le 2026-08-31.**
      *
-     * On ne peut pas afficher six complexes détaillés sur trente-deux
-     * colonnes : il en faudrait plus de quarante segments. Le détail diminue
-     * donc quand le rythme monte — *ce qui est aussi ce que fait un vrai
-     * moniteur à vitesse de défilement constante.*
+     * Il était conçu autour d'une limite mesurée — 253 ms par écriture, donc
+     * quatre images par seconde au mieux. *Mais je n'avais jamais regardé si
+     * l'appareil exposait un système de fichiers.* Il en expose un, et une icône
+     * animée déposée dans son dossier `ICONS` est jouée par l'appareil
+     * lui-même, à pleine vitesse et sans un octet de trafic.
+     *
+     * Ce que ces tests gardent désormais : **un niveau, une icône, et rien qui
+     * dépende du temps.**
      */
-    it('garde le battement le plus riche que le budget autorise', () => {
-        // Au repos, un battement tous les trente-deux pixels : la place existe.
-        expect(formeDuBattement(LARGEUR).nom).toBe('qrs-et-t');
-        // Au bout, un tous les cinq : il ne reste que le pic.
-        expect(formeDuBattement(Math.floor(LARGEUR / NIVEAU_MAX)).nom).toBe('pic');
+    it('donne une icône par niveau, toutes distinctes', () => {
+        const noms = [];
+        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) noms.push(iconeDuNiveau(n));
+        expect(new Set(noms).size, 'deux niveaux se partageaient une icône').toBe(noms.length);
+        expect(noms).toEqual(ICONES_ATTENDUES);
+    });
+
+    /** Les données persistées et les saisies peuvent sortir de l'intervalle. */
+    it('borne les niveaux impossibles au lieu de nommer un fichier absent', () => {
+        expect(iconeDuNiveau(0)).toBe(iconeDuNiveau(NIVEAU_MIN));
+        expect(iconeDuNiveau(99)).toBe(iconeDuNiveau(NIVEAU_MAX));
+        expect(iconeDuNiveau(2.4)).toBe(iconeDuNiveau(2));
     });
 
     /**
-     * ⚠️ **Douze commandes, pas trente-deux.** Mesuré sur l'appareil : un
-     * rectangle par colonne coûtait 802 ms et échouait deux fois sur vingt ;
-     * les segments coûtent 401 ms et ne ratent pas. *Un dessin trop lourd ne se
-     * voit pas dans le code, il se voit sur le fil.*
+     * **Le nom doit correspondre à un fichier livré**, sans quoi l'afficheur
+     * montre un cadre vide sans rien dire. *Un nom qui ne désigne rien échoue en
+     * silence, et c'est le pire des échecs sur un objet qu'on regarde de loin.*
      */
-    it('reste sous une poignée de commandes', () => {
-        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
-            for (let phase = 0; phase < 40; phase++) {
-                expect(traceDuSignal(n, phase).length, `niveau ${n}, phase ${phase}`)
-                    .toBeLessThanOrEqual(BUDGET_DE_SEGMENTS);
-            }
+    it('nomme exactement les fichiers déposés par GM-OS', () => {
+        for (const nom of ICONES_ATTENDUES) {
+            expect(nom).toMatch(/^gmosvk[1-6]$/);
         }
-    });
-
-    it('reste dans la hauteur de la matrice', () => {
-        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
-            for (let phase = 0; phase < 40; phase++) {
-                for (const { dl: [, y0, , y1] } of traceDuSignal(n, phase)) {
-                    for (const y of [y0, y1]) {
-                        expect(y, `niveau ${n}`).toBeGreaterThanOrEqual(0);
-                        expect(y).toBeLessThan(8);
-                    }
-                }
-            }
-        }
-    });
-
-    /**
-     * **Le tracé couvre les deux bords, quelle que soit la phase.** Sans le
-     * cycle qui démarre avant la colonne zéro, le décalage laisserait un blanc
-     * d'un côté à chaque image — et l'œil lirait un tracé qui se recompose
-     * plutôt qu'un tracé qui glisse.
-     */
-    it('fait ENTRER les battements par la gauche au lieu de les faire apparaître', () => {
-        // Un battement qui naîtrait entier au bord se lirait comme un
-        // clignotement. On en dessine donc un avant la colonne zéro, tant
-        // qu'une part de lui se voit.
-        const aCheval = Array.from({ length: 16 }, (_, phase) =>
-            traceDuSignal(4, phase).slice(1).some(({ dl: [x0, , x1] }) => x0 < 0 && x1 >= 0));
-        expect(aCheval.some(Boolean), 'aucun battement n’entre par le bord').toBe(true);
-    });
-
-    /**
-     * **Et un battement entièrement hors matrice ne coûte rien.** C'est ce qui a
-     * ramené le tracé dans son budget : le premier rendu en dessinait un que
-     * personne ne voyait, et dépassait de moitié.
-     */
-    it('ne dépense aucun segment pour ce qui ne se voit pas', () => {
-        for (let n = NIVEAU_MIN; n <= NIVEAU_MAX; n++) {
-            for (let phase = 0; phase < 40; phase++) {
-                for (const { dl: [x0, , x1] } of traceDuSignal(n, phase)) {
-                    expect(Math.max(x0, x1), `niveau ${n}, phase ${phase}`).toBeGreaterThanOrEqual(0);
-                    expect(Math.min(x0, x1)).toBeLessThan(LARGEUR);
-                }
-            }
-        }
-    });
-
-    /**
-     * **La dérive glisse, elle ne saute pas.** La phase est prise modulo
-     * l'écart entre deux pics : le motif se répète à cet intervalle-là, et un
-     * décalage plus grand ferait sauter le tracé.
-     */
-    it('revient sur lui-même au bout d’un écart entre deux battements', () => {
-        const ecart = Math.floor(LARGEUR / 4);
-        expect(traceDuSignal(4, 0)).toEqual(traceDuSignal(4, ecart));
-        expect(traceDuSignal(4, 1)).not.toEqual(traceDuSignal(4, 0));
-    });
-
-    it('supporte une phase négative sans se replier', () => {
-        expect(traceDuSignal(3, -5)).toEqual(traceDuSignal(3, -5 + Math.floor(32 / 3)));
     });
 });
 
@@ -200,32 +112,32 @@ describe('ce qui part vers l’appareil', () => {
      * savent pas pourquoi.* Nommé, le tracé devient un score.
      */
     it('n’écrit rien — le tracé seul ne se nomme pas', () => {
-        expect(composerVoightKampff({ niveau: 3 }, 0).text).toBe('');
+        expect(composerVoightKampff({ niveau: 3 }).text).toBe('');
     });
 
     it('ne défile pas', () => {
-        expect(composerVoightKampff({ niveau: 3 }, 0).noScroll).toBe(true);
+        expect(composerVoightKampff({ niveau: 3 }).noScroll).toBe(true);
     });
 
-    it('dérive avec le temps', () => {
-        const a = composerVoightKampff({ niveau: 3 }, 0);
-        const b = composerVoightKampff({ niveau: 3 }, CADENCE_DU_SIGNAL_MS);
-
-        expect(b.draw).not.toEqual(a.draw);
-    });
-
-    it('ne dérive pas entre deux images', () => {
-        expect(composerVoightKampff({ niveau: 3 }, CADENCE_DU_SIGNAL_MS - 1).draw)
-            .toEqual(composerVoightKampff({ niveau: 3 }, 0).draw);
+    it('nomme l’icône de son niveau', () => {
+        expect(composerVoightKampff({ niveau: 5 }).icon).toBe('gmosvk5');
     });
 
     /**
-     * **Les deux cadences doivent rester égales.** Le battement décide *quand*
-     * on publie, le compositeur calcule l'image de ce moment-là. Si elles
-     * divergeaient, le tracé sauterait ou se figerait — et rien ne le dirait,
-     * puisque chaque moitié serait juste de son côté.
+     * **La charge ne dépend plus du temps, et c'est ce qui libère le réseau.**
+     *
+     * Le battement ne republie que ce qui a **changé** : deux compositions
+     * identiques d'un tour à l'autre valent zéro requête. Le tracé statique, lui,
+     * changeait à chaque image et imposait une écriture toutes les 500 ms.
      */
-    it('calcule ses images à la cadence à laquelle le battement publie', () => {
-        expect(CADENCE_DU_SIGNAL_MS).toBe(CADENCE_RAPIDE_MS);
+    it('ne change pas tant que le niveau ne bouge pas', () => {
+        expect(composerVoightKampff({ niveau: 3 })).toEqual(composerVoightKampff({ niveau: 3 }));
+        expect(composerVoightKampff({ niveau: 4 })).not.toEqual(composerVoightKampff({ niveau: 3 }));
+    });
+
+    /** La couleur suit le rythme, comme l'icône. */
+    it('porte la couleur du niveau', () => {
+        expect(composerVoightKampff({ niveau: 1 }).color).toBe(couleurDuNiveau(1));
+        expect(composerVoightKampff({ niveau: 6 }).color).toBe(couleurDuNiveau(6));
     });
 });
