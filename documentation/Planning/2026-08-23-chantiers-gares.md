@@ -70,6 +70,35 @@ Les **tailles** sont validées par David le 24/08 et vivent dans une seule table
 | c | ✅ **RIEN À FAIRE, vérifié le 31/08 — et c'est moi qui avais recopié un reste mort.** L'étape 9 n'a pas été abandonnée : **son travail était déjà fait par la Forge de campagne** (15-16/08). Le plan de trame le dit depuis le 20/08, § 6 et § 8. J'avais copié la ligne du § 6 de la réconciliation sans l'ouvrir — *un reste recopié survit à sa correction*, la règle que ce même document énonce | `2026-08-08-trame-narrative-cycle-seance.md` |
 | d | ✅ **MESURÉ le 31/08, la décision ET son motif tiennent.** Avec du sel en tête d'invite : **88-96 tok/s** à 4 000 tokens, **82** à 8 000 — soit **+56 s** pour doubler, contre les +51 s du 23/08. *Le prefill l'explique en entier ; il n'y a jamais eu de secondes manquantes.* ⛔ C'est mon banc du matin qui était faux : invite répétée, donc **cache de préfixe**. La condition de réouverture posée le 23/08 (300 tok/s) n'est pas remplie | § 13 de `2026-08-07-acceleration-ia.md` |
 
+### 3 bis · La dette d'avril, triée le 2026-08-31
+
+**Trois documents d'avril n'avaient jamais été réconciliés** — celle du 19/08 ne cataloguait que les
+documents d'août. Onze cases vides ; **cinq étaient déjà faites, une était devenue un piège.**
+
+| | Reste, mesuré | Où |
+| --- | --- | --- |
+| **e** | **32 clés `fr` sans équivalent `en`** (+ 3 clés `en` orphelines, 8 libellés répétés). *Chacune est un endroit où l'interface affiche la clé brute si l'on passe en anglais.* Les deux lignes d'avril — « validation multi-langue » et « audit des doublons » — n'en font qu'une | `src/locales/` |
+| **f** | **37 fichiers en `<select>` natif** contre 5 qui emploient le composant. ⚠️ **Mesurer avant de traiter** : le motif d'avril était un **bug** (listes ouvertes hors du container Electron), pas l'esthétique — s'il a disparu avec Chromium, le chantier se ferme gratuitement | `src/**/*.tsx` |
+| **g** | **Types de relations Nexus personnalisés** — `EntityRelation.type` est une union **fermée** de huit valeurs. *Retenu par David le 31/08* | `src/types/entity.types.ts:54` |
+| **h** | **Voice-to-Light** — la lumière suit le niveau du micro. Aucun lien de `light` vers `voice`. *Retenu par David le 31/08* | `src/modules/light/` |
+
+**Fermées le 31/08, cases jamais cochées :** les chaînes de `useRuleEngine.ts` (zéro chaîne en dur), le
+mismatch `ai_placeholder` (cohérent dans les deux langues), le sélecteur de dossier natif Obsidian
+(`obsidian_bridge.ts:157`), la confirmation de synchro (`gmToast`), Light-OS dans l'orchestrateur
+(`useStoryboardStore.ts:182`).
+
+⛔ **Retirée : « migration finale de `/docs` vers `/documentation` ».** En avril c'était du ménage ;
+`docs/` est depuis **la racine du corpus** que l'Oracle indexe. *L'exécuter casserait le RAG* — la ligne
+est barrée et non supprimée, parce que quelqu'un la reproposerait.
+
+### 3 ter · La couverture des règles — une carte, pas un arriéré
+
+`2026-08-08-corpus-de-regles.md` liste les domaines que GM-OS ne modélise pas : oppositions et
+coopération, états codés en dur, poursuites, environnement et dangers, jauges individuelles sans bornes,
+`2d20` non implémenté. **David a tranché le 31/08 : on rafraîchit la table, on ne la vide pas.** Deux de
+ses lignes avaient d'ailleurs vieilli — les portées atteignent le Cortex depuis le 22/08, et la monnaie
+de table existe depuis le 15/08.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou

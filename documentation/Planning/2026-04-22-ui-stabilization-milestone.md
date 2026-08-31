@@ -2,6 +2,13 @@
 
 Ce document récapitule les avancées sur la robustesse de l'interface et la gestion des campagnes.
 
+> ### 🗃️ Vérifié dans le code le 2026-08-31
+>
+> Ce document est un **jalon daté d'avril 2026**, pas une liste vivante. Ses cases restées vides ont
+> été rouvertes une à une : ce qui était fait est coché avec son ancre, ce qui reste a rejoint la
+> **section ⭐** de `2026-08-23-chantiers-gares.md`, seule liste qui fasse foi.
+
+
 ## ✅ Jalons Atteints
 
 ### 🛡️ Stabilisation de l'Interface
@@ -17,9 +24,15 @@ Ce document récapitule les avancées sur la robustesse de l'interface et la ges
 - **Persistence des Chemins** : Mise à jour en temps réel des chemins système lors des changements de session.
 
 ## 🛠️ Travaux en Cours (Backlog)
-- [ ] Généraliser l'usage du composant `Select` à l'ensemble de l'application (Paramètres IA, Deck-OS).
-- [ ] Implémenter un sélecteur de fichiers/répertoires natif via le bridge pour le choix du dossier Obsidian.
-- [ ] Ajouter une confirmation visuelle lors de la synchronisation réussie avec Obsidian.
+- [ ] Généraliser l'usage du composant `Select`. → **section ⭐**, et **compté le 31/08 : 37 fichiers
+      emploient encore `<select>` natif contre 5 qui utilisent le composant.** ⚠️ *À mesurer avant de
+      traiter* : le motif d'avril était un **bug** — des listes s'ouvrant hors du container Electron —
+      et non l'esthétique. S'il a disparu avec une version de Chromium, le chantier se ferme
+      gratuitement.
+- [x] Sélecteur de fichiers/répertoires natif pour le dossier Obsidian. ✅ **Fait** —
+      `electron/obsidian_bridge.ts:157` (`dialog.showOpenDialog`).
+- [x] Confirmation visuelle de synchronisation. ✅ **Fait** — `gmToast(result.message, 'success')` dans
+      `RuleWorkshopViewer.tsx:290`.
 
 ## 📈 Impact Utilisateur
 L'utilisateur bénéficie d'une interface plus stable, sans "saut" de fenêtre inattendu, et d'une gestion transparente de ses notes externes via Obsidian.

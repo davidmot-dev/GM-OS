@@ -270,16 +270,21 @@ Sujets dérivés de ce que GM-OS exploite réellement. Deux d'entre eux — pour
 | Santé et blessures | `defaultHealthType` + échelle | 5 moteurs réels, **3 déclarables**, échelles en dur |
 | Dégâts et types | `damageTypes`, tags `res_`/`vul_`/`imm_` | ✓ |
 | États et conditions | — | ❌ **codés en dur** (`CombatRules.ts:30`) |
-| Monnaie de table (partagée) | — | ❌ **inexistant** |
+| Monnaie de table (partagée) | `GameDriver.ressourcesDeTable` | ✅ **fait le 15/08** — `RessourceDeTable` porte `id`, `label`, `depart`, `min`, `max`, propriétaire et visibilité |
 | Jauges et ressources individuelles | `statsToTrack.isResource`, `ui_config.gauges` | ⚠️ **décoratives** : ni bornes, ni seuils, ni effets |
-| Distances et portées | `tactical.ranges` (5 seuils + modificateurs) | ✓ mais **non transmis au Cortex** |
+| Distances et portées | `tactical.ranges` (5 seuils + modificateurs) | ✅ **transmis au Cortex depuis le 22/08** (`TacticalNarrativeService.ts:103`) |
 | Poursuites | — | ❌ inexistant |
 | Environnement et dangers | — | ❌ inexistant |
 | Stats suivies | `statsToTrack` | ✓ |
 | Ton et registre | `aiInstructions` (texte libre) | ✓ |
 
-**Cinq cases vides, un moteur déclaré mais mort, un moteur non transmis.** C'est l'écart chiffré entre
-le cadre des règles et ce que les jeux de David demandent.
+**Quatre cases vides et un moteur déclaré mais mort** — *rafraîchi le 2026-08-31, et deux lignes avaient
+vieilli en silence* : les portées atteignent le Cortex depuis le 22/08, et la monnaie de table existe
+depuis le 15/08, apportée par un chantier qui ne savait pas qu'il remplissait cette case.
+
+> **Cette table est une CARTE, pas un arriéré** — décision de David le 2026-08-31. Elle dit l'écart entre
+> le cadre des règles et ce que ses jeux demandent ; le combler serait une décision de produit, pas une
+> liste à vider. *Ce qui reste ici ne se coche pas, ça se décide.*
 
 ---
 

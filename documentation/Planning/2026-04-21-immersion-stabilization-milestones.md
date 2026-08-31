@@ -2,6 +2,13 @@
 
 Ce document suit l'évolution des modules Immersion (Light-OS) et Social (Nexus) durant la phase de stabilisation v6.3.4.
 
+> ### 🗃️ Vérifié dans le code le 2026-08-31
+>
+> Ce document est un **jalon daté d'avril 2026**, pas une liste vivante. Ses cases restées vides ont
+> été rouvertes une à une : ce qui était fait est coché avec son ancre, ce qui reste a rejoint la
+> **section ⭐** de `2026-08-23-chantiers-gares.md`, seule liste qui fasse foi.
+
+
 ## 🏁 Jalons Atteints (2026-04-21)
 
 ### 💡 Light-OS : Expansion Majeure
@@ -24,10 +31,20 @@ Ce document suit l'évolution des modules Immersion (Light-OS) et Social (Nexus)
 ## 📋 Backlog Prioritaire (À venir)
 
 ### 🧪 Améliorations Prochaines
-- [ ] **Light-OS & Storyboard** : Intégration des nouveaux effets dans l'orchestrateur global.
-- [ ] **Nexus Relation Engine** : Ajout de types de relations personnalisés avec influence sur la physique du graphe.
-- [ ] **Voice-OS Integration** : Couplage de l'intensité lumineuse avec le niveau sonore de l'entrée micro (Voice-to-Light).
+- [x] **Light-OS & Storyboard** ✅ **Fait** — un moment de storyboard applique sa scène lumineuse :
+      `useStoryboardStore.ts:182` (`moment.lightSceneId` → `hueEngine.applyScene`).
+- [ ] **Nexus Relation Engine** : types de relations personnalisés. → **retenu par David le 31/08**,
+      section ⭐. `EntityRelation.type` est aujourd'hui une union **fermée** de huit valeurs
+      (`src/types/entity.types.ts:54`).
+- [ ] **Voice-OS Integration** (Voice-to-Light). → **retenu par David le 31/08**, section ⭐. Aucun lien
+      du module `light` vers `voice` à ce jour.
 
 ## 📉 Dette Technique & Maintenance
-- [ ] Migration finale de `/docs` vers `/documentation`.
-- [ ] Audit complet des fichiers de traduction pour éviter les doublons entre modules.
+- [x] ~~Migration finale de `/docs` vers `/documentation`.~~ ⛔ **CADUQUE, et devenue dangereuse.** En
+      avril c'était du ménage ; depuis, **`docs/` est la racine du corpus** que l'Oracle indexe —
+      systèmes, fiches, index des livres. *L'exécuter aujourd'hui casserait le RAG.* Ligne conservée
+      barrée plutôt que supprimée : quelqu'un la reproposerait.
+- [ ] Audit des fichiers de traduction. → **fondu dans le même reste que la « validation multi-langue »**
+      ci-dessus : c'est une seule mesure, section ⭐. Compté le 31/08 : 8 libellés répétés plus de deux
+      fois en `fr`, 5 en `en` — *le vrai défaut n'était pas les doublons, c'étaient les 32 clés absentes
+      de l'anglais.*
