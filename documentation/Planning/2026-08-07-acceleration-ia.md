@@ -1049,3 +1049,73 @@ confort, plus la vitesse.
   explicitement le propos au non-spatial ? Document jumeau.
 - **Un mode « hors carte » assumé** pour le Cortex : beaucoup de combats se jouent sans carte, et il y est
   aujourd'hui dégradé par accident plutôt que conçu pour.
+
+---
+
+## 11. Le banc refait — 2026-08-31, et l'axe A a beaucoup mieux tenu que promis
+
+**Pourquoi le refaire.** Le § 2 date du 07/08 et l'axe A a été posé le 12/08 ; entre-temps Ollama est
+passé en **0.33.2**. Le plan disait *« à éprouver sur une séance complète, pas seulement au banc »* — ceci
+n'est toujours qu'un banc, mais il tranche deux points que la séance n'aurait pas éclairés.
+
+**Conditions.** `gemma4:12b` · invite de 13 020 caractères = **4 105 tokens** (le plafond RAG réel, § B.3)
+· `num_ctx=16384` · `num_predict=64` · `think:false`. L'iGPU est bien tenu :
+
+```text
+inference compute … library=Vulkan … "Intel(R) Arc(TM) 140T GPU" type=iGPU total="17.9 GiB"
+ollama ps → gemma4:12b … 8,4 GB … 100% GPU … 16384
+```
+
+### Les chiffres, et l'écart avec le § 2
+
+| | § 2 · CPU seul (07/08) | § 2 · iGPU annoncé | **mesuré le 31/08, à chaud** |
+| --- | --- | --- | --- |
+| prefill | 15,3 tok/s | ~72 tok/s (× 4,7) | **660 tok/s** |
+| décodage | 5,5 tok/s | ~6 tok/s (× 1,1) | **7,4 – 8,4 tok/s** |
+
+**Prefiller les 4 000 tokens du RAG coûte 6,2 s**, pas les minutes que le chiffrage du § 5 supposait.
+Le × 4,7 du banc du 07/08 était mesuré à froid, donc **il facturait la mise en route au débit** (voir
+ci-dessous) ; à chaud, le rapport réel est de l'ordre de **× 43**. *Le prefill a cessé d'être le sujet.*
+**Le mur est désormais le décodage**, et il l'est pour la raison que le § 2 avait correctement identifiée
+— la bande passante mémoire, partagée — donc aucun réglage ne l'enlèvera.
+
+### ⚠️ La mise en route est facturée au prefill, pas au chargement
+
+| | `load_duration` | prefill annoncé | coût réel de la question |
+| --- | --- | --- | --- |
+| **à froid** | 9,8 – 20 s | **120 tok/s** (33 – 37 s) | **45 – 58 s** |
+| à chaud | 0,0 s | 660 tok/s (6,2 s) | ~10 s |
+
+`load_duration` ne dit **pas** ce que coûte le démarrage : le reste — la montée du modèle sur l'iGPU — est
+compté dans `prompt_eval_duration`, qui affiche alors un débit cinq fois trop bas. *Un banc qui ne fait
+qu'une passe mesure la mise en route et croit mesurer le débit.* C'est très probablement ce qui a produit
+le × 4,7 du § 2.
+
+**Conséquence pour la table, et c'est la seule qui compte** : la **première** question d'une séance coûte
+~50 s, toutes les suivantes ~10 s. Le serveur retombe à `OLLAMA_KEEP_ALIVE:5m0s` ; le chemin `/api/chat`
+impose bien `keep_alive: '30m'` (`OllamaService.ts:170`), mais **rien ne préchauffe** — la première
+question de la soirée paie donc toujours la mise en route. → *piste : une passe à vide au démarrage de
+GM-OS, ou à l'ouverture de la séance.*
+
+### ⛔ `OLLAMA_FLASH_ATTENTION` ne sert à rien ici — la prescription de l'axe A est caduque
+
+Mesuré à la méthode du 12/08 (second serveur sur le port 11500, `OLLAMA_FLASH_ATTENTION=1`, sans toucher
+au serveur de GM-OS), trois passes chacun :
+
+| | prefill à chaud | décodage |
+| --- | --- | --- |
+| FA=0 — l'état actuel | 660 · 660 tok/s | 7,4 – 7,8 tok/s |
+| FA=1 | 666 · 662 tok/s | 7,4 – 7,8 tok/s |
+
+**Aucun écart hors du bruit.** Le dos Vulkan n'en tire rien. La variable ne doit **pas** être posée : elle
+n'apporterait que la croyance qu'un réglage agit. Les deux autres lignes de l'axe A tiennent —
+`OLLAMA_IGPU_ENABLE=1` est en place au niveau utilisateur, et `keep_alive` voyage dans la requête, ce qui
+vaut mieux qu'une variable d'environnement (*les limites cessent de dépendre du réglage d'une machine*).
+
+### Ce que ça rouvre, et qu'il ne faut pas trancher sans remesurer
+
+Le plafond RAG a été **tranché à 4 000 le 23/08** au motif que le doubler coûtait **+51 s par question**.
+À 660 tok/s, 4 000 tokens de plus ne peuvent en coûter que **~6**. Les 45 s manquantes viennent donc
+d'ailleurs (lecture et scoring du corpus, ou décodage rallongé), **pas du prefill**. La décision de David
+tient tant que ce n'est pas remesuré — mais *le motif qui la portait n'est plus le bon*, et c'est
+exactement le genre d'écart qui fait rejeter une bonne idée pour une mauvaise raison.
