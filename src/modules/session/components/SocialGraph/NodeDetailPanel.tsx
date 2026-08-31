@@ -63,7 +63,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
             <button 
                 onClick={onClose}
                 className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-all text-slate-400 hover:text-white"
-                title={t('modules:session.physics.close')}
+                title={t('modules:session.social_graph.physics.close')}
             >
                 <X size={20} />
             </button>

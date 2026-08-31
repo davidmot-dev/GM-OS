@@ -25,7 +25,10 @@
       "delete_scene": "Supprimer la scène",
       "engine_ready": "Moteur Prêt",
       "latency": "Latence",
-      "master_bus": "Master Bus : Dynamique Active"
+      "master_bus": "Master Bus : Dynamique Active",
+      "delete_track": "Vider la piste",
+      "link_light": "Lier une scène lumineuse",
+      "linked_light": "Scène lumineuse liée"
     },
     "presets": {
       "universes": {
@@ -801,7 +804,8 @@
         "system": "Vous êtes un expert en conception de butin pour le système RPG \"{{systemName}}\".\n{{contextInstructions}}\nMISSION : Transformer la description de l'utilisateur en une liste d'objets structurés.\n\nRÈGLES :\n1. Répondez UNIQUEMENT avec un tableau JSON d'objets.\n2. Chaque objet doit suivre cette interface :\n   {\n     \"name\": string,\n     \"quantity\": number,\n     \"type\": \"item\" | \"currency\",\n     \"rarity\": \"common\" | \"uncommon\" | \"rare\" | \"epic\" | \"legendary\",\n     \"description\": string (courte et immersive),\n     \"weight\": number (poids en kg, optionnel),\n     \"value\": number (valeur estimée en pièces d'or)\n   }\n3. Pour la monnaie, utilisez le type : \"currency\". Une unité de monnaie vaut 1.\n4. Ne dépassez pas 10 objets au total.\n\nEXEMPLE DE SORTIE :\n[{\"name\": \"Dague en Os\", \"quantity\": 1, \"type\": \"item\", \"rarity\": \"common\", \"description\": \"Une dague fragile mais tranchante.\"}]",
         "lite_instruction": "Soyez rapide et générique mais cohérent avec le système.",
         "full_instruction": "Utilisez tout le contexte de la session pour créer des objets uniques liés à l'histoire."
-      }
+      },
+      "generic_system": "Générique"
     },
     "pool": {
       "title": "Pool de Butin ({{count}})",
@@ -1254,7 +1258,8 @@
       "consult_rules": "Consulter Grimoire",
       "session_resources": "Ressources Session",
       "open_http_link": "Ouvrir le Lien HTTP",
-      "access_file": "Accéder au Fichier"
+      "access_file": "Accéder au Fichier",
+      "click_to_view": "Cliquer pour ouvrir"
     },
     "notes": {
       "quick_input": "Espace de Saisie Rapide",
@@ -1656,7 +1661,25 @@
       "entity_created": "{{name}} créé avec succès !",
       "template_duplicated": "Modèle dupliqué",
       "template_deleted": "Modèle supprimé",
-      "driver_deleted": "Système supprimé"
+      "driver_deleted": "Système supprimé",
+      "card_drawn": "Carte tirée de {{name}}",
+      "deck_added": "Paquet « {{name}} » ajouté",
+      "deck_empty": "Paquet vide",
+      "deck_shuffled": "Paquet remélangé",
+      "deck_shuffled_with_returns_one": "Paquet remélangé — 1 carte reprise des mains",
+      "deck_shuffled_with_returns_other": "Paquet remélangé — {{count}} cartes reprises des mains",
+      "entity_added_to_map": "{{name}} placé sur la carte",
+      "projection_off": "Projection coupée",
+      "projection_on": "Projection active",
+      "remote_vitals_update": "Mise à jour à distance — {{details}}",
+      "session_created": "Séance {{number}} créée",
+      "session_deleted": "Séance {{number}} supprimée",
+      "stop_all_error": "L'arrêt global a échoué",
+      "stop_all_success": "Tout est arrêté",
+      "transfer_approved": "Transfert accepté : {{item}}",
+      "transfer_error_char_not_found": "Personnage introuvable",
+      "transfer_rejected": "Transfert refusé",
+      "transfer_request_sent": "Demande de transfert envoyée"
     },
     "events": {
       "item_transfer_title": "Échange d'objets",
@@ -2483,7 +2506,8 @@
         "reveal_log": "🔎 Indice Révélé : {{title}}",
         "reveal_log_content": "**Moment :** {{moment}}\n\n**Description :** {{content}}"
       },
-      "delete_confirm": "Voulez-vous vraiment supprimer cet indice ?"
+      "delete_confirm": "Voulez-vous vraiment supprimer cet indice ?",
+      "empty_selection": "Indice sans titre"
     },
     "campaign_form": {
       "back_to_cockpit": "Retour au Cockpit",
@@ -2556,7 +2580,8 @@
         "neural_overrides_subtitle": "Directives prioritaires pour les Gems IA",
         "auto_generate": "Auto-Génération",
         "ai_placeholder": "Consignes personnalisées pour {{name}}..."
-      }
+      },
+      "wallpaper_browser_title": "Choisir un fond d'écran"
     },
     "snapshots": {
       "title": "Instantané de Session",
@@ -2746,6 +2771,9 @@
         "auto_save": "Sauvegarde Automatique",
         "close_hint": "Ferme cette fenêtre pour enregistrer"
       }
+    },
+    "oracle": {
+      "synced_with_system": "Synchronisé avec le système"
     }
   },
   "storyboard": {
@@ -2848,7 +2876,9 @@
         "unknown_error": "Erreur inconnue",
         "driver_scraping": "Extraction des données du système…",
         "export_scraping": "Extraction des données de la campagne…",
-        "manifest_validation": "Validation du manifeste…"
+        "manifest_validation": "Validation du manifeste…",
+        "archive_unreadable": "Archive illisible.",
+        "bridge_unavailable": "Pont Electron indisponible."
       }
     }
   },

@@ -25,7 +25,10 @@
       "delete_scene": "Delete scene",
       "engine_ready": "Engine Ready",
       "latency": "Latency",
-      "master_bus": "Master Bus: Dynamics Active"
+      "master_bus": "Master Bus: Dynamics Active",
+      "delete_track": "Clear track",
+      "link_light": "Link a light scene",
+      "linked_light": "Light scene linked"
     },
     "presets": {
       "universes": {
@@ -801,7 +804,8 @@
         "system": "You are an expert in loot design for the RPG system \"{{systemName}}\".\n{{contextInstructions}}\nTASK: Transform the user's description into a list of structured objects.\n\nRULES:\n1. Respond ONLY with a JSON array of objects.\n2. Each object must follow this interface:\n   {\n     \"name\": string,\n     \"quantity\": number,\n     \"type\": \"item\" | \"currency\",\n     \"rarity\": \"common\" | \"uncommon\" | \"rare\" | \"epic\" | \"legendary\",\n     \"description\": string (short and immersive),\n     \"weight\": number (weight in kg, optional),\n     \"value\": number (estimated value in gold pieces)\n   }\n3. For currency, use type: \"currency\". One unit of currency is worth 1.\n4. Do not exceed 10 objects total.\n\nEXAMPLE OUTPUT:\n[{\"name\": \"Bone Dagger\", \"quantity\": 1, \"type\": \"item\", \"rarity\": \"common\", \"description\": \"A fragile but sharp dagger.\"}]",
         "lite_instruction": "Be fast and generic but consistent with the system.",
         "full_instruction": "Use the full session context to create unique and story-linked objects."
-      }
+      },
+      "generic_system": "Generic"
     },
     "pool": {
       "title": "Loot Pool ({{count}})",
@@ -1254,7 +1258,8 @@
       "consult_rules": "Consult Rulebook",
       "session_resources": "Session Resources",
       "open_http_link": "Open HTTP Link",
-      "access_file": "Access File"
+      "access_file": "Access File",
+      "click_to_view": "Click to open"
     },
     "notes": {
       "quick_input": "Quick Entry Space",
@@ -1656,7 +1661,25 @@
       "entity_created": "{{name}} created successfully!",
       "template_duplicated": "Template duplicated",
       "template_deleted": "Template deleted",
-      "driver_deleted": "System deleted"
+      "driver_deleted": "System deleted",
+      "card_drawn": "Card drawn from {{name}}",
+      "deck_added": "Deck “{{name}}” added",
+      "deck_empty": "Deck is empty",
+      "deck_shuffled": "Deck shuffled",
+      "deck_shuffled_with_returns_one": "Deck shuffled — 1 card taken back from hands",
+      "deck_shuffled_with_returns_other": "Deck shuffled — {{count}} cards taken back from hands",
+      "entity_added_to_map": "{{name}} placed on the map",
+      "projection_off": "Projection off",
+      "projection_on": "Projection on",
+      "remote_vitals_update": "Remote update — {{details}}",
+      "session_created": "Session {{number}} created",
+      "session_deleted": "Session {{number}} deleted",
+      "stop_all_error": "Global stop failed",
+      "stop_all_success": "Everything stopped",
+      "transfer_approved": "Transfer approved: {{item}}",
+      "transfer_error_char_not_found": "Character not found",
+      "transfer_rejected": "Transfer rejected",
+      "transfer_request_sent": "Transfer request sent"
     },
     "events": {
       "item_transfer_title": "Item Exchange",
@@ -2483,7 +2506,8 @@
         "reveal_log": "🔎 Clue Revealed: {{title}}",
         "reveal_log_content": "**Moment:** {{moment}}\n\n**Description:** {{content}}"
       },
-      "delete_confirm": "Do you really want to delete this clue?"
+      "delete_confirm": "Do you really want to delete this clue?",
+      "empty_selection": "Untitled clue"
     },
     "campaign_form": {
       "back_to_cockpit": "Back to Cockpit",
@@ -2556,7 +2580,8 @@
         "neural_overrides_subtitle": "Priority directives for AI Gems",
         "auto_generate": "Auto-Generation",
         "ai_placeholder": "Custom instructions for {{name}}..."
-      }
+      },
+      "wallpaper_browser_title": "Choose a wallpaper"
     },
     "snapshots": {
       "title": "Session Snapshot",
@@ -2746,6 +2771,9 @@
         "placeholder": "Start taking notes here... Major events, memorable quotes, PC actions...",
         "quick_input": "Quick Notes"
       }
+    },
+    "oracle": {
+      "synced_with_system": "Synced with the system"
     }
   },
   "storyboard": {
@@ -2848,7 +2876,9 @@
         "injecting_system": "Injecting into system database...",
         "injecting_campaign": "Injecting into database...",
         "import_success": "Import completed!",
-        "unknown_error": "Unknown error"
+        "unknown_error": "Unknown error",
+        "archive_unreadable": "Archive unreadable.",
+        "bridge_unavailable": "Electron bridge unavailable."
       }
     }
   },

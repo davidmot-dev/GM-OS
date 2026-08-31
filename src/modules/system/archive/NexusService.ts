@@ -629,7 +629,7 @@ export class NexusService {
         // Guard : vérification du pont IPC
         if (!window.appBridge?.nexus) {
             console.warn('[NexusService] appBridge.nexus non disponible. Mode développement Web?');
-            gmToast(i18next.t('modules:campaign_details.status.no_electron'), 'error');
+            gmToast(i18next.t('modules:session.campaign_details.status.no_electron'), 'error');
             return { success: false, missingAssets: [], error: i18next.t('modules:system.nexus.messages.bridge_unavailable') };
         }
 

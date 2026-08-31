@@ -549,7 +549,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full bg-accent ${tacticalSettings.isEnabled ? 'animate-pulse' : 'animate-ping'}`} />
                              <span className={`text-[10px] font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>
-                                {theme === 'medieval' ? t('common:tactical.eternal_link', 'LIEN ÉTERNEL') : t('common:tactical.system_link', 'System Link Active')}
+                                {theme === 'medieval' ? t('modules:tactical.eternal_link') : t('modules:tactical.system_link')}
                              </span>
                         </div>
                         <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-[9px] text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>

@@ -4,9 +4,19 @@
   "activeModule": "Module Actif",
   "theme": "Thème",
   "sessionMode": "Mode Session",
+  "none": "Aucun",
+  "error_launch_hub": "Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.",
+
   "status": {
     "enabled": "Activé",
-    "disabled": "Désactivé"
+    "disabled": "Désactivé",
+    "none": "Aucun",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "vitality": "Vitalité",
+    "planned": "Prévue",
+    "active": "En cours",
+    "done": "Terminée"
   },
 
   "spotlight": {
@@ -46,7 +56,13 @@
     "export": "Exporter",
     "stop_all": "ARRÊT GLOBAL (Panique)",
     "select_dice": "Sélectionner le type de dé",
-    "select_placeholder": "-- Sélectionner --"
+    "select_placeholder": "-- Sélectionner --",
+    "add": "Ajouter",
+    "change": "Changer",
+    "load": "Charger",
+    "refresh": "Actualiser",
+    "select": "Sélectionner",
+    "view": "Voir"
   },
   "labels": {
     "session_number": "Session {{number}}"

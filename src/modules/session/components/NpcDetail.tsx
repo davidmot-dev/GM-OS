@@ -283,7 +283,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 rounded-xl transition-all font-bold text-sm uppercase tracking-widest group"
                 >
                     <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
-                    {embeddedId ? t('common:actions.close') : t('modules:favorite.back')}
+                    {embeddedId ? t('common:close') : t('modules:favorite.back')}
                 </button>
 
                 <button 

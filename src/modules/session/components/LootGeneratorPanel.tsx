@@ -32,7 +32,7 @@ const LootGeneratorPanel: React.FC = () => {
     
     const driver = getActiveDriver();
     const lootTables = driver?.lootTables || [];
-    const systemName = driver?.name || t('modules:common.generic', { defaultValue: 'Generic' });
+    const systemName = driver?.name || t('modules:loot.generator.generic_system');
 
     const filteredTables = lootTables.filter(t => 
         t.name.toLowerCase().includes(searchTerm.toLowerCase())

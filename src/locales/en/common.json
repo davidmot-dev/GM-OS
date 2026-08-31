@@ -4,9 +4,19 @@
   "activeModule": "Active Module",
   "theme": "Theme",
   "sessionMode": "Session Mode",
+  "none": "None",
+  "error_launch_hub": "Please open the Player Hub in a tab (`http://localhost:5173/?window=hub`) or through the Electron bridge.",
+
   "status": {
     "enabled": "Enabled",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "none": "None",
+    "online": "Online",
+    "offline": "Offline",
+    "vitality": "Vitality",
+    "planned": "Planned",
+    "active": "Active",
+    "done": "Done"
   },
 
   "spotlight": {
@@ -46,7 +56,13 @@
     "export": "Export",
     "stop_all": "GLOBAL STOP (Panic)",
     "select_dice": "Select dice type",
-    "select_placeholder": "-- Select --"
+    "select_placeholder": "-- Select --",
+    "add": "Add",
+    "change": "Change",
+    "load": "Load",
+    "refresh": "Refresh",
+    "select": "Select",
+    "view": "View"
   },
   "labels": {
     "session_number": "Session {{number}}"

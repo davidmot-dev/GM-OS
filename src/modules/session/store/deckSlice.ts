@@ -298,7 +298,9 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
 
         gmToast(
             reprises > 0
-                ? `${i18next.t('modules:session.toasts.deck_shuffled')} ${reprises} carte(s) reprise(s) des mains.`
+                // La phrase des reprises était écrite en français dans le code :
+                // elle serait restée telle quelle en anglais.
+                ? i18next.t('modules:session.toasts.deck_shuffled_with_returns', { count: reprises })
                 : i18next.t('modules:session.toasts.deck_shuffled'),
             'info',
         );

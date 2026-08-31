@@ -190,7 +190,7 @@ export const FavoriteFullDossier: React.FC = () => {
                             className="px-4 py-2 rounded-xl bg-rose-500/10 text-rose-500 font-bold text-[10px] tracking-widest hover:bg-rose-500/20 transition-all flex items-center gap-2 border border-rose-500/20"
                         >
                             <Sword size={14} />
-                            {t('common:sections.combat')}
+                            {t('modules:favorite.sections.combat')}
                         </button>
                     )}
 
@@ -210,7 +210,7 @@ export const FavoriteFullDossier: React.FC = () => {
                             className="px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-500 font-bold text-[10px] tracking-widest hover:bg-emerald-500/20 transition-all flex items-center gap-2 border border-emerald-500/20"
                         >
                             <MapPin size={14} />
-                            {t('common:sections.map')}
+                            {t('modules:favorite.sections.map')}
                         </button>
                     )}
 
