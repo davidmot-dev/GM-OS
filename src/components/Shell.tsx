@@ -35,6 +35,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
 import { usePrechauffageDuModele } from '../modules/ai/prechauffage';
+import { useLumiereQuiSuitLaVoix } from '../modules/light/hooks/useLumiereQuiSuitLaVoix';
 import { useCorpusDeLaCampagne } from '../modules/session/hooks/useCorpusDeLaCampagne';
 import { useBattementDuMinuteur } from '../modules/clock/useBattementDuMinuteur';
 import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
@@ -128,6 +129,17 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
       soirée de notes serait les prendre pour rien.
     */
     usePrechauffageDuModele(seanceOuverte);
+
+    /*
+      **Et Voice-to-Light, pour la même raison que les trois précédents.**
+
+      Accroché au panneau des lumières, l'effet s'arrêterait dès que le meneur
+      quitte cet écran — or c'est en pleine scène qu'on le veut, pas devant le
+      réglage. Le crochet lit le niveau de voix par `getState()` dans sa boucle
+      et non par abonnement : à soixante images par seconde, un abonnement ferait
+      rendre toute l'application.
+    */
+    useLumiereQuiSuitLaVoix();
 
     // Activate Tactical AI listeners
     useHardwareBridge();

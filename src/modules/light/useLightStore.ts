@@ -76,6 +76,16 @@ interface LightState {
     globalBrightness: number; 
     /** Durée par défaut des transitions entre scènes (ms) */
     transitionTimeMs: number; 
+    /**
+     * **La lumière suit-elle la voix du meneur ?** — jalon d'avril 2026.
+     *
+     * Éteint par défaut, et il doit le rester : c'est un effet qui s'assume,
+     * pas un comportement qu'on découvre. Tant qu'il est actif, la brillance
+     * est **commune à toutes les lampes** — les couleurs de la scène restent,
+     * son contraste de brillance est aplani. C'est le prix d'une seule commande
+     * de groupe au lieu d'une par lampe, et il se rend en éteignant le mode.
+     */
+    suivreLaVoix: boolean;
 
     // Scenes
     /** Catalogue des 18 scènes disponibles */
@@ -98,6 +108,7 @@ interface LightState {
     // Actions - Global
     setGlobalBrightness: (val: number) => void;
     setTransitionTime: (ms: number) => void;
+    setSuivreLaVoix: (actif: boolean) => void;
 
     // Actions - Scenes
     /** Capture l'état actuel de toutes les lampes dans une scène */
@@ -156,6 +167,14 @@ export const useLightStore = create<LightState>()(
 
             globalBrightness: 100,
             transitionTimeMs: 5000,
+            /*
+              **Éteint au démarrage, et volontairement NON persisté** — voir le
+              `partialize` en bas de ce fichier. Un mode qui agit sur la pièce
+              elle-même se réarme à chaque fois qu'on le veut : le restaurer en
+              silence au lancement ferait battre les lampes du salon pendant une
+              soirée de préparation où personne ne parle à la table.
+            */
+            suivreLaVoix: false,
 
             scenes: createDefaultScenes(),
             activeSceneId: null,
@@ -202,6 +221,8 @@ export const useLightStore = create<LightState>()(
             }),
 
             setGlobalBrightness: (val) => set({ globalBrightness: Math.max(0, Math.min(100, val)) }),
+
+            setSuivreLaVoix: (actif) => set({ suivreLaVoix: actif }),
 
             setTransitionTime: (ms) => set({ transitionTimeMs: ms }),
 
@@ -295,6 +316,7 @@ export const useLightStore = create<LightState>()(
                     lastManualSceneId: null,
                     globalBrightness: 100,
                     transitionTimeMs: 5000,
+                    suivreLaVoix: false,
                     isSyncEnabled: true
                 });
             },

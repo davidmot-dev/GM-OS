@@ -2,9 +2,18 @@ import React from 'react';
 import { useLightStore } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { useTranslation } from 'react-i18next';
+import { useVoiceStore } from '../../voice/useVoiceStore';
 
 export const Sidebar: React.FC = () => {
-    const { status, bridgeIp, globalBrightness, setGlobalBrightness } = useLightStore();
+    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix } = useLightStore();
+    /*
+      **On dit pourquoi le mode ne fait rien, plutôt que de le rendre
+      inaccessible.** Armé micro coupé, il attend sans rien montrer : un
+      interrupteur qui reste sans effet sans expliquer se fait prendre pour une
+      panne. C'est la règle des trois points du repli de séance, vue de l'autre
+      côté.
+    */
+    const voixActive = useVoiceStore(e => e.isActive);
     const { t } = useTranslation('modules');
 
     const handlePair = async () => {
@@ -144,6 +153,32 @@ export const Sidebar: React.FC = () => {
                         className="w-full h-1.5 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
                     />
                 </div>
+            </div>
+
+            {/* Voice-to-Light — jalon d'avril 2026 */}
+            <div className="flex flex-col gap-2">
+                <button
+                    onClick={() => setSuivreLaVoix(!suivreLaVoix)}
+                    className={`group flex items-center justify-between p-4 rounded-xl border transition-all ${
+                        suivreLaVoix
+                            ? 'bg-accent/20 border-accent/40'
+                            : 'bg-app-bg/50 border-white/10 hover:bg-app-bg'
+                    }`}
+                >
+                    <div className="flex items-center gap-3">
+                        <span className={`material-symbols-outlined transition-transform group-hover:scale-110 ${suivreLaVoix ? 'text-accent' : 'text-slate-400'}`}>graphic_eq</span>
+                        <span className={`font-bold ${suivreLaVoix ? 'text-app-text' : 'text-slate-300'}`}>{t('light.sidebar.suivre_la_voix')}</span>
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${suivreLaVoix ? 'text-accent' : 'text-slate-600'}`}>
+                        {suivreLaVoix ? t('light.sidebar.suivre_la_voix_actif') : t('light.sidebar.suivre_la_voix_inactif')}
+                    </span>
+                </button>
+                {suivreLaVoix && !voixActive && (
+                    <p className="text-[11px] text-amber-400/80 px-1">{t('light.sidebar.suivre_la_voix_sans_micro')}</p>
+                )}
+                {suivreLaVoix && (
+                    <p className="text-[11px] text-slate-500 px-1">{t('light.sidebar.suivre_la_voix_note')}</p>
+                )}
             </div>
 
             {/* Quick Flash Buttons */}

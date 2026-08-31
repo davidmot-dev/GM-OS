@@ -685,7 +685,12 @@
       "healing_green": "Vert de Soin",
       "emergency_blackout": "Blackout d'Urgence",
       "prompt_timeout": "Délai d'appairage dépassé. Veuillez réessayer et appuyer sur le bouton du pont Hue.",
-      "prompt_no_bridge": "Aucun pont trouvé automatiquement."
+      "prompt_no_bridge": "Aucun pont trouvé automatiquement.",
+      "suivre_la_voix": "La lumière suit la voix",
+      "suivre_la_voix_actif": "Actif",
+      "suivre_la_voix_inactif": "Éteint",
+      "suivre_la_voix_sans_micro": "En attente du micro : activez Voice-OS pour que l'effet démarre.",
+      "suivre_la_voix_note": "Les couleurs de la scène restent ; leur contraste de brillance est aplani tant que le mode dure."
     },
     "top": {
       "transition_time": "Temps de Transition",

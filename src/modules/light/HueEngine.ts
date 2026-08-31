@@ -812,6 +812,30 @@ export class HueEngine {
         this.flashTimeout = null;
     }
 
+    /**
+     * **Pose une brillance commune à toutes les lampes, en UNE requête.**
+     *
+     * Employée par Voice-to-Light, qui pousse jusqu'à huit fois par seconde.
+     * `setLightState` ne convient pas ici : six lampes feraient six requêtes par
+     * envoi, soit quarante-huit par seconde, et *le pont Hue en tient une
+     * dizaine.* `/groups/0/action` est le groupe « toutes les lampes » de l'API,
+     * et il ne coûte qu'un appel quel que soit leur nombre.
+     *
+     * **On n'envoie que `bri`** : les couleurs de la scène restent en place. Le
+     * contraste de brillance entre lampes, lui, est aplani tant que le mode
+     * dure — c'est le prix de la requête unique, et il se rend en réappliquant
+     * la scène à l'arrêt.
+     *
+     * `transitiontime: 1` (100 ms) : la lumière doit suivre la voix, pas la
+     * commenter une seconde plus tard.
+     */
+    async modulerLaBrillance(bri: number) {
+        await this.request('PUT', '/groups/0/action', {
+            bri: Math.round(bri),
+            transitiontime: 1,
+        });
+    }
+
     async extinguishAll() {
         if (this.flashTimeout) {
             clearTimeout(this.flashTimeout);

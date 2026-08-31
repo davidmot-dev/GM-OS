@@ -685,7 +685,12 @@
       "healing_green": "Healing Green",
       "emergency_blackout": "Emergency Blackout",
       "prompt_timeout": "Pairing timeout. Please try again and press the button on the Hue Bridge.",
-      "prompt_no_bridge": "No bridge found automatically."
+      "prompt_no_bridge": "No bridge found automatically.",
+      "suivre_la_voix": "Light follows the voice",
+      "suivre_la_voix_actif": "On",
+      "suivre_la_voix_inactif": "Off",
+      "suivre_la_voix_sans_micro": "Waiting for the mic: turn Voice-OS on for the effect to start.",
+      "suivre_la_voix_note": "Scene colours stay; their brightness contrast is flattened while the mode is on."
     },
     "top": {
       "transition_time": "Transition Time",
