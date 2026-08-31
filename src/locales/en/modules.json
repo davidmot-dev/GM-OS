@@ -585,7 +585,9 @@
       "document": "{{ext}} File"
     },
     "notifications": {
-      "entityRemoved": "Removing {{name}} from Player Hub."
+      "entityRemoved": "Removing {{name}} from Player Hub.",
+      "projectionFailed": "Projection failed.",
+      "noPortrait": "{{name}} has no portrait to project."
     },
     "events": {
       "imageProjected": {

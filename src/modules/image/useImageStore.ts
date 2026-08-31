@@ -17,6 +17,19 @@ import i18n from '../../i18n';
 // import { ImageService } from './logic/ImageService'; // Broken by circular dependency
 
 /**
+ * **Le portrait d'une entité, cherché dans les trois champs qui le portent.**
+ *
+ * Ce n'est pas de la tolérance gratuite : les onze appelants de `projectEntity`
+ * ne remplissent pas tous le même champ. Dix posent `avatar` (PNJ, PJ, indices
+ * de `CluesManager`, cartes des paquets), et `SessionClueDeck` pose `imageUrl`.
+ * *Le type les déclare tous les trois depuis toujours ; lire un seul d'entre eux
+ * ferait taire un appelant sur onze, en silence.*
+ */
+export function portraitDeLEntite(entite: ProjectedEntity): string | undefined {
+    return entite.avatar || entite.imageUrl || entite.portraitUrl || undefined;
+}
+
+/**
  * Représente l'état global du Image-OS.
  */
 interface ImageState {
@@ -211,6 +224,33 @@ export const useImageStore = create<ImageState>()(
                     return;
                 }
 
+                /*
+                  ⛔ **Le défaut trouvé par David en pleine partie, le 2026-08-31 :**
+                  *« lorsque je veux projeter l'image d'un PNJ, rien n'apparaît sur
+                  le Player Hub »*.
+
+                  On passait ici **l'entité entière et la cible** à une fonction qui
+                  attend **un portrait et un nom**. L'objet arrivait là où une chaîne
+                  était attendue, le service levait, son `catch` avalait tout : rien
+                  ne partait au hub, et rien ne le disait. Depuis le 2026-04-26.
+
+                  *Deux `as any` suffisaient à faire passer la compilation sur deux
+                  signatures qui n'avaient rien en commun.* Ils sont retirés — c'est
+                  eux, et non la faute de frappe, qui ont coûté quatre mois.
+                */
+                const portrait = entity ? portraitDeLEntite(entity) : undefined;
+
+                /*
+                  **Sans portrait, on le dit — et on ne touche à rien.** Éteindre la
+                  projection en cours parce qu'un PNJ n'a pas d'image punirait le
+                  meneur pour un geste qui n'a rien cassé, et le message d'échec
+                  générique ne lui aurait pas appris ce qui manque.
+                */
+                if (entity && !portrait) {
+                    gmToast(i18n.t('modules:image.notifications.noPortrait', { name: entity.name }), 'warning');
+                    return;
+                }
+
                 // Optimiste : On pose l'entité
                 set({ projectedEntity: entity });
                 if (entity) {
@@ -218,8 +258,8 @@ export const useImageStore = create<ImageState>()(
                 }
 
                 import('./logic/ImageService').then(({ ImageService }) => {
-                    ImageService.projectEntity(entity as any, target as any).then((avatar: any) => {
-                        if (!avatar && entity !== null) {
+                    ImageService.projectEntity(portrait, entity?.name ?? '', entity?.id).then((projete) => {
+                        if (!projete && entity !== null) {
                             get().blackout();
                             gmToast(i18n.t('modules:image.notifications.projectionFailed'));
                         } else if (entity) {

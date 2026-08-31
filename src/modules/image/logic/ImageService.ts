@@ -11,8 +11,18 @@ import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 export class ImageService {
     /**
      * Projette un média sur une cible spécifiée.
+     *
+     * `marque` est **ce qu'on inscrit comme occupant la cible**, et il se
+     * distingue du chemin envoyé : une entité projetée occupe le hub sous **son
+     * identifiant**, pas sous l'adresse de son portrait. *C'est ce que lisent les
+     * écrans pour savoir ce qui est à l'antenne ;* le confondre avec le chemin
+     * ferait perdre le lien avec la fiche dès qu'on projette un PNJ.
      */
-    static async projectMedia(mediaPath: string, target: ProjectionTarget): Promise<string | null> {
+    static async projectMedia(
+        mediaPath: string,
+        target: ProjectionTarget,
+        marque: string = mediaPath,
+    ): Promise<string | null> {
         try {
             console.log(`[ImageService] Projecting ${mediaPath} to ${target}...`);
             const bridge = window.appBridge;
@@ -23,7 +33,7 @@ export class ImageService {
                 console.log(`[ImageService] Sending Local Projection via launchDisplay`);
                 bridge?.image?.launchDisplay([mediaPath], target);
                 
-                (window as any).useImageStore.getState().setProjection(target, mediaPath);
+                (window as any).useImageStore.getState().setProjection(target, marque);
                 return mediaPath;
             }
 
@@ -32,7 +42,7 @@ export class ImageService {
             const resolvedPath = await resolveToSendableUrl(mediaPath);
             if (resolvedPath) {
                 window.appBridge?.image?.syncHubData('image', resolvedPath);
-                (window as any).useImageStore.getState().setProjection(target, mediaPath);
+                (window as any).useImageStore.getState().setProjection(target, marque);
                 return resolvedPath;
             }
 
@@ -44,28 +54,40 @@ export class ImageService {
     }
 
     /**
-     * Projette une entité (PNJ/PJ) via son portrait.
+     * Projette une entité (PNJ, PJ, indice, carte) **par son portrait**.
+     *
+     * ⛔ **Le défaut trouvé par David en pleine partie, le 2026-08-31 :** *« lorsque
+     * je veux projeter l'image d'un PNJ, rien n'apparaît sur le Player Hub »*.
+     *
+     * Le magasin appelait `projectEntity(entity, target)` — l'entité entière, puis
+     * la cible — quand cette fonction attendait `(mediaId, name)`. L'objet arrivait
+     * donc là où une chaîne était attendue, `resolveToSendableUrl` faisait
+     * `src.startsWith(…)` dessus, et l'exception était **avalée par le `catch`
+     * ci-dessous**. Rien ne partait, rien ne se disait. Depuis le 2026-04-26.
+     *
+     * *Deux signatures qui se ressemblent assez pour passer la compilation grâce à
+     * deux `as any` : c'est le `as any` qui a coûté quatre mois, pas la faute de
+     * frappe.*
+     *
+     * **Et cette fonction ne refait plus le travail de `projectMedia`.** Elle en
+     * dupliquait le corps à une ligne près ; le même motif que partout ailleurs
+     * dans ce projet — *deux écrivains pour une même donnée finissent par
+     * diverger.* Un seul chemin porte désormais la projection.
      */
-    static async projectEntity(mediaId: string, name: string): Promise<void> {
-        try {
-            console.log(`[ImageService] Projecting Entity: ${name} (${mediaId})...`);
-            
-            const store = (window as any).useImageStore.getState();
-            const target = store.projectionTarget;
-
-            if (target !== 'hub') {
-                window.appBridge?.image?.launchDisplay([mediaId], target);
-                store.setProjection(target, mediaId);
-            } else {
-                const resolved = await resolveToSendableUrl(mediaId);
-                if (resolved) {
-                    window.appBridge?.image?.syncHubData('image', resolved);
-                    store.setProjection(target, mediaId);
-                }
-            }
-        } catch (error) {
-            console.error('[ImageService] Error projecting entity:', error);
+    static async projectEntity(
+        portrait: string | undefined,
+        name: string,
+        marque?: string,
+    ): Promise<string | null> {
+        if (!portrait) {
+            console.warn(`[ImageService] ${name} n'a pas de portrait à projeter.`);
+            return null;
         }
+        console.log(`[ImageService] Projecting Entity: ${name} (${portrait})...`);
+        const target = (window as any).useImageStore.getState().projectionTarget;
+        // L'entité occupe la cible sous son identifiant, jamais sous l'adresse de
+        // son portrait : c'est ce lien-là qui rattache la projection à la fiche.
+        return this.projectMedia(portrait, target, marque ?? portrait);
     }
 
     /**
