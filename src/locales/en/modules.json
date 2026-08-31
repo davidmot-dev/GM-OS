@@ -726,7 +726,36 @@
         "heartbeat": "Heartbeat",
         "flashlight": "Flashlight",
         "radiation": "Radiation",
-        "breathing": "Breathing"
+        "breathing": "Breathing",
+        "abysses": "The Abyss",
+        "alerte": "Red Alert",
+        "alien": "Alien Hive",
+        "aurore": "Northern Lights",
+        "crepuscule": "Dusk",
+        "cyber-night": "Cyberpunk Night",
+        "disco": "Disco Party",
+        "fantome": "Spectre / Ghost",
+        "foret-profonde": "Emerald Forest",
+        "hyperspace": "Hyperspace",
+        "lave": "Molten Lava",
+        "lever-soleil": "Sunrise",
+        "lumiere-ville": "City Lights",
+        "neant": "The Void",
+        "passerelle": "Starship Bridge",
+        "reacteur": "Reactor Core",
+        "stroboscope": "Strobe",
+        "terminal": "Retro Terminal",
+        "toxique": "Toxic Cloud",
+        "trou-noir": "Black Hole",
+        "zen": "Zen Meditation"
+      },
+      "categories": {
+        "alerts": "🚨 Alerts & Danger",
+        "fantasy": "⚔️ Fantasy & Magic",
+        "misc": "⚙️ Misc",
+        "nature": "🌲 Nature & Elements",
+        "space": "🚀 Space & Sci-Fi",
+        "urban": "🏙️ Urban & Tech"
       }
     }
   },
@@ -2696,7 +2725,14 @@
           "hidden_subtitle": "Flipped",
           "oracle_subtitle": "Oracle : {{name}}",
           "card_name_fallback": "Card #{{idx}}"
-        }
+        },
+        "draw_pile_empty": "Click the draw pile"
+      },
+      "notes": {
+        "auto_save": "Auto-Save",
+        "close_hint": "Close this window to save",
+        "placeholder": "Start taking notes here... Major events, memorable quotes, PC actions...",
+        "quick_input": "Quick Notes"
       }
     }
   },

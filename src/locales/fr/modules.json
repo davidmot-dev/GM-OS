@@ -2833,7 +2833,10 @@
         "injecting_system": "Injection dans la base de données système...",
         "injecting_campaign": "Injection dans la base de données...",
         "import_success": "Import terminé !",
-        "unknown_error": "Erreur inconnue"
+        "unknown_error": "Erreur inconnue",
+        "driver_scraping": "Extraction des données du système…",
+        "export_scraping": "Extraction des données de la campagne…",
+        "manifest_validation": "Validation du manifeste…"
       }
     }
   },
