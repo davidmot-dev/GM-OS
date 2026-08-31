@@ -9,8 +9,11 @@ quatre sont clos** — thème, fiche HTML, sauvegarde des images, sauvegarde des
 fiches, les trois derniers **éprouvés en réel, aller et retour**.
 
 **Au 2026-08-30, Deck-OS tombe à son tour — construit ET éprouvé en réel le jour
-même, David : *« tout fonctionne bien »*. Les cinq chantiers sont clos.** Ne
-reste que l'essai en conditions de l'afficheur Ulanzi.
+même, David : *« tout fonctionne bien »*. Les cinq chantiers sont clos.**
+
+**Au 2026-08-31, ce registre absorbe les autres listes** — plan IA, plan du
+Cortex, réconciliation d'août, feuille de route Ulanzi. Tout ce qui reste, tout
+plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 > **Revérifié dans le code le 2026-08-24**, chantier par chantier, sans rien recopier d'un document.
 > Base saine : `tsc -b` propre, **2 321 tests au vert** (190 fichiers, 1 ignoré). Les trois états
@@ -18,6 +21,71 @@ reste que l'essai en conditions de l'afficheur Ulanzi.
 > doublon des Quarts (supprimé), les confirmations de suppression (posées), le mode hors carte du Cortex
 > (construit), et les chiffres du corpus. *Une liste de restes qui vit à deux endroits en désigne un
 > faux* — c'est la troisième fois que ce document paie cette règle.
+
+---
+
+## ⭐ Le registre consolidé — 2026-08-31
+
+**Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
+comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
+document du dépôt : elle venait d'une mémoire de session restée au 21/08. *Une mémoire vieillit comme un
+document, et elle n'a pas de `git log` pour le dire.* D'où cette section : **une seule liste, vérifiée
+dans le code, qui absorbe toutes les autres.**
+
+> Vérifié le 2026-08-31 : `tsc -b` propre, **3 158 tests au vert**, arbre propre et poussé.
+
+### 1 · Ce qui se joue et ne se code pas — la catégorie P6
+
+**C'est elle qui a produit tous les défauts des 18-19/08 et les huit de la séance du 21/08**, dont un jet
+à seize dés. Aucun n'est sorti d'une relecture de code.
+
+| Jamais vu tourner | Depuis |
+| --- | --- |
+| La **bascule de combat entre deux scènes**, et le retour des jetons | 20/08 |
+| L'**aller-retour d'image** d'une ambiance | — |
+| La **consigne de langue** — on sait qu'elle part, pas que le modèle l'applique | — |
+| La **fusion et la scission de scènes** à la revue de fin de séance | 21/08 |
+| Le **journal de contexte d'Ollama** | 22/08 |
+| Les **six widgets Ulanzi ensemble** (un seul a été éprouvé) | 30-31/08 |
+| Le **préchauffage du modèle** — gain mesuré au banc, pas à la table | 31/08 |
+
+### 2 · Ce qui se décide à la table — axe N.3
+
+Les **tailles** sont validées par David le 24/08 et vivent dans une seule table. Ce qui manque pour
+**carte, PNJ, Oracle et journal**, ce n'est pas la taille : c'est **quels éléments grossissent**.
+*Une densité se juge en jouant, pas en regardant* — choisir maintenant serait deviner quatre fois pour
+économiser une séance.
+
+### 3 · Ce qui se code, et c'est court
+
+| | Quoi | Où |
+| --- | --- | --- |
+| a | ⚠️ **« alliés < 2 cases » est resté en dur** — résidu de l'unité de distance corrigée le 22/08 : les ennemis et les neutres s'annoncent en `${unite}` déclarée par le pilote, cette ligne non. **Le seuil de 2 est lui aussi en unités de grille.** *Une correction appliquée à trois lignes sur quatre laisse la quatrième mentir avec l'autorité des trois autres.* | `TacticalNarrativeService.ts:451` |
+| b | **`roadmap-v6.md` n'a pas bougé depuis le 16 avril.** *Une roadmap fausse coûte plus qu'une roadmap absente* — à réconcilier ou à archiver | `documentation/Architecture/` |
+| c | **L'étape 9 du plan de trame est caduque** (la Forge Chronique a été retirée le 17/08) et reste écrite comme si elle tenait | `2026-08-08-trame-narrative-cycle-seance.md` |
+| d | **Remesurer le « +51 s pour doubler le plafond RAG ».** Une **mesure**, pas une décision : celle de David tient, mais son motif ne peut plus être le prefill, qui n'en explique que ~6 à 660 tok/s | § 11 de `2026-08-07-acceleration-ia.md` |
+
+### 4 · Garé par décision, et à ne pas rouvrir sans raison
+
+- **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
+  rien, et un courtier est un service de plus à faire vivre. *La seule des quatre directions dont le coût
+  soit une dépendance d'infrastructure et non du code.*
+
+### 5 · Clos et vérifié dans le code — ce qui ne doit plus être réannoncé
+
+*Ces cinq points ont été présentés comme « à faire » le 31/08 alors qu'ils étaient faits. Les ancres sont
+là pour que la vérification prenne dix secondes la prochaine fois.*
+
+| Annoncé comme ouvert | Réalité, vérifiée le 31/08 |
+| --- | --- |
+| `activeDriver.tactical` non transmis | ✅ `tacticalConfig` est un paramètre — `TacticalNarrativeService.ts:103` |
+| `faction` dérivée à `enemy` | ✅ `faction \|\| (isPlayer ? 'player' : 'neutral')` — `useCombatStore.ts:759` |
+| Contexte RAG envoyé en double | ✅ `sansPersona: true` + `{ systemOnly, limit: 2 }` — `useTacticalAIStore.ts:176` |
+| Unité « cases » en dur | ✅ `${unite}` déclarée par le pilote — **sauf le point 3a ci-dessus** |
+| Axe O — `relu: false` lu par personne | ✅ mention « non relue » et déclaration en un clic — `AIChatPanel.tsx:443` |
+
+**Et pour mémoire, tous les axes A → O du plan IA sont clos**, le Cortex avec eux (ses 5 axes le 22/08,
+ses 3 questions les 22-23, ses vigilances le 24).
 
 ---
 
