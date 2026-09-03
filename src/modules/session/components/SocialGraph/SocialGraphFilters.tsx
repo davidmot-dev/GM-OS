@@ -10,7 +10,8 @@ import {
     Lock,
     Unlock,
     RefreshCw,
-    Sliders
+    Sliders,
+    PinOff
 } from 'lucide-react';
 
 interface CustomSelectProps {
@@ -77,6 +78,9 @@ interface SocialGraphFiltersProps {
     isLocked?: boolean;
     onToggleLock?: () => void;
     onResetLayout?: () => void;
+    /** Combien de nœuds le meneur a posés à la main. */
+    nbEpingles?: number;
+    onDetacherTout?: () => void;
     
     // Nouveaux réglages de physique
     physicsSettings: {
@@ -109,6 +113,8 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
     isLocked,
     onToggleLock,
     onResetLayout,
+    nbEpingles = 0,
+    onDetacherTout,
     physicsSettings,
     setPhysicsSettings,
     isSettingsOpen,
@@ -145,6 +151,23 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     >
                         {isLocked ? <Lock size={20} /> : <Unlock size={20} />}
                     </button>
+                    {/*
+                      Il n'apparaît que s'il y a quelque chose à détacher : *un
+                      bouton toujours là pour un cas rare se lit comme du décor,
+                      et on ne le voit plus le jour où il sert.*
+                    */}
+                    {nbEpingles > 0 && onDetacherTout && (
+                        <button
+                            onClick={onDetacherTout}
+                            className="p-3 rounded-xl transition-all text-amber-500 hover:bg-amber-500/20 relative"
+                            title={`Détacher les ${nbEpingles} nœud(s) posés à la main`}
+                        >
+                            <PinOff size={20} />
+                            <span className="absolute -top-0.5 -right-0.5 text-[9px] font-black bg-amber-500 text-black rounded-full w-4 h-4 flex items-center justify-center">
+                                {nbEpingles}
+                            </span>
+                        </button>
+                    )}
                     <button 
                         onClick={onResetLayout} 
                         className="p-3 hover:bg-red-500/20 rounded-xl transition-all text-slate-400 hover:text-red-400" 

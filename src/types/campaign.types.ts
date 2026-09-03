@@ -122,6 +122,22 @@ export interface Campaign {
     clotureeLe?: number;
 
     // Social Graph Optimization
+    /** L'instantané pris au verrouillage : TOUS les nœuds, tels qu'ils étaient. */
     nodePositions?: Record<string, { x: number; y: number }>;
     isGraphLocked?: boolean;
+    /**
+     * **Les nœuds que le meneur a posés à la main.**
+     *
+     * *Défaut signalé par David le 2026-09-03 : « dès que je libère les
+     * positions, tout se remélange et je n'arrive pas à repositionner les choses
+     * facilement ».*
+     *
+     * Distinct de `nodePositions`, et il faut qu'il le soit : celui-ci est une
+     * **capture en bloc** prise au verrouillage, celui-là une suite de
+     * **décisions**. Les confondre ferait qu'un déverrouillage épinglerait tout
+     * le graphe — soit exactement le verrou qu'on vient de lever.
+     *
+     * Une décision passe donc devant une capture, verrouillé ou non.
+     */
+    noeudsEpingles?: Record<string, { x: number; y: number }>;
 }

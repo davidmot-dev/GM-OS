@@ -39,6 +39,10 @@ export interface CampaignSliceActions {
     freezeGraphLayout: (campaignId: string, positions: Record<string, { x: number; y: number }>) => void;
     unfreezeGraphLayout: (campaignId: string) => void;
     resetGraphLayout: (campaignId: string) => void;
+    /** Retient un nœud là où le meneur vient de le poser. */
+    epinglerLeNoeud: (campaignId: string, noeudId: string, position: { x: number; y: number }) => void;
+    /** Rend un nœud à la simulation. Sans `noeudId`, les rend tous. */
+    detacherLesNoeuds: (campaignId: string, noeudId?: string) => void;
 }
 
 export type CampaignSlice = CampaignSliceState & CampaignSliceActions;
@@ -183,10 +187,38 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
             ),
         })),
 
+    /*
+      **Réinitialiser efface tout, épingles comprises.** C'est le seul geste qui
+      rende le graphe à la simulation seule : le laisser garder les épingles
+      donnerait un « reset » qui ne remet pas à zéro, et le meneur chercherait
+      longtemps pourquoi trois nœuds refusent de bouger.
+    */
     resetGraphLayout: (campaignId) =>
         set((state) => ({
             campaigns: state.campaigns.map((c) =>
-                c.id === campaignId ? { ...c, nodePositions: undefined, isGraphLocked: false } : c
+                c.id === campaignId
+                    ? { ...c, nodePositions: undefined, noeudsEpingles: undefined, isGraphLocked: false }
+                    : c
             ),
+        })),
+
+    epinglerLeNoeud: (campaignId, noeudId, position) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId
+                    ? { ...c, noeudsEpingles: { ...(c.noeudsEpingles ?? {}), [noeudId]: position } }
+                    : c
+            ),
+        })),
+
+    detacherLesNoeuds: (campaignId, noeudId) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) => {
+                if (c.id !== campaignId) return c;
+                if (!noeudId) return { ...c, noeudsEpingles: undefined };
+                const reste = { ...(c.noeudsEpingles ?? {}) };
+                delete reste[noeudId];
+                return { ...c, noeudsEpingles: reste };
+            }),
         })),
 });

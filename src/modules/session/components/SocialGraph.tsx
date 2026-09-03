@@ -25,6 +25,22 @@ import SocialGraphFilters from './SocialGraph/SocialGraphFilters';
 import NodeDetailPanel from './SocialGraph/NodeDetailPanel';
 import RelationForm from './SocialGraph/RelationForm';
 
+/**
+ * **Où chaque nœud se trouvait la dernière fois qu'on l'a vu.**
+ *
+ * *Défaut signalé par David le 2026-09-03 : « dès que je libère les positions,
+ * tout se remélange ».* Le graphe est reconstruit à chaque filtre, à chaque
+ * recherche, à chaque déverrouillage — et un nœud reconstruit **sans
+ * coordonnées** est reposé par d3 sur une spirale, d'où qu'il vînt. *Ce n'est
+ * pas la simulation qui remélangeait : c'est qu'on lui rendait des inconnus à
+ * chaque fois.*
+ *
+ * Hors de React à dessein : ce n'est pas un état — rien ne doit se redessiner
+ * quand il change — et un `useRef` lu pendant le rendu serait une lecture que
+ * React interdit à juste titre. C'est un cache, et il se comporte comme tel.
+ */
+const POSITIONS_VIVANTES = new Map<string, { x: number; y: number }>();
+
 const SocialGraph: React.FC = () => {
     const { t } = useTranslation();
     const { 
@@ -43,6 +59,8 @@ const SocialGraph: React.FC = () => {
         freezeGraphLayout,
         unfreezeGraphLayout,
         resetGraphLayout,
+        epinglerLeNoeud,
+        detacherLesNoeuds,
         navigateToNpcDetail,
         navigateToPlayerDetail
     } = useSessionOSStore();
@@ -105,6 +123,23 @@ const SocialGraph: React.FC = () => {
 
     const imgCache = useRef<Record<string, HTMLImageElement>>({});
 
+    /**
+     * La dernière position connue d'un nœud : ce que la simulation a produit,
+     * à défaut l'instantané du verrouillage.
+     *
+     * Voir `POSITIONS_VIVANTES` : le cache vit hors de React, et cette fonction
+     * est la seule à le lire.
+     */
+    const positionDe = useCallback(
+        (id: string) => POSITIONS_VIVANTES.get(id) ?? activeCampaign?.nodePositions?.[id],
+        [activeCampaign?.nodePositions],
+    );
+
+    /* Changer de campagne rend le cache sans objet : ses nœuds n'existent plus. */
+    useEffect(() => {
+        POSITIONS_VIVANTES.clear();
+    }, [activeCampaignId]);
+
     // Avatar Resolution with Cache Hook
     const { resolvedAvatars, resolveBatch } = useAvatarResolver();
 
@@ -114,8 +149,28 @@ const SocialGraph: React.FC = () => {
             type: typeFilter, 
             faction: factionFilter, 
             search: searchQuery 
-        }, activeCampaign?.nodePositions, isGraphLocked && !isSettingsOpen), 
-    [entities, players, activeCampaignId, typeFilter, factionFilter, searchQuery, activeCampaign?.nodePositions, isGraphLocked, isSettingsOpen]);
+        }, {
+            /*
+              **On sème les dernières positions vues, jamais rien de moins.**
+              L'instantané du verrouillage sert de fond ; ce que la simulation a
+              produit depuis le recouvre, sinon rouvrir un filtre renverrait le
+              graphe à la disposition d'il y a trois séances.
+            */
+            positionDe,
+            epingles: activeCampaign?.noeudsEpingles,
+            verrouille: isGraphLocked && !isSettingsOpen,
+        }), 
+    [entities, players, activeCampaignId, typeFilter, factionFilter, searchQuery,
+     positionDe, activeCampaign?.noeudsEpingles, isGraphLocked, isSettingsOpen]);
+
+    /** Relève ce que la simulation a produit, pour que le prochain calcul en parte. */
+    const releverLesPositions = useCallback(() => {
+        data.nodes.forEach(node => {
+            if (node.x !== undefined && node.y !== undefined) {
+                POSITIONS_VIVANTES.set(node.id, { x: node.x, y: node.y });
+            }
+        });
+    }, [data.nodes]);
 
     const uniqueFactions = useMemo(() => 
         getUniqueFactions(entities, players, activeCampaignId),
@@ -184,6 +239,48 @@ const SocialGraph: React.FC = () => {
         }
     }, [activeCampaignId, isGraphLocked, data.nodes, freezeGraphLayout, unfreezeGraphLayout]);
 
+    /**
+     * **Un nœud posé à la main reste où on l'a lâché.**
+     *
+     * *Second défaut signalé par David : « je n'arrive pas à repositionner les
+     * choses facilement à cause des réglages du nexus ».* Sans ces deux lignes,
+     * lâcher un nœud le rend aux forces, qui le ramènent où elles veulent — et
+     * plus les réglages de physique sont vivants, plus le geste est vain.
+     *
+     * L'épingle est **retenue dans la campagne** au moment du lâcher : une
+     * disposition qu'il faut refaire à chaque ouverture n'est pas une
+     * disposition.
+     */
+    const handleNodeDragEnd = useCallback((node: GraphNode) => {
+        if (node.x === undefined || node.y === undefined) return;
+        node.fx = node.x;
+        node.fy = node.y;
+        POSITIONS_VIVANTES.set(node.id, { x: node.x, y: node.y });
+        if (activeCampaignId) epinglerLeNoeud(activeCampaignId, node.id, { x: node.x, y: node.y });
+    }, [activeCampaignId, epinglerLeNoeud]);
+
+    /**
+     * Rend un nœud — ou tous — à la simulation.
+     *
+     * On efface aussi `fx/fy` sur l'objet vivant : le magasin ne suffit pas, la
+     * simulation tourne sur les nœuds qu'elle tient déjà en main.
+     */
+    const detacher = useCallback((noeudId?: string) => {
+        if (!activeCampaignId) return;
+        detacherLesNoeuds(activeCampaignId, noeudId);
+
+        const fg = graphRef.current;
+        const sim = fg && typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sim?.nodes().forEach((node: any) => {
+            if (!noeudId || node.id === noeudId) {
+                node.fx = null;
+                node.fy = null;
+            }
+        });
+        sim?.alpha(0.3).restart();
+    }, [activeCampaignId, detacherLesNoeuds]);
+
     const handleResetLayout = useCallback(() => {
         if (!activeCampaignId) return;
         resetGraphLayout(activeCampaignId);
@@ -218,6 +315,9 @@ const SocialGraph: React.FC = () => {
 
     const [, setForceUpdate] = useState(0);
 
+    /** Les nœuds posés à la main, pour les marquer et pour les détacher. */
+    const epingles = activeCampaign?.noeudsEpingles;
+
     const paintNode = useCallback((node: GraphNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
         const size = node.type === 'pc' ? 24 : 20;
         const fontSize = 12 / globalScale;
@@ -230,6 +330,20 @@ const SocialGraph: React.FC = () => {
         ctx.fillStyle = node.id === selectedNodeId ? 'rgba(0, 255, 194, 0.2)' : 'rgba(255, 255, 255, 0.05)';
         ctx.fill();
         
+        /*
+          **L'épingle se voit.** Un nœud qui ne bouge plus sans qu'on sache
+          pourquoi passe pour un défaut : *une contrainte muette se cherche.*
+        */
+        if (epingles?.[node.id]) {
+            ctx.beginPath();
+            ctx.arc(nx + size * 0.72, ny - size * 0.72, 4, 0, 2 * Math.PI, false);
+            ctx.fillStyle = '#fbbf24';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+            ctx.lineWidth = 1 / globalScale;
+            ctx.stroke();
+        }
+
         // Border
         ctx.strokeStyle = node.type === 'pc' ? '#00e1ab' : '#94a3b8';
         ctx.lineWidth = 2 / globalScale;
@@ -277,7 +391,7 @@ const SocialGraph: React.FC = () => {
                 }
             }
         }
-    }, [selectedNodeId, resolvedAvatars, FALLBACK_AVATAR]);
+    }, [selectedNodeId, resolvedAvatars, FALLBACK_AVATAR, epingles]);
 
     const handleNodeClick = useCallback((node: GraphNode) => {
         setSelectedNodeId(node.id);
@@ -344,6 +458,8 @@ const SocialGraph: React.FC = () => {
                 isLocked={isGraphLocked}
                 onToggleLock={handleToggleLock}
                 onResetLayout={handleResetLayout}
+                nbEpingles={Object.keys(epingles ?? {}).length}
+                onDetacherTout={() => detacher()}
                 
                 // Nouveaux réglages de physique
                 physicsSettings={{
@@ -386,6 +502,8 @@ const SocialGraph: React.FC = () => {
                         linkColor={(link: GraphLink) => `${couleurDeRelation(link.type)}66`}
                         linkWidth={2}
                         onNodeClick={handleNodeClick}
+                        onNodeDragEnd={handleNodeDragEnd}
+                        onEngineStop={releverLesPositions}
                         onBackgroundClick={() => setSelectedNodeId(null)}
                         cooldownTicks={(isGraphLocked && !isSettingsOpen) ? 0 : 200}
                         d3VelocityDecay={(isGraphLocked && !isSettingsOpen) ? 1 : 0.1}
@@ -423,6 +541,8 @@ const SocialGraph: React.FC = () => {
                     )}
                     onNodeClick={handleNodeClick}
                     onRemoveRelation={handleRemoveRelation}
+                    estEpingle={!!epingles?.[selectedNode.id]}
+                    onDetacher={() => detacher(selectedNode.id)}
                     allNodes={data.nodes}
                     renderRelationForm={() => (
                         <RelationForm 

@@ -9,7 +9,8 @@ import {
     Info, 
     MoveRight, 
     MoveLeft,
-    Trash2
+    Trash2,
+    PinOff
 } from 'lucide-react';
 import { type GraphNode, type GraphLink } from '../../logic/socialNexusUtils';
 
@@ -30,6 +31,10 @@ interface NodeDetailPanelProps {
     onRemoveRelation: (targetId: string, type: string) => void;
     allNodes: GraphNode[];
     renderRelationForm: () => React.ReactNode;
+    /** Ce nœud a-t-il été posé à la main ? */
+    estEpingle?: boolean;
+    /** Le rendre à la simulation. */
+    onDetacher?: () => void;
 }
 
 const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
@@ -48,7 +53,9 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
     onNodeClick,
     onRemoveRelation,
     allNodes,
-    renderRelationForm
+    renderRelationForm,
+    estEpingle,
+    onDetacher
 }) => {
     const { t } = useTranslation();
     /*
@@ -68,6 +75,22 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                 <X size={20} />
             </button>
 
+
+            {/*
+              **Détacher se fait là où l'on regarde le nœud.** L'épingle se pose
+              d'un geste — on lâche le nœud — donc elle doit se retirer d'un
+              geste : *un réglage qui ne se défait que dans un menu n'est pas un
+              geste, c'est un piège.*
+            */}
+            {estEpingle && onDetacher && (
+                <button
+                    onClick={onDetacher}
+                    className="absolute top-6 right-16 p-2 hover:bg-amber-500/20 rounded-full transition-all text-amber-500"
+                    title="Détacher ce nœud : la simulation le reprend"
+                >
+                    <PinOff size={18} />
+                </button>
+            )}
 
             <div className="flex items-center gap-4 mb-2">
                 <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-neonCyan shadow-glow-cyan/20 bg-app-surface">

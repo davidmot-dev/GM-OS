@@ -27,6 +27,66 @@ export interface SocialGraphData {
     links: GraphLink[];
 }
 
+/** Une position retenue, quelle qu'en soit l'origine. */
+export type PositionRetenue = { x: number; y: number };
+
+/**
+ * **Où le graphe reprend, et ce qui n'y bouge pas.**
+ *
+ * *Défaut signalé par David le 2026-09-03 : « dès que je libère les positions,
+ * tout se remélange et je n'arrive pas à repositionner les choses facilement ».*
+ *
+ * Les deux moitiés du défaut tiennent dans la distinction `x/y` contre
+ * `fx/fy` :
+ *
+ * - **`x/y` est un point de départ.** Un nœud construit sans coordonnées est
+ *   posé par d3 sur une spirale, d'où qu'il vînt : c'est *ça*, le remélange au
+ *   déverrouillage. On sème donc les dernières positions connues, et la
+ *   simulation ne fait plus que se détendre à partir de ce qu'on voyait.
+ * - **`fx/fy` est une décision.** Seul un nœud posé à la main en reçoit — les
+ *   forces ne peuvent plus le reprendre, même quand le meneur joue avec les
+ *   réglages de physique.
+ *
+ * **Une épingle passe devant l'instantané de verrouillage**, toujours : le
+ * premier est une décision, le second une capture en bloc.
+ */
+export interface DispositionDuNexus {
+    /**
+     * Où ce nœud se trouvait la dernière fois qu'on l'a vu.
+     *
+     * **Une question posée, pas une table livrée** : les positions vivantes de
+     * l'écran changent à chaque tic de la simulation, et les figer dans un
+     * objet à chaque rendu ferait payer un calcul à chaque image — ou pire,
+     * lire une référence pendant le rendu, ce que React interdit à juste titre.
+     */
+    positionDe?: (id: string) => PositionRetenue | undefined;
+    /** Les nœuds posés à la main. Ils ne bougent plus. */
+    epingles?: Record<string, PositionRetenue>;
+    /** Tout est figé : l'instantané devient une contrainte. */
+    verrouille?: boolean;
+}
+
+/**
+ * Ce que chaque nœud reçoit comme coordonnées, et pourquoi.
+ *
+ * Rendu à part pour être éprouvé seul : c'est deux lignes de conséquence pour
+ * un défaut qui se voit à chaque ouverture du Nexus.
+ */
+export function placerLeNoeud(id: string, disposition?: DispositionDuNexus): Partial<GraphNode> {
+    const epingle = disposition?.epingles?.[id];
+    const capture = disposition?.positionDe?.(id);
+
+    // Une décision du meneur passe devant tout le reste.
+    if (epingle) return { x: epingle.x, y: epingle.y, fx: epingle.x, fy: epingle.y };
+
+    if (disposition?.verrouille) {
+        return capture ? { x: capture.x, y: capture.y, fx: capture.x, fy: capture.y } : {};
+    }
+
+    // Libre : on sème, on ne fige pas. C'est ce qui supprime le remélange.
+    return capture ? { x: capture.x, y: capture.y } : {};
+}
+
 /**
  * Filtre et prépare les données pour la visualisation du graphe social.
  */
@@ -39,8 +99,7 @@ export const prepareSocialGraphData = (
         faction: string;
         search: string;
     },
-    nodePositions?: Record<string, { x: number; y: number }>,
-    isLocked?: boolean
+    disposition?: DispositionDuNexus,
 ): SocialGraphData => {
     if (!campaignId) return { nodes: [], links: [] };
 
@@ -55,8 +114,7 @@ export const prepareSocialGraphData = (
             avatar: pc.portraitUrl,
             type: 'pc' as const,
             faction: pc.faction,
-            fx: isLocked ? nodePositions?.[pc.id]?.x : undefined,
-            fy: isLocked ? nodePositions?.[pc.id]?.y : undefined
+            ...placerLeNoeud(pc.id, disposition),
         })),
         ...campaignEntities.map(npc => ({
             id: npc.id,
@@ -64,8 +122,7 @@ export const prepareSocialGraphData = (
             avatar: npc.avatar,
             type: 'npc' as const,
             faction: npc.faction,
-            fx: isLocked ? nodePositions?.[npc.id]?.x : undefined,
-            fy: isLocked ? nodePositions?.[npc.id]?.y : undefined
+            ...placerLeNoeud(npc.id, disposition),
         }))
     ];
 
