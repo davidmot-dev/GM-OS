@@ -2929,7 +2929,8 @@
       "noise_gate": "Noise Gate",
       "auto_ducking": "Auto-Ducking",
       "noise_suppression": "Suppression de bruit",
-      "noise_suppression_hint": "Débruiteur du navigateur. À couper avec un micro-casque : il rabote les fins de phrase et les chuchotements."
+      "noise_suppression_hint": "Débruiteur du navigateur. À couper avec un micro-casque : il rabote les fins de phrase et les chuchotements.",
+      "compression": "Compression"
     },
     "params": {
       "ducking_threshold": "Seuil de Déclenchement",

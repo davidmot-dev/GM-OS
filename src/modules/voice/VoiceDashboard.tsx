@@ -391,6 +391,13 @@ const VoiceDashboard: React.FC = () => {
                             min={0} max={1} step={0.01}
                             onChange={(val) => updateEffect('distortion', val)} 
                         />
+                        <VocalShaperSlider
+                            label={t('modules:voice.shapers.compression')}
+                            value={currentEffects.compression}
+                            min={0} max={100} step={5}
+                            unit="%"
+                            onChange={(val) => updateEffect('compression', val)}
+                        />
                         <VocalShaperSlider 
                             label={t('modules:voice.shapers.bitcrush')} 
                             value={currentEffects.bitcrush} 

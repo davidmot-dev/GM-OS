@@ -4,6 +4,7 @@ import {
     duckingSuivant, DUCKING_INACTIF, FERMETURE_S, niveauRMS, OUVERTURE_S, porteSuivante,
     PORTE_FERMEE, type EtatDeLaPorte, type EtatDuDucking,
 } from './logic/porteDeLaVoix';
+import { reglageDuCompresseur } from './logic/compression';
 
 /**
  * La cadence de la boucle de mesure, en ms.
@@ -132,13 +133,14 @@ export class VoiceEngine {
             this.lowCut.frequency.value = 120; // Aggressive default (Google Meet uses ~100-120Hz)
             this.lowCut.Q.value = 0.707; // Butterworth — maximally flat passband
 
-            // 4. Compressor — "Broadcast" style (tight, controlled, consistent)
+            /*
+              4. Compresseur — **réglable depuis le 2026-09-03**, et non plus
+              figé à 8:1. Il était annoncé « broadcast » ; à ce taux c'est un
+              limiteur, et il aplatissait le jeu du meneur en même temps que
+              tout ce que Voice-to-Light avait à suivre. Voir `logic/compression`.
+            */
             this.compressor = this.context.createDynamicsCompressor();
-            this.compressor.threshold.value = -24; // Catches most speech levels
-            this.compressor.knee.value = 6;        // Tighter knee for more aggressive onset
-            this.compressor.ratio.value = 8;       // Broadcast ratio — strong leveling
-            this.compressor.attack.value = 0.003;  // Ultra-fast: catches every consonant
-            this.compressor.release.value = 0.15;  // Fast release: voice "breathes" naturally
+            this.appliquerLaCompression(useVoiceStore.getState().currentEffects.compression);
             this.dryGain = this.context.createGain();
 
             // 5. Formant (Peaking EQ)
@@ -266,6 +268,29 @@ export class VoiceEngine {
             console.error('[VoiceEngine] Initialization failed:', error);
             throw error;
         }
+    }
+
+    /** Pose sur le compresseur le réglage correspondant au curseur. */
+    private appliquerLaCompression(compression: number, douceur = 0) {
+        if (!this.compressor || !this.context) return;
+        const r = reglageDuCompresseur(compression);
+        const t = this.context.currentTime;
+        if (douceur > 0) {
+            this.compressor.threshold.setTargetAtTime(r.seuil, t, douceur);
+            this.compressor.ratio.setTargetAtTime(r.taux, t, douceur);
+            this.compressor.knee.setTargetAtTime(r.genou, t, douceur);
+        } else {
+            this.compressor.threshold.value = r.seuil;
+            this.compressor.ratio.value = r.taux;
+            this.compressor.knee.value = r.genou;
+        }
+        /*
+          Attaque et relâchement ne se lissent PAS : ce sont les constantes de
+          temps du détecteur, et les rampes dessus produisent des artefacts. On
+          les pose.
+        */
+        this.compressor.attack.value = r.attaque;
+        this.compressor.release.value = r.relachement;
     }
 
     /**
@@ -568,6 +593,11 @@ export class VoiceEngine {
             if (isMonitor !== prevState.isMonitor || isLive !== prevState.isLive) {
                 const ouvert = (isMonitor || isLive) ? 1.0 : 0;
                 this.sortieGain!.gain.setTargetAtTime(ouvert, this.context.currentTime, 0.05);
+            }
+
+            // 2 bis. Compression
+            if (currentEffects.compression !== prevEffects.compression) {
+                this.appliquerLaCompression(currentEffects.compression, 0.05);
             }
 
             // 3. Low Cut

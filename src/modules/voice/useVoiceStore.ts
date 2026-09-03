@@ -12,6 +12,11 @@ export interface VoiceEffects {
     bitcrush: number;  // 0 to 1
     lowCut: number;     // 80, 250 or 0 (off)
     gateThreshold: number; // -100 to 0 dB
+    /**
+     * La compression, de 0 (aucune) à 100 (le réglage figé d'avant le
+     * 2026-09-03 : 8:1, seuil −24 dB). Voir `logic/compression.ts`.
+     */
+    compression: number;
     outputGain: number; // 0 to 2
     antiLarsen: boolean; // Toggle browser echo cancellation
     /**
@@ -136,6 +141,7 @@ const DEFAULT_EFFECTS: VoiceEffects = {
     bitcrush: 0,
     lowCut: 80,
     gateThreshold: -50,
+    compression: 40,
     outputGain: 1.0,
     antiLarsen: true,
     noiseSuppression: true,

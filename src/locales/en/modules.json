@@ -2929,7 +2929,8 @@
       "noise_gate": "Noise Gate",
       "auto_ducking": "Auto-Ducking",
       "noise_suppression": "Noise Suppression",
-      "noise_suppression_hint": "Browser noise suppressor. Turn it off with a headset mic: it shaves off sentence endings and whispers."
+      "noise_suppression_hint": "Browser noise suppressor. Turn it off with a headset mic: it shaves off sentence endings and whispers.",
+      "compression": "Compression"
     },
     "params": {
       "ducking_threshold": "Trigger Threshold",
