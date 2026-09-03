@@ -24,7 +24,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ---
 
-## ⭐ Le registre consolidé — 2026-08-31
+## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-03**
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
@@ -33,6 +33,12 @@ document, et elle n'a pas de `git log` pour le dire.* D'où cette section : **un
 dans le code, qui absorbe toutes les autres.**
 
 > Vérifié le 2026-08-31 : `tsc -b` propre, **3 158 tests au vert**, arbre propre et poussé.
+>
+> Revérifié le 2026-09-03 : `tsc -b` propre, **3 336 tests au vert** (262 fichiers, 1 ignoré), arbre
+> propre. ⛔ **`npx vitest run` sans bride rend les 263 fichiers en échec** — `Vitest failed to find the
+> current suite`, `tests 0ms`, *aucune assertion n'a tourné* : ce sont les workers qui tombent sous la
+> charge. Rejouer avec **`--maxWorkers=4`**. L'étape 3 de `scripts/validate.ps1` appelle la commande sans
+> bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas exécuté.*
 
 ### 1 · Ce qui se joue et ne se code pas — la catégorie P6
 
@@ -44,7 +50,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 | Jamais vu tourner | Depuis | Ce qui se voit, ou pas |
 | --- | --- | --- |
-| ⛔ Les **« quelques petits bugs » du storyboard** | 31/08 | **Signalés par David en fin de soirée, non nommés** : *« il y a encore quelques petits bugs, mais on verra cela plus tard »*, après avoir essayé en réel le titre projeté, les sorties par son et l'extinction de l'image. **Première chose à faire à la reprise : lui demander lesquels.** Les trois chantiers de la soirée vivent dans le code — `titreProjete.ts`, `sortiesAudio.ts`, `useStoryboardStore.ts` — et chacun porte ses essais. |
+| ✅ Les **« quelques petits bugs » du storyboard** | 31/08 → **clos le 03/09** | **Trois ont été nommés et corrigés** les 02 et 03/09 — voir § 6. David, le 03/09 : *« pour l'instant je n'ai plus de bug dans le storyboard »*. ⚠️ *La ligne reste ici, barrée, parce qu'elle a servi* : le registre ne savait pas quoi chercher, il savait seulement **à qui demander** — et c'est ce qui a produit les trois. |
 | Le **routage audio par son** | 31/08 | Ce qu'aucun essai ne dira : que le son sorte **vraiment** de la bonne enceinte — `setSinkId` n'existe pas sous jsdom. À écouter : une ambiance de moment sur les enceintes du fond pendant que la musique reste devant ; le volume général et le ducking de la voix doivent valoir **aussi** pour la voie détournée. |
 | Le **titre projeté** | 31/08 | La police du thème du jeu s'applique-t-elle vraiment (`--font-display`), et le fondu se lit-il à la table. Un titre permanent doit s'en aller avec son moment, et pas avant. |
 | La **bascule de combat entre deux scènes** | 20/08 | Ouvrir un combat dans une scène, changer de scène, revenir. Combattants, round, compteurs **et jetons de la carte** doivent tous revenir — ils voyagent dans `combatsGares`. *Un combat garé qui ne revient pas est un affrontement perdu en pleine séance.* |
@@ -115,6 +121,10 @@ de table existe depuis le 15/08.
 
 > ## ⭐ Au 2026-08-31 au soir, **plus rien de ce registre ne se code.**
 >
+> ⚠️ **Et pourtant sept chantiers sont sortis les 02 et 03/09** — voir § 6. Aucun ne vient de ce registre :
+> **tous les sept viennent de David, à l'écran.** *Ce n'est pas une contradiction, c'est la démonstration
+> du § 1* — ce qui restait ne se lisait pas, ça se jouait.
+>
 > Les sections 3 et 3 bis sont closes en entier. Ce qui subsiste tient en trois lignes : **la catégorie
 > P6** (§ 1), qui se joue ; **l'axe N.3** (§ 2), qui se décide à la table ; et **Ulanzi D** (§ 4), garé
 > par décision.
@@ -144,6 +154,33 @@ là pour que la vérification prenne dix secondes la prochaine fois.*
 
 **Et pour mémoire, tous les axes A → O du plan IA sont clos**, le Cortex avec eux (ses 5 axes le 22/08,
 ses 3 questions les 22-23, ses vigilances le 24).
+
+### 6 · Ce que les soirées du 02 et du 03/09 ont ajouté
+
+*Sept chantiers, **tous nés d'un signalement de David à l'écran**, aucun d'une relecture de code. Rangés
+ici pour qu'on cesse de les rechercher, avec leur ancre.*
+
+| Quoi | Ce qu'il y avait dessous | Où |
+| --- | --- | --- |
+| **L'ambiance d'une séquence s'éteint** quand la suivante prend la main | *« l'ancienne ambiance ne s'arrête pas »*. Deux raisons, aucune n'était un oubli : Ambient-OS n'arrête que ce qu'une **nouvelle scène** n'allume pas, et Sound-OS **empile**. *Une séquence est une parenthèse — pour l'oreille comme pour l'œil.* La musique fait exception, le meneur l'arrête | `storyboard/sonsDuMoment.ts` |
+| **Le titre n'était pas en retard, il était perdu** | *« le texte du Titre n'apparaît parfois pas tout de suite »* — seulement sur un moniteur éteint, parce que la séquence **crée** alors la fenêtre. ⛔ **Un message émis avant que la fenêtre ne sache écouter est PERDU** ; rien ne le rejoue. Le principal retient le titre vivant, le rendu le **réclame** en arrivant | `electron/main.ts:487` |
+| ⛔ **`tailwindcss-animate` n'avait jamais été installé** | Trouvé en cherchant pourquoi le fondu du titre ne se voyait pas : `animate-in`, `fade-in`, `zoom-in-95`… **125 fois dans 76 fichiers**, produisant zéro règle. *Une classe qui n'existe pas ne prévient pas.* Les fondus d'**entrée** du storyboard n'avaient donc jamais joué — seules les sorties, portées par un style en ligne | `tailwind.config.js` |
+| **Les dés échelonnés au pupitre** | Le mode choisi à la main était lu, puis **recouvert par le pilote actif** : deux D12 lançaient des d6. *Septième fois le même motif — le chemin s'arrête avant le moteur* | `dice/DiceBoard.tsx` |
+| ⛔ **Tout jet parti d'une tablette était un jet manuel** | La réponse à *« qui d'autre a la même rustine à poser ? »*, et elle a trouvé plus grave : `session.activeDiceConfig` était **déclaré des deux côtés et rempli par personne**. *Un champ que personne n'écrit ne rend pas une erreur, il rend `undefined` — et une carte qui ne s'affiche pas ne se signale pas* | `remote/hooks/useNexusSynchronizer.ts` |
+| **L'atelier de thème** | *« un module me permettant de changer les paramètres, couleurs, polices, tailles »*. Les 22 jetons + une échelle de texte, dans les **réglages** et non dans la Forge — *la Forge écrit les règles, le thème est un réglage*. ⛔ **On réécrit les déclarations, jamais le fichier** : un `theme.css` porte 300 lignes de `.rpg-*` que les fiches consomment. Idempotence éprouvée sur les six thèmes réels | `theme/editionDuTheme.ts` |
+| **Les épingles du Nexus** | *« dès que je libère les positions, tout se remélange »*. **`x/y` est un point de départ, `fx/fy` une contrainte** : un nœud rendu à d3 sans coordonnées est reposé sur une spirale — *ce n'est pas la simulation qui remélangeait, c'est qu'on lui rendait des inconnus*. Et **une épingle est une décision, l'instantané une capture** : les confondre ferait qu'un déverrouillage épingle tout le graphe | `session/logic/socialNexusUtils.ts` |
+
+**Ce qui entre en catégorie P6 par ces sept lignes** — livré, jamais vu tourner :
+
+- **L'atelier de thème.** Modifier une couleur doit se voir dans l'application **et** dans une fiche de
+  personnage ouverte ; et le `theme.css` doit rester lisible après trois allers-retours. *L'idempotence
+  est prouvée sur les fichiers du dépôt, pas sur ceux qu'un atelier aura réécrits dix fois.*
+- **Les épingles du Nexus.** Poser trois nœuds, verrouiller, déverrouiller, revenir : les trois doivent
+  être là et **eux seuls** ; « réinitialiser » doit tout rendre à la simulation.
+- **Les dés échelonnés depuis une tablette.** La carte « Système actif » ne s'est **jamais** affichée —
+  personne n'a donc jamais vu ce chemin marcher, dans aucun sens.
+- **Les 125 classes d'animation** qui jouent enfin, dans 76 fichiers. *Rien ne les avait jamais vues
+  jouer* : ce qui se voit maintenant est du neuf, y compris là où personne n'a rien demandé.
 
 ---
 
@@ -341,7 +378,11 @@ fichier HTML, un par PJ** · elle s'affiche sur les **deux** écrans, en bascule
 
 **Aucune question ouverte. Le chantier est prêt à partir.**
 
-## 3a · Le thème — ✅ LIVRÉ le 2026-08-24
+## 3a · Le thème — ✅ LIVRÉ le 2026-08-24, **son atelier le 2026-09-03**
+
+> ⭐ **Depuis le 03/09, le thème d'un jeu se règle DANS l'application** — onglet des réglages, les 22
+> jetons et une échelle de texte, écrits dans le `theme.css` du jeu. Déposer le fichier à la main marche
+> toujours : l'atelier ne remplace pas la porte d'entrée, il en ouvre une seconde. Voir § 6.
 
 **Les six étapes sont faites**, et le résultat dépasse le plan : au lieu d'une
 palette déclarée dans le pilote, **un jeu dépose `docs/systems/<jeu>/theme/theme.css`
