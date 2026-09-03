@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 type ModalType = 'alert' | 'confirm' | 'prompt' | 'custom' | null;
 
-export type CustomModalVariant = 'player-add' | 'character-add' | 'campaign-add' | 'campaign-edit' | 'npc-detail' | 'favorite-dossier' | 'session-select' | 'session-notes' | 'session-summary' | 'session-feedback' | 'light-scene-select' | 'map-projection-select' | 'whiteboard-projection-select' | 'timeline-event-add' | 'timeline-event-edit' | 'wiki-entry-add' | 'wiki-entry-edit' | 'global-settings' | 'snapshot-viewer' | 'damage-calc' | 'danger-preset-editor' | 'narrative-display' | 'loot-os' | 'aide-du-meneur';
+export type CustomModalVariant = 'player-add' | 'character-add' | 'campaign-add' | 'campaign-edit' | 'npc-detail' | 'favorite-dossier' | 'session-select' | 'session-notes' | 'session-summary' | 'session-feedback' | 'light-scene-select' | 'map-projection-select' | 'whiteboard-projection-select' | 'timeline-event-add' | 'timeline-event-edit' | 'wiki-entry-add' | 'wiki-entry-edit' | 'global-settings' | 'snapshot-viewer' | 'damage-calc' | 'danger-preset-editor' | 'narrative-display' | 'loot-os' | 'aide-du-meneur' | 'atelier-adversaires';
 
 interface ModalState {
     type: ModalType;

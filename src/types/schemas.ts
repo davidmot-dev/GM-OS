@@ -107,6 +107,11 @@ export const FullSessionSchema = z.object({
           sauf le jour où l'on a besoin de la sauvegarde.
         */
         music: z.object({ playlists: z.array(z.any()) }).optional(),
+        /* Meme raison que `music` ci-dessus : non declaree, la cle serait jetee. */
+        bestiaire: z.object({
+            gabarits: z.array(z.any()),
+            repartitions: z.record(z.string(), z.any()).optional(),
+        }).optional(),
     }).default({}),
 }).passthrough();
 

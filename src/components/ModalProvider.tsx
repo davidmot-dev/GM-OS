@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
     History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare,
-    Keyboard
-} from 'lucide-react';
+    Keyboard, Swords } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
@@ -16,6 +15,7 @@ import { FavoriteFullDossier } from '../modules/favorite/components/FavoriteFull
 import { MediaBrowser } from './MediaBrowser';
 import { TimelineEventForm } from '../modules/session/components/TimelineEventForm';
 import { WikiEntryForm } from '../modules/session/components/WikiEntryForm';
+import AtelierDesAdversaires from '../modules/combat/components/AtelierDesAdversaires';
 import GlobalSettingsModal from './GlobalSettingsModal';
 import LightSceneSelector from '../modules/light/components/LightSceneSelector';
 import MapProjectionModal from '../modules/map/components/MapProjectionModal';
@@ -215,6 +215,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'narrative-display' && <Sparkles size={18} />}
                                         {customVariant === 'loot-os' && <Package size={18} />}
                                         {customVariant === 'aide-du-meneur' && <Keyboard size={18} />}
+                                        {customVariant === 'atelier-adversaires' && <Swords size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
@@ -240,6 +241,8 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'loot-os' && t('common:modals.loot_os')}
                                         {/* Littéral, comme le reste de l'écran d'aide : il n'a qu'un lecteur. */}
                                         {customVariant === 'aide-du-meneur' && 'Écran du Meneur'}
+                                        {/* Littéral, comme au-dessus : cet écran n'a qu'un lecteur. */}
+                                        {customVariant === 'atelier-adversaires' && 'Atelier des adversaires'}
                                     </h3>
                                 </div>
                                 <button 
@@ -283,6 +286,7 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'narrative-display' && <NarrativeModal />}
                             {customVariant === 'loot-os' && <LootOS />}
                             {customVariant === 'aide-du-meneur' && <AideDuMeneur />}
+                            {customVariant === 'atelier-adversaires' && <AtelierDesAdversaires onClose={closeModal} />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>

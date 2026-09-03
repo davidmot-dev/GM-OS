@@ -3,7 +3,8 @@ import { useCombatStore } from '../useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
 import { 
-    UserPlus, RefreshCw, Dices, Save, Play, Skull, 
+    UserPlus, RefreshCw, Dices, Save, Play, Skull, Swords,
+    
     ArrowDown01, ArrowUp10, Sparkles, Zap, Activity,
     MonitorPlay, MonitorOff
 } from 'lucide-react';
@@ -396,6 +397,21 @@ const CombatControls: React.FC = () => {
                 >
                     <UserPlus size={18} />
                     <span>{t('modules:combat.controls.add_combatant')}</span>
+                </button>
+
+                {/*
+                  **L'atelier des adversaires — 2026-09-03.** Il vit ici et non
+                  dans Session-OS : on en a besoin quand le combat est déjà
+                  ouvert et qu'il manque trois pillards. Le bouton d'ajout
+                  manuel reste au-dessus — il sert encore à poser un nom sans
+                  caractéristiques.
+                */}
+                <button
+                    onClick={() => gmCustom('atelier-adversaires')}
+                    className="w-full bg-app-bg hover:bg-app-surface border border-app-border hover:border-accent/40 text-app-text/80 hover:text-accent px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                >
+                    <Swords size={18} />
+                    <span>Fabriquer des adversaires</span>
                 </button>
 
                 <button

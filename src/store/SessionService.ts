@@ -12,6 +12,7 @@ import { Logger } from '../utils/logger';
 import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSession';
 import { useBibliothequeDesFiches } from '../modules/fiches/useBibliothequeDesFiches';
 import { useMusicStore } from '../modules/music/useMusicStore';
+import { useBestiaireStore } from '../modules/combat/useBestiaireStore';
 
 /**
  * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
@@ -30,6 +31,7 @@ export function construireLaSauvegarde() {
     const clockState = useClockStore.getState();
     const whiteboardState = useWhiteboardStore.getState();
     const musicState = useMusicStore.getState();
+    const bestiaireState = useBestiaireStore.getState();
     const bibliotheque = useBibliothequeDesFiches.getState().instantane;
 
     return {
@@ -80,6 +82,23 @@ export function construireLaSauvegarde() {
             */
             music: {
                 playlists: musicState.playlists,
+            },
+            /*
+              **Le bestiaire suit, et il fallait y penser tout de suite.**
+
+              Music-OS n'etait dans AUCUNE sauvegarde jusqu'au 2026-08-30, et
+              personne ne s'en etait apercu pendant des mois : une donnee qu'on
+              cree sans y penser est une donnee qu'on oublie de proteger. Les
+              gabarits d'adversaires sont exactement de cette famille — quelques
+              minutes de travail chacun, aucune trace ailleurs.
+
+              Les repartitions de champs suivent aussi : c'est ce que David a
+              corrige a la main, jeu par jeu, et le reperdre lui reposerait les
+              memes questions.
+            */
+            bestiaire: {
+                gabarits: bestiaireState.gabarits,
+                repartitions: bestiaireState.repartitions,
             },
             /*
               **La bibliothèque du moteur de fiches — chantier n° 5.**
@@ -243,6 +262,20 @@ export const SessionService = {
             if (music?.playlists?.length) {
                 useMusicStore.setState({ playlists: music.playlists as never });
                 Logger.info(`[Session] ${music.playlists.length} atmosphères restaurées`);
+            }
+            /*
+              Meme prudence que pour les playlists : un bestiaire vide ne
+              remplace jamais un bestiaire plein.
+            */
+            const bestiaire = (data.modules as {
+                bestiaire?: { gabarits?: unknown[]; repartitions?: Record<string, unknown> };
+            }).bestiaire;
+            if (bestiaire?.gabarits?.length) {
+                useBestiaireStore.setState({
+                    gabarits: bestiaire.gabarits as never,
+                    repartitions: (bestiaire.repartitions ?? {}) as never,
+                });
+                Logger.info(`[Session] ${bestiaire.gabarits.length} gabarit(s) d'adversaire restaure(s)`);
             }
             // Ambient and Whiteboard might need more careful hydration if they have active engines
         }
