@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
     History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare,
-    Keyboard, Swords } from 'lucide-react';
+    Keyboard, Swords, ScrollText } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
@@ -16,6 +16,7 @@ import { MediaBrowser } from './MediaBrowser';
 import { TimelineEventForm } from '../modules/session/components/TimelineEventForm';
 import { WikiEntryForm } from '../modules/session/components/WikiEntryForm';
 import AtelierDesAdversaires from '../modules/combat/components/AtelierDesAdversaires';
+import FicheDuCombattant from '../modules/combat/components/FicheDuCombattant';
 import GlobalSettingsModal from './GlobalSettingsModal';
 import LightSceneSelector from '../modules/light/components/LightSceneSelector';
 import MapProjectionModal from '../modules/map/components/MapProjectionModal';
@@ -216,6 +217,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'loot-os' && <Package size={18} />}
                                         {customVariant === 'aide-du-meneur' && <Keyboard size={18} />}
                                         {customVariant === 'atelier-adversaires' && <Swords size={18} />}
+                                        {customVariant === 'fiche-combattant' && <ScrollText size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
@@ -243,6 +245,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'aide-du-meneur' && 'Écran du Meneur'}
                                         {/* Littéral, comme au-dessus : cet écran n'a qu'un lecteur. */}
                                         {customVariant === 'atelier-adversaires' && 'Atelier des adversaires'}
+                                        {customVariant === 'fiche-combattant' && 'Fiche du combattant'}
                                     </h3>
                                 </div>
                                 <button 
@@ -287,6 +290,7 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'loot-os' && <LootOS />}
                             {customVariant === 'aide-du-meneur' && <AideDuMeneur />}
                             {customVariant === 'atelier-adversaires' && <AtelierDesAdversaires onClose={closeModal} />}
+                            {customVariant === 'fiche-combattant' && <FicheDuCombattant />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>
