@@ -2914,7 +2914,9 @@
       "go_live": "DIFFUSER",
       "live_broadcast": "EN DIRECT",
       "ducking_params": "Paramètres Ducking",
-      "master_output": "Sortie Master"
+      "master_output": "Sortie Master",
+      "audio_input": "Micro",
+      "default_input": "Micro Système par Défaut"
     },
     "shapers": {
       "title": "Modeleurs Vocaux",
@@ -2925,7 +2927,9 @@
       "bitcrush": "Bitcrush",
       "anti_larsen": "Anti-Larsen",
       "noise_gate": "Noise Gate",
-      "auto_ducking": "Auto-Ducking"
+      "auto_ducking": "Auto-Ducking",
+      "noise_suppression": "Suppression de bruit",
+      "noise_suppression_hint": "Débruiteur du navigateur. À couper avec un micro-casque : il rabote les fins de phrase et les chuchotements."
     },
     "params": {
       "ducking_threshold": "Seuil de Déclenchement",

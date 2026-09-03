@@ -2914,7 +2914,9 @@
       "go_live": "GO LIVE",
       "live_broadcast": "LIVE BROADCAST",
       "ducking_params": "Ducking Params",
-      "master_output": "Master Output"
+      "master_output": "Master Output",
+      "audio_input": "Microphone",
+      "default_input": "System Default Microphone"
     },
     "shapers": {
       "title": "Vocal Shapers",
@@ -2925,7 +2927,9 @@
       "bitcrush": "Bitcrush",
       "anti_larsen": "Anti-Larsen",
       "noise_gate": "Noise Gate",
-      "auto_ducking": "Auto-Ducking"
+      "auto_ducking": "Auto-Ducking",
+      "noise_suppression": "Noise Suppression",
+      "noise_suppression_hint": "Browser noise suppressor. Turn it off with a headset mic: it shaves off sentence endings and whispers."
     },
     "params": {
       "ducking_threshold": "Trigger Threshold",

@@ -145,7 +145,20 @@ function createWindow() {
             sandbox: false,
             // SECURITY NOTE: webSecurity is currently false to allow legacy file:// access.
             // Switch to TRUE once you've verified that all media loads via gmos:// protocol.
-            webSecurity: true, 
+            webSecurity: true,
+            /*
+              **La fenêtre du meneur ne doit jamais être ralentie en arrière-plan.**
+              Posé le 2026-09-03, en cherchant pourquoi la voix se coupe.
+
+              Chromium ralentit minuteurs et rendu d'une fenêtre reléguée — c'est
+              exactement ce qui arrive à celle du meneur dès qu'on clique sur une
+              fenêtre de projection. Or elle porte des boucles qui DÉCIDENT :
+              la porte du micro, le relâchement du ducking, la lumière qui suit
+              la voix. *Le son continuait de couler, seule la décision
+              s'arrêtait* — porte figée, ambiance qui restait baissée après la
+              dernière phrase.
+            */
+            backgroundThrottling: false,
         },
     })
 

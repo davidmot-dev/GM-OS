@@ -64,10 +64,14 @@ const VoiceDashboard: React.FC = () => {
         updateEffect,
         applyPreset,
         toggleAntiLarsen,
+        toggleNoiseSuppression,
         toggleNoiseGate,
         outputDeviceId,
         availableOutputs,
         setOutputDeviceId,
+        inputDeviceId,
+        availableInputs,
+        setInputDeviceId,
         lastSyncedEntityName,
         appliquerProfil,
         isWorkletReady
@@ -249,6 +253,33 @@ const VoiceDashboard: React.FC = () => {
                     )}
 
                     <div className="mt-8 px-2 flex flex-col gap-4">
+                        {/*
+                          **Le sélecteur de micro — demandé par David le 2026-09-03.**
+
+                          Il vient AVANT la sortie, parce que c'est l'ordre du
+                          signal et l'ordre des ennuis : un micro qui n'est pas
+                          le bon rend tout le reste sans objet. Sans lui,
+                          Voice-OS prenait le périphérique par défaut de
+                          Windows — *lequel se décide au branchement d'une
+                          webcam, pas au moment de jouer.*
+                        */}
+                        <div className="flex items-center gap-2 text-slate-500">
+                            <Mic2 size={14} />
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.audio_input')}</h3>
+                        </div>
+                        <select
+                            value={inputDeviceId || ''}
+                            onChange={(e) => setInputDeviceId(e.target.value || null)}
+                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
+                        >
+                            <option value="">{t('modules:voice.dashboard.default_input')}</option>
+                            {availableInputs.map(device => (
+                                <option key={device.deviceId} value={device.deviceId}>
+                                    {device.label || getAudioLabel(device.deviceId)}
+                                </option>
+                            ))}
+                        </select>
+
                         <div className="flex items-center gap-2 text-slate-500">
                             <Volume2 size={14} />
                             <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.audio_output')}</h3>
@@ -379,6 +410,17 @@ const VoiceDashboard: React.FC = () => {
                             </div>
                         </button>
                         
+                        <button
+                            onClick={() => toggleNoiseSuppression()}
+                            title={t('modules:voice.shapers.noise_suppression_hint')}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseSuppression ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                        >
+                            <span className="text-[10px] font-black uppercase tracking-widest">🧹 {t('modules:voice.shapers.noise_suppression')}</span>
+                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseSuppression ? 'bg-emerald-500' : 'bg-slate-700'}`}>
+                                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.noiseSuppression ? 'right-1' : 'left-1'}`} />
+                            </div>
+                        </button>
+
                         <button 
                             onClick={() => toggleNoiseGate()}
                             className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}

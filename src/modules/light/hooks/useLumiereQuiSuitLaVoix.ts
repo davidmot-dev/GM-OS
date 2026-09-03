@@ -21,10 +21,15 @@ import {
  * pleine scène qu'on veut l'effet, pas devant l'écran qui le règle. *Un émetteur
  * attaché à une vue émet ce que la vue veut bien.*
  *
- * **On n'écoute pas `inputLevel` par abonnement React.** Il se rafraîchit à la
- * cadence de l'écran ; le lire par `useVoiceStore(e => e.inputLevel)` ferait
- * rendre `Shell` — donc toute l'application — soixante fois par seconde. On le
- * lit dans la boucle, avec `getState()`, qui ne provoque aucun rendu.
+ * **On n'écoute pas `inputLevel` par abonnement React.** Il se rafraîchit trente
+ * fois par seconde ; le lire par `useVoiceStore(e => e.inputLevel)` ferait rendre
+ * `Shell` — donc toute l'application — à cette cadence. On le lit dans la boucle,
+ * avec `getState()`, qui ne provoque aucun rendu.
+ *
+ * ⚠️ **Ce niveau est mesuré depuis le 2026-09-03 AVANT les effets**, juste après
+ * le coupe-bas du micro. La lumière suit donc la voix du meneur et non la queue
+ * de réverbération d'un preset — mais la calibration du plancher a changé avec :
+ * un `outputGain` baissé ne baisse plus la lumière.
  */
 export function useLumiereQuiSuitLaVoix(): void {
     const suivreLaVoix = useLightStore(e => e.suivreLaVoix);

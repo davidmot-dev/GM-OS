@@ -14,6 +14,17 @@ export interface VoiceEffects {
     gateThreshold: number; // -100 to 0 dB
     outputGain: number; // 0 to 2
     antiLarsen: boolean; // Toggle browser echo cancellation
+    /**
+     * La suppression de bruit du navigateur (WebRTC).
+     *
+     * **Elle était en dur à `true`, et c'est un suspect direct du « le son se
+     * coupe ».** Ce n'est pas un filtre : c'est un débruiteur agressif qui
+     * décide lui-même de ce qui est de la voix — il rabote les fins de phrase et
+     * les chuchotements, *en amont de tout ce que Voice-OS peut régler.* Sur un
+     * micro-casque, elle n'a plus grand-chose à faire ; sur un micro posé au
+     * milieu de la table, elle reste utile. D'où un réglage, et non un choix.
+     */
+    noiseSuppression: boolean;
     noiseGate: boolean;  // Toggle gate logic
     duckingEnabled: boolean;
     duckingThreshold: number; // dB
@@ -60,7 +71,20 @@ interface VoiceState {
     
     outputDeviceId: string | null;
     availableOutputs: MediaDeviceInfo[];
-    
+
+    /**
+     * Le micro choisi par le meneur, ou `null` pour celui de Windows.
+     *
+     * *Demandé par David le 2026-09-03.* Voice-OS appelait `getUserMedia` sans
+     * `deviceId` : il prenait donc **le périphérique d'entrée par défaut du
+     * système**, et le tableau de bord n'offrait un sélecteur que pour la
+     * sortie. Avec un casque USB branché à côté d'une webcam, c'est Windows qui
+     * tranchait — *et il ne tranche pas le soir de la partie, il tranche au
+     * branchement.*
+     */
+    inputDeviceId: string | null;
+    availableInputs: MediaDeviceInfo[];
+
     lastSyncedEntityId: string | null;
     lastSyncedEntityName: string | null;
     
@@ -77,12 +101,15 @@ interface VoiceState {
     applyPreset: (presetId: string) => void;
     setInputLevel: (level: number) => void;
     toggleAntiLarsen: (active?: boolean) => void;
+    toggleNoiseSuppression: (active?: boolean) => void;
     toggleNoiseGate: (active?: boolean) => void;
     toggleDucking: (active?: boolean) => void;
     setDucking: (isDucking: boolean) => void;
     
     setOutputDeviceId: (deviceId: string | null) => void;
     setAvailableOutputs: (devices: MediaDeviceInfo[]) => void;
+    setInputDeviceId: (deviceId: string | null) => void;
+    setAvailableInputs: (devices: MediaDeviceInfo[]) => void;
     setWorkletReady: (ready: boolean) => void;
     
     syncWithNpc: (npc: { name: string; description: string; roleplayingNotes: string; id: string }) => void;
@@ -111,6 +138,7 @@ const DEFAULT_EFFECTS: VoiceEffects = {
     gateThreshold: -50,
     outputGain: 1.0,
     antiLarsen: true,
+    noiseSuppression: true,
     noiseGate: true,
     duckingEnabled: false,
     duckingThreshold: -40,
@@ -173,6 +201,8 @@ export const useVoiceStore = create<VoiceState>()(
             isWorkletReady: false,
             outputDeviceId: null,
             availableOutputs: [],
+            inputDeviceId: null,
+            availableInputs: [],
             
             presets: INITIAL_PRESETS,
             
@@ -202,6 +232,13 @@ export const useVoiceStore = create<VoiceState>()(
                 currentEffects: { ...state.currentEffects, antiLarsen: active !== undefined ? active : !state.currentEffects.antiLarsen } 
             })),
             
+            toggleNoiseSuppression: (active) => set((state) => ({
+                currentEffects: {
+                    ...state.currentEffects,
+                    noiseSuppression: active !== undefined ? active : !state.currentEffects.noiseSuppression,
+                },
+            })),
+
             toggleNoiseGate: (active) => set((state) => ({ 
                 currentEffects: { ...state.currentEffects, noiseGate: active !== undefined ? active : !state.currentEffects.noiseGate } 
             })),
@@ -217,6 +254,8 @@ export const useVoiceStore = create<VoiceState>()(
 
             setOutputDeviceId: (deviceId) => set({ outputDeviceId: deviceId }),
             setAvailableOutputs: (devices) => set({ availableOutputs: devices }),
+            setInputDeviceId: (deviceId) => set({ inputDeviceId: deviceId }),
+            setAvailableInputs: (devices) => set({ availableInputs: devices }),
             setWorkletReady: (ready) => set({ isWorkletReady: ready }),
             
             lastSyncedEntityId: null,
@@ -379,7 +418,8 @@ Règles des valeurs :
                 currentEffects: state.currentEffects,
                 activePresetId: state.activePresetId,
                 isSyncNPC: state.isSyncNPC,
-                outputDeviceId: state.outputDeviceId
+                outputDeviceId: state.outputDeviceId,
+                inputDeviceId: state.inputDeviceId
             }),
             onRehydrateStorage: () => (state) => {
                 if (state) {

@@ -1,4 +1,27 @@
 import { useVoiceStore } from './useVoiceStore';
+import { gmToast } from '../../stores/useToastStore';
+import {
+    duckingSuivant, DUCKING_INACTIF, FERMETURE_S, niveauRMS, OUVERTURE_S, porteSuivante,
+    PORTE_FERMEE, type EtatDeLaPorte, type EtatDuDucking,
+} from './logic/porteDeLaVoix';
+
+/**
+ * La cadence de la boucle de mesure, en ms.
+ *
+ * ⛔ **C'était `requestAnimationFrame`, et c'est une cause directe du « le son
+ * se coupe ».** Un rAF est lié au rendu de la fenêtre : Chromium le ralentit à
+ * une image par seconde quand la fenêtre passe en arrière-plan, et l'arrête
+ * quand elle est réduite. Or la fenêtre du meneur passe derrière celle de
+ * projection à chaque manipulation. La porte restait alors figée dans son
+ * dernier état et le ducking ne relâchait plus. *Le son, lui, continuait de
+ * couler : c'est la décision qui s'arrêtait, pas l'audio.*
+ *
+ * Un minuteur est ralenti aussi lorsque la fenêtre est réduite — d'où
+ * `backgroundThrottling: false` sur la fenêtre du meneur — mais il ne dépend
+ * plus du rendu, et 30 mesures par seconde suffisent à une porte comme à un
+ * vumètre.
+ */
+const CADENCE_DE_MESURE_MS = 33;
 
 /**
  * Moteur de traitement de la voix en temps réel.
@@ -22,19 +45,46 @@ export class VoiceEngine {
     private reverbGain: GainNode | null = null;
     private dryGain: GainNode | null = null;
     private outputGain: GainNode | null = null;
-    private analyser: AnalyserNode | null = null;
+
+    /**
+     * L'analyseur de **détection**, branché sur la voix avant tout traitement.
+     *
+     * ⛔ Il remplace un analyseur posé sur `outputGain`, c'est-à-dire **après**
+     * le compresseur 8:1, le worklet et la réverbération. Deux défauts en
+     * découlaient : un seuil de porte réglé sur un signal déjà écrasé ne veut
+     * rien dire, et **baisser le gain de sortie fermait la porte** — le curseur
+     * de volume rendait le meneur muet. *Une décision sur la voix se prend sur
+     * la voix, pas sur ce qu'on en a fait.*
+     */
+    private detecteur: AnalyserNode | null = null;
+    private trameDeDetection: Float32Array<ArrayBuffer> | null = null;
 
     // Destinations
-    private monitorGain: GainNode | null = null;
-    private liveGain: GainNode | null = null;
+    /**
+     * L'unique voie vers la sortie.
+     *
+     * ⛔ **Il y en avait DEUX**, `monitorGain` et `liveGain`, toutes deux à 1.0
+     * et toutes deux branchées sur le même nœud de sortie : activer le retour
+     * casque **et** la diffusion sommait le signal deux fois, soit **+6 dB
+     * d'un coup** sur un signal déjà limité. C'est le premier suspect du « ça
+     * sature trop facilement ».
+     *
+     * Elles ne pouvaient de toute façon pas viser deux appareils : `setSinkId`
+     * se pose sur le **contexte**, jamais sur un nœud — les deux finissaient sur
+     * la même enceinte. Les deux interrupteurs restent dans l'interface, ils
+     * commandent désormais une seule voie.
+     */
+    private sortieGain: GainNode | null = null;
     private globalSyncGain: GainNode | null = null;
     private gateGain: GainNode | null = null;
     private limiter: DynamicsCompressorNode | null = null;
 
     private isInitialized = false;
-    private animationFrame: number | null = null;
+    private minuteurDeMesure: number | null = null;
     private lastSyncTime: number = 0;
     private lastSyncLevel: number = 0;
+    private etatDeLaPorte: EtatDeLaPorte = PORTE_FERMEE;
+    private etatDuDucking: EtatDuDucking = DUCKING_INACTIF;
 
     private constructor() {}
 
@@ -65,30 +115,13 @@ export class VoiceEngine {
                 await this.context.resume();
             }
 
-            const { currentEffects } = useVoiceStore.getState();
-
-            if (!navigator.mediaDevices) {
-                throw new Error('navigator.mediaDevices is undefined. Insecure context or restricted browser.');
-            }
-
-            // Apple Google Meet-style constraints for voice clarity
-            this.stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: {
-                    // Always-on DSP processing (OS-level, most effective)
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: currentEffects.antiLarsen, // User-controlled
-                    // Voice-optimized acquisition
-                    sampleRate: { ideal: 16000 },   // Optimal for speech (like Google Meet)
-                    channelCount: { ideal: 1 },     // Mono: eliminates stereo noise bleed
-                } 
-            });
-
+            this.stream = await this.ouvrirLeFlux();
             this.source = this.context.createMediaStreamSource(this.stream);
 
-            // 1. Analyser (at start to see raw input or at end? I'll put it at end for volume display)
-            this.analyser = this.context.createAnalyser();
-            this.analyser.fftSize = 256;
+            // 1. Détection (avant tout traitement) — porte, ducking et vumètre
+            this.detecteur = this.context.createAnalyser();
+            this.detecteur.fftSize = 1024;
+            this.trameDeDetection = new Float32Array(this.detecteur.fftSize);
 
             // 2. Input Gain
             this.inputGain = this.context.createGain();
@@ -142,8 +175,7 @@ export class VoiceEngine {
 
             // 8. Output & Monitors
             this.outputGain = this.context.createGain();
-            this.monitorGain = this.context.createGain();
-            this.liveGain = this.context.createGain();
+            this.sortieGain = this.context.createGain();
             this.globalSyncGain = this.context.createGain();
             this.globalSyncGain.gain.value = 1.0;
 
@@ -162,8 +194,7 @@ export class VoiceEngine {
             // --- APPLY CURRENT STORE STATE ---
             const { isActive, isMonitor, isLive, currentEffects: effects } = useVoiceStore.getState();
             this.inputGain.gain.value = isActive ? 1.0 : 0;
-            this.monitorGain.gain.value = isMonitor ? 1.0 : 0;
-            this.liveGain.gain.value = isLive ? 1.0 : 0;
+            this.sortieGain.gain.value = (isMonitor || isLive) ? 1.0 : 0;
             this.gateGain.gain.value = 1.0; // Open initially
 
             // Apply Effects
@@ -173,9 +204,10 @@ export class VoiceEngine {
                 this.lowCut.frequency.value = effects.lowCut;
             }
             this.formantFilter.frequency.value = 500 + (effects.formant * 5);
-            this.formantFilter.gain.value = Math.abs(effects.formant) / 5;
-            this.reverbGain.gain.value = effects.reverb;
-            this.dryGain.gain.value = 1.0 - (effects.reverb * 0.5);
+            this.formantFilter.gain.value = VoiceEngine.gainDeFormant(effects.formant);
+            const melange = VoiceEngine.melangeDeReverb(effects.reverb);
+            this.reverbGain.gain.value = melange.mouille;
+            this.dryGain.gain.value = melange.sec;
             this.outputGain.gain.value = effects.outputGain;
 
             // --- CONNECT CHAIN ---
@@ -184,6 +216,15 @@ export class VoiceEngine {
             this.inputGain.connect(this.lowCut);
             this.lowCut.connect(this.compressor);
             this.compressor.connect(this.formantFilter);
+
+            /*
+              **La détection se branche ici, en dérivation.** Après le coupe-bas,
+              pour qu'un ronflement de ventilateur n'ouvre pas la porte ; avant
+              le compresseur, pour qu'elle lise les écarts réels de la voix. Une
+              dérivation ne consomme rien du signal : la chaîne continue tout
+              droit.
+            */
+            this.lowCut.connect(this.detecteur);
             
             if (this.voiceWorklet) {
                 this.formantFilter.connect(this.voiceWorklet);
@@ -200,17 +241,12 @@ export class VoiceEngine {
             this.dryGain.connect(this.outputGain);
             this.reverbGain.connect(this.outputGain);
 
-            this.outputGain.connect(this.analyser);
             this.outputGain.connect(this.gateGain);
             this.gateGain.connect(this.limiter);
-            
-            // Final Destinations
-            this.limiter.connect(this.monitorGain);
-            this.monitorGain.connect(this.globalSyncGain);
-            
-            this.limiter.connect(this.liveGain);
-            this.liveGain.connect(this.globalSyncGain);
 
+            /* Une seule voie vers la sortie — voir `sortieGain`. */
+            this.limiter.connect(this.sortieGain);
+            this.sortieGain.connect(this.globalSyncGain);
             this.globalSyncGain.connect(this.context.destination);
 
             // Apply stored output device if any
@@ -229,6 +265,116 @@ export class VoiceEngine {
         } catch (error) {
             console.error('[VoiceEngine] Initialization failed:', error);
             throw error;
+        }
+    }
+
+    /**
+     * Le gain du filtre de formant, **avec son signe**, et borné.
+     *
+     * ⛔ Il était calculé avec `Math.abs()`. Conséquence : les voix graves
+     * *creusaient* la fréquence — 500 + (−80 × 5) = **100 Hz** — mais y posaient
+     * quand même **+16 dB**. Le preset « ogre » et le preset « dragon »
+     * empilaient donc une bosse de seize décibels dans le grave, juste après un
+     * compresseur, et juste avant un limiteur : *c'est là que « ça sature » se
+     * fabriquait, et c'est un `abs()` qui le fabriquait.*
+     *
+     * Le signe rend au curseur ce qu'il annonce — vers le grave on creuse le
+     * haut, vers l'aigu on creuse le grave — et la borne à ±12 dB évite qu'un
+     * bout de course transforme un timbre en saturation.
+     */
+    private static gainDeFormant(formant: number): number {
+        return Math.max(-12, Math.min(12, formant / 5));
+    }
+
+    /**
+     * Le couple sec / mouillé de la réverbération, **à puissance constante**.
+     *
+     * ⛔ C'était `sec = 1 − mix × 0,5` et `mouillé = mix` : à fond, les deux
+     * voies sommaient **1,5 fois** le signal. Deux sources décorrélées
+     * s'additionnent en puissance, pas en amplitude — d'où la même courbe que
+     * le fondu croisé de Music-OS, qui garde la somme des carrés à un.
+     */
+    private static melangeDeReverb(mix: number): { sec: number; mouille: number } {
+        const angle = Math.max(0, Math.min(1, mix)) * Math.PI / 2;
+        return { sec: Math.cos(angle), mouille: Math.sin(angle) };
+    }
+
+    /**
+     * Ouvre le flux du micro selon les réglages courants.
+     *
+     * **Le micro choisi est demandé en `exact`, et pas en `ideal`.** Un `ideal`
+     * qui échoue rend silencieusement *un autre* micro : le meneur croirait
+     * parler dans son casque alors que c'est la webcam qui écoute. En `exact`,
+     * l'appel échoue — on le dit, on retombe sur celui du système, et on remet
+     * le sélecteur à « défaut » pour que l'écran ne mente pas.
+     *
+     * ⚠️ **48 kHz, et non 16 kHz comme avant.** 16 kHz est le bon choix pour de
+     * la parole transmise — c'est celui de la visioconférence — mais ce module
+     * ne transmet pas la parole : il la **transforme**. À 16 kHz, tout est
+     * coupé au-dessus de 8 kHz : les sifflantes disparaissent, une voix
+     * descendue de huit demi-tons devient sourde, et la réverbération n'a plus
+     * de haut. Le contexte tourne de toute façon à 48 kHz — on rééchantillonnait
+     * donc *vers le haut* un signal déjà appauvri.
+     */
+    private async ouvrirLeFlux(): Promise<MediaStream> {
+        if (!navigator.mediaDevices) {
+            throw new Error('navigator.mediaDevices is undefined. Insecure context or restricted browser.');
+        }
+
+        const { currentEffects, inputDeviceId } = useVoiceStore.getState();
+        const commun: MediaTrackConstraints = {
+            echoCancellation: true,
+            noiseSuppression: currentEffects.noiseSuppression,
+            autoGainControl: currentEffects.antiLarsen,
+            sampleRate: { ideal: 48000 },
+            channelCount: { ideal: 1 },
+        };
+
+        if (!inputDeviceId) return navigator.mediaDevices.getUserMedia({ audio: commun });
+
+        try {
+            return await navigator.mediaDevices.getUserMedia({
+                audio: { ...commun, deviceId: { exact: inputDeviceId } },
+            });
+        } catch (error) {
+            console.warn('[VoiceEngine] Micro choisi indisponible, retour au micro système :', error);
+            gmToast('Le micro choisi est introuvable — Voice-OS reprend celui du système.', 'warning');
+            useVoiceStore.getState().setInputDeviceId(null);
+            return navigator.mediaDevices.getUserMedia({ audio: commun });
+        }
+    }
+
+    /**
+     * Rouvre le micro sans démonter la chaîne d'effets.
+     *
+     * ⛔ **Changer l'anti-larsen appelait `stop()` puis `initialize()`** — donc
+     * fermait l'`AudioContext`, détruisait les quinze nœuds, rechargeait le
+     * worklet et rouvrait le micro. Une seconde de silence en pleine partie
+     * dans le meilleur des cas ; et si la réouverture échouait, le module
+     * restait **mort jusqu'au rechargement de l'application**, sans rien dire.
+     *
+     * Seul le flux change ici : on ouvre le nouveau **avant** de lâcher
+     * l'ancien, de sorte qu'un échec laisse le meneur avec un micro qui marche
+     * encore. *Un réglage raté doit être sans conséquence, sinon on n'ose plus
+     * y toucher en séance.*
+     */
+    public async reconfigurerLeMicro() {
+        if (!this.isInitialized || !this.context || !this.inputGain) return;
+
+        try {
+            const nouveau = await this.ouvrirLeFlux();
+            const ancien = this.stream;
+
+            this.source?.disconnect();
+            this.stream = nouveau;
+            this.source = this.context.createMediaStreamSource(nouveau);
+            this.source.connect(this.inputGain);
+
+            ancien?.getTracks().forEach(track => track.stop());
+            console.log('[VoiceEngine] Micro reconfiguré sans démonter la chaîne');
+        } catch (error) {
+            console.error('[VoiceEngine] Reconfiguration du micro en échec :', error);
+            gmToast('Impossible de rouvrir le micro — le précédent reste en place.', 'error');
         }
     }
 
@@ -254,8 +400,12 @@ export class VoiceEngine {
     }
 
     /**
-     * Liste les périphériques de sortie audio disponibles.
-     * Met à jour la liste dans le store global.
+     * Liste les périphériques audio disponibles, **entrées comprises**.
+     *
+     * ⚠️ Les libellés n'arrivent qu'**après** une autorisation micro accordée :
+     * avant, `enumerateDevices` rend des entrées anonymes. C'est pourquoi
+     * `initialize` rappelle cette méthode une fois le flux ouvert — *une liste
+     * de « Périphérique 1, 2, 3 » ne se choisit pas.*
      */
     public async refreshAvailableDevices() {
         if (!navigator.mediaDevices) {
@@ -264,8 +414,8 @@ export class VoiceEngine {
         }
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
-            const outputs = devices.filter(device => device.kind === 'audiooutput');
-            useVoiceStore.getState().setAvailableOutputs(outputs);
+            useVoiceStore.getState().setAvailableOutputs(devices.filter(d => d.kind === 'audiooutput'));
+            useVoiceStore.getState().setAvailableInputs(devices.filter(d => d.kind === 'audioinput'));
         } catch (error) {
             console.error('[VoiceEngine] Failed to enumerate devices:', error);
         }
@@ -292,61 +442,48 @@ export class VoiceEngine {
         }
     }
 
-    private duckingTimeout: number | null = null;
-
     /**
-     * Démarre l'analyse en temps réel du niveau d'entrée.
-     * Gère également la logique du Noise Gate et la détection du Ducking.
-     * Synchronise le niveau de voix avec le Player Hub via le bridge.
+     * Démarre la boucle de mesure : niveau, porte, ducking, vumètre et Hub.
+     *
+     * **Une boucle, une mesure, trois décisions** — et les deux règles qui
+     * décident vivent dans `logic/porteDeLaVoix.ts`, éprouvées sans micro.
      */
     private startLevelTracking() {
-        if (!this.analyser) return;
+        if (!this.detecteur || !this.trameDeDetection) return;
+        if (this.minuteurDeMesure) window.clearInterval(this.minuteurDeMesure);
 
-        const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
         const update = () => {
-            if (!this.analyser) return;
-            this.analyser.getByteTimeDomainData(dataArray);
-            
-            // Calculate RMS
-            let sum = 0;
-            for (let i = 0; i < dataArray.length; i++) {
-                const val = (dataArray[i] - 128) / 128;
-                sum += val * val;
-            }
-            const rms = Math.sqrt(sum / dataArray.length);
+            if (!this.detecteur || !this.trameDeDetection) return;
+            this.detecteur.getFloatTimeDomainData(this.trameDeDetection);
+
+            const { rms, db } = niveauRMS(this.trameDeDetection);
             const level = Math.min(1.0, rms * 5); // Scale for UI visibility
-            const db = 20 * Math.log10(rms || 0.000001);
-            
-            // Dynamic Noise Gate Logic
+            const maintenantMs = performance.now();
+
             if (this.gateGain && this.context) {
                 const { currentEffects, isActive } = useVoiceStore.getState();
-                
-                let targetGain = 1.0;
-                if (!isActive || (currentEffects.noiseGate && db < currentEffects.gateThreshold)) {
-                    targetGain = 0;
-                }
-                
-                // More reactive gate: fast open (0.005s) for crisp voice onset, slower close (0.4s) to avoid pumping
-                const timeConstant = targetGain > 0 ? 0.005 : 0.4;
-                this.gateGain.gain.setTargetAtTime(targetGain, this.context.currentTime, timeConstant);
 
-                // --- DUCKING DETECTION ---
-                if (isActive && currentEffects.duckingEnabled) {
-                    if (db > currentEffects.duckingThreshold) {
-                        if (this.duckingTimeout) {
-                            clearTimeout(this.duckingTimeout);
-                            this.duckingTimeout = null;
-                        }
-                        useVoiceStore.getState().setDucking(true);
-                    } else if (useVoiceStore.getState().isDucking && !this.duckingTimeout) {
-                        this.duckingTimeout = window.setTimeout(() => {
-                            useVoiceStore.getState().setDucking(false);
-                            this.duckingTimeout = null;
-                        }, currentEffects.duckingRelease); // Smooth narrative release
-                    }
-                } else if (useVoiceStore.getState().isDucking) {
-                    useVoiceStore.getState().setDucking(false);
-                }
+                this.etatDeLaPorte = porteSuivante(this.etatDeLaPorte, {
+                    db,
+                    seuilDb: currentEffects.gateThreshold,
+                    micro: isActive,
+                    armee: currentEffects.noiseGate,
+                    maintenantMs,
+                });
+
+                const cible = this.etatDeLaPorte.ouverte ? 1.0 : 0;
+                const constante = this.etatDeLaPorte.ouverte ? OUVERTURE_S : FERMETURE_S;
+                this.gateGain.gain.setTargetAtTime(cible, this.context.currentTime, constante);
+
+                // --- DUCKING ---
+                this.etatDuDucking = duckingSuivant(this.etatDuDucking, {
+                    db,
+                    seuilDb: currentEffects.duckingThreshold,
+                    relacheMs: currentEffects.duckingRelease,
+                    actif: isActive && currentEffects.duckingEnabled,
+                    maintenantMs,
+                });
+                useVoiceStore.getState().setDucking(this.etatDuDucking.duck);
             }
 
             if (useVoiceStore.getState().isActive) {
@@ -371,14 +508,23 @@ export class VoiceEngine {
                 }
             } else {
                 useVoiceStore.getState().setInputLevel(0);
-                if (window.appBridge?.image?.syncHubData) {
+                /*
+                  **Le zéro se dit une fois, pas trente fois par seconde.**
+                  Cette branche envoyait `voice-level: 0` au Hub à chaque tour de
+                  boucle micro coupé — soixante messages par seconde qui ne
+                  disaient rien de nouveau, sur le pont que ce projet a déjà eu à
+                  désaturer. *Un message qui répète l'état connu est du bruit,
+                  même s'il est juste.*
+                */
+                if (this.lastSyncLevel !== 0 && window.appBridge?.image?.syncHubData) {
                     window.appBridge.image.syncHubData('voice-level', '0');
                     this.lastSyncLevel = 0;
                 }
             }
-            this.animationFrame = requestAnimationFrame(update);
         };
+
         update();
+        this.minuteurDeMesure = window.setInterval(update, CADENCE_DE_MESURE_MS);
     }
 
     /**
@@ -391,7 +537,7 @@ export class VoiceEngine {
         useVoiceStore.subscribe((state, prevState) => {
             if (!this.context) return;
             
-            const { currentEffects, isMonitor, isLive, isActive, outputDeviceId } = state;
+            const { currentEffects, isMonitor, isLive, isActive, outputDeviceId, inputDeviceId } = state;
             const prevEffects = prevState.currentEffects;
 
             // Handle Output Device changes
@@ -399,12 +545,17 @@ export class VoiceEngine {
                 this.updateOutputDevice(outputDeviceId);
             }
 
-            // Handle Microphone constraint changes (Anti-Larsen toggle)
-            if (currentEffects.antiLarsen !== prevEffects.antiLarsen && isActive) {
-                console.log('[VoiceEngine] Re-initializing microphone for Anti-Larsen toggle');
-                this.stop();
-                this.initialize().catch(err => console.error("Re-initialization failed", err));
-                return;
+            /*
+              **Les trois réglages qui vivent dans le flux du micro**, et non
+              dans la chaîne : le micro choisi, l'anti-larsen (AGC) et la
+              suppression de bruit. Ils se reposent en rouvrant le flux, sans
+              toucher aux nœuds — voir `reconfigurerLeMicro`.
+            */
+            const fluxAChange = inputDeviceId !== prevState.inputDeviceId
+                || currentEffects.antiLarsen !== prevEffects.antiLarsen
+                || currentEffects.noiseSuppression !== prevEffects.noiseSuppression;
+            if (fluxAChange) {
+                void this.reconfigurerLeMicro();
             }
 
             // 1. Master Active/Mute
@@ -413,12 +564,10 @@ export class VoiceEngine {
                 this.inputGain!.gain.setTargetAtTime(masterVol, this.context.currentTime, 0.05);
             }
 
-            // 2. Monitoring & Live
-            if (isMonitor !== prevState.isMonitor) {
-                this.monitorGain!.gain.setTargetAtTime(isMonitor ? 1.0 : 0, this.context.currentTime, 0.05);
-            }
-            if (isLive !== prevState.isLive) {
-                this.liveGain!.gain.setTargetAtTime(isLive ? 1.0 : 0, this.context.currentTime, 0.05);
+            // 2. Monitoring & Live — une seule voie, voir `sortieGain`
+            if (isMonitor !== prevState.isMonitor || isLive !== prevState.isLive) {
+                const ouvert = (isMonitor || isLive) ? 1.0 : 0;
+                this.sortieGain!.gain.setTargetAtTime(ouvert, this.context.currentTime, 0.05);
             }
 
             // 3. Low Cut
@@ -433,7 +582,7 @@ export class VoiceEngine {
             // 4. Formant (Peaking EQ)
             if (currentEffects.formant !== prevEffects.formant) {
                 const frequency = 500 + (currentEffects.formant * 5);
-                const gain = Math.abs(currentEffects.formant) / 5;
+                const gain = VoiceEngine.gainDeFormant(currentEffects.formant);
                 this.formantFilter!.frequency.setTargetAtTime(frequency, this.context.currentTime, 0.1);
                 this.formantFilter!.gain.setTargetAtTime(gain, this.context.currentTime, 0.1);
             }
@@ -454,8 +603,9 @@ export class VoiceEngine {
 
             // 6. Reverb
             if (currentEffects.reverb !== prevEffects.reverb) {
-                this.reverbGain!.gain.setTargetAtTime(currentEffects.reverb, this.context.currentTime, 0.1);
-                this.dryGain!.gain.setTargetAtTime(1.0 - (currentEffects.reverb * 0.5), this.context.currentTime, 0.1);
+                const melange = VoiceEngine.melangeDeReverb(currentEffects.reverb);
+                this.reverbGain!.gain.setTargetAtTime(melange.mouille, this.context.currentTime, 0.1);
+                this.dryGain!.gain.setTargetAtTime(melange.sec, this.context.currentTime, 0.1);
             }
 
             // 7. Output Gain
@@ -485,7 +635,10 @@ export class VoiceEngine {
      * Arrête complètement l'engine, ferme le flux du microphone et le contexte audio.
      */
     public stop() {
-        if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+        if (this.minuteurDeMesure) {
+            window.clearInterval(this.minuteurDeMesure);
+            this.minuteurDeMesure = null;
+        }
         if (this.stream) {
             this.stream.getTracks().forEach(track => track.stop());
         }
@@ -497,7 +650,11 @@ export class VoiceEngine {
         this.context = null;
         this.stream = null;
         this.source = null;
+        this.detecteur = null;
+        this.trameDeDetection = null;
         this.isInitialized = false;
+        this.etatDeLaPorte = PORTE_FERMEE;
+        this.etatDuDucking = DUCKING_INACTIF;
         
         // Reset UI levels
         useVoiceStore.getState().setInputLevel(0);
