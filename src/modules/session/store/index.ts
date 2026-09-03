@@ -34,12 +34,8 @@ import { createCluesSlice, type CluesSlice } from './cluesSlice';
 import { createDeckSlice, type DeckSlice } from './deckSlice';
 import { createLootSlice, type LootSlice } from './lootSlice';
 
-import type {
-    Entity,
-    SessionModuleSnapshot,
-} from './types';
+import type { SessionModuleSnapshot } from './types';
 import { resolveSheetTemplate } from '../logic/templateResolver';
-import { EncounterGenerator } from '../logic/EncounterGenerator';
 
 import { SessionManager } from '../logic/SessionManager';
 import { fusionnerDeuxScenes, scinderLaSceneAuTemps } from '../logic/curationDeLaTrame';
@@ -120,7 +116,6 @@ interface CrossDomainActions {
     appliquerLaCampagneForgee: (ecriture: CampagneForgee) => void;
     exportActiveCampaignToObsidian: () => Promise<{ success: boolean; message: string }>;
     reconcileTemplates: () => void;
-    generateEncounter: (templateId: string) => Entity[];
 }
 
 // ─────────────────────────────────────────────
@@ -278,20 +273,6 @@ export const useSessionOSStore = create<SessionOSStore>()(
             generatePlayerPortrait: async (playerId, characterId, instructions) => handleGeneratePlayerPortrait(set, get, playerId, characterId, instructions),
             appliquerLaCampagneForgee: (ecriture) => handleAppliquerLaCampagneForgee(set, get, ecriture),
             exportActiveCampaignToObsidian: () => handleExportActiveCampaignToObsidian(get),
-            generateEncounter: (templateId) => {
-                const driver = get().getActiveDriver();
-                const template = driver?.encounterTemplates?.find(t => t.id === templateId);
-                if (!template) return [];
-
-                const prototypes = get().entities.filter(e => !e.isEncounterInstance);
-                const spawned = EncounterGenerator.generateFromTemplate(template, prototypes);
-
-                spawned.forEach(entity => {
-                    get().addEntity(entity);
-                });
-
-                return spawned;
-            },
 
             // ── Session Operations ─────────────────────────
 

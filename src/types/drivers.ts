@@ -167,7 +167,6 @@ export interface GameDriver {
     // Linked assets
     templateId: string; // The ID of the primary SheetTemplate used by this system
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
-    encounterTemplates?: EncounterTemplate[]; // Optional templates for combat encounters
     defaultNotebookUrl?: string; // Default NotebookLM for this system
     
     // Metadata for AI
@@ -226,14 +225,26 @@ export interface GameDriver {
     corpusId?: string;
 }
 
-export interface EncounterEntity {
-    templateId: string;
-    count: string | number;
-    role?: 'normal' | 'elite' | 'boss';
-}
+/*
+  **Les modèles de rencontre ont été retirés le 2026-09-04**, à la demande de
+  David après lecture du code.
 
-export interface EncounterTemplate {
-    id: string;
-    name: string;
-    entities: EncounterEntity[];
-}
+  Ils décrivaient une rencontre composée d'avance — « un chef et 2d4 sbires » —
+  que `EncounterGenerator` instanciait en CLONANT des prototypes de la campagne,
+  et que `EncounterRollPanel` déclenchait d'un clic.
+
+  ⛔ **Rien ne les produisait.** Aucun pilote de référence n'en déclarait, la
+  Forge n'en générait pas, et l'éditeur de pilote n'offrait aucun écran pour en
+  créer. Le panneau ne pouvait donc afficher que son état vide — lequel renvoyait
+  vers un « Rule Engine » dépourvu de cette fonction. Il n'était d'ailleurs monté
+  nulle part.
+
+  *Ce n'était pas du code injoignable : c'était du code qui, même joignable,
+  n'aurait rien montré.* Il manquait la pièce qui produit la donnée, et elle n'a
+  jamais été écrite.
+
+  Le besoin est couvert depuis le 2026-09-03 par l'atelier des adversaires, qui
+  **crée** au lieu de cloner et n'exige aucun prototype saisi d'avance. Si la
+  composition d'escouade revient un jour, elle se fera côté bestiaire : *un seul
+  endroit où l'on fabrique des adversaires, plutôt que deux qui s'ignorent.*
+*/

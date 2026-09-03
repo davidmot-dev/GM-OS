@@ -220,7 +220,13 @@ générer**.*
 - **Trois sorties** : au combat, dans la campagne, ou au bestiaire.
 - Le bestiaire entre dans la **sauvegarde** (clé déclarée dans `schemas.ts` — sans quoi elle serait écrite puis jetée, la leçon de Music-OS).
 
-⛔ **Trouvé en chemin : `EncounterRollPanel` n'est monté nulle part.** L'interface existe, le générateur et son action de store aussi, mais aucun écran ne l'affiche — les `encounterTemplates` déclarés par un pilote sont donc **inatteignables**. Non traité aujourd'hui, et à trancher : le rebrancher dans l'atelier, ou le supprimer. *Une fonctionnalité qu'aucun écran n'atteint n'existe pas, mais son code se maintient quand même.* Le fichier porte aussi un `// @ts-nocheck` en tête.
+⛔ **Trouvé en chemin, puis RETIRÉ le 2026-09-04 sur décision de David** — après lecture du code, comme il l'avait demandé.
+
+`EncounterRollPanel` n'était monté nulle part. Mais le vrai motif du retrait est ailleurs, et il n'apparaissait qu'en cherchant qui remplit `encounterTemplates` : **personne**. Aucun pilote de référence n'en déclarait, la Forge n'en produisait pas, l'éditeur de pilote n'offrait aucun écran pour en créer. *Ce n'était donc pas du code injoignable : c'était du code qui, même joignable, n'aurait affiché que son état vide* — lequel renvoyait vers un « Rule Engine » dépourvu de la fonction. Il manquait la pièce qui produit la donnée, et elle n'a jamais été écrite.
+
+Quatre pièces parties ensemble, un seul lecteur chacune : le panneau, `EncounterGenerator.ts` (et son `// @ts-nocheck`), l'action `generateEncounter` du store, les types `EncounterTemplate`/`EncounterEntity` et le drapeau `isEncounterInstance`. **Zéro test n'a bougé** — ce qui confirme après coup que rien n'en dépendait.
+
+Le besoin est couvert par l'atelier, qui **crée** au lieu de cloner. Si la composition d'escouade revient, elle se fera côté bestiaire : *un seul endroit où l'on fabrique des adversaires, plutôt que deux qui s'ignorent.* Le motif du retrait est consigné dans `types/drivers.ts`, là où le champ vivait.
 
 **Deux retours de David le soir même, et un seul était un défaut :**
 

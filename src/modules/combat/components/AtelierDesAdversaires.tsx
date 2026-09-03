@@ -32,6 +32,9 @@ import {
  * Combat-OS donnait une coquille — un nom, dix points de vie en dur, une fiche
  * de zéros.
  *
+ * *Il a été retiré le 2026-09-04* : son écran n'était monté nulle part, et rien
+ * ne produisait les modèles de rencontre dont il dépendait. Voir `types/drivers.ts`.
+ *
  * ─────────────────────────────────────────────────────────────────────────────
  * LES TROIS DÉCISIONS DE CET ÉCRAN
  * ─────────────────────────────────────────────────────────────────────────────
