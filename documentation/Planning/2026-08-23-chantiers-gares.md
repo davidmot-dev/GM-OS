@@ -239,8 +239,21 @@ générer**.*
 
 **Et la séparation par jeu, vérifiée à la demande** : liste, remplacement sur le même nom, refus de renommage, répartitions ▲▼ — tout est clé sur `driver.id`, et trois tests le tiennent dont un qui monte l'écran. ✅ L'identifiant survit à une reforge depuis le correctif du 16/08 (`enrichirLePilote`), donc le bestiaire ne s'orpheline pas. ⚠️ Deux campagnes du même jeu le partagent, par construction.
 
+**Et une quatrième suite, le lendemain matin : « je ne trouve pas l'atelier et le bestiaire ».**
+
+⛔ **Le stockage n'était pas le problème — la porte l'était.** Le bestiaire était indexé par
+`driver.id` depuis le début, mais il ne s'ouvrait que depuis Combat-OS : *on pense à ses adversaires en
+regardant son JEU, pas en ouvrant un combat.* David proposait de le lier aux pilotes ; la bonne réponse
+était **deux portes, pas un déménagement**.
+
+| Ce qui a été ajouté | Ce qu'il fallait éviter |
+| --- | --- |
+| **Librairie de Modèles → Drivers → bouton BESTIAIRE** | Il ouvre le bestiaire du **pilote sélectionné**, et non de la campagne ouverte — *une discordance qu'on ne remarquerait qu'après avoir fabriqué trois adversaires injouables.* Le pilote se résout dans la liste complète : la Forge en montre dix, et seuls les forgés vivent dans `customGameDrivers` |
+| **Le bestiaire voyage dans le `.gmos-driver`** | Les gabarits sont **re-clés** sur le pilote importé : un bundle bricolé ou un pilote renommé avant l'export les rendrait *invisibles* — importés puis introuvables, pire que pas importés. Réimporter deux fois ne duplique pas, un bundle antérieur au 03/09 s'importe sans rien effacer, et le bestiaire entre dans le **rollback** de l'injection |
+
 **Ce qui entre en P6 :**
 
+- **Les deux portes et l'export**, avec un vrai pilote et un vrai bestiaire — jamais fait tourner.
 - **Les archétypes sur les vrais jeux de David.** La proposition par mots-clés est le point faible assumé : elle a été éprouvée sur les cinq attributs de Dune et sur une échelle en lettres, pas sur ses dix pilotes.
 - **La convention des échelles en lettres** : l'atelier suppose les options rangées *de la meilleure à la pire* (A, B, C, D). Vrai pour Blade Runner ; à vérifier ailleurs — le premier adversaire le dira du premier coup d'œil.
 - **Le geste complet en séance** : fabriquer trois piétailles pendant que les joueurs discutent, sans que ça casse le rythme.
