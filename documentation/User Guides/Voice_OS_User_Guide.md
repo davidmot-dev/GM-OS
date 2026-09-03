@@ -29,6 +29,7 @@ Plutôt que de régler chaque curseur manuellement, utilisez les presets intégr
 
 ## 🎚️ Vocal Shapers (Paramètres Avancés)
 Pour les MJs souhaitant un contrôle total, ajustez les réglages suivants :
+- **Compression** *(nouveau, 0 à 100 %)* : à quel point la voix est ramenée à un niveau constant. **Bas**, votre jeu respire — un murmure reste un murmure, et *Voice-to-Light* a de quoi suivre. **Haut**, tout sort au même niveau, façon radio. Le réglage par défaut est 40 % ; **100 % reproduit exactement le réglage figé d'avant le 03/09/2026**, si vous préférez celui-là.
 - **Pitch Shift** : Modifie la hauteur de la voix (en demi-tons).
 - **Formant (Timbre)** : Modifie la structure de la voix pour simuler une gorge plus large ou plus étroite sans changer la note.
 - **Room Reverb** : Ajoute de l'écho pour simuler une pièce, une cathédrale ou une grotte.
@@ -86,11 +87,18 @@ Dans cet ordre — du plus fréquent au plus rare :
 | Des mots ou des fins de phrase disparaissent | Couper **Suppression de bruit**. Puis, si ça persiste, baisser le seuil du **Noise Gate** (il ferme désormais avec 6 dB de marge et un maintien de 250 ms, mais un seuil trop haut coupe toujours). |
 | Ça sature dès qu'on parle fort | Vérifier le **Formant** : à fond, il posait jusqu'à +16 dB — il est maintenant borné et respecte son signe. Puis baisser **Output Gain**. |
 | Ça sature quand on ajoute de la réverbération | Corrigé le 03/09/2026 : les deux voies (sèche et réverbérée) se mélangent à puissance constante au lieu de s'additionner. |
-| La voix est en retard dans le casque | Corrigé : à **Pitch = 0**, la ligne de transposition est contournée. Elle ajoutait 85 ms **même sans transposition**. |
+| La voix est en retard dans le casque | Corrigé : à **Pitch = 0**, la voix passe sans aucun retard — la ligne de transposition ajoutait 85 ms *même sans transposition*. En transposant, le retard est de 43 ms (contre 85 ms avant). |
+| Tout sort au même niveau, le jeu est écrasé | Baisser **Compression**. Elle était figée à 8:1, ce qui est un limiteur et non un compresseur. |
 | Le ducking reste baissé après la dernière phrase | Corrigé : le relâchement se recalcule à chaque mesure, et la fenêtre du meneur n'est plus ralentie quand elle passe en arrière-plan. |
 
+### 🎛️ La transposition, refaite le 03/09/2026
+
+Les voix de PNJ transposées chuintaient, et ce n'était pas une impression : l'ancien algorithme faisait **onduler le niveau de 39 à 57 %** sur une voix tenue, et lui prenait **1,7 dB** au passage.
+
+Il est remplacé par **WSOLA** — la technique des changeurs de voix : au lieu de recoller la lecture n'importe où, GM-OS cherche l'endroit dont la forme d'onde ressemble le plus à celle qu'il est en train de lire, c'est-à-dire qu'il retombe en phase avec la voix. Mesuré sur le même signal : **1,5 à 25 % d'ondulation**, et le niveau est rendu à l'identique.
+
 > [!NOTE]
-> Ce que la révision du 03/09/2026 **n'a pas** corrigé : la transposition reste un délai à deux têtes de lecture, qui module l'amplitude dès qu'on s'éloigne de l'unisson. C'est le chuintement des voix très graves ou très aiguës — il demande un autre algorithme, pas un réglage.
+> Ce qui subsiste, et qu'aucune méthode temporelle n'évite : un recollage peut répéter ou escamoter une attaque de consonne. C'est audible sur les transpositions extrêmes (±12 demi-tons), beaucoup moins entre −8 et +7. L'alternative — un vocodeur de phase — supprime ce défaut mais ajoute un halo métallique sur les voyelles tenues, ce qui est **pire sur de la voix**.
 
 ---
 

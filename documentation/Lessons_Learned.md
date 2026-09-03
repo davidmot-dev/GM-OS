@@ -545,7 +545,23 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
   quand une boucle DÉCIDE quelque chose (porte, ducking, lumière qui suit la voix), elle ne doit pas
   dépendre du rendu d'une fenêtre — `backgroundThrottling: false`, ou mieux, le fil audio.
 
-### 7. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
+### 7. Une sonde qui ne réveille pas le défaut ne prouve rien
+- **Défi** : refaire la transposition de Voice-OS (chantier du 03/09). Premier jet des tests : sinusoïde
+  à 200 Hz, transposée de −8 demi-tons, mesure de l'ondulation du niveau. **L'ANCIEN algorithme les
+  passait tous** — 3 % d'ondulation, sous un seuil de 12 %.
+- **Cause** : une sinusoïde retardée reste la même sinusoïde. Les deux têtes de lecture de l'ancien
+  algorithme restaient donc **corrélées quoi qu'il arrive**, et son défaut ne pouvait pas se manifester.
+  Sur une « voyelle » (fondamentale + douze harmoniques), le même algorithme ondule de **50 %**, et sur du
+  bruit blanc de **39 %**.
+- **Leçon** : *avant de croire un test vert, le passer sur le code qu'il est censé condamner.* Un test qui
+  ne sait pas échouer ne mesure rien — et il est plus dangereux qu'un test absent, parce qu'il rassure.
+  **Corollaire sur le choix du signal** : une sonde doit ressembler à ce que le module traite vraiment.
+  Ici, la sonde idéale n'était pas la plus pure, c'était **la plus proche d'une voix**.
+- **Et l'inverse est vrai aussi** : c'est la même mesure qui a montré qu'une fenêtre de corrélation plus
+  courte qu'une période de voix (5,3 ms pour un 120 Hz qui en fait 8,3) **doublait** l'ondulation
+  résiduelle. Le réglage n'a pas été deviné, il a été mesuré.
+
+### 8. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
 - **Défi** : `npx vitest run` a rendu **263 fichiers en échec** avec `Error: Vitest failed to find the
   current suite` pointant `src/test/setup.ts`. Un rouge parfaitement crédible.
 - **Cause** : `setup 0ms`, `tests 0ms` — **aucune assertion n'avait tourné**. Ce sont les workers qui
@@ -558,7 +574,7 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
 ---
 
 *Dernière mise à jour : 3 Septembre 2026 — révision de Voice-OS (sélecteur de micro, porte à hystérésis,
-quatre sources de saturation), storyboard (le son d'une séquence, le titre projeté), greffon
+quatre sources de saturation), transposition refaite en WSOLA et compression rendue réglable, storyboard (le son d'une séquence, le titre projeté), greffon
 `tailwindcss-animate` rétabli, dés échelonnés au pupitre et sur tablette, atelier de thème, épingles du
 Social Nexus.*
 
