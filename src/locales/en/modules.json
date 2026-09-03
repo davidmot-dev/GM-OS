@@ -2928,9 +2928,15 @@
       "anti_larsen": "Anti-Larsen",
       "noise_gate": "Noise Gate",
       "auto_ducking": "Auto-Ducking",
-      "noise_suppression": "Noise Suppression",
-      "noise_suppression_hint": "Browser noise suppressor. Turn it off with a headset mic: it shaves off sentence endings and whispers.",
-      "compression": "Compression"
+      "noise_suppression": "Noise removal",
+      "compression": "Compression",
+      "debruitage_aucun": "None",
+      "debruitage_navigateur": "Browser",
+      "debruitage_neuronal": "Neural",
+      "debruitage_aucun_hint": "Raw microphone. Best with a headset mic in a quiet room.",
+      "debruitage_navigateur_hint": "WebRTC's noise suppressor. Effective, but it decides on its own what counts as voice and shaves off sentence endings — with no way to tune it.",
+      "debruitage_neuronal_hint": "RNNoise, inside the GM-OS chain: it erases steady noise and knows when you are speaking, which keeps the gate from cutting your words. Adds 10 ms.",
+      "voice_detected": "The model hears you speaking"
     },
     "params": {
       "ducking_threshold": "Trigger Threshold",

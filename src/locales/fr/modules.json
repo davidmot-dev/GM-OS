@@ -2928,9 +2928,15 @@
       "anti_larsen": "Anti-Larsen",
       "noise_gate": "Noise Gate",
       "auto_ducking": "Auto-Ducking",
-      "noise_suppression": "Suppression de bruit",
-      "noise_suppression_hint": "Débruiteur du navigateur. À couper avec un micro-casque : il rabote les fins de phrase et les chuchotements.",
-      "compression": "Compression"
+      "noise_suppression": "Débruitage",
+      "compression": "Compression",
+      "debruitage_aucun": "Aucun",
+      "debruitage_navigateur": "Navigateur",
+      "debruitage_neuronal": "Neuronal",
+      "debruitage_aucun_hint": "Le micro arrive brut. À choisir avec un micro-casque dans une pièce calme.",
+      "debruitage_navigateur_hint": "Le débruiteur de WebRTC. Efficace, mais il décide seul de ce qui est de la voix et rabote les fins de phrase — et rien ne le règle.",
+      "debruitage_neuronal_hint": "RNNoise, dans la chaîne de GM-OS : il efface le bruit stationnaire et sait dire quand vous parlez, ce qui empêche la porte de couper vos mots. Ajoute 10 ms.",
+      "voice_detected": "Le modèle vous entend parler"
     },
     "params": {
       "ducking_threshold": "Seuil de Déclenchement",

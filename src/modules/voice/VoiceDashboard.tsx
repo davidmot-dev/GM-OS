@@ -55,6 +55,7 @@ const VoiceDashboard: React.FC = () => {
         currentEffects,
         activePresetId,
         inputLevel,
+        probabiliteDeVoix,
         presets,
         toggleActive,
         toggleLive,
@@ -64,7 +65,7 @@ const VoiceDashboard: React.FC = () => {
         updateEffect,
         applyPreset,
         toggleAntiLarsen,
-        toggleNoiseSuppression,
+        setDebruitage,
         toggleNoiseGate,
         outputDeviceId,
         availableOutputs,
@@ -417,16 +418,47 @@ const VoiceDashboard: React.FC = () => {
                             </div>
                         </button>
                         
-                        <button
-                            onClick={() => toggleNoiseSuppression()}
-                            title={t('modules:voice.shapers.noise_suppression_hint')}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseSuppression ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
-                        >
-                            <span className="text-[10px] font-black uppercase tracking-widest">🧹 {t('modules:voice.shapers.noise_suppression')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseSuppression ? 'bg-emerald-500' : 'bg-slate-700'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.noiseSuppression ? 'right-1' : 'left-1'}`} />
+                        {/*
+                          **Le débruitage : UN réglage, trois positions.**
+
+                          Deux interrupteurs auraient laissé empiler le
+                          débruiteur du navigateur et RNNoise — *deux
+                          débruiteurs qui se suivent, ce n'est pas mieux, c'est
+                          pire* : le premier rabote ce que le second aurait su
+                          garder. Le choix est donc exclusif par construction.
+                        */}
+                        <div className="flex flex-col gap-2 p-3 rounded-xl border border-transparent bg-app-surface/50">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    🧹 {t('modules:voice.shapers.noise_suppression')}
+                                </span>
+                                {/*
+                                  La pastille de voix ne s'affiche que quand le modèle
+                                  tourne : *une pastille éteinte se lit comme « il ne
+                                  parle pas », pas comme « personne n'écoute ».*
+                                */}
+                                {currentEffects.debruitage === 'neuronal' && (
+                                    <span
+                                        title={t('modules:voice.shapers.voice_detected')}
+                                        className={`w-2 h-2 rounded-full transition-colors ${probabiliteDeVoix > 0.6 ? 'bg-emerald-400' : 'bg-slate-700'}`}
+                                    />
+                                )}
                             </div>
-                        </button>
+                            <div className="flex gap-1">
+                                {(['aucun', 'navigateur', 'neuronal'] as const).map(mode => (
+                                    <button
+                                        key={mode}
+                                        onClick={() => setDebruitage(mode)}
+                                        title={t(`modules:voice.shapers.debruitage_${mode}_hint`)}
+                                        className={`flex-1 px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all border ${currentEffects.debruitage === mode
+                                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                            : 'bg-app-bg border-transparent text-slate-500 hover:text-slate-300'}`}
+                                    >
+                                        {t(`modules:voice.shapers.debruitage_${mode}`)}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
 
                         <button 
                             onClick={() => toggleNoiseGate()}

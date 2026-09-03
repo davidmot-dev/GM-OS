@@ -83,6 +83,19 @@ export interface MesureDeLaPorte {
     micro: boolean;
     /** La porte est-elle armée ? Désarmée, elle laisse tout passer. */
     armee: boolean;
+    /**
+     * Le modèle de débruitage dit-il qu'on est en train de parler ?
+     *
+     * *Ajouté le 2026-09-03 avec RNNoise, qui rend une probabilité de voix par
+     * trame.* Un détecteur entraîné sait ce qu'un seuil de niveau ne saura
+     * jamais : qu'une fin de phrase soufflée à −55 dB est encore de la parole.
+     *
+     * ⚠️ **Il ne peut que TENIR la porte ouverte, jamais l'ouvrir.** Un modèle
+     * qui se tromperait sur un bruit de fond ouvrirait alors le micro tout seul,
+     * et le meneur n'aurait plus aucun moyen de se taire. *On accorde à une
+     * estimation le droit de prolonger une décision, pas de la prendre.*
+     */
+    voix?: boolean;
     maintenantMs: number;
 }
 
@@ -109,6 +122,14 @@ export function porteSuivante(etat: EtatDeLaPorte, mesure: MesureDeLaPorte): Eta
     const seuilDeFermeture = mesure.seuilDb - MARGE_DE_FERMETURE_DB;
 
     if (mesure.db >= mesure.seuilDb) {
+        return { ouverte: true, derniereVoixMs: mesure.maintenantMs };
+    }
+
+    /*
+      La voix détectée rafraîchit le maintien — mais seulement si la porte est
+      déjà ouverte, cf. la remarque sur `voix`.
+    */
+    if (etat.ouverte && mesure.voix) {
         return { ouverte: true, derniereVoixMs: mesure.maintenantMs };
     }
 

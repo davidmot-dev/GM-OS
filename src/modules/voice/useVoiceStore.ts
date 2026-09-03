@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
 import { contexteAllegeMaintenant } from '../ai/modeDeContexte';
+import { debruitageMigre, type Debruitage } from './logic/migrationDesEffets';
 
 
 export interface VoiceEffects {
@@ -20,16 +21,20 @@ export interface VoiceEffects {
     outputGain: number; // 0 to 2
     antiLarsen: boolean; // Toggle browser echo cancellation
     /**
-     * La suppression de bruit du navigateur (WebRTC).
+     * Qui débruite, et il n'y en a qu'un — voir `logic/migrationDesEffets.ts`.
      *
-     * **Elle était en dur à `true`, et c'est un suspect direct du « le son se
-     * coupe ».** Ce n'est pas un filtre : c'est un débruiteur agressif qui
-     * décide lui-même de ce qui est de la voix — il rabote les fins de phrase et
-     * les chuchotements, *en amont de tout ce que Voice-OS peut régler.* Sur un
-     * micro-casque, elle n'a plus grand-chose à faire ; sur un micro posé au
-     * milieu de la table, elle reste utile. D'où un réglage, et non un choix.
+     * - `aucun` : le signal du micro arrive brut.
+     * - `navigateur` : la suppression de bruit de WebRTC. Ce n'est pas un
+     *   filtre mais un algorithme qui décide lui-même de ce qui est de la voix,
+     *   **en amont de tout ce que Voice-OS peut régler** — d'où les fins de
+     *   phrase rabotées.
+     * - `neuronal` : RNNoise, dans la chaîne de GM-OS. Réglable, mesurable, et
+     *   il rend en prime une probabilité de voix que la porte sait suivre.
+     *
+     * *Un seul réglage à trois positions, et non deux interrupteurs : deux
+     * débruiteurs qui se suivent, ce n'est pas mieux, c'est pire.*
      */
-    noiseSuppression: boolean;
+    debruitage: Debruitage;
     noiseGate: boolean;  // Toggle gate logic
     duckingEnabled: boolean;
     duckingThreshold: number; // dB
@@ -73,6 +78,15 @@ interface VoiceState {
     activePresetId: string | null;
     
     inputLevel: number; // 0 to 1 (for VU-meter)
+
+    /**
+     * La probabilité que le meneur soit en train de parler, selon RNNoise.
+     *
+     * Zéro quand le débruitage neuronal est éteint : *une absence d'estimation
+     * ne doit pas se lire comme une certitude de silence*, et c'est pourquoi la
+     * porte ne s'en sert que pour se TENIR ouverte, jamais pour s'ouvrir.
+     */
+    probabiliteDeVoix: number;
     
     outputDeviceId: string | null;
     availableOutputs: MediaDeviceInfo[];
@@ -105,8 +119,9 @@ interface VoiceState {
     updateEffect: (key: keyof VoiceEffects, value: number) => void;
     applyPreset: (presetId: string) => void;
     setInputLevel: (level: number) => void;
+    setProbabiliteDeVoix: (probabilite: number) => void;
     toggleAntiLarsen: (active?: boolean) => void;
-    toggleNoiseSuppression: (active?: boolean) => void;
+    setDebruitage: (mode: Debruitage) => void;
     toggleNoiseGate: (active?: boolean) => void;
     toggleDucking: (active?: boolean) => void;
     setDucking: (isDucking: boolean) => void;
@@ -144,7 +159,7 @@ const DEFAULT_EFFECTS: VoiceEffects = {
     compression: 40,
     outputGain: 1.0,
     antiLarsen: true,
-    noiseSuppression: true,
+    debruitage: 'navigateur',
     noiseGate: true,
     duckingEnabled: false,
     duckingThreshold: -40,
@@ -204,6 +219,7 @@ export const useVoiceStore = create<VoiceState>()(
             activePresetId: 'clean',
             
             inputLevel: 0,
+            probabiliteDeVoix: 0,
             isWorkletReady: false,
             outputDeviceId: null,
             availableOutputs: [],
@@ -233,16 +249,14 @@ export const useVoiceStore = create<VoiceState>()(
             },
             
             setInputLevel: (level) => set({ inputLevel: level }),
+            setProbabiliteDeVoix: (probabilite) => set({ probabiliteDeVoix: probabilite }),
             
             toggleAntiLarsen: (active) => set((state) => ({ 
                 currentEffects: { ...state.currentEffects, antiLarsen: active !== undefined ? active : !state.currentEffects.antiLarsen } 
             })),
             
-            toggleNoiseSuppression: (active) => set((state) => ({
-                currentEffects: {
-                    ...state.currentEffects,
-                    noiseSuppression: active !== undefined ? active : !state.currentEffects.noiseSuppression,
-                },
+            setDebruitage: (mode) => set((state) => ({
+                currentEffects: { ...state.currentEffects, debruitage: mode },
             })),
 
             toggleNoiseGate: (active) => set((state) => ({ 
@@ -431,6 +445,17 @@ Règles des valeurs :
                 if (state) {
                     // Ensure all new fields exist in currentEffects after hydration
                     state.currentEffects = { ...DEFAULT_EFFECTS, ...state.currentEffects };
+                    /*
+                      Le réglage de débruitage a changé de forme le 2026-09-03 :
+                      un booléen est devenu trois positions. Sans cette
+                      traduction, un rack enregistré le matin repartait « aucun
+                      débruitage » — *un changement de forme ne doit jamais
+                      changer un réglage en silence.*
+                    */
+                    state.currentEffects.debruitage = debruitageMigre(
+                        state.currentEffects as unknown as { debruitage?: unknown; noiseSuppression?: unknown },
+                        DEFAULT_EFFECTS.debruitage,
+                    );
                 }
             }
         }

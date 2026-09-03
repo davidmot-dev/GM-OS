@@ -19,6 +19,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@gradio/client": "^2.1.0",
+    "@shiguredo/rnnoise-wasm": "^2025.1.5",
     "@types/adm-zip": "^0.5.8",
     "@types/archiver": "^7.0.0",
     "@types/file-saver": "^2.0.7",

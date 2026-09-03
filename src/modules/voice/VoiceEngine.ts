@@ -7,6 +7,20 @@ import {
 import { reglageDuCompresseur } from './logic/compression';
 
 /**
+ * Le taux d'echantillonnage impose au contexte.
+ *
+ * **RNNoise est entraine a 48 kHz**, et la transposition compte ses constantes
+ * en millisecondes a ce taux. Le laisser suivre la carte son - 44,1 kHz sur
+ * certains pilotes - decalerait le decoupage en bandes du modele de 9 %.
+ * Chromium sait reechantillonner l'entree pour nous ; *une hypothese de DSP se
+ * garantit, elle ne s'espere pas.*
+ */
+const TAUX_DU_CONTEXTE = 48000;
+
+/** Le seuil au-dela duquel on considere que le modele entend une voix. */
+const SEUIL_DE_VOIX = 0.6;
+
+/**
  * La cadence de la boucle de mesure, en ms.
  *
  * ⛔ **C'était `requestAnimationFrame`, et c'est une cause directe du « le son
@@ -60,6 +74,12 @@ export class VoiceEngine {
     private detecteur: AnalyserNode | null = null;
     private trameDeDetection: Float32Array<ArrayBuffer> | null = null;
 
+    /** Le noeud de debruitage neuronal, s'il a pu etre charge. */
+    private debruiteur: AudioWorkletNode | null = null;
+
+    /** Le module wasm de RNNoise, compile une fois pour toute la session. */
+    private static rnnoise: Promise<WebAssembly.Module> | null = null;
+
     // Destinations
     /**
      * L'unique voie vers la sortie.
@@ -108,7 +128,8 @@ export class VoiceEngine {
 
         try {
             this.context = new AudioContext({
-                latencyHint: 'interactive'
+                latencyHint: 'interactive',
+                sampleRate: TAUX_DU_CONTEXTE,
             });
 
             // Ensure context is running (required for many browsers/Tauri)
@@ -215,7 +236,7 @@ export class VoiceEngine {
             // --- CONNECT CHAIN ---
             // source -> inputGain -> lowCut -> compressor -> formant -> distortion -> dry/wet reverb -> output -> monitor/live
             this.source.connect(this.inputGain);
-            this.inputGain.connect(this.lowCut);
+            await this.brancherLeDebruitage();
             this.lowCut.connect(this.compressor);
             this.compressor.connect(this.formantFilter);
 
@@ -325,6 +346,75 @@ export class VoiceEngine {
     }
 
     /**
+     * Branche le debruitage neuronal entre le gain d'entree et le coupe-bas.
+     *
+     * **Avant le coupe-bas, donc avant le detecteur** qui decide de la porte, du
+     * ducking et de la lumiere : *ce qui decide doit decider sur le signal
+     * propre.*
+     *
+     * WARN **Un echec ici ne doit jamais faire taire le micro.** Trois choses
+     * peuvent manquer - le binaire, le worklet, ou le taux d'echantillonnage -
+     * et dans les trois cas on branche le fil droit et on le dit une fois. *Une
+     * amelioration qui casse la fonction de base n'est pas une amelioration.*
+     */
+    private async brancherLeDebruitage() {
+        if (!this.context || !this.inputGain || !this.lowCut) return;
+
+        const droit = () => this.inputGain!.connect(this.lowCut!);
+
+        if (this.context.sampleRate !== TAUX_DU_CONTEXTE) {
+            console.warn('[VoiceEngine] contexte a ' + this.context.sampleRate + ' Hz : debruitage neuronal indisponible.');
+            gmToast('Debruitage neuronal indisponible : la carte son impose ' + this.context.sampleRate + ' Hz.', 'warning');
+            droit();
+            return;
+        }
+
+        try {
+            if (!VoiceEngine.rnnoise) {
+                VoiceEngine.rnnoise = fetch('/audio/rnnoise.wasm')
+                    .then(reponse => {
+                        if (!reponse.ok) throw new Error('HTTP ' + reponse.status);
+                        return reponse.arrayBuffer();
+                    })
+                    .then(octets => WebAssembly.compile(octets));
+            }
+            const module = await VoiceEngine.rnnoise;
+
+            await this.context.audioWorklet.addModule('/audio/debruitage-processor.js');
+            const noeud = new AudioWorkletNode(this.context, 'debruitage-processor', {
+                numberOfInputs: 1,
+                numberOfOutputs: 1,
+                outputChannelCount: [1],
+                processorOptions: {
+                    module,
+                    actif: useVoiceStore.getState().currentEffects.debruitage === 'neuronal',
+                },
+            });
+
+            noeud.port.onmessage = (evenement) => {
+                const message = evenement.data;
+                if (!message) return;
+                if (message.type === 'voix') {
+                    useVoiceStore.getState().setProbabiliteDeVoix(message.valeur);
+                } else if (message.type === 'echec') {
+                    console.error('[VoiceEngine] RNNoise en echec dans le worklet :', message.message);
+                    gmToast('Le debruitage neuronal n a pas demarre - la voix passe sans lui.', 'error');
+                }
+            };
+
+            this.inputGain.connect(noeud);
+            noeud.connect(this.lowCut);
+            this.debruiteur = noeud;
+            console.log('[VoiceEngine] Debruitage neuronal branche');
+        } catch (erreur) {
+            console.error('[VoiceEngine] Debruitage neuronal indisponible :', erreur);
+            gmToast('Debruitage neuronal indisponible - la voix passe sans lui.', 'warning');
+            this.debruiteur = null;
+            droit();
+        }
+    }
+
+    /**
      * Ouvre le flux du micro selon les réglages courants.
      *
      * **Le micro choisi est demandé en `exact`, et pas en `ideal`.** Un `ideal`
@@ -349,7 +439,7 @@ export class VoiceEngine {
         const { currentEffects, inputDeviceId } = useVoiceStore.getState();
         const commun: MediaTrackConstraints = {
             echoCancellation: true,
-            noiseSuppression: currentEffects.noiseSuppression,
+            noiseSuppression: currentEffects.debruitage === 'navigateur',
             autoGainControl: currentEffects.antiLarsen,
             sampleRate: { ideal: 48000 },
             channelCount: { ideal: 1 },
@@ -493,6 +583,7 @@ export class VoiceEngine {
                     seuilDb: currentEffects.gateThreshold,
                     micro: isActive,
                     armee: currentEffects.noiseGate,
+                    voix: useVoiceStore.getState().probabiliteDeVoix > SEUIL_DE_VOIX,
                     maintenantMs,
                 });
 
@@ -578,9 +669,22 @@ export class VoiceEngine {
             */
             const fluxAChange = inputDeviceId !== prevState.inputDeviceId
                 || currentEffects.antiLarsen !== prevEffects.antiLarsen
-                || currentEffects.noiseSuppression !== prevEffects.noiseSuppression;
+                || (currentEffects.debruitage === 'navigateur') !== (prevEffects.debruitage === 'navigateur');
             if (fluxAChange) {
                 void this.reconfigurerLeMicro();
+            }
+
+            /*
+              Le debruitage neuronal, lui, s'allume par un message : il ne coute
+              ni remontage de chaine ni blanc dans le son.
+            */
+            if (currentEffects.debruitage !== prevEffects.debruitage) {
+                this.debruiteur?.port.postMessage({
+                    type: 'actif', valeur: currentEffects.debruitage === 'neuronal',
+                });
+                if (currentEffects.debruitage !== 'neuronal') {
+                    useVoiceStore.getState().setProbabiliteDeVoix(0);
+                }
             }
 
             // 1. Master Active/Mute
@@ -682,6 +786,7 @@ export class VoiceEngine {
         this.source = null;
         this.detecteur = null;
         this.trameDeDetection = null;
+        this.debruiteur = null;
         this.isInitialized = false;
         this.etatDeLaPorte = PORTE_FERMEE;
         this.etatDuDucking = DUCKING_INACTIF;

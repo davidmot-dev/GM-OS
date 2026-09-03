@@ -84,6 +84,32 @@ describe('porteSuivante', () => {
         expect(coupe.derniereVoixMs).toBe(ouverte.derniereVoixMs);
     });
 
+    it('tient la porte ouverte tant que le modèle entend une voix', () => {
+        /*
+          Une fin de phrase soufflée sous le seuil de fermeture : le niveau dit
+          « silence », RNNoise dit « parole ». C'est la parole qui gagne.
+        */
+        let etat = porteSuivante(PORTE_FERMEE, { ...MESURE, db: -20, maintenantMs: 0 });
+        for (let i = 1; i <= 30; i++) {
+            etat = porteSuivante(etat, { ...MESURE, db: -80, voix: true, maintenantMs: i * 33 });
+        }
+        expect(etat.ouverte).toBe(true);
+
+        /* Et dès que le modèle lâche, le maintien reprend son cours. */
+        etat = porteSuivante(etat, { ...MESURE, db: -80, voix: false, maintenantMs: 31 * 33 + MAINTIEN_MS });
+        expect(etat.ouverte).toBe(false);
+    });
+
+    it('n’OUVRE PAS sur la seule parole du modèle — il ne peut que tenir', () => {
+        /*
+          La garde qui compte : un modèle qui se trompe sur un bruit de fond
+          ouvrirait le micro tout seul, et le meneur n'aurait plus de moyen de se
+          taire.
+        */
+        const etat = porteSuivante(PORTE_FERMEE, { ...MESURE, db: -80, voix: true, maintenantMs: 0 });
+        expect(etat.ouverte).toBe(false);
+    });
+
     it('laisse tout passer quand la porte est désarmée, même dans le silence', () => {
         const etat = porteSuivante(PORTE_FERMEE, { ...MESURE, db: -90, armee: false, maintenantMs: 0 });
         expect(etat.ouverte).toBe(true);
