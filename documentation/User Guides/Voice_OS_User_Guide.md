@@ -48,17 +48,49 @@ L'une des fonctions les plus puissantes de GM-OS v5 pour donner vie à vos PNJ :
 
 ---
 
+## 🎙️ Choisir son micro (v6.5)
+
+En haut du panneau de droite, **Micro** liste les entrées audio de la machine.
+
+- **Micro Système par Défaut** garde le comportement d'avant : Voice-OS prend celui que Windows a choisi.
+- Choisir explicitement un micro **le retient d'une soirée à l'autre**, même après un redémarrage.
+- Si le micro choisi n'est plus branché, Voice-OS **vous le dit** et retombe sur celui du système au lieu d'écouter une webcam en silence.
+
+> [!TIP]
+> Les entrées n'affichent leur vrai nom qu'**une fois le micro activé** : avant l'autorisation, le navigateur ne donne aucun libellé. Activez le micro, puis rouvrez la liste.
+
+---
+
 ## ⚡ Modes de Diffusion
 - **Monitor** : Retour casque personnel. Indispensable pour entendre votre propre transformation vocale.
 - **Go Live** : Diffusion vers la sortie audio principale (vos enceintes ou le stream).
 - **Audio Output** : Permet de choisir précisément sur quel périphérique envoyer la voix transformée (ex: Câble Audio Virtuel pour redirection vers Discord).
 
+> [!NOTE]
+> **Monitor et Go Live sortent sur le même périphérique** — `Audio Output` se règle pour tout le module, pas par voie. Les deux interrupteurs ouvrent donc la même sortie ; les activer ensemble ne double plus le volume (c'était le cas avant le 03/09/2026, et cela suffisait à faire saturer la voix).
+
 ---
 
 ## 🛡️ Sécurité & Hardware
-- **Anti-Larsen** : Algorithme d'annulation d'écho pour éviter les sifflements lors de l'utilisation d'enceintes.
-- **Noise Gate** : Coupe automatiquement le son sous un certain seuil de volume pour éliminer les bruits de fond (clavier, ventilateur).
-- **Output Gain** : Permet d'ajuster le volume final après traitement.
+- **Anti-Larsen** : correction automatique du niveau d'entrée (AGC), pour éviter les sifflements avec des enceintes. En le coupant, vous rendez à votre voix sa dynamique — utile avec un micro-casque, et c'est elle que suit *Voice-to-Light*.
+- **Suppression de bruit** *(nouveau)* : le débruiteur du navigateur. Ce n'est pas un filtre mais un algorithme qui décide lui-même de ce qui est de la voix — **il rabote les fins de phrase et les chuchotements**. À couper en premier si votre voix « se coupe » ; à garder avec un micro posé au milieu de la table.
+- **Noise Gate** : coupe le son sous un certain seuil pour éliminer les bruits de fond (clavier, ventilateur).
+- **Output Gain** : ajuste le volume final après traitement. **Il n'influence plus la porte ni le ducking** : la détection se fait maintenant sur votre voix, avant traitement.
+
+### 🩺 Si le son se coupe, ou sature
+
+Dans cet ordre — du plus fréquent au plus rare :
+
+| Symptôme | À essayer |
+| :--- | :--- |
+| Des mots ou des fins de phrase disparaissent | Couper **Suppression de bruit**. Puis, si ça persiste, baisser le seuil du **Noise Gate** (il ferme désormais avec 6 dB de marge et un maintien de 250 ms, mais un seuil trop haut coupe toujours). |
+| Ça sature dès qu'on parle fort | Vérifier le **Formant** : à fond, il posait jusqu'à +16 dB — il est maintenant borné et respecte son signe. Puis baisser **Output Gain**. |
+| Ça sature quand on ajoute de la réverbération | Corrigé le 03/09/2026 : les deux voies (sèche et réverbérée) se mélangent à puissance constante au lieu de s'additionner. |
+| La voix est en retard dans le casque | Corrigé : à **Pitch = 0**, la ligne de transposition est contournée. Elle ajoutait 85 ms **même sans transposition**. |
+| Le ducking reste baissé après la dernière phrase | Corrigé : le relâchement se recalcule à chaque mesure, et la fenêtre du meneur n'est plus ralentie quand elle passe en arrière-plan. |
+
+> [!NOTE]
+> Ce que la révision du 03/09/2026 **n'a pas** corrigé : la transposition reste un délai à deux têtes de lecture, qui module l'amplitude dès qu'on s'éloigne de l'unisson. C'est le chuintement des voix très graves ou très aiguës — il demande un autre algorithme, pas un réglage.
 
 ---
 

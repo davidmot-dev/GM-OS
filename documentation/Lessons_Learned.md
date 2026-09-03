@@ -525,7 +525,27 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
   propres valeurs doit rendre le fichier identique, octet pour octet —, et il doit tourner sur les
   **vrais fichiers du dépôt**, pas sur une imitation.
 
-### 6. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
+### 6. Deux voies vers la même sortie s'additionnent — et un `abs()` mange un signe
+- **Défi** : « le son se coupe ou sature trop facilement » (Voice-OS). Aucun message d'erreur, aucun
+  test rouge, et un soupçon légitime porté sur la bibliothèque — *alors qu'il n'y en a pas une seule* :
+  tout est en Web Audio et un worklet écrit à la main.
+- **Causes, quatre, toutes muettes** : `monitorGain` et `liveGain` étaient tous deux à 1,0 **sur le même
+  nœud de sortie** (retour casque + diffusion = **+6 dB**) · le gain du formant était calculé avec
+  `Math.abs()`, donc les presets graves posaient **+16 dB à 100 Hz** au lieu de creuser · la
+  réverbération sommait `1 − mix/2` et `mix`, soit **1,5 ×** le signal à fond · et l'écrêtage final était
+  **dur**, ce qui fabrique le grain qu'on entend comme « ça sature ».
+- **Et pour les coupures** : la porte n'avait **ni hystérésis ni maintien** (un seul seuil, franchi des
+  dizaines de fois par phrase), elle mesurait **après** le compresseur et le gain de sortie — *baisser le
+  volume fermait donc la porte* —, sur une mesure en **huit bits** où tout ce qui est sous −42 dB tient
+  dans un pas ; et la boucle qui décide tournait en `requestAnimationFrame`, que Chromium ralentit dès
+  que la fenêtre passe derrière celle de projection.
+- **Leçon** : *un gain de 1,0 n'est pas un interrupteur — deux fois « ouvert » sur un même nœud font
+  « deux fois plus fort ».* Et une décision se prend sur le signal qu'elle prétend juger : la porte du
+  micro se mesure sur la voix, jamais sur ce que la chaîne en a fait. **Corollaire pour ce projet** :
+  quand une boucle DÉCIDE quelque chose (porte, ducking, lumière qui suit la voix), elle ne doit pas
+  dépendre du rendu d'une fenêtre — `backgroundThrottling: false`, ou mieux, le fil audio.
+
+### 7. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
 - **Défi** : `npx vitest run` a rendu **263 fichiers en échec** avec `Error: Vitest failed to find the
   current suite` pointant `src/test/setup.ts`. Un rouge parfaitement crédible.
 - **Cause** : `setup 0ms`, `tests 0ms` — **aucune assertion n'avait tourné**. Ce sont les workers qui
@@ -537,7 +557,8 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
 
 ---
 
-*Dernière mise à jour : 3 Septembre 2026 — storyboard (le son d'une séquence, le titre projeté), greffon
+*Dernière mise à jour : 3 Septembre 2026 — révision de Voice-OS (sélecteur de micro, porte à hystérésis,
+quatre sources de saturation), storyboard (le son d'une séquence, le titre projeté), greffon
 `tailwindcss-animate` rétabli, dés échelonnés au pupitre et sur tablette, atelier de thème, épingles du
 Social Nexus.*
 
