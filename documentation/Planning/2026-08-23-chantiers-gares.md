@@ -165,6 +165,42 @@ tout vert peut n'être qu'une sonde mal choisie.*
 - ⚠️ **Le worklet importe désormais un second fichier.** Si le témoin « Worklet » du tableau de bord
   passe au rouge, c'est là qu'il faut regarder : le son continue, mais sans transposition.
 
+### 8 · Les deux chantiers du soir, 2026-09-03 — débruitage et niveaux
+
+*Choisis par David après la question « ne faudrait-il pas un paquet NPM dédié ? ». La réponse tenue :
+**garder Web Audio comme socle, ajouter du WASM là où l'API ne sait RIEN faire.** Ces deux-là sont
+exactement ces trous.*
+
+| Quoi | Ce que ça apporte, mesuré | Où |
+| --- | --- | --- |
+| ⭐ **Débruitage neuronal (RNNoise)** | **−62 dB sur du bruit stationnaire**, et une **probabilité de voix** par trame de 10 ms. Cette probabilité tient la porte ouverte sur les fins de phrase — *elle répond au « le son se coupe » par un autre chemin que l'hystérésis*. Un seul réglage à trois positions (aucun / navigateur / neuronal), parce que **deux débruiteurs qui se suivent, c'est pire qu'un** | `public/audio/debruitage.js` |
+| ⭐ **Alignement des niveaux (EBU R 128)** | La sonie de chaque piste se mesure **pendant l'écoute**, sans rien décoder ni charger en mémoire, et cale la piste dès la fois suivante. Pondération K vérifiée **à 9·10⁻¹⁶ de la table de la norme** ; portes de la norme comprises, donc une intro murmurée ne fait plus pousser tout le morceau | `public/audio/sonie.js` |
+
+**Ce que ces deux chantiers ont appris, et qui vaut au-delà d'eux :**
+
+- ⛔ **Un module WebAssembly n'est pas prêt parce qu'il est instancié.** `rnnoise_create` partait dans
+  `__assert_fail` : il manquait `emscripten_stack_init` et surtout `__wasm_call_ctors`, **qui remplit les
+  tables du modèle**. Sans lui le réseau existe et ses poids valent zéro — et rien ne le dit.
+- ⛔ **Une norme se recopie, elle ne se réinvente pas.** Les coefficients recalculés « à la manière
+  habituelle » donnaient 1,5293 au lieu de 1,5351 : 0,03 dB, inaudible, mais la mesure n'aurait plus été
+  comparable à celle d'aucun autre outil.
+- **Le paquet npm sert de provenance, pas de code.** `@shiguredo/rnnoise-wasm` livre son wasm inliné dans
+  4,8 Mo de JavaScript dont la glu réclame `TextDecoder` et `window` — donc inutilisable dans un worklet.
+  Le binaire est extrait par `scripts/extraire-rnnoise.mjs`, et les **trois imports** du wasm suffisent à
+  le piloter. *C'est aussi ce qui permet de le mesurer sous Node.*
+
+**Ce qui entre en P6 — livré, jamais entendu :**
+
+- **Le débruitage neuronal sur la voix de David**, avec son micro et sa pièce. ⚠️ RNNoise est entraîné
+  sur de la parole : le banc montre qu'il **efface** un signal synthétique très régulier. Sur une vraie
+  voix, c'est l'inverse — mais c'est à l'oreille de le confirmer.
+- **Sa charge** : le modèle tourne sur le fil audio, cent trames par seconde, toute une soirée.
+- **L'alignement des niveaux sur ses vraies playlists** : la première écoute d'une piste n'est pas encore
+  calée, et le compteur du mixer doit monter au fil de la soirée.
+- ⚠️ **Le contexte de Voice-OS est désormais forcé à 48 kHz** (RNNoise l'exige). Si une carte son le
+  refuse, le débruitage neuronal se désactive **en le disant** — mais c'est un changement de fond sur le
+  moteur, à surveiller au premier lancement.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou

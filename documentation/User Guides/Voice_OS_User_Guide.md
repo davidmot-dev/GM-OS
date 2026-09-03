@@ -74,7 +74,10 @@ En haut du panneau de droite, **Micro** liste les entrées audio de la machine.
 
 ## 🛡️ Sécurité & Hardware
 - **Anti-Larsen** : correction automatique du niveau d'entrée (AGC), pour éviter les sifflements avec des enceintes. En le coupant, vous rendez à votre voix sa dynamique — utile avec un micro-casque, et c'est elle que suit *Voice-to-Light*.
-- **Suppression de bruit** *(nouveau)* : le débruiteur du navigateur. Ce n'est pas un filtre mais un algorithme qui décide lui-même de ce qui est de la voix — **il rabote les fins de phrase et les chuchotements**. À couper en premier si votre voix « se coupe » ; à garder avec un micro posé au milieu de la table.
+- **Débruitage** *(trois positions)* : un seul réglage, parce que deux débruiteurs qui se suivent ne valent pas mieux qu'un — le premier rabote ce que le second aurait su garder.
+    - **Aucun** : le micro arrive brut. Le bon choix avec un micro-casque dans une pièce calme.
+    - **Navigateur** : le débruiteur de WebRTC. Efficace, mais c'est une boîte noire qui décide seule de ce qui est de la voix, **en amont de tout ce que Voice-OS peut régler** — c'est lui qui rabote les fins de phrase.
+    - **Neuronal** *(nouveau)* : **RNNoise**, dans la chaîne de GM-OS. Il efface le bruit stationnaire — ventilateur, souffle, climatisation — et il sait **dire quand vous parlez** : cette information tient la porte ouverte sur vos fins de phrase, là où un seuil de niveau les couperait. Il ajoute **10 ms** de latence et demande une carte son à 48 kHz.
 - **Noise Gate** : coupe le son sous un certain seuil pour éliminer les bruits de fond (clavier, ventilateur).
 - **Output Gain** : ajuste le volume final après traitement. **Il n'influence plus la porte ni le ducking** : la détection se fait maintenant sur votre voix, avant traitement.
 
@@ -84,7 +87,7 @@ Dans cet ordre — du plus fréquent au plus rare :
 
 | Symptôme | À essayer |
 | :--- | :--- |
-| Des mots ou des fins de phrase disparaissent | Couper **Suppression de bruit**. Puis, si ça persiste, baisser le seuil du **Noise Gate** (il ferme désormais avec 6 dB de marge et un maintien de 250 ms, mais un seuil trop haut coupe toujours). |
+| Des mots ou des fins de phrase disparaissent | Passer le **Débruitage** sur *Aucun* ou *Neuronal* — le mode *Navigateur* est le premier suspect. Puis, si ça persiste, baisser le seuil du **Noise Gate** (il ferme désormais avec 6 dB de marge et un maintien de 250 ms, mais un seuil trop haut coupe toujours). |
 | Ça sature dès qu'on parle fort | Vérifier le **Formant** : à fond, il posait jusqu'à +16 dB — il est maintenant borné et respecte son signe. Puis baisser **Output Gain**. |
 | Ça sature quand on ajoute de la réverbération | Corrigé le 03/09/2026 : les deux voies (sèche et réverbérée) se mélangent à puissance constante au lieu de s'additionner. |
 | La voix est en retard dans le casque | Corrigé : à **Pitch = 0**, la voix passe sans aucun retard — la ligne de transposition ajoutait 85 ms *même sans transposition*. En transposant, le retard est de 43 ms (contre 85 ms avant). |
@@ -120,6 +123,15 @@ Une fonctionnalité révolutionnaire pour le confort d'écoute de vos joueurs :
     - **Attaque (Vitesse)** : Temps de transition (en ms) pour baisser le son (souple ou instantané).
     - **Réduction (Range)** : Niveau cible du son ambiant (ex: 0.1 pour un silence presque total, 0.5 pour un fond sonore léger).
     - **Relâchement (Delay)** : Temps d'attente avant que la musique ne remonte après votre dernière parole.
+
+---
+
+### 🧠 Le débruitage neuronal, en détail
+
+- **Une pastille verte** s'allume à côté du réglage quand le modèle vous entend parler. Elle ne s'affiche qu'en mode *Neuronal* : une pastille éteinte dirait « il ne parle pas », alors qu'elle voudrait dire « personne n'écoute ».
+- **Le modèle ne peut que TENIR la porte ouverte, jamais l'ouvrir.** S'il se trompait sur un bruit de fond, il ouvrirait votre micro tout seul et vous n'auriez plus moyen de vous taire.
+- **En cas de problème, la voix passe quand même** : si le modèle ne se charge pas, GM-OS le dit et branche le fil direct. Une amélioration qui casse la fonction de base n'en est pas une.
+- ⚠️ **RNNoise est entraîné sur de la parole humaine.** Il est très efficace sur le bruit régulier ; il n'a pas été conçu pour préserver ce qui n'est pas une voix. Si vous chantez, sifflez ou faites une imitation très inhabituelle, écoutez le résultat avant de compter dessus en séance.
 
 ---
 

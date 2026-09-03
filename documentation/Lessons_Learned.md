@@ -561,7 +561,35 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
   courte qu'une période de voix (5,3 ms pour un 120 Hz qui en fait 8,3) **doublait** l'ondulation
   résiduelle. Le réglage n'a pas été deviné, il a été mesuré.
 
-### 8. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
+### 8. Un module WebAssembly n'est pas prêt parce qu'il est instancié
+- **Défi** : piloter RNNoise sans sa glu Emscripten — elle réclame `TextDecoder` et `window`, dont aucun
+  n'existe dans un AudioWorklet. Le wasm ne demandant que **trois imports** (`__assert_fail`,
+  `emscripten_resize_heap`, `fd_write`), l'instancier soi-même paraissait direct.
+- **Cause** : `rnnoise_create` partait aussitôt dans `__assert_fail`. Il manquait **deux appels
+  d'amorçage** que la glu fait avant d'exposer quoi que ce soit : `emscripten_stack_init`, qui pose la
+  pile, et `__wasm_call_ctors`, **qui remplit les tables du modèle**. Sans lui, le réseau existe et ses
+  poids valent zéro.
+- **Leçon** : *instancier n'est pas initialiser.* Devant un wasm qu'on pilote sans sa glu, lire ce que
+  la glu fait **avant** le premier appel utile — c'est là que vivent les amorçages, et leur absence ne
+  produit pas une erreur de chargement mais un comportement muet et faux.
+- **Corollaire, qui a rendu le chantier mesurable** : trois imports triviaux, c'est aussi ce qui permet
+  au même code de tourner **sous Node**. Le débruiteur a donc son banc (`electron/debruitage.test.ts`)
+  et on sait chiffrer ce qu'il fait : −62 dB sur du bruit stationnaire.
+
+### 9. Une norme se recopie, elle ne se réinvente pas
+- **Défi** : mesurer la sonie des morceaux (EBU R 128) pour les aligner. Les filtres de pondération K
+  sont deux biquads dont la norme publie les coefficients — mais seulement **pour 48 kHz**, alors que
+  Music-OS suit la carte son.
+- **Erreur** : les recalculer avec la forme classique des filtres audio (sinus/cosinus). Résultat :
+  `b0 = 1,5293` au lieu de `1,5351`. Un écart de 0,03 dB — inaudible, et pourtant fatal au but
+  recherché : la mesure n'aurait plus été **comparable** à celle de n'importe quel autre outil.
+- **Solution** : la transformation bilinéaire en `tan` (celle de `libebur128`), qui retombe sur la table
+  publiée à **9·10⁻¹⁶ près**, et un test qui compare aux cinq coefficients de la norme.
+- **Leçon** : quand un calcul existe pour être comparé à celui des autres, la valeur de référence n'est
+  pas « proche », elle est **exacte**. Et le test doit porter sur la table publiée, pas sur ce que le
+  code produit.
+
+### 10. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
 - **Défi** : `npx vitest run` a rendu **263 fichiers en échec** avec `Error: Vitest failed to find the
   current suite` pointant `src/test/setup.ts`. Un rouge parfaitement crédible.
 - **Cause** : `setup 0ms`, `tests 0ms` — **aucune assertion n'avait tourné**. Ce sont les workers qui
@@ -573,7 +601,8 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
 
 ---
 
-*Dernière mise à jour : 3 Septembre 2026 — révision de Voice-OS (sélecteur de micro, porte à hystérésis,
+*Dernière mise à jour : 3 Septembre 2026 — débruitage neuronal (RNNoise) et alignement des niveaux
+(EBU R 128), révision de Voice-OS (sélecteur de micro, porte à hystérésis,
 quatre sources de saturation), transposition refaite en WSOLA et compression rendue réglable, storyboard (le son d'une séquence, le titre projeté), greffon
 `tailwindcss-animate` rétabli, dés échelonnés au pupitre et sur tablette, atelier de thème, épingles du
 Social Nexus.*
