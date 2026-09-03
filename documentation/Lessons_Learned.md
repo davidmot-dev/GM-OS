@@ -458,6 +458,11 @@ partie jouée.
 - **Leçon** : un champ affiché à l'écran doit être **suivi jusqu'au moteur**, et le correctif se pose
   **dans le moteur** — c'est ce qui a corrigé la tablette des joueurs du même coup. **Règle** : *un seuil
   et un nombre de dés ne partagent jamais un `??`.*
+- **Septième fois, le 2026-09-03** : le mode échelonné choisi à la main au pupitre était lu, puis
+  **recouvert par le pilote actif** — deux D12 lançaient des d6. *Un jet faux ne se voit jamais en
+  séance : personne ne recompte un résultat qui a l'air normal.* Les deux questions qui trouvent ces
+  défauts : **« qui d'autre lance ce jet ? »** et, depuis ce jour, **« qui d'autre a la même rustine à
+  poser ? »** — la seconde a découvert que la tablette n'avait jamais reçu le pilote du tout.
 
 ### 9. Une optimisation annoncée qui n'a pas lieu fait chercher le temps perdu ailleurs
 - **Défi** : un commentaire promettait une « exécution parallèle » du Cortex. Sous `NUM_PARALLEL=1`, le
@@ -468,7 +473,75 @@ partie jouée.
 
 ---
 
-*Dernière mise à jour : 22 Août 2026 — trame narrative et journal de séance (plan du 08/08 clos), socle
+## 🕳️ Ce qui ne rend aucune erreur (2026-09-02 → 2026-09-03)
+
+*Les sept chantiers de ces deux jours viennent **tous** d'un signalement de David à l'écran, aucun d'une
+relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous ne produit d'erreur**.*
+
+### 1. Une classe qui n'existe pas ne prévient pas
+- **Défi** : le fondu d'entrée du titre projeté ne se voyait pas. La classe était bien là, dans le JSX.
+- **Cause** : `animate-in`, `fade-in`, `zoom-in-95`, `slide-in-from-*` sont fournies par le greffon
+  **`tailwindcss-animate`, qui n'avait jamais été installé**. Écrites **125 fois dans 76 fichiers**, elles
+  ne produisaient **aucune règle CSS** depuis toujours.
+- **Leçon** : une classe utilitaire absente ne casse rien, **il ne se passe simplement rien** — et
+  personne ne cherche un effet qu'il n'a jamais vu. Devant une animation qui « ne marche pas », vérifier
+  d'abord que la classe **existe dans la sortie CSS**, avant de soupçonner le composant.
+- **Corollaire** : rétablir le greffon a réveillé 125 animations d'un coup. *Réparer une brique morte
+  n'est pas un correctif local : c'est un changement de comportement partout où elle était citée.*
+
+### 2. Un message émis avant que le destinataire n'écoute est perdu, pas en retard
+- **Défi** : « le texte du Titre n'apparaît parfois pas tout de suite » — en réalité seulement quand la
+  séquence **crée** la fenêtre de projection (moniteur éteint).
+- **Cause** : le titre partait dans la seconde qui suivait, vers un rendu qui n'avait pas encore posé son
+  écouteur. L'image ne connaissait pas ce défaut : elle attendait `did-finish-load`.
+- **Leçon** : rien ne rejoue un événement manqué. Deux remèdes possibles, et **le bon est le second** :
+  retarder l'envoi (l'émetteur doit alors savoir quelles fenêtres existent), ou **laisser le récepteur
+  réclamer l'état courant en arrivant**. Le processus principal retient l'état vivant, le rendu le
+  demande — et un écran ouvert au milieu d'une séquence rattrape ce qu'il a raté.
+
+### 3. Un champ déclaré des deux côtés et rempli par personne rend `undefined`
+- **Défi** : la carte « Système actif » du pad de dés ne s'était **jamais** affichée sur les tablettes.
+- **Cause** : `session.activeDiceConfig` était déclaré dans le contrat de synchronisation et lu par la
+  tablette — **et aucun émetteur ne l'écrivait**. Conséquence invisible : tout jet parti d'une tablette
+  était un jet manuel, pendant des mois.
+- **Leçon** : le typage garantit la **forme** d'un champ, jamais qu'il soit **rempli**. Un contrat de
+  synchronisation se vérifie **des deux côtés** — *et une carte qui ne s'affiche pas ne se signale pas.*
+
+### 4. Rendre un inconnu à une simulation, c'est la laisser inventer
+- **Défi** : « dès que je libère les positions, tout se remélange » (Social Nexus).
+- **Cause** : `x/y` est un **point de départ**, `fx/fy` une **contrainte**. Un nœud rendu à D3 sans
+  coordonnées est reposé sur une spirale : ce n'était pas la simulation qui remélangeait.
+- **Leçon** : distinguer **la capture et la décision**. `nodePositions` est un instantané pris en bloc au
+  verrouillage, une épingle est un geste isolé du MJ ; les confondre ferait qu'un déverrouillage épingle
+  tout le graphe — *c'est-à-dire remette le verrou qu'on vient de lever.*
+
+### 5. On réécrit les déclarations, jamais le fichier
+- **Défi** : régler les 22 jetons d'un thème de jeu depuis l'application, sans abîmer le `theme.css`.
+- **Cause potentielle** : un `theme.css` porte les jetons **et trois cents lignes de règles `.rpg-*`**
+  écrites à la main, que les fiches de personnage consomment. Régénérer le fichier depuis les jetons les
+  effacerait — **et rien ne le dirait** : la casse se verrait en ouvrant une fiche, un autre jour.
+- **Leçon** : quand on édite un fichier que d'autres écrivent, remplacer **la valeur de chaque
+  déclaration, à sa place**. Le contrôle qui le prouve est **l'idempotence** — réécrire un thème avec ses
+  propres valeurs doit rendre le fichier identique, octet pour octet —, et il doit tourner sur les
+  **vrais fichiers du dépôt**, pas sur une imitation.
+
+### 6. Un harnais qui s'effondre accuse le code qu'il n'a pas exécuté
+- **Défi** : `npx vitest run` a rendu **263 fichiers en échec** avec `Error: Vitest failed to find the
+  current suite` pointant `src/test/setup.ts`. Un rouge parfaitement crédible.
+- **Cause** : `setup 0ms`, `tests 0ms` — **aucune assertion n'avait tourné**. Ce sont les workers qui
+  tombaient sous la charge des 263 environnements jsdom. La même suite passe avec
+  **`npx vitest run --maxWorkers=4`** : 3 336 tests verts.
+- **Leçon** : avant de croire un échec massif, **lire les compteurs, pas la couleur**. Un échec qui touche
+  *tous* les fichiers, y compris ceux qu'aucune modification n'approche, accuse le harnais.
+  ⚠️ L'étape 3 de `scripts/validate.ps1` appelle la commande **sans bride**.
+
+---
+
+*Dernière mise à jour : 3 Septembre 2026 — storyboard (le son d'une séquence, le titre projeté), greffon
+`tailwindcss-animate` rétabli, dés échelonnés au pupitre et sur tablette, atelier de thème, épingles du
+Social Nexus.*
+
+*Mise à jour précédente : 22 Août 2026 — trame narrative et journal de séance (plan du 08/08 clos), socle
 du plan d'accélération IA (axes A à D), Forge Système et Forge de campagne éprouvées en réel.*
 
 *Mise à jour précédente : 7 Août 2026 - GM-OS v6.5.0 - Session de durcissement : récupération des campagnes, unification du transport (points 1 à 5 clos), migration MCP vers Gemini Notebook.*

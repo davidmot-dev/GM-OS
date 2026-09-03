@@ -194,6 +194,15 @@ Le Social Nexus est piloté par un moteur physique (D3-Force) que vous pouvez co
 > [!TIP]
 > Si le graphe devient confus, utilisez le bouton **Réinitialiser** (icône Refresh) pour nettoyer le layout, ou cliquez sur **"Paramètres par défaut"** dans le panneau Sliders pour restaurer la configuration standard v5.
 
+### 📌 Placer les personnages à la main (v6.5)
+
+Vous pouvez composer votre propre disposition sans lutter contre la simulation :
+
+- **Déplacez un portrait** : il **reste** là où vous le posez, verrouillé ou non. C'est une décision, GM-OS la retient et la garde pour la campagne.
+- **Un compteur ambré** (icône épingle barrée) apparaît dès qu'un nœud est posé à la main, et indique combien il y en a. Cliquez dessus pour **tout rendre à la simulation**.
+- **Verrouiller / déverrouiller** fige ou libère l'ensemble du graphe. Au déverrouillage, seuls vos nœuds posés à la main restent en place — les autres reprennent leur mouvement **à partir d'où ils étaient**, sans se remélanger.
+- **Réinitialiser** efface tout, épingles comprises : c'est le seul geste qui rende le graphe à la simulation seule.
+
 ---
 
 ## 🕵️ Clues-OS (Gestion des Indices)

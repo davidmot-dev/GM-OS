@@ -24,9 +24,28 @@ Dice OS supporte nativement une immense variété de systèmes :
 | **Seuil (Threshold)** | Un test de réussite/échec simple (Réussite si ≥ ou ≤ X). | Appel de Cthulhu |
 | **Avantage / Désav.** | Lance 2 dés et garde le meilleur ou le pire. | D&D 5e |
 | **Year Zero (YZE)** | Gère deux pools séparés (Base et Équipement) avec "Fléaux". | Mutant, Alien |
+| **Year Zero échelonné** | Deux dés de **tailles différentes** (attribut + compétence), la lettre décidant du dé. | Blade Runner |
 | **FATE / Fudge** | Utilise des dés +, -, O pour un résultat narratif. | Fate |
 | **Rolemaster** | Dés 100 "ouverts" avec relances sur les hauts et bas scores. | Rolemaster |
 | **Formule Libre** | Saisie manuelle de formules complexes. | `2d6 + 1d4 - 2` |
+
+## 🎚️ Les Dés Échelonnés (Blade Runner)
+
+Certains jeux ne lancent pas des dés tous identiques : la **lettre** inscrite sur la fiche décide de la taille du dé.
+
+- **L'échelle** : `A` → D12, `B` → D10, `C` → D8, `D` → D6.
+- **Deux dés de base** : un pour l'**attribut**, un pour la **compétence**. Vous les choisissez par leur lettre, pas par leur nombre de faces.
+- **L'équipement** est facultatif, et échelonné lui aussi — le lui donner ajoute un troisième dé.
+- **Lecture** : **6 ou plus** sur un dé vaut une réussite ; **10 ou plus** en vaut **deux** — ce qui n'est possible que sur un D10 ou un D12. La taille du dé décide donc de ce qu'il peut rapporter.
+- **Avantage / Désavantage** : l'avantage ajoute un dé identique au plus petit, le désavantage retire le plus petit. Jamais les deux à la fois.
+
+> [!TIP]
+> **Votre choix l'emporte sur celui du pilote.** Si vous basculez le pupitre à la main en mode échelonné, le système de jeu actif ne le recouvre plus (corrigé le 03/09/2026 : deux D12 demandés lançaient des d6).
+
+> [!NOTE]
+> L'échelle des lettres est transcrite dans GM-OS, **pas dans le pilote de jeu** : une table recopiée par la Forge est une table qui peut être recopiée de travers sans que rien ne le dise.
+
+---
 
 ## 🛰️ Le Pont Tactique (Tactical Bridge)
 

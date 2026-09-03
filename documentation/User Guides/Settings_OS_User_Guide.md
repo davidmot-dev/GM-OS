@@ -14,6 +14,34 @@ GM-OS s'adapte à l'ambiance de votre table :
 
 ---
 
+## 🖌️ L'Atelier de Thème (onglet **Thème du jeu**)
+
+Chaque jeu peut habiller GM-OS à ses couleurs — et depuis la v6.5, **cela se règle dans l'application** : plus besoin d'éditer un fichier CSS à la main.
+
+L'atelier travaille sur le thème du **jeu de la campagne ouverte**, et propose ses réglages en quatre groupes :
+
+| Groupe | Ce que vous y réglez |
+| :--- | :--- |
+| **Couleurs** | Fond, surfaces, papier, encre, texte, accents, bordures |
+| **Polices** | Titres, corps, interface des fiches, chiffres |
+| **Tailles** | Échelle du texte, interlettrage des titres et des surtitres |
+| **Formes** | Rayons des angles, ombre portée |
+
+**Comment ça marche :**
+
+1. Ouvrez les **Paramètres → Thème du jeu**. Si le jeu n'a pas encore de thème, un bouton **Créer un thème** en pose un vierge.
+2. Réglez ce que vous voulez : **les changements s'appliquent tout de suite à l'écran**, mais rien n'est écrit tant que vous n'avez pas cliqué sur **Enregistrer**. **Annuler** revient à l'état enregistré.
+3. Un **contrôle de contraste** signale les paires texte / fond devenues illisibles.
+4. Une **flèche de retour** remet le thème tel qu'il était **avant vos retouches** : la première sauvegarde met le fichier d'origine de côté.
+
+> [!IMPORTANT]
+> L'atelier **réécrit les valeurs, jamais le fichier**. Un `theme.css` de jeu contient aussi des centaines de lignes de règles `.rpg-*` qui habillent les **fiches de personnage** : elles sont préservées telles quelles, commentaires compris.
+
+> [!TIP]
+> Déposer `docs/systems/<jeu>/theme/theme.css` à la main fonctionne toujours — l'atelier n'a pas remplacé cette porte, il en a ouvert une seconde. Une police Google demandée dans l'atelier est déclarée **et** téléchargée automatiquement.
+
+---
+
 ## 📱 GM Remote Control (Télécommande)
 Pilotez votre session sans quitter vos joueurs des yeux :
 - **Activation** : Allez dans l'onglet **Télécommande**.

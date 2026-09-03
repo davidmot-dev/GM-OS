@@ -18,6 +18,8 @@ La **GM Remote Control** est une Web App responsive qui transforme n'importe que
 - Lancez des dés (D4, D6, D8, D10, D12, D20, D100) d'une simple pression.
 - Le résultat s'affiche instantanément sur l'écran de votre PC.
 - Utilisez le bouton **Vider** (rose) pour nettoyer l'historique des lancers sur le PC.
+- **Système actif** *(corrigé le 03/09/2026)* : quand une campagne est ouverte, le pad affiche le jeu en cours et un bouton **Lancer Système** qui applique ses règles — au lieu d'un jet manuel. Cette carte existait dans l'interface mais ne s'était **jamais** affichée : le système de jeu n'était pas transmis à la tablette, et tout jet parti d'un appareil mobile était donc un jet manuel.
+- **Dés échelonnés** : si le jeu en lance (Blade Runner), la tablette propose les **lettres** — attribut, compétence, équipement — et le modificateur d'avantage ou de désavantage. Basculer en **mode manuel** reprend la main sur le système.
 
 ### 2. 🔊 Soundboard (Sons)
 - **Synchronisation** : Les boutons affichent les vrais noms de vos Pads configurés sur PC.

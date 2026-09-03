@@ -39,6 +39,40 @@ Cliquez simplement sur le gros bouton **PLAY** au centre d'une carte.
 
 ---
 
+## 🔊 Choisir **où ça sort** (v6.5)
+
+Un moment ne dit plus seulement *quoi* déclencher, mais *où* :
+
+- **Sortie audio** : chaque son d'un moment peut viser une enceinte précise (un pad Sound-OS sur les enceintes du fond pendant que la musique reste devant). Laissez **Sortie du module** pour garder le comportement habituel.
+- **Écran de projection** : chaque image peut viser un écran nommé, l'**Écran courant d'Image-OS** ou le **Player Hub**.
+
+> [!NOTE]
+> Le volume général et le ducking de la voix s'appliquent **aussi** aux sons détournés vers une autre enceinte.
+
+## 🅰️ Le Titre à l'écran
+
+Chaque moment peut afficher un **titre** par-dessus l'image projetée, dans la police du thème du jeu :
+
+- **Titre affiché sur l'écran** : le texte, facultatif.
+- **Fondu (s)** : la durée du fondu, à l'entrée comme à la sortie.
+- **Durée (s)** : combien de temps il reste. **Laissez vide pour un titre permanent** — il s'en ira alors avec son moment.
+
+> [!TIP]
+> Un écran allumé au milieu d'une séquence **rattrape** le titre en cours : vous n'avez pas à relancer le moment.
+
+## 🎭 Une séquence est une parenthèse
+
+Lancer une séquence **referme la précédente** :
+
+- Son **image** s'éteint en fondu si la nouvelle n'en projette pas d'autre.
+- Ses **sons** s'arrêtent — l'ambiance qu'elle avait posée et ses bruitages —, sauf si la nouvelle séquence les reprend.
+- La **musique** fait exception : elle continue, et c'est vous qui décidez de l'arrêter. Il en va de même pour les lumières.
+
+> [!IMPORTANT]
+> Le Storyboard ne vise **pas** les tablettes des joueurs : il pilote vos écrans de projection et vos enceintes, pas le Player Hub tenu en main.
+
+---
+
 ## 💡 Exemples d'utilisation
 
 ### Scénario A : L'Embuscade
