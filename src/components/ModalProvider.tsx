@@ -289,7 +289,12 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'narrative-display' && <NarrativeModal />}
                             {customVariant === 'loot-os' && <LootOS />}
                             {customVariant === 'aide-du-meneur' && <AideDuMeneur />}
-                            {customVariant === 'atelier-adversaires' && <AtelierDesAdversaires onClose={closeModal} />}
+                            {customVariant === 'atelier-adversaires' && (
+                                <AtelierDesAdversaires
+                                    onClose={closeModal}
+                                    jeuDemande={(defaultValue as { jeuId?: string } | undefined)?.jeuId}
+                                />
+                            )}
                             {customVariant === 'fiche-combattant' && <FicheDuCombattant />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>

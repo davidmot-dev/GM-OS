@@ -168,6 +168,18 @@ export interface NexusDriverState {
     gameDriver: import('../../../types/drivers').GameDriver;
     /** Le template de fiche personnalisé exporté avec ce driver, le cas échéant */
     sheetTemplate?: import('../../../data/defaultSheetTemplates').SheetTemplate;
+    /**
+     * Le bestiaire du jeu — les gabarits d'adversaires rangés par le meneur.
+     *
+     * *Demandé par David le 2026-09-03 : « je veux tes 2 suggestions ».*
+     * Partager un jeu sans ses adversaires, c'est partager un livre de règles
+     * sans son bestiaire : le destinataire aurait les échelles mais devrait
+     * tout refabriquer.
+     *
+     * **Absent des bundles antérieurs**, et c'est pourquoi il est facultatif :
+     * un `.gmos-driver` d'hier s'importe sans rien perdre ni rien inventer.
+     */
+    bestiaire?: import('../../combat/useBestiaireStore').GabaritDAdversaire[];
 }
 
 // ─────────────────────────────────────────────

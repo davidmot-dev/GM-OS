@@ -6,9 +6,9 @@ import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defau
 import { corpusOrphelins } from '../../../../electron/corpusSysteme';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import { tousLesPilotes } from '../store/tousLesPilotes';
-import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree } from 'lucide-react';
+import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree, Swords } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
-import { useModalStore } from '../../../stores/useModalStore';
+import { useModalStore, gmCustom } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import { nexusService } from '../../system/archive/NexusService';
 import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
@@ -440,6 +440,22 @@ const TemplateDashboard: React.FC = () => {
                                             className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
                                         >
                                             <Eye size={14} /> {t('modules:session.header.grimoire_label').toUpperCase()}
+                                        </button>
+                                        {/*
+                                          **La seconde porte du bestiaire — 2026-09-03.**
+                                          David : « je ne trouve pas l'atelier et le
+                                          bestiaire ». Ils vivaient dans Combat-OS, alors
+                                          qu'on pense a ses adversaires en regardant SON
+                                          JEU. Le bestiaire etant deja indexe par pilote,
+                                          il suffisait d'une porte de plus — et elle
+                                          designe explicitement le pilote selectionne,
+                                          qui n'est pas forcement celui de la partie.
+                                        */}
+                                        <button
+                                            onClick={() => gmCustom('atelier-adversaires', { jeuId: selectedItem.id })}
+                                            className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all shadow-lg"
+                                        >
+                                            <Swords size={14} /> BESTIAIRE
                                         </button>
                                         {isNexusAvailable && (
                                             <button

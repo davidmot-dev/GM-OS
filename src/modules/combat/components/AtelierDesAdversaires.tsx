@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Swords, X, BookMarked, Wand2, Users, Save, Trash2, Pencil, Check } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { useCombatStore } from '../useCombatStore';
 import { useBestiaireStore } from '../useBestiaireStore';
 import { gmToast } from '../../../stores/useToastStore';
@@ -51,18 +52,37 @@ import {
 
 interface Props {
     onClose: () => void;
+    /**
+     * Le jeu dont on veut le bestiaire, quand ce n'est pas celui de la campagne.
+     *
+     * *Demande de David le 2026-09-03 : une seconde porte depuis la Forge.* On y
+     * regarde un pilote **choisi dans une liste**, qui n'est pas forcement celui
+     * de la partie en cours — et ouvrir le bestiaire d'un autre jeu que celui
+     * qu'on a sous les yeux serait le genre de discordance qu'on ne remarque
+     * qu'apres avoir fabrique trois adversaires injouables.
+     */
+    jeuDemande?: string;
 }
 
 type Source = { genre: 'archetype'; id: string } | { genre: 'gabarit'; id: string };
 
-export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
-    const { getActiveDriver, customSheetTemplates, addEntity, activeCampaignId } = useSessionOSStore();
+export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) => {
+    const {
+        getActiveDriver, customGameDrivers, customSheetTemplates, addEntity, activeCampaignId,
+    } = useSessionOSStore();
     const addCombatant = useCombatStore(e => e.addCombatant);
     const {
         gabaritsDuJeu, enregistrer, oublier, renommer, retenirLaRepartition, repartitionRetenue,
     } = useBestiaireStore();
 
-    const driver = getActiveDriver();
+    /*
+      Le pilote demande l'emporte sur celui de la campagne — et il se resout
+      dans la liste COMPLETE, references comprises : la Forge en montre dix, et
+      seuls les pilotes forges vivent dans `customGameDrivers`.
+    */
+    const driver = jeuDemande
+        ? tousLesPilotes(customGameDrivers ?? []).find(d => d.id === jeuDemande) ?? getActiveDriver()
+        : getActiveDriver();
     const jeuId = driver?.id ?? 'sans-pilote';
 
     /** Les champs de la fiche du jeu — la seule source des échelles. */

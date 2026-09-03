@@ -128,7 +128,10 @@ Un champ jamais rempli s'affiche **—** et non **0** : *un zéro se lit comme u
 
 ### Le bestiaire
 
-**Où il se trouve** : l'onglet **Bestiaire**, en haut de l'atelier, à côté de *Fabriquer*. Il porte le nombre de gabarits rangés pour le jeu en cours.
+**Où il se trouve — deux portes :**
+
+1. **Combat-OS → colonne de droite → ⚔ Fabriquer des adversaires**, puis l'onglet **Bestiaire** en haut de la fenêtre. Il porte le nombre de gabarits rangés pour le jeu en cours. C'est la porte de la séance.
+2. **Librairie de Modèles → onglet Drivers → sélectionnez un jeu → bouton BESTIAIRE.** C'est la porte de la préparation, et elle ouvre le bestiaire **du pilote sélectionné** — pas celui de la campagne ouverte, s'ils diffèrent.
 
 On y relit chaque gabarit — son archétype, son rang, les valeurs saisies —, on le **renomme** (crayon), on l'**oublie** (corbeille), ou on **fabrique depuis lui** d'un bouton, ce qui bascule sur l'onglet *Fabriquer* avec la bonne source déjà choisie.
 
@@ -141,6 +144,8 @@ Dans l'onglet *Fabriquer*, les mêmes gabarits apparaissent en puces ambrées so
 Un gabarit rangé **appartient au jeu, pas à la campagne** : votre pillard de Blade Runner resservira dans la campagne suivante. Un même nom pour un même jeu **remplace** l'ancien plutôt que d'empiler des doublons.
 
 **Les bestiaires sont étanches d'un jeu à l'autre**, et à tous les niveaux : la liste, le remplacement sur le même nom, le refus d'un renommage en doublon, et jusqu'à vos corrections ▲▼ des caractéristiques. Un gabarit d'Alien ne s'affichera jamais dans une partie de Blade Runner — ses valeurs sont dans une autre échelle, il serait injouable sans que rien ne le signale.
+
+**Il voyage avec son jeu.** Exporter un pilote en `.gmos-driver` (bouton *Exporter* de la Librairie de Modèles) emporte son bestiaire ; l'importer le verse chez le destinataire, rangé sous le pilote importé. Réimporter deux fois le même fichier ne fabrique pas de doublons, et un bundle exporté avant le 03/09/2026 — qui n'en contient pas — s'importe sans rien effacer.
 
 > [!TIP]
 > **Reforger un jeu ne perd pas son bestiaire.** La Forge enrichit le pilote existant au lieu d'en créer un second, et le bestiaire suit son identifiant.

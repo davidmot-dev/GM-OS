@@ -22,6 +22,7 @@
  */
 
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useBestiaireStore } from '../../combat/useBestiaireStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useSoundStore } from '../../sound/useSoundStore';
 import { useMusicStore } from '../../music/useMusicStore';
@@ -264,9 +265,18 @@ export class NexusService {
         // Si l'ID du driver correspond à un template (convention GM-OS), l'exporter
         const sheetTemplate = customSheetTemplates.find((t: SheetTemplate) => t.id === driverId);
 
+        /*
+          **Le bestiaire voyage avec son jeu.** Il est deja indexe par
+          `driver.id` : le ramasser ici ne demande qu'une lecture. On l'omet
+          quand il est vide plutot que d'ecrire un tableau nul — *un bundle ne
+          doit pas grossir de champs qui ne disent rien.*
+        */
+        const bestiaire = useBestiaireStore.getState().gabaritsDuJeu(driverId);
+
         return {
             gameDriver,
             sheetTemplate,
+            ...(bestiaire.length ? { bestiaire } : {}),
         };
     }
 
@@ -1047,6 +1057,9 @@ export class NexusService {
         const previousState = {
             customGameDrivers: store.customGameDrivers ? [...store.customGameDrivers] : [],
             customSheetTemplates: store.customSheetTemplates ? [...store.customSheetTemplates] : [],
+            /* Le bestiaire entre dans le rollback comme le reste : une injection
+               qui echoue a mi-chemin ne doit pas laisser la moitie d'un jeu. */
+            gabarits: [...useBestiaireStore.getState().gabarits],
         };
 
         try {
@@ -1073,6 +1086,30 @@ export class NexusService {
                     customSheetTemplates: updatedTemplates,
                 };
             });
+            /*
+              **Les gabarits sont RE-CLES sur le pilote importe.** Ils portent
+              deja le bon `jeuId` en principe — mais un bundle bricole a la main,
+              ou un pilote renomme avant l'export, suffirait a les rendre
+              invisibles : ils seraient importes puis introuvables, ce qui est
+              pire que ne pas les importer du tout.
+
+              `enregistrer` applique sa regle habituelle : meme nom pour le meme
+              jeu, on remplace. Reimporter deux fois le meme bundle ne fabrique
+              donc pas de doublons.
+            */
+            for (const gabarit of state.bestiaire ?? []) {
+                useBestiaireStore.getState().enregistrer({
+                    jeuId: driverId,
+                    nom: gabarit.nom,
+                    archetypeId: gabarit.archetypeId,
+                    rangId: gabarit.rangId,
+                    sheetData: gabarit.sheetData,
+                    notes: gabarit.notes,
+                });
+            }
+            if (state.bestiaire?.length) {
+                console.log(`[NexusService] ${state.bestiaire.length} gabarit(s) d'adversaire importe(s)`);
+            }
             console.log(`[NexusService] Driver injecté avec succès : ${driverId}`);
         } catch (err) {
             console.error('[NexusService] Injection driver échouée, rollback...', err);
@@ -1080,6 +1117,7 @@ export class NexusService {
                 customGameDrivers: previousState.customGameDrivers,
                 customSheetTemplates: previousState.customSheetTemplates,
             });
+            useBestiaireStore.setState({ gabarits: previousState.gabarits });
             throw err;
         }
     }
