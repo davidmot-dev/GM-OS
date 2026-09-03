@@ -229,6 +229,16 @@ générer**.*
 | *« quand je crée 1 combattant, il m'en envoie 2 »* | ⛔ **C'ÉTAIT un doublon, et j'avais conclu le contraire.** Ma première réponse — « c'est un PJ de la scène » — décrivait un mécanisme réel (il existe depuis le 20/08, et cinq tests le documentent maintenant) **mais pas ce que David voyait** : sa capture montrait « Tireur 1 » et « Tireur 2 ». La vraie cause : le sélecteur de rang **réécrivait le nombre saisi** (« Aguerri » ⇒ 2), donc *un défaut qui dépend de l'ordre des gestes* — rang puis nombre marchait, nombre puis rang non. ⚠️ Et mes tests ne pouvaient pas le voir : ils visaient le **magasin**, qui faisait son travail, alors que le défaut vivait dans l'**état de l'écran**. *Un test qui vise la mauvaise couche est vert pour de bonnes raisons* |
 | *« comment revoir la fiche de ces nouveaux combattants ? »* | ⛔ **On ne pouvait pas.** Et la question a mis au jour un vrai défaut : `CombatCard` lisait la fiche **à deux endroits**, et un seul avait le repli vers `combatant.sheetData`. Sur un jeu sans `ui_config`, la voie historique affichait donc des **zéros** pour un adversaire parfaitement rempli. Une seule porte désormais (`logic/ficheDuCombattant.ts`), et un panneau **Fiche** sur chaque carte |
 
+**Les trois suites du même soir**, toutes nées de ses questions :
+
+| Question de David | Ce qui a été fait |
+| --- | --- |
+| *« comment revoir la fiche de ces nouveaux combattants ? »* | Un panneau **Fiche** sur chaque carte, en lecture. ⛔ Et la question a révélé que `CombatCard` lisait la fiche **à deux endroits**, un seul avec le repli vers `combatant.sheetData` : les adversaires fabriqués y affichaient des **zéros** sur les jeux sans `ui_config`. Une seule porte désormais — `logic/ficheDuCombattant.ts` |
+| *« rajoute un bouton pour l'envoyer au Bestiaire ou à la campagne »* | Deux boutons en pied de fiche. Le bestiaire range un **modèle** (le numéro d'exemplaire tombe), la campagne accueille un **individu** (nom complet gardé) — et le combattant est **rattaché** à la fiche créée. ⛔ Piège évité : `addEntity` **ignore l'identifiant qu'on lui passe** et pose le sien, donc le rattachement se relit au lieu de se deviner |
+| *« où se trouve le bestiaire ? »* | Nulle part : une rangée de puces **masquée quand elle est vide**. Il a maintenant son **onglet** dans l'atelier — relire, renommer, oublier, fabriquer depuis. *Une section qui se cache faute de contenu se lit « cette fonctionnalité n'existe pas ».* |
+
+**Et la séparation par jeu, vérifiée à la demande** : liste, remplacement sur le même nom, refus de renommage, répartitions ▲▼ — tout est clé sur `driver.id`, et trois tests le tiennent dont un qui monte l'écran. ✅ L'identifiant survit à une reforge depuis le correctif du 16/08 (`enrichirLePilote`), donc le bestiaire ne s'orpheline pas. ⚠️ Deux campagnes du même jeu le partagent, par construction.
+
 **Ce qui entre en P6 :**
 
 - **Les archétypes sur les vrais jeux de David.** La proposition par mots-clés est le point faible assumé : elle a été éprouvée sur les cinq attributs de Dune et sur une échelle en lettres, pas sur ses dix pilotes.

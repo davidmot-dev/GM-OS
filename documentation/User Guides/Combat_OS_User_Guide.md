@@ -140,6 +140,14 @@ Dans l'onglet *Fabriquer*, les mêmes gabarits apparaissent en puces ambrées so
 
 Un gabarit rangé **appartient au jeu, pas à la campagne** : votre pillard de Blade Runner resservira dans la campagne suivante. Un même nom pour un même jeu **remplace** l'ancien plutôt que d'empiler des doublons.
 
+**Les bestiaires sont étanches d'un jeu à l'autre**, et à tous les niveaux : la liste, le remplacement sur le même nom, le refus d'un renommage en doublon, et jusqu'à vos corrections ▲▼ des caractéristiques. Un gabarit d'Alien ne s'affichera jamais dans une partie de Blade Runner — ses valeurs sont dans une autre échelle, il serait injouable sans que rien ne le signale.
+
+> [!TIP]
+> **Reforger un jeu ne perd pas son bestiaire.** La Forge enrichit le pilote existant au lieu d'en créer un second, et le bestiaire suit son identifiant.
+
+> [!NOTE]
+> En revanche, **deux campagnes du même jeu partagent le même bestiaire**. C'est voulu : un pillard est un pillard. Il n'y a pas de bestiaire propre à une campagne.
+
 Quand vous fabriquez depuis un gabarit du bestiaire, **ce que vous y avez saisi passe par-dessus le tirage**, champ par champ : ce que vous avez décidé est une décision, le reste est un remplissage. Les caractéristiques que vous n'avez pas fixées varient donc d'un exemplaire à l'autre — trois gardes du même modèle ne sont pas trois jumeaux.
 
 > [!TIP]
