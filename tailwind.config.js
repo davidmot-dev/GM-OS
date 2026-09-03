@@ -1,5 +1,6 @@
 import forms from '@tailwindcss/forms'
 import typography from '@tailwindcss/typography'
+import animate from 'tailwindcss-animate'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -160,5 +161,21 @@ export default {
     plugins: [
         forms,
         typography,
+        /*
+          **Le greffon qui manquait — posé le 2026-09-03, à la demande de David.**
+
+          `animate-in`, `fade-in`, `zoom-in-95`, `slide-in-from-*` et l'unique
+          `animate-out` du bandeau de toast étaient écrits **125 fois dans 76
+          fichiers** et ne produisaient AUCUNE règle : le greffon n'avait jamais
+          été installé. *Une classe qui n'existe pas ne prévient pas — rien ne
+          casse, il ne se passe simplement rien.*
+
+          C'est lui qui définit les images-clés `enter` / `exit` et les variables
+          `--tw-enter-*` que ces classes renseignent, et qui étend `duration-*`,
+          `delay-*`, `ease-*` et `fill-mode-*` à l'animation en plus de la
+          transition — d'où `duration-500` qui prend enfin son sens à côté d'un
+          `animate-in`.
+        */
+        animate,
     ],
 }

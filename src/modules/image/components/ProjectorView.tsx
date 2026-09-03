@@ -185,7 +185,8 @@ const ProjectorView: React.FC = () => {
                             autoPlay 
                             loop 
                             muted 
-                            className="w-full h-full object-contain animate-in fade-in duration-500" 
+                            className="w-full h-full object-contain"
+                            style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}
                         />
                     ) : resolvedUrl ? (
                         <div
@@ -204,10 +205,23 @@ const ProjectorView: React.FC = () => {
                               les deux : la clé qui rejoue l'entrée démonte la
                               sortie.
                             */}
+                            {/*
+                              ⛔ **Le fondu d'entrée est une vraie animation, pas
+                              `animate-in fade-in`** : ce projet n'a pas le
+                              greffon `tailwindcss-animate`, ces classes n'y
+                              produisent aucune règle, et l'image apparaissait
+                              donc d'un coup depuis toujours — seule la SORTIE,
+                              portée par le style en ligne du parent, jouait.
+
+                              ⚠️ Sans mode de remplissage : `both` garderait
+                              l'opacité de fin et **battrait l'opacité en ligne
+                              du parent**, qui est ce qui joue le fondu de
+                              sortie ; l'image ne s'éteindrait plus jamais.
+                            */}
                             <div
                                 key={resolvedUrl}
-                                className="w-full h-full relative flex items-center justify-center animate-in fade-in"
-                                style={{ animationDuration: `${FONDU_DE_LIMAGE_MS}ms` }}
+                                className="w-full h-full relative flex items-center justify-center"
+                                style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}
                             >
                                 <img 
                                     src={resolvedUrl} 

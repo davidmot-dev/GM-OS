@@ -129,6 +129,19 @@
   }
 
   /* View Transitions */
+  /*
+    **Le fondu d'entrée du storyboard**, pour le titre comme pour l'image.
+
+    ⛔ Il remplace `animate-in fade-in`, qui **n'existe pas dans ce projet** :
+    le greffon `tailwindcss-animate` n'est pas installé, ces deux classes ne
+    produisent aucune règle, et les deux fondus d'entrée n'ont donc jamais
+    joué. *Une classe qui n'existe pas ne prévient pas.*
+  */
+  @keyframes gmos-fondu-entrant {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   @keyframes fadeInUp {
     from {
       opacity: 0;
