@@ -201,6 +201,33 @@ exactement ces trous.*
   refuse, le débruitage neuronal se désactive **en le disant** — mais c'est un changement de fond sur le
   moteur, à surveiller au premier lancement.
 
+### 9 · L'atelier des adversaires, 2026-09-03
+
+*« Il me manque un module pour créer des adversaires de combat aléatoire. » Deux
+questions posées, deux réponses de David : les chiffres viennent **du pilote ET
+d'un bestiaire qu'il remplit**, et la destination se choisit **au moment de
+générer**.*
+
+| Ce qui existait | Ce qui manquait |
+| --- | --- |
+| `EncounterGenerator` **assemble** une rencontre en clonant des prototypes déjà saisis, avec un compte en dés et un gonflage élite/boss | Il ne **crée** rien : sans bestiaire patiemment rempli, il ne produit rien. Et l'ajout manuel de Combat-OS donnait une coquille — un nom, **dix points de vie en dur**, une fiche de zéros |
+
+**Ce qui est livré**, dans `combat/logic/fabriqueDAdversaire.ts` et `combat/components/AtelierDesAdversaires.tsx` :
+
+- **Les chiffres viennent du gabarit de fiche du jeu** — `defaultValue` donne l'ordinaire, `max` le plafond, `options` les échelons quand le jeu compte en lettres. L'adversaire est donc **jouable par construction**, et sa santé se calcule ensuite toute seule par la formule du pilote (`addCombatant` le fait déjà — *ne pas devenir le huitième lecteur d'une même vérité*).
+- **Six archétypes et quatre rangs.** ⚠️ Le problème qui n'est pas évident : *GM-OS ne sait pas lequel des champs d'un jeu veut dire « fort »*. Trois issues, une seule tient — deviner en silence fabrique des erreurs invisibles, demander au pilote rendrait les dix pilotes existants muets ; on **propose par mots-clés, on montre, et on retient la correction** du meneur par jeu et par archétype.
+- **Le bestiaire appartient au JEU, pas à la campagne.** Un même nom remplace au lieu d'empiler, et ce que le meneur y a saisi **passe par-dessus le tirage** — une décision passe devant un remplissage.
+- **Trois sorties** : au combat, dans la campagne, ou au bestiaire.
+- Le bestiaire entre dans la **sauvegarde** (clé déclarée dans `schemas.ts` — sans quoi elle serait écrite puis jetée, la leçon de Music-OS).
+
+⛔ **Trouvé en chemin : `EncounterRollPanel` n'est monté nulle part.** L'interface existe, le générateur et son action de store aussi, mais aucun écran ne l'affiche — les `encounterTemplates` déclarés par un pilote sont donc **inatteignables**. Non traité aujourd'hui, et à trancher : le rebrancher dans l'atelier, ou le supprimer. *Une fonctionnalité qu'aucun écran n'atteint n'existe pas, mais son code se maintient quand même.* Le fichier porte aussi un `// @ts-nocheck` en tête.
+
+**Ce qui entre en P6 :**
+
+- **Les archétypes sur les vrais jeux de David.** La proposition par mots-clés est le point faible assumé : elle a été éprouvée sur les cinq attributs de Dune et sur une échelle en lettres, pas sur ses dix pilotes.
+- **La convention des échelles en lettres** : l'atelier suppose les options rangées *de la meilleure à la pire* (A, B, C, D). Vrai pour Blade Runner ; à vérifier ailleurs — le premier adversaire le dira du premier coup d'œil.
+- **Le geste complet en séance** : fabriquer trois piétailles pendant que les joueurs discutent, sans que ça casse le rythme.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou

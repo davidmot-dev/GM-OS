@@ -62,3 +62,49 @@ Le bouton **"Tout Effacer"** (Fin de Combat) déclenche plusieurs actions de ses
 
 - **Jet Système** : Utilise le moteur de dés interne (**Dice OS**).
 - **Snapshot** : Le combat en cours est sauvegardé en temps réel. Si l'application redémarre, le combat reprend exactement au même round et au même tour.
+
+---
+
+## ⚔️ L'Atelier des adversaires (v6.5)
+
+Le bouton **Fabriquer des adversaires**, sous l'ajout manuel, ouvre un atelier qui **crée** des combattants — pas seulement un nom et une coquille vide.
+
+### D'où viennent les chiffres
+
+**Du gabarit de fiche de votre jeu, et de nulle part ailleurs.** Chaque caractéristique y porte déjà sa valeur ordinaire et son plafond : un adversaire fabriqué est donc dans l'échelle du jeu par construction. Sa santé est ensuite calculée par la formule du pilote, exactement comme pour un personnage.
+
+> [!NOTE]
+> Aucun chiffre n'est demandé à l'IA. C'est la leçon la plus chère de ce projet : un modèle qui recopie une table la recopie de travers sans que rien ne le dise. L'atelier tire, le livre décide des bornes.
+
+### Les trois réglages
+
+1. **L'archétype** — Brute, Tireur, Rapide, Meneur, Spécialiste, ou Quelconque pour du figurant. Il décide de ce qui est poussé vers le haut et de ce qui est laissé bas.
+2. **Le rang** — Piétaille, Aguerri, Élite, Boss. Il décale les valeurs autour de la moyenne du jeu ; un boss n'est nul nulle part.
+3. **Le nombre** — le rang en propose un par défaut (quatre piétailles, un boss).
+
+### Ce que l'atelier a deviné, et que vous pouvez corriger
+
+Sous les archétypes, une rangée de **puces** montre les caractéristiques que GM-OS compte pousser (▲ vert) et négliger (▼ rouge). Elles sont pré-remplies d'après les libellés de votre jeu — *GM-OS ne sait pas lequel de vos champs veut dire « fort »*, il le suppose. Cliquez pour corriger : favorisé → négligé → neutre.
+
+**Votre correction est retenue**, par jeu et par archétype. On ne vous reposera pas la question.
+
+### L'aperçu
+
+Il montre le **premier exemplaire**, pas une moyenne — vous voyez ce que vous allez obtenir. **↻ Relancer** en tire un autre.
+
+### Les trois sorties
+
+| Bouton | Ce qu'il fait |
+| :--- | :--- |
+| **Envoyer au combat** | Les adversaires entrent directement dans l'ordre du tour, numérotés s'ils sont plusieurs. Rien n'est rangé dans la campagne. |
+| **Garder dans la campagne** | Ils deviennent des PNJ avec leur fiche — réutilisables, projetables au Player Hub. |
+| **Au bestiaire** | Range le modèle (pas les exemplaires) pour le retrouver plus tard. |
+
+### Le bestiaire
+
+Un gabarit rangé **appartient au jeu, pas à la campagne** : votre pillard de Blade Runner resservira dans la campagne suivante. Un même nom pour un même jeu **remplace** l'ancien plutôt que d'empiler des doublons.
+
+Quand vous fabriquez depuis un gabarit du bestiaire, **ce que vous y avez saisi passe par-dessus le tirage**, champ par champ : ce que vous avez décidé est une décision, le reste est un remplissage. Les caractéristiques que vous n'avez pas fixées varient donc d'un exemplaire à l'autre — trois gardes du même modèle ne sont pas trois jumeaux.
+
+> [!TIP]
+> Le bestiaire entre dans la sauvegarde automatique, avec vos corrections de répartition.
