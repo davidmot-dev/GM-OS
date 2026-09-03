@@ -161,6 +161,8 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
                 statuses: [],
                 sheetData,
                 healthSystem: HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp'),
+                /* Pour que sa fiche sache le ranger au bestiaire plus tard. */
+                origineFabriquee: { archetypeId: archetypeCourant.id, rangId },
                 roleplayingNotes: source.genre === 'gabarit'
                     ? gabarits.find(g => g.id === source.id)?.notes ?? ''
                     : archetypeCourant.resume,

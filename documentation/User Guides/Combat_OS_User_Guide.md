@@ -116,6 +116,16 @@ Un champ jamais rempli s'affiche **—** et non **0** : *un zéro se lit comme u
 > [!NOTE]
 > La fiche est en lecture seule à dessein. Les jauges de la carte de combat se modifient déjà d'un clic ; deux endroits pour changer la même valeur finissent toujours par ne plus être d'accord.
 
+**Deux boutons en pied de fiche**, pour garder un adversaire qui vous plaît :
+
+| Bouton | Ce qu'il range, et sous quel nom |
+| :--- | :--- |
+| **Au bestiaire** | Le **modèle**, pour le refabriquer plus tard. Le numéro d'exemplaire est retiré : « Tireur 2 » devient « Tireur ». Son archétype et son rang voyagent avec lui — la Fabrique s'en souvient. |
+| **Dans la campagne** | L'**individu**, avec son nom complet et ses points de vie actuels. Le combattant du plateau est ensuite **rattaché** à cette fiche : c'est la même créature, pas une copie qui divergerait au premier coup encaissé. |
+
+> [!TIP]
+> Le second bouton disparaît pour un PJ ou un PNJ déjà enregistré — les verser en campagne fabriquerait un doublon d'eux-mêmes.
+
 ### Le bestiaire
 
 Un gabarit rangé **appartient au jeu, pas à la campagne** : votre pillard de Blade Runner resservira dans la campagne suivante. Un même nom pour un même jeu **remplace** l'ancien plutôt que d'empiler des doublons.

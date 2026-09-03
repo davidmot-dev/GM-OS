@@ -1,10 +1,16 @@
 import React from 'react';
+import { BookMarked, Users } from 'lucide-react';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useCombatStore } from '../useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useBestiaireStore } from '../useBestiaireStore';
+import { gmToast } from '../../../stores/useToastStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import { champsAMontrer, ficheDuCombattant } from '../logic/ficheDuCombattant';
-import { decrireLaSante } from '../logic/SanteDuCombattant';
+import { decrireLaSante, santeDeDepart, valeurDuChamp } from '../logic/SanteDuCombattant';
+import { nomDeGabarit, origineOuDefaut } from '../logic/promotionDuCombattant';
+import { archetypeParId } from '../logic/archetypes';
 
 /**
  * **La fiche d'un combattant, en lecture.**
@@ -28,7 +34,9 @@ import { decrireLaSante } from '../logic/SanteDuCombattant';
 export const FicheDuCombattant: React.FC = () => {
     const { defaultValue } = useModalStore();
     const combatants = useCombatStore(e => e.combatants);
-    const { players, entities, customSheetTemplates, getActiveDriver } = useSessionOSStore();
+    const updateCombatant = useCombatStore(e => e.updateCombatant);
+    const { players, entities, customSheetTemplates, getActiveDriver, addEntity, activeCampaignId } = useSessionOSStore();
+    const enregistrerAuBestiaire = useBestiaireStore(e => e.enregistrer);
 
     const combatantId = (defaultValue as { combatantId?: string } | undefined)?.combatantId;
     const combattant = combatants.find(c => c.id === combatantId);
@@ -53,6 +61,90 @@ export const FicheDuCombattant: React.FC = () => {
 
     const blocs = champsAMontrer(gabarit);
     const sante = decrireLaSante(combattant);
+    const origine2 = origineOuDefaut(combattant.origineFabriquee);
+    const dejaEnCampagne = !!combattant.sourceEntityId || !!combattant.sourcePlayerId;
+
+    const rangerAuBestiaire = () => {
+        if (!driver) {
+            gmToast('Aucun système de jeu actif : le gabarit n’aurait pas d’échelle.', 'error');
+            return;
+        }
+        const nom = nomDeGabarit(combattant.name);
+        enregistrerAuBestiaire({
+            jeuId: driver.id,
+            nom,
+            archetypeId: origine2.archetypeId,
+            rangId: origine2.rangId,
+            sheetData: valeurs as Record<string, number | string | boolean>,
+            notes: combattant.roleplayingNotes || archetypeParId(origine2.archetypeId).resume,
+        });
+        gmToast(`« ${nom} » est au bestiaire`, 'success');
+    };
+
+    const verserDansLaCampagne = () => {
+        if (!activeCampaignId) {
+            gmToast('Aucune campagne ouverte : rien où le ranger.', 'error');
+            return;
+        }
+        const depart = santeDeDepart(
+            driver?.combat?.santeDeDepart,
+            champ => valeurDuChamp(valeurs, champ),
+        ) ?? combattant.hpMax ?? 10;
+
+        /*
+          **On garde le nom de l'exemplaire, numéro compris.** Le bestiaire range
+          un modèle — « Tireur » —, la campagne accueille un individu : celui-là
+          est « Tireur 2 », il a peut-être déjà encaissé, et le renommer
+          empêcherait le meneur de le retrouver dans l'ordre du tour.
+        */
+        addEntity({
+            name: combattant.name,
+            type: 'monster',
+            role: 'hostile',
+            status: 'alive',
+            avatar: combattant.avatar || '',
+            hp: combattant.hp ?? depart,
+            maxHp: combattant.hpMax ?? depart,
+            ac: 0,
+            speed: 0,
+            initiative: combattant.init ?? 0,
+            description: archetypeParId(origine2.archetypeId).resume,
+            roleplayingNotes: combattant.roleplayingNotes || '',
+            gmSecretInfo: combattant.gmSecretInfo || '',
+            linkedMapIds: [],
+            campaignId: activeCampaignId,
+            templateId: gabarit?.id,
+            sheetData: valeurs,
+            healthSystem: combattant.healthSystem
+                ?? HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp'),
+        } as Parameters<typeof addEntity>[0]);
+
+        /*
+          **Et le combattant est RATTACHÉ à la fiche qu'on vient de créer.** Sans
+          ce lien, on aurait deux exemplaires de la même créature — celui du
+          plateau et celui de la campagne — qui divergeraient dès le premier coup
+          encaissé. *Promouvoir, ce n'est pas copier : c'est donner une adresse à
+          ce qui n'en avait pas.*
+
+          ⛔ **L'identifiant se relit, il ne se devine pas.** Première version :
+          je fabriquais un `crypto.randomUUID()` et le passais à `addEntity`.
+          Mais `addEntity` pose le sien (`e-${Date.now()}`) et **ignore celui
+          qu'on lui donne** — le rattachement aurait donc pointé vers une fiche
+          inexistante, et la carte de combat aurait cherché en silence une
+          entité qui n'existe pas. On relit donc ce qui a réellement été créé.
+        */
+        const cree = [...useSessionOSStore.getState().entities]
+            .reverse()
+            .find(e => e.campaignId === activeCampaignId && e.name === combattant.name);
+
+        if (cree) {
+            updateCombatant(combattant.id, { sourceEntityId: cree.id });
+        } else {
+            /* Le PNJ existe quand même : seul le lien manque, et on le dit. */
+            gmToast('PNJ créé, mais le combattant n’a pas pu y être rattaché.', 'warning');
+        }
+        gmToast(`« ${combattant.name} » rejoint la campagne`, 'success');
+    };
 
     return (
         <div className="p-5 space-y-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
@@ -110,6 +202,30 @@ export const FicheDuCombattant: React.FC = () => {
                     <p className="text-xs text-slate-300 italic">{combattant.roleplayingNotes}</p>
                 </section>
             )}
+
+            <div className="flex items-center gap-2 pt-2 border-t border-app-border/30">
+                <button
+                    onClick={rangerAuBestiaire}
+                    className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
+                    title="Ranger ce modèle pour le refabriquer plus tard"
+                >
+                    <BookMarked size={12} /> Au bestiaire
+                </button>
+                {/*
+                  Le versement en campagne ne s'offre que pour ce qui n'y est pas
+                  déjà : le proposer sur un PJ ou un PNJ enregistré fabriquerait
+                  un doublon de lui-même.
+                */}
+                {!dejaEnCampagne && (
+                    <button
+                        onClick={verserDansLaCampagne}
+                        className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-300 hover:text-accent hover:border-accent/40 transition-all text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
+                        title="En faire un PNJ de la campagne, et l’y rattacher"
+                    >
+                        <Users size={12} /> Dans la campagne
+                    </button>
+                )}
+            </div>
 
             <footer className="pt-1 text-[9px] font-bold uppercase tracking-widest text-slate-600">
                 {origine === 'campagne' && 'Valeurs lues sur la fiche de campagne — à jour.'}

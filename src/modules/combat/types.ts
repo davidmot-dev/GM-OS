@@ -56,6 +56,20 @@ export interface Combatant {
     roleplayingNotes?: string;
     /** Informations secrètes du MJ */
     gmSecretInfo?: string;
+    /**
+     * D'ou vient un adversaire fabrique par l'atelier.
+     *
+     * **Porte par le combattant, et c'est le point.** L'archetype et le rang
+     * sont connus a la seconde ou on le fabrique, et perdus des qu'on ferme
+     * l'atelier. Sans eux, le ranger au bestiaire depuis sa fiche obligerait a
+     * les redemander — ou a inventer « quelconque / pietaille » pour un boss.
+     * *Une information qu'on possede au moment ou on la produit ne se redemande
+     * pas plus tard : elle voyage.*
+     *
+     * Absente pour tout combattant ajoute autrement, et c'est une information :
+     * elle se lit « celui-la n'a pas ete fabrique ».
+     */
+    origineFabriquee?: import('./logic/promotionDuCombattant').OrigineFabriquee;
     /** Statistiques additionnelles (Mana, Santé Mentale, etc.) */
     extraStats?: Record<string, { value: number; max: number }>; 
     resistances?: string[];
