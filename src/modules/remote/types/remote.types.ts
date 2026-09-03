@@ -84,6 +84,14 @@ export interface RemoteSyncData {
     session?: {
         campaignId: string;
         activeDiceConfig: DiceConfig | null;
+        /**
+         * Ce jeu lance-t-il des **dés échelonnés** ?
+         *
+         * Envoyé comme une réponse et non comme une question : `dice.engine` ne
+         * suffit pas à la poser — un pilote peut déclarer `jet.desEchelonnes` et
+         * un moteur qui dit autre chose. Le meneur tranche, la tablette obéit.
+         */
+        desEchelonnes?: boolean;
     };
 }
 

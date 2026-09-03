@@ -1,9 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Minus, Plus, RotateCcw, Dices, Info, ChevronDown, Check, AlertCircle } from 'lucide-react';
 import { type DiceConfig } from '../../../types/drivers';
+import {
+    facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes,
+} from '../../dice/desEchelonnes';
+
+/** Les niveaux d'un jeu échelonné, du meilleur dé au plus petit. */
+const LETTRES_ECHELONNEES = ['A', 'B', 'C', 'D'] as const;
 
 interface RemoteDicePadProps {
     activeDiceConfig?: DiceConfig | null;
+    /**
+     * Ce jeu lance-t-il des **dés échelonnés** ? La réponse vient du meneur —
+     * elle ne se déduit pas de `activeDiceConfig.engine`, qu'un pilote peut
+     * contredire. Voir `useNexusSynchronizer`.
+     */
+    desEchelonnes?: boolean;
     onRoll: (params: { 
         sides?: number; 
         count: number; 
@@ -14,6 +26,11 @@ interface RemoteDicePadProps {
         gearCount?: number;
         title?: string;
         formula?: string;
+        /** Les lettres choisies par le joueur — un dé de base chacune. */
+        niveauxEchelonnes?: { label: string; lettre: string }[];
+        /** Le dé d'équipement, compté à part : ses 1 usent le matériel. */
+        equipementEchelonne?: string;
+        modificateurEchelonne?: ModificateurDeDes;
     }) => void;
     onClear: () => void;
 }
@@ -32,7 +49,7 @@ const DICE_MODES = [
     { id: 'rolemaster', label: 'Rolemaster' },
 ];
 
-const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll, onClear }) => {
+const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, onRoll, onClear }) => {
     const [diceCount, setDiceCount] = useState(1);
     const [diceModifier, setDiceModifier] = useState(0);
     const [diceMode, setDiceMode] = useState<string>('standard');
@@ -42,6 +59,39 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
     const modeMenuRef = useRef<HTMLDivElement>(null);
     const [threshold, setThreshold] = useState(activeDiceConfig?.successThreshold || 10);
     const [diceFormula, setDiceFormula] = useState('');
+
+    /*
+      **Les dés échelonnés sur la tablette — demandé par David le 2026-09-03**,
+      dans la foulée du même défaut au pupitre du meneur.
+
+      Le joueur nomme ses deux niveaux, comme le meneur nomme ceux d'un PNJ : il
+      les lit sur sa fiche, et **l'échelle reste dans `desEchelonnes.ts`** — le
+      dé écrit à côté de chaque lettre vient de la table et n'est jamais saisi.
+
+      *La composition qui fait foi se refait chez le meneur* : c'est lui qui
+      résout, et deux compositions pour un même jet finiraient par ne plus
+      s'accorder. Ici, on ne calcule que ce qui s'affiche.
+    */
+    const [niveauAttribut, setNiveauAttribut] = useState('B');
+    const [niveauCompetence, setNiveauCompetence] = useState('C');
+    const [niveauEquipement, setNiveauEquipement] = useState('');
+    const [modificateurEchelonne, setModificateurEchelonne] = useState<ModificateurDeDes>('aucun');
+
+    /** Le jet en cours est-il échelonné ? Le mode manuel reprend la main dessus. */
+    const estEchelonne = !!desEchelonnes && !isManualMode;
+
+    const poigneeEchelonnee = poigneeDepuisLesLettres(
+        [
+            { label: 'Attribut', lettre: niveauAttribut },
+            { label: 'Compétence', lettre: niveauCompetence },
+        ],
+        modificateurEchelonne,
+    );
+    const facesDeLEquipement = facesDuNiveau(niveauEquipement);
+
+    /** La poignée telle qu'elle se lit — le même libellé qu'au pupitre. */
+    const libelleDeLaPoignee = poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ')
+        + (facesDeLEquipement !== null ? ` + D${facesDeLEquipement}` : '');
 
     // Sync mode with system when the campaign/driver changes
     if (activeDiceConfig?.engine !== prevSystemEngine && !isManualMode) {
@@ -82,14 +132,33 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
     const handleSystemRoll = () => {
         if (!activeDiceConfig) return;
         const modeId = isManualMode ? diceMode : (activeDiceConfig.engine || 'standard');
+        /*
+          **On envoie les lettres, pas les faces.** L'échelle appartient au jeu,
+          donc au meneur : c'est chez lui qu'elle est transcrite, et c'est lui
+          qui applique l'avantage puis le plafond du livre. Une tablette qui
+          enverrait « 12 » imposerait sa lecture de la règle.
+        */
+        const echelonne = estEchelonne ? {
+            niveauxEchelonnes: [
+                { label: 'Attribut', lettre: niveauAttribut },
+                { label: 'Compétence', lettre: niveauCompetence },
+            ],
+            equipementEchelonne: niveauEquipement || undefined,
+            modificateurEchelonne,
+        } : {};
         onRoll({
             count: diceCount,
             gearCount: threshold,
             modifier: diceModifier,
-            mode: modeId,
+            mode: estEchelonne ? 'yze-echelonne' : modeId,
             target: threshold,
             useSystem: !isManualMode,
-            title: isManualMode ? `Jet Manuel (${DICE_MODES.find(m => m.id === diceMode)?.label})` : `Jet Système (${activeDiceConfig.engine || 'Standard'})`
+            ...echelonne,
+            title: isManualMode
+                ? `Jet Manuel (${DICE_MODES.find(m => m.id === diceMode)?.label})`
+                : estEchelonne
+                ? `Jet Système (${libelleDeLaPoignee})`
+                : `Jet Système (${activeDiceConfig.engine || 'Standard'})`
         });
     };
 
@@ -126,8 +195,79 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
                 </div>
             )}
 
+            {/*
+              **Les niveaux, quand le jeu lance des dés échelonnés.**
+
+              Ce bloc remplace la quantité et le seuil, qui n'ont aucun sens ici :
+              on ne lance pas *un nombre* de dés, on lance **deux dés de tailles
+              différentes**. Le joueur règle, puis touche « Lancer Système ».
+            */}
+            {estEchelonne && (
+                <div className="flex flex-col gap-3 p-5 premium-glass rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">
+                        Attribut / Compétence / Équipement
+                    </span>
+                    <div className="grid grid-cols-3 gap-3">
+                        {([
+                            { cle: 'attribut', titre: 'Attribut', valeur: niveauAttribut, poser: setNiveauAttribut, facultatif: false },
+                            { cle: 'competence', titre: 'Compétence', valeur: niveauCompetence, poser: setNiveauCompetence, facultatif: false },
+                            { cle: 'equipement', titre: 'Équip.', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
+                        ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
+                            <div key={cle} className="flex flex-col gap-1">
+                                <span className="text-[9px] font-black uppercase text-slate-500 tracking-tighter pl-1">{titre}</span>
+                                <select
+                                    value={valeur}
+                                    onChange={(e) => poser(e.target.value)}
+                                    title={titre}
+                                    aria-label={titre}
+                                    className="bg-white/5 border border-white/10 p-3 rounded-2xl text-lg font-black text-accent outline-none focus:border-accent/50 transition-all"
+                                >
+                                    {facultatif && <option value="">—</option>}
+                                    {LETTRES_ECHELONNEES.map(lettre => (
+                                        <option key={lettre} value={lettre}>{lettre} (D{facesDuNiveau(lettre)})</option>
+                                    ))}
+                                </select>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        {([
+                            { cle: 'aucun', titre: 'Normal' },
+                            { cle: 'avantage', titre: 'Avantage' },
+                            { cle: 'desavantage', titre: 'Désavantage' },
+                        ] as const).map(({ cle, titre }) => (
+                            <button
+                                key={cle}
+                                onClick={() => { haptic(10); setModificateurEchelonne(cle); }}
+                                aria-pressed={modificateurEchelonne === cle}
+                                className={`flex-1 px-2 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-tighter transition-all active:scale-95 ${modificateurEchelonne === cle
+                                    ? 'bg-accent text-app-bg border-accent/40 shadow-glow-accent'
+                                    : 'bg-white/5 border-white/10 text-slate-400'}`}
+                            >
+                                {titre}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-2 pl-1">
+                        <span className="text-lg font-black text-white font-mono">{libelleDeLaPoignee || '—'}</span>
+                        <span className="text-[9px] text-slate-500 uppercase tracking-widest ml-auto">6+ réussite · 10+ en vaut deux</span>
+                    </div>
+
+                    {/*
+                      *Une correction muette est une règle perdue* : le livre
+                      plafonne à deux D12, et un désavantage ne vide jamais la
+                      poignée. Quand la composition corrige, elle le dit.
+                    */}
+                    {poigneeEchelonnee.remarques.map((remarque, i) => (
+                        <p key={i} className="text-[10px] italic text-amber-500/80">{remarque}</p>
+                    ))}
+                </div>
+            )}
+
             {/* Controls */}
-            {diceMode === 'formula' ? (
+            {estEchelonne ? null : diceMode === 'formula' ? (
                 <div className="flex flex-col gap-3 p-5 premium-glass rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-300">
                     <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">Formule de dés</span>
                     <div className="flex gap-3">

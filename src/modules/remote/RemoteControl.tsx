@@ -50,6 +50,7 @@ const RemoteControl: React.FC = () => {
                 return (
                     <RemoteDicePad 
                         activeDiceConfig={syncData.session?.activeDiceConfig}
+                        desEchelonnes={syncData.session?.desEchelonnes}
                         onRoll={(dice) => sendAction('remote:dice:roll', dice)} 
                         onClear={() => sendAction('remote:dice:clear', {})}
                     />

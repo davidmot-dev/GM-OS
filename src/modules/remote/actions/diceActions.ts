@@ -1,4 +1,7 @@
 import { DiceEngine } from '../../dice/DiceEngine';
+import {
+    facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes,
+} from '../../dice/desEchelonnes';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import type { ActionRegistry } from './types';
@@ -23,6 +26,41 @@ interface DiceRollPayload {
      * ajouté à côté du premier.
      */
     rule?: 'over' | 'under';
+    /**
+     * **Les niveaux d'un jet à dés échelonnés, tels que la tablette les envoie.**
+     *
+     * *Demandé par David le 2026-09-03, après le même défaut au pupitre.* Ce
+     * sont des **lettres**, pas des faces : l'échelle appartient au jeu, elle
+     * est transcrite une seule fois (`desEchelonnes.ts`) et c'est ici, chez le
+     * meneur, qu'on l'applique. *Un écran qui enverrait « 12 » imposerait sa
+     * lecture de la règle, et deux écrans finiraient par ne plus la lire
+     * pareil.*
+     */
+    niveauxEchelonnes?: { label: string; lettre: string }[];
+    /** Le dé d'équipement, compté à part : ses 1 usent le matériel. */
+    equipementEchelonne?: string;
+    modificateurEchelonne?: ModificateurDeDes;
+}
+
+/**
+ * La poignée d'un jet échelonné, ou `null` si la charge n'en décrit pas.
+ *
+ * L'avantage, le désavantage et le plafond du livre sont appliqués **ici**, par
+ * la même fonction que le pupitre et que le panneau de fiche : trois écrans, une
+ * seule composition.
+ */
+function poigneeDeLaCharge(p: DiceRollPayload) {
+    if (!p.niveauxEchelonnes?.length) return null;
+    const poignee = poigneeDepuisLesLettres(p.niveauxEchelonnes, p.modificateurEchelonne ?? 'aucun');
+    if (poignee.des.length === 0) return null;
+
+    const equipement = facesDuNiveau(p.equipementEchelonne ?? '');
+    return {
+        taillesDeBase: poignee.des.map(d => d.faces),
+        taillesSecondaires: equipement !== null ? [equipement] : [],
+        libelle: poignee.des.map(d => `D${d.faces}`).join(' + ')
+            + (equipement !== null ? ` + D${equipement}` : ''),
+    };
 }
 
 /**
@@ -52,6 +90,23 @@ export function rollManually(
         case 'advantage': return DiceEngine.rollAdvantage(sides, modifier, true, target, sens);
         case 'disadvantage': return DiceEngine.rollAdvantage(sides, modifier, false, target, sens);
         case 'yze': return DiceEngine.rollYZE(count, p.target || p.gearCount || 0);
+        /*
+          **Le mode échelonné manquait à cette liste**, et un mode absent d'un
+          `switch` ne se plaint pas : il tombait dans le `default` et lançait des
+          dés ordinaires. *Le même oubli que la liste des modes du pupitre, qui
+          en a coûté deux le 2026-08-30 — une liste de noms recopiée à la main
+          dérive le jour où un nom s'ajoute.*
+
+          Sans lettres dans la charge, on retombe sur des dés à six faces, le
+          plus petit de l'échelle : **jamais un dé inventé plus gros.**
+        */
+        case 'yze-echelonne': {
+            const poignee = poigneeDeLaCharge(p);
+            return DiceEngine.rollYZEEchelonne(
+                poignee?.taillesDeBase ?? Array.from({ length: Math.max(1, count) }, () => 6),
+                poignee?.taillesSecondaires ?? [],
+            );
+        }
         case 'fate': return DiceEngine.rollFate(count, modifier);
         case 'rolemaster': return DiceEngine.rollRolemaster(modifier);
         case 'formula': return DiceEngine.rollFormula(p.formula || p.title || '1d20');
@@ -75,18 +130,46 @@ const roll = (payload: any) => {
 
     // Le pilote de système prime s'il est explicitement demandé.
     if (p.useSystem && activeDriver) {
+        /*
+          **Les dés échelonnés, reconnus aux mêmes trois signes qu'au pupitre.**
+
+          *Défaut trouvé par David le 2026-09-03 :* la tablette ne lisait que
+          `dice.engine`, et un pilote Blade Runner qui déclare `jet.desEchelonnes`
+          sans corriger son moteur y lançait une réserve de d6 — des réussites
+          plausibles, jamais plus de six, et le dé à douze faces nulle part.
+
+          On force alors le moteur, comme le pupitre et le panneau de fiche : le
+          reste du pilote — le sens du comptage, le seuil — continue de valoir.
+        */
+        const poignee = poigneeDeLaCharge(p);
+        const echelonne = !!poignee
+            || activeDriver.dice?.engine === 'yze-echelonne'
+            || !!activeDriver.jet?.desEchelonnes;
+
         // `jet.sens` voyage avec `dice` : la tablette doit résoudre exactement
         // comme le pupitre du meneur, sens du comptage compris.
         result = DiceEngine.rollFromConfig(
-            { ...activeDriver.dice, ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}) },
+            {
+                ...activeDriver.dice,
+                ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}),
+                ...(echelonne ? { engine: 'yze-echelonne' as const } : {}),
+            },
             {
                 modifier,
                 baseCount: count,
                 gearCount: p.gearCount || 0,
                 targetOverwrite: target,
+                ...(poignee ? {
+                    taillesDeBase: poignee.taillesDeBase,
+                    taillesSecondaires: poignee.taillesSecondaires,
+                } : {}),
             },
         );
-        finalTitle = p.title || `Système (${activeDriver.name})`;
+        /* Ce que le meneur relit : la poignée, et pas seulement le nom du jeu. */
+        finalTitle = p.title
+            || (poignee
+                ? `Système (${activeDriver.name}) — ${poignee.libelle}`
+                : `Système (${activeDriver.name})`);
     } else {
         /*
           La charge d'abord — un écran qui sait ce qu'il veut a raison —, le

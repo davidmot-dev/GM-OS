@@ -198,6 +198,20 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
             const { sessions, campaigns, entities, players, activeCampaignId: currentCampaignId, clues, atlasMaps, customSheetTemplates, customGameDrivers } = freshSessionOS;
 
+            /*
+              **Le pilote de la campagne, pour le pupitre de la tablette.**
+
+              *Défaut trouvé en corrigeant les dés échelonnés, le 2026-09-03 :*
+              `RemoteSyncData` déclare `session.activeDiceConfig` depuis
+              toujours, la tablette le lit — et **personne ne l'écrivait**. La
+              carte « Système actif » et son bouton « Lancer Système » ne se sont
+              donc jamais affichés : tout jet parti d'une tablette était un jet
+              manuel. *Un champ déclaré des deux côtés et rempli par personne ne
+              rend pas une erreur, il rend `undefined` — et une carte qui ne
+              s'affiche pas ne se signale pas.*
+            */
+            const piloteActif = freshSessionOS.getActiveDriver();
+
             // 1. SOUNDS/PADS
             const atmosId = soundStore.activeAtmosphereId;
             const atmosphere = soundStore.atmospheres.find(a => a.id === atmosId) || soundStore.atmospheres[0];
@@ -351,6 +365,20 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                       dont le report l'alimente — la Menace, précisément.
                     */
                     reservesDeTable: currentCampaignId ? (reservesStore.reserves[currentCampaignId] ?? {}) : {},
+                    /*
+                      **Ce que la tablette a besoin de savoir du pilote pour
+                      lancer** : sa configuration de dés, et **s'il s'agit d'un
+                      jeu à dés échelonnés**.
+
+                      Ce second point ne se déduit pas de `dice.engine` seul : un
+                      pilote peut déclarer `jet.desEchelonnes` et un moteur qui
+                      dit autre chose — c'est le défaut que David a trouvé au
+                      pupitre le 2026-09-03, et la Forge a un contrôle exprès
+                      pour lui. *On envoie donc la réponse, pas la question.*
+                    */
+                    activeDiceConfig: piloteActif?.dice ?? null,
+                    desEchelonnes: !!piloteActif?.jet?.desEchelonnes
+                        || piloteActif?.dice?.engine === 'yze-echelonne',
                     /*
                       **Les cartes tenues en main — décidé par David le 2026-08-30.**
 
