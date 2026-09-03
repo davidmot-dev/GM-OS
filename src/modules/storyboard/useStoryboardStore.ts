@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { laSceneQueLAmbianceOuvre } from '../session/logic/trame';
 import { envoyerLeTitre, normaliserLeTitre } from './titreProjete';
+import {
+    cequUnArretEteint, cequUnePriseDeMainEteint, eteindreLesSons,
+    ilYAQuelqueChoseAEteindre, lesSonsAnnoncesPar, AUCUN_SON, type SonsDuMoment,
+} from './sonsDuMoment';
 import type { Scene } from '../../types/trame.types';
 import { persist } from 'zustand/middleware';
 
@@ -103,6 +107,21 @@ interface StoryboardState {
      */
     cibleDeLImageDuMoment: string | null;
 
+    /**
+     * **Ce que le moment en cours a posé sur les trois moteurs de son.**
+     *
+     * *Défaut trouvé par David le 2026-09-02 : « quand je passe d'une séquence à
+     * l'autre, l'ancienne ambiance ne s'arrête pas ».*
+     *
+     * Le pendant sonore de `cibleDeLImageDuMoment` : sans cette trace on saurait
+     * qu'une ambiance tourne, mais pas **laquelle la séquence avait allumée** —
+     * et tout couper emporterait ce que le meneur avait lancé à la main.
+     *
+     * Volatile à dessein, comme la cible de l'image : elle ne décrit pas le
+     * moment, elle décrit ce qui sonne maintenant. Voir `sonsDuMoment.ts`.
+     */
+    sonsDuMoment: SonsDuMoment | null;
+
     // Actions
     addMoment: (moment: Omit<StoryboardMoment, 'id'>) => void;
     updateMoment: (id: string, updates: Partial<StoryboardMoment>) => void;
@@ -129,6 +148,7 @@ export const useStoryboardStore = create<StoryboardState>()(
             activeMomentId: null,
             imageAvantLeMoment: null,
             cibleDeLImageDuMoment: null,
+            sonsDuMoment: null,
 
             arreterLeMoment: () => {
                 const { imageAvantLeMoment, activeMomentId, moments } = get();
@@ -159,6 +179,17 @@ export const useStoryboardStore = create<StoryboardState>()(
                     envoyerLeTitre(normaliserLeTitre({ cible, texte: '' }));
                 }
 
+                /*
+                  **Le son du moment s'en va avec lui**, comme son image et son
+                  titre — la musique exceptée, que le meneur arrête quand il le
+                  décide (décision de David, reprise de celle du 2026-08-17 sur
+                  les lumières). Voir `cequUnArretEteint`.
+                */
+                const sonsAEteindre = cequUnArretEteint(get().sonsDuMoment);
+                if (ilYAQuelqueChoseAEteindre(sonsAEteindre)) {
+                    void eteindreLesSons(sonsAEteindre);
+                }
+
                 if (imageAvantLeMoment && gWindow.useMapStore) {
                     gWindow.useMapStore.getState().setMap(
                         imageAvantLeMoment.mapUrl,
@@ -166,7 +197,10 @@ export const useStoryboardStore = create<StoryboardState>()(
                         imageAvantLeMoment.mapName ?? 'Sans titre',
                     );
                 }
-                set({ activeMomentId: null, imageAvantLeMoment: null, cibleDeLImageDuMoment: null });
+                set({
+                    activeMomentId: null, imageAvantLeMoment: null,
+                    cibleDeLImageDuMoment: null, sonsDuMoment: null,
+                });
             },
 
             addMoment: (momentData) => set((state) => ({
@@ -200,6 +234,37 @@ export const useStoryboardStore = create<StoryboardState>()(
 
                 console.log(`[Storyboard] Triggering Moment: ${moment.name} (${id})`);
                 set({ activeMomentId: id });
+
+                /*
+                  **Ce que la séquence précédente faisait sonner s'arrête ici.**
+
+                  *Défaut trouvé par David le 2026-09-02 : « quand je passe d'une
+                  séquence à l'autre, l'ancienne ambiance ne s'arrête pas ».*
+
+                  Le pendant sonore de l'extinction de l'image, plus bas : une
+                  séquence est une parenthèse pour l'oreille comme pour l'œil.
+                  `cequUnePriseDeMainEteint` dit quoi couper — et surtout ce
+                  qu'il ne faut PAS couper parce qu'un moteur se relaie
+                  lui-même. Voir `sonsDuMoment.ts`.
+
+                  **On attend** : le bruitage qu'on arrête peut être celui que la
+                  séquence qui arrive va relancer, et une extinction en retard le
+                  tuerait dans l'œuf.
+                */
+                const sonsAEteindre = cequUnePriseDeMainEteint(
+                    get().sonsDuMoment, lesSonsAnnoncesPar(moment));
+                if (ilYAQuelqueChoseAEteindre(sonsAEteindre)) {
+                    await eteindreLesSons(sonsAEteindre);
+                }
+
+                /*
+                  **Ce que CE moment aura réellement posé**, et pas ce qu'il
+                  annonce : chaque moteur y inscrit sa part quand il a joué. Une
+                  musique introuvable ne doit rien laisser dans la trace, sinon
+                  la séquence suivante irait couper une platine qui joue
+                  autre chose. *Même règle que la cible de l'image.*
+                */
+                const sonsPoses: SonsDuMoment = { ...AUCUN_SON };
 
                 /*
                   **Lancer une ambiance ouvre la scène qui la déclare.**
@@ -254,6 +319,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                     if (pad) {
                         console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
                         await musicStore.playPad(pad, moment.musicOutputId);
+                        sonsPoses.musicPadId = pad.id;
                     } else {
                         console.warn(`[Storyboard] Music: Pad ID ${moment.musicPadId} NOT FOUND in any playlist.`);
                         if (gmToast) gmToast('warning', `Musique introuvable: ${moment.musicPadId}`);
@@ -377,6 +443,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                         await gWindow.soundEngine.loadAudio(pad.id, pad.filePath);
                         gWindow.soundEngine.play(pad.id, pad.volume, undefined, moment.soundOutputId);
                         soundStore.setPadActive(pad.id, true);
+                        sonsPoses.soundPadId = pad.id;
                     } else {
                         console.warn(`[Storyboard] Sound: Pad ID ${moment.soundPadId} NOT FOUND or no file.`);
                     }
@@ -387,7 +454,10 @@ export const useStoryboardStore = create<StoryboardState>()(
                     console.log(`[Storyboard] Ambient: Applying scene ${moment.ambientSceneId}`);
                     const ambientStore = gWindow.useAmbientStore.getState();
                     await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId);
+                    sonsPoses.ambientSceneId = moment.ambientSceneId;
                 }
+
+                set({ sonsDuMoment: sonsPoses });
 
                 if (gmToast) gmToast('info', `Moment activé : ${moment.name}`);
             },
