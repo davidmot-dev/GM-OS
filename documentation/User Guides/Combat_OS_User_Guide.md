@@ -100,6 +100,22 @@ Il montre le **premier exemplaire**, pas une moyenne — vous voyez ce que vous 
 | **Garder dans la campagne** | Ils deviennent des PNJ avec leur fiche — réutilisables, projetables au Player Hub. |
 | **Au bestiaire** | Range le modèle (pas les exemplaires) pour le retrouver plus tard. |
 
+### Revoir la fiche d'un adversaire
+
+Chaque carte de combat porte un bouton **Fiche** : il ouvre, **en lecture**, toutes les caractéristiques du combattant rangées par section du gabarit de votre jeu.
+
+Il fonctionne pour **tous** les combattants, et le pied de la fiche dit d'où viennent les valeurs :
+
+| Ce qui est écrit | Ce que ça veut dire |
+| :--- | :--- |
+| *Valeurs lues sur la fiche de campagne* | Un PJ ou un PNJ enregistré : sa fiche est la source, et elle est à jour. |
+| *Valeurs portées par le combattant* | Un adversaire fabriqué, qui n'existe que sur ce plateau. Si vous voulez le garder, refabriquez-le avec **Garder dans la campagne**. |
+
+Un champ jamais rempli s'affiche **—** et non **0** : *un zéro se lit comme une valeur du jeu, et ferait croire à un adversaire incapable.*
+
+> [!NOTE]
+> La fiche est en lecture seule à dessein. Les jauges de la carte de combat se modifient déjà d'un clic ; deux endroits pour changer la même valeur finissent toujours par ne plus être d'accord.
+
 ### Le bestiaire
 
 Un gabarit rangé **appartient au jeu, pas à la campagne** : votre pillard de Blade Runner resservira dans la campagne suivante. Un même nom pour un même jeu **remplace** l'ancien plutôt que d'empiler des doublons.

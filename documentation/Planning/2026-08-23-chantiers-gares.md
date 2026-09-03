@@ -222,6 +222,13 @@ générer**.*
 
 ⛔ **Trouvé en chemin : `EncounterRollPanel` n'est monté nulle part.** L'interface existe, le générateur et son action de store aussi, mais aucun écran ne l'affiche — les `encounterTemplates` déclarés par un pilote sont donc **inatteignables**. Non traité aujourd'hui, et à trancher : le rebrancher dans l'atelier, ou le supprimer. *Une fonctionnalité qu'aucun écran n'atteint n'existe pas, mais son code se maintient quand même.* Le fichier porte aussi un `// @ts-nocheck` en tête.
 
+**Deux retours de David le soir même, et un seul était un défaut :**
+
+| Ce qu'il a vu | Ce que c'était |
+| --- | --- |
+| *« quand je crée 1 combattant, il m'en envoie 2 »* | ⛔ **C'ÉTAIT un doublon, et j'avais conclu le contraire.** Ma première réponse — « c'est un PJ de la scène » — décrivait un mécanisme réel (il existe depuis le 20/08, et cinq tests le documentent maintenant) **mais pas ce que David voyait** : sa capture montrait « Tireur 1 » et « Tireur 2 ». La vraie cause : le sélecteur de rang **réécrivait le nombre saisi** (« Aguerri » ⇒ 2), donc *un défaut qui dépend de l'ordre des gestes* — rang puis nombre marchait, nombre puis rang non. ⚠️ Et mes tests ne pouvaient pas le voir : ils visaient le **magasin**, qui faisait son travail, alors que le défaut vivait dans l'**état de l'écran**. *Un test qui vise la mauvaise couche est vert pour de bonnes raisons* |
+| *« comment revoir la fiche de ces nouveaux combattants ? »* | ⛔ **On ne pouvait pas.** Et la question a mis au jour un vrai défaut : `CombatCard` lisait la fiche **à deux endroits**, et un seul avait le repli vers `combatant.sheetData`. Sur un jeu sans `ui_config`, la voie historique affichait donc des **zéros** pour un adversaire parfaitement rempli. Une seule porte désormais (`logic/ficheDuCombattant.ts`), et un panneau **Fiche** sur chaque carte |
+
 **Ce qui entre en P6 :**
 
 - **Les archétypes sur les vrais jeux de David.** La proposition par mots-clés est le point faible assumé : elle a été éprouvée sur les cinq attributs de Dune et sur une échelle en lettres, pas sur ses dix pilotes.
