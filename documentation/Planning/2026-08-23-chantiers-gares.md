@@ -133,6 +133,38 @@ de table existe depuis le 15/08.
 > case soit cochée, un était devenu un piège, un s'est fermé en trente secondes de vérification à
 > l'écran. **Vérifier un reste coûte moins cher que le traiter, et souvent il n'y a rien à traiter.**
 
+### 7 · Voice-OS, révisé et refait le 2026-09-03
+
+*Parti d'une question sur le choix d'un micro, fini en révision du module. David :
+« je ne suis pas toujours content du résultat, le son se coupe ou sature trop facilement (peut-être que
+la librairie choisie n'est pas la meilleure) ». **Il n'y a aucune librairie** — Web Audio et un worklet
+écrit à la main —, et les causes étaient six, toutes muettes.*
+
+| Quoi | Ce qu'il y avait dessous | Où |
+| --- | --- | --- |
+| **Le sélecteur de micro** | `getUserMedia` était appelé **sans `deviceId`** : le module prenait le périphérique par défaut de Windows, et le tableau de bord ne réglait que la SORTIE. *Windows tranche au branchement d'une webcam, pas au moment de jouer* | `voice/VoiceDashboard.tsx` |
+| **La porte coupait des mots** | Ni hystérésis ni maintien (un seul seuil, franchi des dizaines de fois par phrase) · mesurée **après** le compresseur et le gain de sortie — *baisser le volume fermait la porte* · sur **huit bits**, où tout ce qui est sous −42 dB tient dans un pas · et pilotée par un `requestAnimationFrame` que Chromium ralentit dès que la fenêtre passe derrière une projection | `voice/logic/porteDeLaVoix.ts` |
+| **Quatre sources de saturation** | Deux voies de sortie à 1,0 sur le même nœud (**+6 dB** dès qu'on cumulait retour casque et diffusion) · un `Math.abs()` sur le gain du formant (**+16 dB à 100 Hz** sur les presets graves) · une réverbération qui sommait 1,5 × · un écrêtage **dur** | `voice/VoiceEngine.ts` |
+| ⭐ **La transposition, refaite en WSOLA** | L'ancienne faisait **onduler le niveau de 39 à 57 %** sur une voix et perdait 1,7 dB. La nouvelle aligne le point de recollage sur la forme d'onde : **1,5 à 25 %**, niveau rendu à l'identique, latence de 85 → 43 ms (et **zéro** à l'unisson, où elle ajoutait 85 ms *pour rien*) | `public/audio/transposition.js` |
+| **La compression devient un curseur** | Elle était figée à 8:1 — un limiteur, pas un compresseur. **100 % reproduit le réglage d'avant**, défaut à 40 % | `voice/logic/compression.ts` |
+
+⛔ **La leçon de la journée n'est pas dans l'audio, elle est dans la sonde.** Mon premier jeu de tests
+employait une **sinusoïde** : l'ancien algorithme les passait tous (3 % d'ondulation). Une sinusoïde
+retardée reste la même sinusoïde. *Une sonde qui ne réveille pas le défaut ne prouve rien — et un test
+tout vert peut n'être qu'une sonde mal choisie.*
+
+**Ce qui entre en P6 — livré, jamais entendu :**
+
+- **Le sélecteur de micro**, avec son vrai matériel. Et le repli quand l'appareil choisi est débranché.
+- ⚠️ **Deux calibrations ont changé de sens** : le seuil de ducking (−40 dB) et celui de la porte
+  portaient sur le signal **compressé**, ils portent maintenant sur la voix brute. *Un même nombre n'y
+  veut plus dire la même chose.*
+- **Le curseur de compression** : 40 % est un point de départ, pas une réponse. Il se trouve à l'oreille.
+- **La transposition** entre −8 et +7 demi-tons, et surtout aux extrêmes (±12), où un recollage peut
+  escamoter une consonne.
+- ⚠️ **Le worklet importe désormais un second fichier.** Si le témoin « Worklet » du tableau de bord
+  passe au rouge, c'est là qu'il faut regarder : le son continue, mais sans transposition.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
