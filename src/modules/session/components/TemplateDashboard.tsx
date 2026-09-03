@@ -432,14 +432,30 @@ const TemplateDashboard: React.FC = () => {
                                     </button>
                                 )}
                                 {activeTab === 'drivers' && selectedItem && (
-                                    <div className="flex gap-2">
+                                    /*
+                                      **Une grille de deux, et non une rangée.**
+
+                                      ⛔ Défaut vu par David le 2026-09-03, capture à
+                                      l'appui : ces quatre actions vivaient dans un
+                                      `flex` sans repli. Le panneau de droite est étroit,
+                                      et l'arrivée du bestiaire a poussé « Éditer le
+                                      moteur » hors du cadre — *une action qu'on ne voit
+                                      plus n'existe plus, et rien ne prévient.*
+
+                                      La grille ne dépend d'aucune longueur d'étiquette :
+                                      elle tient donc dans les deux langues, et le
+                                      cinquième bouton du prochain chantier ne cassera
+                                      rien non plus.
+                                    */
+                                    <div className="grid grid-cols-2 gap-2 w-full">
                                         <button
                                             onClick={() => {
                                                 setCurrentView('rulebook');
                                             }}
-                                            className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
                                         >
-                                            <Eye size={14} /> {t('modules:session.header.grimoire_label').toUpperCase()}
+                                            <Eye size={14} className="shrink-0" />
+                                            <span className="truncate">{t('modules:session.header.grimoire_label').toUpperCase()}</span>
                                         </button>
                                         {/*
                                           **La seconde porte du bestiaire — 2026-09-03.**
@@ -453,16 +469,19 @@ const TemplateDashboard: React.FC = () => {
                                         */}
                                         <button
                                             onClick={() => gmCustom('atelier-adversaires', { jeuId: selectedItem.id })}
-                                            className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all shadow-lg"
+                                            title="Fabriquer des adversaires pour ce jeu, et relire son bestiaire"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all shadow-lg"
                                         >
-                                            <Swords size={14} /> BESTIAIRE
+                                            <Swords size={14} className="shrink-0" />
+                                            <span className="truncate">BESTIAIRE</span>
                                         </button>
                                         {isNexusAvailable && (
                                             <button
                                                 onClick={() => handleExportDriver(selectedItem.id)}
-                                                className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
+                                                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
                                             >
-                                                <DownloadCloud size={14} /> {t('common:actions.export').toUpperCase()}
+                                                <DownloadCloud size={14} className="shrink-0" />
+                                                <span className="truncate">{t('common:actions.export').toUpperCase()}</span>
                                             </button>
                                         )}
                                         <button
@@ -471,9 +490,10 @@ const TemplateDashboard: React.FC = () => {
                                                 setEditingDriverId(driver.id);
                                                 setCurrentView('driver-editor');
                                             }}
-                                            className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
                                         >
-                                            <Pencil size={14} /> {t('modules:session.template_dashboard.actions.edit_engine')}
+                                            <Pencil size={14} className="shrink-0" />
+                                            <span className="truncate">{t('modules:session.template_dashboard.actions.edit_engine')}</span>
                                         </button>
                                     </div>
                                 )}
