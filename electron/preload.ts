@@ -57,6 +57,12 @@ contextBridge.exposeInMainWorld('appBridge', {
         getDisplays: () => ipcRenderer.invoke('image:get-displays'),
         syncHubData: (type: 'image' | 'entity' | 'voice-level' | 'titre', data: string) => ipcRenderer.send('image:sync-hub-data', type, data),
         launchDisplay: (paths: string[], target: string) => ipcRenderer.send('image:launch-display', paths, target),
+        /*
+          **Un écran qui s'ouvre demande le titre en cours.** Sans ça, le titre
+          d'une séquence qui vient d'ouvrir la fenêtre de projection est émis
+          avant que le rendu n'écoute — et il est perdu, pas en retard.
+        */
+        requestCurrentTitle: (cible: string) => ipcRenderer.send('image:request-current-title', cible),
         closeAllDisplays: () => ipcRenderer.send('image:close-all-displays')
     },
     sound: {

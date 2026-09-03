@@ -484,7 +484,78 @@ ipcMain.handle('image:get-displays', () => {
     }));
 });
 
+/**
+ * **Le titre affiché en ce moment sur chaque écran.**
+ *
+ * *Défaut trouvé par David le 2026-09-02 : « le texte du Titre n'apparaît
+ * parfois pas tout de suite ».*
+ *
+ * Le « parfois » avait une cause exacte : quand une séquence projette une image
+ * sur un moniteur qui n'affichait rien, la fenêtre de projection **vient d'être
+ * créée**. L'image, elle, attend `did-finish-load` avant d'être envoyée ; le
+ * titre partait dans la foulée, vers un rendu qui n'existait pas encore, et
+ * `webContents.send` ne garde rien. *Un message émis avant que la fenêtre ne
+ * sache écouter est un message perdu, pas un message en retard.*
+ *
+ * On garde donc le dernier titre vivant, comme `currentDisplayPaths` garde la
+ * dernière image, et chaque écran le réclame en arrivant. **Le pendant exact du
+ * choix de conception du canal : on diffuse puis on filtre, pour qu'une fenêtre
+ * qui s'ouvre en retard n'ait pas à être connue de l'émetteur.**
+ */
+const titresCourants = new Map<string, { charge: string; expireA: number | null }>();
+
+/** Un titre à durée est vivant tant que sa tenue et son fondu de sortie durent. */
+function titreVivant(cible: string): string | null {
+    const titre = titresCourants.get(cible);
+    if (!titre) return null;
+    if (titre.expireA !== null && Date.now() > titre.expireA) {
+        titresCourants.delete(cible);
+        return null;
+    }
+    return titre.charge;
+}
+
+/**
+ * Un écran qui vient de s'ouvrir demande ce qu'il devrait afficher.
+ *
+ * Rien à répondre est le cas courant : aucun titre en cours, ou le sien est
+ * pour un autre écran. *Le silence est une réponse juste ; c'est même la
+ * réponse la plus fréquente.*
+ */
+ipcMain.on('image:request-current-title', (event, cible: string) => {
+    const charge = titreVivant(cible);
+    if (charge) event.sender.send('image:sync-hub-data', 'titre', charge);
+});
+
 ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
+    /*
+      **On retient le titre avant de le diffuser** : un texte vide RETIRE le
+      titre — c'est le geste d'effacement du storyboard —, donc il efface aussi
+      la mémoire au lieu de s'y écrire.
+    */
+    if (type === 'titre') {
+        try {
+            const titre = JSON.parse(imagePath) as {
+                cible?: string; texte?: string; fondu?: number; duree?: number | null;
+            };
+            if (typeof titre?.cible === 'string') {
+                if (titre.texte) {
+                    const fondu = Number(titre.fondu) || 0;
+                    titresCourants.set(titre.cible, {
+                        charge: imagePath,
+                        expireA: titre.duree
+                            ? Date.now() + (Number(titre.duree) + fondu) * 1000
+                            : null,
+                    });
+                } else {
+                    titresCourants.delete(titre.cible);
+                }
+            }
+        } catch {
+            // Un titre illisible ne doit pas empêcher la diffusion du message.
+        }
+    }
+
     // Broadcast to Hub and all projectors
     if (hubWindow && !hubWindow.isDestroyed()) {
         hubWindow.webContents.send('image:sync-hub-data', type, imagePath);

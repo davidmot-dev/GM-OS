@@ -79,8 +79,24 @@ export const TitreProjete: React.FC<{ cible: string }> = ({ cible }) => {
             poserLeTitre(lireLeTitre(charge));
         };
         window.appBridge?.on?.('image:sync-hub-data', surMessage);
+
+        /*
+          **Et on demande le titre en cours, une fois abonné.**
+
+          *Défaut trouvé par David le 2026-09-02 : « le texte du Titre n'apparaît
+          parfois pas tout de suite ».* La séquence qui projette une image sur un
+          moniteur éteint **crée** la fenêtre de projection ; le titre partait
+          dans la seconde qui suit, vers un rendu qui n'écoutait pas encore, et
+          il était perdu. L'image, elle, attendait déjà `did-finish-load`.
+
+          Demander en arrivant vaut mieux que retarder l'envoi : l'émetteur n'a
+          toujours pas à savoir quelles fenêtres existent, et un écran ouvert au
+          milieu d'une séquence rattrape son titre.
+        */
+        window.appBridge?.image?.requestCurrentTitle?.(cible);
+
         return () => window.appBridge?.off?.('image:sync-hub-data', surMessage);
-    }, [poserLeTitre]);
+    }, [poserLeTitre, cible]);
 
     const retirer = useCallback(() => poserLeTitre(null), [poserLeTitre]);
 

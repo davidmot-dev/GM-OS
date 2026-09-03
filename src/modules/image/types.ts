@@ -39,5 +39,12 @@ export interface ImageBridge {
     getDisplays: () => Promise<DisplayInfo[]>;
     syncHubData: (type: 'image' | 'entity' | 'voice-level' | 'titre', data: string) => void;
     launchDisplay: (paths: string[], target: ProjectionTarget) => void;
+    /**
+     * Demande au processus principal le titre affiché sur cet écran.
+     *
+     * Facultatif : les surfaces qui n'ont pas le pont Electron — la tablette —
+     * n'ont pas de titre à réclamer, le storyboard ne les vise pas.
+     */
+    requestCurrentTitle?: (cible: string) => void;
     closeAllDisplays: () => void;
 }
