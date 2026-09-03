@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { resoudreCorpus } from '../../electron/corpusSysteme';
+import { jeuDeLaCampagneActive } from './jeuDeLaCampagne';
 import { useSessionStore } from '../store/useSessionStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { appliquerLeTheme, type ThemeDuJeuApplique } from './themeDeLInterface';
@@ -44,10 +44,16 @@ export function useThemeDuJeu(): void {
         let annule = false;
 
         const relire = async () => {
-            const etat = useSessionOSStore.getState();
-            const campagne = etat.campaigns?.find(c => c.id === activeCampaignId);
+            /*
+              **La résolution du dossier vit dans `jeuDeLaCampagne`** depuis le
+              2026-09-03 : l'atelier de thème a besoin de la même réponse, et
+              deux endroits qui résolvent le même dossier finissent par ne plus
+              le résoudre pareil.
+            */
+            const jeu = await jeuDeLaCampagneActive(activeCampaignId ?? null);
+            if (annule) return;
 
-            if (!campagne) {
+            if (!jeu) {
                 duJeu.current = null;
                 campagneLue.current = null;
                 poserLesPolices([]);
@@ -55,19 +61,7 @@ export function useThemeDuJeu(): void {
                 return;
             }
 
-            const pilote = etat.customGameDrivers?.find(d => d.id === campagne.system);
-            const dossiersConnus = (await window.appBridge?.ai?.listSystems?.()) ?? [];
-
-            const corpus = resoudreCorpus({
-                systemId: campagne.system,
-                systemName: pilote?.name,
-                systemPath: campagne.systemPath,
-                corpusId: pilote?.corpusId,
-                ragPath: pilote?.ragPath,
-                dossiersConnus,
-            });
-
-            const releve = await chargerLeThemeDuJeu(corpus.racine);
+            const releve = await chargerLeThemeDuJeu(jeu.racine);
             if (annule) return;
 
             duJeu.current = releve
@@ -87,7 +81,7 @@ export function useThemeDuJeu(): void {
             */
             if (releve) {
                 console.info(
-                    `[ThèmeDuJeu] « ${campagne.name} » → docs/${corpus.racine}/theme/theme.css ` +
+                    `[ThèmeDuJeu] « ${jeu.campagne} » → docs/${jeu.racine}/theme/theme.css ` +
                     `(${Object.keys(releve.jetons).length} jetons, ${releve.clarte ?? 'polarité non déclarée'})`,
                 );
             }

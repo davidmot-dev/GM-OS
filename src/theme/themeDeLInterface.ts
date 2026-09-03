@@ -42,6 +42,8 @@
  * une dérivée. *On ne généralise pas une règle sur la moitié des cas.*
  */
 
+import { tailleDeRacine } from './editionDuTheme';
+
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 
 /**
@@ -215,6 +217,11 @@ export function variablesDuTheme(
  * @param theme  le thème choisi ; un identifiant inconnu retombe sur cyberpunk
  * @param accentSurcharge  l'accent choisi à la main, s'il y en a un
  */
+/*
+  L'échelle de texte est lue par `editionDuTheme`, qui la borne et la traduit en
+  pourcentage. Import de type-valeur, sans cycle : ce module-là ne connaît
+  personne.
+*/
 export function appliquerLeTheme(
     theme: string,
     accentSurcharge?: string,
@@ -268,6 +275,22 @@ export function appliquerLeTheme(
     for (const [nom, valeur] of Object.entries(vars)) {
         racine.style.setProperty(nom, valeur);
     }
+
+    /*
+      **L'échelle de texte du jeu — extension GM-OS, posée le 2026-09-03.**
+
+      *Demandée par David avec l'atelier de thème :* le SDK ne porte aucune
+      taille, et un jeu doit pouvoir grossir son texte.
+
+      Elle ne passe pas par une variable : c'est `font-size` sur la racine qui
+      décide de ce que vaut un `rem`, et tout GM-OS est écrit en `rem`. ⚠️ Elle
+      **multiplie** la base de 85 % d'`index.css` — la remplacer par « 100 % »
+      grossirait toute l'interface de 18 % sans que personne ne l'ait demandé.
+
+      Un thème qui n'en déclare pas vide le style au lieu d'écrire une valeur :
+      *ne rien dire et dire « échelle 1 » doivent laisser la même page.*
+    */
+    racine.style.fontSize = tailleDeRacine(jeu?.jetons['font-scale']) ?? '';
 }
 
 /**

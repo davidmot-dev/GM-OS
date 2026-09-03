@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2, Brain } from 'lucide-react';
+import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2, Brain, Palette } from 'lucide-react';
+import { AtelierDuTheme } from '../theme/AtelierDuTheme';
 import { flushApplication } from '../utils/appUtils';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +27,7 @@ interface GlobalSettingsModalProps {
     onClose: () => void;
 }
 
-type TabID = 'system' | 'ai' | 'tactical' | 'remote';
+type TabID = 'system' | 'ai' | 'tactical' | 'remote' | 'theme';
 
 const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) => {
     const { t, i18n } = useTranslation(['settings', 'common']);
@@ -155,6 +156,21 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                     >
                         <Tablet size={18} />
                         {t('settings:tabs.remote')}
+                    </button>
+                    {/*
+                      **L'atelier de thème du jeu — demandé par David le 2026-09-03.**
+
+                      Il vit ici et non dans la Forge : la Forge écrit le pilote,
+                      c'est-à-dire les RÈGLES ; le thème habille l'application et
+                      les fiches, c'est un réglage. *Un réglage se cherche dans les
+                      réglages.*
+                    */}
+                    <button
+                        onClick={() => setActiveTab('theme')}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'theme' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
+                    >
+                        <Palette size={18} />
+                        Thème du jeu
                     </button>
                 </div>
 
@@ -618,6 +634,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                             </div>
                         </div>
                     )}
+
+                    {activeTab === 'theme' && <AtelierDuTheme />}
 
                     {activeTab === 'remote' && (
                         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-10 animate-in fade-in slide-in-from-right-2 duration-300">
