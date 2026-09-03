@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
-import { X, Shield, PlusCircle, Edit2, Brain, Crosshair, Sparkles, Loader2, Zap, User, Swords, ShieldCheck, Users } from 'lucide-react';
+import { X, Shield, PlusCircle, Edit2, Brain, Crosshair, Sparkles, Loader2, Zap, User, Swords, ShieldCheck, Users, ScrollText } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
@@ -10,6 +10,7 @@ import { estHorsDeCombat } from '../logic/SanteDuCombattant';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { ficheDuCombattant } from '../logic/ficheDuCombattant';
 import { useTranslation } from 'react-i18next';
 
 const PRESET_STATUSES = [
@@ -66,7 +67,22 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     
     // Fetch template to know the max values for fields if possible
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...(customSheetTemplates || [])];
-    const sourceTemplate = allTemplates.find(t => t.id === sourceCharacter?.templateId);
+    /*
+      **Une seule porte vers la fiche d'un combattant** — voir
+      `logic/ficheDuCombattant.ts`. Les deux voies d'affichage de cette carte
+      lisaient la fiche differemment : celle des jauges avait son repli vers
+      `combatant.sheetData`, celle de `statsToTrack` non. Les adversaires de la
+      Fabrique, qui n'ont pas de fiche en campagne, y affichaient donc des
+      ZEROS — et un zero se lit comme une valeur, jamais comme une absence de
+      lecteur.
+    */
+    const ficheLue = ficheDuCombattant(
+        combatant,
+        sourceCharacter as { sheetData?: Record<string, unknown>; templateId?: string } | undefined,
+        allTemplates,
+        useSessionOSStore.getState().getActiveDriver()?.templateId,
+    );
+    const sourceTemplate = ficheLue.gabarit ?? undefined;
 
     const activeDriver = useSessionOSStore.getState().getActiveDriver();
     
@@ -382,6 +398,22 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         title={t('combat.card.target_select')}
                     />
 
+                    {/*
+                      **Revoir la fiche — demande par David le 2026-09-03.**
+                      Il n'existait aucun moyen de relire les caracteristiques
+                      d'un adversaire fabrique : elles vivent sur le combattant,
+                      et seules les deux ou trois jauges du pilote etaient
+                      montrees.
+                    */}
+                    <button
+                        onClick={() => gmCustom('fiche-combattant', { combatantId: combatant.id })}
+                        className="mt-2 flex items-center justify-center gap-2 w-full py-1.5 bg-app-surface/40 border border-app-border/60 hover:border-accent/40 text-app-text/60 hover:text-accent rounded-lg text-[9px] font-black transition-all uppercase tracking-[0.2em]"
+                        title="Revoir la fiche de ce combattant"
+                    >
+                        <ScrollText size={12} />
+                        <span>Fiche</span>
+                    </button>
+
                     {/* Quick Calculator Button */}
                     <button
                         onClick={() => {
@@ -524,8 +556,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         {activeDriver?.combat?.statsToTrack
                             .filter(stat => !stat.isMainHP)
                             .map((stat, idx) => {
-                                const sheetData = sourceCharacter?.sheetData as Record<string, string | number> | undefined;
-                                const val = Number(sheetData?.[stat.fieldId] || 0);
+                                const val = Number(ficheLue.valeurs[stat.fieldId] ?? 0);
                                 let max = 10;
                                 const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === stat.fieldId);
                                 if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) max = Number(fieldDef.defaultValue);

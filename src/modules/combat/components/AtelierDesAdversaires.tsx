@@ -9,6 +9,9 @@ import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import { santeDeDepart, valeurDuChamp } from '../logic/SanteDuCombattant';
 import { ARCHETYPES, archetypeParId, proposerLesChamps, RANGS, rangParId } from '../logic/archetypes';
 import { fabriquer, hasardDeGraine, nommerLExemplaire } from '../logic/fabriqueDAdversaire';
+import {
+    NOMBRE_MAX, NOMBRE_MIN, nombreApresChangementDeRang, nombreSaisi, reprendreLaSuggestion,
+} from '../logic/nombreDExemplaires';
 
 /**
  * **L'atelier des adversaires — demandé par David le 2026-09-03.**
@@ -73,7 +76,14 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
 
     const [source, setSource] = useState<Source>({ genre: 'archetype', id: 'brute' });
     const [rangId, setRangId] = useState('pietaille');
-    const [nombre, setNombre] = useState(1);
+    /*
+      ⛔ **Le nombre porte desormais QUI l'a decide.** Il etait un simple entier,
+      et le selecteur de rang le reecrivait a chaque changement : David saisissait
+      1, choisissait « Aguerri », et deux tireurs arrivaient — voir
+      `logic/nombreDExemplaires.ts`.
+    */
+    const [exemplaires, setExemplaires] = useState({ nombre: 1, choisiParLeMeneur: false });
+    const nombre = exemplaires.nombre;
     const [nom, setNom] = useState('');
     const [graine, setGraine] = useState(() => Math.floor(Math.random() * 1e9));
 
@@ -325,17 +335,38 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
                         <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Rang</label>
                         <select
                             value={rangId}
-                            onChange={e => { setRangId(e.target.value); setNombre(rangParId(e.target.value).nombreSuggere); }}
+                            onChange={e => {
+                                setRangId(e.target.value);
+                                setExemplaires(etat => nombreApresChangementDeRang(etat, e.target.value));
+                            }}
                             className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold"
                         >
                             {RANGS.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
                         </select>
                     </div>
                     <div className="space-y-1.5">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Combien</label>
+                        <div className="flex items-baseline justify-between gap-1">
+                            <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Combien</label>
+                            {/*
+                              La suggestion du rang reste offerte, mais elle ne
+                              s'applique plus toute seule des que le meneur a
+                              tranche : on n'enleve pas la commodite, on lui
+                              retire le droit de decider.
+                            */}
+                            {exemplaires.choisiParLeMeneur
+                                && exemplaires.nombre !== rangParId(rangId).nombreSuggere && (
+                                <button
+                                    onClick={() => setExemplaires(reprendreLaSuggestion(rangId))}
+                                    className="text-[9px] font-black uppercase tracking-tighter text-slate-600 hover:text-accent transition-colors"
+                                    title="Reprendre le nombre suggere par le rang"
+                                >
+                                    ↺ {rangParId(rangId).nombreSuggere}
+                                </button>
+                            )}
+                        </div>
                         <input
-                            type="number" min={1} max={20} value={nombre}
-                            onChange={e => setNombre(Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))}
+                            type="number" min={NOMBRE_MIN} max={NOMBRE_MAX} value={nombre}
+                            onChange={e => setExemplaires(nombreSaisi(parseInt(e.target.value, 10)))}
                             className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold"
                         />
                     </div>
