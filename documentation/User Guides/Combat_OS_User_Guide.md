@@ -128,6 +128,16 @@ Un champ jamais rempli s'affiche **—** et non **0** : *un zéro se lit comme u
 
 ### Le bestiaire
 
+**Où il se trouve** : l'onglet **Bestiaire**, en haut de l'atelier, à côté de *Fabriquer*. Il porte le nombre de gabarits rangés pour le jeu en cours.
+
+On y relit chaque gabarit — son archétype, son rang, les valeurs saisies —, on le **renomme** (crayon), on l'**oublie** (corbeille), ou on **fabrique depuis lui** d'un bouton, ce qui bascule sur l'onglet *Fabriquer* avec la bonne source déjà choisie.
+
+Dans l'onglet *Fabriquer*, les mêmes gabarits apparaissent en puces ambrées sous les archétypes : c'est le **sélecteur**, pour choisir une source sans quitter le flux. L'onglet, lui, est la **bibliothèque**.
+
+> [!NOTE]
+> Renommer un gabarit avec un nom déjà pris **dans le même jeu** est refusé et vous le dit — sinon l'autre disparaîtrait en silence. Le même nom dans un autre jeu ne pose aucun problème.
+
+
 Un gabarit rangé **appartient au jeu, pas à la campagne** : votre pillard de Blade Runner resservira dans la campagne suivante. Un même nom pour un même jeu **remplace** l'ancien plutôt que d'empiler des doublons.
 
 Quand vous fabriquez depuis un gabarit du bestiaire, **ce que vous y avez saisi passe par-dessus le tirage**, champ par champ : ce que vous avez décidé est une décision, le reste est un remplissage. Les caractéristiques que vous n'avez pas fixées varient donc d'un exemplaire à l'autre — trois gardes du même modèle ne sont pas trois jumeaux.

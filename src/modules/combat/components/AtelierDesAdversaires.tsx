@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Swords, X, BookMarked, Wand2, Users, Save, Trash2 } from 'lucide-react';
+import { Swords, X, BookMarked, Wand2, Users, Save, Trash2, Pencil, Check } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useCombatStore } from '../useCombatStore';
 import { useBestiaireStore } from '../useBestiaireStore';
@@ -59,7 +59,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
     const { getActiveDriver, customSheetTemplates, addEntity, activeCampaignId } = useSessionOSStore();
     const addCombatant = useCombatStore(e => e.addCombatant);
     const {
-        gabaritsDuJeu, enregistrer, oublier, retenirLaRepartition, repartitionRetenue,
+        gabaritsDuJeu, enregistrer, oublier, renommer, retenirLaRepartition, repartitionRetenue,
     } = useBestiaireStore();
 
     const driver = getActiveDriver();
@@ -85,6 +85,9 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
     const [exemplaires, setExemplaires] = useState({ nombre: 1, choisiParLeMeneur: false });
     const nombre = exemplaires.nombre;
     const [nom, setNom] = useState('');
+    const [onglet, setOnglet] = useState<'fabriquer' | 'bestiaire'>('fabriquer');
+    /** Le gabarit en cours de renommage, et le nom qu'on lui tape. */
+    const [renommage, setRenommage] = useState<{ id: string; nom: string } | null>(null);
     const [graine, setGraine] = useState(() => Math.floor(Math.random() * 1e9));
 
     const archetypeCourant = archetypeParId(
@@ -123,6 +126,28 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
         }
         setRepartition(prochaine);
         retenirLaRepartition(jeuId, archetypeCourant.id, prochaine);
+    };
+
+    /**
+     * Valide un renommage — et **dit pourquoi** quand il est refuse.
+     *
+     * Le magasin rend un verdict plutot qu'un booleen : « ca n'a pas marche »
+     * ne suffit pas a un ecran. Un nom deja pris est refuse et non absorbe,
+     * sans quoi l'autre gabarit disparaitrait en silence.
+     */
+    const validerLeRenommage = () => {
+        if (!renommage) return;
+        const verdict = renommer(renommage.id, renommage.nom);
+        if (verdict === 'ok') {
+            setRenommage(null);
+            return;
+        }
+        gmToast(
+            verdict === 'nom-pris' ? 'Un gabarit de ce jeu porte deja ce nom.'
+                : verdict === 'nom-vide' ? 'Un gabarit sans nom ne se retrouve pas.'
+                    : 'Ce gabarit n’existe plus.',
+            'error',
+        );
     };
 
     /** Fabrique un exemplaire. Le gabarit du bestiaire, s'il y en a un, fait foi. */
@@ -234,6 +259,8 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
         );
     }
 
+    const champsChiffres = champs.filter(c => ['number', 'gauge', 'rating', 'select'].includes(c.type));
+
     const puce = (champ: SheetField) => {
         const favorise = repartition.favorises.includes(champ.id);
         const neglige = repartition.negliges.includes(champ.id);
@@ -253,8 +280,6 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
         );
     };
 
-    const champsChiffres = champs.filter(c => ['number', 'gauge', 'rating', 'select'].includes(c.type));
-
     return (
         <div className="flex flex-col h-full max-h-[80vh] text-app-text">
             <div className="flex items-center justify-between px-5 py-3 border-b border-app-border/50">
@@ -268,6 +293,112 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
                 </button>
             </div>
 
+            {/*
+              **Deux onglets, et non deux ecrans.** Le bestiaire n'existe que
+              pour alimenter la Fabrique : lui donner un module a lui, dans la
+              barre laterale, ferait un ecran qu'on n'ouvre jamais et qui
+              vieillit mal. Il vit donc la ou il sert.
+            */}
+            <div className="flex gap-1 px-5 pt-3">
+                {([['fabriquer', 'Fabriquer', Wand2], ['bestiaire', 'Bestiaire', BookMarked]] as const).map(
+                    ([id, libelle, Icone]) => (
+                        <button
+                            key={id}
+                            onClick={() => setOnglet(id)}
+                            className={`px-3 py-1.5 rounded-t-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 border-b-2 ${onglet === id
+                                ? 'text-accent border-accent'
+                                : 'text-slate-600 border-transparent hover:text-slate-400'}`}
+                        >
+                            <Icone size={12} /> {libelle}
+                            {id === 'bestiaire' && gabarits.length > 0 && (
+                                <span className="font-mono opacity-60">{gabarits.length}</span>
+                            )}
+                        </button>
+                    ),
+                )}
+            </div>
+
+            {onglet === 'bestiaire' && (
+                <div className="flex-1 overflow-y-auto p-5 space-y-3 custom-scrollbar">
+                    {gabarits.length === 0 ? (
+                        <div className="text-center py-10 space-y-2">
+                            <BookMarked className="w-12 h-12 mx-auto text-slate-700 opacity-20" />
+                            <p className="text-slate-400 text-sm">Aucun gabarit pour {driver.name}.</p>
+                            <p className="text-[10px] text-slate-600 uppercase tracking-widest max-w-sm mx-auto">
+                                Fabriquez un adversaire qui vous plaît, puis « Au bestiaire » —
+                                ici ou depuis sa fiche en plein combat. Le bestiaire appartient
+                                au jeu : celui d’un autre système ne s’affiche pas ici.
+                            </p>
+                        </div>
+                    ) : gabarits.map(g => {
+                        const enRenommage = renommage?.id === g.id;
+                        return (
+                            <article key={g.id} className="p-3 rounded-xl bg-app-bg/40 border border-app-border/50 space-y-2">
+                                <div className="flex items-center gap-2">
+                                    {enRenommage ? (
+                                        <input
+                                            autoFocus
+                                            value={renommage.nom}
+                                            onChange={e => setRenommage({ id: g.id, nom: e.target.value })}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter') validerLeRenommage();
+                                                if (e.key === 'Escape') setRenommage(null);
+                                            }}
+                                            className="flex-1 bg-app-surface border border-accent/40 rounded-lg px-2 py-1 text-sm font-black"
+                                        />
+                                    ) : (
+                                        <h4 className="flex-1 text-sm font-black text-app-text truncate">{g.nom}</h4>
+                                    )}
+
+                                    <button
+                                        onClick={() => (enRenommage ? validerLeRenommage() : setRenommage({ id: g.id, nom: g.nom }))}
+                                        title={enRenommage ? 'Valider' : 'Renommer'}
+                                        className="p-1.5 rounded-lg text-slate-600 hover:text-accent transition-colors"
+                                    >
+                                        {enRenommage ? <Check size={13} /> : <Pencil size={13} />}
+                                    </button>
+                                    <button
+                                        onClick={() => oublier(g.id)}
+                                        title="Oublier ce gabarit"
+                                        className="p-1.5 rounded-lg text-slate-700 hover:text-rose-400 transition-colors"
+                                    >
+                                        <Trash2 size={13} />
+                                    </button>
+                                </div>
+
+                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-600">
+                                    {archetypeParId(g.archetypeId).nom} · {rangParId(g.rangId).nom}
+                                </p>
+
+                                {/* Les valeurs saisies, celles qui passeront par-dessus le tirage. */}
+                                <div className="grid grid-cols-3 gap-x-4 gap-y-0.5">
+                                    {champsChiffres
+                                        .filter(champ => g.sheetData[champ.id] !== undefined && g.sheetData[champ.id] !== '')
+                                        .map(champ => (
+                                            <div key={champ.id} className="flex items-baseline justify-between gap-2">
+                                                <span className="text-[10px] text-slate-500 truncate">{champ.label}</span>
+                                                <span className="text-[11px] font-black font-mono text-app-text">
+                                                    {String(g.sheetData[champ.id])}
+                                                </span>
+                                            </div>
+                                        ))}
+                                </div>
+
+                                {g.notes && <p className="text-[10px] text-slate-500 italic">{g.notes}</p>}
+
+                                <button
+                                    onClick={() => { changerDArchetype({ genre: 'gabarit', id: g.id }); setOnglet('fabriquer'); }}
+                                    className="w-full mt-1 px-3 py-1.5 rounded-lg border border-app-border/50 text-slate-400 hover:text-accent hover:border-accent/40 transition-all text-[9px] font-black uppercase tracking-widest"
+                                >
+                                    Fabriquer depuis celui-ci
+                                </button>
+                            </article>
+                        );
+                    })}
+                </div>
+            )}
+
+            {onglet === 'fabriquer' && (
             <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
                 {/* La source : un archétype, ou un gabarit déjà rangé */}
                 <section className="space-y-2">
@@ -291,6 +422,13 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
                     <p className="text-[10px] text-slate-500 italic">{archetypeCourant.resume}</p>
                 </section>
 
+                {/*
+                  **Ces puces ne font pas double emploi avec l'onglet Bestiaire.**
+                  Un sélecteur n'est pas une bibliothèque : ici on choisit une
+                  source sans quitter le flux de fabrication ; là-bas on relit,
+                  on renomme, on jette. Les deux montrent la même liste parce
+                  qu'ils servent deux gestes différents.
+                */}
                 {gabarits.length > 0 && (
                     <section className="space-y-2">
                         <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-1.5">
@@ -422,6 +560,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose }) => {
                     )}
                 </section>
             </div>
+            )}
 
             <div className="p-4 border-t border-app-border/50 flex items-center gap-2">
                 <button

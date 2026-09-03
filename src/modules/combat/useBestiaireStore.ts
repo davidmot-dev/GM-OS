@@ -54,6 +54,16 @@ interface BestiaireState {
     /** Range un gabarit. Un même nom pour un même jeu écrase l'ancien. */
     enregistrer: (gabarit: Omit<GabaritDAdversaire, 'id' | 'creeLe'>) => void;
     oublier: (id: string) => void;
+    /**
+     * Renomme un gabarit.
+     *
+     * **Rend un verdict au lieu d'un booléen**, parce que « ça n'a pas marché »
+     * ne suffit pas à l'écran : il doit pouvoir dire *pourquoi*. Et un nom déjà
+     * pris est refusé plutôt qu'absorbé — `enregistrer` remplace sur le même
+     * nom, ce qui est le bon geste quand on retouche un gabarit, mais ici cela
+     * ferait **disparaître l'autre sans le dire**.
+     */
+    renommer: (id: string, nom: string) => 'ok' | 'nom-pris' | 'nom-vide' | 'introuvable';
     /** Les gabarits d'un jeu, du plus récent au plus ancien. */
     gabaritsDuJeu: (jeuId: string) => GabaritDAdversaire[];
 
@@ -94,6 +104,26 @@ export const useBestiaireStore = create<BestiaireState>()(
             },
 
             oublier: (id) => set((etat) => ({ gabarits: etat.gabarits.filter(g => g.id !== id) })),
+
+            renommer: (id, nom) => {
+                const propre = nom.trim();
+                if (!propre) return 'nom-vide';
+
+                const gabarit = get().gabarits.find(g => g.id === id);
+                if (!gabarit) return 'introuvable';
+
+                const pris = get().gabarits.some(
+                    g => g.id !== id
+                        && g.jeuId === gabarit.jeuId
+                        && g.nom.trim().toLowerCase() === propre.toLowerCase(),
+                );
+                if (pris) return 'nom-pris';
+
+                set((etat) => ({
+                    gabarits: etat.gabarits.map(g => (g.id === id ? { ...g, nom: propre } : g)),
+                }));
+                return 'ok';
+            },
 
             /*
               **On inverse AVANT de trier**, et ce n'est pas une coquetterie :

@@ -73,6 +73,42 @@ describe('useBestiaireStore', () => {
         expect(useBestiaireStore.getState().gabaritsDuJeu('blade-runner')).toHaveLength(0);
     });
 
+    it('renomme un gabarit', () => {
+        useBestiaireStore.getState().enregistrer(pillard);
+        const id = useBestiaireStore.getState().gabaritsDuJeu('blade-runner')[0].id;
+
+        expect(useBestiaireStore.getState().renommer(id, '  Maraudeur  ')).toBe('ok');
+        expect(useBestiaireStore.getState().gabaritsDuJeu('blade-runner')[0].nom).toBe('Maraudeur');
+    });
+
+    it('⭐ refuse un nom déjà pris plutôt que d’absorber l’autre en silence', () => {
+        /*
+          `enregistrer` remplace sur le même nom — c'est le bon geste quand on
+          retouche un gabarit. Ici, cela ferait DISPARAÎTRE l'autre sans le dire.
+        */
+        useBestiaireStore.getState().enregistrer(pillard);
+        useBestiaireStore.getState().enregistrer({ ...pillard, nom: 'Chien de garde' });
+        const chien = useBestiaireStore.getState().gabaritsDuJeu('blade-runner').find(g => g.nom === 'Chien de garde')!;
+
+        expect(useBestiaireStore.getState().renommer(chien.id, 'pillard')).toBe('nom-pris');
+        expect(useBestiaireStore.getState().gabaritsDuJeu('blade-runner')).toHaveLength(2);
+    });
+
+    it('laisse renommer un gabarit avec un nom pris DANS UN AUTRE JEU', () => {
+        useBestiaireStore.getState().enregistrer(pillard);
+        useBestiaireStore.getState().enregistrer({ ...pillard, jeuId: 'alien', nom: 'Ouvrier' });
+        const ouvrier = useBestiaireStore.getState().gabaritsDuJeu('alien')[0];
+
+        expect(useBestiaireStore.getState().renommer(ouvrier.id, 'Pillard')).toBe('ok');
+    });
+
+    it('dit ce qui ne va pas, plutôt que d’échouer sans un mot', () => {
+        useBestiaireStore.getState().enregistrer(pillard);
+        const id = useBestiaireStore.getState().gabaritsDuJeu('blade-runner')[0].id;
+        expect(useBestiaireStore.getState().renommer(id, '   ')).toBe('nom-vide');
+        expect(useBestiaireStore.getState().renommer('inconnu', 'X')).toBe('introuvable');
+    });
+
     it('retient la répartition corrigée par le meneur, par jeu et par archétype', () => {
         const repartition = { favorises: ['force'], negliges: ['analyse'] };
         useBestiaireStore.getState().retenirLaRepartition('alien', 'brute', repartition);
