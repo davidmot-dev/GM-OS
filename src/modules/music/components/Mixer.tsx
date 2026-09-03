@@ -4,7 +4,7 @@ import { useMusicStore } from '../useMusicStore';
 import { musicEngine } from '../MusicEngine';
 
 const Mixer: React.FC = () => {
-    const { crossfader, setCrossfader, masterVolume, setMasterVolume, autoFadeDuration, setAutoFadeDuration, triggerAutoFade } = useMusicStore();
+    const { crossfader, setCrossfader, masterVolume, setMasterVolume, autoFadeDuration, setAutoFadeDuration, triggerAutoFade, normalisation, basculerLaNormalisation, sonies, cibleDeSonie } = useMusicStore();
 
     const [isFading, setIsFading] = useState<null | 'A' | 'B'>(null);
 
@@ -78,6 +78,26 @@ const Mixer: React.FC = () => {
             <div className="absolute -bottom-10 -left-10 size-40 bg-accent/10 blur-[60px] pointer-events-none opacity-40" />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center relative z-10">
+                {/*
+                  **L'alignement des niveaux — chantier du 2026-09-03.**
+
+                  Le compteur dit combien de pistes sont deja mesurees, et c'est
+                  volontaire : *un reglage automatique doit dire ce qu'il sait,
+                  sinon on ne comprend pas pourquoi il agit sur l'une et pas sur
+                  l'autre.* Une piste se mesure toute seule pendant qu'on
+                  l'ecoute ; elle est calee des la fois suivante.
+                */}
+                <button
+                    onClick={() => basculerLaNormalisation()}
+                    title={`Aligne les pistes sur ${cibleDeSonie} LUFS. Une piste est mesuree pendant sa premiere ecoute, puis calee ensuite. ${Object.keys(sonies).length} piste(s) mesuree(s).`}
+                    className={`absolute top-3 right-3 z-20 px-2.5 py-1 rounded-lg border text-[8px] font-black uppercase tracking-widest transition-all ${normalisation
+                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                        : 'bg-app-bg/60 border-app-border/50 text-slate-600 hover:text-slate-400'}`}
+                >
+                    Niveaux alignes
+                    <span className="ml-1.5 opacity-60 font-mono">{Object.keys(sonies).length}</span>
+                </button>
+
                 {/* Master Volume */}
                 <div className="space-y-1">
                     <div className="flex items-center justify-between px-1">

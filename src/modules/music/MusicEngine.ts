@@ -4,6 +4,13 @@
  */
 import { useMediaStore } from '../../stores/useMediaStore';
 import { SortiesAudio } from '../../utils/sortiesAudio';
+/*
+  Le module est du JavaScript parce qu'un AudioWorklet le charge aussi, tel quel,
+  sans passer par Vite. Son contrat pour TypeScript vit dans `sonie.d.ts`, et la
+  règle de gain est partagée avec la sonde : *une cible et une limite écrites à
+  deux endroits finissent par différer.*
+*/
+import { gainDeNormalisation } from '../../../public/audio/sonie.js';
 import {
     courbeDuFonduCroise,
     gainsALaPosition,
@@ -30,6 +37,26 @@ class MusicDeck {
     private audioElement: HTMLAudioElement;
     private sourceNode: MediaElementAudioSourceNode;
     private gainNode: GainNode;
+
+    /**
+     * Le gain de normalisation, entre la source et le gain de la platine.
+     *
+     * Separe du gain de platine EXPRES : celui-la porte le volume et les
+     * fondus, celui-ci porte une correction mesuree. *Deux intentions dans un
+     * meme gain, et on ne sait plus lequel des deux a bouge.*
+     */
+    private gainDeNormalisation: GainNode;
+
+    /** La sonde de sonie, si le worklet a pu etre charge. */
+    private sonde: AudioWorkletNode | null = null;
+
+    /** La piste chargee, qui sert de cle a la sonie mesuree. */
+    private pisteEnCours: string | null = null;
+
+    /** Rendus par le store, comme `onStateChange` — le moteur n'importe rien. */
+    public sonieDe: ((piste: string) => number | null) | null = null;
+    public reglageDeNormalisation: (() => { actif: boolean; cible: number }) | null = null;
+    public onSonieMesuree: ((piste: string, lufs: number) => void) | null = null;
     /** L'arrêt programmé par `fadeOut` — annulable, voir `annulerLArretDiffere`. */
     private arretDiffere: ReturnType<typeof setTimeout> | null = null;
     private state: DeckState;
@@ -56,8 +83,16 @@ class MusicDeck {
         // 2. Branchement Web Audio
         this.sourceNode = context.createMediaElementSource(this.audioElement);
         this.gainNode = context.createGain();
+        this.gainDeNormalisation = context.createGain();
 
-        this.sourceNode.connect(this.gainNode);
+        /*
+          La sonde viendra se glisser entre la source et la normalisation quand
+          son worklet sera charge — voir `brancherLaSonde`. En attendant, le son
+          passe : *une mesure qui n'est pas prete ne doit pas retarder la
+          musique d'une seconde.*
+        */
+        this.sourceNode.connect(this.gainDeNormalisation);
+        this.gainDeNormalisation.connect(this.gainNode);
         this.gainNode.connect(destination);
 
         this.state = {
@@ -73,6 +108,59 @@ class MusicDeck {
         this.audioElement.onpause = () => { this.state.isPlaying = false; this.updateState(); };
         this.audioElement.onended = () => { if (!this.state.isLooping) { this.state.isPlaying = false; this.updateState(); } };
         this.audioElement.onloadedmetadata = () => { this.state.duration = this.audioElement.duration; this.updateState(); };
+    }
+
+    /**
+     * Glisse la sonde de sonie entre la source et le gain de normalisation.
+     *
+     * Appelee apres coup, une fois le module du worklet charge. Un echec est
+     * sans consequence : la platine joue, elle ne mesure simplement pas.
+     */
+    brancherLaSonde() {
+        if (this.sonde) return;
+        try {
+            const sonde = new AudioWorkletNode(this.context, 'sonie-processor', {
+                numberOfInputs: 1,
+                numberOfOutputs: 1,
+                outputChannelCount: [2],
+                processorOptions: { canaux: 2, piste: this.pisteEnCours },
+            });
+
+            sonde.port.onmessage = (evenement) => {
+                const message = evenement.data;
+                if (message && message.type === 'sonie' && this.onSonieMesuree) {
+                    this.onSonieMesuree(message.piste, message.lufs);
+                }
+            };
+
+            this.sourceNode.disconnect(this.gainDeNormalisation);
+            this.sourceNode.connect(sonde);
+            sonde.connect(this.gainDeNormalisation);
+            this.sonde = sonde;
+        } catch (erreur) {
+            console.warn('[MusicDeck] sonde de sonie indisponible :', erreur);
+            this.sonde = null;
+        }
+    }
+
+    /**
+     * Repose le gain de normalisation d'apres ce que le store sait de la piste.
+     *
+     * ⚠️ **Le gain est pose au CHARGEMENT, jamais pendant la lecture.** La sonde
+     * affine sa mesure tout au long du morceau ; suivre ces affinements ferait
+     * bouger le volume sous les doigts du meneur. Une piste deja mesuree est
+     * donc juste des la premiere note ; une piste inconnue joue telle quelle et
+     * sera juste la prochaine fois. *Un correctif qui remue pendant qu'on
+     * ecoute est pire que le defaut.*
+     */
+    appliquerLaNormalisation() {
+        const reglage = this.reglageDeNormalisation ? this.reglageDeNormalisation() : null;
+        const lufs = (reglage && reglage.actif && this.pisteEnCours && this.sonieDe)
+            ? this.sonieDe(this.pisteEnCours)
+            : null;
+
+        const gain = gainDeNormalisation(lufs, reglage ? reglage.cible : undefined);
+        this.gainDeNormalisation.gain.setTargetAtTime(gain, this.context.currentTime, 0.05);
     }
 
     /**
@@ -131,6 +219,15 @@ class MusicDeck {
         }
 
         console.log(`[MusicDeck] Final source assigned: ${finalUrl}`);
+
+        /*
+          La cle de la sonie est l'URL DEMANDEE, pas l'URL finale : celle-ci est
+          un `blob:` recree a chaque chargement, et la mesure serait perdue a
+          chaque fois.
+        */
+        this.pisteEnCours = url;
+        this.sonde?.port.postMessage({ type: 'piste', piste: url });
+        this.appliquerLaNormalisation();
         this.audioElement.src = finalUrl;
         
         // Listen for errors on the audio element immediately
@@ -317,6 +414,9 @@ export class MusicEngine {
     /** L'arrêt programmé de la platine sortante, annulable. */
     private arretDeLaSortante: ReturnType<typeof setTimeout> | null = null;
     private useRescueRoute: boolean = true; // HACK Tauri: Direct routing if MediaStream is blocked
+
+    /** Le module du worklet de sonie, charge une seule fois. */
+    private sondePrete: Promise<void> | null = null;
 
     constructor() {
         this.context = new AudioContext(); // Native default for stability
@@ -620,6 +720,34 @@ export class MusicEngine {
             console.warn('[MusicEngine] AudioContext.setSinkId not supported.');
         }
     }
+    /**
+     * Charge le worklet de sonie et branche les deux sondes.
+     *
+     * Appele par le store apres avoir pose ses rappels — donc apres qu'il sait
+     * quoi faire d'une mesure. *Brancher une sonde dont personne ne lit la
+     * sortie, c'est du calcul en pure perte.*
+     */
+    async preparerLaSonie() {
+        if (this.sondePrete) return this.sondePrete;
+        this.sondePrete = (async () => {
+            try {
+                await this.context.audioWorklet.addModule('/audio/sonie-processor.js');
+                this.deckA.brancherLaSonde();
+                this.deckB.brancherLaSonde();
+                console.log('[MusicEngine] Sondes de sonie branchees');
+            } catch (erreur) {
+                console.warn('[MusicEngine] Mesure de sonie indisponible :', erreur);
+            }
+        })();
+        return this.sondePrete;
+    }
+
+    /** Repose les gains de normalisation des deux platines. */
+    rejouerLaNormalisation() {
+        this.deckA.appliquerLaNormalisation();
+        this.deckB.appliquerLaNormalisation();
+    }
+
 }
 
 

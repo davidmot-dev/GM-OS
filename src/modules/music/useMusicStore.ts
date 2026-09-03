@@ -62,6 +62,27 @@ interface MusicState {
     autoFadeDuration: number; // in ms
     outputDeviceId: string | 'default';
 
+    /**
+     * La sonie mesuree de chaque piste, en LUFS, indexee par son URL ou son id.
+     *
+     * *Chantier du 2026-09-03.* Elle se remplit toute seule pendant l'ecoute :
+     * une piste jouee une fois est calee pour toutes les suivantes.
+     *
+     * ⚠️ **Ce n'est pas une donnee de campagne** — c'est une mesure, et une
+     * mesure se refait. Elle est persistee pour ne pas etre reperdue a chaque
+     * lancement, mais elle n'a rien a faire dans une sauvegarde : *ce qui se
+     * recalcule ne se sauvegarde pas.*
+     */
+    sonies: Record<string, number>;
+    setSonie: (piste: string, lufs: number) => void;
+    basculerLaNormalisation: (actif?: boolean) => void;
+
+    /** Aligner ou non les pistes sur une meme sonie. */
+    normalisation: boolean;
+
+    /** La sonie visee, en LUFS. */
+    cibleDeSonie: number;
+
     history: string[]; // Last 10 pad labels
     consoleLogs: string[]; // Engine logs
 
@@ -146,6 +167,21 @@ export const useMusicStore = create<MusicState>()(
             // @ts-expect-error onStateChange is private but we bind it here
             musicEngine.deckB.onStateChange = (s) => set((state) => ({ deckB: { ...state.deckB, isPlaying: s.isPlaying } }));
 
+            /*
+              **La normalisation : le moteur demande, le store repond.** Le
+              moteur n'importe aucun store — c'est le store qui lui pose ses
+              rappels, comme pour `onStateChange`. Sans quoi on refermerait le
+              cycle qui casse deja les tests du ducking.
+            */
+            for (const platine of [musicEngine.deckA, musicEngine.deckB]) {
+                platine.sonieDe = (piste) => get().sonies[piste] ?? null;
+                platine.reglageDeNormalisation = () => ({
+                    actif: get().normalisation, cible: get().cibleDeSonie,
+                });
+                platine.onSonieMesuree = (piste, lufs) => get().setSonie(piste, lufs);
+            }
+            void musicEngine.preparerLaSonie();
+
             return {
                 playlists: [
                     {
@@ -168,6 +204,26 @@ export const useMusicStore = create<MusicState>()(
                 masterVolume: 1.0,
                 autoFadeDuration: 5000,
                 outputDeviceId: 'default',
+                sonies: {},
+                normalisation: false,
+                cibleDeSonie: -18,
+
+                setSonie: (piste, lufs) => {
+                    /*
+                      On n'ecrit que si la valeur a bouge d'au moins un dixieme
+                      de dB : la sonde affine sa mesure chaque seconde, et
+                      persister a chaque affinement ferait ecrire le disque
+                      soixante fois par morceau pour rien.
+                    */
+                    const ancienne = get().sonies[piste];
+                    if (ancienne !== undefined && Math.abs(ancienne - lufs) < 0.1) return;
+                    set((state) => ({ sonies: { ...state.sonies, [piste]: lufs } }));
+                },
+
+                basculerLaNormalisation: (actif) => {
+                    set((state) => ({ normalisation: actif !== undefined ? actif : !state.normalisation }));
+                    musicEngine.rejouerLaNormalisation();
+                },
                 history: [],
                 consoleLogs: [],
 
@@ -560,7 +616,10 @@ export const useMusicStore = create<MusicState>()(
                 crossfader: state.crossfader,
                 masterVolume: state.masterVolume,
                 autoFadeDuration: state.autoFadeDuration,
-                outputDeviceId: state.outputDeviceId
+                outputDeviceId: state.outputDeviceId,
+                sonies: state.sonies,
+                normalisation: state.normalisation,
+                cibleDeSonie: state.cibleDeSonie
             }),
             version: 1,
             migrate: (persistedState: any, version: number) => {
