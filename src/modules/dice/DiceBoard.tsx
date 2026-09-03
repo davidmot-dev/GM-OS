@@ -162,6 +162,18 @@ const DiceBoard: React.FC = () => {
 
     const facesDeLEquipement = facesDuNiveau(niveauEquipement);
 
+    /**
+     * La poignée telle qu'elle se lit — « D12 + D12 + D8 ».
+     *
+     * **Le même libellé que le pilote soit actif ou non.** C'est ce que le
+     * meneur relit dans l'historique pour vérifier qu'il a lancé ce qu'il
+     * voulait ; sans lui, un jet échelonné passé par le pilote s'intitulait
+     * « Système : Blade Runner » et ne disait **rien** des dés lancés — or
+     * c'est exactement le point où ce chemin s'est trompé deux fois.
+     */
+    const libelleDeLaPoignee = poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ')
+        + (facesDeLEquipement !== null ? ` + D${facesDeLEquipement}` : '');
+
     // Auto-sync with active system driver
     React.useEffect(() => {
         if (activeDriver) {
@@ -244,9 +256,37 @@ const DiceBoard: React.FC = () => {
               inutilisable sur Blade Runner : le meneur y lançait toujours la
               poignée d'un débutant.
             */
-            const echelonne = activeDriver.dice.engine === 'yze-echelonne';
+            /*
+              **TROIS façons de savoir qu'on lance des dés échelonnés, et une
+              seule suffit.**
+
+              *Défaut trouvé par David le 2026-09-03 : « quand je mets 2x A(D12),
+              les valeurs ne dépassent jamais 6 », et l'avantage n'ajoutait aucun
+              dé.* Le pupitre ne regardait que `dice.engine`. Or :
+
+              1. un pilote peut déclarer `jet.desEchelonnes` **et** un moteur qui
+                 dit autre chose — c'est si courant que la Forge a un contrôle
+                 exprès pour ça (`controlesDuPilote`), et le panneau de fiche
+                 force déjà `yze-echelonne` pour cette raison. Le pupitre, lui,
+                 obéissait au champ menteur et lançait une réserve de d6 ;
+              2. **le meneur peut choisir le mode lui-même.** Le sélecteur était
+                 **affiché et ignoré** dès qu'un pilote était actif : on lui
+                 montrait les lettres, la poignée « D12 + D12 » et les boutons
+                 d'avantage, et on lançait tout autre chose. *Le même défaut que
+                 le sélecteur ≥ / ≤ des réserves, deux écrans plus haut.*
+
+              On force alors le moteur, comme le panneau de fiche : le reste du
+              pilote — le sens du comptage, le seuil — continue de valoir.
+            */
+            const echelonne = activeDriver.dice.engine === 'yze-echelonne'
+                || !!activeDriver.jet?.desEchelonnes
+                || finalMode === 'yze-echelonne';
             result = DiceEngine.rollFromConfig(
-                { ...activeDriver.dice, ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}) },
+                {
+                    ...activeDriver.dice,
+                    ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}),
+                    ...(echelonne ? { engine: 'yze-echelonne' as const } : {}),
+                },
                 {
                     modifier: modVal,
                     baseCount: finalCount,
@@ -258,7 +298,11 @@ const DiceBoard: React.FC = () => {
                     } : {}),
                 },
             );
-            return { result, title: t('dice.results.system', { name: activeDriver.name }) };
+            const titreDuSysteme = t('dice.results.system', { name: activeDriver.name });
+            return {
+                result,
+                title: echelonne ? `${titreDuSysteme} — ${libelleDeLaPoignee}` : titreDuSysteme,
+            };
         }
 
         let title = remoteOverrides?.title || `${finalCount}d${sides}`;
@@ -336,8 +380,7 @@ const DiceBoard: React.FC = () => {
                         poigneeEchelonnee.des.map(d => d.faces),
                         facesDeLEquipement !== null ? [facesDeLEquipement] : [],
                     );
-                    title = poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ')
-                        + (facesDeLEquipement !== null ? ` + D${facesDeLEquipement}` : '');
+                    title = libelleDeLaPoignee;
                     break;
                 default:
                     result = DiceEngine.rollStandard(sides, finalCount, modVal);
@@ -347,7 +390,7 @@ const DiceBoard: React.FC = () => {
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
         // Sans elles, un changement de niveau ne serait pas relu : le pupitre
         // lancerait la poignée d'avant, et le résultat resterait plausible.
-        poigneeEchelonnee, facesDeLEquipement]);
+        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee]);
 
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions) => {
         try {
