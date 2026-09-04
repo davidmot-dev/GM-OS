@@ -1,55 +1,97 @@
-# 🧮 Guide Utilisateur : Moteur de Calcul de Fiches
+# 🧮 Guide : les formules de fiche
 
-Ce guide explique comment utiliser le moteur de calcul intégré pour automatiser les statistiques de vos personnages dans GM-OS.
-
-## 🌟 Introduction
-
-Le moteur de calcul permet de transformer n'importe quel champ de type "Nombre" en un champ dynamique. Vous pouvez définir des formules qui se recalculent automatiquement dès qu'une valeur change.
-
-## 📝 Syntaxe de base
-
-Pour utiliser une valeur dans une formule, utilisez le symbole `@` suivi du **nom du champ** (le label affiché).
-
-### Exemples simples :
-- `@Force + 10` : Ajoute 10 à la valeur du champ "Force".
-- `@Force + @Dextérité` : Somme de deux caractéristiques.
-- `@Niveau * 2` : Multiplie le niveau par 2.
-
-## 🎲 Jets de Dés
-
-Le moteur supporte la notation standard des dés de jeu de rôle.
-- `1d20 + @Bonus` : Lance un dé 20 et ajoute le bonus.
-- `@NombreDeDes d6` : Lance un nombre de dés de 6 égal à la variable transmise.
-- `(2d10) * @Multiplicateur` : Calcul complexe avec parenthèses.
-
-## ⚠️ Règles Spéciales
-
-### 1. Espaces et Accents
-Le moteur est intelligent mais les formules mathématiques n'aiment pas les espaces. 
-- **Champ :** "Points de Vie"
-- **Variable à utiliser :** `@PointsdeVie` (retirez simplement les espaces).
-- Les accents sont supportés mais il est recommandé d'écrire `@Force` même si le champ s'appelle "Fôrcë".
-
-### 2. Valeurs par défaut
-Si un champ est vide, il est automatiquement considéré comme **0**. Vos formules ne "casseront" pas si une statistique n'est pas encore remplie.
-
-### 3. Réactivité
-Les calculs sont **instantanés**. Vous n'avez pas besoin de sauvegarder la fiche pour voir le résultat d'une formule évoluer pendant que vous tapez.
-
-## 🛠️ Configuration (MJ uniquement)
-
-1. Ouvrez l'**Éditeur de Templates** de fiches.
-2. Ajoutez un nouveau champ.
-3. Sélectionnez le type **Formule**.
-4. Saisissez votre équation dans le champ "Formule".
-5. Enregistrez le template.
-
-## 💡 Astuces Avancées
-
-Le moteur supporte également des fonctions logiques et mathématiques :
-- `min(@Force, 20)` : Cap la force à 20 maximum.
-- `abs(@Modificateur)` : Valeur absolue.
-- `ceil(@Val / 2)` : Arrondi au supérieur.
+N'importe quel champ d'une fiche peut être **calculé** au lieu d'être saisi. Vous écrivez une
+formule, elle se recalcule dès qu'une valeur change.
 
 ---
-*GM-OS v6 — Moteur de Calcul Dynamique*
+
+## ✍️ La syntaxe
+
+Un `@` suivi du **nom du champ** en désigne la valeur.
+
+```text
+@Force + 10
+@Force + @Dextérité        ⛔ ne marche pas — voir plus bas
+@Niveau * 2
+min(@Force, 20)
+ceil(@Val / 2)
+abs(@Modificateur)
+```
+
+Les opérateurs habituels (`+ - * / ^`), les parenthèses et les fonctions `min`, `max`, `floor`,
+`ceil`, `abs` sont disponibles.
+
+---
+
+## ⛔ Comment écrire le nom d'un champ — la règle exacte
+
+**Le nom du champ est nettoyé avant de devenir une variable :** les accents sont retirés, puis
+**tout ce qui n'est ni lettre ni chiffre disparaît**.
+
+| Le champ s'appelle… | Vous écrivez |
+| :--- | :--- |
+| `Force` | `@Force` |
+| `Points de Vie` | `@PointsdeVie` |
+| `Fôrcë` | `@Force` |
+| `Défense (base)` | `@Defensebase` |
+| `Sang-froid` | `@Sangfroid` |
+
+> ⛔ **Les accents ne sont pas supportés dans la formule.** Ce guide disait qu'ils l'étaient tout en
+> recommandant de les éviter — la première moitié est fausse. Le lecteur de formule ne reconnaît
+> que **lettres non accentuées, chiffres et tiret bas**. `@Dextérité` s'arrête à `@Dext`, et la
+> formule entière tombe. Écrivez `@Dexterite`.
+
+---
+
+## 🎲 Les dés dans une formule
+
+`1d20 + @Bonus` fonctionne. Mais deux choses ne se devinent pas.
+
+> ⛔ **Le nombre de dés ne peut pas être une variable.** Ce guide donnait `@NombreDeDes d6` en
+> exemple : cette écriture **ne marche pas**. Le lecteur exige des chiffres des deux côtés du `d`.
+> `2d6` oui, `@NombreDeDes d6` non.
+
+<!-- -->
+
+> ⚠️ **Un dé dans une formule de fiche est relancé à chaque recalcul.** Le résultat change dès que
+> vous touchez à un autre champ. Une formule de fiche est faite pour des **valeurs dérivées**
+> — un bonus, un seuil, un total —, pas pour un jet mémorisé. Pour lancer un dé et garder le
+> résultat, c'est le [pupitre de dés](./Dice_OS_User_Guide.md).
+
+---
+
+## 🕳️ Quand une formule rend 0
+
+C'est le comportement à connaître, parce qu'il ne ressemble pas à une erreur.
+
+- **Un champ vide vaut 0.** Normal, et voulu : vos formules ne cassent pas sur une fiche à moitié
+  remplie.
+- ⛔ **Un nom que le lecteur ne reconnaît pas fait tomber TOUTE la formule à 0** — pas seulement ce
+  terme. `@Force + 10` avec un `@Force` mal orthographié ne donne pas `10`, il donne **`0`**.
+
+*C'est la conséquence pratique la plus utile de cette page : **une formule qui affiche
+obstinément 0 est presque toujours un nom de champ mal écrit**, pas un champ vide.* Vérifiez
+l'orthographe contre le tableau ci-dessus.
+
+---
+
+## 🛠️ Poser une formule (meneur)
+
+1. Ouvrez l'**éditeur de gabarits** de fiches.
+2. Ajoutez un champ, ou modifiez-en un.
+3. Choisissez le type **Formule**.
+4. Saisissez l'équation.
+5. Enregistrez le gabarit.
+
+> [!TIP]
+> **Nommez vos champs sans accent ni ponctuation dès le départ.** « Points de vie » devient
+> `@Pointsdevie` — lisible. « Défense (naturelle) » devient `@Defensenaturelle` — beaucoup moins.
+> Le nom affiché peut rester joli, mais un champ qu'on référence souvent gagne à porter un nom
+> simple.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Deux affirmations fausses retirées : **les accents ne
+sont pas supportés** dans une formule, et **le nombre de dés ne peut pas être une variable**.
+Ajouté : la règle exacte de transformation d'un nom de champ, le fait qu'un nom inconnu fait tomber
+toute la formule à 0, et qu'un dé y est relancé à chaque recalcul.*

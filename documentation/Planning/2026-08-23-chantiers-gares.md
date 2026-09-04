@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2, 3 et 4 faits le 04/09.** **Suivant** : lot 5 — les règles et la Forge.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 5 faits le 04/09.** **Suivant** : lot 6 — le combat.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -564,6 +564,26 @@ modèle ; la narration et les conseils demandés **en parallèle**.
 est signalée comme telle), et il **nomme les neutres** au lieu de les compter parmi les ennemis —
 ce qui l'empêche de proposer d'attaquer le tavernier.
 
+#### 12j · Lot 5 — les règles et la Forge (2026-09-04)
+
+*Trois guides. Les deux premiers décrivaient un état de l'application antérieur au 2026-08-16 ; le
+troisième donnait **deux exemples de formules qui ne fonctionnent pas**.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **F1** | **Deux exemples de formule faux dans le guide des fiches.** `@Dextérité` : le lecteur ne reconnaît que `[a-zA-Z0-9_]`, il s'arrête à `@Dext` et **la formule entière tombe** — le guide affirmait pourtant que « les accents sont supportés ». Et `@NombreDeDes d6` : le motif des dés exige des **chiffres des deux côtés** du `d`. | ✅ **Corrigé**, avec la règle exacte de transformation d'un nom de champ (accents retirés, non-alphanumériques supprimés). | `CalculationEngine.ts:39-47`, `useSheetCalculator.ts:44-46` |
+| ⛔ **F2** | **Un nom inconnu ne vaut pas 0 : il fait tomber toute la formule à 0.** `expr-eval` lève, le `catch` rend `0`. `@Force + 10` mal orthographié rend **0**, pas 10. Le guide promettait que « vos formules ne casseront pas ». | ✅ **Écrit** — *c'est le diagnostic le plus utile de la page : une formule obstinément à 0 est presque toujours un nom mal écrit.* | `CalculationEngine.ts:60-70` |
+| ⚠ **F3** | **Un dé dans une formule de fiche est relancé à chaque recalcul** (`Math.random()` à chaque évaluation). Le guide vantait la réactivité — « voir le résultat évoluer pendant que vous tapez » — sans dire que le dé change aussi. | **Documenté.** À trancher si ça gêne : mémoriser le tirage par champ, ou refuser les dés dans un champ calculé. | `CalculationEngine.ts:19-28` |
+| ⛔ **F4** | **Les modes « BRAIN » et « BODY » de la Forge n'existent plus.** Le guide demandait de choisir entre extraire la logique ou la structure visuelle. La Forge produit les deux ensemble depuis le 2026-08-16, et **enrichit** un système existant au lieu d'en créer un second — avec une case « Ne pas toucher à la fiche de personnage », cochée par défaut. | ✅ **Réécrit**, y compris l'avertissement de la case décochée : *si la dérivation nomme `points_de_vie` ce que la fiche appelle `hp`, on obtient les deux.* | `ForgeDashboard.tsx:1005-1023, 875-886` |
+| ⛔ **F5** | **« L'IA (Gemini 1.5 Pro) »** — aucun modèle n'est imposé. Le moteur se **choisit à chaque forge** parmi les six, mémorisé par atelier et **toujours affiché**. *Mémoriser sans montrer redonnerait un réglage qu'on a oublié d'avoir posé* — la leçon du coffre Obsidian, reprise dans le code. | ✅ **Corrigé**, avec les durées mesurées (9-15 min en local, 2-5 min après distillation, ~30 s sur Gemini Flash). | `ai/moteurParForge.ts` |
+| ⛔ **F6** | **Forge-OS a trois ateliers** — Forge, Campagne, Trame — et le guide n'en connaissait qu'un. | ✅ **Ajouté**, avec renvoi aux deux guides dédiés. | `ForgeOS.tsx:40-95` |
+| ⛔ **F7** | **L'éditeur de règles a sept sections**, le guide en décrivait trois. Manquaient l'**Atelier** (les fiches partageables), l'**Intelligence** (les personas), les **Trésors** (tables de butin **et vocabulaire du jeu** — monnaie, raretés) et la **Connaissance** (le carnet NotebookLM). | ✅ **Ajouté.** La section Trésors est celle du 04/09 : sans elle, Loot-OS reste neutre et dit « pièces » là où le jeu dit « eddies ». | `RulebookViewer.tsx:50-56` |
+| **F8** | **Le partage d'une règle envoie DEUX choses** : la fenêtre plein écran, **et** un message dans le canal général qui reste dans l'historique. Le guide n'en mentionnait qu'une — or c'est le second qui sert le lendemain. Et le chemin d'accès était faux (« onglet Règles & Forge du Dashboard MJ »). | ✅ **Corrigé.** | `RuleWorkshopViewer.tsx:240-275` |
+
+**Vérifié et exact** : les fonctions `min`, `max`, `floor`, `ceil`, `abs` ; un champ **déclaré mais
+vide** vaut bien 0 ; l'export d'une règle vers Obsidian ; l'éditeur Markdown avec rendu en direct ;
+l'enregistrement des fiches dans le dossier du système ; le lien NotebookLM par système.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -627,7 +647,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Vingt guides passés, **soixante-six** trouvailles (§§ 12a-12i) — **trente réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Vingt-trois guides passés, **soixante-quatorze** trouvailles (§§ 12a-12j) — **trente-sept réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

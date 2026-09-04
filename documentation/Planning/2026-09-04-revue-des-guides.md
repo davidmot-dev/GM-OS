@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Vingt guides plus tard, elle a trouvé **soixante-six défauts** — et pas
+son code de l'autre.** Vingt-trois guides plus tard, elle a trouvé **soixante-quatorze défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après vingt guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après vingt-trois guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 20 guides
+## ✅ Ce qui est fait — 23 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -52,15 +52,17 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | **Lot 2** — Storyboard, Voice-OS | 12g | 7 | **5** |
 | **Lot 3** — Oracle, NotebookLM, Obsidian, synergie | 12h | 7 | **5** |
 | **Lot 4** — Cortex, manuel tactique | 12i | 7 | **7** |
+| **Lot 5** — Forge, partage de règles, formules | 12j | 8 | **7** |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1 à 4 faits le 2026-09-04.** Vingt-neuf trouvailles, vingt et une corrigées — dont
+> ✅ **Lots 1 à 5 faits le 2026-09-04.** Trente-sept trouvailles, vingt-huit corrigées — dont
 > **les deux chemins de connexion donnés aux joueurs**, **deux boutons du Storyboard muets**,
-> **quatre guides décrivant le mauvais moteur d'IA**, et **un bouton du Cortex que les deux guides
-> décrivaient de travers, chacun à sa façon**. Reste 18 guides, en 6 lots.
+> **quatre guides décrivant le mauvais moteur d'IA**, **un bouton du Cortex décrit de travers par
+> les deux guides**, et **deux exemples de formule qui ne fonctionnent pas**. Reste 15 guides, en
+> 5 lots.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -111,13 +113,14 @@ pages décrivaient *Sensors*, et **aucune n'avait raison** — il ne coupe ni le
 seul son, mais **tout le matériel**, sons et lumières. Le manuel a cessé de dupliquer : il renvoie.
 Détail au § 12i.
 
-### Lot 5 — Les règles et la Forge
+### ~~Lot 5 — Les règles et la Forge~~ ✅ fait le 04/09
 
 `Rule_Engine_Forge_Guide` · `Rule_Sharing_Guide` · `Character_Formula_Guide`
 
-**Pourquoi.** La Forge Système a beaucoup bougé (enrichissement plutôt que doublon, langue par
-campagne, vocabulaire du butin). Et `Rule_Sharing` recoupe le `.gmos-driver` de Nexus-OS, dont on
-sait maintenant qu'il emporte le bestiaire depuis le 03/09.
+**Ce que le lot a donné** : les deux premiers guides décrivaient un état de l'application
+**antérieur au 16/08** — modes « BRAIN / BODY » disparus, modèle « Gemini 1.5 Pro » imposé,
+quatre sections de l'éditeur ignorées. Et le guide des formules donnait **deux exemples qui ne
+fonctionnent pas**. Détail au § 12j.
 
 ### Lot 6 — Le combat
 
@@ -195,6 +198,7 @@ détail et les ancres sont au § 12 du registre.*
 | **O3** | Le bouton **« Sync Oracle »** pousse la note dans un carnet NotebookLM — il n'alimente **pas** la conversation. Nom à revoir. |
 | **O4** | La ligne **« Oracle » du diagnostic IA** teste le pont NotebookLM, pas la conversation. |
 | **K1** | Le bouton **« Sensors »** du Cortex commande les **effecteurs** (sons, lumières), pas les capteurs. Le nom invite à l'erreur. |
+| **F3** | Un **dé dans une formule de fiche est relancé à chaque recalcul** : le résultat change dès qu'on touche un autre champ. |
 
 ### P3 bis — Décisions de table, pas défauts
 

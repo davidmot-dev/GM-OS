@@ -1,29 +1,79 @@
-# 📜 Guide : Partager des Règles et du Lore
+# 📜 Guide : partager une règle aux joueurs
 
-Ce guide explique comment utiliser l'Atelier de Forge pour transmettre des informations cruciales à vos joueurs en temps réel.
+Une règle, une énigme, la description d'un lieu — vous pouvez l'envoyer en plein écran sur toutes
+les tablettes, d'un clic.
 
-## 🛠️ Accès à l'Atelier
-1. Ouvrez le **Dashboard MJ**.
-2. Sélectionnez l'onglet **Règles & Forge**.
-3. Vous y trouverez la liste de toutes les règles générées ou importées pour votre campagne actuelle.
+---
 
-## 📡 Partager une fiche aux joueurs
-Pour afficher une règle sur les tablettes de vos joueurs :
-1. Cliquez sur une fiche dans la grille pour l'ouvrir dans le **Grimoire**.
-2. Relisez le contenu (vous pouvez l'éditer en cliquant sur l'icône ✏️).
-3. Cliquez sur le bouton **"Partager aux Joueurs"** en bas à droite.
-4. **Effet Immédiat** : Une fenêtre modale s'ouvrira sur toutes les tablettes connectées avec un effet visuel premium. Un message de notification sera également ajouté à l'historique du chat.
+## 🗺️ Où ça se passe
 
-## 🖊️ Créer et Éditer des règles
-- **Nouveau** : Utilisez le bouton "Créer une Règle" pour ouvrir l'éditeur markdown intégré.
-- **Preview** : L'éditeur propose un rendu en temps réel à droite de votre texte pour vérifier la mise en forme.
-- **Sauvegarde** : Les fichiers sont enregistrés directement dans le dossier de votre système de jeu.
+**Session-OS → Règles** (le *Grimoire*) **→ section Atelier.**
 
-## 💎 Export vers Obsidian
-Si vous utilisez **Obsidian** pour gérer vos campagnes :
-1. Dans la vue lecture d'une règle, cliquez sur l'icône **Globe/Obsidian**.
-2. La règle sera automatiquement copiée dans votre vault configuré, prête à être liée à vos autres notes.
+Vous y trouvez toutes les fiches du système actif : celles que la Forge a produites, et celles que
+vous avez écrites. Un compteur dit combien il y en a, et une recherche les filtre.
 
-## 💡 Conseils pour l'Immersion
-- Utilisez le partage pour les **énigmes complexes** ou les **descriptions de lieux** que les joueurs doivent relire.
-- Les **règles spécifiques** forgées par l'IA durant la partie peuvent être partagées pour lever toute ambiguïté sur une mécanique de jeu improvisée.
+> ⛔ **Correction.** Ce guide envoyait dans un « onglet Règles & Forge du Dashboard MJ ». L'atelier
+> est **une des sept sections** de l'éditeur de règles, pas un onglet séparé. →
+> [Guide de l'éditeur](./Rule_Engine_Forge_Guide.md)
+
+---
+
+## 📡 Partager
+
+1. Cliquez une fiche : elle s'ouvre dans le **Grimoire Dynamique**.
+2. Relisez-la. Le crayon permet de la corriger avant l'envoi.
+3. **Partager aux Joueurs.**
+
+**Deux choses partent en même temps**, et le guide n'en mentionnait qu'une :
+
+- **une fenêtre plein écran** s'ouvre sur toutes les tablettes connectées, avec le titre et le texte
+  mis en forme ;
+- **un message dans le canal général** — *« 📜 RÈGLE PARTAGÉE : … (Affichée sur votre écran) »* —
+  qui reste dans l'historique une fois la fenêtre refermée.
+
+C'est le second qui compte le lendemain : la fenêtre se ferme, le message reste.
+
+> ⚠️ **Le partage vise toutes les tablettes**, sans exception. Il n'y a pas d'envoi à un seul
+> joueur.
+
+L'icône de la fenêtre change selon la catégorie de la fiche — règle, mémoire, scénario — ce qui aide
+les joueurs à savoir ce qu'on leur montre.
+
+---
+
+## 🖊️ Écrire et corriger
+
+- **Créer une Règle** ouvre l'éditeur Markdown, avec un rendu en direct à côté du texte.
+- Les fiches sont enregistrées **dans le dossier du système de jeu**, à côté de celles de la Forge :
+  une règle écrite à la main et une règle forgée se rangent au même endroit et se partagent pareil.
+- Le bouton de rafraîchissement relit le dossier, si vous avez déposé un fichier à la main.
+
+> 🔎 **Ces fiches sont aussi ce que l'Oracle lit.** Une règle que vous corrigez ici corrige du même
+> coup ce que l'Oracle répondra — et si l'Oracle a mal répondu, c'est ici qu'on vient réparer la
+> fiche qu'il a citée. → [Guide de l'Oracle](./AI_Oracle_User_Guide.md)
+
+---
+
+## 💎 Exporter vers Obsidian
+
+Dans la vue lecture, une icône copie la fiche dans votre coffre, prête à être liée à vos autres
+notes. → [Guide Obsidian](./Obsidian_User_Guide.md)
+
+---
+
+## 💡 Quand s'en servir
+
+> [!TIP]
+> **Une énigme, plutôt qu'une règle.** Les joueurs relisent une énigme dix fois ; ils lisent une
+> règle une fois et vous la redemandent. Le partage sert surtout à leur mettre sous les yeux ce
+> qu'ils doivent *travailler* — un texte codé, une inscription, une liste d'indices.
+
+Et pour lever une ambiguïté en pleine partie : forgez la règle manquante, relisez-la, partagez-la.
+Tout le monde a le même texte, et il reste dans l'historique.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Chemin d'accès corrigé — l'Atelier est une section de
+l'éditeur de règles, pas un onglet du cockpit. Ajouté : le **message de chat** envoyé en même temps
+que la fenêtre, le fait que le partage vise **toutes** les tablettes, et le lien entre ces fiches et
+ce que l'Oracle lit.*
