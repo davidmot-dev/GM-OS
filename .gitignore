@@ -72,3 +72,6 @@ backups/
 # Le versionner mettrait au depot du contenu qui n a franchi aucune revue —
 # exactement ce que l etape de revue existe pour empecher.
 docs/systems/*/drafts/
+
+# Espace de travail Obsidian ouvert sur la documentation : local a la machine.
+.obsidian/
