@@ -49,10 +49,11 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
       donnée, lue dans l'autre sens, et le meneur peut enfin voir venir une
       suppression au lieu de la constater.
 
-      Recalculé quand le média change : ouvrir un autre fichier est le seul
-      geste qui rende la réponse caduque tant que ce panneau est ouvert.
+      Calculé une fois par ouverture : le panneau se ferme pour en ouvrir un
+      autre — un voile cliquable le referme —, donc il n'existe pas de moment
+      où la réponse vieillirait sous les yeux du meneur.
     */
-    const recensement = React.useMemo(() => usagesDesMedias(), [media.id]);
+    const recensement = React.useMemo(() => usagesDesMedias(), []);
     const usages = recensement.usages.get(media.id) ?? [];
 
     const formatSize = (bytes: number) => {

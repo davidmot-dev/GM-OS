@@ -24,7 +24,9 @@ const vide = {
     favorite: { favorites: [] },
 };
 
-const etats = structuredClone(vide) as Record<string, any>;
+/* Les magasins sont mimes ; leur forme exacte n'est pas le sujet du test. */
+type Magasins = Record<string, Record<string, unknown>>;
+const etats = structuredClone(vide) as unknown as Magasins;
 
 vi.mock('../modules/npc/useNPCStore', () => ({ useNPCStore: { getState: () => etats.npc } }));
 vi.mock('../modules/image/useImageStore', () => ({ useImageStore: { getState: () => etats.image } }));

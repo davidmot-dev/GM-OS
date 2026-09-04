@@ -36,7 +36,18 @@ try {
 
     # 3. Unit & Integration Tests
     Write-Header "Etape 3 : Execution des Tests Unitaires et d'Integration"
-    npx vitest run
+    #
+    # `--maxWorkers=4` n'est pas un reglage de confort : sans bride, vitest
+    # ouvre autant de processus que la machine a de coeurs, et la suite devient
+    # instable ici. Symptome deja paye deux fois -- 263 fichiers rendus en
+    # echec sans qu'un seul test ait ete execute, puis, le 2026-09-04, un a
+    # deux echecs qui SE DEPLACENT d'une execution a l'autre et disparaissent
+    # des qu'on rejoue le fichier seul.
+    #
+    # Une CI qui echoue au hasard ne dit plus rien : on finit par la croire
+    # quand elle passe et par la contourner quand elle bloque. C'est
+    # exactement ce qu'il ne faut pas d'un garde-fou pose devant `git push`.
+    npx vitest run --maxWorkers=4
     if ($LASTEXITCODE -ne 0) {
         Write-Failure "Des tests ont echoue."
         exit 1
