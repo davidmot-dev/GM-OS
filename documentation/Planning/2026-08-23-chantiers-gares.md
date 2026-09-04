@@ -41,7 +41,7 @@ dans le code, qui absorbe toutes les autres.**
 > l'étape 3 appelait la commande sans bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas
 > exécuté.*
 >
-> Revérifié le 2026-09-05 : `tsc -b` propre, **3 566 tests au vert** (293 fichiers, 1 ignoré),
+> Revérifié le 2026-09-05 : `tsc -b` propre, **3 606 tests au vert** (296 fichiers, 1 ignoré),
 > `npm run validate` vert.
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
@@ -887,6 +887,83 @@ Zustand est un calcul d'état* — chaque test du minuteur aurait fait sonner un
 
 ⭐ **La voie B est close.** Les cent deux trouvailles de la revue sont traitées : réparées, tranchées,
 ou documentées avec leur raison.
+
+### 18 · ⭐ La télécommande, refaite et réparée (2026-09-05)
+
+Demande de David, une fois la revue close : *optimiser la tablette GM Control Remote, en forme et
+en contenu, et l'espace qu'elle occupe.* La refonte a produit une amélioration mesurable — et,
+comme d'habitude, **c'est en écrivant ce qu'elle fait qu'on a trouvé ce qui ne marchait pas.**
+
+#### Le châssis — 35 % de la hauteur rendus au contenu
+
+| | Avant | Après |
+| --- | --- | --- |
+| En-tête | **104 px** pour un titre qu'on connaît et un point de connexion | supprimé, remplacé par une ligne d'état de 48 px |
+| Bas de page | **128 px** réservés à une barre flottante | 0 — la navigation est passée à gauche |
+| Marges | `md:p-10`, soit 80 px en largeur | `p-3` |
+| **Total du châssis** | **272 px sur 768** | **~60 px** |
+
+**Pourquoi la colonne à gauche.** David tient la tablette **en paysage** : une colonne ne coûte
+alors *aucun* pixel vertical, et la largeur qu'elle prend était de toute façon perdue par la barre
+flottante — qui occupait 976 px pour 336 px de boutons, **les deux tiers en vide**.
+
+⭐ **Et c'est elle qui a permis d'écrire les libellés.** Les sept onglets étaient des icônes nues
+dont les noms vivaient dans `title` — *c'est-à-dire nulle part sur un écran tactile, où l'on ne
+survole rien.* **C'est le défaut du 23/08 — « trois points ne disent rien de ce qu'ils cachent » —
+appliqué aux sept portes de l'application.**
+
+Sous 900 px la colonne redevient une barre en bas. *Ce n'est pas une seconde conception : c'est le
+filet qui évite qu'améliorer le paysage casse le téléphone qui marchait.*
+
+#### Quatre défauts muets, tous en amont de l'écran
+
+| # | Ce qui était | Ce qui est |
+| --- | --- | --- |
+| ⛔ **Le tableau blanc** | **Le meneur envoyait QUATRE des sept champs déclarés.** `currentTool`, `currentColor` et `currentWidth` n'arrivaient jamais et restaient à leur valeur de départ — et le canevas les recopie dans **chaque tracé qu'il émet**. *Tout ce qui était dessiné depuis une tablette partait en crayon blanc d'épaisseur 3, et **la gomme dessinait au lieu d'effacer**.* Rien ne le signalait : sur fond sombre, un trait blanc ressemble à un trait voulu. | **`segmentDuTableau`, typé.** Voir ci-dessous — c'est la leçon du jour. |
+| ⛔ **`pad.isActive`** | Déclaré dans le type, dessiné par la tablette, et **jamais posé par personne** : l'anneau d'activité n'a pu s'allumer sur aucun pad depuis qu'il est écrit. | Les deux platines de Music-OS, le thème chargé d'Ambient-OS et les projections d'Image-OS détiennent la réponse. Au passage **Ambient-OS ne retenait pas quel thème il avait chargé** — il versait les pistes et oubliait d'où elles venaient (`themeChargeId`). |
+| ⛔ **Ce qui joue** | Le flux portait ce qu'on peut **déclencher** et jamais ce qui est **en cours**. Il fallait changer d'onglet — ou regarder l'écran du PC, c'est-à-dire cesser de se servir de la télécommande. | Une **ligne d'état permanente** : morceau, ambiance, round, minuteur. *Ce qui n'a rien à dire disparaît au lieu d'afficher un tiret — un bandeau plein de tirets apprend au regard à ne plus s'y arrêter.* |
+| ⛔ **Les plafonds** | 5 morceaux, 8 ambiances, 12 images — et la grille tronquait **en silence**. Trente favoris en donnaient douze sans un mot. | Elle écrit « 12 sur 30 ». *Une liste tronquée sans le dire se lit comme une liste complète, et on cherche longtemps ce qui n'y est pas.* |
+
+#### ⭐ La leçon : le remède était un type, pas un test
+
+Le segment du tableau vivait dans un **littéral anonyme** au milieu d'un crochet de 550 lignes, et
+*un littéral anonyme n'oblige à rien.* La réparation n'est donc pas d'ajouter les trois champs — ça,
+c'est le symptôme — mais d'extraire `segmentDuTableau`, qui **promet `RemoteSyncData['whiteboard']`
+en type de retour** : retirer un champ ne compile plus. **Vérifié en dégradant le code — `TS2741`.**
+
+C'est mot pour mot l'asymétrie que l'en-tête de `remote.types.ts` décrit déjà pour
+`RemoteCombatant`, **trois champs plus haut dans le même fichier** : *une divergence entre celui qui
+écrit et celui qui lit est indétectable par construction tant qu'ils ne partagent pas le type.* La
+règle était écrite, au bon endroit, et le défaut vivait juste en dessous.
+
+#### Deux actions déclarées que personne n'offrait, et une classe qui n'existe pas
+
+- **`whiteboard:set-width`** avait son handler et son contrôle dans `registry.test.ts` — et **aucun
+  émetteur**. La tablette dessinait à l'épaisseur que le meneur avait laissée.
+- **`whiteboard:set-background`** n'avait **ni émetteur ni destinataire** : morte de bout en bout.
+- ⛔ **`scrollbar-hide`, écrite cinq fois, ne produisait aucune règle** — le greffon n'est pas
+  installé. **Même famille que les 125 `animate-in` du 03/09** : *une classe qui n'existe pas ne
+  prévient pas.* Remplacée par `no-scrollbar`, définie dans `index.css`.
+
+#### Et la même rustine, posée des deux côtés
+
+`RemoteDrawingCanvas` est **une copie de `whiteboard/components/DrawingCanvas.tsx` qui n'avait jamais
+reçu le correctif de l'original** : `window.resize` au lieu d'un `ResizeObserver`, un effet dont la
+dépendance était `redraw` — donc remonté **à chaque mouvement du doigt** —, et `canvas.width`
+réassigné sans condition, ce qui **vide le canevas et réinitialise le contexte 2D**. Tout le tableau
+était repeint une vingtaine de fois par seconde pendant un trait.
+
+*« Qui d'autre a la même rustine à poser ? »* — la question du 2026-09-03, restée sans réponse ici
+pendant deux jours. Elle a resservi une seconde fois dans la même séance : le défaut de lint
+`redrawRef.current` écrit en phase de rendu existait **aussi** dans la copie du meneur, et les deux
+ont été corrigés ensemble.
+
+**Vérifié** : `tsc -b` propre, lint sans régression, **40 tests neufs**, `npm run validate` vert —
+**3 606 tests**.
+
+**Ce qui reste à voir à l'écran**, et que rien ici ne peut trancher : que la gomme efface bien depuis
+la tablette, la largeur de la colonne (`w-32`, calée sur « Scénario »), la densité des vignettes à un
+mètre, et le seuil de 900 px sur la vraie tablette.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
