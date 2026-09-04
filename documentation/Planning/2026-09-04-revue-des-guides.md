@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Trente guides plus tard, elle a trouvé **quatre-vingt-sept défauts** — et pas
+son code de l'autre.** Trente-trois guides plus tard, elle a trouvé **quatre-vingt-quinze défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après trente guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après trente-trois guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 30 guides
+## ✅ Ce qui est fait — 33 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -55,14 +55,18 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | **Lot 5** — Forge, partage de règles, formules | 12j | 8 | **7** |
 | **Lot 6** — les quatre satellites du combat | 12k | 8 | **7** |
 | **Lot 7** — Table-OS, butin | 12l | 5 | **5** |
+| **Lot 8** — Image-OS, Light-OS, Favorite-OS | 12n | 8 | **7** |
 | **Lot 10** — `migration-guide`, **archivé** | 12m | — | — |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1 à 7 faits, lot 10 archivé** — le 2026-09-04. Cinquante trouvailles, quarante
-> corrigées. Reste **8 guides, en 2 lots** : l'image et la lumière, puis les petits outils.
+> ✅ **Lots 1 à 8 faits, lot 10 archivé** — le 2026-09-04. Cinquante-huit trouvailles,
+> quarante-sept corrigées. Reste **5 guides, en 1 lot** : les petits outils.
+>
+> ⛔ **La plus grave de toute la revue est au lot 8** : Favorite-OS affirmait qu'une pastille verte
+> « confirme que vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -139,13 +143,15 @@ qui n'existent pas, une coloration des ressources par nom qui n'existe pas, et u
 écrite le matin même avec le pont vers le butin. Le vieux fond de Table-OS a rendu **le jet
 manuel**, qui n'était documenté nulle part. Détail au § 12l.
 
-### Lot 8 — L'image et la lumière
+### ~~Lot 8 — L'image et la lumière~~ ✅ fait le 04/09
 
 `Image_OS_User_Guide` · `Light_OS_User_Guide` · `Favorite_OS_User_Guide`
 
-**Pourquoi ensemble.** Les trois se croisent dans la projection : Image-OS porte le *blackout*
-général, Light-OS reçoit des ordres de quatre modules, Favorite-OS projette des fiches — et le
-Stop All les retire toutes, ce qu'aucun guide ne disait.
+**Ce que le lot a donné** : ⛔ **la trouvaille la plus grave de toute la revue.** Favorite-OS
+annonçait une synchronisation avec un « coffre central » et une pastille verte qui *« confirme que
+vos données sont en sécurité »* — **ni coffre, ni pastille, et le module n'est dans aucune
+sauvegarde.** Troisième occurrence de cette famille après le faux backup GitHub et Map-OS. Détail
+au § 12n.
 
 ### Lot 9 — Les petits outils
 
@@ -177,6 +183,7 @@ détail et les ancres sont au § 12 du registre.*
 | **N2** | La **trame** (actes et scènes) n'est pas exportée par Nexus. | Petit |
 | **N3** | Les **paquets de cartes** sont exportés et jamais réinjectés. | Petit |
 | **N4** | Le **pilote personnalisé** est exporté et jamais réinjecté. | Petit |
+| **G1** | **Favorite-OS n'est dans aucune sauvegarde** — ni automatique, ni export manuel. Ses dossiers sont du travail de préparation. | Petit |
 
 ### P2 — Une fonction annoncée qui ne marche pas
 
@@ -202,6 +209,7 @@ détail et les ancres sont au § 12 du registre.*
 | **K1** | Le bouton **« Sensors »** du Cortex commande les **effecteurs** (sons, lumières), pas les capteurs. Le nom invite à l'erreur. |
 | **F3** | Un **dé dans une formule de fiche est relancé à chaque recalcul** : le résultat change dès qu'on touche un autre champ. |
 | **D4** | **La couleur déclarée d'une jauge n'est presque jamais appliquée** — et l'exemple que la Forge produit garantit qu'elle sera ignorée. |
+| **G8** | `clearAll` d'Image-OS est du **code mort**, et sa confirmation ment sur ce qu'elle efface. |
 
 ### P3 bis — Décisions de table, pas défauts
 

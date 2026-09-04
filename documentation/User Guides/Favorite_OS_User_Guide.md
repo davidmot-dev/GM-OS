@@ -18,7 +18,11 @@ Chaque favori peut être enrichi de nombreuses données :
 - **Visuels** : 
     - **Portrait** : Image haute définition pour l'immersion.
     - **Token** : Icône circulaire utilisée sur la Map.
-- **Dossier Narratif** : Lore public pour les joueurs et **GM Secrets** (notes chiffrées réservées au MJ).
+- **Dossier Narratif** : lore public pour les joueurs, et **notes secrètes** réservées au meneur.
+
+> ⛔ **Ces notes ne sont pas chiffrées**, contrairement à ce qu'annonçait cette page. Elles sont
+> réservées au meneur au sens où **aucun écran joueur ne les affiche** — c'est une séparation
+> d'interface, pas une protection. Elles sont en clair dans le stockage local.
 - **Attributs Rapides** : Listes de caractéristiques textuelles (ex: Alignement, Santé, Poids).
 - **Gauges de Puissance** : Barres visuelles pour représenter des scores (ex: Menace, Rareté, Intelligence).
 
@@ -45,16 +49,39 @@ Activez l'interrupteur **"SYCHRO"** ou cliquez sur l'icône **"PROJECTER"** sur 
 
 ## 🔍 Organisation & Recherche
 - **Catégories** : Filtrez instantanément par type d'entité via les boutons du haut.
-- **Stars** : Marquez vos entités les plus importantes pour les retrouver en haut de liste.
+- **Étoiles** : marquez vos entités les plus importantes pour les retrouver en haut de liste.
+- **Propriétaire** : un dossier peut appartenir à un **personnage joueur**, ce qui le rend privé à
+  sa tablette. Utile pour un objet personnel, un contact, un secret de personnage.
 - **Dernière Vue** : Le système suit votre historique de consultation pour vous proposer vos favoris récents.
 
 ---
 
-## 💾 Sauvegarde & Export
-- **Cloud/Vault Sync** : Le module indique en temps réel l'état de synchronisation avec votre coffre central (Vault). Une pastille verte "Vault Synced" confirme que vos données sont en sécurité.
-- **Export** : Utilisez le bouton **"Export"** dans la barre supérieure pour exporter votre galerie au format JSON, idéal pour le partage ou la sauvegarde externe.
+## ⚠️ Vos favoris ne sont dans aucune sauvegarde
+
+> ⛔ **Deux affirmations dangereuses, retirées le 2026-09-04.** Cette page annonçait une
+> « synchronisation avec votre coffre central (Vault) » et une pastille verte *« Vault Synced »*
+> qui **« confirme que vos données sont en sécurité »**. **Aucun coffre, aucune pastille, aucune
+> synchronisation n'existe** — le mot *Vault* n'apparaît nulle part dans le module. Elle annonçait
+> aussi un **bouton Export** au format JSON : il n'existe pas non plus.
+
+Ce qu'il faut savoir à la place : **Favorite-OS n'est ni dans la sauvegarde automatique, ni dans
+l'export manuel de session.** Vos dossiers vivent dans le stockage local de l'application, et
+c'est tout.
+
+*C'est la même famille que Map-OS (voir le [registre](../Planning/2026-08-23-chantiers-gares.md),
+§ 12a) : une donnée qu'on crée sans y penser est une donnée qu'on oublie de protéger.*
+
+→ [Guide de la sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md)
 
 ---
 
 > [!TIP]
 > **Le Media Hub** : Lorsque vous éditez un dossier, cliquez sur l'icône de dossier à côté des URLs d'images pour ouvrir le **Media Hub**. Vous pourrez alors sélectionner visuellement vos fichiers sans avoir à copier-coller des chemins complexes !
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. **Trois affirmations fausses retirées**, dont deux de
+la famille la plus coûteuse : un coffre de synchronisation qui n'existe pas et « confirmait que vos
+données sont en sécurité », un bouton d'export qui n'existe pas, et des notes secrètes annoncées
+comme chiffrées alors qu'elles sont en clair. Ajouté : le rattachement d'un dossier à un personnage
+joueur, et le fait que le module **n'est dans aucune sauvegarde**.*

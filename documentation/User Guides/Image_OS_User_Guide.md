@@ -29,7 +29,7 @@ En haut de l'interface, vous pouvez sélectionner l'écran de destination :
 - **Diaporama (Sequence)** : Cochez les cases "Sequence" sur vos images, puis lancez le diaporama via le bouton **DIAPORAMA** en haut à droite.
   - **Navigation** : Utilisez les flèches **Précédent** et **Suivant** à côté du bouton pour faire défiler manuellement votre séquence.
 - **Entity (NPC/PC)** : GM-OS projette une fiche complète (nom, portrait, stats publiques) vers le Player Hub en mode "Diorama" tout en affichant l'image brute sur vos écrans secondaires.
-- **Mode Standby** : Lorsqu'aucune image n'est projetée sur un écran, celui-ci affiche un texte discret "EN ATTENTE" (Standby), garantissant que l'écran reste actif sans polluer l'immersion avant le début d'une scène.
+- **Écran au repos** : sans image projetée, l'écran reste noir et prêt.
 
 ## 📁 Organisation de la Bibliothèque
 
@@ -39,12 +39,32 @@ Pour ne pas perdre de temps à chercher une image en plein combat :
 - **Favoris (⭐)** : Marquez vos images les plus utilisées pour un accès rapide.
 - **Séquence** : Marquez les images pour votre scène actuelle afin de les projeter en un clic via le diaporama.
 
+## ⛔ Le bouton qu'il ne faut pas confondre
+
+En bas de la colonne de gauche, **RESTORE DEFAULT** n'est pas un bouton de remise à zéro de
+l'affichage : il **efface toute votre bibliothèque d'images, tous vos dossiers et toutes vos
+projections**. Une confirmation le dit, et il n'y a pas de retour en arrière.
+
+Il est rouge, discret, et juste au-dessus des commandes de projection. *Aucun guide ne le
+mentionnait.*
+
+---
+
 ## 🛑 Contrôle de Sécurité (Blackout)
 
 La gestion visuelle est sensible (spoilers). Image OS propose une synchronisation parfaite du blackout :
 
 - **Target Blackout** : Éteint l'image sur l'écran cible sélectionné. Sur un **Moniteur**, la fenêtre se ferme complètement pour libérer votre bureau. Sur le **Player Hub**, l'image s'efface simplement pour rester prête à la prochaine diffusion.
-- **Global Blackout (🔴 ALL)** : Coupe instantanément TOUTES les projections sur TOUS les écrans et ferme toutes les fenêtres de projection secondaires. Indispensable pour masquer une carte secrète ou finir une scène sur un écran noir dramatique.
+- **ALL** : coupe TOUTES les projections sur TOUS les écrans et ferme les fenêtres secondaires.
+  Indispensable pour masquer une carte secrète, ou finir une scène sur un noir.
+
+> 🔎 **Le noir voulu efface aussi le décor mis de côté.** Quand une fiche de PNJ s'en va, l'image
+> de scène qu'elle recouvrait revient d'elle-même — *l'image est le décor, les fiches passent
+> devant*. Mais si vous avez éteint cet écran à la main, ce décor-là ne ressuscitera pas des heures
+> plus tard à la fin d'une fiche : **un fantôme que personne ne rattacherait à son geste.**
+
+⚠️ **Le Stop All de la barre du haut appelle ce même noir général**, en plus de couper le son et les
+lumières. → [Tour de contrôle audio](./Audio_Master_Guide.md)
 
 ---
 
@@ -63,3 +83,10 @@ La gestion visuelle est sensible (spoilers). Image OS propose une synchronisatio
 - **Multi-Écrans** : Le module détecte automatiquement le nombre de moniteurs branchés via le `appBridge`.
 - **Formats Supportés** : PNG, JPG, WEBP, et même les GIF animés pour des ambiances vivantes.
 - **Performance** : Les images sont pré-chargées pour éviter tout délai lors de la projection.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Retiré : le « mode Standby » affichant « EN ATTENTE »,
+qui n'existe nulle part. Ajouté : le bouton **RESTORE DEFAULT**, qui efface toute la bibliothèque et
+n'était mentionné dans aucun guide ; le fait que le noir voulu efface aussi le décor mis de côté ;
+et que le **Stop All** général déclenche ce noir.*

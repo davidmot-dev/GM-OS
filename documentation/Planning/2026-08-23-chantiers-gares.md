@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 7 et 10 faits le 04/09.** **Suivant** : lot 8 — l’image et la lumière.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 8 et 10 faits le 04/09.** **Suivant** : lot 9 — les petits outils, le dernier.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -649,6 +649,32 @@ ce qui a vieilli dedans :
 Ses trois liens entrants sont repointés vers `V6_Code_Standards` et `AppBridge_Architecture_Standard`,
 qui font autorité.
 
+#### 12n · Lot 8 — l'image et la lumière (2026-09-04)
+
+*Trois guides qui se croisent dans la projection. Le lot a rendu **la trouvaille la plus grave de
+toute la revue** : une page qui affirmait à David que ses données étaient en sécurité.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔⛔ **G1** | **Favorite-OS annonçait un coffre de synchronisation qui n'existe pas.** *« Le module indique en temps réel l'état de synchronisation avec votre coffre central (Vault). Une pastille verte "Vault Synced" **confirme que vos données sont en sécurité**. »* Le mot *Vault* n'apparaît **nulle part** dans le module. **Et Favorite-OS n'est dans aucune sauvegarde** — ni automatique, ni export manuel. *C'est la troisième fois que cette famille d'affirmation est trouvée : le faux backup GitHub du guide général, puis Map-OS, maintenant celle-ci. Sur un dépôt qui a perdu ses campagnes deux fois, c'est la ligne qu'il faut chercher en premier.* | ✅ **Retirée**, remplacée par l'avertissement inverse. ⚠️ **Reste à décider** : mettre Favorite-OS dans `construireLaSauvegarde`. Ses dossiers sont du travail de préparation, comme les presets de Map-OS. | `useFavoriteStore.ts`, `store/SessionService.ts` |
+| ⛔ **G2** | **Un bouton « Export » JSON annoncé, qui n'existe pas** dans Favorite-OS. | ✅ **Retiré.** | — |
+| ⛔ **G3** | **Les « GM Secrets » ne sont pas chiffrés.** Le guide disait « notes chiffrées réservées au MJ » ; `secretNotes` est une chaîne en clair. La réserve est une **séparation d'interface** — aucun écran joueur ne les affiche —, pas une protection. | ✅ **Corrigé.** *Annoncer un chiffrement qui n'existe pas est pire que ne rien annoncer : ça décide de ce qu'on ose y écrire.* | `useFavoriteStore.ts:32` |
+| ⛔ **G4** | **Le bouton « RESTORE DEFAULT » d'Image-OS n'était mentionné dans aucun guide.** Il **efface toute la bibliothèque d'images, tous les dossiers et toutes les projections**. Rouge, discret, juste au-dessus des commandes de projection. Même famille que le bouton de réinitialisation de Sound-OS (§ 12e). | ✅ **Écrit**, dans une section à lui. | `ImageDashboard.tsx:143`, `useImageStore.ts:497` |
+| ⛔ **G5** | **Le « mode Standby » affichant « EN ATTENTE » n'existe pas.** Aucune trace de ce texte. | ✅ **Retiré.** | — |
+| ⛔ **G6** | **Trente-neuf effets lumineux**, là où le guide en citait quatre avant un « etc. » — et *Grisaille*, l'un des quatre, n'existe pas. | ✅ **Corrigé**, avec une douzaine de noms réels. | `HueEngine.ts:408-640` |
+| **G7** | **Cinq modules commandent les lampes** sans passer par Light-OS : Sound-OS, Music-OS, Ambient-OS, les zones de danger de Map-OS, et le Storyboard. Aucun guide ne le disait, alors que c'est la réponse à « pourquoi la lumière a changé toute seule ». Et **le Stop All éteint tout**. | ✅ **Écrit** dans Light-OS. | — |
+| **G8** | **`clearAll` d'Image-OS est du code mort**, et sa confirmation ment : elle annonce que « les dossiers et projections seront perdus » alors qu'elle ne vide que `mediaList`. Aucun appelant. | **À retirer.** Sans risque : personne ne l'appelle. | `useImageStore.ts:475` |
+
+**Vérifié et exact** : les 18 emplacements de scène de Light-OS ; l'appairage par le bouton
+physique du pont ; la transition de **5 secondes par défaut**, réglable ; le retour à l'ambiance
+manuelle quand un effet s'arrête ; le noir par cible qui ferme la fenêtre d'un moniteur mais laisse
+le Hub prêt ; le rattachement d'un favori à un **personnage joueur**, qui le rend privé à sa
+tablette.
+
+**Une qualité du code que les guides taisaient** : le noir demandé à la main **efface aussi le
+décor mis de côté** — sans quoi une image éteinte ressusciterait à la fin de la prochaine fiche,
+des heures plus tard, *un fantôme que personne ne rattacherait à son geste.*
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -712,7 +738,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Trente guides passés, **quatre-vingt-sept** trouvailles (§§ 12a-12m) — **quarante-neuf réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Trente-trois guides passés, **quatre-vingt-quinze** trouvailles (§§ 12a-12n) — **cinquante-six réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

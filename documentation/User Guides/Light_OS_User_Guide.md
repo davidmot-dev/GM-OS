@@ -33,7 +33,9 @@ Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quel
 - **Ajustement Manuel** : Utilisez les curseurs et sélecteurs de couleur pour régler chaque lampe à votre convenance.
 - **Sauvegarde** : Cliquez sur l'icône de disquette (💾) sur l'un des 18 emplacements de scène. L'état actuel de toutes les lampes est alors mémorisé.
 - **Personnalisation** : Faites un clic droit sur une scène pour changer son nom, son icône (Material Icons) et la couleur de son halo lumineux dans l'UI.
-- **Activation** : Un simple clic gauche sur une scène applique l'ambiance avec une transition fluide de 5 secondes (ajustable).
+- **Activation** : un clic gauche applique l'ambiance. La transition dure **5 secondes par
+  défaut**, réglable dans les options — de l'instantané pour un combat au fondu très lent pour un
+  voyage.
 
 ## 🪄 Effets Spéciaux (Software Engine)
 
@@ -44,7 +46,12 @@ GM-OS embarque un moteur d'effets ultra-réactif capable de simuler des ambiance
 - **🚓 Police** : Stroboscope alternant rouge et bleu.
 - **🔮 Arcane** : "Respiration" lente et intense de la luminosité avec légères variations chromatiques.
 - **🌊 Sous l'eau** : Mouvement lent et ondulatoire de la lumière (bleu/cyan).
-- **Et bien d'autres** : *Glitch*, *Néon*, *Radiations*, *Grisaille*, etc.
+- **Et trente-quatre autres** : *Glitch*, *Néon défectueux*, *Radiation*, *Souffle de Dragon*,
+  *Trou Noir*, *Ruche Alien*, *Terminal Retro*, *Lave Fusion*, *Battement de Cœur*, *Aurore
+  Boréale*, *Méditation Zen*, *Le Néant*…
+
+> 🔎 **Il y en a trente-neuf en tout**, là où ce guide en citait quatre et concluait par « etc. ».
+> *Grisaille* n'en fait pas partie. La liste complète est dans le sélecteur d'effet de chaque lampe.
 
 ## 🔄 Synchronisation Multi-Modules (Sync Mode)
 
@@ -66,3 +73,29 @@ C'est ici que GM-OS révèle toute sa puissance. Si le bouton **Sync** est activ
 
 > [!WARNING]
 > En mode "Sync", les commandes envoyées par les modules audio sont prioritaires. Si vous souhaitez garder le contrôle manuel absolu, désactivez le bouton **Sync** dans les options de Light OS.
+
+---
+
+## 💡 Qui d'autre commande vos lampes
+
+Light-OS n'est pas le seul à parler à votre pont. **Cinq modules** peuvent appliquer une scène, et
+c'est utile de savoir lequel a agi quand la lumière change sans qu'on ait rien touché :
+
+| Module | Quand |
+| :--- | :--- |
+| **Sound-OS** | Un pad peut porter une scène, jouée avec le son |
+| **Music-OS** | Un pad de musique, de même |
+| **Ambient-OS** | Une piste d'ambiance ; à son arrêt, la lumière **revient** à une autre piste allumée |
+| **Map-OS** | Une **zone de danger** où un pion entre |
+| **Le Storyboard** | Une séquence, parmi ses six éléments |
+
+⚠️ **Le Stop All de la barre du haut éteint toutes vos lampes** — ce n'est pas qu'un bouton audio.
+→ [Tour de contrôle audio](./Audio_Master_Guide.md)
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Précisé : **trente-neuf effets** là où la page en
+citait quatre avant un « etc. » — et *Grisaille* n'en fait pas partie. Ajouté : la liste des **cinq
+modules** qui peuvent commander vos lampes sans passer par Light-OS, et le fait que le **Stop All
+les éteint**. Les 18 scènes, l'appairage du pont et la transition de 5 secondes par défaut sont
+exacts.*
