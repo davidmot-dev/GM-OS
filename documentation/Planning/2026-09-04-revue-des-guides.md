@@ -191,7 +191,7 @@ détail et les ancres sont au § 12 du registre.*
 | # | Quoi | ✅ |
 | --- | --- | --- |
 | **N1** | Importer une campagne écrasait toute la bibliothèque d'ambiances de Sound-OS. | **fusion par identifiant** |
-| **M1** | Map-OS n'était dans aucune sauvegarde. | **configurations et modèles de zones** ; le brouillard reste ouvert |
+| **M1** | Map-OS n'était dans aucune sauvegarde. | **configurations et modèles de zones** — et une configuration porte le plateau entier. *Le brouillard était déjà miroité depuis le 29/08 : cette ligne l'annonçait à tort comme un reste, corrigé le 05/09.* |
 | **N2** | La trame n'était pas exportée par Nexus. | **exportée, réinjectée, et clonée avec ses liens** |
 | **N3** | Les paquets de cartes étaient exportés et jamais réinjectés. | **réinjectés** |
 | **N4** | Le pilote personnalisé était exporté et jamais réinjecté. | **ajouté, jamais remplacé** |

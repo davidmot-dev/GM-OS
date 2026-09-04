@@ -748,7 +748,26 @@ soir même de la revue.*
 | ⛔ **N2** | **La trame n'était pas exportée.** Une campagne emportée ailleurs arrivait sans son plan narratif — tout le travail de la Forge de campagne restait sur la machine d'origine. | `actes` et `scenes` dans le type, la récolte et l'injection. ⚠️ **Facultatifs** : une archive d'avant aujourd'hui n'a pas de trame, et `undefined` ne doit pas effacer celle de la campagne cible. ⭐ **Le clonage refait les liens** — les scènes de la copie pointent les actes de la copie, sinon deux campagnes se partageraient une trame. | `nexus.types.ts`, `NexusService.ts` |
 | ⛔ **N3** | **Les paquets de cartes étaient mis dans l'archive et jamais reposés.** Deck-OS repartait vide, et on payait le poids sans le bénéfice. | Manifestes remplacés par identifiant ; états de session **fusionnés** — ils couvrent toutes les campagnes, et écraser le dictionnaire perdrait ceux des autres. | `NexusService.ts` (`injectState`) |
 | ⛔ **N4** | **Le pilote personnalisé aussi**, et son gabarit. Une campagne bâtie sur un jeu forgé arrivait en désignant un `system` absent, sans un mot. | ⚠️ **On AJOUTE, on ne remplace jamais** : un pilote du même identifiant est le travail du meneur d'ici. *L'import d'une campagne n'a pas à devenir un outil de destruction de système* — le résolveur de conflits existe, et il ne vaut que pour les bundles de pilote. | idem |
-| ⛔ **M1** | **Map-OS n'était dans aucune sauvegarde.** | Les **configurations de carte** et les **modèles de zones de danger** y entrent : c'est le travail de préparation, celui qui ne se refait pas. **Pas** les pions ni le cadrage — ils décrivent la séance. **Pas le brouillard** : une image par carte, qui relève du **miroir des médias** et non d'un instantané JSON pris toutes les deux minutes. *Chantier laissé ouvert.* | `SessionService.ts`, `schemas.ts` |
+| ⛔ **M1** | **Map-OS n'était dans aucune sauvegarde.** | Les **configurations de carte** et les **modèles de zones de danger** y entrent : c'est le travail de préparation, celui qui ne se refait pas. **Pas** l'état courant du plateau — pions posés, calques, cadrage : *ils décrivent une séance, pas un univers*, et ce qui mérite de durer se range en configuration. **Confirmé par David le 2026-09-05.** | `SessionService.ts`, `schemas.ts` |
+
+⛔ **Correction du 2026-09-05 : j'ai écrit ici que « le brouillard reste ouvert ». C'est faux.** Le
+brouillard de guerre est **miroité depuis le 2026-08-29, aller et retour** — `refletterLeBrouillard`
+et `restaurerLeBrouillard` dans `MiroirDesMedias.ts`, appelés par `SessionBackupManager`. Je l'ai
+annoncé comme un reste en réparant M1, **sans vérifier ce que le miroir couvrait déjà** : exactement
+ce que la règle en tête de ce registre interdit, dans le document qui la porte.
+
+**Ce qui est donc réellement sauvegardé d'une carte**, vérifié dans le code le 2026-09-05 :
+
+| Quoi | Par quel chemin |
+| --- | --- |
+| Les cartes de l'**Atlas** | `lesDonneesDeLaSession` |
+| Les **images** | miroir des médias (29/08) |
+| Le **brouillard** | miroir des médias (29/08) |
+| **Configurations de carte** et modèles de zones | `construireLaSauvegarde` (04/09) |
+
+⭐ **Et une configuration contient le plateau entier** — pions, zones, effets magiques, météo,
+grille et sa couleur, brouillard, zoom, heure du jour. *Une carte rangée en configuration est donc
+sauvegardée complètement ; seul le plateau qu'on est en train de monter reste dehors.*
 | ⛔ **G1** | **Favorite-OS non plus** — et son guide affirmait qu'une pastille verte « confirme que vos données sont en sécurité ». | Les dossiers de favoris entrent dans la sauvegarde, aller et retour. | idem |
 
 **Le piège évité, et il était écrit dans le code** : `modules` de `schemas.ts` n'est **pas**
