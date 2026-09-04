@@ -185,7 +185,7 @@ const ObsidianPanel: React.FC = () => {
                                     }`}
                                 >
                                     {syncStatus === 'syncing' ? <RefreshCw size={14} className="animate-spin" /> : <Share2 size={14} />}
-                                    {syncStatus === 'success' ? 'Synchronisé' : syncStatus === 'error' ? 'Échec' : 'Sync Oracle'}
+                                    {syncStatus === 'success' ? 'Envoyée' : syncStatus === 'error' ? 'Échec' : 'Envoyer au carnet'}
                                 </button>
                                 <button 
                                     onClick={() => window.appBridge?.web?.openExternal?.(`obsidian://open?vault=${encodeURIComponent('Obsidian Vault')}&file=${encodeURIComponent(activeNotePath)}`)}
@@ -217,7 +217,7 @@ const ObsidianPanel: React.FC = () => {
                                 <h4 className="text-xs font-bold text-app-text">Note en lecture seule</h4>
                                 <p className="text-[10px] text-app-text/40 mt-1 leading-relaxed">
                                     GM-OS affiche vos notes Obsidian en temps réel. Pour modifier ce contenu, utilisez l'application Obsidian. 
-                                    Cliquez sur "Sync Oracle" pour que l'IA puisse répondre à vos questions en se basant sur cette note.
+                                    Envoie cette note comme source dans votre carnet NotebookLM, pour la Forge de campagne. Pour que l'Oracle lise vos notes en séance, branchez le coffre dans les réglages IA.
                                 </p>
                             </div>
                         </div>

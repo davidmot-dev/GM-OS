@@ -184,7 +184,7 @@
       "diagnostic_server_active": "Serveur actif",
       "diagnostic_mcp_missing": "Bridge inexistant",
       "diagnostic_unreachable": "Serveur injoignable",
-      "diagnostic_oracle_online": "Oracle en ligne",
+      "diagnostic_oracle_online": "Pont NotebookLM en ligne",
       "diagnostic_empty_res": "Réponse vide",
       "diagnostic_mcp_absent": "Bridge MCP Absent",
       "diagnostic_expired": "Session expirée"
@@ -343,5 +343,11 @@
       "eject_all": "Éjecter Tout",
       "eject_all_tooltip": "Déconnecter tous les appareils et réinitialiser les verrous de personnages"
     }
+  },
+  "oracle": {
+    "title": "Pont NotebookLM (Forge de campagne)",
+    "desc": "Connectez votre compte Google pour que la **Forge de campagne** puisse distiller un scénario depuis un carnet NotebookLM. ⚠️ Ce pont n'a **aucun** rapport avec la conversation de l'Oracle, qui passe par le fournisseur choisi ci-dessus.",
+    "status_hint": "Si la Forge de campagne ne trouve plus votre carnet, une reconnexion peut être nécessaire. L'Oracle, lui, ne dépend pas de ce pont.",
+    "restart_tooltip": "Réinitialiser le serveur MCP NotebookLM"
   }
 }

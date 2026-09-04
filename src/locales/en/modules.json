@@ -900,7 +900,7 @@
         "danger": "Danger Zones",
         "weather": "Weather",
         "ambiance": "Ambiance (Time)",
-        "footer": "Settings are saved per map"
+        "footer": "These settings apply to every map"
       },
       "fog": {
         "title": "Fog of War Tools",
@@ -2081,8 +2081,8 @@
       "status": {
         "active": "ACTIVE",
         "delete_confirm": "Permanently delete \"{{name}}\"?",
-        "nexus_ready_tooltip": "{{count}} media file(s) detected — Full Nexus export available",
-        "nexus_lite_tooltip": "No media file — Light Nexus export (JSON only)"
+        "nexus_ready_tooltip": "{{count}} local media file(s) — they will travel inside the archive",
+        "nexus_lite_tooltip": "No local media files — the archive will hold text only"
       }
     },
     "template_dashboard": {
@@ -2452,9 +2452,9 @@
         "delete_confirm": "Permanently delete \"{{name}}\"?"
       },
       "nexus": {
-        "ready": "Nexus-Ready",
-        "ready_tooltip": "{{count}} media file(s) detected — Full Nexus export available",
-        "light_tooltip": "No media files — Light Nexus export (JSON only)",
+        "ready": "{{count}} media",
+        "ready_tooltip": "{{count}} local media file(s) — they will travel inside the archive. Illustrations held as web URLs are downloaded during export.",
+        "light_tooltip": "No local media files — the archive will hold text only. Not a defect: illustrations may be web links, which export can localise.",
         "select_file": "Select a .gmos file..."
       }
     },

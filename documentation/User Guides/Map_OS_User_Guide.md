@@ -114,8 +114,10 @@ comportent pas pareil**, et c'est le piège du module :
 Le premier calque est celui qui sert le plus : **éteignez votre brouillard** pour placer vos pions
 et vos zones sur la carte entière, rallumez-le, et jouez. Les joueurs n'ont rien vu.
 
-> ⚠️ **Le pied du panneau annonce « Les réglages sont sauvegardés par carte ». Ils ne le sont pas.**
-> L'état des sept calques est **unique et global** : il suit l'application, pas la carte.
+> ⚠️ **L'état des sept calques est unique et global** : il suit l'application, pas la carte.
+> Le pied du panneau annonçait le contraire jusqu'au 2026-09-04 ; il dit désormais « Ces réglages
+> valent pour toutes les cartes ». *On a corrigé la phrase, pas le fait — ranger les calques par
+> carte serait un autre chantier, et rien ne dit qu'on le veut.*
 
 ---
 

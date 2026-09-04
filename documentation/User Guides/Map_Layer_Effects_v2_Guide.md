@@ -53,8 +53,9 @@ n'agissent que sur votre écran, et deux agissent sur les deux**.
 > affecter la projection des joueurs ». C'est faux pour les deux derniers calques. Vérifié dans le
 > code le 2026-09-04.
 
-Le pied du panneau annonce par ailleurs que « les réglages sont sauvegardés par carte ». **Ils ne le
-sont pas** : l'état des sept calques est unique et suit l'application.
+**L'état des sept calques est unique et suit l'application**, pas la carte. Le pied du panneau
+annonçait « sauvegardés par carte » jusqu'au 2026-09-04 ; il dit désormais « Ces réglages valent
+pour toutes les cartes ».
 
 ---
 

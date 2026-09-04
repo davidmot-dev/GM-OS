@@ -111,8 +111,8 @@ En haut du panneau de droite, **Micro** liste les entrées audio de la machine.
 - **Anti-Larsen** : correction automatique du niveau d'entrée (AGC), pour éviter les sifflements avec des enceintes. En le coupant, vous rendez à votre voix sa dynamique — utile avec un micro-casque, et c'est elle que suit *Voice-to-Light*.
 - **Débruitage** *(trois positions)* : un seul réglage, parce que deux débruiteurs qui se suivent ne valent pas mieux qu'un — le premier rabote ce que le second aurait su garder.
     - **Aucun** : le micro arrive brut. Le bon choix avec un micro-casque dans une pièce calme.
-    - **Navigateur** *(le réglage par défaut)* : le débruiteur de WebRTC. Efficace, mais c'est une boîte noire qui décide seule de ce qui est de la voix, **en amont de tout ce que Voice-OS peut régler** — c'est lui qui rabote les fins de phrase.
-    - **Neuronal** *(nouveau)* : **RNNoise**, dans la chaîne de GM-OS. Il efface le bruit stationnaire — ventilateur, souffle, climatisation — et il sait **dire quand vous parlez** : cette information tient la porte ouverte sur vos fins de phrase, là où un seuil de niveau les couperait. Il ajoute **10 ms** de latence et demande une carte son à 48 kHz.
+    - **Navigateur** : le débruiteur de WebRTC. Efficace, mais c'est une boîte noire qui décide seule de ce qui est de la voix, **en amont de tout ce que Voice-OS peut régler** — c'est lui qui rabote les fins de phrase. *C'était le réglage par défaut jusqu'au 2026-09-04, c'est-à-dire que le premier suspect du dépannage était aussi ce que vous aviez sans rien régler.*
+    - **Neuronal** *(le réglage par défaut depuis le 2026-09-04)* : **RNNoise**, dans la chaîne de GM-OS. Il efface le bruit stationnaire — ventilateur, souffle, climatisation — et il sait **dire quand vous parlez** : cette information tient la porte ouverte sur vos fins de phrase, là où un seuil de niveau les couperait. Il ajoute **10 ms** de latence et demande une carte son à 48 kHz.
 - **Noise Gate** : coupe le son sous un certain seuil pour éliminer les bruits de fond (clavier, ventilateur).
 - **Output Gain** : ajuste le volume final après traitement. **Il n'influence plus la porte ni le ducking** : la détection se fait maintenant sur votre voix, avant traitement.
 
@@ -145,10 +145,14 @@ Il est remplacé par **WSOLA** — la technique des changeurs de voix : au lieu 
 Le panneau de gauche du module porte une liste **Voix des PNJ** : un clic repose le profil sur le
 rack, sans passer par la fiche.
 
-> ⚠️ **Cette liste ne montre que les PNJ enregistrés dans NPC-OS.** Les PNJ de votre **galerie de
-> campagne** — ceux qui portent désormais un profil, et qui sont de loin les plus nombreux —
-> n'y apparaissent pas. Pour eux, le rappel se fait par le bouton **« Reposer »** de leur fiche.
-> Relevé le 2026-09-04.
+> ✅ **Elle montre les deux sources depuis le 2026-09-04** : les PNJ enregistrés dans NPC-OS, et
+> ceux de votre **galerie de campagne** à qui vous avez déjà donné une voix. Elle ne montrait
+> auparavant que le mémo de NPC-OS — le module qui porte *un* PNJ à la fois — alors que la galerie
+> en porte plus de cent.
+>
+> Deux limites voulues : **seuls les PNJ qui ont déjà un profil** y entrent (la liste ne grossit que
+> du travail déjà fait), et **la campagne active fait le tri** — rappeler la voix d'un PNJ d'une
+> autre partie n'aurait pas de sens. Le bouton **« Reposer »** de la fiche reste là pour tous.
 
 > ⛔ **Il n'existe aucun bouton « Générer Profil IA » dans Voice-OS.** Cette page en annonçait un ;
 > la génération se fait depuis la fiche du PNJ, par **« Sa voix »**. Voice-OS rappelle, il ne
@@ -184,6 +188,11 @@ Une fonctionnalité révolutionnaire pour le confort d'écoute de vos joueurs :
 
 *Guide révisé le 2026-09-04. Retiré : un bouton « Générer Profil IA » dans Voice-OS, qui n'existe
 pas — et dont la section répétait, en la contredisant, celle sur les voix de PNJ. Ajouté : la liste
-**Voix des PNJ** du module, et sa limite (elle ignore la galerie de campagne). Précisé : le
-débruitage **Navigateur** est le réglage par défaut, c'est-à-dire que le premier suspect des fins de
-phrase coupées est aussi celui que vous avez sans rien régler.*
+**Voix des PNJ** du module.*
+
+*Deux des défauts que cette révision a trouvés ont été corrigés le soir même. **Le débruitage par
+défaut est passé à Neuronal** — le premier suspect des fins de phrase coupées ne pouvait pas rester
+ce que l'on a sans rien régler — et l'explication des trois modes, qui vivait en infobulle, s'écrit
+maintenant sous le sélecteur : une infobulle ne se lit que par quelqu'un qui soupçonne déjà. **Et la
+liste « Voix des PNJ » voit désormais la galerie de campagne**, pour les fiches à qui vous avez déjà
+donné une voix.*

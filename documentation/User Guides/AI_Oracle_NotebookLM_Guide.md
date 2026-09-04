@@ -43,15 +43,17 @@ machine.
 
 ---
 
-## 📤 « Sync Oracle », depuis le module Obsidian
+## 📤 « Envoyer au carnet », depuis le module Obsidian
 
-Le bouton **Sync Oracle** du module Obsidian envoie la note affichée **comme source dans votre
-carnet NotebookLM**. Il est grisé tant qu'aucune URL de carnet n'est renseignée.
+Le bouton **Envoyer au carnet** du module Obsidian envoie la note affichée **comme source dans
+votre carnet NotebookLM**. Il est grisé tant qu'aucune URL de carnet n'est renseignée.
 
-> ⛔ **Il ne fait pas ce que son nom promet.** La note rejoint le carnet ; elle **n'entre pas** dans
-> le corpus que l'Oracle interroge en conversation. Pour que l'Oracle lise vos notes Obsidian, c'est
-> **l'interrupteur du coffre** qu'il faut, dans les réglages IA. →
-> [Guide Obsidian](./Obsidian_User_Guide.md)
+> ⚠️ **La note rejoint le carnet ; elle n'entre pas dans le corpus que l'Oracle interroge en
+> conversation.** Pour que l'Oracle lise vos notes Obsidian, c'est **l'interrupteur du coffre**
+> qu'il faut, dans les réglages IA. → [Guide Obsidian](./Obsidian_User_Guide.md)
+>
+> *Le bouton s'appelait « Sync Oracle » jusqu'au 2026-09-04 — un nom qui promettait exactement ce
+> qu'il ne fait pas, et dont trois guides avaient tiré la conclusion inverse.*
 
 ---
 

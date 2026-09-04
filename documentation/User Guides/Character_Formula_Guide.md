@@ -53,10 +53,16 @@ Les opérateurs habituels (`+ - * / ^`), les parenthèses et les fonctions `min`
 
 <!-- -->
 
-> ⚠️ **Un dé dans une formule de fiche est relancé à chaque recalcul.** Le résultat change dès que
-> vous touchez à un autre champ. Une formule de fiche est faite pour des **valeurs dérivées**
-> — un bonus, un seuil, un total —, pas pour un jet mémorisé. Pour lancer un dé et garder le
-> résultat, c'est le [pupitre de dés](./Dice_OS_User_Guide.md).
+> ✅ **Un dé dans une formule de fiche est tiré une fois, et retenu.** Le total suit les valeurs
+> qui changent autour de lui, mais le dé ne se relance pas parce que vous tapez ailleurs.
+>
+> Jusqu'au 2026-09-04, il était relancé **à chaque recalcul** : le résultat bougeait dès qu'on
+> touchait à n'importe quel autre champ. *Un total qui bouge tout seul n'est pas un calcul, c'est un
+> bruit.*
+>
+> **Modifier la formule relance le dé** — ce n'est plus le même. Et une formule de fiche reste faite
+> pour des **valeurs dérivées** : pour lancer un dé devant la table, c'est le
+> [pupitre de dés](./Dice_OS_User_Guide.md).
 
 ---
 
@@ -93,5 +99,8 @@ l'orthographe contre le tableau ci-dessus.
 
 *Guide révisé le 2026-09-04, code à l'appui. Deux affirmations fausses retirées : **les accents ne
 sont pas supportés** dans une formule, et **le nombre de dés ne peut pas être une variable**.
-Ajouté : la règle exacte de transformation d'un nom de champ, le fait qu'un nom inconnu fait tomber
-toute la formule à 0, et qu'un dé y est relancé à chaque recalcul.*
+Ajouté : la règle exacte de transformation d'un nom de champ, et le fait qu'un nom inconnu fait
+tomber toute la formule à 0.*
+
+*Le défaut que cette révision a trouvé — un dé relancé à chaque recalcul — a été **corrigé le soir
+même** : le tirage est désormais retenu par champ.*

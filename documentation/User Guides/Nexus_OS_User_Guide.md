@@ -94,7 +94,7 @@ Chaque campagne porte l'un de **deux** badges :
 
 | Badge | Ce qu'il dit |
 | :--- | :--- |
-| **Nexus-Ready** (bleu) | La campagne référence *n* fichiers médias locaux → l'export emportera de vrais fichiers |
+| **« *n* médias »** (bleu) | La campagne référence *n* fichiers médias locaux → l'export emportera de vrais fichiers |
 | **Nexus** (gris) | Aucun fichier média local → l'export sera **léger, JSON seulement** |
 
 > ⛔ **Correction.** Ce guide décrivait jusqu'au 2026-09-04 un feu tricolore — 🟢 Nexus-Ready,
@@ -102,6 +102,10 @@ Chaque campagne porte l'un de **deux** badges :
 > le badge compte des médias : **il ne dit pas si vos images sont portables.** Une campagne dont
 > toutes les illustrations sont des URL web affichera le badge gris, et c'est bien à l'arrêt sur les
 > liens distants, pendant l'export, que la question se règle.
+>
+> ✅ **Le badge a été renommé le soir même.** Il s'appelait « Nexus-Ready », ce qui promettait la
+> portabilité alors qu'il ne compte que des fichiers. Il annonce désormais « *n* médias », et son
+> infobulle dit ce qui est compté.
 
 ---
 

@@ -12,12 +12,16 @@ Trois modules audio, trois usages : [Music-OS](./Music_OS_User_Guide.md) joue de
 
 ## ⚠️ La chose à savoir avant de cliquer sur un thème
 
-**Les thèmes livrés avec GM-OS ne contiennent aucun son.**
+**Les thèmes livrés avec GM-OS ne contiennent aucun son — et le disent désormais.**
 
 Les trois univers d'exemple — *Arcologie* et *Club Néon* en Cyberpunk, *Forêt Enchantée* en
 Fantastique — chargent des **pistes nommées et vides** : « Oiseaux », « Ruisseau », « Feuillage »,
 avec leur volume et leur couleur, mais **sans fichier audio**. Ce sont des gabarits, pas des
 bibliothèques.
+
+Depuis le 2026-09-04, le sélecteur l'écrit : un thème dont aucune piste n'a de fichier s'affiche
+« *son nom* — gabarit, sans sons ». La règle vaut aussi pour vos propres thèmes, ce qui est la même
+information.
 
 Le déroulé réel est donc :
 
@@ -85,10 +89,13 @@ Quand vous arrêtez une piste liée, GM-OS ne laisse pas la lumière en plan : i
 piste allumée qui porte un lien**, et applique la sienne ; s'il n'y en a aucune, il revient à votre
 éclairage manuel.
 
-> ⛔ **Correction.** Cette page annonçait une priorité à « la dernière piste **activée** ». Le code
-> retient en fait celle qui porte **le numéro de piste le plus élevé** parmi celles encore
-> allumées — l'ordre des pistes, pas l'ordre dans le temps. Si la lumière ne revient pas à celle
-> que vous attendiez, c'est ça.
+> ✅ **C'est bien la dernière piste ALLUMÉE, depuis le 2026-09-04.** Le code retenait jusque-là
+> celle qui portait **le numéro de piste le plus élevé** parmi celles encore allumées — l'ordre des
+> pistes, pas l'ordre dans le temps. En séance, la salle repassait à une ambiance quittée dix
+> minutes plus tôt.
+>
+> *Les pistes déjà allumées au moment de la correction n'ont pas d'instant d'allumage : elles
+> passent derrière celles qui en ont, ce qui est le bon ordre — elles sont plus anciennes.*
 
 ---
 

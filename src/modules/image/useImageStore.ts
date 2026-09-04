@@ -104,7 +104,6 @@ interface ImageState {
     blackoutAll: () => void;
     blackoutAllHub: () => void;
     navigateSequence: (direction: -1 | 1) => void;
-    clearAll: () => void;
     applySnapshot: (snapshot: {
         projections?: Record<string, string | null>;
         mediaList?: ImageMedia[];
@@ -472,8 +471,6 @@ export const useImageStore = create<ImageState>()(
                     ImageService.blackout('hub');
                 });
             },
-
-            clearAll: () => { if (confirm(i18n.t('modules:image.dashboard.resetConfirm'))) set({ mediaList: [] }); },
 
             applySnapshot: (snapshot) => {
                 if (!snapshot) return;

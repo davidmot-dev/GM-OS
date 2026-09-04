@@ -184,7 +184,7 @@
       "diagnostic_server_active": "Server Active",
       "diagnostic_mcp_missing": "Bridge Missing",
       "diagnostic_unreachable": "Unreachable",
-      "diagnostic_oracle_online": "Oracle Online",
+      "diagnostic_oracle_online": "NotebookLM bridge online",
       "diagnostic_empty_res": "Empty Response",
       "diagnostic_mcp_absent": "Bridge absent",
       "diagnostic_expired": "Session expired"
@@ -343,5 +343,11 @@
       "eject_all": "Eject All",
       "eject_all_tooltip": "Disconnect all devices and reset character locks"
     }
+  },
+  "oracle": {
+    "title": "NotebookLM bridge (campaign Forge)",
+    "desc": "Connect your Google account so the **campaign Forge** can distil a scenario from a NotebookLM notebook. ⚠️ This bridge has **nothing** to do with the Oracle conversation, which uses the provider selected above.",
+    "status_hint": "If the campaign Forge can no longer find your notebook, reconnecting may help. The Oracle itself does not depend on this bridge.",
+    "restart_tooltip": "Restart the NotebookLM MCP server"
   }
 }

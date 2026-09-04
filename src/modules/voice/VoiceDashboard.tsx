@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { 
     AudioLines,
     Mic2, 
@@ -17,6 +17,7 @@ import { voiceEngine } from './VoiceEngine';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useTranslation } from 'react-i18next';
 import { useNPCStore } from '../npc/useNPCStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
 import { gmToast } from '../../stores/useToastStore';
 
 const VocalShaperSlider: React.FC<{
@@ -80,11 +81,38 @@ const VoiceDashboard: React.FC = () => {
     const { getAudioLabel } = useHardwareStore();
 
     /*
-      Les PNJ du mémo qui portent une voix. Voice-OS lit le module des PNJ, et
-      non l'inverse : c'est lui qui a besoin de la liste, et le store des PNJ n'a
-      pas à connaître le rack.
+      Les PNJ qui portent une voix. Voice-OS lit les modules des PNJ, et non
+      l'inverse : c'est lui qui a besoin de la liste, et eux n'ont pas à
+      connaître le rack.
+
+      **Deux sources depuis le 2026-09-04** (défaut V2 du § 12k). On ne lisait
+      que le mémo de NPC-OS — le module qui porte *un* PNJ à la fois — quand la
+      galerie de campagne en porte plus de cent, et que ce sont eux qui peuvent
+      désormais avoir un profil. Une voix posée sur une fiche de la galerie
+      était donc introuvable ici.
+
+      **On n'ajoute que ceux qui ONT déjà un profil** : la liste ne grossit que
+      du travail déjà fait, jamais de cent entrées muettes. Et la campagne
+      active fait le tri — rappeler la voix d'un PNJ d'une autre partie n'a
+      aucun sens.
     */
-    const voixEnregistrees = useNPCStore(state => state.savedEntities).filter(e => e.voiceProfile);
+    const memoDesPnj = useNPCStore(state => state.savedEntities);
+    /*
+      Les deux sélecteurs rendent des références stables du magasin — filtrer
+      *dans* le sélecteur rendrait un tableau neuf à chaque passage, et Zustand
+      le lirait comme un changement d'état à chaque rendu.
+    */
+    const galerie = useSessionOSStore(state => state.entities);
+    const campagneActive = useSessionOSStore(state => state.activeCampaignId);
+    /* Une même fiche peut vivre des deux côtés : l'identifiant tranche. */
+    const voixEnregistrees = useMemo(() => {
+        const duMemo = memoDesPnj.filter(e => e.voiceProfile);
+        const vues = new Set(duMemo.map(e => e.id));
+        return [
+            ...duMemo,
+            ...galerie.filter(e => e.voiceProfile && e.campaignId === campagneActive && !vues.has(e.id)),
+        ];
+    }, [memoDesPnj, galerie, campagneActive]);
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -458,6 +486,18 @@ const VoiceDashboard: React.FC = () => {
                                     </button>
                                 ))}
                             </div>
+                            {/*
+                              **Ce que fait le mode choisi, écrit, pas survolé.**
+
+                              Les trois boutons portaient déjà leur explication en
+                              infobulle — c'est-à-dire nulle part : *une infobulle
+                              ne se lit que par quelqu'un qui soupçonne déjà*. Or
+                              c'est précisément ce réglage qui décide si vos fins
+                              de phrase arrivent aux joueurs.
+                            */}
+                            <p className="text-[9px] leading-snug text-slate-500 italic">
+                                {t(`modules:voice.shapers.debruitage_${currentEffects.debruitage}_hint`)}
+                            </p>
                         </div>
 
                         <button 

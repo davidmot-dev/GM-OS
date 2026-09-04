@@ -19,9 +19,12 @@ Le curseur va de **0 à 100 %**, et le pourcentage s'affiche à droite.
 
 L'icône de haut-parleur coupe le son d'un clic.
 
-> ⚠️ **Le retour de la coupure remonte à 100 %, pas à votre niveau.** Le bouton bascule entre 0 et
-> 1 : si vous jouiez à 40 %, un aller-retour vous ramène à fond. Baissez plutôt le curseur, ou
-> resservez-vous-en pour revenir où vous étiez.
+> ✅ **La coupure rend votre niveau, depuis le 2026-09-04.** Si vous jouiez à 40 %, un
+> aller-retour vous ramène à 40 %. Le bouton basculait auparavant entre 0 et **1** : le retour d'un
+> aparté se prenait à plein volume, exactement au moment où l'on venait de demander le silence.
+>
+> *Le seul cas où il remonte à fond : vous aviez déjà mis le curseur à zéro avant de cliquer. Sans
+> cela, la coupure ne se déferait jamais.*
 
 ---
 
@@ -83,5 +86,5 @@ d'erreur le dit plutôt que de laisser croire au silence.
 
 *Guide refait le 2026-09-04, code à l'appui. Deux affirmations fausses retirées (le boost à 150 %,
 la coupure instantanée des bruitages), deux comportements ajoutés (le tamisage à 50 % des
-bruitages, le retrait des projections du Hub), et un piège nommé : la coupure rapide remonte à
-100 %.*
+bruitages, le retrait des projections du Hub), et un piège nommé — la coupure rapide remontait à
+100 % — **réparé le soir même**.*

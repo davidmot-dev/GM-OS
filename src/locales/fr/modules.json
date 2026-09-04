@@ -900,7 +900,7 @@
         "danger": "Zones de Danger",
         "weather": "Climat & Météo",
         "ambiance": "Ambiance & Heure",
-        "footer": "Les réglages sont sauvegardés par carte"
+        "footer": "Ces réglages valent pour toutes les cartes"
       },
       "fog": {
         "title": "Outils Fog of War",
@@ -2081,8 +2081,8 @@
       "status": {
         "active": "ACTIVE",
         "delete_confirm": "Supprimer définitivement \"{{name}}\" ?",
-        "nexus_ready_tooltip": "{{count}} média(s) détecté(s) — Export Nexus complet disponible",
-        "nexus_lite_tooltip": "Aucun fichier média — Export Nexus léger (JSON uniquement)"
+        "nexus_ready_tooltip": "{{count}} fichier(s) média local(aux) — ils partiront dans l'archive",
+        "nexus_lite_tooltip": "Aucun fichier média local — l'archive ne contiendra que du texte"
       }
     },
     "template_dashboard": {
@@ -2452,9 +2452,9 @@
         "delete_confirm": "Supprimer définitivement \"{{name}}\" ?"
       },
       "nexus": {
-        "ready": "Nexus-Ready",
-        "ready_tooltip": "{{count}} fichier(s) média détecté(s) — Export Nexus complet disponible",
-        "light_tooltip": "Aucun fichier média — Export Nexus léger (JSON uniquement)",
+        "ready": "{{count}} médias",
+        "ready_tooltip": "{{count}} fichier(s) média local(aux) — ils partiront dans l'archive. Les illustrations désignées par une URL web se téléchargent au moment de l'export.",
+        "light_tooltip": "Aucun fichier média local — l'archive ne contiendra que du texte. Ce n'est pas un défaut : les illustrations peuvent être des liens web, localisables à l'export.",
         "select_file": "Sélectionnez un fichier .gmos..."
       }
     },

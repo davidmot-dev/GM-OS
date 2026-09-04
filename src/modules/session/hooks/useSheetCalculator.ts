@@ -62,9 +62,14 @@ export function useSheetCalculator(
      * evaluateFormula
      * Evaluates a single formula string using the character's context.
      */
-    const evaluateFormula = (formula: string): number => {
+    const evaluateFormula = (formula: string, champ?: string): number => {
         if (!formula || !character) return 0;
-        return calculationEngine.evaluate(formula, context);
+        /*
+          **Un champ nommé retient ses dés** (défaut F3 du § 12m). La clé porte
+          le personnage : deux fiches ouvertes ne partagent pas un tirage.
+          Sans nom de champ, on lance vraiment — c'est un aperçu ponctuel.
+        */
+        return calculationEngine.evaluate(formula, context, champ && `${character.id}:${champ}`);
     };
 
     /**
@@ -76,14 +81,28 @@ export function useSheetCalculator(
         if (!character) return results;
 
         for (const [key, formula] of Object.entries(formulas)) {
-            results[key] = calculationEngine.evaluate(formula, context);
+            /* La clé du lot EST le champ : c'est ce qui rend le total stable
+               pendant qu'on tape ailleurs dans la fiche. */
+            results[key] = calculationEngine.evaluate(formula, context, `${character.id}:${key}`);
         }
         return results;
+    };
+
+    /**
+     * Relance les dés d'un champ de cette fiche, ou de toute la fiche.
+     *
+     * *Sans ce geste, un dé retenu ne se rejouerait jamais* — la mémorisation
+     * corrige un total qui bougeait tout seul, elle ne doit pas le figer à vie.
+     */
+    const relancerLesDes = (champ?: string) => {
+        if (!character) return;
+        calculationEngine.relancerLesDes(champ ? `${character.id}:${champ}` : undefined);
     };
 
     return {
         evaluateFormula,
         bulkEvaluate,
+        relancerLesDes,
         context
     };
 }

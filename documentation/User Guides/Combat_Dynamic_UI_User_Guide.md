@@ -15,13 +15,13 @@ l'allure de ses jauges et de la disposition de l'initiative.
 
 Sans configuration, c'est `bar`.
 
-> ⛔ **La couleur que vous déclarez n'est pas appliquée.** Seul le style `bar` la lit — et
-> **seulement si elle est écrite en classe Tailwind** (`bg-red-500`). En `segmented` et en `neon`,
-> la couleur d'accent du thème est employée quoi qu'il arrive.
+> ✅ **La couleur que vous déclarez vaut pour les trois styles**, en classe Tailwind
+> (`bg-red-500`) comme en héxadécimal (`#d97706`). Le chiffre affiché la reprend.
 >
-> Le problème est concret : **l'exemple que la Forge elle-même produit** combine
-> `"style": "segmented"` et `"color": "#d97706"` — un style et un format de couleur qui, ensemble,
-> garantissent que la couleur sera ignorée. Relevé le 2026-09-04.
+> Jusqu'au 2026-09-04, seul le style `bar` la lisait, et seulement écrite en classe : `segmented` et
+> `neon` peignaient la couleur d'accent du thème quoi qu'il arrive. Le problème était concret —
+> **l'exemple que la Forge elle-même produit** combine `"style": "segmented"` et
+> `"color": "#d97706"`, soit exactement les deux conditions du cas ignoré.
 
 ---
 

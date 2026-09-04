@@ -109,14 +109,29 @@ export const TacticalAIControlPanel: React.FC = () => {
           <div className="grid grid-cols-2 gap-2 flex-1">
             <button
             onClick={toggleSensor}
+            title={settings.isMuted
+                ? 'Le Cortex analyse toujours ; ses sons et ses lumières sont coupés. Cliquer pour les rétablir.'
+                : "Couper les sons tactiques et les lumières du Cortex. L’analyse et les conseils continuent."}
             className={`flex flex-col items-center justify-center gap-2 rounded-2xl border transition-all ${
                 settings.isMuted 
                 ? 'bg-red-500/10 border-red-500/30 text-red-400' 
                 : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
             }`}
             >
+            {/*
+                **« Sensors » désignait l'inverse de ce que ce bouton fait.**
+
+                Il ne touche pas à la perception — l'analyse continue et les
+                conseils s'affichent — mais aux **effecteurs** : `isMuted` garde
+                les sons tactiques (`useAudioTactical`) et le pont Hue
+                (`useHardwareBridge`), et rien d'autre.
+
+                Les deux guides du Cortex le décrivaient de travers, chacun à sa
+                façon, et le libellé y invitait. *Un nom qui promet le contraire
+                de son geste coûte plus cher qu'un nom absent.*
+            */}
             {settings.isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            <span className="text-[10px] font-bold uppercase tracking-wider text-center">{settings.isMuted ? 'Muted' : 'Sensors'}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-center">{settings.isMuted ? 'Muet' : 'Sons & Lum.'}</span>
             </button>
             <button
             onClick={toggleAutoDispel}

@@ -768,6 +768,62 @@ qui n'a pas de second geste. Les deux coexistent désormais au lieu que l'un ser
 **Ce qui reste de la voie B** : les rangs P3 (l'écran dit autre chose que ce qu'il fait, et les
 trois décisions de table) et P4 (le ménage).
 
+### 15 · ✅ Les seize P3, réparés (2026-09-04)
+
+Le rang P3 était *« l'écran dit autre chose que ce qu'il fait »*. Douze points étaient clairs ;
+quatre demandaient un arbitrage, **et David a tranché les quatre le même soir**.
+
+#### Ce qui ne demandait qu'un mot juste
+
+| # | Ce qui était | Ce qui est |
+| --- | --- | --- |
+| **M2** | Le pied du panneau des calques annonçait « réglages sauvegardés **par carte** » ; `layerVisibility` est un objet unique et global. | « Ces réglages valent pour toutes les cartes ». *On corrige la phrase, pas le fait : ranger les calques par carte aurait été un autre chantier, et rien ne dit qu'on le veut.* |
+| **N7** | Le badge « Nexus-Ready » compte des références non-`http` : il dit *« cette campagne a des fichiers »*, pas *« elle est portable »*. | « *n* médias », avec l'infobulle qui dit ce qui est compté. |
+| **O3** | « Sync Oracle » pousse la note dans un **carnet NotebookLM** ; elle n'entre pas dans ce que l'Oracle lit. | « Envoyer au carnet » / « Envoyée », et le paragraphe réécrit. |
+| **O4** | La ligne « Oracle » du diagnostic IA teste le pont NotebookLM. *Un contrôle mal nommé est pire qu'un contrôle absent.* | « Pont NotebookLM (Forge de campagne) ». |
+| **K1** | Le bouton « Sensors » / « Muted » du Cortex laissait croire qu'il coupait l'analyse. | « Sons & Lum. » / « Muet », et l'infobulle dit que **l'analyse et les conseils continuent**. |
+| **A2** | Les trois thèmes d'ambiance livrés portent huit pistes nommées et **aucun fichier son**. | Le libellé dit « — gabarit, sans sons ». Une `<option>` native n'accepte pas de pastille : le mot vient dans le nom. Le calcul vaut aussi pour les thèmes du meneur. |
+
+#### Ce qui était un vrai défaut de comportement
+
+| # | Ce qui était | Ce qui est | Où |
+| --- | --- | --- | --- |
+| ⛔ **A4** | **Couper le son repartait à 100 %.** Le bouton basculait entre 0 et **1** : une table réglée à 40 % prenait un mur de son au retour d'un aparté — exactement le moment où l'on venait de demander le silence. | Le niveau d'avant est retenu et rendu. *Une coupure qui ne se défait pas à l'identique n'est pas une coupure, c'est un réglage.* ⚠️ Un curseur déjà à zéro au moment du clic remonte à plein, sans quoi la coupure serait irréversible. 4 tests. | `useAudioMasterStore.ts`, `MasterAudioController.tsx` |
+| ⛔ **A7** | **La reprise lumineuse suivait le numéro de piste.** Le code prenait le dernier élément d'un tableau ordonné par index : arrêter une piste rendait la lumière de celle **au numéro le plus élevé**, pas de celle qu'on venait d'allumer. En séance, la salle repassait à une ambiance quittée dix minutes plus tôt. | `allumeeLe` porte l'instant et décide. Une piste allumée avant ce champ n'en a pas : elle passe derrière, ce qui est le bon ordre — elle est forcément plus ancienne. 4 tests. | `useAmbientStore.ts` (`handleLightReversion`) |
+| ⛔ **D4** | **La couleur d'une jauge n'était presque jamais appliquée.** Seul le style `bar` la lisait ; `segmented` et `neon` peignaient `bg-primary` quoi qu'il arrive. **Et l'exemple que la Forge produit elle-même** combine `segmented` et un héxadécimal — les deux conditions du cas ignoré. | Les trois styles lisent `color`, en classe Tailwind comme en héxadécimal, et le chiffre suit. *Une couleur qu'on choisit sans qu'elle s'applique est pire qu'une couleur qu'on ne peut pas choisir.* | `CombatCard.tsx` |
+| **G8** | `clearAll` d'Image-OS était du code mort dont la confirmation mentait : elle annonçait la perte des dossiers et des projections alors qu'elle ne vidait que `mediaList`. | Retiré. Le chemin survivant est `reset`, qui fait bien ce que la confirmation annonce — elle était juste branchée sur la mauvaise action. | `useImageStore.ts` |
+
+#### Les quatre arbitrages, tranchés par David
+
+| # | Ce que David a choisi | Ce qui est fait |
+| --- | --- | --- |
+| **V3** | **Neuronal par défaut, et le dire à l'écran.** | Le défaut était `navigateur` — c'est-à-dire, d'après notre propre page de dépannage, *le premier suspect* des fins de phrase coupées. Un meneur qui n'avait rien touché avait le réglage que le dépannage accuse. ⚠️ RNNoise coûte 10 ms et **force le contexte à 48 kHz**. Et l'explication des trois modes, qui vivait en infobulle, s'écrit désormais sous le sélecteur : *une infobulle ne se lit que par quelqu'un qui soupçonne déjà*. |
+| **T5** | **Le bouton de projection des dés devient permanent.** | Il vivait en `opacity-0 group-hover/result:opacity-100` : il fallait savoir qu'il existait pour aller le survoler. *Même famille que le repli du 23/08.* La condition sur l'historique reste — sans jet, il n'y a rien à projeter. |
+| **V2** | **Ajouter à la liste des voix ceux qui ONT déjà un profil.** | On ne lisait que le mémo de NPC-OS — le module qui porte *un* PNJ — quand la galerie en porte plus de cent, et que ce sont eux qui peuvent avoir un profil. La liste ne grossit que du travail déjà fait, **et la campagne active fait le tri**. |
+| **F3** | **Mémoriser le tirage par champ.** | `roll()` appelait `Math.random()` à chaque évaluation : taper dans un champ relançait les dés de tous les autres. *Un total qui bouge tout seul n'est pas un calcul, c'est un bruit.* La clé est `<fiche>:<champ>|<formule>` — changer la formule invalide le tirage, ce qui est juste. Un appel **sans nom de champ lance vraiment** : le comportement d'origine est intact pour tout le reste du code. 9 tests. |
+
+**Ce que ce rang a coûté en leçons.** Trois défauts sur seize étaient *un chemin qui s'arrête avant
+le moteur* — D4 (le style ignore la couleur), A7 (le bon tableau, mal trié), A4 (la bonne bascule,
+la mauvaise valeur). C'est le motif que le pupitre de dés a déjà payé six fois. **Et trois autres
+étaient un mot** : un bouton, un badge, une ligne de diagnostic qui nommaient autre chose que ce
+qu'ils font. *Écrire ce qu'un module fait reste le meilleur détecteur de défaut employé sur ce
+dépôt.*
+
+**Vérifié** : `tsc -b` propre, 17 tests neufs, **3 540 tests au vert**.
+
+**Ce qui reste de la voie B** : les **trois décisions de table** (P3 bis) et le **ménage** (P4).
+
+#### P3 bis · Les trois décisions de table, en attente
+
+Ce ne sont pas des défauts : ce sont des choix de maîtrise qu'aucun code ne peut trancher à la
+place de David.
+
+| # | La question |
+| --- | --- |
+| **C1** | Les jauges de tension sont **publiques, tout ou rien**. Faut-il une jauge secrète, que le meneur voit sans que les joueurs la voient ? |
+| **M4** | **N'importe quel joueur peut déplacer n'importe quel pion**, y compris les monstres du meneur. Faut-il restreindre ? |
+| **N5** | Une archive de campagne emporte les **PNJ d'autres campagnes** liés par une relation sociale, **notes du meneur comprises**. Faut-il caviarder à l'export ? |
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou

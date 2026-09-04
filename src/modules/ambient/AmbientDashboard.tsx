@@ -81,6 +81,21 @@ const AmbientDashboard: React.FC = () => {
     );
     const [selectedTheme, setSelectedTheme] = useState(themesInUniverse[0]?.name || '');
 
+    /**
+     * **Un thème sans aucun fichier son est un gabarit, et il doit le dire.**
+     *
+     * Défaut A2 du § 12e : les trois thèmes livrés (« Forêt Enchantée » et les
+     * deux autres) portent huit pistes nommées — *Oiseaux*, *Ruisseau*,
+     * *Feuillage* — et **aucun `url`**. Les charger ne produit rien, ce qui est
+     * défendable : ce sont des modèles à remplir. Mais rien à l'écran ne le
+     * disait, et la déception arrivait au premier clic.
+     *
+     * Une `<option>` native n'accepte pas de pastille : le mot vient donc dans
+     * le libellé. Le calcul vaut aussi pour les thèmes du meneur — il vient
+     * d'enregistrer un thème vide, c'est la même information.
+     */
+    const estUnGabarit = (theme: AmbientTheme) => !theme.tracks.some(piste => piste.url);
+
     // Synchronize selectedTheme if themes change or current one is deleted
     useEffect(() => {
         if (!themesInUniverse.find(tObj => tObj.name === selectedTheme)) {
@@ -207,7 +222,9 @@ const AmbientDashboard: React.FC = () => {
                             >
                                 {themesInUniverse.length > 0 ? (
                                     themesInUniverse.map((tObj: AmbientTheme) => (
-                                        <option key={tObj.id} value={tObj.name} className="bg-app-surface text-app-text">{t(tObj.name)}</option>
+                                        <option key={tObj.id} value={tObj.name} className="bg-app-surface text-app-text">
+                                            {t(tObj.name)}{estUnGabarit(tObj) ? ' — gabarit, sans sons' : ''}
+                                        </option>
                                     ))
                                 ) : (
                                     <option value="" className="bg-app-surface text-app-text">{t('modules:ambient.dashboard.empty')}</option>

@@ -10,7 +10,7 @@ l'envoie en plein écran sur le Player Hub **et sur les tablettes des joueurs**.
 L'interrupteur est l'icône **Cast** (diffusion), **en haut à droite du panneau de résultat** de
 Dice-OS.
 
-> ⚠️ **Il n'apparaît qu'au survol du panneau, et seulement s'il y a déjà un jet dans l'historique.**
+> ✅ **Il est visible en permanence depuis le 2026-09-04**, dès qu'un jet existe dans l'historique. Il vivait auparavant caché jusqu'au survol : *un geste qu'on ne peut faire qu'en le connaissant déjà n'est pas offert, il est caché.*
 > Si vous ne le trouvez pas : lancez un dé, puis passez la souris sur le résultat. Ce guide le
 > plaçait « dans le bandeau Dice-OS » — il n'y est pas.
 
@@ -49,7 +49,7 @@ chasse le précédent.
 > 🔎 **Absent de ce guide jusqu'au 2026-09-04, et c'est pourtant le plus spectaculaire.** Si les
 > **dés 3D** sont activés dans Dice-OS, le Player Hub ne montre pas d'abord le chiffre : il **lance
 > de vrais dés** à l'écran. Le panneau de résultat n'arrive qu'**une seconde et demie plus tard**,
-> et reste volontairement en retrait pour ne pas masquer les dés — il redevient net au survol.
+> et reste volontairement discret pour ne pas masquer les dés.
 >
 > ⚠️ **Les dés 3D ne roulent que sur le Player Hub.** Les tablettes reçoivent le panneau de
 > résultat, sans l'animation. Si vous comptez sur l'effet, c'est l'écran partagé qu'il faut
@@ -63,7 +63,7 @@ L'interrupteur des dés 3D est dans les réglages de Dice-OS, à côté des mode
 
 | Problème | Ce qu'il faut regarder |
 | :--- | :--- |
-| **Je ne trouve pas le bouton Cast** | Il faut un jet dans l'historique, et survoler le panneau de résultat. |
+| **Je ne trouve pas le bouton Cast** | Il faut un jet dans l'historique — sans jet, il n'y a rien à projeter, et le bouton ne s'affiche pas. |
 | **Le jet ne part pas chez les joueurs** | L'interrupteur est éteint. Il ne s'allume pas tout seul au premier lancer. |
 | **Le résultat a disparu trop vite** | Cinq secondes, c'est court. Éteignez puis rallumez pour le remontrer. |
 | **Les dés 3D ne roulent pas sur la tablette** | C'est voulu : l'animation est réservée au Player Hub. |
@@ -79,6 +79,6 @@ L'interrupteur des dés 3D est dans les réglages de Dice-OS, à côté des mode
 ---
 
 *Guide révisé le 2026-09-04, code à l'appui. Corrigé : le bouton n'est pas dans un bandeau mais
-au-dessus du résultat, **caché jusqu'au survol**. Ajouté : la projection atteint aussi **les
+au-dessus du résultat. **Rendu permanent le 2026-09-04.** Ajouté : la projection atteint aussi **les
 tablettes**, et les **dés 3D** du Player Hub, avec leur seconde et demie d'attente — rien de tout
 cela n'était écrit.*

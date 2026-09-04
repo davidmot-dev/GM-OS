@@ -108,7 +108,18 @@ const DEFAULT_EFFECTS: VoiceEffects = {
     compression: 40,
     outputGain: 1.0,
     antiLarsen: true,
-    debruitage: 'navigateur',
+    /*
+      **Neuronal par défaut depuis le 2026-09-04.**
+
+      Le défaut était `navigateur` — c'est-à-dire, d'après notre propre page de
+      dépannage, *le premier suspect* des fins de phrase coupées : WebRTC décide
+      seul de ce qui est de la voix, et rien ne le règle. Un meneur qui n'avait
+      rien touché avait donc le réglage que le dépannage accuse.
+
+      RNNoise coûte 10 ms et force le contexte à 48 kHz, mais il rend une
+      probabilité de voix qui tient la porte ouverte pendant qu'on parle.
+    */
+    debruitage: 'neuronal',
     noiseGate: true,
     duckingEnabled: false,
     duckingThreshold: -40,

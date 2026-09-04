@@ -6,6 +6,13 @@ import { useJournalStore } from '../journal/useJournalStore';
 
 export interface AmbientTrackState {
     id: string;
+    /**
+     * Quand cette piste a été allumée, pour rendre la lumière à la bonne.
+     *
+     * **Absent = allumée avant le 2026-09-04** : elle passe derrière celles qui
+     * portent un instant, ce qui est juste — elle est plus ancienne.
+     */
+    allumeeLe?: number;
     label: string;
     url: string;
     volume: number;
@@ -264,7 +271,8 @@ export const useAmbientStore = create<AmbientState>()(
                         await ambientEngine.tracks[index].load(track.url);
                         ambientEngine.tracks[index].play(track.volume, 1.5);
                         set(state => ({
-                            tracks: state.tracks.map((t, i) => i === index ? { ...t, isPlaying: true } : t)
+                            tracks: state.tracks.map((t, i) =>
+                                i === index ? { ...t, isPlaying: true, allumeeLe: Date.now() } : t)
                         }));
 
                         // Handling light scene
@@ -298,8 +306,23 @@ export const useAmbientStore = create<AmbientState>()(
                     const { isSyncEnabled } = useLightStore.getState();
                     if (!isSyncEnabled) return;
 
+                    /*
+                      **La dernière ALLUMÉE, pas la dernière de la liste.**
+
+                      On prenait `[length - 1]` d'un tableau ordonné par numéro
+                      de piste : arrêter une piste rendait donc la lumière de la
+                      piste **au numéro le plus élevé**, et pas de celle qu'on
+                      venait d'allumer. `allumeeLe` porte l'instant, et c'est lui
+                      qui décide.
+
+                      Une piste allumée avant ce champ n'a pas d'instant : elle
+                      passe derrière celles qui en ont, ce qui est le bon ordre
+                      — elle est forcément plus ancienne.
+                    */
                     const tracks = get().tracks;
-                    const otherActiveWithLights = tracks.filter((t, i) => t.isPlaying && i !== stoppedIndex && t.linkedLightSceneId);
+                    const otherActiveWithLights = tracks
+                        .filter((t, i) => t.isPlaying && i !== stoppedIndex && t.linkedLightSceneId)
+                        .sort((a, b) => (a.allumeeLe ?? 0) - (b.allumeeLe ?? 0));
 
                     if (otherActiveWithLights.length > 0) {
                         const nextTrack = otherActiveWithLights[otherActiveWithLights.length - 1];

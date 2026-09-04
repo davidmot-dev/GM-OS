@@ -466,7 +466,29 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         max = Math.max(max, val > 0 ? val : 10);
 
                         const percent = Math.min(100, Math.max(0, (val / max) * 100));
-                        
+
+                        /*
+                          **La couleur déclarée vaut pour les trois styles.**
+
+                          Défaut D4 du § 12l : seul `bar` lisait `color`. `segmented` et
+                          `neon` peignaient `bg-primary` quoi qu'il arrive — et
+                          l'exemple que la Forge produit elle-même combine
+                          `segmented` et un héxadécimal, soit exactement le cas
+                          ignoré. Une couleur qu'on choisit sans qu'elle s'applique
+                          est pire qu'une couleur qu'on ne peut pas choisir.
+
+                          Deux écritures coexistent (une classe Tailwind, un
+                          héxadécimal) : la classe passe par `className`, le reste
+                          par `style`, jamais les deux.
+                        */
+                        const couleur = gaugeConfig.color?.trim() ?? '';
+                        const couleurEnClasse = couleur.startsWith('bg-');
+                        const classeRemplie = couleurEnClasse ? couleur : (couleur ? '' : 'bg-primary');
+                        const styleRempli = couleurEnClasse || !couleur ? undefined : { backgroundColor: couleur };
+                        /* Le chiffre suit la jauge — sauf quand la couleur est une classe de fond,
+                           qui ne dit rien de la couleur du texte : le doré du thème reprend la main. */
+                        const styleDuChiffre = styleRempli ? { color: couleur } : undefined;
+
                         // Style: Segmented (e.g. for Stress or boxes)
                         if (gaugeConfig.style === 'segmented') {
                             const segments = Math.max(2, Math.min(10, max)); // cap segments for display
@@ -482,7 +504,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex items-center justify-between px-1">
                                         <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
-                                        <span className="text-[12px] font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]">{val}</span>
+                                        <span className="text-[12px] font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val}</span>
                                     </div>
                                     <div className="flex gap-1 h-2.5 bg-app-bg/40 p-0.5 rounded-sm border border-app-border/20">
                                         {Array.from({ length: segments }).map((_, sIdx) => (
@@ -490,9 +512,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                                 key={sIdx}
                                                 className={`flex-1 rounded-sm transition-all duration-300 ${
                                                     sIdx < activeSegments 
-                                                        ? 'bg-primary shadow-glow-gold' 
+                                                        ? `${classeRemplie} shadow-glow-gold`
                                                         : 'bg-app-surface/60 border border-app-border/20'
                                                 }`}
+                                                style={sIdx < activeSegments ? styleRempli : undefined}
                                             />
                                         ))}
                                     </div>
@@ -512,12 +535,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex justify-between items-center px-1">
                                         <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
-                                        <span className="text-[12px] font-black text-primary">{val}</span>
+                                        <span className="text-[12px] font-black text-primary" style={styleDuChiffre}>{val}</span>
                                     </div>
                                     <div className="h-3 bg-app-bg/60 rounded-full overflow-hidden border border-app-border/30 p-[1.5px]">
                                         <div 
-                                            className="h-full rounded-full transition-all duration-1000 ease-out bg-primary shadow-glow-gold"
-                                            style={{ width: `${percent}%` }}
+                                            className={`h-full rounded-full transition-all duration-1000 ease-out shadow-glow-gold ${classeRemplie}`}
+                                            style={{ width: `${percent}%`, ...styleRempli }}
                                         />
                                     </div>
                                 </div>
@@ -539,11 +562,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 </div>
                                 <div className="h-2 bg-app-bg/40 border border-app-border/20 rounded-full overflow-hidden">
                                     <div 
-                                        className={`h-full transition-all duration-500 shadow-sm ${gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : ''}`}
-                                        style={{ 
-                                            width: `${percent}%`,
-                                            backgroundColor: gaugeConfig.color.startsWith('bg-') ? undefined : gaugeConfig.color 
-                                        }}
+                                        className={`h-full transition-all duration-500 shadow-sm ${classeRemplie}`}
+                                        style={{ width: `${percent}%`, ...styleRempli }}
                                     />
                                 </div>
                             </div>

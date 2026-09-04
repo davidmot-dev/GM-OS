@@ -11,6 +11,7 @@ const MasterAudioController: React.FC = () => {
     const { 
         masterVolume, 
         setMasterVolume, 
+        basculerLaCoupure,
         isFocusMode, 
         toggleFocusMode 
     } = useAudioMasterStore();
@@ -64,7 +65,8 @@ const MasterAudioController: React.FC = () => {
                 theme === 'medieval' ? 'bg-black/20 rounded border border-app-border/30' : ''
             }`}>
                 <button 
-                    onClick={() => setMasterVolume(masterVolume === 0 ? 1 : 0)}
+                    onClick={basculerLaCoupure}
+                    title={masterVolume === 0 ? 'Rétablir le niveau d’avant' : 'Couper le son'}
                     className={`transition-colors ${theme === 'medieval' ? 'text-accent' : 'text-app-text/60 hover:text-accent'}`}
                 >
                     {masterVolume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}

@@ -894,9 +894,21 @@ const DiceBoard: React.FC = () => {
                 {/* Latest Result */}
                 <div className="min-h-[16rem] max-h-[50%] flex-shrink-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent/10 via-app-surface/60 to-app-bg border border-accent/20 rounded-2xl flex flex-col items-center justify-center p-6 relative overflow-hidden shadow-2xl backdrop-blur-xl group/result">
                     
-                    {/* Projection Controls Overlay */}
+                    {/*
+                      **Le bouton de projection reste visible.**
+
+                      Défaut T5 du § 12i, tranché le 2026-09-04. Il vivait en
+                      `opacity-0 group-hover/result:opacity-100` : il fallait
+                      savoir qu'il existait pour aller le survoler. *Même famille
+                      que le repli du 23/08, qui rendait des boutons
+                      introuvables.* Un geste qu'on ne peut faire qu'en le
+                      connaissant déjà n'est pas offert, il est caché.
+
+                      La condition sur l'historique reste : sans jet, il n'y a
+                      rien à projeter.
+                    */}
                     {history.length > 0 && (
-                        <div className="absolute top-4 right-4 z-40 flex items-center gap-2 opacity-0 group-hover/result:opacity-100 transition-opacity">
+                        <div className="absolute top-4 right-4 z-40 flex items-center gap-2">
                             <button
                                 onClick={handleToggleProjection}
                                 title={isDiceProjected ? t('dice.status.project_stop') : t('dice.status.project_start')}

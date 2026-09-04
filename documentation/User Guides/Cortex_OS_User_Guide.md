@@ -28,7 +28,7 @@ dit son état : éteint, actif, ou **en train d'analyser** (il pulse).
 
 | Bouton | Ce qu'il fait **vraiment** |
 | :--- | :--- |
-| **Sensors / Muted** | ⛔ **Coupe le matériel** : les sons tactiques et les lumières Hue. **L'analyse et les conseils continuent.** |
+| **Sons & Lum. / Muet** | ⛔ **Coupe le matériel** : les sons tactiques et les lumières Hue. **L'analyse et les conseils continuent.** *Le bouton s'appelait « Sensors » jusqu'au 2026-09-04 — un nom qui laissait croire qu'il coupait les capteurs, c'est-à-dire l'analyse.* |
 | **Auto** | L'auto-dissipation. Actif, le Cortex retire tout seul les statuts incompatibles ; sinon il se contente de le suggérer. |
 | **Test** | Joue un son tactique pour vérifier le branchement audio. |
 | **Flash** | Déclenche manuellement un éclair sur vos lampes Hue, pour ponctuer un moment. |
@@ -147,7 +147,7 @@ chose que ce qu'on croyait.
 ---
 
 *Guide refait le 2026-09-04, code à l'appui. Cinq affirmations fausses retirées : le bouton
-**Sensors** ne coupe pas les suggestions mais le matériel ; les **trois seuils de priorité** étaient
+**Sons & Lum.** ne coupe pas les suggestions mais le matériel ; les **trois seuils de priorité** étaient
 faux ; les **sons tactiques sont livrés** et non à fournir ; le **moteur** n'est pas limité à deux
 fournisseurs optionnels ; et **rien ne part chez les joueurs**. Ajouté : où le Cortex vit
 réellement, et l'avertissement sur les grilles non calibrées.*
