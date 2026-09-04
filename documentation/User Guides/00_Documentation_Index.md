@@ -34,8 +34,8 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Voice-OS](./Voice_OS_User_Guide.md) | Transformer **votre** voix pour incarner un PNJ, et **lui garder sa voix** d'une séance à l'autre. |
 | [Favorite-OS](./Favorite_OS_User_Guide.md) | Le codex du meneur : ce qu'on veut sous la main sans le chercher. |
 | [Indices](./Clues_User_Guide.md) | Poser des secrets, les relier aux PNJ et aux lieux, les révéler au bon moment. |
-| [Map-OS](./Map_OS_User_Guide.md) | Cartes tactiques, pions, brouillard de guerre. |
-| [Calques de carte v2](./Map_Layer_Effects_v2_Guide.md) | Le détail des calques et de la persistance du brouillard. |
+| [Map-OS](./Map_OS_User_Guide.md) | Le plateau tactique : cartes, pions, brouillard, zones de danger, projection. |
+| [Brouillard et calques](./Map_Layer_Effects_v2_Guide.md) | Comment le brouillard est fabriqué, ce que chaque calque masque, et le dépannage. |
 | [Obsidian](./Obsidian_User_Guide.md) | Brancher vos notes de préparation sur GM-OS. |
 | [Web-OS](./Web_OS_User_Guide.md) | Garder à portée les ressources en ligne d'une campagne. |
 

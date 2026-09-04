@@ -23,7 +23,10 @@ tous sont listés dans [l'index](./00_Documentation_Index.md).
 - **La trame** — actes et scènes : le plan de la campagne.
 - **La Forge de campagne** — un scénario écrit devient des actes, des scènes, des PNJ, des lieux.
 - **NPC-OS** — improviser un PNJ, un lieu, une rumeur.
-- **L'Atlas (Map-OS)** — les cartes, les pions, le brouillard de guerre.
+- **Map-OS, le plateau tactique** — la carte de combat : pions, brouillard de guerre, zones de
+  danger, projetée en direct chez les joueurs.
+- **L'Atlas** — autre chose : la galerie des *lieux* de la campagne, que les joueurs consultent
+  depuis l'onglet Atlas de leur tablette.
 - **Les Indices** — les secrets, à qui ils sont liés, quand ils tombent.
 - **Obsidian** — vos notes de préparation, branchées sur l'Oracle.
 

@@ -1,126 +1,367 @@
-# 🗺️ Guide Utilisateur : Map OS
+# 🗺️ Guide : Map-OS, le plateau tactique
 
-Le module **Map OS** est votre table de jeu virtuelle. Il permet de gérer les cartes tactiques, le brouillard de guerre, les pions de combat et les interactions spatiales, le tout synchronisé en temps réel vers vos joueurs.
+> Dans l'application, ce module s'appelle **Plateau Tactique**. « Map-OS » est son nom dans le code
+> et dans cette documentation.
 
-![Aperçu du module Map OS](map_mockup.png)
+Map-OS est la carte que vous montrez à vos joueurs : un plan, des pions, du brouillard de guerre, et
+tout cela dupliqué en direct sur leur écran. Ce guide dit **ce que chaque geste fait réellement**,
+et surtout **ce qui part chez les joueurs et ce qui reste chez vous** — c'est la seule question qui
+compte en séance.
 
-## 📋 Présentation du Module
-
-Map OS combine la puissance d'un logiciel de cartographie et d'un gestionnaire de combat :
-
-1. **Régie Cartographique** : Importez des plans de donjons, des cartes de villes ou des paysages.
-2. **Brouillard de Guerre (Fog of War)** : Révélez la carte progressivement selon l'exploration des joueurs. Le masquage est désormais **physique** : tout ce qui est situé sous le calque de brouillard (pions, magie, carte) est occulté automatiquement.
-3. **Pions Tactiques (Tokens)** : Placez et déplacez les combattants directement sur la grille.
-4. **Grille Tactique** : Affichez une grille personnalisable pour les mesures de distance.
-5. **Projection Synchronisée** : Diffusez la vue "Joueur" sans vos outils de maître de jeu.
-
-## 🛠️ Outils de Brouillard de Guerre (Fog of War)
-
-Le brouillard de guerre masque les zones non explorées. Vous disposez de plusieurs modes et outils :
-
-- **Modes** :
-    - **Révéler (Reveal)** : Le pinceau ou les formes retirent le brouillard.
-    - **Masquer (Hide)** : Le pinceau ou les formes rajoutent du brouillard (pour corriger une erreur).
-- **Outils de Dessin** :
-    - **Pinceau (Paintbrush)** : Pour un tracé libre et organique.
-    - **Zone (Square/Circle)** : Pour révéler des pièces entières ou des rayons de lumière circulaires instantanément.
-- **Commandes Globales** :
-    - **Tout révéler (Eye)** : Retire instantanément tout le brouillard de la carte.
-    - **Tout masquer (EyeOff)** : Recouvre la carte entière de noir.
-
-> [!IMPORTANT]
-> **Persistance Intelligente** : Le brouillard est sauvegardé **par carte**. Si vous changez de lieu, le brouillard de votre précédente map est conservé. Toute nouvelle carte est chargée avec un **brouillard noir complet** par sécurité.
-
-## 🎞️ Gestion des Couches (Layers)
-
-Un nouveau panneau de contrôle vous permet de masquer/afficher dynamiquement les éléments de jeu sans les supprimer :
-- **Brouillard** : Pratique pour voir toute la map sans révéler aux joueurs.
-- **Grille** : Activez ou désactivez le quadrillage.
-- **Pions** : Cachez tous les combattants instantanément.
-- **Magie & Danger** : Masquez les effets visuels d'AoE et de pièges.
-- **Météo** : Désactivez les particules (pluie, neige) si besoin.
-
-## 🌦️ Effets Atmosphériques (Météo)
-
-Apportez une couche d'immersion supplémentaire avec le moteur de particules intégré :
-- **Types d'effets** :
-    - **Pluie (Rain)** : Idéal pour les scènes d'extérieur sombres ou orageuses.
-    - **Neige (Snow)** : Pour les ambiances polaires ou hivernales.
-    - **Brouillard (Smoke/Fog)** : Pour les cimetières, les marais ou les incendies.
-- **Contrôle d'Intensité** : Ajustez le curseur pour passer d'une bruine légère à une tempête battante.
-- **Synchronisation** : Comme pour le reste, l'effet s'affiche sur votre écran de contrôle et simultanément sur celui des joueurs.
-
-## 📏 Grille Tactique
-
-Activez la grille pour faciliter les déplacements et les combats :
-- **Taille de Grille** : Ajustez le nombre de pixels par case pour correspondre parfaitement à votre image.
-- **Apparence** : Modifiez la couleur (blanc/noir) et l'opacité pour que la grille soit visible sans masquer les détails artistiques de la carte.
-
-## ♟️ Gestion des Pions (Tokens)
-
-Map OS est étroitement lié au **Combat OS** :
-- **Ajout rapide** : Tous les combattants actifs dans votre combat actuel apparaissent dans la liste latérale. Un clic sur l'icône **+** les place sur la carte.
-- **Mouvement** : Utilisez l'outil **Pions** pour sélectionner et faire glisser les combattants.
-- **Synchronisation** : Si vous déplacez un pion sur votre écran, il se déplace instantanément sur l'écran des joueurs.
-
-## 📡 Interaction et Projection
-
-### Pings (Signaux visuels)
-L'outil **Ping** permet de désigner un point précis sur la carte. Un cercle coloré éphémère apparaîtra sur l'écran des joueurs pour attirer leur attention ("Ici, vous voyez une trappe secrète").
-
-### Projection vers les Joueurs
-- Cliquez sur **Projeter** pour choisir la destination (Player Hub ou Écran secondaire).
-- La vue projetée est **"Clean"** : elle ne contient ni les menus, ni les zones masquées par le brouillard de guerre du MJ, ni les outils de dessin.
-- **Synchronisation Robuste (v5.5)** : Toutes les interactions (Pings, déplacements de pions, changements de météo ou d'heure) sont répercutées instantanément sur tous les écrans connectés. 
-- **Auto-Initialisation** : Toute nouvelle fenêtre de projection (ex: branchement d'un moniteur en cours de jeu) se synchronise automatiquement sur l'état actuel du MJ dès son ouverture.
-- Utilisez **Recadrer** pour recentrer votre vue et celle des joueurs sur le centre de la carte.
-
-
-## ☢️ Zones de Danger (Éditeur Obsidian Nexus)
-
-L'éditeur de zones a été entièrement refondu pour offrir une expérience **Obsidian Nexus** premium, modulaire et hautement performante :
-
-1. **Architecture en Colonnes** : Gérez la sélection, les paramètres visuels et la logique tactique dans des colonnes distinctes sans défilement inutile.
-2. **Auras Dynamiques** : Liez une zone à un pion (PJ ou PNJ). Elle suivra ses mouvements en temps réel (sorts, lumière, effets de peur).
-3. **Terrains Complexes** : Configurez des zones de ralentissement avec multiplicateur de coût de mouvement auto-calculé.
-4. **Automation Audio/Lumineuse** : Déclenchez des scènes Philips Hue ou des ambiances sonores spécifiques dès qu'une zone est activée.
+![Aperçu du module Map-OS](map_mockup.png)
 
 ---
 
-## 💾 Map Presets (Configuration de Scène)
+## 🚀 Le premier plateau, en cinq gestes
 
-Ne perdez plus de temps à configurer vos rencontres en cours de jeu. Les **Map Presets** vous permettent de capturer l'état complet d'une carte :
+1. **Importer Média** (panneau latéral, en haut) — ouvre la bibliothèque du **Media Hub**. Images
+   **et vidéos** sont acceptées.
+2. **Grille Tactique** — activez-la, puis réglez la **taille de case** jusqu'à ce que le quadrillage
+   colle au dessin de la carte.
+3. **Pions du Combat** — tous les combattants de Combat-OS apparaissent dans la liste du bas. Le
+   bouton **+** les pose sur la carte.
+4. **Outils Fog of War** — la carte est **entièrement noire** au départ. Choisissez **Révéler**,
+   prenez le **Pinceau** ou une **Zone**, et dégagez la première pièce.
+5. **Projeter la Carte** — choisissez le Player Hub ou un moniteur.
 
-- **Sauvegarde de Scène** : Capture le brouillard, la position de tous les pions et toutes les zones de danger actives.
-- **Rappel Instantané** : Préparez plusieurs variantes d'une même carte (ex: "Journée", "Embuscade de Nuit") et basculez entre elles en un clic.
-- **Modularité** : Les presets sont sauvegardés par campagne pour une organisation parfaite.
-
----
-
-## ✨ Vision de l'Oracle (Narration IA)
-
-La **Vision de l'Oracle** est un assistant narratif puissant qui utilise l'Intelligence Artificielle pour donner vie à votre plateau tactique :
-
-- **Analyse en Temps Réel** : L'Oracle examine l'emplacement des pions, le type d'ennemis, leur état de santé (PV), leurs allégeances (Factions) et les conditions environnementales (Météo, Zones de danger).
-- **Génération d'Ambiance** : Produit instantanément un texte descriptif immersif que vous pouvez lire à vos joueurs pour introduire un combat ou une scène d'exploration.
-- **Conseils Tactiques** : L'Oracle suggère des comportements intelligents pour vos PNJ basés sur leur situation actuelle (repli si blessé, harcèlement si en supériorité).
-- **Intégration au Journal** : D'un clic, vous pouvez archiver la narration générée dans votre **Journal de Session** pour garder une trace indélébile de l'histoire.
+Tant que vous n'avez pas cliqué sur *Projeter*, **rien ne part chez les joueurs**. Vous pouvez tout
+préparer à froid.
 
 ---
 
-## 💡 Astuces pour l'Immersion
+## 🌫️ Le brouillard de guerre
+
+### Les deux modes
+
+| Mode | Effet |
+| :--- | :--- |
+| **Révéler** | Le pinceau et les formes **retirent** le brouillard. |
+| **Masquer** | Le pinceau et les formes en **rajoutent** — pour refermer une pièce ou corriger un débordement. |
+
+### Les outils de tracé
+
+- **Pinceau** — tracé libre, pour suivre un couloir.
+- **Zone** (rectangle) et **Rond** (cercle) — cliquez-glissez : une pièce entière ou un rayon de
+  lumière d'un seul geste.
+
+### Les deux commandes globales
+
+**Tout révéler** et **Tout masquer** demandent confirmation, parce qu'elles sont irréversibles.
+
+> ⚠️ **« Tout révéler » est un bouton d'atelier.** En **régime de table** (séance ouverte), il se
+> replie derrière la même protection que les autres gestes destructeurs du module — c'est le
+> comportement voulu : on ne révèle pas une carte entière par un clic malheureux à trois heures du
+> matin.
+
+### Ce qu'il faut savoir, et qui ne se devine pas
+
+> 🔎 **Votre brouillard est translucide, celui des joueurs est opaque.**
+> Sur votre écran le calque est à **80 %** : vous voyez à travers, en sombre. Sur l'écran des
+> joueurs il est à **100 %** : ils ne voient rien. Ce n'est pas un réglage, c'est câblé — et c'est
+> ce qui vous permet de viser un pion que les joueurs n'ont pas encore découvert.
+
+<!-- -->
+> 🔎 **Le masquage est physique.** Le calque de brouillard est posé **au-dessus** des pions, de la
+> magie et des zones de danger (`z-index: 20`). Il n'y a aucun calcul de visibilité : ce qui est
+> sous le noir est caché, point. *Si un pion ne se voit pas chez les joueurs, cherchez d'abord s'il
+> n'est pas sous une zone non révélée.*
+
+<!-- -->
+> 🔎 **Un ping traverse le brouillard.** Les pings sont dessinés **au-dessus** du calque. Signaler
+> un point dans une zone non révélée montre le cercle aux joueurs — sur du noir.
+
+### La persistance
+
+Le brouillard est enregistré **par carte**, dans la base locale du navigateur (IndexedDB), sous
+l'adresse du média. Conséquences :
+
+- Vous pouvez préparer le brouillard de trois cartes à l'avance et basculer de l'une à l'autre.
+- Après un redémarrage, chaque carte retrouve son état exact.
+- **Toute carte jamais explorée démarre en noir complet**, chez vous comme chez les joueurs. C'est
+  une sécurité : aucune fuite possible en chargeant un plan pendant la partie.
+
+---
+
+## 🎞️ Les sept calques
+
+Le panneau **Gestion des Couches** éteint et rallume des familles d'éléments. Mais **tous ne se
+comportent pas pareil**, et c'est le piège du module :
+
+| Calque | Éteindre le calque… |
+| :--- | :--- |
+| **Brouillard de Guerre** | …ne dégage **que votre écran**. Les joueurs restent dans le noir. |
+| **Grille Tactique** | …ne retire la grille **que chez vous**. |
+| **Pions & Acteurs** | …ne les cache **que chez vous**. |
+| **Effets Magiques** | …ne les cache **que chez vous**. |
+| **Zones de Danger** | …ne les cache **que chez vous**. |
+| **Climat & Météo** | ⛔ **…coupe la pluie sur les DEUX écrans.** |
+| **Ambiance & Heure** | ⛔ **…retire la teinte du jour sur les DEUX écrans.** |
+
+> ⛔ **Correction d'une affirmation fausse.** Cette page et le guide des calques annonçaient jusqu'au
+> 2026-09-04 que le panneau agissait « sans affecter la projection des joueurs ». **C'est vrai pour
+> cinq calques sur sept, et faux pour les deux derniers.** Éteindre *Climat & Météo* ou
+> *Ambiance & Heure* les éteint aussi chez les joueurs — ce qui est d'ailleurs souvent ce qu'on
+> veut, mais il fallait le dire.
+
+Le premier calque est celui qui sert le plus : **éteignez votre brouillard** pour placer vos pions
+et vos zones sur la carte entière, rallumez-le, et jouez. Les joueurs n'ont rien vu.
+
+> ⚠️ **Le pied du panneau annonce « Les réglages sont sauvegardés par carte ». Ils ne le sont pas.**
+> L'état des sept calques est **unique et global** : il suit l'application, pas la carte.
+
+---
+
+## 📏 La grille
+
+- **Taille de Grille** — le côté d'une case en pixels de l'image. C'est le seul réglage à ajuster
+  avec soin : il conditionne l'alignement des pions.
+- **Opacité** — pour que le quadrillage se voie sans écraser le dessin.
+
+> ⛔ **Il n'y a pas de réglage de couleur.** Cette page en promettait un (« blanc / noir ») : il
+> n'existe dans aucun écran. La grille est **blanche**, et son opacité est le seul moyen de
+> l'atténuer.
+
+La grille suit la projection : taille, opacité et activation partent chez les joueurs.
+
+---
+
+## ♟️ Les pions
+
+### Les poser
+
+Map-OS ne crée pas de combattants : il affiche ceux de **Combat-OS**. La liste **Pions du Combat**
+reprend l'ordre d'initiative en cours ; le bouton **+** pose le combattant sur la carte, et l'icône
+change quand il y est déjà.
+
+*Taille et statistiques d'un pion se modifient depuis Combat-OS, pas ici.*
+
+### Les manipuler
+
+Sélectionnez l'outil **Pions**, puis glissez. Un clic droit sur un pion ouvre ses trois gestes :
+
+| Geste | Effet |
+| :--- | :--- |
+| **Cacher aux Joueurs** | Le pion disparaît **de l'écran des joueurs**. Chez vous il reste, en grisé translucide. |
+| **Montrer aux Joueurs** | L'inverse. |
+| **Supprimer le Pion** | Il quitte la carte (pas le combat). |
+
+Un combattant frappé d'un statut d'invisibilité dans Combat-OS est traité de la même façon,
+automatiquement.
+
+> ⭐ **Vos joueurs peuvent déplacer les pions depuis leur tablette.** Tout pion visible sur l'écran
+> projeté est saisissable — **y compris les vôtres**. Un verrou de cinq secondes empêche deux
+> personnes de tirer le même pion en même temps ; celui qui n'a pas la main voit le pion terni et ne
+> peut pas le prendre. Si ce n'est pas ce que vous voulez pour votre table, la seule parade
+> aujourd'hui est de ne pas projeter la carte pendant les déplacements.
+
+### Vider la carte
+
+**Vider la carte** retire tous les pions d'un coup, avec confirmation et le compte à l'appui. Comme
+« Tout révéler », ce bouton se replie en régime de table.
+
+---
+
+## ✨ Les effets magiques
+
+Un module à part entière, que cette page passait sous silence.
+
+Sélectionnez l'outil **Magie**, choisissez un **type** parmi sept — Feu, Glace, Acide, Élec, Arcane,
+Noir, Poison — et une **forme** parmi quatre : **Sphère**, **Zone**, **Ligne**, **Cône**. Puis
+cliquez-glissez sur la carte.
+
+- La liste **Effets actifs** compte ce qui est posé et permet de retirer un effet à la fois.
+- **Clic droit sur un effet** (avec l'outil Magie actif) le supprime — c'est le geste rapide.
+- **Tout effacer** vide la carte de ses effets, avec confirmation.
+
+> ⚠️ **Les effets magiques ne survivent pas à la fermeture de l'application.** Ils sont
+> volontairement hors de la sauvegarde locale du module, pour ne pas rouvrir une partie sous une
+> boule de feu de la semaine dernière. Si vous voulez en garder une disposition, passez par un
+> **preset** (voir plus bas) : lui les enregistre.
+
+---
+
+## ☢️ Les zones de danger
+
+Une zone de danger est une surface qui **sait quels pions sont dedans**, et qui peut déclencher
+quelque chose quand ils y entrent.
+
+Outil **Danger**, puis quatre formes : **Zone Rectangulaire**, **Zone Circulaire**, **Cône**,
+**Ligne / Couloir**.
+
+### Les deux natures
+
+- **AURA** — la zone se rattache à un pion et **le suit**. Une torche, une aura de peur, un sort de
+  zone qui se déplace avec son lanceur. Le panneau affiche le *Porteur* de chaque zone active.
+- **TERRAIN** — terrain difficile, avec un **Coût DT** (multiplicateur de coût de déplacement)
+  réglable.
+
+### L'automatisation
+
+Une zone peut porter une **scène Philips Hue** et une **ambiance ou un pad sonore**. Dès qu'un pion
+entre, la lumière et le son basculent ; quand la zone se vide, l'état d'avant est **restauré** — le
+service prend un instantané du monde avant de le modifier.
+
+### Les modèles
+
+**Gérer les Modèles** ouvre l'éditeur : on y prépare des zones réutilisables (nom, couleur, rayon,
+scène, ambiance, aura, terrain, coût) qu'on repose ensuite en un clic depuis la liste **Modèles
+(Presets)**.
+
+---
+
+## 🌦️ Climat et heure du jour
+
+**Effets Atmosphériques** — Aucun, **Pluie**, **Neige**, **Brouillard**, avec un curseur
+d'**Intensité** de la bruine à la tempête.
+
+**Moment de la Journée** — **Aube**, **Jour**, **Gris**, **Crépuscule**, **Nuit**. Une teinte posée
+sur toute la carte, absente de ce guide jusqu'au 2026-09-04.
+
+Les deux partent chez les joueurs. Rappel de la table des calques : les éteindre depuis le panneau
+des couches les éteint **aussi** chez eux.
+
+---
+
+## 🔊 L'audio de la carte
+
+Une carte peut être une **vidéo** (MP4/WebM) — une mer agitée, une forêt qui bruisse — et une vidéo
+a une bande-son. La section **Audio de la Carte** donne donc :
+
+- **Couper / Rétablir le son** ;
+- le choix de la **sortie audio** parmi les enceintes détectées, indépendamment du reste de
+  GM-OS.
+
+C'est ce qui permet d'envoyer le bruit de la pluie sur l'enceinte du fond pendant que la musique
+tient l'avant.
+
+---
+
+## ⚔️ Le tour de combat, sans quitter la carte
+
+Le panneau latéral reprend le **Round** en cours et deux boutons, **Précédent** et **Suivant** :
+vous menez l'initiative sans revenir à Combat-OS.
+
+> 🔎 *Détail qui a coûté un correctif :* « Tour Suivant » reconstruit la liste des combattants, ce
+> qui **démarrait une projection** de la carte même quand rien n'était projeté. C'est fermé —
+> la carte ne part chez les joueurs que si vous l'avez décidé.
+
+---
+
+## 📡 Projeter
+
+**Projeter la Carte** ouvre le choix de la destination :
+
+- **Synchroniser Player Hub** — l'onglet Joueur interne et les tablettes.
+- **Moniteurs Détectés** — une fenêtre plein écran sur un second écran physique.
+
+Une fois la projection active, le panneau affiche la destination et un bouton **Arrêter la
+Projection**.
+
+- **Ce qui part** : la carte, le brouillard, la grille, les pions, la magie, les zones, la météo,
+  l'heure, les pings, le son de la carte.
+- **Ce qui ne part pas** : vos outils, votre panneau, le tracé en cours, et le brouillard que vous
+  avez éteint pour vous.
+- **Recadrer la Vue** recentre la carte — **chez vous et chez eux**.
+- **Une fenêtre ouverte en retard se rattrape toute seule** : branchez un moniteur en pleine partie,
+  la nouvelle fenêtre se synchronise sur l'état courant dès son ouverture.
+
+Pour **couper** brutalement toute projection d'écran (carte comprise), le bouton *Blackout* d'
+**Image-OS** est l'interrupteur général.
+
+---
+
+## 💾 Les configurations sauvées (presets)
+
+**Sauver l'état** capture, sous un nom, **tout ce qui fait la scène** :
+
+la carte elle-même · le brouillard · les pions et leurs positions · les zones de danger · **les
+effets magiques** · la météo et son intensité · l'heure du jour · la grille (activation, taille,
+couleur, opacité) · le zoom et le cadrage.
+
+Préparez « Auberge — jour » et « Auberge — embuscade de nuit », et basculez en un clic. Le
+chargement demande confirmation, parce qu'il **remplace** l'état courant.
+
+> ⛔ **Correction : les presets ne sont PAS rangés par campagne.** Cette page l'affirmait ; le code
+> ne connaît aucun rattachement. Vos configurations sont **communes à toute l'installation** et
+> apparaissent dans toutes vos campagnes. Nommez-les en conséquence — `Milo — Auberge nuit` plutôt
+> que `Auberge nuit`.
+
+---
+
+## ✨ La Vision de l'Oracle
+
+Le bouton **Vision de l'Oracle** (en haut) et le pavé **Cortex Tactique** (en bas) lancent la même
+chose : le modèle lit l'état du plateau et rend un texte.
+
+**Ce qu'il regarde vraiment** : le nom de la carte, la météo et son intensité, les zones de danger
+actives, et chaque pion avec sa **position**, ses **PV**, ses **statuts** et sa **faction** (PJ,
+ennemi, allié, neutre) — récupérés dans Combat-OS.
+
+**Ce qu'il rend** : un paragraphe d'ambiance, puis une analyse tactique en une ou deux phrases par
+camp — une approche suggérée aux PJ, une manière de jouer les hostiles.
+
+Deux boutons ensuite : **Copier le texte**, et **Ajouter au Journal**, qui range la vision dans le
+journal de séance comme **chronique** — elle nourrira donc le compte rendu de fin de séance.
+
+> 🔎 **Cette génération ne consulte pas vos règles.** C'est délibéré : décrire une pluie et suggérer
+> un repli ne demande pas le corpus entier du jeu, qui coûterait plusieurs secondes à chaque clic.
+> L'Oracle travaille ici sur le groupe, les PNJ et l'état du plateau. *L'heure du jour ne lui est
+> pas transmise* — mentionnez-la vous-même si elle compte.
+
+---
+
+## ⚠️ Ce que la sauvegarde ne protège pas
+
+**Map-OS ne fait partie d'aucune sauvegarde** — ni la [sauvegarde automatique
+locale](./Sauvegarde_Automatique_User_Guide.md), ni l'export manuel de session.
+
+Ne sont donc protégés **nulle part** : vos **configurations sauvées**, vos **modèles de zones de
+danger**, les pions posés, les réglages de grille et de calques, et **tout votre brouillard**.
+
+Ce qui l'est, en revanche : l'**Atlas** de la campagne — la galerie des lieux que voient vos joueurs
+dans l'onglet *Atlas* de leur tablette. C'est une autre chose que le plateau tactique, même si le
+guide général les mentionne ensemble.
+
+En pratique : **un preset de carte est du travail de préparation qui ne survivrait pas à une perte
+de données.** Gardez les images sources ailleurs, elles, sont sauvegardées par le miroir des médias.
+
+---
+
+## ⚙️ Raccourcis
+
+| Geste | Effet |
+| :--- | :--- |
+| **Molette** | Zoom avant / arrière, centré sur le pointeur. |
+| **Clic milieu maintenu** | Panoramique (déplacer la carte). |
+| **Clic droit** | Avec l'outil **Magie** : supprime l'effet sous le pointeur. Sur un **pion** : ouvre ses gestes. |
+
+> ⛔ **Deux raccourcis annoncés n'existent pas.** Le **clic droit ne fait pas de panoramique** —
+> seul le clic milieu le fait. Et **ESC n'annule pas l'outil courant** ; la touche ne sert que dans
+> le champ de nommage d'un preset, où elle annule la saisie.
+
+---
+
+## 💡 Trois habitudes qui font gagner du temps
 
 > [!TIP]
-> **Cartes Animées** : Map OS supporte les fichiers vidéo (MP4/WebM). Vous pouvez importer une forêt avec des feuilles qui bougent ou une mer déchaînée depuis le Media Hub pour un rendu spectaculaire.
+> **Cartes animées.** Une vidéo MP4 ou WebM importée depuis le Media Hub tourne en boucle sous les
+> pions. Une mer, un feu de camp, une pluie battante — le rendu vaut largement l'image fixe.
 
-> [!IMPORTANT]
-> **Persistance et Reprise** : Votre exploration est sauvegardée dans le registre de session. Même après un redémarrage, chaque carte retrouve son état exact de brouillard.
+<!-- -->
+> [!TIP]
+> **Préparez avec le brouillard éteint.** Éteignez le calque *Brouillard de Guerre* chez vous,
+> posez pions et zones sur toute la carte, rallumez-le. Les joueurs n'ont jamais rien vu.
+
+<!-- -->
+> [!TIP]
+> **Un preset par scène, pas par carte.** Le même plan d'auberge sert trois fois dans la campagne ;
+> ce qui change, ce sont les pions, la lumière et le brouillard. C'est exactement ce qu'un preset
+> retient.
 
 ---
 
-## ⚙️ Raccourcis et Commandes
-
-- **Molette Souris** : Zoom avant / arrière.
-- **Clic Droit / Milieu** : Panoramique (déplacer la carte).
-- **ESC** : Annuler l'outil actuel ou fermer les fenêtres d'import.
-- **Target Blackout** : (Via Image OS) Couper la projection si les joueurs ne doivent plus voir la carte.
+*Guide refait le 2026-09-04, guide en main et code à côté. Cinq affirmations fausses retirées
+(couleur de grille, presets par campagne, calques sans effet sur les joueurs, clic droit
+panoramique, ESC), et six fonctions qui n'y figuraient pas ajoutées : l'heure du jour, les effets
+magiques, l'audio de la carte, le tour de combat, les gestes sur un pion, et le fait que les joueurs
+déplacent les pions.*

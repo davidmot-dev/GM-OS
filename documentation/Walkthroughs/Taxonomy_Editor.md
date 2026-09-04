@@ -20,7 +20,7 @@ J'ai implémenté un éditeur complet pour gérer la taxonomie du Cortex Tactiqu
 
 ## Galerie de l'Implémentation
 
-![Interface de l'Éditeur](file:///C:/Users/david/OneDrive/Jeux de Rôles/GM-OS-v5/src/modules/tactical-ai/components/TacticalTaxonomyEditor.tsx)
+L'écran est décrit par [TacticalTaxonomyEditor.tsx](../../src/modules/tactical-ai/components/TacticalTaxonomyEditor.tsx).
 > *Note : L'éditeur permet une prévisualisation immédiate des couleurs et des tags.*
 
 ## Vérification de la Persistance

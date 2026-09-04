@@ -5,7 +5,7 @@ J'ai implémenté la prise en compte des personas contextuels définis directeme
 ## Changements Principaux
 
 ### 1. Logique de Prompt "Intelligente"
-Le hook [useNotebookLM.ts](file:///C:/Users/david/OneDrive/Jeux de Rôles/GM-OS-v5/src/modules/session/hooks/useNotebookLM.ts) suit désormais cet ordre de priorité pour les instructions du persona :
+Le hook [useNotebookLM.ts](../../src/modules/session/hooks/useNotebookLM.ts) suit désormais cet ordre de priorité pour les instructions du persona :
 1. **Driver Override** : Instructions définies dans l'onglet "Aetheric Resonance" du driver actif.
 2. **System Override** : Instructions par défaut pour ce système (ex: Alien).
 3. **Base Instructions** : Instructions globales du Gème.

@@ -1,38 +1,96 @@
-# 🎭 Guide : Map Layer Effects v2
+# 🎭 Brouillard et calques : l'atelier
 
-Cette version v2 du moteur de calques de **Map OS** introduit une gestion granulaire de la visibilité et une persistance intelligente du brouillard de guerre par carte.
-
-## 🌟 Points Clés de la v2
-
-### 💾 Persistance par Carte (Registry)
-Contrairement aux versions précédentes où le brouillard était global, la v2 lie votre exploration directement à l'identifiant de la carte.
-- **Continuité** : Préparez le brouillard sur plusieurs cartes à l'avance.
-- **Changement de Scène** : Basculez entre une carte de ville et un donjon sans perdre l'état d'exploration de l'autre.
-- **Stockage** : Les données sont sauvegardées localement (LocalStorage/IndexedDB) pour une reprise instantanée après redémarrage.
-
-### 🛡️ Initialisation Sécurisée (Safe Start)
-Pour éviter tout "spoil" accidentel lors de l'ouverture d'une nouvelle carte :
-- **Noir Complet** : Toute carte non encore explorée est initialisée avec un brouillard opaque à 100%.
-- **Zéro Fuite** : Aucun élément (pions, décors, pièges) n'est visible tant que vous ne décidez pas de commencer l'exploration.
-
-### 🍱 Gestion Granulaire des Couches (Layers)
-Le nouveau panneau de contrôle (`LayerVisibility`) permet d'isoler des éléments sans affecter la projection des joueurs :
-- **Brouillard** : Masquez votre vue MJ du brouillard pour inspecter la carte tout en laissant les joueurs dans le noir.
-- **Grille** : Toggle visuel pour l'alignement tactique.
-- **Tokens** : Cachez tous les pions simultanément pour les "rencontres surprises".
-- **Effets (Magie/Météo)** : Gérez l'encombrement visuel étape par étape.
-
-## 🛠️ Workflow Recommandé
-
-1.  **Préparation** : Importez votre carte. Elle apparaît en noir complet (Safe Start).
-2.  **Placement** : Masquez temporairement le calque **Brouillard** pour placer vos pions et vos zones de danger.
-3.  **Exploration** : Réactivez le calque **Brouillard** et utilisez l'outil **Reveal** pour dévoiler les zones au fur et à mesure de l'avancée des joueurs.
-4.  **Transition** : Changez de carte ; l'état est sauvegardé automatiquement.
+Cette page complète le [guide de Map-OS](./Map_OS_User_Guide.md). Elle ne redit pas où sont les
+boutons : elle explique **comment le brouillard est fabriqué**, ce que les calques changent
+vraiment, et quoi regarder quand l'écran des joueurs ne montre pas ce que vous attendiez.
 
 ---
 
-> [!IMPORTANT]
-> **Masquage Physique** : N'oubliez pas que le brouillard v2 est une couche physique (`z-index: 20`). Tout ce qui est dessous est caché. Si un pion ne se voit pas sur l'écran joueur, vérifiez qu'il n'est pas sous une zone de brouillard non révélée !
+## 🖌️ Comment le brouillard est fabriqué
 
-> [!TIP]
-> **Performance** : La v2 utilise un moteur de rendu canvas optimisé. Même avec des dizaines de calques actifs, la fluidité reste constante à 60fps sur le Player Hub.
+Ce n'est pas un calcul de visibilité, c'est **une image**. Un calque noir posé par-dessus la carte,
+dans lequel vous découpez des trous.
+
+- **Révéler** efface la peinture noire ; **Masquer** la repose.
+- Ce calque est ensuite converti en image et rangé dans la base locale (IndexedDB), **sous l'adresse
+  du média**. C'est cette clé qui fait que le brouillard est *par carte*.
+- Il n'est **pas** dans le stockage local ordinaire du navigateur : une image de brouillard pèse
+  trop lourd pour y tenir.
+
+Trois conséquences pratiques :
+
+1. **Rien n'est calculé depuis les pions.** Aucun mur, aucune ligne de vue, aucune source de
+   lumière. Ce que vous peignez est ce que vos joueurs voient — ni plus, ni moins.
+2. **Le brouillard suit l'image, pas la scène.** Deux campagnes qui utilisent le même fichier de
+   carte partagent le même brouillard.
+3. **Réimporter la même carte sous un autre nom de fichier repart de zéro** (noir complet), parce
+   que l'adresse a changé.
+
+### Le départ en noir
+
+Toute carte jamais explorée s'ouvre **noire à 100 %**, sur votre écran comme sur celui des joueurs.
+Et si, pour une raison quelconque, l'image de brouillard ne peut pas être relue, le repli est **le
+noir**, jamais la carte nue. C'est la seule bonne façon d'échouer ici.
+
+---
+
+## 🍱 Ce que les calques masquent, et pour qui
+
+Le panneau **Gestion des Couches** ne supprime rien : il éteint l'affichage. Mais **cinq calques
+n'agissent que sur votre écran, et deux agissent sur les deux**.
+
+| Calque | Votre écran | Écran des joueurs |
+| :--- | :---: | :---: |
+| Brouillard de Guerre | ✅ | — |
+| Grille Tactique | ✅ | — |
+| Pions & Acteurs | ✅ | — |
+| Effets Magiques | ✅ | — |
+| Zones de Danger | ✅ | — |
+| **Climat & Météo** | ✅ | ⛔ **aussi** |
+| **Ambiance & Heure** | ✅ | ⛔ **aussi** |
+
+> ⛔ **Correction.** Cette page affirmait que le panneau permettait « d'isoler des éléments sans
+> affecter la projection des joueurs ». C'est faux pour les deux derniers calques. Vérifié dans le
+> code le 2026-09-04.
+
+Le pied du panneau annonce par ailleurs que « les réglages sont sauvegardés par carte ». **Ils ne le
+sont pas** : l'état des sept calques est unique et suit l'application.
+
+---
+
+## 🛠️ Le déroulé qui marche
+
+1. **Importez la carte.** Elle est noire.
+2. **Éteignez le calque *Brouillard de Guerre*.** Vous voyez tout ; les joueurs, rien.
+3. **Posez vos pions, vos zones de danger, vos effets.** Réglez la grille sur le dessin.
+4. **Rallumez le calque.** Votre écran redevient sombre — mais à 80 % seulement, vous distinguez ce
+   qu'il y a dessous.
+5. **Projetez**, et révélez au pinceau à mesure que le groupe avance.
+6. **Changez de carte quand la scène change** : le brouillard de celle que vous quittez est gardé.
+
+---
+
+## 🔍 Quand l'écran des joueurs ne montre pas ce qu'il faut
+
+| Symptôme | Cause la plus fréquente |
+| :--- | :--- |
+| **Un pion invisible chez les joueurs** | Il est **sous du brouillard non révélé** — le masquage est physique, rien ne passe au travers. Vous, vous le voyez à travers votre calque à 80 %. |
+| **Un pion invisible, et pas de brouillard dessus** | Il est marqué **Cacher aux Joueurs** (clic droit sur le pion), ou il porte un statut d'invisibilité dans Combat-OS. Chez vous il apparaît grisé et translucide. |
+| **La pluie a disparu chez les joueurs** | Le calque **Climat & Météo** est éteint : il agit sur les deux écrans. |
+| **La carte reste noire chez les joueurs alors que vous avez tout révélé** | Vérifiez que la **projection est active** (le panneau affiche la destination) et non simplement préparée. |
+| **Les joueurs voient une zone révélée qui ne correspond pas à cette carte** | Vous avez changé de carte alors que la nouvelle n'avait encore **aucun brouillard enregistré**. Donnez un coup de pinceau (ou **Tout masquer**) pour forcer l'enregistrement, ce qui remet les deux écrans d'accord. |
+| **Un pion refuse d'être saisi, et paraît terni** | Quelqu'un d'autre le tient — une tablette, une autre fenêtre. Le verrou se relâche au bout de cinq secondes. |
+
+---
+
+## ⚠️ Rien de tout cela n'est sauvegardé
+
+Le brouillard, les calques, les pions posés et les configurations de carte **ne font partie d'aucune
+sauvegarde**, ni automatique ni manuelle. Le détail est dans le
+[guide de Map-OS](./Map_OS_User_Guide.md).
+
+---
+
+*Page refaite le 2026-09-04 : deux affirmations retirées (les calques « sans effet sur la
+projection », et une promesse de 60 images par seconde que rien ne mesure), et le tableau de
+dépannage ajouté.*
