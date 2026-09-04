@@ -1,33 +1,84 @@
-# 🎲 Guide Utilisateur : Projection Automatique des Dés
+# 🎲 Guide : projeter un jet de dés
 
-Le système de projection des dés permet au Maître de Jeu (MJ) de partager instantanément les résultats de ses jets avec les joueurs sur le **Player Hub**.
+Un jet lancé dans Dice-OS reste chez le meneur, sauf s'il décide de le montrer. La **projection**
+l'envoie en plein écran sur le Player Hub **et sur les tablettes des joueurs**.
 
-## 🏗️ Fonctionnement du Master Switch (Interrupteur Maître)
+---
 
-Pour garantir un contrôle total au Maître de Jeu (MJ), la projection utilise un système à deux niveaux :
+## 🔘 Le bouton, et où il se cache
 
-1.  **L'Interrupteur Principal** : Le bouton avec l'icône de diffusion (**Cast**) dans le bandeau Dice-OS.
-    *   **OFF** : Vos jets sont privés. Rien ne s'affiche sur le Player Hub, même si vous lancez des dés.
-    *   **ON** : Le mode "Projection Automatique" est activé.
-2.  **L'Affichage Temporaire** : Lorsque l'interrupteur est **ON**, chaque nouveau lancer de dé apparaît automatiquement sur le Player Hub pendant **5 secondes** avant de s'estomper (le bouton MJ reste allumé).
+L'interrupteur est l'icône **Cast** (diffusion), **en haut à droite du panneau de résultat** de
+Dice-OS.
 
-### Règles d'Affichage
-- **Enchaînement** : Si vous faites plusieurs lancers à la suite, le délai de 5 secondes redémarre à chaque fois.
-- **Fondu** : Une animation de fondu de **1 seconde** intervient à la fin pour une disparition fluide.
+> ⚠️ **Il n'apparaît qu'au survol du panneau, et seulement s'il y a déjà un jet dans l'historique.**
+> Si vous ne le trouvez pas : lancez un dé, puis passez la souris sur le résultat. Ce guide le
+> plaçait « dans le bandeau Dice-OS » — il n'y est pas.
 
-## 🎭 Effets Visuels Cinématiques
+| État | Ce que voient les joueurs |
+| :--- | :--- |
+| **Éteint** | Rien. Vos jets sont privés, même quand vous lancez. |
+| **Allumé** | Un bandeau *Projeté* s'affiche chez vous, et **chaque nouveau jet part automatiquement**. |
 
-L'affichage sur le Player Hub est conçu pour être immersif :
-- **Animations d'entrée** : Zoom et fondu pour attirer l'attention.
-- **Détails des dés** : Les joueurs voient le total mais aussi chaque dé individuel (avec des couleurs spéciales pour les critiques et explosions).
-- **Redimensionnement** : Les résultats longs (Pools) sont ajustés pour rester parfaitement lisibles.
+Allumer l'interrupteur **projette immédiatement le dernier jet** — c'est aussi le moyen de rappeler
+un résultat déjà effacé : éteindre, rallumer.
 
-## 🎮 Contrôles Manuels (MJ)
+---
 
-Dans Dice-OS, le bouton **Cast** vous permet de :
-- **Activer/Désactiver** la projection globale.
-- **Forcer le rappel** d'un résultat : Si le dé a disparu du Hub après 5s mais que vous voulez le remontrer, cliquez simplement sur le bouton Cast (l'éteindre puis le rallumer).
+## ⏱️ Cinq secondes, puis un fondu
 
-## 💡 Astuce
+Un jet projeté reste **5 secondes** à l'écran, puis s'efface en **1 seconde** de fondu.
 
-Le système est compatible avec tous les modes de Dice-OS (Standard, Pool, Year Zero, FATE, etc.). Les textes longs sont automatiquement redimensionnés pour rester parfaitement lisibles.
+**L'interrupteur, lui, ne s'éteint pas.** Il reste allumé, prêt pour le jet suivant. Un
+enchaînement de lancers relance le compte à cinq secondes à chaque fois : le dernier résultat
+chasse le précédent.
+
+---
+
+## 🎬 Ce que les joueurs voient
+
+- **Le total en très grand**, avec chaque dé détaillé en dessous — les critiques et les explosions
+  ont leur propre couleur.
+- **Une entrée en zoom et fondu**, pour attirer l'œil.
+- **Les longs résultats** (jets en réserve de dés) sont réduits pour rester lisibles plutôt que
+  débordés.
+- Tous les modes de Dice-OS passent : standard, réserve, Year Zero, FATE, degrés de réussite, dés
+  échelonnés.
+
+### Les dés en trois dimensions
+
+> 🔎 **Absent de ce guide jusqu'au 2026-09-04, et c'est pourtant le plus spectaculaire.** Si les
+> **dés 3D** sont activés dans Dice-OS, le Player Hub ne montre pas d'abord le chiffre : il **lance
+> de vrais dés** à l'écran. Le panneau de résultat n'arrive qu'**une seconde et demie plus tard**,
+> et reste volontairement en retrait pour ne pas masquer les dés — il redevient net au survol.
+>
+> ⚠️ **Les dés 3D ne roulent que sur le Player Hub.** Les tablettes reçoivent le panneau de
+> résultat, sans l'animation. Si vous comptez sur l'effet, c'est l'écran partagé qu'il faut
+> regarder, pas la tablette de chacun.
+
+L'interrupteur des dés 3D est dans les réglages de Dice-OS, à côté des modes de jet.
+
+---
+
+## 🔧 Dépannage
+
+| Problème | Ce qu'il faut regarder |
+| :--- | :--- |
+| **Je ne trouve pas le bouton Cast** | Il faut un jet dans l'historique, et survoler le panneau de résultat. |
+| **Le jet ne part pas chez les joueurs** | L'interrupteur est éteint. Il ne s'allume pas tout seul au premier lancer. |
+| **Le résultat a disparu trop vite** | Cinq secondes, c'est court. Éteignez puis rallumez pour le remontrer. |
+| **Les dés 3D ne roulent pas sur la tablette** | C'est voulu : l'animation est réservée au Player Hub. |
+| **Le résultat déborde de l'écran** | Il devrait se réduire tout seul. Si ce n'est pas le cas, c'est un défaut à signaler. |
+
+---
+
+> [!TIP]
+> **Laissez l'interrupteur éteint par défaut.** Un meneur lance beaucoup de dés qui ne regardent
+> personne — initiative de PNJ, tests cachés, réactions. Allumez-le pour le jet qui compte, et la
+> projection redevient un événement.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Corrigé : le bouton n'est pas dans un bandeau mais
+au-dessus du résultat, **caché jusqu'au survol**. Ajouté : la projection atteint aussi **les
+tablettes**, et les **dés 3D** du Player Hub, avec leur seconde et demie d'attente — rien de tout
+cela n'était écrit.*

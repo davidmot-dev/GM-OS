@@ -1,60 +1,137 @@
-# 📱 Guide Utilisateur : Tablet Hub (Hub Joueur)
+# 📱 Guide détaillé : ce qu'un joueur fait sur sa tablette
 
-Le **Tablet Hub** est l'interface dédiée aux joueurs. Elle permet de consulter les informations de la session, d'interagir avec le MJ et de gérer son personnage en temps réel depuis une tablette ou un navigateur distant.
-
----
-
-## 🚀 Connexion au Hub
-
-
-1. Assurez-vous que le MJ a lancé la session sur l'ordinateur principal.
-2. Connectez-vous à l'URL fournie par le MJ (ex: `http://[IP-DU-MJ]:3000/hub`).
-3. **Onboarding** : Choisissez votre personnage dans la liste pour synchroniser vos données privées.
-
+Cette page s'adresse aux **joueurs**. Pour brancher les tablettes et comprendre les onglets, voir
+d'abord le [guide du Tablet Hub](./Tablet_Hub_User_Guide.md).
 
 ---
 
-## 📝 Notes Privées PJ
+## 🔌 Se connecter
 
-Depuis la v6.2.1-dev, vous disposez d'une zone de texte personnelle et persistante.
+Le meneur affiche un QR code depuis le bouton **Connecter Joueurs** de sa barre du haut. Scannez-le,
+ou tapez l'adresse affichée dessous :
 
-- **Accès** : Cliquez sur l'icône **Plume/Notes** en bas à droite de l'écran.
-- **Auto-Sauvegarde** : Chaque modification est automatiquement envoyée au serveur du MJ après 1,5 seconde d'inactivité. Une icône de **nuage (Sync)** apparaît brièvement pour confirmer la sauvegarde.
-- **Persistance** : Vos notes sont liées à votre personnage et sont sauvegardées dans la campagne. Vous les retrouverez exactement là où vous les avez laissées à la prochaine session.
-- **Confidentialité** : Seul le MJ peut voir vos notes depuis son Cockpit, les autres joueurs n'y ont pas accès.
+```text
+http://<adresse-du-MJ>:3001/?window=tablet
+```
 
----
+> ⛔ **Correction.** Cette page donnait `http://[IP-DU-MJ]:3000/hub`. **Ni le port ni le chemin
+> n'étaient bons** — un joueur qui suivait ce guide n'arrivait nulle part. Le port applicatif est
+> **3001**, et c'est le paramètre `?window=tablet` qui ouvre le Hub joueur.
 
-## 🎒 Sac à Dos & Échanges (P2P)
-
-L'onglet **Sac** (accessible via l'icône sac à dos) vous permet de gérer votre équipement de manière interactive.
-
-- **Échanges P2P** : Pour donner un objet à un allié, cliquez sur le bouton **"Donner"** à côté de l'objet, puis sélectionnez le destinataire dans la liste des personnages joueurs actifs.
-- **Suppression (Jeter)** : Si vous souhaitez vous débarrasser d'un objet, utilisez le bouton **"Jeter"**. Une fenêtre de confirmation s'affichera pour éviter les erreurs. Une fois validé, l'objet est supprimé de votre inventaire et votre fiche de personnage est mise à jour côté MJ.
-- **Validation MJ** : Une fois le don initié, l'objet apparaît avec une icône d'horloge (En attente). L'échange doit être validé par le Maître du Jeu pour être effectif.
-- **Notifications de Réception** : Lorsqu'un allié vous donne un objet et que le MJ valide, une notification apparaît en bas de votre écran et l'objet est automatiquement ajouté à votre inventaire.
-- **Densité Optimisée** : L'inventaire utilise désormais une échelle réduite (50%) pour permettre l'affichage de plus d'objets sans défilement excessif.
-- **PV & Stats** : Vos points de vie et statistiques sont synchronisés en temps réel. Toute mise à jour du MJ est immédiatement visible sur votre interface.
+Choisissez ensuite votre personnage. **Un seul appareil par personnage** : si la fiche est déjà
+prise, demandez au meneur de libérer les connexions.
 
 ---
 
-## 💬 Messagerie & Notifications
+## 📇 Votre fiche
 
-- **Messagerie** : Communiquez avec le MJ ou les autres joueurs. Les messages du MJ à votre attention apparaissent avec une notification spéciale.
-- **Indices (Clues)** : Lorsqu'un MJ révèle un indice, il apparaît dans votre flux "Archives". Cliquez dessus pour voir les détails et l'image associée.
+Bouton **Fiche**, en bas à droite. Elle s'affiche au format de votre jeu — Cthulhu Hack, Cyberpunk,
+Rêves de Dragons — et non dans une présentation générique.
 
----
-
-## 🎲 Jets de Dés (Projection)
-
-Si le MJ "projette" un jet de dés sur le Hub, une animation plein écran s'affichera pour tous les joueurs, montrant les résultats en temps réel.
+Vos **points de vie et vos statistiques** suivent en direct ce que fait le meneur : une blessure
+appliquée de son côté apparaît sur votre écran sans rien rafraîchir.
 
 ---
 
-## 🎨 Personnalisation visuelle
+## 📝 Vos notes privées
 
-- **Taille de la police** : Pour un confort de lecture optimal sur tablette, la taille globale des textes a été réduite de 15%. Cela permet d'afficher plus de contexte narratif tout en gardant une interface premium et aérée.
+Bouton **Notes**.
+
+- **Enregistrement automatique** : 1,5 seconde après votre dernière frappe. Une icône de nuage
+  confirme brièvement l'envoi. Rien à valider.
+- **Persistance** : les notes appartiennent à votre personnage et vivent dans la campagne. Vous les
+  retrouverez à la séance suivante.
+- **Qui les lit** : vous, et **le meneur** depuis son cockpit. Les autres joueurs n'y ont pas accès.
 
 ---
 
-*Dernière mise à jour : 9 Avril 2026*
+## 🎒 Votre inventaire
+
+Onglet **Inventaire**.
+
+| Geste | Ce qui se passe |
+| :--- | :--- |
+| **Donner** | Choisissez un destinataire parmi les personnages joueurs. L'objet passe en **attente** (icône d'horloge). |
+| **Jeter** | Confirmation obligatoire, puis l'objet disparaît — de votre sac et de la fiche que voit le meneur. |
+
+> ⚠️ **Un don n'est pas immédiat.** Tant qu'il est en attente, l'objet reste chez vous avec son
+> horloge. Il ne change de main qu'une fois l'échange validé — et le destinataire reçoit alors une
+> notification, l'objet arrivant tout seul dans son sac.
+
+Vous pouvez aussi **modifier votre inventaire à la main** depuis la fiche : le changement part chez
+le meneur dès que vous quittez le champ.
+
+---
+
+## 🃏 Vos cartes
+
+Onglet **Cartes**. C'est votre main : les cartes qu'un paquet vous a données et que vous gardez.
+
+> 🔎 **La pastille rouge sur l'onglet compte les cartes qu'on vous tend.** Un don de carte demande
+> votre réponse — c'est vous qui l'acceptez, personne ne peut le faire à votre place. L'onglet se
+> signale donc même fermé.
+
+→ [Guide de Deck-OS](./Deck-OS_User_Manual.md)
+
+---
+
+## 💬 Messages et indices
+
+**Messages** ouvre la messagerie, avec trois zones distinctes :
+
+- le **canal général**, pour le groupe et les annonces du meneur ;
+- le **canal du meneur**, pour vos échanges privés avec lui ;
+- les **canaux privés**, pour parler à un autre joueur.
+
+Un message reçu pendant que vous êtes ailleurs fait apparaître une notification en bas de l'écran ;
+cliquez dessus pour sauter dans la bonne conversation. Le compte des non-lus s'affiche sur le
+bouton.
+
+**Les indices** révélés par le meneur arrivent dans l'onglet **Archives**, avec leur image. Ils y
+restent : c'est votre mémoire d'enquête.
+
+---
+
+## 🗺️ Les lieux et les visages
+
+- Onglet **Lieux** — l'Atlas de la campagne. Chaque lieu découvert reste consultable.
+- Onglet **PNJ** — le trombinoscope. Tous les personnages que le meneur a rendus publics, avec leur
+  portrait et leurs informations publiques. *L'outil qui évite « c'était qui, déjà, le type de la
+  taverne ? »*
+
+Les deux se remplissent tout seuls : dès que le meneur rend un lieu ou un PNJ visible, il apparaît
+sur toutes les tablettes.
+
+---
+
+## ⚔️ Pendant un combat
+
+L'ordre d'initiative s'affiche en surimpression dès qu'un combat est ouvert. Sur mobile, un bouton
+**Initiative** en haut de l'écran l'ouvre et le referme pour libérer la place.
+
+---
+
+## 🎲 Les jets de dés
+
+Quand le meneur projette un jet, il occupe tout l'écran **cinq secondes**. →
+[Guide de la projection des dés](./Dice_Projection_Guide.md)
+
+---
+
+## 🚪 Quitter
+
+Le bouton **Quitter**, tout à droite, demande confirmation puis **libère votre personnage**. Faites-le
+en fin de séance : sans quoi la fiche reste verrouillée, et le meneur devra la débloquer avant que
+quiconque puisse la reprendre.
+
+---
+
+> ⛔ **Une mention retirée.** Cette page annonçait une « taille de police réduite de 15 % pour le
+> confort sur tablette ». La réduction existe, mais ce n'est pas un réglage de tablette : c'est la
+> taille de base de **toute l'application**, meneur compris. Rien de spécifique au Hub.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. L'adresse de connexion était fausse sur le port et sur
+le chemin. Ajouté : les cartes en main et leur pastille, les indices dans les Archives, le
+trombinoscope, l'Atlas, l'ordre d'initiative, et ce que fait vraiment le bouton Quitter.*

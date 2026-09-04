@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, **les quatre modules audio** (04/09). **Suivant** : au choix de David.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Suivant** : lot 2 — Storyboard et Voice-OS.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -476,6 +476,27 @@ bien ; les seize pads, le fondu de 3 s et le volume à 150 % de Sound-OS sont ex
 rattachement des playlists à une campagne se comporte comme annoncé, **playlists orphelines
 comprises** — une campagne supprimée ne fait pas disparaître ses musiques.
 
+#### 12f · Lot 1 — ce que les joueurs ont sous les yeux (2026-09-04)
+
+*Tablet Hub, guide détaillé, projection des dés. **Le lot était placé en tête parce que chaque
+module passé avait livré la même sorte de trouvaille — ce qui part chez les joueurs n'est pas ce
+que le guide annonce. Ici, c'est le chemin pour arriver jusqu'à eux qui était faux.***
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **T1** | **Les deux chemins de connexion donnés aux joueurs étaient faux.** Le guide principal envoyait dans « Paramètres → Télécommande → Nexus Link », qui n'existe pas ; le guide détaillé donnait `http://[IP]:3000/hub`, faux **sur le port et sur le chemin**. Le vrai : un bouton **Connecter Joueurs** dans la barre du haut, et `http://<ip>:3001/?window=tablet`. | ✅ **Corrigé dans les deux guides.** *Rien à coder — mais c'est le défaut de documentation le plus coûteux trouvé jusqu'ici : il empêche purement et simplement d'entrer.* | `Shell.tsx:541`, `NetworkQRCodeModal.tsx:23` |
+| ⛔ **T2** | **Une section entière du guide était du texte de fusion non résolu** : sept lignes commençant par `+`, insérées entre les sections 8 et 9, et numérotées « 10 » avant le « 9 ». | ✅ **Réécrit.** | — |
+| ⛔ **T3** | **« 60 FPS garantis sous Tauri v2 ».** GM-OS ne tourne pas sous Tauri mais sous **Electron** ; aucune de ces images par seconde n'a jamais été mesurée. Le seul reste de Tauri dans le dépôt est un contournement commenté dans `MusicEngine` et deux libellés d'i18n. | ✅ **Retiré.** | — |
+| ⛔ **T4** | **Aucun des six onglets du Hub n'était décrit** — ni les indices (Archives), ni l'Atlas (Lieux), ni les cartes en main, ni l'inventaire. Le guide parlait d'horloge et de jauges, c'est-à-dire de ce que le Hub affiche **tout seul**, jamais de ce qu'un joueur **touche**. | ✅ **Les six onglets et les quatre panneaux sont écrits**, côté meneur et côté joueur. | `TabletHub.tsx:388-455` |
+| ⚠ **T5** | **Le bouton de projection des dés est introuvable.** Il vit en `opacity-0 group-hover/result:opacity-100`, en surimpression du panneau de résultat, et **n'existe que si l'historique n'est pas vide**. Le guide le plaçait « dans le bandeau Dice-OS ». *Même famille que le repli du 23/08, qui rendait des boutons introuvables — le motif revient.* | **À trancher** : le rendre permanent (il est déjà discret), ou laisser et documenter. Documenté en attendant. | `DiceBoard.tsx:899-912` |
+| **T6** | **Les dés 3D n'étaient documentés nulle part**, alors que c'est l'effet le plus spectaculaire : le Player Hub lance de vrais dés, et le panneau de résultat n'arrive qu'après **1,5 s**, en retrait. ⚠️ **Réservé au Player Hub** — les tablettes n'ont que le panneau. | **Documenté.** | `HubDiceDisplay.tsx:25`, `PlayerHub.tsx:196` |
+| **T7** | **La projection des dés atteint aussi les tablettes**, ce que le guide ne disait pas — il parlait du seul Player Hub. | **Documenté.** | `TabletHub.tsx:555` |
+| **T8** | **La « taille de police réduite de 15 % pour le confort tablette » n'est pas un réglage de tablette** : c'est `:root { font-size: 85% }`, la base de **toute** l'application, meneur compris. | **Documenté.** *À garder en tête : un `rem` vaut 13,6 px dans ce projet.* | `index.css:200` |
+
+**Vérifié et exact** : le verrouillage d'un personnage par appareil, l'enregistrement des notes
+privées à 1,5 s, le don d'objet qui passe par une validation, les cinq secondes de projection et
+la seconde de fondu, le port 3001 du diagnostic.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -539,7 +560,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Neuf guides passés, **trente-sept** trouvailles (§§ 12a-12e) — **neuf réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Douze guides passés, **quarante-cinq** trouvailles (§§ 12a-12f) — **treize réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

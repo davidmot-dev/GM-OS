@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Neuf guides plus tard, elle a trouvé **trente-sept défauts** — et pas
+son code de l'autre.** Douze guides plus tard, elle a trouvé **quarante-cinq défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après neuf guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après douze guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 9 guides
+## ✅ Ce qui est fait — 12 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -48,16 +48,20 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | Media Hub | 12c | 8 | **7** |
 | Clock-OS | 12d | 5 | 1 |
 | Tour de contrôle audio, Ambient-OS, Sound-OS, Music-OS | 12e | 10 | 1 |
+| **Lot 1** — Tablet Hub ×2, Projection des dés | 12f | 8 | **4** |
 
 ---
 
-## 🗺️ Voie A — les 29 guides restants, en 10 lots
+## 🗺️ Voie A — les guides restants
+
+> ✅ **Lot 1 fait le 2026-09-04.** Huit trouvailles, quatre corrigées sur-le-champ — dont **les
+> deux chemins de connexion donnés aux joueurs, tous deux faux**. Reste 26 guides, en 9 lots.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
 non.*
 
-### Lot 1 — Ce que les joueurs ont sous les yeux ⭐
+### ~~Lot 1 — Ce que les joueurs ont sous les yeux~~ ✅ fait le 04/09
 
 `Tablet_Hub_User_Guide` · `Tablet_Hub_Advanced_Guide` · `Dice_Projection_Guide`
 
@@ -66,8 +70,10 @@ qui part chez les joueurs n'est pas ce que le guide annonce*. Les jauges de Cloc
 par défaut ; les pions de Map-OS sont déplaçables par n'importe qui. Le Tablet Hub est l'endroit où
 cette question se pose en entier.
 
-**À vérifier en priorité** : quels onglets existent vraiment, ce qu'un joueur voit d'un autre
-joueur, et ce qu'il peut modifier.
+**Ce que le lot a donné** : les **deux** chemins de connexion documentés étaient faux — l'un vers
+un écran qui n'existe pas, l'autre vers un port et un chemin erronés. *Le défaut de documentation
+le plus coûteux trouvé jusqu'ici : il empêche purement et simplement d'entrer.* Et aucun des six
+onglets du Hub n'était décrit. Détail au § 12f.
 
 ### Lot 2 — Le code le plus récent
 
@@ -143,7 +149,7 @@ qu'on a trouvé le pad d'ambiance qui charge le silence.
 
 ---
 
-## 🔧 Voie B — les 28 défauts ouverts, par risque
+## 🔧 Voie B — les 32 défauts ouverts, par risque
 
 *Indépendante de la voie A : ces points se traitent quand on veut, dans l'ordre qu'on veut. Le
 détail et les ancres sont au § 12 du registre.*
@@ -174,6 +180,7 @@ détail et les ancres sont au § 12 du registre.*
 | **A7** | La reprise lumineuse d'Ambient-OS suit le **numéro** de piste, pas l'ordre d'allumage. |
 | **N7** | Le badge **Nexus-Ready** compte des fichiers ; il ne dit pas si la campagne est portable. |
 | **A2** | Les trois thèmes d'ambiance livrés sont des **gabarits sans sons**, et rien ne le signale. |
+| **T5** | Le **bouton de projection des dés est introuvable** : invisible jusqu'au survol du panneau de résultat, et absent tant qu'aucun jet n'a été fait. |
 
 ### P3 bis — Décisions de table, pas défauts
 
