@@ -29,6 +29,16 @@ export const whiteboardActions: ActionRegistry = {
     'whiteboard:set-width': (payload) => {
         useWhiteboardStore.getState().setWidth(payload as number);
     },
+    /*
+      **Ce handler manquait** (2026-09-05). `whiteboard:set-background` était
+      déclaré dans `RemoteActionType` depuis toujours, sans émetteur sur la
+      tablette **et sans destinataire ici** : une action morte des deux côtés.
+      *Un type d'action qui ne mène nulle part se lit comme une fonction qui
+      existe.*
+    */
+    'whiteboard:set-background': (payload) => {
+        useWhiteboardStore.getState().setBackgroundMode(payload as 'dark' | 'light');
+    },
     'whiteboard:clear': () => {
         useWhiteboardStore.getState().clearBoard();
     },

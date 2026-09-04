@@ -46,7 +46,7 @@ const WebDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col bg-app-bg scrollbar-hide overflow-hidden">
+        <div className="h-full flex flex-col bg-app-bg no-scrollbar overflow-hidden">
             {/* Header */}
             <header className="border-b border-app-border bg-app-surface/60 backdrop-blur-xl px-8 py-4 flex items-center justify-between sticky top-0 z-40">
 

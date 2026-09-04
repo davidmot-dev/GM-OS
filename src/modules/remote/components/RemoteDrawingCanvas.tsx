@@ -122,21 +122,42 @@ const RemoteDrawingCanvas: React.FC<RemoteDrawingCanvasProps> = ({ whiteboard, o
         }
     }, [paths, activePath, laserPointer, isDrawing, currentPoints, currentTool, currentColor, currentWidth, drawPath]);
 
+    /*
+      **La mesure du canevas, alignée sur celle du meneur le 2026-09-05.**
+
+      Ce composant est une copie de `whiteboard/components/DrawingCanvas.tsx`
+      **qui n'avait jamais reçu le correctif que l'original a reçu**. Trois
+      écarts, tous dans ce seul effet :
+
+      1. La dépendance était `[redraw]`, et `redraw` change à chaque
+         `setCurrentPoints` — **donc à chaque mouvement du doigt**. L'effet se
+         démontait et se remontait une vingtaine de fois par seconde pendant un
+         trait, réenregistrant son écouteur à chaque fois.
+      2. `canvas.width = …` était réassigné sans condition. *Écrire `width`
+         vide le canevas et réinitialise le contexte 2D* — `lineCap` et
+         `lineJoin` compris —, donc tout le tableau était repeint à chaque
+         mouvement.
+      3. `window.resize` ne voit pas un parent qui change de taille sans que la
+         fenêtre bouge : changer d'onglet, faire apparaître la barre d'outils.
+
+      Un `ResizeObserver` monté **une seule fois** répond aux trois. C'est
+      exactement le motif du 2026-09-03 : *qui d'autre a la même rustine à
+      poser ?*
+    */
+    /*
+      **La référence se pose après le rendu, pas pendant.** L'écrire dans le
+      corps du composant est une mutation en phase de rendu — React s'en plaint,
+      et un rendu abandonné laisserait la référence en avance sur l'état affiché.
+      L'effet sans dépendance s'exécute après chaque rendu, donc bien avant que
+      le `ResizeObserver` ne puisse l'appeler.
+    */
+    const redrawRef = useRef(redraw);
+    useEffect(() => { redrawRef.current = redraw; });
+
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const resizeCanvas = () => {
-            const parent = canvas.parentElement;
-            if (parent) {
-                canvas.width = parent.clientWidth;
-                canvas.height = parent.clientHeight;
-                redraw();
-            }
-        };
-
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        const parent = canvas?.parentElement;
+        if (!canvas || !parent) return;
 
         const context = canvas.getContext('2d');
         if (context) {
@@ -145,8 +166,27 @@ const RemoteDrawingCanvas: React.FC<RemoteDrawingCanvasProps> = ({ whiteboard, o
             contextRef.current = context;
         }
 
-        return () => window.removeEventListener('resize', resizeCanvas);
-    }, [redraw]);
+        const observateur = new ResizeObserver((entrees) => {
+            const entree = entrees[0];
+            if (!entree) return;
+            const l = Math.round(entree.contentRect.width);
+            const h = Math.round(entree.contentRect.height);
+            /* Ne réassigner que si la taille a VRAIMENT changé : sinon on vide
+               le canevas pour rien, et on perd le réglage du contexte. */
+            if (canvas.width !== l || canvas.height !== h) {
+                canvas.width = l;
+                canvas.height = h;
+                if (contextRef.current) {
+                    contextRef.current.lineCap = 'round';
+                    contextRef.current.lineJoin = 'round';
+                }
+            }
+            redrawRef.current();
+        });
+
+        observateur.observe(parent);
+        return () => observateur.disconnect();
+    }, []);
 
     useEffect(() => {
         redraw();

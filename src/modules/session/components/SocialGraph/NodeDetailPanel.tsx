@@ -159,7 +159,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
 
             </div>
 
-            <div className="space-y-6 flex-1 overflow-y-auto pr-2 scrollbar-hide">
+            <div className="space-y-6 flex-1 overflow-y-auto pr-2 no-scrollbar">
                 {!isEditing ? (
                     <section>
                         <div className="flex items-center gap-2 mb-3 text-slate-400">

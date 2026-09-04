@@ -177,7 +177,7 @@ const RemoteControl: React.FC = () => {
                   `p-3` au lieu de `p-4 md:p-10` : quarante pixels de marge de
                   chaque côté sur une tablette, c'est une colonne de pads perdue.
                 */}
-                <main className="flex-1 overflow-y-auto scrollbar-hide p-3">
+                <main className="flex-1 overflow-y-auto no-scrollbar p-3">
                     {renderContent()}
                 </main>
 

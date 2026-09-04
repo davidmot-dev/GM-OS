@@ -131,8 +131,31 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 ### 6. ✏️ Tableau
 
 **La télécommande sait dessiner.** Un canevas tactile relayé vers Whiteboard-OS : vous croquez un
-plan sur le téléphone, il apparaît sur le tableau du meneur — et de là, sur l'écran des joueurs si
+plan sur la tablette, il apparaît sur le tableau du meneur — et de là, sur l'écran des joueurs si
 vous le projetez. → [Guide de Whiteboard-OS](./Whiteboard_OS_User_Guide.md)
+
+La barre du haut porte **cinq outils** (crayon, gomme, laser, rectangle, cercle), **trois
+épaisseurs**, le **fond clair ou sombre**, annuler, rétablir et tout effacer. Les couleurs sont en
+bas.
+
+> ⛔ **Le défaut le plus coûteux de cette tablette, corrigé le 2026-09-05.** Le meneur envoyait
+> **quatre** des sept réglages du tableau : l'outil, la couleur et l'épaisseur n'arrivaient jamais et
+> restaient à leur valeur de départ. Or le canevas les recopie dans **chaque tracé qu'il envoie** —
+> donc **tout ce qui était dessiné depuis une tablette partait en crayon blanc d'épaisseur 3**, quel
+> que soit le bouton touché, et **la gomme dessinait au lieu d'effacer**.
+>
+> *Rien ne le signalait : sur un fond sombre, un trait blanc ressemble à un trait qu'on a voulu.*
+
+> ✅ **Deux réglages sont offerts pour la première fois.** L'**épaisseur** avait son mécanisme côté
+> meneur et aucun bouton sur la tablette ; le **fond clair** était un ordre déclaré que personne
+> n'émettait et que personne n'écoutait.
+
+> 🔎 **Le meneur garde la main.** Changer d'outil sur son écran change celui de la tablette, et
+> l'inverse est vrai. Votre choix s'applique immédiatement sur la tablette sans attendre
+> l'aller-retour — sinon un trait commencé aussitôt après serait parti avec l'ancien outil.
+
+> ✅ **Le canevas prend enfin toute la place.** Il était bridé à 60 % de la hauteur de l'écran, une
+> provision taillée pour l'ancienne disposition à l'étroit.
 
 *Absent de ce guide jusqu'au 2026-09-04.*
 

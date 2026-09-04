@@ -7,6 +7,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useFavoriteStore } from '../../favorite/useFavoriteStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import { useClockStore, jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
+import { segmentDuTableau } from '../segmentDuTableau';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
@@ -388,7 +389,26 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     isCombatProjected: combatStore.isCombatProjected
                 },
                 notes,
-                whiteboard: { paths: whiteboardStore.paths, activePath: whiteboardStore.activePath, laserPointer: whiteboardStore.laserPointer, backgroundMode: whiteboardStore.backgroundMode },
+                /*
+                  **Sept champs déclarés, quatre envoyés — corrigé le 2026-09-05.**
+
+                  `RemoteSyncData.whiteboard` annonçait `currentTool`,
+                  `currentColor` et `currentWidth` ; **rien ne les mettait dans
+                  le message**. Ils restaient donc à leur valeur de départ sur la
+                  tablette — crayon, blanc, épaisseur 3 — pour toujours.
+
+                  Ce n'était pas qu'un affichage faux : `RemoteDrawingCanvas`
+                  recopie ces trois champs dans **chaque tracé qu'il émet**. Tout
+                  ce qui était dessiné depuis une tablette partait donc en crayon
+                  blanc d'épaisseur 3 quel que soit l'outil touché, et **la gomme
+                  dessinait au lieu d'effacer**.
+
+                  *C'est mot pour mot l'asymétrie que l'en-tête de
+                  `remote.types.ts` décrit pour `RemoteCombatant`, trois champs
+                  plus haut dans le même fichier : une divergence entre celui qui
+                  écrit et celui qui lit est indétectable par construction.*
+                */
+                whiteboard: segmentDuTableau(whiteboardStore),
                 clock: { timestamp: clockStore.timestamp, tensions: jaugesVuesParLesJoueurs(clockStore.tensions), timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
                 universalPads,
                 comptesDePads,

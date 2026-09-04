@@ -33,6 +33,7 @@ const EXPECTED_TYPES = [
     'whiteboard:set-laser-pointer', 'whiteboard:set-active-path',
     'whiteboard:draw', 'whiteboard:add-path',
     'whiteboard:set-tool', 'whiteboard:set-color', 'whiteboard:set-width',
+    'whiteboard:set-background',
     'whiteboard:clear', 'whiteboard:undo', 'whiteboard:redo',
     // Scène
     'map:ping', 'remote:map:ping',

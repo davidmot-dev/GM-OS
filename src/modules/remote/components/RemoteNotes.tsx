@@ -35,7 +35,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({ notes, isAventureMode }) => {
                 </button>
             </div>
 
-            <div className={`flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 rounded-2xl bg-white/[0.03] border border-white/5 transition-all ${isAventureMode && notesView === 'private' ? 'blur-md grayscale pointer-events-none' : ''}`}>
+            <div className={`flex-1 min-h-0 overflow-y-auto no-scrollbar p-4 rounded-2xl bg-white/[0.03] border border-white/5 transition-all ${isAventureMode && notesView === 'private' ? 'blur-md grayscale pointer-events-none' : ''}`}>
                 <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-300 max-w-[75ch]">
                     {notesView === 'private'
                         ? (isAventureMode

@@ -150,8 +150,15 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
     }));
 
     // Ref stable pour accéder à redraw sans créer de dépendance d'effet
+    /*
+      **La référence se pose après le rendu, pas pendant.** L'écrire dans le
+      corps du composant est une mutation en phase de rendu — React s'en plaint,
+      et un rendu abandonné laisserait la référence en avance sur l'état affiché.
+      L'effet sans dépendance s'exécute après chaque rendu, donc bien avant que
+      le `ResizeObserver` ne puisse l'appeler.
+    */
     const redrawRef = useRef(redraw);
-    redrawRef.current = redraw;
+    useEffect(() => { redrawRef.current = redraw; });
 
     // RESIZE: Ne s'exécute qu'au montage — utilise ResizeObserver pour détecter les vrais changements de taille
     useEffect(() => {

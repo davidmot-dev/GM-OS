@@ -302,7 +302,7 @@ const AmbientDashboard: React.FC = () => {
             </div>
 
             {/* Quick Scenes Row */}
-            <div className="flex items-center gap-3 px-2 overflow-x-auto scrollbar-hide py-1">
+            <div className="flex items-center gap-3 px-2 overflow-x-auto no-scrollbar py-1">
                 <div className="flex items-center gap-2 text-gm-emerald bg-gm-emerald/10 border border-gm-emerald/20 px-3 py-2 rounded-xl group relative">
                     <Activity size={14} />
                     <span className="text-[10px] font-black uppercase tracking-tight">{t('modules:ambient.dashboard.quick_scenes')}</span>
