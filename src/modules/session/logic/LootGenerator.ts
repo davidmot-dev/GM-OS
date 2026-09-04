@@ -1,9 +1,48 @@
-import type { LootTable, LootEntry } from '../../../types/drivers';
+import type { LootTable, LootEntry, LootRollMode } from '../../../types/drivers';
 import type { InventoryItem } from '../store/types';
 import type { TableData } from '../../tables/types';
 import { TableEngine } from '../../tables/TableEngine';
 import { objetsDepuisDeclaration } from './butinDeclare';
 import { resoudreUneQuantite } from './quantiteDeButin';
+
+/**
+ * Comment cette table tire — **une seule lecture de la règle**.
+ *
+ * `rollMode` est le champ actuel ; `isWeighted` est celui des tables d'avant, et
+ * des tables enregistrées le portent encore. Le générateur savait replier sur
+ * lui ; les écrans, non — un `table.rollMode || 'weighted'` affichait « un seul
+ * parmi la liste » à une table qui teste chaque ligne. *L'éditeur mentait sur ce
+ * que le tirage allait faire*, et l'ancienne case à cocher tombait juste par
+ * accident.
+ */
+export function modeDeTirage(
+    table: Pick<LootTable, 'rollMode'> & { isWeighted?: boolean },
+): LootRollMode {
+    if (table.rollMode) return table.rollMode;
+    return table.isWeighted ? 'weighted' : 'independent';
+}
+
+/**
+ * La table du pilote qu'une entrée `table` désigne — par identifiant, sinon par
+ * nom.
+ *
+ * **Le repli sur le nom est conservé**, et il n'est pas théorique : la table
+ * « TEST » de Blade Runner renvoie vers `« Table 2 »`, son nom, pas son
+ * identifiant. Le retirer casserait des liens qui fonctionnent.
+ *
+ * *L'éditeur lit la même fonction que le générateur*, sans quoi sa liste
+ * déroulante afficherait « Choisir une table... » sur un renvoi qui marche.
+ */
+export function tableImbriqueeDe(entry: LootEntry, tables: LootTable[]): LootTable | undefined {
+    const cible = String(entry.metadata?.tableId || entry.name || '').trim();
+    if (!cible) return undefined;
+    return tables.find(
+        t =>
+            (t.id && t.id.trim() === cible) ||
+            (t.name && t.name.trim() === cible) ||
+            (t.name && t.name.trim().toLowerCase() === cible.toLowerCase()),
+    );
+}
 
 /** Un oracle de Table-OS désigné par une entrée de type `oracle`. */
 export interface ReferenceDOracle {
@@ -65,7 +104,7 @@ export class LootGenerator {
                 const nom = String(metadata.oracleTable || '').trim();
                 if (univers && nom) refs.push({ univers, table: nom });
             } else if (entry.type === 'table') {
-                const suivante = this.trouverLaTableImbriquee(entry, allTables);
+                const suivante = tableImbriqueeDe(entry, allTables);
                 if (suivante) refs.push(...this.referencesDOracle(suivante, allTables, vues));
             }
         }
@@ -95,12 +134,7 @@ export class LootGenerator {
         for (let r = 0; r < numRolls; r++) {
             const entriesToProcess: LootEntry[] = [];
 
-            // On vérifie le mode de tirage (weighted par défaut si non spécifié)
-            const mode =
-                table.rollMode ||
-                ((table as { isWeighted?: boolean }).isWeighted ? 'weighted' : 'independent');
-
-            if (mode === 'independent') {
+            if (modeDeTirage(table) === 'independent') {
                 // Mode Indépendant : chaque ligne est testée comme un % de chance
                 for (const entry of table.entries) {
                     const chance = Number(entry.weight) || 0;
@@ -119,7 +153,7 @@ export class LootGenerator {
 
                 if (entry.type === 'table') {
                     if (objets.length >= totalItemsLimit) continue;
-                    const nextTable = this.trouverLaTableImbriquee(entry, allTables);
+                    const nextTable = tableImbriqueeDe(entry, allTables);
 
                     if (!nextTable) {
                         const cible = (metadata.tableId as string) || entry.name || '';
@@ -169,26 +203,6 @@ export class LootGenerator {
         }
 
         return { objets, avertissements };
-    }
-
-    /**
-     * L'entrée désigne une table du pilote — par identifiant, sinon par nom.
-     *
-     * Le repli sur le nom est conservé : des pilotes enregistrés s'en servent, et
-     * le retirer les casserait sans rien réparer.
-     */
-    private static trouverLaTableImbriquee(
-        entry: LootEntry,
-        allTables: LootTable[],
-    ): LootTable | undefined {
-        const cible = String(entry.metadata?.tableId || entry.name || '').trim();
-        if (!cible) return undefined;
-        return allTables.find(
-            t =>
-                (t.id && t.id.trim() === cible) ||
-                (t.name && t.name.trim() === cible) ||
-                (t.name && t.name.trim().toLowerCase() === cible.toLowerCase()),
-        );
     }
 
     /**

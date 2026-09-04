@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import type { LootTable } from '../../../types/drivers';
 import type { TableData } from '../../tables/types';
 import { objetsDepuisDeclaration, laDeclarationEstVide } from './butinDeclare';
-import { LootGenerator, cleDOracle } from './LootGenerator';
+import { LootGenerator, cleDOracle, modeDeTirage, tableImbriqueeDe } from './LootGenerator';
 import { estDeLaCampagne } from '../store/lootSlice';
 import { lesDonneesDeLaSession } from './donneesDeLaSession';
 import type { SessionOSStore } from '../store/index';
@@ -172,5 +172,43 @@ describe('le butin de séance survit à la fermeture', () => {
 
         expect(durables.lootPool).toEqual(['un-objet']);
         expect(durables.lootHistory).toEqual(['un-don']);
+    });
+});
+
+describe('les tables enregistrées avant le champ `rollMode`', () => {
+    /*
+      Relevées telles quelles dans la sauvegarde du 2026-08-30 : la table « TEST »
+      de Blade Runner porte `isWeighted: false` et **pas** de `rollMode`, et son
+      renvoi vise « Table 2 » — un NOM, pas un identifiant.
+    */
+    const heritee = {
+        id: 'table-1775755055363',
+        name: 'TEST',
+        isWeighted: false,
+        rolls: '1d6',
+        entries: [
+            { name: 'Trésor', weight: 60, type: 'table' as const, metadata: { tableId: 'Table 2' } },
+        ],
+    } as unknown as LootTable;
+
+    const table2: LootTable = {
+        id: 'table-1775756043807',
+        name: 'Table 2',
+        rollMode: 'weighted',
+        rolls: '1',
+        entries: [{ name: 'Carte', weight: 50, type: 'item' }],
+    };
+
+    it("tirent bien chaque ligne, et l'écran doit le dire", () => {
+        // L'ancienne case à cocher tombait juste par accident ; deux boutons
+        // nommés lisant `rollMode || weighted` auraient menti.
+        expect(modeDeTirage(heritee)).toBe('independent');
+        expect(modeDeTirage(table2)).toBe('weighted');
+        expect(modeDeTirage({ rollMode: undefined })).toBe('independent');
+    });
+
+    it('gardent un renvoi fait par nom, que la liste doit montrer choisi', () => {
+        const cible = tableImbriqueeDe(heritee.entries[0], [heritee, table2]);
+        expect(cible?.id).toBe('table-1775756043807');
     });
 });

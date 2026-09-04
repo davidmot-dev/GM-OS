@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Archive, Plus, Trash2, Dices, Layers } from 'lucide-react';
 import type { GameDriver, LootEntry, LootTable } from '../../../../types/drivers';
 import { pontDesTables } from '../../../tables/pontDesTables';
+import { modeDeTirage, tableImbriqueeDe } from '../../logic/LootGenerator';
 import { raretesDuJeu } from '../../logic/vocabulaireDuButin';
 
 /**
@@ -269,7 +270,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                             key={mode}
                                             onClick={() => majTable(tIdx, { rollMode: mode })}
                                             className={`px-3 py-2 rounded-xl border text-left transition-all ${
-                                                (table.rollMode || 'weighted') === mode
+                                                modeDeTirage(table) === mode
                                                     ? 'bg-amber-500/15 border-amber-500/40 text-amber-300'
                                                     : 'bg-app-bg/40 border-app-border/10 text-app-text/40 hover:text-app-text/70'
                                             }`}
@@ -353,7 +354,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
 
                                                 <div className="col-span-2">
                                                     <label className={etiquette}>
-                                                        {(table.rollMode || 'weighted') === 'weighted'
+                                                        {modeDeTirage(table) === 'weighted'
                                                             ? t('modules:session.rule_engine_editor.loot.weight_label')
                                                             : t('modules:session.rule_engine_editor.loot.chance_label')}
                                                     </label>
@@ -405,8 +406,15 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                             <Layers size={8} className="inline mr-1" />
                                                             {t('modules:session.rule_engine_editor.loot.target_table_label')}
                                                         </label>
+                                                        {/*
+                                                            La valeur affichée est celle que le
+                                                            générateur RÉSOUT, pas celle qui est
+                                                            stockée : un renvoi fait par nom
+                                                            fonctionne, et la liste doit le montrer
+                                                            choisi plutôt que vide.
+                                                        */}
                                                         <select
-                                                            value={String(entry.metadata?.tableId || '')}
+                                                            value={tableImbriqueeDe(entry, tables)?.id || ''}
                                                             onChange={e => majMetadata(tIdx, eIdx, { tableId: e.target.value })}
                                                             className={`${champ} text-violet-400`}
                                                         >

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useModeDeContexte } from '../../ai/modeDeContexte';
 import { IndicateurDeMode } from '../../ai/IndicateurDeMode';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { LootGenerator } from '../logic/LootGenerator';
+import { LootGenerator, modeDeTirage } from '../logic/LootGenerator';
 import { chargerLesOracles } from '../../tables/pontDesTables';
 import { proposerDesObjets } from '../logic/propositionDeButinIA';
 import { Sparkles, Dices, Layers, Wand2, Search, Loader2, Zap, BookOpen } from 'lucide-react';
@@ -214,7 +214,7 @@ const LootGeneratorPanel: React.FC = () => {
                                     <span className="text-[9px] text-app-text/40 font-medium uppercase tracking-widest">
                                         {t('modules:loot.generator.table_stats', {
                                             count: table.entries.length,
-                                            mode: t(`modules:loot.generator.roll_modes.${table.rollMode || 'weighted'}`),
+                                            mode: t(`modules:loot.generator.roll_modes.${modeDeTirage(table)}`),
                                         })}
                                     </span>
                                 </div>
