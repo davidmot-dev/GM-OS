@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS (04/09). **Suivant** : au choix de David.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, **les quatre modules audio** (04/09). **Suivant** : au choix de David.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -452,6 +452,30 @@ cache aucune perte de données. Mais son réglage central en dit moins qu'il ne 
 | **C4** | **`timeMultiplier` n'a pas d'écran.** Le champ, son action `setTimeMultiplier` et son commentaire (« accélération du temps fantastique ») existent ; **aucun composant ne l'appelle**, et il vaut donc toujours 1. Même famille que `setGridColor` de Map-OS (§ 12a, M5). | **Deux issues** : le retirer, ou lui donner son curseur en mode fantastique — une nuit qui passe pendant que le groupe campe. | `useClockStore.ts` |
 | **C5** | **Un seul calendrier est livré** (`databases/calendars/harptos.json`), là où le guide laissait entendre une bibliothèque. Le format, lui, est riche : mois de longueurs différentes, jours intercalaires, mois de bissextile, heures par jour libres. | **Rien à coder.** Le guide dit désormais qu'il y en a un, et comment en fabriquer un autre (copier le fichier). | `databases/calendars/` |
 
+#### 12e · Les modules audio — ce que la revue a trouvé dans le code
+
+*Quatre guides d'un coup — la tour de contrôle, Ambient-OS, Sound-OS, Music-OS. **Huit
+affirmations fausses**, dont deux qui se contredisaient entre deux pages : la durée du fondu des
+ambiances au Stop All était donnée à 1 s ici et 2 s là, et le code dit 1 s.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **A1** | **Le pad d'ambiance de la télécommande charge le silence.** `triggerUniversalPad` appelle `ambientStore.loadTheme`, qui pose `isPlaying: false` sur les huit pistes. Le guide promettait un « Toggle Intelligent » et un « Auto-Play » propres à la télécommande : **ni l'un ni l'autre n'existe**, et le pad fait exactement ce que fait le bouton du PC. | **À trancher.** Un pad de télécommande qui ne produit aucun son est difficile à défendre : soit on joue les pistes qui ont un volume (ce que le guide décrivait), soit on retire les thèmes d'ambiance de l'univers des pads. La première est ~10 lignes dans `sceneActions.ts`. | `remote/actions/sceneActions.ts:61-66` |
+| ⛔ **A2** | **Les trois thèmes d'ambiance livrés n'ont aucun fichier son** (`url: ''`). « Forêt Enchantée » charge trois pistes nommées *Oiseaux*, *Ruisseau*, *Feuillage* — et vides. Le guide laissait croire qu'elles apportaient leurs sons. | **Documenté** — ce sont des gabarits, et c'est défendable. Mais rien à l'écran ne le dit : une pastille « gabarit » sur ces trois-là éviterait la déception du premier clic. | `useAmbientStore.ts` (`DEFAULT_PRESETS`) |
+| **A3** | **Le volume général ne monte pas à 150 %.** Le curseur est borné à 1. Le guide promettait un *boost* ; les 150 % existent, mais sur le **volume d'un pad** de Sound-OS. | **Rien à coder** — sauf si David veut vraiment le boost. Corrigé dans le guide. | `MasterAudioController.tsx` |
+| **A4** | **La coupure rapide remonte à 100 %, pas au niveau d'avant.** `setMasterVolume(masterVolume === 0 ? 1 : 0)` : un aller-retour sur une table réglée à 40 % la met à fond. | **Petit correctif utile** : retenir le niveau d'avant la coupure. Trois lignes dans le magasin. | `MasterAudioController.tsx` |
+| **A5** | **Le Stop All ne coupe pas les bruitages : il les fond sur 3 secondes** (`SoundEngine.stopAll` fait une rampe de 3 s). Le guide de la tour de contrôle annonçait une « coupure instantanée ». Et il omettait que le Stop All **retire aussi les fiches et favoris projetés** du Hub. | **Rien à coder** ; les deux sont dans le guide. *À savoir en séance : le bouton panique met trois secondes à faire silence.* | `SoundEngine.ts:249` |
+| **A6** | **Le Focus Chat tamise les bruitages à 50 %**, pas à 10 % comme la musique et les ambiances — `Math.max(0.5, focusDuckingRatio * 5)`. Volontaire et bien pensé (un coup d'épée doit garder son impact), mais écrit nulle part. | **Documenté.** | `SoundEngine.ts:60` |
+| **A7** | **La reprise lumineuse d'Ambient-OS suit le NUMÉRO de piste**, pas l'ordre d'allumage : `otherActiveWithLights[length - 1]` prend le dernier de la liste, qui est ordonnée par index. Le guide annonçait « la dernière piste activée ». | **À trancher** : corriger le code (retenir un ordre d'allumage) ou la phrase. Le guide dit désormais la vérité. | `useAmbientStore.ts` (`handleLightReversion`) |
+| **A8** | **Le fondu automatique de Music-OS dure 5 secondes et se règle** (0,5 à 20 s), et sa courbe est **à puissance constante**. Le guide annonçait « une rampe de 1.5s » — faux sur les trois points. | **Rien à coder.** Le curseur existe, au-dessus du crossfader. | `useMusicStore.ts:205`, `logic/fonduCroise.ts` |
+| **A9** | **Un fragment de phrase recopié** au milieu du guide de Music-OS, reste d'un copier-coller. | ✅ **Réparé.** | — |
+| **A10** | **`setFocusDuckingRatio` n'a pas d'écran** : le rapport de tamisage est déclaré réglable et vaut toujours 0,1. Et `useAudioMasterStore.getBackupData()` **n'a aucun appelant** — le volume général et le Focus ne sont dans aucune sauvegarde. Même famille que `setGridColor` (§ 12a) et `timeMultiplier` (§ 12d) : **trois réglages déclarés, jamais offerts**. | **À trancher en une fois**, pour les trois modules. Un « atelier des réglages morts » : soit on les expose, soit on les retire. | `useAudioMasterStore.ts` |
+
+**Trois choses saines, vérifiées** : la sommation mono d'Ambient-OS et son compresseur existent
+bien ; les seize pads, le fondu de 3 s et le volume à 150 % de Sound-OS sont exacts ; le
+rattachement des playlists à une campagne se comporte comme annoncé, **playlists orphelines
+comprises** — une campagne supprimée ne fait pas disparaître ses musiques.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -515,7 +539,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Quatre modules passés, **vingt-huit** trouvailles (§§ 12a-12d) — **huit déjà réparées**, dont **tout le Media Hub** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Huit modules passés, **trente-huit** trouvailles (§§ 12a-12e) — **neuf déjà réparées**, dont **tout le Media Hub** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

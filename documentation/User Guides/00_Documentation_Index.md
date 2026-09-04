@@ -84,10 +84,10 @@ question la page répond — de quoi choisir sans ouvrir.
 
 | Guide | À quelle question il répond |
 | :--- | :--- |
-| [Master Soundscape](./Audio_Master_Guide.md) | Le volume global, et le mode qui baisse tout sauf la voix. |
+| [Tour de contrôle audio](./Audio_Master_Guide.md) | Le volume général, le Focus Chat, et le Stop All — **qui éteint aussi vos images et vos lumières**. |
 | [Music-OS](./Music_OS_User_Guide.md) | Les playlists, le fondu croisé, l'alignement des niveaux. |
-| [Ambient-OS](./Ambient_OS_User_Guide.md) | Les paysages sonores qui évoluent tout seuls. |
-| [Sound-OS](./Sound_OS_User_Guide.md) | Les bruitages ponctuels, sur pads. |
+| [Ambient-OS](./Ambient_OS_User_Guide.md) | Huit boucles à superposer — et **les thèmes livrés sont des gabarits sans sons**. |
+| [Sound-OS](./Sound_OS_User_Guide.md) | Seize pads de bruitages, clavier et MIDI. |
 | [Image-OS](./Image_OS_User_Guide.md) | Projeter une illustration, un portrait, une carte. |
 | [Media Hub](./Media_Hub_User_Guide.md) | Où vivent les fichiers, et comment les retrouver. |
 | [Light-OS](./Light_OS_User_Guide.md) | Les lumières Philips Hue dans la scène. |

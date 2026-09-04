@@ -1,31 +1,87 @@
-# Guide Utilisateur : Master Soundscape Controller
+# 🎚️ Guide : la tour de contrôle audio
 
-Le **Master Soundscape Controller** est votre tour de contrôle pour l'ambiance sonore globale de votre partie. Il se situe en haut de votre écran, dans la barre de titre de GM-OS.
+En haut de l'écran, dans la barre de titre, trois commandes règnent sur **tout** ce qui sort de
+GM-OS : le volume général, le **Focus Chat**, et le **Stop All**.
 
-## 🎚️ Volume Master Global
-Le curseur horizontal vous permet de régler le volume de **tous les sons** simultanément (Musique, Ambiances, Bruitages et Voix).
-- **Boost** : Vous pouvez monter jusqu'à 150% si certains sons sont trop faibles.
-- **Mute Rapide** : Cliquez sur l'icône de haut-parleur à gauche du curseur pour couper instantanément tout le son.
+Elles pilotent les quatre moteurs sonores à la fois —
+[Music-OS](./Music_OS_User_Guide.md), [Ambient-OS](./Ambient_OS_User_Guide.md),
+[Sound-OS](./Sound_OS_User_Guide.md) et [Voice-OS](./Voice_OS_User_Guide.md).
 
-## ⚡ Focus Chat (Tamisage Narratif)
-Le bouton **Focus Chat** (icône éclair/micro) est un outil puissant pour les moments de roleplay intense ou de narration importante.
+---
 
-- **Action** : En un clic, il divise le volume de la musique et des ambiances de fond par 10.
-- **Résultat** : L'atmosphère reste présente ("tamisage total") mais ne couvre plus jamais votre voix ou celle de vos joueurs.
-- **Retour au calme** : Cliquez à nouveau pour faire revenir progressivement la musique à son niveau précédent.
+## 🔊 Le volume général
 
-## 🚨 Stop All (Bouton Panique)
+Le curseur va de **0 à 100 %**, et le pourcentage s'affiche à droite.
 
-Le bouton **Stop All** (icône de bouton Power rouge/bourgogne) est votre arrêt d'urgence global. Il est situé à gauche du curseur de volume.
+> ⛔ **Correction.** Cette page annonçait un « Boost jusqu'à 150 % ». **Il n'existe pas** : le
+> curseur est borné à 100 %. Les 150 % existent bien, mais ailleurs — sur le **volume d'un pad**
+> de Sound-OS, réglable individuellement.
 
-- **Action** : Un seul clic déclenche une extinction totale et immédiate.
-- **Effets** :
-  - **Musique** : Arrêt de toutes les pistes en cours (Decks A & B).
-  - **Ambiances** : Fondu rapide de 1 seconde pour toutes les pistes d'ambiance.
-  - **SFX** : Coupure instantanée de tous les bruitages.
-  - **Images** : Extinction de toutes les projections (écran noir sur les moniteurs et le Hub).
-  - **Lumières** : Extinction immédiate de toutes les lumières Philips Hue synchronisées.
+L'icône de haut-parleur coupe le son d'un clic.
 
-## 💡 Astuces GM
-- Utilisez **Stop All** à la fin d'une session, lors d'une pause, ou pour créer un silence dramatique immédiat après un événement de jeu majeur.
-- Le **Focus Chat** est préférable pour les moments de dialogue, tandis que **Stop All** est destiné aux fins de scènes ou aux urgences.
+> ⚠️ **Le retour de la coupure remonte à 100 %, pas à votre niveau.** Le bouton bascule entre 0 et
+> 1 : si vous jouiez à 40 %, un aller-retour vous ramène à fond. Baissez plutôt le curseur, ou
+> resservez-vous-en pour revenir où vous étiez.
+
+---
+
+## ⚡ Focus Chat — tamiser sans couper
+
+Le bouton **Focus Chat** est fait pour les moments de dialogue : un clic, et tout ce qui pourrait
+couvrir la voix recule.
+
+| Ce qui joue | Ce qu'il devient |
+| :--- | :--- |
+| **La musique** | **10 %** de son niveau |
+| **Les ambiances** | **10 %** de son niveau |
+| **Les bruitages** | **50 %** — ils reculent, mais restent audibles |
+
+> 🔎 **Les bruitages ne sont pas tamisés comme le reste, et c'est voulu.** Un coup d'épée ou un
+> hurlement joué *pendant* la narration doit garder son impact : Sound-OS applique un plancher à
+> la moitié du volume, là où la musique et les ambiances descendent au dixième. Cette page ne le
+> disait pas.
+
+Le retour se fait en douceur — le gain remonte progressivement, il ne saute pas.
+
+> ⚠️ **À ne pas confondre avec le ducking de [Voice-OS](./Voice_OS_User_Guide.md)**, qui baisse la
+> musique **automatiquement quand vous parlez dans le micro**. Focus Chat est un interrupteur que
+> vous actionnez ; le ducking est un réflexe déclenché par votre voix. Les deux se cumulent.
+
+---
+
+## 🚨 Stop All — l'arrêt d'urgence
+
+Un clic, et la table redevient silencieuse et noire.
+
+| Ce qui s'arrête | Comment |
+| :--- | :--- |
+| **La musique** | Les deux platines, arrêt immédiat |
+| **Les ambiances** | Fondu de **1 seconde** |
+| **Les bruitages** | Fondu de **3 secondes** |
+| **Les projections d'images** | Écran noir sur les moniteurs et le Hub |
+| **Les fiches projetées** | Toutes les projections du Hub sont retirées |
+| **Les lumières Philips Hue** | Extinction |
+
+> ⛔ **Deux corrections.** Cette page annonçait une « coupure **instantanée** des bruitages » :
+> c'est un **fondu de trois secondes**, le plus long des trois. Et elle omettait que **les fiches
+> et favoris projetés sont retirés du Hub** — ce n'est pas qu'un bouton audio, c'est un rideau.
+
+Un message de confirmation s'affiche quand tout est éteint. Si l'un des modules refuse, un message
+d'erreur le dit plutôt que de laisser croire au silence.
+
+---
+
+## 💡 Lequel employer, et quand
+
+> [!TIP]
+> **Focus Chat** pour les dialogues et les révélations : l'ambiance reste, votre voix passe devant.
+> **Stop All** pour les fins de scène, les pauses, et le silence brutal après un coup de théâtre —
+> mais souvenez-vous qu'il éteint aussi vos images et vos lumières. Ce n'est pas un bouton de pause,
+> c'est un rideau qui tombe.
+
+---
+
+*Guide refait le 2026-09-04, code à l'appui. Deux affirmations fausses retirées (le boost à 150 %,
+la coupure instantanée des bruitages), deux comportements ajoutés (le tamisage à 50 % des
+bruitages, le retrait des projections du Hub), et un piège nommé : la coupure rapide remonte à
+100 %.*

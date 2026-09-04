@@ -1,67 +1,110 @@
-# 🔊 Guide Utilisateur : Sound OS
+# 🔊 Guide : Sound-OS, les bruitages
 
-Le module **Sound OS** est votre console d'effets sonores instantanés (One-Shots). Contrairement au Music OS qui gère des ambiances de fond, Sound OS est conçu pour déclencher des sons ponctuels (cris, explosions, bruits de pas) avec une réactivité maximale.
+Sound-OS est une console de déclenchement : **seize pads**, un clic, le son part. Un cri, une porte
+qui claque, une explosion. Rien ne boucle, rien ne s'installe — c'est un coup.
+
+Les trois modules audio se partagent le travail : [Music-OS](./Music_OS_User_Guide.md) joue des
+morceaux, [Ambient-OS](./Ambient_OS_User_Guide.md) tient le fond, Sound-OS **frappe**.
 
 ![Aperçu du module Sound OS](sound_mockup.png)
 
-## 📋 Présentation du Module
+---
 
-Le module propose une interface de type "Launchpad" haute performance :
+## 🎛️ Les pads
+
+Seize boutons, autant de sons. **Cliquez** pour déclencher. La polyphonie est totale : superposez un
+rugissement et une explosion, rien ne se coupe.
+
+**Clic droit sur un pad** pour l'équiper :
+
+| Réglage | Détail |
+| :--- | :--- |
+| **Le son** | choisi dans le [Media Hub](./Media_Hub_User_Guide.md) |
+| **Le titre** | pour le reconnaître en séance |
+| **Le volume** | **jusqu'à 150 %** — c'est ici que le boost existe, pas sur le volume général |
+| **La couleur** | rouge pour les attaques, vert pour la nature… un code visuel vaut mieux qu'une lecture |
+| **Une scène Philips Hue** | jouée en même temps que le son |
+| **Une touche du clavier** | voir plus bas |
+| **Une note MIDI** | voir plus bas |
+
 > [!TIP]
-> **Contrôle Global** : Vos bruitages sont asservis au [Master Soundscape Controller](./Audio_Master_Guide.md). Notez que le mode **Focus Chat** atténue les sons moins fortement que la musique pour garder l'impact des actions tactiques.
-
-1. **La Grille de Pads** : 16 boutons personnalisables pour déclencher vos sons.
-2. **Les Atmosphères** : Des onglets de navigation pour changer instantanément votre set de 16 pads selon le contexte (ex: "Forêt", "Donjon", "Combat Spatial").
-3. **Polyphonie Totale** : Sound OS peut jouer des dizaines de sons simultanément sans coupure.
-
-## 🚀 Fonctionnement des Pads
-
-### Déclenchement Simple
-
-- **Clic Gauche** : Lance le son instantanément.
-- **Polyphonie** : Cliquez plusieurs fois ou sur différents pads pour superposer les sons (ex: un rugissement pendant une explosion).
-
-### Personnalisation (Clic Droit)
-
-Faites un clic droit sur un pad pour ouvrir ses options :
-
-- **Titre** : Renommez le bouton pour l'identifier facilement.
-- **Volume Individuel** : Ajustez le gain de ce son spécifique (jusqu'à 150%).
-- **Couleur** : Assignez un code couleur pour organiser vos pads visuellement (ex: rouge pour les attaques, vert pour les sons naturels).
-
-## ⌨️ Raccourcis & Key Learning
-
-Comme pour la musique, vous pouvez associer des touches de votre clavier à vos effets sonores.
-
-1. Cliquez sur l'icône **Key Learn** (⌨️) dans l'en-tête.
-2. Sélectionnez le Pad à mapper.
-3. Appuyez sur la touche souhaitée.
-4. Quittez le mode Learning. Votre son est maintenant disponible partout dans l'OS !
-
-## 🎹 Support MIDI (MIDI Learn)
-
-Sound OS est compatible avec les contrôleurs matériels (Launchpad, Claviers maître, Korg NanoPad).
-
-1. Connectez votre contrôleur MIDI.
-2. Cliquez sur **MIDI Learn** (icône 🎹).
-3. Sélectionnez un Pad, puis appuyez sur la touche physique de votre contrôleur.
-4. Le bouton s'illumine en vert : la liaison est établie.
-
-## 💡 Maîtriser les Atmosphères
-
-Utilisez les atmosphères pour préparer vos sessions :
-
-- **Préparation** : Créez une atmosphère par lieu important de votre aventure.
-- **Transition Éclair** : D'un seul clic sur l'onglet en haut de la grille, tous vos pads changent pour correspondre au nouveau lieu.
+> **Le lien lumineux est le geste le plus payant du module.** Un pad « Tonnerre » qui déclenche le
+> son *et* fait flasher les lampes en blanc froid fait sursauter une table entière pour deux
+> minutes de préparation.
 
 ---
 
-## ⚙️ Configuration Avancée
+## 🗂️ Les atmosphères
 
-- **Master Stop (Fade-Out)** : Le bouton **Stop All** (⏹️) ne coupe pas le son brutalement. Il applique un fondu de sortie de 3 secondes sur tous les sons en cours pour une atmosphère plus naturelle.
-- **Output Device** : Dirigez vos effets sonores vers une sortie audio spécifique (différente de la musique si besoin) via les paramètres.
+Une **atmosphère** est un jeu complet de seize pads. Les onglets en haut de la grille passent de
+l'un à l'autre instantanément : « Forêt », « Donjon », « Combat spatial ».
+
+Préparez-en une par lieu important de votre scénario, et le changement de décor sonore devient un
+seul clic.
+
+> ⚠️ **Les atmosphères ne sont pas rattachées à une campagne.** Contrairement aux playlists de
+> Music-OS, elles sont communes à toute l'installation : toutes vos campagnes voient les mêmes
+> onglets. Nommez-les en conséquence si vous menez plusieurs jeux.
 
 ---
 
-> [!TIP]
-> **Linked Lights** : Chaque pad sonore peut être lié à une scène Philips Hue. Imaginez déclencher un son d'éclair (Thunder) et voir vos lampes flasher instantanément en blanc froid !
+## ⌨️ Le clavier et le MIDI
+
+**Key Learn** (icône clavier, dans l'en-tête) :
+
+1. Passez en mode apprentissage.
+2. Cliquez le pad à équiper.
+3. Appuyez sur la touche voulue.
+4. Quittez le mode.
+
+La touche fonctionne **partout dans GM-OS**, tant qu'aucun champ de saisie n'a le focus. Vous pouvez
+déclencher un bruitage depuis la carte ou le suivi de combat.
+
+**MIDI Learn** (icône piano) fonctionne pareil, avec un contrôleur branché — Launchpad, nanoPAD,
+clavier maître. Un bouton rafraîchit la liste des périphériques si vous branchez le vôtre après
+coup.
+
+---
+
+## 🎚️ Le volume, et ce que le Focus Chat en fait
+
+Sound-OS a **sa propre sortie audio**, réglable dans l'en-tête du module : vous pouvez envoyer les
+bruitages sur une enceinte différente de la musique.
+
+> 🔎 **Le Focus Chat ne traite pas les bruitages comme le reste.** Quand vous tamisez pour parler,
+> la musique et les ambiances tombent à **10 %** ; les bruitages, eux, s'arrêtent à **50 %**. C'est
+> délibéré : un coup d'épée joué pendant votre narration doit garder son impact. Voir la
+> [tour de contrôle audio](./Audio_Master_Guide.md).
+
+---
+
+## ⏹️ Les deux boutons rouges de l'en-tête
+
+Ils se ressemblent, et l'un est sans retour.
+
+| Bouton | Effet |
+| :--- | :--- |
+| **Arrêt Progressif** (carré) | Éteint tous les sons en cours par un **fondu de 3 secondes**. Sans danger. |
+| **Réinitialiser le module** (flèche circulaire) | ⛔ **Supprime toutes vos atmosphères et toute leur configuration.** Une confirmation le demande, et il n'y a pas de retour en arrière. |
+
+Le **Stop All** de la barre de titre applique le même fondu de trois secondes aux bruitages — ce
+n'est pas une coupure sèche, contrairement à ce qu'annonçait la tour de contrôle.
+
+---
+
+## 🔧 Dépannage
+
+| Problème | Ce qu'il faut regarder |
+| :--- | :--- |
+| **Ma touche ne déclenche rien** | Un champ de saisie a le focus. Cliquez dans le vide et réessayez. |
+| **Le contrôleur MIDI n'apparaît pas** | Branchez-le, puis rafraîchissez la liste depuis l'en-tête. |
+| **Le son part sur la mauvaise enceinte** | Sound-OS a sa sortie propre, dans son en-tête — distincte de celle de Music-OS. |
+| **Les bruitages sont faibles pendant que je parle** | Le Focus Chat est actif : ils sont à 50 %. |
+| **J'ai perdu mes atmosphères** | Le bouton de réinitialisation les efface toutes. Elles sont dans la [sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md). |
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Corrigé : la sortie audio se règle **dans le module**
+et non dans les Paramètres. Ajouté : le bouton de réinitialisation, qui détruit toutes les
+atmosphères ; le fait qu'elles ne sont pas rattachées à une campagne ; et la valeur exacte du
+tamisage des bruitages en Focus Chat.*

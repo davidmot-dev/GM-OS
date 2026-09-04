@@ -1,73 +1,138 @@
-# 🌦️ Guide Utilisateur : Ambient OS
+# 🌦️ Guide : Ambient-OS, les paysages sonores
 
-Le module **Ambient OS** est l'outil ultime pour créer des paysages sonores immersifs et évolutifs. Contrairement aux musiques (Music OS) ou aux effets ponctuels (Sound OS), Ambient OS permet de superposer jusqu'à 8 boucles sonores indépendantes (pluie, vent, rumeur de foule, drones) pour créer une ambiance sur mesure.
+Ambient-OS superpose **huit boucles** indépendantes — pluie, vent, rumeur de foule, drone — pour
+fabriquer une ambiance qui n'existe dans aucun fichier. C'est un pupitre de mixage, pas un lecteur.
+
+Trois modules audio, trois usages : [Music-OS](./Music_OS_User_Guide.md) joue des morceaux,
+[Sound-OS](./Sound_OS_User_Guide.md) déclenche des coups, Ambient-OS **tient le fond**.
 
 ![Aperçu du module Ambient OS](ambient_mockup.png)
 
-## 📋 Présentation du Module
+---
 
-L'interface est conçue comme un pupitre de mixage vertical :
-> [!TIP]
-> **Contrôle Global** : Le volume d'Ambient OS est piloté par le [Master Soundscape Controller](./Audio_Master_Guide.md). Le mode **Focus Chat** permet de tamiser toutes vos pistes d'ambiance d'un simple clic.
+## ⚠️ La chose à savoir avant de cliquer sur un thème
 
-1. **Les 8 Pistes (Tracks)** : Chaque piste est une couche sonore distincte avec sa propre gestion de volume et de lecture.
-2. **Univers & Thèmes** : Un système de bibliothèque pour charger des ensembles de sons pré-configurés.
-3. **Les Scènes** : Des snapshots qui enregistrent l'état (Play/Stop) et le volume de chaque piste pour des changements de contexte rapides.
+**Les thèmes livrés avec GM-OS ne contiennent aucun son.**
 
-## 🚀 Fonctionnement des Pistes
+Les trois univers d'exemple — *Arcologie* et *Club Néon* en Cyberpunk, *Forêt Enchantée* en
+Fantastique — chargent des **pistes nommées et vides** : « Oiseaux », « Ruisseau », « Feuillage »,
+avec leur volume et leur couleur, mais **sans fichier audio**. Ce sont des gabarits, pas des
+bibliothèques.
 
-### Gestion des Couches
-- **Lecture / Pause** : Chaque bouton de piste lance une boucle infinie. Les fondus d'entrée et de sortie (1.5s) assurent une transition naturelle.
-- **Mixage** : Utilisez les curseurs verticaux pour doser chaque élément. 
-  *Exemple : Augmentez le vent et baissez le chant des oiseaux pour simuler l'arrivée d'une tempête.*
-- **Visualisation** : Chaque piste dispose d'un micro-analyseur de spectre pour confirmer visuellement quel son produit du bruit.
+Le déroulé réel est donc :
 
-### Sommation Mono (Legacy Summing)
-GM-OS intègre une technologie héritée de la v3 qui force la sommation mono des pistes d'ambiance. Cela garantit une parfaite clarté du son, peu importe la position des joueurs autour de la table, et évite les problèmes de phase dans les environnements acoustiques difficiles.
-
-## 🛡️ Univers & Thèmes (Presets)
-
-Pour gagner du temps en session, Ambient OS utilise une hiérarchie par Univers :
-
-1. **Univers** : Catégorie globale (ex: *Fantastique*, *Cyberpunk*, *Horreur*).
-2. **Thèmes** : Configuration spécifique de sons (ex: dans l'univers Fantastique, le thème "Forêt Enchantée" chargera des oiseaux, un ruisseau et du feuillage).
-
-> [!TIP]
-> **Key Learning** : Vous pouvez assigner des touches de votre clavier aux pistes pour les activer/désactiver à la volée.
-
-## 🎭 Les Scènes d'Ambiance
-
-Les scènes permettent de modifier radicalement le paysage sonore avec un seul bouton.
-
-- **Snapshot Dynamique** : Une scène enregistre quels sons jouent et à quel volume.
-- **Exemples par défaut** :
-  - **Calme Plat** : Volume bas sur les pistes de fond.
-  - **Tension** : Augmentation des basses et des drones inquiétants.
-  - **Action / Danger** : Volume maximum sur tous les éléments pour une immersion totale.
-
-## 💡 Liens Lumineux (Philips Hue)
-
-Tout comme les autres modules audio de GM-OS, les pistes d'Ambient OS peuvent piloter vos lumières :
-
-1. **Lien par Piste** : Associez une scène lumineuse à une piste (ex: la piste "Orage" liée à une scène de flashs bleutés).
-2. **Priorité Intelligente** : Si plusieurs pistes liées jouent en même temps, l'OS donne la priorité à la dernière piste activée.
-3. **Retour au Calme** : Lorsque vous arrêtez une piste, l'OS rétablit automatiquement l'ambiance lumineuse de la piste précédente encore active, ou revient à votre éclairage manuel.
-
-## 📱 Contrôle Distant (Remote Mode)
-
-Lorsqu'utilisé via la télécommande ou le **Universal Pad**, Ambient OS change légèrement de comportement pour plus de réactivité :
-
-- **Toggle Intelligent** : Appuyer sur un pad de thème (ex: "Forêt") lancera immédiatement le chargement ET la lecture des pistes. Appuyer à nouveau sur le *même* pad coupera tout proprement (Fade Out).
-- **Auto-Play** : Contrairement à l'interface PC où charger un thème ne lance pas le son, la télécommande active automatiquement toutes les pistes ayant un volume configuré.
+1. Chargez un thème (ou partez des huit pistes vierges).
+2. **Attribuez un fichier à chaque piste** depuis le Media Hub.
+3. **Enregistrez le thème** : celui-là gardera vos sons, et se rechargera complet.
 
 ---
 
-## ⚙️ Configuration Technique
+## 🎚️ Les huit pistes
 
-- **Moteur Audio** : Utilise la Web Audio API avec un compresseur de dynamique en sortie master pour éviter toute saturation, même avec 8 pistes à plein volume.
-- **Formats** : Compatible avec vos fichiers locaux ainsi qu'avec les ressources du **Media Hub**.
+- **Lecture / Pause** par piste. L'entrée se fait en **fondu de 1,5 seconde**, la sortie en
+  **1 seconde**.
+- **Un curseur vertical** par piste : c'est là que se fait le travail. *Montez le vent, baissez les
+  oiseaux, et la tempête arrive sans que rien ne change de fichier.*
+- **Un mini-analyseur de spectre** sur chaque piste, pour voir d'un coup d'œil laquelle produit
+  effectivement du son.
+
+> 🔎 **Le son est sommé en mono, exprès.** Les deux canaux sont fusionnés avant la sortie. Une
+> ambiance n'a pas de scène stéréo à respecter, et vos joueurs ne sont pas assis au point d'écoute :
+> la sommation évite qu'une piste s'annule pour celui qui est du mauvais côté de la table.
+
+<!-- -->
+
+> 🔎 **Un compresseur tient la sortie.** Huit boucles à plein volume ne saturent pas.
 
 ---
 
-> [!IMPORTANT]
-> Le bouton **Stop All** déclenche un fondu de sortie global sur 2 secondes, évitant ainsi le silence brutal qui pourrait briser l'immersion de vos joueurs.
+## 📚 Univers et thèmes
+
+Deux niveaux : un **univers** (Fantastique, Cyberpunk, Horreur…) contient des **thèmes** (Forêt
+Enchantée, Taverne, Égouts).
+
+- **Enregistrer un thème** capture les huit pistes telles qu'elles sont — fichiers, volumes,
+  libellés, couleurs.
+- **Charger un thème** remplace les huit pistes… **et ne lance rien**. Vous chargez, vous réglez,
+  vous démarrez. C'est délibéré : un thème se prépare avant la scène.
+- Vous pouvez créer vos propres univers.
+
+---
+
+## 🎭 Les scènes
+
+Une scène est un **instantané des volumes et des états** des huit pistes — pas des fichiers. Elle
+transforme le paysage sans rien recharger.
+
+Trois sont livrées :
+
+| Scène | Ce qu'elle fait |
+| :--- | :--- |
+| **Calme** | Trois pistes actives, volumes bas |
+| **Tension** | Cinq pistes, les drones poussés |
+| **Action** | Les huit pistes, presque à fond |
+
+*Le bon usage : préparez le thème d'un lieu, puis trois scènes pour ce lieu — calme, tension,
+bagarre. Le lieu ne change pas, son humeur si.*
+
+---
+
+## 💡 Les liens lumineux (Philips Hue)
+
+Chaque piste peut porter une **scène lumineuse**, appliquée quand la piste démarre.
+
+Quand vous arrêtez une piste liée, GM-OS ne laisse pas la lumière en plan : il cherche **une autre
+piste allumée qui porte un lien**, et applique la sienne ; s'il n'y en a aucune, il revient à votre
+éclairage manuel.
+
+> ⛔ **Correction.** Cette page annonçait une priorité à « la dernière piste **activée** ». Le code
+> retient en fait celle qui porte **le numéro de piste le plus élevé** parmi celles encore
+> allumées — l'ordre des pistes, pas l'ordre dans le temps. Si la lumière ne revient pas à celle
+> que vous attendiez, c'est ça.
+
+---
+
+## 📱 Depuis la télécommande
+
+> ⛔ **Deux fonctions annoncées ici n'existent pas.** Cette page promettait un « Toggle
+> Intelligent » (appuyer lance la lecture, réappuyer coupe en fondu) et un « Auto-Play » propre à
+> la télécommande. **Ni l'un ni l'autre n'est dans le code** : un pad d'ambiance appelle exactement
+> la même fonction que le bouton du PC — il **charge le thème et ne joue rien**.
+>
+> Concrètement : **appuyer sur un pad de thème depuis la télécommande charge le silence.** Il faut
+> ensuite lancer les pistes depuis l'écran. Relevé le 2026-09-04.
+
+La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer une scène.
+
+---
+
+## 🔧 Dépannage
+
+| Problème | Ce qu'il faut regarder |
+| :--- | :--- |
+| **Un thème livré ne fait aucun bruit** | Normal : les thèmes d'exemple sont des gabarits sans fichiers. Attribuez vos sons, puis enregistrez le thème. |
+| **J'ai chargé un thème et rien ne démarre** | Voulu : charger ne lance pas. Démarrez les pistes une à une, ou appliquez une scène. |
+| **Le pad d'ambiance de la télécommande ne joue rien** | C'est le défaut ci-dessus, pas votre matériel. |
+| **La lumière ne revient pas à la bonne piste** | La reprise choisit le numéro de piste le plus élevé, pas la dernière allumée. |
+| **Une piste ne s'entend pas alors que son curseur est haut** | Regardez son analyseur de spectre : s'il est plat, c'est le fichier qui manque ou ne joue pas. |
+| **Tout est trop faible pendant une narration** | Le **Focus Chat** est actif : il met les ambiances à 10 %. |
+
+---
+
+## ⚙️ Détails techniques
+
+- **Moteur** : Web Audio, sommation mono, compresseur de sortie.
+- **Sources** : fichiers locaux et médias du [Media Hub](./Media_Hub_User_Guide.md).
+- **Sortie** : Ambient-OS a sa propre sortie audio, indépendante de la musique.
+- **Stop All** : le bouton d'urgence de la [tour de contrôle](./Audio_Master_Guide.md) éteint les
+  ambiances en **1 seconde**.
+
+> ⛔ **Correction.** Cette page annonçait un fondu de **2 secondes** au Stop All. C'est la valeur
+> par défaut de la fonction, mais le bouton lui en passe une autre : **une seconde**.
+
+---
+
+*Guide refait le 2026-09-04, code à l'appui. Trois affirmations fausses retirées — les thèmes livrés
+qui « chargeront des oiseaux et un ruisseau », le fondu de 2 secondes au Stop All, et les deux
+fonctions de télécommande qui n'existent pas. Deux précisions ajoutées : la reprise lumineuse suit
+le numéro de piste, et la sortie des pistes dure 1 seconde quand l'entrée en dure 1,5.*

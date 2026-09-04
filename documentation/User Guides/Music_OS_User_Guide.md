@@ -24,7 +24,18 @@ Le module s'articule autour de trois zones de contrôle :
 ### 2. Maîtriser les Transitions (Fades)
 
 - **Manual Fade** : Déplacez le curseur central (Crossfader) vers la gauche pour entendre uniquement le Deck A, ou vers la droite pour le Deck B.
-- **Auto-Fade** : Cliquez sur les boutons **Fade to A** ou **Fade to B**. GM-OS va alors baisser progressivement le volume de la platine active tout en augmentant celui de l'autre de manière fluide (rampe de 1.5s).
+- **Auto-Fade** : Cliquez sur **Fade to A** ou **Fade to B**. GM-OS croise les deux platines tout
+  seul. La durée est **réglable au-dessus du crossfader, de 0,5 à 20 secondes — 5 secondes par
+  défaut**.
+
+> ⛔ **Correction.** Cette page annonçait une « rampe de 1.5s ». Ni la durée ni la forme n'étaient
+> justes : le fondu dure **cinq secondes** sauf réglage contraire, et ce n'est **pas une rampe**
+> mais une courbe **à puissance constante** — les deux platines se croisent sans le creux de volume
+> qu'un fondu linéaire produit au milieu.
+
+> 🔎 **Le crossfader dit toujours la vérité pendant un fondu.** Sa position se calcule sur l'horloge
+> audio, pas sur un minuteur d'interface : interrompre un fondu en le saisissant reprend exactement
+> là où le son en est.
 
 ### 3. Points de Boucle (Loops) 🔁
 
@@ -38,6 +49,28 @@ Idéal pour les musiques d'ambiance qui ne doivent jamais s'arrêter.
 - Créez des onglets thématiques (ex: "Combat", "Exploration", "Taverne").
 - Chaque onglet dispose de sa propre grille de 16 pads.
 - **Drag & Drop** : Réorganisez vos musiques par simple glisser-déposer sur la grille.
+
+### 5. Se placer dans un morceau
+
+La forme d'onde n'est pas qu'un décor : **cliquez dedans** pour sauter à cet instant. Au clavier,
+les flèches déplacent la lecture de **5 secondes**, et de **1 seconde** avec `Maj` — de quoi caler
+une entrée sur un temps fort sans rater la scène.
+
+### 6. Les playlists suivent la campagne
+
+Une playlist peut appartenir à une campagne, ou rester **commune** à toutes.
+
+| État | Ce qui la montre |
+| :--- | :--- |
+| **Rattachée à la campagne ouverte** | visible, en premier |
+| **Commune** (aucun rattachement) | visible, ensuite |
+| **Rattachée à une campagne supprimée** | visible aussi — *une playlist orpheline ne disparaît pas avec sa campagne* |
+| **Rattachée à une autre campagne** | masquée |
+
+> 🔎 **Aucune campagne ouverte : rien n'est masqué.** Il n'existe alors aucun critère de tri, et
+> cacher la bibliothèque entière derrière un écran vide serait indiscernable d'une perte de données.
+
+Une playlist écrite avant l'arrivée de ce rattachement est **commune** : rien n'a eu à être migré.
 
 ---
 
@@ -100,8 +133,8 @@ Le combat s'accélère !
 ---
 
 > [!TIP]
-> Vous pouvez lier une musique à une ambiance lumineuse. Par exemple, lancer le pad "Incendie" peut automatiquement passer vos lampes Philips Hue en rouge clignotant !
-ple, lancer le pad "Incendie" peut automatiquement passer vos lampes Philips Hue en rouge clignotant !
+> Vous pouvez lier une musique à une ambiance lumineuse. Par exemple, lancer le pad « Incendie »
+> peut automatiquement passer vos lampes Philips Hue en rouge clignotant !
 
 ---
 
@@ -127,3 +160,10 @@ Deux morceaux d'une même playlist ne sortent presque jamais au même volume, et
 - Elle **ignore les silences et les intros murmurées** : sans cela, un morceau qui commence par vingt secondes de calme serait poussé de 10 dB, et le refrain arracherait la table.
 
 La correction est **bornée à ±12 dB** : une prise d'ambiance très douce ne sera pas remontée jusqu'à en réveiller son propre souffle. La cible est **−18 LUFS**.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Corrigé : le fondu automatique dure **5 secondes** et
+non 1,5, il est **réglable**, et sa courbe est à puissance constante. Réparé aussi : un fragment de
+phrase recopié au milieu de la page. Ajouté : le **pointage dans le morceau** (clic sur la forme
+d'onde, flèches au clavier) et le **rattachement des playlists à une campagne**.*
