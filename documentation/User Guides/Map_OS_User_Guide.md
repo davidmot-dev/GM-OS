@@ -161,8 +161,12 @@ automatiquement.
 > ⭐ **Vos joueurs peuvent déplacer les pions depuis leur tablette.** Tout pion visible sur l'écran
 > projeté est saisissable — **y compris les vôtres**. Un verrou de cinq secondes empêche deux
 > personnes de tirer le même pion en même temps ; celui qui n'a pas la main voit le pion terni et ne
-> peut pas le prendre. Si ce n'est pas ce que vous voulez pour votre table, la seule parade
-> aujourd'hui est de ne pas projeter la carte pendant les déplacements.
+> peut pas le prendre.
+>
+> **C'est un choix, pas un oubli** — confirmé le 2026-09-04. La confiance de table fait le travail,
+> et déplacer le pion d'un joueur absent dépanne plus souvent qu'il ne gêne. Si ce n'est pas ce que
+> vous voulez pour votre table, la parade est de ne pas projeter la carte pendant les
+> déplacements.
 
 ### Vider la carte
 

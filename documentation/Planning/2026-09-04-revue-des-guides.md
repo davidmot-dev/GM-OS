@@ -70,9 +70,9 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 > vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde — **troisième occurrence**
 > de cette famille après le faux backup GitHub et Map-OS.
 >
-> ✅ **Et les rangs P1 et P2 de la voie B sont réparés le même soir** — dont l'import de campagne
-> qui effaçait la SoundBoard, et le brouillard périmé chez les joueurs. Restent **P3 et P4**,
-> ci-dessous.
+> ✅ **Et la voie B est traitée jusqu'à P3 bis, le même soir** — l'import de campagne qui effaçait
+> la SoundBoard, le brouillard périmé chez les joueurs, la coupure du son qui repartait à plein
+> volume, et les trois décisions de table. **Reste P4**, le ménage.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -204,32 +204,45 @@ détail et les ancres sont au § 12 du registre.*
 | **A1** | Aucune ambiance n'arrivait sur la télécommande, et le code qui savait en lancer une était inatteignable. | **les deux moitiés construites** |
 | **M3** | Changer de carte en cours de projection laissait aux joueurs le brouillard de la précédente. | **le brouillard part toujours, `null` compris** |
 
-### P3 — L'écran dit autre chose que ce qu'il fait
+### ✅ P3 — L'écran dit autre chose que ce qu'il fait : **les seize sont faits**
 
-| # | Quoi |
-| --- | --- |
-| **M2** | Le panneau des calques annonce « sauvegardés par carte ». Ils sont globaux. |
-| **A4** | La coupure rapide du volume remonte à **100 %**, pas au niveau d'avant. |
-| **A7** | La reprise lumineuse d'Ambient-OS suit le **numéro** de piste, pas l'ordre d'allumage. |
-| **N7** | Le badge **Nexus-Ready** compte des fichiers ; il ne dit pas si la campagne est portable. |
-| **A2** | Les trois thèmes d'ambiance livrés sont des **gabarits sans sons**, et rien ne le signale. |
-| **T5** | Le **bouton de projection des dés est introuvable** : invisible jusqu'au survol du panneau de résultat, et absent tant qu'aucun jet n'a été fait. |
-| **V2** | La liste **Voix des PNJ** de Voice-OS ignore la galerie de campagne — elle ne lit que le mémo de NPC-OS. |
-| **V3** | Le **débruitage par défaut** est `navigateur`, que le dépannage désigne comme le premier suspect des fins de phrase coupées. |
-| **O3** | Le bouton **« Sync Oracle »** pousse la note dans un carnet NotebookLM — il n'alimente **pas** la conversation. Nom à revoir. |
-| **O4** | La ligne **« Oracle » du diagnostic IA** teste le pont NotebookLM, pas la conversation. |
-| **K1** | Le bouton **« Sensors »** du Cortex commande les **effecteurs** (sons, lumières), pas les capteurs. Le nom invite à l'erreur. |
-| **F3** | Un **dé dans une formule de fiche est relancé à chaque recalcul** : le résultat change dès qu'on touche un autre champ. |
-| **D4** | **La couleur déclarée d'une jauge n'est presque jamais appliquée** — et l'exemple que la Forge produit garantit qu'elle sera ignorée. |
-| **G8** | `clearAll` d'Image-OS est du **code mort**, et sa confirmation ment sur ce qu'elle efface. |
+*Réparés le 2026-09-04, détail au § 15 du registre. **Les quatre arbitrages ont été tranchés par
+David le même soir** — ils sont marqués ⚖️.*
 
-### P3 bis — Décisions de table, pas défauts
+| # | Quoi | ✅ |
+| --- | --- | --- |
+| **M2** | Le panneau des calques annonçait « sauvegardés par carte ». Ils sont globaux. | **la phrase dit vrai** |
+| ⛔ **A4** | La coupure rapide du volume repartait à **100 %**, pas au niveau d'avant. | **le niveau d'avant est rendu** |
+| ⛔ **A7** | La reprise lumineuse d'Ambient-OS suivait le **numéro** de piste, pas l'ordre d'allumage. | **`allumeeLe` décide** |
+| **N7** | Le badge **Nexus-Ready** compte des fichiers ; il ne dit pas si la campagne est portable. | **« *n* médias »** |
+| **A2** | Les trois thèmes d'ambiance livrés sont des **gabarits sans sons**, et rien ne le signalait. | **le libellé le dit** |
+| ⚖️ **T5** | Le **bouton de projection des dés** n'apparaissait qu'au survol du panneau de résultat. | **permanent** |
+| ⚖️ **V2** | La liste **Voix des PNJ** ignorait la galerie de campagne. | **ceux qui ont déjà un profil, campagne active** |
+| ⚖️ **V3** | Le **débruitage par défaut** était `navigateur`, le premier suspect du dépannage. | **Neuronal, et expliqué à l'écran** |
+| **O3** | Le bouton **« Sync Oracle »** pousse la note dans un carnet NotebookLM, pas dans la conversation. | **« Envoyer au carnet »** |
+| **O4** | La ligne **« Oracle » du diagnostic IA** teste le pont NotebookLM. | **« Pont NotebookLM (Forge) »** |
+| **K1** | Le bouton **« Sensors »** du Cortex commande les effecteurs, pas les capteurs. | **« Sons & Lum. »** |
+| ⚖️ **F3** | Un **dé dans une formule de fiche était relancé à chaque recalcul**. | **retenu par champ** |
+| ⛔ **D4** | **La couleur déclarée d'une jauge n'était lue que par un style sur trois** — et l'exemple de la Forge garantissait qu'elle serait ignorée. | **les trois styles, hexadécimal compris** |
+| **G8** | `clearAll` d'Image-OS était du **code mort** dont la confirmation mentait. | **retiré** |
 
-| # | La question posée à David |
-| --- | --- |
-| **C1** | Les **jauges de tension sont publiques**, toutes ou aucune. Faut-il une jauge secrète ? |
-| **M4** | **N'importe quel joueur déplace n'importe quel pion**, y compris vos monstres. À restreindre ? |
-| **N5** | L'archive d'une campagne **emporte les PNJ d'autres campagnes** liés par une relation, notes de MJ comprises. À caviarder ? |
+**Ce que ce rang a appris.** Trois défauts sur seize étaient *un chemin qui s'arrête avant le
+moteur* — D4, A7, A4 —, le motif que le pupitre de dés a déjà payé six fois. **Six autres n'étaient
+qu'un mot** : un bouton, un badge, une ligne de diagnostic qui nommaient autre chose que leur
+travail.
+
+*17 tests neufs, `npm run validate` vert, 3 540 tests.*
+
+### ✅ P3 bis — Décisions de table, pas défauts : **les trois sont tranchées**
+
+*Tranchées par David le 2026-09-04, détail au § 16 du registre. Deux ont donné du code, une s'est
+close par un refus — ce qui est une réponse, pas un report.*
+
+| # | La question | ✅ |
+| --- | --- | --- |
+| ⭐ **C1** | Les **jauges de tension étaient publiques**, toutes ou aucune. | **un œil par jauge, et une jauge neuve naît secrète** |
+| ⚠️ **N5** | L'archive emportait les **PNJ d'autres campagnes** entiers, notes de MJ comprises. | **caviardées — le réseau reste, les secrets restent chez vous** |
+| **M4** | **N'importe quel joueur déplace n'importe quel pion.** | **laissé ouvert, et le guide le dit comme un choix** |
 
 ### P4 — Ménage
 

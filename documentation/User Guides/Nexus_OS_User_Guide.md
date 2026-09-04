@@ -125,8 +125,15 @@ Deux inclusions qui surprennent :
 
 > ⚠️ **L'archive emporte des PNJ d'autres campagnes.** Si un de vos PNJ a une **relation sociale**
 > vers un personnage d'une autre campagne, ce personnage est inclus pour que le réseau reste
-> cohérent. C'est voulu — mais si vous envoyez le fichier à quelqu'un, **il recevra ces fiches-là
-> aussi**, notes comprises. Vérifiez vos relations croisées avant de partager.
+> cohérent. C'est voulu.
+>
+> ✅ **Mais depuis le 2026-09-04, ces fiches-là partent caviardées** : le nom, le portrait, le rôle
+> et les relations voyagent — c'est ce qui fait le réseau —, tandis que les **Notes de MJ** et les
+> **Informations secrètes** sont vidées. *Les secrets d'une campagne que vous n'avez jamais eu
+> l'intention de partager n'ont pas à voyager dans l'archive d'une autre.*
+>
+> **Les PNJ de la campagne exportée, eux, partent complets.** C'est la campagne qu'on emporte : se
+> caviarder soi-même n'aurait aucun sens.
 
 <!-- -->
 

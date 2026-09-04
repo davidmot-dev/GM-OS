@@ -127,6 +127,30 @@ function fusionnerParIdentifiant<T extends { id: string }>(
     ecrire([...remplaces, ...nouveaux]);
 }
 
+/**
+ * **Une fiche empruntée part sans les notes du meneur.**
+ *
+ * Point N5 du § 12, tranché par David le 2026-09-04. Le niveau 3 ramasse les
+ * PNJ **d'autres campagnes** liés par une relation sociale, pour que le réseau
+ * reste lisible chez le destinataire. C'est voulu — mais envoyer un bundle
+ * donnait alors ces fiches **entières**, `gmSecretInfo` compris : les secrets
+ * d'une campagne qu'on n'a jamais eu l'intention de partager voyageaient dans
+ * l'archive d'une autre.
+ *
+ * On garde ce qui fait le réseau — le nom, le portrait, le rôle, les relations —
+ * et on vide les deux champs de texte libre qui n'appartiennent qu'au meneur.
+ *
+ * ⚠️ **Ne s'applique QU'aux pièces rapportées.** Les PNJ de la campagne
+ * exportée partent complets : c'est la campagne qu'on emporte, et se caviarder
+ * soi-même n'aurait aucun sens.
+ *
+ * *Le caviardage se fait à la source, à l'extraction : ce qui n'est pas entré
+ * dans l'archive ne peut pas en sortir.*
+ */
+function caviarderUnePieceRapportee(entite: Entity): Entity {
+    return { ...entite, gmSecretInfo: '', roleplayingNotes: '' };
+}
+
 export class NexusService {
     private static instance: NexusService;
 
@@ -232,9 +256,9 @@ export class NexusService {
         });
         // Exclure les entités déjà capturées au niveau 2 (même campaignId)
         const entityIds = new Set(entities.map((e: Entity) => e.id));
-        const relatedEntities: Entity[] = store.entities.filter(
-            (e: Entity) => relatedEntityIds.has(e.id) && !entityIds.has(e.id)
-        );
+        const relatedEntities: Entity[] = store.entities
+            .filter((e: Entity) => relatedEntityIds.has(e.id) && !entityIds.has(e.id))
+            .map(caviarderUnePieceRapportee);
 
         // Niveau 3 : Decks de cartes (liés via deckSlice)
         // Le DeckSlice utilise `decks` (manifestes) et `deckStates` (états de session)

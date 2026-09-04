@@ -15,7 +15,9 @@ import {
     Monitor,
     LayoutGrid,
     ChevronsUp,
-    MonitorSmartphone
+    MonitorSmartphone,
+    Eye,
+    EyeOff
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
@@ -75,6 +77,7 @@ const ClockDashboard: React.FC = () => {
         changerLaCouleurDeLaJauge,
         remplirLaJauge,
         basculerSurLAfficheur,
+        basculerLaVueDesJoueurs,
         setTimer,
         setTimerLabel,
         timerDuration,
@@ -567,6 +570,33 @@ const ClockDashboard: React.FC = () => {
                                                 : 'text-slate-700 hover:text-slate-500'}`}
                                         >
                                             <MonitorSmartphone size={14} />
+                                        </button>
+
+                                        {/*
+                                          **Les joueurs la voient, ou non.**
+                                          Tranché par David le 2026-09-04 :
+                                          `isClockProjected` était tout-ou-rien,
+                                          et c'est justement la jauge qu'on veut
+                                          cacher qui rend les autres utiles.
+
+                                          ⚠️ Une jauge NEUVE naît fermée. Une
+                                          jauge d'avant ce bouton reste ouverte —
+                                          elle l'était hier, elle l'est encore.
+                                        */}
+                                        <button
+                                            type="button"
+                                            onClick={() => basculerLaVueDesJoueurs(clock.id)}
+                                            title={(clock.vueParLesJoueurs ?? true)
+                                                ? t('clock.gauge_players_hide')
+                                                : t('clock.gauge_players_show')}
+                                            aria-label={t('clock.gauge_players')}
+                                            className={`shrink-0 transition-colors ${(clock.vueParLesJoueurs ?? true)
+                                                ? 'text-gm-gold/70 hover:text-gm-gold'
+                                                : 'text-slate-700 hover:text-slate-500'}`}
+                                        >
+                                            {(clock.vueParLesJoueurs ?? true)
+                                                ? <Eye size={14} />
+                                                : <EyeOff size={14} />}
                                         </button>
                                     </div>
                                 </div>

@@ -1,4 +1,6 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
+import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
 
 // 🛡️ Safe Dynamic Store Access Helpers
@@ -72,7 +74,15 @@ export const useHubSync = () => {
     const timestamp = useClockStore ? useClockStore((s: any) => s.timestamp) : Date.now();
     const mode = useClockStore ? useClockStore((s: any) => s.mode) : 'realtime';
     const theme = useClockStore ? useClockStore((s: any) => s.theme) : 'modern';
-    const tensions = useClockStore ? useClockStore((s: any) => s.tensions) : EMPTY_ARR;
+    /*
+      **Les jauges secrètes ne quittent pas la machine du meneur** (point C1,
+      2026-09-04). Ce crochet alimente le Player Hub ET les tablettes : c'est
+      l'un des quatre chemins, et on caviarde à la source plutôt qu'à
+      l'affichage — *ce qui n'est pas parti ne peut pas être lu.*
+    */
+    const toutesLesJauges = useClockStore ? useClockStore((s: any) => s.tensions) : EMPTY_ARR;
+    const tensions = useMemo<TensionClock[]>(
+        () => jaugesVuesParLesJoueurs<TensionClock>(toutesLesJauges), [toutesLesJauges]);
     const isClockProjected = useClockStore ? useClockStore((s: any) => s.isClockProjected) : false;
 
     const favorites = useFavoriteStore ? useFavoriteStore((s: any) => s.favorites) : EMPTY_ARR;

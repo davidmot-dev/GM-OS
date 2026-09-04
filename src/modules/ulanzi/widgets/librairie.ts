@@ -550,7 +550,7 @@ export function horlogesPourLaTable(etat: {
     isClockProjected?: boolean;
     tensions?: {
         id: string; name: string; totalSegments: number; filledSegments: number;
-        color?: string; surLAfficheur?: boolean;
+        color?: string; surLAfficheur?: boolean; vueParLesJoueurs?: boolean;
     }[];
 }): HorlogeAAfficher[] {
     if (!etat.isClockProjected) return [];
@@ -563,6 +563,15 @@ export function horlogesPourLaTable(etat: {
           elle y va — comme avant ce champ.
         */
         .filter(t => t.surLAfficheur ?? true)
+        /*
+          **Une jauge secrète n'est pas non plus sur l'afficheur** (point C1,
+          2026-09-04). Les 32 pixels sont posés au milieu de la table : ce que
+          le meneur cache aux tablettes, il le cache là aussi. *Deux drapeaux,
+          deux questions* — `surLAfficheur` demande « celle-là plutôt que les
+          cinq autres », `vueParLesJoueurs` demande « la table a-t-elle le droit
+          de la voir » — et le second l'emporte toujours.
+        */
+        .filter(t => t.vueParLesJoueurs ?? true)
         .map(t => ({
         id: t.id,
         nom: t.name,

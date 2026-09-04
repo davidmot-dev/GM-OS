@@ -813,16 +813,33 @@ dépôt.*
 
 **Ce qui reste de la voie B** : les **trois décisions de table** (P3 bis) et le **ménage** (P4).
 
-#### P3 bis · Les trois décisions de table, en attente
+### 16 · ✅ P3 bis — les trois décisions de table, tranchées (2026-09-04)
 
-Ce ne sont pas des défauts : ce sont des choix de maîtrise qu'aucun code ne peut trancher à la
-place de David.
+Ce n'étaient pas des défauts : le code faisait ce pour quoi il avait été écrit. Ce sont des choix de
+maîtrise, et ils appartenaient à David. **Deux ont donné du code, un s'est clos par un refus.**
 
-| # | La question |
-| --- | --- |
-| **C1** | Les jauges de tension sont **publiques, tout ou rien**. Faut-il une jauge secrète, que le meneur voit sans que les joueurs la voient ? |
-| **M4** | **N'importe quel joueur peut déplacer n'importe quel pion**, y compris les monstres du meneur. Faut-il restreindre ? |
-| **N5** | Une archive de campagne emporte les **PNJ d'autres campagnes** liés par une relation sociale, **notes du meneur comprises**. Faut-il caviarder à l'export ? |
+| # | La question | La décision | Ce qui est fait |
+| --- | --- | --- | --- |
+| ⭐ **C1** | Les jauges de tension étaient **publiques, tout ou rien** : `isClockProjected` valait `true` au démarrage et **trois** écrans le lisaient. Cacher une seule jauge obligeait à cacher l'horloge entière. | **Un drapeau par jauge, et une jauge neuve naît secrète.** | `vueParLesJoueurs`, un œil dans le tableau de bord, et **LE filtre `jaugesVuesParLesJoueurs`** branché sur les **quatre** chemins vers un écran de joueur. 8 tests. |
+| ⚠️ **N5** | L'archive emportait les **PNJ d'autres campagnes** liés par une relation sociale — voulu, pour que le réseau reste lisible — mais **entiers**, `gmSecretInfo` compris. | **Caviarder les notes de MJ.** | Le nom, le portrait, le rôle et les relations partent ; les deux champs de texte libre du meneur sont vidés. **Uniquement les pièces rapportées** — les PNJ de la campagne exportée partent complets. 3 tests. |
+| **M4** | **N'importe quel joueur déplace n'importe quel pion** sur l'écran projeté, y compris les adversaires du meneur. | **Laisser ouvert.** | Rien à coder. La confiance de table fait le travail, et déplacer le pion d'un absent dépanne plus souvent qu'il ne gêne. **Le guide le dit désormais comme un choix, pas comme un oubli.** |
+
+**Ce que C1 a demandé, et qui ne se devinait pas.** Il y a **quatre** chemins vers un écran de
+joueur — le Player Hub, les tablettes, le segment `clock` de la télécommande, et l'afficheur de
+table. *Un caviardage qui vit dans trois copies est un caviardage qui sera oublié dans la
+quatrième* : d'où une seule fonction exportée, et le filtre posé **à la source, avant l'émission**.
+Une jauge secrète ne quitte pas la machine du meneur — ce qui n'est pas parti ne peut pas être lu.
+C'est la règle que l'Ulanzi avait déjà payée le 30/08.
+
+**Et une décision de compatibilité, dans les deux chantiers.** `vueParLesJoueurs` **absent** veut
+dire « vue », comme avant ce champ : les jauges d'hier n'ont pas bougé d'un pixel sur les écrans des
+joueurs. C'est la création qui écrit `false`. *Le même motif que `surLAfficheur` le 31/08 — l'anneau
+absent, la migration évitée.*
+
+**Vérifié** : `tsc -b` propre, 11 tests neufs, `npm run validate` vert.
+
+**Ce qui reste de la voie B** : **P4**, le ménage.
+
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

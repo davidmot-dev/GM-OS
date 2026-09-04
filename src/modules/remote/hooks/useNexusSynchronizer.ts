@@ -6,7 +6,7 @@ import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useFavoriteStore } from '../../favorite/useFavoriteStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
-import { useClockStore } from '../../../store/useClockStore';
+import { useClockStore, jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
@@ -70,7 +70,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 const s = useClockStore.getState();
                 payload.clock = { 
                     timestamp: s.timestamp, mode: s.mode, isClockProjected: s.isClockProjected, 
-                    theme: s.theme, tensions: s.tensions, timerRemaining: s.timerRemaining,
+                    theme: s.theme, tensions: jaugesVuesParLesJoueurs(s.tensions), timerRemaining: s.timerRemaining,
                     timerIsRunning: s.timerIsRunning, timerLabel: s.timerLabel, timerDuration: s.timerDuration
                 };
             } else if (segmentName === 'combat') {
@@ -336,7 +336,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 },
                 notes,
                 whiteboard: { paths: whiteboardStore.paths, activePath: whiteboardStore.activePath, laserPointer: whiteboardStore.laserPointer, backgroundMode: whiteboardStore.backgroundMode },
-                clock: { timestamp: clockStore.timestamp, tensions: clockStore.tensions, timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
+                clock: { timestamp: clockStore.timestamp, tensions: jaugesVuesParLesJoueurs(clockStore.tensions), timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
                 universalPads,
                 dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected, projectionTrigger: diceStore.projectionTrigger },
                 map: { 

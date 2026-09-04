@@ -11,18 +11,26 @@ L'écran est en trois zones : la **configuration** à gauche, le **visualiseur**
 
 ## ⚠️ La chose à savoir avant de créer une jauge
 
-**Vos jauges de tension sont visibles par vos joueurs. Toutes, et par défaut.**
+**Chaque jauge décide si les joueurs la voient — et une jauge neuve naît fermée.**
 
-Le bouton **Monitor**, en haut à droite du visualiseur, est allumé au démarrage. Tant qu'il l'est,
-chaque jauge que vous posez apparaît sur le Player Hub **et sur les tablettes** — son nom, sa forme,
-et son compte (`3 / 6`).
+Le bouton **Monitor**, en haut à droite du visualiseur, est l'interrupteur général : allumé au
+démarrage, il décide **si** les joueurs voient des jauges. Puis, sur chaque jauge, un **œil** décide
+**laquelle**. Ce qui est ouvert part sur le Player Hub, sur les tablettes et sur l'afficheur de
+table ; ce qui est fermé ne quitte pas votre écran.
 
-Il n'y a **pas de réglage jauge par jauge** pour les joueurs : c'est tout ou rien. Une jauge secrète
-n'est donc possible qu'en éteignant le bouton, ce qui masque aussi l'horloge et toutes les autres.
+| L'œil | Ce que ça veut dire |
+| :--- | :--- |
+| 👁️ doré | Les joueurs la voient, sur tous leurs écrans |
+| 👁️‍🗨️ éteint | Elle n'existe que pour vous — vous pouvez la nommer « Le traître frappe » |
 
-> 🔎 **Ce n'est pas forcément un défaut** — dans *Blades in the Dark*, les horloges sont publiques,
-> et c'est précisément ce qui les rend angoissantes. Mais il faut le savoir avant de nommer une
-> jauge « Le traître frappe ».
+> ⚠️ **Une jauge que vous créez aujourd'hui naît fermée**, et s'ouvre d'un clic. *Ouvrir est un
+> geste, refermer est un regret* : une jauge qu'on vient de poser porte souvent un nom qui en dit
+> trop. **Les jauges créées avant le 2026-09-04 restent ouvertes** — elles l'étaient hier, elles le
+> sont encore, et rien n'a bougé sur les écrans de vos joueurs.
+
+> 🔎 **Les laisser ouvertes reste un bon parti** — dans *Blades in the Dark*, les horloges sont
+> publiques, et c'est précisément ce qui les rend angoissantes. Le choix est désormais à vous, jauge
+> par jauge, au lieu d'être tout ou rien.
 
 ---
 
@@ -166,11 +174,14 @@ ajoute pas.*
 > [!TIP]
 > **Le secret des jauges** : servez-vous-en aussi pour les objectifs des joueurs — « Piratage de la
 > console », « Réparation du moteur » — et pas seulement pour les menaces. Une progression qu'on
-> voit avancer vaut tous les discours. Et puisqu'elles sont publiques, c'est le bon usage.
+> voit avancer vaut tous les discours — et pour celles-là, laissez l'œil ouvert.
 
 ---
 
 *Guide refait le 2026-09-04, code à l'appui. Trois choses qui n'y étaient pas : les **quatre formes**
-de jauge, le **réglage par jauge** pour l'afficheur de table, et le fait — le plus important —
-que **les jauges partent chez les joueurs, toutes ou aucune, et par défaut**. Une affirmation
-corrigée : le bouton de projection ne commande pas que le Player Hub.*
+de jauge, le **réglage par jauge** pour l'afficheur de table, et le fait — le plus important — que
+les jauges partaient chez les joueurs, toutes ou aucune, et par défaut. Une affirmation corrigée :
+le bouton de projection ne commande pas que le Player Hub.*
+
+*Ce dernier point a été **tranché et construit le soir même** : chaque jauge porte désormais son
+œil, et une jauge neuve naît fermée.*

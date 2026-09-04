@@ -809,6 +809,89 @@ describe('scrapeCampaignData — niveau 3 (relations cross-campagne)', () => {
         expect(result.relatedEntities?.[0].id).toBe('e-002');
     });
 
+    /**
+     * **Une fiche empruntée part sans les notes du meneur.**
+     *
+     * Point N5 du § 12, tranché par David le 2026-09-04. Le niveau 3 est voulu
+     * — il garde le réseau social lisible chez le destinataire —, mais il
+     * donnait ces fiches **entières**, `gmSecretInfo` compris : les secrets
+     * d'une campagne qu'on n'a jamais eu l'intention de partager voyageaient
+     * dans l'archive d'une autre.
+     */
+    it('CAVIARDE les notes de MJ des fiches empruntées — le point N5', async () => {
+        const entityWithRelation: Entity = {
+            ...mockEntity,
+            id: 'e-001',
+            campaignId: CAMPAIGN_ID,
+            relations: [
+                { targetId: 'e-002', targetType: 'npc', type: 'rival', description: 'Ennemi juré' },
+            ],
+        };
+        const voisineBavarde: Entity = {
+            ...mockEntityOtherCampaign,
+            id: 'e-002',
+            gmSecretInfo: 'Elle est la vraie commanditaire du meurtre.',
+            roleplayingNotes: 'Bégaie dès qu’on parle de son frère.',
+        };
+
+        const { useSessionOSStore } = await import('../../session/useSessionOSStore');
+        vi.mocked(useSessionOSStore.getState).mockReturnValue({
+            ...mockStoreState,
+            entities: [entityWithRelation, voisineBavarde],
+            customGameDrivers: [], customSheetTemplates: [], decks: [], deckStates: {},
+        } as never);
+
+        const result = service.scrapeCampaignData(CAMPAIGN_ID);
+
+        const empruntee = result.relatedEntities?.[0];
+        expect(empruntee?.id).toBe('e-002');
+        expect(empruntee?.gmSecretInfo).toBe('');
+        expect(empruntee?.roleplayingNotes).toBe('');
+        /* Ce qui fait le réseau reste : sans le nom, la relation ne pointe nulle part. */
+        expect(empruntee?.name).toBe(voisineBavarde.name);
+        expect(empruntee?.avatar).toBe(voisineBavarde.avatar);
+    });
+
+    it('caviarde AUSSI la copie rangée dans `entities` — les deux sorties, une seule liste', async () => {
+        /*
+          Le bundle porte la fiche empruntée à deux endroits : `relatedEntities`
+          pour information, et `entities` où elle est concaténée. *Caviarder une
+          des deux serait ne rien caviarder du tout.*
+        */
+        const entityWithRelation: Entity = {
+            ...mockEntity, id: 'e-001', campaignId: CAMPAIGN_ID,
+            relations: [{ targetId: 'e-002', targetType: 'npc', type: 'rival', description: '' }],
+        };
+        const { useSessionOSStore } = await import('../../session/useSessionOSStore');
+        vi.mocked(useSessionOSStore.getState).mockReturnValue({
+            ...mockStoreState,
+            entities: [entityWithRelation, { ...mockEntityOtherCampaign, id: 'e-002', gmSecretInfo: 'Un secret' }],
+            customGameDrivers: [], customSheetTemplates: [], decks: [], deckStates: {},
+        } as never);
+
+        const result = service.scrapeCampaignData(CAMPAIGN_ID);
+
+        expect(result.entities.find((e) => e.id === 'e-002')?.gmSecretInfo).toBe('');
+    });
+
+    it('ne caviarde PAS les PNJ de la campagne exportée — se caviarder soi-même n’a aucun sens', async () => {
+        const sien: Entity = {
+            ...mockEntity, id: 'e-001', campaignId: CAMPAIGN_ID,
+            gmSecretInfo: 'Le traître, c’est lui.',
+            roleplayingNotes: 'Parle trop vite quand il ment.',
+        };
+        const { useSessionOSStore } = await import('../../session/useSessionOSStore');
+        vi.mocked(useSessionOSStore.getState).mockReturnValue({
+            ...mockStoreState, entities: [sien],
+            customGameDrivers: [], customSheetTemplates: [], decks: [], deckStates: {},
+        } as never);
+
+        const result = service.scrapeCampaignData(CAMPAIGN_ID);
+
+        expect(result.entities[0].gmSecretInfo).toBe('Le traître, c’est lui.');
+        expect(result.entities[0].roleplayingNotes).toBe('Parle trop vite quand il ment.');
+    });
+
     it('n\'inclut pas les entités cross-campagne si aucune relation n\'existe', async () => {
         const { useSessionOSStore } = await import('../../session/useSessionOSStore');
         vi.mocked(useSessionOSStore.getState).mockReturnValue({

@@ -96,6 +96,42 @@ export interface TensionClock {
      * *le drapeau choisit lesquelles, l'interrupteur décide si.*
      */
     surLAfficheur?: boolean;
+    /**
+     * **Les joueurs voient-ils cette jauge ?**
+     *
+     * *Tranché par David le 2026-09-04 (point C1 du § 12).* `isClockProjected`
+     * était tout-ou-rien : masquer une seule jauge obligeait à masquer
+     * l'horloge entière. Or c'est précisément la jauge qu'on ne veut pas
+     * montrer qui rend le reste utile — le compte à rebours que le meneur tient
+     * pendant que la table croit avoir le temps.
+     *
+     * ⚠️ **Absent = elle est vue**, exactement comme avant ce champ : les
+     * jauges d'hier continuent de s'afficher, aucune migration, rien à
+     * redessiner. **Mais une jauge NOUVELLE naît secrète** — `addTensionClock`
+     * écrit `false` — parce qu'une jauge qu'on vient de créer n'a pas encore de
+     * nom qu'on assume, et qu'*ouvrir est un geste, refermer est un regret*.
+     *
+     * ⚠️ Ne remplace pas `isClockProjected`, qui reste l'interrupteur général :
+     * *le drapeau choisit lesquelles, l'interrupteur décide si.* Ni
+     * `surLAfficheur`, qui ne parle qu'à l'Ulanzi — une jauge secrète est
+     * retirée des deux, l'afficheur est posé sur la table.
+     */
+    vueParLesJoueurs?: boolean;
+}
+
+/**
+ * **LE filtre : ce que les joueurs ont le droit de voir.**
+ *
+ * Une seule fonction, parce qu'il y a **quatre** chemins vers un écran de
+ * joueur — le Player Hub, les tablettes, le segment `clock` de la télécommande,
+ * et l'afficheur de table. *Un caviardage qui vit dans trois copies est un
+ * caviardage qui sera oublié dans la quatrième.* On filtre **à la source**,
+ * avant l'émission : une jauge secrète ne quitte pas la machine du meneur.
+ */
+export function jaugesVuesParLesJoueurs<T extends { vueParLesJoueurs?: boolean }>(
+    tensions: T[] | undefined,
+): T[] {
+    return (tensions ?? []).filter((jauge) => jauge.vueParLesJoueurs ?? true);
 }
 
 /**
@@ -205,6 +241,8 @@ interface ClockState {
     remplirLaJauge: (id: string) => void;
     /** Cette jauge part-elle sur l'afficheur de table ? */
     basculerSurLAfficheur: (id: string) => void;
+    /** Ouvre ou referme une jauge aux joueurs. */
+    basculerLaVueDesJoueurs: (id: string) => void;
 
     // Calendar Actions
     /** Charge les données d'un calendrier en mémoire */
@@ -327,7 +365,15 @@ export const useClockStore = create<ClockState>()(
                         name,
                         totalSegments,
                         filledSegments: 0,
-                        forme
+                        forme,
+                        /*
+                          **Une jauge naît secrète.** Écrit explicitement, et non
+                          laissé absent : l'absence veut dire « d'avant ce champ »,
+                          donc « visible ». *Ouvrir est un geste, refermer est un
+                          regret* — une jauge qu'on vient de créer porte souvent un
+                          nom qui en dit trop.
+                        */
+                        vueParLesJoueurs: false,
                     }
                 ]
             })),
@@ -342,6 +388,14 @@ export const useClockStore = create<ClockState>()(
                 // donc le premier clic l'en retire — jamais l'inverse.
                 tensions: state.tensions.map((c) =>
                     (c.id === id ? { ...c, surLAfficheur: !(c.surLAfficheur ?? true) } : c)),
+            })),
+
+            basculerLaVueDesJoueurs: (id) => set((state) => ({
+                // `?? true` : une jauge d'avant ce champ est vue, donc le
+                // premier clic la referme. Une jauge neuve porte `false` et
+                // s'ouvre au premier clic — les deux sens marchent.
+                tensions: state.tensions.map((c) =>
+                    (c.id === id ? { ...c, vueParLesJoueurs: !(c.vueParLesJoueurs ?? true) } : c)),
             })),
 
             changerLaCouleurDeLaJauge: (id, couleur) => set((state) => ({
