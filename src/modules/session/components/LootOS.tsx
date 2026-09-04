@@ -5,18 +5,28 @@ import LootPoolViewer from './LootPoolViewer';
 import LootHistoryViewer from './LootHistoryViewer';
 import { Sparkles, Package, Coins, History } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { estDeLaCampagne } from '../store/lootSlice';
+import { estRemarquable, nomDeLaMonnaie } from '../logic/vocabulaireDuButin';
 import { motion } from 'framer-motion';
 
 const LootOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
-    const { lootPool } = useSessionOSStore();
+    const { lootPool, activeCampaignId, getActiveDriver } = useSessionOSStore();
     const [activeTab, setActiveTab] = useState<'generate' | 'pool' | 'history'>('generate');
 
-    const totalValue = lootPool.reduce((acc, it) => acc + (Number(it.value) || 0) * (it.quantity || 1), 0);
-    const magicItemsCount = lootPool.filter(it => it.rarity && !['common', 'currency'].includes(it.rarity)).length;
+    const driver = getActiveDriver();
+    // Le résumé compte ce que l'écran montre, donc le butin de cette campagne.
+    const butin = useMemo(
+        () => lootPool.filter(it => estDeLaCampagne(it.campaignId, activeCampaignId)),
+        [lootPool, activeCampaignId],
+    );
+
+    const totalValue = butin.reduce((acc, it) => acc + (Number(it.value) || 0) * (it.quantity || 1), 0);
+    const remarquables = butin.filter(it => estRemarquable(driver, it.rarity)).length;
+    const monnaie = nomDeLaMonnaie(driver);
 
     const gmQuotes = t('modules:loot.gm_tips.quotes', { returnObjects: true }) as string[];
-    
+
     const dailyQuote = useMemo(() => {
         if (!Array.isArray(gmQuotes) || gmQuotes.length === 0) return '';
         const quoteIndex = Math.floor((Date.now() / 3600000) % gmQuotes.length);
@@ -67,7 +77,7 @@ const LootOS: React.FC = () => {
                             <LootGeneratorPanel />
                         </motion.div>
                     )}
-                    
+
                     {activeTab === 'pool' && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
@@ -94,14 +104,21 @@ const LootOS: React.FC = () => {
                         <div className="glass-bento p-3 flex flex-col gap-1">
                             <div className="flex justify-between items-center">
                                 <span className="text-[10px] text-app-text/60 font-medium">{t('modules:loot.stats.total_value')}</span>
-                                <div className="flex items-center gap-1 text-gm-gold">
+                                <div className="flex items-center gap-1 text-gm-gold" title={monnaie}>
                                     <span className="text-xs font-bold">{totalValue.toLocaleString()}</span>
-                                    <Coins size={12} />
+                                    {/*
+                                        Le jeu nomme sa monnaie, ou personne ne la nomme.
+                                        Une pièce d'or dessinée sur un butin de Blade Runner
+                                        est une affirmation, pas une décoration.
+                                    */}
+                                    {monnaie
+                                        ? <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">{monnaie}</span>
+                                        : <Coins size={12} />}
                                 </div>
                             </div>
                             <div className="flex justify-between items-center text-[10px]">
-                                <span className="text-app-text/40">{t('modules:loot.stats.magic_items')}</span>
-                                <span className="text-violet-400 font-bold">{magicItemsCount}</span>
+                                <span className="text-app-text/40">{t('modules:loot.stats.remarkable_items')}</span>
+                                <span className="text-violet-400 font-bold">{remarquables}</span>
                             </div>
                         </div>
                     </div>

@@ -779,7 +779,7 @@
     "stats": {
       "title": "Résumé Trésor",
       "total_value": "Valeur Totale",
-      "magic_items": "Objets Magiques"
+      "remarkable_items": "Objets Remarquables"
     },
     "generator": {
       "ai_header": "Générateur Rapide (IA)",
@@ -801,11 +801,16 @@
         "ai_failed": "Échec de la génération IA : {{message}}"
       },
       "ai_prompts": {
-        "system": "Vous êtes un expert en conception de butin pour le système RPG \"{{systemName}}\".\n{{contextInstructions}}\nMISSION : Transformer la description de l'utilisateur en une liste d'objets structurés.\n\nRÈGLES :\n1. Répondez UNIQUEMENT avec un tableau JSON d'objets.\n2. Chaque objet doit suivre cette interface :\n   {\n     \"name\": string,\n     \"quantity\": number,\n     \"type\": \"item\" | \"currency\",\n     \"rarity\": \"common\" | \"uncommon\" | \"rare\" | \"epic\" | \"legendary\",\n     \"description\": string (courte et immersive),\n     \"weight\": number (poids en kg, optionnel),\n     \"value\": number (valeur estimée en pièces d'or)\n   }\n3. Pour la monnaie, utilisez le type : \"currency\". Une unité de monnaie vaut 1.\n4. Ne dépassez pas 10 objets au total.\n\nEXEMPLE DE SORTIE :\n[{\"name\": \"Dague en Os\", \"quantity\": 1, \"type\": \"item\", \"rarity\": \"common\", \"description\": \"Une dague fragile mais tranchante.\"}]",
+        "system": "Vous êtes un expert en conception de butin pour le système JDR \"{{systemName}}\".\n{{contextInstructions}}\nMISSION : Transformer la description de l'utilisateur en une liste d'objets structurés.\n\nRÈGLES :\n1. Répondez UNIQUEMENT avec un tableau JSON d'objets.\n2. Chaque objet doit suivre cette interface :\n   {\n     \"name\": string,\n     \"quantity\": number,\n     \"type\": \"item\" | \"currency\",\n     \"rarity\": un seul de : {{raretes}},\n     \"description\": string (courte et immersive),\n     \"weight\": number (masse, optionnel),\n     \"value\": number (valeur estimée en {{monnaie}})\n   }\n3. Pour la monnaie, utilisez le type : \"currency\". Une unité de monnaie vaut 1.\n4. N'inventez aucune rareté hors de la liste donnée.\n5. Ne dépassez pas 10 objets au total.\n\nEXEMPLE DE SORTIE :\n[{\"name\": \"Dague en Os\", \"quantity\": 1, \"type\": \"item\", \"rarity\": \"common\", \"description\": \"Une dague fragile mais tranchante.\"}]",
         "lite_instruction": "Soyez rapide et générique mais cohérent avec le système.",
-        "full_instruction": "Utilisez tout le contexte de la session pour créer des objets uniques liés à l'histoire."
+        "full_instruction": "Utilisez tout le contexte de la session pour créer des objets uniques liés à l'histoire.",
+        "monnaie_neutre": "unités de valeur"
       },
-      "generic_system": "Générique"
+      "generic_system": "Générique",
+      "roll_modes": {
+        "weighted": "un seul tiré",
+        "independent": "chaque ligne testée"
+      }
     },
     "pool": {
       "title": "Pool de Butin ({{count}})",
@@ -831,7 +836,8 @@
       "subtitle": "Trésors ajoutés à la fiche",
       "placeholder_name": "Objet sans nom",
       "footer_hint": "Fiche de personnage mise à jour",
-      "close": "Fermer"
+      "close": "Fermer",
+      "hub_content": "**{{item}}**{{quantite}} revient à **{{recipient}}**."
     },
     "roll_panel": {
       "title": "Générateur de Butin",
@@ -1213,7 +1219,14 @@
       "give_tooltip": "Donner à un PJ",
       "clear_tooltip": "Effacer",
       "recipient_fallback": "un PJ",
-      "effect_prefix": "Effet:"
+      "effect_prefix": "Effet:",
+      "pour_button": "Verser au butin",
+      "pour_tooltip": "Envoie ce que cette entrée déclare vers le butin de séance (Loot-OS)",
+      "poured_toast": "{{count}} objet(s) versé(s) au butin de séance.",
+      "propose_button": "Proposer des objets",
+      "propose_tooltip": "Cette entrée ne déclare aucun butin : l'IA propose des objets depuis son texte, à relire dans Loot-OS",
+      "propose_empty": "Aucun objet n'a pu être tiré de ce résultat.",
+      "propose_failed": "La conversion en objets a échoué."
     },
     "journal": {
       "share_title": "Partage Table : {{table}}",
@@ -2329,22 +2342,51 @@
         "delete_table": "Supprimer la table",
         "table_name_label": "Nom de la Table",
         "rolls_label": "Tirages (Dés)",
-        "weighted_label": "Pondéré (Unique)",
         "entries_title": "Entrées de la Table",
         "add_entry_btn": "Ajouter une Entrée",
         "new_item_name": "Nouvel Objet",
         "entry_types": {
           "item": "Objet / Loot",
           "table": "Sous-Table",
-          "currency": "Monnaie / Or"
+          "currency": "Monnaie / Or",
+          "oracle": "Oracle (Table-OS)"
         },
         "placeholder_display_name": "Nom affiché...",
         "placeholder_name": "Nom de l'objet...",
         "weight_label": "Poids / Chance",
         "chance_label": "Chance (%)",
         "qty_label": "Quantité",
-        "target_id_label": "ID Cible",
-        "placeholder_table_id": "table-xyz"
+        "vocabulary_title": "Le vocabulaire de ce jeu",
+        "vocabulary_hint": "Comment ce jeu nomme sa monnaie et ses paliers de rareté. Sans déclaration, GM-OS reste neutre : « valeur » et « objets remarquables », plutôt que des pièces d'or.",
+        "currency_label": "Monnaie",
+        "currency_placeholder": "Eurodollars, Cred, pièces d'or...",
+        "rarities_label": "Paliers de rareté",
+        "add_rarity_btn": "Ajouter un palier",
+        "rarities_default": "Échelle générique : {{liste}}",
+        "rarity_id_placeholder": "identifiant",
+        "rarity_label_placeholder": "Nom affiché",
+        "rarities_order_hint": "Du plus banal au plus rare. Le premier palier est celui qui ne compte pas comme remarquable.",
+        "mode_label": "Mode de tirage",
+        "modes": {
+          "weighted": "Un seul parmi la liste",
+          "weighted_hint": "Le nombre est un poids relatif",
+          "independent": "Chaque ligne a sa chance",
+          "independent_hint": "Le nombre est un % de chance"
+        },
+        "type_label": "Type",
+        "name_label": "Nom",
+        "display_name_label": "Nom affiché",
+        "target_table_label": "Table appelée",
+        "target_table_none": "Choisir une table...",
+        "oracle_universe_label": "Univers",
+        "oracle_table_label": "Table",
+        "oracle_choose": "Choisir...",
+        "oracle_hint": "L'oracle est tiré avec son propre moteur, et seul ce que l'entrée tirée DÉCLARE (champ « butin » du fichier JSON) entre au butin. Un oracle qui ne déclare rien se lit, il ne verse pas.",
+        "rarity_label": "Rareté",
+        "value_label": "Valeur",
+        "mass_label": "Masse",
+        "description_label": "Description",
+        "description_placeholder": "Ce que le joueur lit sur l'objet..."
       },
       "notebook": {
         "title": "NotebookLM Sync",

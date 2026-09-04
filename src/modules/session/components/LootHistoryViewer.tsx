@@ -4,10 +4,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { History, ArrowRight } from 'lucide-react';
 import { CharacterPortrait } from './LootPoolViewer';
+import { estDeLaCampagne } from '../store/lootSlice';
+import { libelleDeRarete, rangDepuisLeSommet } from '../logic/vocabulaireDuButin';
+
+/**
+ * La couleur d'un badge suit la **place** du palier dans l'échelle du jeu, pas
+ * son nom : le plus rare en ambre, celui d'en dessous en violet, le troisième en
+ * bleu, le reste en neutre. L'échelle par défaut retrouve exactement les
+ * couleurs d'avant — mais un jeu qui nomme ses paliers autrement les obtient
+ * aussi, ce qu'un `rarity === 'legendary'` écrit en dur ne permettait pas.
+ */
+const COULEURS_PAR_RANG = [
+    'bg-amber-500/20 text-amber-400 border border-amber-500/30',
+    'bg-purple-500/20 text-purple-400 border border-purple-500/30',
+    'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+];
+const COULEUR_NEUTRE = 'bg-white/5 text-app-text/40 border border-white/10';
 
 const LootHistoryViewer: React.FC = () => {
     const { t } = useTranslation(['modules']);
-    const { lootHistory, clearLootHistory } = useSessionOSStore();
+    const { lootHistory, clearLootHistory, activeCampaignId, getActiveDriver } = useSessionOSStore();
+    const driver = getActiveDriver();
+
+    // L'historique se lit campagne par campagne, comme le pool qui l'alimente.
+    const dons = React.useMemo(
+        () => lootHistory.filter(e => estDeLaCampagne(e.campaignId, activeCampaignId)),
+        [lootHistory, activeCampaignId],
+    );
 
     const formatTime = (ts: number) => {
         const diff = Date.now() - ts;
@@ -19,7 +42,7 @@ const LootHistoryViewer: React.FC = () => {
         return new Date(ts).toLocaleDateString();
     };
 
-    if (lootHistory.length === 0) {
+    if (dons.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
                 <History size={48} className="mb-3 opacity-20" />
@@ -46,7 +69,7 @@ const LootHistoryViewer: React.FC = () => {
 
             <div className="grid grid-cols-1 gap-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                 <AnimatePresence mode="popLayout">
-                    {lootHistory.map((entry) => (
+                    {dons.map((entry) => (
                         <motion.div
                             key={entry.id}
                             layout
@@ -62,12 +85,9 @@ const LootHistoryViewer: React.FC = () => {
                                             {entry.itemName} {entry.quantity > 1 ? `(x${entry.quantity})` : ''}
                                         </span>
                                         <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter ${
-                                            entry.rarity === 'legendary' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                                            entry.rarity === 'epic' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
-                                            entry.rarity === 'rare' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                            'bg-white/5 text-app-text/40 border border-white/10'
+                                            COULEURS_PAR_RANG[rangDepuisLeSommet(driver, entry.rarity)] ?? COULEUR_NEUTRE
                                         }`}>
-                                            {t(`modules:loot.rarities.${entry.rarity || 'common'}`)}
+                                            {libelleDeRarete(driver, entry.rarity)}
                                         </span>
                                     </div>
                                     <span className="text-[10px] text-app-text/30">

@@ -1,6 +1,40 @@
 import type { LootTable, LootEntry } from '../../../types/drivers';
 import type { InventoryItem } from '../store/types';
-import { DiceEngine } from '../../dice/DiceEngine';
+import type { TableData } from '../../tables/types';
+import { TableEngine } from '../../tables/TableEngine';
+import { objetsDepuisDeclaration } from './butinDeclare';
+import { resoudreUneQuantite } from './quantiteDeButin';
+
+/** Un oracle de Table-OS désigné par une entrée de type `oracle`. */
+export interface ReferenceDOracle {
+    univers: string;
+    table: string;
+}
+
+/** La clé sous laquelle un oracle chargé est rangé — `<univers>/<table>`. */
+export const cleDOracle = (ref: ReferenceDOracle) => `${ref.univers}/${ref.table}`;
+
+export interface OptionsDeGeneration {
+    /** Les oracles déjà chargés, rangés par `cleDOracle`. */
+    oracles?: Map<string, TableData>;
+    iterationLimit?: number;
+    totalItemsLimit?: number;
+}
+
+/**
+ * **Ce qu'un tirage rend : des objets, et ce qui n'a pas marché.**
+ *
+ * Le générateur ne rendait qu'une liste d'objets, et signalait ses échecs à la
+ * console : une table imbriquée introuvable — le cas courant, puisque son
+ * identifiant se recopiait à la main — produisait **zéro objet sans un mot à
+ * l'écran**. Le meneur voyait « la table n'a généré aucun objet » et ne pouvait
+ * pas savoir que c'était une faute de frappe. *Un défaut muet en séance ne se
+ * répare jamais, parce qu'il ne se voit jamais.*
+ */
+export interface ResultatDeGeneration {
+    objets: InventoryItem[];
+    avertissements: string[];
+}
 
 /**
  * Service de génération de butin.
@@ -8,27 +42,66 @@ import { DiceEngine } from '../../dice/DiceEngine';
  */
 export class LootGenerator {
     /**
-     * Génère une liste d'objets à partir d'une table de butin.
-     * Supporte la récursivité (tables imbriquées) et les formules de dés pour les quantités.
+     * Tous les oracles qu'une table peut atteindre, elle et ses imbrications.
+     *
+     * **À appeler avant `generateFromTable`** : charger une table de Table-OS
+     * passe par le pont Electron, donc c'est asynchrone, alors qu'un tirage doit
+     * rester synchrone — il est appelé au clic, au milieu d'une résolution. On
+     * charge d'abord, on tire ensuite.
      */
-    static generateFromTable(table: LootTable, allTables: LootTable[], iterationLimit = 5, totalItemsLimit = 50): InventoryItem[] {
-        if (iterationLimit <= 0) return [];
+    static referencesDOracle(
+        table: LootTable,
+        allTables: LootTable[],
+        vues = new Set<string>(),
+    ): ReferenceDOracle[] {
+        if (vues.has(table.id)) return [];
+        vues.add(table.id);
 
-        const results: InventoryItem[] = [];
+        const refs: ReferenceDOracle[] = [];
+        for (const entry of table.entries || []) {
+            const metadata = entry.metadata || {};
+            if (entry.type === 'oracle') {
+                const univers = String(metadata.oracleUnivers || '').trim();
+                const nom = String(metadata.oracleTable || '').trim();
+                if (univers && nom) refs.push({ univers, table: nom });
+            } else if (entry.type === 'table') {
+                const suivante = this.trouverLaTableImbriquee(entry, allTables);
+                if (suivante) refs.push(...this.referencesDOracle(suivante, allTables, vues));
+            }
+        }
+        return refs;
+    }
+
+    /**
+     * Génère une liste d'objets à partir d'une table de butin.
+     * Supporte la récursivité (tables imbriquées), les oracles de Table-OS et les
+     * formules de dés pour les quantités.
+     */
+    static generateFromTable(
+        table: LootTable,
+        allTables: LootTable[],
+        options: OptionsDeGeneration = {},
+    ): ResultatDeGeneration {
+        const { oracles, iterationLimit = 5, totalItemsLimit = 50 } = options;
+        if (iterationLimit <= 0) return { objets: [], avertissements: [] };
+
+        const objets: InventoryItem[] = [];
+        const avertissements: string[] = [];
+
         // Support de 'rolls' ou 'roll' (compatibilité ascendante)
-        const rollsFormula = table.rolls || (table as any).roll || '1';
-        const numRolls = this.resolveQuantity(rollsFormula);
-        
-        console.group(`🎲 Loot Table: ${table.name} (x${numRolls} tirages)`);
+        const rollsFormula = table.rolls || (table as { roll?: string | number }).roll || '1';
+        const numRolls = resoudreUneQuantite(rollsFormula);
 
         for (let r = 0; r < numRolls; r++) {
             const entriesToProcess: LootEntry[] = [];
-            
+
             // On vérifie le mode de tirage (weighted par défaut si non spécifié)
-            const mode = table.rollMode || ((table as any).isWeighted ? 'weighted' : 'independent');
+            const mode =
+                table.rollMode ||
+                ((table as { isWeighted?: boolean }).isWeighted ? 'weighted' : 'independent');
 
             if (mode === 'independent') {
-                // Mode Indépendant : Teste chaque ligne individuellement comme un % de chance
+                // Mode Indépendant : chaque ligne est testée comme un % de chance
                 for (const entry of table.entries) {
                     const chance = Number(entry.weight) || 0;
                     if (chance >= 100 || Math.random() * 100 < chance) {
@@ -36,72 +109,136 @@ export class LootGenerator {
                     }
                 }
             } else {
-                // Mode Pondéré (Poids cumulé) : En choisit un seul parmi la liste
+                // Mode Pondéré (poids cumulé) : un seul gagnant parmi la liste
                 const entry = this.pickWeightedEntry(table.entries);
                 if (entry) entriesToProcess.push(entry);
             }
 
             for (const entry of entriesToProcess) {
                 const metadata = entry.metadata || {};
-                let quantity = 1;
-
-                // Résolution de la quantité : priorité à quantityFormula (metadata), puis minAmount
-                const qFormula = metadata.quantityFormula || entry.minAmount || (entry as any).quantity;
-                if (qFormula) {
-                    quantity = this.resolveQuantity(qFormula, entry.maxAmount);
-                }
 
                 if (entry.type === 'table') {
-                    const tableIdFromMetadata = metadata.tableId as string;
-                    const nestedTableId = (tableIdFromMetadata || entry.name || "").trim();
-                    
-                    console.log(`🔍 [LootGenerator] Tentative d'imbrication...`);
-                    console.log(`   - Cible cherchée: "${nestedTableId}"`);
-                    if (tableIdFromMetadata) console.log(`   - Trouvé via Metadata ID: "${tableIdFromMetadata}"`);
-                    else console.log(`   - Fallback sur le nom de l'entrée: "${entry.name}"`);
+                    if (objets.length >= totalItemsLimit) continue;
+                    const nextTable = this.trouverLaTableImbriquee(entry, allTables);
 
-                    const nextTable = allTables.find(t => 
-                        (t.id && t.id.trim() === nestedTableId) || 
-                        (t.name && t.name.trim() === nestedTableId) ||
-                        (t.name && t.name.trim().toLowerCase() === nestedTableId.toLowerCase())
-                    );
-
-                    if (nextTable && results.length < totalItemsLimit) {
-                        console.log(`🔗 [LootGenerator] SUCCESS: Table "${nextTable.name}" trouvée. Lancement récursif...`);
-                        results.push(...this.generateFromTable(nextTable, allTables, iterationLimit - 1, totalItemsLimit));
-                    } else if (!nextTable) {
-                        console.warn(`🛑 [LootGenerator] ERROR: Table cible "${nestedTableId}" introuvable dans les ${allTables.length} tables disponibles.`);
-                        console.log(`   - Tables dispos:`, allTables.map(t => `${t.name} (${t.id})`));
-                    } else {
-                        console.warn(`⚠️ [LootGenerator] LIMIT: Limite d'objets ou de récursion atteinte.`);
+                    if (!nextTable) {
+                        const cible = (metadata.tableId as string) || entry.name || '';
+                        avertissements.push(
+                            `Table imbriquée introuvable : « ${cible} » (depuis « ${table.name} »).`,
+                        );
+                        continue;
                     }
-                } else {
-                    // Traitement comme objet (ou monnaie)
-                    const itemType = entry.type === 'currency' ? 'currency' : (entry.type || 'item');
-                    const item: InventoryItem = {
-                        id: `it-${crypto.randomUUID()}`,
-                        name: entry.name,
-                        type: itemType as string,
-                        rarity: (metadata.rarity as string) || 'common',
-                        weight: Number(metadata.weight) || 0,
-                        quantity: quantity,
-                        description: (metadata.description as string) || '',
-                        value: Number(metadata.value) || (itemType === 'currency' ? 1 : 0),
-                        properties: metadata,
-                    };
-                    console.log(`🎁 [LootGenerator] Objet généré : ${item.name} (x${item.quantity})`);
-                    results.push(item);
+
+                    const imbrique = this.generateFromTable(nextTable, allTables, {
+                        ...options,
+                        iterationLimit: iterationLimit - 1,
+                        totalItemsLimit,
+                    });
+                    objets.push(...imbrique.objets);
+                    avertissements.push(...imbrique.avertissements);
+                    continue;
                 }
+
+                if (entry.type === 'oracle') {
+                    objets.push(
+                        ...this.tirerSurUnOracle(entry, table.name, oracles, avertissements),
+                    );
+                    continue;
+                }
+
+                // Traitement comme objet (ou monnaie)
+                const qFormula =
+                    metadata.quantityFormula ||
+                    entry.minAmount ||
+                    (entry as { quantity?: number | string }).quantity;
+                const quantity = qFormula ? resoudreUneQuantite(qFormula, entry.maxAmount) : 1;
+
+                const itemType = entry.type === 'currency' ? 'currency' : entry.type || 'item';
+                objets.push({
+                    id: `it-${crypto.randomUUID()}`,
+                    name: entry.name,
+                    type: itemType as string,
+                    rarity: (metadata.rarity as string) || 'common',
+                    weight: Number(metadata.weight) || 0,
+                    quantity,
+                    description: (metadata.description as string) || '',
+                    value: Number(metadata.value) || (itemType === 'currency' ? 1 : 0),
+                    properties: metadata,
+                });
             }
         }
 
-        console.groupEnd();
-        return results;
+        return { objets, avertissements };
+    }
+
+    /**
+     * L'entrée désigne une table du pilote — par identifiant, sinon par nom.
+     *
+     * Le repli sur le nom est conservé : des pilotes enregistrés s'en servent, et
+     * le retirer les casserait sans rien réparer.
+     */
+    private static trouverLaTableImbriquee(
+        entry: LootEntry,
+        allTables: LootTable[],
+    ): LootTable | undefined {
+        const cible = String(entry.metadata?.tableId || entry.name || '').trim();
+        if (!cible) return undefined;
+        return allTables.find(
+            t =>
+                (t.id && t.id.trim() === cible) ||
+                (t.name && t.name.trim() === cible) ||
+                (t.name && t.name.trim().toLowerCase() === cible.toLowerCase()),
+        );
+    }
+
+    /**
+     * Le pont vers Table-OS : on tire sur l'oracle avec **son** moteur — plages,
+     * dés concaténés, `d66` —, et seul ce que l'entrée tirée **déclare** entre au
+     * butin. Un oracle qui ne déclare rien se lit ; il ne verse pas.
+     */
+    private static tirerSurUnOracle(
+        entry: LootEntry,
+        nomDeLaTable: string,
+        oracles: Map<string, TableData> | undefined,
+        avertissements: string[],
+    ): InventoryItem[] {
+        const metadata = entry.metadata || {};
+        const ref: ReferenceDOracle = {
+            univers: String(metadata.oracleUnivers || '').trim(),
+            table: String(metadata.oracleTable || '').trim(),
+        };
+
+        if (!ref.univers || !ref.table) {
+            avertissements.push(
+                `Entrée « ${entry.name} » de « ${nomDeLaTable} » : aucun oracle désigné.`,
+            );
+            return [];
+        }
+
+        const oracle = oracles?.get(cleDOracle(ref));
+        if (!oracle) {
+            avertissements.push(`Oracle introuvable : « ${cleDOracle(ref)} ».`);
+            return [];
+        }
+
+        const tire = TableEngine.rollDice(oracle.dice);
+        const resultat = TableEngine.resolveEntry(oracle, tire);
+        const objets = objetsDepuisDeclaration(resultat.butin, {
+            table: oracle.name || ref.table,
+            entree: resultat.title,
+        });
+
+        if (objets.length === 0) {
+            avertissements.push(
+                `« ${resultat.title} » (${oracle.name || ref.table}) ne déclare aucun butin.`,
+            );
+        }
+        return objets;
     }
 
     private static pickWeightedEntry(entries: LootEntry[]): LootEntry | null {
         if (!entries || entries.length === 0) return null;
-        
+
         const totalWeight = entries.reduce((sum, e) => sum + (Number(e.weight) || 0), 0);
         if (totalWeight <= 0) {
             // Si tous les poids sont à 0, on en prend un au hasard
@@ -115,34 +252,5 @@ export class LootGenerator {
             random -= weight;
         }
         return entries[entries.length - 1];
-    }
-
-    private static resolveQuantity(min?: number | string, max?: number | string): number {
-        try {
-            if (min === undefined || min === null || min === '') return 1;
-            
-            const minStr = String(min).trim();
-            
-            // Si c'est une formule de dés (ex: "2d6+2")
-            if (minStr.toLowerCase().includes('d')) {
-                const roll = DiceEngine.rollFormula(minStr);
-                return roll.total;
-            }
-
-            // Si c'est un nombre simple ou une plage min-max
-            const minVal = parseInt(minStr);
-            if (isNaN(minVal)) return 1;
-
-            if (max === undefined || max === null || max === '') return minVal;
-
-            const maxVal = parseInt(String(max));
-            if (isNaN(maxVal) || maxVal <= minVal) return minVal;
-
-            // Tirage aléatoire entre min et max (inclusif)
-            return Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-        } catch (e) {
-            console.error("❌ [LootGenerator] Resolve Error:", e);
-            return 1;
-        }
     }
 }

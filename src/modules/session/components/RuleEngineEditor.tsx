@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
-    BookOpen, Dice5, Zap, Map, Archive, Plus, Trash2, type LucideIcon, Eye 
+    BookOpen, Dice5, Zap, Map, Archive, type LucideIcon, Eye 
 } from 'lucide-react';
 import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -13,6 +13,7 @@ import { useRuleEngine } from '../hooks/useRuleEngine';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
 import EditeurDuJet from './rules/EditeurDuJet';
+import EditeurDesTablesDeButin from './rules/EditeurDesTablesDeButin';
 import { TYPES_NUMERIQUES } from '../../forge/rules/controlesDuPilote';
 
 export const RuleEngineEditor: React.FC = () => {
@@ -675,216 +676,7 @@ export const RuleEngineEditor: React.FC = () => {
                                     </p>
                                 </header>
 
-                                <div className="space-y-8">
-                                    <div className="flex justify-end">
-                                        <button
-                                            onClick={() => {
-                                                const newTables = [...(driver.lootTables || [])];
-                                                newTables.push({
-                                                    id: `table-${Date.now()}`,
-                                                    name: t('modules:session.rule_engine_editor.loot.new_table_name'),
-                                                    rolls: '1',
-                                                    rollMode: 'weighted',
-                                                    entries: []
-                                                });
-                                                handleUpdate({ lootTables: newTables });
-                                            }}
-                                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all font-black text-[10px] uppercase tracking-widest shadow-glow-amber/5"
-                                        >
-                                            <Plus size={14} /> {t('modules:session.rule_engine_editor.loot.create_btn')}
-                                        </button>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 gap-8 pb-20">
-                                        {(driver.lootTables || []).map((table, tIdx) => (
-                                            <div key={table.id} className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm group relative overflow-hidden transition-all hover:bg-app-surface/30">
-                                                <div className="absolute top-0 right-0 p-8 text-amber-500/5 -rotate-12 pointer-events-none group-hover:scale-110 transition-transform">
-                                                    <Archive size={120} />
-                                                </div>
-
-                                                <button 
-                                                    onClick={() => {
-                                                        const newTables = driver.lootTables?.filter(t => t.id !== table.id);
-                                                        handleUpdate({ lootTables: newTables });
-                                                    }}
-                                                    className="absolute top-6 right-6 p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 text-white transition-all opacity-0 group-hover:opacity-100"
-                                                    title={t('modules:session.rule_engine_editor.loot.delete_table')}
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-
-                                                <div className="grid grid-cols-12 gap-8 mb-8 relative z-10">
-                                                    <div className="col-span-6">
-                                                        <div className="flex items-center justify-between mb-2 px-1">
-                                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60">{t('modules:session.rule_engine_editor.loot.table_name_label')}</label>
-                                                            <span className="text-[8px] font-mono text-app-text/20 bg-black/20 px-2 py-0.5 rounded border border-white/5 select-all" title="Cliquez pour sélectionner l'ID">
-                                                                {t('common:id_label')}: {table.id}
-                                                            </span>
-                                                        </div>
-                                                        <input 
-                                                            type="text"
-                                                            value={table.name}
-                                                            onChange={e => {
-                                                                const newTables = [...(driver.lootTables || [])];
-                                                                newTables[tIdx] = { ...table, name: e.target.value };
-                                                                handleUpdate({ lootTables: newTables });
-                                                            }}
-                                                            className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 text-lg font-bold text-app-text focus:border-amber-500/50 outline-none shadow-inner"
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">{t('modules:session.rule_engine_editor.loot.rolls_label')}</label>
-                                                        <input 
-                                                            type="text"
-                                                            value={table.rolls || ''}
-                                                            onChange={e => {
-                                                                const newTables = [...(driver.lootTables || [])];
-                                                                newTables[tIdx] = { ...table, rolls: e.target.value };
-                                                                handleUpdate({ lootTables: newTables });
-                                                            }}
-                                                            placeholder="1"
-                                                            className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-center text-amber-400 focus:border-amber-500/50 outline-none shadow-inner text-sm"
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-3 flex flex-col justify-end">
-                                                        <div className="flex items-center gap-2 mb-2">
-                                                            <input 
-                                                                type="checkbox"
-                                                                checked={table.rollMode === 'weighted'}
-                                                                onChange={e => {
-                                                                    const newTables = [...(driver.lootTables || [])];
-                                                                    newTables[tIdx] = { ...table, rollMode: e.target.checked ? 'weighted' : 'independent' };
-                                                                    handleUpdate({ lootTables: newTables });
-                                                                }}
-                                                                id={`weighted-${table.id}`}
-                                                                className="w-4 h-4 accent-amber-500 rounded border-white/10"
-                                                            />
-                                                            <label htmlFor={`weighted-${table.id}`} className="text-[10px] font-black uppercase tracking-widest text-app-text/60">{t('modules:session.rule_engine_editor.loot.weighted_label')}</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-4 relative z-10">
-                                                    <div className="flex items-center justify-between px-2">
-                                                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-app-text/30">{t('modules:session.rule_engine_editor.loot.entries_title')}</span>
-                                                        <button 
-                                                            onClick={() => {
-                                                                const newTables = [...(driver.lootTables || [])];
-                                                                newTables[tIdx].entries.push({
-                                                                    name: t('modules:session.rule_engine_editor.loot.new_item_name'),
-                                                                    type: 'item',
-                                                                    weight: 1,
-                                                                    minAmount: '1'
-                                                                });
-                                                                handleUpdate({ lootTables: newTables });
-                                                            }}
-                                                            className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300 transition-colors"
-                                                        >
-                                                            <Plus size={12} /> {t('modules:session.rule_engine_editor.loot.add_entry_btn')}
-                                                        </button>
-                                                    </div>
-
-                                                    <div className="space-y-2">
-                                                        {table.entries.map((entry, eIdx) => (
-                                                            <div key={eIdx} className="grid grid-cols-12 gap-2 p-2 bg-app-bg/20 rounded-xl border border-app-border/5 hover:bg-app-bg/40 transition-all items-center">
-                                                                <div className="col-span-2">
-                                                                    <select
-                                                                        value={entry.type || 'item'}
-                                                                        onChange={e => {
-                                                                            const newTables = [...(driver.lootTables || [])];
-                                                                            newTables[tIdx].entries[eIdx] = { ...entry, type: e.target.value as any };
-                                                                            handleUpdate({ lootTables: newTables });
-                                                                        }}
-                                                                        className="w-full bg-black/40 border border-white/5 rounded px-2 py-1 text-[9px] font-black uppercase tracking-wider text-amber-400 outline-none"
-                                                                    >
-                                                                        <option value="item">{t('modules:session.rule_engine_editor.loot.entry_types.item')}</option>
-                                                                        <option value="table">{t('modules:session.rule_engine_editor.loot.entry_types.table')}</option>
-                                                                        <option value="currency">{t('modules:session.rule_engine_editor.loot.entry_types.currency')}</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div className="col-span-3">
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={entry.name}
-                                                                        onChange={e => {
-                                                                            const newTables = [...(driver.lootTables || [])];
-                                                                            newTables[tIdx].entries[eIdx] = { ...entry, name: e.target.value };
-                                                                            handleUpdate({ lootTables: newTables });
-                                                                        }}
-                                                                        className="w-full bg-transparent border-b border-white/5 focus:border-amber-500/30 text-xs text-app-text outline-none py-1"
-                                                                        placeholder={entry.type === 'table' ? t('modules:session.rule_engine_editor.loot.placeholder_display_name') : t('modules:session.rule_engine_editor.loot.placeholder_name')}
-                                                                    />
-                                                                </div>
-                                                                <div className="col-span-2">
-                                                                    <div className="flex flex-col">
-                                                                        <label className="text-[7px] font-bold uppercase text-app-text/20 mb-0.5">{table.rollMode === 'weighted' ? t('modules:session.rule_engine_editor.loot.weight_label') : t('modules:session.rule_engine_editor.loot.chance_label')}</label>
-                                                                        <input 
-                                                                            type="number"
-                                                                            value={entry.weight}
-                                                                            onChange={e => {
-                                                                                const newTables = [...(driver.lootTables || [])];
-                                                                                newTables[tIdx].entries[eIdx] = { ...entry, weight: parseInt(e.target.value) || 0 };
-                                                                                handleUpdate({ lootTables: newTables });
-                                                                            }}
-                                                                            className="w-full bg-black/20 text-center py-1 rounded border border-white/5 text-[10px] font-mono text-amber-500"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-span-2">
-                                                                    <div className="flex flex-col">
-                                                                        <label className="text-[7px] font-bold uppercase text-app-text/20 mb-0.5">{t('modules:session.rule_engine_editor.loot.qty_label')}</label>
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={entry.minAmount || ''}
-                                                                            onChange={e => {
-                                                                                const newTables = [...(driver.lootTables || [])];
-                                                                                newTables[tIdx].entries[eIdx] = { ...entry, minAmount: e.target.value };
-                                                                                handleUpdate({ lootTables: newTables });
-                                                                            }}
-                                                                            className="w-full bg-black/20 text-center py-1 rounded border border-white/5 text-[10px] font-mono text-cyan-400"
-                                                                            placeholder="1"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-span-2">
-                                                                    {entry.type === 'table' && (
-                                                                        <div className="flex flex-col">
-                                                                            <label className="text-[7px] font-bold uppercase text-app-text/20 mb-0.5">{t('modules:session.rule_engine_editor.loot.target_id_label')}</label>
-                                                                            <input 
-                                                                                type="text"
-                                                                                value={entry.metadata?.tableId || ''}
-                                                                                onChange={e => {
-                                                                                    const newTables = [...(driver.lootTables || [])];
-                                                                                    const metadata = { ...(entry.metadata || {}), tableId: e.target.value };
-                                                                                    newTables[tIdx].entries[eIdx] = { ...entry, metadata };
-                                                                                    handleUpdate({ lootTables: newTables });
-                                                                                }}
-                                                                                className="w-full bg-black/20 text-center py-1 rounded border border-white/5 text-[9px] font-mono text-violet-400"
-                                                                                placeholder={t('modules:session.rule_engine_editor.loot.placeholder_table_id')}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                                <div className="col-span-1 flex justify-end">
-                                                                    <button 
-                                                                        onClick={() => {
-                                                                            const newTables = [...(driver.lootTables || [])];
-                                                                            newTables[tIdx].entries.splice(eIdx, 1);
-                                                                            handleUpdate({ lootTables: newTables });
-                                                                        }}
-                                                                        className="p-1 px-2 text-red-400 hover:bg-red-500/20 rounded transition-all"
-                                                                    >
-                                                                        <Trash2 size={10} />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                                <EditeurDesTablesDeButin driver={driver} onUpdate={handleUpdate} />
                             </div>
                         )}
 

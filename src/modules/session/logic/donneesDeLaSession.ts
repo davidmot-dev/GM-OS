@@ -45,6 +45,17 @@ export const lesDonneesDeLaSession = (state: SessionOSStore) => ({
     activeCampaignId: state.activeCampaignId,
     decks: state.decks,
     deckStates: state.deckStates,
+    /*
+      **Le butin de séance, ajouté le 2026-09-04.**
+
+      `lootPool` et `lootHistory` vivaient dans le store et **dans aucune des deux
+      listes** : ni persistance vivante, ni sauvegarde fichier. On fermait
+      l'application, le trésor non distribué et l'historique des dons avaient
+      disparu — sans un message, puisque rien n'avait échoué. C'est le défaut que
+      ce fichier existe pour rendre impossible, et il était là depuis le début.
+    */
+    lootPool: state.lootPool,
+    lootHistory: state.lootHistory,
 });
 
 /**

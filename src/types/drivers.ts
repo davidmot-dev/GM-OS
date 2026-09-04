@@ -5,11 +5,47 @@ export type LootRollMode = 'weighted' | 'independent';
 
 export interface LootEntry {
     name: string;
-    weight: number; // Probabilité ou poids relatif
-    type: 'item' | 'table' | 'currency' | 'other';
+    /**
+     * Deux sens selon `rollMode`, et c'est délibéré :
+     * - `weighted` — un **poids relatif** ; un seul gagnant parmi la liste ;
+     * - `independent` — un **pourcentage de chance** ; chaque ligne est testée.
+     *
+     * *Le même nombre veut dire deux choses.* L'éditeur de la Forge le dit
+     * maintenant en toutes lettres au lieu de le cacher derrière une case à
+     * cocher : « poids » d'un côté, « % de chance » de l'autre.
+     */
+    weight: number;
+    /**
+     * `table` imbrique une autre table **du pilote**.
+     * `oracle` tire sur une table **de Table-OS** (`databases/tables/`) et verse
+     * ce que son entrée déclare — voir `metadata.oracleUnivers` / `oracleTable`.
+     */
+    type: 'item' | 'table' | 'currency' | 'other' | 'oracle';
     minAmount?: number | string; // Supporte les formules comme "1d6"
     maxAmount?: number;
     metadata?: Record<string, any>; // Rareté, poids, description, etc.
+}
+
+/**
+ * **Les mots que ce jeu emploie pour parler de butin.**
+ *
+ * Loot-OS parlait de « pièces d'or » et d'« objets magiques » à tous les jeux,
+ * Blade Runner et Alien compris — l'échelle commune→légendaire et la monnaie
+ * étaient codées en dur, dans le panneau comme dans l'invite de l'IA. C'est la
+ * même faute que les points de vie à `10` : *une valeur qui dépend du jeu ne peut
+ * pas vivre en dur dans un écran.*
+ *
+ * Facultatif : sans déclaration, GM-OS reste neutre — « valeur », « objets
+ * remarquables » — et les pilotes existants ne changent pas de comportement.
+ */
+export interface VocabulaireDuButin {
+    /** « Eurodollars », « pièces d'or », « Cred ». */
+    monnaie?: string;
+    /**
+     * Les paliers, du plus banal au plus rare. Le premier est le palier par
+     * défaut : c'est lui qui ne compte pas comme remarquable.
+     */
+    raretes?: Array<{ id: string; label: string }>;
 }
 
 export interface LootTable {
@@ -167,6 +203,8 @@ export interface GameDriver {
     // Linked assets
     templateId: string; // The ID of the primary SheetTemplate used by this system
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
+    /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
+    vocabulaireDuButin?: VocabulaireDuButin;
     defaultNotebookUrl?: string; // Default NotebookLM for this system
     
     // Metadata for AI

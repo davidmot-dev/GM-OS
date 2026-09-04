@@ -4,10 +4,10 @@ import { useModeDeContexte } from '../../ai/modeDeContexte';
 import { IndicateurDeMode } from '../../ai/IndicateurDeMode';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { LootGenerator } from '../logic/LootGenerator';
+import { chargerLesOracles } from '../../tables/pontDesTables';
+import { proposerDesObjets } from '../logic/propositionDeButinIA';
 import { Sparkles, Dices, Layers, Wand2, Search, Loader2, Zap, BookOpen } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
-import { aiService } from '../../ai/AIService';
-import type { InventoryItem } from '../store/types';
 
 const LootGeneratorPanel: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -32,22 +32,49 @@ const LootGeneratorPanel: React.FC = () => {
     
     const driver = getActiveDriver();
     const lootTables = driver?.lootTables || [];
-    const systemName = driver?.name || t('modules:loot.generator.generic_system');
 
     const filteredTables = lootTables.filter(t => 
         t.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleRollOnTable = (tableId: string) => {
+    /*
+      **Un tirage charge ses oracles avant de lancer les dés.**
+
+      Une entrée de type `oracle` désigne une table de Table-OS, qui vit dans un
+      fichier et se lit par le pont Electron — donc de façon asynchrone. Le
+      générateur, lui, est appelé au clic et doit rendre son résultat d'un bloc.
+      D'où les deux temps : on charge, puis on tire.
+    */
+    const handleRollOnTable = async (tableId: string) => {
         const table = lootTables.find(t => t.id === tableId);
         if (!table) return;
 
         try {
-            const items = LootGenerator.generateFromTable(table, lootTables);
-            if (items.length > 0) {
-                addLootToPool(items);
+            const oracles = await chargerLesOracles(
+                LootGenerator.referencesDOracle(table, lootTables),
+            );
+            const { objets, avertissements } = LootGenerator.generateFromTable(
+                table,
+                lootTables,
+                { oracles },
+            );
+
+            if (objets.length > 0) {
+                addLootToPool(objets);
             } else {
                 gmToast(t('modules:loot.generator.toasts.no_items'), "info");
+            }
+
+            /*
+              **Ce qui n'a pas marché se dit à l'écran.**
+
+              Une table imbriquée dont l'identifiant est mal recopié rendait zéro
+              objet et ne le disait qu'à la console : le meneur lisait « aucun
+              objet » et n'avait aucun moyen de savoir que c'était une faute de
+              frappe. *Un défaut muet en séance ne se répare jamais.*
+            */
+            for (const avertissement of avertissements) {
+                gmToast(avertissement, "warning");
             }
         } catch (err) {
             console.error("Loot generation failed:", err);
@@ -65,33 +92,18 @@ const LootGeneratorPanel: React.FC = () => {
         gmToast(statusMsg, "loading");
 
         try {
-            const contextInstructions = useFullContext 
-                ? t('modules:loot.generator.ai_prompts.full_instruction') 
-                : t('modules:loot.generator.ai_prompts.lite_instruction');
+            /*
+              L'invite vit dans `propositionDeButinIA` : le même geste existe
+              dans Table-OS, pour convertir un résultat d'oracle qui ne déclare
+              pas son butin. Deux copies auraient divergé le jour où l'une
+              apprend le vocabulaire du jeu et pas l'autre.
+            */
+            const objets = await proposerDesObjets(aiInput, driver, { lite: !useFullContext });
 
-            const systemPrompt = t('modules:loot.generator.ai_prompts.system', { 
-                systemName, 
-                contextInstructions 
-            });
-
-            const items = await aiService.generateJSON<any[]>(aiInput, systemPrompt, undefined, { lite: !useFullContext });
-            
-            if (Array.isArray(items) && items.length > 0) {
-                const formattedItems: InventoryItem[] = items.map(it => ({
-                    id: `ai-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                    name: it.name || t('modules:loot.notifications.placeholder_name'),
-                    quantity: Number(it.quantity) || 1,
-                    type: it.type || 'item',
-                    rarity: it.rarity || 'common',
-                    description: it.description || '',
-                    weight: Number(it.weight) || 0,
-                    value: Number(it.value) || 0,
-                    properties: it.properties || {}
-                }));
-
-                addLootToPool(formattedItems);
+            if (objets.length > 0) {
+                addLootToPool(objets);
                 setAiInput('');
-                gmToast(t('modules:loot.generator.toasts.ai_success', { count: formattedItems.length }), "success");
+                gmToast(t('modules:loot.generator.toasts.ai_success', { count: objets.length }), "success");
             } else {
                 gmToast(t('modules:loot.generator.toasts.ai_no_valid'), "warning");
             }
@@ -200,7 +212,10 @@ const LootGeneratorPanel: React.FC = () => {
                                 <div className="flex flex-col items-start text-left">
                                     <span className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors">{table.name}</span>
                                     <span className="text-[9px] text-app-text/40 font-medium uppercase tracking-widest">
-                                        {t('modules:loot.generator.table_stats', { count: table.entries.length, mode: table.rollMode })}
+                                        {t('modules:loot.generator.table_stats', {
+                                            count: table.entries.length,
+                                            mode: t(`modules:loot.generator.roll_modes.${table.rollMode || 'weighted'}`),
+                                        })}
                                     </span>
                                 </div>
                                 <div className="p-2 rounded-lg bg-accent/5 text-accent group-hover:bg-accent group-hover:text-app-bg transition-all">

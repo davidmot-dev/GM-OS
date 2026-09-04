@@ -47,6 +47,8 @@ export interface LootHistoryEntry {
     recipientId: string;
     recipientName: string;
     recipientPortrait?: string;
+    /** La campagne où le don a eu lieu — l'historique se lit campagne par campagne. */
+    campaignId?: string;
     timestamp: number;
 }
 

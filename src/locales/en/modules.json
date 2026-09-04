@@ -779,7 +779,7 @@
     "stats": {
       "title": "Treasure Summary",
       "total_value": "Total Value",
-      "magic_items": "Magic Items"
+      "remarkable_items": "Remarkable Items"
     },
     "generator": {
       "ai_header": "AI Quick Generator",
@@ -801,11 +801,16 @@
         "ai_failed": "AI generation failed: {{message}}"
       },
       "ai_prompts": {
-        "system": "You are an expert in loot design for the RPG system \"{{systemName}}\".\n{{contextInstructions}}\nTASK: Transform the user's description into a list of structured objects.\n\nRULES:\n1. Respond ONLY with a JSON array of objects.\n2. Each object must follow this interface:\n   {\n     \"name\": string,\n     \"quantity\": number,\n     \"type\": \"item\" | \"currency\",\n     \"rarity\": \"common\" | \"uncommon\" | \"rare\" | \"epic\" | \"legendary\",\n     \"description\": string (short and immersive),\n     \"weight\": number (weight in kg, optional),\n     \"value\": number (estimated value in gold pieces)\n   }\n3. For currency, use type: \"currency\". One unit of currency is worth 1.\n4. Do not exceed 10 objects total.\n\nEXAMPLE OUTPUT:\n[{\"name\": \"Bone Dagger\", \"quantity\": 1, \"type\": \"item\", \"rarity\": \"common\", \"description\": \"A fragile but sharp dagger.\"}]",
+        "system": "You are a loot design expert for the \"{{systemName}}\" RPG system.\n{{contextInstructions}}\nMISSION: Turn the user's description into a list of structured items.\n\nRULES:\n1. Reply ONLY with a JSON array of objects.\n2. Each object must follow this interface:\n   {\n     \"name\": string,\n     \"quantity\": number,\n     \"type\": \"item\" | \"currency\",\n     \"rarity\": exactly one of: {{raretes}},\n     \"description\": string (short and evocative),\n     \"weight\": number (mass, optional),\n     \"value\": number (estimated value in {{monnaie}})\n   }\n3. For money, use type: \"currency\". One unit of currency is worth 1.\n4. Never invent a rarity outside the given list.\n5. Never exceed 10 items in total.\n\nEXAMPLE OUTPUT:\n[{\"name\": \"Bone Dagger\", \"quantity\": 1, \"type\": \"item\", \"rarity\": \"common\", \"description\": \"A brittle but sharp dagger.\"}]",
         "lite_instruction": "Be fast and generic but consistent with the system.",
-        "full_instruction": "Use the full session context to create unique and story-linked objects."
+        "full_instruction": "Use the full session context to create unique and story-linked objects.",
+        "monnaie_neutre": "value units"
       },
-      "generic_system": "Generic"
+      "generic_system": "Generic",
+      "roll_modes": {
+        "weighted": "one drawn",
+        "independent": "each line tested"
+      }
     },
     "pool": {
       "title": "Loot Pool ({{count}})",
@@ -831,7 +836,8 @@
       "subtitle": "Treasures added to sheet",
       "placeholder_name": "Unnamed Object",
       "footer_hint": "Character sheet updated",
-      "close": "Close"
+      "close": "Close",
+      "hub_content": "**{{item}}**{{quantite}} goes to **{{recipient}}**."
     },
     "roll_panel": {
       "title": "Loot Generator",
@@ -1213,7 +1219,14 @@
       "give_tooltip": "Give to a PC",
       "clear_tooltip": "Clear",
       "recipient_fallback": "a PC",
-      "effect_prefix": "Effect:"
+      "effect_prefix": "Effect:",
+      "pour_button": "Pour into loot",
+      "pour_tooltip": "Send what this entry declares to the session loot pool (Loot-OS)",
+      "poured_toast": "{{count}} item(s) poured into the session loot.",
+      "propose_button": "Propose items",
+      "propose_tooltip": "This entry declares no loot: the AI proposes items from its text, to review in Loot-OS",
+      "propose_empty": "No item could be drawn from this result.",
+      "propose_failed": "Converting the result into items failed."
     },
     "journal": {
       "share_title": "Table Share: {{table}}",
@@ -2329,22 +2342,51 @@
         "delete_table": "Delete table",
         "table_name_label": "Table Name",
         "rolls_label": "Draws (Dice)",
-        "weighted_label": "Weighted (Unique)",
         "entries_title": "Table Entries",
         "add_entry_btn": "Add an Entry",
         "new_item_name": "New Item",
         "entry_types": {
           "item": "Item / Loot",
           "table": "Sub-Table",
-          "currency": "Currency / Gold"
+          "currency": "Currency / Gold",
+          "oracle": "Oracle (Table-OS)"
         },
         "placeholder_display_name": "Display name...",
         "placeholder_name": "Item name...",
         "weight_label": "Weight / Chance",
         "chance_label": "Chance (%)",
         "qty_label": "Quantity",
-        "target_id_label": "Target ID",
-        "placeholder_table_id": "table-xyz"
+        "vocabulary_title": "This game's vocabulary",
+        "vocabulary_hint": "How this game names its currency and rarity tiers. Without a declaration, GM-OS stays neutral: “value” and “remarkable items” rather than gold pieces.",
+        "currency_label": "Currency",
+        "currency_placeholder": "Eurodollars, Cred, gold pieces...",
+        "rarities_label": "Rarity tiers",
+        "add_rarity_btn": "Add a tier",
+        "rarities_default": "Generic scale: {{liste}}",
+        "rarity_id_placeholder": "identifier",
+        "rarity_label_placeholder": "Display name",
+        "rarities_order_hint": "From the most ordinary to the rarest. The first tier is the one that does not count as remarkable.",
+        "mode_label": "Roll mode",
+        "modes": {
+          "weighted": "One from the list",
+          "weighted_hint": "The number is a relative weight",
+          "independent": "Each line has its chance",
+          "independent_hint": "The number is a % chance"
+        },
+        "type_label": "Type",
+        "name_label": "Name",
+        "display_name_label": "Display name",
+        "target_table_label": "Called table",
+        "target_table_none": "Pick a table...",
+        "oracle_universe_label": "Universe",
+        "oracle_table_label": "Table",
+        "oracle_choose": "Pick...",
+        "oracle_hint": "The oracle is rolled with its own engine, and only what the drawn entry DECLARES (the “butin” field of the JSON file) enters the loot. An oracle that declares nothing is read, it does not pour.",
+        "rarity_label": "Rarity",
+        "value_label": "Value",
+        "mass_label": "Mass",
+        "description_label": "Description",
+        "description_placeholder": "What the player reads on the item..."
       },
       "notebook": {
         "title": "NotebookLM Sync",

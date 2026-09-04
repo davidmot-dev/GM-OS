@@ -8,11 +8,15 @@ import {
     AlertTriangle,
     Hash,
     Trash2,
-    Package
+    Package,
+    Loader2,
+    Wand2
 } from 'lucide-react';
 import { useTableStore } from './useTableStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
-import { RecipientSelector } from '../session/components/RecipientSelector';
+import { objetsDepuisDeclaration, laDeclarationEstVide } from '../session/logic/butinDeclare';
+import { proposerDesObjets } from '../session/logic/propositionDeButinIA';
+import { gmToast } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
 
 const TableDashboard: React.FC = () => {
@@ -36,16 +40,29 @@ const TableDashboard: React.FC = () => {
     } = useTableStore();
     const { t } = useTranslation('modules');
 
-    const { 
-        activeCampaignId, 
-        sessions, 
-        players,
-        entities,
+    /*
+      **Table-OS ne donne plus rien à un personnage — il verse au butin.**
+
+      Les deux modules ne font pas le même geste : celui-ci *consulte* — un dé,
+      une plage, un résultat qu'on lit —, Loot-OS *compose* et distribue. Les
+      brancher ne veut pas dire les confondre, et le point de rencontre est le
+      **pool**, jamais le joueur.
+
+      Avant le 2026-09-04, `addLootToCharacter` écrivait une ligne de texte dans
+      le champ `inventory` du personnage — un bloc de prose que l'onglet
+      Inventaire de la tablette ne regarde même pas, puisqu'il affiche
+      `inventoryItems`. *L'objet donné n'apparaissait nulle part où le joueur
+      cherche ses affaires.*
+    */
+    const {
+        activeCampaignId,
+        sessions,
         updateSessionGmSecrets,
-        addLootToCharacter 
+        addLootToPool,
+        getActiveDriver
     } = useSessionOSStore();
 
-    const [showRecipientSelector, setShowRecipientSelector] = useState(false);
+    const [conversionEnCours, setConversionEnCours] = useState(false);
 
     // Find active session to update
     const activeSession = sessions.find(s => 
@@ -74,26 +91,51 @@ const TableDashboard: React.FC = () => {
         updateSessionGmSecrets(activeSession.id, (activeSession.gmSecrets || "") + formatted);
     };
 
-    const handleGiveToPC = (playerId: string, characterId: string) => {
+    /** Ce que l'entrée déclare tombe dans le butin de séance, quantités résolues. */
+    const handleVerserAuButin = () => {
         if (!currentResult) return;
-        
-        // Find recipient name for Journal
-        const player = players.find(p => p.id === playerId);
-        const character = entities.find(e => e.id === characterId);
 
-        const recipientName = character?.name || player?.realName || t('random_tables.main.recipient_fallback');
-        
-        // Log to Journal via store with recipient
-        sendToSession(recipientName);
+        const objets = objetsDepuisDeclaration(currentResult.entry.butin, {
+            table: currentResult.tableName,
+            entree: currentResult.entry.title,
+        });
+        if (objets.length === 0) return;
 
-        let lootString = `**${currentResult.entry.title}** (${currentResult.tableName})\n`;
-        lootString += `_${currentResult.entry.description}_`;
-        if (currentResult.entry.effect) {
-            lootString += `\n**${t('random_tables.main.effect_prefix')}** ${currentResult.entry.effect}`;
+        addLootToPool(objets);
+        gmToast(t('random_tables.main.poured_toast', { count: objets.length }), 'success');
+    };
+
+    /**
+     * L'entrée ne déclare rien : on **propose** des objets depuis son texte.
+     *
+     * On ne lit pas `effect` à la regex — une regex sur de la prose se trompe, et
+     * *un contrôle qui se trompe est pire qu'un contrôle absent*. Le modèle
+     * propose, le meneur relit dans le pool et jette ce qui ne va pas.
+     */
+    const handleProposerDesObjets = async () => {
+        if (!currentResult || conversionEnCours) return;
+        setConversionEnCours(true);
+
+        const texte = [
+            currentResult.entry.title,
+            currentResult.entry.description,
+            currentResult.entry.effect,
+        ].filter(Boolean).join('\n');
+
+        try {
+            const objets = await proposerDesObjets(texte, getActiveDriver());
+            if (objets.length > 0) {
+                addLootToPool(objets);
+                gmToast(t('random_tables.main.poured_toast', { count: objets.length }), 'success');
+            } else {
+                gmToast(t('random_tables.main.propose_empty'), 'warning');
+            }
+        } catch (err) {
+            console.error('[Table-OS] conversion en objets impossible :', err);
+            gmToast(t('random_tables.main.propose_failed'), 'error');
+        } finally {
+            setConversionEnCours(false);
         }
-        
-        addLootToCharacter(playerId, characterId, lootString);
-        setShowRecipientSelector(false);
     };
 
     return (
@@ -278,14 +320,34 @@ const TableDashboard: React.FC = () => {
                                         <span>{t('random_tables.main.log_session')}</span>
                                     </button>
                                     
-                                    <button
-                                        onClick={() => setShowRecipientSelector(true)}
-                                        className="flex-1 flex items-center justify-center gap-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-4 rounded-xl border border-amber-500/30 transition-all group"
-                                        title={t('random_tables.main.give_tooltip')}
-                                    >
-                                        <Package className="w-5 h-5" />
-                                        <span>{t('random_tables.main.give_button')}</span>
-                                    </button>
+                                    {/*
+                                        Le bouton ne s'affiche que si l'entrée déclare
+                                        quelque chose. Un oracle qui ne donne rien se lit,
+                                        il ne verse pas — et ne doit pas prétendre le
+                                        contraire.
+                                    */}
+                                    {!laDeclarationEstVide(currentResult.entry) ? (
+                                        <button
+                                            onClick={handleVerserAuButin}
+                                            className="flex-1 flex items-center justify-center gap-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-4 rounded-xl border border-amber-500/30 transition-all group"
+                                            title={t('random_tables.main.pour_tooltip')}
+                                        >
+                                            <Package className="w-5 h-5" />
+                                            <span>{t('random_tables.main.pour_button')}</span>
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleProposerDesObjets}
+                                            disabled={conversionEnCours}
+                                            className="flex-1 flex items-center justify-center gap-3 bg-app-surface hover:bg-app-surface/80 text-app-text/60 py-4 rounded-xl border border-app-border transition-all group disabled:opacity-40"
+                                            title={t('random_tables.main.propose_tooltip')}
+                                        >
+                                            {conversionEnCours
+                                                ? <Loader2 className="w-5 h-5 animate-spin" />
+                                                : <Wand2 className="w-5 h-5" />}
+                                            <span>{t('random_tables.main.propose_button')}</span>
+                                        </button>
+                                    )}
 
                                     <button
                                         onClick={clearCurrentResult}
@@ -298,15 +360,7 @@ const TableDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Recipient Selector Overlay */}
-                        {showRecipientSelector && (
-                            <div className="mt-4 flex justify-center animate-in fade-in slide-in-from-top-2 duration-200">
-                                <RecipientSelector 
-                                    onSelect={handleGiveToPC}
-                                    onCancel={() => setShowRecipientSelector(false)}
-                                />
-                            </div>
-                        )}
+
                     </div>
                 )}
             </main>

@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Package, User, Trash2, Gift } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { estDeLaCampagne } from '../store/lootSlice';
+import { libelleDeRarete } from '../logic/vocabulaireDuButin';
 /**
  * Petit composant pour gérer la résolution de l'URL du portrait (Media-OS)
  */
@@ -34,8 +36,23 @@ const LootPoolViewer: React.FC = () => {
         clearLootPool,
         activeCampaignId,
         campaigns,
-        sessions
+        sessions,
+        getActiveDriver
     } = useSessionOSStore();
+
+    const driver = getActiveDriver();
+
+    /*
+      **Le butin de la campagne ouverte, et d'elle seule.**
+
+      Le pool était unique pour toutes : le trésor du donjon de l'une attendait
+      dans l'écran de l'autre, où il n'avait aucun sens et où on pouvait le
+      distribuer par erreur.
+    */
+    const butin = React.useMemo(
+        () => lootPool.filter(it => estDeLaCampagne(it.campaignId, activeCampaignId)),
+        [lootPool, activeCampaignId],
+    );
 
     // Trouver la session active pour filtrer les personnages
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
@@ -49,7 +66,7 @@ const LootPoolViewer: React.FC = () => {
         assignLootToCharacter(itemId, playerId, characterId);
     };
 
-    if (lootPool.length === 0) {
+    if (butin.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
                 <Package size={48} className="mb-3 opacity-20" />
@@ -65,7 +82,7 @@ const LootPoolViewer: React.FC = () => {
                 <div className="flex items-center gap-2">
                     <Package size={20} className="text-accent" />
                     <h3 className="text-sm font-bold uppercase tracking-tighter">
-                        {t('modules:loot.pool.title', { count: lootPool.length })}
+                        {t('modules:loot.pool.title', { count: butin.length })}
                     </h3>
                 </div>
                 <button 
@@ -78,7 +95,7 @@ const LootPoolViewer: React.FC = () => {
 
             <div className="grid grid-cols-1 gap-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 <AnimatePresence mode="popLayout">
-                    {lootPool.map((item) => (
+                    {butin.map((item) => (
                         <motion.div
                             key={item.id}
                             layout
@@ -93,7 +110,7 @@ const LootPoolViewer: React.FC = () => {
                                         {item.name} {item.quantity > 1 ? `(x${item.quantity})` : ''}
                                     </span>
                                     <span className="text-[9px] uppercase tracking-widest text-app-text/40 font-bold">
-                                        {t(`modules:loot.rarities.${item.rarity || 'common'}`)} • {t(`modules:loot.types.${item.type || 'item'}`)}
+                                        {libelleDeRarete(driver, item.rarity)} • {t(`modules:loot.types.${item.type || 'item'}`, { defaultValue: item.type })}
                                     </span>
                                 </div>
                                 <button 

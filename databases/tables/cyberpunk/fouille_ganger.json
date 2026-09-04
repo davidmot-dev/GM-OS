@@ -3,34 +3,86 @@
     "dice": "1d20",
     "entries": [
         {
-            "min": 1, "max": 5,
+            "min": 1,
+            "max": 5,
             "title": "Poches vides",
             "description": "Le corps a déjà été fouillé ou le ganger était fauché. Vous ne trouvez que des emballages de synthé-bouffe et un briquet cassé.",
             "effect": "Aucun butin."
         },
         {
-            "min": 6, "max": 12,
+            "min": 6,
+            "max": 12,
             "title": "Quelques Eddies",
             "description": "Vous trouvez une puce de crédit non sécurisée au fond de sa poche et quelques balles en vrac.",
-            "effect": "Gagnez +1d100 Eurodollars (Eddies) et 1d4 munitions pour pistolet."
+            "effect": "Gagnez +1d100 Eurodollars (Eddies) et 1d4 munitions pour pistolet.",
+            "butin": [
+                {
+                    "name": "Eurodollars",
+                    "type": "currency",
+                    "quantite": "1d100"
+                },
+                {
+                    "name": "Munitions de pistolet",
+                    "type": "item",
+                    "quantite": "1d4"
+                }
+            ]
         },
         {
-            "min": 13, "max": 17,
+            "min": 13,
+            "max": 17,
             "title": "Matériel de rue",
             "description": "En fouillant sa veste, vous récupérez un inhalateur médical à moitié plein et une arme blanche de bonne facture.",
-            "effect": "Gagnez 1 couteau tactique (Dégâts 1d6) et 1 dose de Stimulant de rue (Soigne 2d6 PV mais rend 'Étourdi' le tour suivant)."
+            "effect": "Gagnez 1 couteau tactique (Dégâts 1d6) et 1 dose de Stimulant de rue (Soigne 2d6 PV mais rend 'Étourdi' le tour suivant).",
+            "butin": [
+                {
+                    "name": "Couteau tactique",
+                    "type": "item",
+                    "quantite": 1,
+                    "value": 50,
+                    "description": "Dégâts 1d6."
+                },
+                {
+                    "name": "Dose de Stimulant de rue",
+                    "type": "item",
+                    "quantite": 1,
+                    "value": 30,
+                    "description": "Soigne 2d6 PV, mais rend « Étourdi » le tour suivant."
+                }
+            ]
         },
         {
-            "min": 18, "max": 19,
+            "min": 18,
+            "max": 19,
             "title": "Données cryptées",
             "description": "Un éclat de données (shard) noir mat est caché dans un compartiment secret de sa botte.",
-            "effect": "Nécessite un test de Piratage (Difficulté 15). Si réussi : révèle les mots de passe de la planque du gang."
+            "effect": "Nécessite un test de Piratage (Difficulté 15). Si réussi : révèle les mots de passe de la planque du gang.",
+            "butin": [
+                {
+                    "name": "Éclat de données crypté",
+                    "type": "item",
+                    "quantite": 1,
+                    "rarity": "rare",
+                    "description": "Test de Piratage (difficulté 15) : révèle les mots de passe de la planque du gang."
+                }
+            ]
         },
         {
-            "min": 20, "max": 99,
+            "min": 20,
+            "max": 99,
             "title": "Jackpot : Cyberware intact",
             "description": "Le bras mécanique de la victime est un modèle corpo haut de gamme, curieusement épargné par les dégâts.",
-            "effect": "Loot de valeur : Bras cybernétique non-enregistré. Se revend environ 1000 Eddies chez un Charcudoc ou peut être installé."
+            "effect": "Loot de valeur : Bras cybernétique non-enregistré. Se revend environ 1000 Eddies chez un Charcudoc ou peut être installé.",
+            "butin": [
+                {
+                    "name": "Bras cybernétique non-enregistré",
+                    "type": "item",
+                    "quantite": 1,
+                    "rarity": "epic",
+                    "value": 1000,
+                    "description": "Modèle corpo haut de gamme. Se revend chez un Charcudoc, ou peut être installé."
+                }
+            ]
         }
     ]
 }
