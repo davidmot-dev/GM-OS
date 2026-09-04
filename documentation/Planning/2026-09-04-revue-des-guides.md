@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Douze guides plus tard, elle a trouvé **quarante-cinq défauts** — et pas
+son code de l'autre.** Quatorze guides plus tard, elle a trouvé **cinquante-deux défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après douze guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après quatorze guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 12 guides
+## ✅ Ce qui est fait — 14 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -49,13 +49,15 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | Clock-OS | 12d | 5 | 1 |
 | Tour de contrôle audio, Ambient-OS, Sound-OS, Music-OS | 12e | 10 | 1 |
 | **Lot 1** — Tablet Hub ×2, Projection des dés | 12f | 8 | **4** |
+| **Lot 2** — Storyboard, Voice-OS | 12g | 7 | **5** |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lot 1 fait le 2026-09-04.** Huit trouvailles, quatre corrigées sur-le-champ — dont **les
-> deux chemins de connexion donnés aux joueurs, tous deux faux**. Reste 26 guides, en 9 lots.
+> ✅ **Lots 1 et 2 faits le 2026-09-04.** Quinze trouvailles, neuf corrigées sur-le-champ — dont
+> **les deux chemins de connexion donnés aux joueurs**, et **deux boutons du Storyboard qui
+> échouaient sans un mot**. Reste 24 guides, en 8 lots.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -75,13 +77,14 @@ un écran qui n'existe pas, l'autre vers un port et un chemin erronés. *Le déf
 le plus coûteux trouvé jusqu'ici : il empêche purement et simplement d'entrer.* Et aucun des six
 onglets du Hub n'était décrit. Détail au § 12f.
 
-### Lot 2 — Le code le plus récent
+### ~~Lot 2 — Le code le plus récent~~ ✅ fait le 04/09
 
 `Storyboard_User_Guide` · `Voice_OS_User_Guide`
 
-**Pourquoi.** Les deux ont été retravaillés entre le 31/08 et le 03/09 — storyboard (sorties par
-son, titres projetés, fondus), Voice-OS (WSOLA, RNNoise, 48 kHz). *Un guide vieillit à la vitesse
-de son module.*
+**Ce que le lot a donné** : ce sont **les guides les plus justes rencontrés jusqu'ici** — écrits
+dans la foulée du code. Les trouvailles sont donc plus fines, sauf une : **deux boutons
+« Capturer active » du Storyboard visaient des champs qui n'existent pas**, et échouaient en
+silence. Détail au § 12g.
 
 ### Lot 3 — L'Oracle et le corpus
 
@@ -149,7 +152,7 @@ qu'on a trouvé le pad d'ambiance qui charge le silence.
 
 ---
 
-## 🔧 Voie B — les 32 défauts ouverts, par risque
+## 🔧 Voie B — les 34 défauts ouverts, par risque
 
 *Indépendante de la voie A : ces points se traitent quand on veut, dans l'ordre qu'on veut. Le
 détail et les ancres sont au § 12 du registre.*
@@ -181,6 +184,8 @@ détail et les ancres sont au § 12 du registre.*
 | **N7** | Le badge **Nexus-Ready** compte des fichiers ; il ne dit pas si la campagne est portable. |
 | **A2** | Les trois thèmes d'ambiance livrés sont des **gabarits sans sons**, et rien ne le signale. |
 | **T5** | Le **bouton de projection des dés est introuvable** : invisible jusqu'au survol du panneau de résultat, et absent tant qu'aucun jet n'a été fait. |
+| **V2** | La liste **Voix des PNJ** de Voice-OS ignore la galerie de campagne — elle ne lit que le mémo de NPC-OS. |
+| **V3** | Le **débruitage par défaut** est `navigateur`, que le dépannage désigne comme le premier suspect des fins de phrase coupées. |
 
 ### P3 bis — Décisions de table, pas défauts
 

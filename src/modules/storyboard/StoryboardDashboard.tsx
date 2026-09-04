@@ -352,28 +352,55 @@ const StoryboardDashboard: React.FC = () => {
                 }
                 break;
             }
+            /*
+              **`currentMapUrl` n'existe pas** : le champ de `useMapStore`
+              s'appelle `mapUrl`. Le bouton ne posait donc rien, et ne disait
+              rien non plus — la garde `if` avalait l'échec. *Une capture muette
+              est indiscernable d'une capture qui n'a rien trouvé.*
+            */
             case 'map': {
                 const mapStore = (window as any).useMapStore?.getState();
-                if (mapStore?.currentMapUrl) {
-                    setMapUrl(mapStore.currentMapUrl as string);
-                    if (gmToast) gmToast('info', 'Carte Atlas capturée !');
+                if (mapStore?.mapUrl) {
+                    setMapUrl(mapStore.mapUrl as string);
+                    if (gmToast) gmToast('info', t('modules:storyboard.editor.captured_map'));
+                } else if (gmToast) {
+                    gmToast('warning', t('modules:storyboard.editor.capture_nothing'));
                 }
                 break;
             }
+            /*
+              **`activeMediaId` n'existe pas non plus.** Image-OS retient
+              `projections` — un chemin par écran — et `projectionTarget`,
+              l'écran courant. Et le moment attend un **identifiant** de média
+              là où les projections gardent un **chemin** : c'est la liste des
+              médias qui fait le pont entre les deux.
+            */
             case 'image': {
                 const imageStore = (window as any).useImageStore?.getState();
-                if (imageStore?.activeMediaId) {
-                    setImageMediaId(imageStore.activeMediaId as string);
-                    if (gmToast) gmToast('info', 'ID Image capturé !');
+                const cible = (imageStore?.projectionTarget as string) || 'hub';
+                const chemin = imageStore?.projections?.[cible];
+                const media = chemin && imageStore?.mediaList?.find(
+                    (m: { id: string; path: string }) => m.path === chemin || m.id === chemin,
+                );
+                if (media) {
+                    setImageMediaId(media.id as string);
+                    if (gmToast) gmToast('info', t('modules:storyboard.editor.captured_image'));
+                } else if (gmToast) {
+                    gmToast('warning', t('modules:storyboard.editor.capture_nothing'));
                 }
                 break;
             }
-            case 'sound': {
-                if (gmToast) gmToast('warning', 'Sound-OS : ' + t('modules:storyboard.editor.name_placeholder'));
-                break;
-            }
+            /*
+              **Ces deux-là n'ont rien à capturer, et le disent maintenant.**
+              Les messages précédents étaient bâtis sur les mauvaises clés — on
+              lisait « Sound-OS : ex: Combat Final ». Sound-OS **empile** les
+              bruitages (il n'y a pas de pad « actif » unique), et Ambient-OS
+              applique ses scènes sans retenir laquelle : dans les deux cas, il
+              n'existe aucun état courant à recopier.
+            */
+            case 'sound':
             case 'ambient': {
-                if (gmToast) gmToast('warning', 'Ambient-OS : ' + t('modules:storyboard.editor.none'));
+                if (gmToast) gmToast('warning', t('modules:storyboard.editor.capture_unavailable'));
                 break;
             }
         }

@@ -111,7 +111,7 @@ En haut du panneau de droite, **Micro** liste les entrées audio de la machine.
 - **Anti-Larsen** : correction automatique du niveau d'entrée (AGC), pour éviter les sifflements avec des enceintes. En le coupant, vous rendez à votre voix sa dynamique — utile avec un micro-casque, et c'est elle que suit *Voice-to-Light*.
 - **Débruitage** *(trois positions)* : un seul réglage, parce que deux débruiteurs qui se suivent ne valent pas mieux qu'un — le premier rabote ce que le second aurait su garder.
     - **Aucun** : le micro arrive brut. Le bon choix avec un micro-casque dans une pièce calme.
-    - **Navigateur** : le débruiteur de WebRTC. Efficace, mais c'est une boîte noire qui décide seule de ce qui est de la voix, **en amont de tout ce que Voice-OS peut régler** — c'est lui qui rabote les fins de phrase.
+    - **Navigateur** *(le réglage par défaut)* : le débruiteur de WebRTC. Efficace, mais c'est une boîte noire qui décide seule de ce qui est de la voix, **en amont de tout ce que Voice-OS peut régler** — c'est lui qui rabote les fins de phrase.
     - **Neuronal** *(nouveau)* : **RNNoise**, dans la chaîne de GM-OS. Il efface le bruit stationnaire — ventilateur, souffle, climatisation — et il sait **dire quand vous parlez** : cette information tient la porte ouverte sur vos fins de phrase, là où un seuil de niveau les couperait. Il ajoute **10 ms** de latence et demande une carte son à 48 kHz.
 - **Noise Gate** : coupe le son sous un certain seuil pour éliminer les bruits de fond (clavier, ventilateur).
 - **Output Gain** : ajuste le volume final après traitement. **Il n'influence plus la porte ni le ducking** : la détection se fait maintenant sur votre voix, avant traitement.
@@ -140,12 +140,19 @@ Il est remplacé par **WSOLA** — la technique des changeurs de voix : au lieu 
 
 ---
 
-## 🤖 Profilage Vocal par IA (Ollama)
+## 📇 Retrouver une voix depuis Voice-OS
 
-Voice-OS peut désormais générer un profil vocal complet en analysant la fiche d'un PNJ :
-- **Analyse de Contexte** : L'IA étudie les traits, le métier et les notes du PNJ.
-- **Réglages Automatiques** : Le système applique le meilleur preset (Dragon, Spectre, etc.) et ajuste finement le *Pitch*, le *Formant* et la *Reverb* pour correspondre au personnage.
-- **Activation** : Utilisez le bouton **Générer Profil IA** dans l'interface de Voice-OS ou via une fiche PNJ synchronisée.
+Le panneau de gauche du module porte une liste **Voix des PNJ** : un clic repose le profil sur le
+rack, sans passer par la fiche.
+
+> ⚠️ **Cette liste ne montre que les PNJ enregistrés dans NPC-OS.** Les PNJ de votre **galerie de
+> campagne** — ceux qui portent désormais un profil, et qui sont de loin les plus nombreux —
+> n'y apparaissent pas. Pour eux, le rappel se fait par le bouton **« Reposer »** de leur fiche.
+> Relevé le 2026-09-04.
+
+> ⛔ **Il n'existe aucun bouton « Générer Profil IA » dans Voice-OS.** Cette page en annonçait un ;
+> la génération se fait depuis la fiche du PNJ, par **« Sa voix »**. Voice-OS rappelle, il ne
+> génère pas.
 
 ---
 
@@ -172,3 +179,11 @@ Une fonctionnalité révolutionnaire pour le confort d'écoute de vos joueurs :
 
 > [!IMPORTANT]
 > **Latence** : Voice-OS utilise des technologies Web Audio de pointe pour minimiser la latence. Cependant, pour un résultat optimal, utilisez un casque plutôt que des enceintes pour éviter les boucles de feedback.
+
+---
+
+*Guide révisé le 2026-09-04. Retiré : un bouton « Générer Profil IA » dans Voice-OS, qui n'existe
+pas — et dont la section répétait, en la contredisant, celle sur les voix de PNJ. Ajouté : la liste
+**Voix des PNJ** du module, et sa limite (elle ignore la galerie de campagne). Précisé : le
+débruitage **Navigateur** est le réglage par défaut, c'est-à-dire que le premier suspect des fins de
+phrase coupées est aussi celui que vous avez sans rien régler.*

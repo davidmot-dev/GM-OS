@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Suivant** : lot 2 — Storyboard et Voice-OS.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lot 2 fait le 04/09.** **Suivant** : lot 3 — l’Oracle et le corpus.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -497,6 +497,26 @@ que le guide annonce. Ici, c'est le chemin pour arriver jusqu'à eux qui était 
 privées à 1,5 s, le don d'objet qui passe par une validation, les cinq secondes de projection et
 la seconde de fondu, le port 3001 du diagnostic.
 
+#### 12g · Lot 2 — le code le plus récent (2026-09-04)
+
+*Storyboard et Voice-OS. Les deux avaient été retravaillés entre le 31/08 et le 03/09, et leurs
+guides écrits dans la foulée : **ce sont les plus justes rencontrés jusqu'ici**. Les trouvailles
+sont donc plus fines — mais l'une d'elles rendait deux boutons muets depuis toujours.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **S1** | **Deux boutons « Capturer active » visaient des champs qui n'existent pas.** `mapStore.currentMapUrl` (le champ s'appelle `mapUrl`) et `imageStore.activeMediaId` (Image-OS retient `projections` par écran, et des **chemins** là où le moment attend un **identifiant**). Dans les deux cas la garde `if` avalait l'échec : **le clic ne posait rien et ne disait rien**. | ✅ **Corrigé le 04/09.** Et quand il n'y a réellement rien à prendre, le bouton le dit maintenant. *Une capture muette est indiscernable d'une capture qui n'a rien trouvé.* | `StoryboardDashboard.tsx` (`handleCapture`) |
+| ⛔ **S2** | **Les messages de « Capturer active » pour le son et l'ambiance étaient bâtis sur les mauvaises clés** : on lisait *« Sound-OS : ex: Combat Final »* et *« Ambient-OS : Aucun(e) »*. | ✅ **Corrigé**, avec un message qui dit *pourquoi* : Sound-OS empile ses bruitages, Ambient-OS ne retient pas la scène appliquée — il n'existe aucun état courant à recopier. | `storyboard.editor.capture_unavailable` |
+| ⛔ **S3** | **Le guide disait que la musique survit toujours à un changement de séquence.** Faux : `cequUnePriseDeMainEteint` la coupe **si la nouvelle séquence n'apporte pas la sienne**. C'est à l'**arrêt** d'un moment qu'elle reste (`cequUnArretEteint`). *Deux gestes, deux règles* — et le guide n'en donnait qu'une. | ✅ **Le guide porte le tableau des cinq moteurs**, changement et arrêt séparés. | `sonsDuMoment.ts` |
+| ⛔ **S4** | **« Le Storyboard ne vise pas le Player Hub »** — faux : `imageTarget` et la cible du titre acceptent `hub`, et `<TitreProjete cible="hub" />` est monté dans `PlayerHub`. Ce qu'il n'atteint pas, ce sont les **tablettes**. | ✅ **Corrigé.** | `PlayerHub.tsx:115` |
+| ⛔ **V1** | **Aucun bouton « Générer Profil IA » n'existe dans Voice-OS**, contrairement à ce qu'annonçait son guide — et la section qui le décrivait **répétait en la contredisant** celle sur les voix de PNJ, écrite le 04/09. | ✅ **Section retirée**, la génération se fait depuis la fiche du PNJ. | `VoiceDashboard.tsx` |
+| ⚠ **V2** | **La liste « Voix des PNJ » de Voice-OS ignore la galerie de campagne.** Elle lit `useNPCStore.savedEntities` — c'est-à-dire le module qui portait **un** PNJ, quand la galerie en porte cent vingt-trois, et que ce sont eux qui peuvent désormais avoir un profil. | **À trancher.** Y ajouter les entités de campagne porteuses d'un `voiceProfile` est une ligne de plus dans le filtre ; la question est de savoir si cette liste doit grossir de cent entrées, ou rester le mémo de NPC-OS. | `VoiceDashboard.tsx:87` |
+| **V3** | **Le débruitage par défaut est `navigateur`** — c'est-à-dire, d'après le guide lui-même, « le premier suspect » des fins de phrase coupées. Un meneur qui n'a rien réglé a donc le réglage que le dépannage accuse. | **À trancher** : passer le défaut à *Neuronal* maintenant que RNNoise existe, ou laisser et documenter. Documenté. | `useVoiceStore.ts:111` |
+
+**Vérifié et exact** : la voix n'est **jamais** touchée par le Focus Chat (`VoiceEngine` ne lit que
+`masterVolume`, pas `isFocusMode`) ; les cinq presets ; les trois positions du débruitage ; le
+titre permanent quand la durée est vide ; les six éléments d'un moment.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -560,7 +580,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Douze guides passés, **quarante-cinq** trouvailles (§§ 12a-12f) — **treize réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Quatorze guides passés, **cinquante-deux** trouvailles (§§ 12a-12g) — **dix-huit réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

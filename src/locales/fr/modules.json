@@ -2859,7 +2859,11 @@
       "title_placeholder": "Titre à l'écran (facultatif)",
       "title_fade": "Fondu (s)",
       "title_duration": "Durée (s)",
-      "title_permanent": "Permanent"
+      "title_permanent": "Permanent",
+      "captured_map": "Carte du plateau capturée",
+      "captured_image": "Image projetée capturée",
+      "capture_nothing": "Rien à capturer : aucun élément n'est actif en ce moment",
+      "capture_unavailable": "Pas de capture ici : Sound-OS empile ses bruitages et Ambient-OS ne retient pas la scène appliquée — choisissez dans la liste"
     },
     "actions": {
       "duplicate": "Dupliquer",

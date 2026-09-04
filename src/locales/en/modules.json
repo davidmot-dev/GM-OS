@@ -2859,7 +2859,11 @@
       "title_placeholder": "On-screen title (optional)",
       "title_fade": "Fade (s)",
       "title_duration": "Duration (s)",
-      "title_permanent": "Permanent"
+      "title_permanent": "Permanent",
+      "captured_map": "Tactical map captured",
+      "captured_image": "Projected image captured",
+      "capture_nothing": "Nothing to capture: no element is currently active",
+      "capture_unavailable": "No capture here: Sound-OS stacks its effects and Ambient-OS does not remember the applied scene — pick from the list"
     },
     "actions": {
       "duplicate": "Duplicate",

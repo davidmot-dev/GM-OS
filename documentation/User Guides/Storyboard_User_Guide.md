@@ -20,11 +20,37 @@ Le Storyboard utilise une **Table de Montage Horizontale** (façon pellicule de 
 ### 1. Accéder au module
 Cliquez sur l'icône 🎬 (**Storyboard**) dans la section **Modules** de la barre latérale du **Session-OS**.
 
-### 2. Créer une Séquence
-- Cliquez sur le bouton doré **+ AJOUTER UNE SÉQUENCE** en haut à droite.
-- Donnez un nom à votre séquence (ex: *"Rencontre avec l'Inquisiteur"*).
-- Utilisez le panneau latéral droit pour choisir les éléments à déclencher.
-- **Astuce :** Le bouton **[Capturer Active]** permet de copier instantanément ce qui est actuellement actif sur votre PC.
+### 2. Créer une séquence
+
+- Cliquez sur **+ Ajouter une séquence**, en haut à droite.
+- Nommez-la (*« Rencontre avec l'Inquisiteur »*).
+- Choisissez ses éléments dans le panneau de droite.
+
+#### « Capturer active » — six boutons, quatre qui répondent
+
+Chaque élément a **son propre** petit bouton *Capturer active*, qui recopie ce qui tourne en ce
+moment sur votre poste. Il n'y a pas de bouton global.
+
+| Élément | Ce que la capture prend |
+| :--- | :--- |
+| **Musique** | Le morceau de la platine qui joue |
+| **Lumière** | La scène Hue active |
+| **Carte** | La carte chargée sur le plateau tactique |
+| **Image** | L'image projetée sur l'écran courant d'Image-OS |
+| **Bruitage** | ⛔ rien — Sound-OS **empile** ses sons, il n'y a pas de pad « actif » unique |
+| **Ambiance** | ⛔ rien — Ambient-OS applique ses scènes sans retenir laquelle |
+
+> ⛔ **Deux de ces boutons ne marchaient pas, et ne le disaient pas.** *Carte* et *Image*
+> interrogeaient des champs qui n'existent pas (`currentMapUrl`, `activeMediaId`) : le clic ne
+> posait rien et n'affichait aucun message. **Corrigé le 2026-09-04** — et quand il n'y a
+> effectivement rien à prendre, le bouton le dit désormais.
+
+<!-- -->
+
+> 🔎 **Les deux derniers ne sont pas cassés, ils sont impossibles.** Un bruitage et une ambiance se
+> choisissent dans la liste ; il n'existe aucun « état courant » à recopier. Le message qui
+> s'affichait à leur place était bâti sur les mauvaises clés de traduction — on lisait
+> *« Sound-OS : ex: Combat Final »*.
 
 ### 3. Organiser votre Scénario (Drag & Drop)
 Le Storyboard fonctionne comme un logiciel de montage :
@@ -62,14 +88,37 @@ Chaque moment peut afficher un **titre** par-dessus l'image projetée, dans la p
 
 ## 🎭 Une séquence est une parenthèse
 
-Lancer une séquence **referme la précédente** :
+Lancer une séquence **referme la précédente**, mais chaque moteur a sa règle — et elles ne sont pas
+arbitraires : elles suivent la façon dont chaque module se comporte quand un autre son arrive.
 
-- Son **image** s'éteint en fondu si la nouvelle n'en projette pas d'autre.
-- Ses **sons** s'arrêtent — l'ambiance qu'elle avait posée et ses bruitages —, sauf si la nouvelle séquence les reprend.
-- La **musique** fait exception : elle continue, et c'est vous qui décidez de l'arrêter. Il en va de même pour les lumières.
+| Ce que la précédente avait posé | En **changeant** de séquence | En **arrêtant** le moment |
+| :--- | :--- | :--- |
+| **Image** | s'éteint en fondu, sauf si la nouvelle en projette une | s'éteint |
+| **Bruitage** | s'arrête **toujours** — Sound-OS empile, il ne remplace pas | s'arrête |
+| **Ambiance** | s'arrête, **sauf si la nouvelle apporte sa propre scène** | s'arrête |
+| **Musique** | s'arrête, **sauf si la nouvelle apporte sa musique** — les platines s'enchaînent alors en fondu croisé | ⭐ **elle reste** |
+| **Lumières** | restent | restent |
+
+> ⛔ **Correction.** Cette page annonçait que « la musique fait exception : elle continue ». C'est
+> vrai quand vous **arrêtez** un moment — arrêter une parenthèse ne doit pas faire tomber le silence
+> sur la table —, et faux quand vous **passez à la séquence suivante** : là, elle s'arrête si la
+> nouvelle n'en apporte pas. Les deux gestes n'ont pas la même règle.
+
+<!-- -->
+
+> 🔎 **Deux précautions que vous ne verrez jamais, et qui vous évitent des accidents.**
+> La platine ne s'arrête **que si elle joue encore ce morceau-là** : si vous avez changé de piste à
+> la main entre-temps, la séquence n'y touche pas. Et l'ambiance s'éteint **piste par piste**, en
+> ne coupant que celles que sa propre scène avait allumées — la pluie que vous aviez lancée avant
+> la séquence continue de tomber.
 
 > [!IMPORTANT]
-> Le Storyboard ne vise **pas** les tablettes des joueurs : il pilote vos écrans de projection et vos enceintes, pas le Player Hub tenu en main.
+> **Le Storyboard ne va pas jusqu'aux tablettes des joueurs.** Il pilote vos enceintes, vos écrans
+> de projection **et le Player Hub** — l'écran partagé —, mais rien de ce qu'il déclenche
+> n'apparaît sur le Tablet Hub que chacun tient en main. Cette page disait le contraire du Player
+> Hub, qui est bien une destination.
+
+*Corrigé le 2026-09-04.*
 
 ---
 
@@ -93,3 +142,10 @@ Préparez un moment nommé "Secret Révélé" qui :
 
 > [!TIP]
 > Vous pouvez également déclencher ces séquences à distance depuis votre smartphone via le **GM Remote Control** !
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Deux affirmations corrigées : la musique ne survit pas
+à un changement de séquence, seulement à l'arrêt d'un moment ; et le Storyboard atteint bien le
+Player Hub, pas les tablettes. Deux boutons **Capturer active** réparés dans la foulée — ils
+visaient des champs qui n'existent pas et échouaient sans un mot.*
