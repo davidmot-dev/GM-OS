@@ -19,6 +19,7 @@ Trois pages tiennent l'état courant :
 | :--- | :--- |
 | [⭐ Registre des chantiers](./Planning/2026-08-23-chantiers-gares.md) | **La seule liste de ce qui reste**, avec les ancres de code de ce qui est clos. |
 | [État & reprise du jour](./Planning/2026-09-04-etat-et-reprise.md) | Par quoi reprendre, et ce qu'il ne faut pas repayer. Un par journée de travail. |
+| [Revue des guides](./Planning/2026-09-04-revue-des-guides.md) | Le plan de la revue écran par écran : dix lots à suivre un par un, et les 28 défauts ouverts par risque. |
 | [Leçons apprises](./Lessons_Learned.md) | Les défauts qui ont coûté cher, et la règle qu'ils ont laissée. **À lire avant de recommencer un module.** |
 
 ---

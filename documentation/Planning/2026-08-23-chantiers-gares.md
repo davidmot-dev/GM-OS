@@ -468,7 +468,7 @@ ambiances au Stop All était donnée à 1 s ici et 2 s là, et le code dit 1 s.*
 | **A6** | **Le Focus Chat tamise les bruitages à 50 %**, pas à 10 % comme la musique et les ambiances — `Math.max(0.5, focusDuckingRatio * 5)`. Volontaire et bien pensé (un coup d'épée doit garder son impact), mais écrit nulle part. | **Documenté.** | `SoundEngine.ts:60` |
 | **A7** | **La reprise lumineuse d'Ambient-OS suit le NUMÉRO de piste**, pas l'ordre d'allumage : `otherActiveWithLights[length - 1]` prend le dernier de la liste, qui est ordonnée par index. Le guide annonçait « la dernière piste activée ». | **À trancher** : corriger le code (retenir un ordre d'allumage) ou la phrase. Le guide dit désormais la vérité. | `useAmbientStore.ts` (`handleLightReversion`) |
 | **A8** | **Le fondu automatique de Music-OS dure 5 secondes et se règle** (0,5 à 20 s), et sa courbe est **à puissance constante**. Le guide annonçait « une rampe de 1.5s » — faux sur les trois points. | **Rien à coder.** Le curseur existe, au-dessus du crossfader. | `useMusicStore.ts:205`, `logic/fonduCroise.ts` |
-| **A9** | **Un fragment de phrase recopié** au milieu du guide de Music-OS, reste d'un copier-coller. | ✅ **Réparé.** | — |
+| ✅ **A9** | **Un fragment de phrase recopié** au milieu du guide de Music-OS, reste d'un copier-coller. | ✅ **Réparé.** | — |
 | **A10** | **`setFocusDuckingRatio` n'a pas d'écran** : le rapport de tamisage est déclaré réglable et vaut toujours 0,1. Et `useAudioMasterStore.getBackupData()` **n'a aucun appelant** — le volume général et le Focus ne sont dans aucune sauvegarde. Même famille que `setGridColor` (§ 12a) et `timeMultiplier` (§ 12d) : **trois réglages déclarés, jamais offerts**. | **À trancher en une fois**, pour les trois modules. Un « atelier des réglages morts » : soit on les expose, soit on les retire. | `useAudioMasterStore.ts` |
 
 **Trois choses saines, vérifiées** : la sommation mono d'Ambient-OS et son compresseur existent
@@ -539,7 +539,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Huit modules passés, **trente-huit** trouvailles (§§ 12a-12e) — **neuf déjà réparées**, dont **tout le Media Hub** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Neuf guides passés, **trente-sept** trouvailles (§§ 12a-12e) — **neuf réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
