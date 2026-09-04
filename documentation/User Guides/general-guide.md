@@ -74,11 +74,14 @@ voix. → [Guide Voice-OS](./Voice_OS_User_Guide.md)
 
 ## 🛠️ Maintenance
 
-**Nettoyage des médias** — GM-OS repère les fichiers devenus orphelins (l'image d'un PNJ supprimé,
-par exemple). Vous pouvez forcer une purge depuis les **Paramètres**.
+**Nettoyage des médias** — un bouton des **Paramètres** supprime les fichiers devenus orphelins
+(l'image d'un PNJ supprimé, par exemple). **Rien ne tourne automatiquement** : tant que vous ne
+pressez pas ce bouton, aucun média n'est jamais effacé tout seul.
 
-⚠️ Les playlists et ambiances **actives sont protégées** du nettoyage : c'est une garde ajoutée
-après une suppression accidentelle de fichiers audio en cours d'usage.
+⚠️ Les playlists et ambiances **en cours d'usage sont protégées** — garde ajoutée après une
+suppression accidentelle de fichiers audio. Mais **trois sources de médias échappent au balayage**
+(Map-OS, les indices, le storyboard) : à lire avant de lancer une purge.
+→ [Guide du Media Hub](./Media_Hub_User_Guide.md)
 
 ## 🛡️ Vos données sont-elles protégées ?
 

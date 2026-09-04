@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS (04/09). **Suivant** : au choix de David.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub (04/09). **Suivant** : au choix de David.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -369,6 +369,22 @@ cinq trouvailles sont de cette famille, et personne ne peut s'en apercevoir sans
 | **N6** | **Deux options d'export déclarées, jamais offertes.** `includeAssets` est lu mais aucun écran ne le passe ; **`includeSounds` n'est lu nulle part** — il est documenté dans les types et mort dans le code. | **Deux issues** : les exposer dans le HUD (une case « sans les sons » a du sens pour un envoi par mail), ou retirer `includeSounds`. | `nexus.types.ts`, `NexusService.ts:691` |
 | **N7** | **Le badge « Nexus-Ready » mesure autre chose que son nom.** Il compte les références média **non-`http`** : il dit *« cette campagne a des fichiers »*, pas *« cette campagne est portable »*. Une campagne 100 % illustrée par des URL web affiche le badge gris « export léger ». | **Renommer** (« *n* médias » / « JSON seul »), ou compter vraiment ce qui est localisable. Le guide dit désormais ce que le badge fait. | `CampaignLibrary.tsx:32` |
 | **N8** | **Toutes les ambiances et toutes les playlists partent**, campagne ou pas — le commentaire l'assume (« environnement de jeu du meneur »). Depuis le 29-30/08 les atmosphères portent pourtant une **étiquette de campagne**. | **À revoir en même temps que N1** : si l'import fusionne, l'export peut rester large sans danger. Sinon, filtrer. | `NexusService.ts:225-231` |
+
+#### 12c · Media Hub — ce que la revue a trouvé dans le code
+
+*Le guide est corrigé et poussé. Le module a une bonne tête et un mauvais angle mort : **le
+nettoyage des orphelins ne connaît pas tous les propriétaires de médias**. Chaque module ajouté
+depuis a dû s'y déclarer, et trois ne l'ont pas fait.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **H1** | **Le nettoyage a trois angles morts.** `performCleanup` recense huit magasins ; il **ne regarde ni Map-OS** (`mapUrl`, et le `mapUrl` de **chaque preset**), **ni les indices** (`clue.mediaUrl`), **ni le storyboard** (`moment.imageMediaId`). Un fichier qui n'existe que là est compté comme orphelin et **supprimé**. | **À corriger.** Trois blocs `collectId` de plus. *Et le vrai remède est structurel : la liste des propriétaires est recopiée à la main dans un service que personne ne pense à ouvrir quand il ajoute un module — même famille que `donneesDeLaSession`, qui a résolu ce motif en n'ayant qu'une liste.* | `services/MediaCleanupService.ts` |
+| **H2** | **Le nettoyage n'est pas automatique**, contrairement à ce qu'annonçait le guide : un seul appelant, un bouton des Paramètres. Ce n'est pas un défaut — mais ça change la gravité de H1 (rien ne part tout seul) **et** l'usage du cadenas. | **Rien à coder.** Documenté ; à garder en tête si l'idée d'un nettoyage périodique revient : elle serait dangereuse tant que H1 tient. | `GlobalSettingsModal.tsx:508` |
+| **H3** | **Le panneau de détails n'a pas de « Status Tactique ».** Le guide promettait un indicateur disant si le média est utilisé dans la session en cours. Rien de tel n'existe. | **Bonne idée à construire, en fait** : les informations sont déjà réunies par `performCleanup` (l'ensemble des identifiants référencés). Un « utilisé par : 3 endroits / aucun » dans le panneau rendrait H1 visible à l'œil. | `TacticalDetailPanel.tsx` |
+| **H4** | **Aucune détection de doublon à l'import.** Deux imports du même fichier = deux entrées, deux identifiants, deux fois la place. | **À trancher.** Une empreinte à l'import (le format `.gmos` en calcule déjà une, SHA-256) permettrait d'avertir. Coût faible, gain de place réel sur une bibliothèque de 261 Mo. | `useMediaStore.ts` (`addMedia`) |
+| **H5** | **« Image » est la catégorie par défaut**, pas une détection : tout ce qui n'est ni `audio/`, ni `video/`, ni un document connu devient une image — vignette cassée à la clé. | **Petit correctif** : un type `other`, ou un refus explicite. Sans urgence. | `useMediaStore.ts:161-173` |
+| ⚠ **H6** | **Soupçon non falsifié : importer un document depuis l'éditeur de fiche.** L'attribut `accept` est construit par `allowedTypes.map(t => t + '/*')` — ce qui donne `document/*`, **qui n'est pas un type MIME**. Le sélecteur de fichiers pourrait n'afficher aucun fichier. | ⛔ **À vérifier à l'écran** : éditeur de fiche → joindre un document → importer. Si c'est confirmé, mapper `document` vers une vraie liste d'extensions. | `MediaBrowser.tsx:550` |
+| **H7** | **Les documents n'ont pas d'aperçu** : `FullScreenPreview` traite image, audio et vidéo, et ne rend rien pour un document — écran vide. | **Documenté.** Un `<iframe>` suffirait pour un PDF, si le besoin se présente. | `FullScreenPreview.tsx` |
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
@@ -433,7 +449,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Map-OS et Nexus-OS passés, **quatorze** trouvailles de code (§§ 12a-12b) | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Map-OS, Nexus-OS et Media Hub passés, **vingt et une** trouvailles de code (§§ 12a-12c) | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
