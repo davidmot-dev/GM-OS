@@ -16,7 +16,12 @@ import { resoudreUneQuantite } from './quantiteDeButin';
  * accident.
  */
 export function modeDeTirage(
-    table: Pick<LootTable, 'rollMode'> & { isWeighted?: boolean },
+    /*
+      `rollMode` est **facultatif ici**, alors qu'il est obligatoire dans
+      `LootTable` : c'est précisément le cas des tables enregistrées avant lui, et
+      le type doit pouvoir décrire ce qu'on lit vraiment sur le disque.
+    */
+    table: Partial<Pick<LootTable, 'rollMode'>> & { isWeighted?: boolean },
 ): LootRollMode {
     if (table.rollMode) return table.rollMode;
     return table.isWeighted ? 'weighted' : 'independent';
