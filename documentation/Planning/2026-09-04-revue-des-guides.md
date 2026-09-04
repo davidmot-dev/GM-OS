@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Dix-huit guides plus tard, elle a trouvé **cinquante-neuf défauts** — et pas
+son code de l'autre.** Vingt guides plus tard, elle a trouvé **soixante-six défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après dix-huit guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après vingt guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 18 guides
+## ✅ Ce qui est fait — 20 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -51,14 +51,16 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | **Lot 1** — Tablet Hub ×2, Projection des dés | 12f | 8 | **4** |
 | **Lot 2** — Storyboard, Voice-OS | 12g | 7 | **5** |
 | **Lot 3** — Oracle, NotebookLM, Obsidian, synergie | 12h | 7 | **5** |
+| **Lot 4** — Cortex, manuel tactique | 12i | 7 | **7** |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1, 2 et 3 faits le 2026-09-04.** Vingt-deux trouvailles, quatorze corrigées — dont
-> **les deux chemins de connexion donnés aux joueurs**, **deux boutons du Storyboard muets**, et
-> **quatre guides qui décrivaient le mauvais moteur d'IA**. Reste 20 guides, en 7 lots.
+> ✅ **Lots 1 à 4 faits le 2026-09-04.** Vingt-neuf trouvailles, vingt et une corrigées — dont
+> **les deux chemins de connexion donnés aux joueurs**, **deux boutons du Storyboard muets**,
+> **quatre guides décrivant le mauvais moteur d'IA**, et **un bouton du Cortex que les deux guides
+> décrivaient de travers, chacun à sa façon**. Reste 18 guides, en 6 lots.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -100,13 +102,14 @@ décrivaient le mauvais moteur**, affirmant que l'Oracle repose sur NotebookLM a
 l'un des six fournisseurs configurés. Et **aucun** ne mentionnait l'interrupteur du coffre, seul
 mécanisme qui donne vraiment vos notes à l'Oracle. Détail au § 12h.
 
-### Lot 4 — Le Cortex
+### ~~Lot 4 — Le Cortex~~ ✅ fait le 04/09
 
 `Cortex_OS_User_Guide` · `Tactical_AI_User_Manual`
 
-**Pourquoi ensemble.** Deux guides pour un seul module, vu de deux endroits. C'est exactement la
-configuration qui produit des contradictions — comme Audio Master et Ambient-OS, qui donnaient deux
-durées différentes pour le même fondu.
+**Ce que le lot a donné** : le pari s'est vérifié sur **le premier bouton du panneau**. Les deux
+pages décrivaient *Sensors*, et **aucune n'avait raison** — il ne coupe ni les suggestions ni le
+seul son, mais **tout le matériel**, sons et lumières. Le manuel a cessé de dupliquer : il renvoie.
+Détail au § 12i.
 
 ### Lot 5 — Les règles et la Forge
 
@@ -191,6 +194,7 @@ détail et les ancres sont au § 12 du registre.*
 | **V3** | Le **débruitage par défaut** est `navigateur`, que le dépannage désigne comme le premier suspect des fins de phrase coupées. |
 | **O3** | Le bouton **« Sync Oracle »** pousse la note dans un carnet NotebookLM — il n'alimente **pas** la conversation. Nom à revoir. |
 | **O4** | La ligne **« Oracle » du diagnostic IA** teste le pont NotebookLM, pas la conversation. |
+| **K1** | Le bouton **« Sensors »** du Cortex commande les **effecteurs** (sons, lumières), pas les capteurs. Le nom invite à l'erreur. |
 
 ### P3 bis — Décisions de table, pas défauts
 

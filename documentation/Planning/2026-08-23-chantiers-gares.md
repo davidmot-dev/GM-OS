@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 et 3 faits le 04/09.** **Suivant** : lot 4 — le Cortex.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2, 3 et 4 faits le 04/09.** **Suivant** : lot 5 — les règles et la Forge.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -538,6 +538,32 @@ le coffre comme racine **additive et éteinte par défaut** ; le badge **SYNC** 
 configuré pour le système ; la génération séquentielle des personas ; l'export vers Obsidian qui
 crée sans jamais modifier.
 
+#### 12i · Lot 4 — le Cortex (2026-09-04)
+
+*Deux guides pour un seul module. Le pari du lot — « c'est la configuration qui produit des
+contradictions » — s'est vérifié sur **le premier bouton du panneau**, décrit par les deux pages, et
+**aucune des deux n'avait raison**.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **K1** | **Le bouton « Sensors » ne fait ce qu'aucun des deux guides annonçait.** Le guide Cortex : « en mode Muted, l'IA ne fera aucune suggestion » — faux, l'analyse continue. Le manuel : « coupe le retour audio » — incomplet. `isMuted` garde exactement deux choses : `useAudioTactical` (les sons) et `useHardwareBridge` (les lampes Hue). **C'est un interrupteur de matériel, pas d'intelligence.** | ✅ **Corrigé.** ⚠️ Le libellé lui-même invite à l'erreur : « Sensors » (capteurs) suggère la perception, alors qu'il commande les **effecteurs**. *À renommer si David le souhaite* — « Effets » ou « Matériel ». | `useTacticalAIStore`, `hooks/useAudioTactical.ts:23`, `hooks/useHardwareBridge.ts:43` |
+| ⛔ **K2** | **Les trois seuils de priorité étaient faux.** Le manuel donnait « Urgence 3-5 / Opportunité 2 / Conseil 1 ». Le code range à **≥ 4**, **= 3**, et **le reste**. Un conseil de priorité 3 était donc annoncé rouge et s'affiche jaune. | ✅ **Corrigé.** | `TacticalAdvicePanel.tsx:116-135` |
+| ⛔ **K3** | **« Ouvrez Map-OS, cliquez sur l'icône Brain de la barre d'outils ».** Il n'y a pas d'icône Brain dans Map-OS, et le Cortex n'y est pas : c'est un bandeau monté dans `Shell`, présent partout, dont l'interrupteur vit dans les Paramètres généraux. | ✅ **Corrigé.** | `Shell.tsx:570`, `GlobalSettingsModal.tsx:589` |
+| ⛔ **K4** | **« Vos banques de sons tactiques doivent être présentes dans `assets/sounds/tactical` ».** Elles **sont livrées** : neuf fichiers dans `public/assets/sounds/tactical`. Le guide envoyait chercher ce qui était déjà là — et le chemin donné n'existe pas à la racine. | ✅ **Corrigé.** | `public/assets/sounds/tactical/` |
+| ⛔ **K5** | **« Moteurs supportés : OpenAI (GPT-4) et Google Gemini … (optionnel) ».** Le Cortex passe par `aiService`, donc **les six fournisseurs** comme l'Oracle — et le modèle **n'est pas optionnel** : sans lui, aucun conseil. | ✅ **Corrigé.** | `useTacticalAIStore.ts:62-178` |
+| ⛔ **K6** | **« Le Player Hub est informé » des catégories de portée.** Aucune trace du Cortex dans `PlayerHub` ni `TabletHub`. Rien ne part chez les joueurs. | ✅ **Corrigé.** | — |
+| **K7** | **La duplication elle-même était le défaut.** Deux pages décrivaient les mêmes boutons ; c'est ainsi qu'elles ont divergé. Le manuel **cesse de décrire** et renvoie au guide pour tout ce qui est commun. | ✅ **Fait.** *Même remède que pour le tableau des personas du lot 3.* | — |
+
+**Vérifié et exact** : les cinq catégories de portée (**Contact**, Courte, Moyenne, Longue,
+Extrême) ; le déclenchement à chaque changement de tour et à la dépose d'un pion ; l'auto-dissipation
+des statuts incompatibles ; le caviardage de l'adresse et du jeton du pont Hue avant tout envoi au
+modèle ; la narration et les conseils demandés **en parallèle**.
+
+**Deux qualités du code que les guides taisaient**, et qui méritent d'être lues : le rapport
+**distingue ce qu'il sait de ce qu'il suppose** (une distance mesurée sur une grille non calibrée
+est signalée comme telle), et il **nomme les neutres** au lieu de les compter parmi les ennemis —
+ce qui l'empêche de proposer d'attaquer le tavernier.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -601,7 +627,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Dix-huit guides passés, **cinquante-neuf** trouvailles (§§ 12a-12h) — **vingt-trois réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Vingt guides passés, **soixante-six** trouvailles (§§ 12a-12i) — **trente réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

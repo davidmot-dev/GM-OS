@@ -1,62 +1,153 @@
-# 🧠 Guide Utilisateur : Cortex OS (Tactical AI)
+# 🧠 Guide : le Cortex tactique
 
-**Cortex OS** est le "cerveau" invisible de GM-OS. C'est un moteur d'analyse en temps réel qui surveille votre table de jeu pour vous fournir des conseils tactiques, automatiser les règles complexes et orchestrer l'immersion matérielle (lumières et sons).
+Le Cortex regarde votre combat — qui est où, à quelle distance, dans quel état — et vous rend deux
+choses : **un paragraphe de situation** à lire à la table, et **des conseils d'action** classés par
+urgence. Il pilote aussi vos lumières et vos sons tactiques.
 
 ![Aperçu du module Cortex OS](cortex_mockup.png)
 
-## 📋 Présentation du Module
-
-Cortex OS agit comme un assistant expert à vos côtés :
-
-1. **Analyse de Proximité** : Calcule les distances entre les pions et applique les modificateurs de portée.
-2. **Smart Dispel** : Détecte les conflits d'états (ex: un personnage en feu qui devient mouillé).
-3. **Orchestration Immersive** : Pilote vos lampes Philips Hue et vos sons d'ambiance selon l'action.
-4. **Insights Tactiques** : Propose des rappels de règles et des **Analyses de Groupe** (Détection de flanquement, suggestions de repli coordonné).
-
-## 🛰️ Capteurs et Interface (Widget Horizontal)
-
-Le panneau de contrôle Cortex se présente désormais sous la forme d'un widget horizontal discret en bas de l'écran (ou via l'icône Brain) :
-
-- **Live Sensors (ON/OFF)** : Active ou désactive l'analyse en temps réel. En mode "Muted", l'IA ne fera aucune suggestion et ne touchera pas au matériel.
-- **Auto-Dispel** : Si activé, l'IA nettoiera automatiquement les statuts incompatibles. Sinon, elle se contentera de vous suggérer l'action via un "Insight".
-- **Intensité AI** : Règle la fréquence et la "sensibilité" des analyses.
-
-## 📏 Calculateur Tactique Universel
-
-Cortex OS utilise le module **Map OS** pour mesurer les distances :
-- **Portées Dynamiques** : Selon le système de jeu (Driver) sélectionné, l'IA traduit les pixels en unités (cases, mètres, pieds) et identifie la catégorie de portée (CàC, Courte, Moyenne, Longue, Extrême).
-- **Calcul de Modificateurs** : Si un attaquant est à portée "Longue", Cortex affiche immédiatement le malus associé dans la liste des **Insights Actifs**.
-- **Mise à Jour au Déplacement** : Dès que vous lâchez un pion sur la carte, Cortex scanne son nouvel environnement.
-
-## 🎭 Immersion Automatisée (Taxonomy)
-
-C'est ici que la magie opère. Cortex possède un dictionnaire (Taxonomy) qui lie des concepts de jeu à des effets réels :
-
-- **Mots-Clés Visuels** : Si un PNJ gagne le statut "Inconscient", Cortex peut automatiquement tamiser les lumières Philips Hue en bleu sombre.
-- **Effets Sonores Tactiques** : Si un personnage entre en portée de "Contact" avec un ennemi, l'IA peut déclencher un son d'alerte de proximité ou de tension.
-- **Flash de Combat** : Un bouton manuel permet de simuler un éclair ou une explosion via vos lumières connectées pour ponctuer un moment dramatique.
-
-## 📜 Journal d'Analyse (Analytics)
-
-Au bas du panneau Cortex, vous trouverez les **Recent Analytics**. Ce log technique vous montre ce que l'IA "voit" :
-- *"Scan terminé : 4 pions détectés."*
-- *"Alerte : Le Guerrier est à portée de corps à corps du Gobelin."*
-- *"Nettoyage : Statut 'Froid' retiré (conflit avec 'En Feu')."*
-- *"Tactique : Alerte de Flanquement détectée sur le Flanc Droit !"*
+> 📖 Ce guide est **la référence**. Le [manuel du Cortex](./Tactical_AI_User_Manual.md) est le
+> mémo de séance : comment lire le panneau pendant qu'on joue.
 
 ---
 
-## 💡 Astuces pour l'Expertise
+## 🔌 Où il vit, et comment on l'allume
 
-> [!TIP]
-> **Le Player Hub est informé** : Certaines analyses de Cortex (comme les catégories de portée) peuvent être transmises au Hub Joueur pour les aider à anticiper leurs malus de tir avant même de lancer les dés.
+**Le Cortex n'est pas dans Map-OS.** C'est un bandeau horizontal en bas de l'écran, présent dans
+toute l'application dès qu'il est activé.
 
-> [!IMPORTANT]
-> **Dépendance Hardware** : Pour profiter pleinement de Cortex OS, vos lumières **Philips Hue** doivent être appairées dans le module **Light OS** et vos banques de sons tactiques doivent être présentes dans le dossier `assets/sounds/tactical`.
+L'interrupteur général est dans **Paramètres → Cortex tactique**. Un voyant dans la barre du haut
+dit son état : éteint, actif, ou **en train d'analyser** (il pulse).
+
+> ⛔ **Correction.** Le manuel envoyait « ouvrir Map-OS et cliquer sur l'icône Brain de la barre
+> d'outils ». Il n'y a pas d'icône Brain dans Map-OS, et le Cortex ne s'y trouve pas.
 
 ---
 
-## ⚙️ Détails Techniques
+## 🎛️ Les quatre boutons du bandeau
 
-- **Moteurs Supportés** : OpenAI (GPT-4) et Google Gemini sont configurables pour des analyses narratives encore plus poussées (optionnel).
-- **Mise à Jour** : L'analyse se déclenche automatiquement à chaque changement de tour dans le **Combat OS** ou à la fin d'un déplacement sur **Map OS**.
+| Bouton | Ce qu'il fait **vraiment** |
+| :--- | :--- |
+| **Sensors / Muted** | ⛔ **Coupe le matériel** : les sons tactiques et les lumières Hue. **L'analyse et les conseils continuent.** |
+| **Auto** | L'auto-dissipation. Actif, le Cortex retire tout seul les statuts incompatibles ; sinon il se contente de le suggérer. |
+| **Test** | Joue un son tactique pour vérifier le branchement audio. |
+| **Flash** | Déclenche manuellement un éclair sur vos lampes Hue, pour ponctuer un moment. |
+
+> ⛔ **Les deux guides se contredisaient sur le premier bouton**, et aucun n'avait raison. Celui-ci
+> annonçait que « en mode Muted, l'IA ne fera aucune suggestion » — **faux**, elle continue. Le
+> manuel disait « coupe le retour audio » — **incomplet**, il coupe aussi les lumières.
+> `isMuted` garde exactement deux choses : le son tactique et le pont matériel. Vérifié le
+> 2026-09-04.
+
+Pour arrêter réellement l'analyse, c'est l'interrupteur des Paramètres.
+
+---
+
+## 📊 Ce que le Cortex vous rend
+
+### La narration de situation
+
+Un court paragraphe sur l'état du champ de bataille, à lire ou à paraphraser.
+
+### Les conseils, en trois rangs
+
+| Rang | Priorité | Ce que c'est |
+| :--- | :---: | :--- |
+| 🔴 **Urgence** | **4 et 5** | Une menace immédiate, ou une occasion de conclure |
+| 🟡 **Opportunité** | **3** | Un mouvement à jouer, une zone à couvrir |
+| ⚪ **Conseil** | **1 et 2** | Un rappel de capacité, un placement défensif |
+
+> ⛔ **Les trois seuils étaient faux dans le manuel** — il donnait « Urgence 3-5 »,
+> « Opportunité 2 », « Conseil 1 ». Le code range à **≥ 4**, **= 3**, et **le reste**.
+
+Les deux sorties sont demandées **en même temps**, pas l'une après l'autre : c'est ce qui rend
+l'attente supportable en pleine partie.
+
+---
+
+## 📏 Ce que le Cortex mesure
+
+Il lit les pions de **Map-OS** et traduit les pixels en unités de votre jeu, puis en catégories de
+portée :
+
+**Contact** · **Courte** · **Moyenne** · **Longue** · **Extrême**
+
+Chaque catégorie porte son modificateur, affiché dans les conseils. Les seuils viennent du **pilote
+de jeu** quand il en déclare ; sinon, d'une table par défaut.
+
+> ⚠️ **Une distance mesurée sur une grille non calibrée ne vaut rien.** Si vous n'avez pas réglé la
+> taille de case dans Map-OS, le Cortex compte sur une grille supposée — *un conseil de placement
+> fondé sur une unité arbitraire est faux sans jamais se plaindre.* Le rapport distingue ce qu'il
+> sait de ce qu'il suppose.
+
+<!-- -->
+
+> 🔎 **Sans carte, le Cortex voit quand même.** Les listes d'alliés et d'ennemis se remplissent
+> depuis Combat-OS ; l'absence de pions le prive des distances, pas des combattants.
+
+L'analyse se relance à chaque changement de tour dans Combat-OS et quand vous lâchez un pion sur la
+carte.
+
+---
+
+## 🎭 L'immersion automatique
+
+Un **dictionnaire** (la taxonomie) relie des concepts de jeu à des effets réels : un statut
+« Inconscient » peut tamiser vos lampes en bleu sombre, une entrée en portée de contact peut
+déclencher une alerte de proximité.
+
+**Les sons tactiques sont livrés avec GM-OS** — neuf fichiers dans
+`public/assets/sounds/tactical` : alarme de proximité, verrouillage de cible, coup de tonnerre,
+tension sourde, éclat de glace…
+
+> ⛔ **Correction.** Ce guide demandait au meneur de fournir « ses banques de sons tactiques ».
+> Elles sont déjà là.
+
+Les lumières, elles, demandent un pont **Philips Hue** appairé dans
+[Light-OS](./Light_OS_User_Guide.md). Deux voyants en haut du bandeau disent si le pont Hue répond
+et si l'audio est prêt.
+
+---
+
+## 🤖 Le moteur
+
+Le Cortex utilise **le même service d'IA que l'Oracle** — donc le fournisseur choisi dans les
+réglages : Ollama en local, ou Gemini, OpenAI, Anthropic, Ollama Cloud, une adresse à vous.
+
+> ⛔ **Correction.** Ce guide présentait « OpenAI (GPT-4) et Google Gemini » comme deux moteurs
+> optionnels réservés aux analyses poussées. Ni l'un ni l'autre : le modèle n'est pas optionnel — le
+> Cortex ne rend aucun conseil sans lui — et le choix est bien plus large.
+
+Le Cortex s'appuie aussi sur les **consignes d'IA de votre pilote de jeu** : un système bien décrit
+donne des conseils qui parlent sa langue.
+
+> 🔎 **Vos identifiants ne partent pas au modèle.** L'adresse de votre pont Hue et son jeton sont
+> caviardés avant l'envoi — *le caviardage se fait à la source*, pas à l'affichage.
+
+---
+
+## 📜 Le journal d'analyse
+
+Au bas du bandeau, le Cortex montre ce qu'il voit : combien de pions il a détectés, qui vient
+d'entrer en portée de contact, quel statut il a nettoyé, quel flanquement il a repéré. Un bouton
+**Wipe** le vide.
+
+C'est là qu'on regarde quand un conseil paraît absurde : le plus souvent, le Cortex a mesuré autre
+chose que ce qu'on croyait.
+
+---
+
+## ⚠️ Ce qui ne va pas chez les joueurs
+
+> ⛔ **Le Player Hub n'est pas informé.** Ce guide affirmait que « certaines analyses, comme les
+> catégories de portée, peuvent être transmises au Hub joueur ». **Aucune** ne l'est : ni le Player
+> Hub ni le Tablet Hub ne lisent quoi que ce soit du Cortex. Le Cortex parle au meneur, et à lui
+> seul.
+
+---
+
+*Guide refait le 2026-09-04, code à l'appui. Cinq affirmations fausses retirées : le bouton
+**Sensors** ne coupe pas les suggestions mais le matériel ; les **trois seuils de priorité** étaient
+faux ; les **sons tactiques sont livrés** et non à fournir ; le **moteur** n'est pas limité à deux
+fournisseurs optionnels ; et **rien ne part chez les joueurs**. Ajouté : où le Cortex vit
+réellement, et l'avertissement sur les grilles non calibrées.*
