@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 8 et 10 faits le 04/09.** **Suivant** : lot 9 — les petits outils, le dernier.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). ✅ **LA VOIE A EST TERMINÉE le 04/09** — les dix lots, 38 guides. **Suivant** : la voie B, les défauts non réparés.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -460,7 +460,7 @@ ambiances au Stop All était donnée à 1 s ici et 2 s là, et le code dit 1 s.*
 
 | # | Trouvaille | Ce qu'on en fait | Où |
 | --- | --- | --- | --- |
-| ⛔ **A1** | **Le pad d'ambiance de la télécommande charge le silence.** `triggerUniversalPad` appelle `ambientStore.loadTheme`, qui pose `isPlaying: false` sur les huit pistes. Le guide promettait un « Toggle Intelligent » et un « Auto-Play » propres à la télécommande : **ni l'un ni l'autre n'existe**, et le pad fait exactement ce que fait le bouton du PC. | **À trancher.** Un pad de télécommande qui ne produit aucun son est difficile à défendre : soit on joue les pistes qui ont un volume (ce que le guide décrivait), soit on retire les thèmes d'ambiance de l'univers des pads. La première est ~10 lignes dans `sceneActions.ts`. | `remote/actions/sceneActions.ts:61-66` |
+| ⛔ **A1** | **Il n'y a pas de pad d'ambiance sur la télécommande.** *Corrigé le 04/09 en passant le lot 9 : ma première rédaction disait « le pad charge le silence » — le constat était juste, le geste ne l'est pas.* `triggerUniversalPad` a bien une branche qui appelle `loadTheme` (laquelle pose `isPlaying: false`), **mais rien ne peut l'atteindre** : `universalPads` ne contient que **cinq morceaux de musique et douze images favorites**, jamais d'ambiance. La branche est du **code inatteignable**, et le guide promettait un « Toggle Intelligent » et un « Auto-Play » qui n'ont jamais existé. | **À trancher.** Soit on envoie les thèmes d'ambiance dans `universalPads` **et** on les fait jouer (~15 lignes, deux fichiers), soit on retire la branche morte de `sceneActions`. En attendant, le chemin réel pour une ambiance à distance est l'onglet **Scénario**. | `useNexusSynchronizer.ts:223-233`, `remote/actions/sceneActions.ts:61-66` |
 | ⛔ **A2** | **Les trois thèmes d'ambiance livrés n'ont aucun fichier son** (`url: ''`). « Forêt Enchantée » charge trois pistes nommées *Oiseaux*, *Ruisseau*, *Feuillage* — et vides. Le guide laissait croire qu'elles apportaient leurs sons. | **Documenté** — ce sont des gabarits, et c'est défendable. Mais rien à l'écran ne le dit : une pastille « gabarit » sur ces trois-là éviterait la déception du premier clic. | `useAmbientStore.ts` (`DEFAULT_PRESETS`) |
 | **A3** | **Le volume général ne monte pas à 150 %.** Le curseur est borné à 1. Le guide promettait un *boost* ; les 150 % existent, mais sur le **volume d'un pad** de Sound-OS. | **Rien à coder** — sauf si David veut vraiment le boost. Corrigé dans le guide. | `MasterAudioController.tsx` |
 | **A4** | **La coupure rapide remonte à 100 %, pas au niveau d'avant.** `setMasterVolume(masterVolume === 0 ? 1 : 0)` : un aller-retour sur une table réglée à 40 % la met à fond. | **Petit correctif utile** : retenir le niveau d'avant la coupure. Trois lignes dans le magasin. | `MasterAudioController.tsx` |
@@ -675,6 +675,54 @@ tablette.
 décor mis de côté** — sans quoi une image éteinte ressusciterait à la fin de la prochaine fiche,
 des heures plus tard, *un fantôme que personne ne rattacherait à son geste.*
 
+#### 12o · Lot 9 — les petits outils, et la fin de la voie A (2026-09-04)
+
+*Cinq guides, et le dernier lot. Quatre d'entre eux se sont révélés exacts — les seuls de toute la
+revue à passer sans correction de fond. Tout était dans la télécommande, **qui a aussi corrigé une
+trouvaille que j'avais mal formulée**.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **R1** | **La télécommande a sept panneaux, le guide en décrivait cinq** — et il manquait **celui qui s'ouvre en premier**. Absents : **Pads** (l'onglet par défaut) et **Tableau** (dessiner depuis le téléphone, relayé vers Whiteboard-OS). | ✅ **Écrits.** | `RemoteControl.tsx:27-37` |
+| ⛔ **R2** | ⭐ **Correction d'une trouvaille de ce même jour (A1).** J'avais écrit « le pad d'ambiance de la télécommande charge le silence » : le constat était juste — `loadTheme` ne joue rien — mais **le geste décrit n'existe pas**. `universalPads` ne contient que **cinq morceaux de musique** et **douze images favorites** ; aucune ambiance n'y est envoyée, et `RemoteControl` est le **seul** émetteur de `remote:pad:trigger`. La branche ambiance de `sceneActions` est donc **inatteignable**. | **À trancher** : envoyer les thèmes dans `universalPads` **et** les faire jouer (~15 lignes, deux fichiers), ou retirer la branche morte. *Le chemin réel pour une ambiance à distance est l'onglet **Scénario**.* Le guide d'Ambient-OS et le § 12e sont corrigés. | `useNexusSynchronizer.ts:223-233` |
+| **R3** | **Le QR code de la télécommande porte un jeton d'appairage** (`#token=…`). Recopier l'adresse sans ce fragment ne suffit pas — et le guide ne le disait pas. | ✅ **Écrit.** | `GlobalSettingsModal.tsx:91` |
+| **R4** | **Ce que la grille de pads contient réellement** : cinq morceaux au plus, douze images favorites au plus, et rien d'autre. Ni bruitages, ni cartes, ni ambiances. | ✅ **Écrit.** | idem |
+| **C1b** | **Le deck d'indices vit dans le panneau de séance**, pas dans le cockpit comme l'annonçait le guide. | ✅ **Corrigé.** | `SessionWorkspace.tsx:187` |
+| **S1** | **La recherche rapide s'ouvre déjà pleine** : sans rien taper, elle liste **les destinations** — tous les modules. C'est son usage le plus fréquent, et il n'était pas écrit. | ✅ **Écrit.** | `useSpotlight.ts:96-124` |
+| **W1** | **« Clear » et « Réinitialiser » de Web-OS ne font pas la même chose** — l'un vide, l'autre restaure les liens d'origine —, et aucun des deux ne se défait. | ✅ **Précisé.** | `useWebStore.ts:89, 120` |
+
+**Vérifié et exact, sans une correction** : `Clues`, `Whiteboard-OS`, `Web-OS` et
+`Universal_Search` — les cinq outils du tableau, l'export vers Media Hub + wiki + journal, le
+`CTRL/CMD + K`, l'export et l'import JSON des liens, l'ouverture des liens dans le navigateur par
+défaut, la double temporalité des indices, la traçabilité au journal à la révélation.
+
+**Un lien tissé au passage** : le tableau se dessine aussi **depuis la télécommande**, ce
+qu'aucun des deux guides ne disait.
+
+---
+
+### ⭐ La voie A est terminée
+
+**38 guides passés en une journée**, du § 12a au § 12o. Un archivé. **Cent deux trouvailles**, dont
+**soixante-trois réparées**.
+
+*Ce que la revue aura appris, en une phrase : **écrire ce qu'un module fait vraiment est le
+meilleur détecteur de défauts employé sur ce dépôt** — et le seul qui trouve ceux qu'aucune
+relecture de code ne voit, parce qu'ils ne se manifestent qu'en confrontant une promesse à son
+implémentation.*
+
+**Les trois familles qui reviennent :**
+
+1. **Ce qui part chez les joueurs n'est pas ce que le guide annonce** — jauges publiques, pions
+   déplaçables, projection des dés sur les tablettes.
+2. **Des tableaux de correspondances purement inventés** — statuts de dégâts, couleurs de jauges,
+   moteurs d'IA, feux tricolores de portabilité.
+3. ⛔ **Des affirmations de sécurité sans objet** — trois fois : le backup GitHub du guide général,
+   Map-OS hors sauvegarde, et la pastille « Vault Synced » de Favorite-OS. *Sur un dépôt qui a
+   perdu ses campagnes deux fois, c'est la famille à chercher en premier.*
+
+**Reste la voie B** : les défauts trouvés et non réparés, au § 12 et dans le plan.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -738,7 +786,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Trente-trois guides passés, **quatre-vingt-quinze** trouvailles (§§ 12a-12n) — **cinquante-six réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — ✅ **38 guides, les dix lots** — **cent deux** trouvailles (§§ 12a-12o), **soixante-trois réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

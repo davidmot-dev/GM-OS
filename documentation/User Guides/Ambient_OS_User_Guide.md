@@ -94,13 +94,16 @@ piste allumée qui porte un lien**, et applique la sienne ; s'il n'y en a aucune
 
 ## 📱 Depuis la télécommande
 
-> ⛔ **Deux fonctions annoncées ici n'existent pas.** Cette page promettait un « Toggle
-> Intelligent » (appuyer lance la lecture, réappuyer coupe en fondu) et un « Auto-Play » propre à
-> la télécommande. **Ni l'un ni l'autre n'est dans le code** : un pad d'ambiance appelle exactement
-> la même fonction que le bouton du PC — il **charge le thème et ne joue rien**.
+> ⛔ **Il n'y a pas de pad d'ambiance sur la télécommande.** Cette page promettait un « Toggle
+> Intelligent » et un « Auto-Play » qui lanceraient un thème d'une pression. **Ni l'un ni l'autre
+> n'existe** — et la grille de pads de la télécommande ne reçoit que **des morceaux de musique et
+> des images favorites** : aucune ambiance n'y est envoyée.
 >
-> Concrètement : **appuyer sur un pad de thème depuis la télécommande charge le silence.** Il faut
-> ensuite lancer les pistes depuis l'écran. Relevé le 2026-09-04.
+> *Le code contient bien une branche pour charger un thème depuis un pad ; rien ne peut l'atteindre.*
+> Relevé le 2026-09-04, précisé le même jour en passant la télécommande en revue.
+
+Pour lancer une ambiance à distance, le chemin réel est l'onglet **Scénario** : une séquence de
+storyboard peut porter une scène d'ambiance, et celle-là part bien.
 
 La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer une scène.
 
@@ -112,7 +115,7 @@ La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer u
 | :--- | :--- |
 | **Un thème livré ne fait aucun bruit** | Normal : les thèmes d'exemple sont des gabarits sans fichiers. Attribuez vos sons, puis enregistrez le thème. |
 | **J'ai chargé un thème et rien ne démarre** | Voulu : charger ne lance pas. Démarrez les pistes une à une, ou appliquez une scène. |
-| **Le pad d'ambiance de la télécommande ne joue rien** | C'est le défaut ci-dessus, pas votre matériel. |
+| **Je ne trouve pas d'ambiance sur la télécommande** | Il n'y en a pas dans la grille de pads. Passez par l'onglet **Scénario**. |
 | **La lumière ne revient pas à la bonne piste** | La reprise choisit le numéro de piste le plus élevé, pas la dernière allumée. |
 | **Une piste ne s'entend pas alors que son curseur est haut** | Regardez son analyseur de spectre : s'il est plat, c'est le fichier qui manque ou ne joue pas. |
 | **Tout est trop faible pendant une narration** | Le **Focus Chat** est actif : il met les ambiances à 10 %. |

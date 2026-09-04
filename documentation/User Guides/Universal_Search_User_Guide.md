@@ -15,7 +15,11 @@ Où que vous soyez dans l'OS, utilisez le raccourci suivant pour ouvrir la barre
 
 ## 📂 Que pouvez-vous rechercher ?
 
-Le Spotlight indexe en temps réel les catégories suivantes :
+⚭ **La barre s'ouvre déjà pleine.** Sans rien taper, elle liste **les destinations** — tous les
+modules de GM-OS — et votre frappe les filtre en même temps que le reste. *C'est le moyen le plus
+rapide de changer de module, avant même d'être un moyen de chercher quelque chose.*
+
+Elle indexe ensuite, en temps réel :
 
 ### 👤 Entités (PNJ & Héros)
 - Recherchez par **nom** ou **description**.
@@ -57,3 +61,8 @@ Le Spotlight est conçu pour être utilisé sans souris :
 
 > [!TIP]
 > Le Spotlight est intelligent : il priorise les correspondances exactes et limite les résultats aux 8 éléments les plus pertinents pour garder une interface claire.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Ajouté : la barre **s'ouvre déjà pleine** des
+destinations de navigation — son usage le plus fréquent, et il n'était pas écrit.*

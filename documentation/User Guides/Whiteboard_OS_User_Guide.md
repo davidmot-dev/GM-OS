@@ -7,7 +7,7 @@
 ## 🖌️ Outils de Dessin
 La barre d'outils flottante vous donne accès à une panoplie d'instruments :
 - **Pinceau (Brush)** : Pour le dessin à main levée.
-- **Formes (Shapes)** : Créez des rectangles ou des cercles parfaits.
+- **Formes** : rectangles et cercles.
 - **Gomme (Eraser)** : Effacez des segments de traits spécifiques.
 - **Pointeur Laser** : Un outil éphémère qui disparaît après quelques secondes, idéal pour désigner un élément sans polluer le dessin.
 
@@ -42,4 +42,19 @@ Une des fonctions les plus puissantes de Whiteboard-OS est son intégration avec
 5. Une entrée est créée dans le **Journal** avec la référence de la capture pour une navigation rapide.
 
 > [!TIP]
-> Utilisez cette fonction pour immortaliser les schémas complexes ou les plans de donjons improvisés que les joueurs devront consulter plus tard dans leur journal d'aventure !
+> Utilisez cette fonction pour immortaliser les schémas complexes ou les plans de donjons
+> improvisés que les joueurs devront consulter plus tard.
+
+---
+
+## 📱 Dessiner depuis le téléphone
+
+La [télécommande](./Remote_Control_User_Guide.md) porte un onglet **Tableau** : vous croquez sur
+l'écran tactile, le trait apparaît ici. Plus confortable qu'une souris pour un plan tracé à la
+volée — et ça n'était écrit dans aucun des deux guides.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Les cinq outils, la projection et l'export vers le
+Media Hub, le wiki et le journal sont exacts. Ajouté : on peut **dessiner depuis la
+télécommande**.*

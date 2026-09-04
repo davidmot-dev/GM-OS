@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Trente-trois guides plus tard, elle a trouvé **quatre-vingt-quinze défauts** — et pas
+son code de l'autre.** Trente-huit guides plus tard, elle a trouvé **cent deux défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après trente-trois guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après les trente-huit.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 33 guides
+## ✅ Ce qui est fait — les 38 guides, les dix lots
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -56,17 +56,21 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | **Lot 6** — les quatre satellites du combat | 12k | 8 | **7** |
 | **Lot 7** — Table-OS, butin | 12l | 5 | **5** |
 | **Lot 8** — Image-OS, Light-OS, Favorite-OS | 12n | 8 | **7** |
+| **Lot 9** — les cinq petits outils | 12o | 7 | **7** |
 | **Lot 10** — `migration-guide`, **archivé** | 12m | — | — |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1 à 8 faits, lot 10 archivé** — le 2026-09-04. Cinquante-huit trouvailles,
-> quarante-sept corrigées. Reste **5 guides, en 1 lot** : les petits outils.
+> ⭐ **LA VOIE A EST TERMINÉE** — le 2026-09-04, en une journée. **Les dix lots, 38 guides**,
+> soixante-cinq trouvailles, cinquante-quatre corrigées.
 >
-> ⛔ **La plus grave de toute la revue est au lot 8** : Favorite-OS affirmait qu'une pastille verte
-> « confirme que vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde.
+> ⛔ **La plus grave est au lot 8** : Favorite-OS affirmait qu'une pastille verte « confirme que
+> vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde — **troisième occurrence**
+> de cette famille après le faux backup GitHub et Map-OS.
+>
+> **Il reste la voie B**, ci-dessous.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -153,13 +157,15 @@ vos données sont en sécurité »* — **ni coffre, ni pastille, et le module n
 sauvegarde.** Troisième occurrence de cette famille après le faux backup GitHub et Map-OS. Détail
 au § 12n.
 
-### Lot 9 — Les petits outils
+### ~~Lot 9 — Les petits outils~~ ✅ fait le 04/09
 
 `Clues_User_Guide` · `Whiteboard_OS_User_Guide` · `Web_OS_User_Guide` ·
 `Remote_Control_User_Guide` · `Universal_Search_User_Guide`
 
-**Pourquoi en fin.** Surface réduite, enjeu faible. Mais `Remote_Control` mérite un œil : c'est là
-qu'on a trouvé le pad d'ambiance qui charge le silence.
+**Ce que le lot a donné** : **quatre guides sur cinq exacts** — les seuls de toute la revue à
+passer sans correction de fond. Tout était dans `Remote_Control`, qui décrivait **cinq panneaux sur
+sept** et oubliait **celui qui s'ouvre en premier**. Il a aussi **corrigé une trouvaille du matin**
+(A1) : il n'y a pas de pad d'ambiance du tout. Détail au § 12o.
 
 ### ~~Lot 10 — Le reliquat~~ ✅ archivé le 04/09
 

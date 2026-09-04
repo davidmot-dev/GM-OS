@@ -15,7 +15,10 @@ L'interface est conçue pour une efficacité maximale :
 ## 📂 Gestion de la Bibliothèque
 - **Nouveau Lien (New Link)** : Ajoutez une URL et donnez-lui un nom clair.
 - **Édition** : Modifiez l'URL ou le titre d'un lien existant à tout moment.
-- **Réinitialisation (Reset)** : Si vous vous perdez, le bouton de réinitialisation restaure les liens "standard" de GM-OS (SRD Rules, NPC Generators).
+- **Réinitialisation** : restaure les liens livrés avec GM-OS.
+
+> ⚠️ **« Clear » et « Réinitialiser » ne font pas la même chose** : le premier vide la bibliothèque,
+> le second la remplace par les liens d'origine. Aucun des deux ne se défait.
 
 ---
 

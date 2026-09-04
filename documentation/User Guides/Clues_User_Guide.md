@@ -31,7 +31,7 @@ Une fois l'indice révélé, cliquez sur l'icône **Externe** (ou via le Deck de
 ---
 
 ## 🎴 Deck de Session (Cockpit MJ)
-Pour un accès plus rapide en pleine partie, utilisez le widget **Deck d'Indices** situé en bas de votre tableau de bord (Cockpit).
+Pour un accès plus rapide en pleine partie, le **deck d'indices** apparaît en bas du **panneau de séance** — celui qui s'ouvre quand une séance est en cours, et non le cockpit.
 - Faites défiler vos indices latéralement sans quitter votre écran principal.
 - Utilisez le bouton rapide de projection pour afficher l'indice sur le Hub de manière fluide.
 
@@ -49,4 +49,11 @@ Les joueurs peuvent consulter l'ensemble des indices déjà révélés via l'ong
 - **Journal de Session** : Utilisez les notes générées automatiquement comme base pour vos récapitulatifs de campagne hebdomadaires.
 
 ---
-*GM-OS v6 - L'Immobilisme est votre ennemi. La preuve est votre alliée.*
+> ⚠️ **L'image d'un indice échappait au nettoyage des médias** jusqu'au 2026-09-04 : elle passait
+> pour un fichier orphelin. C'est corrigé — mais si des illustrations d'indices ont disparu après
+> un nettoyage, c'était ça. → [Guide du Media Hub](./Media_Hub_User_Guide.md)
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui : le deck vit dans le panneau de séance, et l'image
+d'un indice était un angle mort du nettoyage.*
