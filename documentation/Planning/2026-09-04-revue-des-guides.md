@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Quatorze guides plus tard, elle a trouvé **cinquante-deux défauts** — et pas
+son code de l'autre.** Dix-huit guides plus tard, elle a trouvé **cinquante-neuf défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après quatorze guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après dix-huit guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 14 guides
+## ✅ Ce qui est fait — 18 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -50,14 +50,15 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | Tour de contrôle audio, Ambient-OS, Sound-OS, Music-OS | 12e | 10 | 1 |
 | **Lot 1** — Tablet Hub ×2, Projection des dés | 12f | 8 | **4** |
 | **Lot 2** — Storyboard, Voice-OS | 12g | 7 | **5** |
+| **Lot 3** — Oracle, NotebookLM, Obsidian, synergie | 12h | 7 | **5** |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1 et 2 faits le 2026-09-04.** Quinze trouvailles, neuf corrigées sur-le-champ — dont
-> **les deux chemins de connexion donnés aux joueurs**, et **deux boutons du Storyboard qui
-> échouaient sans un mot**. Reste 24 guides, en 8 lots.
+> ✅ **Lots 1, 2 et 3 faits le 2026-09-04.** Vingt-deux trouvailles, quatorze corrigées — dont
+> **les deux chemins de connexion donnés aux joueurs**, **deux boutons du Storyboard muets**, et
+> **quatre guides qui décrivaient le mauvais moteur d'IA**. Reste 20 guides, en 7 lots.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -86,7 +87,7 @@ dans la foulée du code. Les trouvailles sont donc plus fines, sauf une : **deux
 « Capturer active » du Storyboard visaient des champs qui n'existent pas**, et échouaient en
 silence. Détail au § 12g.
 
-### Lot 3 — L'Oracle et le corpus
+### ~~Lot 3 — L'Oracle et le corpus~~ ✅ fait le 04/09
 
 `AI_Oracle_User_Guide` · `AI_Oracle_NotebookLM_Guide` · `Obsidian_User_Guide` ·
 `ai-obsidian-synergy`
@@ -94,8 +95,10 @@ silence. Détail au § 12g.
 **Pourquoi ensemble.** Les quatre décrivent la même chaîne : les racines documentaires, le coffre
 Obsidian, le plafond RAG, les personas. Séparés, ils se contrediront.
 
-**Point de vigilance connu** : le plafond RAG est à 4 000 et le coffre est une racine **additive,
-éteinte par défaut** — deux faits qu'une version antérieure des guides disait de travers.
+**Ce que le lot a donné** : le pari était qu'ils se contrediraient. C'est pire — **les quatre
+décrivaient le mauvais moteur**, affirmant que l'Oracle repose sur NotebookLM alors qu'il parle à
+l'un des six fournisseurs configurés. Et **aucun** ne mentionnait l'interrupteur du coffre, seul
+mécanisme qui donne vraiment vos notes à l'Oracle. Détail au § 12h.
 
 ### Lot 4 — Le Cortex
 
@@ -152,7 +155,7 @@ qu'on a trouvé le pad d'ambiance qui charge le silence.
 
 ---
 
-## 🔧 Voie B — les 34 défauts ouverts, par risque
+## 🔧 Voie B — les 36 défauts ouverts, par risque
 
 *Indépendante de la voie A : ces points se traitent quand on veut, dans l'ordre qu'on veut. Le
 détail et les ancres sont au § 12 du registre.*
@@ -186,6 +189,8 @@ détail et les ancres sont au § 12 du registre.*
 | **T5** | Le **bouton de projection des dés est introuvable** : invisible jusqu'au survol du panneau de résultat, et absent tant qu'aucun jet n'a été fait. |
 | **V2** | La liste **Voix des PNJ** de Voice-OS ignore la galerie de campagne — elle ne lit que le mémo de NPC-OS. |
 | **V3** | Le **débruitage par défaut** est `navigateur`, que le dépannage désigne comme le premier suspect des fins de phrase coupées. |
+| **O3** | Le bouton **« Sync Oracle »** pousse la note dans un carnet NotebookLM — il n'alimente **pas** la conversation. Nom à revoir. |
+| **O4** | La ligne **« Oracle » du diagnostic IA** teste le pont NotebookLM, pas la conversation. |
 
 ### P3 bis — Décisions de table, pas défauts
 

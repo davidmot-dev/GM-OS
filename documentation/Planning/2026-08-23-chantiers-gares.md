@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lot 2 fait le 04/09.** **Suivant** : lot 3 — l’Oracle et le corpus.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 et 3 faits le 04/09.** **Suivant** : lot 4 — le Cortex.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -517,6 +517,27 @@ sont donc plus fines — mais l'une d'elles rendait deux boutons muets depuis to
 `masterVolume`, pas `isFocusMode`) ; les cinq presets ; les trois positions du débruitage ; le
 titre permanent quand la durée est vide ; les six éléments d'un moment.
 
+#### 12h · Lot 3 — l'Oracle et le corpus (2026-09-04)
+
+*Quatre guides pour une seule chaîne. Le lot avait été groupé parce que « séparés, ils se
+contrediront » — c'est pire que ça : **ils se contredisaient déjà, et tous les quatre décrivaient
+le mauvais moteur.***
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **O1** | **Les quatre guides affirmaient que l'Oracle repose sur NotebookLM.** Faux : la conversation passe par `AIService`, avec l'un des **six** fournisseurs (`gemini`, `openai`, `anthropic`, `ollama`, `ollama_cloud`, `custom`). NotebookLM sert à **la Forge de campagne**, pour distiller un scénario. Un meneur dont l'Oracle ne répondait plus était donc envoyé réparer un pont sans rapport — et invité à surveiller un « voyant vert Bridged » qui ne dit rien de sa capacité à répondre. | ✅ **Corrigé dans les quatre.** La page NotebookLM change de sujet : elle décrit l'outil pour ce qu'il est. | `ai/types.ts:1`, `AIService.ts:271` |
+| ⛔ **O2** | **Le compte des personas était faux trois fois sur une seule page** : « 6 experts », une liste de sept, puis « vos 7 GEMS ». Ils sont **huit** — **Le Stratège** manquait partout. | ✅ **Corrigé.** Le tableau des six que portait la page NotebookLM est supprimé plutôt que réparé : deux guides qui listent la même chose divergeront de nouveau. | `PersonaGeneratorService.ts:18-27` |
+| ⛔ **O3** | **« Sync Oracle » ne fait pas ce que son nom promet.** Le bouton pousse la note dans un **carnet NotebookLM** ; elle n'entre pas dans ce que l'Oracle lit en conversation. Les trois guides en tiraient la conclusion inverse — « l'IA répond en tenant compte de VOTRE monde ». Ce qui donne les notes à l'Oracle est **l'interrupteur du coffre**, et **aucun des quatre guides ne le mentionnait**. | ✅ **Les deux mécanismes sont distingués**, avec un tableau « lequel des trois, pour quoi ». ⚠️ **Le nom du bouton reste trompeur** : à renommer (« Envoyer au carnet ») si David le souhaite. | `ObsidianPanel.tsx:52-67` |
+| ⚠ **O4** | **La ligne « Oracle » du diagnostic IA teste le pont NotebookLM**, pas la conversation. Une croix rouge sur cette ligne ne dit rien de l'Oracle. *Un contrôle mal nommé est pire qu'un contrôle absent* — la leçon de la dérivation de Cthulhu Hack, reprise ici. | **À renommer** : « Pont NotebookLM (Forge) ». Une clé d'i18n. | `AISettings.tsx:201-215` |
+| ⛔ **O5** | **Un chemin de coffre écrit en dur, nom d'utilisateur compris** (`C:\Users\david\OneDrive\Obsidian Vault`), donné comme l'emplacement par défaut. | ✅ **Retiré.** | — |
+| ⛔ **O6** | **Une consigne de dépannage sans objet** : « assurez-vous que la `notebook_query` est active » et « utilisez le bouton RECONNECT du panneau Oracle ». Ce bouton n'existe pas dans le panneau Oracle ; la reconnexion vit dans l'atelier de campagne. | ✅ **Retiré.** | — |
+| **O7** | **Les sources citées n'étaient documentées nulle part** — et c'est la fonction la plus utile du panneau. Sous chaque réponse : le nom de chaque fiche consultée, son état (**non relue** / **relue**), un **⚑** pour la signaler comme suspecte et la mettre en file de reforge, et un badge de **penchant** (règles / campagne) toujours affiché. | ✅ **Écrit.** *C'est la boucle qui rend un corpus fiable : l'Oracle répond mal → on voit quelle fiche l'a mal renseigné → on la signale.* | `AIChatPanel.tsx:410-478` |
+
+**Vérifié et exact** : le plafond de contexte à **4 000 jetons** (`electron/ragSelection.ts:39`) ;
+le coffre comme racine **additive et éteinte par défaut** ; le badge **SYNC** sur un persona
+configuré pour le système ; la génération séquentielle des personas ; l'export vers Obsidian qui
+crée sans jamais modifier.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -580,7 +601,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Quatorze guides passés, **cinquante-deux** trouvailles (§§ 12a-12g) — **dix-huit réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Dix-huit guides passés, **cinquante-neuf** trouvailles (§§ 12a-12h) — **vingt-trois réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

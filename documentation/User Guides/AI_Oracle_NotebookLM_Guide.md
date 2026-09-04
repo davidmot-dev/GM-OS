@@ -1,72 +1,71 @@
-# 🧠 Guide Utilisateur : AI Oracle & NotebookLM
+# 📓 Guide : NotebookLM, et ce qu'il fait vraiment dans GM-OS
 
-L'**AI Oracle** est l'interface d'intelligence artificielle de GM-OS. Contrairement à une IA générique, l'Oracle est "augmenté" par vos propres données grâce à l'intégration profonde avec **NotebookLM** (via un bridge MCP).
-
-## 🌌 Le Concept : Le Cerveau de votre Monde
-
-L'Oracle ne se contente pas de vous aider à improviser. Il puise dans une base de connaissances structurée (votre Notebook) pour :
-- Répondre avec exactitude aux questions de lore (noms de lieux, généalogies, faits historiques).
-- arbitrer des points de règles complexes basés sur le Rulebook officiel indexé.
-- Générer du contenu cohérent avec le style et le ton de votre campagne.
-
----
-
-## 🛠️ Connexion & Bridge MCP
-
-Pour fonctionner, l'Oracle s'appuie sur le **NotebookLM MCP Server**. 
-- **Lien Neural** : Chaque campagne ou système de jeu pointe vers une URL NotebookLM spécifique.
-- **Identification** : GM-OS extrait l'ID unique de votre Notebook pour établir la communication.
-- **Authentification** : Si la connexion échoue, utilisez la commande `notebooklm-mcp-auth` dans votre terminal pour rafraîchir les jetons d'accès.
+> ⛔ **Cette page décrivait NotebookLM comme le moteur de l'Oracle. Il ne l'est pas.**
+>
+> On y lisait que « l'Oracle s'appuie sur le NotebookLM MCP Server », que chaque campagne « pointe
+> vers une URL NotebookLM », et que sans ce pont l'IA ne répondrait pas. **Rien de tout cela n'est
+> vrai pour la conversation avec l'Oracle** : elle passe par le fournisseur choisi dans les
+> réglages IA — Ollama, Gemini, OpenAI, Anthropic ou une adresse à vous.
+>
+> Un meneur dont l'Oracle ne répondait plus était donc envoyé réparer un pont sans rapport.
+> Corrigé le 2026-09-04. → [Le vrai guide de l'Oracle](./AI_Oracle_User_Guide.md)
 
 ---
 
-## 💎 Les Gems (Personas)
+## 🎯 À quoi NotebookLM sert, alors
 
-L'Oracle peut adopter 6 "Gems" (personnalités) différentes pour filtrer ses réponses.
+À **une** chose, et elle est précieuse : **distiller un gros document**.
 
-| Gem | Persona | Spécialité |
-| :--- | :--- | :--- |
-| 📖 | **Le Sage** | Expert en règles, statistiques et mécaniques techniques. |
-| 🖋️ | **Le Scribe** | Chroniqueur, idéal pour résumer des sessions ou organiser des notes. |
-| ✨ | **L'Oracle** | Maître de la narration, de l'ambiance et des rebondissements. |
-| 🎵 | **Le Barde** | Enrichit le lore avec de la poésie, des chansons et des légendes. |
-| ⚗️ | **L'Alchimiste** | Créateur de butin, de potions et de fiches de PNJ sur mesure. |
-| 👤 | **L'Acteur** | Aide le MJ à interpréter les dialogues et motivations des PNJ. |
+NotebookLM est un service de Google qui ingère des sources — un PDF de règles, un scénario de
+cent pages, une vidéo, un site — et sait en tirer des réponses. GM-OS s'en sert dans **la Forge de
+campagne** : c'est l'étape qui transforme un scénario écrit en actes, scènes, PNJ et lieux.
 
-> [!TIP]
-> **Cohésion Rule Engine** : Si vous jouez à un système spécifique (ex: Alien, D&D), les Gems s'adaptent automatiquement ! Elminster parlera pour D&D, tandis qu'un journaliste d'Arkham répondra pour l'Appel de Cthulhu.
+C'est un travail de **préparation**, long (deux à cinq minutes), fait une fois. Rien à voir avec la
+question qu'on pose en pleine partie.
+
+→ [Guide de la Forge de campagne](./Forge_De_Campagne_User_Guide.md)
 
 ---
 
-## 📂 Alimentation de l'Oracle (Feeding)
+## 🔌 Le pont, et quand il vous concerne
 
-Il existe trois façons principales de donner des connaissances à votre Oracle :
+GM-OS parle à NotebookLM par un **serveur MCP**, qui doit être installé et authentifié sur votre
+machine.
 
-### 1. Synchronisation Obsidian (Manuel)
-Depuis le module **Obsidian**, sélectionnez une note et cliquez sur **"Sync to Oracle"**. La note est instantanément injectée dans la mémoire de travail de l'IA.
+- **Le carnet se désigne par son URL**, dans l'atelier de campagne. GM-OS en extrait l'identifiant.
+- **Si l'authentification expire**, le bouton **Forcer la reconnexion au pont NotebookLM** de
+  l'atelier rafraîchit les jetons. En dernier recours, la commande
+  `notebooklm-mcp-auth` dans un terminal.
 
-### 2. Chemins RAG (Semi-Automatique)
-Dans les paramètres de votre campagne (**Session OS**), vous pouvez définir des répertoires "RAG".
-- Placez vos PDF, fichiers texte ou Markdown dans le dossier `docs/` de GM-OS.
-- L'Oracle priorisera ces documents pour ses réponses locales.
-
-### 3. NotebookLM (Direct)
-Vous pouvez ajouter des sources directement dans l'interface de NotebookLM (YouTube, documents Google Drive, sites web). GM-OS y aura accès via l'ID du notebook.
-
----
-
-## 🕹️ Utilisation de l'Interface
-
-L'**Oracle Panel** (accessible via l'icône d'étincelles dans le Cockpit) propose deux modes :
-
-- **Mode Chat** : Dialogue direct avec le Persona actif. L'IA a accès à toutes les sources du Notebook et aux consignes du Persona.
-- **Source View** : Permet de consulter les documents sources (Note: Certaines restrictions de sécurité Google peuvent nécessiter d'ouvrir la source dans une fenêtre externe).
+> ⚠️ **Le diagnostic des réglages IA porte une ligne « Oracle » qui teste ce pont-là**, et non la
+> conversation. Une croix rouge sur cette ligne ne dit **rien** de la capacité de l'Oracle à
+> répondre. C'est un nom malheureux dans le code ; le savoir évite une heure de dépannage inutile.
 
 ---
 
-## 💡 Scénarios d'Usage
+## 📤 « Sync Oracle », depuis le module Obsidian
 
-- **"Je ne sais plus qui est le cousin du Duc d'Havre-Gris..."** -> Interrogez l'Oracle avec le Gem **Scribe**.
-- **"Décris-moi l'odeur et l'ambiance de cette ruelle sombre sous la pluie."** -> Utilisez le Gem **Oracle**.
-- **"Quelles sont les chances de survie si je saute de 10 mètres dans de la boue ?"** -> Demandez au **Sage**.
-- **"Génère-moi une liste de 3 rumeurs locales sur la disparition des enfants."** -> Appelez le **Barde**.
+Le bouton **Sync Oracle** du module Obsidian envoie la note affichée **comme source dans votre
+carnet NotebookLM**. Il est grisé tant qu'aucune URL de carnet n'est renseignée.
+
+> ⛔ **Il ne fait pas ce que son nom promet.** La note rejoint le carnet ; elle **n'entre pas** dans
+> le corpus que l'Oracle interroge en conversation. Pour que l'Oracle lise vos notes Obsidian, c'est
+> **l'interrupteur du coffre** qu'il faut, dans les réglages IA. →
+> [Guide Obsidian](./Obsidian_User_Guide.md)
+
+---
+
+## 🧭 Lequel des trois, pour quoi
+
+| Ce que vous voulez | L'outil |
+| :--- | :--- |
+| Poser une question en cours de partie | **L'Oracle**, sur son corpus local |
+| Que l'Oracle connaisse vos notes Obsidian | **L'interrupteur du coffre**, réglages IA |
+| Transformer un scénario de cent pages en campagne jouable | **La Forge de campagne**, avec NotebookLM |
+
+---
+
+*Page refaite le 2026-09-04. Son sujet a changé : elle prétendait décrire le moteur de l'Oracle, et
+décrit désormais NotebookLM pour ce qu'il est — l'outil de distillation de la Forge de campagne. Le
+tableau des six personas qu'elle portait est supprimé : il en manquait deux, et il faisait doublon
+avec le guide de l'Oracle, qui les tient à jour.*
