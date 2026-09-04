@@ -347,11 +347,14 @@ journal de séance comme **chronique** — elle nourrira donc le compte rendu de
 
 ## ⚠️ Ce que la sauvegarde ne protège pas
 
-**Map-OS ne fait partie d'aucune sauvegarde** — ni la [sauvegarde automatique
-locale](./Sauvegarde_Automatique_User_Guide.md), ni l'export manuel de session.
+✅ **Depuis le 2026-09-04, vos configurations sauvées et vos modèles de zones de danger sont dans
+la sauvegarde** — automatique et manuelle. C'est le travail de préparation, celui qui ne se refait
+pas.
 
-Ne sont donc protégés **nulle part** : vos **configurations sauvées**, vos **modèles de zones de
-danger**, les pions posés, les réglages de grille et de calques, et **tout votre brouillard**.
+⛔ **Ce qui n'y est toujours pas** : **le brouillard**, les pions posés, le cadrage et l'état des
+calques. Les trois derniers se refont en quelques clics ; le brouillard, non — c'est une image par
+carte, et il relève du **miroir des médias** plutôt que de l'instantané pris toutes les deux
+minutes. Chantier ouvert.
 
 Ce qui l'est, en revanche : l'**Atlas** de la campagne — la galerie des lieux que voient vos joueurs
 dans l'onglet *Atlas* de leur tablette. C'est une autre chose que le plateau tactique, même si le

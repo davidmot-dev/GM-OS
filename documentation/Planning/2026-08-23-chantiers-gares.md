@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). ✅ **LA VOIE A EST TERMINÉE le 04/09** — les dix lots, 38 guides. **Suivant** : la voie B, les défauts non réparés.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). ✅ **VOIE A TERMINÉE** (38 guides) **et les six P1 de la voie B réparés**, le 04/09. **Suivant** : les rangs P2 à P4, § 13 et plan.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -723,6 +723,35 @@ implémentation.*
 
 **Reste la voie B** : les défauts trouvés et non réparés, au § 12 et dans le plan.
 
+### 13 · ✅ Les six P1 de la revue, réparés (2026-09-04)
+
+*Le rang P1 de la voie B : ce qui peut détruire ou laisser perdre du travail. Les six sont faits le
+soir même de la revue.*
+
+| # | Ce qui était | Ce qui est | Où |
+| --- | --- | --- | --- |
+| ⛔ **N1** | Importer une campagne **remplaçait toute la bibliothèque d'ambiances de Sound-OS**. Des heures de pads effacées sans un mot, par le geste qu'on fait en recevant le fichier d'un ami. | **`fusionnerParIdentifiant`**, appliquée aux ambiances **et** aux playlists. *Le bon code était déjà là deux lignes plus bas ; il n'y avait qu'à le partager.* Règle : ce qui porte le même identifiant est remplacé, ce qui est nouveau s'ajoute, **ce qui n'est pas dans l'archive reste**. Une archive vide n'écrase rien. | `NexusService.ts` |
+| ⛔ **N2** | **La trame n'était pas exportée.** Une campagne emportée ailleurs arrivait sans son plan narratif — tout le travail de la Forge de campagne restait sur la machine d'origine. | `actes` et `scenes` dans le type, la récolte et l'injection. ⚠️ **Facultatifs** : une archive d'avant aujourd'hui n'a pas de trame, et `undefined` ne doit pas effacer celle de la campagne cible. ⭐ **Le clonage refait les liens** — les scènes de la copie pointent les actes de la copie, sinon deux campagnes se partageraient une trame. | `nexus.types.ts`, `NexusService.ts` |
+| ⛔ **N3** | **Les paquets de cartes étaient mis dans l'archive et jamais reposés.** Deck-OS repartait vide, et on payait le poids sans le bénéfice. | Manifestes remplacés par identifiant ; états de session **fusionnés** — ils couvrent toutes les campagnes, et écraser le dictionnaire perdrait ceux des autres. | `NexusService.ts` (`injectState`) |
+| ⛔ **N4** | **Le pilote personnalisé aussi**, et son gabarit. Une campagne bâtie sur un jeu forgé arrivait en désignant un `system` absent, sans un mot. | ⚠️ **On AJOUTE, on ne remplace jamais** : un pilote du même identifiant est le travail du meneur d'ici. *L'import d'une campagne n'a pas à devenir un outil de destruction de système* — le résolveur de conflits existe, et il ne vaut que pour les bundles de pilote. | idem |
+| ⛔ **M1** | **Map-OS n'était dans aucune sauvegarde.** | Les **configurations de carte** et les **modèles de zones de danger** y entrent : c'est le travail de préparation, celui qui ne se refait pas. **Pas** les pions ni le cadrage — ils décrivent la séance. **Pas le brouillard** : une image par carte, qui relève du **miroir des médias** et non d'un instantané JSON pris toutes les deux minutes. *Chantier laissé ouvert.* | `SessionService.ts`, `schemas.ts` |
+| ⛔ **G1** | **Favorite-OS non plus** — et son guide affirmait qu'une pastille verte « confirme que vos données sont en sécurité ». | Les dossiers de favoris entrent dans la sauvegarde, aller et retour. | idem |
+
+**Le piège évité, et il était écrit dans le code** : `modules` de `schemas.ts` n'est **pas**
+`.passthrough()`. Sans déclarer `map` et `favorite` dans le schéma Zod, les clés auraient été
+**écrites puis jetées à la relecture** — la sauvegarde aurait paru complète et se serait révélée
+amputée le jour où l'on en a besoin. C'est le défaut exact que Music-OS a payé le 2026-08-30, et le
+commentaire laissé ce jour-là l'a évité aujourd'hui.
+
+**La prudence commune aux six** : *une liste vide ne remplace jamais une liste pleine.* Une
+sauvegarde antérieure à aujourd'hui n'a aucune de ces clés, et le `?.length` l'écarte.
+
+**Vérifié** : `tsc -b` propre, **8 tests neufs** (`completudeDuBundle.test.ts`,
+`fusionParIdentifiant.test.ts`), `npm run validate` vert — 3 515 tests.
+
+**Ce qui reste de la voie B** : les rangs P2 à P4, dont ⛔ **M3**, le seul qui demande l'écran de
+David — *projeter, charger une carte jamais explorée, regarder la tablette.*
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -786,7 +815,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — ✅ **38 guides, les dix lots** — **cent deux** trouvailles (§§ 12a-12o), **soixante-trois réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — ✅ **38 guides, les dix lots** — **cent deux** trouvailles (§§ 12a-12o), **soixante-neuf réparées** dont **les six P1** (§ 13), dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -113,8 +113,9 @@ pour une migration.
 ### ✅ Ce qui part
 
 La campagne · ses **PNJ** · ses **joueurs et leurs personnages** · l'historique des **séances** ·
-les **cartes de l'Atlas** · le **wiki** · la **chronologie** · les **indices** · et, côté médias,
-toutes les images moissonnées avec leur empreinte de contrôle.
+les **cartes de l'Atlas** · le **wiki** · la **chronologie** · les **indices** · **la trame**, actes
+et scènes · les **paquets de cartes** · le **système de jeu forgé** et son gabarit de fiche · et,
+côté médias, toutes les images moissonnées avec leur empreinte de contrôle.
 
 Deux inclusions qui surprennent :
 
@@ -133,17 +134,26 @@ Deux inclusions qui surprennent :
 
 | Ce qui manque | Conséquence concrète |
 | :--- | :--- |
-| **La trame — actes et scènes** | Une campagne exportée arrive **sans son plan narratif**. Tout ce que la Forge de campagne a écrit — les actes, les scènes, leur ordre — reste sur la machine d'origine. |
-| **Les paquets de cartes** | Ils sont *mis* dans l'archive, mais l'import ne les repose pas. Deck-OS repart vide. |
-| **Le système de jeu forgé** | Le pilote personnalisé est *mis* dans l'archive, mais l'import ne l'installe pas. Une campagne bâtie sur un jeu forgé arrive en désignant un système absent — **exportez le `.gmos-driver` à côté, et importez-le en premier**. |
-| **Le plateau tactique (Map-OS)** | Brouillard, pions, configurations de carte et modèles de zones ne sont dans aucune archive. Voir le [guide de Map-OS](./Map_OS_User_Guide.md). |
+| **Le plateau tactique (Map-OS)** | Brouillard et pions ne voyagent pas. Voir le [guide de Map-OS](./Map_OS_User_Guide.md). |
 | **Les sons distants** | Un pad ou une piste qui pointe vers Spotify, SoundCloud ou une URL quelconque reste un lien. |
 
-> ⛔ **Et une manœuvre à connaître avant tout import.** Aujourd'hui, importer une campagne
-> **remplace l'intégralité de votre bibliothèque d'ambiances sonores** par celle de l'archive —
-> les playlists musicales, elles, fusionnent proprement. Avant d'importer le bundle de quelqu'un
-> d'autre, **exportez le vôtre** ou faites une sauvegarde : vos ambiances de Sound-OS sont en jeu.
-> *Signalé le 2026-09-04, pas encore corrigé.*
+> ✅ **Quatre manques comblés le 2026-09-04.** Jusqu'à cette date, l'archive **laissait la trame**
+> — actes et scènes — sur la machine d'origine, et **mettait dedans sans jamais reposer** les
+> paquets de cartes et le système de jeu forgé. Les quatre voyagent désormais.
+>
+> Deux précautions accompagnent le retour : **le pilote s'ajoute, il ne remplace jamais** un
+> système du même identifiant déjà présent — l'import d'une campagne n'a pas à détruire votre
+> travail de Forge —, et **une archive d'avant cette date ne perd rien** : sans trame dedans, la
+> trame d'ici n'est pas touchée.
+
+<!-- -->
+
+> ✅ **Et le défaut le plus coûteux est corrigé.** Importer une campagne **remplaçait
+> l'intégralité de votre bibliothèque d'ambiances de Sound-OS** par celle de l'archive : des heures
+> de pads rangés effacées sans un mot. *Le bon code était déjà là, deux lignes plus bas — les
+> playlists fusionnaient proprement depuis le début.* Les deux suivent maintenant la même règle :
+> **ce qui porte le même identifiant est remplacé, ce qui est nouveau s'ajoute, ce qui n'est pas
+> dans l'archive reste.**
 
 ---
 
@@ -166,14 +176,14 @@ une archive abîmée.
 | **L'archive semble vide de toute image** | La campagne portait le badge gris **Nexus** : ses illustrations sont des liens web. Relancez l'export et choisissez **Tout localiser**. |
 | **« Archive invalide » à l'import** | Le manifeste ne passe pas la vérification. Un `.gmos` est un **fichier ZIP** : renommez-en une copie en `.zip` pour regarder dedans — vous devez y trouver `manifest.json` et `state.json`. |
 | **Des PNJ sans portrait après l'import** | Leur avatar était une URL distante non localisée. Reposez une image depuis le Media Hub. |
-| **La campagne importée n'a plus ses actes ni ses scènes** | Ce n'est pas une panne : **la trame n'est pas exportée**. Voir le tableau ci-dessus. |
-| **La campagne importée ne trouve pas son système de jeu** | Le pilote n'est pas installé par l'import de campagne. Importez d'abord le `.gmos-driver` correspondant. |
+| **Une campagne d'avant le 04/09 arrive sans sa trame** | Normal : les archives antérieures n'en contiennent pas. Réexportez-la depuis la machine d'origine. |
 | **Les boutons Nexus sont grisés** | Vous êtes dans un navigateur, pas dans l'application de bureau. |
 | **L'export est long** | Normal : chaque image est copiée et empreintée. Comptez une à deux minutes pour une campagne bien illustrée. |
 
 ---
 
-*Guide refait le 2026-09-04, code à l'appui. Quatre sections qui n'avaient rien à faire ici ont été
+*Guide refait le 2026-09-04, code à l'appui, **et complété le soir même** quand les quatre
+manques qu'il décrivait ont été comblés. Quatre sections qui n'avaient rien à faire ici ont été
 retirées — le « Theater Mode » (un nom qui n'apparaît nulle part dans le code), le style
 « Glassmorphism / Bento », la messagerie du Hub, et le moment de la journée de Map-OS, qui a
 [son guide](./Map_OS_User_Guide.md). Le feu tricolore Nexus-Ready a été corrigé en deux états, les

@@ -96,6 +96,37 @@ const DANGEROUS_PATH_PATTERNS = [
 // SERVICE
 // ─────────────────────────────────────────────
 
+/**
+ * **Verse une liste importée dans une liste existante, sans rien perdre.**
+ *
+ * Trois cas, et le troisième est celui qui manquait :
+ *
+ * - un élément de l'archive qui porte un identifiant **déjà présent** le
+ *   remplace — c'est la version importée qu'on a demandée ;
+ * - un élément **nouveau** s'ajoute ;
+ * - un élément **absent de l'archive reste en place**. C'est tout le sujet :
+ *   une archive de campagne décrit *une* campagne, elle n'a jamais eu vocation
+ *   à définir toute la bibliothèque du meneur.
+ *
+ * Une archive **vide n'écrase rien** : même prudence que la restauration de
+ * session, où une bibliothèque vide ne remplace jamais une pleine.
+ */
+function fusionnerParIdentifiant<T extends { id: string }>(
+    importes: T[] | undefined,
+    lire: () => T[],
+    ecrire: (fusionnes: T[]) => void,
+): void {
+    if (!importes || importes.length === 0) return;
+
+    const existants = lire();
+    const parId = new Map(importes.map(e => [e.id, e]));
+    const remplaces = existants.map(e => parId.get(e.id) ?? e);
+    const dejaLa = new Set(existants.map(e => e.id));
+    const nouveaux = importes.filter(e => !dejaLa.has(e.id));
+
+    ecrire([...remplaces, ...nouveaux]);
+}
+
 export class NexusService {
     private static instance: NexusService;
 
@@ -171,6 +202,14 @@ export class NexusService {
         const timelineEvents = store.timelineEvents?.filter((e: TimelineEvent) => e.campaignId === campaignId) ?? [];
         const clues = store.clues?.filter((cl: Clue) => cl.campaignId === campaignId) ?? [];
 
+        /*
+          **La trame, ajoutée le 2026-09-04.** Actes et scènes portent tous deux
+          `campaignId` — volontairement redondant côté scène —, donc le filtre
+          est le même que pour le reste du niveau 1.
+        */
+        const actes = store.actes?.filter((a: { campaignId: string }) => a.campaignId === campaignId) ?? [];
+        const scenes = store.scenes?.filter((sc: { campaignId: string }) => sc.campaignId === campaignId) ?? [];
+
         // Niveau 2 : Entités et joueurs
         const entities = store.entities.filter((e: Entity) => e.campaignId === campaignId);
 
@@ -239,6 +278,8 @@ export class NexusService {
             wikiEntries,
             timelineEvents,
             clues,
+            actes,
+            scenes,
             deckManifests,
             deckSessionStates,
             relatedEntities,       // Méta : entités cross-campagne (pour info)
@@ -1039,6 +1080,79 @@ export class NexusService {
             ];
         }
 
+        /*
+          **La trame — ce qui manquait le plus.**
+
+          `undefined` et `[]` ne disent pas la même chose ici : une archive
+          d'avant le 2026-09-04 n'a **aucune** trame, et remplacer par du vide
+          effacerait les actes que le meneur aurait écrits de son côté sur la
+          campagne cible. On ne touche donc à la trame que si l'archive en
+          apporte une.
+        */
+        if (state.actes !== undefined) {
+            nextPartialState.actes = [
+                ...(store.actes ?? []).filter((a: { campaignId: string }) => a.campaignId !== campaignId),
+                ...state.actes,
+            ];
+        }
+        if (state.scenes !== undefined) {
+            nextPartialState.scenes = [
+                ...(store.scenes ?? []).filter((sc: { campaignId: string }) => sc.campaignId !== campaignId),
+                ...state.scenes,
+            ];
+        }
+
+        /*
+          **Les paquets de cartes étaient mis dans l'archive et jamais reposés.**
+
+          Deck-OS repartait donc vide à l'arrivée, alors que le poids voyageait.
+          Les manifestes se remplacent par identifiant ; les états de session
+          se fusionnent, parce que ce sont ceux de **toutes** les campagnes et
+          qu'écraser le dictionnaire perdrait ceux des autres.
+        */
+        if (state.deckManifests?.length) {
+            const importes = new Set(state.deckManifests.map(d => d.id));
+            nextPartialState.decks = [
+                ...(store.decks ?? []).filter((d: { id: string }) => !importes.has(d.id)),
+                ...state.deckManifests,
+            ];
+        }
+        if (state.deckSessionStates?.length) {
+            const parDeck = { ...(store.deckStates ?? {}) };
+            for (const etat of state.deckSessionStates) {
+                if (etat?.deckId) parDeck[etat.deckId] = etat;
+            }
+            nextPartialState.deckStates = parDeck;
+        }
+
+        /*
+          **Le pilote personnalisé, et son gabarit de fiche.**
+
+          Ils étaient exportés et jamais réinjectés : une campagne bâtie sur un
+          jeu forgé arrivait en désignant un `system` absent de la machine — et
+          rien ne le disait.
+
+          ⚠️ **On AJOUTE, on ne remplace jamais.** Un pilote portant déjà cet
+          identifiant est le travail du meneur d'ici : l'écraser avec la version
+          de l'archive ferait de l'import de campagne un outil de destruction de
+          système. Le résolveur de conflits existe pour ça, et il ne s'applique
+          qu'aux bundles de pilote.
+        */
+        if (state.requiredDriverData?.length) {
+            const dejaLa = new Set((store.customGameDrivers ?? []).map((d: { id: string }) => d.id));
+            const manquants = state.requiredDriverData.filter(d => !dejaLa.has(d.id));
+            if (manquants.length) {
+                nextPartialState.customGameDrivers = [...(store.customGameDrivers ?? []), ...manquants];
+            }
+        }
+        if (state.requiredTemplateData?.length) {
+            const dejaLa = new Set((store.customSheetTemplates ?? []).map((t: { id: string }) => t.id));
+            const manquants = state.requiredTemplateData.filter(t => !dejaLa.has(t.id));
+            if (manquants.length) {
+                nextPartialState.customSheetTemplates = [...(store.customSheetTemplates ?? []), ...manquants];
+            }
+        }
+
         // Injection atomique
         useSessionOSStore.setState(nextPartialState);
         console.log(`[NexusService] Atomic injection complete for: ${campaignId}`);
@@ -1229,6 +1343,29 @@ export class NexusService {
                 id: `clue-${crypto.randomUUID()}`,
                 campaignId: remapId(cl.campaignId),
             })),
+            /*
+              **La trame se clone en deux temps**, parce qu'une scène pointe son
+              acte. On fabrique d'abord la correspondance ancien → nouvel acte,
+              puis on la relit pour les scènes : sans elle, les scènes de la
+              copie désigneraient les actes de l'original, et deux campagnes se
+              partageraient une trame.
+            */
+            ...(() => {
+                if (!state.actes && !state.scenes) return {};
+                const nouvelActe = new Map<string, string>();
+                const actes = (state.actes ?? []).map((a) => {
+                    const id = `acte-${crypto.randomUUID()}`;
+                    nouvelActe.set(a.id, id);
+                    return { ...a, id, campaignId: newCampaignId };
+                });
+                const scenes = (state.scenes ?? []).map((sc) => ({
+                    ...sc,
+                    id: `scene-${crypto.randomUUID()}`,
+                    campaignId: newCampaignId,
+                    acteId: nouvelActe.get(sc.acteId) ?? sc.acteId,
+                }));
+                return { actes, scenes };
+            })(),
         };
     }
 
@@ -1452,21 +1589,34 @@ export class NexusService {
                     this.emitProgress('injecting', 85, i18next.t('modules:system.nexus.messages.injecting_campaign'));
                     this.injectState(finalState);
 
-                    // Phase 7 : Restauration des stores audio
-                    if (finalState.atmospheres && finalState.atmospheres.length > 0) {
-                        useSoundStore.setState({ atmospheres: finalState.atmospheres });
-                    }
+                    /*
+                      **Phase 7 : les deux bibliothèques audio, FUSIONNÉES.**
 
-                    if (finalState.playlists && finalState.playlists.length > 0) {
-                        const musicState = useMusicStore.getState();
-                        const existingIds = new Set(musicState.playlists.map(p => p.id));
-                        const newPlaylists = finalState.playlists.filter(p => !existingIds.has(p.id));
-                        const updatedPlaylists = musicState.playlists.map(p => {
-                            const incoming = finalState.playlists!.find(ip => ip.id === p.id);
-                            return incoming ?? p;
-                        });
-                        useMusicStore.setState({ playlists: [...updatedPlaylists, ...newPlaylists] });
-                    }
+                      Les atmosphères étaient **remplacées** :
+                      `setState({ atmospheres })` pur et simple. Importer le
+                      bundle d'un ami effaçait donc toute la SoundBoard du
+                      meneur — des heures de pads rangés, sans un mot et sans
+                      retour possible.
+
+                      *Le bon code était déjà là, deux lignes plus bas* : les
+                      playlists fusionnaient proprement depuis le début. Les
+                      deux suivent désormais la même règle — **ce qui porte le
+                      même identifiant est remplacé, ce qui est nouveau
+                      s'ajoute, ce qui n'est pas dans l'archive reste**.
+
+                      Relevé le 2026-09-04 en relisant le guide de Nexus-OS.
+                    */
+                    fusionnerParIdentifiant(
+                        finalState.atmospheres,
+                        () => useSoundStore.getState().atmospheres,
+                        (atmospheres) => useSoundStore.setState({ atmospheres }),
+                    );
+
+                    fusionnerParIdentifiant(
+                        finalState.playlists,
+                        () => useMusicStore.getState().playlists,
+                        (playlists) => useMusicStore.setState({ playlists }),
+                    );
 
                     // CRITIQUE : Navigation Landing Post-Import
                     console.log(`[NexusService] Finalizing import for ${finalState.campaign.id}. Landing on Cockpit.`);

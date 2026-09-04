@@ -17,6 +17,7 @@ import type {
     TimelineEvent,
     Clue,
 } from '../../session/store/types';
+import type { Acte, Scene } from '../../../types/trame.types';
 import type { Atmosphere } from '../../sound/useSoundStore';
 import type { Playlist } from '../../music/useMusicStore';
 import type { DeckManifest, DeckSessionState } from '../../session/store/types';
@@ -127,6 +128,22 @@ export interface NexusCampaignState {
     timelineEvents: TimelineEvent[];
     /** Indices (clues) de cette campagne */
     clues: Clue[];
+    /**
+     * **La trame — actes et scènes.**
+     *
+     * Absente de l'archive jusqu'au 2026-09-04 : une campagne emportée sur une
+     * autre machine y arrivait **sans son plan narratif**. Tout ce que la Forge
+     * de campagne avait écrit — les actes, les scènes, leur ordre — restait sur
+     * la machine d'origine, et rien ne le signalait.
+     *
+     * *Même famille que Music-OS et le bestiaire, oubliés des sauvegardes le
+     * 2026-08-30 : la trame a été ajoutée à `donneesDeLaSession` et jamais ici.*
+     *
+     * **Facultatives**, pour qu'un `.gmos` d'avant cette date s'importe sans
+     * rien perdre ni rien inventer.
+     */
+    actes?: Acte[];
+    scenes?: Scene[];
     /** Paquets de cartes (manifestes uniquement) */
     deckManifests: DeckManifest[];
     /** États de session des decks */

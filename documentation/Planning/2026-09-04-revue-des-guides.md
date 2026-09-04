@@ -70,7 +70,8 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 > vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde — **troisième occurrence**
 > de cette famille après le faux backup GitHub et Map-OS.
 >
-> **Il reste la voie B**, ci-dessous.
+> ✅ **Et les six P1 de la voie B sont réparés le même soir** — dont l'import de campagne qui
+> effaçait la SoundBoard. Restent les rangs **P2 à P4**, ci-dessous.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -175,21 +176,23 @@ avec un en-tête qui dit ce qui a vieilli dedans. Ses trois liens entrants sont 
 
 ---
 
-## 🔧 Voie B — les 36 défauts ouverts, par risque
+## 🔧 Voie B — les défauts, par risque
 
 *Indépendante de la voie A : ces points se traitent quand on veut, dans l'ordre qu'on veut. Le
 détail et les ancres sont au § 12 du registre.*
 
-### P1 — Perte de données possible
+### ✅ P1 — Perte de données possible : **les six sont faits**
 
-| # | Quoi | Coût estimé |
+*Réparés le 2026-09-04 au soir, détail au § 13 du registre. Conservés ici pour mémoire.*
+
+| # | Quoi | ✅ |
 | --- | --- | --- |
-| **N1** | Importer une campagne **écrase toute la bibliothèque d'ambiances de Sound-OS**. Les playlists, deux lignes plus bas, fusionnent proprement : *le bon code est déjà là, à côté du mauvais*. | Petit |
-| **M1** | **Map-OS n'est dans aucune sauvegarde** — brouillard, pions, configurations de carte, modèles de zones. | Moyen (le brouillard relève du miroir des médias, pas de l'instantané JSON) |
-| **N2** | La **trame** (actes et scènes) n'est pas exportée par Nexus. | Petit |
-| **N3** | Les **paquets de cartes** sont exportés et jamais réinjectés. | Petit |
-| **N4** | Le **pilote personnalisé** est exporté et jamais réinjecté. | Petit |
-| **G1** | **Favorite-OS n'est dans aucune sauvegarde** — ni automatique, ni export manuel. Ses dossiers sont du travail de préparation. | Petit |
+| **N1** | Importer une campagne écrasait toute la bibliothèque d'ambiances de Sound-OS. | **fusion par identifiant** |
+| **M1** | Map-OS n'était dans aucune sauvegarde. | **configurations et modèles de zones** ; le brouillard reste ouvert |
+| **N2** | La trame n'était pas exportée par Nexus. | **exportée, réinjectée, et clonée avec ses liens** |
+| **N3** | Les paquets de cartes étaient exportés et jamais réinjectés. | **réinjectés** |
+| **N4** | Le pilote personnalisé était exporté et jamais réinjecté. | **ajouté, jamais remplacé** |
+| **G1** | Favorite-OS n'était dans aucune sauvegarde. | **dans la sauvegarde** |
 
 ### P2 — Une fonction annoncée qui ne marche pas
 

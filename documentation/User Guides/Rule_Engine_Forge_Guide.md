@@ -9,11 +9,11 @@ de règles** vous laisse tout reprendre à la main.
 
 L'en-tête du module porte trois onglets, et ce guide n'en connaissait qu'un :
 
-| Atelier | Ce qu'il produit |
-| :--- | :--- |
-| **Forge** | Un **système de jeu** : moteur de dés, combat, portées, consignes d'IA, gabarit de fiche |
+| Atelier      | Ce qu'il produit                                                                                                            |
+| :----------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| **Forge**    | Un **système de jeu** : moteur de dés, combat, portées, consignes d'IA, gabarit de fiche                                    |
 | **Campagne** | Une campagne jouable à partir d'un scénario — actes, scènes, PNJ, lieux. → [guide dédié](./Forge_De_Campagne_User_Guide.md) |
-| **Trame** | Le plan narratif d'une campagne existante. → [guide dédié](./Trame_Narrative_User_Guide.md) |
+| **Trame**    | Le plan narratif d'une campagne existante. → [guide dédié](./Trame_Narrative_User_Guide.md)                                 |
 
 ---
 

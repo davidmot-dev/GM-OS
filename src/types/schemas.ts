@@ -107,6 +107,24 @@ export const FullSessionSchema = z.object({
           sauf le jour où l'on a besoin de la sauvegarde.
         */
         music: z.object({ playlists: z.array(z.any()) }).optional(),
+        /*
+          **Map-OS et les favoris, entres le 2026-09-04.**
+
+          Ni l'un ni l'autre n'etait dans aucune sauvegarde. Meme famille que
+          Music-OS et le bestiaire, et meme raison de les declarer ici : sans
+          la ligne, Zod jetterait la cle a la relecture.
+
+          On ne garde que ce qui est de la **preparation** : les configurations
+          de carte et les modeles de zones de danger, les dossiers de favoris.
+          Les pions poses et le cadrage decrivent la seance en cours ; le
+          brouillard, lui, est une image par carte et releve du miroir des
+          medias, pas de cet instantane.
+        */
+        map: z.object({
+            mapPresets: z.array(z.any()).optional(),
+            dangerZonePresets: z.array(z.any()).optional(),
+        }).optional(),
+        favorite: z.object({ favorites: z.array(z.any()) }).optional(),
         /* Meme raison que `music` ci-dessus : non declaree, la cle serait jetee. */
         bestiaire: z.object({
             gabarits: z.array(z.any()),

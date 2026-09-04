@@ -13,6 +13,8 @@ import { lesDonneesDeLaSession } from '../modules/session/logic/donneesDeLaSessi
 import { useBibliothequeDesFiches } from '../modules/fiches/useBibliothequeDesFiches';
 import { useMusicStore } from '../modules/music/useMusicStore';
 import { useBestiaireStore } from '../modules/combat/useBestiaireStore';
+import { useMapStore } from '../modules/map/useMapStore';
+import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 
 /**
  * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
@@ -33,6 +35,8 @@ export function construireLaSauvegarde() {
     const musicState = useMusicStore.getState();
     const bestiaireState = useBestiaireStore.getState();
     const bibliotheque = useBibliothequeDesFiches.getState().instantane;
+    const mapState = useMapStore.getState();
+    const favoriteState = useFavoriteStore.getState();
 
     return {
         version: '5.1.0',
@@ -99,6 +103,34 @@ export function construireLaSauvegarde() {
             bestiaire: {
                 gabarits: bestiaireState.gabarits,
                 repartitions: bestiaireState.repartitions,
+            },
+            /*
+              **Map-OS n'etait dans aucune sauvegarde** — releve le 2026-09-04
+              en ecrivant son guide. Ni les configurations de carte, ni les
+              modeles de zones de danger, ni le brouillard.
+
+              **Ce qui entre ici est ce qui est de la preparation** : un preset
+              de carte et un modele de zone sont du travail fait a froid, qui ne
+              se retrouve nulle part ailleurs. Les pions poses, le zoom et
+              l'etat des calques decrivent la seance en cours et se refont en
+              trois clics.
+
+              **Le brouillard n'y est pas, et c'est delibere** : c'est une image
+              par carte, dans une base a part. Il releve du miroir des medias —
+              115 images, 261 Mo mesures le 29/08 — et non d'un instantane JSON
+              qu'on prend toutes les deux minutes.
+            */
+            map: {
+                mapPresets: mapState.mapPresets,
+                dangerZonePresets: mapState.dangerZonePresets,
+            },
+            /*
+              **Favorite-OS non plus** — et son guide affirmait qu'une pastille
+              verte « confirme que vos donnees sont en securite ». Elles ne
+              l'etaient pas.
+            */
+            favorite: {
+                favorites: favoriteState.favorites,
             },
             /*
               **La bibliothèque du moteur de fiches — chantier n° 5.**
@@ -276,6 +308,32 @@ export const SessionService = {
                     repartitions: (bestiaire.repartitions ?? {}) as never,
                 });
                 Logger.info(`[Session] ${bestiaire.gabarits.length} gabarit(s) d'adversaire restaure(s)`);
+            }
+            /*
+              Meme prudence que partout ailleurs ici : **une liste vide ne
+              remplace jamais une liste pleine**. Une sauvegarde anterieure au
+              2026-09-04 n'a pas ces cles du tout, et le `?.length` l'ecarte.
+            */
+            const carte = (data.modules as {
+                map?: { mapPresets?: unknown[]; dangerZonePresets?: unknown[] };
+            }).map;
+            if (carte?.mapPresets?.length || carte?.dangerZonePresets?.length) {
+                useMapStore.setState({
+                    ...(carte.mapPresets?.length ? { mapPresets: carte.mapPresets as never } : {}),
+                    ...(carte.dangerZonePresets?.length
+                        ? { dangerZonePresets: carte.dangerZonePresets as never }
+                        : {}),
+                });
+                Logger.info(
+                    `[Session] ${carte.mapPresets?.length ?? 0} configuration(s) de carte et `
+                    + `${carte.dangerZonePresets?.length ?? 0} modele(s) de zone restaures`,
+                );
+            }
+
+            const favoris = (data.modules as { favorite?: { favorites?: unknown[] } }).favorite;
+            if (favoris?.favorites?.length) {
+                useFavoriteStore.setState({ favorites: favoris.favorites as never });
+                Logger.info(`[Session] ${favoris.favorites.length} favori(s) restaure(s)`);
             }
             // Ambient and Whiteboard might need more careful hydration if they have active engines
         }

@@ -56,7 +56,7 @@ Activez l'interrupteur **"SYCHRO"** ou cliquez sur l'icône **"PROJECTER"** sur 
 
 ---
 
-## ⚠️ Vos favoris ne sont dans aucune sauvegarde
+## 💾 Vos favoris et la sauvegarde
 
 > ⛔ **Deux affirmations dangereuses, retirées le 2026-09-04.** Cette page annonçait une
 > « synchronisation avec votre coffre central (Vault) » et une pastille verte *« Vault Synced »*
@@ -64,12 +64,11 @@ Activez l'interrupteur **"SYCHRO"** ou cliquez sur l'icône **"PROJECTER"** sur 
 > synchronisation n'existe** — le mot *Vault* n'apparaît nulle part dans le module. Elle annonçait
 > aussi un **bouton Export** au format JSON : il n'existe pas non plus.
 
-Ce qu'il faut savoir à la place : **Favorite-OS n'est ni dans la sauvegarde automatique, ni dans
-l'export manuel de session.** Vos dossiers vivent dans le stockage local de l'application, et
-c'est tout.
+✅ **Corrigé le jour même : vos favoris sont désormais dans la sauvegarde**, automatique et
+manuelle. Ils n'y étaient pas.
 
-*C'est la même famille que Map-OS (voir le [registre](../Planning/2026-08-23-chantiers-gares.md),
-§ 12a) : une donnée qu'on crée sans y penser est une donnée qu'on oublie de protéger.*
+*C'était la même famille que Map-OS : une donnée qu'on crée sans y penser est une donnée qu'on
+oublie de protéger. Les deux sont entrées ensemble.*
 
 → [Guide de la sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md)
 
