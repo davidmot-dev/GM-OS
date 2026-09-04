@@ -1802,7 +1802,12 @@
         "map": "Carte",
         "project": "Projeter"
       },
-      "change_type": "Changer le type : PNJ, Monstre, Joueur"
+      "change_type": "Changer le type : PNJ, Monstre, Joueur",
+      "voice_gen": "Sa voix",
+      "voice_gen_tooltip": "Proposer des réglages de voix pour ce PNJ, d'après ses notes et ses traits — puis les enregistrer sur sa fiche",
+      "voice_recall": "Reposer",
+      "voice_recall_tooltip": "Reposer la voix enregistrée de ce PNJ sur le rack de Voice-OS",
+      "voice_recalled": "Voix de {{name}} rappelée."
     },
     "wiki_form": {
       "title_label": "Titre de l'article",

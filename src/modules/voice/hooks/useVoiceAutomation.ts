@@ -2,11 +2,16 @@ import { useEffect } from 'react';
 import { useVoiceStore } from '../useVoiceStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
+import { depuisUnPnjDeCampagne } from '../logic/personnageAVoix';
 
 /**
- * Custom Hook for Voice-OS Automation.
- * Listens to active NPC selection and combat turns to automatically 
- * adjust voice pitch and presets based on keywords.
+ * L'automatisme de Voice-OS : la voix suit le PNJ sélectionné, et le combattant
+ * dont c'est le tour.
+ *
+ * **Ce qu'il pose est désormais le profil enregistré du PNJ quand il en a un**,
+ * et seulement à défaut les réglages devinés par mots-clés — la règle vit dans
+ * `syncWithNpc`, une seule fois, pour que les deux déclencheurs ci-dessous ne
+ * puissent pas en avoir chacun une version.
  */
 export const useVoiceAutomation = () => {
     const { isSyncNPC, syncWithNpc } = useVoiceStore();
@@ -19,12 +24,7 @@ export const useVoiceAutomation = () => {
 
         const npc = entities.find(e => e.id === selectedEntityId);
         if (npc && (npc.type === 'npc' || npc.type === 'monster')) {
-            syncWithNpc({
-                id: npc.id,
-                name: npc.name,
-                description: npc.description,
-                roleplayingNotes: npc.roleplayingNotes
-            });
+            syncWithNpc(depuisUnPnjDeCampagne(npc));
         }
     }, [selectedEntityId, entities, isSyncNPC, syncWithNpc]);
 
@@ -37,12 +37,7 @@ export const useVoiceAutomation = () => {
             // Find the original entity to get descriptions/notes
             const npc = entities.find(e => e.id === activeCombatant.sourceEntityId);
             if (npc) {
-                syncWithNpc({
-                    id: npc.id,
-                    name: npc.name,
-                    description: npc.description,
-                    roleplayingNotes: npc.roleplayingNotes
-                });
+                syncWithNpc(depuisUnPnjDeCampagne(npc));
             }
         }
     }, [currentTurnIdx, combatants, entities, isSyncNPC, syncWithNpc]);

@@ -3,69 +3,11 @@ import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
 import { contexteAllegeMaintenant } from '../ai/modeDeContexte';
 import { debruitageMigre, type Debruitage } from './logic/migrationDesEffets';
+import { texteDuPersonnage, type PersonnageAVoix } from './logic/personnageAVoix';
 
 
-export interface VoiceEffects {
-    pitch: number;      // -12 to 12 semitones
-    formant: number;    // -100 to 100 (timbre simulation via peaking EQ)
-    reverb: number;     // 0 to 1 (mix)
-    distortion: number; // 0 to 1 (amount)
-    bitcrush: number;  // 0 to 1
-    lowCut: number;     // 80, 250 or 0 (off)
-    gateThreshold: number; // -100 to 0 dB
-    /**
-     * La compression, de 0 (aucune) à 100 (le réglage figé d'avant le
-     * 2026-09-03 : 8:1, seuil −24 dB). Voir `logic/compression.ts`.
-     */
-    compression: number;
-    outputGain: number; // 0 to 2
-    antiLarsen: boolean; // Toggle browser echo cancellation
-    /**
-     * Qui débruite, et il n'y en a qu'un — voir `logic/migrationDesEffets.ts`.
-     *
-     * - `aucun` : le signal du micro arrive brut.
-     * - `navigateur` : la suppression de bruit de WebRTC. Ce n'est pas un
-     *   filtre mais un algorithme qui décide lui-même de ce qui est de la voix,
-     *   **en amont de tout ce que Voice-OS peut régler** — d'où les fins de
-     *   phrase rabotées.
-     * - `neuronal` : RNNoise, dans la chaîne de GM-OS. Réglable, mesurable, et
-     *   il rend en prime une probabilité de voix que la porte sait suivre.
-     *
-     * *Un seul réglage à trois positions, et non deux interrupteurs : deux
-     * débruiteurs qui se suivent, ce n'est pas mieux, c'est pire.*
-     */
-    debruitage: Debruitage;
-    noiseGate: boolean;  // Toggle gate logic
-    duckingEnabled: boolean;
-    duckingThreshold: number; // dB
-    duckingRange: number; // 0 to 1 (target gain)
-    duckingRelease: number; // ms delay before fade-in
-    duckingAttack: number; // ms for the fade transition
-}
-
-/**
- * Un profil vocal enregistré sur la fiche d'un PNJ.
- *
- * **Ce qu'on garde, et pourquoi tout.** On enregistre l'état complet du rack —
- * pas les cinq valeurs suggérées par le modèle. Le meneur retouche presque
- * toujours aux curseurs après coup, et c'est cet état-là qu'il veut retrouver,
- * pas la proposition initiale. *Ce qu'on rappelle doit être ce qu'on a entendu.*
- */
-export interface ProfilVocal {
-    /** Le preset actif, s'il n'a pas été retouché depuis. */
-    presetId: string | null;
-    effects: VoiceEffects;
-    /** Quand il a été posé — pour que l'écran puisse dire « il y a trois jours ». */
-    enregistreLe: number;
-}
-
-export interface VoicePreset {
-    id: string;
-    name: string;
-    icon: string;
-    description: string;
-    effects: VoiceEffects;
-}
+export type { VoiceEffects, ProfilVocal, VoicePreset } from './types';
+import type { VoiceEffects, ProfilVocal, VoicePreset } from './types';
 
 interface VoiceState {
     isActive: boolean;
@@ -132,7 +74,14 @@ interface VoiceState {
     setAvailableInputs: (devices: MediaDeviceInfo[]) => void;
     setWorkletReady: (ready: boolean) => void;
     
-    syncWithNpc: (npc: { name: string; description: string; roleplayingNotes: string; id: string }) => void;
+    /**
+     * Repose la voix d'un personnage, **profil enregistré d'abord**.
+     *
+     * Les mots-clés ne sont plus qu'un repli, pour un PNJ dont personne n'a
+     * jamais réglé la voix. Auparavant ils étaient le seul chemin, et ils
+     * écrasaient tout à chaque bascule de sélection.
+     */
+    syncWithNpc: (personnage: PersonnageAVoix) => void;
     /**
      * Fabrique un profil vocal et l'applique.
      *
@@ -140,7 +89,7 @@ interface VoiceState {
      * l'appelant qui sait où le ranger — la fiche du PNJ — et le store de voix
      * n'a pas à connaître le module des PNJ.
      */
-    generateVoiceProfile: (npc: { name: string; gmNotes: string; fields: Record<string, string> }) => Promise<ProfilVocal | null>;
+    generateVoiceProfile: (personnage: PersonnageAVoix) => Promise<ProfilVocal | null>;
     /** Repose un profil enregistré sur le rack. */
     appliquerProfil: (profil: ProfilVocal) => void;
     
@@ -281,14 +230,28 @@ export const useVoiceStore = create<VoiceState>()(
             lastSyncedEntityId: null,
         lastSyncedEntityName: null,
 
-            syncWithNpc: (npc) => {
-                // ... Existing sync logic ...
-                const { isSyncNPC, lastSyncedEntityId, updateEffect, applyPreset } = get();
-                if (!isSyncNPC || lastSyncedEntityId === npc.id) return;
+            syncWithNpc: (personnage) => {
+                const { isSyncNPC, lastSyncedEntityId, updateEffect, applyPreset, appliquerProfil } = get();
+                if (!isSyncNPC || lastSyncedEntityId === personnage.id) return;
 
-                const text = `${npc.name} ${npc.description} ${npc.roleplayingNotes}`.toLowerCase();
-                
-                // Keep existing keyword logic for ultra-fast fallback
+                /*
+                  **Ce qu'on a réglé passe avant ce qu'on devine.**
+
+                  Un profil enregistré est un choix du meneur — proposé par l'IA,
+                  puis retouché aux curseurs. Les mots-clés ci-dessous sont une
+                  approximation sur deux champs de texte : ils ne peuvent pas
+                  passer devant. *Sans cette priorité, sélectionner un PNJ
+                  effaçait sa propre voix.*
+                */
+                if (personnage.voiceProfile) {
+                    appliquerProfil(personnage.voiceProfile);
+                    set({ lastSyncedEntityId: personnage.id, lastSyncedEntityName: personnage.name });
+                    return;
+                }
+
+                const text = texteDuPersonnage(personnage);
+
+                // Repli par mots-clés, pour un PNJ dont la voix n'a jamais été réglée.
                 if (text.includes('spectre') || text.includes('fantôme') || text.includes('ghost')) {
                     applyPreset('ghost');
                 } else if (text.includes('ogre') || text.includes('géant') || text.includes('troll') || text.includes('colossal')) {
@@ -303,9 +266,9 @@ export const useVoiceStore = create<VoiceState>()(
                     else if (text.includes('enfant') || text.includes('petit')) updateEffect('pitch', 5);
                 }
 
-                set({ 
-                    lastSyncedEntityId: npc.id,
-                    lastSyncedEntityName: npc.name
+                set({
+                    lastSyncedEntityId: personnage.id,
+                    lastSyncedEntityName: personnage.name
                 });
             },
 
@@ -314,7 +277,7 @@ export const useVoiceStore = create<VoiceState>()(
                 activePresetId: profil.presetId,
             }),
 
-            generateVoiceProfile: async (npc) => {
+            generateVoiceProfile: async (personnage) => {
                 const { updateEffect, applyPreset } = get();
                 const aiStore = (await import('../../stores/useAIStore')).useAIStore.getState();
 
@@ -332,11 +295,11 @@ export const useVoiceStore = create<VoiceState>()(
                 const provider = aiStore.activeProvider;
                 const model = aiStore.configs[provider]?.modelId ?? '—';
 
-                const fieldsText = Object.entries(npc.fields).map(([k, v]) => `${k}: ${v}`).join(', ');
+                const fieldsText = Object.entries(personnage.traits).map(([k, v]) => `${k}: ${v}`).join(', ');
                 const prompt = `Analyse ce personnage et propose des réglages de voix.
-Nom: ${npc.name}
+Nom: ${personnage.name}
 Traits: ${fieldsText}
-Notes: ${npc.gmNotes}
+Notes: ${personnage.notes}
 
 Règles des valeurs :
 - preset: "clean", "ghost", "ogre", "robot" ou "dragon"
@@ -410,7 +373,7 @@ Règles des valeurs :
                     if (profile.reverb !== undefined) updateEffect('reverb', profile.reverb);
                     if (profile.distortion !== undefined) updateEffect('distortion', profile.distortion);
 
-                    set({ lastSyncedEntityName: npc.name || 'Unknown NPC' });
+                    set({ lastSyncedEntityId: personnage.id, lastSyncedEntityName: personnage.name || 'Unknown NPC' });
                     gmToast(translate.t('modules:voice.messages.profile_generated', { provider: provider.toUpperCase(), model }), 'info');
 
                     // L'état RÉEL du rack après application — c'est lui qu'on

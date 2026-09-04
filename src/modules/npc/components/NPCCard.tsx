@@ -9,6 +9,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { useFavoriteStore, type FavoriteType } from '../../favorite/useFavoriteStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useVoiceStore } from '../../voice/useVoiceStore';
+import { depuisUnPnjDeNpcOs } from '../../voice/logic/personnageAVoix';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { RecipientSelector } from '../../session/components/RecipientSelector';
@@ -357,7 +358,7 @@ const NPCCard: React.FC = () => {
                     <button
                         onClick={async (e) => {
                             e.stopPropagation();
-                            const profil = await generateVoiceProfile(currentEntity);
+                            const profil = await generateVoiceProfile(depuisUnPnjDeNpcOs(currentEntity));
                             if (profil) setVoiceProfile(currentEntity.id, profil);
                         }}
                         className="text-[10px] uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"

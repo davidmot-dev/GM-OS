@@ -31,7 +31,7 @@ export interface NPCEntity {
      * revenir à l'une. Une voix qu'on doit refabriquer à chaque bascule n'est
      * pas un profil, c'est un réglage.
      */
-    voiceProfile?: import('../voice/useVoiceStore').ProfilVocal;
+    voiceProfile?: import('../voice/types').ProfilVocal;
 }
 
 interface NPCBridge {
@@ -73,7 +73,7 @@ interface NPCState {
     deleteFromMemo: (id: string) => void;
     updateEntityNotes: (id: string, notes: string) => void;
     /** Range un profil vocal sur la fiche, ou l'en retire avec `null`. */
-    setVoiceProfile: (id: string, profil: import('../voice/useVoiceStore').ProfilVocal | null) => void;
+    setVoiceProfile: (id: string, profil: import('../voice/types').ProfilVocal | null) => void;
     toggleDeadStatus: (id: string) => void;
     clearHistory: () => void;
     setCurrentEntity: (entity: NPCEntity | null) => void;

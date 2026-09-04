@@ -99,4 +99,18 @@ export interface Entity {
     relations?: EntityRelation[];
     faction?: string;
     isVisibleByPlayers?: boolean;
+    /**
+     * **La voix de ce PNJ, réglée une fois et rappelée ensuite.**
+     *
+     * Le profilage vocal existait depuis toujours — mais uniquement sur les
+     * entités de NPC-OS, un module à part. Les PNJ de la campagne, qui sont les
+     * cent et quelques que le meneur joue vraiment, n'avaient pas de champ pour
+     * en porter un : la case « Sync PNJ » recalculait des réglages par mots-clés
+     * à chaque bascule de sélection, et les écrasait aussitôt. *Une voix qu'on
+     * doit refabriquer à chaque fois n'est pas un profil, c'est un réglage.*
+     *
+     * Facultatif : un PNJ sans profil retombe sur les mots-clés, exactement
+     * comme avant.
+     */
+    voiceProfile?: import('../modules/voice/types').ProfilVocal;
 }

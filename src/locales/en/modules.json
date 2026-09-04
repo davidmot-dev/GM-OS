@@ -1802,7 +1802,12 @@
         "map": "Map",
         "project": "Project"
       },
-      "change_type": "Change the type: NPC, Monster, Player"
+      "change_type": "Change the type: NPC, Monster, Player",
+      "voice_gen": "Its voice",
+      "voice_gen_tooltip": "Propose voice settings for this NPC from its notes and traits, then save them on its sheet",
+      "voice_recall": "Recall",
+      "voice_recall_tooltip": "Put this NPC's saved voice back on the Voice-OS rack",
+      "voice_recalled": "{{name}}'s voice recalled."
     },
     "wiki_form": {
       "title_label": "Article Title",

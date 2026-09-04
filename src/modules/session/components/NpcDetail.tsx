@@ -14,6 +14,9 @@ import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useVoiceAutomation } from '../../voice/hooks/useVoiceAutomation';
+import { useVoiceStore } from '../../voice/useVoiceStore';
+import { depuisUnPnjDeCampagne } from '../../voice/logic/personnageAVoix';
+import { AudioLines } from 'lucide-react';
 import { HealthManager } from './health/HealthManager';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
@@ -202,6 +205,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const currentTemplate = customSheetTemplates.find(t => t.id === selectedNpc?.templateId);
     const { evaluateFormula } = useSheetCalculator(selectedNpc || null, currentTemplate || null);
     useVoiceAutomation();
+    const { generateVoiceProfile, appliquerProfil } = useVoiceStore();
+    const [profilageEnCours, setProfilageEnCours] = useState(false);
 
     const ROLE_LABELS = {
         ally: t('modules:session.npc_detail.affinity.ally'),
@@ -424,6 +429,59 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                         <Monitor size={14} />
                                         <span className="text-[10px] font-black uppercase tracking-widest">{selectedNpc.isVisibleByPlayers ? t('common:status.online') : t('common:status.offline')}</span>
                                     </button>
+
+                                    {/*
+                                        **La voix des PNJ de la campagne, enfin ici.**
+
+                                        Le profilage vocal existait depuis toujours, mais
+                                        seulement dans NPC-OS — un module à part, qui ne
+                                        contient qu'une poignée de fiches. Les cent et
+                                        quelques PNJ que le meneur joue vraiment sont dans
+                                        cette galerie, et n'avaient aucun bouton : la case
+                                        « Sync PNJ » leur devinait des réglages par
+                                        mots-clés et les écrasait à la sélection suivante.
+                                    */}
+                                    <button
+                                        onClick={async () => {
+                                            if (profilageEnCours) return;
+                                            setProfilageEnCours(true);
+                                            try {
+                                                const profil = await generateVoiceProfile(depuisUnPnjDeCampagne(selectedNpc));
+                                                // `generateVoiceProfile` dit déjà ses échecs :
+                                                // un `null` a été expliqué, on n'écrit rien.
+                                                if (profil) updateEntity(selectedNpc.id, { voiceProfile: profil });
+                                            } finally {
+                                                setProfilageEnCours(false);
+                                            }
+                                        }}
+                                        disabled={profilageEnCours}
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400/80 hover:bg-emerald-500/20 transition-all disabled:opacity-40"
+                                        title={t('modules:session.npc_detail.voice_gen_tooltip')}
+                                    >
+                                        <Sparkles size={14} className={profilageEnCours ? 'animate-pulse' : ''} />
+                                        <span className="text-[10px] font-black uppercase tracking-widest">
+                                            {t('modules:session.npc_detail.voice_gen')}
+                                        </span>
+                                    </button>
+
+                                    {/* Rien à rappeler tant que rien n'a été réglé : un
+                                        bouton qui reposerait un profil inexistant remettrait
+                                        le rack à des valeurs que personne n'a choisies. */}
+                                    {selectedNpc.voiceProfile && (
+                                        <button
+                                            onClick={() => {
+                                                appliquerProfil(selectedNpc.voiceProfile!);
+                                                gmToast(t('modules:session.npc_detail.voice_recalled', { name: selectedNpc.name }), 'info');
+                                            }}
+                                            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-300/80 hover:bg-cyan-500/20 transition-all"
+                                            title={t('modules:session.npc_detail.voice_recall_tooltip')}
+                                        >
+                                            <AudioLines size={14} />
+                                            <span className="text-[10px] font-black uppercase tracking-widest">
+                                                {t('modules:session.npc_detail.voice_recall')}
+                                            </span>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         )}
