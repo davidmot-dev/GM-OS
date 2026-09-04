@@ -587,7 +587,8 @@
     },
     "preview": {
       "audioStatus": "Sonic Frequency Decoded",
-      "close": "Close preview"
+      "close": "Close preview",
+      "documentNotRendered": "This format cannot be shown here. The Hub can store it and hand it to a sheet, but only PDFs and plain text can be read on screen."
     },
     "thumbnail": {
       "audio": "Sonic Data",

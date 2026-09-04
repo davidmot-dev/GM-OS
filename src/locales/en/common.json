@@ -193,6 +193,7 @@
     },
     "orphans": "Orphans",
     "orphanBadge": "No usage",
-    "orphanBadgeTitle": "No module uses this file. It is not at risk unless you run the cleanup."
+    "orphanBadgeTitle": "No module uses this file. It is not at risk unless you run the cleanup.",
+    "duplicateConfirm": "\"{{name}}\" is already in the Hub, with the same size. Import it anyway?"
   }
 }

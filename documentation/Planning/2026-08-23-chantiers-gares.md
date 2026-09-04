@@ -381,10 +381,10 @@ depuis a dû s'y déclarer, et trois ne l'ont pas fait.*
 | ✅ **H1** | **Le nettoyage a trois angles morts.** `performCleanup` recense huit magasins ; il **ne regarde ni Map-OS** (`mapUrl`, et le `mapUrl` de **chaque preset**), **ni les indices** (`clue.mediaUrl`), **ni le storyboard** (`moment.imageMediaId`). Un fichier qui n'existe que là est compté comme orphelin et **supprimé**. | **À corriger.** Trois blocs `collectId` de plus. *Et le vrai remède est structurel : la liste des propriétaires est recopiée à la main dans un service que personne ne pense à ouvrir quand il ajoute un module — même famille que `donneesDeLaSession`, qui a résolu ce motif en n'ayant qu'une liste.* | `services/MediaCleanupService.ts` |
 | ✅ **H2** | **Le nettoyage n'est pas automatique**, contrairement à ce qu'annonçait le guide : un seul appelant, un bouton des Paramètres. Ce n'est pas un défaut — mais ça change la gravité de H1 (rien ne part tout seul) **et** l'usage du cadenas. | **Rien à coder.** Documenté ; à garder en tête si l'idée d'un nettoyage périodique revient : elle serait dangereuse tant que H1 tient. | `GlobalSettingsModal.tsx:508` |
 | ✅ **H3** | **Le panneau de détails n'a pas de « Status Tactique ».** Le guide promettait un indicateur disant si le média est utilisé dans la session en cours. Rien de tel n'existe. | **Bonne idée à construire, en fait** : les informations sont déjà réunies par `performCleanup` (l'ensemble des identifiants référencés). Un « utilisé par : 3 endroits / aucun » dans le panneau rendrait H1 visible à l'œil. | `TacticalDetailPanel.tsx` |
-| **H4** | **Aucune détection de doublon à l'import.** Deux imports du même fichier = deux entrées, deux identifiants, deux fois la place. | **À trancher.** Une empreinte à l'import (le format `.gmos` en calcule déjà une, SHA-256) permettrait d'avertir. Coût faible, gain de place réel sur une bibliothèque de 261 Mo. | `useMediaStore.ts` (`addMedia`) |
-| **H5** | **« Image » est la catégorie par défaut**, pas une détection : tout ce qui n'est ni `audio/`, ni `video/`, ni un document connu devient une image — vignette cassée à la clé. | **Petit correctif** : un type `other`, ou un refus explicite. Sans urgence. | `useMediaStore.ts:161-173` |
-| ⚠ **H6** | **Soupçon non falsifié : importer un document depuis l'éditeur de fiche.** L'attribut `accept` est construit par `allowedTypes.map(t => t + '/*')` — ce qui donne `document/*`, **qui n'est pas un type MIME**. Le sélecteur de fichiers pourrait n'afficher aucun fichier. | ⛔ **À vérifier à l'écran** : éditeur de fiche → joindre un document → importer. Si c'est confirmé, mapper `document` vers une vraie liste d'extensions. | `MediaBrowser.tsx:550` |
-| **H7** | **Les documents n'ont pas d'aperçu** : `FullScreenPreview` traite image, audio et vidéo, et ne rend rien pour un document — écran vide. | **Documenté.** Un `<iframe>` suffirait pour un PDF, si le besoin se présente. | `FullScreenPreview.tsx` |
+| ✅ **H4** | **Aucune détection de doublon à l'import.** Deux imports du même fichier = deux entrées, deux identifiants, deux fois la place. | **À trancher.** Une empreinte à l'import (le format `.gmos` en calcule déjà une, SHA-256) permettrait d'avertir. Coût faible, gain de place réel sur une bibliothèque de 261 Mo. | `useMediaStore.ts` (`addMedia`) |
+| ✅ **H5** | **« Image » est la catégorie par défaut**, pas une détection : tout ce qui n'est ni `audio/`, ni `video/`, ni un document connu devient une image — vignette cassée à la clé. | **Petit correctif** : un type `other`, ou un refus explicite. Sans urgence. | `useMediaStore.ts:161-173` |
+| ✅ **H6** | **Soupçon non falsifié : importer un document depuis l'éditeur de fiche.** L'attribut `accept` est construit par `allowedTypes.map(t => t + '/*')` — ce qui donne `document/*`, **qui n'est pas un type MIME**. Le sélecteur de fichiers pourrait n'afficher aucun fichier. | ⛔ **À vérifier à l'écran** : éditeur de fiche → joindre un document → importer. Si c'est confirmé, mapper `document` vers une vraie liste d'extensions. | `MediaBrowser.tsx:550` |
+| ✅ **H7** | **Les documents n'ont pas d'aperçu** : `FullScreenPreview` traite image, audio et vidéo, et ne rend rien pour un document — écran vide. | **Documenté.** Un `<iframe>` suffirait pour un PDF, si le besoin se présente. | `FullScreenPreview.tsx` |
 
 #### 12c bis · ✅ Le recensement des médias — construit le 2026-09-04
 
@@ -413,6 +413,31 @@ filtre de type — donc la seule où les documents apparaissent.
 
 **Ce qui reste de la § 12c** : H4 (doublons à l'import), H5 (« image » par défaut), H6 (le
 soupçon `accept="document/*"`, à vérifier à l'écran), H7 (pas d'aperçu de document).
+
+
+**✅ Les quatre restants sont faits le 2026-09-04**, dans la foulée du recensement :
+
+- **H6 était bien un défaut, et il n'a pas fallu d'écran pour le prouver.** `document/*` n'est pas
+  un type MIME ; le filtre du sélecteur ne désignait donc rien quand on demandait un document.
+  Corrigé en désignant les extensions.
+- **H4** : un fichier de même **nom et même taille** demande confirmation. Le contrôle porte sur le
+  nom et la taille, pas sur une empreinte — relire toute la base à chaque import coûterait plus que
+  le doublon qu'on évite. Et il **avertit sans interdire** : une variante retouchée sous le même nom
+  est un cas légitime.
+- **H5** : le repli de classement passe de `image` à `document` — une carte neutre avec l'extension
+  plutôt qu'une vignette cassée. Les images dont Windows ne donne pas le type (`.jfif`, `.avif`)
+  sont reconnues à leur extension, pour qu'aucune ne tombe dans le repli.
+- **H7** : PDF et texte brut s'affichent ; les formats bureautiques disent pourquoi ils ne
+  s'affichent pas, au lieu d'un cadre blanc.
+
+⭐ **Le vrai gain est structurel** : `stores/typesDeMedia.ts` tient **une** table, lue par le
+classement *et* par le filtre du sélecteur. Ils se contredisaient — l'un rangeait par extension,
+l'autre demandait un type qui n'existe pas — et c'est exactement le motif que ce dépôt paie depuis
+des mois. 11 tests.
+
+**H8, relevé au passage et non traité** : le sélecteur ne prend **qu'un fichier à la fois**
+(`files?.[0]`, pas d'attribut `multiple`). Documenté ; à ouvrir si David importe souvent par lots —
+c'est aussi là que la détection de doublon rendrait le plus.
 
 #### 12d · Clock-OS — ce que la revue a trouvé dans le code
 
@@ -490,7 +515,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Quatre modules passés, **vingt-sept** trouvailles (§§ 12a-12d) — **quatre déjà réparées** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (H1-H3 sont faits) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Quatre modules passés, **vingt-huit** trouvailles (§§ 12a-12d) — **huit déjà réparées**, dont **tout le Media Hub** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

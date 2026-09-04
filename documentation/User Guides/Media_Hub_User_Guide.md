@@ -41,17 +41,24 @@ sons, vidéos et documents ensemble. C'est le mode « ranger ma bibliothèque »
 | :--- | :--- |
 | **Audio** | le type du fichier (`audio/…`) — MP3, WAV, OGG, M4A… |
 | **Vidéo** | le type du fichier (`video/…`) — MP4, WebM… |
-| **Document** | PDF, DOC, DOCX, ODT, TXT, RTF, MD |
-| **Image** | **tout le reste** |
+| **Image** | le type du fichier, **ou** l'extension — JPG, PNG, WEBP, GIF, SVG, AVIF, HEIC, JFIF… |
+| **Document** | PDF, DOC, DOCX, ODT, RTF, TXT, MD, CSV, JSON — **et tout ce qui n'entre pas ailleurs** |
 
-> ⚠️ **« Image » est la catégorie par défaut, pas une détection.** Un fichier que GM-OS ne reconnaît
-> ni comme son, ni comme vidéo, ni comme document est rangé dans les images — et n'affichera donc
-> qu'une vignette cassée. Si un import atterrit au mauvais endroit, c'est ça.
+> 🔎 **Deux corrections du 2026-09-04.** « Image » était le repli : un fichier que GM-OS ne savait
+> pas classer y atterrissait et n'affichait qu'une **vignette cassée**. Le repli est désormais
+> « document », qui montre une carte neutre avec l'extension — *se tromper en le disant vaut mieux
+> que se tromper en le cachant*. Et les images dont Windows ne donne pas le type (`.jfif`, `.avif`
+> selon les versions) sont maintenant reconnues à leur extension.
 
 <!-- -->
 
-> ⚠️ **Aucune détection de doublon.** Importer deux fois le même fichier crée deux entrées
-> indépendantes, avec deux identifiants. Rien ne vous préviendra.
+> ⚠️ **Un fichier à la fois.** Le sélecteur ne prend pas de sélection multiple.
+
+<!-- -->
+
+> 🔎 **Les doublons sont signalés depuis le 2026-09-04.** Un fichier de **même nom et même taille**
+> déclenche une demande de confirmation. C'est un avertissement, pas une interdiction : vous pouvez
+> vouloir la copie — une variante retouchée sous le même nom, par exemple.
 
 Les fichiers importés sont **recopiés dans la base interne** de l'application. Déplacer, renommer ou
 supprimer l'original sur votre disque n'a plus aucun effet sur votre partie.
@@ -113,8 +120,10 @@ anciens**, **Taille**, **Nom (A-Z)**.
 - un **son** et une **vidéo** démarrent tout seuls, avec les commandes de lecture ;
 - **ESC** referme.
 
-> ⚠️ **Les documents n'ont pas d'aperçu.** Ouvrir un PDF en plein écran affiche un écran vide. Le
-> Hub sait les ranger, pas les lire.
+> 🔎 **Les documents s'ouvrent aussi, depuis le 2026-09-04.** Un **PDF** et le **texte brut**
+> (`.txt`, `.md`, `.csv`, `.json`) se lisent en plein écran. Les formats bureautiques — `.doc`,
+> `.docx`, `.odt`, `.rtf` — ne s'affichent pas : GM-OS le dit désormais au lieu de montrer un cadre
+> blanc. *Une absence expliquée n'est plus une panne.*
 
 Au survol de la vignette apparaissent **Supprimer Asset** et le grand bouton rond **Sélectionner
 pour Transmission** — celui qui renvoie le fichier au module qui a ouvert le Hub. Un crayon permet
@@ -240,9 +249,10 @@ campagne sur les médias concernés.
 | Problème | Ce qu'il faut regarder |
 | :--- | :--- |
 | **Un fichier n'apparaît pas** | Vous avez ouvert le Hub depuis un module qui ne montre pas ce type. Ouvrez-le depuis le bon module. |
-| **Une vignette est cassée** | Le fichier a été rangé dans les images par défaut, faute d'être reconnu. |
-| **Un PDF ne s'ouvre pas en aperçu** | Normal : le Hub ne lit pas les documents. |
-| **Le même fichier apparaît deux fois** | Il a été importé deux fois. Il n'y a pas de détection de doublon ; supprimez-en un. |
+| **Une vignette est cassée** | Un import antérieur au 2026-09-04, rangé dans les images par défaut. Renommez-le ou réimportez-le. |
+| **Un `.docx` s'ouvre sur une explication au lieu du texte** | Normal : seuls les PDF et le texte brut se lisent à l'écran. |
+| **Le même fichier apparaît deux fois** | Deux imports antérieurs au 2026-09-04, quand rien ne les signalait. Supprimez-en un. |
+| **Le sélecteur de fichiers n'affiche aucun document** | C'était un défaut, corrigé le 2026-09-04 : le filtre demandait un type de fichier qui n'existe pas. |
 | **Des images ont disparu après un nettoyage** | Si c'était **avant le 2026-09-04**, elles n'étaient sans doute référencées que par l'un des six angles morts d'alors (Map-OS, un indice, le storyboard, un document de fiche, l'avatar d'un joueur, un favori). Restaurez depuis la sauvegarde. Depuis, ces six modules sont recensés. |
 | **Le nettoyage refuse d'agir** | Un module n'a pas répondu, et l'écran le nomme. Tout ce qu'il détenait passerait pour orphelin : GM-OS préfère ne rien supprimer. |
 | **Le filtre par tags ne rend presque rien** | Le bouton est sur **AND** : il exige *tous* les tags. Repassez-le sur **OR**. |
@@ -258,3 +268,7 @@ les **dossiers de collection**, la **logique OU / ET** des tags, et le **tri**.*
 supprimait sans confirmation ni liste, et rien ne disait jamais qui se sert d'un fichier. Les trois
 sont corrigés le même jour — le « Status Tactique » qui manquait est devenu la section
 **Utilisé par**.*
+
+*Quatre défauts de plus le même jour : le filtre du sélecteur demandait `document/*`, **qui n'est
+pas un type de fichier** ; le repli de classement était « image », d'où les vignettes cassées ; les
+doublons passaient sans un mot ; et les documents n'avaient aucun aperçu.*

@@ -4,6 +4,7 @@ import { useMediaStore } from '../stores/useMediaStore';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
 import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
 import { usagesDesMedias } from '../services/proprietairesDesMedias';
+import { filtreDeSelection } from '../stores/typesDeMedia';
 import { gmPrompt } from '../stores/useModalStore';
 import { gmToast } from '../stores/useToastStore';
 import { mediasRestituables, restaurerLesMedias } from '../modules/session/logic/MiroirDesMedias';
@@ -114,11 +115,12 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
       `mediaList` sert de déclencheur : c'est le seul changement qui puisse
       créer ou résorber un orphelin sans quitter cet écran.
     */
-    const usages = React.useMemo(
-        () => (isOpen ? usagesDesMedias().usages : new Map()),
-        [isOpen, mediaList],
-    );
-    const estOrphelin = React.useCallback((id: string) => !usages.has(id), [usages]);
+    const orphelins = React.useMemo(() => {
+        if (!isOpen) return new Set<string>();
+        const { usages } = usagesDesMedias();
+        return new Set(mediaList.filter(m => !usages.has(m.id)).map(m => m.id));
+    }, [isOpen, mediaList]);
+    const estOrphelin = React.useCallback((id: string) => orphelins.has(id), [orphelins]);
 
     // 2. Lifecycle & Effects
     useEffect(() => {
@@ -156,6 +158,27 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        /*
+          **Le Hub ne détectait aucun doublon.** Deux imports du même fichier
+          donnaient deux entrées, deux identifiants et deux fois la place — sans
+          un mot. Sur une bibliothèque de 261 Mo, c'est de la place perdue qu'on
+          ne retrouve jamais, puisque rien ne permet de reconnaître les deux
+          copies l'une de l'autre une fois rangées.
+
+          **Le contrôle porte sur le nom ET la taille**, pas sur le contenu :
+          une empreinte demanderait de relire chaque fichier de la base à chaque
+          import. Deux fichiers de même nom et de même octet près sont le même
+          fichier dans tous les cas qui se produisent vraiment.
+
+          *Et il avertit, il n'interdit pas.* Le meneur peut vouloir la copie —
+          une variante retouchée sous le même nom, par exemple.
+        */
+        const doublon = mediaList.find(m => m.name === file.name && m.size === file.size);
+        if (doublon && !confirm(t('mediaBrowser.duplicateConfirm', { name: file.name }))) {
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
 
         setIsUploading(true);
         try {
@@ -581,7 +604,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     ref={fileInputRef} 
                                     onChange={handleUpload} 
                                     className="hidden" 
-                                    accept={allowedTypes ? allowedTypes.map(t => `${t}/*`).join(',') : "*/*"} 
+                                    accept={filtreDeSelection(allowedTypes)} 
                                 />
                             </label>
 

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { openDB, type IDBPDatabase } from 'idb';
+import { typeDuFichier } from './typesDeMedia';
 
 export type MediaType = 'image' | 'audio' | 'video' | 'document';
 
@@ -159,18 +160,12 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
             const db = await getDB();
             const id = `m-${crypto.randomUUID()}`;
 
-            let type: MediaType = 'image';
-            if (file.type.startsWith('audio/')) type = 'audio';
-            else if (file.type.startsWith('video/')) type = 'video';
-            else if (
-                file.type === 'application/pdf' ||
-                file.type === 'application/msword' ||
-                file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-                file.type === 'application/vnd.oasis.opendocument.text' ||
-                file.type === 'text/plain' ||
-                file.type === 'application/rtf' ||
-                file.name.match(/\.(pdf|doc|docx|odt|txt|rtf|md)$/i)
-            ) type = 'document';
+            /*
+              Le classement vit dans `typesDeMedia.ts`, avec le filtre du
+              sélecteur de fichiers : les deux se contredisaient, l'un rangeant
+              par extension et l'autre demandant `document/*`, qui n'existe pas.
+            */
+            const type: MediaType = typeDuFichier(file);
 
             const item = {
                 id,

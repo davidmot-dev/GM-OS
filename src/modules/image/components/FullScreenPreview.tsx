@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { X, Music } from 'lucide-react';
+import { X, Music, FileText, FileWarning } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { MediaItem } from '../../../stores/useMediaStore';
 import { useTranslation } from 'react-i18next';
+import { documentAffichable, extensionDe } from '../../../stores/typesDeMedia';
 
 interface FullScreenPreviewProps {
     media: MediaItem;
@@ -67,6 +68,43 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                         <div className="absolute -inset-4 bg-accent/10 blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         <video src={url} autoPlay controls className="w-full h-full rounded-[2.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-app-border/10 relative z-10 object-cover" />
                     </div>
+                )}
+                {/*
+                  **Un document n'avait aucun aperçu** : le Hub savait le ranger
+                  et pas le montrer, si bien qu'ouvrir un PDF donnait un écran
+                  vide sans un mot d'explication.
+
+                  Le navigateur rend nativement les PDF et le texte brut. Les
+                  formats bureautiques, non — et un cadre blanc serait pire que
+                  la phrase qui le remplace : *une absence expliquée n'est plus
+                  une panne.*
+                */}
+                {media.type === 'document' && (
+                    documentAffichable(media.name) ? (
+                        <div className="relative w-full max-w-6xl h-[80vh]">
+                            <iframe
+                                src={url}
+                                title={media.name}
+                                className="w-full h-full rounded-[2.5rem] border border-app-border/10 bg-white shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative z-10"
+                            />
+                        </div>
+                    ) : (
+                        <div className="bg-app-surface/80 backdrop-blur-3xl border border-app-border/10 p-16 rounded-[4rem] w-full max-w-xl flex flex-col items-center gap-8 shadow-[0_50px_100px_rgba(0,0,0,0.6)]">
+                            <div className="w-32 h-32 rounded-[2.5rem] bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
+                                <FileText size={56} />
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-2xl font-black text-app-text uppercase tracking-[0.2em] mb-3 font-display break-all">{media.name}</h3>
+                                <p className="text-app-text/30 text-[10px] font-black uppercase tracking-[0.4em] font-display">
+                                    {extensionDe(media.name)}
+                                </p>
+                            </div>
+                            <p className="flex items-center gap-3 text-app-text/40 text-xs text-center leading-relaxed max-w-sm">
+                                <FileWarning size={16} className="flex-shrink-0 opacity-60" />
+                                {t('modules:image.preview.documentNotRendered')}
+                            </p>
+                        </div>
+                    )
                 )}
             </div>
 

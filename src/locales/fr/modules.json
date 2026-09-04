@@ -587,7 +587,8 @@
     },
     "preview": {
       "audioStatus": "Fréquence Sonique Décodée",
-      "close": "Fermer la prévisualisation"
+      "close": "Fermer la prévisualisation",
+      "documentNotRendered": "Ce format ne s'affiche pas ici. Le Hub sait le ranger et le transmettre à une fiche, mais seuls les PDF et le texte brut se lisent à l'écran."
     },
     "thumbnail": {
       "audio": "Données Soniques",
