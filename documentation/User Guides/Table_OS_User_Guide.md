@@ -65,9 +65,54 @@ Localisation du prompt : `databases/tables/MedFan/Prompt Aide Création de Table
 
 ## 🔗 Intégration avec Session-OS (Journal & Log)
 Chaque tirage peut être envoyé directement dans le log de votre session actuelle :
-- **Log Session** : Envoie le texte (Titre, Roll, Description, Effet) dans le Journal de la session.
-- **Donner à un PJ** : Envoie l'objet à un joueur et crée une entrée dans le Journal mentionnant explicitement le **destinataire** (Personnage ou Joueur).
-- Les détails sont automatiquement formatés en Markdown pour une lecture propre dans le Journal.
+- **Log Session** : envoie le texte (titre, jet, description, effet) dans le Journal de la
+  session, formaté en Markdown.
+- **Verser au butin** : envoie ce que l'entrée **déclare** vers le pool de Loot-OS, quantités
+  résolues. Vous distribuez ensuite depuis Loot-OS, comme n'importe quel butin.
+- **Proposer des objets** : s'affiche à la place du précédent quand l'entrée ne déclare rien.
+  L'IA lit son texte et propose des objets, que vous relisez dans le pool avant qu'ils ne
+  comptent. *On ne devine jamais des objets à partir de la prose sans vous le montrer.*
+
+> ⭐ **Table-OS ne donne plus rien directement à un personnage** (2026-09-04). Le bouton
+> « Donner à un PJ » écrivait une ligne de texte dans un champ de la fiche que **l'onglet
+> Inventaire de la tablette ne regarde même pas** : l'objet donné n'apparaissait nulle part où
+> le joueur cherche ses affaires. Les deux modules ne font pas le même geste — celui-ci
+> *consulte*, Loot-OS *compose et distribue* — et leur point de rencontre est le **pool**.
+
+---
+
+## 💰 Déclarer ce qu'une entrée donne : le champ `butin`
+
+Une entrée peut annoncer, en plus de sa prose, ce qu'on emporte. Le champ est **facultatif** :
+sans lui, la table reste un pur oracle et le bouton « Verser au butin » ne s'affiche pas.
+
+```json
+{
+    "min": 6, "max": 12,
+    "title": "Quelques Eddies",
+    "description": "Une puce de crédit non sécurisée au fond de sa poche.",
+    "effect": "Gagnez +1d100 Eurodollars et 1d4 munitions pour pistolet.",
+    "butin": [
+        { "name": "Eurodollars", "type": "currency", "quantite": "1d100" },
+        { "name": "Munitions de pistolet", "type": "item", "quantite": "1d4" }
+    ]
+}
+```
+
+| Clé | Rôle |
+| :--- | :--- |
+| `name` | Le nom de l'objet. Seule clé obligatoire. |
+| `type` | `item` (défaut) ou `currency`. |
+| `quantite` | Un nombre, ou une formule de dés — `1d100`, `2d6+2`. Défaut : 1. |
+| `rarity`, `value`, `weight`, `description` | Facultatifs, comme sur une entrée de table du pilote. |
+
+> ⛔ **GM-OS ne lit pas `effect` pour en tirer des objets.** Une lecture automatique de la
+> prose se tromperait, et *un contrôle qui se trompe est pire qu'un contrôle absent*. Ce qui
+> n'est pas déclaré n'est pas versé — sauf si vous demandez explicitement la proposition par
+> l'IA, que vous relisez.
+
+`databases/tables/cyberpunk/fouille_ganger.json` est déclarée en exemple : ouvrez-la pour voir
+la forme complète.
 
 ---
 

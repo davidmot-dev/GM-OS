@@ -24,7 +24,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ---
 
-## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-03**
+## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-04**
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
@@ -264,6 +264,70 @@ regardant son JEU, pas en ouvrant un combat.* David proposait de le lier aux pil
 - **La convention des échelles en lettres** : l'atelier suppose les options rangées *de la meilleure à la pire* (A, B, C, D). Vrai pour Blade Runner ; à vérifier ailleurs — le premier adversaire le dira du premier coup d'œil.
 - **Le geste complet en séance** : fabriquer trois piétailles pendant que les joueurs discutent, sans que ça casse le rythme.
 
+### 10 · Loot-OS revu, 2026-09-04
+
+*« Je ne suis pas satisfait du fonctionnement que je trouve confus. » La confusion était
+écrite : **DEUX systèmes de tables sans aucun lien**, et le mot « table » des deux côtés.*
+
+**La lecture de David a décidé du plan** : les deux modules n'ont pas la même fonction —
+Table-OS *consulte* (un dé, une plage, un résultat qu'on lit), Loot-OS *compose* (plusieurs
+tirages, imbrications, quantités, puis distribution). On ne fusionne donc pas, on **branche**.
+Et le point de rencontre est le **pool**, jamais le personnage.
+
+| Quoi | Ce qu'il y avait dessous | Où |
+| --- | --- | --- |
+| ⭐ **Le pont, dans les deux sens** | Une entrée d'oracle **déclare** son butin (champ `butin`, facultatif) ; « Verser au butin » l'envoie au pool ; une table du pilote peut appeler un oracle via le type d'entrée `oracle`. ⛔ **On ne lit pas `effect` à la regex** — *un contrôle qui se trompe est pire qu'un contrôle absent* ; l'IA propose, le meneur relit dans le pool | `session/logic/butinDeclare.ts` |
+| ⛔ **Table-OS écrivait chez le joueur, en PROSE** | `addLootToCharacter` remplissait `character.inventory`, **une zone de texte que l'onglet Inventaire de la tablette ne regarde même pas** (il affiche `inventoryItems`). *L'objet donné n'apparaissait nulle part où le joueur cherche ses affaires* | `tables/TableDashboard.tsx` |
+| ⛔ **Le butin de séance n'était sauvegardé NULLE PART** | `lootPool` et `lootHistory` n'étaient dans aucune des deux listes durables. On fermait l'application, le butin non distribué et l'historique avaient disparu — **sans un message, puisque rien n'avait échoué**. Et le pool était **commun à toutes les campagnes** | `session/logic/donneesDeLaSession.ts` |
+| **Une table imbriquée introuvable était MUETTE** | Elle rendait zéro objet et ne se plaignait qu'à la console : le meneur lisait « aucun objet » sans pouvoir savoir que c'était une faute de frappe. `generateFromTable` rend maintenant ses avertissements, et la cible se choisit dans une liste | `session/logic/LootGenerator.ts` |
+| **Ni rareté, ni valeur, ni description n'avaient de champ** | Le générateur les lit depuis toujours dans `metadata` — la Forge ne les exposait pas. Les deux compteurs du panneau valaient donc **zéro** pour tout ce qui venait d'une table | `session/components/rules/EditeurDesTablesDeButin.tsx` |
+| **Le vocabulaire de D&D imposé à tous les jeux** | Échelle commune→légendaire et « pièces d'or » **en dur**, dans le panneau comme dans l'invite de l'IA, à Blade Runner comme à Alien. *Même faute que les points de vie à `10`* | `session/logic/vocabulaireDuButin.ts` |
+| **Quatre fichiers morts sur dix** | Les deux `LootNotification`, `LootRollPanel`, et `useLootStore` — une projection du butin vers le Player Hub **qui n'a jamais eu le moindre lecteur, écran compris** | supprimés |
+
+**⛔ Le défaut que la question de David a révélé, et qui vaut au-delà.** À « est-ce que je dois
+reforger ? », la vérification a montré que **la Forge n'a jamais produit une seule table de
+butin** (aucune dans les pilotes par défaut, aucune mention dans son code) — et, dans la même
+lecture, que la table `TEST` de Blade Runner est au format d'avant : `isWeighted: false`, pas
+de `rollMode`. Mes deux boutons nommés lisaient `rollMode || 'weighted'` et l'affichaient
+**« un seul parmi la liste »** alors qu'elle teste chaque ligne. *En nommant le mode, j'avais
+rendu visible un mensonge qui ne l'était pas* — l'ancienne case à cocher tombait juste par
+accident. `modeDeTirage()` et `tableImbriqueeDe()` sortent donc du générateur, exportées : **un
+écran qui réimplémente la lecture d'un moteur finit toujours par en diverger.**
+
+### 11 · La voix des PNJ, 2026-09-04
+
+*« L'application permet de générer des profils vocaux via IA, où cela est-il stocké et est-ce
+que je peux en faire pour la galerie de PNJ ? » La réponse était **non**, et un chiffre disait
+pourquoi.*
+
+Dans la sauvegarde du 30/08 : **NPC-OS porte UN PNJ, la galerie de campagne en porte 123.** Le
+bouton de profilage ne vivait que dans `NPCCard`, sur le type `NPCEntity`. Les 123 PNJ que
+David joue vraiment sont des `Entity` de `useSessionOSStore` — **et ce type n'avait aucun champ
+pour ranger un profil.** Ce qu'ils avaient à la place : la case « Sync PNJ », qui cherche des
+mots-clés et applique un preset à chaque changement de sélection **et** à chaque tour de
+combat, sans jamais rien enregistrer. *Une voix qu'on doit refabriquer à chaque bascule n'est
+pas un profil, c'est un réglage.*
+
+| Quoi | Ce qu'il y avait dessous | Où |
+| --- | --- | --- |
+| ⭐ **La priorité, qui est le cœur du changement** | `syncWithNpc` repose le **profil enregistré** s'il existe, et ne retombe sur les mots-clés que sinon. Sans elle, le pas en avant devenait un pas en arrière : l'automatisme aurait effacé la voix qu'on venait de régler, dès le prochain clic. *Le défaut aurait été pire qu'avant, puisqu'il y aurait désormais quelque chose à perdre* | `voice/useVoiceStore.ts` |
+| **Trois chemins qui ne parlaient pas la même langue** | Le profilage IA prenait `{name, gmNotes, fields}`, l'automatisme `{name, description, roleplayingNotes, id}`, la galerie ne passait rien faute de bouton. `PersonnageAVoix` est la seule forme, avec un adaptateur par magasin | `voice/logic/personnageAVoix.ts` |
+| **`gmSecretInfo` ne part pas au modèle** | Ce qui part au modèle part chez le fournisseur actif, qui peut être distant. Les notes de roleplay disent comment un personnage parle — c'est la question posée ; ses secrets ne servent pas à régler une hauteur de voix. **Testé** | `voice/logic/personnageAVoix.test.ts` |
+| ⛔ **Un cycle de types a fait disparaître `Window`** | Donner un `voiceProfile` à `Entity` a fait importer `useVoiceStore` par `entity.types.ts` — or `window.d.ts` importe `VoiceState`, donc le magasin. Le cycle a tué l'augmentation globale : **une centaine d'erreurs « `appBridge` n'existe pas sur `Window` »**, pour un champ facultatif. *Un type partagé ne doit pas habiter chez celui qui s'en sert le plus* | `voice/types.ts` |
+
+**Ce qui entre en catégorie P6 par ces deux sections** — livré, jamais vu tourner en séance :
+
+- **Le pont Table-OS → butin.** Une seule table le déclare (`fouille_ganger`) ; le geste complet
+  — tirer, verser, distribuer, voir l'objet arriver sur la tablette — n'a jamais été joué.
+- **L'entrée de type `oracle`.** Aucune table de pilote n'en contient : le chemin
+  Loot-OS → Table-OS n'a jamais été emprunté hors des tests.
+- **⚠️ L'annonce du butin part vers TOUTES les tablettes.** `HubNotification` ne vise pas un
+  personnage. À valider en séance, ou à restreindre.
+- **La voix d'un PNJ de campagne.** Un profil généré, retouché, rappelé trois séances plus
+  tard : rien de tout cela n'a encore été fait sur un vrai PNJ.
+- **Le vocabulaire du butin.** Aucun pilote n'en déclare — tout est donc neutre aujourd'hui,
+  et personne n'a vu « Eddies » s'afficher.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -325,6 +389,8 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 3b | **Fiche HTML** | ✅ **LIVRÉE SUR LES DEUX ÉCRANS le 28/08** | Étapes 5 et 6 — le `hotspot` et `humanite` par la Forge | Rien |
 | 4 | **Sauvegarde des images** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
+| 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
+| 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

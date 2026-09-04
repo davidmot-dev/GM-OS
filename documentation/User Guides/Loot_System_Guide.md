@@ -29,24 +29,71 @@ Une table de butin est un objet JSON structuré contenant une liste d'entrées p
 
 ## 2. Types d'Entrées
 
-Le système supporte trois types d'entrées principaux :
+Le système supporte quatre types d'entrées :
 
 | Type | Description | Usage |
 | :--- | :--- | :--- |
 | `item` | Un objet physique simple. | Armes, consommables, gadgets. |
 | `currency` | De l'argent ou des crédits. | Chinyen, Or, Dollars. |
-| `table` | Une référence à une *autre* table. | **Récursivité** (ex: une table "Trésor" appelle la table "Gemmes"). |
+| `table` | Une référence à une *autre* table **du pilote**. | **Récursivité** (une table « Trésor » appelle « Gemmes »). |
+| `oracle` | Un tirage sur une table de **Table-OS**. | Faire fouiller un corps par la table de fouille du jeu. |
+
+> ⭐ **La cible se choisit dans une liste, plus jamais à la main.** Jusqu'au 2026-09-04,
+> l'identifiant de la table appelée se recopiait dans un champ texte : une faute de frappe
+> produisait **zéro objet sans un mot à l'écran**. Aujourd'hui le tirage vous dit ce qu'il n'a
+> pas trouvé, et nomme la cible manquante.
+
+### Le type `oracle`, en pratique
+
+Choisissez l'univers puis la table (les listes viennent de `databases/tables/`). Le tirage se
+fait avec le moteur de Table-OS — plages `min`/`max`, dés concaténés `d66` — et **seul ce que l'entrée
+tirée DÉCLARE entre au butin** : son champ `butin`, décrit dans le *Guide Table-OS*. Un oracle
+qui ne déclare rien se lit, il ne verse pas — et il vous le dit.
+
+> ⚠️ Le **modificateur** du tableau de bord de Table-OS ne s'applique pas ici : il appartient à
+> l'écran où vous tirez à la main, pas à un appel depuis une table de butin.
+
+## 2 bis. Ce qu'une entrée décrit
+
+Au-delà du nom et de la quantité, chaque entrée d'objet porte :
+
+| Champ | À quoi il sert |
+| :--- | :--- |
+| **Rareté** | Choisie dans l'échelle du jeu. Compte dans « Objets remarquables ». |
+| **Valeur** | Additionnée dans « Valeur totale ». Une monnaie sans valeur vaut 1 par unité. |
+| **Masse** | Le poids **physique** — à ne pas confondre avec le poids de tirage. |
+| **Description** | Ce que le joueur lit sur l'objet. |
+
+> Le générateur lisait ces quatre champs depuis toujours ; **ils n'avaient simplement aucun
+> champ dans la Forge**. C'est pourquoi les deux compteurs du panneau valaient zéro pour tout
+> ce qui venait d'une table.
+
+## 2 ter. Le vocabulaire de votre jeu
+
+En tête de la section *Butin* de la Forge, deux réglages facultatifs :
+
+- **Monnaie** — « Eurodollars », « Cred », « pièces d'or ».
+- **Paliers de rareté** — du plus banal au plus rare. **Le premier palier est celui qui ne
+  compte pas** comme remarquable.
+
+Sans déclaration, GM-OS reste neutre (« valeur », « objets remarquables ») au lieu d'imposer
+l'échelle et l'or de D&D à Blade Runner. Ces mots partent aussi dans l'invite de l'IA.
 
 ## 3. Modes de Tirage
 
 Le système propose deux modes fondamentaux de résolution :
 
-### A. Mode Pondéré (Weighted) - Par Défaut
-Le système effectue un **choix unique** parmi les entrées. Plus le `weight` est élevé par rapport aux autres, plus l'objet a de chances d'être séléctionné.
-- **Usage** : "Une potion parmi trois", "Un trésor aléatoire".
+### A. « Un seul parmi la liste » (`weighted`) — par défaut
+Le système effectue un **choix unique**. Plus le `weight` est élevé par rapport aux autres,
+plus l'entrée a de chances de sortir.
+- **Usage** : « une potion parmi trois », « un trésor aléatoire ».
 
-### B. Mode Indépendant (Set Complet)
-Chaque entrée est testée **individuellement**. Le `weight` représente ici une **probabilité de drop (0-100%)**.
+> ⚠️ **Le même nombre veut dire deux choses selon le mode** — poids relatif ici, pourcentage
+> de chance en dessous. C'était caché derrière une case à cocher ; ce sont maintenant deux
+> choix nommés, et l'étiquette du champ voisin suit.
+
+### B. « Chaque ligne a sa chance » (`independent`)
+Chaque entrée est testée **individuellement**. Le `weight` est ici une **probabilité (0-100 %)**.
 - Si `weight = 100`, l'objet est garanti.
 - Si `weight = 10`, l'objet a 10% de chance d'apparaître.
 - **Usage** : "Générer tout l'équipement de départ d'un PNJ", "Set d'objets garantis".

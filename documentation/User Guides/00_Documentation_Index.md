@@ -39,7 +39,11 @@ Bienvenue dans le centre de documentation de **GM-OS v6**. Ce guide centralise t
 - [**GM Remote Control (Télécommande)**](./Remote_Control_User_Guide.md)
 - [**Dice-OS (Projection Automatique)**](./Dice_Projection_Guide.md)
 - [**Universal Search (Spotlight)**](./Universal_Search_User_Guide.md)
-- [**Table OS (Butins & Aléatoire)**](./Table_OS_User_Guide.md)
+- [**Table OS (Oracles & Aléatoire)**](./Table_OS_User_Guide.md) — *tirer un résultat qu'on lit,
+  et le verser au butin quand l'entrée le déclare*
+- [**Loot-OS — le butin de séance**](./Loot_Module_Guide.md) — *le pool, la distribution, l'historique*
+- [**Loot-OS — écrire ses tables**](./Loot_System_Guide.md) — *types d'entrées, modes de tirage,
+  vocabulaire du jeu*
 - [**Clock OS (Gestion du Temps)**](./Clock_OS_User_Guide.md)
 
 ---

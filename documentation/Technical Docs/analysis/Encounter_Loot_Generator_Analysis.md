@@ -1,5 +1,22 @@
 # ⚔️ Analyse : Encounter & Loot Generator (v5.5)
 
+> ## ⛔ Document de VISION, daté du 2026-03-23 — **rien de ce qui suit n'a été construit**
+>
+> Ni `lootConfig`, ni `scalingType`, ni `rarityTables`, ni le dossier `public/data/loot/`, ni
+> le bouton « Générer Butin » de fin de combat n'existent dans le code. Chercher ces noms ne
+> donne rien. *Une analyse conservée sans le dire devient une description du produit, et
+> envoie chercher des fonctions qui n'ont jamais été écrites.*
+>
+> **Ce qui a réellement été construit, le 2026-09-04**, et qui répond autrement à la même
+> intention : le pont entre Table-OS et Loot-OS. Une entrée de table déclare son butin dans un
+> champ `butin`, un bouton le verse au pool, et une table du pilote peut appeler un oracle.
+> Voir [`../loot-system-architecture.md`](../loot-system-architecture.md).
+>
+> **Ce que cette analyse garde de juste** : l'idée d'un butin qui s'adapte au système de jeu
+> (réalisée par `vocabulaireDuButin`) et celle d'un butin narré. **Ce qu'elle a de périmé** :
+> la mise à l'échelle automatique par niveau/CR, qui suppose une notion de puissance que la
+> plupart des jeux de David n'ont pas.
+
 Ce document détaille la vision technique pour l'intégration d'un générateur de butin dynamique piloté par le Rule-Engine de GM-OS.
 
 ## 1. Philosophie & Objectifs

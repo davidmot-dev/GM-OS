@@ -37,14 +37,49 @@ Pour les MJs souhaitant un contrôle total, ajustez les réglages suivants :
 
 ---
 
+## 🎭 Donner une voix à un PNJ, et la lui garder
+
+> ⚠️ **Ce n'est pas une synthèse vocale.** GM-OS ne parle pas à votre place : un « profil
+> vocal » est un jeu de réglages du rack appliqué à **votre** voix — hauteur, formants,
+> réverbération, distorsion.
+
+Sur la fiche d'un PNJ — dans la **galerie de campagne** comme dans NPC-OS — deux boutons :
+
+- **« Sa voix »** : l'IA lit son nom, ses notes de roleplay, sa description, son type, son
+  rôle et sa faction, et propose des réglages. **Ce qui est enregistré est l'état réel du rack
+  après application** — donc vos retouches aux curseurs si vous en faites, et non la
+  suggestion brute du modèle. *Ce qu'on rappelle doit être ce qu'on a entendu.*
+- **« Reposer »** : n'apparaît que si un profil existe, et le remet sur le rack.
+
+Le profil est rangé **sur la fiche du PNJ** et voyage dans les sauvegardes.
+
+> ⭐ **Depuis le 2026-09-04, cela vaut pour les PNJ de votre campagne.** Le profilage
+> n'existait que dans NPC-OS — un module à part, où vous aviez une fiche, quand la galerie en
+> portait cent vingt-trois. Ces cent vingt-trois n'avaient aucun endroit pour ranger une voix.
+
+**Vos secrets ne partent pas au modèle.** `gmSecretInfo` est exclu de ce qu'on lui envoie : ses
+notes de roleplay disent comment il parle — c'est la question posée ; ses secrets ne servent
+pas à régler une hauteur de voix, et ce qui part au modèle part chez le fournisseur actif, qui
+peut être distant.
+
+---
+
 ## 🔄 Sync NPC : Automatisation & Immersion
-L'une des fonctions les plus puissantes de GM-OS v5 pour donner vie à vos PNJ :
+La voix suit le PNJ dont vous vous occupez :
 
 1.  **Identification du PNJ** : Votre volume vocal est envoyé au **Player Hub**. Le portrait du PNJ actif est mis en avant (vibrations, aura) au rythme de vos paroles.
-2.  **Automatisation Vocale** : Si activée, Voice-OS analyse la description et les notes du PNJ pour ajuster votre voix :
-    -   **Mots-clés de Pitch** : "Géant", "Ogre", "Grave" baissent le ton. "Enfant", "Petit", "Fée" l'augmentent.
-    -   **Presets Automatiques** : Si le PNJ est décrit comme un "Spectre", "Robot", "Androïde" ou "Dragon", le preset correspondant est appliqué instantanément.
-3.  **Déclenchement** : La synchronisation se fait dès que vous ouvrez une fiche PNJ ou quand le tour d'un PNJ commence en combat.
+2.  **Ce qui est posé sur le rack**, dans cet ordre :
+    -   **Son profil enregistré**, s'il en a un — *ce que vous avez réglé passe avant ce que
+        GM-OS devine.*
+    -   **Sinon, les mots-clés** : « Spectre », « Ogre », « Robot », « Androïde », « Dragon »
+        appellent le preset correspondant ; « grave », « profond » baissent le ton, « enfant »,
+        « petit » l'augmentent. Cherchés dans le nom, les notes et les traits.
+3.  **Déclenchement** : dès que vous ouvrez une fiche PNJ, ou quand son tour commence en combat.
+
+> ⭐ **La priorité est le point important.** Sans elle, l'automatisme aurait effacé la voix que
+> vous veniez de régler au premier reclic sur la fiche — *le défaut aurait été pire qu'avant,
+> puisqu'il y aurait désormais quelque chose à perdre.* Un PNJ sans profil se comporte
+> exactement comme avant.
 
 
 ---

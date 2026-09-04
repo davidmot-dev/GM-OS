@@ -70,6 +70,8 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 - **[x] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas. (v6.2.3-dev - 9 Avril 2026)
 - **[x] Raffinement Inventaire Tablette** : Ajout du bouton "Jeter", confirmations de suppression et synchronisation MJ-PJ optimiste. (v6.2.4-dev - 9 Avril 2026)
 - **[x] Module de Loot de Session** : Gestion d'un pool de butin partagé, distribution aux joueurs et historique de loot. (v6.2.5-dev - 9 Avril 2026)
+- **[x] Loot-OS branché sur Table-OS** : une entrée d'oracle déclare son butin et le verse au pool ; une table du pilote peut appeler un oracle. Le pool est **persisté** et rattaché à une campagne, et le vocabulaire (monnaie, raretés) vient du pilote. (2026-09-04)
+- **[x] Voix des PNJ de campagne** : profil vocal généré par IA, enregistré sur la fiche, et **reposé en priorité** sur la synchronisation par mots-clés. (2026-09-04)
 - **[x] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub avec validation MJ (v6.2.2-dev).
 - **[x] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ. (v6.2.1-dev)
 - **[x] MapStore & Ambiance System** : Gestion de l'état de l'atlas (pions, brouillard, météo) intégrée au flux de synchronisation réactif. Système de moments de la journée avec filtres dynamiques (v6.1.0-dev).

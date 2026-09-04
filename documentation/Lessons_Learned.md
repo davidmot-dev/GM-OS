@@ -601,7 +601,83 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
 
 ---
 
-*Dernière mise à jour : 3 Septembre 2026 — débruitage neuronal (RNNoise) et alignement des niveaux
+## 🌉 Brancher deux modules sans les confondre (2026-09-04)
+
+### 1. Le point de rencontre n'est pas celui qu'on croit
+- **Défi** : Table-OS et Loot-OS parlaient tous deux de « tables » et n'avaient aucun lien. La
+  demande était de les faire fonctionner ensemble « tout en maintenant la souplesse de Loot-OS ».
+- **Ce qui a décidé du plan** : ils ne font pas le même geste. L'un *consulte* — un dé, une plage,
+  un résultat qu'on lit — l'autre *compose* : plusieurs tirages, des imbrications, des quantités,
+  puis une distribution. **On ne fusionne pas, on branche.**
+- **Solution** : le point de rencontre est le **pool de butin**, jamais le personnage. Table-OS ne
+  sait pas ce qu'est un objet ; il sait *verser*. Loot-OS distribue.
+- **Le défaut que cela a révélé** : Table-OS court-circuitait Loot-OS et écrivait une ligne de
+  prose dans `character.inventory` — **une zone de texte que l'onglet Inventaire de la tablette
+  ne regarde même pas**, puisqu'il affiche `inventoryItems`. L'objet donné n'apparaissait nulle
+  part où le joueur cherche ses affaires.
+- **Leçon** : *deux modules qui portent le même mot ne font pas forcément le même geste — et
+  celui qui les relie doit passer par ce que les deux savent manipuler, pas par le raccourci.*
+
+### 2. Ce qui n'est pas déclaré ne se devine pas
+- **Défi** : une entrée d'oracle dit en prose « Gagnez +1d100 Eurodollars et 1d4 munitions ».
+  Aucun code ne peut en tirer des objets sans deviner.
+- **Refusé** : lire `effect` à la regex. *Un contrôle qui se trompe est pire qu'un contrôle
+  absent* — c'est la leçon de la Forge, et elle vaut ici mot pour mot.
+- **Solution** : un champ `butin` **facultatif** sur l'entrée, et pour les tables qui n'en ont
+  pas, un geste explicite — l'IA propose, le meneur relit dans le pool avant que ça compte.
+- **Leçon** : quand une donnée n'existe pas sous forme exploitable, on l'ajoute **en option** ou
+  on demande à l'humain. On ne la reconstitue pas par heuristique sur du texte libre.
+
+### 3. Nommer une chose peut rendre visible un mensonge qui ne l'était pas
+- **Défi** : une case à cocher « pondéré » faisait basculer le sens du champ voisin — poids
+  relatif d'un côté, pourcentage de chance de l'autre — sans le dire. Elle a été remplacée par
+  deux choix nommés, chacun avec sa phrase.
+- **Erreur** : les deux boutons lisaient `table.rollMode || 'weighted'`. Or les tables
+  enregistrées avant ce champ portent `isWeighted` — le générateur savait replier dessus, pas
+  l'écran. La table « TEST » de Blade Runner, qui teste chaque ligne, s'affichait « un seul parmi
+  la liste ». **L'ancienne case à cocher tombait juste par accident** (`rollMode === 'weighted'`
+  est faux pour les deux raisons à la fois).
+- **Leçon** : *un écran qui réimplémente la lecture d'un moteur finit toujours par en diverger.*
+  `modeDeTirage()` et `tableImbriqueeDe()` sont sorties du générateur, exportées, et les écrans
+  les appellent. **Rendre une valeur explicite oblige à la lire correctement** — ce qui était
+  approximatif tant que c'était implicite devient faux dès que c'est écrit.
+
+### 4. Un type partagé ne doit pas habiter chez celui qui s'en sert le plus
+- **Défi** : donner un `voiceProfile` facultatif à l'entité de campagne.
+- **Cause** : `entity.types.ts` s'est mis à importer `useVoiceStore` — et `window.d.ts` importe
+  `VoiceState`, donc le même magasin. Le cycle a fait **disparaître l'augmentation globale de
+  `Window`** : une centaine d'erreurs « `appBridge` n'existe pas sur `Window` », dans des fichiers
+  que rien n'avait touchés.
+- **Solution** : `voice/types.ts`, un module feuille qui n'importe rien, réexporté par le magasin.
+- **Leçon** : un `declare global` est fragile aux cycles. *Les types partagés vivent dans une
+  feuille* — et une erreur qui frappe des fichiers sans rapport avec la modification accuse la
+  résolution de modules, pas le code.
+
+### 5. Une vérification ne vaut que pour l'état sur lequel elle a tourné
+- **Erreur** : avoir annoncé « `tsc -b` propre » dans un message de commit, alors que le typage
+  avait tourné **avant** l'ajout du dernier test — suivi de `vitest` seul, qui ne type rien.
+- **Ce qui l'a rattrapé** : le hook `pre-push`, qui a refusé l'envoi. Le message était déjà écrit
+  et faux.
+- **Leçon** : rejouer la vérification **après** la dernière écriture, ou ne pas l'affirmer. Un
+  outil de vérification passé trop tôt donne un résultat vrai à propos de rien.
+
+### 6. Chercher ce que l'utilisateur a vraiment, pas ce que le code permet
+- **Question posée** : « est-ce que je dois reforger des choses ? », puis « est-ce que je peux
+  faire des profils vocaux pour la galerie de PNJ ? »
+- **Méthode qui a répondu aux deux** : ouvrir les **sauvegardes réelles** plutôt que le code seul.
+  Elles ont dit : un seul pilote sur douze porte des tables de butin (et la Forge n'en a jamais
+  produit) ; NPC-OS porte **un** PNJ quand la galerie en porte **123**.
+- **Leçon** : *le code dit ce qui est possible, les données disent ce qui existe.* Les deux
+  réponses — « rien à reforger » et « la fonctionnalité est câblée sur le mauvais écran » —
+  venaient des données, et aucune ne se lisait dans le code.
+
+---
+
+*Dernière mise à jour : 4 Septembre 2026 — Loot-OS revu (pont Table-OS ↔ Loot-OS, butin de séance
+persisté et rattaché à une campagne, vocabulaire du butin pris dans le pilote) et voix des PNJ de
+campagne (profil enregistré sur la fiche, reposé en priorité).*
+
+*Mise à jour précédente : 3 Septembre 2026 — débruitage neuronal (RNNoise) et alignement des niveaux
 (EBU R 128), révision de Voice-OS (sélecteur de micro, porte à hystérésis,
 quatre sources de saturation), transposition refaite en WSOLA et compression rendue réglable, storyboard (le son d'une séquence, le titre projeté), greffon
 `tailwindcss-animate` rétabli, dés échelonnés au pupitre et sur tablette, atelier de thème, épingles du
