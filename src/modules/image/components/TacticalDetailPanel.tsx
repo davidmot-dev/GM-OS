@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, Trash2, Folder, Tag, Users, Check, Image as ImageIcon, Music, Film, FileText, Lock, Unlock, ShieldCheck } from 'lucide-react';
+import { X, Trash2, Folder, Tag, Users, Check, Image as ImageIcon, Music, Film, FileText, Lock, Unlock, ShieldCheck, Unplug, Link2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { MediaItem, MediaCollection } from '../../../stores/useMediaStore';
 import type { Campaign } from '../../session/useSessionOSStore';
 import { MediaItemThumbnail } from './MediaItemThumbnail';
+import { usagesDesMedias } from '../../../services/proprietairesDesMedias';
 
 interface TacticalDetailPanelProps {
     media: MediaItem;
@@ -39,6 +40,20 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 }) => {
     const { t, i18n } = useTranslation(['modules', 'common']);
     const [newTag, setNewTag] = useState('');
+
+    /*
+      **Qui se sert de ce fichier.**
+
+      L'application savait répondre « personne » — c'est ce que le nettoyage
+      calcule pour décider d'effacer — et ne le disait nulle part. La même
+      donnée, lue dans l'autre sens, et le meneur peut enfin voir venir une
+      suppression au lieu de la constater.
+
+      Recalculé quand le média change : ouvrir un autre fichier est le seul
+      geste qui rende la réponse caduque tant que ce panneau est ouvert.
+    */
+    const recensement = React.useMemo(() => usagesDesMedias(), [media.id]);
+    const usages = recensement.usages.get(media.id) ?? [];
 
     const formatSize = (bytes: number) => {
         if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
@@ -194,6 +209,52 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                             }}
                         />
                     </div>
+                </section>
+
+                {/* Usage Section */}
+                <section className="bg-app-surface/20 rounded-3xl p-6 space-y-3">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">
+                        {t('image.detail.usage.title')}
+                    </h4>
+
+                    {usages.length > 0 ? (
+                        <ul className="flex flex-col gap-2">
+                            {usages.map((usage, i) => (
+                                <li key={`${usage.module}-${i}`} className="flex items-start gap-3">
+                                    <Link2 size={12} className="text-accent/50 mt-0.5 flex-shrink-0" />
+                                    <span className="text-[11px] leading-tight">
+                                        <span className="font-black uppercase tracking-widest text-app-text/40 text-[9px]">
+                                            {usage.module}
+                                        </span>
+                                        <span className="block text-app-text/60">{usage.sujet}</span>
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        /*
+                          **Neutre, et non alarmant** — tranché avec David le
+                          2026-09-04. Sur une bibliothèque où la réserve est
+                          légitimement inutilisée, un rouge sur la moitié des
+                          fichiers ne voudrait plus rien dire. On constate ; la
+                          conséquence n'arrive qu'au moment du nettoyage, où
+                          elle est annoncée.
+                        */
+                        <p className="flex items-start gap-3 text-[11px] text-app-text/35 leading-tight">
+                            <Unplug size={12} className="mt-0.5 flex-shrink-0 opacity-60" />
+                            {media.isPersistent
+                                ? t('image.detail.usage.noneProtected')
+                                : t('image.detail.usage.none')}
+                        </p>
+                    )}
+
+                    {!recensement.complet && (
+                        <p className="text-[10px] text-amber-400/70 italic leading-tight">
+                            {t('image.detail.usage.unknown', {
+                                modules: recensement.modulesEnEchec.join(', '),
+                            })}
+                        </p>
+                    )}
                 </section>
 
                 {/* Metadata Section */}

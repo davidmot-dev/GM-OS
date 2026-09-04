@@ -64,7 +64,16 @@
     "storage_usage_title": "Local storage usage",
     "storage_usage_desc": "Size of the state persisted in the browser. Once the quota is exceeded, saves fail silently.",
     "storage_usage_session": "session: {{size}}",
-    "storage_usage_warning": "⚠️ Close to the quota — consider archiving old campaigns."
+    "storage_usage_warning": "⚠️ Close to the quota — consider archiving old campaigns.",
+    "media_cleanup_scan": "SCAN",
+    "media_cleanup_scanning": "SCANNING...",
+    "media_cleanup_none": "No orphan files: everything is used somewhere.",
+    "media_cleanup_found": "{{count}} file(s) with no usage — {{size}} MB",
+    "media_cleanup_spared": "{{count}} locked orphan(s), which will be spared",
+    "media_cleanup_confirm": "DELETE THESE {{count}} FILES",
+    "media_cleanup_cancel": "Cancel",
+    "media_cleanup_more": "… and {{count}} more",
+    "media_cleanup_unreliable": "Incomplete survey ({{modules}}): nothing deleted. These modules could not be queried, and their files would look like orphans."
   },
   "inlined_media": {
     "title": "Media embedded in campaigns",

@@ -577,6 +577,12 @@
         "removeTag": "Retirer le tag {{tag}}",
         "linkCampaign": "Lier à {{name}}",
         "unlinkCampaign": "Délier de {{name}}"
+      },
+      "usage": {
+        "title": "Utilisé par",
+        "none": "Aucun usage — sera supprimé au prochain nettoyage",
+        "noneProtected": "Aucun usage — verrouillé, donc épargné",
+        "unknown": "Usages inconnus : {{modules}} n’a pas répondu"
       }
     },
     "preview": {

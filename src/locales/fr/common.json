@@ -6,7 +6,6 @@
   "sessionMode": "Mode Session",
   "none": "Aucun",
   "error_launch_hub": "Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.",
-
   "status": {
     "enabled": "Activé",
     "disabled": "Désactivé",
@@ -18,7 +17,6 @@
     "active": "En cours",
     "done": "Terminée"
   },
-
   "spotlight": {
     "placeholder": "Rechercher une entité, musique, règle...",
     "close_tooltip": "Fermer la recherche",
@@ -88,7 +86,7 @@
   "playerHub": "Player Hub",
   "externalDisplay": "Écran externe",
   "gm": "GM",
-  "search": "Rechercher",
+  "search": "Rechercher...",
   "previous": "Précédent",
   "next": "Suivant",
   "filter": "Filtrer",
@@ -119,7 +117,6 @@
   "save": "Sauvegarder",
   "delete": "Supprimer",
   "edit": "Éditer",
-  "search": "Rechercher...",
   "quit_confirm": "Voulez-vous vraiment quitter GM-OS ?",
   "launching_hub": "Lancement du Player Hub...",
   "launching_tablet": "Lancement du Hub Tablette...",
@@ -150,11 +147,26 @@
     "globalMatrix": "Matrice Globale",
     "sort": {
       "label": "Tri",
-      "date": { "label": "Date", "desc": "Trier par chronologie" },
-      "recent": { "label": "Plus récents", "desc": "Les derniers imports" },
-      "oldest": { "label": "Plus anciens", "desc": "Depuis le début" },
-      "size": { "label": "Taille", "desc": "Poids du fichier" },
-      "name": { "label": "Nom (A-Z)", "desc": "Ordre alphabétique" }
+      "date": {
+        "label": "Date",
+        "desc": "Trier par chronologie"
+      },
+      "recent": {
+        "label": "Plus récents",
+        "desc": "Les derniers imports"
+      },
+      "oldest": {
+        "label": "Plus anciens",
+        "desc": "Depuis le début"
+      },
+      "size": {
+        "label": "Taille",
+        "desc": "Poids du fichier"
+      },
+      "name": {
+        "label": "Nom (A-Z)",
+        "desc": "Ordre alphabétique"
+      }
     },
     "importAsset": "Importer Asset Tactique",
     "uploadingAsset": "Chargement des données...",
@@ -178,6 +190,9 @@
       "audio": "AUDIO",
       "video": "VIDEO",
       "document": "DOC"
-    }
+    },
+    "orphans": "Orphelins",
+    "orphanBadge": "Aucun usage",
+    "orphanBadgeTitle": "Aucun module ne se sert de ce fichier. Il n'est pas en danger tant que vous ne lancez pas le nettoyage."
   }
 }

@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useMediaStore } from '../stores/useMediaStore';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
-import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw } from 'lucide-react';
+import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
+import { usagesDesMedias } from '../services/proprietairesDesMedias';
 import { gmPrompt } from '../stores/useModalStore';
 import { gmToast } from '../stores/useToastStore';
 import { mediasRestituables, restaurerLesMedias } from '../modules/session/logic/MiroirDesMedias';
@@ -94,7 +95,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     const [typeFilter, setTypeFilter] = useState<MediaType | 'all'>('all');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [tagLogic, setTagLogic] = useState<'AND' | 'OR'>('OR');
-    const [smartFilter, setSmartFilter] = useState<'none' | 'recent' | 'untagged'>('none');
+    const [smartFilter, setSmartFilter] = useState<'none' | 'recent' | 'untagged' | 'orphans'>('none');
     const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'size-desc' | 'name-asc'>('date-desc');
     const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -104,6 +105,20 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
     
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    /*
+      **Qui se sert de quoi — calculé une fois par ouverture.**
+
+      Le recensement lit une douzaine de magasins ; le refaire à chaque rendu
+      coûterait pour rien, puisque rien de ce qu'on filtre ici ne le modifie.
+      `mediaList` sert de déclencheur : c'est le seul changement qui puisse
+      créer ou résorber un orphelin sans quitter cet écran.
+    */
+    const usages = React.useMemo(
+        () => (isOpen ? usagesDesMedias().usages : new Map()),
+        [isOpen, mediaList],
+    );
+    const estOrphelin = React.useCallback((id: string) => !usages.has(id), [usages]);
 
     // 2. Lifecycle & Effects
     useEffect(() => {
@@ -162,6 +177,14 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         if (smartFilter === 'untagged') {
             if (m.tags.length > 0) return false;
         }
+
+        /*
+          **Un orphelin verrouillé reste dans la liste.** Ce dossier sert à
+          passer les orphelins en revue avant un nettoyage, pas à prédire ce que
+          le nettoyage supprimera — et ce qu'on a déjà pris la peine de
+          protéger mérite d'être revu comme le reste.
+        */
+        if (smartFilter === 'orphans' && !estOrphelin(m.id)) return false;
 
         if (smartFilter !== 'untagged' && selectedTags.length > 0) {
             const mediaTagsLower = m.tags.map(t => t.toLowerCase());
@@ -299,6 +322,17 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     >
                                         <ShieldAlert size={18} className="opacity-50" />
                                         {t('mediaBrowser.unaliasContent')}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setSmartFilter(smartFilter === 'orphans' ? 'none' : 'orphans');
+                                            setSelectedCollectionId(null);
+                                            setSelectedTags([]);
+                                        }}
+                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'orphans' ? 'bg-app-text/10 text-app-text/80 border border-app-text/20' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
+                                    >
+                                        <Unplug size={18} className="opacity-50" />
+                                        {t('mediaBrowser.orphans')}
                                     </button>
                                 </div>
                                 
@@ -646,6 +680,17 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 {media.isPersistent && (
                                                     <div className="w-10 h-10 rounded-2xl bg-accent/10 backdrop-blur-md border border-accent/20 flex items-center justify-center text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]">
                                                         <Lock size={16} />
+                                                    </div>
+                                                )}
+                                                {estOrphelin(media.id) && (
+                                                    <div
+                                                        className="h-10 px-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 text-white/40"
+                                                        title={t('mediaBrowser.orphanBadgeTitle')}
+                                                    >
+                                                        <Unplug size={13} />
+                                                        <span className="text-[8px] font-black uppercase tracking-widest">
+                                                            {t('mediaBrowser.orphanBadge')}
+                                                        </span>
                                                     </div>
                                                 )}
                                             </div>

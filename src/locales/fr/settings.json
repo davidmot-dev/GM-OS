@@ -64,7 +64,16 @@
     "storage_usage_title": "Occupation du stockage local",
     "storage_usage_desc": "Taille de l'état persisté dans le navigateur. Au dépassement du quota, les sauvegardes échouent silencieusement.",
     "storage_usage_session": "dont session : {{size}}",
-    "storage_usage_warning": "⚠️ Proche du quota — pensez à archiver d'anciennes campagnes."
+    "storage_usage_warning": "⚠️ Proche du quota — pensez à archiver d'anciennes campagnes.",
+    "media_cleanup_scan": "ANALYSER",
+    "media_cleanup_scanning": "ANALYSE...",
+    "media_cleanup_none": "Aucun fichier orphelin : tout est utilisé quelque part.",
+    "media_cleanup_found": "{{count}} fichier(s) sans aucun usage — {{size}} Mo",
+    "media_cleanup_spared": "{{count}} orphelin(s) verrouillé(s), qui seront épargnés",
+    "media_cleanup_confirm": "SUPPRIMER CES {{count}} FICHIERS",
+    "media_cleanup_cancel": "Annuler",
+    "media_cleanup_more": "… et {{count}} de plus",
+    "media_cleanup_unreliable": "Recensement incomplet ({{modules}}) : aucune suppression. Ces modules n'ont pas pu être interrogés, et leurs fichiers passeraient pour orphelins."
   },
   "inlined_media": {
     "title": "Médias intégrés aux campagnes",

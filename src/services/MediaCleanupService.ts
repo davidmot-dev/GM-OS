@@ -1,11 +1,28 @@
-import { useMediaStore } from '../stores/useMediaStore';
-import { useNPCStore } from '../modules/npc/useNPCStore';
-import { useImageStore } from '../modules/image/useImageStore';
-import { useSessionOSStore } from '../modules/session/useSessionOSStore';
-import { useCombatStore } from '../modules/combat/useCombatStore';
-import { useSoundStore } from '../modules/sound/useSoundStore';
-import { useMusicStore } from '../modules/music/useMusicStore';
-import { useAmbientStore } from '../modules/ambient/useAmbientStore';
+import { useMediaStore, type MediaItem } from '../stores/useMediaStore';
+import { usagesDesMedias, type UsageDunMedia } from './proprietairesDesMedias';
+
+/** Un média que plus personne ne retient. */
+export interface MediaOrphelin {
+    media: MediaItem;
+    /** Vrai s'il est verrouillé — orphelin, mais épargné par le nettoyage. */
+    protege: boolean;
+}
+
+/** Ce qu'un nettoyage supprimerait, avant de le faire. */
+export interface ApercuDuNettoyage {
+    /** Les orphelins non protégés — ceux qui partiraient. */
+    aSupprimer: MediaOrphelin[];
+    /** Les orphelins verrouillés — listés pour la revue, jamais supprimés. */
+    epargnes: MediaOrphelin[];
+    /** Octets récupérés si l'on confirme. */
+    octets: number;
+    /**
+     * Faux si un module n'a pas pu être interrogé. **Le nettoyage refuse alors
+     * d'agir** : ses médias passeraient pour orphelins.
+     */
+    fiable: boolean;
+    modulesEnEchec: string[];
+}
 
 export class MediaCleanupService {
     private static instance: MediaCleanupService;
@@ -22,124 +39,90 @@ export class MediaCleanupService {
     }
 
     /**
-     * Scans all stores for media references and deletes orphans from IndexedDB.
-     * @returns The number of deleted items.
+     * **Dit ce qui serait supprimé, sans rien supprimer.**
+     *
+     * Le bouton de nettoyage effaçait d'un clic, sans confirmation, et
+     * annonçait le compte **après**. Une suppression de masse irréversible
+     * derrière un seul clic, sur une base dont on a découvert le 2026-09-04
+     * qu'elle avait six angles morts. *Ce qu'on ne peut pas défaire, on doit au
+     * moins pouvoir le regarder d'abord.*
      */
-    public async performCleanup(): Promise<{ deletedCount: number; savedBytes: number }> {
-        if (this.isCleaning) {
-            console.log("[MediaCleanupService] Cleanup already in progress, skipping.");
-            return { deletedCount: 0, savedBytes: 0 };
-        }
-        
-        this.isCleaning = true;
-        try {
-            const mediaStore = useMediaStore.getState();
+    public async apercu(): Promise<ApercuDuNettoyage> {
+        const mediaStore = useMediaStore.getState();
         await mediaStore.initDB();
-        
-        const allMedia = mediaStore.mediaList;
-        if (allMedia.length === 0) return { deletedCount: 0, savedBytes: 0 };
 
-        const referencedIds = new Set<string>();
+        const { usages, complet, modulesEnEchec } = usagesDesMedias();
 
-        // 1. collect references from NPC Store
-        const npcStore = useNPCStore.getState();
-        if (npcStore.currentEntity?.avatar) this.collectId(npcStore.currentEntity.avatar, referencedIds);
-        npcStore.savedEntities.forEach((e) => {
-            if (e.avatar) this.collectId(e.avatar, referencedIds);
-        });
+        const aSupprimer: MediaOrphelin[] = [];
+        const epargnes: MediaOrphelin[] = [];
+        let octets = 0;
 
-        // 2. collect references from Image Store
-        const imageStore = useImageStore.getState();
-        imageStore.mediaList.forEach((m) => {
-            this.collectId(m.id, referencedIds);
-            this.collectId(m.path, referencedIds);
-        });
-        Object.values(imageStore.projections).forEach((id) => {
-            if (typeof id === 'string') this.collectId(id, referencedIds);
-        });
-
-        // 3. collect references from SessionOS Store
-        const sessionStore = useSessionOSStore.getState();
-        sessionStore.campaigns.forEach((c) => {
-            if (c.wallpaperUrl) this.collectId(c.wallpaperUrl, referencedIds);
-        });
-        sessionStore.entities.forEach((e) => {
-            if (e.avatar) this.collectId(e.avatar, referencedIds);
-        });
-        sessionStore.players?.forEach((p) => {
-            p.characters?.forEach((c) => {
-                if (c.portraitUrl) this.collectId(c.portraitUrl, referencedIds);
-                if (c.tokenUrl) this.collectId(c.tokenUrl, referencedIds);
-            });
-        });
-        sessionStore.atlasMaps?.forEach((m) => {
-            if (m.fileUrl) this.collectId(m.fileUrl, referencedIds);
-        });
-        sessionStore.wikiEntries?.forEach((w) => {
-            w.imageUrls?.forEach((url: string) => this.collectId(url, referencedIds));
-        });
-
-        // 4. collect references from Combat Store
-        const combatStore = useCombatStore.getState();
-        combatStore.combatants.forEach((c) => {
-            if (c.avatar) this.collectId(c.avatar, referencedIds);
-        });
-
-        // 5. collect references from Sound Store
-        const soundStore = useSoundStore.getState();
-        soundStore.atmospheres.forEach((a) => {
-            Object.values(a.pads).forEach((p) => {
-                const pad = p as { filePath?: string };
-                if (pad.filePath) this.collectId(pad.filePath, referencedIds);
-            });
-        });
-
-        // 6. collect references from Music Store
-        const musicStore = useMusicStore.getState();
-        musicStore.playlists.forEach((playlist) => {
-            playlist.pads.forEach((pad) => {
-                if (pad.url) this.collectId(pad.url, referencedIds);
-            });
-        });
-
-        // 7. collect references from Ambient Store
-        const ambientStore = useAmbientStore.getState();
-        ambientStore.presets.forEach((preset) => {
-            preset.tracks.forEach((track) => {
-                if (track.url) this.collectId(track.url, referencedIds);
-            });
-        });
-        ambientStore.tracks.forEach((track) => {
-            if (track.url) this.collectId(track.url, referencedIds);
-        });
-
-        // 8. Identify and delete orphans
-        let deletedCount = 0;
-        let savedBytes = 0;
-
-        for (const media of allMedia) {
-            if (!referencedIds.has(media.id) && !media.isPersistent) {
-                console.log(`[MediaCleanup] Deleting orphan media: ${media.name} (${media.id})`);
-                savedBytes += media.size;
-                await mediaStore.deleteMedia(media.id);
-                deletedCount++;
-            } else if (media.isPersistent && !referencedIds.has(media.id)) {
-                console.log(`[MediaCleanup] Sparing persistent orphan: ${media.name} (${media.id})`);
+        for (const media of useMediaStore.getState().mediaList) {
+            if (usages.has(media.id)) continue;
+            if (media.isPersistent) {
+                epargnes.push({ media, protege: true });
+            } else {
+                aSupprimer.push({ media, protege: false });
+                octets += media.size;
             }
         }
+
+        return { aSupprimer, epargnes, octets, fiable: complet, modulesEnEchec };
+    }
+
+    /**
+     * Supprime les médias que plus aucun module ne retient.
+     *
+     * @param apercu L'aperçu déjà montré à l'utilisateur. Le passer garantit
+     * qu'on supprime **exactement ce qui a été annoncé** — sans lui, un second
+     * recensement pourrait trancher autrement entre l'affichage et le clic.
+     */
+    public async performCleanup(
+        apercu?: ApercuDuNettoyage,
+    ): Promise<{ deletedCount: number; savedBytes: number; refuse?: string[] }> {
+        if (this.isCleaning) {
+            console.log('[MediaCleanupService] Cleanup already in progress, skipping.');
+            return { deletedCount: 0, savedBytes: 0 };
+        }
+
+        this.isCleaning = true;
+        try {
+            const plan = apercu ?? (await this.apercu());
+
+            /*
+              **Un recensement incomplet ne supprime rien.**
+              Si un magasin n'a pas répondu, tout ce qu'il détenait paraît
+              orphelin — et c'est précisément ce qu'on effacerait.
+            */
+            if (!plan.fiable) {
+                console.warn(
+                    '[MediaCleanup] Recensement incomplet, aucune suppression :',
+                    plan.modulesEnEchec.join(', '),
+                );
+                return { deletedCount: 0, savedBytes: 0, refuse: plan.modulesEnEchec };
+            }
+
+            const mediaStore = useMediaStore.getState();
+            let deletedCount = 0;
+            let savedBytes = 0;
+
+            for (const orphelin of plan.aSupprimer) {
+                console.log(
+                    `[MediaCleanup] Deleting orphan media: ${orphelin.media.name} (${orphelin.media.id})`,
+                );
+                savedBytes += orphelin.media.size;
+                await mediaStore.deleteMedia(orphelin.media.id);
+                deletedCount++;
+            }
 
             return { deletedCount, savedBytes };
         } finally {
             this.isCleaning = false;
         }
     }
-
-    private collectId(value: string | undefined, set: Set<string>) {
-        if (!value) return;
-        if (value.startsWith('m-')) {
-            set.add(value);
-        }
-    }
 }
 
 export const mediaCleanupService = MediaCleanupService.getInstance();
+
+/** Réexporté pour que les écrans n'aient qu'un point d'entrée à connaître. */
+export type { UsageDunMedia };

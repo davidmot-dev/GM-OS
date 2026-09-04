@@ -78,9 +78,8 @@ voix. → [Guide Voice-OS](./Voice_OS_User_Guide.md)
 (l'image d'un PNJ supprimé, par exemple). **Rien ne tourne automatiquement** : tant que vous ne
 pressez pas ce bouton, aucun média n'est jamais effacé tout seul.
 
-⚠️ Les playlists et ambiances **en cours d'usage sont protégées** — garde ajoutée après une
-suppression accidentelle de fichiers audio. Mais **trois sources de médias échappent au balayage**
-(Map-OS, les indices, le storyboard) : à lire avant de lancer une purge.
+Depuis le 2026-09-04, il **analyse d'abord** et vous nomme les fichiers concernés ; la suppression
+est un second geste. Le panneau de détails d'un média dit désormais **qui s'en sert**.
 → [Guide du Media Hub](./Media_Hub_User_Guide.md)
 
 ## 🛡️ Vos données sont-elles protégées ?

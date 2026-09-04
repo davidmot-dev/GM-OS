@@ -10,9 +10,8 @@ import { useHardwareStore } from '../stores/useHardwareStore';
 import AISettings from '../modules/ai/components/AISettings';
 import { TacticalTaxonomyEditor } from '../modules/tactical-ai/components/TacticalTaxonomyEditor';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
-import { mediaCleanupService } from '../services/MediaCleanupService';
 import { gmToast } from '../stores/useToastStore';
-import { Trash2, RefreshCw } from 'lucide-react';
+import NettoyageDesMedias from './settings/NettoyageDesMedias';
 import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import VerrouDeLaSouris from './settings/VerrouDeLaSouris';
@@ -43,8 +42,6 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     
     // Tactical AI Store Integration (Reactive)
     const { settings: tacticalSettings, updateSettings: updateTacticalSettings } = useTacticalAIStore();
-    const [isCleaning, setIsCleaning] = useState(false);
-    const [cleanupResult, setCleanupResult] = useState<{deletedCount: number, savedBytes: number} | null>(null);
     
     // Obsidian Store Integration
     const { vaultPath, setVaultPath, browseVaultPath, fetchNotes, isLoading: isObsidianLoading, error: obsidianError } = useObsidianStore();
@@ -490,37 +487,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 px-1 border-l-2 border-accent/30 pl-3">{t('settings:sections.maintenance')}</h3>
                                 
                                 <div className="grid grid-cols-1 gap-4">
-                                    {/* Media Cleanup */}
-                                    <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10 flex items-center justify-between">
-                                        <div className="flex-1">
-                                            <h4 className="text-app-text font-bold text-sm mb-1">{t('settings:maintenance.media_cleanup_title')}</h4>
-                                            <p className="text-xs text-app-text/40 max-w-md">{t('settings:maintenance.media_cleanup_desc')}</p>
-                                            {cleanupResult && (
-                                                <p className="text-[10px] text-accent font-black uppercase mt-2">
-                                                    {t('settings:maintenance.media_cleanup_last', { count: cleanupResult.deletedCount, size: (cleanupResult.savedBytes / 1024 / 1024).toFixed(2) })}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <button 
-                                            onClick={async () => {
-                                                setIsCleaning(true);
-                                                try {
-                                                    const res = await mediaCleanupService.performCleanup();
-                                                    setCleanupResult(res);
-                                                    gmToast(t('common:success_cleanup', { count: res.deletedCount }), "success");
-                                                } catch {
-                                                    gmToast(t('common:error_cleanup'), "error");
-                                                } finally {
-                                                    setIsCleaning(false);
-                                                }
-                                            }}
-                                            disabled={isCleaning}
-                                            className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-bg border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
-                                        >
-                                            {isCleaning ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
-                                            {isCleaning ? t('settings:maintenance.cleaning') : t('settings:maintenance.cleanup_button')}
-                                        </button>
-                                    </div>
+                                    <NettoyageDesMedias />
 
                                     <InlinedMediaPanel />
 

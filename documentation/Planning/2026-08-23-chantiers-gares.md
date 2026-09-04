@@ -378,13 +378,41 @@ depuis a dû s'y déclarer, et trois ne l'ont pas fait.*
 
 | # | Trouvaille | Ce qu'on en fait | Où |
 | --- | --- | --- | --- |
-| ⛔ **H1** | **Le nettoyage a trois angles morts.** `performCleanup` recense huit magasins ; il **ne regarde ni Map-OS** (`mapUrl`, et le `mapUrl` de **chaque preset**), **ni les indices** (`clue.mediaUrl`), **ni le storyboard** (`moment.imageMediaId`). Un fichier qui n'existe que là est compté comme orphelin et **supprimé**. | **À corriger.** Trois blocs `collectId` de plus. *Et le vrai remède est structurel : la liste des propriétaires est recopiée à la main dans un service que personne ne pense à ouvrir quand il ajoute un module — même famille que `donneesDeLaSession`, qui a résolu ce motif en n'ayant qu'une liste.* | `services/MediaCleanupService.ts` |
-| **H2** | **Le nettoyage n'est pas automatique**, contrairement à ce qu'annonçait le guide : un seul appelant, un bouton des Paramètres. Ce n'est pas un défaut — mais ça change la gravité de H1 (rien ne part tout seul) **et** l'usage du cadenas. | **Rien à coder.** Documenté ; à garder en tête si l'idée d'un nettoyage périodique revient : elle serait dangereuse tant que H1 tient. | `GlobalSettingsModal.tsx:508` |
-| **H3** | **Le panneau de détails n'a pas de « Status Tactique ».** Le guide promettait un indicateur disant si le média est utilisé dans la session en cours. Rien de tel n'existe. | **Bonne idée à construire, en fait** : les informations sont déjà réunies par `performCleanup` (l'ensemble des identifiants référencés). Un « utilisé par : 3 endroits / aucun » dans le panneau rendrait H1 visible à l'œil. | `TacticalDetailPanel.tsx` |
+| ✅ **H1** | **Le nettoyage a trois angles morts.** `performCleanup` recense huit magasins ; il **ne regarde ni Map-OS** (`mapUrl`, et le `mapUrl` de **chaque preset**), **ni les indices** (`clue.mediaUrl`), **ni le storyboard** (`moment.imageMediaId`). Un fichier qui n'existe que là est compté comme orphelin et **supprimé**. | **À corriger.** Trois blocs `collectId` de plus. *Et le vrai remède est structurel : la liste des propriétaires est recopiée à la main dans un service que personne ne pense à ouvrir quand il ajoute un module — même famille que `donneesDeLaSession`, qui a résolu ce motif en n'ayant qu'une liste.* | `services/MediaCleanupService.ts` |
+| ✅ **H2** | **Le nettoyage n'est pas automatique**, contrairement à ce qu'annonçait le guide : un seul appelant, un bouton des Paramètres. Ce n'est pas un défaut — mais ça change la gravité de H1 (rien ne part tout seul) **et** l'usage du cadenas. | **Rien à coder.** Documenté ; à garder en tête si l'idée d'un nettoyage périodique revient : elle serait dangereuse tant que H1 tient. | `GlobalSettingsModal.tsx:508` |
+| ✅ **H3** | **Le panneau de détails n'a pas de « Status Tactique ».** Le guide promettait un indicateur disant si le média est utilisé dans la session en cours. Rien de tel n'existe. | **Bonne idée à construire, en fait** : les informations sont déjà réunies par `performCleanup` (l'ensemble des identifiants référencés). Un « utilisé par : 3 endroits / aucun » dans le panneau rendrait H1 visible à l'œil. | `TacticalDetailPanel.tsx` |
 | **H4** | **Aucune détection de doublon à l'import.** Deux imports du même fichier = deux entrées, deux identifiants, deux fois la place. | **À trancher.** Une empreinte à l'import (le format `.gmos` en calcule déjà une, SHA-256) permettrait d'avertir. Coût faible, gain de place réel sur une bibliothèque de 261 Mo. | `useMediaStore.ts` (`addMedia`) |
 | **H5** | **« Image » est la catégorie par défaut**, pas une détection : tout ce qui n'est ni `audio/`, ni `video/`, ni un document connu devient une image — vignette cassée à la clé. | **Petit correctif** : un type `other`, ou un refus explicite. Sans urgence. | `useMediaStore.ts:161-173` |
 | ⚠ **H6** | **Soupçon non falsifié : importer un document depuis l'éditeur de fiche.** L'attribut `accept` est construit par `allowedTypes.map(t => t + '/*')` — ce qui donne `document/*`, **qui n'est pas un type MIME**. Le sélecteur de fichiers pourrait n'afficher aucun fichier. | ⛔ **À vérifier à l'écran** : éditeur de fiche → joindre un document → importer. Si c'est confirmé, mapper `document` vers une vraie liste d'extensions. | `MediaBrowser.tsx:550` |
 | **H7** | **Les documents n'ont pas d'aperçu** : `FullScreenPreview` traite image, audio et vidéo, et ne rend rien pour un document — écran vide. | **Documenté.** Un `<iframe>` suffirait pour un PDF, si le besoin se présente. | `FullScreenPreview.tsx` |
+
+#### 12c bis · ✅ Le recensement des médias — construit le 2026-09-04
+
+*H1, H2 et H3 sont clos, et le chantier a trouvé plus grand que ce qu'il venait réparer.*
+
+**Ce qui a été construit** — `src/services/proprietairesDesMedias.ts` : **une** liste des
+propriétaires de médias, lue par les deux qui en ont besoin. Le nettoyage y demande *« qui
+retient encore ce fichier ? »*, les écrans y demandent *« qui se sert de celui-ci ? »*. C'est la
+même connaissance, dans les deux sens — et elle n'était calculée que dans un sens, puis jetée.
+
+| Ce qui change | Où |
+| --- | --- |
+| ⛔ **Six angles morts, et non trois.** La revue en annonçait trois ; en écrivant la liste j'ai trouvé les **documents liés à une fiche**, **l'avatar d'un joueur** (distinct de celui de son personnage) et **les favoris**. Douze propriétaires au total | `proprietairesDesMedias.ts` |
+| ⭐ **Le nettoyage annonce avant d'agir.** Il n'y avait **aucune confirmation** : un clic, la suppression partait, le compte s'affichait après. Deux temps désormais — *Analyser*, qui nomme les fichiers et leur poids, puis *Supprimer ces N fichiers*, qui exécute **le plan affiché** et non un plan recalculé | `settings/NettoyageDesMedias.tsx` |
+| ⭐ **Un recensement incomplet ne supprime RIEN.** Si un magasin échoue, tout ce qu'il détenait paraît orphelin — c'est exactement ce qu'on effacerait. `complet: false` bloque le nettoyage et l'écran nomme le module muet. *Épargner trop est acceptable ; effacer trop ne l'est jamais* | `MediaCleanupService.ts` |
+| **Le « Status Tactique » manquant est devenu la section « Utilisé par ».** Elle nomme chaque usage — *« Map-OS — Configuration « Embuscade de nuit » »* — au lieu d'un compte | `TacticalDetailPanel.tsx` |
+| **Badge « Aucun usage » et dossier calculé « Orphelins ».** **Neutre**, tranché avec David : sur une bibliothèque où la réserve est légitimement inutilisée, un rouge sur la moitié des vignettes ne voudrait plus rien dire. Le dossier montre aussi les orphelins **verrouillés** — c'est une revue, pas une prédiction | `MediaBrowser.tsx` |
+| ⛔ **Trouvé en route : le Media Hub était monté DEUX fois.** `App.tsx` **et** `ModalProvider.tsx` le rendaient sur le même `isMediaHubOpen` — deux navigateurs plein écran superposés au pixel près, chacun avec son abonnement et son champ d'import. Invisible, puisque fermer l'un baisse le drapeau des deux. Celui du `ModalProvider` est retiré | `ModalProvider.tsx` |
+
+**Et une correction de ma propre revue** : le guide affirmait que le Hub n'a pas d'entrée dans la
+barre latérale. **Il en a une**, section *Outils*, et c'est la **seule** façon de le voir sans
+filtre de type — donc la seule où les documents apparaissent.
+
+**Vérifié** : `tsc -b` propre, 22 tests neufs (`proprietairesDesMedias.test.ts`,
+`MediaCleanupService.test.ts`), `npm run validate` vert.
+
+**Ce qui reste de la § 12c** : H4 (doublons à l'import), H5 (« image » par défaut), H6 (le
+soupçon `accept="document/*"`, à vérifier à l'écran), H7 (pas d'aperçu de document).
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
@@ -449,7 +477,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Map-OS, Nexus-OS et Media Hub passés, **vingt et une** trouvailles de code (§§ 12a-12c) | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Map-OS, Nexus-OS et Media Hub passés, **vingt-deux** trouvailles (§§ 12a-12c) — **trois déjà réparées** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (H1-H3 sont faits) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

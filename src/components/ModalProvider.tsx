@@ -12,7 +12,6 @@ import CampaignForm from '../modules/session/components/CampaignForm';
 import { SessionSelectModal } from '../modules/session/components/SessionSelectModal';
 import NpcDetail from '../modules/session/components/NpcDetail';
 import { FavoriteFullDossier } from '../modules/favorite/components/FavoriteFullDossier';
-import { MediaBrowser } from './MediaBrowser';
 import { TimelineEventForm } from '../modules/session/components/TimelineEventForm';
 import { WikiEntryForm } from '../modules/session/components/WikiEntryForm';
 import AtelierDesAdversaires from '../modules/combat/components/AtelierDesAdversaires';
@@ -37,7 +36,7 @@ const ModalProvider: React.FC = () => {
     const { 
         type, message, onConfirm, onCancel, onPromptConfirm, 
         defaultValue, confirmLabel, cancelLabel, customVariant, 
-        isMediaHubOpen, isNetworkModalOpen, closeModal, closeMediaHub 
+        isNetworkModalOpen, closeModal 
     } = useModalStore();
 
     const { t } = useTranslation(['common']);
@@ -49,7 +48,7 @@ const ModalProvider: React.FC = () => {
         }
     }, [type, defaultValue]);
 
-    if (!type && !isMediaHubOpen && !isNetworkModalOpen) return null;
+    if (!type && !isNetworkModalOpen) return null;
 
     return (
         <>
@@ -302,16 +301,18 @@ const ModalProvider: React.FC = () => {
                 </div>
             )}
 
-            {isMediaHubOpen && (
-                <MediaBrowser 
-                    isOpen={true} 
-                    onClose={closeMediaHub} 
-                    onSelect={(id) => {
-                        console.log("Media selected:", id);
-                        closeMediaHub();
-                    }} 
-                />
-            )}
+            {/*
+              **Le Media Hub était monté ici ET dans `App.tsx`, sur le même
+              drapeau `isMediaHubOpen`.** Ouvrir le Hub depuis la barre latérale
+              empilait donc deux navigateurs plein écran identiques, chacun avec
+              son abonnement au magasin et son champ d'import. Rien ne le
+              laissait voir — ils sont superposés au pixel près, et fermer l'un
+              baisse le drapeau des deux.
+
+              C'est celui d'`App.tsx` qui reste : il est rendu sans attendre le
+              morceau chargé à la demande de ce fichier, donc le Hub s'ouvre
+              tout de suite. Trouvé le 2026-09-04.
+            */}
 
             <NetworkQRCodeModal />
         </>

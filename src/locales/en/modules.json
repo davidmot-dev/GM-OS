@@ -577,6 +577,12 @@
         "removeTag": "Remove tag {{tag}}",
         "linkCampaign": "Link to {{name}}",
         "unlinkCampaign": "Unlink from {{name}}"
+      },
+      "usage": {
+        "title": "Used by",
+        "none": "No usage — will be deleted on the next cleanup",
+        "noneProtected": "No usage — locked, therefore spared",
+        "unknown": "Unknown usage: {{modules}} did not answer"
       }
     },
     "preview": {

@@ -6,7 +6,6 @@
   "sessionMode": "Session Mode",
   "none": "None",
   "error_launch_hub": "Please open the Player Hub in a tab (`http://localhost:5173/?window=hub`) or through the Electron bridge.",
-
   "status": {
     "enabled": "Enabled",
     "disabled": "Disabled",
@@ -18,7 +17,6 @@
     "active": "Active",
     "done": "Done"
   },
-
   "spotlight": {
     "placeholder": "Search for an entity, music, rule...",
     "close_tooltip": "Close search",
@@ -88,7 +86,7 @@
   "playerHub": "Player Hub",
   "externalDisplay": "External Display",
   "gm": "GM",
-  "search": "Search",
+  "search": "Search...",
   "previous": "Previous",
   "next": "Next",
   "filter": "Filter",
@@ -119,7 +117,6 @@
   "save": "Save",
   "delete": "Delete",
   "edit": "Edit",
-  "search": "Search...",
   "quit_confirm": "Do you really want to quit GM-OS?",
   "launching_hub": "Launching Player Hub...",
   "launching_tablet": "Launching Tablet Hub...",
@@ -150,11 +147,26 @@
     "globalMatrix": "Global Matrix",
     "sort": {
       "label": "Sort",
-      "date": { "label": "Date", "desc": "Sort by chronology" },
-      "recent": { "label": "Recent", "desc": "Latest imports" },
-      "oldest": { "label": "Oldest", "desc": "From the beginning" },
-      "size": { "label": "Size", "desc": "File weight" },
-      "name": { "label": "Name (A-Z)", "desc": "Alphabetical order" }
+      "date": {
+        "label": "Date",
+        "desc": "Sort by chronology"
+      },
+      "recent": {
+        "label": "Recent",
+        "desc": "Latest imports"
+      },
+      "oldest": {
+        "label": "Oldest",
+        "desc": "From the beginning"
+      },
+      "size": {
+        "label": "Size",
+        "desc": "File weight"
+      },
+      "name": {
+        "label": "Name (A-Z)",
+        "desc": "Alphabetical order"
+      }
     },
     "importAsset": "Import Tactical Asset",
     "uploadingAsset": "Uploading data...",
@@ -178,6 +190,9 @@
       "audio": "AUDIO",
       "video": "VIDEO",
       "document": "DOC"
-    }
+    },
+    "orphans": "Orphans",
+    "orphanBadge": "No usage",
+    "orphanBadgeTitle": "No module uses this file. It is not at risk unless you run the cleanup."
   }
 }
