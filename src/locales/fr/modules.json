@@ -79,6 +79,9 @@
     }
   },
   "clock": {
+    "chime": "Sonnerie de fin",
+    "chime_off": "Couper la sonnerie de fin de minuteur",
+    "chime_on": "Faire sonner la fin du minuteur",
     "config": "Configuration",
     "time_mode": "Mode de Temps",
     "modes": {
@@ -988,7 +991,10 @@
       "grid": {
         "title": "Grille Tactique",
         "size": "Taille de Grille",
-        "opacity": "Opacité"
+        "opacity": "Opacité",
+        "color": "Couleur",
+        "color_reset": "Revenir au blanc",
+        "color_reset_short": "blanc"
       },
       "combat": {
         "title": "Tour de Combat",
@@ -1242,6 +1248,10 @@
     }
   },
   "session": {
+    "audio_master": {
+      "focus_ducking": "Tamisage",
+      "focus_ducking_hint": "À quel niveau le Focus baisse l'ambiance, la musique et les bruitages. Plus bas, plus votre voix passe devant."
+    },
     "cockpit": {
       "none_active": "Aucune Campagne Active",
       "active_chronicle": "Chronique Active",
@@ -2052,6 +2062,7 @@
         "oracle_copy": "Copie Oracle",
         "open_wiki": "Chronologie / Wiki",
         "open_npcs": "Galerie des PNJs",
+        "nexus_light": "Archive légère — sans les images ni les sons",
         "nexus_export": "Exporter (.gmos)",
         "nexus_import": "Importer (.gmos)"
       },

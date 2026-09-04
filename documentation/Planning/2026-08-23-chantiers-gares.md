@@ -24,7 +24,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ---
 
-## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-04**
+## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-05**
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
@@ -37,8 +37,22 @@ dans le code, qui absorbe toutes les autres.**
 > Revérifié le 2026-09-03 : `tsc -b` propre, **3 336 tests au vert** (262 fichiers, 1 ignoré), arbre
 > propre. ⛔ **`npx vitest run` sans bride rend les 263 fichiers en échec** — `Vitest failed to find the
 > current suite`, `tests 0ms`, *aucune assertion n'a tourné* : ce sont les workers qui tombent sous la
-> charge. Rejouer avec **`--maxWorkers=4`**. L'étape 3 de `scripts/validate.ps1` appelle la commande sans
-> bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas exécuté.*
+> charge. Rejouer avec **`--maxWorkers=4`**. ✅ **Corrigé dans `scripts/validate.ps1` le 2026-09-04** —
+> l'étape 3 appelait la commande sans bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas
+> exécuté.*
+>
+> Revérifié le 2026-09-05 : `tsc -b` propre, **3 566 tests au vert** (293 fichiers, 1 ignoré),
+> `npm run validate` vert.
+
+> ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
+> écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
+> documentés avec leur raison. Le détail vit au § 12 (les trouvailles, par module) et aux §§ 13 à 17
+> (les réparations, par rang de risque). Le plan suivi est
+> `documentation/Planning/2026-09-04-revue-des-guides.md`.
+>
+> *Ce qu'il faut en retenir pour la suite : **écrire ce qu'un module fait est le meilleur détecteur
+> de défaut employé sur ce dépôt.** Les trois quarts des trouvailles étaient dans le code, pas dans
+> la documentation.*
 
 ### 1 · Ce qui se joue et ne se code pas — la catégorie P6
 
@@ -840,6 +854,39 @@ absent, la migration évitée.*
 
 **Ce qui reste de la voie B** : **P4**, le ménage.
 
+
+### 17 · ✅ P4, le ménage — la voie B est close (2026-09-05)
+
+Le dernier rang. *Et la vérification a trouvé deux points **pires** que ce que le § 12 en disait* —
+c'est la troisième fois que réécrire un constat en révèle un plus grand.
+
+| # | Ce qui était | Ce qui est |
+| --- | --- | --- |
+| ⭐ **M5** | **La couleur de grille n'existait dans aucun écran** ; la grille était blanche pour tout le monde. Or `gridColor` était lu par les deux toiles, voyageait dans les presets et jusqu'à l'écran des joueurs. | **Un sélecteur, et un lien pour revenir au blanc.** *Toute la chaîne était là sauf le bouton au bout.* Le blanc reste le défaut : rien ne change sur les cartes d'aujourd'hui. |
+| ⭐ **A10** | **Le rapport de tamisage valait toujours 0,1** et rien ne permettait d'y toucher — très bas pour un aparté, beaucoup trop haut pour une révélation. Les trois moteurs lisaient pourtant la valeur. | **Un curseur, 5 % à 60 %, qui n'apparaît que quand le Focus est allumé** : c'est le seul moment où il veut dire quelque chose. Même diagnostic que M5, à un module près. |
+| ⛔ **C4** | **`timeMultiplier` n'était lu par PERSONNE.** Le § 12d disait « il vaut donc toujours 1 », ce qui laissait croire que la chaîne existait. Elle n'existe pas : aucune boucle ne fait avancer l'horloge fantastique. | **Retiré.** *L'exposer aurait demandé d'écrire l'accélération du temps — une fonction, pas du ménage.* La distinction avec M5 et A10 n'apparaît qu'en ouvrant le code. |
+| ⭐ **C3** | **`ChimeEngine` — cinq harmoniques, quatre secondes — était écrit en entier et n'avait aucun appelant.** Aucune sonnerie n'existait nulle part dans GM-OS. | **Branchée à zéro, avec son interrupteur** (choix de David). Elle sonne depuis `useBattementDuMinuteur` et **jamais depuis `tickTimer`** : *un `set` de Zustand est un calcul d'état, y glisser un son en ferait un effet de bord que chaque test déclencherait.* 7 tests. |
+| **A10 bis** | **`useAudioMasterStore.getBackupData()` n'avait aucun appelant** : le bandeau audio n'était dans aucune sauvegarde. | **Retiré, et non branché.** *Le volume général, le Focus et le tamisage décrivent une pièce, pas un univers* — exactement la raison pour laquelle Music-OS ne sauvegarde que ses playlists, tranchée le 30/08. Ils restent persistés localement, ce qui est le bon niveau. |
+| **N6** | `includeAssets` était lu mais **aucun écran ne le passait** ; `includeSounds` était déclaré, documenté, et **lu nulle part**. | **Une case « archive légère »** dans le panneau de campagne, et `includeSounds` retiré. *Une option qui n'a jamais rien commandé est pire qu'une option absente : elle promet un réglage.* Le choix ne se retient pas d'une fois sur l'autre — une case restée cochée produirait un jour une archive vide qu'on croit complète. |
+| **N8** | **Toutes les ambiances et playlists partent**, campagne ou pas. | **Laissé large, et la raison écrite.** Elle n'existait pas quand ce code a été rédigé : depuis le 04/09, **l'import fusionne au lieu de remplacer**. Une bibliothèque large ne détruit plus celle du destinataire. *Le danger est fermé ; reste de l'encombrement, ce qui n'est pas la même chose.* |
+| **M6** | Les effets magiques ne sont pas persistés — probablement voulu, mais rien ne le disait. | **L'intention écrite dans `partialize`.** Rouvrir une partie sous la boule de feu de la semaine dernière n'aurait aucun sens, et un effet permanent se range dans un preset de carte. *Une omission qui a l'air d'un oubli finit par être « corrigée » par quelqu'un.* |
+| ⭐ **H8** | **Le Media Hub ne prenait qu'un fichier** — `files?.[0]` — alors que le sélecteur en aurait accepté autant qu'on veut. | **`multiple`, et la boucle extraite dans `importerPlusieursMedias`** : *une logique cachée dans un composant n'est couverte par rien*, la leçon de `horlogesPourLaTable`. Deux règles épinglées — la question du doublon se pose **par fichier**, et **un échec n'arrête pas les suivants**. En série et non en parallèle : trente écritures IndexedDB lancées ensemble sont la course déjà payée ici. 8 tests. |
+| **A3 · A5 · A6 · A8** | Documentés dans les guides. | **Rien à coder** — confirmé. |
+
+**Ce que ce rang a appris, et qui vaut au-delà.** *« Réglage déclaré, jamais offert » n'est pas un
+diagnostic* — c'en est trois. M5 et A10 avaient toute leur chaîne et il manquait un bouton ; C4
+n'avait **que** son nom. Les ranger ensemble au § 12 était juste comme relevé et faux comme plan :
+deux se livrent en un après-midi, le troisième était un chantier déguisé. **On ne le voit qu'en
+ouvrant le code, jamais en relisant la liste.**
+
+Et une leçon de plus sur les effets de bord : la cloche **ne sonne pas dans le réducteur**. Le
+réflexe était d'appeler `playChime()` dans `tickTimer`, là où le zéro se produit. *Un `set` de
+Zustand est un calcul d'état* — chaque test du minuteur aurait fait sonner une cloche.
+
+**Vérifié** : `tsc -b` propre, 15 tests neufs, `npm run validate` vert, **3 566 tests**.
+
+⭐ **La voie B est close.** Les cent deux trouvailles de la revue sont traitées : réparées, tranchées,
+ou documentées avec leur raison.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

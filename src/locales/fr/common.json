@@ -194,6 +194,7 @@
     "orphans": "Orphelins",
     "orphanBadge": "Aucun usage",
     "orphanBadgeTitle": "Aucun module ne se sert de ce fichier. Il n'est pas en danger tant que vous ne lancez pas le nettoyage.",
+    "importDone": "{{count}} fichiers rangés dans le Hub.",
     "duplicateConfirm": "« {{name}} » existe déjà dans le Hub, avec la même taille. L'importer quand même ?"
   }
 }

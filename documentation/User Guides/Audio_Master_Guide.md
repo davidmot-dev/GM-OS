@@ -52,6 +52,16 @@ Le retour se fait en douceur — le gain remonte progressivement, il ne saute pa
 
 ---
 
+> ✅ **Le tamisage se règle depuis le 2026-09-05.** Quand le Focus est allumé, un curseur apparaît
+> à côté du bouton et dit **à quel niveau** le reste descend. Il valait 10 % et rien ne permettait
+> d'y toucher — très bas pour un aparté, beaucoup trop haut pour une révélation. Réglable de 5 % à
+> 60 % : au-delà, le Focus ne se distingue plus de son absence.
+>
+> *`setFocusDuckingRatio` existait depuis toujours et les trois moteurs lisaient déjà la valeur.
+> Comme la couleur de grille de Map-OS : toute la chaîne était là sauf le bouton au bout.*
+
+---
+
 ## 🚨 Stop All — l'arrêt d'urgence
 
 Un clic, et la table redevient silencieuse et noire.

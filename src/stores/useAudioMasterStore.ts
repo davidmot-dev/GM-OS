@@ -19,16 +19,26 @@ interface AudioMasterState {
     basculerLaCoupure: () => void;
     toggleFocusMode: () => void;
     setFocusDuckingRatio: (ratio: number) => void;
-    getBackupData: () => {
-        masterVolume: number;
-        isFocusMode: boolean;
-        focusDuckingRatio: number;
-    };
+    /*
+      **Il n'y a pas de `getBackupData` ici, et c'est voulu** (point A10,
+      2026-09-05). Il en existait un — sans aucun appelant, donc le bandeau
+      n'était dans aucune sauvegarde. La tentation était de le brancher ; c'est
+      l'inverse qu'il fallait faire.
+
+      *Le volume général, le Focus et le tamisage décrivent une pièce, pas un
+      univers.* Restaurer sur une autre machine le volume réglé pour les
+      enceintes d'ici n'aurait aucun sens — c'est exactement la raison pour
+      laquelle Music-OS ne sauvegarde que ses playlists et jamais sa sortie
+      audio, tranchée le 2026-08-30.
+
+      Ces trois valeurs sont persistées localement, ce qui est le bon niveau :
+      elles survivent à un redémarrage et ne voyagent pas.
+    */
 }
 
 export const useAudioMasterStore = create<AudioMasterState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             masterVolume: 1.0,
             volumeAvantCoupure: 1.0,
             isFocusMode: false,
@@ -49,11 +59,6 @@ export const useAudioMasterStore = create<AudioMasterState>()(
             }),
             toggleFocusMode: () => set((state) => ({ isFocusMode: !state.isFocusMode })),
             setFocusDuckingRatio: (focusDuckingRatio) => set({ focusDuckingRatio }),
-            getBackupData: () => ({
-                masterVolume: get().masterVolume,
-                isFocusMode: get().isFocusMode,
-                focusDuckingRatio: get().focusDuckingRatio
-            })
         }),
         {
             name: 'gm-os-audio-master-storage',

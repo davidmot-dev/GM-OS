@@ -285,12 +285,21 @@ export class NexusService {
             (t) => allTemplateIds.includes(t.id)
         );
 
-        // Niveau 5 : Atmosphères de la SoundBoard (pads audio)
-        // On exporte TOUTES les atmosphères — elles ne sont pas liées à une campagne spécifique
-        // mais font partie de l'environnement de jeu du GM.
-        const atmospheres = useSoundStore.getState().atmospheres;
+        /*
+          **Niveau 5 : TOUTES les atmosphères et TOUTES les playlists partent**,
+          campagne ou pas. Elles sont l'environnement de jeu du meneur plus que
+          celui d'une partie — le même orage sert dans trois campagnes.
 
-        // Niveau 5 : Playlists musicales
+          *Revu le 2026-09-05 (point N8) et laissé large, pour une raison qui
+          n'existait pas quand ce code a été écrit* : depuis le 2026-09-04,
+          **l'import fusionne par identifiant au lieu de remplacer**. Une
+          bibliothèque large qui arrive chez quelqu'un ne détruit donc plus la
+          sienne — elle s'y ajoute. C'était le danger, il est fermé.
+
+          ⚠️ Ce qui reste vrai, et que le guide dit : envoyer un bundle envoie
+          **toute** sa sonothèque. C'est de l'encombrement, plus une perte.
+        */
+        const atmospheres = useSoundStore.getState().atmospheres;
         const playlists = useMusicStore.getState().playlists;
 
         return {

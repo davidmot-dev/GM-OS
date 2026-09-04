@@ -49,6 +49,16 @@ table ; ce qui est fermé ne quitte pas votre écran.
 - Un **message** libre — « Auto-destruction », « Arrivée des renforts » — affiché avec le décompte.
 - **Départ**, **Pause**, et une remise à zéro.
 - Sous dix secondes, l'affichage passe en urgence ; à zéro, il devient rouge et sautille.
+- **Une cloche sonne à zéro** — cinq harmoniques, quatre secondes. La clochette en haut de la
+  section l'éteint et la rallume.
+
+> ✅ **La sonnerie existe depuis le 2026-09-05.** Le moteur de cloche était écrit **en entier** et
+> n'avait aucun appelant : aucune sonnerie n'existait nulle part dans GM-OS. Elle est allumée par
+> défaut, *mais une sonnerie qu'on ne peut pas couper devient insupportable en trois séances* —
+> d'où l'interrupteur, à côté du titre.
+>
+> Elle se tait toute seule dans deux cas : la clochette est éteinte, ou **le son général est
+> coupé**. Si la table est au silence, une cloche est exactement ce qu'on ne veut pas.
 
 > 🔎 **Le minuteur descend même quand vous quittez Clock-OS.** Ça n'a pas toujours été vrai : le
 > battement vivait dans l'écran, et partir au cockpit le figeait — y compris sur les tablettes des

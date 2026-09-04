@@ -79,6 +79,9 @@
     }
   },
   "clock": {
+    "chime": "End chime",
+    "chime_off": "Mute the timer's end chime",
+    "chime_on": "Ring at the end of the timer",
     "config": "Configuration",
     "time_mode": "Time Mode",
     "modes": {
@@ -988,7 +991,10 @@
       "grid": {
         "title": "Tactical Grid",
         "size": "Grid Size",
-        "opacity": "Opacity"
+        "opacity": "Opacity",
+        "color": "Colour",
+        "color_reset": "Back to white",
+        "color_reset_short": "white"
       },
       "combat": {
         "title": "Combat Turn",
@@ -1242,6 +1248,10 @@
     }
   },
   "session": {
+    "audio_master": {
+      "focus_ducking": "Ducking",
+      "focus_ducking_hint": "How far Focus lowers ambience, music and sound effects. Lower means your voice cuts through more."
+    },
     "cockpit": {
       "none_active": "No Active Campaign",
       "active_chronicle": "Active Chronicle",
@@ -2052,6 +2062,7 @@
         "oracle_copy": "Oracle Copy",
         "open_wiki": "Timeline / Wiki",
         "open_npcs": "NPC Gallery",
+        "nexus_light": "Light archive - no images or sounds",
         "nexus_export": "Export (.gmos)",
         "nexus_import": "Import (.gmos)"
       },

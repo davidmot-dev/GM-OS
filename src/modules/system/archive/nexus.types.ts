@@ -207,18 +207,25 @@ export interface NexusDriverState {
  * Options passées à la fonction d'export.
  */
 export interface NexusExportOptions {
-    /** Inclure les fichiers médias dans le bundle (défaut: true) */
-    includeAssets: boolean;
     /**
-     * Inclure les fichiers audio (Sound Pads, Music Playlists).
-     * Activé par défaut — peut être désactivé pour réduire la taille du bundle.
+     * Inclure les fichiers médias dans le bundle (défaut : `true`).
+     *
+     * **Offert dans le panneau depuis le 2026-09-05** (point N6). Il était lu
+     * par `exportBundle` mais **aucun écran ne le passait** : l'archive
+     * emportait toujours tout. Une campagne bien illustrée pèse des centaines
+     * de mégaoctets, ce qui ne s'envoie pas par courriel — d'où la case.
      */
-    includeSounds: boolean;
+    includeAssets: boolean;
 }
 
+/*
+  **`includeSounds` a été retiré le 2026-09-05.** Il était déclaré ici,
+  documenté, posé à `true` par défaut — et **lu nulle part**. *Une option qui
+  n'a jamais rien commandé est pire qu'une option absente : elle promet un
+  réglage.* Les sons suivent `includeAssets` comme le reste des médias.
+*/
 export const DEFAULT_NEXUS_EXPORT_OPTIONS: NexusExportOptions = {
     includeAssets: true,
-    includeSounds: true,
 };
 
 /**

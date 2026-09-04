@@ -17,7 +17,9 @@ import {
     ChevronsUp,
     MonitorSmartphone,
     Eye,
-    EyeOff
+    EyeOff,
+    Bell,
+    BellOff
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
@@ -82,6 +84,8 @@ const ClockDashboard: React.FC = () => {
         setTimerLabel,
         timerDuration,
         timerLabel,
+        sonnerieDuMinuteur,
+        basculerLaSonnerie,
         isClockProjected,
         setIsClockProjected,
         availableCalendars,
@@ -317,6 +321,28 @@ const ClockDashboard: React.FC = () => {
                 <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
                     <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
                         <Timer size={16} /> {t('clock.timer_section')}
+
+                        {/*
+                          **La cloche de fin, et son interrupteur** (point C3,
+                          2026-09-05). `ChimeEngine` était écrit en entier et
+                          n'avait aucun appelant : aucune sonnerie n'existait
+                          nulle part. Elle sonne maintenant à zéro.
+
+                          Le bouton est ici plutôt que dans les réglages : c'est
+                          la seule section où le mot « sonnerie » veut dire
+                          quelque chose, et on l'éteint au moment où elle gêne.
+                        */}
+                        <button
+                            type="button"
+                            onClick={basculerLaSonnerie}
+                            title={sonnerieDuMinuteur ? t('clock.chime_off') : t('clock.chime_on')}
+                            aria-label={t('clock.chime')}
+                            className={`ml-auto shrink-0 transition-colors ${sonnerieDuMinuteur
+                                ? 'text-gm-gold/70 hover:text-gm-gold'
+                                : 'text-slate-700 hover:text-slate-500'}`}
+                        >
+                            {sonnerieDuMinuteur ? <Bell size={14} /> : <BellOff size={14} />}
+                        </button>
                     </h3>
 
                     <div className="space-y-2 mb-4">

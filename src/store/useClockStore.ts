@@ -160,8 +160,6 @@ interface ClockState {
     theme: ClockTheme;
     /** Point actuel dans le temps (Millisecondes UNIX ou relatives) */
     timestamp: number; 
-    /** Multiplicateur pour l'accélération du temps fantastique */
-    timeMultiplier: number; 
 
     // Timer State
     /** Durée totale configurée pour le minuteur (secondes) */
@@ -189,6 +187,20 @@ interface ClockState {
     // Projection State
     /** Indique si l'horloge/minuteur est projeté sur le Player Hub */
     isClockProjected: boolean;
+    /**
+     * **La cloche sonne-t-elle quand le minuteur atteint zéro ?**
+     *
+     * *Point C3 du § 12d, tranché par David le 2026-09-05.* `ChimeEngine` —
+     * cinq harmoniques, quatre secondes de décroissance — était **entièrement
+     * écrit et n'avait aucun appelant** : aucune sonnerie n'existait nulle part
+     * dans l'application. La fin d'un minuteur est le moment qui la mérite le
+     * plus, et le moteur était déjà là.
+     *
+     * Allumée par défaut, parce que c'est la fonction qu'on livre. *Mais une
+     * sonnerie qu'on ne peut pas couper devient insupportable en trois
+     * séances* — d'où l'interrupteur, demandé avec.
+     */
+    sonnerieDuMinuteur: boolean;
 
     // Actions
     setMode: (mode: ClockMode) => void;
@@ -198,7 +210,6 @@ interface ClockState {
     /** Avance ou recule le temps de X secondes */
     addTime: (seconds: number) => void;
     /** Configure la vitesse de défilement du temps */
-    setTimeMultiplier: (multiplier: number) => void;
 
     // Timer Actions
     /** Configure une durée de minuteur */
@@ -260,6 +271,8 @@ interface ClockState {
     // Projection Actions
     /** Active/Désactive la projection sur le moniteur externe */
     setIsClockProjected: (projected: boolean) => void;
+    /** Allume ou éteint la cloche de fin de minuteur. */
+    basculerLaSonnerie: () => void;
 }
 
 export const useClockStore = create<ClockState>()(
@@ -269,7 +282,6 @@ export const useClockStore = create<ClockState>()(
             theme: 'modern',
 
             timestamp: Date.now(),
-            timeMultiplier: 1,
 
             timerDuration: 0,
             timerRemaining: 0,
@@ -283,6 +295,7 @@ export const useClockStore = create<ClockState>()(
 
             tensions: [],
             isClockProjected: true,
+            sonnerieDuMinuteur: true,
 
             setMode: (mode) => set({ mode }),
             setTheme: (theme) => set({ theme }),
@@ -332,8 +345,6 @@ export const useClockStore = create<ClockState>()(
                 const suivant = base + (seconds * 1000);
                 return horodatageValide(suivant) ? { timestamp: suivant } : state;
             }),
-
-            setTimeMultiplier: (timeMultiplier) => set({ timeMultiplier }),
 
             setTimer: (seconds) => set({
                 timerDuration: seconds,
@@ -462,6 +473,8 @@ export const useClockStore = create<ClockState>()(
             },
 
             setIsClockProjected: (isClockProjected) => set({ isClockProjected }),
+
+            basculerLaSonnerie: () => set((etat) => ({ sonnerieDuMinuteur: !etat.sonnerieDuMinuteur })),
 
             getFantasyDate: () => {
                 const { timestamp, activeCalendarId, calendars } = get();
@@ -613,7 +626,8 @@ export const useClockStore = create<ClockState>()(
                 activeCalendarId: state.activeCalendarId,
                 calendars: state.calendars,
                 availableCalendars: state.availableCalendars,
-                isClockProjected: state.isClockProjected
+                isClockProjected: state.isClockProjected,
+                sonnerieDuMinuteur: state.sonnerieDuMinuteur
             }),
             /*
               **Un horodatage déjà corrompu ne doit pas revenir au démarrage.**

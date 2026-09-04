@@ -89,6 +89,7 @@ const MapControls: React.FC = () => {
         isGridEnabled, setGridEnabled,
         gridSize, setGridSize,
         gridOpacity, setGridOpacity,
+        gridColor, setGridColor,
         weatherType, setWeather,
         weatherIntensity,
         timeOfDay, setTimeOfDay,
@@ -743,6 +744,41 @@ const MapControls: React.FC = () => {
                                     onChange={(e) => setGridOpacity(parseFloat(e.target.value))}
                                     className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
                                 />
+                            </div>
+
+                            {/*
+                              **La couleur de grille, enfin offerte** (point M5,
+                              2026-09-05). `setGridColor` existait depuis
+                              toujours, la couleur voyageait dans les presets et
+                              jusqu'à l'écran des joueurs — mais **aucun écran ne
+                              l'appelait**, et la grille était blanche pour tout
+                              le monde. *Toute la chaîne était là sauf le bouton
+                              au bout.*
+
+                              Le blanc reste le défaut : c'est ce que voient les
+                              tables d'aujourd'hui, et rien ne doit bouger chez
+                              elles.
+                            */}
+                            <div className="flex items-center justify-between gap-3">
+                                <span className="text-[10px] text-slate-400">{t('map.sidebar.grid.color')}</span>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="color"
+                                        value={gridColor}
+                                        title={t('map.sidebar.grid.color')}
+                                        aria-label={t('map.sidebar.grid.color')}
+                                        onChange={(e) => setGridColor(e.target.value)}
+                                        className="w-8 h-6 rounded cursor-pointer bg-transparent border border-app-border"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setGridColor('#ffffff')}
+                                        title={t('map.sidebar.grid.color_reset')}
+                                        className="text-[9px] uppercase tracking-wider text-slate-600 hover:text-slate-300 transition-colors"
+                                    >
+                                        {t('map.sidebar.grid.color_reset_short')}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}

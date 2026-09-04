@@ -126,12 +126,16 @@ et vos zones sur la carte entière, rallumez-le, et jouez. Les joueurs n'ont rie
 - **Taille de Grille** — le côté d'une case en pixels de l'image. C'est le seul réglage à ajuster
   avec soin : il conditionne l'alignement des pions.
 - **Opacité** — pour que le quadrillage se voie sans écraser le dessin.
+- **Couleur** — un sélecteur, et un lien pour revenir au blanc.
 
-> ⛔ **Il n'y a pas de réglage de couleur.** Cette page en promettait un (« blanc / noir ») : il
-> n'existe dans aucun écran. La grille est **blanche**, et son opacité est le seul moyen de
-> l'atténuer.
+> ✅ **La couleur de grille existe depuis le 2026-09-05.** Elle était promise par ce guide et
+> n'existait dans aucun écran : la grille était blanche pour tout le monde. *Toute la chaîne était
+> pourtant là* — le magasin, les presets, la projection jusqu'à l'écran des joueurs. Il ne manquait
+> que le bouton au bout.
+>
+> Le blanc reste le défaut : rien ne change sur les cartes d'aujourd'hui.
 
-La grille suit la projection : taille, opacité et activation partent chez les joueurs.
+La grille suit la projection : taille, opacité, couleur et activation partent chez les joueurs.
 
 ---
 
@@ -417,3 +421,6 @@ de données.** Gardez les images sources ailleurs, elles, sont sauvegardées par
 panoramique, ESC), et six fonctions qui n'y figuraient pas ajoutées : l'heure du jour, les effets
 magiques, l'audio de la carte, le tour de combat, les gestes sur un pion, et le fait que les joueurs
 déplacent les pions — chacune avec sa propre section.*
+
+*Le 2026-09-05, **la couleur de grille a cessé d'être une affirmation fausse** : elle a obtenu son
+sélecteur. Des cinq, c'était la seule dont tout le reste existait déjà.*

@@ -675,6 +675,19 @@ export const useMapStore = create<MapState>()(
             */
             storage: stockageLocalDuMJ(),
             version: 1,
+            /*
+              **Ce qui n'est pas ici ne survit pas au redémarrage, et c'est
+              voulu pour `magicEffects`** (point M6, écrit le 2026-09-05).
+
+              Les effets magiques sont posés pendant un combat et valent pour
+              ce combat : *rouvrir une partie sous la boule de feu de la semaine
+              dernière n'aurait aucun sens.* Ils voyagent dans les presets de
+              carte — c'est là qu'un effet permanent se range, un cercle de
+              protection gravé dans le décor.
+
+              L'absence était juste ; rien ne la disait. Une omission qui a
+              l'air d'un oubli finit par être « corrigée » par quelqu'un.
+            */
             partialize: (state) => ({
                 mapUrl: state.mapUrl,
                 mapName: state.mapName,

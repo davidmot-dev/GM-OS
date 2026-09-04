@@ -5,6 +5,7 @@ import type { MediaType, MediaItem } from '../stores/useMediaStore';
 import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
 import { usagesDesMedias } from '../services/proprietairesDesMedias';
 import { filtreDeSelection } from '../stores/typesDeMedia';
+import { importerPlusieursMedias } from './media/importerPlusieursMedias';
 import { gmPrompt } from '../stores/useModalStore';
 import { gmToast } from '../stores/useToastStore';
 import { mediasRestituables, restaurerLesMedias } from '../modules/session/logic/MiroirDesMedias';
@@ -155,40 +156,43 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         });
     };
 
+    /**
+     * **Le Hub prend plusieurs fichiers d'un coup** (point H8, 2026-09-05).
+     *
+     * Il n'en lisait qu'un — `files?.[0]` — alors que le sélecteur en aurait
+     * accepté autant qu'on veut. Ranger une sonothèque se faisait donc fichier
+     * par fichier, avec une fenêtre de sélection à rouvrir entre chaque.
+     *
+     * La règle elle-même vit dans `importerPlusieursMedias`, où elle est
+     * testée : *une logique cachée dans un composant n'est couverte par rien.*
+     *
+     * ⚠️ **Le contrôle de doublon porte sur le nom ET la taille**, pas sur le
+     * contenu : une empreinte demanderait de relire toute la base à chaque
+     * import. Deux fichiers de même nom et de même octet près sont le même
+     * fichier dans tous les cas qui se produisent vraiment. *Et il avertit, il
+     * n'interdit pas* — le meneur peut vouloir la copie, une variante
+     * retouchée sous le même nom par exemple.
+     */
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        /*
-          **Le Hub ne détectait aucun doublon.** Deux imports du même fichier
-          donnaient deux entrées, deux identifiants et deux fois la place — sans
-          un mot. Sur une bibliothèque de 261 Mo, c'est de la place perdue qu'on
-          ne retrouve jamais, puisque rien ne permet de reconnaître les deux
-          copies l'une de l'autre une fois rangées.
-
-          **Le contrôle porte sur le nom ET la taille**, pas sur le contenu :
-          une empreinte demanderait de relire chaque fichier de la base à chaque
-          import. Deux fichiers de même nom et de même octet près sont le même
-          fichier dans tous les cas qui se produisent vraiment.
-
-          *Et il avertit, il n'interdit pas.* Le meneur peut vouloir la copie —
-          une variante retouchée sous le même nom, par exemple.
-        */
-        const doublon = mediaList.find(m => m.name === file.name && m.size === file.size);
-        if (doublon && !confirm(t('mediaBrowser.duplicateConfirm', { name: file.name }))) {
-            if (fileInputRef.current) fileInputRef.current.value = '';
-            return;
-        }
+        const fichiers = Array.from(e.target.files ?? []);
+        if (fichiers.length === 0) return;
 
         setIsUploading(true);
-        try {
-            const campaignIds = activeCampaignId ? [activeCampaignId] : [];
-            await addMedia(file, [], campaignIds);
-        } catch (err) {
-            alert(`${t('error_save')} : ${err}`);
-        } finally {
-            setIsUploading(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
+        const campaignIds = activeCampaignId ? [activeCampaignId] : [];
+
+        const resultat = await importerPlusieursMedias(fichiers, {
+            existants: mediaList,
+            ajouter: (fichier) => addMedia(fichier, [], campaignIds),
+            demanderPourLeDoublon: (nom) => confirm(t('mediaBrowser.duplicateConfirm', { name: nom })),
+        });
+
+        setIsUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+
+        if (resultat.echecs.length > 0) {
+            alert(`${t('error_save')} : ${resultat.echecs.join(', ')}`);
+        } else if (resultat.ranges > 1) {
+            gmToast(t('mediaBrowser.importDone', { count: resultat.ranges }), 'success');
         }
     };
 
@@ -599,12 +603,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             <label className="bg-accent hover:bg-accent/80 text-app-bg px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
                                 <UploadCloud size={18} className="group-hover:translate-y-[-2px] transition-transform duration-500" />
                                 {isUploading ? t('mediaBrowser.uploadingAsset') : t('mediaBrowser.importAsset')}
-                                <input 
-                                    type="file" 
-                                    ref={fileInputRef} 
-                                    onChange={handleUpload} 
-                                    className="hidden" 
-                                    accept={filtreDeSelection(allowedTypes)} 
+                                <input
+                                    type="file"
+                                    multiple
+                                    ref={fileInputRef}
+                                    onChange={handleUpload}
+                                    className="hidden"
+                                    accept={filtreDeSelection(allowedTypes)}
                                 />
                             </label>
 

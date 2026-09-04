@@ -28,6 +28,17 @@ Une fenêtre plein écran, le **Nexus HUD**, suit le travail. Il traverse ces é
 
 Un sélecteur vous demande où poser le fichier.
 
+> ✅ **Une case « archive légère » est offerte depuis le 2026-09-05**, juste au-dessus des deux
+> boutons. Cochée, l'archive part **sans les images ni les sons** : le JSON seul, quelques centaines
+> de kilo-octets au lieu de quelques centaines de mégaoctets. C'est ce qu'il faut pour envoyer une
+> campagne par courriel, ou pour une copie de travail.
+>
+> Elle est décochée par défaut et **ne se retient pas d'une fois sur l'autre** : emporter les médias
+> est ce qu'on veut presque toujours, et une case qui resterait cochée produirait un jour une
+> archive vide qu'on croit complète.
+>
+> *L'option existait dans le code depuis le début et aucun écran ne la passait.*
+
 ### L'arrêt sur les liens distants
 
 Si des images pointent vers Internet (une URL Pinterest, Unsplash…), le HUD s'interrompt et propose :
@@ -138,8 +149,13 @@ Deux inclusions qui surprennent :
 <!-- -->
 
 > ⚠️ **L'archive emporte TOUTES vos ambiances sonores et TOUTES vos playlists**, pas seulement
-> celles de la campagne. Le code le dit explicitement : elles sont considérées comme
-> l'environnement de jeu du meneur.
+> celles de la campagne — le même orage sert dans trois campagnes, et elles sont l'environnement de
+> jeu du meneur plus que celui d'une partie.
+>
+> **Revu le 2026-09-05 et laissé large**, pour une raison qui n'existait pas quand ce code a été
+> écrit : depuis le 04/09, **l'import fusionne au lieu de remplacer**. Une bibliothèque large qui
+> arrive chez quelqu'un ne détruit donc plus la sienne, elle s'y ajoute. C'était le danger, il est
+> fermé — reste de l'encombrement, ce qui n'est pas la même chose qu'une perte.
 
 ### ⛔ Ce qui ne part pas, ou ne revient pas
 

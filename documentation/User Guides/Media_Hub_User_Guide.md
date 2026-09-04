@@ -37,6 +37,15 @@ sons, vidéos et documents ensemble. C'est le mode « ranger ma bibliothèque »
 
 **Importer Asset Tactique**, en bas à droite, ouvre le sélecteur de fichiers de votre système.
 
+> ✅ **Vous pouvez en choisir plusieurs d'un coup depuis le 2026-09-05.** Le Hub n'en prenait qu'un,
+> ce qui obligeait à rouvrir la fenêtre entre chaque fichier — ranger une sonothèque prenait la
+> soirée.
+>
+> **Un fichier refusé n'arrête pas les autres** : les vingt-neuf restants entrent, et un message
+> nomme celui qui a échoué. *Un import qui abandonne au premier problème oblige à tout recommencer
+> en devinant où il s'est arrêté.* La question du doublon, elle, se pose fichier par fichier — dire
+> non à l'un ne saute que celui-là.
+
 | Famille | Reconnue par |
 | :--- | :--- |
 | **Audio** | le type du fichier (`audio/…`) — MP3, WAV, OGG, M4A… |

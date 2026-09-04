@@ -70,9 +70,11 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 > vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde — **troisième occurrence**
 > de cette famille après le faux backup GitHub et Map-OS.
 >
-> ✅ **Et la voie B est traitée jusqu'à P3 bis, le même soir** — l'import de campagne qui effaçait
-> la SoundBoard, le brouillard périmé chez les joueurs, la coupure du son qui repartait à plein
-> volume, et les trois décisions de table. **Reste P4**, le ménage.
+> ⭐ **ET LA VOIE B EST CLOSE** — le 4 septembre au soir pour les rangs P1 à P3 bis, le 5 pour le
+> ménage. L'import de campagne qui effaçait la SoundBoard, le brouillard périmé chez les joueurs, la
+> coupure du son qui repartait à plein volume, les trois décisions de table, et les neuf points de
+> ménage. **Les cent deux trouvailles sont traitées** : réparées, tranchées, ou documentées avec
+> leur raison.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -244,17 +246,28 @@ close par un refus — ce qui est une réponse, pas un report.*
 | ⚠️ **N5** | L'archive emportait les **PNJ d'autres campagnes** entiers, notes de MJ comprises. | **caviardées — le réseau reste, les secrets restent chez vous** |
 | **M4** | **N'importe quel joueur déplace n'importe quel pion.** | **laissé ouvert, et le guide le dit comme un choix** |
 
-### P4 — Ménage
+### ✅ P4 — Ménage : **fait, et la voie B est close**
 
-| # | Quoi |
-| --- | --- |
-| **M5 · C4 · A10** | ⭐ **Trois réglages déclarés qu'aucun écran n'offre** — couleur de grille, accélération du temps, rapport de tamisage. *Une seule passe : on les expose, ou on les retire.* |
-| **C3** | `ChimeEngine` : une cloche entièrement écrite, sans aucun appelant. La fin d'un minuteur mériterait un son. |
-| **M6** | Les effets magiques ne sont pas persistés — probablement voulu, mais rien ne le dit. |
-| **N6** | `includeSounds` déclaré et jamais lu ; `includeAssets` lu mais jamais passé. |
-| **N8** | L'export Nexus emporte **toutes** les ambiances et playlists, campagne ou pas. |
-| **H8** | Le Media Hub n'importe **qu'un fichier à la fois**. |
-| **A3 · A5 · A6 · A8** | Documentés, rien à coder. |
+*Fait le 2026-09-05, détail au § 17 du registre.*
+
+| # | Quoi | ✅ |
+| --- | --- | --- |
+| ⭐ **M5 · A10** | **Deux réglages dont toute la chaîne existait sauf le bouton au bout** — couleur de grille, rapport de tamisage. | **exposés** : un sélecteur de couleur, un curseur 5-60 % |
+| ⛔ **C4** | `timeMultiplier` n'était **lu par personne** — l'exposer aurait demandé d'écrire l'accélération du temps. | **retiré** |
+| ⭐ **C3** | `ChimeEngine`, écrit en entier et sans appelant : aucune sonnerie n'existait dans GM-OS. | **branchée à zéro, avec son interrupteur** |
+| **A10 bis** | `getBackupData()` du bandeau audio, sans appelant. | **retiré, et non branché** — ces valeurs décrivent une pièce, pas un univers |
+| **N6** | `includeSounds` jamais lu ; `includeAssets` lu et jamais passé. | **une case « archive légère »**, et `includeSounds` retiré |
+| **N8** | L'export emporte **toutes** les ambiances et playlists. | **laissé large** — l'import fusionne depuis le 04/09, le danger est fermé |
+| **M6** | Les effets magiques ne sont pas persistés. | **l'intention écrite** dans `partialize` |
+| ⭐ **H8** | Le Media Hub n'importait **qu'un fichier à la fois**. | **`multiple`**, et la boucle extraite et testée |
+| **A3 · A5 · A6 · A8** | Documentés dans les guides. | **rien à coder** |
+
+**Ce que ce rang a appris.** *« Réglage déclaré, jamais offert » n'est pas un diagnostic* — c'en est
+trois. M5 et A10 avaient toute leur chaîne ; C4 n'avait que son nom. Les ranger ensemble était juste
+comme relevé et faux comme plan. **On ne le voit qu'en ouvrant le code, jamais en relisant la
+liste.**
+
+*15 tests neufs, `npm run validate` vert, 3 566 tests.*
 
 ---
 

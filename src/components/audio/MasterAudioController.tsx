@@ -12,8 +12,10 @@ const MasterAudioController: React.FC = () => {
         masterVolume, 
         setMasterVolume, 
         basculerLaCoupure,
-        isFocusMode, 
-        toggleFocusMode 
+        isFocusMode,
+        toggleFocusMode,
+        focusDuckingRatio,
+        setFocusDuckingRatio
     } = useAudioMasterStore();
     const { theme } = useSessionStore();
 
@@ -118,6 +120,43 @@ const MasterAudioController: React.FC = () => {
                 {/* Micro-animation indicator */}
                 <div className={`w-1 h-1 rounded-full absolute right-2 top-2 ${isFocusMode ? 'bg-accent animate-ping' : 'bg-app-text/10'}`} />
             </button>
+
+            {/*
+              **À quel point le Focus baisse le reste** (point A10, 2026-09-05).
+
+              `setFocusDuckingRatio` existait depuis toujours et les trois
+              moteurs — ambiance, musique, bruitages — lisaient déjà la valeur.
+              **Aucun écran ne l'appelait**, et le rapport valait donc toujours
+              0,1 : le Focus coupait tout à 10 %, ce qui est très bas pour un
+              aparté et beaucoup trop haut pour une révélation. *Toute la chaîne
+              était là sauf le bouton au bout.*
+
+              Le curseur n'apparaît **que quand le Focus est allumé** : c'est le
+              seul moment où il veut dire quelque chose, et une barre de plus en
+              permanence dans ce bandeau serait du bruit.
+
+              Bornes 5 % à 60 % : au-delà, le Focus ne se distingue plus de
+              l'absence de Focus, et en deçà de 5 % il vaut mieux couper.
+            */}
+            {isFocusMode && (
+                <div className="flex flex-col gap-1 min-w-[110px]">
+                    <div className="flex justify-between items-center gap-2 text-[9px] uppercase tracking-widest text-accent/70">
+                        <span>{t('modules:session.audio_master.focus_ducking')}</span>
+                        <span className="font-mono">{Math.round(focusDuckingRatio * 100)}%</span>
+                    </div>
+                    <input
+                        type="range"
+                        min="0.05"
+                        max="0.6"
+                        step="0.05"
+                        value={focusDuckingRatio}
+                        title={t('modules:session.audio_master.focus_ducking_hint')}
+                        aria-label={t('modules:session.audio_master.focus_ducking')}
+                        onChange={(e) => setFocusDuckingRatio(parseFloat(e.target.value))}
+                        className="w-full h-1 accent-accent bg-app-bg/60 rounded-lg cursor-pointer"
+                    />
+                </div>
+            )}
 
             {/* Panic Button / Stop All */}
             <button

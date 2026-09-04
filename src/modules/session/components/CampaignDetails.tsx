@@ -28,11 +28,24 @@ const CampaignDetails: React.FC = () => {
     // de retourner une Promise résolue par l'interaction utilisateur
     const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
 
+    /*
+      **L'archive peut partir sans ses médias** (point N6, 2026-09-05).
+      `includeAssets` était lu par `exportBundle` depuis toujours, mais **aucun
+      écran ne le passait** : le bundle emportait donc toujours tout. Une
+      campagne bien illustrée pèse des centaines de mégaoctets, ce qui ne
+      s'envoie pas par courriel.
+
+      Le choix ne se retient pas d'une fois sur l'autre : *emporter les médias
+      est ce qu'on veut presque toujours*, et une case qui reste décochée
+      produirait un jour une archive vide qu'on croit complète.
+    */
+    const [emporterLesMedias, setEmporterLesMedias] = useState(true);
+
     const handleExport = async () => {
         if (!activeCampaignId) return;
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
-        await nexusService.exportBundle(activeCampaignId);
+        await nexusService.exportBundle(activeCampaignId, { includeAssets: emporterLesMedias });
         setTimeout(() => setNexusProgress(null), 3000);
     };
 
@@ -380,6 +393,16 @@ const CampaignDetails: React.FC = () => {
                         </span>
                     )}
                 </div>
+
+                <label className="flex items-center gap-2 mb-3 text-[11px] text-app-text/50 hover:text-app-text/80 transition-colors cursor-pointer select-none">
+                    <input
+                        type="checkbox"
+                        checked={!emporterLesMedias}
+                        onChange={(e) => setEmporterLesMedias(!e.target.checked)}
+                        className="accent-amber-500"
+                    />
+                    <span>{t('modules:session.campaign_details.actions.nexus_light')}</span>
+                </label>
 
                 {/* Actions */}
                 <div className="flex gap-3">
