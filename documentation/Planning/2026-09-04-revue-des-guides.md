@@ -204,7 +204,7 @@ détail et les ancres sont au § 12 du registre.*
 | **A1** | Aucune ambiance n'arrivait sur la télécommande, et le code qui savait en lancer une était inatteignable. | **les deux moitiés construites** |
 | **M3** | Changer de carte en cours de projection laissait aux joueurs le brouillard de la précédente. | **le brouillard part toujours, `null` compris** |
 
-### ✅ P3 — L'écran dit autre chose que ce qu'il fait : **les seize sont faits**
+### ✅ P3 — L'écran dit autre chose que ce qu'il fait : **les quatorze sont faits**
 
 *Réparés le 2026-09-04, détail au § 15 du registre. **Les quatre arbitrages ont été tranchés par
 David le même soir** — ils sont marqués ⚖️.*
@@ -226,10 +226,10 @@ David le même soir** — ils sont marqués ⚖️.*
 | ⛔ **D4** | **La couleur déclarée d'une jauge n'était lue que par un style sur trois** — et l'exemple de la Forge garantissait qu'elle serait ignorée. | **les trois styles, hexadécimal compris** |
 | **G8** | `clearAll` d'Image-OS était du **code mort** dont la confirmation mentait. | **retiré** |
 
-**Ce que ce rang a appris.** Trois défauts sur seize étaient *un chemin qui s'arrête avant le
+**Ce que ce rang a appris.** Trois défauts sur quatorze étaient *un chemin qui s'arrête avant le
 moteur* — D4, A7, A4 —, le motif que le pupitre de dés a déjà payé six fois. **Six autres n'étaient
-qu'un mot** : un bouton, un badge, une ligne de diagnostic qui nommaient autre chose que leur
-travail.
+qu'un mot** : un bouton, un badge, une ligne de diagnostic, un libellé qui nommaient autre chose que
+leur travail.
 
 *17 tests neufs, `npm run validate` vert, 3 540 tests.*
 

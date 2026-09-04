@@ -768,9 +768,9 @@ qui n'a pas de second geste. Les deux coexistent désormais au lieu que l'un ser
 **Ce qui reste de la voie B** : les rangs P3 (l'écran dit autre chose que ce qu'il fait, et les
 trois décisions de table) et P4 (le ménage).
 
-### 15 · ✅ Les seize P3, réparés (2026-09-04)
+### 15 · ✅ Les quatorze P3, réparés (2026-09-04)
 
-Le rang P3 était *« l'écran dit autre chose que ce qu'il fait »*. Douze points étaient clairs ;
+Le rang P3 était *« l'écran dit autre chose que ce qu'il fait »*. Dix points étaient clairs ;
 quatre demandaient un arbitrage, **et David a tranché les quatre le même soir**.
 
 #### Ce qui ne demandait qu'un mot juste
@@ -802,12 +802,12 @@ quatre demandaient un arbitrage, **et David a tranché les quatre le même soir*
 | **V2** | **Ajouter à la liste des voix ceux qui ONT déjà un profil.** | On ne lisait que le mémo de NPC-OS — le module qui porte *un* PNJ — quand la galerie en porte plus de cent, et que ce sont eux qui peuvent avoir un profil. La liste ne grossit que du travail déjà fait, **et la campagne active fait le tri**. |
 | **F3** | **Mémoriser le tirage par champ.** | `roll()` appelait `Math.random()` à chaque évaluation : taper dans un champ relançait les dés de tous les autres. *Un total qui bouge tout seul n'est pas un calcul, c'est un bruit.* La clé est `<fiche>:<champ>|<formule>` — changer la formule invalide le tirage, ce qui est juste. Un appel **sans nom de champ lance vraiment** : le comportement d'origine est intact pour tout le reste du code. 9 tests. |
 
-**Ce que ce rang a coûté en leçons.** Trois défauts sur seize étaient *un chemin qui s'arrête avant
-le moteur* — D4 (le style ignore la couleur), A7 (le bon tableau, mal trié), A4 (la bonne bascule,
-la mauvaise valeur). C'est le motif que le pupitre de dés a déjà payé six fois. **Et trois autres
-étaient un mot** : un bouton, un badge, une ligne de diagnostic qui nommaient autre chose que ce
-qu'ils font. *Écrire ce qu'un module fait reste le meilleur détecteur de défaut employé sur ce
-dépôt.*
+**Ce que ce rang a coûté en leçons.** Trois défauts sur quatorze étaient *un chemin qui s'arrête
+avant le moteur* — D4 (le style ignore la couleur), A7 (le bon tableau, mal trié), A4 (la bonne
+bascule, la mauvaise valeur). C'est le motif que le pupitre de dés a déjà payé six fois. **Et six
+autres n'étaient qu'un mot** : un bouton, un badge, une ligne de diagnostic, un libellé qui
+nommaient autre chose que ce qu'ils font. *Écrire ce qu'un module fait reste le meilleur détecteur
+de défaut employé sur ce dépôt.*
 
 **Vérifié** : `tsc -b` propre, 17 tests neufs, **3 540 tests au vert**.
 
