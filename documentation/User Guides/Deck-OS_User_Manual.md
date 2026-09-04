@@ -1,6 +1,6 @@
 # Manuel Utilisateur : Deck-OS & Oracle
 
-Bienvenue dans le guide complet de **Deck-OS**, votre moteur de cartes interactif pour GM-OS v5. Ce manuel vous guide pas à pas pour une maîtrise totale de vos paquets de cartes.
+Bienvenue dans le guide complet de **Deck-OS**, votre moteur de cartes interactif pour GM-OS. Ce manuel vous guide pas à pas pour une maîtrise totale de vos paquets de cartes.
 
 ---
 
@@ -33,6 +33,39 @@ Le mode **Seer's Eye** (icône de l'œil) est votre outil de projection vers le 
 2.  **Affichage Joueur** : La carte actuelle apparaît instantanément sur tous les écrans connectés.
 3.  **Mode Oracle (Immersif)** : Les joueurs ne voient **que l'image**. Le nom, la description et les statistiques techniques sont masqués pour garder le mystère.
 4.  **Changement de Carte** : Tirez une nouvelle carte pendant que l'œil est actif ; elle se mettra à jour automatiquement chez les joueurs.
+
+---
+
+## 🃏 Les cartes qu'un joueur garde en main
+
+> ⭐ **Livré et éprouvé en partie réelle le 2026-08-30.**
+
+Une carte tirée peut **quitter le paquet** pour rejoindre la main d'un joueur. Elle apparaît alors
+dans l'onglet **Cartes** de sa tablette, et elle y reste — d'une séance à l'autre.
+
+### Ce qu'il faut comprendre
+
+- **Une carte gardée est un quatrième tas.** Pas un objet d'inventaire : le **paquet** détient la
+  vérité. *Un inventaire aurait dû croire l'expéditeur sur parole.*
+- **Elle sort des trois autres tas.** Un même index ne peut pas être à la fois dans la défausse et
+  dans la main de quelqu'un — sinon deux endroits diraient la vérité sur la même carte.
+- **Les paquets sont fermés par défaut.** Un joueur ne pioche que si vous l'ouvrez.
+- **Un don se demande.** Donner une carte à un autre joueur envoie une **demande** ; le destinataire
+  accepte ou refuse. Personne d'autre que lui ne peut accepter à sa place.
+
+### Si un geste est refusé
+
+Trois couches d'autorisation se prononcent, et elles ne disent pas la même chose :
+
+1. **Qui vous êtes** — meneur ou joueur.
+2. **Tenez-vous vraiment cette carte ?**
+3. **Ce type de carte existe-t-il ?**
+
+Un refus est presque toujours l'une des trois qui fait son travail.
+
+> ⚠️ **La liste « Donner à » du meneur ne filtre pas par connexion, celle des joueurs si.** C'est
+> délibéré : le meneur doit pouvoir attribuer une carte à un joueur absent ce soir-là. **Ne pas les
+> aligner.**
 
 ---
 

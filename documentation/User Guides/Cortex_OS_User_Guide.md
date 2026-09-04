@@ -1,6 +1,6 @@
 # 🧠 Guide Utilisateur : Cortex OS (Tactical AI)
 
-**Cortex OS** est le "cerveau" invisible de GM-OS v5. C'est un moteur d'analyse en temps réel qui surveille votre table de jeu pour vous fournir des conseils tactiques, automatiser les règles complexes et orchestrer l'immersion matérielle (lumières et sons).
+**Cortex OS** est le "cerveau" invisible de GM-OS. C'est un moteur d'analyse en temps réel qui surveille votre table de jeu pour vous fournir des conseils tactiques, automatiser les règles complexes et orchestrer l'immersion matérielle (lumières et sons).
 
 ![Aperçu du module Cortex OS](cortex_mockup.png)
 

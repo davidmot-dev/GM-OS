@@ -1,6 +1,6 @@
 # 🧠 Guide Utilisateur : Rule Engine & The Forge
 
-Le **Rule Engine** (Le Cerveau) et **The Forge** (L'Atelier) forment le cœur technique de GM-OS v5. Ils permettent de définir comment le système de jeu fonctionne, comment les dés sont lancés, et comment l'IA doit se comporter.
+Le **Rule Engine** (Le Cerveau) et **The Forge** (L'Atelier) forment le cœur technique de GM-OS. Ils permettent de définir comment le système de jeu fonctionne, comment les dés sont lancés, et comment l'IA doit se comporter.
 
 ---
 

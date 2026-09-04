@@ -1,6 +1,6 @@
 # 🎲 Guide Utilisateur : Table-OS
 
-**Table-OS** est le moteur de génération de contenu aléatoire de GM-OS v5. Il permet de gérer des milliers d'entrées (Butins, Rencontres, Météo, Oracles) et de les intégrer instantanément dans votre narration.
+**Table-OS** est le moteur de génération de contenu aléatoire de GM-OS. Il permet de gérer des milliers d'entrées (Butins, Rencontres, Météo, Oracles) et de les intégrer instantanément dans votre narration.
 
 ---
 

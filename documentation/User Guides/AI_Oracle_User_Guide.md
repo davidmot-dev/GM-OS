@@ -1,6 +1,6 @@
 # 🧠 Guide Utilisateur : AI Oracle (Gems)
 
-L'**Oracle AI** est votre co-pilote narratif et technique dans GM-OS v5. Basé sur la technologie NotebookLM, il est capable de répondre à vos questions en se basant précisément sur vos propres règles de jeu, vos scénarios et vos notes de campagne.
+L'**Oracle AI** est votre co-pilote narratif et technique dans GM-OS. Basé sur la technologie NotebookLM, il est capable de répondre à vos questions en se basant précisément sur vos propres règles de jeu, vos scénarios et vos notes de campagne.
 
 ![Sélecteur de Persona de l'Oracle](oracle_mockup.png)
 

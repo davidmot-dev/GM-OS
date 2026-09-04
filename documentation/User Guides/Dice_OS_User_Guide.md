@@ -1,6 +1,6 @@
 # 🎲 Guide Utilisateur : Dice OS
 
-**Dice OS** est le moteur de probabilités central de GM-OS v5. Plus qu'un simple lanceur de dés, c'est un outil universel capable de gérer les mécaniques de centaines de jeux de rôle, tout en restant connecté à l'action tactique sur votre carte.
+**Dice OS** est le moteur de probabilités central de GM-OS. Plus qu'un simple lanceur de dés, c'est un outil universel capable de gérer les mécaniques de centaines de jeux de rôle, tout en restant connecté à l'action tactique sur votre carte.
 
 ![Aperçu du module Dice OS](dice_mockup.png)
 
@@ -27,7 +27,36 @@ Dice OS supporte nativement une immense variété de systèmes :
 | **Year Zero échelonné** | Deux dés de **tailles différentes** (attribut + compétence), la lettre décidant du dé. | Blade Runner |
 | **FATE / Fudge** | Utilise des dés +, -, O pour un résultat narratif. | Fate |
 | **Rolemaster** | Dés 100 "ouverts" avec relances sur les hauts et bas scores. | Rolemaster |
+| **2d20** | Deux dés vingt comptés en réussites sous un seuil, le seuil venant de la fiche. | Dune, *2d20* |
+| **Pourcentage (d100)** | Un dé cent sous une cible, gradué en **six degrés**. | Rêves de Dragons, L'Appel de Cthulhu, RuneQuest |
 | **Formule Libre** | Saisie manuelle de formules complexes. | `2d6 + 1d4 - 2` |
+
+> ⚠️ **Le seuil n'est pas toujours un nombre fixe.** Chez Dune il vaut une compétence **plus** un
+> principe, choisis test par test, de 8 à 16 : un pilote peut donc décrire **de quoi un jet se
+> compose**, en termes de champs de la fiche, au lieu d'inscrire un minimum qui sous-estimerait
+> tous les personnages.
+
+## 📊 Les six degrés de réussite
+
+Un jet ne rend pas « réussi » ou « raté » : il rend **un degré sur une échelle commune**, du
+meilleur au pire.
+
+1. Réussite particulière
+2. Réussite significative
+3. Réussite normale
+4. Échec normal
+5. Échec particulier
+6. Échec total
+
+> ⭐ **L'échelle est commune, les nombres appartiennent au jeu.** L'Appel de Cthulhu et RuneQuest
+> graduent en fractions du pourcentage ; Dune a son critique et sa complication ; Alien distingue
+> réussite et surplus. Chaque jeu apporte **ses seuils** ; les six noms, eux, sont les mêmes partout
+> — le meneur et la tablette d'un joueur ne peuvent donc pas dire deux choses différentes du même
+> jet.
+
+⚠️ **La table du livre fait foi contre la phrase qui prétend la résumer.** Les tables de conversion
+sont transcrites telles quelles, exceptions comprises — un résumé qui « a l'air juste » produit des
+degrés faux qu'aucune partie ne rattrape.
 
 ## 🎚️ Les Dés Échelonnés (Blade Runner)
 

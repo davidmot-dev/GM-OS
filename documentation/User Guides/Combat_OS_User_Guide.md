@@ -21,7 +21,29 @@ Vous avez deux méthodes pour définir l'ordre de combat :
 - **Jet Système (Auto-Initiative)** : 
     - **Standard** : Lance un dé (configurable, ex: d20) pour tous les combattants ayant une initiative à 0.
     - **Intelligent (Formula)** : Si un système de jeu (Driver) est actif, Combat OS utilise la formule officielle (ex: `1d10 + [DEX]`) ou un système de cartes.
-    - **Tri** : Le système trie automatiquement la liste selon les règles du driver (Croissant ou Décroissant).
+    - **Tri** : Le système trie automatiquement la liste selon les règles du driver (croissant ou
+      décroissant).
+
+### ⭐ Quand l'ordre ne se calcule pas : l'alternance
+
+Certains jeux **n'ordonnent pas** leurs combattants. Chez *Dune*, le meneur désigne qui ouvre, puis
+les activations **alternent entre les camps** ; un camp peut garder la main en payant.
+
+Un pilote peut donc déclarer un mode **alternance** plutôt qu'une formule. Le combat affiche alors
+le **camp qui a la main** — c'est chez lui qu'on choisit le prochain à agir — qui a déjà joué dans
+ce round, et combien de tours d'affilée le camp en cours a pris.
+
+- **Garder la main se paie**, sur une réserve de table : deux points d'Impulsion chez Dune, ou deux
+  points de Menace concédés au meneur.
+- **Le nombre de tours d'affilée est plafonné** par le pilote — chez Dune, deux : *« conserver
+  l'initiative est impossible tant qu'au moins un ennemi n'a pas agi ».*
+
+> ⚠️ **Deux camps, pas trois.** Le livre lui-même ne dit pas comment s'organise l'alternance si
+> plus de deux camps s'affrontent : les neutres rejoignent donc les adversaires. C'est faux, mais
+> **visible** — plutôt qu'un troisième camp qui n'aurait jamais la main.
+
+Sans déclaration, l'ordre reste celui de la formule : **tous les pilotes antérieurs continuent de
+fonctionner.**
 
 ## 🦶 Déroulement des Tours
 
@@ -32,12 +54,36 @@ Vous avez deux méthodes pour définir l'ordre de combat :
 
 ## 🩸 Santé et Statuts
 
+### ⭐ Cinq modèles de santé, pas seulement des points de vie
+
+Tous les jeux ne comptent pas la santé de la même façon. GM-OS en connaît **cinq**, et c'est le
+**pilote du jeu** qui décide lequel s'applique :
+
+| Modèle | Ce que l'écran montre | Pour quels jeux |
+| :--- | :--- | :--- |
+| **Points de vie** (`hp`) | `12/20` | Les jeux à jauge classique. |
+| **Horloge** (`clocks`) | `Horloge 3/6` | Vaincre comme une tâche étendue — Dune. |
+| **Cases** (`boxes`) | `Cases 2/5` | Les jeux à cases à cocher. |
+| **Blessures** (`wounds`) | le nom du palier atteint | Les jeux à échelle nommée. |
+| **Anatomie** (`anatomy`) | `2 atteintes` | Les jeux à localisation. |
+
+> ⚠️ **La santé de départ ne vaut pas dix pour tout le monde.** Un pilote peut déclarer **où la
+> lire sur la fiche**, en formule : chez *Alien*, la Santé vaut la **Force** du personnage — deux à
+> cinq. Sans cette déclaration, chaque écran garde la valeur qu'il fournissait. Idem pour l'horloge
+> de Dune, dont le nombre de segments **se lit sur la compétence défensive de la cible**, de quatre
+> à huit : un duelliste médiocre et un maître ne tombent pas au même rythme.
+
+Si votre jeu affiche des points de vie là où il devrait afficher autre chose, c'est le **pilote**
+qu'il faut corriger, dans la Forge — pas le combat.
+
 ### Gestion des Statuts
 Ajoutez des icônes et des noms d'effets (ex: *Étourdi*, *En Feu*).
 - **Conflits Automatiques** : Le système possède une intelligence métier. Si vous ajoutez le statut "En Feu" à un personnage qui possède le statut "Mouillé", ce dernier sera automatiquement retiré.
 
-### Synchronisation des PV
-Modifiez les points de vie des participants durant le combat. Une fois l'affrontement terminé ou pendant une pause, cliquez sur **"Sync PV vers Session"** pour mettre à jour durablement les fiches de personnages (PJ) et d'entités (PNJ) dans la base de données de la campagne.
+### Synchronisation de la santé
+Modifiez la santé des participants pendant le combat. Une fois l'affrontement terminé ou pendant
+une pause, la synchronisation reporte durablement l'état sur les fiches des personnages joueurs et
+des entités de la campagne.
 
 ## 📑 Archive et Fin de Combat
 Le bouton **"Tout Effacer"** (Fin de Combat) déclenche plusieurs actions de session :

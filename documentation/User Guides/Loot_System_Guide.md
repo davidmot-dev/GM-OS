@@ -142,10 +142,20 @@ Voici comment est implémentée la table "Preuves du LAPD" :
 
 ## 5. Comment ajouter vos tables ?
 
-1.  Ouvrez `src/data/defaultGameDrivers.ts`.
-2.  Localisez le `gameDriver` de votre système (ex: `br-v1`).
-3.  Modifiez l'objet `loot.tables` en ajoutant vos nouvelles structures.
-4.  Relancez l'application. Les nouvelles tables apparaîtront dans le **LootRollPanel** de vos fiches de personnages.
+**Dans l'application, jamais dans les fichiers source** : Forge-OS → votre pilote → section
+**Butin** → *Créer une table*.
+
+1. Nommez la table et donnez-lui son nombre de **tirages** (`1`, `1d4+1`…).
+2. Choisissez son **mode** — un seul parmi la liste, ou chaque ligne a sa chance.
+3. Ajoutez ses entrées : type, nom, poids, quantité, puis rareté, valeur, masse et description.
+4. Les tables apparaissent aussitôt dans **Loot-OS → onglet Génération**.
+
+> ⛔ **Cette section décrivait jusqu'au 2026-09-04 une procédure impossible** : éditer
+> `src/data/defaultGameDrivers.ts` pour y modifier un objet `loot.tables`. Ce champ n'existe pas
+> (le pilote porte `lootTables`), **aucun pilote par défaut ne déclare de table de butin**, et le
+> `LootRollPanel` où les tables devaient apparaître n'était monté nulle part — il a été supprimé.
+> Les tables de butin ne viennent que d'une chose : **l'éditeur de la Forge**.
 
 > [!IMPORTANT]
-> Assurez-vous que les `id` sont uniques à travers l'ensemble du driver pour éviter les conflits lors de la résolution récursive.
+> Le tirage vous **dit** ce qu'il n'a pas trouvé — une table appelée qui n'existe plus, un oracle
+> illisible. Un tirage qui rend zéro objet sans expliquer pourquoi ne se répare jamais en séance.

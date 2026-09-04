@@ -1,6 +1,6 @@
 # 🧠 Guide Utilisateur : AI Oracle & NotebookLM
 
-L'**AI Oracle** est l'interface d'intelligence artificielle de GM-OS v5. Contrairement à une IA générique, l'Oracle est "augmenté" par vos propres données grâce à l'intégration profonde avec **NotebookLM** (via un bridge MCP).
+L'**AI Oracle** est l'interface d'intelligence artificielle de GM-OS. Contrairement à une IA générique, l'Oracle est "augmenté" par vos propres données grâce à l'intégration profonde avec **NotebookLM** (via un bridge MCP).
 
 ## 🌌 Le Concept : Le Cerveau de votre Monde
 

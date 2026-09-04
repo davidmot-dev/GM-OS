@@ -23,7 +23,7 @@ L'interface est conçue comme un pupitre de mixage vertical :
 - **Visualisation** : Chaque piste dispose d'un micro-analyseur de spectre pour confirmer visuellement quel son produit du bruit.
 
 ### Sommation Mono (Legacy Summing)
-GM-OS v5 intègre une technologie héritée de la v3 qui force la sommation mono des pistes d'ambiance. Cela garantit une parfaite clarté du son, peu importe la position des joueurs autour de la table, et évite les problèmes de phase dans les environnements acoustiques difficiles.
+GM-OS intègre une technologie héritée de la v3 qui force la sommation mono des pistes d'ambiance. Cela garantit une parfaite clarté du son, peu importe la position des joueurs autour de la table, et évite les problèmes de phase dans les environnements acoustiques difficiles.
 
 ## 🛡️ Univers & Thèmes (Presets)
 

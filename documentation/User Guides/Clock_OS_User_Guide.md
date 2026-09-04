@@ -1,6 +1,6 @@
 # ⏳ Guide Utilisateur : Clock-OS
 
-**Clock-OS** est le centre de gestion du temps et de la tension narrative de GM-OS v5. Que vous suiviez le temps réel, une durée précise via un minuteur, ou les siècles d'un monde fantastique, Clock-OS synchronise tout l'OS sur votre rythme.
+**Clock-OS** est le centre de gestion du temps et de la tension narrative de GM-OS. Que vous suiviez le temps réel, une durée précise via un minuteur, ou les siècles d'un monde fantastique, Clock-OS synchronise tout l'OS sur votre rythme.
 
 ---
 

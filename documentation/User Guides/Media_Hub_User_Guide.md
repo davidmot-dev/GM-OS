@@ -1,6 +1,6 @@
 # 🗄️ Guide Utilisateur : Media Hub
 
-Le **Media Hub** est la bibliothèque centrale de GM-OS v5. C'est ici que sont stockés, indexés et organisés tous les fichiers que vous utilisez dans vos sessions : illustrations, musiques, effets sonores, vidéos d'ambiance et documents de référence.
+Le **Media Hub** est la bibliothèque centrale de GM-OS. C'est ici que sont stockés, indexés et organisés tous les fichiers que vous utilisez dans vos sessions : illustrations, musiques, effets sonores, vidéos d'ambiance et documents de référence.
 
 ![Aperçu du Media Hub](media_hub_mockup.png)
 

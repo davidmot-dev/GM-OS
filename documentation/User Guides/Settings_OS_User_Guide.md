@@ -1,6 +1,6 @@
 # ⚙️ Guide Utilisateur : Paramètres de l'OS
 
-Le module **Paramètres de l'OS** est le centre de contrôle global de GM-OS v5. C'est ici que vous configurez l'esthétique de votre interface, votre matériel physique, vos services d'IA et votre **télécommande déportée**.
+Le module **Paramètres de l'OS** est le centre de contrôle global de GM-OS. C'est ici que vous configurez l'esthétique de votre interface, votre matériel physique, vos services d'IA et votre **télécommande déportée**.
 
 ---
 
@@ -76,12 +76,26 @@ Configurez le "cerveau" de votre OS :
 
 ---
 
-## 💾 Sauvegarde & Synchronisation (Git Cloud)
-GM-OS v5 assure la sécurité de vos données de campagne sans action manuelle :
-- **Sauvegarde Automatique** : À chaque modification majeure (création de PNJ, fin de session), l'OS synchronise vos données sur votre branche GitHub privée `data-sync`.
-- **Isolation Totale** : Vos données sont stockées séparément du code source pour une clarté maximale.
-- **Restauration** : En cas de changement de machine, l'OS récupère automatiquement votre dernier état synchronisé.
-- **Indicateur de Statut** : Surveillez l'icône de Cloud dans la barre de titre pour vérifier l'état de la synchronisation.
+## 💾 Sauvegarde automatique — **locale**
+
+GM-OS protège vos campagnes sans action de votre part :
+
+- **Où** : `C:\Projet_David\Security_Backup_GMOS`, **à côté** du dossier de l'application. Les
+  **douze** plus récentes sont conservées.
+- **Quand** : deux minutes après votre dernier changement, à la fermeture de l'application, avant
+  toute suppression de campagne, à la clôture d'une séance.
+- **Les images ont un miroir séparé**, incrémental : seules les nouveautés sont copiées.
+- **Restaurer reste votre geste** : vous choisissez votre fichier. Rien ne se restaure tout seul.
+
+> ⛔ **Cette section annonçait jusqu'au 2026-09-04 une synchronisation vers une branche GitHub
+> `data-sync`, avec restauration automatique au changement de machine. RIEN DE TOUT CELA N'EXISTE**,
+> et il ne faut surtout pas compter dessus. Ce mécanisme a **vidé l'installation** en mars 2026 :
+> la branche visée étant orpheline, git a supprimé tous les fichiers qui n'y existaient pas. Il a
+> été retiré, et **la sauvegarde actuelle n'exécute aucune commande de gestion de version, jamais**.
+>
+> Pour transporter une campagne d'une machine à l'autre, c'est [Nexus-OS](./Nexus_OS_User_Guide.md).
+
+→ [Guide de la sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md)
 
 ---
 

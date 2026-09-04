@@ -1,6 +1,6 @@
 # 📔 Guide Utilisateur : Module Obsidian
 
-Le module **Obsidian Bridge** permet d'intégrer vos notes personnelles de préparation directement dans l'interface de GM-OS v5. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et l'intelligence artificielle de l'Oracle.
+Le module **Obsidian Bridge** permet d'intégrer vos notes personnelles de préparation directement dans l'interface de GM-OS. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et l'intelligence artificielle de l'Oracle.
 
 ![Aperçu du module Obsidian](obsidian_mockup.png)
 

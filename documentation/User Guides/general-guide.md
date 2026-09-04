@@ -1,46 +1,101 @@
-# 📖 Guide de l'Utilisateur GM-OS v5
+# 📖 Par où entrer dans GM-OS
 
-Ce guide vous aide à tirer le meilleur parti des fonctionnalités avancées de GM-OS pour vos sessions de JdR.
-
----
-
-## 🎙️ Voice-OS & Profilage IA
-Voice-OS vous permet de transformer votre voix en temps réel pour incarner vos PNJ.
-
-- **Profilage Intelligent** : Dans la fiche d'un PNJ, cliquez sur "Générer Profil Vocal". L'IA (Ollama ou Gemini) analysera les caractéristiques du personnage pour suggérer des réglages optimaux (Pitch, Reverb, Distortion).
-- **Synchronisaton (Sync NPC)** : Activez cette option pour que le portrait du PNJ sur le **Player Hub** réagisse visuellement à votre intensité vocale.
-
-## 📱 Tablet Hub (Second Écran)
-Le Tablet Hub permet de déporter les informations critiques sur une tablette ou un smartphone.
-
-1. Cliquez sur l'icône **QR Code** dans la barre latérale.
-2. Scannez le code avec votre appareil mobile.
-3. Suivez l'Horloge, les Chronos et les Jauges de Tension en temps réel sans encombrer votre écran principal.
-
-## 🧠 AI Oracle (Cortex & NotebookLM)
-L'IA vous assiste dans la narration et les règles.
-
-Le **Cortex** est votre cerveau tactique. Il se manifeste de deux manières :
-1.  **Widget Cortex (Interface)** : Affiche en temps réel les distances entre les pions et les modificateurs de portée (v1.0).
-2.  **Assistant Tactique NPC (Combat)** : Sur chaque carte de PNJ dans Combat-OS, cliquez sur l'icône **Brain (Cerveau)**. L'IA analysera les PV, la cible et le positionnement du PNJ pour vous suggérer la meilleure action narrative ou tactique.
-
-> [!TIP]
-> Si vous utilisez Ollama en local, le Cortex v1.0 utilisera vos modèles locaux pour générer ces suggestions sans coût d'API.
-
-#### 🧠 NotebookLM Sync
-L'Oracle peut également être lié à un Notebook spécifique. Importez vos PDF de règles ou vos notes de campagne. Posez vos questions directement dans le chat AI pour obtenir des réponses sourcées sur votre propre univers.
-
-## 🛠️ Maintenance du Système
-
-### Nettoyage des Médias (Media Cleanup)
-GM-OS stocke les médias localement dans IndexedDB.
-
-- **Automatique** : Le système se nettoie 5 secondes après chaque démarrage.
-- **Manuel** : Allez dans **Paramètres > Système > Nettoyer** pour forcer une purge des fichiers orphelins (images de PNJ supprimés, etc.).
-
-### 🛡️ Sécurité & Synchronisation
-Vos données sont précieuses. GM-OS v5 intègre une **sauvegarde automatique vers GitHub** sur une branche isolée (`data-sync`). Cela garantit que votre travail est protégé et synchronisé entre tous vos terminaux MJ. Consultez le mode **Paramètres** pour vérifier le statut de la synchronisation.
+GM-OS est un ensemble de modules qui se partagent une campagne. Ce guide dit **ce que chacun fait
+en une phrase**, et dans quel ordre les découvrir. Pour le détail, chaque module a son guide —
+tous sont listés dans [l'index](./00_Documentation_Index.md).
 
 ---
 
-*Dernière mise à jour : Mars 2026 (v5.1.1-STABLE)*
+## 🚪 Les trois écrans qu'il faut connaître d'abord
+
+| Écran | Ce qu'il est |
+| :--- | :--- |
+| **Session-OS — le cockpit** | Votre tour de contrôle : les campagnes, les séances, les personnages, et l'accès à tout le reste. |
+| **Le Tablet Hub** | Ce que vos joueurs voient sur leur tablette : fiche, inventaire, cartes, messages. |
+| **Forge-OS** | Là où l'on décrit un jeu à GM-OS (la Forge Système) et où l'on transforme un scénario en objets jouables (la Forge de campagne). |
+
+**Le premier soir**, vous n'avez besoin que du premier.
+
+## 🧭 Ce que fait chaque module
+
+### Préparer
+
+- **La trame** — actes et scènes : le plan de la campagne.
+- **La Forge de campagne** — un scénario écrit devient des actes, des scènes, des PNJ, des lieux.
+- **NPC-OS** — improviser un PNJ, un lieu, une rumeur.
+- **L'Atlas (Map-OS)** — les cartes, les pions, le brouillard de guerre.
+- **Les Indices** — les secrets, à qui ils sont liés, quand ils tombent.
+- **Obsidian** — vos notes de préparation, branchées sur l'Oracle.
+
+### Jouer
+
+- **Combat-OS** — initiative, santé, effets, tour par tour.
+- **Dice-OS** — le pupitre de dés, y compris les mécaniques exotiques.
+- **Clock-OS** — le temps, les minuteurs, les horloges de tension.
+- **Deck-OS** — les paquets de cartes, et celles qu'un joueur garde en main.
+- **Table-OS** et **Loot-OS** — les oracles qu'on consulte, et le butin qu'on distribue.
+- **Le Journal** — ce qui s'écrit tout seul pendant que vous jouez.
+
+### L'ambiance
+
+- **Music-OS**, **Ambient-OS**, **Sound-OS** — les musiques, les paysages sonores, les bruitages.
+- **Image-OS** — projeter une illustration, un portrait, une carte.
+- **Light-OS** — les lumières Philips Hue.
+- **Voice-OS** — transformer votre voix pour incarner un PNJ.
+- **Le Storyboard** — enchaîner son, lumière et image en un seul geste.
+- **L'afficheur Ulanzi** — le petit écran 32 × 8 posé sur la table.
+
+### L'intelligence artificielle
+
+- **L'Oracle** — poser une question à un modèle qui connaît **votre** corpus, en local (Ollama) ou
+  à distance.
+- **Le Cortex** — l'assistant tactique : il observe la table et suggère.
+
+---
+
+## 🎙️ Donner une voix à un PNJ
+
+Sur la fiche d'un PNJ — dans la galerie de campagne comme dans NPC-OS — un bouton propose des
+réglages de voix d'après ses notes, et un second les repose plus tard.
+
+⚠️ **Ce n'est pas une synthèse vocale** : GM-OS ne parle pas à votre place. Il transforme **votre**
+voix. → [Guide Voice-OS](./Voice_OS_User_Guide.md)
+
+## 📱 Brancher une tablette
+
+1. Ouvrez le **QR Code** depuis la barre latérale.
+2. Scannez-le avec l'appareil du joueur.
+3. Tous les appareils doivent être sur le **même réseau Wi-Fi** que le PC du meneur.
+
+→ [Guide du Tablet Hub](./Tablet_Hub_User_Guide.md)
+
+## 🛠️ Maintenance
+
+**Nettoyage des médias** — GM-OS repère les fichiers devenus orphelins (l'image d'un PNJ supprimé,
+par exemple). Vous pouvez forcer une purge depuis les **Paramètres**.
+
+⚠️ Les playlists et ambiances **actives sont protégées** du nettoyage : c'est une garde ajoutée
+après une suppression accidentelle de fichiers audio en cours d'usage.
+
+## 🛡️ Vos données sont-elles protégées ?
+
+**Oui, par une sauvegarde locale automatique** — dans `C:\Projet_David\Security_Backup_GMOS`, à
+côté du dossier de l'application. Elle se déclenche deux minutes après votre dernier changement, à
+la fermeture, avant toute suppression de campagne, et à la clôture d'une séance. Les douze plus
+récentes sont conservées.
+
+> ⛔ **Correction d'une affirmation dangereuse.** Cette page annonçait jusqu'au 2026-09-04 une
+> « sauvegarde automatique vers GitHub sur une branche isolée `data-sync` ». **Ce mécanisme
+> n'existe plus, et il ne faut surtout pas compter dessus** : c'est lui qui, en mars 2026, a
+> **vidé l'installation** — la branche visée étant orpheline, git a supprimé tous les fichiers qui
+> n'y existaient pas. Il a été retiré et remplacé par la sauvegarde locale décrite ci-dessus, qui
+> n'exécute aucune commande de gestion de version, jamais.
+
+→ [Guide de la sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md)
+
+Pour **emporter** une campagne sur une autre machine, c'est autre chose :
+→ [Nexus-OS, export & import](./Nexus_OS_User_Guide.md)
+
+---
+
+*Guide refondu le 2026-09-04. Il datait de mars 2026 et décrivait une sauvegarde qui n'existe plus.*

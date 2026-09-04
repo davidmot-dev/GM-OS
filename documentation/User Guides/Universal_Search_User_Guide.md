@@ -1,6 +1,6 @@
 # 🔍 Guide Utilisateur : Universal Search (Spotlight)
 
-Le système **Universal Search** (Spotlight) est votre outil de navigation ultime dans GM-OS v5. Il vous permet de trouver et d'interagir avec n'importe quel élément de votre campagne en quelques pressions de touches.
+Le système **Universal Search** (Spotlight) est votre outil de navigation ultime dans GM-OS. Il vous permet de trouver et d'interagir avec n'importe quel élément de votre campagne en quelques pressions de touches.
 
 ---
 

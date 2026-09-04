@@ -1,6 +1,6 @@
 # 📱 Guide Utilisateur : GM Remote Control
 
-La **GM Remote Control** est une Web App responsive qui transforme n'importe quel appareil mobile (smartphone, tablette) en une surface de contrôle tactile pour **GM-OS v5**.
+La **GM Remote Control** est une Web App responsive qui transforme n'importe quel appareil mobile (smartphone, tablette) en une surface de contrôle tactile pour **GM-OS**.
 
 ## 🚀 Connexion Initiale
 

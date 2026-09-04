@@ -1,6 +1,13 @@
 # 📅 Guide Utilisateur : Session OS (Master Cockpit)
 
-**Session OS** est le cœur décisionnel de GM-OS v5. C'est ici que vous gérez vos campagnes, suivez la progression de vos joueurs, préparez vos scénarios et archivez les chroniques de vos aventures. C'est l'interface qui lie tous les autres modules entre eux.
+**Session OS** est le cœur décisionnel de GM-OS. C'est ici que vous gérez vos campagnes, suivez la
+progression de vos joueurs, préparez vos scénarios et archivez les chroniques de vos aventures.
+C'est l'interface qui lie tous les autres modules entre eux.
+
+> 📖 **Trois de ses parties ont leur propre guide**, parce qu'elles sont devenues des modules à part
+> entière : la [trame narrative](./Trame_Narrative_User_Guide.md) (actes et scènes), le
+> [journal de séance](./Journal_De_Seance_User_Guide.md), et la
+> [sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md).
 
 ````carousel
 *(Capture « Master Cockpit » — perdue lors du déplacement du projet.)*
@@ -25,7 +32,17 @@ Lors de la création d'une campagne, vous devez configurer plusieurs éléments 
 - **Nom & Synopsis** : Le titre et l'intrigue principale. Le synopsis aide l'IA à comprendre l'enjeu global.
 - **Système de Jeu (Rule Engine)** : **Crucial.** Vous choisissez ici le moteur qui gérera les dés, les fiches et l'intelligence de combat (ex: Alien RPG, D&D 5e).
 - **Wallpaper** : Une image d'ambiance qui définit le fond visuel de tout votre OS pendant cette campagne.
-- **Chemins RAG (Cerveau AI)** : Indiquez des dossiers locaux (dans `/docs`) contenant votre lore. L'IA Oracle indexera ces dossiers pour répondre à vos questions sur le monde.
+- **Le corpus de la campagne** : les dossiers que l'Oracle indexera pour répondre à vos questions
+  sur le monde. Une campagne peut désigner **plusieurs racines** — celle du jeu, la sienne, et un
+  coffre Obsidian.
+
+> ⚠️ **Les racines s'ajoutent, elles ne se remplacent pas.** Jusqu'au 2026-08-22, désigner un coffre
+> Obsidian **écrasait** la racine documentaire : l'Oracle cessait de voir les règles du jeu sans le
+> dire. Le coffre est aujourd'hui une racine **supplémentaire**, éteinte par défaut, et un coffre
+> illisible n'enlève jamais rien au reste.
+
+- **La langue de la Forge** : on peut forger depuis un livre anglais et vouloir un résultat en
+  français. Réglage **par campagne** ; sans lui, la langue de l'interface sert de repli.
 
 ### 🗑️ Suppression et Nettoyage de Campagne
 
@@ -63,7 +80,9 @@ L'IA Oracle ne se contente pas de citer des règles. Selon le système choisi, e
 
 Inutile de rédiger manuellement les instructions de vos assistants. Un bouton **"Générer avec l'IA"** est disponible :
 
-- **Dans les Campagnes** : Pour adapter les 7 personas (GEMS) au ton et au synopsis de votre aventure.
+- **Dans les Campagnes** : pour adapter les **huit** personas (GEMS) au ton et au synopsis de votre
+  aventure — le Sage, l'Oracle, l'Acteur, l'Alchimiste, le Barde, le Cartographe, le Scribe et le
+  Stratège.
 - **Dans le Rule Engine (Drivers)** : Pour définir les comportements par défaut de tout un système de jeu.
 
 **Précision** : Le système utilise une génération séquentielle optimisée pour **Ollama**, garantissant des instructions riches et sans coupures.
@@ -99,11 +118,44 @@ Le **Cockpit** est l'écran par défaut une fois une campagne lancée. Il affich
 - **Le Header Global (v5.3)** : Situé tout en haut, il contient désormais le **Bouton Panique (Stop All)** pour tout éteindre en urgence, le curseur de volume master, et le bouton **Focus Chat** pour tamiser l'ambiance sonore.
 - **Les Personnages Actifs** : Portraits et barres de vie mis à jour instantanément.
 - **Le Workspace & Session Notes** : Zone d'édition rapide et multilingue pour vos notes de session. Supporte désormais l'auto-sauvegarde atomique et la synchronisation avec le Cerveau IA.
-- **Les Snapshots** : Voir section ci-dessous.
+- **Les Snapshots** : voir section ci-dessous.
+- **Deck-OS** : la bibliothèque de paquets, ou le lecteur si un paquet est lié à la campagne.
+- **Loot-OS** : le butin de séance — génération, pool, distribution, historique.
 
 ---
 
+## 🎭 La trame : où l'on en est de l'histoire
+
+Le cockpit affiche **l'acte en cours** et le nombre de **scènes ouvertes ou en pause**. Un clic
+dessus ouvre la trame.
+
+Les **gestes** — ouvrir une scène, la terminer — ne sont pas là : ils vivent dans le panneau de
+séance. *Un second endroit pour ouvrir une scène ferait deux écrans à tenir d'accord.*
+
+→ [Guide de la trame narrative](./Trame_Narrative_User_Guide.md)
+
+## 📓 Le journal, et la clôture d'une séance
+
+Pendant que vous jouez, les modules **écrivent d'eux-mêmes** au journal : combats, déplacements,
+jets, dons d'objets, questions posées à l'Oracle.
+
+À la clôture, deux étapes : une **curation** scène par scène — la vôtre, dix minutes — puis un
+**compte rendu** en trois sections, dont deux se calculent sans modèle.
+
+⚠️ **Une séance qui se termine ne termine pas ses scènes : elle les suspend.** Elles reprendront à
+la séance suivante de la même campagne.
+
+→ [Guide du journal de séance](./Journal_De_Seance_User_Guide.md)
+
+## 🛟 La sauvegarde tourne pendant ce temps
+
+Sans que vous ayez rien à lancer : deux minutes après votre dernier changement, à la fermeture de
+l'application, avant toute suppression de campagne, et à la clôture d'une séance.
+
+→ [Guide de la sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md)
+
 ## 📸 Snapshots : Voyage dans le Temps
+
 
 Un Snapshot capture l'intégralité de l'état de l'application à un instant T :
 
@@ -122,15 +174,27 @@ Le **Layout Manager** sauvegarde l'état de votre *interface* (en plus de la fic
 
 ### Ce qui est mémorisé par campagne
 
-- **Le Module Actif** : Retrouvez directement le module sur lequel vous travailliez (ex: Map OS).
-- **L'État des Panneaux** : Si vos assistants IA (GEMS) ou votre Cortex Tactique étaient ouverts, ils le resteront.
-- **Thème Visuel** : Chaque campagne peut avoir sa propre identité visuelle.
+- **Le Module Actif** : retrouvez directement le module sur lequel vous travailliez (ex : Map-OS).
+- **L'État des Panneaux** : si vos assistants IA (GEMS) ou votre Cortex Tactique étaient ouverts,
+  ils le resteront.
+- **Thème Visuel** : chaque campagne peut avoir sa propre identité visuelle.
+
+### ⭐ Deux dispositions, pas une : l'atelier et la table
+
+GM-OS retient **deux** dispositions par campagne — celle d'**hors séance** (l'atelier) et celle
+d'une **séance ouverte** (la table).
+
+> *« On retrouve son atelier tel qu'on l'a laissé le samedi matin, et sa table telle qu'on l'a
+> laissée le samedi soir. »*
+
+Tant que vous n'avez rien réglé en séance, c'est la disposition de l'atelier qui sert — jamais une
+disposition vide. **Un régime qui démarre nu n'est pas un second régime, c'est une perte.**
 
 ---
 
 ## 📐 Workspace Sync v2 - Auto-Layout Intelligent
 
-GM-OS v5 intègre désormais une détection matérielle des moniteurs pour optimiser votre espace de travail.
+GM-OS intègre désormais une détection matérielle des moniteurs pour optimiser votre espace de travail.
 
 ### Détection d'Écrans
 

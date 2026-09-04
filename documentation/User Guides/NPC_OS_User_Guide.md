@@ -1,6 +1,6 @@
 # 🎭 Guide Utilisateur : NPC OS (Générateur Universel)
 
-**NPC OS** est l'outil ultime d'improvisation et de préparation de GM-OS v5. Il permet de générer instantanément des personnages, des lieux, des rumeurs ou des objets, tout en assurant une cohérence thématique parfaite avec votre univers de jeu.
+**NPC OS** est l'outil ultime d'improvisation et de préparation de GM-OS. Il permet de générer instantanément des personnages, des lieux, des rumeurs ou des objets, tout en assurant une cohérence thématique parfaite avec votre univers de jeu.
 
 ![Aperçu du module NPC OS](npc_mockup.png)
 
@@ -52,6 +52,16 @@ Désormais, **NPC OS** tire parti de l'intelligence artificielle locale pour sub
 
 - **Avatar** : Cliquez sur le cadre de l'avatar pour lier une image locale ou web à votre entité.
 - **Voice Sync (Cible)** : Si vous utilisez **Voice OS**, l'avatar émet un léger pulse visuel au rythme de votre voix lorsque vous parlez, renforçant l'immersion des joueurs.
+- **⭐ Sa voix, générée et gardée** : le bouton **Vocal** propose des réglages de voix d'après les
+  notes et les traits du PNJ, et les **enregistre sur sa fiche**. Un second bouton, *Sa voix*, les
+  repose plus tard sur le rack. Ce qui est gardé est **l'état réel du rack après application** —
+  donc vos retouches aux curseurs, pas la suggestion brute du modèle.
+
+  ⚠️ Ce n'est **pas** une synthèse vocale : GM-OS transforme **votre** voix.
+  → [Guide Voice-OS](./Voice_OS_User_Guide.md)
+
+> 📌 **Les PNJ de votre campagne ont les mêmes boutons depuis le 2026-09-04**, dans leur galerie.
+> Le profilage vocal n'existait jusque-là que dans NPC-OS — un module à part.
 - **Projection Hub** : Cliquez sur l'icône **Œil** pour projeter instantanément la fiche (image + texte sélectionné) sur le Player Hub des joueurs.
 
 ## 🔗 Intégrations Cross-Modules

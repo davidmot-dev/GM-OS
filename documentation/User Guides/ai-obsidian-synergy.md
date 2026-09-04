@@ -4,7 +4,7 @@ Ce guide présente la nouvelle architecture de préparation de partie dans GM-OS
 
 ## 🚀 Le Workflow de Préparation
 
-GM-OS v5 transforme la manière dont vous interagissez avec vos données de jeu.
+GM-OS transforme la manière dont vous interagissez avec vos données de jeu.
 
 ````carousel
 ```mermaid

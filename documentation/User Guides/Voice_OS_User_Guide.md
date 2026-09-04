@@ -1,6 +1,6 @@
 # 🎤 Guide Utilisateur : Voice-OS
 
-**Voice-OS** est le module de traitement audio en temps réel de GM-OS v5. Il permet au Maître de Jeu de transformer sa voix pour incarner des créatures, des entités numériques ou des divinités tout en conservant une immersion totale.
+**Voice-OS** est le module de traitement audio en temps réel de GM-OS. Il permet au Maître de Jeu de transformer sa voix pour incarner des créatures, des entités numériques ou des divinités tout en conservant une immersion totale.
 
 > [!TIP]
 > **Volume Master** : La voix est pilotée par le [Master Soundscape Controller](./Audio_Master_Guide.md). Contrairement à la musique, la voix n'est **jamais atténuée** par le mode Focus Chat, car elle en est la priorité.

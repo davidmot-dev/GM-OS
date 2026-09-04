@@ -37,7 +37,7 @@ Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quel
 
 ## 🪄 Effets Spéciaux (Software Engine)
 
-GM-OS v5 embarque un moteur d'effets ultra-réactif capable de simuler des ambiances dynamiques :
+GM-OS embarque un moteur d'effets ultra-réactif capable de simuler des ambiances dynamiques :
 
 - **🕯️ Bougie / Feu** : Scintillement aléatoire de la luminosité et de la teinte (orangé).
 - **⚡ Orage** : Fond noir permanent entrecoupé de flashs blancs aléatoires ultra-rapides.
