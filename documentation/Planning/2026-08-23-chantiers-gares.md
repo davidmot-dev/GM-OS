@@ -328,6 +328,48 @@ pas un profil, c'est un réglage.*
 - **Le vocabulaire du butin.** Aucun pilote n'en déclare — tout est donc neutre aujourd'hui,
   et personne n'a vu « Eddies » s'afficher.
 
+### 12 · La revue des guides, écran par écran — ouverte le 2026-09-04
+
+*La documentation a été réparée le 04/09 (180 liens, 53 orphelins, 6 guides neufs), mais la
+**vérité de fond** d'un guide ne se lit pas dans les liens : elle se lit dans le code, et pour
+ce qui reste, à l'écran. La revue se fait donc module par module, à la demande de David. Chaque
+passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
+de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
+
+**Modules passés** : Map-OS, Nexus-OS (04/09). **Suivant** : au choix de David.
+
+#### 12a · Map-OS — ce que la revue a trouvé dans le code
+
+*Le guide est corrigé et poussé (`b0d2a91`). Ce tableau ne liste que ce qui reste à décider ou
+à coder.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⚠️ **M1** | **Map-OS n'est dans AUCUNE sauvegarde.** Ni `construireLaSauvegarde`, ni la sauvegarde automatique. Sont donc hors filet : les configurations de carte, les modèles de zones de danger, les pions posés, les réglages de grille et de calques, et **tout le brouillard** (IndexedDB `fogDB`). *Exactement la famille de Music-OS et du bestiaire, rattrapés le 30/08 : une donnée qu'on crée sans y penser est une donnée qu'on oublie de protéger.* | **À trancher, puis coder.** Le brouillard est volumineux (une image par carte) — il relève probablement du **miroir des médias** et non de l'instantané JSON. Les presets et les modèles de zones, eux, sont du texte : ils entrent dans `construireLaSauvegarde`. | `store/SessionService.ts`, `map/useMapStore.ts` |
+| **M2** | **Le pied du panneau des calques ment** : « Les réglages sont sauvegardés par carte ». `layerVisibility` est un objet **unique et global** dans `partialize` ; `setMap` n'y touche pas. | **Deux issues.** Corriger la phrase (une clé i18n, cinq minutes), *ou* rendre le fait vrai en rangeant `layerVisibility` par `mapUrl` comme le brouillard. La seconde est ce que la phrase promettait. | `map.sidebar.layers.footer`, `map/useMapStore.ts` |
+| **M3** | **Soupçon non falsifié : changer de carte en cours de projection.** `syncToPlayers` ne pousse `projectedFogDataUrl` que **si `fogDataUrl` est non nul**. Or `setMap` sur une carte encore vierge le met à `null`, et `MapCanvas` peint le noir **sans l'enregistrer**. L'écran des joueurs garderait donc le brouillard de la carte précédente — des trous au mauvais endroit. | ⛔ **À vérifier à l'écran en premier** : projeter, charger une carte jamais explorée, regarder la tablette. Si c'est confirmé : pousser explicitement `projectedFogDataUrl: null` (le repli des deux toiles est déjà le noir). La parade actuelle est un coup de pinceau. | `map/useMapStore.ts` (`syncToPlayers`), `map/components/MapCanvas.tsx` |
+| **M4** | **N'importe quel joueur déplace n'importe quel pion.** `isInteractable = (isProjectedView \|\| currentTool === 'move_token')` : sur l'écran projeté, **tout** pion visible est saisissable, y compris les adversaires du meneur. Un verrou de cinq secondes empêche seulement deux personnes de tirer le même. | **Décision de table, pas défaut.** Si David veut le restreindre : `linkedSessionPlayerId` existe déjà sur `MapToken` et suffirait à ne rendre saisissable que son propre pion. Documenté en attendant. | `map/components/MapTokenNode.tsx` |
+| **M5** | **`setGridColor` est du code mort.** Il existe dans le magasin, voyage dans les presets et dans la projection, et **aucun écran ne l'appelle**. La grille est blanche pour tout le monde. | **Deux issues** : retirer l'action, *ou* poser le sélecteur de couleur que le guide promettait (le reste de la chaîne est déjà là — c'est un `<input type="color">`). | `map/useMapStore.ts:420` |
+| **M6** | **Les effets magiques ne sont pas persistés** (absents de `partialize`, présents dans les presets). C'est probablement voulu — ne pas rouvrir une partie sous une boule de feu de la semaine dernière — mais rien ne le dit dans le code. | **Écrire l'intention** en commentaire, ou la corriger. Rien à faire d'urgent. | `map/useMapStore.ts` (`partialize`) |
+
+#### 12b · Nexus-OS — ce que la revue a trouvé dans le code
+
+*Le guide est corrigé et poussé. Nexus-OS **empaquette plus qu'il ne réinstalle** : le motif de
+ce module, c'est une donnée mise dans l'archive et jamais ressortie à l'autre bout. Trois des
+cinq trouvailles sont de cette famille, et personne ne peut s'en apercevoir sans faire l'aller
+**et** le retour.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **N1** | **Importer une campagne ÉCRASE toute la bibliothèque d'ambiances de Sound-OS.** `useSoundStore.setState({ atmospheres: finalState.atmospheres })` — un remplacement pur. Les **playlists**, deux lignes plus bas, fusionnent proprement (fusion par identifiant, ajout des nouvelles). *Le bon code est déjà là, à côté du mauvais.* | **À corriger, priorité haute** : appliquer aux atmosphères la fusion déjà écrite pour les playlists. C'est de la perte de données silencieuse, et le seul geste qui la déclenche est celui qu'on fait en recevant le fichier d'un ami. | `NexusService.ts` (`importBundle`, phase 7) |
+| ⛔ **N2** | **La trame n'est pas exportée.** `NexusCampaignState` n'a ni `actes` ni `scenes`, et `scrapeCampaignData` ne les lit pas. Une campagne emportée ailleurs arrive **sans son plan narratif** — tout ce que la Forge de campagne a écrit reste sur la machine d'origine. | **À ajouter.** Filtrer par `campaignId` comme les autres niveaux 1. *Même famille que Music-OS et le bestiaire (30/08) : la trame a été ajoutée à `donneesDeLaSession` et oubliée ici.* | `nexus.types.ts`, `NexusService.ts` |
+| ⛔ **N3** | **Les paquets de cartes sont exportés et jamais réinjectés.** `deckManifests` et `deckSessionStates` sont dans le bundle ; `injectState` ne les repose pas. Deck-OS repart vide à l'arrivée. | **À corriger** — ou à retirer de l'export si ce n'est pas voulu. En l'état on paie le poids sans le bénéfice. Note : à l'export les paquets sont filtrés par `systemId`, et les `deckStates` ne sont **pas filtrés du tout** (`Object.values`). | `NexusService.ts` (`injectState`) |
+| ⛔ **N4** | **Le pilote personnalisé est exporté et jamais réinjecté.** Idem pour `requiredTemplateData`. Une campagne bâtie sur un jeu forgé arrive en désignant un `system` absent de la machine. La parade actuelle — documentée — est d'exporter le `.gmos-driver` à côté et de l'importer **en premier**. | **À trancher** : réinjecter (avec le résolveur de conflits, puisque le driver a déjà le sien), ou **avertir à l'import** que le système manque. La seconde est peu coûteuse et supprime le symptôme muet. | `NexusService.ts` (`injectState`) |
+| ⚠️ **N5** | **L'archive emporte des PNJ d'autres campagnes.** Niveau 3, délibéré : les entités liées par une **relation sociale** sont incluses pour garder le réseau cohérent. Mais partager un bundle partage donc ces fiches-là, **notes de MJ comprises**. | **Documenté, décision de David.** Si c'est gênant : caviarder à la source (comme `gmSecretInfo` pour la voix), ou n'inclure qu'un squelette nom + identifiant. | `NexusService.ts:186-198` |
+| **N6** | **Deux options d'export déclarées, jamais offertes.** `includeAssets` est lu mais aucun écran ne le passe ; **`includeSounds` n'est lu nulle part** — il est documenté dans les types et mort dans le code. | **Deux issues** : les exposer dans le HUD (une case « sans les sons » a du sens pour un envoi par mail), ou retirer `includeSounds`. | `nexus.types.ts`, `NexusService.ts:691` |
+| **N7** | **Le badge « Nexus-Ready » mesure autre chose que son nom.** Il compte les références média **non-`http`** : il dit *« cette campagne a des fichiers »*, pas *« cette campagne est portable »*. Une campagne 100 % illustrée par des URL web affiche le badge gris « export léger ». | **Renommer** (« *n* médias » / « JSON seul »), ou compter vraiment ce qui est localisable. Le guide dit désormais ce que le badge fait. | `CampaignLibrary.tsx:32` |
+| **N8** | **Toutes les ambiances et toutes les playlists partent**, campagne ou pas — le commentaire l'assume (« environnement de jeu du meneur »). Depuis le 29-30/08 les atmosphères portent pourtant une **étiquette de campagne**. | **À revoir en même temps que N1** : si l'import fusionne, l'export peut rester large sans danger. Sinon, filtrer. | `NexusService.ts:225-231` |
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -391,6 +433,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Map-OS et Nexus-OS passés, **quatorze** trouvailles de code (§§ 12a-12b) | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

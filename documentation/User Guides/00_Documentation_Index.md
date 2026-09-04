@@ -109,7 +109,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | Guide | À quelle question il répond |
 | :--- | :--- |
 | [La sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md) | Ce qui protège vos campagnes toutes les deux minutes, où ça atterrit, et pourquoi ça refuse parfois. |
-| [Nexus-OS — export & import](./Nexus_OS_User_Guide.md) | Emporter une campagne complète dans un `.gmos`, la rouvrir ailleurs. |
+| [Nexus-OS — export & import](./Nexus_OS_User_Guide.md) | Emporter une campagne ou un système de jeu dans un fichier, le rouvrir ailleurs — **et ce que l'archive ne contient pas**. |
 | [Guide de migration](./migration-guide.md) | Ce qui change entre les grandes versions de GM-OS. |
 | [Compilation & déploiement (Windows)](../Technical%20Docs/Compilation_Deployment_Guide.md) | Fabriquer l'exécutable. |
 | [Installation Linux](../Technical%20Docs/Linux_Installation_Guide.md) | Faire tourner GM-OS ailleurs que sous Windows. |

@@ -1,173 +1,181 @@
-# Guide de l'Utilisateur — Nexus-OS : Export & Import de Campagnes
+# 📦 Guide : Nexus-OS — emporter une campagne
 
-Ce guide explique comment utiliser le système **Nexus-OS** pour exporter votre campagne complète dans un fichier portable `.gmos` et la réimporter sur un autre appareil (ou après réinstallation).
+Nexus-OS empaquette une campagne, ou un système de jeu, dans **un seul fichier** que vous pouvez
+copier sur une clé, envoyer à quelqu'un, ou rouvrir après une réinstallation.
 
----
+C'est de la **portabilité**, pas de la sauvegarde. Pour protéger vos données au quotidien, c'est la
+[sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md) qui travaille, toute seule, sans que
+vous ayez à y penser.
 
-## 🚀 Qu'est-ce que Nexus-OS ?
-
-Nexus-OS est le système de **portabilité** de GM-OS. Il vous permet de :
-
-- **Exporter** une campagne entière (PNJs, cartes, wiki, sons, images) dans un seul fichier `.gmos`.
-- **Importer** ce fichier sur n'importe quel autre poste GM-OS.
-- **Sauvegarder** vos aventures avant une migration ou réinstallation.
+> ⚠️ **Nexus-OS ne fonctionne que dans l'application de bureau.** Ouvert dans un navigateur, les
+> boutons sont grisés et un badge le dit — l'empaquetage a besoin d'écrire des fichiers.
 
 ---
 
-## 📤 Exporter une Campagne
+## 📤 Exporter une campagne
 
-### Depuis la Bibliothèque de Campagnes
+**Cockpit → la campagne → panneau « Portabilité & Archivage de Campagne » → Exporter (.gmos)**
 
-1. Ouvrez la **Bibliothèque de Campagnes** (icône livre en haut).
-2. Sélectionnez votre campagne (clic sur la carte).
-3. Cliquez sur **"Exporter (Nexus)"** — l'icône de satellite dans les actions de la campagne.
-4. Une fenêtre "Nexus HUD" s'ouvre — elle affiche la progression en temps réel.
-5. Une fenêtre de dialogue vous demande **où sauvegarder** le fichier `.gmos`.
-6. L'export se déroule automatiquement en plusieurs phases :
+Une fenêtre plein écran, le **Nexus HUD**, suit le travail. Il traverse ces étapes :
 
-| Phase | Ce qui se passe |
+| Étape | Ce qui se passe |
 | :--- | :--- |
-| 🔍 Scan | Détection de toutes les images et sons liés |
-| 🛰️ Remote Check | **Nouveau** : Détection et téléchargement des images provenant du web |
-| 🍃 Harvest | Récupération des médias depuis le Media Hub interne |
-| 📦 Packaging | Création de l'archive compressée |
-| ✅ Done | Export terminé ! |
+| **Extraction des données** | Tout ce qui appartient à la campagne est rassemblé |
+| **Vérification des liens distants** | Les images qui vivent sur le web sont repérées — **le HUD s'arrête ici s'il en trouve** |
+| **Moissonnage des médias** | Les fichiers sont récupérés depuis le Media Hub |
+| **Compression du bundle** | L'archive `.gmos` est écrite |
+| **Opération terminée** | Le HUD se referme au bout de trois secondes |
 
-> 💡 **Conseil :** L'export peut prendre 30 secondes à 2 minutes selon le nombre d'images et sons liés à votre campagne.
+Un sélecteur vous demande où poser le fichier.
 
----
+### L'arrêt sur les liens distants
 
-## 📥 Importer une Campagne
+Si des images pointent vers Internet (une URL Pinterest, Unsplash…), le HUD s'interrompt et propose :
 
-### Méthode 1 : Bouton dédié dans la Bibliothèque
+- **Tout localiser** — GM-OS télécharge ces images, les range dans votre Media Hub et les met dans
+  l'archive. La campagne devient utilisable **hors ligne**, chez vous comme chez le destinataire.
+- **Ignorer** — les liens restent des liens. L'archive est plus légère, mais elle dépend du web.
 
-1. Ouvrez la **Bibliothèque de Campagnes**.
-2. Cliquez sur le bouton **"Importer un bundle Nexus"** (icône en bas de la bibliothèque).
-3. Sélectionnez votre fichier `.gmos` dans la fenêtre de dialogue.
-4. Le Nexus HUD s'ouvre et affiche la progression.
-5. Si la campagne importée a le même nom qu'une campagne existante, un **Conflict Resolver** s'affiche :
-    - **Remplacer** : Écrase la version existante.
-    - **Cloner** : Importe comme nouvelle campagne indépendante.
-    - **Annuler** : Arrête l'import.
+Un téléchargement qui échoue (lien mort) est signalé dans le journal du HUD et **n'interrompt pas
+l'export**.
 
 ---
 
-## 🏎️ Partage de Systèmes de Jeu (Drivers)
+## 📥 Importer
 
-GM-OS v2 introduit la possibilité d'exporter vos **GameDrivers** (créés via le *System Forge*) indépendamment de vos campagnes. Cela permet de partager uniquement les règles et les modèles de fiches de personnages.
+Trois boutons ouvrent **le même sélecteur**, qui accepte aussi bien un `.gmos` qu'un
+`.gmos-driver` :
 
-### Exporter un Driver
-
-1. Rendez-vous dans la **Librairie de Modèles** (Onglet `Drivers`).
-2. Sélectionnez le Driver que vous souhaitez partager.
-3. Dans le panneau d'aperçu à droite, cliquez sur le bouton **"EXPORTER"**.
-4. Le fichier généré aura l'extension `.gmos-driver`.
-
-### Importer un Driver
-
-1. Ouvrez la **Librairie de Modèles** (Onglet `Drivers`).
-2. Cliquez sur le bouton global **"IMPORTER DRIVER"** en haut de la liste.
-3. Sélectionnez votre fichier `.gmos-driver`.
-4. Si un driver du même nom existe déjà, le système vous proposera de le **Cloner** pour éviter d'écraser votre travail actuel.
-
----
-
-## 🛰️ Localisation Interactive (Nouveau v2)
-
-Auparavant, les images provenant d'Internet (ex: une URL Pinterest ou Unsplash) n'étaient pas incluses dans l'export. **Nexus-OS v2** peut maintenant les "localiser" pour vous.
-
-1.  Lors de l'export, si des URLs distantes sont trouvées, le HUD s'arrête et vous propose deux choix :
-    -   **"Tout localiser"** : GM-OS télécharge les images, les range dans votre coffre-fort (Media Hub) et les inclut dans le fichier `.gmos`. Votre campagne devient 100% portable.
-    -   **"Ignorer"** : Les liens restent tels quels.
-2.  Si un téléchargement échoue (lien mort), une alerte `⚠️` s'affiche dans le journal du HUD. Le fichier reste un lien distant mais n'empêche pas l'export du reste.
-
----
-
-## 📊 Indicateur "Nexus-Ready"
-
-Dans la bibliothèque, chaque campagne affiche un badge **Nexus-Ready** :
-
-- 🟢 **Nexus-Ready** : Tous les médias sont locaux ou dans le Media Hub → export complet garanti.
-- 🟡 **Localisable** : Certains médias sont distants mais peuvent être téléchargés lors de l'export.
-- 🔴 **Non portable** : Liens techniques ou protégés (ex: YouTube) qui ne peuvent pas être archivés.
-
----
-
-## 🎵 Sons & Musiques Exportés
-
-L'export Nexus inclut également :
-
-- Les **atmosphères du Sound Board** (groupes de pads sonores) liées à la campagne.
-- Les **playlists musicales** contenant des fichiers locaux.
-
-> ⚠️ Les sons pointant vers des URLs distantes (Spotify, SoundCloud, etc.) ne sont pas inclus dans l'export.
-
----
-
-## 🎲 Confort Visuel : Theater Mode
-
-Pour les moments critiques comme les jets de dés, le Tablet Hub et le Player Hub basculent automatiquement en **Theater Mode**.
-
-- **Immersion Maximale** : Le résultat s'affiche en plein écran avec un effet de flou cinématique sur le reste de l'interface.
-- **Lisibilité Accrue** : Les scores sont affichés avec une typographie XXL et des effets de lueur (glows) adaptés à votre thème RPG.
-- **Auto-nettoyage** : L'affichage disparaît après 5 secondes pour vous permettre de reprendre la narration sans intervention manuelle.
-
-*(Capture « Theater Mode Preview » — perdue lors du déplacement du projet.)*
-
----
-
-## 💬 Messagerie Sécurisée & Confidentialité
-
-Le système de messagerie du Hub a été renforcé pour garantir l'immersion :
-
-- **Filtrage par Campagne** : Vous ne voyez que les personnages appartenant à la campagne active. Aucun risque de "spoiler" ou de confusion avec les PJs d'autres aventures.
-- **Messages Ciblés** : Les messages privés envoyés par le MJ ne sont visibles que par le destinataire concernatif, avec une notification discrète.
-
----
-
-## 💎 Design Premium : Glassmorphism 2.0 & Bento Style
-
-Depuis la v6.1.0-dev, l'interface de **Session-OS** a été entièrement refondue pour offrir une expérience plus immersive et luxueuse.
-
-- **Style Bento Box** : Vos cartes de campagnes et les panels du cockpit utilisent désormais une structure "Bento" avec des bordures lumineuses organiques (glows).
-- **Glassmorphism Avancé** : L'utilisation de flous cinématiques (`backdrop-filter`) et de saturations enrichies permet une meilleure lisibilité quel que soit le thème (Cyberpunk, Medieval, Modern, Claire).
-- **Transitions Fluides** : Toutes vos interactions sont maintenant accompagnées de micro-animations (entrées en cascade, effets de survol magnétiques).
-
----
-
-## 🌅 Moment de la Journée & Ambiance Atlas (Map-OS)
-
-Le MJ peut désormais transformer instantanément l'atmosphère d'une carte via le panneau de contrôle de l'Atlas.
-
-### Utilisation du Sélecteur
-
-Le panneau d'Ambiance propose 5 moments clés :
-
-- **Aube (Dawn)** : Teinte orangée et douce, contraste réduit.
-- **Jour (Day)** : Teinte naturelle, luminosité standard.
-- **Grisâtre (Overcast)** : Teinte froide et désaturée. **Note** : Sélectionner ce mode augmente automatiquement l'intensité de la pluie/neige si elle est active.
-- **Crépuscule (Dusk)** : Teinte pourpre et dorée, ambiance chaleureuse.
-- **Nuit (Night)** : Bleu profond, luminosité réduite à 60%. Optimisé pour être jouable tout en restant immersif.
-
-### Visibilité des Calques
-
-Vous pouvez masquer l'effet d'ambiance à tout moment via le bouton **"Ambiance (Heure)"** dans le gestionnaire de calques, ce qui ramènera la carte à ses couleurs d'origine sans changer le réglage temporel.
-
----
-
-## 🔧 Conseils & Dépannage
-
-| Problème | Solution |
+| Où | Bouton |
 | :--- | :--- |
-| L'export se termine mais le ZIP semble vide (pas d'images) | Vérifiez le badge Nexus-Ready — vos médias sont probablement des URLs distantes. Importez-les d'abord dans le Media Hub. |
-| L'import échoue avec "fichier invalide" | Vérifiez que le fichier est bien un `.gmos` non corrompu. Essayez de le renommer en `.zip` pour inspecter son contenu. |
-| Des PNJs apparaissent sans avatar après import | Ce PNJ avait un avatar URL distante (non portable). Réassignez-lui un avatar depuis le Media Hub. |
-| L'export est très lent | Normal si votre campagne contient beaucoup d'images. 57 images ≈ 60-90 secondes selon la taille. |
+| Bibliothèque de campagnes | **IMPORTER UN BUNDLE NEXUS** |
+| Panneau d'une campagne | **Importer (.gmos)** |
+| Librairie de Modèles, onglet Drivers | **Importer un driver** |
+
+> 🔎 **C'est l'archive qui décide de sa destination, pas l'écran d'où vous partez.** Le fichier porte
+> le nom de sa campagne : l'importer depuis le panneau d'une *autre* campagne ne l'y verse pas, il
+> restaure la campagne du fichier. Il n'y a donc aucun risque à se tromper de bouton.
+
+### Si une campagne du même nom existe déjà
+
+Le **résolveur de conflits** s'affiche et vous laisse trois issues :
+
+| Choix | Effet |
+| :--- | :--- |
+| **Remplacer** | Les données de la campagne existante sont écrasées par celles de l'archive |
+| **Cloner** | L'archive entre comme une **nouvelle campagne indépendante**, avec de nouveaux identifiants |
+| **Annuler** | Rien n'est touché |
+
+À la fin, GM-OS **bascule sur la campagne importée** et vous dépose dans le cockpit.
 
 ---
 
-### État du Système
+## 🎲 Partager un système de jeu
 
-Dernière mise à jour : 11 Avril 2026
+Un `.gmos-driver` contient un **système**, sans aucune campagne : les règles, le moteur de dés, les
+consignes d'IA, le gabarit de fiche associé, et — depuis le 2026-09-03 — **le bestiaire du jeu**,
+c'est-à-dire les gabarits d'adversaires que vous avez rangés. *Partager un jeu sans ses adversaires
+reviendrait à partager un livre de règles sans son bestiaire.*
 
-Statut : Nexus-OS v2.0 — Portabilité totale, Exportation de Drivers, HUD Multilingue (I18n) et validation de sécurité du manifeste opérationnels.
+**Exporter** : Librairie de Modèles → onglet **Drivers** → sélectionnez-en un → **Exporter** dans le
+panneau d'aperçu.
+
+**Importer** : le bouton **Importer un driver** en haut de la même page. Un driver du même nom
+déclenche le même résolveur de conflits, avec l'option **Cloner** pour ne pas écraser votre travail.
+
+> Un `.gmos-driver` fabriqué avant le 03/09 ne contient pas de bestiaire. Il s'importe sans rien
+> perdre : le champ est facultatif.
+
+---
+
+## 📊 Le badge Nexus dans la bibliothèque
+
+Chaque campagne porte l'un de **deux** badges :
+
+| Badge | Ce qu'il dit |
+| :--- | :--- |
+| **Nexus-Ready** (bleu) | La campagne référence *n* fichiers médias locaux → l'export emportera de vrais fichiers |
+| **Nexus** (gris) | Aucun fichier média local → l'export sera **léger, JSON seulement** |
+
+> ⛔ **Correction.** Ce guide décrivait jusqu'au 2026-09-04 un feu tricolore — 🟢 Nexus-Ready,
+> 🟡 Localisable, 🔴 Non portable (YouTube) — qui **n'a jamais existé**. Il n'y a que deux états, et
+> le badge compte des médias : **il ne dit pas si vos images sont portables.** Une campagne dont
+> toutes les illustrations sont des URL web affichera le badge gris, et c'est bien à l'arrêt sur les
+> liens distants, pendant l'export, que la question se règle.
+
+---
+
+## 📋 Ce que l'archive contient — et ce qu'elle laisse
+
+C'est la partie qu'il faut lire avant d'envoyer un fichier à quelqu'un, ou avant de compter dessus
+pour une migration.
+
+### ✅ Ce qui part
+
+La campagne · ses **PNJ** · ses **joueurs et leurs personnages** · l'historique des **séances** ·
+les **cartes de l'Atlas** · le **wiki** · la **chronologie** · les **indices** · et, côté médias,
+toutes les images moissonnées avec leur empreinte de contrôle.
+
+Deux inclusions qui surprennent :
+
+> ⚠️ **L'archive emporte des PNJ d'autres campagnes.** Si un de vos PNJ a une **relation sociale**
+> vers un personnage d'une autre campagne, ce personnage est inclus pour que le réseau reste
+> cohérent. C'est voulu — mais si vous envoyez le fichier à quelqu'un, **il recevra ces fiches-là
+> aussi**, notes comprises. Vérifiez vos relations croisées avant de partager.
+
+<!-- -->
+
+> ⚠️ **L'archive emporte TOUTES vos ambiances sonores et TOUTES vos playlists**, pas seulement
+> celles de la campagne. Le code le dit explicitement : elles sont considérées comme
+> l'environnement de jeu du meneur.
+
+### ⛔ Ce qui ne part pas, ou ne revient pas
+
+| Ce qui manque | Conséquence concrète |
+| :--- | :--- |
+| **La trame — actes et scènes** | Une campagne exportée arrive **sans son plan narratif**. Tout ce que la Forge de campagne a écrit — les actes, les scènes, leur ordre — reste sur la machine d'origine. |
+| **Les paquets de cartes** | Ils sont *mis* dans l'archive, mais l'import ne les repose pas. Deck-OS repart vide. |
+| **Le système de jeu forgé** | Le pilote personnalisé est *mis* dans l'archive, mais l'import ne l'installe pas. Une campagne bâtie sur un jeu forgé arrive en désignant un système absent — **exportez le `.gmos-driver` à côté, et importez-le en premier**. |
+| **Le plateau tactique (Map-OS)** | Brouillard, pions, configurations de carte et modèles de zones ne sont dans aucune archive. Voir le [guide de Map-OS](./Map_OS_User_Guide.md). |
+| **Les sons distants** | Un pad ou une piste qui pointe vers Spotify, SoundCloud ou une URL quelconque reste un lien. |
+
+> ⛔ **Et une manœuvre à connaître avant tout import.** Aujourd'hui, importer une campagne
+> **remplace l'intégralité de votre bibliothèque d'ambiances sonores** par celle de l'archive —
+> les playlists musicales, elles, fusionnent proprement. Avant d'importer le bundle de quelqu'un
+> d'autre, **exportez le vôtre** ou faites une sauvegarde : vos ambiances de Sound-OS sont en jeu.
+> *Signalé le 2026-09-04, pas encore corrigé.*
+
+---
+
+## 🔒 Ce que GM-OS refuse d'ouvrir
+
+Une archive n'est pas un fichier de confiance : elle vient d'ailleurs. Avant toute écriture,
+GM-OS vérifie que le manifeste porte bien sa version de schéma et les champs obligatoires, et
+**rejette tout chemin de fichier qui tente de sortir du dossier d'extraction** (les fameux `../`).
+Un fichier dont le manifeste ne passe pas est refusé **avant** que quoi que ce soit ne soit injecté.
+
+Chaque média est accompagné de son empreinte **SHA-256** et de sa taille, ce qui permet de détecter
+une archive abîmée.
+
+---
+
+## 🔧 Dépannage
+
+| Problème | Ce qu'il faut regarder |
+| :--- | :--- |
+| **L'archive semble vide de toute image** | La campagne portait le badge gris **Nexus** : ses illustrations sont des liens web. Relancez l'export et choisissez **Tout localiser**. |
+| **« Archive invalide » à l'import** | Le manifeste ne passe pas la vérification. Un `.gmos` est un **fichier ZIP** : renommez-en une copie en `.zip` pour regarder dedans — vous devez y trouver `manifest.json` et `state.json`. |
+| **Des PNJ sans portrait après l'import** | Leur avatar était une URL distante non localisée. Reposez une image depuis le Media Hub. |
+| **La campagne importée n'a plus ses actes ni ses scènes** | Ce n'est pas une panne : **la trame n'est pas exportée**. Voir le tableau ci-dessus. |
+| **La campagne importée ne trouve pas son système de jeu** | Le pilote n'est pas installé par l'import de campagne. Importez d'abord le `.gmos-driver` correspondant. |
+| **Les boutons Nexus sont grisés** | Vous êtes dans un navigateur, pas dans l'application de bureau. |
+| **L'export est long** | Normal : chaque image est copiée et empreintée. Comptez une à deux minutes pour une campagne bien illustrée. |
+
+---
+
+*Guide refait le 2026-09-04, code à l'appui. Quatre sections qui n'avaient rien à faire ici ont été
+retirées — le « Theater Mode » (un nom qui n'apparaît nulle part dans le code), le style
+« Glassmorphism / Bento », la messagerie du Hub, et le moment de la journée de Map-OS, qui a
+[son guide](./Map_OS_User_Guide.md). Le feu tricolore Nexus-Ready a été corrigé en deux états, les
+étapes de l'export rétablies, et la liste de ce que l'archive **ne** contient **pas** ajoutée —
+c'est elle qu'il fallait écrire.*
