@@ -165,18 +165,27 @@ automatiquement.
 
 Un module à part entière, que cette page passait sous silence.
 
-Sélectionnez l'outil **Magie**, choisissez un **type** parmi sept — Feu, Glace, Acide, Élec, Arcane,
-Noir, Poison — et une **forme** parmi quatre : **Sphère**, **Zone**, **Ligne**, **Cône**. Puis
-cliquez-glissez sur la carte.
+Sélectionnez l'outil **Magie**, choisissez un **type** parmi sept — **Feu**, **Glace**, **Acide**,
+**Élec**, **Arcane**, **Noir**, **Poison** — et une **forme** parmi quatre : **Sphère**, **Zone**,
+**Ligne**, **Cône**. Puis cliquez-glissez sur la carte.
+
+> 🔎 **La direction du glissement oriente l'effet.** Pour une **Ligne** et un **Cône**, l'angle est
+> calculé depuis le point de départ vers le point d'arrivée : partez du lanceur et tirez vers la
+> cible, le cône pointe tout seul dans le bon sens. Pour une **Sphère** et une **Zone**, le
+> glissement ne règle que la taille.
 
 - La liste **Effets actifs** compte ce qui est posé et permet de retirer un effet à la fois.
-- **Clic droit sur un effet** (avec l'outil Magie actif) le supprime — c'est le geste rapide.
-- **Tout effacer** vide la carte de ses effets, avec confirmation.
+- **Clic droit sur un effet** (avec l'outil Magie actif) le supprime — c'est le geste rapide en
+  pleine partie.
+- **Tout effacer** vide la carte de ses effets, avec confirmation et le compte à l'appui.
 
-> ⚠️ **Les effets magiques ne survivent pas à la fermeture de l'application.** Ils sont
-> volontairement hors de la sauvegarde locale du module, pour ne pas rouvrir une partie sous une
-> boule de feu de la semaine dernière. Si vous voulez en garder une disposition, passez par un
-> **preset** (voir plus bas) : lui les enregistre.
+Les effets sont posés **sous le brouillard** : une boule de feu dans une pièce non révélée ne se
+voit pas chez les joueurs.
+
+> ⚠️ **Les effets magiques ne survivent pas à la fermeture de l'application.** Ils sont hors de la
+> sauvegarde locale du module — sans doute pour ne pas rouvrir une partie sous une boule de feu de
+> la semaine dernière. Si vous voulez en garder une disposition, passez par un **preset** (voir plus
+> bas) : lui, il les enregistre.
 
 ---
 
@@ -186,7 +195,8 @@ Une zone de danger est une surface qui **sait quels pions sont dedans**, et qui 
 quelque chose quand ils y entrent.
 
 Outil **Danger**, puis quatre formes : **Zone Rectangulaire**, **Zone Circulaire**, **Cône**,
-**Ligne / Couloir**.
+**Ligne / Couloir**. Comme pour la magie, **le glissement oriente le cône et la ligne** : partez de
+la source, tirez vers la cible.
 
 ### Les deux natures
 
@@ -209,30 +219,55 @@ scène, ambiance, aura, terrain, coût) qu'on repose ensuite en un clic depuis l
 
 ---
 
-## 🌦️ Climat et heure du jour
+## 🌦️ Le climat
 
-**Effets Atmosphériques** — Aucun, **Pluie**, **Neige**, **Brouillard**, avec un curseur
-d'**Intensité** de la bruine à la tempête.
+**Effets Atmosphériques** propose quatre états — **Aucun**, **Pluie**, **Neige**, **Brouillard** —
+et un curseur d'**Intensité** qui va de la bruine à la tempête. Ce sont de vraies particules
+dessinées au-dessus de la carte ; l'intensité règle leur nombre.
 
-**Moment de la Journée** — **Aube**, **Jour**, **Gris**, **Crépuscule**, **Nuit**. Une teinte posée
-sur toute la carte, absente de ce guide jusqu'au 2026-09-04.
+Le brouillard atmosphérique (la brume) n'a **rien à voir** avec le brouillard de guerre : c'est un
+effet visuel, il ne cache rien.
 
-Les deux partent chez les joueurs. Rappel de la table des calques : les éteindre depuis le panneau
-des couches les éteint **aussi** chez eux.
+## 🌅 Le moment de la journée
+
+Cinq teintes posées sur toute la carte, absentes de ce guide jusqu'au 2026-09-04 :
+
+| Moment | Ce que ça fait à l'image |
+| :--- | :--- |
+| **Aube** | Voile orangé léger, image très légèrement éclaircie et saturée |
+| **Jour** | Aucun effet — c'est l'état neutre |
+| **Gris** | Voile gris-bleu, image désaturée et légèrement assombrie, contraste réduit |
+| **Crépuscule** | Voile pourpre, image assombrie et saturée, virage chaud |
+| **Nuit** | Voile bleu nuit **dense**, image assombrie et contrastée — c'est le plus marqué de loin |
+
+Le passage d'un moment à l'autre se fait en **fondu de deux secondes**, chez vous et chez les
+joueurs en même temps. C'est assez lent pour qu'on puisse le lancer devant la table sans casser
+l'illusion : la nuit tombe, elle ne s'allume pas.
+
+> ⛔ **Une affirmation fausse, qui traînait dans le guide de Nexus-OS.** On y lisait que choisir
+> *Gris* « augmente automatiquement l'intensité de la pluie ou de la neige ». **Ce n'est pas le
+> cas** : le moteur de particules ne lit que le curseur d'intensité, jamais le moment de la journée.
+> Les deux réglages sont indépendants — à vous de monter la pluie si vous assombrissez le ciel.
+
+Climat et moment partent tous deux chez les joueurs. Rappel de la table des calques : **les éteindre
+depuis le panneau des couches les éteint aussi chez eux** — ce sont les deux seuls dans ce cas.
 
 ---
 
 ## 🔊 L'audio de la carte
 
-Une carte peut être une **vidéo** (MP4/WebM) — une mer agitée, une forêt qui bruisse — et une vidéo
-a une bande-son. La section **Audio de la Carte** donne donc :
+**Cette section n'apparaît que si la carte chargée est une vidéo.** Une image n'a pas de bande-son ;
+une mer agitée, un feu de camp ou une forêt qui bruisse en ont une, et Map-OS vous la donne à
+piloter :
 
-- **Couper / Rétablir le son** ;
-- le choix de la **sortie audio** parmi les enceintes détectées, indépendamment du reste de
-  GM-OS.
+- **Couper / Rétablir le son**, d'un bouton.
+- Un **curseur de volume** avec son pourcentage, indépendant du volume général de GM-OS.
+- Le choix de la **sortie audio** parmi les enceintes détectées — la même liste que Music-OS et
+  Sound-OS, mais un réglage distinct.
 
 C'est ce qui permet d'envoyer le bruit de la pluie sur l'enceinte du fond pendant que la musique
-tient l'avant.
+tient l'avant. Volume et coupure suivent la projection : ce que vous réglez ici vaut aussi pour la
+fenêtre des joueurs.
 
 ---
 
@@ -364,4 +399,4 @@ de données.** Gardez les images sources ailleurs, elles, sont sauvegardées par
 (couleur de grille, presets par campagne, calques sans effet sur les joueurs, clic droit
 panoramique, ESC), et six fonctions qui n'y figuraient pas ajoutées : l'heure du jour, les effets
 magiques, l'audio de la carte, le tour de combat, les gestes sur un pion, et le fait que les joueurs
-déplacent les pions.*
+déplacent les pions — chacune avec sa propre section.*
