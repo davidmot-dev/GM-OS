@@ -222,14 +222,37 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             })) : [];
 
             // 2. UNIVERSAL PADS
+            /*
+              **Quels pads sont actifs, et ce qui joue.**
+
+              `RemoteUniversalPad.isActive` existait, la tablette dessinait son
+              anneau lumineux — et **rien ne posait jamais le champ** : le point
+              n'a donc pu s'allumer sur aucun pad depuis qu'il est écrit. Ce sont
+              les deux platines de Music-OS et le thème chargé d'Ambient-OS qui
+              détiennent la réponse ; il suffisait de la demander.
+            */
+            const platines = [musicStore.deckA, musicStore.deckB];
+            const padsMusiqueActifs = new Set(
+                platines.filter(d => d?.isPlaying && d.activePadId).map(d => d!.activePadId as string),
+            );
+            const pistesDAmbiance = ambientStore.tracks.filter(t => t.isPlaying).length;
+            const themeDAmbianceActif = pistesDAmbiance > 0 ? ambientStore.themeChargeId : null;
+
             const musicPlaylist = musicStore.playlists.find(p => p.id === musicStore.activePlaylistId) || musicStore.playlists[0];
-            const musicPads = (musicPlaylist?.pads.filter(p => !!p.url) || []).slice(0, 5).map(p => ({
-                id: p.id, type: 'music' as const, label: p.label || 'Sans Nom', color: 'var(--accent)'
+            const morceauxJouables = musicPlaylist?.pads.filter(p => !!p.url) || [];
+            const musicPads = morceauxJouables.slice(0, 5).map(p => ({
+                id: p.id, type: 'music' as const, label: p.label || 'Sans Nom', color: 'var(--accent)',
+                isActive: padsMusiqueActifs.has(p.id),
             }));
 
-            const favoriteImages = imageStore.mediaList.filter(m => m.isFavorite).slice(0, 12);
+            const toutesLesFavorites = imageStore.mediaList.filter(m => m.isFavorite);
+            const favoriteImages = toutesLesFavorites.slice(0, 12);
+            /* Une image projetée quelque part est un pad actif : le meneur voit d'un
+               coup d'œil ce qui est déjà à l'écran, et n'a pas à le rappuyer. */
+            const imagesProjetees = new Set(Object.values(imageStore.projections ?? {}).filter(Boolean) as string[]);
             const resolvedImagePads = await Promise.all(favoriteImages.map(async (m) => ({
-                id: m.id, type: 'image' as const, label: m.name, imageUrl: await resolveToSendableUrl(m.path), color: 'var(--emerald-500)'
+                id: m.id, type: 'image' as const, label: m.name, imageUrl: await resolveToSendableUrl(m.path), color: 'var(--emerald-500)',
+                isActive: imagesProjetees.has(m.id),
             })));
 
             /*
@@ -250,9 +273,39 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 label: p.name,
                 sublabel: p.universe,
                 color: 'var(--cyan-500)',
+                isActive: p.id === themeDAmbianceActif,
             }));
 
             const universalPads = [...musicPads, ...ambientPads, ...resolvedImagePads];
+
+            /*
+              **Les plafonds se disent.** La grille tronquait en silence : trente
+              favoris en donnaient douze, et rien à l'écran ne l'indiquait. On
+              envoie les deux nombres et la tablette écrit « 12 sur 30 » —
+              *une liste tronquée sans le dire se lit comme une liste complète.*
+            */
+            const comptesDePads = {
+                music: { montres: musicPads.length, total: morceauxJouables.length },
+                ambient: { montres: ambientPads.length, total: ambientStore.presets.length },
+                image: { montres: resolvedImagePads.length, total: toutesLesFavorites.length },
+            };
+
+            /*
+              **Ce qui joue en ce moment.** Le flux portait ce qu'on peut
+              déclencher et jamais ce qui est en cours : il fallait changer
+              d'onglet — ou regarder l'écran du PC — pour savoir si une musique
+              tournait.
+
+              L'ambiance porte **son compte de pistes en plus de son nom** : une
+              ambiance composée à la main n'a pas de thème, et dire « 3 pistes »
+              reste vrai là où un nom serait inventé.
+            */
+            const platineQuiJoue = platines.find(d => d?.isPlaying);
+            const lecture = {
+                musique: platineQuiJoue?.activeTrackLabel ?? null,
+                ambiance: ambientStore.presets.find(p => p.id === themeDAmbianceActif)?.name ?? null,
+                pistesDAmbiance,
+            };
 
             // 3. COMBAT & ENTITIES
             const resolvedCombatants = (await Promise.all(combatStore.combatants.map(async (c) => ({
@@ -338,6 +391,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 whiteboard: { paths: whiteboardStore.paths, activePath: whiteboardStore.activePath, laserPointer: whiteboardStore.laserPointer, backgroundMode: whiteboardStore.backgroundMode },
                 clock: { timestamp: clockStore.timestamp, tensions: jaugesVuesParLesJoueurs(clockStore.tensions), timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
                 universalPads,
+                comptesDePads,
+                lecture,
                 dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected, projectionTrigger: diceStore.projectionTrigger },
                 map: { 
                     projectionTarget: mapStore.projectionTarget, 

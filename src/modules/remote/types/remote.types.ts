@@ -58,6 +58,38 @@ export interface RemoteUniversalPad {
 
 import { type DiceConfig } from '../../../types/drivers';
 
+/**
+ * **Ce qui joue en ce moment, pour la ligne d'état de la télécommande.**
+ *
+ * La tablette ne le savait pas : le flux portait les *pads* — ce qu'on peut
+ * déclencher — et jamais l'état de lecture. Un meneur devait donc changer
+ * d'onglet pour savoir si une musique tournait. *Une surface de contrôle qui ne
+ * dit pas ce qui est en cours oblige à deviner ou à regarder l'écran du PC,
+ * c'est-à-dire à cesser de s'en servir.*
+ */
+export interface RemoteLecture {
+    /** Le morceau en cours sur l'une des deux platines, ou `null`. */
+    musique: string | null;
+    /** Le thème d'ambiance chargé, ou `null` s'il a été composé à la main. */
+    ambiance: string | null;
+    /** Combien de pistes d'ambiance jouent — vrai même sans thème nommé. */
+    pistesDAmbiance: number;
+}
+
+/**
+ * **Ce que les plafonds ont écarté.**
+ *
+ * La grille de pads est bornée — cinq morceaux, huit ambiances, douze images —
+ * et elle tronquait **en silence** : un meneur avec trente favoris en voyait
+ * douze sans qu'un mot le dise. *Une liste tronquée sans le dire se lit comme
+ * une liste complète, et on cherche longtemps ce qui n'y est pas.*
+ */
+export interface RemoteComptesDePads {
+    music: { montres: number; total: number };
+    ambient: { montres: number; total: number };
+    image: { montres: number; total: number };
+}
+
 export interface RemoteSyncData {
     sounds: RemoteSound[];
     moments: RemoteMoment[];
@@ -81,6 +113,22 @@ export interface RemoteSyncData {
         currentWidth: number;
     };
     universalPads: RemoteUniversalPad[];
+    /** Combien de pads chaque famille a produits, et combien ont été montrés. */
+    comptesDePads?: RemoteComptesDePads;
+    /** Ce qui joue en ce moment, pour la ligne d'état. */
+    lecture?: RemoteLecture;
+    /**
+     * L'horloge du meneur.
+     *
+     * ⚠️ Ces champs **arrivaient déjà** — `useRemoteSync` recopie tout le
+     * message —, ils n'étaient simplement pas déclarés ici, donc invisibles pour
+     * qui lit le type. *Un transport qui porte plus que son contrat est un
+     * transport dont personne ne sait ce qu'il porte.*
+     */
+    clock?: {
+        timerRemaining: number;
+        timerIsRunning: boolean;
+    };
     session?: {
         campaignId: string;
         activeDiceConfig: DiceConfig | null;

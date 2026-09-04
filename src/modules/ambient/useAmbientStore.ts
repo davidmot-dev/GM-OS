@@ -4,6 +4,18 @@ import { ambientEngine } from './AmbientEngine';
 import { useJournalStore } from '../journal/useJournalStore';
 // Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
+/**
+ * **Le thème actuellement chargé, pour que la télécommande sache le dire.**
+ *
+ * Rien ne le retenait : `loadTheme` versait les pistes du thème dans les huit
+ * emplacements et **oubliait d'où elles venaient**. La tablette pouvait donc
+ * voir que des pistes jouent, jamais *laquelle* des ambiances était en place, et
+ * le pad correspondant ne pouvait pas s'allumer.
+ *
+ * `null` quand le meneur a composé son ambiance à la main plutôt que de charger
+ * un thème — c'est un état légitime, et le dire vaut mieux que désigner au
+ * hasard le thème qui ressemble le plus.
+ */
 export interface AmbientTrackState {
     id: string;
     /**
@@ -69,6 +81,8 @@ interface AmbientState {
     setMasterVolume: (volume: number) => void;
     setOutputDevice: (deviceId: string) => void;
     fadeOutAll: () => void;
+    /** L'identifiant du thème chargé, ou `null` si l'ambiance est composée à la main. */
+    themeChargeId: string | null;
     setTrackLightLink: (index: number, sceneId: string | null) => void;
     handleLightReversion: (stoppedIndex: number) => void;
     /**
@@ -166,11 +180,15 @@ export const useAmbientStore = create<AmbientState>()(
             presets: DEFAULT_PRESETS,
             scenes: DEFAULT_SCENES,
             customUniverses: [],
+            themeChargeId: null,
 
 
             loadTheme: async (universe, themeName) => {
                 const theme = get().presets.find(p => p.universe === universe && p.name === themeName);
                 if (!theme) return;
+
+                /* Ce qui est chargé se retient : voir `themeChargeId`. */
+                set({ themeChargeId: theme.id });
 
                 // Stop all current
                 ambientEngine.fadeOutAll(1.0);
@@ -355,6 +373,8 @@ export const useAmbientStore = create<AmbientState>()(
             },
 
             fadeOutAll: async () => {
+                /* Plus rien ne joue : aucun thème n'est en place. */
+                set({ themeChargeId: null });
                 ambientEngine.fadeOutAll(2.0);
                 set(state => ({
                     tracks: state.tracks.map(t => ({ ...t, isPlaying: false }))
