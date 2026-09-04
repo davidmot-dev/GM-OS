@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Vingt-trois guides plus tard, elle a trouvé **soixante-quatorze défauts** — et pas
+son code de l'autre.** Vingt-sept guides plus tard, elle a trouvé **quatre-vingt-deux défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après vingt-trois guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après vingt-sept guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 23 guides
+## ✅ Ce qui est fait — 27 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -53,16 +53,17 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | **Lot 3** — Oracle, NotebookLM, Obsidian, synergie | 12h | 7 | **5** |
 | **Lot 4** — Cortex, manuel tactique | 12i | 7 | **7** |
 | **Lot 5** — Forge, partage de règles, formules | 12j | 8 | **7** |
+| **Lot 6** — les quatre satellites du combat | 12k | 8 | **7** |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1 à 5 faits le 2026-09-04.** Trente-sept trouvailles, vingt-huit corrigées — dont
+> ✅ **Lots 1 à 6 faits le 2026-09-04.** Quarante-cinq trouvailles, trente-cinq corrigées — dont
 > **les deux chemins de connexion donnés aux joueurs**, **deux boutons du Storyboard muets**,
-> **quatre guides décrivant le mauvais moteur d'IA**, **un bouton du Cortex décrit de travers par
-> les deux guides**, et **deux exemples de formule qui ne fonctionnent pas**. Reste 15 guides, en
-> 5 lots.
+> **quatre guides décrivant le mauvais moteur d'IA**, **deux exemples de formule qui ne
+> fonctionnent pas**, et **plusieurs tableaux de correspondances purement inventés**. Reste
+> 11 guides, en 4 lots.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -122,13 +123,14 @@ Détail au § 12i.
 quatre sections de l'éditeur ignorées. Et le guide des formules donnait **deux exemples qui ne
 fonctionnent pas**. Détail au § 12j.
 
-### Lot 6 — Le combat
+### ~~Lot 6 — Le combat~~ ✅ fait le 04/09
 
 `Combat_Dynamic_UI_User_Guide` · `combat_os_cohesion_guide` · `Smart_Damage_Calculator_Guide` ·
 `NPC_Live_Generator_User_Guide`
 
-**Pourquoi.** Quatre satellites autour de Combat-OS, dont le guide principal a déjà eu sa passe de
-fond. Les satellites, non.
+**Ce que le lot a donné** : le motif y est **des tableaux inventés** — deux statuts automatiques
+qui n'existent pas, une coloration des ressources par nom qui n'existe pas, et un moteur d'images
+(« Gemini / Imagen-3 ») qui n'est pas celui du code. Détail au § 12k.
 
 ### Lot 7 — Les tables et le butin
 
@@ -199,6 +201,7 @@ détail et les ancres sont au § 12 du registre.*
 | **O4** | La ligne **« Oracle » du diagnostic IA** teste le pont NotebookLM, pas la conversation. |
 | **K1** | Le bouton **« Sensors »** du Cortex commande les **effecteurs** (sons, lumières), pas les capteurs. Le nom invite à l'erreur. |
 | **F3** | Un **dé dans une formule de fiche est relancé à chaque recalcul** : le résultat change dès qu'on touche un autre champ. |
+| **D4** | **La couleur déclarée d'une jauge n'est presque jamais appliquée** — et l'exemple que la Forge produit garantit qu'elle sera ignorée. |
 
 ### P3 bis — Décisions de table, pas défauts
 

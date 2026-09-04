@@ -1,6 +1,6 @@
 # 🎭 Guide Utilisateur : NPC Live Generator (IA)
 
-Le **NPC Live Generator** est une extension majeure de NPC-OS. Il permet de générer instantanément des portraits et des décors immersifs pour vos entités (PNJ, Lieux, Objets) en utilisant la puissance de l'IA Gemini (Imagen-3).
+Le **NPC Live Generator** est une extension majeure de NPC-OS. Il permet de générer instantanément des portraits et des décors immersifs pour vos entités (PNJ, Lieux, Objets) en générant l'image à la demande.
 
 ## 🌟 Pourquoi utiliser le Live Generator ?
 
@@ -37,9 +37,36 @@ Toutes les images générées sont gérées de manière intelligente :
 - **Persistance** : Si vous enregistrez l'entité en **Mémo**, l'avatar et le décor sont conservés pour vos prochaines sessions.
 - **Modification Manuelle** : Vous pouvez à tout moment remplacer une image IA par une image locale en cliquant sur l'icône **Partager/Dossier** sur l'avatar.
 
-## ⚙️ Prérequis
+## ⚙️ Qui fabrique l'image
 
-Pour utiliser cette fonctionnalité, assurez-vous que :
+> ⛔ **Correction.** Cette page annonçait « l'IA Gemini (Imagen-3) » et demandait une **clé API
+> Gemini**. Ni l'une ni l'autre : **Gemini ne génère aucune image dans GM-OS.** Relevé le
+> 2026-09-04.
 
-- Votre **Clé API Gemini** est configurée dans les `Paramètres > IA`.
-- Vous disposez d'une connexion internet active pour solliciter les modèles de génération.
+GM-OS essaie trois chemins, dans cet ordre :
+
+| Ordre | Moteur | Quand |
+| :---: | :--- | :--- |
+| 1 | **FLUX en local**, par Ollama | Seulement **hors séance**. Voir l'encadré ci-dessous. |
+| 2 | **Cloudflare Workers AI** (`flux-1-schnell`) | Le chemin normal, quelques secondes |
+| 3 | **Z-Image**, via HuggingFace | Dernier recours |
+
+**Ce qu'il faut configurer** : dans *Paramètres → IA → Image*, un **identifiant de compte
+Cloudflare** et un **jeton** portant la permission `Workers AI — Edit`. Le forfait gratuit couvre
+largement une campagne. Un bouton **Tester** emprunte exactement le même chemin que la génération
+réelle — *un test qui refait l'appel à sa façon ne teste pas ce qui tourne en séance.*
+
+> ⚠️ **En pleine partie, la diffusion locale est court-circuitée.** Un modèle local met jusqu'à
+> quatre-vingt-dix secondes, et pendant ce temps il occupe **l'unique créneau de calcul** — donc
+> l'Oracle et le Cortex avec lui. Séance ouverte, GM-OS va droit au service distant ; **mettre la
+> séance en pause rouvre le local.**
+
+Les messages d'erreur sont ceux que le service a rendus, jamais un « échec » générique : un quota
+épuisé, un jeton sans la bonne permission et un identifiant de compte erroné sont trois problèmes
+différents, et les confondre ferait chercher au mauvais endroit.
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Le moteur d'images n'est pas Gemini/Imagen-3 mais
+**Cloudflare Workers AI**, avec FLUX en local hors séance et Z-Image en dernier recours — et la clé
+à configurer n'est pas une clé Gemini. Ajouté : pourquoi le local est écarté pendant une séance.*

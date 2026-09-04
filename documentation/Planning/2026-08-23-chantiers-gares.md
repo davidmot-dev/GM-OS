@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 5 faits le 04/09.** **Suivant** : lot 6 — le combat.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 6 faits le 04/09.** **Suivant** : lot 7 — les tables et le butin.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -584,6 +584,30 @@ troisième donnait **deux exemples de formules qui ne fonctionnent pas**.*
 vide** vaut bien 0 ; l'export d'une règle vers Obsidian ; l'éditeur Markdown avec rendu en direct ;
 l'enregistrement des fiches dans le dossier du système ; le lien NotebookLM par système.
 
+#### 12k · Lot 6 — le combat (2026-09-04)
+
+*Quatre satellites de Combat-OS. Le motif du lot : **des tableaux inventés** — des correspondances
+listées dans les guides que le code ne contient nulle part.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⛔ **D1** | **Deux statuts automatiques inventés.** Le guide du calculateur annonçait neuf correspondances type → statut ; le code en a **six** plus le soin. « Nécrotique → Affaibli » et « Radiant → Ébloui » n'existent pas — les deux **types** existent bien, mais ne posent rien. Et **Empoisonné dure 5 tours**, pas 3. | ✅ **Corrigé.** À trancher si David veut vraiment ces deux statuts : c'est deux lignes dans `COMBAT_AUTO_STATUS_RULES`. | `combat/logic/CombatRules.ts:31-38` |
+| ⛔ **D2** | **La correspondance se fait par mot contenu.** Le guide donnait « Froid / **Glace** » et « **Éclair** / Foudre » : seuls `froid` et `foudre` déclenchent quelque chose. Un pilote qui nommerait son type « Glace » ne poserait aucun statut, **sans que rien le signale**. | ✅ **Documenté.** *Le nom du type est devenu une clé de correspondance sans que personne l'ait décidé* — à surveiller si un pilote forgé nomme ses types autrement. | idem, `includes(key)` |
+| ⛔ **D3** | **La coloration automatique des ressources par nom n'existe pas.** Le guide de cohésion donnait une table — *Sanity* violet, *Mana* bleu, *XP* ambre, le reste indigo. Aucune trace dans le code : la couleur vient du pilote, ou du repli à une seule couleur. | ✅ **Corrigé.** | `CombatCard.tsx:450-600` |
+| ⛔ **D4** | **La couleur déclarée d'une jauge n'est presque jamais appliquée.** Seul le style `bar` la lit, et **seulement si elle est écrite en classe Tailwind** (`bg-red-500`). Les styles `segmented` et `neon` emploient `bg-primary` quoi qu'il arrive. **Or l'exemple que la Forge produit elle-même** combine `"style":"segmented"` et `"color":"#d97706"` — les deux conditions qui garantissent que la couleur sera ignorée. | **À corriger** : lire `gaugeConfig.color` dans les trois styles, et accepter l'hexadécimal (un `style={{ background }}` plutôt qu'une classe). *Sinon corriger l'exemple de la Forge, qui enseigne le contraire.* | `CombatCard.tsx:471-545`, `GroupesDeChamps.ts:571` |
+| ⛔ **D5** | **Le rapport de fin de combat va au journal de séance, pas à la chronologie.** Le guide annonçait « un événement de type `combat` ajouté à la **Timeline** » ; c'est `useJournalStore.addEvent({ type: 'COMBAT' })`. La conséquence compte : il rejoint le **compte rendu de fin de séance**, et non l'histoire longue de la campagne. | ✅ **Corrigé.** | `useCombatStore.ts:842` |
+| ⛔ **D6** | **Une variable d'initiative introuvable vaut `0`**, elle ne déclenche pas le repli annoncé sur `1d20`. `1d20 + [dex]` sans `dex` rend un `1d20` sec : le résultat ressemble à ce que le guide promettait, **mais rien ne signale que la caractéristique manquait**. Le repli sur un dé au hasard n'existe que si la formule est illisible. | ✅ **Documenté.** *Un modificateur silencieusement absent est plus difficile à voir qu'une erreur.* | `CombatRules.ts:108-150` |
+| ⛔ **N1b** | **Le générateur d'images n'est pas Gemini/Imagen-3.** Le guide en faisait son moteur et demandait une **clé API Gemini** : **Gemini ne génère aucune image dans GM-OS**. Trois chemins : FLUX local (hors séance), **Cloudflare Workers AI**, puis Z-Image. La clé à configurer est un **compte Cloudflare + jeton `Workers AI — Edit`**. | ✅ **Corrigé**, avec la raison du court-circuit en séance : le local occupe l'unique créneau de calcul, donc l'Oracle et le Cortex avec lui. | `AIService.ts:664-860`, `ai/cloudflareImage.ts` |
+| **D7** | **Le bouton « DERNIER JET »** du calculateur reprend le total du dernier lancer de dés. Le geste qui fait gagner le plus de temps, absent de tous les guides. | ✅ **Écrit.** | `DamageCalculator.tsx:99-105` |
+
+**Vérifié et exact** : résistance ÷2, vulnérabilité ×2, immunité 0 ; le plafonnement des soins ; la
+résolution des conflits de statuts (le feu retire le mouillé) ; les trois styles de jauge et les
+deux dispositions d'initiative ; le bouton **Sync PV vers Session** ; les types de dégâts
+personnalisables par le pilote.
+
+**Un geste que personne n'avait écrit** : sur une jauge de ressource, **clic gauche −1, clic droit
++1**.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -647,7 +671,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Vingt-trois guides passés, **soixante-quatorze** trouvailles (§§ 12a-12j) — **trente-sept réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Vingt-sept guides passés, **quatre-vingt-deux** trouvailles (§§ 12a-12k) — **quarante-quatre réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
