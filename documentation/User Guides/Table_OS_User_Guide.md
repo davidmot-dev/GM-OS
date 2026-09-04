@@ -4,23 +4,34 @@
 
 ---
 
-## 🖥️ Le Dashboard Table-OS
-L'interface est optimisée pour la rapidité en cours de partie :
-1. **Sélecteur d'Univers (Config)** : Choisissez le système ou l'univers (ex: Alien, MedFan, Cyberpunk).
-2. **Sélecteur de Table** : Affiche toutes les tables JSON disponibles dans l'univers choisi.
-3. **Lanceur de Dés** : Zone centrale pour déclencher le tirage, avec gestion des modificateurs.
-4. **Visualisation de Résultat** : Une carte détaillée affichant le titre, la description et l'effet mécanique du tirage.
-5. **Historique** : Un journal des 50 derniers tirages pour ne rien oublier.
+## 🖥️ Le pupitre
+
+Colonne de gauche, dans l'ordre où on s'en sert :
+
+| Contrôle | À quoi il sert |
+| :--- | :--- |
+| **Univers / Jeu** | Le dossier de tables : Alien, Blade Runner, Cthulhu Hack, MedFan, cyberpunk, générique |
+| **Table Aléatoire** | Les tables de cet univers. Le dé requis s'affiche dessous — *Jet Requis : 1d20* |
+| **Modificateur de Jet** | Ajouté au **résultat brut**, pas au dé |
+| **Jet Manuel** + **Afficher** | ⚭ **Vous avez lancé un vrai dé ?** Tapez le chiffre et cliquez *Afficher* : la table donne l'entrée correspondante sans rien retirer |
+| **LANCER** | Le tirage par GM-OS |
+| **Historique Récent** | Les **dix** derniers tirages à l'écran ; cinquante sont gardés en mémoire |
+
+> 🔎 **Le jet manuel n'était documenté nulle part**, et c'est pourtant le geste des meneurs qui
+> tiennent à lancer leurs propres dés. Ajouté le 2026-09-04.
 
 ---
 
-## 🎲 Moteur de Dés : Standard & Legacy
-Table-OS supporte une syntaxe de dés étendue :
+## 🎲 La syntaxe des dés
+
+Table-OS lit deux familles :
 - **Standard** : `1d20`, `2d6+5`, `1d100`...
-- **Legacy (v3/Concatenation)** : Très utile pour certains systèmes (comme *Alien* ou *Cthulhu Hack*). Exemples :
-    - `d66` : Lance deux d6 et les juxtapose (résultat de 11 à 66).
-    - `d666` : Juxtapose trois d6.
-    - `d44`, `d88`...
+- **Juxtaposés** : `d66` lance deux d6 et colle les chiffres — résultats de 11 à 66. Utile pour
+  *Alien* ou *Cthulhu Hack*.
+
+> ⚠️ **La règle exacte : un seul chiffre, répété, et seulement 4, 6 ou 8.** `d44`, `d66`, `d88`,
+> `d444`, `d666`, `d888` fonctionnent. `d1010` et `d36` **non** — ils seront lus comme des dés
+> ordinaires, ou pas du tout.
 
 ---
 
@@ -31,6 +42,10 @@ Bien que Table-OS soit un module unique, il se décline en plusieurs "sous-modul
 - **Oracles** : Prompts narratifs pour relancer l'intrigue (inspirés d'Ironsworn).
 - **Météo** : Gestion des conditions climatiques et de leurs impacts.
 - **PNJ & Lieux** : Listes de noms, métiers et secrets (en lien avec NPC-OS).
+
+> 🔎 **Six univers sont livrés** : *Alien* (attaques, panique, avaries, blessures critiques),
+> *Blade Runner*, *Cthulhu Hack*, *MedFan*, *cyberpunk* et *générique*. Les plus fournis sont Alien
+> et MedFan.
 
 ---
 
@@ -118,3 +133,10 @@ la forme complète.
 
 > [!TIP]
 > **Modificateur de Jet** : N'oubliez pas le champ "Modificateur". Si vous avez un bonus de +2 à la chance, entrez "2" pour décaler tout le tirage vers les résultats les plus élevés de la table !
+
+---
+
+*Guide révisé le 2026-09-04, code à l'appui. Ajouté : le **jet manuel**, qui laisse lancer un vrai
+dé et n'était documenté nulle part ; la règle exacte des dés juxtaposés (un chiffre répété, et
+seulement 4, 6 ou 8) ; et le fait que l'historique **montre dix tirages** là où il en garde
+cinquante.*

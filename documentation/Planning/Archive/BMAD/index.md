@@ -15,7 +15,7 @@ Bienvenue dans la base de connaissances de **GM-OS v5**. Ce document est le poin
 
 ## 📚 Guides & Manuels
 
-- [**Guide de Migration v3 -> v5**](../../../User Guides/migration-guide.md)
+- [**Note de refonte v5**](../2026-03-10-refonte-v5-architecture.md) *(archivée le 2026-09-04)*
 - [**Architecture (Rule Engine AI)**](../../../Architecture/rule-engine-ai.md)
 - **Développement & Debug** *(document non conservé)*
 

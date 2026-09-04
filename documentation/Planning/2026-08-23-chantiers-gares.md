@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 6 faits le 04/09.** **Suivant** : lot 7 — les tables et le butin.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). **Lots 2 à 7 et 10 faits le 04/09.** **Suivant** : lot 8 — l’image et la lumière.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -608,6 +608,47 @@ personnalisables par le pilote.
 **Un geste que personne n'avait écrit** : sur une jauge de ressource, **clic gauche −1, clic droit
 +1**.
 
+#### 12l · Lot 7 — les tables et le butin, et l'archivage du lot 10 (2026-09-04)
+
+*Le lot le plus court en trouvailles, et pour une bonne raison : **la moitié de ces pages a été
+écrite le matin même**, avec le pont Table-OS → butin. Ce qui restait à vérifier, c'est le vieux
+fond de Table-OS.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| **T1** | **Le « jet manuel » n'était documenté nulle part.** Un champ et un bouton *Afficher* permettent d'entrer le chiffre d'un **vrai dé** et d'obtenir l'entrée correspondante, sans que GM-OS tire quoi que ce soit. *C'est le geste des meneurs qui tiennent à lancer leurs propres dés* — et il était invisible. | ✅ **Écrit.** | `TableDashboard.tsx:207-225` |
+| ⛔ **T2** | **La règle des dés juxtaposés était donnée par l'exemple, jamais par la règle.** Le motif est `/^d([468])\1+$/` : **un seul chiffre, répété, et seulement 4, 6 ou 8**. `d1010` ou `d36` ne fonctionnent pas — ils seront lus comme des dés ordinaires, ou pas du tout. Les exemples du guide étaient tous valides ; la limite ne l'était pas. | ✅ **Écrit.** | `TableEngine.ts:13` |
+| **T3** | **L'historique montre dix tirages, il en garde cinquante.** Le guide annonçait cinquante, ce qui est vrai en mémoire et faux à l'écran. | ✅ **Précisé.** | `useTableStore.ts:102`, `TableDashboard.tsx:245` |
+| ✅ **T4** | **Trois clés d'i18n mortes** — `give_button`, `give_tooltip`, `recipient_fallback` : les libellés du bouton « Donner à un PJ » retiré de Table-OS le matin même. | ✅ **Retirées**, en français et en anglais. | `random_tables.main.*` |
+| ✅ **T5** | **Le guide d'écriture des tables numérotait deux fois « 3 » et deux fois « 4 ».** | ✅ **Renumérotée**, 1 à 7. | `Loot_System_Guide.md` |
+
+**Vérifié et exact** : les six univers livrés ; le modificateur appliqué au **résultat brut** et non
+au dé ; le fichier de gabarit `databases/modele_table.json` ; le prompt d'aide à la création
+(`databases/tables/MedFan/`) ; les quatre portes d'entrée du butin ; l'annonce du don qui part vers
+**toutes** les tablettes ; le pool rattaché à une campagne et persisté.
+
+**Deux guides de butin, et c'est voulu** : l'un *compose* (écrire ses tables), l'autre *distribue*
+(le pool, les dons, l'historique). Ils ne se recouvrent pas — contrairement au Cortex du § 12i, il
+n'y avait rien à dédoublonner.
+
+#### 12m · Lot 10 — archivé plutôt que révisé (2026-09-04)
+
+`migration-guide` n'était **pas un guide utilisateur** : une note d'architecture datée du
+2026-03-10, écrite pour qui touche au code — règles `appBridge`, TypeScript strict, Vitest,
+génération des composants par Stitch. Aucun de ses paragraphes ne décrit un geste de table.
+
+**Déplacé** vers `Planning/Archive/2026-03-10-refonte-v5-architecture.md`, avec un en-tête qui dit
+ce qui a vieilli dedans :
+
+- la **portabilité Electron / Tauri** posée en principe fondateur — Tauri n'a jamais dépassé deux
+  libellés et un contournement commenté *(le même fantôme que les « 60 FPS sous Tauri v2 » du
+  § 12f)* ;
+- le **« aucun type `any` »** — il en reste des centaines, que le linteur signale sans bloquer ;
+- **Stitch / Figma** comme source des composants React.
+
+Ses trois liens entrants sont repointés vers `V6_Code_Standards` et `AppBridge_Architecture_Standard`,
+qui font autorité.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -671,7 +712,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Vingt-sept guides passés, **quatre-vingt-deux** trouvailles (§§ 12a-12k) — **quarante-quatre réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Trente guides passés, **quatre-vingt-sept** trouvailles (§§ 12a-12m) — **quarante-neuf réparées**, dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

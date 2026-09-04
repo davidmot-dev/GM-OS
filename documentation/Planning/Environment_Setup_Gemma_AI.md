@@ -63,4 +63,6 @@ Si GM-OS affiche une erreur de connexion alors qu'Ollama semble lancé :
 
 ---
 
-*Besoin d'aide ? Consultez le [Migration Guide](../User Guides/migration-guide.md) pour passer de la v5 à la v6.*
+*Les règles d'architecture font foi dans [les standards de code v6](./V6_Code_Standards.md) et
+[le standard AppBridge](./AppBridge_Architecture_Standard.md). La note de refonte v5, archivée le
+2026-09-04, est [ici](./Archive/2026-03-10-refonte-v5-architecture.md).*

@@ -79,7 +79,7 @@ En tête de la section *Butin* de la Forge, deux réglages facultatifs :
 Sans déclaration, GM-OS reste neutre (« valeur », « objets remarquables ») au lieu d'imposer
 l'échelle et l'or de D&D à Blade Runner. Ces mots partent aussi dans l'invite de l'IA.
 
-## 3. Modes de Tirage
+## 3. Modes de tirage
 
 Le système propose deux modes fondamentaux de résolution :
 
@@ -98,14 +98,14 @@ Chaque entrée est testée **individuellement**. Le `weight` est ici une **proba
 - Si `weight = 10`, l'objet a 10% de chance d'apparaître.
 - **Usage** : "Générer tout l'équipement de départ d'un PNJ", "Set d'objets garantis".
 
-## 4. Multi-Tirages (Rolls)
+## 4. Multi-tirages
 
 Vous pouvez configurer le nombre de fois que la table doit s'exécuter automatiquement via le champ `Tirages (Dés)` :
 - Valeur fixe : `3` (tire 3 fois).
 - Formule de dés : `1d4+1` (tire entre 2 et 5 fois).
 - En mode **Indépendant**, le nombre de tirages démultiplie les tests de probabilité.
 
-## 3. Paramètres Avancés (Metadata)
+## 5. Paramètres avancés
 
 Les métadonnées permettent d'instancier dynamiquement les objets lors du tirage.
 
@@ -123,7 +123,7 @@ Le système de notification (`LootNotification`) adapte ses couleurs selon la ra
 - `Épique` (Violet)
 - `Légendaire` (Or)
 
-## 4. Exemple Concret : Blade Runner
+## 6. Exemple complet : Blade Runner
 
 Voici comment est implémentée la table "Preuves du LAPD" :
 
@@ -140,7 +140,7 @@ Voici comment est implémentée la table "Preuves du LAPD" :
 }
 ```
 
-## 5. Comment ajouter vos tables ?
+## 7. Ajouter vos tables
 
 **Dans l'application, jamais dans les fichiers source** : Forge-OS → votre pilote → section
 **Butin** → *Créer une table*.

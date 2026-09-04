@@ -13,10 +13,10 @@ affirmait que les campagnes étaient sauvegardées sur GitHub — par le mécani
 l'installation en mars.
 
 D'où cette seconde passe, plus lente et plus dure : **un module à la fois, le guide d'un côté et
-son code de l'autre.** Vingt-sept guides plus tard, elle a trouvé **quatre-vingt-deux défauts** — et pas
+son code de l'autre.** Trente guides plus tard, elle a trouvé **quatre-vingt-sept défauts** — et pas
 seulement dans les guides. Les trois quarts sont dans le code.
 
-> ⭐ **La leçon, après vingt-sept guides.** *Écrire ce qu'un module fait vraiment est le meilleur
+> ⭐ **La leçon, après trente guides.** *Écrire ce qu'un module fait vraiment est le meilleur
 > détecteur de défauts qu'on ait employé sur ce dépôt.* Aucune relecture de code ne les aurait
 > trouvés : ils ne se voient qu'en confrontant une promesse à son implémentation.
 
@@ -39,7 +39,7 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 
 ---
 
-## ✅ Ce qui est fait — 27 guides
+## ✅ Ce qui est fait — 30 guides
 
 | Guide | § | Trouvailles | Réparées |
 | --- | --- | --- | --- |
@@ -54,16 +54,15 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 | **Lot 4** — Cortex, manuel tactique | 12i | 7 | **7** |
 | **Lot 5** — Forge, partage de règles, formules | 12j | 8 | **7** |
 | **Lot 6** — les quatre satellites du combat | 12k | 8 | **7** |
+| **Lot 7** — Table-OS, butin | 12l | 5 | **5** |
+| **Lot 10** — `migration-guide`, **archivé** | 12m | — | — |
 
 ---
 
 ## 🗺️ Voie A — les guides restants
 
-> ✅ **Lots 1 à 6 faits le 2026-09-04.** Quarante-cinq trouvailles, trente-cinq corrigées — dont
-> **les deux chemins de connexion donnés aux joueurs**, **deux boutons du Storyboard muets**,
-> **quatre guides décrivant le mauvais moteur d'IA**, **deux exemples de formule qui ne
-> fonctionnent pas**, et **plusieurs tableaux de correspondances purement inventés**. Reste
-> 11 guides, en 4 lots.
+> ✅ **Lots 1 à 7 faits, lot 10 archivé** — le 2026-09-04. Cinquante trouvailles, quarante
+> corrigées. Reste **8 guides, en 2 lots** : l'image et la lumière, puis les petits outils.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -132,12 +131,13 @@ fonctionnent pas**. Détail au § 12j.
 qui n'existent pas, une coloration des ressources par nom qui n'existe pas, et un moteur d'images
 (« Gemini / Imagen-3 ») qui n'est pas celui du code. Détail au § 12k.
 
-### Lot 7 — Les tables et le butin
+### ~~Lot 7 — Les tables et le butin~~ ✅ fait le 04/09
 
 `Table_OS_User_Guide` · `Loot_Module_Guide`
 
-**Pourquoi.** Le pont Table-OS → butin a été construit le 04/09 et **n'a jamais été joué en
-séance**. Les deux guides le décrivent d'avant.
+**Ce que le lot a donné** : peu, et pour une bonne raison — la moitié de ces pages avait été
+écrite le matin même avec le pont vers le butin. Le vieux fond de Table-OS a rendu **le jet
+manuel**, qui n'était documenté nulle part. Détail au § 12l.
 
 ### Lot 8 — L'image et la lumière
 
@@ -155,11 +155,11 @@ Stop All les retire toutes, ce qu'aucun guide ne disait.
 **Pourquoi en fin.** Surface réduite, enjeu faible. Mais `Remote_Control` mérite un œil : c'est là
 qu'on a trouvé le pad d'ambiance qui charge le silence.
 
-### Lot 10 — Le reliquat
+### ~~Lot 10 — Le reliquat~~ ✅ archivé le 04/09
 
-`migration-guide`
-
-À lire pour décider s'il a encore un sujet, ou s'il doit être archivé.
+`migration-guide` n'était pas un guide utilisateur : une note d'architecture du 2026-03-10, écrite
+pour qui touche au code. Déplacée vers `Planning/Archive/2026-03-10-refonte-v5-architecture.md`,
+avec un en-tête qui dit ce qui a vieilli dedans. Ses trois liens entrants sont repointés.
 
 ---
 
