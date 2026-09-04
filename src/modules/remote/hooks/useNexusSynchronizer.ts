@@ -9,6 +9,7 @@ import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useImageStore } from '../../image/useImageStore';
+import { useAmbientStore } from '../../ambient/useAmbientStore';
 
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -189,6 +190,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const favoriteStore = useFavoriteStore.getState();
             const musicStore = useMusicStore.getState();
             const imageStore = useImageStore.getState();
+            const ambientStore = useAmbientStore.getState();
 
             const clockStore = useClockStore.getState();
             const whiteboardStore = useWhiteboardStore.getState();
@@ -230,7 +232,27 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 id: m.id, type: 'image' as const, label: m.name, imageUrl: await resolveToSendableUrl(m.path), color: 'var(--emerald-500)'
             })));
 
-            const universalPads = [...musicPads, ...resolvedImagePads];
+            /*
+              **Les thèmes d'ambiance, ajoutés le 2026-09-04.**
+
+              `sceneActions` savait déjà en lancer un depuis un pad — mais rien
+              ne lui en envoyait jamais : la branche était **inatteignable**, et
+              le guide d'Ambient-OS promettait depuis des mois un geste qui
+              n'existait pas.
+
+              Le sous-titre porte l'univers : deux jeux peuvent avoir leur
+              « Taverne », et sur un téléphone on ne survole rien pour lever le
+              doute.
+            */
+            const ambientPads = ambientStore.presets.slice(0, 8).map(p => ({
+                id: p.id,
+                type: 'ambient' as const,
+                label: p.name,
+                sublabel: p.universe,
+                color: 'var(--cyan-500)',
+            }));
+
+            const universalPads = [...musicPads, ...ambientPads, ...resolvedImagePads];
 
             // 3. COMBAT & ENTITIES
             const resolvedCombatants = (await Promise.all(combatStore.combatants.map(async (c) => ({

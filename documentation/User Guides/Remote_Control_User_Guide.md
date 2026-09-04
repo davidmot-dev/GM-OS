@@ -26,13 +26,16 @@ La **GM Remote Control** est une Web App responsive qui transforme n'importe que
 Une grille de raccourcis, remplie automatiquement avec deux choses et deux seulement :
 
 - **Jusqu'à cinq morceaux** de la playlist active de Music-OS ;
+- **Jusqu'à huit thèmes d'ambiance**, avec leur univers en sous-titre ;
 - **Jusqu'à douze images** marquées en favori dans Image-OS — avec leur vignette.
 
-Un appui lance le morceau, ou projette l'image.
+Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 
-> ⚠️ **Rien d'autre n'y arrive.** Ni ambiances, ni bruitages, ni cartes : ces familles ne sont pas
-> envoyées à la télécommande. Pour les ambiances, c'est l'onglet **Scénario** (une séquence de
-> storyboard peut en porter une) ; pour les bruitages, l'onglet **Sons**.
+> ✅ **Les ambiances sont arrivées le 2026-09-04.** La grille n'en recevait aucune, et le code qui
+> savait en lancer une était donc inatteignable. Un appui **charge le thème et démarre ses pistes**
+> — celles qui ont un fichier et un volume.
+
+> ⚠️ **Les bruitages ne sont pas ici** : ils ont leur propre onglet, **Sons**.
 
 ### 2. 🎲 Dés
 - Lancez des dés (D4, D6, D8, D10, D12, D20, D100) d'une simple pression.

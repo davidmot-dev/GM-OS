@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). ✅ **VOIE A TERMINÉE** (38 guides) **et les six P1 de la voie B réparés**, le 04/09. **Suivant** : les rangs P2 à P4, § 13 et plan.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS, les quatre modules audio, **le lot 1 — Tablet Hub et projection des dés** (04/09). ✅ **VOIE A TERMINÉE** (38 guides), **P1 et P2 de la voie B réparés**, le 04/09. **Suivant** : les rangs P3 et P4, §§ 13-14 et plan.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -752,6 +752,22 @@ sauvegarde antérieure à aujourd'hui n'a aucune de ces clés, et le `?.length` 
 **Ce qui reste de la voie B** : les rangs P2 à P4, dont ⛔ **M3**, le seul qui demande l'écran de
 David — *projeter, charger une carte jamais explorée, regarder la tablette.*
 
+### 14 · ✅ Les deux P2, réparés (2026-09-04)
+
+| # | Ce qui était | Ce qui est | Où |
+| --- | --- | --- | --- |
+| ⛔ **M3** | **Changer de carte en cours de projection laissait aux joueurs le brouillard de la précédente.** `syncToPlayers` ne poussait `projectedFogDataUrl` **que s'il y en avait un** — donc au chargement d'un plan jamais exploré, la valeur d'avant restait : des trous révélés au mauvais endroit, sur une carte qu'ils n'ont pas encore vue. | La garde tombe : le brouillard part **toujours**, `null` compris. *La garde protégeait la mauvaise chose* — elle évitait d'écrire `null`, alors que `null` est précisément ce qu'il faut dire. **Le repli des deux toiles était déjà le noir complet ; c'est le chemin qui n'y menait pas.** 3 tests. | `useMapStore.ts` (`syncToPlayers`) |
+| ⛔ **A1** | **Aucun thème d'ambiance n'arrivait sur la télécommande**, et le code qui savait en lancer un était donc **inatteignable**. Le guide promettait depuis des mois un geste qui n'existait pas. | **Les deux moitiés construites**, sur décision de David : jusqu'à huit thèmes dans la grille de pads (univers en sous-titre — deux jeux peuvent avoir leur « Taverne »), et `lancerLeTheme` qui **charge puis démarre**. ⚠️ Ne démarre que les pistes qui ont **un fichier et un volume** : une piste à zéro fait partie du thème sans faire partie du moment. 5 tests. | `useNexusSynchronizer.ts`, `useAmbientStore.ts`, `sceneActions.ts` |
+
+**Ce que A1 laisse en place, et c'est voulu** : `loadTheme` continue de charger **sans jouer**.
+C'est le geste juste à l'écran — on charge, on règle, on démarre — et c'est un pad de télécommande
+qui n'a pas de second geste. Les deux coexistent désormais au lieu que l'un serve pour les deux.
+
+**Vérifié** : `tsc -b` propre, 8 tests neufs, `npm run validate` vert — 3 523 tests.
+
+**Ce qui reste de la voie B** : les rangs P3 (l'écran dit autre chose que ce qu'il fait, et les
+trois décisions de table) et P4 (le ménage).
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -815,7 +831,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — ✅ **38 guides, les dix lots** — **cent deux** trouvailles (§§ 12a-12o), **soixante-neuf réparées** dont **les six P1** (§ 13), dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — ✅ **38 guides, les dix lots** — **cent deux** trouvailles (§§ 12a-12o), **soixante et onze réparées** dont **les six P1 et les deux P2** (§§ 13-14), dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

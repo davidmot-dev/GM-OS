@@ -94,16 +94,20 @@ piste allumée qui porte un lien**, et applique la sienne ; s'il n'y en a aucune
 
 ## 📱 Depuis la télécommande
 
-> ⛔ **Il n'y a pas de pad d'ambiance sur la télécommande.** Cette page promettait un « Toggle
-> Intelligent » et un « Auto-Play » qui lanceraient un thème d'une pression. **Ni l'un ni l'autre
-> n'existe** — et la grille de pads de la télécommande ne reçoit que **des morceaux de musique et
-> des images favorites** : aucune ambiance n'y est envoyée.
->
-> *Le code contient bien une branche pour charger un thème depuis un pad ; rien ne peut l'atteindre.*
-> Relevé le 2026-09-04, précisé le même jour en passant la télécommande en revue.
+✅ **Vos thèmes sont sur la grille de pads, et un appui les lance.** Jusqu'à huit d'entre eux, avec
+leur univers en sous-titre — deux jeux peuvent avoir leur « Taverne », et sur un téléphone on ne
+survole rien pour lever le doute.
 
-Pour lancer une ambiance à distance, le chemin réel est l'onglet **Scénario** : une séquence de
-storyboard peut porter une scène d'ambiance, et celle-là part bien.
+**Un appui charge le thème et démarre les pistes qui ont un fichier et un volume.** Une piste que
+vous avez mise à zéro fait partie du thème sans faire partie du moment : elle reste muette.
+
+> ⛔ **Ce n'était pas le cas avant le 2026-09-04.** Cette page promettait un « Toggle Intelligent »
+> et un « Auto-Play » qui n'existaient ni l'un ni l'autre — et **aucune ambiance n'était même
+> envoyée à la télécommande**. Le code contenait bien une branche pour en lancer une ; rien ne
+> pouvait l'atteindre. Les deux moitiés manquantes ont été construites.
+
+L'onglet **Scénario** reste l'autre chemin : une séquence de storyboard peut porter une scène
+d'ambiance.
 
 La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer une scène.
 
@@ -115,7 +119,7 @@ La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer u
 | :--- | :--- |
 | **Un thème livré ne fait aucun bruit** | Normal : les thèmes d'exemple sont des gabarits sans fichiers. Attribuez vos sons, puis enregistrez le thème. |
 | **J'ai chargé un thème et rien ne démarre** | Voulu : charger ne lance pas. Démarrez les pistes une à une, ou appliquez une scène. |
-| **Je ne trouve pas d'ambiance sur la télécommande** | Il n'y en a pas dans la grille de pads. Passez par l'onglet **Scénario**. |
+| **Un pad d'ambiance ne fait aucun bruit** | Ses pistes n'ont pas de fichier, ou leur volume est à zéro. Un thème livré est un gabarit vide — voir le haut de cette page. |
 | **La lumière ne revient pas à la bonne piste** | La reprise choisit le numéro de piste le plus élevé, pas la dernière allumée. |
 | **Une piste ne s'entend pas alors que son curseur est haut** | Regardez son analyseur de spectre : s'il est plat, c'est le fichier qui manque ou ne joue pas. |
 | **Tout est trop faible pendant une narration** | Le **Focus Chat** est actif : il met les ambiances à 10 %. |

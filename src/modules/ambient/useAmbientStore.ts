@@ -39,6 +39,18 @@ interface AmbientState {
 
     // Actions
     loadTheme: (universe: string, themeName: string) => Promise<void>;
+    /**
+     * **Charge un thème ET le lance** — le geste de la télécommande.
+     *
+     * `loadTheme` pose les huit pistes à l'arrêt, et c'est voulu à l'écran : on
+     * charge, on règle, on démarre. Mais un pad de télécommande n'a pas de
+     * second geste — *appuyer dessus doit produire du son*, sans quoi il
+     * charge le silence.
+     *
+     * Ne démarre que les pistes qui ont **un fichier et un volume** : une piste
+     * à zéro fait partie du thème sans en faire partie du moment.
+     */
+    lancerLeTheme: (universe: string, themeName: string) => Promise<void>;
     saveTheme: (universe: string, themeName: string) => void;
     deleteTheme: (themeId: string) => void;
     saveScene: (name: string) => void;
@@ -162,6 +174,25 @@ export const useAmbientStore = create<AmbientState>()(
                 });
 
                 set({ tracks: newTracks });
+            },
+
+            lancerLeTheme: async (universe, themeName) => {
+                await get().loadTheme(universe, themeName);
+
+                /*
+                  **Une piste à la fois, et l'état relu à chaque tour.**
+                  `toggleTrack` écrit dans le magasin ; un instantané pris avant
+                  la boucle mentirait dès la deuxième piste — même raison que
+                  l'extinction côté storyboard.
+                */
+                const aLancer = get().tracks
+                    .map((t, i) => ({ t, i }))
+                    .filter(({ t }) => !!t.url && t.volume > 0)
+                    .map(({ i }) => i);
+
+                for (const i of aLancer) {
+                    if (!get().tracks[i]?.isPlaying) await get().toggleTrack(i);
+                }
             },
 
             saveTheme: (universe, themeName) => {

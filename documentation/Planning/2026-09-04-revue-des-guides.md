@@ -70,8 +70,9 @@ Une séance = **un lot**. Chacun tient en une session, et se termine par un `git
 > vos données sont en sécurité ». Ni coffre, ni pastille, ni sauvegarde — **troisième occurrence**
 > de cette famille après le faux backup GitHub et Map-OS.
 >
-> ✅ **Et les six P1 de la voie B sont réparés le même soir** — dont l'import de campagne qui
-> effaçait la SoundBoard. Restent les rangs **P2 à P4**, ci-dessous.
+> ✅ **Et les rangs P1 et P2 de la voie B sont réparés le même soir** — dont l'import de campagne
+> qui effaçait la SoundBoard, et le brouillard périmé chez les joueurs. Restent **P3 et P4**,
+> ci-dessous.
 
 *L'ordre n'est pas alphabétique : il va du plus risqué au plus tranquille. Un guide faux sur ce que
 voient les joueurs coûte une soirée ; un guide faux sur un outil qu'on ouvre deux fois par an,
@@ -194,12 +195,14 @@ détail et les ancres sont au § 12 du registre.*
 | **N4** | Le pilote personnalisé était exporté et jamais réinjecté. | **ajouté, jamais remplacé** |
 | **G1** | Favorite-OS n'était dans aucune sauvegarde. | **dans la sauvegarde** |
 
-### P2 — Une fonction annoncée qui ne marche pas
+### ✅ P2 — Une fonction annoncée qui ne marche pas : **les deux sont faits**
 
-| # | Quoi | Coût |
+*Réparés le 2026-09-04, détail au § 14 du registre.*
+
+| # | Quoi | ✅ |
 | --- | --- | --- |
-| **A1** | Le **pad d'ambiance de la télécommande charge le silence** (`loadTheme` ne joue rien). | ~10 lignes |
-| **M3** | Soupçon : **changer de carte en cours de projection** laisserait aux joueurs le brouillard de la carte précédente. ⛔ **À vérifier à l'écran d'abord.** | Trente secondes de test |
+| **A1** | Aucune ambiance n'arrivait sur la télécommande, et le code qui savait en lancer une était inatteignable. | **les deux moitiés construites** |
+| **M3** | Changer de carte en cours de projection laissait aux joueurs le brouillard de la précédente. | **le brouillard part toujours, `null` compris** |
 
 ### P3 — L'écran dit autre chose que ce qu'il fait
 

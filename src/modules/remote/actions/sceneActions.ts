@@ -62,7 +62,13 @@ const triggerUniversalPad = (payload: any) => {
     const preset = ambientStore.presets.find(p => p.id === id);
     if (preset) {
         console.log(`[Actions] Triggering Ambient Preset: ${preset.name}`);
-        ambientStore.loadTheme(preset.universe, preset.name);
+        /*
+          **`loadTheme` charge sans jouer, et c'est juste à l'écran** : on
+          charge, on règle, on démarre. Un pad de télécommande n'a pas de
+          second geste — il chargeait donc le silence. `lancerLeTheme` fait
+          les deux.
+        */
+        void ambientStore.lancerLeTheme(preset.universe, preset.name);
     }
 };
 

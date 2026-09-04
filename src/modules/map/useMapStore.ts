@@ -485,9 +485,26 @@ export const useMapStore = create<MapState>()(
                     updates.projectedIsVideo = state.isVideo;
                 }
                 
-                if (state.fogDataUrl) {
-                    updates.projectedFogDataUrl = state.fogDataUrl;
-                }
+                /*
+                  **Le brouillard part TOUJOURS, y compris quand il n'y en a pas.**
+
+                  La garde `if (state.fogDataUrl)` laissait la valeur projetée
+                  intacte lorsque la carte courante n'avait aucun brouillard
+                  enregistré — c'est-à-dire **exactement au chargement d'une
+                  carte jamais explorée**. L'écran des joueurs gardait alors le
+                  brouillard de la carte précédente : des trous révélés au
+                  mauvais endroit, sur un plan qu'ils n'ont pas encore vu.
+
+                  *La garde protégeait la mauvaise chose.* Elle évitait d'écrire
+                  `null`, alors que `null` est précisément ce qu'il faut dire —
+                  les deux toiles, celle du meneur et celle des joueurs, peignent
+                  **le noir complet** quand elles ne reçoivent rien. Le repli
+                  était déjà juste ; c'est le chemin qui n'y menait pas.
+
+                  Relevé le 2026-09-04 en écrivant le guide de Map-OS, corrigé le
+                  même jour.
+                */
+                updates.projectedFogDataUrl = state.fogDataUrl;
 
                 set(updates);
             },

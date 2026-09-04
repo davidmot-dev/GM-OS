@@ -70,6 +70,14 @@ préparer à froid.
 > 🔎 **Un ping traverse le brouillard.** Les pings sont dessinés **au-dessus** du calque. Signaler
 > un point dans une zone non révélée montre le cercle aux joueurs — sur du noir.
 
+<!-- -->
+
+> ✅ **Changer de carte en cours de projection est sûr depuis le 2026-09-04.** L'écran des joueurs
+> gardait auparavant le brouillard de la carte précédente quand la nouvelle n'en avait aucun —
+> c'est-à-dire **au chargement d'un plan jamais exploré** : des trous révélés au mauvais endroit.
+> La projection dit désormais « pas de brouillard » au lieu de se taire, et les deux toiles peignent
+> alors le noir complet.
+
 ### La persistance
 
 Le brouillard est enregistré **par carte**, dans la base locale du navigateur (IndexedDB), sous
