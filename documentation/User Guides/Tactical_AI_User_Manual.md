@@ -1,6 +1,6 @@
 # Manuel Utilisateur : Assistant Tactique (Cortex)
 
-![Header Cortex AI](C:\Users\david\.gemini\antigravity\brain\22c17f26-cad9-4fa0-983b-879d7051c15a\tactical_cortex_manual_header_1775753363458.png)
+*(Capture « Header Cortex AI » — perdue lors du déplacement du projet.)*
 
 Le **Cortex** est un module d'intelligence artificielle intégré à Map-OS. Il assiste le MJ en analysant la situation tactique sur l'atlas et en suggérant des approches stratégiques pour les PNJs et les monstres.
 

@@ -17,6 +17,7 @@ Les "Neural Overrides" (Personas comme l'Oracle ou le Sage) peuvent être modifi
 
 ### 3. Intégration Forge & Explorer
 - **Analyse Multimodale** : Support des PDF, Images, **Markdown (.md)**, **Text (.txt)**, **JSON** et **JSONL**.
+- **Ciblage Explicite (🧠 Brain vs 👕 Body)** : Nouveau sélecteur permettant d'indiquer si l'on forge la logique (dés, règles) ou la structure visuelle (champs, sections).
 - **Explorateur Local** : Scan automatique du dossier `docs/systems` pour importer vos documents PDF, MD, TXT, JSON et JSONL personnels.
 - **Temps de Réflexion** : Augmentation du timeout IA à 120s pour l'analyse de livres de règles massifs.
 
@@ -25,13 +26,15 @@ Les "Neural Overrides" (Personas comme l'Oracle ou le Sage) peuvent être modifi
 ## Démonstration Visuelle
 
 ````carousel
-![Tableau de Bord de la Forge (Stitch Edition)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/media_templates_dashboard_1773352309972.png)
+*(Capture « Tableau de Bord de la Forge (Stitch Edition) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Nouvel Éditeur du Moteur de Règles (Logique & IA)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/rule_engine_editor_1773396789927.png)
+*(Capture « Nouveau Sélecteur de Cible (Brain vs Body) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Configuration de la Résonance IA sur fiche native](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/template_resonance_editor_1773396749471.png)
+*(Capture « Nouvel Éditeur du Moteur de Règles (Logique & IA) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Vidéo de vérification du workflow complet](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/verify_rule_engine_editor_1773396579672.webp)
+*(Capture « Configuration de la Résonance IA sur fiche native » — perdue lors du déplacement du projet.)*
+<!-- slide -->
+*(Capture « Vidéo de vérification du workflow complet » — perdue lors du déplacement du projet.)*
 ````
 
 ---

@@ -26,15 +26,15 @@ Les "Neural Overrides" (Personas comme l'Oracle ou le Sage) peuvent être modifi
 ## Démonstration Visuelle
 
 ````carousel
-![Tableau de Bord de la Forge (Stitch Edition)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/media_templates_dashboard_1773352309972.png)
+*(Capture « Tableau de Bord de la Forge (Stitch Edition) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Nouveau Sélecteur de Cible (Brain vs Body)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/forge_targeting_refined_1773399342688.png)
+*(Capture « Nouveau Sélecteur de Cible (Brain vs Body) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Nouvel Éditeur du Moteur de Règles (Logique & IA)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/rule_engine_editor_1773396789927.png)
+*(Capture « Nouvel Éditeur du Moteur de Règles (Logique & IA) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Configuration de la Résonance IA sur fiche native](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/template_resonance_editor_1773396749471.png)
+*(Capture « Configuration de la Résonance IA sur fiche native » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Vidéo de vérification du workflow complet](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/verify_rule_engine_editor_1773396579672.webp)
+*(Capture « Vidéo de vérification du workflow complet » — perdue lors du déplacement du projet.)*
 ````
 
 ---

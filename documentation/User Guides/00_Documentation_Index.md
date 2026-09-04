@@ -1,6 +1,6 @@
 # 🗂️ Les guides utilisateur de GM-OS
 
-**Les 46 guides du dossier, rangés par ce que vous cherchez à faire.** Chaque ligne dit à quelle
+**Les 52 guides du dossier, rangés par ce que vous cherchez à faire.** Chaque ligne dit à quelle
 question la page répond — de quoi choisir sans ouvrir.
 
 > Vous cherchez plutôt *comment c'est fait* ? → [Index technique](../Technical%20Docs/00_Index_Technique.md)
@@ -16,6 +16,14 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Session-OS — le cockpit](./Session_OS_User_Guide.md) | Comment créer une campagne, préparer une séance, la lancer. **Le plus complet : commencez ici.** |
 | [Recherche universelle](./Universal_Search_User_Guide.md) | Retrouver n'importe quoi d'une frappe (`Ctrl+K`) — entité, carte, son, règle. |
 | [Paramètres](./Settings_OS_User_Guide.md) | Thème, matériel audio, clés d'API, écrans. |
+
+## 📖 Préparer une histoire, et la raconter
+
+| Guide | À quelle question il répond |
+| :--- | :--- |
+| [La Trame narrative](./Trame_Narrative_User_Guide.md) | Actes et scènes : le plan de la campagne, ce qui est joué, ce qui reste. |
+| [La Forge de campagne](./Forge_De_Campagne_User_Guide.md) | Transformer un scénario écrit en actes, scènes, PNJ et lieux. |
+| [Le Journal de séance](./Journal_De_Seance_User_Guide.md) | Ce qui s'enregistre pendant la partie, et comment en tirer un compte rendu. |
 
 ## 🎭 Le monde et ceux qui l'habitent
 
@@ -69,6 +77,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | :--- | :--- |
 | [Tablet Hub](./Tablet_Hub_User_Guide.md) | L'écran du joueur : fiche, inventaire, cartes, messages. **Commencez par celui-ci.** |
 | [Tablet Hub — usages avancés](./Tablet_Hub_Advanced_Guide.md) | Les réglages fins de ce même écran. |
+| [La fiche de personnage HTML](./Fiche_HTML_User_Guide.md) | La vraie fiche du jeu, branchée sur les données — et qui gagne quand les deux divergent. |
 | [Télécommande du MJ](./Remote_Control_User_Guide.md) | Piloter GM-OS depuis un téléphone. |
 
 ## 🎧 L'ambiance
@@ -83,6 +92,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Media Hub](./Media_Hub_User_Guide.md) | Où vivent les fichiers, et comment les retrouver. |
 | [Light-OS](./Light_OS_User_Guide.md) | Les lumières Philips Hue dans la scène. |
 | [Whiteboard-OS](./Whiteboard_OS_User_Guide.md) | Dessiner à quatre mains avec les joueurs. |
+| [Afficheur Ulanzi](./Ulanzi_Afficheur_User_Guide.md) | Le petit écran 32 × 8 posé sur la table : widgets, défilé, icônes animées. |
 
 ## 🧠 L'intelligence artificielle
 
@@ -98,6 +108,7 @@ question la page répond — de quoi choisir sans ouvrir.
 
 | Guide | À quelle question il répond |
 | :--- | :--- |
+| [La sauvegarde automatique](./Sauvegarde_Automatique_User_Guide.md) | Ce qui protège vos campagnes toutes les deux minutes, où ça atterrit, et pourquoi ça refuse parfois. |
 | [Nexus-OS — export & import](./Nexus_OS_User_Guide.md) | Emporter une campagne complète dans un `.gmos`, la rouvrir ailleurs. |
 | [Guide de migration](./migration-guide.md) | Ce qui change entre les grandes versions de GM-OS. |
 | [Compilation & déploiement (Windows)](../Technical%20Docs/Compilation_Deployment_Guide.md) | Fabriquer l'exécutable. |
@@ -124,5 +135,7 @@ l'image devait apparaître, plutôt que d'afficher une icône cassée. Elles son
 
 ---
 
-*Index reconstruit le 2026-09-04 : les 46 guides sont listés (22 ne l'étaient nulle part), les
-liens vers l'ancienne arborescence `docs/` sont réparés.*
+*Index reconstruit le 2026-09-04 : les 52 guides sont listés (22 ne l'étaient nulle part), les
+liens vers l'ancienne arborescence `docs/` sont réparés, et **six guides ont été écrits** pour des
+modules majeurs qui n'en avaient aucun — la trame, la Forge de campagne, le journal, la sauvegarde
+automatique, l'afficheur Ulanzi et la fiche HTML.*

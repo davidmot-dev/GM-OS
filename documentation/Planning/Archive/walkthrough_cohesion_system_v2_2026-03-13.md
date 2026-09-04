@@ -36,17 +36,17 @@ Pour garantir une expérience cohérente, j'ai lié structurellement les fiches 
 ## Démonstration Visuelle
 
 ````carousel
-![Sélecteur de Fiche dans le Moteur de Règles](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/rule_editor_linked_sheet_selector_1773409773019.png)
+*(Capture « Sélecteur de Fiche dans le Moteur de Règles » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Indicateur de Moteur sur la Fiche de Personnage](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/sheet_editor_linked_engine_indicator_1773409748225.png)
+*(Capture « Indicateur de Moteur sur la Fiche de Personnage » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Confirmation de Cohésion dans la Création de Campagne](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/campaign_form_cohesion_active_1773409637279.png)
+*(Capture « Confirmation de Cohésion dans la Création de Campagne » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Tableau de Bord de la Forge (Stitch Edition)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/media_templates_dashboard_1773352309972.png)
+*(Capture « Tableau de Bord de la Forge (Stitch Edition) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Nouveau Sélecteur de Cible (Brain vs Body)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/forge_targeting_refined_1773399342688.png)
+*(Capture « Nouveau Sélecteur de Cible (Brain vs Body) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Vérification de l'intégration Combat OS (Standard Mode)](C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/adventure_system_readable_name_1773406955508.png)
+*(Capture « Vérification de l'intégration Combat OS (Standard Mode) » — perdue lors du déplacement du projet.)*
 ````
 
 ---

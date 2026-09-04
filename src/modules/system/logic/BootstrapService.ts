@@ -41,8 +41,21 @@ export class BootstrapService {
             console.log('[Bootstrap] 📡 Démarrage des services de fond (Spatial Triggers)...');
             spatialTriggerService.startWatching();
 
-            // 4. Désactivation du cycle de sauvegarde automatique (Évite les timeouts sur sessions lourdes)
-            // sessionBackupManager.start();
+            /*
+              **La sauvegarde automatique n'a rien à démarrer ici, et ce n'est pas un oubli.**
+
+              Cette ligne portait un appel commenté à `sessionBackupManager.start()`, avec
+              pour explication « désactivation du cycle de sauvegarde automatique ». Les deux
+              sont faux aujourd'hui : **`start()` n'existe plus**, et la sauvegarde tourne.
+
+              Elle ne bat plus à intervalle fixe — c'était bien la cause des blocages sur
+              les grosses séances. Elle se déclenche sur des faits : deux minutes après le
+              DERNIER changement (`signalerUnChangement`), à la fermeture, avant la
+              suppression d'une campagne, à la clôture d'une séance.
+
+              *Un commentaire qui décrit un mécanisme retiré est pire qu'une absence de
+              commentaire : il fait croire que le filet est décroché.*
+            */
 
             // 5. Marquage du système comme "Prêt"
             useSessionStore.getState().setSystemReady(true);
