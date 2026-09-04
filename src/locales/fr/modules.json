@@ -116,8 +116,8 @@
     "gauge_add_default": "Créer une jauge de {{segments}} segments (nommez-la ci-dessus pour la reconnaître)",
     "segments": "Segments",
     "projection": {
-      "show": "Affiché sur le Player Hub",
-      "hide": "Caché du Player Hub"
+      "show": "Visible partout : Player Hub, tablettes et afficheur de table — cliquez pour tout masquer",
+      "hide": "Masqué partout : ni horloge ni jauges chez les joueurs ni sur l'afficheur — cliquez pour tout montrer"
     },
     "empty": {
       "no_gauges": "Aucune jauge active",

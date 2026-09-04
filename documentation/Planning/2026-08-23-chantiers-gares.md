@@ -336,7 +336,7 @@ ce qui reste, à l'écran. La revue se fait donc module par module, à la demand
 passage produit deux choses : les corrections du guide (faites tout de suite) et **les défauts
 de code qu'il a fallu trouver pour les écrire** — c'est cette seconde liste qui vit ici.*
 
-**Modules passés** : Map-OS, Nexus-OS, Media Hub (04/09). **Suivant** : au choix de David.
+**Modules passés** : Map-OS, Nexus-OS, Media Hub, Clock-OS (04/09). **Suivant** : au choix de David.
 
 #### 12a · Map-OS — ce que la revue a trouvé dans le code
 
@@ -414,6 +414,19 @@ filtre de type — donc la seule où les documents apparaissent.
 **Ce qui reste de la § 12c** : H4 (doublons à l'import), H5 (« image » par défaut), H6 (le
 soupçon `accept="document/*"`, à vérifier à l'écran), H7 (pas d'aperçu de document).
 
+#### 12d · Clock-OS — ce que la revue a trouvé dans le code
+
+*Le guide est corrigé et poussé. Le module est sain — c'est le premier des quatre dont le code ne
+cache aucune perte de données. Mais son réglage central en dit moins qu'il ne fait.*
+
+| # | Trouvaille | Ce qu'on en fait | Où |
+| --- | --- | --- | --- |
+| ⭐ **C1** | **Les jauges de tension sont publiques, toutes ou aucune, et par défaut.** `isClockProjected` vaut `true` au démarrage, et **trois** écrans le lisent : le Player Hub, **les tablettes** et **l'afficheur Ulanzi**. Il n'existe aucun réglage de visibilité *par jauge pour les joueurs* — `surLAfficheur` ne parle qu'à l'Ulanzi. Une jauge secrète est donc impossible sans masquer l'horloge entière. | **Décision de table, pas défaut** — dans *Blades in the Dark* les horloges sont publiques, et c'est ce qui les rend angoissantes. Documenté. Si David veut une jauge privée : `surLAfficheur` montre que le motif « un drapeau par jauge » marche déjà, il suffirait d'un second champ. | `useClockStore.ts`, `TabletHub.tsx:275-283`, `HubClockWidgets.tsx` |
+| ✅ **C2** | **L'infobulle du bouton de projection ne nommait qu'une de ses trois destinations** (« Affiché sur le Player Hub »). Le meneur qui éteint l'horloge pour se concentrer éteint aussi **l'instrument posé au milieu de la table**, sans que rien le lui dise. | **Corrigé le 04/09** : les deux libellés nomment les trois destinations, en français et en anglais. | `clock.projection.show/hide` |
+| **C3** | **`ChimeEngine` est du code mort.** Une cloche de cinq harmoniques, quatre secondes de décroissance, entièrement écrite — et `playChime` n'a **aucun appelant**. Aucune sonnerie n'existe donc à la fin d'un minuteur, ni au changement d'heure. | **Bonne matière à finir, pas à jeter.** La fin d'un minuteur est le moment de l'application qui mérite le plus un son, et le moteur est déjà là. À trancher avec David : sonnerie à zéro, oui ou non. | `clock/services/ChimeEngine.ts` |
+| **C4** | **`timeMultiplier` n'a pas d'écran.** Le champ, son action `setTimeMultiplier` et son commentaire (« accélération du temps fantastique ») existent ; **aucun composant ne l'appelle**, et il vaut donc toujours 1. Même famille que `setGridColor` de Map-OS (§ 12a, M5). | **Deux issues** : le retirer, ou lui donner son curseur en mode fantastique — une nuit qui passe pendant que le groupe campe. | `useClockStore.ts` |
+| **C5** | **Un seul calendrier est livré** (`databases/calendars/harptos.json`), là où le guide laissait entendre une bibliothèque. Le format, lui, est riche : mois de longueurs différentes, jours intercalaires, mois de bissextile, heures par jour libres. | **Rien à coder.** Le guide dit désormais qu'il y en a un, et comment en fabriquer un autre (copier le fichier). | `databases/calendars/` |
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -477,7 +490,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Map-OS, Nexus-OS et Media Hub passés, **vingt-deux** trouvailles (§§ 12a-12c) — **trois déjà réparées** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (H1-H3 sont faits) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — Quatre modules passés, **vingt-sept** trouvailles (§§ 12a-12d) — **quatre déjà réparées** | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (H1-H3 sont faits) | Le rythme de David — un module à la fois |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

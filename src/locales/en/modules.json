@@ -116,8 +116,8 @@
     "gauge_add_default": "Create a {{segments}}-segment gauge (name it above to recognise it)",
     "segments": "Segments",
     "projection": {
-      "show": "Visible on Player Hub",
-      "hide": "Hidden from Player Hub"
+      "show": "Visible everywhere: Player Hub, tablets and table display — click to hide it all",
+      "hide": "Hidden everywhere: no clock or gauges for players or on the display — click to show it all"
     },
     "empty": {
       "no_gauges": "No active gauges",

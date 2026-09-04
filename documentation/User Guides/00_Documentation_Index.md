@@ -48,7 +48,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Calculateur de dégâts](./Smart_Damage_Calculator_Guide.md) | Appliquer un impact à plusieurs cibles d'un coup. |
 | [Dice-OS](./Dice_OS_User_Guide.md) | Le pupitre de dés, et les mécaniques exotiques (pools, dés échelonnés, d100). |
 | [Projection des dés](./Dice_Projection_Guide.md) | Faire voir un jet aux joueurs. |
-| [Clock-OS](./Clock_OS_User_Guide.md) | Le temps, les minuteurs, les horloges de tension. |
+| [Clock-OS](./Clock_OS_User_Guide.md) | Le temps — réel, figé, compté — et les jauges de tension, **que vos joueurs voient**. |
 | [Deck-OS](./Deck-OS_User_Manual.md) | Les paquets de cartes, le tirage, et **les cartes qu'un joueur garde en main**. |
 | [Storyboard](./Storyboard_User_Guide.md) | Enchaîner son, lumière et image en un seul geste. |
 
