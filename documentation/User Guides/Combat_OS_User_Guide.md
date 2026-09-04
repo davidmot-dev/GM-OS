@@ -2,7 +2,7 @@
 
 Le module **Combat OS** est votre tour de contrôle pour les affrontements. Il automatise la gestion de l'ordre de passage, le suivi de la santé, les effets de statut et synchronise le tout avec le plateau de jeu et la chronologie de votre campagne.
 
-![Aperçu du module Combat OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/combat_mockup.png)
+![Aperçu du module Combat OS](combat_mockup.png)
 
 ## 📋 Présentation du Module
 

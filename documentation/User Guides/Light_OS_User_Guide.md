@@ -2,7 +2,7 @@
 
 Le module **Light OS** est votre centre de contrôle domotique dédié à l'immersion. Il intègre vos lumières **Philips Hue** directement dans votre environnement de jeu, permettant de synchroniser l'éclairage de votre pièce avec l'action, la musique et les effets sonores.
 
-![Aperçu du module Light OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/light_mockup.png)
+![Aperçu du module Light OS](light_mockup.png)
 
 ## 📋 Présentation du Module
 

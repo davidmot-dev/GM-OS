@@ -26,7 +26,7 @@ Ce document retrace les modifications apportées pour améliorer l'immersion vis
 
 ## 📸 Rendu Visuel
 
-![Theater Mode Preview](file:///C:/Users/david/.gemini/antigravity/brain/46c86007-1290-455b-bed5-f0df4ff2667e/tablet_hub_dice_theater_mode_1775302636253_1775302657256.png)
+*(Capture « Theater Mode Preview » — perdue lors du déplacement du projet.)*
 > *Simulation du nouveau mode d'affichage des dés en mode "Theater".*
 
 ## 🧪 Tests & Validation

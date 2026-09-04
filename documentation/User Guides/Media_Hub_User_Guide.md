@@ -2,7 +2,7 @@
 
 Le **Media Hub** est la bibliothèque centrale de GM-OS v5. C'est ici que sont stockés, indexés et organisés tous les fichiers que vous utilisez dans vos sessions : illustrations, musiques, effets sonores, vidéos d'ambiance et documents de référence.
 
-![Aperçu du Media Hub](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/media_hub_mockup.png)
+![Aperçu du Media Hub](media_hub_mockup.png)
 
 ## 📋 Présentation du Module
 

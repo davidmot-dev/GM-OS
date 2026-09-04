@@ -2,7 +2,7 @@
 
 Le module **Ambient OS** est l'outil ultime pour créer des paysages sonores immersifs et évolutifs. Contrairement aux musiques (Music OS) ou aux effets ponctuels (Sound OS), Ambient OS permet de superposer jusqu'à 8 boucles sonores indépendantes (pluie, vent, rumeur de foule, drones) pour créer une ambiance sur mesure.
 
-![Aperçu du module Ambient OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/ambient_mockup.png)
+![Aperçu du module Ambient OS](ambient_mockup.png)
 
 ## 📋 Présentation du Module
 

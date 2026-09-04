@@ -35,10 +35,10 @@ Le composant massif `MediaBrowser.tsx` a été découpé en sous-composants modu
 ### Composants extraits
 | Composant | Fichier | État |
 |-----------|---------|------|
-| Media Browser | [MediaBrowser.tsx](file:///c:/Projet_David/GM-OS-v5/src/components/MediaBrowser.tsx) | ✅ Modulaire |
-| Thumbnail | [MediaItemThumbnail.tsx](file:///c:/Projet_David/GM-OS-v5/src/components/MediaItemThumbnail.tsx) | ✅ Nouveau |
-| Detail Panel | [TacticalDetailPanel.tsx](file:///c:/Projet_David/GM-OS-v5/src/components/TacticalDetailPanel.tsx) | ✅ Nouveau |
-| Preview | [FullScreenPreview.tsx](file:///c:/Projet_David/GM-OS-v5/src/components/FullScreenPreview.tsx) | ✅ Nouveau |
+| Media Browser | [MediaBrowser.tsx](../../src/components/MediaBrowser.tsx) | ✅ Modulaire |
+| Thumbnail | [MediaItemThumbnail.tsx](../../src/modules/image/components/MediaItemThumbnail.tsx) | ✅ Nouveau |
+| Detail Panel | [TacticalDetailPanel.tsx](../../src/modules/image/components/TacticalDetailPanel.tsx) | ✅ Nouveau |
+| Preview | [FullScreenPreview.tsx](../../src/modules/image/components/FullScreenPreview.tsx) | ✅ Nouveau |
 
 ---
 *Ce document résume les efforts de nettoyage et de standardisation pour GM-OS v5.*

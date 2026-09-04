@@ -2,7 +2,7 @@
 
 **Cortex OS** est le "cerveau" invisible de GM-OS v5. C'est un moteur d'analyse en temps réel qui surveille votre table de jeu pour vous fournir des conseils tactiques, automatiser les règles complexes et orchestrer l'immersion matérielle (lumières et sons).
 
-![Aperçu du module Cortex OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/cortex_mockup.png)
+![Aperçu du module Cortex OS](cortex_mockup.png)
 
 ## 📋 Présentation du Module
 

@@ -2,7 +2,7 @@
 
 Le module **Obsidian Bridge** permet d'intégrer vos notes personnelles de préparation directement dans l'interface de GM-OS v5. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et l'intelligence artificielle de l'Oracle.
 
-![Aperçu du module Obsidian](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/obsidian_mockup.png)
+![Aperçu du module Obsidian](obsidian_mockup.png)
 
 ## 📋 Présentation du Module
 Le module se divise en deux zones principales :

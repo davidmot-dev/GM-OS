@@ -2,7 +2,7 @@
 
 Le module **Master Storyboard** est le chef d'orchestre de votre partie. Il vous permet de synchroniser instantanément l'ambiance sonore, l'éclairage et les visuels pour créer des moments cinématographiques inoubliables via une interface de montage intuitive.
 
-![Aperçu du Master Storyboard](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/storyboard_mockup.png)
+![Aperçu du Master Storyboard](storyboard_mockup.png)
 
 ## 📋 Présentation du Module
 

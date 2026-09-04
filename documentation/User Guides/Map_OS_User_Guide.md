@@ -2,7 +2,7 @@
 
 Le module **Map OS** est votre table de jeu virtuelle. Il permet de gérer les cartes tactiques, le brouillard de guerre, les pions de combat et les interactions spatiales, le tout synchronisé en temps réel vers vos joueurs.
 
-![Aperçu du module Map OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/map_mockup.png)
+![Aperçu du module Map OS](map_mockup.png)
 
 ## 📋 Présentation du Module
 

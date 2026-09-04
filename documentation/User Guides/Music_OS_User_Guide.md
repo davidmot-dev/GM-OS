@@ -2,7 +2,7 @@
 
 Le module **Music OS** est le coeur de l'ambiance sonore de vos sessions. Contrairement à un simple lecteur audio, il est conçu comme un véritable mixeur de DJ thématique, vous permettant de gérer des transitions fluides entre vos musiques d'ambiance.
 
-![Aperçu du module Music OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/music_mockup.png)
+![Aperçu du module Music OS](music_mockup.png)
 
 ## 📋 Présentation du Module
 

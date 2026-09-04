@@ -2,7 +2,7 @@
 
 Le module **Image OS** est votre régie visuelle. Il vous permet de projeter des illustrations, des portraits de PNJ, des cartes ou des ambiances visuelles sur différents écrans (Hub Joueur, Moniteurs secondaires, Vidéoprojecteurs) pour renforcer l'immersion de vos joueurs.
 
-![Aperçu du module Image OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/image_mockup.png)
+![Aperçu du module Image OS](image_mockup.png)
 
 ## 📋 Présentation du Module
 

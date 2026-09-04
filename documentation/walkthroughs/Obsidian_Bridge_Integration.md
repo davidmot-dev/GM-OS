@@ -5,7 +5,7 @@ L'intégration d'Obsidian est maintenant terminée. Vous pouvez parcourir votre 
 ## Changements Majeurs
 
 ### 1. Backend & Bridge
-- **[obsidian_bridge.ts](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/electron/obsidian_bridge.ts)** : Gestion de la lecture récursive du Vault et accès sécurisé aux fichiers `.md`.
+- **[obsidian_bridge.ts](../../electron/obsidian_bridge.ts)** : Gestion de la lecture récursive du Vault et accès sécurisé aux fichiers `.md`.
 - **Preload** : Exposition de `appBridge.obsidian` pour permettre au frontend d'interagir avec vos notes.
 
 ### 2. Interface Utilisateur

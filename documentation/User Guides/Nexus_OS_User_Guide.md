@@ -112,7 +112,7 @@ Pour les moments critiques comme les jets de dés, le Tablet Hub et le Player Hu
 - **Lisibilité Accrue** : Les scores sont affichés avec une typographie XXL et des effets de lueur (glows) adaptés à votre thème RPG.
 - **Auto-nettoyage** : L'affichage disparaît après 5 secondes pour vous permettre de reprendre la narration sans intervention manuelle.
 
-![Theater Mode Preview](file:///C:/Users/david/.gemini/antigravity/brain/46c86007-1290-455b-bed5-f0df4ff2667e/tablet_hub_dice_theater_mode_1775302636253_1775302657256.png)
+*(Capture « Theater Mode Preview » — perdue lors du déplacement du projet.)*
 
 ---
 

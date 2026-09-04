@@ -2,7 +2,7 @@
 
 **Dice OS** est le moteur de probabilités central de GM-OS v5. Plus qu'un simple lanceur de dés, c'est un outil universel capable de gérer les mécaniques de centaines de jeux de rôle, tout en restant connecté à l'action tactique sur votre carte.
 
-![Aperçu du module Dice OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/dice_mockup.png)
+![Aperçu du module Dice OS](dice_mockup.png)
 
 ## 📋 Présentation du Module
 

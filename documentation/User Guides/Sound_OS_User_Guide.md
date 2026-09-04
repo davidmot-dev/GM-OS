@@ -2,7 +2,7 @@
 
 Le module **Sound OS** est votre console d'effets sonores instantanés (One-Shots). Contrairement au Music OS qui gère des ambiances de fond, Sound OS est conçu pour déclencher des sons ponctuels (cris, explosions, bruits de pas) avec une réactivité maximale.
 
-![Aperçu du module Sound OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/sound_mockup.png)
+![Aperçu du module Sound OS](sound_mockup.png)
 
 ## 📋 Présentation du Module
 

@@ -7,14 +7,14 @@ Ce document récapitule les actions menées pour finaliser la phase d'**Automati
 ## 🛠️ Modifications Réalisées
 
 ### 1. Hook Git de Pré-Push (pre-push)
-- **Fichier** : [.git/hooks/pre-push](file:///c:/Projet_David/GM-OS-v5/.git/hooks/pre-push)
+- **Fichier** : [.git/hooks/pre-push](../../.git/hooks/pre-push)
 - **Description** : Création d'un script de hook Git pre-push. Ce script shell intercepte automatiquement chaque commande `git push` lancée sur la machine de développement et exécute en arrière-plan `npm run validate`.
 - **Comportement** :
   - Si toutes les étapes du cycle de validation (typage, tests, build) réussissent, le push se poursuit normalement.
   - Si une régression est détectée (code de retour différent de `0`), le push est annulé avec un rapport explicatif et une astuce pour bypasser en cas d'urgence (`--no-verify`).
 
 ### 2. Documentation Technique du Workflow
-- **Fichier** : [anti_regression_protocol.md](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/anti_regression_protocol.md)
+- **Fichier** : [anti_regression_protocol.md](../Technical Docs/anti_regression_protocol.md)
 - **Modifications** :
   - Ajout de la section **"⚡ Automatisation avec Git Hooks"** qui documente l'installation, le comportement du hook pre-push, et la méthode de contournement exceptionnelle avec `--no-verify`.
 

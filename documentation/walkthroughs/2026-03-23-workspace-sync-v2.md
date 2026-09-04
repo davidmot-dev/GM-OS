@@ -18,11 +18,11 @@ L'implémentation de **Workspace Sync v2** permet à GM-OS de détecter dynamiqu
 
 ## 🛠️ Modifications techniques
 
-- **[main.ts](file:///c:/Projet_David/GM-OS-v5/electron/main.ts)** : Ajout des écouteurs `screen.on`.
-- **[preload.ts](file:///c:/Projet_David/GM-OS-v5/electron/preload.ts)** : Exposition de `onDisplayChanged`.
-- **[useSessionStore.ts](file:///c:/Projet_David/GM-OS-v5/src/store/useSessionStore.ts)** : Nouvel état `displayCount`.
-- **[useDisplayDetection.ts](file:///c:/Projet_David/GM-OS-v5/src/hooks/useDisplayDetection.ts)** : Hook de gestion des événements et toasts.
-- **[useLayoutManager.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/session/hooks/useLayoutManager.ts)** : Logique de résolution de conflits de layout.
+- **[main.ts](../../electron/main.ts)** : Ajout des écouteurs `screen.on`.
+- **[preload.ts](../../electron/preload.ts)** : Exposition de `onDisplayChanged`.
+- **[useSessionStore.ts](../../src/store/useSessionStore.ts)** : Nouvel état `displayCount`.
+- **[useDisplayDetection.ts](../../src/hooks/useDisplayDetection.ts)** : Hook de gestion des événements et toasts.
+- **[useLayoutManager.ts](../../src/modules/session/hooks/useLayoutManager.ts)** : Logique de résolution de conflits de layout.
 
 ## ✅ Test de validation
 

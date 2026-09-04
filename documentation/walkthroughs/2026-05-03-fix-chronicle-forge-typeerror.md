@@ -6,7 +6,7 @@ J'ai résolu le problème de `TypeError: Cannot read properties of undefined (re
 
 ### [GM-OS v5]
 
-#### [ChronicleForge.tsx](file:///C:/Projet_David/GM-OS-v5/src/modules/forge/components/ChronicleForge.tsx)
+#### `file:///C:/Projet_David/GM-OS-v5/src/modules/forge/components/ChronicleForge.tsx` *(ce fichier n'existe plus)*
 - Ajout de l'optional chaining (`?.`) sur `result.campaign`.
 - Utilisation de `(result.entities || [])`, `(result.locations || [])` et `(result.lore || [])` pour sécuriser les itérations `.map()`.
 - Sécurisation identique dans la fonction `handleCommit` pour garantir un déploiement sans erreur même avec des données partielles.

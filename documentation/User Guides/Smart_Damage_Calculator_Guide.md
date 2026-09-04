@@ -2,7 +2,7 @@
 
 Le **Calculateur de Dégâts Intelligent** est un outil avancé intégré au **Combat OS**. Il permet de gérer les impacts de combat de manière groupée et automatisée, en tenant compte des caractéristiques spécifiques de chaque participant.
 
-![Aperçu du Calculateur](file:///C:/Users/david/OneDrive/Jeux%20de%20Rôles/GM-OS-v5/doc./user-guides/combat_mockup.png)
+![Aperçu du Calculateur](combat_mockup.png)
 
 > [!NOTE]
 > **Nouveauté v6.2.6** : L'interface du calculateur est désormais intégralement localisée en **Français** et en **Anglais**. Tous les types de dégâts et les badges de statut s'adaptent dynamiquement à la langue de votre session.

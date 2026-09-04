@@ -28,9 +28,9 @@ flowchart LR
 
 ### Key Components
 
-- **[NPCStore.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/npc/useNPCStore.ts)**: Handles the business logic for building prompts and updating the entity state.
-- **[NPCCard.tsx](file:///c:/Projet_David/GM-OS-v5/src/modules/npc/components/NPCCard.tsx)**: The main interface, now featuring "Sparkles" for portrait AI and "ImageIcon" for background AI.
-- **[MediaImage.tsx](file:///c:/Projet_David/GM-OS-v5/src/modules/npc/components/MediaImage.tsx)**: Ensures that images from both external URLs and the local Media Hub are rendered correctly.
+- **[NPCStore.ts](../../src/modules/npc/useNPCStore.ts)**: Handles the business logic for building prompts and updating the entity state.
+- **[NPCCard.tsx](../../src/modules/npc/components/NPCCard.tsx)**: The main interface, now featuring "Sparkles" for portrait AI and "ImageIcon" for background AI.
+- **[MediaImage.tsx](../../src/components/MediaImage.tsx)**: Ensures that images from both external URLs and the local Media Hub are rendered correctly.
 
 ## 🧪 Integration Testing
 
@@ -42,5 +42,5 @@ The following scenarios were verified:
 
 ## 📚 Related Documentation
 
-- [User Guide - NPC Live Generator](file:///c:/Projet_David/GM-OS-v5/doc./user-guides/NPC_Live_Generator_User_Guide.md)
-- [Technical Doc - NPC Live Generator](file:///c:/Projet_David/GM-OS-v5/doc./technical/NPC_Live_Generator_Technical_Doc.md)
+- [User Guide - NPC Live Generator](../User Guides/NPC_Live_Generator_User_Guide.md)
+- [Technical Doc - NPC Live Generator](../Technical Docs/NPC_Live_Generator_Technical_Doc.md)

@@ -5,17 +5,17 @@ Ce walkthrough résume les modifications apportées pour résoudre les erreurs d
 ## Modifications Effectuées
 
 ### 1. Résolution de `mediaResolver.test.ts`
-- **Fichier impacté** : [mediaResolver.ts](file:///c:/Projet_David/GM-OS-v5/src/utils/mediaResolver.ts)
+- **Fichier impacté** : [mediaResolver.ts](../../src/utils/mediaResolver.ts)
 - **Problème** : Les chemins de fichiers locaux n'étaient pas résolus en URLs de proxy local, provoquant l'échec des tests de conversion d'adresses absolues Windows et temporaires relatives.
 - **Correction** : Ré-implémentation de la logique de proxyisation dynamique en interrogeant `window.appBridge.remote.getConnectionInfo` pour construire l'URL du proxy de média (`http://ip:port/media/path`) lorsque l'adresse IP n'est pas un loopback (`127.0.0.1` ou `localhost`).
 
 ### 2. Résolution de `AmbientEngine.test.ts`
-- **Fichier impacté** : [AmbientEngine.test.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/ambient/AmbientEngine.test.ts)
+- **Fichier impacté** : [AmbientEngine.test.ts](../../src/modules/ambient/AmbientEngine.test.ts)
 - **Problème** : `mediaStore.initDB is not a function`.
 - **Correction** : Mise à jour du mock de `useMediaStore` pour inclure les propriétés `isInitialized: true` et `initDB: vi.fn().mockResolvedValue(undefined)` (similaire à la correction déjà appliquée à `SoundEngine.test.ts`).
 
 ### 3. Résolution de `useRemoteSync.test.ts`
-- **Fichier impacté** : [useRemoteSync.test.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/remote/hooks/useRemoteSync.test.ts)
+- **Fichier impacté** : [useRemoteSync.test.ts](../../src/modules/remote/hooks/useRemoteSync.test.ts)
 - **Problème** : L'espion WebSocket `mockWebSocketSpy` enregistrait 3 appels au lieu des 2 attendus à la suite de la deuxième coupure de connexion, et les assertions de temps n'étaient pas adaptées au délai réel du backoff.
 - **Cause** : Le mock du store client `useClientStore` retournait un nouvel objet et une nouvelle espionne `vi.fn()` à chaque appel, causant des boucles de reconnexion infinies dues aux cycles de rendu de React et au renouvellement des dépendances de la fonction `connect`.
 - **Correction** :
@@ -23,7 +23,7 @@ Ce walkthrough résume les modifications apportées pour résoudre les erreurs d
   2. Ajustement des assertions de pas temporel de Vitest pour correspondre à la progression exacte du backoff exponentiel (1000ms, puis 2000ms).
 
 ### 4. Tenue de la Documentation
-- **Fichier impacté** : [Lessons_Learned.md](file:///c:/Projet_David/GM-OS-v5/documentation/Lessons_Learned.md)
+- **Fichier impacté** : [Lessons_Learned.md](../Lessons_Learned.md)
 - **Action** : Ajout d'une nouvelle leçon apprise décrivant les pièges des mocks de stores Zustand instables dans les tests unitaires.
 
 ---

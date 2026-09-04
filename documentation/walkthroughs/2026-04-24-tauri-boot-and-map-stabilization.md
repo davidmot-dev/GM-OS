@@ -7,7 +7,7 @@ Ce walkthrough documente la résolution des crashs au démarrage liés aux dépe
 ### 1. Résolution de la Dépendance Circulaire (Map Module)
 - **Problème** : `useMapStore.ts` importait statiquement `MapService.ts`, qui lui-même importait le store pour lire l'état de la carte. Ce cycle bloquait le résolveur de modules de Vite en mode développement, provoquant des erreurs `ERR_CONNECTION_REFUSED` sur le fichier `MapDashboard.tsx`.
 - **Solution** : Passage aux imports dynamiques (`import()`) dans les actions de synchronisation du store.
-- **Fichier modifié** : [useMapStore.ts](file:///c:/Projet_David/GM-OS-v5/v7-migration/src/modules/map/useMapStore.ts)
+- **Fichier modifié** : [useMapStore.ts](../../src/modules/map/useMapStore.ts)
 
 ### 2. Validation du Chargement Lazy
 - **Vérification** : Confirmation que `MapDashboard.tsx` est correctement servi par Vite après la rupture du cycle.

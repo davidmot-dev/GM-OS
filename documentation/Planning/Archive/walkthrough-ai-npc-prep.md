@@ -11,15 +11,15 @@ La fonctionnalité repose sur la synergie de deux systèmes existants dans GM-OS
 ## 🛠️ Changements Apportés (Documentation)
 
 ### 🗺️ Roadmap & Architecture
-- **[roadmap-v6.md](file:///c:/Projet_David/GM-OS-v5/doc./architecture/roadmap-v6.md)** : Marqué comme "Terminé" (v6.1.2-dev).
-- **[session-os-modular-architecture.md](file:///c:/Projet_David/GM-OS-v5/docs/technical/session-os-modular-architecture.md)** : Ajout d'une section sur l'extension du "Neural Liaison" pour l'injection automatisée des profiles PNJ.
+- **[roadmap-v6.md](../../Architecture/roadmap-v6.md)** : Marqué comme "Terminé" (v6.1.2-dev).
+- **[session-os-modular-architecture.md](../../Technical Docs/session-os-modular-architecture.md)** : Ajout d'une section sur l'extension du "Neural Liaison" pour l'injection automatisée des profiles PNJ.
 
 ### 📖 Guides Utilisateurs
-- **[AI_Oracle_User_Guide.md](file:///c:/Projet_David/GM-OS-v5/doc./user-guides/AI_Oracle_User_Guide.md)** : Ajout d'une section pratique expliquant comment solliciter l'IA pour des répliques "à la volée".
-- **[Session_OS_User_Guide.md](file:///c:/Projet_David/GM-OS-v5/doc./user-guides/Session_OS_User_Guide.md)** : Mise en avant de la fonctionnalité dans le panneau du Master Cockpit.
+- **[AI_Oracle_User_Guide.md](../../User Guides/AI_Oracle_User_Guide.md)** : Ajout d'une section pratique expliquant comment solliciter l'IA pour des répliques "à la volée".
+- **[Session_OS_User_Guide.md](../../User Guides/Session_OS_User_Guide.md)** : Mise en avant de la fonctionnalité dans le panneau du Master Cockpit.
 
 ### 📔 Retours d'Expérience
-- **[docs/dev/Lessons_Learned_Archive.md](file:///c:/Projet_David/GM-OS-v5/docs/dev/Lessons_Learned_Archive.md)** : Formalisation de la leçon sur l'"Émergence Fonctionnelle" (comment des briques de base bien conçues créent de nouvelles fonctions sans code additionnel).
+- **docs/dev/Lessons_Learned_Archive.md *(document non conservé)*** : Formalisation de la leçon sur l'"Émergence Fonctionnelle" (comment des briques de base bien conçues créent de nouvelles fonctions sans code additionnel).
 
 ## 🚀 Comment l'utiliser ?
 

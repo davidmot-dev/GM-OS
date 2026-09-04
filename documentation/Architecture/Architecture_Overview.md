@@ -178,4 +178,4 @@ graph TD
 ---
 
 > [!TIP]
-> Pour des détails techniques approfondis sur chaque sous-système, consultez les fichiers dans le dossier [Technical Docs/](../technical/).
+> Pour des détails techniques approfondis sur chaque sous-système, consultez le dossier [Technical Docs](../Technical%20Docs/).

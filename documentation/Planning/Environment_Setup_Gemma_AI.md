@@ -63,4 +63,4 @@ Si GM-OS affiche une erreur de connexion alors qu'Ollama semble lancé :
 
 ---
 
-*Besoin d'aide ? Consultez le [Migration Guide](file:///c:/Projet_David/GM-OS-v5/docs/user-guides/migration-guide.md) pour passer de la v5 à la v6.*
+*Besoin d'aide ? Consultez le [Migration Guide](../User Guides/migration-guide.md) pour passer de la v5 à la v6.*

@@ -3,13 +3,13 @@
 **Session OS** est le cœur décisionnel de GM-OS v5. C'est ici que vous gérez vos campagnes, suivez la progression de vos joueurs, préparez vos scénarios et archivez les chroniques de vos aventures. C'est l'interface qui lie tous les autres modules entre eux.
 
 ````carousel
-![Master Cockpit](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/session_cockpit.png)
+*(Capture « Master Cockpit » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![World Atlas](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/session_atlas.png)
+*(Capture « World Atlas » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Session Prep](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/session_prep.png)
+*(Capture « Session Prep » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Obsidian Bridge](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/session_obsidian.png)
+*(Capture « Obsidian Bridge » — perdue lors du déplacement du projet.)*
 ````
 
 ---

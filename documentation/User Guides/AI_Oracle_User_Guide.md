@@ -2,7 +2,7 @@
 
 L'**Oracle AI** est votre co-pilote narratif et technique dans GM-OS v5. Basé sur la technologie NotebookLM, il est capable de répondre à vos questions en se basant précisément sur vos propres règles de jeu, vos scénarios et vos notes de campagne.
 
-![Sélecteur de Persona de l'Oracle](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/oracle_mockup.png)
+![Sélecteur de Persona de l'Oracle](oracle_mockup.png)
 
 ## 📋 Présentation du Module
 L'Oracle s'affiche sous la forme d'un panneau latéral intelligent. Il propose deux modes d'interaction :

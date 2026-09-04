@@ -36,10 +36,10 @@ Dans l'éditeur de moteur de règles (`RuleEngineEditor`), vous pouvez désormai
 
 ## 🛠️ Modifications Techniques (Résumé)
 
-- **[NEW] [PersonaGeneratorService.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/ai/PersonaGeneratorService.ts)** : Logique de prompting structuré.
-- **[MODIFY] [CampaignForm.tsx](file:///c:/Projet_David/GM-OS-v5/src/modules/session/components/CampaignForm.tsx)** : Ajout de l'interface de génération.
-- **[MODIFY] [RuleEngineEditor.tsx](file:///c:/Projet_David/GM-OS-v5/src/modules/session/components/RuleEngineEditor.tsx)** : Ajout de l'interface de génération.
-- **[MODIFY] [RAGService.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/ai/RAGService.ts)** : Support de l'isolation contextuelle.
+- **[NEW] [PersonaGeneratorService.ts](../../src/modules/ai/PersonaGeneratorService.ts)** : Logique de prompting structuré.
+- **[MODIFY] [CampaignForm.tsx](../../src/modules/session/components/CampaignForm.tsx)** : Ajout de l'interface de génération.
+- **[MODIFY] [RuleEngineEditor.tsx](../../src/modules/session/components/RuleEngineEditor.tsx)** : Ajout de l'interface de génération.
+- **[MODIFY] [RAGService.ts](../../src/modules/ai/RAGService.ts)** : Support de l'isolation contextuelle.
 
 ## ✅ Test de Validation
 

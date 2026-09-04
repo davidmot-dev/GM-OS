@@ -25,13 +25,13 @@ Les "Neural Overrides" (Personas comme l'Oracle ou le Sage) peuvent être modifi
 ## Démonstration Visuelle
 
 ````carousel
-![Tableau de Bord de la Forge (Stitch Edition)](file:///C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/media_templates_dashboard_1773352309972.png)
+*(Capture « Tableau de Bord de la Forge (Stitch Edition) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Nouvel Éditeur du Moteur de Règles (Logique & IA)](file:///C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/rule_engine_editor_1773396789927.png)
+*(Capture « Nouvel Éditeur du Moteur de Règles (Logique & IA) » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-![Configuration de la Résonance IA sur fiche native](file:///C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/template_resonance_editor_1773347739353.png)
+*(Capture « Configuration de la Résonance IA sur fiche native » — perdue lors du déplacement du projet.)*
 <!-- slide -->
-[Vidéo de vérification du workflow complet](file:///C:/Users/david/.gemini/antigravity/brain/cb9d3783-0a27-40e7-abae-77dac71e6b8a/verify_rule_engine_editor_1773396579672.webp)
+Vidéo de vérification du workflow complet *(document non conservé)*
 ````
 
 ---

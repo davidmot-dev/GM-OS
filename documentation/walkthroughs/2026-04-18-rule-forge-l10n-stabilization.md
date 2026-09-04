@@ -8,7 +8,7 @@ Audit complet et stabilisation de l'internationalisation pour le module `RuleEng
 ## Modifications
 
 ### 🤖 Intelligence Artificielle (AI)
-- **[PersonaGeneratorService.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/ai/PersonaGeneratorService.ts)** : 
+- **[PersonaGeneratorService.ts](../../src/modules/ai/PersonaGeneratorService.ts)** : 
     - Ajout du persona **LE STRATÈGE** à la liste de génération automatique (il était manquant alors que présent dans le GemStore).
 
 ### 🛠 Hooks & Logique

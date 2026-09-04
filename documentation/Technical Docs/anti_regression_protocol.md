@@ -28,7 +28,7 @@ Toute modification apportée au code de production doit passer l'intégralité d
 
 ## 🛠️ Automatisation : `npm run validate`
 
-Pour simplifier et forcer ce cycle de validation, un script PowerShell automatisé est mis à disposition dans le projet : [validate.ps1](file:///c:/Projet_David/GM-OS-v5/scripts/validate.ps1).
+Pour simplifier et forcer ce cycle de validation, un script PowerShell automatisé est mis à disposition dans le projet : [validate.ps1](../../scripts/validate.ps1).
 
 ### Exécution
 Pour valider votre code localement, lancez simplement la commande suivante dans votre terminal :

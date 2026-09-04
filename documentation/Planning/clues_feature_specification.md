@@ -34,9 +34,9 @@ Le modèle suit la structure définie initialement, avec une intégration dans l
 ---
 
 ## 📂 Fichiers de Référence
-- **Logique Store** : [chronicleSlice.ts](file:///c:/Projet_David/GM-OS-v5/src/modules/session/store/chronicleSlice.ts)
-- **Gestionnaire** : [CluesManager.tsx](file:///c:/Projet_David/GM-OS-v5/src/modules/session/components/CluesManager.tsx)
-- **Widget Deck** : [SessionClueDeck.tsx](file:///c:/Projet_David/GM-OS-v5/src/modules/session/components/SessionClueDeck.tsx)
+- **Logique Store** : [chronicleSlice.ts](../../src/modules/session/store/chronicleSlice.ts)
+- **Gestionnaire** : [CluesManager.tsx](../../src/modules/session/components/CluesManager.tsx)
+- **Widget Deck** : [SessionClueDeck.tsx](../../src/modules/session/components/SessionClueDeck.tsx)
 
 ---
 *Dernière mise à jour : 27 Mars 2026*

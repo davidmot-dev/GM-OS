@@ -2,7 +2,7 @@
 
 **NPC OS** est l'outil ultime d'improvisation et de préparation de GM-OS v5. Il permet de générer instantanément des personnages, des lieux, des rumeurs ou des objets, tout en assurant une cohérence thématique parfaite avec votre univers de jeu.
 
-![Aperçu du module NPC OS](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/npc_mockup.png)
+![Aperçu du module NPC OS](npc_mockup.png)
 
 ## 📋 Présentation du Module
 
