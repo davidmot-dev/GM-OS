@@ -170,15 +170,18 @@ Une fonctionnalité révolutionnaire pour le confort d'écoute de vos joueurs :
     - **Réduction (Range)** : Niveau cible du son ambiant (ex: 0.1 pour un silence presque total, 0.5 pour un fond sonore léger).
     - **Relâchement (Delay)** : Temps d'attente avant que la musique ne remonte après votre dernière parole.
 
-> ⛔ **Corrigé le 2026-09-05 : le ducking pouvait ne jamais se brancher, sans rien dire.**
-> Music-OS et Ambient-OS s'abonnent à Voice-OS au démarrage. Selon l'ordre dans lequel
-> l'application chargeait ses modules, cet abonnement pouvait échouer — et la musique
-> **ne baissait alors jamais** quand vous parliez, sans message ni indice. Deux réparations :
-> le chemin fautif est coupé, et un échec de branchement s'écrit désormais dans le journal
-> en nommant le module et la conséquence. *Une panne muette est plus coûteuse qu'une panne
-> bruyante : on la découvre en séance.*
+> 🔧 **Consolidé le 2026-09-05 : un abonnement raté ne peut plus passer inaperçu.**
+> Music-OS et Ambient-OS s'abonnent à Voice-OS au démarrage. Un enchevêtrement dans le
+> chargement des modules pouvait faire échouer cet abonnement — et la musique n'aurait
+> alors **jamais** baissé quand vous parlez, sans message ni indice.
 >
-> Si le ducking vous paraît inactif, le journal (`main.log`) le dira.
+> ⚠️ **Honnêteté sur la portée** : cet échec n'a été *observé* que dans les tests
+> automatiques. Rien ne prouve qu'il se soit produit dans l'application, ni le contraire —
+> et c'est précisément le problème d'une panne muette. Deux réparations : le chemin fautif
+> est coupé, et un échec de branchement s'écrit désormais dans le journal (`main.log`) en
+> nommant le module et la conséquence.
+>
+> Si le ducking vous paraît inactif un jour, le journal tranchera.
 
 > 🔎 **Il agit aussi sur les vidéos projetées** depuis le 2026-09-05 — voir
 > [Image-OS](./24-Image-OS-la-regie-visuelle.md). Une vidéo YouTube fait exception : son son

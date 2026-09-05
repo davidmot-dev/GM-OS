@@ -30,7 +30,7 @@ raison. Puis la télécommande a été refaite.
 | **05/09, le châssis** | L'**Ulanzi rendait la main au premier passage dans chaque module** — un `Suspense` manquant démontait tout le châssis ; trois autres émetteurs tombaient avec lui |
 | **05/09, le Markdown** | **Les tableaux ne s'interprétaient nulle part** — `remark-gfm` absent, et six écrans qui reposaient chacun le réglage ; un composant unique, et une garde qui balaie tout `src/` |
 | **05/09, la vidéo** | **Image-OS accepte les vidéos** — le projecteur savait les jouer, le sélecteur les refusait, et elles étaient `muted` en dur ; leur son obéit à la table par message · **Web-OS projette une vidéo YouTube**, avec ses trois limites dites avant le clic |
-| **05/09, le ducking** | Un **cycle d'imports** privait Music-OS et Ambient-OS de leur ducking dès que `useVoiceStore` ouvrait le graphe — muet depuis on ne sait quand ; arête coupée, et l'échec ne peut plus se taire |
+| **05/09, le ducking** | Un **cycle d'imports** privait Music-OS et Ambient-OS de leur ducking dès que `useVoiceStore` ouvrait le graphe — observé en test, **jamais prouvé dans l'application** ; arête coupée, et l'échec ne peut plus se taire |
 
 ---
 
@@ -109,9 +109,9 @@ pictogramme de pellicule. Un clic la projette, **avec le son**, en boucle.
 Puis les trois commandes de la table, pendant qu'elle joue : baisser le **volume général**,
 enclencher le **Focus**, et **parler au micro**. La vidéo doit suivre les trois.
 
-⭐ **Au micro, écoutez aussi la musique.** C'est le ducking réparé le même jour — il pouvait ne
-jamais se brancher, selon l'ordre de chargement des modules. S'il vous semblait déjà capricieux
-avant aujourd'hui, c'était peut-être cela.
+⭐ **Au micro, écoutez aussi la musique.** C'est le ducking consolidé le même jour. S'il vous
+semblait capricieux par le passé, le journal le dira désormais — mais rien ne prouve qu'il l'ait
+jamais été dans l'application.
 
 ⚠️ **Son son sort par l'écran de projection**, pas par l'enceinte réglée dans Music-OS — c'est une
 limite, pas un défaut : un élément d'une fenêtre ne se branche pas sur le contexte audio d'une
@@ -167,8 +167,13 @@ construisant le son des vidéos, **corrigé dans la foulée**. `useVoiceStore` i
 `ai/modeDeContexte`, qui tire `useSessionOSStore`, d'où l'on atteint les moteurs de Music-OS et
 d'Ambient-OS — lesquels **se construisent au chargement de leur module** et s'abonnent aussitôt à
 `useVoiceStore`. Quand celui-ci ouvrait le graphe, ils recevaient un module encore en cours
-d'évaluation : **la musique cessait de baisser quand le meneur parle**, sans une ligne dans la
-console.
+d'évaluation : l'abonnement échouait, et **la musique n'aurait plus baissé quand le meneur parle**,
+sans une ligne dans la console.
+
+⚠️ **Portée exacte, à ne pas surestimer.** L'échec n'a été **observé qu'en test**. La mémoire du
+projet affirmait depuis le 30/08 que *« l'application n'y tombe jamais, son entrée est `main.tsx` »* —
+affirmation que je n'ai ni vérifiée ni infirmée. *Une panne muette ne se prouve pas absente ;* c'est
+la raison d'être du second correctif.
 
 *C'est ce qui le rend si difficile à voir : quatre sondes d'une ligne chacune — la séance,
 `modeDeContexte`, le moteur — sont toutes propres ;* seule celle qui entre par la voix échoue. Deux
