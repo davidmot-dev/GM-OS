@@ -60,7 +60,7 @@ export interface ImageBridge {
      * ne peut pas rejoindre le bus audio du meneur. On lui envoie donc le niveau
      * qu'elle doit tenir, plutôt que de la brancher.
      */
-    syncHubData: (type: 'image' | 'entity' | 'voice-level' | 'titre' | 'son-video', data: string) => void;
+    syncHubData: (type: 'image' | 'video' | 'entity' | 'voice-level' | 'titre' | 'son-video', data: string) => void;
     launchDisplay: (paths: string[], target: ProjectionTarget) => void;
     /**
      * Demande au processus principal le titre affiché sur cet écran.

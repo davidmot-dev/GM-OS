@@ -1,5 +1,7 @@
 import type { ProjectionTarget } from '../types';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
+import { useMediaStore } from '../../../stores/useMediaStore';
+import { natureDuMedia } from './natureDuMedia';
 
 /**
  * ImageService - Gère la logique métier de projection d'images.
@@ -48,6 +50,8 @@ export class ImageService {
             */
             if (mediaPath.startsWith('__')) {
                 window.appBridge?.image?.syncHubData('image', mediaPath);
+                /* Le Hub reconnaît lui-même le marqueur YouTube : il le porte
+                   en clair, contrairement à une adresse résolue. */
                 (window as any).useImageStore.getState().setProjection(target, marque);
                 return mediaPath;
             }
@@ -56,7 +60,22 @@ export class ImageService {
             // La tablette ne peut pas lire IndexedDB localement, on doit lui envoyer une URL résolue.
             const resolvedPath = await resolveToSendableUrl(mediaPath);
             if (resolvedPath) {
-                window.appBridge?.image?.syncHubData('image', resolvedPath);
+                /*
+                  ⛔ **On ANNONCE la nature, parce que le Hub ne peut pas la
+                  déduire — 2026-09-05.**
+
+                  Les écrans de projection reçoivent un identifiant et vont
+                  chercher le fichier : ils ont le type MIME. Le Hub, lui, reçoit
+                  une adresse **déjà résolue** (`http://…/temp/m-1757…`), parce
+                  qu'une tablette ne peut pas lire la base du meneur — et cette
+                  adresse **n'a pas d'extension**.
+
+                  Il rendait donc toute projection en `background-image`, ce qui
+                  ne peut pas jouer un film : *la vidéo arrivait bien, et rien ne
+                  s'affichait.* Trouvé par David.
+                */
+                const nature = natureDuMedia(mediaPath, useMediaStore.getState().mediaList);
+                window.appBridge?.image?.syncHubData(nature === 'video' ? 'video' : 'image', resolvedPath);
                 (window as any).useImageStore.getState().setProjection(target, marque);
                 return resolvedPath;
             }

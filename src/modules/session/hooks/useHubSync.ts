@@ -42,6 +42,24 @@ export const useHubSync = () => {
     // ─────────────────────────────────────────────
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
+    /**
+     * **La projection en cours est-elle un film ? — 2026-09-05.**
+     *
+     * Le Hub reçoit une adresse déjà résolue, sans extension : il ne peut pas le
+     * déduire, le meneur le lui dit. Voir [[natureDuMedia]].
+     *
+     * ⚠️ Il est remis à `false` par chaque projection d'image, et pas seulement
+     * posé à `true` par les vidéos : *un drapeau qu'on lève sans jamais le
+     * baisser transforme la photographie suivante en cadre noir.*
+     */
+    const [liveMediaEstUneVideo, setLiveMediaEstUneVideo] = useState(false);
+    /**
+     * Le niveau que la vidéo projetée doit tenir, dicté par le meneur.
+     *
+     * Part à 1 : *un silence qu'on ne s'explique pas coûte plus cher qu'un son
+     * trop fort.* Le meneur le renvoie à chaque changement de projection.
+     */
+    const [niveauSonVideo, setNiveauSonVideo] = useState(1);
     const [liveEntity, setLiveEntity] = useState<any | null>(null);
     const [sessionSummary, setSessionSummary] = useState<string>('');
     const [showDice, setShowDice] = useState(false);
@@ -306,7 +324,18 @@ export const useHubSync = () => {
                     if (data.type === 'sync' && data.payload) applySyncPayload(data.payload);
                     if (data.type === 'hub-projection') {
                         const { type, data: payload } = data.payload;
-                        if (type === 'image') setLiveImagePath(payload || null);
+                        if (type === 'image') {
+                            setLiveImagePath(payload || null);
+                            setLiveMediaEstUneVideo(false);
+                        }
+                        if (type === 'video') {
+                            setLiveImagePath(payload || null);
+                            setLiveMediaEstUneVideo(!!payload);
+                        }
+                        if (type === 'son-video') {
+                            const niveau = Number(payload);
+                            if (Number.isFinite(niveau)) setNiveauSonVideo(Math.min(1, Math.max(0, niveau)));
+                        }
                         if (type === 'entity') setLiveEntity(payload ? JSON.parse(payload) : null);
                         /*
                           Le canal porte aussi un type `titre`, qui n'est pas lu
@@ -366,7 +395,18 @@ export const useHubSync = () => {
         if (typeof window === 'undefined') return;
 
         const handleIpcUpdate = (_event: any, type: string, data: any) => {
-            if (type === 'image') setLiveImagePath(data || null);
+            if (type === 'image') {
+                setLiveImagePath(data || null);
+                setLiveMediaEstUneVideo(false);
+            }
+            else if (type === 'video') {
+                setLiveImagePath(data || null);
+                setLiveMediaEstUneVideo(!!data);
+            }
+            else if (type === 'son-video') {
+                const niveau = Number(data);
+                if (Number.isFinite(niveau)) setNiveauSonVideo(Math.min(1, Math.max(0, niveau)));
+            }
             else if (type === 'entity') setLiveEntity(data ? JSON.parse(data) : null);
             else if (type === 'voice-level') {
                 const sSync = getStore('useSyncStore');
@@ -382,6 +422,7 @@ export const useHubSync = () => {
             if (payload?.type === 'FULL_RESET') {
                 setLiveImagePath(null);
                 setLiveEntity(null);
+                setLiveMediaEstUneVideo(false);
                 return;
             }
             applySyncPayload(payload);
@@ -545,6 +586,8 @@ export const useHubSync = () => {
     return {
         status,
         liveImagePath,
+        liveMediaEstUneVideo,
+        niveauSonVideo,
         liveEntity,
         voiceLevel,
         sessionSummary,

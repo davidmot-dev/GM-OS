@@ -55,7 +55,7 @@ contextBridge.exposeInMainWorld('appBridge', {
     },
     image: {
         getDisplays: () => ipcRenderer.invoke('image:get-displays'),
-        syncHubData: (type: 'image' | 'entity' | 'voice-level' | 'titre' | 'son-video', data: string) => ipcRenderer.send('image:sync-hub-data', type, data),
+        syncHubData: (type: 'image' | 'video' | 'entity' | 'voice-level' | 'titre' | 'son-video', data: string) => ipcRenderer.send('image:sync-hub-data', type, data),
         launchDisplay: (paths: string[], target: string) => ipcRenderer.send('image:launch-display', paths, target),
         /*
           **Un écran qui s'ouvre demande le titre en cours.** Sans ça, le titre

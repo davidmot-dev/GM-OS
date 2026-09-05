@@ -94,6 +94,33 @@ that has just opened has received nothing and would stay at full volume forever.
 output device (the HDMI display), not the speaker chosen in Music-OS. `setSinkId` applies to a
 context, and there is none here.
 
+### ⛔ The Hub must be told, it cannot deduce (2026-09-05)
+
+Projector windows receive a **media id** and fetch the file: they hold the MIME type. The Hub
+receives an **already-resolved URL** — `http://<lan>:<port>/temp/m-1757…` — because a tablet cannot
+read the GM's IndexedDB. That URL **has no extension**, and nothing in it separates a film from a
+photograph.
+
+The Hub therefore painted every projection as a CSS `background-image`, which cannot play a video:
+*the video arrived and nothing showed.* Two halves were missing, and both were needed.
+
+1. **The GM announces the kind.** `ImageService.projectMedia` calls
+   `image/logic/natureDuMedia.ts` — marker first, then the Media Hub's own classification, then the
+   filename — and sends `syncHubData('video' | 'image', url)`. The fallback is *image*: a still
+   shown for a film displays a frozen frame, a film shown for a still displays nothing.
+2. **The Hub draws accordingly.** `components/hub/FondProjete.tsx` is shared by `PlayerHub` and
+   `TabletHub` — *two writers for one piece of state always drift* — and picks `<video>`, `<iframe>`
+   or a background div. `useHubSync` carries `liveMediaEstUneVideo` and `niveauSonVideo`, both reset
+   by every image projection: *a flag raised and never lowered turns the next photograph into a
+   black frame.*
+
+⚠️ **Audio policy**: sound plays on the **Player Hub only**. Player tablets render the same video
+muted — the table has one screen and five tablets, and five network-skewed soundtracks are noise,
+not atmosphere. A refused autoplay falls back to muted playback rather than a frozen first frame.
+
+⚠️ The projection **card** is suppressed for videos: the background already plays it full-screen,
+and a card would decode the same film a second time on its own clock.
+
 ### YouTube (`__youtube__<id>`)
 
 A YouTube link stays a Web-OS bookmark — nothing to back up, nothing for Nexus — so it never enters

@@ -117,6 +117,10 @@ jamais été dans l'application.
 limite, pas un défaut : un élément d'une fenêtre ne se branche pas sur le contexte audio d'une
 autre.
 
+⭐ **Puis la même vidéo vers le Player Hub.** C'est le retour de David le soir même : le Hub
+peignait toute projection en image de fond, donc **rien ne s'affichait**. Il doit maintenant la
+jouer en plein fond, **avec le son** — et **muette sur les tablettes des joueurs**, délibérément.
+
 **Web-OS → coller une adresse YouTube.** Le pad doit changer de pictogramme, et un bouton
 **Projeter** apparaître au survol. ⚠️ Là, **le son n'obéit à rien** : c'est écrit dans le guide et
 dit au clic.

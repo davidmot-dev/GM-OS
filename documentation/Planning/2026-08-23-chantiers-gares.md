@@ -1113,11 +1113,26 @@ dans la bibliothèque d'Image-OS. Il voyage vers le projecteur comme `__youtube_
 convention de la carte et du tableau blanc plutôt qu'en ouvrant un second canal. Ses trois limites —
 Internet, hors sauvegarde, **son hors mixage** — sont dites au clic et dans le guide.
 
+⛔ **Le Hub, lui, n'affichait rien — trouvé par David le soir même.** Il peignait **toute**
+projection en `background-image`, ce qui ne peut pas jouer un film. Et il ne pouvait pas s'en rendre
+compte : *les écrans de projection reçoivent un identifiant et vont chercher le fichier — ils ont le
+type MIME ; le Hub reçoit une adresse **déjà résolue**, sans extension*, parce qu'une tablette ne
+peut pas lire la base du meneur. **Un destinataire qui ne peut pas déduire doit être informé** : le
+meneur annonce la nature (`natureDuMedia`), et un fond partagé par les deux hubs choisit l'élément à
+dessiner. Le repli est *image* : une image affichée à tort montre une trame figée, une vidéo
+affichée à tort ne montre rien.
+
+⭐ **Décision : le son sur le Player Hub, jamais sur les tablettes.** L'écran de la table est unique,
+les tablettes sont cinq — *cinq bandes-son décalées par le réseau ne font pas une ambiance.* Et la
+carte de projection est supprimée pour une vidéo : le fond la joue déjà en plein écran, une carte
+décoderait le même film une seconde fois sur sa propre horloge.
+
 ⚠️ **Resté tel quel, et c'est un choix à confirmer** : une vidéo **boucle**, comportement d'origine.
 Bon pour une ambiance, discutable pour un plan de film. Un interrupteur par pad serait peu de chose.
 
 **Ancres** : `image/logic/gainDeLaVideo.ts`, `image/useSonDeLaVideoProjetee.ts`, `web/youtube.ts`,
-`web/components/WebLinkPad.tsx`.
+`web/components/WebLinkPad.tsx`, `image/logic/natureDuMedia.ts`,
+`components/hub/FondProjete.tsx`.
 
 ### 23 · ⛔ Le ducking pouvait ne jamais se brancher, et se taisait (2026-09-05)
 

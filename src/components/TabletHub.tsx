@@ -49,11 +49,13 @@ import { useClientStore } from '../stores/useClientStore';
 import { usePerformanceControl } from '../hooks/usePerformanceControl';
 import { usePerformanceStore } from '../stores/usePerformanceStore';
 import type { DieResult } from '../modules/dice/DiceEngine';
+import FondProjete from './hub/FondProjete';
 
 const TabletHub: React.FC = () => {
     const {
         status,
         liveImagePath,
+        liveMediaEstUneVideo,
         liveEntity,
         sessionSummary,
         showDice,
@@ -251,16 +253,30 @@ const TabletHub: React.FC = () => {
                     style={{ backgroundImage: `url('${resolvedCampaignWallpaper}')` }}
                 />
             )}
-            {/* Layer 2 (z-1): Active projection (NPC, image projetée) */}
+            {/* Layer 2 (z-1): Active projection (NPC, image ou VIDÉO projetée) */}
+            {/*
+              ⛔ **Une `background-image` ne peut pas jouer un film.** Même défaut
+              que sur le Player Hub, corrigé le 2026-09-05 — voir [[FondProjete]].
+
+              ⚠️ **Sans le son, ici.** L'écran de la table est unique ; les
+              tablettes sont cinq, et cinq bandes-son décalées par le réseau ne
+              font pas une ambiance. Le son de la table appartient aux enceintes
+              de la table.
+            */}
             <div
-                className={`fixed inset-0 z-1 bg-cover bg-center transition-all duration-1000 ease-in-out ${
+                className={`fixed inset-0 z-1 transition-all duration-1000 ease-in-out ${
                     (resolvedFavorites.length > 0 || liveEntity) ? 'brightness-[0.15] grayscale-[30%]' : 'brightness-[0.4] grayscale-[20%]'
                 }`}
-                style={{
-                    backgroundImage: resolvedBackground ? `url('${resolvedBackground}')` : 'none',
-                    opacity: resolvedBackground ? 1 : 0,
-                }}
-            />
+                style={{ opacity: resolvedBackground ? 1 : 0 }}
+            >
+                {resolvedBackground && (
+                    <FondProjete
+                        url={resolvedBackground}
+                        estUneVideo={liveMediaEstUneVideo}
+                        className="absolute inset-0 w-full h-full bg-cover bg-center"
+                    />
+                )}
+            </div>
             
             {/* Overlay for focus (when an entity is displayed front-and-center) */}
             {(resolvedFavorites.length > 0 || liveEntity) && (
@@ -323,7 +339,16 @@ const TabletHub: React.FC = () => {
                                     // 3. Decide if we show the raw image card
                                     const isWallpaper = liveImagePath === activeCampaignWallpaper;
                                     const imageAlreadyShownAsEntity = !!liveImagePath && shownImages.has(liveImagePath);
-                                    const showImageCard = !!liveImagePath && !isWallpaper && !imageAlreadyShownAsEntity;
+                                    /*
+                                      ⚠️ **Pas de carte pour un film — 2026-09-05.**
+                                      Le fond le joue déjà en plein écran, ce qui est
+                                      ce qu'on veut d'une vidéo. Une carte en plus
+                                      afficherait le *même* film une seconde fois :
+                                      deux décodages, deux horloges qui divergent, et
+                                      une vignette qui contredit le fond.
+                                    */
+                                    const showImageCard = !!liveImagePath && !isWallpaper
+                                        && !imageAlreadyShownAsEntity && !liveMediaEstUneVideo;
 
                                     const count = filteredFavorites.length + (liveEntity ? 1 : 0) + (showImageCard ? 1 : 0);
                                     

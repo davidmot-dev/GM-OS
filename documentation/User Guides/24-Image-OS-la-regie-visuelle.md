@@ -71,6 +71,27 @@ Par-dessus lui s'appliquent les trois commandes habituelles de la table :
 > 🔎 **Pour arrêter une vidéo**, coupez l'écran (**Blackout**). Il n'y a pas de
 > bouton pause : elle est un décor, comme une image.
 
+### Sur le Player Hub et les tablettes
+
+La vidéo s'y affiche **en plein fond**, comme une image projetée le ferait.
+
+| Surface | Le son |
+| --- | --- |
+| **Player Hub** — l'écran de la table | ✅ oui, au niveau que vous dictez |
+| **Tablettes des joueurs** | ❌ muet, délibérément |
+
+> ⚠️ **Pourquoi les tablettes restent muettes.** L'écran de la table est unique ;
+> les tablettes sont cinq. *Cinq appareils jouant la même bande-son avec un
+> décalage de réseau ne font pas une ambiance, ils font du bruit.* Le son de la
+> table appartient aux enceintes de la table.
+
+> ⛔ **Corrigé le 2026-09-05, le jour même.** Le Hub peignait **toute** projection
+> comme une image de fond — ce qui ne peut pas jouer un film. La vidéo arrivait
+> bien, et l'écran restait vide. Il fallait deux choses : que le Hub sache
+> *dessiner* une vidéo, et surtout **qu'on le prévienne** — il reçoit une adresse
+> préparée pour lui, sans extension, où rien ne distingue un film d'une
+> photographie.
+
 ## 📁 Organisation de la Bibliothèque
 
 Pour ne pas perdre de temps à chercher une image en plein combat :

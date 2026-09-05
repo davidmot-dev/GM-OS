@@ -25,12 +25,14 @@ import { HubProjectionCard } from './hub/HubProjectionCard';
 import { TitreProjete } from './TitreProjete';
 import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
+import FondProjete from './hub/FondProjete';
 
 const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
     const hubSync = useHubSync();
     const {
-        liveImagePath, liveEntity, showDice, resolvedFavorites,
+        liveImagePath, liveMediaEstUneVideo, niveauSonVideo,
+        liveEntity, showDice, resolvedFavorites,
         isClockProjected, timestamp, mode, theme, tensions,
         combatants, currentTurnIdx, round, isCombatProjected,
         activeCampaignWallpaper, voiceLevel
@@ -86,18 +88,40 @@ const PlayerHub: React.FC = React.memo(() => {
                     />
                 ) : (
                     <AnimatePresence mode="wait">
+                        {/*
+                          ⛔ **Ce fond était une image CSS, et rien d'autre.** Une
+                          `background-image` ne peut pas jouer un film : la vidéo
+                          arrivait bien, et l'écran restait vide. Trouvé par David
+                          le 2026-09-05.
+
+                          L'animation reste sur l'enveloppe ; c'est
+                          [[FondProjete]] qui choisit l'élément à dessiner.
+
+                          ⭐ **Le son est permis ici**, et seulement ici :
+                          l'écran de la table est unique, les tablettes sont
+                          cinq.
+                        */}
                         <motion.div
                             key={resolvedBackground || 'none'}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 1.5 }}
-                            className="absolute inset-0 bg-cover bg-center grayscale-[20%] transition-all duration-1000"
+                            className="absolute inset-0"
                             style={{
-                                backgroundImage: resolvedBackground ? `url('${resolvedBackground}')` : "none",
                                 filter: `brightness(${(resolvedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(20%)`
                             }}
-                        />
+                        >
+                            {resolvedBackground && (
+                                <FondProjete
+                                    url={resolvedBackground}
+                                    estUneVideo={liveMediaEstUneVideo}
+                                    avecSon
+                                    niveauSonore={niveauSonVideo}
+                                    className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000"
+                                />
+                            )}
+                        </motion.div>
                     </AnimatePresence>
                 )}
                 {!resolvedBackground && !isMapActive && <div className="absolute inset-0 bg-app-bg" />}
@@ -151,7 +175,16 @@ const PlayerHub: React.FC = React.memo(() => {
                                     // 3. Decide if we show the raw image card
                                     const isWallpaper = liveImagePath === activeCampaignWallpaper;
                                     const imageAlreadyShownAsEntity = !!liveImagePath && shownImages.has(liveImagePath);
-                                    const showImageCard = !!liveImagePath && !isWallpaper && !imageAlreadyShownAsEntity;
+                                    /*
+                                      ⚠️ **Pas de carte pour un film — 2026-09-05.**
+                                      Le fond le joue déjà en plein écran, ce qui est
+                                      ce qu'on veut d'une vidéo. Une carte en plus
+                                      afficherait le *même* film une seconde fois :
+                                      deux décodages, deux horloges qui divergent, et
+                                      une vignette qui contredit le fond.
+                                    */
+                                    const showImageCard = !!liveImagePath && !isWallpaper
+                                        && !imageAlreadyShownAsEntity && !liveMediaEstUneVideo;
 
                                     const count = filteredFavorites.length + (liveEntity ? 1 : 0) + (showImageCard ? 1 : 0);
                                     
