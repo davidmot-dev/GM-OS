@@ -8,6 +8,7 @@ import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCa
 import { useImageStore } from '../useImageStore';
 import { useTranslation } from 'react-i18next';
 import { TitreProjete } from '../../../components/TitreProjete';
+import { videoDuMarqueur, adresseDIntegration, PREFIXE_YOUTUBE } from '../../web/youtube';
 
 /**
  * Le fondu de l'image projetée, à l'entrée comme à la sortie.
@@ -35,9 +36,25 @@ const ProjectorView: React.FC = () => {
 
     const resolvedUrl = useMediaUrl(imagePath && !imagePath.startsWith('__') ? imagePath : undefined);
     const { initDB, getMediaBlob } = useMediaStore();
-    const [mediaType, setMediaType] = useState<'image' | 'video' | 'unknown'>('unknown');
+    const [mediaType, setMediaType] = useState<'image' | 'video' | 'youtube' | 'unknown'>('unknown');
     /* Le même fait que `mediaType`, lisible depuis un rappel qui ne re-rend pas. */
     const estUneVideo = useRef(false);
+
+    /*
+      **Le niveau dicté par le meneur — 2026-09-05.**
+
+      La vidéo joue ici, dans la fenêtre de projection, et ne peut pas rejoindre
+      le bus audio qui vit dans celle du meneur. Celui-ci calcule le niveau et
+      l'envoie ; on l'applique. Voir [[gainDeLaVideo]].
+
+      ⚠️ **Il part à 1 et non à 0.** Un projecteur ouvert avant que le meneur
+      n'ait touché à quoi que ce soit n'a rien reçu — *un silence qu'on ne
+      s'explique pas coûte plus cher qu'un son trop fort, parce qu'on ne sait pas
+      où chercher.* Le meneur renvoie de toute façon le niveau à chaque
+      changement de projection.
+    */
+    const [niveauDuSon, setNiveauDuSon] = useState(1);
+    const elementVideo = useRef<HTMLVideoElement | null>(null);
 
     /*
       **L'image s'éteint en fondu, elle ne disparaît pas d'un coup.**
@@ -93,6 +110,11 @@ const ProjectorView: React.FC = () => {
                 setIpcCount(c => c + 1);
                 updateImageSource(data || null);
             }
+            if (type === 'son-video') {
+                const niveau = Number(data);
+                // Un message abîmé ne doit pas rendre la vidéo muette pour de bon.
+                if (Number.isFinite(niveau)) setNiveauDuSon(Math.min(1, Math.max(0, niveau)));
+            }
         };
 
         if (window.appBridge?.on) {
@@ -124,7 +146,24 @@ const ProjectorView: React.FC = () => {
 
     // Détection du type de média
     useEffect(() => {
-        if (!imagePath || imagePath.startsWith('__')) return;
+        if (!imagePath) return;
+
+        /*
+          **Une vidéo YouTube se reconnaît à son marqueur, pas à un blob.** Elle
+          ne passe pas par le Media Hub : rien à charger, rien à renifler.
+
+          Elle compte comme une vidéo pour `estUneVideo` — donc elle **part sans
+          attendre le fondu**. Un cadre distant gardé monté et transparent
+          continuerait de jouer son son, et aucun réglage de GM-OS ne pourrait
+          l'en empêcher.
+        */
+        if (imagePath.startsWith(PREFIXE_YOUTUBE)) {
+            estUneVideo.current = true;
+            setMediaType('youtube');
+            return;
+        }
+        if (imagePath.startsWith('__')) return;
+
         const detectType = async () => {
             if (imagePath.startsWith('m-')) {
                 const blob = await getMediaBlob(imagePath);
@@ -138,6 +177,40 @@ const ProjectorView: React.FC = () => {
         };
         detectType();
     }, [imagePath, getMediaBlob]);
+
+    /*
+      **Le niveau s'applique à l'élément, pas par un attribut.**
+
+      React n'a pas de propriété `volume` : la seule voie est l'élément lui-même.
+      L'effet se rejoue aussi quand la source change, parce qu'un nouveau
+      `<video>` naît toujours à plein volume — *un réglage qui ne se réapplique
+      pas à la relève n'est vrai qu'une fois.*
+    */
+    useEffect(() => {
+        const element = elementVideo.current;
+        if (!element) return;
+        element.volume = niveauDuSon;
+    }, [niveauDuSon, imagePath, mediaType]);
+
+    /*
+      **Si la lecture avec son est refusée, on joue en muet plutôt que rien.**
+
+      Electron autorise la lecture automatique, mais le réglage est modifiable et
+      un navigateur ordinaire la refuse. Le refus est **silencieux** : la vidéo
+      resterait figée sur sa première image, indiscernable d'une photographie, en
+      pleine séance. *Une dégradation annoncée vaut mieux qu'une panne muette* —
+      d'où la seconde tentative, et la trace dans la console.
+    */
+    useEffect(() => {
+        const element = elementVideo.current;
+        if (!element || mediaType !== 'video') return;
+
+        element.play().catch((raison) => {
+            console.warn('[ProjectorView] Lecture avec son refusée, reprise en muet :', raison);
+            element.muted = true;
+            element.play().catch(() => { /* Là, il n'y a plus rien à tenter. */ });
+        });
+    }, [imagePath, mediaType]);
 
     const { projectedMapUrl, projectionTarget: mapTarget } = useMapStore();
     const { projectionTarget: whiteboardTarget, backgroundMode } = useWhiteboardStore();
@@ -178,13 +251,45 @@ const ProjectorView: React.FC = () => {
                 <>
                     {!imagePath && <div className="text-white/10 uppercase text-xs tracking-widest">{t('common:standby')}</div>}
                     
-                    {resolvedUrl && mediaType === 'video' ? (
+                    {mediaType === 'youtube' && videoDuMarqueur(imagePath ?? '') ? (
+                        /*
+                          **Le cadre YouTube — 2026-09-05, à la demande de David.**
+
+                          ⚠️ **Son son n'obéit à personne ici.** Un cadre distant
+                          ne se branche sur aucun contexte audio, et `niveauDuSon`
+                          ne l'atteint pas : c'est le lecteur de YouTube qui tient
+                          son volume. Le meneur le sait avant de projeter — Web-OS
+                          le lui dit — et le geste de repli est de couper l'écran.
+
+                          `allow` liste ce que le cadre a le droit de faire : sans
+                          `autoplay`, la vidéo attendrait un clic que personne ne
+                          peut donner sur un écran de projection.
+                        */
+                        <iframe
+                            key={imagePath}
+                            src={adresseDIntegration(videoDuMarqueur(imagePath ?? '')!)}
+                            title="Vidéo YouTube projetée"
+                            allow="autoplay; encrypted-media; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full border-0"
+                            style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}
+                        />
+                    ) : resolvedUrl && mediaType === 'video' ? (
+                        /*
+                          **La vidéo a du son depuis le 2026-09-05.** Elle était
+                          `muted` en dur : elle jouait, et personne ne l'entendait.
+
+                          `loop` est conservé — c'est le comportement d'origine, et
+                          il sert l'usage courant, une boucle d'ambiance. Une vidéo
+                          qui doit s'arrêter se coupe au blackout.
+                        */
                         <video 
+                            ref={elementVideo}
                             key={imagePath || 'vid'} 
                             src={resolvedUrl} 
                             autoPlay 
                             loop 
-                            muted 
+                            playsInline
                             className="w-full h-full object-contain"
                             style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}
                         />

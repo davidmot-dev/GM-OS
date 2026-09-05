@@ -22,6 +22,41 @@ L'interface est conçue pour une efficacité maximale :
 
 ---
 
+## 📺 Projeter une vidéo YouTube
+
+**Ajouté le 2026-09-05, à la demande de David.** Collez l'adresse d'une vidéo
+YouTube comme n'importe quel autre lien : Web-OS la **reconnaît**, remplace son
+pictogramme par celui de YouTube, et ajoute un bouton **Projeter** dans les
+commandes qui apparaissent au survol.
+
+Les quatre écritures fonctionnent — celle du site, celle du bouton *Partager*,
+celle du code d'intégration, et les *Shorts* — et le **point de départ est
+conservé** si l'adresse en contient un (`?t=1m30s`).
+
+La vidéo part sur **l'écran cible réglé dans Image-OS** ; le bouton le nomme avant
+que vous cliquiez. Une vidéo à l'antenne porte une étiquette visible sur son pad, et
+le même bouton la coupe.
+
+> ⛔ **Trois choses qu'une vidéo YouTube ne fait pas comme un fichier**, et qu'il
+> vaut mieux savoir avant la séance :
+>
+> - **Elle a besoin d'Internet.** Une coupure donne un cadre noir devant vos
+>   joueurs.
+> - **Elle ne part ni dans la sauvegarde ni dans Nexus.** Seule l'adresse voyage ;
+>   la vidéo reste chez YouTube, et peut disparaître.
+> - ⚠️ **Son son échappe entièrement au mixage.** Ni le volume général, ni le mode
+>   Focus, ni le ducking de la voix ne l'atteignent — *un cadre distant ne se
+>   branche sur aucun contexte audio, et aucun réglage n'y changera rien.* Réglez
+>   le volume dans le lecteur, ou coupez l'écran.
+>
+> GM-OS bride ce qu'il peut : domaine sans traceur, et les suggestions de fin
+> réduites à la même chaîne. **Il n'existe aucun moyen de supprimer l'écran de fin
+> de YouTube** ; coupez l'écran avant que la vidéo se termine.
+
+> 💡 **Pour une vidéo que vous montrerez souvent**, téléchargez-la et posez-la dans
+> [Image-OS](./24-Image-OS-la-regie-visuelle.md) : elle devient un pad comme un
+> autre — sauvegardée, transportable, mixée, et fiable hors ligne.
+
 ## 💾 Sauvegarde & Partage (JSON)
 Votre bibliothèque Web-OS est précieuse. Vous pouvez l'exporter et l'importer très simplement :
 - **Save (Export)** : Sauvegarde toute votre liste de liens dans un fichier JSON sur votre ordinateur.
@@ -38,3 +73,9 @@ Web-OS utilise le **Bridge** système pour une expérience fluide :
 
 > [!TIP]
 > **Organisation Tactique** : Créez une bibliothèque spécifique pour chaque système de jeu. Exportez-les en fichiers JSON nommés (ex: `web-alien.json`, `web-cthulhu.json`) et chargez la liste correspondante au début de votre séance !
+
+---
+
+*Complété le 2026-09-05 : Web-OS sait désormais **projeter une vidéo YouTube** sur un écran de
+table, avec ses trois limites annoncées avant le clic. Voir aussi
+[Image-OS](./24-Image-OS-la-regie-visuelle.md), qui a reçu les vidéos en fichier le même jour.*

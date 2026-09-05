@@ -3,7 +3,7 @@ import React from 'react';
 import {
     Ban, Folder as FolderIcon, History as HistoryIcon,
     Star as StarIcon, Search as SearchIcon,
-    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight
+    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight, Film
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
@@ -14,6 +14,7 @@ import { gmConfirm, gmPrompt } from '../../stores/useModalStore';
 import { gmToast } from '../../stores/useToastStore';
 import { mediasRestituables, restaurerLesMedias } from '../session/logic/MiroirDesMedias';
 import { useHardwareStore } from '../../stores/useHardwareStore';
+import { estUneVideo } from '../../stores/typesDeMedia';
 import { useTranslation } from 'react-i18next';
 
 const ImageDashboard: React.FC = () => {
@@ -76,7 +77,15 @@ const ImageDashboard: React.FC = () => {
         addMedia({
             name: media.name,
             path: mediaId,
-            sizeInfo: `${(media.size / (1024 * 1024)).toFixed(1)}MB`
+            sizeInfo: `${(media.size / (1024 * 1024)).toFixed(1)}MB`,
+            /*
+              **Ce que le Hub sait déjà, le pad n'a pas à le redeviner.** Le Media
+              Hub a classé le fichier à l'import, avec sa table d'extensions ; on
+              recopie son verdict plutôt que d'en rendre un second. *Deux
+              classements pour un même fichier finissent par se contredire* — le
+              motif payé sur ce projet plus souvent qu'aucun autre.
+            */
+            type: media.type === 'video' ? 'video' : 'image',
         });
     };
 
@@ -87,6 +96,15 @@ const ImageDashboard: React.FC = () => {
             }
         });
     };
+
+    const volumeVideo = useImageStore(state => state.volumeVideo);
+    const setVolumeVideo = useImageStore(state => state.setVolumeVideo);
+
+    /* Le champ d'abord, le nom en repli : les pads d'avant le 2026-09-05 n'ont
+       pas de `type`. Même règle que dans le pad. */
+    const contientUneVideo = mediaList.some(
+        (m) => (m.type ? m.type === 'video' : estUneVideo(m.name)),
+    );
 
     let displayedMedia = mediaList;
     if (currentView === 'favorites') {
@@ -108,7 +126,13 @@ const ImageDashboard: React.FC = () => {
                 isOpen={isBrowserOpen}
                 onClose={() => setIsBrowserOpen(false)}
                 onSelect={handleMediaSelect}
-                allowedTypes={['image']}
+                /*
+                  **Les vidéos entrent le 2026-09-05.** Le projecteur savait les
+                  jouer depuis longtemps ; c'est ce filtre, et lui seul, qui
+                  interdisait d'en poser une sur le tableau. *Une capacité qu'on
+                  ne peut pas atteindre n'existe pas.*
+                */
+                allowedTypes={['image', 'video']}
                 title={t('image.sidebar.mediaLibrary')}
             />
 
@@ -204,6 +228,39 @@ const ImageDashboard: React.FC = () => {
                 </div>
 
                 <div className="mt-auto pt-4 border-t border-app-border flex flex-col gap-3">
+                    {/*
+                        **Le niveau des vidéos — 2026-09-05.**
+
+                        Il ne remplace pas le volume général : il s'y multiplie,
+                        comme la tranche d'un module sur une console. *On calme une
+                        vidéo trop forte sans toucher à la musique, et on coupe
+                        toute la table d'un seul geste ailleurs.*
+
+                        Il n'apparaît que si la bibliothèque contient une vidéo :
+                        un réglage qui ne s'applique à rien n'apprend rien.
+                    */}
+                    {contientUneVideo && (
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex justify-between items-center text-ui-10 text-slate-500 uppercase tracking-widest font-bold">
+                                <span className="flex items-center gap-1.5"><Film size={12} /> Son des vidéos</span>
+                                <span className="tabular-nums text-slate-400">{Math.round(volumeVideo * 100)}%</span>
+                            </div>
+                            <input
+                                type="range"
+                                min={0}
+                                max={1}
+                                step={0.01}
+                                value={volumeVideo}
+                                onChange={(e) => setVolumeVideo(Number(e.target.value))}
+                                aria-label="Niveau sonore des vidéos projetées"
+                                className="w-full accent-accent cursor-pointer"
+                            />
+                            <p className="text-ui-9 text-slate-600 leading-snug normal-case">
+                                Le volume général, le Focus et la voix s'y appliquent aussi.
+                            </p>
+                        </div>
+                    )}
+
                     <div className="flex justify-between items-center text-ui-10 text-slate-500 uppercase tracking-widest font-bold">
                         <span>{t('image.sidebar.localStorage')}</span>
                         <span>{t('image.storage.itemsCount', { count: mediaList.length })}</span>

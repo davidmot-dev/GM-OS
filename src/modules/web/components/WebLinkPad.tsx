@@ -1,7 +1,11 @@
 import React from 'react';
-import { Link, Edit2, Palette, X } from 'lucide-react';
+import { Link, Edit2, Palette, X, Youtube, MonitorPlay, MonitorX } from 'lucide-react';
 import type { WebLink } from '../types';
 import { useWebStore } from '../useWebStore';
+import { videoYouTube, marqueurDeProjection } from '../youtube';
+import { useImageStore } from '../../image/useImageStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { gmToast } from '../../../stores/useToastStore';
 
 interface WebLinkPadProps {
     link: WebLink;
@@ -10,6 +14,44 @@ interface WebLinkPadProps {
 
 const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
     const { openLink, removeLink } = useWebStore();
+
+    /*
+      **Une vidéo YouTube reste un marque-page, et devient projetable.**
+
+      Demandé par David le 2026-09-05 : *« les vidéos YouTube sont visibles à
+      partir de Web-OS »*. Elle n'entre donc pas dans la bibliothèque d'Image-OS —
+      *ce qui n'est pas un fichier n'a pas sa place parmi les fichiers* : rien à
+      sauvegarder, rien à emporter dans Nexus, et une vignette qu'on ne pourrait
+      pas dessiner.
+    */
+    const video = videoYouTube(link.url);
+    const cible = useImageStore((e) => e.projectionTarget);
+    const projections = useImageStore((e) => e.projections);
+    const { getDisplayLabel } = useHardwareStore();
+
+    const marqueur = video ? marqueurDeProjection(video) : null;
+    const estProjetee = !!marqueur && projections[cible as string] === marqueur;
+
+    const projeter = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!marqueur) return;
+
+        const { ImageService } = await import('../../image/logic/ImageService');
+
+        if (estProjetee) {
+            await ImageService.blackout(cible as string);
+            return;
+        }
+
+        await ImageService.projectMedia(marqueur, cible as any);
+        /*
+          **Le seul avertissement qui compte, au moment où il compte.** Le son
+          d'un cadre distant échappe entièrement au mixage de GM-OS : ni le volume
+          général, ni le Focus, ni le ducking de la voix ne l'atteignent. Le dire
+          dans un manuel ne servirait à rien ; le dire au clic, si.
+        */
+        gmToast("Vidéo YouTube projetée — son hors du mixage, et Internet requis.");
+    };
 
     // Mapping colors to Tailwind classes
     const colorClasses: Record<string, string> = {
@@ -31,8 +73,19 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
             onClick={() => openLink(link.url)}
         >
             <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors ${currentClasses.split(' ').find(c => c.startsWith('bg-'))}`}>
-                <Link size={24} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />
+                {/* Le pictogramme dit ce que le lien est, avant qu'on survole. */}
+                {video
+                    ? <Youtube size={24} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />
+                    : <Link size={24} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />}
             </div>
+
+            {/* Une vidéo à l'antenne se voit sans survoler : c'est ce qui permet
+                de la couper sans la chercher. */}
+            {estProjetee && (
+                <span className="absolute top-2 left-2 bg-accent text-app-bg text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg font-display">
+                    {getDisplayLabel(cible as string)}
+                </span>
+            )}
 
             <span className="text-xs font-medium text-slate-300 text-center truncate w-full">
                 {link.name}
@@ -54,6 +107,20 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                 >
                     <Palette size={18} />
                 </button>
+                {video && (
+                    <button
+                        onClick={projeter}
+                        className={`p-2 rounded-lg transition-colors ${estProjetee
+                            ? 'bg-accent text-app-bg shadow-glow-accent'
+                            : 'bg-app-bg hover:bg-app-surface text-app-text'}`}
+                        title={estProjetee
+                            ? `Couper la projection sur ${getDisplayLabel(cible as string)}`
+                            : `Projeter sur ${getDisplayLabel(cible as string)} — son hors du mixage, Internet requis`}
+                    >
+                        {estProjetee ? <MonitorX size={18} /> : <MonitorPlay size={18} />}
+                    </button>
+                )}
+
                 <button
                     onClick={(e) => { e.stopPropagation(); removeLink(link.id); }}
                     className="p-2 bg-red-900/50 hover:bg-red-800/70 rounded-lg text-red-100 transition-colors"

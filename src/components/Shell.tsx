@@ -36,6 +36,7 @@ import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
 import { usePrechauffageDuModele } from '../modules/ai/prechauffage';
 import { useLumiereQuiSuitLaVoix } from '../modules/light/hooks/useLumiereQuiSuitLaVoix';
+import { useSonDeLaVideoProjetee } from '../modules/image/useSonDeLaVideoProjetee';
 import { useCorpusDeLaCampagne } from '../modules/session/hooks/useCorpusDeLaCampagne';
 import { useBattementDuMinuteur } from '../modules/clock/useBattementDuMinuteur';
 import { uneSeanceEstOuverte } from '../modules/session/logic/seanceOuverte';
@@ -140,6 +141,16 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
       rendre toute l'application.
     */
     useLumiereQuiSuitLaVoix();
+
+    /*
+      **Et le niveau des vidéos projetées, pour la même raison — cinquième.**
+
+      Une vidéo joue dans la fenêtre de projection, hors du bus audio ; le meneur
+      lui dicte son niveau depuis ici. Attaché à Image-OS, l'émetteur se tairait
+      dès qu'on quitte cet écran — or on baisse le son et on enclenche le Focus
+      depuis n'importe où, justement pendant que la vidéo joue.
+    */
+    useSonDeLaVideoProjetee();
 
     // Activate Tactical AI listeners
     useHardwareBridge();

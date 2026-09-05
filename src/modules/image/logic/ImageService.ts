@@ -37,6 +37,21 @@ export class ImageService {
                 return mediaPath;
             }
 
+            /*
+              **Un marqueur n'est pas un chemin, et ne se résout pas.**
+
+              `__whiteboard__`, `__tactical_map__` et, depuis le 2026-09-05,
+              `__youtube__<id>` désignent quoi afficher, pas où le trouver. Les
+              passer au résolveur lui ferait chercher un média de ce nom et rendre
+              `null` — *une projection qui échoue parce qu'on a cherché l'adresse
+              d'une chose qui n'en a pas.*
+            */
+            if (mediaPath.startsWith('__')) {
+                window.appBridge?.image?.syncHubData('image', mediaPath);
+                (window as any).useImageStore.getState().setProjection(target, marque);
+                return mediaPath;
+            }
+
             // 📡 CAS DISTANT (Hub / Tablette)
             // La tablette ne peut pas lire IndexedDB localement, on doit lui envoyer une URL résolue.
             const resolvedPath = await resolveToSendableUrl(mediaPath);

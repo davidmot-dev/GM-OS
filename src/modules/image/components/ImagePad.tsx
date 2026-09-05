@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { X, Star, Edit2 } from 'lucide-react';
+import { X, Star, Edit2, Film } from 'lucide-react';
+import { estUneVideo } from '../../../stores/typesDeMedia';
 import type { ImageMedia } from '../types';
 import { useImageStore } from '../useImageStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -48,15 +49,44 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
     const resolvedUrl = useMediaUrl(media.path);
     const safePath = resolvedUrl || '';
 
+    /*
+      **Le champ d'abord, le nom en repli.** Les pads posés avant le 2026-09-05
+      n'ont pas de `type` : sans le repli par le nom, toutes les vidéos déjà
+      rangées resteraient des cases vides. *Un champ facultatif dont on ne prévoit
+      pas l'absence est un champ obligatoire qui s'ignore.*
+    */
+    const estVideo = media.type ? media.type === 'video' : estUneVideo(media.name);
+
     return (
         <div
             onClick={() => projectSolo(media)}
             className={`group aspect-video rounded-2xl bg-app-surface/40 border overflow-hidden relative cursor-pointer transition-all ${borderClass}`}
         >
-            <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                style={{ backgroundImage: `url('${safePath}')` }}
-            ></div>
+            {estVideo ? (
+                /*
+                  **La vidéo est sa propre vignette.** Une image de fond ne peut
+                  pas afficher une vidéo : le pad restait noir, et rien ne disait
+                  pourquoi.
+
+                  `preload="metadata"` ne charge que la première image, pas le
+                  fichier — *une bibliothèque de trente vidéos ne doit pas coûter
+                  trente vidéos à ouvrir.* Et `muted` sans lecture : le pad est
+                  une vignette, le son appartient au projecteur.
+                */
+                <video
+                    src={safePath}
+                    muted
+                    playsInline
+                    preload="metadata"
+                    aria-hidden
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+            ) : (
+                <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    style={{ backgroundImage: `url('${safePath}')` }}
+                ></div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-app-bg/90 via-transparent to-transparent"></div>
 
             <div className="absolute top-3 left-3 flex flex-col gap-1">
@@ -126,8 +156,15 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
             <div className="absolute bottom-0 w-full p-4">
                 <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0 pr-2">
-                        <h4 className="text-sm font-bold text-app-text truncate drop-shadow-md group-hover:text-accent transition-colors">
-                            {media.name}
+                        <h4 className="text-sm font-bold text-app-text truncate drop-shadow-md group-hover:text-accent transition-colors flex items-center gap-1.5">
+                            {/*
+                              Le pictogramme dit **avant de cliquer** que ce pad
+                              va faire du bruit et durer. La vignette animée ne
+                              suffit pas : une vidéo arrêtée sur sa première image
+                              ressemble à une photographie.
+                            */}
+                            {estVideo && <Film size={13} className="shrink-0 text-accent" aria-label="Vidéo" />}
+                            <span className="truncate">{media.name}</span>
                         </h4>
                         <div className="text-ui-7 font-black text-app-text/20 uppercase tracking-tighter">[{media.id}]</div>
                         <div className="flex items-center gap-2 mt-1">

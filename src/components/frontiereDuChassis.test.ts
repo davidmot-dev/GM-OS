@@ -56,6 +56,9 @@ describe('la frontière de chargement', () => {
             'useBattementDuMinuteur',
             'usePrechauffageDuModele',
             'useLumiereQuiSuitLaVoix',
+            // Ajouté le 2026-09-05 avec la vidéo : il dicte au projecteur le
+            // niveau sonore, et le meneur baisse le son depuis n'importe où.
+            'useSonDeLaVideoProjetee',
         ]) {
             expect(SHELL).toContain(`${crochet}(`);
         }

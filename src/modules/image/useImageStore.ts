@@ -55,6 +55,15 @@ interface ImageState {
      */
     imagePrecedente: Record<string, string | null>;
     displays: DisplayInfo[];
+    /**
+     * **Le niveau des vidéos projetées, 0 à 1 — 2026-09-05.**
+     *
+     * Il ne remplace pas le volume général : il s'y **multiplie**, comme le
+     * curseur d'un module dans une console. *Le meneur doit pouvoir calmer une
+     * vidéo trop forte sans toucher à la musique, et couper toute la table d'un
+     * seul geste.* Voir [[gainDeLaVideo]].
+     */
+    volumeVideo: number;
     activeFolderId: string | null; 
     currentView: 'library' | 'favorites' | 'recent';
 
@@ -66,6 +75,7 @@ interface ImageState {
     setProjectionTarget: (target: ProjectionTarget) => void;
     setProjection: (target: string, path: string | null) => void;
     setCurrentView: (view: 'library' | 'favorites' | 'recent') => void;
+    setVolumeVideo: (volume: number) => void;
     fetchDisplays: () => Promise<void>;
 
     addFolder: (name: string, parentId?: string | null) => void;
@@ -121,6 +131,7 @@ export const useImageStore = create<ImageState>()(
             projections: {},
             imagePrecedente: {},
             displays: [],
+            volumeVideo: 1,
             folders: [],
             activeFolderId: null,
             currentView: 'library',
@@ -172,6 +183,7 @@ export const useImageStore = create<ImageState>()(
             renameMedia: (id, name) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === id ? { ...m, name } : m) })),
             toggleMediaFavorite: (id) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === id ? { ...m, isFavorite: !m.isFavorite } : m) })),
             setProjectionTarget: (projectionTarget) => set({ projectionTarget }),
+            setVolumeVideo: (volume) => set({ volumeVideo: Math.min(1, Math.max(0, volume)) }),
             setProjection: (target, path) => set((state) => ({ 
                 projections: { ...state.projections, [target]: path } 
             })),
@@ -501,7 +513,13 @@ export const useImageStore = create<ImageState>()(
             // `imagePrecedente` accompagne `projections` : garder l'un sans
             // l'autre ferait revenir un décor sur un écran qui a changé, ou
             // perdre le décor d'une projection qui, elle, a survécu.
-            partialize: (s) => ({ mediaList: s.mediaList, projectionTarget: s.projectionTarget, folders: s.folders, projections: s.projections, imagePrecedente: s.imagePrecedente }),
+            /*
+              `volumeVideo` est retenu : c'est un réglage de bibliothèque, pas de
+              pièce. Il dit à quel point les vidéos du meneur sont fortes les
+              unes par rapport aux autres — au contraire du volume général, qui
+              décrit les enceintes d'ici et reste hors des sauvegardes.
+            */
+            partialize: (s) => ({ mediaList: s.mediaList, projectionTarget: s.projectionTarget, folders: s.folders, projections: s.projections, imagePrecedente: s.imagePrecedente, volumeVideo: s.volumeVideo }),
             onRehydrateStorage: () => (s) => {
                 if (!s) return;
                 // On vérifie dorénavant par "path" (m-127...) car les projections stockent les chemins

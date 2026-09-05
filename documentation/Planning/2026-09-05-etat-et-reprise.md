@@ -29,6 +29,7 @@ raison. Puis la télécommande a été refaite.
 | **05/09 au soir, la séance** | Quatre retours de David en jouant : **« Couper le son » qui ne coupait que les bruitages** · le **résultat des dés** qui n'arrivait jamais · les **notes élargies** à la trame, au wiki, aux indices et au coffre Obsidian · la **messagerie** · et les **Chroniques inatteignables** en pleine partie |
 | **05/09, le châssis** | L'**Ulanzi rendait la main au premier passage dans chaque module** — un `Suspense` manquant démontait tout le châssis ; trois autres émetteurs tombaient avec lui |
 | **05/09, le Markdown** | **Les tableaux ne s'interprétaient nulle part** — `remark-gfm` absent, et six écrans qui reposaient chacun le réglage ; un composant unique, et une garde qui balaie tout `src/` |
+| **05/09, la vidéo** | **Image-OS accepte les vidéos** — le projecteur savait les jouer, le sélecteur les refusait, et elles étaient `muted` en dur ; leur son obéit à la table par message · **Web-OS projette une vidéo YouTube**, avec ses trois limites dites avant le clic |
 
 ---
 
@@ -99,6 +100,22 @@ Deux réglages dont **toute la chaîne existait sauf le bouton au bout**. Map-OS
 (le blanc reste le défaut, rien n'a bougé sur vos cartes). Puis allumer **Focus Chat** : un curseur
 apparaît à côté du bouton, entre 5 % et 60 %.
 
+### 6. Projeter une vidéo, puis une vidéo YouTube.
+
+**Image-OS → ajouter → choisir un `.mp4`.** Le pad doit montrer la première image du film et un
+pictogramme de pellicule. Un clic la projette, **avec le son**, en boucle.
+
+Puis les trois commandes de la table, pendant qu'elle joue : baisser le **volume général**,
+enclencher le **Focus**, et **parler au micro**. La vidéo doit suivre les trois.
+
+⚠️ **Son son sort par l'écran de projection**, pas par l'enceinte réglée dans Music-OS — c'est une
+limite, pas un défaut : un élément d'une fenêtre ne se branche pas sur le contexte audio d'une
+autre.
+
+**Web-OS → coller une adresse YouTube.** Le pad doit changer de pictogramme, et un bouton
+**Projeter** apparaître au survol. ⚠️ Là, **le son n'obéit à rien** : c'est écrit dans le guide et
+dit au clic.
+
 ---
 
 ## 2 · Trois pièges payés aujourd'hui, à ne pas repayer
@@ -131,6 +148,23 @@ coupait**. Il ne coupait que les bruitages. *Renommer, c'est promettre.*
 d'appeler `playChime()` dans `tickTimer`, là où le zéro se produit. *Un `set` de Zustand est un
 calcul d'état* : chaque test du minuteur aurait fait sonner une cloche. Elle sonne depuis le
 battement, en comparant l'avant et l'après — ce qui la rend aussi insensible à un double montage.
+
+**⛔ Une vidéo ne peut pas entrer dans le bus audio, et le nier aurait coûté une soirée.** Le
+premier réflexe, pour donner du son aux vidéos, était de les brancher sur le contexte de Music-OS
+comme tout le reste. *Impossible :* la vidéo joue dans la **fenêtre de projection**, le contexte
+vit dans celle du meneur, et aucun chemin ne relie les deux. Elle reçoit donc un **ordre** —
+le niveau calculé par le meneur — au lieu d'un branchement. Le résultat à la table est le même ;
+la limite ne l'est pas, et elle est écrite dans le guide : *le son sort par l'écran, pas par
+l'enceinte de Music-OS.*
+
+**⚠️ Un défaut pré-existant trouvé en chemin, et laissé tel quel.** Importer `useVoiceStore` **en
+premier** ouvre un cycle — `modeDeContexte`, `useSessionOSStore`, les moteurs de Music-OS et
+d'Ambient-OS — au bout duquel les deux moteurs reçoivent un module à moitié évalué et **leur
+abonnement au ducking échoue en silence**. Vérifié par une sonde de trois lignes n'important que ce
+magasin : deux rejets non gérés. *Rien de neuf : la mémoire le note depuis le 30/08 comme « casse le
+ducking dans les tests ».* Le nouveau crochet du son des vidéos l'évite par un import différé, comme
+les moteurs eux-mêmes ; **la cause, elle, reste à traiter** — et elle mérite qu'on vérifie si elle
+mord aussi dans l'application, où l'ordre d'import n'est pas celui des tests.
 
 ---
 

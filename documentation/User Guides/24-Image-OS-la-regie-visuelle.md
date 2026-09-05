@@ -31,6 +31,46 @@ En haut de l'interface, vous pouvez sélectionner l'écran de destination :
 - **Entity (NPC/PC)** : GM-OS projette une fiche complète (nom, portrait, stats publiques) vers le Player Hub en mode "Diorama" tout en affichant l'image brute sur vos écrans secondaires.
 - **Écran au repos** : sans image projetée, l'écran reste noir et prêt.
 
+## 🎬 Les vidéos
+
+**Ajouté le 2026-09-05, à la demande de David.** Une vidéo se pose sur le tableau
+**comme une image** : le bouton d'ajout accepte désormais les `.mp4`, `.webm`, `.mov`
+et compagnie, et le pad les distingue par un pictogramme de pellicule et par sa
+vignette, qui montre la première image du film.
+
+Un clic la projette. Elle **tourne en boucle**, avec le son.
+
+> ⛔ **Ce n'était pas un manque, c'était une porte fermée.** L'écran de projection
+> savait jouer une vidéo depuis longtemps — mais le sélecteur de fichiers, lui,
+> n'acceptait que des images. *Une capacité qu'on ne peut pas atteindre n'existe
+> pas.* Et elle jouait **en muet**, en dur, depuis toujours.
+
+### Son des vidéos
+
+Un curseur, en bas du panneau de gauche, apparaît **dès que votre bibliothèque
+contient une vidéo**. Il règle les vidéos entre elles, comme la tranche d'un module
+sur une console.
+
+Par-dessus lui s'appliquent les trois commandes habituelles de la table :
+
+| Ce que vous faites | Effet sur la vidéo |
+| --- | --- |
+| Baisser le **volume général** | Elle baisse d'autant |
+| **Couper le son** | Elle se tait |
+| Enclencher le **mode Focus** | Elle se tamise |
+| **Parler au micro** (Voice-OS) | Elle plonge, puis remonte |
+
+> ⚠️ **La vidéo n'est pas *dans* le mixage, elle lui obéit.** Elle joue dans la
+> fenêtre de projection, un autre processus ; on ne branche pas un élément d'une
+> fenêtre sur le graphe audio d'une autre. GM-OS lui **envoie** donc le niveau
+> qu'elle doit tenir. Le résultat à la table est le même, à une exception près :
+> **elle sort par l'appareil de l'écran de projection** — la télévision, le
+> vidéoprojecteur — et non par l'enceinte choisie dans Music-OS. Sur une
+> installation où tout passe par le même ampli, cela ne se remarque pas.
+
+> 🔎 **Pour arrêter une vidéo**, coupez l'écran (**Blackout**). Il n'y a pas de
+> bouton pause : elle est un décor, comme une image.
+
 ## 📁 Organisation de la Bibliothèque
 
 Pour ne pas perdre de temps à chercher une image en plein combat :
@@ -85,6 +125,9 @@ lumières. → [Tour de contrôle audio](./70-Tour-de-controle-audio.md)
 - **Performance** : Les images sont pré-chargées pour éviter tout délai lors de la projection.
 
 ---
+
+*Complété le 2026-09-05 : les **vidéos** entrent dans la bibliothèque, avec leur son piloté par la
+table. Voir aussi [Web-OS](./28-Navigateur-integre.md) pour projeter une vidéo YouTube.*
 
 *Guide révisé le 2026-09-04, code à l'appui. Retiré : le « mode Standby » affichant « EN ATTENTE »,
 qui n'existe nulle part. Ajouté : le bouton **RESTORE DEFAULT**, qui efface toute la bibliothèque et

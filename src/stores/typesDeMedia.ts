@@ -47,6 +47,17 @@ const EXTENSIONS_D_IMAGE = [
     '.heic', '.heif', '.tif', '.tiff', '.ico', '.jfif',
 ] as const;
 
+/**
+ * Les extensions de vidéo, pour les mêmes raisons que celles d'image.
+ *
+ * Image-OS en a besoin **sans le fichier** : il ne garde qu'un identifiant et
+ * un nom, jamais le blob. Reconnaître une vidéo à son nom est donc le seul
+ * moyen d'afficher la bonne vignette avant de l'avoir chargée.
+ */
+export const EXTENSIONS_DE_VIDEO = [
+    '.mp4', '.webm', '.mov', '.m4v', '.ogv', '.mkv', '.avi',
+] as const;
+
 const finitPar = (nom: string, extensions: readonly string[]) => {
     const minuscule = nom.toLowerCase();
     return extensions.some((ext) => minuscule.endsWith(ext));
@@ -64,7 +75,7 @@ export function typeDuFichier(file: { type?: string; name: string }): MediaType 
     const mime = file.type ?? '';
 
     if (mime.startsWith('audio/')) return 'audio';
-    if (mime.startsWith('video/')) return 'video';
+    if (mime.startsWith('video/') || finitPar(file.name, EXTENSIONS_DE_VIDEO)) return 'video';
     if (mime.startsWith('image/') || finitPar(file.name, EXTENSIONS_D_IMAGE)) return 'image';
     if (MIMES_DE_DOCUMENT.has(mime) || finitPar(file.name, EXTENSIONS_DE_DOCUMENT)) return 'document';
 
@@ -94,6 +105,22 @@ export function filtreDeSelection(types?: readonly MediaType[]): string {
  */
 export function documentAffichable(nom: string): boolean {
     return finitPar(nom, ['.pdf', '.txt', '.md', '.csv', '.json']);
+}
+
+/**
+ * Ce nom de fichier désigne-t-il une vidéo ?
+ *
+ * ⚠️ **Le nom, pas le type MIME.** Image-OS ne détient qu'un identifiant et un
+ * nom ; le fichier lui-même vit dans le Media Hub. *Un pad doit savoir ce qu'il
+ * montre avant d'avoir chargé quoi que ce soit,* sous peine d'afficher une case
+ * vide le temps d'un aller-retour — ou pour toujours, si le chargement échoue.
+ *
+ * Le projecteur, lui, a le blob en main et se fie au type MIME : il est plus
+ * sûr, et il l'a. *Chacun juge avec ce dont il dispose ; c'est la table des
+ * extensions qui les empêche de se contredire.*
+ */
+export function estUneVideo(nom: string): boolean {
+    return finitPar(nom, EXTENSIONS_DE_VIDEO);
 }
 
 /** L'extension d'un fichier, en majuscules, pour l'afficher. */
