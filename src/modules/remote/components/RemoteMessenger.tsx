@@ -104,7 +104,7 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                 <button
                     onClick={() => setFiltre('tous')}
                     title="Tout le fil, et le canal général pour écrire"
-                    className={`shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-colors ${filtre === 'tous' ? 'bg-accent text-app-bg' : 'bg-white/5 text-slate-500 hover:text-slate-300'}`}
+                    className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase transition-colors ${filtre === 'tous' ? 'bg-accent text-app-bg' : 'bg-white/5 text-slate-500 hover:text-slate-300'}`}
                 >
                     Tous
                 </button>
@@ -112,7 +112,7 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                     <button
                         key={id}
                         onClick={() => setFiltre(id)}
-                        className={`shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-colors ${filtre === id ? 'bg-accent text-app-bg' : 'bg-white/5 text-slate-500 hover:text-slate-300'}`}
+                        className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase transition-colors ${filtre === id ? 'bg-accent text-app-bg' : 'bg-white/5 text-slate-500 hover:text-slate-300'}`}
                     >
                         {nom}
                     </button>
@@ -131,7 +131,7 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                     return (
                         <div key={m.id} className={`flex ${duMeneur ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[75%] rounded-xl px-3 py-2 flex flex-col gap-0.5 ${duMeneur ? 'bg-accent/15 border border-accent/30' : 'bg-white/5 border border-white/10'}`}>
-                                <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-slate-500">
+                                <span className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-wider text-slate-500">
                                     {duMeneur ? <Shield size={10} /> : <User size={10} />}
                                     {duMeneur
                                         ? `→ ${m.toId === CANAL_GENERAL ? 'Tous' : m.toName}`

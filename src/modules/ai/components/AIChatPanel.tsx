@@ -261,7 +261,7 @@ const AIChatPanel: React.FC = () => {
               <h3 className="text-sm font-bold tracking-tight uppercase">AI Companion</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest leading-none">Contextual Oracle Active</span>
+                <span className="text-ui-10 font-mono text-app-text/40 uppercase tracking-widest leading-none">Contextual Oracle Active</span>
               </div>
             </div>
           </div>
@@ -289,7 +289,7 @@ const AIChatPanel: React.FC = () => {
                  }`}
                >
                  <Icon size={18} />
-                 <span className="text-[9px] font-black uppercase tracking-widest">{t(gem.name)}</span>
+                 <span className="text-ui-9 font-black uppercase tracking-widest">{t(gem.name)}</span>
                </button>
              );
           })}
@@ -329,12 +329,12 @@ const AIChatPanel: React.FC = () => {
         */}
         {lacunes.length > 0 && (
           <details className="px-1 pb-2">
-            <summary className="cursor-pointer text-[9px] font-black uppercase tracking-widest text-amber-300/50 hover:text-amber-300/80">
+            <summary className="cursor-pointer text-ui-9 font-black uppercase tracking-widest text-amber-300/50 hover:text-amber-300/80">
               Lacunes — {lacunes.length} sujet{lacunes.length > 1 ? 's' : ''} sans fiche qui réponde
             </summary>
             <ul className="mt-1.5 space-y-1">
               {lacunes.slice(0, 8).map(lacune => (
-                <li key={lacune.clef} className="flex items-start gap-2 text-[10px] text-app-text/45">
+                <li key={lacune.clef} className="flex items-start gap-2 text-ui-10 text-app-text/45">
                   <span className="font-mono text-amber-300/60 shrink-0">
                     ×{lacune.fois}
                   </span>
@@ -380,21 +380,21 @@ const AIChatPanel: React.FC = () => {
           meneur lit — une règle, et non une reformulation qui peut avoir glissé.
         */}
         {ficheDirecte && (
-          <div className="mx-1 mb-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-300/90">
+          <div className="mx-1 mb-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-emerald-300/90">
             Tiré de la fiche — aucun modèle invoqué
           </div>
         )}
 
 
         {jugement && (
-          <div className="mx-1 mb-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-amber-300/90">
+          <div className="mx-1 mb-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-amber-300/90">
             {ETIQUETTE_DU_JUGEMENT}
           </div>
         )}
 
 
         {dansLeLivre.length > 0 && (
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1 pb-2 text-[10px]">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1 pb-2 text-ui-10">
             <span className="font-black uppercase tracking-widest text-sky-300/50">
               Le livre en parle
             </span>
@@ -422,7 +422,7 @@ const AIChatPanel: React.FC = () => {
                     ? "Ce cortex met les notes de la campagne à parité avec les fiches de règles : c'est la pertinence qui a tranché."
                     : 'Ce cortex donne la priorité aux fiches de règles du corpus.'
                 }
-                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-widest ${
+                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-ui-9 font-black uppercase tracking-widest ${
                   penchant === 'campagne'
                     ? 'border-sky-400/30 bg-sky-500/10 text-sky-300/70'
                     : 'border-app-border/30 bg-app-text/5 text-app-text/40'
@@ -437,7 +437,7 @@ const AIChatPanel: React.FC = () => {
                 <span
                   key={source.path}
                   title={source.path}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-app-border/30 bg-app-text/5 px-2 py-0.5 text-[9px] font-mono text-app-text/40"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-app-border/30 bg-app-text/5 px-2 py-0.5 text-ui-9 font-mono text-app-text/40"
                 >
                   {nom}
                   {source.relu === false && (
@@ -497,7 +497,7 @@ const AIChatPanel: React.FC = () => {
                     {msg.gemId === 'scribe' && <PenTool size={10} />}
                     {msg.gemId === 'oracle' && <Eye size={10} />}
                   </div>
-                  <span className="text-[9px] font-black uppercase tracking-widest opacity-60">
+                  <span className="text-ui-9 font-black uppercase tracking-widest opacity-60">
                     {t(storeGems.find(g => g.id === msg.gemId)?.name || 'AI')}
                   </span>
                 </div>
@@ -527,13 +527,13 @@ const AIChatPanel: React.FC = () => {
               {enAttente.map(r => (
                 <div key={r.id} className="flex items-center gap-3 flex-wrap">
                   <Clock size={12} className="text-amber-400 shrink-0" />
-                  <span className="text-[11px] text-amber-200/80 leading-relaxed flex-1 min-w-0">
+                  <span className="text-ui-11 text-amber-200/80 leading-relaxed flex-1 min-w-0">
                     <b>{r.libelle}</b> occupe le modèle depuis {depuisQuand(r.depuis)} — votre
                     question partira à la suite.
                   </span>
                   <button
                     onClick={() => void abandonner(r.id)}
-                    className="shrink-0 px-2.5 py-1 rounded-lg border border-amber-500/30 text-[9px] font-black uppercase tracking-widest text-amber-300/80 hover:bg-amber-500/15 hover:text-amber-200 transition-all"
+                    className="shrink-0 px-2.5 py-1 rounded-lg border border-amber-500/30 text-ui-9 font-black uppercase tracking-widest text-amber-300/80 hover:bg-amber-500/15 hover:text-amber-200 transition-all"
                   >
                     Abandonner
                   </button>
@@ -552,7 +552,7 @@ const AIChatPanel: React.FC = () => {
                   <div className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce [animation-delay:-0.3s]" />
                 </div>
                 {aiStatus && (
-                  <span className="text-[10px] font-mono text-accent/80 uppercase tracking-widest animate-pulse ml-1">
+                  <span className="text-ui-10 font-mono text-accent/80 uppercase tracking-widest animate-pulse ml-1">
                     {aiStatus}
                   </span>
                 )}
@@ -570,7 +570,7 @@ const AIChatPanel: React.FC = () => {
                   que de se taire. Le plafond, lui, est une promesse tenue : au
                   pire, ça s'arrête là — et depuis l'axe D.1, ça s'arrête vraiment.
                 */}
-                <span className="text-[10px] font-mono text-app-text/25 tracking-widest ml-1">
+                <span className="text-ui-10 font-mono text-app-text/25 tracking-widest ml-1">
                   {attenteAnnoncee(budgetDuMoment(sessions))}
                 </span>
               </div>
@@ -588,7 +588,7 @@ const AIChatPanel: React.FC = () => {
               <button
                 key={p}
                 onClick={() => setProvider(p)}
-                className={`px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter transition-all border ${
+                className={`px-2 py-1 rounded text-ui-9 font-black uppercase tracking-tighter transition-all border ${
                   activeProvider === p 
                     ? 'bg-accent/20 border-accent/40 text-accent ring-1 ring-accent/20' 
                     : 'bg-black/20 border-white/5 text-app-text/30 hover:text-app-text/50'
@@ -604,7 +604,7 @@ const AIChatPanel: React.FC = () => {
             <div className="w-6 h-3 rounded-full bg-slate-800 relative cursor-not-allowed opacity-50">
                <div className="absolute left-0.5 top-0.5 w-2 h-2 rounded-full bg-slate-600" />
             </div>
-            <span className="text-[8px] font-black uppercase tracking-widest text-app-text/20">Vocal Shaping</span>
+            <span className="text-ui-8 font-black uppercase tracking-widest text-app-text/20">Vocal Shaping</span>
           </div>
         </div>
 

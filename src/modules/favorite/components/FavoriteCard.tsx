@@ -73,8 +73,8 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                     </div>
                     {entity.isSyncedToPlayerHub && (
                         <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-accent/20 border border-accent/30 animate-pulse">
-                            <span className="material-symbols-outlined text-accent text-[14px]">tv</span>
-                            <span className="text-accent text-[8px] font-black tracking-widest leading-none">HUB</span>
+                            <span className="material-symbols-outlined text-accent text-sm">tv</span>
+                            <span className="text-accent text-ui-8 font-black tracking-widest leading-none">HUB</span>
                         </div>
                     )}
                 </div>
@@ -122,7 +122,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                         className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-app-surface/80 text-slate-300 transition-colors"
                         title={t('modules:favorite.card.view_details')}
                     >
-                        <span className="material-symbols-outlined text-[18px]">visibility</span>
+                        <span className="material-symbols-outlined text-lg">visibility</span>
                     </button>
                     <button
                         onClick={(e) => {
@@ -134,7 +134,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                         className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 transition-colors"
                         title={t('modules:favorite.card.remove')}
                     >
-                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                        <span className="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </div>
             </div>

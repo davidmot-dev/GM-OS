@@ -64,7 +64,7 @@ const ForgeOS: React.FC = () => {
                     <button
                         onClick={() => setMode('system')}
                         className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
+                            theme === 'medieval' ? 'rounded-sm text-ui-11 font-display tracking-widest' : 'rounded-lg text-ui-10 font-black uppercase tracking-widest'
                         } ${mode === 'system' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'}`}
                     >
                         <Hammer size={12} /> {t('modules:session.header.forge')}
@@ -72,7 +72,7 @@ const ForgeOS: React.FC = () => {
                     <button
                         onClick={() => setMode('campagne')}
                         className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
+                            theme === 'medieval' ? 'rounded-sm text-ui-11 font-display tracking-widest' : 'rounded-lg text-ui-10 font-black uppercase tracking-widest'
                         } ${mode === 'campagne' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'}`}
                     >
                         <Layers size={12} /> Campagne
@@ -80,7 +80,7 @@ const ForgeOS: React.FC = () => {
                     <button
                         onClick={() => setMode('trame')}
                         className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
+                            theme === 'medieval' ? 'rounded-sm text-ui-11 font-display tracking-widest' : 'rounded-lg text-ui-10 font-black uppercase tracking-widest'
                         } ${mode === 'trame' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'}`}
                     >
                         <Network size={12} /> Trame

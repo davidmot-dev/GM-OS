@@ -58,7 +58,7 @@ export const FavoriteDashboard: React.FC = () => {
                                     <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
                                         <span>{t('modules:favorite.dashboard.sort_by')}:</span>
                                         <button className="flex items-center gap-1 text-accent hover:text-accent/80 transition-colors">
-                                            {t('modules:favorite.dashboard.recent')} <span className="material-symbols-outlined text-[14px]">expand_more</span>
+                                            {t('modules:favorite.dashboard.recent')} <span className="material-symbols-outlined text-sm">expand_more</span>
                                         </button>
                                     </div>
                                 </div>

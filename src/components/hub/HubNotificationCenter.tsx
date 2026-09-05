@@ -72,7 +72,7 @@ const HubNotificationCenter: React.FC = () => {
                             {/* Content */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between mb-0.5">
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 truncate pr-4">
+                                    <span className="text-ui-10 font-black uppercase tracking-[0.2em] text-white/30 truncate pr-4">
                                         RECU DE : {notif.fromName}
                                     </span>
                                     <button 
@@ -99,7 +99,7 @@ const HubNotificationCenter: React.FC = () => {
                                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse [animation-delay:0.2s]" />
                                     </div>
-                                    <span className="text-[9px] font-bold text-app-text/10 italic">NEXUS-COMM v5.2</span>
+                                    <span className="text-ui-9 font-bold text-app-text/10 italic">NEXUS-COMM v5.2</span>
                                 </div>
                             </div>
                         </div>

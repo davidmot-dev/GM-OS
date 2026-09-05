@@ -25,7 +25,7 @@ const NPCHistory: React.FC = () => {
                     <Trash2 size={24} className="opacity-20" />
                 </div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-1">{t('npc.history.empty_title')}</p>
-                <p className="text-[10px]">{t('npc.history.empty_desc')}</p>
+                <p className="text-ui-10">{t('npc.history.empty_desc')}</p>
             </div>
         );
     }
@@ -44,7 +44,7 @@ const NPCHistory: React.FC = () => {
     return (
         <div className="h-full flex flex-col">
             <div className="p-4 flex items-center justify-between border-b border-app-border bg-app-bg/30">
-                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{t('npc.history.title')}</span>
+                <span className="text-ui-10 uppercase font-bold text-slate-500 tracking-widest">{t('npc.history.title')}</span>
                 {/*
                     **Le massif était nu, et j'avais protégé le détail.**
 
@@ -91,12 +91,12 @@ const NPCHistory: React.FC = () => {
 
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                                <p className={`text-[11px] font-bold truncate ${entity.isDead ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                                <p className={`text-ui-11 font-bold truncate ${entity.isDead ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
                                     {entity.name}
                                 </p>
                                 {entity.isDead && <Skull size={10} className="text-rose-500 shrink-0" />}
                             </div>
-                            <p className="text-[8px] text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
+                            <p className="text-ui-8 text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
 
                         <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact surInvitation icone={<Trash2 size={12} />}>

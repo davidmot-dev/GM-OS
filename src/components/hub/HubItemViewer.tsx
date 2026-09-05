@@ -64,8 +64,8 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                                     <Package size={120} className="text-app-text/20 stroke-[1]" />
                                 </div>
                                 <div className="text-center space-y-2">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-app-text/10">Inventaire Privé</p>
-                                    <p className="text-[8px] font-bold text-app-text/5 uppercase tracking-widest">Objet sans image</p>
+                                    <p className="text-ui-10 font-black uppercase tracking-[0.5em] text-app-text/10">Inventaire Privé</p>
+                                    <p className="text-ui-8 font-bold text-app-text/5 uppercase tracking-widest">Objet sans image</p>
                                 </div>
                             </div>
                         )}
@@ -79,7 +79,7 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                                 {item.ownerId && (
                                     <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                                         <User size={12} className="text-emerald-500/50" />
-                                        <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+                                        <span className="text-ui-9 font-black text-emerald-400 uppercase tracking-widest">
                                             Objet Privé
                                         </span>
                                     </div>
@@ -87,7 +87,7 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                                 {item.attributes && Object.keys(item.attributes).length > 0 && (
                                     <div className="flex items-center gap-2 px-3 py-1.5 bg-rose-500/10 rounded-full border border-rose-500/20">
                                         <Shield size={12} className="text-rose-500/50" />
-                                        <span className="text-[9px] font-black text-rose-500/80 uppercase tracking-widest">
+                                        <span className="text-ui-9 font-black text-rose-500/80 uppercase tracking-widest">
                                             Stats Incluses
                                         </span>
                                     </div>
@@ -119,7 +119,7 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
 
                         {/* Footnote */}
                         <div className="pt-8 border-t border-app-border/10">
-                            <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-[0.3em]">Item Management | GM-OS Legacy</p>
+                            <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-[0.3em]">Item Management | GM-OS Legacy</p>
                         </div>
                     </div>
                 </motion.div>

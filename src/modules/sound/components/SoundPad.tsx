@@ -76,7 +76,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                 <div className="size-12 rounded-full bg-app-surface/20 flex items-center justify-center text-app-text/40 group-hover:text-white group-hover:scale-110 transition-all border border-app-border/20 group-hover:bg-accent/40">
                     <Plus size={24} />
                 </div>
-                <span className="mt-4 text-[9px] font-black text-app-text/30 uppercase tracking-[0.2em] group-hover:text-app-text/60">Empty Pad</span>
+                <span className="mt-4 text-ui-9 font-black text-app-text/30 uppercase tracking-[0.2em] group-hover:text-app-text/60">Empty Pad</span>
             </div>
         );
     }
@@ -96,21 +96,21 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
             {/* Header: Key & MIDI */}
             <div className="flex justify-between items-start pointer-events-none z-10">
                 <div 
-                    className={`px-2 py-1 rounded-lg border text-[9px] font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-accent text-white border-white/20' : 'bg-app-bg/60 text-app-text/40 border-app-border'}`}
+                    className={`px-2 py-1 rounded-lg border text-ui-9 font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-accent text-white border-white/20' : 'bg-app-bg/60 text-app-text/40 border-app-border'}`}
                 >
                     {keyLabel || <Keyboard size={10} />}
                 </div>
 
                 <div className="flex items-center gap-1.5 bg-app-bg/60 px-2 py-1 rounded-lg border border-app-border/30">
-                    <span className="text-[8px] font-black text-white/30 mr-1">{id}</span>
+                    <span className="text-ui-8 font-black text-white/30 mr-1">{id}</span>
                     {linkedLightSceneId && (
                         <div className="flex items-center gap-1 text-accent animate-pulse">
                             <Lightbulb size={10} fill="currentColor" className="drop-shadow-glow-accent" />
-                            <span className="text-[7px] font-black uppercase tracking-widest hidden group-hover:block">Light Linked</span>
+                            <span className="text-ui-7 font-black uppercase tracking-widest hidden group-hover:block">Light Linked</span>
                         </div>
                     )}
                     {midiMapping ? (
-                        <span className="text-[9px] font-black text-amber-500">#{midiMapping}</span>
+                        <span className="text-ui-9 font-black text-amber-500">#{midiMapping}</span>
                     ) : (
                         <Zap size={10} className="text-slate-600" />
                     )}
@@ -127,10 +127,10 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
 
             {/* Content: Title & File */}
             <div className="text-center pointer-events-none z-10">
-                <h3 className={`text-[11px] font-black uppercase tracking-widest transition-colors ${isActive ? 'text-white' : 'text-slate-200'}`}>
+                <h3 className={`text-ui-11 font-black uppercase tracking-widest transition-colors ${isActive ? 'text-white' : 'text-slate-200'}`}>
                     {title || 'Unnamed Sound'}
                 </h3>
-                <p className="text-[9px] font-bold text-app-text/30 mt-1.5 truncate max-w-[120px] mx-auto opacity-40 italic">
+                <p className="text-ui-9 font-bold text-app-text/30 mt-1.5 truncate max-w-[120px] mx-auto opacity-40 italic">
                     {shortName}
                 </p>
             </div>
@@ -181,7 +181,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
 
             {isMenuOpen && (
                 <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-5 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
-                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-[10px] font-black text-app-text/40 mb-2 hover:text-white uppercase tracking-[0.2em] transition-colors">Retour</button>
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-10 font-black text-app-text/40 mb-2 hover:text-white uppercase tracking-[0.2em] transition-colors">Retour</button>
                     
                     <div className="w-full grid grid-cols-2 gap-2">
                         <button
@@ -190,7 +190,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                                 gmPrompt('Renommer le Pad', title, (newTitle) => renamePad(id, newTitle));
                                 setIsMenuOpen(false);
                             }}
-                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-app-border bg-app-surface/50 text-[9px] font-black uppercase tracking-widest hover:bg-accent hover:border-accent transition-all"
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-app-border bg-app-surface/50 text-ui-9 font-black uppercase tracking-widest hover:bg-accent hover:border-accent transition-all"
                         >
                             <Edit2 size={12} /> Renommer
                         </button>
@@ -201,7 +201,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                                 onAssignMedia(id);
                                 setIsMenuOpen(false);
                             }}
-                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-app-border bg-app-surface/50 text-[9px] font-black uppercase tracking-widest hover:bg-accent hover:border-accent transition-all"
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-app-border bg-app-surface/50 text-ui-9 font-black uppercase tracking-widest hover:bg-accent hover:border-accent transition-all"
                         >
                             <RefreshCcw size={12} /> Remplacer
                         </button>
@@ -216,7 +216,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                             });
                             setIsMenuOpen(false);
                         }}
-                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${linkedLightSceneId ? 'bg-accent/20 border-accent text-accent shadow-glow-accent' : 'bg-app-surface/50 border-app-border hover:bg-accent/10 hover:border-accent'}`}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-ui-9 font-black uppercase tracking-widest transition-all ${linkedLightSceneId ? 'bg-accent/20 border-accent text-accent shadow-glow-accent' : 'bg-app-surface/50 border-app-border hover:bg-accent/10 hover:border-accent'}`}
                     >
                         <Lightbulb size={12} /> {linkedLightSceneId ? 'Lumière Liée' : 'Lier Lumière'}
                     </button>
@@ -227,7 +227,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                             gmConfirm('Effacer ce pad ?', () => clearPad(id));
                             setIsMenuOpen(false);
                         }}
-                        className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
+                        className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-500 text-ui-9 font-black uppercase tracking-widest hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
                     >
                         <Trash2 size={12} /> Effacer Pad
                     </button>

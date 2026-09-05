@@ -88,8 +88,8 @@ const GrimoireSplash: React.FC = () => {
 
             {/* Corner Info */}
             <div className="fixed top-12 left-12 hidden sm:flex flex-col gap-1">
-                <div className="text-[10px] text-[#4a3728]/60 uppercase tracking-widest font-cinzel">Aetheric Frequency: 432Hz</div>
-                <div className="text-[10px] text-[#4a3728]/60 uppercase tracking-widest font-cinzel">Celestial Phase: Waxing</div>
+                <div className="text-ui-10 text-[#4a3728]/60 uppercase tracking-widest font-cinzel">Aetheric Frequency: 432Hz</div>
+                <div className="text-ui-10 text-[#4a3728]/60 uppercase tracking-widest font-cinzel">Celestial Phase: Waxing</div>
             </div>
 
             <style>{`

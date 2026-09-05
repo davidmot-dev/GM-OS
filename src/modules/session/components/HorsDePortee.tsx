@@ -87,7 +87,7 @@ const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact, sur
                 title={`${libelle} — un geste de plus pendant la séance`}
                 aria-label={libelle}
                 className={`px-1.5 py-1 rounded text-app-text/30 hover:text-app-text/70 transition-all `
-                    + `text-[11px] leading-none font-bold tracking-widest opacity-60 hover:opacity-100 `
+                    + `text-ui-11 leading-none font-bold tracking-widest opacity-60 hover:opacity-100 `
                     + (surInvitation ? 'opacity-0 group-hover:opacity-100' : '')}
             >
                 {icone ?? '···'}
@@ -100,7 +100,7 @@ const HorsDePortee: React.FC<Props> = ({ regime, libelle, children, compact, sur
             type="button"
             onClick={() => setRevele(true)}
             title={`${libelle} — un geste de plus pendant la séance`}
-            className="w-full py-2 text-[10px] uppercase tracking-widest text-app-text/30 hover:text-red-500/70 transition-colors"
+            className="w-full py-2 text-ui-10 uppercase tracking-widest text-app-text/30 hover:text-red-500/70 transition-colors"
         >
             {libelle}…
         </button>

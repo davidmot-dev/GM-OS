@@ -52,9 +52,9 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
     return (
         <div className="flex flex-col gap-4 flex-shrink-0">
             <div className="flex items-center justify-between px-3">
-                <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">{t('modules:session.checklist.prep_session')}</p>
+                <p className="text-app-text/40 text-ui-10 font-bold uppercase tracking-[0.2em]">{t('modules:session.checklist.prep_session')}</p>
                 <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-mono text-accent">
+                    <span className="text-ui-10 font-mono text-accent">
                         {(session.checklist || []).filter(i => i.isCompleted).length}/{(session.checklist || []).length}
                     </span>
                 </div>
@@ -62,7 +62,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
 
             <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto px-1 custom-scrollbar">
                 {(!session.checklist || session.checklist.length === 0) ? (
-                    <p className="text-[10px] text-app-text/50 italic text-center py-4">{t('modules:session.checklist.no_task')}</p>
+                    <p className="text-ui-10 text-app-text/50 italic text-center py-4">{t('modules:session.checklist.no_task')}</p>
                 ) : (
                     session.checklist.map(item => (
                         <div
@@ -129,7 +129,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                     placeholder={t('modules:session.checklist.add_placeholder')}
                     value={newItemText}
                     onChange={(e) => setNewItemText(e.target.value)}
-                    className="w-full bg-app-surface/60 border border-app-border rounded-lg py-2 pl-3 pr-10 text-[11px] text-app-text placeholder:text-app-text/40 focus:outline-none focus:border-accent/30 transition-all"
+                    className="w-full bg-app-surface/60 border border-app-border rounded-lg py-2 pl-3 pr-10 text-ui-11 text-app-text placeholder:text-app-text/40 focus:outline-none focus:border-accent/30 transition-all"
                     title={t('modules:session.checklist.tooltip_new_task')}
                 />
                 <button 

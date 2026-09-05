@@ -222,7 +222,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                 </div>
                                 
                                 <div className="text-left flex-1 min-w-0">
-                                    <div className="text-[9px] font-black text-accent/40 uppercase tracking-[0.15em] leading-none mb-1">
+                                    <div className="text-ui-9 font-black text-accent/40 uppercase tracking-[0.15em] leading-none mb-1">
                                         Persona
                                     </div>
                                     <div className="flex items-center gap-1.5 leading-tight">
@@ -241,7 +241,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                     className="absolute top-[calc(100%+12px)] left-0 w-80 bg-app-surface/98 backdrop-blur-2xl border border-accent/30 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
                                 >
                                     <div className="p-4 bg-accent/5 border-b border-accent/10 flex items-center justify-between">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-accent">Changer de Persona</span>
+                                        <span className="text-ui-10 font-black uppercase tracking-widest text-accent">Changer de Persona</span>
                                         <Sparkles size={12} className="text-accent/40" />
                                     </div>
                                     <div className="p-2 grid grid-cols-1 gap-1.5 max-h-[400px] overflow-y-auto custom-scrollbar">
@@ -271,14 +271,14 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                             {t(gem.name)}
                                                             {hasDriverOverride && (
                                                                 <div 
-                                                                    className={`px-1.5 py-0.5 rounded text-[7px] font-black border ${isActive ? 'bg-app-bg/20 border-white/20 text-white' : 'bg-accent/10 border-accent/20 text-accent'}`}
+                                                                    className={`px-1.5 py-0.5 rounded text-ui-7 font-black border ${isActive ? 'bg-app-bg/20 border-white/20 text-white' : 'bg-accent/10 border-accent/20 text-accent'}`}
                                                                     title={t('modules:session.oracle.synced_with_system', 'Synchronisé avec le système')}
                                                                 >
                                                                     SYNC
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <div className={`text-[9px] font-medium leading-tight line-clamp-2 mt-0.5 ${isActive ? 'text-app-bg/80' : 'text-app-text/40'}`}>
+                                                        <div className={`text-ui-9 font-medium leading-tight line-clamp-2 mt-0.5 ${isActive ? 'text-app-bg/80' : 'text-app-text/40'}`}>
                                                             {t(gem.description)}
                                                         </div>
                                                     </div>
@@ -350,7 +350,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                     <button
                                         key={source.type}
                                         onClick={() => setUserSelectedType(source.type as 'campaign' | 'driver' | 'template')}
-                                        className={`px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                                        className={`px-3 py-1.5 text-ui-9 font-black uppercase tracking-widest rounded-lg transition-all ${
                                             selectedUrlType === source.type 
                                                 ? 'bg-accent text-app-bg shadow-glow-accent/20' 
                                                 : 'text-app-text/40 hover:text-app-text/60'
@@ -421,7 +421,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                         {msg.role === 'assistant' ? <GemIcon size={18} /> : <User size={18} />}
                                                     </div>
                                                     <div className="space-y-1 overflow-hidden flex-1">
-                                                        <p className={`text-[9px] font-black uppercase tracking-widest ${msg.role === 'assistant' ? 'text-accent' : 'text-app-text/20'}`}>
+                                                        <p className={`text-ui-9 font-black uppercase tracking-widest ${msg.role === 'assistant' ? 'text-accent' : 'text-app-text/20'}`}>
                                                             {msg.role === 'assistant' ? (activeGem ? t(activeGem.name) : 'AI Oracle') : 'Maître du Jeu'}
                                                         </p>
                                                         <div className="text-sm leading-relaxed text-app-text/80 whitespace-pre-wrap prose prose-invert prose-sm max-w-none">
@@ -475,7 +475,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         <Send size={18} />
                                     </button>
                                 </form>
-                                <p className="mt-3 text-[9px] text-app-text/30 font-mono text-center uppercase tracking-widest">
+                                <p className="mt-3 text-ui-9 text-app-text/30 font-mono text-center uppercase tracking-widest">
                                     {isQuerying ? 'Flux Neural : ACTIF' : `Connecté au Notebook : ${notebookId?.slice(0, 8) || 'AUCUN'}...`}
                                 </p>
                             </div>
@@ -486,7 +486,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             {isLoading && !loadError && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-app-bg z-10">
                                     <RefreshCw className="animate-spin text-accent mb-4" size={32} />
-                                    <p className="text-accent/50 text-[10px] font-mono uppercase tracking-[0.2em] animate-pulse">Établissement de la Liaison Neurale...</p>
+                                    <p className="text-accent/50 text-ui-10 font-mono uppercase tracking-[0.2em] animate-pulse">Établissement de la Liaison Neurale...</p>
                                 </div>
                             )}
                             
@@ -506,10 +506,10 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         OUVRIR LA FENÊTRE SOURCE <ExternalLink size={18} />
                                     </button>
                                     <div className="mt-8 flex flex-col items-center gap-2">
-                                        <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Projet Recommandé :</p>
+                                        <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">Projet Recommandé :</p>
                                         <button 
                                             onClick={() => setViewMode('chat')}
-                                            className="text-accent text-[10px] font-black uppercase tracking-widest hover:underline flex items-center gap-2"
+                                            className="text-accent text-ui-10 font-black uppercase tracking-widest hover:underline flex items-center gap-2"
                                         >
                                             Utiliser le Chat Intégré (MCP) <Sparkles size={10} />
                                         </button>
@@ -530,7 +530,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                 </div>
 
                 {/* Status Footer */}
-                <footer className="h-10 border-t border-app-border bg-app-bg px-4 flex items-center justify-between text-[10px] font-mono text-app-text/40 uppercase tracking-widest shrink-0">
+                <footer className="h-10 border-t border-app-border bg-app-bg px-4 flex items-center justify-between text-ui-10 font-mono text-app-text/40 uppercase tracking-widest shrink-0">
                     <span>Nœud d'IA Intégré</span>
                     <span className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-emerald-500' : 'bg-app-surface'}`}></span>

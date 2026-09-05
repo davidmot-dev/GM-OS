@@ -22,7 +22,7 @@ export const HarmBoxesDriver: React.FC<HarmBoxesDriverProps> = ({ boxes }) => {
               <div className="w-2 h-2 bg-rose-500 rounded-sm -rotate-45" />
             )}
           </div>
-          <span className={`text-[9px] font-black uppercase tracking-wider transition-colors ${
+          <span className={`text-ui-9 font-black uppercase tracking-wider transition-colors ${
             box.filled ? 'text-rose-400' : 'text-app-text/30'
           }`}>
             {box.label}

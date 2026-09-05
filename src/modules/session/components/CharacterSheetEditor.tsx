@@ -27,12 +27,12 @@ const FieldFormula: React.FC<{
     value: number;
 }> = ({ field, value }) => (
     <div className="flex items-center justify-between p-3 bg-accent/5 rounded-xl border border-accent/20 shadow-inner group">
-        <label className="text-[10px] font-black uppercase tracking-widest text-accent/60 flex items-center gap-2">
+        <label className="text-ui-10 font-black uppercase tracking-widest text-accent/60 flex items-center gap-2">
             <Calculator size={12} className="group-hover:rotate-12 transition-transform" />
             {field.label}
         </label>
         <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
+            <span className="text-ui-11 font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
                 {value}
             </span>
         </div>
@@ -163,7 +163,7 @@ const CharacterSheetEditor: React.FC = () => {
                     <span className="text-2xl">{template.emoji}</span>
                     <div>
                         <p className="text-xs font-black uppercase tracking-widest text-app-text/40">{template.name}</p>
-                        <p className="text-[10px] text-app-text/20">Fiche de {character.name}</p>
+                        <p className="text-ui-10 text-app-text/20">Fiche de {character.name}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -240,7 +240,7 @@ const CharacterSheetEditor: React.FC = () => {
 
                         {/* Portrait */}
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-2">Portrait</p>
+                            <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 mb-2">Portrait</p>
                             <div
                                 className="aspect-[3/4] rounded-2xl overflow-hidden bg-app-bg border border-app-border shadow-2xl relative group cursor-pointer"
                             >
@@ -299,7 +299,7 @@ const CharacterSheetEditor: React.FC = () => {
                                 {isGeneratingAIImage && (
                                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center z-30">
                                         <Sparkles size={32} className="text-accent animate-spin mb-2" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-accent animate-pulse">Vision en cours...</span>
+                                        <span className="text-ui-9 font-black uppercase tracking-widest text-accent animate-pulse">Vision en cours...</span>
                                     </div>
                                 )}
                             </div>
@@ -307,7 +307,7 @@ const CharacterSheetEditor: React.FC = () => {
 
                         {/* Token */}
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-2 flex items-center gap-1.5">
+                            <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 mb-2 flex items-center gap-1.5">
                                 <Layers size={10} /> Token (Map / Combat)
                             </p>
                             <div
@@ -319,17 +319,17 @@ const CharacterSheetEditor: React.FC = () => {
                                 ) : (
                                     <div className="flex flex-col items-center gap-2 text-app-text/20 group-hover:text-accent/60 transition-colors">
                                         <Layers size={28} />
-                                        <span className="text-[9px] font-bold uppercase tracking-widest">Pas de token</span>
+                                        <span className="text-ui-9 font-bold uppercase tracking-widest">Pas de token</span>
                                     </div>
                                 )}
                                 {tokenUrl && (
                                     <div className="absolute inset-0 bg-app-bg/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2">
                                         <FolderOpen size={20} className="text-accent" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-accent">Changer</span>
+                                        <span className="text-ui-9 font-black uppercase tracking-widest text-accent">Changer</span>
                                     </div>
                                 )}
                             </div>
-                            <p className="text-[9px] text-app-text/20 mt-1.5 text-center">Utilisé dans Map-OS et Combat-OS</p>
+                            <p className="text-ui-9 text-app-text/20 mt-1.5 text-center">Utilisé dans Map-OS et Combat-OS</p>
                         </div>
 
                         {/* Identity */}
@@ -359,7 +359,7 @@ const CharacterSheetEditor: React.FC = () => {
                         {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
                         <div className="p-4 bg-app-bg/60 border border-accent/20 rounded-xl space-y-3 shadow-lg shadow-red-500/5">
                             <div className="flex items-center justify-between">
-                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-accent">Points de vie</span>
+                                <span className="text-ui-9 font-black uppercase tracking-[0.15em] text-accent">Points de vie</span>
                                 <Heart size={12} className="text-red-500 animate-pulse" />
                             </div>
                                                 <div className="flex items-center justify-center gap-2 mt-1">
@@ -459,7 +459,7 @@ const CharacterSheetEditor: React.FC = () => {
                             const others = otherFields(section);
                             return (
                                 <div key={section.id} className="space-y-3">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2">{section.label}</h3>
+                                    <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2">{section.label}</h3>
 
                                     {/* Gauges: 2-column grid */}
                                     {gauges.length > 0 && (
@@ -514,7 +514,7 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Description */}
                     <div className="col-span-9 border-t border-app-border pt-6 space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
                             <BookOpen size={12} /> Description
                         </h3>
                         <textarea
@@ -528,7 +528,7 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Inventory */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
                             <Package size={12} /> Sac à Dos (Interactif)
                         </h3>
                         
@@ -537,7 +537,7 @@ const CharacterSheetEditor: React.FC = () => {
                                 {(character.inventoryItems ?? []).length === 0 ? (
                                     <div className="py-8 text-center border-2 border-dashed border-app-border/40 rounded-xl">
                                         <Package className="mx-auto text-app-text/10 mb-2" size={32} />
-                                        <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-widest">Le sac à dos est vide</p>
+                                        <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-widest">Le sac à dos est vide</p>
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-2 gap-3">
@@ -547,8 +547,8 @@ const CharacterSheetEditor: React.FC = () => {
                                                     <Package size={20} />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="text-[11px] font-black text-app-text uppercase truncate">{item.name}</h4>
-                                                    <p className="text-[9px] text-app-text/40 font-bold uppercase tracking-tighter">
+                                                    <h4 className="text-ui-11 font-black text-app-text uppercase truncate">{item.name}</h4>
+                                                    <p className="text-ui-9 text-app-text/40 font-bold uppercase tracking-tighter">
                                                         {item.type} • <span className={
                                                             item.rarity === 'légendaire' ? 'text-orange-500' :
                                                             item.rarity === 'rare' ? 'text-blue-500' :
@@ -631,7 +631,7 @@ const CharacterSheetEditor: React.FC = () => {
                                 ) : (
                                     <button 
                                         onClick={() => setIsAddingItem(true)}
-                                        className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-accent/20 hover:border-accent/50 hover:bg-accent/5 text-accent rounded-xl transition-all text-[10px] font-black uppercase tracking-[0.2em]"
+                                        className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-accent/20 hover:border-accent/50 hover:bg-accent/5 text-accent rounded-xl transition-all text-ui-10 font-black uppercase tracking-[0.2em]"
                                     >
                                         <Plus size={14} />
                                         Ajouter un objet
@@ -639,12 +639,12 @@ const CharacterSheetEditor: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <p className="text-[9px] text-app-text/20 italic">Ces objets sont interactifs sur le Hub du joueur et peuvent être échangés entre joueurs.</p>
+                        <p className="text-ui-9 text-app-text/20 italic">Ces objets sont interactifs sur le Hub du joueur et peuvent être échangés entre joueurs.</p>
                     </div>
 
                     {/* Inventory Legacy */}
                     <div className="col-span-9 space-y-3 opacity-60">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 border-b border-app-border/40 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 border-b border-app-border/40 pb-2 flex items-center gap-2">
                             <FileText size={12} /> Notes d'Inventaire (Ancien système)
                         </h3>
                         <textarea
@@ -658,9 +658,9 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Player Notes */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
                             <PenTool size={12} /> Notes du Joueur
-                            <span className="ml-auto text-[9px] bg-cyan-500/10 text-cyan-600 border border-cyan-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Public Joueur</span>
+                            <span className="ml-auto text-ui-9 bg-cyan-500/10 text-cyan-600 border border-cyan-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Public Joueur</span>
                         </h3>
                         <textarea
                             value={playerNotes}
@@ -673,9 +673,9 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* GM Notes */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 border-b border-amber-500/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-500 border-b border-amber-500/20 pb-2 flex items-center gap-2">
                             <Lock size={12} /> Notes du MJ
-                            <span className="ml-auto text-[9px] bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Privé</span>
+                            <span className="ml-auto text-ui-9 bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Privé</span>
                         </h3>
                         <textarea
                             value={gmNotes}
@@ -688,7 +688,7 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Tablet HUB Configuration */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
                             <Tablet size={12} /> Configuration Tablet HUB
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -718,18 +718,18 @@ const CharacterSheetEditor: React.FC = () => {
                                 onChange={(val) => updateCharacterHubOptions({ showRelations: val })} 
                             />
                         </div>
-                        <p className="text-[9px] text-app-text/20 italic">Déterminez quels éléments sont visibles par le joueur sur sa tablette.</p>
+                        <p className="text-ui-9 text-app-text/20 italic">Déterminez quels éléments sont visibles par le joueur sur sa tablette.</p>
                     </div>
 
                     {/* Linked Documents */}
                     <div className="col-span-9 space-y-3">
                         <div className="flex items-center justify-between border-b border-accent/20 pb-2">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2">
+                            <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2">
                                 <FileText size={12} /> Documents Liés
                             </h3>
                             <button
                                 onClick={() => setMediaBrowserTarget('document')}
-                                className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-accent/10 text-accent border border-accent/30 rounded-lg hover:bg-accent/20 transition-all"
+                                className="flex items-center gap-1.5 px-3 py-1 text-ui-10 font-black uppercase tracking-widest bg-accent/10 text-accent border border-accent/30 rounded-lg hover:bg-accent/20 transition-all"
                             >
                                 + Lier un document
                             </button>
@@ -750,7 +750,7 @@ const CharacterSheetEditor: React.FC = () => {
                                     return (
                                         <div key={docId} className="flex items-center gap-3 px-4 py-2.5 bg-app-bg/40 border border-app-border/40 rounded-xl hover:border-app-border/60 transition-all group">
                                             <FileText size={14} className="text-emerald-400 flex-shrink-0" />
-                                            <span className="text-[9px] font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">{ext}</span>
+                                            <span className="text-ui-9 font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">{ext}</span>
                                             <button
                                                 onClick={() => openDocument(docId)}
                                                 className="flex-1 text-left text-sm text-app-text/80 hover:text-app-text transition-colors truncate"

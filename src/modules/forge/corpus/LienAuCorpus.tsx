@@ -40,7 +40,7 @@ const LienAuCorpus: React.FC<{
 
     return (
         <div className="bg-app-text/5 rounded-2xl border border-app-border/10 p-5 space-y-3">
-            <p className="text-[10px] uppercase font-black text-accent tracking-[0.2em] font-display flex items-center gap-2">
+            <p className="text-ui-10 uppercase font-black text-accent tracking-[0.2em] font-display flex items-center gap-2">
                 <FolderOpen size={12} /> {titre}
             </p>
 
@@ -88,7 +88,7 @@ const LienAuCorpus: React.FC<{
                     {corpus.aCreer && (
                         <div className="flex gap-2 items-start bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
                             <Info size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                            <p className="text-[11px] text-amber-200/70 leading-relaxed">
+                            <p className="text-ui-11 text-amber-200/70 leading-relaxed">
                                 Ce dossier n'existe pas encore sur le disque. Il sera créé à
                                 l'enregistrement, vide : ni fiches, ni personas tant qu'on n'y aura
                                 rien écrit.
@@ -105,7 +105,7 @@ const LienAuCorpus: React.FC<{
                     {corpus.contradiction && (
                         <div className="flex gap-2 items-start bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
                             <AlertTriangle size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                            <p className="text-[11px] text-amber-200/70 leading-relaxed">
+                            <p className="text-ui-11 text-amber-200/70 leading-relaxed">
                                 Le nom de ce pilote désigne <code className="font-mono">{corpus.contradiction}</code>,
                                 un autre dossier qui existe aussi. C'est le corpus déclaré qui
                                 l'emporte, et c'est bien <code className="font-mono">{corpus.id}</code> qui

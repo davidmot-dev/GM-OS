@@ -187,7 +187,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
                                 )}
                             </div>
                             <span
-                                className={`text-[8px] font-bold uppercase tracking-widest transition-colors duration-300 ${
+                                className={`text-ui-8 font-bold uppercase tracking-widest transition-colors duration-300 ${
                                     isActive ? 'text-amber-400' : isDone ? 'text-emerald-400/60' : 'text-app-text/20'
                                 }`}
                             >
@@ -348,14 +348,14 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-0.5">
                                     <Zap size={10} className="text-amber-400/60" />
-                                    <span className="text-[9px] text-amber-400/60 font-black uppercase tracking-[0.2em]">
+                                    <span className="text-ui-9 text-amber-400/60 font-black uppercase tracking-[0.2em]">
                                         {t('modules:system.nexus.hud.title')}
                                     </span>
                                 </div>
                                 <h2 className={`text-lg font-black ${config.color} leading-tight`}>
                                     {t(config.label)}
                                 </h2>
-                                <p className="text-[11px] text-app-text/40 font-mono mt-0.5 truncate">
+                                <p className="text-ui-11 text-app-text/40 font-mono mt-0.5 truncate">
                                     {progress?.message ?? '...'}
                                 </p>
                             </div>
@@ -409,7 +409,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                 <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
                                 <div className="w-2 h-2 rounded-full bg-emerald-500/60" />
                             </div>
-                            <span className="text-[8px] text-app-text/20 font-mono uppercase tracking-widest">
+                            <span className="text-ui-8 text-app-text/20 font-mono uppercase tracking-widest">
                                 {t('modules:system.nexus.hud.log_title')}
                             </span>
                         </div>
@@ -418,7 +418,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             {logs.map((log, idx) => (
                                 <p
                                     key={idx}
-                                    className={`text-[10px] font-mono leading-relaxed transition-opacity duration-300 ${
+                                    className={`text-ui-10 font-mono leading-relaxed transition-opacity duration-300 ${
                                         log.includes('⚠️')
                                             ? idx === logs.length - 1
                                                 ? 'text-rose-400 font-bold'
@@ -432,7 +432,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                 </p>
                             ))}
                             {logs.length === 0 && (
-                                <p className="text-[10px] font-mono text-app-text/20 italic">
+                                <p className="text-ui-10 font-mono text-app-text/20 italic">
                                     {t('modules:system.nexus.hud.initialization')}
                                 </p>
                             )}
@@ -447,7 +447,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                 <AlertCircle size={18} className="text-indigo-400 mt-0.5 shrink-0" />
                                 <div>
                                     <h4 className="text-sm font-bold text-indigo-100">{t('modules:system.nexus.hud.interaction.title')}</h4>
-                                    <p className="text-[11px] text-indigo-200/60 leading-relaxed mt-1">
+                                    <p className="text-ui-11 text-indigo-200/60 leading-relaxed mt-1">
                                         {t('modules:system.nexus.hud.interaction.desc', { count: progress.remoteUrlCount })}
                                     </p>
                                 </div>
@@ -456,14 +456,14 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => onResolveInteraction?.('localize')}
-                                    className="flex-1 py-2 px-4 bg-indigo-500 hover:bg-indigo-400 text-white text-[11px] font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 py-2 px-4 bg-indigo-500 hover:bg-indigo-400 text-white text-ui-11 font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                                 >
                                     <Download size={14} />
                                     {t('modules:system.nexus.hud.interaction.localize_all')}
                                 </button>
                                 <button
                                     onClick={() => onResolveInteraction?.('ignore')}
-                                    className="flex-1 py-2 px-4 bg-white/5 hover:bg-white/10 text-app-text/60 text-[11px] font-bold rounded-lg transition-colors border border-white/10"
+                                    className="flex-1 py-2 px-4 bg-white/5 hover:bg-white/10 text-app-text/60 text-ui-11 font-bold rounded-lg transition-colors border border-white/10"
                                 >
                                     {t('modules:system.nexus.hud.interaction.ignore')}
                                 </button>

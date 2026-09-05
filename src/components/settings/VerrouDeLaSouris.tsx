@@ -101,8 +101,8 @@ const VerrouDeLaSouris: React.FC = () => {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">Souris branchées</p>
-                <button onClick={() => void rafraichir()} className="text-[10px] text-accent font-bold uppercase transition-opacity hover:opacity-70">
+                <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50">Souris branchées</p>
+                <button onClick={() => void rafraichir()} className="text-ui-10 text-accent font-bold uppercase transition-opacity hover:opacity-70">
                     <RefreshCw size={12} className="inline mr-1" />Actualiser
                 </button>
             </div>
@@ -112,14 +112,14 @@ const VerrouDeLaSouris: React.FC = () => {
               homonymes, et le seul moyen de savoir lequel est lequel est
               d'essayer — autant le dire.
             */}
-            <p className="text-[10px] text-app-text/40 leading-relaxed px-1">
+            <p className="text-ui-10 text-app-text/40 leading-relaxed px-1">
                 Windows nomme souvent toutes les souris de la même façon. Si tu coupes la mauvaise,
                 <strong className="text-amber-400"> ne fais rien</strong> : elle revient seule au bout de
                 vingt secondes. Fermer GM-OS rend aussi toutes les souris coupées.
             </p>
 
             {erreur && (
-                <p role="alert" className="text-[11px] font-semibold text-rose-400 flex items-start gap-2 px-1">
+                <p role="alert" className="text-ui-11 font-semibold text-rose-400 flex items-start gap-2 px-1">
                     <AlertTriangle size={13} className="shrink-0 mt-0.5" />{erreur}
                 </p>
             )}
@@ -139,14 +139,14 @@ const VerrouDeLaSouris: React.FC = () => {
                                 <Mouse size={16} className={s.active ? 'text-emerald-400' : 'text-app-text/20'} />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs font-bold text-app-text truncate">{s.nom}</p>
-                                    <p className="text-[10px] font-mono text-app-text/30 truncate" title={s.id}>
+                                    <p className="text-ui-10 font-mono text-app-text/30 truncate" title={s.id}>
                                         {signatureLisible(s.id)}
                                     </p>
                                 </div>
                                 <button
                                     disabled={occupe}
                                     onClick={() => (s.active ? couper(s.id) : rendre(s.id))}
-                                    className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest border transition-all disabled:opacity-40 ${
+                                    className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest border transition-all disabled:opacity-40 ${
                                         s.active
                                             ? 'bg-app-surface border-app-border text-app-text/70 hover:text-rose-400 hover:border-rose-500/40'
                                             : 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
@@ -158,7 +158,7 @@ const VerrouDeLaSouris: React.FC = () => {
 
                             {sursis && (
                                 <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                                    <p className="flex-1 text-[11px] font-bold text-amber-300 leading-tight">
+                                    <p className="flex-1 text-ui-11 font-bold text-amber-300 leading-tight">
                                         Ta souris répond encore ? Confirme.
                                         <span className="block font-normal text-amber-400/70">
                                             Sans confirmation, elle revient dans {sursis.secondes} s.
@@ -166,7 +166,7 @@ const VerrouDeLaSouris: React.FC = () => {
                                     </p>
                                     <button
                                         onClick={() => void confirmer(s.id)}
-                                        className="shrink-0 px-4 py-2 rounded-lg bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest hover:opacity-90"
+                                        className="shrink-0 px-4 py-2 rounded-lg bg-amber-500 text-black text-ui-10 font-black uppercase tracking-widest hover:opacity-90"
                                     >
                                         Oui, garde-la coupée
                                     </button>

@@ -238,7 +238,7 @@ const ProjectorView: React.FC = () => {
                     ) : (imagePath || isMapWindow) ? (
                         <div className="flex flex-col items-center gap-4 text-accent/20">
                             <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            {isMapWindow && <div className="text-[10px] uppercase tracking-widest animate-pulse">Chargement de la carte...</div>}
+                            {isMapWindow && <div className="text-ui-10 uppercase tracking-widest animate-pulse">Chargement de la carte...</div>}
                         </div>
                     ) : null}
                 </>
@@ -249,7 +249,7 @@ const ProjectorView: React.FC = () => {
 
             {/* Subtle overlay for identity */}
             <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 z-50">
-                <div className="text-[10px] text-white/20 uppercase tracking-[0.3em]">
+                <div className="text-ui-10 text-white/20 uppercase tracking-[0.3em]">
                     {isMapWindow ? 'Map-OS' : isWhiteboardWindow ? 'Whiteboard-OS' : 'Image-OS'}
                 </div>
             </div>

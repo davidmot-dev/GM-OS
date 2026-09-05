@@ -92,7 +92,7 @@ const ConflictCard: React.FC<{ conflict: NexusConflict }> = ({ conflict }) => {
                     <AlertTriangle size={14} className="text-rose-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-rose-400/60 font-bold uppercase tracking-widest mb-0.5">
+                    <p className="text-ui-10 text-rose-400/60 font-bold uppercase tracking-widest mb-0.5">
                         Conflit détecté
                     </p>
                     <p className="text-sm font-bold text-app-text truncate">
@@ -105,19 +105,19 @@ const ConflictCard: React.FC<{ conflict: NexusConflict }> = ({ conflict }) => {
             <div className="grid grid-cols-2 gap-2">
                 {/* Version locale */}
                 <div className="bg-black/30 rounded-lg p-2.5 border border-white/5">
-                    <p className="text-[8px] text-app-text/30 font-bold uppercase tracking-widest mb-1">
+                    <p className="text-ui-8 text-app-text/30 font-bold uppercase tracking-widest mb-1">
                         Version locale
                     </p>
                     <p className="text-xs font-semibold text-app-text/80 truncate">
                         {conflict.existingName}
                     </p>
-                    <p className="text-[9px] text-app-text/40 font-mono mt-1 truncate">
+                    <p className="text-ui-9 text-app-text/40 font-mono mt-1 truncate">
                         ID: {conflict.existingId.slice(0, 16)}…
                     </p>
                 </div>
                 {/* Bundle importé */}
                 <div className="bg-amber-500/5 rounded-lg p-2.5 border border-amber-500/15">
-                    <p className="text-[8px] text-amber-400/50 font-bold uppercase tracking-widest mb-1">
+                    <p className="text-ui-8 text-amber-400/50 font-bold uppercase tracking-widest mb-1">
                         Bundle importé
                     </p>
                     <p className="text-xs font-semibold text-amber-400/90 truncate">
@@ -125,7 +125,7 @@ const ConflictCard: React.FC<{ conflict: NexusConflict }> = ({ conflict }) => {
                     </p>
                     <div className="flex items-center gap-1 mt-1">
                         <Calendar size={8} className="text-amber-400/40" />
-                        <p className="text-[9px] text-amber-400/40 font-mono truncate">
+                        <p className="text-ui-9 text-amber-400/40 font-mono truncate">
                             {exportDate}
                         </p>
                     </div>
@@ -136,13 +136,13 @@ const ConflictCard: React.FC<{ conflict: NexusConflict }> = ({ conflict }) => {
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
                     <Users size={10} className="text-app-text/30" />
-                    <span className="text-[10px] text-app-text/40">
+                    <span className="text-ui-10 text-app-text/40">
                         {conflict.entityCount} entités
                     </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <BookOpen size={10} className="text-app-text/30" />
-                    <span className="text-[10px] text-app-text/40">
+                    <span className="text-ui-10 text-app-text/40">
                         {conflict.sessionCount} sessions
                     </span>
                 </div>
@@ -184,7 +184,7 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         <div>
                             <div className="flex items-center gap-1.5 mb-0.5">
                                 <Zap size={9} className="text-rose-400/50" />
-                                <span className="text-[9px] text-rose-400/50 font-bold uppercase tracking-[0.2em]">
+                                <span className="text-ui-9 text-rose-400/50 font-bold uppercase tracking-[0.2em]">
                                     Nexus-OS · Import
                                 </span>
                             </div>
@@ -193,7 +193,7 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                             </h2>
                         </div>
                     </div>
-                    <p className="text-[11px] text-app-text/40 leading-relaxed mt-2">
+                    <p className="text-ui-11 text-app-text/40 leading-relaxed mt-2">
                         {conflicts.length === 1
                             ? 'Une campagne dans ce bundle possède le même identifiant qu\'une campagne déjà présente dans votre bibliothèque.'
                             : `${conflicts.length} campagnes en conflit ont été détectées. Choisissez comment procéder.`}
@@ -209,7 +209,7 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
 
                 {/* Actions */}
                 <div className="px-6 pb-6 space-y-2.5">
-                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-widest mb-3">
+                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest mb-3">
                         Choisir une action
                     </p>
 
@@ -224,11 +224,11 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         </div>
                         <div className="flex-1 text-left">
                             <p className="text-xs font-bold">Remplacer</p>
-                            <p className="text-[10px] text-app-text/40 mt-0.5 leading-tight">
+                            <p className="text-ui-10 text-app-text/40 mt-0.5 leading-tight">
                                 {STRATEGY_CONFIG.replace.description}
                             </p>
                         </div>
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.replace.badgeClass}`}>
+                        <span className={`text-ui-9 font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.replace.badgeClass}`}>
                             Écraser
                         </span>
                     </button>
@@ -244,11 +244,11 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         </div>
                         <div className="flex-1 text-left">
                             <p className="text-xs font-bold">Cloner</p>
-                            <p className="text-[10px] text-app-text/40 mt-0.5 leading-tight">
+                            <p className="text-ui-10 text-app-text/40 mt-0.5 leading-tight">
                                 {STRATEGY_CONFIG.clone.description}
                             </p>
                         </div>
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.clone.badgeClass}`}>
+                        <span className={`text-ui-9 font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.clone.badgeClass}`}>
                             Sûr
                         </span>
                     </button>
@@ -264,7 +264,7 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         </div>
                         <div className="flex-1 text-left">
                             <p className="text-xs font-bold">Annuler</p>
-                            <p className="text-[10px] text-app-text/30 mt-0.5">
+                            <p className="text-ui-10 text-app-text/30 mt-0.5">
                                 Abandonne l'import. Aucune modification effectuée.
                             </p>
                         </div>

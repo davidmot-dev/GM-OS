@@ -135,7 +135,7 @@ const SectionEditor: React.FC<{
                                         ...(e.target.value === 'rating' ? { max: 5 } : {}),
                                         ...(e.target.value === 'select' ? { options: [] } : {})
                                     })}
-                                    className="bg-app-bg text-app-text/80 text-[11px] rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
+                                    className="bg-app-bg text-app-text/80 text-ui-11 rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
                                 >
                                     {(Object.entries(fieldTypeLabels) as [SheetFieldType, string][]).map(([type, label]) => (
                                         <option key={type} value={type}>{label}</option>
@@ -149,7 +149,7 @@ const SectionEditor: React.FC<{
                             {/* Configuration supplementaire pour les champs complexes */}
                             {field.type === 'select' && (
                                 <div className="flex items-center gap-2 pl-5">
-                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">{t('modules:session.template_manager.editor.field_options')}</span>
+                                    <span className="text-ui-10 text-app-text/40 uppercase font-bold">{t('modules:session.template_manager.editor.field_options')}</span>
                                     <FieldOptionsInput 
                                         options={field.options || []} 
                                         onUpdate={newOptions => updateField(i, { options: newOptions })} 
@@ -158,7 +158,7 @@ const SectionEditor: React.FC<{
                             )}
                             {field.type === 'rating' && (
                                 <div className="flex items-center gap-2 pl-5">
-                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">{t('modules:session.template_manager.editor.max_value_label')}</span>
+                                    <span className="text-ui-10 text-app-text/40 uppercase font-bold">{t('modules:session.template_manager.editor.max_value_label')}</span>
                                     <input 
                                         type="number"
                                         min={1}
@@ -235,7 +235,7 @@ const TemplateEditor: React.FC<{
                     <Sparkles size={16} />
                 </div>
                 <div className="flex-1">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-500/70 mb-1">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-blue-500/70 mb-1">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
                     <input 
                         type="text"
                         value={template.defaultNotebookUrl || ''}
@@ -256,7 +256,7 @@ const TemplateEditor: React.FC<{
                 <h4 className="text-xs font-black uppercase tracking-tight text-app-text flex items-center gap-2">
                     <Sparkles size={14} className="text-accent" /> {t('modules:session.template_manager.editor.ai_personas_title')}
                 </h4>
-                <p className="text-[10px] text-app-text/60">{t('modules:session.template_manager.editor.ai_personas_subtitle')}</p>
+                <p className="text-ui-10 text-app-text/60">{t('modules:session.template_manager.editor.ai_personas_subtitle')}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {useGemStore.getState().gems.map(gem => {
                         const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, User, Sparkles, Brain };
@@ -266,7 +266,7 @@ const TemplateEditor: React.FC<{
                             <div key={gem.id} className="p-3 bg-app-surface/40 border border-white/5 rounded-xl space-y-2 focus-within:border-accent/30 transition-colors">
                                 <div className="flex items-center gap-2">
                                     <Icon size={14} className="text-accent" />
-                                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">{t(gem.name)}</span>
+                                    <span className="text-ui-10 font-bold text-white uppercase tracking-widest">{t(gem.name)}</span>
                                 </div>
                                 <textarea
                                     value={currValue}
@@ -379,7 +379,7 @@ const TemplateManager: React.FC = () => {
             {/* Sidebar */}
             <div className="w-64 flex-shrink-0 border-r border-app-border bg-app-surface/50 flex flex-col">
                 <div className="p-4 border-b border-app-border">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.template_manager.manager.sidebar_title')}</h3>
+                    <h3 className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.template_manager.manager.sidebar_title')}</h3>
                 </div>
                 <div className="flex-1 overflow-y-auto p-3 space-y-1">
                     {allTemplates.map(templateItem => (
@@ -391,7 +391,7 @@ const TemplateManager: React.FC = () => {
                             <span className="text-lg">{templateItem.emoji}</span>
                             <div className="min-w-0">
                                 <p className="text-xs font-bold truncate">{templateItem.name}</p>
-                                {templateItem.isBuiltin && <p className="text-[9px] text-slate-600 uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
+                                {templateItem.isBuiltin && <p className="text-ui-9 text-slate-600 uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
                             </div>
                         </button>
                     ))}

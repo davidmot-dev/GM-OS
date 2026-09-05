@@ -64,8 +64,8 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                                     <FileSearch size={120} className="text-app-text/20 stroke-[1]" />
                                 </div>
                                 <div className="text-center space-y-2">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-app-text/10">Archives Sécurisées</p>
-                                    <p className="text-[8px] font-bold text-app-text/5 uppercase tracking-widest">Preuve immatérielle</p>
+                                    <p className="text-ui-10 font-black uppercase tracking-[0.5em] text-app-text/10">Archives Sécurisées</p>
+                                    <p className="text-ui-8 font-bold text-app-text/5 uppercase tracking-widest">Preuve immatérielle</p>
                                 </div>
                             </div>
                         )}
@@ -79,7 +79,7 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                                 {clue.revealedAt && (
                                     <div className="flex items-center gap-2 px-3 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20">
                                         <Calendar size={12} className="text-app-text/30" />
-                                        <span className="text-[9px] font-black text-app-text/40 uppercase tracking-widest">
+                                        <span className="text-ui-9 font-black text-app-text/40 uppercase tracking-widest">
                                             {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' }).format(clue.revealedAt)}
                                         </span>
                                     </div>
@@ -87,7 +87,7 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                                 {clue.campaignMoment && (
                                     <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full border border-accent/20">
                                         <Bookmark size={12} className="text-accent/50" />
-                                        <span className="text-[9px] font-black text-accent/60 uppercase tracking-widest">
+                                        <span className="text-ui-9 font-black text-accent/60 uppercase tracking-widest">
                                             {clue.campaignMoment}
                                         </span>
                                     </div>
@@ -112,7 +112,7 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
 
                         {/* Footnote */}
                         <div className="pt-8 border-t border-app-border/10">
-                            <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-[0.3em]">Session History | GM-OS Legacy</p>
+                            <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-[0.3em]">Session History | GM-OS Legacy</p>
                         </div>
                     </div>
                 </motion.div>

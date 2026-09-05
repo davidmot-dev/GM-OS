@@ -109,7 +109,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                     </div>
                     <div>
                         <h2 className="text-xl font-black uppercase tracking-tighter text-app-text">{t('settings:title')}</h2>
-                        <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest">{t('settings:version_subtitle')}</p>
+                        <p className="text-ui-10 text-app-text/60 font-bold uppercase tracking-widest">{t('settings:version_subtitle')}</p>
                     </div>
                 </div>
                 <button 
@@ -125,7 +125,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
             <div className="flex-1 flex overflow-hidden">
                 {/* Sidebar Navigation */}
                 <div className="w-64 border-r border-app-border/10 bg-app-surface/20 flex flex-col p-4 gap-2">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30 px-3 mb-2">{t('settings:categories_label')}</p>
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/30 px-3 mb-2">{t('settings:categories_label')}</p>
                     <button 
                         onClick={() => setActiveTab('system')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'system' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
@@ -184,7 +184,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             <Shield size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">{t('settings:system.bridge_label')}</p>
+                                            <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50">{t('settings:system.bridge_label')}</p>
                                             <p className={`text-sm font-black ${isBridgeActive ? 'text-emerald-500' : 'text-red-500'}`}>
                                                 {isBridgeActive ? t('settings:system.connected') : t('settings:system.disconnected')}
                                             </p>
@@ -195,7 +195,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             <Terminal size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">{t('settings:system.environment')}</p>
+                                            <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50">{t('settings:system.environment')}</p>
                                             <p className="text-sm font-black text-blue-400">PRODUCTION-DAWN</p>
                                         </div>
                                     </div>
@@ -209,7 +209,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     {/* Theme Selection */}
                                     <div className="space-y-4">
-                                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.theme_label')}</p>
+                                        <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.theme_label')}</p>
                                         <div className="flex flex-col gap-2">
                                             {(['cyberpunk', 'medieval', 'modern', 'claire'] as ThemeID[]).map((tID) => (
                                                 <button
@@ -235,7 +235,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
 
                                     {/* Palette Selection */}
                                     <div className="space-y-4">
-                                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.palette_label', { theme })}</p>
+                                        <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.palette_label', { theme })}</p>
                                         <div className="bg-app-surface/20 border border-app-border/20 rounded-xl p-6 h-[184px] flex flex-col items-center justify-center space-y-6">
                                             <div className="flex gap-3">
                                                 {(THEME_PALETTES[theme]?.palettes || []).map((color) => (
@@ -259,7 +259,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 >
                                                     {themeColor}
                                                 </p>
-                                                <p className="text-[9px] uppercase tracking-[0.2em] text-app-text/40 mt-1">{t('settings:system.active_sample')}</p>
+                                                <p className="text-ui-9 uppercase tracking-[0.2em] text-app-text/40 mt-1">{t('settings:system.active_sample')}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -276,7 +276,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </div>
                                         <div className="flex-1 space-y-1">
                                             <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('settings:system.language_label')}</h4>
-                                            <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest leading-relaxed">
+                                            <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest leading-relaxed">
                                                 {t('settings:system.language_description')}
                                             </p>
                                         </div>
@@ -295,7 +295,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 <span className="text-2xl">{lang.flag}</span>
                                                 <div className="text-left">
                                                     <p className="text-xs font-black uppercase tracking-widest text-app-text">{lang.name}</p>
-                                                    <p className="text-[9px] font-bold text-app-text/40 uppercase tracking-tighter">{lang.code.toUpperCase()}</p>
+                                                    <p className="text-ui-9 font-bold text-app-text/40 uppercase tracking-tighter">{lang.code.toUpperCase()}</p>
                                                 </div>
                                                 {language === lang.code && <CheckCircle2 size={16} className="ml-auto text-accent" />}
                                             </button>
@@ -312,8 +312,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     {/* Audio Outputs */}
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between px-1">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">{t('settings:hardware.audio_outputs')}</p>
-                                            <button onClick={() => fetchAudioDevices()} className="text-[10px] text-accent font-bold uppercase transition-opacity hover:opacity-70">{t('settings:hardware.refresh')}</button>
+                                            <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50">{t('settings:hardware.audio_outputs')}</p>
+                                            <button onClick={() => fetchAudioDevices()} className="text-ui-10 text-accent font-bold uppercase transition-opacity hover:opacity-70">{t('settings:hardware.refresh')}</button>
                                         </div>
                                         <div className="flex flex-col gap-3">
                                             {audioDevices.length === 0 && (
@@ -324,7 +324,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             {audioDevices.map((device) => (
                                                 <div key={device.deviceId} className="p-4 rounded-xl border border-app-border/20 bg-app-surface/20 flex flex-col gap-2 transition-all hover:bg-app-surface/40">
                                                     <div className="flex items-center justify-between">
-                                                        <p className="text-[10px] font-mono font-bold text-app-text/40 truncate flex-1 uppercase tracking-tighter">
+                                                        <p className="text-ui-10 font-mono font-bold text-app-text/40 truncate flex-1 uppercase tracking-tighter">
                                                             {device.label}
                                                         </p>
                                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow-emerald/30 ml-2" />
@@ -344,8 +344,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     {/* Monitor Displays */}
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between px-1">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">{t('settings:hardware.monitors')}</p>
-                                            <button onClick={() => fetchDisplays()} className="text-[10px] text-accent font-bold uppercase transition-opacity hover:opacity-70">{t('settings:hardware.refresh')}</button>
+                                            <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50">{t('settings:hardware.monitors')}</p>
+                                            <button onClick={() => fetchDisplays()} className="text-ui-10 text-accent font-bold uppercase transition-opacity hover:opacity-70">{t('settings:hardware.refresh')}</button>
                                         </div>
                                         <div className="flex flex-col gap-3">
                                             {displays.length === 0 && (
@@ -356,7 +356,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             {displays.map((display) => (
                                                 <div key={display.id} className="p-4 rounded-xl border border-app-border/20 bg-app-surface/20 flex flex-col gap-2 transition-all hover:bg-app-surface/40">
                                                     <div className="flex items-center justify-between">
-                                                        <p className="text-[10px] font-mono font-bold text-app-text/40 truncate flex-1 uppercase tracking-tighter">
+                                                        <p className="text-ui-10 font-mono font-bold text-app-text/40 truncate flex-1 uppercase tracking-tighter">
                                                             {display.label} ({display.bounds.width}x{display.bounds.height})
                                                         </p>
                                                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-glow-blue/30 ml-2" />
@@ -402,7 +402,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 <div className="flex items-center justify-between px-1">
                                     <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 border-l-2 border-accent/30 pl-3 italic">{t('settings:sections.obsidian')}</h3>
                                     {testStatus === 'success' && (
-                                        <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-black uppercase animate-pulse">
+                                        <span className="flex items-center gap-1 text-ui-10 text-emerald-500 font-black uppercase animate-pulse">
                                             <CheckCircle2 size={12} /> {t('settings:obsidian.connected')}
                                         </span>
                                     )}
@@ -414,7 +414,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </div>
                                         <div className="flex-1 space-y-1">
                                             <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('settings:obsidian.vault_path')}</h4>
-                                            <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest leading-relaxed">
+                                            <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest leading-relaxed">
                                                 {t('settings:obsidian.vault_description')}
                                             </p>
                                         </div>
@@ -460,7 +460,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 }
                                             }}
                                             disabled={isObsidianLoading || !vaultPath}
-                                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                                            className={`px-6 py-3 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all border ${
                                                 testStatus === 'success' 
                                                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' 
                                                 : testStatus === 'error'
@@ -474,7 +474,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
 
                                     {obsidianError && (
                                         <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/10">
-                                            <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight italic">
+                                            <p className="text-ui-10 text-red-500 font-bold uppercase tracking-tight italic">
                                                 {t('settings:obsidian.error_prefix')}{obsidianError}
                                             </p>
                                         </div>
@@ -503,14 +503,14 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                     {storageUsage ? formatBytes(storageUsage.totalBytes) : '—'}
                                                 </p>
                                                 {storageUsage && (
-                                                    <p className="text-[9px] font-bold uppercase tracking-widest text-app-text/40 mt-1">
+                                                    <p className="text-ui-9 font-bold uppercase tracking-widest text-app-text/40 mt-1">
                                                         {t('settings:maintenance.storage_usage_session', { size: formatBytes(storageUsage.sessionBytes) })}
                                                     </p>
                                                 )}
                                             </div>
                                         </div>
                                         {storageUsage?.isNearQuota && (
-                                            <p className="text-[10px] text-rose-400 font-black uppercase mt-3">
+                                            <p className="text-ui-10 text-rose-400 font-black uppercase mt-3">
                                                 {t('settings:maintenance.storage_usage_warning')}
                                             </p>
                                         )}
@@ -540,7 +540,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                             <section className="pt-8 flex flex-col items-center gap-4 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
                                 <div className="w-16 h-1 bg-gradient-to-r from-transparent via-app-border to-transparent" />
                                 <div className="flex flex-col items-center">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/40">Designed & Powered by</p>
+                                    <p className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/40">Designed & Powered by</p>
                                     <h2 className="text-xl font-black text-app-text italic tracking-tighter">GM-OS <span className="text-accent">PROJECT</span></h2>
                                 </div>
                                 <div className="flex gap-4">
@@ -560,7 +560,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">{t('settings:ai.title')}</h3>
-                                        <p className="text-[10px] text-app-text/60 font-black uppercase tracking-widest mt-0.5">{t('settings:ai.subtitle')}</p>
+                                        <p className="text-ui-10 text-app-text/60 font-black uppercase tracking-widest mt-0.5">{t('settings:ai.subtitle')}</p>
                                     </div>
                                 </div>
                                 
@@ -582,7 +582,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </div>
                                         <div>
                                             <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('settings:tactical.master_switch')}</h4>
-                                            <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">{t('settings:tactical.switch_desc')}</p>
+                                            <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">{t('settings:tactical.switch_desc')}</p>
                                         </div>
                                     </div>
                                     <button
@@ -615,7 +615,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">{t('settings:remote.gm_remote_title')}</h3>
-                                            <p className="text-[10px] text-app-text/60 max-w-[240px] mt-1 uppercase tracking-widest font-black">{t('settings:remote.gm_remote_subtitle')}</p>
+                                            <p className="text-ui-10 text-app-text/60 max-w-[240px] mt-1 uppercase tracking-widest font-black">{t('settings:remote.gm_remote_subtitle')}</p>
                                         </div>
                                     </div>
 
@@ -639,10 +639,10 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </div>
                                         {/* On affiche l'URL sans le fragment : le secret ne doit pas
                                             se retrouver sur un partage d'écran ou une capture. */}
-                                        <p className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{remoteUrl || t('settings:remote.waiting_url')}</p>
+                                        <p className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{remoteUrl || t('settings:remote.waiting_url')}</p>
                                         <button
                                             onClick={handleRevokePairings}
-                                            className="text-[9px] font-bold uppercase tracking-widest text-rose-400/70 hover:text-rose-400 transition-colors"
+                                            className="text-ui-9 font-bold uppercase tracking-widest text-rose-400/70 hover:text-rose-400 transition-colors"
                                             title={t('settings:remote.revoke_pairings_tooltip')}
                                         >
                                             {t('settings:remote.revoke_pairings')}
@@ -650,10 +650,10 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     </div>
 
                                     <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
-                                        <span className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.direct_connection')}</span>
+                                        <span className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.direct_connection')}</span>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-glow-emerald" />
-                                            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">{t('settings:remote.active')} (3001)</span>
+                                            <span className="text-ui-9 font-bold text-emerald-500 uppercase tracking-widest">{t('settings:remote.active')} (3001)</span>
                                         </div>
                                     </div>
                                 </section>
@@ -666,7 +666,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">{t('settings:remote.tablet_hub_title')}</h3>
-                                            <p className="text-[10px] text-app-text/60 max-w-[240px] mt-1 uppercase tracking-widest font-black">{t('settings:remote.tablet_hub_subtitle')}</p>
+                                            <p className="text-ui-10 text-app-text/60 max-w-[240px] mt-1 uppercase tracking-widest font-black">{t('settings:remote.tablet_hub_subtitle')}</p>
                                         </div>
                                     </div>
 
@@ -688,14 +688,14 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             )}
                                             <div className="absolute inset-0 border-2 border-blue-400/20 rounded-[1.5rem] pointer-events-none" />
                                         </div>
-                                        <p className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{tabletUrl || t('settings:remote.waiting_url')}</p>
+                                        <p className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{tabletUrl || t('settings:remote.waiting_url')}</p>
                                     </div>
 
                                     <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-between">
-                                        <span className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.streaming_label')}</span>
+                                        <span className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.streaming_label')}</span>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-blue-400 shadow-glow-blue" />
-                                            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest">{t('settings:remote.active')}</span>
+                                            <span className="text-ui-9 font-bold text-blue-400 uppercase tracking-widest">{t('settings:remote.active')}</span>
                                         </div>
                                     </div>
                                 </section>
@@ -712,8 +712,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         { label: t('settings:remote.functions.scene_label'), desc: t('settings:remote.functions.scene_desc') }
                                     ].map(f => (
                                         <div key={f.label} className="p-4 rounded-2xl bg-app-surface/20 border border-app-border/20 text-center space-y-1">
-                                            <p className="text-[10px] font-black text-app-text/80 uppercase">{f.label}</p>
-                                            <p className="text-[9px] text-app-text/40">{f.desc}</p>
+                                            <p className="text-ui-10 font-black text-app-text/80 uppercase">{f.label}</p>
+                                            <p className="text-ui-9 text-app-text/40">{f.desc}</p>
                                         </div>
                                     ))}
                                 </div>

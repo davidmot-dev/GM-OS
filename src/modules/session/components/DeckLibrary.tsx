@@ -50,7 +50,7 @@ const DeckLibrary: React.FC = () => {
                             Deck-OS <span className="text-white/20 px-2">//</span> 
                             <span className="text-gm-gold">{t('modules:session.deck_module.library.title')}</span>
                         </h1>
-                        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">{t('modules:session.deck_module.library.subtitle')}</p>
+                        <p className="text-ui-10 text-white/40 font-bold uppercase tracking-widest mt-1">{t('modules:session.deck_module.library.subtitle')}</p>
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@ const DeckLibrary: React.FC = () => {
                     <button 
                         type="button"
                         onClick={() => setShowAllDecks(!showAllDecks)}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] tracking-widest uppercase transition-all border ${
+                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-ui-10 tracking-widest uppercase transition-all border ${
                             showAllDecks 
                             ? 'bg-gm-gold/20 border-gm-gold text-gm-gold shadow-glow-gold/10' 
                             : 'bg-white/5 border-white/10 text-white/40 hover:text-white hover:border-white/20'
@@ -72,7 +72,7 @@ const DeckLibrary: React.FC = () => {
                     <button 
                         type="button"
                         onClick={() => { resetForm(); setIsAdding(true); }}
-                        className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2.5 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20 focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
+                        className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2.5 rounded-xl text-ui-10 tracking-widest uppercase transition-all shadow-glow-gold/20 focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
                     >
                         <Plus size={14} />
                         {t('modules:session.deck_module.library.new_deck')}
@@ -88,12 +88,12 @@ const DeckLibrary: React.FC = () => {
                         <div className="flex flex-col items-center gap-2">
                             <span className="text-xs font-black uppercase tracking-widest text-center">
                                 {t('modules:session.deck_module.library.empty_state')}<br/>
-                                <span className="text-[10px] opacity-40">{t('modules:session.deck_module.library.empty_state_filter_hint', { systemId: currentSystemId })}</span>
+                                <span className="text-ui-10 opacity-40">{t('modules:session.deck_module.library.empty_state_filter_hint', { systemId: currentSystemId })}</span>
                             </span>
                             {!showAllDecks && (
                                 <button 
                                     onClick={() => setShowAllDecks(true)}
-                                    className="mt-4 text-[10px] font-black uppercase tracking-widest text-gm-gold hover:underline"
+                                    className="mt-4 text-ui-10 font-black uppercase tracking-widest text-gm-gold hover:underline"
                                 >
                                     {t('modules:session.deck_module.library.show_all_btn')}
                                 </button>
@@ -124,10 +124,10 @@ const DeckLibrary: React.FC = () => {
                             <div className="space-y-1">
                                 <h3 className="text-white font-black uppercase tracking-widest text-sm">{deck.name}</h3>
                                 <div className="flex gap-2">
-                                    <span className="px-2 py-0.5 rounded bg-white/5 text-[8px] font-black text-white/40 uppercase tracking-tighter">
+                                    <span className="px-2 py-0.5 rounded bg-white/5 text-ui-8 font-black text-white/40 uppercase tracking-tighter">
                                         {deck.systemId}
                                     </span>
-                                    <span className="px-2 py-0.5 rounded bg-gm-gold/10 text-[8px] font-black text-gm-gold uppercase tracking-tighter">
+                                    <span className="px-2 py-0.5 rounded bg-gm-gold/10 text-ui-8 font-black text-gm-gold uppercase tracking-tighter">
                                         {t('modules:session.deck_module.library.card_count', { count: deck.cardCount })}
                                     </span>
                                 </div>
@@ -147,7 +147,7 @@ const DeckLibrary: React.FC = () => {
                                     title={deck.ouvertAuxJoueurs
                                         ? t('modules:session.deck_module.library.close_to_players')
                                         : t('modules:session.deck_module.library.open_to_players')}
-                                    className={`mt-2 flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[8px] font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-1 ${deck.ouvertAuxJoueurs
+                                    className={`mt-2 flex items-center gap-1.5 rounded-lg border px-2 py-1 text-ui-8 font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-1 ${deck.ouvertAuxJoueurs
                                         ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 focus:ring-emerald-500/40'
                                         : 'border-white/10 bg-white/5 text-white/30 hover:text-white/60 focus:ring-white/20'}`}
                                 >
@@ -178,14 +178,14 @@ const DeckLibrary: React.FC = () => {
                         </div>
 
                         <div className="flex items-center justify-between relative z-10">
-                            <div className="flex items-center gap-3 text-[9px] font-bold text-white/20 uppercase tracking-widest">
+                            <div className="flex items-center gap-3 text-ui-9 font-bold text-white/20 uppercase tracking-widest">
                                 {deck.orientation === 'portrait' ? <Smartphone size={12} /> : <Monitor size={12} />}
                                 {deck.format} — {deck.orientation}
                             </div>
                             <button 
                                 type="button"
                                 onClick={() => { handleSelect(deck.id); setCurrentView('deck-player'); }}
-                                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-gm-gold hover:text-black rounded-xl text-[9px] font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
+                                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-gm-gold hover:text-black rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
                             >
                                 {t('modules:session.deck_module.library.load_btn')}
                                 <ArrowRight size={12} />
@@ -207,7 +207,7 @@ const DeckLibrary: React.FC = () => {
                         <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-name" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.name_label')}</label>
+                                    <label htmlFor="deck-name" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.name_label')}</label>
                                     <input 
                                         id="deck-name"
                                         value={form.name}
@@ -217,7 +217,7 @@ const DeckLibrary: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-system" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.system_label')}</label>
+                                    <label htmlFor="deck-system" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.system_label')}</label>
                                     <select 
                                         id="deck-system"
                                         value={form.systemId}
@@ -236,26 +236,26 @@ const DeckLibrary: React.FC = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-format" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.format_label')}</label>
+                                    <label htmlFor="deck-format" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.format_label')}</label>
                                     <select 
                                         id="deck-format"
                                         value={form.format}
                                         title={t('modules:session.deck_module.editor.format_label')}
                                         onChange={e => form.setFormat(e.target.value as CardFormat)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-[10px] uppercase font-black tracking-widest focus:border-gm-gold/40 transition-all outline-none"
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-ui-10 uppercase font-black tracking-widest focus:border-gm-gold/40 transition-all outline-none"
                                     >
                                         <option value="poker">{t('modules:session.deck_module.editor.formats.poker')}</option>
                                         <option value="tarot">{t('modules:session.deck_module.editor.formats.tarot')}</option>
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-orientation" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.orientation_label')}</label>
+                                    <label htmlFor="deck-orientation" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.orientation_label')}</label>
                                     <select 
                                         id="deck-orientation"
                                         value={form.orientation}
                                         title={t('modules:session.deck_module.editor.orientation_label')}
                                         onChange={e => form.setOrientation(e.target.value as CardOrientation)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-[10px] uppercase font-black tracking-widest focus:border-gm-gold/40 transition-all outline-none"
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-ui-10 uppercase font-black tracking-widest focus:border-gm-gold/40 transition-all outline-none"
                                     >
                                         <option value="portrait">{t('modules:session.deck_module.editor.orientations.portrait')}</option>
                                         <option value="landscape">{t('modules:session.deck_module.editor.orientations.landscape')}</option>
@@ -265,7 +265,7 @@ const DeckLibrary: React.FC = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-extension-select" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.extension_label')}</label>
+                                    <label htmlFor="deck-extension-select" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.extension_label')}</label>
                                     <select 
                                         id="deck-extension-select"
                                         value={form.extension}
@@ -282,7 +282,7 @@ const DeckLibrary: React.FC = () => {
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-padding" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.padding_label')}</label>
+                                    <label htmlFor="deck-padding" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.padding_label')}</label>
                                     <select 
                                         id="deck-padding"
                                         value={form.padding}
@@ -298,7 +298,7 @@ const DeckLibrary: React.FC = () => {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label htmlFor="deck-card-count" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.count_label')}</label>
+                                <label htmlFor="deck-card-count" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.count_label')}</label>
                                 <input 
                                     id="deck-card-count"
                                     type="number"
@@ -309,36 +309,36 @@ const DeckLibrary: React.FC = () => {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label htmlFor="deck-folder-path" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1 flex items-center gap-2">
+                                <label htmlFor="deck-folder-path" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1 flex items-center gap-2">
                                     <FolderOpen size={10} /> {t('modules:session.deck_module.editor.path_label')}
                                 </label>
                                 <input 
                                     id="deck-folder-path"
                                     value={form.folderPath}
                                     onChange={e => form.setFolderPath(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-[10px] font-mono tracking-tighter text-white/60 focus:border-gm-gold/40 transition-all outline-none"
+                                    className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-ui-10 font-mono tracking-tighter text-white/60 focus:border-gm-gold/40 transition-all outline-none"
                                     placeholder={t('modules:session.deck_module.editor.path_placeholder')}
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-extension-input" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.extension_label')}</label>
+                                    <label htmlFor="deck-extension-input" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.extension_label')}</label>
                                     <input 
                                         id="deck-extension-input"
                                         value={form.extension}
                                         onChange={e => form.setExtension(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-4 text-[10px] font-mono text-white/60 focus:border-gm-gold/40 transition-all outline-none"
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-4 text-ui-10 font-mono text-white/60 focus:border-gm-gold/40 transition-all outline-none"
                                         placeholder=".png"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-filename-pattern" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.pattern_label')}</label>
+                                    <label htmlFor="deck-filename-pattern" className="text-ui-9 font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.pattern_label')}</label>
                                     <input 
                                         id="deck-filename-pattern"
                                         value={form.filenamePattern}
                                         onChange={e => form.setFilenamePattern(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-4 text-[10px] font-mono text-white/60 focus:border-gm-gold/40 transition-all outline-none"
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-4 text-ui-10 font-mono text-white/60 focus:border-gm-gold/40 transition-all outline-none"
                                         placeholder={t('modules:session.deck_module.editor.pattern_placeholder')}
                                     />
                                 </div>
@@ -353,7 +353,7 @@ const DeckLibrary: React.FC = () => {
                                         id="useDiscard"
                                         className="w-4 h-4 rounded bg-black border-white/10 text-gm-gold focus:ring-gm-gold/30"
                                     />
-                                    <label htmlFor="useDiscard" className="text-[9px] font-black uppercase tracking-widest text-white/40 cursor-pointer">{t('modules:session.deck_module.editor.discard_label')}</label>
+                                    <label htmlFor="useDiscard" className="text-ui-9 font-black uppercase tracking-widest text-white/40 cursor-pointer">{t('modules:session.deck_module.editor.discard_label')}</label>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <input 
@@ -363,12 +363,12 @@ const DeckLibrary: React.FC = () => {
                                         id="startAtZero"
                                         className="w-4 h-4 rounded bg-black border-white/10 text-gm-gold focus:ring-gm-gold/30"
                                     />
-                                    <label htmlFor="startAtZero" className="text-[9px] font-black uppercase tracking-widest text-white/40 cursor-pointer">{t('modules:session.deck_module.editor.start_zero_label')}</label>
+                                    <label htmlFor="startAtZero" className="text-ui-9 font-black uppercase tracking-widest text-white/40 cursor-pointer">{t('modules:session.deck_module.editor.start_zero_label')}</label>
                                 </div>
                                 <button 
                                     type="button"
                                     onClick={handleSave}
-                                    className="px-6 py-2 bg-gm-gold text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-gold/20 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
+                                    className="px-6 py-2 bg-gm-gold text-black rounded-xl text-ui-10 font-black uppercase tracking-widest shadow-glow-gold/20 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
                                 >
                                     {editingDeckId ? t('modules:session.deck_module.editor.update_btn') : t('modules:session.deck_module.editor.validate_btn')}
                                 </button>

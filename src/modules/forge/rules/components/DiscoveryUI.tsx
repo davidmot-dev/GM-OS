@@ -81,7 +81,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
         <div className="flex items-center gap-4">
           {candidates.length > 0 && (
             <div className="text-right">
-              <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/60">
+              <p className="text-ui-10 font-black uppercase tracking-widest text-purple-400/60">
                 {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
               </p>
               {/*
@@ -90,7 +90,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
                 seances — et elle survit a la fermeture, contrairement a la
                 memoire de session qui la portait avant.
               */}
-              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400/60 mt-0.5">
+              <p className="text-ui-10 font-black uppercase tracking-widest text-emerald-400/60 mt-0.5">
                 {t('session.forge_module.atelier.forged_count', {
                   forgees: candidates.filter(c => fichesPubliees.includes(c.id)).length,
                   total: candidates.length,
@@ -101,7 +101,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
           {onEnregistrerInventaire && (
             <button
               onClick={onEnregistrerInventaire}
-              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all"
             >
               <Save size={14} /> {t('session.forge_module.atelier.save_inventory')}
             </button>
@@ -157,7 +157,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
                     />
                   )}
                 </h4>
-                <p className="text-[10px] text-app-text/40 uppercase tracking-widest font-bold">
+                <p className="text-ui-10 text-app-text/40 uppercase tracking-widest font-bold">
                   {statut === 'non' ? t('session.forge_module.atelier.not_covered')
                     : statut === 'inconnu' ? t('session.forge_module.atelier.not_read')
                     : horsCanevas ? t('session.forge_module.atelier.off_canvas')

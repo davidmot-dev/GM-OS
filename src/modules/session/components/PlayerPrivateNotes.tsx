@@ -148,12 +148,12 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                 <div className="flex items-center gap-4">
                     {activeTab === 'notes' && (
                         isSaving ? (
-                            <div className="flex items-center gap-1.5 text-[10px] text-indigo-400 font-medium animate-pulse">
+                            <div className="flex items-center gap-1.5 text-ui-10 text-indigo-400 font-medium animate-pulse">
                                 <RefreshCcw className="w-3 h-3 animate-spin" />
                                 <span>SYNCHRO...</span>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-1.5 text-[10px] text-emerald-400/70 font-medium">
+                            <div className="flex items-center gap-1.5 text-ui-10 text-emerald-400/70 font-medium">
                                 <Save className="w-3 h-3" />
                                 <span>À JOUR</span>
                             </div>
@@ -201,7 +201,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                 placeholder="Notez ici vos théories, secrets et rappels personnels... Ces notes ne sont visibles que par vous (et sauvegardées chez le MJ)."
                                 className="w-full h-[600px] bg-slate-950/50 border border-white/5 rounded-lg p-4 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none text-sm leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
                             />
-                            <div className="flex justify-between items-center text-[10px] text-slate-500 italic">
+                            <div className="flex justify-between items-center text-ui-10 text-slate-500 italic">
                                 <span>Sauvegarde automatique activée</span>
                                 <span>{localNotes.length} caractères</span>
                             </div>
@@ -314,7 +314,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
 
                                     {/* Written Comments */}
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                                        <label className="text-ui-10 font-black text-slate-400 uppercase tracking-widest pl-1">
                                             Remarques & Notes pour le MJ
                                         </label>
                                         <textarea

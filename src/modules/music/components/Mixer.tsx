@@ -90,7 +90,7 @@ const Mixer: React.FC = () => {
                 <button
                     onClick={() => basculerLaNormalisation()}
                     title={`Aligne les pistes sur ${cibleDeSonie} LUFS. Une piste est mesuree pendant sa premiere ecoute, puis calee ensuite. ${Object.keys(sonies).length} piste(s) mesuree(s).`}
-                    className={`absolute top-3 right-3 z-20 px-2.5 py-1 rounded-lg border text-[8px] font-black uppercase tracking-widest transition-all ${normalisation
+                    className={`absolute top-3 right-3 z-20 px-2.5 py-1 rounded-lg border text-ui-8 font-black uppercase tracking-widest transition-all ${normalisation
                         ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                         : 'bg-app-bg/60 border-app-border/50 text-slate-600 hover:text-slate-400'}`}
                 >
@@ -102,12 +102,12 @@ const Mixer: React.FC = () => {
                 <div className="space-y-1">
                     <div className="flex items-center justify-between px-1">
                         <div className="flex flex-col">
-                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Master</span>
-                            <span className="text-[7px] font-black text-accent uppercase tracking-widest opacity-60">Engine</span>
+                            <span className="text-ui-9 font-black text-slate-500 uppercase tracking-widest">Master</span>
+                            <span className="text-ui-7 font-black text-accent uppercase tracking-widest opacity-60">Engine</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">
                             <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{Math.round(masterVolume * 100)}</span>
-                            <span className="text-[10px] font-black text-slate-600">%</span>
+                            <span className="text-ui-10 font-black text-slate-600">%</span>
                         </div>
                     </div>
                     <div className="relative h-1.5 bg-app-bg rounded-full border border-app-border/50 shadow-inner group/range">
@@ -138,7 +138,7 @@ const Mixer: React.FC = () => {
                     <div className="flex justify-between items-center w-full max-w-[200px] gap-3">
                         <button
                             onClick={async () => await triggerAutoFade('A')}
-                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
                         >
                             A
                         </button>
@@ -147,7 +147,7 @@ const Mixer: React.FC = () => {
                         </div>
                         <button
                             onClick={async () => await triggerAutoFade('B')}
-                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
                         >
                             B
                         </button>
@@ -182,8 +182,8 @@ const Mixer: React.FC = () => {
                             className="absolute inset-x-0 w-full h-full opacity-0 cursor-pointer z-20"
                         />
                         
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 text-[8px] font-black text-slate-700 opacity-40 uppercase">A</div>
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[8px] font-black text-slate-700 opacity-40 uppercase">B</div>
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 text-ui-8 font-black text-slate-700 opacity-40 uppercase">A</div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-ui-8 font-black text-slate-700 opacity-40 uppercase">B</div>
                     </div>
                 </div>
 
@@ -191,12 +191,12 @@ const Mixer: React.FC = () => {
                 <div className="space-y-1">
                     <div className="flex items-center justify-between px-1">
                         <div className="flex flex-col">
-                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Logic</span>
-                            <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest opacity-60">Fade</span>
+                            <span className="text-ui-9 font-black text-slate-500 uppercase tracking-widest">Logic</span>
+                            <span className="text-ui-7 font-black text-slate-600 uppercase tracking-widest opacity-60">Fade</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">
                             <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{(autoFadeDuration / 1000).toFixed(1)}</span>
-                            <span className="text-[10px] font-black text-slate-600">s</span>
+                            <span className="text-ui-10 font-black text-slate-600">s</span>
                         </div>
                     </div>
                     <div className="relative h-1.5 bg-app-bg rounded-full border border-app-border/50 shadow-inner group/range-speed">

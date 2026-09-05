@@ -194,7 +194,7 @@ const RemoteControl: React.FC = () => {
                 }`}
             >
                 <Icon size={enColonne ? 18 : 20} strokeWidth={actif ? 2.5 : 2} className="shrink-0" />
-                <span className={`font-black uppercase tracking-wider ${enColonne ? 'text-[11px]' : 'text-[9px]'}`}>
+                <span className={`font-black uppercase tracking-wider ${enColonne ? 'text-ui-11' : 'text-ui-9'}`}>
                     {onglet.label}
                 </span>
             </button>
@@ -210,9 +210,9 @@ const RemoteControl: React.FC = () => {
             */}
             <nav className="hidden min-[900px]:flex flex-col gap-1 w-32 shrink-0 p-2 border-r border-white/5 bg-app-bg">
                 <div className="px-3 pt-2 pb-3">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-600">GM Remote</span>
+                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-600">GM Remote</span>
                     {isAventureMode && (
-                        <span className="block mt-1 text-[9px] font-black uppercase tracking-widest text-amber-500">Aventure</span>
+                        <span className="block mt-1 text-ui-9 font-black uppercase tracking-widest text-amber-500">Aventure</span>
                     )}
                 </div>
                 {boutonsDOnglet(true)}

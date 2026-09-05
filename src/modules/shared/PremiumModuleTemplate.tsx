@@ -61,7 +61,7 @@ export const PremiumModuleTemplate: React.FC = () => {
             <div>
               <h1 className="text-xl font-black text-white italic tracking-tight">NOM DU MODULE</h1>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                <span className="text-ui-9 font-black uppercase tracking-widest px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                   STANDARD V5.6
                 </span>
               </div>
@@ -120,7 +120,7 @@ export const PremiumModuleTemplate: React.FC = () => {
                 <div className="grid grid-cols-2 gap-8">
                   {/* Carte Premium Standard */}
                   <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-sm space-y-6">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 mb-3 block px-1">Exemple de Saisie</label>
+                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-cyan-400/60 mb-3 block px-1">Exemple de Saisie</label>
                     <input 
                       type="text"
                       className="w-full bg-black/40 px-5 py-4 rounded-2xl border border-white/10 font-mono text-base text-white focus:border-cyan-500/50 outline-none transition-all shadow-inner"
@@ -129,7 +129,7 @@ export const PremiumModuleTemplate: React.FC = () => {
                   </div>
 
                   <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-sm flex flex-col justify-center">
-                    <p className="text-[11px] text-slate-500 leading-relaxed italic px-2">
+                    <p className="text-ui-11 text-slate-500 leading-relaxed italic px-2">
                        Conseil : Utilisez ces cartes pour regrouper les paramètres logiques par thématique.
                     </p>
                   </div>

@@ -188,7 +188,7 @@ const AmbientDashboard: React.FC = () => {
                     {/* Universe Select */}
                     <div className="flex flex-col px-3 relative group/uni">
                         <div className="flex items-center justify-between mb-1">
-                            <label className="text-[8px] font-black text-app-text/60 uppercase">{t('modules:ambient.dashboard.universe')}</label>
+                            <label className="text-ui-8 font-black text-app-text/60 uppercase">{t('modules:ambient.dashboard.universe')}</label>
                             <button onClick={handleAddUniverse} className="opacity-0 group-hover/uni:opacity-100 transition-opacity p-0.5" title={t('modules:ambient.dashboard.new_universe')}>
                                 <Plus size={8} className="text-gm-cyan" />
                             </button>
@@ -212,7 +212,7 @@ const AmbientDashboard: React.FC = () => {
 
                     {/* Theme Select */}
                     <div className="flex flex-col px-3 min-w-[140px]">
-                        <label className="text-[8px] font-black text-app-text/60 uppercase mb-1">{t('modules:ambient.dashboard.ambiance_theme')}</label>
+                        <label className="text-ui-8 font-black text-app-text/60 uppercase mb-1">{t('modules:ambient.dashboard.ambiance_theme')}</label>
                         <div className="flex items-center gap-2">
                             <select
                                 value={selectedTheme}
@@ -270,7 +270,7 @@ const AmbientDashboard: React.FC = () => {
                                 setOutputDevice(newId);
                                 ambientEngine.setOutputDevice(newId);
                             }}
-                            className="bg-app-surface border-none text-app-text/70 text-[10px] rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
+                            className="bg-app-surface border-none text-app-text/70 text-ui-10 rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
                             title={t('modules:ambient.dashboard.audio_output')}
                         >
                             <option value="default">{t('modules:ambient.dashboard.system_default')}</option>
@@ -305,7 +305,7 @@ const AmbientDashboard: React.FC = () => {
             <div className="flex items-center gap-3 px-2 overflow-x-auto no-scrollbar py-1">
                 <div className="flex items-center gap-2 text-gm-emerald bg-gm-emerald/10 border border-gm-emerald/20 px-3 py-2 rounded-xl group relative">
                     <Activity size={14} />
-                    <span className="text-[10px] font-black uppercase tracking-tight">{t('modules:ambient.dashboard.quick_scenes')}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-tight">{t('modules:ambient.dashboard.quick_scenes')}</span>
                     <button 
                         onClick={handleSaveScene}
                         className="ml-2 p-1 bg-gm-emerald/20 hover:bg-gm-emerald/40 rounded-lg transition-colors"
@@ -318,7 +318,7 @@ const AmbientDashboard: React.FC = () => {
                     <div key={scene.id} className="group relative flex items-center">
                         <button
                             onClick={() => applyScene(scene.id)}
-                            className="px-5 py-2.5 rounded-xl bg-app-surface/60 border border-app-border hover:border-gm-cyan/50 hover:bg-app-surface transition-all text-[11px] font-bold uppercase tracking-wide whitespace-nowrap"
+                            className="px-5 py-2.5 rounded-xl bg-app-surface/60 border border-app-border hover:border-gm-cyan/50 hover:bg-app-surface transition-all text-ui-11 font-bold uppercase tracking-wide whitespace-nowrap"
                         >
                             <span className="text-app-text/70 group-hover:text-app-text transition-colors">{t(scene.name)} <span className="opacity-30">[{scene.id.substring(0, 8)}]</span></span>
                         </button>
@@ -355,7 +355,7 @@ const AmbientDashboard: React.FC = () => {
             </div>
 
             {/* Status Footer */}
-            <div className="flex justify-between items-center px-6 py-3 bg-app-surface/40 rounded-2xl border border-app-border/50 text-[9px] font-mono text-app-text/60 uppercase tracking-widest">
+            <div className="flex justify-between items-center px-6 py-3 bg-app-surface/40 rounded-2xl border border-app-border/50 text-ui-9 font-mono text-app-text/60 uppercase tracking-widest">
                 <div className="flex items-center gap-4">
                     <span className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_5px_#10b981]" />

@@ -103,7 +103,7 @@ const AtlasLinkedEntities: React.FC = () => {
             {pickingCategory && (
                 <div className="absolute inset-0 z-20 bg-app-bg/95 p-4 flex flex-col">
                     <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-[10px] font-black text-accent uppercase tracking-widest">{t('modules:session.world_atlas.linked_entities.link_favorite')}</h4>
+                        <h4 className="text-ui-10 font-black text-accent uppercase tracking-widest">{t('modules:session.world_atlas.linked_entities.link_favorite')}</h4>
                         <button 
                             onClick={() => setPickingCategory(null)} 
                             className="text-app-text/20 hover:text-white"
@@ -115,7 +115,7 @@ const AtlasLinkedEntities: React.FC = () => {
                     <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
                         {/* Section Favoris */}
                         <div>
-                            <div className="text-[8px] font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
+                            <div className="text-ui-8 font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
                                 <Bookmark size={8} /> {t('modules:session.world_atlas.linked_entities.favorites_section')}
                             </div>
                             <div className="flex flex-col gap-1">
@@ -130,7 +130,7 @@ const AtlasLinkedEntities: React.FC = () => {
                                         >
                                             <div className="min-w-0 pr-2">
                                                 <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{fav.name}</div>
-                                                {fav.subtitle && <div className="text-[10px] text-app-text/20 truncate">{fav.subtitle}</div>}
+                                                {fav.subtitle && <div className="text-ui-10 text-app-text/20 truncate">{fav.subtitle}</div>}
                                             </div>
                                             <Star size={10} className="text-accent/50 flex-shrink-0" />
                                         </button>
@@ -141,7 +141,7 @@ const AtlasLinkedEntities: React.FC = () => {
                         {/* Section Campagne (Entities) - Uniquement pour les PNJs pour l'instant */}
                         {pickingCategory === 'npc' && (
                             <div className="mt-2">
-                                <div className="text-[8px] font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
+                                <div className="text-ui-8 font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
                                     <Users size={8} /> {t('modules:session.world_atlas.linked_entities.npc_gallery_section')}
                                 </div>
                                 <div className="flex flex-col gap-1">
@@ -155,7 +155,7 @@ const AtlasLinkedEntities: React.FC = () => {
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{entity.name}</div>
-                                                    <div className="text-[10px] text-app-text/20 truncate">{entity.description || t('modules:session.world_atlas.linked_entities.npc_campaign_subtitle')}</div>
+                                                    <div className="text-ui-10 text-app-text/20 truncate">{entity.description || t('modules:session.world_atlas.linked_entities.npc_campaign_subtitle')}</div>
                                                 </div>
                                                 <Users size={10} className="text-blue-400/50 flex-shrink-0" />
                                             </button>
@@ -167,7 +167,7 @@ const AtlasLinkedEntities: React.FC = () => {
                         {/* Section Cartes Atlas - Uniquement pour les Lieux pour l'instant */}
                         {pickingCategory === 'lieu' && (
                             <div className="mt-2">
-                                <div className="text-[8px] font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
+                                <div className="text-ui-8 font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
                                     <MapPin size={8} /> {t('modules:session.world_atlas.linked_entities.atlas_maps_section')}
                                 </div>
                                 <div className="flex flex-col gap-1">
@@ -181,7 +181,7 @@ const AtlasLinkedEntities: React.FC = () => {
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{m.name}</div>
-                                                    <div className="text-[10px] text-app-text/20 truncate">{t('modules:session.world_atlas.linked_entities.atlas_map_subtitle')}</div>
+                                                    <div className="text-ui-10 text-app-text/20 truncate">{t('modules:session.world_atlas.linked_entities.atlas_map_subtitle')}</div>
                                                 </div>
                                                 <MapPin size={10} className="text-green-400/50 flex-shrink-0" />
                                             </button>
@@ -193,7 +193,7 @@ const AtlasLinkedEntities: React.FC = () => {
                         {/* Section Wiki - Événements ou Objets */}
                         {(pickingCategory === 'evenement' || pickingCategory === 'objet') && (
                             <div className="mt-2">
-                                <div className="text-[8px] font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
+                                <div className="text-ui-8 font-bold text-app-text/30 px-3 mb-1 flex items-center gap-1 uppercase tracking-tighter">
                                     {pickingCategory === 'evenement' ? <Zap size={8} /> : <Package size={8} />} {t('modules:session.world_atlas.linked_entities.world_wiki_section')}
                                 </div>
                                 <div className="flex flex-col gap-1">
@@ -208,7 +208,7 @@ const AtlasLinkedEntities: React.FC = () => {
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{entry.title}</div>
-                                                    <div className="text-[10px] text-app-text/20 truncate">{t('modules:session.world_atlas.linked_entities.wiki_article_subtitle', { category: entry.category })}</div>
+                                                    <div className="text-ui-10 text-app-text/20 truncate">{t('modules:session.world_atlas.linked_entities.wiki_article_subtitle', { category: entry.category })}</div>
                                                 </div>
                                                 {pickingCategory === 'evenement' ? (
                                                     <Zap size={10} className="text-purple-400/50 flex-shrink-0" />
@@ -226,7 +226,7 @@ const AtlasLinkedEntities: React.FC = () => {
                           pickingCategory === 'lieu' ? atlasMaps.filter(m => m.campaignId === activeCampaignId && m.id !== selectedMap.id).length === 0 : 
                           pickingCategory === 'evenement' ? wikiEntries.filter(e => e.campaignId === activeCampaignId).length === 0 :
                           pickingCategory === 'objet' ? wikiEntries.filter(e => e.campaignId === activeCampaignId && e.category === 'item').length === 0 : true) && (
-                            <p className="text-app-text/20 text-[10px] italic text-center mt-10">{t('modules:session.world_atlas.linked_entities.no_elements_available')}</p>
+                            <p className="text-app-text/20 text-ui-10 italic text-center mt-10">{t('modules:session.world_atlas.linked_entities.no_elements_available')}</p>
                         )}
                     </div>
                 </div>

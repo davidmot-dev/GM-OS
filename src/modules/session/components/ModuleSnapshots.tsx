@@ -43,7 +43,7 @@ const ModuleSnapshots: React.FC = () => {
 
                 {/* Track 1: Active Encounter */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
+                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1">
                         <span>{t('modules:session.snapshots.combat_order')}</span>
                         <span className="text-accent">{t('modules:session.snapshots.round_hash', { number: round })}</span>
                     </div>
@@ -63,7 +63,7 @@ const ModuleSnapshots: React.FC = () => {
                                         key={c.id} 
                                         className={`flex items-center gap-3 transition-opacity ${isCurrentTurn ? 'opacity-100' : 'opacity-50'}`}
                                     >
-                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-[10px] border transition-all ${
+                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-ui-10 border transition-all ${
                                             isCurrentTurn 
                                             ? 'bg-accent/20 text-accent border-accent/50 shadow-glow-accent' 
                                             : 'bg-app-surface text-app-text/40 border-app-border/30'
@@ -71,7 +71,7 @@ const ModuleSnapshots: React.FC = () => {
                                             {c.init}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className={`text-[10px] font-bold truncate ${isCurrentTurn ? 'text-white' : 'text-app-text/40'}`}>
+                                            <p className={`text-ui-10 font-bold truncate ${isCurrentTurn ? 'text-white' : 'text-app-text/40'}`}>
                                                 {c.name}
                                             </p>
                                             {hpPct !== null && (
@@ -87,19 +87,19 @@ const ModuleSnapshots: React.FC = () => {
                                 );
                             })}
                             {combatants.length > 5 && (
-                                <p className="text-[10px] text-app-text/20 text-center italic mt-1">{t('modules:session.snapshots.others_count', { count: combatants.length - 5 })}</p>
+                                <p className="text-ui-10 text-app-text/20 text-center italic mt-1">{t('modules:session.snapshots.others_count', { count: combatants.length - 5 })}</p>
                             )}
                         </div>
                     ) : (
                         <div className="bg-app-bg/20 rounded-xl border border-dashed border-app-border/40 p-4 text-center">
-                            <p className="text-[10px] text-app-text/20 italic">{t('session.snapshots.no_active_encounter')}</p>
+                            <p className="text-ui-10 text-app-text/20 italic">{t('session.snapshots.no_active_encounter')}</p>
                         </div>
                     )}
                 </div>
 
                 {/* Track 2: Audio Environment */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
+                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1">
                         <span>{t('session.snapshots.audio_environment')}</span>
                     </div>
                     <div className="bg-app-bg/40 rounded-xl border border-app-border/40 p-3">
@@ -111,7 +111,7 @@ const ModuleSnapshots: React.FC = () => {
                                 <p className="text-xs text-app-text font-bold truncate">
                                     {activeTrackLabel || t('session.snapshots.audio_silence')}
                                 </p>
-                                <p className="text-[10px] text-app-text/40 truncate italic">
+                                <p className="text-ui-10 text-app-text/40 truncate italic">
                                     {isAudioPlaying ? t('session.snapshots.audio_deck_label', { deck: activeDeck }) : t('session.snapshots.audio_waiting')}
                                 </p>
                             </div>
@@ -146,7 +146,7 @@ const ModuleSnapshots: React.FC = () => {
 
                 {/* Track 3: Conditions */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
+                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1">
                         <span>{t('session.snapshots.active_conditions')}</span>
                     </div>
                     {allActiveStatuses.length > 0 ? (
@@ -154,26 +154,26 @@ const ModuleSnapshots: React.FC = () => {
                             {allActiveStatuses.slice(0, 4).map((s, idx) => (
                                 <div key={idx} className="bg-app-bg/40 rounded-lg p-2 border border-app-border/40 flex items-center gap-2 overflow-hidden">
                                     <div className="flex-shrink-0">{getStatusIcon(s.name)}</div>
-                                    <span className="text-[10px] text-app-text/80 truncate" title={`${s.name} (${s.combatantName})`}>
+                                    <span className="text-ui-10 text-app-text/80 truncate" title={`${s.name} (${s.combatantName})`}>
                                         {s.name} <span className="text-app-text/20">({s.combatantName})</span>
                                     </span>
                                 </div>
                             ))}
                             {allActiveStatuses.length > 4 && (
-                                <div className="col-span-2 text-[10px] text-slate-600 text-center italic">
+                                <div className="col-span-2 text-ui-10 text-slate-600 text-center italic">
                                     {t('modules:session.snapshots.others_count', { count: allActiveStatuses.length - 4 })}
                                 </div>
                             )}
                         </div>
                     ) : (
                         <div className="bg-slate-800/20 rounded-xl border border-dashed border-slate-700/50 p-4 text-center">
-                            <p className="text-[10px] text-slate-600 italic">{t('session.snapshots.no_condition')}</p>
+                            <p className="text-ui-10 text-slate-600 italic">{t('session.snapshots.no_condition')}</p>
                         </div>
                     )}
                 </div>
                 {/* Track 4: Deck-OS */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-white/5 pt-4 mt-2">
+                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-white/5 pt-4 mt-2">
                         <span>{t('session.snapshots.cards_destiny')}</span>
                         <div className="flex gap-2">
                             <button 
@@ -194,7 +194,7 @@ const ModuleSnapshots: React.FC = () => {
                             </div>
                             <div className="flex flex-col items-start">
                                 <span className="text-xs text-app-text font-bold uppercase tracking-wider group-hover:text-gm-gold transition-colors">Deck-OS</span>
-                                <span className="text-[9px] text-app-text/40 uppercase tracking-widest font-black">{t('session.snapshots.start_engine')}</span>
+                                <span className="text-ui-9 text-app-text/40 uppercase tracking-widest font-black">{t('session.snapshots.start_engine')}</span>
                             </div>
                         </div>
                     </button>
@@ -205,10 +205,10 @@ const ModuleSnapshots: React.FC = () => {
             {/* Quick Roll Tray */}
             <div className="mt-auto bg-app-bg p-4 rounded-xl border border-app-border/40 shadow-lg">
                 <div className="flex justify-between items-center mb-3">
-                    <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">{t('session.snapshots.quick_roll')}</span>
+                    <span className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">{t('session.snapshots.quick_roll')}</span>
                     <button
                         onClick={() => clearDiceRolls()}
-                        className="text-accent text-[10px] font-bold hover:underline"
+                        className="text-accent text-ui-10 font-bold hover:underline"
                     >
                         {t('session.snapshots.history')}
                     </button>
@@ -223,7 +223,7 @@ const ModuleSnapshots: React.FC = () => {
                                     : 'bg-app-surface hover:bg-app-surface/80 border-app-border/30'
                                 }`}
                         >
-                            <span className={`text-[10px] font-mono ${sides === 20 ? 'text-accent' : 'text-app-text/40'}`}>
+                            <span className={`text-ui-10 font-mono ${sides === 20 ? 'text-accent' : 'text-app-text/40'}`}>
                                 d{sides === 100 ? '%' : sides}
                             </span>
                             <span className={`text-xs font-bold ${sides === 20 ? 'text-white' : 'text-app-text/80'}`}>

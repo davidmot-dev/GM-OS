@@ -60,7 +60,7 @@ export const ChoixDeLaForme: React.FC<ChoixDeLaFormeProps> = ({ valeur, onChoisi
                         : 'bg-app-bg/50 border-app-border text-app-text/40 hover:text-app-text hover:border-accent/30'}`}
                 >
                     {icone}
-                    {!compact && <span className="text-[9px] font-bold uppercase tracking-wider">{nom}</span>}
+                    {!compact && <span className="text-ui-9 font-bold uppercase tracking-wider">{nom}</span>}
                 </button>
             );
         })}

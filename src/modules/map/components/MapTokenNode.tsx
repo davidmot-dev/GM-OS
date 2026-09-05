@@ -185,9 +185,9 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             {combatant && combatant.statuses.length > 0 && (
                 <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 bg-obsidian border border-gray-700 rounded-full px-1.5 py-0.5 flex gap-0.5 pointer-events-none shadow-xl z-20">
                     {combatant.statuses.slice(0, 3).map((s: StatusEffect) => (
-                        <span key={s.id} className="text-[12px] leading-none drop-shadow-md">{s.icon}</span>
+                        <span key={s.id} className="text-ui-12 leading-none drop-shadow-md">{s.icon}</span>
                     ))}
-                    {combatant.statuses.length > 3 && <span className="text-[10px] text-gray-400 font-bold ml-0.5">+{combatant.statuses.length - 3}</span>}
+                    {combatant.statuses.length > 3 && <span className="text-ui-10 text-gray-400 font-bold ml-0.5">+{combatant.statuses.length - 3}</span>}
                 </div>
             )}
 

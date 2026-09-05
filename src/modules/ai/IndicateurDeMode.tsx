@@ -32,7 +32,7 @@ export const IndicateurDeMode: React.FC<{
 
     return (
         <div className="flex items-center gap-2 flex-wrap">
-            <span className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${teinte}`}>
+            <span className={`flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest ${teinte}`}>
                 <Icone size={12} />
                 {mode.libelle}
             </span>
@@ -40,7 +40,7 @@ export const IndicateurDeMode: React.FC<{
             {onSurcharge && (
                 <button
                     onClick={() => onSurcharge(!mode.allege)}
-                    className="text-[10px] font-bold uppercase tracking-widest text-app-text/35 hover:text-app-text/70 underline underline-offset-2 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-app-text/35 hover:text-app-text/70 underline underline-offset-2 transition-colors"
                 >
                     {mode.allege ? 'Prendre tout le contexte' : 'Alléger'}
                 </button>
@@ -56,7 +56,7 @@ export const IndicateurDeMode: React.FC<{
             {onSurcharge && surcharge !== undefined && !compact && (
                 <button
                     onClick={() => onSurcharge(undefined)}
-                    className="text-[10px] font-bold uppercase tracking-widest text-app-text/25 hover:text-app-text/60 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-app-text/25 hover:text-app-text/60 transition-colors"
                 >
                     suivre la séance
                 </button>

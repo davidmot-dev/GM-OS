@@ -264,7 +264,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         }`}>
                             GM-OS <span className={theme === 'medieval' ? 'text-app-text/60' : ''}>v6</span>
                         </span>
-                        <span className={`text-[10px] uppercase tracking-[0.2em] mt-1 opacity-80 backdrop-blur-sm ${
+                        <span className={`text-ui-10 uppercase tracking-[0.2em] mt-1 opacity-80 backdrop-blur-sm ${
                             theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent'
                         }`}>
                             {theme === 'medieval' ? 'MÉDIÉVAL-GRIMOIRE' : 'NEXUS-PROTOCOL'}
@@ -300,7 +300,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/60 uppercase tracking-widest">{t('common:audio', 'Audio')}</div>
+                    <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/60 uppercase tracking-widest">{t('common:audio', 'Audio')}</div>
                     <NavItem
                         icon={<Music size={20} />}
                         label={t('modules:names.music')}
@@ -328,7 +328,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{t('common:global', 'Global')}</div>
+                    <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:global', 'Global')}</div>
                     <NavItem
                         icon={<Star size={20} className="text-amber-500" />}
                         label={t('modules:names.favorite')}
@@ -350,7 +350,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{t('common:aventure', 'Aventure')}</div>
+                    <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:aventure', 'Aventure')}</div>
                     <NavItem
                         icon={<Sword size={20} />}
                         label={t('modules:names.combat')}
@@ -378,7 +378,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{t('common:outils', 'Outils')}</div>
+                    <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:outils', 'Outils')}</div>
                     <NavItem
                         icon={<FolderOpen size={20} className="text-gm-cyan" />}
                         label={t('common:mediaHub', 'Media Hub')}
@@ -461,7 +461,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             title={`${t('modules:tooltips.save_session')}\nDernière sauvegarde automatique : ${backupLabel}\nClic droit : ouvrir le dossier des sauvegardes`}
                         >
                             <Save size={18} className="group-hover:scale-110 transition-transform" />
-                            <span className="text-[7px] mt-0.5 opacity-50 font-mono tracking-tighter">
+                            <span className="text-ui-7 mt-0.5 opacity-50 font-mono tracking-tighter">
                                 {backupLabel}
                             </span>
                             <div className="absolute inset-0 bg-gm-cyan/0 group-hover:bg-gm-cyan/5 transition-colors" />
@@ -532,7 +532,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             theme === 'medieval' ? 'rounded-md border-app-border/40' : 'rounded-full border-app-accent/20'
                         } ${tacticalSettings.isEnabled ? 'bg-accent/10' : 'bg-app-surface opacity-50'}`}>
                             <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
-                             <span className={`text-[10px] uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
+                             <span className={`text-ui-10 uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
                                 {tacticalSettings.isEnabled 
                                     ? (theme === 'medieval' ? t('modules:tactical.seal_active') : t('modules:tactical.cortex_active')) 
                                     : (theme === 'medieval' ? t('modules:tactical.seal_broken') : t('modules:tactical.cortex_disabled'))}
@@ -544,15 +544,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             title="Ouvrir le code de connexion PWA"
                         >
                             <Wifi size={14} className="group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-bold uppercase tracking-widest hidden md:inline">Connecter Joueurs</span>
+                            <span className="text-ui-10 font-bold uppercase tracking-widest hidden md:inline">Connecter Joueurs</span>
                         </button>
                         <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full bg-accent ${tacticalSettings.isEnabled ? 'animate-pulse' : 'animate-ping'}`} />
-                             <span className={`text-[10px] font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>
+                             <span className={`text-ui-10 font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>
                                 {theme === 'medieval' ? t('modules:tactical.eternal_link') : t('modules:tactical.system_link')}
                              </span>
                         </div>
-                        <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-[9px] text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
+                        <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-ui-9 text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
                             GM-OS_v{__APP_VERSION__}
                         </div>
                     </div>

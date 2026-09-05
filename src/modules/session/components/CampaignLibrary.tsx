@@ -239,12 +239,12 @@ const CampaignLibrary: React.FC = () => {
                                         : 'text-app-text/90 group-hover:text-accent'
                                 }`}>{campaign.name}</h3>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
+                                    <span className="text-ui-10 bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
                                     {campaign.id === activeCampaignId && (
-                                        <span className="text-[10px] bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
+                                        <span className="text-ui-10 bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
                                     )}
                                     {campaign.clotureeLe && (
-                                        <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">
+                                        <span className="text-ui-10 bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">
                                             clôturée
                                         </span>
                                     )}
@@ -270,7 +270,7 @@ const CampaignLibrary: React.FC = () => {
                                         return assetCount > 0 ? (
                                             <span
                                                 title={t('modules:session.campaign_library.status.nexus_ready_tooltip', { count: assetCount })}
-                                                className="flex items-center gap-1 text-[9px] bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
+                                                className="flex items-center gap-1 text-ui-9 bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
                                             >
                                                 <Package size={8} />
                                                 Nexus-Ready
@@ -278,7 +278,7 @@ const CampaignLibrary: React.FC = () => {
                                         ) : (
                                             <span
                                                 title={t('modules:session.campaign_library.status.nexus_lite_tooltip')}
-                                                className="flex items-center gap-1 text-[9px] text-app-text/20 border border-app-border/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
+                                                className="flex items-center gap-1 text-ui-9 text-app-text/20 border border-app-border/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
                                             >
                                                 <Package size={8} />
                                                 Nexus

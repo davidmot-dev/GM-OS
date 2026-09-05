@@ -13,8 +13,8 @@ const TradeRequestPanel: React.FC = () => {
     return (
         <div className="flex flex-col gap-3 mt-4 border-t border-app-border/40 pt-4 px-3">
             <div className="flex items-center justify-between mb-1">
-                <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">Échanges en attente</p>
-                <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-accent/20 text-accent text-[9px] font-bold animate-pulse">
+                <p className="text-app-text/40 text-ui-10 font-bold uppercase tracking-[0.2em]">Échanges en attente</p>
+                <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-accent/20 text-accent text-ui-9 font-bold animate-pulse">
                     <Clock size={10} />
                     {pendingRequests.length}
                 </div>
@@ -41,7 +41,7 @@ const TradeRequestPanel: React.FC = () => {
                                         <h4 className="text-xs font-bold text-app-text truncate max-w-[120px]">
                                             {request.item.name}
                                         </h4>
-                                        <p className="text-[9px] text-app-text/40 uppercase tracking-tighter">
+                                        <p className="text-ui-9 text-app-text/40 uppercase tracking-tighter">
                                             {request.item.type} • Qté: {request.item.quantity}
                                         </p>
                                     </div>
@@ -49,11 +49,11 @@ const TradeRequestPanel: React.FC = () => {
                             </div>
 
                             <div className="flex items-center gap-2 mb-3 bg-black/20 p-1.5 rounded-lg border border-white/5">
-                                <span className="text-[10px] font-bold text-accent truncate flex-1 text-center bg-accent/10 py-0.5 rounded">
+                                <span className="text-ui-10 font-bold text-accent truncate flex-1 text-center bg-accent/10 py-0.5 rounded">
                                     {request.fromCharacterName}
                                 </span>
                                 <ArrowRight size={12} className="text-app-text/40 shrink-0" />
-                                <span className="text-[10px] font-bold text-emerald-400 truncate flex-1 text-center bg-emerald-400/10 py-0.5 rounded">
+                                <span className="text-ui-10 font-bold text-emerald-400 truncate flex-1 text-center bg-emerald-400/10 py-0.5 rounded">
                                     {request.toCharacterName}
                                 </span>
                             </div>
@@ -61,7 +61,7 @@ const TradeRequestPanel: React.FC = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => approveItemTransfer(request.id)}
-                                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/40 transition-all font-bold text-[10px] uppercase tracking-wider"
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/40 transition-all font-bold text-ui-10 uppercase tracking-wider"
                                 >
                                     <Check size={14} />
                                     Approuver

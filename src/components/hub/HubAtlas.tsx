@@ -17,10 +17,10 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                         <Globe className="text-accent" size={30} />
                         Atlas des Lieux Visités
                     </h2>
-                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-[0.5em]">Cartographie des territoires explorés par le groupe.</p>
+                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Cartographie des territoires explorés par le groupe.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-[10px] font-black bg-emerald-500/10 border border-emerald-500/20 px-6 py-2 rounded-full text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                    <div className="text-ui-10 font-black bg-emerald-500/10 border border-emerald-500/20 px-6 py-2 rounded-full text-emerald-400 uppercase tracking-widest flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         {atlasMaps.length} Lieux Découverts
                     </div>
@@ -51,13 +51,13 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                                 )}
 
                                 <div className="absolute top-4 right-4 z-20">
-                                    <div className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-[7px] font-black text-white/60 uppercase tracking-widest">
+                                    <div className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-ui-7 font-black text-white/60 uppercase tracking-widest">
                                         {map.type}
                                     </div>
                                 </div>
 
                                 <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-700">
-                                    <div className="px-6 py-2 bg-accent text-app-bg rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-glow-accent">
+                                    <div className="px-6 py-2 bg-accent text-app-bg rounded-full text-ui-9 font-black uppercase tracking-[0.2em] shadow-glow-accent">
                                         Consulter l'Atlas
                                     </div>
                                 </div>
@@ -65,7 +65,7 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
 
                             <div className="px-2 space-y-2">
                                 <h3 className="text-lg font-black text-app-text uppercase tracking-tight truncate group-hover:text-accent transition-colors duration-500">{map.name}</h3>
-                                <p className="text-[10px] font-serif text-app-text/40 leading-relaxed italic line-clamp-2">
+                                <p className="text-ui-10 font-serif text-app-text/40 leading-relaxed italic line-clamp-2">
                                     {map.narrativeDescription || "Documentation en attente..."}
                                 </p>
                             </div>
@@ -79,7 +79,7 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                             </div>
                             <div className="space-y-3">
                                 <p className="text-sm font-black uppercase tracking-[0.4em] text-app-text/20">Territoires inconnus</p>
-                                <p className="max-w-xs text-[10px] text-app-text/10 font-bold uppercase leading-relaxed">
+                                <p className="max-w-xs text-ui-10 text-app-text/10 font-bold uppercase leading-relaxed">
                                     Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.
                                 </p>
                             </div>

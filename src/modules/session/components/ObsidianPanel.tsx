@@ -122,7 +122,7 @@ const ObsidianPanel: React.FC = () => {
                             <div className="w-6 h-6 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 border border-purple-500/30">
                                 <Sparkles size={14} />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-app-text/60">Obsidian vault</span>
+                            <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/60">Obsidian vault</span>
                         </div>
                         <button 
                             onClick={() => fetchNotes()}
@@ -149,7 +149,7 @@ const ObsidianPanel: React.FC = () => {
                     {error ? (
                         <div className="p-4 text-center space-y-2">
                             <AlertCircle size={24} className="mx-auto text-rose-500/40" />
-                            <p className="text-[10px] text-rose-500/60 uppercase font-bold">{error}</p>
+                            <p className="text-ui-10 text-rose-500/60 uppercase font-bold">{error}</p>
                         </div>
                     ) : (
                         <div className="space-y-0.5">
@@ -168,7 +168,7 @@ const ObsidianPanel: React.FC = () => {
                                 <h1 className="text-3xl font-black text-app-text tracking-tight flex items-center gap-3">
                                     {activeNotePath.split('\\').pop()?.replace('.md', '')}
                                 </h1>
-                                <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-widest mt-1">
+                                <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-widest mt-1">
                                     {activeNotePath.replace(/\\/g, ' > ')}
                                 </p>
                             </div>
@@ -176,7 +176,7 @@ const ObsidianPanel: React.FC = () => {
                                 <button 
                                     onClick={handleSync}
                                     disabled={!notebookUrl || syncStatus === 'syncing'}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                         syncStatus === 'success' 
                                         ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
                                         : syncStatus === 'error'
@@ -215,7 +215,7 @@ const ObsidianPanel: React.FC = () => {
                             </div>
                             <div>
                                 <h4 className="text-xs font-bold text-app-text">Note en lecture seule</h4>
-                                <p className="text-[10px] text-app-text/40 mt-1 leading-relaxed">
+                                <p className="text-ui-10 text-app-text/40 mt-1 leading-relaxed">
                                     GM-OS affiche vos notes Obsidian en temps réel. Pour modifier ce contenu, utilisez l'application Obsidian. 
                                     Envoie cette note comme source dans votre carnet NotebookLM, pour la Forge de campagne. Pour que l'Oracle lise vos notes en séance, branchez le coffre dans les réglages IA.
                                 </p>
@@ -229,7 +229,7 @@ const ObsidianPanel: React.FC = () => {
                         </div>
                         <div className="text-center">
                             <p className="font-black text-sm tracking-[0.2em] uppercase text-app-text/30">Select a note to begin</p>
-                            <p className="text-[10px] opacity-20 mt-2 uppercase tracking-[0.3em]">Votre savoir d'Obsidian, au service de vos parties</p>
+                            <p className="text-ui-10 opacity-20 mt-2 uppercase tracking-[0.3em]">Votre savoir d'Obsidian, au service de vos parties</p>
                         </div>
                     </div>
                 )}

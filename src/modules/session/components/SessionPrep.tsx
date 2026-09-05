@@ -71,12 +71,12 @@ const SessionPrep: React.FC = () => {
                     </button>
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-accent font-bold uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded border border-accent/20">
+                            <span className="text-ui-10 text-accent font-bold uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded border border-accent/20">
                                 {activeCampaign?.name || t('modules:session.prep.no_active_campaign')}
                             </span>
                             <h2 className="text-2xl font-black text-app-text tracking-tight">{t('modules:session.prep.list_title')}</h2>
                         </div>
-                        <p className="text-[10px] text-app-text/40 uppercase tracking-[0.2em] font-bold mt-1">{t('modules:session.prep.list_subtitle')}</p>
+                        <p className="text-ui-10 text-app-text/40 uppercase tracking-[0.2em] font-bold mt-1">{t('modules:session.prep.list_subtitle')}</p>
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@ const SessionPrep: React.FC = () => {
                                     className="flex flex-col text-left p-8 bg-app-surface/40 border border-app-border/20 rounded-[2rem] hover:border-accent/40 hover:bg-app-surface/60 transition-all group relative overflow-hidden active:scale-[0.98] shadow-2xl cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
                                     <div className="flex items-center justify-between mb-4">
-                                        <div className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-lg uppercase tracking-widest border border-accent/20">
+                                        <div className="px-3 py-1 bg-accent/10 text-accent text-ui-10 font-black rounded-lg uppercase tracking-widest border border-accent/20">
                                             {t('modules:session.prep.session_card_number', { number: s.number })}
                                         </div>
                                         <div className={`w-3 h-3 rounded-full ${
@@ -159,7 +159,7 @@ const SessionPrep: React.FC = () => {
                                     <h4 className="text-2xl font-black text-app-text mb-2 truncate">{new Date(s.date).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</h4>
                                     <p className="text-xs text-app-text/40 uppercase tracking-widest font-bold mb-6">{t(`modules:session.prep.status.${s.status}`)}</p>
                                     
-                                    <div className="mt-auto flex items-center gap-3 text-[10px] font-black text-accent/60 group-hover:text-accent transition-colors uppercase tracking-[0.2em] border-t border-app-border pt-6">
+                                    <div className="mt-auto flex items-center gap-3 text-ui-10 font-black text-accent/60 group-hover:text-accent transition-colors uppercase tracking-[0.2em] border-t border-app-border pt-6">
                                         <BookOpen size={14} />
                                         {t('modules:session.prep.prepare_btn')}
                                     </div>

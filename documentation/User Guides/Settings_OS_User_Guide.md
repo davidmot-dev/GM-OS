@@ -24,8 +24,33 @@ L'atelier travaille sur le thème du **jeu de la campagne ouverte**, et propose 
 | :--- | :--- |
 | **Couleurs** | Fond, surfaces, papier, encre, texte, accents, bordures |
 | **Polices** | Titres, corps, interface des fiches, chiffres |
-| **Tailles** | Échelle du texte, interlettrage des titres et des surtitres |
+| **Tailles** | Le texte d'ensemble, **quatre bandes réglables**, interlettrage des titres et des surtitres |
 | **Formes** | Rayons des angles, ombre portée |
+
+### Les tailles de texte, bande par bande
+
+**Ajouté le 2026-09-05, à la demande de David.** Un seul réglage existait — « Échelle du texte » —
+et il y en a maintenant cinq :
+
+| Réglage | Ce qu'il redimensionne |
+| :--- | :--- |
+| **Tout le texte** | L'ensemble. Les quatre suivants s'y **multiplient**. |
+| **Étiquettes et badges** | Les petites capitales, les pastilles, les libellés — **la bande la plus dense de l'écran** |
+| **Texte courant** | Ce qu'on lit vraiment : notes, résumés, descriptions |
+| **Titres** | Les titres de panneau et les grands nombres |
+| **Chiffres et code** | Tout ce qui est à chasse fixe : compteurs, jets, minuteurs |
+
+> 🔎 **Pourquoi des bandes et pas « une taille par police ».** Les quatre polices du groupe
+> *Polices* choisissent des **familles de caractères**, pas des tailles — et deux d'entre elles ne
+> servent qu'aux fiches de personnage. Leur donner un curseur chacune aurait fait **trois contrôles
+> sur quatre qui n'agissent sur rien**. Ce qui existe vraiment à l'écran, ce sont ces quatre bandes.
+
+> ⛔ **Et l'ancien réglage ne redimensionnait que la moitié de l'écran.** **1 832 tailles étaient
+> écrites en pixels en dur** dans l'interface — `text-[10px]` mille soixante fois — et n'obéissaient
+> à aucune échelle. Elles ont toutes été converties le 2026-09-05, **à valeur identique** : rien n'a
+> changé d'aspect, mais tout suit désormais vos réglages.
+>
+> *Le curseur d'avant faisait donc à moitié ce qu'il promettait, et rien ne le disait.*
 
 **Comment ça marche :**
 

@@ -44,7 +44,7 @@ const ZenSplash: React.FC = () => {
                         {statuses.map((status, i) => (
                             <span
                                 key={status}
-                                className={`absolute inset-0 text-[10px] tracking-[0.2em] font-light uppercase transition-all duration-1000 transform ${
+                                className={`absolute inset-0 text-ui-10 tracking-[0.2em] font-light uppercase transition-all duration-1000 transform ${
                                     statusIndex === i 
                                     ? 'opacity-100 translate-y-0' 
                                     : 'opacity-0 translate-y-4'
@@ -57,7 +57,7 @@ const ZenSplash: React.FC = () => {
                 </div>
             </main>
 
-            <div className="fixed bottom-12 text-[9px] tracking-[0.3em] font-light text-white/10 uppercase font-mono">
+            <div className="fixed bottom-12 text-ui-9 tracking-[0.3em] font-light text-white/10 uppercase font-mono">
                 Presence Established
             </div>
 

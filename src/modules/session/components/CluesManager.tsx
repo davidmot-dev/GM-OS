@@ -197,7 +197,7 @@ const CluesManager: React.FC = () => {
                             setEditingClue({ title: '', content: '', isRevealed: false });
                             setIsAdding(true);
                         }}
-                        className="flex items-center gap-2 bg-gm-gold text-black font-black px-6 py-3 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20 hover:scale-105"
+                        className="flex items-center gap-2 bg-gm-gold text-black font-black px-6 py-3 rounded-xl text-ui-10 tracking-widest uppercase transition-all shadow-glow-gold/20 hover:scale-105"
                         title={t('modules:session.clues_manager.add_fragment_tooltip')}
                     >
                         <Plus size={14} />
@@ -211,7 +211,7 @@ const CluesManager: React.FC = () => {
                     {/* Editor Side */}
                     <div className="space-y-8 p-10 rounded-[3rem] glass-bento border border-white/5 shadow-2xl flex-1 min-h-[600px]">
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-gold">{t('modules:session.clues_manager.editor_title')}</span>
+                            <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-gm-gold">{t('modules:session.clues_manager.editor_title')}</span>
                             <button 
                                 onClick={() => { setEditingClue(null); setIsAdding(false); setEditingClueId(null); }} 
                                 className="text-white/20 hover:text-white transition-all"
@@ -223,7 +223,7 @@ const CluesManager: React.FC = () => {
 
                         <div className="space-y-6">
                             <div className="space-y-3">
-                                <label htmlFor="clue-title" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.clue_title_label')}</label>
+                                <label htmlFor="clue-title" className="text-ui-10 font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.clue_title_label')}</label>
                                 <input 
                                     id="clue-title"
                                     value={editingClue.title || ''}
@@ -234,7 +234,7 @@ const CluesManager: React.FC = () => {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.visual_label')}</label>
+                                <label className="text-ui-10 font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.visual_label')}</label>
                                 <button 
                                     type="button"
                                     onClick={() => setIsMediaBrowserOpen(true)}
@@ -246,20 +246,20 @@ const CluesManager: React.FC = () => {
                                         <>
                                             <ResolvedAsset src={resolvedMedia || ''} className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" />
                                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <span className="text-[10px] font-black uppercase tracking-widest text-white">{t('modules:session.clues_manager.change_image')}</span>
+                                                <span className="text-ui-10 font-black uppercase tracking-widest text-white">{t('modules:session.clues_manager.change_image')}</span>
                                             </div>
                                         </>
                                     ) : (
                                         <div className="flex flex-col items-center gap-2 text-white/20 group-hover:text-gm-gold/40 transition-colors">
                                             <ImageIcon size={32} strokeWidth={1} />
-                                            <span className="text-[9px] font-black uppercase tracking-widest">{t('modules:session.clues_manager.add_visual')}</span>
+                                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.clues_manager.add_visual')}</span>
                                         </div>
                                     )}
                                 </button>
                             </div>
 
                             <div className="space-y-3">
-                                <label htmlFor="clue-content" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.content_label')}</label>
+                                <label htmlFor="clue-content" className="text-ui-10 font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.content_label')}</label>
                                 <textarea 
                                     id="clue-content"
                                     value={editingClue.content || ''}
@@ -272,7 +272,7 @@ const CluesManager: React.FC = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-3">
-                                    <label htmlFor="clue-location" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
+                                    <label htmlFor="clue-location" className="text-ui-10 font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
                                         <MapPin size={12} /> {t('modules:session.clues_manager.location_label')}
                                     </label>
                                     <div className="relative">
@@ -290,7 +290,7 @@ const CluesManager: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <label htmlFor="clue-owner" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
+                                    <label htmlFor="clue-owner" className="text-ui-10 font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
                                         <Users size={12} /> {t('modules:session.clues_manager.npc_label')}
                                     </label>
                                     <div className="relative">
@@ -310,7 +310,7 @@ const CluesManager: React.FC = () => {
                             </div>
 
                             <div className="space-y-3">
-                                <label htmlFor="clue-moment" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
+                                <label htmlFor="clue-moment" className="text-ui-10 font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
                                     <Sparkles size={12} /> {t('modules:session.clues_manager.moment_label')}
                                 </label>
                                 <input 
@@ -328,8 +328,8 @@ const CluesManager: React.FC = () => {
                                         {editingClue.isRevealed ? <Eye size={18} /> : <EyeOff size={18} />}
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-white">{t('modules:session.clues_manager.revelation_label')}</p>
-                                        <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest mt-0.5">{t('modules:session.clues_manager.revelation_desc')}</p>
+                                        <p className="text-ui-10 font-black uppercase tracking-widest text-white">{t('modules:session.clues_manager.revelation_label')}</p>
+                                        <p className="text-ui-9 text-white/20 font-bold uppercase tracking-widest mt-0.5">{t('modules:session.clues_manager.revelation_desc')}</p>
                                     </div>
                                 </div>
                                 <button
@@ -346,7 +346,7 @@ const CluesManager: React.FC = () => {
                         <div className="pt-8 flex gap-4">
                                 <button 
                                     onClick={handleSave}
-                                    className="flex-1 flex items-center justify-center gap-3 bg-gm-gold text-black font-black py-4 rounded-2xl text-[10px] tracking-widest uppercase shadow-glow-gold/10 hover:opacity-90 transition-all active:scale-95"
+                                    className="flex-1 flex items-center justify-center gap-3 bg-gm-gold text-black font-black py-4 rounded-2xl text-ui-10 tracking-widest uppercase shadow-glow-gold/10 hover:opacity-90 transition-all active:scale-95"
                                     title={isAdding ? t('modules:session.clues_manager.save_button_add') : t('modules:session.clues_manager.save_button_update')}
                                 >
                                     <Save size={16} />
@@ -369,7 +369,7 @@ const CluesManager: React.FC = () => {
                     <div className="space-y-8 sticky top-0">
                         <div className="flex items-center gap-3 px-4">
                             <Sparkles className="text-gm-purple" size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-purple/60">{t('modules:session.clues_manager.preview_title')}</span>
+                            <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-gm-purple/60">{t('modules:session.clues_manager.preview_title')}</span>
                         </div>
                         
                         <div className={`min-h-[600px] flex-1 rounded-[3.5rem] glass-bento !bg-[#0c0c0e]/40 border border-white/10 shadow-glow-white/5 overflow-hidden relative group p-12 pb-32 flex flex-col items-center justify-center text-center gap-8 ${justRevealed === editingClue.id ? 'animate-clue-reveal ring-4 ring-gm-gold/50 shadow-glow-gold' : ''}`}>
@@ -408,18 +408,18 @@ const CluesManager: React.FC = () => {
                                     {(editingClue.locationId) && (
                                         <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full flex items-center gap-2">
                                             <MapPin size={10} className="text-gm-gold" />
-                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">{t('modules:session.clues_manager.localized')}</span>
+                                            <span className="text-ui-8 font-black uppercase tracking-widest text-white/40">{t('modules:session.clues_manager.localized')}</span>
                                         </div>
                                     )}
                                     {(editingClue.ownerId) && (
                                         <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full flex items-center gap-2">
                                             <Users size={10} className="text-gm-gold" />
-                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">{t('modules:session.clues_manager.npc_link')}</span>
+                                            <span className="text-ui-8 font-black uppercase tracking-widest text-white/40">{t('modules:session.clues_manager.npc_link')}</span>
                                         </div>
                                     )}
                                 </div>
                                 {!editingClue.isRevealed && (
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-[8px] font-black uppercase tracking-[0.2em] shadow-glow-red/5">
+                                    <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-ui-8 font-black uppercase tracking-[0.2em] shadow-glow-red/5">
                                         <EyeOff size={10} /> {t('modules:session.clues_manager.hidden_label')}
                                     </div>
                                 )}
@@ -475,7 +475,7 @@ const CluesManager: React.FC = () => {
                                 {clue.locationId && (
                                     <div className="px-3 py-1 bg-white/5 rounded-lg border border-white/5 flex items-center gap-2" title={`Lieu: ${campaignMaps.find(m => m.id === clue.locationId)?.name}`}>
                                         <MapPin size={10} className="text-white/20" />
-                                        <span className="text-[9px] font-bold text-white/40 truncate max-w-[80px]">
+                                        <span className="text-ui-9 font-bold text-white/40 truncate max-w-[80px]">
                                             {campaignMaps.find(m => m.id === clue.locationId)?.name}
                                         </span>
                                     </div>
@@ -483,18 +483,18 @@ const CluesManager: React.FC = () => {
                                 {clue.ownerId && (
                                     <div className="px-3 py-1 bg-white/5 rounded-lg border border-white/5 flex items-center gap-2" title={`PNJ: ${campaignEntities.find(e => e.id === clue.ownerId)?.name}`}>
                                         <Users size={10} className="text-white/20" />
-                                        <span className="text-[9px] font-bold text-white/40 truncate max-w-[80px]">
+                                        <span className="text-ui-9 font-bold text-white/40 truncate max-w-[80px]">
                                             {campaignEntities.find(e => e.id === clue.ownerId)?.name}
                                         </span>
                                     </div>
                                 )}
                                 <div className="ml-auto flex flex-col items-end gap-1">
-                                    <div className={`px-3 py-1 rounded-lg flex items-center gap-2 text-[9px] font-black uppercase tracking-widest ${clue.isRevealed ? 'bg-gm-gold/20 text-gm-gold' : 'bg-white/5 text-white/20'}`}>
+                                    <div className={`px-3 py-1 rounded-lg flex items-center gap-2 text-ui-9 font-black uppercase tracking-widest ${clue.isRevealed ? 'bg-gm-gold/20 text-gm-gold' : 'bg-white/5 text-white/20'}`}>
                                         {clue.isRevealed ? <Eye size={12} /> : <EyeOff size={12} />}
                                         {clue.isRevealed ? t('modules:session.clues_manager.revealed') : t('modules:session.clues_manager.hidden')}
                                     </div>
                                     {clue.isRevealed && clue.revealedAt && (
-                                        <p className="text-[8px] font-bold text-white/20 uppercase tracking-tighter">
+                                        <p className="text-ui-8 font-bold text-white/20 uppercase tracking-tighter">
                                             {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(clue.revealedAt)}
                                         </p>
                                     )}
@@ -503,7 +503,7 @@ const CluesManager: React.FC = () => {
                             {clue.campaignMoment && (
                                 <div className="mt-4 px-3 py-1 bg-gm-gold/10 rounded-lg inline-flex items-center gap-2 border border-gm-gold/5 self-start">
                                     <Sparkles size={8} className="text-gm-gold" />
-                                    <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">{clue.campaignMoment}</span>
+                                    <span className="text-ui-8 font-black text-white/40 uppercase tracking-widest">{clue.campaignMoment}</span>
                                 </div>
                             )}
                         </motion.div>
@@ -514,14 +514,14 @@ const CluesManager: React.FC = () => {
                             <Search size={48} className="text-white/10" strokeWidth={1} />
                             <div className="space-y-2">
                                 <p className="text-xs font-black uppercase tracking-widest text-white/20">{t('modules:session.clues_manager.empty_state_title')}</p>
-                                <p className="text-[10px] text-white/10 font-bold uppercase tracking-widest max-w-xs px-6 opacity-40">{t('modules:session.clues_manager.empty_state_desc')}</p>
+                                <p className="text-ui-10 text-white/10 font-bold uppercase tracking-widest max-w-xs px-6 opacity-40">{t('modules:session.clues_manager.empty_state_desc')}</p>
                             </div>
                             <button
                                 onClick={() => {
                                     setEditingClue({ title: '', content: '', isRevealed: false });
                                     setIsAdding(true);
                                 }}
-                                className="mt-4 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-all shadow-lg shadow-black/40"
+                                className="mt-4 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-ui-10 font-black uppercase tracking-widest text-white/40 hover:text-white transition-all shadow-lg shadow-black/40"
                             >
                                 {t('modules:session.clues_manager.init_first')}
                             </button>

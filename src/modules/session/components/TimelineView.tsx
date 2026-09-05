@@ -91,7 +91,7 @@ const TimelineView: React.FC = () => {
                         <button
                             key={t}
                             onClick={() => setFilter(t)}
-                            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                            className={`px-4 py-1.5 rounded-full text-ui-10 font-black uppercase tracking-widest border transition-all ${
                                 filter === t 
                                     ? 'bg-accent/20 border-accent/40 text-accent shadow-glow-accent/10' 
                                     : 'bg-white/5 border-white/5 text-app-text/40 hover:text-app-text hover:border-white/10'
@@ -104,7 +104,7 @@ const TimelineView: React.FC = () => {
 
                 <button 
                     onClick={() => gmCustom('timeline-event-add')}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-accent text-app-bg rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all active:scale-95"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-accent text-app-bg rounded-xl text-ui-10 font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all active:scale-95"
                 >
                     <Plus size={14} strokeWidth={3} />
                     Nouvel Événement
@@ -140,11 +140,11 @@ const TimelineView: React.FC = () => {
                                 <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 hover:bg-white/5 transition-all group-hover:shadow-2xl">
                                     <div className="flex items-center justify-between mb-6">
                                         <div className="flex items-center gap-4">
-                                            <span className="text-[10px] font-black text-accent bg-accent/10 px-3 py-1 rounded-full uppercase tracking-widest border border-accent/20">
+                                            <span className="text-ui-10 font-black text-accent bg-accent/10 px-3 py-1 rounded-full uppercase tracking-widest border border-accent/20">
                                                 {event.date}
                                             </span>
                                             {event.isWikiSource && (
-                                                <span className="text-[8px] font-black text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded border border-purple-400/20 uppercase tracking-widest">
+                                                <span className="text-ui-8 font-black text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded border border-purple-400/20 uppercase tracking-widest">
                                                     WIKI: {event.originalCategory}
                                                 </span>
                                             )}
@@ -171,7 +171,7 @@ const TimelineView: React.FC = () => {
                                             ) : (
                                                 <button 
                                                     onClick={() => handleEventClick(event)}
-                                                    className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-500 hover:text-white transition-all"
+                                                    className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-xl text-ui-9 font-black uppercase tracking-widest hover:bg-purple-500 hover:text-white transition-all"
                                                 >
                                                     <Book size={12} />
                                                     Voir Article
@@ -186,7 +186,7 @@ const TimelineView: React.FC = () => {
 
                                     <div className="flex flex-wrap gap-6 pt-6 border-t border-white/5">
                                         {event.locationId && (
-                                            <div className="flex items-center gap-2.5 text-[10px] font-black uppercase tracking-widest text-app-text/30">
+                                            <div className="flex items-center gap-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text/30">
                                                 <MapPin size={14} className="text-accent" />
                                                 <span className="group-hover:text-app-text/60 transition-colors">
                                                     {atlasMaps.find(m => m.id === event.locationId)?.name}
@@ -194,7 +194,7 @@ const TimelineView: React.FC = () => {
                                             </div>
                                         )}
                                         {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length > 0 && (
-                                            <div className="flex items-center gap-2.5 text-[10px] font-black uppercase tracking-widest text-app-text/30">
+                                            <div className="flex items-center gap-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text/30">
                                                 <Users size={14} className="text-accent" />
                                                 <span className="group-hover:text-app-text/60 transition-colors">
                                                     {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length} Participants
@@ -214,7 +214,7 @@ const TimelineView: React.FC = () => {
                             <LucideHistory size={64} strokeWidth={1} className="opacity-20 translate-y-4" />
                             <div className="text-center">
                                 <p className="font-black text-xs tracking-[0.4em] uppercase">Silence dans les Archives</p>
-                                <p className="text-[10px] opacity-40 mt-2 uppercase tracking-[0.2em]">Aucun événement enregistré dans cette période</p>
+                                <p className="text-ui-10 opacity-40 mt-2 uppercase tracking-[0.2em]">Aucun événement enregistré dans cette période</p>
                             </div>
                         </motion.div>
                     )}

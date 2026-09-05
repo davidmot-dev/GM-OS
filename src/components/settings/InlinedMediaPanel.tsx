@@ -130,13 +130,13 @@ export const InlinedMediaPanel: React.FC = () => {
                             </p>
                             <div className="space-y-1 mb-4">
                                 {summary.byField.map(f => (
-                                    <div key={f.field} className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-app-text/50">
+                                    <div key={f.field} className="flex justify-between text-ui-10 font-bold uppercase tracking-widest text-app-text/50">
                                         <span>{f.field} × {f.count}</span>
                                         <span className="tabular-nums">{formatBytes(f.bytes)}</span>
                                     </div>
                                 ))}
                             </div>
-                            <p className="text-[10px] text-amber-400/80 mb-3">{t('settings:inlined_media.backup_hint')}</p>
+                            <p className="text-ui-10 text-amber-400/80 mb-3">{t('settings:inlined_media.backup_hint')}</p>
                             <button
                                 onClick={handleMigrate}
                                 disabled={isBusy}
@@ -162,11 +162,11 @@ export const InlinedMediaPanel: React.FC = () => {
                     </p>
                     {(report.failed > 0 || report.skipped > 0) && (
                         <>
-                            <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">
+                            <p className="text-ui-10 text-amber-400 font-bold uppercase tracking-widest">
                                 {t('settings:inlined_media.kept', { count: report.failed + report.skipped })}
                             </p>
                             {report.errors.slice(0, 5).map((e, i) => (
-                                <p key={i} className="text-[10px] text-app-text/40">{e}</p>
+                                <p key={i} className="text-ui-10 text-app-text/40">{e}</p>
                             ))}
                         </>
                     )}

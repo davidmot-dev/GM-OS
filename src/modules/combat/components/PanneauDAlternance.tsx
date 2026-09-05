@@ -36,7 +36,7 @@ interface PanneauDAlternanceProps {
 }
 
 const NomDuCamp: React.FC<{ camp: Camp }> = ({ camp }) => (
-    <span className="inline-flex items-center gap-1.5 font-black uppercase tracking-widest text-[10px]">
+    <span className="inline-flex items-center gap-1.5 font-black uppercase tracking-widest text-ui-10">
         {camp === 'joueurs' ? <Users size={12} /> : <Crown size={12} />}
         {camp === 'joueurs' ? 'Joueurs' : 'Adversaires'}
     </span>
@@ -71,10 +71,10 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
     if (!tour) {
         return (
             <div className="space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">
+                <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                     Ordre d'action — alternance
                 </p>
-                <p className="text-[11px] text-app-text/40 leading-snug">
+                <p className="text-ui-11 text-app-text/40 leading-snug">
                     Rien ne se tire et rien ne se trie : désignez le camp qui ouvre le conflit.
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -104,12 +104,12 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
     return (
         <div className="space-y-3">
             <div className="flex items-center justify-between">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">
+                <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                     Round {tour.round}
                 </p>
                 <button
                     onClick={clore}
-                    className="text-[9px] font-bold uppercase tracking-widest text-app-text/30 hover:text-red-400 transition-colors"
+                    className="text-ui-9 font-bold uppercase tracking-widest text-app-text/30 hover:text-red-400 transition-colors"
                 >
                     Clore
                 </button>
@@ -118,7 +118,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
             {/* ── Le round est fini : qui ouvre le suivant ─────────────────── */}
             {fini ? (
                 <div className="space-y-2 rounded-xl border border-accent/20 bg-accent/5 p-3">
-                    <p className="text-[11px] text-app-text/60 leading-snug">
+                    <p className="text-ui-11 text-app-text/60 leading-snug">
                         Tout le monde a agi. Le dernier à jouer désigne le camp qui ouvre — ou paie
                         pour que le sien débute.
                     </p>
@@ -133,7 +133,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                                     className="px-3 py-2 rounded-lg border border-app-border/40 hover:border-accent/50 hover:text-accent transition-colors text-app-text/70"
                                 >
                                     <NomDuCamp camp={gratuit} />
-                                    <span className="block text-[9px] font-bold text-app-text/30 mt-0.5">gratuit</span>
+                                    <span className="block text-ui-9 font-bold text-app-text/30 mt-0.5">gratuit</span>
                                 </button>
                                 <button
                                     onClick={() => {
@@ -144,7 +144,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                                 >
                                     <NomDuCamp camp={payant} />
                                     {cout && (
-                                        <span className="block text-[9px] font-bold text-amber-300/60 mt-0.5">
+                                        <span className="block text-ui-9 font-bold text-amber-300/60 mt-0.5">
                                             {cout.montant} {cout.ressource}
                                         </span>
                                     )}
@@ -156,13 +156,13 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
             ) : tour.enAttenteDeDecision ? (
                 /* ── Une action vient d'être résolue : céder ou garder ──────── */
                 <div className="space-y-2 rounded-xl border border-accent/20 bg-accent/5 p-3">
-                    <p className="text-[11px] text-app-text/60 leading-snug">
+                    <p className="text-ui-11 text-app-text/60 leading-snug">
                         Action résolue. <NomDuCamp camp={tour.campActif} /> cède la main, ou la garde.
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                         <button
                             onClick={ceder}
-                            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-app-border/40 hover:border-accent/50 hover:text-accent transition-colors text-[10px] font-black uppercase tracking-widest text-app-text/70"
+                            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-app-border/40 hover:border-accent/50 hover:text-accent transition-colors text-ui-10 font-black uppercase tracking-widest text-app-text/70"
                         >
                             <ArrowRightLeft size={12} /> Céder
                         </button>
@@ -180,7 +180,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                             }}
                             disabled={!retention.possible}
                             title={retention.raison}
-                            className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border transition-colors text-[10px] font-black uppercase tracking-widest ${
+                            className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border transition-colors text-ui-10 font-black uppercase tracking-widest ${
                                 retention.possible
                                     ? 'border-amber-500/30 hover:border-amber-400/60 text-amber-200/80'
                                     : 'border-app-border/20 text-app-text/20 cursor-not-allowed'
@@ -195,23 +195,23 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                         </button>
                     </div>
                     {!retention.possible && retention.raison && (
-                        <p className="text-[10px] text-amber-300/60 leading-snug">{retention.raison}</p>
+                        <p className="text-ui-10 text-amber-300/60 leading-snug">{retention.raison}</p>
                     )}
                 </div>
             ) : (
                 /* ── La main est à un camp : il désigne son intervenant ─────── */
                 <div className="space-y-2">
-                    <p className="flex items-center gap-2 text-[11px] text-app-text/50">
+                    <p className="flex items-center gap-2 text-ui-11 text-app-text/50">
                         La main est à <NomDuCamp camp={tour.campActif} />
                         {tour.activationsConsecutives > 0 && (
-                            <span className="font-mono text-[10px] text-amber-300/60">
+                            <span className="font-mono text-ui-10 text-amber-300/60">
                                 {tour.activationsConsecutives} d'affilée
                             </span>
                         )}
                     </p>
 
                     {replisurAutreCamp && (
-                        <p className="text-[10px] text-app-text/40 leading-snug">
+                        <p className="text-ui-10 text-app-text/40 leading-snug">
                             Ce camp n'a plus personne à faire agir : les combattants restants
                             terminent le round.
                         </p>
@@ -226,14 +226,14 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                             >
                                 <ChevronRight size={12} className="text-app-text/30" />
                                 <span className="text-xs font-bold text-app-text/80 truncate">{c.name}</span>
-                                <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-app-text/25">
+                                <span className="ml-auto text-ui-9 font-black uppercase tracking-widest text-app-text/25">
                                     {campDe(c) === 'joueurs' ? 'joueurs' : 'adversaires'}
                                 </span>
                             </button>
                         ))}
                     </div>
 
-                    <p className="text-[10px] text-app-text/25">
+                    <p className="text-ui-10 text-app-text/25">
                         {combattants.length - tour.ontAgi.length} sur {combattants.length} n'ont pas encore agi.
                     </p>
                 </div>

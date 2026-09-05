@@ -53,7 +53,7 @@ const MapLayersPanel: React.FC = () => {
                 ))}
             </div>
             
-            <div className="mt-2 pt-2 border-t border-white/5 text-[10px] text-slate-500 italic text-center">
+            <div className="mt-2 pt-2 border-t border-white/5 text-ui-10 text-slate-500 italic text-center">
                 {t('map.sidebar.layers.footer')}
             </div>
         </div>

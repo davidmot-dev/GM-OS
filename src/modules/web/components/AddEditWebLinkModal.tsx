@@ -51,7 +51,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Label</label>
+                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest px-1">Label</label>
                         <input
                             autoFocus
                             type="text"
@@ -64,7 +64,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">URL</label>
+                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest px-1">URL</label>
                         <input
                             type="url"
                             value={url}
@@ -76,7 +76,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1 text-center block">Theme Color</label>
+                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest px-1 text-center block">Theme Color</label>
                         <div className="flex justify-center gap-3 py-2">
                             {COLORS.map((c) => (
                                 <button

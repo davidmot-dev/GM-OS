@@ -93,7 +93,7 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
                             }`}
                         >
                             <Volume2 size={16} className={s.active ? 'text-rose-400' : ''} />
-                            <span className="text-[10px] font-bold leading-tight text-center line-clamp-2 w-full">
+                            <span className="text-ui-10 font-bold leading-tight text-center line-clamp-2 w-full">
                                 {s.title}
                             </span>
                         </button>

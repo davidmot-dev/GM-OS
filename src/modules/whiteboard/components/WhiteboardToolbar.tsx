@@ -61,7 +61,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                         title={tool.label}
                     >
                         <tool.icon size={20} />
-                        <div className="absolute left-full ml-4 px-2 py-1 rounded bg-accent text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
+                        <div className="absolute left-full ml-4 px-2 py-1 rounded bg-accent text-ui-10 font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
                             {tool.label}
                         </div>
                     </button>
@@ -76,7 +76,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                     title={isLight ? t('whiteboard.background.title_dark') : t('whiteboard.background.title_light')}
                 >
                     {isLight ? <Sun size={20} /> : <Moon size={20} />}
-                    <div className="absolute left-full ml-4 px-2 py-1 rounded bg-gm-violet text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
+                    <div className="absolute left-full ml-4 px-2 py-1 rounded bg-gm-violet text-ui-10 font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
                         {isLight ? t('whiteboard.background.switch_dark') : t('whiteboard.background.switch_light')}
                     </div>
                 </button>

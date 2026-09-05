@@ -62,20 +62,20 @@ const MapCard: React.FC<{
                         {map.name}
                     </p>
                     <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                        <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border ${typeMeta.color}`}>
+                        <span className={`inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border ${typeMeta.color}`}>
                             {typeMeta.icon} {t(typeMeta.labelKey)}
                         </span>
                         {map.isVideo && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
+                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
                                 <Film size={8} /> {t('modules:session.world_atlas.library.animated')}
                             </span>
                         )}
                         {isProjected && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
                             </span>
                         )}
                         {map.isVisited && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
                                 <CheckCircle2 size={8} /> {t('modules:session.world_atlas.library.visited')}
                             </span>
                         )}

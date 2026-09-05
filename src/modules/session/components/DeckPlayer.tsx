@@ -53,7 +53,7 @@ const DeckPlayer: React.FC = () => {
                 <button 
                     type="button"
                     onClick={() => setCurrentView('deck-library')} 
-                    className="px-6 py-2 bg-gm-gold/10 text-gm-gold border border-gm-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gm-gold/20 transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
+                    className="px-6 py-2 bg-gm-gold/10 text-gm-gold border border-gm-gold/20 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-gm-gold/20 transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
                 >
                     {t('modules:session.deck_module.player.go_to_library')}
                 </button>
@@ -79,7 +79,7 @@ const DeckPlayer: React.FC = () => {
                         <h1 className="text-xs font-black uppercase tracking-[0.2em] text-white/80 flex items-center gap-2">
                              Deck <span className="text-gm-gold">//</span> {activeDeck.name}
                         </h1>
-                        <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest mt-0.5">
+                        <p className="text-ui-9 text-white/20 font-bold uppercase tracking-widest mt-0.5">
                             {activeDeck.format} — {activeDeck.orientation} — {activeDeck.systemId}
                         </p>
                     </div>
@@ -89,7 +89,7 @@ const DeckPlayer: React.FC = () => {
                     <button 
                         type="button"
                         onClick={() => setCurrentView('deck-library')}
-                        className="mr-4 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all bg-white/5 text-white/40 border border-white/5 hover:bg-white/10 hover:text-white flex items-center gap-2 focus:outline-none"
+                        className="mr-4 px-4 py-1.5 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all bg-white/5 text-white/40 border border-white/5 hover:bg-white/10 hover:text-white flex items-center gap-2 focus:outline-none"
                     >
                         <Layers size={14} /> {t('modules:session.deck_module.player.library')}
                     </button>
@@ -99,7 +99,7 @@ const DeckPlayer: React.FC = () => {
                             key={d.id}
                             type="button"
                             onClick={() => setActiveDeckId(d.id)}
-                            className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border focus:outline-none ${
+                            className={`px-4 py-1.5 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all border focus:outline-none ${
                                 activeDeckId === d.id 
                                 ? 'bg-gm-gold text-black border-gm-gold shadow-glow-gold/20' 
                                 : 'bg-white/5 text-white/40 border-white/5 hover:bg-white/10'
@@ -115,7 +115,7 @@ const DeckPlayer: React.FC = () => {
                         type="button"
                         onClick={toggleProjection}
                         title={isProjecting ? t('modules:session.deck_module.player.stop_projection') : t('modules:session.deck_module.player.start_projection')}
-                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border focus:outline-none ${
+                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all border focus:outline-none ${
                             isProjecting 
                             ? 'bg-gm-blue/20 text-gm-blue border-gm-blue/40 shadow-glow-blue/20' 
                             : 'bg-white/5 text-white/20 border-white/5 hover:bg-white/10 hover:text-white/60'
@@ -148,11 +148,11 @@ const DeckPlayer: React.FC = () => {
                         >
                             <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="w-full h-full object-cover opacity-60 group-hover:opacity-100" />
                             <div className="absolute inset-x-0 bottom-4 flex flex-col items-center gap-2">
-                                <span className="px-3 py-1 bg-black/80 rounded-full text-[10px] font-black text-gm-gold border border-gm-gold/30">
+                                <span className="px-3 py-1 bg-black/80 rounded-full text-ui-10 font-black text-gm-gold border border-gm-gold/30">
                                     {activeState.remainingIndices.length}
                                 </span>
                                 <div 
-                                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${
+                                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-ui-8 font-black uppercase tracking-widest border ${
                                         activeDeck.useDiscard 
                                         ? 'bg-red-500/10 text-red-400 border-red-500/20' 
                                         : 'bg-gm-blue/10 text-gm-blue border-gm-blue/20'
@@ -165,7 +165,7 @@ const DeckPlayer: React.FC = () => {
                             </div>
                         </div>
                     </button>
-                    <span className="text-[10px] font-black uppercase tracking-tighter text-white/20">{t('modules:session.deck_module.player.draw_pile')}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-tighter text-white/20">{t('modules:session.deck_module.player.draw_pile')}</span>
                 </div>
 
                 {/* Center: The Active Card (Zone de Jeu) */}
@@ -209,7 +209,7 @@ const DeckPlayer: React.FC = () => {
                             className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-gold transition-all disabled:opacity-20 focus:outline-none"
                         >
                             <RefreshCw size={24} />
-                            <span className="text-[9px] font-black uppercase tracking-widest">{t('modules:session.deck_module.player.draw_btn')}</span>
+                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.deck_module.player.draw_btn')}</span>
                         </button>
                         <div className="w-px h-12 self-center bg-white/5" />
                         <button 
@@ -219,7 +219,7 @@ const DeckPlayer: React.FC = () => {
                             className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-red-400 transition-all disabled:opacity-20 focus:outline-none"
                         >
                             <Trash2 size={24} />
-                            <span className="text-[9px] font-black uppercase tracking-widest">{t('modules:session.deck_module.player.discard_btn')}</span>
+                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.deck_module.player.discard_btn')}</span>
                         </button>
                         <div className="w-px h-12 self-center bg-white/5" />
                         {/*
@@ -238,7 +238,7 @@ const DeckPlayer: React.FC = () => {
                                 onChange={(e) => handleGarder(e.target.value === 'mj' ? null : e.target.value)}
                                 title={t('modules:session.deck_module.player.hands.keep')}
                                 aria-label={t('modules:session.deck_module.player.hands.keep')}
-                                className="bg-transparent text-[9px] font-black uppercase tracking-widest text-white/40 outline-none disabled:opacity-20 hover:text-gm-gold cursor-pointer"
+                                className="bg-transparent text-ui-9 font-black uppercase tracking-widest text-white/40 outline-none disabled:opacity-20 hover:text-gm-gold cursor-pointer"
                             >
                                 <option value="">{t('modules:session.deck_module.player.hands.keep')}</option>
                                 {porteursPossibles.map(p => (
@@ -255,7 +255,7 @@ const DeckPlayer: React.FC = () => {
                             className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-purple transition-all focus:outline-none"
                         >
                             <RotateCcw size={24} />
-                            <span className="text-[9px] font-black uppercase tracking-widest">{t('modules:session.deck_module.player.shuffle_btn')}</span>
+                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.deck_module.player.shuffle_btn')}</span>
                         </button>
                     </div>
                 </div>
@@ -276,7 +276,7 @@ const DeckPlayer: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-tighter text-white/20">{t('modules:session.deck_module.player.discard_pile')}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-tighter text-white/20">{t('modules:session.deck_module.player.discard_pile')}</span>
                 </div>
             </div>
 
@@ -307,14 +307,14 @@ const DeckPlayer: React.FC = () => {
                                 <button
                                     type="button"
                                     onClick={() => accepterLeDonDeCarte(d.id)}
-                                    className="rounded-lg bg-gm-gold px-3 py-1 text-[9px] font-black uppercase tracking-widest text-black"
+                                    className="rounded-lg bg-gm-gold px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-black"
                                 >
                                     {t('modules:session.deck_module.player.hands.accept')}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => refuserLeDonDeCarte(d.id)}
-                                    className="rounded-lg border border-white/20 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-white/50 hover:text-white"
+                                    className="rounded-lg border border-white/20 px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-white/50 hover:text-white"
                                 >
                                     {t('modules:session.deck_module.player.hands.refuse')}
                                 </button>
@@ -326,13 +326,13 @@ const DeckPlayer: React.FC = () => {
 
             {mainsOuvertes.length > 0 && (
                 <div className="shrink-0 border-t border-white/5 bg-black/30 backdrop-blur-xl px-8 py-5">
-                    <p className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-white/25">
+                    <p className="mb-4 text-ui-10 font-black uppercase tracking-[0.2em] text-white/25">
                         {t('modules:session.deck_module.player.hands.title')}
                     </p>
                     <div className="flex flex-wrap gap-8">
                         {mainsOuvertes.map(main => (
                             <div key={main.porteur ?? 'mj'} className="flex flex-col gap-2">
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${main.porteur === null ? 'text-gm-gold/70' : 'text-white/50'}`}>
+                                <span className={`text-ui-10 font-black uppercase tracking-widest ${main.porteur === null ? 'text-gm-gold/70' : 'text-white/50'}`}>
                                     {main.nom}
                                 </span>
                                 <div className="flex gap-3">
@@ -399,7 +399,7 @@ const DeckPlayer: React.FC = () => {
                                         handleDonner(c.index, e.target.value === 'mj' ? null : e.target.value))}
                                     title={t('modules:session.deck_module.player.hands.give')}
                                     aria-label={t('modules:session.deck_module.player.hands.give')}
-                                    className="cursor-pointer bg-transparent text-[9px] font-black uppercase tracking-widest text-white/25 outline-none hover:text-white/60"
+                                    className="cursor-pointer bg-transparent text-ui-9 font-black uppercase tracking-widest text-white/25 outline-none hover:text-white/60"
                                 >
                                     <option value="">{t('modules:session.deck_module.player.hands.give')}</option>
                                     {porteursPossibles

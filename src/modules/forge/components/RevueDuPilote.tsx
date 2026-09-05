@@ -29,7 +29,7 @@ import LienAuCorpus from '../corpus/LienAuCorpus';
 
 const Bloc: React.FC<{ titre: string; children: React.ReactNode }> = ({ titre, children }) => (
   <div className="bg-app-text/5 rounded-2xl border border-app-border/10 p-5 space-y-3">
-    <p className="text-[10px] uppercase font-black text-accent tracking-[0.2em] font-display">{titre}</p>
+    <p className="text-ui-10 uppercase font-black text-accent tracking-[0.2em] font-display">{titre}</p>
     {children}
   </div>
 );
@@ -112,7 +112,7 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
     <div className={`rounded-2xl border p-5 space-y-3 ${
       erreurs.length > 0 ? 'bg-red-500/5 border-red-500/20' : 'bg-amber-500/5 border-amber-500/20'
     }`}>
-      <p className={`flex items-center gap-2 text-[10px] uppercase font-black tracking-[0.2em] font-display ${
+      <p className={`flex items-center gap-2 text-ui-10 uppercase font-black tracking-[0.2em] font-display ${
         erreurs.length > 0 ? 'text-red-400' : 'text-amber-400'
       }`}>
         <AlertTriangle size={14} />
@@ -131,7 +131,7 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
           </li>
         ))}
       </ul>
-      <p className="text-[10px] text-app-text/40 leading-relaxed">
+      <p className="text-ui-10 text-app-text/40 leading-relaxed">
         Rien n'est refusé pour autant : un identifiant introuvable peut venir d'une fiche incomplète
         autant que d'une invention du modèle. C'est à vous de trancher avant d'enregistrer.
       </p>
@@ -187,7 +187,7 @@ export const RevueDuPilote: React.FC<{
       */}
       {onRequalifier && peutEtreRequalifie(driver) && (
         <div className="bg-app-text/5 border border-app-border/20 rounded-2xl p-5 space-y-3">
-          <p className="text-[10px] uppercase font-black text-accent tracking-[0.2em] font-display">
+          <p className="text-ui-10 uppercase font-black text-accent tracking-[0.2em] font-display">
             Ce jeu lance-t-il des dés échelonnés ?
           </p>
           <p className="text-xs text-app-text/60 leading-relaxed">
@@ -199,11 +199,11 @@ export const RevueDuPilote: React.FC<{
           <button
             type="button"
             onClick={() => onRequalifier(requalifierEnDesEchelonnes(driver).driver)}
-            className="px-4 py-2 rounded-xl bg-accent/15 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/25 transition-colors"
+            className="px-4 py-2 rounded-xl bg-accent/15 border border-accent/40 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/25 transition-colors"
           >
             Requalifier en dés échelonnés
           </button>
-          <p className="text-[10px] text-app-text/40 leading-relaxed">
+          <p className="text-ui-10 text-app-text/40 leading-relaxed">
             Rien n'est inventé : les {driver.jet?.seuil?.length ?? 0} composantes trouvées par la
             Forge sont déplacées telles quelles, avec leurs sections. Le seuil, qui n'a pas de sens
             ici, est retiré.
@@ -386,7 +386,7 @@ export const RevueDuPilote: React.FC<{
             </p>
             <div className="flex flex-wrap gap-1.5 pl-3">
               {(section.fields ?? []).map(champ => (
-                <span key={champ.id} className="text-[10px] bg-app-text/5 border border-app-border/10 rounded-lg px-2 py-1">
+                <span key={champ.id} className="text-ui-10 bg-app-text/5 border border-app-border/10 rounded-lg px-2 py-1">
                   {champ.label} <code className="font-mono text-app-text/40">{champ.id}</code>
                   <span className="text-app-text/30"> · {champ.type}</span>
                   {champ.max !== undefined && <span className="text-app-text/30"> · max {champ.max}</span>}

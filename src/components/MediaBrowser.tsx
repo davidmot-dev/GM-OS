@@ -290,7 +290,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 <h1 className="text-base font-black uppercase tracking-[0.25em] text-app-text drop-shadow-[0_0_10px_rgba(var(--app-text-rgb),0.3)] font-display">{title || t('mediaBrowser.hubTitle')}</h1>
                                 <div className="flex items-center gap-2 mt-1">
                                     <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_5px_var(--accent)]" />
-                                    <p className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest leading-none">{t('mediaBrowser.nexusProtocol')}</p>
+                                    <p className="text-ui-10 font-bold text-app-text/30 uppercase tracking-widest leading-none">{t('mediaBrowser.nexusProtocol')}</p>
                                 </div>
                             </div>
                         </div>
@@ -300,13 +300,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         {/* Virtual Directories */}
                         <section>
                             <div className="flex items-center justify-between mb-4 px-2">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
+                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
                                     <Folder size={14} />
                                     {t('mediaBrowser.foldersTitle')}
                                 </h3>
                                 <button 
                                     onClick={handleCreateCollection}
-                                    className="p-1 px-3 rounded-xl bg-accent/10 text-accent hover:bg-accent/20 transition-all border border-accent/20 text-[10px] font-black uppercase tracking-widest"
+                                    className="p-1 px-3 rounded-xl bg-accent/10 text-accent hover:bg-accent/20 transition-all border border-accent/20 text-ui-10 font-black uppercase tracking-widest"
                                     title={t('mediaBrowser.newFolder')}
                                 >
                                     <Plus size={14} />
@@ -327,7 +327,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 </button>
 
                                 <div className="pt-3 space-y-1.5">
-                                    <h4 className="px-5 text-[9px] font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">{t('mediaBrowser.smartMatrix')}</h4>
+                                    <h4 className="px-5 text-ui-9 font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">{t('mediaBrowser.smartMatrix')}</h4>
                                     <button
                                         onClick={() => {
                                             setSmartFilter('recent');
@@ -364,7 +364,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 </div>
                                 
                                 <div className="pt-6 space-y-1.5">
-                                    <h4 className="px-5 text-[9px] font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">{t('mediaBrowser.userDomains')}</h4>
+                                    <h4 className="px-5 text-ui-9 font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">{t('mediaBrowser.userDomains')}</h4>
                                     {collections.map(coll => (
                                         <div key={coll.id} className="group flex items-center gap-1 pr-2">
                                             <button
@@ -400,7 +400,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     ))}
                                     {collections.length === 0 && (
                                         <div className="px-5 py-8 text-center border border-dashed border-app-border/10 rounded-2xl">
-                                            <p className="text-[10px] font-bold text-app-text/10 uppercase tracking-widest">{t('mediaBrowser.noUnitsDetected')}</p>
+                                            <p className="text-ui-10 font-bold text-app-text/10 uppercase tracking-widest">{t('mediaBrowser.noUnitsDetected')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -410,13 +410,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         {/* Tactical Metadata Tags */}
                         <section className="pt-8 border-t border-app-border/10">
                             <div className="flex items-center justify-between mb-5 px-2">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
+                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
                                     <Tag size={14} />
                                     {t('mediaBrowser.tacticalTags')}
                                 </h3>
                                 <button 
                                     onClick={() => setTagLogic(tagLogic === 'AND' ? 'OR' : 'AND')}
-                                    className={`px-3 py-1 rounded-xl text-[9px] font-black tracking-widest transition-all border ${tagLogic === 'AND' ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/10 text-app-text/40 hover:text-app-text/70'}`}
+                                    className={`px-3 py-1 rounded-xl text-ui-9 font-black tracking-widest transition-all border ${tagLogic === 'AND' ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/10 text-app-text/40 hover:text-app-text/70'}`}
                                     title={`${t('mediaBrowser.matrixLogic')}: ${tagLogic}`}
                                 >
                                     {tagLogic}
@@ -435,13 +435,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             setSelectedCollectionId(null);
                                             setSmartFilter('none');
                                         }}
-                                        className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] border transition-all duration-300 ${selectedTags.includes(tag) ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/5 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60 hover:bg-app-text/10'}`}
+                                        className={`px-4 py-2 rounded-2xl text-ui-10 font-black uppercase tracking-[0.1em] border transition-all duration-300 ${selectedTags.includes(tag) ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/5 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60 hover:bg-app-text/10'}`}
                                     >
                                         {tag}
                                     </button>
                                 ))}
                                 {allTags.length === 0 && (
-                                    <div className="text-[10px] font-bold text-app-text/5 uppercase tracking-widest text-center w-full py-4 italic">{t('mediaBrowser.noTagTraces')}</div>
+                                    <div className="text-ui-10 font-bold text-app-text/5 uppercase tracking-widest text-center w-full py-4 italic">{t('mediaBrowser.noTagTraces')}</div>
                                 )}
                             </div>
                         </section>
@@ -466,7 +466,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         */}
                         {aRestituer > 0 && (
                             <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-3">
-                                <p className="text-[11px] text-emerald-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-emerald-300/80 leading-relaxed">
                                     {aRestituer} média{aRestituer > 1 ? 's' : ''} dans la sauvegarde,
                                     absent{aRestituer > 1 ? 's' : ''} d'ici.
                                 </p>
@@ -474,7 +474,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     type="button"
                                     disabled={restauration}
                                     onClick={lancerLaRestauration}
-                                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-500/30 transition-all duration-300 disabled:opacity-30"
+                                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-ui-10 font-black uppercase tracking-[0.2em] border border-emerald-500/30 transition-all duration-300 disabled:opacity-30"
                                 >
                                     <RotateCcw size={15} />
                                     {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
@@ -488,7 +488,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     clearDB();
                                 }
                             }}
-                            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-red-500/5 text-red-500/40 hover:bg-red-500/20 hover:text-red-500 text-[10px] font-black uppercase tracking-[0.2em] border border-red-500/10 hover:border-red-500/40 transition-all duration-500 group"
+                            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-red-500/5 text-red-500/40 hover:bg-red-500/20 hover:text-red-500 text-ui-10 font-black uppercase tracking-[0.2em] border border-red-500/10 hover:border-red-500/40 transition-all duration-500 group"
                         >
                             <Trash2 size={16} className="group-hover:rotate-12 transition-transform duration-500" />
                             {t('mediaBrowser.purgeHub')}
@@ -513,10 +513,10 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     placeholder={t('mediaBrowser.searchPlaceholder')} 
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full bg-app-bg/80 border border-app-border/10 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-500 placeholder:text-app-text/5 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em] text-app-text"
+                                    className="w-full bg-app-bg/80 border border-app-border/10 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-500 placeholder:text-app-text/5 placeholder:uppercase placeholder:text-ui-10 placeholder:tracking-[0.2em] text-app-text"
                                 />
                                 <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                    <div className="px-1.5 py-0.5 border border-accent/20 rounded text-[8px] font-black text-accent/50 font-display">{t('mediaBrowser.scanMode')}</div>
+                                    <div className="px-1.5 py-0.5 border border-accent/20 rounded text-ui-8 font-black text-accent/50 font-display">{t('mediaBrowser.scanMode')}</div>
                                 </div>
                             </div>
 
@@ -532,7 +532,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     <button
                                         key={btn.id}
                                         onClick={() => setTypeFilter(btn.id as MediaType | 'all')}
-                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-accent text-app-bg shadow-[0_0_25px_rgba(var(--accent-rgb),0.4)] translate-y-[-1px]' : 'text-app-text/20 hover:text-app-text/70 hover:bg-app-text/5'}`}
+                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-accent text-app-bg shadow-[0_0_25px_rgba(var(--accent-rgb),0.4)] translate-y-[-1px]' : 'text-app-text/20 hover:text-app-text/70 hover:bg-app-text/5'}`}
                                     >
                                         {btn.icon}
                                         {t(`mediaBrowser.tabs.${btn.key}`)}
@@ -546,7 +546,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             {activeCampaignId && (
                                 <button
                                     onClick={() => setCampaignFilterEnabled(!campaignFilterEnabled)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-amber-500/10 border-amber-500/40 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-app-bg/80 border-app-border/10 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60'}`}
+                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-amber-500/10 border-amber-500/40 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-app-bg/80 border-app-border/10 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60'}`}
                                 >
                                     <Users size={16} className={`transition-transform duration-500 ${campaignFilterEnabled ? 'scale-110' : 'group-hover:scale-110'}`} />
                                     {campaignFilterEnabled ? t('mediaBrowser.focusOperational') : t('mediaBrowser.globalMatrix')}
@@ -557,7 +557,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             <div className="relative">
                                 <button
                                     onClick={() => setIsSortMenuOpen(!isSortMenuOpen)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 bg-app-bg/80 border ${isSortMenuOpen ? 'border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'border-app-border/10 text-app-text/30'} rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 group`}
+                                    className={`flex items-center gap-3 px-6 py-3.5 bg-app-bg/80 border ${isSortMenuOpen ? 'border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'border-app-border/10 text-app-text/30'} rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 group`}
                                 >
                                     <ListFilter size={18} className={`transition-colors duration-500 ${isSortMenuOpen ? 'text-accent' : 'group-hover:text-app-text/60 text-app-text/20'}`} />
                                     <span>{t(`mediaBrowser.sort.${sortBy.split('-')[0]}.label`)}</span>
@@ -586,11 +586,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                         <div className="flex items-center justify-between mb-1">
                                                             <div className="flex items-center gap-3">
                                                                 <span className={sortBy === option.id ? 'text-app-bg' : 'text-accent/40'}>{option.icon}</span>
-                                                                <span className="text-[10px] font-black uppercase tracking-widest">{t(`mediaBrowser.sort.${option.key}.label`)}</span>
+                                                                <span className="text-ui-10 font-black uppercase tracking-widest">{t(`mediaBrowser.sort.${option.key}.label`)}</span>
                                                             </div>
                                                             {sortBy === option.id && <Check size={14} className="text-app-bg" />}
                                                         </div>
-                                                        <p className={`text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover/opt:opacity-60 transition-opacity ${sortBy === option.id ? 'text-app-bg' : 'text-app-text'}`}>{t(`mediaBrowser.sort.${option.key}.desc`)}</p>
+                                                        <p className={`text-ui-9 font-bold uppercase tracking-widest opacity-40 group-hover/opt:opacity-60 transition-opacity ${sortBy === option.id ? 'text-app-bg' : 'text-app-text'}`}>{t(`mediaBrowser.sort.${option.key}.desc`)}</p>
                                                     </button>
                                                 ))}
                                             </div>
@@ -600,7 +600,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             </div>
 
                             {/* Main Import Interface */}
-                            <label className="bg-accent hover:bg-accent/80 text-app-bg px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
+                            <label className="bg-accent hover:bg-accent/80 text-app-bg px-8 py-4 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
                                 <UploadCloud size={18} className="group-hover:translate-y-[-2px] transition-transform duration-500" />
                                 {isUploading ? t('mediaBrowser.uploadingAsset') : t('mediaBrowser.importAsset')}
                                 <input
@@ -633,7 +633,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     <UploadCloud size={48} className="text-app-text/5 animate-pulse" />
                                 </div>
                                 <h4 className="text-2xl font-black uppercase tracking-[0.4em] text-app-text/10 mb-4 font-display">{t('mediaBrowser.noDataDetected')}</h4>
-                                <p className="text-[10px] font-bold text-app-text/5 uppercase tracking-[0.3em] leading-loose mb-10">
+                                <p className="text-ui-10 font-bold text-app-text/5 uppercase tracking-[0.3em] leading-loose mb-10">
                                     {t('mediaBrowser.noDataSub')}
                                 </p>
                                 <button 
@@ -645,7 +645,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                         setCampaignFilterEnabled(false);
                                         setSmartFilter('none');
                                     }}
-                                    className="px-10 py-4 rounded-2xl bg-app-text/5 hover:bg-accent/10 text-app-text/20 hover:text-accent text-[10px] font-black uppercase tracking-[0.25em] border border-app-text/10 hover:border-accent/30 transition-all duration-500"
+                                    className="px-10 py-4 rounded-2xl bg-app-text/5 hover:bg-accent/10 text-app-text/20 hover:text-accent text-ui-10 font-black uppercase tracking-[0.25em] border border-app-text/10 hover:border-accent/30 transition-all duration-500"
                                 >
                                     {t('mediaBrowser.resetFrequency')}
                                 </button>
@@ -671,8 +671,8 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-app-bg via-app-bg/80 to-transparent translate-y-[20px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-10">
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[11px] font-black text-accent tracking-tighter drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.6)]">{formatSize(media.size)}</span>
-                                                        <span className="text-[8px] font-bold text-app-text/30 uppercase tracking-widest mt-1.5 opacity-60">
+                                                        <span className="text-ui-11 font-black text-accent tracking-tighter drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.6)]">{formatSize(media.size)}</span>
+                                                        <span className="text-ui-8 font-bold text-app-text/30 uppercase tracking-widest mt-1.5 opacity-60">
                                                             {t('mediaBrowser.synchronizedDate', { date: new Date(media.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit' }) })}
                                                         </span>
                                                     </div>
@@ -716,7 +716,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                         title={t('mediaBrowser.orphanBadgeTitle')}
                                                     >
                                                         <Unplug size={13} />
-                                                        <span className="text-[8px] font-black uppercase tracking-widest">
+                                                        <span className="text-ui-8 font-black uppercase tracking-widest">
                                                             {t('mediaBrowser.orphanBadge')}
                                                         </span>
                                                     </div>
@@ -746,7 +746,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             {/* Domain Tags Row */}
                                             <div className="flex flex-wrap gap-2 mb-6 min-h-[22px]">
                                                 {collections.filter(c => c.mediaIds.includes(media.id)).map(coll => (
-                                                    <span key={coll.id} className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-blue-400/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+                                                    <span key={coll.id} className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase border border-blue-400/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
                                                         <FileText size={10} className="opacity-50" />
                                                         {coll.name}
                                                         <button 
@@ -765,7 +765,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 {media.campaignIds.map(cid => {
                                                     const campaignName = campaigns.find(c => c.id === cid)?.name || t('unknown_unit', { id: cid.substring(0, 4) });
                                                     return (
-                                                        <span key={cid} className="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+                                                        <span key={cid} className="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase shadow-[0_0_15px_rgba(245,158,11,0.05)]">
                                                             {campaignName}
                                                         </span>
                                                     );
@@ -775,9 +775,9 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             <div className="mt-auto pt-5 border-t border-app-border/10 flex items-center justify-between">
                                                 <div className="flex flex-wrap gap-2 items-center max-w-[75%] overflow-hidden">
                                                     {media.tags.map(t => (
-                                                        <span key={t} className="text-[9px] font-bold text-app-text/10 group-hover:text-accent/40 transition-colors uppercase tracking-widest">#{t}</span>
+                                                        <span key={t} className="text-ui-9 font-bold text-app-text/10 group-hover:text-accent/40 transition-colors uppercase tracking-widest">#{t}</span>
                                                     ))}
-                                                    {media.tags.length === 0 && <span className="text-[8px] font-bold text-app-text/5 uppercase italic tracking-[0.2em]">{t('mediaBrowser.noTagTraces')}</span>}
+                                                    {media.tags.length === 0 && <span className="text-ui-8 font-bold text-app-text/5 uppercase italic tracking-[0.2em]">{t('mediaBrowser.noTagTraces')}</span>}
                                                 </div>
                                                 
                                                 <div className="relative">

@@ -60,7 +60,7 @@ const RevueDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
                     <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">
                         Revue de la séance
                     </h3>
-                    <p className="text-[11px] text-slate-500 mt-1 max-w-xl leading-relaxed">
+                    <p className="text-ui-11 text-slate-500 mt-1 max-w-xl leading-relaxed">
                         Scène par scène. Ce qui est retenu ici part au résumé ; le reste demeure au
                         journal sans y aller. Rien n'est effacé.
                     </p>
@@ -127,7 +127,7 @@ const RevueDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
 const Compteur: React.FC<{
     valeur: number; mot: string; accent?: boolean; alerte?: boolean; sourd?: boolean;
 }> = ({ valeur, mot, accent, alerte, sourd }) => (
-    <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border ${
+    <span className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest border ${
         alerte ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
             : accent ? 'bg-accent/10 border-accent/30 text-accent'
                 : sourd ? 'bg-app-bg/40 border-app-border/20 text-slate-600'
@@ -154,24 +154,24 @@ const ARanger: React.FC<{
         <div className="flex items-center gap-3">
             <Inbox size={16} className="text-amber-400 shrink-0" />
             <div>
-                <p className="text-[11px] font-black uppercase tracking-widest text-amber-200">
+                <p className="text-ui-11 font-black uppercase tracking-widest text-amber-200">
                     À ranger
                 </p>
-                <p className="text-[10px] text-slate-500 leading-relaxed">
+                <p className="text-ui-10 text-slate-500 leading-relaxed">
                     Deux scènes étaient ouvertes à la fois : l'outil n'a pas voulu choisir à votre place.
                 </p>
             </div>
         </div>
         <ul className="space-y-1.5">
             {evenements.map(e => (
-                <li key={e.id} className="flex items-center gap-3 flex-wrap text-[12px]">
+                <li key={e.id} className="flex items-center gap-3 flex-wrap text-ui-12">
                     <PastilleDeNature evenement={e} />
                     <span className="text-slate-300 font-semibold">{e.title}</span>
                     {scenes.length > 0 && (
                         <select
                             defaultValue=""
                             onChange={ev => ev.target.value && ranger(e.id, ev.target.value)}
-                            className="ml-auto bg-app-bg border border-app-border/40 rounded-lg px-2 py-1 text-[10px] font-bold text-slate-300"
+                            className="ml-auto bg-app-bg border border-app-border/40 rounded-lg px-2 py-1 text-ui-10 font-bold text-slate-300"
                         >
                             <option value="">Ranger dans…</option>
                             {scenes.map(s => (
@@ -222,7 +222,7 @@ const BlocDeScene: React.FC<{
                     <Layers size={15} className="text-accent/60 shrink-0 mt-1" />
                     <div className="flex-1 min-w-0 space-y-2">
                         {acte && (
-                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-600">
+                            <p className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-600">
                                 {acte.titre}
                             </p>
                         )}
@@ -240,7 +240,7 @@ const BlocDeScene: React.FC<{
                             onChange={e => modifierScene(scene.id, { resume: e.target.value })}
                             rows={2}
                             placeholder="Ce qui s'y est joué — c'est ce résumé que la chronique reprendra."
-                            className="w-full bg-app-bg/40 border border-app-border/30 rounded-xl px-3 py-2 text-[12px] text-slate-300 outline-none focus:border-accent/40 resize-y leading-relaxed"
+                            className="w-full bg-app-bg/40 border border-app-border/30 rounded-xl px-3 py-2 text-ui-12 text-slate-300 outline-none focus:border-accent/40 resize-y leading-relaxed"
                         />
                     </div>
                     {/*
@@ -261,7 +261,7 @@ const BlocDeScene: React.FC<{
                                     e.target.value = '';
                                 }}
                                 title="Absorber une autre scène dans celle-ci : elles n'en faisaient qu'une"
-                                className="appearance-none bg-app-bg border border-app-border/30 rounded-lg pl-7 pr-2 py-2 text-[10px] font-bold text-slate-500 hover:text-accent hover:border-accent/40 transition-all cursor-pointer"
+                                className="appearance-none bg-app-bg border border-app-border/30 rounded-lg pl-7 pr-2 py-2 text-ui-10 font-bold text-slate-500 hover:text-accent hover:border-accent/40 transition-all cursor-pointer"
                             >
                                 <option value="">Absorber…</option>
                                 {autres.map(a => (
@@ -293,7 +293,7 @@ const BlocDeScene: React.FC<{
                         />
                     ))}
                     {recit.length === 0 && (
-                        <li className="text-[11px] text-slate-600 italic">
+                        <li className="text-ui-11 text-slate-600 italic">
                             Rien qui raconte — cette scène n'entrera pas dans le résumé.
                         </li>
                     )}
@@ -303,7 +303,7 @@ const BlocDeScene: React.FC<{
                     <div className="pl-8">
                         <button
                             onClick={() => setDeplie(!deplie)}
-                            className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-400 transition-colors"
+                            className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-slate-600 hover:text-slate-400 transition-colors"
                         >
                             {deplie ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                             {traces.length} trace{traces.length > 1 ? 's' : ''}
@@ -344,7 +344,7 @@ const LigneDEvenement: React.FC<{
     /** Absent sur le premier événement de la scène : voir `premier` ci-dessus. */
     scinder?: (depuis: number) => void;
 }> = ({ evenement, basculer, scinder }) => (
-    <li className="flex items-center gap-2.5 text-[12px] group">
+    <li className="flex items-center gap-2.5 text-ui-12 group">
         <button
             onClick={() => basculer(evenement)}
             title={natureDe(evenement) === 'chronique'

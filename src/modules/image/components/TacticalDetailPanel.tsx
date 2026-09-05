@@ -75,11 +75,11 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     <div className="flex flex-col">
                         <h3 className="text-lg font-black uppercase tracking-widest text-app-text truncate max-w-[280px] font-display" title={media.name}>{media.name}</h3>
                         <div className="flex items-center gap-2">
-                             <span className="text-[10px] font-bold text-accent/60 uppercase tracking-[0.3em] font-display">{t('image.detail.neuralInterface')}</span>
+                             <span className="text-ui-10 font-bold text-accent/60 uppercase tracking-[0.3em] font-display">{t('image.detail.neuralInterface')}</span>
                              {media.isPersistent && (
                                  <div className="flex items-center gap-1.5 px-2 py-0.5 bg-accent/10 rounded-full border border-accent/20">
                                      <ShieldCheck size={8} className="text-accent" />
-                                     <span className="text-[8px] font-black text-accent uppercase tracking-widest">{t('image.detail.persistent')}</span>
+                                     <span className="text-ui-8 font-black text-accent uppercase tracking-widest">{t('image.detail.persistent')}</span>
                                  </div>
                              )}
                         </div>
@@ -101,10 +101,10 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     <MediaItemThumbnail media={media} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                     <div className="absolute bottom-6 left-6 flex items-center gap-4">
-                        <span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-lg text-[10px] font-black text-accent uppercase tracking-widest">
+                        <span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-lg text-ui-10 font-black text-accent uppercase tracking-widest">
                             {media.type}
                         </span>
-                        <span className="text-[10px] font-bold text-app-text/40 uppercase tracking-widest">
+                        <span className="text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">
                             {formatSize(media.size)}
                         </span>
                     </div>
@@ -123,7 +123,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                     <button 
                         onClick={() => onSelect(media.id)}
-                        className="flex items-center justify-center gap-3 py-4 bg-accent text-app-bg rounded-2xl font-black text-[11px] uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
+                        className="flex items-center justify-center gap-3 py-4 bg-accent text-app-bg rounded-2xl font-black text-ui-11 uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
                     >
                         <Check size={16} strokeWidth={3} />
                         {t('image.detail.actions.select')}
@@ -135,7 +135,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                 onClose();
                             }
                         }}
-                        className="flex items-center justify-center gap-3 py-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-red-500/20 transition-all"
+                        className="flex items-center justify-center gap-3 py-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl font-black text-ui-11 uppercase tracking-widest hover:bg-red-500/20 transition-all"
                     >
                         <Trash2 size={16} />
                         {t('image.detail.actions.delete')}
@@ -146,14 +146,14 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <section>
                     <div className="flex items-center gap-3 mb-6">
                         <Folder size={14} className="text-accent/40" />
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.classification')}</h4>
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.classification')}</h4>
                     </div>
                     <div className="space-y-2">
                         {collections.map(coll => (
                             <button
                                 key={coll.id}
                                 onClick={() => toggleMediaInCollection(coll.id, media.id)}
-                                className={`w-full flex items-center justify-between px-6 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest transition-all duration-300 ${coll.mediaIds.includes(media.id) ? 'bg-accent/20 text-accent border border-accent/30 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 text-app-text/30 border border-transparent hover:bg-app-text/10'}`}
+                                className={`w-full flex items-center justify-between px-6 py-4 rounded-2xl text-ui-11 font-bold uppercase tracking-widest transition-all duration-300 ${coll.mediaIds.includes(media.id) ? 'bg-accent/20 text-accent border border-accent/30 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 text-app-text/30 border border-transparent hover:bg-app-text/10'}`}
                             >
                                 <div className="flex items-center gap-4">
                                     <Folder size={16} className={coll.mediaIds.includes(media.id) ? 'text-accent' : 'opacity-30'} />
@@ -164,7 +164,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         ))}
                         {collections.length === 0 && (
                             <div className="py-6 text-center border-2 border-dashed border-app-border/10 rounded-3xl">
-                                <p className="text-[10px] italic text-app-text/5 uppercase tracking-widest font-bold">{t('image.detail.noFolders')}</p>
+                                <p className="text-ui-10 italic text-app-text/5 uppercase tracking-widest font-bold">{t('image.detail.noFolders')}</p>
                             </div>
                         )}
                     </div>
@@ -174,12 +174,12 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <section>
                     <div className="flex items-center gap-3 mb-6">
                         <Tag size={14} className="text-accent/40" />
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.matrixTags')}</h4>
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.matrixTags')}</h4>
                     </div>
                     <div className="bg-app-surface/40 border border-app-border/10 rounded-[2rem] p-6 space-y-6">
                          <div className="flex flex-wrap gap-2">
                             {media.tags.map(tagItem => (
-                                <span key={tagItem} className="inline-flex items-center gap-2 bg-accent/5 text-accent border border-accent/20 px-3 py-1.5 rounded-xl text-[10px] font-black tracking-widest uppercase">
+                                <span key={tagItem} className="inline-flex items-center gap-2 bg-accent/5 text-accent border border-accent/20 px-3 py-1.5 rounded-xl text-ui-10 font-black tracking-widest uppercase">
                                     #{tagItem}
                                     <button 
                                         onClick={() => updateMediaTags(media.id, media.tags.filter(tag => tag !== tagItem))}
@@ -191,7 +191,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                     </button>
                                 </span>
                             ))}
-                            {media.tags.length === 0 && <span className="text-[9px] font-bold text-app-text/10 uppercase italic tracking-widest">{t('image.detail.noTags')}</span>}
+                            {media.tags.length === 0 && <span className="text-ui-9 font-bold text-app-text/10 uppercase italic tracking-widest">{t('image.detail.noTags')}</span>}
                         </div>
                         <input
                             type="text"
@@ -214,7 +214,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 
                 {/* Usage Section */}
                 <section className="bg-app-surface/20 rounded-3xl p-6 space-y-3">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">
+                    <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/30 font-display">
                         {t('image.detail.usage.title')}
                     </h4>
 
@@ -223,8 +223,8 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                             {usages.map((usage, i) => (
                                 <li key={`${usage.module}-${i}`} className="flex items-start gap-3">
                                     <Link2 size={12} className="text-accent/50 mt-0.5 flex-shrink-0" />
-                                    <span className="text-[11px] leading-tight">
-                                        <span className="font-black uppercase tracking-widest text-app-text/40 text-[9px]">
+                                    <span className="text-ui-11 leading-tight">
+                                        <span className="font-black uppercase tracking-widest text-app-text/40 text-ui-9">
                                             {usage.module}
                                         </span>
                                         <span className="block text-app-text/60">{usage.sujet}</span>
@@ -241,7 +241,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                           conséquence n'arrive qu'au moment du nettoyage, où
                           elle est annoncée.
                         */
-                        <p className="flex items-start gap-3 text-[11px] text-app-text/35 leading-tight">
+                        <p className="flex items-start gap-3 text-ui-11 text-app-text/35 leading-tight">
                             <Unplug size={12} className="mt-0.5 flex-shrink-0 opacity-60" />
                             {media.isPersistent
                                 ? t('image.detail.usage.noneProtected')
@@ -250,7 +250,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     )}
 
                     {!recensement.complet && (
-                        <p className="text-[10px] text-amber-400/70 italic leading-tight">
+                        <p className="text-ui-10 text-amber-400/70 italic leading-tight">
                             {t('image.detail.usage.unknown', {
                                 modules: recensement.modulesEnEchec.join(', '),
                             })}
@@ -260,16 +260,16 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 
                 {/* Metadata Section */}
                 <section className="bg-app-surface/20 rounded-3xl p-6 space-y-4">
-                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
+                    <div className="flex items-center justify-between text-ui-10 font-bold uppercase tracking-widest">
                         <span className="text-app-text/20">{t('image.detail.identifier')}</span>
-                        <span className="text-app-text/60 font-mono text-[9px]">{media.id.split('-')[0]}</span>
+                        <span className="text-app-text/60 font-mono text-ui-9">{media.id.split('-')[0]}</span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
+                    <div className="flex items-center justify-between text-ui-10 font-bold uppercase tracking-widest">
                         <span className="text-app-text/20">{t('image.detail.importDate')}</span>
                         <span className="text-app-text/60">{new Date(media.createdAt).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US')}</span>
                     </div>
                     <div className="pt-4 border-t border-app-border/10">
-                        <span className="text-[9px] font-black text-app-text/20 uppercase tracking-[0.3em] block mb-3 font-display">{t('image.detail.operationalAttribution')}</span>
+                        <span className="text-ui-9 font-black text-app-text/20 uppercase tracking-[0.3em] block mb-3 font-display">{t('image.detail.operationalAttribution')}</span>
                         <div className="flex flex-wrap gap-2">
                              {campaigns.map(campaign => {
                                  const isLinked = media.campaignIds.includes(campaign.id);
@@ -282,7 +282,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                                  : [...media.campaignIds, campaign.id];
                                              updateMediaCampaigns(media.id, newCampaignIds);
                                          }}
-                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-amber-500/20 text-amber-500 border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'bg-app-surface/5 text-app-text/20 border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
+                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-amber-500/20 text-amber-500 border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'bg-app-surface/5 text-app-text/20 border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
                                          title={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                          aria-label={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                      >
@@ -292,7 +292,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                  );
                              })}
                              {campaigns.length === 0 && (
-                                 <span className="text-[8px] font-bold text-app-text/5 uppercase italic tracking-widest">{t('image.detail.noCampaigns')}</span>
+                                 <span className="text-ui-8 font-bold text-app-text/5 uppercase italic tracking-widest">{t('image.detail.noCampaigns')}</span>
                              )}
                         </div>
                     </div>

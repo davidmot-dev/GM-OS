@@ -42,7 +42,7 @@
  * une dérivée. *On ne généralise pas une règle sur la moitié des cas.*
  */
 
-import { tailleDeRacine } from './editionDuTheme';
+import { tailleDeRacine, echelleDeTexte } from './editionDuTheme';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 
@@ -291,7 +291,38 @@ export function appliquerLeTheme(
       *ne rien dire et dire « échelle 1 » doivent laisser la même page.*
     */
     racine.style.fontSize = tailleDeRacine(jeu?.jetons['font-scale']) ?? '';
+
+    /*
+      **Les quatre bandes de taille** — posées le 2026-09-05.
+
+      Elles ne touchent pas à la racine : chaque palier de l'échelle les
+      multiplie lui-même (voir le bloc en tête d'`index.css`). On écrit donc un
+      **nombre**, pas une taille.
+
+      *Effacer plutôt qu'écrire « 1 »* : une variable absente retombe sur le
+      défaut déclaré dans `index.css`, et **ne rien dire doit laisser la même
+      page que dire « échelle 1 »**. C'est la règle que suit déjà la ligne
+      au-dessus.
+    */
+    for (const [jeton, variable] of BANDES_DE_TAILLE) {
+        const facteur = echelleDeTexte(jeu?.jetons[jeton]);
+        if (facteur === null) racine.style.removeProperty(variable);
+        else racine.style.setProperty(variable, String(facteur));
+    }
 }
+
+/**
+ * Les quatre bandes réglables, et la variable CSS que chacune pilote.
+ *
+ * **Une seule table**, parce qu'un jeton écrit d'un côté et lu de l'autre est
+ * exactement l'asymétrie que ce dépôt a payée trois fois cette semaine.
+ */
+const BANDES_DE_TAILLE: readonly (readonly [string, string])[] = [
+    ['scale-interface', '--echelle-interface'],
+    ['scale-corps', '--echelle-corps'],
+    ['scale-titres', '--echelle-titres'],
+    ['scale-mono', '--echelle-mono'],
+];
 
 /**
  * Les variables d'un thème de jeu **sauf** l'accent, arbitré à part.

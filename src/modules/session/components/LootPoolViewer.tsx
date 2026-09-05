@@ -71,7 +71,7 @@ const LootPoolViewer: React.FC = () => {
             <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
                 <Package size={48} className="mb-3 opacity-20" />
                 <p className="text-sm font-medium">{t('modules:loot.pool.empty')}</p>
-                <p className="text-[10px] uppercase tracking-widest mt-1">{t('modules:loot.pool.empty_hint')}</p>
+                <p className="text-ui-10 uppercase tracking-widest mt-1">{t('modules:loot.pool.empty_hint')}</p>
             </div>
         );
     }
@@ -87,7 +87,7 @@ const LootPoolViewer: React.FC = () => {
                 </div>
                 <button 
                     onClick={() => clearLootPool()}
-                    className="text-[10px] font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
                 >
                     {t('modules:loot.pool.clear_all')}
                 </button>
@@ -109,7 +109,7 @@ const LootPoolViewer: React.FC = () => {
                                     <span className="text-xs font-bold text-app-text group-hover:text-accent transition-colors">
                                         {item.name} {item.quantity > 1 ? `(x${item.quantity})` : ''}
                                     </span>
-                                    <span className="text-[9px] uppercase tracking-widest text-app-text/40 font-bold">
+                                    <span className="text-ui-9 uppercase tracking-widest text-app-text/40 font-bold">
                                         {libelleDeRarete(driver, item.rarity)} • {t(`modules:loot.types.${item.type || 'item'}`, { defaultValue: item.type })}
                                     </span>
                                 </div>
@@ -133,7 +133,7 @@ const LootPoolViewer: React.FC = () => {
                                                 title={t('modules:loot.pool.assign_to', { name: char.name })}
                                             >
                                                 <CharacterPortrait character={char} size={20} />
-                                                <span className="text-[10px] font-bold text-app-text/60 group-hover/btn:text-accent truncate max-w-[80px]">
+                                                <span className="text-ui-10 font-bold text-app-text/60 group-hover/btn:text-accent truncate max-w-[80px]">
                                                     {char.name}
                                                 </span>
                                                 <Gift size={10} className="text-accent opacity-0 group-hover/btn:opacity-100 transition-opacity" />
@@ -141,7 +141,7 @@ const LootPoolViewer: React.FC = () => {
                                         ))
                                 )}
                                 {sessionEntityIds.length === 0 && (
-                                    <span className="text-[8px] uppercase font-bold text-app-text/20 py-2 italic">
+                                    <span className="text-ui-8 uppercase font-bold text-app-text/20 py-2 italic">
                                         {t('modules:loot.pool.no_active_chars')}
                                     </span>
                                 )}

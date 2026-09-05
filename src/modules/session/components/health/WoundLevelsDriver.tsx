@@ -34,7 +34,7 @@ export const WoundLevelsDriver: React.FC<WoundLevelsDriverProps & { onLevelClick
             <div className={`w-2 h-2 rounded-full ${
               isSelected ? 'bg-accent animate-pulse shadow-glow-accent' : isPast ? 'bg-white/40' : 'bg-white/10'
             }`} />
-            <span className={`text-[11px] font-black uppercase tracking-wider ${isSelected ? 'text-accent' : 'text-app-text/60'}`}>
+            <span className={`text-ui-11 font-black uppercase tracking-wider ${isSelected ? 'text-accent' : 'text-app-text/60'}`}>
               {label}
             </span>
             {isSelected && (

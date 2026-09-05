@@ -93,10 +93,10 @@ export const RuleEngineEditor: React.FC = () => {
                                 placeholder={t('modules:session.rule_engine_editor.name_placeholder')}
                             />
                             <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent/20">
+                                <span className="text-ui-9 font-black uppercase tracking-widest px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent/20">
                                     {t('modules:session.rule_engine_editor.core_label')}
                                 </span>
-                                <span className="text-[9px] text-app-text/20 font-bold uppercase tracking-tighter">{t('common:id_label')}: {driver.id}</span>
+                                <span className="text-ui-9 text-app-text/20 font-bold uppercase tracking-tighter">{t('common:id_label')}: {driver.id}</span>
 
                             </div>
                         </div>
@@ -153,7 +153,7 @@ export const RuleEngineEditor: React.FC = () => {
                                 <div className="grid grid-cols-2 gap-8">
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm space-y-6">
                                         <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.engine_label')}</label>
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.engine_label')}</label>
                                             <select 
                                                 value={dice.engine || 'standard'}
                                                 onChange={e => handleUpdate({ dice: { ...dice, engine: e.target.value as GameDriver['dice']['engine'] } })}
@@ -176,7 +176,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.default_dice_label')}</label>
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.default_dice_label')}</label>
                                             <input 
                                                 type="text"
                                                 value={dice.defaultDice || ''}
@@ -197,7 +197,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             est une valeur qu'on subit.*
                                         */}
                                         <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">
                                                 {t('modules:session.rule_engine_editor.core.logic_label')}
                                             </label>
                                             <select
@@ -213,7 +213,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                     </option>
                                                 ))}
                                             </select>
-                                            <p className="text-[11px] text-app-text/35 leading-relaxed mt-2 px-1">
+                                            <p className="text-ui-11 text-app-text/35 leading-relaxed mt-2 px-1">
                                                 {t('modules:session.rule_engine_editor.core.logic_help')}
                                             </p>
                                         </div>
@@ -221,7 +221,7 @@ export const RuleEngineEditor: React.FC = () => {
 
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm flex flex-col justify-center">
                                         <div className="mb-6">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.sheet_link_label')}</label>
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.sheet_link_label')}</label>
                                             <div className="flex gap-2">
                                                 <select 
                                                     value={driver.templateId}
@@ -248,7 +248,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        <p className="text-[11px] text-app-text/40 leading-relaxed italic px-2">
+                                        <p className="text-ui-11 text-app-text/40 leading-relaxed italic px-2">
                                             {t('modules:session.rule_engine_editor.core.sheet_link_description')}
                                         </p>
                                     </div>
@@ -288,7 +288,7 @@ export const RuleEngineEditor: React.FC = () => {
                                     <div className="col-span-7 p-8 bg-indigo-500/5 border border-indigo-500/20 rounded-[2.5rem] space-y-8">
                                         <div className="grid grid-cols-2 gap-6">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.init_formula_label')}</label>
+                                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.init_formula_label')}</label>
                                                 <input 
                                                     type="text"
                                                     value={combat.initiativeFormula || ''}
@@ -298,7 +298,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.health_type_label')}</label>
+                                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.health_type_label')}</label>
                                                 <select 
                                                     value={combat.defaultHealthType || 'hp'}
                                                     onChange={e => handleUpdate({ combat: { ...combat, defaultHealthType: e.target.value as GameDriver['combat']['defaultHealthType'] } })}
@@ -329,7 +329,7 @@ export const RuleEngineEditor: React.FC = () => {
                                           suivre le code, il s'amende.
                                         */}
                                         <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">
                                                 Santé de départ — lue sur la fiche
                                             </label>
                                             {/*
@@ -366,7 +366,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                     <option key={c.id} value={c.id}>{c.label}</option>
                                                 ))}
                                             </datalist>
-                                            <p className="text-[9px] text-app-text/30 font-bold uppercase tracking-widest mt-3 px-2 leading-relaxed">
+                                            <p className="text-ui-9 text-app-text/30 font-bold uppercase tracking-widest mt-3 px-2 leading-relaxed">
                                                 Formule sur des identifiants de champs de la fiche. Vide : chaque écran
                                                 garde les points de vie qu'il fournit. Un nombre seul n'a pas sa place
                                                 ici — il vaudrait pour tout le monde.
@@ -374,7 +374,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             {/* Ce que la fiche offre vraiment, sous les yeux : sans gabarit
                                                 rattaché, aucun identifiant n'existe et la formule ne pourra
                                                 rien lire. */}
-                                            <p className="text-[9px] text-indigo-300/40 font-bold uppercase tracking-widest mt-2 px-2 leading-relaxed">
+                                            <p className="text-ui-9 text-indigo-300/40 font-bold uppercase tracking-widest mt-2 px-2 leading-relaxed">
                                                 {champsNumeriquesDeLaFiche.length > 0
                                                     ? `Champs numériques disponibles : ${champsNumeriquesDeLaFiche.map(c => c.id).join(', ')}`
                                                     : 'Aucun champ numérique sur la fiche rattachée — une formule n’y lirait rien.'}
@@ -382,18 +382,18 @@ export const RuleEngineEditor: React.FC = () => {
                                         </div>
 
                                         <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-4 block px-1">{t('modules:session.rule_engine_editor.combat.sort_order_label')}</label>
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-4 block px-1">{t('modules:session.rule_engine_editor.combat.sort_order_label')}</label>
                                             <div className="flex p-1 bg-app-bg/40 rounded-2xl border border-app-border/10 overflow-hidden">
                                                 <button 
                                                     onClick={() => handleUpdate({ combat: { ...combat, initiativeSort: 'desc' } })}
-                                                    className={`flex-1 py-4 text-[11px] font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort !== 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
+                                                    className={`flex-1 py-4 text-ui-11 font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort !== 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
                                                     title={t('modules:session.rule_engine_editor.combat.descending_title')}
                                                 >
                                                     {t('modules:session.rule_engine_editor.combat.descending')}
                                                 </button>
                                                 <button 
                                                     onClick={() => handleUpdate({ combat: { ...combat, initiativeSort: 'asc' } })}
-                                                    className={`flex-1 py-4 text-[11px] font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort === 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
+                                                    className={`flex-1 py-4 text-ui-11 font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort === 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
                                                     title={t('modules:session.rule_engine_editor.combat.ascending_title')}
                                                 >
                                                     {t('modules:session.rule_engine_editor.combat.ascending')}
@@ -404,11 +404,11 @@ export const RuleEngineEditor: React.FC = () => {
 
                                     <div className="col-span-5 p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] flex flex-col justify-between group">
                                         <div>
-                                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 mb-6 flex items-center gap-2">
+                                            <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 mb-6 flex items-center gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
                                                 {t('modules:session.rule_engine_editor.combat.card_draw_title')}
                                             </h4>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.deck_size_label')}</label>
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.deck_size_label')}</label>
                                             <input 
                                                 type="number"
                                                 value={combat.initiativeCards || ''}
@@ -417,7 +417,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 placeholder={t('modules:session.rule_engine_editor.combat.deck_size_placeholder')}
                                             />
                                         </div>
-                                        <p className="text-[10px] text-app-text/40 leading-relaxed uppercase font-bold tracking-tight border-t border-app-border/10 pt-4 mt-6">
+                                        <p className="text-ui-10 text-app-text/40 leading-relaxed uppercase font-bold tracking-tight border-t border-app-border/10 pt-4 mt-6">
                                             {t('modules:session.rule_engine_editor.combat.card_draw_description')}
                                         </p>
                                     </div>
@@ -440,8 +440,8 @@ export const RuleEngineEditor: React.FC = () => {
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between p-6 bg-emerald-500/5 rounded-[2rem] border border-emerald-500/20 shadow-xl">
                                         <div className="flex flex-col gap-1">
-                                            <label className="text-[11px] font-black uppercase text-app-text tracking-[0.2em]">{t('modules:session.rule_engine_editor.tactical.enable_ai_label')}</label>
-                                            <span className="text-[10px] text-emerald-500/60 font-medium italic">{t('modules:session.rule_engine_editor.tactical.enable_ai_description')}</span>
+                                            <label className="text-ui-11 font-black uppercase text-app-text tracking-[0.2em]">{t('modules:session.rule_engine_editor.tactical.enable_ai_label')}</label>
+                                            <span className="text-ui-10 text-emerald-500/60 font-medium italic">{t('modules:session.rule_engine_editor.tactical.enable_ai_description')}</span>
                                         </div>
                                         <button 
                                             onClick={() => handleUpdate({ tactical: { ...tactical, useTacticalAI: !tactical.useTacticalAI } })}
@@ -459,9 +459,9 @@ export const RuleEngineEditor: React.FC = () => {
 
                                         <div className="relative z-10">
                                             <div className="grid grid-cols-12 gap-4 mb-6 px-4">
-                                                <div className="col-span-4 text-[9px] font-black uppercase tracking-[0.3em] text-app-text/40">{t('modules:session.rule_engine_editor.tactical.zone_label')}</div>
-                                                <div className="col-span-4 text-[9px] font-black uppercase tracking-[0.3em] text-app-text/40 text-center">{t('modules:session.rule_engine_editor.tactical.max_threshold_label')}</div>
-                                                <div className="col-span-4 text-[9px] font-black uppercase tracking-[0.3em] text-app-text/40 text-center">{t('modules:session.rule_engine_editor.tactical.modifier_label')}</div>
+                                                <div className="col-span-4 text-ui-9 font-black uppercase tracking-[0.3em] text-app-text/40">{t('modules:session.rule_engine_editor.tactical.zone_label')}</div>
+                                                <div className="col-span-4 text-ui-9 font-black uppercase tracking-[0.3em] text-app-text/40 text-center">{t('modules:session.rule_engine_editor.tactical.max_threshold_label')}</div>
+                                                <div className="col-span-4 text-ui-9 font-black uppercase tracking-[0.3em] text-app-text/40 text-center">{t('modules:session.rule_engine_editor.tactical.modifier_label')}</div>
                                             </div>
 
                                             <div className="space-y-3">
@@ -537,7 +537,7 @@ export const RuleEngineEditor: React.FC = () => {
                                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Brain size={120} />
                                         </div>
-                                        <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-violet-400 mb-6 flex items-center gap-3 font-mono">
+                                        <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-violet-400 mb-6 flex items-center gap-3 font-mono">
                                             <div className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
                                             {t('modules:session.rule_engine_editor.ai.global_prompt_label')}
                                         </h4>
@@ -555,10 +555,10 @@ export const RuleEngineEditor: React.FC = () => {
                                                 <Archive size={20} />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-violet-400 font-mono">
+                                                <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-violet-400 font-mono">
                                                     Chemin de l'Atelier (RAG)
                                                 </h4>
-                                                <p className="text-[9px] text-app-text/40 font-bold uppercase tracking-tight mt-1">
+                                                <p className="text-ui-9 text-app-text/40 font-bold uppercase tracking-tight mt-1">
                                                     Répertoire où seront sauvegardées et consultées les fiches de règles
                                                 </p>
                                             </div>
@@ -571,7 +571,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 placeholder="ex: systems/my-system/rules"
                                                 className="w-full bg-app-bg/40 px-6 py-4 rounded-2xl border border-app-border/10 focus:border-violet-500/40 outline-none transition-all font-mono text-sm"
                                             />
-                                            <p className="text-[9px] text-app-text/20 font-bold uppercase tracking-widest mt-3 px-2 flex items-center gap-2">
+                                            <p className="text-ui-9 text-app-text/20 font-bold uppercase tracking-widest mt-3 px-2 flex items-center gap-2">
                                                 <Sparkles size={10} className="text-violet-400" />
                                                 Le chemin doit être relatif au dossier <code className="text-violet-400/60">docs/</code> pour l'indexation IA.
                                             </p>
@@ -595,7 +595,7 @@ export const RuleEngineEditor: React.FC = () => {
                                         pilote={driver}
                                         lectureSeule
                                         noteLectureSeule={
-                                            <p className="text-[11px] text-app-text/40 leading-relaxed">
+                                            <p className="text-ui-11 text-app-text/40 leading-relaxed">
                                                 Ces personas appartiennent au corpus, pas à ce pilote :
                                                 toutes les campagnes qui l'emploient les partagent. Elles se
                                                 modifient dans la Forge, qui est le seul écran à écrire dans{' '}
@@ -616,7 +616,7 @@ export const RuleEngineEditor: React.FC = () => {
                                           « rien n'est défini » : ils veulent dire
                                           « rien n'écrase le corpus ».
                                         */}
-                                        <p className="text-[11px] text-app-text/40 leading-relaxed px-2 -mt-2">
+                                        <p className="text-ui-11 text-app-text/40 leading-relaxed px-2 -mt-2">
                                             Laissez vide pour employer la persona du corpus ci-dessus. Ce qui
                                             est écrit ici ne vaut que pour ce pilote et l'emporte sur elle.
                                         </p>
@@ -634,7 +634,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                                 </div>
                                                                 <div className="flex flex-col">
                                                                     <span className={`text-xs font-black uppercase tracking-[0.2em] ${currValue ? 'text-violet-400' : 'text-app-text/40'}`}>{t(gem.name)}</span>
-                                                                    <span className="text-[10px] text-app-text/20 font-medium font-sans">{t('modules:session.rule_engine_editor.ai.persona_type_label', { id: gem.id })}</span>
+                                                                    <span className="text-ui-10 text-app-text/20 font-medium font-sans">{t('modules:session.rule_engine_editor.ai.persona_type_label', { id: gem.id })}</span>
                                                                 </div>
                                                             </div>
                                                             {currValue && <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse shadow-[0_0_10px_rgba(139,92,246,1)]" />}
@@ -700,7 +700,7 @@ export const RuleEngineEditor: React.FC = () => {
                                     </div>
                                     
                                     <div className="relative z-10 space-y-6">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 mb-2 block px-2 italic">{t('modules:session.rule_engine_editor.notebook.link_label')}</label>
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.3em] text-blue-400 mb-2 block px-2 italic">{t('modules:session.rule_engine_editor.notebook.link_label')}</label>
                                         <div className="relative">
                                             <div className="absolute left-6 top-1/2 -translate-y-1/2 text-blue-500/40">
                                                 <BookOpen size={20} />
@@ -715,7 +715,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             />
                                         </div>
                                         <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10 space-y-3">
-                                            <p className="text-[11px] text-app-text/40 leading-relaxed font-medium">
+                                            <p className="text-ui-11 text-app-text/40 leading-relaxed font-medium">
                                                 <strong className="text-blue-400/80 uppercase font-bold">{t('common:note')} :</strong> {t('modules:session.rule_engine_editor.notebook.hint')}
                                             </p>
 

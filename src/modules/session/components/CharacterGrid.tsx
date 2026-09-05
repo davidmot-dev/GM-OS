@@ -171,7 +171,7 @@ const CharacterCard: React.FC<{
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent z-20"></div>
                 {linkedCampaign && (
-                    <span className="absolute top-2 right-2 bg-accent/90 text-app-bg text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider z-30">
+                    <span className="absolute top-2 right-2 bg-accent/90 text-app-bg text-ui-10 font-black px-2 py-0.5 rounded-md uppercase tracking-wider z-30">
                         {linkedCampaign.name.length > 12 ? linkedCampaign.name.slice(0, 12) + '…' : linkedCampaign.name}
                     </span>
                 )}
@@ -250,7 +250,7 @@ const CharacterCard: React.FC<{
                         title={t('modules:session.characters.combat_btn')}
                     >
                         <Swords size={14} />
-                        <span className="text-[10px] font-bold uppercase">{t('modules:session.characters.combat_btn')}</span>
+                        <span className="text-ui-10 font-bold uppercase">{t('modules:session.characters.combat_btn')}</span>
                     </button>
                     <button
                         onClick={(e) => {

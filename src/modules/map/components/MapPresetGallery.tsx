@@ -34,7 +34,7 @@ const MapPresetGallery: React.FC = () => {
             {/* Quick Save Section */}
             <div className="bg-app-bg/40 border border-app-border rounded-xl p-3">
                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('map.presets.new')}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-slate-500">{t('map.presets.new')}</span>
                     {!isSaving && (
                         <button 
                             onClick={() => {
@@ -44,7 +44,7 @@ const MapPresetGallery: React.FC = () => {
                             className="bg-accent/10 hover:bg-accent/20 text-accent p-1.5 rounded-lg transition-all flex items-center gap-2"
                         >
                             <Save size={14} />
-                            <span className="text-[9px] font-bold uppercase">{t('map.presets.saveState')}</span>
+                            <span className="text-ui-9 font-bold uppercase">{t('map.presets.saveState')}</span>
                         </button>
                     )}
                 </div>
@@ -66,7 +66,7 @@ const MapPresetGallery: React.FC = () => {
                         <div className="flex gap-2">
                             <button 
                                 onClick={handleSave}
-                                className="flex-1 bg-accent text-slate-900 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-white transition-all flex items-center justify-center gap-2"
+                                className="flex-1 bg-accent text-slate-900 py-1.5 rounded-lg text-ui-10 font-black uppercase hover:bg-white transition-all flex items-center justify-center gap-2"
                             >
                                 <Check size={14} />
                                 {t('map.presets.confirm')}
@@ -88,7 +88,7 @@ const MapPresetGallery: React.FC = () => {
                 {mapPresets.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-8 px-4 border border-dashed border-app-border rounded-xl opacity-40">
                         <FolderOpen size={32} className="mb-2" />
-                        <p className="text-[10px] font-bold uppercase tracking-tight text-center">{t('map.presets.empty')}</p>
+                        <p className="text-ui-10 font-bold uppercase tracking-tight text-center">{t('map.presets.empty')}</p>
                     </div>
                 ) : (
                     mapPresets.map(preset => (
@@ -116,18 +116,18 @@ const MapPresetGallery: React.FC = () => {
 
                             <div className="flex items-center justify-between mt-1">
                                 <div className="flex items-center gap-3">
-                                    <div className="flex items-center gap-1 text-[9px] text-slate-500 font-bold uppercase">
+                                    <div className="flex items-center gap-1 text-ui-9 text-slate-500 font-bold uppercase">
                                         <Check size={10} className="text-gm-emerald" />
                                         <span>{t('map.presets.count.tokens', { count: preset.tokens.length, defaultValue: `${preset.tokens.length} Pions` })}</span>
                                     </div>
-                                    <div className="flex items-center gap-1 text-[9px] text-slate-500 font-bold uppercase">
+                                    <div className="flex items-center gap-1 text-ui-9 text-slate-500 font-bold uppercase">
                                         <Check size={10} className="text-rose-500" />
                                         <span>{t('map.presets.count.zones', { count: preset.dangerZones.length, defaultValue: `${preset.dangerZones.length} Zones` })}</span>
                                     </div>
                                 </div>
                                 <button 
                                     onClick={() => handleLoad(preset.id, preset.name)}
-                                    className="bg-app-surface hover:bg-accent text-slate-300 hover:text-slate-900 px-3 py-1 rounded-lg border border-app-border hover:border-accent text-[9px] font-black uppercase tracking-widest transition-all"
+                                    className="bg-app-surface hover:bg-accent text-slate-300 hover:text-slate-900 px-3 py-1 rounded-lg border border-app-border hover:border-accent text-ui-9 font-black uppercase tracking-widest transition-all"
                                 >
                                     {t('map.presets.load')}
                                 </button>
@@ -135,7 +135,7 @@ const MapPresetGallery: React.FC = () => {
                             
                             {/* Visual Hint of the map name if available */}
                             {preset.mapName && (
-                                <div className="text-[8px] text-slate-600 italic truncate mt-1 border-t border-app-border/30 pt-1">
+                                <div className="text-ui-8 text-slate-600 italic truncate mt-1 border-t border-app-border/30 pt-1">
                                     {t('map.presets.mapLabel')} : {preset.mapName}
                                 </div>
                             )}
@@ -144,7 +144,7 @@ const MapPresetGallery: React.FC = () => {
                 )}
             </div>
 
-            <p className="text-[9px] text-slate-500 italic px-2">
+            <p className="text-ui-9 text-slate-500 italic px-2">
                 {t('map.presets.note')}
             </p>
         </div>

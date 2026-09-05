@@ -40,12 +40,12 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
     return (
         <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl flex flex-col gap-6">
             <div className="flex items-center justify-between">
-                <p className="text-[10px] text-app-text/40 font-black uppercase tracking-widest">
+                <p className="text-ui-10 text-app-text/40 font-black uppercase tracking-widest">
                     L'acte dans lequel cette séance se déroule, et les scènes qu'on pense jouer
                 </p>
                 <button
                     onClick={() => setCurrentView('trame')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/50 hover:text-app-text transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text transition-all"
                 >
                     <ExternalLink size={11} /> Ouvrir la trame
                 </button>
@@ -73,7 +73,7 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
 
                     {session.acteId && (
                         proposees.length === 0 ? (
-                            <p className="text-[11px] text-app-text/30 italic px-1">
+                            <p className="text-ui-11 text-app-text/30 italic px-1">
                                 Cet acte n'a encore aucune scène.
                             </p>
                         ) : (
@@ -98,7 +98,7 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
                     */}
                     {horsActe.length > 0 && (
                         <div className="flex flex-col gap-1.5 pt-2 border-t border-white/5">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-amber-400/60 px-1">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-amber-400/60 px-1">
                                 Prévues hors de cet acte
                             </p>
                             {horsActe.map(scene => (
@@ -113,7 +113,7 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
                     )}
 
                     {introuvables > 0 && (
-                        <p className="flex items-center gap-2 text-[11px] text-amber-300/70 px-1">
+                        <p className="flex items-center gap-2 text-ui-11 text-amber-300/70 px-1">
                             <AlertTriangle size={12} className="shrink-0" />
                             {introuvables} scène{introuvables > 1 ? 's' : ''} prévue{introuvables > 1 ? 's' : ''} n'existe
                             {introuvables > 1 ? 'nt' : ''} plus dans la trame.
@@ -159,13 +159,13 @@ const CaseDeScene: React.FC<{ scene: Scene; choisie: boolean; onBascule: () => v
                     : ''
             }`}>{scene.titre}</span>
             {etat === 'en-cours' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
             )}
             {etat === 'en-pause' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
             )}
             {scene.origine === 'improvisee' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
             )}
         </button>
     );

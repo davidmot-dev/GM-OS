@@ -25,18 +25,18 @@ const RaccourcisDeNavigation: React.FC = () => {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 flex items-center gap-2">
+                <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50 flex items-center gap-2">
                     <Keyboard size={12} /> Raccourcis de navigation
                 </p>
                 <button
                     onClick={reinitialiser}
-                    className="text-[10px] text-accent font-bold uppercase transition-opacity hover:opacity-70 flex items-center gap-1.5"
+                    className="text-ui-10 text-accent font-bold uppercase transition-opacity hover:opacity-70 flex items-center gap-1.5"
                 >
                     <RotateCcw size={11} /> Par défaut
                 </button>
             </div>
 
-            <p className="text-[11px] text-app-text/50 leading-relaxed px-1">
+            <p className="text-ui-11 text-app-text/50 leading-relaxed px-1">
                 Ces touches <strong>ouvrent un écran</strong>, rien de plus : aucune ne
                 déclenche de son, de projection ni de jet. Le pavé numérique reste aux
                 pastilles de Music-OS et Sound-OS. Tout le reste s'atteint par{' '}
@@ -49,7 +49,7 @@ const RaccourcisDeNavigation: React.FC = () => {
                         key={rang}
                         className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]"
                     >
-                        <span className="bg-app-surface text-app-text/60 text-[10px] font-mono px-2.5 flex items-center border-r border-app-border shrink-0">
+                        <span className="bg-app-surface text-app-text/60 text-ui-10 font-mono px-2.5 flex items-center border-r border-app-border shrink-0">
                             Ctrl+{rang + 1}
                         </span>
                         <select

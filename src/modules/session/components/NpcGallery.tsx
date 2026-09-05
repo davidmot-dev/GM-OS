@@ -103,7 +103,7 @@ const NpcGallery: React.FC = () => {
             <aside className="w-80 h-full bg-app-surface border-r border-app-border flex flex-col p-6 overflow-y-auto custom-scrollbar transition-colors">
                 <div className="mb-8">
                     <h2 className="text-2xl font-black text-accent font-display tracking-tighter uppercase">{t('modules:session.npc_gallery.title')}</h2>
-                    <p className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">{t('modules:session.npc_gallery.subtitle')}</p>
+                    <p className="text-ui-10 text-slate-500 font-bold tracking-[0.2em] uppercase">{t('modules:session.npc_gallery.subtitle')}</p>
                 </div>
 
                 {/* Search */}
@@ -122,7 +122,7 @@ const NpcGallery: React.FC = () => {
 
                 {/* Filters */}
                 <nav className="flex-1 space-y-2">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 ml-2">{t('modules:session.npc_gallery.filters_label')}</p>
+                    <p className="text-ui-10 font-black text-slate-500 uppercase tracking-widest mb-4 ml-2">{t('modules:session.npc_gallery.filters_label')}</p>
                     <FilterButton 
                         active={filter === 'all'} 
                         onClick={() => setFilter('all')} 
@@ -180,7 +180,7 @@ const NpcGallery: React.FC = () => {
                         <div className="h-1 w-16 bg-accent mt-3 shadow-[0_0_15px_rgba(var(--accent-rgb),0.5)]"></div>
                     </div>
                     
-                    <div className="flex gap-3 text-slate-500 font-mono text-[10px] tracking-widest uppercase mb-4">
+                    <div className="flex gap-3 text-slate-500 font-mono text-ui-10 tracking-widest uppercase mb-4">
                         <div className="flex items-center gap-2 px-4 py-2 bg-app-surface/50 rounded-full border border-app-border">
                             <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
                             {t('modules:session.npc_gallery.status_active')}
@@ -262,7 +262,7 @@ const NpcGallery: React.FC = () => {
                         </div>
                         <div className="text-center">
                             <span className="font-display font-black text-slate-500 uppercase tracking-widest text-xs group-hover:text-accent transition-colors">{t('modules:session.npc_gallery.empty_state_init')}</span>
-                            <p className="text-[9px] text-slate-700 mt-1 font-mono group-hover:text-slate-500">{t('modules:session.npc_gallery.empty_state_slot')}</p>
+                            <p className="text-ui-9 text-slate-700 mt-1 font-mono group-hover:text-slate-500">{t('modules:session.npc_gallery.empty_state_slot')}</p>
                         </div>
                     </button>
                 </motion.div>
@@ -470,7 +470,7 @@ const NpcGalleryItem: React.FC<{
             */}
             <div className="p-5 flex-1 flex flex-col relative text-app-text">
                 {/* Role Badge */}
-                <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-slate-400 border-white/10'}`}>
+                <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-ui-9 font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-slate-400 border-white/10'}`}>
                     {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
                 </div>
 
@@ -484,7 +484,7 @@ const NpcGalleryItem: React.FC<{
                         la place. Deux lignes suffisent à distinguer deux PNJ, ce
                         qu'un mot et demi ne permettait pas.
                     */}
-                    <p className="text-[10px] text-slate-500 font-bold italic tracking-wide line-clamp-2 leading-snug">
+                    <p className="text-ui-10 text-slate-500 font-bold italic tracking-wide line-clamp-2 leading-snug">
                         {npc.description || t('modules:session.npc_gallery.default_description')}
                     </p>
                 </div>
@@ -502,12 +502,12 @@ const NpcGalleryItem: React.FC<{
                         montre ce que le système décrit.
                     */}
                     {fractionDeVie(npc) === null ? (
-                        <div className="flex items-center gap-1.5 text-[10px] font-black text-slate-600 tracking-widest uppercase">
+                        <div className="flex items-center gap-1.5 text-ui-10 font-black text-slate-600 tracking-widest uppercase">
                             <Activity size={11} className="text-rose-400/60" />
                             <span>{abregerLaSante(npc) ?? decrireLaSante(npc) ?? 'santé non chiffrée'}</span>
                         </div>
                     ) : (<>
-                    <div className="flex justify-between items-center text-[10px] font-black text-slate-600 mb-1 tracking-widest uppercase">
+                    <div className="flex justify-between items-center text-ui-10 font-black text-slate-600 mb-1 tracking-widest uppercase">
                         <span>{t('modules:session.npc_gallery.hp_label')}</span>
                         <span className={fractionDeVie(npc)! < 0.3 ? 'text-red-400' : 'text-accent'}>{npc.hp} / {npc.maxHp} HP</span>
                     </div>
@@ -525,7 +525,7 @@ const NpcGalleryItem: React.FC<{
                     <div className="flex gap-2 mt-2">
                         <button 
                             onClick={(e) => { e.stopPropagation(); onSelect(); }}
-                            className="flex-1 flex items-center justify-center gap-2 bg-app-surface border border-app-border text-slate-500 hover:bg-app-bg hover:text-accent h-9 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all"
+                            className="flex-1 flex items-center justify-center gap-2 bg-app-surface border border-app-border text-slate-500 hover:bg-app-bg hover:text-accent h-9 rounded-lg font-bold text-ui-10 uppercase tracking-widest transition-all"
                         >
                             <FileText size={12} />
                             {t('modules:session.npc_gallery.details_btn')}

@@ -171,7 +171,7 @@ const AddEntityForm: React.FC = () => {
                         ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center text-app-text/10 group-hover:text-accent transition-colors">
                                 <ImageIcon size={64} className="mb-2" />
-                                <p className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.forms.labels.avatar_select')}</p>
+                                <p className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.forms.labels.avatar_select')}</p>
                             </div>
                         )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -182,7 +182,7 @@ const AddEntityForm: React.FC = () => {
                     {/* Type & Role Selector */}
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 flex items-center gap-2">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 pl-1 flex items-center gap-2">
                                 <Users size={12} /> {t('modules:session.forms.labels.type')}
                             </p>
                             <div className="flex gap-2">
@@ -191,7 +191,7 @@ const AddEntityForm: React.FC = () => {
                                         key={typeVal}
                                         type="button"
                                         onClick={() => setType(typeVal)}
-                                        className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition-all border ${
+                                        className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase transition-all border ${
                                             type === typeVal ? 'bg-accent text-white border-accent' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
@@ -202,7 +202,7 @@ const AddEntityForm: React.FC = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 flex items-center gap-2">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 pl-1 flex items-center gap-2">
                                 <Skull size={12} /> {t('modules:session.forms.labels.alignment')}
                             </p>
                             <div className="grid grid-cols-2 gap-2">
@@ -211,7 +211,7 @@ const AddEntityForm: React.FC = () => {
                                         key={r}
                                         type="button"
                                         onClick={() => setRole(r)}
-                                        className={`py-2 rounded-xl text-[10px] font-black uppercase transition-all border ${
+                                        className={`py-2 rounded-xl text-ui-10 font-black uppercase transition-all border ${
                                             role === r ? 'bg-white text-app-bg border-white' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
@@ -226,7 +226,7 @@ const AddEntityForm: React.FC = () => {
                 {/* Right Col: Fields */}
                 <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="entity-name" className="text-[10px] font-black uppercase tracking-widest text-accent pl-1">{t('modules:session.forms.labels.name')}</label>
+                        <label htmlFor="entity-name" className="text-ui-10 font-black uppercase tracking-widest text-accent pl-1">{t('modules:session.forms.labels.name')}</label>
                         <input
                             id="entity-name"
                             type="text"
@@ -240,7 +240,7 @@ const AddEntityForm: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="entity-description" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 italic">{t('modules:session.forms.labels.description')}</label>
+                        <label htmlFor="entity-description" className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 pl-1 italic">{t('modules:session.forms.labels.description')}</label>
                         <input
                             id="entity-description"
                             type="text"
@@ -318,7 +318,7 @@ const AddEntityForm: React.FC = () => {
                                     className="w-full bg-transparent border-none text-center text-white font-black text-sm focus:ring-0"
                                     title={intitule}
                                 />
-                                <label htmlFor={stat.id} className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{intitule}</label>
+                                <label htmlFor={stat.id} className="text-ui-9 uppercase font-bold text-app-text/20 tracking-wider">{intitule}</label>
                             </div>
                             );
                         })}
@@ -329,7 +329,7 @@ const AddEntityForm: React.FC = () => {
                         <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
                             <div className="flex items-center gap-2 mb-1">
                                 <BookOpen size={14} className="text-app-text/40 pointer-events-none" />
-                                <label htmlFor="entity-roleplaying-notes" className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.forms.labels.notes')}</label>
+                                <label htmlFor="entity-roleplaying-notes" className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.forms.labels.notes')}</label>
                             </div>
                             <textarea
                                 id="entity-roleplaying-notes"
@@ -347,7 +347,7 @@ const AddEntityForm: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-2 mb-1 relative z-10">
                                 <Lock size={14} className="text-accent pointer-events-none" />
-                                <label htmlFor="entity-secret-info" className="text-[10px] font-black uppercase tracking-widest text-accent">{t('modules:session.forms.labels.secrets')}</label>
+                                <label htmlFor="entity-secret-info" className="text-ui-10 font-black uppercase tracking-widest text-accent">{t('modules:session.forms.labels.secrets')}</label>
                             </div>
                             <textarea
                                 id="entity-secret-info"

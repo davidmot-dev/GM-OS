@@ -17,10 +17,10 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                         <Users className="text-accent" size={30} />
                         Trombinoscope
                     </h2>
-                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-[0.5em]">Registre des individus et entités identifiés.</p>
+                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Registre des individus et entités identifiés.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-[10px] font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
+                    <div className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                         {npcs.length} Profils Répertoriés
                     </div>
@@ -43,14 +43,14 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                                     className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" 
                                 />
                                 <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                                    <div className="px-4 py-1.5 bg-accent/90 backdrop-blur-md rounded-full text-[8px] font-black text-app-bg uppercase tracking-widest">
+                                    <div className="px-4 py-1.5 bg-accent/90 backdrop-blur-md rounded-full text-ui-8 font-black text-app-bg uppercase tracking-widest">
                                         Inspecter
                                     </div>
                                 </div>
                             </div>
                             <div className="px-1 text-center">
-                                <h3 className="text-[11px] font-black text-app-text uppercase tracking-wider truncate mb-1">{npc.name}</h3>
-                                <p className="text-[7px] font-black text-app-text/20 uppercase tracking-[0.2em]">{npc.role || 'Citoyen'}</p>
+                                <h3 className="text-ui-11 font-black text-app-text uppercase tracking-wider truncate mb-1">{npc.name}</h3>
+                                <p className="text-ui-7 font-black text-app-text/20 uppercase tracking-[0.2em]">{npc.role || 'Citoyen'}</p>
                             </div>
                             <div className="absolute top-2 right-2 p-2 bg-app-bg/60 backdrop-blur-md rounded-full border border-app-border/10 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Sparkles size={10} className="text-accent" />
@@ -65,7 +65,7 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                             </div>
                             <div className="space-y-2">
                                 <p className="text-xs font-black uppercase tracking-[0.3em] text-app-text/20">Aucun sujet identifié</p>
-                                <p className="text-[10px] text-app-text/10 font-bold uppercase">En attente de transmission par le MJ</p>
+                                <p className="text-ui-10 text-app-text/10 font-bold uppercase">En attente de transmission par le MJ</p>
                             </div>
                         </div>
                     )}

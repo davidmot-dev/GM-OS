@@ -44,7 +44,7 @@ export const Bloc: React.FC<{
     <div className="rounded-2xl border border-app-border/10 bg-app-surface/40 p-5">
         <div className="flex items-center gap-2 mb-3 text-accent">
             {icone}
-            <h3 className="text-[11px] font-black uppercase tracking-widest text-app-text">{titre}</h3>
+            <h3 className="text-ui-11 font-black uppercase tracking-widest text-app-text">{titre}</h3>
         </div>
         {children}
     </div>

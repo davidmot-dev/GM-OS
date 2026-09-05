@@ -38,7 +38,7 @@ export const MediaItemThumbnail: React.FC<MediaItemThumbnailProps> = ({ media })
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-accent rounded-full animate-ping" />
                 </div>
                 <Music size={32} className="text-accent/60 group-hover:text-accent transition-colors" />
-                <div className="px-3 py-1 bg-accent/10 rounded-full text-[9px] font-black text-accent border border-accent/20 tracking-widest uppercase font-display">{t('image.thumbnail.audio')}</div>
+                <div className="px-3 py-1 bg-accent/10 rounded-full text-ui-9 font-black text-accent border border-accent/20 tracking-widest uppercase font-display">{t('image.thumbnail.audio')}</div>
             </div>
         );
     }
@@ -48,7 +48,7 @@ export const MediaItemThumbnail: React.FC<MediaItemThumbnailProps> = ({ media })
             <div className="w-full h-full bg-app-surface/20 flex flex-col items-center justify-center gap-4 p-6">
                 <FileText size={36} className="text-accent/40 group-hover:text-accent transition-colors" />
                 <div className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 font-display">{t('image.thumbnail.document', { ext })}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 font-display">{t('image.thumbnail.document', { ext })}</span>
                     <div className="w-8 h-0.5 bg-accent/20 rounded-full" />
                 </div>
             </div>

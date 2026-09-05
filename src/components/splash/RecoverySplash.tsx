@@ -44,7 +44,7 @@ const RecoverySplash: React.FC = () => {
 
                 <div className="w-full max-w-md space-y-3 font-mono">
                     <div className="flex justify-between items-end mb-1">
-                        <span className="text-[10px] font-bold tracking-tighter uppercase">Power Draw: Critical</span>
+                        <span className="text-ui-10 font-bold tracking-tighter uppercase">Power Draw: Critical</span>
                         <span className="text-xs">PWR_LVL: 74%</span>
                     </div>
                     <div className="flex gap-1">
@@ -55,14 +55,14 @@ const RecoverySplash: React.FC = () => {
                             <div key={i} className="h-4 w-3 bg-amber-dim opacity-20 border border-black/50"></div>
                         ))}
                     </div>
-                    <div className="flex justify-between text-[9px] text-amber-dim uppercase">
+                    <div className="flex justify-between text-ui-9 text-amber-dim uppercase">
                         <span>BUS_ID: 0x88F2A</span>
                         <span>RESERVE_CELLS: OFFLINE</span>
                     </div>
                 </div>
             </main>
 
-            <aside className="fixed bottom-8 left-8 w-80 space-y-1 font-mono text-[11px] animate-flicker pointer-events-none">
+            <aside className="fixed bottom-8 left-8 w-80 space-y-1 font-mono text-ui-11 animate-flicker pointer-events-none">
                 <p className="text-amber-dim opacity-50"># KERNEL BOOT SEQUENCE 1.0.4-RUGGED</p>
                 <p className="text-red-500 font-bold">!!! CRITICAL: ANALOG_LINK_ERROR (HUE_BRIDGE_FAILED)</p>
                 <p className="">&gt; BYPASSING SAFETY INTERLOCKS...</p>
@@ -74,13 +74,13 @@ const RecoverySplash: React.FC = () => {
                 <p className="animate-pulse">&gt; AWAITING INPUT_</p>
             </aside>
 
-            <div className="fixed top-8 right-8 text-[10px] text-amber-dim font-mono border border-amber-dim/40 p-3 bg-black/80">
+            <div className="fixed top-8 right-8 text-ui-10 text-amber-dim font-mono border border-amber-dim/40 p-3 bg-black/80">
                 SITE_TEMP: 104°F<br/>
                 RADIATION: 0.12 mSv/h<br/>
                 <span className="text-amber font-bold">STATUS: HAZARDOUS</span>
             </div>
 
-            <div className="fixed top-8 left-8 text-[10px] text-amber/40 font-mono tracking-widest uppercase [writing-mode:vertical-lr] rotate-180">
+            <div className="fixed top-8 left-8 text-ui-10 text-amber/40 font-mono tracking-widest uppercase [writing-mode:vertical-lr] rotate-180">
                 Waste-Land Comm-Unit v{__APP_VERSION__}
             </div>
 

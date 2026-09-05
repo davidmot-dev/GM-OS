@@ -35,14 +35,14 @@ const TimelineWikiDashboard: React.FC = () => {
                             <Shield size={14} className="text-accent" />
                             <h2 className="text-lg font-black uppercase tracking-widest">{activeCampaign.name}</h2>
                         </div>
-                        <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-[0.2em]">Archives & Chroniques du Monde</p>
+                        <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-[0.2em]">Archives & Chroniques du Monde</p>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-1 p-1 bg-black/40 rounded-2xl border border-white/5 backdrop-blur-md">
                     <button
                         onClick={() => setWikiTab('timeline')}
-                        className={`flex items-center gap-2 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                        className={`flex items-center gap-2 px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                             wikiTab === 'timeline' 
                                 ? 'bg-accent text-app-bg shadow-glow-accent' 
                                 : 'text-app-text/40 hover:text-app-text hover:bg-white/5'
@@ -53,7 +53,7 @@ const TimelineWikiDashboard: React.FC = () => {
                     </button>
                     <button
                         onClick={() => setWikiTab('wiki')}
-                        className={`flex items-center gap-2 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                        className={`flex items-center gap-2 px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                             wikiTab === 'wiki' 
                                 ? 'bg-accent text-app-bg shadow-glow-accent' 
                                 : 'text-app-text/40 hover:text-app-text hover:bg-white/5'

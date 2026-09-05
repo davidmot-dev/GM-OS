@@ -125,7 +125,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         type="button"
                         onClick={handleSubmit}
                         title={t('modules:session.campaign_form.sync_nexus_tooltip')}
-                        className={`flex items-center gap-2 font-black px-6 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all ${
+                        className={`flex items-center gap-2 font-black px-6 py-2 rounded-xl text-ui-10 tracking-widest uppercase transition-all ${
                             hasUnsavedChanges 
                                 ? 'bg-accent text-app-bg hover:opacity-90 shadow-glow-accent/40 animate-pulse border border-accent/50' 
                                 : 'bg-accent/20 text-accent/60 hover:bg-accent/40 hover:text-accent border border-transparent'
@@ -162,7 +162,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                             }`}
                         >
                             <item.icon size={20} />
-                            <span className="absolute left-full ml-4 px-3 py-1.5 bg-app-bg border border-app-border/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-accent opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 z-50 whitespace-nowrap font-display">
+                            <span className="absolute left-full ml-4 px-3 py-1.5 bg-app-bg border border-app-border/10 rounded-lg text-ui-10 font-black uppercase tracking-widest text-accent opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 z-50 whitespace-nowrap font-display">
                                 {item.label}
                             </span>
                         </button>
@@ -208,7 +208,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                             <Edit3 size={12} /> {t('modules:session.campaign_form.identity.name_label')}
                                         </label>
                                         <input 
@@ -219,7 +219,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         />
                                     </div>
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                             <Sparkles size={12} /> {t('modules:session.campaign_form.identity.system_label')}
                                         </label>
                                         <Select 
@@ -234,7 +234,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
+                                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                         <Info size={12} /> {t('modules:session.campaign_form.identity.description_label')}
                                     </label>
                                     <input 
@@ -246,7 +246,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
+                                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                         <Folder size={12} /> {t('modules:session.campaign_form.identity.obsidian_vault_label')}
                                     </label>
                                     <div className="flex gap-4">
@@ -264,7 +264,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                     if (path) setObsidianPath(path);
                                                 }
                                             }}
-                                            className="px-8 py-5 bg-accent/10 border border-accent/20 rounded-2xl text-accent font-black uppercase tracking-widest text-[10px] hover:bg-accent hover:text-app-bg transition-all"
+                                            className="px-8 py-5 bg-accent/10 border border-accent/20 rounded-2xl text-accent font-black uppercase tracking-widest text-ui-10 hover:bg-accent hover:text-app-bg transition-all"
                                         >
                                             {t('modules:session.campaign_form.identity.btn_browse')}
                                         </button>
@@ -286,7 +286,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
+                                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                         <PenTool size={12} /> {t('modules:session.campaign_form.narrative.synopsis_label')}
                                     </label>
                                     <textarea 
@@ -312,7 +312,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         <Users className="text-accent" />
                                         {t('modules:session.campaign_form.npc.title')}
                                     </h2>
-                                    <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest mt-1">{t('modules:session.campaign_form.npc.subtitle')}</p>
+                                    <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest mt-1">{t('modules:session.campaign_form.npc.subtitle')}</p>
                                 </div>
 
                                 <div className="flex-1 overflow-hidden">
@@ -342,7 +342,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                             <ResolvedAsset src={wallpaperUrl} className="w-full h-full object-cover rounded-[2.5rem] opacity-60 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent opacity-60" />
                                             <div className="absolute inset-x-8 bottom-8 p-10 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500">
-                                                <div className="px-10 py-4 bg-accent text-app-bg text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-accent">{t('modules:session.campaign_form.ambience.change_wallpaper')}</div>
+                                                <div className="px-10 py-4 bg-accent text-app-bg text-ui-10 font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-accent">{t('modules:session.campaign_form.ambience.change_wallpaper')}</div>
                                             </div>
                                         </>
                                     ) : (
@@ -438,7 +438,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                     )}
                                                 </div>
                                                 <div className="p-6 text-center">
-                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-accent font-display' : 'text-app-text/30 group-hover:text-app-text/60'}`}>{map.name}</span>
+                                                    <span className={`text-ui-10 font-black uppercase tracking-widest ${isActive ? 'text-accent font-display' : 'text-app-text/30 group-hover:text-app-text/60'}`}>{map.name}</span>
                                                 </div>
                                             </button>
                                         );
@@ -466,12 +466,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         </div>
                                         <div>
                                             <h3 className="text-lg font-black uppercase tracking-[0.2em] text-violet-400 font-display">{t('modules:session.campaign_form.intelligence.notebook_title')}</h3>
-                                            <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-widest mt-1">{t('modules:session.campaign_form.intelligence.notebook_subtitle')}</p>
+                                            <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest mt-1">{t('modules:session.campaign_form.intelligence.notebook_subtitle')}</p>
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-500/60 px-2 flex items-center gap-2">
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-violet-500/60 px-2 flex items-center gap-2">
                                             <ExternalLink size={12} /> {t('modules:session.campaign_form.intelligence.notebook_label')}
                                         </label>
                                         <input 
@@ -485,13 +485,13 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
 
                                     <div className="flex flex-col md:flex-row gap-6">
                                         <div className="flex-1 space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                                 <PenTool size={12} /> {t('modules:session.campaign_form.intelligence.rules_path_label')}
                                             </label>
                                             <input value={systemPath} onChange={e => setSystemPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.rules_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
                                         </div>
                                         <div className="flex-1 space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                                 <PenTool size={12} /> {t('modules:session.campaign_form.intelligence.notes_path_label')}
                                             </label>
                                             <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.notes_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
@@ -510,7 +510,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         plus rien.
                                     */}
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                             <PenTool size={12} /> Langue de la Forge
                                         </label>
                                         <select
@@ -524,7 +524,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                 <option key={code} value={code}>{nom}</option>
                                             ))}
                                         </select>
-                                        <p className="text-[10px] text-app-text/25 italic px-2 leading-relaxed">
+                                        <p className="text-ui-10 text-app-text/25 italic px-2 leading-relaxed">
                                             Ne gouverne que la prose. Les identifiants et les noms propres
                                             restent écrits comme les fiches les écrivent.
                                         </p>
@@ -535,14 +535,14 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 <div className="space-y-8">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
-                                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-violet-500">{t('modules:session.campaign_form.intelligence.neural_overrides')}</h3>
-                                            <p className="text-[9px] text-app-text/20 font-bold uppercase tracking-widest italic">{t('modules:session.campaign_form.intelligence.neural_overrides_subtitle')}</p>
+                                            <h3 className="text-ui-10 font-black uppercase tracking-[0.3em] text-violet-500">{t('modules:session.campaign_form.intelligence.neural_overrides')}</h3>
+                                            <p className="text-ui-9 text-app-text/20 font-bold uppercase tracking-widest italic">{t('modules:session.campaign_form.intelligence.neural_overrides_subtitle')}</p>
                                         </div>
                                         <button
                                             type="button"
                                             onClick={handleAutoGenerate}
                                             disabled={isGenerating}
-                                            className="flex items-center gap-3 px-6 py-2.5 bg-violet-600 text-white border border-violet-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-violet/5"
+                                            className="flex items-center gap-3 px-6 py-2.5 bg-violet-600 text-white border border-violet-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-violet/5"
                                         >
                                             {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                                             {t('modules:session.campaign_form.intelligence.auto_generate')}
@@ -559,7 +559,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-violet-600 text-white shadow-glow-violet/20' : 'bg-app-bg text-app-text/20'}`}>
                                                             <Sparkles size={16} />
                                                         </div>
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/60">{t(gem.name, { defaultValue: gem.id })}</span>
+                                                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/60">{t(gem.name, { defaultValue: gem.id })}</span>
                                                     </div>
                                                     <textarea 
                                                         value={aiPersonas[gem.id] || ''}
@@ -570,7 +570,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                             setAiPersonas(next);
                                                         }}
                                                         rows={3}
-                                                        className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-[11px] text-app-text/40 focus:border-violet-500/40 resize-none outline-none custom-scrollbar transition-all shadow-inner"
+                                                        className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-ui-11 text-app-text/40 focus:border-violet-500/40 resize-none outline-none custom-scrollbar transition-all shadow-inner"
                                                         placeholder={t('modules:session.campaign_form.intelligence.ai_placeholder', { name: t(gem.name) })}
                                                     />
                                                 </div>

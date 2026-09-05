@@ -81,7 +81,7 @@ export const SelecteurDeMoteur: React.FC<{
                             disabled={!utilisable}
                             title={utilisable ? undefined : 'Aucune clé enregistrée pour ce moteur'}
                             onClick={() => retenir(forge, p === activeProvider ? undefined : p)}
-                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all
+                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-ui-10 font-bold uppercase tracking-widest transition-all
                                 ${actif ? 'bg-indigo-500/20 text-indigo-300' : 'text-app-text/40 hover:text-app-text/70'}
                                 ${utilisable ? '' : 'opacity-30 cursor-not-allowed'}`}
                         >
@@ -96,7 +96,7 @@ export const SelecteurDeMoteur: React.FC<{
             </div>
 
             {verdictDePause(retenu) && (
-                <span className="text-[10px] text-app-text/40 pl-1">
+                <span className="text-ui-10 text-app-text/40 pl-1">
                     {verdictDePause(retenu)}
                 </span>
             )}

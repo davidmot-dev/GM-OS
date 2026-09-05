@@ -565,7 +565,7 @@ const SocialGraph: React.FC = () => {
                 <div className="absolute bottom-10 left-10 p-6 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-10">
                     <div className="flex items-center gap-3 text-slate-400 mb-4">
                         <Users size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.social_graph.legend_title')}</span>
+                        <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.legend_title')}</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-8 gap-y-3">
@@ -579,7 +579,7 @@ const SocialGraph: React.FC = () => {
                         ].map(item => (
                             <div key={item.label} className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full shadow-glow" style={{ backgroundColor: item.color }} />
-                                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{item.label}</span>
+                                <span className="text-ui-10 font-bold text-slate-300 uppercase tracking-wider">{item.label}</span>
                             </div>
                         ))}
 

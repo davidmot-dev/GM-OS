@@ -130,7 +130,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
             case 'barre':
                 return (
                     <>
-                        {compte(Y_DU_COMPTE_PLAT, 'text-[15px]')}
+                        {compte(Y_DU_COMPTE_PLAT, 'text-[calc(15px*var(--echelle-corps,1))]')}
                         {casesDeLaBarre(totalSegments).map((c, i) => (
                             <rect
                                 key={i}
@@ -150,7 +150,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
             case 'points':
                 return (
                     <>
-                        {compte(Y_DU_COMPTE_PLAT, 'text-[15px]')}
+                        {compte(Y_DU_COMPTE_PLAT, 'text-[calc(15px*var(--echelle-corps,1))]')}
                         {pastillesDeLaJauge(totalSegments).map((p, i) => (
                             <circle
                                 key={i}
@@ -218,7 +218,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
                                 </>
                             );
                         })()}
-                        {compte(Y_DU_COMPTE_CADRAN, 'text-[13px]')}
+                        {compte(Y_DU_COMPTE_CADRAN, 'text-[calc(13px*var(--echelle-corps,1))]')}
                     </>
                 );
 
@@ -246,7 +246,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
                                 style={{ filter: halo(i < filledSegments) }}
                             />
                         ))}
-                        {compte(REPERE / 2, 'text-[14px]')}
+                        {compte(REPERE / 2, 'text-sm')}
                         {pleine && (
                             <circle
                                 cx={REPERE / 2}

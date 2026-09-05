@@ -89,14 +89,14 @@ const DamageCalculator: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
                                 {isHealing ? <HeartPulse size={12} className="text-emerald-400" /> : <Zap size={12} className="text-gm-crimson" />}
                                 {isHealing ? t('modules:combat.damage.amount_heal') : t('modules:combat.damage.amount_dmg')}
                             </label>
                             {lastRoll && (
                                 <button 
                                     onClick={() => setAmount(lastRoll.total)}
-                                    className="flex items-center gap-1.5 px-2 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded text-[9px] font-black text-indigo-400 transition-all"
+                                    className="flex items-center gap-1.5 px-2 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded text-ui-9 font-black text-indigo-400 transition-all"
                                 >
                                     <Dices size={10} /> {t('modules:combat.damage.last_roll', { total: lastRoll.total })}
                                 </button>
@@ -115,13 +115,13 @@ const DamageCalculator: React.FC = () => {
                         <div className="flex p-1 bg-black/40 rounded-xl border border-white/5 shadow-inner">
                             <button 
                                 onClick={() => setIsHealing(false)}
-                                className={`flex-1 py-2.5 text-[10px] font-black tracking-widest transition-all rounded-lg ${!isHealing ? 'bg-gm-crimson text-white shadow-glow-crimson' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`flex-1 py-2.5 text-ui-10 font-black tracking-widest transition-all rounded-lg ${!isHealing ? 'bg-gm-crimson text-white shadow-glow-crimson' : 'text-slate-500 hover:text-slate-300'}`}
                             >
                                 {t('modules:combat.damage.action_dmg')}
                             </button>
                             <button 
                                 onClick={() => setIsHealing(true)}
-                                className={`flex-1 py-2.5 text-[10px] font-black tracking-widest transition-all rounded-lg ${isHealing ? 'bg-emerald-600 text-white shadow-glow-emerald' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`flex-1 py-2.5 text-ui-10 font-black tracking-widest transition-all rounded-lg ${isHealing ? 'bg-emerald-600 text-white shadow-glow-emerald' : 'text-slate-500 hover:text-slate-300'}`}
                             >
                                 {t('modules:combat.damage.action_heal')}
                             </button>
@@ -129,7 +129,7 @@ const DamageCalculator: React.FC = () => {
                     </div>
 
                     <div className="space-y-4">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
                             {t('modules:combat.damage.type_label')}
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 h-[156px] overflow-y-auto custom-scrollbar pr-2">
@@ -137,7 +137,7 @@ const DamageCalculator: React.FC = () => {
                                 <button
                                     key={tKey}
                                     onClick={() => setType(tKey)}
-                                    className={`px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${
+                                    className={`px-3 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-wider transition-all border ${
                                         type === tKey 
                                         ? 'bg-primary text-white border-primary shadow-glow-primary/30' 
                                         : 'bg-white/[0.02] border-white/5 text-slate-500 hover:border-white/20 hover:text-slate-300'
@@ -160,7 +160,7 @@ const DamageCalculator: React.FC = () => {
                         </div>
                         <button 
                             onClick={toggleAll} 
-                            className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[9px] font-black text-slate-500 hover:text-primary transition-all uppercase tracking-widest border border-white/5"
+                            className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-ui-9 font-black text-slate-500 hover:text-primary transition-all uppercase tracking-widest border border-white/5"
                         >
                             <RotateCcw size={10} className="group-hover:rotate-180 transition-transform duration-500" />
                             {selectedIds.length === combatants.length ? t('common:actions.clear') : t('common:actions.all')}
@@ -202,7 +202,7 @@ const DamageCalculator: React.FC = () => {
                                                     qu'il n'y en a pas. Un 0/0 se lirait « mourant ». */}
                                                 {(!healthSys || healthSys.type === 'hp') ? (
                                                     fractionDeVie(c) === null ? (
-                                                        <span className="text-[9px] font-mono text-slate-600 font-bold uppercase tracking-widest">
+                                                        <span className="text-ui-9 font-mono text-slate-600 font-bold uppercase tracking-widest">
                                                             sans jauge
                                                         </span>
                                                     ) : (
@@ -213,12 +213,12 @@ const DamageCalculator: React.FC = () => {
                                                                 style={{ width: `${fractionDeVie(c)! * 100}%` }}
                                                             />
                                                         </div>
-                                                        <span className="text-[9px] font-mono text-slate-500 font-bold">{decrireLaSante(c) ?? "—"}</span>
+                                                        <span className="text-ui-9 font-mono text-slate-500 font-bold">{decrireLaSante(c) ?? "—"}</span>
                                                     </>
                                                     )
                                                 ) : (
                                                     <div className="flex items-center gap-2">
-                                                        <div className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter border ${
+                                                        <div className={`px-1.5 py-0.5 rounded text-ui-8 font-black uppercase tracking-tighter border ${
                                                             healthSys.state === 'dead' ? 'bg-slate-500/10 border-slate-500/30 text-slate-500' :
                                                             healthSys.state === 'critical' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500' :
                                                             'bg-primary/10 border-primary/30 text-primary'

@@ -75,7 +75,7 @@ export const MessageAlertOverlay: React.FC = () => {
                              </div>
                              <div className="flex flex-col">
                                  <span className="text-xs font-black uppercase tracking-widest text-accent">Nouveau Message</span>
-                                 <span className="text-[10px] font-bold text-app-text/80 truncate max-w-[150px]">
+                                 <span className="text-ui-10 font-bold text-app-text/80 truncate max-w-[150px]">
                                      {alert.character}
                                  </span>
                              </div>
@@ -99,7 +99,7 @@ export const MessageAlertOverlay: React.FC = () => {
                             type="button"
                             onClick={() => handleDismiss(alert.id)}
                             title="Accepter"
-                            className="flex-1 py-2 px-3 rounded-xl bg-app-bg border border-app-border text-[10px] font-bold uppercase tracking-wider hover:bg-app-surface text-app-text/60 hover:text-app-text transition-all flex items-center justify-center gap-2"
+                            className="flex-1 py-2 px-3 rounded-xl bg-app-bg border border-app-border text-ui-10 font-bold uppercase tracking-wider hover:bg-app-surface text-app-text/60 hover:text-app-text transition-all flex items-center justify-center gap-2"
                         >
                             <Check size={12} />
                             OK
@@ -108,7 +108,7 @@ export const MessageAlertOverlay: React.FC = () => {
                             type="button"
                             onClick={() => handleSave(alert)}
                             title="Enregistrer dans le journal"
-                            className="flex-1 py-2 px-3 rounded-xl bg-gm-gold/20 border border-gm-gold/30 text-[10px] font-bold uppercase tracking-wider text-gm-gold hover:bg-gm-gold hover:text-app-bg transition-all flex items-center justify-center gap-2 shadow-lg shadow-gm-gold/10"
+                            className="flex-1 py-2 px-3 rounded-xl bg-gm-gold/20 border border-gm-gold/30 text-ui-10 font-bold uppercase tracking-wider text-gm-gold hover:bg-gm-gold hover:text-app-bg transition-all flex items-center justify-center gap-2 shadow-lg shadow-gm-gold/10"
                         >
                             <Save size={12} />
                             Sauvegarder

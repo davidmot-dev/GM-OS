@@ -44,7 +44,7 @@ const AtmosphereManager: React.FC = () => {
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/20 border border-accent rounded-xl shadow-glow-accent/20">
                                 <input
                                     autoFocus
-                                    className="bg-transparent text-[10px] font-black uppercase tracking-widest text-white outline-none w-24"
+                                    className="bg-transparent text-ui-10 font-black uppercase tracking-widest text-white outline-none w-24"
                                     value={editValue}
                                     onChange={(e) => setEditValue(e.target.value)}
                                     onBlur={handleRename}
@@ -63,7 +63,7 @@ const AtmosphereManager: React.FC = () => {
                                         e.preventDefault();
                                         setMenuOpenId(menuOpenId === atmos.id ? null : atmos.id);
                                     }}
-                                    className={`flex items-center gap-3 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                    className={`flex items-center gap-3 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                         activeAtmosphereId === atmos.id
                                             ? 'bg-accent text-white shadow-glow-accent'
                                             : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'
@@ -93,7 +93,7 @@ const AtmosphereManager: React.FC = () => {
                                         <div className="absolute top-full left-0 mt-2 w-32 bg-app-surface/95 backdrop-blur-2xl border border-app-border rounded-xl shadow-3xl p-1 z-50 animate-in fade-in zoom-in-95 duration-150">
                                             <button 
                                                 onClick={() => startRename(atmos)}
-                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[9px] font-black text-app-text/40 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all"
+                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-ui-9 font-black text-app-text/40 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all"
                                             >
                                                 <Edit2 size={10} />
                                                 Rename
@@ -105,7 +105,7 @@ const AtmosphereManager: React.FC = () => {
                                                     }
                                                     setMenuOpenId(null);
                                                 }}
-                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[9px] font-black text-red-400/70 uppercase tracking-widest hover:bg-red-500/10 hover:text-red-400 transition-all"
+                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-ui-9 font-black text-red-400/70 uppercase tracking-widest hover:bg-red-500/10 hover:text-red-400 transition-all"
                                             >
                                                 <Trash2 size={10} />
                                                 Delete

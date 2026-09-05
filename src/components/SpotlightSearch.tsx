@@ -76,7 +76,7 @@ export const SpotlightSearch: React.FC = () => {
                         className="flex-1 bg-transparent border-none outline-none text-slate-100 placeholder:text-slate-500 text-lg"
                     />
                     <div className="flex items-center space-x-2">
-                        <div className="flex items-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-[10px] text-slate-400 font-medium">
+                        <div className="flex items-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-ui-10 text-slate-400 font-medium">
                             ESC
                         </div>
                         <button 
@@ -112,7 +112,7 @@ export const SpotlightSearch: React.FC = () => {
                         </div>
                     ) : (
                         <div className="px-4 py-3 space-y-4">
-                            <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-2">{t('common:spotlight.suggestions')}</div>
+                            <div className="text-ui-10 uppercase tracking-wider text-slate-500 font-bold px-2">{t('common:spotlight.suggestions')}</div>
                             <div className="grid grid-cols-2 gap-2">
                                 <QuickTip icon={User} label={t('common:spotlight.quick_tips.npcs')} />
                                 <QuickTip icon={Music} label={t('common:spotlight.quick_tips.audio')} />
@@ -130,7 +130,7 @@ export const SpotlightSearch: React.FC = () => {
                 </div>
 
                 {/* Footer / Shortcuts */}
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-950/40 border-t border-slate-800 text-[10px] text-slate-500">
+                <div className="flex items-center justify-between px-4 py-2 bg-slate-950/40 border-t border-slate-800 text-ui-10 text-slate-500">
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">
                             <div className="flex items-center px-1 py-0.5 rounded border border-slate-800 bg-slate-900 mr-1.5 font-mono">↑↓</div>
@@ -179,14 +179,14 @@ const ResultItem: React.FC<{
                     {result.title}
                 </div>
                 {result.subtitle && (
-                    <div className="text-[11px] text-slate-500 truncate mt-0.5 italic">
+                    <div className="text-ui-11 text-slate-500 truncate mt-0.5 italic">
                         {result.subtitle}
                     </div>
                 )}
             </div>
             {isSelected && (
                 <div className="flex items-center text-accent/50 animate-pulse">
-                    <span className="text-[10px] font-bold mr-2 uppercase tracking-tighter">{t('common:spotlight.open_hint')}</span>
+                    <span className="text-ui-10 font-bold mr-2 uppercase tracking-tighter">{t('common:spotlight.open_hint')}</span>
                     <CornerDownLeft className="w-3 h-3" />
                 </div>
             )}
@@ -197,6 +197,6 @@ const ResultItem: React.FC<{
 const QuickTip: React.FC<{ icon: any; label: string }> = ({ icon: Icon, label }) => (
     <div className="flex items-center p-2 rounded-lg bg-slate-800/30 border border-slate-800/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all cursor-default">
         <Icon className="w-4 h-4 mr-2" />
-        <span className="text-[11px] font-medium">{label}</span>
+        <span className="text-ui-11 font-medium">{label}</span>
     </div>
 );

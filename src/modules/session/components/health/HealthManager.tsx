@@ -315,7 +315,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
             title="Changer de moteur"
           >
             <Settings2 size={10} className="group-hover/engine:rotate-90 transition-transform duration-500" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em]">
+            <span className="text-ui-9 font-black uppercase tracking-[0.2em]">
               {health.type === 'hp' && 'Points de Vie'}
               {health.type === 'clocks' && 'Horloges'}
               {health.type === 'anatomy' && 'Anatomie'}
@@ -324,7 +324,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
             </span>
           </button>
 
-          <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border transition-all ${
+          <div className={`px-2 py-0.5 rounded-md text-ui-8 font-black uppercase tracking-widest border transition-all ${
               health.state === 'healthy' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
               health.state === 'dead' ? 'bg-slate-500/10 text-slate-400 border-slate-500/20' : 
               health.state === 'critical' ? 'bg-red-600/20 text-red-500 border-red-500/40 shadow-glow-red/40 animate-pulse' :
@@ -430,7 +430,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
             */}
             {cibleDesCoups && (
                 <div
-                    className="flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-primary/90 pr-1"
+                    className="flex items-center gap-1 text-ui-8 font-black uppercase tracking-widest text-primary/90 pr-1"
                     title={`Les dégâts et les soins de cette ligne partent sur ${cibleDesCoups.nom}`}
                 >
                     <Crosshair size={9} className="shrink-0" />
@@ -443,7 +443,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
               fait passer pour une panne.* C'est ce message qui manquait.
             */}
             {sansEffet && (
-                <p role="status" className="text-[8px] font-black uppercase tracking-widest text-amber-400 text-right max-w-[190px] leading-tight">
+                <p role="status" className="text-ui-8 font-black uppercase tracking-widest text-amber-400 text-right max-w-[190px] leading-tight">
                     {sansEffet}
                 </p>
             )}
@@ -456,7 +456,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                   title={cibleDesCoups ? `Infliger dégâts à ${cibleDesCoups.nom}` : 'Infliger dégâts'}
                 >
                     <Swords size={18} className="text-rose-500 group-hover/dmg:rotate-12 transition-transform" />
-                    <span className="text-[7px] font-black uppercase tracking-widest text-rose-500/80">Dégats</span>
+                    <span className="text-ui-7 font-black uppercase tracking-widest text-rose-500/80">Dégats</span>
                 </button>
                 
                 {/* Impact value display area */}
@@ -495,7 +495,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                 <select
                     value={typeChoisi}
                     onChange={(e) => setImpactType(e.target.value)}
-                    className="max-w-[92px] bg-black/40 border border-white/10 rounded-lg px-1.5 py-1 text-[9px] font-black uppercase tracking-wider text-slate-300 outline-none focus:border-primary/50 transition-colors cursor-pointer"
+                    className="max-w-[92px] bg-black/40 border border-white/10 rounded-lg px-1.5 py-1 text-ui-9 font-black uppercase tracking-wider text-slate-300 outline-none focus:border-primary/50 transition-colors cursor-pointer"
                     title="Type de dégâts — appliqué aux résistances de la fiche"
                 >
                     {typesDisponibles.map(jeton => (
@@ -511,7 +511,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                   title={cibleDesCoups ? `Soigner ${cibleDesCoups.nom}` : 'Soigner'}
                 >
                     <Heart size={18} className="text-emerald-400 group-hover/heal:scale-110 transition-transform" />
-                    <span className="text-[7px] font-black uppercase tracking-widest text-emerald-400/80">Soins</span>
+                    <span className="text-ui-7 font-black uppercase tracking-widest text-emerald-400/80">Soins</span>
                 </button>
             </div>
         </div>

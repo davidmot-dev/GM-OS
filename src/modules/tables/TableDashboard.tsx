@@ -238,15 +238,15 @@ const TableDashboard: React.FC = () => {
 
                 {/* History Mini-List */}
                 <div className="flex-1 overflow-hidden flex flex-col pt-4">
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-app-text/50 mb-2 flex items-center gap-2 px-1">
+                    <h3 className="text-ui-10 font-bold uppercase tracking-widest text-app-text/50 mb-2 flex items-center gap-2 px-1">
                         <History className="w-3 h-3" /> {t('random_tables.sidebar.history_title')}
                     </h3>
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-2 text-app-text/60">
                         {history.slice(0, 10).map((res, i) => (
-                            <div key={i} className="text-[11px] p-2 rounded bg-app-surface/30 border border-app-border/50 flex justify-between items-center group">
+                            <div key={i} className="text-ui-11 p-2 rounded bg-app-surface/30 border border-app-border/50 flex justify-between items-center group">
                                 <span className="text-app-text/60 font-mono">[{res.finalValue}]</span>
                                 <span className="flex-1 px-2 truncate font-medium">{res.entry.title}</span>
-                                <span className="text-[9px] text-app-text/30">{new Date(res.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                <span className="text-ui-9 text-app-text/30">{new Date(res.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                         ))}
                     </div>
@@ -286,7 +286,7 @@ const TableDashboard: React.FC = () => {
                                     <h1 className="text-3xl font-bold mt-4">{currentResult.entry.title}</h1>
                                 </div>
                                 <div className="text-right">
-                                    <div className="opacity-50 text-[10px] uppercase tracking-tighter mb-1 font-bold">{t('random_tables.main.source', { table: currentResult.tableName })}</div>
+                                    <div className="opacity-50 text-ui-10 uppercase tracking-tighter mb-1 font-bold">{t('random_tables.main.source', { table: currentResult.tableName })}</div>
                                     <BookOpen className="w-8 h-8 opacity-20 ml-auto" />
                                 </div>
                             </div>

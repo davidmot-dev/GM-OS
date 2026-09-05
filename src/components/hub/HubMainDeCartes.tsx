@@ -137,7 +137,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                             {carteEnGrand.texte}
                         </p>
                     )}
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-white/30">
+                    <p className="text-ui-10 uppercase tracking-[0.2em] text-white/30">
                         {t('modules:session.deck_module.player.hands.tap_to_close')}
                     </p>
                 </div>
@@ -156,13 +156,13 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                     <div className="flex gap-2">
                         <button
                             onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })}
-                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-white"
+                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2.5 text-ui-10 font-black uppercase tracking-widest text-white"
                         >
                             <Check size={12} /> {t('modules:session.deck_module.player.hands.accept')}
                         </button>
                         <button
                             onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id, characterId })}
-                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-app-border px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-app-text/60"
+                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-app-border px-3 py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text/60"
                         >
                             <X size={12} /> {t('modules:session.deck_module.player.hands.refuse')}
                         </button>
@@ -181,7 +181,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
             */}
             {paquetsOuverts.length > 0 && (
                 <section className="rounded-2xl border border-app-border/40 bg-app-surface/50 p-4 backdrop-blur-xl">
-                    <p className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">
+                    <p className="mb-3 flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                         <Hand size={12} /> {t('modules:session.deck_module.player.hands.open_decks')}
                     </p>
                     <div className="flex flex-wrap gap-5">
@@ -204,14 +204,14 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                             alt={paquet.name}
                                             className="h-32 rounded-xl border border-accent/40 object-cover shadow-lg"
                                         />
-                                        <span className="absolute inset-x-0 bottom-1 mx-auto w-fit rounded-full bg-black/80 px-2 py-0.5 text-[10px] font-black text-accent">
+                                        <span className="absolute inset-x-0 bottom-1 mx-auto w-fit rounded-full bg-black/80 px-2 py-0.5 text-ui-10 font-black text-accent">
                                             {restantes}
                                         </span>
                                     </button>
-                                    <span className="max-w-[9rem] truncate text-center text-[10px] font-bold uppercase tracking-widest text-app-text/40">
+                                    <span className="max-w-[9rem] truncate text-center text-ui-10 font-bold uppercase tracking-widest text-app-text/40">
                                         {paquet.name}
                                     </span>
-                                    <span className="text-[9px] font-black uppercase tracking-widest text-app-text/25">
+                                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/25">
                                         {vide
                                             ? t('modules:session.deck_module.player.hands.deck_empty')
                                             : t('modules:session.deck_module.player.hands.draw')}
@@ -224,7 +224,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
             )}
 
             <section className="rounded-2xl border border-app-border/40 bg-app-surface/50 p-4 backdrop-blur-xl">
-                <p className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">
+                <p className="mb-3 flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                     <Layers size={12} /> {t('modules:session.deck_module.player.hands.title')}
                 </p>
 
@@ -243,7 +243,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                     <div className="flex flex-col gap-5">
                         {mesCartes.map(({ paquet, revelees, scellees }) => (
                             <div key={paquet.id} className="flex flex-col gap-2">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">
+                                <span className="text-ui-10 font-bold uppercase tracking-widest text-app-text/30">
                                     {paquet.name}
                                 </span>
 
@@ -286,7 +286,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                   créerait deux vérités sur une carte.
                                                 */}
                                                 {enAttente ? (
-                                                    <span className="text-center text-[9px] font-bold uppercase tracking-wider text-app-text/30">
+                                                    <span className="text-center text-ui-9 font-bold uppercase tracking-wider text-app-text/30">
                                                         {t('modules:session.deck_module.player.hands.pending')}
                                                     </span>
                                                 ) : (
@@ -295,7 +295,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                             onClick={() => demanderAuMeneur('deck:jouer-carte', {
                                                                 deckId: paquet.id, index, characterId,
                                                             })}
-                                                            className="flex-1 rounded-md border border-app-border px-2 py-1.5 text-[9px] font-black uppercase tracking-wider text-app-text/60 hover:border-accent/40 hover:text-app-text"
+                                                            className="flex-1 rounded-md border border-app-border px-2 py-1.5 text-ui-9 font-black uppercase tracking-wider text-app-text/60 hover:border-accent/40 hover:text-app-text"
                                                         >
                                                             {t('modules:session.deck_module.player.hands.play_own')}
                                                         </button>
@@ -308,7 +308,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                                 })}
                                                                 title={t('modules:session.deck_module.player.hands.give_to')}
                                                                 aria-label={t('modules:session.deck_module.player.hands.give_to')}
-                                                                className="flex-1 cursor-pointer rounded-md border border-app-border bg-transparent px-1 py-1.5 text-[9px] font-black uppercase tracking-wider text-app-text/60"
+                                                                className="flex-1 cursor-pointer rounded-md border border-app-border bg-transparent px-1 py-1.5 text-ui-9 font-black uppercase tracking-wider text-app-text/60"
                                                             >
                                                                 <option value="">{t('modules:session.deck_module.player.hands.give_to')}</option>
                                                                 {voisins.map(v => (

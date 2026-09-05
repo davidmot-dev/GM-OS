@@ -62,10 +62,10 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                         <Package className="text-accent" size={30} />
                         Inventaire
                     </h2>
-                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-[0.5em]">Trésors, reliques et possessions personnelles.</p>
+                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Trésors, reliques et possessions personnelles.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-[10px] font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
+                    <div className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                         {structuredItems.length + items.length} Objets
                     </div>
@@ -97,21 +97,21 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                         <Clock size={16} className="text-accent animate-pulse" />
                                                     </div>
                                                 )}
-                                                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-accent/20 border border-accent/30 text-[6px] font-black text-accent uppercase tracking-tighter">
+                                                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-accent/20 border border-accent/30 text-[calc(6px*var(--echelle-interface,1))] font-black text-accent uppercase tracking-tighter">
                                                     {isPending ? 'Wait...' : item.rarity}
                                                 </div>
                                             </div>
                                             
                                             <div className="px-1 text-center space-y-0.5">
-                                                <h3 className="text-[9px] font-black text-app-text uppercase tracking-wider truncate" title={item.name}>{item.name}</h3>
-                                                <p className="text-[7px] font-bold text-app-text/40 uppercase tracking-widest">Qty: {item.quantity}</p>
+                                                <h3 className="text-ui-9 font-black text-app-text uppercase tracking-wider truncate" title={item.name}>{item.name}</h3>
+                                                <p className="text-ui-7 font-bold text-app-text/40 uppercase tracking-widest">Qty: {item.quantity}</p>
                                             </div>
 
                                             <div className="flex gap-1.5 mt-1">
                                                 <button 
                                                     disabled={isPending}
                                                     onClick={() => setTransferringItem(item)}
-                                                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border transition-all text-[7px] font-black uppercase tracking-widest ${
+                                                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border transition-all text-ui-7 font-black uppercase tracking-widest ${
                                                         isPending 
                                                             ? 'bg-app-bg/40 text-app-text/20 border-white/5 cursor-not-allowed'
                                                             : 'bg-accent/20 hover:bg-accent/40 text-accent border-accent/20'
@@ -135,7 +135,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                             </div>
                         ) : (
                             <div className="mx-4 p-8 border-2 border-dashed border-white/5 rounded-[2rem] bg-white/[0.02] text-center">
-                                <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-widest">Votre sac à dos est vide</p>
+                                <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-widest">Votre sac à dos est vide</p>
                             </div>
                         )}
                     </section>
@@ -162,7 +162,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                             )}
                                         </div>
                                         <div className="px-1 text-center">
-                                            <h3 className="text-[9px] font-black text-app-text uppercase tracking-wider truncate">{item.name}</h3>
+                                            <h3 className="text-ui-9 font-black text-app-text uppercase tracking-wider truncate">{item.name}</h3>
                                         </div>
                                     </button>
                                 ))}
@@ -177,7 +177,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                             </div>
                             <div className="space-y-3">
                                 <p className="text-sm font-black uppercase tracking-[0.4em] text-app-text/20">Inventaire Vide</p>
-                                <p className="max-w-xs text-[10px] text-app-text/10 font-bold uppercase leading-relaxed">
+                                <p className="max-w-xs text-ui-10 text-app-text/10 font-bold uppercase leading-relaxed">
                                     Vous ne possédez aucun objet pour le moment.
                                 </p>
                             </div>
@@ -213,14 +213,14 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                     <Package size={40} />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">{transferringItem.type}</span>
+                                    <span className="text-ui-10 font-black text-accent uppercase tracking-widest mb-1">{transferringItem.type}</span>
                                     <h4 className="text-xl font-black text-app-text uppercase">{transferringItem.name}</h4>
                                     <p className="text-xs text-app-text/40">{transferringItem.description}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-4">
-                                <p className="text-[10px] font-black text-app-text/40 uppercase tracking-[0.4em] px-2">Choisir le destinataire</p>
+                                <p className="text-ui-10 font-black text-app-text/40 uppercase tracking-[0.4em] px-2">Choisir le destinataire</p>
                                 <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                     {otherCharacters.map(char => (
                                         <button
@@ -234,7 +234,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                 </div>
                                                 <div className="flex flex-col items-start">
                                                     <span className="text-sm font-black text-app-text uppercase tracking-tight group-hover:text-accent transition-colors">{char.name}</span>
-                                                    <span className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest">{char.classRace}</span>
+                                                    <span className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest">{char.classRace}</span>
                                                 </div>
                                             </div>
                                             <ChevronRight size={20} className="text-app-text/20 group-hover:text-accent group-hover:translate-x-1 transition-all" />
@@ -252,7 +252,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 <div className="size-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
                                     <Clock size={16} />
                                 </div>
-                                <p className="text-[10px] font-bold text-amber-500/80 leading-relaxed uppercase tracking-wider">
+                                <p className="text-ui-10 font-bold text-amber-500/80 leading-relaxed uppercase tracking-wider">
                                     Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif.
                                 </p>
                             </div>

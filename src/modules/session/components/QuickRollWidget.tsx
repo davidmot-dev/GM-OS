@@ -21,10 +21,10 @@ const QuickRollWidget: React.FC = () => {
     return (
         <div className="mt-auto bg-slate-900 flex flex-col p-4 rounded-xl border border-slate-800 shadow-lg shrink-0">
             <div className="flex justify-between items-center mb-3">
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                <span className="text-ui-10 text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
                     <Dices size={12} /> Quick Roll
                 </span>
-                <button className="text-gm-gold text-[10px] font-bold hover:underline flex items-center gap-1">
+                <button className="text-gm-gold text-ui-10 font-bold hover:underline flex items-center gap-1">
                     <History size={12} /> HISTORY
                 </button>
             </div>
@@ -40,7 +40,7 @@ const QuickRollWidget: React.FC = () => {
                             }`}
                         title={`Roll ${dice.expression}`}
                     >
-                        <span className={`text-[10px] font-mono mb-0.5 ${dice.highlight ? 'text-gm-gold' : 'text-slate-500'}`}>
+                        <span className={`text-ui-10 font-mono mb-0.5 ${dice.highlight ? 'text-gm-gold' : 'text-slate-500'}`}>
                             {dice.label}
                         </span>
                     </button>

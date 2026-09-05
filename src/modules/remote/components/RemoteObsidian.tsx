@@ -81,7 +81,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                     </button>
                     <span className="min-w-0 flex flex-col">
                         <span className="text-sm font-bold text-slate-200 truncate">{ouverte?.nom ?? coffre.chemin}</span>
-                        {ouverte?.dossier && <span className="text-[10px] text-slate-600 truncate">{ouverte.dossier}</span>}
+                        {ouverte?.dossier && <span className="text-ui-10 text-slate-600 truncate">{ouverte.dossier}</span>}
                     </span>
                 </div>
                 <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-white/[0.03] border border-white/5 p-4">
@@ -143,7 +143,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                     </p>
                 ) : (
                     <>
-                        <p className="text-[10px] uppercase tracking-widest text-slate-600 px-1 pb-1">
+                        <p className="text-ui-10 uppercase tracking-widest text-slate-600 px-1 pb-1">
                             {retenues.length} note{retenues.length > 1 ? 's' : ''}
                             {!filtre && notes.length > 0 && <span className="text-slate-700"> · tout le coffre</span>}
                         </p>
@@ -157,7 +157,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                                 <span className="flex-1 min-w-0 flex flex-col">
                                     <span className="text-xs font-bold text-slate-200 truncate">{n.nom}</span>
                                     {n.dossier && (
-                                        <span className="flex items-center gap-1 text-[10px] text-slate-600 truncate">
+                                        <span className="flex items-center gap-1 text-ui-10 text-slate-600 truncate">
                                             <Folder size={9} className="shrink-0" /> {n.dossier}
                                         </span>
                                     )}

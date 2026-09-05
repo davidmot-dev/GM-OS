@@ -158,7 +158,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
         <div className="glass-bento rounded-3xl border border-app-border/15 p-5 flex flex-col gap-4 shrink-0">
             <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Trame en cours</p>
+                    <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent">Trame en cours</p>
                     <p className="text-sm font-bold text-app-text truncate mt-0.5">
                         {acte ? acte.titre : 'Aucun acte annoncé pour cette séance'}
                     </p>
@@ -166,7 +166,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                 <button
                     onClick={() => setCurrentView('trame')}
                     title="Ouvrir la trame complète"
-                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/50 hover:text-app-text transition-all"
+                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text transition-all"
                 >
                     <ExternalLink size={11} /> Trame
                 </button>
@@ -175,7 +175,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
             {/* Combien de scènes tournent — l'information qu'on cherche d'un coup d'œil
                 quand le groupe s'est séparé. */}
             {enCours.length > 0 && (
-                <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400/80">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-emerald-400/80">
                     {enCours.length} scène{enCours.length > 1 ? 's' : ''} en cours
                 </p>
             )}
@@ -198,7 +198,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                 reprendre à la main dès maintenant. */}
             {enPause.length > 0 && (
                 <div className="flex flex-col gap-1.5 pt-2 border-t border-app-border/15">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">
                         En pause
                     </p>
                     {enPause.map(scene => (
@@ -218,7 +218,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
 
             {aJouer.length > 0 && (
                 <div className="flex flex-col gap-1.5 pt-2 border-t border-app-border/15">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">
                         Scènes de l'acte
                     </p>
                     {aJouer.map(scene => (
@@ -238,7 +238,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
             )}
 
             {enCours.length === 0 && enPause.length === 0 && aJouer.length === 0 && (
-                <p className="text-[11px] text-app-text/40 italic px-1 leading-relaxed">
+                <p className="text-ui-11 text-app-text/40 italic px-1 leading-relaxed">
                     {acte
                         ? 'Cet acte n’a encore aucune scène. Une scène improvisée s’ouvre du même geste qu’elle se crée.'
                         : 'Aucun acte annoncé pour cette séance — déclare-le en préparation, ou depuis la trame.'}
@@ -253,7 +253,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
             */}
             <div className="pt-2 border-t border-app-border/15">
                 {!session.acteId ? (
-                    <p className="text-[11px] text-app-text/30 italic px-1">
+                    <p className="text-ui-11 text-app-text/30 italic px-1">
                         Annonce un acte pour cette séance : une scène improvisée doit pouvoir s'y ranger.
                     </p>
                 ) : (
@@ -261,9 +261,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                         <button
                             onClick={improviser}
                             title="Elle s'ouvre tout de suite, avec le lieu, les PNJ en piste et l'ambiance en cours. Le titre se corrige après."
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-accent/30 text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/10 transition-all"
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-accent/30 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/10 transition-all"
                         ><Plus size={14} /> Scène improvisée</button>
-                        <p className="text-[9px] text-app-text/25 px-1 leading-relaxed">
+                        <p className="text-ui-9 text-app-text/25 px-1 leading-relaxed">
                             Un clic : elle capture le lieu, les PNJ en piste et l'ambiance. On la nomme après.
                         </p>
                     </div>
@@ -273,7 +273,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
             {acte && (
                 <button
                     onClick={basculerLActe}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                         acte.acheve
                             ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
                             : 'text-app-text/40 border border-app-border/20 hover:text-app-text'
@@ -366,11 +366,11 @@ const LigneDeSceneJouee: React.FC<{
             {prevueCeSoir && etat === 'prevue' && (
                 <span
                     title="Annoncée en préparation pour cette séance"
-                    className="text-[8px] font-black uppercase tracking-widest text-accent/70 shrink-0"
+                    className="text-ui-8 font-black uppercase tracking-widest text-accent/70 shrink-0"
                 >prévue</span>
             )}
             {scene.origine === 'improvisee' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-amber-400/70 shrink-0">
+                <span className="text-ui-8 font-black uppercase tracking-widest text-amber-400/70 shrink-0">
                     improvisée
                 </span>
             )}
@@ -406,10 +406,10 @@ const LigneDeSceneJouee: React.FC<{
                 */}
                 {scene.resume.trim().length > 0 && (
                     <div>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-1.5">
+                        <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 mb-1.5">
                             Ce qui s'y joue
                         </p>
-                        <p className="text-[12px] leading-relaxed text-app-text/80 whitespace-pre-wrap">
+                        <p className="text-ui-12 leading-relaxed text-app-text/80 whitespace-pre-wrap">
                             {scene.resume}
                         </p>
                     </div>
@@ -423,11 +423,11 @@ const LigneDeSceneJouee: React.FC<{
                     n'aurait aucun sens.
                 */}
                 <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-1.5">
+                    <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 mb-1.5">
                         Personnages présents
                     </p>
                     {troupe.length === 0 ? (
-                        <p className="text-[11px] text-app-text/30 italic">
+                        <p className="text-ui-11 text-app-text/30 italic">
                             Aucun personnage rattaché à cette séance.
                         </p>
                     ) : (
@@ -436,7 +436,7 @@ const LigneDeSceneJouee: React.FC<{
                                 <button
                                     key={pj.id}
                                     onClick={() => basculerLePJ(pj.id)}
-                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all ${
+                                    className={`px-2.5 py-1 rounded-lg text-ui-11 font-bold border transition-all ${
                                         presents.includes(pj.id)
                                             ? 'bg-accent/20 border-accent/50 text-app-text'
                                             : 'bg-app-bg/40 border-app-border/20 text-app-text/40 hover:text-app-text/70'
@@ -449,7 +449,7 @@ const LigneDeSceneJouee: React.FC<{
 
                 {/* Lu, jamais édité ici : ces deux-là se préparent dans la trame. */}
                 {(nomsDesPNJ.length > 0 || lieu) && (
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-app-text/50">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-ui-11 text-app-text/50">
                         {lieu && <span><span className="opacity-50">Lieu </span>{lieu}</span>}
                         {nomsDesPNJ.length > 0 && (
                             <span><span className="opacity-50">PNJ </span>{nomsDesPNJ.join(', ')}</span>
@@ -473,10 +473,10 @@ const LigneDeSceneJouee: React.FC<{
                 */}
                 {ambiance && (
                     <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
                             Ambiance
                         </span>
-                        <span className="text-[11px] text-app-text/60 truncate flex-1 min-w-0">
+                        <span className="text-ui-11 text-app-text/60 truncate flex-1 min-w-0">
                             {ambiance.name}
                         </span>
                         <button
@@ -484,7 +484,7 @@ const LigneDeSceneJouee: React.FC<{
                             title={momentEnCours
                                 ? 'Arrêter l’ambiance — l’image de la scène revient'
                                 : 'Lancer l’ambiance — son image remplace celle de la scène'}
-                            className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border transition-all ${
+                            className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-ui-10 font-black uppercase tracking-widest border transition-all ${
                                 momentEnCours
                                     ? 'bg-accent/20 border-accent/50 text-accent'
                                     : 'bg-app-bg/40 border-app-border/20 text-app-text/50 hover:text-app-text'
@@ -507,7 +507,7 @@ const LigneDeSceneJouee: React.FC<{
                     onChange={e => onModifier({ notesDuMeneur: e.target.value })}
                     rows={3}
                     placeholder="Ce qui s’y passe — notes du meneur"
-                    className="w-full bg-app-bg/40 px-3 py-2 rounded-lg border border-app-border/20 text-[12px] leading-relaxed focus:border-accent/50 outline-none resize-y"
+                    className="w-full bg-app-bg/40 px-3 py-2 rounded-lg border border-app-border/20 text-ui-12 leading-relaxed focus:border-accent/50 outline-none resize-y"
                 />
             </div>
         )}

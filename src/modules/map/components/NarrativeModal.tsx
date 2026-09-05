@@ -62,7 +62,7 @@ const NarrativeModal: React.FC = () => {
             </div>
             
             <div className="px-6 py-3 bg-slate-950/50 border-t border-indigo-500/10 text-center">
-                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">{t('map.narrative.footer')}</span>
+                <span className="text-ui-10 text-slate-500 uppercase font-bold tracking-widest">{t('map.narrative.footer')}</span>
             </div>
         </div>
     );

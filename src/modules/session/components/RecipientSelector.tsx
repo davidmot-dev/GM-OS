@@ -21,7 +21,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ onSelect, 
         return (
             <div className="p-4 bg-app-surface border border-app-border rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 w-64 z-50">
                 <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Donner à...</span>
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">Donner à...</span>
                     <button onClick={onCancel} className="text-app-text/20 hover:text-red-400 transition-colors"><X size={14} /></button>
                 </div>
                 <p className="text-xs text-app-text/40 italic">Aucun personnage dans la campagne active.</p>
@@ -32,7 +32,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ onSelect, 
     return (
         <div className="p-2 bg-app-surface border border-app-border/60 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 min-w-[220px] z-50 backdrop-blur-xl">
             <div className="flex justify-between items-center px-3 py-1.5 border-b border-app-border/40 mb-1">
-                <span className="text-[10px] font-black uppercase tracking-widest text-accent">Sélecteur de PJ</span>
+                <span className="text-ui-10 font-black uppercase tracking-widest text-accent">Sélecteur de PJ</span>
                 <button onClick={onCancel} className="text-app-text/40 hover:text-red-400 transition-colors"><X size={14} /></button>
             </div>
             
@@ -54,7 +54,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ onSelect, 
                         </div>
                         <div className="flex flex-col min-w-0">
                             <span className="text-xs font-black text-app-text group-hover:text-accent transition-colors truncate">{character.name}</span>
-                            <span className="text-[9px] text-app-text/40 font-bold uppercase tracking-tighter truncate opacity-80">{character.classRace}</span>
+                            <span className="text-ui-9 text-app-text/40 font-bold uppercase tracking-tighter truncate opacity-80">{character.classRace}</span>
                         </div>
                     </button>
                 ))}
@@ -63,7 +63,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ onSelect, 
             <div className="px-3 py-2 mt-1 border-t border-app-border/30">
                 <button 
                     onClick={onCancel}
-                    className="w-full text-center text-[9px] font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-colors"
+                    className="w-full text-center text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-colors"
                 >
                     Annuler
                 </button>

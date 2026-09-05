@@ -54,7 +54,7 @@ export const SceneGrid: React.FC = () => {
                                 title={t('light.grid.capture_tooltip')}
                             >
                                 <span className="material-symbols-outlined text-app-text/40 text-3xl group-hover:text-accent transition-colors">add</span>
-                                <span className="text-[10px] font-bold text-app-text/40 uppercase tracking-tight group-hover:text-accent">{t('light.grid.capture')}</span>
+                                <span className="text-ui-10 font-bold text-app-text/40 uppercase tracking-tight group-hover:text-accent">{t('light.grid.capture')}</span>
                             </div>
                         );
                     }

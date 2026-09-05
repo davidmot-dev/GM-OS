@@ -171,7 +171,7 @@ const ClockDashboard: React.FC = () => {
                                     <button
                                         key={t.id}
                                         onClick={() => setTheme(t.id)}
-                                        className={`p-2 rounded-lg border text-[10px] font-bold uppercase transition-all ${theme === t.id
+                                        className={`p-2 rounded-lg border text-ui-10 font-bold uppercase transition-all ${theme === t.id
                                             ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
                                             : 'bg-app-surface/50 border-app-border text-app-text/60 hover:border-accent/50 hover:bg-app-surface'
                                             }`}
@@ -202,7 +202,7 @@ const ClockDashboard: React.FC = () => {
                                     <div className="space-y-3 pt-2 border-t border-app-border/50">
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
-                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">{t('clock.year')}</label>
+                                                <label className="text-ui-10 text-slate-500 uppercase block mb-1">{t('clock.year')}</label>
                                                 <input
                                                     type="number"
                                                     className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
@@ -211,7 +211,7 @@ const ClockDashboard: React.FC = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">{t('clock.day')}</label>
+                                                <label className="text-ui-10 text-slate-500 uppercase block mb-1">{t('clock.day')}</label>
                                                 <input
                                                     type="number"
                                                     className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
@@ -221,7 +221,7 @@ const ClockDashboard: React.FC = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-[10px] text-slate-500 uppercase block mb-1">{t('clock.month')}</label>
+                                            <label className="text-ui-10 text-slate-500 uppercase block mb-1">{t('clock.month')}</label>
                                             <select
                                                 className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
                                                 value={fantasyDate.monthIndex}
@@ -369,7 +369,7 @@ const ClockDashboard: React.FC = () => {
                             <button
                                 key={m}
                                 onClick={() => setTimer(m * 60)}
-                                className="bg-app-surface/80 border border-app-border text-[10px] font-bold py-1 rounded hover:bg-app-surface hover:text-accent transition-all"
+                                className="bg-app-surface/80 border border-app-border text-ui-10 font-bold py-1 rounded hover:bg-app-surface hover:text-accent transition-all"
                             >
                                 {m}m
                             </button>
@@ -443,7 +443,7 @@ const ClockDashboard: React.FC = () => {
                                     title={nomDeLaNouvelle.trim()
                                         ? t('clock.gauge_add_named', { nom: nomDeLaNouvelle.trim(), segments: s })
                                         : t('clock.gauge_add_default', { segments: s })}
-                                    className="bg-app-bg/50 border border-app-border text-app-text/50 px-2 py-1 rounded text-[10px] font-bold hover:bg-app-surface hover:text-accent transition-all"
+                                    className="bg-app-bg/50 border border-app-border text-app-text/50 px-2 py-1 rounded text-ui-10 font-bold hover:bg-app-surface hover:text-accent transition-all"
                                 >
                                     +{s}
                                 </button>
@@ -510,7 +510,7 @@ const ClockDashboard: React.FC = () => {
                                     </div>
                                     <div className="text-center">
                                         <p className="text-xs font-bold text-slate-300 truncate w-full max-w-[120px] uppercase tracking-tight">{clock.name}</p>
-                                        <p className="text-[10px] text-slate-500 font-mono italic">
+                                        <p className="text-ui-10 text-slate-500 font-mono italic">
                                             {clock.filledSegments} / {clock.totalSegments} {t('clock.segments')}
                                         </p>
                                     </div>
@@ -633,7 +633,7 @@ const ClockDashboard: React.FC = () => {
                             <div className="col-span-4 h-full flex flex-col items-center justify-center text-slate-600 border-2 border-dashed border-slate-800/50 rounded-xl py-8">
                                 <Plus size={32} className="mb-2 opacity-20" />
                                 <p className="text-sm font-medium italic">{t('clock.empty.no_gauges')}</p>
-                                <p className="text-[10px] uppercase mt-1">{t('clock.empty.create_hint')}</p>
+                                <p className="text-ui-10 uppercase mt-1">{t('clock.empty.create_hint')}</p>
                             </div>
                         )}
                     </div>

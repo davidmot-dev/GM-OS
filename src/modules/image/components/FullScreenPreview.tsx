@@ -57,7 +57,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                             <h3 className="text-2xl font-black text-app-text uppercase tracking-[0.3em] mb-3 drop-shadow-[0_0_15px_rgba(var(--app-text-rgb),0.2)] font-display">{media.name}</h3>
                             <div className="flex items-center justify-center gap-3">
                                 <div className="w-2 h-2 rounded-full bg-accent" />
-                                <p className="text-app-text/20 text-[10px] font-black uppercase tracking-[0.4em] font-display">{t('modules:image.preview.audioStatus')}</p>
+                                <p className="text-app-text/20 text-ui-10 font-black uppercase tracking-[0.4em] font-display">{t('modules:image.preview.audioStatus')}</p>
                             </div>
                         </div>
                         <audio src={url} autoPlay controls className="w-full h-14 rounded-2xl relative z-10 opacity-80 hover:opacity-100 transition-opacity" />
@@ -95,7 +95,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                             </div>
                             <div className="text-center">
                                 <h3 className="text-2xl font-black text-app-text uppercase tracking-[0.2em] mb-3 font-display break-all">{media.name}</h3>
-                                <p className="text-app-text/30 text-[10px] font-black uppercase tracking-[0.4em] font-display">
+                                <p className="text-app-text/30 text-ui-10 font-black uppercase tracking-[0.4em] font-display">
                                     {extensionDe(media.name)}
                                 </p>
                             </div>
@@ -108,7 +108,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                 )}
             </div>
 
-            <div className="absolute bottom-12 px-8 py-3 bg-black/40 border border-app-border/5 rounded-full text-app-text/20 text-[10px] uppercase font-black tracking-[0.5em] backdrop-blur-md font-display">
+            <div className="absolute bottom-12 px-8 py-3 bg-black/40 border border-app-border/5 rounded-full text-app-text/20 text-ui-10 uppercase font-black tracking-[0.5em] backdrop-blur-md font-display">
                 {t('common:pressEscToClose')}
             </div>
         </div>

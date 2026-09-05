@@ -47,12 +47,12 @@ export const FieldGauge: React.FC<{
     return (
         <div className="group space-y-1.5">
             <div className="flex justify-between items-baseline gap-2">
-                <label htmlFor={field.id} className="text-[11px] font-black uppercase tracking-widest text-app-text/70">
+                <label htmlFor={field.id} className="text-ui-11 font-black uppercase tracking-widest text-app-text/70">
                     {field.label}
                 </label>
                 <span className="font-mono font-black text-app-text tabular-nums">
                     <span className="text-base">{value}</span>
-                    <span className="text-[11px] text-app-text/40"> / {max}</span>
+                    <span className="text-ui-11 text-app-text/40"> / {max}</span>
                 </span>
             </div>
             <div className="relative h-4 bg-app-bg rounded-lg overflow-hidden border border-app-border/60 shadow-inner">
@@ -89,7 +89,7 @@ export const FieldNumber: React.FC<{
     onChange: (val: number) => void;
 }> = ({ field, value, onChange }) => (
     <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label htmlFor={field.id} className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+        <label htmlFor={field.id} className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
         <input
             id={field.id}
             type="number"
@@ -107,7 +107,7 @@ export const FieldText: React.FC<{
     onChange: (val: string) => void;
 }> = ({ field, value, onChange }) => (
     <div className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label htmlFor={field.id} className="text-[10px] font-black uppercase tracking-widest text-app-text/40 w-28 flex-shrink-0">{field.label}</label>
+        <label htmlFor={field.id} className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 w-28 flex-shrink-0">{field.label}</label>
         <input
             id={field.id}
             type="text"
@@ -133,7 +133,7 @@ export const FieldCheckbox: React.FC<{
         className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 w-full hover:border-accent/20 transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
     >
         {value ? <CheckSquare size={16} className="text-accent flex-shrink-0" /> : <Square size={16} className="text-app-text/20 flex-shrink-0" />}
-        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</span>
+        <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</span>
     </button>
 );
 
@@ -149,7 +149,7 @@ export const FieldSelect: React.FC<{
 
     return (
         <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40 overflow-visible">
-            <label htmlFor={field.id} className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+            <label htmlFor={field.id} className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
             <Select
                 value={value}
                 onChange={onChange}
@@ -168,7 +168,7 @@ export const FieldTextarea: React.FC<{
     onChange: (val: string) => void;
 }> = ({ field, value, onChange }) => (
     <div className="flex flex-col gap-2 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label htmlFor={field.id} className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+        <label htmlFor={field.id} className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
         <textarea
             id={field.id}
             value={value}
@@ -209,7 +209,7 @@ export const FieldRating: React.FC<{
     const max = field.max || 5;
     return (
         <div className="flex items-center justify-between gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 hover:border-accent/20 transition-all">
-            <span className="text-[11px] font-black uppercase tracking-widest text-app-text/70">{field.label}</span>
+            <span className="text-ui-11 font-black uppercase tracking-widest text-app-text/70">{field.label}</span>
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5" role="group" aria-label={`Évaluation: ${field.label}`}>
                     {Array.from({ length: max }).map((_, i) => (
@@ -229,7 +229,7 @@ export const FieldRating: React.FC<{
                 </div>
                 {/* Le nombre, parce qu'au-delà de six pastilles on ne compte plus. */}
                 <span className="font-mono font-black tabular-nums shrink-0 text-app-text">
-                    {value}<span className="text-[11px] text-app-text/40">/{max}</span>
+                    {value}<span className="text-ui-11 text-app-text/40">/{max}</span>
                 </span>
             </div>
         </div>

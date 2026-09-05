@@ -180,7 +180,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
 
     // DEBUG PANEL - Visible only in dev or via triple click (mocked here as always for debug)
     const renderDebugOverlay = () => (
-        <div className="fixed bottom-4 left-4 z-[9999] bg-black/80 backdrop-blur-md border border-app-border/40 p-4 rounded-xl text-[10px] font-mono text-app-text/60 max-w-xs shadow-2xl pointer-events-none select-none">
+        <div className="fixed bottom-4 left-4 z-[9999] bg-black/80 backdrop-blur-md border border-app-border/40 p-4 rounded-xl text-ui-10 font-mono text-app-text/60 max-w-xs shadow-2xl pointer-events-none select-none">
             <h5 className="text-accent font-bold mb-2 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                 HUB SYNC DEBUG
@@ -353,20 +353,20 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                             haptic(10);
                             setShowLogoutConfirm(true);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-[10px] font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
+                        className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-ui-10 font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
                     >
                         <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40 group-hover:bg-rose-500 group-hover:animate-pulse" />
                         Quitter la session
                     </button>
                 ) : (
                     <div className="flex items-center gap-2 p-1 bg-rose-600 rounded-full animate-in zoom-in duration-300">
-                        <span className="px-4 text-[9px] font-black text-white uppercase tracking-tighter">Vraiment ?</span>
+                        <span className="px-4 text-ui-9 font-black text-white uppercase tracking-tighter">Vraiment ?</span>
                         <button 
                             onClick={() => {
                                 haptic(10);
                                 setShowLogoutConfirm(false);
                             }}
-                            className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-[10px] font-black uppercase"
+                            className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-ui-10 font-black uppercase"
                         >
                             Non
                         </button>
@@ -375,7 +375,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                 haptic([10, 50, 10]);
                                 logout();
                             }}
-                            className="px-4 py-2 bg-white text-rose-600 hover:bg-rose-50 rounded-full text-[10px] font-black uppercase"
+                            className="px-4 py-2 bg-white text-rose-600 hover:bg-rose-50 rounded-full text-ui-10 font-black uppercase"
                         >
                             Oui, quitter
                         </button>
@@ -391,7 +391,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                     <div className="flex items-center justify-center gap-3">
                         <div className="h-[1px] w-12 bg-accent/40" />
                         <div className="flex flex-col items-center">
-                            <span className="text-[10px] font-bold text-app-text/40 tracking-[0.2em] uppercase">
+                            <span className="text-ui-10 font-bold text-app-text/40 tracking-[0.2em] uppercase">
                                 Agent de la Session
                             </span>
                             <span className="text-sm font-medium text-accent/90 text-center max-w-[280px] leading-tight px-4" title={sessionDisplayName}>
@@ -420,8 +420,8 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                 {/* Player Name Badge (Top Right) */}
                                 <div className="absolute top-4 right-4 z-10">
                                     <div className="flex flex-col items-end">
-                                        <span className="text-[8px] font-black text-accent/40 uppercase tracking-widest mb-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Joueur</span>
-                                        <span className="px-3 py-1.5 bg-accent text-app-bg text-[10px] font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
+                                        <span className="text-ui-8 font-black text-accent/40 uppercase tracking-widest mb-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Joueur</span>
+                                        <span className="px-3 py-1.5 bg-accent text-app-bg text-ui-10 font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
                                             {char.playerName}
                                         </span>
                                     </div>
@@ -444,7 +444,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
 
                                 <div className="p-8 text-left relative">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent text-[10px] font-black uppercase tracking-widest rounded-full">
+                                        <span className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent text-ui-10 font-black uppercase tracking-widest rounded-full">
                                             Connectable
                                         </span>
                                         <Shield size={16} className="text-app-text/20 group-hover:text-accent transition-colors" />
@@ -452,7 +452,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                     <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter mb-1 select-none">
                                         {char.name}
                                     </h3>
-                                    <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-widest select-none leading-relaxed mt-2">
+                                    <p className="text-app-text/40 text-ui-10 font-bold uppercase tracking-widest select-none leading-relaxed mt-2">
                                         {char.classRace || "Héros d'Eldoria"}
                                     </p>
                                 </div>
@@ -470,7 +470,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                 )}
             </div>
             
-             <div className="mt-auto pb-8 text-app-text/20 font-bold text-[10px] uppercase tracking-[0.2em] flex flex-col items-center gap-1 relative z-10">
+             <div className="mt-auto pb-8 text-app-text/20 font-bold text-ui-10 uppercase tracking-[0.2em] flex flex-col items-center gap-1 relative z-10">
                 <div className="flex items-center gap-4 mb-2">
                     <div className="flex items-center gap-1.5">
                         <div className={`w-1 h-1 rounded-full bg-current ${getLatencyColor(latency || null)}`} />

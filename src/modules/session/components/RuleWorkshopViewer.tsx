@@ -385,13 +385,13 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                     </button>
                     <button
                         onClick={handleCreateNew}
-                        className="px-6 py-3 bg-accent text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                        className="px-6 py-3 bg-accent text-white rounded-2xl font-black uppercase tracking-widest text-ui-10 shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                     >
                         <Plus size={16} />
                         {t('modules:session.forge_module.workshop_viewer.create_button')}
                     </button>
                     <div className="h-8 w-[1px] bg-white/10 mx-2" />
-                    <span className="text-[10px] font-black text-app-text/20 uppercase tracking-widest">
+                    <span className="text-ui-10 font-black text-app-text/20 uppercase tracking-widest">
                         {t('modules:session.forge_module.workshop_viewer.available_files', { count: filteredDocs.length })}
                     </span>
                 </div>
@@ -421,7 +421,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     <div className="p-2 bg-accent/10 rounded-lg text-accent">
                                         <Scroll size={16} />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-accent/60">
+                                    <span className="text-ui-10 font-black uppercase tracking-widest text-accent/60">
                                         {t('modules:session.forge_module.workshop_viewer.rule_forged')}
                                     </span>
                                 </div>
@@ -436,7 +436,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     </p>
                                 </div>
 
-                                <div className="pt-4 border-t border-white/5 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-app-text/20">
+                                <div className="pt-4 border-t border-white/5 flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-app-text/20">
                                     <span>{t('modules:session.forge_module.workshop_viewer.md_version')}</span>
                                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform group-hover:text-accent" />
                                 </div>
@@ -459,7 +459,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     <h2 className="text-2xl font-black uppercase tracking-tight text-white font-display">
                                         {selectedCard.title}
                                     </h2>
-                                    <p className="text-[10px] text-accent font-black uppercase tracking-widest mt-1 flex items-center gap-2">
+                                    <p className="text-ui-10 text-accent font-black uppercase tracking-widest mt-1 flex items-center gap-2">
                                         <Sparkles size={10} /> {t('modules:session.forge_module.workshop_viewer.dynamic_grimoire')} — {systemId}
                                     </p>
                                 </div>
@@ -531,7 +531,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                         className="bg-transparent text-2xl font-black uppercase tracking-tight text-white font-display border-none outline-none focus:ring-0 placeholder:text-white/10"
                                         placeholder={t('modules:session.forge_module.workshop_viewer.rule_title_placeholder')}
                                     />
-                                    <p className="text-[10px] text-accent font-black uppercase tracking-widest mt-1">
+                                    <p className="text-ui-10 text-accent font-black uppercase tracking-widest mt-1">
                                         {t('modules:session.forge_module.workshop_viewer.grimoire_edition')} — {systemId}
                                     </p>
                                 </div>
@@ -539,7 +539,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             <div className="flex items-center gap-4">
                                 <button 
                                     onClick={() => setIsEditing(false)}
-                                    className="px-8 py-3 text-app-text/40 hover:text-white font-black uppercase tracking-widest text-[10px] transition-all"
+                                    className="px-8 py-3 text-app-text/40 hover:text-white font-black uppercase tracking-widest text-ui-10 transition-all"
                                 >
                                     {t('modules:session.forge_module.workshop_viewer.cancel')}
                                 </button>
@@ -557,7 +557,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             {/* Editor Pane */}
                             <div className="flex-1 border-r border-white/5 flex flex-col">
                                 <div className="px-8 py-3 bg-white/2 border-b border-white/5 flex items-center justify-between">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-white/20">{t('modules:session.forge_module.workshop_viewer.markdown_editor')}</span>
+                                    <span className="text-ui-10 font-black uppercase tracking-widest text-white/20">{t('modules:session.forge_module.workshop_viewer.markdown_editor')}</span>
                                     <div className="flex gap-4 opacity-20">
                                         <History size={14} />
                                         <Layers size={14} />
@@ -574,7 +574,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             {/* Preview Pane */}
                             <div className="flex-1 bg-black/40 flex flex-col">
                                 <div className="px-8 py-3 bg-white/2 border-b border-white/5">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-accent">{t('modules:session.forge_module.workshop_viewer.dynamic_render')}</span>
+                                    <span className="text-ui-10 font-black uppercase tracking-widest text-accent">{t('modules:session.forge_module.workshop_viewer.dynamic_render')}</span>
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar p-12">
                                     <div className="max-w-3xl mx-auto prose prose-invert prose-emerald prose-p:text-lg prose-headings:font-display prose-headings:tracking-tighter">

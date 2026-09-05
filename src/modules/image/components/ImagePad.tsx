@@ -63,7 +63,7 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                 {activeTargets.map(targetLabel => (
                     <span
                         key={targetLabel}
-                        className={`bg-accent text-app-bg text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap font-display`}
+                        className={`bg-accent text-app-bg text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap font-display`}
                     >
                         {targetLabel}
                     </span>
@@ -129,10 +129,10 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                         <h4 className="text-sm font-bold text-app-text truncate drop-shadow-md group-hover:text-accent transition-colors">
                             {media.name}
                         </h4>
-                        <div className="text-[7px] font-black text-app-text/20 uppercase tracking-tighter">[{media.id}]</div>
+                        <div className="text-ui-7 font-black text-app-text/20 uppercase tracking-tighter">[{media.id}]</div>
                         <div className="flex items-center gap-2 mt-1">
                             {media.sizeInfo && (
-                                <span className="text-[10px] text-app-text/60 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">
+                                <span className="text-ui-10 text-app-text/60 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">
                                     {media.sizeInfo}
                                 </span>
                             )}
@@ -140,7 +140,7 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                                 <select
                                     value={media.folderId || ''}
                                     onChange={(e) => moveMediaToFolder(media.id, e.target.value || null)}
-                                    className="text-[10px] text-app-text/60 font-mono bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
+                                    className="text-ui-10 text-app-text/60 font-mono bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
                                     onClick={(e) => e.stopPropagation()}
                                     title={t('image.pad.moveFolderTooltip')}
                                 >

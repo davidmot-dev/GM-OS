@@ -79,11 +79,11 @@ export const RulebookViewer: React.FC = () => {
                                 <h1 className="text-3xl font-black font-display uppercase tracking-tight italic text-white drop-shadow-glow-accent/20">
                                     {driver.name}
                                 </h1>
-                                <span className="px-2 py-0.5 rounded bg-accent/10 border border-accent/20 text-[10px] font-black text-accent uppercase tracking-widest">
+                                <span className="px-2 py-0.5 rounded bg-accent/10 border border-accent/20 text-ui-10 font-black text-accent uppercase tracking-widest">
                                     v{driver.version}
                                 </span>
                             </div>
-                            <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em] mt-1 flex items-center gap-2">
+                            <p className="text-ui-10 font-bold text-app-text/40 uppercase tracking-[0.3em] mt-1 flex items-center gap-2">
                                 <Globe size={10} className="text-accent" />
                                 {t('modules:session.header.grimoire_label')} — {driver.author}
                             </p>
@@ -149,7 +149,7 @@ export const RulebookViewer: React.FC = () => {
                             }`}
                         >
                             <item.icon size={24} className={`transition-transform duration-300 ${activeSection === item.id ? 'scale-110' : 'group-hover:scale-110'}`} />
-                            <span className="text-[8px] font-black uppercase tracking-tighter mt-1 opacity-60">{item.id}</span>
+                            <span className="text-ui-8 font-black uppercase tracking-tighter mt-1 opacity-60">{item.id}</span>
                             {activeSection === item.id && (
                                 <div className={`absolute -right-1 w-1.5 h-8 rounded-full ${item.color.replace('text', 'bg')} shadow-[0_0_15px_currentColor]`} />
                             )}
@@ -182,7 +182,7 @@ export const RulebookViewer: React.FC = () => {
 
                                     <div className="grid grid-cols-2 gap-8 mt-12">
                                         <div className="p-8 bg-app-surface/30 rounded-[3rem] border border-white/5 space-y-6">
-                                            <div className="flex items-center gap-3 text-cyan-400/60 uppercase text-[10px] font-black tracking-widest">
+                                            <div className="flex items-center gap-3 text-cyan-400/60 uppercase text-ui-10 font-black tracking-widest">
                                                 <Info size={14} /> {t('modules:session.rule_engine_editor.core.engine_label')}
                                             </div>
                                             <div className="text-3xl font-black text-white uppercase tracking-tight">
@@ -194,14 +194,14 @@ export const RulebookViewer: React.FC = () => {
                                         </div>
 
                                         <div className="p-8 bg-app-surface/30 rounded-[3rem] border border-white/5 space-y-6">
-                                            <div className="flex items-center gap-3 text-cyan-400/60 uppercase text-[10px] font-black tracking-widest">
+                                            <div className="flex items-center gap-3 text-cyan-400/60 uppercase text-ui-10 font-black tracking-widest">
                                                 <Dice5 size={14} /> {t('modules:session.rule_engine_editor.core.default_dice_label')}
                                             </div>
                                             <div className="text-5xl font-mono font-black text-accent uppercase tracking-tighter drop-shadow-glow-accent/40">
                                                 {driver.dice.defaultDice}
                                             </div>
                                             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 w-fit">
-                                                <span className="text-[10px] font-black text-accent uppercase tracking-widest">{driver.dice.logic}</span>
+                                                <span className="text-ui-10 font-black text-accent uppercase tracking-widest">{driver.dice.logic}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -237,13 +237,13 @@ export const RulebookViewer: React.FC = () => {
                                             <div className="p-8 bg-app-surface/30 rounded-[2.5rem] border border-white/5 space-y-4">
                                                 <h3 className="text-xs font-black uppercase tracking-[0.3em] text-indigo-400/60">{t('modules:session.rule_engine_editor.combat.initiative_title')}</h3>
                                                 <div className="text-2xl font-mono font-black text-white">{driver.combat.initiativeFormula}</div>
-                                                <div className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest">Sort: {driver.combat.initiativeSort || 'DESC'}</div>
+                                                <div className="text-ui-10 font-bold text-app-text/30 uppercase tracking-widest">Sort: {driver.combat.initiativeSort || 'DESC'}</div>
                                             </div>
                                             <div className="p-8 bg-app-surface/30 rounded-[2.5rem] border border-white/5 space-y-4">
                                                 <h3 className="text-xs font-black uppercase tracking-[0.3em] text-indigo-400/60">{t('modules:session.rule_engine_editor.combat.damage_title')}</h3>
                                                 <div className="flex flex-wrap gap-2">
                                                     {driver.combat.damageTypes?.map((d, i) => (
-                                                        <span key={i} className="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] font-bold uppercase">{d}</span>
+                                                        <span key={i} className="px-2 py-1 bg-white/5 border border-white/10 rounded text-ui-10 font-bold uppercase">{d}</span>
                                                     )) || <span className="text-xs italic opacity-40">Standard</span>}
                                                 </div>
                                             </div>
@@ -266,9 +266,9 @@ export const RulebookViewer: React.FC = () => {
                                             <div className="grid grid-cols-5 gap-4">
                                                 {Object.entries(driver.tactical.ranges).map(([key, range]) => (
                                                     <div key={key} className="p-6 bg-app-surface/30 rounded-3xl border border-white/5 text-center space-y-3">
-                                                        <div className="text-[10px] font-black uppercase tracking-widest text-emerald-400/60">{range.label}</div>
+                                                        <div className="text-ui-10 font-black uppercase tracking-widest text-emerald-400/60">{range.label}</div>
                                                         <div className="text-2xl font-black text-white">{range.maxUnits}u</div>
-                                                        <div className={`text-[10px] font-bold py-1 rounded-full ${range.modifier >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                                                        <div className={`text-ui-10 font-bold py-1 rounded-full ${range.modifier >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
                                                             {range.modifier >= 0 ? `+${range.modifier}` : range.modifier}
                                                         </div>
                                                     </div>
@@ -281,7 +281,7 @@ export const RulebookViewer: React.FC = () => {
                                                     </div>
                                                     <div>
                                                         <div className="text-sm font-black uppercase tracking-tight">{t('modules:session.rule_engine_editor.tactical.ai_toggle')}</div>
-                                                        <p className="text-[10px] opacity-40 uppercase font-bold">{driver.tactical.useTacticalAI ? t('common:status.enabled') : t('common:status.disabled')}</p>
+                                                        <p className="text-ui-10 opacity-40 uppercase font-bold">{driver.tactical.useTacticalAI ? t('common:status.enabled') : t('common:status.disabled')}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -351,7 +351,7 @@ export const RulebookViewer: React.FC = () => {
                                                 <div key={idx} className="p-8 bg-app-surface/30 rounded-[2.5rem] border border-white/5 space-y-6">
                                                     <div className="flex items-center justify-between border-b border-white/5 pb-4">
                                                         <h3 className="text-xl font-black text-amber-400 uppercase italic tracking-tight">{table.name}</h3>
-                                                        <span className="px-2 py-1 bg-amber-500/10 rounded text-[10px] font-black text-amber-500 uppercase tracking-widest">
+                                                        <span className="px-2 py-1 bg-amber-500/10 rounded text-ui-10 font-black text-amber-500 uppercase tracking-widest">
                                                             {table.rollMode}
                                                         </span>
                                                     </div>

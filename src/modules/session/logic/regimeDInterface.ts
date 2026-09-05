@@ -87,7 +87,7 @@ const TAILLES = {
     /** Un nom qu'on doit reconnaître sans le lire en entier. */
     nom: ['text-sm', 'text-lg'],
     /** Un libellé de service, qui n'a pas à se lire de loin. */
-    libelle: ['text-[10px]', 'text-xs'],
+    libelle: ['text-ui-10', 'text-xs'],
     /** Une cible qu'on touche sans viser. */
     cible: ['h-8', 'h-12'],
     /** L'espace entre deux choses qu'il ne faut pas confondre. */

@@ -49,7 +49,7 @@ export const AddPlayerForm: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-[10px] uppercase font-bold text-app-text/40 tracking-widest">{t('modules:session.players.avatar_label')}</p>
+                <p className="text-ui-10 uppercase font-bold text-app-text/40 tracking-widest">{t('modules:session.players.avatar_label')}</p>
             </div>
 
             {/* Inputs */}

@@ -85,7 +85,7 @@ const WhiteboardDashboard: React.FC = () => {
                     {projectionTarget && (
                         <div className="flex items-center gap-2 mt-1 py-1 px-2 bg-accent/10 border border-accent/20 rounded-md">
                             <Cast size={12} className="text-accent animate-pulse" />
-                            <span className="text-[9px] font-black text-accent uppercase tracking-wider">
+                            <span className="text-ui-9 font-black text-accent uppercase tracking-wider">
                                 {t('whiteboard.projection.active', { target: projectionTarget === 'hub' ? t('whiteboard.projection.player_hub') : t('whiteboard.projection.monitor') })}
                             </span>
                             <button 
@@ -95,7 +95,7 @@ const WhiteboardDashboard: React.FC = () => {
                                     }
                                     clearProjectedState();
                                 }}
-                                className="ml-2 text-[8px] text-accent hover:text-accent/80 font-bold uppercase transition-colors"
+                                className="ml-2 text-ui-8 text-accent hover:text-accent/80 font-bold uppercase transition-colors"
                             >
                                 {t('whiteboard.actions.stop')}
                             </button>

@@ -100,10 +100,10 @@ const LootOS: React.FC = () => {
                 {/* Side Stats / Quick Info */}
                 <div className="w-64 border-l border-white/5 bg-black/10 p-5 hidden lg:flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.stats.title')}</span>
+                        <span className="text-ui-10 font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.stats.title')}</span>
                         <div className="glass-bento p-3 flex flex-col gap-1">
                             <div className="flex justify-between items-center">
-                                <span className="text-[10px] text-app-text/60 font-medium">{t('modules:loot.stats.total_value')}</span>
+                                <span className="text-ui-10 text-app-text/60 font-medium">{t('modules:loot.stats.total_value')}</span>
                                 <div className="flex items-center gap-1 text-gm-gold" title={monnaie}>
                                     <span className="text-xs font-bold">{totalValue.toLocaleString()}</span>
                                     {/*
@@ -112,11 +112,11 @@ const LootOS: React.FC = () => {
                                         est une affirmation, pas une décoration.
                                     */}
                                     {monnaie
-                                        ? <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">{monnaie}</span>
+                                        ? <span className="text-ui-9 font-bold uppercase tracking-wider opacity-70">{monnaie}</span>
                                         : <Coins size={12} />}
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center text-[10px]">
+                            <div className="flex justify-between items-center text-ui-10">
                                 <span className="text-app-text/40">{t('modules:loot.stats.remarkable_items')}</span>
                                 <span className="text-violet-400 font-bold">{remarquables}</span>
                             </div>
@@ -124,8 +124,8 @@ const LootOS: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.gm_tips.title')}</span>
-                        <p className="text-[11px] text-app-text/50 leading-relaxed italic">
+                        <span className="text-ui-10 font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.gm_tips.title')}</span>
+                        <p className="text-ui-11 text-app-text/50 leading-relaxed italic">
                             "{dailyQuote}"
                         </p>
                     </div>

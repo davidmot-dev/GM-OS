@@ -171,7 +171,7 @@ const PlayerHub: React.FC = React.memo(() => {
                 {/* Status Bar Indicator */}
                 <div className="absolute bottom-12 left-1/2 -translate-x-1/2 pointer-events-none">
                     {resolvedFavorites.length > 0 && (
-                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-accent/40 animate-pulse">Knowledge Base Synchronized</p>
+                        <p className="text-ui-10 font-black uppercase tracking-[0.5em] text-accent/40 animate-pulse">Knowledge Base Synchronized</p>
                     )}
                 </div>
             </div>

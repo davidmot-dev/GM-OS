@@ -183,7 +183,7 @@ export const AddCharacterForm: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-[10px] uppercase font-bold text-app-text/40 tracking-widest">Portrait de Personnage</p>
+                <p className="text-ui-10 uppercase font-bold text-app-text/40 tracking-widest">Portrait de Personnage</p>
             </div>
 
             {/* Inputs Grid */}
@@ -247,7 +247,7 @@ export const AddCharacterForm: React.FC = () => {
                   le gabarit ne se résout pas se voit ici, avant la création, et
                   non le jour où la fiche s'ouvre vide.
                 */}
-                <p className="text-[10px] text-app-text/30 pl-1 pt-1">
+                <p className="text-ui-10 text-app-text/30 pl-1 pt-1">
                     {gabarit
                         ? <>Fiche : <span className="text-app-text/50">{gabarit.emoji} {gabarit.name}</span>
                             {' '}— {gabarit.sections.reduce((n, s) => n + s.fields.length, 0)} champs</>
@@ -268,7 +268,7 @@ export const AddCharacterForm: React.FC = () => {
                         <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
                 </select>
-                <p className="text-[10px] text-app-text/30 pl-1">
+                <p className="text-ui-10 text-app-text/30 pl-1">
                     {campagnesDuJeu.length > 0
                         ? <>Seules les campagnes de {jeuChoisi?.name ?? 'ce jeu'} sont proposées : un personnage
                             n'a pas de fiche dans un autre système.</>

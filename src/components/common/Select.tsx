@@ -116,7 +116,7 @@ export const Select: React.FC<SelectProps> = ({
                                     option.isHeader ? (
                                         <div 
                                             key={`header-${index}`} 
-                                            className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-app-accent/50 bg-app-accent/5 mt-1 first:mt-0"
+                                            className="px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-app-accent/50 bg-app-accent/5 mt-1 first:mt-0"
                                         >
                                             {option.label}
                                         </div>

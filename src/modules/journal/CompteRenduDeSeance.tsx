@@ -51,7 +51,7 @@ const CompteRenduDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
                 <button
                     onClick={copier}
                     title="Copier le compte rendu en Markdown"
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border/40 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-accent hover:border-accent/40 transition-all"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border/40 text-ui-10 font-black uppercase tracking-widest text-slate-400 hover:text-accent hover:border-accent/40 transition-all"
                 >
                     {copie ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
                     {copie ? 'Copié' : 'Copier'}
@@ -109,7 +109,7 @@ const Section: React.FC<{
             <div>
                 <h4 className="text-sm font-black uppercase tracking-[0.2em] text-slate-300">{titre}</h4>
                 {sousTitre && (
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter opacity-80">
+                    <p className="text-ui-10 text-slate-500 font-bold uppercase tracking-tighter opacity-80">
                         {sousTitre}
                     </p>
                 )}
@@ -126,7 +126,7 @@ const Liste: React.FC<{ titre: string; valeurs: readonly string[] }> = ({ titre,
     if (valeurs.length === 0) return null;
     return (
         <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1.5">{titre}</p>
+            <p className="text-ui-10 font-black uppercase tracking-widest text-slate-500 mb-1.5">{titre}</p>
             <ul className="space-y-0.5">
                 {valeurs.map((v, i) => (
                     <li key={i} className="flex gap-2"><span className="text-accent/50">·</span>{v}</li>

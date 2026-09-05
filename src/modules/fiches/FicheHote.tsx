@@ -341,7 +341,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                         {etat.nom === 'chargement' && (
                             <div className="flex items-center gap-3 text-app-text/50">
                                 <RefreshCw size={16} className="animate-spin" />
-                                <span className="text-[11px] font-black uppercase tracking-widest">Ouverture de la fiche…</span>
+                                <span className="text-ui-11 font-black uppercase tracking-widest">Ouverture de la fiche…</span>
                             </div>
                         )}
 
@@ -350,7 +350,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                 {/* Elle a peut-être très bien répondu — pour refuser. Le motif le dit. */}
                                 <div className="flex items-center gap-2 text-amber-500">
                                     <AlertTriangle size={16} />
-                                    <span className="text-[11px] font-black uppercase tracking-widest">La fiche n'a pas pu s'ouvrir</span>
+                                    <span className="text-ui-11 font-black uppercase tracking-widest">La fiche n'a pas pu s'ouvrir</span>
                                 </div>
                                 <p className="text-xs text-app-text/50 font-mono">{etat.motif}</p>
                             </div>
@@ -360,7 +360,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                             <>
                                 <div className="flex items-center gap-2 text-accent">
                                     <Link2 size={16} />
-                                    <h3 className="text-[11px] font-black uppercase tracking-widest">
+                                    <h3 className="text-ui-11 font-black uppercase tracking-widest">
                                         À quelle fiche relier {personnage.name} ?
                                     </h3>
                                 </div>
@@ -383,7 +383,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                         >
                                             <FileText size={14} className="text-app-text/30 shrink-0" />
                                             <span className="text-sm font-bold text-app-text truncate">{f.name}</span>
-                                            <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-app-text/30 shrink-0">
+                                            <span className="ml-auto text-ui-9 font-black uppercase tracking-widest text-app-text/30 shrink-0">
                                                 {f.templateName}
                                             </span>
                                         </button>
@@ -417,7 +417,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                             type="button"
                                             disabled={occupe}
                                             onClick={restaurer}
-                                            className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
+                                            className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
                                         >
                                             <RotateCcw size={13} /> Restaurer la bibliothèque
                                         </button>
@@ -429,7 +429,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                     disabled={occupe || !table}
                                     onClick={creer}
                                     title={table ? undefined : 'Sans correspondance, GM-OS ne saurait pas quoi écrire dans la fiche neuve.'}
-                                    className="w-full flex items-center justify-center gap-2 p-3 bg-accent/10 border border-accent/30 rounded-2xl text-[11px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 transition-colors disabled:opacity-30"
+                                    className="w-full flex items-center justify-center gap-2 p-3 bg-accent/10 border border-accent/30 rounded-2xl text-ui-11 font-black uppercase tracking-widest text-accent hover:bg-accent/20 transition-colors disabled:opacity-30"
                                 >
                                     <Plus size={14} /> Créer une fiche pour {personnage.name}
                                 </button>

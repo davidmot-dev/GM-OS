@@ -122,8 +122,33 @@ export const JETONS_EDITABLES: JetonEditable[] = [
       aide: 'Les compteurs, les jets, tout ce qui s’aligne en colonnes.' },
 
     // ── Tailles ─────────────────────────────────────────────────────────────
-    { cle: 'font-scale', label: 'Échelle du texte', groupe: 'tailles', famille: 'echelle', surLInterface: true,
-      aide: 'Grossit ou réduit TOUT le texte de l’interface. Extension GM-OS : le SDK n’a pas de taille.' },
+    { cle: 'font-scale', label: 'Tout le texte', groupe: 'tailles', famille: 'echelle', surLInterface: true,
+      aide: 'Le réglage d’ensemble. Les quatre suivants s’y multiplient : on règle l’ensemble, puis on corrige une bande.' },
+
+    /*
+      **Une échelle par bande — demandé par David le 2026-09-05.**
+
+      Il voulait « la taille des différentes polices ». Les quatre polices du
+      thème choisissent des **familles**, pas des tailles : leur donner un
+      curseur chacune aurait fait trois contrôles sur quatre qui n'agissent sur
+      rien, `font-body` et `font-ui` ne servant qu'aux fiches.
+
+      Ce qui existe vraiment dans l'interface, ce sont **quatre bandes de
+      taille** — l'habillage, le texte courant, les titres, les chiffres. Ce
+      sont elles qu'on règle. Voir le bloc en tête de `index.css`.
+
+      ⛔ Et il a fallu d'abord **convertir 1 832 tailles écrites en pixels en
+      dur**, qui n'obéissaient à aucune échelle : le curseur d'avant ne
+      redimensionnait que la moitié de l'écran, sans le dire.
+    */
+    { cle: 'scale-interface', label: 'Étiquettes et badges', groupe: 'tailles', famille: 'echelle', surLInterface: true,
+      aide: 'Les petites capitales, les pastilles, les libellés. C’est la bande la plus dense de l’écran.' },
+    { cle: 'scale-corps', label: 'Texte courant', groupe: 'tailles', famille: 'echelle', surLInterface: true,
+      aide: 'Ce qu’on lit vraiment : notes, résumés, descriptions.' },
+    { cle: 'scale-titres', label: 'Titres', groupe: 'tailles', famille: 'echelle', surLInterface: true,
+      aide: 'Les titres de panneau et les grands nombres.' },
+    { cle: 'scale-mono', label: 'Chiffres et code', groupe: 'tailles', famille: 'echelle', surLInterface: true,
+      aide: 'Tout ce qui est à chasse fixe : compteurs, jets, minuteurs.' },
     { cle: 'title-tracking', label: 'Interlettrage des titres', groupe: 'tailles', famille: 'longueur',
       aide: 'L’espace entre les lettres des titres, en em.' },
     { cle: 'kicker-tracking', label: 'Interlettrage des surtitres', groupe: 'tailles', famille: 'longueur',

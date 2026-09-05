@@ -28,14 +28,14 @@ const SessionSummaryModal: React.FC = () => {
                         <Calendar size={24} />
                     </div>
                     <div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-accent mb-1">Session Date</div>
+                        <div className="text-ui-10 font-black uppercase tracking-widest text-accent mb-1">Session Date</div>
                         <div className="text-sm font-mono text-app-text/60">
                             {new Date(session.date).toLocaleDateString(undefined, { dateStyle: 'long' })}
                         </div>
                     </div>
                 </div>
                 
-                <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                     Journal de Campagne
                 </div>
@@ -44,8 +44,8 @@ const SessionSummaryModal: React.FC = () => {
             {/* Editor Area */}
             <div className="flex-1 flex flex-col gap-4 overflow-hidden">
                 <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">Résumé Public & Lore</label>
-                    <div className="flex items-center gap-2 text-[10px] text-accent/60 font-medium">
+                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">Résumé Public & Lore</label>
+                    <div className="flex items-center gap-2 text-ui-10 text-accent/60 font-medium">
                         <Sparkles size={12} />
                         Ce contenu sera utilisé par l'Oracle
                     </div>

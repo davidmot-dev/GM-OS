@@ -120,7 +120,7 @@ const WikiView: React.FC = () => {
                             placeholder="Rechercher dans les archives..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-black/40 border border-white/5 rounded-2xl pl-11 pr-4 py-3 text-[11px] text-app-text focus:outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all placeholder:text-app-text/20"
+                            className="w-full bg-black/40 border border-white/5 rounded-2xl pl-11 pr-4 py-3 text-ui-11 text-app-text focus:outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all placeholder:text-app-text/20"
                         />
                     </div>
 
@@ -129,7 +129,7 @@ const WikiView: React.FC = () => {
                             <button
                                 key={cat}
                                 onClick={() => setSelectedCategory(cat)}
-                                className={`px-2 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] border transition-all truncate ${
+                                className={`px-2 py-2 rounded-xl text-ui-9 font-black uppercase tracking-[0.15em] border transition-all truncate ${
                                     selectedCategory === cat 
                                         ? 'bg-accent/20 border-accent/40 text-accent shadow-glow-accent/5' 
                                         : 'bg-white/5 border-white/5 text-app-text/30 hover:text-app-text/60 hover:bg-white/10'
@@ -161,8 +161,8 @@ const WikiView: React.FC = () => {
                                 }`}
                             >
                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
-                                    <span className="text-[11px] font-black uppercase tracking-tight truncate pr-2 group-hover:translate-x-1 transition-transform">{entry.title}</span>
-                                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-app-text/10 opacity-60">
+                                    <span className="text-ui-11 font-black uppercase tracking-tight truncate pr-2 group-hover:translate-x-1 transition-transform">{entry.title}</span>
+                                    <span className="text-ui-8 font-black uppercase tracking-[0.2em] text-app-text/10 opacity-60">
                                         {entry.category}
                                     </span>
                                 </div>
@@ -175,7 +175,7 @@ const WikiView: React.FC = () => {
                 <div className="p-6 border-t border-white/5">
                     <button 
                         onClick={() => gmCustom('wiki-entry-add')}
-                        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-app-bg rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-glow-accent/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-app-bg rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] shadow-glow-accent/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
                         <Plus size={16} strokeWidth={3} />
                         Nouvel Article
@@ -205,19 +205,19 @@ const WikiView: React.FC = () => {
                                         <div>
                                             <h1 className="text-4xl font-black text-app-text tracking-tighter uppercase leading-none">{selectedEntry.title}</h1>
                                             <div className="flex items-center gap-6 mt-3">
-                                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent flex items-center gap-2">
+                                                <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-accent flex items-center gap-2">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></div>
                                                     #{selectedEntry.category}
                                                 </span>
                                                 <div className="flex gap-1.5">
                                                     {(selectedEntry.tags || []).map(tag => (
-                                                        <span key={tag} className="text-[9px] font-black uppercase tracking-widest text-app-text/20 bg-white/5 border border-white/5 px-2 py-1 rounded-lg">
+                                                        <span key={tag} className="text-ui-9 font-black uppercase tracking-widest text-app-text/20 bg-white/5 border border-white/5 px-2 py-1 rounded-lg">
                                                             {tag}
                                                         </span>
                                                     ))}
                                                 </div>
                                                 {selectedEntry.eventDate && (
-                                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent/60">
+                                                    <div className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60">
                                                         <LucideHistory size={12} />
                                                         <span>Date : {selectedEntry.eventDate}</span>
                                                     </div>
@@ -233,7 +233,7 @@ const WikiView: React.FC = () => {
                                             title="Transformer en élément de jeu (PNJ, Indice, Lieu...)"
                                         >
                                             <Sparkles size={18} className="group-hover/magic:rotate-12 transition-transform" />
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden lg:inline">Pont Magique</span>
+                                            <span className="text-ui-10 font-black uppercase tracking-[0.2em] hidden lg:inline">Pont Magique</span>
                                         </button>
 
                                         <button 
@@ -274,7 +274,7 @@ const WikiView: React.FC = () => {
                                     {/* Linked Stuff (Bento Style) */}
                                     <div className="grid grid-cols-2 gap-8">
                                         <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl">
-                                            <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-app-text/30 flex items-center gap-3 mb-6">
+                                            <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-app-text/30 flex items-center gap-3 mb-6">
                                                 <Users size={16} className="text-accent" />
                                                 Entités Liées
                                             </h4>
@@ -283,18 +283,18 @@ const WikiView: React.FC = () => {
                                                     (selectedEntry.linkedEntityIds || []).map(id => (
                                                         <div key={id} className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 hover:border-accent/20 transition-colors">
                                                             <div className="w-2 h-2 rounded-full bg-accent/40" />
-                                                            <span className="text-[11px] font-black uppercase tracking-tight text-app-text/60">{entities.find(e => e.id === id)?.name || "Entité inconnue"}</span>
+                                                            <span className="text-ui-11 font-black uppercase tracking-tight text-app-text/60">{entities.find(e => e.id === id)?.name || "Entité inconnue"}</span>
                                                         </div>
                                                     ))
                                                 ) : (
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-app-text/10 italic p-4 text-center border border-dashed border-white/5 rounded-2xl">Aucun lien établi</span>
+                                                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/10 italic p-4 text-center border border-dashed border-white/5 rounded-2xl">Aucun lien établi</span>
                                                 )}
                                             </div>
                                         </div>
                                         
                                         <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl flex flex-col items-center justify-center text-center gap-4 opacity-40 hover:opacity-100 transition-opacity">
                                             <Layers size={32} strokeWidth={1} className="text-accent/40" />
-                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] leading-relaxed">Module de Connexion Étendu prochainement disponible</p>
+                                            <p className="text-ui-9 font-black uppercase tracking-[0.2em] leading-relaxed">Module de Connexion Étendu prochainement disponible</p>
                                         </div>
                                     </div>
                                 </div>
@@ -316,9 +316,9 @@ const WikiView: React.FC = () => {
                                     <div className="glass-bento rounded-[2.5rem] p-8 border border-accent/20 bg-accent/5 shadow-xl space-y-4">
                                         <div className="flex items-center gap-3 text-accent">
                                             <Shield size={18} strokeWidth={2.5} />
-                                            <span className="text-[11px] font-black uppercase tracking-[0.3em]">Censure MJ</span>
+                                            <span className="text-ui-11 font-black uppercase tracking-[0.3em]">Censure MJ</span>
                                         </div>
-                                        <p className="text-[11px] text-app-text/40 leading-relaxed font-black uppercase tracking-wider italic">
+                                        <p className="text-ui-11 text-app-text/40 leading-relaxed font-black uppercase tracking-wider italic">
                                             Cet article est chiffré. Seules les données publiques sont projetées vers l'interface des joueurs.
                                         </p>
                                     </div>
@@ -334,7 +334,7 @@ const WikiView: React.FC = () => {
                             <BookOpen size={120} strokeWidth={0.5} className="opacity-20" />
                             <div className="text-center space-y-3">
                                 <p className="font-black text-sm tracking-[0.5em] uppercase">Bibliothèque d'Alexandrie</p>
-                                <p className="text-[10px] opacity-40 uppercase tracking-[0.3em]">Choisissez un grimoire dans les archives latérales</p>
+                                <p className="text-ui-10 opacity-40 uppercase tracking-[0.3em]">Choisissez un grimoire dans les archives latérales</p>
                             </div>
                         </motion.div>
                     )}

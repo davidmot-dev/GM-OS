@@ -77,7 +77,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.title_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.title_label')}</label>
                     <input
                         required
                         type="text"
@@ -88,7 +88,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.category_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.category_label')}</label>
                     <select
                         value={category}
                         onChange={e => setCategory(e.target.value as WikiEntry['category'])}
@@ -100,7 +100,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                     </select>
                 </div>
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.date_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.date_label')}</label>
                     <input
                         type="text"
                         value={eventDate}
@@ -112,7 +112,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
             </div>
 
             <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.content_label')}</label>
+                <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.content_label')}</label>
                 <textarea
                     required
                     value={content}
@@ -126,7 +126,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
             <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.tags_label')}</label>
+                        <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.tags_label')}</label>
                         <div className="flex gap-2">
                             <input
                                 type="text"
@@ -134,7 +134,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                                 onChange={e => setNewTag(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
                                 placeholder={t('modules:session.wiki_form.tags_placeholder')}
-                                className="flex-1 bg-app-bg/20 border border-app-border rounded-lg px-3 py-1.5 text-[10px] text-app-text focus:outline-none focus:border-accent/50 transition-all"
+                                className="flex-1 bg-app-bg/20 border border-app-border rounded-lg px-3 py-1.5 text-ui-10 text-app-text focus:outline-none focus:border-accent/50 transition-all"
                             />
                             <button type="button" onClick={addTag} title={t('modules:session.wiki_form.tags_placeholder')} className="p-1.5 bg-app-surface border border-app-border rounded-lg text-accent hover:bg-accent/10 transition-all">
                                 <Plus size={14} />
@@ -142,7 +142,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                         </div>
                         <div className="flex flex-wrap gap-1 mt-2">
                             {tags.map(tag => (
-                                <span key={tag} className="flex items-center gap-1.5 px-2 py-0.5 bg-app-bg border border-app-border rounded text-[9px] text-app-text/60">
+                                <span key={tag} className="flex items-center gap-1.5 px-2 py-0.5 bg-app-bg border border-app-border rounded text-ui-9 text-app-text/60">
                                     {tag}
                                     <button type="button" onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-rose-400">
                                         <X size={10} />
@@ -153,7 +153,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.images_label')}</label>
+                        <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.images_label')}</label>
                         <div className="flex gap-2">
                             <input
                                 type="text"
@@ -161,7 +161,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                                 onChange={e => setNewImageUrl(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addImage())}
                                 placeholder={t('modules:session.wiki_form.images_placeholder')}
-                                className="flex-1 bg-app-bg/20 border border-app-border rounded-lg px-3 py-1.5 text-[10px] text-app-text focus:outline-none focus:border-accent/50 transition-all"
+                                className="flex-1 bg-app-bg/20 border border-app-border rounded-lg px-3 py-1.5 text-ui-10 text-app-text focus:outline-none focus:border-accent/50 transition-all"
                             />
                             <button type="button" onClick={addImage} title={t('modules:session.wiki_form.images_placeholder')} className="p-1.5 bg-app-surface border border-app-border rounded-lg text-accent hover:bg-accent/10 transition-all">
                                 <Plus size={14} />
@@ -185,14 +185,14 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.entities_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.entities_label')}</label>
                     <div className="max-h-48 overflow-y-auto border border-app-border rounded-xl p-2 space-y-1 custom-scrollbar bg-app-bg/20">
                         {entities.filter(e => e.campaignId === activeCampaignId).map(entity => (
                             <button
                                 key={entity.id}
                                 type="button"
                                 onClick={() => toggleEntity(entity.id)}
-                                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all ${
+                                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-ui-10 font-bold transition-all ${
                                     linkedEntityIds.includes(entity.id)
                                         ? 'bg-accent/10 text-accent'
                                         : 'text-app-text/40 hover:bg-app-surface/40 hover:text-app-text'

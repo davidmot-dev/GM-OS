@@ -150,7 +150,7 @@ export const FicheDuCombattant: React.FC = () => {
         <div className="p-5 space-y-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
             <header className="space-y-1">
                 <h3 className="text-lg font-black text-app-text">{combattant.name}</h3>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-slate-500">
                     {combattant.isPlayer ? 'Personnage joueur' : `Camp : ${combattant.faction}`}
                     {sante ? ` · ${sante}` : ''}
                 </p>
@@ -166,7 +166,7 @@ export const FicheDuCombattant: React.FC = () => {
 
             {blocs.map(bloc => (
                 <section key={bloc.section} className="space-y-2">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+                    <h4 className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-500">
                         {bloc.section}
                     </h4>
                     <div className="grid grid-cols-2 gap-x-5 gap-y-1.5">
@@ -184,10 +184,10 @@ export const FicheDuCombattant: React.FC = () => {
 
                             return (
                                 <div key={champ.id} className="flex items-baseline justify-between gap-3 border-b border-app-border/20 pb-1">
-                                    <span className="text-[11px] text-slate-400 truncate">{champ.label}</span>
+                                    <span className="text-ui-11 text-slate-400 truncate">{champ.label}</span>
                                     <span className="text-sm font-black font-mono text-app-text shrink-0">
                                         {affichage}
-                                        {champ.max ? <span className="text-[9px] text-slate-600 font-bold"> / {champ.max}</span> : null}
+                                        {champ.max ? <span className="text-ui-9 text-slate-600 font-bold"> / {champ.max}</span> : null}
                                     </span>
                                 </div>
                             );
@@ -198,7 +198,7 @@ export const FicheDuCombattant: React.FC = () => {
 
             {combattant.roleplayingNotes && (
                 <section className="space-y-1">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Comment il se bat</h4>
+                    <h4 className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-500">Comment il se bat</h4>
                     <p className="text-xs text-slate-300 italic">{combattant.roleplayingNotes}</p>
                 </section>
             )}
@@ -206,7 +206,7 @@ export const FicheDuCombattant: React.FC = () => {
             <div className="flex items-center gap-2 pt-2 border-t border-app-border/30">
                 <button
                     onClick={rangerAuBestiaire}
-                    className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
+                    className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
                     title="Ranger ce modèle pour le refabriquer plus tard"
                 >
                     <BookMarked size={12} /> Au bestiaire
@@ -219,7 +219,7 @@ export const FicheDuCombattant: React.FC = () => {
                 {!dejaEnCampagne && (
                     <button
                         onClick={verserDansLaCampagne}
-                        className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-300 hover:text-accent hover:border-accent/40 transition-all text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
+                        className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-300 hover:text-accent hover:border-accent/40 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
                         title="En faire un PNJ de la campagne, et l’y rattacher"
                     >
                         <Users size={12} /> Dans la campagne
@@ -227,7 +227,7 @@ export const FicheDuCombattant: React.FC = () => {
                 )}
             </div>
 
-            <footer className="pt-1 text-[9px] font-bold uppercase tracking-widest text-slate-600">
+            <footer className="pt-1 text-ui-9 font-bold uppercase tracking-widest text-slate-600">
                 {origine === 'campagne' && 'Valeurs lues sur la fiche de campagne — à jour.'}
                 {origine === 'combattant' && 'Valeurs portées par le combattant — il n’existe que sur ce plateau.'}
                 {origine === 'aucune' && 'Ce combattant n’a aucune caractéristique enregistrée.'}

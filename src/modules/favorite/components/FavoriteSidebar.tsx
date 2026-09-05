@@ -29,36 +29,36 @@ export const FavoriteSidebar: React.FC = () => {
 
             <nav className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                    <p className="text-slate-500 text-[10px] font-bold uppercase px-3 tracking-widest">{t('modules:favorite.sidebar.filters')}</p>
+                    <p className="text-slate-500 text-ui-10 font-bold uppercase px-3 tracking-widest">{t('modules:favorite.sidebar.filters')}</p>
                     <div className="space-y-1">
                         <button
                             onClick={() => setCategory('all')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'all' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-slate-400 hover:bg-app-surface/50 hover:text-slate-200'}`}>
-                            <span className="material-symbols-outlined text-[20px]">grid_view</span>
+                            <span className="material-symbols-outlined text-xl">grid_view</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.all')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('npc')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'npc' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'text-slate-400 hover:bg-app-surface/50 hover:text-slate-200'}`}>
-                            <span className="material-symbols-outlined text-[20px] ${activeCategory !== 'npc' && 'text-amber-500/70'}">person_celebrate</span>
+                            <span className="material-symbols-outlined text-xl ${activeCategory !== 'npc' && 'text-amber-500/70'}">person_celebrate</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.npc')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('place')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'place' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'text-slate-400 hover:bg-app-surface/50 hover:text-slate-200'}`}>
-                            <span className="material-symbols-outlined text-[20px] ${activeCategory !== 'place' && 'text-emerald-500/70'}">map</span>
+                            <span className="material-symbols-outlined text-xl ${activeCategory !== 'place' && 'text-emerald-500/70'}">map</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.place')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('item')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'item' ? 'bg-purple-500/10 text-purple-500 border border-purple-500/20' : 'text-slate-400 hover:bg-app-surface/50 hover:text-slate-200'}`}>
-                            <span className="material-symbols-outlined text-[20px] ${activeCategory !== 'item' && 'text-purple-500/70'}">swords</span>
+                            <span className="material-symbols-outlined text-xl ${activeCategory !== 'item' && 'text-purple-500/70'}">swords</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.item')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('lore')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'lore' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-slate-400 hover:bg-app-surface/50 hover:text-slate-200'}`}>
-                            <span className="material-symbols-outlined text-[20px] ${activeCategory !== 'lore' && 'text-accent/70'}">auto_stories</span>
+                            <span className="material-symbols-outlined text-xl ${activeCategory !== 'lore' && 'text-accent/70'}">auto_stories</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.lore')}</span>
                         </button>
                     </div>
@@ -68,7 +68,7 @@ export const FavoriteSidebar: React.FC = () => {
                     onClick={handleNewEntry}
                     className="flex items-center justify-center gap-2 w-full bg-app-surface hover:bg-app-surface/80 text-white font-bold py-3 px-4 rounded-xl border border-app-border transition-all uppercase text-xs tracking-widest shadow-lg shadow-black/20"
                 >
-                    <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                    <span className="material-symbols-outlined text-lg">add_circle</span>
                     {t('modules:favorite.sidebar.new_entry')}
                 </button>
             </nav>

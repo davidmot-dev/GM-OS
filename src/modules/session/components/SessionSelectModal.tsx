@@ -46,7 +46,7 @@ export const SessionSelectModal: React.FC = () => {
                                 </div>
                             </div>
                              <div className="flex items-center gap-2 text-accent opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
-                                <span className="text-[10px] font-bold uppercase tracking-widest">Lancer</span>
+                                <span className="text-ui-10 font-bold uppercase tracking-widest">Lancer</span>
                                 <Play size={14} fill="currentColor" />
                             </div>
                         </button>
@@ -55,12 +55,12 @@ export const SessionSelectModal: React.FC = () => {
             </div>
 
             <div className="mt-6 flex justify-between items-center bg-app-surface/40 -mx-6 -mb-6 p-4 border-t border-app-border">
-                <span className="text-[10px] text-app-text/40 uppercase tracking-widest font-bold">
+                <span className="text-ui-10 text-app-text/40 uppercase tracking-widest font-bold">
                     {plannedSessions.length} session{plannedSessions.length > 1 ? 's' : ''} en attente
                 </span>
                 <button
                     onClick={closeModal}
-                    className="px-4 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-widest text-app-text/40 hover:text-app-text hover:bg-app-surface/10 transition-all border border-app-border"
+                    className="px-4 py-1.5 rounded-lg text-ui-11 font-bold uppercase tracking-widest text-app-text/40 hover:text-app-text hover:bg-app-surface/10 transition-all border border-app-border"
                 >
                     Retour
                 </button>

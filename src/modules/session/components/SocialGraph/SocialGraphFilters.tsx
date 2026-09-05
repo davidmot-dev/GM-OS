@@ -28,7 +28,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ label, value, option
 
     return (
         <div className="space-y-1 relative">
-            <label className="text-[9px] font-bold text-slate-500 uppercase px-1">{label}</label>
+            <label className="text-ui-9 font-bold text-slate-500 uppercase px-1">{label}</label>
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white flex justify-between items-center hover:border-neonCyan/50 transition-all"
@@ -163,7 +163,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             title={`Détacher les ${nbEpingles} nœud(s) posés à la main`}
                         >
                             <PinOff size={20} />
-                            <span className="absolute -top-0.5 -right-0.5 text-[9px] font-black bg-amber-500 text-black rounded-full w-4 h-4 flex items-center justify-center">
+                            <span className="absolute -top-0.5 -right-0.5 text-ui-9 font-black bg-amber-500 text-black rounded-full w-4 h-4 flex items-center justify-center">
                                 {nbEpingles}
                             </span>
                         </button>
@@ -205,14 +205,14 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
             {isSettingsOpen && (
                 <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 shadow-2xl animate-fade-in animate-slide-up-subtle w-[350px] space-y-6 mt-4">
                     <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                        <span className="text-[10px] font-black uppercase text-accent tracking-widest">{t('modules:session.social_graph.physics.settings_title')}</span>
-                        <button onClick={() => setIsSettingsOpen(false)} className="text-slate-500 hover:text-white text-[10px] font-bold uppercase transition-colors">{t('modules:session.social_graph.physics.close')}</button>
+                        <span className="text-ui-10 font-black uppercase text-accent tracking-widest">{t('modules:session.social_graph.physics.settings_title')}</span>
+                        <button onClick={() => setIsSettingsOpen(false)} className="text-slate-500 hover:text-white text-ui-10 font-bold uppercase transition-colors">{t('modules:session.social_graph.physics.close')}</button>
                     </div>
 
 
                     {/* Charge Slider */}
                     <div className="space-y-3">
-                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                        <div className="flex justify-between items-center text-ui-10 uppercase font-bold tracking-wider">
                             <span className="text-slate-400">{t('modules:session.social_graph.physics.charge_label')}</span>
                             <span className="text-neonCyan">{physicsSettings.charge}</span>
                         </div>
@@ -227,7 +227,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
                             title="Ajuster la force de répulsion entre les nœuds"
                         />
-                        <div className="flex justify-between text-[8px] text-slate-600 font-bold uppercase">
+                        <div className="flex justify-between text-ui-8 text-slate-600 font-bold uppercase">
                             <span>{t('modules:session.social_graph.physics.dense')}</span>
                             <span>{t('modules:session.social_graph.physics.airy')}</span>
                         </div>
@@ -236,7 +236,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
 
                     {/* Distance Slider */}
                     <div className="space-y-3">
-                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                        <div className="flex justify-between items-center text-ui-10 uppercase font-bold tracking-wider">
                             <span className="text-slate-400">{t('modules:session.social_graph.physics.distance_label')}</span>
                             <span className="text-neonCyan">{physicsSettings.distance}px</span>
                         </div>
@@ -251,7 +251,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
                             title="Ajuster la longueur par défaut des liens"
                         />
-                         <div className="flex justify-between text-[8px] text-slate-600 font-bold uppercase">
+                         <div className="flex justify-between text-ui-8 text-slate-600 font-bold uppercase">
                             <span>{t('modules:session.social_graph.physics.tight')}</span>
                             <span>{t('modules:session.social_graph.physics.wide')}</span>
                         </div>
@@ -260,7 +260,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
 
                     {/* Collision Slider */}
                     <div className="space-y-3">
-                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                        <div className="flex justify-between items-center text-ui-10 uppercase font-bold tracking-wider">
                             <span className="text-slate-400">{t('modules:session.social_graph.physics.collision_label')}</span>
                             <span className="text-neonCyan">{physicsSettings.collision}px</span>
                         </div>
@@ -275,7 +275,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
                             title="Ajuster l'espace de collision autour de chaque personnage"
                         />
-                         <div className="flex justify-between text-[8px] text-slate-600 font-bold uppercase">
+                         <div className="flex justify-between text-ui-8 text-slate-600 font-bold uppercase">
                             <span>{t('modules:session.social_graph.physics.small')}</span>
                             <span>{t('modules:session.social_graph.physics.imposing')}</span>
                         </div>
@@ -288,7 +288,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             setPhysicsSettings.setDistance(150);
                             setPhysicsSettings.setCollision(40);
                         }}
-                        className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-all"
+                        className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-ui-10 font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-all"
                     >
                         {t('modules:session.social_graph.physics.default_btn')}
                     </button>

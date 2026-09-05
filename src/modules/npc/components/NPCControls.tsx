@@ -47,7 +47,7 @@ const NPCControls: React.FC = () => {
             <div className="flex flex-col gap-3">
                 {/* Level 1: Universe */}
                 <div className="flex flex-col gap-1">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">{t('npc.controls.universe')}</label>
+                    <label className="text-ui-10 uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">{t('npc.controls.universe')}</label>
                     <select
                         value={config?.universe?.split('_')[0] || ''}
                         onChange={(e) => {
@@ -67,7 +67,7 @@ const NPCControls: React.FC = () => {
 
                 {/* Level 2: Theme */}
                 <div className="flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">{t('npc.controls.theme')}</label>
+                    <label className="text-ui-10 uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">{t('npc.controls.theme')}</label>
                     <select
                         value={config?.universe || ''}
                         onChange={(e) => setConfig({ universe: e.target.value })}
@@ -90,7 +90,7 @@ const NPCControls: React.FC = () => {
             <div className="flex flex-col gap-2 mt-2">
                 <button
                     onClick={() => setConfig({ aiEnabled: !config.aiEnabled })}
-                    className={`flex items-center justify-center gap-2 py-1.5 rounded-lg border transition-all text-[10px] font-black uppercase tracking-widest ${
+                    className={`flex items-center justify-center gap-2 py-1.5 rounded-lg border transition-all text-ui-10 font-black uppercase tracking-widest ${
                         config.aiEnabled 
                         ? 'bg-accent/10 border-accent/30 text-accent shadow-glow-accent/20' 
                         : 'bg-app-surface border-app-border text-slate-500 hover:text-slate-400'

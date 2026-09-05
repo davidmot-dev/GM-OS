@@ -165,7 +165,7 @@ export const FavoriteFullDossier: React.FC = () => {
                     <div className="h-6 w-px bg-white/10" />
                     <div className="flex items-center gap-3">
                         <currentType.icon size={18} className={currentType.color} />
-                        <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${currentType.color}`}>
+                        <span className={`text-ui-10 font-black uppercase tracking-[0.3em] ${currentType.color}`}>
                             {t(`modules:favorite.categories.${formData.type}`)} {t('modules:favorite.sections.dossier')}
                         </span>
                     </div>
@@ -187,7 +187,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                 });
                                 gmToast(`${formData.name || entity.name} ${t('modules:favorite.actions.sent_to_combat')}`);
                             }}
-                            className="px-4 py-2 rounded-xl bg-rose-500/10 text-rose-500 font-bold text-[10px] tracking-widest hover:bg-rose-500/20 transition-all flex items-center gap-2 border border-rose-500/20"
+                            className="px-4 py-2 rounded-xl bg-rose-500/10 text-rose-500 font-bold text-ui-10 tracking-widest hover:bg-rose-500/20 transition-all flex items-center gap-2 border border-rose-500/20"
                         >
                             <Sword size={14} />
                             {t('modules:favorite.sections.combat')}
@@ -207,7 +207,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                 });
                                 gmToast(`${formData.name || entity.name} ${t('modules:favorite.actions.sent_to_map')}`);
                             }}
-                            className="px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-500 font-bold text-[10px] tracking-widest hover:bg-emerald-500/20 transition-all flex items-center gap-2 border border-emerald-500/20"
+                            className="px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-500 font-bold text-ui-10 tracking-widest hover:bg-emerald-500/20 transition-all flex items-center gap-2 border border-emerald-500/20"
                         >
                             <MapPin size={14} />
                             {t('modules:favorite.sections.map')}
@@ -224,7 +224,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                 updateFavorite(entity.id, { isSyncedToPlayerHub: newVal });
                                 gmToast(`${formData.name || entity.name} ${newVal ? t('modules:favorite.actions.synced_player') : t('modules:favorite.actions.removed_player')}`);
                             }}
-                            className={`px-4 py-2 rounded-xl border font-bold text-[10px] tracking-widest transition-all flex items-center gap-2
+                            className={`px-4 py-2 rounded-xl border font-bold text-ui-10 tracking-widest transition-all flex items-center gap-2
                                 ${formData.isSyncedToPlayerHub
                                     ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
                                     : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
@@ -279,7 +279,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                     <button
                                         key={t_type}
                                         onClick={() => setFormData({ ...formData, type: t_type })}
-                                        className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                                        className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all
                                             ${isActive
                                                 ? `${cfg.bg} ${cfg.color} shadow-inner`
                                                 : 'text-slate-500 hover:text-slate-300'}`}
@@ -300,7 +300,7 @@ export const FavoriteFullDossier: React.FC = () => {
                     <div className="lg:col-span-3 p-8 space-y-8 bg-app-bg/50 backdrop-blur-sm">
                         <div className="flex items-center gap-2 text-slate-500 mb-2">
                             <ImageIcon size={14} />
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.visual_assets')}</h3>
+                            <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.visual_assets')}</h3>
                         </div>
 
                         {/* Portrait */}
@@ -311,7 +311,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                 ) : (
                                     <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 gap-2">
                                         <ImageIcon size={48} />
-                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('modules:favorite.sections.no_portrait')}</span>
+                                        <span className="text-ui-10 font-bold uppercase tracking-widest">{t('modules:favorite.sections.no_portrait')}</span>
                                     </div>
                                 )}
                                 <button
@@ -327,7 +327,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                 placeholder={t('common:standby')}
                                 value={formData.imageUrl || ''}
                                 onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                                className="w-full bg-app-bg/50 border border-white/5 rounded-xl px-4 py-2 text-[10px] text-slate-500 focus:outline-none focus:border-accent/30 font-mono"
+                                className="w-full bg-app-bg/50 border border-white/5 rounded-xl px-4 py-2 text-ui-10 text-slate-500 focus:outline-none focus:border-accent/30 font-mono"
                             />
                         </div>
 
@@ -351,13 +351,13 @@ export const FavoriteFullDossier: React.FC = () => {
                                     </button>
                                 </div>
                                 <div className="flex-1 space-y-1">
-                                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('modules:favorite.placeholders.select_token')}</h4>
+                                    <h4 className="text-ui-10 font-black text-slate-500 uppercase tracking-widest">{t('modules:favorite.placeholders.select_token')}</h4>
                                     <input
                                         type="text"
                                         placeholder={t('common:standby')}
                                         value={formData.tokenUrl || ''}
                                         onChange={e => setFormData({ ...formData, tokenUrl: e.target.value })}
-                                        className="w-full bg-app-bg/50 border border-white/5 rounded-lg px-3 py-1.5 text-[9px] text-slate-500 focus:outline-none focus:border-accent/30 font-mono"
+                                        className="w-full bg-app-bg/50 border border-white/5 rounded-lg px-3 py-1.5 text-ui-9 text-slate-500 focus:outline-none focus:border-accent/30 font-mono"
                                     />
                                 </div>
                             </div>
@@ -369,9 +369,9 @@ export const FavoriteFullDossier: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-slate-500">
                                 <ScrollText size={16} />
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.narrative')}</h3>
+                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.narrative')}</h3>
                             </div>
-                            <span className="text-[10px] font-bold text-slate-700 font-serif italic">{t('modules:favorite.sections.dossier')}</span>
+                            <span className="text-ui-10 font-bold text-slate-700 font-serif italic">{t('modules:favorite.sections.dossier')}</span>
                         </div>
 
                         <textarea
@@ -385,7 +385,7 @@ export const FavoriteFullDossier: React.FC = () => {
                         <div className="pt-8 border-t border-white/5 space-y-4">
                             <div className="flex items-center gap-2 text-accent/50">
                                 <span className="material-symbols-outlined text-sm">lock</span>
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.notes_secret')}</h3>
+                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.notes_secret')}</h3>
                             </div>
                             <textarea
                                 value={formData.secretNotes || ''}
@@ -401,12 +401,12 @@ export const FavoriteFullDossier: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2 text-slate-500">
                                         <MessageSquare size={16} />
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.detail.dialogue_prep')}</h3>
+                                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.detail.dialogue_prep')}</h3>
                                     </div>
                                     <button
                                         onClick={handleGenerateDialogues}
                                         disabled={isGeneratingDialogues}
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                             isGeneratingDialogues 
                                                 ? 'bg-accent/10 text-accent/50 animate-pulse' 
                                                 : 'bg-accent text-slate-950 hover:scale-105 active:scale-95 shadow-lg shadow-accent/20'
@@ -449,13 +449,13 @@ export const FavoriteFullDossier: React.FC = () => {
                         {/* Ownership Section */}
                         <div className="space-y-6">
                             <div className="flex items-center gap-2 text-slate-500">
-                                <span className="material-symbols-outlined text-[16px]">shield_person</span>
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.assignment')}</h3>
+                                <span className="material-symbols-outlined text-base">shield_person</span>
+                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.assignment')}</h3>
                             </div>
                             
                             <div className="space-y-4">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.placeholders.campaign')}</label>
+                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.placeholders.campaign')}</label>
                                     <select
                                         title={t('modules:favorite.placeholders.campaign')}
                                         value={formData.campaignId || ''}
@@ -469,7 +469,7 @@ export const FavoriteFullDossier: React.FC = () => {
 
                                 {formData.campaignId && formData.type === 'item' && (
                                     <section className="space-y-2 text-left animate-in fade-in">
-                                        <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest ml-1">{t('modules:favorite.placeholders.owner_private')}</label>
+                                        <label className="text-ui-10 font-bold text-emerald-500 uppercase tracking-widest ml-1">{t('modules:favorite.placeholders.owner_private')}</label>
                                         <select
                                             title={t('modules:favorite.placeholders.owner_private')}
                                             value={formData.ownerId || ''}
@@ -495,7 +495,7 @@ export const FavoriteFullDossier: React.FC = () => {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-slate-500">
                                     <Activity size={16} />
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.attributes')}</h3>
+                                    <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.attributes')}</h3>
                                 </div>
                                 <button
                                     onClick={() => {
@@ -503,7 +503,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                         attrs[`${t('modules:favorite.detail.traits')} ${Object.keys(attrs).length + 1}`] = '...';
                                         setFormData({ ...formData, attributes: attrs });
                                     }}
-                                    className="p-1 px-3 rounded-lg bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all flex items-center gap-1"
+                                    className="p-1 px-3 rounded-lg bg-accent/10 text-accent text-ui-9 font-black uppercase tracking-widest hover:bg-accent/20 transition-all flex items-center gap-1"
                                 >
                                     <Plus size={12} /> {t('common:actions.add')}
                                 </button>
@@ -513,7 +513,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                 {Object.entries(formData.attributes || {}).map(([key, value]) => (
                                     <div key={key} className="group relative flex items-center glass-panel border border-white/5 hover:border-white/10 rounded-2xl p-4 transition-all">
                                         <div className="flex-1 space-y-1">
-                                            <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">
+                                            <div className="text-ui-9 font-black text-slate-500 uppercase tracking-widest mb-1">
                                                 {t([`modules:favorite.attributes.${key.trim().toLowerCase()}`, key])}
                                             </div>
                                             <input
@@ -547,7 +547,7 @@ export const FavoriteFullDossier: React.FC = () => {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-slate-500">
                                     <Layers size={16} />
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.gauges')}</h3>
+                                    <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:favorite.sections.gauges')}</h3>
                                 </div>
                                 <button
                                     onClick={() => {
@@ -555,7 +555,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                         stats[`${t('modules:favorite.detail.gauges')} ${Object.keys(stats).length + 1}`] = 50;
                                         setFormData({ ...formData, stats });
                                     }}
-                                    className="p-1 px-3 rounded-lg bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all flex items-center gap-1"
+                                    className="p-1 px-3 rounded-lg bg-accent/10 text-accent text-ui-9 font-black uppercase tracking-widest hover:bg-accent/20 transition-all flex items-center gap-1"
                                 >
                                     <Plus size={12} /> {t('common:actions.add')}
                                 </button>
@@ -565,11 +565,11 @@ export const FavoriteFullDossier: React.FC = () => {
                                 {Object.entries(formData.stats || {}).map(([stat, val]) => (
                                     <div key={stat} className="group space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                            <div className="text-ui-10 font-black text-slate-400 uppercase tracking-widest mb-1">
                                                 {t([`modules:favorite.attributes.${stat.trim().toLowerCase()}`, stat])}
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <span className="text-[10px] font-black text-accent">{val}%</span>
+                                                <span className="text-ui-10 font-black text-accent">{val}%</span>
                                                 <button
                                                     onClick={() => {
                                                         const stats = { ...formData.stats };

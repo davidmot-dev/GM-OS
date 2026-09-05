@@ -92,7 +92,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             ? <Users size={12} className="text-app-text/30" />
                             : <Crown size={12} className="text-app-text/30" />}
 
-                        <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
                             {r.label}
                         </span>
 
@@ -160,7 +160,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                         annoncer(r);
                         if (r.mouvements.length === 0) gmToast('Rien à éroder : les réserves sont au plancher.', 'info');
                     }}
-                    className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-lg border border-app-border/40 text-[9px] font-black uppercase tracking-widest text-app-text/50 hover:border-accent/40 hover:text-accent transition-colors"
+                    className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-lg border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:border-accent/40 hover:text-accent transition-colors"
                     title="Applique l'érosion de fin de scène déclarée par le système"
                 >
                     <Hourglass size={11} /> Fin de scène

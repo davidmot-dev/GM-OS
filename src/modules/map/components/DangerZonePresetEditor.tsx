@@ -101,7 +101,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                     {preset.name}
                                 </span>
                                 {preset.isAura && (
-                                    <span className="text-[10px] text-cyan-400/60 uppercase font-black tracking-tighter">{t('map.dangerEditor.auraActive')}</span>
+                                    <span className="text-ui-10 text-cyan-400/60 uppercase font-black tracking-tighter">{t('map.dangerEditor.auraActive')}</span>
                                 )}
                             </div>
                             <ChevronRight size={14} className={`transition-all ${selectedPresetId === preset.id ? 'text-cyan-400 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'}`} />
@@ -129,7 +129,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                         {selectedPreset.name}
                                     </h2>
                                 </div>
-                                <div className="flex items-center gap-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">
+                                <div className="flex items-center gap-4 text-ui-10 font-bold text-slate-500 uppercase tracking-widest pl-1">
                                     <span className="flex items-center gap-1.5 border-r border-slate-800 pr-4">
                                         <Activity size={12} className="text-cyan-500/50" />
                                         Nexus ID: <span className="text-slate-400">{selectedPreset.id.substring(0, 8)}...</span>
@@ -160,7 +160,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                     
                                     <div className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.modelName')}</label>
+                                            <label className="text-ui-10 font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.modelName')}</label>
                                             <input 
                                                 type="text" 
                                                 value={selectedPreset.name}
@@ -171,7 +171,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                         </div>
                                         
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.signature')}</label>
+                                            <label className="text-ui-10 font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.signature')}</label>
                                             <div className="flex gap-4 p-4 bg-[#060e20]/50 rounded-xl border border-[#192540]">
                                                 <div className="relative">
                                                     <input 
@@ -191,7 +191,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                                         className="bg-transparent text-xl font-mono font-black text-white outline-none uppercase tracking-tighter w-28"
                                                         title={t('map.dangerEditor.hexCode') as string}
                                                     />
-                                                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest italic">{t('map.dangerEditor.hexCode')}</span>
+                                                    <span className="text-ui-9 text-slate-500 font-bold uppercase tracking-widest italic">{t('map.dangerEditor.hexCode')}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -220,7 +220,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                     {selectedPreset.isDifficultTerrain && (
                                         <div className="space-y-4 pt-2 animate-in slide-in-from-top-4 fade-in duration-300">
                                             <div className="flex justify-between items-center mb-1">
-                                                <label className="text-[10px] font-black text-emerald-400/60 uppercase tracking-widest">{t('map.dangerEditor.multiCost')}</label>
+                                                <label className="text-ui-10 font-black text-emerald-400/60 uppercase tracking-widest">{t('map.dangerEditor.multiCost')}</label>
                                                 <span className="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-lg text-xs font-black italic">
                                                     x{selectedPreset.movementCost || 2.0}
                                                 </span>
@@ -237,7 +237,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                                     className="w-full accent-emerald-500 hover:accent-emerald-400 transition-all cursor-pointer"
                                                 />
                                             </div>
-                                            <div className="flex justify-between text-[8px] font-bold text-slate-500 uppercase">
+                                            <div className="flex justify-between text-ui-8 font-bold text-slate-500 uppercase">
                                                 <span>{t('map.dangerEditor.normal')}</span>
                                                 <span>{t('map.dangerEditor.lethal')}</span>
                                             </div>
@@ -289,7 +289,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                          <Sparkles className="text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]" size={18} />
                                      </div>
                                      <div className="space-y-2 text-slate-300">
-                                         <p className="text-[10px] font-black text-amber-400 uppercase tracking-widest pl-1">{t('map.dangerEditor.protocol')}</p>
+                                         <p className="text-ui-10 font-black text-amber-400 uppercase tracking-widest pl-1">{t('map.dangerEditor.protocol')}</p>
                                          <p className="text-xs leading-relaxed italic opacity-80">
                                             {t('map.dangerEditor.protocolDesc')}
                                          </p>
@@ -329,7 +329,7 @@ const SectionHeader = ({ icon: Icon, title, color = "text-cyan-400" }: { icon: R
         <div className={`p-1.5 rounded-lg bg-white/5 ${color}`}>
             <Icon size={14} />
         </div>
-        <h3 className={`text-[10px] font-black uppercase tracking-[0.25em] ${color}`}>{title}</h3>
+        <h3 className={`text-ui-10 font-black uppercase tracking-[0.25em] ${color}`}>{title}</h3>
     </div>
 );
 
@@ -350,7 +350,7 @@ const TacticalSwitch = ({ label, description, active, onToggle, color = "cyan" }
         <div className="flex items-center justify-between group cursor-pointer" onClick={onToggle}>
             <div className="space-y-1">
                 <label className="text-sm font-black text-white group-hover:text-cyan-400 transition-colors uppercase tracking-wider">{label}</label>
-                <p className="text-[10px] text-slate-500 font-bold italic">{description}</p>
+                <p className="text-ui-10 text-slate-500 font-bold italic">{description}</p>
             </div>
             <div className={`w-14 h-7 p-1 rounded-full transition-all duration-300 flex items-center ${active ? accents[color] : 'bg-[#060e20] border border-[#40485d]'}`}>
                 <div className={`w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-sm ${active ? 'translate-x-[26px]' : 'translate-x-0'}`} />
@@ -378,7 +378,7 @@ const ObsidianSelect = ({
         <div className="space-y-2 relative">
             <div className="flex items-center gap-2 mb-1">
                 <Icon size={12} className={accentClasses[accent].split(' ')[0]} />
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{label}</label>
+                <label className="text-ui-10 font-black text-slate-500 uppercase tracking-widest">{label}</label>
             </div>
             
             <button

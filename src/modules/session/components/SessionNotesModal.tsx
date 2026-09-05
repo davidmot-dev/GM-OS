@@ -18,11 +18,11 @@ const SessionNotesModal: React.FC = () => {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-accent/60">
                     <Maximize2 size={14} />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('modules:session.notes.quick_input')}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:session.notes.quick_input')}</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1 bg-app-surface rounded-full border border-app-border">
                     <StickyNote size={12} className="text-accent" />
-                    <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest">
+                    <p className="text-ui-10 text-app-text/60 font-bold uppercase tracking-widest">
                         {t('common:labels.session_number', { number: session.number })} • {campaign?.name}
                     </p>
                 </div>
@@ -38,7 +38,7 @@ const SessionNotesModal: React.FC = () => {
             />
 
             {/* Simple Help Info */}
-            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-app-text/20">
+            <div className="flex items-center justify-between text-ui-10 font-bold uppercase tracking-widest text-app-text/20">
                 <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 opacity-50"></div>
                     {t('modules:session.notes.auto_save')}

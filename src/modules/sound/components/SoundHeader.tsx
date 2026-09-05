@@ -74,7 +74,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                     <div className="flex items-center gap-4 bg-black/20 px-3 py-1.5 rounded-xl border border-white/5">
                         <div className="flex items-center gap-2">
                             <div className={`size-1.5 rounded-full transition-all duration-500 ${isMidiConnected ? 'bg-emerald-500 shadow-glow-emerald animate-pulse' : 'bg-app-text/20'}`} />
-                            <span className={`text-[8px] font-black uppercase tracking-widest leading-none transition-colors ${isMidiConnected ? 'text-emerald-400' : 'text-app-text/40'}`}>
+                            <span className={`text-ui-8 font-black uppercase tracking-widest leading-none transition-colors ${isMidiConnected ? 'text-emerald-400' : 'text-app-text/40'}`}>
                                 {isMidiConnected ? 'MIDI CONNECTED' : 'NO MIDI DEVICE'}
                             </span>
                         </div>
@@ -93,7 +93,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                     <div className="flex bg-app-bg/40 p-1 rounded-xl border border-app-border/40 shadow-inner mr-2">
                         <button
                             onClick={toggleMidiLearn}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${isMidiLearnActive 
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${isMidiLearnActive 
                                 ? 'bg-accent text-white shadow-glow-accent' 
                                 : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'}`}
                         >
@@ -102,7 +102,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                         </button>
                         <button
                             onClick={toggleKeyLearn}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${isKeyLearnActive 
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${isKeyLearnActive 
                                 ? 'bg-accent text-white shadow-glow-accent' 
                                 : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'}`}
                         >
@@ -115,7 +115,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                     <div className="relative device-selector">
                         <button
                             onClick={() => setIsDeviceMenuOpen(!isDeviceMenuOpen)}
-                            className={`flex items-center gap-3 bg-app-bg/40 border rounded-xl px-4 py-2 text-[8px] font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border text-app-text/40 hover:border-app-border/60 hover:text-app-text/80'}`}
+                            className={`flex items-center gap-3 bg-app-bg/40 border rounded-xl px-4 py-2 text-ui-8 font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border text-app-text/40 hover:border-app-border/60 hover:text-app-text/80'}`}
                         >
                             <span className="truncate max-w-[120px]">{currentDeviceLabel}</span>
                             <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-accent' : ''}`} />
@@ -126,7 +126,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                                 <div className="max-h-60 overflow-y-auto custom-scrollbar">
                                     <button
                                         onClick={() => { setOutputDevice('default'); soundEngine.setOutputDevice('default'); setIsDeviceMenuOpen(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-app-surface/5 hover:text-white'}`}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-app-surface/5 hover:text-white'}`}
                                     >
                                         <span>Default Speaker</span>
                                         {outputDeviceId === 'default' && <Check size={12} className="text-accent" />}
@@ -138,7 +138,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                                         <button
                                             key={device.deviceId}
                                             onClick={() => { setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
-                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-white/5 hover:text-white'}`}
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-white/5 hover:text-white'}`}
                                         >
                                             <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                             {outputDeviceId === device.deviceId && <Check size={12} className="text-accent" />}

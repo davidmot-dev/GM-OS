@@ -45,7 +45,7 @@ const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: M
             title={label}
         >
             <Icon size={20} className={isActive ? 'text-slate-950' : 'text-accent'} />
-            <span className="text-[10px] uppercase font-bold">{label}</span>
+            <span className="text-ui-10 uppercase font-bold">{label}</span>
         </button>
     );
 };
@@ -267,7 +267,7 @@ const MapControls: React.FC = () => {
                         ) : (
                             <Sparkles size={16} className="text-accent group-hover:scale-110 transition-transform animate-pulse" />
                         )}
-                        <span className="text-[11px] font-black uppercase tracking-widest text-indigo-100 group-hover:text-accent transition-colors">{t('map.sidebar.oracle')}</span>
+                        <span className="text-ui-11 font-black uppercase tracking-widest text-indigo-100 group-hover:text-accent transition-colors">{t('map.sidebar.oracle')}</span>
                     </button>
                 </section>
 
@@ -331,7 +331,7 @@ const MapControls: React.FC = () => {
                     {currentTool === 'magic' && (
                         <div className="bg-app-bg/20 p-3 rounded border border-app-border flex flex-col gap-3">
                             <div>
-                                <div className="flex justify-between text-[10px] text-slate-400 mb-2 uppercase font-bold tracking-wider">
+                                <div className="flex justify-between text-ui-10 text-slate-400 mb-2 uppercase font-bold tracking-wider">
                                     <span>{t('map.sidebar.magic.type')}</span>
                                     <button onClick={handleClearMagic} className="text-rose-500 hover:text-rose-400">{t('map.sidebar.magic.clearAll')}</button>
                                 </div>
@@ -348,7 +348,7 @@ const MapControls: React.FC = () => {
                                         <button
                                             key={s.id}
                                             onClick={() => setMagicSettings(s.id as MagicStyle, magicShape)}
-                                            className={`p-1.5 rounded border text-[10px] flex flex-col items-center transition-all ${
+                                            className={`p-1.5 rounded border text-ui-10 flex flex-col items-center transition-all ${
 
                                                 magicStyle === s.id 
                                                 ? 'bg-accent/20 border-accent text-accent' 
@@ -364,7 +364,7 @@ const MapControls: React.FC = () => {
                             </div>
                             
                             <div>
-                                <span className="text-[10px] text-slate-400 mb-2 block uppercase font-bold tracking-wider">{t('map.sidebar.magic.shape')}</span>
+                                <span className="text-ui-10 text-slate-400 mb-2 block uppercase font-bold tracking-wider">{t('map.sidebar.magic.shape')}</span>
                                 <div className="grid grid-cols-2 gap-2">
                                     {[
                                         { id: 'circle', icon: Circle, label: t('map.sidebar.magic.shapes.circle') },
@@ -384,7 +384,7 @@ const MapControls: React.FC = () => {
                                                 }`}
                                             >
                                                 <Icon size={14} />
-                                                <span className="text-[10px] font-bold">{sh.label}</span>
+                                                <span className="text-ui-10 font-bold">{sh.label}</span>
                                             </button>
                                         );
                                     })}
@@ -396,7 +396,7 @@ const MapControls: React.FC = () => {
                             {magicEffects.length > 0 && (
                                 <div className="mt-2 border-t border-app-border pt-3">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t('map.sidebar.magic.activeEffects')} ({magicEffects.length})</span>
+                                        <span className="text-ui-10 text-slate-400 uppercase font-bold tracking-wider">{t('map.sidebar.magic.activeEffects')} ({magicEffects.length})</span>
                                     </div>
                                     <div className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                                         {magicEffects.map((eff) => (
@@ -410,7 +410,7 @@ const MapControls: React.FC = () => {
                                                         eff.style === 'arcane' ? '#a855f7' : 
                                                         eff.style === 'darkness' ? '#374151' : '#10b981'
                                                     }} />
-                                                    <span className="text-[10px] text-slate-300 capitalize truncate font-medium">
+                                                    <span className="text-ui-10 text-slate-300 capitalize truncate font-medium">
                                                         {t(`map.sidebar.magic.styles.${eff.style}`)} - {
                                                             eff.type === 'circle' ? t('map.sidebar.magic.shapes.circle') :
                                                             eff.type === 'rect' ? t('map.sidebar.magic.shapes.rect') :
@@ -446,13 +446,13 @@ const MapControls: React.FC = () => {
                         <div className="flex gap-2">
                             <button
                                 onClick={() => gmCustom('danger-preset-editor')}
-                                className="text-[9px] font-black uppercase tracking-widest text-accent hover:text-white transition-colors"
+                                className="text-ui-9 font-black uppercase tracking-widest text-accent hover:text-white transition-colors"
                             >
                                 {t('map.sidebar.danger.managePresets')}
                             </button>
                             <button
                                 onClick={() => gmConfirm(t('map.sidebar.danger.clearConfirm'), clearDangerZones)}
-                                className="text-[9px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-400 transition-colors"
+                                className="text-ui-9 font-black uppercase tracking-widest text-rose-500 hover:text-rose-400 transition-colors"
                             >
                                 {t('map.sidebar.danger.clearAll')}
                             </button>
@@ -462,13 +462,13 @@ const MapControls: React.FC = () => {
                     <div className="flex flex-col gap-2">
                         {currentTool === 'danger' ? (
                             <div className="bg-rose-500/5 border border-rose-500/20 rounded-lg p-3">
-                                <p className="text-[11px] text-rose-200/70 mb-3 italic">
+                                <p className="text-ui-11 text-rose-200/70 mb-3 italic">
                                     {t('map.sidebar.danger.instruction')}
                                 </p>
                                 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{t('map.sidebar.danger.shape')}</label>
+                                        <label className="text-ui-10 text-slate-500 uppercase font-bold block mb-1">{t('map.sidebar.danger.shape')}</label>
                                         <div className="flex gap-1">
                                             <button 
                                                 onClick={() => setDangerShape('rect')}
@@ -505,7 +505,7 @@ const MapControls: React.FC = () => {
                                     <div className="flex gap-2">
                                         <button 
                                             onClick={() => setAuraOverride(!auraOverride)}
-                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-[10px] font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
                                             title={t('map.sidebar.danger.aura')}
                                         >
                                             <Link size={14} />
@@ -513,7 +513,7 @@ const MapControls: React.FC = () => {
                                         </button>
                                         <button 
                                             onClick={() => setDifficultTerrainOverride(!difficultTerrainOverride)}
-                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-[10px] font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
                                             title={t('map.sidebar.danger.terrain')}
                                         >
                                             <Mountain size={14} />
@@ -523,7 +523,7 @@ const MapControls: React.FC = () => {
 
                                     {difficultTerrainOverride && (
                                         <div className="flex items-center justify-between px-1">
-                                            <span className="text-[10px] text-slate-500 uppercase font-bold">{t('map.sidebar.danger.dtCost')}</span>
+                                            <span className="text-ui-10 text-slate-500 uppercase font-bold">{t('map.sidebar.danger.dtCost')}</span>
                                             <div className="flex items-center gap-2">
                                                 <input 
                                                     type="range" min="1" max="4" step="0.5" 
@@ -531,13 +531,13 @@ const MapControls: React.FC = () => {
                                                     onChange={(e) => setMovementCostOverride(parseFloat(e.target.value))}
                                                     className="w-20 h-1 accent-emerald-500 bg-gray-700 rounded-lg cursor-pointer"
                                                 />
-                                                <span className="text-[10px] font-mono text-emerald-500">x{movementCostOverride}</span>
+                                                <span className="text-ui-10 font-mono text-emerald-500">x{movementCostOverride}</span>
                                             </div>
                                         </div>
                                     )}
 
                                     <div>
-                                        <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{t('map.sidebar.danger.presets')}</label>
+                                        <label className="text-ui-10 text-slate-500 uppercase font-bold block mb-1">{t('map.sidebar.danger.presets')}</label>
                                         <div className="grid grid-cols-1 gap-1">
                                             {dangerZonePresets.map(preset => {
                                                 const isActive = selectedDangerPresetId === preset.id;
@@ -552,7 +552,7 @@ const MapControls: React.FC = () => {
                                                         }`}
                                                     >
                                                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.color }} />
-                                                        <span className={`flex-1 text-[11px] ${isActive ? 'text-accent font-bold' : 'text-slate-300'}`}>
+                                                        <span className={`flex-1 text-ui-11 ${isActive ? 'text-accent font-bold' : 'text-slate-300'}`}>
                                                             {preset.name}
                                                             <span className="ml-2 inline-flex gap-1 opacity-50">
                                                                 {preset.isAura && <Link size={10} />}
@@ -577,7 +577,7 @@ const MapControls: React.FC = () => {
                                     <div key={zone.id} className="bg-app-bg/30 border border-app-border rounded p-2 flex flex-col gap-1 group">
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: zone.color }} />
-                                            <span className="text-[11px] text-slate-300 flex-1 truncate">{zone.name}</span>
+                                            <span className="text-ui-11 text-slate-300 flex-1 truncate">{zone.name}</span>
                                             <div className="flex gap-1">
                                                 {zone.isAura && <Link size={12} className="text-accent" />}
                                                 {zone.isDifficultTerrain && <Mountain size={12} className="text-emerald-500" />}
@@ -590,7 +590,7 @@ const MapControls: React.FC = () => {
                                             </button>
                                         </div>
                                         {zone.isAura && (
-                                            <div className="text-[9px] text-slate-500 flex items-center gap-1 px-1 italic">
+                                            <div className="text-ui-9 text-slate-500 flex items-center gap-1 px-1 italic">
                                                 <Users size={10} />
                                                 <span>{t('map.sidebar.danger.carrier')}: {zone.parentTokenId ? (tokens.find(t => t.id === zone.parentTokenId)?.name || t('map.sidebar.danger.unknown')) : t('map.sidebar.danger.none')}</span>
                                             </div>
@@ -598,7 +598,7 @@ const MapControls: React.FC = () => {
                                     </div>
                                 ))}
                                 {dangerZones.length === 0 && (
-                                    <p className="text-center py-4 text-[11px] text-slate-600 italic border border-dashed border-app-border rounded">
+                                    <p className="text-center py-4 text-ui-11 text-slate-600 italic border border-dashed border-app-border rounded">
                                         {t('map.sidebar.danger.noActiveZones')}
                                     </p>
                                 )}
@@ -633,7 +633,7 @@ const MapControls: React.FC = () => {
                                     title={w.label}
                                 >
                                     <Icon size={18} />
-                                    <span className="text-[9px] mt-1 font-bold uppercase">{w.label}</span>
+                                    <span className="text-ui-9 mt-1 font-bold uppercase">{w.label}</span>
                                 </button>
                             );
                         })}
@@ -687,7 +687,7 @@ const MapControls: React.FC = () => {
                                     title={t.label}
                                 >
                                     <Icon size={18} className={isActive ? 'text-accent' : t.color} />
-                                    <span className="text-[8px] mt-1 font-bold uppercase truncate w-full text-center">{t.label}</span>
+                                    <span className="text-ui-8 mt-1 font-bold uppercase truncate w-full text-center">{t.label}</span>
                                 </button>
                             );
                         })}
@@ -714,7 +714,7 @@ const MapControls: React.FC = () => {
                     {isGridEnabled && (
                         <div className="flex flex-col gap-3 bg-app-bg/20 p-3 rounded border border-app-border">
                             <div className="flex flex-col gap-1">
-                                <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                                <div className="flex justify-between text-ui-10 text-slate-400 mb-1">
                                     <span>{t('map.sidebar.grid.size')}</span>
                                     <span className="text-accent font-mono">{gridSize}px</span>
                                 </div>
@@ -730,7 +730,7 @@ const MapControls: React.FC = () => {
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                                <div className="flex justify-between text-ui-10 text-slate-400 mb-1">
                                     <span>{t('map.sidebar.grid.opacity')}</span>
                                     <span className="text-accent font-mono">{Math.round(gridOpacity * 100)}%</span>
                                 </div>
@@ -760,7 +760,7 @@ const MapControls: React.FC = () => {
                               elles.
                             */}
                             <div className="flex items-center justify-between gap-3">
-                                <span className="text-[10px] text-slate-400">{t('map.sidebar.grid.color')}</span>
+                                <span className="text-ui-10 text-slate-400">{t('map.sidebar.grid.color')}</span>
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="color"
@@ -774,7 +774,7 @@ const MapControls: React.FC = () => {
                                         type="button"
                                         onClick={() => setGridColor('#ffffff')}
                                         title={t('map.sidebar.grid.color_reset')}
-                                        className="text-[9px] uppercase tracking-wider text-slate-600 hover:text-slate-300 transition-colors"
+                                        className="text-ui-9 uppercase tracking-wider text-slate-600 hover:text-slate-300 transition-colors"
                                     >
                                         {t('map.sidebar.grid.color_reset_short')}
                                     </button>
@@ -794,8 +794,8 @@ const MapControls: React.FC = () => {
                         </h3>
                         {combatants.length > 0 && (
                             <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-black bg-gm-crimson/20 text-gm-crimson px-2 py-0.5 rounded uppercase tracking-tighter">{t('map.sidebar.combat.round')} {round}</span>
-                                <span className="text-[10px] font-black bg-app-surface text-app-text/60 px-2 py-0.5 rounded border border-app-border uppercase tracking-tighter">{currentTurnIdx + 1} / {combatants.length}</span>
+                                <span className="text-ui-10 font-black bg-gm-crimson/20 text-gm-crimson px-2 py-0.5 rounded uppercase tracking-tighter">{t('map.sidebar.combat.round')} {round}</span>
+                                <span className="text-ui-10 font-black bg-app-surface text-app-text/60 px-2 py-0.5 rounded border border-app-border uppercase tracking-tighter">{currentTurnIdx + 1} / {combatants.length}</span>
                             </div>
                         )}
                     </div>
@@ -858,7 +858,7 @@ const MapControls: React.FC = () => {
                             ))
                         )}
                     </div>
-                    <div className="mt-2 text-[10px] text-gray-500 px-1 border-t border-gray-800 pt-2 text-center">
+                    <div className="mt-2 text-ui-10 text-gray-500 px-1 border-t border-gray-800 pt-2 text-center">
                         {t('map.sidebar.combatants.footer')}
                     </div>
                 </section>
@@ -867,7 +867,7 @@ const MapControls: React.FC = () => {
                 {isVideo && (
                     <section className="mt-4 pt-4 border-t border-gray-800 flex flex-col gap-3 px-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('map.sidebar.audio.title')}</span>
+                            <span className="text-ui-10 font-black uppercase tracking-widest text-slate-500">{t('map.sidebar.audio.title')}</span>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setMapMuted(!isMapMuted)}
@@ -891,7 +891,7 @@ const MapControls: React.FC = () => {
                                     className="w-full accent-accent h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer"
                                 />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-400 tabular-nums w-8 text-right">
+                            <span className="text-ui-10 font-bold text-slate-400 tabular-nums w-8 text-right">
                                 {Math.round(mapVolume * 100)}%
                             </span>
                         </div>
@@ -913,9 +913,9 @@ const MapControls: React.FC = () => {
                             <div className="w-full flex flex-col items-center justify-center gap-1 p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent shadow-inner">
                                 <div className="flex items-center gap-2">
                                     <Cast size={16} className="animate-pulse" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest italic">{t('map.sidebar.projection.active')}</span>
+                                    <span className="text-ui-10 font-black uppercase tracking-widest italic">{t('map.sidebar.projection.active')}</span>
                                 </div>
-                                <span className="text-[9px] font-bold opacity-60 uppercase tracking-tighter tabular-nums truncate max-w-full">{t('map.sidebar.projection.target')} : {getDisplayLabel(projectionTarget)}</span>
+                                <span className="text-ui-9 font-bold opacity-60 uppercase tracking-tighter tabular-nums truncate max-w-full">{t('map.sidebar.projection.target')} : {getDisplayLabel(projectionTarget)}</span>
                             </div>
                             <button
                                 onClick={() => {
@@ -924,7 +924,7 @@ const MapControls: React.FC = () => {
                                     }
                                     clearProjectedState();
                                 }}
-                                className="w-full py-1 text-[10px] text-slate-500 hover:text-rose-400 transition-colors uppercase font-bold tracking-widest"
+                                className="w-full py-1 text-ui-10 text-slate-500 hover:text-rose-400 transition-colors uppercase font-bold tracking-widest"
                             >
                                 {t('map.sidebar.projection.stop')}
                             </button>
@@ -943,8 +943,8 @@ const MapControls: React.FC = () => {
                         >
                             <Brain className={`shrink-0 ${isAnalyzing ? 'animate-spin-slow' : 'group-hover:scale-110 transition-transform'}`} size={20} />
                             <div className="text-left">
-                                <span className="text-[10px] font-black uppercase tracking-widest block leading-none">{t('map.sidebar.ai.title')}</span>
-                                <span className="text-[8px] opacity-60 uppercase font-bold">{isAnalyzing ? t('map.sidebar.ai.analyzing') : t('map.sidebar.ai.launch')}</span>
+                                <span className="text-ui-10 font-black uppercase tracking-widest block leading-none">{t('map.sidebar.ai.title')}</span>
+                                <span className="text-ui-8 opacity-60 uppercase font-bold">{isAnalyzing ? t('map.sidebar.ai.analyzing') : t('map.sidebar.ai.launch')}</span>
                             </div>
                         </button>
                     </div>
@@ -958,14 +958,14 @@ const MapControls: React.FC = () => {
                                 }`}
                         >
                             <Cast className={projectionTarget ? 'text-slate-500' : 'text-accent group-hover:scale-110 transition-transform'} />
-                            <span className="text-[10px] font-bold uppercase tracking-tight">{t('map.sidebar.projection.project')}</span>
+                            <span className="text-ui-10 font-bold uppercase tracking-tight">{t('map.sidebar.projection.project')}</span>
                         </button>
                         <button
                             onClick={resetView}
                             className="flex flex-col items-center justify-center gap-2 p-4 bg-app-surface/40 hover:bg-app-surface border border-app-border/50 rounded-xl transition-all group shadow-lg"
                         >
                             <Maximize className="text-slate-400 group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-bold uppercase tracking-tight text-white/80">{t('map.sidebar.projection.resetView')}</span>
+                            <span className="text-ui-10 font-bold uppercase tracking-tight text-white/80">{t('map.sidebar.projection.resetView')}</span>
                         </button>
                     </div>
                 </section>
@@ -1007,7 +1007,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-[8px] font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-white shadow-glow-accent/20' : 'border-app-border/50 text-slate-500 hover:border-app-border/10 hover:text-slate-300'}`}
+                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-ui-8 font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-white shadow-glow-accent/20' : 'border-app-border/50 text-slate-500 hover:border-app-border/10 hover:text-slate-300'}`}
             >
                 <span className="truncate max-w-[140px]">{currentLabel}</span>
                 <ChevronDown size={12} className={`transition-transform duration-300 ${isOpen ? 'rotate-180 text-accent' : ''}`} />
@@ -1023,7 +1023,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
                         <div className="max-h-48 overflow-y-auto custom-scrollbar flex flex-col gap-0.5">
                             <button
                                 onClick={() => { onSelect('default'); setIsOpen(false); }}
-                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-white' : 'text-slate-400 hover:bg-app-surface/5 hover:text-white'}`}
+                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-white' : 'text-slate-400 hover:bg-app-surface/5 hover:text-white'}`}
                             >
                                 <span>{t('map.sidebar.audio.defaultSpeaker')}</span>
                                 {currentId === 'default' && <Check size={10} className="text-gm-violet" />}
@@ -1035,7 +1035,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
                                 <button
                                     key={device.deviceId}
                                     onClick={() => { onSelect(device.deviceId); setIsOpen(false); }}
-                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
                                 >
                                     <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                     {currentId === device.deviceId && <Check size={10} className="text-gm-violet" />}
@@ -1073,7 +1073,7 @@ const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, 
                     />
                 ) : (
                     <div className="w-6 h-6 rounded-full bg-app-surface border border-app-border flex items-center justify-center">
-                        <span className="text-[10px] uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>
+                        <span className="text-ui-10 uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>
                     </div>
                 )}
                 <span className="text-sm text-slate-200 truncate">{combatant.name}</span>

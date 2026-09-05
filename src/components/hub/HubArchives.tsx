@@ -20,9 +20,9 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
                         <Archive className="text-accent" size={24} />
                         Archives du Groupe
                     </h2>
-                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-widest">Preuves et indices collectés lors de la campagne.</p>
+                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest">Preuves et indices collectés lors de la campagne.</p>
                 </div>
-                <div className="text-[10px] font-black bg-app-text/5 border border-app-border/40 px-4 py-2 rounded-full text-app-text/40 uppercase tracking-widest">
+                <div className="text-ui-10 font-black bg-app-text/5 border border-app-border/40 px-4 py-2 rounded-full text-app-text/40 uppercase tracking-widest">
                     {revealedClues.length} Fragments Découverts
                 </div>
             </div>
@@ -51,13 +51,13 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
                                         <h3 className="text-sm font-black text-app-text group-hover:text-accent transition-colors">{clue.title}</h3>
                                         <div className="flex flex-wrap gap-2">
                                             {clue.revealedAt && (
-                                                <span className="text-[7px] font-black text-app-text/30 uppercase tracking-[0.2em] bg-app-text/5 px-2 py-0.5 rounded border border-app-border/40">
+                                                <span className="text-ui-7 font-black text-app-text/30 uppercase tracking-[0.2em] bg-app-text/5 px-2 py-0.5 rounded border border-app-border/40">
                                                     DÉCOUVERT LE {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(clue.revealedAt))}
                                                 </span>
                                             )}
                                         </div>
                                     </div>
-                                    <p className="text-[11px] text-app-text/40 leading-relaxed italic font-serif line-clamp-4">{clue.content}</p>
+                                    <p className="text-ui-11 text-app-text/40 leading-relaxed italic font-serif line-clamp-4">{clue.content}</p>
                                 </div>
                             </div>
                         </button>

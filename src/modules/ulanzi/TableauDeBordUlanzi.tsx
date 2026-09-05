@@ -152,7 +152,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
         <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
                 <MonitorSmartphone size={13} className={`shrink-0 ${actif ? 'text-accent' : 'text-app-text/40'}`} />
-                <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-app-text/60 truncate">
+                <span className="text-ui-10 uppercase tracking-[0.18em] font-semibold text-app-text/60 truncate">
                     Afficheur Ulanzi
                 </span>
             </div>
@@ -165,7 +165,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
         return (
             <div className="flex-shrink-0 glass-bento rounded-xl px-4 py-2.5 flex flex-col gap-1">
                 {entete}
-                <p className="text-[10px] leading-snug text-app-text/40">
+                <p className="text-ui-10 leading-snug text-app-text/40">
                     Afficheur Ulanzi éteint — il garde sa routine.
                     {disponibles.length === 0 && ' Aucun widget pour ce jeu.'}
                 </p>
@@ -185,7 +185,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
               donc pas deux écrivains — c'est le partage du § 12.
             */}
             {disponibles.length === 0 ? (
-                <p className="text-[10px] leading-snug text-app-text/40">
+                <p className="text-ui-10 leading-snug text-app-text/40">
                     Aucun widget pour ce jeu. L&apos;afficheur garde sa routine.
                 </p>
             ) : (
@@ -193,7 +193,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                     {disponibles.map(widget => {
                         const coche = actifs.some(a => a.widget.id === widget.id);
                         return (
-                            <div key={widget.id} className="flex items-center gap-2 text-[11px]">
+                            <div key={widget.id} className="flex items-center gap-2 text-ui-11">
                                 <label className="flex flex-1 min-w-0 items-center gap-2 cursor-pointer">
                                     <input
                                         type="checkbox"
@@ -226,7 +226,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                   silencieux se cherche une heure.*
                                 */}
                                 {coche && widget.source.de === 'horloge' && (
-                                    <span className={`shrink-0 text-[10px] ${horlogesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${horlogesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
                                         {!isClockProjected
                                             ? 'non projetées'
                                             : horlogesMontrees === 0
@@ -235,19 +235,19 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'pilote' && (
-                                    <span className={`shrink-0 text-[10px] ${reservesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${reservesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
                                         {reservesMontrees > 0
                                             ? `${reservesMontrees} affichée${reservesMontrees > 1 ? 's' : ''}`
                                             : 'aucune réserve'}
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'temps' && (
-                                    <span className={`shrink-0 text-[10px] ${isClockProjected ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${isClockProjected ? 'text-app-text/40' : 'text-amber-300/70'}`}>
                                         {isClockProjected ? LIBELLES_DE_MODE[modeDeLHorloge] : 'non projetée'}
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'minuteur' && (
-                                    <span className={`shrink-0 text-[10px] ${minuteurMontre ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${minuteurMontre ? 'text-app-text/40' : 'text-amber-300/70'}`}>
                                         {!isClockProjected
                                             ? 'non projeté'
                                             : minuteurMontre
@@ -281,7 +281,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                                 type="button"
                                                 onClick={() => jeu && setCouleurDuWidget(jeu, widget.id, null)}
                                                 title="Revenir à la couleur d'origine"
-                                                className="text-[10px] leading-none text-app-text/30 hover:text-app-text/70"
+                                                className="text-ui-10 leading-none text-app-text/30 hover:text-app-text/70"
                                             >
                                                 ×
                                             </button>
@@ -289,7 +289,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                     </span>
                                 )}
                                 {coche && (
-                                    <label className="flex shrink-0 items-center gap-1 text-[10px] text-app-text/40">
+                                    <label className="flex shrink-0 items-center gap-1 text-ui-10 text-app-text/40">
                                         <input
                                             type="number"
                                             min={3}
@@ -307,7 +307,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                         );
                     })}
                     {actifs.length === 0 && (
-                        <p className="text-[10px] leading-snug text-amber-300/70">
+                        <p className="text-ui-10 leading-snug text-amber-300/70">
                             Aucun widget coché — l&apos;afficheur garde sa routine.
                         </p>
                     )}
@@ -357,7 +357,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                     </div>
 
                     <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
-                        <div className="flex items-baseline justify-between gap-2 text-[11px]">
+                        <div className="flex items-baseline justify-between gap-2 text-ui-11">
                             <span className="font-bold text-app-text">{LIBELLES[moment]}</span>
                             <span className={coute ? 'text-red-400 font-bold' : 'text-app-text/50'}>
                                 {quarts.consecutifs} d&apos;affilée{coute ? ' · +1 stress' : ''}
@@ -368,7 +368,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                             <button
                                 type="button"
                                 onClick={quartSuivant}
-                                className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-app-border/40 bg-app-surface/60 px-2 py-1.5 text-[11px] font-bold text-app-text hover:bg-accent/20 hover:border-accent/40 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-app-border/40 bg-app-surface/60 px-2 py-1.5 text-ui-11 font-bold text-app-text hover:bg-accent/20 hover:border-accent/40 transition-colors"
                             >
                                 <ChevronRight size={12} /> Quart suivant
                             </button>
@@ -376,7 +376,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                 type="button"
                                 onClick={pause}
                                 title="Une pause consomme elle-même un Quart, et remet le compteur à zéro."
-                                className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2 py-1.5 text-[11px] font-bold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2 py-1.5 text-ui-11 font-bold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
                             >
                                 <Coffee size={12} /> Pause
                             </button>
@@ -425,7 +425,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                         onClick={calmerLeSignal}
                         disabled={signal.niveau <= NIVEAU_MIN}
                         title="Calmer le sujet"
-                        className="rounded-lg border border-app-border/40 px-2 py-1 text-[11px] font-bold text-app-text/60 hover:text-app-text disabled:opacity-20"
+                        className="rounded-lg border border-app-border/40 px-2 py-1 text-ui-11 font-bold text-app-text/60 hover:text-app-text disabled:opacity-20"
                     >
                         <ChevronDown size={12} />
                     </button>
@@ -434,7 +434,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                         onClick={accelererLeSignal}
                         disabled={signal.niveau >= NIVEAU_MAX}
                         title="Le rythme s’accélère"
-                        className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-[11px] font-bold text-rose-300 hover:bg-rose-500/20 disabled:opacity-20"
+                        className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-ui-11 font-bold text-rose-300 hover:bg-rose-500/20 disabled:opacity-20"
                     >
                         <Activity size={12} /> Accélérer
                     </button>
@@ -450,7 +450,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
             )}
 
             {/* Les réglages de l'appareil, communs à tous les widgets. */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-app-text/40">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-ui-10 text-app-text/40">
                 <label
                     className="flex items-center gap-1 cursor-pointer"
                     title="Coupe l'horloge, la météo, l'humidité et la batterie pendant la séance : l'afficheur ne montre plus que les widgets choisis. Ces réglages ne s'appliquent qu'au démarrage, donc l'afficheur redémarre (~10 s) à la prise et à la restitution."
@@ -471,7 +471,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                     placeholder="awtrix_73f7a4.local"
                     title="Nom mDNS ou adresse IP de l'afficheur"
                     aria-label="Adresse de l'afficheur"
-                    className="flex-1 min-w-[7rem] rounded bg-app-bg/60 border border-app-border/40 px-1.5 font-mono text-[10px] text-app-text/60"
+                    className="flex-1 min-w-[7rem] rounded bg-app-bg/60 border border-app-border/40 px-1.5 font-mono text-ui-10 text-app-text/60"
                 />
             </div>
 
@@ -481,12 +481,12 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                 c'est l'écran de la table qui manque, pas l'information.
             */}
             {seanceOuverte && joignable === false && (
-                <p className="flex items-start gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] leading-snug text-amber-300/90">
+                <p className="flex items-start gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-ui-10 leading-snug text-amber-300/90">
                     <WifiOff size={11} className="mt-0.5 shrink-0" />
                     <span>
                         Afficheur injoignable — le Quart se tient ici et reprendra seul.
                         {pourquoi && (
-                            <span className="block mt-0.5 font-mono text-[9px] leading-tight text-amber-200/70 break-all">
+                            <span className="block mt-0.5 font-mono text-ui-9 leading-tight text-amber-200/70 break-all">
                                 {pourquoi}
                             </span>
                         )}
@@ -494,7 +494,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                 </p>
             )}
             {!seanceOuverte && (
-                <p className="text-[10px] leading-snug text-app-text/40">
+                <p className="text-ui-10 leading-snug text-app-text/40">
                     L&apos;afficheur garde sa routine tant qu&apos;aucune séance n&apos;est ouverte.
                 </p>
             )}

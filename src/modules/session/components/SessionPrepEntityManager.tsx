@@ -46,10 +46,10 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
         <div className="flex flex-col gap-6">
             {/* Active List */}
             <div className="flex flex-col gap-2">
-                <span className="text-[9px] text-app-text/60 font-bold uppercase tracking-widest ml-1 mb-1">{t('modules:session.focus.entity_manager.in_session')}</span>
+                <span className="text-ui-9 text-app-text/60 font-bold uppercase tracking-widest ml-1 mb-1">{t('modules:session.focus.entity_manager.in_session')}</span>
                 {activeEntities.length === 0 ? (
                     <div className="p-4 border border-dashed border-app-border rounded-xl text-center">
-                        <p className="text-[10px] text-app-text/40 italic">{t('modules:session.focus.entity_manager.no_entities')}</p>
+                        <p className="text-ui-10 text-app-text/40 italic">{t('modules:session.focus.entity_manager.no_entities')}</p>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-2">
@@ -65,7 +65,7 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                                     <h5 className="text-xs font-bold text-app-text truncate">{entity.name}</h5>
                                     <div className="flex items-center gap-1.5 mt-0.5">
                                         {getRoleIcon(entity.role)}
-                                        <span className="text-[9px] text-app-text/60 uppercase font-mono tracking-tighter">{entity.description}</span>
+                                        <span className="text-ui-9 text-app-text/60 uppercase font-mono tracking-tighter">{entity.description}</span>
                                     </div>
                                 </div>
                                 <button 
@@ -89,7 +89,7 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                         placeholder={t('modules:session.focus.entity_manager.search_placeholder')} 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="bg-transparent border-none text-[11px] text-app-text p-0 focus:ring-0 w-full placeholder:text-app-text/40"
+                        className="bg-transparent border-none text-ui-11 text-app-text p-0 focus:ring-0 w-full placeholder:text-app-text/40"
                     />
                 </div>
 
@@ -104,14 +104,14 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                                 <ResolvedImage src={entity.avatar} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[11px] font-bold text-app-text/60 group-hover:text-app-text transition-colors truncate">{entity.name}</p>
-                                <p className="text-[8px] text-app-text/50 uppercase font-bold tracking-tighter">{entity.type}</p>
+                                <p className="text-ui-11 font-bold text-app-text/60 group-hover:text-app-text transition-colors truncate">{entity.name}</p>
+                                <p className="text-ui-8 text-app-text/50 uppercase font-bold tracking-tighter">{entity.type}</p>
                             </div>
                             <Plus size={14} className="text-app-text/40 group-hover:text-accent transition-colors ml-auto mr-1" />
                         </button>
                     ))}
                     {availableEntities.length === 0 && (
-                        <p className="text-[9px] text-app-text/50 italic text-center py-2">{t('modules:session.focus.entity_manager.all_linked')}</p>
+                        <p className="text-ui-9 text-app-text/50 italic text-center py-2">{t('modules:session.focus.entity_manager.all_linked')}</p>
                     )}
                 </div>
             </div>

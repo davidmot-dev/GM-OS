@@ -42,12 +42,12 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
         <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-3 px-3 h-12 rounded-xl bg-white/[0.03] border border-white/5">
                 <span className="flex items-baseline gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Round</span>
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-slate-500">Round</span>
                     <span className="text-xl font-black text-white tabular-nums">{combat.round ?? 1}</span>
                 </span>
                 <button
                     onClick={onNextTurn}
-                    className="px-5 py-2 bg-accent text-app-bg rounded-lg flex items-center gap-1.5 font-black uppercase text-[11px] active:scale-95 transition-all"
+                    className="px-5 py-2 bg-accent text-app-bg rounded-lg flex items-center gap-1.5 font-black uppercase text-ui-11 active:scale-95 transition-all"
                 >
                     Suivant <ChevronRight size={16} />
                 </button>
@@ -60,10 +60,10 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                         <div key={c.id} className={`p-2.5 rounded-xl border transition-colors ${isActive ? 'bg-accent/10 border-accent' : 'bg-white/[0.03] border-white/5'}`}>
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center gap-2 min-w-0">
-                                    <div className={`w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-black text-[11px] tabular-nums transition-colors ${isActive ? 'bg-accent text-app-bg' : 'bg-white/10'}`}>{c.init}</div>
+                                    <div className={`w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-black text-ui-11 tabular-nums transition-colors ${isActive ? 'bg-accent text-app-bg' : 'bg-white/10'}`}>{c.init}</div>
                                     <div className="flex flex-col min-w-0">
                                         <span className={`font-bold text-sm truncate transition-colors ${isActive ? 'text-accent' : 'text-slate-200'}`}>{c.name}</span>
-                                        <span className="text-[8px] uppercase text-slate-500">{c.isPlayer ? 'Joueur' : 'Ennemi'}</span>
+                                        <span className="text-ui-8 uppercase text-slate-500">{c.isPlayer ? 'Joueur' : 'Ennemi'}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1.5 shrink-0">
@@ -78,7 +78,7 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                             </button>
                                             <div className="flex flex-col items-center min-w-[28px]">
                                                 <span className="text-xs font-black tabular-nums">{c.hp}</span>
-                                                <span className="text-[8px] text-slate-500">PV</span>
+                                                <span className="text-ui-8 text-slate-500">PV</span>
                                             </div>
                                             <button
                                                 onClick={() => onUpdateHp(c.id, 1)}
@@ -90,7 +90,7 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                         </>
                                     )}
                                     {isAventureMode && !c.isPlayer && (
-                                        <div className="text-[10px] font-black uppercase text-slate-600 tracking-widest italic pr-1">Caché</div>
+                                        <div className="text-ui-10 font-black uppercase text-slate-600 tracking-widest italic pr-1">Caché</div>
                                     )}
                                 </div>
                             </div>
@@ -105,7 +105,7 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                         libellé que personne ne garantissait.
                                     */}
                                     {c.healthSystem.type === 'wounds' && (
-                                        <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                                        <span className={`text-ui-10 font-black uppercase px-2 py-0.5 rounded-full border ${
                                             c.healthSystem.state === 'healthy' ? 'border-emerald-500/30 text-emerald-400' :
                                             c.healthSystem.state === 'dead' ? 'bg-rose-600 text-white animate-pulse' :
                                             'border-amber-500 text-amber-400'
@@ -116,7 +116,7 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                     {c.healthSystem.type === 'clocks' && (
                                         <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
                                             <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                            <span className="text-[10px] font-bold text-blue-400 tabular-nums">
+                                            <span className="text-ui-10 font-bold text-blue-400 tabular-nums">
                                                 {Number(c.healthSystem.data.filled ?? 0)} / {Number(c.healthSystem.data.segments ?? 0)}
                                             </span>
                                         </div>
@@ -132,7 +132,7 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                         </div>
                                     )}
                                     {c.healthSystem.type === 'anatomy' && (
-                                        <div className="flex items-center gap-1 text-[10px] text-rose-400 font-bold uppercase">
+                                        <div className="flex items-center gap-1 text-ui-10 text-rose-400 font-bold uppercase">
                                             <Shield size={10} />
                                             {Object.values((c.healthSystem.data.parts as Record<string, { status: string }>) ?? {})
                                                 .filter(p => p.status !== 'healthy').length} Blessures

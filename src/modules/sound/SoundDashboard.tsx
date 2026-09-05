@@ -82,7 +82,7 @@ const SoundDashboard: React.FC = () => {
                 </div>
 
                 {/* Optional: Footer with small stats or indicator */}
-                <footer className="h-10 px-8 border-t border-app-border/50 flex items-center justify-between text-[10px] text-app-text/50 font-black uppercase tracking-widest">
+                <footer className="h-10 px-8 border-t border-app-border/50 flex items-center justify-between text-ui-10 text-app-text/50 font-black uppercase tracking-widest">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                              <div className="size-1.5 rounded-full bg-accent shadow-glow-accent animation-pulse" />

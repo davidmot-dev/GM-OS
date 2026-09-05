@@ -72,7 +72,7 @@ const PanneauDesPersonas: React.FC<{
                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-app-text/40">
                         Personas du corpus
                     </h3>
-                    <p className="text-[11px] text-app-text/40 mt-1 leading-relaxed max-w-2xl">
+                    <p className="text-ui-11 text-app-text/40 mt-1 leading-relaxed max-w-2xl">
                         Le texte que l'Oracle emploie réellement, lu dans{' '}
                         <code className="font-mono text-app-text/60">
                             docs/{corpus?.racine ?? '…'}/gems.json
@@ -87,7 +87,7 @@ const PanneauDesPersonas: React.FC<{
                         {modifie && (
                             <button
                                 onClick={() => { setBrouillon(null); setEchec(null); }}
-                                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border/40 text-[10px] font-black uppercase tracking-widest text-app-text/50 hover:text-app-text/80 transition-all"
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border/40 text-ui-10 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text/80 transition-all"
                             >
                                 <RotateCcw size={12} /> Annuler
                             </button>
@@ -95,7 +95,7 @@ const PanneauDesPersonas: React.FC<{
                         <button
                             onClick={sauver}
                             disabled={!modifie || !corpus}
-                            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                 modifie && corpus
                                     ? 'bg-accent text-app-bg shadow-glow-accent/20'
                                     : 'bg-app-surface/40 text-app-text/20 cursor-not-allowed'
@@ -112,7 +112,7 @@ const PanneauDesPersonas: React.FC<{
             {enregistre && (
                 <div className="flex items-center gap-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-3">
                     <Check size={14} className="text-emerald-400 shrink-0" />
-                    <p className="text-[11px] text-emerald-300/80">
+                    <p className="text-ui-11 text-emerald-300/80">
                         Écrit dans le corpus. Toutes les campagnes qui l'emploient en héritent.
                     </p>
                 </div>
@@ -121,14 +121,14 @@ const PanneauDesPersonas: React.FC<{
             {echec && (
                 <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3">
                     <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
-                    <p className="text-[11px] text-red-300/80">L'écriture a échoué — {echec}</p>
+                    <p className="text-ui-11 text-red-300/80">L'écriture a échoué — {echec}</p>
                 </div>
             )}
 
             {personas.erreur && (
                 <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3">
                     <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
-                    <p className="text-[11px] text-red-300/80 leading-relaxed">
+                    <p className="text-ui-11 text-red-300/80 leading-relaxed">
                         Le fichier existe mais ne se lit pas — {personas.erreur}. Les gemmes jouent
                         leurs instructions par défaut en attendant qu'il soit réparé.
                     </p>
@@ -136,7 +136,7 @@ const PanneauDesPersonas: React.FC<{
             )}
 
             {!chargement && !personas.present && !personas.erreur && (
-                <p className="text-[11px] text-app-text/40 leading-relaxed">
+                <p className="text-ui-11 text-app-text/40 leading-relaxed">
                     Ce corpus n'a pas de <code className="font-mono">gems.json</code>. Ce n'est pas
                     une anomalie : les gemmes emploient alors leurs instructions par défaut.
                     {!lectureSeule && ' Écrire ici en créera un.'}
@@ -157,12 +157,12 @@ const PanneauDesPersonas: React.FC<{
                             }`}
                         >
                             <div className="flex items-center justify-between mb-3">
-                                <span className={`text-[11px] font-black uppercase tracking-[0.2em] ${
+                                <span className={`text-ui-11 font-black uppercase tracking-[0.2em] ${
                                     vientDuCorpus ? 'text-accent' : 'text-app-text/40'
                                 }`}>
                                     {t(gem.name)}
                                 </span>
-                                <code className="font-mono text-[10px] text-app-text/30">{gem.id}</code>
+                                <code className="font-mono text-ui-10 text-app-text/30">{gem.id}</code>
                             </div>
                             <textarea
                                 value={valeur}
@@ -173,7 +173,7 @@ const PanneauDesPersonas: React.FC<{
                                         ? 'Le corpus ne définit pas cette persona — instruction par défaut de la gemme.'
                                         : 'Vide : la gemme emploiera son instruction par défaut.'
                                 }
-                                className={`w-full h-36 bg-app-bg/40 border border-app-border/10 rounded-xl p-3 text-[11px] text-app-text/70 outline-none transition-all font-mono resize-none leading-relaxed custom-scrollbar ${
+                                className={`w-full h-36 bg-app-bg/40 border border-app-border/10 rounded-xl p-3 text-ui-11 text-app-text/70 outline-none transition-all font-mono resize-none leading-relaxed custom-scrollbar ${
                                     lectureSeule ? 'cursor-default opacity-80' : 'focus:border-accent/40'
                                 }`}
                             />

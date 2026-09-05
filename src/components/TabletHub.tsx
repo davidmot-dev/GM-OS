@@ -214,7 +214,7 @@ const TabletHub: React.FC = () => {
                     title={performance.isManagedAutomatically
                         ? 'Mode défini automatiquement pour cet appareil'
                         : 'Basculer entre qualité visuelle et fluidité'}
-                    className={`p-1.5 px-3 rounded-full backdrop-blur-md border text-[9px] font-black uppercase tracking-widest transition-all ${
+                    className={`p-1.5 px-3 rounded-full backdrop-blur-md border text-ui-9 font-black uppercase tracking-widest transition-all ${
                         performance.isManagedAutomatically ? 'cursor-default' : ''
                     } ${
                         performance.isLowGraphics
@@ -236,7 +236,7 @@ const TabletHub: React.FC = () => {
             {/* Campaign Header */}
             {activeCampaignName && currentTab === 'live' && (
                 <div className="fixed top-12 md:top-6 left-4 md:left-8 z-40 animate-in fade-in slide-in-from-left duration-1000 pointer-events-none flex flex-col">
-                    <span className="hidden md:block text-[10px] font-black text-accent/60 uppercase tracking-[0.4em] mb-1">Opération en cours</span>
+                    <span className="hidden md:block text-ui-10 font-black text-accent/60 uppercase tracking-[0.4em] mb-1">Opération en cours</span>
                     <h1 className="text-xl md:text-3xl font-black text-app-text uppercase tracking-tightest drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] opacity-50 md:opacity-100">
                         {activeCampaignName}
                     </h1>
@@ -287,7 +287,7 @@ const TabletHub: React.FC = () => {
                                     <NarrativeClock clock={clock} theme={theme} size={48} />
                                     <div className="flex flex-col flex-1 overflow-hidden">
                                         <p className={`text-sm font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
-                                        <p className="text-[10px] mt-0.5 font-bold text-app-text/60">
+                                        <p className="text-ui-10 mt-0.5 font-bold text-app-text/60">
                                             {clock.filledSegments} / {clock.totalSegments}
                                         </p>
                                     </div>
@@ -371,7 +371,7 @@ const TabletHub: React.FC = () => {
                 <div className={`fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-app-surface/20 border border-app-border/40 rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto ${performance.blurClass}`}>
                     <div className="flex items-center gap-5 mb-6 opacity-40">
                         <BookOpen size={20} className="text-app-text" />
-                        <h3 className="text-[10px] font-black text-app-text uppercase tracking-[0.4em]">Chroniques de Séance</h3>
+                        <h3 className="text-ui-10 font-black text-app-text uppercase tracking-[0.4em]">Chroniques de Séance</h3>
                     </div>
                     <div className="max-h-[220px] overflow-y-auto custom-scrollbar-minimal pr-6 group">
                         <p className="text-xl text-app-text/70 leading-relaxed font-serif italic text-justify group-hover:opacity-100 transition-opacity duration-700">
@@ -397,7 +397,7 @@ const TabletHub: React.FC = () => {
                         <button
                             key={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
-                            className={`relative flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                            className={`relative flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${
                                 currentTab === tab.id
                                     ? `bg-${tab.color || 'accent'}${tab.color ? '-600 text-white' : ' text-app-bg'}`
                                     : 'text-app-text/40 hover:text-app-text'
@@ -411,7 +411,7 @@ const TabletHub: React.FC = () => {
                             {tab.id === 'cartes' && cartesProposees > 0 && currentTab !== 'cartes' && (
                                 <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-[9px] items-center justify-center font-bold text-white">{cartesProposees}</span>
+                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-ui-9 items-center justify-center font-bold text-white">{cartesProposees}</span>
                                 </span>
                             )}
                         </button>
@@ -419,7 +419,7 @@ const TabletHub: React.FC = () => {
                     <div className="w-[1px] h-4 bg-app-border/40 mx-1 md:mx-2" />
                     <button 
                         onClick={() => setIsInventoryOpen(!isInventoryOpen)}
-                        className={`flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-indigo-600 text-white' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-indigo-600 text-white' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Fiche Personnage"
                     >
                         <User className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -427,7 +427,7 @@ const TabletHub: React.FC = () => {
                     </button>
                     <button 
                         onClick={() => setIsNotesOpen(!isNotesOpen)}
-                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Notes Personnelles"
                     >
                         <BookOpen className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -435,7 +435,7 @@ const TabletHub: React.FC = () => {
                     </button>
                     <button 
                         onClick={toggleMessenger}
-                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Messages"
                     >
                         <MessageSquare className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -443,13 +443,13 @@ const TabletHub: React.FC = () => {
                         {unreadCount > 0 && !isMessengerOpen && (
                             <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-[9px] items-center justify-center font-bold text-white">{unreadCount}</span>
+                                <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-ui-9 items-center justify-center font-bold text-white">{unreadCount}</span>
                             </span>
                         )}
                     </button>
                     <button 
                         onClick={() => window.confirm('Quitter la session ?') && resetIdentity()}
-                        className="flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all ml-1 md:ml-0"
+                        className="flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all ml-1 md:ml-0"
                         title="Quitter"
                     >
                         <LogOut className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -484,7 +484,7 @@ const TabletHub: React.FC = () => {
                                 <ResolvedImage className="size-8 rounded-full border border-rose-500" src={activeCombatant.avatar} alt={activeCombatant.name} />
                                 <div className="flex flex-col">
                                     <p className="text-app-text text-xs font-bold leading-none">{activeCombatant.name}</p>
-                                    <p className="text-rose-400 text-[8px] font-bold uppercase mt-1">À toi</p>
+                                    <p className="text-rose-400 text-ui-8 font-bold uppercase mt-1">À toi</p>
                                 </div>
                             </div>
                         </div>
@@ -588,7 +588,7 @@ const DiceResultDisplay: React.FC = () => {
             <div className="relative flex flex-col items-center gap-3 text-center">
                 <div className="flex items-center gap-4">
                     <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-accent/60" />
-                    <span className="text-accent text-[10px] font-black uppercase tracking-[0.8em] py-1 px-4 border border-accent/20 rounded-full">
+                    <span className="text-accent text-ui-10 font-black uppercase tracking-[0.8em] py-1 px-4 border border-accent/20 rounded-full">
                         Séquence du Destin
                     </span>
                     <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-accent/60" />
@@ -617,8 +617,8 @@ const DiceResultDisplay: React.FC = () => {
                         className={`size-14 md:size-16 flex flex-col items-center justify-center rounded-xl text-xl md:text-2xl font-black border-2 transition-all shadow-lg relative ${getDieCssClass(r)}`}
                     >
                         {r.displayStr || r.val}
-                        {r.source === 'gear' && <span className="absolute bottom-1 right-1.5 text-[8px] opacity-40 font-bold uppercase">G</span>}
-                        {r.source === 'base' && <span className="absolute bottom-1 right-1.5 text-[8px] opacity-40 font-bold uppercase">B</span>}
+                        {r.source === 'gear' && <span className="absolute bottom-1 right-1.5 text-ui-8 opacity-40 font-bold uppercase">G</span>}
+                        {r.source === 'base' && <span className="absolute bottom-1 right-1.5 text-ui-8 opacity-40 font-bold uppercase">B</span>}
                     </motion.div>
                 ))}
             </div>
@@ -666,7 +666,7 @@ const MessageToast: React.FC<{ fromName: string; channel: string; onClick: () =>
                     <MessageSquare size={18} className="text-white" />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-black text-white/60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
+                    <span className="text-ui-10 font-black text-white/60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
                     <p className="text-sm font-bold text-white leading-tight">
                         {fromName} <span className="opacity-60 font-medium ml-1">({channel})</span>
                     </p>

@@ -325,7 +325,7 @@ const TemplateDashboard: React.FC = () => {
                                         className="flex items-center gap-2 px-4 py-2 rounded-xl bg-app-bg border border-amber-500/30 hover:border-amber-400 text-amber-200 hover:text-amber-100 transition-all text-xs font-bold"
                                     >
                                         <span className="font-mono">{dossier}</span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-400/60">
+                                        <span className="text-ui-10 font-black uppercase tracking-widest text-amber-400/60">
                                             {t('modules:session.template_dashboard.orphans.adopt')}
                                         </span>
                                     </button>
@@ -347,7 +347,7 @@ const TemplateDashboard: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setMontrerReferences(v => !v)}
-                                className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-app-text/30 hover:text-app-text/60 transition-colors"
+                                className="mb-4 flex items-center gap-2 text-ui-10 font-bold uppercase tracking-widest text-app-text/30 hover:text-app-text/60 transition-colors"
                             >
                                 <Eye size={12} />
                                 {montrerReferences
@@ -391,14 +391,14 @@ const TemplateDashboard: React.FC = () => {
 
                                     <h3 className="text-lg font-black text-app-text mb-1 uppercase tracking-tight">{item.name}</h3>
                                     <div className="flex items-center gap-3">
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded-full border border-accent/20">
+                                        <span className="text-ui-10 font-bold uppercase tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded-full border border-accent/20">
                                             {activeTab === 'sheets' 
                                                 ? t('modules:session.template_dashboard.status.fields_count', { count: (item as SheetTemplate).sections.reduce((acc, s) => acc + s.fields.length, 0) })
                                                 : t('modules:session.template_dashboard.status.driver_version', { version: (item as GameDriver).version || '1.0' })
                                             }
                                         </span>
                                         {activeTab === 'sheets' && (item as SheetTemplate).isBuiltin && (
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">
+                                            <span className="text-ui-10 font-bold uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">
                                                 {t('modules:session.template_dashboard.status.builtin')}
                                             </span>
                                         )}
@@ -417,7 +417,7 @@ const TemplateDashboard: React.FC = () => {
                     <>
                         <div className="sticky top-0 z-10 bg-gradient-to-b from-app-surface to-transparent pb-6 -mt-8 pt-8">
                             <div className="flex items-center justify-between mb-4">
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent opacity-60">
+                                <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-accent opacity-60">
                                     {activeTab === 'sheets' ? t('modules:session.template_dashboard.preview.ui_preview') : t('modules:session.template_dashboard.preview.ai_engine')}
                                 </span>
                                 {selectedTemplate && (
@@ -426,7 +426,7 @@ const TemplateDashboard: React.FC = () => {
                                             setEditingTemplateId(selectedTemplate.id);
                                             setCurrentView('template-editor');
                                         }}
-                                        className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
+                                        className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
                                     >
                                         <Pencil size={14} /> {selectedTemplate.isBuiltin ? t('modules:session.template_dashboard.actions.resonance_custom') : t('modules:session.template_dashboard.actions.edit_template')}
                                     </button>
@@ -452,7 +452,7 @@ const TemplateDashboard: React.FC = () => {
                                             onClick={() => {
                                                 setCurrentView('rulebook');
                                             }}
-                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
                                         >
                                             <Eye size={14} className="shrink-0" />
                                             <span className="truncate">{t('modules:session.header.grimoire_label').toUpperCase()}</span>
@@ -470,7 +470,7 @@ const TemplateDashboard: React.FC = () => {
                                         <button
                                             onClick={() => gmCustom('atelier-adversaires', { jeuId: selectedItem.id })}
                                             title="Fabriquer des adversaires pour ce jeu, et relire son bestiaire"
-                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all shadow-lg"
                                         >
                                             <Swords size={14} className="shrink-0" />
                                             <span className="truncate">BESTIAIRE</span>
@@ -478,7 +478,7 @@ const TemplateDashboard: React.FC = () => {
                                         {isNexusAvailable && (
                                             <button
                                                 onClick={() => handleExportDriver(selectedItem.id)}
-                                                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
+                                                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
                                             >
                                                 <DownloadCloud size={14} className="shrink-0" />
                                                 <span className="truncate">{t('common:actions.export').toUpperCase()}</span>
@@ -490,7 +490,7 @@ const TemplateDashboard: React.FC = () => {
                                                 setEditingDriverId(driver.id);
                                                 setCurrentView('driver-editor');
                                             }}
-                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
                                         >
                                             <Pencil size={14} className="shrink-0" />
                                             <span className="truncate">{t('modules:session.template_dashboard.actions.edit_engine')}</span>
@@ -503,9 +503,9 @@ const TemplateDashboard: React.FC = () => {
                                 <div>
                                     <h2 className="text-xl font-black text-app-text line-clamp-1 uppercase">{selectedItem.name}</h2>
                                     {selectedTemplate && (
-                                        <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">{selectedTemplate.id}</p>
+                                        <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">{selectedTemplate.id}</p>
                                     )}
-                                    <p className="text-[9px] text-app-text/40 font-bold uppercase tracking-widest">
+                                    <p className="text-ui-9 text-app-text/40 font-bold uppercase tracking-widest">
                                         {activeTab === 'sheets' ? t('modules:session.template_dashboard.preview.ui_subtitle') : t('modules:session.template_dashboard.preview.ai_subtitle')}
                                     </p>
                                 </div>
@@ -518,15 +518,15 @@ const TemplateDashboard: React.FC = () => {
                                     <div key={section.id} className="space-y-4" style={{ animationDelay: `${idx * 100}ms` }}>
                                         <div className="flex items-center gap-3">
                                             <div className="h-px flex-1 bg-gradient-to-r from-accent/40 to-transparent"></div>
-                                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80">{section.label}</h4>
+                                            <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/80">{section.label}</h4>
                                             <div className="h-px flex-1 bg-gradient-to-l from-accent/40 to-transparent"></div>
                                         </div>
                                         <div className="space-y-3">
                                             {section.fields.map(field => (
                                                 <div key={field.id} className="p-4 rounded-xl bg-app-bg/40 border border-app-border/20 group hover:border-accent/30 transition-all">
                                                     <div className="flex justify-between items-center mb-1">
-                                                        <label className="text-[9px] font-black uppercase tracking-widest text-app-text/40 uppercase">{field.label}</label>
-                                                        <span className="text-[8px] font-bold text-accent/40 bg-accent/5 px-1.5 py-0.5 rounded border border-accent/10">{field.type}</span>
+                                                        <label className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 uppercase">{field.label}</label>
+                                                        <span className="text-ui-8 font-bold text-accent/40 bg-accent/5 px-1.5 py-0.5 rounded border border-accent/10">{field.type}</span>
                                                     </div>
                                                     {field.type === 'gauge' ? (
                                                         <div className="h-1.5 w-full bg-app-surface rounded-full overflow-hidden mt-2">
@@ -561,11 +561,11 @@ const TemplateDashboard: React.FC = () => {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="bg-app-surface/40 p-3 rounded-lg border border-white/5 text-center">
-                                                <p className="text-[9px] text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.default_dice')}</p>
+                                                <p className="text-ui-9 text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.default_dice')}</p>
                                                 <p className="text-sm font-mono font-black text-accent uppercase">{(selectedItem as GameDriver).dice?.defaultDice || '1D20'}</p>
                                             </div>
                                             <div className="bg-app-surface/40 p-3 rounded-lg border border-white/5 text-center">
-                                                <p className="text-[9px] text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.logic')}</p>
+                                                <p className="text-ui-9 text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.logic')}</p>
                                                 <p className="text-xs font-black text-emerald-400 uppercase">{(selectedItem as GameDriver).dice?.logic || 'SUM'}</p>
                                             </div>
                                         </div>
@@ -588,7 +588,7 @@ const TemplateDashboard: React.FC = () => {
                                         </div>
                                         <div className="space-y-2">
                                             {(selectedItem as GameDriver).combat?.statsToTrack?.map((s, i) => (
-                                                <div key={i} className="flex items-center justify-between text-[10px] bg-black/20 p-2 rounded">
+                                                <div key={i} className="flex items-center justify-between text-ui-10 bg-black/20 p-2 rounded">
                                                     <span className="font-bold opacity-60">{s.label}</span>
                                                     <span className="font-mono text-accent uppercase font-black">{s.fieldId}</span>
                                                 </div>
@@ -607,10 +607,10 @@ const TemplateDashboard: React.FC = () => {
                                                 {Object.entries((selectedItem as GameDriver).aiPersonas || {}).map(([id, text]) => (
                                                     <div key={id} className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
                                                         <div className="flex items-center justify-between">
-                                                            <span className="text-[10px] font-black uppercase tracking-widest text-violet-400">{t(`modules:session.rule_engine_editor.ai.persona_type_label`, { id })}</span>
+                                                            <span className="text-ui-10 font-black uppercase tracking-widest text-violet-400">{t(`modules:session.rule_engine_editor.ai.persona_type_label`, { id })}</span>
                                                             <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-glow-violet" />
                                                         </div>
-                                                        <p className="text-[10px] text-app-text/60 italic leading-relaxed line-clamp-3">{text}</p>
+                                                        <p className="text-ui-10 text-app-text/60 italic leading-relaxed line-clamp-3">{text}</p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -635,7 +635,7 @@ const TemplateDashboard: React.FC = () => {
                     </p>
                     <button 
                          onClick={ouvrirLaForge}
-                         className="w-full bg-app-bg border border-accent/40 hover:border-accent text-accent font-black py-4 rounded-xl text-[10px] tracking-[0.2em] transition-all hover:bg-accent hover:text-app-bg shadow-lg shadow-accent/5 group"
+                         className="w-full bg-app-bg border border-accent/40 hover:border-accent text-accent font-black py-4 rounded-xl text-ui-10 tracking-[0.2em] transition-all hover:bg-accent hover:text-app-bg shadow-lg shadow-accent/5 group"
                     >
                         {t('modules:session.template_dashboard.actions.open_forge')} <ChevronRight size={14} className="inline ml-1 group-hover:translate-x-1 transition-transform" />
                     </button>

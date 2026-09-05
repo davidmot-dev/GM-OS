@@ -71,10 +71,10 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     type="text"
                     value={t(track.label, { index: index + 1 })}
                     onChange={(e) => updateTrack(index, { label: e.target.value })}
-                    className="w-full bg-transparent text-[10px] font-bold uppercase tracking-widest text-app-text/50 text-center focus:text-app-text focus:outline-none"
+                    className="w-full bg-transparent text-ui-10 font-bold uppercase tracking-widest text-app-text/50 text-center focus:text-app-text focus:outline-none"
                     placeholder={t('modules:ambient.presets.tracks.default_track', { index: index + 1 }).toUpperCase()}
                 />
-                <div className="text-[7px] font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{track.id}]</div>
+                <div className="text-ui-7 font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{track.id}]</div>
 
                 {/* Visualizer */}
                 <div className="mt-2">
@@ -124,7 +124,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     />
 
                 </div>
-                <div className="flex items-center gap-1 text-[8px] font-mono text-app-text/60 font-bold uppercase">
+                <div className="flex items-center gap-1 text-ui-8 font-mono text-app-text/60 font-bold uppercase">
                     <Volume2 size={10} />
                     {Math.round(track.volume * 100)}%
                 </div>
@@ -140,7 +140,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                 />
                 <button
                     onClick={handleFileSelect}
-                    className="text-[8px] font-bold text-app-text/50 hover:text-app-text hover:underline transition-all"
+                    className="text-ui-8 font-bold text-app-text/50 hover:text-app-text hover:underline transition-all"
                 >
                     {track.url ? t('common:actions.change') : t('common:actions.load')}
                 </button>

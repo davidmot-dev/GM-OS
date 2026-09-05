@@ -252,7 +252,7 @@ const JournalDashboard: React.FC = () => {
                 </button>
                 </HorsDePortee>
               </div>
-              <div className="flex items-center gap-3 mt-3 text-[9px] text-slate-500 font-mono uppercase tracking-tighter">
+              <div className="flex items-center gap-3 mt-3 text-ui-9 text-slate-500 font-mono uppercase tracking-tighter">
                 <span className="flex items-center gap-1"><Clock className="size-2.5" /> {j.duration || '--:--'}</span>
                 <span className="flex items-center gap-1"><Book className="size-2.5" /> {j.events.length}</span>
               </div>
@@ -342,7 +342,7 @@ const JournalDashboard: React.FC = () => {
                             <h3 className="text-sm font-bold text-app-text-bright leading-none mb-1">
                               {event.title}
                             </h3>
-                            <span className="text-[10px] uppercase tracking-widest text-app-text-muted font-black font-mono opacity-50">
+                            <span className="text-ui-10 uppercase tracking-widest text-app-text-muted font-black font-mono opacity-50">
                               {format(event.timestamp, 'HH:mm:ss')}
                             </span>
                           </div>
@@ -398,7 +398,7 @@ const JournalDashboard: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">{t('modules:journal.dashboard.final_note_title')}</h3>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter opacity-80">{t('modules:journal.dashboard.final_note_desc')}</p>
+                    <p className="text-ui-10 text-slate-500 font-bold uppercase tracking-tighter opacity-80">{t('modules:journal.dashboard.final_note_desc')}</p>
                   </div>
                 </div>
                 <textarea

@@ -320,7 +320,7 @@ const AtelierDeCampagne: React.FC = () => {
                                 dans l'application — c'est le travail de la Forge,
                                 qui dérivera ces fiches en actes, lieux et PNJ.
                             */}
-                            <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
+                            <p className="text-ui-11 text-app-text/30 italic leading-relaxed mt-2">
                                 Pas besoin qu'elle existe déjà : l'Atelier écrit un dossier de fiches
                                 sourcées. La campagne elle-même naîtra de la Forge, à partir d'elles.
                             </p>
@@ -333,7 +333,7 @@ const AtelierDeCampagne: React.FC = () => {
                                 le déclare déjà : la redemander serait offrir de
                                 la contredire.
                             */}
-                            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30 mt-4 mb-2">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/30 mt-4 mb-2">
                                 Jeu <span className="font-bold normal-case tracking-normal opacity-70">— pour la Forge, plus tard</span>
                             </p>
                             <div className="space-y-1 max-h-44 overflow-y-auto custom-scrollbar pr-1">
@@ -355,7 +355,7 @@ const AtelierDeCampagne: React.FC = () => {
                     )}
 
                     {campagneExistante && (
-                        <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
+                        <p className="text-ui-11 text-app-text/30 italic leading-relaxed mt-2">
                             Jeu : <b className="not-italic text-app-text/50">{campagneExistante.system || 'non déclaré'}</b> —
                             celui de la campagne, inscrit tel quel dans les fiches.
                         </p>
@@ -363,19 +363,19 @@ const AtelierDeCampagne: React.FC = () => {
 
                     {corpus && (
                         <div className="mt-3 space-y-1.5">
-                            <p className="flex items-center gap-2 text-[11px] font-mono text-app-text/50">
+                            <p className="flex items-center gap-2 text-ui-11 font-mono text-app-text/50">
                                 <FolderTree size={12} className="shrink-0" /> docs/{corpus.racine}/fiches
                             </p>
-                            <p className="text-[10px] uppercase tracking-widest font-bold text-app-text/30">
+                            <p className="text-ui-10 uppercase tracking-widest font-bold text-app-text/30">
                                 résolu par : {corpus.raison}
                             </p>
                             {corpus.aCreer && (
-                                <p className="text-[11px] text-amber-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-amber-300/80 leading-relaxed">
                                     Ce dossier n'existe pas encore : il sera créé à la première fiche.
                                 </p>
                             )}
                             {corpus.contradiction && (
-                                <p className="text-[11px] text-amber-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-amber-300/80 leading-relaxed">
                                     Le nom de la campagne désignerait <b>{corpus.contradiction}</b>. Le chemin
                                     déclaré l'emporte — mais vérifie que c'est bien voulu.
                                 </p>
@@ -387,7 +387,7 @@ const AtelierDeCampagne: React.FC = () => {
                 <Bloc icone={<Globe size={16} />} titre="Carnet NotebookLM">
                     <button
                         onClick={() => void ouvrirLeSelecteur()}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 transition-all"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/20 transition-all"
                     >
                         <Globe size={12} /> {carnetId ? 'Changer de carnet' : 'Choisir un carnet'}
                     </button>
@@ -397,7 +397,7 @@ const AtelierDeCampagne: React.FC = () => {
                             <p className="text-xs font-bold truncate">
                                 {carnets.find(c => c.id === carnetId)?.title ?? carnetId}
                             </p>
-                            <p className="text-[10px] uppercase tracking-widest font-bold text-app-text/30">
+                            <p className="text-ui-10 uppercase tracking-widest font-bold text-app-text/30">
                                 {sourcesRetenues.length > 0
                                     ? `${sourcesRetenues.length} source${sourcesRetenues.length > 1 ? 's' : ''} retenue${sourcesRetenues.length > 1 ? 's' : ''}`
                                     : 'carnet entier'}
@@ -406,7 +406,7 @@ const AtelierDeCampagne: React.FC = () => {
                                 règles de l'échec à 72 secondes : douze sources
                                 contre une. C'est le levier le plus rentable. */}
                             {sourcesRetenues.length === 0 && sources.length > 1 && (
-                                <p className="text-[11px] text-amber-300/70 leading-relaxed pt-1">
+                                <p className="text-ui-11 text-amber-300/70 leading-relaxed pt-1">
                                     Ne retenir que le livre de cette campagne accélère beaucoup les
                                     réponses — et évite que le carnet réponde depuis un autre jeu.
                                 </p>
@@ -431,7 +431,7 @@ const AtelierDeCampagne: React.FC = () => {
                     d'avoir posé.*
                 */}
                 <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-app-text/35">
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/35">
                         Moteur de la forge
                     </span>
                     <SelecteurDeMoteur forge="campagne" />
@@ -439,8 +439,8 @@ const AtelierDeCampagne: React.FC = () => {
 
                 {erreur && (
                     <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-red-400">Le carnet refuse</p>
-                        <p className="text-[11px] text-app-text/60 mt-1 font-mono leading-relaxed">{erreur}</p>
+                        <p className="text-ui-10 font-black uppercase tracking-widest text-red-400">Le carnet refuse</p>
+                        <p className="text-ui-11 text-app-text/60 mt-1 font-mono leading-relaxed">{erreur}</p>
                     </div>
                 )}
             </div>
@@ -494,21 +494,21 @@ const AtelierDeCampagne: React.FC = () => {
                 <div className="rounded-2xl border border-app-border/10 bg-app-surface/40 p-5">
                     <div className="flex items-center gap-2 mb-1">
                         <FileText size={16} className="text-accent" />
-                        <h3 className="text-[11px] font-black uppercase tracking-widest">
+                        <h3 className="text-ui-11 font-black uppercase tracking-widest">
                             3. Les fiches {etapes.length > 0 && <span className="text-app-text/30">({etapes.length})</span>}
                         </h3>
                     </div>
 
                     {/* Ce que le disque atteste, avant même d'avoir relancé quoi que ce soit. */}
                     {corpus && (publiees.size > 0 || brouillonsOrphelins.length > 0) && (
-                        <p className="text-[11px] text-app-text/40 leading-relaxed mt-2">
+                        <p className="text-ui-11 text-app-text/40 leading-relaxed mt-2">
                             Déjà sur le disque : <b className="text-emerald-400/80">{publiees.size} publiée{publiees.size > 1 ? 's' : ''}</b>
                             {brouillonsOrphelins.length > 0 && <>, <b className="text-amber-300/80">{brouillonsOrphelins.length} brouillon{brouillonsOrphelins.length > 1 ? 's' : ''} en attente</b></>}.
                         </p>
                     )}
 
                     {actes.length === 0 ? (
-                        <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
+                        <p className="text-ui-11 text-app-text/30 italic leading-relaxed mt-2">
                             Les deux sujets qui s'interrogent partie par partie — les personnages et les
                             scènes — attendent la structure. Sans elle, ils repartiraient sur la campagne
                             entière et rendraient la même réponse à chaque fois.
@@ -532,7 +532,7 @@ const AtelierDeCampagne: React.FC = () => {
 
                     {brouillonsOrphelins.length > 0 && (
                         <div className="mt-4 pt-4 border-t border-app-border/10 space-y-1.5">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-amber-400/60">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-amber-400/60">
                                 Brouillons repris du disque
                             </p>
                             {brouillonsOrphelins.map(fiche => (
@@ -615,7 +615,7 @@ const SelecteurDeCarnet: React.FC<{
                     {chargement && carnets.length === 0 ? (
                         <div className="flex items-center justify-center h-40"><Loader2 size={28} className="text-accent animate-spin" /></div>
                     ) : carnets.length === 0 ? (
-                        <p className="text-[11px] text-app-text/30 italic p-3 leading-relaxed">
+                        <p className="text-ui-11 text-app-text/30 italic p-3 leading-relaxed">
                             Aucun carnet. Le pont MCP est peut-être déconnecté — l'éclair, en haut, force
                             la reconnexion.
                         </p>
@@ -651,14 +651,14 @@ const SelecteurDeCarnet: React.FC<{
                                 peut se lire « ne retiens aucune source », d'où
                                 l'omission de la clé côté service.
                             */}
-                            <p className="text-[11px] text-app-text/35 leading-relaxed">
+                            <p className="text-ui-11 text-app-text/35 leading-relaxed">
                                 {sourcesRetenues.length === 0
                                     ? 'Aucune source retenue : le carnet entier sera interrogé.'
                                     : `${sourcesRetenues.length} source${sourcesRetenues.length > 1 ? 's' : ''} retenue${sourcesRetenues.length > 1 ? 's' : ''} — les autres seront ignorées.`}
                             </p>
 
                             {sources.length === 0 && (
-                                <p className="text-[11px] text-app-text/30 italic">Ce carnet ne rend aucune source.</p>
+                                <p className="text-ui-11 text-app-text/30 italic">Ce carnet ne rend aucune source.</p>
                             )}
 
                             {sources.map(s => {
@@ -674,7 +674,7 @@ const SelecteurDeCarnet: React.FC<{
                                         }`}
                                     >
                                         <span className="text-sm font-medium truncate">{s.title}</span>
-                                        <span className={`shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                                        <span className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest ${
                                             retenue ? 'bg-accent text-white' : 'bg-white/5 text-app-text/40'
                                         }`}>
                                             {retenue ? 'retenue' : 'retenir'}
@@ -690,7 +690,7 @@ const SelecteurDeCarnet: React.FC<{
             <div className="p-4 border-t border-app-border/10 flex justify-end bg-app-surface/20">
                 <button
                     onClick={onFermer}
-                    className="px-6 py-2.5 rounded-xl bg-accent text-white text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                    className="px-6 py-2.5 rounded-xl bg-accent text-white text-ui-10 font-black uppercase tracking-widest hover:brightness-110 transition-all"
                 >
                     Terminé
                 </button>
@@ -709,17 +709,17 @@ const Etape: React.FC<{
             <div className="min-w-0">
                 <div className="flex items-center gap-2 text-accent">
                     {icone}
-                    <h3 className="text-[11px] font-black uppercase tracking-widest text-app-text">
+                    <h3 className="text-ui-11 font-black uppercase tracking-widest text-app-text">
                         {numero}. {titre}
                     </h3>
                     {fait && <Check size={13} className="text-emerald-400" />}
                 </div>
-                <p className="text-[11px] text-app-text/35 leading-relaxed mt-1.5">{aide}</p>
+                <p className="text-ui-11 text-app-text/35 leading-relaxed mt-1.5">{aide}</p>
             </div>
             <button
                 onClick={onLancer}
                 disabled={!actif || enCours}
-                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             >
                 {enCours ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
                 {fait ? 'Relancer' : 'Lancer'}
@@ -738,7 +738,7 @@ const LigneDeFiche: React.FC<{
             <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold truncate">{titre}</p>
                 {fiche && (
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-app-text/30 mt-0.5">
+                    <p className="text-ui-10 uppercase tracking-widest font-bold text-app-text/30 mt-0.5">
                         couverture {fiche.couverture} · {fiche.sections.length} section{fiche.sections.length > 1 ? 's' : ''}
                         {/* Une fiche relue du disque ne porte pas les avertissements
                             de sa forge : la réponse brute du carnet n'est pas
@@ -749,7 +749,7 @@ const LigneDeFiche: React.FC<{
                 )}
             </div>
             {publiee ? (
-                <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-emerald-400">
                     <Check size={12} /> publiée
                 </span>
             ) : (
@@ -757,7 +757,7 @@ const LigneDeFiche: React.FC<{
                     <button
                         onClick={onForger}
                         disabled={!actif || enCours}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/30 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 transition-all"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/30 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 transition-all"
                     >
                         {enCours ? <Loader2 size={11} className="animate-spin" /> : <Play size={11} />}
                         {fiche ? 'Refaire' : 'Forger'}
@@ -765,7 +765,7 @@ const LigneDeFiche: React.FC<{
                     {fiche && (
                         <button
                             onClick={onPublier}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-black uppercase tracking-widest text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-ui-10 font-black uppercase tracking-widest text-emerald-400 hover:bg-emerald-500/20 transition-all"
                         >
                             <Upload size={11} /> Publier
                         </button>
@@ -782,7 +782,7 @@ const LigneDeFiche: React.FC<{
         {fiche && fiche.avertissements.length > 0 && (
             <ul className="mt-2 space-y-1">
                 {fiche.avertissements.map((a, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[11px] text-amber-300/70 leading-relaxed">
+                    <li key={i} className="flex items-start gap-2 text-ui-11 text-amber-300/70 leading-relaxed">
                         <AlertTriangle size={11} className="shrink-0 mt-0.5" /> {a}
                     </li>
                 ))}
@@ -794,10 +794,10 @@ const LigneDeFiche: React.FC<{
 /** La réponse du carnet, telle quelle. Montrée, jamais résumée. */
 const Brut: React.FC<{ texte: string; repliee?: boolean }> = ({ texte, repliee }) => (
     <details open={!repliee} className="mt-3">
-        <summary className="cursor-pointer text-[10px] font-black uppercase tracking-widest text-app-text/30 hover:text-app-text/60">
+        <summary className="cursor-pointer text-ui-10 font-black uppercase tracking-widest text-app-text/30 hover:text-app-text/60">
             Réponse du carnet
         </summary>
-        <pre className="mt-2 max-h-72 overflow-auto text-[11px] leading-relaxed text-app-text/60 whitespace-pre-wrap bg-app-bg/40 rounded-xl p-4 border border-app-border/10">
+        <pre className="mt-2 max-h-72 overflow-auto text-ui-11 leading-relaxed text-app-text/60 whitespace-pre-wrap bg-app-bg/40 rounded-xl p-4 border border-app-border/10">
             {texte}
         </pre>
     </details>

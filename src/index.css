@@ -4,6 +4,109 @@
 
 @config "../tailwind.config.js";
 
+/* ═══════════════════════════════════════════════════════════════════════
+   L'ÉCHELLE TYPOGRAPHIQUE, EN QUATRE BANDES RÉGLABLES
+
+   Posée le 2026-09-05, à la demande de David : *« je voudrais pouvoir
+   sélectionner la taille des différentes polices »*.
+
+   ⛔ **Ce qui manquait n'était pas des curseurs.** L'atelier de thème en avait
+   un — « Échelle du texte » — qui agit sur la taille de la racine, donc sur
+   tout ce qui est écrit en `rem`. Mais **1 832 tailles de l'interface étaient
+   écrites en pixels en dur** : `text-[10px]` mille soixante fois, `text-[9px]`
+   trois cent cinquante-deux, `text-[11px]` deux cent quarante-sept… *Elles
+   n'obéissaient à rien.* Le curseur redimensionnait la moitié de l'écran, et
+   rien ne le disait.
+
+   ⛔ **ET LA RACINE VAUT 85 %.** Un `rem` fait donc **13,6 px** et non 16 —
+   le piège que ce dépôt a déjà payé le 2026-08-23. Conséquence directe :
+   `text-xs` rend **10,2 px**, si bien que les tailles écrites à la main
+   **ne se sont jamais emboîtées** sous l'échelle de Tailwind (`text-[11px]`
+   est plus GRAND que `text-xs`). Les nommer `2xs`, `3xs`… aurait donc menti
+   sur l'ordre : ils portent le pixel dont ils viennent.
+
+   Les valeurs en `rem` ci-dessous sont calculées **sur 13,6 px**, pour que la
+   conversion ne change **rien** à l'écran. Les prendre sur 16 px aurait
+   rétréci toute l'interface de 15 %.
+
+   | Bande | Paliers | Ce qu'elle habille |
+   | --- | --- | --- |
+   | `--echelle-interface` | `ui-7` → `ui-12`, `xs` | libellés, pastilles, badges |
+   | `--echelle-corps`     | `sm`, `base`, `lg`     | le texte qu'on lit |
+   | `--echelle-titres`    | `xl` et au-dessus      | les titres |
+   | `--echelle-mono`      | `.font-mono`, `code`   | chiffres et code |
+
+   ⚠️ **Les hauteurs de ligne suivent leur bande.** Grossir le texte sans
+   grossir l'interligne le tasserait, et un paragraphe serré se lit plus mal
+   qu'un paragraphe petit.
+
+   ⚠️ Ces quatre bandes **se multiplient** avec « Échelle du texte », qui reste
+   le réglage d'ensemble : celle-là agit sur la racine, celles-ci sur les
+   paliers. C'est voulu — on règle l'ensemble, puis on corrige une bande.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+    --echelle-interface: 1;
+    --echelle-corps: 1;
+    --echelle-titres: 1;
+    --echelle-mono: 1;
+}
+
+@theme {
+    /* Les six tailles que l'interface écrivait en pixels. Le nombre est leur
+       origine : `ui-10` valait 10 px avant d'être réglable. */
+    --text-ui-7: calc(0.5147rem * var(--echelle-interface, 1));
+    --text-ui-7--line-height: calc(0.75rem * var(--echelle-interface, 1));
+    --text-ui-8: calc(0.5882rem * var(--echelle-interface, 1));
+    --text-ui-8--line-height: calc(0.8235rem * var(--echelle-interface, 1));
+    --text-ui-9: calc(0.6618rem * var(--echelle-interface, 1));
+    --text-ui-9--line-height: calc(0.9265rem * var(--echelle-interface, 1));
+    --text-ui-10: calc(0.7353rem * var(--echelle-interface, 1));
+    --text-ui-10--line-height: calc(1.0294rem * var(--echelle-interface, 1));
+    --text-ui-11: calc(0.8088rem * var(--echelle-interface, 1));
+    --text-ui-11--line-height: calc(1.1324rem * var(--echelle-interface, 1));
+    --text-ui-12: calc(0.8824rem * var(--echelle-interface, 1));
+    --text-ui-12--line-height: calc(1.2353rem * var(--echelle-interface, 1));
+
+    --text-xs: calc(0.75rem * var(--echelle-interface, 1));
+    --text-xs--line-height: calc(1rem * var(--echelle-interface, 1));
+
+    --text-sm: calc(0.875rem * var(--echelle-corps, 1));
+    --text-sm--line-height: calc(1.25rem * var(--echelle-corps, 1));
+    --text-base: calc(1rem * var(--echelle-corps, 1));
+    --text-base--line-height: calc(1.5rem * var(--echelle-corps, 1));
+    --text-lg: calc(1.125rem * var(--echelle-corps, 1));
+    --text-lg--line-height: calc(1.75rem * var(--echelle-corps, 1));
+
+    --text-xl: calc(1.25rem * var(--echelle-titres, 1));
+    --text-xl--line-height: calc(1.75rem * var(--echelle-titres, 1));
+    --text-2xl: calc(1.5rem * var(--echelle-titres, 1));
+    --text-2xl--line-height: calc(2rem * var(--echelle-titres, 1));
+    --text-3xl: calc(1.875rem * var(--echelle-titres, 1));
+    --text-3xl--line-height: calc(2.25rem * var(--echelle-titres, 1));
+    --text-4xl: calc(2.25rem * var(--echelle-titres, 1));
+    --text-4xl--line-height: calc(2.5rem * var(--echelle-titres, 1));
+    --text-5xl: calc(3rem * var(--echelle-titres, 1));
+    --text-6xl: calc(3.75rem * var(--echelle-titres, 1));
+    --text-7xl: calc(4.5rem * var(--echelle-titres, 1));
+    --text-8xl: calc(6rem * var(--echelle-titres, 1));
+    --text-9xl: calc(8rem * var(--echelle-titres, 1));
+}
+
+/*
+  La bande des chiffres. Elle ne peut pas passer par les paliers : `font-mono`
+  choisit une **famille**, pas une taille, et le même palier sert au texte
+  courant. On multiplie donc sur place en `em`, ce qui **compose** avec le
+  palier que l'élément porte déjà au lieu de l'écraser.
+*/
+.font-mono,
+code,
+kbd,
+samp,
+pre {
+    font-size: calc(1em * var(--echelle-mono, 1));
+}
+
 @layer utilities {
   .particles {
     background-image: radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 1%);
@@ -54,7 +157,7 @@
   }
 
   .stitch-label {
-    @apply text-[10px] font-bold uppercase tracking-[0.15em] text-slate-300/90;
+    @apply text-ui-10 font-bold uppercase tracking-[0.15em] text-slate-300/90;
     font-family: 'Inter', sans-serif;
   }
 

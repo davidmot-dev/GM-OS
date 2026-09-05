@@ -107,12 +107,12 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                         : 'bg-rose-500 animate-pulse'}`}
                 />
                 {status !== 'connected' && (
-                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-rose-400">
+                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-rose-400">
                         <WifiOff size={12} /> Reconnexion
                     </span>
                 )}
                 {status === 'connected' && !isPaired && (
-                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-amber-400">
+                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-amber-400">
                         <ShieldAlert size={12} /> Non appairée
                     </span>
                 )}
@@ -188,7 +188,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                     style={{ width: `${progression * 100}%` }}
                 />
                 <Power size={14} strokeWidth={2.5} className="relative" />
-                <span className="relative text-[10px] font-black uppercase tracking-widest">Couper le son</span>
+                <span className="relative text-ui-10 font-black uppercase tracking-widest">Couper le son</span>
             </button>
         </header>
     );

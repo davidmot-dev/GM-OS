@@ -47,17 +47,17 @@ const BandeauDeLaScene: React.FC = () => {
             {aChoisir ? (
                 <>
                     <AlertTriangle size={14} className="text-amber-400 shrink-0" />
-                    <span className="text-[11px] font-bold text-amber-200">
+                    <span className="text-ui-11 font-bold text-amber-200">
                         Plusieurs scènes sont en cours — à laquelle ce combat appartient-il ?
                     </span>
                 </>
             ) : (
                 <>
                     <Layers size={14} className="text-accent shrink-0" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-app-text/40">
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">
                         Scène
                     </span>
-                    <span className="text-[12px] font-bold text-app-text">
+                    <span className="text-ui-12 font-bold text-app-text">
                         {scene ? scene.titre : 'aucune — ce combat n’entrera dans aucun résumé'}
                     </span>
                 </>
@@ -76,7 +76,7 @@ const BandeauDeLaScene: React.FC = () => {
                                 : gare
                                     ? 'Reprendre le combat garé de cette scène — plateau, tour et carte'
                                     : 'Basculer sur cette scène'}
-                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all ${
+                            className={`px-2.5 py-1 rounded-lg text-ui-11 font-bold border transition-all ${
                                 active
                                     ? 'bg-accent/20 border-accent/50 text-app-text'
                                     : 'bg-app-bg/40 border-app-border/20 text-app-text/50 hover:text-app-text'

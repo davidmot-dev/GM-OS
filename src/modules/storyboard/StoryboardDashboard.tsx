@@ -451,14 +451,14 @@ const StoryboardDashboard: React.FC = () => {
                     </div>
                     <div>
                         <h2 className="text-xl font-black uppercase tracking-tighter text-white">{t('modules:storyboard.title')}</h2>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('modules:storyboard.subtitle')}</p>
+                        <p className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('modules:storyboard.subtitle')}</p>
                     </div>
                 </div>
                 
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={startNew}
-                        className="flex items-center gap-2 px-6 py-3 bg-accent text-app-bg rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20"
+                        className="flex items-center gap-2 px-6 py-3 bg-accent text-app-bg rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20"
                     >
                         <Plus size={16} />
                         {t('modules:storyboard.add_sequence')}
@@ -539,7 +539,7 @@ const StoryboardDashboard: React.FC = () => {
                         <div className="flex items-center justify-between mb-10">
                             <div>
                                 <h3 className="text-xl font-black uppercase tracking-tighter text-white">{t('modules:storyboard.editor.title')}</h3>
-                                <p className="text-[10px] font-bold text-accent uppercase tracking-widest">{t('modules:storyboard.editor.subtitle')}</p>
+                                <p className="text-ui-10 font-bold text-accent uppercase tracking-widest">{t('modules:storyboard.editor.subtitle')}</p>
                             </div>
                             <button onClick={() => setIsEditing(false)} className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors" title={t('modules:storyboard.editor.cancel')}>
                                 <X size={20} />
@@ -549,7 +549,7 @@ const StoryboardDashboard: React.FC = () => {
                         <div className="space-y-8 flex-1">
                             {/* Name Input */}
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('modules:storyboard.editor.name_label')}</label>
+                                <label className="text-ui-10 font-black uppercase tracking-widest text-slate-500">{t('modules:storyboard.editor.name_label')}</label>
                                 <input 
                                     type="text" 
                                     value={name}
@@ -562,9 +562,9 @@ const StoryboardDashboard: React.FC = () => {
                             {/* Music & Ambient Group */}
                             <div className="p-6 rounded-3xl bg-blue-500/5 border border-blue-500/10 space-y-6">
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-blue-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-blue-400">
                                         <span className="flex items-center gap-2"><Music size={14} /> {t('modules:storyboard.editor.music_label')}</span>
-                                        <button onClick={() => handleCapture('music')} className="text-[9px] hover:underline lowercase bg-blue-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('music')} className="text-ui-9 hover:underline lowercase bg-blue-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={musicPadId}
@@ -590,7 +590,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={musicOutputId}
                                         onChange={e => setMusicOutputId(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-blue-400/80 focus:border-blue-400 outline-none"
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-blue-400/80 focus:border-blue-400 outline-none"
                                         title={t('modules:storyboard.editor.output_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.output_module')}</option>
@@ -603,7 +603,7 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-cyan-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-cyan-400">
                                         <span className="flex items-center gap-2"><Waves size={14} /> {t('modules:storyboard.editor.ambient_label')}</span>
                                     </label>
                                     <select 
@@ -626,7 +626,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={ambientOutputId}
                                         onChange={e => setAmbientOutputId(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-cyan-400/80 focus:border-cyan-400 outline-none"
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-cyan-400/80 focus:border-cyan-400 outline-none"
                                         title={t('modules:storyboard.editor.output_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.output_module')}</option>
@@ -639,7 +639,7 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-rose-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-rose-400">
                                         <span className="flex items-center gap-2"><Volume2 size={14} /> {t('modules:storyboard.editor.sound_label')}</span>
                                     </label>
                                     <select 
@@ -663,7 +663,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={soundOutputId}
                                         onChange={e => setSoundOutputId(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-rose-400/80 focus:border-rose-400 outline-none"
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-rose-400/80 focus:border-rose-400 outline-none"
                                         title={t('modules:storyboard.editor.output_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.output_module')}</option>
@@ -679,9 +679,9 @@ const StoryboardDashboard: React.FC = () => {
                             {/* Visuals & Lights Group */}
                             <div className="p-6 rounded-3xl bg-orange-500/5 border border-orange-500/10 space-y-6">
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-orange-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-orange-400">
                                         <span className="flex items-center gap-2"><Sun size={14} /> {t('modules:storyboard.editor.light_label')}</span>
-                                        <button onClick={() => handleCapture('light')} className="text-[9px] hover:underline lowercase bg-orange-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('light')} className="text-ui-9 hover:underline lowercase bg-orange-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={lightSceneId}
@@ -697,9 +697,9 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-emerald-400">
                                         <span className="flex items-center gap-2"><MapIcon size={14} /> {t('modules:storyboard.editor.map_label')}</span>
-                                        <button onClick={() => handleCapture('map')} className="text-[9px] hover:underline lowercase bg-emerald-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('map')} className="text-ui-9 hover:underline lowercase bg-emerald-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={mapUrl}
@@ -715,9 +715,9 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-purple-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-purple-400">
                                         <span className="flex items-center gap-2"><ImageIcon size={14} /> {t('modules:storyboard.editor.image_label')}</span>
-                                        <button onClick={() => handleCapture('image')} className="text-[9px] hover:underline lowercase bg-purple-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('image')} className="text-ui-9 hover:underline lowercase bg-purple-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={imageMediaId}
@@ -739,7 +739,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={imageTarget}
                                         onChange={e => setImageTarget(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold text-purple-400/80 focus:border-purple-400 outline-none"
+                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-purple-400/80 focus:border-purple-400 outline-none"
                                         title={t('modules:storyboard.editor.screen_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.screen_current')}</option>
@@ -768,18 +768,18 @@ const StoryboardDashboard: React.FC = () => {
                                     {titre.trim() && (
                                         <div className="flex gap-3">
                                             <label className="flex-1 flex flex-col gap-1">
-                                                <span className="text-[9px] uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
                                                     {t('modules:storyboard.editor.title_fade')}
                                                 </span>
                                                 <input
                                                     type="number" min={FONDU_MIN} max={FONDU_MAX} step={0.5}
                                                     value={titreFondu}
                                                     onChange={e => setTitreFondu(e.target.value)}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
                                                 />
                                             </label>
                                             <label className="flex-1 flex flex-col gap-1">
-                                                <span className="text-[9px] uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
                                                     {t('modules:storyboard.editor.title_duration')}
                                                 </span>
                                                 <input
@@ -787,7 +787,7 @@ const StoryboardDashboard: React.FC = () => {
                                                     value={titreDuree}
                                                     onChange={e => setTitreDuree(e.target.value)}
                                                     placeholder={t('modules:storyboard.editor.title_permanent')}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-[11px] font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
                                                 />
                                             </label>
                                         </div>
@@ -806,7 +806,7 @@ const StoryboardDashboard: React.FC = () => {
                             </button>
                             <button 
                                 onClick={() => setIsEditing(false)}
-                                className="w-full bg-white/5 border border-white/5 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+                                className="w-full bg-white/5 border border-white/5 text-slate-400 py-4 rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:bg-white/10 transition-all"
                             >
                                 {t('modules:storyboard.editor.cancel')}
                             </button>

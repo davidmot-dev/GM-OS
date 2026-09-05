@@ -53,7 +53,7 @@ const FieldNumber: React.FC<{
     t: (key: string) => string;
 }> = ({ field, value, onChange }) => (
     <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
+        <label className="text-ui-11 font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
         <input
             type="number"
             value={value ?? 0}
@@ -71,7 +71,7 @@ const FieldText: React.FC<{
     t: (key: string) => string;
 }> = ({ field, value, onChange }) => (
     <div className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60 w-28 flex-shrink-0">{field.label}</label>
+        <label className="text-ui-11 font-black uppercase tracking-wider text-app-text/60 w-28 flex-shrink-0">{field.label}</label>
         <input
             type="text"
             value={value ?? ''}
@@ -95,7 +95,7 @@ const FieldCheckbox: React.FC<{
         <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${value ? 'bg-accent border-accent' : 'border-app-text/20'}`}>
             {value && <CheckCircle size={10} className="text-white" />}
         </div>
-        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60 cursor-pointer">{field.label}</label>
+        <label className="text-ui-11 font-black uppercase tracking-wider text-app-text/60 cursor-pointer">{field.label}</label>
     </button>
 );
 
@@ -106,11 +106,11 @@ const FieldSelect: React.FC<{
     t: (key: string) => string;
 }> = ({ field, value, onChange, t }) => (
     <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
+        <label className="text-ui-11 font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
         <select
             value={value}
             onChange={e => onChange(e.target.value)}
-            className="w-48 bg-app-surface text-app-text text-[11px] rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
+            className="w-48 bg-app-surface text-app-text text-ui-11 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
             title={field.label}
         >
             <option value="" disabled>{t('common:actions.select_placeholder')}</option>
@@ -128,7 +128,7 @@ const FieldTextarea: React.FC<{
     t: (key: string) => string;
 }> = ({ field, value, onChange }) => (
     <div className="flex flex-col gap-2 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 col-span-2">
-        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
+        <label className="text-ui-11 font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
         <textarea
             value={value}
             onChange={e => onChange(e.target.value)}
@@ -155,11 +155,11 @@ const FieldFormula: React.FC<{
     value: number;
 }> = ({ field, value }) => (
     <div className="flex items-center justify-between p-3 bg-accent/5 rounded-xl border border-accent/20 shadow-inner group">
-        <label className="text-[10px] font-black uppercase tracking-widest text-accent/60 flex items-center gap-2">
+        <label className="text-ui-10 font-black uppercase tracking-widest text-accent/60 flex items-center gap-2">
             <Calculator size={12} className="group-hover:rotate-12 transition-transform" />
             {field.label}
         </label>
-        <span className="text-[11px] font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
+        <span className="text-ui-11 font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
             {value}
         </span>
     </div>
@@ -320,7 +320,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
 
                         {selectedNpc.status === 'dead' && (
                             <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
-                                <div className="bg-rose-600 text-white text-[10px] font-black px-3 py-1 rounded uppercase tracking-widest rotate-[-10deg] border border-rose-400/50">{t('modules:session.npc_detail.status.dead')}</div>
+                                <div className="bg-rose-600 text-white text-ui-10 font-black px-3 py-1 rounded uppercase tracking-widest rotate-[-10deg] border border-rose-400/50">{t('modules:session.npc_detail.status.dead')}</div>
                             </div>
                         )}
 
@@ -333,7 +333,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
                                 <div className="flex flex-col items-center gap-4 animate-pulse">
                                     <Sparkles size={48} className="text-accent animate-spin" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{t('modules:session.npc_detail.status.generating')}</span>
+                                    <span className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent">{t('modules:session.npc_detail.status.generating')}</span>
                                 </div>
                             </div>
                         )}
@@ -400,7 +400,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                         title={t('modules:session.npc_detail.change_type')}
                                     >
                                         {selectedNpc.type === 'monster' ? <Skull size={14} /> : <Users size={14} />}
-                                        <span className="text-[10px] font-black uppercase tracking-widest">
+                                        <span className="text-ui-10 font-black uppercase tracking-widest">
                                             {t(`modules:session.forms.types.${selectedNpc.type || 'npc'}`)}
                                         </span>
                                     </button>
@@ -414,7 +414,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                         title={t('common:actions.edit')}
                                     >
                                         {React.createElement(ROLE_ICONS[selectedNpc.role || 'neutral'], { size: 14 })}
-                                        <span className="text-[10px] font-black uppercase tracking-widest">{ROLE_LABELS[selectedNpc.role as keyof typeof ROLE_LABELS || 'neutral']}</span>
+                                        <span className="text-ui-10 font-black uppercase tracking-widest">{ROLE_LABELS[selectedNpc.role as keyof typeof ROLE_LABELS || 'neutral']}</span>
                                     </button>
                                     <button
                                         onClick={() => updateEntity(selectedNpc.id, { status: selectedNpc.status === 'dead' ? 'alive' : 'dead' })}
@@ -427,7 +427,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedNpc.isVisibleByPlayers ? 'bg-accent/20 border-accent/40 text-accent' : 'bg-app-surface/40 border-app-border/40 text-app-text/40'}`}
                                     >
                                         <Monitor size={14} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">{selectedNpc.isVisibleByPlayers ? t('common:status.online') : t('common:status.offline')}</span>
+                                        <span className="text-ui-10 font-black uppercase tracking-widest">{selectedNpc.isVisibleByPlayers ? t('common:status.online') : t('common:status.offline')}</span>
                                     </button>
 
                                     {/*
@@ -459,7 +459,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                         title={t('modules:session.npc_detail.voice_gen_tooltip')}
                                     >
                                         <Sparkles size={14} className={profilageEnCours ? 'animate-pulse' : ''} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">
+                                        <span className="text-ui-10 font-black uppercase tracking-widest">
                                             {t('modules:session.npc_detail.voice_gen')}
                                         </span>
                                     </button>
@@ -477,7 +477,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                             title={t('modules:session.npc_detail.voice_recall_tooltip')}
                                         >
                                             <AudioLines size={14} />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">
+                                            <span className="text-ui-10 font-black uppercase tracking-widest">
                                                 {t('modules:session.npc_detail.voice_recall')}
                                             </span>
                                         </button>
@@ -518,7 +518,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     title={t('common:status.vitality')}
                                 />
                             </div>
-                            <span className="text-[8px] font-bold text-accent uppercase tracking-widest">{t('common:status.vitality')}</span>
+                            <span className="text-ui-8 font-bold text-accent uppercase tracking-widest">{t('common:status.vitality')}</span>
                         </div>
                         {/* La classe d'armure suit les points de vie : c'est un
                             seuil contre des attaques qui en retirent. Le jour où
@@ -528,7 +528,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Shield size={14} className="text-blue-400" />
                             <input type="number" value={selectedNpc.ac} onChange={e => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.ac')} />
-                            <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.ac')}</span>
+                            <span className="text-ui-8 font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.ac')}</span>
                         </div>
                         )}
                         </>) : (
@@ -537,7 +537,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             <span className="text-white font-black text-xs">
                                 {abregerLaSante(selectedNpc) ?? 'santé non chiffrée'}
                             </span>
-                            <span className="text-[8px] font-bold text-app-text/20 uppercase tracking-widest">
+                            <span className="text-ui-8 font-bold text-app-text/20 uppercase tracking-widest">
                                 {decrireLaSante(selectedNpc) ?? 'aucun modèle de santé'}
                             </span>
                         </div>
@@ -552,7 +552,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Wind size={14} className="text-emerald-400" />
                             <input type="number" value={selectedNpc.speed} onChange={e => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.speed')} />
-                            <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.speed')}</span>
+                            <span className="text-ui-8 font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.speed')}</span>
                         </div>
                         )}
                         {/* L'initiative chiffree n'a de sens que si le jeu
@@ -562,7 +562,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Zap size={14} className="text-amber-400" />
                             <input type="number" value={selectedNpc.initiative ?? 0} onChange={e => updateEntity(selectedNpc.id, { initiative: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.initiative')} />
-                            <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.initiative')}</span>
+                            <span className="text-ui-8 font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.initiative')}</span>
                         </div>
                         )}
                     </div>
@@ -570,12 +570,12 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     {/* Template Selection */}
                     {isEditing && (
                         <div className="p-4 bg-app-surface/20 border border-white/5 rounded-2xl space-y-3">
-                            <div className="flex items-center gap-2"><Layers size={14} className="text-accent"/><label className="text-[11px] font-black uppercase tracking-widest text-app-text/60">{t('modules:session.npc_detail.sections.sheet_template')}</label></div>
+                            <div className="flex items-center gap-2"><Layers size={14} className="text-accent"/><label className="text-ui-11 font-black uppercase tracking-widest text-app-text/60">{t('modules:session.npc_detail.sections.sheet_template')}</label></div>
                             <div className="grid grid-cols-2 gap-2">
                                 {allTemplates.map(t => (
                                     <button 
                                         key={t.id} onClick={() => updateEntity(selectedNpc.id, { templateId: t.id })}
-                                        className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-all ${selectedNpc.templateId === t.id ? 'bg-accent/10 border-accent text-accent' : 'bg-app-bg border-app-border text-app-text/40'}`}
+                                        className={`px-3 py-2 rounded-xl text-ui-10 font-black uppercase border transition-all ${selectedNpc.templateId === t.id ? 'bg-accent/10 border-accent text-accent' : 'bg-app-bg border-app-border text-app-text/40'}`}
                                     >
                                         {t.name}
                                     </button>
@@ -589,13 +589,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         <div className="space-y-6">
                             <div className="flex items-center gap-2 border-b border-white/5 pb-2">
                                 < BookOpen size={16} className="text-accent" />
-                                <h3 className="text-[11px] font-black uppercase tracking-widest text-accent">{t('modules:session.npc_detail.sections.sheet_dossier')} : {template.name}</h3>
+                                <h3 className="text-ui-11 font-black uppercase tracking-widest text-accent">{t('modules:session.npc_detail.sections.sheet_dossier')} : {template.name}</h3>
                             </div>
                             {template.sections.map((section, sidx) => (
                                 <div key={sidx} className="space-y-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-px flex-1 bg-white/5" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/20">{section.label}</span>
+                                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/20">{section.label}</span>
                                         <div className="h-px flex-1 bg-white/5" />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
@@ -624,11 +624,11 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     {/* Notes & Secret Info */}
                     <div className="grid grid-cols-1 gap-4">
                         <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 space-y-2">
-                            <div className="flex items-center gap-2"><BookOpen size={14} className="text-app-text/40"/><h4 className="text-[10px] font-black uppercase text-app-text/40">{t('modules:session.npc_detail.sections.notes')}</h4></div>
+                            <div className="flex items-center gap-2"><BookOpen size={14} className="text-app-text/40"/><h4 className="text-ui-10 font-black uppercase text-app-text/40">{t('modules:session.npc_detail.sections.notes')}</h4></div>
                             <textarea className="w-full bg-transparent text-xs text-app-text/80 outline-none resize-none min-h-[80px]" value={selectedNpc.roleplayingNotes || ''} onChange={e => updateEntity(selectedNpc.id, { roleplayingNotes: e.target.value })} placeholder={t('modules:session.npc_detail.placeholders.roleplay')} />
                         </div>
                         <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 space-y-2">
-                            <div className="flex items-center gap-2"><Lock size={14} className="text-accent"/><h4 className="text-[11px] font-black uppercase text-accent">{t('modules:session.npc_detail.sections.secrets')}</h4></div>
+                            <div className="flex items-center gap-2"><Lock size={14} className="text-accent"/><h4 className="text-ui-11 font-black uppercase text-accent">{t('modules:session.npc_detail.sections.secrets')}</h4></div>
                             <textarea className="w-full bg-transparent text-xs text-app-text/80 outline-none resize-none min-h-[80px]" value={selectedNpc.gmSecretInfo || ''} onChange={e => updateEntity(selectedNpc.id, { gmSecretInfo: e.target.value })} placeholder={t('modules:session.npc_detail.placeholders.secrets')} />
                         </div>
                     </div>
@@ -636,21 +636,21 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     {/* Nexus / Maps Links */}
                     <div className="grid grid-cols-2 gap-6 pt-4">
                         <div className="space-y-3">
-                            <h4 className="text-[10px] font-black uppercase text-gm-gold/60 flex items-center gap-2"><Search size={14}/> {t('modules:session.npc_detail.sections.clues')}</h4>
+                            <h4 className="text-ui-10 font-black uppercase text-gm-gold/60 flex items-center gap-2"><Search size={14}/> {t('modules:session.npc_detail.sections.clues')}</h4>
                             <div className="flex flex-wrap gap-2">
                                 {linkedClues.map(c => (
-                                    <button key={c.id} onClick={() => handleClueClick(c.id)} className="px-3 py-1.5 rounded-xl bg-black/20 border border-white/5 text-[9px] font-black text-white/40 hover:text-gm-gold hover:border-gm-gold/40 transition-all">{c.title}</button>
+                                    <button key={c.id} onClick={() => handleClueClick(c.id)} className="px-3 py-1.5 rounded-xl bg-black/20 border border-white/5 text-ui-9 font-black text-white/40 hover:text-gm-gold hover:border-gm-gold/40 transition-all">{c.title}</button>
                                 ))}
-                                {linkedClues.length === 0 && <span className="text-[10px] italic text-app-text/10">{t('modules:session.npc_detail.sections.no_clue')}</span>}
+                                {linkedClues.length === 0 && <span className="text-ui-10 italic text-app-text/10">{t('modules:session.npc_detail.sections.no_clue')}</span>}
                             </div>
                         </div>
                         <div className="space-y-3">
-                            <h4 className="text-[10px] font-black uppercase text-app-text/40 flex items-center gap-2"><MapPin size={14}/> {t('modules:session.npc_detail.sections.maps')}</h4>
+                            <h4 className="text-ui-10 font-black uppercase text-app-text/40 flex items-center gap-2"><MapPin size={14}/> {t('modules:session.npc_detail.sections.maps')}</h4>
                             <div className="flex flex-wrap gap-2">
                                 {linkedMaps.map(m => (
-                                    <span key={m.id} className="px-3 py-1.5 rounded-xl bg-black/20 border border-white/5 text-[9px] font-black text-white/40">{m.name}</span>
+                                    <span key={m.id} className="px-3 py-1.5 rounded-xl bg-black/20 border border-white/5 text-ui-9 font-black text-white/40">{m.name}</span>
                                 ))}
-                                {linkedMaps.length === 0 && <span className="text-[10px] italic text-app-text/10">{t('modules:session.npc_detail.sections.no_map')}</span>}
+                                {linkedMaps.length === 0 && <span className="text-ui-10 italic text-app-text/10">{t('modules:session.npc_detail.sections.no_map')}</span>}
                             </div>
                         </div>
                     </div>

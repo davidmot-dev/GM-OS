@@ -41,15 +41,15 @@ export const TacticalAdvicePanel: React.FC = () => {
                         )}
                     </div>
                     <div>
-                        <h4 className="text-[11px] font-black text-white uppercase tracking-wider line-clamp-1 drop-shadow-md">{activeActor.name}</h4>
-                        <p className="text-[9px] text-accent/80 font-mono uppercase tracking-tighter">Tour Actuel • {activeActor.hp}/{activeActor.hpMax} PV</p>
+                        <h4 className="text-ui-11 font-black text-white uppercase tracking-wider line-clamp-1 drop-shadow-md">{activeActor.name}</h4>
+                        <p className="text-ui-9 text-accent/80 font-mono uppercase tracking-tighter">Tour Actuel • {activeActor.hp}/{activeActor.hpMax} PV</p>
                     </div>
                 </div>
 
                 <button
                     onClick={handleAnalyze}
                     disabled={isAnalyzing}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all
                         ${isAnalyzing 
                             ? 'bg-slate-800 text-white/20 cursor-not-allowed border border-white/5' 
                             : 'bg-accent text-slate-950 hover:brightness-110 active:scale-95 border-t border-white/40 shadow-glow-accent'}`}
@@ -80,9 +80,9 @@ export const TacticalAdvicePanel: React.FC = () => {
                             <div className="absolute top-0 left-0 w-1 h-full bg-accent/50" />
                             <div className="flex items-center gap-2 mb-3">
                                 <Sparkles size={14} className="text-accent animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-accent">Analyse Stratégique</span>
+                                <span className="text-ui-10 font-black uppercase tracking-[0.25em] text-accent">Analyse Stratégique</span>
                             </div>
-                            <p className="text-[13px] text-white/90 leading-relaxed font-medium" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                            <p className="text-[calc(13px*var(--echelle-corps,1))] text-white/90 leading-relaxed font-medium" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                                 {strategicNarration}
                             </p>
                         </motion.div>
@@ -98,10 +98,10 @@ export const TacticalAdvicePanel: React.FC = () => {
                                 <Brain size={64} className="text-white/10 group-hover:text-accent/20 transition-colors duration-700" />
                                 <div className="absolute inset-0 bg-accent/5 blur-3xl rounded-full" />
                             </div>
-                            <h5 className="text-[14px] font-black text-white/40 tracking-[0.3em]" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                            <h5 className="text-sm font-black text-white/40 tracking-[0.3em]" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                                 CORTEX READY
                             </h5>
-                            <p className="text-[11px] text-white/30 leading-relaxed mt-4 font-medium" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                            <p className="text-ui-11 text-white/30 leading-relaxed mt-4 font-medium" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                                 Cliquez sur Analyser pour recevoir des conseils stratégiques basés sur la situation spatiale et narrative.
                             </p>
                         </motion.div>
@@ -128,7 +128,7 @@ export const TacticalAdvicePanel: React.FC = () => {
                                 </div>
                                 <div className="space-y-1.5 pt-0.5">
                                     <div className="flex items-center gap-2">
-                                        <span className={`text-[10px] font-black uppercase tracking-[0.2em]
+                                        <span className={`text-ui-10 font-black uppercase tracking-[0.2em]
                                             ${advice.priority >= 4 ? 'text-red-400' : 'text-accent'}`}>
                                             {advice.type === 'macro-rout' ? 'Alerte Critique' : 
                                              advice.priority >= 4 ? 'Urgence' : 
@@ -147,12 +147,12 @@ export const TacticalAdvicePanel: React.FC = () => {
 
             {/* Status Footer */}
             <div className="px-5 py-3 border-t border-white/10 bg-slate-950/40 flex items-center justify-between backdrop-blur-xl">
-                <span className="text-[9px] font-mono text-white/30 uppercase tracking-[0.1em]">
+                <span className="text-ui-9 font-mono text-white/30 uppercase tracking-[0.1em]">
                    Cortex Neural v6.2 • Active Liaison
                 </span>
                 <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full shadow-glow-accent ${isAnalyzing ? 'bg-accent animate-pulse' : 'bg-emerald-500/80 shadow-glow-emerald'}`} />
-                    <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{status}</span>
+                    <span className="text-ui-9 font-black text-white/50 uppercase tracking-widest">{status}</span>
                 </div>
             </div>
         </div>

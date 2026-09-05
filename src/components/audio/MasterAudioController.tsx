@@ -86,7 +86,7 @@ const MasterAudioController: React.FC = () => {
                     }`}
                 />
                 
-                <span className="text-[10px] font-mono text-app-text/40 w-8 text-right">
+                <span className="text-ui-10 font-mono text-app-text/40 w-8 text-right">
                     {Math.round(masterVolume * 100)}%
                 </span>
             </div>
@@ -112,7 +112,7 @@ const MasterAudioController: React.FC = () => {
                     ) : (
                         <Mic size={16} className="group-hover/btn:scale-110 transition-transform" />
                     )}
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                    <span className="text-ui-10 font-black uppercase tracking-[0.2em]">
                         {isFocusMode ? 'Focus ACTIVE' : 'Focus Chat'}
                     </span>
                 </div>
@@ -140,7 +140,7 @@ const MasterAudioController: React.FC = () => {
             */}
             {isFocusMode && (
                 <div className="flex flex-col gap-1 min-w-[110px]">
-                    <div className="flex justify-between items-center gap-2 text-[9px] uppercase tracking-widest text-accent/70">
+                    <div className="flex justify-between items-center gap-2 text-ui-9 uppercase tracking-widest text-accent/70">
                         <span>{t('modules:session.audio_master.focus_ducking')}</span>
                         <span className="font-mono">{Math.round(focusDuckingRatio * 100)}%</span>
                     </div>
@@ -169,7 +169,7 @@ const MasterAudioController: React.FC = () => {
                 title={t('common:actions.stop_all')}
             >
                 <Power size={16} className="group-hover/panic:scale-110 transition-transform" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:inline">
+                <span className="text-ui-10 font-black uppercase tracking-[0.2em] hidden sm:inline">
                     Stop All
                 </span>
             </button>

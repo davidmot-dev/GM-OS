@@ -139,14 +139,14 @@ const TrameDashboard: React.FC = () => {
                     </div>
                     <div>
                         <h1 className="text-xl font-black uppercase tracking-widest font-display">Trame narrative</h1>
-                        <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.25em]">
+                        <p className="text-ui-10 font-bold text-app-text/40 uppercase tracking-[0.25em]">
                             {campagne.name} — {mesActes.length} acte{mesActes.length > 1 ? 's' : ''}
                         </p>
                     </div>
                 </div>
                 <button
                     onClick={creerActe}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-white text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-white text-ui-11 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
                 >
                     <Plus size={14} /> Ajouter un acte
                 </button>
@@ -178,14 +178,14 @@ const TrameDashboard: React.FC = () => {
                                         setSelection({ type: 'acte', id: acte.id });
                                     }}
                                 >
-                                    <span className="text-[10px] font-mono font-black text-app-text/30 w-6 shrink-0">
+                                    <span className="text-ui-10 font-mono font-black text-app-text/30 w-6 shrink-0">
                                         {String(index + 1).padStart(2, '0')}
                                     </span>
                                     <div className="flex-1 min-w-0">
                                         <p className={`text-sm font-bold truncate ${acte.acheve ? 'line-through opacity-40' : ''}`}>
                                             {acte.titre}
                                         </p>
-                                        <p className="text-[10px] text-app-text/40 uppercase tracking-widest">
+                                        <p className="text-ui-10 text-app-text/40 uppercase tracking-widest">
                                             {sesScenes.length} scène{sesScenes.length > 1 ? 's' : ''}
                                         </p>
                                     </div>
@@ -223,7 +223,7 @@ const TrameDashboard: React.FC = () => {
                                         ))}
                                         <button
                                             onClick={() => creerScene(acte.id)}
-                                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-app-border/20 text-[10px] font-bold uppercase tracking-widest text-app-text/40 hover:text-accent hover:border-accent/30 transition-all"
+                                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-app-border/20 text-ui-10 font-bold uppercase tracking-widest text-app-text/40 hover:text-accent hover:border-accent/30 transition-all"
                                         >
                                             <CornerDownRight size={12} /> Ajouter une scène
                                         </button>
@@ -263,13 +263,13 @@ const TrameDashboard: React.FC = () => {
                             </Champ>
                             <button
                                 onClick={() => demanderAchevementActe(acteSelectionne)}
-                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-app-border/20 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
+                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-app-border/20 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
                             >
                                 {acteSelectionne.acheve ? <CheckCircle2 size={14} className="text-emerald-400" /> : <Circle size={14} />}
                                 {acteSelectionne.acheve ? 'Acte achevé' : 'Marquer comme achevé'}
                             </button>
                             {/* On n'efface pas un acte joué : il reste lisible, barré. */}
-                            <p className="text-[11px] text-app-text/30 italic leading-relaxed">
+                            <p className="text-ui-11 text-app-text/30 italic leading-relaxed">
                                 Un acte achevé reste dans la trame et se relit — c'est lui qui dit d'où la campagne vient.
                                 Ses scènes se terminent avec lui.
                             </p>
@@ -302,7 +302,7 @@ const TrameDashboard: React.FC = () => {
 
 const Champ: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
     <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">{label}</label>
+        <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">{label}</label>
         {children}
     </div>
 );
@@ -340,13 +340,13 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
                 title={closeSansAvoirEteJouee(scene) ? 'Close avec son acte, sans avoir été jouée' : undefined}
             >{scene.titre}</span>
             {etat === 'en-cours' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
             )}
             {etat === 'en-pause' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
             )}
             {scene.origine === 'improvisee' && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
             )}
             <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
                 {/*
@@ -494,7 +494,7 @@ const EditeurDeScene: React.FC<{
                 />
             </Champ>
 
-            <p className="text-[11px] text-app-text/30 italic leading-relaxed flex items-start gap-2">
+            <p className="text-ui-11 text-app-text/30 italic leading-relaxed flex items-start gap-2">
                 <Clapperboard size={13} className="shrink-0 mt-0.5" />
                 Rien n'est obligatoire ici. Une scène peu remplie reste une scène — c'est le cas de
                 toutes celles qui naissent en pleine partie.
@@ -512,11 +512,11 @@ const Cases: React.FC<{
     onBascule: (id: string) => void;
 }> = ({ icone, label, vide, options, choisis, onBascule }) => (
     <div className="space-y-2">
-        <label className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">
+        <label className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">
             {icone} {label}
         </label>
         {options.length === 0 ? (
-            <p className="text-[11px] text-app-text/25 italic px-1">{vide}</p>
+            <p className="text-ui-11 text-app-text/25 italic px-1">{vide}</p>
         ) : (
             <div className="flex flex-wrap gap-1.5">
                 {options.map(o => {
@@ -525,7 +525,7 @@ const Cases: React.FC<{
                         <button
                             key={o.id}
                             onClick={() => onBascule(o.id)}
-                            className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${
+                            className={`px-2.5 py-1.5 rounded-lg text-ui-10 font-bold border transition-all ${
                                 actif
                                     ? 'bg-accent/20 border-accent/40 text-accent'
                                     : 'bg-app-bg/30 border-app-border/20 text-app-text/40 hover:text-app-text/70'

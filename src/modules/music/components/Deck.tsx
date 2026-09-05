@@ -114,7 +114,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
 
                 <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="flex items-center gap-2">
-                        <span className={`px-1.5 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-white shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-slate-500'}`}>
+                        <span className={`px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-white shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-slate-500'}`}>
                             DRK {side}
                         </span>
 
@@ -123,7 +123,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             <button
                                 onClick={() => void triggerAutoFade(side)}
                                 title={`La platine ${side} joue mais le crossfader est sur l’autre — cliquer pour l’amener à l’antenne`}
-                                className="px-1.5 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest border bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black transition-all"
+                                className="px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest border bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black transition-all"
                             >
                                 Muet → à l’antenne
                             </button>
@@ -209,7 +209,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between text-[8px] font-black font-mono tracking-tighter text-slate-600 px-0.5 uppercase">
+                <div className="flex items-center justify-between text-ui-8 font-black font-mono tracking-tighter text-slate-600 px-0.5 uppercase">
                     <span className={pointageEnCours !== null ? 'text-accent' : isPlaying ? 'text-accent' : ''}>
                         {formatTime(positionAffichee)}
                     </span>

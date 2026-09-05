@@ -47,7 +47,7 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
     <div className="w-full h-8 flex flex-col justify-center gap-1 px-1 relative group/hp">
         {/* PV Labels */}
         <div className="flex justify-between items-end px-0.5">
-            <span className="text-[10px] font-display font-black text-white/40 uppercase tracking-tighter">Vitality</span>
+            <span className="text-ui-10 font-display font-black text-white/40 uppercase tracking-tighter">Vitality</span>
             <div className={`flex items-baseline gap-1 font-display font-black tracking-tight ${percentage <= 25 ? 'text-rose-500' : 'text-white/80'}`}>
                 <input 
                     type="number" 
@@ -56,12 +56,12 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
                     className="w-8 bg-transparent text-right outline-none focus:text-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none"
                     title="Actuel"
                 />
-                <span className="text-[10px] opacity-30 select-none">/</span>
+                <span className="text-ui-10 opacity-30 select-none">/</span>
                 <input 
                     type="number" 
                     value={max}
                     onChange={(e) => onMaxChange?.(parseInt(e.target.value) || 1)}
-                    className="w-8 bg-transparent text-left opacity-30 focus:opacity-100 outline-none focus:text-accent transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none text-[10px]"
+                    className="w-8 bg-transparent text-left opacity-30 focus:opacity-100 outline-none focus:text-accent transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none text-ui-10"
                     title="Max"
                 />
             </div>

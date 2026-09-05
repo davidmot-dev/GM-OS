@@ -283,7 +283,7 @@ const CombatControls: React.FC = () => {
                     title={isCombatProjected ? t('modules:projection.deactivate') : t('modules:projection.activate')}
                 >
                     {isCombatProjected ? <MonitorPlay size={18} /> : <MonitorOff size={18} />}
-                    <span className="text-[10px] font-black uppercase tracking-tighter">
+                    <span className="text-ui-10 font-black uppercase tracking-tighter">
                         {isCombatProjected ? 'ON' : 'OFF'}
                     </span>
                 </button>
@@ -291,7 +291,7 @@ const CombatControls: React.FC = () => {
 
             {/* Active Driver Indicator */}
             <div className="mb-6 flex flex-col gap-1">
-                <span className="text-[10px] text-app-text/30 font-black uppercase tracking-widest">{t('modules:combat.controls.active_system')}</span>
+                <span className="text-ui-10 text-app-text/30 font-black uppercase tracking-widest">{t('modules:combat.controls.active_system')}</span>
                 <div className={`px-3 py-2 rounded-lg border flex items-center gap-2 group transition-all ${activeDriver ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-app-bg/50 border-app-border/20 text-app-text/40'}`}>
                     <Sparkles size={14} className={activeDriver ? 'animate-pulse' : 'opacity-20'} />
                     <span className="text-xs font-black uppercase tracking-wider truncate">
@@ -323,7 +323,7 @@ const CombatControls: React.FC = () => {
                 <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
                         <Activity className="w-4 h-4 text-accent" />
-                        <h3 className="font-bold text-app-text/70 uppercase tracking-wider text-[10px]">{t('modules:combat.controls.auto_init.title')}</h3>
+                        <h3 className="font-bold text-app-text/70 uppercase tracking-wider text-ui-10">{t('modules:combat.controls.auto_init.title')}</h3>
                     </div>
                 </div>
 
@@ -351,7 +351,7 @@ const CombatControls: React.FC = () => {
                             <Zap className="w-5 h-5 text-yellow-300 animate-pulse" />
                             <span className="font-black tracking-tighter text-lg uppercase">{t('modules:combat.controls.auto_init.system')}</span>
                         </div>
-                        <div className="flex flex-col items-center gap-1 text-[9px] text-indigo-100 font-medium opacity-90">
+                        <div className="flex flex-col items-center gap-1 text-ui-9 text-indigo-100 font-medium opacity-90">
                             <span className="px-2 py-0.5 bg-white/20 rounded-md backdrop-blur-sm border border-white/10 tracking-widest uppercase">
                                 {activeDriver.combat.initiativeCards 
                                     ? t('modules:combat.controls.auto_init.cards', { max: activeDriver.combat.initiativeCards }) 

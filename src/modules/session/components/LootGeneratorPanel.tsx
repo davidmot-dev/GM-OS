@@ -130,7 +130,7 @@ const LootGeneratorPanel: React.FC = () => {
                         <button 
                             onClick={() => setSurcharge(true)}
                             title={t('modules:loot.generator.lite_mode')}
-                            className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${!useFullContext ? 'bg-gm-gold/20 text-gm-gold' : 'text-app-text/40 hover:text-app-text/60'}`}
+                            className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-ui-10 font-bold transition-all ${!useFullContext ? 'bg-gm-gold/20 text-gm-gold' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <Zap size={10} />
                             LITE
@@ -138,7 +138,7 @@ const LootGeneratorPanel: React.FC = () => {
                         <button 
                             onClick={() => setSurcharge(false)}
                             title={t('modules:loot.generator.full_mode')}
-                            className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${useFullContext ? 'bg-indigo-500/20 text-indigo-400' : 'text-app-text/40 hover:text-app-text/60'}`}
+                            className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-ui-10 font-bold transition-all ${useFullContext ? 'bg-indigo-500/20 text-indigo-400' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <BookOpen size={10} />
                             FULL
@@ -178,7 +178,7 @@ const LootGeneratorPanel: React.FC = () => {
                     </button>
                     <div className="absolute inset-0 rounded-xl bg-gm-gold/5 blur opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </div>
-                <p className="text-[10px] text-app-text/40 px-2 italic">{t('modules:loot.generator.ai_hint')}</p>
+                <p className="text-ui-10 text-app-text/40 px-2 italic">{t('modules:loot.generator.ai_hint')}</p>
             </div>
 
             {/* Tables Selection */}
@@ -211,7 +211,7 @@ const LootGeneratorPanel: React.FC = () => {
                             >
                                 <div className="flex flex-col items-start text-left">
                                     <span className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors">{table.name}</span>
-                                    <span className="text-[9px] text-app-text/40 font-medium uppercase tracking-widest">
+                                    <span className="text-ui-9 text-app-text/40 font-medium uppercase tracking-widest">
                                         {t('modules:loot.generator.table_stats', {
                                             count: table.entries.length,
                                             mode: t(`modules:loot.generator.roll_modes.${modeDeTirage(table)}`),

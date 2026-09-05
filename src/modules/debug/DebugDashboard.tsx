@@ -107,7 +107,7 @@ const DebugDashboard: React.FC = () => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setAutoScroll(!autoScroll)}
-                            className={`p-2 rounded-xl border transition-all flex items-center gap-2 text-[10px] font-bold ${
+                            className={`p-2 rounded-xl border transition-all flex items-center gap-2 text-ui-10 font-bold ${
                                 autoScroll 
                                 ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' 
                                 : 'bg-white/5 border-white/10 text-slate-500'
@@ -150,7 +150,7 @@ const DebugDashboard: React.FC = () => {
                             <button
                                 key={level}
                                 onClick={() => setLevelFilter(level)}
-                                className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all ${
+                                className={`px-2.5 py-1 rounded-lg text-ui-9 font-black uppercase tracking-tighter transition-all ${
                                     levelFilter === level 
                                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
                                     : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
@@ -165,7 +165,7 @@ const DebugDashboard: React.FC = () => {
                         <Filter size={12} className="text-slate-600 flex-shrink-0" />
                         <button
                             onClick={() => setModuleFilter('all')}
-                            className={`px-2 py-0.5 rounded-full border text-[9px] font-bold transition-all whitespace-nowrap ${
+                            className={`px-2 py-0.5 rounded-full border text-ui-9 font-bold transition-all whitespace-nowrap ${
                                 moduleFilter === 'all'
                                 ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-400'
                                 : 'bg-white/5 border-white/10 text-slate-500'
@@ -177,7 +177,7 @@ const DebugDashboard: React.FC = () => {
                             <button
                                 key={mod}
                                 onClick={() => setModuleFilter(mod)}
-                                className={`px-2 py-0.5 rounded-full border text-[9px] font-bold transition-all whitespace-nowrap ${
+                                className={`px-2 py-0.5 rounded-full border text-ui-9 font-bold transition-all whitespace-nowrap ${
                                     moduleFilter === mod
                                     ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-400'
                                     : 'bg-white/5 border-white/10 text-slate-500'
@@ -241,7 +241,7 @@ const LogRow: React.FC<{
             >
                 <div className="flex items-center gap-2 mt-0.5">
                     {isExpanded ? <ChevronDown size={14} className="text-slate-500" /> : <ChevronRight size={14} className="text-slate-500" />}
-                    <span className="text-[10px] font-mono text-slate-500 opacity-60 w-24">[{time}]</span>
+                    <span className="text-ui-10 font-mono text-slate-500 opacity-60 w-24">[{time}]</span>
                 </div>
                 
                 <div className="flex items-center gap-3">
@@ -250,7 +250,7 @@ const LogRow: React.FC<{
                     </div>
 
                     {log.module && (
-                        <div className={`flex-shrink-0 px-2 py-0.5 rounded border text-[9px] font-black uppercase tracking-widest ${moduleStyle}`}>
+                        <div className={`flex-shrink-0 px-2 py-0.5 rounded border text-ui-9 font-black uppercase tracking-widest ${moduleStyle}`}>
                             {log.module}
                         </div>
                     )}
@@ -264,7 +264,7 @@ const LogRow: React.FC<{
             {isExpanded && !!log.data && (
                 <div className="px-12 pb-4">
                     <div className="bg-slate-950/80 rounded-xl border border-white/5 p-4 overflow-x-auto custom-scrollbar shadow-inner">
-                        <pre className="text-[11px] font-mono text-blue-300">
+                        <pre className="text-ui-11 font-mono text-blue-300">
                             {JSON.stringify(log.data, null, 2)}
                         </pre>
                     </div>

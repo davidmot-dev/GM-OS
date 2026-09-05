@@ -13,12 +13,12 @@ const HistoryPanel: React.FC = () => {
                     <div className="size-6 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-500">
                         <History size={14} />
                     </div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest">Track History</h3>
+                    <h3 className="text-ui-10 font-bold uppercase tracking-widest">Track History</h3>
                 </div>
 
                 <div className="space-y-2 max-h-[120px] overflow-y-auto no-scrollbar pr-2">
                     {history.length === 0 ? (
-                        <p className="text-[10px] text-slate-600 italic">No history recorded yet...</p>
+                        <p className="text-ui-10 text-slate-600 italic">No history recorded yet...</p>
                     ) : (
                         history.map((track, i) => (
                             <div
@@ -42,10 +42,10 @@ const HistoryPanel: React.FC = () => {
                     <div className="size-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                         <Terminal size={14} />
                     </div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest">System Interface Log</h3>
+                    <h3 className="text-ui-10 font-bold uppercase tracking-widest">System Interface Log</h3>
                 </div>
 
-                <div className="max-h-[120px] overflow-y-auto font-mono text-[10px] space-y-1 custom-scrollbar pr-4 bg-slate-950/40 p-3 rounded-2xl border border-white/5">
+                <div className="max-h-[120px] overflow-y-auto font-mono text-ui-10 space-y-1 custom-scrollbar pr-4 bg-slate-950/40 p-3 rounded-2xl border border-white/5">
                     {consoleLogs.length === 0 ? (
                         <p className="text-slate-700 italic">Engine initializing...</p>
                     ) : (

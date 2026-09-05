@@ -136,7 +136,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
             {/* Keybind Indicator */}
             {keyLabel && (
-                <div className={`absolute top-2 left-2 border text-[7px] font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-app-bg text-slate-500 border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
+                <div className={`absolute top-2 left-2 border text-ui-7 font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-app-bg text-slate-500 border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
                     {keyLabel}
                 </div>
             )}
@@ -162,10 +162,10 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             </div>
 
             <div className="mt-3 px-3 w-full text-center">
-                <span className={`text-[10px] font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-slate-500 group-hover:text-slate-300'}`}>
                     {pad.label}
                 </span>
-                <div className="text-[7px] font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{pad.id}]</div>
+                <div className="text-ui-7 font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{pad.id}]</div>
                 {isPlaying && (
                     <div className="flex justify-center gap-0.5 mt-1.5">
                         <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '0ms' }} />
@@ -185,10 +185,10 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
             {isMenuOpen && !isLearningThis && (
                 <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
-                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-[9px] font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
                     <button
                         onClick={handleEdit}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-accent hover:border-accent text-[10px] font-black uppercase tracking-widest transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-accent hover:border-accent text-ui-10 font-black uppercase tracking-widest transition-all"
                     >
                         <Edit3 size={12} /> ÉDITER
                     </button>
@@ -206,7 +206,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                             });
                             setIsMenuOpen(false);
                         }}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-red-600 hover:border-red-600 text-[10px] font-black uppercase tracking-widest transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-red-600 hover:border-red-600 text-ui-10 font-black uppercase tracking-widest transition-all"
                     >
                         <Trash2 size={12} /> VIDER
                     </button>
@@ -229,7 +229,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                       après.
                     */}
                     <div className="w-full flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 shrink-0">Charger</span>
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-slate-600 shrink-0">Charger</span>
                         {(['A', 'B'] as const).map((platine) => {
                             const occupee = platine === 'A' ? isPlayingOnA : isPlayingOnB;
                             const enLecture = platine === 'A' ? deckA.isPlaying : deckB.isPlaying;
@@ -244,7 +244,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                                     title={enLecture
                                         ? `Charger sur la platine ${platine} — elle joue : la piste en cours sera coupée`
                                         : `Charger sur la platine ${platine} sans lancer la lecture`}
-                                    className={`flex-1 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                                    className={`flex-1 py-2.5 rounded-xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
                                         enLecture
                                             ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black'
                                             : 'bg-app-surface border-app-border/50 hover:bg-accent hover:border-accent'
@@ -266,7 +266,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                             });
                             setIsMenuOpen(false);
                         }}
-                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${pad.linkedLightSceneId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-app-surface border-app-border/50 hover:bg-gm-cyan hover:border-gm-cyan'}`}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-ui-10 font-black uppercase tracking-widest transition-all ${pad.linkedLightSceneId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-app-surface border-app-border/50 hover:bg-gm-cyan hover:border-gm-cyan'}`}
                     >
                         <Lightbulb size={12} /> {pad.linkedLightSceneId ? 'LIÉ' : 'LIER LUMIÈRE'}
                     </button>
@@ -329,10 +329,10 @@ const PlaylistManager: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
                 <Music size={32} strokeWidth={1} className="text-slate-700" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-slate-500">
                     Aucune atmosphère pour cette campagne
                 </p>
-                <p className="text-[10px] text-slate-600 max-w-sm leading-relaxed">
+                <p className="text-ui-10 text-slate-600 max-w-sm leading-relaxed">
                     {campagneId === null
                         ? 'Créez-en une avec le + du bandeau.'
                         : 'Créez-en une avec le + du bandeau, ou rendez une atmosphère existante « commune » depuis la campagne qui la détient — elle apparaîtra alors partout.'}

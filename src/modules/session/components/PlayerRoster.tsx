@@ -142,7 +142,7 @@ const PlayerCard: React.FC<{
             <div className="flex flex-col gap-1 items-end">
                 <button
                     onClick={onToggleOnline}
-                    className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all border z-10 ${
+                    className={`flex-shrink-0 text-ui-10 font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all border z-10 ${
                         player.isOnline 
                         ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/20' 
                         : 'text-app-text/40 border-app-border bg-app-surface/50 hover:bg-app-surface hover:text-app-text/60'

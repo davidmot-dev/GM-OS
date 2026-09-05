@@ -28,7 +28,7 @@ const RemoteNotificationCenter: React.FC = () => {
 
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-accent flex items-center gap-1">
+                                <span className="text-ui-10 font-black uppercase tracking-widest text-accent flex items-center gap-1">
                                     <Clock size={10} /> {new Date(notif.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                                 <button 
@@ -51,7 +51,7 @@ const RemoteNotificationCenter: React.FC = () => {
 
                             <div className="flex items-center gap-2 mt-3">
                                 <div className="h-px flex-1 bg-app-border/5" />
-                                <span className="text-[9px] font-bold text-app-text/20 uppercase tracking-tighter">Tablet Hub Sync</span>
+                                <span className="text-ui-9 font-bold text-app-text/20 uppercase tracking-tighter">Tablet Hub Sync</span>
                             </div>
                         </div>
                     </div>

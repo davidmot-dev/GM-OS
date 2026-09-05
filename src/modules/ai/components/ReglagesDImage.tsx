@@ -82,13 +82,13 @@ const ReglagesDImage: React.FC = () => {
                     <div>
                         <div className="flex items-center gap-2">
                             <h5 className="font-black uppercase tracking-tighter text-app-text">Génération d'image</h5>
-                            <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
+                            <span className={`px-1.5 py-0.5 rounded text-ui-8 font-bold uppercase ${
                                 pret ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/10 text-white/40'
                             }`}>
                                 {pret ? 'configuré' : 'non configuré'}
                             </span>
                         </div>
-                        <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">
+                        <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">
                             Cloudflare Workers AI — 10 000 neurones par jour
                         </p>
                     </div>
@@ -99,7 +99,7 @@ const ReglagesDImage: React.FC = () => {
                     type="button"
                     onClick={tester}
                     disabled={!pret || essai?.etat === 'encours'}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/30 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/30 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                     {essai?.etat === 'encours'
                         ? <><Loader2 size={12} className="animate-spin" /> Essai…</>
@@ -109,7 +109,7 @@ const ReglagesDImage: React.FC = () => {
                     href="https://dash.cloudflare.com/?to=/:account/ai/workers-ai"
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/10 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/10 transition-all"
                 >
                     <ExternalLink size={12} /> Tableau de bord
                 </a>
@@ -127,8 +127,8 @@ const ReglagesDImage: React.FC = () => {
                 <div className="flex items-center gap-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
                     <img src={essai.apercu} alt="Essai de génération" className="w-20 h-20 rounded-lg object-cover" />
                     <div>
-                        <p className="text-[11px] font-black uppercase tracking-widest text-emerald-400">Cloudflare répond</p>
-                        <p className="text-[11px] text-app-text/50 mt-1">
+                        <p className="text-ui-11 font-black uppercase tracking-widest text-emerald-400">Cloudflare répond</p>
+                        <p className="text-ui-11 text-app-text/50 mt-1">
                             {Math.round(essai.octets / 1024)} Ko reçus. La génération d'image passera par lui.
                         </p>
                     </div>
@@ -136,14 +136,14 @@ const ReglagesDImage: React.FC = () => {
             )}
             {essai?.etat === 'echec' && (
                 <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
-                    <p className="text-[11px] font-black uppercase tracking-widest text-red-400">Cloudflare refuse</p>
-                    <p className="text-[11px] text-app-text/60 mt-1 font-mono leading-relaxed">{essai.dit}</p>
+                    <p className="text-ui-11 font-black uppercase tracking-widest text-red-400">Cloudflare refuse</p>
+                    <p className="text-ui-11 text-app-text/60 mt-1 font-mono leading-relaxed">{essai.dit}</p>
                 </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label htmlFor="cf-account" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">
+                    <label htmlFor="cf-account" className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">
                         Identifiant de compte
                     </label>
                     <input
@@ -157,7 +157,7 @@ const ReglagesDImage: React.FC = () => {
                         }`}
                     />
                     {compteDouteux && (
-                        <p className="text-[11px] text-amber-300/80 leading-relaxed px-1">
+                        <p className="text-ui-11 text-amber-300/80 leading-relaxed px-1">
                             Un identifiant de compte fait 32 caractères hexadécimaux — celui-ci n'en a pas
                             la forme. Ce n'est ni le nom d'un Worker ni ton sous-domaine : ouvre
                             <a href="https://dash.cloudflare.com" target="_blank" rel="noreferrer" className="underline mx-1">dash.cloudflare.com</a>
@@ -167,7 +167,7 @@ const ReglagesDImage: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <label htmlFor="cf-token" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">
+                    <label htmlFor="cf-token" className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">
                         Jeton d'API
                     </label>
                     <div className="relative">
@@ -192,7 +192,7 @@ const ReglagesDImage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="cf-model" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">
+                <label htmlFor="cf-model" className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 px-1">
                     Modèle
                 </label>
                 <input
@@ -209,14 +209,14 @@ const ReglagesDImage: React.FC = () => {
                 le déduire d'un échec : d'où viennent les deux valeurs, et où va
                 le jeton.
             */}
-            <p className="text-[11px] text-app-text/40 leading-relaxed italic">
+            <p className="text-ui-11 text-app-text/40 leading-relaxed italic">
                 Les deux valeurs se récupèrent sur le tableau de bord Workers AI, en cliquant
                 « Use REST API » puis « Create a Workers AI API Token ». Aucun Worker n'est à
                 déployer. <span className="text-app-text/60">Le jeton est enregistré dans le trousseau
                 du système, jamais dans les préférences de l'application.</span>
             </p>
 
-            <p className="text-[11px] text-app-text/30 leading-relaxed">
+            <p className="text-ui-11 text-app-text/30 leading-relaxed">
                 Sans ces valeurs, la génération d'image retombe sur ses recours précédents —
                 Ollama en local s'il tourne, puis un espace HuggingFace public dont la
                 disponibilité ne dépend pas de nous.

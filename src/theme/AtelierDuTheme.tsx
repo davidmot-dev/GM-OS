@@ -296,10 +296,10 @@ export const AtelierDuTheme: React.FC = () => {
                         <Palette size={16} className="text-accent" />
                         {nomDuJeu}
                     </h3>
-                    <p className="text-[10px] font-mono text-app-text/40 mt-1">
+                    <p className="text-ui-10 font-mono text-app-text/40 mt-1">
                         docs/{cheminDuTheme(racine)}
                     </p>
-                    <p className="text-[10px] text-app-text/40 mt-1 max-w-lg">
+                    <p className="text-ui-10 text-app-text/40 mt-1 max-w-lg">
                         Ce fichier habille l’application <strong>et</strong> les fiches de personnage.
                         Les réglages s’appliquent tout de suite ; rien n’est écrit avant « Enregistrer ».
                     </p>
@@ -320,7 +320,7 @@ export const AtelierDuTheme: React.FC = () => {
                             onBlur={() => setConfirmeLaRestauration(false)}
                             disabled={enCoursDEcriture}
                             title="Remettre le thème tel qu’il était avant tes retouches"
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all disabled:opacity-30 ${
+                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border transition-all disabled:opacity-30 ${
                                 confirmeLaRestauration
                                     ? 'border-amber-500/60 bg-amber-500/15 text-amber-500'
                                     : 'border-app-border bg-app-bg text-app-text/60 hover:text-app-text'
@@ -333,14 +333,14 @@ export const AtelierDuTheme: React.FC = () => {
                     <button
                         onClick={revenir}
                         disabled={!modifie}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-app-border bg-app-bg text-app-text/60 hover:text-app-text disabled:opacity-30 transition-all"
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border border-app-border bg-app-bg text-app-text/60 hover:text-app-text disabled:opacity-30 transition-all"
                     >
                         <RotateCcw size={13} /> Annuler
                     </button>
                     <button
                         onClick={() => void enregistrer()}
                         disabled={!modifie || enCoursDEcriture}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-accent text-app-bg disabled:opacity-30 transition-all"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-accent text-app-bg disabled:opacity-30 transition-all"
                     >
                         {enCoursDEcriture ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
                         Enregistrer
@@ -356,7 +356,7 @@ export const AtelierDuTheme: React.FC = () => {
                             <p className="text-xs font-black uppercase tracking-widest text-amber-500">
                                 Ce jeu n’a pas encore de thème
                             </p>
-                            <p className="text-[11px] text-app-text/50 mt-1 max-w-xl">
+                            <p className="text-ui-11 text-app-text/50 mt-1 max-w-xl">
                                 Je peux en créer un neuf : les vingt-deux jetons, et rien d’autre. Les
                                 habillages de fiche d’un thème complet décrivent une page de livre —
                                 les inventer serait prétendre connaître la direction artistique de ton jeu.
@@ -364,7 +364,7 @@ export const AtelierDuTheme: React.FC = () => {
                         </div>
                         <button
                             onClick={creerUnTheme}
-                            className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 shrink-0"
+                            className="px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 shrink-0"
                         >
                             Créer un thème
                         </button>
@@ -375,7 +375,7 @@ export const AtelierDuTheme: React.FC = () => {
 
                 {GROUPES.map(groupe => (
                     <section key={groupe.id} className="space-y-3">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 border-l-2 border-accent/30 pl-3">
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 border-l-2 border-accent/30 pl-3">
                             {groupe.titre}
                         </h4>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -412,11 +412,11 @@ const ChampDeJeton: React.FC<{
 }> = ({ jeton, valeur, poser, alerte }) => (
     <div className="p-4 rounded-2xl bg-app-bg/40 border border-app-border/60 space-y-2">
         <div className="flex items-center justify-between gap-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-app-text/80">
+            <label className="text-ui-11 font-black uppercase tracking-widest text-app-text/80">
                 {jeton.label}
             </label>
             {!jeton.surLInterface && (
-                <span className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-app-surface text-app-text/30 border border-app-border/60">
+                <span className="text-ui-8 font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-app-surface text-app-text/30 border border-app-border/60">
                     {POUR_LES_FICHES}
                 </span>
             )}
@@ -460,9 +460,9 @@ const ChampDeJeton: React.FC<{
             />
         )}
 
-        <p className="text-[10px] text-app-text/35 leading-snug">{jeton.aide}</p>
+        <p className="text-ui-10 text-app-text/35 leading-snug">{jeton.aide}</p>
         {alerte && (
-            <p className="text-[10px] text-amber-500/90 leading-snug flex items-start gap-1.5">
+            <p className="text-ui-10 text-amber-500/90 leading-snug flex items-start gap-1.5">
                 <AlertTriangle size={11} className="mt-0.5 shrink-0" /> {alerte}
             </p>
         )}
@@ -508,11 +508,11 @@ const ChampDePolice: React.FC<{
                 onChange={e => poser(jeton.cle, e.target.value)}
                 placeholder='"Ma Police", serif'
                 aria-label={jeton.label}
-                className="w-full bg-app-surface border border-app-border rounded-lg px-3 py-2 text-[11px] font-mono text-app-text outline-none focus:border-accent/60"
+                className="w-full bg-app-surface border border-app-border rounded-lg px-3 py-2 text-ui-11 font-mono text-app-text outline-none focus:border-accent/60"
             />
 
             {famille && (
-                <p className={`text-[10px] flex items-start gap-1.5 leading-snug ${
+                <p className={`text-ui-10 flex items-start gap-1.5 leading-snug ${
                     fourniture === 'locale' ? 'text-amber-500/90' : 'text-emerald-500/80'
                 }`}>
                     {fourniture === 'locale'
@@ -554,7 +554,7 @@ const ChampDEchelle: React.FC<{
                 <button
                     onClick={() => poser('font-scale', '')}
                     title="Retirer l’échelle du thème"
-                    className="text-[9px] font-black uppercase tracking-widest text-app-text/40 hover:text-app-text"
+                    className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text"
                 >
                     Défaut
                 </button>
@@ -582,7 +582,7 @@ const ControleDuContraste: React.FC<{ valeurs: Record<string, string> }> = ({ va
                 return (
                     <div
                         key={m.quoi}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-[10px] font-bold ${
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-ui-10 font-bold ${
                             passe
                                 ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-500/90'
                                 : 'border-amber-500/30 bg-amber-500/5 text-amber-500'

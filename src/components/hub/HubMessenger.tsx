@@ -102,7 +102,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                             </div>
                             <div>
                                 <h3 className="text-sm font-bold text-app-text uppercase tracking-wider">Messagerie</h3>
-                                <p className="text-[10px] text-accent font-medium">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
+                                <p className="text-ui-10 text-accent font-medium">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
                             </div>
                         </div>
                         <button 
@@ -132,7 +132,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                         {selectedRecipient.portrait ? (
                                             <img src={selectedRecipient.portrait} alt={selectedRecipient.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-[9px] font-bold text-accent">
+                                            <div className="w-full h-full flex items-center justify-center text-ui-9 font-bold text-accent">
                                                 {selectedRecipient.name[0]}
                                             </div>
                                         )}
@@ -176,7 +176,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                                     {char.portrait ? (
                                                         <img src={char.portrait} alt={char.name} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold">
+                                                        <div className="w-full h-full flex items-center justify-center text-ui-10 font-bold">
                                                             {char.name[0]}
                                                         </div>
                                                     )}
@@ -220,12 +220,12 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                         </div>
                                         <div className="flex items-center gap-1.5 mt-1">
                                             {!isMe && (
-                                                <span className="text-[9px] font-bold text-accent uppercase tracking-tighter">
+                                                <span className="text-ui-9 font-bold text-accent uppercase tracking-tighter">
                                                     {msg.fromName}
                                                 </span>
                                             )}
                                             {isBroadcast && <Users size={8} className="text-app-text/40" />}
-                                            <span className="text-[9px] text-app-text/40 uppercase tracking-tighter">
+                                            <span className="text-ui-9 text-app-text/40 uppercase tracking-tighter">
                                                 {isMe ? 'VOUS' : ''} • {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
@@ -256,7 +256,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                 <Send size={16} />
                             </button>
                         </div>
-                        <p className="text-[10px] text-app-text/40 mt-2 italic text-center">
+                        <p className="text-ui-10 text-app-text/40 mt-2 italic text-center">
                             {selectedRecipientId === 'all' 
                                 ? 'Tout le monde pourra lire ce message.' 
                                 : `Seul ${selectedRecipient.name} pourra lire ce message.`}

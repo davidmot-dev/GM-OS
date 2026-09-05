@@ -64,7 +64,7 @@ export const HubAtlasViewer: React.FC<HubAtlasViewerProps> = ({ map, onClose }) 
                                 <div className="p-10 bg-app-surface/20 rounded-full border border-app-border/10">
                                     <Globe size={80} className="text-app-text/10" />
                                 </div>
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/20">Cartographie Indisponible</p>
+                                <p className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/20">Cartographie Indisponible</p>
                             </div>
                         )}
                     </div>
@@ -76,13 +76,13 @@ export const HubAtlasViewer: React.FC<HubAtlasViewerProps> = ({ map, onClose }) 
                             <div className="flex flex-wrap gap-3">
                                 <div className="flex items-center gap-2 px-4 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20 shadow-lg">
                                     <MapPin size={12} className="text-accent" />
-                                    <span className="text-[10px] font-black text-app-text/60 uppercase tracking-widest">
+                                    <span className="text-ui-10 font-black text-app-text/60 uppercase tracking-widest">
                                         Lieu Visité
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                                     <Info size={12} className="text-emerald-400" />
-                                    <span className="text-[10px] font-black text-emerald-400/80 uppercase tracking-widest text-shadow-glow">
+                                    <span className="text-ui-10 font-black text-emerald-400/80 uppercase tracking-widest text-shadow-glow">
                                         {map.type.replace('-', ' ')}
                                     </span>
                                 </div>
@@ -111,7 +111,7 @@ export const HubAtlasViewer: React.FC<HubAtlasViewerProps> = ({ map, onClose }) 
 
                         {/* Footer decorative */}
                         <div className="pt-8 border-t border-app-border/10 flex items-center justify-between opacity-30">
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Atlas du Nexus</p>
+                            <p className="text-ui-10 font-black uppercase tracking-[0.3em]">Atlas du Nexus</p>
                             <div className="flex gap-2">
                                 <div className="w-8 h-1 bg-app-text/20 rounded-full" />
                                 <div className="w-2 h-1 bg-accent/40 rounded-full" />

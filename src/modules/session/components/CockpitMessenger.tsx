@@ -80,7 +80,7 @@ export const CockpitMessenger: React.FC = () => {
             <div className="flex items-center justify-between px-3 py-2 border-b border-app-border/20 bg-app-surface/40">
                 <div className="flex items-center gap-2 text-app-text/60">
                     <MessageSquare size={14} className="text-accent" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">{t('modules:session.messenger.title')}</span>
+                    <span className="text-ui-10 font-bold uppercase tracking-wider">{t('modules:session.messenger.title')}</span>
                 </div>
                 
                 <div className="relative">
@@ -89,7 +89,7 @@ export const CockpitMessenger: React.FC = () => {
                         className="flex items-center gap-1 px-2 py-1 rounded-md bg-app-bg/40 border border-app-border/30 hover:border-accent/40 transition-colors"
                     >
                         <Filter size={10} className="text-accent/60" />
-                        <span className="text-[9px] font-bold uppercase truncate max-w-[60px]">
+                        <span className="text-ui-9 font-bold uppercase truncate max-w-[60px]">
                             {selectedFilter === 'all' ? t('modules:session.messenger.filter_all') : (activeCharacters.find(c => c.id === selectedFilter)?.name || t('modules:session.messenger.player_label'))}
                         </span>
                         <ChevronDown size={10} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
@@ -98,7 +98,7 @@ export const CockpitMessenger: React.FC = () => {
                         <div className="absolute right-0 top-full mt-1 w-32 bg-app-surface border border-app-border shadow-2xl rounded-lg z-50 overflow-hidden py-1">
                             <button 
                                 onClick={() => { setSelectedFilter('all'); setIsFilterOpen(false); }}
-                                className={`w-full text-left px-3 py-1.5 text-[10px] hover:bg-accent/10 transition-colors ${selectedFilter === 'all' ? 'text-accent font-bold' : 'text-app-text/70'}`}
+                                className={`w-full text-left px-3 py-1.5 text-ui-10 hover:bg-accent/10 transition-colors ${selectedFilter === 'all' ? 'text-accent font-bold' : 'text-app-text/70'}`}
                             >
                                 {t('modules:session.messenger.filter_all')}
                             </button>
@@ -106,7 +106,7 @@ export const CockpitMessenger: React.FC = () => {
                                 <button 
                                     key={char.id}
                                     onClick={() => { setSelectedFilter(char.id); setIsFilterOpen(false); }}
-                                    className={`w-full text-left px-3 py-1.5 text-[10px] hover:bg-accent/10 transition-colors ${selectedFilter === char.id ? 'text-accent font-bold' : 'text-app-text/70'}`}
+                                    className={`w-full text-left px-3 py-1.5 text-ui-10 hover:bg-accent/10 transition-colors ${selectedFilter === char.id ? 'text-accent font-bold' : 'text-app-text/70'}`}
                                 >
                                     {char.name}
                                 </button>
@@ -121,7 +121,7 @@ export const CockpitMessenger: React.FC = () => {
                 {filteredMessages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full opacity-20 py-4">
                         <MessageSquare size={24} />
-                        <span className="text-[10px] mt-1 italic uppercase tracking-widest">{t('modules:session.messenger.no_message')}</span>
+                        <span className="text-ui-10 mt-1 italic uppercase tracking-widest">{t('modules:session.messenger.no_message')}</span>
                     </div>
                 ) : (
                     filteredMessages.map((msg) => (
@@ -131,10 +131,10 @@ export const CockpitMessenger: React.FC = () => {
                         >
                             <div className="flex items-center gap-1.5 opacity-50 px-1">
                                 {msg.fromId === 'GM' ? <Shield size={8} className="text-accent" /> : <User size={8} />}
-                                <span className="text-[8px] font-bold uppercase truncate max-w-[100px]">
+                                <span className="text-ui-8 font-bold uppercase truncate max-w-[100px]">
                                     {getCharacterName(msg.fromId, msg.fromName)}
                                 </span>
-                                <span className="text-[8px] font-mono">{format(msg.timestamp, 'HH:mm')}</span>
+                                <span className="text-ui-8 font-mono">{format(msg.timestamp, 'HH:mm')}</span>
                             </div>
                             
                             <div className={`px-2.5 py-1.5 rounded-lg text-xs max-w-[90%] break-words border ${
@@ -168,7 +168,7 @@ export const CockpitMessenger: React.FC = () => {
                     onChange={(e) => setMessageInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder={selectedFilter === 'all' ? t('modules:session.messenger.write_to_all') : t('modules:session.messenger.write_to_recipient', { recipient: (activeCharacters.find(c => c.id === selectedFilter)?.name || '...') })}
-                    className="flex-1 bg-app-surface/60 border border-app-border/40 rounded-lg py-1.5 px-3 text-[11px] placeholder:text-app-text/30 focus:outline-none focus:border-accent/50 transition-colors"
+                    className="flex-1 bg-app-surface/60 border border-app-border/40 rounded-lg py-1.5 px-3 text-ui-11 placeholder:text-app-text/30 focus:outline-none focus:border-accent/50 transition-colors"
                 />
                 <button 
                     onClick={handleSend}
@@ -183,7 +183,7 @@ export const CockpitMessenger: React.FC = () => {
             <div className="px-2 py-1.5 bg-app-surface/40 border-t border-app-border/10 flex justify-between items-center">
                  <div className="flex items-center gap-1 opacity-30">
                     <Clock size={8} />
-                    <span className="text-[8px] font-mono uppercase tracking-tighter text-app-text/40">{t('modules:session.messenger.session_only')}</span>
+                    <span className="text-ui-8 font-mono uppercase tracking-tighter text-app-text/40">{t('modules:session.messenger.session_only')}</span>
                  </div>
                  <div className="w-1 h-1 rounded-full bg-accent/40 animate-pulse" />
             </div>

@@ -40,7 +40,7 @@ export const HubProjectionCard: React.FC<HubProjectionCardProps> = ({
                     <div className="w-2.5 h-2.5 rounded-full bg-accent animate-ping" />
                     <span className="text-xs font-black text-accent uppercase tracking-[0.4em]">Reception Visuelle</span>
                 </div>
-                <div className="flex items-center gap-2 text-app-text/30 font-mono text-[10px]">
+                <div className="flex items-center gap-2 text-app-text/30 font-mono text-ui-10">
                     <span className="hidden sm:inline">FRQ: 142.9 MHz</span>
                     <span className="hidden sm:inline h-3 w-px bg-app-border/40" />
                     <span>Sync: 6.3</span>
@@ -90,12 +90,12 @@ export const HubProjectionCard: React.FC<HubProjectionCardProps> = ({
                             </p>
                         </div>
                         {subtitle && (
-                            <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.5em] mt-1">{subtitle}</p>
+                            <p className="text-ui-10 font-bold text-app-text/40 uppercase tracking-[0.5em] mt-1">{subtitle}</p>
                         )}
                     </div>
                 )}
                 
-                <p className="text-[10px] text-center font-bold text-accent/50 uppercase tracking-[0.2em] opacity-60">
+                <p className="text-ui-10 text-center font-bold text-accent/50 uppercase tracking-[0.2em] opacity-60">
                     Projection {isVoiceReactive ? 'Interface-OS' : 'Image-OS'} Active
                 </p>
             </div>

@@ -136,7 +136,7 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
           {formatDuree(ecoule)}
         </p>
         {critique && (
-          <p className="text-[10px] font-black uppercase tracking-widest text-red-400/60">
+          <p className="text-ui-10 font-black uppercase tracking-widest text-red-400/60">
             La requête sera abandonnée à {formatDuree(plafondSecondes * 1000)}
           </p>
         )}
@@ -145,7 +145,7 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
       {onAbandon && (
         <button
           onClick={onAbandon}
-          className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/30 text-[10px] font-black uppercase tracking-widest transition-all"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/30 text-ui-10 font-black uppercase tracking-widest transition-all"
         >
           <XCircle size={14} /> {libelleAbandon ?? "Cesser d'attendre"}
         </button>
@@ -190,7 +190,7 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
 
       {journal.length > 0 && (
         <div className="w-full max-w-2xl bg-black/40 border border-white/5 rounded-[2rem] p-6 text-left">
-          <div className="flex items-center gap-2 mb-4 text-[10px] font-black uppercase tracking-widest text-white/20">
+          <div className="flex items-center gap-2 mb-4 text-ui-10 font-black uppercase tracking-widest text-white/20">
             <Radio size={12} className="text-purple-400/60" /> Journal du pont
           </div>
           <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1 font-mono text-xs">

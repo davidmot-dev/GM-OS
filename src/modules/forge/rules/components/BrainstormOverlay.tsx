@@ -573,7 +573,7 @@ export const BrainstormOverlay: React.FC = () => {
               <h2 className="text-2xl font-black uppercase tracking-tighter text-white font-display">
                 {t('session.forge_module.tabs.rules').split(' ')[0]} <span className="text-purple-400">{t('session.forge_module.tabs.rules').split(' ').slice(1).join(' ') || 'Rules'}</span>
               </h2>
-              <div className="flex items-center gap-2 text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">
+              <div className="flex items-center gap-2 text-ui-10 text-white/40 font-bold uppercase tracking-widest mt-1">
                 <Sparkles size={12} className="text-purple-400" /> Powered by NotebookLM
               </div>
             </div>
@@ -587,7 +587,7 @@ export const BrainstormOverlay: React.FC = () => {
               le pilote d une campagne Blade Runner — ce qui est arrive.
             */}
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-white/20 uppercase tracking-widest mb-0.5">
+              <span className="text-ui-10 font-black text-white/20 uppercase tracking-widest mb-0.5">
                 {t('session.forge_module.atelier.corpus_label')}
               </span>
               <button
@@ -651,7 +651,7 @@ export const BrainstormOverlay: React.FC = () => {
                     'ANNULER',
                   );
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-ui-10 font-black uppercase tracking-widest text-white/50 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all"
               >
                 <RotateCcw size={14} /> Recommencer
               </button>
@@ -708,7 +708,7 @@ export const BrainstormOverlay: React.FC = () => {
                     {brainstormStore.error === 'SELECT_CORPUS' && (
                       <button
                         onClick={() => brainstormStore.setError(null)}
-                        className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors"
+                        className="text-ui-10 font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors"
                       >
                         {t('common:actions.cancel')}
                       </button>
@@ -778,7 +778,7 @@ export const BrainstormOverlay: React.FC = () => {
                         brainstormStore.setCorpusCible(slug(nouveauCorpus));
                         brainstormStore.setError(null);
                       }}
-                      className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                      className={`px-6 py-3 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                         slug(nouveauCorpus)
                           ? 'bg-purple-600 text-white hover:bg-purple-500'
                           : 'bg-white/5 text-white/10 cursor-not-allowed'
@@ -788,7 +788,7 @@ export const BrainstormOverlay: React.FC = () => {
                     </button>
                   </div>
                   {slug(nouveauCorpus) && (
-                    <p className="text-[10px] text-white/30 font-mono">
+                    <p className="text-ui-10 text-white/30 font-mono">
                       systems/{slug(nouveauCorpus)}
                     </p>
                   )}
@@ -823,7 +823,7 @@ export const BrainstormOverlay: React.FC = () => {
             }`}>
               <FolderTree size={16} className={corpus.aCreer || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
               <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-white/20">
                   {t('session.forge_module.atelier.corpus_target')}
                   <span className="ml-2 text-white/40 normal-case tracking-normal font-normal">
                     ({t(`session.forge_module.atelier.corpus_reason_${corpus.raison}`)})
@@ -874,7 +874,7 @@ export const BrainstormOverlay: React.FC = () => {
                 <div className="max-w-4xl mx-auto px-6 pb-6 flex justify-center">
                   <button
                     onClick={handlePersonas}
-                    className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all"
+                    className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all"
                   >
                     <Users size={16} /> {t('session.forge_module.atelier.personas_button')}
                   </button>
@@ -903,7 +903,7 @@ export const BrainstormOverlay: React.FC = () => {
                    <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
                  </button>
                  <div className="text-right">
-                   <p className="text-[10px] text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.review_title')}</p>
+                   <p className="text-ui-10 text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.review_title')}</p>
                    <p className="text-xs text-amber-400/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
                  </div>
                </div>
@@ -936,7 +936,7 @@ export const BrainstormOverlay: React.FC = () => {
                        {t('session.forge_module.atelier.sections_title')}
                      </h4>
                      {resolutionEnCours && (
-                       <span className="text-[10px] font-black uppercase tracking-widest text-white/20 animate-pulse">
+                       <span className="text-ui-10 font-black uppercase tracking-widest text-white/20 animate-pulse">
                          {t('session.forge_module.atelier.sections_checking')}
                        </span>
                      )}
@@ -981,7 +981,7 @@ export const BrainstormOverlay: React.FC = () => {
                              <span
                                key={`${r.demande}-${idx}`}
                                title={r.entree && r.entree !== r.demande ? r.entree : undefined}
-                               className={`px-3 py-1.5 rounded-lg text-[11px] font-bold border ${
+                               className={`px-3 py-1.5 rounded-lg text-ui-11 font-bold border ${
                                  r.statut === 'exact'
                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80'
                                    : r.statut === 'approche'
@@ -1024,10 +1024,10 @@ export const BrainstormOverlay: React.FC = () => {
                )}
 
                <div className="bg-black/40 border border-white/5 rounded-[3rem] p-12 relative">
-                 <div className="absolute top-8 right-12 text-[10px] font-black uppercase tracking-widest text-white/10">Markdown Construct</div>
+                 <div className="absolute top-8 right-12 text-ui-10 font-black uppercase tracking-widest text-white/10">Markdown Construct</div>
                  <div className="prose prose-invert max-w-none">
                    <h1 className="text-4xl font-black uppercase tracking-tighter text-white font-display mb-4">{brainstormStore.activeCard.title}</h1>
-                   <p className="text-[10px] font-black uppercase tracking-widest text-white/20 mb-8">
+                   <p className="text-ui-10 font-black uppercase tracking-widest text-white/20 mb-8">
                      {t('session.forge_module.atelier.review_path')} <span className="text-purple-400/60">{cheminDeLaFiche}</span>
                    </p>
                    <div className="text-white/60 leading-relaxed font-sans text-base whitespace-pre-wrap">
@@ -1059,7 +1059,7 @@ export const BrainstormOverlay: React.FC = () => {
                    <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
                  </button>
                  <div className="text-right">
-                   <p className="text-[10px] text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.personas_title')}</p>
+                   <p className="text-ui-10 text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.personas_title')}</p>
                    <p className="text-xs text-amber-400/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
                  </div>
                </div>
@@ -1078,7 +1078,7 @@ export const BrainstormOverlay: React.FC = () => {
                  </div>
                )}
 
-               <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
+               <p className="text-ui-10 font-black uppercase tracking-widest text-white/20">
                  {t('session.forge_module.atelier.personas_path')}{' '}
                  <span className="text-purple-400/60">{corpus ? cheminDesPersonas(corpus) : ''}</span>
                </p>
@@ -1088,7 +1088,7 @@ export const BrainstormOverlay: React.FC = () => {
                    <div key={clef} className="bg-black/40 border border-white/5 rounded-[2rem] p-6 space-y-3">
                      <div className="flex items-center justify-between">
                        <h4 className="text-sm font-black uppercase tracking-widest text-purple-400 font-display">{clef}</h4>
-                       <span className="text-[10px] font-bold text-white/20">{texte.length}</span>
+                       <span className="text-ui-10 font-bold text-white/20">{texte.length}</span>
                      </div>
                      <p className="text-sm text-white/50 leading-relaxed">{texte}</p>
                    </div>
@@ -1131,7 +1131,7 @@ export const BrainstormOverlay: React.FC = () => {
                  <div className="flex gap-3">
                    <button
                      onClick={() => brainstormStore.reset()}
-                     className="px-6 py-3 text-white/30 hover:text-white/60 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                     className="px-6 py-3 text-white/30 hover:text-white/60 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all"
                    >
                      {t('session.forge_module.atelier.btn_finish')}
                    </button>
@@ -1147,7 +1147,7 @@ export const BrainstormOverlay: React.FC = () => {
                        setCurrentView('rule-workshop');
                        setActiveModule('dashboard');
                      }}
-                     className="px-6 py-3 text-accent/50 hover:text-accent rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
+                     className="px-6 py-3 text-accent/50 hover:text-accent rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all flex items-center gap-2"
                    >
                      <BookOpen size={14} />
                      {t('modules:session.header.grimoire_label')}
@@ -1163,7 +1163,7 @@ export const BrainstormOverlay: React.FC = () => {
                    <span className="flex flex-col items-start leading-tight">
                      {t('session.forge_module.atelier.btn_forge_next')}
                      {restantAForger > 0 && (
-                       <span className="text-[10px] font-bold text-white/50 normal-case tracking-normal">
+                       <span className="text-ui-10 font-bold text-white/50 normal-case tracking-normal">
                          {t('session.forge_module.atelier.remaining', { restant: restantAForger })}
                        </span>
                      )}

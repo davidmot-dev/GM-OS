@@ -121,7 +121,7 @@ const ImageDashboard: React.FC = () => {
                     <div className="grid grid-cols-2 gap-3">
                         <button
                             onClick={blackout}
-                            className="bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 hover:border-rose-500/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-[10px] tracking-[0.2em] group"
+                            className="bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 hover:border-rose-500/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
                             title={t('image.dashboard.blackout.targetTooltip')}
                         >
                             <div className="p-2 rounded-full bg-rose-500/10 group-hover:scale-110 transition-transform shadow-glow-rose">
@@ -131,7 +131,7 @@ const ImageDashboard: React.FC = () => {
                         </button>
                         <button
                             onClick={blackoutAll}
-                            className="bg-rose-600 hover:bg-rose-500 text-white font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-[10px] tracking-[0.2em] group"
+                            className="bg-rose-600 hover:bg-rose-500 text-white font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
                             title={t('image.dashboard.blackout.allTooltip')}
                         >
                             <div className="p-2 rounded-full bg-white/20 group-hover:scale-110 transition-transform shadow-lg">
@@ -143,7 +143,7 @@ const ImageDashboard: React.FC = () => {
 
                     <button
                         onClick={() => gmConfirm(t('image.dashboard.resetConfirm'), () => reset())}
-                        className="w-full bg-app-bg/60 border border-red-500/10 text-red-500/40 hover:bg-red-500/10 hover:text-red-500 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-[10px] tracking-widest uppercase hover:border-red-500/30 group"
+                        className="w-full bg-app-bg/60 border border-red-500/10 text-red-500/40 hover:bg-red-500/10 hover:text-red-500 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-widest uppercase hover:border-red-500/30 group"
                         title={t('image.dashboard.resetTooltip')}
                     >
                         <RotateCcw size={14} className="group-hover:-rotate-180 transition-transform duration-500" />
@@ -204,7 +204,7 @@ const ImageDashboard: React.FC = () => {
                 </div>
 
                 <div className="mt-auto pt-4 border-t border-app-border flex flex-col gap-3">
-                    <div className="flex justify-between items-center text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                    <div className="flex justify-between items-center text-ui-10 text-slate-500 uppercase tracking-widest font-bold">
                         <span>{t('image.sidebar.localStorage')}</span>
                         <span>{t('image.storage.itemsCount', { count: mediaList.length })}</span>
                     </div>
@@ -221,7 +221,7 @@ const ImageDashboard: React.FC = () => {
                     */}
                     {aRestituer > 0 && (
                         <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl space-y-2">
-                            <p className="text-[11px] text-emerald-300/80 leading-relaxed normal-case">
+                            <p className="text-ui-11 text-emerald-300/80 leading-relaxed normal-case">
                                 {aRestituer} média{aRestituer > 1 ? 's' : ''} présent
                                 {aRestituer > 1 ? 's' : ''} dans la sauvegarde et absent
                                 {aRestituer > 1 ? 's' : ''} d'ici.
@@ -230,7 +230,7 @@ const ImageDashboard: React.FC = () => {
                                 type="button"
                                 disabled={restauration}
                                 onClick={lancerLaRestauration}
-                                className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
+                                className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-ui-10 font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
                             >
                                 <RotateCcw size={13} />
                                 {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
@@ -250,7 +250,7 @@ const ImageDashboard: React.FC = () => {
                             <div className="flex bg-app-surface p-1 rounded-xl">
                                 <button
                                     onClick={() => setProjectionTarget('hub')}
-                                    className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${projectionTarget === 'hub'
+                                    className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === 'hub'
                                         ? 'bg-accent text-slate-950 shadow-glow-accent'
                                         : 'text-slate-500 hover:text-white'
                                         }`}
@@ -261,7 +261,7 @@ const ImageDashboard: React.FC = () => {
                                     <button
                                         key={d.id}
                                         onClick={() => setProjectionTarget(d.id)}
-                                        className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${projectionTarget === d.id
+                                        className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === d.id
                                             ? 'bg-accent text-slate-950 shadow-glow-accent'
                                             : 'text-slate-500 hover:text-white'
                                             }`}

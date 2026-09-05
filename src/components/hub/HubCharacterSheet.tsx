@@ -145,7 +145,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 <button 
                     onClick={onClose}
                     title="Fermer la fiche"
-                    className="flex items-center gap-2 px-4 py-2 bg-app-surface/40 border border-app-border rounded-2xl text-[10px] font-black text-app-text/40 uppercase tracking-widest hover:text-app-text hover:bg-app-surface/60 transition-all group"
+                    className="flex items-center gap-2 px-4 py-2 bg-app-surface/40 border border-app-border rounded-2xl text-ui-10 font-black text-app-text/40 uppercase tracking-widest hover:text-app-text hover:bg-app-surface/60 transition-all group"
                 >
                     <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Retour
                 </button>
@@ -155,7 +155,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     <button
                         onClick={() => { setSurLaFiche(v => !v); setFicheDejaOuverte(true); }}
                         title={surLaFiche ? 'Revenir à la vue synthétique' : 'Afficher ma fiche'}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
                             surLaFiche
                                 ? 'bg-accent/20 border-accent/40 text-accent'
                                 : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
@@ -168,12 +168,12 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 <div className="text-right">
                     <h2 className="text-3xl font-black text-app-text uppercase tracking-tighter leading-none mb-1">{character.name}</h2>
                     <div className="flex items-center justify-end gap-2">
-                        <div className="px-2 py-0.5 bg-accent/10 border border-accent/30 rounded text-[9px] font-black text-accent uppercase tracking-widest flex items-center gap-1.5 shadow-glow-accent/5">
+                        <div className="px-2 py-0.5 bg-accent/10 border border-accent/30 rounded text-ui-9 font-black text-accent uppercase tracking-widest flex items-center gap-1.5 shadow-glow-accent/5">
                             <Shield size={10} />
                             SYSTÈME : {template.name}
                         </div>
                         <div className="w-1 h-1 rounded-full bg-app-text/20" />
-                        <span className="text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{character.classRace || 'Agent Nexus'}</span>
+                        <span className="text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{character.classRace || 'Agent Nexus'}</span>
                     </div>
                 </div>
             </div>
@@ -311,7 +311,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                         const value = character.sheetData?.[field.id] ?? field.defaultValue;
                                         return (
                                             <div key={field.id} className="p-4 bg-app-surface/40 border border-app-border/10 rounded-2xl">
-                                                <span className="text-[9px] font-black text-app-text/30 uppercase tracking-widest">{field.label}</span>
+                                                <span className="text-ui-9 font-black text-app-text/30 uppercase tracking-widest">{field.label}</span>
                                                 {field.type === 'gauge' ? (
                                                     <div className="space-y-2 mt-1">
                                                         <span className="text-lg font-black text-app-text font-mono">{String(value)}</span>
@@ -385,7 +385,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
             <div className="mt-auto pt-6 flex items-center justify-between border-t border-app-border/10">
                 <div className="flex items-center gap-3 opacity-30">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-app-text">Liaison Active</span>
+                    <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-app-text">Liaison Active</span>
                 </div>
                 <Layout size={12} className="text-app-text/10" />
             </div>

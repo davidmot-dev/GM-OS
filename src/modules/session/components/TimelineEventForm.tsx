@@ -72,7 +72,7 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.title_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.title_label')}</label>
                     <input
                         required
                         type="text"
@@ -83,7 +83,7 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.date_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.date_label')}</label>
                     <input
                         type="text"
                         value={date}
@@ -96,14 +96,14 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
 
 
             <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.type_label')}</label>
+                <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.type_label')}</label>
                 <div className="flex flex-wrap gap-2">
                     {(['session', 'combat', 'quest', 'lore', 'major', 'minor', 'discovery'] as const).map(itemType => (
                         <button
                             key={itemType}
                             type="button"
                             onClick={() => setType(itemType as any)}
-                            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                            className={`px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border transition-all ${
                                 type === itemType 
                                     ? 'bg-accent/10 border-accent/40 text-accent shadow-glow-accent/10' 
                                     : 'bg-app-bg/20 border-app-border text-app-text/40 hover:text-app-text'
@@ -117,7 +117,7 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
 
 
             <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.desc_label')}</label>
+                <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.desc_label')}</label>
                 <textarea
                     required
                     value={description}
@@ -131,7 +131,7 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.npc_detail.sections.maps')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.npc_detail.sections.maps')}</label>
                     <select
                         title={t('modules:session.npc_detail.sections.maps')}
                         value={locationId}
@@ -146,14 +146,14 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.entities_label')}</label>
+                    <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.entities_label')}</label>
                     <div className="max-h-32 overflow-y-auto border border-app-border rounded-xl p-2 space-y-1 custom-scrollbar bg-app-bg/20">
                         {entities.filter(e => e.campaignId === activeCampaignId).map(entity => (
                             <button
                                 key={entity.id}
                                 type="button"
                                 onClick={() => toggleEntity(entity.id)}
-                                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all ${
+                                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-ui-10 font-bold transition-all ${
                                     involvedEntityIds.includes(entity.id)
                                         ? 'bg-accent/10 text-accent'
                                         : 'text-app-text/40 hover:bg-app-surface/40 hover:text-app-text'

@@ -97,7 +97,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                     <img src={resolvedAvatar || selectedNode.avatar} alt={selectedNode.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                    <span className="text-neonCyan text-[10px] font-black uppercase tracking-[0.3em] mb-1 block">
+                    <span className="text-neonCyan text-ui-10 font-black uppercase tracking-[0.3em] mb-1 block">
                         {selectedNode.type === 'pc' ? t('modules:session.social_graph.node_detail.type_pj') : t('modules:session.social_graph.node_detail.type_npc')}
                     </span>
 
@@ -123,7 +123,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                     onChange={(e) => setTempFaction(e.target.value)}
                                     onBlur={onSaveFaction}
                                     onKeyDown={(e) => e.key === 'Enter' && onSaveFaction()}
-                                    className="bg-black/40 border border-neonCyan/30 rounded px-2 py-0.5 text-[9px] text-neonCyan uppercase font-black tracking-wider outline-none focus:border-neonCyan"
+                                    className="bg-black/40 border border-neonCyan/30 rounded px-2 py-0.5 text-ui-9 text-neonCyan uppercase font-black tracking-wider outline-none focus:border-neonCyan"
                                 />
                             </div>
                         ) : (
@@ -132,7 +132,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                     setTempFaction(selectedNode.faction || '');
                                     setIsEditingFaction(true);
                                 }}
-                                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-accent/20 border border-accent/30 text-accent text-[9px] font-black uppercase tracking-wider hover:bg-accent/30 transition-all font-display"
+                                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-accent/20 border border-accent/30 text-accent text-ui-9 font-black uppercase tracking-wider hover:bg-accent/30 transition-all font-display"
                             >
                                 <Shield size={10} />
                                 {selectedNode.faction || t('modules:session.social_graph.node_detail.faction_label')}
@@ -146,13 +146,13 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
             <div className="flex gap-2 mb-8 border-b border-white/10 pb-4">
                 <button 
                     onClick={() => setIsEditing(false)}
-                    className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!isEditing ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}
+                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${!isEditing ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}
                 >
                     {t('modules:session.social_graph.node_detail.tabs.relations')}
                 </button>
                 <button 
                     onClick={() => setIsEditing(true)}
-                    className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}
+                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}
                 >
                     {t('modules:session.social_graph.node_detail.tabs.edit')}
                 </button>
@@ -164,7 +164,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                     <section>
                         <div className="flex items-center gap-2 mb-3 text-slate-400">
                             <Info size={14} />
-                            <h3 className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.relations_title')}</h3>
+                            <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.relations_title')}</h3>
                         </div>
 
                         <div className="space-y-3">
@@ -182,19 +182,19 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                                 <div className="flex items-center gap-1.5 mt-1">
                                                     {isOutbound ? (
                                                         <>
-                                                            <span className="text-[8px] text-slate-500 font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
+                                                            <span className="text-ui-8 text-slate-500 font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
                                                             <MoveRight size={10} className="text-neonCyan" />
                                                         </>
                                                     ) : (
                                                         <>
                                                             <MoveLeft size={10} className="text-accent" />
-                                                            <span className="text-[8px] text-slate-500 font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
+                                                            <span className="text-ui-8 text-slate-500 font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
                                                         </>
                                                     )}
                                                 </div>
 
                                             </div>
-                                            <span className="text-[9px] font-black uppercase px-2 py-1 rounded-md border shrink-0" style={{ color: getRelationColor(rel.type), borderColor: `${getRelationColor(rel.type)}44`, backgroundColor: `${getRelationColor(rel.type)}11` }}>
+                                            <span className="text-ui-9 font-black uppercase px-2 py-1 rounded-md border shrink-0" style={{ color: getRelationColor(rel.type), borderColor: `${getRelationColor(rel.type)}44`, backgroundColor: `${getRelationColor(rel.type)}11` }}>
                                                 {libelleDeRelation(rel, t)}
                                             </span>
 
@@ -212,7 +212,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                         <div className="space-y-4 py-4">
                             <div className="flex items-center gap-2 text-slate-400">
                                 <Trash2 size={14} />
-                                <h3 className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.manage_existing')}</h3>
+                                <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.manage_existing')}</h3>
                             </div>
                             <div className="space-y-2">
                                 {activeRelations.map((rel, i) => {
@@ -227,8 +227,8 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                                     {isOutbound ? <MoveRight size={14} /> : <MoveLeft size={14} />}
                                                 </div>
                                                 <div>
-                                                    <div className="text-[11px] font-bold text-white">{otherNode?.name}</div>
-                                                    <div className="text-[9px] uppercase tracking-wider opacity-60" style={{ color: getRelationColor(rel.type) }}>{libelleDeRelation(rel, t)}</div>
+                                                    <div className="text-ui-11 font-bold text-white">{otherNode?.name}</div>
+                                                    <div className="text-ui-9 uppercase tracking-wider opacity-60" style={{ color: getRelationColor(rel.type) }}>{libelleDeRelation(rel, t)}</div>
                                                 </div>
 
                                             </div>

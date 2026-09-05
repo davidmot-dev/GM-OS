@@ -52,7 +52,7 @@ export const ClockDriver: React.FC<ClockDriverProps> = ({ filled, total }) => {
         
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-[12px] font-black font-display text-white mt-1">{filled}<span className="opacity-40 text-[10px]">/</span>{total}</span>
+            <span className="text-ui-12 font-black font-display text-white mt-1">{filled}<span className="opacity-40 text-ui-10">/</span>{total}</span>
         </div>
       </div>
     </div>

@@ -77,7 +77,7 @@ const PanneauDesFiches: React.FC<{
                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-app-text/40 flex items-center gap-2">
                         <FileText size={12} /> Fiches du corpus
                     </h3>
-                    <p className="text-[10px] text-app-text/40 mt-1">
+                    <p className="text-ui-10 text-app-text/40 mt-1">
                         {chargement ? 'Lecture du disque…' : `${fiches.length} fiche${fiches.length > 1 ? 's' : ''} dans rules/`}
                     </p>
                 </div>
@@ -98,7 +98,7 @@ const PanneauDesFiches: React.FC<{
             {doublons > 0 && (
                 <div className="flex items-start gap-2 bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
                     <AlertTriangle size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                    <p className="text-[11px] text-amber-200/70 leading-relaxed">
+                    <p className="text-ui-11 text-amber-200/70 leading-relaxed">
                         {doublons} fiches portent un sujet que porte déjà une autre. L'Oracle les
                         reçoit toutes. Vérifiez laquelle garder — elles ne sont pas forcément
                         redondantes : deux fiches peuvent couvrir deux aspects d'un même sujet.
@@ -117,15 +117,15 @@ const PanneauDesFiches: React.FC<{
                         }`}
                     >
                         <div className="min-w-0">
-                            <p className="text-[11px] font-mono text-app-text/70 truncate">{fiche.nom}</p>
-                            <p className="text-[10px] text-app-text/40 truncate">
+                            <p className="text-ui-11 font-mono text-app-text/70 truncate">{fiche.nom}</p>
+                            <p className="text-ui-10 text-app-text/40 truncate">
                                 {fiche.sujet ?? <span className="italic">aucun sujet — hors de tout groupe</span>}
                             </p>
                         </div>
                         <button
                             onClick={() => archiver(fiche)}
                             title="Écarter vers rules-v1/"
-                            className="flex items-center gap-1.5 px-3 py-1.5 shrink-0 rounded-lg border border-app-border/30 text-[9px] font-black uppercase tracking-widest text-app-text/40 hover:text-amber-300 hover:border-amber-500/40 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-1.5 shrink-0 rounded-lg border border-app-border/30 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-amber-300 hover:border-amber-500/40 transition-all"
                         >
                             <Archive size={11} /> Écarter
                         </button>
@@ -133,7 +133,7 @@ const PanneauDesFiches: React.FC<{
                 ))}
 
                 {!chargement && fiches.length === 0 && (
-                    <p className="text-[11px] text-app-text/40 leading-relaxed">
+                    <p className="text-ui-11 text-app-text/40 leading-relaxed">
                         Ce corpus n'a aucune fiche publiée. L'Atelier de Règles les produit, une par
                         sujet du canevas.
                     </p>

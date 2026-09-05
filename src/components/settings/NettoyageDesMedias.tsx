@@ -71,7 +71,7 @@ const NettoyageDesMedias: React.FC = () => {
                         {t('settings:maintenance.media_cleanup_desc')}
                     </p>
                     {dernier && (
-                        <p className="text-[10px] text-accent font-black uppercase mt-2">
+                        <p className="text-ui-10 text-accent font-black uppercase mt-2">
                             {t('settings:maintenance.media_cleanup_last', {
                                 count: dernier.deletedCount,
                                 size: enMo(dernier.savedBytes),
@@ -94,7 +94,7 @@ const NettoyageDesMedias: React.FC = () => {
             {apercu && !apercu.fiable && (
                 <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                     <AlertTriangle size={16} className="text-amber-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                    <p className="text-ui-11 text-amber-200/80 leading-relaxed">
                         {t('settings:maintenance.media_cleanup_unreliable', {
                             modules: apercu.modulesEnEchec.join(', '),
                         })}
@@ -103,14 +103,14 @@ const NettoyageDesMedias: React.FC = () => {
             )}
 
             {apercu && apercu.fiable && apercu.aSupprimer.length === 0 && (
-                <p className="text-[11px] text-app-text/40 italic">
+                <p className="text-ui-11 text-app-text/40 italic">
                     {t('settings:maintenance.media_cleanup_none')}
                 </p>
             )}
 
             {apercu && apercu.fiable && apercu.aSupprimer.length > 0 && (
                 <div className="flex flex-col gap-3 p-4 rounded-xl bg-app-bg/40 border border-app-border/20">
-                    <p className="text-[11px] font-black uppercase tracking-widest text-app-text/60">
+                    <p className="text-ui-11 font-black uppercase tracking-widest text-app-text/60">
                         {t('settings:maintenance.media_cleanup_found', {
                             count: apercu.aSupprimer.length,
                             size: enMo(apercu.octets),
@@ -121,7 +121,7 @@ const NettoyageDesMedias: React.FC = () => {
                         {apercu.aSupprimer.slice(0, NOMMES).map(({ media }) => (
                             <li
                                 key={media.id}
-                                className="flex items-center justify-between gap-3 text-[11px] text-app-text/50"
+                                className="flex items-center justify-between gap-3 text-ui-11 text-app-text/50"
                             >
                                 <span className="truncate">{media.name}</span>
                                 <span className="tabular-nums text-app-text/25 flex-shrink-0">
@@ -130,7 +130,7 @@ const NettoyageDesMedias: React.FC = () => {
                             </li>
                         ))}
                         {apercu.aSupprimer.length > NOMMES && (
-                            <li className="text-[11px] text-app-text/25 italic">
+                            <li className="text-ui-11 text-app-text/25 italic">
                                 {t('settings:maintenance.media_cleanup_more', {
                                     count: apercu.aSupprimer.length - NOMMES,
                                 })}
@@ -139,7 +139,7 @@ const NettoyageDesMedias: React.FC = () => {
                     </ul>
 
                     {apercu.epargnes.length > 0 && (
-                        <p className="flex items-center gap-2 text-[10px] text-app-text/30">
+                        <p className="flex items-center gap-2 text-ui-10 text-app-text/30">
                             <Lock size={11} />
                             {t('settings:maintenance.media_cleanup_spared', {
                                 count: apercu.epargnes.length,
@@ -151,7 +151,7 @@ const NettoyageDesMedias: React.FC = () => {
                         <button
                             onClick={supprimer}
                             disabled={enSuppression}
-                            className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                            className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 px-5 py-2.5 rounded-xl text-ui-11 font-black uppercase tracking-widest transition-all disabled:opacity-50"
                         >
                             {enSuppression ? (
                                 <RefreshCw size={14} className="animate-spin" />
@@ -167,7 +167,7 @@ const NettoyageDesMedias: React.FC = () => {
                         <button
                             onClick={() => setApercu(null)}
                             disabled={enSuppression}
-                            className="text-[11px] font-bold uppercase tracking-widest text-app-text/30 hover:text-app-text/60 transition-colors disabled:opacity-50"
+                            className="text-ui-11 font-bold uppercase tracking-widest text-app-text/30 hover:text-app-text/60 transition-colors disabled:opacity-50"
                         >
                             {t('settings:maintenance.media_cleanup_cancel')}
                         </button>

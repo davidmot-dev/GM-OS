@@ -55,7 +55,7 @@ const WebDashboard: React.FC = () => {
                     <div className="flex bg-app-bg/50 p-1 rounded-xl border border-app-border focus-within:border-accent/30 transition-all">
                         <button
                             onClick={importLinks}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-[10px] font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-ui-10 font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
                             title="Importer une liste JSON"
                         >
                             <FileUp size={14} className="group-hover:scale-110 transition-transform" />
@@ -63,7 +63,7 @@ const WebDashboard: React.FC = () => {
                         </button>
                         <button
                             onClick={exportLinks}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-[10px] font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-ui-10 font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
                             title="Exporter la liste en JSON"
                         >
                             <FileDown size={14} className="group-hover:scale-110 transition-transform" />
@@ -75,7 +75,7 @@ const WebDashboard: React.FC = () => {
 
                     <button
                         onClick={clearAll}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/40 border border-red-900/30 transition-all text-[10px] font-bold text-red-400 uppercase tracking-widest group"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/40 border border-red-900/30 transition-all text-ui-10 font-bold text-red-400 uppercase tracking-widest group"
                         title="Vider la bibliothèque"
                     >
                         <Trash2 size={14} className="group-hover:scale-110 transition-transform" />
@@ -138,7 +138,7 @@ const WebDashboard: React.FC = () => {
                                 <div className="w-12 h-12 rounded-full flex items-center justify-center bg-app-surface border border-app-border group-hover:bg-app-surface/80 group-hover:border-accent/30 transition-colors">
                                     <Plus size={24} className="text-slate-600 group-hover:text-slate-300" />
                                 </div>
-                                <span className="mt-4 text-[10px] font-bold text-slate-500 group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">Add Link</span>
+                                <span className="mt-4 text-ui-10 font-bold text-slate-500 group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">Add Link</span>
                             </button>
                         </div>
                     )}
@@ -146,7 +146,7 @@ const WebDashboard: React.FC = () => {
             </main>
 
             {/* Footer status bar */}
-            <footer className="h-10 border-t border-app-border bg-app-surface/80 backdrop-blur-md px-6 flex items-center justify-between text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+            <footer className="h-10 border-t border-app-border bg-app-surface/80 backdrop-blur-md px-6 flex items-center justify-between text-ui-10 font-mono text-slate-500 uppercase tracking-widest">
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 pr-4 border-r border-app-border">
                         <div className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-glow-accent"></div>

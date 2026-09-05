@@ -308,7 +308,7 @@ const NPCCard: React.FC = () => {
 
                     {currentEntity?.isDead && (
                         <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
-                            <div className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-rose-900/50 uppercase tracking-tighter rotate-[-10deg] border border-rose-400/50">
+                            <div className="bg-rose-600 text-white text-ui-10 font-black px-2 py-0.5 rounded shadow-lg shadow-rose-900/50 uppercase tracking-tighter rotate-[-10deg] border border-rose-400/50">
                                 {t('npc.card.dead')}
                             </div>
                         </div>
@@ -361,7 +361,7 @@ const NPCCard: React.FC = () => {
                             const profil = await generateVoiceProfile(depuisUnPnjDeNpcOs(currentEntity));
                             if (profil) setVoiceProfile(currentEntity.id, profil);
                         }}
-                        className="text-[10px] uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"
+                        className="text-ui-10 uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"
                         title={t('npc.card.voice_gen_tooltip')}
                     >
                         <Sparkles size={10} />
@@ -378,14 +378,14 @@ const NPCCard: React.FC = () => {
                                 appliquerProfil(currentEntity.voiceProfile!);
                                 gmToast(`Voix de ${currentEntity.name} rappelée.`, 'info');
                             }}
-                            className="text-[10px] uppercase font-bold tracking-widest text-cyan-300/80 px-2 py-1 border border-cyan-500/20 rounded bg-cyan-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-cyan-500/20 transition-colors"
+                            className="text-ui-10 uppercase font-bold tracking-widest text-cyan-300/80 px-2 py-1 border border-cyan-500/20 rounded bg-cyan-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-cyan-500/20 transition-colors"
                             title="Reposer ce profil vocal sur le rack"
                         >
                             <AudioLines size={10} />
                             Sa voix
                         </button>
                     )}
-                    <div className="text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
+                    <div className="text-ui-10 uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
                         {t(`npc.categories.${currentEntity.category}`)}
                     </div>
                 </div>
@@ -400,7 +400,7 @@ const NPCCard: React.FC = () => {
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-4">
                     {Object.entries(currentEntity.fields).map(([key, value]) => (
                         <div key={key} className="flex flex-col">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-tighter">{key}</span>
+                            <span className="text-ui-10 uppercase font-bold text-slate-500 tracking-tighter">{key}</span>
                             <span className="text-slate-200 font-medium leading-tight">{value}</span>
                         </div>
                     ))}

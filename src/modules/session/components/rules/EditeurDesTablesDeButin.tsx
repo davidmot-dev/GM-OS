@@ -86,18 +86,18 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
         majEntree(tIdx, eIdx, { metadata: { ...(entree.metadata || {}), ...patch } });
     };
 
-    const champ = 'w-full bg-black/20 px-2 py-1.5 rounded border border-white/5 text-[10px] text-app-text outline-none focus:border-amber-500/40';
-    const etiquette = 'text-[7px] font-bold uppercase text-app-text/20 mb-0.5 block';
+    const champ = 'w-full bg-black/20 px-2 py-1.5 rounded border border-white/5 text-ui-10 text-app-text outline-none focus:border-amber-500/40';
+    const etiquette = 'text-ui-7 font-bold uppercase text-app-text/20 mb-0.5 block';
 
     return (
         <div className="space-y-8">
             {/* ─── Le vocabulaire du jeu ─────────────────────────────────── */}
             <div className="p-6 bg-app-surface/20 border border-app-border/10 rounded-[2rem] space-y-5">
                 <div className="space-y-1">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-400/60">
+                    <h3 className="text-ui-10 font-black uppercase tracking-[0.25em] text-amber-400/60">
                         {t('modules:session.rule_engine_editor.loot.vocabulary_title')}
                     </h3>
-                    <p className="text-[10px] text-app-text/40 leading-relaxed max-w-2xl">
+                    <p className="text-ui-10 text-app-text/40 leading-relaxed max-w-2xl">
                         {t('modules:session.rule_engine_editor.loot.vocabulary_hint')}
                     </p>
                 </div>
@@ -126,14 +126,14 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                         raretes: [...(driver.vocabulaireDuButin?.raretes || raretes), { id: '', label: '' }],
                                     },
                                 })}
-                                className="flex items-center gap-1 text-[9px] font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300"
+                                className="flex items-center gap-1 text-ui-9 font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300"
                             >
                                 <Plus size={10} /> {t('modules:session.rule_engine_editor.loot.add_rarity_btn')}
                             </button>
                         </div>
 
                         {(driver.vocabulaireDuButin?.raretes || []).length === 0 ? (
-                            <p className="text-[9px] text-app-text/30 italic">
+                            <p className="text-ui-9 text-app-text/30 italic">
                                 {t('modules:session.rule_engine_editor.loot.rarities_default', {
                                     liste: raretes.map(p => p.label).join(' · '),
                                 })}
@@ -180,7 +180,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                         </button>
                                     </div>
                                 ))}
-                                <p className="text-[8px] text-app-text/25 italic">
+                                <p className="text-ui-8 text-app-text/25 italic">
                                     {t('modules:session.rule_engine_editor.loot.rarities_order_hint')}
                                 </p>
                             </div>
@@ -201,7 +201,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                             entries: [],
                         }],
                     })}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all font-black text-[10px] uppercase tracking-widest"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all font-black text-ui-10 uppercase tracking-widest"
                 >
                     <Plus size={14} /> {t('modules:session.rule_engine_editor.loot.create_btn')}
                 </button>
@@ -225,10 +225,10 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                         <div className="grid grid-cols-12 gap-8 mb-8 relative z-10">
                             <div className="col-span-6">
                                 <div className="flex items-center justify-between mb-2 px-1">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60">
+                                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400/60">
                                         {t('modules:session.rule_engine_editor.loot.table_name_label')}
                                     </label>
-                                    <span className="text-[8px] font-mono text-app-text/20 bg-black/20 px-2 py-0.5 rounded border border-white/5 select-all">
+                                    <span className="text-ui-8 font-mono text-app-text/20 bg-black/20 px-2 py-0.5 rounded border border-white/5 select-all">
                                         {t('common:id_label')}: {table.id}
                                     </span>
                                 </div>
@@ -241,7 +241,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                             </div>
 
                             <div className="col-span-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">
+                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">
                                     {t('modules:session.rule_engine_editor.loot.rolls_label')}
                                 </label>
                                 <input
@@ -261,7 +261,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                 sa phrase : ce que le tirage fait est écrit.
                             */}
                             <div className="col-span-4">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">
+                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">
                                     {t('modules:session.rule_engine_editor.loot.mode_label')}
                                 </label>
                                 <div className="grid grid-cols-2 gap-2">
@@ -275,10 +275,10 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                     : 'bg-app-bg/40 border-app-border/10 text-app-text/40 hover:text-app-text/70'
                                             }`}
                                         >
-                                            <span className="block text-[9px] font-black uppercase tracking-widest">
+                                            <span className="block text-ui-9 font-black uppercase tracking-widest">
                                                 {t(`modules:session.rule_engine_editor.loot.modes.${mode}`)}
                                             </span>
-                                            <span className="block text-[8px] leading-tight opacity-60 mt-0.5">
+                                            <span className="block text-ui-8 leading-tight opacity-60 mt-0.5">
                                                 {t(`modules:session.rule_engine_editor.loot.modes.${mode}_hint`)}
                                             </span>
                                         </button>
@@ -289,7 +289,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
 
                         <div className="space-y-4 relative z-10">
                             <div className="flex items-center justify-between px-2">
-                                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-app-text/30">
+                                <span className="text-ui-9 font-black uppercase tracking-[0.3em] text-app-text/30">
                                     {t('modules:session.rule_engine_editor.loot.entries_title')}
                                 </span>
                                 <button
@@ -306,7 +306,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                         };
                                         onUpdate({ lootTables: suivantes });
                                     }}
-                                    className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300 transition-colors"
+                                    className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300 transition-colors"
                                 >
                                     <Plus size={12} /> {t('modules:session.rule_engine_editor.loot.add_entry_btn')}
                                 </button>
@@ -458,7 +458,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                         </select>
                                                     </div>
                                                     <div className="col-span-12">
-                                                        <p className="text-[8px] text-app-text/25 italic leading-relaxed">
+                                                        <p className="text-ui-8 text-app-text/25 italic leading-relaxed">
                                                             {t('modules:session.rule_engine_editor.loot.oracle_hint')}
                                                         </p>
                                                     </div>

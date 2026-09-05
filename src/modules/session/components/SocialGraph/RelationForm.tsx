@@ -37,7 +37,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4">
                 <div className="flex items-center gap-2 text-neonCyan">
                     <Plus size={14} />
-                    <h3 className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.social_graph.relation_form.add_btn')}</h3>
+                    <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.relation_form.add_btn')}</h3>
                 </div>
 
                 
@@ -80,7 +80,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
                         alliance pour la physique, et porte son nom pour l'œil.
                     */}
                     <div className="space-y-1">
-                        <label className="text-[9px] font-bold text-slate-500 uppercase px-1">{t('modules:session.social_graph.relation_form.libelle_label')}</label>
+                        <label className="text-ui-9 font-bold text-slate-500 uppercase px-1">{t('modules:session.social_graph.relation_form.libelle_label')}</label>
                         <input
                             type="text"
                             placeholder={t('modules:session.social_graph.relation_form.libelle_placeholder')}
@@ -92,7 +92,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
 
 
                     <div className="space-y-1">
-                        <label className="text-[9px] font-bold text-slate-500 uppercase px-1">{t('modules:session.social_graph.relation_form.desc_label')}</label>
+                        <label className="text-ui-9 font-bold text-slate-500 uppercase px-1">{t('modules:session.social_graph.relation_form.desc_label')}</label>
                         <input 
                             type="text"
                             placeholder={t('modules:session.social_graph.relation_form.desc_placeholder')}
@@ -106,7 +106,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
                     <button 
                         onClick={onAddRelation}
                         disabled={!newRelTarget}
-                        className="w-full py-3 bg-neonCyan/20 border border-neonCyan/30 text-neonCyan text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-neonCyan hover:text-black transition-all disabled:opacity-30 disabled:hover:bg-neonCyan/20 disabled:hover:text-neonCyan"
+                        className="w-full py-3 bg-neonCyan/20 border border-neonCyan/30 text-neonCyan text-ui-10 font-black uppercase tracking-widest rounded-xl hover:bg-neonCyan hover:text-black transition-all disabled:opacity-30 disabled:hover:bg-neonCyan/20 disabled:hover:text-neonCyan"
                     >
                         {t('modules:session.social_graph.relation_form.add_btn')}
                     </button>

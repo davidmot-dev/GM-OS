@@ -110,7 +110,7 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             )}
                         />
 
-                        <div className="mt-2 text-[10px] font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
+                        <div className="mt-2 text-ui-10 font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
                             <span className="w-4 h-px bg-white/10" />
                             CLIQUER POUR FERMER
                             <span className="w-4 h-px bg-white/10" />

@@ -480,7 +480,7 @@ const DiceBoard: React.FC = () => {
 
                     {showSettings && (
                         <div className="mb-6 p-4 rounded-xl bg-app-bg/40 border border-app-border animate-in fade-in slide-in-from-top-2">
-                             <h4 className="text-[10px] font-black text-app-text/40 uppercase tracking-widest mb-3">{t('dice.settings.title')}</h4>
+                             <h4 className="text-ui-10 font-black text-app-text/40 uppercase tracking-widest mb-3">{t('dice.settings.title')}</h4>
                              <div className="flex flex-wrap gap-6">
                                 <label className="flex items-center gap-3 cursor-pointer group">
                                     <div className="relative">
@@ -495,7 +495,7 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-xs font-bold text-app-text/80 group-hover:text-app-text">{t('dice.settings.enable_3d')}</span>
-                                        <span className="text-[9px] text-app-text/40">{t('dice.settings.enable_3d_desc')}</span>
+                                        <span className="text-ui-9 text-app-text/40">{t('dice.settings.enable_3d_desc')}</span>
                                     </div>
                                 </label>
                              </div>
@@ -561,7 +561,7 @@ const DiceBoard: React.FC = () => {
                                                 { cle: 'equipement', titre: 'Équipement', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
                                             ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
                                                 <div key={cle} className="flex flex-1 min-w-[8rem] bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
-                                                    <span className="bg-app-surface text-app-text/60 text-[10px] px-2 flex items-center border-r border-app-border uppercase tracking-wider">
+                                                    <span className="bg-app-surface text-app-text/60 text-ui-10 px-2 flex items-center border-r border-app-border uppercase tracking-wider">
                                                         {titre}
                                                     </span>
                                                     <select
@@ -592,7 +592,7 @@ const DiceBoard: React.FC = () => {
                                                     key={cle}
                                                     onClick={() => setModificateurEchelonne(cle)}
                                                     aria-pressed={modificateurEchelonne === cle}
-                                                    className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-widest transition-all ${modificateurEchelonne === cle
+                                                    className={`px-3 py-1.5 rounded-lg border text-ui-10 font-bold uppercase tracking-widest transition-all ${modificateurEchelonne === cle
                                                         ? 'bg-accent/20 border-accent/60 text-accent'
                                                         : 'bg-app-bg border-app-border text-app-text/50 hover:text-app-text'}`}
                                                 >
@@ -600,7 +600,7 @@ const DiceBoard: React.FC = () => {
                                                 </button>
                                             ))}
 
-                                            <span className="text-[11px] font-mono text-app-text/60 ml-auto">
+                                            <span className="text-ui-11 font-mono text-app-text/60 ml-auto">
                                                 {poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ') || '—'}
                                                 {facesDeLEquipement !== null && ` + D${facesDeLEquipement}`}
                                             </span>
@@ -614,7 +614,7 @@ const DiceBoard: React.FC = () => {
                                           quelque chose, elle le dit.
                                         */}
                                         {poigneeEchelonnee.remarques.map((remarque, i) => (
-                                            <p key={i} className="text-[10px] italic text-amber-500/80">{remarque}</p>
+                                            <p key={i} className="text-ui-10 italic text-amber-500/80">{remarque}</p>
                                         ))}
                                     </div>
                                 ) : mode === 'yze' ? (
@@ -804,7 +804,7 @@ const DiceBoard: React.FC = () => {
                                     className="px-4 py-2 hover:bg-app-surface transition-colors flex flex-col items-start"
                                 >
                                     <span className="text-sm font-semibold text-app-text">{t(qr.label)}</span>
-                                    <span className="text-[10px] text-accent font-mono tracking-wider">{qr.formula}</span>
+                                    <span className="text-ui-10 text-accent font-mono tracking-wider">{qr.formula}</span>
                                 </button>
                                 <button onClick={() => removeQuickRoll(qr.id)} title={t('common:actions.delete') + " " + t(qr.label)} className="px-2 self-stretch hover:bg-rose-500/20 text-app-text/50 hover:text-rose-500 transition-colors">
                                     <X size={14} />
@@ -828,7 +828,7 @@ const DiceBoard: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3 mb-3">
                             <div className="space-y-1">
-                                <label className="text-[10px] text-app-text/40 uppercase">{t('dice.tactical.attacker')}</label>
+                                <label className="text-ui-10 text-app-text/40 uppercase">{t('dice.tactical.attacker')}</label>
                                 <select 
                                     value={lastSelectedTokenId || ''} 
                                     onChange={e => setLastSelectedTokenId(e.target.value)}
@@ -840,7 +840,7 @@ const DiceBoard: React.FC = () => {
                                 </select>
                             </div>
                             <div className="space-y-1">
-                                <label className="text-[10px] text-app-text/40 uppercase">{t('dice.tactical.target')}</label>
+                                <label className="text-ui-10 text-app-text/40 uppercase">{t('dice.tactical.target')}</label>
                                 <select 
                                     value={targetTokenId || ''} 
                                     onChange={e => setTargetTokenId(e.target.value)}
@@ -861,11 +861,11 @@ const DiceBoard: React.FC = () => {
                                 return (
                                     <div className="bg-app-bg/40 rounded-xl p-3 border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] text-accent font-bold uppercase">{t('dice.tactical.range_category', { category: range.category })}</span>
+                                            <span className="text-ui-10 text-accent font-bold uppercase">{t('dice.tactical.range_category', { category: range.category })}</span>
                                             <span className="text-xs text-app-text/80">{t('dice.tactical.distance', { units: range.distanceUnits, px: Math.round(range.distancePx) })}</span>
                                         </div>
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[10px] text-app-text/40 uppercase">{t('dice.inputs.mod')}</span>
+                                            <span className="text-ui-10 text-app-text/40 uppercase">{t('dice.inputs.mod')}</span>
                                             <button 
                                                 onClick={() => setModifier(range.modifier)}
                                                 className="text-sm font-black text-accent hover:text-accent/80 transition-colors bg-accent/10 px-2 py-0.5 rounded border border-accent/30 flex items-center gap-1"
@@ -880,11 +880,11 @@ const DiceBoard: React.FC = () => {
                             return null;
                         })()}
                         {!lastSelectedTokenId || !targetTokenId ? (
-                            <div className="text-[10px] text-app-text/30 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
+                            <div className="text-ui-10 text-app-text/30 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
                                 <Info size={12} /> {t('dice.tactical.hint')}
                             </div>
                         ) : lastSelectedTokenId === targetTokenId ? (
-                            <div className="text-[10px] text-rose-400/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
+                            <div className="text-ui-10 text-rose-400/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
                                 {t('dice.tactical.error_same')}
                             </div>
                         ) : null}
@@ -925,7 +925,7 @@ const DiceBoard: React.FC = () => {
 
                     {isDiceProjected && (
                         <div className="absolute top-4 left-4 z-40">
-                             <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-accent/10 border border-accent/30 text-[9px] font-black text-accent uppercase tracking-widest animate-pulse">
+                             <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-accent/10 border border-accent/30 text-ui-9 font-black text-accent uppercase tracking-widest animate-pulse">
                                 <Cast size={10} /> {t('dice.status.projected')}
                              </span>
                         </div>
@@ -956,8 +956,8 @@ const DiceBoard: React.FC = () => {
                                 {history[0].rolls.map((r, i) => (
                                     <span key={i} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg text-xs font-black shadow-inner relative group ${getDieCssClass(r)}`}>
                                         {r.displayStr ? r.displayStr : r.val}
-                                        {r.source === 'gear' && <span className="absolute bottom-0 right-1 text-[8px] opacity-40 font-bold uppercase">G</span>}
-                                        {r.source === 'base' && <span className="absolute bottom-0 right-1 text-[8px] opacity-40 font-bold uppercase">B</span>}
+                                        {r.source === 'gear' && <span className="absolute bottom-0 right-1 text-ui-8 opacity-40 font-bold uppercase">G</span>}
+                                        {r.source === 'base' && <span className="absolute bottom-0 right-1 text-ui-8 opacity-40 font-bold uppercase">B</span>}
                                     </span>
                                 ))}
                             </div>
@@ -994,12 +994,12 @@ const DiceBoard: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <div className="flex flex-wrap gap-1 max-w-[60%] items-center">
                                         {record.rolls.map((r, idx) => (
-                                            <span key={idx} className={`text-[10px] px-1.5 py-0.5 rounded flex items-center justify-center font-bold ${getDieCssClass(r)}`}>
+                                            <span key={idx} className={`text-ui-10 px-1.5 py-0.5 rounded flex items-center justify-center font-bold ${getDieCssClass(r)}`}>
                                                 {r.displayStr || r.val}
                                             </span>
                                         ))}
                                         {record.modifier !== 0 && (
-                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-600 dark:text-blue-400 font-bold ml-1">
+                                            <span className="text-ui-10 px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-600 dark:text-blue-400 font-bold ml-1">
                                                 {record.modifier > 0 ? '+' : ''}{record.modifier}
                                             </span>
                                         )}
@@ -1008,7 +1008,7 @@ const DiceBoard: React.FC = () => {
                                 </div>
                                 <EtiquetteDuDegre
                                     resultat={record}
-                                    classes={reussi => 'mt-1 text-[10px] uppercase font-bold text-right '
+                                    classes={reussi => 'mt-1 text-ui-10 uppercase font-bold text-right '
                                         + (reussi ? 'text-emerald-500' : 'text-rose-500')}
                                 />
                             </div>

@@ -161,7 +161,7 @@ const CampaignDetails: React.FC = () => {
                         </div>
                         <div className="space-y-4">
                             <div>
-                                <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.system')}</p>
+                                <p className="text-ui-10 text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.system')}</p>
                                 <div className="flex items-center gap-2">
                                     <p className="text-app-text/80 font-medium">{systemName}</p>
                                     {customGameDrivers.find(d => d.id === campaign.system) && (
@@ -172,11 +172,11 @@ const CampaignDetails: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.description')}</p>
+                                <p className="text-ui-10 text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.description')}</p>
                                 <p className="text-app-text/60 text-sm leading-relaxed">{campaign.description}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.synopsis')}</p>
+                                <p className="text-ui-10 text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.synopsis')}</p>
                                 <p className="text-app-text/60 text-sm italic leading-relaxed border-l-2 border-accent/30 pl-3">
                                     "{campaign.synopsis}"
                                 </p>
@@ -193,7 +193,7 @@ const CampaignDetails: React.FC = () => {
                             <h3 className="font-bold text-sm uppercase tracking-wide">{t('modules:session.campaign_details.sections.ai_oracle')}</h3>
                         </div>
                         <div className="space-y-3">
-                            <p className="text-[10px] text-app-text/40 leading-relaxed">
+                            <p className="text-ui-10 text-app-text/40 leading-relaxed">
                                 {t('modules:session.campaign_details.descriptions.ai_oracle')}
                             </p>
                             <div className="relative group">
@@ -207,7 +207,7 @@ const CampaignDetails: React.FC = () => {
                                 <Sparkles size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" />
                             </div>
                             {campaign.notebookUrl && (
-                                <p className="text-[9px] text-emerald-500/70 flex items-center gap-1 font-mono">
+                                <p className="text-ui-9 text-emerald-500/70 flex items-center gap-1 font-mono">
                                     <span className="w-1 h-1 rounded-full bg-emerald-500"></span>
                                     {t('modules:session.campaign_details.status.oracle_ready')}
                                 </p>
@@ -220,7 +220,7 @@ const CampaignDetails: React.FC = () => {
                         className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
                     >
                         <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">{t('modules:session.campaign_details.actions.open_wiki')}</h4>
-                        <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">{t('modules:session.campaign_details.descriptions.open_wiki')}</p>
+                        <p className="text-ui-10 text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">{t('modules:session.campaign_details.descriptions.open_wiki')}</p>
                     </button>
 
                     {/*
@@ -234,7 +234,7 @@ const CampaignDetails: React.FC = () => {
                         className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
                     >
                         <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">Trame narrative</h4>
-                        <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Actes et scènes</p>
+                        <p className="text-ui-10 text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Actes et scènes</p>
                     </button>
                 </div>
 
@@ -257,7 +257,7 @@ const CampaignDetails: React.FC = () => {
                                         <div className="flex items-center gap-3">
                                             <span className="text-lg font-mono font-bold text-app-text/90">#{s.number}</span>
                                             <h4 className="text-sm font-bold text-app-text/80">{t('common:labels.session_number', { number: s.number })}</h4>
-                                            <span className={`text-[10px] px-2 py-0.5 rounded uppercase font-bold ${s.status === 'active' ? 'bg-amber-500 text-slate-950 shadow-glow-accent' : 'bg-app-surface text-app-text/40'}`}>
+                                            <span className={`text-ui-10 px-2 py-0.5 rounded uppercase font-bold ${s.status === 'active' ? 'bg-amber-500 text-slate-950 shadow-glow-accent' : 'bg-app-surface text-app-text/40'}`}>
                                                 {t('common:status.' + s.status, { defaultValue: s.status })}
                                             </span>
                                         </div>
@@ -267,7 +267,7 @@ const CampaignDetails: React.FC = () => {
                                                     e.stopPropagation();
                                                     useModalStore.getState().showCustom('session-summary', { sessionId: s.id });
                                                 }}
-                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-[10px] font-bold text-blue-400 hover:bg-blue-500 hover:text-white transition-all uppercase tracking-wider"
+                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-blue-400 hover:bg-blue-500 hover:text-white transition-all uppercase tracking-wider"
                                                 title={t('modules:session.campaign_details.actions.edit_summary')}
                                             >
                                                 <Edit3 size={12} />
@@ -295,7 +295,7 @@ const CampaignDetails: React.FC = () => {
                                                         btn.classList.remove('bg-emerald-500/10', 'border-emerald-500/30');
                                                     }, 2000);
                                                 }}
-                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-[10px] font-bold text-accent hover:bg-accent hover:text-app-bg transition-all uppercase tracking-wider"
+                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-accent hover:bg-accent hover:text-app-bg transition-all uppercase tracking-wider"
                                                 title={t('modules:session.campaign_details.actions.oracle_copy')}
                                             >
                                                 <Sparkles size={12} />
@@ -342,7 +342,7 @@ const CampaignDetails: React.FC = () => {
                                         </div>
                                     ))
                                 ) : (
-                                    <p className="text-[10px] text-app-text/20 italic text-center py-4">
+                                    <p className="text-ui-10 text-app-text/20 italic text-center py-4">
                                         {t('modules:session.campaign_details.status.no_locations')}
                                     </p>
                                 )}
@@ -360,7 +360,7 @@ const CampaignDetails: React.FC = () => {
                                     <div key={npc.id} className="relative group aspect-square rounded-lg overflow-hidden border border-app-border hover:border-accent transition-colors cursor-pointer" onClick={() => setCurrentView('npc-gallery')}>
                                         <ResolvedAsset src={npc.avatar} className="w-full h-full object-cover" alt={npc.name} />
                                         <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <p className="text-[8px] text-white font-bold uppercase p-1 bg-black/60 rounded">{npc.name}</p>
+                                            <p className="text-ui-8 text-white font-bold uppercase p-1 bg-black/60 rounded">{npc.name}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -385,16 +385,16 @@ const CampaignDetails: React.FC = () => {
                     </div>
                     <div>
                         <h3 className="font-bold text-sm uppercase tracking-wide">Nexus-OS</h3>
-                        <p className="text-[10px] text-app-text/40">{t('modules:session.campaign_details.descriptions.nexus')}</p>
+                        <p className="text-ui-10 text-app-text/40">{t('modules:session.campaign_details.descriptions.nexus')}</p>
                     </div>
                     {!isNexusAvailable && (
-                        <span className="ml-auto text-[9px] bg-app-surface border border-app-border text-app-text/30 px-2 py-1 rounded font-mono uppercase">
+                        <span className="ml-auto text-ui-9 bg-app-surface border border-app-border text-app-text/30 px-2 py-1 rounded font-mono uppercase">
                             {t('modules:session.campaign_details.status.no_electron')}
                         </span>
                     )}
                 </div>
 
-                <label className="flex items-center gap-2 mb-3 text-[11px] text-app-text/50 hover:text-app-text/80 transition-colors cursor-pointer select-none">
+                <label className="flex items-center gap-2 mb-3 text-ui-11 text-app-text/50 hover:text-app-text/80 transition-colors cursor-pointer select-none">
                     <input
                         type="checkbox"
                         checked={!emporterLesMedias}
@@ -428,7 +428,7 @@ const CampaignDetails: React.FC = () => {
                     </button>
                 </div>
 
-                <p className="text-[9px] text-app-text/25 leading-relaxed">
+                <p className="text-ui-9 text-app-text/25 leading-relaxed">
                     {t('modules:session.campaign_details.descriptions.nexus_detailed')}
                 </p>
             </div>

@@ -131,7 +131,7 @@ export const Sidebar: React.FC = () => {
                         }}
                         className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
                     >
-                        <span className="material-symbols-outlined text-[14px]">delete_forever</span>
+                        <span className="material-symbols-outlined text-sm">delete_forever</span>
                         {t('light.sidebar.forget_bridge')}
                     </button>
                 )}
@@ -169,15 +169,15 @@ export const Sidebar: React.FC = () => {
                         <span className={`material-symbols-outlined transition-transform group-hover:scale-110 ${suivreLaVoix ? 'text-accent' : 'text-slate-400'}`}>graphic_eq</span>
                         <span className={`font-bold ${suivreLaVoix ? 'text-app-text' : 'text-slate-300'}`}>{t('light.sidebar.suivre_la_voix')}</span>
                     </div>
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${suivreLaVoix ? 'text-accent' : 'text-slate-600'}`}>
+                    <span className={`text-ui-10 font-black uppercase tracking-widest ${suivreLaVoix ? 'text-accent' : 'text-slate-600'}`}>
                         {suivreLaVoix ? t('light.sidebar.suivre_la_voix_actif') : t('light.sidebar.suivre_la_voix_inactif')}
                     </span>
                 </button>
                 {suivreLaVoix && !voixActive && (
-                    <p className="text-[11px] text-amber-400/80 px-1">{t('light.sidebar.suivre_la_voix_sans_micro')}</p>
+                    <p className="text-ui-11 text-amber-400/80 px-1">{t('light.sidebar.suivre_la_voix_sans_micro')}</p>
                 )}
                 {suivreLaVoix && (
-                    <p className="text-[11px] text-slate-500 px-1">{t('light.sidebar.suivre_la_voix_note')}</p>
+                    <p className="text-ui-11 text-slate-500 px-1">{t('light.sidebar.suivre_la_voix_note')}</p>
                 )}
             </div>
 

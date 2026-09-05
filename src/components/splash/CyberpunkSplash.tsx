@@ -40,7 +40,7 @@ const CyberpunkSplash: React.FC = () => {
                     <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700/50">
                         <div className="h-full bg-gradient-to-r from-neonCyan to-neonViolet shadow-[0_0_10px_#22d3ee] animate-[progressFill_4s_ease-out_forwards]"></div>
                     </div>
-                    <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+                    <div className="flex justify-between text-ui-10 text-slate-500 font-mono">
                         <span>ESTABLISHING SECURE LINK...</span>
                         <span className="animate-pulse">SYNCHRONIZING_</span>
                     </div>
@@ -49,7 +49,7 @@ const CyberpunkSplash: React.FC = () => {
 
             {/* Technical Logs Overlay */}
             <aside className="fixed bottom-10 left-10 w-64 h-32 overflow-hidden glass-panel rounded-lg p-3 hidden md:block">
-                <div className="text-[9px] font-mono text-neonCyan/70 h-full">
+                <div className="text-ui-9 font-mono text-neonCyan/70 h-full">
                     <div className="animate-[scrollLog_10s_linear_infinite] space-y-1">
                         <p>&gt; Linking Philips Hue Bridge...</p>
                         <p>&gt; [SUCCESS] Hue Bridge Connected</p>
@@ -71,7 +71,7 @@ const CyberpunkSplash: React.FC = () => {
             </aside>
 
             {/* Corner Accents */}
-            <div className="fixed top-8 right-8 text-[10px] text-slate-600 font-mono border-r border-t border-slate-700 p-2 hidden sm:block">
+            <div className="fixed top-8 right-8 text-ui-10 text-slate-600 font-mono border-r border-t border-slate-700 p-2 hidden sm:block">
                 SYSTEM_STATUS: NOMINAL<br/>
                 LOCAL_TIME: {new Date().toLocaleTimeString()}
             </div>

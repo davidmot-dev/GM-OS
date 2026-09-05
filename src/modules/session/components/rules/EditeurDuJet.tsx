@@ -139,7 +139,7 @@ const LigneDeComposante: React.FC<{
       */}
       {(autres.length > 0 || (composante.sectionId !== '' && disponibles.length > 0)) && (
         <div className="flex items-center gap-1.5 flex-wrap pl-1">
-          <span className="text-[9px] font-black uppercase tracking-widest text-app-text/25">
+          <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/25">
             aussi dans
           </span>
           {autres.map(id => {
@@ -149,7 +149,7 @@ const LigneDeComposante: React.FC<{
                 key={id}
                 onClick={() => ecrireLesAutres(autres.filter(x => x !== id))}
                 title="Retirer ce sous-groupe"
-                className={`group flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold border transition-all ${
+                className={`group flex items-center gap-1 px-2 py-1 rounded-lg text-ui-10 font-bold border transition-all ${
                   connue
                     ? 'bg-app-bg/40 border-app-border/20 text-app-text/60 hover:border-red-400/40 hover:text-red-300'
                     : 'bg-red-500/10 border-red-400/30 text-red-300'
@@ -167,7 +167,7 @@ const LigneDeComposante: React.FC<{
               value=""
               onChange={e => e.target.value && ecrireLesAutres([...autres, e.target.value])}
               title="Ajouter un sous-groupe où cette même valeur se lit"
-              className="bg-transparent border border-dashed border-app-border/30 rounded-lg px-2 py-1 text-[10px] font-bold text-app-text/40 hover:border-accent/40 hover:text-accent outline-none cursor-pointer"
+              className="bg-transparent border border-dashed border-app-border/30 rounded-lg px-2 py-1 text-ui-10 font-bold text-app-text/40 hover:border-accent/40 hover:text-accent outline-none cursor-pointer"
             >
               <option value="">+ sous-groupe</option>
               {disponibles.map(s => (
@@ -231,7 +231,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
 
     const nombre = (valeur: number | undefined, onChange: (n: number) => void, titre: string) => (
         <label className="flex-1">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-accent/60 mb-2 block px-1">{titre}</span>
+            <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-accent/60 mb-2 block px-1">{titre}</span>
             <input
                 type="number"
                 value={valeur ?? 0}
@@ -250,8 +250,8 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
     ) => (
         <div className="space-y-3">
             <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-1">{titre}</p>
-                <p className="text-[11px] text-app-text/40 italic px-1 mt-1 leading-relaxed">{explication}</p>
+                <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-1">{titre}</p>
+                <p className="text-ui-11 text-app-text/40 italic px-1 mt-1 leading-relaxed">{explication}</p>
             </div>
             {liste.map((composante, i) => (
                 <LigneDeComposante
@@ -264,7 +264,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             ))}
             <button
                 onClick={() => ecrire([...liste, { id: '', label: '', sectionId: '' }])}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-accent/30 text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/10 transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-accent/30 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/10 transition-all"
             ><Plus size={14} /> Ajouter une composante</button>
         </div>
     );
@@ -275,14 +275,14 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                 <Dices className="text-accent" size={20} />
                 <div>
                     <h3 className="text-sm font-black uppercase tracking-widest text-app-text">Composition du jet</h3>
-                    <p className="text-[11px] text-app-text/40 italic mt-0.5">
+                    <p className="text-ui-11 text-app-text/40 italic mt-0.5">
                         Ce que le joueur retient sur sa fiche avant de lancer, et combien de dés il prend.
                     </p>
                 </div>
             </header>
 
             {!gabarit && (
-                <p className="text-[11px] text-amber-300/70 italic">
+                <p className="text-ui-11 text-amber-300/70 italic">
                     Ce pilote ne désigne aucune fiche : sans elle, aucune section où choisir.
                     Rattache-lui un gabarit ci-dessus.
                 </p>
@@ -314,7 +314,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             <div className="space-y-3 pt-2 border-t border-app-border/10">
                 <div className="flex gap-4 items-end">
                     <label className="flex-1">
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
+                        <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
                             Seconde poule — son nom
                         </span>
                         <input
@@ -327,7 +327,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                         />
                     </label>
                     <label className="flex-1">
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
+                        <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
                             Ce qu’un 1 déclenche
                         </span>
                         <input
@@ -366,10 +366,10 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             */}
             <div className="space-y-3 pt-2 border-t border-app-border/10">
                 <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-1">
+                    <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-1">
                         Cible calculée — quand le jeu croise sur une table
                     </p>
-                    <p className="text-[11px] text-app-text/40 italic px-1 mt-1 leading-relaxed">
+                    <p className="text-ui-11 text-app-text/40 italic px-1 mt-1 leading-relaxed">
                         Chez Rêves de Dragons la compétence ne s’ajoute pas au pourcentage : elle déplace
                         la colonne, donc elle multiplie — Agilité 12 avec +3 vaut 78 % et non 15.
                         Laisse « aucune » si les valeurs de la fiche s’additionnent.
@@ -404,10 +404,10 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                 {cible && (
                     <div className="space-y-4 pl-1 pt-1">
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-1">
+                            <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 px-1">
                                 Caractéristique — ce qui se lit en ordonnée
                             </p>
-                            <p className="text-[11px] text-app-text/40 italic px-1 mt-1 mb-3 leading-relaxed">
+                            <p className="text-ui-11 text-app-text/40 italic px-1 mt-1 mb-3 leading-relaxed">
                                 Une seule. Sans elle la mécanique n’a rien à croiser : le jet vaudrait
                                 zéro pour cent quel que soit le personnage, et un pourcentage faux ne se
                                 plaint de rien.
@@ -464,7 +464,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                 */}
                 {cible && jet?.difficulte && (
                     <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
-                        <p className="flex-1 text-[11px] text-amber-200/80 leading-relaxed">
+                        <p className="flex-1 text-ui-11 text-amber-200/80 leading-relaxed">
                             Un <b>compte de réussites</b> ({jet.difficulte.min} à {jet.difficulte.max},
                             départ {jet.difficulte.defaut}) subsiste alors qu’une cible est déclarée.
                             Les deux se nomment « difficulté » et n’ont aucun rapport : la cible décide,
@@ -472,21 +472,21 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                         </p>
                         <button
                             onClick={() => onUpdate({ jet: { ...jet, difficulte: undefined } })}
-                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-[10px] font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
+                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
                         >Retirer le compte</button>
                     </div>
                 )}
 
                 {cible && (jet?.seuil ?? []).length > 0 && (
                     <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
-                        <p className="flex-1 text-[11px] text-amber-200/80 leading-relaxed">
+                        <p className="flex-1 text-ui-11 text-amber-200/80 leading-relaxed">
                             {(jet?.seuil ?? []).length} composantes de seuil subsistent alors qu’une cible
                             est déclarée. Elles ne servent plus à rien, et le panneau de jet les réclamera
                             toutes au joueur avant de le laisser lancer.
                         </p>
                         <button
                             onClick={() => majJet({ seuil: [] })}
-                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-[10px] font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
+                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
                         >Vider le seuil</button>
                     </div>
                 )}
@@ -522,7 +522,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                         successThreshold => onUpdate({ dice: { ...driver.dice, successThreshold } }),
                         'Seuil fixe',
                     )}
-                    <p className="flex-[2] text-[11px] text-app-text/40 italic leading-relaxed pb-3">
+                    <p className="flex-[2] text-ui-11 text-app-text/40 italic leading-relaxed pb-3">
                         La valeur à atteindre — ou à ne pas dépasser — sur chaque dé.
                         Le moteur « yze » compte les six de lui-même et ignore ce champ.
                     </p>
@@ -530,7 +530,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             )}
 
             <div>
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-accent/60 mb-2 block px-1">
+                <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-accent/60 mb-2 block px-1">
                     Sens de la comparaison
                 </span>
                 <select
@@ -542,7 +542,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                     <option value="superieur-ou-egal">Réussite au-dessus — « chaque six est une réussite »</option>
                     <option value="sous-ou-egal">Réussite en dessous — « chaque dé sous le seuil »</option>
                 </select>
-                <p className="text-[11px] text-app-text/40 italic px-1 mt-2 leading-relaxed">
+                <p className="text-ui-11 text-app-text/40 italic px-1 mt-2 leading-relaxed">
                     Les deux se ressemblent et s’inversent : un jet résolu à l’envers ne se voit jamais en séance.
                 </p>
             </div>

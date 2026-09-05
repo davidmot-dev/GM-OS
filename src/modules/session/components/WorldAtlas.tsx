@@ -16,7 +16,7 @@ const WorldAtlas: React.FC = () => {
             <div className="h-12 flex-shrink-0 bg-app-surface border-b border-app-border flex items-center px-4">
                 <button 
                     onClick={() => setCurrentView('cockpit')}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 transition-all font-bold text-[10px] uppercase tracking-widest group"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 transition-all font-bold text-ui-10 uppercase tracking-widest group"
                 >
                     <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
                     {t('modules:session.world_atlas.back_to_cockpit')}

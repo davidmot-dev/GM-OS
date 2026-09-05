@@ -66,7 +66,7 @@ const SessionFeedbackModal: React.FC = () => {
                         <MessageSquare size={24} />
                     </div>
                     <div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-accent mb-1">
+                        <div className="text-ui-10 font-black uppercase tracking-widest text-accent mb-1">
                             {t('modules:session.feedback.title')}
                         </div>
                         <div className="text-sm font-mono text-app-text/60">
@@ -75,7 +75,7 @@ const SessionFeedbackModal: React.FC = () => {
                     </div>
                 </div>
                 
-                <div className="px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                <div className="px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
                     <Calendar size={12} />
                     {new Date(session.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                 </div>
@@ -92,7 +92,7 @@ const SessionFeedbackModal: React.FC = () => {
                 <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-8">
                     {/* Left side: Aggregate metrics */}
                     <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                             {t('modules:session.feedback.aggregate')}
                         </h4>
                         
@@ -158,14 +158,14 @@ const SessionFeedbackModal: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="bg-slate-900/30 border border-app-border/20 rounded-[1.5rem] p-4 text-[10px] text-app-text/40 leading-relaxed uppercase tracking-wider font-semibold">
+                        <div className="bg-slate-900/30 border border-app-border/20 rounded-[1.5rem] p-4 text-ui-10 text-app-text/40 leading-relaxed uppercase tracking-wider font-semibold">
                             💡 {t('modules:session.feedback.average')} ({feedbackCount} {feedbackCount > 1 ? 'contributeurs' : 'contributeur'})
                         </div>
                     </div>
 
                     {/* Right side: Detailed feedbacks list */}
                     <div className="flex-1 min-h-0 flex flex-col gap-6">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 shrink-0">
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 shrink-0">
                             {t('modules:session.feedback.details')}
                         </h4>
                         
@@ -198,14 +198,14 @@ const SessionFeedbackModal: React.FC = () => {
                                                 </div>
                                                 <div>
                                                     <h5 className="font-bold text-sm text-slate-200">{f.characterName}</h5>
-                                                    <span className="text-[9px] text-slate-500 font-mono">
+                                                    <span className="text-ui-9 text-slate-500 font-mono">
                                                         {new Date(f.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                                                     </span>
                                                 </div>
                                             </div>
 
                                             {/* Ratings grid for this player */}
-                                            <div className="flex flex-col gap-1 text-[10px] uppercase font-bold text-slate-400 items-end bg-black/20 p-2.5 rounded-xl border border-white/5">
+                                            <div className="flex flex-col gap-1 text-ui-10 uppercase font-bold text-slate-400 items-end bg-black/20 p-2.5 rounded-xl border border-white/5">
                                                 <div className="flex items-center gap-2">
                                                     <span>{t('modules:session.feedback.fun')}</span>
                                                     {renderStars(f.funRating, 12)}

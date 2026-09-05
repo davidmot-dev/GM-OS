@@ -64,7 +64,7 @@ const SessionWorkspace: React.FC = () => {
                 <div className="flex items-center gap-10">
                     {/* PC List */}
                     <div className="flex flex-col justify-center">
-                        <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">{t('modules:session.workspace.group')}</span>
+                        <span className="text-ui-9 font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">{t('modules:session.workspace.group')}</span>
                         <div className="flex -space-x-3">
                             {Array.from(new Set(session.sessionEntityIds || [])).map(id => {
                                 // Find character among all players
@@ -95,7 +95,7 @@ const SessionWorkspace: React.FC = () => {
                                             proposaient de le régler — le survol du même
                                             personnage disait donc deux choses différentes. */}
                                         {aUneJaugeDeVie(pc) && (
-                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-1 text-[10px] hidden group-hover:flex items-center gap-2 z-50 shadow-xl">
+                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-1 text-ui-10 hidden group-hover:flex items-center gap-2 z-50 shadow-xl">
                                             <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, -1); }} className="hover:text-red-400 font-bold w-4 text-center">-</button>
                                             <span className="font-mono font-bold text-app-text min-w-[20px] text-center">{pc.hp}</span>
                                             <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, 1); }} className="hover:text-green-400 font-bold w-4 text-center">+</button>
@@ -116,7 +116,7 @@ const SessionWorkspace: React.FC = () => {
 
                     {/* Session NPC List */}
                     <div className="flex flex-col justify-center">
-                        <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">{t('modules:session.workspace.active_npcs')}</span>
+                        <span className="text-ui-9 font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">{t('modules:session.workspace.active_npcs')}</span>
                         <div className="flex gap-3">
                             {Array.from(new Set(session.sessionEntityIds || [])).map(id => {
                                 const npc = entities.find(e => e.id === id);
@@ -140,10 +140,10 @@ const SessionWorkspace: React.FC = () => {
                                             className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-500 border border-white/20"
                                             title={t('modules:session.workspace.remove_from_session')}
                                         >
-                                            <span className="text-[10px] font-bold">×</span>
+                                            <span className="text-ui-10 font-bold">×</span>
                                         </button>
 
-                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-0.5 text-[8px] font-bold text-app-text whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 uppercase tracking-tighter shadow-xl">
+                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-0.5 text-ui-8 font-bold text-app-text whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 uppercase tracking-tighter shadow-xl">
                                             {npc.name}
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@ const SessionWorkspace: React.FC = () => {
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2 px-1">
                         <MapPin size={14} className="text-accent" />
-                        <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">{t('modules:session.workspace.pinned_locations')}</span>
+                        <span className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">{t('modules:session.workspace.pinned_locations')}</span>
                     </div>
                     <div className="flex gap-3 flex-wrap pb-2">
                         {activeLocations.map(loc => (

@@ -100,9 +100,9 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({ pads, comptes
                     <section key={type} className="flex flex-col gap-2">
                         <div className="flex items-baseline gap-2 px-1">
                             <Icone size={13} className={`${teinte} shrink-0 self-center`} />
-                            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{titre}</h2>
+                            <h2 className="text-ui-10 font-black uppercase tracking-widest text-slate-400">{titre}</h2>
                             {tronque && (
-                                <span className="text-[10px] text-amber-500/80 italic">
+                                <span className="text-ui-10 text-amber-500/80 italic">
                                     {compte.montres} sur {compte.total} — les autres restent sur le PC
                                 </span>
                             )}
@@ -129,7 +129,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({ pads, comptes
                                         )}
                                         {/* Le voile part du bas : le titre reste lisible sur une image claire. */}
                                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-2 pt-4 pb-1.5">
-                                            <span className={`block text-[10px] font-bold leading-tight text-left line-clamp-2 ${pad.isActive ? 'text-accent' : 'text-slate-200'}`}>
+                                            <span className={`block text-ui-10 font-bold leading-tight text-left line-clamp-2 ${pad.isActive ? 'text-accent' : 'text-slate-200'}`}>
                                                 {pad.label}
                                             </span>
                                         </div>
@@ -161,7 +161,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({ pads, comptes
                                                 {pad.label}
                                             </span>
                                             {pad.sublabel && (
-                                                <span className="text-[10px] text-slate-500 truncate">{pad.sublabel}</span>
+                                                <span className="text-ui-10 text-slate-500 truncate">{pad.sublabel}</span>
                                             )}
                                         </span>
                                         {pad.isActive && (

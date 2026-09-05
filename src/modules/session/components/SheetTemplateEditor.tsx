@@ -159,7 +159,7 @@ const SectionEditor: React.FC<{
                             {field.type === 'formula' && (
                                 <div className="flex flex-col gap-2 pl-8">
                                     <div className="flex items-center gap-3">
-                                        <span className="text-[10px] text-accent font-black uppercase tracking-widest">{t('modules:session.template_manager.editor.equation_label')}</span>
+                                        <span className="text-ui-10 text-accent font-black uppercase tracking-widest">{t('modules:session.template_manager.editor.equation_label')}</span>
                                         <input 
                                             type="text"
                                             value={field.formula || ''}
@@ -168,12 +168,12 @@ const SectionEditor: React.FC<{
                                             placeholder={t('modules:session.template_manager.editor.equation_placeholder')}
                                         />
                                     </div>
-                                    <p className="text-[9px] text-app-text/40 italic">{t('modules:session.template_manager.editor.equation_hint')}</p>
+                                    <p className="text-ui-9 text-app-text/40 italic">{t('modules:session.template_manager.editor.equation_hint')}</p>
                                 </div>
                             )}
                             {field.type === 'select' && (
                                 <div className="flex items-center gap-3 pl-8">
-                                    <span className="text-[10px] text-app-text/40 uppercase font-black tracking-widest">{t('modules:session.template_manager.editor.field_options')}</span>
+                                    <span className="text-ui-10 text-app-text/40 uppercase font-black tracking-widest">{t('modules:session.template_manager.editor.field_options')}</span>
                                     <FieldOptionsInput 
                                         options={field.options || []} 
                                         onUpdate={newOptions => updateField(i, { options: newOptions })} 
@@ -182,7 +182,7 @@ const SectionEditor: React.FC<{
                             )}
                             {field.type === 'rating' && (
                                 <div className="flex items-center gap-3 pl-8">
-                                    <span className="text-[10px] text-app-text/40 uppercase font-black tracking-widest">{t('modules:session.template_manager.editor.max_value_label')}</span>
+                                    <span className="text-ui-10 text-app-text/40 uppercase font-black tracking-widest">{t('modules:session.template_manager.editor.max_value_label')}</span>
                                     <input 
                                         type="number"
                                         min={1}
@@ -316,10 +316,10 @@ const SheetTemplateEditor: React.FC = () => {
                                 readOnly={template.isBuiltin}
                             />
                             <div className="flex items-center gap-2 mt-0.5">
-                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${template.isBuiltin ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
+                                <span className={`text-ui-9 font-black uppercase tracking-widest px-2 py-0.5 rounded ${template.isBuiltin ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
                                     {template.isBuiltin ? t('modules:session.template_manager.manager.status_core') : t('modules:session.template_manager.manager.status_user')}
                                 </span>
-                                <span className="text-[9px] text-app-text/20 font-bold uppercase tracking-tighter">ID: {template.id}</span>
+                                <span className="text-ui-9 text-app-text/20 font-bold uppercase tracking-tighter">ID: {template.id}</span>
                             </div>
                         </div>
                     </div>
@@ -350,12 +350,12 @@ const SheetTemplateEditor: React.FC = () => {
                                 <h4 className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-accent mb-4">
                                     <Brain size={16} /> {t('modules:session.template_manager.manager.aetheric_resonance')}
                                 </h4>
-                                <p className="text-[11px] text-app-text/60 leading-relaxed mb-6">
+                                <p className="text-ui-11 text-app-text/60 leading-relaxed mb-6">
                                     {t('modules:session.template_manager.manager.aetheric_resonance_desc')}
                                 </p>
                                 
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30 mb-2">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
+                                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/30 mb-2">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
                                     <div className="relative group">
                                         <BookOpen size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-accent/40" />
                                         <input 
@@ -363,22 +363,22 @@ const SheetTemplateEditor: React.FC = () => {
                                             value={driver?.defaultNotebookUrl || template.defaultNotebookUrl || ''}
                                             onChange={e => handleDriverUpdate({ defaultNotebookUrl: e.target.value })}
                                             placeholder={t('modules:session.template_manager.editor.notebook_link_placeholder')}
-                                            className="w-full bg-app-bg/60 text-[11px] text-app-text/80 pl-9 pr-4 py-3 rounded-2xl border border-app-border/40 focus:outline-none focus:border-accent/50 transition-all font-mono"
+                                            className="w-full bg-app-bg/60 text-ui-11 text-app-text/80 pl-9 pr-4 py-3 rounded-2xl border border-app-border/40 focus:outline-none focus:border-accent/50 transition-all font-mono"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-4 mt-6">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30">{t('modules:session.template_manager.manager.rule_engine_label')}</p>
+                                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/30">{t('modules:session.template_manager.manager.rule_engine_label')}</p>
                                     <div className="flex items-center gap-3 p-3 bg-app-bg/60 rounded-2xl border border-app-border/40">
                                         <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
                                             <Brain size={16} />
                                         </div>
                                         <div className="flex-1 overflow-hidden">
-                                            <p className="text-[10px] font-bold text-app-text truncate">
+                                            <p className="text-ui-10 font-bold text-app-text truncate">
                                                 {customGameDrivers.find(d => d.templateId === template.id)?.name || t('modules:session.template_manager.manager.generic_driver')}
                                             </p>
-                                            <p className="text-[8px] text-app-text/20 uppercase font-black">{t('modules:session.template_manager.manager.rule_engine_subtitle')}</p>
+                                            <p className="text-ui-8 text-app-text/20 uppercase font-black">{t('modules:session.template_manager.manager.rule_engine_subtitle')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -386,14 +386,14 @@ const SheetTemplateEditor: React.FC = () => {
 
                             {!template.isBuiltin && (
                                 <div className="p-6 rounded-3xl border-2 border-dashed border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-all group">
-                                    <h5 className="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">{t('modules:session.template_manager.manager.destruction_label')}</h5>
-                                    <p className="text-[10px] text-app-text/40 mb-4">{t('modules:session.template_manager.manager.destruction_desc')}</p>
+                                    <h5 className="text-ui-10 font-black uppercase tracking-widest text-red-500 mb-2">{t('modules:session.template_manager.manager.destruction_label')}</h5>
+                                    <p className="text-ui-10 text-app-text/40 mb-4">{t('modules:session.template_manager.manager.destruction_desc')}</p>
                                     <button 
                                         onClick={() => showConfirm(t('modules:session.template_manager.manager.delete_confirm', { name: template.name }), () => {
                                             deleteSheetTemplate(template.id);
                                             handleBack();
                                         })}
-                                        className="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/40 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all shadow-lg"
+                                        className="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/40 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all shadow-lg"
                                     >
                                         {t('modules:session.template_manager.manager.destruction_btn')}
                                     </button>
@@ -402,7 +402,7 @@ const SheetTemplateEditor: React.FC = () => {
                         </div>
 
                         <div className="col-span-8">
-                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-app-text/40 mb-6 flex items-center gap-3">
+                            <h3 className="text-ui-11 font-black uppercase tracking-[0.2em] text-app-text/40 mb-6 flex items-center gap-3">
                                 <Sparkles size={14} /> Neural Overrides & Gems
                             </h3>
                             <div className="grid grid-cols-2 gap-4">
@@ -417,7 +417,7 @@ const SheetTemplateEditor: React.FC = () => {
                                                     <div className={`p-2 rounded-xl ${currValue ? 'bg-accent text-app-bg' : 'bg-app-bg text-app-text/40'}`}>
                                                         <Icon size={14} />
                                                     </div>
-                                                <span className={`text-[11px] font-black uppercase tracking-widest ${currValue ? 'text-accent' : 'text-app-text/60'}`}>{t(gem.name)}</span>
+                                                <span className={`text-ui-11 font-black uppercase tracking-widest ${currValue ? 'text-accent' : 'text-app-text/60'}`}>{t(gem.name)}</span>
                                             </div>
                                                 {currValue && <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
                                             </div>
@@ -434,7 +434,7 @@ const SheetTemplateEditor: React.FC = () => {
                                                     handleDriverUpdate({ aiPersonas: newPersonas });
                                                 }}
                                                 placeholder={t('modules:session.campaign_form.intelligence.ai_placeholder', { name: t(gem.name) })}
-                                                className="w-full h-32 bg-app-bg/40 border border-app-border/20 rounded-xl p-3 text-[11px] text-app-text/80 focus:border-accent/40 outline-none transition-all font-mono resize-none leading-relaxed"
+                                                className="w-full h-32 bg-app-bg/40 border border-app-border/20 rounded-xl p-3 text-ui-11 text-app-text/80 focus:border-accent/40 outline-none transition-all font-mono resize-none leading-relaxed"
                                             />
                                         </div>
                                     );
@@ -447,13 +447,13 @@ const SheetTemplateEditor: React.FC = () => {
 
                     <div className="space-y-8">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-3">
+                            <h3 className="text-ui-11 font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-3">
                                 <Plus size={14} className="text-accent" /> {t('modules:session.template_manager.manager.structure_title')}
                             </h3>
                             {!template.isBuiltin && (
                                 <button
                                     onClick={addSection}
-                                    className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
+                                    className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
                                 >
                                     {t('modules:session.template_manager.manager.new_section_btn')}
                                 </button>
@@ -477,7 +477,7 @@ const SheetTemplateEditor: React.FC = () => {
                                     <Plus size={32} />
                                 </div>
                                 <h4 className="text-sm font-black text-app-text/40 group-hover:text-app-text/60 transition-colors uppercase tracking-widest">{t('modules:session.template_manager.manager.init_structure_title')}</h4>
-                                <p className="text-[11px] text-app-text/20 mt-2">{t('modules:session.template_manager.manager.init_structure_desc')}</p>
+                                <p className="text-ui-11 text-app-text/20 mt-2">{t('modules:session.template_manager.manager.init_structure_desc')}</p>
                             </div>
                         )}
                     </div>

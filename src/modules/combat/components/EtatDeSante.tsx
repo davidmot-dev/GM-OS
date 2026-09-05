@@ -79,7 +79,7 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
               segments ne le dit pas de lui-même.
             */}
             {resume && (
-                <p className="mt-3 text-center text-[10px] font-bold uppercase tracking-widest text-app-text/40">
+                <p className="mt-3 text-center text-ui-10 font-bold uppercase tracking-widest text-app-text/40">
                     {resume}
                 </p>
             )}
@@ -118,7 +118,7 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
             {enTete('Anatomie', `${atteintes.length} atteinte${atteintes.length > 1 ? 's' : ''}`)}
             <div className="space-y-1">
                 {atteintes.map(([nom, p]) => (
-                    <p key={nom} className="text-[11px] text-rose-300/80 font-mono">{nom} — {p.status}</p>
+                    <p key={nom} className="text-ui-11 text-rose-300/80 font-mono">{nom} — {p.status}</p>
                 ))}
             </div>
         </>);

@@ -47,8 +47,8 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
                     <X size={24} />
                 </div>
                 <div className="text-left">
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Aucune</span>
-                    <span className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter italic">Désactiver le lien</span>
+                    <span className="block text-ui-10 font-black uppercase tracking-widest text-slate-400">Aucune</span>
+                    <span className="text-ui-9 font-bold text-slate-600 uppercase tracking-tighter italic">Désactiver le lien</span>
                 </div>
             </button>
 
@@ -65,8 +65,8 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
                         <span className="material-symbols-outlined text-2xl">{scene.icon}</span>
                     </div>
                     <div className="text-left overflow-hidden">
-                        <span className="block text-[10px] font-black uppercase tracking-widest text-white truncate">{scene.name}</span>
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">
+                        <span className="block text-ui-10 font-black uppercase tracking-widest text-white truncate">{scene.name}</span>
+                        <span className="text-ui-9 font-bold text-slate-500 uppercase tracking-tighter">
                             {Object.keys(scene.lightStates).length} LUMIÈRE(S)
                         </span>
                     </div>
@@ -76,8 +76,8 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
             {capturedScenes.length === 0 && (
                 <div className="col-span-2 py-12 flex flex-col items-center justify-center text-center opacity-50">
                     <Lightbulb size={32} className="text-slate-600 mb-4" />
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Aucune scène capturée</p>
-                    <p className="text-[9px] text-slate-600 mt-1 uppercase">Capturez des scènes dans l'onglet Light OS</p>
+                    <p className="text-ui-10 font-bold uppercase tracking-widest text-slate-500">Aucune scène capturée</p>
+                    <p className="text-ui-9 text-slate-600 mt-1 uppercase">Capturez des scènes dans l'onglet Light OS</p>
                 </div>
             )}
         </div>

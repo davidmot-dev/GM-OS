@@ -205,7 +205,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             {/* Campaign & Owner Selectors */}
                             <div className="space-y-4 pt-2">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('common:aventure')}</label>
+                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('common:aventure')}</label>
                                     <select
                                         value={formData.campaignId || ''}
                                         onChange={e => setFormData({ ...formData, campaignId: e.target.value || undefined, ownerId: undefined })}
@@ -218,7 +218,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                                 {formData.campaignId && entity.type === 'item' && (
                                     <section className="space-y-2 text-left animate-in fade-in">
-                                        <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest ml-1">{t('common:playerHub')}</label>
+                                        <label className="text-ui-10 font-bold text-emerald-500 uppercase tracking-widest ml-1">{t('common:playerHub')}</label>
                                         <select
                                             value={formData.ownerId || ''}
                                             onChange={e => setFormData({ ...formData, ownerId: e.target.value || undefined })}
@@ -239,7 +239,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                             <div className="space-y-4">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.portrait_label')}</label>
+                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.portrait_label')}</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
@@ -258,7 +258,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     </div>
                                 </section>
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.token_label')}</label>
+                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.token_label')}</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
@@ -320,7 +320,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                 attrs[newKey] = value;
                                                 setFormData({ ...formData, attributes: attrs });
                                             }}
-                                            className="w-full bg-transparent text-[10px] text-accent uppercase font-bold text-center focus:outline-none mb-1"
+                                            className="w-full bg-transparent text-ui-10 text-accent uppercase font-bold text-center focus:outline-none mb-1"
                                         />
                                         <input
                                             type="text"
@@ -345,7 +345,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">
+                                        <p className="text-ui-10 text-slate-500 uppercase font-bold tracking-wider mb-1">
                                             {t([`modules:favorite.attributes.${key.trim().toLowerCase()}`, key])}
                                         </p>
                                         <p className="text-sm font-bold text-slate-200">{value}</p>
@@ -466,7 +466,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             <button
                                 onClick={handleGenerateDialogues}
                                 disabled={isGeneratingDialogues}
-                                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${
                                     isGeneratingDialogues 
                                         ? 'bg-accent/10 text-accent/50 animate-pulse' 
                                         : 'bg-accent text-slate-950 hover:scale-105 active:scale-95 shadow-glow-accent/20'
@@ -494,7 +494,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 ))
                             ) : (
                                 <div className="py-4 text-center border border-dashed border-white/5 rounded-xl">
-                                    <p className="text-[10px] text-slate-600 uppercase tracking-widest">{t('modules:favorite.detail.no_lore')}</p>
+                                    <p className="text-ui-10 text-slate-600 uppercase tracking-widest">{t('modules:favorite.detail.no_lore')}</p>
                                 </div>
                             )}
                         </div>

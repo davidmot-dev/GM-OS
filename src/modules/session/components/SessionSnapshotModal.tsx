@@ -54,7 +54,7 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                         </div>
                         <div>
                             <h3 className="text-xl font-black text-app-text tracking-tight uppercase">Capture d'État</h3>
-                            <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest mt-1">Sauvegarder la configuration actuelle</p>
+                            <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest mt-1">Sauvegarder la configuration actuelle</p>
                         </div>
                     </div>
                     <button 
@@ -82,7 +82,7 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <label className="text-[10px] font-black text-app-text/40 uppercase tracking-[0.2em] ml-2">Choisir une session prévue</label>
+                        <label className="text-ui-10 font-black text-app-text/40 uppercase tracking-[0.2em] ml-2">Choisir une session prévue</label>
                         <div className="max-h-60 overflow-y-auto custom-scrollbar flex flex-col gap-2">
                             {relevantSessions.map(s => (
                                 <div
@@ -101,9 +101,9 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                                         <div>
                                             <div className="text-sm font-bold text-app-text">
                                                 Session #{s.number}
-                                                {s.status === 'active' && <span className="ml-2 text-[8px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">Active</span>}
+                                                {s.status === 'active' && <span className="ml-2 text-ui-8 bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">Active</span>}
                                             </div>
-                                            <div className="text-[10px] text-app-text/40">{new Date(s.date).toLocaleDateString()}</div>
+                                            <div className="text-ui-10 text-app-text/40">{new Date(s.date).toLocaleDateString()}</div>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                                                 >
                                                     <Eye size={14} />
                                                 </button>
-                                                <div className="text-[8px] font-black bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">
+                                                <div className="text-ui-8 font-black bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">
                                                     Snapshot Existant
                                                 </div>
                                             </div>

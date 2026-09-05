@@ -101,14 +101,14 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                             disabled={isGenerating}
                             className="w-full h-32 bg-black/40 border border-app-border/50 rounded-2xl p-4 text-sm text-app-text/90 focus:border-accent/50 outline-none transition-all resize-none font-sans leading-relaxed custom-scrollbar placeholder:text-app-text/20"
                         />
-                        <div className="absolute bottom-3 right-4 text-[9px] font-bold text-app-text/20 uppercase tracking-widest pointer-events-none">
+                        <div className="absolute bottom-3 right-4 text-ui-9 font-bold text-app-text/20 uppercase tracking-widest pointer-events-none">
                             Ctrl + Enter pour lancer
                         </div>
                     </div>
 
                     {/* Suggestions */}
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 flex items-center gap-1.5">
+                        <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 flex items-center gap-1.5">
                             <Wand2 size={10} className="text-accent" /> Suggestions
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -117,7 +117,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                                     key={idx}
                                     onClick={() => setInputValue(prev => prev ? `${prev}, ${s}` : s)}
                                     disabled={isGenerating}
-                                    className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[10px] font-bold text-app-text/60 hover:border-accent/30 hover:text-accent transition-all active:scale-95"
+                                    className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-ui-10 font-bold text-app-text/60 hover:border-accent/30 hover:text-accent transition-all active:scale-95"
                                 >
                                     {s}
                                 </button>
@@ -130,14 +130,14 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                 <div className="px-6 py-4 bg-black/20 flex gap-3">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-3 rounded-xl border border-app-border text-app-text/40 font-black uppercase tracking-widest text-[10px] hover:bg-white/5 transition-all"
+                        className="flex-1 py-3 rounded-xl border border-app-border text-app-text/40 font-black uppercase tracking-widest text-ui-10 hover:bg-white/5 transition-all"
                     >
                         Annuler
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={isGenerating}
-                        className={`flex-[2] py-3 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all shadow-glow-accent ${
+                        className={`flex-[2] py-3 rounded-xl font-black uppercase tracking-widest text-ui-10 flex items-center justify-center gap-2 transition-all shadow-glow-accent ${
                             isGenerating 
                             ? 'bg-accent/20 text-accent cursor-not-allowed' 
                             : 'bg-accent text-slate-950 hover:scale-[1.02] active:scale-[0.98]'

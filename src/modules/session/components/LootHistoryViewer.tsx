@@ -47,7 +47,7 @@ const LootHistoryViewer: React.FC = () => {
             <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
                 <History size={48} className="mb-3 opacity-20" />
                 <p className="text-sm font-medium">{t('modules:loot.history.empty')}</p>
-                <p className="text-[10px] uppercase tracking-widest mt-1">{t('modules:loot.history.empty_hint')}</p>
+                <p className="text-ui-10 uppercase tracking-widest mt-1">{t('modules:loot.history.empty_hint')}</p>
             </div>
         );
     }
@@ -61,7 +61,7 @@ const LootHistoryViewer: React.FC = () => {
                 </div>
                 <button 
                     onClick={() => clearLootHistory()}
-                    className="text-[10px] font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
                 >
                     {t('modules:loot.history.clear_all')}
                 </button>
@@ -84,13 +84,13 @@ const LootHistoryViewer: React.FC = () => {
                                         <span className="text-xs font-bold text-app-text truncate">
                                             {entry.itemName} {entry.quantity > 1 ? `(x${entry.quantity})` : ''}
                                         </span>
-                                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter ${
+                                        <span className={`text-ui-8 font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter ${
                                             COULEURS_PAR_RANG[rangDepuisLeSommet(driver, entry.rarity)] ?? COULEUR_NEUTRE
                                         }`}>
                                             {libelleDeRarete(driver, entry.rarity)}
                                         </span>
                                     </div>
-                                    <span className="text-[10px] text-app-text/30">
+                                    <span className="text-ui-10 text-app-text/30">
                                         {formatTime(entry.timestamp)}
                                     </span>
                                 </div>
@@ -104,7 +104,7 @@ const LootHistoryViewer: React.FC = () => {
                                             character={{ portraitUrl: entry.recipientPortrait || '', name: entry.recipientName }} 
                                             size={20} 
                                         />
-                                        <span className="text-[10px] font-bold text-accent/80 whitespace-nowrap">
+                                        <span className="text-ui-10 font-bold text-accent/80 whitespace-nowrap">
                                             {entry.recipientName}
                                         </span>
                                     </div>

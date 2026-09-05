@@ -19,7 +19,7 @@ const CampaignWidget: React.FC = () => {
         <div className="bg-slate-800/40 rounded-xl border border-slate-700/50 p-4 transition-all hover:border-gm-gold/30">
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                    <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest mb-1">Active Campaign</p>
+                    <p className="text-ui-10 uppercase font-bold text-slate-500 tracking-widest mb-1">Active Campaign</p>
                     <h3 className="text-slate-100 font-bold tracking-tight text-lg line-clamp-1">{campaignName}</h3>
                 </div>
                 <button

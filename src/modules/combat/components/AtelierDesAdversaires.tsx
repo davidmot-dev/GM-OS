@@ -275,7 +275,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
             <div className="p-10 text-center space-y-3">
                 <Swords className="w-14 h-14 mx-auto text-slate-700 opacity-20" />
                 <p className="text-slate-400 font-medium">Aucun système de jeu actif.</p>
-                <p className="text-[10px] text-slate-500 uppercase tracking-widest">
+                <p className="text-ui-10 text-slate-500 uppercase tracking-widest">
                     L’atelier tire les caractéristiques dans l’échelle du jeu : sans pilote, il n’a pas d’échelle.
                 </p>
             </div>
@@ -292,7 +292,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                 key={champ.id}
                 onClick={() => basculerLeChamp(champ.id)}
                 title="Favorisé → négligé → neutre"
-                className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter border transition-all ${favorise
+                className={`px-2 py-1 rounded-lg text-ui-9 font-black uppercase tracking-tighter border transition-all ${favorise
                     ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                     : neglige
                         ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
@@ -309,7 +309,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                 <div className="flex items-center gap-2">
                     <Swords size={16} className="text-accent" />
                     <h2 className="text-sm font-black uppercase tracking-widest">Atelier des adversaires</h2>
-                    <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">{driver.name}</span>
+                    <span className="text-ui-9 font-bold text-slate-600 uppercase tracking-widest">{driver.name}</span>
                 </div>
                 <button onClick={onClose} className="text-slate-500 hover:text-app-text transition-colors">
                     <X size={18} />
@@ -328,7 +328,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                         <button
                             key={id}
                             onClick={() => setOnglet(id)}
-                            className={`px-3 py-1.5 rounded-t-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 border-b-2 ${onglet === id
+                            className={`px-3 py-1.5 rounded-t-xl text-ui-10 font-black uppercase tracking-widest transition-all flex items-center gap-1.5 border-b-2 ${onglet === id
                                 ? 'text-accent border-accent'
                                 : 'text-slate-600 border-transparent hover:text-slate-400'}`}
                         >
@@ -347,7 +347,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                         <div className="text-center py-10 space-y-2">
                             <BookMarked className="w-12 h-12 mx-auto text-slate-700 opacity-20" />
                             <p className="text-slate-400 text-sm">Aucun gabarit pour {driver.name}.</p>
-                            <p className="text-[10px] text-slate-600 uppercase tracking-widest max-w-sm mx-auto">
+                            <p className="text-ui-10 text-slate-600 uppercase tracking-widest max-w-sm mx-auto">
                                 Fabriquez un adversaire qui vous plaît, puis « Au bestiaire » —
                                 ici ou depuis sa fiche en plein combat. Le bestiaire appartient
                                 au jeu : celui d’un autre système ne s’affiche pas ici.
@@ -389,7 +389,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                     </button>
                                 </div>
 
-                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-600">
+                                <p className="text-ui-9 font-black uppercase tracking-widest text-slate-600">
                                     {archetypeParId(g.archetypeId).nom} · {rangParId(g.rangId).nom}
                                 </p>
 
@@ -399,19 +399,19 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                         .filter(champ => g.sheetData[champ.id] !== undefined && g.sheetData[champ.id] !== '')
                                         .map(champ => (
                                             <div key={champ.id} className="flex items-baseline justify-between gap-2">
-                                                <span className="text-[10px] text-slate-500 truncate">{champ.label}</span>
-                                                <span className="text-[11px] font-black font-mono text-app-text">
+                                                <span className="text-ui-10 text-slate-500 truncate">{champ.label}</span>
+                                                <span className="text-ui-11 font-black font-mono text-app-text">
                                                     {String(g.sheetData[champ.id])}
                                                 </span>
                                             </div>
                                         ))}
                                 </div>
 
-                                {g.notes && <p className="text-[10px] text-slate-500 italic">{g.notes}</p>}
+                                {g.notes && <p className="text-ui-10 text-slate-500 italic">{g.notes}</p>}
 
                                 <button
                                     onClick={() => { changerDArchetype({ genre: 'gabarit', id: g.id }); setOnglet('fabriquer'); }}
-                                    className="w-full mt-1 px-3 py-1.5 rounded-lg border border-app-border/50 text-slate-400 hover:text-accent hover:border-accent/40 transition-all text-[9px] font-black uppercase tracking-widest"
+                                    className="w-full mt-1 px-3 py-1.5 rounded-lg border border-app-border/50 text-slate-400 hover:text-accent hover:border-accent/40 transition-all text-ui-9 font-black uppercase tracking-widest"
                                 >
                                     Fabriquer depuis celui-ci
                                 </button>
@@ -425,7 +425,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
             <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
                 {/* La source : un archétype, ou un gabarit déjà rangé */}
                 <section className="space-y-2">
-                    <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-1.5">
+                    <h3 className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-1.5">
                         <Wand2 size={11} /> Fabriquer depuis un archétype
                     </h3>
                     <div className="flex flex-wrap gap-1.5">
@@ -434,7 +434,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                 key={a.id}
                                 onClick={() => changerDArchetype({ genre: 'archetype', id: a.id })}
                                 title={a.resume}
-                                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tighter border transition-all ${source.genre === 'archetype' && source.id === a.id
+                                className={`px-3 py-1.5 rounded-xl text-ui-10 font-black uppercase tracking-tighter border transition-all ${source.genre === 'archetype' && source.id === a.id
                                     ? 'bg-accent/10 border-accent/30 text-accent'
                                     : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-300'}`}
                             >
@@ -442,7 +442,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                             </button>
                         ))}
                     </div>
-                    <p className="text-[10px] text-slate-500 italic">{archetypeCourant.resume}</p>
+                    <p className="text-ui-10 text-slate-500 italic">{archetypeCourant.resume}</p>
                 </section>
 
                 {/*
@@ -454,7 +454,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                 */}
                 {gabarits.length > 0 && (
                     <section className="space-y-2">
-                        <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-1.5">
+                        <h3 className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-1.5">
                             <BookMarked size={11} /> Ou reprendre du bestiaire
                         </h3>
                         <div className="flex flex-wrap gap-1.5">
@@ -462,7 +462,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                 <div key={g.id} className="flex items-center">
                                     <button
                                         onClick={() => changerDArchetype({ genre: 'gabarit', id: g.id })}
-                                        className={`px-3 py-1.5 rounded-l-xl text-[10px] font-black uppercase tracking-tighter border transition-all ${source.genre === 'gabarit' && source.id === g.id
+                                        className={`px-3 py-1.5 rounded-l-xl text-ui-10 font-black uppercase tracking-tighter border transition-all ${source.genre === 'gabarit' && source.id === g.id
                                             ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
                                             : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-300'}`}
                                     >
@@ -483,11 +483,11 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
 
                 {/* Ce que l'atelier a compris des champs du jeu */}
                 <section className="space-y-2">
-                    <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+                    <h3 className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-500">
                         Ce qu’il pousse et ce qu’il néglige
                     </h3>
                     <div className="flex flex-wrap gap-1.5">{champsChiffres.map(puce)}</div>
-                    <p className="text-[9px] text-slate-600 italic">
+                    <p className="text-ui-9 text-slate-600 italic">
                         Proposé d’après les libellés du jeu — clique pour corriger, ton choix est retenu.
                     </p>
                 </section>
@@ -495,7 +495,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                 {/* Rang, nombre, nom */}
                 <section className="grid grid-cols-3 gap-3">
                     <div className="space-y-1.5">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Rang</label>
+                        <label className="text-ui-9 font-black uppercase tracking-widest text-slate-500">Rang</label>
                         <select
                             value={rangId}
                             onChange={e => {
@@ -509,7 +509,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                     </div>
                     <div className="space-y-1.5">
                         <div className="flex items-baseline justify-between gap-1">
-                            <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Combien</label>
+                            <label className="text-ui-9 font-black uppercase tracking-widest text-slate-500">Combien</label>
                             {/*
                               La suggestion du rang reste offerte, mais elle ne
                               s'applique plus toute seule des que le meneur a
@@ -520,7 +520,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                 && exemplaires.nombre !== rangParId(rangId).nombreSuggere && (
                                 <button
                                     onClick={() => setExemplaires(reprendreLaSuggestion(rangId))}
-                                    className="text-[9px] font-black uppercase tracking-tighter text-slate-600 hover:text-accent transition-colors"
+                                    className="text-ui-9 font-black uppercase tracking-tighter text-slate-600 hover:text-accent transition-colors"
                                     title="Reprendre le nombre suggere par le rang"
                                 >
                                     ↺ {rangParId(rangId).nombreSuggere}
@@ -534,7 +534,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                         />
                     </div>
                     <div className="space-y-1.5">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Nom</label>
+                        <label className="text-ui-9 font-black uppercase tracking-widest text-slate-500">Nom</label>
                         <input
                             value={nom} onChange={e => setNom(e.target.value)}
                             placeholder={nomDeBase}
@@ -546,12 +546,12 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                 {/* L'aperçu : le PREMIER exemplaire, pas une moyenne */}
                 <section className="space-y-2 p-3 rounded-xl bg-app-bg/40 border border-app-border/50">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+                        <h3 className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-500">
                             Aperçu — {nommerLExemplaire(nomDeBase, 0, nombre)}
                         </h3>
                         <button
                             onClick={() => setGraine(Math.floor(Math.random() * 1e9))}
-                            className="text-[9px] font-black uppercase tracking-widest text-accent hover:underline"
+                            className="text-ui-9 font-black uppercase tracking-widest text-accent hover:underline"
                         >
                             ↻ Relancer
                         </button>
@@ -559,7 +559,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                     <div className="grid grid-cols-3 gap-x-4 gap-y-1">
                         {champsChiffres.map(champ => (
                             <div key={champ.id} className="flex items-baseline justify-between gap-2">
-                                <span className="text-[10px] text-slate-500 truncate">{champ.label}</span>
+                                <span className="text-ui-10 text-slate-500 truncate">{champ.label}</span>
                                 <span className="text-xs font-black font-mono text-app-text">
                                     {String(apercu.sheetData[champ.id] ?? '—')}
                                 </span>
@@ -567,17 +567,17 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                         ))}
                     </div>
                     {apercu.fabrique.pointsForts.length > 0 && (
-                        <p className="text-[10px] text-emerald-400/80 italic">
+                        <p className="text-ui-10 text-emerald-400/80 italic">
                             Fort en : {apercu.fabrique.pointsForts.join(', ')}
                         </p>
                     )}
                     {apercu.fabrique.pointsFaibles.length > 0 && (
-                        <p className="text-[10px] text-rose-400/70 italic">
+                        <p className="text-ui-10 text-rose-400/70 italic">
                             Faible en : {apercu.fabrique.pointsFaibles.join(', ')}
                         </p>
                     )}
                     {apercu.gabarit && (
-                        <p className="text-[9px] text-amber-400/70 italic">
+                        <p className="text-ui-9 text-amber-400/70 italic">
                             Les valeurs saisies dans « {apercu.gabarit.nom} » passent par-dessus le tirage.
                         </p>
                     )}
@@ -588,20 +588,20 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
             <div className="p-4 border-t border-app-border/50 flex items-center gap-2">
                 <button
                     onClick={rangerAuBestiaire}
-                    className="px-3 py-2.5 rounded-xl border border-app-border/50 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                    className="px-3 py-2.5 rounded-xl border border-app-border/50 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center gap-1.5"
                 >
                     <Save size={12} /> Au bestiaire
                 </button>
                 <div className="flex-1" />
                 <button
                     onClick={garderDansLaCampagne}
-                    className="px-4 py-2.5 rounded-xl border border-app-border/50 text-slate-300 hover:border-accent/40 hover:text-accent transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                    className="px-4 py-2.5 rounded-xl border border-app-border/50 text-slate-300 hover:border-accent/40 hover:text-accent transition-all text-ui-10 font-black uppercase tracking-widest flex items-center gap-1.5"
                 >
                     <Users size={12} /> Garder dans la campagne
                 </button>
                 <button
                     onClick={envoyerAuCombat}
-                    className="px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                    className="px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center gap-1.5"
                 >
                     <Swords size={12} /> Envoyer au combat
                 </button>

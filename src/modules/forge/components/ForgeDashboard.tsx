@@ -59,7 +59,7 @@ const JournalDesLacunes: React.FC<{ lacunes: LacuneDuPilote[] }> = ({ lacunes })
 
   return (
     <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 space-y-3">
-      <h4 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 font-display">
+      <h4 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400 font-display">
         <AlertTriangle size={14} /> {t('modules:session.forge_module.corpus_forge.gaps_title')}
       </h4>
       <ul className="space-y-2">
@@ -72,7 +72,7 @@ const JournalDesLacunes: React.FC<{ lacunes: LacuneDuPilote[] }> = ({ lacunes })
           </li>
         ))}
       </ul>
-      <p className="text-[10px] text-app-text/40 leading-relaxed">
+      <p className="text-ui-10 text-app-text/40 leading-relaxed">
         {t('modules:session.forge_module.corpus_forge.gaps_hint')}
       </p>
     </div>
@@ -956,7 +956,7 @@ const ForgeDashboard: React.FC = () => {
             <>
               {/* Metadata / Output Target */}
               <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
-                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display">
                    <Rocket size={14} className="animate-pulse" /> {t('modules:session.forge_module.destination_label')}
                 </h2>
                 <div className="flex flex-col gap-3">
@@ -992,7 +992,7 @@ const ForgeDashboard: React.FC = () => {
                       className="w-full bg-white/2 border-b border-white/10 p-2 text-sm text-white/80 focus:outline-none focus:border-accent/50 transition-all placeholder:text-white/10 font-sans italic" 
                     />
                     {!allDrivers.find(d => d.name === forgeStore.targetSystemName) && forgeStore.targetSystemName && (
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[8px] font-black text-accent uppercase tracking-widest animate-pulse">
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 text-ui-8 font-black text-accent uppercase tracking-widest animate-pulse">
                         <Sparkles size={10} /> Nouveau
                       </div>
                     )}
@@ -1012,10 +1012,10 @@ const ForgeDashboard: React.FC = () => {
                         className="mt-0.5 accent-accent"
                       />
                       <span className="flex flex-col gap-1">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/70">
+                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/70">
                           Ne pas toucher à la fiche de personnage
                         </span>
-                        <span className="text-[11px] text-app-text/40 leading-relaxed">
+                        <span className="text-ui-11 text-app-text/40 leading-relaxed">
                           {piloteSeulement
                             ? "Seul le pilote est enrichi. La fiche existante reste telle quelle — ses champs, leurs identifiants, et les valeurs déjà saisies sur les personnages."
                             : "La dérivation ajoutera ses sections et ses champs manquants. Si elle nomme « points_de_vie » ce que ta fiche appelle « hp », tu obtiendras les deux."}
@@ -1035,10 +1035,10 @@ const ForgeDashboard: React.FC = () => {
                 possible en dessous, pour un jeu qu'aucun atelier n'a documenté.
               */}
               <div className="bg-purple-500/10 rounded-2xl border border-purple-500/20 p-5 flex flex-col gap-3 hover:border-purple-500/40 transition-all">
-                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-purple-400 font-display">
                   <Layers size={14} /> {t('modules:session.forge_module.corpus_forge.label')}
                 </h2>
-                <p className="text-[10px] text-app-text/40 leading-relaxed">
+                <p className="text-ui-10 text-app-text/40 leading-relaxed">
                   {t('modules:session.forge_module.corpus_forge.hint')}
                 </p>
 
@@ -1074,7 +1074,7 @@ const ForgeDashboard: React.FC = () => {
                 */}
                 {corpusVise && (
                   <div className="flex flex-col gap-2 rounded-xl border border-white/10 bg-black/20 p-3">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30">
+                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-white/30">
                       Ce corpus est
                     </span>
                     <div className="flex gap-2">
@@ -1085,7 +1085,7 @@ const ForgeDashboard: React.FC = () => {
                         <button
                           key={choix.valeur}
                           onClick={() => void enregistrerLaDeclaration({ ...declaration, nature: choix.valeur })}
-                          className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                          className={`flex-1 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${
                             declaration.nature === choix.valeur
                               ? 'bg-purple-600 text-white'
                               : 'bg-white/5 text-white/40 hover:bg-white/10'
@@ -1104,7 +1104,7 @@ const ForgeDashboard: React.FC = () => {
                         plutôt que de laisser croire qu'il agit.
                       */}
                       <label className="flex flex-col gap-1">
-                        <span className="text-[9px] uppercase tracking-widest text-white/25">
+                        <span className="text-ui-9 uppercase tracking-widest text-white/25">
                           Moteur (non lu)
                         </span>
                         <input
@@ -1112,11 +1112,11 @@ const ForgeDashboard: React.FC = () => {
                           onChange={e => setDeclaration({ ...declaration, moteur: e.target.value })}
                           onBlur={() => void enregistrerLaDeclaration(declaration)}
                           placeholder="2d20, yze…"
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[11px] font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
+                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-ui-11 font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
                         />
                       </label>
                       <label className="flex flex-col gap-1">
-                        <span className="text-[9px] uppercase tracking-widest text-white/25">
+                        <span className="text-ui-9 uppercase tracking-widest text-white/25">
                           Langue de forge
                         </span>
                         <input
@@ -1124,11 +1124,11 @@ const ForgeDashboard: React.FC = () => {
                           onChange={e => setDeclaration({ ...declaration, langue: e.target.value })}
                           onBlur={() => void enregistrerLaDeclaration(declaration)}
                           placeholder={i18n.language}
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[11px] font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
+                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-ui-11 font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
                         />
                       </label>
                     </div>
-                    <p className="text-[9px] text-white/25 leading-relaxed">
+                    <p className="text-ui-9 text-white/25 leading-relaxed">
                       Un socle commun ne se forge pas en pilote : il sert à combler les sujets
                       qu&apos;un corpus de jeu ne couvre pas. Vider un champ retire la déclaration.
                     </p>
@@ -1143,20 +1143,20 @@ const ForgeDashboard: React.FC = () => {
                 */}
                 {famillesConnues.length > 0 && (
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-white/30">
                       Socle commun (facultatif)
                     </label>
                     <select
                       value={familleCible ?? ''}
                       onChange={(e) => setFamilleCible(e.target.value || null)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-[11px] font-bold text-white/70 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-ui-11 font-bold text-white/70 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
                     >
                       <option value="" className="bg-app-bg text-white/40">Aucun — ce jeu seul</option>
                       {famillesConnues.map(f => (
                         <option key={f} value={f} className="bg-app-bg text-white font-mono">{f}</option>
                       ))}
                     </select>
-                    <p className="text-[9px] text-white/25 leading-relaxed">
+                    <p className="text-ui-9 text-white/25 leading-relaxed">
                       Sert uniquement aux sujets que le corpus du jeu ne couvre pas. Le jeu
                       l'emporte toujours, et chaque comblement est signalé.
                     </p>
@@ -1166,7 +1166,7 @@ const ForgeDashboard: React.FC = () => {
                 <button
                   onClick={forgerDepuisLeCorpus}
                   disabled={!corpusVise || forgeStore.isProcessing}
-                  className={`w-full py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${
+                  className={`w-full py-3 rounded-xl font-black text-ui-10 uppercase tracking-[0.2em] transition-all ${
                     !corpusVise || forgeStore.isProcessing
                       ? 'bg-white/5 text-white/10 cursor-not-allowed'
                       : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
@@ -1175,7 +1175,7 @@ const ForgeDashboard: React.FC = () => {
                   {t('modules:session.forge_module.corpus_forge.button')}
                 </button>
                 {!corpusVise && (
-                  <p className="text-[10px] text-amber-300/60 leading-relaxed">
+                  <p className="text-ui-10 text-amber-300/60 leading-relaxed">
                     {t('modules:session.forge_module.corpus_forge.required')}
                   </p>
                 )}
@@ -1194,7 +1194,7 @@ const ForgeDashboard: React.FC = () => {
               */}
               {corpusVise && (
                 <details className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 group">
-                  <summary className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display cursor-pointer list-none">
+                  <summary className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display cursor-pointer list-none">
                     <Users size={14} /> Personas du corpus
                     <ChevronRight size={12} className="ml-auto transition-transform group-open:rotate-90" />
                   </summary>
@@ -1217,7 +1217,7 @@ const ForgeDashboard: React.FC = () => {
               */}
               {corpusVise && (
                 <details className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 group">
-                  <summary className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display cursor-pointer list-none">
+                  <summary className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display cursor-pointer list-none">
                     <FolderTree size={14} /> Fiches du corpus
                     <ChevronRight size={12} className="ml-auto transition-transform group-open:rotate-90" />
                   </summary>
@@ -1229,7 +1229,7 @@ const ForgeDashboard: React.FC = () => {
 
               {/* User Instructions Extension */}
               <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
-                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display">
                    <Sparkles size={14} className="text-amber-500" /> {t('modules:session.forge_module.intentions_label')}
                 </h2>
                 <textarea 
@@ -1256,7 +1256,7 @@ const ForgeDashboard: React.FC = () => {
                   L atelier avait ete decouple ; ce point d entree-ci ne l etait
                   pas. Documenter un corpus reste une operation de bibliotheque.
                 */}
-                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-purple-400 font-display">
                    <Shield size={14} /> {t('modules:session.forge_module.atelier.corpus_label')}
                 </h2>
 
@@ -1294,12 +1294,12 @@ const ForgeDashboard: React.FC = () => {
                     onChange={e => setNouveauCorpus(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') void ouvrirUnCorpus(); }}
                     placeholder={t('modules:session.forge_module.atelier.corpus_new_placeholder')}
-                    className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white/80 font-mono focus:outline-none focus:border-purple-500/50 placeholder:text-white/20"
+                    className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-ui-11 text-white/80 font-mono focus:outline-none focus:border-purple-500/50 placeholder:text-white/20"
                   />
                   <button
                     disabled={!slug(nouveauCorpus) || ouvertureEnCours}
                     onClick={() => void ouvrirUnCorpus()}
-                    className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${
+                    className={`px-4 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all shrink-0 ${
                       slug(nouveauCorpus) && !ouvertureEnCours
                         ? 'bg-purple-600 text-white hover:bg-purple-500'
                         : 'bg-white/5 text-white/10 cursor-not-allowed'
@@ -1316,7 +1316,7 @@ const ForgeDashboard: React.FC = () => {
                   celui qui porte deja les fiches.
                 */}
                 {slug(nouveauCorpus) && (
-                  <p className="text-[10px] text-white/30 font-mono -mt-1">
+                  <p className="text-ui-10 text-white/30 font-mono -mt-1">
                     systems/{slug(nouveauCorpus)}
                     {dossiersSystemes.some(d => d === slug(nouveauCorpus)) && (
                       <span className="text-amber-400/70 not-italic"> — existe deja, sera rejoint</span>
@@ -1326,7 +1326,7 @@ const ForgeDashboard: React.FC = () => {
 
                 <div className="h-px bg-white/5 my-1" />
 
-                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-purple-400 font-display">
                    <Sparkles size={14} /> {t('modules:session.forge_module.atelier.custom_subject_label')}
                 </h2>
                 <textarea 
@@ -1348,14 +1348,14 @@ const ForgeDashboard: React.FC = () => {
                     brainstormStore.setNotebook(selectedNotebook?.id || '', selectedNotebook?.title);
                     brainstormStore.startDiscovery();
                   }}
-                  className={`w-full py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${
+                  className={`w-full py-3 rounded-xl font-black text-ui-10 uppercase tracking-[0.2em] transition-all ${
                     !selectedNotebook || !corpusVise ? 'bg-white/5 text-white/10 cursor-not-allowed' : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
                   }`}
                 >
                   {t('modules:session.forge_module.atelier.analyze_button')}
                 </button>
                 {!corpusVise && (
-                  <p className="text-[10px] text-amber-300/60 leading-relaxed">
+                  <p className="text-ui-10 text-amber-300/60 leading-relaxed">
                     {t('modules:session.forge_module.atelier.corpus_required')}
                   </p>
                 )}
@@ -1493,7 +1493,7 @@ const ForgeDashboard: React.FC = () => {
                       addLog("TRANSMUTATION ABORTED MANUALLY.");
                       gmToast("Transmutation annulée", "info");
                     }}
-                    className="w-full py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-colors"
+                    className="w-full py-2 rounded-xl text-ui-10 font-bold uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-colors"
                   >
                     {t('modules:session.forge_module.atelier.abort_forge')}
                   </button>
@@ -1637,10 +1637,10 @@ const ForgeDashboard: React.FC = () => {
           */}
           {logs.length > 0 && (
             <div className="shrink-0 border-t border-app-border/10 bg-black/40 px-6 py-4">
-              <div className="flex items-center gap-2 mb-2 text-[10px] font-black uppercase tracking-widest text-app-text/20">
+              <div className="flex items-center gap-2 mb-2 text-ui-10 font-black uppercase tracking-widest text-app-text/20">
                 <Terminal size={12} className="text-accent/60" /> Journal de la Forge
               </div>
-              <div className="max-h-32 overflow-y-auto custom-scrollbar space-y-1 font-mono text-[11px] text-app-text/50">
+              <div className="max-h-32 overflow-y-auto custom-scrollbar space-y-1 font-mono text-ui-11 text-app-text/50">
                 {logs.map((ligne, idx) => (
                   <p key={idx} className="leading-relaxed break-words">{ligne}</p>
                 ))}
@@ -1700,7 +1700,7 @@ const ForgeDashboard: React.FC = () => {
                                 <div className="flex gap-2">
                                   <button 
                                     onClick={() => handleSourceImport(s.id, s.title)} 
-                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                    className={`px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                       forgeStore.contextItems.some(item => item.name === `[NB] ${s.title}`)
                                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                                         : 'bg-accent/20 text-accent hover:bg-accent hover:text-white'
@@ -1717,7 +1717,7 @@ const ForgeDashboard: React.FC = () => {
                                         brainstormStore.setSources([...current, s.id]);
                                       }
                                     }}
-                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                    className={`px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                       brainstormStore.selectedSourceIds.includes(s.id)
                                         ? 'bg-purple-500 text-white'
                                         : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'

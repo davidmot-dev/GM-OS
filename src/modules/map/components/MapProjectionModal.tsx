@@ -98,7 +98,7 @@ const MapProjectionModal: React.FC = () => {
                 <div className="h-px bg-app-border my-1" />
 
                 {/* Option 2: Monitors */}
-                <h5 className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">{t('map.projection.monitors.title')}</h5>
+                <h5 className="text-ui-10 font-black uppercase tracking-widest text-slate-500 px-1">{t('map.projection.monitors.title')}</h5>
                 
                 {displays.length === 0 ? (
                     <div className="p-4 bg-app-bg/50 rounded-xl border border-dashed border-app-border text-center">

@@ -436,7 +436,7 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
                         {/*
                           Une taille en `rem`, comme la boîte : les deux suivent
                           alors la même racine et le rapport ne peut plus
-                          dériver. En `px` — c'était `text-[120px]` — les
+                          dériver. En `px` — c'était `text-[calc(120px*var(--echelle-titres,1))]` — les
                           chiffres débordaient de l'anneau dès que la racine
                           n'était pas à 100 %.
                         */}

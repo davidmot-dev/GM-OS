@@ -47,7 +47,7 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
                                 {getIcon()}
                             </div>
                             <div>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] block mb-1">
+                                <span className="text-ui-10 font-black text-slate-500 uppercase tracking-[0.3em] block mb-1">
                                     Transmission de Données
                                 </span>
                                 <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tightest leading-none">

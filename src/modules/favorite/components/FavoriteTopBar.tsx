@@ -10,7 +10,7 @@ export const FavoriteTopBar: React.FC = () => {
         <header className="h-16 border-b border-app-border px-8 flex items-center justify-between gap-6 shrink-0 bg-app-bg/50 backdrop-blur-sm z-10">
             <div className="flex-1 max-w-xl">
                 <div className="relative group">
-                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-accent transition-colors text-[20px]">search</span>
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-accent transition-colors text-xl">search</span>
                     <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -23,7 +23,7 @@ export const FavoriteTopBar: React.FC = () => {
 
             <div className="flex items-center gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border hover:bg-app-surface/80 transition-colors text-sm font-semibold text-slate-300">
-                    <span className="material-symbols-outlined text-[18px]">file_export</span>
+                    <span className="material-symbols-outlined text-lg">file_export</span>
                     {t('modules:favorite.topbar.export')}
                 </button>
                 <div className="h-6 w-[1px] bg-app-border mx-1"></div>
