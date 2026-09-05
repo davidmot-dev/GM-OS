@@ -56,14 +56,23 @@ qu'on ne peut pas couper.* Rien n'empêche de l'envoyer sur plusieurs écrans à
 >   joueurs.
 > - **Elle ne part ni dans la sauvegarde ni dans Nexus.** Seule l'adresse voyage ;
 >   la vidéo reste chez YouTube, et peut disparaître.
-> - ⚠️ **Son son échappe entièrement au mixage.** Ni le volume général, ni le mode
->   Focus, ni le ducking de la voix ne l'atteignent — *un cadre distant ne se
->   branche sur aucun contexte audio, et aucun réglage n'y changera rien.* Réglez
->   le volume dans le lecteur, ou coupez l'écran.
+> - ⚠️ **Vous ne choisissez pas son enceinte de sortie.** Elle sort par l'appareil
+>   de l'écran où elle joue. *Un cadre distant ne se branche sur aucun contexte
+>   audio* — c'est la seule limite audio qui subsiste.
 >
 > GM-OS bride ce qu'il peut : domaine sans traceur, et les suggestions de fin
 > réduites à la même chaîne. **Il n'existe aucun moyen de supprimer l'écran de fin
 > de YouTube** ; coupez l'écran avant que la vidéo se termine.
+
+> ⭐ **Son volume, lui, obéit à la table — depuis le 2026-09-05.** Le volume
+> général, le mode Focus et le ducking de la voix l'atteignent, comme une vidéo de
+> votre bibliothèque. *Je vous avais dit l'inverse : c'était confondre l'enceinte
+> et le niveau.* La première reste hors de portée, le second se commande.
+>
+> ⚠️ **Un envoi sans accusé de réception.** GM-OS parle au lecteur de YouTube, qui
+> ignore ce qui lui arrive avant d'être prêt. L'ordre est donc répété pendant les
+> deux premières secondes. Si le niveau semble ne pas suivre au tout premier
+> instant, c'est cela — il se rattrape.
 
 > 💡 **Pour une vidéo que vous montrerez souvent**, téléchargez-la et posez-la dans
 > [Image-OS](./24-Image-OS-la-regie-visuelle.md) : elle devient un pad comme un

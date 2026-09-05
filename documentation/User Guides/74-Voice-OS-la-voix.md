@@ -184,8 +184,8 @@ Une fonctionnalité révolutionnaire pour le confort d'écoute de vos joueurs :
 > Si le ducking vous paraît inactif un jour, le journal tranchera.
 
 > 🔎 **Il agit aussi sur les vidéos projetées** depuis le 2026-09-05 — voir
-> [Image-OS](./24-Image-OS-la-regie-visuelle.md). Une vidéo YouTube fait exception : son son
-> échappe entièrement au mixage.
+> [Image-OS](./24-Image-OS-la-regie-visuelle.md) — **y compris les vidéos YouTube**, dont le
+> lecteur reçoit le niveau. Seule leur *enceinte de sortie* échappe encore à GM-OS.
 
 ---
 

@@ -1,0 +1,48 @@
+{
+    "name": "Événements de Pause à la Maison — Doppelganger de Noah",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Rien d'anormal",
+            "description": "Activité routinière à la discrétion du joueur.",
+            "effect": ""
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Rêve de miroir",
+            "description": "Rêve intense d'une poursuite sous la pluie à portée Moyenne contre ses propres statistiques. Si l'agent attrape sa proie, il découvre son propre visage.",
+            "effect": "Il se réveille en sursaut : pas de récupération de stress et facteur de stress 1."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Quiproquo téléphonique",
+            "description": "Sa relation clé l'appelle, furieuse ou troublée de s'être fait ignorer dans la rue plus tôt.",
+            "effect": "En réalité, le PNJ a croisé Noah sans faire la différence physique."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "La visite d'Ezekiel",
+            "description": "L'imposteur Ray McCoy (Ezekiel) s'invite chez lui pour « discuter de l'enquête » et lui pose de nombreuses questions détournées sur sa vie et ses souvenirs.",
+            "effect": "Relancer si Ezekiel est démasqué."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "L'interrogatoire d'Holden",
+            "description": "Holden appelle par Vid-Phon et lui pose des questions d'une précision dérangeante sur son passé et sa famille.",
+            "effect": "Il ne veut pas en expliquer la raison."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "L'appel de Noah",
+            "description": "Noah appelle en masquant son visage.",
+            "effect": "Test de Perspicacité (Insight) pour reconnaître que la voix est exactement la sienne. Noah lui pose des questions existentielles sur le sens du devoir et la liberté."
+        }
+    ]
+}

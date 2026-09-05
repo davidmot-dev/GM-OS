@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { videoDuMarqueur, adresseDIntegration } from '../../modules/web/youtube';
+import { useNiveauDuLecteurYouTube } from '../../modules/web/pilotageDuLecteurYouTube';
 
 /**
  * **Ce que le Hub affiche derrière tout le reste : image, film, ou cadre distant.**
@@ -49,7 +50,28 @@ const FondProjete: React.FC<FondProjeteProps> = ({
     style,
 }) => {
     const element = useRef<HTMLVideoElement | null>(null);
+    const cadre = useRef<HTMLIFrameElement | null>(null);
     const video = videoDuMarqueur(url);
+
+    /*
+      ⭐ **Le volume d'une vidéo YouTube obéit aussi — 2026-09-05.**
+
+      J'avais annoncé le contraire à David. C'était confondre l'enceinte et le
+      niveau : la première reste hors de portée, le second se commande. Voir
+      [[pilotageDuLecteurYouTube]].
+    */
+    useNiveauDuLecteurYouTube(cadre, niveauSonore, avecSon);
+
+    /*
+      **Le cadre naît muet si la table l'est.** Le lecteur commence à jouer avant
+      d'écouter quoi que ce soit : sur une table coupée, il ferait entrer un
+      éclat de son que l'ordre suivant éteindrait une seconde trop tard.
+
+      ⚠️ **Figé au montage, exprès.** Recalculer l'adresse à chaque changement de
+      niveau rechargerait le cadre — *la vidéo repartirait du début à chaque coup
+      de curseur.*
+    */
+    const muetAuDepart = useRef(!avecSon || niveauSonore === 0);
 
     /*
       **Le niveau s'applique à l'élément, pas par un attribut** — React n'a pas de
@@ -83,7 +105,8 @@ const FondProjete: React.FC<FondProjeteProps> = ({
     if (video) {
         return (
             <iframe
-                src={adresseDIntegration(video)}
+                ref={cadre}
+                src={adresseDIntegration(video, { muet: muetAuDepart.current })}
                 title="Vidéo YouTube projetée"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen

@@ -64,12 +64,18 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
 
         await ImageService.projectMedia(marqueur, ecranId as any);
         /*
-          **Le seul avertissement qui compte, au moment où il compte.** Le son
-          d'un cadre distant échappe entièrement au mixage de GM-OS : ni le volume
-          général, ni le Focus, ni le ducking de la voix ne l'atteignent. Le dire
-          dans un manuel ne servirait à rien ; le dire au clic, si.
+          **Le seul avertissement qui compte, au moment où il compte.**
+
+          ⭐ **Corrigé le 2026-09-05 : le niveau obéit désormais**, par
+          `postMessage` au lecteur. Ce qui reste vrai, et qu'il faut donc encore
+          dire, c'est qu'**Internet est requis** — une coupure donne un cadre noir
+          devant les joueurs — et que l'**enceinte de sortie** ne se choisit pas :
+          `setSinkId` n'a aucune prise sur un cadre distant.
+
+          *Un avertissement qui a cessé d'être vrai est pire qu'aucun : il apprend
+          à ne pas lire les suivants.*
         */
-        gmToast("Vidéo YouTube projetée — son hors du mixage, et Internet requis.");
+        gmToast("Vidéo YouTube projetée — Internet requis, et sortie audio non choisissable.");
     };
 
     // Mapping colors to Tailwind classes
@@ -141,7 +147,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                         className={`p-2 rounded-lg transition-colors ${occupes.length > 0
                             ? 'bg-accent text-app-bg shadow-glow-accent'
                             : 'bg-app-bg hover:bg-app-surface text-app-text'}`}
-                        title="Projeter — choisir l'écran. Son hors du mixage, Internet requis."
+                        title="Projeter — choisir l'écran. Internet requis ; le volume suit la table, pas l'enceinte."
                     >
                         <MonitorPlay size={18} />
                     </button>

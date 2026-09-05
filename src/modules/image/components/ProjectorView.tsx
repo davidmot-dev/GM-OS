@@ -9,6 +9,7 @@ import { useImageStore } from '../useImageStore';
 import { useTranslation } from 'react-i18next';
 import { TitreProjete } from '../../../components/TitreProjete';
 import { videoDuMarqueur, adresseDIntegration, PREFIXE_YOUTUBE } from '../../web/youtube';
+import { useNiveauDuLecteurYouTube } from '../../web/pilotageDuLecteurYouTube';
 
 /**
  * Le fondu de l'image projetée, à l'entrée comme à la sortie.
@@ -55,6 +56,17 @@ const ProjectorView: React.FC = () => {
     */
     const [niveauDuSon, setNiveauDuSon] = useState(1);
     const elementVideo = useRef<HTMLVideoElement | null>(null);
+    const cadreYouTube = useRef<HTMLIFrameElement | null>(null);
+
+    /*
+      ⭐ **Le cadre YouTube obéit au même niveau — 2026-09-05.** L'enceinte de
+      sortie reste hors de portée ; le niveau, non. Voir
+      [[pilotageDuLecteurYouTube]].
+    */
+    const muetAuDepart = useRef(niveauDuSon === 0);
+
+    /* Sans condition : un cadre absent ne reçoit rien, et il n'y a rien à dire. */
+    useNiveauDuLecteurYouTube(cadreYouTube, niveauDuSon, true);
 
     /*
       **L'image s'éteint en fondu, elle ne disparaît pas d'un coup.**
@@ -264,10 +276,16 @@ const ProjectorView: React.FC = () => {
                           `allow` liste ce que le cadre a le droit de faire : sans
                           `autoplay`, la vidéo attendrait un clic que personne ne
                           peut donner sur un écran de projection.
+
+                          ⭐ **Son niveau, lui, obéit depuis le 2026-09-05** :
+                          `enablejsapi=1` et un ordre par `postMessage`. Ce qui
+                          reste hors de portée est l'enceinte de sortie, pas le
+                          volume.
                         */
                         <iframe
+                            ref={cadreYouTube}
                             key={imagePath}
-                            src={adresseDIntegration(videoDuMarqueur(imagePath ?? '')!)}
+                            src={adresseDIntegration(videoDuMarqueur(imagePath ?? '')!, { muet: muetAuDepart.current })}
                             title="Vidéo YouTube projetée"
                             allow="autoplay; encrypted-media; picture-in-picture"
                             allowFullScreen

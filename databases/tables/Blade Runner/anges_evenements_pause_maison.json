@@ -1,0 +1,55 @@
+{
+    "name": "Événements de Pause à la Maison",
+    "dice": "1d8",
+    "entries": [
+        {
+            "min": 1,
+            "max": 2,
+            "title": "Rien d'anormal",
+            "description": "Rien d'extraordinaire ne se produit.",
+            "effect": "Le joueur décrit les activités banales et routinières de son personnage."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Cauchemar / Souvenir clé",
+            "description": "Le personnage revit son souvenir clé de façon déformée.",
+            "effect": "Pas de récupération de stress. Test de Perspicacité (Insight) contre le facteur de stress 1 : en cas de réussite, le rêve apporte un indice mystique ou symbolique sur l'enquête."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Appel de la relation clé",
+            "description": "La relation clé contacte l'agent par Vid-Phon.",
+            "effect": "Elle lui demande de l'aide, de l'affection, ou lui parle de l'affaire en cours."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Détente totale",
+            "description": "L'agent s'accorde un vrai moment de calme : musique douce, vieux film ou temps partagé avec son DiJi.",
+            "effect": "Soigne 1 point de stress supplémentaire, en plus du point habituel de repos."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Visite surprise",
+            "description": "La relation clé de l'agent sonne à sa porte.",
+            "effect": "Elle affirme être en danger ou avoir besoin d'aide en urgence, avec un potentiel coup monté lié à l'enquête."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Le coup de fil d'Holden",
+            "description": "Deputy Chief Holden appelle par Vid-Phon.",
+            "effect": "Il exige un rapport d'étape immédiat et évalue les performances de ses subordonnés."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Appel mystérieux",
+            "description": "Un PNJ de l'enquête actuelle ou d'une affaire passée appelle l'agent.",
+            "effect": "Il propose des informations cruciales en échange d'un service ou de matériel."
+        }
+    ]
+}

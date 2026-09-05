@@ -1111,7 +1111,22 @@ récepteur qui n'a jamais rien reçu ne se distingue pas d'un récepteur en pann
 **YouTube reste un marque-page** — rien à sauvegarder, rien à emporter dans Nexus, donc pas d'entrée
 dans la bibliothèque d'Image-OS. Il voyage vers le projecteur comme `__youtube__<id>`, en suivant la
 convention de la carte et du tableau blanc plutôt qu'en ouvrant un second canal. Ses trois limites —
-Internet, hors sauvegarde, **son hors mixage** — sont dites au clic et dans le guide.
+Internet, hors sauvegarde, son hors mixage — étaient dites au clic et dans le guide.
+
+⭐ **Et l'une des trois était fausse, corrigée le soir même.** J'avais annoncé à David que le son
+d'un cadre distant était hors d'atteinte. *C'était confondre l'enceinte et le niveau* : la première
+reste hors de portée — `setSinkId` n'a aucune prise sur un cadre — mais le second se commande par
+`postMessage`, avec `enablejsapi=1`. Le volume d'une vidéo YouTube suit donc la table comme le reste.
+⚠️ **Envoi sans accusé de réception** : le lecteur ignore ce qui lui arrive avant d'être prêt, et
+rien ne dit quand il l'est sans monter tout l'appareillage d'événements de YouTube — l'ordre est
+répété sur deux secondes et demie. *Un ordre répété quatre fois coûte moins qu'une poignée de main
+qu'il faut maintenir.* Le cadre naît `mute=1` quand la table est déjà coupée, sans quoi il ferait
+entrer un éclat de son qu'on éteindrait une seconde trop tard. Ancre :
+`web/pilotageDuLecteurYouTube.ts`.
+
+⛔ **La leçon de méthode.** Huit textes — code, guides, doc technique, registre — affirmaient que ce
+son échappait au mixage, et les corriger a demandé un balayage. *Un avertissement qui a cessé d'être
+vrai est pire qu'aucun : il apprend à ne pas lire les suivants.*
 
 ⛔ **Le Hub, lui, n'affichait rien — trouvé par David le soir même.** Il peignait **toute**
 projection en `background-image`, ce qui ne peut pas jouer un film. Et il ne pouvait pas s'en rendre

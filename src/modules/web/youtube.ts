@@ -6,11 +6,16 @@
  * devient donc pas un nouvel objet, juste **un lien qu'on sait aussi projeter**.
  *
  * ⚠️ **Une vidéo YouTube n'est pas un média de GM-OS, et il faut le savoir en la
- * lançant.** Elle demande Internet en séance, elle ne part ni dans la sauvegarde
- * ni dans Nexus — seule l'adresse voyage — et **son son échappe entièrement au
- * mixage** : un cadre distant n'est pas branchable sur un contexte audio, et
- * aucun réglage de GM-OS ne l'atteindra. C'est le prix, et il est écrit dans
- * l'interface avant qu'on projette.
+ * lançant.** Elle demande Internet en séance, et elle ne part ni dans la
+ * sauvegarde ni dans Nexus — seule l'adresse voyage.
+ *
+ * ⭐ **Son volume, lui, obéit depuis le 2026-09-05.** J'avais annoncé le
+ * contraire : un cadre distant n'est branchable sur aucun contexte audio, donc
+ * *rien* ne l'atteindrait. C'était confondre deux choses. L'**enceinte de
+ * sortie** reste hors de portée — `setSinkId` n'a pas de prise sur un cadre —
+ * mais le **niveau** se commande par `postMessage`, et suit donc le volume
+ * général, le Focus et le ducking comme le reste. Voir
+ * [[pilotageDuLecteurYouTube]].
  */
 
 /** Les hôtes que YouTube emploie, et eux seuls. */
@@ -112,15 +117,27 @@ export function videoYouTube(adresse: string): VideoYouTube | null {
  *   l'interface conseille de couper l'écran avant la fin.
  * - **`playsinline=1`** : la vidéo reste dans son cadre au lieu de réclamer le
  *   plein écran du système, qui passerait par-dessus la fenêtre de projection.
+ * - **`enablejsapi=1`** *(2026-09-05)* : sans lui, le lecteur n'écoute aucun
+ *   ordre, et **son volume échappe à GM-OS pour de bon**. Avec lui, il accepte
+ *   `setVolume` par `postMessage` — voir [[pilotageDuLecteurYouTube]].
+ *
+ * ⚠️ **`muet` n'est pas un réglage, c'est une précaution de démarrage.** Le
+ * lecteur commence à jouer avant d'écouter quoi que ce soit ; si la table est
+ * coupée, le laisser démarrer à plein volume ferait entrer un éclat de son que
+ * l'ordre suivant viendrait éteindre une seconde trop tard. *Ce qui doit être
+ * silencieux doit naître silencieux.* Hors de ce cas, on démarre audible :
+ * *rester muet parce qu'un ordre s'est perdu serait pire.*
  */
-export function adresseDIntegration(video: VideoYouTube): string {
+export function adresseDIntegration(video: VideoYouTube, options?: { muet?: boolean }): string {
     const parametres = new URLSearchParams({
         autoplay: '1',
         rel: '0',
         modestbranding: '1',
         playsinline: '1',
+        enablejsapi: '1',
     });
     if (video.debut) parametres.set('start', String(video.debut));
+    if (options?.muet) parametres.set('mute', '1');
 
     return `https://www.youtube-nocookie.com/embed/${video.id}?${parametres.toString()}`;
 }

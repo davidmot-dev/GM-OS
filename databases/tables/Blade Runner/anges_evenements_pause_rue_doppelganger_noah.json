@@ -1,0 +1,48 @@
+{
+    "name": "Événements de Pause dans la Rue — Doppelganger de Noah",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Rien d'anormal",
+            "description": "Rien à signaler d'extraordinaire.",
+            "effect": ""
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Double vision",
+            "description": "L'agent croise son propre visage au milieu d'une foule compacte avant qu'il ne disparaisse.",
+            "effect": "Événement de facteur de stress 1. Il s'agit bien de Noah, mais impossible de le rattraper au milieu de la foule."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Confrontation de rue",
+            "description": "Sa relation clé l'interpelle brutalement dans la rue pour savoir pourquoi l'agent l'a royalement ignorée quelques heures plus tôt.",
+            "effect": "Elle a en fait croisé Noah."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "McCoy aux aguets",
+            "description": "Ray McCoy (Ezekiel) apparaît « par hasard » à côté de lui et tente de l'interroger sur ses souvenirs d'enfance de manière suspecte.",
+            "effect": "Relancer si Ezekiel est démasqué."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Le litige de la Doxie",
+            "description": "Une Doxie furieuse lui barre la route et exige 1 point de Chinyen pour des services qu'il n'a jamais sollicités, mais que Noah a commandés avant de fuir.",
+            "effect": "Si l'agent refuse de payer, elle appelle deux brutes (Force B, Santé 5) pour le passer à tabac."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "La filature inversée",
+            "description": "L'agent se sent suivi. S'il tente de confronter son poursuivant, lancez une poursuite.",
+            "effect": "S'il l'intercepte, il fait face à Noah. Noah tentera de fuir, mais un jet de Manipulation réussi permet de lui parler brièvement."
+        }
+    ]
+}

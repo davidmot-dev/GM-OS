@@ -132,8 +132,15 @@ used by `__tactical_map__` and `__whiteboard__` rather than opening a second cha
 - `ImageService.projectMedia` short-circuits any `__`-prefixed path **before** `resolveToSendableUrl`:
   a marker names *what* to show, not *where* to find it.
 
-⚠️ Its audio is outside the mix entirely, and no GM-OS setting can reach it. The UI says so at click
-time.
+**Its volume obeys** (2026-09-05): `enablejsapi=1` plus `setVolume`/`mute` over `postMessage`, from
+`web/pilotageDuLecteurYouTube.ts`. It therefore follows master volume, Focus and voice ducking like a
+local video.
+
+⚠️ Two caveats, both real. **The output device cannot be chosen** — `setSinkId` has no purchase on a
+cross-origin frame — and the command is **fire-and-forget**: the player ignores anything sent before
+it is ready, and nothing tells us when that is without wiring YouTube's whole event handshake, so the
+order is repeated over the first ~2.5 s. The frame is also born `mute=1` when the table is already
+silent: *what must be silent must be born silent.*
 
 ## 🛡️ Safety & Reliability
 

@@ -124,8 +124,8 @@ jouer en plein fond, **avec le son** — et **muette sur les tablettes des joueu
 **Web-OS → coller une adresse YouTube.** Le pad doit changer de pictogramme, et un bouton
 **Projeter** apparaître au survol — il ouvre la **liste des écrans** sur le pad, et une étiquette
 apparaît par écran où la vidéo joue. ⚠️ Vérifiez ensuite qu'Image-OS a **gardé sa propre cible** :
-c'est le point que j'ai le plus travaillé à ne pas casser. ⚠️ Là, **le son n'obéit à rien** : c'est écrit dans le guide et
-dit au clic.
+c'est le point que j'ai le plus travaillé à ne pas casser. ⭐ Et **le volume obéit** : baissez la table pendant qu'elle joue.
+Seule l'**enceinte de sortie** ne se choisit pas.
 
 ---
 

@@ -1,0 +1,55 @@
+{
+    "name": "Événements de Pause dans la Rue",
+    "dice": "1d8",
+    "entries": [
+        {
+            "min": 1,
+            "max": 2,
+            "title": "Rien d'anormal",
+            "description": "Rien de spécial ne se passe.",
+            "effect": "Le joueur décrit ce que fait son agent pour tuer le temps dans la mégapole."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Fantôme du passé",
+            "description": "L'agent croit apercevoir un objet ou une personne de son souvenir clé.",
+            "effect": "Événement de facteur de stress 1. Le PNJ suspect peut s'avérer hostile et le poursuivre ou l'attaquer."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Confrontation en public",
+            "description": "La relation clé de l'agent surgit brusquement dans la rue.",
+            "effect": "Elle exige une explication, de l'aide ou une confrontation dramatique."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Agression violente",
+            "description": "Deux voyous (Force B, Agilité C, Combat C, Santé 5) armés de matraques et de couteaux tentent de détrousser l'agent dans un recoin sombre.",
+            "effect": "S'ils l'emportent, ils volent tout son équipement et ses armes."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Rencontre avec une Doxie",
+            "description": "Une Doxie (Empathie B, Manipulation B, Perspicacité C) accoste l'agent.",
+            "effect": "Cela peut déboucher sur un moment intime, une discussion désabusée ou une tentative déguisée de lui soutirer des informations."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Publicité envoûtante",
+            "description": "Une publicité holographique animée fascine totalement l'agent.",
+            "effect": "Test de Perspicacité (Insight) : s'il échoue, l'agent ne peut plus récupérer de stress tant qu'il n'a pas dépensé 1 point de Chinyen pour acheter le produit promu."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Contact de la rue",
+            "description": "Un PNJ de l'enquête actuelle ou précédente aborde l'agent.",
+            "effect": "Il négocie des informations hautement confidentielles contre rémunération."
+        }
+    ]
+}
