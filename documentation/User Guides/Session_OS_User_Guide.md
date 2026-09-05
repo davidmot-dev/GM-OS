@@ -122,6 +122,31 @@ Le **Cockpit** est l'écran par défaut une fois une campagne lancée. Il affich
 - **Deck-OS** : la bibliothèque de paquets, ou le lecteur si un paquet est lié à la campagne.
 - **Loot-OS** : le butin de séance — génération, pool, distribution, historique.
 
+### La colonne de navigation
+
+Elle mène aux écrans qu'on ouvre **pendant comme avant** une séance :
+
+| | |
+| :--- | :--- |
+| **Storyboard** | Les moments de la campagne |
+| **Galerie PNJ** | Les fiches de vos personnages non joueurs |
+| **Social Nexus** | Le graphe des relations |
+| **Atlas du Monde** | Les lieux et leurs cartes |
+| **Chroniques & Wiki** | La chronologie et les fiches du monde |
+| **Loot-OS** | Le butin |
+| **La trame** | Actes et scènes |
+
+> ⛔ **« Chroniques & Wiki » n'était pas dans cette colonne avant le 2026-09-05**, et son unique
+> bouton vivait dans le **panneau de campagne**. Or ce panneau est un écran d'atelier : **dès
+> qu'une séance s'ouvre, GM-OS vous ramène au cockpit** (voir « Deux dispositions » plus bas).
+> La chronologie et le wiki devenaient donc **inatteignables en pleine partie** — sauf par la
+> recherche universelle, que rien n'indique.
+>
+> *Trouvé par David en séance. Le classement interne rangeait pourtant cet écran parmi ceux « des
+> deux côtés », avec ce commentaire : « on les bâtit le samedi matin et on les consulte le samedi
+> soir ». **La navigation ne tenait pas ce que le classement promettait** — c'est la porte qu'on a
+> ajoutée, pas le classement qu'on a changé.*
+
 ---
 
 ## 🎭 La trame : où l'on en est de l'histoire
@@ -189,6 +214,14 @@ d'une **séance ouverte** (la table).
 
 Tant que vous n'avez rien réglé en séance, c'est la disposition de l'atelier qui sert — jamais une
 disposition vide. **Un régime qui démarre nu n'est pas un second régime, c'est une perte.**
+
+> ⚠️ **Ouvrir une séance vous ramène au cockpit** si vous étiez sur un écran d'atelier — la Forge,
+> la bibliothèque, le panneau de campagne, la préparation de séance. C'est voulu : *un écran
+> d'atelier n'a rien à faire devant soi quand la table attend.* Rien ne se déclenche dans l'autre
+> sens : fermer une séance ne vous chasse d'aucun écran.
+>
+> **Conséquence à connaître** : tout ce qui n'a de porte **que** dans un écran d'atelier devient
+> hors de portée pendant la partie. C'est ce qui est arrivé aux Chroniques jusqu'au 2026-09-05.
 
 ---
 

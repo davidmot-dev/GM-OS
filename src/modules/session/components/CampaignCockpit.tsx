@@ -270,6 +270,29 @@ const CampaignCockpit: React.FC = () => {
                     <MapIcon size={20} />
                     <span className="text-sm font-medium">{t('modules:session.cockpit.view_world_atlas')}</span>
                 </button>
+                {/*
+                  **Les Chroniques n'avaient aucune porte dans le cockpit** — trouvé
+                  par David le 2026-09-05 : *« je n'ai plus, quand une session est en
+                  cours, l'accès à la chronologie et au wiki »*.
+
+                  Leur seul bouton vivait dans le panneau de campagne, classé
+                  `'preparation'` — et `useLayoutManager` renvoie au cockpit toute
+                  vue d'atelier dès qu'une séance commence. Le panneau devenait donc
+                  inatteignable, et la porte avec lui.
+
+                  Or `timeline-wiki` est classée **`'les-deux'`**, avec ce commentaire
+                  dans `affiniteDesVues` : *« on les bâtit le samedi matin et on les
+                  consulte le samedi soir »*. **La navigation ne tenait pas ce que le
+                  classement promettait.** On ajoute la porte plutôt que de changer le
+                  classement : c'est lui qui avait raison.
+                */}
+                <button
+                    onClick={() => setCurrentView('timeline-wiki')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'timeline-wiki' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                >
+                    <Library size={20} />
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_chronicles')}</span>
+                </button>
                 <button
                     onClick={() => showCustom('loot-os')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${
