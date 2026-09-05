@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 import { useObsidianStore } from '../useObsidianStore';
 import type { NoteEntry } from '../useObsidianStore';
 import { 
@@ -203,9 +203,9 @@ const ObsidianPanel: React.FC = () => {
                             </div>
                         ) : (
                             <div className="prose prose-invert prose-emerald max-w-none prose-p:text-app-text/80 prose-p:leading-relaxed prose-p:text-base prose-p:font-sans">
-                                <ReactMarkdown>
+                                <TexteMarkdown>
                                     {activeNoteContent || "Cette note semble vide."}
-                                </ReactMarkdown>
+                                </TexteMarkdown>
                             </div>
                         )}
 

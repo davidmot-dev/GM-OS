@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 import { useTranslation } from 'react-i18next';
 import { 
     Sparkles, ArrowLeft, Dice5, Zap, Map, Archive, BookOpen, 
@@ -308,9 +308,9 @@ export const RulebookViewer: React.FC = () => {
                                         <div className="p-8 bg-app-surface/30 rounded-[2.5rem] border border-white/5 space-y-4">
                                             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-violet-400/60">{t('modules:session.rule_engine_editor.ai.instructions_label')}</h3>
                                             <div className="text-base text-app-text/70 leading-relaxed italic prose prose-invert prose-emerald max-w-none">
-                                                <ReactMarkdown>
+                                                <TexteMarkdown>
                                                     {driver.aiInstructions || ''}
-                                                </ReactMarkdown>
+                                                </TexteMarkdown>
                                             </div>
                                         </div>
 
@@ -324,9 +324,9 @@ export const RulebookViewer: React.FC = () => {
                                                             <div className="w-2 h-2 rounded-full bg-violet-500 shadow-glow-violet" />
                                                         </div>
                                                         <div className="text-sm text-app-text/50 leading-relaxed italic prose prose-invert prose-sm max-w-none">
-                                                            <ReactMarkdown>
+                                                            <TexteMarkdown>
                                                                 {text || ''}
-                                                            </ReactMarkdown>
+                                                            </TexteMarkdown>
                                                         </div>
                                                     </div>
                                                 ))}

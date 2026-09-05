@@ -27,6 +27,8 @@ raison. Puis la télécommande a été refaite.
 | **05/09, P4** | Couleur de grille et tamisage **exposés** · `timeMultiplier` retiré · **la cloche du minuteur sonne enfin**, avec son interrupteur · case « archive légère » · le Media Hub prend **plusieurs fichiers** |
 | **05/09, télécommande** | **Navigation en colonne, libellés écrits, ligne d'état permanente** · quatre défauts muets · le **tableau blanc réparé** |
 | **05/09 au soir, la séance** | Quatre retours de David en jouant : **« Couper le son » qui ne coupait que les bruitages** · le **résultat des dés** qui n'arrivait jamais · les **notes élargies** à la trame, au wiki, aux indices et au coffre Obsidian · la **messagerie** · et les **Chroniques inatteignables** en pleine partie |
+| **05/09, le châssis** | L'**Ulanzi rendait la main au premier passage dans chaque module** — un `Suspense` manquant démontait tout le châssis ; trois autres émetteurs tombaient avec lui |
+| **05/09, le Markdown** | **Les tableaux ne s'interprétaient nulle part** — `remark-gfm` absent, et six écrans qui reposaient chacun le réglage ; un composant unique, et une garde qui balaie tout `src/` |
 
 ---
 

@@ -4,6 +4,7 @@ import { type RemoteLectureDuMeneur, type RemoteActe, type RemoteScene } from '.
 import RemoteObsidian from './RemoteObsidian';
 import type { CoffreObsidian } from '../hooks/useRemoteSync';
 import { chroniquesParType, LIBELLE_DE_CATEGORIE } from '../chroniquesParType';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 
 /**
  * **Le panneau de lecture du meneur — élargi le 2026-09-05.**
@@ -297,9 +298,15 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                                 </button>
                                 {ficheOuverte === fiche.id && (
                                     <div className="px-2.5 pb-2.5 flex flex-col gap-2">
-                                        <p className="text-ui-11 leading-relaxed text-slate-300 whitespace-pre-wrap max-w-[80ch]">
-                                            {fiche.contenu || "Cette fiche n'a pas de contenu."}
-                                        </p>
+                                        {fiche.contenu ? (
+                                            /* Une fiche de wiki est écrite en Markdown comme le
+                                               reste : elle mérite d'être lue, pas épelée. */
+                                            <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-slate-200 prose-p:text-slate-300 prose-li:text-slate-300 prose-strong:text-slate-100 prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-slate-400 prose-td:text-slate-300">
+                                                <TexteMarkdown>{fiche.contenu}</TexteMarkdown>
+                                            </div>
+                                        ) : (
+                                            <p className="text-ui-11 italic text-slate-500">Cette fiche n'a pas de contenu.</p>
+                                        )}
                                         {fiche.tags.length > 0 && (
                                             <div className="flex flex-wrap gap-1">
                                                 {fiche.tags.map((tag) => (

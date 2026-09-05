@@ -263,6 +263,15 @@ geste. Les dossiers passent avant les notes, dans l'ordre alphabétique.
 > 🔒 **Le coffre ne part qu'aux tablettes appairées.** Les tablettes des joueurs ne le reçoivent
 > pas — pas même caché : *un secret caviardé à l'affichage a déjà voyagé jusqu'à l'appareil.*
 
+**La note s'affiche mise en forme** — titres, listes, gras, **tableaux** — et non plus en texte
+brut. Une table plus large que l'écran défile toute seule, sans emporter la page. Il en va de même
+pour les fiches de l'onglet **Chroniques**.
+
+> ⛔ **Corrigé le 2026-09-05.** La tablette montrait la **source** des notes au lieu des notes :
+> dièses, étoiles et barres verticales à l'écran. *Rien ne manquait, tout était illisible.* Le même
+> jour, le lecteur du cockpit a reçu la moitié qui lui manquait — les tableaux. Voir
+> [le guide du Nexus Wiki](./84-Nexus-Wiki-coffre-Obsidian.md).
+
 ### 8. 💬 Messages
 
 **Ajouté le 2026-09-05, à la demande de David.** Le fil de conversation avec vos joueurs, celui du

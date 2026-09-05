@@ -19,16 +19,36 @@ Cliquez sur l'icône ✨ (**Sparkles**) dans la section **Global** de la barre l
 - Cliquez sur les dossiers pour les déplier/replier.
 - Cliquez sur une note pour l'afficher instantanément dans le lecteur central.
 
-### 3. Donner vos notes à l’IA
+### 3. Ce que le lecteur sait interpréter
+
+Le lecteur rend le Markdown de vos notes : titres, gras, listes, liens, citations,
+blocs de code — **et les tableaux**.
+
+> ⛔ **Corrigé le 2026-09-05.** Les tableaux s'affichaient jusque-là en texte brut,
+> barres verticales comprises. GM-OS n'interprétait que le Markdown de base, où les
+> tableaux n'existent pas : ils viennent d'une extension qui n'était pas branchée.
+> Le même oubli rendait muets le **texte barré** (`~~ainsi~~`), les **cases à
+> cocher** (`- [ ]`) et les **liens écrits sans crochets**. Tout cela s'affiche
+> désormais, ici comme sur la tablette du meneur, dans le livre de règles et dans
+> les fiches de wiki.
+
+Un tableau plus large que le panneau **défile tout seul**, sans pousser le reste de
+la page.
+
+Deux écritures d'Obsidian restent en dehors : les liens internes `[[Note]]` (montrés
+tels quels) et l'en-tête `---` du haut de note, qui s'affiche comme une ligne suivie
+de ses champs.
+
+### 4. Donner vos notes à l’IA
 
 Voir la section dédiée plus bas : **deux mécanismes existent**, et un seul agit sur la
 conversation.
 
-### 4. Éditeur & Liens
+### 5. Éditeur & Liens
 Le lecteur de GM-OS est principalement conçu pour la consultation.
 - Pour modifier une note, cliquez sur l'icône **Lien Externe** (en haut à droite du lecteur) pour l'ouvrir dans Obsidian.
 
-### 5. Exporter vers Obsidian 📤
+### 6. Exporter vers Obsidian 📤
 Vous pouvez désormais exporter vos données GM-OS vers Obsidian pour archive ou préparation approfondie.
 1. Allez dans les **Détails de la Campagne** (cliquez sur le titre de la campagne dans le Cockpit).
 2. Cliquez sur le bouton violet **Exporter vers Obsidian**.
@@ -106,6 +126,9 @@ Vous avez une fiche de PNJ très détaillée dans Obsidian.
 > Si vous venez d'ajouter une note dans Obsidian et qu'elle n'apparaît pas encore, cliquez sur le bouton de rafraîchissement 🔄 en haut de l'explorateur.
 
 ---
+
+*Complété le 2026-09-05 : le lecteur **interprète enfin les tableaux** (§ 3) — ils s'affichaient en
+texte brut sur tous les écrans qui rendent du Markdown.*
 
 *Guide révisé le 2026-09-04, code à l'appui. Corrigé : **« Sync Oracle » n'alimente pas la
 conversation avec l'Oracle** — il pousse la note dans un carnet NotebookLM, qui sert à la Forge de

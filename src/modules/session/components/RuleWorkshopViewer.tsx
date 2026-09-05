@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import ReactMarkdown from 'react-markdown';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 import { useTranslation } from 'react-i18next';
 import { 
     Search, History, Scroll, 
@@ -490,9 +490,9 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
 
                         <div className="flex-1 overflow-y-auto custom-scrollbar p-12 bg-black/20">
                             <div className="max-w-4xl mx-auto prose prose-invert prose-emerald prose-headings:font-display prose-headings:tracking-tighter prose-p:text-lg prose-p:leading-relaxed prose-strong:text-accent prose-li:text-app-text/80">
-                                <ReactMarkdown>
+                                <TexteMarkdown>
                                     {readingContent || ''}
-                                </ReactMarkdown>
+                                </TexteMarkdown>
                             </div>
                         </div>
 
@@ -578,9 +578,9 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar p-12">
                                     <div className="max-w-3xl mx-auto prose prose-invert prose-emerald prose-p:text-lg prose-headings:font-display prose-headings:tracking-tighter">
-                                        <ReactMarkdown>
+                                        <TexteMarkdown>
                                             {editContent}
-                                        </ReactMarkdown>
+                                        </TexteMarkdown>
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, BookOpen, Shield, HelpCircle, FileText } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import TexteMarkdown from '../TexteMarkdown';
 
 interface HubRuleViewerProps {
     rule: {
@@ -73,7 +73,7 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
                             prose-code:text-cyan-400 prose-code:bg-cyan-950/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
                             prose-ul:list-disc prose-ul:pl-6
                             prose-li:my-2">
-                            <ReactMarkdown>{rule.content}</ReactMarkdown>
+                            <TexteMarkdown>{rule.content}</TexteMarkdown>
                         </div>
                     </div>
 

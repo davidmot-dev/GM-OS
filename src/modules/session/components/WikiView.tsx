@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { MediaImage } from '../../../components/MediaImage';
 import { 
@@ -265,9 +265,9 @@ const WikiView: React.FC = () => {
                                             <BookOpen size={120} strokeWidth={1} />
                                         </div>
                                         <div className="prose prose-invert prose-emerald max-w-none relative z-10 prose-p:leading-[1.8] prose-p:text-lg prose-p:font-medium selection:bg-accent selection:text-app-bg">
-                                            <ReactMarkdown>
+                                            <TexteMarkdown>
                                                 {selectedEntry.content || ''}
-                                            </ReactMarkdown>
+                                            </TexteMarkdown>
                                         </div>
                                     </div>
 

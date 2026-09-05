@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, X, FileText, Folder, ChevronRight, RefreshCw, ArrowLeft, Home } from 'lucide-react';
 import type { CoffreObsidian } from '../hooks/useRemoteSync';
 import { toutesLesNotes, contenuDuChemin, range } from '../arbreDuCoffre';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 
 /**
  * **Le coffre Obsidian sur la tablette — 2026-09-05.**
@@ -99,10 +100,20 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                         <p className="text-sm italic text-slate-500 text-center py-10">Lecture…</p>
                     ) : coffre.erreur ? (
                         <p className="text-sm italic text-rose-400 text-center py-10">{coffre.erreur}</p>
+                    ) : coffre.contenu ? (
+                        /*
+                          **Le coffre s'affichait en texte brut jusqu'au 2026-09-05.**
+                          Une note d'Obsidian est du Markdown : ses titres, ses
+                          listes et ses tableaux étaient rendus avec leurs dièses
+                          et leurs barres verticales. *Montrer la source d'un
+                          document au lieu du document est une panne discrète —
+                          rien ne manque à l'écran, tout est illisible.*
+                        */
+                        <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-slate-200 prose-p:text-slate-300 prose-li:text-slate-300 prose-strong:text-slate-100 prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-slate-400 prose-td:text-slate-300">
+                            <TexteMarkdown>{coffre.contenu}</TexteMarkdown>
+                        </div>
                     ) : (
-                        <p className="text-sm leading-relaxed text-slate-300 whitespace-pre-wrap max-w-[80ch]">
-                            {coffre.contenu || 'Cette note est vide.'}
-                        </p>
+                        <p className="text-sm italic text-slate-500 text-center py-10">Cette note est vide.</p>
                     )}
                 </div>
             </div>
