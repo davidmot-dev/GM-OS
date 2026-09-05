@@ -41,8 +41,9 @@ dans le code, qui absorbe toutes les autres.**
 > l'étape 3 appelait la commande sans bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas
 > exécuté.*
 >
-> Revérifié le 2026-09-05 au soir : `tsc -b` propre, **3 652 tests au vert** (302 fichiers,
-> 1 ignoré), `npm run validate` vert.
+> Revérifié le 2026-09-05 au soir, après les quatre chantiers du jour : `tsc -b` propre,
+> **3 772 tests au vert** (314 fichiers, 1 ignoré), `npm run validate` vert, **zéro rejet non
+> géré** — voir §§ 20 à 23.
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1037,6 +1038,119 @@ d'une porte, pas qu'elle s'ouvre — un repli ou une condition lui échapperaien
 
 **La règle générale, à retenir** : *tout ce qui n'a de porte que dans un écran d'atelier devient
 hors de portée pendant la partie.*
+
+### 20 · ⛔ Le châssis se démontait au premier chargement de chaque module (2026-09-05)
+
+Trouvé par David : *« quand je vais dans un autre module, l'Ulanzi se reset »*.
+
+Les modules sont chargés en `lazy`. À la **première** ouverture de chacun, le chargement du morceau
+suspend le rendu — et le seul `Suspense` au-dessus enveloppait **`Shell` lui-même**. React masquait
+donc tout le châssis, ce qui **nettoie les effets** de ses crochets.
+
+| Crochet | Ce que son nettoyage déclenchait |
+| --- | --- |
+| `useBattementUlanzi` | **rend la main à l'afficheur** — le « reset » signalé |
+| `useBattementDuMinuteur` | le compte à rebours cesse de descendre |
+| `usePrechauffageDuModele` | le modèle se décharge |
+| `useLumiereQuiSuitLaVoix` | la lumière cesse de suivre |
+
+*Un émetteur attaché à une vue émet ce que la vue veut bien* — la leçon du 30/08 avait fait monter
+ces crochets dans `Shell`, et une frontière absente les redescendait au rang de la vue sans que rien
+ne le dise. **Le défaut ne se produisait qu'au premier passage dans chaque module** : une fois le
+morceau en cache, plus rien. De quoi chercher longtemps.
+
+La frontière descend autour du seul module. `frontiereDuChassis.test.ts` lit le source et exige
+qu'elle entoure les enfants, et que les crochets permanents soient montés là — il en garde **cinq**
+depuis le § 22. ⚠️ Il ne prouve pas qu'ils survivent à l'exécution : monter `Shell` en entier
+demanderait de simuler une douzaine de magasins. *Le test le dit en tête plutôt que de laisser
+croire à une garde qui n'existe pas.*
+
+**Ancres** : `components/Shell.tsx`, `components/frontiereDuChassis.test.ts`.
+
+### 21 · ⛔ Le Markdown n'interprétait les tableaux nulle part (2026-09-05)
+
+Trouvé par David en lisant le Nexus Wiki : *« il n'interprète pas les tables correctement »*.
+
+`react-markdown` ne connaît que le **CommonMark**, où **les tableaux n'existent pas** — ils viennent
+de l'extension GitHub, portée par `remark-gfm`, qui n'était pas installé. `| Nom | Effet |` n'était
+donc pas un tableau mais un paragraphe. Muets pour la même raison : le texte barré, les cases à
+cocher, les liens sans crochets.
+
+⚠️ **Le défaut était à six endroits** — panneau Obsidian, vue Wiki, livre de règles, atelier de
+règles, deux écrans du Hub. *Un réglage qui doit être le même partout et que chaque appelant repose
+est un réglage qu'un appelant finira par oublier.* Un composant unique le porte, et une garde
+**balaie tout `src/`** pour refuser un septième appel direct : *une garde qui énumère ce qu'elle
+surveille ne surveille pas ce qui arrive après elle.*
+
+La tablette, elle, n'interprétait **rien** : coffre et Chroniques en texte brut. *Montrer la source
+d'un document au lieu du document est une panne discrète — rien ne manque, tout est illisible.*
+
+**Ancres** : `components/TexteMarkdown.tsx`, `components/markdownEnUnSeulEndroit.test.ts`.
+
+### 22 · ⭐ La vidéo entre dans Image-OS, et YouTube dans Web-OS (2026-09-05)
+
+Demandé par David : *« est-ce qu'on pourrait imaginer lancer une vidéo ? ou une vidéo YouTube ? »*,
+puis *« on construit les 2 »*.
+
+**Le projecteur savait déjà jouer une vidéo** — il reniflait le type du fichier chargé. Quatre
+verrous l'entouraient : le sélecteur n'acceptait que des images, `ImageMedia` ne disait pas ce qu'il
+était, le pad dessinait sa vignette en `background-image` (donc une case vide), et l'élément était
+`muted` en dur. *Une capacité qu'on ne peut pas atteindre n'existe pas.*
+
+⛔ **Le son est le vrai sujet, et il ne se branche pas.** La vidéo joue dans la **fenêtre de
+projection** ; le bus audio vit dans celle du meneur. On ne branche pas un élément d'une fenêtre sur
+le graphe audio d'une autre — il n'y a aucun chemin. Le meneur **calcule** donc le niveau
+(`volume général × Focus × ducking × curseur propre`) et le lui **envoie** sur le canal qui porte
+déjà les projections. ⚠️ Ce que l'imitation ne rend pas : la vidéo sort par l'appareil de l'écran de
+projection, pas par l'enceinte de Music-OS — `setSinkId` se pose sur un contexte, et il n'y en a pas.
+
+⭐ **L'émetteur réémet à chaque changement de projection**, pas seulement quand le niveau change :
+une fenêtre qui vient de naître n'a rien reçu et resterait à plein volume pour toujours. *Un
+récepteur qui n'a jamais rien reçu ne se distingue pas d'un récepteur en panne.*
+
+**YouTube reste un marque-page** — rien à sauvegarder, rien à emporter dans Nexus, donc pas d'entrée
+dans la bibliothèque d'Image-OS. Il voyage vers le projecteur comme `__youtube__<id>`, en suivant la
+convention de la carte et du tableau blanc plutôt qu'en ouvrant un second canal. Ses trois limites —
+Internet, hors sauvegarde, **son hors mixage** — sont dites au clic et dans le guide.
+
+⚠️ **Resté tel quel, et c'est un choix à confirmer** : une vidéo **boucle**, comportement d'origine.
+Bon pour une ambiance, discutable pour un plan de film. Un interrupteur par pad serait peu de chose.
+
+**Ancres** : `image/logic/gainDeLaVideo.ts`, `image/useSonDeLaVideoProjetee.ts`, `web/youtube.ts`,
+`web/components/WebLinkPad.tsx`.
+
+### 23 · ⛔ Le ducking pouvait ne jamais se brancher, et se taisait (2026-09-05)
+
+Trouvé en construisant le § 22, corrigé sur demande de David.
+
+`useVoiceStore` importait `ai/modeDeContexte`, qui tire `useSessionOSStore`, d'où l'on atteint les
+moteurs de Music-OS et d'Ambient-OS. Or **ces moteurs se construisent au chargement de leur module**
+et s'abonnent aussitôt à `useVoiceStore`, par un `import()` différé censé éviter le cycle. Quand la
+voix ouvrait le graphe, ils recevaient un module **encore en cours d'évaluation** : le lien était
+vide, l'abonnement mourait dans une promesse que personne n'attend.
+
+⭐ **La leçon, qui vaut au-delà de ce cas** : *un cycle d'imports ne casse rien tant que personne
+n'entre par le mauvais bout.* Quatre sondes d'une ligne — la séance, `modeDeContexte`, le moteur —
+sont **toutes propres** ; seule celle qui entre par la voix échoue. C'est ce qui le rend invisible,
+et si facile à rouvrir.
+
+Deux correctifs, et il fallait les deux : **l'arête est coupée** (import différé dans l'action, qui
+était déjà asynchrone) et **l'échec ne peut plus être muet** (`abonnementAuDucking` garde l'espace de
+noms — un lien ESM est vivant —, relit un tour plus tard, puis crie en nommant le moteur *et* la
+conséquence). *Une cause corrigée revient par un autre chemin ; une défaillance qui se dit, non.*
+
+⚠️ **Portée exacte, à ne pas surestimer** : l'échec n'a été **observé qu'en test**. Une note de
+mémoire affirmait depuis le 30/08 que *« l'application n'y tombe jamais, son entrée est
+`main.tsx` »* — ni prouvé ni infirmé. *Une panne muette ne se prouve pas absente ;* c'est la raison
+d'être du second correctif.
+
+⚠️ **Un ajout retiré en route** : appliquer l'état courant au branchement a fait tomber six fichiers
+de tests — plusieurs remplacent le magasin de la voix par un substitut partiel, et Music-OS lit
+`currentEffects` sans garde. *Un ajout qui n'était pas le correctif ne vaut pas le risque qu'il
+introduit.*
+
+**Ancres** : `voice/abonnementAuDucking.ts`, `voice/importsDuMagasinDeVoix.test.ts`,
+`voice/useVoiceStore.ts`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

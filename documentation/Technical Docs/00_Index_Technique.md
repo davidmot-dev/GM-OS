@@ -48,13 +48,13 @@ pour *comment on s'en sert*, voir [les guides utilisateur](../User%20Guides/00-I
 | [Social Nexus](./Social_Nexus_Technical_Doc.md) | Le graphe relationnel D3.js, ses forces et ses épingles. |
 | [Indices — Clues-OS](./Clues-OS_Technical_Doc.md) · [système transverse](./Clues_System_Technical_Doc.md) | La gestion des secrets. *Deux documents : le premier décrit le module, le second ses liens avec le reste.* |
 | [NPC Live Generator](./NPC_Live_Generator_Technical_Doc.md) | La génération d'images pour les entités. |
-| [Image-OS](./Image_OS_Technical_Doc.md) | La projection visuelle sur plusieurs écrans. |
+| [Image-OS](./Image_OS_Technical_Doc.md) | La projection visuelle sur plusieurs écrans, vidéo et YouTube compris. |
 
 ## 🔊 Son et lumière
 
 | Document | Ce qu'il couvre |
 | :--- | :--- |
-| [Master Soundscape Controller](./Audio_Master_Controller_Technical_Doc.md) | Le volume global et l'atténuation automatique. |
+| [Master Soundscape Controller](./Audio_Master_Controller_Technical_Doc.md) | Le volume global, l'atténuation automatique, et le niveau dicté aux vidéos projetées. |
 | [Light-OS](./Light-OS_Technical_Doc.md) | Le pont Philips Hue, scènes natives et effets logiciels. |
 | [Étiquetage pour le Cortex](./tactical-ai-tagging.md) | Les mots-clés qui permettent à l'IA de choisir une ambiance. |
 

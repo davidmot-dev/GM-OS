@@ -47,7 +47,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Map-OS](./22-Map-OS-le-plateau.md) | Le plateau tactique : cartes, pions, brouillard, zones de danger, projection. |
 | [Brouillard et calques](./23-Map-OS-calques-et-effets.md) | Comment le brouillard est fabriqué, ce que chaque calque masque, et le dépannage. |
 | [Obsidian](./84-Nexus-Wiki-coffre-Obsidian.md) | Brancher vos notes de préparation sur GM-OS. |
-| [Web-OS](./28-Navigateur-integre.md) | Garder à portée les ressources en ligne d'une campagne. |
+| [Web-OS](./28-Navigateur-integre.md) | Garder à portée les ressources en ligne d'une campagne, et **projeter une vidéo YouTube**. |
 
 ## ⚔️ Jouer
 
@@ -109,7 +109,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Music-OS](./71-Music-OS.md) | Les playlists, le fondu croisé, l'alignement des niveaux. |
 | [Ambient-OS](./72-Ambient-OS.md) | Huit boucles à superposer — et **les thèmes livrés sont des gabarits sans sons**. |
 | [Sound-OS](./73-Sound-OS-bruitages.md) | Seize pads de bruitages, clavier et MIDI. |
-| [Image-OS](./24-Image-OS-la-regie-visuelle.md) | Projeter une illustration, un portrait, une carte. |
+| [Image-OS](./24-Image-OS-la-regie-visuelle.md) | Projeter une illustration, un portrait, une carte — **ou une vidéo**, avec son son. |
 | [Media Hub](./92-Media-Hub.md) | Où vivent les fichiers, et comment les retrouver. |
 | [Light-OS](./75-Light-OS-les-lumieres.md) | Les lumières Philips Hue dans la scène. |
 | [Whiteboard-OS](./27-Tableau-blanc.md) | Dessiner à quatre mains avec les joueurs. |
