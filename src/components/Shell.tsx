@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
     Music,
     Volume2,
@@ -558,8 +558,38 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
                 </header>
 
+                {/*
+                  ⛔ **LA FRONTIÈRE QUI MANQUAIT — posée le 2026-09-05.**
+
+                  Trouvé par David : *« quand je vais dans un autre module,
+                  l'Ulanzi se reset »*.
+
+                  Les modules sont chargés en `lazy`. À la **première** ouverture
+                  de chacun, le chargement du morceau suspend le rendu — et le
+                  seul `Suspense` au-dessus enveloppait **`Shell` lui-même**, dans
+                  `App`. React masquait donc tout le châssis le temps du
+                  chargement, ce qui **nettoie les effets** de tous ses crochets.
+
+                  Or `Shell` porte précisément les émetteurs qu'on y a montés
+                  *pour qu'ils ne s'arrêtent jamais* : le battement de l'Ulanzi —
+                  dont le nettoyage **rend la main à l'appareil** —, celui du
+                  minuteur, le préchauffage du modèle, la lumière qui suit la
+                  voix.
+
+                  *Un émetteur attaché à une vue émet ce que la vue veut bien* :
+                  la leçon du 30/08 avait fait monter ces crochets ici, et une
+                  frontière absente les redescendait au rang de la vue sans que
+                  rien ne le dise. **Elle ne se déclenchait qu'au premier passage
+                  dans un module** — une fois le morceau en cache, plus rien : de
+                  quoi chercher longtemps.
+
+                  La frontière descend donc autour du seul module. Ce qui suspend
+                  ne masque plus que lui.
+                */}
                 <div className="flex-1 overflow-hidden">
-                    {children}
+                    <Suspense fallback={<div className="h-full w-full bg-app-bg" />}>
+                        {children}
+                    </Suspense>
                 </div>
             </main>
 

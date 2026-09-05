@@ -100,6 +100,15 @@ serait un service de plus à faire vivre.
 
 ---
 
+> ⛔ **L'afficheur se rendait à lui-même au premier changement de module.** Trouvé par David le
+> 2026-09-05 : *« quand je vais dans un autre module, l'Ulanzi se reset »*. GM-OS charge chaque
+> module à la demande, et le temps de ce chargement il masquait **tout son châssis** — y compris le
+> battement qui tient l'afficheur, dont l'arrêt lui rend la main. Cela n'arrivait qu'**au premier
+> passage** dans chaque module, une fois par lancement : de quoi chercher longtemps.
+>
+> L'afficheur reste désormais à vous tant que GM-OS tourne. *Le même défaut arrêtait aussi le
+> minuteur, déchargeait le modèle d'IA et coupait la lumière qui suit la voix.*
+
 ### Le jour d'enquête
 
 **Ajouté le 2026-09-05, à la demande de David.** Le défilé disait *où* on en est dans la journée et
