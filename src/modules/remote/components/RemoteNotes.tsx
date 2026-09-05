@@ -3,6 +3,7 @@ import { EyeOff, FileText, Layers, BookOpen, Search, X, Lightbulb, Vault } from 
 import { type RemoteLectureDuMeneur, type RemoteActe, type RemoteScene } from '../segmentDeLecture';
 import RemoteObsidian from './RemoteObsidian';
 import type { CoffreObsidian } from '../hooks/useRemoteSync';
+import { chroniquesParType, LIBELLE_DE_CATEGORIE } from '../chroniquesParType';
 
 /**
  * **Le panneau de lecture du meneur — élargi le 2026-09-05.**
@@ -41,11 +42,6 @@ const ETATS = {
     'prevue': { mot: 'À jouer', teinte: 'text-slate-400 border-white/10' },
     'terminee': { mot: 'Close', teinte: 'text-slate-600 border-white/5' },
 } as const;
-
-const CATEGORIES: Record<string, string> = {
-    npc: 'PNJ', location: 'Lieu', organization: 'Organisation', lore: 'Savoir',
-    item: 'Objet', clue: 'Indice', rumor: 'Rumeur', other: 'Autre',
-};
 
 /** Une scène en une ligne : titre et état, le reste au déplié. */
 const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: () => void }> = ({
@@ -126,6 +122,9 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
         if (!cherche) return wiki;
         return wiki.filter((f) => aplati(`${f.titre} ${f.contenu} ${f.tags.join(' ')}`).includes(cherche));
     }, [wiki, filtreWiki]);
+
+    /* Le rangement vit dans `chroniquesParType`, où il est testé. */
+    const groupesDeChroniques = useMemo(() => chroniquesParType(wikiFiltre), [wikiFiltre]);
 
     const VUES: { id: Vue; titre: string; icone: typeof Layers; compte?: number }[] = [
         { id: 'seance', titre: 'Séance', icone: FileText },
@@ -275,19 +274,24 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             </button>
                         )}
                     </div>
-                    <div className={`${cadre} flex flex-col gap-1.5`}>
+                    <div className={`${cadre} flex flex-col gap-3`}>
                         {wikiFiltre.length === 0 ? (
                             <p className="text-sm italic text-slate-500 text-center py-10">
                                 {filtreWiki ? `Rien ne correspond à « ${filtreWiki} ».` : 'Le wiki de cette campagne est vide.'}
                             </p>
-                        ) : wikiFiltre.map((fiche) => (
+                        ) : groupesDeChroniques.map(({ cle, titre, fiches }) => (
+                        <section key={cle} className="flex flex-col gap-1.5">
+                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-slate-500 px-1">
+                                {titre} <span className="text-slate-700 tabular-nums">{fiches.length}</span>
+                            </h3>
+                            {fiches.map((fiche) => (
                             <div key={fiche.id} className="rounded-lg border border-white/5 bg-white/[0.02]">
                                 <button
                                     onClick={() => setFicheOuverte(ficheOuverte === fiche.id ? null : fiche.id)}
                                     className="w-full flex items-center gap-2 px-2.5 py-2 text-left"
                                 >
                                     <span className="shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border border-white/10 text-slate-500">
-                                        {CATEGORIES[fiche.categorie] ?? fiche.categorie}
+                                        {LIBELLE_DE_CATEGORIE[fiche.categorie] ?? fiche.categorie}
                                     </span>
                                     <span className="flex-1 min-w-0 text-xs font-bold text-slate-200 truncate">{fiche.titre}</span>
                                 </button>
@@ -306,6 +310,8 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                                     </div>
                                 )}
                             </div>
+                            ))}
+                        </section>
                         ))}
                     </div>
                 </>

@@ -194,7 +194,7 @@ vivait sur l'écran du PC — c'est-à-dire hors de portée dès qu'on tient la 
 | :--- | :--- |
 | **Séance** | Ce qui **se joue** maintenant, ce qui est **en pause**, ce qui reste **à jouer** — plus le résumé public |
 | **Trame** | Les actes de la campagne et leurs scènes, repliables, **avec vos notes de meneur** |
-| **Chroniques** | Les fiches de chronique de la campagne, avec une recherche |
+| **Chroniques** | Les fiches de chronique, **rangées par type**, avec une recherche |
 | **Nexus Wiki** | Le **coffre Obsidian** de la campagne, avec une recherche |
 | **Indices** | Ceux que vous avez donnés, et ceux qui vous restent en main |
 | **Secrets** | Vos notes privées sur la séance active |
@@ -220,6 +220,20 @@ Toucher une scène la déplie : son résumé, et vos notes en ambre.
 > ⚠️ **Le wiki arrive sans ses images.** Elles pèseraient des mégaoctets **à chaque
 > synchronisation**, pour des vignettes qu'on ne regarde pas en jouant. Le texte, lui, est ce qu'on
 > relit.
+
+#### Chroniques — rangées par type
+
+**Ajouté le 2026-09-05, à la demande de David.** Les fiches sont groupées par catégorie — PNJ,
+Lieu, Organisation, Objet, Savoir, Indice, Rumeur, Autre — chaque groupe avec son compte, et les
+titres triés à l'intérieur.
+
+L'ordre des groupes **n'est pas alphabétique** : il va du plus consulté en séance au moins consulté.
+On cherche un PNJ ou un lieu dix fois par soirée, une rumeur deux fois par campagne.
+
+> 🔎 **Une catégorie sans fiche n'apparaît pas** — un en-tête suivi de rien apprend au regard à
+> sauter les en-têtes. Et une fiche portant un type que GM-OS ne connaît pas est rangée sous **Non
+> classées** plutôt que d'être masquée : *une fiche qu'on n'affiche pas est une fiche qu'on croit
+> effacée.*
 
 > ⚠️ **La vue *Secrets* est masquée en Mode Aventure**, comme avant.
 
