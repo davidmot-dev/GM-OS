@@ -63,6 +63,23 @@ contextBridge.exposeInMainWorld('appBridge', {
           avant que le rendu n'écoute — et il est perdu, pas en retard.
         */
         requestCurrentTitle: (cible: string) => ipcRenderer.send('image:request-current-title', cible),
+        /*
+          ⛔ **Et l'IMAGE avait le même trou, béant depuis toujours.**
+
+          Le processus principal répond déjà à `image:request-current-display`
+          depuis longtemps — **et personne ne l'appelait**. Un récepteur sans
+          émetteur ne lève aucune erreur.
+
+          Sans cet appel, une fenêtre de projection qui vient de naître dépend
+          d'un message émis sur `did-finish-load`, c'est-à-dire **avant que React
+          n'ait attaché son écouteur** : le message est perdu, pas en retard. Le
+          projecteur retombait alors sur le magasin, qui porte la **marque** de ce
+          qui occupe l'écran — et non le chemin de son fichier. Les deux
+          coïncidaient par hasard pour Image-OS ; pour un lieu de l'Atlas ou le
+          portrait d'un PNJ, la marque ne désigne aucun média, et **rien ne se
+          chargeait**. Trouvé par David le 2026-09-06.
+        */
+        requestCurrentDisplay: (cible: string) => ipcRenderer.send('image:request-current-display', cible),
         closeAllDisplays: () => ipcRenderer.send('image:close-all-displays')
     },
     sound: {

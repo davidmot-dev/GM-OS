@@ -132,7 +132,25 @@ const ProjectorView: React.FC = () => {
         if (window.appBridge?.on) {
             window.appBridge.on('image:update-display', handleUpdateDisplay);
             window.appBridge.on('image:sync-hub-data', handleSyncHubData);
-            
+
+            /*
+              ⛔ **On demande ce qu'on doit afficher, une fois écouteurs posés.**
+
+              La fenêtre reçoit son image sur `did-finish-load` — donc **avant**
+              cette ligne, la plupart du temps. *Un message émis avant que la
+              fenêtre ne sache écouter est perdu, pas en retard* : la leçon du
+              02/09 sur le titre, qui avait déjà `requestCurrentTitle` pour
+              remède. L'image avait le même trou, et le processus principal
+              répondait déjà à cette demande **que personne ne lui faisait**.
+
+              Ce qui le cachait : le projecteur retombait sur le magasin, dont
+              `projections` porte la **marque** — *ce qui occupe l'écran*, pas
+              *où le trouver*. Les deux coïncident pour une image d'Image-OS, et
+              divergent pour un lieu ou un PNJ, dont la marque est l'identifiant
+              de la fiche. Trouvé par David le 2026-09-06 en projetant un lieu.
+            */
+            window.appBridge.image?.requestCurrentDisplay?.(targetId);
+
             return () => {
                 window.appBridge?.off?.('image:update-display', handleUpdateDisplay);
                 window.appBridge?.off?.('image:sync-hub-data', handleSyncHubData);

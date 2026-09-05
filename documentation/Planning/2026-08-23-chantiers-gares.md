@@ -45,7 +45,7 @@ dans le code, qui absorbe toutes les autres.**
 > propre, **3 806 tests au vert** (319 fichiers, 1 ignoré), `npm run validate` vert, **zéro rejet
 > non géré** — voir §§ 20 à 23, dont le § 22 qui a grossi trois fois dans la soirée.
 >
-> Revérifié le **2026-09-06** après le § 24 : **3 812 tests au vert** (320 fichiers, 1 ignoré).
+> Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1217,6 +1217,32 @@ qui affiche une liste ne compte pas sur la visite d'un autre pour la remplir.*
 
 **Ancres** : `session/components/AtlasMapDetail.tsx`, `components/MenuDesEcrans.tsx`,
 `web/ecransDeProjection.ts`.
+
+### 25 · ⛔ Une fenêtre de projection ne demandait jamais ce qu'elle devait afficher (2026-09-06)
+
+Trouvé par David en essayant le § 24 : *« quand je projette, l'image ne se charge pas »*.
+
+**Le mécanisme, en deux temps.** Une fenêtre de projection qui vient de naître reçoit son image sur
+`did-finish-load`, c'est-à-dire **avant que React n'ait attaché son écouteur** : *un message émis
+avant que la fenêtre ne sache écouter est perdu, pas en retard.* C'est mot pour mot la leçon du
+02/09 sur le titre projeté — qui porte son remède, `requestCurrentTitle`, depuis ce jour-là.
+
+**L'image avait le même trou.** Et le processus principal **répondait déjà** à
+`image:request-current-display` : la réponse était écrite, personne ne posait la question. *Un
+récepteur sans émetteur ne lève aucune erreur* — troisième fois ce mois-ci.
+
+⚠️ **Ce qui l'a caché des mois durant, et c'est le plus instructif.** Le projecteur retombait sur le
+magasin, dont `projections` porte la **marque** — *ce qui occupe l'écran*, pas *où le trouver*. Les
+deux **coïncident** pour une image d'Image-OS, dont la marque est son propre chemin. Elles divergent
+pour un lieu ou un portrait de PNJ, dont la marque est l'identifiant de la fiche. Le défaut dormait
+donc derrière une coïncidence, et **le premier appelant qui ne la respectait pas l'a réveillé** — le
+bouton du § 24, écrit le matin même.
+
+*Corollaire : un correctif qui rétablit la coïncidence aurait marché et n'aurait rien réparé.*
+
+**Ancres** : `electron/preload.ts` (`requestCurrentDisplay`), `image/components/ProjectorView.tsx`,
+`image/components/demandeDeLEtatCourant.test.ts` — qui garde les **trois maillons** : la réponse, le
+pont, et l'appel.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

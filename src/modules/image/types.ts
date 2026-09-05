@@ -69,5 +69,13 @@ export interface ImageBridge {
      * n'ont pas de titre à réclamer, le storyboard ne les vise pas.
      */
     requestCurrentTitle?: (cible: string) => void;
+    /**
+     * Demande au processus principal **ce qui doit être affiché** sur cet écran.
+     *
+     * Facultatif comme son voisin : les surfaces sans pont Electron — la
+     * tablette — n'ont personne à qui le demander. Voir le commentaire du
+     * préchargement pour ce que son absence coûtait.
+     */
+    requestCurrentDisplay?: (cible: string) => void;
     closeAllDisplays: () => void;
 }
