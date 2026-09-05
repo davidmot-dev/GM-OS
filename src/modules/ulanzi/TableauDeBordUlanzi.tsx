@@ -1,7 +1,7 @@
 import React from 'react';
 import { Coffee, MonitorSmartphone, ChevronRight, ChevronDown, WifiOff, RotateCcw, Activity } from 'lucide-react';
 import { useUlanziStore } from './useUlanziStore';
-import { QUARTS, composerDefile, stressDuQuart } from './widgets/defileDesQuarts';
+import { QUARTS, composerDefile, stressDuQuart, jourDe } from './widgets/defileDesQuarts';
 import { widgetsActifs, widgetsDuJeu, estActif, reservesPourLaTable } from './widgets/librairie';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useRessourcesDeTableStore } from '../table/useRessourcesDeTableStore';
@@ -358,7 +358,12 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
 
                     <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
                         <div className="flex items-baseline justify-between gap-2 text-ui-11">
-                            <span className="font-bold text-app-text">{LIBELLES[moment]}</span>
+                            {/* Le jour d'abord : c'est lui qui situe le reste. */}
+                            <span className="font-bold text-app-text">
+                                <span className="text-accent">Jour {jourDe(quarts)}</span>
+                                <span className="text-app-text/30"> · </span>
+                                {LIBELLES[moment]}
+                            </span>
                             <span className={coute ? 'text-red-400 font-bold' : 'text-app-text/50'}>
                                 {quarts.consecutifs} d&apos;affilée{coute ? ' · +1 stress' : ''}
                             </span>

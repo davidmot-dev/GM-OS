@@ -49,9 +49,41 @@ export interface EtatDesQuarts {
     quartDuJour: number;
     /** Quarts enchaînés sans pause. Vaut 0 juste après une pause. */
     consecutifs: number;
+    /**
+     * **Le jour d'enquête, à partir de 1.**
+     *
+     * Demandé par David le 2026-09-05. Le défilé disait déjà *où* on en est dans
+     * la journée et **repassait au matin après la nuit** — mais rien ne disait
+     * **quelle** journée. Or une enquête de *Blade Runner* dure plusieurs jours,
+     * et le nombre de jours écoulés est un fait de partie qu'on annonce à la
+     * table.
+     *
+     * ⚠️ **Facultatif à la lecture.** Un état enregistré avant ce champ n'en a
+     * pas : `jourDe()` le lit comme le premier jour, plutôt que d'afficher
+     * « JOUR NaN » sur l'afficheur. *Une valeur absente doit se lire comme un
+     * début, jamais comme une erreur.*
+     */
+    jour?: number;
 }
 
-export const ETAT_INITIAL: EtatDesQuarts = { quartDuJour: 0, consecutifs: 0 };
+export const ETAT_INITIAL: EtatDesQuarts = { quartDuJour: 0, consecutifs: 0, jour: 1 };
+
+/** Le jour d'un état, en traitant l'absence comme le premier. */
+export function jourDe(etat: EtatDesQuarts): number {
+    return etat.jour && etat.jour > 0 ? etat.jour : 1;
+}
+
+/**
+ * Le jour suivant, **quand et seulement quand la nuit se referme**.
+ *
+ * C'est le passage de `nuit` à `matin` qui fait le jour, et non un compteur de
+ * quatre : *une pause prise en pleine nuit fait aussi lever le soleil*, puisque
+ * elle consomme un Quart comme les autres.
+ */
+function jourApres(etat: EtatDesQuarts, quartSuivantIndex: number): number {
+    const aBoucle = quartSuivantIndex === 0;
+    return jourDe(etat) + (aBoucle ? 1 : 0);
+}
 
 /**
  * Un Quart de travail de plus.
@@ -60,9 +92,11 @@ export const ETAT_INITIAL: EtatDesQuarts = { quartDuJour: 0, consecutifs: 0 };
  * qu'une enquête dure plusieurs jours.
  */
 export function quartSuivant(etat: EtatDesQuarts): EtatDesQuarts {
+    const quartDuJour = (etat.quartDuJour + 1) % QUARTS.length;
     return {
-        quartDuJour: (etat.quartDuJour + 1) % QUARTS.length,
+        quartDuJour,
         consecutifs: etat.consecutifs + 1,
+        jour: jourApres(etat, quartDuJour),
     };
 }
 
@@ -73,9 +107,13 @@ export function quartSuivant(etat: EtatDesQuarts): EtatDesQuarts {
  * journée avance donc, et le compteur d'enchaînement retombe à zéro.
  */
 export function pause(etat: EtatDesQuarts): EtatDesQuarts {
+    const quartDuJour = (etat.quartDuJour + 1) % QUARTS.length;
     return {
-        quartDuJour: (etat.quartDuJour + 1) % QUARTS.length,
+        quartDuJour,
         consecutifs: 0,
+        /* La pause consomme un Quart : elle fait donc lever le jour comme le
+           reste, si c'est elle qui referme la nuit. */
+        jour: jourApres(etat, quartDuJour),
     };
 }
 
@@ -200,5 +238,75 @@ export function composerDefile(
         center: true,
         noScroll: true,
         draw: dessinerDefile(etat, seuil),
+    };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LE COMPTEUR DE JOUR — une seconde application, 2026-09-05
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * **Pourquoi une application à part, et non une ligne de plus.**
+ *
+ * Demandé par David : *« en plus de faire progresser les Quarts, je voudrais un
+ * compteur du jour — Jour 1, Jour 2… cela peut défiler de l'un à l'autre. »*
+ *
+ * Trente-deux pixels de large. « JOURNEE » en occupe déjà près de trente : y
+ * ajouter « J3 » forcerait le texte à défiler, et *un texte qui défile n'est pas
+ * consultable d'un coup d'œil* — c'est la règle que ce widget s'est donnée dès
+ * le premier jour, et elle vaut toujours.
+ *
+ * ⭐ **L'afficheur fait déjà défiler ses applications tout seul.** Poser le jour
+ * comme une seconde application, c'est obtenir l'alternance que David demande
+ * **sans une seule requête de plus** : le TC001 tourne entre ses apps, on ne
+ * pousse que quand l'état change. *La fonction existait dans l'appareil ; il
+ * suffisait de s'en servir plutôt que de la refaire.*
+ */
+
+/** Le jour, tel qu'il part vers la matrice. Sans accent, comme les Quarts. */
+export function texteDuJour(etat: EtatDesQuarts): string {
+    return `JOUR ${jourDe(etat)}`;
+}
+
+/**
+ * La couleur du compteur de jour.
+ *
+ * **Elle suit le moment**, exactement comme le nom du Quart : les deux
+ * applications se succèdent à l'écran, et deux teintes différentes pour un même
+ * instant se liraient comme deux informations sans rapport.
+ */
+export function couleurDuJour(etat: EtatDesQuarts): string {
+    return COULEURS.moment[etat.quartDuJour];
+}
+
+/**
+ * La barre du bas reprend **le rang du Quart dans la journée**, et non
+ * l'enchaînement.
+ *
+ * Sur cette application-là, le compte d'enchaînement serait redondant — il est
+ * déjà sur l'autre, deux secondes plus tôt. Ce qui manque ici, c'est *où l'on en
+ * est dans ce jour-ci* : quatre segments, celui du moment allumé.
+ */
+export function dessinerLeJour(etat: EtatDesQuarts): RectanglePlein[] {
+    const largeur = 7;
+    const pas = 8; // 4 × 8 = 32, la largeur exacte
+    return QUARTS.map((_, n) => ({
+        df: [
+            n * pas, HAUTEUR - 2, largeur, 2,
+            n === etat.quartDuJour ? COULEURS.moment[n]
+                : n < etat.quartDuJour ? COULEURS.passe
+                    : COULEURS.aVenir,
+        ] as [number, number, number, number, string],
+    }));
+}
+
+/** L'état, traduit en ce que la seconde application doit montrer. */
+export function composerLeJour(etat: EtatDesQuarts): CompositionDuDefile {
+    return {
+        text: texteDuJour(etat),
+        color: couleurDuJour(etat),
+        center: true,
+        noScroll: true,
+        draw: dessinerLeJour(etat),
     };
 }

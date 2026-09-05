@@ -29,6 +29,7 @@ Toutes les idées de widget se ramènent à **quatre types** :
 | Widget | Ce qu'il affiche | Étagère |
 | :--- | :--- | :--- |
 | **Défilé des Quarts** | Les quarts de *Blade Runner*, avec une couleur par moment du jour et la barre des consécutifs. | composé |
+| **Jour d'enquête** | « JOUR 3 », dans la couleur du moment, avec les quatre Quarts du jour en bas. | composé |
 | **Horloges** | Les horloges de tension de Clock-OS. | miroir |
 | **Minuteur** | Le minuteur en cours. | miroir |
 | **Heure du monde** | L'heure de fiction. | générique |
@@ -96,6 +97,32 @@ serait un service de plus à faire vivre.
 - **Écran noir → regardez `/api/settings` et `/api/loop`** avant de soupçonner le matériel.
 - La conception détaillée vit dans
   [`Planning/2026-08-23-afficheur-ulanzi.md`](../Planning/2026-08-23-afficheur-ulanzi.md).
+
+---
+
+### Le jour d'enquête
+
+**Ajouté le 2026-09-05, à la demande de David.** Le défilé disait *où* on en est dans la journée et
+repassait au matin après la nuit — mais rien ne disait **quelle** journée. Une enquête en dure
+plusieurs, et le compte s'annonce à la table.
+
+**C'est une seconde application**, à cocher dans le tableau de bord à côté du défilé. L'afficheur
+tourne déjà entre ses applications : les deux se succèdent donc à l'écran, **sans une requête de
+plus**.
+
+> 🔎 **Pourquoi pas sur la même ligne.** Trente-deux pixels : « JOURNEE » en occupe déjà près de
+> trente. Y ajouter « J3 » forcerait le texte à défiler — *et un texte qui défile n'est pas
+> consultable d'un coup d'œil.*
+
+- Le jour **avance quand la nuit se referme sur le matin**, jamais autrement.
+- ⚠️ **Une pause fait lever le jour elle aussi** si c'est elle qui referme la nuit : le livre dit
+  « Pause d'un Quart », donc elle consomme un Quart comme les autres.
+- Il lit **le même état que le défilé** — le jour et le Quart ne peuvent pas se contredire.
+- Une partie commencée avant cette version repart au **jour 1** : *une valeur absente doit se lire
+  comme un début, jamais comme une erreur.*
+
+Le tableau de bord affiche le jour à côté du moment, pour que vous le voyiez sans regarder
+l'afficheur.
 
 ---
 

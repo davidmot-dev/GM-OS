@@ -1,5 +1,6 @@
 import {
     composerDefile,
+    composerLeJour,
     SEUIL_SANS_PAUSE,
     type EtatDesQuarts,
 } from './defileDesQuarts';
@@ -151,6 +152,34 @@ export const LIBRAIRIE: readonly WidgetDeTable[] = [
     },
     {
         /*
+          **Le compteur de jour — demandé par David le 2026-09-05.**
+
+          *« En plus de faire progresser les Quarts, je voudrais un compteur du
+          jour — Jour 1, Jour 2… cela peut défiler de l'un à l'autre. »*
+
+          ⭐ **Une application à part, et c'est ce qui produit l'alternance.**
+          L'afficheur tourne déjà entre ses applications tout seul : le jour
+          apparaît donc après les Quarts, **sans une requête de plus**. Sur
+          trente-deux pixels, « JOURNEE » et « JOUR 3 » ensemble forceraient le
+          texte à défiler — *et un texte qui défile n'est pas consultable d'un
+          coup d'œil.*
+
+          ⚠️ **Pas `parDefaut`.** Il s'allume depuis le tableau de bord, comme
+          tous ceux venus après lui : *on ne rend pas visible chez quelqu'un ce
+          qu'il n'a pas demandé.* Le défilé garde son exception parce qu'il
+          marchait avant que ce tableau existe.
+
+          Il lit le même état que le défilé : **le jour et le Quart ne peuvent
+          donc pas se contredire**, ils sont le même fait lu deux fois.
+        */
+        id: 'jour',
+        nom: 'Jour d’enquête',
+        type: 'rang',
+        systemId: 'blade-runner',
+        source: { de: 'main' },
+    },
+    {
+        /*
           **Le premier miroir — étape B, le 2026-08-30.**
 
           Universel : toute campagne peut porter des horloges de tension, alors
@@ -250,6 +279,7 @@ export const COMPOSITEURS: Record<
 > = {
     quarts: ({ quarts, seuilSansPause }) =>
         composerDefile(quarts, seuilSansPause ?? SEUIL_SANS_PAUSE) as unknown as ChargeDeWidget,
+    jour: ({ quarts }) => composerLeJour(quarts) as unknown as ChargeDeWidget,
     // `maintenant` porte la dérive du tracé : une colonne par seconde.
     vk: ({ signal }) =>
         composerVoightKampff(signal ?? SIGNAL_INITIAL) as unknown as ChargeDeWidget,

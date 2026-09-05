@@ -399,9 +399,9 @@ describe('les noms sur l’appareil', () => {
 });
 
 describe('le catalogue livré', () => {
-    it('porte les six widgets', () => {
+    it('porte les sept widgets', () => {
         expect(LIBRAIRIE.map(w => w.id))
-            .toEqual(['quarts', 'horloges', 'minuteur', 'heure', 'reserves', 'vk']);
+            .toEqual(['quarts', 'jour', 'horloges', 'minuteur', 'heure', 'reserves', 'vk']);
     });
 
     /**
@@ -409,9 +409,16 @@ describe('le catalogue livré', () => {
      * chaque fois ; la promesse « ajouter un jeu ne coûte aucune ligne » ne vaut
      * que pour l'étagère générique. Ce test se remarque si elle enfle.
      */
-    it('n’a que deux widgets composés — le défilé et le signal', () => {
+    it('n’a que trois widgets composés — le défilé, son jour, et le signal', () => {
+        /*
+          Le compteur de jour rejoint l'étagère composée le 2026-09-05. Il en
+          paie le prix — un dessin propre à *Blade Runner* — mais **il partage
+          l'état du défilé** : c'est un second regard sur le même fait, pas une
+          seconde source. *Deux états pour un même jour finiraient par se
+          contredire.*
+        */
         expect(LIBRAIRIE.filter(w => w.source.de === 'main').map(w => w.id))
-            .toEqual(['quarts', 'vk']);
+            .toEqual(['quarts', 'jour', 'vk']);
     });
 
     /**
