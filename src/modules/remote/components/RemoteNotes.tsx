@@ -130,14 +130,21 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
     const VUES: { id: Vue; titre: string; icone: typeof Layers; compte?: number }[] = [
         { id: 'seance', titre: 'Séance', icone: FileText },
         { id: 'trame', titre: 'Trame', icone: Layers, compte: actes.length },
-        { id: 'wiki', titre: 'Wiki', icone: BookOpen, compte: wiki.length },
+        { id: 'wiki', titre: 'Chroniques', icone: BookOpen, compte: wiki.length },
         /*
           **Le coffre Obsidian est à côté du wiki, et pas dedans.** Le wiki
-          appartient à la campagne ; le coffre est le carnet personnel du meneur,
-          tous jeux confondus. *Les mêler ferait chercher dans l'un ce qui est
-          dans l'autre.*
+          appartient à la campagne ; le coffre est le carnet Obsidian rattaché à
+          cette campagne. *Les mêler ferait chercher dans l'un ce qui est dans
+          l'autre.*
+
+          ⛔ **Il s'appelait « Coffre » et David ne le trouvait pas** (2026-09-05).
+          Le module s'appelle **« Nexus Wiki »** partout ailleurs — l'écran des
+          réglages dit même « Coffre Obsidian (Nexus Wiki) ». Chercher un nom
+          qu'on n'a pas écrit, c'est passer devant sans le voir, et il y a un
+          onglet « Wiki » juste à côté qui montre autre chose. *Le nom d'un
+          bouton se prend dans le vocabulaire de celui qui le cherche.*
         */
-        { id: 'obsidian', titre: 'Coffre', icone: Vault },
+        { id: 'obsidian', titre: 'Nexus Wiki', icone: Vault },
         { id: 'indices', titre: 'Indices', icone: Lightbulb, compte: indices.length },
         { id: 'secrets', titre: 'Secrets', icone: EyeOff },
     ];
@@ -146,7 +153,12 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
 
     return (
         <div className="flex flex-col gap-3 h-full">
-            <div className="flex gap-0.5 bg-white/5 p-0.5 rounded-xl border border-white/10 self-start shrink-0">
+            {/*
+              Six onglets, dont un à deux mots : le bandeau défile plutôt que de
+              déborder. *Un onglet coupé par le bord est un onglet qui n'existe
+              pas* — la leçon du 23/08, reprise ici avant qu'elle ne coûte.
+            */}
+            <div className="flex gap-0.5 bg-white/5 p-0.5 rounded-xl border border-white/10 self-start shrink-0 max-w-full overflow-x-auto no-scrollbar">
                 {VUES.map(({ id, titre, icone: Icone, compte }) => (
                     <button
                         key={id}

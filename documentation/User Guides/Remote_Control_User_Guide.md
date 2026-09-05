@@ -194,14 +194,19 @@ vivait sur l'écran du PC — c'est-à-dire hors de portée dès qu'on tient la 
 | :--- | :--- |
 | **Séance** | Ce qui **se joue** maintenant, ce qui est **en pause**, ce qui reste **à jouer** — plus le résumé public |
 | **Trame** | Les actes de la campagne et leurs scènes, repliables, **avec vos notes de meneur** |
-| **Wiki** | Les fiches de la campagne, avec une recherche |
-| **Coffre** | Vos notes **Obsidian**, avec une recherche |
+| **Chroniques** | Les fiches de chronique de la campagne, avec une recherche |
+| **Nexus Wiki** | Le **coffre Obsidian** de la campagne, avec une recherche |
 | **Indices** | Ceux que vous avez donnés, et ceux qui vous restent en main |
 | **Secrets** | Vos notes privées sur la séance active |
 
-> 🔎 **Le coffre est à côté du wiki, pas dedans.** Le wiki appartient à la campagne ; le coffre
-> Obsidian est votre carnet personnel, tous jeux confondus. *Les mêler ferait chercher dans l'un ce
-> qui est dans l'autre.*
+> ⚠️ **Deux choses distinctes, et il est facile de les confondre.** *Chroniques* montre les fiches
+> que vous écrivez dans GM-OS ; ***Nexus Wiki*** ouvre le **coffre Obsidian rattaché à la
+> campagne** — celui que vous désignez dans la fiche de campagne, champ *Coffre Obsidian*.
+>
+> ⛔ **Cet onglet s'appelait « Coffre » à sa sortie, et David ne l'a pas trouvé.** Le module
+> s'appelle « Nexus Wiki » partout ailleurs — l'écran des réglages dit même « Coffre Obsidian
+> (Nexus Wiki) ». *Chercher un nom qu'on n'a pas écrit, c'est passer devant sans le voir.* Corrigé
+> le 2026-09-05.
 
 Toucher une scène la déplie : son résumé, et vos notes en ambre.
 
@@ -218,7 +223,7 @@ Toucher une scène la déplie : son résumé, et vos notes en ambre.
 
 > ⚠️ **La vue *Secrets* est masquée en Mode Aventure**, comme avant.
 
-#### Le coffre Obsidian
+#### Nexus Wiki — le coffre Obsidian
 
 **Ajouté le 2026-09-05.** La liste des notes arrive **à l'ouverture de l'onglet**, une fois ; le
 **contenu d'une note ne part que quand vous la touchez**. Un bouton la recharge si vous venez
