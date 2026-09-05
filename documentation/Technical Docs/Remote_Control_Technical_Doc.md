@@ -36,16 +36,31 @@ Les messages sont échangés au format **JSON**.
 ### Mobile ➔ PC (Actions)
 ```json
 {
-  "type": "dice:roll",
-  "payload": { "die": 20 }
+  "type": "remote:dice:roll",
+  "payload": { "sides": 20, "count": 1, "modifier": 0, "mode": "standard" }
 }
 ```
-Types supportés :
-- `dice:roll`, `dice:clear`
-- `sound:trigger` (via `SoundController`), `sound:volume`, `sound:stop-all`
-- `ambient:trigger` (Theme auto-play/toggle logic), `ambient:scene`
-- `combat:update-hp`, `combat:next-turn`
-- `storyboard:trigger`
+
+> ⛔ **Cette page listait cinq familles d'actions. Il y en a une quarantaine.** Corrigé le
+> 2026-09-05 — et cette fois **sans recopier la liste** : une énumération dans un document
+> se périme dès le commit suivant, et c'est exactement ce qui était arrivé ici.
+
+**Ce qui fait foi** : `src/modules/remote/actions/index.ts` compose le registre, et
+`KNOWN_ACTION_TYPES` en donne la liste à l'exécution. `registry.test.ts` vérifie que chaque type
+déclaré a bien un handler.
+
+Les familles, pour s'orienter : dés, audio, combat, session (messages, inventaire, transferts),
+tableau blanc, scène, table (réserves), paquets de cartes, coffre Obsidian.
+
+#### Qui a le droit de quoi
+
+`electron/actionPolicy.ts` tranche, et **refuse par défaut** : tout type absent de
+`PLAYER_ALLOWED_ACTIONS` est réservé aux rôles appairés (`gm`, `remote`). Pour les actions qu'un
+joueur peut émettre, une seconde couche vérifie **qu'il agit sur son propre personnage** —
+`OWNERSHIP_FIELD` dit quel champ du payload porte la cible.
+
+*Conséquence à connaître : ajouter un type d'action le rend automatiquement privilégié.* C'est le
+bon défaut — on ouvre un droit sciemment, on ne l'oublie pas fermé.
 
 ### 4. Specialized Trigger Logic (Main PC)
 Pour garantir une expérience fluide, certaines actions ne sont pas de simples appels aux stores :
@@ -54,18 +69,45 @@ Pour garantir une expérience fluide, certaines actions ne sont pas de simples a
 - **Music-OS** : Les actions `playPad` forcent la résolution de l'ID MediaStore (`m-xxxx`) avant l'assignation à la platine.
 
 ### PC ➔ Mobile (Sync)
-```json
-{
-  "type": "sync",
-  "payload": {
-    "sounds": [...],
-    "moments": [...],
-    "masterVolume": 0.8,
-    "combat": {...},
-    "notes": { "public": "...", "private": "..." }
-  }
-}
-```
+
+Une diffusion périodique, **freinée à 500 ms** (`useNexusSynchronizer`), qui porte l'état complet.
+
+**Ce qui fait foi** : l'interface `RemoteSyncData` dans `src/modules/remote/types/remote.types.ts`.
+Elle compte une quinzaine de segments — pads, sons, combat, horloge, tableau, dés, carte, messages,
+lecture du meneur, session.
+
+> ⛔ **Le piège de ce transport, payé trois fois.** Un segment construit dans un **littéral anonyme**
+> au milieu du synchroniseur n'oblige à rien : `whiteboard` déclarait sept champs et n'en envoyait
+> **quatre**, pendant des mois. La tablette recopiait les trois manquants dans chaque tracé qu'elle
+> émettait — *tout ce qui était dessiné depuis une tablette partait en crayon blanc, gomme
+> comprise.*
+>
+> **Le remède est le type de retour, pas un test** : `segmentDuTableau` et `segmentDeLecture`
+> promettent leur type, donc un champ oublié **ne compile plus**. Vérifié en dégradant le code —
+> `TS2741`. *Une asymétrie entre celui qui écrit et celui qui lit est indétectable par construction
+> tant qu'ils ne partagent pas le type.*
+
+#### Question / réponse — hors du flux périodique
+
+Tout ne peut pas voyager deux fois par seconde. Le **coffre Obsidian** compte plus de deux mille
+notes : la tablette **demande** (`remote:obsidian:lister`, `remote:obsidian:lire`), le meneur
+**répond** par `broadcastUIAction`.
+
+> 🔒 **La réponse vise le rôle `'remote'`.** `SyncServer.broadcastAction` accepte un rôle
+> destinataire depuis toujours ; **le pont l'avalait** jusqu'au 2026-09-05, et tout partait à tout
+> le monde. Sans ce correctif, le carnet privé du meneur se déposait sur l'appareil de chaque
+> joueur. *C'est la règle de `mainsPourLaTable` : un secret caviardé à l'affichage a déjà voyagé.*
+
+#### Ce qui est caviardé à la source
+
+Le même message part à tous les clients d'un rôle : **ce qu'on ne veut pas montrer ne doit pas
+partir.** Trois exemples en place :
+
+| Quoi | Ce qui est retiré | Où |
+| :--- | :--- | :--- |
+| Cartes en main | l'index de toute carte face cachée, il ne reste que le compte | `mainsPourLaTable` |
+| Jauges de tension | celles que le meneur garde secrètes | `jaugesVuesParLesJoueurs` |
+| Wiki de campagne | les images — coût réseau, pas secret | `segmentDeLecture` |
 
 ## 🛠️ Optimisations et Sécurité
 
@@ -78,4 +120,17 @@ Pour garantir une expérience fluide, certaines actions ne sont pas de simples a
 
 ## 🛑 Limites connues
 - Nécessite d'être sur le même sous-réseau (WiFi).
-- Pas de support HTTPS natif en local (peut poser problème avec certaines API de navigateur mobile comme la vibration si non servi via localhost ou HTTPS).
+- Pas de support HTTPS natif en local (peut poser problème avec certaines API de navigateur mobile
+  comme la vibration si non servi via localhost ou HTTPS).
+- **L'appairage est un jeton dans le fragment du QR code** (`#token=…`). Recopier l'adresse sans lui
+  connecte l'appareil en **simple joueur** : le serveur rétrograde le rôle demandé, et la tablette
+  l'affiche dans son bandeau. Voir `pairingToken.ts` et `remote:registered`.
+- **Le coffre Obsidian n'est lisible que si son chemin est réglé sur le PC.** Le chemin demandé par
+  la tablette est résolu sous la racine du coffre côté Electron (`obsidian_bridge.ts`) — durci le
+  2026-09-05, quand ce chemin a cessé de venir uniquement de l'écran du meneur.
+
+---
+
+*Document remis d'aplomb le 2026-09-05. Il décrivait cinq familles d'actions sur une quarantaine et
+un flux de cinq clés sur une quinzaine. **Les énumérations ont été remplacées par des renvois au
+code qui fait foi** — c'est ce qui avait vieilli, et ce qui vieillira encore.*

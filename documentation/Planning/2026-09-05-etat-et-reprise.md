@@ -1,8 +1,8 @@
 # État et reprise — 2026-09-05
 
-> **Base saine, vérifiée en fin de journée** : `npm run validate` complet au vert — `tsc -b`
-> propre, **3 606 tests** (296 fichiers, 1 ignoré), build de production et PWA, branche
-> `feature/tablet-hub-pwa`, arbre propre.
+> **Base saine, vérifiée en fin de soirée** : `npm run validate` complet au vert — `tsc -b`
+> propre, **3 652 tests** (302 fichiers, 1 ignoré), build de production et PWA, branche
+> `feature/tablet-hub-pwa`, arbre propre et poussé.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule —
@@ -26,6 +26,7 @@ raison. Puis la télécommande a été refaite.
 | **04/09 au soir, P3 bis** | **Une jauge de tension peut rester secrète** · les PNJ d'autres campagnes partent **caviardés** · les pions restent libres, par décision |
 | **05/09, P4** | Couleur de grille et tamisage **exposés** · `timeMultiplier` retiré · **la cloche du minuteur sonne enfin**, avec son interrupteur · case « archive légère » · le Media Hub prend **plusieurs fichiers** |
 | **05/09, télécommande** | **Navigation en colonne, libellés écrits, ligne d'état permanente** · quatre défauts muets · le **tableau blanc réparé** |
+| **05/09 au soir, la séance** | Quatre retours de David en jouant : **« Couper le son » qui ne coupait que les bruitages** · le **résultat des dés** qui n'arrivait jamais · les **notes élargies** à la trame, au wiki, aux indices et au coffre Obsidian · la **messagerie** · et les **Chroniques inatteignables** en pleine partie |
 
 ---
 
@@ -33,7 +34,10 @@ raison. Puis la télécommande a été refaite.
 
 ### 1. Ouvrir la télécommande sur la vraie tablette, en paysage.
 
-C'est le seul travail du jour dont **rien** n'a été vu à l'écran, et il touche tout ce qu'on
+⭐ **La moitié de ce document a déjà été validée en séance** — David a joué avec la refonte le soir
+même, et ses quatre retours sont traités. Ce qui suit reste à juger.
+
+C'est le travail du jour dont le plus **reste** à voir à l'écran, et il touche tout ce qu'on
 manipule en séance. Quatre choses à juger, dans cet ordre :
 
 - **La colonne de gauche** (`w-32`, calée sur « Scénario ») : trop large, trop étroite ?
@@ -73,6 +77,20 @@ Elle n'existait nulle part : le moteur était écrit en entier et personne ne l'
 minuteur de dix secondes. ⚠️ **Elle se tait quand le son général est coupé** — c'est voulu, pas un
 défaut.
 
+### 4 bis. Les quatre ajouts du soir, dans l'ordre où ils se cassent.
+
+**Couper le son** doit couper les *trois* sources — bruitage, musique, ambiance — et **laisser les
+images et les lumières**. **Le résultat d'un jet** doit apparaître sur la tablette, y compris pour
+un jet lancé au pupitre, et s'effacer seul au bout de quinze secondes.
+
+**L'onglet Messages** : écrire à un joueur depuis la tablette, et vérifier qu'il le **reçoit
+vraiment**. ⚠️ C'est le point le plus fragile de la soirée : le chemin naïf aurait fait apparaître
+le message dans le fil du cockpit *sans jamais l'envoyer*. Vérifiez donc sur la tablette du joueur,
+pas sur la vôtre.
+
+**Le coffre Obsidian**, sixième vue des Notes : la liste de vos 2 272 notes transite **en une
+fois** à l'ouverture de l'onglet — c'est le temps de réponse qu'il faut juger. Puis ouvrir une note.
+
 ### 5. Poser une couleur de grille, et régler le tamisage du Focus.
 
 Deux réglages dont **toute la chaîne existait sauf le bouton au bout**. Map-OS → Grille → Couleur
@@ -97,6 +115,16 @@ l'horloge fantastique, et l'exposer aurait demandé d'écrire l'accélération d
 ensemble dans le registre était juste comme relevé et **faux comme plan**. *On ne le voit qu'en
 ouvrant le code, jamais en relisant la liste.*
 
+**⛔ Un destinataire sans expéditeur attend, et il n'a l'air de rien.** Sur les quatre retours du
+soir, **trois étaient un chaînon manquant entre deux moitiés qui existaient déjà** : l'écran de
+résultat des dés guettait un message que personne n'émet ; la messagerie avait tout son mécanisme
+et aucun transport ; la vue des Chroniques était classée « des deux côtés » sans porte du côté
+partie. *Aucun type, aucun test unitaire ne voit ça — c'est en jouant qu'on le trouve.*
+
+**⛔ Un nom plus large que le geste est une promesse qu'on tient par hasard.** J'ai renommé « STOP
+ALL SOUNDS » en « Tout couper » en le promouvant dans la ligne d'état, **sans vérifier ce qu'il
+coupait**. Il ne coupait que les bruitages. *Renommer, c'est promettre.*
+
 **⛔ Un effet de bord n'a rien à faire dans un réducteur.** Le réflexe, pour la cloche, était
 d'appeler `playChime()` dans `tickTimer`, là où le zéro se produit. *Un `set` de Zustand est un
 calcul d'état* : chaque test du minuteur aurait fait sonner une cloche. Elle sonne depuis le
@@ -115,6 +143,12 @@ registre se relit comme une mesure.*
 avait touché cinq panneaux sur sept, et c'est celui que je n'avais pas ouvert qui portait le défaut
 le plus coûteux de la tablette.
 
+**J'ai noyé la question qui protège les données.** La règle est de demander si GM-OS tourne **avant
+toute édition**, et je l'ai posée en première des quatre questions d'une carte dont les trois autres
+portaient sur des choix d'interface — c'est-à-dire dans un contexte où l'on répond aux quatre d'un
+geste. *Une consigne noyée est une consigne perdue*, et c'est une leçon que ce dépôt a déjà payée
+ailleurs. Elle se pose seule.
+
 ---
 
-*Écrit au terme de la journée du 2026-09-05.*
+*Écrit au terme de la journée du 2026-09-05, complété le soir même après la séance de David.*

@@ -41,8 +41,8 @@ dans le code, qui absorbe toutes les autres.**
 > l'étape 3 appelait la commande sans bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas
 > exécuté.*
 >
-> Revérifié le 2026-09-05 : `tsc -b` propre, **3 606 tests au vert** (296 fichiers, 1 ignoré),
-> `npm run validate` vert.
+> Revérifié le 2026-09-05 au soir : `tsc -b` propre, **3 652 tests au vert** (302 fichiers,
+> 1 ignoré), `npm run validate` vert.
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -983,6 +983,60 @@ ont été corrigés ensemble.
 **Ce qui reste à voir à l'écran**, et que rien ici ne peut trancher : que la gomme efface bien depuis
 la tablette, la largeur de la colonne (`w-32`, calée sur « Scénario »), la densité des vignettes à un
 mètre, et le seuil de 900 px sur la vraie tablette.
+
+### 19 · ⭐ La soirée de la tablette — quatre retours de séance (2026-09-05)
+
+David a joué avec la télécommande refaite le matin même. Quatre retours, et **trois d'entre eux ont
+révélé un destinataire sans expéditeur, ou l'inverse.**
+
+| # | Le retour de David | Ce qu'il y avait derrière |
+| --- | --- | --- |
+| ⛔ **Couper le son** | *« le bouton tout couper ne coupe pas la musique et ambiant »* | Le handler n'appelait que `stopAllPads()` : **Sound-OS et rien d'autre**. Le bouton s'appelait « STOP ALL SOUNDS » et **je l'avais renommé « Tout couper » la veille sans vérifier ce qu'il coupait** — *un nom plus large que le geste est une promesse qu'on tient seulement par hasard.* Il coupe les trois sources, et s'appelle « Couper le son ». Images et lumières restent, tranché par David. |
+| ⛔ **Le résultat des dés** | *« je voudrais voir le résultat sur la tablette »* | L'écran de résultat existait — **cent vingt-cinq lignes** — et n'avait jamais pu s'afficher : il guettait un `dice:result` que **personne n'émet**. Le dernier jet circulait pourtant dans le segment `dice` depuis toujours, non déclaré. *Un destinataire sans expéditeur ne lève aucune erreur : il attend.* |
+| ⭐ **Les notes** | *« la trame, les scènes prévues, l'accès au wiki »* | Rien de tout cela n'arrivait à la tablette. Cinq vues au lieu de deux champs de texte, puis six avec le coffre. `segmentDeLecture`, **typée en retour**. |
+| ⛔ **Les Chroniques** | *« je n'ai plus, quand une session est en cours, l'accès à la chronologie et au wiki »* | Voir le § 18 bis ci-dessous — le plus instructif des quatre. |
+
+#### La messagerie et le coffre — et deux trous de sécurité trouvés en chemin
+
+| # | Ce qui était | Ce qui est |
+| --- | --- | --- |
+| **Messagerie** | Le mécanisme existait **entièrement** côté meneur ; le fil n'était pas dans le flux et aucune action n'en émettait. | Un huitième onglet, et **le compte des non-lus dans la ligne d'état** — *une messagerie qu'il faut penser à aller voir n'est pas une messagerie, c'est une boîte aux lettres.* ⚠️ **Le piège évité** : `session:send-message` existe et n'aurait rien fait de bon — son handler **inscrit sans rediffuser**. Un message parti de la tablette serait apparu dans le fil du cockpit **sans jamais atteindre le joueur**. |
+| **Coffre Obsidian** | Lisible par Electron **sur le PC** ; la tablette n'y avait aucun accès. Plus de deux mille notes, et la diffusion part deux fois par seconde. | **Question/réponse hors du flux** : l'arborescence à l'ouverture, le contenu à l'ouverture d'une note. |
+| 🔒 **Le pont avalait le rôle** | `SyncServer.broadcastAction` accepte un **rôle destinataire** depuis toujours — et `broadcastUIAction` ne le transmettait pas. **Tout partait à tout le monde.** | Corrigé. Sans cela, le carnet privé du meneur se serait déposé sur l'appareil de chaque joueur. *C'est la règle de `mainsPourLaTable` : un secret caviardé à l'affichage a déjà voyagé.* |
+| 🔒 **Le chemin du coffre** | `startsWith(rootPath)` acceptait un **dossier voisin** — `C:\Coffre-prive` quand le coffre est `C:\Coffre`. | `path.resolve` et le séparateur. *Sans portée tant que le chemin venait de l'écran du meneur ; j'ouvrais ce chemin au réseau.* |
+
+⭐ **La leçon de la soirée, et elle est nette.** Sur quatre retours, **trois étaient un chaînon
+manquant entre deux moitiés qui existaient déjà** : l'écran de résultat sans émetteur, la messagerie
+sans transport, le classement de vue sans porte. *Rien de tout cela ne lève d'erreur — un
+destinataire sans expéditeur attend, et un expéditeur sans destinataire parle dans le vide.* Aucun
+type, aucun test unitaire ne les voit ; **c'est en jouant qu'on les trouve.**
+
+**Vérifié** : `tsc -b` propre, lint sans régression, **37 tests neufs**, `npm run validate` vert —
+**3 652 tests**.
+
+### 18 bis · ⛔ Une vue autorisée et inatteignable (2026-09-05)
+
+*Séparé du reste parce que le mécanisme se reproduira ailleurs.*
+
+`timeline-wiki` — la chronologie et le wiki — n'avait **qu'une seule porte** : le bouton
+« Chroniques » du panneau de campagne. Ce panneau est classé `'preparation'`, et `useLayoutManager`
+renvoie au cockpit **toute vue d'atelier dès qu'une séance s'ouvre**. La porte devenait donc
+inatteignable en pleine partie, et la colonne du cockpit n'en offrait aucune autre.
+
+**Le classement disait pourtant `'les-deux'`**, avec ce commentaire écrit le 23/08 : *« on les bâtit
+le samedi matin et on les consulte le samedi soir »*. **La navigation ne tenait pas ce que le
+classement promettait** — on a donc ajouté la porte, pas reclassé la vue.
+
+*Qui d'autre a la même rustine à poser :* les six vues classées des deux côtés ont été vérifiées une
+à une. Les cinq autres avaient déjà leur porte.
+
+⭐ **Et une garde, parce qu'aucun type ne peut exprimer cet invariant.**
+`portesDuCockpit.test.ts` lit le source du cockpit et exige que chaque vue `'les-deux'` y soit
+atteignable. Dégradé pour vérifier : retirer le bouton fait échouer le cas. Il garde **l'existence**
+d'une porte, pas qu'elle s'ouvre — un repli ou une condition lui échapperaient, et il le dit.
+
+**La règle générale, à retenir** : *tout ce qui n'a de porte que dans un écran d'atelier devient
+hors de portée pendant la partie.*
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

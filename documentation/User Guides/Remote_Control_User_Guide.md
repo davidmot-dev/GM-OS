@@ -1,6 +1,15 @@
-# 📱 Guide Utilisateur : GM Remote Control
+# 📱 Guide : la tablette du meneur
 
-La **GM Remote Control** est une Web App responsive qui transforme n'importe quel appareil mobile (smartphone, tablette) en une surface de contrôle tactile pour **GM-OS**.
+**Votre** surface de contrôle — à ne pas confondre avec le [Tablet Hub](./Tablet_Hub_User_Guide.md),
+qui est l'écran de vos joueurs.
+
+Elle est pensée pour une **tablette tenue en paysage**, et fonctionne sur un téléphone en repli.
+C'est une page web : rien à installer, on scanne un QR code.
+
+> 🔒 **Elle voit ce que vos joueurs ne voient pas** — vos notes privées, les notes de meneur de
+> votre trame, les secrets de vos PNJ, et votre coffre Obsidian. C'est l'appairage qui lui donne ce
+> droit, et **une tablette non appairée est rétrogradée en simple écran de joueur** : le bandeau du
+> haut le dit.
 
 ## 🚀 Connexion Initiale
 

@@ -50,7 +50,8 @@ de temps dans ce dossier.
 
 1. [Session-OS — le cockpit](./User%20Guides/Session_OS_User_Guide.md) — créer une campagne, préparer, lancer.
 2. [Tablet Hub](./User%20Guides/Tablet_Hub_User_Guide.md) — ce que vos joueurs auront sous les yeux.
-3. Puis, à la carte, dans [l'index des guides](./User%20Guides/00_Documentation_Index.md) : le combat,
+3. [La tablette du meneur](./User%20Guides/Remote_Control_User_Guide.md) — **la vôtre**, à ne pas confondre avec la précédente.
+4. Puis, à la carte, dans [l'index des guides](./User%20Guides/00_Documentation_Index.md) : le combat,
    les dés, le son, l'IA.
 
 ### « Je veux décrire mon jeu à GM-OS »

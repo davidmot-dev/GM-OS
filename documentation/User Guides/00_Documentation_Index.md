@@ -71,14 +71,25 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Moteur de calcul des fiches](./Character_Formula_Guide.md) | Automatiser un score dérivé sur une fiche. |
 | [Partager règles et lore](./Rule_Sharing_Guide.md) | Envoyer un extrait de règle aux joueurs en pleine partie. |
 
-## 📱 Ce que les joueurs voient
+## 📱 Les tablettes
+
+> ⚠️ **Il y a deux tablettes, et elles n'ont rien à voir.** Celle des joueurs montre leur fiche ;
+> **la vôtre pilote GM-OS et porte vos secrets.** Elles se confondent facilement — ce document les
+> rangeait d'ailleurs ensemble sous « ce que les joueurs voient » jusqu'au 2026-09-05.
+
+### Votre tablette
+
+| Guide | À quelle question il répond |
+| :--- | :--- |
+| ⭐ [**La tablette du meneur**](./Remote_Control_User_Guide.md) | Votre surface de contrôle, **pensée pour une tablette tenue en paysage** : pads, dés, sons, scénario, combat, tableau blanc, trame et wiki, messages. Elle voit vos notes privées et votre coffre Obsidian. |
+
+### Celles de vos joueurs
 
 | Guide | À quelle question il répond |
 | :--- | :--- |
 | [Tablet Hub](./Tablet_Hub_User_Guide.md) | L'écran du joueur : fiche, inventaire, cartes, messages. **Commencez par celui-ci.** |
 | [Tablet Hub — usages avancés](./Tablet_Hub_Advanced_Guide.md) | Les réglages fins de ce même écran. |
 | [La fiche de personnage HTML](./Fiche_HTML_User_Guide.md) | La vraie fiche du jeu, branchée sur les données — et qui gagne quand les deux divergent. |
-| [Télécommande du MJ](./Remote_Control_User_Guide.md) | Piloter GM-OS depuis un téléphone. |
 
 ## 🎧 L'ambiance
 
@@ -120,7 +131,8 @@ question la page répond — de quoi choisir sans ouvrir.
 Ces paires couvrent le même sujet. Elles sont conservées — chacune dit quelque chose que l'autre
 n'a pas — mais **lisez la première d'abord** :
 
-- **Tablet Hub** : [Tablet_Hub_User_Guide](./Tablet_Hub_User_Guide.md), puis [Tablet_Hub_Advanced_Guide](./Tablet_Hub_Advanced_Guide.md).
+- **Tablet Hub** *(les joueurs)* : [Tablet_Hub_User_Guide](./Tablet_Hub_User_Guide.md), puis [Tablet_Hub_Advanced_Guide](./Tablet_Hub_Advanced_Guide.md).
+- **Votre tablette** : [Remote_Control_User_Guide](./Remote_Control_User_Guide.md) — à ne pas confondre avec les précédents.
 - **Cortex** : [Cortex_OS_User_Guide](./Cortex_OS_User_Guide.md), puis [Tactical_AI_User_Manual](./Tactical_AI_User_Manual.md).
 - **Oracle** : [AI_Oracle_User_Guide](./AI_Oracle_User_Guide.md), puis [AI_Oracle_NotebookLM_Guide](./AI_Oracle_NotebookLM_Guide.md).
 
