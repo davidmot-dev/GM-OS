@@ -82,7 +82,7 @@ non.*
 
 ### ~~Lot 1 — Ce que les joueurs ont sous les yeux~~ ✅ fait le 04/09
 
-`Tablet_Hub_User_Guide` · `Tablet_Hub_Advanced_Guide` · `Dice_Projection_Guide`
+`61-Tablette-des-joueurs` · `62-Tablette-des-joueurs-reglages-fins` · `35-Projeter-un-jet`
 
 **Pourquoi en premier.** Chaque module passé jusqu'ici a livré la même sorte de trouvaille : *ce
 qui part chez les joueurs n'est pas ce que le guide annonce*. Les jauges de Clock-OS sont publiques
@@ -96,7 +96,7 @@ onglets du Hub n'était décrit. Détail au § 12f.
 
 ### ~~Lot 2 — Le code le plus récent~~ ✅ fait le 04/09
 
-`Storyboard_User_Guide` · `Voice_OS_User_Guide`
+`13-Storyboard-les-moments` · `74-Voice-OS-la-voix`
 
 **Ce que le lot a donné** : ce sont **les guides les plus justes rencontrés jusqu'ici** — écrits
 dans la foulée du code. Les trouvailles sont donc plus fines, sauf une : **deux boutons
@@ -105,8 +105,8 @@ silence. Détail au § 12g.
 
 ### ~~Lot 3 — L'Oracle et le corpus~~ ✅ fait le 04/09
 
-`AI_Oracle_User_Guide` · `AI_Oracle_NotebookLM_Guide` · `Obsidian_User_Guide` ·
-`ai-obsidian-synergy`
+`80-Oracle-poser-une-question` · `81-Oracle-le-pont-NotebookLM` · `84-Nexus-Wiki-coffre-Obsidian` ·
+`85-Nexus-Wiki-et-l-Oracle`
 
 **Pourquoi ensemble.** Les quatre décrivent la même chaîne : les racines documentaires, le coffre
 Obsidian, le plafond RAG, les personas. Séparés, ils se contrediront.
@@ -118,7 +118,7 @@ mécanisme qui donne vraiment vos notes à l'Oracle. Détail au § 12h.
 
 ### ~~Lot 4 — Le Cortex~~ ✅ fait le 04/09
 
-`Cortex_OS_User_Guide` · `Tactical_AI_User_Manual`
+`82-Cortex-OS` · `83-Cortex-OS-aide-memoire`
 
 **Ce que le lot a donné** : le pari s'est vérifié sur **le premier bouton du panneau**. Les deux
 pages décrivaient *Sensors*, et **aucune n'avait raison** — il ne coupe ni les suggestions ni le
@@ -127,7 +127,7 @@ Détail au § 12i.
 
 ### ~~Lot 5 — Les règles et la Forge~~ ✅ fait le 04/09
 
-`Rule_Engine_Forge_Guide` · `Rule_Sharing_Guide` · `Character_Formula_Guide`
+`50-Forge-des-systemes` · `52-Partager-une-regle` · `51-Formules-de-fiche`
 
 **Ce que le lot a donné** : les deux premiers guides décrivaient un état de l'application
 **antérieur au 16/08** — modes « BRAIN / BODY » disparus, modèle « Gemini 1.5 Pro » imposé,
@@ -136,8 +136,8 @@ fonctionnent pas**. Détail au § 12j.
 
 ### ~~Lot 6 — Le combat~~ ✅ fait le 04/09
 
-`Combat_Dynamic_UI_User_Guide` · `combat_os_cohesion_guide` · `Smart_Damage_Calculator_Guide` ·
-`NPC_Live_Generator_User_Guide`
+`31-Combat-OS-cartes-de-combattant` · `32-Combat-OS-et-la-Forge` · `33-Calcul-des-degats` ·
+`21-Generer-un-PNJ-en-direct`
 
 **Ce que le lot a donné** : le motif y est **des tableaux inventés** — deux statuts automatiques
 qui n'existent pas, une coloration des ressources par nom qui n'existe pas, et un moteur d'images
@@ -145,7 +145,7 @@ qui n'existent pas, une coloration des ressources par nom qui n'existe pas, et u
 
 ### ~~Lot 7 — Les tables et le butin~~ ✅ fait le 04/09
 
-`Table_OS_User_Guide` · `Loot_Module_Guide`
+`40-Table-OS-tables-aleatoires` · `41-Butin-distribuer-en-seance`
 
 **Ce que le lot a donné** : peu, et pour une bonne raison — la moitié de ces pages avait été
 écrite le matin même avec le pont vers le butin. Le vieux fond de Table-OS a rendu **le jet
@@ -153,7 +153,7 @@ manuel**, qui n'était documenté nulle part. Détail au § 12l.
 
 ### ~~Lot 8 — L'image et la lumière~~ ✅ fait le 04/09
 
-`Image_OS_User_Guide` · `Light_OS_User_Guide` · `Favorite_OS_User_Guide`
+`24-Image-OS-la-regie-visuelle` · `75-Light-OS-les-lumieres` · `26-Favoris`
 
 **Ce que le lot a donné** : ⛔ **la trouvaille la plus grave de toute la revue.** Favorite-OS
 annonçait une synchronisation avec un « coffre central » et une pastille verte qui *« confirme que
@@ -163,8 +163,8 @@ au § 12n.
 
 ### ~~Lot 9 — Les petits outils~~ ✅ fait le 04/09
 
-`Clues_User_Guide` · `Whiteboard_OS_User_Guide` · `Web_OS_User_Guide` ·
-`Remote_Control_User_Guide` · `Universal_Search_User_Guide`
+`25-Indices` · `27-Tableau-blanc` · `28-Navigateur-integre` ·
+`60-Tablette-du-meneur` · `94-Recherche-universelle`
 
 **Ce que le lot a donné** : **quatre guides sur cinq exacts** — les seuls de toute la revue à
 passer sans correction de fond. Tout était dans `Remote_Control`, qui décrivait **cinq panneaux sur

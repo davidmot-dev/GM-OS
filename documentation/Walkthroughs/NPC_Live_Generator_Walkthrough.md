@@ -42,5 +42,5 @@ The following scenarios were verified:
 
 ## 📚 Related Documentation
 
-- [User Guide - NPC Live Generator](../User Guides/NPC_Live_Generator_User_Guide.md)
+- [User Guide - NPC Live Generator](../User Guides/21-Generer-un-PNJ-en-direct.md)
 - [Technical Doc - NPC Live Generator](../Technical Docs/NPC_Live_Generator_Technical_Doc.md)

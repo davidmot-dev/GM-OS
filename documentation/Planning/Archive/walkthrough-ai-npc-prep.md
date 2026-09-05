@@ -15,8 +15,8 @@ La fonctionnalité repose sur la synergie de deux systèmes existants dans GM-OS
 - **[session-os-modular-architecture.md](../../Technical Docs/session-os-modular-architecture.md)** : Ajout d'une section sur l'extension du "Neural Liaison" pour l'injection automatisée des profiles PNJ.
 
 ### 📖 Guides Utilisateurs
-- **[AI_Oracle_User_Guide.md](../../User Guides/AI_Oracle_User_Guide.md)** : Ajout d'une section pratique expliquant comment solliciter l'IA pour des répliques "à la volée".
-- **[Session_OS_User_Guide.md](../../User Guides/Session_OS_User_Guide.md)** : Mise en avant de la fonctionnalité dans le panneau du Master Cockpit.
+- **[80-Oracle-poser-une-question.md](../../User Guides/80-Oracle-poser-une-question.md)** : Ajout d'une section pratique expliquant comment solliciter l'IA pour des répliques "à la volée".
+- **[10-Session-OS-le-cockpit.md](../../User Guides/10-Session-OS-le-cockpit.md)** : Mise en avant de la fonctionnalité dans le panneau du Master Cockpit.
 
 ### 📔 Retours d'Expérience
 - **docs/dev/Lessons_Learned_Archive.md *(document non conservé)*** : Formalisation de la leçon sur l'"Émergence Fonctionnelle" (comment des briques de base bien conçues créent de nouvelles fonctions sans code additionnel).

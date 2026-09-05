@@ -31,7 +31,7 @@ de temps dans ce dossier.
 
 | Dossier | Nature | Comment le lire |
 | :--- | :--- | :--- |
-| [**User Guides**](./User%20Guides/00_Documentation_Index.md) | *Comment on s'en sert.* 46 guides. | Fait autorité sur les **gestes**. Peut décrire un écran qui a bougé. |
+| [**User Guides**](./User%20Guides/00-Index-des-guides.md) | *Comment on s'en sert.* 46 guides. | Fait autorité sur les **gestes**. Peut décrire un écran qui a bougé. |
 | [**Technical Docs**](./Technical%20Docs/00_Index_Technique.md) | *Comment c'est fait.* 31 documents. | Fait autorité sur les **intentions d'architecture**. En cas de doute, **le code fait foi**. |
 | [**Architecture**](./Architecture/) | Vue d'ensemble, magasins d'état, feuille de route. | Le socle. Change rarement. |
 | [**Planning**](./Planning/) | Les plans, les décisions, l'état du jour. 59 documents. | **Daté par nature.** Un plan dit ce qu'on voulait faire, pas ce qui existe. |
@@ -48,18 +48,18 @@ de temps dans ce dossier.
 
 ### « Je veux mener une partie avec GM-OS »
 
-1. [Session-OS — le cockpit](./User%20Guides/Session_OS_User_Guide.md) — créer une campagne, préparer, lancer.
-2. [Tablet Hub](./User%20Guides/Tablet_Hub_User_Guide.md) — ce que vos joueurs auront sous les yeux.
-3. [La tablette du meneur](./User%20Guides/Remote_Control_User_Guide.md) — **la vôtre**, à ne pas confondre avec la précédente.
-4. Puis, à la carte, dans [l'index des guides](./User%20Guides/00_Documentation_Index.md) : le combat,
+1. [Session-OS — le cockpit](./User%20Guides/10-Session-OS-le-cockpit.md) — créer une campagne, préparer, lancer.
+2. [Tablet Hub](./User%20Guides/61-Tablette-des-joueurs.md) — ce que vos joueurs auront sous les yeux.
+3. [La tablette du meneur](./User%20Guides/60-Tablette-du-meneur.md) — **la vôtre**, à ne pas confondre avec la précédente.
+4. Puis, à la carte, dans [l'index des guides](./User%20Guides/00-Index-des-guides.md) : le combat,
    les dés, le son, l'IA.
 
 ### « Je veux décrire mon jeu à GM-OS »
 
-1. [Rule Engine & la Forge](./User%20Guides/Rule_Engine_Forge_Guide.md) — le pilote d'un système.
-2. [Moteur de calcul des fiches](./User%20Guides/Character_Formula_Guide.md) — les scores dérivés.
-3. [Loot-OS — écrire ses tables](./User%20Guides/Loot_System_Guide.md) et
-   [Table-OS](./User%20Guides/Table_OS_User_Guide.md) — le hasard et le butin.
+1. [Rule Engine & la Forge](./User%20Guides/50-Forge-des-systemes.md) — le pilote d'un système.
+2. [Moteur de calcul des fiches](./User%20Guides/51-Formules-de-fiche.md) — les scores dérivés.
+3. [Loot-OS — écrire ses tables](./User%20Guides/42-Butin-ecrire-les-tables.md) et
+   [Table-OS](./User%20Guides/40-Table-OS-tables-aleatoires.md) — le hasard et le butin.
 
 ### « Je viens toucher au code »
 
@@ -87,7 +87,7 @@ Le dossier [`Migration/`](./Migration/) porte les plans de la transition vers Ta
 ## ✍️ Écrire dans ce dossier
 
 - **Un nouveau module** → un guide dans `User Guides/`, ajouté à
-  [son index](./User%20Guides/00_Documentation_Index.md). Un guide que l'index ne cite pas
+  [son index](./User%20Guides/00-Index-des-guides.md). Un guide que l'index ne cite pas
   n'existe pour personne : c'était le cas de 22 d'entre eux avant le 2026-09-04.
 - **Une décision d'architecture** → `Technical Docs/`, et une ligne dans
   [l'index technique](./Technical%20Docs/00_Index_Technique.md).

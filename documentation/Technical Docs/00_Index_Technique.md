@@ -1,7 +1,7 @@
 # 🛠️ Index technique
 
 **Les 31 documents techniques du dossier**, rangés par sujet. Ils décrivent *comment c'est fait* ;
-pour *comment on s'en sert*, voir [les guides utilisateur](../User%20Guides/00_Documentation_Index.md).
+pour *comment on s'en sert*, voir [les guides utilisateur](../User%20Guides/00-Index-des-guides.md).
 
 > ⚠️ **Un document technique vieillit sans prévenir.** Ceux qui portent une date de mise à jour
 > disent de quand ils parlent ; les autres décrivent l'état du jour où ils ont été écrits. En cas

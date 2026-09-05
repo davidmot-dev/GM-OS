@@ -31,4 +31,4 @@ Un bouton **ExternalLink** dans le profil latéral permet de basculer instantan�
 ---
 
 > [!NOTE]
-> Le Social Nexus est désormais le point central de la gestion politique de vos campagnes. Pour plus de détails, consultez le [Guide Utilisateur Session OS](../User Guides/Session_OS_User_Guide.md).
+> Le Social Nexus est désormais le point central de la gestion politique de vos campagnes. Pour plus de détails, consultez le [Guide Utilisateur Session OS](../User Guides/10-Session-OS-le-cockpit.md).

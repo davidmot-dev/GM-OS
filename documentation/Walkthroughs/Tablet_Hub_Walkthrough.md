@@ -35,5 +35,5 @@ Ce walkthrough détaille les étapes de la création du **Tablet Hub**, une inte
 - **Sync Logic** : Vérification manuelle de la réactivité du bouton "Projeter l'horloge".
 
 ## 📚 Documents Associés
-- [Guide de l'Utilisateur](../User Guides/Tablet_Hub_User_Guide.md)
+- [Guide de l'Utilisateur](../User Guides/61-Tablette-des-joueurs.md)
 - [Documentation Technique](../Technical Docs/Tablet_Hub_Technical_Doc.md)

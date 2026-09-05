@@ -22,7 +22,7 @@ Suite au workflow `[doc]`, les fichiers suivants ont été actualisés :
 - `roadmap-v6.md` : Mise à jour du statut des phases 0 et 1.
 - `docs/dev/Lessons_Learned_Archive.md` : Documentation des pièges de dépendances Zustand et des événements passifs.
 - `session-os-modular-architecture.md` : Ajout des standards de navigation atomique.
-- `general-guide.md` : Mention de la fluidité accrue pour les utilisateurs.
+- `01-Prise-en-main.md` : Mention de la fluidité accrue pour les utilisateurs.
 
 ## 📊 Conclusion
 Le système est désormais prêt pour les tests de combat tactique intensifs. Les fondations de navigation cross-module sont durcies pour les futurs développements de la Phase 2.

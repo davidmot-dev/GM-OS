@@ -634,7 +634,7 @@ fond de Table-OS.*
 | ⛔ **T2** | **La règle des dés juxtaposés était donnée par l'exemple, jamais par la règle.** Le motif est `/^d([468])\1+$/` : **un seul chiffre, répété, et seulement 4, 6 ou 8**. `d1010` ou `d36` ne fonctionnent pas — ils seront lus comme des dés ordinaires, ou pas du tout. Les exemples du guide étaient tous valides ; la limite ne l'était pas. | ✅ **Écrit.** | `TableEngine.ts:13` |
 | **T3** | **L'historique montre dix tirages, il en garde cinquante.** Le guide annonçait cinquante, ce qui est vrai en mémoire et faux à l'écran. | ✅ **Précisé.** | `useTableStore.ts:102`, `TableDashboard.tsx:245` |
 | ✅ **T4** | **Trois clés d'i18n mortes** — `give_button`, `give_tooltip`, `recipient_fallback` : les libellés du bouton « Donner à un PJ » retiré de Table-OS le matin même. | ✅ **Retirées**, en français et en anglais. | `random_tables.main.*` |
-| ✅ **T5** | **Le guide d'écriture des tables numérotait deux fois « 3 » et deux fois « 4 ».** | ✅ **Renumérotée**, 1 à 7. | `Loot_System_Guide.md` |
+| ✅ **T5** | **Le guide d'écriture des tables numérotait deux fois « 3 » et deux fois « 4 ».** | ✅ **Renumérotée**, 1 à 7. | `42-Butin-ecrire-les-tables.md` |
 
 **Vérifié et exact** : les six univers livrés ; le modificateur appliqué au **résultat brut** et non
 au dé ; le fichier de gabarit `databases/modele_table.json` ; le prompt d'aide à la création
