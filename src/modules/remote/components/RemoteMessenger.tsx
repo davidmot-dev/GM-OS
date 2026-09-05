@@ -14,6 +14,16 @@ import type { SessionMessage } from '../../../types/session.types';
  * rediffuse pas*. S'en servir aurait produit des messages qui apparaissent dans
  * le fil du cockpit **sans jamais atteindre le joueur** : on croit avoir parlé.
  * D'où `remote:session:gm-message`, qui passe par `sendDirectMessage`.
+ *
+ * ⛔ **Et une restriction que j'avais posée à tort** (corrigée le 2026-09-05,
+ * dans la foulée) : le champ d'écriture restait fermé sur « Tous », au motif
+ * qu'un message sans destinataire n'existe pas. C'était faux — **le meneur peut
+ * écrire à tout le monde depuis son cockpit depuis toujours**, en envoyant à
+ * l'identifiant `'all'`, et le Tablet Hub des joueurs le reçoit comme *Canal
+ * Général*. Tout le circuit existait ; je l'avais fermé côté tablette.
+ *
+ * *Une précaution qui interdit ce que le reste de l'application permet n'est pas
+ * une précaution, c'est une régression.*
  */
 
 interface RemoteMessengerProps {
@@ -22,6 +32,14 @@ interface RemoteMessengerProps {
     destinataires: { id: string; nom: string }[];
     onEnvoyer: (toId: string, toName: string, contenu: string) => void;
 }
+
+/**
+ * L'identifiant du canal général, tel que le cockpit et le Tablet Hub le
+ * connaissent déjà. **Il ne s'invente pas ici** : le hub teste `toId === 'all'`
+ * pour afficher « Canal Général », et une valeur différente n'atteindrait
+ * personne.
+ */
+const CANAL_GENERAL = 'all';
 
 /** L'heure seule : sur une tablette, la date d'un message du soir n'apprend rien. */
 function heure(instant: number): string {
@@ -54,12 +72,25 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
         return tries.filter(m => m.fromId === filtre || m.toId === filtre);
     }, [messages, filtre]);
 
-    /* Le fil se lit par le bas : c'est le dernier message qui compte. */
+    /*
+      Le fil se lit par le bas : c'est le dernier message qui compte.
+
+      `scrollIntoView` est appelé avec précaution — il manque dans jsdom, et un
+      composant qui **casse** parce qu'une commodité du DOM est absente rend un
+      écran blanc pour un défilement. *Le confort ne doit jamais faire tomber ce
+      qu'il accompagne.*
+    */
     useEffect(() => {
-        finDuFil.current?.scrollIntoView({ block: 'end' });
+        finDuFil.current?.scrollIntoView?.({ block: 'end' });
     }, [fil.length]);
 
-    const destinataireChoisi = correspondants.find(c => c.id === filtre);
+    /*
+      **« Tous » est un destinataire, pas une absence de destinataire.** C'est le
+      canal général, celui que le hub des joueurs affiche à part.
+    */
+    const destinataireChoisi = filtre === 'tous'
+        ? { id: CANAL_GENERAL, nom: 'Tous les joueurs' }
+        : correspondants.find(c => c.id === filtre);
 
     const envoyer = () => {
         if (!destinataireChoisi || !texte.trim()) return;
@@ -72,6 +103,7 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
             <div className="flex gap-1 overflow-x-auto no-scrollbar shrink-0">
                 <button
                     onClick={() => setFiltre('tous')}
+                    title="Tout le fil, et le canal général pour écrire"
                     className={`shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-colors ${filtre === 'tous' ? 'bg-accent text-app-bg' : 'bg-white/5 text-slate-500 hover:text-slate-300'}`}
                 >
                     Tous
@@ -101,7 +133,9 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                             <div className={`max-w-[75%] rounded-xl px-3 py-2 flex flex-col gap-0.5 ${duMeneur ? 'bg-accent/15 border border-accent/30' : 'bg-white/5 border border-white/10'}`}>
                                 <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-slate-500">
                                     {duMeneur ? <Shield size={10} /> : <User size={10} />}
-                                    {duMeneur ? `→ ${m.toName}` : m.fromName}
+                                    {duMeneur
+                                        ? `→ ${m.toId === CANAL_GENERAL ? 'Tous' : m.toName}`
+                                        : m.fromName}
                                     <span className="ml-auto font-mono tabular-nums">{heure(m.timestamp)}</span>
                                 </span>
                                 <span className="text-xs leading-relaxed text-slate-200 whitespace-pre-wrap">{m.content}</span>
@@ -113,10 +147,10 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
             </div>
 
             {/*
-              **On n'écrit qu'à quelqu'un.** Le champ reste fermé tant que « Tous »
-              est sélectionné : *un message sans destinataire n'existe pas dans ce
-              modèle*, et deviner le dernier correspondant enverrait un jour le
-              secret d'un joueur à un autre.
+              **Le champ dit toujours à qui l'on parle.** C'est la seule garde qui
+              compte ici : *deviner le destinataire enverrait un jour le secret
+              d'un joueur à un autre.* Sur « Tous », il dit « Tous les joueurs » —
+              le message part au canal général, et tout le monde le lit.
             */}
             <div className="shrink-0 flex items-center gap-2">
                 <input
@@ -128,6 +162,7 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                     placeholder={destinataireChoisi
                         ? `Écrire à ${destinataireChoisi.nom}…`
                         : 'Choisissez un destinataire ci-dessus'}
+                    title={destinataireChoisi ? `Message à ${destinataireChoisi.nom}` : undefined}
                     aria-label="Message à envoyer"
                     className="flex-1 h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-sm text-app-text placeholder:text-slate-600 outline-none focus:border-accent/40 disabled:opacity-40"
                 />

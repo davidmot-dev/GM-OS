@@ -242,10 +242,17 @@ d'écrire une note sur le PC.
 **Ajouté le 2026-09-05, à la demande de David.** Le fil de conversation avec vos joueurs, celui du
 cockpit, sur la tablette.
 
-- Les onglets du haut filtrent par correspondant — **Tous**, ou l'un d'eux.
-- Le champ d'écriture ne s'ouvre **qu'une fois un destinataire choisi**. *Un message sans
-  destinataire n'existe pas, et deviner le dernier correspondant enverrait un jour le secret d'un
-  joueur à un autre.*
+- Les onglets du haut choisissent à qui vous parlez — **Tous**, ou l'un des joueurs.
+- Sur **Tous**, le message part au **canal général** : tout le monde le lit, et le Tablet Hub des
+  joueurs l'affiche comme tel. Sur un nom, il n'atteint que celui-là.
+- Le champ **dit toujours à qui vous parlez**. *Deviner le destinataire enverrait un jour le secret
+  d'un joueur à un autre.*
+
+> ⛔ **Le canal général était fermé à sa sortie, et c'était mon erreur.** J'avais interdit d'écrire
+> sur « Tous » au motif qu'un message sans destinataire n'existe pas — alors que le cockpit le
+> permet depuis toujours et que les tablettes des joueurs savent le recevoir. *Une précaution qui
+> interdit ce que le reste de l'application permet n'est pas une précaution, c'est une régression.*
+> Trouvé par David le 2026-09-05, corrigé le jour même.
 - Un joueur qui a écrit puis s'est déconnecté **reste joignable** : une conversation ne disparaît
   pas parce que l'appareil d'en face s'est éteint.
 
