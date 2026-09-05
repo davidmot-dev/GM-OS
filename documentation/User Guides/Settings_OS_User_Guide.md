@@ -37,7 +37,7 @@ et il y en a maintenant cinq :
 | **Tout le texte** | L'ensemble. Les quatre suivants s'y **multiplient**. |
 | **Étiquettes et badges** | Les petites capitales, les pastilles, les libellés — **la bande la plus dense de l'écran** |
 | **Texte courant** | Ce qu'on lit vraiment : notes, résumés, descriptions |
-| **Titres** | Les titres de panneau et les grands nombres |
+| **Titres et grands nombres** | Les titres de panneau et les grands nombres |
 | **Chiffres et code** | Tout ce qui est à chasse fixe : compteurs, jets, minuteurs |
 
 > 🔎 **Pourquoi des bandes et pas « une taille par police ».** Les quatre polices du groupe

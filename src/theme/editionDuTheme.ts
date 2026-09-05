@@ -145,7 +145,10 @@ export const JETONS_EDITABLES: JetonEditable[] = [
       aide: 'Les petites capitales, les pastilles, les libellés. C’est la bande la plus dense de l’écran.' },
     { cle: 'scale-corps', label: 'Texte courant', groupe: 'tailles', famille: 'echelle', surLInterface: true,
       aide: 'Ce qu’on lit vraiment : notes, résumés, descriptions.' },
-    { cle: 'scale-titres', label: 'Titres', groupe: 'tailles', famille: 'echelle', surLInterface: true,
+    /* ⚠️ Pas « Titres » : le groupe Polices a déjà un réglage de ce nom, pour la
+       famille de caractères. *Deux contrôles du même nom dans un même écran se
+       confondent* — et le test qui les cherche aussi. */
+    { cle: 'scale-titres', label: 'Titres et grands nombres', groupe: 'tailles', famille: 'echelle', surLInterface: true,
       aide: 'Les titres de panneau et les grands nombres.' },
     { cle: 'scale-mono', label: 'Chiffres et code', groupe: 'tailles', famille: 'echelle', surLInterface: true,
       aide: 'Tout ce qui est à chasse fixe : compteurs, jets, minuteurs.' },

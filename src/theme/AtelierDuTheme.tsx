@@ -447,7 +447,7 @@ const ChampDeJeton: React.FC<{
 
         {jeton.famille === 'police' && <ChampDePolice jeton={jeton} valeur={valeur} poser={poser} />}
 
-        {jeton.famille === 'echelle' && <ChampDEchelle valeur={valeur} poser={poser} />}
+        {jeton.famille === 'echelle' && <ChampDEchelle jeton={jeton} valeur={valeur} poser={poser} />}
 
         {(jeton.famille === 'longueur' || jeton.famille === 'ombre') && (
             <input
@@ -529,10 +529,25 @@ const ChampDePolice: React.FC<{
     );
 };
 
+/**
+ * ⛔ **Il écrivait `'font-scale'` en dur.** Trouvé par David le 2026-09-05, le
+ * jour même où les quatre bandes de taille sont arrivées : *« quand je bouge un
+ * slider, c'est le slider tout le texte qui bouge »*.
+ *
+ * Tant qu'il n'y avait **qu'un seul** réglage d'échelle, la clé en dur et la clé
+ * du jeton se confondaient — le défaut n'existait pas encore, il attendait.
+ * Les cinq curseurs pilotaient donc tous le même jeton.
+ *
+ * *Un composant qui édite un champ doit savoir LEQUEL* : il le reçoit
+ * maintenant, comme `ChampDePolice` le fait depuis toujours à deux lignes
+ * d'ici. La ressemblance entre les deux rendait l'écart d'autant plus
+ * invisible.
+ */
 const ChampDEchelle: React.FC<{
+    jeton: JetonEditable;
     valeur: string;
     poser: (cle: string, valeur: string) => void;
-}> = ({ valeur, poser }) => {
+}> = ({ jeton, valeur, poser }) => {
     const echelle = echelleDeTexte(valeur);
 
     return (
@@ -543,8 +558,8 @@ const ChampDEchelle: React.FC<{
                 max={ECHELLE_MAX}
                 step={0.01}
                 value={echelle ?? 1}
-                onChange={e => poser('font-scale', e.target.value)}
-                aria-label="Échelle du texte"
+                onChange={e => poser(jeton.cle, e.target.value)}
+                aria-label={jeton.label}
                 className="flex-1 accent-[var(--app-accent)]"
             />
             <span className="text-xs font-black text-accent font-mono w-14 text-right">
@@ -552,8 +567,8 @@ const ChampDEchelle: React.FC<{
             </span>
             {echelle !== null && (
                 <button
-                    onClick={() => poser('font-scale', '')}
-                    title="Retirer l’échelle du thème"
+                    onClick={() => poser(jeton.cle, '')}
+                    title={`Retirer « ${jeton.label} » du thème`}
                     className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text"
                 >
                     Défaut

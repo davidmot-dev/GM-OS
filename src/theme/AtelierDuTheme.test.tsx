@@ -71,6 +71,65 @@ beforeEach(() => {
     } as never);
 });
 
+/**
+ * **Chaque curseur écrit SON jeton.**
+ *
+ * Défaut trouvé par David le 2026-09-05, le jour même où les quatre bandes de
+ * taille sont arrivées : *« quand je bouge un slider, c'est le slider tout le
+ * texte qui bouge »*. `ChampDEchelle` écrivait `'font-scale'` **en dur**.
+ *
+ * ⭐ **Le défaut n'existait pas avant ce jour-là : il attendait.** Tant qu'il n'y
+ * avait qu'un seul réglage d'échelle, la clé en dur et la clé du jeton se
+ * confondaient. *Un code juste par coïncidence devient faux le jour où la
+ * coïncidence cesse* — et rien ne l'annonce.
+ */
+describe('chaque réglage écrit le sien', () => {
+    /** Les cinq échelles, celles qui partageaient une même clé. */
+    const ECHELLES = [
+        ['Tout le texte', 'font-scale'],
+        ['Étiquettes et badges', 'scale-interface'],
+        ['Texte courant', 'scale-corps'],
+        ['Titres et grands nombres', 'scale-titres'],
+        ['Chiffres et code', 'scale-mono'],
+    ] as const;
+
+    it.each(ECHELLES)('« %s » écrit « %s » et pas un autre', async (libelle, cle) => {
+        render(<AtelierDuTheme />);
+        await screen.findByLabelText('Accent');
+
+        const curseur = screen.getByLabelText(libelle);
+        fireEvent.change(curseur, { target: { value: '1.3' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+
+        await waitFor(() => expect(writeDoc).toHaveBeenCalled());
+        const ecrit = writeDoc.mock.calls.at(-1)![1];
+        expect(ecrit).toContain(`--rpg-${cle}: 1.3`);
+    });
+
+    it('bouger UN curseur ne touche pas les quatre autres', async () => {
+        render(<AtelierDuTheme />);
+        await screen.findByLabelText('Accent');
+
+        /* 1,2 et non 1,4 : l'échelle est bornée à 1,3, et une valeur hors bornes
+           se ferait écraser — le test ne mesurerait plus ce qu'il croit. */
+        fireEvent.change(screen.getByLabelText('Chiffres et code'), { target: { value: '1.2' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+
+        await waitFor(() => expect(writeDoc).toHaveBeenCalled());
+        const ecrit = writeDoc.mock.calls.at(-1)![1];
+
+        expect(ecrit).toContain('--rpg-scale-mono: 1.2');
+        /* C'est LA régression : le curseur écrivait « tout le texte ». */
+        expect(ecrit).not.toContain('--rpg-font-scale');
+        expect(ecrit).not.toContain('--rpg-scale-titres');
+    });
+
+    it('les cinq curseurs portent cinq libellés distincts — sinon on ne les distinguerait pas', () => {
+        const libelles = new Set(ECHELLES.map(([l]) => l));
+        expect(libelles.size).toBe(5);
+    });
+});
+
 describe('l’atelier de thème', () => {
     it('lit le thème du jeu de la campagne ouverte', async () => {
         render(<AtelierDuTheme />);
