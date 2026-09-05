@@ -19,6 +19,7 @@ import RemoteNotes from './components/RemoteNotes';
 import RemoteDiceResultOverlay from './components/RemoteDiceResultOverlay';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
 import RemoteStatusBar from './components/RemoteStatusBar';
+import { useDernierJet } from './hooks/useDernierJet';
 
 /**
  * **La télécommande, refaite pour une tablette tenue en paysage (2026-09-05).**
@@ -52,7 +53,15 @@ const ONGLETS = [
 ] as const;
 
 const RemoteControl: React.FC = () => {
-    const { status, isPaired, syncData, lastDiceResult, clearDiceResult, sendAction } = useRemoteSync();
+    const { status, isPaired, syncData, sendAction } = useRemoteSync();
+    /*
+      **Le résultat des dés vient du flux, pas d'un message dédié.**
+
+      `useRemoteSync` guettait un `dice:result` que **personne n'émet** : l'écran
+      de résultat n'a jamais pu s'afficher. Le dernier jet du meneur circule
+      pourtant dans le segment `dice` depuis toujours. Voir `useDernierJet`.
+    */
+    const { jet: dernierJet, ecarter: ecarterLeJet } = useDernierJet(syncData.dice?.lastRoll);
     const [activeTab, setActiveTab] = useState<Onglet>('pads');
     const [isAventureMode] = useState(() => typeof window !== 'undefined' ? window.location.search.includes('mode=adventure') : false);
 
@@ -104,6 +113,7 @@ const RemoteControl: React.FC = () => {
                 return (
                     <RemoteNotes
                         notes={syncData.notes}
+                        lecture={syncData.lectureDuMeneur}
                         isAventureMode={isAventureMode}
                     />
                 );
@@ -188,8 +198,8 @@ const RemoteControl: React.FC = () => {
             </div>
 
             <RemoteDiceResultOverlay
-                result={lastDiceResult}
-                onClose={clearDiceResult}
+                result={dernierJet}
+                onClose={ecarterLeJet}
             />
         </div>
     );

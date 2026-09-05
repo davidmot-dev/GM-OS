@@ -8,6 +8,7 @@ import { useFavoriteStore } from '../../favorite/useFavoriteStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import { useClockStore, jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import { segmentDuTableau } from '../segmentDuTableau';
+import { segmentDeLecture } from '../segmentDeLecture';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
@@ -413,6 +414,18 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 universalPads,
                 comptesDePads,
                 lecture,
+                /*
+                  **La trame, le wiki et les indices** — ajoutés le 2026-09-05.
+                  L'onglet Notes ne portait que deux champs de texte libre ;
+                  tout ce qu'un meneur relit vraiment en séance restait sur
+                  l'écran du PC, hors de portée dès qu'il tient la tablette.
+                */
+                lectureDuMeneur: segmentDeLecture(currentCampaignId, {
+                    actes: freshSessionOS.actes,
+                    scenes: freshSessionOS.scenes,
+                    wikiEntries: freshSessionOS.wikiEntries,
+                    clues: freshSessionOS.clues,
+                }),
                 dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected, projectionTrigger: diceStore.projectionTrigger },
                 map: { 
                     projectionTarget: mapStore.projectionTarget, 

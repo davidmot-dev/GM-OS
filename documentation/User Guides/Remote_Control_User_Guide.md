@@ -48,10 +48,18 @@ Elle affiche, quel que soit l'onglet ouvert :
 
 Ce qui n'a rien à dire **disparaît** au lieu d'afficher un tiret.
 
-> ⚠️ **« Tout couper » se tient enfoncé** — sept dixièmes de seconde, avec une jauge qui avance.
+> ⚠️ **« Couper le son » se tient enfoncé** — sept dixièmes de seconde, avec une jauge qui avance.
 > C'est un geste d'urgence, il devait être atteignable depuis n'importe quel onglet ; mais un bouton
-> qui coupe tout, à portée de pouce sur une tablette posée entre deux dés, se déclencherait tout
+> qui coupe le son, à portée de pouce sur une tablette posée entre deux dés, se déclencherait tout
 > seul. Relâchez avant la fin et rien ne se passe.
+>
+> ⛔ **Il s'appelait « Tout couper » et ne coupait que les bruitages.** Trouvé par David en séance
+> le 2026-09-05 : la musique et l'ambiance continuaient. Il coupe désormais **les trois sources**.
+> *Un nom plus large que le geste est une promesse qu'on tient seulement par hasard.*
+>
+> ⚠️ **Les images et les lumières restent** — choix de David. Le rideau complet, celui qui éteint
+> aussi l'écran des joueurs, est le bouton **Stop All** du meneur. →
+> [Guide de l'Audio Master](./Audio_Master_Guide.md)
 
 ---
 
@@ -95,6 +103,13 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 - Utilisez le bouton **Vider** (rose) pour nettoyer l'historique des lancers sur le PC.
 - **Système actif** *(corrigé le 03/09/2026)* : quand une campagne est ouverte, le pad affiche le jeu en cours et un bouton **Lancer Système** qui applique ses règles — au lieu d'un jet manuel. Cette carte existait dans l'interface mais ne s'était **jamais** affichée : le système de jeu n'était pas transmis à la tablette, et tout jet parti d'un appareil mobile était donc un jet manuel.
 - **Dés échelonnés** : si le jeu en lance (Blade Runner), la tablette propose les **lettres** — attribut, compétence, équipement — et le modificateur d'avantage ou de désavantage. Basculer en **mode manuel** reprend la main sur le système.
+
+> ✅ **Le résultat s'affiche sur la tablette depuis le 2026-09-05**, en grand, quel que soit
+> l'onglet ouvert — **et pour tous les jets**, y compris ceux lancés à votre pupitre. Il s'efface
+> seul au bout de quinze secondes, ou d'un appui.
+>
+> ⛔ **Cet écran existait déjà et n'avait jamais pu s'afficher** : il guettait un message que
+> personne n'émettait. *Un destinataire sans expéditeur ne lève aucune erreur — il attend.*
 
 ### 3. 🔊 Sons
 - **Synchronisation** : Les boutons affichent les vrais noms de vos Pads configurés sur PC.
@@ -159,10 +174,34 @@ bas.
 
 *Absent de ce guide jusqu'au 2026-09-04.*
 
-### 7. 📑 Notes
-- **Synopsis** : Lisez le résumé public de la session pour les joueurs.
-- **Secrets MJ** : Accédez à vos notes privées et aux intrigues secrètes de la session active.
-- **Lecture Confortable** : Interface optimisée pour la lecture en environnement sombre.
+### 7. 📑 Notes — le panneau de lecture
+
+**Cinq vues, dans l'ordre où l'on s'en sert**, demandées par David le 2026-09-05. Le panneau ne
+portait jusque-là que deux champs de texte libre ; tout ce qu'un meneur relit vraiment en jouant
+vivait sur l'écran du PC — c'est-à-dire hors de portée dès qu'on tient la tablette.
+
+| Vue | Ce qu'elle porte |
+| :--- | :--- |
+| **Séance** | Ce qui **se joue** maintenant, ce qui est **en pause**, ce qui reste **à jouer** — plus le résumé public |
+| **Trame** | Les actes de la campagne et leurs scènes, repliables, **avec vos notes de meneur** |
+| **Wiki** | Les fiches de la campagne, avec une recherche |
+| **Indices** | Ceux que vous avez donnés, et ceux qui vous restent en main |
+| **Secrets** | Vos notes privées sur la séance active |
+
+Toucher une scène la déplie : son résumé, et vos notes en ambre.
+
+> 🔎 **Les états d'une scène sont ceux de votre trame**, calculés chez vous et non redevinés ici :
+> *à jouer*, *en cours*, *en pause*, *close*. Une scène close **sans avoir jamais été jouée** le
+> dit — les confondre ferait lire au journal une partie qui n'a pas eu lieu.
+
+> 🔎 **La vue *Séance* traverse les actes.** Une scène en cours peut appartenir à un acte qu'on
+> croyait derrière soi : *la trame est un plan glissant tant que la campagne vit.*
+
+> ⚠️ **Le wiki arrive sans ses images.** Elles pèseraient des mégaoctets **à chaque
+> synchronisation**, pour des vignettes qu'on ne regarde pas en jouant. Le texte, lui, est ce qu'on
+> relit.
+
+> ⚠️ **La vue *Secrets* est masquée en Mode Aventure**, comme avant.
 
 ---
 
@@ -193,3 +232,8 @@ libellés écrits, ligne d'état permanente, et une passe de densité sur les ci
 rendait 35 % de la hauteur au contenu ; il en rend moins de 8 %. Trois défauts muets ont été trouvés
 en chemin — **les plafonds de la grille tronquaient sans le dire**, **le point d'activité des pads
 n'était jamais allumé**, et **rien ne disait ce qui jouait**.*
+
+*Le même jour, le **tableau blanc** a révélé le plus coûteux : tout ce qui en partait était un
+crayon blanc, gomme comprise. Puis, le soir, trois demandes de David — **« Couper le son » qui ne
+coupait que les bruitages**, **le résultat des dés qui n'arrivait jamais**, et **les notes élargies
+à la trame, au wiki et aux indices**.*

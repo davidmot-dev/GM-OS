@@ -39,8 +39,6 @@ export const useRemoteSync = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const [isPaired, setIsPaired] = useState<boolean>(() => !!getPairingToken());
     const [syncData, setSyncData] = useState<RemoteSyncData>(INITIAL_SYNC_DATA);
-    const [lastDiceResult, setLastDiceResult] = useState<RollRecord | null>(null);
-    const resultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const socketRef = useRef<WebSocket | null>(null);
     const backoffRef = useRef(BACKOFF_INITIAL);
     const connectRef = useRef<(() => void) | null>(null);
@@ -119,13 +117,16 @@ export const useRemoteSync = () => {
                     }));
                 }
                 // Specific UI Actions
-                else if (data.type === 'dice:result') {
-                    setLastDiceResult(data.payload);
-                    if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
-                    resultTimeoutRef.current = setTimeout(() => {
-                        setLastDiceResult(null);
-                    }, 15000);
-                }
+                /*
+                  **Il n'y a plus de branche `dice:result` ici, et c'est voulu**
+                  (2026-09-05). Elle guettait un message que **personne n'a
+                  jamais émis** : l'écran de résultat, cent vingt-cinq lignes,
+                  n'a donc jamais pu s'afficher. *Un destinataire sans expéditeur
+                  ne lève aucune erreur : il attend.*
+
+                  Le dernier jet du meneur circule dans le segment `dice` du flux
+                  de synchronisation depuis toujours. Voir `useDernierJet`.
+                */
                 // Le serveur confirme le rôle réellement accordé, qui peut être
                 // inférieur à celui demandé si l'appairage n'a pas été validé.
                 else if (data.type === 'remote:registered') {
@@ -173,20 +174,10 @@ export const useRemoteSync = () => {
         }
     }, []);
 
-    const clearDiceResult = useCallback(() => {
-        if (resultTimeoutRef.current) {
-            clearTimeout(resultTimeoutRef.current);
-            resultTimeoutRef.current = null;
-        }
-        setLastDiceResult(null);
-    }, []);
-
     return {
         status,
         isPaired,
         syncData,
-        lastDiceResult,
-        clearDiceResult,
         sendAction
     };
 };

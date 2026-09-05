@@ -44,11 +44,16 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
     const imageRef = useRef<number | null>(null);
 
     /*
-      **L'arrêt général se tient enfoncé.** Il vivait dans le troisième onglet,
-      alors que c'est le geste d'urgence — le seul qu'on veuille atteindre sans
-      chercher. Mais un bouton « tout couper » à portée de pouce sur une tablette
-      posée entre deux dés se déclencherait tout seul : *l'appui long est ce qui
-      permet de le rendre atteignable sans le rendre dangereux.*
+      **Le silence se tient enfoncé.** Le geste vivait dans le troisième onglet,
+      alors que c'est celui qu'on veut atteindre sans chercher. Mais un bouton
+      qui coupe le son, à portée de pouce sur une tablette posée entre deux dés,
+      se déclencherait tout seul : *l'appui long est ce qui permet de le rendre
+      atteignable sans le rendre dangereux.*
+
+      ⚠️ **Il s'appelait « Tout couper » et ne coupait que les bruitages** —
+      David l'a trouvé en séance le 2026-09-05. Le handler ne touchait ni la
+      musique ni l'ambiance. Il les coupe maintenant, et **les images et les
+      lumières restent** : le rideau complet est le bouton du meneur.
     */
     const arreterLAppui = () => {
         debutRef.current = null;
@@ -150,8 +155,8 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                 onPointerLeave={arreterLAppui}
                 onPointerCancel={arreterLAppui}
                 onContextMenu={(e) => e.preventDefault()}
-                title="Tout couper — maintenir appuyé"
-                aria-label="Tout couper — maintenir appuyé"
+                title="Couper le son — maintenir appuyé"
+                aria-label="Couper le son — maintenir appuyé"
                 className="relative shrink-0 h-8 px-3 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-400 flex items-center gap-1.5 overflow-hidden select-none touch-none"
             >
                 {/* La jauge de l'appui : le geste se voit avancer, donc s'annule. */}
@@ -160,7 +165,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                     style={{ width: `${progression * 100}%` }}
                 />
                 <Power size={14} strokeWidth={2.5} className="relative" />
-                <span className="relative text-[10px] font-black uppercase tracking-widest">Tout couper</span>
+                <span className="relative text-[10px] font-black uppercase tracking-widest">Couper le son</span>
             </button>
         </header>
     );

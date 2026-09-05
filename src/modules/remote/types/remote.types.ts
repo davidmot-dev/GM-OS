@@ -57,6 +57,8 @@ export interface RemoteUniversalPad {
 }
 
 import { type DiceConfig } from '../../../types/drivers';
+import type { RemoteLectureDuMeneur } from '../segmentDeLecture';
+import type { RollRecord } from '../hooks/useRemoteSync';
 
 /**
  * **Ce qui joue en ce moment, pour la ligne d'état de la télécommande.**
@@ -117,6 +119,27 @@ export interface RemoteSyncData {
     comptesDePads?: RemoteComptesDePads;
     /** Ce qui joue en ce moment, pour la ligne d'état. */
     lecture?: RemoteLecture;
+    /**
+     * **Ce que le meneur lit pendant qu'il joue** : la trame, le wiki, les
+     * indices. Demandé par David le 2026-09-05 — l'onglet Notes ne portait que
+     * deux champs de texte libre, et tout le reste vivait sur l'écran du PC.
+     */
+    lectureDuMeneur?: RemoteLectureDuMeneur;
+    /**
+     * **Le dernier jet du meneur.**
+     *
+     * ⚠️ Il **arrivait déjà** — le synchroniseur l'envoie depuis toujours — et
+     * il n'était simplement pas déclaré ici. Pendant ce temps la tablette
+     * guettait un message `dice:result` que **personne n'émet**, si bien que
+     * son écran de résultat, cent vingt-cinq lignes, ne s'est jamais affiché.
+     *
+     * *Un destinataire sans expéditeur ne lève aucune erreur : il attend.*
+     */
+    dice?: {
+        lastRoll: RollRecord | null;
+        isDiceProjected: boolean;
+        projectionTrigger: number;
+    };
     /**
      * L'horloge du meneur.
      *

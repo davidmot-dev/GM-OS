@@ -112,7 +112,7 @@ describe('l’arrêt général se tient enfoncé', () => {
         vi.stubGlobal('cancelAnimationFrame', (id: number) => clearTimeout(id));
 
         poser({ onStopAll: couper });
-        fireEvent.pointerDown(screen.getByLabelText(/Tout couper/));
+        fireEvent.pointerDown(screen.getByLabelText(/Couper le son/));
         avancer(800);
 
         expect(couper).toHaveBeenCalledTimes(1);
@@ -124,7 +124,7 @@ describe('l’arrêt général se tient enfoncé', () => {
         vi.stubGlobal('cancelAnimationFrame', (id: number) => clearTimeout(id));
 
         poser({ onStopAll: couper });
-        const bouton = screen.getByLabelText(/Tout couper/);
+        const bouton = screen.getByLabelText(/Couper le son/);
 
         fireEvent.pointerDown(bouton);
         avancer(200);
@@ -140,7 +140,7 @@ describe('l’arrêt général se tient enfoncé', () => {
         vi.stubGlobal('cancelAnimationFrame', (id: number) => clearTimeout(id));
 
         poser({ onStopAll: couper });
-        const bouton = screen.getByLabelText(/Tout couper/);
+        const bouton = screen.getByLabelText(/Couper le son/);
 
         fireEvent.pointerDown(bouton);
         avancer(300);
