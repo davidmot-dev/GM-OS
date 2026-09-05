@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Plus,
     Trash2,
@@ -8,6 +8,7 @@ import {
     RotateCcw
 } from 'lucide-react';
 import { useWebStore } from './useWebStore';
+import { useImageStore } from '../image/useImageStore';
 import type { WebLink } from './types';
 import WebLinkPad from './components/WebLinkPad';
 import AddEditWebLinkModal from './components/AddEditWebLinkModal';
@@ -26,6 +27,19 @@ const WebDashboard: React.FC = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingLink, setEditingLink] = useState<WebLink | null>(null);
+
+    /*
+      **Web-OS demande la liste des écrans, parce qu'il en propose.**
+
+      Depuis le 2026-09-05, une vidéo YouTube se projette d'ici, et le meneur
+      choisit sa sortie sur le pad. Or `displays` n'est rempli que par
+      `fetchDisplays`, appelé jusqu'ici **par le seul Image-OS** : un meneur qui
+      n'y était pas passé depuis le démarrage se serait vu proposer le Player Hub
+      et rien d'autre. *Un module qui affiche une liste doit la demander lui-même,
+      et non compter sur la visite d'un autre écran.*
+    */
+    const fetchDisplays = useImageStore((e) => e.fetchDisplays);
+    useEffect(() => { void fetchDisplays(); }, [fetchDisplays]);
 
     const handleAddClick = () => {
         setEditingLink(null);

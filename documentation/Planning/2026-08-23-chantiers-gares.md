@@ -1130,7 +1130,15 @@ décoderait le même film une seconde fois sur sa propre horloge.
 ⚠️ **Resté tel quel, et c'est un choix à confirmer** : une vidéo **boucle**, comportement d'origine.
 Bon pour une ambiance, discutable pour un plan de film. Un interrupteur par pad serait peu de chose.
 
+⭐ **Et la sortie se choisit depuis Web-OS**, demandé dans la foulée. Le bouton nommait la cible
+réglée **dans Image-OS** sans laisser en changer : *un réglage qui vit dans un module et décide dans
+un autre est une action à distance.* Le choix se fait là où le geste se fait — et **il ne déplace pas
+la cible d'Image-OS**, sans quoi une vidéo envoyée sur le moniteur 2 y enverrait la prochaine image
+du meneur à son insu. Web-OS demande lui-même la liste des écrans : *un module qui affiche une liste
+ne compte pas sur la visite d'un autre pour la remplir.*
+
 **Ancres** : `image/logic/gainDeLaVideo.ts`, `image/useSonDeLaVideoProjetee.ts`, `web/youtube.ts`,
+`web/ecransDeProjection.ts`,
 `web/components/WebLinkPad.tsx`, `image/logic/natureDuMedia.ts`,
 `components/hub/FondProjete.tsx`.
 

@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link, Edit2, Palette, X, Youtube, MonitorPlay, MonitorX } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, Edit2, Palette, X, Youtube, MonitorPlay, Check } from 'lucide-react';
 import type { WebLink } from '../types';
 import { useWebStore } from '../useWebStore';
 import { videoYouTube, marqueurDeProjection } from '../youtube';
 import { useImageStore } from '../../image/useImageStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmToast } from '../../../stores/useToastStore';
+import { ecransDeProjection, ecransOccupes } from '../ecransDeProjection';
 
 interface WebLinkPadProps {
     link: WebLink;
@@ -25,25 +26,43 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
       pas dessiner.
     */
     const video = videoYouTube(link.url);
-    const cible = useImageStore((e) => e.projectionTarget);
+    const ecrans = useImageStore((e) => e.displays);
     const projections = useImageStore((e) => e.projections);
     const { getDisplayLabel } = useHardwareStore();
 
     const marqueur = video ? marqueurDeProjection(video) : null;
-    const estProjetee = !!marqueur && projections[cible as string] === marqueur;
 
-    const projeter = async (e: React.MouseEvent) => {
+    /*
+      ⛔ **Le bouton nommait l'écran sans laisser en changer — corrigé le
+      2026-09-05.**
+
+      *« Quand je lance une vidéo YouTube, je veux pouvoir choisir la sortie »*
+      (David). Web-OS projetait sur la cible réglée **dans Image-OS** : viser le
+      second moniteur demandait de quitter ce module, changer un réglage
+      ailleurs, et revenir. *Un réglage qui vit dans un module et décide dans un
+      autre est une action à distance.*
+
+      Le choix se fait donc là où le geste se fait. Il ne **modifie pas** la cible
+      d'Image-OS : *choisir où part une vidéo ne doit pas déplacer les images du
+      meneur à son insu.*
+    */
+    const [choixOuvert, setChoixOuvert] = useState(false);
+    const destinations = ecransDeProjection(ecrans, projections, marqueur, getDisplayLabel);
+    const occupes = ecransOccupes(destinations);
+
+    const basculer = async (e: React.MouseEvent, ecranId: string, aLAntenne: boolean) => {
         e.stopPropagation();
         if (!marqueur) return;
+        setChoixOuvert(false);
 
         const { ImageService } = await import('../../image/logic/ImageService');
 
-        if (estProjetee) {
-            await ImageService.blackout(cible as string);
+        if (aLAntenne) {
+            await ImageService.blackout(ecranId);
             return;
         }
 
-        await ImageService.projectMedia(marqueur, cible as any);
+        await ImageService.projectMedia(marqueur, ecranId as any);
         /*
           **Le seul avertissement qui compte, au moment où il compte.** Le son
           d'un cadre distant échappe entièrement au mixage de GM-OS : ni le volume
@@ -79,12 +98,20 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                     : <Link size={24} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />}
             </div>
 
-            {/* Une vidéo à l'antenne se voit sans survoler : c'est ce qui permet
-                de la couper sans la chercher. */}
-            {estProjetee && (
-                <span className="absolute top-2 left-2 bg-accent text-app-bg text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg font-display">
-                    {getDisplayLabel(cible as string)}
-                </span>
+            {/* Une vidéo à l'antenne se voit sans survoler — et sur QUELS écrans :
+                *une vidéo qu'on a lancée et qu'on ne retrouve plus est une vidéo
+                qu'on ne peut pas couper.* */}
+            {occupes.length > 0 && (
+                <div className="absolute top-2 left-2 flex flex-col items-start gap-1">
+                    {occupes.map((ecran) => (
+                        <span
+                            key={ecran.id}
+                            className="bg-accent text-app-bg text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg font-display whitespace-nowrap"
+                        >
+                            {ecran.libelle}
+                        </span>
+                    ))}
+                </div>
             )}
 
             <span className="text-xs font-medium text-slate-300 text-center truncate w-full">
@@ -109,15 +136,14 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                 </button>
                 {video && (
                     <button
-                        onClick={projeter}
-                        className={`p-2 rounded-lg transition-colors ${estProjetee
+                        onClick={(e) => { e.stopPropagation(); setChoixOuvert(true); }}
+                        aria-label="Choisir l'écran de projection"
+                        className={`p-2 rounded-lg transition-colors ${occupes.length > 0
                             ? 'bg-accent text-app-bg shadow-glow-accent'
                             : 'bg-app-bg hover:bg-app-surface text-app-text'}`}
-                        title={estProjetee
-                            ? `Couper la projection sur ${getDisplayLabel(cible as string)}`
-                            : `Projeter sur ${getDisplayLabel(cible as string)} — son hors du mixage, Internet requis`}
+                        title="Projeter — choisir l'écran. Son hors du mixage, Internet requis."
                     >
-                        {estProjetee ? <MonitorX size={18} /> : <MonitorPlay size={18} />}
+                        <MonitorPlay size={18} />
                     </button>
                 )}
 
@@ -129,6 +155,55 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                     <X size={18} />
                 </button>
             </div>
+
+            {/*
+              **Le choix de l'écran occupe le pad lui-même.**
+
+              Une liste flottante dans une grille de vignettes se fait recouvrir
+              par la suivante, ou déborde du cadre. Le pad est déjà la surface que
+              le doigt vise : *on remplace ce qu'il montre au lieu d'ajouter une
+              couche par-dessus.*
+
+              Chaque ligne dit son état et fait l'inverse : ce qui est à l'antenne
+              se coupe, le reste s'allume. **Aucune sortie séparée**, parce qu'un
+              bouton « couper » distinct laisserait deviner lequel des écrans il
+              coupe.
+            */}
+            {choixOuvert && (
+                <div
+                    className="absolute inset-0 z-10 bg-app-bg/95 backdrop-blur-sm flex flex-col p-2 gap-1 overflow-y-auto no-scrollbar"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="flex items-center justify-between px-1 pb-1 shrink-0">
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">
+                            Projeter sur
+                        </span>
+                        <button
+                            onClick={() => setChoixOuvert(false)}
+                            aria-label="Fermer le choix de l'écran"
+                            className="p-1 rounded text-slate-500 hover:text-app-text"
+                        >
+                            <X size={14} />
+                        </button>
+                    </div>
+
+                    {destinations.map((ecran) => (
+                        <button
+                            key={ecran.id}
+                            onClick={(e) => basculer(e, ecran.id, ecran.aLAntenne)}
+                            className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-xs font-bold transition-colors shrink-0 ${
+                                ecran.aLAntenne
+                                    ? 'bg-accent text-app-bg shadow-glow-accent'
+                                    : 'bg-app-surface/60 text-app-text hover:bg-app-surface'
+                            }`}
+                            title={ecran.aLAntenne ? `Couper sur ${ecran.libelle}` : `Projeter sur ${ecran.libelle}`}
+                        >
+                            {ecran.aLAntenne ? <Check size={13} className="shrink-0" /> : <MonitorPlay size={13} className="shrink-0" />}
+                            <span className="truncate">{ecran.libelle}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

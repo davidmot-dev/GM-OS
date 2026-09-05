@@ -33,9 +33,21 @@ Les quatre écritures fonctionnent — celle du site, celle du bouton *Partager*
 celle du code d'intégration, et les *Shorts* — et le **point de départ est
 conservé** si l'adresse en contient un (`?t=1m30s`).
 
-La vidéo part sur **l'écran cible réglé dans Image-OS** ; le bouton le nomme avant
-que vous cliquiez. Une vidéo à l'antenne porte une étiquette visible sur son pad, et
-le même bouton la coupe.
+**Vous choisissez l'écran au moment de lancer.** Le bouton ouvre la liste sur le pad
+lui-même : *Player Hub*, puis chaque moniteur détecté. Une ligne déjà allumée se
+coupe d'un second appui.
+
+Chaque écran où la vidéo est à l'antenne porte son **étiquette sur le pad**, visible
+sans survoler — *une vidéo qu'on a lancée et qu'on ne retrouve plus est une vidéo
+qu'on ne peut pas couper.* Rien n'empêche de l'envoyer sur plusieurs écrans à la fois.
+
+> ⭐ **Ce choix ne déplace pas la cible d'Image-OS.** Envoyer une vidéo sur le
+> Moniteur 2 n'y enverra pas la prochaine image que vous projetterez depuis Image-OS.
+> *Un geste ici ne doit pas déplacer vos images à votre insu.*
+
+> ⛔ **Corrigé le 2026-09-05, à votre demande.** Le bouton nommait l'écran… réglé
+> dans **Image-OS**, sans laisser en changer : viser le second moniteur demandait de
+> quitter Web-OS, changer un réglage dans un autre module, et revenir.
 
 > ⛔ **Trois choses qu'une vidéo YouTube ne fait pas comme un fichier**, et qu'il
 > vaut mieux savoir avant la séance :
