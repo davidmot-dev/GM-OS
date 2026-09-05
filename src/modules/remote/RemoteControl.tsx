@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     LayoutDashboard,
     Dices,
@@ -7,6 +7,7 @@ import {
     PenTool,
     BookOpen,
     Film,
+    MessageSquare,
 } from 'lucide-react';
 import { useRemoteSync } from './hooks/useRemoteSync';
 import { type RemoteActionType } from './types/remote.types';
@@ -19,6 +20,7 @@ import RemoteNotes from './components/RemoteNotes';
 import RemoteDiceResultOverlay from './components/RemoteDiceResultOverlay';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
 import RemoteStatusBar from './components/RemoteStatusBar';
+import RemoteMessenger from './components/RemoteMessenger';
 import { useDernierJet } from './hooks/useDernierJet';
 
 /**
@@ -40,7 +42,7 @@ import { useDernierJet } from './hooks/useDernierJet';
  * filet qui évite qu'améliorer le paysage casse le portrait.
  */
 
-type Onglet = 'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story';
+type Onglet = 'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story' | 'messages';
 
 const ONGLETS = [
     { id: 'pads', icon: LayoutDashboard, label: 'Pads' },
@@ -50,10 +52,14 @@ const ONGLETS = [
     { id: 'combat', icon: Sword, label: 'Combat' },
     { id: 'whiteboard', icon: PenTool, label: 'Tableau' },
     { id: 'notes', icon: BookOpen, label: 'Notes' },
+    { id: 'messages', icon: MessageSquare, label: 'Messages' },
 ] as const;
 
 const RemoteControl: React.FC = () => {
-    const { status, isPaired, syncData, sendAction } = useRemoteSync();
+    const {
+        status, isPaired, syncData, sendAction,
+        coffre, demanderLeCoffre, ouvrirUneNote, fermerLaNote,
+    } = useRemoteSync();
     /*
       **Le résultat des dés vient du flux, pas d'un message dédié.**
 
@@ -62,8 +68,34 @@ const RemoteControl: React.FC = () => {
       pourtant dans le segment `dice` depuis toujours. Voir `useDernierJet`.
     */
     const { jet: dernierJet, ecarter: ecarterLeJet } = useDernierJet(syncData.dice?.lastRoll);
+
+    /*
+      **Les messages non lus, comptés une fois pour la ligne d'état.**
+
+      `isRead` est posé par le meneur quand il lit dans le cockpit ; ce que la
+      tablette compte est donc *ce qu'il n'a lu nulle part*. On ne compte que ce
+      qui vient des joueurs : ses propres messages naissent lus.
+    */
+    const messagesNonLus = useMemo(
+        () => (syncData.messages ?? []).filter((m) => m.fromId !== 'GM' && !m.isRead).length,
+        [syncData.messages],
+    );
     const [activeTab, setActiveTab] = useState<Onglet>('pads');
     const [isAventureMode] = useState(() => typeof window !== 'undefined' ? window.location.search.includes('mode=adventure') : false);
+
+    /*
+      **À qui le meneur peut écrire** : les personnages des joueurs de la
+      campagne active. Le messager y ajoute ceux qui ont déjà écrit — *une
+      conversation ne disparaît pas parce que l'appareil d'en face s'est
+      éteint.*
+    */
+    const destinataires = useMemo(() => {
+        const campagne = syncData.session?.activeCampaignId;
+        return (syncData.session?.players ?? []).flatMap((joueur) =>
+            (joueur.characters ?? [])
+                .filter((perso) => !campagne || perso.campaignId === campagne)
+                .map((perso) => ({ id: perso.id, nom: perso.name })));
+    }, [syncData.session]);
 
     const renderContent = () => {
         switch (activeTab) {
@@ -115,6 +147,19 @@ const RemoteControl: React.FC = () => {
                         notes={syncData.notes}
                         lecture={syncData.lectureDuMeneur}
                         isAventureMode={isAventureMode}
+                        coffre={coffre}
+                        onChargerLeCoffre={demanderLeCoffre}
+                        onOuvrirUneNote={ouvrirUneNote}
+                        onFermerLaNote={fermerLaNote}
+                    />
+                );
+            case 'messages':
+                return (
+                    <RemoteMessenger
+                        messages={syncData.messages ?? []}
+                        destinataires={destinataires}
+                        onEnvoyer={(toId, toName, content) =>
+                            sendAction('remote:session:gm-message', { toId, toName, content })}
                     />
                 );
             case 'story':
@@ -180,6 +225,8 @@ const RemoteControl: React.FC = () => {
                     lecture={syncData.lecture}
                     combat={syncData.combat}
                     minuteur={syncData.clock}
+                    messagesNonLus={messagesNonLus}
+                    onVoirLesMessages={() => setActiveTab('messages')}
                     onStopAll={() => sendAction('remote:sound:stop-all', {})}
                 />
 

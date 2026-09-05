@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { EyeOff, FileText, Layers, BookOpen, Search, X, Lightbulb } from 'lucide-react';
+import { EyeOff, FileText, Layers, BookOpen, Search, X, Lightbulb, Vault } from 'lucide-react';
 import { type RemoteLectureDuMeneur, type RemoteActe, type RemoteScene } from '../segmentDeLecture';
+import RemoteObsidian from './RemoteObsidian';
+import type { CoffreObsidian } from '../hooks/useRemoteSync';
 
 /**
  * **Le panneau de lecture du meneur — élargi le 2026-09-05.**
@@ -20,9 +22,14 @@ interface RemoteNotesProps {
     notes: { public: string, private: string };
     lecture?: RemoteLectureDuMeneur;
     isAventureMode: boolean;
+    /** Le coffre Obsidian — hors du flux périodique, voir `RemoteObsidian`. */
+    coffre: CoffreObsidian;
+    onChargerLeCoffre: () => void;
+    onOuvrirUneNote: (chemin: string) => void;
+    onFermerLaNote: () => void;
 }
 
-type Vue = 'seance' | 'trame' | 'wiki' | 'indices' | 'secrets';
+type Vue = 'seance' | 'trame' | 'wiki' | 'obsidian' | 'indices' | 'secrets';
 
 const aplati = (texte: string) =>
     texte.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -80,7 +87,9 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
     );
 };
 
-const RemoteNotes: React.FC<RemoteNotesProps> = ({ notes, lecture, isAventureMode }) => {
+const RemoteNotes: React.FC<RemoteNotesProps> = ({
+    notes, lecture, isAventureMode, coffre, onChargerLeCoffre, onOuvrirUneNote, onFermerLaNote,
+}) => {
     const [vue, setVue] = useState<Vue>('seance');
     const [filtreWiki, setFiltreWiki] = useState('');
     const [ficheOuverte, setFicheOuverte] = useState<string | null>(null);
@@ -122,6 +131,13 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({ notes, lecture, isAventureMod
         { id: 'seance', titre: 'Séance', icone: FileText },
         { id: 'trame', titre: 'Trame', icone: Layers, compte: actes.length },
         { id: 'wiki', titre: 'Wiki', icone: BookOpen, compte: wiki.length },
+        /*
+          **Le coffre Obsidian est à côté du wiki, et pas dedans.** Le wiki
+          appartient à la campagne ; le coffre est le carnet personnel du meneur,
+          tous jeux confondus. *Les mêler ferait chercher dans l'un ce qui est
+          dans l'autre.*
+        */
+        { id: 'obsidian', titre: 'Coffre', icone: Vault },
         { id: 'indices', titre: 'Indices', icone: Lightbulb, compte: indices.length },
         { id: 'secrets', titre: 'Secrets', icone: EyeOff },
     ];
@@ -281,6 +297,15 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({ notes, lecture, isAventureMod
                         ))}
                     </div>
                 </>
+            )}
+
+            {vue === 'obsidian' && (
+                <RemoteObsidian
+                    coffre={coffre}
+                    onCharger={onChargerLeCoffre}
+                    onOuvrir={onOuvrirUneNote}
+                    onFermer={onFermerLaNote}
+                />
             )}
 
             {/* ── Les indices ───────────────────────────────────────────── */}

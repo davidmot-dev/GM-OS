@@ -25,6 +25,9 @@ const EXPECTED_TYPES = [
     'session:update-character-sheet-data', 'remote:session:update-character-sheet-data',
     'session:submit-feedback', 'remote:session:submit-feedback',
     'session:send-message', 'session:receive-message',
+    // Le meneur qui parle depuis sa tablette, et son coffre Obsidian.
+    'remote:session:gm-message',
+    'remote:obsidian:lister', 'remote:obsidian:lire',
     'session:request-item-transfer', 'remote:session:request-item-transfer',
     'session:approve-item-transfer', 'remote:session:approve-item-transfer',
     'session:reject-item-transfer', 'remote:session:reject-item-transfer',

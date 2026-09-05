@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Music, Waves, Swords, Timer, Power, WifiOff, ShieldAlert } from 'lucide-react';
+import { Music, Waves, Swords, Timer, Power, WifiOff, ShieldAlert, MessageSquare } from 'lucide-react';
 import { type RemoteLecture } from '../types/remote.types';
 
 /**
@@ -23,6 +23,9 @@ interface RemoteStatusBarProps {
     lecture?: RemoteLecture;
     combat: { combatants: { name: string }[]; currentTurnIdx: number; round: number };
     minuteur?: { timerRemaining: number; timerIsRunning: boolean };
+    /** Combien de messages de joueurs le meneur n'a lus nulle part. */
+    messagesNonLus?: number;
+    onVoirLesMessages?: () => void;
     onStopAll: () => void;
 }
 
@@ -37,7 +40,7 @@ function enMinutes(secondes: number): string {
 const APPUI_LONG_MS = 700;
 
 const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
-    status, isPaired, lecture, combat, minuteur, onStopAll,
+    status, isPaired, lecture, combat, minuteur, messagesNonLus, onVoirLesMessages, onStopAll,
 }) => {
     const [progression, setProgression] = useState(0);
     const debutRef = useRef<number | null>(null);
@@ -148,6 +151,26 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                     </span>
                 )}
             </div>
+
+            {/*
+              **Les messages non lus se signalent ici** — demandé par David le
+              2026-09-05. Un message reçu pendant qu'on est dans un autre onglet
+              n'appelait rien : *une messagerie qu'il faut penser à aller voir
+              n'est pas une messagerie, c'est une boîte aux lettres.*
+
+              Le compte disparaît à zéro, comme le reste de cette ligne.
+            */}
+            {!!messagesNonLus && (
+                <button
+                    onClick={onVoirLesMessages}
+                    title={`${messagesNonLus} message(s) non lu(s)`}
+                    aria-label={`${messagesNonLus} message(s) non lu(s)`}
+                    className="shrink-0 h-8 px-2.5 rounded-lg border border-accent/40 bg-accent/15 text-accent flex items-center gap-1.5 active:scale-95 transition-transform"
+                >
+                    <MessageSquare size={13} strokeWidth={2.5} />
+                    <span className="text-xs font-black tabular-nums">{messagesNonLus}</span>
+                </button>
+            )}
 
             <button
                 onPointerDown={commencerLAppui}

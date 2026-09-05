@@ -58,6 +58,7 @@ export interface RemoteUniversalPad {
 
 import { type DiceConfig } from '../../../types/drivers';
 import type { RemoteLectureDuMeneur } from '../segmentDeLecture';
+import type { SessionMessage } from '../../../types/session.types';
 import type { RollRecord } from '../hooks/useRemoteSync';
 
 /**
@@ -120,6 +121,15 @@ export interface RemoteSyncData {
     /** Ce qui joue en ce moment, pour la ligne d'état. */
     lecture?: RemoteLecture;
     /**
+     * **Le fil de messages avec les joueurs.**
+     *
+     * Il n'arrivait pas jusqu'ici : le meneur voyait ses messages dans le
+     * cockpit, la tablette n'en savait rien. Les **cinquante derniers**, parce
+     * que *l'historique complet grossirait la charge à chaque diffusion* — la
+     * raison qui écarte déjà l'historique des demandes de carte.
+     */
+    messages?: SessionMessage[];
+    /**
      * **Ce que le meneur lit pendant qu'il joue** : la trame, le wiki, les
      * indices. Demandé par David le 2026-09-05 — l'onglet Notes ne portait que
      * deux champs de texte libre, et tout le reste vivait sur l'écran du PC.
@@ -153,7 +163,29 @@ export interface RemoteSyncData {
         timerIsRunning: boolean;
     };
     session?: {
-        campaignId: string;
+        /**
+         * ⛔ **Déclaré et jamais envoyé.** Le synchroniseur envoie
+         * `activeCampaignId` ; ce champ-ci n'a jamais été rempli, et personne
+         * ne le lisait — ce qui est la seule raison pour laquelle ça n'a rien
+         * cassé. *Troisième occurrence du même écart dans ce fichier, après les
+         * trois champs du tableau blanc et le segment des dés.*
+         *
+         * Conservé le temps de vérifier qu'aucune tablette ancienne ne s'y fie,
+         * et marqué facultatif pour que le type cesse de mentir.
+         */
+        campaignId?: string;
+        /** La campagne ouverte chez le meneur — **c'est celui-ci qui arrive**. */
+        activeCampaignId?: string | null;
+        /**
+         * Les joueurs et leurs personnages. Ils arrivaient déjà ; ils n'étaient
+         * pas déclarés. Le strict nécessaire est typé ici — *déclarer tout ce
+         * que le meneur envoie ferait de ce fichier une copie de son magasin.*
+         */
+        players?: {
+            id: string;
+            name?: string;
+            characters?: { id: string; name: string; campaignId?: string }[];
+        }[];
         activeDiceConfig: DiceConfig | null;
         /**
          * Ce jeu lance-t-il des **dés échelonnés** ?
@@ -190,7 +222,17 @@ export type RemoteActionType =
     | 'session:update-character-narrative'
     /** Ce que la fiche HTML d'un joueur impose : champs du gabarit, notes, inventaire. */
     | 'session:update-character-sheet-data'
-    | 'session:send-message';
+    | 'session:send-message'
+    /** Le meneur parle depuis sa tablette — inscrit chez lui **et** diffusé aux joueurs. */
+    | 'remote:session:gm-message'
+    /*
+      **Le coffre Obsidian, en question/réponse.** Il ne peut pas voyager dans la
+      diffusion périodique : plus de deux mille notes, et la diffusion part
+      jusqu'à deux fois par seconde. La tablette demande, le meneur répond — et
+      **seulement aux tablettes de meneur**.
+    */
+    | 'remote:obsidian:lister'
+    | 'remote:obsidian:lire';
 
 export interface RemoteAction {
     type: RemoteActionType;

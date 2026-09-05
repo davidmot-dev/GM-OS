@@ -281,7 +281,20 @@ contextBridge.exposeInMainWorld('appBridge', {
         },
         removeActions: () => ipcRenderer.removeAllListeners('remote:action'),
         sendSync: (data: unknown) => ipcRenderer.send('remote:broadcast-sync', data),
-        broadcastUIAction: (action: unknown) => ipcRenderer.send('remote:broadcast-ui-action', action),
+        /*
+          **Le rôle destinataire, ajouté le 2026-09-05.**
+
+          `SyncServer.broadcastAction` sait viser un rôle depuis toujours — son
+          troisième paramètre —, et **le pont l'avalait** : tout partait à tout
+          le monde. Sans lui, répondre à une tablette de meneur déposerait la
+          réponse **sur l'appareil de chaque joueur**.
+
+          *C'est la règle de `mainsPourLaTable` : un secret caviardé à
+          l'affichage a déjà voyagé.* Elle s'applique ici au coffre Obsidian,
+          qui est le carnet privé du meneur.
+        */
+        broadcastUIAction: (action: unknown, role?: string) =>
+            ipcRenderer.send('remote:broadcast-ui-action', action, role),
         cacheMedia: (buffer: ArrayBuffer, id: string) => ipcRenderer.invoke('remote:cache-media', buffer, id),
     },
     relay: {

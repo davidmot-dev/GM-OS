@@ -165,7 +165,12 @@ declare global {
             // `mediaPort` est celui du proxy média, toujours le SyncServer.
             getConnectionInfo?: () => Promise<{ ip: string; port: number; mediaPort?: number; mediaEpoch?: string }>;
             sendSync?: (payload: SyncPayload) => void;
-            broadcastUIAction?: (action: any) => void;
+            /**
+             * @param role Quand il est donné, **seuls les clients de ce rôle
+             *             reçoivent l'action**. Sans lui, tout le monde reçoit
+             *             — y compris les tablettes des joueurs.
+             */
+            broadcastUIAction?: (action: any, role?: string) => void;
             broadcastToTablets: (type: string, payload: unknown) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
             openProjectionWindow: (displayId: string, url: string) => void;

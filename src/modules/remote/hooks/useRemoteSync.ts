@@ -3,6 +3,17 @@ import { useClientStore } from '../../../stores/useClientStore';
 import { type RemoteSyncData, type RemoteActionType } from '../types/remote.types';
 import { type RollResult as BaseRollResult } from '../../dice/DiceEngine';
 import { capturePairingTokenFromUrl, getPairingToken } from '../pairingToken';
+import type { NoteEntry } from '../../session/useObsidianStore';
+
+/** L'état du coffre Obsidian sur la tablette — hors du flux périodique. */
+export interface CoffreObsidian {
+    notes: NoteEntry[];
+    /** La note ouverte, et son contenu quand il est arrivé. */
+    chemin: string | null;
+    contenu: string | null;
+    chargement: boolean;
+    erreur?: string;
+}
 
 export interface RollRecord extends BaseRollResult {
     id: string;
@@ -39,6 +50,14 @@ export const useRemoteSync = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const [isPaired, setIsPaired] = useState<boolean>(() => !!getPairingToken());
     const [syncData, setSyncData] = useState<RemoteSyncData>(INITIAL_SYNC_DATA);
+    /*
+      **Le coffre Obsidian vit à part du reste de l'état.** Il n'arrive pas dans
+      la diffusion : il se demande, et la réponse tombe par un message dédié.
+      Le mêler à `syncData` laisserait croire qu'il se rafraîchit tout seul.
+    */
+    const [coffre, setCoffre] = useState<CoffreObsidian>({
+        notes: [], chemin: null, contenu: null, chargement: false,
+    });
     const socketRef = useRef<WebSocket | null>(null);
     const backoffRef = useRef(BACKOFF_INITIAL);
     const connectRef = useRef<(() => void) | null>(null);
@@ -127,6 +146,24 @@ export const useRemoteSync = () => {
                   Le dernier jet du meneur circule dans le segment `dice` du flux
                   de synchronisation depuis toujours. Voir `useDernierJet`.
                 */
+                /*
+                  **Les réponses du coffre Obsidian.** Elles n'arrivent pas par
+                  la diffusion périodique — deux mille notes ne peuvent pas
+                  voyager deux fois par seconde — mais en réponse à une demande
+                  de cette tablette. Voir `obsidianActions`.
+                */
+                else if (data.type === 'obsidian:arbre') {
+                    setCoffre((avant) => ({ ...avant, notes: data.payload?.notes ?? [], chargement: false }));
+                }
+                else if (data.type === 'obsidian:note') {
+                    setCoffre((avant) => ({
+                        ...avant,
+                        chemin: data.payload?.chemin ?? null,
+                        contenu: data.payload?.contenu ?? null,
+                        erreur: data.payload?.erreur,
+                        chargement: false,
+                    }));
+                }
                 // Le serveur confirme le rôle réellement accordé, qui peut être
                 // inférieur à celui demandé si l'appairage n'a pas été validé.
                 else if (data.type === 'remote:registered') {
@@ -174,10 +211,30 @@ export const useRemoteSync = () => {
         }
     }, []);
 
+    /** Demande l'arborescence du coffre, puis le contenu d'une note. */
+    const demanderLeCoffre = useCallback(() => {
+        setCoffre((avant) => ({ ...avant, chargement: true, erreur: undefined }));
+        sendAction('remote:obsidian:lister', {});
+    }, [sendAction]);
+
+    const ouvrirUneNote = useCallback((chemin: string) => {
+        setCoffre((avant) => ({ ...avant, chemin, contenu: null, chargement: true, erreur: undefined }));
+        sendAction('remote:obsidian:lire', { chemin });
+    }, [sendAction]);
+
+    /* Refermer est local : rien à demander au meneur pour revenir à la liste. */
+    const fermerLaNote = useCallback(() => {
+        setCoffre((avant) => ({ ...avant, chemin: null, contenu: null, erreur: undefined }));
+    }, []);
+
     return {
         status,
         isPaired,
         syncData,
-        sendAction
+        sendAction,
+        coffre,
+        demanderLeCoffre,
+        ouvrirUneNote,
+        fermerLaNote,
     };
 };

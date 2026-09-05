@@ -415,6 +415,13 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 comptesDePads,
                 lecture,
                 /*
+                  **Le fil de messages, ajouté le 2026-09-05.** Les cinquante
+                  derniers seulement : le magasin en garde cent, et les envoyer
+                  tous à chaque diffusion grossirait la charge pour un historique
+                  que personne ne relit sur une tablette.
+                */
+                messages: (freshSessionOS.messages ?? []).slice(-50),
+                /*
                   **La trame, le wiki et les indices** — ajoutés le 2026-09-05.
                   L'onglet Notes ne portait que deux champs de texte libre ;
                   tout ce qu'un meneur relit vraiment en séance restait sur

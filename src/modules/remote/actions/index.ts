@@ -2,6 +2,7 @@ import { diceActions } from './diceActions';
 import { audioActions } from './audioActions';
 import { combatActions } from './combatActions';
 import { sessionActions } from './sessionActions';
+import { obsidianActions } from './obsidianActions';
 import { whiteboardActions } from './whiteboardActions';
 import { sceneActions } from './sceneActions';
 import { tableActions } from './tableActions';
@@ -35,6 +36,7 @@ export const actionRegistry: ActionRegistry = {
     ...audioActions,
     ...combatActions,
     ...sessionActions,
+    ...obsidianActions,
     ...whiteboardActions,
     ...sceneActions,
     ...tableActions,
