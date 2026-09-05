@@ -1,22 +1,29 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Search, X, FileText, Folder, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Search, X, FileText, Folder, ChevronRight, RefreshCw, ArrowLeft, Home } from 'lucide-react';
 import type { CoffreObsidian } from '../hooks/useRemoteSync';
-import type { NoteEntry } from '../../session/useObsidianStore';
+import { toutesLesNotes, contenuDuChemin, range } from '../arbreDuCoffre';
 
 /**
  * **Le coffre Obsidian sur la tablette — 2026-09-05.**
  *
  * Demandé par David : *« est-ce que dans les notes, je pourrais avoir accès à la
- * partie Obsidian ? »*.
+ * partie Obsidian ? »*, puis, en le voyant : *« peux-tu respecter le découpage »*.
  *
- * ⛔ **Le coffre ne voyage pas dans la diffusion périodique.** Plus de deux mille
- * notes, et la diffusion part jusqu'à deux fois par seconde. On demande
- * l'arborescence **à l'ouverture de l'onglet**, une fois, et le contenu d'une
- * note **seulement quand on la touche**.
+ * ⛔ **La première version aplatissait tout.** Les deux mille notes arrivaient en
+ * une seule liste, le dossier réduit à un sous-titre — *un coffre rangé depuis
+ * des années dont le rangement était jeté à l'affichage.* Les dossiers sont un
+ * classement que le meneur a fait ; les ignorer lui demande de le refaire de
+ * tête à chaque consultation.
  *
- * L'arborescence est aplatie pour la recherche : *on cherche un nom, on ne
- * descend pas une hiérarchie de dossiers avec le pouce.* Les dossiers restent
- * visibles en navigation, mais la recherche traverse tout.
+ * On descend donc dossier par dossier, avec un fil d'Ariane pour remonter.
+ *
+ * ⚠️ **Sauf en recherche.** Chercher un nom traverse **tout le coffre** et rend
+ * une liste plate, chaque résultat portant son chemin : *quand on cherche, on ne
+ * sait pas où c'est rangé — c'est même souvent pour cela qu'on cherche.*
+ *
+ * ⛔ Rappel du transport : le coffre **ne voyage pas dans la diffusion
+ * périodique** (deux mille notes, deux diffusions par seconde). L'arborescence
+ * est demandée à l'ouverture, le contenu d'une note quand on la touche.
  */
 
 interface RemoteObsidianProps {
@@ -30,18 +37,9 @@ interface RemoteObsidianProps {
 const aplati = (texte: string) =>
     texte.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-/** Toutes les notes du coffre, à plat, avec le dossier qui les porte. */
-function toutesLesNotes(entrees: NoteEntry[], prefixe = ''): { nom: string; chemin: string; dossier: string }[] {
-    return entrees.flatMap((entree) => {
-        if (entree.type === 'directory') {
-            return toutesLesNotes(entree.children ?? [], prefixe ? `${prefixe} / ${entree.name}` : entree.name);
-        }
-        return [{ nom: entree.name, chemin: entree.path, dossier: prefixe }];
-    });
-}
-
 const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOuvrir, onFermer }) => {
     const [filtre, setFiltre] = useState('');
+    const [chemin, setChemin] = useState<string[]>([]);
 
     /*
       **On demande une fois, à l'ouverture.** Redemander à chaque rendu ferait
@@ -58,24 +56,36 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
         onCharger();
     }, [onCharger]);
 
-    const notes = useMemo(() => toutesLesNotes(coffre.notes), [coffre.notes]);
+    const toutes = useMemo(() => toutesLesNotes(coffre.notes), [coffre.notes]);
 
-    const retenues = useMemo(() => {
+    const resultats = useMemo(() => {
         const cherche = aplati(filtre.trim());
-        if (!cherche) return notes;
-        return notes.filter(n => aplati(`${n.nom} ${n.dossier}`).includes(cherche));
-    }, [notes, filtre]);
+        if (!cherche) return null;
+        return toutes.filter(n => aplati(`${n.nom} ${n.dossier}`).includes(cherche));
+    }, [toutes, filtre]);
 
-    /* Une note ouverte prend tout l'écran : c'est de la lecture, pas du choix. */
+    /*
+      **Un chemin devenu invalide retombe à la racine, au rendu.**
+
+      Un dossier renommé sur le PC pendant qu'on le regardait laisserait sinon un
+      écran vide sans explication. Le repli se **calcule** plutôt que de passer
+      par un effet : *corriger un état depuis un effet demande un rendu de plus
+      pour dire ce qu'on savait déjà.*
+    */
+    const niveauBrut = useMemo(() => contenuDuChemin(coffre.notes, chemin), [coffre.notes, chemin]);
+    const cheminEffectif = niveauBrut === null ? [] : chemin;
+    const niveau = niveauBrut ?? coffre.notes;
+
+    // ── Une note ouverte prend tout l'écran : c'est de la lecture. ──────────
     if (coffre.chemin) {
-        const ouverte = notes.find(n => n.chemin === coffre.chemin);
+        const ouverte = toutes.find(n => n.chemin === coffre.chemin);
         return (
             <div className="flex flex-col gap-3 h-full">
                 <div className="shrink-0 flex items-center gap-2">
                     <button
                         onClick={onFermer}
                         aria-label="Revenir à la liste"
-                        className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-slate-200"
+                        className="w-9 h-9 shrink-0 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-slate-200"
                     >
                         <ArrowLeft size={16} />
                     </button>
@@ -99,6 +109,9 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
         );
     }
 
+    const enRecherche = resultats !== null;
+    const contenu = range(niveau);
+
     return (
         <div className="flex flex-col gap-3 h-full">
             <div className="shrink-0 flex items-center gap-2">
@@ -108,7 +121,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                         type="search"
                         value={filtre}
                         onChange={(e) => setFiltre(e.target.value)}
-                        placeholder="Chercher une note…"
+                        placeholder="Chercher dans tout le coffre…"
                         aria-label="Chercher une note dans le coffre"
                         className="w-full h-9 pl-9 pr-9 rounded-xl bg-white/5 border border-white/10 text-sm text-app-text placeholder:text-slate-600 outline-none focus:border-accent/40"
                     />
@@ -132,39 +145,98 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                 </button>
             </div>
 
+            {/*
+              **Le fil d'Ariane.** Chaque niveau est touchable — *on remonte de
+              trois dossiers d'un geste, au lieu d'appuyer trois fois sur retour.*
+              Caché pendant une recherche, qui ne se tient dans aucun dossier.
+            */}
+            {!enRecherche && cheminEffectif.length > 0 && (
+                <nav aria-label="Chemin dans le coffre" className="shrink-0 flex items-center gap-1 overflow-x-auto no-scrollbar text-ui-11">
+                    <button
+                        onClick={() => setChemin([])}
+                        className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                    >
+                        <Home size={12} /> Coffre
+                    </button>
+                    {cheminEffectif.map((nom, i) => (
+                        <React.Fragment key={`${nom}-${i}`}>
+                            <ChevronRight size={12} className="shrink-0 text-slate-700" />
+                            <button
+                                onClick={() => setChemin(cheminEffectif.slice(0, i + 1))}
+                                className={`shrink-0 px-2 py-1 rounded-lg hover:bg-white/5 ${i === cheminEffectif.length - 1 ? 'text-accent font-bold' : 'text-slate-400 hover:text-slate-200'}`}
+                            >
+                                {nom}
+                            </button>
+                        </React.Fragment>
+                    ))}
+                </nav>
+            )}
+
             <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-white/[0.03] border border-white/5 p-3 flex flex-col gap-1">
-                {coffre.chargement && notes.length === 0 ? (
+                {coffre.chargement && coffre.notes.length === 0 ? (
                     <p className="text-sm italic text-slate-500 text-center py-10">Lecture du coffre…</p>
-                ) : retenues.length === 0 ? (
+                ) : enRecherche ? (
+                    resultats!.length === 0 ? (
+                        <p className="text-sm italic text-slate-500 text-center py-10">
+                            Aucune note ne correspond à « {filtre} ».
+                        </p>
+                    ) : (
+                        <>
+                            <p className="text-ui-10 uppercase tracking-widest text-slate-600 px-1 pb-1">
+                                {resultats!.length} note{resultats!.length > 1 ? 's' : ''} dans tout le coffre
+                            </p>
+                            {resultats!.map((n) => (
+                                <button
+                                    key={n.chemin}
+                                    onClick={() => onOuvrir(n.chemin)}
+                                    className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-white/5 bg-white/[0.02] hover:border-white/20 text-left"
+                                >
+                                    <FileText size={14} className="shrink-0 text-slate-600" />
+                                    <span className="flex-1 min-w-0 flex flex-col">
+                                        <span className="text-xs font-bold text-slate-200 truncate">{n.nom}</span>
+                                        {n.dossier && (
+                                            <span className="flex items-center gap-1 text-ui-10 text-slate-600 truncate">
+                                                <Folder size={9} className="shrink-0" /> {n.dossier}
+                                            </span>
+                                        )}
+                                    </span>
+                                </button>
+                            ))}
+                        </>
+                    )
+                ) : contenu.length === 0 ? (
                     <p className="text-sm italic text-slate-500 text-center py-10">
-                        {filtre
-                            ? `Aucune note ne correspond à « ${filtre} ».`
-                            : "Le coffre est vide, ou son chemin n'est pas réglé sur le PC."}
+                        {cheminEffectif.length > 0
+                            ? 'Ce dossier est vide.'
+                            : "Le coffre est vide, ou son chemin n'est pas réglé dans la fiche de campagne."}
                     </p>
                 ) : (
-                    <>
-                        <p className="text-ui-10 uppercase tracking-widest text-slate-600 px-1 pb-1">
-                            {retenues.length} note{retenues.length > 1 ? 's' : ''}
-                            {!filtre && notes.length > 0 && <span className="text-slate-700"> · tout le coffre</span>}
-                        </p>
-                        {retenues.map((n) => (
+                    <div className="grid grid-cols-1 min-[900px]:grid-cols-2 gap-1">
+                        {contenu.map((entree) => entree.type === 'directory' ? (
                             <button
-                                key={n.chemin}
-                                onClick={() => onOuvrir(n.chemin)}
+                                key={entree.path}
+                                onClick={() => setChemin([...cheminEffectif, entree.name])}
+                                className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-white/5 bg-white/[0.04] hover:border-accent/30 text-left"
+                            >
+                                <Folder size={14} className="shrink-0 text-accent/70" />
+                                <span className="flex-1 min-w-0 text-xs font-bold text-slate-200 truncate">{entree.name}</span>
+                                {/* Le compte dit s'il vaut la peine d'ouvrir. */}
+                                <span className="shrink-0 text-ui-10 text-slate-600 tabular-nums">
+                                    {(entree.children ?? []).length}
+                                </span>
+                                <ChevronRight size={13} className="shrink-0 text-slate-600" />
+                            </button>
+                        ) : (
+                            <button
+                                key={entree.path}
+                                onClick={() => onOuvrir(entree.path)}
                                 className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-white/5 bg-white/[0.02] hover:border-white/20 text-left"
                             >
                                 <FileText size={14} className="shrink-0 text-slate-600" />
-                                <span className="flex-1 min-w-0 flex flex-col">
-                                    <span className="text-xs font-bold text-slate-200 truncate">{n.nom}</span>
-                                    {n.dossier && (
-                                        <span className="flex items-center gap-1 text-ui-10 text-slate-600 truncate">
-                                            <Folder size={9} className="shrink-0" /> {n.dossier}
-                                        </span>
-                                    )}
-                                </span>
+                                <span className="flex-1 min-w-0 text-xs font-bold text-slate-200 truncate">{entree.name}</span>
                             </button>
                         ))}
-                    </>
+                    </div>
                 )}
             </div>
         </div>

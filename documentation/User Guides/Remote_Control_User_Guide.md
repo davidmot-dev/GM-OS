@@ -229,6 +229,18 @@ Toucher une scène la déplie : son résumé, et vos notes en ambre.
 **contenu d'une note ne part que quand vous la touchez**. Un bouton la recharge si vous venez
 d'écrire une note sur le PC.
 
+**Le découpage de votre coffre est respecté** : on descend dossier par dossier, chacun affichant ce
+qu'il contient, et un **fil d'Ariane** en haut permet de remonter de plusieurs niveaux d'un seul
+geste. Les dossiers passent avant les notes, dans l'ordre alphabétique.
+
+> ⛔ **La première version aplatissait tout** — deux mille notes en une seule liste, le dossier
+> réduit à un sous-titre. *Un coffre rangé depuis des années dont le rangement était jeté à
+> l'affichage.* Corrigé le jour même, à la demande de David.
+
+> 🔎 **Sauf quand vous cherchez.** La recherche traverse **tout le coffre** et rend une liste plate,
+> chaque résultat portant son chemin : *quand on cherche, on ne sait pas où c'est rangé — c'est même
+> souvent pour cela qu'on cherche.*
+
 > ⚠️ **Pourquoi pas tout, tout le temps.** Le coffre contient plus de deux mille notes et la
 > tablette est rafraîchie jusqu'à deux fois par seconde : tout envoyer à chaque fois saturerait le
 > réseau pour des notes qu'on ne lit pas. D'où la demande à l'ouverture, et la lecture à la
