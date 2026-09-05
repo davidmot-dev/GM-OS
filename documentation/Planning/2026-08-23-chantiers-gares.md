@@ -44,6 +44,8 @@ dans le code, qui absorbe toutes les autres.**
 > Revérifié le 2026-09-05 en fin de soirée, après les **sept** chantiers du jour : `tsc -b`
 > propre, **3 806 tests au vert** (319 fichiers, 1 ignoré), `npm run validate` vert, **zéro rejet
 > non géré** — voir §§ 20 à 23, dont le § 22 qui a grossi trois fois dans la soirée.
+>
+> Revérifié le **2026-09-06** après le § 24 : **3 812 tests au vert** (320 fichiers, 1 ignoré).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1189,6 +1191,32 @@ introduit.*
 
 **Ancres** : `voice/abonnementAuDucking.ts`, `voice/importsDuMagasinDeVoix.test.ts`,
 `voice/useVoiceStore.ts`.
+
+### 24 · ⭐ Projeter un lieu sur un écran (2026-09-06)
+
+Demandé par David : *« je voudrais que tu rajoutes un bouton qui permet de projeter un lieu sur un
+écran »*.
+
+L'Atlas savait **envoyer un lieu à Map-OS** — mais c'est autre chose : cela en fait un **plateau
+tactique**, avec ses pions, son brouillard et ses mesures. Rien ne permettait simplement de **montrer**
+le lieu, comme on montre une illustration depuis Image-OS. *On regarde une ville, on joue sur un
+donjon* — deux gestes voisins, deux intentions distinctes, et ils restent donc deux boutons.
+
+⭐ **Le lieu occupe l'écran sous SON identifiant**, jamais sous l'adresse de son image : c'est ce que
+lisent les écrans pour savoir ce qui est à l'antenne, et les confondre ferait perdre le lien avec la
+fiche — le défaut payé le 31/08 sur les portraits de PNJ. Un test le garde, et il tombe quand on
+passe l'image à la place.
+
+Le menu des écrans est **le même qu'à Web-OS**, extrait au moment où un deuxième appelant est apparu
+(`MenuDesEcrans`). ⚠️ **Seules les lignes sont partagées, pas leur cadre** : Web-OS les pose sur le
+pad — une liste flottante dans une grille de vignettes se fait recouvrir par la suivante — quand
+l'Atlas les déroule sous son bouton. *Ce qui diffère est la place, pas le contenu.*
+
+Et l'Atlas **demande lui-même la liste des écrans**, troisième module à en avoir besoin : *un module
+qui affiche une liste ne compte pas sur la visite d'un autre pour la remplir.*
+
+**Ancres** : `session/components/AtlasMapDetail.tsx`, `components/MenuDesEcrans.tsx`,
+`web/ecransDeProjection.ts`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

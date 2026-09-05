@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Edit2, Palette, X, Youtube, MonitorPlay, Check } from 'lucide-react';
+import { Link, Edit2, Palette, X, Youtube, MonitorPlay } from 'lucide-react';
 import type { WebLink } from '../types';
 import { useWebStore } from '../useWebStore';
 import { videoYouTube, marqueurDeProjection } from '../youtube';
@@ -7,6 +7,7 @@ import { useImageStore } from '../../image/useImageStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { ecransDeProjection, ecransOccupes } from '../ecransDeProjection';
+import MenuDesEcrans from '../../../components/MenuDesEcrans';
 
 interface WebLinkPadProps {
     link: WebLink;
@@ -193,21 +194,10 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                         </button>
                     </div>
 
-                    {destinations.map((ecran) => (
-                        <button
-                            key={ecran.id}
-                            onClick={(e) => basculer(e, ecran.id, ecran.aLAntenne)}
-                            className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-xs font-bold transition-colors shrink-0 ${
-                                ecran.aLAntenne
-                                    ? 'bg-accent text-app-bg shadow-glow-accent'
-                                    : 'bg-app-surface/60 text-app-text hover:bg-app-surface'
-                            }`}
-                            title={ecran.aLAntenne ? `Couper sur ${ecran.libelle}` : `Projeter sur ${ecran.libelle}`}
-                        >
-                            {ecran.aLAntenne ? <Check size={13} className="shrink-0" /> : <MonitorPlay size={13} className="shrink-0" />}
-                            <span className="truncate">{ecran.libelle}</span>
-                        </button>
-                    ))}
+                    {/* Les lignes viennent de [[MenuDesEcrans]] : l'Atlas les
+                        déroule sous un bouton, Web-OS les pose sur le pad — même
+                        contenu, place différente. */}
+                    <MenuDesEcrans destinations={destinations} onChoisir={basculer} />
                 </div>
             )}
         </div>

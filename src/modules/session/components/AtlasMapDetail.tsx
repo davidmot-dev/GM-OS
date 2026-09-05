@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2, Footprints } from 'lucide-react';
+import { useImageStore } from '../../image/useImageStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { ecransDeProjection, ecransOccupes } from '../../web/ecransDeProjection';
+import MenuDesEcrans from '../../../components/MenuDesEcrans';
+import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2, Footprints, MonitorPlay, X } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -37,6 +41,30 @@ const AtlasMapDetail: React.FC = () => {
     const [isChoosingMedia, setIsChoosingMedia] = useState(false);
     const [showAIPrompt, setShowAIPrompt] = useState(false);
 
+    /*
+      **Projeter un lieu — demandé par David le 2026-09-06.**
+
+      L'Atlas savait déjà *« Envoyer à Map-OS »*, mais c'est autre chose : cela en
+      fait un **plateau tactique**, avec ses pions et son brouillard. Rien ne
+      permettait simplement de **montrer le lieu** sur un écran de la table, comme
+      on montre une illustration depuis Image-OS. *Deux gestes voisins, deux
+      intentions distinctes : on regarde une ville, on joue sur un donjon.*
+    */
+    const ecrans = useImageStore((e) => e.displays);
+    const projections = useImageStore((e) => e.projections);
+    const fetchDisplays = useImageStore((e) => e.fetchDisplays);
+    const { getDisplayLabel } = useHardwareStore();
+    const [choixOuvert, setChoixOuvert] = useState(false);
+
+    /*
+      **L'Atlas demande la liste des écrans lui-même.** `fetchDisplays` n'était
+      appelé que par Image-OS et Web-OS : un meneur qui n'y était pas passé depuis
+      le démarrage se serait vu proposer le Player Hub et rien d'autre. *Un module
+      qui affiche une liste ne compte pas sur la visite d'un autre pour la
+      remplir.*
+    */
+    useEffect(() => { void fetchDisplays(); }, [fetchDisplays]);
+
     // Always call hooks at the top level
     const url = useMediaUrl(selectedMap?.fileUrl);
 
@@ -54,6 +82,28 @@ const AtlasMapDetail: React.FC = () => {
     const handleSendToMapOS = () => {
         setMap(selectedMap.fileUrl, selectedMap.isVideo, selectedMap.name, selectedMap.narrativeDescription);
         setCurrentView('cockpit');
+    };
+
+    /*
+      **Le lieu occupe l'écran sous SON identifiant, et non sous celui de son
+      image.** C'est ce que lisent les écrans pour savoir ce qui est à l'antenne ;
+      les confondre ferait perdre le lien avec la fiche — le défaut payé le 31/08
+      sur les portraits de PNJ.
+    */
+    const destinations = ecransDeProjection(ecrans, projections, selectedMap.id, getDisplayLabel);
+    const aLAntenne = ecransOccupes(destinations);
+
+    const projeterLeLieu = async (e: React.MouseEvent, ecranId: string, aLAntenne: boolean) => {
+        e.stopPropagation();
+        setChoixOuvert(false);
+
+        const { ImageService } = await import('../../image/logic/ImageService');
+
+        if (aLAntenne) {
+            await ImageService.blackout(ecranId);
+            return;
+        }
+        await ImageService.projectMedia(selectedMap.fileUrl, ecranId as never, selectedMap.id);
     };
 
     const handleMediaSelect = (mediaId: string) => {
@@ -203,9 +253,59 @@ const AtlasMapDetail: React.FC = () => {
                                 <Pin size={16} fill={isPinned ? "currentColor" : "none"} />
                                 {isPinned ? t('modules:session.world_atlas.detail.pinned') : t('modules:session.world_atlas.detail.pin')}
                             </button>
+                            {/*
+                              **Projeter le lieu — 2026-09-06.**
+
+                              Il se distingue de « Envoyer à Map-OS », juste à
+                              côté : celui-là en fait un **plateau de jeu**, avec
+                              pions et brouillard ; celui-ci le **montre**, sur
+                              l'écran de la table. *On regarde une ville, on joue
+                              sur un donjon.*
+                            */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setChoixOuvert((o) => !o)}
+                                    aria-label="Projeter ce lieu sur un écran"
+                                    className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${
+                                        aLAntenne.length > 0
+                                            ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                            : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/30'
+                                    }`}
+                                    title="Montrer ce lieu sur un écran de la table"
+                                >
+                                    <MonitorPlay size={16} />
+                                    {aLAntenne.length > 0
+                                        ? aLAntenne.map((ecran) => ecran.libelle).join(' · ')
+                                        : 'Projeter'}
+                                </button>
+
+                                {choixOuvert && (
+                                    <div className="absolute bottom-full left-0 mb-2 z-30 w-56 max-h-64 overflow-y-auto no-scrollbar bg-app-bg/95 backdrop-blur-md border border-app-border rounded-xl shadow-2xl p-2 flex flex-col gap-1">
+                                        <div className="flex items-center justify-between px-1 pb-1 shrink-0">
+                                            <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">
+                                                Projeter sur
+                                            </span>
+                                            <button
+                                                onClick={() => setChoixOuvert(false)}
+                                                aria-label="Fermer le choix de l'écran"
+                                                className="p-1 rounded text-slate-500 hover:text-app-text"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                        <MenuDesEcrans
+                                            destinations={destinations}
+                                            onChoisir={projeterLeLieu}
+                                            quoi={selectedMap.name}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
                             <button
                                 onClick={handleSendToMapOS}
                                 className="flex items-center gap-2 bg-accent hover:bg-accent/80 text-white font-black py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent"
+                                title="En faire un plateau tactique, avec pions et brouillard"
                             >
                                 <Send size={16} />
                                 {t('modules:session.world_atlas.detail.send_to_mapos')}

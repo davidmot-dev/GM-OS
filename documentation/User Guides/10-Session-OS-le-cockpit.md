@@ -253,6 +253,28 @@ L'Atlas gère la géographie et les lieux d'intérêt :
 - **Entités Liées** : Épinglez des PNJ ou des objets directement sur vos cartes.
 - **Lieux Actifs** : Épinglez vos lieux favoris pour un accès immédiat.
 
+### 📺 Montrer un lieu à la table
+
+**Ajouté le 2026-09-06, à la demande de David.** Sur la fiche d'un lieu, le bouton
+**Projeter** ouvre la liste de vos écrans — *Player Hub*, puis chaque moniteur
+détecté — et y envoie l'image du lieu. Un second appui sur une ligne allumée la
+coupe, et le bouton **affiche les écrans où le lieu est à l'antenne** : vous n'avez
+pas à ouvrir la liste pour savoir si vous montrez quelque chose.
+
+> ⚠️ **À ne pas confondre avec « Envoyer à Map-OS », juste à côté.** Les deux
+> gestes se ressemblent et ne font pas la même chose :
+>
+> | Bouton | Ce qu'il fait |
+> | --- | --- |
+> | **Projeter** | **Montre** le lieu sur un écran, comme une illustration |
+> | **Envoyer à Map-OS** | En fait un **plateau tactique** : pions, brouillard, mesures |
+>
+> *On regarde une ville, on joue sur un donjon.*
+
+> 🔎 **Un lieu dont l'image est une vidéo se projette aussi**, et se comporte alors
+> comme n'importe quelle vidéo — voir
+> [Image-OS](./24-Image-OS-la-regie-visuelle.md) pour son son.
+
 ---
 
 ### Presets de Cartes (Configuration de Scène)
