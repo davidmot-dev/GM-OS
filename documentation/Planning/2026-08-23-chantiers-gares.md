@@ -41,9 +41,9 @@ dans le code, qui absorbe toutes les autres.**
 > l'étape 3 appelait la commande sans bride ; *un harnais qui s'effondre accuse le code qu'il n'a pas
 > exécuté.*
 >
-> Revérifié le 2026-09-05 au soir, après les quatre chantiers du jour : `tsc -b` propre,
-> **3 772 tests au vert** (314 fichiers, 1 ignoré), `npm run validate` vert, **zéro rejet non
-> géré** — voir §§ 20 à 23.
+> Revérifié le 2026-09-05 en fin de soirée, après les **sept** chantiers du jour : `tsc -b`
+> propre, **3 806 tests au vert** (319 fichiers, 1 ignoré), `npm run validate` vert, **zéro rejet
+> non géré** — voir §§ 20 à 23, dont le § 22 qui a grossi trois fois dans la soirée.
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou

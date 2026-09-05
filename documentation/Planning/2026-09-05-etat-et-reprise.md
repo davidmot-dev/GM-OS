@@ -1,8 +1,11 @@
 # État et reprise — 2026-09-05
 
-> **Base saine, vérifiée en fin de soirée** : `npm run validate` complet au vert — `tsc -b`
-> propre, **3 652 tests** (302 fichiers, 1 ignoré), build de production et PWA, branche
-> `feature/tablet-hub-pwa`, arbre propre et poussé.
+> **Base saine, vérifiée après le dernier chantier de la soirée** : `npm run validate` complet
+> au vert — `tsc -b` propre, **3 806 tests** (319 fichiers, 1 ignoré), build de production et
+> PWA, branche `feature/tablet-hub-pwa`, arbre propre et poussé jusqu'à `3d0fd371`.
+>
+> *L'en-tête de la première rédaction annonçait 3 652 tests ; la soirée a continué sur trois
+> chantiers de plus.*
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule —
@@ -31,6 +34,9 @@ raison. Puis la télécommande a été refaite.
 | **05/09, le Markdown** | **Les tableaux ne s'interprétaient nulle part** — `remark-gfm` absent, et six écrans qui reposaient chacun le réglage ; un composant unique, et une garde qui balaie tout `src/` |
 | **05/09, la vidéo** | **Image-OS accepte les vidéos** — le projecteur savait les jouer, le sélecteur les refusait, et elles étaient `muted` en dur ; leur son obéit à la table par message · **Web-OS projette une vidéo YouTube**, avec ses trois limites dites avant le clic |
 | **05/09, le ducking** | Un **cycle d'imports** privait Music-OS et Ambient-OS de leur ducking dès que `useVoiceStore` ouvrait le graphe — observé en test, **jamais prouvé dans l'application** ; arête coupée, et l'échec ne peut plus se taire |
+| **05/09, le Hub** | La vidéo **n'apparaissait pas sur le Player Hub** : il peignait toute projection en image de fond, et **ne pouvait pas deviner** qu'on lui envoyait un film — l'adresse qu'il reçoit n'a pas d'extension. On la lui annonce ; un fond partagé la dessine |
+| **05/09, la sortie** | **L'écran de destination se choisit depuis Web-OS**, sur le pad — il fallait auparavant aller changer un réglage dans Image-OS et revenir. Et ce choix **ne déplace pas** la cible d'Image-OS |
+| **05/09, le volume YouTube** | ⛔ **Je m'étais trompé, à huit endroits** : le niveau d'un lecteur YouTube **se commande** (`enablejsapi=1` + `postMessage`). Seule l'**enceinte** reste hors de portée. Le volume général, le Focus et le ducking l'atteignent |
 
 ---
 
