@@ -30,6 +30,7 @@ raison. Puis la télécommande a été refaite.
 | **05/09, le châssis** | L'**Ulanzi rendait la main au premier passage dans chaque module** — un `Suspense` manquant démontait tout le châssis ; trois autres émetteurs tombaient avec lui |
 | **05/09, le Markdown** | **Les tableaux ne s'interprétaient nulle part** — `remark-gfm` absent, et six écrans qui reposaient chacun le réglage ; un composant unique, et une garde qui balaie tout `src/` |
 | **05/09, la vidéo** | **Image-OS accepte les vidéos** — le projecteur savait les jouer, le sélecteur les refusait, et elles étaient `muted` en dur ; leur son obéit à la table par message · **Web-OS projette une vidéo YouTube**, avec ses trois limites dites avant le clic |
+| **05/09, le ducking** | Un **cycle d'imports** privait Music-OS et Ambient-OS de leur ducking dès que `useVoiceStore` ouvrait le graphe — muet depuis on ne sait quand ; arête coupée, et l'échec ne peut plus se taire |
 
 ---
 
@@ -108,6 +109,10 @@ pictogramme de pellicule. Un clic la projette, **avec le son**, en boucle.
 Puis les trois commandes de la table, pendant qu'elle joue : baisser le **volume général**,
 enclencher le **Focus**, et **parler au micro**. La vidéo doit suivre les trois.
 
+⭐ **Au micro, écoutez aussi la musique.** C'est le ducking réparé le même jour — il pouvait ne
+jamais se brancher, selon l'ordre de chargement des modules. S'il vous semblait déjà capricieux
+avant aujourd'hui, c'était peut-être cela.
+
 ⚠️ **Son son sort par l'écran de projection**, pas par l'enceinte réglée dans Music-OS — c'est une
 limite, pas un défaut : un élément d'une fenêtre ne se branche pas sur le contexte audio d'une
 autre.
@@ -157,14 +162,25 @@ le niveau calculé par le meneur — au lieu d'un branchement. Le résultat à l
 la limite ne l'est pas, et elle est écrite dans le guide : *le son sort par l'écran, pas par
 l'enceinte de Music-OS.*
 
-**⚠️ Un défaut pré-existant trouvé en chemin, et laissé tel quel.** Importer `useVoiceStore` **en
-premier** ouvre un cycle — `modeDeContexte`, `useSessionOSStore`, les moteurs de Music-OS et
-d'Ambient-OS — au bout duquel les deux moteurs reçoivent un module à moitié évalué et **leur
-abonnement au ducking échoue en silence**. Vérifié par une sonde de trois lignes n'important que ce
-magasin : deux rejets non gérés. *Rien de neuf : la mémoire le note depuis le 30/08 comme « casse le
-ducking dans les tests ».* Le nouveau crochet du son des vidéos l'évite par un import différé, comme
-les moteurs eux-mêmes ; **la cause, elle, reste à traiter** — et elle mérite qu'on vérifie si elle
-mord aussi dans l'application, où l'ordre d'import n'est pas celui des tests.
+**⛔ Un cycle d'imports ne casse rien tant que personne n'entre par le mauvais bout.** Trouvé en
+construisant le son des vidéos, **corrigé dans la foulée**. `useVoiceStore` importait
+`ai/modeDeContexte`, qui tire `useSessionOSStore`, d'où l'on atteint les moteurs de Music-OS et
+d'Ambient-OS — lesquels **se construisent au chargement de leur module** et s'abonnent aussitôt à
+`useVoiceStore`. Quand celui-ci ouvrait le graphe, ils recevaient un module encore en cours
+d'évaluation : **la musique cessait de baisser quand le meneur parle**, sans une ligne dans la
+console.
+
+*C'est ce qui le rend si difficile à voir : quatre sondes d'une ligne chacune — la séance,
+`modeDeContexte`, le moteur — sont toutes propres ;* seule celle qui entre par la voix échoue. Deux
+correctifs, et il fallait les deux : **l'arête est coupée** (import différé dans l'action, qui était
+déjà asynchrone) et **l'échec ne peut plus être muet** — `abonnementAuDucking` relit le lien un tour
+plus tard, puis crie en nommant le moteur et la conséquence. *Une cause corrigée revient par un
+autre chemin ; une défaillance qui se dit, non.*
+
+⚠️ **Un ajout retiré en route.** Appliquer l'état courant au branchement — pour le moteur né pendant
+que le meneur parle — a fait tomber six fichiers de tests : plusieurs remplacent le magasin de la
+voix par un substitut partiel, et Music-OS lit `currentEffects` sans garde. *Un ajout qui n'était
+pas le correctif ne vaut pas le risque qu'il introduit.*
 
 ---
 

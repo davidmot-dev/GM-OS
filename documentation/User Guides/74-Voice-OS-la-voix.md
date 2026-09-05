@@ -170,6 +170,20 @@ Une fonctionnalité révolutionnaire pour le confort d'écoute de vos joueurs :
     - **Réduction (Range)** : Niveau cible du son ambiant (ex: 0.1 pour un silence presque total, 0.5 pour un fond sonore léger).
     - **Relâchement (Delay)** : Temps d'attente avant que la musique ne remonte après votre dernière parole.
 
+> ⛔ **Corrigé le 2026-09-05 : le ducking pouvait ne jamais se brancher, sans rien dire.**
+> Music-OS et Ambient-OS s'abonnent à Voice-OS au démarrage. Selon l'ordre dans lequel
+> l'application chargeait ses modules, cet abonnement pouvait échouer — et la musique
+> **ne baissait alors jamais** quand vous parliez, sans message ni indice. Deux réparations :
+> le chemin fautif est coupé, et un échec de branchement s'écrit désormais dans le journal
+> en nommant le module et la conséquence. *Une panne muette est plus coûteuse qu'une panne
+> bruyante : on la découvre en séance.*
+>
+> Si le ducking vous paraît inactif, le journal (`main.log`) le dira.
+
+> 🔎 **Il agit aussi sur les vidéos projetées** depuis le 2026-09-05 — voir
+> [Image-OS](./24-Image-OS-la-regie-visuelle.md). Une vidéo YouTube fait exception : son son
+> échappe entièrement au mixage.
+
 ---
 
 ### 🧠 Le débruitage neuronal, en détail

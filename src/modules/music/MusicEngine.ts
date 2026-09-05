@@ -19,6 +19,7 @@ import {
     positionDuFondu,
     type FonduEnCours,
 } from './logic/fonduCroise';
+import { brancherLeDucking } from '../voice/abonnementAuDucking';
 
 export interface DeckState {
     isPlaying: boolean;
@@ -479,13 +480,17 @@ export class MusicEngine {
      * S'abonne au VoiceStore pour ajuster le gain master quand quelqu'un parle.
      */
     private async setupDucking() {
-        // We import it dynamically to avoid circular dependencies if any
-        const { useVoiceStore } = await import('../voice/useVoiceStore');
-        
-        useVoiceStore.subscribe((state) => {
-            const { isDucking, currentEffects } = state;
+        /*
+          ⛔ **L'import différé ne suffisait pas — 2026-09-05.** Il évite bien le
+          cycle *dans un sens*, mais quand `useVoiceStore` était lui-même le point
+          d'entrée du graphe, il rendait un module encore en cours d'évaluation :
+          l'abonnement levait une exception dans une promesse que personne
+          n'attend, et **la musique cessait de baisser quand le meneur parle**,
+          sans un mot. Voir [[abonnementAuDucking]].
+        */
+        await brancherLeDucking('MusicEngine', ({ isDucking, currentEffects }) => {
             const targetGain = isDucking ? currentEffects.duckingRange : 1.0;
-            
+
             // Smooth transition for ducking using dynamic attack
             this.duckingGain.gain.setTargetAtTime(targetGain, this.context.currentTime, currentEffects.duckingAttack / 1000);
             this.valeurDucking = targetGain;

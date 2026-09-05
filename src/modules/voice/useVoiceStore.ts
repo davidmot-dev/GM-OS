@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
-import { contexteAllegeMaintenant } from '../ai/modeDeContexte';
 import { debruitageMigre, type Debruitage } from './logic/migrationDesEffets';
 import { texteDuPersonnage, type PersonnageAVoix } from './logic/personnageAVoix';
 
@@ -345,6 +344,28 @@ Règles des valeurs :
 
                 try {
                     const { aiService } = await import('../../modules/ai/AIService');
+                    /*
+                      ⛔ **`modeDeContexte` entre en différé, et ce n'est pas un
+                      détail de style — 2026-09-05.**
+
+                      Importé en tête de fichier, il tirait `useSessionOSStore`,
+                      et de là les moteurs de Music-OS et d'Ambient-OS. Or ces
+                      moteurs se construisent **au chargement de leur module** et
+                      s'abonnent aussitôt à ce magasin-ci. Quand `useVoiceStore`
+                      était le point d'entrée du graphe, ils recevaient donc un
+                      module **encore en cours d'évaluation** : leur abonnement
+                      échouait, et **la musique cessait de baisser quand le meneur
+                      parle** — sans une ligne dans la console.
+
+                      *Un cycle d'imports ne casse rien tant que personne n'entre
+                      par le mauvais bout ;* c'est ce qui le rend si difficile à
+                      voir, et si facile à rouvrir. `importsDuMagasinDeVoix.test.ts`
+                      garde la porte fermée.
+
+                      Le différé est ici sans coût : l'action est déjà asynchrone,
+                      et la ligne au-dessus importe `AIService` de la même façon.
+                    */
+                    const { contexteAllegeMaintenant } = await import('../ai/modeDeContexte');
 
                     /*
                       **Sans persona et sans contexte de séance.**

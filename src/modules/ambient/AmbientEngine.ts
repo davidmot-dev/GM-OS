@@ -1,5 +1,6 @@
 import { useMediaStore } from '../../stores/useMediaStore';
 import { SortiesAudio } from '../../utils/sortiesAudio';
+import { brancherLeDucking } from '../voice/abonnementAuDucking';
 
 /**
  * Représente une piste d'ambiance individuelle.
@@ -254,9 +255,12 @@ export class AmbientEngine {
      * S'abonne au Voice Store pour réduire le volume des ambiances quand quelqu'un parle.
      */
     private async setupDucking() {
-        const { useVoiceStore } = await import('../voice/useVoiceStore');
-        
-        useVoiceStore.subscribe((state) => {
+        /*
+          ⛔ Même remède que Music-OS, pour la même cause : un import différé
+          n'empêche pas de recevoir un module à moitié évalué quand c'est
+          `useVoiceStore` qui ouvre le graphe. Voir [[abonnementAuDucking]].
+        */
+        await brancherLeDucking('AmbientEngine', (state) => {
             const { isDucking, currentEffects } = state;
             
             // Safety: ensure finite values to prevent Web Audio API crashes 
