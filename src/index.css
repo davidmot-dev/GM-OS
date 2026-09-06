@@ -107,6 +107,66 @@ pre {
     font-size: calc(1em * var(--echelle-mono, 1));
 }
 
+/*
+  ═══════════════════════════════════════════════════════════════════════
+  LES DOCUMENTS MARKDOWN SUIVENT LA BANDE « TEXTE COURANT »
+
+  Trouvé par David le 2026-09-06, capture à l'appui : *« les différents
+  slicers ne semblent pas agrandir cela »* — un tableau d'article du wiki.
+
+  ⛔ **`.prose` ne connaît AUCUN de nos paliers.** Le greffon typographique
+  écrit ses tailles en dur : `1rem` sur le bloc, puis tout l'intérieur en
+  `em` — un tableau vaut `0.875em`, soit **11,9 px** avec la racine à 85 %.
+  Les quatre bandes ne redéfinissent que les jetons `--text-*` de Tailwind ;
+  un greffon qui n'emploie pas ces classes leur est invisible.
+
+  D'où le symptôme trompeur : dans le wiki, les paragraphes grossissaient
+  (le conteneur porte `prose-p:text-lg`, une vraie classe) et le tableau
+  d'à côté ne bougeait pas. *Un réglage qui agit sur la moitié d'un même
+  bloc se lit comme un réglage en panne.*
+
+  On rattache donc le bloc — tout l'intérieur étant en `em`, titres, listes
+  et tableaux suivent d'eux-mêmes.
+
+  ⚠️ **`.prose-sm` n'est visé QUE s'il accompagne `.prose`.** Le centre de
+  notifications du Hub porte `prose-sm` seul, sous un `text-xs` qui gagne
+  aujourd'hui parce que les utilitaires passent devant les composants :
+  une règle hors couche sur `.prose-sm` nu lui volerait sa taille.
+  ═══════════════════════════════════════════════════════════════════════
+*/
+.prose {
+    font-size: calc(1rem * var(--echelle-corps, 1));
+}
+
+.prose.prose-sm {
+    font-size: calc(0.875rem * var(--echelle-corps, 1));
+}
+
+/*
+  **Un tableau se lit à la taille du texte qui l'entoure.** Le greffon le
+  rétrécit de 12,5 % — convention d'article de blog, où la table est une
+  annexe. Ici c'est l'inverse : une table de dégâts ou une fiche technique
+  comparative est **ce qu'on vient lire**, et elle se lit en séance, de
+  loin. Les marges intérieures du greffon sont en `em` : elles suivent.
+*/
+.prose table {
+    font-size: 1em;
+}
+
+/*
+  ⛔ **LA LOUPE NE PASSE PAS PAR ICI, ET C'EST UNE LEÇON.** Une variable
+  `--loupe` a vécu une heure dans ces deux règles, le 2026-09-06. Elle
+  grossissait les titres et laissait les paragraphes intacts : ceux du wiki
+  portent `prose-p:text-lg`, une classe utilitaire qui pose une taille en
+  `rem`. *Un `rem` se calcule sur la racine du document, jamais sur le bloc qui
+  le contient* — l'héritage était coupé par le premier `text-*` venu.
+
+  `LoupeDeLecture` applique donc un `zoom` sur l'enveloppe du document, ce qui
+  ne demande rien à la cascade. **Ces deux règles restent le réglage du jeu**,
+  la loupe est le confort de l'écran : deux choses, deux mécanismes, aucune
+  multiplication cachée entre les deux.
+*/
+
 @layer utilities {
   .particles {
     background-image: radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 1%);
