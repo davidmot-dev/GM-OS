@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TexteMarkdown from '../../../components/TexteMarkdown';
+import LoupeDeLecture from '../../../components/LoupeDeLecture';
 import { useObsidianStore } from '../useObsidianStore';
 import type { NoteEntry } from '../useObsidianStore';
 import { 
@@ -202,11 +203,13 @@ const ObsidianPanel: React.FC = () => {
                                 <RefreshCw size={32} className="animate-spin text-accent/20" />
                             </div>
                         ) : (
-                            <div className="prose prose-invert prose-emerald max-w-none prose-p:text-app-text/80 prose-p:leading-relaxed prose-p:text-base prose-p:font-sans">
-                                <TexteMarkdown>
-                                    {activeNoteContent || "Cette note semble vide."}
-                                </TexteMarkdown>
-                            </div>
+                            <LoupeDeLecture>
+                                <div className="prose prose-invert prose-emerald max-w-none prose-p:text-app-text/80 prose-p:leading-relaxed prose-p:text-base prose-p:font-sans">
+                                    <TexteMarkdown>
+                                        {activeNoteContent || "Cette note semble vide."}
+                                    </TexteMarkdown>
+                                </div>
+                            </LoupeDeLecture>
                         )}
 
                         <div className="mt-12 p-4 bg-app-surface/40 border border-app-border rounded-2xl flex gap-4 items-start">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TexteMarkdown from '../../../components/TexteMarkdown';
+import LoupeDeLecture from '../../../components/LoupeDeLecture';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { MediaImage } from '../../../components/MediaImage';
 import { 
@@ -264,11 +265,13 @@ const WikiView: React.FC = () => {
                                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <BookOpen size={120} strokeWidth={1} />
                                         </div>
-                                        <div className="prose prose-invert prose-emerald max-w-none relative z-10 prose-p:leading-[1.8] prose-p:text-lg prose-p:font-medium selection:bg-accent selection:text-app-bg">
-                                            <TexteMarkdown>
-                                                {selectedEntry.content || ''}
-                                            </TexteMarkdown>
-                                        </div>
+                                        <LoupeDeLecture className="z-10">
+                                            <div className="prose prose-invert prose-emerald max-w-none prose-p:leading-[1.8] prose-p:text-lg prose-p:font-medium selection:bg-accent selection:text-app-bg">
+                                                <TexteMarkdown>
+                                                    {selectedEntry.content || ''}
+                                                </TexteMarkdown>
+                                            </div>
+                                        </LoupeDeLecture>
                                     </div>
 
                                     {/* Linked Stuff (Bento Style) */}
