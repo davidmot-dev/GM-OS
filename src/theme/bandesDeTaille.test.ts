@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { JETONS_EDITABLES, echelleDeTexte } from './editionDuTheme';
+import {
+    JETONS_EDITABLES, echelleDeTexte, palierDeLEchelle, PALIERS_DE_TAILLE,
+    ECHELLE_MIN, ECHELLE_MAX,
+} from './editionDuTheme';
 
 /**
  * **Les quatre bandes de taille.**
@@ -105,5 +108,59 @@ describe('ce qu’une bande accepte comme valeur', () => {
         const grand = echelleDeTexte('500');
         expect(grand).not.toBeNull();
         expect(grand!).toBeGreaterThan(1);
+    });
+});
+
+/**
+ * **Les paliers nommés** — demandés par David le 2026-09-06 : *« ne serait-ce
+ * pas plus simple d'avoir une liste avec les différentes tailles ? »*
+ *
+ * Ce qui se garde ici est **l'accord entre la liste et la borne**. Offrir un
+ * palier qu'`echelleDeTexte` borderait afficherait un nom pour une taille qu'on
+ * n'obtient pas — le motif « un contrôle qui se trompe est pire qu'un contrôle
+ * absent », déjà payé sur la dérivation de Cthulhu Hack.
+ */
+describe('les paliers de taille', () => {
+    it('tiennent tous dans les bornes — un nom ne doit jamais promettre une taille bornée', () => {
+        for (const p of PALIERS_DE_TAILLE) {
+            expect(echelleDeTexte(p.valeur)).toBeCloseTo(Number(p.valeur), 6);
+        }
+    });
+
+    it('montent dans l’ordre, et proposent « Normal »', () => {
+        const valeurs = PALIERS_DE_TAILLE.map(p => Number(p.valeur));
+        expect([...valeurs].sort((a, b) => a - b)).toEqual(valeurs);
+        expect(valeurs).toContain(1);
+    });
+
+    /**
+     * **Le dernier palier EST le plafond.** Sinon on borderait une plage que
+     * rien ne permet d'atteindre — un plafond que l'interface ne sait pas
+     * offrir n'existe que dans le code.
+     */
+    it('vont jusqu’au plafond, et pas au-delà', () => {
+        const valeurs = PALIERS_DE_TAILLE.map(p => Number(p.valeur));
+        expect(Math.max(...valeurs)).toBe(ECHELLE_MAX);
+        expect(Math.min(...valeurs)).toBe(ECHELLE_MIN);
+    });
+
+    it('portent des noms distincts — deux libellés identiques ne se choisissent pas', () => {
+        expect(new Set(PALIERS_DE_TAILLE.map(p => p.label)).size).toBe(PALIERS_DE_TAILLE.length);
+    });
+
+    it('se retrouvent depuis la valeur du thème, en facteur comme en pourcentage', () => {
+        expect(palierDeLEchelle('1.2')?.label).toBe('Très grand');
+        expect(palierDeLEchelle('120')?.label).toBe('Très grand');
+    });
+
+    it('rendent `null` sur une valeur hors liste — c’est ce qui la garde sélectionnable', () => {
+        /*
+          Un thème réglé au curseur d'avant peut porter « 107 % ». Le confondre
+          avec « rien de réglé » le remplacerait au premier passage dans
+          l'atelier, sans que personne ne l'ait demandé.
+        */
+        expect(palierDeLEchelle('1.07')).toBeNull();
+        expect(echelleDeTexte('1.07')).toBeCloseTo(1.07, 3);
+        expect(palierDeLEchelle('')).toBeNull();
     });
 });

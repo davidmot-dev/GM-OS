@@ -189,7 +189,18 @@ export const GROUPES: { id: JetonEditable['groupe']; titre: string }[] = [
 export const BASE_DE_TEXTE_POURCENT = 85;
 
 export const ECHELLE_MIN = 0.8;
-export const ECHELLE_MAX = 1.3;
+
+/**
+ * **Le plafond monte à 200 % le 2026-09-06**, à la demande de David : il lisait
+ * des étiquettes de 8 px sur la fiche d'un lieu, et 130 % les portait à 10,4 —
+ * *un plafond prudent qui n'atteint pas le besoin ne protège de rien.*
+ *
+ * ⚠️ **C'est un vrai doublement.** La racine passe de 85 % à 170 %, donc un
+ * `rem` de 13,6 px à 27,2 : des panneaux dimensionnés à l'œil déborderont. Le
+ * retour est toujours possible — « Non réglé » remet le défaut du jeu, et le
+ * réglage vit dans un fichier qu'on peut rouvrir.
+ */
+export const ECHELLE_MAX = 2;
 
 /**
  * L'échelle lue sur un jeton, ou `null` si le thème n'en déclare pas.
@@ -220,6 +231,68 @@ export function tailleDeRacine(valeur: string | undefined): string | null {
     const echelle = echelleDeTexte(valeur);
     if (echelle === null) return null;
     return `${(BASE_DE_TEXTE_POURCENT * echelle).toFixed(2)}%`;
+}
+
+
+/* ────────────────────────────────────────────────────────────────────────────
+   LES PALIERS NOMMÉS — parce que « 100 % » ne dit pas ce qu'on va obtenir
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * **Les six tailles offertes au meneur, nommées.**
+ *
+ * Demandé par David le 2026-09-06 : *« ne serait-ce pas plus simple d'avoir
+ * une liste avec les différentes tailles ? »*
+ *
+ * ⚠️ **Une liste PAR POLICE reste refusée**, pour la raison déjà écrite plus
+ * haut : les quatre polices d'un thème choisissent des *familles*, pas des
+ * tailles, et deux d'entre elles ne servent qu'aux fiches. Ce qui change ici
+ * n'est donc pas ce qu'on règle — ce sont toujours les cinq échelles — mais
+ * **comment on le désigne** : un palier nommé se retrouve, se dit à voix haute
+ * et se repose à l'identique sur un autre jeu ; un curseur au centième ne se
+ * repose jamais deux fois au même endroit.
+ *
+ * Les bornes sont celles d'`echelleDeTexte` : proposer un palier qu'elle
+ * borderait afficherait un nom pour une valeur qu'on n'obtient pas. *Un
+ * contrôle qui se trompe est pire qu'un contrôle absent.*
+ */
+export interface PalierDeTaille {
+    /** La valeur écrite dans le thème — un facteur, jamais un pourcentage. */
+    valeur: string;
+    /** Ce que le meneur lit. */
+    label: string;
+}
+
+export const PALIERS_DE_TAILLE: readonly PalierDeTaille[] = [
+    { valeur: '0.8', label: 'Très petit' },
+    { valeur: '0.9', label: 'Petit' },
+    { valeur: '1', label: 'Normal' },
+    { valeur: '1.1', label: 'Grand' },
+    { valeur: '1.2', label: 'Très grand' },
+    { valeur: '1.3', label: 'Énorme' },
+    /*
+      **Les écarts s'élargissent en haut de l'échelle.** Dix pour cent de plus
+      sur 190 ne se voit pas, là où dix pour cent sur 90 se voit tout de suite :
+      c'est le rapport qui compte, pas la différence. Une liste régulière aurait
+      donc coûté quatre crans indiscernables pour rien.
+    */
+    { valeur: '1.5', label: 'Géant' },
+    { valeur: '1.75', label: 'Immense' },
+    { valeur: '2', label: 'Maximal' },
+];
+
+/**
+ * Le palier qui correspond à une valeur du thème, ou `null`.
+ *
+ * `null` couvre **deux cas qu'il ne faut pas confondre** : le jeton absent —
+ * le jeu ne règle rien — et une valeur écrite à la main hors des paliers, par
+ * exemple « 107 % » venu d'un curseur d'avant. Le second doit rester
+ * sélectionnable, sinon l'ouvrir dans l'atelier le remplacerait en silence.
+ */
+export function palierDeLEchelle(valeur: string | undefined): PalierDeTaille | null {
+    const echelle = echelleDeTexte(valeur);
+    if (echelle === null) return null;
+    return PALIERS_DE_TAILLE.find(p => Number(p.valeur) === echelle) ?? null;
 }
 
 /* ────────────────────────────────────────────────────────────────────────────

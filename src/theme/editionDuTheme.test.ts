@@ -3,6 +3,7 @@ import {
     ecrireLesJetons, ecrireLImportDePolices, echelleDeTexte, tailleDeRacine,
     requeteDePolices, pileDePolice, familleDeLaPile, policeFournie, themeVierge,
     cheminDeLOriginal, JETONS_EDITABLES, BASE_DE_TEXTE_POURCENT,
+    ECHELLE_MIN, ECHELLE_MAX,
 } from './editionDuTheme';
 import { cheminDuTheme, extraireJetons, extraireImportsDePolice } from './jetonsDeTheme';
 
@@ -164,10 +165,21 @@ describe('l’échelle du texte', () => {
         expect(echelleDeTexte('1.1')).toBeCloseTo(1.1);
     });
 
-    /** Une interface illisible ne se répare plus depuis l'interface. */
+    /**
+     * Une interface illisible ne se répare plus depuis l'interface.
+     *
+     * ⚠️ Le plafond se lit sur `ECHELLE_MAX` et ne se recopie pas ici : quand il
+     * est passé de 1,3 à 2 le 2026-09-06, un chiffre écrit en dur aurait fait
+     * échouer ce test **sans que rien ne soit cassé**.
+     */
     it('borne ce qui rendrait l’application inutilisable', () => {
-        expect(echelleDeTexte('3')).toBe(1.3);
-        expect(echelleDeTexte('0.2')).toBe(0.8);
+        expect(echelleDeTexte('3')).toBe(ECHELLE_MAX);
+        expect(echelleDeTexte('0.2')).toBe(ECHELLE_MIN);
+    });
+
+    it('laisse atteindre le plafond, en facteur comme en pourcentage', () => {
+        expect(echelleDeTexte('2')).toBe(2);
+        expect(echelleDeTexte('200')).toBe(2);
     });
 
     /**

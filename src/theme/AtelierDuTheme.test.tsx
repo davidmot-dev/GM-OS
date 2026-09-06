@@ -110,8 +110,8 @@ describe('chaque réglage écrit le sien', () => {
         render(<AtelierDuTheme />);
         await screen.findByLabelText('Accent');
 
-        /* 1,2 et non 1,4 : l'échelle est bornée à 1,3, et une valeur hors bornes
-           se ferait écraser — le test ne mesurerait plus ce qu'il croit. */
+        /* Un palier de la liste, et pas une valeur inventée : un `<select>`
+           refuse ce qu'il n'offre pas, et le test ne mesurerait plus rien. */
         fireEvent.change(screen.getByLabelText('Chiffres et code'), { target: { value: '1.2' } });
         fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
 
@@ -124,7 +124,50 @@ describe('chaque réglage écrit le sien', () => {
         expect(ecrit).not.toContain('--rpg-scale-titres');
     });
 
-    it('les cinq curseurs portent cinq libellés distincts — sinon on ne les distinguerait pas', () => {
+    /**
+     * **« Non réglé » efface, il n'écrit pas « 100 % ».**
+     *
+     * C'est la règle que suit déjà `themeDeLInterface` en retirant la propriété
+     * plutôt qu'en posant « 1 » : *ne rien dire et dire « échelle 1 » doivent
+     * laisser la même page.* Le curseur d'avant la tenait par un bouton
+     * « Défaut » à côté ; la liste la tient par sa première option, et rien ne
+     * garderait cet accord si personne ne le vérifiait ici.
+     */
+    it('« Non réglé » retire le jeton du fichier', async () => {
+        /* Il faut partir d'un thème qui LE PORTE : effacer ce qui n'est pas là
+           ne change rien, donc n'enregistre rien — et le test ne mesurerait que
+           le bouton grisé. */
+        readDoc.mockImplementation(async (chemin: string) =>
+            chemin === CHEMIN_ORIGINAL
+                ? null
+                : THEME.replace('--rpg-accent: #ff5f56;', '--rpg-accent: #ff5f56; --rpg-scale-corps: 1.2;'));
+
+        render(<AtelierDuTheme />);
+        await screen.findByLabelText('Accent');
+
+        fireEvent.change(screen.getByLabelText('Texte courant'), { target: { value: '' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+
+        await waitFor(() => expect(writeDoc).toHaveBeenCalled());
+        expect(writeDoc.mock.calls.at(-1)![1]).not.toContain('--rpg-scale-corps');
+    });
+
+    /** Les six paliers sont offerts, et nommés — c'est tout l'objet du change. */
+    it('offre des tailles nommées plutôt qu’un pourcentage nu', async () => {
+        render(<AtelierDuTheme />);
+        await screen.findByLabelText('Accent');
+
+        const liste = screen.getByLabelText('Texte courant') as HTMLSelectElement;
+        const libelles = [...liste.options].map(o => o.textContent);
+
+        expect(libelles).toContain('Normal · 100 %');
+        expect(libelles).toContain('Énorme · 130 %');
+        /* Le plafond demandé par David le 2026-09-06. */
+        expect(libelles).toContain('Maximal · 200 %');
+        expect(liste.options[0].value).toBe('');
+    });
+
+    it('les cinq réglages portent cinq libellés distincts — sinon on ne les distinguerait pas', () => {
         const libelles = new Set(ECHELLES.map(([l]) => l));
         expect(libelles.size).toBe(5);
     });

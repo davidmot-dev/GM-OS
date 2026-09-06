@@ -11,7 +11,7 @@ import {
     cheminDeLOriginal, contraste, ecrireLesJetons, ecrireLImportDePolices, echelleDeTexte,
     familleDeLaPile, GROUPES, JETONS_EDITABLES, JETONS_PAR_DEFAUT, PAIRES_A_CONTROLER,
     pileDePolice, policeFournie, POLICES_CONNUES, requeteDePolices, themeVierge,
-    ECHELLE_MAX, ECHELLE_MIN, type JetonEditable,
+    palierDeLEchelle, PALIERS_DE_TAILLE, type JetonEditable,
 } from './editionDuTheme';
 
 /**
@@ -530,13 +530,22 @@ const ChampDePolice: React.FC<{
 };
 
 /**
+ * **Une taille se choisit dans une liste, pas sur un curseur** — David, le
+ * 2026-09-06 : *« ne serait-ce pas plus simple d'avoir une liste avec les
+ * différentes tailles ? »*
+ *
+ * Le curseur d'avant affichait « 107 % », ce qui ne dit rien de ce qu'on va
+ * obtenir et ne se repose jamais deux fois au même endroit. Les six paliers
+ * nommés vivent dans `editionDuTheme.ts`, avec la raison pour laquelle une
+ * liste **par police** reste refusée.
+ *
  * ⛔ **Il écrivait `'font-scale'` en dur.** Trouvé par David le 2026-09-05, le
  * jour même où les quatre bandes de taille sont arrivées : *« quand je bouge un
  * slider, c'est le slider tout le texte qui bouge »*.
  *
  * Tant qu'il n'y avait **qu'un seul** réglage d'échelle, la clé en dur et la clé
  * du jeton se confondaient — le défaut n'existait pas encore, il attendait.
- * Les cinq curseurs pilotaient donc tous le même jeton.
+ * Les cinq réglages pilotaient donc tous le même jeton.
  *
  * *Un composant qui édite un champ doit savoir LEQUEL* : il le reçoit
  * maintenant, comme `ChampDePolice` le fait depuis toujours à deux lignes
@@ -549,31 +558,33 @@ const ChampDEchelle: React.FC<{
     poser: (cle: string, valeur: string) => void;
 }> = ({ jeton, valeur, poser }) => {
     const echelle = echelleDeTexte(valeur);
+    const palier = palierDeLEchelle(valeur);
+    /* Une valeur réglée qui ne tombe sur aucun palier — un curseur d'avant, ou
+       un thème écrit à la main. On l'offre au lieu de la remplacer en silence. */
+    const horsPalier = echelle !== null && palier === null;
 
     return (
         <div className="flex items-center gap-3">
-            <input
-                type="range"
-                min={ECHELLE_MIN}
-                max={ECHELLE_MAX}
-                step={0.01}
-                value={echelle ?? 1}
+            <select
+                value={echelle === null ? '' : String(echelle)}
                 onChange={e => poser(jeton.cle, e.target.value)}
                 aria-label={jeton.label}
-                className="flex-1 accent-[var(--app-accent)]"
-            />
-            <span className="text-xs font-black text-accent font-mono w-14 text-right">
-                {Math.round((echelle ?? 1) * 100)} %
-            </span>
-            {echelle !== null && (
-                <button
-                    onClick={() => poser(jeton.cle, '')}
-                    title={`Retirer « ${jeton.label} » du thème`}
-                    className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text"
-                >
-                    Défaut
-                </button>
-            )}
+                className="flex-1 bg-app-surface border border-app-border rounded-lg px-3 py-2 text-xs font-bold text-app-text outline-none focus:border-accent/60"
+            >
+                {/* La valeur vide EFFACE le jeton : *ne rien dire et dire
+                    « 100 % » ne sont pas la même chose pour le thème.* */}
+                <option value="">Non réglé — laisse le défaut</option>
+                {PALIERS_DE_TAILLE.map(p => (
+                    <option key={p.valeur} value={p.valeur}>
+                        {p.label} · {Math.round(Number(p.valeur) * 100)} %
+                    </option>
+                ))}
+                {horsPalier && (
+                    <option value={String(echelle)}>
+                        Personnalisé · {Math.round(echelle * 100)} %
+                    </option>
+                )}
+            </select>
         </div>
     );
 };
