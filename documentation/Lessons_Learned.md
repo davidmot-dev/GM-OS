@@ -673,7 +673,60 @@ relecture de code. Ce n'est pas un hasard : **aucun des cinq défauts ci-dessous
 
 ---
 
-*Dernière mise à jour : 4 Septembre 2026 — Loot-OS revu (pont Table-OS ↔ Loot-OS, butin de séance
+## 📏 Une unité absolue n'obéit à rien de ce qui la contient (2026-09-06)
+
+*Trois signalements de David en une journée, tous sur la même question — « comment j'agrandis ce
+texte ? » — et **deux fois la même cause**, la seconde alors que je venais de la corriger ailleurs.*
+
+### 1. Un réglage invisible à un moteur qui n'emploie pas nos classes
+
+- **Défi** : capture à l'appui, un tableau d'article du wiki à 11,9 px. *« Les différents slicers ne
+  semblent pas agrandir cela. »*
+- **Cause** : les cinq réglages de taille redéfinissent les **jetons `--text-*` de Tailwind**, donc
+  les classes `text-sm`, `text-base`… Les documents Markdown, eux, sont mis en page par le greffon
+  typographique, qui écrit **ses propres tailles en dur**. Il n'emploie aucune de ces classes : les
+  réglages lui étaient **invisibles**, sans qu'aucune erreur ne le signale.
+- **Ce qui l'a rendu déroutant** : les *paragraphes* du wiki, eux, grossissaient — leur conteneur
+  porte `prose-p:text-lg`, une vraie classe. **Un réglage qui agit sur la moitié d'un même bloc se
+  lit comme un réglage en panne**, pas comme un réglage incomplet.
+- **Leçon** : un mécanisme de réglage ne couvre que ce qui **le consomme**. Devant « le curseur ne
+  fait rien », la première question n'est pas *le curseur écrit-il bien ?* mais **qui lit ce qu'il
+  écrit** — et la réponse se vérifie dans la CSS construite, pas dans le composant.
+
+### 2. Un `rem` se calcule sur la racine, jamais sur le bloc qui le contient
+
+- **Défi** : une heure plus tard, la loupe de lecture livrée le matin. Capture à 230 % : *« le texte
+  ne grossis pas »* — titres crevant l'écran, paragraphes intacts.
+- **Cause** : la loupe posait une variable sur le bloc et laissait les tailles en `em` en hériter.
+  Mais `prose-p:text-lg` pose une taille en **`rem`**, et *un `rem` se calcule sur la racine du
+  document*. **Tout élément portant une classe `text-*` coupe la chaîne d'héritage** — et dans ce
+  dépôt, ils sont légion. Les titres suivaient seulement parce que le greffon les écrit en `em`.
+- **Leçon** : `em` et `rem` ne diffèrent pas par la commodité mais par **qui décide**. Un mécanisme
+  fondé sur l'héritage ne survit pas à une seule unité absolue posée en chemin, et il échoue
+  **partiellement** — donc de la façon la plus trompeuse. Quand le grossissement doit valoir pour
+  *tout un sous-arbre quoi qu'il contienne*, `zoom` est la bonne réponse : il n'interroge pas la
+  cascade, et la mise en page **se recasse** au lieu de déborder comme le ferait `transform: scale`.
+- **Corollaire, valable au-delà du CSS** : *j'ai reproduit dans le correctif la cause exacte que je
+  venais de diagnostiquer.* Comprendre un mécanisme ne protège pas de le refaire à trois lignes
+  d'intervalle — seule la question « qu'est-ce qui, ici, ne dépend pas de ce que je pilote ? »
+  l'aurait vu.
+
+### 3. Un plafond nommé en dur dans un test
+
+- **Défi** : ouvrir l'échelle de 130 à 200 %, demandé le même jour.
+- **Cause** : le test de bornage attendait `1.3` — le plafond recopié à la main. Il serait tombé au
+  changement **sans que rien ne soit cassé**.
+- **Leçon** : une garde qui recopie la constante qu'elle surveille ne garde plus le comportement,
+  elle garde une valeur. Elle lit maintenant `ECHELLE_MAX` — et une garde de plus vérifie que le
+  dernier palier offert **est** ce plafond : *un plafond que l'interface ne sait pas offrir n'existe
+  que dans le code.*
+
+---
+
+*Dernière mise à jour : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
+loupe de lecture sur les quatre lecteurs, tailles nommées jusqu'à 200 %.*
+
+*Mise à jour précédente : 4 Septembre 2026 — Loot-OS revu (pont Table-OS ↔ Loot-OS, butin de séance
 persisté et rattaché à une campagne, vocabulaire du butin pris dans le pilote) et voix des PNJ de
 campagne (profil enregistré sur la fiche, reposé en priorité).*
 

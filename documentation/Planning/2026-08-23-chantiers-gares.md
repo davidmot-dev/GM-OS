@@ -24,7 +24,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ---
 
-## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-05**
+## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-06**
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
@@ -1243,6 +1243,104 @@ bouton du § 24, écrit le matin même.
 **Ancres** : `electron/preload.ts` (`requestCurrentDisplay`), `image/components/ProjectorView.tsx`,
 `image/components/demandeDeLEtatCourant.test.ts` — qui garde les **trois maillons** : la réponse, le
 pont, et l'appel.
+
+### 26 · ⛔ Les documents Markdown n'obéissaient à aucune bande de taille (2026-09-06)
+
+Trouvé par David, capture à l'appui : *« peux-tu me dire comment augmenter la taille de ce texte
+encadré en rouge ? les différents slicers ne semblent pas agrandir cela »* — un tableau d'article du
+wiki, à **11,9 px**.
+
+**`.prose` ne connaît aucun de nos paliers.** Le greffon typographique écrit ses tailles en dur :
+`1rem` sur le bloc, puis tout l'intérieur en `em` — un tableau valant `0.875em`. Les quatre bandes,
+elles, ne redéfinissent que les jetons `--text-*` de Tailwind. *Un greffon qui n'emploie pas ces
+classes leur est invisible.*
+
+⚠️ **D'où le symptôme trompeur** : dans le wiki, les paragraphes grossissaient — le conteneur porte
+`prose-p:text-lg`, une vraie classe — et le tableau d'à côté ne bougeait pas. *Un réglage qui agit
+sur la moitié d'un même bloc se lit comme un réglage en panne.*
+
+Le bloc est rattaché à `--echelle-corps` ; tout l'intérieur étant en `em`, titres, listes **et**
+tableaux suivent d'eux-mêmes. Et un tableau se lit désormais **à la taille du texte qui l'entoure** :
+le greffon le rétrécit de 12,5 %, convention d'article de blog où la table est une annexe — ici
+c'est l'inverse, une table de dégâts est *ce qu'on vient lire*, et on la lit en séance, de loin.
+
+⚠️ **`prose-sm` n'est visé que s'il accompagne `prose`.** Le centre de notifications du Hub porte
+`prose-sm` **seul**, sous un `text-xs` qui gagne parce que les utilitaires passent devant les
+composants : une règle hors couche sur `prose-sm` nu lui aurait volé sa taille.
+
+⛔ **Aucune garde possible** : `index.css` est illisible depuis Vitest — ni `?raw`, ni `node:fs`, ni
+`import.meta.glob`, les trois sont déjà essayés et `bandesDeTaille.test.ts` le dit. Vérifié dans la
+**CSS construite** (nos règles à profondeur 0, celles du greffon dans `@layer components`) et à
+l'écran par David.
+
+**Ancres** : `src/index.css` (bloc « Les documents Markdown suivent la bande »), `components/TexteMarkdown.tsx`.
+
+### 27 · ⭐ Une loupe de lecture pour les documents (2026-09-06)
+
+Demandée par David : *« est-ce qu'on pourrait faire un mécanisme de loupe pour me faciliter la
+lecture ? »*
+
+**Ctrl + molette** sur un document, ou deux boutons à côté ; le pourcentage se clique pour revenir à
+100 %. De **70 à 300 %**, retenu **par appareil**. Posée sur les quatre lecteurs : l'article du Nexus
+Wiki, le lecteur plein écran d'une règle, l'aperçu de l'atelier, la note du panneau Obsidian.
+
+**Un hublot qui suit la souris a été écarté** : il montre trois mots à la fois et occupe une main,
+quand ce qu'on lit est une fiche technique à trois colonnes, en pleine partie. *On ne lit pas un
+tableau par un trou de serrure.* Le zoom du document, lui, laisse la mise en page se rerégler.
+
+**Ce n'est pas un réglage de thème.** L'atelier décide de ce que le jeu *est*, et cela part sur le
+disque dans un `theme.css` que les joueurs lisent aussi ; la loupe décide de ce que **cet écran-ci**
+montre à cet instant. *Un confort de lecture n'est pas une décision d'univers.*
+
+⭐ **La première version a vécu une heure**, et c'est le point qui compte. Elle posait `--loupe` sur
+le bloc et laissait les `em` en hériter. David, capture à 230 % : *« le texte ne grossis pas »* —
+titres énormes, paragraphes intacts. **Le même motif que le § 26** : `prose-p:text-lg` pose une
+taille en `rem`, et *un `rem` se calcule sur la racine du document, jamais sur le bloc qui le
+contient*. Tout élément portant une classe `text-*` coupe la chaîne d'héritage, et ils sont légion.
+`zoom` ne demande rien à la cascade — et la mise en page **se recasse** dans la même colonne, là où
+`transform: scale` déborderait. ⚠️ La commande reste **hors** du zoom : à 230 %, une barre de boutons
+zoomée devient un bandeau.
+
+⚠️ **`onWheel` de React est passif** : `preventDefault` y est sans effet, et Electron aurait zoomé
+toute la fenêtre **par-dessus**. L'écouteur est posé à la main en `{ passive: false }` — le piège que
+`MapCanvas` signale depuis longtemps.
+
+**Ancres** : `components/LoupeDeLecture.tsx`, `components/reglageDeLoupe.ts`,
+`components/LoupeDeLecture.test.tsx` — qui garde le **geste** : Ctrl + molette grossit, **la molette
+nue ne fait rien** (sinon le document sauterait de taille à chaque défilement).
+
+### 28 · ⭐ Des tailles nommées, jusqu'à 200 % (2026-09-06)
+
+Deux demandes de David le même jour : *« ne serait-ce pas plus simple d'avoir une liste avec les
+différentes tailles pour chaque police ? »*, puis, après avoir lu des étiquettes de 8 px sur la fiche
+d'un lieu, *« je veux que tu puisses monter jusqu'à 200 % »*.
+
+**Une liste par police reste refusée**, pour la raison déjà écrite au 05/09 : les quatre polices d'un
+thème choisissent des **familles**, pas des tailles, et deux d'entre elles ne servent qu'aux fiches.
+Ce qui change n'est donc pas *ce qu'on règle* — ce sont toujours les cinq échelles — mais **comment
+on le désigne**. *Un curseur affichant « 107 % » ne dit rien de ce qu'on obtiendra et ne se repose
+jamais deux fois au même endroit ; un palier nommé se retrouve et se dit à voix haute.*
+
+Neuf paliers, de **Très petit (80 %)** à **Maximal (200 %)**. Les écarts s'élargissent en haut —
+130, 150, 175, 200 : *dix pour cent de plus sur 190 ne se voit pas, là où dix pour cent sur 90 se
+voit tout de suite.* C'est le rapport qui compte, pas la différence.
+
+**« Non réglé » remplace le bouton *Défaut*** : il **efface** le jeton au lieu d'écrire « 100 % » —
+*ne rien dire et dire « échelle 1 » doivent laisser la même page*. Et une valeur héritée d'un ancien
+curseur reste offerte comme « Personnalisé » plutôt que d'être remplacée en silence à la première
+ouverture de l'atelier.
+
+⚠️ **200 % est un vrai doublement** : sur « Tout le texte », la racine passe de 85 à 170 % et un
+`rem` de 13,6 à **27,2 px**. Des panneaux dimensionnés à l'œil déborderont — c'est le retour toujours
+possible qui rend ce plafond acceptable. *Conseil de séance : monter la seule bande qui gêne, pas
+l'ensemble.*
+
+⛔ **Le test de bornage nommait « 1.3 » en dur** : il aurait échoué ce jour-là **sans que rien ne
+soit cassé**. Il lit maintenant `ECHELLE_MAX`, et une garde de plus vérifie que le dernier palier
+**est** le plafond — *un plafond que l'interface ne sait pas offrir n'existe que dans le code.*
+
+**Ancres** : `theme/editionDuTheme.ts` (`PALIERS_DE_TAILLE`, `ECHELLE_MAX`), `theme/AtelierDuTheme.tsx`
+(`ChampDEchelle`), `theme/bandesDeTaille.test.ts`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

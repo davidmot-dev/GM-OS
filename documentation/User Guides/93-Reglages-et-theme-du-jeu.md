@@ -52,6 +52,38 @@ et il y en a maintenant cinq :
 >
 > *Le curseur d'avant faisait donc à moitié ce qu'il promettait, et rien ne le disait.*
 
+> ⛔ **Les documents Markdown n'obéissaient à aucune bande — corrigé le 2026-09-06.** Les articles du
+> Nexus Wiki, les règles, les notes du coffre Obsidian sont mis en page par un moteur typographique
+> qui écrit **ses propres tailles**, ignorant les réglages ci-dessus. On voyait donc les paragraphes
+> d'un article grossir pendant que **le tableau juste à côté ne bougeait pas**. Ils suivent
+> maintenant la bande **Texte courant** — et un tableau se lit désormais à la taille du texte qui
+> l'entoure, au lieu d'être rétréci de 12,5 % comme dans un article de blog.
+>
+> Pour grossir **un seul document, le temps de le lire**, voyez la **loupe de lecture** (guide
+> *84 — Nexus Wiki & coffre Obsidian*) : elle ne touche à aucun réglage de jeu.
+
+### Neuf tailles nommées, de 80 à 200 %
+
+**Depuis le 2026-09-06**, chaque réglage se choisit dans une **liste**, et non plus sur un curseur :
+
+| | | |
+| :--- | :--- | :--- |
+| Non réglé | Très petit · 80 % | Petit · 90 % |
+| **Normal · 100 %** | Grand · 110 % | Très grand · 120 % |
+| Énorme · 130 % | Géant · 150 % | **Maximal · 200 %** |
+
+- **« Non réglé »** *efface* le réglage au lieu d'écrire « 100 % » : le jeu retrouve son défaut, et
+  le jeton disparaît du fichier. *Ne rien dire et dire « échelle 1 » doivent laisser la même page.*
+- Les écarts **s'élargissent en haut** de l'échelle. Dix pour cent de plus sur 190 ne se voit pas,
+  là où dix pour cent sur 90 saute aux yeux : c'est le rapport qui compte, pas la différence.
+- Un thème réglé avant cette liste — au curseur, à « 107 % » — garde sa valeur, offerte comme
+  **« Personnalisé »**. Elle n'est jamais remplacée en silence.
+
+> [!WARNING]
+> **200 % est un vrai doublement.** Sur *Tout le texte*, la base de l'application passe de 85 à
+> 170 % : des panneaux dimensionnés à l'œil déborderont. Rien n'est perdu — « Non réglé » remet le
+> défaut — mais **montez d'abord la seule bande qui vous gêne**, pas l'ensemble.
+
 **Comment ça marche :**
 
 1. Ouvrez les **Paramètres → Thème du jeu**. Si le jeu n'a pas encore de thème, un bouton **Créer un thème** en pose un vierge.

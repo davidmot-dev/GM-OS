@@ -39,6 +39,32 @@ Deux écritures d'Obsidian restent en dehors : les liens internes `[[Note]]` (mo
 tels quels) et l'en-tête `---` du haut de note, qui s'affiche comme une ligne suivie
 de ses champs.
 
+### 3 bis. La loupe de lecture 🔍
+
+**Ajoutée le 2026-09-06.** Un document se lit parfois de loin, ou après une longue
+soirée. En haut à droite du lecteur, une petite commande **A− · 100 % · A+** grossit
+le document affiché :
+
+| Geste | Effet |
+| :--- | :--- |
+| **Ctrl + molette** sur le document | Monte ou descend d'un cran |
+| Les boutons **A−** / **A+** | La même chose à la souris |
+| Un clic sur **le pourcentage** | Revient à 100 % |
+
+- De **70 à 300 %**, par pas de 10 %.
+- La commande **s'efface** tant que la loupe est à 100 %, et réapparaît au survol.
+- Le réglage est **retenu par appareil** et vous suit d'un document à l'autre.
+
+On la retrouve aux quatre endroits où l'on *lit* : cet écran, la **note du panneau
+Obsidian**, le **lecteur plein écran d'une règle** et l'**aperçu de l'atelier de
+règles**.
+
+> [!IMPORTANT]
+> **La loupe n'est pas un réglage de jeu.** Elle ne touche à aucun fichier, ne
+> traverse aucune fenêtre et n'apparaît pas chez les joueurs : elle change ce que
+> **cet écran-ci** montre à cet instant. Pour régler durablement la taille du texte
+> de toute l'application, voyez le guide *93 — Réglages & thème du jeu*.
+
 ### 4. Donner vos notes à l’IA
 
 Voir la section dédiée plus bas : **deux mécanismes existent**, et un seul agit sur la
