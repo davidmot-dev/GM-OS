@@ -1,5 +1,6 @@
 import { useLightStore, VITESSE_EFFET_DEFAUT } from "./useLightStore";
 import type { HueLight, HueLightState } from "./useLightStore";
+import { sceneDeRepli } from "./logic/sceneDeRepli";
 
 interface HueApiLight {
     state: {
@@ -271,10 +272,62 @@ export class HueEngine {
         }
     }
 
+    /**
+     * **Un module rend la main** — fin d'un son, d'une piste d'ambiance, d'une
+     * musique, d'un flash tactique.
+     *
+     * On revient à ce que le meneur avait choisi, et à défaut à l'éclairage
+     * normal de la pièce. ⛔ *Avant le 2026-09-07, une soirée où aucune scène
+     * n'avait été cliquée finissait dans le noir à la fin du premier pad
+     * sonore* : `lastManualSceneId` était vide, et `applyScene(null)` éteint.
+     */
     async revertToManualScene() {
-        const { lastManualSceneId } = useLightStore.getState();
-        console.log(`[HUE ENGINE] Reverting to manual scene: ${lastManualSceneId}`);
-        await this.applyScene(lastManualSceneId, true);
+        const { lastManualSceneId, defaultSceneId, scenes } = useLightStore.getState();
+        const cible = sceneDeRepli(scenes, [lastManualSceneId, defaultSceneId]);
+        console.log(`[HUE ENGINE] Reverting to scene: ${cible} (manuelle: ${lastManualSceneId}, défaut: ${defaultSceneId})`);
+        await this.applyScene(cible, true);
+    }
+
+    /**
+     * **Le Stop All de la barre du haut : on coupe tout, et la pièce revient à
+     * son éclairage normal.**
+     *
+     * Il vise le défaut **directement**, sans passer par la dernière scène
+     * choisie : *on ne veut pas retomber sur la scène d'alerte qui jouait il y
+     * a trois secondes.* Sans éclairage normal désigné, il éteint — le
+     * comportement d'avant ce réglage, et celui de qui ne s'en sert pas.
+     *
+     * ⚠️ À ne pas confondre avec `extinguishAll`, qui reste l'extinction
+     * franche du bouton rouge de Light-OS : *un bouton nommé « extinction »
+     * doit éteindre, sinon il ne reste aucune porte vers le noir.*
+     */
+    async revenirALEclairageNormal() {
+        const { defaultSceneId, scenes } = useLightStore.getState();
+        const cible = sceneDeRepli(scenes, [defaultSceneId]);
+        if (!cible) {
+            await this.extinguishAll();
+            return;
+        }
+
+        /*
+          **Tout se tait d'abord.** `applyScene` n'arrête que les effets des
+          lampes qu'elle contient : une lampe absente de la scène normale
+          garderait son orage en cours, et le Stop All aurait laissé la pièce
+          clignoter. *Un geste qui s'appelle « tout arrêter » ne peut pas
+          n'arrêter que ce que sa cible mentionne.*
+
+          Leur brillance, elle, n'est pas touchée : une lampe hors de la scène
+          normale reste où elle était. On la fait taire, on ne décide pas à sa
+          place.
+        */
+        if (this.flashTimeout) {
+            clearTimeout(this.flashTimeout);
+            this.flashTimeout = null;
+        }
+        Object.keys(useLightStore.getState().lights).forEach(id => this.stopSoftwareEffect(id));
+
+        console.log(`[HUE ENGINE] Stop All → éclairage normal : ${cible}`);
+        await this.applyScene(cible, true);
     }
 
     // ------------------------------------------------------------------------

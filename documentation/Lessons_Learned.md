@@ -772,8 +772,46 @@ heure, qui a mis au jour deux défauts du moteur d'effets — dont un antérieur
 
 ---
 
-*Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS, et les deux
-défauts du moteur d'effets qu'il a mis au jour.*
+## 🏠 Ce qui se passe quand tout s'arrête (2026-09-07)
+
+*Deuxième demande de David le même jour : désigner l'éclairage normal de la pièce. Elle a mis au
+jour un défaut plus ancien qu'elle — la lumière s'éteignait toute seule — et failli en créer un
+autre, en alignant trois gestes qui ne veulent pas la même chose.*
+
+### 1. Une demande de confort peut être un rapport de bogue
+
+- **Défi** : *« comme ma lumière est aussi l'éclairage normal, je voudrais pouvoir définir un défaut
+  vers lequel on revient. »* Une demande de fonctionnalité, en apparence.
+- **Ce qu'elle a révélé** : le retour automatique des modules audio visait la « dernière scène
+  choisie à la main ». Champ vide tant que le meneur n'avait cliqué aucune tuile — et le chemin de
+  repli, dans ce cas, **éteignait**. Autrement dit : la fin du premier bruitage d'une soirée
+  plongeait la pièce dans le noir. Personne ne l'avait signalé comme un défaut ; il était arrivé
+  déguisé en souhait.
+- **Leçon** : quand un utilisateur demande à **choisir** ce qui se passe dans un cas, la première
+  question à poser au code est *que fait-il dans ce cas aujourd'hui ?* La réponse est souvent « la
+  pire des options par défaut », et la demande est alors un rapport de bogue qui s'ignore.
+
+### 2. Trois chemins qui se ressemblent ne veulent pas la même chose
+
+- **Défi** : rendre le repli configurable sans écraser les différences entre les gestes qui l'utilisent.
+- **Cause potentielle** : le retour automatique d'un module, le Stop All de la barre du haut et
+  l'extinction d'urgence passaient par deux fonctions dont l'une appelait l'autre. La pente naturelle
+  était de les faire toutes viser le nouveau défaut — et de perdre au passage **la seule porte vers
+  le noir**, ainsi que la préférence pour la scène que le meneur avait choisie lui-même.
+- **Leçon** : avant de rendre un comportement configurable, énumérer **qui l'appelle et pourquoi**.
+  Ce qui se ressemble dans le code (« on revient à l'état de repos ») recouvre souvent trois
+  intentions distinctes, et un réglage unique les aplatit. Ici la règle commune — *prendre le premier
+  candidat qui éclaire vraiment quelque chose* — a été isolée dans une fonction pure, et **la liste
+  des candidats est restée propre à chaque appelant**.
+- **Corollaire** : *un geste qui s'appelle « tout arrêter » ne peut pas n'arrêter que ce que sa cible
+  mentionne.* Appliquer la scène de repli n'éteint que les effets des lampes qu'elle nomme ; il a
+  fallu faire taire les autres explicitement.
+
+---
+
+*Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux
+défauts du moteur d'effets qu'il a mis au jour ; éclairage normal de la pièce, et le noir qui tombait
+tout seul à la fin du premier bruitage d'une soirée.*
 
 *Mise à jour précédente : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
 loupe de lecture sur les quatre lecteurs, tailles nommées jusqu'à 200 %.*

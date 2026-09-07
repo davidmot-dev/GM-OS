@@ -708,7 +708,11 @@
       "suivre_la_voix_actif": "Actif",
       "suivre_la_voix_inactif": "Éteint",
       "suivre_la_voix_sans_micro": "En attente du micro : activez Voice-OS pour que l'effet démarre.",
-      "suivre_la_voix_note": "Les couleurs de la scène restent ; leur contraste de brillance est aplani tant que le mode dure."
+      "suivre_la_voix_note": "Les couleurs de la scène restent ; leur contraste de brillance est aplani tant que le mode dure.",
+      "default_scene": "Éclairage normal",
+      "default_scene_none": "Aucun — on éteint",
+      "default_scene_hint": "La pièce y revient quand un son se termine, et quand vous coupez tout.",
+      "default_scene_hint_none": "Sans éclairage normal, tout retour se fait dans le noir."
     },
     "top": {
       "transition_time": "Temps de Transition",
@@ -728,7 +732,9 @@
       "save_button": "Enregistrer",
       "cancel_button": "Annuler",
       "speed_tooltip": "Vitesse des effets de la scène",
-      "speed_reset_tooltip": "Revenir à la vitesse d'origine (×1)"
+      "speed_reset_tooltip": "Revenir à la vitesse d'origine (×1)",
+      "default_set_tooltip": "Désigner comme éclairage normal de la pièce",
+      "default_unset_tooltip": "Ne plus être l'éclairage normal de la pièce"
     },
     "footer": {
       "no_lights": "Aucune lampe détectée.",

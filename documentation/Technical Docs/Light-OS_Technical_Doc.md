@@ -27,6 +27,21 @@ La cadence d'un effet est écrite dans son `case` (`interval`). La **vitesse de 
 *   **Application immédiate** : `appliquerVitesseDeScene(sceneId)` replanifie sur-le-champ les effets nés de cette scène. *Sans cet appel, un effet lent (crépuscule : 10 s) n'apprendrait sa nouvelle vitesse qu'au tour suivant, ce qui se lit comme un réglage en panne.*
 *   ⛔ **`setInterval` fige sa période** à la pose : c'est la raison pour laquelle les deux familles d'effets passent maintenant par une seule fonction `planifier()` interne — les dynamiques en `setTimeout` un tour à la fois, les autres en `setInterval` jusqu'à ce que la vitesse change.
 
+### 2 ter. Les trois portes du retour (2026-09-07)
+Trois gestes ramènent la pièce au repos. **Ils se ressemblent assez pour être confondus dans le code, et ils ne visent pas la même chose.**
+
+| Méthode | Appelée par | Vise |
+| :--- | :--- | :--- |
+| `revertToManualScene()` | Sound-OS, Music-OS, Ambient-OS (×2), `restoreAfterTactical` | `lastManualSceneId`, puis `defaultSceneId`, puis extinction |
+| `revenirALEclairageNormal()` | le **Stop All** de `MasterAudioController` | `defaultSceneId` **directement**, puis extinction |
+| `extinguishAll()` | le bouton rouge de la `Sidebar` de Light-OS | rien : elle éteint |
+
+*   **La règle commune** est isolée dans `logic/sceneDeRepli.ts` : prendre le premier candidat qui **porte réellement l'état d'une lampe**. Une scène absente, ou existante mais vide, est sautée — *un repli qui ne fait rien consomme le tour de celui qui aurait marché*.
+*   ⛔ **Le défaut réparé** : avant ce jour, une soirée où aucune scène n'avait été cliquée finissait dans le noir à la fin du premier pad sonore — `lastManualSceneId` était `null`, et `applyScene(null)` éteint.
+*   ⚠️ **Le Stop All ne passe pas par `lastManualSceneId`**, volontairement : *on ne retombe pas sur la scène d'alerte qui jouait il y a trois secondes.*
+*   ⚠️ **`revenirALEclairageNormal` arrête d'abord tous les effets logiciels**, sur **toutes** les lampes connues. `applyScene` n'arrête que ceux des lampes qu'elle mentionne : une lampe absente de la scène normale garderait son orage en cours, et un geste nommé « tout arrêter » aurait laissé la pièce clignoter. Leur brillance, elle, n'est pas touchée.
+*   **`defaultSceneId`** vit dans le store, est persisté, et **tombe à `null` quand la tuile désignée est effacée** (`clearScene`). `null` partout = comportement d'avant, à l'identique.
+
 ### 3. Hiérarchie des Overrides
 1.  **Tactical State** (Flash, Alerte) : Priorité absolue. Interrompt les effets en cours.
 2.  **Software Effects** (Loop) : Priorité haute.
@@ -52,4 +67,4 @@ Pour ajouter un effet :
 4.  Ajouter la traduction dans `modules.json` sous `light.footer.effects`.
 5.  Si l'effet modifie son `interval` en cours de route, l'ajouter à la liste `dynamique` (voir ci-dessus).
 
-*Documentation complétée le 2026-09-07 : vitesse des effets par scène, plancher de cadence, numéro de génération.*
+*Documentation complétée le 2026-09-07 : vitesse des effets par scène, plancher de cadence, numéro de génération, puis les trois portes du retour et l'éclairage normal (`defaultSceneId`).*

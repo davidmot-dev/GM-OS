@@ -47,8 +47,8 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
 >
-> Revérifié le **2026-09-07** après le § 29 : `tsc -b` propre, **3 846 tests au vert** (323 fichiers,
-> 1 ignoré, 4 tests ignorés).
+> Revérifié le **2026-09-07** après les §§ 29 et 30 : `tsc -b` propre, **3 864 tests au vert**
+> (325 fichiers, 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1350,6 +1350,9 @@ soit cassé**. Il lit maintenant `ECHELLE_MAX`, et une garde de plus vérifie qu
 Demandé par David : *« est-ce que tu peux mettre un slider dans chaque tuile pour contrôler la
 vitesse de l'effet ? »*
 
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-07**, sur les lampes de la table — David : *« ok ça marche et les
+sliders dans les tuiles aussi »*.
+
 Un facteur **de ×0,25 à ×3, par quarts**, porté par la scène (`effectSpeed`) et qui **divise la
 cadence** de tous ses effets : la bougie battait toutes les 250 ms, elle bat à 125 ms en ×2 ; le
 crépuscule passe de 10 s à 40 s en ×0,25. Le chiffre affiché est un bouton — un clic remet ×1.
@@ -1388,6 +1391,64 @@ rien à migrer — et le réglage suit la sauvegarde automatique, puisqu'il vit 
 **Ancres** : `light/useLightStore.ts` (`effectSpeed`, `setSceneEffectSpeed`, `bornerVitesse`),
 `light/HueEngine.ts` (`cadenceEffective`, `CADENCE_PLANCHER_MS`, `appliquerVitesseDeScene`,
 `generationEffet`), `light/components/SceneGrid.tsx`, `light/vitesseDesEffets.test.ts`.
+
+### 30 · ⭐ L'éclairage normal de la pièce — et le noir qui tombait tout seul (2026-09-07)
+
+Demandé par David dans la foulée du § 29 : *« comme ma lumière est aussi l'éclairage normal, je
+voudrais pouvoir définir un défaut vers lequel on revient systématiquement, même quand je coupe tout.
+Si j'ai pas défini de défaut, alors je peux mettre à noir. »*
+
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-07** — David : *« ok ça marche »*. Les deux chantiers du jour sont
+donc clos et vérifiés sur le matériel, pas seulement au banc.
+
+⛔ **La demande a mis au jour un défaut qui était déjà là.** Les retours automatiques (fin d'un son,
+d'une piste d'ambiance, d'une musique, d'un flash) visaient `lastManualSceneId`. **Si le meneur
+n'avait cliqué aucune scène depuis le lancement**, ce champ est vide, `applyScene(null)` éteint — et
+la pièce tombait dans le noir **à la fin du premier pad sonore de la soirée**, sans que personne ne
+l'ait demandé. *La demande de David n'était pas un confort : c'était le rapport de bogue.*
+
+**TROIS PORTES, et elles ne visaient pas la même chose.** Le point le plus important de ce chantier
+est de les avoir séparées au lieu de les aligner :
+
+| Geste | Vise |
+| :--- | :--- |
+| Retour automatique d'un module | la dernière scène choisie, **puis** l'éclairage normal, puis l'extinction |
+| **Stop All** de la barre du haut | l'éclairage normal **directement**, puis l'extinction |
+| **Extinction d'urgence** (bouton rouge de Light-OS) | rien : elle éteint |
+
+⚠️ **Le Stop All ne repasse pas par la dernière scène choisie**, et c'est délibéré : *on ne veut pas
+retomber sur la scène d'alerte qui jouait il y a trois secondes.* ⚠️ **Le bouton rouge reste une
+vraie extinction** — tranché par David : *un bouton nommé « extinction » doit éteindre*, sinon il ne
+resterait aucune porte vers le noir tant qu'un défaut est désigné.
+
+**La règle commune est isolée** dans `sceneDeRepli` : *prendre le premier candidat qui porte
+réellement l'état d'une lampe.* Une scène absente ou vide est sautée — **une tuile vide n'est pas un
+repli**, l'appliquer ne changerait rien et la lumière resterait sur ce que le son venait
+d'installer. *Un repli qui ne fait rien est pire qu'un repli absent : il consomme le tour de celui
+qui aurait marché.* Corollaire posé dans le magasin : **effacer la tuile désignée retire la
+désignation**.
+
+⛔ **`applyScene` n'arrête que les effets des lampes qu'elle mentionne.** Le Stop All devait donc
+faire taire **toutes** les lampes connues avant d'installer la scène normale — sans quoi une lampe
+absente de cette scène aurait gardé son orage, et le geste aurait laissé la pièce clignoter. *Un
+geste qui s'appelle « tout arrêter » ne peut pas n'arrêter que ce que sa cible mentionne.*
+
+**Deux portes pour désigner**, demandées ensemble : l'icône 🏠 sur la tuile (visible en permanence sur
+la désignée, au survol sur les autres, second clic pour libérer) et un bloc dans la barre latérale,
+posé **juste au-dessus de l'extinction** — *les deux répondent à la même question, « que devient la
+lumière quand on arrête tout ? », et ils y répondent différemment.*
+
+**Rien n'est imposé à qui ne s'en sert pas** : `defaultSceneId` à `null` laisse les trois portes se
+comporter exactement comme avant.
+
+⭐ **La dégradation a été jouée** : le repli ramené à `[lastManualSceneId]` seul fait tomber le test
+du cas de David, et lui seul. *Une garde qu'on n'a pas vue échouer ne garde rien.*
+
+**Ancres** : `light/logic/sceneDeRepli.ts` (+ son test), `light/logic/troisPortesDuRetour.test.ts`
+(les trois gestes tenus chacun à sa place, en statut `mock`), `light/HueEngine.ts`
+(`revertToManualScene`, `revenirALEclairageNormal`, `extinguishAll`), `light/useLightStore.ts`
+(`defaultSceneId`, `setDefaultScene`), `light/components/Sidebar.tsx`,
+`light/components/SceneGrid.tsx`, `components/audio/MasterAudioController.tsx`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

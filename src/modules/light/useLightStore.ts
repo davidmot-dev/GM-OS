@@ -103,6 +103,18 @@ interface LightState {
     activeSceneId: string | null;
     /** Dernière scène activée manuellement par l'utilisateur */
     lastManualSceneId: string | null;
+    /**
+     * **L'éclairage normal de la pièce** — la scène vers laquelle on retombe.
+     *
+     * Demandé par David le 2026-09-07 : *« comme ma lumière est aussi
+     * l'éclairage normal, je voudrais pouvoir définir un défaut vers lequel on
+     * revient systématiquement, même quand je coupe tout »*.
+     *
+     * `null` tant que rien n'est désigné, et **tout se comporte alors comme
+     * avant** : on éteint. C'est la condition pour que ce réglage n'impose rien
+     * à qui ne s'en sert pas.
+     */
+    defaultSceneId: string | null;
 
     // Actions - Connection
     /** Met à jour les paramètres de connexion au pont */
@@ -126,6 +138,8 @@ interface LightState {
     updateSceneMetadata: (sceneId: string, name: string, icon: string, color: string) => void;
     /** Règle la vitesse des effets d'une scène (bornée par `VITESSE_MIN`/`VITESSE_MAX`) */
     setSceneEffectSpeed: (sceneId: string, speed: number) => void;
+    /** Désigne l'éclairage normal de la pièce, ou le retire avec `null` */
+    setDefaultScene: (sceneId: string | null) => void;
     /** Active une scène sur le pont physique */
     setActiveScene: (sceneId: string | null, isAutomatic?: boolean) => void;
     /** Réinitialise une scène aux valeurs par défaut */
@@ -203,6 +217,7 @@ export const useLightStore = create<LightState>()(
             scenes: createDefaultScenes(),
             activeSceneId: null,
             lastManualSceneId: null,
+            defaultSceneId: null,
             isSyncEnabled: true, // Enabled by default
 
             setConnection: async (status, ip, username) => {
@@ -266,6 +281,13 @@ export const useLightStore = create<LightState>()(
                 };
             }),
 
+            setDefaultScene: (sceneId) => set((state) => {
+                if (sceneId === null) return { defaultSceneId: null };
+                if (!state.scenes[sceneId]) return state;
+                /* Un second clic sur la tuile déjà désignée la libère. */
+                return { defaultSceneId: state.defaultSceneId === sceneId ? null : sceneId };
+            }),
+
             setSceneEffectSpeed: (sceneId, speed) => set((state) => {
                 if (!state.scenes[sceneId]) return state;
                 return {
@@ -295,6 +317,13 @@ export const useLightStore = create<LightState>()(
             })),
 
             clearScene: (sceneId: string) => set((state) => ({
+                /*
+                  **Effacer la tuile désignée retire la désignation.** Une scène
+                  vide ne porte l'état d'aucune lampe : la garder pour défaut
+                  laisserait un repli qui ne fait rien, ce qui se voit encore
+                  moins qu'un repli absent.
+                */
+                defaultSceneId: state.defaultSceneId === sceneId ? null : state.defaultSceneId,
                 scenes: {
                     ...state.scenes,
                     [sceneId]: {
@@ -352,6 +381,7 @@ export const useLightStore = create<LightState>()(
                     scenes: createDefaultScenes(),
                     activeSceneId: null,
                     lastManualSceneId: null,
+                    defaultSceneId: null,
                     globalBrightness: 100,
                     transitionTimeMs: 5000,
                     suivreLaVoix: false,
@@ -403,7 +433,8 @@ export const useLightStore = create<LightState>()(
                 globalBrightness: state.globalBrightness,
                 transitionTimeMs: state.transitionTimeMs,
                 isSyncEnabled: state.isSyncEnabled,
-                lastManualSceneId: state.lastManualSceneId
+                lastManualSceneId: state.lastManualSceneId,
+                defaultSceneId: state.defaultSceneId
             })
         }
     )

@@ -496,6 +496,7 @@ declare global {
         hueEngine?: { 
             applyScene: (id: string | null, isAutomatic?: boolean) => Promise<void>; 
             revertToManualScene: () => Promise<void>;
+            revenirALEclairageNormal: () => Promise<void>;
             extinguishAll: () => Promise<void>;
             triggerFlash: (hex: string, duration?: number, intensity?: number) => Promise<void>;
             applyTacticalState: (hex: string, name: string, intensity?: number) => Promise<void>;

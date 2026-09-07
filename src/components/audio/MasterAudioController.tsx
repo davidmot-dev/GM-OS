@@ -29,7 +29,7 @@ const MasterAudioController: React.FC = () => {
             musicEngine?: { stopAll: () => void };
             ambientEngine?: { fadeOutAll: (d: number) => void };
             useImageStore?: { getState: () => { blackoutAll: () => void } };
-            hueEngine?: { extinguishAll: () => Promise<void> };
+            hueEngine?: { revenirALEclairageNormal: () => Promise<void> };
         }
         const win = window as unknown as GMWindow;
         try {
@@ -41,9 +41,17 @@ const MasterAudioController: React.FC = () => {
             // 2. Projections & Displays
             if (win.useImageStore) win.useImageStore.getState().blackoutAll();
 
-            // 3. Lighting (Hue)
+            /*
+              3. Lighting (Hue) — **on revient à l'éclairage normal de la pièce,
+              on n'éteint pas.** Demandé par David le 2026-09-07 : la lumière de
+              la table est aussi celle où l'on voit ses notes. Tant qu'aucune
+              scène n'est désignée comme éclairage normal, ce chemin éteint
+              exactement comme avant.
+
+              L'extinction franche garde sa porte : le bouton rouge de Light-OS.
+            */
             if (win.hueEngine) {
-                await win.hueEngine.extinguishAll();
+                await win.hueEngine.revenirALEclairageNormal();
             }
 
             // 4. Favorites & Projections (Full Hub Sync cleanup)

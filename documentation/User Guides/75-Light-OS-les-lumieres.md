@@ -85,6 +85,45 @@ Le réglage **agit immédiatement** si la scène est en cours : pas besoin de la
 > **fondu d'une scène à l'autre**, le curseur règle la **vitesse de l'animation** une fois la scène
 > installée.
 
+## 🏠 L'éclairage normal de la pièce
+
+Votre lumière de jeu est aussi celle sous laquelle on lit ses notes et on sert à boire. **Désignez la
+scène qui est votre éclairage normal**, et c'est vers elle que la pièce revient quand quelque chose
+s'arrête — au lieu de tomber dans le noir.
+
+Deux façons de la désigner, au choix :
+
+- **L'icône 🏠 sur une tuile** : elle apparaît au survol, un clic désigne la tuile, un second la
+  libère. La tuile désignée garde sa maison affichée en permanence.
+- **Le bloc « Éclairage normal »** de la barre latérale, juste au-dessus du bouton d'extinction : la
+  liste de vos scènes capturées, et « Aucun ».
+
+### Ce que ça change, geste par geste
+
+| Geste | Sans éclairage normal | Avec |
+| :--- | :--- | :--- |
+| **Un son, une piste, une musique se termine** | retour à la dernière scène que vous avez cliquée — et **noir** si vous n'en avez cliqué aucune | retour à votre éclairage normal |
+| **Stop All** (barre du haut) | tout au noir | retour à votre éclairage normal |
+| **Extinction d'urgence** (bouton rouge de Light-OS) | tout au noir | **tout au noir** — inchangé |
+
+> [!IMPORTANT]
+> **Le défaut que cela répare.** Si vous n'aviez cliqué aucune scène depuis le lancement, la fin du
+> premier bruitage éteignait votre pièce — en pleine partie, sans que vous ayez rien demandé.
+> Désigner un éclairage normal ferme ce trou ; ne rien désigner laisse le comportement d'avant,
+> à l'identique.
+
+> [!NOTE]
+> **Le Stop All ne repasse pas par la dernière scène jouée.** Il vise votre éclairage normal
+> directement : *on ne veut pas retomber sur la scène d'alerte qui jouait il y a trois secondes.* Les
+> retours automatiques, eux, préfèrent ce que vous aviez choisi à la main — l'éclairage normal n'est
+> leur recours que si vous n'avez rien choisi.
+>
+> **Le bouton rouge reste une vraie extinction**, pour finir la soirée ou pour le noir complet : sinon
+> plus aucune porte ne mènerait au noir tant qu'un éclairage normal serait désigné.
+>
+> Seules les scènes **capturées** peuvent être désignées, et **effacer la tuile désignée retire la
+> désignation** — un repli qui vise une tuile vide ne ferait rien, en silence.
+
 ## 🔄 Synchronisation Multi-Modules (Sync Mode)
 
 C'est ici que GM-OS révèle toute sa puissance. Si le bouton **Sync** est activé :
@@ -121,13 +160,17 @@ c'est utile de savoir lequel a agi quand la lumière change sans qu'on ait rien 
 | **Map-OS** | Une **zone de danger** où un pion entre |
 | **Le Storyboard** | Une séquence, parmi ses six éléments |
 
-⚠️ **Le Stop All de la barre du haut éteint toutes vos lampes** — ce n'est pas qu'un bouton audio.
+⚠️ **Le Stop All de la barre du haut agit sur vos lampes** — ce n'est pas qu'un bouton audio. Il les
+éteint, ou les ramène à votre **éclairage normal** si vous en avez désigné un (voir plus haut).
 → [Tour de contrôle audio](./70-Tour-de-controle-audio.md)
 
 ---
 
 *Complété le 2026-09-07 : le **curseur de vitesse** de chaque tuile (×0,25 à ×3), ce qu'il ne
-touche pas, et la différence avec le temps de transition.*
+touche pas, et la différence avec le temps de transition. Puis l'**éclairage normal de la pièce** —
+les deux façons de le désigner, ce qu'il change pour les trois gestes de retour, et le défaut qu'il
+répare (la pièce s'éteignait à la fin du premier bruitage d'une soirée). **Les deux ont été
+éprouvés sur les lampes de la table le jour même.***
 
 *Guide révisé le 2026-09-04, code à l'appui. Précisé : **trente-neuf effets** là où la page en
 citait quatre avant un « etc. » — et *Grisaille* n'en fait pas partie. Ajouté : la liste des **cinq

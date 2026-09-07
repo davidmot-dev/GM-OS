@@ -708,7 +708,11 @@
       "suivre_la_voix_actif": "On",
       "suivre_la_voix_inactif": "Off",
       "suivre_la_voix_sans_micro": "Waiting for the mic: turn Voice-OS on for the effect to start.",
-      "suivre_la_voix_note": "Scene colours stay; their brightness contrast is flattened while the mode is on."
+      "suivre_la_voix_note": "Scene colours stay; their brightness contrast is flattened while the mode is on.",
+      "default_scene": "Normal lighting",
+      "default_scene_none": "None — lights off",
+      "default_scene_hint": "The room returns to it when a sound ends, and when you stop everything.",
+      "default_scene_hint_none": "With no normal lighting, every fallback goes dark."
     },
     "top": {
       "transition_time": "Transition Time",
@@ -728,7 +732,9 @@
       "save_button": "Save",
       "cancel_button": "Cancel",
       "speed_tooltip": "Speed of the scene's effects",
-      "speed_reset_tooltip": "Back to the original speed (×1)"
+      "speed_reset_tooltip": "Back to the original speed (×1)",
+      "default_set_tooltip": "Set as the room's normal lighting",
+      "default_unset_tooltip": "No longer the room's normal lighting"
     },
     "footer": {
       "no_lights": "No lights discovered.",

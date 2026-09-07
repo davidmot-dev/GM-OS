@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 const PAS_DE_VITESSE = 0.25;
 
 export const SceneGrid: React.FC = () => {
-    const { scenes, activeSceneId, saveSceneSnapshot, clearScene, setSceneEffectSpeed } = useLightStore();
+    const { scenes, activeSceneId, defaultSceneId, saveSceneSnapshot, clearScene, setSceneEffectSpeed, setDefaultScene } = useLightStore();
     const { t } = useTranslation('modules');
 
     // Sort scenes by ID to maintain grid order SCENE_01 to SCENE_18
@@ -64,6 +64,7 @@ export const SceneGrid: React.FC = () => {
                     const isActive = activeSceneId === scene.id;
                     const hasData = Object.keys(scene.lightStates).length > 0;
                     const aDesEffets = Object.values(scene.lightStates).some(s => s.effect && s.effect !== 'none');
+                    const estLEclairageNormal = defaultSceneId === scene.id;
                     const vitesse = scene.effectSpeed ?? VITESSE_EFFET_DEFAUT;
 
                     if (!hasData) {
@@ -109,12 +110,29 @@ export const SceneGrid: React.FC = () => {
                                 {scene.name}
                             </span>
 
-                            {/* Has Software Effect indicator */}
-                            {aDesEffets && (
-                                <div className="absolute top-2 right-2 flex gap-1">
+                            <div className="absolute top-2 right-2 flex items-center gap-1 z-20">
+                                {/* Has Software Effect indicator */}
+                                {aDesEffets && (
                                     <span className="material-symbols-outlined text-sm animate-pulse" style={{ color: scene.color }}>auto_awesome</span>
-                                </div>
-                            )}
+                                )}
+
+                                {/*
+                                  **L'éclairage normal de la pièce.** La maison reste
+                                  visible sur la tuile désignée, et n'apparaît au survol
+                                  que sur les autres : *ce qui est désigné doit se voir
+                                  sans chercher, ce qui ne l'est pas ne doit pas encombrer.*
+                                */}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setDefaultScene(scene.id); }}
+                                    title={estLEclairageNormal ? t('light.grid.default_unset_tooltip') : t('light.grid.default_set_tooltip')}
+                                    className={`material-symbols-outlined text-sm transition-all ${estLEclairageNormal
+                                        ? 'text-accent opacity-100'
+                                        : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-accent'
+                                        }`}
+                                >
+                                    home
+                                </button>
+                            </div>
 
                             {/*
                               **Le curseur de vitesse — seulement là où il a prise.**

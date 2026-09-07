@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useVoiceStore } from '../../voice/useVoiceStore';
 
 export const Sidebar: React.FC = () => {
-    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix } = useLightStore();
+    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix, scenes, defaultSceneId, setDefaultScene } = useLightStore();
     /*
       **On dit pourquoi le mode ne fait rien, plutôt que de le rendre
       inaccessible.** Armé micro coupé, il attend sans rien montrer : un
@@ -15,6 +15,11 @@ export const Sidebar: React.FC = () => {
     */
     const voixActive = useVoiceStore(e => e.isActive);
     const { t } = useTranslation('modules');
+
+    /** Les seules scènes qui peuvent servir de repli : celles qui portent un état. */
+    const scenesCapturees = Object.values(scenes)
+        .filter(scene => Object.keys(scene.lightStates).length > 0)
+        .sort((a, b) => a.id.localeCompare(b.id));
 
     const handlePair = async () => {
         if (!bridgeIp) {
@@ -209,7 +214,39 @@ export const Sidebar: React.FC = () => {
                 </button>
             </div>
 
-            <div className="mt-auto pt-6 border-t border-app-border">
+            <div className="mt-auto pt-6 border-t border-app-border flex flex-col gap-5">
+
+                {/*
+                  **L'éclairage normal de la pièce.** Placé juste au-dessus de
+                  l'extinction, parce que les deux répondent à la même question —
+                  *que devient la lumière quand on arrête tout ?* — et qu'ils y
+                  répondent différemment.
+
+                  Seules les scènes **capturées** sont offertes : une tuile vide
+                  ne porte l'état d'aucune lampe, la choisir pour repli
+                  donnerait un réglage qui ne fait rien.
+                */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">
+                        {t('light.sidebar.default_scene')}
+                    </label>
+                    <select
+                        value={defaultSceneId ?? ''}
+                        onChange={(e) => setDefaultScene(e.target.value || null)}
+                        className="bg-app-bg border border-app-border rounded-lg px-3 py-2 text-sm font-bold text-app-text focus:ring-0 focus:border-accent/50 outline-none cursor-pointer transition-colors"
+                    >
+                        <option value="">{t('light.sidebar.default_scene_none')}</option>
+                        {scenesCapturees.map(scene => (
+                            <option key={scene.id} value={scene.id}>{scene.name}</option>
+                        ))}
+                    </select>
+                    <p className="text-ui-10 text-slate-500 leading-snug">
+                        {defaultSceneId
+                            ? t('light.sidebar.default_scene_hint')
+                            : t('light.sidebar.default_scene_hint_none')}
+                    </p>
+                </div>
+
                 <button
                     onClick={() => hueEngine.extinguishAll()}
                     className="w-full py-4 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
