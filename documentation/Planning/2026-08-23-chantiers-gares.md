@@ -1450,6 +1450,26 @@ du cas de David, et lui seul. *Une garde qu'on n'a pas vue échouer ne garde rie
 (`defaultSceneId`, `setDefaultScene`), `light/components/Sidebar.tsx`,
 `light/components/SceneGrid.tsx`, `components/audio/MasterAudioController.tsx`.
 
+### 31 · ⚠️ Trois promesses de Light-OS que rien ne tient (trouvé le 2026-09-07, **non corrigé**)
+
+*Trouvées en relisant le module pour les §§ 29 et 30, et vérifiées dans le code. Elles attendent une
+décision de David — elles sont écrites ici pour ne pas se perdre, pas pour être faites d'office.*
+
+| # | La promesse | Ce que dit le code |
+| --- | --- | --- |
+| ⛔ **L1** | Le guide 75 : *« désactivez le bouton **Sync** dans les options de Light OS »* pour garder le contrôle manuel. | **`setSyncEnabled` n'est appelé par aucun écran.** `isSyncEnabled` est lu **dix fois**, dans trois modules (Ambient-OS, Music-OS, Sound-OS), il est persisté — et il vaut `true` pour toujours. ⚠️ **Pire qu'absent** : le seul interrupteur voisin s'appelle « **Synchro Simulée** » et bascule le pont en **mode simulé**. Un meneur qui suit le guide débranche son pont au lieu de couper la synchro. |
+| ⛔ **L2** | Le guide 75 : *« **Key Learn** : mappez vos scènes préférées sur les touches de votre clavier »*. | **`keyCode` n'a ni lecteur ni écrivain.** Une ligne de type dans `LightScene`, et rien d'autre dans tout le dépôt. Même famille que `timeMultiplier` (§ 17, C4) et `includeSounds` (§ 17, N6). |
+| ⚠️ **L3** | Le guide 75 : *« clic droit sur une scène pour changer son nom, son **icône** et la **couleur** de son halo »*. | `updateSceneMetadata` **existe et sait le faire**, mais son unique appelant lui repasse `scene.icon` et `scene.color` inchangés. **Les dix-huit tuiles sont donc grises et portent la même ampoule à jamais** — alors que la couleur pilote la bordure active, le halo et l'étoile ✨. *La chaîne entière est là, il manque le bouton au bout* — le motif M5/A10 du § 17, à un module près. (Et ce n'est pas un clic droit, c'est le crayon ; l'icône de capture n'est pas une disquette mais un appareil photo.) |
+
+⚠️ **Elles ont survécu à la revue des guides** (§§ 12-17), qui a bien relu le guide 75 — mais sur sa
+**liste d'effets**, où elle a trouvé les trente-neuf. *Un guide relu n'est pas un guide vérifié ligne
+à ligne : une relecture trouve ce qu'elle est venue chercher.*
+
+**Le coût si on les traite** : L3 est un après-midi (un sélecteur de couleur et un choix d'icône dans
+la fenêtre de renommage). L1 est une case à cocher — mais il faut d'abord décider si la synchro doit
+pouvoir se couper, ou si la promesse doit disparaître du guide. L2 est une **fonctionnalité**, pas un
+bouton : il n'y a aucun code de raccourci clavier derrière.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -1513,7 +1533,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
-| 8 | **Revue des guides, écran par écran** | 🔄 **OUVERTE le 04/09** — ✅ **38 guides, les dix lots** — **cent deux** trouvailles (§§ 12a-12o), **soixante et onze réparées** dont **les six P1 et les deux P2** (§§ 13-14), dont **tout le Media Hub**. Plan de la suite : `2026-09-04-revue-des-guides.md` | Réparer N1 — un import de campagne écrase les ambiances de Sound-OS (le § 12c est clos) | Le rythme de David — un module à la fois |
+| 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
