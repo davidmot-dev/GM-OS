@@ -1,12 +1,20 @@
 import React from 'react';
-import { useLightStore } from '../useLightStore';
+import {
+    useLightStore,
+    VITESSE_EFFET_MIN,
+    VITESSE_EFFET_MAX,
+    VITESSE_EFFET_DEFAUT,
+} from '../useLightStore';
 import type { LightScene } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { gmPrompt } from '../../../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
 
+/** Le pas du curseur : des quarts, pour que ×1 se retrouve sans viser. */
+const PAS_DE_VITESSE = 0.25;
+
 export const SceneGrid: React.FC = () => {
-    const { scenes, activeSceneId, saveSceneSnapshot, clearScene } = useLightStore();
+    const { scenes, activeSceneId, saveSceneSnapshot, clearScene, setSceneEffectSpeed } = useLightStore();
     const { t } = useTranslation('modules');
 
     // Sort scenes by ID to maintain grid order SCENE_01 to SCENE_18
@@ -21,6 +29,17 @@ export const SceneGrid: React.FC = () => {
         const currentLights = useLightStore.getState().lights;
         saveSceneSnapshot(id, currentLights);
         // Maybe visual feedback here
+    };
+
+    /*
+      **Le curseur agit sur la scène, et tout de suite sur la pièce.** Le magasin
+      garde le réglage pour la prochaine fois ; le moteur, lui, ne le verrait
+      qu'au prochain battement — jusqu'à dix secondes pour un crépuscule. On le
+      lui dit donc à la main, et seulement pour les effets nés de cette scène.
+    */
+    const handleSpeed = (sceneId: string, vitesse: number) => {
+        setSceneEffectSpeed(sceneId, vitesse);
+        hueEngine.appliquerVitesseDeScene(sceneId);
     };
 
     const handleRename = (e: React.MouseEvent, scene: LightScene) => {
@@ -44,6 +63,8 @@ export const SceneGrid: React.FC = () => {
                 {sortedScenes.map((scene: LightScene) => {
                     const isActive = activeSceneId === scene.id;
                     const hasData = Object.keys(scene.lightStates).length > 0;
+                    const aDesEffets = Object.values(scene.lightStates).some(s => s.effect && s.effect !== 'none');
+                    const vitesse = scene.effectSpeed ?? VITESSE_EFFET_DEFAUT;
 
                     if (!hasData) {
                         return (
@@ -89,9 +110,44 @@ export const SceneGrid: React.FC = () => {
                             </span>
 
                             {/* Has Software Effect indicator */}
-                            {Object.values(scene.lightStates).some(s => s.effect && s.effect !== 'none') && (
+                            {aDesEffets && (
                                 <div className="absolute top-2 right-2 flex gap-1">
                                     <span className="material-symbols-outlined text-sm animate-pulse" style={{ color: scene.color }}>auto_awesome</span>
+                                </div>
+                            )}
+
+                            {/*
+                              **Le curseur de vitesse — seulement là où il a prise.**
+                              Une scène sans effet n'a rien à accélérer : lui donner
+                              un curseur inerte ferait douter des autres.
+                            */}
+                            {aDesEffets && (
+                                <div
+                                    className="w-full px-5 relative z-20"
+                                    onClick={(e) => e.stopPropagation()}
+                                    onDoubleClick={(e) => e.stopPropagation()}
+                                >
+                                    <div className="flex items-center justify-center gap-1.5 mb-1">
+                                        <span className="material-symbols-outlined text-slate-500 text-sm leading-none">speed</span>
+                                        <button
+                                            onClick={() => handleSpeed(scene.id, VITESSE_EFFET_DEFAUT)}
+                                            title={t('light.grid.speed_reset_tooltip')}
+                                            className="text-ui-10 font-mono font-bold text-slate-400 hover:text-accent transition-colors leading-none"
+                                        >
+                                            ×{vitesse.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                                        </button>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min={VITESSE_EFFET_MIN}
+                                        max={VITESSE_EFFET_MAX}
+                                        step={PAS_DE_VITESSE}
+                                        value={vitesse}
+                                        onChange={(e) => handleSpeed(scene.id, parseFloat(e.target.value))}
+                                        title={t('light.grid.speed_tooltip')}
+                                        /* La couleur de scène vaut `#334155` tant que personne ne l'a changée : la teindre avec rendrait le curseur invisible. */
+                                        className="w-full h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
+                                    />
                                 </div>
                             )}
 

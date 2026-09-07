@@ -53,6 +53,38 @@ GM-OS embarque un moteur d'effets ultra-réactif capable de simuler des ambiance
 > 🔎 **Il y en a trente-neuf en tout**, là où ce guide en citait quatre et concluait par « etc. ».
 > *Grisaille* n'en fait pas partie. La liste complète est dans le sélecteur d'effet de chaque lampe.
 
+### ⏱️ Régler la vitesse d'un effet
+
+Chaque tuile qui contient au moins un effet porte un **curseur de vitesse**, sous son nom. Il va de
+**×0,25 à ×3**, par quarts, et **×1** est la vitesse d'origine de l'effet.
+
+- **Vers la droite, tout s'accélère** : la bougie qui scintillait toutes les 250 ms scintille deux
+  fois plus vite en ×2, l'orage frappe plus souvent, le cœur bat plus fort.
+- **Vers la gauche, tout s'étire** : un crépuscule réglé sur ×0,25 met quarante secondes entre deux
+  changements de teinte au lieu de dix — de quoi tenir une scène entière.
+- **Le chiffre affiché est un bouton** : un clic dessus revient à ×1.
+
+Le réglage **agit immédiatement** si la scène est en cours : pas besoin de la relancer. Il appartient
+à la tuile, il est retenu avec elle, et il repart dans la sauvegarde automatique.
+
+> [!TIP]
+> **Deux tuiles, deux vitesses.** Rien ne vous oblige à ranger un effet une seule fois : capturez la
+> même ambiance dans deux tuiles, l'une en ×0,5 pour l'attente, l'autre en ×2 pour l'assaut. Vous
+> changez de rythme d'un clic, sans toucher aux lampes.
+
+> [!NOTE]
+> **Le curseur n'apparaît que là où il a prise.** Une scène sans effet n'a rien à accélérer — elle
+> n'affiche donc pas de curseur, comme elle n'affiche pas l'étoile ✨.
+>
+> Deux limites voulues : un effet choisi **à la main** dans le pied de page (sous une lampe précise)
+> garde sa cadence d'origine, car il n'appartient à aucune tuile ; et même poussé à ×3, un effet ne
+> descend jamais sous **un dixième de seconde** entre deux commandes — au-delà, le pont Hue sature et
+> la lumière prend du retard sur ce que vous faites.
+>
+> ⚠️ **À ne pas confondre avec le *Temps de transition*** de la barre du haut : celui-ci règle le
+> **fondu d'une scène à l'autre**, le curseur règle la **vitesse de l'animation** une fois la scène
+> installée.
+
 ## 🔄 Synchronisation Multi-Modules (Sync Mode)
 
 C'est ici que GM-OS révèle toute sa puissance. Si le bouton **Sync** est activé :
@@ -93,6 +125,9 @@ c'est utile de savoir lequel a agi quand la lumière change sans qu'on ait rien 
 → [Tour de contrôle audio](./70-Tour-de-controle-audio.md)
 
 ---
+
+*Complété le 2026-09-07 : le **curseur de vitesse** de chaque tuile (×0,25 à ×3), ce qu'il ne
+touche pas, et la différence avec le temps de transition.*
 
 *Guide révisé le 2026-09-04, code à l'appui. Précisé : **trente-neuf effets** là où la page en
 citait quatre avant un « etc. » — et *Grisaille* n'en fait pas partie. Ajouté : la liste des **cinq

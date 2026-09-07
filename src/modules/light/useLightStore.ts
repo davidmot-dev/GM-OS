@@ -51,6 +51,15 @@ export interface LightScene {
     color: string; 
     /** États des lampes enregistrés pour cette scène */
     lightStates: Record<string, HueLightState>; 
+    /**
+     * **Multiplicateur de vitesse des effets de la scène** (1 = cadence d'origine).
+     *
+     * Les cadences des effets logiciels sont écrites dans `HueEngine` : une
+     * bougie bat toutes les 250 ms, un lever de soleil toutes les 10 s. Ce
+     * facteur les divise — 2 va deux fois plus vite, 0,5 deux fois moins.
+     * Absent vaut 1, ce qui laisse les scènes d'avant ce réglage inchangées.
+     */
+    effectSpeed?: number;
     /** Code touche MIDI/Clavier associé (Key Learn) */
     keyCode?: string; 
 }
@@ -115,6 +124,8 @@ interface LightState {
     saveSceneSnapshot: (sceneId: string, currentLights: Record<string, HueLight>) => void;
     /** Met à jour le nom, l'icône ou la couleur d'une scène */
     updateSceneMetadata: (sceneId: string, name: string, icon: string, color: string) => void;
+    /** Règle la vitesse des effets d'une scène (bornée par `VITESSE_MIN`/`VITESSE_MAX`) */
+    setSceneEffectSpeed: (sceneId: string, speed: number) => void;
     /** Active une scène sur le pont physique */
     setActiveScene: (sceneId: string | null, isAutomatic?: boolean) => void;
     /** Réinitialise une scène aux valeurs par défaut */
@@ -140,6 +151,19 @@ interface LightState {
 // ----------------------
 // Initial State
 // ----------------------
+
+/** Vitesse minimale d'un effet : quatre fois plus lent que sa cadence d'origine. */
+export const VITESSE_EFFET_MIN = 0.25;
+/** Vitesse maximale : trois fois plus rapide. Au-delà, le pont Hue sature. */
+export const VITESSE_EFFET_MAX = 3;
+/** Vitesse d'une scène qui n'a jamais été réglée. */
+export const VITESSE_EFFET_DEFAUT = 1;
+
+/** Ramène une vitesse dans les bornes, et refuse ce qui n'est pas un nombre. */
+export const bornerVitesse = (valeur: number): number => {
+    if (!Number.isFinite(valeur)) return VITESSE_EFFET_DEFAUT;
+    return Math.min(VITESSE_EFFET_MAX, Math.max(VITESSE_EFFET_MIN, valeur));
+};
 
 const createDefaultScenes = (): Record<string, LightScene> => {
     const scenes: Record<string, LightScene> = {};
@@ -242,6 +266,19 @@ export const useLightStore = create<LightState>()(
                 };
             }),
 
+            setSceneEffectSpeed: (sceneId, speed) => set((state) => {
+                if (!state.scenes[sceneId]) return state;
+                return {
+                    scenes: {
+                        ...state.scenes,
+                        [sceneId]: {
+                            ...state.scenes[sceneId],
+                            effectSpeed: bornerVitesse(speed)
+                        }
+                    }
+                };
+            }),
+
             updateSceneMetadata: (sceneId, name, icon, color) => set((state) => ({
                 scenes: {
                     ...state.scenes,
@@ -265,7 +302,8 @@ export const useLightStore = create<LightState>()(
                         name: `Scene ${parseInt(sceneId.split('_')[1])}`,
                         icon: 'wb_incandescent',
                         color: '#334155',
-                        lightStates: {}
+                        lightStates: {},
+                        effectSpeed: VITESSE_EFFET_DEFAUT
                     }
                 }
             })),

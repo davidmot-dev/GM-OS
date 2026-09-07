@@ -1,4 +1,4 @@
-import { useLightStore } from "./useLightStore";
+import { useLightStore, VITESSE_EFFET_DEFAUT } from "./useLightStore";
 import type { HueLight, HueLightState } from "./useLightStore";
 
 interface HueApiLight {
@@ -16,8 +16,45 @@ interface HueApiLight {
     name: string;
 }
 
+/**
+ * **Le plancher d'une cadence d'effet, en millisecondes.**
+ *
+ * Le pont Hue accepte de l'ordre de dix commandes par seconde, et chaque lampe
+ * en effet a sa propre boucle : une scène de quatre lampes à 100 ms tient déjà
+ * tout le budget. Accélérer ne doit donc jamais descendre plus bas que ce que
+ * le code d'origine s'autorisait déjà (stroboscope, hyperspace : 100 ms).
+ */
+export const CADENCE_PLANCHER_MS = 100;
+
+/**
+ * Applique une vitesse à une cadence d'effet.
+ *
+ * `vitesse` divise l'attente : 2 va deux fois plus vite, 0,5 deux fois moins.
+ * Le résultat est borné par {@link CADENCE_PLANCHER_MS} — *un curseur poussé au
+ * bout ne doit pas pouvoir noyer le pont.*
+ */
+export const cadenceEffective = (intervalleMs: number, vitesse: number): number => {
+    const facteur = Number.isFinite(vitesse) && vitesse > 0 ? vitesse : VITESSE_EFFET_DEFAUT;
+    return Math.max(CADENCE_PLANCHER_MS, Math.round(intervalleMs / facteur));
+};
+
 export class HueEngine {
     private softwareEffectIntervals: Record<string, ReturnType<typeof setInterval>> = {};
+    /** Scène d'où vient l'effet en cours d'une lampe — c'est elle qui porte la vitesse. */
+    private sceneDeLEffet: Record<string, string | null> = {};
+    /** Cadence réellement planifiée pour une lampe, pour ne replanifier que si elle change. */
+    private cadencePlanifiee: Record<string, number> = {};
+    /** Replanifie l'effet d'une lampe à la vitesse du moment (posée par `startSoftwareEffect`). */
+    private replanifierEffet: Record<string, () => void> = {};
+    /**
+     * **Le numéro de l'effet en cours sur une lampe.**
+     *
+     * Une boucle d'effet attend la réponse du pont avant de se replanifier. Si
+     * la scène change pendant cette attente, la boucle qui reprend appartient à
+     * l'effet d'avant : sans ce numéro, elle réinstallerait son propre minuteur
+     * par-dessus le nouveau, et la lampe resterait sur la scène précédente.
+     */
+    private generationEffet: Record<string, number> = {};
     private flashTimeout: ReturnType<typeof setTimeout> | null = null;
 
     // ------------------------------------------------------------------------
@@ -224,7 +261,7 @@ export class HueEngine {
             if (state.effect && state.effect !== 'none') {
                 // IMPORTANT: Even if there is an effect, we must turn the light ON first and set its base state
                 await this.setLightState(id, { ...state, effect: 'none' }, transTime);
-                this.startSoftwareEffect(id, state.effect, state);
+                this.startSoftwareEffect(id, state.effect, state, sceneId);
             } else {
                 // Ensure we handle them sequentially to not rate-limit the bridge
                 await this.setLightState(id, state, transTime);
@@ -363,11 +400,41 @@ export class HueEngine {
         ];
     }
 
+    /**
+     * La vitesse qui règle l'effet d'une lampe : celle de la scène qui l'a
+     * allumé, ou la cadence d'origine si l'effet a été choisi à la main.
+     */
+    private vitesseDeLEffet(id: string): number {
+        const sceneId = this.sceneDeLEffet[id];
+        if (!sceneId) return VITESSE_EFFET_DEFAUT;
+        return useLightStore.getState().scenes[sceneId]?.effectSpeed ?? VITESSE_EFFET_DEFAUT;
+    }
+
+    /**
+     * **Répercute tout de suite le curseur d'une tuile.**
+     *
+     * Sans ça, un effet lent (le crépuscule bat toutes les 10 s) n'apprendrait
+     * sa nouvelle vitesse qu'au tour suivant — jusqu'à dix secondes après que le
+     * meneur a lâché le curseur, ce qui se lit comme un réglage qui ne marche pas.
+     */
+    appliquerVitesseDeScene(sceneId: string) {
+        Object.keys(this.replanifierEffet).forEach(id => {
+            if (this.sceneDeLEffet[id] === sceneId && this.softwareEffectIntervals[id]) {
+                this.replanifierEffet[id]();
+            }
+        });
+    }
+
     stopSoftwareEffect(id: string) {
         if (this.softwareEffectIntervals[id]) {
             clearInterval(this.softwareEffectIntervals[id]);
             delete this.softwareEffectIntervals[id];
         }
+        delete this.sceneDeLEffet[id];
+        delete this.cadencePlanifiee[id];
+        delete this.replanifierEffet[id];
+        // Périme toute boucle encore suspendue sur une réponse du pont.
+        this.generationEffet[id] = (this.generationEffet[id] ?? 0) + 1;
         useLightStore.getState().updateLightState(id, { effect: 'none' });
         // Native effect clear
         if (useLightStore.getState().status === 'connected') {
@@ -375,9 +442,22 @@ export class HueEngine {
         }
     }
 
-    startSoftwareEffect(id: string, effectName: string, baseState?: HueLightState) {
+    /**
+     * Démarre un effet logiciel sur une lampe.
+     *
+     * `sceneId` dit **d'où vient l'effet**, et donc quelle vitesse le règle : un
+     * effet lancé depuis une tuile suit le curseur de cette tuile, un effet
+     * choisi à la main dans le pied de page garde sa cadence d'origine.
+     */
+    startSoftwareEffect(id: string, effectName: string, baseState?: HueLightState, sceneId?: string) {
         this.stopSoftwareEffect(id);
 
+        const generation = (this.generationEffet[id] ?? 0) + 1;
+        this.generationEffet[id] = generation;
+        /** Cette boucle est-elle toujours celle de l'effet en cours ? */
+        const toujoursALaBarre = () => this.generationEffet[id] === generation;
+
+        this.sceneDeLEffet[id] = sceneId ?? null;
         useLightStore.getState().updateLightState(id, { effect: effectName });
 
         // If mock, just register
@@ -398,7 +478,22 @@ export class HueEngine {
         let interval = 250; // Minimum 250ms for performance stability
         let tick = 0;
 
+        /*
+          **Deux familles d'effets.** Les « dynamiques » recalculent leur attente
+          à chaque tour (un néon grésille court puis tient long) : ils se
+          replanifient un tour à la fois. Les autres battent à cadence fixe.
+        */
+        const dynamique = [
+            'glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight',
+            'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant',
+            'trou-noir', 'hyperspace', 'reacteur'
+        ].includes(effectName);
+
+        /** L'attente du prochain tour, vitesse de la scène comprise. */
+        const cadenceVoulue = () => cadenceEffective(interval, this.vitesseDeLEffet(id));
+
         const loop = async () => {
+            if (!toujoursALaBarre()) return;
             const freshState = useLightStore.getState().lights[id]?.state || state;
             const payload: Record<string, unknown> = {};
             const baseBri = freshState.bri || 150;
@@ -715,17 +810,19 @@ export class HueEngine {
                 // Bypass setLightState to avoid polluting local store heavily and forcing React renders 10x a second
                 await this.request('PUT', `/lights/${id}/state`, payload);
 
-                // If interval changed dynamically (glitch, neon, etc.), re-schedule
-                const dynamicEffects = [
-                    'glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight',
-                    'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant', 
-                    'trou-noir', 'hyperspace', 'reacteur'
-                ];
-
-                if (dynamicEffects.includes(effectName)) {
-                    if (this.softwareEffectIntervals[id]) {
-                        clearTimeout(this.softwareEffectIntervals[id]);
-                        this.softwareEffectIntervals[id] = setTimeout(loop, interval);
+                /*
+                  **La cadence se relit à chaque tour, pas au démarrage.** Un
+                  effet dynamique (glitch, néon...) change d'attente à chaque
+                  passage ; les autres gardent la leur, mais le curseur de la
+                  tuile peut l'avoir changée entre-temps. On ne replanifie que
+                  si l'attente voulue diffère de celle qui court — sans quoi on
+                  reconstruirait un `setInterval` dix fois par seconde.
+                */
+                if (this.softwareEffectIntervals[id] && toujoursALaBarre()) {
+                    if (dynamique) {
+                        planifier();
+                    } else if (cadenceVoulue() !== this.cadencePlanifiee[id]) {
+                        planifier();
                     }
                 }
             } catch {
@@ -733,19 +830,27 @@ export class HueEngine {
             }
         };
 
-        const dynamicEffectsList = [
-            'glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight',
-            'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant', 
-            'trou-noir', 'hyperspace', 'reacteur'
-        ];
+        /*
+          Une seule porte pour poser le minuteur, quel que soit le type d'effet :
+          les dynamiques se replanifient à chaque tour (`setTimeout`), les autres
+          battent à cadence fixe (`setInterval`) jusqu'à ce que la vitesse change.
+        */
+        const planifier = () => {
+            const attente = cadenceVoulue();
+            if (this.softwareEffectIntervals[id]) {
+                clearTimeout(this.softwareEffectIntervals[id]);
+                clearInterval(this.softwareEffectIntervals[id]);
+            }
+            this.cadencePlanifiee[id] = attente;
+            this.softwareEffectIntervals[id] = dynamique
+                ? setTimeout(loop, attente)
+                : setInterval(loop, attente);
+        };
+        this.replanifierEffet[id] = planifier;
 
         // First run
         loop();
-        if (!dynamicEffectsList.includes(effectName)) {
-            this.softwareEffectIntervals[id] = setInterval(loop, interval);
-        } else {
-            this.softwareEffectIntervals[id] = setTimeout(loop, interval); // managed in loop
-        }
+        planifier();
     }
 
     // ------------------------------------------------------------------------

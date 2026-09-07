@@ -726,7 +726,9 @@
       "rename_tooltip": "Renommer la Scène",
       "rename_prompt": "Renommer la Scène :",
       "save_button": "Enregistrer",
-      "cancel_button": "Annuler"
+      "cancel_button": "Annuler",
+      "speed_tooltip": "Vitesse des effets de la scène",
+      "speed_reset_tooltip": "Revenir à la vitesse d'origine (×1)"
     },
     "footer": {
       "no_lights": "Aucune lampe détectée.",

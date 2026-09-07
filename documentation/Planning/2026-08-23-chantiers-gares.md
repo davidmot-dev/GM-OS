@@ -24,7 +24,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ---
 
-## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-06**
+## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-07**
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
@@ -46,6 +46,9 @@ dans le code, qui absorbe toutes les autres.**
 > non géré** — voir §§ 20 à 23, dont le § 22 qui a grossi trois fois dans la soirée.
 >
 > Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
+>
+> Revérifié le **2026-09-07** après le § 29 : `tsc -b` propre, **3 846 tests au vert** (323 fichiers,
+> 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1341,6 +1344,50 @@ soit cassé**. Il lit maintenant `ECHELLE_MAX`, et une garde de plus vérifie qu
 
 **Ancres** : `theme/editionDuTheme.ts` (`PALIERS_DE_TAILLE`, `ECHELLE_MAX`), `theme/AtelierDuTheme.tsx`
 (`ChampDEchelle`), `theme/bandesDeTaille.test.ts`.
+
+### 29 · ⭐ Un curseur de vitesse sur chaque tuile de Light-OS (2026-09-07)
+
+Demandé par David : *« est-ce que tu peux mettre un slider dans chaque tuile pour contrôler la
+vitesse de l'effet ? »*
+
+Un facteur **de ×0,25 à ×3, par quarts**, porté par la scène (`effectSpeed`) et qui **divise la
+cadence** de tous ses effets : la bougie battait toutes les 250 ms, elle bat à 125 ms en ×2 ; le
+crépuscule passe de 10 s à 40 s en ×0,25. Le chiffre affiché est un bouton — un clic remet ×1.
+
+**Le curseur ne paraît que sur les tuiles qui ont un effet**, au même critère que l'étoile ✨ déjà
+affichée. *Une scène sans effet n'a rien à accélérer, et un curseur inerte ferait douter des autres.*
+
+⛔ **`setInterval` fige sa période au moment où on le pose.** Trente-neuf effets s'y appuyaient : le
+curseur aurait été **sans aucun effet sur ce qui tourne déjà**, c'est-à-dire dans le seul cas où on
+s'en sert. Les deux familles d'effets — cadence fixe, et cadence recalculée à chaque tour (glitch,
+néon, orage…) — passent désormais par **une seule porte de planification**, qui relit la vitesse à
+chaque battement et ne repose le minuteur que si l'attente voulue a changé.
+
+⚠️ **Un plancher à 100 ms**, la valeur que le code s'autorisait déjà (stroboscope, hyperspace).
+Chaque lampe en effet a **sa propre boucle**, et le pont Hue tient de l'ordre de dix commandes par
+seconde : à quatre lampes, le budget est déjà pris. *Le seul réglage qu'on offre au meneur ne doit
+pas pouvoir noyer l'appareil* — et une vitesse nulle, absente ou abîmée retombe sur la cadence
+d'origine plutôt que d'arrêter l'effet en silence.
+
+⭐ **Le curseur agit tout de suite sur la pièce**, et pas au battement suivant. Écrire dans le magasin
+suffisait pour la prochaine fois ; le crépuscule, lui, n'aurait appris sa nouvelle vitesse que
+**dix secondes** après le geste. *Un réglage qui met dix secondes à répondre se lit comme un réglage
+cassé.*
+
+⛔ **Un défaut voisin, refermé au passage : deux boucles pouvaient se chevaucher.** Une boucle d'effet
+attend la réponse du pont avant de se replanifier. Si la scène change pendant cette attente, la
+boucle qui reprend appartient à **l'effet d'avant** et réinstalle son minuteur par-dessus le nouveau
+— la lampe reste sur la scène précédente, sans que rien ne le dise. Un **numéro de génération** par
+lampe périme la boucle dépassée. *Il était là avant ce chantier ; il ne se voyait pas parce qu'il
+demande un pont lent et un changement de scène pressé — soit exactement une soirée de jeu.*
+
+**Portée.** Un effet choisi à la main dans le pied de page n'appartient à aucune tuile : il garde sa
+cadence d'origine. Les scènes enregistrées avant ce jour n'ont **pas** de vitesse — elles valent ×1,
+rien à migrer — et le réglage suit la sauvegarde automatique, puisqu'il vit dans `scenes`.
+
+**Ancres** : `light/useLightStore.ts` (`effectSpeed`, `setSceneEffectSpeed`, `bornerVitesse`),
+`light/HueEngine.ts` (`cadenceEffective`, `CADENCE_PLANCHER_MS`, `appliquerVitesseDeScene`,
+`generationEffet`), `light/components/SceneGrid.tsx`, `light/vitesseDesEffets.test.ts`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

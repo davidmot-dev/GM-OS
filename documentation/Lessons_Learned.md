@@ -723,7 +723,59 @@ texte ? » — et **deux fois la même cause**, la seconde alors que je venais d
 
 ---
 
-*Dernière mise à jour : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
+## ⏱️ Un minuteur retient ce qu'on lui a dit, pas ce qu'on veut (2026-09-07)
+
+*Demande de David : un curseur de vitesse sur chaque tuile de Light-OS. Une fonctionnalité d'une
+heure, qui a mis au jour deux défauts du moteur d'effets — dont un antérieur, et invisible.*
+
+### 1. `setInterval` fige sa période au moment où on le pose
+
+- **Défi** : rendre réglable la cadence de trente-neuf effets lumineux qui tournent en boucle.
+- **Cause** : chaque effet posait `setInterval(loop, interval)` **une fois**, au démarrage. Écrire la
+  nouvelle vitesse dans le magasin aurait suffi pour le prochain démarrage — et n'aurait **rien
+  changé à ce qui tourne**, c'est-à-dire au seul cas où on se sert d'un curseur.
+- **Leçon** : rendre réglable une valeur ne consiste pas à la stocker, mais à trouver **qui la lit,
+  et quand**. Une valeur lue une seule fois, à la construction, n'est pas un réglage — c'est un
+  paramètre de démarrage. La question à poser devant toute demande de réglage est *à quel moment
+  cette valeur est-elle relue ?* ; si la réponse est « jamais », le réglage est à construire avant
+  l'interface qui le montre.
+- **Corollaire** : le remède est presque toujours de ramener les chemins à **une seule porte**. Ici,
+  les deux familles d'effets — cadence fixe et cadence recalculée à chaque tour — avaient chacune
+  leur planification, et la liste qui les départageait était **écrite deux fois** dans la même
+  fonction.
+
+### 2. Deux boucles peuvent se chevaucher derrière une attente réseau
+
+- **Défi** : aucun — le défaut était là avant, et personne ne l'avait vu.
+- **Cause** : une boucle d'effet attend la réponse du pont Hue **avant** de se replanifier. Si la
+  scène change pendant cette attente, la boucle qui reprend appartient à l'effet **révolu** : elle
+  réinstalle son minuteur par-dessus le nouveau, et la lampe reste sur la scène d'avant. Il faut un
+  pont lent et un changement de scène pressé — *soit exactement une soirée de jeu*.
+- **Leçon** : tout `await` au milieu d'une boucle est un endroit où le monde a pu changer. Vérifier
+  que le minuteur existe encore ne suffit pas : il faut vérifier que **c'est toujours le nôtre**. Un
+  numéro de génération par cible, incrémenté à chaque démarrage et à chaque arrêt, coûte quatre
+  lignes et ferme la catégorie entière.
+- **Où le chercher ailleurs** : partout où un `stop()` suivi d'un `start()` immédiat croise une
+  boucle asynchrone — les effets lumineux, les fondus audio, les sondes de matériel.
+
+### 3. Le seul réglage offert ne doit pas pouvoir noyer l'appareil
+
+- **Défi** : jusqu'où laisser accélérer un effet ?
+- **Cause potentielle** : chaque lampe en effet a **sa propre boucle**, et le pont Hue tient de
+  l'ordre de dix commandes par seconde. Une scène de quatre lampes à 100 ms prend déjà tout le
+  budget ; le curseur au maximum sur les cadences les plus courtes serait descendu à 25 ms.
+- **Leçon** : quand on rend réglable ce qui parle à un appareil physique, la borne haute ne se
+  choisit pas au confort d'usage mais **au budget de l'appareil**, et le plancher se prend sur ce que
+  le code s'autorisait déjà — il est *mesuré*, pas inventé. Et une valeur absente, nulle ou abîmée
+  doit retomber sur le comportement d'origine : *un réglage qu'on n'a pas su lire ne doit jamais
+  arrêter ce qu'il réglait.*
+
+---
+
+*Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS, et les deux
+défauts du moteur d'effets qu'il a mis au jour.*
+
+*Mise à jour précédente : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
 loupe de lecture sur les quatre lecteurs, tailles nommées jusqu'à 200 %.*
 
 *Mise à jour précédente : 4 Septembre 2026 — Loot-OS revu (pont Table-OS ↔ Loot-OS, butin de séance

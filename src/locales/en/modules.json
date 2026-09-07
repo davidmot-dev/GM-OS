@@ -726,7 +726,9 @@
       "rename_tooltip": "Rename Scene",
       "rename_prompt": "Rename Scene:",
       "save_button": "Save",
-      "cancel_button": "Cancel"
+      "cancel_button": "Cancel",
+      "speed_tooltip": "Speed of the scene's effects",
+      "speed_reset_tooltip": "Back to the original speed (×1)"
     },
     "footer": {
       "no_lights": "No lights discovered.",
