@@ -30,12 +30,35 @@ Avant de commencer, vous devez lier GM-OS à votre installation Philips Hue :
 
 Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quelques secondes :
 
-- **Ajustement Manuel** : Utilisez les curseurs et sélecteurs de couleur pour régler chaque lampe à votre convenance.
-- **Sauvegarde** : Cliquez sur l'icône de disquette (💾) sur l'un des 18 emplacements de scène. L'état actuel de toutes les lampes est alors mémorisé.
-- **Personnalisation** : Faites un clic droit sur une scène pour changer son nom, son icône (Material Icons) et la couleur de son halo lumineux dans l'UI.
+- **Ajustement Manuel** : Utilisez les curseurs et sélecteurs de couleur du pied de page pour régler
+  chaque lampe à votre convenance.
+- **Sauvegarde** : survolez une tuile et cliquez l'**appareil photo 📷** en bas à gauche. L'état
+  actuel de toutes les lampes y est mémorisé. Une tuile encore vide se capture d'un simple clic.
+- **Personnalisation** : le **crayon ✏️** en bas à droite ouvre l'éditeur de la tuile — son **nom**,
+  son **icône** (vingt-quatre proposées, ou n'importe quel nom de Material Symbol) et sa **couleur**.
+  Cette couleur ne commande aucune lampe : c'est le repère de la tuile à l'écran — bordure de la
+  scène active, halo, étoile ✨.
 - **Activation** : un clic gauche applique l'ambiance. La transition dure **5 secondes par
   défaut**, réglable dans les options — de l'instantané pour un combat au fondu très lent pour un
   voyage.
+- **Effacement** : la croix ✕ en haut à gauche vide la tuile. Elle perd alors son nom, son icône, sa
+  couleur, sa touche — et cesse d'être l'éclairage normal si elle l'était.
+
+### ⌨️ Lancer une scène à la touche
+
+Survolez une tuile et cliquez le **⌨** en haut à droite, puis pressez la touche voulue. Elle
+s'affiche alors en permanence sur la tuile, et **fonctionne depuis n'importe quel écran de GM-OS** —
+c'est tout l'intérêt : changer l'ambiance sans quitter vos notes.
+
+> [!NOTE]
+> **Une touche ne commande qu'une scène** : l'attribuer à une seconde tuile la retire à la première,
+> sans quoi la gagnante serait tirée au hasard de l'ordre interne. **Échap** (ou un clic sur la
+> tuile) annule l'apprentissage.
+>
+> ⚠️ **En revanche, Sound-OS et Music-OS écoutent le clavier de leur côté.** La même touche peut donc
+> lancer un bruitage **et** sa lumière — un cumul souvent utile, mais qui surprend si on l'a fait sans
+> le vouloir. Les touches tenues avec **Ctrl, Alt ou Cmd** ne déclenchent jamais rien, et rien ne se
+> déclenche pendant que vous tapez dans un champ ou qu'une boîte est ouverte.
 
 ## 🪄 Effets Spéciaux (Software Engine)
 
@@ -138,12 +161,22 @@ C'est ici que GM-OS révèle toute sa puissance. Si le bouton **Sync** est activ
 
 - **Luminosité Globale (Master)** : Un curseur général pour atténuer toute votre installation sans modifier les réglages de chaque scène.
 - **Transition Time** : Réglez la vitesse à laquelle les scènes changent (de l'instantané pour les combats au fondu très lent pour les scènes de voyage).
-- **Key Learn** : Mappez vos scènes préférées sur les touches de votre clavier pour les changer sans quitter vos notes.
+- **Synchro des modules** : l'interrupteur qui décide si les sons, musiques et ambiances ont le droit
+  de commander vos lampes. Allumé par défaut.
+- **Key Learn** : associez une touche à vos scènes préférées pour les changer sans quitter vos notes
+  — voir « Lancer une scène à la touche » plus haut.
 
 ---
 
 > [!WARNING]
-> En mode "Sync", les commandes envoyées par les modules audio sont prioritaires. Si vous souhaitez garder le contrôle manuel absolu, désactivez le bouton **Sync** dans les options de Light OS.
+> En mode **Synchro**, les commandes envoyées par les modules audio sont prioritaires. Pour garder le
+> contrôle manuel absolu, coupez l'interrupteur **Synchro des modules**, dans la barre du haut de
+> Light-OS.
+>
+> ⚠️ **Ne le confondez pas avec son voisin, « Mode simulé »** — celui-là *débranche votre pont Hue*
+> et simule quatre lampes, pour préparer une ambiance sans matériel. Il s'appelait « Synchro
+> Simulée » jusqu'au 2026-09-07, et un meneur qui suivait ce guide coupait donc son pont en croyant
+> couper la synchro.
 
 ---
 
@@ -165,6 +198,12 @@ c'est utile de savoir lequel a agi quand la lumière change sans qu'on ait rien 
 → [Tour de contrôle audio](./70-Tour-de-controle-audio.md)
 
 ---
+
+*Corrigé le 2026-09-07 — **trois promesses que rien ne tenait**, trouvées dans le code : le bouton
+**Sync** n'existait pas (et son voisin « Synchro Simulée » débranchait le pont), le **Key Learn**
+n'avait aucun code derrière, et seul le **nom** d'une tuile pouvait changer — jamais son icône ni sa
+couleur. Les trois sont désormais vraies. Corrigé aussi : la capture se fait par un appareil photo et
+non une disquette, et l'éditeur s'ouvre au crayon, pas au clic droit.*
 
 *Complété le 2026-09-07 : le **curseur de vitesse** de chaque tuile (×0,25 à ×3), ce qu'il ne
 touche pas, et la différence avec le temps de transition. Puis l'**éclairage normal de la pièce** —

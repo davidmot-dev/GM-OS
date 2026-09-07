@@ -42,6 +42,13 @@ Trois gestes ramènent la pièce au repos. **Ils se ressemblent assez pour être
 *   ⚠️ **`revenirALEclairageNormal` arrête d'abord tous les effets logiciels**, sur **toutes** les lampes connues. `applyScene` n'arrête que ceux des lampes qu'elle mentionne : une lampe absente de la scène normale garderait son orage en cours, et un geste nommé « tout arrêter » aurait laissé la pièce clignoter. Leur brillance, elle, n'est pas touchée.
 *   **`defaultSceneId`** vit dans le store, est persisté, et **tombe à `null` quand la tuile désignée est effacée** (`clearScene`). `null` partout = comportement d'avant, à l'identique.
 
+### 2 quater. Le clavier et la synchro (2026-09-07)
+
+*   **`useLightKeyboardControls`** est monté dans `GlobalKeybinds`, aux côtés de Sound-OS et Music-OS. **Troisième écouteur `keydown` sur `window`** : les trois sont indépendants, donc une même touche peut déclencher un pad **et** une scène. Voulu ; ce qui ne l'est pas — deux scènes sur une touche — est écarté à l'écriture par `setSceneKeyCode`.
+*   La garde est la fonction partagée **`estUneFrappeDePastille`** (champs de saisie, `role="dialog"`, Ctrl/Alt/Cmd). ⚠️ **Conséquence non évidente** : le bouton de Key Learn ne peut pas vivre dans `EditeurDeScene`, qui porte `role="dialog"` — la garde y rendrait le clavier à la boîte et la frappe n'arriverait jamais. Il est donc sur la tuile.
+*   **`sceneEnApprentissage`** est un **mode**, non persisté : rouvrir GM-OS en attente d'une touche laisserait le clavier muet sans dire pourquoi. `Escape` en sort.
+*   ⛔ **`isSyncEnabled` n'avait aucun écrivain** jusqu'à ce jour : lu dix fois dans Ambient-OS, Music-OS et Sound-OS, persisté, et `true` à jamais. L'interrupteur est dans `TopControls`. **Le voisin a été renommé** `mock_sync` → `mock_mode` : il porte le nom que le guide donnait à celui-ci, et bascule le pont en simulation.
+
 ### 3. Hiérarchie des Overrides
 1.  **Tactical State** (Flash, Alerte) : Priorité absolue. Interrompt les effets en cours.
 2.  **Software Effects** (Loop) : Priorité haute.
@@ -67,4 +74,4 @@ Pour ajouter un effet :
 4.  Ajouter la traduction dans `modules.json` sous `light.footer.effects`.
 5.  Si l'effet modifie son `interval` en cours de route, l'ajouter à la liste `dynamique` (voir ci-dessus).
 
-*Documentation complétée le 2026-09-07 : vitesse des effets par scène, plancher de cadence, numéro de génération, puis les trois portes du retour et l'éclairage normal (`defaultSceneId`).*
+*Documentation complétée le 2026-09-07 : vitesse des effets par scène, plancher de cadence, numéro de génération ; les trois portes du retour et l'éclairage normal (`defaultSceneId`) ; puis le clavier (`keyCode`, enfin lu) et l'interrupteur de synchro (`isSyncEnabled`, enfin écrit).*

@@ -60,7 +60,14 @@ export interface LightScene {
      * Absent vaut 1, ce qui laisse les scènes d'avant ce réglage inchangées.
      */
     effectSpeed?: number;
-    /** Code touche MIDI/Clavier associé (Key Learn) */
+    /**
+     * **La touche qui lance cette scène**, au format `KeyboardEvent.code`
+     * (`KeyA`, `Numpad1`, `Digit2`…).
+     *
+     * ⛔ Ce champ existait depuis toujours **sans un seul lecteur ni écrivain** :
+     * le guide promettait un « Key Learn » que rien ne tenait. Branché le
+     * 2026-09-07, sur le modèle de Sound-OS et Music-OS.
+     */
     keyCode?: string; 
 }
 
@@ -116,6 +123,16 @@ interface LightState {
      */
     defaultSceneId: string | null;
 
+    /**
+     * **La scène en attente d'une touche**, ou `null`.
+     *
+     * L'apprentissage est un **mode**, pas un réglage : tant qu'il dure, la
+     * prochaine frappe est capturée au lieu d'agir. Il n'est donc **pas
+     * persisté** — rouvrir GM-OS en attente d'une touche laisserait le clavier
+     * muet sans dire pourquoi.
+     */
+    sceneEnApprentissage: string | null;
+
     // Actions - Connection
     /** Met à jour les paramètres de connexion au pont */
     setConnection: (status: ConnectionStatus, ip?: string | null, username?: string | null) => Promise<void>;
@@ -140,6 +157,10 @@ interface LightState {
     setSceneEffectSpeed: (sceneId: string, speed: number) => void;
     /** Désigne l'éclairage normal de la pièce, ou le retire avec `null` */
     setDefaultScene: (sceneId: string | null) => void;
+    /** Met une scène en attente de touche, ou annule l'attente avec `null` */
+    apprendreUneTouche: (sceneId: string | null) => void;
+    /** Associe une touche à une scène — et la retire de celle qui l'avait */
+    setSceneKeyCode: (sceneId: string, keyCode: string | null) => void;
     /** Active une scène sur le pont physique */
     setActiveScene: (sceneId: string | null, isAutomatic?: boolean) => void;
     /** Réinitialise une scène aux valeurs par défaut */
@@ -218,6 +239,7 @@ export const useLightStore = create<LightState>()(
             activeSceneId: null,
             lastManualSceneId: null,
             defaultSceneId: null,
+            sceneEnApprentissage: null,
             isSyncEnabled: true, // Enabled by default
 
             setConnection: async (status, ip, username) => {
@@ -288,6 +310,38 @@ export const useLightStore = create<LightState>()(
                 return { defaultSceneId: state.defaultSceneId === sceneId ? null : sceneId };
             }),
 
+            apprendreUneTouche: (sceneId) => set((state) => {
+                if (sceneId !== null && !state.scenes[sceneId]) return state;
+                /* Un second clic sur la même tuile annule l'attente. */
+                return { sceneEnApprentissage: state.sceneEnApprentissage === sceneId ? null : sceneId };
+            }),
+
+            setSceneKeyCode: (sceneId, keyCode) => set((state) => {
+                if (!state.scenes[sceneId]) return state;
+
+                /*
+                  **Une touche ne commande qu'une scène.** On la retire donc de
+                  celle qui la portait avant — sinon deux tuiles répondraient à
+                  la même frappe et la gagnante serait celle que l'ordre de
+                  parcours désigne, c'est-à-dire personne en particulier.
+
+                  ⚠️ Cela ne vaut QUE pour Light-OS : Sound-OS et Music-OS
+                  écoutent le clavier de leur côté, et une même touche peut donc
+                  lancer un son ET sa lumière. C'est un cumul utile, pas un
+                  conflit — voir le § 32 du registre.
+                */
+                const scenes = { ...state.scenes };
+                if (keyCode) {
+                    Object.values(scenes).forEach(scene => {
+                        if (scene.id !== sceneId && scene.keyCode === keyCode) {
+                            scenes[scene.id] = { ...scene, keyCode: undefined };
+                        }
+                    });
+                }
+                scenes[sceneId] = { ...scenes[sceneId], keyCode: keyCode ?? undefined };
+                return { scenes, sceneEnApprentissage: null };
+            }),
+
             setSceneEffectSpeed: (sceneId, speed) => set((state) => {
                 if (!state.scenes[sceneId]) return state;
                 return {
@@ -332,7 +386,10 @@ export const useLightStore = create<LightState>()(
                         icon: 'wb_incandescent',
                         color: '#334155',
                         lightStates: {},
-                        effectSpeed: VITESSE_EFFET_DEFAUT
+                        effectSpeed: VITESSE_EFFET_DEFAUT,
+                        /* Une tuile vide ne doit pas garder une touche : elle
+                           répondrait par un geste sans effet. */
+                        keyCode: undefined
                     }
                 }
             })),
@@ -382,6 +439,7 @@ export const useLightStore = create<LightState>()(
                     activeSceneId: null,
                     lastManualSceneId: null,
                     defaultSceneId: null,
+                    sceneEnApprentissage: null,
                     globalBrightness: 100,
                     transitionTimeMs: 5000,
                     suivreLaVoix: false,

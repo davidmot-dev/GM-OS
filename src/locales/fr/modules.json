@@ -717,10 +717,14 @@
     "top": {
       "transition_time": "Temps de Transition",
       "inst": "Inst.",
-      "mock_sync": "Synchro Simulée",
       "reset_module": "Réinitialiser le Module",
       "reset_confirm": "Voulez-vous vraiment réinitialiser le module Light OS ? Toutes vos scènes seront réinitialisées.",
-      "reset_tooltip": "Réinitialiser"
+      "reset_tooltip": "Réinitialiser",
+      "sync": "Synchro des modules",
+      "sync_on_tooltip": "Les sons, musiques et ambiances peuvent commander vos lampes. Cliquez pour reprendre la main.",
+      "sync_off_tooltip": "Vos lampes n'obéissent qu'à vous. Cliquez pour laisser les modules audio les commander.",
+      "mock_mode": "Mode simulé",
+      "mock_mode_tooltip": "Débranche le pont Hue et simule quatre lampes, pour préparer une ambiance sans matériel."
     },
     "grid": {
       "capture": "Capturer",
@@ -728,13 +732,16 @@
       "overwrite_tooltip": "Écraser avec l'état actuel",
       "clear_tooltip": "Effacer la Scène",
       "rename_tooltip": "Renommer la Scène",
-      "rename_prompt": "Renommer la Scène :",
       "save_button": "Enregistrer",
       "cancel_button": "Annuler",
       "speed_tooltip": "Vitesse des effets de la scène",
       "speed_reset_tooltip": "Revenir à la vitesse d'origine (×1)",
       "default_set_tooltip": "Désigner comme éclairage normal de la pièce",
-      "default_unset_tooltip": "Ne plus être l'éclairage normal de la pièce"
+      "default_unset_tooltip": "Ne plus être l'éclairage normal de la pièce",
+      "key_learn_tooltip": "Associer une touche du clavier à cette scène",
+      "key_change_tooltip": "Changer la touche de cette scène",
+      "key_press": "Pressez une touche",
+      "key_escape": "Échap ou clic pour annuler"
     },
     "footer": {
       "no_lights": "Aucune lampe détectée.",
@@ -788,6 +795,15 @@
         "disco": "Disco Party",
         "zen": "Méditation Zen"
       }
+    },
+    "editor": {
+      "title": "Personnaliser la tuile",
+      "name": "Nom",
+      "icon": "Icône",
+      "icon_free": "…ou un nom de Material Symbol",
+      "color": "Couleur",
+      "color_free": "Couleur personnalisée",
+      "color_hint": "Elle ne commande aucune lampe : c'est le repère de la tuile à l'écran — bordure, halo, étoile."
     }
   },
   "loot": {

@@ -809,9 +809,49 @@ autre, en alignant trois gestes qui ne veulent pas la même chose.*
 
 ---
 
+## 🔌 Un nom déclaré n'a ni écrivain ni lecteur tant qu'on ne l'a pas ouvert (2026-09-07)
+
+*Trois promesses du guide de Light-OS, trouvées en relisant le module pour tout autre chose, et
+traitées le soir même. Elles avaient survécu à une revue des trente-huit guides.*
+
+### 1. Une promesse écrite dans un guide n'a aucun code derrière tant qu'on ne l'a pas ouvert
+
+- **Défi** : rendre vrai ce que le guide de Light-OS annonçait. Trois promesses, trouvées en relisant
+  le module pour tout autre chose.
+- **Ce qu'il y avait** : `isSyncEnabled` lu **dix fois** dans trois modules, persisté, et **écrit par
+  personne** — `true` à jamais, alors que le guide disait comment le couper. `keyCode` déclaré dans
+  le type, **sans un seul lecteur ni écrivain** dans tout le dépôt. `updateSceneMetadata` capable de
+  changer l'icône et la couleur, mais son unique appelant les repassant inchangées.
+- ⛔ **Le pire des trois n'était pas l'absence, c'était l'homonyme.** Le seul interrupteur voisin
+  s'appelait « Synchro Simulée » et bascule le pont Hue en **mode simulé**. Un meneur qui suivait le
+  guide — *« désactivez le bouton Sync »* — débranchait donc son matériel en croyant reprendre la
+  main. *Deux réglages dont l'un porte le nom de l'autre, c'est un piège, pas une étiquette
+  maladroite.*
+- **Leçon** : les trois avaient survécu à une revue des trente-huit guides, qui avait pourtant relu
+  celui-ci — mais sur sa liste d'effets, où elle a trouvé ce qu'elle cherchait. **Une relecture trouve
+  ce qu'elle est venue chercher.** Le seul contrôle qui attrape cette famille est mécanique :
+  *chaque nom déclaré a-t-il un écrivain et un lecteur ?* Trois occurrences en un mois — `timeMultiplier`,
+  `includeSounds`, et ces trois-ci.
+
+### 2. Une garde partagée contraint la place des boutons d'un autre module
+
+- **Défi** : mettre le bouton de « Key Learn » dans la fenêtre d'édition d'une tuile — l'endroit
+  naturel, puisqu'on y règle déjà le nom, l'icône et la couleur.
+- **Cause** : la garde clavier commune à Sound-OS, Music-OS et Light-OS écarte toute frappe pendant
+  qu'un `role="dialog"` est ouvert — pour la bonne raison que taper « Taverne » dans un champ ne doit
+  pas lancer les pastilles liées à T, A, V, E, R, N et E. Le mode d'apprentissage n'aurait donc
+  **jamais reçu la frappe**.
+- **Leçon** : une protection écrite pour un module devient une contrainte d'agencement pour les
+  suivants, et **elle ne se lit pas dans la maquette** — seulement en essayant. Quand un geste
+  dépend d'un mécanisme partagé, vérifier ce que ce mécanisme interdit **avant** de choisir où poser
+  le bouton.
+
+---
+
 *Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux
 défauts du moteur d'effets qu'il a mis au jour ; éclairage normal de la pièce, et le noir qui tombait
-tout seul à la fin du premier bruitage d'une soirée.*
+tout seul à la fin du premier bruitage d'une soirée ; puis les trois promesses du guide que rien ne
+tenait — dont un interrupteur qui débranchait le pont sous le nom d'un autre.*
 
 *Mise à jour précédente : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
 loupe de lecture sur les quatre lecteurs, tailles nommées jusqu'à 200 %.*

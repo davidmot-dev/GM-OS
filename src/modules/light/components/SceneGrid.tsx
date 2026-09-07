@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     useLightStore,
     VITESSE_EFFET_MIN,
@@ -7,15 +7,21 @@ import {
 } from '../useLightStore';
 import type { LightScene } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
-import { gmPrompt } from '../../../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
+import { EditeurDeScene } from './EditeurDeScene';
+import { toucheLisible } from '../useLightKeyboardControls';
 
 /** Le pas du curseur : des quarts, pour que ×1 se retrouve sans viser. */
 const PAS_DE_VITESSE = 0.25;
 
 export const SceneGrid: React.FC = () => {
-    const { scenes, activeSceneId, defaultSceneId, saveSceneSnapshot, clearScene, setSceneEffectSpeed, setDefaultScene } = useLightStore();
+    const {
+        scenes, activeSceneId, defaultSceneId, sceneEnApprentissage,
+        saveSceneSnapshot, clearScene, setSceneEffectSpeed, setDefaultScene,
+        apprendreUneTouche, updateSceneMetadata,
+    } = useLightStore();
     const { t } = useTranslation('modules');
+    const [sceneEnEdition, setSceneEnEdition] = useState<string | null>(null);
 
     // Sort scenes by ID to maintain grid order SCENE_01 to SCENE_18
     const sortedScenes = Object.values(scenes).sort((a, b) => a.id.localeCompare(b.id));
@@ -44,17 +50,7 @@ export const SceneGrid: React.FC = () => {
 
     const handleRename = (e: React.MouseEvent, scene: LightScene) => {
         e.stopPropagation();
-        gmPrompt(
-            t('light.grid.rename_prompt'),
-            scene.name,
-            (newName: string) => {
-                if (newName && newName.trim() !== '') {
-                    useLightStore.getState().updateSceneMetadata(scene.id, newName.trim(), scene.icon, scene.color);
-                }
-            },
-            t('light.grid.save_button'),
-            t('light.grid.cancel_button')
-        );
+        setSceneEnEdition(scene.id);
     };
 
     return (
@@ -132,7 +128,43 @@ export const SceneGrid: React.FC = () => {
                                 >
                                     home
                                 </button>
+
+                                {/*
+                                  **La touche qui lance la scène.** Affichée en
+                                  permanence quand elle existe — *un raccourci
+                                  qu'il faut survoler pour lire n'en est pas un.*
+                                */}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); apprendreUneTouche(scene.id); }}
+                                    title={scene.keyCode ? t('light.grid.key_change_tooltip') : t('light.grid.key_learn_tooltip')}
+                                    className={`text-ui-10 font-mono font-bold leading-none px-1 py-0.5 rounded transition-all ${scene.keyCode
+                                        ? 'bg-app-bg/80 text-accent opacity-100'
+                                        : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-accent'
+                                        }`}
+                                >
+                                    {scene.keyCode ? toucheLisible(scene.keyCode) : '⌨'}
+                                </button>
                             </div>
+
+                            {/*
+                              **L'attente d'une touche se voit sur la tuile
+                              concernée**, et couvre tout le reste : c'est un
+                              mode, et la prochaine frappe ne fera pas ce
+                              qu'elle fait d'habitude. *Un mode qui ne se voit
+                              pas est un piège.*
+                            */}
+                            {sceneEnApprentissage === scene.id && (
+                                <div
+                                    className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-app-bg/90 rounded-xl border-2 border-accent animate-pulse cursor-pointer"
+                                    onClick={(e) => { e.stopPropagation(); apprendreUneTouche(null); }}
+                                >
+                                    <span className="material-symbols-outlined text-accent text-2xl">keyboard</span>
+                                    <span className="text-ui-10 font-bold text-accent uppercase tracking-tight text-center px-2">
+                                        {t('light.grid.key_press')}
+                                    </span>
+                                    <span className="text-ui-10 text-slate-500">{t('light.grid.key_escape')}</span>
+                                </div>
+                            )}
 
                             {/*
                               **Le curseur de vitesse — seulement là où il a prise.**
@@ -196,6 +228,17 @@ export const SceneGrid: React.FC = () => {
                     );
                 })}
             </div>
+
+            {sceneEnEdition && scenes[sceneEnEdition] && (
+                <EditeurDeScene
+                    scene={scenes[sceneEnEdition]}
+                    onAnnuler={() => setSceneEnEdition(null)}
+                    onValider={(nom, icone, couleur) => {
+                        updateSceneMetadata(sceneEnEdition, nom, icone, couleur);
+                        setSceneEnEdition(null);
+                    }}
+                />
+            )}
         </div>
     );
 };

@@ -4,7 +4,7 @@ import { RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const TopControls: React.FC = () => {
-    const { transitionTimeMs, setTransitionTime, reset } = useLightStore();
+    const { transitionTimeMs, setTransitionTime, reset, isSyncEnabled, setSyncEnabled, status } = useLightStore();
     const { t } = useTranslation('modules');
 
     return (
@@ -38,8 +38,44 @@ export const TopControls: React.FC = () => {
 
                 <div className="h-10 w-px bg-app-border"></div>
 
+                {/*
+                  **La synchro des autres modules — l'interrupteur que le guide
+                  promettait depuis toujours.**
+
+                  ⛔ `isSyncEnabled` était lu **dix fois**, dans Sound-OS,
+                  Music-OS et Ambient-OS, persisté, et **aucun écran ne
+                  l'écrivait** : il valait `true` à jamais. *La chaîne entière
+                  était là, il manquait le bouton au bout.*
+
+                  Il est posé **avant** le mode simulé, parce que c'est celui
+                  qu'on cherche : le voisin, lui, débranche le pont.
+                */}
                 <div className="flex items-center gap-4">
-                    <span className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('light.top.mock_sync')}</span>
+                    <span className={`text-ui-10 font-bold uppercase tracking-widest transition-colors ${isSyncEnabled ? 'text-accent' : 'text-slate-500'}`}>
+                        {t('light.top.sync')}
+                    </span>
+                    <button
+                        onClick={() => setSyncEnabled(!isSyncEnabled)}
+                        title={isSyncEnabled ? t('light.top.sync_on_tooltip') : t('light.top.sync_off_tooltip')}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isSyncEnabled ? 'bg-accent' : 'bg-app-surface'}`}>
+                        <span className={`${isSyncEnabled ? 'translate-x-5' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}></span>
+                    </button>
+                </div>
+
+                <div className="h-10 w-px bg-app-border"></div>
+
+                {/*
+                  **Le mode simulé, renommé.** Il s'appelait « Synchro Simulée »
+                  et se tenait seul dans cette barre : le meneur qui suivait le
+                  guide — *« désactivez le bouton Sync »* — **débranchait son
+                  pont Hue** au lieu de couper la synchro. *Deux réglages dont
+                  l'un porte le nom de l'autre, c'est un piège, pas une
+                  étiquette maladroite.*
+                */}
+                <div className="flex items-center gap-4">
+                    <span className={`text-ui-10 font-bold uppercase tracking-widest transition-colors ${status === 'mock' ? 'text-amber-400' : 'text-slate-500'}`}>
+                        {t('light.top.mock_mode')}
+                    </span>
                     <button
                         onClick={() => {
                             if (useLightStore.getState().status === 'mock') {
@@ -48,8 +84,9 @@ export const TopControls: React.FC = () => {
                                 useLightStore.getState().setConnection('mock');
                             }
                         }}
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${useLightStore.getState().status === 'mock' ? 'bg-accent' : 'bg-app-surface'}`}>
-                        <span className={`${useLightStore.getState().status === 'mock' ? 'translate-x-5' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}></span>
+                        title={t('light.top.mock_mode_tooltip')}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${status === 'mock' ? 'bg-amber-500' : 'bg-app-surface'}`}>
+                        <span className={`${status === 'mock' ? 'translate-x-5' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}></span>
                     </button>
                 </div>
 

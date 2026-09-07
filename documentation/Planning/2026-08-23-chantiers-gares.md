@@ -47,8 +47,8 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
 >
-> Revérifié le **2026-09-07** après les §§ 29 et 30 : `tsc -b` propre, **3 864 tests au vert**
-> (325 fichiers, 1 ignoré, 4 tests ignorés).
+> Revérifié le **2026-09-07** après les §§ 29 à 31 : `tsc -b` propre, **3 876 tests au vert**
+> (326 fichiers, 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1450,10 +1450,10 @@ du cas de David, et lui seul. *Une garde qu'on n'a pas vue échouer ne garde rie
 (`defaultSceneId`, `setDefaultScene`), `light/components/Sidebar.tsx`,
 `light/components/SceneGrid.tsx`, `components/audio/MasterAudioController.tsx`.
 
-### 31 · ⚠️ Trois promesses de Light-OS que rien ne tient (trouvé le 2026-09-07, **non corrigé**)
+### 31 · ✅ Trois promesses de Light-OS que rien ne tenait — **tenues le 2026-09-07**
 
-*Trouvées en relisant le module pour les §§ 29 et 30, et vérifiées dans le code. Elles attendent une
-décision de David — elles sont écrites ici pour ne pas se perdre, pas pour être faites d'office.*
+*Trouvées en relisant le module pour les §§ 29 et 30, vérifiées dans le code, et **traitées les
+trois** le soir même sur décision de David : « on va faire L1, L2, L3 ».*
 
 | # | La promesse | Ce que dit le code |
 | --- | --- | --- |
@@ -1465,10 +1465,27 @@ décision de David — elles sont écrites ici pour ne pas se perdre, pas pour �
 **liste d'effets**, où elle a trouvé les trente-neuf. *Un guide relu n'est pas un guide vérifié ligne
 à ligne : une relecture trouve ce qu'elle est venue chercher.*
 
-**Le coût si on les traite** : L3 est un après-midi (un sélecteur de couleur et un choix d'icône dans
-la fenêtre de renommage). L1 est une case à cocher — mais il faut d'abord décider si la synchro doit
-pouvoir se couper, ou si la promesse doit disparaître du guide. L2 est une **fonctionnalité**, pas un
-bouton : il n'y a aucun code de raccourci clavier derrière.
+#### ✅ Ce qui a été livré
+
+| # | Livré | Ce qui ne se devinait pas |
+| --- | --- | --- |
+| **L1** | Un vrai interrupteur **« Synchro des modules »** dans la barre du haut, **posé avant** le mode simulé. | ⛔ **Le voisin a été renommé, et c'est la moitié du correctif.** « Synchro Simulée » → **« Mode simulé »**, en ambre et non en accent, avec une bulle qui dit qu'il *débranche le pont*. *Deux réglages dont l'un porte le nom de l'autre, c'est un piège et non une étiquette maladroite* — la clé `mock_sync` a été supprimée pour qu'elle ne revienne pas. |
+| **L2** | Le **Key Learn** : un ⌨ sur la tuile, la frappe suivante s'inscrit, et la touche vaut **depuis n'importe quel écran**. | Monté dans `GlobalKeybinds`, avec la garde partagée `estUneFrappeDePastille` — *une scène qu'il faudrait ouvrir Light-OS pour lancer n'aurait aucun intérêt*. **Une touche ne commande qu'une scène** : l'attribuer à une seconde la retire à la première, sinon la gagnante serait celle que l'ordre de parcours désigne. ⚠️ **Mais c'est le TROISIÈME écouteur du clavier sur `window`** (Sound-OS, Music-OS, Light-OS) : ils sont indépendants, donc une même touche peut lancer un son **et** sa lumière. Cumul voulu, écrit dans le guide. **Échap** annule l'attente — sans cette porte, y entrer par erreur obligerait à sacrifier une touche pour en sortir. |
+| **L3** | Un **éditeur de tuile** — nom, **icône** (24 proposées + champ libre), **couleur** (16 pastilles + sélecteur). | Il remplace un `gmPrompt`, qui ne sait porter qu'une ligne. ⚠️ **La grille d'icônes est fermée par choix** : les noms de Material Symbols ne se devinent pas, et *une icône mal orthographiée ne s'affiche pas — une tuile vide ne dirait pas pourquoi*. La couleur ne commande **aucune lampe**, et le guide le dit maintenant : c'est le repère de la tuile à l'écran. |
+
+⚠️ **Le Key Learn ne pouvait pas vivre dans l'éditeur.** La garde partagée rend le clavier à toute
+boîte portant `role="dialog"` — sinon taper « Taverne » dans le champ du nom lancerait les pastilles
+liées à T, A, V, E, R, N et E. Le ⌨ est donc resté **sur la tuile**. *Une garde qui protège un module
+contraint la place des boutons d'un autre : ça ne se voit qu'en essayant.*
+
+**Trois corrections de plus dans le guide 75**, trouvées en le rendant vrai : la capture se fait par
+un **appareil photo** et non une disquette, l'éditeur s'ouvre au **crayon** et non au clic droit, et
+l'effacement retire aussi la touche et la désignation d'éclairage normal.
+
+**Ancres** : `light/components/TopControls.tsx` (L1), `light/useLightKeyboardControls.ts` +
+`components/GlobalKeybinds.tsx` + `light/logic/raccourcisDeScene.test.ts` (L2),
+`light/components/EditeurDeScene.tsx` (L3), `light/useLightStore.ts`
+(`sceneEnApprentissage`, `setSceneKeyCode`).
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
