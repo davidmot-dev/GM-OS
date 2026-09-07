@@ -47,8 +47,8 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
 >
-> Revérifié le **2026-09-07** après les §§ 29 à 32 : `tsc -b` propre, **3 881 tests au vert**
-> (327 fichiers, 1 ignoré, 4 tests ignorés).
+> Revérifié le **2026-09-07** après les §§ 29 à 34 : `tsc -b` propre, **3 926 tests au vert**
+> (328 fichiers, 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1541,6 +1541,73 @@ autres**. La collision n'était visible sur aucun d'eux pris seul.
 
 **Ancres** : `light/logic/couleurDeLaTuile.ts` (+ son test), `light/components/SceneGrid.tsx`,
 `light/components/EditeurDeScene.tsx`.
+
+### 33 · ⭐ Le contrôle qui attrape « déclaré, branché à rien » (2026-09-07)
+
+*Proposé après le § 31, sur une mesure et non sur une intuition : j'ai passé les magasins au peigne
+avant de proposer l'outil, pour vérifier qu'il attraperait quelque chose. **Il attrape dix-neuf
+noms.***
+
+#### Pourquoi il existe
+
+Trois fois en un mois, un réglage a été **déclaré, implémenté, parfois documenté dans un guide — et
+branché à rien** : `timeMultiplier` et `includeSounds` (§ 17), `isSyncEnabled` et `keyCode` (§ 31),
+`isMapVideo` (ci-dessous). **Aucun outil ne les voyait** : TypeScript est content, le nom existe et
+son type est juste ; les tests sont verts, ils exercent ce qui est branché ; et une relecture de
+guide ne les voit pas non plus — *elle trouve ce qu'elle est venue chercher*.
+
+`src/stores/nomsSansEcrivainNiLecteur.test.ts` compare des **noms**, pas des références. Il ne prouve
+donc pas qu'un nom est mort : il dit qu'il **n'apparaît nulle part ailleurs que dans son magasin**.
+D'où sa forme — **une liste d'exceptions qui ne doit pas grandir**, chacune portant sa raison. Un nom
+neuf qui y tombe fait échouer le test avec la question à poser : *qui est censé l'écrire, qui est
+censé le lire ?*
+
+#### ⛔ Ce que le contrôle a appris sur lui-même
+
+Il a fallu le dégrader **deux fois** pour qu'il soit vrai, et les deux défauts étaient du type qu'il
+traque :
+
+| Défaut du contrôle | Conséquence |
+| --- | --- |
+| Il **se lisait lui-même** — les noms tolérés y sont écrits en toutes lettres | chaque tolérance se déclarait « employée ailleurs ». *Un contrôle qui s'inclut dans ce qu'il mesure mesure sa propre existence.* Les fichiers de test sont désormais hors corpus, ce qui le rend **plus sévère** : un nom cité seulement par sa propre sonde n'est pas branché |
+| Son filtre de chemins ne reconnaissait **aucun** des quinze magasins de `src/stores/` (ils arrivent en `./x.ts`, pas `../stores/x.ts`) | quinze magasins hors examen. **C'est la garde du compte qui l'a dit** — *un contrôle qui n'examine rien passe au vert* |
+| ⛔ Il ne lisait que la **première** `interface` de chaque fichier | dans `useLightStore.ts`, `HueLightState` — et **jamais `LightState`**. Trouvé en ajoutant un champ fantôme qui **n'a rien déclenché** : *une sonde qui ne réveille pas le défaut ne prouve rien*, et c'est la seule façon de s'en apercevoir. Corrigé, la récolte est passée de 9 à 19 noms |
+
+#### ⚠️ Ce qu'il a trouvé, et qui attend une décision
+
+Dix noms sont **déclarés, souvent implémentés, et appelés par personne** — mesuré, pas supposé :
+
+| Où | Quoi |
+| --- | --- |
+| `useSoundStore` | `setPadColor` — **la couleur d'une pastille de son ne peut pas être changée** |
+| `useClockStore` | `addTime`, `resetTensionClock`, `setActiveCalendar` — le temps ne s'avance pas par cette porte, une horloge de tension ne se remet pas à zéro, le calendrier actif ne se choisit pas. Et `daysPerWeek` a **une seule occurrence dans tout le dépôt** : la semaine du calendrier n'a jamais eu de longueur |
+| `useSessionStore` | `isSessionMode` / `toggleSessionMode` — « Mode MJ Focus (masque les outils d'édition) », écrit, mis dans un instantané, **lu par aucun écran**. Rien n'est masqué |
+| `useMapUIStore` | `setBrushSize` — `brushSize` est figé à **50**, lu par `FogEngine` et persisté : on peint un couloir et une plaine au même pinceau |
+| `usePerformanceStore` | `setAutoPerformance` — le mode force les graphismes bas et **rien ne permet de le contredire** |
+| `useUlanziStore` | `setSeuil` — `seuilSansPause` est borné 1-6, donc prévu réglable, et aucun écran ne le règle |
+| `useMapStore` | `attachZoneToToken` — aucun écran ne sait attacher une zone de danger à un pion |
+| `useCombatStore`, `useForgeStore`, `useMusicStore`, `useAIStore`, `useGemStore`, `useImageStore`, `useWebStore` | `isRemoteSyncing` (déclaré, **même pas implémenté**), `resetCombat`, `setAnalysisResult`, `clearPlaylistPads`, `getApiKey`, `setGems`, `projectUrl`, `setLinks` |
+
+*Aucun n'a été touché : ce sont des décisions, pas des défauts évidents.* Douze autres noms sont
+employés à l'intérieur de leur propre magasin — légitimes, et inscrits comme tels.
+
+**Ancre** : `src/stores/nomsSansEcrivainNiLecteur.test.ts` (43 magasins examinés).
+
+### 34 · ⛔ Un moment de storyboard ne pouvait pas porter une carte vidéo (2026-09-07)
+
+Trouvé par le peigne du § 33. `isMapVideo` est **lu** — `useStoryboardStore` le passe à `setMap` — et
+**écrit par personne** : le bouton de capture copiait `mapStore.mapUrl` et oubliait `mapStore.isVideo`,
+qui se trouve **juste à côté**. La vidéo est entrée dans le projet le 05/09 (§ 22) ; le storyboard ne
+l'a pas suivie. *Un champ lu que rien n'écrit ne lève aucune erreur : il rend la valeur par défaut, et
+le défaut ressemble à un choix.*
+
+**Trois sources, une règle par source :** la capture depuis Map-OS prend le verdict du **magasin**
+(une carte peut venir d'une adresse sans extension) ; un choix dans la liste de l'Atlas se décide sur
+l'**extension**, par `estUneVideo` — *la même fonction que le Media Hub, on recopie son verdict au
+lieu d'en rendre un second* ; et un moment enregistré **avant** ce correctif retombe sur son adresse
+(`??` et non `||`, pour qu'un `false` explicite reste un choix respecté).
+
+**Ancres** : `storyboard/StoryboardDashboard.tsx`, `stores/typesDeMedia.ts` (`estUneVideo`).
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

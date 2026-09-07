@@ -28,6 +28,7 @@ import { useImageStore } from '../image/useImageStore';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useSortiesAudioDisponibles } from '../../hooks/useSortiesAudioDisponibles';
 import { FONDU_MAX, FONDU_MIN, FONDU_PAR_DEFAUT, DUREE_MAX } from './titreProjete';
+import { estUneVideo } from '../../stores/typesDeMedia';
 
 // DND Kit Imports
 import {
@@ -228,6 +229,18 @@ const StoryboardDashboard: React.FC = () => {
     const [musicPadId, setMusicPadId] = useState('');
     const [lightSceneId, setLightSceneId] = useState('');
     const [mapUrl, setMapUrl] = useState('');
+    /*
+      **Une carte vidéo rejouée depuis un moment repartait en image fixe.**
+
+      `isMapVideo` était **lu** — `useStoryboardStore` le passe à `setMap` — et
+      **écrit par personne** : le bouton de capture copiait `mapStore.mapUrl` et
+      oubliait `mapStore.isVideo`, qui se trouve juste à côté. La vidéo est
+      entrée dans le projet le 05/09 ; le storyboard ne l'a pas suivie.
+
+      *Un champ lu que rien n'écrit ne lève aucune erreur : il rend la valeur par
+      défaut, et le défaut ressemble à un choix.*
+    */
+    const [mapEstVideo, setMapEstVideo] = useState(false);
     const [imageMediaId, setImageMediaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
     const [ambientSceneId, setAmbientSceneId] = useState('');
@@ -296,6 +309,13 @@ const StoryboardDashboard: React.FC = () => {
         setMusicPadId(moment.musicPadId || '');
         setLightSceneId(moment.lightSceneId || '');
         setMapUrl(moment.mapUrl || '');
+        /*
+          `??` et non `||` : un moment écrit avant ce correctif n'a pas le champ,
+          et son adresse décide alors — un `.mp4` enregistré hier se rejouera en
+          vidéo sans qu'on ait à rouvrir le moment. Un `false` explicite, lui,
+          est un choix et doit être respecté.
+        */
+        setMapEstVideo(moment.isMapVideo ?? estUneVideo(moment.mapUrl || ''));
         setImageMediaId(moment.imageMediaId || '');
         setSoundPadId(moment.soundPadId || '');
         setAmbientSceneId(moment.ambientSceneId || '');
@@ -362,6 +382,14 @@ const StoryboardDashboard: React.FC = () => {
                 const mapStore = (window as any).useMapStore?.getState();
                 if (mapStore?.mapUrl) {
                     setMapUrl(mapStore.mapUrl as string);
+                    /*
+                      **Le magasin de la carte fait foi**, pas l'extension : une
+                      carte peut venir d'une adresse sans extension. On recopie
+                      son verdict au lieu d'en rendre un second — *deux
+                      classements pour un même fichier finissent par se
+                      contredire*, la règle de `natureDuMedia`.
+                    */
+                    setMapEstVideo(Boolean(mapStore.isVideo));
                     if (gmToast) gmToast('info', t('modules:storyboard.editor.captured_map'));
                 } else if (gmToast) {
                     gmToast('warning', t('modules:storyboard.editor.capture_nothing'));
@@ -414,6 +442,7 @@ const StoryboardDashboard: React.FC = () => {
             musicPadId: musicPadId || undefined,
             lightSceneId: lightSceneId || undefined,
             mapUrl: mapUrl || undefined,
+            isMapVideo: mapUrl && mapEstVideo ? true : undefined,
             imageMediaId: imageMediaId || undefined,
             soundPadId: soundPadId || undefined,
             ambientSceneId: ambientSceneId || undefined,
@@ -703,7 +732,15 @@ const StoryboardDashboard: React.FC = () => {
                                     </label>
                                     <select 
                                         value={mapUrl}
-                                        onChange={e => setMapUrl(e.target.value)}
+                                        /*
+                                          **Le choix dans l'Atlas décide aussi de la
+                                          nature.** La liste porte des `fileUrl` de
+                                          lieux : c'est l'extension qui tranche, par
+                                          la même fonction que le Media Hub —
+                                          `estUneVideo`. Une carte capturée depuis
+                                          Map-OS, elle, garde le verdict du magasin.
+                                        */
+                                        onChange={e => { setMapUrl(e.target.value); setMapEstVideo(estUneVideo(e.target.value)); }}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-emerald-400 outline-none"
                                         title={t('modules:storyboard.editor.map_label')}
                                     >

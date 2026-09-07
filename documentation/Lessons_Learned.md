@@ -884,13 +884,33 @@ qu'on retrouve chaque semaine ici.*
   collision est parfois le signe qu'un élément était mal placé dès le départ**, pas seulement qu'il
   manque de place.
 
+### 5. Un contrôle mécanique se dégrade avant d'être cru
+
+- **Défi** : écrire le test qui attrape la famille « déclaré, branché à rien » — trois occurrences en
+  un mois, qu'aucun outil ne voyait.
+- **Ce qui s'est passé** : le contrôle est **passé au vert trois fois de suite en n'examinant
+  presque rien**. Il se lisait lui-même (les noms tolérés y sont écrits en toutes lettres, donc
+  « employés ailleurs »). Son filtre de chemins ne reconnaissait aucun des quinze magasins d'un
+  répertoire, parce que les fichiers voisins arrivent en `./x.ts` et non `../dossier/x.ts`. Et
+  surtout **il ne lisait que la première `interface` de chaque fichier** — dans le magasin des
+  lumières, un type accessoire, jamais l'état du magasin.
+- **Ce qui l'a révélé** : un **champ fantôme** ajouté à la main dans un magasin, qui **n'a rien
+  déclenché**. Sans ce geste, l'outil serait entré au dépôt en donnant le sentiment que tout est
+  propre — *un contrôle qui n'examine rien passe au vert, et c'est la pire des façons d'échouer*. La
+  récolte est passée de 9 noms à 19 après correction.
+- **Leçon** : *un outil de détection doit être vu échouer sur un cas fabriqué avant d'être cru sur
+  les cas réels.* Et deux gardes valent d'être écrites dans le contrôle lui-même : **le compte de ce
+  qu'il examine** (il a attrapé le filtre de chemins) et **la péremption de ses propres exceptions**
+  (une tolérance qui survit à sa cause devient un mensonge).
+
 ---
 
 *Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux
 défauts du moteur d'effets qu'il a mis au jour ; éclairage normal de la pièce, et le noir qui tombait
 tout seul à la fin du premier bruitage d'une soirée ; puis les trois promesses du guide que rien ne
-tenait — dont un interrupteur qui débranchait le pont sous le nom d'un autre ; puis la couleur de
-tuile qui ne se voyait nulle part, et les icônes qui se télescopaient.*
+tenait — dont un interrupteur qui débranchait le pont sous le nom d'un autre ; la couleur de
+tuile qui ne se voyait nulle part, et les icônes qui se télescopaient ; enfin **le contrôle
+mécanique** qui attrape cette famille, et les dix-neuf noms qu'il a trouvés.*
 
 *Mise à jour précédente : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
 loupe de lecture sur les quatre lecteurs, tailles nommées jusqu'à 200 %.*
