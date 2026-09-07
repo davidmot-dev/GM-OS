@@ -47,8 +47,8 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
 >
-> Revérifié le **2026-09-07** après les §§ 29 à 31 : `tsc -b` propre, **3 876 tests au vert**
-> (326 fichiers, 1 ignoré, 4 tests ignorés).
+> Revérifié le **2026-09-07** après les §§ 29 à 32 : `tsc -b` propre, **3 881 tests au vert**
+> (327 fichiers, 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1486,6 +1486,57 @@ l'effacement retire aussi la touche et la désignation d'éclairage normal.
 `components/GlobalKeybinds.tsx` + `light/logic/raccourcisDeScene.test.ts` (L2),
 `light/components/EditeurDeScene.tsx` (L3), `light/useLightStore.ts`
 (`sceneEnApprentissage`, `setSceneKeyCode`).
+
+### 32 · ⛔ La couleur d'une tuile ne se voyait nulle part — et les icônes se sont télescopées (2026-09-07)
+
+*Deux retours de David dans l'heure qui a suivi le § 31, tous deux à l'écran. **Le premier montre que
+livrer un réglage ne suffit pas ; le second, que ce qu'on ajoute pousse ce qui était là.***
+
+#### ⛔ 32a — « je ne sais pas donner de couleur à mes tuiles »
+
+L'éditeur de tuile fonctionnait. **C'est la tuile qui ne montrait rien.** `scene.color` était lu à
+**cinq endroits**, et la couleur que portent les dix-huit scènes depuis leur création — `#334155` —
+sur un fond `--app-surface` à `#0f172a` donne un **rapport de contraste d'environ 1,6**, sous le
+seuil où l'œil distingue une forme.
+
+| Repère | Ce qu'il donnait |
+| --- | --- |
+| Icône de la tuile | grise : la couleur n'était lue **que si la scène jouait** |
+| Bordure de la scène active | **écrasait la classe `border-accent`** par un gris sombre — *activer une tuile la rendait moins visible* |
+| Halo, dégradé de la scène active | invisibles |
+| Étoile ✨ « cette scène porte un effet » | ⛔ **invisible pour tout le monde, depuis toujours** — et c'était le seul repère permanent du lot |
+
+⭐ **La cause tient en une phrase : `#334155` n'a jamais voulu dire « peins-moi en gris ardoise », il
+voulait dire « personne n'a choisi ».** Tant que rien ne permettait d'en changer, la distinction
+n'existait pas ; **l'éditeur du § 31 l'a rendue nécessaire, et je ne l'avais pas faite.** *Un défaut
+qui signifie « rien n'est choisi » ne doit jamais traverser la même porte qu'une valeur choisie.*
+
+`couleurDeLaTuile` rend `null` dans ce cas, et les cinq usages passent par elle : les classes CSS
+jouent alors seules, donc **l'apparence d'avant est conservée à l'identique** pour qui n'a rien
+choisi. Une couleur choisie, elle, marque la tuile **au repos** — icône teintée, bordure à `80`
+d'alpha (pleine à l'activation : *dix-huit bordures saturées se disputeraient l'œil*), halo, étoile.
+Dans l'éditeur, la première pastille s'appelle **« Aucune couleur »** au lieu de se faire passer pour
+un gris. ⚠️ Une teinte *voisine* du défaut (`#334156`) reste un choix : **on lit l'intention à
+l'égalité, pas à la ressemblance** — un test le tient.
+
+#### ⛔ 32b — « les icônes se mélangent »
+
+Capture à l'appui : l'étoile ✨ du coin haut-droit et l'icône de la scène, **côte à côte, lues comme
+un seul glyphe**. La cause n'est pas l'étoile : la colonne centrée de la tuile a grossi le jour même
+d'une **ligne de vitesse et d'un curseur** (§ 29), le carré n'a pas grandi, et le contenu est remonté
+dans la bande où les badges de coin sont posés à `top-2`.
+
+**L'étoile est descendue dans la ligne de vitesse**, à la place d'un glyphe `speed` qui ne disait
+rien que le « ×2 » ne disait déjà — *et elle y est mieux : cette ligne n'existe QUE sur les scènes à
+effet, donc elle ne peut pas mentir.* La colonne est resserrée (icône `text-3xl`, gouttières `gap-2`)
+et `py-7` l'empêche désormais d'entrer dans les bandes de coin.
+
+⚠️ *Un carré de taille fixe se remplit ; ce qu'on y ajoute pousse ce qui y était.* Trois ajouts en
+deux jours — curseur de vitesse, maison, badge de touche — et **aucun n'a été pensé contre les
+autres**. La collision n'était visible sur aucun d'eux pris seul.
+
+**Ancres** : `light/logic/couleurDeLaTuile.ts` (+ son test), `light/components/SceneGrid.tsx`,
+`light/components/EditeurDeScene.tsx`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

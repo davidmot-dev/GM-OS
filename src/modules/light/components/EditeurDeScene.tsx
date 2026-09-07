@@ -1,15 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { LightScene } from '../useLightStore';
+import { COULEUR_NEUTRE, couleurDeLaTuile } from '../logic/couleurDeLaTuile';
 
 /**
  * **L'éditeur d'une tuile : son nom, son icône, sa couleur.**
  *
  * ⛔ Le guide promettait les trois depuis toujours. L'unique appelant de
  * `updateSceneMetadata` repassait l'icône et la couleur **inchangées** : les
- * dix-huit tuiles étaient grises et portaient la même ampoule à jamais, alors
- * que la couleur pilote la bordure active, le halo et l'étoile ✨. *Toute la
- * chaîne était là, il manquait le bouton au bout.*
+ * dix-huit tuiles étaient grises et portaient la même ampoule à jamais. *Toute
+ * la chaîne était là, il manquait le bouton au bout.*
+ *
+ * ⛔ **Et le bouton posé, il ne se passait toujours rien.** Signalé par David le
+ * lendemain : *« je ne sais pas donner de couleur à mes tuiles »*. La couleur
+ * n'était lue **que sur la scène active** — on choisissait, on validait, et la
+ * tuile ne bougeait pas tant qu'on ne l'avait pas cliquée. *Exposer un réglage
+ * ne suffit pas : il faut lui donner un endroit où se voir.* Voir
+ * `logic/couleurDeLaTuile.ts`.
  *
  * Il remplace un `gmPrompt`, qui ne sait porter qu'une ligne de texte.
  */
@@ -35,7 +42,7 @@ const ICONES = [
  * distinguent d'un coup d'œil sur fond sombre, et non des blancs de lampe.
  */
 const COULEURS = [
-    '#334155', '#ef4444', '#f97316', '#f59e0b',
+    COULEUR_NEUTRE, '#ef4444', '#f97316', '#f59e0b',
     '#facc15', '#84cc16', '#22c55e', '#14b8a6',
     '#06b6d4', '#3b82f6', '#6366f1', '#a855f7',
     '#d946ef', '#ec4899', '#f43f5e', '#e2e8f0',
@@ -53,6 +60,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
     const [icone, setIcone] = useState(scene.icon);
     const [couleur, setCouleur] = useState(scene.color);
     const champDuNom = useRef<HTMLInputElement>(null);
+    const apercu = couleurDeLaTuile({ color: couleur });
 
     useEffect(() => {
         champDuNom.current?.select();
@@ -89,7 +97,8 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-3xl" style={{ color: couleur }}>{icone}</span>
+                    {/* Même règle que la tuile : la couleur neutre rend le gris ardoise. */}
+                    <span className="material-symbols-outlined text-3xl" style={{ color: apercu ?? '#94a3b8' }}>{icone}</span>
                     <h2 className="text-lg font-bold text-app-text">{t('light.editor.title')}</h2>
                 </div>
 
@@ -117,7 +126,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
                                     : 'bg-app-bg border-app-border hover:border-accent/40'
                                     }`}
                             >
-                                <span className="material-symbols-outlined text-lg" style={{ color: icone === nomDIcone ? couleur : undefined }}>
+                                <span className="material-symbols-outlined text-lg" style={{ color: icone === nomDIcone ? (apercu ?? undefined) : undefined }}>
                                     {nomDIcone}
                                 </span>
                             </button>
@@ -139,7 +148,10 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
                                 <button
                                     key={teinte}
                                     onClick={() => setCouleur(teinte)}
-                                    title={teinte}
+                                    /* La première pastille n'est pas un gris : c'est
+                                       « aucune couleur ». Le dire, sinon on croit
+                                       avoir choisi et rien ne change sur la tuile. */
+                                    title={teinte === COULEUR_NEUTRE ? t('light.editor.color_none') : teinte}
                                     className={`aspect-square rounded-lg border-2 transition-all ${couleur.toLowerCase() === teinte.toLowerCase()
                                         ? 'border-app-text scale-110'
                                         : 'border-transparent hover:scale-105'
@@ -156,7 +168,9 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
                             className="size-9 rounded-lg border border-app-border cursor-pointer p-0 bg-transparent shrink-0"
                         />
                     </div>
-                    <p className="text-ui-10 text-slate-500 leading-snug">{t('light.editor.color_hint')}</p>
+                    <p className="text-ui-10 text-slate-500 leading-snug">
+                        {apercu ? t('light.editor.color_hint') : t('light.editor.color_hint_none')}
+                    </p>
                 </div>
 
                 <div className="flex justify-end gap-2 pt-1">

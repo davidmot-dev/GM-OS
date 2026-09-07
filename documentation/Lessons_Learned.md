@@ -809,10 +809,14 @@ autre, en alignant trois gestes qui ne veulent pas la même chose.*
 
 ---
 
-## 🔌 Un nom déclaré n'a ni écrivain ni lecteur tant qu'on ne l'a pas ouvert (2026-09-07)
+## 🔌 Déclaré, écrit, livré — et pourtant absent de l'écran (2026-09-07)
 
-*Trois promesses du guide de Light-OS, trouvées en relisant le module pour tout autre chose, et
-traitées le soir même. Elles avaient survécu à une revue des trente-huit guides.*
+*Une soirée entière sur Light-OS, et quatre fois la même forme de défaut : **quelque chose existe
+dans le code et n'existe pas pour celui qui regarde.** Un drapeau lu dix fois et écrit par personne ;
+un champ déclaré sans lecteur ; un réglage écrit mais peint dans une couleur qu'on ne distingue pas ;
+un indicateur poussé hors de sa place par ses voisins. Les deux premiers ont été trouvés en relisant
+le code, **les deux autres par David à l'écran, dans l'heure** — ce qui est exactement le partage
+qu'on retrouve chaque semaine ici.*
 
 ### 1. Une promesse écrite dans un guide n'a aucun code derrière tant qu'on ne l'a pas ouvert
 
@@ -846,12 +850,47 @@ traitées le soir même. Elles avaient survécu à une revue des trente-huit gui
   dépend d'un mécanisme partagé, vérifier ce que ce mécanisme interdit **avant** de choisir où poser
   le bouton.
 
+### 3. Exposer un réglage ne suffit pas : il lui faut un endroit où se voir
+
+- **Défi** : l'éditeur de tuile venait d'être livré. *« Je ne sais pas donner de couleur à mes
+  tuiles »* — signalé dans l'heure.
+- **Cause** : l'éditeur écrivait bien. **La tuile ne lisait la couleur que sur la scène active** — on
+  choisissait, on validait, et rien ne bougeait tant qu'on n'avait pas cliqué la tuile. Et la teinte
+  que portaient les dix-huit depuis leur création, `#334155`, donnait sur le fond `#0f172a` un
+  contraste d'environ **1,6** : quatre des cinq repères de couleur étaient perdus, dont un
+  indicateur permanent invisible pour tout le monde depuis toujours.
+- ⭐ **Le fond de l'affaire** : ce `#334155` ne voulait pas dire « gris ardoise », il voulait dire
+  **« personne n'a choisi »**. Tant que rien ne permettait d'en changer, la distinction n'existait
+  pas — *elle est née le jour où le réglage est apparu, et c'est ce jour-là qu'il fallait la faire.*
+- **Leçon** : *un défaut qui signifie « rien n'est choisi » ne doit jamais traverser la même porte
+  qu'une valeur choisie.* Et plus largement : livrer un réglage, c'est deux choses — l'écriture **et**
+  un endroit visible où le résultat se lit. La première sans la seconde produit un réglage qui a
+  l'air cassé, ce qui est pire qu'un réglage absent.
+
+### 4. Un carré de taille fixe se remplit — ce qu'on y ajoute pousse ce qui y était
+
+- **Défi** : *« les icônes se mélangent »*, capture à l'appui, une heure plus tard.
+- **Cause** : trois ajouts en deux jours sur la même tuile — un curseur de vitesse, une maison, un
+  badge de touche. La colonne centrée a grossi, le carré non, et le contenu est remonté dans la
+  bande où les badges de coin sont posés en absolu. L'icône de la scène et l'indicateur d'effet se
+  sont retrouvés côte à côte, lus comme **un seul glyphe**.
+- **Leçon** : dans un conteneur de taille contrainte, chaque ajout est un **déménagement**, pas une
+  addition. **Aucun des trois n'était fautif seul**, et c'est pour cela que rien ne l'a signalé : ni
+  le typage, ni les tests, ni la relecture d'une de ces trois modifications. Le remède qui tient est
+  de **séparer les bandes** — une marge qui réserve les coins — plutôt que d'espérer que le contenu
+  reste petit.
+- **Corollaire utile** : le meilleur emplacement pour l'indicateur d'effet n'était pas le coin mais
+  la ligne de vitesse, *qui n'existe que sur les scènes à effet* — donc qui ne peut pas mentir. **Une
+  collision est parfois le signe qu'un élément était mal placé dès le départ**, pas seulement qu'il
+  manque de place.
+
 ---
 
 *Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux
 défauts du moteur d'effets qu'il a mis au jour ; éclairage normal de la pièce, et le noir qui tombait
 tout seul à la fin du premier bruitage d'une soirée ; puis les trois promesses du guide que rien ne
-tenait — dont un interrupteur qui débranchait le pont sous le nom d'un autre.*
+tenait — dont un interrupteur qui débranchait le pont sous le nom d'un autre ; puis la couleur de
+tuile qui ne se voyait nulle part, et les icônes qui se télescopaient.*
 
 *Mise à jour précédente : 6 Septembre 2026 — les documents Markdown rattachés aux réglages de taille,
 loupe de lecture sur les quatre lecteurs, tailles nommées jusqu'à 200 %.*

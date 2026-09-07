@@ -803,7 +803,9 @@
       "icon_free": "…ou un nom de Material Symbol",
       "color": "Couleur",
       "color_free": "Couleur personnalisée",
-      "color_hint": "Elle ne commande aucune lampe : c'est le repère de la tuile à l'écran — bordure, halo, étoile."
+      "color_hint": "Elle marque la tuile dans la grille — icône, bordure, halo, étoile. Elle ne commande aucune lampe.",
+      "color_none": "Aucune couleur (gris par défaut)",
+      "color_hint_none": "Sans couleur, la tuile reste grise. Choisissez-en une pour la repérer d'un coup d'œil dans la grille."
     }
   },
   "loot": {

@@ -803,7 +803,9 @@
       "icon_free": "…or a Material Symbol name",
       "color": "Colour",
       "color_free": "Custom colour",
-      "color_hint": "It drives no lamp: it is the tile's marker on screen — border, glow, star."
+      "color_hint": "It marks the tile in the grid — icon, border, glow, star. It drives no lamp.",
+      "color_none": "No colour (default grey)",
+      "color_hint_none": "With no colour the tile stays grey. Pick one to spot it at a glance in the grid."
     }
   },
   "loot": {

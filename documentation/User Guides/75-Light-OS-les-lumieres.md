@@ -36,8 +36,9 @@ Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quel
   actuel de toutes les lampes y est mémorisé. Une tuile encore vide se capture d'un simple clic.
 - **Personnalisation** : le **crayon ✏️** en bas à droite ouvre l'éditeur de la tuile — son **nom**,
   son **icône** (vingt-quatre proposées, ou n'importe quel nom de Material Symbol) et sa **couleur**.
-  Cette couleur ne commande aucune lampe : c'est le repère de la tuile à l'écran — bordure de la
-  scène active, halo, étoile ✨.
+  Cette couleur ne commande aucune lampe : elle **repère la tuile dans la grille** — son icône, sa
+  bordure, son halo quand elle joue. La première pastille, « Aucune couleur », rend la tuile au gris
+  par défaut.
 - **Activation** : un clic gauche applique l'ambiance. La transition dure **5 secondes par
   défaut**, réglable dans les options — de l'instantané pour un combat au fondu très lent pour un
   voyage.
@@ -198,6 +199,11 @@ c'est utile de savoir lequel a agi quand la lumière change sans qu'on ait rien 
 → [Tour de contrôle audio](./70-Tour-de-controle-audio.md)
 
 ---
+
+*Repris le 2026-09-07 au soir, sur deux retours de David à l'écran : la **couleur d'une tuile ne se
+voyait nulle part** (elle n'était lue que sur la scène en cours de lecture, et la teinte par défaut
+était invisible sur le fond sombre), et l'**étoile ✨ se télescopait avec l'icône de la scène** — elle
+est descendue dans la ligne de vitesse.*
 
 *Corrigé le 2026-09-07 — **trois promesses que rien ne tenait**, trouvées dans le code : le bouton
 **Sync** n'existait pas (et son voisin « Synchro Simulée » débranchait le pont), le **Key Learn**

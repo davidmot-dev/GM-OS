@@ -9,6 +9,7 @@ import type { LightScene } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { useTranslation } from 'react-i18next';
 import { EditeurDeScene } from './EditeurDeScene';
+import { couleurDeLaTuile } from '../logic/couleurDeLaTuile';
 import { toucheLisible } from '../useLightKeyboardControls';
 
 /** Le pas du curseur : des quarts, pour que ×1 se retrouve sans viser. */
@@ -61,6 +62,12 @@ export const SceneGrid: React.FC = () => {
                     const hasData = Object.keys(scene.lightStates).length > 0;
                     const aDesEffets = Object.values(scene.lightStates).some(s => s.effect && s.effect !== 'none');
                     const estLEclairageNormal = defaultSceneId === scene.id;
+                    /*
+                      `null` quand personne n'a choisi de couleur : les classes
+                      CSS jouent alors seules, et la tuile a exactement
+                      l'apparence qu'elle avait avant l'éditeur.
+                    */
+                    const teinte = couleurDeLaTuile(scene);
                     const vitesse = scene.effectSpeed ?? VITESSE_EFFET_DEFAUT;
 
                     if (!hasData) {
@@ -81,24 +88,46 @@ export const SceneGrid: React.FC = () => {
                         <div
                             key={scene.id}
                             onClick={() => handleApply(scene.id)}
-                            className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative overflow-hidden ${isActive
+                            /*
+                              **`py-7` n'est pas de l'esthétique, c'est une
+                              séparation.** Les badges de coin vivent à `top-2` /
+                              `bottom-2` et mesurent une vingtaine de pixels : sans
+                              cette marge, la colonne centrée remonte dans leur
+                              bande dès qu'elle grossit — et le 2026-09-07 elle a
+                              grossi d'une ligne de vitesse et d'un curseur.
+                              L'icône de la scène se retrouvait **collée à
+                              l'étoile ✨**, les deux se lisant comme un seul
+                              glyphe. *Un carré de taille fixe se remplit ; ce
+                              qu'on y ajoute pousse ce qui y était.*
+                            */
+                            className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-2 py-7 px-2 cursor-pointer group transition-all duration-300 relative overflow-hidden ${isActive
                                 ? `bg-app-surface/50 border-accent border-2 shadow-glow-accent`
                                 : `bg-app-surface/50 border border-app-border hover:border-accent/30`
                                 }`}
+                            /*
+                              **La teinte marque la tuile au repos, pas seulement
+                              quand elle joue.** Elle ne servait qu'à la scène
+                              active : on choisissait une couleur, on validait, et
+                              *rien ne bougeait* tant qu'on n'avait pas cliqué la
+                              tuile. `80` en alpha au repos, pleine à l'activation
+                              — dix-huit bordures saturées se disputeraient l'œil.
+                            */
                             style={{
-                                borderColor: isActive ? scene.color : undefined,
-                                boxShadow: isActive ? `0 0 20px ${scene.color}30` : undefined
+                                borderColor: teinte ? (isActive ? teinte : `${teinte}80`) : undefined,
+                                boxShadow: isActive && teinte ? `0 0 20px ${teinte}55` : undefined
                             }}
                         >
-                            {isActive && (
+                            {isActive && teinte && (
                                 <div
                                     className="absolute inset-0 opacity-10"
-                                    style={{ background: `linear-gradient(to bottom right, ${scene.color}, transparent)` }}
+                                    style={{ background: `linear-gradient(to bottom right, ${teinte}, transparent)` }}
                                 />
                             )}
                             <span
-                                className="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform"
-                                style={{ color: isActive ? scene.color : '#94a3b8' }} // slate-400
+                                className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform"
+                                /* Le gris ardoise reste le défaut : c'est ce que voit
+                                   une tuile dont personne n'a choisi la couleur. */
+                                style={{ color: teinte ?? '#94a3b8' }} // slate-400
                             >
                                 {scene.icon}
                             </span>
@@ -107,11 +136,6 @@ export const SceneGrid: React.FC = () => {
                             </span>
 
                             <div className="absolute top-2 right-2 flex items-center gap-1 z-20">
-                                {/* Has Software Effect indicator */}
-                                {aDesEffets && (
-                                    <span className="material-symbols-outlined text-sm animate-pulse" style={{ color: scene.color }}>auto_awesome</span>
-                                )}
-
                                 {/*
                                   **L'éclairage normal de la pièce.** La maison reste
                                   visible sur la tuile désignée, et n'apparaît au survol
@@ -178,7 +202,22 @@ export const SceneGrid: React.FC = () => {
                                     onDoubleClick={(e) => e.stopPropagation()}
                                 >
                                     <div className="flex items-center justify-center gap-1.5 mb-1">
-                                        <span className="material-symbols-outlined text-slate-500 text-sm leading-none">speed</span>
+                                        {/*
+                                          **L'étoile « cette scène porte un effet » vit
+                                          ici**, à la place d'un glyphe `speed` qui ne
+                                          disait rien que le « ×2 » ne disait déjà.
+
+                                          Elle y dit la même chose qu'au coin, au même
+                                          endroit que la vitesse qu'elle qualifie — et
+                                          *cette ligne n'existe QUE sur les scènes à
+                                          effet*, donc elle ne peut pas mentir.
+                                        */}
+                                        <span
+                                            className={`material-symbols-outlined text-sm leading-none animate-pulse ${teinte ? '' : 'text-accent'}`}
+                                            style={{ color: teinte ?? undefined }}
+                                        >
+                                            auto_awesome
+                                        </span>
                                         <button
                                             onClick={() => handleSpeed(scene.id, VITESSE_EFFET_DEFAUT)}
                                             title={t('light.grid.speed_reset_tooltip')}
