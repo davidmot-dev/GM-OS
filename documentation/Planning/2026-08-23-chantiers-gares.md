@@ -1492,6 +1492,10 @@ l'effacement retire aussi la touche et la désignation d'éclairage normal.
 *Deux retours de David dans l'heure qui a suivi le § 31, tous deux à l'écran. **Le premier montre que
 livrer un réglage ne suffit pas ; le second, que ce qu'on ajoute pousse ce qui était là.***
 
+✅ **CORRIGÉ ET VÉRIFIÉ À L'ÉCRAN le 2026-09-07** — David : *« ok c'est bon »*. Les deux défauts sont
+nés le jour même, du § 29 et du § 31 : **une soirée de livraisons se relit toujours à l'écran, et
+c'est là que la moitié de ses défauts se voit.***
+
 #### ⛔ 32a — « je ne sais pas donner de couleur à mes tuiles »
 
 L'éditeur de tuile fonctionnait. **C'est la tuile qui ne montrait rien.** `scene.color` était lu à
@@ -1601,6 +1605,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 5 | **Sauvegarde de la bibliothèque des fiches** | ✅ **ÉPROUVÉE EN RÉEL le 29/08** — aller **et** retour | — | Rien |
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
+| 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé

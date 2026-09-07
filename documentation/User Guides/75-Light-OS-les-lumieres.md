@@ -203,7 +203,8 @@ c'est utile de savoir lequel a agi quand la lumière change sans qu'on ait rien 
 *Repris le 2026-09-07 au soir, sur deux retours de David à l'écran : la **couleur d'une tuile ne se
 voyait nulle part** (elle n'était lue que sur la scène en cours de lecture, et la teinte par défaut
 était invisible sur le fond sombre), et l'**étoile ✨ se télescopait avec l'icône de la scène** — elle
-est descendue dans la ligne de vitesse.*
+est descendue dans la ligne de vitesse. **Les deux corrections ont été vérifiées à l'écran le soir
+même.***
 
 *Corrigé le 2026-09-07 — **trois promesses que rien ne tenait**, trouvées dans le code : le bouton
 **Sync** n'existait pas (et son voisin « Synchro Simulée » débranchait le pont), le **Key Learn**
