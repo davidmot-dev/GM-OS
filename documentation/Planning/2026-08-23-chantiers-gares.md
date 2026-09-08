@@ -47,8 +47,8 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-06** après les §§ 24 et 25 : **3 816 tests au vert** (321 fichiers, 1 ignoré).
 >
-> Revérifié le **2026-09-07** après les §§ 29 à 34 : `tsc -b` propre, **3 926 tests au vert**
-> (328 fichiers, 1 ignoré, 4 tests ignorés).
+> Revérifié le **2026-09-07** après les §§ 29 à 35 : `tsc -b` propre, **3 931 tests au vert**
+> (329 fichiers, 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1579,8 +1579,8 @@ Dix noms sont **déclarés, souvent implémentés, et appelés par personne** �
 
 | Où | Quoi |
 | --- | --- |
-| `useSoundStore` | `setPadColor` — **la couleur d'une pastille de son ne peut pas être changée** |
-| `useClockStore` | `addTime`, `resetTensionClock`, `setActiveCalendar` — le temps ne s'avance pas par cette porte, une horloge de tension ne se remet pas à zéro, le calendrier actif ne se choisit pas. Et `daysPerWeek` a **une seule occurrence dans tout le dépôt** : la semaine du calendrier n'a jamais eu de longueur |
+| `useSoundStore` | ✅ **`setPadColor` — TRAITÉ, voir § 35.** Et c'était pire que « la couleur ne peut pas être changée » |
+| `useClockStore` | ⛔ **J'ai exagéré la première rédaction de cette ligne, corrigée le 07/09 au soir.** `setActiveCalendar` est un **doublon** : `selectCalendar` pose `activeCalendarId` (ligne 467) et l'écran a bien sa liste déroulante. `addTime` en est un autre : le tableau de bord avance le temps par `setTimestamp`. `resetTensionClock` ferait gagner six clics — `updateTensionSegments` vide déjà une jauge segment par segment. **Seul `daysPerWeek` est une vraie anomalie** : une occurrence dans tout le dépôt, jamais lue. *Un nom sans appelant n'est pas une fonctionnalité manquante — il faut regarder si un voisin fait déjà le travail.* |
 | `useSessionStore` | `isSessionMode` / `toggleSessionMode` — « Mode MJ Focus (masque les outils d'édition) », écrit, mis dans un instantané, **lu par aucun écran**. Rien n'est masqué |
 | `useMapUIStore` | `setBrushSize` — `brushSize` est figé à **50**, lu par `FogEngine` et persisté : on peint un couloir et une plaine au même pinceau |
 | `usePerformanceStore` | `setAutoPerformance` — le mode force les graphismes bas et **rien ne permet de le contredire** |
@@ -1608,6 +1608,47 @@ lieu d'en rendre un second* ; et un moment enregistré **avant** ce correctif re
 (`??` et non `||`, pour qu'un `false` explicite reste un choix respecté).
 
 **Ancres** : `storyboard/StoryboardDashboard.tsx`, `stores/typesDeMedia.ts` (`estUneVideo`).
+
+### 35 · ⛔ La couleur d'une pastille de son n'a jamais rien coloré (2026-09-07)
+
+*Premier des dix noms du § 33 à être traité, sur décision de David. **Et il s'est révélé plus grave
+que ce que le contrôle annonçait** : le contrôle disait « personne n'appelle `setPadColor` » ; en
+ouvrant, la valeur qu'il aurait fallu remplacer n'existait pas non plus.*
+
+⛔ **`var(--electric-violet)` n'est définie NULLE PART dans le dépôt.** Une seule occurrence dans tout
+le projet — celle qui l'emploie, comme valeur de naissance de chaque pastille. Les **cinq** endroits
+qui peignent une pastille pointaient donc vers rien :
+
+| Où | Ce que ça donnait |
+| --- | --- |
+| Bordure de la pastille active | valeur invalide, la classe reprenait la main |
+| Fond teinté | `` `${color}15` `` → `var(--electric-violet)15`, **du CSS qui n'existe dans aucune grammaire** |
+| Barre de progression, son halo, le dégradé du bas | sans couleur |
+
+⚠️ **Et `var(--gm-violet)`, trois lignes plus bas, n'existe pas davantage** — `gm.violet` est une
+couleur *Tailwind*, pas une variable CSS. *Deux variables mortes à trois lignes d'écart : elles se
+recopient plus vite qu'on ne les vérifie.*
+
+**Pourquoi ça a tenu si longtemps.** *Une couleur qui ne s'applique pas ne rend aucune erreur :
+l'élément garde simplement ce qu'il avait.* Et le seul moyen de remplacer la valeur morte —
+`setPadColor` — n'était appelé par personne. **Les deux défauts se protégeaient l'un l'autre** : sans
+bouton, la valeur ne changeait jamais ; sans valeur valide, un bouton n'aurait rien montré.
+
+**Livré** : une rangée de huit pastilles de couleur dans le menu d'un pad, et `couleurDuPad` par où
+passent les cinq usages — tout ce qui n'est pas une hexadécimale à six chiffres retombe sur le violet
+de l'application (`gm.violet`, `#8b5cf6`, dont le commentaire de la configuration dit « Music/Sound/
+Voice OS »). **Aucune migration** : les pastilles existantes gardent leur champ et s'affichent enfin.
+
+⚠️ La leçon technique : *une concaténation suppose une forme, et rien ne l'impose.* Coller `15` au
+bout d'une valeur CSS ne marche que sur une hexadécimale à six chiffres — un test le tient maintenant
+dans les deux sens.
+
+⭐ **La seconde garde du contrôle du § 33 a servi le jour même.** `setPadColor` étant désormais
+employé, sa tolérance est devenue périmée et le test a échoué en demandant qu'on retire sa ligne.
+*Une tolérance qui survit à sa cause devient un mensonge* — le mécanisme prévu pour ça a fonctionné à
+sa première occasion.
+
+**Ancres** : `sound/logic/couleurDuPad.ts` (+ son test), `sound/components/SoundPad.tsx`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

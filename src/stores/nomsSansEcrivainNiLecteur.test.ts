@@ -154,7 +154,6 @@ const TOLERES: Record<string, string> = {
     'resetCombat': "⚠️ useCombatStore : implémentée, aucun appelant",
     'setAnalysisResult': "⚠️ useForgeStore : implémentée, aucun appelant",
     'clearPlaylistPads': "⚠️ useMusicStore : implémentée, aucun appelant",
-    'setPadColor': "⚠️ useSoundStore : implémentée, aucun appelant — la couleur d'une pastille de son ne peut pas être changée",
     'addTime': "⚠️ useClockStore : implémentée, aucun appelant — le temps ne s'avance pas par cette porte",
     'resetTensionClock': "⚠️ useClockStore : implémentée, aucun appelant — une horloge de tension ne se remet pas à zéro",
     'setActiveCalendar': "⚠️ useClockStore : implémentée, aucun appelant — le calendrier actif ne se choisit pas",

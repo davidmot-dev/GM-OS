@@ -3,6 +3,7 @@ import { useSoundStore, type SoundPad as ISoundPad } from '../useSoundStore';
 import { soundEngine } from '../SoundEngine';
 import { soundController } from '../SoundController';
 import { gmCustom, gmPrompt, gmConfirm } from '../../../stores/useModalStore';
+import { COULEUR_PAD_DEFAUT, couleurDuPad, couleurDuPadAttenuee } from '../logic/couleurDuPad';
 import { Plus, Zap, Keyboard, Lightbulb, Volume2, MoreHorizontal, Edit2, Trash2, RefreshCcw } from 'lucide-react';
 
 interface SoundPadProps {
@@ -11,8 +12,14 @@ interface SoundPadProps {
 }
 
 const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
-    const { id, title, filePath, volume, color, midiMapping, keyMapping, isActive, linkedLightSceneId } = pad;
-    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad, renamePad, clearPad } = useSoundStore();
+    const { id, title, filePath, volume, midiMapping, keyMapping, isActive, linkedLightSceneId } = pad;
+    /*
+      **Une seule porte pour la couleur.** Les cinq usages ci-dessous la
+      prenaient brute — et elle valait `var(--electric-violet)`, une variable
+      définie nulle part. Voir `logic/couleurDuPad.ts`.
+    */
+    const color = couleurDuPad(pad.color);
+    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad, renamePad, clearPad, setPadColor } = useSoundStore();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // UI state
@@ -89,8 +96,12 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
             onClick={togglePlayback}
             className={`relative h-64 bg-app-bg/40 backdrop-blur-md border border-app-border/40 rounded-2xl flex flex-col justify-between p-5 group cursor-pointer transition-all duration-300 shadow-xl overflow-hidden ${isActive ? 'shadow-glow-accent ring-1 ring-accent/30' : 'hover:border-app-border/20 hover:bg-app-surface/5'}`}
             style={{ 
-                borderColor: isActive ? color : isLearningThis ? 'var(--gm-violet)' : 'var(--app-border)',
-                backgroundColor: isActive ? `${color}15` : undefined
+                /* `var(--gm-violet)` n'existe pas davantage : `gm.violet` est une
+                   couleur Tailwind, pas une variable CSS. Trois lignes, deux
+                   variables mortes — elles se recopient plus vite qu'on ne les
+                   vérifie. */
+                borderColor: isActive ? color : isLearningThis ? COULEUR_PAD_DEFAUT : 'var(--app-border)',
+                backgroundColor: isActive ? couleurDuPadAttenuee(pad.color, '15') : undefined
             }}
         >
             {/* Header: Key & MIDI */}
@@ -220,6 +231,33 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                     >
                         <Lightbulb size={12} /> {linkedLightSceneId ? 'Lumière Liée' : 'Lier Lumière'}
                     </button>
+
+                    {/*
+                      **Le choix de couleur — le bouton qui manquait au bout de la
+                      chaîne.** `setPadColor` était écrite depuis toujours et
+                      appelée par personne ; les cinq endroits qui peignent la
+                      pastille étaient donc condamnés à une valeur morte.
+
+                      Des pastilles et non un sélecteur libre : une couleur se
+                      choisit ici *pour distinguer une pastille des autres d'un
+                      coup d'œil en séance*, pas pour être accordée au pixel. Elles
+                      restent lisibles sur le fond sombre, et la première rend le
+                      défaut.
+                    */}
+                    <div className="w-full flex items-center justify-between gap-1 px-1 pt-1">
+                        {[COULEUR_PAD_DEFAUT, '#ef4444', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#ec4899'].map(teinte => (
+                            <button
+                                key={teinte}
+                                onClick={(e) => { e.stopPropagation(); setPadColor(id, teinte); }}
+                                title={teinte === COULEUR_PAD_DEFAUT ? 'Couleur par défaut' : teinte}
+                                className={`size-6 rounded-full border-2 transition-all ${color.toLowerCase() === teinte.toLowerCase()
+                                    ? 'border-app-text scale-110'
+                                    : 'border-transparent hover:scale-110'
+                                    }`}
+                                style={{ backgroundColor: teinte }}
+                            />
+                        ))}
+                    </div>
 
                     <button
                         onClick={(e) => {

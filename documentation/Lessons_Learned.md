@@ -809,7 +809,7 @@ autre, en alignant trois gestes qui ne veulent pas la même chose.*
 
 ---
 
-## 🔌 Déclaré, écrit, livré — et pourtant absent de l'écran (2026-09-07)
+## 🔌 Déclaré, écrit, livré — et pourtant absent de l'écran (2026-09-07/08)
 
 *Une soirée entière sur Light-OS, et quatre fois la même forme de défaut : **quelque chose existe
 dans le code et n'existe pas pour celui qui regarde.** Un drapeau lu dix fois et écrit par personne ;
@@ -903,9 +903,44 @@ qu'on retrouve chaque semaine ici.*
   qu'il examine** (il a attrapé le filtre de chemins) et **la péremption de ses propres exceptions**
   (une tolérance qui survit à sa cause devient un mensonge).
 
+### 6. Deux défauts peuvent se protéger l'un l'autre
+
+- **Défi** : brancher `setPadColor`, une action implémentée que personne n'appelait.
+- **Ce qu'il y avait dessous** : la valeur qu'il aurait fallu remplacer **n'existait pas non plus**.
+  Chaque pastille de son naissait avec `var(--electric-violet)`, une variable CSS **définie nulle
+  part dans le dépôt** — une seule occurrence dans tout le projet, celle qui l'emploie. Les cinq
+  endroits qui peignent une pastille pointaient donc vers rien, dont un `` `${color}15` `` qui
+  produisait du CSS n'existant dans aucune grammaire.
+- ⭐ **Le point** : sans bouton, la valeur morte ne changeait jamais ; sans valeur valide, un bouton
+  n'aurait rien montré. **Chacun rendait l'autre invisible**, et corriger un seul des deux n'aurait
+  rien donné à voir — ce qui aurait fait conclure que le correctif était mauvais.
+- **Leçon** : quand un outil signale « personne n'appelle X », la question suivante n'est pas
+  *faut-il brancher X ?* mais **que vaut ce que X écrit aujourd'hui ?** Un nom sans appelant est
+  souvent le symptôme visible d'une chaîne qui n'a jamais tourné en entier.
+- **Corollaire de rédaction** : *une concaténation suppose une forme, et rien ne l'impose.* Coller
+  deux caractères au bout d'une valeur CSS ne marche que si elle est hexadécimale ; ni le typage ni
+  le navigateur ne le disent.
+
+### 7. Un nom sans appelant n'est pas une fonctionnalité manquante
+
+- **Défi** : rendre compte des dix noms trouvés par le contrôle du § 33.
+- **Ce que j'ai fait de travers** : j'ai écrit à David que « le calendrier actif ne se choisit pas »
+  et que « le temps ne s'avance pas ». **Les deux étaient faux** : `selectCalendar` pose
+  `activeCalendarId` et l'écran a sa liste déroulante ; le tableau de bord avance le temps par
+  `setTimestamp`. Ces noms sont des **doublons inutilisés**, pas des portes manquantes.
+- **Leçon** : le contrôle mesure une chose vraie — *ce nom n'est cité nulle part ailleurs* — et il
+  est tentant de la traduire en *cette capacité n'existe pas*. **Ce n'est pas la même phrase.** Avant
+  de rapporter un orphelin comme un manque, il faut chercher **le voisin qui fait déjà le travail** :
+  ici, deux fois sur trois, il existait à quelques lignes.
+- **Ce que ça coûte** : une liste de restes qui exagère envoie travailler sur ce qui marche déjà —
+  exactement le défaut que la règle du 31/08 devait éteindre, sous une forme nouvelle.
+
 ---
 
-*Dernière mise à jour : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux
+*Dernière mise à jour : 8 Septembre 2026 — la couleur d'une pastille de son, qui n'a jamais rien
+coloré, et deux défauts qui se protégeaient l'un l'autre.*
+
+*Mise à jour précédente : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux
 défauts du moteur d'effets qu'il a mis au jour ; éclairage normal de la pièce, et le noir qui tombait
 tout seul à la fin du premier bruitage d'une soirée ; puis les trois promesses du guide que rien ne
 tenait — dont un interrupteur qui débranchait le pont sous le nom d'un autre ; la couleur de
