@@ -187,20 +187,17 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
                         ressources, motif ?? 'depuis la tablette');
 
                     if (typeof window === 'undefined') return resultat;
-                    const pont = (window as unknown as {
-                        appBridge?: { remote?: { broadcastToTablets?: (t: string, p: unknown) => void } };
-                    }).appBridge;
 
-                    // Deux chemins, comme partout ailleurs : le pont Electron
-                    // quand il existe, l'événement capté par `useHubSync` sinon
-                    // — c'est le cas de la tablette en PWA, qui n'a pas de pont.
-                    if (pont?.remote?.broadcastToTablets) {
-                        pont.remote.broadcastToTablets('table:ajuster', { ressourceId: id, delta });
-                    } else {
-                        window.dispatchEvent(new CustomEvent('table:ajuster', {
-                            detail: { ressourceId: id, delta, motif },
-                        }));
-                    }
+                    /*
+                      **Un seul chemin.** Le second — `broadcastToTablets` par le
+                      pont Electron — n'a jamais existé dans le préload, et il ne
+                      portait même pas les mêmes données : ⛔ **le `motif` y
+                      disparaissait.** *Une branche jamais prise ne se maintient
+                      pas : elle diverge en silence.* (2026-09-09)
+                    */
+                    window.dispatchEvent(new CustomEvent('table:ajuster', {
+                        detail: { ressourceId: id, delta, motif },
+                    }));
                     return resultat;
                 },
             };

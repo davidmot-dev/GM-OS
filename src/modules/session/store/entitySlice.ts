@@ -484,20 +484,20 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         // Mettre à jour le store local (tablette) pour un retour visuel immédiat
         get().updateCharacterNarrative(playerId, characterId, updates);
 
-        // Envoyer l'action au MJ via le pont distant (Electron/WebSocket)
+        /*
+          **Un seul chemin, et c'est celui-ci.** Il y en avait deux en
+          apparence — `appBridge.remote.broadcastToTablets` quand le pont
+          existe, cet événement sinon — mais ⛔ **le préload n'a jamais exposé
+          `broadcastToTablets`** : la garde était toujours fausse, et tout est
+          passé par ici depuis le premier jour, y compris chez le meneur.
+          `useHubSync` le réachemine vers la socket (voir sa liste
+          `AREACHEMINER`). *Une branche morte qui double une branche vivante
+          n'est pas une sécurité : c'est un commentaire qui ment.* (2026-09-09)
+        */
         if (typeof window !== 'undefined') {
-            if (window.appBridge?.remote?.broadcastToTablets) {
-                // Mode Electron (MJ ou Hub intégré)
-                window.appBridge.remote.broadcastToTablets(
-                    'session:update-character-narrative',
-                    { playerId, characterId, updates }
-                );
-            } else {
-                // Mode Browser (Tablette distante) via CustomEvent capturé par useHubSync
-                window.dispatchEvent(new CustomEvent('session:update-character-narrative', {
-                    detail: { playerId, characterId, updates }
-                }));
-            }
+            window.dispatchEvent(new CustomEvent('session:update-character-narrative', {
+                detail: { playerId, characterId, updates }
+            }));
         }
     },
 
@@ -543,16 +543,10 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         }));
 
         if (typeof window === 'undefined') return;
-        if (window.appBridge?.remote?.broadcastToTablets) {
-            window.appBridge.remote.broadcastToTablets(
-                'session:update-character-sheet-data',
-                { playerId, characterId, updates }
-            );
-        } else {
-            window.dispatchEvent(new CustomEvent('session:update-character-sheet-data', {
-                detail: { playerId, characterId, updates }
-            }));
-        }
+        /* Chemin unique — voir le commentaire de `updateCharacterNarrative`. */
+        window.dispatchEvent(new CustomEvent('session:update-character-sheet-data', {
+            detail: { playerId, characterId, updates }
+        }));
     },
 
     addLootToCharacter: (playerId, characterId, item) => {

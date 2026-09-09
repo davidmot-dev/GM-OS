@@ -59,10 +59,6 @@ const TROUS_CONNUS: Record<string, string> = {
     highlightMapToken:
         "Appelé trois fois par useCombatStore pour souligner le pion du combattant actif sur la carte. " +
         "RIEN ne l'implémente, nulle part : la fonctionnalité n'a jamais marché.",
-    broadcastToTablets:
-        "Appelé quatre fois (entitySlice, sessionSlice, ressources de table). La branche « mode Electron » " +
-        "n'est donc jamais prise : tout passe par le CustomEvent de secours, que useHubSync réachemine. " +
-        "Le commentaire qui dit « le Player Hub s'en tire par le pont Electron » décrit un chemin mort.",
     openFile:
         "Appelé par CampaignCockpit pour ouvrir le fichier d'une campagne. Le repli affiche une alerte " +
         "avec le chemin — le bouton ne ment pas, mais il n'ouvre rien.",
@@ -120,7 +116,6 @@ describe('le contrat du pont et ce que le préload expose', () => {
      */
     it('ne laisse pas la liste des trous connus grandir en silence', () => {
         expect(Object.keys(TROUS_CONNUS).sort()).toEqual([
-            'broadcastToTablets',
             'highlightMapToken',
             'openFile',
         ]);

@@ -379,17 +379,12 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
 
     remoteSubmitSessionFeedback: (sessionId, feedback) => {
         get().submitSessionFeedback(sessionId, feedback);
+        /* Chemin unique : `broadcastToTablets` n'a jamais existé dans le
+           préload — voir `entitySlice.updateCharacterNarrative`. */
         if (typeof window !== 'undefined') {
-            if (window.appBridge?.remote?.broadcastToTablets) {
-                window.appBridge.remote.broadcastToTablets(
-                    'session:submit-feedback',
-                    { sessionId, feedback }
-                );
-            } else {
-                window.dispatchEvent(new CustomEvent('session:submit-feedback', {
-                    detail: { sessionId, feedback }
-                }));
-            }
+            window.dispatchEvent(new CustomEvent('session:submit-feedback', {
+                detail: { sessionId, feedback }
+            }));
         }
     },
 });

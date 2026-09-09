@@ -171,7 +171,6 @@ declare global {
              *             — y compris les tablettes des joueurs.
              */
             broadcastUIAction?: (action: any, role?: string) => void;
-            broadcastToTablets: (type: string, payload: unknown) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
             onAction: (callback: (data: RemoteAction) => void) => () => void;
             // Ordre des arguments aligné sur preload.ts : (buffer, id).
