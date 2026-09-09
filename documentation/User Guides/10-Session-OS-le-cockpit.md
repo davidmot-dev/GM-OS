@@ -97,6 +97,23 @@ L'Oracle est désormais synchronisé avec vos PNJs actifs. Si vous avez épingl�
 
 Gérez votre table physiquement et numériquement dans l'onglet **Roster**.
 
+### La fiche du joueur
+
+L'écran se lit en deux colonnes : la **liste de vos joueurs** à gauche, et le **détail de celui que vous
+avez sélectionné** à droite, avec ses personnages.
+
+- **Changer l'image d'un joueur** : cliquez sur son portrait. Un appareil photo apparaît au survol et la
+  médiathèque s'ouvre. Les **deux portraits fonctionnent** — la petite vignette de la liste de gauche
+  comme le grand portrait du panneau de droite. Le choix est enregistré immédiatement, sans
+  confirmation.
+- **En ligne / Hors ligne** : la pastille à droite de chaque ligne bascule l'état du joueur. Elle est
+  déclarative — elle dit qui est à votre table, elle ne dépend pas d'une connexion réelle.
+- **Le nombre de personnages** affiché sous un nom ne compte que ceux de la **campagne active** ; le
+  panneau de droite, lui, les montre tous.
+- **Ajouter un joueur** : le bouton en bas de la liste. Un portrait peut être choisi dès la création,
+  et il reste modifiable ensuite.
+- **Retirer un joueur** : l'icône de corbeille, avec confirmation.
+
 ### Fiches de Personnage Dynamiques
 
 Les fiches sont entièrement adaptables :

@@ -2010,6 +2010,29 @@ noms sans emploi.**
 **Ancres** : `electron/preload.ts`, `src/types/window.d.ts`, `src/modules/ai/RAGService.ts`,
 `electron/pontDeclareEtExpose.test.ts`.
 
+### 40 · Changer l'image d'un joueur — le geste existait, l'endroit non (2026-09-09)
+
+*« Juste un détail, je voudrais être capable de changer l'image d'un joueur »*, capture à l'appui du
+panneau de droite du Roster.
+
+⭐ **Le geste existait déjà**, sur la vignette de 40 px de la liste de gauche : survol, appareil photo,
+médiathèque, `updatePlayer`. La chaîne entière était bonne — j'ai vérifié avant de répondre, échaudé
+par le § 39b où j'avais annoncé morte une fonctionnalité vivante.
+
+**Ce qui manquait, c'est l'endroit où l'on clique.** Le seul portrait visible de cet écran — le grand,
+à côté du nom et du compte de personnages — était une simple image, sans réaction ni indice. *David a
+demandé la fonctionnalité en regardant précisément celui-là.* ⚠️ Une capacité qui n'existe que sur la
+plus petite de ses deux représentations, derrière un survol, n'existe pas pour qui la cherche.
+
+Les deux portraits ouvrent désormais la même médiathèque. ⚠️ Deux portes, un seul écrivain : le magasin
+(`updatePlayer`) ; les écrans ne font que demander.
+
+*Au passage, le guide du cockpit décrivait les fiches de personnage et **rien sur la fiche du joueur
+lui-même** — ni l'ajout, ni le portrait, ni la pastille en ligne. La section manquante est écrite.*
+
+**Ancres** : `session/components/CharacterGrid.tsx`, `session/components/PlayerRoster.tsx`,
+`documentation/User Guides/10-Session-OS-le-cockpit.md`.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
