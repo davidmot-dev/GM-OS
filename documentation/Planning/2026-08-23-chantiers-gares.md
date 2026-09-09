@@ -1853,6 +1853,93 @@ déjà pour s'annuler, elle ne peut donc pas être attribuée à une tuile par l
 `light/useLightKeyboardControls.ts`, `light/components/Sidebar.tsx`,
 `light/logic/troisPortesDuRetour.test.ts`.
 
+### 39 · ⭐ L'audit du 2026-09-09 — quatre trous, le premier traité
+
+*« Peux-tu revoir l'application dans son ensemble et me trouver les trous ? »* — quatre peignes passés
+sur 978 fichiers, chaque candidat vérifié dans le code avant d'être annoncé. **Le peigne compte des
+noms, pas des références** : même parti pris que le contrôle des magasins, et mêmes limites.
+
+⚠️ **Ce que l'audit dit de bon, et qu'il faut lire aussi** : les 34 moteurs et services n'ont **aucune
+capacité orpheline réelle** — tout ce que le peigne a signalé était appelé par IPC, par une variable
+intermédiaire ou par un bootstrap. Et il n'y a **qu'un seul `catch` muet** dans tout le dépôt
+(`useClientStore`, migration d'identifiant qui retombe proprement sur un nouvel UUID). *Le motif qui a
+coûté quatre mois de panne de projection est éteint.*
+
+#### 39a · ✅ TRAITÉ — Aucun PDF du corpus n'a jamais nourri la Forge
+
+`RAGService` appelait `extractPdf`, le préload n'exposait que `extractPDF`, et **le contrat déclarait
+les deux**. L'appel optionnel valait `undefined`, le `if (text)` était faux : la fonction concluait
+*« ce PDF est vide »* — pour tous les PDF, depuis toujours.
+
+⚠️ **La conséquence n'est pas théorique** : `getContextForSpecificSystem` **admet explicitement** le
+`.pdf` pour la génération d'un système, puis en jette le contenu. Un livre de règles en PDF déposé dans
+`docs/systems/<jeu>/` ne nourrit pas la Forge — pendant que l'index de l'Oracle, lui, lit bien les PDF
+par son propre chemin (`RAGEngine`, `pdf-parse`). *Deux chemins pour la même matière, un qui marche, un
+qui se tait.*
+
+⛔ **Ce qui l'a rendu invisible : le fichier de types lui-même.** *Un contrat qui déclare les deux
+orthographes ne peut plus arbitrer entre elles*, et le typage n'avait donc rien à dire. C'est le motif
+des deux `as any` de la projection des fiches, transposé au contrat du pont.
+
+Le nom retenu est `extractPdf`, celui de ses voisins `readDoc` et `writeDoc` — *« PDF » en capitales
+invitait la faute à se reproduire.* Et un PDF qui ne rend rien se dit désormais dans la console : *une
+extraction qui échoue et une extraction vide se ressemblent trop pour partager le même silence.*
+
+#### 39b · ✅ TRAITÉ — Le contrôle qui manquait, et ses trois premières prises
+
+Le contrôle des magasins (§ 33) **ne regarde que les magasins**. Les deux défauts du jour vivaient
+ailleurs : le geste d'arrêt sans bouton dans un **moteur** (§ 37c), le PDF dans le **contrat du pont**.
+`pontDeclareEtExpose` tient désormais le second front — *tout ce que le contrat déclare, le préload
+l'expose.*
+
+⚠️ **Il a mordu tout de suite : trois noms déclarés, APPELÉS, et absents du préload.** Leur garde
+`if (pont?.x)` est donc toujours fausse. Ils sont dans une liste d'exceptions datée, **pour être vus et
+non tolérés** — les exposer demande une décision de David :
+
+| Nom | Ce qui ne marche pas |
+| :--- | :--- |
+| `highlightMapToken` | Appelé **trois fois** par `useCombatStore` pour souligner le pion du combattant actif sur la carte. **Rien ne l'implémente nulle part** — la fonctionnalité n'a jamais marché |
+| `broadcastToTablets` | Appelé **quatre fois**. La branche « mode Electron » n'est jamais prise ; tout passe par le `CustomEvent` de secours que `useHubSync` réachemine. ⚠️ Le commentaire qui dit *« le Player Hub s'en tire par le pont Electron »* **décrit un chemin mort** |
+| `openFile` | Le bouton du cockpit de campagne. Son repli affiche une alerte avec le chemin — *il ne ment pas, mais il n'ouvre rien* |
+
+#### 39c · ⛔ OUVERT — Neuf clés de traduction absentes des deux langues
+
+`clesEmployees` ne vérifie que les clés à namespace explicite (`modules:x.y`). En résolvant le
+namespace depuis `useTranslation(...)`, **890 appels échappent au contrôle** — et neuf clés y sont
+introuvables en français comme en anglais.
+
+Une est visible sans rien chercher : `ImagePad` affiche **`image.pad.stop` en toutes lettres** sur la
+pastille dès qu'une image est projetée (`image.pad.solo` existe, `stop` non). Les autres : deux
+infobulles de la carte (`addToMap`, `alreadyOnMap`), l'horodatage du lobby (`remote.lobby.just_now`),
+et cinq libellés des réglages IA (`ollama_cloud_label/_desc`, `custom_label/_desc`,
+`diagnostic_configured`).
+
+*Le vrai chantier n'est pas les neuf clés, c'est l'angle mort :* étendre le contrôle aux clés sans
+préfixe. ⚠️ Attention aux pluriels — `itemsCount` existe sous `itemsCount_one` / `_other`, et un
+contrôle naïf le déclarerait manquant.
+
+#### 39d · ⛔ OUVERT — Le storyboard est le seul enchaînement qui signe du nom du meneur
+
+`useStoryboardStore` appelle `applyScene(moment.lightSceneId)` **sans `isAutomatic`**. Les cinq autres
+enchaînements le passent tous à `true` : les zones de la carte, Sound-OS deux fois, Music-OS, la
+restauration d'instantané. **Et la documentation d'`applyScene` cite nommément « un moment de
+storyboard » parmi les six enchaînements** — *le code contredit son propre commentaire.*
+
+Deux effets : le journal écrit *« Lumières : <scène> »* alors que le geste était **le moment**, et
+surtout `lastManualSceneId` est écrasé — à la fin du prochain son, le retour automatique ramènera la
+scène du storyboard comme si le meneur l'avait choisie à la main.
+
+*Code mort relevé au passage, sans conséquence :* `FogEngine.isPointRevealed` et
+`CrossWindowEventService.getLocksVersion` n'ont aucun appelant — le second a pourtant un test, qui
+éprouve donc du code que rien n'utilise.
+
+**Ce que l'audit n'a pas balayé**, pour que le silence ait un sens : rien sur l'ergonomie, sur les
+guides face au code, sur les performances ni sur la sécurité. **Uniquement les chaînes cassées et les
+noms sans emploi.**
+
+**Ancres** : `electron/preload.ts`, `src/types/window.d.ts`, `src/modules/ai/RAGService.ts`,
+`electron/pontDeclareEtExpose.test.ts`.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -1918,6 +2005,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 | 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
 | 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
+| 11 | **L'audit du 09/09 — les trous** | ⛔ **DEUX TRAITÉS, DEUX OUVERTS** (§ 39). Traités : le PDF que la Forge n'a jamais lu, et le contrôle du contrat du pont qui manquait. **Ouverts : neuf clés de traduction absentes des deux langues** (§ 39c) et **le storyboard qui se fait passer pour un geste du meneur** (§ 39d). ⚠️ Le contrôle neuf tient aussi **trois noms appelés que le préload n'expose pas** — dont `highlightMapToken`, qui n'a jamais marché | Le § 39c : étendre le contrôle des clés aux appels sans préfixe | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
