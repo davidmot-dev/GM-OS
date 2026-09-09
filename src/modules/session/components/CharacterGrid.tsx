@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -7,17 +7,19 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { PlayerCharacter, Campaign } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2 } from 'lucide-react';
+import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
+import { MediaBrowser } from '../../../components/MediaBrowser';
 
 const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
     const { t } = useTranslation(['modules']);
-    const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession } = useSessionOSStore();
+    const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession, updatePlayer } = useSessionOSStore();
     
     const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
 
     const selectedPlayer = players.find(p => p.id === selectedPlayerId);
     const resolvedPlayerAvatar = useMediaUrl(selectedPlayer?.avatarUrl);
+    const [choixDuPortrait, setChoixDuPortrait] = useState(false);
 
     if (!selectedPlayer) {
         return (
@@ -31,12 +33,32 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
         <div className="flex-1 h-full flex flex-col bg-app-bg/20 overflow-y-auto custom-scrollbar border-r border-app-border/50">
             {/* Player Header */}
             <div className="p-6 border-b border-app-border flex items-center gap-5 bg-app-surface/60 backdrop-blur-sm sticky top-0 z-10">
-                <div className="relative">
+                {/*
+                  **Le grand portrait change l'image, comme la vignette du roster.**
+
+                  Le geste existait depuis toujours — sur la vignette de 40 px de
+                  la liste de gauche, derrière un survol. *Mais c'est ici qu'on
+                  clique* : David a demandé la fonctionnalité en regardant cet
+                  écran, où le seul portrait visible ne répondait pas.
+                  (2026-09-09)
+
+                  ⚠️ Deux portes vers le même geste, et c'est voulu : le magasin
+                  reste le seul écrivain (`updatePlayer`), les deux écrans ne font
+                  que le demander.
+                */}
+                <div
+                    className="relative group/portrait cursor-pointer"
+                    onClick={() => setChoixDuPortrait(true)}
+                    title={t('modules:session.players.avatar_change_title')}
+                >
                     <img
                         src={resolvedPlayerAvatar || undefined}
                         alt={selectedPlayer.realName}
-                        className="w-16 h-16 rounded-full bg-app-surface object-cover ring-2 ring-accent/40"
+                        className="w-16 h-16 rounded-full bg-app-surface object-cover ring-2 ring-accent/40 group-hover/portrait:opacity-40 transition-opacity"
                     />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/portrait:opacity-100 transition-opacity text-app-text pointer-events-none">
+                        <Camera size={22} />
+                    </div>
                     <span className={`absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full border-2 border-app-bg ${selectedPlayer.isOnline ? 'bg-emerald-400' : 'bg-app-text/20'}`}></span>
                 </div>
                 <div>
@@ -123,6 +145,17 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                     {t('modules:session.characters.add_button')}
                 </button>
             </div>
+
+            <MediaBrowser
+                isOpen={choixDuPortrait}
+                onClose={() => setChoixDuPortrait(false)}
+                onSelect={(mediaId) => {
+                    updatePlayer(selectedPlayer.id, { avatarUrl: mediaId });
+                    setChoixDuPortrait(false);
+                }}
+                allowedTypes={['image']}
+                title={t('modules:session.players.avatar_change_title')}
+            />
         </div>
     );
 };
