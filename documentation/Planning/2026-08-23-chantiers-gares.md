@@ -1930,16 +1930,43 @@ portée passe de ~500 appels à plus de 1 200, et son seuil de garde monte avec 
 ✅ **Éprouvé à l'envers** : en retirant `image.pad.stop` du français, le test nomme la clé et échoue.
 *Un contrôle vert qui n'attrape rien ne vaut rien.*
 
-#### 39d · ⛔ OUVERT — Le storyboard est le seul enchaînement qui signe du nom du meneur
+#### 39d · ✅ TRAITÉ — Le storyboard était le seul enchaînement qui signait du nom du meneur
 
-`useStoryboardStore` appelle `applyScene(moment.lightSceneId)` **sans `isAutomatic`**. Les cinq autres
-enchaînements le passent tous à `true` : les zones de la carte, Sound-OS deux fois, Music-OS, la
-restauration d'instantané. **Et la documentation d'`applyScene` cite nommément « un moment de
-storyboard » parmi les six enchaînements** — *le code contredit son propre commentaire.*
+`useStoryboardStore` appelait `applyScene(moment.lightSceneId)` **sans `isAutomatic`**, seul des six :
+les zones de la carte, Sound-OS deux fois, Music-OS et la restauration d'instantané le passent tous.
+**Et la documentation d'`applyScene` cite nommément « un moment de storyboard » parmi les
+enchaînements** — *le code contredisait son propre commentaire, et rien ne pouvait le dire.*
 
-Deux effets : le journal écrit *« Lumières : <scène> »* alors que le geste était **le moment**, et
-surtout `lastManualSceneId` est écrasé — à la fin du prochain son, le retour automatique ramènera la
-scène du storyboard comme si le meneur l'avait choisie à la main.
+⚠️ **Le vrai défaut n'était pas le journal.** `lastManualSceneId` était écrasé : à la fin du son
+suivant, le retour automatique ramenait la scène du storyboard **comme si le meneur l'avait choisie à
+la main**. *Ça ne se voit pas en jouant le moment ; ça se voit trois minutes plus tard, sur une pièce
+qui revient au mauvais endroit.*
+
+Le `setActiveScene` qui suivait est **retiré, pas corrigé** : `applyScene` le fait déjà, avec le même
+drapeau. *Deux écrivains pour une même donnée est le motif que ce dépôt paie le plus souvent* — et
+celui-ci écrivait l'inverse de l'autre.
+
+**Le contrôle qui tient la règle** : *hors de Light-OS, personne ne clique.* Un appel venu d'un autre
+module n'a pas de doigt derrière lui — la frontière est nette, donc la règle n'a pas besoin
+d'exceptions. ⚠️ Le Spotlight fait exception à l'œil mais pas à la règle : son `applyScene` est celui
+du magasin d'**ambiance**.
+
+✅ **Éprouvé à l'envers** : en retirant le drapeau, le contrôle nomme le fichier et échoue. ⚠️ Et il
+s'est trompé une première fois — *la glob rend des chemins relatifs au test*, donc les sources de
+Light-OS commencent par `./` et non par `/light/` : il accusait la tuile qu'on clique. *Un contrôle qui
+se trompe est pire qu'un contrôle absent.*
+
+#### 39e · ⛔ OUVERT — Un moment de storyboard écrit trois lignes au journal, et aucune ne le nomme
+
+Trouvé en fermant le § 39d. Un seul moment produit *« Musique : X »*, *« Ambiance : X »* et
+*« Lumières : X »* — **et pas une ligne ne dit quel moment a été joué.**
+
+⚠️ Ce n'est pas le même correctif : Music-OS et Ambient-OS journalisent **sans condition**, ils n'ont
+aucun drapeau à passer. Les faire taire demande de leur en ajouter un, et surtout de trancher la
+question qui vient d'abord : **un moment mérite-t-il sa propre ligne ?** *C'est une décision, pas un
+correctif* — et elle appartient à David.
+
+*Ce que le journal dit aujourd'hui d'un moment joué : ses effets, jamais son nom.*
 
 *Code mort relevé au passage, sans conséquence :* `FogEngine.isPointRevealed` et
 `CrossWindowEventService.getLocksVersion` n'ont aucun appelant — le second a pourtant un test, qui
@@ -2017,7 +2044,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 | 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
 | 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
-| 11 | **L'audit du 09/09 — les trous** | ⛔ **TROIS TRAITÉS, UN OUVERT** (§ 39). Traités : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont qui manquait, et les neuf clés qui s'affichaient en clair — avec l'angle mort qui les cachait (§ 39c). **Ouvert : le storyboard qui se fait passer pour un geste du meneur** (§ 39d). ⚠️ Le contrôle du pont tient aussi **trois noms appelés que le préload n'expose pas** — dont `highlightMapToken`, qui n'a jamais marché | Le § 39d : passer `isAutomatic` depuis le storyboard | Rien |
+| 11 | **L'audit du 09/09 — les trous** | ✅ **LES QUATRE SONT TRAITÉS** (§ 39) : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont qui manquait, les neuf clés qui s'affichaient en clair avec l'angle mort qui les cachait, et le storyboard qui signait du nom du meneur — *lequel écrasait la scène où la pièce revient*. ⛔ **Deux décisions restent à prendre, pas des correctifs** : les trois noms que le préload n'expose pas (§ 39b — dont `highlightMapToken`, qui n'a jamais marché) et les trois lignes de journal d'un moment de storyboard (§ 39e) | Trancher le § 39e : un moment mérite-t-il sa propre ligne ? | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
