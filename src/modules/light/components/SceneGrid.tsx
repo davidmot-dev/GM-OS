@@ -4,6 +4,9 @@ import {
     VITESSE_EFFET_MIN,
     VITESSE_EFFET_MAX,
     VITESSE_EFFET_DEFAUT,
+    INTENSITE_SCENE_MIN,
+    INTENSITE_SCENE_MAX,
+    INTENSITE_SCENE_DEFAUT,
 } from '../useLightStore';
 import type { LightScene } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
@@ -15,11 +18,14 @@ import { toucheLisible } from '../useLightKeyboardControls';
 /** Le pas du curseur : des quarts, pour que ×1 se retrouve sans viser. */
 const PAS_DE_VITESSE = 0.25;
 
+/** Le pas du curseur d'intensité, en points de pourcentage : des cinquièmes de dizaine. */
+const PAS_D_INTENSITE = 5;
+
 export const SceneGrid: React.FC = () => {
     const {
         scenes, activeSceneId, defaultSceneId, sceneEnApprentissage,
-        saveSceneSnapshot, clearScene, setSceneEffectSpeed, setDefaultScene,
-        apprendreUneTouche, updateSceneMetadata,
+        saveSceneSnapshot, clearScene, setSceneEffectSpeed, setSceneBrightness,
+        setDefaultScene, apprendreUneTouche, updateSceneMetadata,
     } = useLightStore();
     const { t } = useTranslation('modules');
     const [sceneEnEdition, setSceneEnEdition] = useState<string | null>(null);
@@ -49,6 +55,17 @@ export const SceneGrid: React.FC = () => {
         hueEngine.appliquerVitesseDeScene(sceneId);
     };
 
+    /*
+      **L'intensité aussi agit tout de suite, mais pas de la même façon.** Les
+      lampes sous effet relisent le réglage à leur prochain battement ; les
+      lampes posées ne rebattent jamais, et c'est le moteur qui les renvoie —
+      une fois le curseur reposé, pour ne pas noyer le pont en chemin.
+    */
+    const handleIntensite = (sceneId: string, pourcent: number) => {
+        setSceneBrightness(sceneId, pourcent);
+        hueEngine.appliquerIntensiteDeScene(sceneId);
+    };
+
     const handleRename = (e: React.MouseEvent, scene: LightScene) => {
         e.stopPropagation();
         setSceneEnEdition(scene.id);
@@ -69,6 +86,7 @@ export const SceneGrid: React.FC = () => {
                     */
                     const teinte = couleurDeLaTuile(scene);
                     const vitesse = scene.effectSpeed ?? VITESSE_EFFET_DEFAUT;
+                    const intensite = scene.sceneBrightness ?? INTENSITE_SCENE_DEFAUT;
 
                     if (!hasData) {
                         return (
@@ -189,6 +207,55 @@ export const SceneGrid: React.FC = () => {
                                     <span className="text-ui-10 text-slate-500">{t('light.grid.key_escape')}</span>
                                 </div>
                             )}
+
+                            {/*
+                              **Le curseur d'intensité — sur toutes les tuiles remplies.**
+                              Contrairement à la vitesse, il a prise partout :
+                              toute scène capturée porte une brillance, avec ou
+                              sans effet.
+
+                              Il **multiplie** ce qui a été capturé au lieu de le
+                              réécrire : on baisse une ambiance pour la soirée,
+                              et revenir à 100 % rend la scène d'origine sans
+                              avoir à la recapturer.
+                            */}
+                            <div
+                                /*
+                                  **Une seule ligne, et c'est délibéré.** La
+                                  vitesse peut s'offrir un titre au-dessus de son
+                                  curseur : elle ne s'affiche que sur les scènes
+                                  à effet. L'intensité, elle, est sur les dix-huit
+                                  tuiles — *un carré de taille fixe se remplit, et
+                                  ce qu'on y ajoute pousse ce qui y était.*
+                                */
+                                className="w-full px-4 flex items-center gap-1.5 relative z-20"
+                                onClick={(e) => e.stopPropagation()}
+                                onDoubleClick={(e) => e.stopPropagation()}
+                            >
+                                <span
+                                    className="material-symbols-outlined text-sm leading-none text-slate-400 shrink-0"
+                                    style={{ color: teinte ?? undefined }}
+                                >
+                                    light_mode
+                                </span>
+                                <input
+                                    type="range"
+                                    min={INTENSITE_SCENE_MIN}
+                                    max={INTENSITE_SCENE_MAX}
+                                    step={PAS_D_INTENSITE}
+                                    value={intensite}
+                                    onChange={(e) => handleIntensite(scene.id, parseInt(e.target.value, 10))}
+                                    title={t('light.grid.brightness_tooltip')}
+                                    className="flex-1 min-w-0 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
+                                />
+                                <button
+                                    onClick={() => handleIntensite(scene.id, INTENSITE_SCENE_DEFAUT)}
+                                    title={t('light.grid.brightness_reset_tooltip')}
+                                    className="text-ui-10 font-mono font-bold text-slate-400 hover:text-accent transition-colors leading-none shrink-0 w-8 text-right"
+                                >
+                                    {intensite}%
+                                </button>
+                            </div>
 
                             {/*
                               **Le curseur de vitesse — seulement là où il a prise.**

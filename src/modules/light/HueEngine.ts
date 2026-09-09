@@ -1,4 +1,4 @@
-import { useLightStore, VITESSE_EFFET_DEFAUT } from "./useLightStore";
+import { useLightStore, INTENSITE_SCENE_DEFAUT, VITESSE_EFFET_DEFAUT } from "./useLightStore";
 import type { HueLight, HueLightState } from "./useLightStore";
 import { sceneDeRepli } from "./logic/sceneDeRepli";
 
@@ -28,6 +28,25 @@ interface HueApiLight {
 export const CADENCE_PLANCHER_MS = 100;
 
 /**
+ * **Le temps qu'on laisse au curseur d'intensité avant de rejouer la scène.**
+ *
+ * Un curseur traîné émet des dizaines de valeurs ; rejouer la scène à chacune
+ * noierait le pont, qui tient de l'ordre de dix commandes par seconde et qui
+ * fait déjà battre les effets. On ne garde que la dernière valeur d'un quart de
+ * seconde — le geste reste vivant, le pont ne s'en aperçoit pas.
+ */
+export const DELAI_INTENSITE_MS = 250;
+
+/**
+ * La transition d'un rejeu d'intensité, en millisecondes.
+ *
+ * ⚠️ Ce n'est **pas** `transitionTimeMs` : celui-là vaut cinq secondes par
+ * défaut, ce qui est juste pour passer d'une ambiance à l'autre et absurde pour
+ * un curseur qu'on pousse — la pièce répondrait cinq secondes après la main.
+ */
+export const TRANSITION_INTENSITE_MS = 200;
+
+/**
  * Applique une vitesse à une cadence d'effet.
  *
  * `vitesse` divise l'attente : 2 va deux fois plus vite, 0,5 deux fois moins.
@@ -37,6 +56,36 @@ export const CADENCE_PLANCHER_MS = 100;
 export const cadenceEffective = (intervalleMs: number, vitesse: number): number => {
     const facteur = Number.isFinite(vitesse) && vitesse > 0 ? vitesse : VITESSE_EFFET_DEFAUT;
     return Math.max(CADENCE_PLANCHER_MS, Math.round(intervalleMs / facteur));
+};
+
+/**
+ * **La brillance réellement envoyée au pont**, une fois les deux curseurs passés.
+ *
+ * `bri` est la brillance nominale — celle qu'a enregistrée la capture d'une
+ * tuile, ou celle qu'un effet vient de calculer. Elle est multipliée par le
+ * curseur global (*toute la pièce, ce soir*) puis par celui de la tuile
+ * (*cette ambiance-là est basse*). **Les deux se composent** : 50 % de global
+ * sur une scène à 50 % rend le quart.
+ *
+ * Deux bornes, et aucune n'est décorative :
+ * - **254 en haut**, parce que la tuile monte jusqu'à 150 % et que le pont
+ *   refuse la commande entière au-delà — une lampe déjà pleine resterait
+ *   simplement pleine, mais elle emmènerait les autres dans son refus ;
+ * - **0 en bas**, qui est ce que le code faisait déjà quand le curseur global
+ *   est à zéro. On ne le remonte pas à 1 : ce serait décider qu'un global à
+ *   zéro veut dire « au plus bas » alors qu'il a toujours voulu dire « rien ».
+ *
+ * Une valeur illisible (scène d'avant le réglage, sauvegarde abîmée) vaut
+ * 100 % : *on joue la scène telle qu'elle a été capturée, on ne l'éteint pas.*
+ */
+export const brillanceEffective = (
+    bri: number,
+    pourcentGlobal: number,
+    pourcentDeScene: number = INTENSITE_SCENE_DEFAUT
+): number => {
+    const global = Number.isFinite(pourcentGlobal) ? pourcentGlobal : 100;
+    const scene = Number.isFinite(pourcentDeScene) ? pourcentDeScene : INTENSITE_SCENE_DEFAUT;
+    return Math.max(0, Math.min(254, Math.round(bri * (global / 100) * (scene / 100))));
 };
 
 export class HueEngine {
@@ -57,6 +106,10 @@ export class HueEngine {
      */
     private generationEffet: Record<string, number> = {};
     private flashTimeout: ReturnType<typeof setTimeout> | null = null;
+    /** Le rejeu d'intensité en attente, s'il y en a un (voir {@link DELAI_INTENSITE_MS}). */
+    private minuterieIntensite: ReturnType<typeof setTimeout> | null = null;
+    /** Un rejeu d'intensité est-il en train de parler au pont ? */
+    private rejeuIntensiteEnCours = false;
 
     // ------------------------------------------------------------------------
     // Discovery & Pairing
@@ -185,7 +238,24 @@ export class HueEngine {
         useLightStore.getState().setLights(formattedLights);
     }
 
-    async setLightState(id: string, state: Partial<HueLightState>, transitionTimeMs: number = 400) {
+    /**
+     * Envoie un état à une lampe.
+     *
+     * `intensiteDeScene` est le curseur de la tuile d'où vient cet état, en
+     * pourcentage. Il ne s'applique **qu'au message envoyé au pont** : l'état
+     * gardé en mémoire reste la brillance nominale, celle qu'une capture doit
+     * réenregistrer. *Sinon deux allers-retours entre une tuile à 50 % et une
+     * capture éteindraient la scène par étapes.*
+     *
+     * Il vaut 100 par défaut, et c'est ce que reçoit un geste direct sur une
+     * lampe (le pied de page) : ce geste n'appartient à aucune tuile.
+     */
+    async setLightState(
+        id: string,
+        state: Partial<HueLightState>,
+        transitionTimeMs: number = 400,
+        intensiteDeScene: number = INTENSITE_SCENE_DEFAUT
+    ) {
         // Transition time in Hue API is in multiples of 100ms
         const transitiontime = Math.round(transitionTimeMs / 100);
 
@@ -199,10 +269,13 @@ export class HueEngine {
             if (state.xy !== undefined) payload.xy = state.xy;
             if (state.ct !== undefined) payload.ct = Math.round(state.ct);
 
-            // Apply global brightness as a modifier
+            // Apply global brightness and the tile's own intensity as modifiers
             if (typeof payload.bri === 'number') {
-                const globalBri = useLightStore.getState().globalBrightness / 100;
-                payload.bri = Math.round(payload.bri * globalBri);
+                payload.bri = brillanceEffective(
+                    payload.bri,
+                    useLightStore.getState().globalBrightness,
+                    intensiteDeScene
+                );
             }
         }
 
@@ -253,6 +326,9 @@ export class HueEngine {
         }
 
         const transTime = useLightStore.getState().transitionTimeMs;
+        /* Lue une fois pour toute la scène : le curseur ne doit pas changer de
+           valeur entre la première lampe et la dernière. */
+        const intensite = scene.sceneBrightness ?? INTENSITE_SCENE_DEFAUT;
         useLightStore.getState().setActiveScene(sceneId, isAutomatic);
 
         // Turn everything off first if not in snapshot?
@@ -261,11 +337,11 @@ export class HueEngine {
             this.stopSoftwareEffect(id); // Clean any previous logic
             if (state.effect && state.effect !== 'none') {
                 // IMPORTANT: Even if there is an effect, we must turn the light ON first and set its base state
-                await this.setLightState(id, { ...state, effect: 'none' }, transTime);
+                await this.setLightState(id, { ...state, effect: 'none' }, transTime, intensite);
                 this.startSoftwareEffect(id, state.effect, state, sceneId);
             } else {
                 // Ensure we handle them sequentially to not rate-limit the bridge
-                await this.setLightState(id, state, transTime);
+                await this.setLightState(id, state, transTime, intensite);
                 // Tiny delay to let the bridge breathe (increased from 50ms)
                 await new Promise(r => setTimeout(r, 100));
             }
@@ -464,6 +540,19 @@ export class HueEngine {
     }
 
     /**
+     * L'intensité qui règle l'effet d'une lampe : celle de la scène qui l'a
+     * allumé, ou la pleine brillance si l'effet a été choisi à la main.
+     *
+     * Elle est relue **à chaque battement** — c'est ce qui fait qu'un curseur
+     * poussé pendant qu'une bougie brûle se voit sans rien replanifier.
+     */
+    private intensiteDeLEffet(id: string): number {
+        const sceneId = this.sceneDeLEffet[id];
+        if (!sceneId) return INTENSITE_SCENE_DEFAUT;
+        return useLightStore.getState().scenes[sceneId]?.sceneBrightness ?? INTENSITE_SCENE_DEFAUT;
+    }
+
+    /**
      * **Répercute tout de suite le curseur d'une tuile.**
      *
      * Sans ça, un effet lent (le crépuscule bat toutes les 10 s) n'apprendrait
@@ -476,6 +565,60 @@ export class HueEngine {
                 this.replanifierEffet[id]();
             }
         });
+    }
+
+    /**
+     * **Répercute le curseur d'intensité d'une tuile sur la pièce.**
+     *
+     * Deux moitiés, et elles ne se ressemblent pas :
+     * - les lampes **sous un effet** n'ont rien à recevoir — leur boucle relit
+     *   l'intensité à chaque battement (voir {@link intensiteDeLEffet}) ;
+     * - les lampes **posées** ne rebattent jamais : sans ce rejeu, le curseur
+     *   ne ferait rien avant la prochaine activation de la tuile.
+     *
+     * Rien n'est envoyé si la tuile n'est pas celle qui joue : *un réglage
+     * gardé pour tout à l'heure ne doit pas allumer la pièce maintenant.*
+     */
+    appliquerIntensiteDeScene(sceneId: string) {
+        if (useLightStore.getState().activeSceneId !== sceneId) return;
+
+        if (this.minuterieIntensite) clearTimeout(this.minuterieIntensite);
+        this.minuterieIntensite = setTimeout(() => {
+            this.minuterieIntensite = null;
+            void this.rejouerIntensite(sceneId);
+        }, DELAI_INTENSITE_MS);
+    }
+
+    /** Renvoie les lampes posées d'une scène à la brillance voulue, une par une. */
+    private async rejouerIntensite(sceneId: string) {
+        /*
+          Un rejeu parle au pont pendant plusieurs centaines de millisecondes.
+          Si le curseur bouge encore pendant ce temps, on ne double pas les
+          commandes : on redemande un rejeu, qui repartira dans un quart de
+          seconde avec la valeur du moment.
+        */
+        if (this.rejeuIntensiteEnCours) {
+            this.appliquerIntensiteDeScene(sceneId);
+            return;
+        }
+
+        const scene = useLightStore.getState().scenes[sceneId];
+        if (!scene) return;
+        const intensite = scene.sceneBrightness ?? INTENSITE_SCENE_DEFAUT;
+
+        this.rejeuIntensiteEnCours = true;
+        try {
+            for (const [id, state] of Object.entries(scene.lightStates)) {
+                if (state.effect && state.effect !== 'none') continue;
+                if (useLightStore.getState().activeSceneId !== sceneId) break;
+                await this.setLightState(id, state, TRANSITION_INTENSITE_MS, intensite);
+                await new Promise(r => setTimeout(r, 100));
+            }
+        } catch {
+            // Pont injoignable : le réglage reste gardé, il jouera à la prochaine activation.
+        } finally {
+            this.rejeuIntensiteEnCours = false;
+        }
     }
 
     stopSoftwareEffect(id: string) {
@@ -851,10 +994,13 @@ export class HueEngine {
                     break;
             }
 
-            // Apply global brightness to the effect
+            // Apply global brightness and the scene's intensity to the effect
             if (typeof payload.bri === 'number') {
-                const globalBri = useLightStore.getState().globalBrightness / 100;
-                payload.bri = Math.round(payload.bri * globalBri);
+                payload.bri = brillanceEffective(
+                    payload.bri,
+                    useLightStore.getState().globalBrightness,
+                    this.intensiteDeLEffet(id)
+                );
             }
 
             tick++;

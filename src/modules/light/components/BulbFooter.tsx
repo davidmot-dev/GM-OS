@@ -1,13 +1,60 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLightStore } from '../useLightStore';
 import type { HueLight } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
+import { creerLimiteur } from '../logic/limiterLaCadence';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Les bornes de brillance du protocole Hue. **1 et non 0** : zéro n'est pas une
+ * brillance, c'est une lampe éteinte — et l'interrupteur est juste à côté.
+ */
+const BRI_MIN = 1;
+const BRI_MAX = 254;
+/** Le pas du curseur : ~1 % de la plage, assez fin pour viser, assez gros pour ne pas noyer le pont. */
+const PAS_DE_BRILLANCE = 2;
+
+/**
+ * **Une commande au pont toutes les 150 ms au plus, par lampe.**
+ *
+ * Le pont en accepte une dizaine par seconde en tout, et les effets logiciels
+ * en consomment déjà. Un curseur laissé libre en émettrait soixante.
+ */
+const CADENCE_CURSEUR_MS = 150;
+
+/** De la brillance Hue (1-254) au pourcentage qu'on montre au meneur. */
+const enPourcent = (bri: number) => Math.round((bri / BRI_MAX) * 100);
+
 export const BulbFooter: React.FC = () => {
-    const { lights } = useLightStore();
+    const { lights, updateLightState } = useLightStore();
     const { t } = useTranslation('modules');
     const lightList = Object.values(lights);
+
+    /* Un limiteur pour tout le pied de page, mais qui compte par lampe : régler
+       la deuxième ne doit pas faire attendre la première. */
+    const limiteur = useRef(creerLimiteur(CADENCE_CURSEUR_MS));
+    useEffect(() => {
+        const courant = limiteur.current;
+        return () => courant.annuler();
+    }, []);
+
+    /**
+     * **Le curseur de brillance d'une lampe.**
+     *
+     * L'écran suit la main tout de suite ; le pont, lui, ne reçoit qu'une
+     * valeur par intervalle — *la dernière*, donc celle où la main s'arrête.
+     *
+     * ⚠️ La valeur réglée ici est la brillance **nominale**, celle qu'une
+     * capture enregistrera dans une tuile. Ce qu'on voit dans la pièce est
+     * cette valeur passée par le curseur global, exactement comme pour une
+     * scène : à 50 % de global, une lampe poussée au maximum éclaire à moitié.
+     */
+    const handleBrightnessChange = (id: string, bri: number) => {
+        updateLightState(id, { bri, on: true });
+        limiteur.current(id, () => {
+            hueEngine.setLightState(id, { bri, on: true }, 200).catch(() => { });
+        });
+    };
 
     const handleColorChange = (id: string, hexColor: string) => {
         const xy = hueEngine.hexToXy(hexColor);
@@ -168,6 +215,31 @@ export const BulbFooter: React.FC = () => {
                                             </optgroup>
                                         </select>
                                     </div>
+                                </div>
+
+                                {/*
+                                  **La brillance de la lampe**, qui n'existait
+                                  nulle part : on pouvait choisir sa couleur et
+                                  son effet, mais son intensité venait de
+                                  l'application Hue et d'elle seule — et c'est
+                                  cette valeur-là que la capture d'une tuile
+                                  enregistre.
+                                */}
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className="material-symbols-outlined text-sm text-slate-500 shrink-0">light_mode</span>
+                                    <input
+                                        type="range"
+                                        min={BRI_MIN}
+                                        max={BRI_MAX}
+                                        step={PAS_DE_BRILLANCE}
+                                        value={light.state.bri ?? BRI_MAX}
+                                        onChange={(e) => handleBrightnessChange(light.id, parseInt(e.target.value, 10))}
+                                        title={t('light.footer.brightness')}
+                                        className="flex-1 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
+                                    />
+                                    <span className="text-ui-10 font-mono font-bold text-slate-400 w-8 text-right shrink-0">
+                                        {enPourcent(light.state.bri ?? BRI_MAX)}%
+                                    </span>
                                 </div>
                             </div>
                         </div>

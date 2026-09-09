@@ -736,6 +736,8 @@
       "cancel_button": "Annuler",
       "speed_tooltip": "Vitesse des effets de la scène",
       "speed_reset_tooltip": "Revenir à la vitesse d'origine (×1)",
+      "brightness_tooltip": "Intensité de la scène : multiplie la brillance enregistrée",
+      "brightness_reset_tooltip": "Revenir à la scène telle qu'elle a été capturée (100 %)",
       "default_set_tooltip": "Désigner comme éclairage normal de la pièce",
       "default_unset_tooltip": "Ne plus être l'éclairage normal de la pièce",
       "key_learn_tooltip": "Associer une touche du clavier à cette scène",
@@ -746,6 +748,7 @@
     "footer": {
       "no_lights": "Aucune lampe détectée.",
       "change_color": "Changer la Couleur",
+      "brightness": "Brillance de la lampe (celle qu'une capture enregistrera)",
       "categories": {
         "urban": "🏙️ Urbain & Tech",
         "nature": "🌲 Nature & Éléments",

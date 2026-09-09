@@ -736,6 +736,8 @@
       "cancel_button": "Cancel",
       "speed_tooltip": "Speed of the scene's effects",
       "speed_reset_tooltip": "Back to the original speed (×1)",
+      "brightness_tooltip": "Scene intensity: scales the captured brightness",
+      "brightness_reset_tooltip": "Back to the scene as captured (100%)",
       "default_set_tooltip": "Set as the room's normal lighting",
       "default_unset_tooltip": "No longer the room's normal lighting",
       "key_learn_tooltip": "Bind a keyboard key to this scene",
@@ -746,6 +748,7 @@
     "footer": {
       "no_lights": "No lights discovered.",
       "change_color": "Change Color",
+      "brightness": "Lamp brightness (the value a capture will record)",
       "effects": {
         "steady": "Steady",
         "colorloop": "Colorloop",

@@ -61,6 +61,21 @@ export interface LightScene {
      */
     effectSpeed?: number;
     /**
+     * **L'intensité de la scène, en pourcentage de ce qui a été capturé.**
+     *
+     * Une tuile enregistre la brillance qu'avaient les lampes au moment de la
+     * capture ; ce facteur la multiplie sans la réécrire — 60 joue la même
+     * ambiance en veilleuse, 130 la remonte, et revenir à 100 rend exactement
+     * la scène d'origine. *On règle une ambiance sans la perdre.*
+     *
+     * ⚠️ Il se **compose** avec {@link LightState.globalBrightness} : le
+     * curseur global dit « toute la pièce, ce soir », celui de la tuile dit
+     * « cette ambiance-là est basse ». Les deux se multiplient.
+     *
+     * Absent vaut 100, ce qui laisse les scènes d'avant ce réglage inchangées.
+     */
+    sceneBrightness?: number;
+    /**
      * **La touche qui lance cette scène**, au format `KeyboardEvent.code`
      * (`KeyA`, `Numpad1`, `Digit2`…).
      *
@@ -155,6 +170,8 @@ interface LightState {
     updateSceneMetadata: (sceneId: string, name: string, icon: string, color: string) => void;
     /** Règle la vitesse des effets d'une scène (bornée par `VITESSE_MIN`/`VITESSE_MAX`) */
     setSceneEffectSpeed: (sceneId: string, speed: number) => void;
+    /** Règle l'intensité d'une scène en pourcentage (bornée par `INTENSITE_SCENE_MIN`/`MAX`) */
+    setSceneBrightness: (sceneId: string, pourcent: number) => void;
     /** Désigne l'éclairage normal de la pièce, ou le retire avec `null` */
     setDefaultScene: (sceneId: string | null) => void;
     /** Met une scène en attente de touche, ou annule l'attente avec `null` */
@@ -198,6 +215,24 @@ export const VITESSE_EFFET_DEFAUT = 1;
 export const bornerVitesse = (valeur: number): number => {
     if (!Number.isFinite(valeur)) return VITESSE_EFFET_DEFAUT;
     return Math.min(VITESSE_EFFET_MAX, Math.max(VITESSE_EFFET_MIN, valeur));
+};
+
+/**
+ * **Intensité minimale d'une tuile : un dixième de ce qui a été capturé.**
+ *
+ * Pas zéro : une tuile qui n'allume rien ne se distingue pas d'une tuile en
+ * panne, et le meneur a déjà un geste pour éteindre la pièce.
+ */
+export const INTENSITE_SCENE_MIN = 10;
+/** Intensité maximale : la moitié en plus. Au-delà, la brillance Hue sature (254). */
+export const INTENSITE_SCENE_MAX = 150;
+/** Intensité d'une scène qui n'a jamais été réglée : celle de la capture, à l'identique. */
+export const INTENSITE_SCENE_DEFAUT = 100;
+
+/** Ramène une intensité dans les bornes, et refuse ce qui n'est pas un nombre. */
+export const bornerIntensite = (valeur: number): number => {
+    if (!Number.isFinite(valeur)) return INTENSITE_SCENE_DEFAUT;
+    return Math.min(INTENSITE_SCENE_MAX, Math.max(INTENSITE_SCENE_MIN, valeur));
 };
 
 const createDefaultScenes = (): Record<string, LightScene> => {
@@ -355,6 +390,19 @@ export const useLightStore = create<LightState>()(
                 };
             }),
 
+            setSceneBrightness: (sceneId, pourcent) => set((state) => {
+                if (!state.scenes[sceneId]) return state;
+                return {
+                    scenes: {
+                        ...state.scenes,
+                        [sceneId]: {
+                            ...state.scenes[sceneId],
+                            sceneBrightness: bornerIntensite(pourcent)
+                        }
+                    }
+                };
+            }),
+
             updateSceneMetadata: (sceneId, name, icon, color) => set((state) => ({
                 scenes: {
                     ...state.scenes,
@@ -387,6 +435,7 @@ export const useLightStore = create<LightState>()(
                         color: '#334155',
                         lightStates: {},
                         effectSpeed: VITESSE_EFFET_DEFAUT,
+                        sceneBrightness: INTENSITE_SCENE_DEFAUT,
                         /* Une tuile vide ne doit pas garder une touche : elle
                            répondrait par un geste sans effet. */
                         keyCode: undefined
