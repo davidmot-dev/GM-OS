@@ -172,7 +172,17 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.invoke('ai:resolve-sections', systeme, contenuFiche),
         readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
         writeDoc: (filePath: string, content: string) => ipcRenderer.invoke('ai:write-doc', filePath, content),
-        extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),
+        /*
+          ⛔ **Ce nom s'ecrivait `extractPDF` et son unique appelant
+          `extractPdf`.** Le contrat declarait LES DEUX, donc le typage
+          n'avait rien a dire, l'appel optionnel valait `undefined`, et
+          `RAGService` concluait simplement que le PDF ne contenait rien.
+          *Aucun PDF du corpus n'a jamais nourri la Forge.*
+
+          On garde la graphie de ses voisins (`readDoc`, `writeDoc`) :
+          `PDF` en capitales invitait la faute a se reproduire.
+        */
+        extractPdf: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),
         proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => 
             ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),
         chercherDansLIndex: (

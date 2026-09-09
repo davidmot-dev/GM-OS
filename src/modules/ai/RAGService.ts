@@ -274,12 +274,19 @@ export class RAGService {
         }
       } 
       else if (ext === '.pdf') {
-        // Use the new extract-pdf bridge
         const text = await window.appBridge?.ai?.extractPdf?.(entry.path);
         if (text) {
           const truncated = text.length > MAX_DOC_SIZE ? text.substring(0, MAX_DOC_SIZE) + "..." : text;
           return `[Fichier PDF: ${entry.name}]\n${truncated}\n`;
         }
+        /*
+          **Un PDF qui ne rend rien se dit.** C'est le silence qui a coute :
+          l'appel visait un nom que le pont n'exposait pas, il valait donc
+          `undefined`, et ce `if` concluait « ce PDF est vide » — pour tous les
+          PDF, depuis toujours. *Une extraction qui echoue et une extraction
+          vide se ressemblent trop pour partager le meme silence.*
+        */
+        console.warn(`[RAG Service] Aucun texte extrait de ${entry.name} — PDF vide, illisible, ou pont indisponible.`);
       }
     }
 

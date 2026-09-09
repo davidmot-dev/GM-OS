@@ -173,7 +173,6 @@ declare global {
             broadcastUIAction?: (action: any, role?: string) => void;
             broadcastToTablets: (type: string, payload: unknown) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
-            openProjectionWindow: (displayId: string, url: string) => void;
             onAction: (callback: (data: RemoteAction) => void) => () => void;
             // Ordre des arguments aligné sur preload.ts : (buffer, id).
             // La déclaration les inversait, sans conséquence jusqu'ici faute d'appelant.
@@ -263,8 +262,16 @@ declare global {
             }>;
             readDoc: (filePath: string) => Promise<string | null>;
             writeDoc: (filePath: string, content: string) => Promise<boolean>;
+            /**
+             * Extrait le texte d'un PDF du corpus.
+             *
+             * ⛔ **Ce nom etait declare DEUX FOIS, `extractPdf` et
+             * `extractPDF`.** Le preload n'exposait que le second, l'unique
+             * appelant ecrivait le premier — et c'est ce fichier qui rendait
+             * la faute invisible : *un contrat qui declare les deux
+             * orthographes ne peut plus arbitrer entre elles.*
+             */
             extractPdf: (filePath: string) => Promise<string>;
-            extractPDF: (filePath: string) => Promise<string>;
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
             /**
              * Contexte RAG pour la question en cours.
