@@ -1902,21 +1902,33 @@ non tolérés** — les exposer demande une décision de David :
 | `broadcastToTablets` | Appelé **quatre fois**. La branche « mode Electron » n'est jamais prise ; tout passe par le `CustomEvent` de secours que `useHubSync` réachemine. ⚠️ Le commentaire qui dit *« le Player Hub s'en tire par le pont Electron »* **décrit un chemin mort** |
 | `openFile` | Le bouton du cockpit de campagne. Son repli affiche une alerte avec le chemin — *il ne ment pas, mais il n'ouvre rien* |
 
-#### 39c · ⛔ OUVERT — Neuf clés de traduction absentes des deux langues
+#### 39c · ✅ TRAITÉ — Neuf clés s'affichaient en clair, et le contrôle ne pouvait pas les voir
 
-`clesEmployees` ne vérifie que les clés à namespace explicite (`modules:x.y`). En résolvant le
-namespace depuis `useTranslation(...)`, **890 appels échappent au contrôle** — et neuf clés y sont
-introuvables en français comme en anglais.
+⛔ **L'angle mort d'abord** : `clesEmployees` ne vérifiait que les clés à namespace explicite
+(`modules:x.y`). **Elles sont une minorité** — 890 appels écrivent leur clé sans préfixe et la tiennent
+de leur composant (`useTranslation('modules')` puis `t('x.y')`). *Un contrôle qui ne couvre qu'une
+minorité de son sujet rassure plus qu'il ne protège.*
 
-Une est visible sans rien chercher : `ImagePad` affiche **`image.pad.stop` en toutes lettres** sur la
-pastille dès qu'une image est projetée (`image.pad.solo` existe, `stop` non). Les autres : deux
-infobulles de la carte (`addToMap`, `alreadyOnMap`), l'horodatage du lobby (`remote.lobby.just_now`),
-et cinq libellés des réglages IA (`ollama_cloud_label/_desc`, `custom_label/_desc`,
-`diagnostic_configured`).
+**Quatre clés s'affichaient en toutes lettres à l'écran** : `image.pad.stop` sur la pastille dès qu'une
+image est projetée (sa voisine `solo` existe, elle non), les deux infobulles du bouton « ajouter le
+combattant à la carte », et l'horodatage du lobby des tablettes.
 
-*Le vrai chantier n'est pas les neuf clés, c'est l'angle mort :* étendre le contrôle aux clés sans
-préfixe. ⚠️ Attention aux pluriels — `itemsCount` existe sous `itemsCount_one` / `_other`, et un
-contrôle naïf le déclarerait manquant.
+⚠️ **Les cinq autres n'étaient pas le même défaut** — les réglages IA portaient un **repli positionnel
+écrit en français** : `t('ai.providers.custom_desc', 'API compatible OpenAI/Custom')`. Personne ne
+voyait de clé brute, mais *l'anglais voyait le français de l'auteur*. Les traduire était juste ; les
+compter comme des clés manquantes aurait rendu le contrôle bavard. Il les laisse donc passer, et les
+replis restent en place.
+
+**Le contrôle lit désormais les clés sans préfixe**, en résolvant le namespace sur le `useTranslation`
+du fichier. ⚠️ Un **tableau vaut « l'un des deux »** : i18next parcourt les namespaces dans l'ordre et
+rend le premier qui répond — *exiger le premier ferait échouer le test sur du code qui marche*. Sa
+portée passe de ~500 appels à plus de 1 200, et son seuil de garde monte avec elle.
+
+⚠️ Piège gardé pour la suite : **les pluriels**. `itemsCount` n'existe que sous `itemsCount_one` /
+`_other`, et un contrôle naïf le déclarerait manquant — `sait()` essaie les six suffixes d'i18next.
+
+✅ **Éprouvé à l'envers** : en retirant `image.pad.stop` du français, le test nomme la clé et échoue.
+*Un contrôle vert qui n'attrape rien ne vaut rien.*
 
 #### 39d · ⛔ OUVERT — Le storyboard est le seul enchaînement qui signe du nom du meneur
 
@@ -2005,7 +2017,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 | 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
 | 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
-| 11 | **L'audit du 09/09 — les trous** | ⛔ **DEUX TRAITÉS, DEUX OUVERTS** (§ 39). Traités : le PDF que la Forge n'a jamais lu, et le contrôle du contrat du pont qui manquait. **Ouverts : neuf clés de traduction absentes des deux langues** (§ 39c) et **le storyboard qui se fait passer pour un geste du meneur** (§ 39d). ⚠️ Le contrôle neuf tient aussi **trois noms appelés que le préload n'expose pas** — dont `highlightMapToken`, qui n'a jamais marché | Le § 39c : étendre le contrôle des clés aux appels sans préfixe | Rien |
+| 11 | **L'audit du 09/09 — les trous** | ⛔ **TROIS TRAITÉS, UN OUVERT** (§ 39). Traités : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont qui manquait, et les neuf clés qui s'affichaient en clair — avec l'angle mort qui les cachait (§ 39c). **Ouvert : le storyboard qui se fait passer pour un geste du meneur** (§ 39d). ⚠️ Le contrôle du pont tient aussi **trois noms appelés que le préload n'expose pas** — dont `highlightMapToken`, qui n'a jamais marché | Le § 39d : passer `isAutomatic` depuis le storyboard | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
