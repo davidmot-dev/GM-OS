@@ -2010,10 +2010,10 @@ noms sans emploi.**
 **Ancres** : `electron/preload.ts`, `src/types/window.d.ts`, `src/modules/ai/RAGService.ts`,
 `electron/pontDeclareEtExpose.test.ts`.
 
-### 40 · Changer l'image d'un joueur — le geste existait, l'endroit non (2026-09-09)
+### 40 · ✅ Changer l'image d'un joueur — le geste existait, l'endroit non (2026-09-09)
 
 *« Juste un détail, je voudrais être capable de changer l'image d'un joueur »*, capture à l'appui du
-panneau de droite du Roster.
+panneau de droite du Roster. ✅ **Vérifié à l'écran le soir même** : *« si j'ai vu et c'est correct »*.
 
 ⭐ **Le geste existait déjà**, sur la vignette de 40 px de la liste de gauche : survol, appareil photo,
 médiathèque, `updatePlayer`. La chaîne entière était bonne — j'ai vérifié avant de répondre, échaudé
