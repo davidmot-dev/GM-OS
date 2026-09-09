@@ -1705,6 +1705,90 @@ déstructuration y laissait deux variables inemployées.*
 `store/useSessionStore.ts` (`surchargeDuRegime`, `forcerLeRegime`),
 `session/logic/surchargeDuRegime.test.ts`, `components/Shell.tsx`.
 
+### 37 · ⭐ L'intensité par tuile et par lampe — et le bouton d'arrêt qui n'existait pas (2026-09-09)
+
+Question de David : *« j'aurais voulu savoir s'il était possible dans Light-OS de régler l'intensité
+des lumières par tuile ? »* Non — et la mesure de ce qui existait valait mieux que la réponse.
+
+⛔ **Un seul curseur d'intensité dans tout le module, et il était global.** La brillance d'une scène
+était celle **figée à la capture** ; le pied de page savait régler la couleur et l'effet d'une lampe,
+mais **pas sa brillance** — elle venait de l'application Hue et d'elle seule. *La valeur qu'une tuile
+enregistre était la seule que l'application ne permettait pas de choisir.* Les deux voies ont donc été
+proposées, et David les a prises toutes les deux : **« je veux les deux »**.
+
+Verdict à l'écran le jour même : **« tout fonctionne bien »**.
+
+#### 37a · Le curseur de la tuile — il multiplie, il ne réécrit pas
+
+`sceneBrightness`, de 10 à 150 %, **multiplie ce qui a été capturé**. On baisse une ambiance pour la
+soirée, et revenir à 100 % rend la scène d'origine **sans recapture** — un test le tient. Il se
+**compose** avec le curseur global : le global dit *« toute la pièce ce soir »*, la tuile dit *« cette
+ambiance-là est basse »*.
+
+⚠️ **Deux facteurs sur la même valeur, c'est deux façons de sortir des clous.** La brillance envoyée
+est bornée à 254 : sans ça, une tuile à 150 % sur une lampe déjà pleine ferait **refuser la commande
+entière** par le pont, en emmenant les autres lampes avec elle. Et une valeur illisible — scène d'avant
+le réglage, sauvegarde abîmée — vaut 100 % : *on joue la scène telle qu'elle a été capturée, on ne
+l'éteint pas.*
+
+Il agit tout de suite, par **deux chemins qui ne se ressemblent pas** : les lampes **sous effet**
+relisent l'intensité à chaque battement ; les lampes **posées** ne rebattent jamais, et c'est le moteur
+qui les renvoie — un quart de seconde après que le curseur s'arrête, et avec une transition de 200 ms
+et non les 5 s de `transitionTimeMs`, *qui feraient répondre la pièce cinq secondes après la main.*
+
+⚠️ **L'intensité ne touche que le message envoyé au pont** : l'état gardé en mémoire reste la
+brillance nominale. Sinon deux allers-retours entre une tuile à 50 % et une capture éteindraient la
+scène par étapes.
+
+⛔ **Une seule ligne sur la tuile** — icône, curseur, pourcentage — là où la vitesse s'offre un titre
+au-dessus de son curseur. La vitesse ne s'affiche que sur les scènes à effet ; l'intensité est sur les
+dix-huit. *Le § 32 a déjà été payé sur ce carré : ce qu'on y ajoute pousse ce qui y était.*
+
+#### 37b · Le curseur de la lampe — la valeur que la capture enregistrera
+
+Dans le pied de page, chaque lampe a sa brillance. C'est la valeur **nominale** : ce qu'on voit dans la
+pièce est elle passée par le curseur global, exactement comme une scène.
+
+⛔ **Un curseur traîné émet une valeur par pixel, et le pont en accepte une dizaine par seconde**,
+effets compris. `creerLimiteur` laisse passer le premier geste — sinon le curseur donnerait
+l'impression de coller — puis n'en garde plus qu'un par intervalle : **la dernière valeur demandée**,
+jamais une du milieu. *Ce qui compte pour un curseur, c'est où la main s'arrête, pas par où elle est
+passée.* La clé sépare les lampes : deux réglées coup sur coup ne se volent pas leur tour.
+
+#### 37c · ⛔ Le geste existait dans le moteur, sans personne pour l'appeler
+
+Retour de David dans la foulée : *« il me semble qu'il n'y a pas de bouton pour arrêter la scène en
+cours à part le blackout d'urgence »*. C'est exact, et c'était plus qu'un bouton manquant.
+
+`revenirALEclairageNormal` est écrit **depuis le 07/09** (§ 30) : il coupe tous les effets logiciels —
+y compris ceux des lampes que la scène de repli ne mentionne pas — puis ramène l'éclairage normal, ou
+éteint s'il n'y en a pas. **Le seul appel de toute l'application venait du Stop All de la barre
+audio.** Dans Light-OS lui-même : rien. Le seul geste d'arrêt du module était l'extinction d'urgence —
+*c'est-à-dire éteindre la pièce pour arrêter une ambiance.*
+
+⚠️ **C'est la quatrième fois en trois jours que le motif du § 31 se paie** : la chaîne entière est là,
+il manque le bouton au bout. Le § 31 en avait trouvé trois d'un coup, le § 36 un autre le matin même.
+*Aucun outil ne les voit* — le nom est branché, le typage est content, et les tests exercent ce qui est
+branché.
+
+Le bouton est posé dans la barre latérale, au-dessus de l'extinction, là où vit déjà le sélecteur
+d'éclairage normal : les trois répondent à la même question. Les deux se lisent maintenant l'un contre
+l'autre — **Arrêter la scène** coupe les effets et ramène l'éclairage normal, sobre et non rouge ;
+**Blackout d'Urgence** éteint, toujours.
+
+- ⚠️ Il vise l'éclairage normal et **jamais la dernière scène choisie** : c'est la deuxième des trois
+  portes du retour, et les aligner ferait retomber sur la scène d'alerte qui jouait il y a trois
+  secondes.
+- ⚠️ **Éteint quand aucune scène ne joue**, et le titre dit pourquoi : *un bouton nommé « arrêter »
+  allumerait la pièce si rien ne jouait.* Sans éclairage normal désigné il éteint — son infobulle
+  l'annonce avant le clic.
+
+**Ancres** : `light/useLightStore.ts` (`sceneBrightness`, `bornerIntensite`, `setSceneBrightness`),
+`light/HueEngine.ts` (`brillanceEffective`, `appliquerIntensiteDeScene`, `intensiteDeLEffet`,
+`revenirALEclairageNormal`), `light/components/SceneGrid.tsx`, `light/components/BulbFooter.tsx`,
+`light/components/Sidebar.tsx`, `light/logic/limiterLaCadence.ts`,
+`light/intensiteDesScenes.test.ts`.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -1769,6 +1853,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 | 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
+| 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
