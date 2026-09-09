@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { hueEngine } from '../HueEngine';
 import { useLightStore } from '../useLightStore';
+import { useJournalStore } from '../../journal/useJournalStore';
 
 /**
  * **Trois gestes ramènent la pièce au repos, et ils ne visent pas la même
@@ -107,5 +108,70 @@ describe('l’extinction d’urgence', () => {
 
         expect(useLightStore.getState().activeSceneId).toBeNull();
         expect(useLightStore.getState().lights['1'].state.on).toBe(false);
+    });
+});
+
+/**
+ * **Le journal disait quand une ambiance commençait, jamais quand elle
+ * s'arrêtait.** `applyScene` consigne le geste du meneur depuis la revue des 36
+ * émetteurs ; les deux arrêts n'écrivaient rien. *À la relecture d'après-séance,
+ * toutes les lumières de la soirée avaient l'air d'être restées allumées.*
+ *
+ * La règle est celle d'`applyScene`, et elle vaut plus que la ligne qu'elle
+ * produit : **on consigne ce que le meneur a voulu, pas ce que l'application a
+ * enchaîné.** Un journal qui double ses lignes se relit comme un journal qui
+ * ment sur le nombre de gestes.
+ *
+ * L'écriture est remplacée par un espion : le vrai `addEvent` se tait sans
+ * séance ouverte, et *ce qu'on veut éprouver ici est la décision d'écrire, pas
+ * la présence d'un journal.*
+ */
+describe('ce que l’arrêt écrit au journal', () => {
+    let ecrire: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+        ecrire = vi.fn();
+        useJournalStore.setState({ addEvent: ecrire });
+    });
+
+    it('écrit une ligne quand le meneur arrête la scène', async () => {
+        useLightStore.getState().setDefaultScene('SCENE_01');
+        useLightStore.getState().setActiveScene('SCENE_02');
+
+        await hueEngine.revenirALEclairageNormal();
+
+        expect(ecrire).toHaveBeenCalledTimes(1);
+        expect(ecrire.mock.calls[0][0].title).toContain('arrêt de la scène');
+    });
+
+    /** *Une seule ligne, quelle que soit la fin* — même quand l'arrêt éteint. */
+    it('n’en écrit qu’une quand l’arrêt finit par éteindre', async () => {
+        useLightStore.getState().setActiveScene('SCENE_02');
+
+        await hueEngine.revenirALEclairageNormal();
+
+        expect(ecrire).toHaveBeenCalledTimes(1);
+    });
+
+    it('écrit une ligne pour l’extinction d’urgence', async () => {
+        await hueEngine.extinguishAll();
+
+        expect(ecrire).toHaveBeenCalledTimes(1);
+        expect(ecrire.mock.calls[0][0].title).toContain('extinction');
+    });
+
+    /**
+     * ⛔ La moitié qui compte : *la musique dit déjà qu'elle s'arrête, sa
+     * lumière n'a pas à le redire.*
+     */
+    it('ne dit rien quand c’est l’application qui enchaîne', async () => {
+        useLightStore.getState().setDefaultScene('SCENE_01');
+        useLightStore.getState().setActiveScene('SCENE_02');
+
+        await hueEngine.revenirALEclairageNormal(true);
+        await hueEngine.revertToManualScene();
+        await hueEngine.applyScene(null, true);
+
+        expect(ecrire).not.toHaveBeenCalled();
     });
 });

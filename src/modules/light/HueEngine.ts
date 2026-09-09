@@ -288,7 +288,9 @@ export class HueEngine {
     async applyScene(sceneId: string | null, isAutomatic: boolean = false) {
         if (!sceneId) {
             console.log('[HUE ENGINE] No scene specified, extinguishing all.');
-            await this.extinguishAll();
+            /* `isAutomatic` voyage avec le geste : éteindre parce qu'un son se
+               termine n'est pas éteindre parce qu'on l'a demandé. */
+            await this.extinguishAll(isAutomatic);
             return;
         }
 
@@ -349,6 +351,29 @@ export class HueEngine {
     }
 
     /**
+     * Écrit une ligne au journal de séance.
+     *
+     * L'import est **dynamique**, comme celui d'`applyScene` : le journal
+     * connaît les lumières, les lumières ne doivent pas connaître le journal au
+     * chargement.
+     */
+    private async consignerAuJournal(titre: string, contenu: string, metadata?: Record<string, unknown>) {
+        try {
+            const { useJournalStore } = await import('../journal/useJournalStore');
+            useJournalStore.getState().addEvent({
+                type: 'SYSTEM',
+                title: titre,
+                content: contenu,
+                metadata,
+            });
+        } catch (e) {
+            /* Le journal est un témoin, pas une condition : son absence ne doit
+               jamais empêcher la pièce de s'éteindre. */
+            console.warn('[HUE ENGINE] Journal indisponible :', e);
+        }
+    }
+
+    /**
      * **Un module rend la main** — fin d'un son, d'une piste d'ambiance, d'une
      * musique, d'un flash tactique.
      *
@@ -377,11 +402,32 @@ export class HueEngine {
      * franche du bouton rouge de Light-OS : *un bouton nommé « extinction »
      * doit éteindre, sinon il ne reste aucune porte vers le noir.*
      */
-    async revenirALEclairageNormal() {
+    async revenirALEclairageNormal(isAutomatic: boolean = false) {
         const { defaultSceneId, scenes } = useLightStore.getState();
         const cible = sceneDeRepli(scenes, [defaultSceneId]);
+
+        /*
+          **Le journal disait quand une ambiance commençait, jamais quand elle
+          s'arrêtait.** `applyScene` consigne le geste du meneur depuis la revue
+          des 36 émetteurs ; les deux arrêts, eux, n'écrivaient rien. À la
+          relecture d'après-séance, toutes les lumières de la soirée avaient
+          l'air d'être restées allumées.
+
+          Une seule ligne pour l'arrêt, quelle que soit sa fin : c'est
+          `extinguishAll` qui se tait quand c'est nous qui l'appelons.
+        */
+        if (!isAutomatic) {
+            await this.consignerAuJournal(
+                'Lumières : arrêt de la scène',
+                cible
+                    ? `Retour à l'éclairage normal « ${scenes[cible].name} ».`
+                    : `Extinction : aucun éclairage normal n'est désigné.`,
+                { sceneId: cible }
+            );
+        }
+
         if (!cible) {
-            await this.extinguishAll();
+            await this.extinguishAll(true);
             return;
         }
 
@@ -1140,7 +1186,23 @@ export class HueEngine {
         });
     }
 
-    async extinguishAll() {
+    /**
+     * **L'extinction franche : tout s'éteint, rien ne revient.**
+     *
+     * `isAutomatic` dit d'où vient le geste, et il ne décide que du journal :
+     * le bouton rouge est une décision du meneur, la fin d'un son qui laisse la
+     * pièce sans scène n'en est pas une. *Un journal qui consigne les
+     * enchaînements de l'application se relit comme un journal qui ment sur le
+     * nombre de gestes.*
+     */
+    async extinguishAll(isAutomatic: boolean = false) {
+        if (!isAutomatic) {
+            await this.consignerAuJournal(
+                'Lumières : extinction',
+                'Toutes les lampes sont éteintes.'
+            );
+        }
+
         if (this.flashTimeout) {
             clearTimeout(this.flashTimeout);
             this.flashTimeout = null;
