@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useVoiceStore } from '../../voice/useVoiceStore';
 
 export const Sidebar: React.FC = () => {
-    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix, scenes, defaultSceneId, setDefaultScene } = useLightStore();
+    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix, scenes, activeSceneId, defaultSceneId, setDefaultScene } = useLightStore();
     /*
       **On dit pourquoi le mode ne fait rien, plutôt que de le rendre
       inaccessible.** Armé micro coupé, il attend sans rien montrer : un
@@ -246,6 +246,36 @@ export const Sidebar: React.FC = () => {
                             : t('light.sidebar.default_scene_hint_none')}
                     </p>
                 </div>
+
+                {/*
+                  **Arrêter la scène en cours — le geste qui n'avait pas de
+                  bouton.**
+
+                  ⛔ Le moteur savait le faire depuis le 07/09
+                  (`revenirALEclairageNormal`), et **rien dans Light-OS ne
+                  l'appelait** : seul le Stop All de la barre audio y menait.
+                  Dans le module lui-même, la seule façon d'arrêter une ambiance
+                  était l'extinction d'urgence — *c'est-à-dire éteindre la pièce
+                  pour arrêter une scène.*
+
+                  Il vise l'**éclairage normal**, jamais la dernière scène
+                  choisie : c'est la deuxième des trois portes du retour, et
+                  elles ne s'alignent pas (voir `sceneDeRepli`).
+
+                  Éteint quand rien ne joue : *un bouton qui « arrête » alors
+                  que rien ne joue allumerait la pièce.* On le montre quand
+                  même, et le titre dit pourquoi il attend.
+                */}
+                <button
+                    onClick={() => hueEngine.revenirALEclairageNormal()}
+                    disabled={!activeSceneId}
+                    title={!activeSceneId
+                        ? t('light.sidebar.stop_scene_none_active')
+                        : (defaultSceneId ? t('light.sidebar.stop_scene_tooltip') : t('light.sidebar.stop_scene_tooltip_none'))}
+                    className="w-full py-3 bg-app-bg hover:bg-app-surface border border-app-border hover:border-accent/40 text-slate-300 hover:text-app-text rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-app-bg disabled:hover:border-app-border disabled:hover:text-slate-300">
+                    <span className="material-symbols-outlined">stop_circle</span>
+                    {t('light.sidebar.stop_scene')}
+                </button>
 
                 <button
                     onClick={() => hueEngine.extinguishAll()}
