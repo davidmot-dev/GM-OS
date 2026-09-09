@@ -236,6 +236,34 @@ export const useStoryboardStore = create<StoryboardState>()(
                 set({ activeMomentId: id });
 
                 /*
+                  **Le journal nommait les effets, jamais le geste.** Un moment
+                  écrivait « Musique : X », « Ambiance : X », « Lumières : X » —
+                  trois lignes pour une intention, et pas une ne disait quel
+                  moment avait été joué. Les trois modules se taisent désormais
+                  quand c'est un moment qui les appelle ; celui-ci parle à leur
+                  place, une fois. (2026-09-09)
+
+                  ⚠️ On consigne **avant** d'orchestrer, comme `applyScene` : ce
+                  qu'on note est l'intention du meneur, et elle ne devient pas
+                  fausse si une piste manque à l'appel.
+
+                  L'import est dynamique — le journal connaît les modules, les
+                  modules ne doivent pas le connaître au chargement.
+                */
+                try {
+                    const { useJournalStore } = await import('../journal/useJournalStore');
+                    useJournalStore.getState().addEvent({
+                        type: 'SYSTEM',
+                        title: `Moment : ${moment.name}`,
+                        content: `Moment de storyboard « ${moment.name} » joué à la table.`,
+                        metadata: { momentId: id },
+                    });
+                } catch (e) {
+                    /* Un témoin n'est pas une condition : sans lui, le moment se joue quand même. */
+                    console.warn('[Storyboard] Journal indisponible :', e);
+                }
+
+                /*
                   **Ce que la séquence précédente faisait sonner s'arrête ici.**
 
                   *Défaut trouvé par David le 2026-09-02 : « quand je passe d'une
@@ -318,7 +346,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                     
                     if (pad) {
                         console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
-                        await musicStore.playPad(pad, moment.musicOutputId);
+                        await musicStore.playPad(pad, moment.musicOutputId, true);
                         sonsPoses.musicPadId = pad.id;
                     } else {
                         console.warn(`[Storyboard] Music: Pad ID ${moment.musicPadId} NOT FOUND in any playlist.`);
@@ -470,7 +498,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                 if (moment.ambientSceneId && gWindow.useAmbientStore) {
                     console.log(`[Storyboard] Ambient: Applying scene ${moment.ambientSceneId}`);
                     const ambientStore = gWindow.useAmbientStore.getState();
-                    await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId);
+                    await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId, true);
                     sonsPoses.ambientSceneId = moment.ambientSceneId;
                 }
 

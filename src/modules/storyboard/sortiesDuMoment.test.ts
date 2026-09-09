@@ -82,9 +82,12 @@ describe('un moment qui choisit ses sorties', () => {
 
         await useStoryboardStore.getState().triggerMoment('moment-1');
 
-        expect(playPad).toHaveBeenCalledWith(expect.objectContaining({ id: 'pad-musique' }), 'enceintes-de-la-table');
+        /* Le `true` final dit « c'est un enchaînement » : sans lui, Music-OS
+           écrirait sa propre ligne au journal pour un geste qui est celui du
+           moment. Voir `gestesEtEnchainements.test.ts`. */
+        expect(playPad).toHaveBeenCalledWith(expect.objectContaining({ id: 'pad-musique' }), 'enceintes-de-la-table', true);
         expect(play).toHaveBeenCalledWith('pad-son', 0.8, undefined, 'caisson-sous-la-table');
-        expect(applyScene).toHaveBeenCalledWith('scene-ambiance', 'enceintes-du-fond');
+        expect(applyScene).toHaveBeenCalledWith('scene-ambiance', 'enceintes-du-fond', true);
         expect(projectSolo).toHaveBeenCalledWith(expect.objectContaining({ id: 'media-1' }), 'moniteur-2');
     });
 
@@ -98,9 +101,9 @@ describe('un moment qui choisit ses sorties', () => {
 
         await useStoryboardStore.getState().triggerMoment('moment-1');
 
-        expect(playPad).toHaveBeenCalledWith(expect.objectContaining({ id: 'pad-musique' }), undefined);
+        expect(playPad).toHaveBeenCalledWith(expect.objectContaining({ id: 'pad-musique' }), undefined, true);
         expect(play).toHaveBeenCalledWith('pad-son', 0.8, undefined, undefined);
-        expect(applyScene).toHaveBeenCalledWith('scene-ambiance', undefined);
+        expect(applyScene).toHaveBeenCalledWith('scene-ambiance', undefined, true);
         expect(projectSolo).toHaveBeenCalledWith(expect.objectContaining({ id: 'media-1' }), undefined);
     });
 
@@ -111,6 +114,6 @@ describe('un moment qui choisit ses sorties', () => {
         await useStoryboardStore.getState().triggerMoment('moment-1');
 
         expect(play).toHaveBeenCalledWith('pad-son', 0.8, undefined, 'caisson-sous-la-table');
-        expect(playPad).toHaveBeenCalledWith(expect.anything(), undefined);
+        expect(playPad).toHaveBeenCalledWith(expect.anything(), undefined, true);
     });
 });

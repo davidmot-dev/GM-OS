@@ -178,7 +178,7 @@ describe('une séquence qui prend la main sur une autre', () => {
 
         expect(toggleTrack).not.toHaveBeenCalled();
         expect(stopDeck).not.toHaveBeenCalled();
-        expect(applyScene).toHaveBeenCalledWith('scene-metro', undefined);
+        expect(applyScene).toHaveBeenCalledWith('scene-metro', undefined, true);
     });
 
     /**

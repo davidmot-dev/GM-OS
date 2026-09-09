@@ -138,7 +138,16 @@ interface MusicState {
      * ce qui joue déjà ailleurs — routage par son demandé par David le
      * 2026-08-31. Absent, la musique suit la sortie du module comme avant.
      */
-    playPad: (pad: MusicPad, sortie?: string) => Promise<void>;
+    /**
+     * `isAutomatic` dit **d'où vient le geste**, et il ne décide que du journal.
+     *
+     * Un moment de storyboard allume la musique, l'ambiance et les lumières : si
+     * chacun consigne, une seule intention du meneur devient trois lignes, et
+     * aucune ne dit ce qu'il a joué. *Un journal qui double ses lignes se relit
+     * comme un journal qui ment sur le nombre de gestes.* C'est la règle
+     * d'`applyScene` depuis la revue des 36 émetteurs, étendue ici. (2026-09-09)
+     */
+    playPad: (pad: MusicPad, sortie?: string, isAutomatic?: boolean) => Promise<void>;
     addLog: (message: string) => void;
     setActivePlaylistId: (id: string) => void;
 
@@ -453,7 +462,7 @@ export const useMusicStore = create<MusicState>()(
                         : { deckB: { ...state.deckB, isLooping: newValue } };
                 }),
 
-                playPad: async (pad: MusicPad, sortie?: string) => {
+                playPad: async (pad: MusicPad, sortie?: string, isAutomatic = false) => {
                     if (!pad.url) {
                         get().addLog(`Piste ignorée : pas de fichier pour "${pad.label}"`);
                         return;
@@ -509,12 +518,14 @@ export const useMusicStore = create<MusicState>()(
                     musicEngine.routerLaPlatine(targetDeck, sortie);
                     await get().triggerAutoFade(targetDeck);
 
-                    useJournalStore.getState().addEvent({
-                        type: 'AUDIO',
-                        title: `Musique : ${pad.label}`,
-                        content: `Lecture de la piste "${pad.label}" sur le Deck ${targetDeck}.`,
-                        metadata: { padId: pad.id, deck: targetDeck }
-                    });
+                    if (!isAutomatic) {
+                        useJournalStore.getState().addEvent({
+                            type: 'AUDIO',
+                            title: `Musique : ${pad.label}`,
+                            content: `Lecture de la piste "${pad.label}" sur le Deck ${targetDeck}.`,
+                            metadata: { padId: pad.id, deck: targetDeck }
+                        });
+                    }
 
                     // 4. Trigger Light if linked and sync enabled
                     try {

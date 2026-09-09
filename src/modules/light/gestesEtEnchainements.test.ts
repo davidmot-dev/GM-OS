@@ -89,6 +89,48 @@ const passeLeDrapeau = (args: string): boolean => {
     return false;
 };
 
+/**
+ * **Ce qu'un moment de storyboard déclenche est un enchaînement, en entier.**
+ *
+ * Le § 39d n'avait traité que les lumières. En le fermant, le compte est apparu :
+ * un seul moment écrivait **trois lignes** au journal — « Musique : X »,
+ * « Ambiance : X », « Lumières : X » — *et pas une ne disait quel moment avait
+ * été joué.* Les trois modules se taisent désormais quand c'est un moment qui
+ * les appelle, et le storyboard parle à leur place, une fois.
+ *
+ * Ce contrôle tient le trio ensemble : ⚠️ **corriger celui qu'on cherchait
+ * aurait laissé les deux autres** — c'est la question qui a déjà payé trois fois
+ * ce mois-ci, *qui d'autre a la même rustine à poser ?*
+ */
+const storyboard = Object.entries(sources)
+    .find(([chemin]) => chemin.endsWith('storyboard/useStoryboardStore.ts'))?.[1] ?? '';
+
+/** Les appels du storyboard qui doivent porter le drapeau, et leur receveur. */
+const APPELS_DU_MOMENT = [
+    { quoi: 'les lumières', motif: /hueEngine\.applyScene\(/ },
+    { quoi: 'la musique', motif: /playPad\(/ },
+    { quoi: "l'ambiance", motif: /ambientStore\.applyScene\(/ },
+];
+
+describe('ce qu’un moment de storyboard déclenche', () => {
+    it('trouve le magasin du storyboard', () => {
+        /* Un renommage de fichier viderait ce contrôle sans rien casser d'autre. */
+        expect(storyboard.length).toBeGreaterThan(1000);
+    });
+
+    it.each(APPELS_DU_MOMENT)('passe le drapeau à $quoi', ({ motif }) => {
+        const trouve = motif.exec(storyboard);
+        expect(trouve, `Le storyboard n'appelle plus ${motif.source} : ` +
+            'le contrôle ne protège plus rien.').not.toBeNull();
+
+        const args = argumentsDe(storyboard, trouve!.index + trouve![0].length - 1);
+        expect(args.trimEnd().endsWith('true'),
+            `Le storyboard appelle ${motif.source}${args}) sans dire que c'est un ` +
+            "enchaînement : le module écrira sa propre ligne au journal, et le moment " +
+            'aura autant de lignes que d\'effets.').toBe(true);
+    });
+});
+
 describe('qui a le droit de signer du nom du meneur', () => {
     it('trouve les appels venus des autres modules', () => {
         /* Cinq au 2026-09-09 : zones de la carte (2), Sound-OS (2), Music-OS,

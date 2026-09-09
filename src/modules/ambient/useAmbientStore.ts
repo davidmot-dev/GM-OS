@@ -93,7 +93,16 @@ interface AmbientState {
      * routage par son demandé par David le 2026-08-31. Absent, tout suit la
      * sortie du module comme avant.
      */
-    applyScene: (sceneId: string, sortie?: string) => Promise<void>;
+    /**
+     * `isAutomatic` dit **d'où vient le geste**, et il ne décide que du journal.
+     *
+     * Un moment de storyboard allume la musique, l'ambiance et les lumières : si
+     * chacun consigne, une seule intention du meneur devient trois lignes, et
+     * aucune ne dit ce qu'il a joué. *Un journal qui double ses lignes se relit
+     * comme un journal qui ment sur le nombre de gestes.* C'est la règle
+     * d'`applyScene` depuis la revue des 36 émetteurs, étendue ici. (2026-09-09)
+     */
+    applyScene: (sceneId: string, sortie?: string, isAutomatic?: boolean) => Promise<void>;
     applySnapshot: (snapshot: {
         activeTracks?: { id: string; url: string; volume: number; isPlaying: boolean }[];
         masterVolume?: number;
@@ -393,7 +402,7 @@ export const useAmbientStore = create<AmbientState>()(
                 }
             },
 
-            applyScene: async (sceneId, sortie) => {
+            applyScene: async (sceneId, sortie, isAutomatic = false) => {
                 const scene = get().scenes.find(s => s.id === sceneId);
                 if (!scene) return;
 
@@ -442,12 +451,14 @@ export const useAmbientStore = create<AmbientState>()(
                   ambiance est un geste de table. Ce qu'elle installe — la pluie,
                   la taverne — relève de la scène, que la trame porte déjà.
                 */
-                useJournalStore.getState().addEvent({
-                    type: 'AUDIO',
-                    title: `Ambiance : ${scene.name}`,
-                    content: `Nappe d'ambiance « ${scene.name} » appliquée.`,
-                    metadata: { sceneId },
-                });
+                if (!isAutomatic) {
+                    useJournalStore.getState().addEvent({
+                        type: 'AUDIO',
+                        title: `Ambiance : ${scene.name}`,
+                        content: `Nappe d'ambiance « ${scene.name} » appliquée.`,
+                        metadata: { sceneId },
+                    });
+                }
             },
 
             applySnapshot: async (snapshot) => {
