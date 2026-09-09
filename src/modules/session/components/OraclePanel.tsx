@@ -169,8 +169,11 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
 
     const handleOpenExternal = () => {
         if (activeNotebookUrl) {
-            if (window.appBridge?.openExternal) {
-                window.appBridge.openExternal(activeNotebookUrl);
+            /* ⛔ Cet appel visait `appBridge.openExternal`, declare a la racine du
+               contrat mais expose sous `web` : la garde etait toujours fausse et
+               le lien partait dans le repli navigateur. (2026-09-09) */
+            if (window.appBridge?.web?.openExternal) {
+                window.appBridge.web.openExternal(activeNotebookUrl);
             } else {
                 window.open(activeNotebookUrl, '_blank');
             }

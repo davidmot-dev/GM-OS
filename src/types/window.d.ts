@@ -147,8 +147,14 @@ declare global {
             }>>;
             lireUnMedia?: (id: string) => Promise<ArrayBuffer | null>;
         };
-        openFile?: (path: string) => void;
-        openExternal?: (url: string) => void;
+        /**
+         * Ouvre un fichier avec l'application par défaut du système.
+         *
+         * ⚠️ Le verdict est rendu par `electron/ouvertureDeFichier.ts` : un
+         * exécutable est refusé, parce qu'*une campagne s'importe et que son
+         * chemin de fichier voyage avec elle.*
+         */
+        openFile?: (path: string) => Promise<{ ouvert: boolean; raison?: string }>;
         utils?: {
             formatFileUrl: (path: string) => string;
         };

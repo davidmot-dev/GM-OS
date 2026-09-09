@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog, shell, screen, protocol, net, nati
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
+import { verdictDOuverture } from './ouvertureDeFichier'
 import http from 'node:http'
 import https from 'node:https'
 import { createRequire } from 'node:module';
@@ -874,6 +875,43 @@ ipcMain.handle('backup:reveal', async () => {
     const dossier = dossierDesSauvegardes();
     await fs.ensureDir(dossier);
     shell.openPath(dossier);
+});
+
+/*
+  **Ouvrir le fichier d'une campagne** — le bouton du cockpit, qui affichait une
+  alerte avec le chemin faute de canal (audit du 2026-09-09).
+
+  ⚠️ `shell.openPath` ne montre pas un fichier : il le CONFIE au systeme, qui le
+  lance avec ce qui lui est associe. D'ou le verdict de `ouvertureDeFichier` —
+  *une campagne s'importe, et son chemin de fichier voyage avec elle.*
+
+  On rend toujours une reponse, jamais une exception : l'appelant est un bouton,
+  et un bouton doit pouvoir dire pourquoi il n'a rien fait.
+*/
+ipcMain.handle('app:open-file', async (_event, chemin: string) => {
+    if (typeof chemin !== 'string' || chemin.trim() === '') {
+        return { ouvert: false, raison: 'chemin-vide' };
+    }
+    if (!(await fs.pathExists(chemin))) {
+        console.warn('[Ouverture] Introuvable :', chemin);
+        return { ouvert: false, raison: 'introuvable' };
+    }
+
+    const estUnDossier = (await fs.stat(chemin)).isDirectory();
+    const verdict = verdictDOuverture(chemin, estUnDossier);
+    if (!verdict.autorise) {
+        console.warn(`[Ouverture] Refuse (${verdict.raison}) :`, chemin);
+        return { ouvert: false, raison: verdict.raison };
+    }
+
+    /* `shell.openPath` rend une chaine VIDE quand tout va bien, et le message
+       d'erreur du systeme sinon. */
+    const erreur = await shell.openPath(chemin);
+    if (erreur) {
+        console.warn('[Ouverture] Refus du systeme :', erreur);
+        return { ouvert: false, raison: 'systeme' };
+    }
+    return { ouvert: true };
 });
 
 /*

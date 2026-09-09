@@ -1325,6 +1325,8 @@
       "consult_rules": "Consulter Grimoire",
       "session_resources": "Ressources Session",
       "open_http_link": "Ouvrir le Lien HTTP",
+      "open_file_failed": "Impossible d'ouvrir « {{chemin}} ». Le fichier a peut-être été déplacé ou supprimé.",
+      "open_file_refused": "Ce fichier est un exécutable : GM-OS ne l'ouvre pas.",
       "access_file": "Accéder au Fichier",
       "click_to_view": "Cliquer pour ouvrir"
     },

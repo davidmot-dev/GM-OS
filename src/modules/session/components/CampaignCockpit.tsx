@@ -563,13 +563,28 @@ const CampaignCockpit: React.FC = () => {
                         )}
                         {activeSession.filePath && (
                             <button 
-                                onClick={() => {
-                                    if (window.appBridge?.openFile) {
-                                        window.appBridge.openFile(activeSession.filePath!);
-                                    } else {
-                                        console.log('Opening file:', activeSession.filePath);
-                                        alert(`File: ${activeSession.filePath}`);
+                                onClick={async () => {
+                                    const chemin = activeSession.filePath!;
+                                    const ouvrir = window.appBridge?.openFile;
+                                    /*
+                                      **Hors d'Electron, il n'y a rien à ouvrir** — une
+                                      tablette n'a pas de disque à nous. On montre le
+                                      chemin, ce que ce bouton faisait déjà.
+                                    */
+                                    if (!ouvrir) {
+                                        alert(chemin);
+                                        return;
                                     }
+                                    const resultat = await ouvrir(chemin);
+                                    if (resultat?.ouvert) return;
+                                    /*
+                                      *Un bouton doit pouvoir dire pourquoi il n'a rien
+                                      fait.* Le refus d'un exécutable a sa propre phrase :
+                                      c'est le seul cas où ne rien faire est volontaire.
+                                    */
+                                    alert(resultat?.raison === 'extension-executable'
+                                        ? t('modules:session.cockpit.open_file_refused')
+                                        : t('modules:session.cockpit.open_file_failed', { chemin }));
                                 }}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-all group"
                             >

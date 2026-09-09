@@ -34,6 +34,13 @@ import path from 'node:path';
  * dit qu'un nom déclaré n'a **aucun homonyme dans le préload**. Dans ce sens-là
  * il est sans faux négatif, et c'est le sens qui mord.
  *
+ * ⚠️ **Des noms, et pas des chemins** — c'est sa vraie limite, mesurée le jour
+ * même : `openExternal` était déclaré **à la racine** du contrat et exposé
+ * **sous `web`**, et ce contrôle n'y voyait rien puisque le nom existait
+ * quelque part. Le panneau de l'Oracle appelait donc le vide. *La parade n'est
+ * pas ici : c'est que le contrat déclare chaque nom là où il est réellement
+ * exposé — le typage attrape alors l'appelant tout seul.*
+ *
  * D'où la forme retenue, elle aussi reprise : **une liste d'exceptions qui ne
  * doit pas grandir**, chacune avec sa raison et sa date. Un nom neuf qui tombe
  * ici pose la seule question qui vaille — *qui est censé l'exposer ?* — et deux
@@ -59,9 +66,6 @@ const TROUS_CONNUS: Record<string, string> = {
     highlightMapToken:
         "Appelé trois fois par useCombatStore pour souligner le pion du combattant actif sur la carte. " +
         "RIEN ne l'implémente, nulle part : la fonctionnalité n'a jamais marché.",
-    openFile:
-        "Appelé par CampaignCockpit pour ouvrir le fichier d'une campagne. Le repli affiche une alerte " +
-        "avec le chemin — le bouton ne ment pas, mais il n'ouvre rien.",
 };
 
 /** Les noms de fonctions déclarés dans `interface AppBridge`. */
@@ -117,7 +121,6 @@ describe('le contrat du pont et ce que le préload expose', () => {
     it('ne laisse pas la liste des trous connus grandir en silence', () => {
         expect(Object.keys(TROUS_CONNUS).sort()).toEqual([
             'highlightMapToken',
-            'openFile',
         ]);
     });
 

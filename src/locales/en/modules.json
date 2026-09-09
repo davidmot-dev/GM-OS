@@ -1325,6 +1325,8 @@
       "consult_rules": "Consult Rulebook",
       "session_resources": "Session Resources",
       "open_http_link": "Open HTTP Link",
+      "open_file_failed": "Could not open \"{{chemin}}\". The file may have been moved or deleted.",
+      "open_file_refused": "That file is an executable: GM-OS will not open it.",
       "access_file": "Access File",
       "click_to_view": "Click to open"
     },

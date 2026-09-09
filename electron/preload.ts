@@ -21,6 +21,16 @@ contextBridge.exposeInMainWorld('appBridge', {
     getPathForFile(file: File) {
         return webUtils.getPathForFile(file)
     },
+    /*
+      **Le bouton du cockpit de campagne ouvrait une alerte.** `openFile` etait
+      declare dans le contrat et expose nulle part : son repli affichait le
+      chemin dans une boite de dialogue. (2026-09-09)
+
+      ⚠️ Il est pose A LA RACINE, la ou le contrat l'annonce et ou l'appelant le
+      cherche. C'est la lecon du voisin : `openExternal` etait declare ici et
+      expose sous `web`, et le panneau de l'Oracle appelait donc le vide.
+    */
+    openFile: (chemin: string) => ipcRenderer.invoke('app:open-file', chemin),
     app: {
         quit: () => ipcRenderer.send('app:quit'),
         onDisplayChanged: (callback: (count: number) => void) => {
