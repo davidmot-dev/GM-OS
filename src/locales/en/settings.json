@@ -150,7 +150,11 @@
       "gemini_desc": "Flash or Pro models. Ideal for RAG and long prompts.",
       "openai_desc": "GPT-4o or o1. Industry standard, balanced and precise.",
       "anthropic_desc": "Claude 3.5 Sonnet. Excellent for creative writing and RP.",
-      "ollama_desc": "Local models (Phi-3, Gemma 2). 100% private, no subscription."
+      "ollama_desc": "Local models (Phi-3, Gemma 2). 100% private, no subscription.",
+      "ollama_cloud_label": "Ollama (Cloud)",
+      "ollama_cloud_desc": "Remote Ollama server over HTTPS. The same models, without the local machine.",
+      "custom_label": "Custom API",
+      "custom_desc": "Any OpenAI-compatible API: your own endpoint and key."
     },
     "status": {
       "active": "Active",
@@ -184,6 +188,7 @@
       "diagnostic_server_active": "Server Active",
       "diagnostic_mcp_missing": "Bridge Missing",
       "diagnostic_unreachable": "Unreachable",
+      "diagnostic_configured": "Configured",
       "diagnostic_oracle_online": "NotebookLM bridge online",
       "diagnostic_empty_res": "Empty Response",
       "diagnostic_mcp_absent": "Bridge absent",
@@ -339,6 +344,7 @@
       "clear_tooltip": "Clear disconnected",
       "refresh_tooltip": "Refresh",
       "no_devices": "No devices connected",
+      "just_now": "Just now",
       "reconnect_note": "Tablets reconnect automatically if signal is lost.",
       "eject_all": "Eject All",
       "eject_all_tooltip": "Disconnect all devices and reset character locks"

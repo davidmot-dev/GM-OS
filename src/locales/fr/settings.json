@@ -150,7 +150,11 @@
       "gemini_desc": "Modèles Flash ou Pro. Idéal pour le RAG et les prompts longs.",
       "openai_desc": "GPT-4o ou o1. Standard de l'industrie, équilibré et précis.",
       "anthropic_desc": "Claude 3.5 Sonnet. Excellent pour l'écriture créative et le RP.",
-      "ollama_desc": "Modèles locaux (Phi-3, Gemma 2). 100% privé, sans abonnement."
+      "ollama_desc": "Modèles locaux (Phi-3, Gemma 2). 100% privé, sans abonnement.",
+      "ollama_cloud_label": "Ollama (Cloud)",
+      "ollama_cloud_desc": "Serveur Ollama distant, joint en HTTPS. Les mêmes modèles, sans la machine locale.",
+      "custom_label": "API personnalisée",
+      "custom_desc": "Toute API compatible OpenAI : point d'entrée et clé au choix."
     },
     "status": {
       "active": "Actif",
@@ -184,6 +188,7 @@
       "diagnostic_server_active": "Serveur actif",
       "diagnostic_mcp_missing": "Bridge inexistant",
       "diagnostic_unreachable": "Serveur injoignable",
+      "diagnostic_configured": "Configuré",
       "diagnostic_oracle_online": "Pont NotebookLM en ligne",
       "diagnostic_empty_res": "Réponse vide",
       "diagnostic_mcp_absent": "Bridge MCP Absent",
@@ -339,6 +344,7 @@
       "clear_tooltip": "Vider les déconnectés",
       "refresh_tooltip": "Rafraîchir",
       "no_devices": "Aucun appareil connecté",
+      "just_now": "À l'instant",
       "reconnect_note": "Les tablettes se reconnectent automatiquement en cas de perte de signal.",
       "eject_all": "Éjecter Tout",
       "eject_all_tooltip": "Déconnecter tous les appareils et réinitialiser les verrous de personnages"

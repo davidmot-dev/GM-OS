@@ -555,6 +555,7 @@
       "removeFromFavs": "Remove from Favorites",
       "remove": "Remove",
       "solo": "SOLO",
+      "stop": "STOP",
       "projectSource": "Project on {{target}}",
       "moveFolderTooltip": "Move to folder",
       "includeSequenceTooltip": "Include in sequence"
@@ -1039,6 +1040,8 @@
         "title": "Combat Tokens",
         "clear": "Clear Map",
         "clearConfirm": "Do you want to REMOVE the {{count}} tokens from the map?",
+        "addToMap": "Add to map",
+        "alreadyOnMap": "Already on the map",
         "none": "No active combatant.",
         "hint": "Add them from Combat OS.",
         "footer": "Tip: Modify size and stats from Combat OS."

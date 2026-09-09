@@ -555,6 +555,7 @@
       "removeFromFavs": "Retirer des favoris",
       "remove": "Retirer",
       "solo": "SOLO",
+      "stop": "STOP",
       "projectSource": "Projeter sur {{target}}",
       "moveFolderTooltip": "Déplacer vers un dossier",
       "includeSequenceTooltip": "Inclure dans la séquence"
@@ -1039,6 +1040,8 @@
         "title": "Pions du Combat",
         "clear": "Vider la carte",
         "clearConfirm": "Voulez-vous SUPPRIMER les {{count}} pions de la carte ?",
+        "addToMap": "Ajouter à la carte",
+        "alreadyOnMap": "Déjà sur la carte",
         "none": "Aucun combattant actif.",
         "hint": "Ajoutez-les depuis le Combat OS.",
         "footer": "Astuce : Modifiez la taille et les stats depuis le Combat OS."
