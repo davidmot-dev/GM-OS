@@ -326,12 +326,29 @@ export const useStoryboardStore = create<StoryboardState>()(
                     }
                 }
 
-                // 2. Light-OS
-                if (moment.lightSceneId && gWindow.useLightStore && gWindow.hueEngine) {
+                /*
+                  2. Light-OS — **un moment est un enchaînement, pas un geste.**
+
+                  ⛔ Cet appel omettait `isAutomatic`, et il était le SEUL des
+                  six : les zones de la carte, Sound-OS deux fois, Music-OS et la
+                  restauration d'instantané le passent tous. *La documentation
+                  d'`applyScene` cite pourtant « un moment de storyboard » parmi
+                  les enchaînements — le code contredisait son propre commentaire.*
+
+                  Deux effets, et le second est le vrai défaut : le journal
+                  écrivait « Lumières : <scène> » alors que le geste était le
+                  MOMENT, et surtout **`lastManualSceneId` était écrasé**. À la
+                  fin du son suivant, le retour automatique ramenait la scène du
+                  storyboard comme si le meneur l'avait choisie à la main.
+
+                  ⚠️ Le `setActiveScene` qui suivait est retiré, pas corrigé :
+                  `applyScene` le fait déjà, avec le même drapeau. *Deux
+                  écrivains pour une même donnée est le motif que ce dépôt paie
+                  le plus souvent* — et celui-ci écrivait l'inverse de l'autre.
+                */
+                if (moment.lightSceneId && gWindow.hueEngine) {
                     console.log(`[Storyboard] Light: Applying scene ${moment.lightSceneId}`);
-                    const lightStore = gWindow.useLightStore.getState();
-                    gWindow.hueEngine.applyScene(moment.lightSceneId);
-                    lightStore.setActiveScene(moment.lightSceneId);
+                    gWindow.hueEngine.applyScene(moment.lightSceneId, true);
                 }
 
                 /*
