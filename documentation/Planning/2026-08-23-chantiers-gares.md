@@ -1892,15 +1892,37 @@ ailleurs : le geste d'arrêt sans bouton dans un **moteur** (§ 37c), le PDF dan
 `pontDeclareEtExpose` tient désormais le second front — *tout ce que le contrat déclare, le préload
 l'expose.*
 
-⚠️ **Il a mordu tout de suite : trois noms déclarés, APPELÉS, et absents du préload.** Leur garde
-`if (pont?.x)` est donc toujours fausse. Ils sont dans une liste d'exceptions datée, **pour être vus et
-non tolérés** — les exposer demande une décision de David :
+⚠️ **Il a mordu tout de suite : trois noms déclarés, APPELÉS, et absents du préload.** ✅ **Les trois
+sont tranchés le jour même**, et la liste d'exceptions du contrôle est **vide** :
 
-| Nom | Ce qui ne marche pas |
-| :--- | :--- |
-| `highlightMapToken` | Appelé **trois fois** par `useCombatStore` pour souligner le pion du combattant actif sur la carte. **Rien ne l'implémente nulle part** — la fonctionnalité n'a jamais marché |
-| `broadcastToTablets` | Appelé **quatre fois**. La branche « mode Electron » n'est jamais prise ; tout passe par le `CustomEvent` de secours que `useHubSync` réachemine. ⚠️ Le commentaire qui dit *« le Player Hub s'en tire par le pont Electron »* **décrit un chemin mort** |
-| `openFile` | Le bouton du cockpit de campagne. Son repli affiche une alerte avec le chemin — *il ne ment pas, mais il n'ouvre rien* |
+| Nom | Ce qui n'allait pas | Verdict |
+| :--- | :--- | :--- |
+| `openFile` | Le bouton du cockpit de campagne affichait une alerte avec le chemin — *il ne mentait pas, mais il n'ouvrait rien* | ✅ **Exposé**, avec une garde : `shell.openPath` **confie** le fichier au système, et *une campagne s'importe* |
+| `broadcastToTablets` | Appelé **quatre fois**, jamais pris : tout passe par le `CustomEvent` que `useHubSync` réachemine. Le commentaire *« le Player Hub s'en tire par le pont Electron »* décrivait un chemin mort — ⚠️ qui avait **déjà divergé** (le `motif` des ressources de table y disparaissait) | ✅ **Supprimé** : construire le canal aurait bâti un second transport pour ce qu'un seul fait déjà |
+| `highlightMapToken` | Appelé **trois fois** par `useCombatStore` pour souligner le pion du combattant actif | ✅ **Supprimé — et voir ci-dessous : la fonctionnalité existait déjà** |
+
+⛔ **Mon audit s'est trompé sur celui-là, et l'erreur mérite d'être écrite.** J'avais conclu *« la
+fonctionnalité n'a jamais marché »* ; David a répondu qu'il la voulait ; en allant la construire, je
+l'ai **trouvée déjà là**. `MapTokenNode` lit le magasin de combat lui-même et pose
+`ring-accent shadow-glow-accent animate-pulse` sur le jeton dont le `linkedCombatantId` est celui du
+tour — **sur les trois écrans**, meneur, calque et joueurs, puisque les trois rendent le même
+composant.
+
+Ce qui était mort n'était donc pas la fonctionnalité mais **une seconde façon impérative de la
+demander** : par *nom*, là où la vraie se fait par *identifiant*. ⭐ *Un peigne qui compte les noms dit
+« ce nom ne mène nulle part » ; il ne dit pas « cette fonctionnalité n'existe pas ».* J'ai conclu la
+seconde phrase à partir de la première — c'est le § 36 à la lettre, **la bonne réponse était de ne pas
+le construire**.
+
+⚠️ La limite réelle, elle, vaut d'être connue : l'anneau ne s'allume que sur un jeton **lié** à un
+combattant (`linkedCombatantId`, posé par le bouton « ajouter à la carte »). Un pion déposé à la main
+sans ce lien ne s'allumera pas.
+
+⚠️ **Et le contrôle a montré sa limite le même jour** : il compare des **noms**, pas des **chemins**.
+`openExternal` était déclaré **à la racine** du contrat et exposé **sous `web`** — le nom existait
+quelque part, donc le contrôle se taisait, et le panneau de l'Oracle appelait le vide. *La parade n'est
+pas dans le contrôle : c'est que le contrat déclare chaque nom là où il est réellement exposé, et le
+typage attrape alors l'appelant tout seul.* C'est ce qui s'est passé.
 
 #### 39c · ✅ TRAITÉ — Neuf clés s'affichaient en clair, et le contrôle ne pouvait pas les voir
 
@@ -1956,17 +1978,26 @@ s'est trompé une première fois — *la glob rend des chemins relatifs au test*
 Light-OS commencent par `./` et non par `/light/` : il accusait la tuile qu'on clique. *Un contrôle qui
 se trompe est pire qu'un contrôle absent.*
 
-#### 39e · ⛔ OUVERT — Un moment de storyboard écrit trois lignes au journal, et aucune ne le nomme
+#### 39e · ✅ TRAITÉ — Un moment de storyboard a sa ligne, et ses effets se taisent
 
-Trouvé en fermant le § 39d. Un seul moment produit *« Musique : X »*, *« Ambiance : X »* et
-*« Lumières : X »* — **et pas une ligne ne dit quel moment a été joué.**
+Trouvé en fermant le § 39d : un seul moment produisait *« Musique : X »*, *« Ambiance : X »* et
+*« Lumières : X »* — **et pas une ligne ne disait quel moment avait été joué.** Le § 39d n'avait traité
+que la troisième, parce qu'`applyScene` avait déjà son drapeau ; les deux autres journalisaient **sans
+condition**.
 
-⚠️ Ce n'est pas le même correctif : Music-OS et Ambient-OS journalisent **sans condition**, ils n'ont
-aucun drapeau à passer. Les faire taire demande de leur en ajouter un, et surtout de trancher la
-question qui vient d'abord : **un moment mérite-t-il sa propre ligne ?** *C'est une décision, pas un
-correctif* — et elle appartient à David.
+David a tranché : **une seule ligne, celle du moment.** Music-OS et Ambient-OS reçoivent donc le même
+drapeau, avec le même sens qu'ailleurs — *il dit d'où vient le geste et ne décide que du journal* — et
+le storyboard parle à leur place, **avant** d'orchestrer, comme `applyScene` : *ce qu'on note est
+l'intention du meneur, et elle ne devient pas fausse si une piste manque à l'appel.*
 
-*Ce que le journal dit aujourd'hui d'un moment joué : ses effets, jamais son nom.*
+⚠️ **La question qui a trouvé les deux autres** est celle qui a déjà payé trois fois ce mois-ci :
+*qui d'autre a la même rustine à poser ?* Corriger les lumières seules aurait laissé le journal à deux
+lignes muettes sur leur cause — le même défaut, en plus discret.
+
+Le contrôle des gestes tient désormais le trio ensemble : **les trois appels du storyboard doivent
+finir par `true`**. Éprouvé à l'envers sur celui de la musique. Deux tests existants épinglaient les
+arguments exacts de `playPad` et `applyScene` : ils sont mis à jour, et *ce sont eux qui documentent
+maintenant qu'un moment est un enchaînement.*
 
 *Code mort relevé au passage, sans conséquence :* `FogEngine.isPointRevealed` et
 `CrossWindowEventService.getLocksVersion` n'ont aucun appelant — le second a pourtant un test, qui
@@ -2044,7 +2075,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 | 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
 | 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
-| 11 | **L'audit du 09/09 — les trous** | ✅ **LES QUATRE SONT TRAITÉS** (§ 39) : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont qui manquait, les neuf clés qui s'affichaient en clair avec l'angle mort qui les cachait, et le storyboard qui signait du nom du meneur — *lequel écrasait la scène où la pièce revient*. ⛔ **Deux décisions restent à prendre, pas des correctifs** : les trois noms que le préload n'expose pas (§ 39b — dont `highlightMapToken`, qui n'a jamais marché) et les trois lignes de journal d'un moment de storyboard (§ 39e) | Trancher le § 39e : un moment mérite-t-il sa propre ligne ? | Rien |
+| 11 | **L'audit du 09/09 — les trous** | ✅ **TOUT EST TRAITÉ, décisions comprises** (§ 39) : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont, les neuf clés affichées en clair et leur angle mort, le storyboard qui signait du nom du meneur, le bouton du cockpit, la branche morte des tablettes, et la ligne de journal du moment. ⛔ **Une erreur d'audit corrigée en chemin** : `highlightMapToken` ne « n'avait jamais marché » — *la fonctionnalité existait déjà*, c'était une seconde façon impérative de la demander (§ 39b). La liste d'exceptions du contrôle du pont est **vide** | — | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
