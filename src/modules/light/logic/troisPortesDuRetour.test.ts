@@ -2,6 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { hueEngine } from '../HueEngine';
 import { useLightStore } from '../useLightStore';
 import { useJournalStore } from '../../journal/useJournalStore';
+import type { JournalEvent } from '../../journal/types';
+
+/** La signature d'`addEvent`, pour que l'espion soit typé comme lui. */
+type EcritureAuJournal = (evenement: Omit<JournalEvent, 'timestamp' | 'id'>) => void;
 
 /**
  * **Trois gestes ramènent la pièce au repos, et ils ne visent pas la même
@@ -127,10 +131,10 @@ describe('l’extinction d’urgence', () => {
  * la présence d'un journal.*
  */
 describe('ce que l’arrêt écrit au journal', () => {
-    let ecrire: ReturnType<typeof vi.fn>;
+    let ecrire: ReturnType<typeof vi.fn<EcritureAuJournal>>;
 
     beforeEach(() => {
-        ecrire = vi.fn();
+        ecrire = vi.fn<EcritureAuJournal>();
         useJournalStore.setState({ addEvent: ecrire });
     });
 

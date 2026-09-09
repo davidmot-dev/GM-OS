@@ -1108,7 +1108,26 @@ export class HueEngine {
         const store = useLightStore.getState();
         const xy = this.hexToXy(hexColor);
         const baseBri = this.hexToBri(hexColor);
-        const bri = Math.max(1, Math.round(baseBri * intensity));
+        /*
+          ⛔ **Ce chemin ignorait le curseur global.** Il parle au pont
+          directement — c'est voulu, il ne doit toucher ni l'état gardé en
+          mémoire ni la scène active — mais il court-circuitait du même coup la
+          seule multiplication que **toutes** les autres lampes subissent : à
+          20 % d'intensité globale, « Rouge Critique » partait quand même à
+          pleine puissance. *Un curseur qui dit « toute la pièce » et qu'un
+          chemin ignore n'est pas un curseur, c'est une approximation.*
+
+          ⚠️ **Ils sont DEUX à faire ça**, `triggerFlash` et
+          `applyTacticalState`, avec les mêmes quatre lignes recopiées. Corriger
+          celui qu'on cherchait aurait laissé l'autre — *la question qui trouve
+          ces défauts est toujours « qui d'autre a la même rustine à poser ? »*
+
+          L'intensité d'une **tuile** ne s'y applique pas : ni un flash ni un
+          état tactique n'appartiennent à une scène. Et le plancher à 1 reste,
+          parce que la commande dit `on: true` — *envoyer « allume-toi à zéro »
+          n'a pas de sens ; qui veut le noir a le bouton rouge.*
+        */
+        const bri = Math.max(1, brillanceEffective(baseBri * intensity, store.globalBrightness));
 
         console.log(`[HUE ENGINE] ⚡ FLASH triggered: ${hexColor} (Scaled Brightness: ${bri}, Intensity: ${intensity})`);
 
@@ -1137,7 +1156,8 @@ export class HueEngine {
         const store = useLightStore.getState();
         const xy = this.hexToXy(hexColor);
         const baseBri = this.hexToBri(hexColor);
-        const bri = Math.max(1, Math.round(baseBri * intensity));
+        /* Même défaut, même correctif — voir le commentaire de `triggerFlash`. */
+        const bri = Math.max(1, brillanceEffective(baseBri * intensity, store.globalBrightness));
         
         console.log(`[HUE ENGINE] 🛡️ Applying Persistent Tactical State: ${name} (${hexColor}) (Scaled Brightness: ${bri}, Intensity: ${intensity})`);
 
