@@ -4,7 +4,7 @@ import { hueEngine } from './HueEngine';
 import { estUneFrappeDePastille } from '../../utils/frappeDePastille';
 
 /**
- * **Le « Key Learn » de Light-OS — une touche lance une scène.**
+ * **Le clavier de Light-OS — une touche lance une scène, Échap l'arrête.**
  *
  * ⛔ Le guide le promettait depuis toujours ; `keyCode` n'avait **ni lecteur ni
  * écrivain** dans tout le dépôt. Branché le 2026-09-07.
@@ -46,6 +46,32 @@ export const useLightKeyboardControls = () => {
                     return;
                 }
                 etat.setSceneKeyCode(etat.sceneEnApprentissage, touche);
+                return;
+            }
+
+            /*
+              **Échap arrête la scène en cours.** Choisi par David le
+              2026-09-09 : c'est la touche universelle du « sortir », et la seule
+              qu'on puisse réserver sans rien retirer au meneur — l'apprentissage
+              l'utilise déjà pour s'annuler, elle ne peut donc **pas** être
+              attribuée à une tuile par l'écran.
+
+              ⚠️ Elle est lue **avant** la recherche par touche : une sauvegarde
+              ancienne qui porterait `Escape` sur une tuile ne la lancerait pas.
+              *Une touche réservée qui ne l'est qu'à l'écriture ne l'est pas.*
+
+              ⛔ Et elle ne fait rien quand **aucune scène ne joue** — même règle
+              que le bouton de la barre latérale : le retour vise l'éclairage
+              normal, donc un « arrêter » sur une pièce au repos l'**allumerait**.
+              *Le geste d'arrêt ne doit jamais être un geste d'allumage.*
+
+              La garde partagée écarte déjà les champs de saisie et les boîtes
+              ouvertes : Échap y garde son rôle habituel de fermeture.
+            */
+            if (touche === 'Escape') {
+                if (!etat.activeSceneId) return;
+                evenement.preventDefault();
+                hueEngine.revenirALEclairageNormal();
                 return;
             }
 

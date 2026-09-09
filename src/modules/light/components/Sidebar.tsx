@@ -275,6 +275,14 @@ export const Sidebar: React.FC = () => {
                     className="w-full py-3 bg-app-bg hover:bg-app-surface border border-app-border hover:border-accent/40 text-slate-300 hover:text-app-text rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-app-bg disabled:hover:border-app-border disabled:hover:text-slate-300">
                     <span className="material-symbols-outlined">stop_circle</span>
                     {t('light.sidebar.stop_scene')}
+                    {/*
+                      **Le raccourci se lit sur le bouton**, comme la touche
+                      d'une tuile se lit sur la tuile : *un raccourci qu'il faut
+                      chercher dans un guide n'en est pas un.*
+                    */}
+                    <span className="text-ui-10 font-mono font-normal text-slate-500 border border-app-border rounded px-1 py-0.5 leading-none">
+                        Échap
+                    </span>
                 </button>
 
                 <button
