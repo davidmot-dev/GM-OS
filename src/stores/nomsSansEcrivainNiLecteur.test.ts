@@ -132,8 +132,6 @@ const TOLERES: Record<string, string> = {
 
     // ⚠️ Déclarés et rien d'autre — ni écrivain, ni lecteur, nulle part.
     'daysPerWeek': "⚠️ 2026-09-07 : UNE SEULE occurrence dans tout le dépôt, sa propre déclaration. Ses trois voisins du calendrier (daysOfWeek, hoursPerDay, minutesPerHour) sont lus par le calcul de date ; celui-là ne l'est pas — la semaine du calendrier n'a jamais eu de longueur",
-    'isSessionMode': "⚠️ 2026-09-07 : « Mode MJ Focus (masque les outils d'édition) » — écrit, mis dans un instantané, et LU PAR AUCUN ÉCRAN. Rien n'est masqué",
-    'toggleSessionMode': "⚠️ 2026-09-07 : la bascule du mode ci-dessus, qu'aucun bouton n'appelle",
 
     // Employés chez eux, mesuré le 2026-09-07 (3 occurrences ou plus dans leur propre magasin).
     'trackVolumes': "les volumes par piste, relus par le magasin des ambiances",

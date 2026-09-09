@@ -1,4 +1,5 @@
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useSessionStore } from '../../../store/useSessionStore';
 import { momentDeJeu } from '../../ai/budgetsDeTemps';
 import { regimeDInterface, type RegimeDInterface } from '../logic/regimeDInterface';
 
@@ -20,5 +21,19 @@ import { regimeDInterface, type RegimeDInterface } from '../logic/regimeDInterfa
  */
 export function useRegimeDInterface(): RegimeDInterface {
     const moment = useSessionOSStore(s => momentDeJeu(s.sessions));
-    return regimeDInterface(moment);
+    /*
+      **Le forçage du meneur passe devant, et il ne va pas plus loin que
+      l'écran — tranché par David le 2026-09-09.**
+
+      Les budgets de temps de l'IA lisent `momentDeJeu` directement et ne voient
+      donc pas cette surcharge : *replier son écran ne veut pas dire que la
+      table a cessé d'attendre.* L'IA a déjà ses deux portes à elle — le bouton
+      « Alléger » de l'axe F.5, et la pause de séance qui lève ses plafonds.
+
+      C'était la seule chose qui manquait à l'axe N.3 : il déduisait son régime
+      en silence, sans rien pour le voir ni pour le contredire, là où l'axe F.5
+      avait donné les deux à l'IA dès août.
+    */
+    const surcharge = useSessionStore(s => s.surchargeDuRegime);
+    return regimeDInterface(surcharge ?? moment);
 }

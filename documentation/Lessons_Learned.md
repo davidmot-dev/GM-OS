@@ -937,7 +937,51 @@ qu'on retrouve chaque semaine ici.*
 
 ---
 
-*Dernière mise à jour : 8 Septembre 2026 — la couleur d'une pastille de son, qui n'a jamais rien
+## 🚪 Ce qui existe déjà porte souvent un autre nom (2026-09-09)
+
+*Demande de David : « je voulais le MJ Focus, mais je veux aussi une possibilité d'en sortir au
+besoin. » **La bonne réponse était de ne pas le construire.***
+
+### 1. Un nom mort peut désigner une chose vivante, ailleurs
+
+- **Défi** : brancher `isSessionMode`, « Mode MJ Focus (masque les outils d'édition) », écrit et lu
+  par aucun écran.
+- **Ce qu'il fallait voir** : le mode existait **déjà**, sous un autre nom et dans un autre module —
+  le régime `aLaTable`, livré trois semaines plus tôt, qui densifie cinq modules et éloigne les
+  actions destructives. Le brancher aurait donné **deux écrivains pour un même fait**.
+- **Leçon** : devant un nom orphelin, la question n'est pas seulement *faut-il le brancher ?* mais
+  **la chose qu'il nomme existe-t-elle ailleurs ?** Un vestige et une fonctionnalité vivante se
+  ressemblent beaucoup vus depuis le magasin. *Chercher la chose, pas le nom* — c'est le pendant de
+  la leçon du 07/09 sur les doublons de l'horloge, et la deuxième fois en trois jours.
+
+### 2. Une règle appliquée d'un seul côté
+
+- **Ce qui manquait vraiment** : le régime se **déduisait en silence**, sans rien pour le voir ni le
+  contredire. Or l'axe voisin — le mode de contexte de l'IA — avait reçu les deux dès août, et son
+  indicateur porte la règle écrite noir sur blanc : *« c'est la Forge qui doit le dire, avec le moyen
+  de passer outre. »*
+- **Leçon** : une règle formulée pour un axe ne se propage pas toute seule à ses voisins, même quand
+  elle est écrite, même quand elle est bonne. **Deux axes livrés à un mois d'écart, une même règle,
+  appliquée d'un seul côté** — et personne ne l'a vu, parce que chacun était complet vu de
+  l'intérieur. *Un principe ne vaut que là où quelqu'un est allé le poser.*
+
+### 3. Une porte de sortie ne peut pas faire partie de ce qu'elle referme
+
+- **Le geste** : l'interrupteur du régime vit dans la barre du haut, jamais dans un des cinq modules
+  que le régime replie.
+- **Pourquoi c'est une règle et non un goût** : le 2026-08-23, le mode compact avait rendu **trois
+  boutons introuvables** en héritant d'un style de survol que les originaux n'avaient pas. *Une porte
+  de sortie qui disparaît avec le mode qu'elle doit quitter n'est pas une porte.*
+- **Corollaire de rédaction** : l'indicateur montre **trois** raisons et non deux — séance ouverte,
+  hors séance, **forcé**. *« Table parce qu'une séance est ouverte » n'est pas « Table parce que je
+  l'ai demandé »* : sans la troisième, le meneur chercherait la séance qui n'existe pas.
+
+---
+
+*Dernière mise à jour : 9 Septembre 2026 — le MJ Focus, qui existait déjà sous le nom de régime
+« table », et la porte de sortie qui lui manquait.*
+
+*Mise à jour précédente : 8 Septembre 2026 — la couleur d'une pastille de son, qui n'a jamais rien
 coloré, et deux défauts qui se protégeaient l'un l'autre.*
 
 *Mise à jour précédente : 7 Septembre 2026 — curseur de vitesse des effets de Light-OS et les deux

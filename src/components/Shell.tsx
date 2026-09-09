@@ -46,6 +46,7 @@ import { SessionService } from '../store/SessionService';
 import AIChatPanel from '../modules/ai/components/AIChatPanel';
 import { TacticalAIControlPanel } from '../modules/tactical-ai/components/TacticalAIControlPanel';
 import MasterAudioController from './audio/MasterAudioController';
+import { IndicateurDeRegime } from '../modules/session/components/IndicateurDeRegime';
 
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { useTacticalOrchestrator } from '../modules/tactical-ai/hooks/useTacticalOrchestrator';
@@ -539,6 +540,16 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        {/*
+                          **La porte de sortie du mode « table », et elle est ici
+                          exprès.** Le régime replie cinq modules ; son propre
+                          interrupteur ne doit jamais faire partie de ce qu'il
+                          replie — *une porte de sortie qui disparaît avec le mode
+                          qu'elle doit quitter n'est pas une porte.* La barre du
+                          haut est le seul endroit visible depuis tous les modules.
+                        */}
+                        <IndicateurDeRegime />
+
                          <div className={`flex items-center gap-4 px-4 py-1.5 border ${
                             theme === 'medieval' ? 'rounded-md border-app-border/40' : 'rounded-full border-app-accent/20'
                         } ${tacticalSettings.isEnabled ? 'bg-accent/10' : 'bg-app-surface opacity-50'}`}>

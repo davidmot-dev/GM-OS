@@ -49,6 +49,9 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-07** après les §§ 29 à 35 : `tsc -b` propre, **3 931 tests au vert**
 > (329 fichiers, 1 ignoré, 4 tests ignorés).
+>
+> Revérifié le **2026-09-09** après le § 36 : `tsc -b` propre, **3 940 tests au vert**
+> (330 fichiers, 1 ignoré, 4 tests ignorés).
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -1581,7 +1584,7 @@ Dix noms sont **déclarés, souvent implémentés, et appelés par personne** �
 | --- | --- |
 | `useSoundStore` | ✅ **`setPadColor` — TRAITÉ, voir § 35.** Et c'était pire que « la couleur ne peut pas être changée » |
 | `useClockStore` | ⛔ **J'ai exagéré la première rédaction de cette ligne, corrigée le 07/09 au soir.** `setActiveCalendar` est un **doublon** : `selectCalendar` pose `activeCalendarId` (ligne 467) et l'écran a bien sa liste déroulante. `addTime` en est un autre : le tableau de bord avance le temps par `setTimestamp`. `resetTensionClock` ferait gagner six clics — `updateTensionSegments` vide déjà une jauge segment par segment. **Seul `daysPerWeek` est une vraie anomalie** : une occurrence dans tout le dépôt, jamais lue. *Un nom sans appelant n'est pas une fonctionnalité manquante — il faut regarder si un voisin fait déjà le travail.* |
-| `useSessionStore` | `isSessionMode` / `toggleSessionMode` — « Mode MJ Focus (masque les outils d'édition) », écrit, mis dans un instantané, **lu par aucun écran**. Rien n'est masqué |
+| `useSessionStore` | ✅ **`isSessionMode` / `toggleSessionMode` — TRAITÉS, voir § 36.** Supprimés : le mode existait déjà ailleurs, sous un autre nom |
 | `useMapUIStore` | `setBrushSize` — `brushSize` est figé à **50**, lu par `FogEngine` et persisté : on peint un couloir et une plaine au même pinceau |
 | `usePerformanceStore` | `setAutoPerformance` — le mode force les graphismes bas et **rien ne permet de le contredire** |
 | `useUlanziStore` | `setSeuil` — `seuilSansPause` est borné 1-6, donc prévu réglable, et aucun écran ne le règle |
@@ -1649,6 +1652,58 @@ employé, sa tolérance est devenue périmée et le test a échoué en demandant
 sa première occasion.
 
 **Ancres** : `sound/logic/couleurDuPad.ts` (+ son test), `sound/components/SoundPad.tsx`.
+
+### 36 · ⭐ Le MJ Focus existait déjà — il lui manquait sa porte de sortie (2026-09-09)
+
+Demandé par David après le § 33 : *« je voulais le MJ Focus, mais je veux aussi une possibilité d'en
+sortir au besoin, comment faire ? »*
+
+⭐ **La bonne réponse était de ne pas le construire.** Le mode existe depuis l'axe N.3
+(2026-08-23/24) : `aLaTable` densifie cinq modules — combat, carte, PNJ, Oracle, journal —, pré-choisit
+ce qui peut l'être et **éloigne les actions destructives de ce qu'on touche dix fois par tour**. Il se
+déduit de `momentDeJeu` : une séance ouverte et non en pause. *Brancher `isSessionMode` aurait créé un
+**second écrivain pour le même fait** — le motif que ce dépôt paie plus souvent qu'aucun autre.* Les
+deux noms morts sont supprimés.
+
+**Et la sortie existait aussi, sans que rien ne le dise** : mettre la séance **en pause** fait
+repasser `momentDeJeu` en préparation — c'est déjà écrit dans son code, au titre de l'axe G. Personne
+ne pouvait le deviner.
+
+#### Ce qui manquait vraiment
+
+⛔ **Le régime se déduisait en silence : rien pour le voir, rien pour le contredire.** L'axe F.5 avait
+pourtant donné les deux à l'IA dès août, et son `IndicateurDeMode` porte la règle mot pour mot —
+*« c'est la Forge qui doit le dire, avec le moyen de passer outre »*. **L'axe N.3 ne l'a jamais fait
+pour l'écran.** *Deux axes voisins, une même règle, appliquée d'un seul côté.*
+
+`IndicateurDeRegime` reprend ce patron : il affiche **Table** ou **Atelier**, **sa raison** — séance
+ouverte / hors séance / **forcé** —, et offre de basculer. Trois raisons et non deux : *« Table parce
+qu'une séance est ouverte » n'est pas « Table parce que je l'ai demandé »*, et le meneur doit
+reconnaître son propre geste, sinon il cherchera la séance qui n'existe pas. Quand un forçage est
+actif, un second bouton **Auto** rend la main à la séance — *rendre la main et forcer l'autre régime
+sont deux intentions, une bascule unique obligerait à passer par l'une pour atteindre l'autre.*
+
+⛔ **Il vit dans la barre du haut, et c'est une cicatrice, pas une préférence.** Le 2026-08-23, le mode
+compact avait rendu **trois boutons introuvables**. *Une porte de sortie qui disparaît avec le mode
+qu'elle doit quitter n'est pas une porte* — l'interrupteur ne fait donc jamais partie de ce que le
+régime replie, et la barre du haut est le seul endroit visible depuis tous les modules.
+
+#### Deux décisions de David
+
+- ⚠️ **Le forçage ne va pas plus loin que l'écran.** Les budgets de temps de l'IA lisent `momentDeJeu`
+  directement et ignorent la surcharge : *replier son écran ne veut pas dire que la table a cessé
+  d'attendre.* L'IA garde ses deux portes à elle — le bouton « Alléger » de l'axe F.5, et la pause.
+- **Non persisté** : *un forçage est un geste « pour maintenant »*. Le restaurer au lancement mettrait
+  l'écran dans un régime que personne n'a demandé ce jour-là, sans rien pour l'expliquer — la règle de
+  `suivreLaVoix`. ⚠️ Le `partialize` de ce magasin persiste **tout sauf** ce qu'on lui retire : il a
+  fallu l'y ajouter explicitement, sans quoi le commentaire aurait menti.
+
+*Au passage, une erreur `eslint` antérieure est réparée dans ce `partialize` — l'omission par
+déstructuration y laissait deux variables inemployées.*
+
+**Ancres** : `session/components/IndicateurDeRegime.tsx`, `session/hooks/useRegimeDInterface.ts`,
+`store/useSessionStore.ts` (`surchargeDuRegime`, `forcerLeRegime`),
+`session/logic/surchargeDuRegime.test.ts`, `components/Shell.tsx`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

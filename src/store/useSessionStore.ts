@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import i18n from '../i18n';
 import { DEFAULT_LANGUAGE } from '../config/languages';
 import { PALETTES, type ThemeID } from '../theme/themeDeLInterface';
+import type { MomentDeJeu } from '../modules/ai/budgetsDeTemps';
 
 export type { ThemeID };
 export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal' | 'forge';
@@ -11,7 +12,25 @@ interface SessionState {
     activeModule: ModuleID;
     theme: ThemeID;
     themeColor: string; // Hex color for global accents
-    isSessionMode: boolean; // Mode MJ Focus (masque les outils d'édition)
+    /**
+     * **Le régime d'interface forcé à la main, ou `null` pour suivre la séance.**
+     *
+     * ⛔ Ce champ remplace `isSessionMode`, qui portait le commentaire « Mode MJ
+     * Focus (masque les outils d'édition) » — **écrit, mis dans une sauvegarde,
+     * et lu par aucun écran**. Rien n'était masqué.
+     *
+     * Le mode existait pourtant déjà, ailleurs et sous un autre nom : le régime
+     * `aLaTable` de l'axe N.3, dérivé de `momentDeJeu`. *Brancher `isSessionMode`
+     * aurait créé un second écrivain pour le même fait* — le motif que ce dépôt
+     * paie le plus souvent. On garde donc la source unique, et on lui ajoute la
+     * seule chose qui lui manquait : **le moyen de passer outre.**
+     *
+     * ⚠️ **Non persisté, volontairement.** Un forçage est un geste « pour
+     * maintenant » : le restaurer au lancement mettrait l'écran dans un régime
+     * que personne n'a demandé ce jour-là, sans rien pour l'expliquer. C'est la
+     * même règle que `suivreLaVoix` de Light-OS.
+     */
+    surchargeDuRegime: MomentDeJeu | null;
     isAIPanelOpen: boolean;
     isMessengerOpen: boolean;
     displayCount: number;
@@ -22,7 +41,8 @@ interface SessionState {
     setActiveModule: (id: ModuleID) => void;
     setTheme: (theme: ThemeID) => void;
     setThemeColor: (color: string) => void;
-    toggleSessionMode: (force?: boolean) => void;
+    /** Force un régime d'interface, ou rend la main à la séance avec `null`. */
+    forcerLeRegime: (regime: MomentDeJeu | null) => void;
     toggleAIPanel: (force?: boolean) => void;
     toggleMessenger: (force?: boolean) => void;
     setDisplayCount: (count: number) => void;
@@ -32,7 +52,6 @@ interface SessionState {
         activeModule: string;
         theme: string;
         themeColor: string;
-        isSessionMode: boolean;
         displayCount: number;
     };
 }
@@ -52,7 +71,7 @@ export const useSessionStore = create<SessionState>()(
             activeModule: 'dashboard',
             theme: 'cyberpunk',
             themeColor: THEME_PALETTES['cyberpunk'].accent,
-            isSessionMode: false,
+            surchargeDuRegime: null,
             isAIPanelOpen: false,
             isMessengerOpen: false,
             displayCount: 1,
@@ -65,9 +84,7 @@ export const useSessionStore = create<SessionState>()(
                 themeColor: THEME_PALETTES[theme]?.accent || '#3b82f6'
             }),
             setThemeColor: (themeColor) => set({ themeColor }),
-            toggleSessionMode: (force?: boolean) => set((state) => ({
-                isSessionMode: force !== undefined ? force : !state.isSessionMode
-            })),
+            forcerLeRegime: (surchargeDuRegime) => set({ surchargeDuRegime }),
             toggleAIPanel: (force?: boolean) => set((state) => ({
                 isAIPanelOpen: force !== undefined ? force : !state.isAIPanelOpen
             })),
@@ -85,14 +102,21 @@ export const useSessionStore = create<SessionState>()(
                 activeModule: get().activeModule,
                 theme: get().theme,
                 themeColor: get().themeColor,
-                isSessionMode: get().isSessionMode,
                 displayCount: get().displayCount,
             }),
         }),
         {
             name: 'gmos-session-storage',
             partialize: (state) => {
-                const { isSystemReady, ...persistedState } = state;
+                /*
+                  `surchargeDuRegime` sort d'ici avec `isSystemReady` : **un
+                  forçage est un geste « pour maintenant »**. Le restaurer au
+                  lancement mettrait l'écran dans un régime que personne n'a
+                  demandé ce jour-là, sans rien pour l'expliquer.
+                */
+                const persistedState = { ...state } as Partial<SessionState>;
+                delete persistedState.isSystemReady;
+                delete persistedState.surchargeDuRegime;
                 return persistedState;
             }
         }

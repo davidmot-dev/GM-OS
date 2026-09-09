@@ -223,6 +223,37 @@ disposition vide. **Un régime qui démarre nu n'est pas un second régime, c'es
 > **Conséquence à connaître** : tout ce qui n'a de porte **que** dans un écran d'atelier devient
 > hors de portée pendant la partie. C'est ce qui est arrivé aux Chroniques jusqu'au 2026-09-05.
 
+### ⭐ Le régime « table » — et comment en sortir
+
+Ouvrir une séance ne change pas que la disposition : cinq modules — **combat, carte, PNJ, Oracle,
+journal** — passent en régime **table**. Concrètement, trois choses :
+
+1. **La densité augmente** : à table on regarde de loin, parfois debout, souvent en parlant.
+2. **Les valeurs sont déjà choisies** : l'écran ne pose pas les questions qu'il sait résoudre.
+3. **Les actions destructives s'éloignent** de ce que vous touchez dix fois par tour. Elles restent
+   atteignables — elles cessent seulement d'être voisines du bouton que vous pressez sans regarder.
+
+**La barre du haut affiche toujours le régime en cours et sa raison** — *Table (séance ouverte)*,
+*Atelier (hors séance)*, ou *Table (forcé)*. Le libellé à côté bascule d'un clic, et quand vous avez
+forcé un régime, un bouton **Auto** rend la main à la séance.
+
+> [!TIP]
+> **Trois façons de sortir du régime table**, selon ce que vous faites :
+>
+> - **Le bouton « Atelier »** de la barre du haut : pour un instant, sans toucher à la séance. C'est
+>   la porte à prendre quand vous voulez juste éditer quelque chose au milieu d'une partie.
+> - **Mettre la séance en pause** : une séance en pause n'est pas une séance en cours. Le régime
+>   repasse en atelier **et** les plafonds de temps de l'IA se lèvent — c'est la porte des vraies
+>   interruptions, le café, la fin de soirée.
+> - **Fermer la séance**, évidemment.
+
+> [!NOTE]
+> **Forcer le régime n'agit que sur l'écran.** L'IA garde son plafond de cinq minutes tant que la
+> séance tourne : *replier votre écran ne veut pas dire que la table a cessé d'attendre.* Pour
+> l'IA, servez-vous de son propre bouton « Alléger », ou de la pause.
+>
+> Le forçage **ne survit pas au redémarrage** : au lancement, le régime suit de nouveau la séance.
+
 ---
 
 ## 📐 Workspace Sync v2 - Auto-Layout Intelligent
