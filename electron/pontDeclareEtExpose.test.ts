@@ -53,20 +53,17 @@ const contrat = fs.readFileSync(path.join(RACINE, 'src', 'types', 'window.d.ts')
 const preload = fs.readFileSync(path.join(RACINE, 'electron', 'preload.ts'), 'utf-8');
 
 /**
- * ⛔ **TROIS TROUS CONNUS, datés du 2026-09-09.**
+ * ⭐ **La liste est vide, et elle doit le rester.**
  *
- * Ces trois-là sont **appelés** par l'application et n'existent pas dans le
- * préload : la garde `if (pont?.x)` qui les entoure est donc toujours fausse.
- * On ne peut pas les retirer du contrat — leurs appelants ne compileraient
- * plus — et les exposer demande une décision qui n'est pas la mienne.
+ * Elle a porté trois noms le 2026-09-09 — `openFile`, `broadcastToTablets`,
+ * `highlightMapToken` — tous appelés par l'application et absents du préload.
+ * Les trois ont été tranchés le jour même : le premier exposé, les deux autres
+ * supprimés parce qu'ils **doublaient un chemin qui marchait déjà**.
  *
- * *Ils sont ici pour être vus, pas pour être tolérés.*
+ * Une entrée neuve ici est un aveu, pas une tolérance : elle dit qu'on a laissé
+ * un appel viser le vide en connaissance de cause.
  */
-const TROUS_CONNUS: Record<string, string> = {
-    highlightMapToken:
-        "Appelé trois fois par useCombatStore pour souligner le pion du combattant actif sur la carte. " +
-        "RIEN ne l'implémente, nulle part : la fonctionnalité n'a jamais marché.",
-};
+const TROUS_CONNUS: Record<string, string> = {};
 
 /** Les noms de fonctions déclarés dans `interface AppBridge`. */
 const declarationsDuContrat = (): string[] => {
@@ -119,9 +116,7 @@ describe('le contrat du pont et ce que le préload expose', () => {
      * quatrième sans le dire.
      */
     it('ne laisse pas la liste des trous connus grandir en silence', () => {
-        expect(Object.keys(TROUS_CONNUS).sort()).toEqual([
-            'highlightMapToken',
-        ]);
+        expect(Object.keys(TROUS_CONNUS).sort()).toEqual([]);
     });
 
     /**

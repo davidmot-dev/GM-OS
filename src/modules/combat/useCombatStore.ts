@@ -1031,13 +1031,23 @@ export const useCombatStore = create<CombatState>()(
                         }
                         return c;
                     });
-                    const activeCombatant = newCombatants[nextIdx];
-                    if (activeCombatant && typeof window !== 'undefined') {
-                        const bridge = (window as any).appBridge;
-                        if (bridge && bridge.highlightMapToken) {
-                            bridge.highlightMapToken(activeCombatant.name);
-                        }
-                    }
+                    /*
+                      ⛔ **Trois appels à `appBridge.highlightMapToken` vivaient
+                      ici, et frappaient le vide** : le préload n'a jamais exposé
+                      ce nom (audit du 2026-09-09).
+
+                      ⭐ Mais **le pion du combattant actif EST bien souligné** :
+                      `MapTokenNode` lit ce magasin lui-même et pose
+                      `ring-accent shadow-glow-accent animate-pulse` sur le jeton
+                      dont le `linkedCombatantId` est celui du tour. Sur les trois
+                      écrans, meneur et joueurs, sans que personne n'ait rien à
+                      appeler.
+
+                      *Ce qui était mort n'était donc pas la fonctionnalité, mais
+                      une seconde façon impérative de la demander* — par nom, là
+                      où la vraie se fait par identifiant. La supprimer, c'est
+                      retirer le doublon, pas l'effet.
+                    */
                     
                     const newState = { currentTurnIdx: nextIdx, round: nextRound, combatants: newCombatants };
                     return newState;
@@ -1055,13 +1065,8 @@ export const useCombatStore = create<CombatState>()(
                     const newCombatants = state.combatants.map((c, i) =>
                         i === idx ? { ...c, statuses: processStatusDurations(c.statuses) } : c
                     );
-                    const actif = newCombatants[idx];
-                    if (actif && typeof window !== 'undefined') {
-                        const bridge = (window as any).appBridge;
-                        if (bridge && bridge.highlightMapToken) {
-                            bridge.highlightMapToken(actif.name);
-                        }
-                    }
+                    /* Le pion du tour est souligné par `MapTokenNode` lui-même —
+                       voir `nextTurn`. */
                     return { currentTurnIdx: idx, combatants: newCombatants };
                 });
                 get().broadcastSync();
@@ -1076,13 +1081,7 @@ export const useCombatStore = create<CombatState>()(
                         prevIdx = state.combatants.length - 1;
                         prevRound = Math.max(1, prevRound - 1);
                     }
-                    const activeCombatant = state.combatants[prevIdx];
-                    if (activeCombatant && typeof window !== 'undefined') {
-                        const bridge = (window as any).appBridge;
-                        if (bridge && bridge.highlightMapToken) {
-                            bridge.highlightMapToken(activeCombatant.name);
-                        }
-                    }
+                    /* Idem : rien à demander, le jeton suit ce magasin. */
                     return { currentTurnIdx: prevIdx, round: prevRound };
                 });
                 get().broadcastSync();

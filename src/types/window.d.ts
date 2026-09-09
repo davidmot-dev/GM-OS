@@ -197,7 +197,6 @@ declare global {
             getSecret: () => Promise<string>;
             rotate: () => Promise<string>;
         };
-        highlightMapToken?: (name: string) => void;
         app?: {
             quit: () => void;
             onDisplayChanged: (callback: (count: number) => void) => () => void;
@@ -543,7 +542,6 @@ declare global {
             rollFormula: (formula: string) => any;
             rollFromConfig: (config: any, options?: any) => any;
         };
-        highlightMapToken?: (name: string) => void;
     }
 }
 
