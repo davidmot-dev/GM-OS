@@ -1789,6 +1789,70 @@ l'autre — **Arrêter la scène** coupe les effets et ramène l'éclairage norm
 `light/components/Sidebar.tsx`, `light/logic/limiterLaCadence.ts`,
 `light/intensiteDesScenes.test.ts`.
 
+### 38 · ⭐ Trois suggestions prises au mot : le flash, le journal, et Échap (2026-09-09)
+
+*« Est-ce que tu as encore des suggestions ? »* — puis, les trois posées : **« ok fait les 3 »**. Elles
+sortaient toutes de la lecture du § 37, et aucune n'était une idée : chacune était une chose que le
+code disait déjà.
+
+#### 38a · ⛔ Les flashs ignoraient le curseur global — et ils étaient DEUX
+
+`triggerFlash` parle au pont **directement**, et c'est voulu — il ne doit toucher ni l'état gardé en
+mémoire ni la scène active. Mais il court-circuitait du même coup la seule multiplication que **toutes**
+les autres lampes subissent : à 20 % d'intensité globale, *« Rouge Critique » partait quand même à
+pleine puissance*.
+
+⚠️ **`applyTacticalState` porte les mêmes quatre lignes recopiées, et le même défaut.** L'état tactique
+persistant du module de combat. *Je ne l'ai vu qu'en réparant* — la ligne à corriger existait à
+l'identique deux fois dans le fichier, et le premier correctif avait visé la bonne des deux par chance.
+**La question qui trouve ces défauts est toujours la même : « qui d'autre a la même rustine à poser ? »**
+Elle a déjà servi trois fois au pupitre de dés.
+
+⚠️ **Troisième et quatrième chemins en deux jours qui s'arrêtent avant le moteur** — après le § 37c, et
+le motif des jets de dés qu'on connaît par cœur. *Un curseur qui dit « toute la pièce » et qu'un chemin
+ignore n'est pas un curseur, c'est une approximation.*
+
+L'intensité d'une **tuile**, elle, ne s'y applique pas : un flash n'appartient à aucune scène. Et le
+plancher à 1 reste, parce que la commande dit `on: true` — *envoyer « allume-toi à zéro » n'a pas de
+sens ; qui veut le noir a le bouton rouge.*
+
+#### 38b · ⛔ Le journal disait quand une ambiance commençait, jamais quand elle s'arrêtait
+
+`applyScene` consigne le geste du meneur depuis la revue des 36 émetteurs (2026-08-20). Les **deux
+arrêts** — `revenirALEclairageNormal` et `extinguishAll` — n'écrivaient rien, le Stop All de la barre
+audio pas davantage. *À la relecture d'après-séance, toutes les lumières de la soirée avaient l'air
+d'être restées allumées.*
+
+La règle appliquée est celle d'`applyScene`, et elle vaut plus que la ligne qu'elle produit : **on
+consigne ce que le meneur a voulu, pas ce que l'application a enchaîné.** `isAutomatic` voyage donc
+avec le geste jusque dans `extinguishAll`, et une seule ligne est écrite quelle que soit la fin de
+l'arrêt — *un journal qui double ses lignes se relit comme un journal qui ment sur le nombre de
+gestes.*
+
+⚠️ Comme les lignes de scène, elles ne s'écrivent **que si une séance est ouverte** : `addEvent` se
+tait sans journal actif. Les tests remplacent donc l'écriture par un espion — *ce qu'on éprouve est la
+décision d'écrire, pas la présence d'un journal.*
+
+#### 38c · Échap arrête la scène — le raccourci choisi par David
+
+Les dix-huit tuiles pouvaient avoir leur touche depuis le 07/09 ; l'arrêt obligeait à revenir sur
+l'écran Light-OS. Trois candidats ont été proposés, David a pris **Échap** : la touche universelle du
+« sortir », et la seule qu'on puisse réserver sans rien retirer au meneur — *l'apprentissage l'utilise
+déjà pour s'annuler, elle ne peut donc pas être attribuée à une tuile par l'écran.*
+
+- ⚠️ Elle est lue **avant** la recherche par touche : une sauvegarde ancienne qui porterait `Escape`
+  sur une tuile ne la lancerait pas. *Une touche réservée qui ne l'est qu'à l'écriture ne l'est pas.*
+- ⛔ Elle **ne fait rien quand aucune scène ne joue**, même règle que le bouton : le retour vise
+  l'éclairage normal, donc un « arrêter » sur une pièce au repos l'**allumerait**. *Le geste d'arrêt ne
+  doit jamais être un geste d'allumage.*
+- La garde partagée écarte déjà les champs de saisie et les boîtes ouvertes : Échap y garde son rôle
+  de fermeture. Et le raccourci **se lit sur le bouton** — *un raccourci qu'il faut chercher dans un
+  guide n'en est pas un.*
+
+**Ancres** : `light/HueEngine.ts` (`triggerFlash`, `applyTacticalState`, `consignerAuJournal`, `extinguishAll(isAutomatic)`),
+`light/useLightKeyboardControls.ts`, `light/components/Sidebar.tsx`,
+`light/logic/troisPortesDuRetour.test.ts`.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
@@ -1853,7 +1917,7 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 | 6 | **Loot-OS & le pont vers Table-OS** | ✅ **LIVRÉ le 04/09** — jamais joué en séance (P6) | Tirer sur `fouille_ganger`, verser, distribuer | Rien |
 | 7 | **La voix des PNJ de campagne** | ✅ **LIVRÉE le 04/09** — jamais jouée en séance (P6) | Générer la voix d'un PNJ, la retoucher, la rappeler | Rien |
 | 9 | **Light-OS, la journée du 07/09** | ✅ **CINQ CHANTIERS, tous vérifiés à l'écran** — vitesse des effets par tuile (§ 29), éclairage normal de la pièce (§ 30), les trois promesses du guide que rien ne tenait (§ 31), la couleur de tuile invisible et les icônes télescopées (§ 32). ⚠️ **Quatre des sept défauts de la journée sont nés dans la journée** : chaque livraison a déplacé quelque chose sur le même carré | — | Rien |
-| 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
+| 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
