@@ -21,9 +21,58 @@ import type { HealthSystem, DamageImpact } from '../useSessionOSStore';
  * prochaine incompatibilité réelle.
  */
 export function woundLabel(health: { data: Record<string, unknown> }): string {
-    const levels = (health.data.levels as string[]) ?? [];
-    const index = (health.data.currentIndex as number) ?? -1;
+    const levels = listeOuVide<string>(health.data.levels);
+    const index = nombreOuRepli(health.data.currentIndex, -1);
     return levels[index] ?? '';
+}
+
+/**
+ * **Les trois lectures de `data`, au même endroit que le reste du modele.**
+ *
+ * `HealthSystem.data` est un `Record<string, unknown>` : c'est le pilote du jeu
+ * qui decide de ce qu'il y met, et rien ne garantit qu'un champ attendu soit la.
+ * Chaque ecran s'etait donc ecrit sa propre parade, et deux d'entre elles
+ * etaient fausses — `HealthManager` lisait `Number(data.current) ?? repli`, ou
+ * le repli ne peut JAMAIS se declencher : `Number()` rend `NaN`, jamais `null`.
+ * La barre de vie affichait donc `NaN` la ou elle devait retomber sur le PJ.
+ *
+ * *Une garde qu'on reecrit a chaque appel est une garde qu'on reecrit mal une
+ * fois sur deux.* C'est la raison d'etre de `woundLabel` juste au-dessus, et
+ * c'est exactement la meme ici.
+ */
+
+/**
+ * Un nombre utilisable, ou le repli.
+ *
+ * ⚠️ `Number()` seul ne suffit pas, et pas seulement a cause du `NaN` :
+ * `Number(null)` vaut **0**, et `Number('')` aussi. Un champ absent rendrait
+ * donc une jauge a zero — un personnage annonce mort — la ou le repli disait 10.
+ * D'ou le tri par type avant toute conversion.
+ */
+export function nombreOuRepli(valeur: unknown, repli: number): number {
+    if (typeof valeur === 'number') return Number.isFinite(valeur) ? valeur : repli;
+    if (typeof valeur === 'string' && valeur.trim() !== '') {
+        const nombre = Number(valeur);
+        if (Number.isFinite(nombre)) return nombre;
+    }
+    return repli;
+}
+
+/** La liste, ou une liste vide — jamais `undefined`, que `.map()` ferait exploser. */
+export function listeOuVide<T>(valeur: unknown): T[] {
+    return Array.isArray(valeur) ? (valeur as T[]) : [];
+}
+
+/**
+ * L'objet, ou un objet vide.
+ *
+ * `typeof null === 'object'` : le test sur `null` n'est pas superflu, et un
+ * tableau non plus n'est pas la table de zones qu'attend la silhouette.
+ */
+export function objetOuVide<T>(valeur: unknown): Record<string, T> {
+    return valeur !== null && typeof valeur === 'object' && !Array.isArray(valeur)
+        ? (valeur as Record<string, T>)
+        : {};
 }
 
 /**
@@ -117,7 +166,7 @@ export const HealthInterpreter = {
     processResistances: (health: HealthSystem, impact: DamageImpact): DamageImpact => {
         if (!impact.type || impact.isRecovery) return impact;
 
-        const tags = (health.data.tags as string[]) || [];
+        const tags = listeOuVide<string>(health.data.tags);
         let multiplier = 1;
 
         // Check for specific tags: res_FIRE, vul_COLD, etc.
@@ -132,8 +181,8 @@ export const HealthInterpreter = {
     },
 
     handleHP: (health: HealthSystem, impact: DamageImpact): HealthSystem => {
-        const currentHp = (health.data.current as number) ?? 0;
-        const maxHp = (health.data.max as number) ?? 10;
+        const currentHp = nombreOuRepli(health.data.current, 0);
+        const maxHp = nombreOuRepli(health.data.max, 10);
         
         let nextHp = impact.isRecovery ? currentHp + impact.value : currentHp - impact.value;
         nextHp = Math.max(0, Math.min(maxHp, nextHp));
@@ -155,8 +204,8 @@ export const HealthInterpreter = {
     },
 
     handleClocks: (health: HealthSystem, impact: DamageImpact): HealthSystem => {
-        const filled = (health.data.filled as number) ?? 0;
-        const segments = (health.data.segments as number) ?? 6;
+        const filled = nombreOuRepli(health.data.filled, 0);
+        const segments = nombreOuRepli(health.data.segments, 6);
 
         let nextFilled = impact.isRecovery ? filled - impact.value : filled + impact.value;
         nextFilled = Math.max(0, Math.min(segments, nextFilled));
@@ -178,7 +227,7 @@ export const HealthInterpreter = {
         const location = impact.location || 'torso';
         
         // Deep clone the parts map
-        const parts = { ...(health.data.parts as Record<string, { status: string }> || {}) };
+        const parts = { ...objetOuVide<{ status: string }>(health.data.parts) };
         const part = { ...(parts[location] || { status: 'healthy' }) };
         
         const currentStatus = part.status || 'healthy';
@@ -221,8 +270,8 @@ export const HealthInterpreter = {
     },
     
     handleWounds: (health: HealthSystem, impact: DamageImpact): HealthSystem => {
-        const levels = (health.data.levels as string[]) || [];
-        const currentIndex = (health.data.currentIndex as number) ?? -1;
+        const levels = listeOuVide<string>(health.data.levels);
+        const currentIndex = nombreOuRepli(health.data.currentIndex, -1);
         
         let nextIndex = impact.isRecovery ? currentIndex - impact.value : currentIndex + impact.value;
         nextIndex = Math.max(-1, Math.min(levels.length - 1, nextIndex));
@@ -240,7 +289,7 @@ export const HealthInterpreter = {
     },
 
     handleBoxes: (health: HealthSystem, impact: DamageImpact): HealthSystem => {
-        const boxes = (health.data.boxes as { label: string, filled: boolean }[]) || [];
+        const boxes = listeOuVide<{ label: string; filled: boolean }>(health.data.boxes);
         const filledCount = boxes.filter(b => b.filled).length;
         
         let nextCount = impact.isRecovery ? filledCount - impact.value : filledCount + impact.value;

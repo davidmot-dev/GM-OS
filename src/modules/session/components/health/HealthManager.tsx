@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type HealthSystem, type PersistenceBadge } from '../../useSessionOSStore';
-import { HealthInterpreter } from '../../logic/HealthInterpreter';
+import { HealthInterpreter, nombreOuRepli, listeOuVide, objetOuVide } from '../../logic/HealthInterpreter';
 import { DamageCalculator } from '../../logic/DamageCalculator';
 import { HealthBarDriver } from './HealthBarDriver';
 import { ClockDriver } from './ClockDriver';
@@ -359,8 +359,8 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
         >
             {health.type === 'hp' && (
                 <HealthBarDriver 
-                    current={Number(health.data.current) ?? (porteur as any)?.hp ?? 0}
-                    max={Number(health.data.max) ?? (porteur as any)?.maxHp ?? 10}
+                    current={nombreOuRepli(health.data.current, nombreOuRepli((porteur as any)?.hp, 0))}
+                    max={nombreOuRepli(health.data.max, nombreOuRepli((porteur as any)?.maxHp, 10))}
                     onCurrentChange={(val) => {
                         if (type === 'pc') {
                             const player = players.find(p => p.characters.some(c => c.id === id));
@@ -381,23 +381,23 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                     isHealing={isHealing}
                 />
             )}
-            {health.type === 'clocks' && <ClockDriver filled={Number(health.data.filled)} total={Number(health.data.segments)} />}
+            {health.type === 'clocks' && <ClockDriver filled={nombreOuRepli(health.data.filled, 0)} total={nombreOuRepli(health.data.segments, 6)} />}
             {health.type === 'anatomy' && (
                 <AnatomicalSilhouette 
-                    parts={health.data.parts as Record<string, { status: PartStatus }>} 
+                    parts={objetOuVide<{ status: PartStatus }>(health.data.parts)} 
                     onPartClick={(partId, isRecovery) => triggerImpact(isRecovery, partId)} 
                 />
             )}
             {health.type === 'wounds' && (
                 <WoundLevelsDriver 
-                    levels={health.data.levels as string[]} 
-                    currentIndex={health.data.currentIndex as number} 
+                    levels={listeOuVide<string>(health.data.levels)} 
+                    currentIndex={nombreOuRepli(health.data.currentIndex, -1)} 
                     onLevelClick={(index) => {
                         const nextHealth = {
                             ...health,
                             data: { ...health.data, currentIndex: index },
-                            state: index === (health.data.levels as string[]).length - 1 ? 'dead' :
-                                   index >= ((health.data.levels as string[]).length / 2) ? 'critical' :
+                            state: index === listeOuVide<string>(health.data.levels).length - 1 ? 'dead' :
+                                   index >= (listeOuVide<string>(health.data.levels).length / 2) ? 'critical' :
                                    index >= 0 ? 'wounded' : 'healthy'
                         } as HealthSystem;
                         
@@ -412,7 +412,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
             )}
             {health.type === 'boxes' && (
                 <HarmBoxesDriver 
-                    boxes={health.data.boxes as { label: string, filled: boolean }[]} 
+                    boxes={listeOuVide<{ label: string; filled: boolean }>(health.data.boxes)} 
                 />
             )}
         </div>
