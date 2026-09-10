@@ -978,7 +978,143 @@ besoin. » **La bonne réponse était de ne pas le construire.***
 
 ---
 
-*Dernière mise à jour : 9 Septembre 2026 — le MJ Focus, qui existait déjà sous le nom de régime
+## 🔍 Ce qu'une revue de code trouve, et ce qu'elle ne trouve qu'en corrigeant (2026-09-10/11)
+
+*Revue demandée sur l'application entière, puis les cinq lots de correction qui en sont sortis. La
+moitié des vrais défauts n'a pas été trouvée par la lecture : elle est apparue en écrivant le
+correctif.*
+
+### 1. Un outil rouge en permanence ne dit plus rien
+
+`npm run lint` sortait **585 erreurs**, dont 468 pour la seule règle `no-explicit-any`. Un script qui
+échoue toujours n'est plus lancé — et c'est pourtant lui qui portait les deux vrais bugs de la revue :
+le `NaN` de la barre de vie (`no-constant-binary-expression`, **2 occurrences**) et les 27 crochets
+conditionnels du hub (`rules-of-hooks`).
+
+**La leçon** : *un signal noyé est un signal perdu.* Passer la règle bavarde en avertissement a ramené
+la sortie à 71 erreurs, presque toutes réelles. Ce qui bloque doit désigner un défaut ; le reste
+s'affiche sans arrêter.
+
+⚠️ **Et l'ordre compte** : ce nettoyage se fait **après** les correctifs, pas avant. Les lots
+précédents avaient déjà retiré une trentaine d'erreurs — trier ce qui va partir est du travail perdu.
+
+### 2. Retirer du type vaut mieux que filtrer à l'usage
+
+Deux fois dans la même semaine, le même levier a fait tout le travail.
+
+- Fermer le pont générique : plutôt que d'écrire une liste blanche de canaux, **retirer `on`/`off`/`send`
+  du type `AppBridge`**. `tsc` a alors énuméré les appelants — dont **trois que `grep` avait ratés** et
+  un canal absent de mon relevé.
+- Sortir les clés du renderer : plutôt que convenir de ne plus remplir `apiKey`, **retirer le champ du
+  type**. `tsc` a listé les vingt-sept lecteurs.
+
+**La leçon** : *une discipline s'oublie, un type refuse.* Et le compilateur est un inventaire
+exhaustif là où la recherche textuelle est un sondage. Le mode d'échec d'une liste blanche incomplète
+est le silence — la fonction cesse simplement de répondre, en séance.
+
+### 3. Un `off` peut ne rien retirer, et personne ne le voit
+
+Le pont enregistrait une fonction **enveloppe** anonyme dans `on`, et demandait à Electron de retirer
+le `listener` d'origine dans `off`. Electron compare par référence : aucune correspondance, aucun
+retrait. **Tout abonnement passé par ce pont était définitif.**
+
+Rien ne le signalait : l'écran restait correct, la mémoire seule grossissait, et les charges utiles se
+rejouaient autant de fois qu'il y avait eu de rendus.
+
+**La leçon** : *une méthode d'abonnement doit rendre la fonction qui retire ce qu'elle a posé.* Elle
+ferme alors sur le bon écouteur par construction, et l'appelant ne peut pas se tromper de référence.
+
+Deux erreurs peuvent d'ailleurs **s'annuler à l'écran et s'ajouter en mémoire** : `map:ping` écoutait
+un canal qu'aucun émetteur n'alimente, et son `off` visait une autre fonction que son `on`. Aucun des
+deux défauts ne produisait de symptôme visible.
+
+### 4. La rustine appliquée d'un seul côté — encore
+
+Le motif revient, et il revient toujours entre **voisins immédiats** :
+
+| Corrigé | Jamais reporté sur |
+| --- | --- |
+| `obsidian:read-note` (garde de chemin, avec dix lignes de commentaire) | `write-note` et `ensure-directory`, **vingt lignes plus bas**, qui écrivent |
+| `broadcastUIAction` (le rôle destinataire, avec son commentaire) | `sendSync`, **une ligne plus haut** |
+| `ulanzi:before-quit` (`removeAllListeners` contre le doublon `StrictMode`) | `backup:before-quit`, son jumeau — **celui qui porte la sauvegarde automatique** |
+
+**La leçon** : *quand on écrit un commentaire pour expliquer une correction, la question suivante est
+« qui d'autre a la même rustine à poser ? » — et la réponse est le plus souvent juste en dessous.*
+
+### 5. Un contrôle qui ne peut pas être faux protège moins qu'il n'en a l'air
+
+`startsWith(racine)` accepte le dossier **voisin** : `C:\Coffre-prive` passe quand le coffre est
+`C:\Coffre`. Quatre implémentations de cette question cohabitaient, dont deux justes — et **les deux
+justes ne disaient pas la même chose** sur la racine elle-même : l'une l'acceptait, l'autre non, en
+silence.
+
+C'est en unifiant, et donc en devant trancher ce désaccord, qu'est apparu le vrai défaut :
+**`ai:delete-doc` avec un chemin vide supprimait le corpus entier** — `path.join(root, '')` rend
+`root`, que le préfixe acceptait.
+
+**La leçon** : *deux versions justes qui divergent sur un cas limite signalent un cas limite que
+personne n'a tranché.* Un module partagé force la décision ; quatre copies la laissent implicite.
+
+### 6. `Number()` ne rend jamais `null`
+
+`Number(x) ?? repli` est du code mort : `Number()` rend **`NaN`**, jamais `null` ni `undefined`. Le
+repli écrit pour le cas d'absence ne peut donc jamais se déclencher.
+
+⚠️ Et la correction évidente est fausse aussi : `Number.isFinite(Number(x))` accepte `null` — parce que
+**`Number(null)` vaut 0**, comme `Number('')`. Une jauge retomberait donc à zéro, c'est-à-dire à « mort »
+pour un personnage, là où le repli disait 10. Il faut trier par **type** avant toute conversion.
+
+### 7. Un contrôle ne vaut que dégradé
+
+Chacun des cinq contrôles posés a été confronté au code d'origine **remis à l'identique** : 10 des 12
+tests du composant de santé rougissent, 3 des 4 du hub, 3 des 4 du pont. *Un test qui reste vert sur le
+bug qu'il prétend garder ne garde rien* — et deux fois cette semaine, la dégradation a appris quelque
+chose que la lecture n'avait pas vu (`anatomy` levait, l'horodatage de repli était instable).
+
+### 8. Un secret masqué reste un secret écrit
+
+Le chemin Gemini journalisait la clé « masquée » — cinq caractères de tête, cinq de queue — dans
+`main.log`. Et le message d'erreur du proxy écrivait **l'URL entière**, dans laquelle Gemini attend
+précisément sa clé.
+
+**La leçon** : *on ne protège pas un secret qu'on recopie dans un journal.* Après avoir retiré la clé
+du chemin, le premier réflexe doit être de chercher qui l'écrit encore — un masque partiel est une
+fuite partielle, pas une protection.
+
+### 9. Un paramètre qui n'est qu'un drapeau déguisé
+
+`listModels(apiKey)` ne se servait de son argument que pour tester sa présence. Un tel paramètre
+**invite à le remplir avec la vraie valeur** — et c'est exactement ce que faisaient les quatre
+appelants. Le retirer a supprimé quatre transports de clé sans changer un comportement.
+
+### 10. Un champ de saisie contrôlé écrit à chaque frappe
+
+`onChange` appelait `updateConfig`, qui appelait `saveSecret`. Taper une clé de quarante caractères
+déposait donc **quarante versions tronquées** dans le coffre, dont trente-neuf fausses. Seule la
+dernière était juste, et rien ne le disait.
+
+**La leçon** : *une écriture persistante ne doit pas être une conséquence de la frappe.* Elle mérite un
+geste — un bouton — et l'état intermédiaire vit en local.
+
+### 11. Un correctif de course se déplace avec ce qu'il protégeait
+
+`fusionnerEtatIA` existait pour qu'une clé relue du coffre survive à la réhydratation. Les clés parties,
+le correctif semblait sans objet — mais **`clesPresentes` se remplit exactement de la même façon**,
+depuis le coffre, de façon asynchrone. Sans la même précaution, toutes les mentions « configurée » se
+seraient vidées quelques instants après l'ouverture, invitant à retaper des clés déjà présentes : *le
+geste même qui a failli les perdre en août.*
+
+**La leçon** : *quand on remplace une donnée par sa métadonnée, les défauts de la donnée suivent.*
+
+---
+
+*Dernière mise à jour : 11 Septembre 2026 — revue de code de l'application entière et les cinq lots de
+correction qui en sont sortis (le `NaN` de la barre de vie et les trois branches qui levaient, une
+seule comparaison de chemins, les 27 crochets conditionnels du hub, le lint rendu lisible), puis la
+fermeture du pont générique — dont le `off` ne retirait jamais rien — et la garde des clés d'API, que
+le renderer ne détient plus du tout.*
+
+*Mise à jour précédente : 9 Septembre 2026 — le MJ Focus, qui existait déjà sous le nom de régime
 « table », et la porte de sortie qui lui manquait.*
 
 *Mise à jour précédente : 8 Septembre 2026 — la couleur d'une pastille de son, qui n'a jamais rien

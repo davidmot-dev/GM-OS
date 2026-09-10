@@ -24,7 +24,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ---
 
-## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-07**
+## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun
@@ -2032,6 +2032,111 @@ lui-même** — ni l'ajout, ni le portrait, ni la pastille en ligne. La section 
 
 **Ancres** : `session/components/CharacterGrid.tsx`, `session/components/PlayerRoster.tsx`,
 `documentation/User Guides/10-Session-OS-le-cockpit.md`.
+
+### 41 · ⭐ La revue de code du 2026-09-10, et ce qu'elle a ouvert (2026-09-10/11)
+
+*Demandée par David : « fais un code review de l'application ». Cinq lots de correction en sont
+sortis, puis un chantier de sécurité que la revue n'avait pas vu venir.*
+
+**Le relevé de départ** : `tsc -b` propre, **3 978 tests au vert**, et `npm run lint` **rouge à 585
+erreurs** — donc plus jamais lancé. *C'est pourtant lui qui a trouvé les deux vrais bugs de la revue.*
+
+| Lot | Ce qui était | Ce qui est |
+| --- | --- | --- |
+| **1** | ⛔ `current={Number(x) ?? repli}` — `Number()` rend `NaN`, jamais `null` : **le repli était du code mort** et la barre de vie affichait `NaN`. **Trois des cinq branches levaient** une `TypeError` sur un `data` incomplet. | Trois lecteurs dans `HealthInterpreter`, employés par les cinq branches **et** par les dix lectures internes de l'interprète. |
+| **2** | Quatre implémentations de « ce chemin est-il sous cette racine ? », dont deux fausses (`startsWith` accepte le dossier **voisin**). | `electron/sousChemin.ts`, onze appelants. `strictementSous` / `sousOuEgal` — *l'arbitrage se fait au nom appelé*. |
+| **3** | 27 crochets React **conditionnels** dans `useHubSync`. Ils ne tenaient que parce que le graphe d'imports d'`App.tsx` charge les huit magasins avant le premier rendu. | `useMagasin` appelle `useSyncExternalStore` **toujours** : le compte devient invariant par construction. |
+| **4** | 585 erreurs de lint, dont 468 pour `no-explicit-any`. | `warn` pour celle-là, `require` toléré dans les tests. **585 → 69**, presque toutes réelles. |
+| **5** | Trois marges de « défense en profondeur ». | `nosniff` posé ; les deux autres se sont révélées être des chantiers — voir plus bas. |
+
+**Trois défauts trouvés en corrigeant, et non à la revue :**
+
+- ⛔ **`ai:delete-doc` avec un chemin VIDE supprimait tout le corpus.** `path.join(root, '')` rend
+  `root`, que `startsWith(root)` acceptait, et `fs.remove` faisait le reste. *Seule la question « la
+  racine est-elle dedans ? » l'a fait apparaître.*
+- ⚠️ **`anatomy` crashait aussi** — le plan le laissait « à vérifier ». C'est la dégradation qui a
+  tranché, pas la lecture.
+- ⚠️ **`Number(null)` vaut 0**, et `Number('')` aussi : un lecteur bâti sur `Number.isFinite` seul
+  aurait rendu 0 — division par zéro pour `max`, personnage annoncé mort pour `current`.
+
+#### 41a · ⛔ Le pont générique, et la fuite qu'il cachait
+
+Le préload exposait `on` / `off` / `send` / `invoke` sur **n'importe quel canal**. Six canaux y
+transitaient sans figurer dans aucun contrat, dont `remote:eject-all`. Mais le vrai motif était
+ailleurs :
+
+> **`off` ne retirait JAMAIS rien.** `on` enregistrait une enveloppe anonyme et `off` demandait le
+> retrait de la fonction d'origine. Electron compare par référence. **Tout abonnement passé par ce
+> pont était définitif.**
+
+Trois fuites que ce silence cachait : `fetchDisplays` posait un écouteur **à chaque appel**, les deux
+écouteurs d'`App.tsx` n'étaient pas dans le nettoyage de leur effet, et **`map:ping` écoutait un canal
+qu'aucun émetteur n'alimente** — son `off` visant en prime une autre fonction que son `on`.
+
+Deux autres, du même geste :
+
+- ⛔ **`sendSync` avalait le rôle** — le défaut corrigé pour `broadcastUIAction` **une ligne plus
+  bas**, jamais reporté. C'est pour ça que le synchroniseur passait par le générique : il envoie la
+  charge complète aux rôles `gm`/`remote` et une charge **caviardée** aux `player`/`hub`. *« Nettoyer »
+  en passant à `sendSync` aurait envoyé la version non caviardée sur toutes les tablettes.*
+- ⛔ **`backup:before-quit` pouvait avoir DEUX abonnés.** `StrictMode` monte chaque effet deux fois et
+  le principal attend avec `ipcMain.once` : la première réponse libère la fermeture, et la plus rapide
+  est celle qui n'a rien écrit. C'est le défaut Ulanzi du 30/08, jamais reporté sur le jumeau — **celui
+  qui porte la sauvegarde automatique**.
+
+⭐ **La leçon de méthode** : *retirer le générique du **type** plutôt que le filtrer.* `tsc` devient
+alors l'inventaire — il a trouvé **trois appelants que `grep` avait ratés** et un canal absent de mon
+relevé. Une liste blanche écrite à la main les aurait tous manqués, et le mode d'échec aurait été le
+silence.
+
+#### 41b · 🔑 La garde des clés d'API
+
+La liste blanche d'hôtes ne tenait pas : le fournisseur **Custom** existe pour joindre l'endpoint que
+le meneur nomme. Le contrôle porte donc sur **quelle clé a le droit de partir vers quel hôte** — et le
+relevé des appels a déplacé le risque là où je ne l'attendais pas : **Gemini met sa clé dans l'URL**
+(`?key=`, six endroits), là où Anthropic la met en en-tête. *Une clé dans une URL atterrit dans les
+journaux du serveur d'en face.*
+
+Deux paliers :
+
+1. **Le processus principal pose la clé** (`clesDesFournisseurs.ts`), depuis le coffre, au vu du
+   fournisseur déclaré. ⛔ **Le journal recrachait ce qu'on venait de protéger** : `main.ts` écrivait
+   l'URL entière dans son message d'erreur — donc la clé de Gemini dans `main.log`.
+2. **L'écran ne détient plus rien** : `useAIStore` ne connaît que `clesPresentes`, obtenu par
+   `etatDuCoffre()` qui rend les **noms** des entrées. Le type `AIModelConfig` n'a plus de champ
+   `apiKey`.
+
+⛔ **Le champ de saisie écrivait au coffre À CHAQUE FRAPPE.** Taper une clé de quarante caractères y
+déposait quarante versions tronquées, dont trente-neuf fausses. L'écriture est maintenant un **geste**.
+
+⚠️ **La course de la réhydratation n'a pas disparu, elle a changé d'objet.** `clesPresentes` se remplit
+depuis le coffre au démarrage, donc de façon asynchrone — exactement comme les clés avant lui.
+`fusionnerEtatIA` le préserve donc de la même manière, sans quoi toutes les mentions « configurée » se
+videraient après l'ouverture et inviteraient à retaper des clés déjà présentes. *C'est le geste qui a
+failli les perdre en août.*
+
+**Pour le meneur, le geste change : on ne relit plus une clé, on la remplace.**
+
+#### 41c · Ce qui reste
+
+- ⚠️ **Aucune de ces corrections n'a été éprouvée à l'écran.** Les tests couvrent la logique, pas le
+  geste — et c'est là que David trouve les défauts depuis des semaines. **Saisir une clé pour de vrai**
+  est la seule vérification qui manque.
+- Les **69 erreurs de lint** restantes, dont 13 `set-state-in-effect` et 7 `react-hooks/refs` : le tas
+  suivant à trier.
+- Les **448 `any`** : concentrés dans les chemins de synchronisation, où le typage réel demanderait de
+  décrire les charges utiles échangées entre fenêtres. *Un chantier, pas une correction.*
+
+**Relevé de sortie** : `tsc -b` propre, **4 047 tests** (+69), lint **69 erreurs** (−516).
+Six commits, de `df836c65` à `f1b0f9a9`.
+
+**Ancres** : `session/logic/HealthInterpreter.ts`, `electron/sousChemin.ts`,
+`session/hooks/useHubSync.ts`, `electron/preload.ts`, `electron/hotesDesFournisseurs.ts`,
+`electron/clesDesFournisseurs.ts`, `src/stores/useAIStore.ts`.
+
+**Les quatre contrôles posés**, tous vérifiés par dégradation — *un test qui reste vert sur le bug
+qu'il prétend garder ne garde rien* : `donneesIncompletes.test.tsx`, `sousChemin.test.ts`,
+`magasinsQuiApparaissent.test.tsx`, `pontSansCanalLibre.test.ts`, `lesClesNeVoyagentPas.test.ts`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

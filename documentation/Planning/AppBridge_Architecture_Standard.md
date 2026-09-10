@@ -50,5 +50,87 @@ Dans un environnement multi-fenêtres (MJ, Hub, Projecteurs), la synchronisation
 3. **Mocks de Test** : Pour les tests Vitest, simulez systématiquement `window.appBridge` pour tester la logique métier sans avoir besoin d'un environnement Electron.
 
 ---
+
+## 6. ⛔ Aucun canal libre (2026-09-10)
+
+**Le pont n'expose aucune méthode générique.** Il n'y a plus de `on`, `off`,
+`send` ni `invoke` prenant un nom de canal en paramètre : **chaque canal a sa
+méthode nommée**, et le canal y est écrit en toutes lettres.
+
+### Pourquoi
+
+Deux raisons, et la seconde est la vraie.
+
+1. **La surface réelle du pont n'était pas celle que le contrat annonçait.** Six
+   canaux transitaient par le générique sans figurer nulle part — dont
+   `remote:eject-all`, qui déconnecte toute la table.
+
+2. ⛔ **`off` ne retirait jamais rien.** `on` enregistrait une fonction
+   *enveloppe* anonyme et `off` demandait à Electron de retirer le `listener`
+   d'origine, qui n'avait jamais été enregistré. Electron compare par référence :
+   aucune correspondance, aucun retrait. **Tout abonnement passé par ce pont
+   était définitif.**
+
+Trois fuites que ce silence cachait, trouvées en le fermant : `fetchDisplays`
+posait un écouteur *à chaque appel*, les deux abonnements d'`App.tsx` n'étaient
+pas dans le nettoyage de leur effet, et `map:ping` écoutait un canal **qu'aucun
+émetteur n'alimente** — son `off` visant en prime une autre fonction que son
+`on`.
+
+### La règle
+
+> **Tout ce que le préload abonne, il doit savoir le retirer.** Une méthode
+> d'abonnement ferme sur l'écouteur qu'elle pose et **rend la fonction qui le
+> retire** ; l'appelant s'en sert dans le nettoyage de son effet.
+
+```typescript
+onUpdateDisplay: (rappel: (chemins: string[]) => void) => {
+    const ecouteur = (_e: Electron.IpcRendererEvent, chemins: string[]) => rappel(chemins);
+    ipcRenderer.on('image:update-display', ecouteur);
+    return () => ipcRenderer.off('image:update-display', ecouteur);
+}
+```
+
+⚠️ **Deux exceptions, et la liste ne doit pas grandir** : `ulanzi:before-quit` et
+`backup:before-quit`. Ce sont des poignées de main de fermeture — le rappel vit
+aussi longtemps que la fenêtre, et le danger n'est pas la fuite mais le
+**doublon**, `StrictMode` montant chaque effet deux fois. Elles se protègent donc
+par `removeAllListeners` avant de s'abonner : le processus principal attend avec
+`ipcMain.once`, et *la première réponse libère la fermeture — la plus rapide
+étant celle qui n'a rien écrit*.
+
+### Le contrôle
+
+`electron/pontSansCanalLibre.test.ts` tient les deux invariants : aucun appel IPC
+ne prend son canal dans une variable, et chaque `on` a son `off`. **Retirer le
+générique du *type* (`window.d.ts`) est ce qui rend `tsc` exhaustif** — il a
+trouvé trois appelants que `grep` avait ratés, et un canal absent du relevé.
+
+---
+
+## 7. 🔑 Les secrets ne traversent pas le pont (2026-09-10/11)
+
+**Aucune clé d'API ne circule dans le renderer.** Le processus principal les
+détient (coffre `SecurityManager`) et les **pose lui-même** sur les requêtes
+sortantes ; l'écran déclare seulement **pour quel fournisseur** il parle.
+
+| Fichier | Rôle |
+| --- | --- |
+| `electron/hotesDesFournisseurs.ts` | Quel hôte un fournisseur a le droit de joindre. Un hôte **libre** (`custom`, `ollama`) est écrit ; un fournisseur **absent** est refusé. |
+| `electron/clesDesFournisseurs.ts` | Où la clé s'attache — en-tête `x-api-key`, `Authorization: Bearer`, ou **paramètre d'URL** pour Gemini. |
+
+⚠️ **Elles ne se posent pas toutes au même endroit**, et c'est ce qui interdit
+une fonction unique : **Gemini met sa clé dans l'URL**. Une URL voyage dans les
+journaux du serveur d'en face — d'où le caviardage du journal d'erreur de
+`main.ts`, qui recopiait l'URL entière.
+
+Côté magasin, `useAIStore` ne connaît que `clesPresentes` : **qui** a une clé,
+jamais laquelle. Il le demande à `etatDuCoffre()`, qui rend les *noms* des
+entrées. Le type `AIModelConfig` n'a plus de champ `apiKey` — *c'est le typage
+qui refuse, pas une discipline qu'on oublie*.
+
+**Conséquence pour l'écran** : on ne relit plus une clé, **on la remplace**.
+
+---
 *Date de création : 16 Avril 2026*
-*Version : 1.0 (v6 Stabilization Wave)*
+*Version : 1.2 — 11 Septembre 2026 (fermeture du canal libre, garde des clés)*
