@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import AI_SERVICE from './AIService.ts?raw';
 import CLOUDFLARE from './cloudflareImage.ts?raw';
+import MAGASIN from '../../stores/useAIStore.ts?raw';
 
 /**
  * **Aucune clé d'API n'est assemblée dans le renderer.**
@@ -24,14 +25,13 @@ import CLOUDFLARE from './cloudflareImage.ts?raw';
  * où quelqu'un rajoute un en-tête « juste pour essayer », il rougit.
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * CE QU'IL NE COUVRE PAS ENCORE
+ * ET LE RENDERER NE LES DÉTIENT PLUS DU TOUT (2026-09-11)
  * ─────────────────────────────────────────────────────────────────────────────
  *
- * Les clés restent en mémoire du renderer, parce que l'écran des réglages les
- * affiche et que les gardes de présence les lisent. Les en retirer demande que
- * cet écran demande au coffre « y a-t-il une clé ? » plutôt que sa valeur —
- * `SecurityManager.etatDuCoffre()` rend déjà les noms sans les valeurs. C'est
- * l'étape suivante, et elle ne change rien à ce que ce test garde.
+ * Le magasin ne charge plus aucune valeur : il demande au coffre **qui** a une
+ * clé (`etatDuCoffre`, qui rend les noms des entrées sans leurs valeurs) et n'en
+ * garde qu'un booléen. Le type `AIModelConfig` n'a même plus de champ pour en
+ * retenir une — c'est le typage qui refuse, pas une discipline qu'on oublie.
  */
 
 const SOURCES: Record<string, string> = {
@@ -80,5 +80,30 @@ describe('le fournisseur est déclaré à chaque appel', () => {
            `electron/hotesDesFournisseurs.ts`. */
         const nommes = [...AI_SERVICE.matchAll(/,\s*'(gemini|anthropic|custom|image-cloudflare|ollama|ollama_cloud)'\s*\)/g)];
         expect(nommes.length, 'chaque appel déclare son fournisseur').toBeGreaterThanOrEqual(appels.length);
+    });
+});
+
+describe('le magasin ne lit aucun secret', () => {
+    /*
+      ⛔ **L'invariant qui compte ici.** `syncWithKeychain` appelait `getSecret`
+      six fois au démarrage et ramenait six secrets dans la mémoire du rendu,
+      pour n'en faire que des booléens à l'écran. Il demande maintenant l'état du
+      coffre, qui rend les NOMS des entrées et jamais leurs valeurs.
+
+      Le jour où quelqu'un rajoute un `getSecret` « juste pour vérifier », les
+      clés recommencent à traverser le pont sans que rien ne le dise.
+    */
+    it('n’appelle jamais `getSecret`', () => {
+        expect(MAGASIN, 'le magasin relit une valeur du coffre').not.toMatch(/getSecret\s*\(/);
+    });
+
+    it('demande l’état du coffre, qui ne porte que des noms', () => {
+        expect(MAGASIN).toMatch(/etatDuCoffre\s*\(\)/);
+    });
+
+    /* `saveSecret` reste : c'est le seul chemin par lequel une clé ENTRE. */
+    it('n’écrit au coffre que par un geste nommé', () => {
+        const ecritures = [...MAGASIN.matchAll(/saveSecret\s*\(/g)];
+        expect(ecritures.length, 'une seule écriture, dans `enregistrerLaCle`').toBe(1);
     });
 });

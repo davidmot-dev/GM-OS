@@ -13,7 +13,26 @@ import ReglagesDImage from './ReglagesDImage';
 
 const AISettings: React.FC = () => {
   const { t } = useTranslation(['settings', 'modules']);
-  const { configs, updateConfig, activeProvider, setProvider, syncWithKeychain } = useAIStore();
+  const {
+    configs, updateConfig, activeProvider, setProvider, syncWithKeychain,
+    clesPresentes, aUneCle, enregistrerLaCle, oublierLaCle,
+  } = useAIStore();
+
+  /**
+   * **Les clés en cours de saisie, et rien d'autre.**
+   *
+   * Le magasin ne détient plus aucune clé : ce champ ne peut donc plus afficher
+   * celle qui est enregistrée. C'est le geste qui change — *on ne relit pas une
+   * clé, on la remplace* — et c'est le prix de ne plus la promener.
+   *
+   * ⛔ Elles vivent ici, en état local, et pas dans le magasin. L'ancien champ
+   * appelait `updateConfig` **à chaque frappe**, ce qui écrivait au coffre à
+   * chaque frappe : taper une clé de quarante caractères y déposait quarante
+   * versions tronquées, dont trente-neuf fausses. L'écriture est désormais un
+   * geste, pas une conséquence de la saisie.
+   */
+  const [clesSaisies, setClesSaisies] = useState<Record<string, string>>({});
+  const saisie = (id: string) => clesSaisies[id] ?? '';
   const { gems, updateGem, syncGemsWithDefaults } = useGemStore();
   const activeCampaign = useSessionOSStore(state => state.campaigns.find(c => c.id === state.activeCampaignId));
   const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
@@ -94,10 +113,10 @@ const AISettings: React.FC = () => {
 
   useEffect(() => {
     const fetchModels = async () => {
-      if (activeProvider === 'gemini' && configs.gemini.apiKey) {
+      if (activeProvider === 'gemini' && aUneCle('gemini')) {
         setIsLoadingModels(prev => ({ ...prev, gemini: true }));
         try {
-          const data = await aiService.listModels(configs.gemini.apiKey);
+          const data = await aiService.listModels();
           setDiscoveredModels(prev => ({ ...prev, gemini: data }));
         } catch (err) {
           console.error("Failed to discover Gemini models:", err);
@@ -120,7 +139,7 @@ const AISettings: React.FC = () => {
     };
 
     fetchModels();
-  }, [activeProvider, configs.gemini.apiKey, configs.ollama.endpoint, configs.ollama_cloud.endpoint]);
+  }, [activeProvider, clesPresentes.gemini, configs.ollama.endpoint, configs.ollama_cloud.endpoint]);
 
   const toggleKeyVisibility = (provider: string) => {
     setShowKeys(prev => ({ ...prev, [provider]: !prev[provider] }));
@@ -135,8 +154,8 @@ const AISettings: React.FC = () => {
 
     // 1. Test Gemini
     try {
-      if (configs.gemini.apiKey) {
-        await aiService.listModels(configs.gemini.apiKey);
+      if (aUneCle('gemini')) {
+        await aiService.listModels();
         setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'success', message: t('ai.actions.diagnostic_active') } }));
       } else {
         setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
@@ -147,7 +166,7 @@ const AISettings: React.FC = () => {
 
     // 2. Test OpenAI
     try {
-      if (configs.openai.apiKey) {
+      if (aUneCle('openai')) {
         setDiagnosticResults(prev => ({ ...prev, openai: { status: 'success', message: t('ai.actions.diagnostic_active') } }));
       } else {
         setDiagnosticResults(prev => ({ ...prev, openai: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
@@ -158,7 +177,7 @@ const AISettings: React.FC = () => {
 
     // 3. Test Anthropic
     try {
-      if (configs.anthropic.apiKey) {
+      if (aUneCle('anthropic')) {
         setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'success', message: t('ai.actions.diagnostic_active') } }));
       } else {
         setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
@@ -318,24 +337,14 @@ const AISettings: React.FC = () => {
         </div>
       )}
 
-      {etatDuCoffre?.etat === 'lu' && (() => {
-        const absentes = etatDuCoffre.entrees
-          .filter(e => e.startsWith('ai-key-'))
-          .map(e => e.replace('ai-key-', ''))
-          .filter(p => p !== 'image' && !configs[p as keyof typeof configs]?.apiKey);
-        if (absentes.length === 0) return null;
-        return (
-          <div className="p-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 space-y-1">
-            <p className="text-ui-10 font-black uppercase tracking-widest text-amber-300">
-              {absentes.length} clé{absentes.length > 1 ? 's' : ''} dans le coffre, pas à l'écran
-            </p>
-            <p className="text-ui-11 text-amber-200/80 leading-relaxed">
-              Le coffre porte une clé pour <b>{absentes.join(', ')}</b>, mais le champ est vide :
-              la synchronisation n'a pas abouti. <b>Ne la retape pas</b> — redémarre l'application.
-            </p>
-          </div>
-        );
-      })()}
+      {/*
+        **L'avertissement « des clés dans le coffre, pas à l'écran » est retiré.**
+
+        Il existait parce que les deux pouvaient diverger : l'écran tenait sa
+        propre copie des clés, et une relecture du coffre pouvait l'écraser. Le
+        magasin ne tient plus qu'un booléen, dérivé du coffre à chaque
+        démarrage — il n'y a plus deux versions à comparer.
+      */}
 
       <div className="grid grid-cols-1 gap-4 overflow-visible relative">
         {providers.map((p) => (
@@ -390,18 +399,42 @@ const AISettings: React.FC = () => {
                   <div className="relative">
                     <input
                       type={showKeys[p.id] ? 'text' : 'password'}
-                      value={configs[p.id]?.apiKey || ''}
-                      onChange={(e) => updateConfig(p.id, { apiKey: e.target.value })}
-                      placeholder={t('ai.status.api_key_placeholder', { name: p.name })}
+                      value={saisie(p.id)}
+                      onChange={(e) => setClesSaisies(prev => ({ ...prev, [p.id]: e.target.value }))}
+                      placeholder={aUneCle(p.id)
+                        ? t('ai.status.key_stored_hint')
+                        : t('ai.status.api_key_placeholder', { name: p.name })}
                       className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
                     />
-                    <button 
+                    <button
                       onClick={() => toggleKeyVisibility(p.id)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-app-text/20 hover:text-app-text transition-colors"
                     >
                       {showKeys[p.id] ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
+
+                  {/* L'écriture est un geste, pas une conséquence de la frappe. */}
+                  {saisie(p.id).trim() !== '' && (
+                    <button
+                      onClick={async () => {
+                        const ecrite = await enregistrerLaCle(p.id, saisie(p.id));
+                        if (ecrite) setClesSaisies(prev => ({ ...prev, [p.id]: '' }));
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-accent/20 border border-accent/40 text-ui-9 font-black uppercase tracking-widest text-accent hover:bg-accent/30 transition-all"
+                    >
+                      {t('ai.actions.save_key')}
+                    </button>
+                  )}
+
+                  {aUneCle(p.id) && saisie(p.id).trim() === '' && (
+                    <button
+                      onClick={() => oublierLaCle(p.id)}
+                      className="w-full px-3 py-2 rounded-xl border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-rose-400 hover:border-rose-500/40 transition-all"
+                    >
+                      {t('ai.actions.forget_key')}
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -475,7 +508,7 @@ const AISettings: React.FC = () => {
                         try {
                           let models: string[] = [];
                           if (p.id === 'gemini') {
-                             models = await aiService.listModels(configs.gemini.apiKey);
+                             models = await aiService.listModels();
                           } else {
                              models = (await window.appBridge?.ai?.ollamaListModels?.(configs[p.id].endpoint)) || [];
                           }
@@ -586,7 +619,7 @@ const AISettings: React.FC = () => {
               </div>
             )}
 
-            {configs[p.id]?.apiKey && (
+            {aUneCle(p.id) && (
               <div className="mt-4 flex items-center gap-2 text-ui-9 font-bold uppercase tracking-widest text-emerald-500/60 bg-emerald-500/5 px-3 py-2 rounded-lg border border-emerald-500/10">
                 <ShieldCheck size={12} />
                 {t('ai.status.key_configured')}

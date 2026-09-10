@@ -155,7 +155,6 @@ const TOLERES: Record<string, string> = {
     'addTime': "⚠️ useClockStore : implémentée, aucun appelant — le temps ne s'avance pas par cette porte",
     'resetTensionClock': "⚠️ useClockStore : implémentée, aucun appelant — une horloge de tension ne se remet pas à zéro",
     'setActiveCalendar': "⚠️ useClockStore : implémentée, aucun appelant — le calendrier actif ne se choisit pas",
-    'getApiKey': "⚠️ useAIStore : implémentée, aucun appelant",
     'setGems': "⚠️ useGemStore : implémentée, aucun appelant",
 };
 

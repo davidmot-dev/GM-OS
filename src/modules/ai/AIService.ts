@@ -334,7 +334,7 @@ export class AIService {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
-    if (activeProvider !== 'ollama' && !config.apiKey && activeProvider !== 'custom') {
+    if (activeProvider !== 'ollama' && !useAIStore.getState().aUneCle(activeProvider) && activeProvider !== 'custom') {
       throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
     }
 
@@ -460,8 +460,11 @@ export class AIService {
         }
 
         if (activeProvider === 'anthropic') {
-          const apiKey = config.apiKey?.trim();
-          if (!apiKey) throw new Error("Clé API Anthropic non configurée.");
+          /* Présence seule : la valeur est au coffre, et c'est le processus
+             principal qui la pose. Voir `electron/clesDesFournisseurs.ts`. */
+          if (!useAIStore.getState().aUneCle('anthropic')) {
+            throw new Error("Clé API Anthropic non configurée.");
+          }
           const model = config.modelId || 'claude-3-5-sonnet-latest';
           const url = `https://api.anthropic.com/v1/messages`;
           
@@ -560,10 +563,9 @@ export class AIService {
     noteFinale?: string,
     contexte?: ContexteDeCampagne,
   ): Promise<string> {
-    const { activeProvider, configs } = useAIStore.getState();
-    const config = configs[activeProvider];
+    const { activeProvider } = useAIStore.getState();
 
-    if (!config.apiKey && activeProvider !== 'ollama') {
+    if (!useAIStore.getState().aUneCle(activeProvider) && activeProvider !== 'ollama') {
       throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
     }
 
@@ -809,7 +811,7 @@ Use the names above verbatim. Do not invent a setting title.
         Gemini rend, donc la même écriture en aval.
       */
       const image = useAIStore.getState().image;
-      if (image.accountId && image.apiKey) {
+      if (image.accountId && useAIStore.getState().aUneCle('image')) {
         try {
           // L'appel vit dans `cloudflareImage.ts`, partagé avec le bouton
           // « Tester » des réglages : un test qui emprunterait un autre chemin
@@ -908,10 +910,8 @@ Use the names above verbatim. Do not invent a setting title.
       }
 
       // 2. FALLBACK GEMINI 2.5 FLASH IMAGE
-      const geminiConfig = configs['gemini'] as { apiKey?: string };
-      const apiKey = geminiConfig?.apiKey;
-      
-      if (!apiKey) {
+      /* Présence seule : le jeton vit au coffre, posé par le processus principal. */
+      if (!useAIStore.getState().aUneCle('gemini')) {
         throw new Error("Clé API Gemini manquante pour fallback.");
       }
 
@@ -1018,11 +1018,14 @@ Use the names above verbatim. Do not invent a setting title.
   }
 
   /**
-   * Liste les modèles disponibles pour une clé API Gemini.
-   * @param apiKey Clé API Google Gemini.
-   * @returns Liste des IDs de modèles.
+   * Liste les modèles disponibles pour le fournisseur actif.
+   *
+   * ⚠️ **Ne prend plus la clé en paramètre.** Elle ne servait qu'à savoir s'il y
+   * en avait une — la requête, elle, part sans clé, que le processus principal
+   * pose depuis le coffre. Un paramètre qui n'est qu'un drapeau déguisé invite
+   * à le remplir avec la vraie valeur.
    */
-  public async listModels(apiKey?: string): Promise<string[]> {
+  public async listModels(): Promise<string[]> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
@@ -1033,7 +1036,7 @@ Use the names above verbatim. Do not invent a setting title.
       return [];
     }
 
-    if (activeProvider === 'gemini' && apiKey) {
+    if (activeProvider === 'gemini' && useAIStore.getState().aUneCle('gemini')) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models`;
       const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}, 'gemini') as { ok: boolean; data: { models?: { name: string }[] } };
       if (response?.ok) {

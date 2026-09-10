@@ -1,4 +1,4 @@
-import type { ConfigDImage } from '../../stores/useAIStore';
+import { useAIStore, type ConfigDImage } from '../../stores/useAIStore';
 
 /**
  * L'appel à Cloudflare Workers AI, en un seul endroit.
@@ -20,8 +20,14 @@ import type { ConfigDImage } from '../../stores/useAIStore';
  * confondre ferait chercher au mauvais endroit.
  */
 export async function genererViaCloudflare(prompt: string, config: ConfigDImage): Promise<string> {
-    if (!config.accountId || !config.apiKey) {
-        throw new Error('identifiant de compte ou jeton manquant');
+    /* Le jeton n'est plus ici : il vit au coffre, sous `ai-key-image`, et le
+       processus principal le pose sur la requête. Reste à vérifier qu'il existe
+       — un appel sans jeton reviendrait avec un 401 que rien n'expliquerait. */
+    if (!config.accountId) {
+        throw new Error('identifiant de compte manquant');
+    }
+    if (!useAIStore.getState().aUneCle('image')) {
+        throw new Error('jeton manquant');
     }
 
     const modele = config.modelId || '@cf/black-forest-labs/flux-1-schnell';

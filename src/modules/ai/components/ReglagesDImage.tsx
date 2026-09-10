@@ -26,7 +26,13 @@ import { genererViaCloudflare, octetsDeLImage } from '../cloudflareImage';
  * traitement que les clés de conversation.
  */
 const ReglagesDImage: React.FC = () => {
-    const { image, updateImageConfig } = useAIStore();
+    const { image, updateImageConfig, aUneCle, enregistrerLaCle, oublierLaCle } = useAIStore();
+
+    /*
+      Le jeton en cours de saisie, en état local : le magasin n'en détient plus.
+      L'ancien champ écrivait au coffre à chaque frappe — voir `AISettings`.
+    */
+    const [jetonSaisi, setJetonSaisi] = React.useState('');
     const [visible, setVisible] = React.useState(false);
 
     /**
@@ -41,7 +47,7 @@ const ReglagesDImage: React.FC = () => {
         { etat: 'encours' } | { etat: 'ok'; apercu: string; octets: number } | { etat: 'echec'; dit: string } | null
     >(null);
 
-    const pret = !!image.accountId && !!image.apiKey;
+    const pret = !!image.accountId && aUneCle('image');
 
     /**
      * L'identifiant de compte a-t-il la forme d'un identifiant de compte ?
@@ -174,9 +180,11 @@ const ReglagesDImage: React.FC = () => {
                         <input
                             id="cf-token"
                             type={visible ? 'text' : 'password'}
-                            value={image.apiKey || ''}
-                            onChange={e => updateImageConfig({ apiKey: e.target.value.trim() })}
-                            placeholder="Permissions Workers AI — Read et Edit"
+                            value={jetonSaisi}
+                            onChange={e => setJetonSaisi(e.target.value)}
+                            placeholder={aUneCle('image')
+                                ? "Enregistré dans le coffre — saisissez-en un nouveau pour le remplacer"
+                                : "Permissions Workers AI — Read et Edit"}
                             className="w-full bg-app-bg/40 px-4 py-3 pr-11 rounded-xl border border-app-border/20 font-mono text-xs text-app-text focus:border-accent/50 outline-none"
                         />
                         <button
@@ -188,6 +196,26 @@ const ReglagesDImage: React.FC = () => {
                             {visible ? <EyeOff size={14} /> : <Eye size={14} />}
                         </button>
                     </div>
+
+                    {jetonSaisi.trim() !== '' && (
+                        <button
+                            onClick={async () => {
+                                if (await enregistrerLaCle('image', jetonSaisi)) setJetonSaisi('');
+                            }}
+                            className="w-full mt-2 px-3 py-2 rounded-xl bg-accent/20 border border-accent/40 text-ui-9 font-black uppercase tracking-widest text-accent hover:bg-accent/30 transition-all"
+                        >
+                            Enregistrer le jeton
+                        </button>
+                    )}
+
+                    {aUneCle('image') && jetonSaisi.trim() === '' && (
+                        <button
+                            onClick={() => oublierLaCle('image')}
+                            className="w-full mt-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-rose-400 hover:border-rose-500/40 transition-all"
+                        >
+                            Effacer le jeton du coffre
+                        </button>
+                    )}
                 </div>
             </div>
 

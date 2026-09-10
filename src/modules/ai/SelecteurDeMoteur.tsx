@@ -38,7 +38,9 @@ export const SelecteurDeMoteur: React.FC<{
     const sessions = useSessionOSStore(e => e.sessions);
 
     const retenu = moteurDeLaForge(forge, choix, activeProvider);
-    const configs = useAIStore(e => e.configs);
+    /* La présence, pas la valeur : le magasin ne détient plus les clés. */
+    const clesPresentes = useAIStore(e => e.clesPresentes);
+    const aUneCle = (p: AIProvider) => clesPresentes[p] === true;
 
     /*
       **« Pause de 15 min : cette Forge en demande 4, on y va. »**
@@ -73,7 +75,7 @@ export const SelecteurDeMoteur: React.FC<{
                       Le masquer laisserait croire qu'il n'existe pas ; l'offrir
                       sans le dire ferait échouer la Forge au bout de son invite.
                     */
-                    const utilisable = !distant || !!configs[p]?.apiKey;
+                    const utilisable = !distant || aUneCle(p);
                     const actif = retenu === p;
                     return (
                         <button

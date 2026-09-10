@@ -164,7 +164,8 @@
       "local_status": "Statut Local",
       "ollama_ready": "Serveur Ollama Prêt",
       "ollama_offline": "Ollama Déconnecté",
-      "key_configured": "Clé configurée localement"
+      "key_configured": "Clé configurée localement",
+      "key_stored_hint": "Enregistrée dans le coffre — saisissez-en une nouvelle pour la remplacer"
     },
     "actions": {
       "pull_phi3": "Pull phi3",
@@ -192,7 +193,9 @@
       "diagnostic_oracle_online": "Pont NotebookLM en ligne",
       "diagnostic_empty_res": "Réponse vide",
       "diagnostic_mcp_absent": "Bridge MCP Absent",
-      "diagnostic_expired": "Session expirée"
+      "diagnostic_expired": "Session expirée",
+      "save_key": "Enregistrer la clé",
+      "forget_key": "Effacer la clé du coffre"
     },
     "labels": {
       "model": "Modèle",

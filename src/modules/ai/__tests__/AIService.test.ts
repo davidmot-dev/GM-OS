@@ -50,10 +50,12 @@ describe('AIService', () => {
       vi.mocked(useAIStore.getState).mockReturnValue({
         activeProvider: 'gemini',
         configs: {
-          gemini: { provider: 'gemini', apiKey: 'test-key', modelId: 'gemini-1.5-flash' },
+          gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
           openai: { provider: 'openai', modelId: 'gpt-4o' },
           anthropic: { provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' }
         },
+        /* La cle vit au coffre : le magasin n'en dit que la presence. */
+        aUneCle: () => true,
         setProvider: vi.fn(),
         updateConfig: vi.fn(),
         getApiKey: vi.fn()
@@ -92,8 +94,10 @@ describe('AIService', () => {
         configs: {
           gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
           openai: { provider: 'openai', modelId: 'gpt-4o' },
-          anthropic: { provider: 'anthropic', apiKey: 'ant-key', modelId: 'claude-3-5-sonnet-latest' }
+          anthropic: { provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' }
         },
+        /* La cle vit au coffre : le magasin n'en dit que la presence. */
+        aUneCle: () => true,
         setProvider: vi.fn(),
         updateConfig: vi.fn(),
         getApiKey: vi.fn()
@@ -144,8 +148,9 @@ describe('AIService', () => {
           configs: {
             gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
             openai: { provider: 'openai', modelId: 'gpt-4o' },
-            anthropic: { provider: 'anthropic', apiKey: 'ant-key', modelId: 'claude-3-5-sonnet-latest' }
+            anthropic: { provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' }
           },
+          aUneCle: () => true,
           setProvider: vi.fn(),
           updateConfig: vi.fn(),
           getApiKey: vi.fn()
