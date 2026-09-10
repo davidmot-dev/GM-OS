@@ -32,7 +32,9 @@ export async function genererViaCloudflare(prompt: string, config: ConfigDImage)
 
     const reponse = await proxy(
         url, 'POST',
-        { 'Content-Type': 'application/json', Authorization: `Bearer ${config.apiKey}` },
+        /* `Authorization` est posé par le processus principal, depuis l'entrée
+           `ai-key-image` du coffre — voir `electron/clesDesFournisseurs.ts`. */
+        { 'Content-Type': 'application/json' },
         // Quatre pas : le régime pour lequel schnell est entraîné, et le plafond
         // du modèle est de huit.
         { prompt, steps: 4 },

@@ -52,6 +52,8 @@ import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
+import { poserLaCle } from './clesDesFournisseurs'
+import { securityManager } from './SecurityManager'
 import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay'
 import { type RelayRole } from './relayPolicy'
 import { auditDenied } from './auditLog'
@@ -811,14 +813,43 @@ ipcMain.handle('ai:proxy-request', async (
         return { ok: false, status: 0, statusText: verdict.raison, data: null };
     }
 
+    /*
+      **La clé est posée ICI, et n'a jamais traversé le pont.**
+
+      L'écran dit pour qui il parle ; le coffre du processus principal fournit la
+      clé et `clesDesFournisseurs` la pose là où l'API l'attend — en-tête pour
+      Anthropic, paramètre d'URL pour Gemini. Une clé que le renderer ne détient
+      pas ne peut pas être posée sur la mauvaise requête.
+
+      Ce que l'appariement clé ↔ hôte ne pouvait pas faire : il vérifiait l'hôte,
+      pas la provenance de la clé. Un appel déclaré `custom` pouvait porter celle
+      d'Anthropic, parce que c'est l'écran qui assemblait les en-têtes.
+    */
+    const preparee = poserLaCle(fournisseur, url, headers, (id) => securityManager.getSecret(id));
+    if (!preparee.prete) {
+        console.warn(`[Proxy IA] ${preparee.raison}`);
+        return { ok: false, status: 0, statusText: preparee.raison, data: null };
+    }
+    const urlFinale = preparee.url;
+    const entetesFinaux = preparee.entetes;
+
     return new Promise((resolve, reject) => {
         try {
-            const parsedUrl = new URL(url);
+            const parsedUrl = new URL(urlFinale);
             const lib = parsedUrl.protocol === 'https:' ? https : http;
+
+            /*
+              ⛔ **Ce qu'on écrit dans le journal ne doit plus contenir l'URL
+              entière.** La clé de Gemini EST un paramètre de cette URL : la
+              journaliser reviendrait à la recopier dans `main.log`, après
+              s'être donné le mal de ne pas la faire voyager. On garde l'hôte et
+              le chemin, qui suffisent à diagnostiquer.
+            */
+            const pourLeJournal = `${parsedUrl.host}${parsedUrl.pathname}`;
 
             const options: https.RequestOptions = {
                 method,
-                headers,
+                headers: entetesFinaux,
                 // Ces en-têtes portent les clés d'API : un hôte public doit
                 // présenter un certificat valide, sans exception. Seul un
                 // endpoint d'inférence du réseau local peut être auto-signé.
@@ -850,7 +881,7 @@ ipcMain.handle('ai:proxy-request', async (
             });
 
             req.on('error', (err) => {
-                console.error(`[AI Main] Proxy request failed for ${url}:`, err.message);
+                console.error(`[AI Main] Proxy request failed for ${pourLeJournal}:`, err.message);
                 reject(err);
             });
 

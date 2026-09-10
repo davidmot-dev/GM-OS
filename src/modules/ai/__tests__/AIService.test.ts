@@ -114,8 +114,16 @@ describe('AIService', () => {
       expect(mockProxyRequest).toHaveBeenCalledWith(
         'https://api.anthropic.com/v1/messages',
         'POST',
+        /*
+          ⛔ **La clé n'est PLUS dans les en-têtes, et c'est le contrat.**
+
+          Elle est posée par le processus principal, depuis le coffre, au vu du
+          fournisseur déclaré (`electron/clesDesFournisseurs.ts`). Ce test
+          atteste donc son absence : une clé qui reparaîtrait ici voudrait dire
+          que l'écran s'est remis à l'assembler, et que le mélange entre
+          fournisseurs est rouvert.
+        */
         expect.objectContaining({
-          'x-api-key': 'ant-key',
           'anthropic-version': '2023-06-01'
         }),
         expect.objectContaining({
@@ -124,6 +132,10 @@ describe('AIService', () => {
         }),
         'anthropic'
       );
+
+      const entetes = mockProxyRequest.mock.calls[0][2] as Record<string, string>;
+      expect(entetes['x-api-key'], 'la clé ne doit plus traverser le pont').toBeUndefined();
+      expect(entetes.Authorization).toBeUndefined();
     });
 
     it('should handle Anthropic errors', async () => {

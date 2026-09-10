@@ -287,14 +287,24 @@ export class SecurityManager {
     }
 }
 
+/**
+ * Le coffre du processus principal, partagé.
+ *
+ * ⚠️ **Il ne lit RIEN à la construction**, et c'est la condition à ne pas
+ * casser : la lecture est paresseuse (`assurerCharge`), et le coffre a déjà
+ * perdu ses clés une fois pour avoir été lu avant `ready`. Un module qui
+ * l'importe ne déclenche donc aucune lecture ; seul un appel en déclenche une.
+ *
+ * Il sort de `registerSecurityHandlers` depuis le 2026-09-10 : le proxy IA pose
+ * lui-même les clés sur les requêtes sortantes, et il lui faut le même coffre —
+ * pas un second, qui aurait sa propre idée de ce qu'il contient.
+ */
+export const securityManager = new SecurityManager();
+
 /** Enregistre les handlers IPC pour le pont de sécurité. */
 export function registerSecurityHandlers() {
-    // L'instance ne lit rien à la construction : le premier appel IPC vient d'un
-    // rendu, qui n'existe qu'après `ready`.
-    const manager = new SecurityManager();
-
-    ipcMain.handle('security:get-secret', (_, id: string) => manager.getSecret(id));
-    ipcMain.handle('security:set-secret', (_, id: string, value: string) => manager.setSecret(id, value));
-    ipcMain.handle('security:delete-secret', (_, id: string) => manager.deleteSecret(id));
-    ipcMain.handle('security:etat', () => manager.etatDuCoffre());
+    ipcMain.handle('security:get-secret', (_, id: string) => securityManager.getSecret(id));
+    ipcMain.handle('security:set-secret', (_, id: string, value: string) => securityManager.setSecret(id, value));
+    ipcMain.handle('security:delete-secret', (_, id: string) => securityManager.deleteSecret(id));
+    ipcMain.handle('security:etat', () => securityManager.etatDuCoffre());
 }

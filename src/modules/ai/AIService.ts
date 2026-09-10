@@ -388,16 +388,16 @@ export class AIService {
         }
 
         if (activeProvider === 'custom') {
-          const apiKey = config.apiKey?.trim();
           const model = config.modelId;
           const endpoint = config.endpoint; // ex: https://api.together.xyz/v1/chat/completions
           
           if (!endpoint) throw new Error("Endpoint manquant pour le fournisseur Custom.");
           if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
+          /* La clé est posée par le processus principal — voir
+             `electron/clesDesFournisseurs.ts`. Elle ne traverse plus le pont. */
           const bridgeResponse = await window.appBridge.ai.proxyRequest(endpoint, 'POST', {
             'Content-Type': 'application/json',
-            ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {})
           }, {
             model,
             messages: [
@@ -416,11 +416,10 @@ export class AIService {
         }
 
         if (activeProvider === 'gemini') {
-          const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
           const model = config.modelId || 'gemini-1.5-flash';
           
           const tryVersion = async (version: string) => {
-            const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent`;
             if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
             return window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
@@ -440,7 +439,7 @@ export class AIService {
             const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
             if (bridgeResponse.status === 429) {
               if (model !== 'gemini-2.0-flash-lite') {
-                 const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
+                 const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent`;
                  const fallbackRes = await window.appBridge?.ai?.proxyRequest?.(fallbackUrl, 'POST', { 'Content-Type': 'application/json' }, {
                    contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
                    generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
@@ -468,9 +467,9 @@ export class AIService {
           
           if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
+          /* `x-api-key` est posé par le processus principal, depuis le coffre. */
           const bridgeResponse = await window.appBridge.ai.proxyRequest(url, 'POST', {
             'Content-Type': 'application/json',
-            'x-api-key': apiKey,
             'anthropic-version': '2023-06-01'
           }, {
             model,
@@ -918,7 +917,7 @@ Use the names above verbatim. Do not invent a setting title.
 
       console.log(`[AI Service] Generating image with Gemini 2.5 Flash...`);
       
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`;
       
       const payload = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -996,14 +995,14 @@ Use the names above verbatim. Do not invent a setting title.
    * @returns Le template de fiche partiel.
    */
   public async generateStructuredTemplate(systemQuery: string): Promise<Partial<import('../../data/defaultSheetTemplates').SheetTemplate>> {
-    const { activeProvider, configs } = useAIStore.getState();
-    const config = configs[activeProvider];
+    /* `configs` n'est plus lu ici : la clé vient du coffre, côté processus
+       principal. Seul le fournisseur actif décide encore du chemin. */
+    const { activeProvider } = useAIStore.getState();
 
     const systemPrompt = `Tu es un expert en JdR. Crée un template JSON pour le système : ${systemQuery}`;
     
     if (activeProvider === 'gemini') {
-      const apiKey = config.apiKey?.trim();
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
       
       const bridgeResponse = await window.appBridge?.ai?.proxyRequest?.(url, 'POST', { 'Content-Type': 'application/json' }, {
         contents: [{ parts: [{ text: systemPrompt }] }],
@@ -1035,7 +1034,7 @@ Use the names above verbatim. Do not invent a setting title.
     }
 
     if (activeProvider === 'gemini' && apiKey) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models`;
       const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}, 'gemini') as { ok: boolean; data: { models?: { name: string }[] } };
       if (response?.ok) {
         const data = response.data;
@@ -1499,34 +1498,27 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
 
     // 1. CAS GEMINI (NATIF + VISUEL)
     if (activeProvider === 'gemini') {
-      const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
       const model = config.modelId || 'gemini-1.5-flash';
-      let url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      
-      if (!apiKey) {
-        console.error("[AIService] ❌ Erreur : Clé API Gemini absente !");
-      } else {
-        let finalKey = apiKey;
-        // Détection de clé doublée (bug potentiel de synchronisation)
-        if (apiKey.length > 20 && apiKey.length % 2 === 0) {
-          const half = apiKey.length / 2;
-          if (apiKey.substring(0, half) === apiKey.substring(half)) {
-            console.warn("[AIService] ⚠️ Détection d'une clé doublée ! Correction automatique...");
-            finalKey = apiKey.substring(0, half);
-          }
-        }
-        
-        const masked = `${finalKey.substring(0, 5)}...${finalKey.substring(finalKey.length - 5)}`;
-        console.log(`[AIService] 🔑 Utilisation de la clé Gemini: ${masked} (${finalKey.length} chars)`);
-        
-        // On met à jour l'URL avec la clé potentiellement corrigée
-        if (finalKey !== apiKey) {
-          const model = config.modelId || 'gemini-1.5-flash';
-          const newUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${finalKey}`;
-          // On continue avec la clé corrigée
-          url = newUrl;
-        }
-      }
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+      /*
+        **La clé n'est plus ici, et deux choses sont parties avec elle.**
+
+        La détection de « clé doublée » corrigeait à la volée une clé recopiée
+        deux fois par une synchronisation — un symptôme du temps où la clé
+        voyageait entre magasins et écrans. Le processus principal lit désormais
+        le coffre, qui n'a qu'une valeur par entrée : il n'y a plus de doublon à
+        rattraper.
+
+        Le journal masqué part aussi. Il écrivait dans `main.log` les cinq
+        premiers et les cinq derniers caractères de la clé : *un masque reste
+        une fuite partielle*, et il n'a plus d'objet puisque l'écran ne détient
+        plus la clé au moment de l'appel.
+
+        L'absence de clé n'est plus constatée ici non plus : c'est le processus
+        principal qui la voit, et il rend un refus nommé — voir
+        `electron/clesDesFournisseurs.ts`.
+      */
       
       if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
