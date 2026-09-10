@@ -2,6 +2,7 @@ import { app } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { auditDenied } from './auditLog';
+import { sousOuEgal } from './sousChemin';
 
 /**
  * Registre des racines depuis lesquelles le SyncServer accepte de servir des fichiers.
@@ -88,10 +89,8 @@ class MediaAccessRegistry {
     }
 
     private isUnder(normalizedTarget: string, roots: string[]): boolean {
-        return roots.some(root => {
-            const rel = path.relative(root, normalizedTarget);
-            return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
-        });
+        // Une racine autorisée l'est avec tout son contenu, elle-même comprise.
+        return roots.some(root => sousOuEgal(normalizedTarget, root));
     }
 
     /**

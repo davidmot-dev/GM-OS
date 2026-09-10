@@ -1,4 +1,5 @@
 import { ipcMain, dialog } from 'electron';
+import { strictementSous, sousOuEgal } from './sousChemin';
 import path from 'node:path';
 import fs from 'fs-extra';
 
@@ -75,23 +76,9 @@ export function registerObsidianHandlers() {
         const rootPath = vaultPath || DEFAULT_VAULT_PATH;
         const fullPath = path.join(rootPath, relativePath);
 
-        /*
-          **Le chemin doit rester DANS le coffre, dossier voisin compris.**
-
-          `startsWith(rootPath)` seul acceptait `C:\Coffre-prive` quand le
-          coffre est `C:\Coffre` : le préfixe correspond, le dossier n'a rien à
-          voir. C'était sans portée tant que le chemin venait de l'écran du
-          meneur ; **il arrive du réseau depuis le 2026-09-05**, quand la
-          tablette a reçu l'accès au coffre.
-
-          `path.resolve` normalise les `..` avant la comparaison, et le
-          séparateur ferme le cas du voisin. *Un chemin qui vient d'ailleurs ne
-          se croit pas sur parole.*
-        */
-        const racine = path.resolve(rootPath);
-        const vise = path.resolve(fullPath);
-        if (vise !== racine && !vise.startsWith(racine + path.sep)) {
-            console.error(`[Obsidian Bridge] Security Violation: Attempted to read outside vault: ${vise}`);
+        // Une note est un fichier : le coffre lui-même n'en est pas un.
+        if (!strictementSous(fullPath, rootPath)) {
+            console.error(`[Obsidian Bridge] Security Violation: Attempted to read outside vault: ${fullPath}`);
             return null;
         }
 
@@ -112,8 +99,8 @@ export function registerObsidianHandlers() {
         const rootPath = vaultPath || DEFAULT_VAULT_PATH;
         const fullPath = path.join(rootPath, relativePath);
 
-        // Security check
-        if (!fullPath.startsWith(rootPath)) {
+        // Une note est un fichier — voir `sousChemin.ts` pour le piège du dossier voisin.
+        if (!strictementSous(fullPath, rootPath)) {
             console.error(`[Obsidian Bridge] Security Violation: Attempted to write outside vault: ${fullPath}`);
             return false;
         }
@@ -132,8 +119,8 @@ export function registerObsidianHandlers() {
         const rootPath = vaultPath || DEFAULT_VAULT_PATH;
         const fullPath = path.join(rootPath, relativePath);
 
-        // Security check
-        if (!fullPath.startsWith(rootPath)) {
+        // Le coffre lui-même est admis ici : il existe déjà, il n'y a rien à créer.
+        if (!sousOuEgal(fullPath, rootPath)) {
             console.error(`[Obsidian Bridge] Security Violation: Attempted to create directory outside vault: ${fullPath}`);
             return false;
         }

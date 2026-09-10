@@ -1,6 +1,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import { strictementSous } from './sousChemin';
 
 /**
  * **Le serveur des fiches — un port à lui, et c'est tout l'intérêt.**
@@ -84,9 +85,8 @@ export function cheminServi(urlBrute: string, racineDocs: string): string | null
       aujourd'hui et échouerait au premier encodage exotique ou lien symbolique :
       seule la comparaison des chemins résolus dit la vérité.
     */
-    const racine = path.resolve(racineDocs);
-    const vise = path.resolve(racine, relatif);
-    if (vise !== racine && !vise.startsWith(racine + path.sep)) return null;
+    const vise = path.resolve(path.resolve(racineDocs), relatif);
+    if (!strictementSous(vise, racineDocs)) return null;
 
     return vise;
 }

@@ -14,6 +14,7 @@ import {
     type Ecarte,
 } from './ragSelection';
 import { chargerIndex, chercherDansLIndex, verifierLesCitations } from './bookIndex';
+import { strictementSous, sousOuEgal } from './sousChemin';
 
 const require = createRequire(import.meta.url);
 let pdf: any;
@@ -33,12 +34,6 @@ const EXTENSIONS_INDEXEES = ['.md', '.txt', '.pdf', '.jsonl'];
 
 /** Le préfixe des clés du coffre dans l'index — voir `RACINE_DU_COFFRE`. */
 const PREFIXE_DU_COFFRE = `${RACINE_DU_COFFRE}/`;
-
-/** `enfant` est-il `parent` ou dessous ? Comparaison de chemins de disque, pas de chaînes. */
-function sousChemin(enfant: string, parent: string): boolean {
-    const rel = path.relative(path.resolve(parent), path.resolve(enfant));
-    return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
-}
 
 /**
  * Écrit dans `main.log` via electron-log, avec repli console si le module est
@@ -163,13 +158,13 @@ export class RAGEngine {
         if (!await fs.pathExists(vise) || !(await fs.stat(vise)).isDirectory()) {
             return { accepte: false, raison: `Dossier introuvable : ${vise}` };
         }
-        if (sousChemin(vise, this.docsPath) || sousChemin(this.docsPath, vise)) {
+        if (sousOuEgal(vise, this.docsPath) || sousOuEgal(this.docsPath, vise)) {
             return {
                 accepte: false,
                 raison: 'Ce dossier recouvre le corpus de GM-OS : les mêmes fichiers seraient indexés deux fois, sous deux rangs différents.',
             };
         }
-        if (process.env.APP_ROOT && sousChemin(vise, path.resolve(process.env.APP_ROOT))) {
+        if (process.env.APP_ROOT && sousOuEgal(vise, path.resolve(process.env.APP_ROOT))) {
             return { accepte: false, raison: 'Ce dossier est à l’intérieur de l’installation de GM-OS.' };
         }
 
@@ -553,7 +548,7 @@ export function registerRagHandlers() {
     ipcMain.handle('ai:read-doc', async (_event, relativePath: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         const fullPath = path.join(root, relativePath);
-        if (!await fs.pathExists(fullPath) || !fullPath.startsWith(root)) return null;
+        if (!strictementSous(fullPath, root) || !await fs.pathExists(fullPath)) return null;
         return fs.readFile(fullPath, 'utf-8');
     });
 
@@ -578,7 +573,7 @@ export function registerRagHandlers() {
     ipcMain.handle('ai:list-dir', async (_event, relativePath: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         const dossier = path.join(root, relativePath);
-        if (!dossier.startsWith(root)) return [];
+        if (!sousOuEgal(dossier, root)) return [];
         if (!await fs.pathExists(dossier)) return [];
         const entrees = await fs.readdir(dossier, { withFileTypes: true });
         return entrees.filter(e => e.isFile()).map(e => e.name);
@@ -614,7 +609,7 @@ export function registerRagHandlers() {
         const crees: string[] = [];
         for (const relatif of dossiers) {
             const complet = path.join(root, relatif);
-            if (!complet.startsWith(root)) {
+            if (!sousOuEgal(complet, root)) {
                 console.error(`[RAG Engine] Security Violation: refus de créer hors de docs: ${complet}`);
                 continue;
             }
@@ -681,7 +676,7 @@ export function registerRagHandlers() {
     ipcMain.handle('ai:delete-doc', async (_event, relativePath: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         const fullPath = path.join(root, relativePath);
-        if (!fullPath.startsWith(root)) {
+        if (!strictementSous(fullPath, root)) {
             console.error(`[RAG Engine] Security Violation: refus de supprimer hors de docs: ${fullPath}`);
             return false;
         }
@@ -699,7 +694,7 @@ export function registerRagHandlers() {
     ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         const fullPath = path.join(root, relativePath);
-        if (!await fs.pathExists(fullPath) || !fullPath.startsWith(root)) return "Fichier introuvable.";
+        if (!strictementSous(fullPath, root) || !await fs.pathExists(fullPath)) return "Fichier introuvable.";
 
         try {
             const dataBuffer = await fs.readFile(fullPath);
@@ -720,7 +715,7 @@ export function registerRagHandlers() {
         console.log(`[RAG Engine] Writing doc: ${relativePath} -> ${fullPath}`);
 
         // Security check: ensure the path is inside the docs folder
-        if (!fullPath.startsWith(root)) {
+        if (!strictementSous(fullPath, root)) {
             console.error(`[RAG Engine] Security Violation: Attempted to write outside docs: ${fullPath}`);
             return false;
         }
