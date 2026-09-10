@@ -118,10 +118,10 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             }
 
             if (Object.keys(payload).length > 0 && window.appBridge) {
-                window.appBridge.send('remote:broadcast-sync', payload, 'remote');
-                window.appBridge.send('remote:broadcast-sync', payload, 'gm');
-                window.appBridge.send('remote:broadcast-sync', payload, 'player');
-                window.appBridge.send('remote:broadcast-sync', payload, 'hub');
+                window.appBridge.remote?.sendSync?.(payload, 'remote');
+                window.appBridge.remote?.sendSync?.(payload, 'gm');
+                window.appBridge.remote?.sendSync?.(payload, 'player');
+                window.appBridge.remote?.sendSync?.(payload, 'hub');
             }
         } catch (e) {
             console.error(`[NexusSync] Fast-Sync Error (${segmentName}):`, e);
@@ -556,8 +556,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             
             if (Object.keys(diffPayload).length > 0 && window.appBridge) {
                 // Roles: remote/gm see everything. player sees sanitized.
-                window.appBridge.send('remote:broadcast-sync', diffPayload, 'remote');
-                window.appBridge.send('remote:broadcast-sync', diffPayload, 'gm');
+                window.appBridge.remote?.sendSync?.(diffPayload, 'remote');
+                window.appBridge.remote?.sendSync?.(diffPayload, 'gm');
 
                 const playerDiff = JSON.parse(JSON.stringify(diffPayload));
                 
@@ -587,8 +587,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     }));
                 }
 
-                window.appBridge.send('remote:broadcast-sync', playerDiff, 'player');
-                window.appBridge.send('remote:broadcast-sync', playerDiff, 'hub'); // Ensuring Hubs get the player-sanitized data too
+                window.appBridge.remote?.sendSync?.(playerDiff, 'player');
+                window.appBridge.remote?.sendSync?.(playerDiff, 'hub'); // Ensuring Hubs get the player-sanitized data too
 
                 lastBroadcastRef.current = fullState;
             }

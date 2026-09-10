@@ -51,6 +51,7 @@ import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
+import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay'
 import { type RelayRole } from './relayPolicy'
 import { auditDenied } from './auditLog'
@@ -783,7 +784,33 @@ ipcMain.on('remote:clear-disconnected', (event) => {
 // --- AI RAG Handlers ---
 // AI handlers are now managed in RAGEngine.ts
 
-ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, headers: Record<string, string>, body: unknown): Promise<AIProxyResponse> => {
+ipcMain.handle('ai:proxy-request', async (
+    _event,
+    url: string,
+    method: string,
+    headers: Record<string, string>,
+    body: unknown,
+    fournisseur: FournisseurReseau,
+): Promise<AIProxyResponse> => {
+    /*
+      **L'appariement clé ↔ hôte, avant qu'un seul octet ne parte.**
+
+      Les en-têtes portent les clés d'API — et Gemini met la sienne dans l'URL,
+      ce qui la livrerait aux journaux du serveur d'en face à la moindre erreur
+      d'hôte. L'appelant déclare donc pour quel fournisseur il parle, et
+      `hotesDesFournisseurs` dit si cet hôte lui est ouvert.
+
+      Le refus emprunte la forme d'une réponse ratée plutôt qu'une exception :
+      les neuf appelants lisent déjà `ok` et `statusText`, et un refus qui
+      remonte sous le même visage qu'une panne réseau se voit à l'écran au lieu
+      de disparaître dans un `catch`.
+    */
+    const verdict = verdictDeLHote(fournisseur, url);
+    if (!verdict.admis) {
+        auditDenied(`[Proxy IA] ${verdict.raison}`);
+        return { ok: false, status: 0, statusText: verdict.raison, data: null };
+    }
+
     return new Promise((resolve, reject) => {
         try {
             const parsedUrl = new URL(url);

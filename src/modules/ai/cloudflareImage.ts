@@ -36,6 +36,7 @@ export async function genererViaCloudflare(prompt: string, config: ConfigDImage)
         // Quatre pas : le régime pour lequel schnell est entraîné, et le plafond
         // du modèle est de huit.
         { prompt, steps: 4 },
+        'image-cloudflare',
     );
 
     if (!reponse?.ok) {

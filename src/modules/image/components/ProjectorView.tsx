@@ -110,14 +110,13 @@ const ProjectorView: React.FC = () => {
     useEffect(() => {
         initDB();
 
-        const handleUpdateDisplay = (_event: unknown, paths: string[]) => {
+        const handleUpdateDisplay = (paths: string[]) => {
             setIpcCount(c => c + 1);
             const data = paths && paths.length > 0 ? paths[0] : 'EMPTY';
             updateImageSource(data === 'EMPTY' ? null : data);
         };
 
-        const handleSyncHubData = (_event: unknown, ...args: unknown[]) => {
-            const [type, data] = args as [string, string];
+        const handleSyncHubData = (type: string, data: string) => {
             if (type === 'image') {
                 setIpcCount(c => c + 1);
                 updateImageSource(data || null);
@@ -129,9 +128,10 @@ const ProjectorView: React.FC = () => {
             }
         };
 
-        if (window.appBridge?.on) {
-            window.appBridge.on('image:update-display', handleUpdateDisplay);
-            window.appBridge.on('image:sync-hub-data', handleSyncHubData);
+        const image = window.appBridge?.image;
+        if (image?.onUpdateDisplay && image?.onSyncHubData) {
+            const retirerAffichage = image.onUpdateDisplay(handleUpdateDisplay);
+            const retirerDonnees = image.onSyncHubData(handleSyncHubData);
 
             /*
               ⛔ **On demande ce qu'on doit afficher, une fois écouteurs posés.**
@@ -149,11 +149,14 @@ const ProjectorView: React.FC = () => {
               divergent pour un lieu ou un PNJ, dont la marque est l'identifiant
               de la fiche. Trouvé par David le 2026-09-06 en projetant un lieu.
             */
-            window.appBridge.image?.requestCurrentDisplay?.(targetId);
+            image.requestCurrentDisplay?.(targetId);
 
+            /* Les deux fonctions rendues par l'abonnement ferment sur l'ecouteur
+               reellement pose. L'ancien `off` visait une autre fonction et ne
+               retirait donc rien : chaque remontage laissait un doublon. */
             return () => {
-                window.appBridge?.off?.('image:update-display', handleUpdateDisplay);
-                window.appBridge?.off?.('image:sync-hub-data', handleSyncHubData);
+                retirerAffichage();
+                retirerDonnees();
             };
         }
     }, [initDB, targetId, updateImageSource]);

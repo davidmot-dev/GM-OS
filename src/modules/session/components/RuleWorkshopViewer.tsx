@@ -247,9 +247,9 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
             category: selectedCard.category || 'rule'
         };
 
-        if (window.appBridge?.send) {
+        if (window.appBridge?.remote?.broadcastUIAction) {
             // Diffusion via le bridge pour l'affichage en Popup (Tablettes, Joueurs)
-            window.appBridge.send('remote:broadcast-ui-action', { 
+            window.appBridge.remote.broadcastUIAction({ 
                 type: 'session:display-rule', 
                 payload: payload 
             });
@@ -266,7 +266,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                 isRead: false
             };
 
-            window.appBridge.send('remote:broadcast-ui-action', { 
+            window.appBridge.remote.broadcastUIAction({ 
                 type: 'session:receive-message', 
                 payload: msg 
             });

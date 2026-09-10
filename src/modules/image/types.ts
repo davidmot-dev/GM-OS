@@ -78,4 +78,13 @@ export interface ImageBridge {
      */
     requestCurrentDisplay?: (cible: string) => void;
     closeAllDisplays: () => void;
+    /**
+     * S'abonne a ce que le processus principal ordonne d'afficher.
+     *
+     * **Rend la fonction de retrait**, et l'appelant doit s'en servir : c'est
+     * ce que l'ancien pont generique ne permettait pas, son `off` etant inerte.
+     */
+    onUpdateDisplay?: (rappel: (chemins: string[]) => void) => () => void;
+    /** Le pendant en lecture de `syncHubData`. Rend aussi sa fonction de retrait. */
+    onSyncHubData?: (rappel: (type: string, donnee: string) => void) => () => void;
 }

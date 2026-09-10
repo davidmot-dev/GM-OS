@@ -120,7 +120,11 @@ export class SyncServer {
             console.log(`[SyncServer] Serving media file: ${filePath}`);
             res.writeHead(200, {
                 'Content-Type': mimeType,
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                // Le type declare fait foi : pas de reniflage, pas de surprise.
+                // Le proxy sert du .svg, que le navigateur executerait s'il le
+                // prenait pour du HTML. Meme geste que dans serveurDesFiches.
+                'X-Content-Type-Options': 'nosniff',
             });
             fs.createReadStream(filePath).pipe(res);
             return;
@@ -151,7 +155,8 @@ export class SyncServer {
                 res.writeHead(200, {
                     // Les assets mis en cache par remote:cache-media n'ont pas d'extension.
                     'Content-Type': MEDIA_MIME_TYPES[ext] || 'image/webp',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'X-Content-Type-Options': 'nosniff',
                 });
                 fs.createReadStream(filePath).pipe(res);
             } else {

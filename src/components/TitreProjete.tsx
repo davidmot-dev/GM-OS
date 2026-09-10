@@ -85,12 +85,11 @@ export const TitreProjete: React.FC<{ cible: string }> = ({ cible }) => {
 
     /* Le pont Electron alimente les fenêtres, et c'est le seul chemin. */
     useEffect(() => {
-        const surMessage = (_e: unknown, ...args: unknown[]) => {
-            const [type, charge] = args as [string, string];
+        const surMessage = (type: string, charge: string) => {
             if (type !== 'titre') return;
             poserLeTitre(lireLeTitre(charge));
         };
-        window.appBridge?.on?.('image:sync-hub-data', surMessage);
+        const retirerLAbonnement = window.appBridge?.image?.onSyncHubData?.(surMessage);
 
         /*
           **Et on demande le titre en cours, une fois abonné.**
@@ -107,7 +106,7 @@ export const TitreProjete: React.FC<{ cible: string }> = ({ cible }) => {
         */
         window.appBridge?.image?.requestCurrentTitle?.(cible);
 
-        return () => window.appBridge?.off?.('image:sync-hub-data', surMessage);
+        return () => retirerLAbonnement?.();
     }, [poserLeTitre, cible]);
 
     const retirer = useCallback(() => poserLeTitre(null), [poserLeTitre]);

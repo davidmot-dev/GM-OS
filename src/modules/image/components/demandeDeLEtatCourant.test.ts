@@ -46,11 +46,17 @@ describe('les trois maillons de la demande', () => {
         /*
           L'ordre compte : demander avant d'écouter, c'est perdre la réponse
           exactement comme on perdait le message d'origine.
+
+          ⚠️ **L'ancrage a changé le 2026-09-10, l'intention non.** Le
+          projecteur ne nomme plus le canal : il appelle `image.onUpdateDisplay`,
+          une méthode du contrat qui rend la fonction de retrait de son écouteur.
+          Le pont générique d'avant nommait le canal — et son `off` visait une
+          autre fonction que celle qu'il avait posée, donc ne retirait rien.
         */
-        const poseDesEcouteurs = PROJECTEUR.indexOf("on('image:update-display'");
+        const poseDesEcouteurs = PROJECTEUR.indexOf('onUpdateDisplay(');
         const demande = PROJECTEUR.indexOf('requestCurrentDisplay');
 
-        expect(poseDesEcouteurs, 'le projecteur écoute `image:update-display`').toBeGreaterThan(-1);
+        expect(poseDesEcouteurs, 'le projecteur s’abonne par `onUpdateDisplay`').toBeGreaterThan(-1);
         expect(demande, 'le projecteur demande l’état courant').toBeGreaterThan(-1);
         expect(demande).toBeGreaterThan(poseDesEcouteurs);
     });

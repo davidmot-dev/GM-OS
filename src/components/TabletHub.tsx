@@ -384,7 +384,7 @@ const TabletHub: React.FC = () => {
                             structuredItems={playerWithChar?.characters.find(c => c.id === characterId)?.inventoryItems || []}
                             characters={players.flatMap(p => p.characters.map(c => ({ ...c, playerId: p.id }))).filter(c => c.campaignId === activeCampaignId)}
                             transferRequests={transferRequests}
-                            currentCharacterId={characterId}
+                            currentCharacterId={characterId ?? undefined}
                             onSelectItem={setSelectedItem} 
                         />
                     )}

@@ -123,6 +123,12 @@ interface ImageState {
     clearActiveProjections: () => void;
 }
 
+/**
+ * L'abonnement au signal des projecteurs, posé une seule fois pour la vie du
+ * module. Voir `fetchDisplays` pour ce que son absence coûtait.
+ */
+let abonnementAuxProjecteurs: (() => void) | null = null;
+
 export const useImageStore = create<ImageState>()(
     persist(
         (set, get) => ({
@@ -147,9 +153,17 @@ export const useImageStore = create<ImageState>()(
                     }
                 }
 
-                // 📡 Réponse au signal AUTO-SYNC des projecteurs
-                if (bridge?.on) {
-                    bridge.on('image:sync-hub-data', (_event: unknown, type: string, targetId: string) => {
+                /*
+                  📡 Réponse au signal AUTO-SYNC des projecteurs.
+
+                  ⛔ **Un seul abonnement, pas un par appel.** `fetchDisplays` est
+                  appelée à chaque ouverture d'Image-OS ; cette ligne posait donc
+                  un écouteur de plus à chaque fois, et rien ne les retirait — le
+                  `off` du pont générique était inerte. Au troisième passage, un
+                  `projector-ready` relançait la projection trois fois.
+                */
+                if (!abonnementAuxProjecteurs && bridge?.image?.onSyncHubData) {
+                    abonnementAuxProjecteurs = bridge.image.onSyncHubData((type: string, targetId: string) => {
                         if (type === 'projector-ready') {
                             const currentMediaPath = get().projections[targetId];
                             if (currentMediaPath) {

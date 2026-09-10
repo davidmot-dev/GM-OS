@@ -71,11 +71,15 @@ describe('AIService', () => {
       const response = await aiService.generateText('Bonjour');
 
       expect(response.text).toBe('Hello from Gemini');
+      /* Le cinquieme argument est le fournisseur declare : c'est lui qui
+         autorise l'hote cote processus principal, et la cle de Gemini voyage
+         DANS l'URL. Voir `electron/hotesDesFournisseurs.ts`. */
       expect(mockProxyRequest).toHaveBeenCalledWith(
         expect.stringContaining('generativelanguage.googleapis.com'),
         'POST',
         expect.any(Object),
-        expect.any(Object)
+        expect.any(Object),
+        'gemini'
       );
     });
   });
@@ -117,7 +121,8 @@ describe('AIService', () => {
         expect.objectContaining({
           model: 'claude-3-5-sonnet-latest',
           messages: expect.any(Array)
-        })
+        }),
+        'anthropic'
       );
     });
 

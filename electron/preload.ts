@@ -1,23 +1,32 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
+import type { FournisseurReseau } from './hotesDesFournisseurs'
 
 // --------- Expose some API to the Renderer process ---------
+/*
+  **Le pont generique a ete retire le 2026-09-10.**
+
+  Il exposait `on` / `off` / `send` / `invoke` sur n'importe quel canal, a cote
+  des methodes nommees. Deux raisons de le fermer, et la seconde est la vraie :
+
+  1. La surface reelle du pont n'etait pas celle que ce fichier annonce. Six
+     canaux transitaient par lui sans figurer dans aucun contrat, dont
+     `remote:eject-all` — deconnecter toute la table.
+
+  2. ⛔ **`off` ne retirait JAMAIS rien.** `on` enregistrait une fonction
+     enveloppe anonyme (`(event, ...args) => listener(...)`) et `off` demandait
+     a Electron de retirer le `listener` d'origine, qui n'avait jamais ete
+     enregistre. Electron compare par reference : aucune correspondance, aucun
+     retrait. **Chaque abonnement etait definitif**, et l'effet du hub se
+     reabonnait a chaque changement de `applySyncPayload` — les charges utiles
+     se rejouaient donc autant de fois qu'il y avait eu de rendus.
+
+  Les methodes nommees ci-dessous n'ont pas ce defaut par construction : elles
+  ferment sur l'ecouteur qu'elles ont pose, et **rendent la fonction qui le
+  retire**. C'est le motif deja suivi par `onAction`, `onStreamToken` et
+  `onDisplayChanged` — il n'a jamais ete faux, il n'etait juste pas applique
+  partout.
+*/
 contextBridge.exposeInMainWorld('appBridge', {
-    on(...args: Parameters<typeof ipcRenderer.on>) {
-        const [channel, listener] = args
-        return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))
-    },
-    off(...args: Parameters<typeof ipcRenderer.off>) {
-        const [channel, ...omit] = args
-        return ipcRenderer.off(channel, ...omit)
-    },
-    send(...args: Parameters<typeof ipcRenderer.send>) {
-        const [channel, ...omit] = args
-        return ipcRenderer.send(channel, ...omit)
-    },
-    invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
-        const [channel, ...omit] = args
-        return ipcRenderer.invoke(channel, ...omit)
-    },
     getPathForFile(file: File) {
         return webUtils.getPathForFile(file)
     },
@@ -90,7 +99,27 @@ contextBridge.exposeInMainWorld('appBridge', {
           chargeait**. Trouvé par David le 2026-09-06.
         */
         requestCurrentDisplay: (cible: string) => ipcRenderer.send('image:request-current-display', cible),
-        closeAllDisplays: () => ipcRenderer.send('image:close-all-displays')
+        closeAllDisplays: () => ipcRenderer.send('image:close-all-displays'),
+
+        /**
+         * Ce que le processus principal ordonne d'afficher sur cet ecran.
+         *
+         * Ecoute par la fenetre de projection. Rend la fonction de retrait :
+         * sans elle, chaque remontage du composant ajoutait un ecouteur de plus,
+         * et l'image se redessinait autant de fois qu'il y avait eu de montages.
+         */
+        onUpdateDisplay: (rappel: (chemins: string[]) => void) => {
+            const ecouteur = (_event: Electron.IpcRendererEvent, chemins: string[]) => rappel(chemins);
+            ipcRenderer.on('image:update-display', ecouteur);
+            return () => ipcRenderer.off('image:update-display', ecouteur);
+        },
+
+        /** Le pendant en lecture de `syncHubData` : meme canal, meme couple (type, donnee). */
+        onSyncHubData: (rappel: (type: string, donnee: string) => void) => {
+            const ecouteur = (_event: Electron.IpcRendererEvent, type: string, donnee: string) => rappel(type, donnee);
+            ipcRenderer.on('image:sync-hub-data', ecouteur);
+            return () => ipcRenderer.off('image:sync-hub-data', ecouteur);
+        }
     },
     sound: {
         loadAudios: () => ipcRenderer.invoke('sound:load-audios')
@@ -193,8 +222,14 @@ contextBridge.exposeInMainWorld('appBridge', {
           `PDF` en capitales invitait la faute a se reproduire.
         */
         extractPdf: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),
-        proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => 
-            ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),
+        /**
+         * @param fournisseur Pour qui cet appel parle. Le processus principal
+         *        s'en sert pour verifier que l'hote vise est ouvert a ce
+         *        fournisseur — voir `hotesDesFournisseurs.ts`. Les cles voyagent
+         *        dans les en-tetes, et celle de Gemini dans l'URL elle-meme.
+         */
+        proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown, fournisseur: FournisseurReseau) => 
+            ipcRenderer.invoke('ai:proxy-request', url, method, headers, body, fournisseur),
         chercherDansLIndex: (
             systeme: string,
             question: string,
@@ -317,7 +352,51 @@ contextBridge.exposeInMainWorld('appBridge', {
             return () => ipcRenderer.off('remote:action', listener);
         },
         removeActions: () => ipcRenderer.removeAllListeners('remote:action'),
-        sendSync: (data: unknown) => ipcRenderer.send('remote:broadcast-sync', data),
+        /**
+         * ⚠️ **Le role compte ici autant que pour `broadcastUIAction` ci-dessous.**
+         *
+         * Cette methode l'avalait, alors que `SyncServer` le lit depuis toujours
+         * (`ipcMain.on('remote:broadcast-sync', (_e, data, role) => ...)`).
+         * `useNexusSynchronizer` envoie quatre fois : la charge complete aux
+         * roles `remote` et `gm`, et une charge **caviardee** aux roles `player`
+         * et `hub`. Perdre le role ferait partir la version non caviardee a
+         * tout le monde — *un secret caviarde a l'affichage a deja voyage*.
+         *
+         * Sans role, tout le monde recoit : c'est ce que fait `useCombatStore`,
+         * et c'est voulu.
+         */
+        sendSync: (data: unknown, role?: string) => ipcRenderer.send('remote:broadcast-sync', data, role),
+
+        /** La synchronisation venue du meneur, telle que la recoivent hub et projecteur. */
+        onBroadcastSync: (rappel: (donnees: unknown) => void) => {
+            const ecouteur = (_event: Electron.IpcRendererEvent, donnees: unknown) => rappel(donnees);
+            ipcRenderer.on('remote:broadcast-sync', ecouteur);
+            return () => ipcRenderer.off('remote:broadcast-sync', ecouteur);
+        },
+
+        /* ── Le moniteur de salon ───────────────────────────────────────────
+           Quatre gestes qui passaient par le pont generique, donc hors contrat.
+           `ejectAll` deconnecte toute la table : il merite d'etre nomme. */
+
+        /** La liste des appareils connectes, poussee par le SyncServer. */
+        onSyncClients: (rappel: (clients: unknown[]) => void) => {
+            const ecouteur = (_event: Electron.IpcRendererEvent, clients: unknown[]) => rappel(clients);
+            ipcRenderer.on('remote:sync-clients', ecouteur);
+            return () => ipcRenderer.off('remote:sync-clients', ecouteur);
+        },
+        /**
+         * Le processus principal reclame une synchronisation complete — il le
+         * fait a chaque connexion d'un appareil (`SyncServer.handleConnection`).
+         * Ecoute par la fenetre du meneur, qui seule detient l'etat.
+         */
+        onRequestSync: (rappel: () => void) => {
+            const ecouteur = () => rappel();
+            ipcRenderer.on('remote:request-sync', ecouteur);
+            return () => ipcRenderer.off('remote:request-sync', ecouteur);
+        },
+        requestClientSync: () => ipcRenderer.send('remote:request-client-sync'),
+        clearDisconnected: () => ipcRenderer.send('remote:clear-disconnected'),
+        ejectAll: () => ipcRenderer.send('remote:eject-all'),
         /*
           **Le rôle destinataire, ajouté le 2026-09-05.**
 
@@ -394,6 +473,21 @@ contextBridge.exposeInMainWorld('appBridge', {
         ouvrirLeDossier: () => ipcRenderer.invoke('backup:reveal'),
         /** GM-OS va se fermer : dernière occasion d'écrire. */
         surDemandeDeFermeture: (rappel: () => void) => {
+            /*
+              ⛔ **Un seul abonné, comme pour le jumeau Ulanzi (2026-08-30).**
+
+              `StrictMode` monte chaque effet DEUX fois : sans ce nettoyage, deux
+              rappels s'abonnent et deux `fermetureTerminee()` partent. Or le
+              processus principal attend avec `ipcMain.once` — **la première
+              réponse libère la fermeture**, et la plus rapide est celle qui n'a
+              rien écrit.
+
+              Le remède est en place sur `ulanzi:before-quit` depuis le 30/08,
+              avec ce raisonnement mot pour mot. Il n'avait jamais été reporté
+              ici, sur le chemin qui porte la sauvegarde automatique — celui où
+              perdre la course coûte le plus cher. Reporté le 2026-09-10.
+            */
+            ipcRenderer.removeAllListeners('backup:before-quit');
             ipcRenderer.on('backup:before-quit', () => rappel());
         },
         /** « J'ai fini » — sans quoi la fermeture attend le délai de sécurité. */

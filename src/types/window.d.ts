@@ -21,6 +21,10 @@ import { WebState } from '../modules/web/useWebStore';
 // `mcpActivity` est volontairement sans dépendance à `electron` ni à `node`,
 // et c'est le contrat du canal `mcp:activity` qu'on veut partager, pas du code.
 import type { EvenementMcp } from '../../electron/mcpActivity';
+// Même parti pris que le voisin : c'est le contrat du canal `ai:proxy-request`
+// qu'on partage, pas du code. `hotesDesFournisseurs` ne dépend ni d'electron ni
+// de node.
+import type { FournisseurReseau } from '../../electron/hotesDesFournisseurs';
 
 declare global {
     export interface DisplayInfo {
@@ -163,14 +167,36 @@ declare global {
             saveList: (data: unknown) => Promise<boolean>;
             loadList: () => Promise<unknown>;
         };
-        on: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
-        off: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
-        send: (channel: string, ...args: any[]) => void;
         remote: {
             // `port` sert à charger l'app sur la tablette (Vite en dev) ;
             // `mediaPort` est celui du proxy média, toujours le SyncServer.
             getConnectionInfo?: () => Promise<{ ip: string; port: number; mediaPort?: number; mediaEpoch?: string }>;
-            sendSync?: (payload: SyncPayload) => void;
+            /**
+             * @param role Sans lui, **tout le monde recoit**. Avec lui, seuls
+             *             les clients de ce role. Le pont l'avalait jusqu'au
+             *             2026-09-10, et `useNexusSynchronizer` devait donc
+             *             passer par le pont generique pour envoyer une charge
+             *             caviardee aux joueurs et la charge complete au meneur.
+             *
+             * ⚠️ La charge n'est pas toujours un `SyncPayload` nominal :
+             * `useNexusSynchronizer` envoie un **differentiel** calcule champ a
+             * champ, structurellement plus laxiste que le type. Le pont
+             * generique l'acceptait en `any` ; on l'admet ici explicitement,
+             * plutot que de faire mentir le type de l'autre appelant.
+             */
+            sendSync?: (payload: SyncPayload | Record<string, unknown>, role?: string) => void;
+            /** S'abonne a la synchronisation du meneur. Rend sa fonction de retrait. */
+            onBroadcastSync?: (rappel: (donnees: unknown) => void) => () => void;
+            /** La liste des appareils connectes. Rend sa fonction de retrait. */
+            onSyncClients?: (rappel: (clients: unknown[]) => void) => () => void;
+            /** Le principal reclame une synchronisation complete. Rend sa fonction de retrait. */
+            onRequestSync?: (rappel: () => void) => () => void;
+            /** Redemande la liste des appareils — le moniteur de salon au montage. */
+            requestClientSync?: () => void;
+            /** Oublie les appareils deconnectes. */
+            clearDisconnected?: () => void;
+            /** ⚠️ Deconnecte **tous** les appareils de la table. */
+            ejectAll?: () => void;
             /**
              * @param role Quand il est donné, **seuls les clients de ce rôle
              *             reçoivent l'action**. Sans lui, tout le monde reçoit
@@ -276,7 +302,14 @@ declare global {
              * orthographes ne peut plus arbitrer entre elles.*
              */
             extractPdf: (filePath: string) => Promise<string>;
-            proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
+            /**
+             * @param fournisseur Pour qui cet appel parle. **Obligatoire** : c'est
+             *        lui qui autorise l'hôte visé (voir
+             *        `electron/hotesDesFournisseurs.ts`). Un fournisseur absent de
+             *        la table est refusé — ce qui fait échouer au développement
+             *        tout chemin réseau ajouté sans y passer.
+             */
+            proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown, fournisseur: FournisseurReseau) => Promise<AIProxyResponse>;
             /**
              * Contexte RAG pour la question en cours.
              * `query` est ce qui permet de trier par sujet plutôt que par ordre

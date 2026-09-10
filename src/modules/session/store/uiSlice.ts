@@ -218,8 +218,8 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
         set((state) => ({ messages: [...state.messages, msg].slice(-100) }));
 
         // Broadcast aux Hubs
-        if (window.appBridge?.send) {
-            window.appBridge.send('remote:broadcast-ui-action', {
+        if (window.appBridge?.remote?.broadcastUIAction) {
+            window.appBridge.remote.broadcastUIAction({
                 type: 'session:receive-message',
                 payload: msg
             });

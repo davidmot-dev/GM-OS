@@ -404,7 +404,7 @@ export class AIService {
               { role: 'system', content: systemPrompt },
               { role: 'user', content: prompt }
             ]
-          });
+          }, 'custom');
 
           if (!bridgeResponse.ok) {
             throw new Error(`Erreur API Custom (${bridgeResponse.status}): ${bridgeResponse.statusText}`);
@@ -426,7 +426,7 @@ export class AIService {
             return window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
               contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
               generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
-            });
+            }, 'gemini');
           };
 
           const initialVersion = model.startsWith('gemini-2') ? 'v1beta' : 'v1';
@@ -444,7 +444,7 @@ export class AIService {
                  const fallbackRes = await window.appBridge?.ai?.proxyRequest?.(fallbackUrl, 'POST', { 'Content-Type': 'application/json' }, {
                    contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
                    generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
-                 });
+                 }, 'gemini');
                  if (fallbackRes?.ok) {
                    const data = fallbackRes.data as GeminiResponse;
                    return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "Réponse fallback.", metadata: { provider: 'gemini', model: 'gemini-2.0-flash-lite' } };
@@ -478,7 +478,7 @@ export class AIService {
             messages: [
               { role: 'user', content: `${systemPrompt}\n\nUtilisateur: ${prompt}` }
             ]
-          });
+          }, 'anthropic');
 
           if (!bridgeResponse.ok) {
             const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
@@ -927,7 +927,7 @@ Use the names above verbatim. Do not invent a setting title.
 
 
       console.log(`[AI Service] Proxying Gemini Image request...`);
-      const bridgeResponse = await window.appBridge?.ai?.proxyRequest?.(url, 'POST', { 'Content-Type': 'application/json' }, payload);
+      const bridgeResponse = await window.appBridge?.ai?.proxyRequest?.(url, 'POST', { 'Content-Type': 'application/json' }, payload, 'gemini');
 
       if (!bridgeResponse?.ok) {
         const errorMsg = (bridgeResponse?.data as { error?: { message?: string } })?.error?.message || bridgeResponse?.statusText || 'Inconnue';
@@ -1008,7 +1008,7 @@ Use the names above verbatim. Do not invent a setting title.
       const bridgeResponse = await window.appBridge?.ai?.proxyRequest?.(url, 'POST', { 'Content-Type': 'application/json' }, {
         contents: [{ parts: [{ text: systemPrompt }] }],
         generationConfig: { response_mime_type: "application/json" }
-      });
+      }, 'gemini');
 
       if (bridgeResponse?.ok) {
         const data = bridgeResponse.data as GeminiResponse;
@@ -1036,7 +1036,7 @@ Use the names above verbatim. Do not invent a setting title.
 
     if (activeProvider === 'gemini' && apiKey) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-      const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}) as { ok: boolean; data: { models?: { name: string }[] } };
+      const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}, 'gemini') as { ok: boolean; data: { models?: { name: string }[] } };
       if (response?.ok) {
         const data = response.data;
         return (data.models || []).map((m) => m.name.replace('models/', ''));
@@ -1570,7 +1570,7 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
       while (retries <= MAX_RETRIES) {
         try {
           response = await Promise.race([
-            window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, payload),
+            window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, payload, 'gemini'),
             new Promise((_, reject) => 
               setTimeout(() => reject(new Error(`TIMEOUT : Gemini n'a pas répondu en ${attenteAnnoncee(TIMEOUT_MS)}.`)), TIMEOUT_MS)
             )

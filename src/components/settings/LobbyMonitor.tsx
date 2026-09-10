@@ -8,22 +8,16 @@ const LobbyMonitor: React.FC = () => {
     const [clients, setClients] = useState<ClientContext[]>([]);
 
     useEffect(() => {
-        const handleSyncClients = (_event: unknown, ...args: unknown[]) => {
-            const data = args[0] as ClientContext[];
-            setClients(data);
+        const handleSyncClients = (clients: unknown[]) => {
+            setClients(clients as ClientContext[]);
         };
 
-        if (window.appBridge?.on) {
-            window.appBridge.on('remote:sync-clients', handleSyncClients);
-            // Request initial list
-            window.appBridge.send('remote:request-client-sync');
-        }
+        const distant = window.appBridge?.remote;
+        const retirerLAbonnement = distant?.onSyncClients?.(handleSyncClients);
+        // On demande la liste une fois abonné, jamais avant.
+        distant?.requestClientSync?.();
 
-        return () => {
-            if (window.appBridge?.off) {
-                window.appBridge.off('remote:sync-clients', handleSyncClients);
-            }
-        };
+        return () => retirerLAbonnement?.();
     }, []);
 
     const getStatusIcon = (status: ClientContext['status']) => {
@@ -61,8 +55,8 @@ const LobbyMonitor: React.FC = () => {
                     </span>
                     <button 
                         onClick={() => {
-                            if (window.appBridge?.send) {
-                                window.appBridge.send('remote:clear-disconnected');
+                            if (window.appBridge?.remote?.clearDisconnected) {
+                                window.appBridge.remote.clearDisconnected();
                                 // Show immediate feedback by filtering locally until sync
                                 setClients(prev => prev.filter(c => c.status === 'active'));
                             }
@@ -73,7 +67,7 @@ const LobbyMonitor: React.FC = () => {
                         <Trash2 size={14} />
                     </button>
                     <button 
-                        onClick={() => window.appBridge?.send?.('remote:request-client-sync')}
+                        onClick={() => window.appBridge?.remote?.requestClientSync?.()}
                         className="p-1.5 hover:bg-white/10 text-slate-500 hover:text-white rounded-lg transition-all"
                         title={t('remote.lobby.refresh_tooltip')}
                     >
@@ -128,8 +122,8 @@ const LobbyMonitor: React.FC = () => {
                     </p>
                     <button
                         onClick={() => {
-                            if (window.appBridge?.send) {
-                                window.appBridge.send('remote:eject-all');
+                            if (window.appBridge?.remote?.ejectAll) {
+                                window.appBridge.remote.ejectAll();
                                 // Immediate feedback: clear local state
                                 setClients([]);
                                 // Reset character locks in session store

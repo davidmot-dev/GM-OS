@@ -198,11 +198,19 @@ function App() {
       }
     });
 
-    bridge.on('remote:request-sync', (_event) => {
+    /*
+      ⛔ **Ces deux abonnements n'etaient jamais retires.** Ils passaient par le
+      pont generique, dont le `off` etait inerte — et le nettoyage de cet effet
+      ne les mentionnait meme pas. L'effet depend de `handleSync` et
+      `handleAction` : chaque changement d'identite ajoutait deux ecouteurs de
+      plus dans la fenetre du meneur.
+    */
+    const retirerDemandeDeSync = bridge.remote.onRequestSync?.(() => {
         handleSync(true);
     });
 
-    bridge.on('remote:sync-clients', (_event, clients: import('./types/shared').ClientContext[]) => {
+    const retirerListeDesClients = bridge.remote.onSyncClients?.((liste) => {
+        const clients = liste as import('./types/shared').ClientContext[];
         if (!clients || !Array.isArray(clients)) return;
         const locks: Record<string, string> = {};
         clients.forEach(c => {
@@ -218,6 +226,8 @@ function App() {
 
     return () => {
       cleanupAction();
+      retirerDemandeDeSync?.();
+      retirerListeDesClients?.();
       unsubscribeCombat();
       console.log('[App] Remote action listeners removed.');
     };

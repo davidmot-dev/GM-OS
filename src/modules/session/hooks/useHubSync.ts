@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo, useSyncExternalStore } from 'react';
 import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
@@ -8,6 +8,55 @@ const getStore = (name: string) => (typeof window !== 'undefined' ? (window as a
 
 const EMPTY_OBJ = {};
 const EMPTY_ARR: any[] = [];
+
+/**
+ * L'instant de repli de l'horloge, fige au chargement du module.
+ *
+ * ATTENTION : il ne peut PAS etre `Date.now()` appele a la lecture.
+ * `useSyncExternalStore` compare l'instantane qu'on lui rend, et une valeur
+ * neuve a chaque appel le fait boucler sans fin. Une horloge absente n'avance
+ * pas : c'est la bonne reponse, pas un pis-aller.
+ */
+const INSTANT_DE_REPLI = Date.now();
+
+/** Un abonnement qui ne notifie jamais : un magasin absent est un magasin fige. */
+const NE_CHANGE_JAMAIS = () => () => {};
+
+/**
+ * **Lire un magasin resolu par son nom, a cout de crochets FIXE.**
+ *
+ * Ce crochet atteint huit magasins par `window` sans en importer aucun. C'est
+ * delibere, et `useRessourcesDeTableStore.ts` l'enonce. Mais la version d'avant
+ * appelait chaque magasin derriere un ternaire :
+ *
+ *     const combatants = useCombatStore ? useCombatStore(s => s.combatants) : EMPTY_ARR;
+ *
+ * ...soit **27 crochets conditionnels**. Le jour ou l'un des huit apparait entre
+ * deux rendus, le compte change et React leve « Rendered more hooks than during
+ * the previous render » : dans le Player Hub ou sur la tablette, c'est-a-dire
+ * devant les joueurs.
+ *
+ * Ca tenait parce que le graphe d'imports statiques d'`App.tsx` charge les huit
+ * avant le premier rendu. *C'etait une coincidence, pas une garantie* : le depot
+ * charge deja 32 modules en `lazy()`, et il suffisait qu'un seul devienne
+ * l'unique importateur d'un de ces magasins.
+ *
+ * Ici, `useSyncExternalStore` est appele TOUJOURS, magasin present ou non. Le
+ * compte est invariant par construction, et la resolution dynamique reste.
+ *
+ * Deux conditions a ne pas casser en touchant a ce code :
+ *  - `magasin.subscribe` est une reference stable de Zustand. Ecrire une
+ *    fonction flechee a sa place ferait se reabonner a chaque rendu ;
+ *  - `defaut` doit etre une constante de module (`EMPTY_ARR`, `EMPTY_OBJ`) : un
+ *    litteral neuf a chaque rendu relance la boucle decrite plus haut.
+ */
+function useMagasin<T>(nom: string, choisir: (etat: any) => T, defaut: T): T {
+    const magasin = getStore(nom);
+    return useSyncExternalStore(
+        magasin?.subscribe ?? NE_CHANGE_JAMAIS,
+        () => (magasin ? choisir(magasin.getState()) : defaut),
+    );
+}
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -75,60 +124,53 @@ export const useHubSync = () => {
     const lastDiceTriggerRef = useRef(0);
 
     // ─────────────────────────────────────────────
-    // Dynamic Store Resolution (Hooks)
+    // Lecture des magasins - voir `useMagasin` : un crochet par ligne, toujours,
+    // que le magasin soit charge ou non.
     // ─────────────────────────────────────────────
-    const useImageStore = getStore('useImageStore');
-    const useSessionOSStore = getStore('useSessionOSStore');
-    const useClockStore = getStore('useClockStore');
-    const useFavoriteStore = getStore('useFavoriteStore');
-    const useCombatStore = getStore('useCombatStore');
-    const useClientStore = getStore('useClientStore');
-    const useDiceStore = getStore('useDiceStore');
-    const useSyncStore = getStore('useSyncStore');
 
     // 🛡️ Individual Selectors (Stable)
-    const projections = useImageStore ? useImageStore((s: any) => s.projections) : EMPTY_OBJ;
+    const projections = useMagasin('useImageStore', s => s.projections, EMPTY_OBJ);
     
-    const timestamp = useClockStore ? useClockStore((s: any) => s.timestamp) : Date.now();
-    const mode = useClockStore ? useClockStore((s: any) => s.mode) : 'realtime';
-    const theme = useClockStore ? useClockStore((s: any) => s.theme) : 'modern';
+    const timestamp = useMagasin('useClockStore', s => s.timestamp, INSTANT_DE_REPLI);
+    const mode = useMagasin('useClockStore', s => s.mode, 'realtime');
+    const theme = useMagasin('useClockStore', s => s.theme, 'modern');
     /*
       **Les jauges secrètes ne quittent pas la machine du meneur** (point C1,
       2026-09-04). Ce crochet alimente le Player Hub ET les tablettes : c'est
       l'un des quatre chemins, et on caviarde à la source plutôt qu'à
       l'affichage — *ce qui n'est pas parti ne peut pas être lu.*
     */
-    const toutesLesJauges = useClockStore ? useClockStore((s: any) => s.tensions) : EMPTY_ARR;
+    const toutesLesJauges = useMagasin('useClockStore', s => s.tensions, EMPTY_ARR);
     const tensions = useMemo<TensionClock[]>(
         () => jaugesVuesParLesJoueurs<TensionClock>(toutesLesJauges), [toutesLesJauges]);
-    const isClockProjected = useClockStore ? useClockStore((s: any) => s.isClockProjected) : false;
+    const isClockProjected = useMagasin('useClockStore', s => s.isClockProjected, false);
 
-    const favorites = useFavoriteStore ? useFavoriteStore((s: any) => s.favorites) : EMPTY_ARR;
+    const favorites = useMagasin('useFavoriteStore', s => s.favorites, EMPTY_ARR);
     
-    const combatants = useCombatStore ? useCombatStore((s: any) => s.combatants) : EMPTY_ARR;
-    const currentTurnIdx = useCombatStore ? useCombatStore((s: any) => s.currentTurnIdx) : 0;
-    const round = useCombatStore ? useCombatStore((s: any) => s.round) : 0;
-    const isCombatProjected = useCombatStore ? useCombatStore((s: any) => s.isCombatProjected) : false;
+    const combatants = useMagasin('useCombatStore', s => s.combatants, EMPTY_ARR);
+    const currentTurnIdx = useMagasin('useCombatStore', s => s.currentTurnIdx, 0);
+    const round = useMagasin('useCombatStore', s => s.round, 0);
+    const isCombatProjected = useMagasin('useCombatStore', s => s.isCombatProjected, false);
 
-    const entities = useSessionOSStore ? useSessionOSStore((s: any) => s.entities) : EMPTY_ARR;
-    const activeCampaignId = useSessionOSStore ? useSessionOSStore((s: any) => s.activeCampaignId) : null;
-    const activeCampaignName = useSessionOSStore ? useSessionOSStore((s: any) => s.activeCampaignName) : '';
-    const activeCampaignWallpaper = useSessionOSStore ? useSessionOSStore((s: any) => s.activeCampaignWallpaper) : null;
-    const sessions = useSessionOSStore ? useSessionOSStore((s: any) => s.sessions) : EMPTY_ARR;
-    const transferRequests = useSessionOSStore ? useSessionOSStore((s: any) => s.transferRequests) : EMPTY_ARR;
-    const clues = useSessionOSStore ? useSessionOSStore((s: any) => s.clues) : EMPTY_ARR;
-    const connectedCharacters = useSessionOSStore ? useSessionOSStore((s: any) => s.connectedCharacters) : EMPTY_OBJ;
+    const entities = useMagasin('useSessionOSStore', s => s.entities, EMPTY_ARR);
+    const activeCampaignId = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignId, null);
+    const activeCampaignName = useMagasin('useSessionOSStore', s => s.activeCampaignName, '');
+    const activeCampaignWallpaper = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignWallpaper, null);
+    const sessions = useMagasin('useSessionOSStore', s => s.sessions, EMPTY_ARR);
+    const transferRequests = useMagasin('useSessionOSStore', s => s.transferRequests, EMPTY_ARR);
+    const clues = useMagasin('useSessionOSStore', s => s.clues, EMPTY_ARR);
+    const connectedCharacters = useMagasin('useSessionOSStore', s => s.connectedCharacters, EMPTY_OBJ);
 
-    const deviceId = useClientStore ? useClientStore((s: any) => s.deviceId) : 'guest';
-    const pseudo = useClientStore ? useClientStore((s: any) => s.pseudo) : '';
-    const playerName = useClientStore ? useClientStore((s: any) => s.playerName) : '';
-    const characterId = useClientStore ? useClientStore((s: any) => s.characterId) : null;
-    const isOnboarded = useClientStore ? useClientStore((s: any) => s.isOnboarded) : false;
+    const deviceId = useMagasin('useClientStore', s => s.deviceId, 'guest');
+    const pseudo = useMagasin('useClientStore', s => s.pseudo, '');
+    const playerName = useMagasin('useClientStore', s => s.playerName, '');
+    const characterId = useMagasin<string | null>('useClientStore', s => s.characterId, null);
+    const isOnboarded = useMagasin('useClientStore', s => s.isOnboarded, false);
 
-    const voiceLevel = useSyncStore ? useSyncStore((s: any) => s.voiceLevel) : 0;
+    const voiceLevel = useMagasin('useSyncStore', s => s.voiceLevel, 0);
     
-    const projectionTrigger = useDiceStore ? useDiceStore((s: any) => s.projectionTrigger) : 0;
-    const isDiceProjected = useDiceStore ? useDiceStore((s: any) => s.isDiceProjected) : false;
+    const projectionTrigger = useMagasin('useDiceStore', s => s.projectionTrigger, 0);
+    const isDiceProjected = useMagasin('useDiceStore', s => s.isDiceProjected, false);
 
     const host = window.location.hostname;
     const port = 3001;
@@ -394,7 +436,7 @@ export const useHubSync = () => {
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
-        const handleIpcUpdate = (_event: any, type: string, data: any) => {
+        const handleIpcUpdate = (type: string, data: any) => {
             if (type === 'image') {
                 setLiveImagePath(data || null);
                 setLiveMediaEstUneVideo(false);
@@ -418,7 +460,7 @@ export const useHubSync = () => {
             else if (type === 'session:display-rule') setSharedRule(data as any);
         };
 
-        const handleBroadcastSync = (_e: any, payload: any) => {
+        const handleBroadcastSync = (payload: any) => {
             if (payload?.type === 'FULL_RESET') {
                 setLiveImagePath(null);
                 setLiveEntity(null);
@@ -428,11 +470,21 @@ export const useHubSync = () => {
             applySyncPayload(payload);
         };
 
-        if (window.appBridge?.on) {
-            window.appBridge.on('image:sync-hub-data', handleIpcUpdate);
-            window.appBridge.on('map:ping', (_e: any, data: any) => handleIpcUpdate(null, 'map-ping', data));
-            window.appBridge.on('remote:broadcast-sync', handleBroadcastSync);
-        }
+        /*
+          ⛔ **`map:ping` a ete retire le 2026-09-10 : ce canal IPC n'existe pas.**
+
+          Rien, dans le processus principal, n'emet `map:ping` — le ping de carte
+          voyage en `CustomEvent` du DOM (voir `PlayerHub.tsx`) et par les actions
+          distantes. L'abonnement ecoutait donc le vide, et son retrait visait
+          `handleIpcUpdate` alors que l'abonnement avait pose une fonction
+          flechee : *deux erreurs qui s'annulaient a l'ecran et s'ajoutaient en
+          memoire.*
+        */
+        const retraits: (() => void)[] = [];
+        const image = window.appBridge?.image;
+        if (image?.onSyncHubData) retraits.push(image.onSyncHubData(handleIpcUpdate));
+        const distant = window.appBridge?.remote;
+        if (distant?.onBroadcastSync) retraits.push(distant.onBroadcastSync(handleBroadcastSync));
 
         const handleSendMessage = (e: Event) => {
             const detail = (e as CustomEvent).detail;
@@ -531,11 +583,7 @@ export const useHubSync = () => {
             window.removeEventListener('session:submit-feedback', handleSubmitFeedback);
             window.removeEventListener('table:ajuster', handleAjusterReserve);
             for (const nom of AREACHEMINER) window.removeEventListener(nom, acheminer);
-            if (window.appBridge?.off) {
-                window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
-                window.appBridge.off('map:ping', handleIpcUpdate);
-                window.appBridge.off('remote:broadcast-sync', handleBroadcastSync);
-            }
+            for (const retirer of retraits) retirer();
         };
     }, [applySyncPayload]);
 
