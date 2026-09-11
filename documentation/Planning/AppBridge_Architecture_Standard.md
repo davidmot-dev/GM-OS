@@ -131,6 +131,27 @@ qui refuse, pas une discipline qu'on oublie*.
 
 **Conséquence pour l'écran** : on ne relit plus une clé, **on la remplace**.
 
+### ⛔ Le piège que cette architecture a ouvert (2026-09-11)
+
+Pour que le proxy lise le même coffre, `securityManager` est devenu une **instance de niveau
+module**. Son constructeur appelait `app.getPath('userData')` — et `main.ts` l'importe.
+
+> `app.getPath('userData')` ne lit pas un chemin : il le **verrouille** pour toute la vie du
+> processus, d'après `app.name` **au moment de l'appel**. Or `main.ts` pose
+> `app.name = 'gm-os-v5'` dans son corps, donc **après** l'évaluation de ses imports.
+
+Résultat : toutes les données ont basculé sur le profil `gm-os-v6`, vide, et le meneur a trouvé une
+campagne de démonstration à la place des siennes.
+
+**La règle, désormais tenue par `electron/verrouDuCheminDeDonnees.test.ts`** :
+
+> **Aucun module importé par `main.ts` ne doit appeler `app.getPath` à son évaluation** — ni au
+> niveau module, ni dans un constructeur. Le chemin se résout au **premier besoin**, par un accesseur
+> paresseux.
+
+⚠️ Un singleton exporté est du code qui s'exécute à l'import. *Le `new` de niveau module est discret ;
+c'est le constructeur qu'il faut lire.*
+
 ---
 *Date de création : 16 Avril 2026*
 *Version : 1.2 — 11 Septembre 2026 (fermeture du canal libre, garde des clés)*

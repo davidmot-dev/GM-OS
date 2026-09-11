@@ -1106,13 +1106,61 @@ geste même qui a failli les perdre en août.*
 
 **La leçon** : *quand on remplace une donnée par sa métadonnée, les défauts de la donnée suivent.*
 
+### 12. ⛔ Résoudre un chemin système n'est pas le lire — c'est le verrouiller
+
+`app.getPath('userData')` **fige** l'emplacement des données pour toute la vie du processus, d'après
+le nom de l'application **au moment de l'appel**. Un appel trop tôt ne rend pas un mauvais chemin :
+il en impose un, définitivement.
+
+C'est ce qui est arrivé le lendemain du chantier des clés. Pour que le proxy IA lise le même coffre,
+le `SecurityManager` est devenu une **instance de niveau module** — et son constructeur résolvait le
+chemin. Les imports s'évaluant avant le corps du module, l'appel tombait **1 643 lignes avant** le
+`app.name = 'gm-os-v5'` qui devait le précéder. Toutes les données ont basculé sur un profil vide, et
+le meneur a trouvé une campagne de démonstration à la place de ses sept.
+
+**Trois choses à retenir, et la troisième est la plus transférable :**
+
+1. *Un singleton exporté est du code qui s'exécute à l'import.* Le `new` de niveau module est
+   discret ; c'est le constructeur qu'il faut aller lire.
+2. Un chemin système se résout au **premier besoin**, jamais à la construction — un accesseur
+   paresseux coûte trois lignes.
+3. ⚠️ **Le commentaire qui énonçait la règle vivait dans le fichier qui la respectait.** *Une règle
+   écrite là où on la lit ne couvre pas là où on l'enfreint.* Elle est devenue un contrôle, qui la
+   tient pour tous les modules importés par `main.ts`.
+
+### 13. Une contradiction entre les traces et le témoignage est un indice
+
+Le diagnostic a suivi cinq questions. Les quatre premières disaient : les sauvegardes ont les sept
+campagnes, le magasin vivant a les données de démonstration, sa dernière écriture date de deux jours
+**avant** le travail suspect, et le journal prouve que l'application n'a pas tourné depuis.
+
+Cette quatrième réponse semblait innocenter le travail de la veille — et elle **contredisait** ce que
+le meneur décrivait : *« j'ai relancé ce matin »*. C'est en cherchant à lever cette contradiction —
+« alors où a-t-elle tourné ? » — qu'est apparu le vrai défaut : un second profil, écrit le matin même.
+
+**La leçon** : *quand les traces et le témoignage divergent, c'est qu'on ne regarde pas au bon
+endroit.* Le réflexe de conclure « les traces disent que ce n'est pas moi » aurait clos l'enquête sur
+la bonne nouvelle et laissé le défaut en place.
+
+### 14. Le premier geste d'un incident de données est une copie, pas un diagnostic
+
+Avant de comprendre quoi que ce soit, trois sauvegardes ont été copiées hors du dossier soumis à
+rotation. Ça coûte une seconde, ça ne détruit rien, et ça retire toute urgence au reste de l'enquête —
+*on ne diagnostique pas bien quand chaque minute peut coûter la donnée qu'on cherche.*
+
+Corollaire : **annoncer d'abord ce qui est sauf.** Le meneur a eu « tes sept campagnes sont là, voici
+où » avant l'explication. L'analyse peut attendre ; l'angoisse, non.
+
 ---
 
 *Dernière mise à jour : 11 Septembre 2026 — revue de code de l'application entière et les cinq lots de
 correction qui en sont sortis (le `NaN` de la barre de vie et les trois branches qui levaient, une
 seule comparaison de chemins, les 27 crochets conditionnels du hub, le lint rendu lisible), puis la
 fermeture du pont générique — dont le `off` ne retirait jamais rien — et la garde des clés d'API, que
-le renderer ne détient plus du tout.*
+le renderer ne détient plus du tout. **Et le lendemain matin, la régression que ce dernier chantier a
+introduite** : un `app.getPath` à l'import qui a fait basculer tout le profil de données, la
+sauvegarde automatique qui a tenu pour sa première mise à l'épreuve réelle, et les deux leçons de
+méthode que l'enquête a laissées.*
 
 *Mise à jour précédente : 9 Septembre 2026 — le MJ Focus, qui existait déjà sous le nom de régime
 « table », et la porte de sortie qui lui manquait.*

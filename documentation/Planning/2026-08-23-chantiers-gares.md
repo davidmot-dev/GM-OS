@@ -2138,6 +2138,65 @@ Six commits, de `df836c65` à `f1b0f9a9`.
 qu'il prétend garder ne garde rien* : `donneesIncompletes.test.tsx`, `sousChemin.test.ts`,
 `magasinsQuiApparaissent.test.tsx`, `pontSansCanalLibre.test.ts`, `lesClesNeVoyagentPas.test.ts`.
 
+#### 41d · ⛔ Le profil des données a basculé — et ce que ça a appris (2026-09-11)
+
+*Au réveil, David relance GM-OS et trouve **« The Eternal Quest » à la place de ses sept campagnes**.
+Son message : « tu as perdu les campagnes ».*
+
+**C'était moi.** En sortant `securityManager` de `registerSecurityHandlers` au § 41b — pour que le
+proxy IA lise le même coffre — j'en ai fait une **instance de niveau module**. Son constructeur
+appelait `app.getPath('userData')`.
+
+> `app.getPath('userData')` ne lit pas un chemin : il le **VERROUILLE** pour toute la vie du
+> processus, d'après le nom de l'application **au moment de l'appel**.
+
+`main.ts` pose `app.name = 'gm-os-v5'` en ligne 22 — `package.json` s'appelant `gm-os-v6` — avec
+précisément ce commentaire : *« lock the storage path before any getPath calls »*. Les imports
+s'évaluant avant le corps du module, mon appel tombait **1 643 lignes avant** ce verrou dans le
+paquet construit : `new SecurityManager()` en 51140, `app.name` en 52783.
+
+Toutes les données ont donc basculé sur le profil **`gm-os-v6`**, vide. Un magasin neuf se remplit de
+ses données de démonstration. *Rien n'était perdu — tout était ailleurs, et rien ne le disait.*
+
+**⭐ Le filet a tenu, et c'était sa première mise à l'épreuve réelle.** Les sept campagnes étaient
+dans les **17 sauvegardes automatiques** de `Security_Backup_GMOS`, la plus récente du 9 septembre à
+22:56:38 ; les clés d'API dans `gm-os-v5/vault/secrets.enc`, intactes. David a relancé, restauré, et
+confirmé : *« tout fonctionne »*.
+
+**Ce que le diagnostic a demandé, dans l'ordre** — et c'est la partie réutilisable :
+
+| Question | Réponse, et ce qu'elle a écarté |
+| --- | --- |
+| Les sauvegardes ont-elles les campagnes ? | 7, dans les 4 plus récentes. *La panique tombe ici.* |
+| Le magasin vivant contient quoi ? | `c-1` « The Eternal Quest » — la signature des mocks |
+| Quand a-t-il été écrit ? | **9 sept. 22:56:04**, deux jours avant mon travail |
+| L'application a-t-elle tourné depuis ? | `main.log` s'arrête au 9 sept. — **non** |
+| Alors où a tourné celle de ce matin ? | ⭐ `gm-os-v6/logs/main.log`, **11 sept. 07:59** |
+
+*La quatrième réponse semblait m'innocenter. C'est la cinquième qui a trouvé le défaut — et elle n'a
+été posée que parce que la quatrième contredisait ce que David décrivait.* **Une contradiction entre
+les traces et le témoignage est un indice, pas une erreur du témoin.**
+
+⚠️ **Deux causes, le même écran.** Le magasin `gm-os-v5` portait *déjà* les mocks depuis le 9
+septembre au soir, indépendamment de mon défaut. Sans lui, David aurait vu le même écran. Les deux
+demandaient la même restauration.
+
+⚠️ **La question « GM-OS tourne-t-il ? » ne protège PAS de cette famille.** Je l'ai posée en ouverture
+de session et David avait répondu non. Elle couvre l'écriture concurrente pendant le rechargement à
+chaud — **pas ce qu'un changement fait au démarrage suivant**.
+
+⚠️ **Et le commentaire qui énonçait la règle vivait dans `main.ts`**, alors que mon changement était
+dans `SecurityManager.ts`. *Une règle écrite là où on la lit ne couvre pas là où on l'enfreint.* D'où
+le contrôle plutôt qu'un commentaire de plus : `electron/verrouDuCheminDeDonnees.test.ts` interdit
+`app.getPath` dans un constructeur **et** au niveau module, pour les 24 modules importés par
+`main.ts`. 50 tests ; remis le défaut, deux rougissent.
+
+**Le correctif** : le chemin du coffre se résout au **premier besoin**, par un accesseur paresseux.
+Les sept autres `getPath('userData')` du processus principal sont audités — tous déjà paresseux, sauf
+celui de `main.ts`, qui vient après le verrou.
+
+**Ancre** : `electron/SecurityManager.ts`, commit `0d87cc8e`.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
