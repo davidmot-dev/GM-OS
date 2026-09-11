@@ -28,6 +28,29 @@ const ICI = path.dirname(fileURLToPath(import.meta.url));
  * vraiment l'application ». C'est l'inverse — c'est le seul contexte où elle
  * tourne sur des données qui n'existent que le temps du test.*
  *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ⚠️ CE QUI RESTE DEHORS — À LIRE AVANT D'ÉCRIRE UN TEST
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * `--user-data-dir` isole **ce qui vit dans le profil** : IndexedDB, le stockage
+ * local, le coffre des clés, les médias temporaires, le miroir. Le reste a été
+ * cherché un par un, et trois chemins lui échappent :
+ *
+ * | Quoi | Où | Statut |
+ * | --- | --- | --- |
+ * | Sauvegardes automatiques | chemin absolu, hors installation | ✅ redirigées ci-dessous |
+ * | Corpus `docs/` | `APP_ROOT/docs` — le dépôt | ⛔ **réel** : `ai:write-doc`, `ai:delete-doc` |
+ * | Coffre Obsidian | dossier du meneur | ⛔ **réel** : `obsidian:write-note` |
+ * | Pont Hue, afficheur Ulanzi | le réseau | ⛔ **réels** |
+ *
+ * ⭐ Les APIs d'IA, elles, sont protégées **par accident heureux** : le coffre du
+ * profil jetable est vide, et depuis le 2026-09-11 c'est le processus principal
+ * qui pose les clés — sans clé, l'appel est refusé avant de partir.
+ *
+ * **La règle qui en découle : un test de bout en bout ne doit pas déclencher
+ * d'écriture de corpus, de note Obsidian, ni de commande d'appareil.** Tant que
+ * ces trois-là n'ont pas leur propre échappement, c'est au test de s'abstenir.
+ *
  * ⚠️ `verifierLIsolation` n'est pas une politesse : c'est la garde. Elle
  * interroge le processus principal sur le chemin qu'il a réellement retenu, et
  * refuse de continuer s'il ne tombe pas dans le dossier jetable. *Une isolation
@@ -75,7 +98,23 @@ export async function lancerGmOs(): Promise<GmOsLance> {
             `--user-data-dir=${profil}`,
         ],
         cwd: racine,
-        env: { ...environnementPropre(), ...ports.variables },
+        env: {
+            ...environnementPropre(),
+            ...ports.variables,
+            /*
+              ⛔ **Les sauvegardes automatiques ne vivent PAS sous `userData`.**
+
+              Leur dossier est un chemin absolu — `C:\Projet_David\Security_Backup_GMOS`
+              — posé là exprès pour ne jamais tomber sous l'installation. Il
+              échappe donc entièrement à `--user-data-dir`, et **il tourne** :
+              une sauvegarde écrite par un test évincerait les vraies.
+
+              `GMOS_DOSSIER_SAUVEGARDES` existait déjà ; il suffisait de s'en
+              servir. *Le profil jetable isole ce qui vit dans le profil — le
+              reste demande à être cherché un par un.*
+            */
+            GMOS_DOSSIER_SAUVEGARDES: path.join(profil, 'sauvegardes'),
+        },
     });
 
     const fenetre = await fenetreDuMeneur(application);
@@ -190,6 +229,19 @@ async function verifierLIsolation(application: ElectronApplication, profil: stri
         throw new Error(
             `[E2E] ⛔ ARRÊT : l'application écrit dans « ${retenu} » et non dans le profil jetable ` +
             `« ${profil} ». Aucun test ne doit tourner sur les données réelles.`,
+        );
+    }
+
+    /* Et le dossier des sauvegardes, qui n'est pas sous `userData` — voir le
+       commentaire de la variable au lancement. */
+    const sauvegardes = await application.evaluate(
+        () => process.env.GMOS_DOSSIER_SAUVEGARDES ?? '(non posée)',
+    );
+    if (!normaliser(sauvegardes).startsWith(normaliser(profil))) {
+        await application.close();
+        throw new Error(
+            `[E2E] ⛔ ARRÊT : les sauvegardes iraient dans « ${sauvegardes} », hors du profil jetable. ` +
+            `Elles tournent : un test évincerait de vraies sauvegardes.`,
         );
     }
 }
