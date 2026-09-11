@@ -67,18 +67,46 @@ export interface ResultatDEcriture {
 }
 
 export class SecurityManager {
-    private secretsPath: string;
+    private cheminDuCoffre: string | null = null;
     private secrets: Record<string, string> = {};
     private etat: EtatDuCoffre = 'jamais-lu';
 
     constructor() {
-        this.secretsPath = path.join(app.getPath('userData'), 'vault', 'secrets.enc');
         /*
           **Rien n'est lu ici, et c'est le correctif.** Le constructeur tourne à
           l'évaluation du module, avant `app.whenReady()` ; `safeStorage` n'y est
           pas garanti disponible, et une lecture ratée à cet instant se
           propageait jusqu'à la destruction du fichier.
         */
+    }
+
+    /**
+     * ⛔ **Le chemin se résout au premier BESOIN, jamais à la construction.**
+     *
+     * `app.getPath('userData')` ne se contente pas de lire : il **verrouille**
+     * l'emplacement des données pour toute la vie du processus, à partir du nom
+     * de l'application au moment de l'appel. Or `main.ts` pose
+     * `app.name = 'gm-os-v5'` — le nom de `package.json` étant `gm-os-v6` — et
+     * ce verrou-là doit venir en premier.
+     *
+     * **Ce que ça a coûté, le 2026-09-11.** En sortant `securityManager` de
+     * `registerSecurityHandlers` pour que le proxy IA lise le même coffre, j'en
+     * ai fait une instance de niveau module. Son constructeur s'exécutait donc
+     * **à l'import de `main.ts`**, soit 1 643 lignes avant `app.name`. Toutes
+     * les données ont basculé sur le profil `gm-os-v6`, vide : au démarrage
+     * suivant, David a trouvé une campagne de démonstration à la place de ses
+     * sept. *Rien n'était perdu — tout était ailleurs.*
+     *
+     * ⚠️ La règle qui en sort : **aucun module importé par `main.ts` ne doit
+     * appeler `app.getPath` à son évaluation.** Le commentaire de `main.ts`
+     * l'écrivait déjà (« lock the storage path before any getPath calls ») ; il
+     * ne protégeait que ce qu'on lisait dans `main.ts`.
+     */
+    private get secretsPath(): string {
+        if (this.cheminDuCoffre === null) {
+            this.cheminDuCoffre = path.join(app.getPath('userData'), 'vault', 'secrets.enc');
+        }
+        return this.cheminDuCoffre;
     }
 
     /** Le dossier du coffre, créé au moment d'écrire et pas avant. */
