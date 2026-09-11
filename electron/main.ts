@@ -62,6 +62,7 @@ import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
 import { ServeurDesFiches } from './serveurDesFiches'
 import { portsDeGmOs } from './portsDeGmOs'
+import { racineDuCorpus, appareilsMuets } from './perimetreDeLInstance'
 import {
     mediasCopies, copierUnMedia, inscrireAuCatalogue,
     lireLeCatalogue, lireUnMedia, type FicheDeMedia,
@@ -212,7 +213,7 @@ function createWindow() {
       HTML que GM-OS n'écrit pas et ne relit pas. Un port distinct rend la même
       séparation aux tablettes.
     */
-    serveurDesFiches = new ServeurDesFiches(path.join(APP_ROOT, 'docs'), PORTS.fiches);
+    serveurDesFiches = new ServeurDesFiches(racineDuCorpus(process.env, APP_ROOT), PORTS.fiches);
     serveurDesFiches.start();
 }
 
@@ -417,6 +418,9 @@ ipcMain.on('log:message', (_event, level: string, message: string, ...args: unkn
  * dossier `/ICONS` s'était vidé et rien ne s'en apercevait plus.
  */
 ipcMain.handle('ulanzi:deposer-icones', async (_event, hote: string) => {
+    /* Appareils muets : on répond comme un dépôt qui n'avait rien à faire. */
+    if (appareilsMuets(process.env)) return { deposees: [], manquantes: [] };
+
     const dossier = path.join(process.env.VITE_PUBLIC || '', 'ulanzi');
     try {
         return await deposerLesIcones(hote, dossier);
@@ -429,6 +433,19 @@ ipcMain.handle('ulanzi:deposer-icones', async (_event, hote: string) => {
 });
 
 ipcMain.handle('light:request', async (_event, url: string, method: string, body?: unknown, headers?: Record<string, string>) => {
+    /*
+      ⛔ **Le seul interrupteur qui protège la pièce.**
+
+      Hue ET Ulanzi passent par ici — `appBridge.ulanzi` retombe sur
+      `appBridge.light`. Sans cette garde, un test qui traverse Light-OS allume
+      les lampes du salon : *un effet qu'aucune assertion ne peut annuler.*
+
+      On répond `null`, ce que ce handler produit déjà pour un corps vide : le
+      mode muet parle comme un appareil qui n'a rien à dire, **pas comme une
+      panne**. Une exception, elle, remonterait à l'écran du meneur.
+    */
+    if (appareilsMuets(process.env)) return null;
+
     return new Promise((resolve, reject) => {
         try {
             const parsedUrl = new URL(url);

@@ -38,6 +38,32 @@ test.describe('le profil est jetable', () => {
     });
 });
 
+test.describe('le périmètre', () => {
+    /*
+      ⛔ Ces assertions interrogent le processus principal sur ce qu'il croit
+      avoir le droit de toucher. *Poser une variable et ne pas vérifier qu'elle
+      est prise, c'est croire l'avoir posée* — le défaut exact que j'ai commis ce
+      matin avec un contrôle dont le motif ne correspondait jamais.
+    */
+    test('le corpus et le coffre sont dans le profil jetable', async () => {
+        const vus = await gmos.application.evaluate(() => ({
+            corpus: process.env.GMOS_RACINE_DOCS ?? '(non posée)',
+            coffre: process.env.GMOS_COFFRE_OBSIDIAN ?? '(non posée)',
+        }));
+
+        expect(vus.corpus.toLowerCase(), 'le corpus viserait le dépôt')
+            .toContain(gmos.profil.toLowerCase());
+        expect(vus.coffre.toLowerCase(), 'le coffre viserait celui du meneur')
+            .toContain(gmos.profil.toLowerCase());
+    });
+
+    /* Aucune lampe, aucun afficheur : les seuls effets qu'on ne peut pas annuler. */
+    test('les appareils sont muets', async () => {
+        const muets = await gmos.application.evaluate(() => process.env.GMOS_SANS_APPAREILS);
+        expect(muets).toBe('1');
+    });
+});
+
 test.describe('les ports', () => {
     /*
       La preuve de bout en bout de `GMOS_PORT_SYNC` : le serveur écoute vraiment

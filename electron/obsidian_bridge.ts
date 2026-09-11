@@ -1,5 +1,6 @@
 import { ipcMain, dialog } from 'electron';
 import { strictementSous, sousOuEgal } from './sousChemin';
+import { coffreObsidian } from './perimetreDeLInstance';
 import path from 'node:path';
 import fs from 'fs-extra';
 
@@ -8,7 +9,9 @@ import fs from 'fs-extra';
  * Handles secure file access to the Obsidian Vault.
  */
 
-const DEFAULT_VAULT_PATH = 'C:\\Users\\david\\OneDrive\\Obsidian Vault';
+/* `GMOS_COFFRE_OBSIDIAN` le déplace — voir `perimetreDeLInstance.ts`. Sans la
+   variable, c'est le coffre du meneur, comme toujours. */
+const DEFAULT_VAULT_PATH = coffreObsidian(process.env);
 
 interface NoteEntry {
     name: string;

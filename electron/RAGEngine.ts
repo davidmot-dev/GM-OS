@@ -15,6 +15,7 @@ import {
 } from './ragSelection';
 import { chargerIndex, chercherDansLIndex, verifierLesCitations } from './bookIndex';
 import { strictementSous, sousOuEgal } from './sousChemin';
+import { racineDuCorpus } from './perimetreDeLInstance';
 
 const require = createRequire(import.meta.url);
 let pdf: any;
@@ -89,7 +90,9 @@ export class RAGEngine {
     private isIndexing: boolean = false;
 
     private constructor() {
-        this.docsPath = path.join(process.env.APP_ROOT || '', 'docs');
+        /* `GMOS_RACINE_DOCS` déplace tout le corpus — lecture ET écriture.
+           Voir `perimetreDeLInstance.ts` ; sans la variable, rien ne change. */
+        this.docsPath = racineDuCorpus(process.env, process.env.APP_ROOT || '');
     }
 
     /*

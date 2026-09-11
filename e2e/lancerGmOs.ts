@@ -34,22 +34,23 @@ const ICI = path.dirname(fileURLToPath(import.meta.url));
  *
  * `--user-data-dir` isole **ce qui vit dans le profil** : IndexedDB, le stockage
  * local, le coffre des clés, les médias temporaires, le miroir. Le reste a été
- * cherché un par un, et trois chemins lui échappent :
+ * cherché un par un — et tout est fermé depuis le 2026-09-11 :
  *
- * | Quoi | Où | Statut |
+ * | Quoi | Où ça allait | Comment c'est fermé |
  * | --- | --- | --- |
- * | Sauvegardes automatiques | chemin absolu, hors installation | ✅ redirigées ci-dessous |
- * | Corpus `docs/` | `APP_ROOT/docs` — le dépôt | ⛔ **réel** : `ai:write-doc`, `ai:delete-doc` |
- * | Coffre Obsidian | dossier du meneur | ⛔ **réel** : `obsidian:write-note` |
- * | Pont Hue, afficheur Ulanzi | le réseau | ⛔ **réels** |
+ * | Sauvegardes automatiques | chemin absolu, hors installation | `GMOS_DOSSIER_SAUVEGARDES` |
+ * | Corpus `docs/` | `APP_ROOT/docs` — le dépôt | `GMOS_RACINE_DOCS` |
+ * | Coffre Obsidian | dossier du meneur | `GMOS_COFFRE_OBSIDIAN` |
+ * | Pont Hue, afficheur Ulanzi | le réseau, donc le salon | `GMOS_SANS_APPAREILS` |
  *
  * ⭐ Les APIs d'IA, elles, sont protégées **par accident heureux** : le coffre du
  * profil jetable est vide, et depuis le 2026-09-11 c'est le processus principal
  * qui pose les clés — sans clé, l'appel est refusé avant de partir.
  *
- * **La règle qui en découle : un test de bout en bout ne doit pas déclencher
- * d'écriture de corpus, de note Obsidian, ni de commande d'appareil.** Tant que
- * ces trois-là n'ont pas leur propre échappement, c'est au test de s'abstenir.
+ * ⚠️ **Ce qui reste à la charge du test**, et qu'aucune variable ne couvre : un
+ * test qui déclencherait une vraie génération d'image, un envoi vers une tablette
+ * appairée, ou l'ouverture d'un fichier par le système. *L'inventaire vaut pour
+ * ce qui a été cherché ; il ne prouve pas qu'il ne reste rien.*
  *
  * ⚠️ `verifierLIsolation` n'est pas une politesse : c'est la garde. Elle
  * interroge le processus principal sur le chemin qu'il a réellement retenu, et
@@ -114,6 +115,20 @@ export async function lancerGmOs(): Promise<GmOsLance> {
               reste demande à être cherché un par un.*
             */
             GMOS_DOSSIER_SAUVEGARDES: path.join(profil, 'sauvegardes'),
+
+            /*
+              Les trois échappements du périmètre — voir
+              `electron/perimetreDeLInstance.ts`.
+
+              ⚠️ Le corpus vise un dossier **vide** du profil, pas une copie du
+              vrai : un test qui a besoin de règles doit les y semer lui-même.
+              *Lire le vrai corpus marcherait aujourd'hui et écrirait dedans le
+              jour où un test touche la Forge.*
+            */
+            GMOS_RACINE_DOCS: path.join(profil, 'corpus'),
+            GMOS_COFFRE_OBSIDIAN: path.join(profil, 'coffre'),
+            /* Et surtout : aucune lampe, aucun afficheur. */
+            GMOS_SANS_APPAREILS: '1',
         },
     });
 

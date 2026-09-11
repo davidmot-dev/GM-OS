@@ -33,10 +33,20 @@ describe('la racine du moteur', () => {
         expect(moteur).not.toMatch(/setDocsPath\s*\(/);
     });
 
-    it('est calculée une seule fois, depuis APP_ROOT', () => {
+    it('est calculée une seule fois, par le périmètre de l’instance', () => {
         const affectations = moteur.match(/this\.docsPath\s*=/g) ?? [];
         expect(affectations).toHaveLength(1);
-        expect(moteur).toContain("this.docsPath = path.join(process.env.APP_ROOT || '', 'docs')");
+
+        /*
+          ⚠️ **L'ancrage a changé le 2026-09-11, l'intention non.** La racine
+          était `path.join(APP_ROOT, 'docs')` écrit ici ; elle vient désormais de
+          `racineDuCorpus(process.env, APP_ROOT)`, qui laisse
+          `GMOS_RACINE_DOCS` la déplacer — un environnement d'essai ne doit pas
+          écrire dans le vrai corpus.
+          *Ce qui compte reste le même : UNE seule affectation, et pas de chemin
+          recomposé à la main.*
+        */
+        expect(moteur).toContain("racineDuCorpus(process.env, process.env.APP_ROOT || '')");
     });
 
     /**
