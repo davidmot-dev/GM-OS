@@ -1174,7 +1174,8 @@
     "search": "Search...",
     "quit_confirm": "Do you really want to quit GM-OS?",
     "launching_hub": "Launching Player Hub...",
-    "launching_tablet": "Launching Tablet Hub..."
+    "launching_tablet": "Launching Tablet Hub...",
+    "aide": "Help"
   },
   "npc": {
     "title": "Universal Generator",

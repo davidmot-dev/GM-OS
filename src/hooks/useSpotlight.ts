@@ -19,7 +19,7 @@ import {
   type LucideIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { CATALOGUE_DES_MODULES, MODULES_ATTEIGNABLES } from '../data/catalogueDesModules';
+import { CATALOGUE_DES_MODULES, MODULES_DE_LA_PALETTE } from '../data/catalogueDesModules';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 
 export type SpotlightCategory = 'entity' | 'audio' | 'map' | 'rule' | 'action';
@@ -81,7 +81,7 @@ export const useSpotlight = () => {
   const { atmospheres } = useSoundStore();
 
   /**
-   * **Les vingt modules, en tête de palette.**
+   * **Les modules, en tête de palette.**
    *
    * *« L'application devient très complexe »* — David, 2026-08-30. La palette
    * cherchait du **contenu** : des PNJ, des lieux, des entrées de wiki. Elle ne
@@ -94,7 +94,7 @@ export const useSpotlight = () => {
    * la clé de la barre latérale — un module renommé l'est aux deux endroits.
    */
   const destinations = useMemo<SpotlightResult[]>(
-    () => MODULES_ATTEIGNABLES.map(id => ({
+    () => MODULES_DE_LA_PALETTE.map(id => ({
       id: `module-${id}`,
       type: 'action' as const,
       title: t(CATALOGUE_DES_MODULES[id].cle),

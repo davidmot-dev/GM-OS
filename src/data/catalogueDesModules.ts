@@ -55,9 +55,27 @@ export interface EntreeDuCatalogue {
      * comme les autres.
      */
     resume: string;
+    /**
+     * **Listé dans la palette (`Ctrl+K`) ?** À défaut, suit `atteignable`.
+     *
+     * ⚠️ **Ces deux questions n'en faisaient qu'une jusqu'au 2026-09-11**, et le
+     * module d'aide est le cas où elles divergent : on veut pouvoir l'atteindre
+     * en tapant « aide » dans la palette, **sans** qu'il puisse prendre une des
+     * neuf places — il a déjà `Ctrl+H`.
+     *
+     * *Un drapeau qui répond à deux questions finit par en trahir une.*
+     */
+    dansLaPalette?: boolean;
 }
 
 export const CATALOGUE_DES_MODULES: Record<ModuleID, EntreeDuCatalogue> = {
+    /*
+      **L'aide n'est pas proposable comme destination de raccourci**, pour la
+      même raison que `debug` : elle a déjà `Ctrl+H`, et lui donner une des neuf
+      places la retirerait à un module de séance.
+    */
+    aide: { cle: 'modules:names.aide', atteignable: false, dansLaPalette: true, famille: 'technique', resume: 'Les raccourcis, et le manuel des 52 guides.' },
+
     dashboard: { cle: 'modules:names.dashboard', atteignable: true, famille: 'mener', resume: 'Campagnes, séances, PNJ, lieux, trame.' },
     combat: { cle: 'modules:names.combat', atteignable: true, famille: 'mener', resume: "Ordre d'initiative, santé, cibles." },
     dice: { cle: 'modules:names.dice', atteignable: true, famille: 'mener', resume: 'Les jets, réglés sur le pilote du jeu ouvert.' },
@@ -96,6 +114,14 @@ export function modulesDeLaFamille(famille: FamilleDeModule): ModuleID[] {
  */
 export const MODULES_ATTEIGNABLES = (Object.keys(CATALOGUE_DES_MODULES) as ModuleID[])
     .filter(id => CATALOGUE_DES_MODULES[id].atteignable);
+
+/**
+ * Ce que la palette propose — les modules atteignables, **plus** ceux qui ne
+ * méritent pas une des neuf places mais qu'on doit pouvoir trouver en tapant
+ * leur nom. Voir `dansLaPalette`.
+ */
+export const MODULES_DE_LA_PALETTE = (Object.keys(CATALOGUE_DES_MODULES) as ModuleID[])
+    .filter(id => CATALOGUE_DES_MODULES[id].dansLaPalette ?? CATALOGUE_DES_MODULES[id].atteignable);
 
 /** Le nombre de places de raccourci direct : `Ctrl+1` à `Ctrl+9`. */
 export const PLACES_DE_RACCOURCI = 9;

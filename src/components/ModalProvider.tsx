@@ -29,7 +29,6 @@ import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEd
 import NarrativeModal from '../modules/map/components/NarrativeModal';
 // Secondary imports consolidated above
 import LootOS from '../modules/session/components/LootOS';
-import AideDuMeneur from './AideDuMeneur';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 
 const ModalProvider: React.FC = () => {
@@ -287,7 +286,6 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'danger-preset-editor' && <DangerZonePresetEditor />}
                             {customVariant === 'narrative-display' && <NarrativeModal />}
                             {customVariant === 'loot-os' && <LootOS />}
-                            {customVariant === 'aide-du-meneur' && <AideDuMeneur />}
                             {customVariant === 'atelier-adversaires' && (
                                 <AtelierDesAdversaires
                                     onClose={closeModal}

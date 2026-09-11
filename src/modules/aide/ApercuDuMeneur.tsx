@@ -6,20 +6,22 @@ import {
     PLACES_DE_RACCOURCI,
     modulesDeLaFamille,
     type FamilleDeModule,
-} from '../data/catalogueDesModules';
-import { useRaccourcisStore } from '../stores/useRaccourcisStore';
-import { useModalStore } from '../stores/useModalStore';
+} from '../../data/catalogueDesModules';
+import { useRaccourcisStore } from '../../stores/useRaccourcisStore';
 
 /**
  * **L'écran du meneur — la face intérieure du paravent.**
  *
- * Demandé par David le 2026-08-30, ouvert par `Ctrl+H`. C'est une **surface de
- * coup d'œil**, pas un manuel : on la regarde sans quitter la table des yeux,
- * puis on la referme d'un `Échap`.
+ * Demandé par David le 2026-08-30. C'est une **surface de coup d'œil**, pas un
+ * manuel : on la regarde sans quitter la table des yeux.
  *
- * Elle s'ouvre **par-dessus** l'écran courant plutôt que de le remplacer. Perdre
- * son Combat-OS pour se rappeler quelle touche ouvre Image-OS serait payer la
- * question plus cher que la réponse.
+ * ⚠️ **Elle était une incrustation jusqu'au 2026-09-11**, ouverte et refermée par
+ * `Ctrl+H` par-dessus l'écran courant. Elle est devenue le premier onglet du
+ * module d'aide, à côté du manuel — *lire un guide de deux cents lignes dans une
+ * fenêtre de coup d'œil n'aurait rendu service ni à l'un ni à l'autre.*
+ *
+ * `Ctrl+H` garde son geste de bascule : il mène ici, et **ramène d'où l'on
+ * vient**. La touche qui a fait apparaître la page doit la faire disparaître.
  *
  * **Les modules sont dérivés du catalogue**, jamais réécrits ici : leurs noms
  * viennent de `modules:names.<id>`, comme la barre latérale, et leur résumé du
@@ -103,27 +105,17 @@ const Regle: React.FC<{ titre: string; children: React.ReactNode }> = ({ titre, 
     </div>
 );
 
-const AideDuMeneur: React.FC = () => {
+/*
+  ⛔ **Le compte des modules se calcule, il ne s'écrit pas.** Cette page annonçait
+  « les vingt modules » en toutes lettres — et le module d'aide en a fait
+  vingt-et-un le jour de son arrivée. *Un nombre recopié dans une page d'aide est
+  un nombre qui ment au premier ajout.*
+*/
+const NOMBRE_DE_MODULES = Object.keys(CATALOGUE_DES_MODULES).length;
+
+const ApercuDuMeneur: React.FC = () => {
     const { t } = useTranslation(['modules']);
     const places = useRaccourcisStore(s => s.places);
-    const closeModal = useModalStore(s => s.closeModal);
-
-    /*
-      **`Échap` referme, et c'est posé ICI plutôt que dans `ModalProvider`.**
-
-      Les boîtes personnalisées n'écoutent pas `Échap` aujourd'hui, et leur
-      donner toutes cette touche ferait perdre une fiche de campagne à moitié
-      remplie sur une frappe distraite. Cette page-ci ne contient rien à perdre :
-      elle peut se fermer d'un geste, et elle seule.
-    */
-    React.useEffect(() => {
-        const auClavier = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') closeModal();
-        };
-        window.addEventListener('keydown', auClavier);
-        return () => window.removeEventListener('keydown', auClavier);
-    }, [closeModal]);
-
     return (
         <div className="flex flex-col gap-10 p-8">
 
@@ -135,7 +127,7 @@ const AideDuMeneur: React.FC = () => {
                         <Combinaison touches={['Ctrl', 'K']} vive />
                         <h4 className="text-base font-bold text-app-text">La palette</h4>
                         <p className="text-sm text-app-text/60">
-                            Elle liste les vingt modules dès l'ouverture. Tapez deux ou trois
+                            Elle liste tous les modules dès l'ouverture. Tapez deux ou trois
                             lettres pour filtrer&nbsp;; la recherche s'étend alors aux PNJ, aux
                             lieux, aux entrées du wiki et aux fiches de règles.
                         </p>
@@ -150,7 +142,7 @@ const AideDuMeneur: React.FC = () => {
                         <p className="text-sm text-app-text/60">
                             Neuf modules sous les doigts, assignables dans
                             <strong className="text-app-text/80"> Paramètres → Matériel</strong>.
-                            Vingt modules pour neuf touches&nbsp;: à vous de dire lesquels comptent,
+                            {NOMBRE_DE_MODULES} modules pour neuf touches&nbsp;: à vous de dire lesquels comptent,
                             selon le jeu que vous menez.
                         </p>
                     </article>
@@ -163,12 +155,12 @@ const AideDuMeneur: React.FC = () => {
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     <div>
                         <p className="mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-app-text/30">Aller quelque part</p>
-                        <Ligne touches={['Ctrl', 'H']}>Ouvre et referme cette page.</Ligne>
+                        <Ligne touches={['Ctrl', 'H']}>Ouvre l’aide, et ramène d’où l’on vient.</Ligne>
                         <Ligne touches={['Ctrl', 'K']}>Ouvre et ferme la palette.</Ligne>
                         <Ligne touches={['Ctrl', '1…9']}>Ouvre le module assigné à cette place.</Ligne>
                         <Ligne touches={['↑', '↓']}>Parcourt les résultats de la palette.</Ligne>
                         <Ligne touches={['Entrée']}>Ouvre le résultat sélectionné.</Ligne>
-                        <Ligne touches={['Échap']}>Referme cette page, la palette, une boîte, une image en plein écran.</Ligne>
+                        <Ligne touches={['Échap']}>Referme la palette, une boîte, une image en plein écran.</Ligne>
                     </div>
                     <div>
                         <p className="mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-app-text/30">Faire sonner</p>
@@ -222,7 +214,7 @@ const AideDuMeneur: React.FC = () => {
 
             {/* Les modules ----------------------------------------------- */}
             <section>
-                <Titre>Les vingt modules</Titre>
+                <Titre>Les {NOMBRE_DE_MODULES} modules</Titre>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {(Object.keys(FAMILLES) as FamilleDeModule[]).map(famille => (
                         <Famille key={famille} famille={famille} />
@@ -238,4 +230,4 @@ const AideDuMeneur: React.FC = () => {
     );
 };
 
-export default AideDuMeneur;
+export default ApercuDuMeneur;

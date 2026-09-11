@@ -6,7 +6,7 @@ import { PALETTES, type ThemeID } from '../theme/themeDeLInterface';
 import type { MomentDeJeu } from '../modules/ai/budgetsDeTemps';
 
 export type { ThemeID };
-export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal' | 'forge';
+export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal' | 'forge' | 'aide';
 
 interface SessionState {
     activeModule: ModuleID;

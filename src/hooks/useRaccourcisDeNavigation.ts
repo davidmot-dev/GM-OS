@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useSessionStore } from '../store/useSessionStore';
+import { useEffect, useRef } from 'react';
+import { useSessionStore, type ModuleID } from '../store/useSessionStore';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 import { useModalStore } from '../stores/useModalStore';
 import { PLACES_DE_RACCOURCI } from '../data/catalogueDesModules';
@@ -23,6 +23,9 @@ import { PLACES_DE_RACCOURCI } from '../data/catalogueDesModules';
  * les voir se transformer en changement d'écran.
  */
 export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
+    /** L'écran quitté pour aller à l'aide — c'est là que `Ctrl+H` ramène. */
+    const venuDe = useRef<ModuleID | null>(null);
+
     useEffect(() => {
         /*
           Les fenêtres joueur, projecteur et tablette n'ont pas de barre
@@ -49,31 +52,35 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
               boîte qu'on ouvre et referme de la même touche.
             */
             const modale = useModalStore.getState();
-            const aideOuverte = modale.customVariant === 'aide-du-meneur' && modale.type === 'custom';
-            if (modale.type !== null && !aideOuverte) return;
+            if (modale.type !== null) return;
 
             /*
-              **`Ctrl+H` ouvre et referme l'écran du meneur.**
+              **`Ctrl+H` mène à l'aide, et ramène d'où l'on vient.**
 
               Une bascule, et non une ouverture : la même touche qui a fait
               apparaître la page doit la faire disparaître, sinon on cherche
               comment sortir de l'aide qu'on venait chercher.
 
-              Elle passe **par-dessus** l'écran courant. Perdre son Combat-OS
-              pour se rappeler quelle touche ouvre Image-OS coûterait plus cher
-              que la question ne vaut.
+              ⚠️ **C'était une incrustation jusqu'au 2026-09-11**, posée
+              par-dessus l'écran courant pour ne pas le perdre. L'aide est
+              devenue un module — le manuel des 52 guides n'aurait pas tenu dans
+              une fenêtre de coup d'œil — et le retour remplace la fermeture :
+              *on ne perd toujours pas son Combat-OS, on y revient.*
             */
             if (evenement.code === 'KeyH') {
                 evenement.preventDefault();
-                if (aideOuverte) modale.closeModal();
-                else modale.showCustom('aide-du-meneur');
+                const session = useSessionStore.getState();
+                if (session.activeModule === 'aide') {
+                    /* Le repli sur `dashboard` couvre le cas où l'aide a été
+                       ouverte par la barre latérale : il n'y a alors pas de
+                       « d'où l'on vient », et rester coincé serait pire. */
+                    session.setActiveModule(venuDe.current ?? 'dashboard');
+                } else {
+                    venuDe.current = session.activeModule;
+                    session.setActiveModule('aide');
+                }
                 return;
             }
-
-            // Les places n'ouvrent rien tant que l'aide est devant : on la
-            // referme d'abord, sinon le module changerait sous une page qui le
-            // cache.
-            if (aideOuverte) return;
 
             const correspondance = /^Digit([1-9])$/.exec(evenement.code);
             if (!correspondance) return;

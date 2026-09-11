@@ -25,6 +25,7 @@ import type { EvenementMcp } from '../../electron/mcpActivity';
 // qu'on partage, pas du code. `hotesDesFournisseurs` ne dépend ni d'electron ni
 // de node.
 import type { FournisseurReseau } from '../../electron/hotesDesFournisseurs';
+import type { GuideDuManuel } from '../../electron/guidesDuManuel';
 
 declare global {
     export interface DisplayInfo {
@@ -161,6 +162,13 @@ declare global {
         openFile?: (path: string) => Promise<{ ouvert: boolean; raison?: string }>;
         utils?: {
             formatFileUrl: (path: string) => string;
+        };
+        /**
+         * Le manuel du meneur. **Lecture seule** : aucune ecriture n'existe en
+         * regard, et c'est voulu.
+         */
+        aide?: {
+            guides: () => Promise<GuideDuManuel[]>;
         };
         web?: {
             openExternal: (url: string) => void;

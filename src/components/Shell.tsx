@@ -29,8 +29,7 @@ import {
     Brain,
     Sparkles,
     BookOpen,
-    Hammer
-} from 'lucide-react';
+    Hammer, HelpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSessionStore } from '../store/useSessionStore';
 import { useBattementUlanzi } from '../modules/ulanzi/useBattementUlanzi';
@@ -450,6 +449,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             title={`${t('modules:tooltips.theme_prefix')}${theme}`}
                         >
                             <Palette size={18} className="group-hover:rotate-12 transition-transform" />
+                        </button>
+                        {/* L'aide voisine le Debug : deux écrans qu'on ouvre en
+                            dehors du jeu, et jamais pendant. */}
+                        <button
+                            onClick={() => setActiveModule('aide')}
+                            className={`flex-1 py-3 flex items-center justify-center transition-all ${activeModule === 'aide' ? 'text-accent bg-accent/10' : 'text-app-text/50 hover:text-accent hover:bg-accent/10'}`}
+                            title={`${t('modules:names.aide')} — Ctrl+H`}
+                        >
+                            <HelpCircle size={18} />
                         </button>
                         <button 
                             onClick={() => setActiveModule('debug')}

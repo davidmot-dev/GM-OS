@@ -53,6 +53,7 @@ import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { poserLaCle } from './clesDesFournisseurs'
+import { lireLesGuides } from './guidesDuManuel'
 import { securityManager } from './SecurityManager'
 import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay'
 import { type RelayRole } from './relayPolicy'
@@ -946,6 +947,26 @@ ipcMain.handle('backup:reveal', async () => {
   On rend toujours une reponse, jamais une exception : l'appelant est un bouton,
   et un bouton doit pouvoir dire pourquoi il n'a rien fait.
 */
+/**
+ * **Le manuel du meneur, servi au module d'aide.**
+ *
+ * Les 52 guides partent en une fois — 456 Ko mesurés — parce que la recherche
+ * du module porte sur leur CORPS et doit répondre à la frappe. Voir
+ * `electron/guidesDuManuel.ts` pour ce choix et la mesure qui le soutient.
+ *
+ * ⚠️ **Lecture seule, et aucune écriture n'existe en regard.** Un manuel qu'on
+ * peut modifier depuis l'écran qui le consulte est un manuel qui finit par
+ * mentir sans qu'on sache quand.
+ */
+ipcMain.handle('aide:guides', async () => {
+    try {
+        return await lireLesGuides(process.env.APP_ROOT || '');
+    } catch (error) {
+        console.error('[Manuel] Lecture impossible :', error);
+        return [];
+    }
+});
+
 ipcMain.handle('app:open-file', async (_event, chemin: string) => {
     if (typeof chemin !== 'string' || chemin.trim() === '') {
         return { ouvert: false, raison: 'chemin-vide' };

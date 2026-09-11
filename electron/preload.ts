@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import type { FournisseurReseau } from './hotesDesFournisseurs'
+import type { GuideDuManuel } from './guidesDuManuel'
 
 // --------- Expose some API to the Renderer process ---------
 /*
@@ -47,6 +48,15 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.on('app:display-changed', listener);
             return () => ipcRenderer.off('app:display-changed', listener);
         }
+    },
+    /**
+     * Le manuel du meneur — lecture seule.
+     *
+     * Une seule methode : il n'y a rien a ecrire. Voir
+     * `electron/guidesDuManuel.ts`.
+     */
+    aide: {
+        guides: (): Promise<GuideDuManuel[]> => ipcRenderer.invoke('aide:guides'),
     },
     debug: {
         openConsole: () => ipcRenderer.send('debug:open-console')

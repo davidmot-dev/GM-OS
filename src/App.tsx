@@ -49,6 +49,7 @@ const SoundDashboard = lazy(() => import('./modules/sound/SoundDashboard'));
 const LightDashboard = lazy(() => import('./modules/light/LightDashboard'));
 const WhiteboardDashboard = lazy(() => import('./modules/whiteboard/WhiteboardDashboard'));
 const DebugDashboard = lazy(() => import('./modules/debug/DebugDashboard'));
+const AideDashboard = lazy(() => import('./modules/aide/AideDashboard'));
 const VoiceDashboard = lazy(() => import('./modules/voice/VoiceDashboard'));
 const ProjectorView = lazy(() => import('./modules/image/components/ProjectorView'));
 const PlayerHub = lazy(() => import('./components/PlayerHub'));
@@ -251,6 +252,7 @@ function App() {
       case 'favorite': return <ErrorBoundary moduleName="Favorite OS"><FavoriteDashboard /></ErrorBoundary>;
       case 'whiteboard': return <ErrorBoundary moduleName="Whiteboard OS"><WhiteboardDashboard /></ErrorBoundary>;
       case 'debug': return <ErrorBoundary moduleName="Debug OS"><DebugDashboard /></ErrorBoundary>;
+      case 'aide': return <ErrorBoundary moduleName="Aide"><AideDashboard /></ErrorBoundary>;
       case 'voice': return <ErrorBoundary moduleName="Voice OS"><VoiceDashboard /></ErrorBoundary>;
       case 'obsidian': return <ErrorBoundary moduleName="Obsidian Panel"><ObsidianPanel /></ErrorBoundary>;
       case 'journal': return <ErrorBoundary moduleName="Journal OS"><JournalDashboard /></ErrorBoundary>;
