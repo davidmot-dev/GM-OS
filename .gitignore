@@ -75,3 +75,9 @@ docs/systems/*/drafts/
 
 # Espace de travail Obsidian ouvert sur la documentation : local a la machine.
 .obsidian/
+
+# Sorties des tests de bout en bout : traces, captures et rapport HTML.
+# Elles decrivent UNE execution sur UNE machine — les versionner ferait grossir
+# le depot de mégaoctets qui ne disent rien de plus que le resultat.
+test-results/
+e2e-resultats/

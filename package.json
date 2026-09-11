@@ -11,7 +11,8 @@
     "test": "vitest",
     "gemini": "gemini",
     "gemini:doc": "gemini --context documentation/",
-    "validate": "powershell -ExecutionPolicy Bypass -File ./scripts/validate.ps1"
+    "validate": "powershell -ExecutionPolicy Bypass -File ./scripts/validate.ps1",
+    "test:e2e": "npm run build && playwright test"
   },
   "main": "dist-electron/main.js",
   "dependencies": {
@@ -52,6 +53,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@google/gemini-cli": "latest",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/typography": "^0.5.19",

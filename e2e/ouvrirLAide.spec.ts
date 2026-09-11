@@ -1,0 +1,112 @@
+import { test, expect } from '@playwright/test';
+import path from 'node:path';
+import { lancerGmOs, type GmOsLance } from './lancerGmOs';
+
+/**
+ * **Le premier test de geste : `Ctrl+H` ouvre l'aide, et la referme.**
+ *
+ * Choisi comme terrain d'essai parce qu'il ne risque rien — le module d'aide est
+ * en **lecture seule**, il ne vit que dans la fenêtre du meneur, et il n'écrit
+ * dans aucun magasin persisté. *On n'apprend pas à piloter une application en
+ * commençant par l'écran qui peut détruire du travail.*
+ *
+ * Ce qu'il garde et qu'aucun test de Vitest ne peut garder : que la touche
+ * atteigne vraiment l'application, que le module se monte, que le manuel arrive
+ * du disque, et que la recherche réponde. Quatre maillons qui se testent chacun
+ * en isolation aujourd'hui — *et dont rien ne vérifie qu'ils sont attachés.*
+ */
+
+let gmos: GmOsLance;
+
+test.beforeAll(async () => { gmos = await lancerGmOs(); });
+test.afterAll(async () => { await gmos?.fermer(); });
+
+test.describe('le profil est jetable', () => {
+    /*
+      ⛔ Le test le plus important du dossier, et le seul qui doive rougir fort.
+      Il redit à l'assertion ce que `lancerGmOs` a déjà refusé — parce qu'une
+      garde qui vit uniquement dans le code du lanceur peut être contournée par
+      un test qui lance l'application autrement.
+    */
+    test('l’application n’écrit pas dans les données réelles', async () => {
+        const retenu = await gmos.application.evaluate(({ app }) => app.getPath('userData'));
+
+        expect(path.resolve(retenu).toLowerCase())
+            .toContain(path.resolve(gmos.profil).toLowerCase());
+        expect(retenu.toLowerCase(), 'jamais le profil réel')
+            .not.toContain('appdata\\roaming\\gm-os');
+    });
+});
+
+test.describe('les deux portes de l’aide', () => {
+    /*
+      Le bouton d'abord, le raccourci ensuite : ce sont deux chemins vers le même
+      écran, et les tester séparément dit lequel est cassé quand l'un l'est.
+    */
+    test('le bouton de la barre latérale ouvre le module', async () => {
+        const { fenetre } = gmos;
+
+        await fenetre.getByRole('button', { name: /Aide/ }).click();
+
+        await expect(fenetre.getByRole('button', { name: /Aperçu/ })).toBeVisible();
+        await expect(fenetre.getByRole('button', { name: /Manuel/ })).toBeVisible();
+    });
+
+    test('Ctrl+H ouvre le module d’aide', async () => {
+        const { fenetre } = gmos;
+
+        /*
+          On repart du tableau de bord pour que le raccourci ait quelque chose à
+          faire — sinon il refermerait l'aide ouverte par le test précédent.
+
+          ⚠️ **Et ce clic sert une seconde fois, découvert en écrivant ce test :**
+          une frappe envoyée comme TOUTE PREMIÈRE interaction après le lancement
+          n'atteint pas l'application — la page n'a pas encore le focus. Le même
+          test échouait, et passe dès qu'un clic précède. *Un raccourci ne se
+          teste pas sur une fenêtre que personne n'a encore touchée* — ce qui ne
+          se voit jamais à l'usage, où l'on a toujours cliqué quelque part avant.
+        */
+        await fenetre.getByRole('button', { name: 'Tableau de Bord' }).click();
+
+        /* La fenêtre du meneur seule écoute le clavier : les autres n'ont pas de
+           barre latérale, et un raccourci n'y mènerait nulle part. */
+        await fenetre.keyboard.press('Control+h');
+
+        await expect(fenetre.getByRole('button', { name: /Aperçu/ })).toBeVisible();
+    });
+
+    /*
+      La bascule, telle que David l'a voulue le 30/08 : *« la même touche qui a
+      fait apparaître la page doit la faire disparaître »*. Depuis que l'aide est
+      un module, « disparaître » veut dire **revenir d'où l'on vient**.
+    */
+    test('et Ctrl+H ramène d’où l’on vient', async () => {
+        const { fenetre } = gmos;
+
+        await fenetre.keyboard.press('Control+h');
+        await expect(fenetre.getByRole('button', { name: /Aperçu/ })).toBeHidden();
+    });
+});
+
+test.describe('le manuel', () => {
+    test('arrive du disque et se laisse chercher', async () => {
+        const { fenetre } = gmos;
+
+        await fenetre.getByRole('button', { name: /Aide/ }).click();
+        await fenetre.getByRole('button', { name: /Manuel/ }).click();
+
+        /* Le compte est affiché à côté du titre de l'onglet : s'il est là, les
+           guides ont bien traversé le pont. */
+        await expect(fenetre.getByRole('button', { name: /Manuel · \d+/ })).toBeVisible();
+
+        const recherche = fenetre.getByPlaceholder(/Chercher dans les guides/);
+        await recherche.fill('pupitre');
+
+        /* La recherche porte sur le CORPS : un guide qui ne porte pas le mot dans
+           son titre doit pouvoir remonter. On vérifie qu'elle répond, et qu'elle
+           ne répond pas tout — *un moteur qui rend tout ne rend rien.* */
+        const resultats = fenetre.locator('aside button');
+        await expect(resultats.first()).toBeVisible();
+        expect(await resultats.count()).toBeLessThan(52);
+    });
+});

@@ -57,6 +57,43 @@ export class SyncServer {
                 this.handleConnection(ws);
             });
 
+            /*
+              ⛔ **Un port occupé ne doit pas tuer GM-OS.**
+
+              `listen` signale l'échec par un événement `error` **asynchrone** : le
+              `try/catch` qui entoure ce bloc ne l'attrape pas, et un `error` sans
+              écouteur est une exception non gérée qui emporte le processus
+              principal. *Lancer GM-OS une seconde fois le faisait donc crasher*,
+              et c'est ce qui interdisait d'exécuter les tests de bout en bout en
+              parallèle.
+
+              Le voisin le savait déjà : `ServeurDesFiches` porte cette garde
+              depuis sa création, avec sa raison — « les fiches ne s'afficheront
+              pas sur les tablettes, le reste marche ». Ici c'est la
+              synchronisation des tablettes qui manquera, et le meneur gardera son
+              cockpit. *Perdre une fonction vaut mieux que perdre l'application.*
+
+              ⚠️ **C'EST SUR `wss` QU'IL FAUT ÉCOUTER, ET C'EST CONTRE-INTUITIF.**
+              `new WebSocketServer({ server })` pose ses propres écouteurs sur le
+              serveur HTTP, dont un `error` qu'il **ré-émet sur lui-même**.
+              L'erreur est donc déjà « gérée » côté HTTP — poser la garde
+              uniquement là ne change rien — et c'est `wss`, sans écouteur, qui
+              lève. *Mesuré : une garde posée sur le serveur HTTP seul laissait le
+              processus tomber exactement comme avant.*
+
+              On garde les deux : `wss` est celle qui mord, et celle du serveur
+              couvre le cas où le WebSocket ne serait pas encore attaché.
+            */
+            const surErreur = (err: NodeJS.ErrnoException) => {
+                const pourquoi = err.code === 'EADDRINUSE'
+                    ? `le port ${this.port} est déjà pris — une autre instance de GM-OS tourne-t-elle ?`
+                    : err.message;
+                console.error(`[Nexus Sync] Serveur non démarré : ${pourquoi}`);
+                this.server = null;
+            };
+            this.wss.on('error', surErreur);
+            this.server.on('error', surErreur);
+
             this.server.listen(this.port, '0.0.0.0', () => {
                 console.log(`[Nexus Sync] Server + Media proxy listening on 0.0.0.0:${this.port}`);
             });
