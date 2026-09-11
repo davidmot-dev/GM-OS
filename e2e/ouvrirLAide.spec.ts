@@ -38,6 +38,24 @@ test.describe('le profil est jetable', () => {
     });
 });
 
+test.describe('les ports', () => {
+    /*
+      La preuve de bout en bout de `GMOS_PORT_SYNC` : le serveur écoute vraiment
+      là où l'environnement le lui a dit. *Un réglage qu'on passe sans vérifier
+      qu'il est pris est un réglage qu'on croit avoir.*
+    */
+    test('le SyncServer écoute sur le port attribué à ce worker', async () => {
+        const reponse = await fetch(`http://127.0.0.1:${gmos.ports.sync}/`);
+        expect(reponse.ok, `rien ne répond sur ${gmos.ports.sync}`).toBe(true);
+    });
+
+    /* Et surtout PAS sur le port par défaut : un GM-OS ouvert sur la machine du
+       meneur ne doit pas voir les tablettes rejoindre une instance de test. */
+    test('et pas sur le port par défaut', async () => {
+        expect(gmos.ports.sync).not.toBe(3001);
+    });
+});
+
 test.describe('les deux portes de l’aide', () => {
     /*
       Le bouton d'abord, le raccourci ensuite : ce sont deux chemins vers le même

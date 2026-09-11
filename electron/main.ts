@@ -60,7 +60,8 @@ import { type RelayRole } from './relayPolicy'
 import { auditDenied } from './auditLog'
 import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
-import { ServeurDesFiches, PORT_DES_FICHES } from './serveurDesFiches'
+import { ServeurDesFiches } from './serveurDesFiches'
+import { portsDeGmOs } from './portsDeGmOs'
 import {
     mediasCopies, copierUnMedia, inscrireAuCatalogue,
     lireLeCatalogue, lireUnMedia, type FicheDeMedia,
@@ -128,7 +129,16 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let win: BrowserWindow | null
 let syncServer: SyncServer | null = null;
 let serveurDesFiches: ServeurDesFiches | null = null;
-const REMOTE_PORT = 3001;
+/*
+  **Les deux ports, lus dans l'environnement au démarrage.**
+
+  `GMOS_PORT_SYNC` et `GMOS_PORT_FICHES` — voir `portsDeGmOs.ts` pour les défauts
+  et ce qui arrive à une valeur illisible. Rendus réglables pour que plusieurs
+  instances puissent tourner ensemble, ce que demandent les tests de bout en
+  bout. ⚠️ *Sans variable, rien ne bouge : 3001 et 3002, comme toujours.*
+*/
+const PORTS = portsDeGmOs(process.env);
+const REMOTE_PORT = PORTS.sync;
 const TEMP_MEDIA_DIR = path.join(app.getPath('userData'), 'temp-media');
 
 // Marque le contenu courant de temp-media. Le dossier étant vidé au démarrage,
@@ -202,7 +212,7 @@ function createWindow() {
       HTML que GM-OS n'écrit pas et ne relit pas. Un port distinct rend la même
       séparation aux tablettes.
     */
-    serveurDesFiches = new ServeurDesFiches(path.join(APP_ROOT, 'docs'), PORT_DES_FICHES);
+    serveurDesFiches = new ServeurDesFiches(path.join(APP_ROOT, 'docs'), PORTS.fiches);
     serveurDesFiches.start();
 }
 
@@ -765,7 +775,7 @@ ipcMain.handle('remote:get-connection-info', () => {
         mediaPort: REMOTE_PORT,
         // Port des fiches. Volontairement DIFFÉRENT du port applicatif : c'est
         // cette différence qui isole la fiche du stockage du Player Hub.
-        fichesPort: PORT_DES_FICHES,
+        fichesPort: PORTS.fiches,
         // Identifie le contenu courant de temp-media, vidé à chaque démarrage.
         // Le renderer mémorise les médias qu'il y a déposés ; si cette valeur
         // change, sa mémoire ne vaut plus rien et il doit redéposer, sans quoi

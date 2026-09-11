@@ -1,3 +1,5 @@
+import { portDesFiches } from '../../utils/portsDuRenderer';
+
 /**
  * **Le pont vers la fiche — le côté GM-OS de la couture.**
  *
@@ -217,8 +219,16 @@ export function ouvrirLePont(cible: Window, options: OptionsDuPont = {}): PontDe
     };
 }
 
-/** Le port du serveur des fiches. Doit rester d'accord avec `electron/serveurDesFiches.ts`. */
-export const PORT_DES_FICHES = 3002;
+/**
+ * Le port du serveur des fiches.
+ *
+ * ⚠️ **Il était déclaré ici ET dans `electron/serveurDesFiches.ts`**, avec un
+ * commentaire demandant aux deux de « rester d'accord ». *Deux nombres qu'on prie
+ * de rester d'accord finissent par diverger.* Il vient désormais d'un seul
+ * endroit — voir `src/utils/portsDuRenderer.ts` pour ce que la tablette sait et
+ * ne sait pas du port.
+ */
+export const PORT_DES_FICHES = portDesFiches();
 
 /** Vrai dans une fenêtre Electron — meneur, Player Hub, projecteur. */
 function dansElectron(): boolean {

@@ -10,25 +10,30 @@ import { defineConfig } from '@playwright/test';
  * l'ont été à l'écran.
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * ⛔ EXÉCUTION EN SÉRIE, ET CE N'EST PAS UN CHOIX DE CONFORT
+ * UN SEUL WORKER — ET LA RAISON A CHANGÉ LE 2026-09-11
  * ─────────────────────────────────────────────────────────────────────────────
  *
- * GM-OS ouvre deux serveurs sur des ports fixes — 3001 pour le SyncServer, 3002
- * pour les fiches. Deux instances simultanées se les disputent, et
- * `SyncServer.listen` n'a **aucun gestionnaire d'erreur** : le port occupé émet
- * un `error` non géré qui tue le processus principal.
+ * Ce n'était **pas** un choix de confort : les deux serveurs de GM-OS écoutaient
+ * sur des ports fixes, et `SyncServer.listen` n'avait aucun gestionnaire
+ * d'erreur — deux instances, et le processus principal mourait. *Lancer GM-OS
+ * deux fois le faisait crasher.*
  *
- * *C'est un vrai défaut de l'application, pas seulement une gêne de test :
- * lancer GM-OS deux fois le fait crasher aujourd'hui.* Tant qu'il n'est pas
- * corrigé et les ports rendus réglables, un seul worker.
+ * ✅ **Les deux sont corrigés.** Le port occupé est désormais rattrapé, et
+ * `lancerGmOs` attribue à chaque worker sa propre paire de ports par
+ * `TEST_PARALLEL_INDEX`. **Rien n'interdit plus le parallèle.**
  *
- * ⚠️ **Et il faut que GM-OS soit fermé** pour lancer ces tests, pour la même
- * raison.
+ * Il reste à 1 parce qu'un worker = une application Electron complète : c'est la
+ * machine qui décide, pas le code. *Monter ce nombre est désormais un réglage,
+ * plus une correction à faire.*
+ *
+ * ⭐ Et GM-OS peut rester ouvert pendant les tests : les ports de test évitent
+ * volontairement 3001/3002.
  */
 export default defineConfig({
     testDir: './e2e',
 
-    /* Voir l'en-tête : les ports sont fixes, donc une instance à la fois. */
+    /* Voir l'en-tête : réglable, plus contraint. Une application Electron par
+       worker — c'est la machine qui décide. */
     workers: 1,
     fullyParallel: false,
 

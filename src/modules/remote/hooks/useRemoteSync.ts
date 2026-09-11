@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { useClientStore } from '../../../stores/useClientStore';
 import { type RemoteSyncData, type RemoteActionType } from '../types/remote.types';
 import { type RollResult as BaseRollResult } from '../../dice/DiceEngine';
@@ -66,7 +67,7 @@ export const useRemoteSync = () => {
     const { deviceId, pseudo, setStatus: setClientStatus } = useClientStore();
 
     const host = window.location.hostname;
-    const port = 3001;
+    const port = portDeSynchronisation();
 
     const connect = useCallback(() => {
         if (socketRef.current?.readyState === WebSocket.OPEN || socketRef.current?.readyState === WebSocket.CONNECTING) return;

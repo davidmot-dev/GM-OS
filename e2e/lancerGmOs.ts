@@ -43,6 +43,8 @@ export interface GmOsLance {
     fenetre: Page;
     /** Le profil jetable, pour les assertions d'isolation. */
     profil: string;
+    /** Les ports attribués à ce worker — voir `portsDeCeWorker`. */
+    ports: { sync: number; fiches: number };
     fermer: () => Promise<void>;
 }
 
@@ -64,6 +66,7 @@ export async function lancerGmOs(): Promise<GmOsLance> {
     }
 
     const profil = fs.mkdtempSync(path.join(os.tmpdir(), 'gmos-e2e-'));
+    const ports = portsDeCeWorker();
 
     const application = await electron.launch({
         args: [
@@ -72,7 +75,7 @@ export async function lancerGmOs(): Promise<GmOsLance> {
             `--user-data-dir=${profil}`,
         ],
         cwd: racine,
-        env: environnementPropre(),
+        env: { ...environnementPropre(), ...ports.variables },
     });
 
     const fenetre = await fenetreDuMeneur(application);
@@ -82,11 +85,39 @@ export async function lancerGmOs(): Promise<GmOsLance> {
         application,
         fenetre,
         profil,
+        ports: { sync: ports.sync, fiches: ports.fiches },
         fermer: async () => {
             await application.close();
             /* Le dossier part avec le test. `force` : un fichier encore tenu par
                un processus qui s'éteint ne doit pas faire échouer le nettoyage. */
             fs.rmSync(profil, { recursive: true, force: true });
+        },
+    };
+}
+
+/**
+ * **Deux ports par worker, attribués sans course.**
+ *
+ * Playwright numérote ses workers dans `TEST_PARALLEL_INDEX`. On en dérive une
+ * paire distincte plutôt que de chercher un port libre : *sonder un port puis le
+ * reprendre laisse une fenêtre où le système peut l'attribuer à quelqu'un
+ * d'autre* — j'ai écrit ce défaut le matin même dans `portOccupe.test.ts`, et il
+ * a fait échouer le test pour la mauvaise raison.
+ *
+ * Les ports par défaut (3001/3002) sont **volontairement évités**, y compris
+ * pour le worker 0 : un GM-OS ouvert sur la machine du meneur ne doit pas voir
+ * ses tablettes se connecter à une instance de test.
+ */
+function portsDeCeWorker(): { sync: number; fiches: number; variables: Record<string, string> } {
+    const index = Number(process.env.TEST_PARALLEL_INDEX ?? '0') || 0;
+    const sync = 4100 + index * 10;
+    const fiches = sync + 1;
+    return {
+        sync,
+        fiches,
+        variables: {
+            GMOS_PORT_SYNC: String(sync),
+            GMOS_PORT_FICHES: String(fiches),
         },
     };
 }

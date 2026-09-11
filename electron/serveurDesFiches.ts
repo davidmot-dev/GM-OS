@@ -2,6 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { strictementSous } from './sousChemin';
+import { PORT_FICHES_PAR_DEFAUT } from './portsDeGmOs';
 
 /**
  * **Le serveur des fiches — un port à lui, et c'est tout l'intérêt.**
@@ -37,7 +38,15 @@ import { strictementSous } from './sousChemin';
  */
 
 /** Le port des fiches. Distinct du `SyncServer` : c'est toute la raison d'être. */
-export const PORT_DES_FICHES = 3002;
+/**
+ * Le port des fiches.
+ *
+ * ⚠️ **Réexporté, plus déclaré.** Il valait 3002 ici ET dans
+ * `src/modules/fiches/pontDeLaFiche.ts`, avec un commentaire demandant aux deux
+ * de « rester d'accord ». *Deux nombres qu'on prie de rester d'accord finissent
+ * par diverger* — ils viennent maintenant de `portsDeGmOs.ts`.
+ */
+export const PORT_DES_FICHES = PORT_FICHES_PAR_DEFAUT;
 
 /** Les deux seules formes d'adresse acceptées, et l'extension qui va avec. */
 const ROUTES: { prefixe: string; extension: string }[] = [

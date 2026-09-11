@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef, useMemo, useSyncExternalStore } from 'react';
+import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
@@ -80,7 +81,7 @@ async function resolveMediaToDataUrl(src: string | undefined): Promise<string | 
     }
     if (!window.appBridge) {
         const host = window.location.hostname;
-        return `http://${host}:3001/temp/${src}`;
+        return `http://${host}:${portDeSynchronisation()}/temp/${src}`;
     }
     return undefined;
 }
@@ -173,7 +174,7 @@ export const useHubSync = () => {
     const isDiceProjected = useMagasin('useDiceStore', s => s.isDiceProjected, false);
 
     const host = window.location.hostname;
-    const port = 3001;
+    const port = portDeSynchronisation();
 
     // ─────────────────────────────────────────────
     // Handlers

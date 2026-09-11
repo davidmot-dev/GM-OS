@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { portDeSynchronisation } from '../utils/portsDuRenderer';
 import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2, Brain, Palette } from 'lucide-react';
 import { AtelierDuTheme } from '../theme/AtelierDuTheme';
 import { flushApplication } from '../utils/appUtils';
@@ -82,7 +83,9 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
         }
     }, []);
 
-    const port = connectionInfo?.port || 3001;
+    /* Le pont dit le vrai port ; le défaut n'est qu'un repli tant qu'il n'a pas
+       répondu. Voir `src/utils/portsDuRenderer.ts`. */
+    const port = connectionInfo?.port || portDeSynchronisation();
     const remoteUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:${port}/?window=remote` : '';
     const tabletUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:${port}/?window=tablet` : '';
 
@@ -653,7 +656,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         <span className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.direct_connection')}</span>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-glow-emerald" />
-                                            <span className="text-ui-9 font-bold text-emerald-500 uppercase tracking-widest">{t('settings:remote.active')} (3001)</span>
+                                            <span className="text-ui-9 font-bold text-emerald-500 uppercase tracking-widest">{t('settings:remote.active')} ({port})</span>
                                         </div>
                                     </div>
                                 </section>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { portDeSynchronisation } from '../utils/portsDuRenderer';
 import { useMediaStore } from '../stores/useMediaStore';
 
 /**
@@ -89,7 +90,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     // use the media proxy on port 3001 of the GM's machine
                     if (!window.appBridge) {
                         const host = window.location.hostname; // Main PC IP
-                        const remoteUrl = `http://${host}:3001/temp/${sourceIdOrUrl}`;
+                        const remoteUrl = `http://${host}:${portDeSynchronisation()}/temp/${sourceIdOrUrl}`;
                         console.log(`[useMediaUrl] Remote failsafe: resolving ${sourceIdOrUrl} to ${remoteUrl}`);
                         if (isMounted) setResolvedUrl(remoteUrl);
                         return;
@@ -139,7 +140,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                         const endpoint = isTemp ? 'temp' : 'media';
                         const finalCleanPath = isTemp ? cleanPath.replace('temp/', '') : cleanPath;
                         
-                        return `http://${host}:3001/${endpoint}/${encodeURIComponent(finalCleanPath.replace(/\\/g, '/'))}`;
+                        return `http://${host}:${portDeSynchronisation()}/${endpoint}/${encodeURIComponent(finalCleanPath.replace(/\\/g, '/'))}`;
                     }
 
                     if (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\')) {
