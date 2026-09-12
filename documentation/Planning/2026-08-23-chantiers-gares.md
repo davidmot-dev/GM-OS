@@ -92,6 +92,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | Le **démarrage amputé** | 12/09 | Écrit le jour où l'écran bloqué a été refermé (§ 48), et **jamais vu se produire** : il faut qu'une étape expire ou échoue pour la première fois. À regarder si ça arrive — l'écran d'attente nomme-t-il bien l'étape, la notification survit-elle au premier rendu, et **l'application est-elle vraiment utilisable** amputée de cette étape ? *C'est le pari du correctif : un démarrage dégradé vaut mieux qu'une absence de démarrage — et il n'a pas encore été vérifié en vrai.* |
 | ✅ Les **boutons de l'Ulanzi** | 12/09 → ✅ **ÉPROUVÉS EN RÉEL le 13/09** | David : *« tout fonctionne »*. La chaîne entière tient — appui, MQTT, Home Assistant, GM-OS. Les trois boutons publient (`buttonLeft`, `buttonSelect`, `buttonRight`) et **gardent leur défilé natif** : rien n'est confisqué à l'appareil. ⚠️ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les deux craintes qui ont guidé la mesure, et les deux étaient infondées |
 | Le **matériel débranché puis rebranché** | 12/09 | Écrit le jour même (§ 51) et **jamais éprouvé sur du vrai matériel**. Trois choses à regarder : le nom donné à l'enceinte tient-il après un cycle de débranchement ; une ambiance visée dessus la **retrouve**-t-elle ; et l'alerte d'absence n'apparaît-elle **qu'une fois**. *La signature repose sur l'hypothèse que Windows rend le même libellé au rebranchement — mesurée sur la documentation, pas sur ta machine.* |
+| Le **retour au Home entre deux moments** | 13/09 | Écrit le jour même (§ 52), **jamais vu sur une vraie lampe**. À juger en séance : le passage d'un moment éclairé à un moment sans lumière **fait-il clignoter la pièce** (Home puis scène suivante), et l'éclairage normal désigné est-il celui qu'on veut retrouver en sortant d'une scène tendue ? *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -2903,6 +2904,69 @@ ailleurs.
 
 ⚠️ **À éprouver en réel** — voir § 1 : débrancher une enceinte en pleine séance et la rebrancher.
 Le nom doit tenir, la sortie doit se retrouver, et l'alerte ne doit apparaître qu'une fois.
+
+### 52 · ⭐ La lumière entre deux séquences — la dernière à ne pas suivre la règle (2026-09-13)
+
+*David : « quand je passe d'une séquence à l'autre, il faut respecter les paramètres de la scène
+suivante — s'il n'y a pas de configuration pour la lumière, il faut retourner vers le "Home" de
+Light-OS. Et quand j'arrête une séquence, il faut tout arrêter, sauf Light-OS qui va vers son
+"Home". »*
+
+#### ⭐ La règle, qui existait déjà pour tout le reste
+
+**Un moment décrit l'état complet de la table, pas ce qui change.** Ce qu'il ne déclare pas revient
+à son repos, au lieu de survivre du moment précédent.
+
+| Quoi | Depuis |
+| --- | --- |
+| l'image | 2026-08-31 (`cibleDeLImageDuMoment`) |
+| le son — ambiance, bruitage | 2026-09-02 (`sonsDuMoment`) |
+| **la lumière** | **2026-09-13** |
+
+`if (moment.lightSceneId)` appliquait une scène ; **son absence ne faisait rien du tout**, et la
+scène du moment précédent restait sur la pièce toute la séquence suivante. *Trois modules suivaient
+la règle, un ne la suivait pas — et c'est celui qu'on voit le plus, puisqu'il éclaire la table.*
+
+#### Deux décisions posées à David plutôt que tranchées seul
+
+Sa consigne touchait deux choix qu'il avait faits auparavant. *Renverser une décision écrite sans la
+nommer, c'est la perdre deux fois.*
+
+| Question | Sa réponse |
+| --- | --- |
+| « Tout arrêter » inclut-il **la musique** ? `cequUnArretEteint` l'épargne exprès depuis le 17/08 | **Non** — une nappe traverse plusieurs scènes, et un silence brutal s'entend. Il maintient sa décision |
+| Un moment sans lumière : **Home toujours**, ou seulement si la séquence avait posé une scène ? | **Seulement si la séquence avait posé** — même doctrine que le son : *on ne ramène que ce que la séquence a posé*, et le réglage manuel du meneur ne s'écrase pas |
+
+⚠️ **Le « Home » n'est pas la dernière scène choisie.** C'est `revenirALEclairageNormal`, qui vise
+l'éclairage désigné de la pièce — `revertToManualScene` ramènerait *« la scène d'alerte qui jouait
+il y a trois secondes »*, ce que son propre commentaire prévient depuis le 07/09.
+
+#### ⭐⭐ Deux fichiers de tests, et la distinction vaut d'être dite
+
+`lumiereDuMoment.test.ts` garde **la décision** — quand rentrer au Home.
+`lumiereEntreDeuxMoments.test.ts` garde **le branchement** — qu'elle soit appelée, et que le magasin
+retienne ce que le moment a posé.
+
+⛔ **La distinction a coûté deux défauts la veille** : un magasin dont l'écriture et la lecture
+n'employaient plus la même clé (§ 51), et une adresse composée avec le mauvais champ (§ 49). *Dans
+les deux cas la mécanique était juste et personne ne l'appelait correctement.* La dégradation fait
+rougir **5 tests sur les 16**, des deux côtés.
+
+#### ⚠️ Et la garde des noms a montré sa limite
+
+`nomsSansEcrivainNiLecteur` a réclamé le retrait de la tolérance de `sonsDuMoment`, au motif qu'il
+est désormais « cité ailleurs ». La seule citation est **un commentaire de documentation** écrit le
+jour même dans le module frère. *Une garde qui lit des noms ne peut pas lire des intentions* — c'est
+écrit dans son propre en-tête, et c'en est un cas. On l'a suivie, en consignant pourquoi.
+
+**Ancres** : `storyboard/lumiereDuMoment.ts` (+ 8 tests), `lumiereEntreDeuxMoments.test.ts`
+(+ 8 tests), `useStoryboardStore.ts` (`lumiereDuMoment`, prise de main et arrêt).
+
+**Vérifié** : `tsc -b` propre, **4 394 tests** (365 fichiers), **164 tests E2E**.
+
+⚠️ **À éprouver à la table** — voir § 1 : aucun de ces tests ne voit une vraie lampe. Ce qui se
+juge en séance : que le retour au Home ne fasse pas clignoter la pièce entre deux moments, et que
+l'éclairage normal soit bien celui qu'on veut retrouver en sortant d'une scène tendue.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

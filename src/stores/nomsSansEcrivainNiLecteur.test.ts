@@ -154,7 +154,17 @@ const TOLERES: Record<string, string> = {
     'setSonie': "appelée par la mesure de sonie du magasin de musique",
     'updateEntityNotes': "appelée par une autre action de useNPCStore",
     'imageAvantLeMoment': "le décor d'avant un moment, relu à sa fermeture (useStoryboardStore)",
-    'sonsDuMoment': "les sons empilés par un moment, relus à son arrêt (useStoryboardStore)",
+    /*
+      ⚠️ **`sonsDuMoment` a quitté cette liste le 2026-09-13, et pas parce qu'il a
+      changé.** Un module frère (`lumiereDuMoment.ts`) le cite désormais **dans sa
+      documentation**, et ce contrôle compare du texte : il ne distingue pas un
+      renvoi d'un usage. *Une garde qui lit des noms ne peut pas lire des
+      intentions* — c'est écrit dans son en-tête, et c'en est un cas.
+
+      Si ce renvoi disparaît un jour, le contrôle redemandera la tolérance. C'est
+      du bruit, mais du bruit qui pose une question plutôt que d'en taire une.
+    */
+    'lumiereDuMoment': "la scène de lumière posée par un moment, relue à la prise de main suivante et à l'arrêt (useStoryboardStore)",
     'undoStack': "la pile d’annulation du tableau blanc, relue chez elle",
     'redoStack': "la pile de rétablissement du tableau blanc, relue chez elle",
     'loadCalendar': "appelée par une autre action de useClockStore",

@@ -10,6 +10,9 @@ import { persist } from 'zustand/middleware';
 import {
     resumeDuMoment, traceDuMoment, type EffetDuMoment,
 } from './logic/rapportDuMoment';
+import {
+    ceQueLaPriseDeMainFaitALaLumiere, ceQuUnArretFaitALaLumiere,
+} from './lumiereDuMoment';
 import { Logger } from '../../utils/logger';
 /*
   ⛔ **Importé, et non lu sur `window` — c'est le défaut du 2026-09-12.**
@@ -134,6 +137,15 @@ interface StoryboardState {
      * moment, elle décrit ce qui sonne maintenant. Voir `sonsDuMoment.ts`.
      */
     sonsDuMoment: SonsDuMoment | null;
+    /**
+     * **La scène de lumière que CE moment a posée**, ou `null`.
+     *
+     * Le pendant de `cibleDeLImageDuMoment` et de `sonsDuMoment` : sans cette
+     * trace, on ne saurait pas distinguer *« la séquence avait allumé quelque
+     * chose »* de *« le meneur avait choisi sa scène à la main »* — et le retour
+     * au Home écraserait son réglage. Voir `lumiereDuMoment.ts`.
+     */
+    lumiereDuMoment: string | null;
 
     // Actions
     addMoment: (moment: Omit<StoryboardMoment, 'id'>) => void;
@@ -145,10 +157,15 @@ interface StoryboardState {
     /**
      * Referme la parenthèse : l'image de la scène revient.
      *
-     * **On ne coupe que ce que le moment a posé.** La musique et les lumières
-     * restent : le meneur les arrête quand il le décide, et les couper d'office
-     * ferait tomber le silence sur la table pour un geste qui ne parlait que de
-     * l'image.
+     * **On ne coupe que ce que le moment a posé.** La musique reste : le meneur
+     * l'arrête quand il le décide, et la couper d'office ferait tomber le
+     * silence sur la table — une nappe traverse plusieurs scènes. *Tranché par
+     * David le 2026-09-13, contre sa propre consigne « tout arrêter » du même
+     * jour : la question lui a été posée, il a maintenu la décision du 17/08.*
+     *
+     * ⭐ **La lumière fait exception dans l'autre sens** : elle ne reste pas,
+     * elle **rentre au Home** — l'éclairage normal de la pièce. On ne laisse la
+     * table ni dans le noir, ni dans l'ambiance du moment refermé.
      */
     arreterLeMoment: () => void;
     reset: () => void;
@@ -161,6 +178,7 @@ export const useStoryboardStore = create<StoryboardState>()(
             activeMomentId: null,
             imageAvantLeMoment: null,
             cibleDeLImageDuMoment: null,
+            lumiereDuMoment: null,
             sonsDuMoment: null,
 
             arreterLeMoment: () => {
@@ -203,6 +221,21 @@ export const useStoryboardStore = create<StoryboardState>()(
                     void eteindreLesSons(sonsAEteindre);
                 }
 
+                /*
+                  ⭐ **« Tout arrêter, sauf Light-OS qui va vers son Home »** —
+                  David, 2026-09-13. La pièce ne doit rester ni dans le noir, ni
+                  dans l'ambiance rouge du moment qu'on vient de fermer.
+
+                  ⚠️ **Le Home, et non la dernière scène choisie** :
+                  `revertToManualScene` ramènerait la scène d'alerte qui jouait
+                  il y a trois secondes. C'est `revenirALEclairageNormal` qui
+                  vise l'éclairage désigné de la pièce.
+                */
+                if (ceQuUnArretFaitALaLumiere(get().lumiereDuMoment) === 'revenir-au-home'
+                    && gWindow.hueEngine) {
+                    void gWindow.hueEngine.revenirALEclairageNormal(true);
+                }
+
                 if (imageAvantLeMoment && gWindow.useMapStore) {
                     gWindow.useMapStore.getState().setMap(
                         imageAvantLeMoment.mapUrl,
@@ -213,6 +246,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                 set({
                     activeMomentId: null, imageAvantLeMoment: null,
                     cibleDeLImageDuMoment: null, sonsDuMoment: null,
+                    lumiereDuMoment: null,
                 });
             },
 
@@ -402,6 +436,30 @@ export const useStoryboardStore = create<StoryboardState>()(
                   écrivains pour une même donnée est le motif que ce dépôt paie
                   le plus souvent* — et celui-ci écrivait l'inverse de l'autre.
                 */
+                /*
+                  ⭐ **Un moment décrit l'état complet de la table, pas ce qui
+                  change** — demande de David du 2026-09-13. Un moment sans
+                  lumière **ramène la pièce à son éclairage normal** au lieu de
+                  laisser en place la scène du moment précédent.
+
+                  ⛔ Mais seulement si la séquence avait elle-même posé une
+                  scène : le réglage manuel du meneur ne s'écrase pas. Voir
+                  `lumiereDuMoment.ts`.
+                */
+                const gesteDeLumiere = ceQueLaPriseDeMainFaitALaLumiere(
+                    get().lumiereDuMoment, moment.lightSceneId);
+
+                if (gesteDeLumiere === 'revenir-au-home') {
+                    if (gWindow.hueEngine) {
+                        console.log('[Storyboard] Light: aucune scène déclarée — retour à l’éclairage normal.');
+                        void gWindow.hueEngine.revenirALEclairageNormal(true);
+                        effets.push({ nom: 'Lumières', sort: 'joue' });
+                    } else {
+                        effets.push({ nom: 'Lumières', sort: 'module-absent' });
+                    }
+                    set({ lumiereDuMoment: null });
+                }
+
                 if (moment.lightSceneId) {
                     if (!gWindow.hueEngine) {
                         /*
@@ -416,6 +474,8 @@ export const useStoryboardStore = create<StoryboardState>()(
                         console.log(`[Storyboard] Light: Applying scene ${moment.lightSceneId}`);
                         gWindow.hueEngine.applyScene(moment.lightSceneId, true);
                         effets.push({ nom: 'Lumières', sort: 'joue' });
+                        /* Ce que CE moment a posé — et donc ce qu'il devra rendre. */
+                        set({ lumiereDuMoment: moment.lightSceneId });
                     }
                 }
 
@@ -599,7 +659,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                 }
             },
 
-            reset: () => set({ moments: [], activeMomentId: null })
+            reset: () => set({ moments: [], activeMomentId: null, lumiereDuMoment: null })
         }),
         {
             name: 'gm-os-storyboard-storage',

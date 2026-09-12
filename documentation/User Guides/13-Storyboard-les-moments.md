@@ -97,7 +97,22 @@ arbitraires : elles suivent la façon dont chaque module se comporte quand un au
 | **Bruitage** | s'arrête **toujours** — Sound-OS empile, il ne remplace pas | s'arrête |
 | **Ambiance** | s'arrête, **sauf si la nouvelle apporte sa propre scène** | s'arrête |
 | **Musique** | s'arrête, **sauf si la nouvelle apporte sa musique** — les platines s'enchaînent alors en fondu croisé | ⭐ **elle reste** |
-| **Lumières** | restent | restent |
+| **Lumières** | ⭐ **retour à l'éclairage normal**, sauf si la nouvelle déclare sa scène | ⭐ **retour à l'éclairage normal** |
+
+> ⭐ **Nouveau le 2026-09-13 — la lumière suit enfin la règle des autres.**
+>
+> Une séquence décrit **l'état complet de la table, pas ce qui change**. Un moment qui ne parle pas
+> de lumière ne laisse donc plus la scène du précédent sur la pièce : **elle revient à votre
+> éclairage normal** — celui que vous avez désigné dans Light-OS, et non la dernière scène jouée.
+>
+> ⚠️ **Mais seulement si la séquence avait elle-même allumé quelque chose.** Si vous aviez choisi
+> votre éclairage à la main, un moment muet sur la lumière n'y touche pas : *une séquence qui ne dit
+> rien d'un sujet n'a rien à y décider.*
+>
+> C'est aussi la seule chose qu'un **arrêt** ne coupe pas mais **ramène** : la pièce ne reste ni dans
+> le noir, ni dans le rouge de la scène qu'on vient de fermer.
+
+<!-- -->
 
 > ⛔ **Correction.** Cette page annonçait que « la musique fait exception : elle continue ». C'est
 > vrai quand vous **arrêtez** un moment — arrêter une parenthèse ne doit pas faire tomber le silence
