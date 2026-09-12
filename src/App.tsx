@@ -21,6 +21,7 @@ import { useHydration } from './hooks/useHydration';
 import { useSemence } from './hooks/useSemence';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
 import { useBoutonsDeLUlanzi } from './modules/ulanzi/hooks/useBoutonsDeLUlanzi';
+import { useMaterielDeTable } from './hooks/useMaterielDeTable';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useRaccourcisDeNavigation } from './hooks/useRaccourcisDeNavigation';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
@@ -127,6 +128,9 @@ function App() {
   
   // --- AUTO-CONNECT HUE BRIDGES (GM SEULEMENT) ---
   useHueAutoConnect(isMainPC);
+
+  /* Une enceinte branchée en pleine séance doit être reconnue sans redémarrer. */
+  useMaterielDeTable(isMainPC);
   
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);

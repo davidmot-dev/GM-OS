@@ -68,8 +68,20 @@ test.describe('⭐ choisir l’écran', () => {
     test('changer de cible atteint le magasin', async () => {
         const depart = (await image(gmos)).cible;
 
-        /* Les écrans détectés portent un libellé « Écran <id> ». */
-        const autre = gmos.fenetre.getByRole('button', { name: /^Écran \d+$/ }).first();
+        /*
+          ⭐ **Le libellé d'un écran a changé le 2026-09-12, et en mieux.**
+
+          Il était « Écran 2528732444 » — l'identifiant système brut — parce que
+          la liste des écrans n'était remplie **que par l'écran des Réglages** :
+          partout ailleurs, `getDisplayLabel` n'avait rien à quoi se raccrocher.
+          Le démarrage la recense désormais, et le nom devient « Moniteur 2 » —
+          ou celui que le meneur a donné.
+
+          On accepte les trois formes : *ce test garde le geste de projection,
+          pas le vocabulaire.*
+        */
+        const autre = gmos.fenetre
+            .getByRole('button', { name: /^(Écran \d+|Moniteur \d+)$/ }).first();
         test.skip(await autre.count() === 0, 'aucun second écran détecté sur cette machine');
 
         await autre.click();

@@ -8,6 +8,7 @@
   pour cette raison. *Une garde qui n'est jamais franchie ressemble à un
   code qui marche.*
 */
+import { poserLaSortie } from '../../utils/poserLaSortie';
 import { gmToast } from '../../stores/useToastStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { SortiesAudio } from '../../utils/sortiesAudio';
@@ -316,20 +317,23 @@ export class SoundEngine {
      */
     public async setOutputDevice(deviceId: string) {
         if ('setSinkId' in this.context) {
-            try {
-                // @ts-expect-error AudioContext.setSinkId exists in modern browsers
-                await this.context.setSinkId(deviceId === 'default' ? '' : deviceId);
-                console.log(`[SoundEngine] Output device changed to ${deviceId}`);
-            } catch (error: unknown) {
-                const err = error as { name?: string; message?: string };
-                if (err.name === 'NotFoundError') {
-                    console.warn(`[SoundEngine] Device ${deviceId} not found, falling back to default.`);
-                    // @ts-expect-error fallback
-                    await this.context.setSinkId('');
-                } else {
-                    console.error('[SoundEngine] Failed to set audio output device', error);
-                }
-            }
+            /*
+              ⛔ **Ce bloc portait le défaut du 2026-09-12**, et son jumeau dans
+              l'autre moteur : un `deviceId` périmé était pris pour un appareil
+              absent, et le repli sur la sortie par défaut ne se disait qu'à la
+              console. *Une ambiance visée sur les enceintes du fond sortait
+              devant, en silence.* `poserLaSortie` retrouve l'appareil par sa
+              signature avant tout repli, et prévient le meneur quand il a
+              vraiment disparu.
+            */
+            await poserLaSortie({
+                nom: 'SoundEngine',
+                deviceId,
+                appliquer: async (sinkId) => {
+                    // @ts-expect-error AudioContext.setSinkId exists in modern browsers
+                    await this.context.setSinkId(sinkId);
+                },
+            });
         } else {
             console.warn('[SoundEngine] AudioContext.setSinkId is not supported by this browser.');
         }

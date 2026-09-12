@@ -23,6 +23,7 @@ const faux = vi.hoisted(() => ({
     syncIA: vi.fn<() => Promise<void>>(),
     syncHue: vi.fn<() => Promise<void>>(),
     startWatching: vi.fn(),
+    recenser: vi.fn<() => Promise<void>>(),
     gmToast: vi.fn(),
     /** L'état que `initDB` laisse derrière elle — elle avale ses propres erreurs. */
     media: { erreur: null as string | null },
@@ -50,6 +51,9 @@ vi.mock('../../map/useMapStore', () => ({
     useMapStore: { getState: () => ({ resetProjectionState: vi.fn() }) },
 }));
 vi.mock('../../../stores/useToastStore', () => ({ gmToast: faux.gmToast }));
+vi.mock('../../../stores/useHardwareStore', () => ({
+    useHardwareStore: { getState: () => ({ recenserLeMateriel: faux.recenser }) },
+}));
 
 const { setSystemReady, initDB, syncIA, syncHue, startWatching, gmToast } = faux;
 
@@ -69,6 +73,7 @@ beforeEach(() => {
     initDB.mockResolvedValue(undefined);
     syncIA.mockResolvedValue(undefined);
     syncHue.mockResolvedValue(undefined);
+    faux.recenser.mockResolvedValue(undefined);
     remettreAZero();
 });
 afterEach(() => { vi.useRealTimers(); });
@@ -81,13 +86,14 @@ async function demarrer(): Promise<void> {
 }
 
 describe('un démarrage sain', () => {
-    it('mène les quatre étapes et déclare le système prêt', async () => {
+    it('mène les cinq étapes et déclare le système prêt', async () => {
         await demarrer();
 
         expect(initDB).toHaveBeenCalled();
         expect(syncIA).toHaveBeenCalled();
         expect(syncHue).toHaveBeenCalled();
         expect(startWatching).toHaveBeenCalled();
+        expect(faux.recenser, 'le matériel de table n’a pas été recensé').toHaveBeenCalled();
         expect(setSystemReady).toHaveBeenCalledWith(true);
     });
 
@@ -194,6 +200,6 @@ describe('ce que l’écran d’attente peut montrer', () => {
         await demarrer();
 
         expect(useDemarrageStore.getState().etapeEnCours).toBeNull();
-        expect(useDemarrageStore.getState().rendus).toHaveLength(4);
+        expect(useDemarrageStore.getState().rendus).toHaveLength(5);
     });
 });

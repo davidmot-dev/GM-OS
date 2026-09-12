@@ -91,6 +91,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
 | Le **démarrage amputé** | 12/09 | Écrit le jour où l'écran bloqué a été refermé (§ 48), et **jamais vu se produire** : il faut qu'une étape expire ou échoue pour la première fois. À regarder si ça arrive — l'écran d'attente nomme-t-il bien l'étape, la notification survit-elle au premier rendu, et **l'application est-elle vraiment utilisable** amputée de cette étape ? *C'est le pari du correctif : un démarrage dégradé vaut mieux qu'une absence de démarrage — et il n'a pas encore été vérifié en vrai.* |
 | Les **trois boutons de l'Ulanzi** | 12/09 | Construits le jour même (§ 49) et **jamais pressés en vrai**. Deux choses à regarder au premier essai : l'appui parvient-il jusqu'à Home Assistant (le sujet MQTT ne se devine pas, il s'écoute) — et **capture-t-il le bouton**, auquel cas le défilé des Quarts perd sa navigation native. *Le seul widget éprouvé en vraie soirée serait celui qu'on abîmerait.* |
+| Le **matériel débranché puis rebranché** | 12/09 | Écrit le jour même (§ 51) et **jamais éprouvé sur du vrai matériel**. Trois choses à regarder : le nom donné à l'enceinte tient-il après un cycle de débranchement ; une ambiance visée dessus la **retrouve**-t-elle ; et l'alerte d'absence n'apparaît-elle **qu'une fois**. *La signature repose sur l'hypothèse que Windows rend le même libellé au rebranchement — mesurée sur la documentation, pas sur ta machine.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -129,7 +130,6 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
-| ⚠️ **Le périphérique de sortie d'Ambient-OS n'existe plus** : `Device 22ad7d4a… not found, falling back to default`. Le son sort, mais **devant au lieu du fond** | Le message est à la console à chaque lecture. Les `sinkId` changent au rebranchement : un réglage mémorisé vieillit sans le dire | Vu en marge de l'incident principal, et sans effet sur les données. *Mais un réglage de sortie qui retombe en silence est un mensonge d'écran* |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -2806,6 +2806,83 @@ du cockpit toujours présent**, c'est-à-dire exactement ce que David avait sous
 
 ⚠️ **Ce qui reste ouvert** — voir § 1 bis : pourquoi la séquence elle-même s'est mal exécutée. Le
 classement explique l'écran inaccessible, **pas** l'image absente ni les lumières éteintes.
+
+### 51 · ⭐ Les noms du matériel, et la sortie qu'on ne retrouvait plus (2026-09-12)
+
+*« Est-il possible de garder les noms que j'attribue aux sorties audio, aux écrans ou autre quand je
+rallume GM-OS » — et la réponse était : ils n'ont jamais été perdus.*
+
+#### ⛔ Ce n'était pas la sauvegarde, c'était la clé
+
+`useHardwareStore` persiste ses deux carnets d'alias **depuis toujours**. Ce qui bougeait, c'est
+l'étiquette sous laquelle ils sont rangés :
+
+| Carnet | Rangé par | Pourquoi ça bouge |
+| --- | --- | --- |
+| sorties audio | `deviceId` | une empreinte du périphérique : **rebrancher une enceinte en change l'identifiant** |
+| écrans | `display.id` | attribué par le système, **réattribué** au redémarrage ou au changement de câble |
+
+*Le nom était toujours là, rangé sous l'ancienne clé ; GM-OS cherchait la nouvelle.*
+
+⭐ **Et le même soir, le même identifiant instable expliquait autre chose** : le
+`Device 22ad7d4a… not found, falling back to default` d'Ambient-OS. Une ambiance visée sur les
+enceintes du fond sortait **devant**, en silence. **Un seul défaut, deux symptômes.**
+
+#### La signature, et ce qu'elle coûte
+
+⚠️ **On n'échange pas un identifiant faux contre un identifiant vrai.** On échange un identifiant
+qui change à **chaque rebranchement** contre un autre qui ne change que si l'on remanie son
+installation. *C'est un gain de fiabilité, pas une garantie*, et les deux limites sont écrites dans
+le module.
+
+- **Sortie audio** : le libellé Windows, nettoyé de sa numérotation. ⛔ **Windows renomme au
+  rebranchement** — `Realtek` devient `2- Realtek`, puis `3-`. *Sans ce nettoyage, la signature
+  aurait été aussi instable que ce qu'elle remplace, et le correctif n'aurait rien corrigé.*
+- **Écran** : sa géométrie, faute de mieux — le processus principal ne transmet aucun nom système,
+  il fabrique `Moniteur 1`, `Moniteur 2`… **d'après le rang dans la liste**, qui change aussi.
+
+#### ⭐ Le carnet des signatures connues — ce qui rend le routage réparable
+
+Un moment de storyboard mémorise `ambientOutputId: '22ad7d4a…'` **et rien d'autre**. Le jour où cet
+identifiant change, plus rien ne relie le choix du meneur à une enceinte réelle.
+
+D'où `signaturesConnues` : `deviceId` → la signature qu'il portait **la dernière fois qu'on l'a vu**,
+relevée à chaque recensement. *C'est la seule occasion de la lire — quand l'appareil sera débranché,
+il n'y aura plus rien.* Cela évite de changer le format des six magasins qui enregistrent une sortie.
+
+⚠️ **Et ça ne rattrape pas le passé** : un choix fait avant ce carnet, sur une enceinte jamais
+rebranchée depuis, reste irrécupérable. *Un filet posé aujourd'hui ne rattrape pas ce qui est tombé
+hier.*
+
+#### ⛔ Deux défauts trouvés en chemin
+
+1. **Le repli ne jouait nulle part.** `audioDevices` et `displays` n'étaient remplies que **par
+   l'écran des Réglages** : partout ailleurs, une sortie sans alias s'affichait « Périphérique
+   Inconnu » et un écran « Écran 2528732444 » — *alors que le nom système était à portée d'un
+   appel.* Le recensement est devenu une étape du démarrage.
+2. **Le repli audio était muet et recopié.** Ambient-OS et Sound-OS portaient le **même bloc**,
+   `catch (NotFoundError)` puis `console.warn`. Un point de passage unique les remplace : il retrouve
+   par signature avant tout repli, et **prévient le meneur** quand la sortie a vraiment disparu —
+   *en la nommant comme lui la nomme.*
+
+⚠️ Une seule alerte par appareil, remise à zéro au `devicechange` : *un avertissement qui crie tout
+le temps ne se lit plus.*
+
+#### ⭐ Deux gardes du dépôt ont mordu pendant le chantier
+
+| Garde | Ce qu'elle a trouvé |
+| --- | --- |
+| `nomsSansEcrivainNiLecteur.test.ts` | `signatureDeLaSortieChoisie`, **déclaré et appelé par personne** — j'avais ajouté un sélecteur « au cas où ». Le test offre deux réponses honnêtes, le brancher ou le supprimer : **supprimé** |
+| `e2e/imageOs.spec.ts` | le libellé d'un écran est passé de `Écran 2528732444` à `Moniteur 2`. *Un test qui rougit sur une amélioration reste un test qui fait son travail* — il gardait le vocabulaire, il garde désormais le geste |
+
+**Ancres** : `utils/signatureDuMateriel.ts` (+ 27 tests), `utils/poserLaSortie.ts` (+ 9 tests),
+`stores/useHardwareStore.ts`, `hooks/useMaterielDeTable.ts`, étape « Matériel de table » du
+`BootstrapService`.
+
+**Vérifié** : `tsc -b` propre, **4 359 tests** (361 fichiers), **159 tests E2E**.
+
+⚠️ **À éprouver en réel** — voir § 1 : débrancher une enceinte en pleine séance et la rebrancher.
+Le nom doit tenir, la sortie doit se retrouver, et l'alerte ne doit apparaître qu'une fois.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

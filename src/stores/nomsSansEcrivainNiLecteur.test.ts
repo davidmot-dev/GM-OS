@@ -119,6 +119,7 @@ const TOLERES: Record<string, string> = {
     'hoursPerDay': 'la longueur du jour, lue par le calcul de date (useClockStore)',
     'minutesPerHour': "la longueur de l'heure, lue par le calcul de date (useClockStore)",
     'volumeAvantCoupure': 'le volume retenu pendant une coupure, relu au rétablissement (useAudioMasterStore)',
+    'signaturesConnues': "la signature qu'un appareil portait la dernière fois qu'on l'a vu — écrite au recensement et relue par `sortieAEmployer`, dans useHardwareStore",
 
     // Écrites, jamais appelées de l'extérieur : code mort assumé, à retirer un jour.
     'projectUrl': 'code mort constaté le 2026-09-07 — aucun appelant, aucun écran',

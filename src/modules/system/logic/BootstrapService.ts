@@ -7,6 +7,7 @@ import { useImageStore } from '../../image/useImageStore';
 import { useMapStore } from '../../map/useMapStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useDemarrageStore } from '../useDemarrageStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 import {
     menerLeDemarrage, alerteDuDemarrage, type EtapeDeDemarrage,
 } from './etapesDuDemarrage';
@@ -94,6 +95,22 @@ export class BootstrapService {
                 nom: 'Trousseau Hue',
                 delaiMs,
                 faire: () => useLightStore.getState().syncWithKeychain(),
+            },
+            {
+                /*
+                  **Les enceintes et les écrans présents, et les noms qu'ils
+                  portent.** Ajouté le 2026-09-12 : les deux listes n'étaient
+                  remplies que par l'écran des Paramètres, et partout ailleurs
+                  une sortie s'affichait « Périphérique Inconnu » — *le nom
+                  Windows était pourtant à portée d'un appel.*
+
+                  Ce pas reclasse aussi les alias du meneur sous leur signature
+                  stable, et relève la signature de chaque appareil vu. Voir
+                  `utils/signatureDuMateriel.ts`.
+                */
+                nom: 'Matériel de table',
+                delaiMs,
+                faire: () => useHardwareStore.getState().recenserLeMateriel(),
             },
             {
                 nom: 'Services de fond',

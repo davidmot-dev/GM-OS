@@ -2,6 +2,24 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SoundEngine } from './SoundEngine';
 
 // Mock the MediaStore
+
+/*
+  **Le routage passe désormais par `poserLaSortie`**, qui demande au carnet
+  du matériel si la sortie enregistrée existe encore — correctif du
+  2026-09-12 : un `deviceId` périmé n'est pas un appareil absent.
+*/
+vi.mock('../../stores/useHardwareStore', () => ({
+    useHardwareStore: {
+        getState: () => ({
+            sortieAEmployer: (id: string | null | undefined) =>
+                (id && id !== 'default'
+                    ? { sort: 'trouvee', deviceId: id, par: 'identifiant' }
+                    : { sort: 'par-defaut' }),
+            getAudioLabel: (id: string) => id,
+        }),
+    },
+}));
+
 vi.mock('../../stores/useMediaStore', () => ({
     useMediaStore: {
         getState: vi.fn(() => ({
