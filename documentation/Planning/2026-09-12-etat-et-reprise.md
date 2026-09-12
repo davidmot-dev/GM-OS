@@ -1,9 +1,13 @@
 # État et reprise — 2026-09-12
 
 > **Base saine.** `tsc -b` propre, **4 230 tests verts** (353 fichiers, 1 ignoré), **23 tests E2E verts**, branche
-> `feature/tablet-hub-pwa`, arbre propre. **8 commits en avance sur l'origine** — le push
-> reste à faire par David, le gestionnaire d'identifiants ouvre une fenêtre que mon shell
-> ne sait pas piloter.
+> `feature/tablet-hub-pwa`, **arbre propre, tout est poussé**.
+>
+> ⚠️ **Correction du 12/09** : ce document disait que le push devait revenir à David parce que
+> « le gestionnaire d'identifiants ouvre une fenêtre que mon shell ne sait pas piloter ».
+> **C'est faux.** Les identifiants sont en cache et le push part tout seul ; ce qu'on avait pris
+> pour un blocage, c'est le **hook de pre-push** qui lance toute la validation en silence
+> pendant trois minutes.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule.
@@ -25,56 +29,55 @@
 | **12/09, la garde** | ⭐ **Le profil de données est vérifié à l'exécution** — nommé au journal à chaque démarrage, et l'application refuse de continuer s'il n'est pas le bon (§ 42 du registre) |
 | **12/09, Light-OS** | ⛔ **La reconnexion au pont bouclait sans fin** — un effet qui avait `status` en dépendance *et* l'écrivait. Trouvé par David **en déplacement**, pont resté à la maison. Plafond, recul, **abandon annoncé** (§ 44). Éprouvé par lui : *« le correctif light-os fonctionne »* |
 | **12/09, la trame au journal** | ⭐ **Ouvrir une scène ne laissait aucune trace** — donc la scène n'entrait pas dans la revue de séance, et le filet du plan du 08/08 (*scinder ce qu'on a oublié de marquer*) était absent là où il devait servir. Ouverture et fermeture consignées, avec le décor (§ 45) |
+| **12/09, la doc** | ⭐ **`02-GM-OS-en-bref.md`** — le but de l'application, son vocabulaire, et chaque module en deux phrases. La liste des modules a été **déplacée** depuis `01-Prise-en-main`, pas recopiée |
+| **12/09, NotebookLM** | ⭐ **Un carnet « GM-OS » porte les 53 guides**, et un hook post-commit y renvoie ceux qui changent — *une source NotebookLM est une copie figée* |
+| **12/09, les hooks** | ⛔ **Le hook de pre-push vivait hors du dépôt depuis toujours.** Les deux sont versionnés dans `scripts/hooks/`, lus par `core.hooksPath` posé par `npm install` |
 | **12/09, la donnée gelée** | ⭐ **Une campagne témoin de 8 Ko** sert de décor aux tests E2E, et **le premier test de migration** la fait rencontrer du code neuf (§ 43). Les tests E2E passent de **9 à 17** |
 
 ---
 
 ## 1 · Par quoi reprendre
 
-### ✅ La garde d'exécution sur le chemin de données — **FAITE le 2026-09-12**
+### ⭐ Le journal de séance n'est dans AUCUNE sauvegarde
 
-`electron/gardeDuProfil.ts`, branchée en tête de `main.ts` : le profil verrouillé est **écrit au
-journal à chaque démarrage**, et l'application **refuse de continuer** si ce n'est pas le vrai profil
-alors qu'aucun `--user-data-dir` n'a été passé. L'arrêt n'est pas muet — journal, console **et**
-boîte d'erreur.
+**C'est le geste que je recommande en premier**, et il n'était pas connu ce matin. Trouvé en
+diagnostiquant autre chose, vérifié deux fois :
 
-⭐ **Et la règle s'est révélée avoir deux sens** : une isolation qui retombe sur le **vrai** profil
-est refusée elle aussi. `lancerGmOs.ts` vérifiait ça depuis Playwright ; `repetition.mjs` ne le
-vérifiait pas du tout. *Un contrôle placé dans l'appelant ne couvre que cet appelant.*
+- `SessionService` collecte **onze** magasins — `sessionOS`, `npc`, `web`, `ambient`, `clock`,
+  `whiteboard`, `fiches`, `music`, `bestiaire`, `map`, `favorite`. **`useJournalStore` n'en fait pas
+  partie.**
+- L'export Nexus ne le porte pas non plus : zéro occurrence de « journal » dans `NexusService.ts`.
 
-Le piège annoncé ci-dessous était réel et il est tenu : **les tests E2E passent**, donc la garde
-laisse bien démarrer les instances isolées. Détail complet au § 42 du registre.
+⛔ **Donc tous tes journaux de séance — le fil, les scènes traversées, les comptes rendus — ne sont
+protégés par rien.** La sauvegarde automatique qui t'a sauvé le 11/09 ne les aurait pas ramenés.
 
-### ✅ 2. Des bases anciennes archivées, pour éprouver les migrations — **FAITE le 2026-09-12**
+C'est exactement la famille de Music-OS le 30/08 : *un module qu'on croit couvert parce que les
+autres le sont.* ⚠️ Et la question qui la trouve n'est pas « qu'est-ce qui est sauvegardé ? » mais
+**« qui d'autre écrit une donnée que personne ne ramasse ? »**.
 
-`e2e/baseAncienne.spec.ts` écrit une charge en `version: 9`, recharge la fenêtre, et vérifie que rien
-n'a disparu. `migrate` est traversé pour de vrai — il le dit au journal.
+Ce qu'il faudra trancher en le faisant : le journal suit-il la campagne (donc l'export Nexus aussi)
+ou seulement la machine (donc la sauvegarde seule) ? *Music-OS a été tranché « playlists seulement,
+la sortie audio décrit la pièce, pas l'univers » — le journal, lui, est clairement de l'univers.*
 
-⭐ **Une seule donnée gelée sert les deux besoins** : `e2e/donnees/campagne-temoin.json`. La charge
-persistée s'en **dérive** au lieu de vivre dans un second fichier — `partialize` range
-`lesDonneesDeLaSession`, qui est exactement ce que `modules.sessionOS` capture. *Une donnée gelée qui
-vit à deux endroits en désigne une fausse.*
+### 2. Ce qui reste ne se code pas — la catégorie P6
 
-⭐ Et le principe qui rend ça tenable : **on ne fabrique pas une vieille base, on en gèle une jeune.**
+Les deux gestes du § 1 d'hier sont clos (§§ 42 et 43 du registre). Ce qui reste au registre **se
+joue** : le routage audio par son, les six widgets Ulanzi ensemble, Voice-to-Light au pont, la
+bascule de combat entre deux scènes.
 
-Détail complet au § 43 du registre.
+⚠️ **Et la fusion de scènes est passée de « jamais essayée » à « essayée, et elle a coûté ».** Le
+geste marchait ; ce qui manquait, c'est qu'une scène ouverte ne laissait **aucune trace au journal**,
+donc n'entrait pas dans la revue. Corrigé (§ 45), et **à éprouver en vraie soirée** : que la revue
+montre les scènes traversées, et que fusionner emmène bien leurs événements.
 
----
+### 3. Un point resté sans explication
 
-## 1 bis · Ce qui reste, maintenant
-
-Les deux gestes du § 1 sont faits. **Ce qui reste ne se code pas — ça se joue** : la catégorie P6 du
-registre (routage audio par son, les six widgets Ulanzi ensemble, Voice-to-Light au pont, la bascule
-de combat entre deux scènes…).
-
-⚠️ **Et la fusion de scènes est passée de « jamais essayée » à « essayée, et elle a coûté ».** Ce
-qu'elle a révélé ne se lisait dans aucun document : le geste marchait, mais rien ne faisait entrer
-une scène jouée dans la revue. *La catégorie P6 vient de rendre son quatrième défaut du mois — et
-comme les trois autres, c'est David à l'écran qui l'a trouvé.*
-
-⚠️ Le socle E2E, lui, est désormais **capable** de porter des tests de geste sur un décor réaliste.
-Ce qu'il couvre aujourd'hui : l'aide, le périmètre, les ports, la semence, la migration. Tout le reste
-de l'application n'a encore aucun test de bout en bout — *un socle n'est pas une couverture.*
+⚠️ **L'écran bloqué au démarrage du 12/09 n'a jamais été expliqué.** La boucle de Light-OS était
+réelle et elle est corrigée ; David a confirmé que ça remarche. Mais **dans ma reproduction, l'écran
+restait cliquable pendant toute la boucle** — je n'ai donc pas établi le lien. Si ça revient, les
+deux questions qui trancheraient en dix secondes : l'écran montre-t-il le **splash** (runes, « GM-OS
+vVI.V ») ou le **`LoadingOverlay`** (fond flouté, roue, « SYSTEM_BUSY ») ? Et la console porte-t-elle
+`[Bootstrap] ✅ Système prêt` ? *Ce sont deux composants et deux causes.*
 
 ---
 
@@ -130,6 +133,33 @@ serait à jour, comme la production. Ils se bouchent par les deux gestes du § 1
 ---
 
 ## 4 · Ce qu'il ne faut pas repayer
+
+⛔ **Un effet ne se rejoue pas sur ce qu'il écrit.** `useHueAutoConnect` avait `status` en dépendance
+*et* l'écrivait : boucle infinie dès que le pont ne répondait plus. Et **retirer la dépendance ne
+suffisait pas** — une seule chaîne de rappels l'aurait reconstituée. La terminaison vit maintenant
+dans une politique séparée et testée.
+
+⛔ **Un défaut qui ne se déclenche qu'ailleurs ne se voit jamais au bureau.** Celui-là a demandé un
+déplacement, pont resté à la maison.
+
+⛔ **Compter des longueurs n'est pas vérifier une forme.** Le témoin gelé a porté trois champs
+inventés (`closeLe` au lieu de `termineeLe`, un `passages` de fantaisie, `creeeLe` absent) sous
+douze tests verts — parce que les assertions disaient « il y a trois scènes », jamais « ce sont des
+scènes ». Le remède : une **affectation typée sans `as`**, et l'état jugé par la fonction que
+l'application emploie.
+
+⛔ **Une sonde qui ne charge pas la page rend un verdict quand même.** Mes reproductions du mode dev
+visaient `localhost:5173` et tombaient sur `chrome-error://chromewebdata` — le piège IPv6 que
+`main.ts` contourne pour lui-même. J'en ai tiré « le mode dev est cassé », qui était faux.
+
+⛔ **Un contrôle invisible est un contrôle qu'on croit avoir.** Le hook de pre-push vivait hors du
+dépôt depuis toujours. Les hooks sont désormais versionnés dans `scripts/hooks/`, lus par
+`core.hooksPath` — **pas copiés** : deux copies finissent par diverger, et on ne sait plus laquelle
+s'exécute.
+
+⚠️ **Une liste qui vit à deux endroits en désigne une fausse** — appliqué deux fois aujourd'hui :
+la liste des modules a été *déplacée* de `01-Prise-en-main` vers `02-GM-OS-en-bref`, et les quatre
+conditions de la fusion ne sont écrites que dans le guide du journal.
 
 ⛔ **Une garde qui refuse tout ressemble beaucoup à une garde qui marche.** La semence exigeait
 une base *vide* ; une base neuve ne l'est jamais, elle porte `INITIAL_DATA`. La garde refusait
