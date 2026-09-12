@@ -2197,6 +2197,58 @@ celui de `main.ts`, qui vient après le verrou.
 
 **Ancre** : `electron/SecurityManager.ts`, commit `0d87cc8e`.
 
+### 42 · ⭐ La garde d'exécution sur le chemin de données (2026-09-12)
+
+*Le geste recommandé la veille au § 1 de l'état du 12/09. Il vise précisément le défaut du 11/09 —
+et il ferme le seul trou que `npm run repetition` ne peut pas boucher, puisqu'elle passe
+`--user-data-dir` et court-circuite exactement le mécanisme qui a cassé.*
+
+**Ce qui manquait.** Le test de source `verrouDuCheminDeDonnees.test.ts` interdit les deux formes
+connues du défaut — `app.getPath` au niveau module, et dans un constructeur. Il ne peut pas interdire
+les autres : *un module peut toujours résoudre le chemin depuis une fonction appelée au niveau
+module.* Et surtout, rien ne regardait le **résultat**. Le 11/09, GM-OS a verrouillé `gm-os-v6` et
+**a démarré quand même**, sans un mot.
+
+**La règle, et pourquoi elle a deux sens.** La répétition et les tests de bout en bout passent
+`--user-data-dir` : leur profil n'est **légitimement pas** celui du meneur. Une garde qui exigerait
+`gm-os-v5` sans distinguer les empêcherait tous de démarrer. D'où une seule comparaison, lue dans les
+deux sens :
+
+> **Le verrou doit porter sur le vrai profil exactement quand aucune isolation n'a été demandée.**
+
+| `--user-data-dir` | Profil verrouillé | Verdict |
+| --- | --- | --- |
+| absent | le vrai | ✅ démarrage ordinaire — **le profil est nommé au journal** |
+| absent | un autre | ⛔ le défaut du 11/09 : arrêt avant d'écrire |
+| présent | un autre | ✅ répétition ou test, bien isolé |
+| présent | **le vrai** | ⛔ isolation ratée — *un essai s'apprête à écrire dans les vraies données* |
+
+⭐ **La quatrième ligne n'est pas une symétrie gratuite.** `e2e/lancerGmOs.ts` vérifiait l'isolation
+depuis Playwright ; `scripts/repetition.mjs` ne la vérifiait **pas du tout**. Posée dans le processus
+principal, la vérification vaut pour tout ce qui démarre GM-OS, présent et à venir — *un contrôle
+placé dans l'appelant ne couvre que cet appelant.*
+
+**L'arrêt n'est pas muet** : `main.log`, la console, **et** `dialog.showErrorBox` (permis avant
+`whenReady`, et il le faut). *Un arrêt silencieux serait un second échec muet là où on vient d'en
+payer un.*
+
+**Et le journal parle même quand tout va bien.** Le profil verrouillé est écrit à **chaque**
+démarrage, accepté ou non. C'est ce qui manquait le 11/09 pour trancher en trente secondes au lieu de
+cinq questions de diagnostic.
+
+⚠️ **L'appel de la garde est le premier `app.getPath` de `main.ts`** — celui que le test de source
+surveille. Le verrou se pose donc à un endroit qu'on peut montrer du doigt, après `app.name`.
+
+**Vérifié en vrai, et pas seulement en test** : une instance lancée avec `--user-data-dir` sur un
+profil jetable démarre et écrit `[Profil] Profil isolé verrouillé : « … » (--user-data-dir)` dans son
+`main.log`. ⛔ **La branche du refus n'a PAS été rejouée sur le vrai profil** — c'est justement celle
+qu'il ne faut pas répéter sur les données de David ; elle est tenue par deux tests unitaires.
+
+**Ancres** : `electron/gardeDuProfil.ts`, son branchement en tête de `electron/main.ts`,
+`electron/gardeDuProfil.test.ts` (8 tests). `tsc -b` propre, **4 180 tests au vert** (350 fichiers,
+1 ignoré), **les 9 tests E2E au vert** — c'est eux qui prouvent que la garde laisse passer ce qu'elle
+doit laisser passer.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou

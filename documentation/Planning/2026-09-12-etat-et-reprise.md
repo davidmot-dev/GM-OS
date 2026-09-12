@@ -1,6 +1,6 @@
 # État et reprise — 2026-09-12
 
-> **Base saine.** `tsc -b` propre, **4 170 tests verts** (349 fichiers, 1 ignoré), branche
+> **Base saine.** `tsc -b` propre, **4 180 tests verts** (350 fichiers, 1 ignoré), **9 tests E2E verts**, branche
 > `feature/tablet-hub-pwa`, arbre propre. **8 commits en avance sur l'origine** — le push
 > reste à faire par David, le gestionnaire d'identifiants ouvre une fenêtre que mon shell
 > ne sait pas piloter.
@@ -27,23 +27,19 @@
 
 ## 1 · Par quoi reprendre
 
-### ⭐ La garde d'exécution sur le chemin de données
+### ✅ La garde d'exécution sur le chemin de données — **FAITE le 2026-09-12**
 
-**C'est le geste que je recommande en premier**, et il répond à la question que David a posée
-sur un environnement de staging (voir § 3).
+`electron/gardeDuProfil.ts`, branchée en tête de `main.ts` : le profil verrouillé est **écrit au
+journal à chaque démarrage**, et l'application **refuse de continuer** si ce n'est pas le vrai profil
+alors qu'aucun `--user-data-dir` n'a été passé. L'arrêt n'est pas muet — journal, console **et**
+boîte d'erreur.
 
-Aujourd'hui, rien ne crie si GM-OS verrouille le mauvais profil. Il y a un **test de source**
-(`electron/verrouDuCheminDeDonnees.test.ts` — aucun `app.getPath` au niveau module ni dans un
-constructeur, pour tout ce qu'importe `main.ts`) et [`main.ts:22`](../../electron/main.ts)
-qui pose `app.name`. Mais **aucune garde à l'exécution**.
+⭐ **Et la règle s'est révélée avoir deux sens** : une isolation qui retombe sur le **vrai** profil
+est refusée elle aussi. `lancerGmOs.ts` vérifiait ça depuis Playwright ; `repetition.mjs` ne le
+vérifiait pas du tout. *Un contrôle placé dans l'appelant ne couvre que cet appelant.*
 
-Ce qu'elle ferait : au démarrage, écrire dans `main.log` le profil réellement verrouillé, et
-**refuser de continuer** si ce n'est pas `gm-os-v5` alors qu'aucun `--user-data-dir` n'a été
-passé. Petit, et il vise précisément le défaut du 11/09.
-
-⚠️ **Attention au piège en l'écrivant** : la répétition et les tests E2E passent
-`--user-data-dir`, donc leur `userData` n'est légitimement PAS `gm-os-v5`. La garde doit
-distinguer les deux cas, sans quoi elle empêchera les essais de démarrer.
+Le piège annoncé ci-dessous était réel et il est tenu : **les 9 tests E2E passent**, donc la garde
+laisse bien démarrer les instances isolées. Détail complet au § 42 du registre.
 
 ### 2. Des bases anciennes archivées, pour éprouver les migrations
 
@@ -79,6 +75,8 @@ instance si elle cherche son port. *L'inventaire vaut pour ce qui a été cherch
 1. **Ce qu'un changement fait au VRAI profil au démarrage suivant.** `--user-data-dir` impose
    le chemin de données : la répétition **court-circuite exactement le mécanisme qui a cassé
    le 11/09**. Elle aurait été verte pendant que le profil basculait sur `gm-os-v6`.
+   ✅ *Ce trou-là est désormais surveillé par la garde du § 1 — elle regarde le résultat, pas
+   l’environnement.* Ce qui reste dehors, ce sont les autres effets d’un changement au démarrage.
 2. **Les migrations** (voir § 1.2).
 
 ---

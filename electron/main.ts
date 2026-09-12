@@ -27,6 +27,34 @@ log.transports.console.level = 'debug';
 log.initialize();
 console.log('[Main] Logger initialized at:', log.transports.file.getFile().path);
 
+/**
+ * ⛔ **Le profil de données, vérifié à l'exécution — avant tout le reste.**
+ *
+ * L'appel ci-dessous est **le premier `app.getPath` de `main.ts`** — celui que
+ * le test de source surveille. Il pose le verrou à un endroit qu'on peut montrer
+ * du doigt, et il ne peut pas être en avance sur `app.name`, posé plus haut.
+ *
+ * Le 2026-09-11, ce verrou est tombé sur `gm-os-v6` et **l'application a démarré
+ * quand même**, sur un profil vide. Elle ne démarre plus : elle nomme le profil
+ * au journal à chaque fois, et s'arrête s'il n'est pas celui qu'on attend.
+ *
+ * ⚠️ `showErrorBox` avant `whenReady` est permis, et il le faut : *un arrêt muet
+ * serait un second échec silencieux là où on vient d'en payer un.*
+ */
+const profilDeDonnees = verdictDuProfil({
+    profilVerrouille: app.getPath('userData'),
+    profilReel: path.join(app.getPath('appData'), PROFIL_ATTENDU),
+    argv: process.argv,
+});
+if (profilDeDonnees.accepte) {
+    log.info(`[Profil] ${profilDeDonnees.motif}`);
+} else {
+    log.error(`[Profil] ${profilDeDonnees.motif}`);
+    console.error(`[Profil] ${profilDeDonnees.motif}`);
+    dialog.showErrorBox('GM-OS — profil de données inattendu', profilDeDonnees.motif);
+    app.exit(1);
+}
+
 interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
 }
@@ -63,6 +91,7 @@ import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './s
 import { ServeurDesFiches } from './serveurDesFiches'
 import { portsDeGmOs } from './portsDeGmOs'
 import { racineDuCorpus, appareilsMuets, fichierDeSemence } from './perimetreDeLInstance'
+import { verdictDuProfil, PROFIL_ATTENDU } from './gardeDuProfil'
 import {
     mediasCopies, copierUnMedia, inscrireAuCatalogue,
     lireLeCatalogue, lireUnMedia, type FicheDeMedia,
