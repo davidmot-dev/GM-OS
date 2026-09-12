@@ -16,6 +16,8 @@ import {
     suspendreLesScenes, reprendreLesScenes, clonerLaScene as cloner, titreDisponible,
 } from '../logic/trame';
 import { releverLaTableMaintenant, titreParDefaut } from '../logic/etatDeLaTable';
+import { entreePourLOuvertureDeScene, entreePourLaFermetureDeScene } from '../logic/journalDeLaTrame';
+import { useJournalStore } from '../../journal/useJournalStore';
 import type { AtlasMap } from '../../../types/chronicle.types';
 
 /**
@@ -40,6 +42,14 @@ type AvecLaTable = TrameSlice & {
     atlasMaps?: AtlasMap[];
     selectedAtlasMapId?: string | null;
     sessions?: GameSession[];
+    /*
+      Déclarés par leur FORME et non par leur type, volontairement : la trame n'a
+      besoin que d'un identifiant et d'un nom pour écrire au journal. Importer
+      `Player` et `Entity` ferait dépendre ce fichier de deux modèles entiers
+      pour deux champs.
+    */
+    players?: { characters?: { id: string; name: string }[] }[];
+    entities?: { id: string; name: string }[];
 };
 
 /** Retire un acte et ses scènes des prévisions de toutes les séances. */
@@ -262,17 +272,85 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
        Le parcours réel
        ───────────────────────────────────────────── */
 
-    ouvrirLaScene: (id, seanceId) =>
+    /*
+      **Ouvrir une scène laisse une trace au journal** — le trou trouvé par David
+      le 2026-09-12. Sans elle, une scène jouée mais silencieuse n'apparaissait
+      pas dans la revue de séance : `preparerLaRevue` part des événements, jamais
+      de la trame. Le filet prévu par le plan du 08/08 — *scinder à la revue ce
+      qu'on a oublié de marquer* — était donc absent dans le seul cas qui
+      l'exigeait. Voir `logic/journalDeLaTrame.ts`.
+    */
+    ouvrirLaScene: (id, seanceId) => {
+        /*
+          ⚠️ **L'entrée se décide sur l'état d'AVANT**, parce que c'est lui qui
+          dit s'il se passe quelque chose : une scène déjà en cours ne bouge pas,
+          et une scène terminée est *rouverte*, pas ouverte.
+        */
+        const avant = get() as AvecLaTable;
+        const scene = avant.scenes.find((s) => s.id === id);
+        /*
+          **Le décor de la scène, résolu ICI.** Le journal ne doit pas porter des
+          identifiants : « PJ présents : Nel Varga, Idris Koa » se relit six mois
+          plus tard, « PJ présents : temoin-pj-1 » non. Et c'est le magasin qui
+          sait résoudre — la fonction pure, elle, reste éprouvable sans lui.
+        */
+        const entree = entreePourLOuvertureDeScene(scene, {
+            acte: avant.actes.find((a) => a.id === scene?.acteId),
+            lieu: avant.atlasMaps?.find((m) => m.id === scene?.lieuId),
+            personnages: (avant.players ?? []).flatMap((p) => p.characters ?? []),
+            entites: avant.entities ?? [],
+        });
+
         set((state) => {
             const quand = Date.now();
             return { scenes: state.scenes.map((s) => (s.id === id ? ouvrir(s, quand, seanceId) : s)) };
-        }),
+        });
 
-    terminerLaScene: (id) =>
-        set((state) => {
-            const quand = Date.now();
-            return { scenes: state.scenes.map((s) => (s.id === id ? terminer(s, quand) : s)) };
-        }),
+        /*
+          ⛔ **Hors du `set`, et ce n'est pas un détail de style.** Un `set` de
+          Zustand est un calcul d'état ; y glisser une écriture au journal en
+          ferait un effet de bord que chaque test déclencherait — la leçon déjà
+          payée par la sonnerie du minuteur, qui sonne depuis le battement et
+          jamais depuis `tickTimer`.
+
+          ⚠️ Et sous garde d'enregistrement : `addEvent` laisse passer les
+          `SYSTEM` à l'arrêt, si bien que préparer sa trame un dimanche après-midi
+          ajouterait des lignes à un journal archivé des semaines plus tôt. Le
+          même garde protège déjà « Campagne activée ».
+        */
+        if (entree && useJournalStore.getState().isRecording) {
+            useJournalStore.getState().addEvent(entree);
+        }
+    },
+
+    /*
+      **Et la frontière de sortie se marque aussi** — décision de David le
+      2026-09-12, dans la foulée de l'entrée d'ouverture. Elle porte le seul fait
+      que l'ouverture ne pouvait pas connaître : la durée jouée.
+    */
+    terminerLaScene: (id) => {
+        /*
+          ⚠️ `quand` est calculé UNE fois et partagé : l'entrée dit la durée
+          arrêtée à l'instant même où le passage se ferme. Deux `Date.now()`
+          donneraient deux instants, et la trace mentirait de quelques
+          millisecondes sur ce que la trame enregistre.
+        */
+        const quand = Date.now();
+        const avant = get();
+        const entree = entreePourLaFermetureDeScene(
+            avant.scenes.find((s) => s.id === id),
+            quand,
+        );
+
+        set((state) => ({
+            scenes: state.scenes.map((s) => (s.id === id ? terminer(s, quand) : s)),
+        }));
+
+        /* Hors du `set`, et sous garde d'enregistrement — voir `ouvrirLaScene`. */
+        if (entree && useJournalStore.getState().isRecording) {
+            useJournalStore.getState().addEvent(entree);
+        }
+    },
 
     /*
       **Improvisée ET ouverte du même geste.** C'est tout l'intérêt : on
