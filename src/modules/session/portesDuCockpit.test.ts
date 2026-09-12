@@ -21,6 +21,14 @@ import type { CurrentView } from '../../types/campaign.types';
  * inatteignable** — le classement disait `'les-deux'`, la navigation disait
  * `'preparation'`.
  *
+ * ⛔ **ET LE MÊME MÉCANISME A FRAPPÉ UNE TROISIÈME FOIS, le 2026-09-12.**
+ * Cette fois c'était le **Master Storyboard**, et ce test-ci ne pouvait rien y
+ * voir : il ne parcourt que les vues classées `'les-deux'`, or le storyboard
+ * était classé `'preparation'`. *Une garde qui part du classement ne peut pas
+ * attraper une erreur DE classement.* Le complément vit désormais dans
+ * `affiniteDesVues.test.ts` — la liste gelée de ce qui disparaît en séance — et
+ * dans `e2e/storyboardEnSeance.spec.ts`, qui ouvre une séance et clique.
+ *
  * ⚠️ **Ce que ce test ne prouve pas.** Il lit le source du cockpit et y cherche
  * un `setCurrentView`. Il ne dit rien de la visibilité réelle du bouton — un
  * repli, une condition, un `hidden` lui échapperaient. *Il garde l'existence
@@ -41,9 +49,9 @@ describe('les portes du cockpit', () => {
         expect(portes.has(vue)).toBe(true);
     });
 
-    it('en couvre bien six — sans quoi la boucle ci-dessus ne prouverait rien', () => {
+    it('en couvre bien sept — sans quoi la boucle ci-dessus ne prouverait rien', () => {
         /* Une liste vide fait passer `it.each` sans exécuter un seul cas. */
-        expect(desDeuxCotes.length).toBe(6);
+        expect(desDeuxCotes.length).toBe(7);
     });
 
     it('trouve les portes en lisant vraiment le fichier', () => {

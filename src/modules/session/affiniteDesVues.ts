@@ -41,7 +41,6 @@ export const AFFINITE_DES_VUES: Record<CurrentView, Affinite> = {
     'campaign-details': 'preparation',
     'campaign-form': 'preparation',
     'session-prep': 'preparation',
-    storyboard: 'preparation',
     'deck-library': 'preparation',
 
     // On y est pendant qu'on joue.
@@ -58,6 +57,27 @@ export const AFFINITE_DES_VUES: Record<CurrentView, Affinite> = {
     'timeline-wiki': 'les-deux',
     players: 'les-deux',
     trame: 'les-deux',
+    /*
+      ⛔ **Le storyboard était classé « préparation » — corrigé le 2026-09-12,
+      après une séance perdue.**
+
+      David : *« le bouton Master Storyboard s'allume quand je vais dessus, mais
+      ne lance pas le storyboard »*. La vue passait bien à `storyboard`, et
+      `useLayoutManager` la ramenait au cockpit dans le rendu suivant. Pas de
+      plantage, pas d'erreur, **rien au journal** : le classement faisait
+      exactement ce qu'on lui avait dit.
+
+      ⭐ **C'est le seul écran de préparation dont le contenu sert PENDANT qu'on
+      joue** — ses moments se déclenchent à la table, depuis le panneau de trame.
+      Et contrairement à Deck-OS, il n'a pas de jumeau de partie
+      (`deck-library` / `deck-player`) : le classer « préparation » ne le
+      rangeait pas, il le **faisait disparaître au moment où il sert**.
+
+      ⚠️ Et le pire : une séquence qui rate en séance est précisément le moment
+      où l'on veut l'ouvrir. *Le défaut et l'impossibilité de le diagnostiquer
+      étaient le même.*
+    */
+    storyboard: 'les-deux',
 };
 
 /**

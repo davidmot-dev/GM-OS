@@ -120,9 +120,16 @@ avec une case de plus pour ce qu'on a vu sans le traiter.
 > symptôme sans reproduction, on ne demande pas « qu'est-ce qui a causé ça ? » — on demande
 > **« quels chemins de ce code peuvent ne jamais finir ? »**, et ceux-là se comptent.*
 
-✅ **La case est vide au 2026-09-12 au soir.** Les cinq lignes ouvertes ce jour-là sont sorties par
-le haut : quatre au § 47, la cinquième au § 48. *Elle reste ici, vide, parce qu'une case qu'on
-supprime quand elle se vide ne se rouvre jamais quand il le faudrait.*
+⚠️ **Vidée le 12/09 au soir, rouverte le soir même.** Les cinq lignes du matin sont sorties par le
+haut (§ 47 et § 48), et elle a resservi le jour même — ce qui est exactement ce qu'on lui demande.
+
+⭐ Elle portait cette phrase depuis le matin : *« une case qu'on supprime quand elle se vide ne se
+rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
+
+| Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
+| --- | --- | --- |
+| ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
+| ⚠️ **Le périphérique de sortie d'Ambient-OS n'existe plus** : `Device 22ad7d4a… not found, falling back to default`. Le son sort, mais **devant au lieu du fond** | Le message est à la console à chaque lecture. Les `sinkId` changent au rebranchement : un réglage mémorisé vieillit sans le dire | Vu en marge de l'incident principal, et sans effet sur les données. *Mais un réglage de sortie qui retombe en silence est un mensonge d'écran* |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -2724,6 +2731,81 @@ minutes, sur une ligne qui avait attendu une journée.
 **Éprouvé par dégradation, des deux côtés** : sans la course d'expiration, **5 tests rougissent** et
 la suite met 16 s au lieu de 0,8 s — le blocage se mesure ; avec l'ancien `if (!rapport.degrade)`
 devant `setSystemReady`, **2 tests rougissent**.
+
+### 50 · ⛔ Le Master Storyboard inatteignable en séance — et le silence autour (2026-09-12)
+
+*Une séquence ratée en pleine partie, et l'écran qui l'aurait expliquée était justement celui qu'on
+ne pouvait plus ouvrir.*
+
+#### Le symptôme, et ce qu'il n'était pas
+
+David : *« j'ai lancé une scène qui avait une séquence de Storyboard liée, elle ne s'est pas bien
+exécutée (pas d'image projetée, les lumières ne se sont pas allumées, l'ambiance s'arrête), et après
+je ne peux pas revenir dans le master storyboard »*.
+
+⭐ **Le journal de l'application a tranché avant toute hypothèse** : aucun `error`, aucun `warn`
+depuis le **5 septembre**. Donc **pas de plantage** — l'`ErrorBoundary` aurait écrit
+`CRITICAL_MODULE_FAILURE` et remplacé tout le cockpit. *Trois hypothèses ont été écartées par une
+lecture de `main.log`, avant d'avoir coûté une ligne de code.*
+
+#### ⛔ La cause : un classement, pas un mécanisme
+
+`affiniteDesVues.ts` portait `storyboard: 'preparation'`. Pendant une séance, `useLayoutManager`
+ramène au cockpit toute vue qui ne convient pas au moment. **Le clic passait, la vue changeait, et le
+rendu suivant la ramenait.** Le bouton s'allumait le temps d'une image.
+
+⭐ **Le storyboard est le seul écran de préparation dont le contenu sert PENDANT qu'on joue** — ses
+moments se déclenchent depuis le panneau de trame. Et contrairement à Deck-OS, il n'a pas de jumeau
+de partie (`deck-library` / `deck-player`) : le classer « préparation » ne le rangeait pas, il le
+**faisait disparaître au moment où il sert**. David : *« c'est une erreur, le storyboard doit pouvoir
+être lancé en partie »*.
+
+#### ⛔⛔ TROISIÈME FOIS pour ce même mécanisme
+
+| Quand | Quelle vue | Trouvé par |
+| --- | --- | --- |
+| 2026-09-05 | `timeline-wiki` — *« je n'ai plus accès à la chronologie et au wiki »* | David, en séance |
+| 2026-09-12 | `storyboard` | David, en séance |
+
+⭐⭐ **Et la garde écrite le 05/09 ne pouvait pas l'attraper.** `portesDuCockpit.test.ts` vérifie que
+toute vue classée `'les-deux'` a une porte dans le cockpit — il **part du classement**. Or c'est le
+classement qui était faux. *Une garde qui part d'une table ne peut pas attraper une erreur DE cette
+table.*
+
+Le complément est donc d'une autre nature : une **liste gelée** de ce qui disparaît en séance
+(`affiniteDesVues.test.ts`), sur le modèle du registre des actions distantes. Elle n'empêche pas un
+mauvais choix : elle empêche un choix **silencieux**.
+
+#### ⚠️ Et le silence qui entourait tout ça
+
+Deux causes cumulées, trouvées en cherchant la première :
+
+1. **`window.useToastStore` n'est assigné nulle part.** Sept appels le lisaient — les trois moteurs
+   audio, le storyboard, son tableau de bord — tous derrière un `if (gmToast)` **jamais franchi**.
+   *« Fichier d'ambiance introuvable dans la base de données »* était prêt depuis toujours.
+   ⭐ Et le typage l'a prouvé à la seconde où l'import est devenu statique : **cinq `TS2345`**, les
+   arguments étaient inversés. *Le `any` de `window` cachait une erreur de type.*
+2. **Chaque effet d'un moment est un `if` muet** : magasin absent de `window`, effet sauté sans un
+   mot. *Un `&&` qui protège est un `&&` qui cache.*
+
+Un moment rend désormais des comptes, moteur par moteur, et **distingue « introuvable » (la donnée du
+meneur a bougé) de « module non chargé » (le code n'était pas là)** — même silence à la table,
+réparations opposées.
+
+#### ⭐ Éprouvé par dégradation, et la dégradation a reproduit l'écran
+
+En remplaçant `'les-deux'` par `'preparation'` : le témoin hors séance **passe**, les deux tests de
+séance **rougissent**, et le message d'échec montre *« locator resolved to `<button>` »* — **le bouton
+du cockpit toujours présent**, c'est-à-dire exactement ce que David avait sous les yeux.
+
+**Ancres** : `affiniteDesVues.ts` (`storyboard: 'les-deux'`), `affiniteDesVues.test.ts` (liste gelée),
+`portesDuCockpit.test.ts` (7 vues), `storyboard/logic/rapportDuMoment.ts` (+ 13 tests),
+`e2e/storyboardEnSeance.spec.ts`.
+
+**Vérifié** : `tsc -b` propre, **4 323 tests** (359 fichiers), **159 tests E2E**.
+
+⚠️ **Ce qui reste ouvert** — voir § 1 bis : pourquoi la séquence elle-même s'est mal exécutée. Le
+classement explique l'écran inaccessible, **pas** l'image absente ni les lumières éteintes.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

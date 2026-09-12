@@ -45,6 +45,76 @@ describe('le classement des vues', () => {
     });
 });
 
+/**
+ * ⛔ **LA GARDE NÉE D'UNE SÉANCE PERDUE — 2026-09-12.**
+ *
+ * Le storyboard était classé « préparation ». Pendant une séance,
+ * `useLayoutManager` ramenait donc la vue au cockpit à chaque tentative :
+ * *« le bouton s'allume quand je vais dessus, mais ne lance pas le
+ * storyboard »*. **Aucune erreur, aucune ligne de journal** — le mécanisme
+ * faisait exactement ce qu'on lui avait dit.
+ *
+ * ⭐ *Ce classement n'est pas une préférence d'affichage : c'est le seul endroit
+ * du code qui peut rendre un écran INATTEIGNABLE.* Ce qu'on y écrit mérite donc
+ * la même discipline que le registre des actions distantes : une liste gelée,
+ * qu'on ne modifie que sciemment.
+ */
+describe('⛔ ce qui disparaît pendant une séance', () => {
+    /**
+     * **La liste gelée.** Toute vue ajoutée ici devient invisible dès qu'une
+     * séance est ouverte, et **rien ne le dira à l'écran**. Ce test rougit tant
+     * qu'on n'a pas mis à jour la liste — c'est-à-dire tant que le choix n'a pas
+     * été fait consciemment.
+     */
+    const INACCESSIBLES_EN_SEANCE: CurrentView[] = [
+        'forge', 'rule-workshop', 'template-editor', 'driver-editor',
+        'templates', 'library', 'campaign-editor', 'campaign-details',
+        'campaign-form', 'session-prep', 'deck-library',
+    ];
+
+    it('la liste des écrans écartés de la table n’a pas bougé en douce', () => {
+        const ecartes = (Object.keys(AFFINITE_DES_VUES) as CurrentView[])
+            .filter(v => !vueConvientAu('partie', v))
+            .sort();
+
+        expect(
+            ecartes,
+            'un écran est devenu inaccessible en séance — était-ce voulu ?',
+        ).toEqual([...INACCESSIBLES_EN_SEANCE].sort());
+    });
+
+    /*
+      ⭐ **Le storyboard n'en fait plus partie, et il ne doit jamais y revenir.**
+      Ses moments se déclenchent à la table depuis le panneau de trame : c'est le
+      seul écran dont le contenu est *utilisé* pendant qu'on joue. Et une
+      séquence qui rate en séance est précisément le moment où l'on veut l'ouvrir.
+    */
+    it('le storyboard s’ouvre pendant une séance', () => {
+        expect(AFFINITE_DES_VUES.storyboard).toBe('les-deux');
+        expect(
+            vueConvientAu('partie', 'storyboard'),
+            'le storyboard redeviendrait inatteignable en pleine séance',
+        ).toBe(true);
+    });
+
+    /* Et il reste évidemment atteignable en préparation : c'est là qu'on l'écrit. */
+    it('et en préparation, où on le bâtit', () => {
+        expect(vueConvientAu('preparation', 'storyboard')).toBe(true);
+    });
+
+    /*
+      ⚠️ **Un écran écarté doit avoir un remplaçant, ou il n'en est pas un.**
+      Deck-OS l'a (`deck-library` → `deck-player`). Ceux de la liste ci-dessus
+      n'en ont pas — c'est le parti pris de l'axe N —, mais `vueDeRepli` doit
+      alors toujours convenir, sans quoi on renverrait le meneur dans un écran
+      qui se refermerait aussitôt. *Une boucle de repli serait pire que tout.*
+    */
+    it('le repli convient aux deux moments — sinon il bouclerait', () => {
+        expect(vueConvientAu('partie', vueDeRepli())).toBe(true);
+        expect(vueConvientAu('preparation', vueDeRepli())).toBe(true);
+    });
+});
+
 describe('ce qui convient à quel moment', () => {
     it('écarte la Forge de la table', () => {
         expect(vueConvientAu('partie', 'forge')).toBe(false);
