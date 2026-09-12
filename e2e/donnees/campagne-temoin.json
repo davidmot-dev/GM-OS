@@ -1,0 +1,232 @@
+{
+  "version": "5.1.0",
+  "timestamp": "2026-09-12T00:00:00.000Z",
+  "global": {
+    "theme": "cyberpunk",
+    "themeColor": "#06b6d4",
+    "activeModule": "dashboard"
+  },
+  "modules": {
+    "sessionOS": {
+      "activeCampaignId": "temoin-campagne",
+      "campaigns": [
+        {
+          "id": "temoin-campagne",
+          "name": "Le Silence de Varn",
+          "system": "generic",
+          "description": "Campagne temoin gelee. Elle n'existe que pour les tests.",
+          "synopsis": "Une station de relais cesse de repondre. Personne n'est parti.",
+          "activeSessionId": "temoin-seance-1",
+          "activeLocationIds": ["temoin-lieu-station"]
+        }
+      ],
+      "players": [
+        {
+          "id": "temoin-joueur-1",
+          "realName": "Joueuse temoin A",
+          "avatarUrl": "",
+          "isOnline": false,
+          "characters": [
+            {
+              "id": "temoin-pj-1",
+              "name": "Nel Varga",
+              "classRace": "Technicienne de bord",
+              "portraitUrl": "",
+              "hp": 9,
+              "maxHp": 12,
+              "campaignId": "temoin-campagne",
+              "templateId": "generic",
+              "sheetData": { "metier": "Technicienne", "moral": 3 }
+            }
+          ]
+        },
+        {
+          "id": "temoin-joueur-2",
+          "realName": "Joueur temoin B",
+          "avatarUrl": "",
+          "isOnline": false,
+          "characters": [
+            {
+              "id": "temoin-pj-2",
+              "name": "Idris Koa",
+              "classRace": "Negociateur",
+              "portraitUrl": "",
+              "hp": 11,
+              "maxHp": 11,
+              "campaignId": "temoin-campagne",
+              "templateId": "generic",
+              "sheetData": { "metier": "Negociateur", "moral": 5 }
+            }
+          ]
+        }
+      ],
+      "entities": [
+        {
+          "id": "temoin-pnj-1",
+          "name": "Superviseur Hale",
+          "campaignId": "temoin-campagne",
+          "type": "npc",
+          "description": "Repond trop vite aux questions qu'on ne lui a pas posees.",
+          "imageUrl": ""
+        },
+        {
+          "id": "temoin-pnj-2",
+          "name": "Ancre-7",
+          "campaignId": "temoin-campagne",
+          "type": "npc",
+          "description": "Une voix dans le systeme de relais. Elle compte les absents.",
+          "imageUrl": ""
+        }
+      ],
+      "sessions": [
+        {
+          "id": "temoin-seance-1",
+          "campaignId": "temoin-campagne",
+          "name": "Seance temoin 1",
+          "date": "2026-09-12T00:00:00.000Z",
+          "notes": "Seance gelee : elle ne doit jamais etre rejouee ni mise a jour."
+        }
+      ],
+      "actes": [
+        {
+          "id": "temoin-acte-1",
+          "campaignId": "temoin-campagne",
+          "ordre": 1,
+          "titre": "L'arrivee",
+          "resume": "Le groupe atteint la station et constate le silence.",
+          "acheve": true
+        },
+        {
+          "id": "temoin-acte-2",
+          "campaignId": "temoin-campagne",
+          "ordre": 2,
+          "titre": "Ce que Hale n'a pas dit",
+          "resume": "Le superviseur cache un depart qui n'en etait pas un.",
+          "notesDuMeneur": "Hale ment sur la date, pas sur le nombre."
+        }
+      ],
+      "scenes": [
+        {
+          "id": "temoin-scene-1",
+          "campaignId": "temoin-campagne",
+          "acteId": "temoin-acte-1",
+          "ordre": 1,
+          "titre": "Amarrage",
+          "resume": "Le sas s'ouvre sur un couloir eclaire et vide.",
+          "origine": "preparee",
+          "lieuId": "temoin-lieu-station",
+          "entiteIds": [],
+          "personnagesIds": ["temoin-pj-1", "temoin-pj-2"],
+          "indiceIds": ["temoin-indice-1"],
+          "closeLe": "2026-09-12T00:10:00.000Z",
+          "passages": [
+            {
+              "id": "temoin-passage-1",
+              "quand": "2026-09-12T00:05:00.000Z",
+              "type": "note",
+              "texte": "Les rations sont intactes. Le cafe est encore chaud."
+            }
+          ]
+        },
+        {
+          "id": "temoin-scene-2",
+          "campaignId": "temoin-campagne",
+          "acteId": "temoin-acte-2",
+          "ordre": 1,
+          "titre": "Entretien avec Hale",
+          "resume": "Il repond a tout, et trop vite.",
+          "origine": "preparee",
+          "entiteIds": ["temoin-pnj-1"],
+          "personnagesIds": ["temoin-pj-2"],
+          "indiceIds": ["temoin-indice-2"]
+        },
+        {
+          "id": "temoin-scene-3",
+          "campaignId": "temoin-campagne",
+          "acteId": "temoin-acte-2",
+          "ordre": 2,
+          "titre": "La voix dans le relais",
+          "resume": "Scene improvisee : Ancre-7 prend la parole sans qu'on l'appelle.",
+          "origine": "improvisee",
+          "entiteIds": ["temoin-pnj-2"],
+          "indiceIds": []
+        }
+      ],
+      "clues": [
+        {
+          "id": "temoin-indice-1",
+          "campaignId": "temoin-campagne",
+          "titre": "Le cafe encore chaud",
+          "contenu": "Le depart date de moins d'une heure.",
+          "decouvert": true
+        },
+        {
+          "id": "temoin-indice-2",
+          "campaignId": "temoin-campagne",
+          "titre": "La date corrigee",
+          "contenu": "Le registre a ete reecrit, une seule fois.",
+          "decouvert": false
+        }
+      ],
+      "wikiEntries": [
+        {
+          "id": "temoin-wiki-1",
+          "campaignId": "temoin-campagne",
+          "title": "Station Varn",
+          "content": "Relais de communication. Equipage nominal : neuf.",
+          "tags": ["lieu"]
+        }
+      ],
+      "atlasMaps": [
+        {
+          "id": "temoin-lieu-station",
+          "campaignId": "temoin-campagne",
+          "name": "Station Varn",
+          "imageUrl": "",
+          "tokens": [],
+          "fogEnabled": false
+        }
+      ],
+      "timelineEvents": [
+        {
+          "id": "temoin-evt-1",
+          "campaignId": "temoin-campagne",
+          "title": "Dernier message recu",
+          "date": "2026-09-11T22:00:00.000Z"
+        }
+      ],
+      "decks": [
+        {
+          "id": "temoin-paquet",
+          "name": "Cartes de complication",
+          "systemId": "generic",
+          "folderPath": "assets/decks/generic/temoin-paquet",
+          "cardCount": 6,
+          "format": "poker",
+          "orientation": "portrait",
+          "useDiscard": true,
+          "ouvertAuxJoueurs": true
+        }
+      ],
+      "deckStates": {
+        "temoin-paquet": {
+          "deckId": "temoin-paquet",
+          "remainingIndices": [3, 4, 5, 6],
+          "discardedIndices": [1],
+          "currentCardIndex": null,
+          "enMain": [
+            {
+              "cardIndex": 2,
+              "porteurId": "temoin-pj-1",
+              "face": "porteur"
+            }
+          ]
+        }
+      },
+      "lootPool": [],
+      "lootHistory": [],
+      "customSheetTemplates": [],
+      "customGameDrivers": []
+    }
+  }
+}

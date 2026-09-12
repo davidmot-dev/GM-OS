@@ -61,6 +61,33 @@ const ICI = path.dirname(fileURLToPath(import.meta.url));
 /** Le paquet construit, celui qu'Electron reçoit en argument. */
 const POINT_DENTREE = 'dist-electron/main.js';
 
+/**
+ * **La campagne témoin, gelée.**
+ *
+ * Un test qui a besoin d'autre chose qu'un écran d'accueil la demande à
+ * `lancerGmOs({ semence: CAMPAGNE_TEMOIN })`. Sans elle, l'instance démarre sur
+ * `INITIAL_DATA` — « The Eternal Quest » — ce qui suffit à la plupart des tests
+ * et ne coûte rien.
+ *
+ * ⛔ **Elle est gelée, pas maintenue.** Son contenu ne se régénère pas ; il est
+ * gardé par `src/modules/session/data/campagneTemoinGelee.test.ts`, qui échoue
+ * bruyamment le jour où le code ne sait plus la lire. *Un témoin qu'on
+ * rafraîchit cesse de pouvoir contredire le code.*
+ */
+export const CAMPAGNE_TEMOIN = path.join(ICI, 'donnees', 'campagne-temoin.json');
+
+export interface OptionsDeLancement {
+    /**
+     * Le fichier de sauvegarde dont partir, s'il y en a un.
+     *
+     * ⚠️ La semence n'entre que sur un état d'usine, et seulement après
+     * l'hydratation — voir les trois gardes de `src/hooks/useSemence.ts`. Sur une
+     * instance qui porte déjà des campagnes, elle ne fait rien **et le dit au
+     * journal**.
+     */
+    semence?: string;
+}
+
 export interface GmOsLance {
     application: ElectronApplication;
     /** La fenêtre du meneur — la première qu'Electron ouvre. */
@@ -79,7 +106,7 @@ export interface GmOsLance {
  * charge `dist/index.html` : c'est ce qui permet de tester sans orchestrer Vite,
  * mais un `dist/` périmé ferait passer des tests sur du code d'hier.
  */
-export async function lancerGmOs(): Promise<GmOsLance> {
+export async function lancerGmOs(options: OptionsDeLancement = {}): Promise<GmOsLance> {
     const racine = path.resolve(ICI, '..');
     const entree = path.join(racine, POINT_DENTREE);
 
@@ -129,6 +156,16 @@ export async function lancerGmOs(): Promise<GmOsLance> {
             GMOS_COFFRE_OBSIDIAN: path.join(profil, 'coffre'),
             /* Et surtout : aucune lampe, aucun afficheur. */
             GMOS_SANS_APPAREILS: '1',
+
+            /*
+              La semence, seulement si le test la demande.
+
+              ⛔ **Elle n'est jamais héritée** : `environnementPropre` efface
+              toutes les `GMOS_*` du terminal. Sans ça, une variable posée dans
+              le shell du meneur — pour une répétition, par exemple — entrerait
+              dans les tests, et le décor dépendrait de qui lance la commande.
+            */
+            ...(options.semence ? { GMOS_SEMENCE: options.semence } : {}),
         },
     });
 
@@ -147,6 +184,41 @@ export async function lancerGmOs(): Promise<GmOsLance> {
             fs.rmSync(profil, { recursive: true, force: true });
         },
     };
+}
+
+/**
+ * Attend que la base ait fini d'être relue.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ⛔ CE QUI SE PASSE SI ON ATTEND LA MAUVAISE CHOSE
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * On a d'abord attendu « le magasin porte au moins une campagne ». **C'est un
+ * faux signal** : le magasin naît avec `INITIAL_DATA`, donc la condition est
+ * vraie *avant* la moindre lecture d'IndexedDB. C'est la même méprise que la
+ * garde de la semence a payée en août — *une base neuve n'est jamais vide.*
+ *
+ * Et la conséquence était muette : `gmOnlyStateStorage.setItem` refuse d'écrire
+ * tant que la base n'a pas été relue, **et retourne sans rien dire**. Un test
+ * qui écrivait trop tôt voyait donc son écriture disparaître, sans erreur, sans
+ * trace — puis l'application persistait son propre état par-dessus. *Trois
+ * hypothèses fausses avant de simplement demander à Zustand ce qu'il sait
+ * déjà.*
+ *
+ * `persist.hasHydrated()` est ce signal, et il vient de la même mécanique que
+ * le verrou d'écriture : les deux sont posés par `onRehydrateStorage`.
+ */
+export async function attendreLHydratation(gmos: GmOsLance): Promise<void> {
+    await gmos.fenetre.waitForFunction(
+        () => {
+            const magasin = (window as never as {
+                useSessionOSStore?: { persist?: { hasHydrated: () => boolean } };
+            }).useSessionOSStore;
+            return magasin?.persist?.hasHydrated() === true;
+        },
+        undefined,
+        { timeout: 30_000 },
+    );
 }
 
 /**
@@ -217,11 +289,21 @@ async function fenetreDuMeneur(application: ElectronApplication): Promise<Page> 
  * porte cette variable exige `env -u ELECTRON_RUN_AS_NODE`. On la retire donc
  * ici plutôt que d'exiger un terminal particulier — *une précaution qui dépend
  * de qui lance la commande n'est pas une précaution.*
+ *
+ * ⛔ **Et toutes les `GMOS_*` héritées partent avec elle.** Le périmètre d'une
+ * instance de test est déclaré ici, en entier, juste au-dessus ; une variable
+ * venue du terminal s'y ajouterait sans que personne ne l'ait voulu. Le cas
+ * concret : `GMOS_SEMENCE`, posée à la main pour une répétition, ferait démarrer
+ * les tests sur les vraies campagnes du meneur. Elle ne détruirait rien — la
+ * semence lit un fichier — mais un test vert ou rouge selon le shell ne prouve
+ * plus rien. *Le même raisonnement que la ligne du dessus, appliqué à nos
+ * propres variables.*
  */
 function environnementPropre(): Record<string, string> {
     const propre: Record<string, string> = {};
     for (const [cle, valeur] of Object.entries(process.env)) {
         if (cle === 'ELECTRON_RUN_AS_NODE') continue;
+        if (cle.startsWith('GMOS_')) continue;
         if (valeur !== undefined) propre[cle] = valeur;
     }
     /* Sans elle, `main.ts` chargerait le serveur de dev au lieu de `dist/`. */

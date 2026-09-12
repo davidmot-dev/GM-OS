@@ -2249,6 +2249,85 @@ qu'il ne faut pas répéter sur les données de David ; elle est tenue par deux 
 1 ignoré), **les 9 tests E2E au vert** — c'est eux qui prouvent que la garde laisse passer ce qu'elle
 doit laisser passer.
 
+### 43 · ⭐ La donnée gelée — un témoin pour les tests, et le premier test de migration (2026-09-12)
+
+*Le second geste du § 1 de l'état du 12/09. Il ferme le dernier trou nommé : `PersistenceService` était
+en `version: 10` avec un `migrate` que **rien n'exerçait**.*
+
+#### Le pivot : ce sont deux besoins, une seule donnée gelée
+
+Ils portent le même nom et n'ont ni le même format ni le même chemin d'entrée :
+
+| | La campagne témoin | La base ancienne |
+| --- | --- | --- |
+| **Sert à** | le décor des tests E2E | éprouver `migrate` |
+| **Enveloppe** | `{ version, timestamp, global, modules }` | `{ state, version }` |
+| **Entre par** | `GMOS_SEMENCE` → `validateSession` → `distributeData` | **la réhydratation** |
+
+⭐ **Mais le contenu est le même**, et ce n'est pas une coïncidence : `partialize` range
+`lesDonneesDeLaSession(state)`, qui est exactement ce que `modules.sessionOS` capture — le commentaire
+de `partialize` le dit déjà. La base ancienne se **dérive** donc du témoin dans le test, au lieu de
+vivre dans un second fichier. *Une donnée gelée qui vit à deux endroits en désigne une fausse* — la
+règle que ce document applique à ses listes de restes.
+
+⭐ **Et on ne fabrique pas une vieille base : on en gèle une jeune.** Le témoin est figé aujourd'hui ;
+c'est le code de demain qui le rendra ancien, sans que personne n'y touche.
+
+#### Ce qui est entré
+
+| | Quoi | Où |
+| --- | --- | --- |
+| **Le témoin** | 8 Ko, fabriqué et non copié — *une vraie sauvegarde fait 1,4 Mo et porte les sept campagnes de David : ni le poids ni le contenu n'entrent dans un dépôt*. Une campagne, 2 joueurs, 2 PNJ, 2 actes, 3 scènes, un paquet avec une carte en main | `e2e/donnees/campagne-temoin.json` |
+| **Son gardien** | 12 tests : il passe `validateSession`, il ne perd ni `actes` ni `scenes` ni `decks` (les champs que seul `.passthrough()` fait traverser), ses identifiants sont préfixés, son horodatage est fixe, et sa cohérence interne tient | `campagneTemoinGelee.test.ts` |
+| **La semence en E2E** | `lancerGmOs({ semence: CAMPAGNE_TEMOIN })`, facultative. Sans elle, le décor d'usine — qui suffit et ne coûte rien | `e2e/lancerGmOs.ts` |
+| **Le test de migration** | Écrit une charge en `version: 9` par la porte de l'application elle-même, **recharge la fenêtre**, et vérifie que rien n'a disparu | `e2e/baseAncienne.spec.ts` |
+
+**Mesuré** : `[Store Migration] Migrating from version 9 to 10` apparaît au journal, et la campagne, les
+2 actes, les 3 scènes et la carte en main sont tous là après le rechargement.
+
+#### Ce qui a été appris, et qui coûtera cher à quelqu'un d'autre
+
+⛔ **`campaigns.length > 0` n'est PAS un signal d'hydratation.** Le magasin naît avec `INITIAL_DATA` :
+la condition est vraie **avant** la moindre lecture d'IndexedDB. C'est la méprise de la garde de la
+semence en août, à l'identique — *une base neuve n'est jamais vide.*
+
+⛔ **Et la conséquence était muette.** `gmOnlyStateStorage.setItem` refuse d'écrire tant que la base
+n'a pas été relue, **et retourne sans rien dire**. L'écriture du test disparaissait sans erreur, puis
+l'application persistait son propre état par-dessus. Trois hypothèses fausses avant de simplement
+demander à Zustand ce qu'il savait déjà : `persist.hasHydrated()`. *Les deux — le verrou d'écriture et
+ce drapeau — sont posés par le même `onRehydrateStorage`.*
+
+⭐ **Le test de contrôle compte autant que l'autre.** Une seconde instance démarre **sans** semence et
+vérifie qu'elle porte le décor d'usine. Sans lui, « la campagne du témoin est à l'écran » pourrait être
+vrai pour une raison étrangère à la semence. *Une assertion qui ne peut pas échouer ne mesure rien.*
+
+⛔ **Un jeu d'essai qui se dégrade laisse les tests VERTS.** Si le témoin cesse un jour de passer la
+validation, la semence est refusée — et le test E2E continue de tourner, sur la campagne de
+démonstration, avec un décor qui n'est pas celui qu'il croit. D'où un gardien qui, lui, rougit.
+
+⛔ **Le lanceur E2E efface désormais toutes les `GMOS_*` héritées du terminal.** Une `GMOS_SEMENCE`
+posée à la main pour une répétition serait entrée dans les tests. Elle n'aurait rien détruit — la
+semence lit un fichier — mais *un test vert ou rouge selon le shell ne prouve plus rien.*
+
+⚠️ **Le témoin est rattaché au système `generic`, et c'est voulu.** L'écran affiche un avertissement
+(« gabarit de fiche et non un jeu ») qu'on pourrait prendre pour un oubli. Une instance de test vise un
+corpus **vide** : aucun pilote de jeu n'y existe. *Un témoin qui déclarerait un jeu absent serait moins
+honnête que celui qui n'en déclare aucun.*
+
+⚠️ **Ce que le format de sauvegarde ne porte pas, et qu'on ne peut donc pas geler ainsi** : les combats
+garés. Ils vivent dans `useCombatStore`, qui n'entre dans aucune sauvegarde. Mon plan du jour annonçait
+« un combat garé dans le témoin » — il n'était pas réalisable, et le dire vaut mieux que de simuler un
+champ qui n'existe pas.
+
+⚠️ **Le contrat que `baseAncienne.spec.ts` énonce n'est pas le code d'aujourd'hui.** `migrate` est un
+passe-plat ; l'assertion est **« une base ancienne ne perd rien »**. Le jour où une vraie migration
+sera écrite, ce test devra continuer à passer — sinon c'est la migration qui détruit, pas le test qui
+vieillit.
+
+**Ancres** : `e2e/donnees/campagne-temoin.json`, `e2e/semerUneCampagne.spec.ts`,
+`e2e/baseAncienne.spec.ts`, `src/modules/session/data/campagneTemoinGelee.test.ts`. `tsc -b` propre,
+**4 192 tests au vert** (351 fichiers, 1 ignoré), **17 tests E2E au vert** (contre 9 la veille).
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 - **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
