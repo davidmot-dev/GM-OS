@@ -1,8 +1,12 @@
 # 📖 Guide général
 
-GM-OS est un ensemble de modules qui se partagent une campagne. Ce guide dit **ce que chacun fait
-en une phrase**, et dans quel ordre les découvrir. Pour le détail, chaque module a son guide —
-tous sont listés dans [l'index](./00-Index-des-guides.md).
+GM-OS est un ensemble de modules qui se partagent une campagne. Ce guide dit **par où entrer et
+dans quel ordre découvrir**. Pour le détail, chaque module a son guide — tous sont listés dans
+[l'index](./00-Index-des-guides.md).
+
+> 🧭 **Vous ne savez pas encore ce qu'est GM-OS ?** Commencez par
+> [GM-OS en bref](./02-GM-OS-en-bref.md) : le but de l'application, son vocabulaire, et ce que fait
+> chaque module en deux phrases.
 
 ---
 
@@ -18,43 +22,11 @@ tous sont listés dans [l'index](./00-Index-des-guides.md).
 
 ## 🧭 Ce que fait chaque module
 
-### Préparer
+**Cette liste a déménagé** — elle vit désormais dans [GM-OS en bref](./02-GM-OS-en-bref.md), avec
+deux phrases par module au lieu d'une.
 
-- **La trame** — actes et scènes : le plan de la campagne.
-- **La Forge de campagne** — un scénario écrit devient des actes, des scènes, des PNJ, des lieux.
-- **NPC-OS** — improviser un PNJ, un lieu, une rumeur.
-- **Map-OS, le plateau tactique** — la carte de combat : pions, brouillard de guerre, zones de
-  danger, projetée en direct chez les joueurs.
-- **L'Atlas** — autre chose : la galerie des *lieux* de la campagne, que les joueurs consultent
-  depuis l'onglet Atlas de leur tablette.
-- **Les Indices** — les secrets, à qui ils sont liés, quand ils tombent.
-- **Obsidian** — vos notes de préparation, branchées sur l'Oracle.
-
-### Jouer
-
-- **Combat-OS** — initiative, santé, effets, tour par tour.
-- **Dice-OS** — le pupitre de dés, y compris les mécaniques exotiques.
-- **Clock-OS** — le temps, les minuteurs, les horloges de tension.
-- **Deck-OS** — les paquets de cartes, et celles qu'un joueur garde en main.
-- **Table-OS** et **Loot-OS** — les oracles qu'on consulte, et le butin qu'on distribue.
-- **Le Journal** — ce qui s'écrit tout seul pendant que vous jouez.
-
-### L'ambiance
-
-- **Music-OS**, **Ambient-OS**, **Sound-OS** — les musiques, les paysages sonores, les bruitages.
-- **Image-OS** — projeter une illustration, un portrait, une carte.
-- **Light-OS** — les lumières Philips Hue.
-- **Voice-OS** — transformer votre voix pour incarner un PNJ.
-- **Le Storyboard** — enchaîner son, lumière et image en un seul geste.
-- **L'afficheur Ulanzi** — le petit écran 32 × 8 posé sur la table.
-
-### L'intelligence artificielle
-
-- **L'Oracle** — poser une question à un modèle qui connaît **votre** corpus, en local (Ollama) ou
-  à distance.
-- **Le Cortex** — l'assistant tactique : il observe la table et suggère.
-
----
+> ⭐ *Elle n'a pas été recopiée, elle a été déplacée.* Deux listes du même contenu finissent
+> toujours par diverger, et le jour où elles se contredisent on ne sait plus laquelle croire.
 
 ## 🎙️ Donner une voix à un PNJ
 

@@ -22,6 +22,37 @@ Trente-six endroits de GM-OS consignent au journal. Chaque ligne porte **un type
 | `NOTE` | Ce que vous écrivez vous-même. |
 | `SYSTEM` | Le reste — dons d'objets, changements d'état. |
 
+### Ouvrir et terminer une scène s'écrivent aussi
+
+Depuis le 2026-09-12, **ouvrir une scène dépose une entrée**, et la terminer une autre. Ce sont des
+`SYSTEM`, donc des **traces** : elles marquent la frontière sans entrer dans le résumé.
+
+L'entrée d'ouverture porte le décor — l'acte, le lieu, les PJ présents, les PNJ, puis le synopsis :
+
+```
+Scène ouverte : La voix dans le relais
+
+Acte : Ce que Hale n'a pas dit
+Lieu : Station Varn
+PJ présents : Nel Varga, Idris Koa
+PNJ : Ancre-7
+
+Ancre-7 prend la parole sans qu'on l'appelle.
+```
+
+Une rubrique dont vous n'avez rien renseigné **disparaît** au lieu de s'afficher vide. L'entrée de
+fermeture, elle, dit la **durée jouée** — ou *« Close sans avoir été jouée »* pour une scène que
+l'acte a emportée sans que le groupe y passe.
+
+> ⭐ **Et ce n'est pas qu'un confort de relecture.** La revue de fin de séance ne liste que les
+> scènes **qui portent des événements**. Avant, une scène jouée mais silencieuse n'y apparaissait
+> pas du tout — donc impossible à fusionner ou à scinder, alors que c'est exactement le rattrapage
+> prévu. *Le filet manquait là où il devait servir.*
+
+> ⚠️ Rien n'est écrit si le geste ne change rien : rouvrir une scène déjà ouverte, ou terminer une
+> scène déjà close, ne dépose aucune entrée. Et rien ne s'écrit **hors séance** — préparer sa trame
+> un dimanche après-midi ne remplit pas un journal archivé.
+
 > ⭐ **Pourquoi `PJ` et `DICE` existent séparément.** La mort d'un personnage joueur s'écrivait
 > autrefois en `NPC` : cela fonctionnait, mais rangeait sous « personnage non joueur »
 > l'événement qu'une table raconte le plus longtemps. Et les dés sont le geste **le plus fréquent**
@@ -53,6 +84,25 @@ scènes**, chacune avec ce qui s'y est passé — le rattachement est déjà fai
 C'est **votre** étape, et elle mérite votre attention. Le résumé qui suit, lui, est automatisé —
 parce que les deux n'ont pas le même mode de défaillance : **un résumé raté se relance, c'est bon
 marché ; une curation ratée fausse tout ce qui en découle.**
+
+### Où se trouvent « Absorber… » et les ciseaux
+
+Les deux gestes vivent **dans le module Journal de Jeu**, section **« Revue de la séance »**, sous
+le compte rendu — et nulle part ailleurs : les écrans de trame ne les proposent pas.
+
+Ils n'apparaissent que lorsque la revue a de quoi les appliquer. **Quatre conditions**, et aucune
+ne s'annonce à l'écran :
+
+| Ce que vous cherchez | Ce qu'il faut |
+| :--- | :--- |
+| Voir une scène dans la revue | qu'elle porte **au moins un événement**. Depuis le 12/09, l'ouverture en dépose un — donc toute scène ouverte y est. |
+| Le menu **« Absorber… »** | **au moins deux scènes** dans la revue, et la scène gardée ne doit pas être mise de côté. |
+| Les **ciseaux** (scinder) | un événement qui **n'est pas le premier** de sa scène. Couper sur le premier donnerait tout à la seconde moitié. |
+| Des ciseaux visibles sans déplier | un événement de **récit**. Les traces — dés, combat, son, ouverture de scène — sont repliées derrière leur bouton. |
+
+> ⚠️ **Une séance surtout faite de jets et de combats affiche « Rien qui raconte »** sous ses
+> scènes, et ses ciseaux sont dans le repli des traces. Ce n'est pas une panne : seuls `NPC`, `PJ`,
+> `LOCATION` et `NOTE` sont de la chronique par défaut.
 
 La curation écrit dans la trame et dans les événements — des objets déjà enregistrés — et non dans
 un brouillon jetable. Sa sortie vaut donc par elle-même : c'est la matière de la chronique, du wiki

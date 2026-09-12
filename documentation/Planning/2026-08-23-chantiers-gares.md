@@ -81,7 +81,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | **Voice-to-Light** | 31/08 | Le pont Hue tient-il huit commandes par seconde une soirée durant. Et l'aplatissement du contraste de brillance est-il acceptable, ou abîme-t-il les scènes. L'arrêt doit rendre la scène telle qu'elle était. |
 | Le **préchauffage du modèle** | 31/08 | La première question doit coûter ~50 s au lieu de ~62. Et voir si les 8,4 Gio tenus toute la soirée gênent la **génération d'image locale**, qui charge son modèle sur la même mémoire partagée. |
 | La **physique du graphe social** | 31/08 | Familles et alliances se regroupent-elles visiblement, rivalités s'écartent-elles — ou n'est-ce que du bruit ? *Les valeurs d'affinité sont une estimation, pas une mesure.* |
-| La **fusion et la scission de scènes** | 21/08 | À la revue de fin de séance. Livrées, jamais employées sur une vraie soirée. |
+| ⚠️ La **fusion et la scission de scènes** | 21/08 → **essayée le 12/09** | **David a essayé et n'y est pas arrivé.** La reproduction Playwright a établi que **le geste marche** : ce qui manquait était les *conditions d'apparition* — et surtout qu'une scène ouverte ne laissait **aucune trace au journal**, donc n'entrait pas dans la revue. Corrigé au § 45, 3 tests E2E. **Reste à éprouver en vraie soirée** : que la revue montre bien les scènes traversées, et que fusionner deux scènes emmène leurs événements. |
 | L'**aller-retour d'image** d'une ambiance | — | Déclencher un moment de storyboard qui porte une image, la voir partir au projecteur **et revenir**. |
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
 | Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
@@ -2327,6 +2327,117 @@ vieillit.
 **Ancres** : `e2e/donnees/campagne-temoin.json`, `e2e/semerUneCampagne.spec.ts`,
 `e2e/baseAncienne.spec.ts`, `src/modules/session/data/campagneTemoinGelee.test.ts`. `tsc -b` propre,
 **4 192 tests au vert** (351 fichiers, 1 ignoré), **17 tests E2E au vert** (contre 9 la veille).
+
+### 44 · ⛔ La boucle de Light-OS — GM-OS inutilisable hors de chez soi (2026-09-12)
+
+*Trouvée par David, **en déplacement**, l'écran bloqué et la console qui défilait : « il y a une
+boucle sur light-os ».*
+
+`useHueAutoConnect` avait `status` dans ses dépendances **et écrivait `status`** :
+
+```
+disconnected → setConnection('discovering')   ← l'effet se rejoue
+             → fetchLights() … expire à 5 s
+             → setConnection('disconnected')  ← l'effet se rejoue
+```
+
+⛔ **Tant que le pont répond, le cycle s'arrête au premier succès et rien ne se voit.** Il a fallu
+un pont resté à la maison pour le révéler. *Un défaut qui ne se déclenche qu'ailleurs ne se voit
+jamais au bureau* — et celui-là avait vécu des mois.
+
+**Le correctif tient en deux pièces, et la première ne suffisait pas.**
+
+| | Quoi | Pourquoi |
+| --- | --- | --- |
+| 1 | `status` quitte les dépendances | ⭐ **Un effet ne se rejoue pas sur ce qu'il écrit.** L'état frais se lit toujours par `getState()` |
+| 2 | Une politique séparée et testée — plafond 4, recul 0,5 / 3 / 15 / 60 s, **abandon annoncé** | Sans plafond, **une seule chaîne de rappels** aurait reconstitué la boucle. La terminaison ne doit pas dépendre d'un tableau de dépendances |
+
+⭐ **On s'arrête, et on le dit.** Le meneur doit distinguer « je n'ai pas essayé » de « le pont ne
+répond pas » : *un abandon silencieux se lit comme une panne de GM-OS ; un abandon annoncé se lit
+comme une panne du pont.*
+
+**Mesuré en conditions réelles** (pont injoignable, jeton en coffre, paquet construit) : tentatives
+à 0,8 / 8,8 / 28,8 / 93,8 s, abandon à 98,9 s, puis **silence**. ✅ **Éprouvé par David le jour
+même** : *« le correctif light-os fonctionne »*.
+
+⚠️ **Ce que je n'ai PAS prouvé, et il faut le dire** : que cette boucle causait l'écran bloqué. Dans
+la reproduction, l'écran restait **cliquable** pendant toute la boucle. Trois hypothèses fausses
+avant d'arriver là — un minuteur de splash remis à zéro à chaque rendu (démenti : personne n'écrivait
+pendant 20 s), puis « le mode dev est cassé » (démenti : mes sondes visaient `localhost:5173` et
+n'ont jamais chargé la page, le piège IPv6 que `main.ts` contourne pour lui-même). *Une sonde qui ne
+charge pas la page rend un verdict quand même.*
+
+**Ancres** : `light/logic/reconnexionAuPont.ts` (12 tests), `light/hooks/useHueAutoConnect.ts`,
+commit `c973421f`.
+
+### 45 · ⭐ La trame écrit au journal, et le filet retrouve sa prise (2026-09-12)
+
+*Question de David : « lorsque je lance une scène, il ne doit pas y avoir une entrée dans le
+journal ? ». **Non, il n'y en avait aucune.***
+
+`ouvrirLaScene` et `terminerLaScene` ne touchaient pas au journal. Et ça coûtait bien plus qu'une
+ligne manquante dans le fil :
+
+⛔ **Une scène ouverte mais silencieuse n'existait pas dans la revue de séance.**
+`preparerLaRevue` part des **événements**, jamais de la trame — zéro événement, aucun bloc, donc ni
+fusionnable, ni scindable, ni résumable.
+
+⭐ **Et c'est là que ça faisait mal.** Le plan du 08/08 (§ 3.2) accepte explicitement qu'un
+changement de scène soit oublié — *« un marquage manqué est réparable, pas perdu »* — et nomme son
+filet : **« la revue de fin de séance permet de scinder une scène »**. Or ce filet ne s'affichait que
+pour les scènes portant déjà des événements. **Le filet était absent précisément dans le cas qu'il
+devait rattraper.** C'est exactement ce que David a rencontré en essayant la fusion.
+
+#### Ce que l'entrée contient — demande de David dans la foulée
+
+> *« je veux que tu notes les infos intéressantes (si le journal en a besoin — le synopsis de la
+> scène), les joueurs présents, le lieu, etc. »*
+
+```
+Scène ouverte : La voix dans le relais
+
+Acte : Ce que Hale n'a pas dit
+Lieu : Station Varn
+PJ présents : Nel Varga, Idris Koa
+PNJ : Ancre-7
+
+Ancre-7 prend la parole sans qu'on l'appelle.
+```
+
+| Décision | Pourquoi |
+| --- | --- |
+| **Les noms, jamais les identifiants** | « PJ présents : pj-1 » ne se relit pas six mois plus tard. La résolution se fait dans le magasin — seul à connaître l'état ; la fonction reste pure et testable. Un identifiant qui ne désigne plus personne est **sauté** |
+| **Une rubrique vide disparaît** | *Une rubrique vide affirme un manque ; une rubrique absente n'affirme rien* |
+| **`SYSTEM`, donc `trace`** | La scène devient visible dans la revue **sans** entrer dans le résumé — qui reçoit déjà sa structure par `leRecitCureDuJournal`. Même décision que l'ouverture de combat |
+| **`sceneId` posé explicitement** | `laSceneCourante()` ne répondrait pas : la scène qu'on ouvre n'est pas encore en cours. *L'émetteur qui sait garde la main* |
+| **Rien si le geste ne change rien** | Scène déjà ouverte, déjà terminée : *une trace d'un geste sans effet est un mensonge sur le parcours* |
+| **« Scène rouverte »** | Ranimer une scène terminée, c'est revenir sur ses pas — et ça se relit |
+| **La fermeture dit la durée jouée** | Somme des passages, celui encore ouvert arrêté à l'instant du geste (**un seul `Date.now()`, partagé**). Ou « Close sans avoir été jouée » — *les confondre ferait croire à une partie qui n'a pas eu lieu* |
+
+⛔ **L'écriture se fait HORS du `set` de Zustand.** Un `set` est un calcul d'état ; y glisser une
+écriture au journal en ferait un effet de bord que chaque test déclencherait — la leçon déjà payée
+par la sonnerie du minuteur (§ C3). Et **sous garde `isRecording`**, sans quoi préparer sa trame un
+dimanche remplirait un journal archivé.
+
+#### Ce que la reproduction Playwright a établi sur la fusion
+
+⭐ **Le geste marchait.** Moteur (30 tests depuis le 21/08), magasin, écran : tout était en place.
+Ce qui manquait était **les conditions d'apparition** — quatre, silencieuses, dont aucune ne
+s'explique à l'écran. Elles sont maintenant figées par 3 tests E2E et écrites **une seule fois**,
+dans le guide du journal.
+
+⛔ **Et le témoin gelé de la veille portait trois défauts nés le matin même** : `closeLe` (chaîne
+ISO) là où le moteur lit `termineeLe` (un nombre), un `passages` inventé, et `creeeLe` absent alors
+qu'il est obligatoire. Rien ne l'avait signalé — *les assertions comptaient des **longueurs***.
+« `scenes` n'est pas vide » était vrai d'un tableau de scènes inutilisables.
+
+⭐ **Le remède n'est pas de redécrire la forme dans le test** — ce serait la recopier, donc la
+laisser vieillir. Deux gardes : une **affectation typée sans `as`** (c'est `tsc` qui refuse un champ
+manquant ou mal typé), et l'état des scènes **jugé par `etatDeLaScene`**, la fonction que
+l'application emploie.
+
+**Ancres** : `session/logic/journalDeLaTrame.ts` (21 tests), `session/store/trameSlice.ts`,
+`e2e/ouvrirUneScene.spec.ts`, `e2e/curerLaTrame.spec.ts`, commits `4db1e241` et `c50d5c20`.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

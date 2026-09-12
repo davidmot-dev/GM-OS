@@ -68,12 +68,15 @@ sinon son premier passage, et le journal ne saurait plus rattacher ce qui s'y es
 
 1. **Avant** — vous écrivez vos actes et vos scènes, et la pastille vous dit ce qui manque.
 2. **Vous lancez la séance** — les scènes en pause de cette campagne repartent avec elle.
-3. **Vous ouvrez une scène** — un passage s'ouvre. Deux scènes ouvertes en même temps, c'est un
-   groupe séparé.
+3. **Vous ouvrez une scène** — un passage s'ouvre, **et le journal le note** : l'acte, le lieu, les
+   PJ présents, les PNJ, le synopsis. Deux scènes ouvertes en même temps, c'est un groupe séparé —
+   mais alors GM-OS ne sait plus à laquelle rattacher ce qui arrive, et les événements repartent
+   sans scène : la revue vous les présentera à part, sous « À ranger ».
 4. **Vous improvisez** — une scène née en cours de partie est une scène ordinaire dont la pastille
    est basse. Elle porte seulement une marque d'origine ; *deux types distincts forceraient à
    choisir au pire moment, quand on ne sait pas encore si ce qu'on improvise deviendra important.*
 5. **Vous terminez, ou vous arrêtez** — terminer close la scène ; arrêter la séance la suspend.
+   Terminer dépose au journal une dernière entrée, avec la **durée jouée**.
 
 ## 5. Clore un acte
 
@@ -93,6 +96,11 @@ Deux gestes pour rattraper la réalité d'une partie :
   la rejoignent **dans tous les journaux** : la trame et le journal ne peuvent pas être d'accord à
   moitié.
 - **Scinder une scène** à partir d'un instant — la seconde moitié devient une scène à part.
+
+> ⚠️ **Ces deux gestes ne sont pas sur cet écran.** Ils vivent dans le module **Journal de Jeu**,
+> section « Revue de la séance ». C'est cohérent : on cure en relisant ce qui s'est passé, pas en
+> regardant le plan. Les conditions exactes qui les font apparaître sont décrites dans le
+> [guide du journal](./14-Journal-de-seance.md) — *elles n'y sont écrites qu'une fois, exprès.*
 
 ---
 

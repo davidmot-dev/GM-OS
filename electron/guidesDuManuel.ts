@@ -10,7 +10,7 @@ export { DOSSIER_DU_MANUEL, FAMILLES_DU_MANUEL, type GuideDuManuel } from './for
 /**
  * **Le manuel du meneur, lu depuis le disque.**
  *
- * Les 52 guides de `documentation/User Guides/` sont la documentation que David
+ * Les guides de `documentation/User Guides/` sont la documentation que David
  * écrit et relit ; elle vivait jusqu'ici **hors de l'application**, dans un
  * dossier qu'il fallait ouvrir à côté. Ce module la fait entrer dans GM-OS.
  *

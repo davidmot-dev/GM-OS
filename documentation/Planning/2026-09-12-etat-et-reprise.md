@@ -1,6 +1,6 @@
 # État et reprise — 2026-09-12
 
-> **Base saine.** `tsc -b` propre, **4 192 tests verts** (351 fichiers, 1 ignoré), **17 tests E2E verts**, branche
+> **Base saine.** `tsc -b` propre, **4 230 tests verts** (353 fichiers, 1 ignoré), **23 tests E2E verts**, branche
 > `feature/tablet-hub-pwa`, arbre propre. **8 commits en avance sur l'origine** — le push
 > reste à faire par David, le gestionnaire d'identifiants ouvre une fenêtre que mon shell
 > ne sait pas piloter.
@@ -23,6 +23,8 @@
 | **11/09, les essais** | **Socle Playwright** (`e2e/lancerGmOs.ts`) : profil jetable par worker, refus de démarrer sans isolation vérifiée · **les deux ports deviennent réglables** · **le périmètre d'une instance** (corpus, coffre Obsidian, appareils muets) |
 | **12/09, la répétition** | ⭐ **`npm run repetition`** — GM-OS avec les vraies données, et rien à perdre |
 | **12/09, la garde** | ⭐ **Le profil de données est vérifié à l'exécution** — nommé au journal à chaque démarrage, et l'application refuse de continuer s'il n'est pas le bon (§ 42 du registre) |
+| **12/09, Light-OS** | ⛔ **La reconnexion au pont bouclait sans fin** — un effet qui avait `status` en dépendance *et* l'écrivait. Trouvé par David **en déplacement**, pont resté à la maison. Plafond, recul, **abandon annoncé** (§ 44). Éprouvé par lui : *« le correctif light-os fonctionne »* |
+| **12/09, la trame au journal** | ⭐ **Ouvrir une scène ne laissait aucune trace** — donc la scène n'entrait pas dans la revue de séance, et le filet du plan du 08/08 (*scinder ce qu'on a oublié de marquer*) était absent là où il devait servir. Ouverture et fermeture consignées, avec le décor (§ 45) |
 | **12/09, la donnée gelée** | ⭐ **Une campagne témoin de 8 Ko** sert de décor aux tests E2E, et **le premier test de migration** la fait rencontrer du code neuf (§ 43). Les tests E2E passent de **9 à 17** |
 
 ---
@@ -63,7 +65,12 @@ Détail complet au § 43 du registre.
 
 Les deux gestes du § 1 sont faits. **Ce qui reste ne se code pas — ça se joue** : la catégorie P6 du
 registre (routage audio par son, les six widgets Ulanzi ensemble, Voice-to-Light au pont, la bascule
-de combat entre deux scènes, la fusion de scènes…).
+de combat entre deux scènes…).
+
+⚠️ **Et la fusion de scènes est passée de « jamais essayée » à « essayée, et elle a coûté ».** Ce
+qu'elle a révélé ne se lisait dans aucun document : le geste marchait, mais rien ne faisait entrer
+une scène jouée dans la revue. *La catégorie P6 vient de rendre son quatrième défaut du mois — et
+comme les trois autres, c'est David à l'écran qui l'a trouvé.*
 
 ⚠️ Le socle E2E, lui, est désormais **capable** de porter des tests de geste sur un décor réaliste.
 Ce qu'il couvre aujourd'hui : l'aide, le périmètre, les ports, la semence, la migration. Tout le reste

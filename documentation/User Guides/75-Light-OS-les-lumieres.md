@@ -22,6 +22,30 @@ Avant de commencer, vous devez lier GM-OS à votre installation Philips Hue :
 3. Lorsque l'OS vous le demande, appuyez sur le bouton physique central de votre **Philips Hue Bridge**.
 4. Une fois jumelé, le statut passe au vert ("Connected") et vos lampes apparaissent dans l'interface.
 
+### 🔁 La reconnexion au démarrage, et quand elle s'arrête
+
+Au lancement de GM-OS, si un pont a déjà été appairé, Light-OS **tente de le rejoindre tout seul**.
+Vous n'avez rien à faire : dans le cas normal, le statut passe au vert en une seconde.
+
+**Si le pont ne répond pas** — il est éteint, débranché, ou vous n'êtes pas sur le même réseau —
+GM-OS réessaie **quatre fois**, en espaçant : une demi-seconde, trois secondes, quinze secondes,
+puis une minute. Après quoi **il renonce et vous le dit** : *« Pont Hue injoignable (adresse) —
+reconnexion abandonnée. Relance-la depuis Light-OS quand il répondra. »*
+
+> ⭐ **Pourquoi renoncer plutôt que d'insister.** Un pont absent ne revient pas de lui-même dans la
+> minute. Réessayer sans fin ne le fait pas revenir — ça occupe l'application pour rien. Et
+> l'abandon est **annoncé** parce que vous devez pouvoir distinguer *« GM-OS n'a pas encore
+> essayé »* de *« le pont ne répond pas »* : un abandon silencieux se lit comme une panne de GM-OS,
+> alors que la panne est ailleurs.
+
+Rien n'est perdu : **le bouton de connexion de l'en-tête n'est pas concerné par ce plafond**.
+Cliquez-le quand le pont est de nouveau joignable, et la connexion repart. Poser une nouvelle
+adresse relance le cycle depuis zéro.
+
+> ⚠️ **En déplacement, c'est le cas normal.** Emporter GM-OS loin de son pont ne pose aucun
+> problème : quatre tentatives, un message, puis le silence. *Avant le 2026-09-12, GM-OS appelait
+> le pont indéfiniment — une tentative toutes les cinq secondes et demie, toute la soirée.*
+
 > [!TIP]
 > **Réinitialisation (Forget Bridge)** : Si vous changez de pont ou si vous souhaitez réinitialiser la détection automatique, utilisez le bouton **"Forget Bridge"** (icône 🗑️) dans la barre latérale. Cela effacera l'IP du pont et votre clé utilisateur pour repartir sur une installation propre.
 
