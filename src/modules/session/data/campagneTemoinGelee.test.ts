@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { validateSession } from '../../../types/schemas';
 import { CAMPAGNES_DE_DEMONSTRATION, rienQueLaDemonstration } from './sessionMocks';
+import { etatDeLaScene } from '../logic/trame';
+import type { Acte, OrigineDeScene, Scene } from '../../../types/trame.types';
 import temoin from '../../../../e2e/donnees/campagne-temoin.json';
 
 /**
@@ -33,6 +35,32 @@ import temoin from '../../../../e2e/donnees/campagne-temoin.json';
  */
 
 const sessionOS = (temoin as { modules: { sessionOS: Record<string, unknown> } }).modules.sessionOS;
+
+/**
+ * ⛔ **LA GARDE QUI COMPTE, ET ELLE NE TOURNE PAS À L'EXÉCUTION.**
+ *
+ * Ces deux affectations sont typées **sans `as`** : c'est `tsc` qui vérifie que
+ * le témoin gelé décrit bien des actes et des scènes. Un champ obligatoire
+ * absent — `creeeLe`, oublié à la première écriture — ou un champ du bon nom
+ * mais du mauvais type — `termineeLe` écrit en chaîne ISO au lieu d'un nombre —
+ * fait échouer la compilation, pas un test.
+ *
+ * *Une assertion qui compte des longueurs dit qu'il y a trois scènes ; elle ne
+ * dit pas que ce sont des scènes.* Les deux défauts ci-dessus ont vécu dans ce
+ * fichier pendant une heure, sous douze tests verts.
+ */
+const actesDuTemoin: Acte[] = temoin.modules.sessionOS.actes;
+
+/*
+  ⚠️ **Une seule concession, et elle est nommée.** Un import JSON élargit les
+  littéraux : `"preparee"` arrive en `string`, pas en `OrigineDeScene`. On rétablit
+  ce champ-là, et lui seul — tous les autres restent vérifiés par l'affectation.
+  Les valeurs réelles sont éprouvées à l'exécution, plus bas.
+*/
+const scenesDuTemoin: Scene[] = temoin.modules.sessionOS.scenes.map(s => ({
+    ...s,
+    origine: s.origine as OrigineDeScene,
+}));
 
 describe('le témoin gelé — il doit rester lisible', () => {
     it('passe la validation, par le chemin réel de la semence', () => {
@@ -110,11 +138,59 @@ describe('le témoin gelé — ce qui le distingue du décor par défaut', () =>
     });
 });
 
+describe('le témoin gelé — ses scènes sont dans les trois états', () => {
+    /*
+      ⛔ **LA LEÇON DU 12/09, ET ELLE A FAILLI COÛTER UNE JOURNÉE DE FAUX DÉBOGAGE.**
+
+      La première version de ce témoin portait `closeLe: '2026-09-12T00:10:00Z'`
+      et un passage `{ id, quand, type, texte }`. **Ces champs n'existent pas.**
+      Le moteur lit `termineeLe` (un NOMBRE) et des passages `{ debut, fin? }`.
+
+      Rien ne l'a signalé : le schéma laisse traverser ce qu'il ne nomme pas, et
+      les assertions d'alors comptaient des **longueurs** — « `scenes` n'est pas
+      vide » était vrai d'un tableau de scènes inutilisables. *Un jeu d'essai aux
+      champs inventés ressemble à un décor réaliste et n'exerce rien ; il est
+      pire qu'un décor absent, parce qu'on lui fait confiance.*
+
+      Le remède n'est pas de redécrire la forme ici — ce serait la recopier, donc
+      la laisser vieillir. **On la fait juger par la fonction que l'application
+      emploie**, `etatDeLaScene`. Si le vocabulaire des scènes change, ce test
+      rougit.
+    */
+    it.each([
+        ['temoin-scene-1', 'terminee'],
+        ['temoin-scene-2', 'en-cours'],
+        ['temoin-scene-3', 'prevue'],
+    ])('%s est « %s », jugée par le moteur lui-même', (id: string, attendu: string) => {
+        const scene = scenesDuTemoin.find(s => s.id === id);
+
+        expect(scene, `${id} absente du témoin`).toBeDefined();
+        expect(etatDeLaScene(scene!)).toBe(attendu);
+    });
+
+    /*
+      ⭐ Et l'invariant dont dépend le rattachement automatique des événements de
+      journal : `laSceneOuLEvenementSeRange` ne désigne une scène que s'il y en a
+      **exactement une** en cours. Deux scènes ouvertes, et tout événement part
+      sans scène — la revue de séance n'aurait alors plus rien à montrer.
+    */
+    it('ne déclare que des origines connues', () => {
+        /* La contrepartie de l'élargissement JSON : ce que le typage ne peut
+           plus vérifier, l'exécution le vérifie. */
+        for (const s of scenesDuTemoin) {
+            expect(['preparee', 'improvisee'], `${s.id} : origine inconnue`).toContain(s.origine);
+        }
+    });
+
+    it('n’a qu’une seule scène en cours — sinon rien ne se rattache', () => {
+        const enCours = scenesDuTemoin.filter(s => etatDeLaScene(s) === 'en-cours');
+        expect(enCours).toHaveLength(1);
+    });
+});
+
 describe('le témoin gelé — sa cohérence interne', () => {
-    const actes = sessionOS.actes as { id: string; campaignId: string }[];
-    const scenes = sessionOS.scenes as {
-        id: string; titre: string; acteId: string; campaignId: string; personnagesIds?: string[];
-    }[];
+    const actes = actesDuTemoin;
+    const scenes = scenesDuTemoin;
     const campagnes = sessionOS.campaigns as { id: string }[];
 
     it('la campagne active existe', () => {

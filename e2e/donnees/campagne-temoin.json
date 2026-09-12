@@ -17,7 +17,9 @@
           "description": "Campagne temoin gelee. Elle n'existe que pour les tests.",
           "synopsis": "Une station de relais cesse de repondre. Personne n'est parti.",
           "activeSessionId": "temoin-seance-1",
-          "activeLocationIds": ["temoin-lieu-station"]
+          "activeLocationIds": [
+            "temoin-lieu-station"
+          ]
         }
       ],
       "players": [
@@ -36,7 +38,10 @@
               "maxHp": 12,
               "campaignId": "temoin-campagne",
               "templateId": "generic",
-              "sheetData": { "metier": "Technicienne", "moral": 3 }
+              "sheetData": {
+                "metier": "Technicienne",
+                "moral": 3
+              }
             }
           ]
         },
@@ -55,7 +60,10 @@
               "maxHp": 11,
               "campaignId": "temoin-campagne",
               "templateId": "generic",
-              "sheetData": { "metier": "Negociateur", "moral": 5 }
+              "sheetData": {
+                "metier": "Negociateur",
+                "moral": 5
+              }
             }
           ]
         }
@@ -116,17 +124,22 @@
           "origine": "preparee",
           "lieuId": "temoin-lieu-station",
           "entiteIds": [],
-          "personnagesIds": ["temoin-pj-1", "temoin-pj-2"],
-          "indiceIds": ["temoin-indice-1"],
-          "closeLe": "2026-09-12T00:10:00.000Z",
+          "personnagesIds": [
+            "temoin-pj-1",
+            "temoin-pj-2"
+          ],
+          "indiceIds": [
+            "temoin-indice-1"
+          ],
           "passages": [
             {
-              "id": "temoin-passage-1",
-              "quand": "2026-09-12T00:05:00.000Z",
-              "type": "note",
-              "texte": "Les rations sont intactes. Le cafe est encore chaud."
+              "debut": 1789156800000,
+              "fin": 1789159500000,
+              "seanceId": "temoin-seance-1"
             }
-          ]
+          ],
+          "termineeLe": 1789159500000,
+          "creeeLe": 1789156000000
         },
         {
           "id": "temoin-scene-2",
@@ -136,9 +149,22 @@
           "titre": "Entretien avec Hale",
           "resume": "Il repond a tout, et trop vite.",
           "origine": "preparee",
-          "entiteIds": ["temoin-pnj-1"],
-          "personnagesIds": ["temoin-pj-2"],
-          "indiceIds": ["temoin-indice-2"]
+          "entiteIds": [
+            "temoin-pnj-1"
+          ],
+          "personnagesIds": [
+            "temoin-pj-2"
+          ],
+          "indiceIds": [
+            "temoin-indice-2"
+          ],
+          "passages": [
+            {
+              "debut": 1789160400000,
+              "seanceId": "temoin-seance-1"
+            }
+          ],
+          "creeeLe": 1789156100000
         },
         {
           "id": "temoin-scene-3",
@@ -148,8 +174,11 @@
           "titre": "La voix dans le relais",
           "resume": "Scene improvisee : Ancre-7 prend la parole sans qu'on l'appelle.",
           "origine": "improvisee",
-          "entiteIds": ["temoin-pnj-2"],
-          "indiceIds": []
+          "entiteIds": [
+            "temoin-pnj-2"
+          ],
+          "indiceIds": [],
+          "creeeLe": 1789160500000
         }
       ],
       "clues": [
@@ -174,7 +203,9 @@
           "campaignId": "temoin-campagne",
           "title": "Station Varn",
           "content": "Relais de communication. Equipage nominal : neuf.",
-          "tags": ["lieu"]
+          "tags": [
+            "lieu"
+          ]
         }
       ],
       "atlasMaps": [
@@ -211,8 +242,15 @@
       "deckStates": {
         "temoin-paquet": {
           "deckId": "temoin-paquet",
-          "remainingIndices": [3, 4, 5, 6],
-          "discardedIndices": [1],
+          "remainingIndices": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "discardedIndices": [
+            1
+          ],
           "currentCardIndex": null,
           "enMain": [
             {
