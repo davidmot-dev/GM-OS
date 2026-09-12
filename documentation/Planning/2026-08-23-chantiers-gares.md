@@ -90,7 +90,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
 | Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
 | Le **démarrage amputé** | 12/09 | Écrit le jour où l'écran bloqué a été refermé (§ 48), et **jamais vu se produire** : il faut qu'une étape expire ou échoue pour la première fois. À regarder si ça arrive — l'écran d'attente nomme-t-il bien l'étape, la notification survit-elle au premier rendu, et **l'application est-elle vraiment utilisable** amputée de cette étape ? *C'est le pari du correctif : un démarrage dégradé vaut mieux qu'une absence de démarrage — et il n'a pas encore été vérifié en vrai.* |
-| ✅ Les **boutons de l'Ulanzi** | 12/09 → **mesurés le 13/09** | **Les deux craintes sont levées** : l'appui parvient à Home Assistant, et les boutons **gardent leur défilé natif tout en publiant** — rien n'est confisqué à l'appareil. Sujets réels : `…/stats/buttonLeft`, `…/stats/buttonSelect` et `…/stats/buttonRight`, **pas** `button1` comme je l'avais écrit. ⭐ **Les trois publient** — et celui du milieu, qui ne fait rien sur l'appareil, est le seul entièrement libre. ⚠️ *J'avais conclu l'inverse sur une capture incomplète : deux sujets vus, le troisième déclaré absent — une absence dans un relévé partiel n'est pas une absence.* ⚠️ **Reste à éprouver** : la chaîne complète jusqu'à GM-OS, et le **filtre `payload`** — AWTRIX publie l'ÉTAT du bouton (enfoncement ET relâchement), donc sans filtre *chaque pression compte double*, ce qui ne se voit qu'à la table |
+| ✅ Les **boutons de l'Ulanzi** | 12/09 → ✅ **ÉPROUVÉS EN RÉEL le 13/09** | David : *« tout fonctionne »*. La chaîne entière tient — appui, MQTT, Home Assistant, GM-OS. Les trois boutons publient (`buttonLeft`, `buttonSelect`, `buttonRight`) et **gardent leur défilé natif** : rien n'est confisqué à l'appareil. ⚠️ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les deux craintes qui ont guidé la mesure, et les deux étaient infondées |
 | Le **matériel débranché puis rebranché** | 12/09 | Écrit le jour même (§ 51) et **jamais éprouvé sur du vrai matériel**. Trois choses à regarder : le nom donné à l'enceinte tient-il après un cycle de débranchement ; une ambiance visée dessus la **retrouve**-t-elle ; et l'alerte d'absence n'apparaît-elle **qu'une fois**. *La signature repose sur l'hypothèse que Windows rend le même libellé au rebranchement — mesurée sur la documentation, pas sur ta machine.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
@@ -3003,6 +3003,19 @@ distingue* — seule une fonction pure, éprouvée sur le cas du développement,
 ⭐ **Le diagnostic a tenu en deux mesures, sans rien demander à David** : lire `main.log` pour savoir
 que GM-OS tournait, puis poster sur `/bouton` avec le vrai jeton lu dans `pairing.json` — `200`,
 `{"recu":"milieu"}`. *Le côté GM-OS étant hors de cause, il ne restait qu'un champ à relire.*
+
+#### ✅ Éprouvé en réel le 2026-09-13
+
+David : *« tout fonctionne »*. La chaîne entière — appui sur l'afficheur, MQTT, Home Assistant,
+`POST /bouton`, geste dans GM-OS.
+
+⭐ **Les deux craintes notées en P6 étaient infondées, et c'est la mesure qui l'a dit** : l'appui
+parvient bien jusqu'à HA, et les boutons **gardent leur défilé natif tout en publiant** — le défilé
+des Quarts ne perd rien. *Une crainte écrite est une crainte qu'on peut lever ; une crainte tue
+reste vraie pour toujours.*
+
+⚠️ Et deux choses que seule la mise en service a révélées, toutes deux invisibles en test :
+**le filtre `payload`** (sans lui chaque pression compte double) et **le mauvais port annoncé**.
 
 **Ancres** : `electron/boutonsDeLUlanzi.ts` (+ 24 tests), `SyncServer.traiterLAppui`,
 `utils/portsDuRenderer.ts` (`adresseDuPontDesBoutons`, + 8 tests),

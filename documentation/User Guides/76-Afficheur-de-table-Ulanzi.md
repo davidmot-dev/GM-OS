@@ -84,6 +84,9 @@ trafic réseau**.
 
 ## 6. Les trois boutons physiques — par Home Assistant
 
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-13.** La chaîne complète fonctionne — appui sur l'afficheur, MQTT,
+Home Assistant, GM-OS.
+
 **Longtemps impossible, ouvert le 2026-09-12.** Mesuré sur le firmware 0.98 : les appuis ne
 remontent **pas en HTTP**. Seul MQTT les expose — et un courtier était alors un service de plus à
 faire vivre. Un Home Assistant sur le réseau porte déjà ce courtier : la seule raison du gel a
@@ -137,12 +140,17 @@ il n'est jamais affiché à l'écran. À coller dans `secrets.yaml` :
 gmos_jeton: "le-jeton-copie"
 ```
 
-**4 · L'appel**, dans `configuration.yaml` (l'adresse exacte est affichée dans le panneau) :
+**4 · L'appel**, dans `configuration.yaml`.
+
+⛔ **Recopiez l'adresse affichée par le panneau, ligne « Pont : » — ne la reconstituez pas.** Elle
+porte l'IP de votre machine **et le port du SyncServer**, qui n'est pas celui qui sert l'interface.
+*Le panneau lui-même a annoncé le mauvais port jusqu'au 2026-09-13 : Home Assistant postait sur le
+serveur de développement, qui répondait sa page d'accueil sans rien faire, et sans erreur.*
 
 ```yaml
 rest_command:
   gmos_bouton:
-    url: "http://192.168.1.42:3001/bouton"
+    url: "http://192.168.0.211:3001/bouton"   # ← l'adresse LUE dans le panneau
     method: POST
     content_type: "application/json"
     headers:
@@ -187,9 +195,13 @@ déclencher que ce que **vous** avez posé sur vos trois boutons.
 ⚠️ **« Révoquer les appairages » coupe aussi ce pont.** Le jeton est celui des tablettes : le
 régénérer invalide les deux. Il faudra recopier le nouveau dans `secrets.yaml`.
 
-⚠️ **À vérifier au premier essai** : l'appui continue-t-il de faire défiler les applications de
-l'appareil ? Si MQTT capture les boutons, le défilé perd sa navigation — et c'est le seul widget
-éprouvé en vraie soirée.
+✅ **Les boutons gardent leur défilé natif tout en publiant** — vérifié le 13/09. GM-OS ne
+confisque rien à l'appareil.
+
+⚠️ **Si rien ne se passe, coupez le problème en deux.** Dans HA :
+*Outils de développement → Actions → `rest_command.gmos_bouton`*, avec `bouton: milieu`, puis
+**Exécuter**. Ça réussit ? Le défaut est dans le MQTT. Ça échoue ? HA n'atteint pas votre machine —
+adresse, ou **pare-feu Windows** sur le port du SyncServer.
 
 ---
 
