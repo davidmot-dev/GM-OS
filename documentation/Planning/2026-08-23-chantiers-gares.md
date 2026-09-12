@@ -63,6 +63,10 @@ dans le code, qui absorbe toutes les autres.**
 > de défaut employé sur ce dépôt.** Les trois quarts des trouvailles étaient dans le code, pas dans
 > la documentation.*
 
+> **Trois cases, et une seule liste.** Le § 1 dit ce qui **se joue** et ne se code pas ; le
+> **§ 1 bis** ce qu'on a **constaté sans le traiter** ; le § 4 ce qui est **garé par décision**.
+> Une ligne circule entre elles, elle ne se recopie jamais ailleurs.
+
 ### 1 · Ce qui se joue et ne se code pas — la catégorie P6
 
 **C'est elle qui a produit tous les défauts des 18-19/08 et les huit de la séance du 21/08**, dont un jet
@@ -86,6 +90,27 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
 | Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
+
+### 1 bis · ⚠️ Constaté, pas encore traité
+
+**Ouverte le 2026-09-12, à la demande de David** : *« lors de tes tests E2E, où consignes-tu les
+différents bugs que tu aurais découverts ? »* — la réponse honnête était **nulle part de
+systématique**. Un défaut corrigé obtient sa section numérotée ; un défaut *constaté et différé*
+finissait dans l'`etat-et-reprise` du jour, qui est un **instantané daté** : il vieillit, et personne
+ne le relit.
+
+**Ce n'est pas un registre de bogues de plus.** *Une liste de restes qui vit à deux endroits en
+désigne une fausse* — ce document a déjà payé cette règle trois fois. C'est la même liste unique,
+avec une case de plus pour ce qu'on a vu sans le traiter.
+
+> **La discipline, en une phrase.** Une ligne ne sort d'ici que par le haut — corrigée, elle devient
+> une section numérotée avec ses ancres ; garée exprès, elle descend au § 4. *Elle ne s'efface
+> jamais parce qu'on a cessé d'y penser.*
+
+| Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
+| --- | --- | --- |
+| ⛔ **Le journal de séance n'est dans AUCUNE sauvegarde.** `SessionService` collecte onze magasins — `sessionOS`, `npc`, `web`, `ambient`, `clock`, `whiteboard`, `fiches`, `music`, `bestiaire`, `map`, `favorite` — et **`useJournalStore` n'en fait pas partie**. L'export Nexus ne le porte pas non plus. Le fil d'une séance, les scènes traversées, les comptes rendus : rien n'est protégé | Ouvrir n'importe quelle sauvegarde de `Security_Backup_GMOS` et lire les clés de `modules` : le journal en est absent. Ou `grep -c journal` dans `NexusService.ts` → 0 | Trouvé le 12/09 **en fin de session, en diagnostiquant autre chose**. Demande une décision avant d'écrire : *le journal suit-il la campagne — donc l'export Nexus aussi — ou seulement la machine ?* Music-OS avait été tranché « playlists seulement, la sortie audio décrit la pièce, pas l'univers » ; le journal, lui, est clairement de l'univers. **C'est le § 1 de l'état du 12/09 : le premier geste à reprendre** |
+| ⚠️ **L'écran bloqué au démarrage n'a jamais été expliqué.** Le 12/09, GM-OS est resté sur un écran plein, David en déplacement. La boucle de Light-OS était réelle, elle est corrigée (§ 44), et il a confirmé que ça remarche — **mais le lien n'est pas établi** : dans la reproduction, l'écran restait **cliquable** pendant toute la boucle | Si ça revient, **deux questions tranchent en dix secondes** : l'écran montre-t-il le **splash** (runes animées, « GM-OS vVI.V », une citation) ou le **`LoadingOverlay`** (fond flouté, roue, « SYSTEM_BUSY ») ? Et la console porte-t-elle `[Bootstrap] ✅ Système prêt` ? *Ce sont deux composants et deux causes.* Si c'est « SYSTEM_BUSY / CHARGEMENT DE LA SESSION », le suspect est `loadFullSession`, qui attend un **sélecteur de fichier** — une boîte de dialogue restée ouverte hors écran bloque l'attente indéfiniment | Le symptôme a disparu. **Sans reproduction, chercher plus loin serait deviner** — j'ai déjà produit trois hypothèses fausses ce jour-là, dont une bâtie sur des sondes qui n'avaient jamais chargé la page |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 

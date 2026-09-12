@@ -38,32 +38,20 @@
 
 ## 1 · Par quoi reprendre
 
-### ⭐ Le journal de séance n'est dans AUCUNE sauvegarde
+### ⭐ Le journal de séance n'est dans aucune sauvegarde
 
-**C'est le geste que je recommande en premier**, et il n'était pas connu ce matin. Trouvé en
-diagnostiquant autre chose, vérifié deux fois :
+**C'est le geste que je recommande en premier**, et il n'était pas connu ce matin.
 
-- `SessionService` collecte **onze** magasins — `sessionOS`, `npc`, `web`, `ambient`, `clock`,
-  `whiteboard`, `fiches`, `music`, `bestiaire`, `map`, `favorite`. **`useJournalStore` n'en fait pas
-  partie.**
-- L'export Nexus ne le porte pas non plus : zéro occurrence de « journal » dans `NexusService.ts`.
-
-⛔ **Donc tous tes journaux de séance — le fil, les scènes traversées, les comptes rendus — ne sont
-protégés par rien.** La sauvegarde automatique qui t'a sauvé le 11/09 ne les aurait pas ramenés.
-
-C'est exactement la famille de Music-OS le 30/08 : *un module qu'on croit couvert parce que les
-autres le sont.* ⚠️ Et la question qui la trouve n'est pas « qu'est-ce qui est sauvegardé ? » mais
-**« qui d'autre écrit une donnée que personne ne ramasse ? »**.
-
-Ce qu'il faudra trancher en le faisant : le journal suit-il la campagne (donc l'export Nexus aussi)
-ou seulement la machine (donc la sauvegarde seule) ? *Music-OS a été tranché « playlists seulement,
-la sortie audio décrit la pièce, pas l'univers » — le journal, lui, est clairement de l'univers.*
+Le détail — ce qu'on a vu, comment le revoir, et la décision à prendre avant d'écrire — vit au
+**§ 1 bis du registre**, [« Constaté, pas encore traité »](./2026-08-23-chantiers-gares.md).
+*Il n'est pas recopié ici : ce document-ci est un instantané daté, il vieillira ; le registre, lui,
+est vivant.*
 
 ### 2. Ce qui reste ne se code pas — la catégorie P6
 
-Les deux gestes du § 1 d'hier sont clos (§§ 42 et 43 du registre). Ce qui reste au registre **se
-joue** : le routage audio par son, les six widgets Ulanzi ensemble, Voice-to-Light au pont, la
-bascule de combat entre deux scènes.
+Les deux gestes du § 1 d'hier sont clos (§§ 42 et 43 du registre). Ce qui reste **se joue** : le
+routage audio par son, les six widgets Ulanzi ensemble, Voice-to-Light au pont, la bascule de combat
+entre deux scènes.
 
 ⚠️ **Et la fusion de scènes est passée de « jamais essayée » à « essayée, et elle a coûté ».** Le
 geste marchait ; ce qui manquait, c'est qu'une scène ouverte ne laissait **aucune trace au journal**,
@@ -72,12 +60,9 @@ montre les scènes traversées, et que fusionner emmène bien leurs événements
 
 ### 3. Un point resté sans explication
 
-⚠️ **L'écran bloqué au démarrage du 12/09 n'a jamais été expliqué.** La boucle de Light-OS était
-réelle et elle est corrigée ; David a confirmé que ça remarche. Mais **dans ma reproduction, l'écran
-restait cliquable pendant toute la boucle** — je n'ai donc pas établi le lien. Si ça revient, les
-deux questions qui trancheraient en dix secondes : l'écran montre-t-il le **splash** (runes, « GM-OS
-vVI.V ») ou le **`LoadingOverlay`** (fond flouté, roue, « SYSTEM_BUSY ») ? Et la console porte-t-elle
-`[Bootstrap] ✅ Système prêt` ? *Ce sont deux composants et deux causes.*
+L'écran bloqué au démarrage du 12/09 n'a jamais été élucidé — la boucle Light-OS était réelle et est
+corrigée, mais le lien n'est pas établi. Les deux questions qui trancheraient si ça revient sont au
+**§ 1 bis du registre**, avec le reste.
 
 ---
 
