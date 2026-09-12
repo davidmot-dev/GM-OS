@@ -2,6 +2,17 @@
  * Engine Audio pour Music OS v5
  * Gère le mixage, les platines, les boucles A/B et le routage via Streaming HTML5.
  */
+/*
+  ⛔ **`window.useToastStore` n'existe pas — trouvé le 2026-09-12.**
+  Ce moteur criait dans le vide : le magasin n'est assigné nulle part, donc
+  le `if` qui gardait l'appel n'a jamais été franchi, et *« Fichier
+  introuvable dans la base de données »* n'est jamais sorti. Les arguments
+  étaient de surcroît inversés (`gmToast(message, type)`).
+  Une séquence de storyboard à moitié jouée est restée sans explication
+  pour cette raison. *Une garde qui n'est jamais franchie ressemble à un
+  code qui marche.*
+*/
+import { gmToast } from '../../stores/useToastStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { SortiesAudio } from '../../utils/sortiesAudio';
 /*
@@ -201,7 +212,7 @@ class MusicDeck {
                 console.log(`[MusicDeck] Blob URL created: ${finalUrl}`);
             } else {
                 console.error(`[MusicDeck] MediaBlob not found for ID: ${url}`);
-                if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Fichier audio introuvable dans la base de données.`);
+                gmToast(`Fichier audio introuvable dans la base de données.`, 'error');
                 return; // Abort loading
             }
         } else if (url) {
@@ -236,7 +247,7 @@ class MusicDeck {
             const err = this.audioElement.error;
             const msg = `Erreur Audio: ${err?.message || 'Inconnue'} (Code ${err?.code})`;
             console.error(`[MusicDeck] AudioElement Error [${finalUrl}]:`, err);
-            if (window.useToastStore) window.useToastStore.getState().gmToast('error', msg);
+            gmToast(msg, 'error');
         };
 
         this.audioElement.load();
@@ -276,7 +287,7 @@ class MusicDeck {
         } catch (e) {
             const error = e as Error;
             console.error(`[MusicDeck] Play failed for ${this.audioElement.src}:`, error);
-            if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Échec Lecture: ${error.message}`);
+            gmToast(`Échec Lecture: ${error.message}`, 'error');
         }
     }
 

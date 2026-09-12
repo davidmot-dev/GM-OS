@@ -7,6 +7,19 @@ import {
 } from './sonsDuMoment';
 import type { Scene } from '../../types/trame.types';
 import { persist } from 'zustand/middleware';
+import {
+    resumeDuMoment, traceDuMoment, type EffetDuMoment,
+} from './logic/rapportDuMoment';
+import { Logger } from '../../utils/logger';
+/*
+  ⛔ **Importé, et non lu sur `window` — c'est le défaut du 2026-09-12.**
+
+  Ce fichier lisait `gWindow.useToastStore?.getState()`, qui n'est **assigné
+  nulle part**. Les deux `if (gmToast)` qui suivaient ne passaient donc jamais :
+  ni « Musique introuvable », ni « Moment activé » ne sont jamais sortis. *Une
+  garde qui n'est jamais franchie ressemble à un code qui marche.*
+*/
+import { gmToast } from '../../stores/useToastStore';
 
 export interface StoryboardMoment {
     id: string;
@@ -295,6 +308,17 @@ export const useStoryboardStore = create<StoryboardState>()(
                 const sonsPoses: SonsDuMoment = { ...AUCUN_SON };
 
                 /*
+                  **Ce que chaque moteur aura fait de ce qu'on lui demandait.**
+
+                  ⛔ Ajouté après l'incident du 2026-09-12 : une séquence à moitié
+                  jouée, et **pas une ligne** dans le journal de l'application.
+                  Chaque effet ci-dessous est un `if` : quand la condition tombe,
+                  l'effet est sauté sans un mot. *Un `&&` qui protège est un `&&`
+                  qui cache.* Voir `logic/rapportDuMoment.ts`.
+                */
+                const effets: EffetDuMoment[] = [];
+
+                /*
                   **Lancer une ambiance ouvre la scène qui la déclare.**
 
                   Second marquage gratuit du § 3.1 du plan du 2026-08-08, resté
@@ -337,20 +361,24 @@ export const useStoryboardStore = create<StoryboardState>()(
                 // Cross-store orchestration
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const gWindow = window as any;
-                const { gmToast } = gWindow.useToastStore?.getState() || {};
 
                 // 1. Music-OS
-                if (moment.musicPadId && gWindow.useMusicStore) {
-                    const musicStore = gWindow.useMusicStore.getState();
-                    const pad = musicStore.playlists.flatMap((p: { pads: { id: string, label: string }[] }) => p.pads).find((p: { id: string }) => p.id === moment.musicPadId);
-                    
-                    if (pad) {
-                        console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
-                        await musicStore.playPad(pad, moment.musicOutputId, true);
-                        sonsPoses.musicPadId = pad.id;
+                if (moment.musicPadId) {
+                    if (!gWindow.useMusicStore) {
+                        effets.push({ nom: 'Musique', sort: 'module-absent' });
                     } else {
-                        console.warn(`[Storyboard] Music: Pad ID ${moment.musicPadId} NOT FOUND in any playlist.`);
-                        if (gmToast) gmToast('warning', `Musique introuvable: ${moment.musicPadId}`);
+                        const musicStore = gWindow.useMusicStore.getState();
+                        const pad = musicStore.playlists.flatMap((p: { pads: { id: string, label: string }[] }) => p.pads).find((p: { id: string }) => p.id === moment.musicPadId);
+
+                        if (pad) {
+                            console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
+                            await musicStore.playPad(pad, moment.musicOutputId, true);
+                            sonsPoses.musicPadId = pad.id;
+                            effets.push({ nom: 'Musique', sort: 'joue' });
+                        } else {
+                            console.warn(`[Storyboard] Music: Pad ID ${moment.musicPadId} NOT FOUND in any playlist.`);
+                            effets.push({ nom: 'Musique', sort: 'introuvable', cherche: moment.musicPadId });
+                        }
                     }
                 }
 
@@ -374,9 +402,21 @@ export const useStoryboardStore = create<StoryboardState>()(
                   écrivains pour une même donnée est le motif que ce dépôt paie
                   le plus souvent* — et celui-ci écrivait l'inverse de l'autre.
                 */
-                if (moment.lightSceneId && gWindow.hueEngine) {
-                    console.log(`[Storyboard] Light: Applying scene ${moment.lightSceneId}`);
-                    gWindow.hueEngine.applyScene(moment.lightSceneId, true);
+                if (moment.lightSceneId) {
+                    if (!gWindow.hueEngine) {
+                        /*
+                          ⛔ *« les lumières ne se sont pas allumées »*, 12/09 — et
+                          ce `&&` était la seule chose entre le meneur et
+                          l'explication. `hueEngine` n'est posé sur `window` que
+                          par l'import de `HueEngine.ts` : si ce module n'a pas
+                          été chargé, la scène est sautée en silence.
+                        */
+                        effets.push({ nom: 'Lumières', sort: 'module-absent' });
+                    } else {
+                        console.log(`[Storyboard] Light: Applying scene ${moment.lightSceneId}`);
+                        gWindow.hueEngine.applyScene(moment.lightSceneId, true);
+                        effets.push({ nom: 'Lumières', sort: 'joue' });
+                    }
                 }
 
                 /*
@@ -388,8 +428,12 @@ export const useStoryboardStore = create<StoryboardState>()(
                   une mémoire vide ferait croire à une parenthèse ouverte qui
                   rendrait un décor arbitraire à sa fermeture.
                 */
+                if (moment.mapUrl && !gWindow.useMapStore) {
+                    effets.push({ nom: 'Carte', sort: 'module-absent' });
+                }
                 if (moment.mapUrl && gWindow.useMapStore) {
                     console.log(`[Storyboard] Map: Setting URL ${moment.mapUrl}`);
+                    effets.push({ nom: 'Carte', sort: 'joue' });
                     const mapStore = gWindow.useMapStore.getState();
                     set({
                         imageAvantLeMoment: {
@@ -439,16 +483,30 @@ export const useStoryboardStore = create<StoryboardState>()(
                 }
                 set({ cibleDeLImageDuMoment: cibleDeLImage });
 
-                if (moment.imageMediaId && gWindow.useImageStore) {
-                    const imageStore = gWindow.useImageStore.getState();
-                    const media = imageStore.mediaList.find((m: { id: string, name: string }) => m.id === moment.imageMediaId);
-                    if (media) {
-                        console.log(`[Storyboard] Image: Projecting solo ${media.name}`);
-                        imageStore.projectSolo(media, moment.imageTarget);
-                    } else {
-                        console.warn(`[Storyboard] Image: Media ID ${moment.imageMediaId} NOT FOUND.`);
-                        // Rien n'a été posé : la trace mentirait au prochain moment.
+                if (moment.imageMediaId) {
+                    if (!gWindow.useImageStore) {
+                        effets.push({ nom: 'Image', sort: 'module-absent' });
                         set({ cibleDeLImageDuMoment: null });
+                    } else {
+                        const imageStore = gWindow.useImageStore.getState();
+                        const media = imageStore.mediaList.find((m: { id: string, name: string }) => m.id === moment.imageMediaId);
+                        if (media) {
+                            console.log(`[Storyboard] Image: Projecting solo ${media.name}`);
+                            imageStore.projectSolo(media, moment.imageTarget);
+                            effets.push({ nom: 'Image', sort: 'joue' });
+                        } else {
+                            /*
+                              ⚠️ *« pas d'image projetée »*, 12/09. `mediaList` est
+                              vide tant que la médiathèque n'a pas ouvert sa base :
+                              **une médiathèque en panne rend donc « introuvable »
+                              pour TOUT**, et c'est indiscernable d'un média
+                              effacé — sauf par le message du démarrage.
+                            */
+                            console.warn(`[Storyboard] Image: Media ID ${moment.imageMediaId} NOT FOUND.`);
+                            effets.push({ nom: 'Image', sort: 'introuvable', cherche: moment.imageMediaId });
+                            // Rien n'a été posé : la trace mentirait au prochain moment.
+                            set({ cibleDeLImageDuMoment: null });
+                        }
                     }
                 }
 
@@ -477,34 +535,68 @@ export const useStoryboardStore = create<StoryboardState>()(
                 }
 
                 // 5. Sound-OS (SFX)
-                if (moment.soundPadId && gWindow.useSoundStore && gWindow.soundEngine) {
-                    const soundStore = gWindow.useSoundStore.getState();
-                    const atmosId = soundStore.activeAtmosphereId;
-                    const atmosphere = soundStore.atmospheres.find((a: { id: string }) => a.id === atmosId);
-
-                    const pad = atmosphere?.pads[moment.soundPadId];
-                    if (pad && pad.filePath) {
-                        console.log(`[Storyboard] Sound: Playing SFX ${pad.title} (${pad.id})`);
-                        await gWindow.soundEngine.loadAudio(pad.id, pad.filePath);
-                        gWindow.soundEngine.play(pad.id, pad.volume, undefined, moment.soundOutputId);
-                        soundStore.setPadActive(pad.id, true);
-                        sonsPoses.soundPadId = pad.id;
+                if (moment.soundPadId) {
+                    if (!gWindow.useSoundStore || !gWindow.soundEngine) {
+                        effets.push({ nom: 'Bruitage', sort: 'module-absent' });
                     } else {
-                        console.warn(`[Storyboard] Sound: Pad ID ${moment.soundPadId} NOT FOUND or no file.`);
+                        const soundStore = gWindow.useSoundStore.getState();
+                        const atmosId = soundStore.activeAtmosphereId;
+                        const atmosphere = soundStore.atmospheres.find((a: { id: string }) => a.id === atmosId);
+
+                        const pad = atmosphere?.pads[moment.soundPadId];
+                        if (pad && pad.filePath) {
+                            console.log(`[Storyboard] Sound: Playing SFX ${pad.title} (${pad.id})`);
+                            await gWindow.soundEngine.loadAudio(pad.id, pad.filePath);
+                            gWindow.soundEngine.play(pad.id, pad.volume, undefined, moment.soundOutputId);
+                            soundStore.setPadActive(pad.id, true);
+                            sonsPoses.soundPadId = pad.id;
+                            effets.push({ nom: 'Bruitage', sort: 'joue' });
+                        } else {
+                            /* ⚠️ Le pad est cherché dans l'ambiance ACTIVE : en
+                               changer suffit à le rendre introuvable. */
+                            console.warn(`[Storyboard] Sound: Pad ID ${moment.soundPadId} NOT FOUND or no file.`);
+                            effets.push({ nom: 'Bruitage', sort: 'introuvable', cherche: moment.soundPadId });
+                        }
                     }
                 }
 
                 // 6. Ambient-OS
-                if (moment.ambientSceneId && gWindow.useAmbientStore) {
-                    console.log(`[Storyboard] Ambient: Applying scene ${moment.ambientSceneId}`);
-                    const ambientStore = gWindow.useAmbientStore.getState();
-                    await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId, true);
-                    sonsPoses.ambientSceneId = moment.ambientSceneId;
+                if (moment.ambientSceneId) {
+                    if (!gWindow.useAmbientStore) {
+                        effets.push({ nom: 'Ambiance', sort: 'module-absent' });
+                    } else {
+                        console.log(`[Storyboard] Ambient: Applying scene ${moment.ambientSceneId}`);
+                        const ambientStore = gWindow.useAmbientStore.getState();
+                        await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId, true);
+                        sonsPoses.ambientSceneId = moment.ambientSceneId;
+                        effets.push({ nom: 'Ambiance', sort: 'joue' });
+                    }
                 }
 
                 set({ sonsDuMoment: sonsPoses });
 
-                if (gmToast) gmToast('info', `Moment activé : ${moment.name}`);
+                /*
+                  ⛔ **LE MOMENT REND DES COMPTES — ajouté le 2026-09-12.**
+
+                  Une séquence à moitié jouée ne laissait **rien** : ni `warn`, ni
+                  `error`, et la seule bulle prévue passait par un magasin absent
+                  de `window`. *L'application avait des choses à dire et aucun
+                  moyen de les dire.*
+
+                  La trace part toujours — même quand tout va bien : *une trace
+                  qui n'existe que les mauvais jours ne permet pas de comparer.*
+                  Le meneur, lui, n'est dérangé que s'il manque quelque chose.
+                */
+                const rapport = { moment: moment.name, effets };
+                Logger.info('[Storyboard] ' + traceDuMoment(rapport));
+
+                const manque = resumeDuMoment(rapport);
+                if (manque) {
+                    Logger.warn('[Storyboard] ' + manque);
+                    gmToast(`⚠️ ${manque}`, 'warning');
+                } else {
+                    gmToast(`Moment activé : ${moment.name}`, 'info');
+                }
             },
 
             reset: () => set({ moments: [], activeMomentId: null })

@@ -1,3 +1,14 @@
+/*
+  ⛔ **`window.useToastStore` n'existe pas — trouvé le 2026-09-12.**
+  Ce moteur criait dans le vide : le magasin n'est assigné nulle part, donc
+  le `if` qui gardait l'appel n'a jamais été franchi, et *« Fichier
+  introuvable dans la base de données »* n'est jamais sorti. Les arguments
+  étaient de surcroît inversés (`gmToast(message, type)`).
+  Une séquence de storyboard à moitié jouée est restée sans explication
+  pour cette raison. *Une garde qui n'est jamais franchie ressemble à un
+  code qui marche.*
+*/
+import { gmToast } from '../../stores/useToastStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { SortiesAudio } from '../../utils/sortiesAudio';
 
@@ -131,7 +142,7 @@ export class SoundEngine {
                 const blob = await mediaStore.getMediaBlob(filePath);
                 if (!blob) {
                     console.error(`[SoundEngine] MediaBlob not found for ID: ${filePath}`);
-                    if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Fichier sonore introuvable dans la base de données.`);
+                    gmToast(`Fichier sonore introuvable dans la base de données.`, 'error');
                     return;
                 }
                 arrayBuffer = await blob.arrayBuffer();

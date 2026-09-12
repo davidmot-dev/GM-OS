@@ -1,3 +1,5 @@
+/* ⛔ `window.useToastStore` n'existe pas — voir `useStoryboardStore.ts`. */
+import { gmToast } from '../../stores/useToastStore';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStoryboardStore } from './useStoryboardStore';
@@ -349,7 +351,6 @@ const StoryboardDashboard: React.FC = () => {
     };
 
     const handleCapture = (type: 'music' | 'light' | 'map' | 'image' | 'sound' | 'ambient') => {
-        const gmToast = (window as any).useToastStore?.getState()?.gmToast;
 
         switch (type) {
             case 'music': {
@@ -359,7 +360,7 @@ const StoryboardDashboard: React.FC = () => {
                                  (musicStore.deckB.isPlaying ? musicStore.deckB.activePadId : musicStore.deckA.activePadId);
                     if (padId) {
                         setMusicPadId(padId as string);
-                        if (gmToast) gmToast('info', 'ID Musique capturé !');
+                        gmToast('ID Musique capturé !', 'info');
                     }
                 }
                 break;
@@ -368,7 +369,7 @@ const StoryboardDashboard: React.FC = () => {
                 const lightStore = (window as any).useLightStore?.getState();
                 if (lightStore?.activeSceneId) {
                     setLightSceneId(lightStore.activeSceneId as string);
-                    if (gmToast) gmToast('info', 'Scène Lumière capturée !');
+                    gmToast('Scène Lumière capturée !', 'info');
                 }
                 break;
             }
@@ -390,9 +391,9 @@ const StoryboardDashboard: React.FC = () => {
                       contredire*, la règle de `natureDuMedia`.
                     */
                     setMapEstVideo(Boolean(mapStore.isVideo));
-                    if (gmToast) gmToast('info', t('modules:storyboard.editor.captured_map'));
-                } else if (gmToast) {
-                    gmToast('warning', t('modules:storyboard.editor.capture_nothing'));
+                    gmToast(t('modules:storyboard.editor.captured_map'), 'info');
+                } else {
+                    gmToast(t('modules:storyboard.editor.capture_nothing'), 'warning');
                 }
                 break;
             }
@@ -412,9 +413,9 @@ const StoryboardDashboard: React.FC = () => {
                 );
                 if (media) {
                     setImageMediaId(media.id as string);
-                    if (gmToast) gmToast('info', t('modules:storyboard.editor.captured_image'));
-                } else if (gmToast) {
-                    gmToast('warning', t('modules:storyboard.editor.capture_nothing'));
+                    gmToast(t('modules:storyboard.editor.captured_image'), 'info');
+                } else {
+                    gmToast(t('modules:storyboard.editor.capture_nothing'), 'warning');
                 }
                 break;
             }
@@ -428,7 +429,7 @@ const StoryboardDashboard: React.FC = () => {
             */
             case 'sound':
             case 'ambient': {
-                if (gmToast) gmToast('warning', t('modules:storyboard.editor.capture_unavailable'));
+                gmToast(t('modules:storyboard.editor.capture_unavailable'), 'warning');
                 break;
             }
         }
