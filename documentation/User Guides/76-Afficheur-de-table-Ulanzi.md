@@ -82,11 +82,85 @@ trafic réseau**.
 
 **Débit mesuré** : lecture ≈ 34 ms, écriture ≈ 150 ms à coût fixe.
 
-## 6. Ce qui n'est pas possible
+## 6. Les trois boutons physiques — par Home Assistant
 
-**Les boutons physiques de l'appareil sont garés.** Mesuré sur le firmware 0.98 : rien en HTTP.
-Seul MQTT les expose, et il ne se configure que sur le portail de l'appareil — un courtier MQTT
-serait un service de plus à faire vivre.
+**Longtemps impossible, ouvert le 2026-09-12.** Mesuré sur le firmware 0.98 : les appuis ne
+remontent **pas en HTTP**. Seul MQTT les expose — et un courtier était alors un service de plus à
+faire vivre. Un Home Assistant sur le réseau porte déjà ce courtier : la seule raison du gel a
+disparu.
+
+### Ce qui se règle dans GM-OS
+
+**Paramètres → Système**, sous les raccourcis clavier. Chaque bouton reçoit un geste :
+
+| Geste | Ce qu'il fait |
+| --- | --- |
+| **Rien** | le défaut — le bouton garde son comportement d'usine |
+| **Tour suivant** | avance l'initiative de Combat-OS |
+| **Quart suivant** / **Pause des Quarts** | pilote le défilé |
+| **Effacer les dés** | vide le pupitre |
+| **Couper tous les sons** | arrête les bruitages |
+| **Lancer un jet préréglé** | lance la formule que vous tapez à côté (`1d20`, `2d6+3`…) |
+
+> ⚠️ **Un bouton ne porte aucun argument.** C'est ce qui décide de cette liste : *« pinguer la
+> carte »* voudrait des coordonnées, *« déclencher un moment »* voudrait lequel. Le jet préréglé est
+> l'exception, et sa formule est figée **au moment où l'on règle**, pas au moment où l'on appuie.
+
+### Ce qui se branche dans Home Assistant
+
+**1 · Sur l'appareil.** Portail de l'Ulanzi → MQTT : l'adresse de votre courtier, son identifiant
+et son mot de passe. ⚠️ **Ça ne se configure que là** — aucune requête HTTP ne le fait.
+
+**2 · Trouver le sujet des boutons.** ⛔ **Ne le devinez pas.** Dans HA :
+*Paramètres → Appareils et services → MQTT → Configurer → Écouter un sujet*, tapez `#`, et appuyez
+sur un bouton. Le sujet se nomme tout seul en deux secondes.
+
+**3 · Le jeton.** Le bouton **« Copier le jeton »** du panneau le met dans votre presse-papiers —
+il n'est jamais affiché à l'écran. À coller dans `secrets.yaml` :
+
+```yaml
+gmos_jeton: "le-jeton-copie"
+```
+
+**4 · L'appel**, dans `configuration.yaml` (l'adresse exacte est affichée dans le panneau) :
+
+```yaml
+rest_command:
+  gmos_bouton:
+    url: "http://192.168.1.42:3001/bouton"
+    method: POST
+    content_type: "application/json"
+    headers:
+      x-gmos-jeton: !secret gmos_jeton
+    payload: '{"bouton": "{{ bouton }}"}'
+```
+
+**5 · Une automatisation par bouton** — `gauche`, `milieu`, `droite` :
+
+```yaml
+automation:
+  - alias: "GM-OS — bouton gauche de l'Ulanzi"
+    trigger:
+      - platform: mqtt
+        topic: "awtrix_73f7a4/stats/button1"   # ← le sujet révélé à l'étape 2
+    action:
+      - service: rest_command.gmos_bouton
+        data:
+          bouton: gauche
+```
+
+### Trois choses à savoir
+
+⛔ **Le pont transporte un appui, jamais une action.** Home Assistant dit *« on a appuyé à
+gauche »* ; c'est GM-OS qui décide de quoi faire. Même si le jeton fuitait, on ne pourrait
+déclencher que ce que **vous** avez posé sur vos trois boutons.
+
+⚠️ **« Révoquer les appairages » coupe aussi ce pont.** Le jeton est celui des tablettes : le
+régénérer invalide les deux. Il faudra recopier le nouveau dans `secrets.yaml`.
+
+⚠️ **À vérifier au premier essai** : l'appui continue-t-il de faire défiler les applications de
+l'appareil ? Si MQTT capture les boutons, le défilé perd sa navigation — et c'est le seul widget
+éprouvé en vraie soirée.
 
 ---
 
@@ -95,6 +169,7 @@ serait un service de plus à faire vivre.
 - **Des nombres et des barres, jamais des phrases.** C'est la contrainte qui décide de tout.
 - **Plusieurs widgets défilent** ; le catalogue se choisit par jeu.
 - **Écran noir → regardez `/api/settings` et `/api/loop`** avant de soupçonner le matériel.
+- **Les trois boutons servent à quelque chose depuis le 12/09**, via Home Assistant — § 6.
 - La conception détaillée vit dans
   [`Planning/2026-08-23-afficheur-ulanzi.md`](../Planning/2026-08-23-afficheur-ulanzi.md).
 

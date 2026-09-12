@@ -8,6 +8,8 @@ import {
     type EtatDesQuarts,
 } from './widgets/defileDesQuarts';
 import { HOTE_PAR_DEFAUT, type RoutineSauvegardee } from './UlanziService';
+import { BOUTONS, type BoutonUlanzi } from '../../../electron/boutonsDeLUlanzi';
+import { GESTE_PAR_DEFAUT, type ReglageDeBouton } from './logic/gestesDesBoutons';
 import {
     accelerer,
     calmer,
@@ -82,6 +84,19 @@ interface EtatUlanzi {
      * de ce qu'il faut rendre.
      */
     routine: RoutineSauvegardee | null;
+    /**
+     * **Ce que font les trois boutons physiques.**
+     *
+     * Rouvert le 2026-09-12 : la direction était garée au § 4 du registre parce
+     * qu'elle demandait un courtier MQTT — *« un service de plus à faire vivre,
+     * à démarrer avec GM-OS et à rendre en partant »*. Le Home Assistant de
+     * David porte ce courtier, tourne sans GM-OS et n'a rien à rendre. **La
+     * seule raison du gel a disparu.**
+     *
+     * ⚠️ Les appuis n'arrivent pas par l'appareil : ils arrivent par HA, qui
+     * les pousse sur `POST /bouton`. Voir `electron/boutonsDeLUlanzi.ts`.
+     */
+    boutons: Record<BoutonUlanzi, ReglageDeBouton>;
     /** Résultat de la dernière tentative de contact. `null` = jamais essayé. */
     joignable: boolean | null;
     /** **Pourquoi** la dernière tentative a échoué. Un « non » muet ne se diagnostique pas. */
@@ -121,6 +136,7 @@ interface EtatUlanzi {
      * plus une sauvegarde.* Elle ne s'efface qu'à une restitution réussie.
      */
     memoriserLaRoutine: (routine: RoutineSauvegardee) => void;
+    setBouton: (bouton: BoutonUlanzi, reglage: ReglageDeBouton) => void;
     setJoignable: (joignable: boolean | null, pourquoi?: string | null) => void;
 }
 
@@ -137,6 +153,10 @@ export const useUlanziStore = create<EtatUlanzi>()(
             routine: null,
             joignable: null,
             pourquoi: null,
+            boutons: Object.fromEntries(
+                BOUTONS.map(b => [b, { geste: GESTE_PAR_DEFAUT }]),
+            ) as Record<BoutonUlanzi, ReglageDeBouton>,
+
 
             setHote: (hote) => set({ hote: hote.trim() || HOTE_PAR_DEFAUT }),
             basculerActif: (force) =>
@@ -178,6 +198,9 @@ export const useUlanziStore = create<EtatUlanzi>()(
             // Écrire seulement si l'on ne tient rien : une routine déjà
             // mémorisée est la seule qui ait vu l'appareil intact.
             memoriserLaRoutine: (routine) => set((s) => (s.routine ? {} : { routine })),
+            setBouton: (bouton, reglage) => set(s => ({
+                boutons: { ...s.boutons, [bouton]: reglage },
+            })),
             setJoignable: (joignable, pourquoi = null) => set({ joignable, pourquoi }),
         }),
         {
@@ -194,6 +217,7 @@ export const useUlanziStore = create<EtatUlanzi>()(
                 quarts: s.quarts,
                 signal: s.signal,
                 routine: s.routine,
+                boutons: s.boutons,
             }),
         },
     ),

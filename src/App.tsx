@@ -20,6 +20,7 @@ import { useDemarrageStore } from './modules/system/useDemarrageStore';
 import { useHydration } from './hooks/useHydration';
 import { useSemence } from './hooks/useSemence';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
+import { useBoutonsDeLUlanzi } from './modules/ulanzi/hooks/useBoutonsDeLUlanzi';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useRaccourcisDeNavigation } from './hooks/useRaccourcisDeNavigation';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
@@ -193,6 +194,13 @@ function App() {
   const handleAction = useCallback((data: RemoteAction) => {
     dispatchRemoteAction(data, { activeCampaignId, sync: handleSync });
   }, [activeCampaignId, handleSync]);
+
+  /*
+    **Les trois boutons physiques de l'afficheur**, relayes par Home Assistant.
+    Ils passent par `handleAction` comme une tablette : un bouton ne peut rien
+    faire que la telecommande du meneur ne puisse deja faire.
+  */
+  useBoutonsDeLUlanzi(isMainPC, handleAction);
 
 
   // Handle Remote Sync and Actions (Only on Main PC Window)

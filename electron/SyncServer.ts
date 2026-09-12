@@ -8,6 +8,9 @@ import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
 import { evaluateAction } from './actionPolicy';
 import { auditDenied } from './auditLog';
+import {
+    lireLAppui, ENTETE_DU_JETON, TAILLE_MAX_DU_CORPS,
+} from './boutonsDeLUlanzi';
 
 export type ClientRole = 'gm' | 'remote' | 'player' | 'hub';
 
@@ -117,12 +120,103 @@ export class SyncServer {
         }
     }
 
+    /**
+     * **Un appui sur un bouton de l'afficheur, relayé par Home Assistant.**
+     *
+     * ⛔ **Le jeton est jugé AVANT que le corps ne soit lu**, et c'est la seule
+     * façon de ne rien accumuler pour un inconnu. Le secret voyage dans un
+     * en-tête : il est donc disponible tout de suite, alors que le corps
+     * arrive en morceaux.
+     *
+     * ⭐ **Le pré-vol n'est pas un second contrôle, c'est le même.** On appelle
+     * `lireLAppui` avec un corps **vide** : si elle refuse pour la méthode ou
+     * pour le jeton, on s'arrête là. Un `400` signifie au contraire que ces
+     * deux-là sont bons — il ne reste qu'à lire ce qui suit. *Deux écrivains
+     * pour une même décision finissent toujours par diverger ; ici il n'y en a
+     * qu'un, appelé deux fois.*
+     */
+    private traiterLAppui(req: http.IncomingMessage, res: http.ServerResponse) {
+        const repondre = (code: number, charge: object) => {
+            res.writeHead(code, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(charge));
+        };
+
+        const entree = {
+            methode: req.method,
+            jeton: req.headers[ENTETE_DU_JETON] as string | undefined,
+            leSecretEstBon: (jeton: unknown) => pairingManager.verify(jeton),
+        };
+
+        const preVol = lireLAppui({ ...entree, corps: '' });
+        if (!preVol.ok && preVol.code !== 400) {
+            /* Refus sur la méthode ou le jeton : rien n'a été lu, rien ne le sera. */
+            auditDenied('[Ulanzi] appui refuse : ' + preVol.motif);
+            repondre(preVol.code, { erreur: preVol.motif });
+            req.destroy();
+            return;
+        }
+
+        let corps = '';
+        let coupe = false;
+
+        req.on('data', (morceau: Buffer) => {
+            if (coupe) return;
+            corps += morceau.toString('utf8');
+
+            /*
+              ⚠️ On coupe la ligne au lieu d'accumuler pour refuser à la fin :
+              *attendre la fin d'un flux qu'on a déjà décidé de rejeter, c'est
+              accepter un flux sans fin.* L'appelant est authentifié à ce
+              stade — il apprend donc légitimement la borne.
+            */
+            if (corps.length > TAILLE_MAX_DU_CORPS) {
+                coupe = true;
+                repondre(413, { erreur: 'corps trop volumineux' });
+                req.destroy();
+            }
+        });
+
+        req.on('end', () => {
+            if (coupe) return;
+
+            const verdict = lireLAppui({ ...entree, corps });
+            if (!verdict.ok) {
+                repondre(verdict.code, { erreur: verdict.motif });
+                return;
+            }
+
+            /*
+              ⛔ **On transmet l'appui, jamais une action.** Le geste associé vit
+              dans les réglages du meneur, et c'est sa propre fenêtre qui le
+              construit. Home Assistant n'a donc aucune prise sur le registre
+              des actions — voir l'en-tête de `boutonsDeLUlanzi.ts`.
+            */
+            this.mainWindow?.webContents.send('ulanzi:bouton', verdict.bouton);
+            repondre(200, { recu: verdict.bouton });
+        });
+
+        req.on('error', () => { /* client parti en cours de route : rien à faire */ });
+    }
+
     private handleHttpRequest(req: http.IncomingMessage, res: http.ServerResponse) {
         if (!req.url) return;
 
         // Le serveur écoute sur 0.0.0.0 : tout chemin venant d'un client est hostile
         // par défaut. On coupe la query string avant décodage, sinon `?x=..` passe.
         const urlPath = req.url.split('?')[0];
+
+        /*
+          **Les trois boutons de l'afficheur, poussés par Home Assistant.**
+
+          En tête du routeur parce que c'est la seule route qui ÉCRIT : la
+          laisser tomber dans le service de fichiers statiques la rendrait
+          dépendante de l'ordre des `if`, et *une garde qui ne tient que par sa
+          position finit par bouger.*
+        */
+        if (urlPath === '/bouton') {
+            this.traiterLAppui(req, res);
+            return;
+        }
 
         // Support serving local files via /media/path-to-file
         if (urlPath.startsWith('/media/')) {

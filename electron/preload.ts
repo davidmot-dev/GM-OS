@@ -199,6 +199,25 @@ contextBridge.exposeInMainWorld('appBridge', {
          */
         deposerLesIcones: (hote: string): Promise<{ deposees: string[]; manquantes: string[] }> =>
             ipcRenderer.invoke('ulanzi:deposer-icones', hote),
+
+        /**
+         * **Un des trois boutons physiques a été pressé**, relayé par Home
+         * Assistant sur `POST /bouton`.
+         *
+         * ⛔ **Ce qui arrive est un APPUI, jamais une action.** Le geste associé
+         * vit dans les réglages du meneur, et c'est cette fenêtre-ci qui le
+         * construit — voir `electron/boutonsDeLUlanzi.ts` pour ce que cette
+         * séparation protège.
+         *
+         * ⚠️ **Rend son propre retrait**, comme `onAction` : un écouteur posé à
+         * chaque changement d'identité et jamais retiré, c'est le défaut trouvé
+         * dans `App.tsx` — deux abonnés de plus par rendu.
+         */
+        surAppuiDeBouton: (rappel: (bouton: string) => void) => {
+            const ecouteur = (_e: unknown, bouton: string) => rappel(bouton);
+            ipcRenderer.on('ulanzi:bouton', ecouteur);
+            return () => ipcRenderer.off('ulanzi:bouton', ecouteur);
+        },
     },
     clock: {
         listCalendars: () => ipcRenderer.invoke('clock:list-calendars'),

@@ -90,6 +90,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
 | Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
 | Le **démarrage amputé** | 12/09 | Écrit le jour où l'écran bloqué a été refermé (§ 48), et **jamais vu se produire** : il faut qu'une étape expire ou échoue pour la première fois. À regarder si ça arrive — l'écran d'attente nomme-t-il bien l'étape, la notification survit-elle au premier rendu, et **l'application est-elle vraiment utilisable** amputée de cette étape ? *C'est le pari du correctif : un démarrage dégradé vaut mieux qu'une absence de démarrage — et il n'a pas encore été vérifié en vrai.* |
+| Les **trois boutons de l'Ulanzi** | 12/09 | Construits le jour même (§ 49) et **jamais pressés en vrai**. Deux choses à regarder au premier essai : l'appui parvient-il jusqu'à Home Assistant (le sujet MQTT ne se devine pas, il s'écoute) — et **capture-t-il le bouton**, auquel cas le défilé des Quarts perd sa navigation native. *Le seul widget éprouvé en vraie soirée serait celui qu'on abîmerait.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -2726,9 +2727,90 @@ devant `setSystemReady`, **2 tests rougissent**.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
-- **Ulanzi D — les boutons physiques.** Mesuré le 30/08 : rien en HTTP sur le firmware 0.98. MQTT ou
-  rien, et un courtier est un service de plus à faire vivre. *La seule des quatre directions dont le coût
-  soit une dépendance d'infrastructure et non du code.*
+✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie
+le jour où sa raison d'être a disparu : voir le § 49.
+
+> ⭐ **Et c'est la leçon de cette case.** Elle disait *« à ne pas rouvrir **sans raison** »*, et la
+> raison écrite était un coût d'infrastructure, pas une impossibilité. *Une ligne garée avec son
+> motif se rouvre toute seule le jour où le motif tombe ; une ligne garée sans motif ne se rouvre
+> jamais.*
+
+### 49 · ⭐ Les trois boutons de l'Ulanzi — le § 4 se vide (2026-09-12)
+
+*Garée le 30/08 pour une raison précise. David a installé un Home Assistant ; la raison n'existait
+plus.*
+
+#### Ce qui était écrit, et pourquoi ça comptait
+
+> *« Les boutons ne remontent pas en HTTP. MQTT, donc, ou rien — et un courtier est un service de
+> plus à faire vivre, **à démarrer avec GM-OS et à rendre en partant**. »*
+
+⭐ **Le gel ne portait pas sur la faisabilité, mais sur un coût d'exploitation** — et c'est
+exactement ce qui l'a rendu réversible. Home Assistant porte déjà Mosquitto, tourne **sans** GM-OS et
+n'a **rien à rendre** en partant. Les trois clauses du motif tombent d'un coup.
+
+*Une ligne garée avec son motif se rouvre toute seule le jour où le motif tombe.*
+
+#### ⭐ Le découpage, et la propriété qui en tombe
+
+```
+bouton → MQTT → Home Assistant → POST /bouton (secret d'appairage)
+       → webContents.send('ulanzi:bouton') → la fenêtre MJ résout le réglage
+```
+
+⛔ **Le pont transporte un APPUI, jamais une action.** Le réglage vit dans le magasin persisté de
+l'écran ; le processus principal ne le connaît pas et n'a rien à arbitrer. **Même si le secret
+fuitait, on ne pourrait déclencher que ce que le meneur a lui-même posé sur ses trois boutons** — là
+où un pont qui transporterait un type d'action donnerait la main sur les soixante-six du registre.
+
+*Ce n'était pas le découpage prévu : il est tombé du refus d'apprendre les réglages au principal.*
+
+#### ⛔ Trois refus, parce que le serveur écoute sur `0.0.0.0`
+
+| | |
+| --- | --- |
+| **Le secret** | celui des tablettes (`pairingManager.verify`, comparaison à temps constant). Rien de neuf à inventer, et `rotate()` révoque le pont avec le reste |
+| **L'ordre** | le jeton est jugé **avant** que le corps ne soit lu — un inconnu reçoit `401` quoi qu'il envoie, et n'apprend donc ni les noms des boutons ni la forme attendue. *Une erreur qui renseigne est une erreur qui aide celui qui cherche* |
+| **La borne** | 1 Kio, et on coupe la ligne au lieu d'accumuler pour refuser à la fin |
+
+⭐ **Le pré-vol n'est pas un second contrôle, c'est le même appelé deux fois** : `lireLAppui` avec un
+corps **vide** dit si la méthode et le jeton passent. *Deux écrivains pour une même décision finissent
+toujours par diverger.*
+
+#### La contrainte qui a choisi les gestes
+
+⛔ **Un bouton ne porte aucun argument.** Sur soixante-six actions, la plupart sont inposables :
+`map:ping` veut des coordonnées, `storyboard:trigger` un identifiant. Restent six gestes qui se
+suffisent — plus le **jet préréglé**, dont l'argument est figé *au moment où l'on règle*, jamais au
+moment où l'on appuie.
+
+⚠️ `ulanzi:quart-suivant` et `ulanzi:pause` ont dû **entrer au registre** : les deux gestes vivaient
+dans `useUlanziStore`, offerts par le tableau de bord et **par rien d'autre**. *Une cinquième chaîne
+complète sans bouton au bout.*
+
+#### Deux erreurs de placement, trouvées par les tests
+
+1. Le panneau était d'abord dans le tableau de bord de l'afficheur — qui vit **dans le cockpit**, donc
+   inatteignable sans séance ouverte. *Régler ce que font des boutons est un geste de préparation.*
+   Il est passé aux **Paramètres**, à côté des raccourcis clavier.
+2. `getByLabel('Bouton droit')` cherche une **sous-chaîne** : il désignait aussi *« Formule du bouton
+   droit »* dès qu'un jet était réglé. Les tests passaient **selon leur rang d'exécution**.
+
+#### ⚠️ Et une règle respectée plutôt que contournée
+
+Home Assistant a besoin du jeton, que `GlobalSettingsModal` déclare *« jamais affiché en clair »*.
+Le panneau le **copie** sans le montrer : *copier n'est pas afficher*, et la valeur ne traverse aucun
+rendu.
+
+**Ancres** : `electron/boutonsDeLUlanzi.ts` (+ 24 tests), `SyncServer.traiterLAppui`,
+`ulanzi/logic/gestesDesBoutons.ts` (+ 16 tests), `ulanzi/hooks/useBoutonsDeLUlanzi.ts`,
+`ulanzi/components/ReglageDesBoutons.tsx`, `e2e/boutonsUlanzi.spec.ts` (11 tests, la chaîne entière
+sans Home Assistant).
+
+**Vérifié** : `tsc -b` propre, **4 307 tests** (358 fichiers), **156 tests E2E**.
+
+⚠️ **Ce qui reste à éprouver en séance** — voir § 1 : que l'appui parvienne jusqu'à HA, et qu'il ne
+prive pas l'appareil de sa propre navigation.
 
 ### 5 · Clos et vérifié dans le code — ce qui ne doit plus être réannoncé
 

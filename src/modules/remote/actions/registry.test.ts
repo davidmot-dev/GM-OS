@@ -58,6 +58,16 @@ const EXPECTED_TYPES = [
     'deck:demander-don', 'remote:deck:demander-don',
     'deck:accepter-don', 'remote:deck:accepter-don',
     'deck:refuser-don', 'remote:deck:refuser-don',
+    /*
+      Le défilé des Quarts de l'afficheur. Les deux gestes vivaient déjà dans
+      `useUlanziStore`, offerts par le tableau de bord et par rien d'autre ; ils
+      entrent au registre le 2026-09-12 pour les **trois boutons physiques**,
+      relayés par Home Assistant.
+
+      ⚠️ Ils ne sont pas dans `PLAYER_ALLOWED_ACTIONS` : l'afficheur est un objet
+      du meneur, et le refus par défaut est le bon.
+    */
+    'ulanzi:quart-suivant', 'ulanzi:pause',
 ];
 
 describe('actionRegistry', () => {

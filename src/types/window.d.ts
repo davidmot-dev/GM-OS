@@ -442,6 +442,13 @@ declare global {
              * **Facultatif** : un pont plus ancien ne l'expose pas.
              */
             deposerLesIcones?: (hote: string) => Promise<{ deposees: string[]; manquantes: string[] }>;
+            /**
+             * Un des trois boutons physiques a été pressé — relayé par Home
+             * Assistant. Rend son propre retrait.
+             *
+             * **Facultatif** : un pont plus ancien ne l'expose pas.
+             */
+            surAppuiDeBouton?: (rappel: (bouton: string) => void) => () => void;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;

@@ -17,6 +17,7 @@ import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import VerrouDeLaSouris from './settings/VerrouDeLaSouris';
 import RaccourcisDeNavigation from './settings/RaccourcisDeNavigation';
+import ReglageDesBoutons from '../modules/ulanzi/components/ReglageDesBoutons';
 import { QRCodeSVG } from 'qrcode.react';
 import { measureLocalStorageUsage, formatBytes, type StorageUsage } from '../modules/session/logic/storageDiagnostics';
 import { InlinedMediaPanel } from './settings/InlinedMediaPanel';
@@ -395,6 +396,22 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     */}
                                     <div className="md:col-span-2">
                                         <RaccourcisDeNavigation />
+                                    </div>
+
+                                    {/*
+                                      Les trois boutons de l'afficheur Ulanzi.
+                                      Même section, même raison : c'est du
+                                      matériel de table.
+
+                                      ⚠️ **Et pas dans le tableau de bord de
+                                      l'afficheur**, qui vit dans le cockpit et
+                                      n'est donc atteignable qu'une séance
+                                      ouverte. *Régler ce que font des boutons
+                                      est un geste de préparation ; on ne le
+                                      fait pas en jouant.*
+                                    */}
+                                    <div className="md:col-span-2">
+                                        <ReglageDesBoutons />
                                     </div>
                                 </div>
                             </section>
