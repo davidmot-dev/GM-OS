@@ -222,6 +222,19 @@ export async function attendreLHydratation(gmos: GmOsLance): Promise<void> {
 }
 
 /**
+ * Ouvre un module par son bouton de la barre latérale.
+ *
+ * ⚠️ **Par le bouton, et non en posant `activeModule` dans un magasin.** Poser
+ * l'état sauterait précisément ce qu'on veut éprouver : que le bouton existe,
+ * qu'il porte le bon libellé, et qu'il atteigne le module. *Un raccourci de test
+ * qui court-circuite le geste ne teste plus le geste.*
+ */
+export async function ouvrirLeModule(gmos: GmOsLance, nom: string | RegExp): Promise<void> {
+    const motif = typeof nom === 'string' ? new RegExp(`^${nom}$`) : nom;
+    await gmos.fenetre.getByRole('button', { name: motif }).first().click();
+}
+
+/**
  * **Deux ports par worker, attribués sans course.**
  *
  * Playwright numérote ses workers dans `TEST_PARALLEL_INDEX`. On en dérive une

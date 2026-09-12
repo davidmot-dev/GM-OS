@@ -110,6 +110,7 @@ avec une case de plus pour ce qu'on a vu sans le traiter.
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
 | ⛔ **Le journal de séance n'est dans AUCUNE sauvegarde.** `SessionService` collecte onze magasins — `sessionOS`, `npc`, `web`, `ambient`, `clock`, `whiteboard`, `fiches`, `music`, `bestiaire`, `map`, `favorite` — et **`useJournalStore` n'en fait pas partie**. L'export Nexus ne le porte pas non plus. Le fil d'une séance, les scènes traversées, les comptes rendus : rien n'est protégé | Ouvrir n'importe quelle sauvegarde de `Security_Backup_GMOS` et lire les clés de `modules` : le journal en est absent. Ou `grep -c journal` dans `NexusService.ts` → 0 | Trouvé le 12/09 **en fin de session, en diagnostiquant autre chose**. Demande une décision avant d'écrire : *le journal suit-il la campagne — donc l'export Nexus aussi — ou seulement la machine ?* Music-OS avait été tranché « playlists seulement, la sortie audio décrit la pièce, pas l'univers » ; le journal, lui, est clairement de l'univers. **C'est le § 1 de l'état du 12/09 : le premier geste à reprendre** |
+| ⚠️ **La Médiathèque ne se ferme pas avec Échap**, et son bouton de fermeture s'intitule **« Désactiver l'Interface »**. C'est une surcouche **plein écran** qui couvre la barre latérale : tant qu'elle est ouverte, plus aucun module n'est cliquable | Ouvrir la Médiathèque, appuyer sur Échap : rien. Le seul moyen d'en sortir est un bouton sans texte, dont l'infobulle ne dit pas « fermer » | Trouvé le 12/09 **en écrivant les tests E2E des modules** (§ 46), pas en jouant. Deux gestes indépendants — *Échap ferme un modal* est une attente universelle ; *un bouton dit ce qu'il fait* est une leçon que ce dépôt a déjà payée avec « Sync Oracle », renommé « Envoyer au carnet » le 04/09 parce qu'il *« promettait exactement ce qu'il ne fait pas »*. ⚠️ **Reste à vérifier si les autres modaux de GM-OS ferment avec Échap** : si oui, celui-ci est une exception ; si non, c'est une règle qui manque partout |
 | ⚠️ **L'écran bloqué au démarrage n'a jamais été expliqué.** Le 12/09, GM-OS est resté sur un écran plein, David en déplacement. La boucle de Light-OS était réelle, elle est corrigée (§ 44), et il a confirmé que ça remarche — **mais le lien n'est pas établi** : dans la reproduction, l'écran restait **cliquable** pendant toute la boucle | Si ça revient, **deux questions tranchent en dix secondes** : l'écran montre-t-il le **splash** (runes animées, « GM-OS vVI.V », une citation) ou le **`LoadingOverlay`** (fond flouté, roue, « SYSTEM_BUSY ») ? Et la console porte-t-elle `[Bootstrap] ✅ Système prêt` ? *Ce sont deux composants et deux causes.* Si c'est « SYSTEM_BUSY / CHARGEMENT DE LA SESSION », le suspect est `loadFullSession`, qui attend un **sélecteur de fichier** — une boîte de dialogue restée ouverte hors écran bloque l'attente indéfiniment | Le symptôme a disparu. **Sans reproduction, chercher plus loin serait deviner** — j'ai déjà produit trois hypothèses fausses ce jour-là, dont une bâtie sur des sondes qui n'avaient jamais chargé la page |
 
 ### 2 · Ce qui se décide à la table — axe N.3
@@ -2463,6 +2464,65 @@ l'application emploie.
 
 **Ancres** : `session/logic/journalDeLaTrame.ts` (21 tests), `session/store/trameSlice.ts`,
 `e2e/ouvrirUneScene.spec.ts`, `e2e/curerLaTrame.spec.ts`, commits `4db1e241` et `c50d5c20`.
+
+### 46 · ⭐ Les tests E2E par module — et ce que le premier filet a trouvé (2026-09-12)
+
+*Demande de David : « peux-tu faire des modules de test E2E pour chaque module de GM-OS ». Premier
+lot : le filet large, puis Dice-OS, Combat-OS, Clock-OS, Deck-OS — les quatre où un défaut ne se voit
+jamais en séance et coûte cher.*
+
+**De 9 tests E2E à 70.**
+
+| Fichier | Ce qu'il garde |
+| --- | --- |
+| `tousLesModules.spec.ts` | Les 21 modules ont leur bouton, s'ouvrent, affichent quelque chose — **et la traversée ne produit aucune exception** |
+| `diceOs.spec.ts` | Les sept dés, la plage d'un d20 **sur cinq tirages**, l'accord entre total et somme, la formule annoncée, l'historique |
+| `combatOs.spec.ts` | Ajouter un combattant, l'initiative auto, le round qui bascule — et ⭐ **la bascule de combat entre deux scènes** |
+| `clockOs.spec.ts` | Les jauges (création, remplissage), ⭐ **une jauge neuve naît SECRÈTE**, le minuteur en secondes, les modes |
+| `deckOs.spec.ts` | ⭐ **Le recensement après chaque geste** — pioche + défausse + main + carte retournée = le compte du paquet |
+
+⭐ **L'item P6 de la bascule de combat est éprouvé**, trois semaines après avoir été garé. Le registre
+demandait : *« ouvrir un combat dans une scène, changer de scène, revenir — combattants, round et
+compteurs doivent tous revenir »*. Ils reviennent.
+
+#### ⛔ Ce que le filet a trouvé dès le premier passage
+
+| | Quoi |
+| --- | --- |
+| ⛔ **Les sept icônes de dés ne s'affichaient pas dans le paquet construit** | `DiceBoard.tsx` écrivait `/icons/D20b.png`, **absolu depuis la racine**. En dev, Vite le sert et tout va bien ; dans le paquet, la page est chargée par `loadFile`, donc en `file://`, et le chemin vise **la racine du disque C:**. ⭐ *Le défaut n'existait QUE dans ce qui serait livré — et David développe en dev.* Cas isolé, vérifié : une seule occurrence dans tout `src/`. Corrigé en relatif |
+| ⚠️ **La Médiathèque n'est pas un panneau, c'est une surcouche modale** | Elle couvre la barre latérale ; tant qu'elle est ouverte, plus aucun module n'est cliquable. Le test la traversait comme les autres et bloquait sur le suivant |
+
+#### ⭐ Et ce que ça corrige de ce que j'avais affirmé
+
+Le matin même, je répondais à David que *« mes tests E2E n'ont découvert aucun bogue produit »*, et
+j'en tirais que *« un test E2E ne découvre pas, il empêche de revenir en arrière »*. **La deuxième
+moitié était fausse.** Un filet assez large découvre — encore faut-il qu'il soit large : les 4 230
+tests unitaires ne montent aucun module dans la vraie application, et aucun ne tourne sur le paquet
+construit.
+
+#### Les leçons de méthode, pour le prochain lot
+
+⛔ **Sonder avant d'écrire.** Chaque module a demandé une sonde jetable — libellés de boutons, forme
+du magasin — avant la moindre assertion. Deux échecs sur trois de mes premières versions venaient
+d'un **nom de champ inventé** : `initiative` au lieu de `init`, et j'en concluais que l'initiative
+automatique ne servait personne. *Un champ absent se lit comme une valeur fausse, et accuse le code
+au lieu du test.*
+
+⛔ **Un test qui contredit le code n'a pas forcément raison.** J'ai écrit que remélanger devait
+préserver les cartes en main. C'est l'inverse, **et c'est documenté dans `shuffleDeck`** — tout
+revient au paquet, et une annonce le dit. Le test a été réécrit pour figer la règle **et son
+annonce** : *le comportement seul serait un défaut ; c'est l'annonce qui en fait une règle.*
+
+⚠️ **Le bruit s'autorise nommément.** `ResizeObserver loop completed` est un avertissement de
+Chromium, pas une exception de l'application. Il figure dans une liste `BRUIT_CONNU` **avec sa
+raison écrite** — *sans raison, une ligne n'a pas sa place, et le test doit rougir.*
+
+⚠️ **Ce qu'aucun de ces tests ne dira** : une instance d'essai n'a ni média, ni clé d'API, ni corpus,
+et ses appareils sont muets. Music-OS s'ouvre sur une bibliothèque vide, l'Oracle sans modèle,
+Light-OS sans pont. *Qu'un module s'ouvre ne dit rien de ce qu'il fait quand il a de quoi travailler.*
+
+**Ancres** : `e2e/tousLesModules.spec.ts`, `e2e/diceOs.spec.ts`, `e2e/combatOs.spec.ts`,
+`e2e/clockOs.spec.ts`, `e2e/deckOs.spec.ts`, `src/modules/dice/DiceBoard.tsx`. **70 tests E2E verts.**
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

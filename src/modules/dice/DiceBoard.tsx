@@ -758,7 +758,18 @@ const DiceBoard: React.FC = () => {
                                     className="aspect-square flex flex-col items-center justify-center gap-2 rounded-2xl bg-app-surface hover:bg-accent/90 text-app-text/70 hover:text-white border border-app-border/80 hover:border-accent transition-all duration-300 group relative overflow-hidden shadow-lg"
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    <img src={`/icons/D${sides}b.png`} alt={`d${sides}`} className="w-10 h-10 object-contain relative z-10 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] invert dark:invert-0" />
+                                    {/*
+                                      ⛔ **Chemin RELATIF, et c'est tout le correctif.**
+                                      Il a longtemps ete `/icons/...`, absolu depuis la
+                                      racine : en dev, Vite le sert depuis `localhost:5173`
+                                      et tout va bien ; dans le paquet construit, la page est
+                                      chargee par `loadFile`, donc en `file://`, et le meme
+                                      chemin vise **la racine du disque C:**. Les sept icones
+                                      de des ne s'affichaient donc QUE en developpement.
+                                      Trouve le 2026-09-12 par la traversee E2E des modules,
+                                      qui tourne sur le paquet construit -- jamais en dev.
+                                  */}
+                                    <img src={`./icons/D${sides}b.png`} alt={`d${sides}`} className="w-10 h-10 object-contain relative z-10 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] invert dark:invert-0" />
                                     <span className="text-xs font-bold tracking-widest relative z-10 opacity-70 group-hover:opacity-100">d{sides}</span>
                                     {sides === 20 && <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
                                 </button>
