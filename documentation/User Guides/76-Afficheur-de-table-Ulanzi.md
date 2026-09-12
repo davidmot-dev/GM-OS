@@ -172,10 +172,11 @@ automation:
 > fois par pression** — deux tours d'initiative passés au lieu d'un, et ça ne se voit qu'à la
 > table.
 >
-> ⚠️ **Vérifiez lequel des deux vaut « enfoncé ».** Dans la fenêtre d'écoute, appuyez en
-> maintenant : vous verrez passer `1` puis `0`, ou l'inverse selon la version du firmware. C'est
-> celui de l'enfoncement qu'il faut mettre. *Deux secondes de mesure valent mieux qu'une valeur
-> recopiée d'un guide.*
+> ✅ **Mesuré le 2026-09-13 sur le firmware 0.98** : en maintenant le bouton, HA affiche `1` ;
+> au relâchement, `0`. C'est donc **`payload: "1"`** — l'enfoncement.
+>
+> ⚠️ Sur un autre firmware, refaites les deux secondes de mesure : appuyez en maintenant dans la
+> fenêtre d'écoute. *Une valeur recopiée d'un guide ne vaut pas une valeur lue sur son appareil.*
 
 ### Trois choses à savoir
 
