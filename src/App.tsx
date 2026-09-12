@@ -16,6 +16,7 @@ import { useObsidianStore } from './modules/session/useObsidianStore';
 import { useAIStore } from './stores/useAIStore';
 import { useLightStore } from './modules/light/useLightStore';
 import { BootstrapService } from './modules/system/logic/BootstrapService';
+import { useDemarrageStore } from './modules/system/useDemarrageStore';
 import { useHydration } from './hooks/useHydration';
 import { useSemence } from './hooks/useSemence';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
@@ -107,6 +108,9 @@ function App() {
 
   // Le système est "prêt" si hydraté et (si Main PC) si le bootstrap est fini
   const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
+  /* De quoi peupler l'écran d'attente — voir la garde plus bas. */
+  const etapeDeDemarrage = useDemarrageStore(state => state.etapeEnCours);
+  const etapesRendues = useDemarrageStore(state => state.rendus);
 
   useDisplayDetection(isMainPC);
 
@@ -271,9 +275,34 @@ function App() {
   const isTabletView = searchParams.get('window') === 'tablet' || pathname.includes('/tablet-hub');
   const isRemoteView = searchParams.get('window') === 'remote' || pathname.includes('/remote');
 
+  /*
+    ⛔ **L'ÉCRAN BLOQUÉ DU 2026-09-12, ET IL NE DISAIT QUE TROIS MOTS.**
+
+    C'est ce voile-ci — ni le splash, ni `LoadingOverlay` — qui pouvait rester
+    à l'écran pour toujours : `bootstrap()` attendait ses étapes sans borne, et
+    son `catch` laissait `isSystemReady` à `false` délibérément. Le blocage est
+    refermé dans `etapesDuDemarrage.ts`, mais un démarrage **lent** existe
+    encore, et un meneur devant un écran noir a le droit de savoir ce qu'on
+    attend. *Un écran qui ne dit ni ce qu'il attend ni pourquoi il a renoncé ne
+    se diagnostique pas après coup — c'est ce qui a coûté la journée du 12/09.*
+  */
   if (!isAppReady) {
-    return <div className="h-screen w-screen bg-black flex items-center justify-center">
+    const manquees = etapesRendues.filter(e => e.etat !== 'faite');
+
+    return <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-2">
       <div className="text-cyan-500 font-mono animate-pulse">GM-OS BOOTING...</div>
+
+      {etapeDeDemarrage && (
+        <div className="text-cyan-700 font-mono text-ui-11">{etapeDeDemarrage}…</div>
+      )}
+
+      {/* Une étape manquée se dit ici AUSSI : au moment où elle manque, le
+          meneur regarde cet écran et pas encore ses notifications. */}
+      {manquees.map(etape => (
+        <div key={etape.nom} className="text-amber-500 font-mono text-ui-11">
+          ⚠ {etape.nom} — {etape.motif ?? etape.etat}
+        </div>
+      ))}
     </div>;
   }
 

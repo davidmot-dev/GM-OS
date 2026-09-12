@@ -54,6 +54,22 @@ Depuis le 2026-09-04, il **analyse d'abord** et vous nomme les fichiers concern�
 est un second geste. Le panneau de détails d'un média dit désormais **qui s'en sert**.
 → [Guide du Media Hub](./92-Media-Hub.md)
 
+## ⏳ Au démarrage, si l'écran reste noir
+
+Au lancement, GM-OS affiche brièvement **`GM-OS BOOTING...`** pendant qu'il ouvre la médiathèque,
+récupère vos clés dans le coffre de Windows et démarre ses services. Depuis le **2026-09-12**, il
+**dit ce qu'il attend** : le nom de l'étape en cours s'affiche sous le titre.
+
+**Cet écran ne peut plus rester là indéfiniment.** Chaque étape dispose de quinze secondes ; celle qui
+ne répond pas est abandonnée, et **l'application s'ouvre quand même**. Vos campagnes ne sont
+concernées par aucune de ces étapes — elles sont lues ailleurs.
+
+> ⚠️ **Si une étape a manqué, un message vous le dit et la nomme.** Il faut le lire : l'application
+> tourne, mais **amputée de quelque chose**. « Médiathèque » veut dire que vos médias ne seront pas
+> listés ; « Trousseau IA » que l'Oracle n'aura pas ses clés. Dans les deux cas, **relancer GM-OS
+> suffit presque toujours** — la cause la plus fréquente est une autre fenêtre de GM-OS (projecteur,
+> hub des joueurs, tablette) restée ouverte d'une session précédente.
+
 ## 🛡️ Vos données sont-elles protégées ?
 
 **Oui, par une sauvegarde locale automatique** — dans `C:\Projet_David\Security_Backup_GMOS`, à

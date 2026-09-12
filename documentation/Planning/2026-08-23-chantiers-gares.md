@@ -89,6 +89,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | L'**aller-retour d'image** d'une ambiance | — | Déclencher un moment de storyboard qui porte une image, la voir partir au projecteur **et revenir**. |
 | La **consigne de langue** | — | On sait qu'elle **part** dans l'invite ; pas que le modèle l'**applique**. *Aucun test ne peut attraper cet écart-là.* |
 | Le **dépôt des icônes par GM-OS** | 31/08 | ⛔ **La réponse est venue le soir même : non.** `/list?dir=/ICONS` rendait `[]` alors que `gmos_vk` était poussé — cadre noir. Deux causes : le flash s'efface, et **la prise de main peut rater** (un appareil qui démarre refuse les écritures quelques minutes). Le dépôt est devenu une **veille** — voir `2026-08-23-afficheur-ulanzi.md` § 17. Reste à voir en séance : qu'elle répare toute seule un appareil vidé, sans qu'on redémarre GM-OS. |
+| Le **démarrage amputé** | 12/09 | Écrit le jour où l'écran bloqué a été refermé (§ 48), et **jamais vu se produire** : il faut qu'une étape expire ou échoue pour la première fois. À regarder si ça arrive — l'écran d'attente nomme-t-il bien l'étape, la notification survit-elle au premier rendu, et **l'application est-elle vraiment utilisable** amputée de cette étape ? *C'est le pari du correctif : un démarrage dégradé vaut mieux qu'une absence de démarrage — et il n'a pas encore été vérifié en vrai.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -107,14 +108,20 @@ avec une case de plus pour ce qu'on a vu sans le traiter.
 > une section numérotée avec ses ancres ; garée exprès, elle descend au § 4. *Elle ne s'efface
 > jamais parce qu'on a cessé d'y penser.*
 >
-> ⭐ **Et elle a fonctionné du premier coup.** Ouverte le 2026-09-12 au matin avec quatre lignes,
-> elle en a rendu **quatre** le soir même — le coffre Obsidian, le journal hors sauvegarde et les
-> deux libellés trompeurs — chacune devenue une entrée du § 47, avec ses ancres. *Une case qui se
-> vide est une case qui sert ; une case qui grossit est une liste de regrets.*
+> ⭐ **Et elle a fonctionné du premier coup — les CINQ lignes sont sorties le jour même.** Ouverte
+> le 2026-09-12 au matin, elle a rendu quatre le soir (§ 47 : le coffre Obsidian, le journal hors
+> sauvegarde, les deux libellés trompeurs) puis **l'écran bloqué** (§ 48). *Une case qui se vide est
+> une case qui sert ; une case qui grossit est une liste de regrets.*
+>
+> ⭐⭐ **Et la cinquième a appris quelque chose que les quatre autres ne disaient pas.** Elle a
+> attendu une reproduction qui n'est jamais venue, alors qu'elle était **lisible dans le code du
+> premier jour**. Ce qui manquait n'était pas la scène : c'était la bonne question. *Devant un
+> symptôme sans reproduction, on ne demande pas « qu'est-ce qui a causé ça ? » — on demande
+> **« quels chemins de ce code peuvent ne jamais finir ? »**, et ceux-là se comptent.*
 
-| Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
-| --- | --- | --- |
-| ⚠️ **L'écran bloqué au démarrage n'a jamais été expliqué.** Le 12/09, GM-OS est resté sur un écran plein, David en déplacement. La boucle de Light-OS était réelle, elle est corrigée (§ 44), et il a confirmé que ça remarche — **mais le lien n'est pas établi** : dans la reproduction, l'écran restait **cliquable** pendant toute la boucle | Si ça revient, **deux questions tranchent en dix secondes** : l'écran montre-t-il le **splash** (runes animées, « GM-OS vVI.V », une citation) ou le **`LoadingOverlay`** (fond flouté, roue, « SYSTEM_BUSY ») ? Et la console porte-t-elle `[Bootstrap] ✅ Système prêt` ? *Ce sont deux composants et deux causes.* Si c'est « SYSTEM_BUSY / CHARGEMENT DE LA SESSION », le suspect est `loadFullSession`, qui attend un **sélecteur de fichier** — une boîte de dialogue restée ouverte hors écran bloque l'attente indéfiniment | Le symptôme a disparu. **Sans reproduction, chercher plus loin serait deviner** — j'ai déjà produit trois hypothèses fausses ce jour-là, dont une bâtie sur des sondes qui n'avaient jamais chargé la page |
+✅ **La case est vide au 2026-09-12 au soir.** Les cinq lignes ouvertes ce jour-là sont sorties par
+le haut : quatre au § 47, la cinquième au § 48. *Elle reste ici, vide, parce qu'une case qu'on
+supprime quand elle se vide ne se rouvre jamais quand il le faudrait.*
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -2639,10 +2646,83 @@ des champs **obligatoires** d'`Entity` que le schéma laisse passer en `z.any()`
 qu'on prend pour un défaut du code.* La garde de typage du témoin — posée le matin pour les scènes —
 couvre désormais les entités, et l'exécution vérifie les valeurs des trois unions.
 
-**Ce qui reste au § 1 bis** : l'écran bloqué au démarrage, toujours sans explication. *Sans
-reproduction, le traiter serait deviner.*
+**Ce qui restait au § 1 bis** — l'écran bloqué au démarrage — est sorti dans la foulée : voir le § 48.
 
 **Vérifié** : `tsc -b` propre, **4 239 tests** (355 fichiers), **145 tests E2E**.
+
+### 48 · ⭐ L'écran bloqué au démarrage — la dernière ligne du § 1 bis (2026-09-12)
+
+*Elle attendait une reproduction. Elle était lisible dans le code depuis le premier jour.*
+
+#### ⛔ Ce n'était ni le splash ni `LoadingOverlay` — c'était le troisième écran
+
+Le § 1 bis portait **deux questions pour trancher entre deux composants**. Les deux étaient les
+mauvais. Le voile qui pouvait rester à l'écran pour toujours est celui d'`App.tsx`, affiché tant que
+`isSystemReady` est faux, et il ne disait **que trois mots** :
+
+```
+GM-OS BOOTING...
+```
+
+⭐ **Personne ne l'avait nommé, et c'est exactement pourquoi il n'a pas été diagnostiqué.** Un écran
+qui ne dit ni ce qu'il attend ni pourquoi il a renoncé ne se reconstitue pas le lendemain — *le
+symptôme a disparu parce que la cause était transitoire, pas parce qu'elle était réparée.*
+
+#### ⛔ Trois chemins qui ne finissent jamais, et chacun suffisait
+
+| Attendu par `bootstrap()` | Comment ça bloque |
+| --- | --- |
+| `initDB()` | `openDB` **ne résout jamais** quand une autre fenêtre tient la base media à une version antérieure : le rappel `blocked` se contente d'un avertissement. **Projecteur, Player Hub et tablette partagent l'origine du meneur** — il suffit qu'une reste ouverte |
+| les deux `syncWithKeychain()` | un `Promise.all` : **un seul rejet** et les étapes suivantes ne partent pas, `setSystemReady(true)` compris |
+| le `catch` final | il laissait `isSystemReady` à `false` **exprès** — commentaire d'époque : *« on laisse isSystemReady à false pour bloquer l'interface si critique »*. Sans message, sans reprise, sans bouton |
+
+⚠️ Et aucune de ces trois étapes ne porte les campagnes : elles arrivent par la réhydratation du
+magasin persisté, qui ne passe pas par là. **Rien de ce que fait le démarrage ne justifiait de garder
+le meneur dehors.**
+
+#### ⭐ Le remède : ne pas chercher lequel des trois a bloqué
+
+Sans reproduction, désigner un coupable aurait été deviner — j'avais déjà produit trois hypothèses
+fausses ce jour-là. On retire **la possibilité** de bloquer :
+
+1. chaque étape est **nommée** et **bornée** (15 s) — celle qui dépasse ne retient plus personne, elle
+   se déclare ;
+2. le démarrage **aboutit toujours** : `isSystemReady` est posé dans tous les cas ;
+3. l'écran d'attente **dit l'étape en cours**, et nomme celles qui ont manqué.
+
+⛔ **Le contrepoids, sans lequel le correctif serait pire que le défaut.** On a échangé un blocage
+visible contre un démarrage amputé : une étape manquée doit donc **se voir** — à l'écran d'attente,
+dans la console, et par une notification qui **nomme l'étape** (« 2 étapes ont échoué » n'aide
+personne). *Une panne muette se découvre en séance.*
+
+⚠️ **Expirer n'est pas annuler.** Une promesse ne s'interrompt pas : on cesse de l'attendre. Son
+résultat tardif est ignoré, et la médiathèque se recharge à la première ouverture — ses lecteurs
+testent `isInitialized` avant de s'en servir.
+
+#### ⭐ Un défaut de plus, tombé en chemin
+
+`initDB()` **avale sa propre exception**, pose `isInitialized: true` et laisse la liste vide : *une
+lecture ratée se présente comme une médiathèque vide*. C'est le motif qui a coûté les campagnes le
+27/08, et son champ `error` **n'était lu par personne**. L'étape le relit et refuse la fausse
+réussite.
+
+⚠️ **Et on ne le corrige pas en remettant `isInitialized` à `false`** : `MediaBrowser` rappelle
+`initDB` dès qu'il le voit faux, et une base en panne deviendrait **la boucle de Light-OS, à
+l'identique**. Le drapeau dit « tentée » ; c'est le démarrage qui dit « manquée ».
+
+#### La leçon, et elle vaut au-delà de ce défaut
+
+⭐⭐ **Devant un symptôme sans reproduction, la question n'est pas « qu'est-ce qui a causé ça ? » —
+c'est « quels chemins de ce code peuvent ne jamais finir ? ».** La première demande une scène qu'on
+n'a pas ; la seconde se répond en lisant, et elle **se compte**. Ici elle en a rendu trois, en vingt
+minutes, sur une ligne qui avait attendu une journée.
+
+**Ancres** : `system/logic/etapesDuDemarrage.ts` (+ 17 tests), `system/logic/BootstrapService.ts`
+(+ 10 tests), `system/useDemarrageStore.ts`, `App.tsx` — la garde `!isAppReady`.
+
+**Éprouvé par dégradation, des deux côtés** : sans la course d'expiration, **5 tests rougissent** et
+la suite met 16 s au lieu de 0,8 s — le blocage se mesure ; avec l'ancien `if (!rapport.degrade)`
+devant `setSystemReady`, **2 tests rougissent**.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
