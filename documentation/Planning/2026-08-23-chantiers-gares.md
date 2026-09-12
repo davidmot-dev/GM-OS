@@ -2495,6 +2495,20 @@ jamais en séance et coûte cher.*
 
 ⚠️ **Loot-OS est le moins testable de tous, et le fichier le dit en tête.** Son générateur appelle un modèle, ses tables viennent du corpus : une instance d'essai n'a ni l'un ni l'autre. *Écrire des tests qui prétendraient les couvrir donnerait une couverture décorative.* Ce qui reste — les états vides — vaut pourtant : **un vide muet se lit comme une panne**.
 
+**Quatrième lot — la famille « le geste oui, l'effet non » (7 fichiers, 133 tests au total) :**
+
+| Fichier | Ce qu'il garde | Ce qu'il ne peut pas dire |
+| --- | --- | --- |
+| `musicOs` | Les deux platines, et ⭐ **à qui appartient une atmosphère** — sans étiquette, elle est **commune** (décision du 30/08, celle qui a évité toute migration) | Qu'un son sorte, et de quelle enceinte |
+| `soundOs` | Les **seize** pads, l'atmosphère active, l'apprentissage de touche qui **s'éteint** | Qu'un bruitage se déclenche |
+| `ambientOs` | Les huit pistes, et ⭐ **les thèmes livrés qui s'annoncent « gabarit, sans sons »** | La superposition, le fondu |
+| `imageOs` | L'état vide, et ⭐ **le choix de l'écran cible** — *une projection mal dirigée ne se rattrape pas* | Qu'une image s'affiche |
+| `lightOs` | L'absence de lampe **annoncée**, et ⭐ **l'existence du bouton « Arrêter la scène »** — celui qui manquait du 07 au 09/09 | Qu'une lampe change ; on ne clique ni « Mode simulé » ni « Blackout » |
+| `voiceOs` | Les cinq voix, ⭐ **le débruitage à trois positions** et son coût annoncé, les quatre réglages de ducking | Toute la chaîne audio : pas de micro. ⚠️ **`useVoiceStore` n'est pas exposé sur `window`** — seul des dix-huit |
+| `mapOs` | La météo, le moment, et ⭐ **que le reflet des joueurs ne suive PAS de lui-même** tant qu'on n'a pas projeté | Qu'une carte s'affiche |
+
+⭐ **Cinq surprises de forme dans ce seul lot, et toutes m'ont fait accuser le code avant le test.** `campagneId` en français au milieu de champs anglais · `autoFadeDuration` en **millisecondes** là où l'écran dit « 5.0 s » · `scenes` de Light-OS est un **objet indexé**, pas un tableau · `[track-0]` est en **minuscules** dans le DOM et en majuscules à l'écran (c'est la CSS) · et `gmPrompt` ouvre un **modal interne**, pas une invite du navigateur. *On ne devine ni un nom de champ, ni une unité, ni une forme : on les lit.*
+
 ⭐ **L'item P6 de la bascule de combat est éprouvé**, trois semaines après avoir été garé. Le registre
 demandait : *« ouvrir un combat dans une scène, changer de scène, revenir — combattants, round et
 compteurs doivent tous revenir »*. Ils reviennent.
