@@ -29,6 +29,7 @@ import path from 'node:path';
 export const VARIABLE_RACINE_DOCS = 'GMOS_RACINE_DOCS';
 export const VARIABLE_COFFRE_OBSIDIAN = 'GMOS_COFFRE_OBSIDIAN';
 export const VARIABLE_SANS_APPAREILS = 'GMOS_SANS_APPAREILS';
+export const VARIABLE_SEMENCE = 'GMOS_SEMENCE';
 
 /** Le coffre Obsidian du meneur, quand rien ne le déplace. */
 export const COFFRE_OBSIDIAN_PAR_DEFAUT = 'C:\\Users\\david\\OneDrive\\Obsidian Vault';
@@ -74,4 +75,20 @@ export function coffreObsidian(env: Environnement): string {
 export function appareilsMuets(env: Environnement): boolean {
     const valeur = posee(env[VARIABLE_SANS_APPAREILS])?.toLowerCase();
     return valeur === '1' || valeur === 'true' || valeur === 'oui';
+}
+
+/**
+ * Le fichier de sauvegarde dont cette instance doit partir, s'il y en a un.
+ *
+ * ⛔ **Rien ne sème sans cette variable.** Une instance ordinaire rend
+ * `undefined` et ne lit aucun fichier : *un mecanisme qui peut remplacer l'etat
+ * du meneur doit demander a exister, pas demander a etre desactive.*
+ *
+ * ⚠️ Et ce n'est que la moitie de la garde. L'autre est cote ecran : la semence
+ * n'est appliquee **qu'apres l'hydratation** et **que si aucune campagne n'est
+ * presente**. Semer par-dessus des donnees existantes serait exactement la perte
+ * qu'on passe le mois a empecher.
+ */
+export function fichierDeSemence(env: Environnement): string | undefined {
+    return posee(env[VARIABLE_SEMENCE]);
 }

@@ -58,6 +58,13 @@ contextBridge.exposeInMainWorld('appBridge', {
     aide: {
         guides: (): Promise<GuideDuManuel[]> => ipcRenderer.invoke('aide:guides'),
     },
+    /**
+     * La semence d'une instance de repetition — `null` partout ailleurs.
+     * Voir `electron/perimetreDeLInstance.ts`.
+     */
+    semence: {
+        lire: (): Promise<unknown | null> => ipcRenderer.invoke('semence:lire'),
+    },
     debug: {
         openConsole: () => ipcRenderer.send('debug:open-console')
     },

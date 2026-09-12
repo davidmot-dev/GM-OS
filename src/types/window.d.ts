@@ -170,6 +170,13 @@ declare global {
         aide?: {
             guides: () => Promise<GuideDuManuel[]>;
         };
+        /**
+         * La semence d'une instance de répétition. **`null` partout ailleurs** :
+         * sans `GMOS_SEMENCE`, aucun fichier n'est même ouvert.
+         */
+        semence?: {
+            lire: () => Promise<unknown | null>;
+        };
         web?: {
             openExternal: (url: string) => void;
             saveList: (data: unknown) => Promise<boolean>;

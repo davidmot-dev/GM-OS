@@ -17,6 +17,7 @@ import { useAIStore } from './stores/useAIStore';
 import { useLightStore } from './modules/light/useLightStore';
 import { BootstrapService } from './modules/system/logic/BootstrapService';
 import { useHydration } from './hooks/useHydration';
+import { useSemence } from './hooks/useSemence';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useRaccourcisDeNavigation } from './hooks/useRaccourcisDeNavigation';
@@ -115,6 +116,9 @@ function App() {
     raccourci de navigation y donnerait à un joueur prise sur ce qu'on montre.
   */
   useRaccourcisDeNavigation(isMainPC);
+  /* Instance de répétition : ne fait rien sans `GMOS_SEMENCE`, et jamais sur une
+     base qui porte déjà des campagnes. Voir `useSemence`. */
+  useSemence(isMainPC, isHydrated);
   
   // --- AUTO-CONNECT HUE BRIDGES (GM SEULEMENT) ---
   useHueAutoConnect(isMainPC);

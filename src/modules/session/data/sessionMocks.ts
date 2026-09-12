@@ -118,3 +118,30 @@ export const INITIAL_DATA = {
         { id: 'clue-1', campaignId: 'c-1', title: "Le Médaillon Sanglant", content: "Un médaillon trouvé sur un garde mort, marqué du sceau de Varick.", locationId: 'am-1', ownerId: 'e-1', isRevealed: false },
     ] as Clue[],
 };
+
+/**
+ * **Les campagnes que porte une base neuve.**
+ *
+ * Deux modules ont besoin de savoir reconnaître l'état d'usine, et pour des
+ * raisons opposées : la sauvegarde automatique refuse de l'archiver (sans quoi
+ * le filet remplacerait les vraies sauvegardes par des copies de « The Eternal
+ * Quest »), et la semence de répétition refuse d'écraser autre chose que lui.
+ *
+ * ⛔ **Le critère est dérivé de `INITIAL_DATA`, jamais recopié.** Il vivait en
+ * dur — `new Set(['c-1', 'c-2'])` — dans `SessionBackupManager`. Une troisième
+ * campagne de démonstration ajoutee ici l'aurait laissé en place sans que rien
+ * ne le signale : *une liste recopiée ne vieillit pas avec sa source.*
+ */
+export const CAMPAGNES_DE_DEMONSTRATION: ReadonlySet<string> =
+    new Set(INITIAL_DATA.campaigns.map(c => c.id));
+
+/**
+ * L'etat ne contient-il **rien d'autre** que la démonstration ?
+ *
+ * ⚠️ **Une liste vide rend `true`** — c'est le sens voulu de part et d'autre :
+ * un état vide ne contient rien du meneur non plus. Les deux appelants tranchent
+ * le cas vide avant, chacun à sa façon.
+ */
+export function rienQueLaDemonstration(campagnes: { id: string }[]): boolean {
+    return campagnes.every(c => CAMPAGNES_DE_DEMONSTRATION.has(c.id));
+}

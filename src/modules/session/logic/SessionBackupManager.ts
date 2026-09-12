@@ -4,6 +4,7 @@ import { lEcritureEstOuverte } from './PersistenceService';
 import { isMainWindow } from '../../../utils/windowRole';
 import { Logger } from '../../../utils/logger';
 import { refletterLesMedias } from './MiroirDesMedias';
+import { rienQueLaDemonstration } from '../data/sessionMocks';
 
 /**
  * **La sauvegarde automatique — côté rendu.**
@@ -21,9 +22,6 @@ import { refletterLesMedias } from './MiroirDesMedias';
  * dialogue, poser un voile de chargement, ou restaurer. Restaurer reste un
  * geste du MJ, qui choisit son fichier.
  */
-
-/** Les campagnes de `INITIAL_DATA` — si on les voit, la base n'a pas été relue. */
-const CAMPAGNES_DE_DEMONSTRATION = new Set(['c-1', 'c-2']);
 
 export type RaisonDeRefus =
     | 'fenetre-secondaire'
@@ -67,7 +65,10 @@ export function fautIlSauvegarder(etat: {
         };
     }
 
-    if (campagnes.every(c => CAMPAGNES_DE_DEMONSTRATION.has(c.id))) {
+    /* Le critère vit dans `sessionMocks` — là où vivent les campagnes qu'il
+       désigne. Il était recopié ici, et la semence de répétition en avait besoin
+       aussi : *deux copies d'une même liste finissent par ne plus dire pareil.* */
+    if (rienQueLaDemonstration(campagnes)) {
         return {
             ecrire: false,
             raison: 'donnees-de-demonstration',

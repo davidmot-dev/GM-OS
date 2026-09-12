@@ -62,7 +62,7 @@ import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 import { ecrireSauvegarde, sauvegardesConnues, dossierDesSauvegardes } from './sauvegardeAutomatique'
 import { ServeurDesFiches } from './serveurDesFiches'
 import { portsDeGmOs } from './portsDeGmOs'
-import { racineDuCorpus, appareilsMuets } from './perimetreDeLInstance'
+import { racineDuCorpus, appareilsMuets, fichierDeSemence } from './perimetreDeLInstance'
 import {
     mediasCopies, copierUnMedia, inscrireAuCatalogue,
     lireLeCatalogue, lireUnMedia, type FicheDeMedia,
@@ -985,6 +985,34 @@ ipcMain.handle('backup:reveal', async () => {
  * peut modifier depuis l'écran qui le consulte est un manuel qui finit par
  * mentir sans qu'on sache quand.
  */
+/**
+ * **La semence d'une instance de répétition.**
+ *
+ * Rend le contenu du fichier désigné par `GMOS_SEMENCE`, ou `null`. Une instance
+ * ordinaire n'a pas la variable et reçoit donc `null` sans qu'aucun fichier ne
+ * soit ouvert.
+ *
+ * ⚠️ **Ce handler LIT, il n'applique rien.** C'est l'écran qui décide de semer,
+ * et seulement après l'hydratation et sur une base vide — voir `useSemence`.
+ * *Le processus principal n'a pas à savoir si l'état du meneur est remplaçable.*
+ */
+ipcMain.handle('semence:lire', async () => {
+    const fichier = fichierDeSemence(process.env);
+    if (!fichier) return null;
+
+    try {
+        if (!(await fs.pathExists(fichier))) {
+            log.warn(`[Semence] Fichier introuvable, rien ne sera semé : ${fichier}`);
+            return null;
+        }
+        log.info(`[Semence] Lecture de ${fichier}`);
+        return await fs.readJson(fichier);
+    } catch (e) {
+        log.warn('[Semence] Fichier illisible, rien ne sera semé :', e);
+        return null;
+    }
+});
+
 ipcMain.handle('aide:guides', async () => {
     try {
         return await lireLesGuides(process.env.APP_ROOT || '');

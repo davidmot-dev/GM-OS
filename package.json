@@ -12,7 +12,8 @@
     "gemini": "gemini",
     "gemini:doc": "gemini --context documentation/",
     "validate": "powershell -ExecutionPolicy Bypass -File ./scripts/validate.ps1",
-    "test:e2e": "npm run build && playwright test"
+    "test:e2e": "npm run build && playwright test",
+    "repetition": "node scripts/repetition.mjs"
   },
   "main": "dist-electron/main.js",
   "dependencies": {
