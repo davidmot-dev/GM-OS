@@ -111,9 +111,24 @@ disparu.
 **1 · Sur l'appareil.** Portail de l'Ulanzi → MQTT : l'adresse de votre courtier, son identifiant
 et son mot de passe. ⚠️ **Ça ne se configure que là** — aucune requête HTTP ne le fait.
 
-**2 · Trouver le sujet des boutons.** ⛔ **Ne le devinez pas.** Dans HA :
-*Paramètres → Appareils et services → MQTT → Configurer → Écouter un sujet*, tapez `#`, et appuyez
-sur un bouton. Le sujet se nomme tout seul en deux secondes.
+**2 · Les sujets des boutons**, mesurés sur l'appareil de David le **2026-09-13** :
+
+```text
+awtrix_73f7a4/stats/buttonLeft      ← bouton gauche
+awtrix_73f7a4/stats/buttonSelect    ← bouton du milieu
+awtrix_73f7a4/stats/buttonRight     ← bouton droit
+```
+
+⚠️ **`awtrix_73f7a4` est le préfixe de CET appareil.** Le vôtre en a un autre. Pour le lire :
+*Paramètres → Appareils et services → MQTT → Configurer → Écouter un sujet*, tapez `#`, appuyez sur
+un bouton — le sujet se nomme tout seul.
+
+⭐ **Les trois publient, et les trois gardent leur comportement d'usine.** Gauche et droite
+continuent de faire défiler les widgets **tout en publiant** : GM-OS ne confisque rien.
+
+⭐⭐ **Et celui du milieu est le meilleur des trois** — parce qu'il ne fait rien sur l'appareil. Les
+deux autres ont un travail natif à côté du vôtre ; lui est entièrement libre. *Ce qui ressemblait à
+un bouton mort est celui qu'on peut prendre sans rien enlever.*
 
 **3 · Le jeton.** Le bouton **« Copier le jeton »** du panneau le met dans votre presse-papiers —
 il n'est jamais affiché à l'écran. À coller dans `secrets.yaml` :
@@ -142,12 +157,25 @@ automation:
   - alias: "GM-OS — bouton gauche de l'Ulanzi"
     trigger:
       - platform: mqtt
-        topic: "awtrix_73f7a4/stats/button1"   # ← le sujet révélé à l'étape 2
+        topic: "awtrix_73f7a4/stats/buttonLeft"
+        payload: "1"          # ← NE PAS OMETTRE : voir ci-dessous
     action:
       - service: rest_command.gmos_bouton
         data:
           bouton: gauche
 ```
+
+> ⛔ **Le filtre `payload` n'est pas un détail : sans lui, chaque pression compte double.**
+>
+> AWTRIX ne publie pas « on a appuyé », il publie **l'état du bouton** : un message à
+> l'enfoncement, un autre au relâchement. Une automatisation sans filtre se déclenche donc **deux
+> fois par pression** — deux tours d'initiative passés au lieu d'un, et ça ne se voit qu'à la
+> table.
+>
+> ⚠️ **Vérifiez lequel des deux vaut « enfoncé ».** Dans la fenêtre d'écoute, appuyez en
+> maintenant : vous verrez passer `1` puis `0`, ou l'inverse selon la version du firmware. C'est
+> celui de l'enfoncement qu'il faut mettre. *Deux secondes de mesure valent mieux qu'une valeur
+> recopiée d'un guide.*
 
 ### Trois choses à savoir
 
