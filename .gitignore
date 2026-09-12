@@ -81,3 +81,4 @@ docs/systems/*/drafts/
 # le depot de mégaoctets qui ne disent rien de plus que le resultat.
 test-results/
 e2e-resultats/
+scripts/.notebooklm-etat.json

@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Synchronise le carnet NotebookLM « GM-OS » quand un commit touche les guides.
+#
+# Demande de David le 2026-09-12 : « je voudrais que tu mettes à jour à chaque
+# fois ». Une source NotebookLM est une COPIE FIGÉE : sans ce hook, le carnet
+# continue de répondre d'après la version d'avant, avec assurance et sans le
+# dire.
+#
+# ⚠️ Il ne se déclenche QUE si le commit touche `documentation/User Guides/`, et
+# le script ne renvoie que les fichiers dont l'empreinte a changé. Un commit de
+# code ne coûte donc rien du tout.
+#
+# Pour l'installer :   cp scripts/hooks/post-commit .git/hooks/ && chmod +x .git/hooks/post-commit
+# Pour le désactiver : GMOS_SANS_NOTEBOOKLM=1 git commit …
+#                      (ou supprimez .git/hooks/post-commit)
+
+if [ -n "$GMOS_SANS_NOTEBOOKLM" ]; then
+    exit 0
+fi
+
+# `diff-tree` sur HEAD : ce que CE commit a touché, et rien d'autre.
+if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q '^documentation/User Guides/.*\.md$'; then
+    exit 0
+fi
+
+echo ""
+echo "=================================================="
+echo "  [NotebookLM] Des guides ont changé"
+echo "=================================================="
+
+if node scripts/notebooklm-guides.mjs; then
+    exit 0
+fi
+
+# ⛔ Un hook post-commit ne doit JAMAIS faire échouer le commit : il est déjà
+# écrit. On avertit, on laisse la main.
+echo ""
+echo "⚠️  [NotebookLM] Synchronisation incomplète. Le commit, lui, est bien en place."
+echo "    Relancez quand vous voulez :  npm run notebooklm"
+exit 0

@@ -57,6 +57,41 @@ votre carnet NotebookLM**. Il est grisé tant qu'aucune URL de carnet n'est rens
 
 ---
 
+## 📚 Le carnet « GM-OS » — la documentation, interrogeable
+
+Depuis le 2026-09-12, **les 53 guides utilisateur sont des sources d'un carnet NotebookLM nommé
+« GM-OS »**. Vous pouvez donc lui poser des questions sur GM-OS lui-même : *« comment scinder une
+scène ? »*, *« que fait le Stop All au juste ? »* — et il répond en citant le guide.
+
+C'est un usage différent des carnets de jeu : ici, le corpus n'est pas votre univers, c'est le
+**manuel de l'outil**.
+
+### Il se met à jour tout seul
+
+⛔ **Une source NotebookLM est une copie figée.** Modifier un guide dans le dépôt ne change rien au
+carnet, qui continuerait de répondre d'après la version d'avant — *avec assurance, et sans le dire*.
+
+D'où une synchronisation automatique : **un `git commit` qui touche `documentation/User Guides/`
+renvoie les guides modifiés**, et eux seuls. Un commit de code ne coûte rien.
+
+| Commande | Ce qu'elle fait |
+| :--- | :--- |
+| `npm run notebooklm` | Renvoie les guides modifiés depuis la dernière fois. |
+| `node scripts/notebooklm-guides.mjs --etat` | Dit ce qui serait renvoyé, **sans rien envoyer**. |
+| `node scripts/notebooklm-guides.mjs --tout` | Renvoie les 53. Une dizaine de minutes — à éviter. |
+
+> ⚠️ **Pour désactiver ponctuellement** : `GMOS_SANS_NOTEBOOKLM=1 git commit …`. Pour de bon,
+> supprimez `.git/hooks/post-commit` — il se réinstalle depuis `scripts/hooks/post-commit`.
+
+> 🔎 **Deux détails de conception, au cas où ça se comporte bizarrement.** Remplacer une source,
+> c'est la **supprimer puis la rajouter** — NotebookLM ne sait mettre à jour en place que les
+> documents venus de Drive. On ajoute **avant** de supprimer : si le réseau lâche au milieu, vous
+> vous retrouvez avec un doublon visible plutôt qu'avec un trou silencieux. Et l'état local
+> (`scripts/.notebooklm-etat.json`) n'est **pas** versionné : il se reconstruit tout seul en
+> rapprochant les sources du carnet des guides, par leur titre.
+
+---
+
 ## 🧭 Lequel des trois, pour quoi
 
 | Ce que vous voulez | L'outil |
