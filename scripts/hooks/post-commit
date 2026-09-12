@@ -11,9 +11,10 @@
 # le script ne renvoie que les fichiers dont l'empreinte a changé. Un commit de
 # code ne coûte donc rien du tout.
 #
-# Pour l'installer :   cp scripts/hooks/post-commit .git/hooks/ && chmod +x .git/hooks/post-commit
-# Pour le désactiver : GMOS_SANS_NOTEBOOKLM=1 git commit …
-#                      (ou supprimez .git/hooks/post-commit)
+# Ce hook est VERSIONNE : git le lit ici meme, via `core.hooksPath`, pose par
+# `npm install` (voir `scripts/installer-les-hooks.mjs`). Rien a copier.
+#
+# Pour le desactiver : GMOS_SANS_NOTEBOOKLM=1 git commit ...
 
 if [ -n "$GMOS_SANS_NOTEBOOKLM" ]; then
     exit 0

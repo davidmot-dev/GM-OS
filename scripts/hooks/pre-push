@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Verification complete avant chaque push : tsc, lint, tests, build.
+#
+# ⚠️ Ce hook a vecu dans `.git/hooks/` -- donc HORS du depot -- jusqu'au
+# 2026-09-12. Un clone frais n'en heritait pas, et personne ne pouvait le relire
+# ni le corriger : un controle invisible est un controle qu'on croit avoir.
+# Il est desormais versionne ici, et `core.hooksPath` pointe sur ce dossier
+# (voir `scripts/installer-les-hooks.mjs`, lance par `npm install`).
+
+# validate.sh/validate.ps1 integration in git hook
+echo ""
+echo "=================================================="
+echo "  [Local CI] Verification pre-push en cours..."
+echo "=================================================="
+echo ""
+
+# Run npm run validate (--if-present: le hook est partage entre worktrees,
+# certaines branches (ex: GM-OS_v7_P2P) ne definissent pas ce script)
+npm run validate --if-present
+result=$?
+
+if [ $result -ne 0 ]; then
+  echo ""
+  echo "❌ [Local CI] La validation pre-push a echoue !"
+  echo "❌ Veuillez corriger les erreurs avant de pousser votre code."
+  echo "💡 Astuce: Pour bypasser en cas d'urgence, utilisez: git push --no-verify"
+  echo ""
+  exit 1
+fi
+
+echo ""
+echo "✔ [Local CI] Pre-push reussi. Envoi en cours..."
+echo ""
+exit 0

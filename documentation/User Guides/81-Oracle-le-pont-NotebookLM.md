@@ -81,7 +81,8 @@ renvoie les guides modifiés**, et eux seuls. Un commit de code ne coûte rien.
 | `node scripts/notebooklm-guides.mjs --tout` | Renvoie les 53. Une dizaine de minutes — à éviter. |
 
 > ⚠️ **Pour désactiver ponctuellement** : `GMOS_SANS_NOTEBOOKLM=1 git commit …`. Pour de bon,
-> supprimez `.git/hooks/post-commit` — il se réinstalle depuis `scripts/hooks/post-commit`.
+> retirez `scripts/hooks/post-commit` — **les hooks sont versionnés** et git les lit directement
+> là-bas (`core.hooksPath`, posé par `npm install`).
 
 > 🔎 **Deux détails de conception, au cas où ça se comporte bizarrement.** Remplacer une source,
 > c'est la **supprimer puis la rajouter** — NotebookLM ne sait mettre à jour en place que les

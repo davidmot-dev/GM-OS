@@ -14,7 +14,8 @@
     "validate": "powershell -ExecutionPolicy Bypass -File ./scripts/validate.ps1",
     "test:e2e": "npm run build && playwright test",
     "repetition": "node scripts/repetition.mjs",
-    "notebooklm": "node scripts/notebooklm-guides.mjs"
+    "notebooklm": "node scripts/notebooklm-guides.mjs",
+    "prepare": "node scripts/installer-les-hooks.mjs"
   },
   "main": "dist-electron/main.js",
   "dependencies": {
