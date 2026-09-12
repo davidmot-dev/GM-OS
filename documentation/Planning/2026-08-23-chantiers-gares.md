@@ -2482,6 +2482,19 @@ jamais en séance et coûte cher.*
 | `clockOs.spec.ts` | Les jauges (création, remplissage), ⭐ **une jauge neuve naît SECRÈTE**, le minuteur en secondes, les modes |
 | `deckOs.spec.ts` | ⭐ **Le recensement après chaque geste** — pioche + défausse + main + carte retournée = le compte du paquet |
 
+**Deuxième et troisième lots (le même jour) — la famille « geste complet testable » est close :**
+
+| Fichier | Ce qu'il garde |
+| --- | --- |
+| `whiteboardOs` | Les cinq outils, un trait au crayon, ⭐ **le laser qui s'efface seul**, annuler/rétablir — et ⭐ **un trait qui survit à un aller-retour**, le défaut exact corrigé le 2026-06-17 |
+| `npcOs` | Le générateur, ses listes, ⭐ **un tirage sans aucune clé d'API** (l'IA n'est qu'un enrichissement) |
+| `webOs` | Les liens d'usine, le formulaire **en modal**, et un lien qui survit à un changement de module |
+| `tableOs` | ⭐ **La chaîne des trois maillons** : l'univers peuple les tables, la table peuple le tirage, le tirage rend une ligne |
+| `lootOs` | Les trois temps, et ⭐ **les états vides qui disent POURQUOI** — deux de ses trois sources sont hors de portée (IA, corpus) |
+| `favorisOs` | Les filtres, et ⭐ **la recherche dans les deux sens** — ce qui reste *et* ce qui doit disparaître |
+
+⚠️ **Loot-OS est le moins testable de tous, et le fichier le dit en tête.** Son générateur appelle un modèle, ses tables viennent du corpus : une instance d'essai n'a ni l'un ni l'autre. *Écrire des tests qui prétendraient les couvrir donnerait une couverture décorative.* Ce qui reste — les états vides — vaut pourtant : **un vide muet se lit comme une panne**.
+
 ⭐ **L'item P6 de la bascule de combat est éprouvé**, trois semaines après avoir été garé. Le registre
 demandait : *« ouvrir un combat dans une scène, changer de scène, revenir — combattants, round et
 compteurs doivent tous revenir »*. Ils reviennent.
