@@ -38,8 +38,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     const [storageUsage, setStorageUsage] = useState<StorageUsage | null>(null);
     const { theme, setTheme, themeColor, setThemeColor, language, setLanguage } = useSessionStore();
     const { 
-        audioDevices, fetchAudioDevices, audioAliases, setAudioAlias,
-        displays, fetchDisplays, displayAliases, setDisplayAlias 
+        audioDevices, fetchAudioDevices, aliasDeLaSortie, setAudioAlias,
+        displays, fetchDisplays, aliasDeLEcran, setDisplayAlias 
     } = useHardwareStore();
     
     // Tactical AI Store Integration (Reactive)
@@ -335,7 +335,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                     </div>
                                                     <input
                                                         type="text"
-                                                        value={audioAliases[device.deviceId] || ''}
+                                                        value={aliasDeLaSortie(device.deviceId)}
                                                         onChange={(e) => setAudioAlias(device.deviceId, e.target.value)}
                                                         placeholder={t('settings:hardware.audio_alias_placeholder')}
                                                         className="bg-app-bg/50 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold text-app-text focus:border-accent/50 outline-none transition-all placeholder:text-app-text/20"
@@ -367,7 +367,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                     </div>
                                                     <input
                                                         type="text"
-                                                        value={displayAliases[display.id] || ''}
+                                                        value={aliasDeLEcran(display.id)}
                                                         onChange={(e) => setDisplayAlias(display.id, e.target.value)}
                                                         placeholder={t('settings:hardware.monitor_alias_placeholder')}
                                                         className="bg-app-bg/50 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold text-app-text focus:border-accent/50 outline-none transition-all placeholder:text-app-text/20"

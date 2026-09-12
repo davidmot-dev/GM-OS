@@ -129,6 +129,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
+| ⚠️ **Échap ne ferme pas les Paramètres**, et le modal avale alors tous les clics — constaté en écrivant `e2e/nommerLeMateriel.spec.ts` | Ouvrir les Paramètres, presser Échap : rien ne se passe. Le bouton « Fermer les paramètres », lui, marche | **C'est le défaut de la Médiathèque du § 47, sur un autre écran.** *Une famille de défauts ne se referme pas écran par écran* — la traiter demande de savoir combien de surcouches sont dans ce cas, ce qui n'a pas été compté |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
 
 ### 2 · Ce qui se décide à la table — axe N.3
@@ -2875,11 +2876,30 @@ le temps ne se lit plus.*
 | `nomsSansEcrivainNiLecteur.test.ts` | `signatureDeLaSortieChoisie`, **déclaré et appelé par personne** — j'avais ajouté un sélecteur « au cas où ». Le test offre deux réponses honnêtes, le brancher ou le supprimer : **supprimé** |
 | `e2e/imageOs.spec.ts` | le libellé d'un écran est passé de `Écran 2528732444` à `Moniteur 2`. *Un test qui rougit sur une amélioration reste un test qui fait son travail* — il gardait le vocabulaire, il garde désormais le geste |
 
-**Ancres** : `utils/signatureDuMateriel.ts` (+ 27 tests), `utils/poserLaSortie.ts` (+ 9 tests),
-`stores/useHardwareStore.ts`, `hooks/useMaterielDeTable.ts`, étape « Matériel de table » du
-`BootstrapService`.
+#### ⛔ Et j'ai cassé la saisie dans l'heure qui a suivi
 
-**Vérifié** : `tsc -b` propre, **4 359 tests** (361 fichiers), **159 tests E2E**.
+David : *« je n'arrive pas à donner un nom au moniteur »*.
+
+Les champs des Réglages lisaient `displayAliases[display.id]` **en direct**, pendant que
+`setDisplayAlias` écrivait désormais sous la signature. On tapait, c'était enregistré, le champ
+relisait l'ancienne clé et n'y trouvait rien : **un champ contrôlé dont la valeur ne change jamais
+refuse la frappe.** Les deux champs étaient touchés, audio et écran.
+
+⭐⭐ **Et les trente-six tests écrits une heure plus tôt ne pouvaient pas le voir.** Ils éprouvaient
+la signature, la migration, la résolution — *la mécanique interne*. Pas une fois **le geste** :
+taper un nom, le relire. C'est désormais le premier test du magasin, et la dégradation le confirme
+(5 rouges, dont « garde le nom qu'on vient de lui donner »).
+
+*Un lecteur et un écrivain qui n'emploient pas la même clé sont pires que deux écrivains : personne
+ne voit rien, et rien ne plante.* Les carnets ne se lisent plus que par leurs sélecteurs — et
+`nomsSansEcrivainNiLecteur` l'a remarqué tout seul en constatant qu'ils n'étaient plus cités
+ailleurs.
+
+**Ancres** : `utils/signatureDuMateriel.ts` (+ 27 tests), `utils/poserLaSortie.ts` (+ 9 tests),
+`stores/useHardwareStore.ts` (+ 11 tests d'aller-retour), `hooks/useMaterielDeTable.ts`,
+étape « Matériel de table » du `BootstrapService`, `e2e/nommerLeMateriel.spec.ts`.
+
+**Vérifié** : `tsc -b` propre, **4 370 tests** (362 fichiers), **163 tests E2E**.
 
 ⚠️ **À éprouver en réel** — voir § 1 : débrancher une enceinte en pleine séance et la rebrancher.
 Le nom doit tenir, la sortie doit se retrouver, et l'alerte ne doit apparaître qu'une fois.

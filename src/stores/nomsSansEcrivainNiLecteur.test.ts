@@ -120,6 +120,17 @@ const TOLERES: Record<string, string> = {
     'minutesPerHour': "la longueur de l'heure, lue par le calcul de date (useClockStore)",
     'volumeAvantCoupure': 'le volume retenu pendant une coupure, relu au rétablissement (useAudioMasterStore)',
     'signaturesConnues': "la signature qu'un appareil portait la dernière fois qu'on l'a vu — écrite au recensement et relue par `sortieAEmployer`, dans useHardwareStore",
+    /*
+      ⭐ **Ces deux-là ont cessé d'être cités ailleurs le 2026-09-12, et c'est le
+      correctif.** Les champs des Réglages les lisaient en direct
+      (`aliases[deviceId]`) pendant que `setAlias` écrivait sous la signature :
+      **le champ refusait la frappe**. Ils passent désormais par
+      `aliasDeLaSortie` / `aliasDeLEcran`, qui résolvent dans les deux sens.
+      *Un carnet qui ne se lit plus que par ses sélecteurs ne peut plus se
+      désaccorder avec son écrivain.*
+    */
+    'audioAliases': 'le carnet des noms de sorties — lu par `aliasDeLaSortie` et `getAudioLabel`, dans useHardwareStore',
+    'displayAliases': "le carnet des noms d'écrans — lu par `aliasDeLEcran` et `getDisplayLabel`, dans useHardwareStore",
 
     // Écrites, jamais appelées de l'extérieur : code mort assumé, à retirer un jour.
     'projectUrl': 'code mort constaté le 2026-09-07 — aucun appelant, aucun écran',

@@ -83,6 +83,16 @@ interface HardwareState {
     // Selectors
     getAudioLabel: (deviceId: string) => string;
     getDisplayLabel: (displayId: string) => string;
+    /**
+     * **Le nom donné par le meneur, et rien d'autre** — vide s'il n'en a pas donné.
+     *
+     * ⛔ **À ne pas confondre avec `getAudioLabel`**, qui retombe sur le libellé
+     * Windows. Un champ de saisie qui afficherait ce repli ferait croire au
+     * meneur qu'il a déjà nommé l'appareil, et effacerait le nom système dès
+     * qu'il toucherait une touche.
+     */
+    aliasDeLaSortie: (deviceId: string) => string;
+    aliasDeLEcran: (displayId: string) => string;
     /** Quelle sortie employer pour un identifiant enregistré — voir `retrouverLaSortie`. */
     sortieAEmployer: (deviceId: string | null | undefined) => VerdictDeSortie;
 }
@@ -205,6 +215,36 @@ export const useHardwareStore = create<HardwareState>()(
                     ?? state.displayAliases[displayId]
                     ?? ecran?.label
                     ?? `Écran ${displayId}`;
+            },
+
+            /*
+              ⛔ **Ces deux-là existent parce que j'ai cassé la saisie le
+              2026-09-12.** Les champs des Réglages lisaient `aliases[id]` en
+              direct pendant que `setAlias` écrivait sous la signature : on
+              tapait, rien ne s'affichait, **le champ refusait la frappe**.
+
+              *Un lecteur et un écrivain qui n'emploient pas la même clé sont
+              pires que deux écrivains : personne ne voit rien, et rien ne
+              plante.* La résolution vit donc ici, une fois, pour les deux sens.
+            */
+            aliasDeLaSortie: (deviceId) => {
+                const state = get();
+                const appareil = state.audioDevices.find(d => d.deviceId === deviceId);
+                const signature = signatureDeLaSortie(appareil ?? { deviceId });
+
+                return (signature ? state.audioAliases[signature] : undefined)
+                    ?? state.audioAliases[deviceId]
+                    ?? '';
+            },
+
+            aliasDeLEcran: (displayId) => {
+                const state = get();
+                const ecran = state.displays.find(d => d.id === displayId);
+                const signature = ecran ? signatureDeLEcran(ecran) : null;
+
+                return (signature ? state.displayAliases[signature] : undefined)
+                    ?? state.displayAliases[displayId]
+                    ?? '';
             },
 
             sortieAEmployer: (deviceId) => {
