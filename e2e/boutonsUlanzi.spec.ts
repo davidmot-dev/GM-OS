@@ -187,6 +187,25 @@ test.describe('les réglages à l’écran', () => {
       qui devient ambigu selon l'état de l'écran est un test qui dépend de son
       rang d'exécution.*
     */
+    /*
+      ⭐ **L'adresse annoncée est celle du SyncServer de CETTE instance.**
+
+      Chaque worker reçoit un port propre (`GMOS_PORT_SYNC`) : si le panneau
+      affichait `3001` en dur, ou le port d'un autre serveur, ce test le dirait.
+
+      ⚠️ **Ce qu'il ne peut PAS attraper**, et c'est précisément le défaut du
+      2026-09-12 : ici l'application tourne en **production**, où le port de
+      l'interface et celui du SyncServer sont **le même**. La confusion entre
+      `port` et `mediaPort` n'y est pas visible — elle ne se voit qu'en
+      développement, et seule `adresseDuPontDesBoutons.test.ts` la garde.
+      *Un test de bout en bout ne voit que ce que son environnement distingue.*
+    */
+    test('le panneau annonce l’adresse du pont de cette instance', async () => {
+        const pont = gmos.fenetre.locator('code').filter({ hasText: '/bouton' }).first();
+
+        await expect(pont).toContainText(`:${gmos.ports.sync}/bouton`);
+    });
+
     test('les trois boutons ont leur liste déroulante', async () => {
         for (const nom of ['Bouton gauche', 'Bouton du milieu', 'Bouton droit']) {
             await expect(gmos.fenetre.getByLabel(nom, { exact: true })).toBeVisible();

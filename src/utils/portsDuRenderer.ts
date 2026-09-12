@@ -62,3 +62,36 @@ export function portDeSynchronisation(): number {
 export function portDesFiches(): number {
     return PORT_FICHES_PAR_DEFAUT;
 }
+
+/** Ce que `remote:get-connection-info` rend, vu d'ici. */
+export interface InfoDeConnexion {
+    ip?: string;
+    /** Où l'INTERFACE est servie : Vite en développement, le SyncServer en production. */
+    port?: number;
+    /** Le SyncServer, **toujours** — c'est lui qui porte `/media/`, `/temp/` et `/bouton`. */
+    mediaPort?: number;
+}
+
+/**
+ * **L'adresse du pont des boutons de l'afficheur** — ou `null` sans réseau.
+ *
+ * ⛔ **C'est `mediaPort` qu'il faut, et surtout pas `port`.** Les deux sont
+ * identiques en production et **diffèrent en développement**, où `port` désigne
+ * Vite (5173) parce que c'est lui qui sert l'interface avec son rechargement à
+ * chaud. `/bouton` vit dans le SyncServer, comme `/media/` et `/temp/`.
+ *
+ * ⭐ **Le défaut a été commis le 2026-09-12 et trouvé le lendemain par David** :
+ * le panneau affichait `http://…:5173/bouton`, Home Assistant y postait, et
+ * **Vite répondait son `index.html`** — aucune erreur, aucun effet. Le
+ * commentaire de `remote:get-connection-info` décrivait pourtant ce mode
+ * d'échec mot pour mot, pour le proxy média.
+ *
+ * *Un champ nommé `port` à côté d'un champ nommé `mediaPort` invite à prendre le
+ * premier ; la seule défense est de ne composer cette adresse qu'ici.*
+ */
+export function adresseDuPontDesBoutons(info: InfoDeConnexion | null | undefined): string | null {
+    if (!info?.ip) return null;
+
+    const port = info.mediaPort ?? PORT_SYNC_PAR_DEFAUT;
+    return `http://${info.ip}:${port}/bouton`;
+}

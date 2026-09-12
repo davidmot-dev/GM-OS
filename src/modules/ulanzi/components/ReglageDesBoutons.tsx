@@ -2,7 +2,7 @@ import React from 'react';
 import { useUlanziStore } from '../useUlanziStore';
 import { GESTES, leGeste } from '../logic/gestesDesBoutons';
 import { BOUTONS, type BoutonUlanzi } from '../../../../electron/boutonsDeLUlanzi';
-import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
+import { adresseDuPontDesBoutons } from '../../../utils/portsDuRenderer';
 import { gmToast } from '../../../stores/useToastStore';
 
 /**
@@ -34,11 +34,14 @@ const ReglageDesBoutons: React.FC = () => {
 
     React.useEffect(() => {
         window.appBridge?.remote?.getConnectionInfo?.()
-            .then(info => {
-                if (info?.ip) {
-                    setAdresse(`http://${info.ip}:${info.port || portDeSynchronisation()}/bouton`);
-                }
-            })
+            /*
+              ⛔ **L'adresse se compose dans `adresseDuPontDesBoutons`, et nulle
+              part ailleurs.** Ce code prenait `info.port` — celui de **Vite** en
+              développement — et le panneau annonçait donc `…:5173/bouton`. Home
+              Assistant y postait, Vite répondait son `index.html`, et rien ne se
+              passait. Trouvé par David le 2026-09-13.
+            */
+            .then(info => setAdresse(adresseDuPontDesBoutons(info) ?? ''))
             .catch(() => { /* pas de réseau : l'adresse reste vide, et on le dit */ });
     }, []);
 

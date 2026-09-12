@@ -2981,7 +2981,31 @@ Home Assistant a besoin du jeton, que `GlobalSettingsModal` déclare *« jamais 
 Le panneau le **copie** sans le montrer : *copier n'est pas afficher*, et la valeur ne traverse aucun
 rendu.
 
+#### ⛔ Et le panneau annonçait la mauvaise adresse — trouvé le 13/09
+
+David, après avoir tout branché : *« ça ne marche pas »*, puis
+*« `http://192.168.0.211:5173/bouton`, c'est ce qu'il y a dans Paramètres OS »*.
+
+**5173 est le port de Vite.** `remote:get-connection-info` rend deux ports : `port`, où
+l'**interface** est servie (Vite en développement, pour le rechargement à chaud), et `mediaPort`,
+qui est **toujours** le SyncServer. J'avais pris le premier. Home Assistant postait donc sur Vite,
+**qui répondait son `index.html`** : aucune erreur, aucun effet, rien à diagnostiquer.
+
+⭐⭐ **Le commentaire de `main.ts` décrivait ce mode d'échec mot pour mot**, pour le proxy média :
+*« jamais celui de Vite, qui ne sert ni /media/ ni /temp/ et répond son index.html à leur place »*.
+J'ai pris le mauvais champ **malgré l'avertissement, deux lignes au-dessus**. *Un champ nommé `port`
+à côté d'un champ nommé `mediaPort` invite à prendre le premier.*
+
+⚠️ **Et les tests de bout en bout ne pouvaient pas le voir** : ils tournent en **production**, où
+les deux ports sont le même. *Un test de bout en bout ne voit que ce que son environnement
+distingue* — seule une fonction pure, éprouvée sur le cas du développement, garde ça.
+
+⭐ **Le diagnostic a tenu en deux mesures, sans rien demander à David** : lire `main.log` pour savoir
+que GM-OS tournait, puis poster sur `/bouton` avec le vrai jeton lu dans `pairing.json` — `200`,
+`{"recu":"milieu"}`. *Le côté GM-OS étant hors de cause, il ne restait qu'un champ à relire.*
+
 **Ancres** : `electron/boutonsDeLUlanzi.ts` (+ 24 tests), `SyncServer.traiterLAppui`,
+`utils/portsDuRenderer.ts` (`adresseDuPontDesBoutons`, + 8 tests),
 `ulanzi/logic/gestesDesBoutons.ts` (+ 16 tests), `ulanzi/hooks/useBoutonsDeLUlanzi.ts`,
 `ulanzi/components/ReglageDesBoutons.tsx`, `e2e/boutonsUlanzi.spec.ts` (11 tests, la chaîne entière
 sans Home Assistant).
