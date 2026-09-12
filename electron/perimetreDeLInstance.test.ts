@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import {
-    racineDuCorpus, coffreObsidian, appareilsMuets,
+    racineDuCorpus, coffreObsidian, coffreImpose, appareilsMuets,
     COFFRE_OBSIDIAN_PAR_DEFAUT,
     VARIABLE_RACINE_DOCS, VARIABLE_COFFRE_OBSIDIAN, VARIABLE_SANS_APPAREILS,
 } from './perimetreDeLInstance';
@@ -125,5 +125,46 @@ describe('le périmètre est réellement branché', () => {
 
         expect(garde, 'la garde est dans le handler').toBeGreaterThan(-1);
         expect(envoi).toBeGreaterThan(garde);
+    });
+});
+
+describe('le coffre IMPOSÉ — la garde du 2026-09-12', () => {
+    /*
+      ⛔ **Le défaut que cette fonction referme.** Le pont Obsidian accepte un
+      chemin envoyé par l'écran, et ne retombait sur la variable que si l'écran
+      n'envoyait rien. Or l'écran en envoie toujours un — `useObsidianStore`
+      porte le coffre du meneur en dur. Toutes les exécutions E2E ont donc lu le
+      vrai coffre de David.
+
+      ⭐ *Poser une variable et vérifier qu'elle est posée n'est pas vérifier
+      qu'elle est suivie.* Le test de périmètre passait pendant ce temps-là.
+    */
+    it('rend le coffre quand la variable est posée', () => {
+        expect(coffreImpose({ [VARIABLE_COFFRE_OBSIDIAN]: 'D:\\essai\\coffre' }))
+            .toBe('D:\\essai\\coffre');
+    });
+
+    /*
+      ⚠️ **Et RIEN sans elle — c'est tout le mécanisme.** Hors instance isolée,
+      l'écran doit garder la main : les réglages du meneur et l'export vers
+      Obsidian désignent légitimement un coffre. Une garde qui s'appliquerait
+      toujours casserait ces deux usages.
+    */
+    it('ne rend rien sans la variable — l’écran garde la main', () => {
+        expect(coffreImpose({})).toBeUndefined();
+    });
+
+    it('ni sur une variable vide, qui n’est pas un choix', () => {
+        expect(coffreImpose({ [VARIABLE_COFFRE_OBSIDIAN]: '   ' })).toBeUndefined();
+    });
+
+    /*
+      La distinction avec `coffreObsidian` est le cœur du correctif : l'une rend
+      toujours un chemin utilisable, l'autre ne parle que si l'on a exigé une
+      isolation.
+    */
+    it('se distingue de `coffreObsidian`, qui rend toujours quelque chose', () => {
+        expect(coffreObsidian({})).toBe(COFFRE_OBSIDIAN_PAR_DEFAUT);
+        expect(coffreImpose({})).toBeUndefined();
     });
 });

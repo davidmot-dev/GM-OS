@@ -8,16 +8,18 @@ import { lancerGmOs, attendreLHydratation, ouvrirLeModule, CAMPAGNE_TEMOIN, type
  * ⚠️ CE MODULE NE S'APPELLE PAS CE QU'IL EST
  * ─────────────────────────────────────────────────────────────────────────────
  *
- * Le bouton de la barre latérale dit **« Galerie PNJ »**. Ce n'est pas une
- * galerie : c'est un **générateur**, et il affiche *« En attente de génération —
- * sélectionnez un univers et cliquez sur le bouton de tirage »*. Les personnages
- * de la campagne, eux, vivent ailleurs.
+ * Le bouton de la barre latérale disait **« Galerie PNJ »** — pour un
+ * **générateur**, qui affiche *« En attente de génération »*. Il s'appelle
+ * désormais **« Générateur PNJ »** (corrigé le 2026-09-12).
  *
- * ⭐ Ma première version de ce fichier cherchait les PNJ du témoin dans cet
- * écran et concluait qu'ils manquaient. *Un nom qui promet autre chose que ce
- * qu'il fait ne trompe pas que les tests* — c'est la leçon déjà payée par
- * « Sync Oracle », renommé « Envoyer au carnet » le 2026-09-04. Le constat est
- * versé au § 1 bis du registre.
+ * ⛔ **Et le pire n'était pas le mensonge, c'était l'homonymie : DEUX écrans
+ * portaient ce nom.** Celui-ci, et la vraie galerie du cockpit, qui liste bien
+ * les PNJ de la campagne. Ma première version de ce fichier les cherchait ici,
+ * ne les trouvait pas, et j'en ai conclu qu'aucun écran ne les listait — parce
+ * que cliquer « Galerie PNJ » tombait toujours sur le générateur.
+ *
+ * ⭐ *Deux écrans de même nom ne trompent pas que les tests.* C'est la leçon
+ * déjà payée par « Sync Oracle », renommé « Envoyer au carnet » le 2026-09-04.
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * CE QUI EST TESTABLE SANS MODÈLE
@@ -34,7 +36,7 @@ let gmos: GmOsLance;
 test.beforeAll(async () => {
     gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
     await attendreLHydratation(gmos);
-    await ouvrirLeModule(gmos, 'Galerie PNJ');
+    await ouvrirLeModule(gmos, 'Générateur PNJ');
     await gmos.fenetre.getByRole('button', { name: /Générer PNJ/ }).first()
         .waitFor({ timeout: 20_000 });
 });

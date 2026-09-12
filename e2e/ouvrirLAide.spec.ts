@@ -57,6 +57,39 @@ test.describe('le périmètre', () => {
             .toContain(gmos.profil.toLowerCase());
     });
 
+    /*
+      ⛔ **LA VARIABLE POSÉE N'ÉTAIT PAS LA VARIABLE SUIVIE.**
+
+      Le test au-dessus vérifie que `GMOS_COFFRE_OBSIDIAN` est **posée**. Il
+      passait — et le coffre fuyait quand même : chaque geste du pont Obsidian
+      accepte un chemin **envoyé par l'écran**, et l'écran en envoie toujours un
+      (`useObsidianStore` porte celui du meneur en dur). Toutes les exécutions
+      E2E ont donc listé le vrai coffre de David, découvert le 2026-09-12.
+
+      ⭐ Celui-ci interroge le pont **comme le ferait un écran fautif** : il lui
+      demande explicitement le vrai coffre. La réponse doit être vide, parce que
+      la variable l'emporte désormais. *Une isolation qui dépend de la bonne foi
+      de l'appelant n'est pas une isolation.*
+
+      ⚠️ Aucune note n'est nommée ici, et rien n'est écrit : on compte, c'est
+      tout.
+    */
+    test('le coffre RÉELLEMENT lu est celui du profil, même si l’écran en demande un autre', async () => {
+        const notes = await gmos.fenetre.evaluate(async (coffreDuMeneur: string) => {
+            const pont = (window as never as {
+                appBridge?: { obsidian?: { listNotes: (v?: string) => Promise<unknown[]> } };
+            }).appBridge?.obsidian;
+            if (!pont) return { erreur: 'pont absent' };
+            return { compte: ((await pont.listNotes(coffreDuMeneur)) ?? []).length };
+        }, 'C:\\Users\\david\\OneDrive\\Obsidian Vault');
+
+        expect(notes, 'le pont Obsidian n’est pas exposé').not.toHaveProperty('erreur');
+        expect(
+            (notes as { compte: number }).compte,
+            'le vrai coffre du meneur a été lu depuis une instance d’essai',
+        ).toBe(0);
+    });
+
     /* Aucune lampe, aucun afficheur : les seuls effets qu'on ne peut pas annuler. */
     test('les appareils sont muets', async () => {
         const muets = await gmos.application.evaluate(() => process.env.GMOS_SANS_APPAREILS);

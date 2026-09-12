@@ -106,13 +106,14 @@ avec une case de plus pour ce qu'on a vu sans le traiter.
 > **La discipline, en une phrase.** Une ligne ne sort d'ici que par le haut — corrigée, elle devient
 > une section numérotée avec ses ancres ; garée exprès, elle descend au § 4. *Elle ne s'efface
 > jamais parce qu'on a cessé d'y penser.*
+>
+> ⭐ **Et elle a fonctionné du premier coup.** Ouverte le 2026-09-12 au matin avec quatre lignes,
+> elle en a rendu **quatre** le soir même — le coffre Obsidian, le journal hors sauvegarde et les
+> deux libellés trompeurs — chacune devenue une entrée du § 47, avec ses ancres. *Une case qui se
+> vide est une case qui sert ; une case qui grossit est une liste de regrets.*
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
-| ⛔ **Le journal de séance n'est dans AUCUNE sauvegarde.** `SessionService` collecte onze magasins — `sessionOS`, `npc`, `web`, `ambient`, `clock`, `whiteboard`, `fiches`, `music`, `bestiaire`, `map`, `favorite` — et **`useJournalStore` n'en fait pas partie**. L'export Nexus ne le porte pas non plus. Le fil d'une séance, les scènes traversées, les comptes rendus : rien n'est protégé | Ouvrir n'importe quelle sauvegarde de `Security_Backup_GMOS` et lire les clés de `modules` : le journal en est absent. Ou `grep -c journal` dans `NexusService.ts` → 0 | Trouvé le 12/09 **en fin de session, en diagnostiquant autre chose**. Demande une décision avant d'écrire : *le journal suit-il la campagne — donc l'export Nexus aussi — ou seulement la machine ?* Music-OS avait été tranché « playlists seulement, la sortie audio décrit la pièce, pas l'univers » ; le journal, lui, est clairement de l'univers. **C'est le § 1 de l'état du 12/09 : le premier geste à reprendre** |
-| ⛔ **L'ISOLATION DU COFFRE OBSIDIAN EST PERCÉE.** `GMOS_COFFRE_OBSIDIAN` déplace bien le coffre — mais **chaque handler du pont accepte un `vaultPath` envoyé par l'ÉCRAN**, et n'utilise la variable que si l'écran n'envoie rien (`obsidian_bridge.ts`, lignes 26 à 152). Or `useObsidianStore.ts:50` code en dur `C:\Users\david\OneDrive\Obsidian Vault` comme état initial. **Toutes les exécutions E2E ont donc listé le vrai coffre du meneur.** ⚠️ En lecture seulement à ce jour — mais `obsidian:write-note` et `obsidian:ensure-directory` prennent le même paramètre : **un test qui écrirait une note écrirait dans le vrai coffre** | Ouvrir « Nexus Wiki » dans une instance E2E : les notes personnelles s'affichent (« Anges de Feu », « Fullmetal Alchemist »…) alors que `GMOS_COFFRE_OBSIDIAN` vise le profil jetable | Trouvé le 12/09 en sondant le module pour écrire son test. ⭐ **Et le plus instructif : le test de périmètre PASSE.** `ouvrirLAide.spec.ts` vérifie que la **variable** est posée — jamais que le chemin **employé** est celui-là. *Poser une variable et vérifier qu'elle est posée n'est pas vérifier qu'elle est suivie.* ⚠️ **À trancher** : le processus principal doit-il **refuser** un chemin venu de l'écran quand la variable est posée, ou l'écran doit-il cesser d'en envoyer un ? *Le premier protège même contre un écran fautif ; c'est celui que je recommande.* |
-| ⚠️ **Le bouton « Galerie PNJ » n'ouvre pas une galerie, mais un GÉNÉRATEUR.** L'écran affiche *« En attente de génération — sélectionnez un univers et cliquez sur le bouton de tirage »*. Les PNJ déjà écrits de la campagne ne s'y consultent pas | Ouvrir « Galerie PNJ » sur une campagne peuplée : aucun de ses PNJ n'apparaît. ⚠️ **Et je n'ai trouvé aucun écran qui les liste** — ni le tableau de bord, ni Rencontres | Trouvé le 12/09 en écrivant les tests E2E (§ 46) : mon fichier cherchait les PNJ du témoin dans cet écran et concluait qu'ils manquaient. Le guide, lui, décrit bien un générateur (« improviser un PNJ… et le garder ») — **c'est le libellé du bouton qui promet autre chose**. Troisième cas du même motif après « Sync Oracle » et « Désactiver l'Interface ». ⚠️ **À trancher avant de coder** : renommer le bouton, ou ajouter la galerie qu'il annonce ? *Les deux répondent, et ils ne coûtent pas la même chose.* |
-| ⚠️ **La Médiathèque ne se ferme pas avec Échap**, et son bouton de fermeture s'intitule **« Désactiver l'Interface »**. C'est une surcouche **plein écran** qui couvre la barre latérale : tant qu'elle est ouverte, plus aucun module n'est cliquable | Ouvrir la Médiathèque, appuyer sur Échap : rien. Le seul moyen d'en sortir est un bouton sans texte, dont l'infobulle ne dit pas « fermer » | Trouvé le 12/09 **en écrivant les tests E2E des modules** (§ 46), pas en jouant. Deux gestes indépendants — *Échap ferme un modal* est une attente universelle ; *un bouton dit ce qu'il fait* est une leçon que ce dépôt a déjà payée avec « Sync Oracle », renommé « Envoyer au carnet » le 04/09 parce qu'il *« promettait exactement ce qu'il ne fait pas »*. ⚠️ **Reste à vérifier si les autres modaux de GM-OS ferment avec Échap** : si oui, celui-ci est une exception ; si non, c'est une règle qui manque partout |
 | ⚠️ **L'écran bloqué au démarrage n'a jamais été expliqué.** Le 12/09, GM-OS est resté sur un écran plein, David en déplacement. La boucle de Light-OS était réelle, elle est corrigée (§ 44), et il a confirmé que ça remarche — **mais le lien n'est pas établi** : dans la reproduction, l'écran restait **cliquable** pendant toute la boucle | Si ça revient, **deux questions tranchent en dix secondes** : l'écran montre-t-il le **splash** (runes animées, « GM-OS vVI.V », une citation) ou le **`LoadingOverlay`** (fond flouté, roue, « SYSTEM_BUSY ») ? Et la console porte-t-elle `[Bootstrap] ✅ Système prêt` ? *Ce sont deux composants et deux causes.* Si c'est « SYSTEM_BUSY / CHARGEMENT DE LA SESSION », le suspect est `loadFullSession`, qui attend un **sélecteur de fichier** — une boîte de dialogue restée ouverte hors écran bloque l'attente indéfiniment | Le symptôme a disparu. **Sans reproduction, chercher plus loin serait deviner** — j'ai déjà produit trois hypothèses fausses ce jour-là, dont une bâtie sur des sondes qui n'avaient jamais chargé la page |
 
 ### 2 · Ce qui se décide à la table — axe N.3
@@ -2559,6 +2560,89 @@ Light-OS sans pont. *Qu'un module s'ouvre ne dit rien de ce qu'il fait quand il 
 
 **Ancres** : `e2e/tousLesModules.spec.ts`, `e2e/diceOs.spec.ts`, `e2e/combatOs.spec.ts`,
 `e2e/clockOs.spec.ts`, `e2e/deckOs.spec.ts`, `src/modules/dice/DiceBoard.tsx`. **70 tests E2E verts.**
+
+### 47 · ⭐ Les quatre constats du § 1 bis, traités (2026-09-12)
+
+*Trois semaines de « constaté, pas encore traité » auraient suffi à les oublier. La case avait été
+ouverte le matin même ; elle s'est vidée le soir.*
+
+#### ⛔ 1. L'isolation du coffre Obsidian — le plus sérieux des quatre
+
+`GMOS_COFFRE_OBSIDIAN` déplaçait bien le coffre, mais **chaque geste du pont acceptait un chemin
+envoyé par l'écran**, et ne retombait sur la variable que si l'écran n'envoyait rien. Or l'écran en
+envoie toujours un : `useObsidianStore` porte celui du meneur **en dur**. Toutes les exécutions E2E
+lisaient donc le vrai coffre de David.
+
+⭐ **Le remède n'est pas d'ignorer le paramètre**, qui est légitime — les réglages du meneur et
+l'export vers Obsidian s'en servent. C'est de le **subordonner** : `coffreImpose(env)` rend le coffre
+quand la variable est posée, et **rien** sinon. Hors instance isolée, rien ne change pour personne.
+
+⭐⭐ **Et c'est la dégradation qui a sauvé le test.** Mon assertion de bout en bout passait *avec le
+défaut remis* — parce que le heredoc du shell avait mangé les antislashs du chemin, et qu'elle
+interrogeait donc une adresse invalide. **Un test vert qui ne peut pas rougir ne prouve rien**, et
+seule la remise du défaut l'a montré. *Dégrader à l'identique, sinon la dégradation ne prouve rien* —
+la règle du 2026-08-22, repayée.
+
+**Ancres** : `perimetreDeLInstance.ts` (`coffreImpose`, 4 tests), `obsidian_bridge.ts`
+(`racineDuCoffre`, 5 gestes), `e2e/ouvrirLAide.spec.ts` — l'assertion interroge le pont **comme le
+ferait un écran fautif**, et compte sans nommer aucune note.
+
+#### ⛔ 2. Le journal de séance n'était dans aucune sauvegarde
+
+Onze magasins étaient collectés ; `useJournalStore` n'en faisait pas partie, et l'export Nexus ne le
+portait pas non plus. **Le fil des séances, les scènes traversées et les comptes rendus n'étaient
+protégés par rien.**
+
+⭐ **Le code portait déjà la cicatrice précédente**, en commentaire dans `SessionService` : *« il y
+manquait `entities`, `clues` et `sessions` »*. Même famille, même cause — *une liste de ce qu'on
+sauvegarde, recopiée à la main, oublie toujours quelque chose.*
+
+| Où | Ce qui a été fait |
+| --- | --- |
+| La sauvegarde | `journal` récolté et restauré — **on ajoute et on remplace par identifiant, on ne vide jamais** |
+| Le schéma | `journal` déclaré : sans ça il serait écrit puis **jeté à la relecture**, `modules` n'étant pas `.passthrough()` |
+| L'export Nexus | **Décision de David** : le journal voyage avec la campagne. ⚠️ Seuls ceux qui **connaissent** leur campagne partent — `campaignId` est facultatif, et *un journal rattaché à tort serait pire qu'un journal absent* |
+
+**Ancres** : `SessionService.ts`, `schemas.ts`, `NexusService.ts`, `nexus.types.ts`,
+`leJournalEstSauvegarde.test.ts` (4 tests).
+
+#### ⚠️ 3. La Médiathèque — deux défauts pour un seul écran
+
+Elle est une **surcouche plein écran** qui couvre la barre latérale, elle ne se fermait **qu'au
+bouton**, et ce bouton s'intitulait **« Désactiver l'Interface »**. *Une surcouche dont on ne sait pas
+sortir est un piège, pas une fenêtre.*
+
+- **Échap la ferme**, comme les cinq autres surcouches de GM-OS — elle était l'exception, et une
+  exception qu'aucune décision n'explique est un oubli.
+- ⚠️ **Les modaux imbriqués passent d'abord** : sans cette garde, une seule frappe fermerait l'aperçu
+  **et** la médiathèque derrière lui.
+- Le bouton s'appelle **« Fermer la médiathèque »**.
+
+#### ⚠️ 4. « Galerie PNJ » — et l'homonymie était pire que le mensonge
+
+Le bouton de la barre latérale ouvre un **générateur**. Il s'appelle désormais **« Générateur PNJ »**.
+
+⛔ **Mais le vrai défaut n'était pas le libellé : DEUX écrans portaient ce nom.** Celui-là, et la
+**vraie galerie du cockpit**, qui liste bien les PNJ de la campagne. J'avais conclu qu'aucun écran ne
+les listait — parce que cliquer « Galerie PNJ » tombait toujours sur le générateur. *Deux écrans de
+même nom ne trompent pas que les tests.*
+
+Troisième cas du motif après « Sync Oracle » et « Désactiver l'Interface ».
+
+#### ⭐ Et un cinquième défaut, tombé de la vérification
+
+En ouvrant la vraie galerie, l'écran affichait **`SESSION.NPC_GALLERY.ROLES.UNDEFINED`** — une clé de
+traduction brute. La cause était **mon témoin** : ses PNJ n'avaient ni `role`, ni `status`, ni `ac`,
+des champs **obligatoires** d'`Entity` que le schéma laisse passer en `z.any()`.
+
+⚠️ *Une donnée d'essai incomplète ne produit pas un test plus tolérant : elle produit un écran faux
+qu'on prend pour un défaut du code.* La garde de typage du témoin — posée le matin pour les scènes —
+couvre désormais les entités, et l'exécution vérifie les valeurs des trois unions.
+
+**Ce qui reste au § 1 bis** : l'écran bloqué au démarrage, toujours sans explication. *Sans
+reproduction, le traiter serait deviner.*
+
+**Vérifié** : `tsc -b` propre, **4 239 tests** (355 fichiers), **145 tests E2E**.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

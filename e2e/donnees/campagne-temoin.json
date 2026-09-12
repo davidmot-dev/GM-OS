@@ -75,7 +75,17 @@
           "campaignId": "temoin-campagne",
           "type": "npc",
           "description": "Repond trop vite aux questions qu'on ne lui a pas posees.",
-          "imageUrl": ""
+          "avatar": "",
+          "hp": 8,
+          "maxHp": 8,
+          "initiative": 0,
+          "linkedMapIds": [],
+          "role": "neutral",
+          "status": "alive",
+          "ac": 12,
+          "speed": 30,
+          "roleplayingNotes": "Repond trop vite. Regarde la porte quand il ment.",
+          "gmSecretInfo": "Il a reecrit le registre lui-meme."
         },
         {
           "id": "temoin-pnj-2",
@@ -83,7 +93,17 @@
           "campaignId": "temoin-campagne",
           "type": "npc",
           "description": "Une voix dans le systeme de relais. Elle compte les absents.",
-          "imageUrl": ""
+          "avatar": "",
+          "hp": 8,
+          "maxHp": 8,
+          "initiative": 0,
+          "linkedMapIds": [],
+          "role": "neutral",
+          "status": "unknown",
+          "ac": 10,
+          "speed": 0,
+          "roleplayingNotes": "Voix plate, phrases courtes. Ne repond jamais deux fois pareil.",
+          "gmSecretInfo": "Ancre-7 compte les absents depuis trois semaines."
         }
       ],
       "sessions": [

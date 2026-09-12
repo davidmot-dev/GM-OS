@@ -15,6 +15,7 @@ import { useMusicStore } from '../modules/music/useMusicStore';
 import { useBestiaireStore } from '../modules/combat/useBestiaireStore';
 import { useMapStore } from '../modules/map/useMapStore';
 import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
+import { useJournalStore } from '../modules/journal/useJournalStore';
 
 /**
  * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
@@ -28,6 +29,7 @@ export function construireLaSauvegarde() {
     const sessionState = useSessionStore.getState();
     const osState = useSessionOSStore.getState();
     const npcState = useNPCStore.getState();
+    const journalState = useJournalStore.getState();
     const webState = useWebStore.getState();
     const ambientState = useAmbientStore.getState();
     const clockState = useClockStore.getState();
@@ -55,6 +57,21 @@ export function construireLaSauvegarde() {
             sessionOS: lesDonneesDeLaSession(osState),
             npc: {
                 savedEntities: npcState.savedEntities,
+            },
+            /*
+              **Le journal, ajoute le 2026-09-12 — il n'etait dans AUCUNE
+              sauvegarde.** Onze magasins etaient collectes ici ; `useJournalStore`
+              n'en faisait pas partie, et l'export Nexus ne le portait pas non
+              plus. Le fil d'une seance, les scenes traversees et les comptes
+              rendus n'etaient donc proteges par rien.
+
+              C'est exactement la cicatrice que porte le commentaire du dessus :
+              `entities`, `clues` et `sessions` avaient deja manque ici. *Une
+              liste de ce qu'on sauvegarde, recopiee a la main, oublie toujours
+              quelque chose.*
+            */
+            journal: {
+                journals: journalState.journals,
             },
             web: {
                 links: webState.links,
@@ -335,6 +352,31 @@ export const SessionService = {
                 useFavoriteStore.setState({ favorites: favoris.favorites as never });
                 Logger.info(`[Session] ${favoris.favorites.length} favori(s) restaure(s)`);
             }
+            /*
+              **Le journal se restaure comme les fiches : on ajoute et on
+              remplace par identifiant, on ne vide JAMAIS.** Une archive qui ne
+              porte pas de journal ne doit pas effacer ceux du meneur — c'est le
+              refus de retrecissement deja applique a la bibliotheque des fiches
+              et aux ambiances de Sound-OS.
+
+              ⚠️ Et un instantane vide n'en remplace jamais un plein : le garde
+              qui empeche ce filet de devenir le second mecanisme de perte.
+            */
+            const journal = (data.modules as { journal?: { journals?: { id: string }[] } }).journal;
+            if (journal?.journals?.length) {
+                const existants = useJournalStore.getState().journals;
+                const entrants = journal.journals as never[];
+                const idsEntrants = new Set(journal.journals.map(j => j.id));
+
+                useJournalStore.setState({
+                    journals: [
+                        ...entrants,
+                        ...existants.filter(j => !idsEntrants.has(j.id)),
+                    ],
+                });
+                Logger.info(`[Session] ${journal.journals.length} journal(aux) restaure(s)`);
+            }
+
             // Ambient and Whiteboard might need more careful hydration if they have active engines
         }
     }

@@ -144,6 +144,23 @@ export interface NexusCampaignState {
      */
     actes?: Acte[];
     scenes?: Scene[];
+    /**
+     * **Les journaux de seance de la campagne — ajoutes le 2026-09-12.**
+     *
+     * Une campagne emportee arrivait sans son vecu : le fil des seances, les
+     * scenes traversees, les comptes rendus. *Tout le travail d'apres-partie
+     * restait sur la machine d'origine*, comme la trame avant le 04/09.
+     *
+     * ⚠️ **Seuls les journaux qui connaissent leur campagne voyagent.**
+     * `campaignId` est facultatif sur un journal : ceux d'avant le rattachement
+     * n'en portent pas, et les emporter au hasard les collerait a une campagne
+     * qui n'est pas la leur. *Mieux vaut laisser un journal chez lui que le
+     * rattacher a tort.*
+     *
+     * **Facultatifs**, pour qu'un `.gmos` d'avant cette date s'importe sans
+     * rien perdre ni rien inventer.
+     */
+    journaux?: unknown[];
     /** Paquets de cartes (manifestes uniquement) */
     deckManifests: DeckManifest[];
     /** États de session des decks */

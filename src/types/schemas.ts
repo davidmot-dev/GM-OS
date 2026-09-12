@@ -93,6 +93,8 @@ export const FullSessionSchema = z.object({
     modules: z.object({
         sessionOS: SessionOSModuleSchema.optional(),
         npc: z.object({ savedEntities: z.array(z.any()) }).optional(),
+        /* Le journal de seance — absent de toute sauvegarde jusqu'au 2026-09-12. */
+        journal: z.object({ journals: z.array(z.any()) }).optional(),
         web: z.object({ links: z.array(WebLinkSchema) }).optional(),
         clock: z.object({ timestamp: z.number() }).optional(),
         ambient: z.object({ tracks: z.array(z.any()) }).optional(),

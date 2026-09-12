@@ -59,6 +59,34 @@ export function coffreObsidian(env: Environnement): string {
 }
 
 /**
+ * **Le coffre IMPOSÉ, quand l'instance est isolée — et rien sinon.**
+ *
+ * ⛔ **La différence avec `coffreObsidian` n'est pas cosmétique, et elle a
+ * coûté.** Le pont Obsidian accepte un chemin **envoyé par l'écran** sur chacun
+ * de ses six gestes, et ne retombait sur la variable que si l'écran n'envoyait
+ * rien. Or l'écran en envoie toujours un : `useObsidianStore` porte le chemin du
+ * coffre du meneur **en dur** dans son état initial.
+ *
+ * Résultat, découvert le 2026-09-12 : **toutes les exécutions de tests ont lu le
+ * vrai coffre de David.** En lecture seulement — mais `obsidian:write-note`
+ * prend le même paramètre, et un test qui aurait écrit aurait écrit chez lui.
+ *
+ * ⭐ **Le remède n'est pas d'ignorer le paramètre**, qui est légitime : les
+ * réglages du meneur et l'export vers Obsidian s'en servent. C'est de le
+ * **subordonner** — quand la variable est posée, elle l'emporte, et l'écran
+ * n'est plus cru sur parole.
+ *
+ * ⚠️ **Rend `undefined` quand la variable est absente**, et c'est tout le
+ * mécanisme : hors instance isolée, rien ne change pour personne.
+ *
+ * ⭐ *Poser une variable et vérifier qu'elle est posée n'est pas vérifier
+ * qu'elle est suivie.* Le test de périmètre passait, et le coffre fuyait.
+ */
+export function coffreImpose(env: Environnement): string | undefined {
+    return posee(env[VARIABLE_COFFRE_OBSIDIAN]);
+}
+
+/**
  * Les appareils sont-ils muets ?
  *
  * ⛔ **Le seul interrupteur qui protège une pièce.** Sans lui, un test qui passe

@@ -1,6 +1,6 @@
 import { ipcMain, dialog } from 'electron';
 import { strictementSous, sousOuEgal } from './sousChemin';
-import { coffreObsidian } from './perimetreDeLInstance';
+import { coffreObsidian, coffreImpose } from './perimetreDeLInstance';
 import path from 'node:path';
 import fs from 'fs-extra';
 
@@ -13,6 +13,26 @@ import fs from 'fs-extra';
    variable, c'est le coffre du meneur, comme toujours. */
 const DEFAULT_VAULT_PATH = coffreObsidian(process.env);
 
+/**
+ * **Le coffre sur lequel ce geste va porter.**
+ *
+ * ⛔ **L'ordre compte, et il est l'inverse de celui d'avant.** Le chemin venu de
+ * l'écran passait en premier ; il passe désormais après le coffre imposé.
+ *
+ * Sans `GMOS_COFFRE_OBSIDIAN`, rien ne change : l'écran garde la main, comme
+ * depuis toujours — c'est ainsi que les réglages du meneur et l'export vers
+ * Obsidian désignent un coffre. **Avec la variable, l'écran n'est plus cru sur
+ * parole** : une instance d'essai lit et écrit dans SON coffre, quoi qu'on lui
+ * demande.
+ *
+ * *Une isolation qui dépend de la bonne foi de l'appelant n'est pas une
+ * isolation* — et celle-ci a laissé toutes les exécutions E2E du 2026-09-12
+ * lister le vrai coffre du meneur.
+ */
+function racineDuCoffre(vaultPath?: string): string {
+    return coffreImpose(process.env) ?? vaultPath ?? DEFAULT_VAULT_PATH;
+}
+
 interface NoteEntry {
     name: string;
     path: string; // Relative path to vault root
@@ -24,7 +44,7 @@ export function registerObsidianHandlers() {
     console.log('[Obsidian Bridge] Registering IPC Handlers');
 
     ipcMain.handle('obsidian:list-notes', async (_event, vaultPath?: string) => {
-        const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+        const rootPath = racineDuCoffre(vaultPath);
         
         if (!(await fs.pathExists(rootPath))) {
             console.error(`[Obsidian Bridge] Vault path not found: ${rootPath}`);
@@ -76,7 +96,7 @@ export function registerObsidianHandlers() {
     });
 
     ipcMain.handle('obsidian:read-note', async (_event, relativePath: string, vaultPath?: string) => {
-        const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+        const rootPath = racineDuCoffre(vaultPath);
         const fullPath = path.join(rootPath, relativePath);
 
         // Une note est un fichier : le coffre lui-même n'en est pas un.
@@ -99,7 +119,7 @@ export function registerObsidianHandlers() {
     });
 
     ipcMain.handle('obsidian:write-note', async (_event, relativePath: string, content: string, vaultPath?: string) => {
-        const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+        const rootPath = racineDuCoffre(vaultPath);
         const fullPath = path.join(rootPath, relativePath);
 
         // Une note est un fichier — voir `sousChemin.ts` pour le piège du dossier voisin.
@@ -119,7 +139,7 @@ export function registerObsidianHandlers() {
     });
 
     ipcMain.handle('obsidian:ensure-directory', async (_event, relativePath: string, vaultPath?: string) => {
-        const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+        const rootPath = racineDuCoffre(vaultPath);
         const fullPath = path.join(rootPath, relativePath);
 
         // Le coffre lui-même est admis ici : il existe déjà, il n'y a rien à créer.
@@ -149,7 +169,7 @@ export function registerObsidianHandlers() {
      * au bon endroit, tant que personne ne demande si le bon endroit existe.*
      */
     ipcMain.handle('obsidian:vault-exists', async (_event, vaultPath?: string) => {
-        const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+        const rootPath = racineDuCoffre(vaultPath);
         try {
             return (await fs.pathExists(rootPath)) && (await fs.stat(rootPath)).isDirectory();
         } catch {

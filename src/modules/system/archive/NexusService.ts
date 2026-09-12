@@ -25,6 +25,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useBestiaireStore } from '../../combat/useBestiaireStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useSoundStore } from '../../sound/useSoundStore';
+import { useJournalStore } from '../../journal/useJournalStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { gmToast } from '../../../stores/useToastStore';
 import i18next from 'i18next';
@@ -234,6 +235,15 @@ export class NexusService {
         const actes = store.actes?.filter((a: { campaignId: string }) => a.campaignId === campaignId) ?? [];
         const scenes = store.scenes?.filter((sc: { campaignId: string }) => sc.campaignId === campaignId) ?? [];
 
+        /*
+          **Les journaux de seance, ajoutes le 2026-09-12.** Meme filtre que la
+          trame — mais `campaignId` est FACULTATIF sur un journal : ceux d'avant
+          le rattachement n'en portent pas, et ils restent donc chez eux. *Un
+          journal rattache a tort serait pire qu'un journal absent.*
+        */
+        const journaux = useJournalStore.getState().journals
+            .filter((j: { campaignId?: string }) => j.campaignId === campaignId);
+
         // Niveau 2 : Entités et joueurs
         const entities = store.entities.filter((e: Entity) => e.campaignId === campaignId);
 
@@ -313,6 +323,7 @@ export class NexusService {
             clues,
             actes,
             scenes,
+            journaux,
             deckManifests,
             deckSessionStates,
             relatedEntities,       // Méta : entités cross-campagne (pour info)
@@ -1133,6 +1144,25 @@ export class NexusService {
                 ...(store.scenes ?? []).filter((sc: { campaignId: string }) => sc.campaignId !== campaignId),
                 ...state.scenes,
             ];
+        }
+
+        /*
+          **Les journaux suivent la meme regle que la trame**, et pour la meme
+          raison : `undefined` veut dire « l'archive n'en parle pas », et non
+          « il n'y en a aucun ». Une archive d'avant le 2026-09-12 ne doit pas
+          effacer les journaux que le meneur aurait ecrits de son cote.
+
+          ⚠️ Ils ne vivent pas dans le magasin de session mais dans le leur :
+          l'ecriture est donc separee, apres le `set` du magasin principal.
+        */
+        if (state.journaux !== undefined) {
+            const existants = useJournalStore.getState().journals;
+            useJournalStore.setState({
+                journals: [
+                    ...existants.filter((j: { campaignId?: string }) => j.campaignId !== campaignId),
+                    ...(state.journaux as never[]),
+                ],
+            });
         }
 
         /*

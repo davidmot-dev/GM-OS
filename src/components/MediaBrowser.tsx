@@ -103,6 +103,33 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     const [isUploading, setIsUploading] = useState(false);
     const [editingMediaId, setEditingMediaId] = useState<string | null>(null);
     const [previewItem, setPreviewItem] = useState<MediaItem | null>(null);
+
+    /*
+      **Échap ferme la médiathèque** — ajouté le 2026-09-12.
+
+      ⛔ Elle est une surcouche **plein écran** qui couvre la barre latérale :
+      tant qu'elle est ouverte, plus aucun module n'est cliquable. Et elle ne se
+      fermait qu'au bouton, dont l'intitulé ne disait même pas « fermer ».
+      Trouvé en écrivant la traversée E2E des modules, qui bloquait dessus.
+
+      ⭐ Le motif existe déjà à **cinq endroits** dans GM-OS — `SpotlightSearch`,
+      `FullScreenPreview`, `AIPromptOverlay`… *La médiathèque était l'exception,
+      pas la règle*, et une exception qu'aucune décision n'explique est un oubli.
+
+      ⚠️ **Les modaux imbriqués passent d'abord.** L'aperçu plein écran et
+      l'éditeur de média posent leur propre écoute d'Échap : sans cette garde,
+      une seule frappe fermerait l'aperçu **et** la médiathèque derrière lui —
+      et le meneur perdrait sa navigation pour avoir voulu refermer une image.
+    */
+    useEffect(() => {
+        const surEchap = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            if (previewItem || editingMediaId) return;
+            onClose();
+        };
+        window.addEventListener('keydown', surEchap);
+        return () => window.removeEventListener('keydown', surEchap);
+    }, [onClose, previewItem, editingMediaId]);
     const [campaignFilterEnabled, setCampaignFilterEnabled] = useState(true);
     const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
     

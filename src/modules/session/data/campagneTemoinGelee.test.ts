@@ -3,6 +3,7 @@ import { validateSession } from '../../../types/schemas';
 import { CAMPAGNES_DE_DEMONSTRATION, rienQueLaDemonstration } from './sessionMocks';
 import { etatDeLaScene } from '../logic/trame';
 import type { Acte, OrigineDeScene, Scene } from '../../../types/trame.types';
+import type { Entity } from '../../../types/entity.types';
 import temoin from '../../../../e2e/donnees/campagne-temoin.json';
 
 /**
@@ -50,6 +51,28 @@ const sessionOS = (temoin as { modules: { sessionOS: Record<string, unknown> } }
  * fichier pendant une heure, sous douze tests verts.
  */
 const actesDuTemoin: Acte[] = temoin.modules.sessionOS.actes;
+
+/*
+  ⛔ **La même garde, étendue aux entités le 2026-09-12 — et elle a servi le
+  jour même.** Les PNJ du témoin n'avaient ni `role`, ni `status`, ni `ac` : des
+  champs **obligatoires** d'`Entity`. Rien ne l'avait signalé, parce que le
+  schéma les laisse traverser en `z.any()`.
+
+  Ça s'est vu à l'écran, dans la vraie galerie : `role` valant `undefined`,
+  l'affichage retombait sur **la clé de traduction brute**
+  `SESSION.NPC_GALLERY.ROLES.UNDEFINED`. *Une donnée d'essai incomplète ne
+  produit pas un test plus tolérant : elle produit un écran faux qu'on prend
+  pour un défaut du code.*
+
+  Comme pour les scènes, on élargit le seul champ qu'un import JSON ne sait pas
+  restreindre — les unions littérales — et l'exécution vérifie les valeurs.
+*/
+const entitesDuTemoin: Entity[] = temoin.modules.sessionOS.entities.map(e => ({
+    ...e,
+    type: e.type as Entity['type'],
+    role: e.role as Entity['role'],
+    status: e.status as Entity['status'],
+}));
 
 /*
   ⚠️ **Une seule concession, et elle est nommée.** Un import JSON élargit les
@@ -174,6 +197,14 @@ describe('le témoin gelé — ses scènes sont dans les trois états', () => {
       **exactement une** en cours. Deux scènes ouvertes, et tout événement part
       sans scène — la revue de séance n'aurait alors plus rien à montrer.
     */
+    it('ses entités déclarent des natures, rôles et états connus', () => {
+        for (const e of entitesDuTemoin) {
+            expect(['pc', 'npc', 'monster'], `${e.id} : type inconnu`).toContain(e.type);
+            expect(['ally', 'neutral', 'hostile', 'boss'], `${e.id} : rôle inconnu`).toContain(e.role);
+            expect(['alive', 'injured', 'dead', 'unknown'], `${e.id} : état inconnu`).toContain(e.status);
+        }
+    });
+
     it('ne déclare que des origines connues', () => {
         /* La contrepartie de l'élargissement JSON : ce que le typage ne peut
            plus vérifier, l'exécution le vérifie. */

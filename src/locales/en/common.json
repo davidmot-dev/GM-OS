@@ -170,7 +170,7 @@
     },
     "importAsset": "Import Tactical Asset",
     "uploadingAsset": "Uploading data...",
-    "deactivateInterface": "Deactivate Interface",
+    "deactivateInterface": "Close the media hub",
     "noDataDetected": "No Data Detected",
     "noDataSub": "Archive empty or restricted by matrix filters. Please initialize new data sets or reset frequency.",
     "resetFrequency": "Reset Frequency",

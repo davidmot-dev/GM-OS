@@ -58,7 +58,7 @@ const LES_PANNEAUX = [
     'Cortex IA',
     'Combat-OS',
     'Dice-OS',
-    'Galerie PNJ',
+    'Générateur PNJ',
     'Cartographie',
     'Image-OS',
     'Horloge & Temps',
@@ -152,11 +152,18 @@ test.describe('les modules de la barre latérale', () => {
         await expect(surcouches().first()).toBeVisible({ timeout: 15_000 });
 
         /*
-          ⚠️ Le bouton de fermeture s'intitule **« Désactiver l'Interface »** —
-          voir le § 1 bis du registre. On le vise par ce libellé parce que c'est
-          celui qui existe, pas parce qu'il est bon.
+          ⭐ **Échap la ferme — corrigé le 2026-09-12.** Elle ne se fermait
+          qu'au bouton, et ce bouton s'intitulait « Désactiver l'Interface ».
+          Deux défauts pour un seul écran : *une surcouche plein écran dont on
+          ne sait pas sortir est un piège, pas une fenêtre.*
         */
-        await gmos.fenetre.getByTitle("Désactiver l'Interface").click();
+        await gmos.fenetre.keyboard.press('Escape');
+        await expect(surcouches()).toHaveCount(0, { timeout: 10_000 });
+
+        /* Et le bouton dit désormais ce qu'il fait. */
+        await ouvrirLeModule(gmos, 'Médiathèque');
+        await expect(surcouches().first()).toBeVisible({ timeout: 15_000 });
+        await gmos.fenetre.getByTitle(/Fermer la médiathèque/i).click();
         await expect(surcouches()).toHaveCount(0, { timeout: 10_000 });
 
         /* Et la navigation repart : c'est ce que le blocage empêchait. */

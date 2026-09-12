@@ -170,7 +170,7 @@
     },
     "importAsset": "Importer Asset Tactique",
     "uploadingAsset": "Chargement des données...",
-    "deactivateInterface": "Désactiver l'Interface",
+    "deactivateInterface": "Fermer la médiathèque",
     "noDataDetected": "Aucune donnée détectée",
     "noDataSub": "Archive vide ou restreinte par les filtres de matrice. Veuillez initialiser de nouveaux jeux de données ou réinitialiser la fréquence.",
     "resetFrequency": "Réinitialiser la Fréquence",
