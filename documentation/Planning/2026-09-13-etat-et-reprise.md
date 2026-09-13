@@ -1,6 +1,6 @@
 # État et reprise — 2026-09-13
 
-> **Base saine.** `tsc -b` propre, **4 394 tests verts** (365 fichiers, 1 ignoré), **164 tests E2E
+> **Base saine.** `tsc -b` propre, **4 409 tests verts** (368 fichiers, 1 ignoré), **168 tests E2E
 > verts**, branche `feature/tablet-hub-pwa`, arbre propre.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
@@ -23,8 +23,9 @@
 | **Le matériel de table** | ⭐ Les noms des sorties et des écrans **survivent au rebranchement** — ils étaient persistés, mais rangés sous un identifiant qui change. Le routage suit la même signature (§ 51) |
 | **La lumière du storyboard** | ⭐ **Elle suit enfin la règle des autres** : un moment sans lumière ramène la pièce à son éclairage normal, et un arrêt aussi (§ 52) |
 | **L'instrumentation** | ⭐ Un moment de storyboard **rend des comptes**, moteur par moteur, et distingue « introuvable » de « module non chargé » — *deux silences identiques à la table, deux réparations opposées* |
+| **`Ctrl+0`** | ⭐ **Vider l'écran des joueurs d'un geste** (§ 53) — et `FULL_RESET`, reçu par `useHubSync` et **émis par personne** depuis toujours, trouve enfin son émetteur. *Sixième « chaîne complète sans bouton au bout »* |
 
-**Tests** : 4 230 → **4 394**. **E2E** : 23 → **164**, un fichier par module.
+**Tests** : 4 230 → **4 409**. **E2E** : 23 → **168**, un fichier par module.
 
 ---
 
@@ -53,7 +54,9 @@ Trois lignes entrées en P6 le même jour, toutes **écrites et jamais éprouvé
 - **le retour au Home entre deux moments** — la pièce **clignote-t-elle** (Home puis scène
   suivante) ;
 - **le démarrage amputé** — jamais vu se produire ; l'application est-elle vraiment utilisable
-  privée d'une étape.
+  privée d'une étape ;
+- **`Ctrl+0` sur un vrai Player Hub** — les tests éprouvent le **départ** du message, jamais son
+  arrivée : aucune fenêtre de Hub n'est ouverte dans une instance d'essai.
 
 ### ⚠️ Échap ne ferme pas les Paramètres
 
@@ -125,6 +128,24 @@ muet sur une capture qui n'en montrait que deux. Il publie.
 `nomsSansEcrivainNiLecteur` a réclamé le retrait d'une tolérance parce qu'un nom était « cité
 ailleurs » — la seule citation étant un **commentaire de documentation**. C'est écrit dans son
 propre en-tête ; c'en est un cas.
+
+⛔ **Une dégradation doit compiler, sinon elle ne dégrade rien.** Quatre tests E2E sont restés verts
+sur un raccourci débranché : `npm run build` est `tsc -b && vite build`, `tsc` a échoué, `vite` n'a
+jamais tourné, et Playwright a mesuré **l'ancien `dist`**. *C'est le piège du § 47 retourné — là-bas
+un test vert ne pouvait pas rougir à cause d'un chemin mangé par le shell, ici à cause d'un artefact
+périmé.*
+
+⛔ **`undefined` et `null` ne veulent pas dire la même chose, et un ternaire ne le dit pas.** Le fond
+du Player Hub en dépend : l'un rend la main au décor, l'autre éteint l'écran. `Ctrl+0` posait `null`
+et **noircissait tout**. La ligne est devenue `fondDuPlayerHub`, avec ses trois cas nommés.
+
+⛔ **Une doctrine juste appliquée au mauvais endroit reste une erreur** — et elle a l'air d'autant
+plus solide qu'elle cite le dépôt. J'ai affirmé « le fond reste » en déduisant d'`imageAvantLeMoment`
+(*l'image est le décor, les fiches passent devant*) **au lieu de lire la ligne qui décidait**.
+
+⚠️ **Ne pas lancer `vitest` et Playwright en concurrence.** Un décompte E2E bancal (162 passés,
+« 4 did not run », sortie 0) venait de là, et non du code — rejoué seul : **168 passés**. *Un
+résultat qu'on n'explique pas se rejoue avant de se raconter.*
 
 ⭐ **Une ligne garée avec son motif se rouvre toute seule le jour où le motif tombe.** Les boutons
 de l'Ulanzi étaient garés parce qu'un courtier MQTT était « un service de plus à faire vivre ».
