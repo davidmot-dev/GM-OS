@@ -1,4 +1,4 @@
-# État et reprise — 2026-09-13
+# État et reprise — 2026-09-13, prolongé au 14
 
 > **Base saine.** `tsc -b` propre, **4 489 tests verts** (375 fichiers, 1 ignoré), **173 tests E2E**,
 > branche `feature/tablet-hub-pwa`.
@@ -12,6 +12,9 @@
 >
 > Il prend la suite de [`2026-09-12-etat-et-reprise.md`](./2026-09-12-etat-et-reprise.md), qui
 > s'arrêtait à la mi-journée du 12.
+>
+> ⚠️ **Il couvre aussi le 14** — la soirée du 13 s'est prolongée, et les essais du diaporama
+> ont eu lieu après minuit. *Un second document aurait coupé en deux une seule suite de gestes.*
 
 ---
 

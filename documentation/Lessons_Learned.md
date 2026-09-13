@@ -1153,7 +1153,118 @@ où » avant l'explication. L'analyse peut attendre ; l'angoisse, non.
 
 ---
 
-*Dernière mise à jour : 11 Septembre 2026 — revue de code de l'application entière et les cinq lots de
+## 🎞️ Ce qu'une fonctionnalité neuve apprend sur l'ancienne (2026-09-13/14)
+
+*Deux demandes de David — « Échap ne ferme pas les Paramètres » et « créer des diaporamas avec un
+fondu entre chaque image ». La première a rendu une famille de trente écrans ; la seconde a servi de
+banc d'essai à du code livré depuis des mois, et en a sorti quatre défauts.*
+
+### 1. Une famille de défauts se compte avant de se traiter — et le comptage trouve autre chose
+
+- **Défi** : le défaut était signalé sur **un** écran, les Paramètres. La ligne avait été différée
+  la veille avec un motif précis : *le nombre d'écrans dans ce cas n'a pas été compté.*
+- **Ce que le comptage a rendu** : 40 fichiers en `fixed inset-0`, 12 parlant d'`Escape`, et la
+  moitié de ces douze l'écoutaient sur un **champ de saisie**, pas sur la surcouche. Les Paramètres
+  n'étaient pas un écran mais **une trentaine** — toutes servies par le même `ModalProvider`.
+- **⛔ Et une seconde face que personne ne cherchait** : la garde du clavier partagée par Sound-OS,
+  Music-OS et Light-OS repérait les « boîtes ouvertes » par `[role="dialog"]`, présent dans **deux**
+  fichiers côté meneur. Médiathèque ou Forge ouvertes, une lettre frappée lançait encore la pastille
+  de son et la scène de lumière, en pleine séance.
+- **Leçon** : *une garde qui dépend d'un attribut qu'il faut penser à poser ne protège que les
+  écrans dont l'auteur connaissait la garde.* Les deux faces se sont refermées avec une seule pièce
+  — un registre des surcouches ouvertes — parce que les deux posaient la même question : **qu'est-ce
+  qui est ouvert, et dans quel ordre ?**
+- **Corollaire** : *un motif de renvoi qui dit ce qui manque est un motif qui se lève ; « plus
+  tard » ne se lève jamais.*
+
+### 2. Une fonctionnalité nouvelle est un banc d'essai pour l'ancienne
+
+- **Ce qui s'est passé** : les diaporamas ont enchaîné des images toutes les six secondes. En deux
+  jours ils ont révélé **quatre défauts antérieurs**, tous invisibles jusque-là :
+  1. le fondu entre deux images **passait par le noir** des deux côtés — sortante démontée au
+     projecteur, `mode="wait"` au Player Hub (trois secondes de noir) ;
+  2. **Image-OS n'était dans aucune sauvegarde**, ni pads ni dossiers — quatrième fois que cette
+     liste oublie un magasin ;
+  3. le fondu **s'animait sur du vide** (voir § 3) ;
+  4. une `<img>` sans `w-full h-full` **gardait sa taille naturelle** : `object-contain` ne décide
+     rien sur une boîte sans dimension, et `max-w-[95%]` ne fait que plafonner.
+- **Leçon** : *un meneur qui projette une image toutes les deux minutes ne peut voir aucun de ces
+  défauts ; un diaporama les montre quatre-vingt fois par heure.* **Une cadence rend visible ce
+  qu'un geste isolé dissimule.**
+- **Corollaire de conception** : l'horloge du diaporama vit **dans la fenêtre du meneur** et
+  n'envoie que des projections d'image ordinaires. *Le projecteur, le Hub, les tablettes, le pont
+  IPC et la sauvegarde n'ont rien eu à apprendre* — une fonctionnalité greffée sur un chemin
+  existant hérite de tout ce qui y marche déjà.
+
+### 3. Une transition qui démarre avant son sujet joue à vide
+
+- **Défi** : David, après essai — *« un temps mort, puis un saut »*, sur les deux écrans.
+- **La cause** : **l'adresse d'une image arrive avant l'image.** `useMediaUrl` rend un `data:`
+  base64 sorti d'IndexedDB, que le navigateur doit encore **décoder**. L'animation d'opacité partait
+  à la seconde où l'adresse arrivait, donc sur un cadre vide : on voyait l'ancienne image immobile,
+  puis la nouvelle apparaître d'un coup à mi-fondu.
+- **Solution** : décoder d'abord, n'annoncer l'image qu'ensuite. *Le remède est de **retarder** le
+  fondu, pas de l'allonger.*
+- **⚠️ Piège** : `onload` ne suffit pas — il dit que les octets sont là, pas qu'il y a des pixels.
+  C'est `decode()` qui attend la seconde étape, et c'est elle qui coûte.
+- **Ce qu'on accepte en échange** : une image lourde s'affiche un instant plus tard — mais **en
+  fondu**. *Le temps mort existait déjà ; il était pris sur le fondu au lieu d'être pris avant lui.*
+
+### 4. L'ordre de deux couches superposées se dit, il ne se devine pas
+
+- **Défi** : *« le fondu de la première image fonctionne, mais après je n'ai pas de fondu entre les
+  images suivantes »*. Ce défaut-là venait du correctif de la veille, pas d'un code ancien.
+- **La cause** : les deux couches portaient la même `relative z-10` sur leur image. Mais la couche
+  **entrante anime son opacité**, ce qui lui **crée un contexte d'empilement** : son `z-10` y reste
+  enfermé, et elle-même ne vaut que `z-auto`. La sortante n'anime rien, donc n'en crée aucun — *son
+  `z-10` s'échappe et écrase le `0` de sa sœur.* **L'ancienne image passait par-dessus la nouvelle
+  pendant tout le fondu**, qui jouait entier, caché.
+- **Leçon** : un `z-index` implicite dépend de **qui crée un contexte d'empilement**, donc d'une
+  animation, d'une opacité, d'un filtre — **des propriétés qu'on change pour des raisons visuelles,
+  sans penser à l'ordre.** Les couches portent désormais `z-0` / `z-10` en toutes lettres, sur les
+  deux écrans, y compris celui où le défaut n'existait pas encore.
+- **⭐ Leçon de méthode** : *un défaut d'empilement se mesure, il ne se raisonne pas.* Quatre
+  hypothèses ont été écartées par une seule mesure — `elementFromPoint` au centre du cadre, en plein
+  fondu, dans le moteur de rendu d'Electron : `ancienne` sans les `z-index`, `nouvelle` avec.
+
+### 5. Une garde qui lit des noms doit lire du code, pas des commentaires
+
+- **Défi** : la garde écrite pour empêcher le retour d'un défaut de nommage **se validait sur sa
+  propre documentation** — le commentaire qui explique le défaut citait la fonction qu'elle
+  cherchait. Avec le défaut remis, elle restait verte.
+- **Deuxième piège du même fichier** : elle cherchait la **forme** du code (le sélecteur Zustand) et
+  ne voyait pas le composant qui déstructure le magasin. *Sa propre liste de dispenses l'a
+  dénoncée : elle dispensait un fichier qu'elle ne trouvait même pas.*
+- **Leçon** : troisième occurrence de ce motif après `nomsSansEcrivainNiLecteur`. **Une garde qui
+  lit des noms ne peut pas lire des intentions — mais elle peut au moins ne lire que du code**, et
+  chercher **le geste** plutôt que la manière de l'écrire.
+
+### 6. Le meneur qui décrit ce qu'il voit désigne la cause
+
+- **Les trois retours de David, dans l'ordre** : *« cela marche, à part le fondu »*, puis *« un
+  temps mort puis un saut »*, puis *« la première image fond, les suivantes non »*.
+- **Ce qu'ils valaient** : le premier a séparé le livrable du défaut ; le deuxième a nommé le
+  décodage ; **le troisième a nommé la couche qui n'existe pas au premier tour** — sans rien savoir
+  du code. *Un symptôme qui distingue le premier cas de tous les autres désigne ce qui manque au
+  premier tour.*
+- **Leçon** : quatre mille tests n'ont vu aucun des trois. *Tous les défauts d'affichage de ce dépôt
+  ont été trouvés à l'écran, aucun par relecture* — et la formulation du meneur vaut mieux qu'une
+  pile d'appels, à condition de la lire comme un indice et non comme une plainte.
+
+---
+
+*Dernière mise à jour : 14 Septembre 2026 — Échap ferme les surcouches (une famille de trente
+écrans derrière un défaut signalé sur un seul, et la garde du clavier qui n'attrapait presque
+rien), les diaporamas d'Image-OS et les **quatre défauts antérieurs** qu'ils ont révélés — le
+fondu qui passait par le noir, Image-OS absent de toute sauvegarde, le fondu qui s'animait avant le
+décodage, les images qui gardaient leur taille naturelle — puis l'empilement des deux couches,
+mesuré et non déduit.*
+
+*⚠️ **Le 12 septembre n'a pas de section ici** : les boutons de l'Ulanzi, `Ctrl+0`, les noms du
+matériel, le Master Storyboard inatteignable et le démarrage borné vivent aux §§ 47 à 53 du
+registre des chantiers.*
+
+*Mise à jour précédente : 11 Septembre 2026 — revue de code de l'application entière et les cinq lots de
 correction qui en sont sortis (le `NaN` de la barre de vie et les trois branches qui levaient, une
 seule comparaison de chemins, les 27 crochets conditionnels du hub, le lint rendu lisible), puis la
 fermeture du pont générique — dont le `off` ne retirait jamais rien — et la garde des clés d'API, que

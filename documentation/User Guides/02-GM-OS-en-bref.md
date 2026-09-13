@@ -260,6 +260,19 @@ rapide que de savoir dans quel module chercher.
 Tous ces guides, dans GM-OS, avec leur propre moteur de recherche. Le même raccourci vous ramène
 d'où vous veniez.
 
+**Refermer ce qui est ouvert** (`Échap`)
+N'importe quelle boîte, n'importe quelle surcouche : les Paramètres, la Médiathèque, l'Oracle, une
+fiche, un aperçu plein écran, une demande de confirmation. **Une seule frappe, et seulement celle
+du dessus** — refermer l'image qu'affiche la Médiathèque ne referme pas la Médiathèque.
+
+> ⭐ **Une boîte ouverte prend aussi la main sur le clavier.** Tant qu'elle est là, vos pastilles
+> de sons et vos scènes de lumière ne répondent plus aux touches : *taper le nom d'une scène ne
+> doit pas lancer les sept sons de ses lettres.*
+>
+> ⚠️ **Une exception, et elle est voulue** : l'atelier de brainstorm de la Forge ne se ferme pas
+> par Échap. Sa croix **réinitialise** la série — une frappe par réflexe ne doit pas pouvoir jeter
+> une demi-heure de fiches en revue.
+
 **Vider l'écran des joueurs** (`Ctrl+0`)
 Retire d'un coup ce que le Player Hub affiche — image projetée, fiche de PNJ, titre — sans avoir à
 savoir ce qui s'y trouvait. *Il existe parce qu'on ne regarde pas cet écran-là : ce qu'on y laisse

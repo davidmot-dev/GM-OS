@@ -124,6 +124,17 @@ Gérez vos sorties audio physiques :
 Gérez vos écrans secondaires pour l'immersion :
 - **Alias d'Écran** : Nommez vos écrans (ex: "TV Murale") pour savoir où vous projetez vos médias.
 
+> ⭐ **Le nom que vous donnez ici est celui que vous verrez partout ailleurs** : Image-OS, l'atlas,
+> les liens web, et le choix d'écran d'un moment de storyboard. Cette page est la seule qui affiche
+> en plus l'étiquette du système et la définition — *c'est ici qu'on nomme, il faut donc savoir
+> lequel des trois on est en train de nommer.*
+>
+> ⚠️ **Le nom survit au rebranchement.** Il est rangé sous une signature de l'écran et non sous
+> l'identifiant que le système réattribue à chaque branchement — débrancher la TV et la rebrancher
+> ne vous fait pas tout renommer.
+
+> ⚠️ **Échap referme cette fenêtre**, comme toutes les autres depuis le 2026-09-13.
+
 ---
 
 ## 🤖 Intelligence Artificielle (Cloud & Tactical)
