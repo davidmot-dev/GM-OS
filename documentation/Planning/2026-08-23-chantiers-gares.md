@@ -3022,10 +3022,34 @@ code tenait, mais parce que la dégradation **ne compilait pas** — `npm run bu
 d'un chemin mangé par le shell ; ici à cause d'un artefact périmé. **Une dégradation doit compiler,
 sinon elle ne dégrade rien.** Refaite proprement, elle fait rougir **3 des 4**.
 
-**Ancres** : `image/logic/effacerLePlayerHub.ts` (+ 8 tests), `useRaccourcisDeNavigation.ts`
+#### ⛔ Et il noircissait tout l'écran — corrigé le lendemain matin
+
+David, capture à l'appui : *« je voulais que la fenêtre encadrée en rouge se ferme, pas le
+background derrière cette fenêtre »*.
+
+Le fond du Player Hub tenait dans **un ternaire d'une ligne, sans un mot d'explication** :
+
+```ts
+const backgroundPath = liveImagePath !== undefined ? liveImagePath : (activeHubId || wallpaper);
+```
+
+Il porte **trois** états : `undefined` = rien n'est projeté, le décor reprend la main ; `null` = la
+projection est éteinte, écran noir ; une adresse = cette image. **`FULL_RESET` posait `null`.**
+
+⚠️ **Et j'avais affirmé la veille que « le fond reste »** — en le déduisant d'une règle voisine
+(`imageAvantLeMoment`, *l'image est le décor, les fiches passent devant*) **au lieu de lire cette
+ligne**. *Une doctrine juste appliquée au mauvais endroit reste une erreur*, et elle avait l'air
+d'autant plus solide qu'elle citait le dépôt.
+
+⭐ Le ternaire est devenu `fondDuPlayerHub`, documenté et éprouvé (7 tests). Sa dégradation —
+remplacer `!== undefined` par `!= null`, la substitution exacte qui a noirci l'écran — en fait
+rougir **2**.
+
+**Ancres** : `image/logic/effacerLePlayerHub.ts` (+ 8 tests), `hub/fondDuPlayerHub.ts` (+ 7 tests),
+`useRaccourcisDeNavigation.ts`
 (`Digit0`), `e2e/viderLePlayerHub.spec.ts` (4 tests, dont la garde des champs de saisie).
 
-**Vérifié** : `tsc -b` propre, **4 402 tests** (367 fichiers), **168 tests E2E**.
+**Vérifié** : `tsc -b` propre, **4 409 tests** (368 fichiers), **168 tests E2E**.
 
 ⚠️ **Ce qu'aucun test ne dit** — voir § 1 : que l'écran des joueurs se vide **vraiment**. La fenêtre
 du Hub n'est pas ouverte dans une instance d'essai, et ce qui part par `sendSync` ne revient pas. On

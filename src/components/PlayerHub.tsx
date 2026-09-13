@@ -26,6 +26,7 @@ import { TitreProjete } from './TitreProjete';
 import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 import FondProjete from './hub/FondProjete';
+import { fondDuPlayerHub } from './hub/fondDuPlayerHub';
 
 const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
@@ -48,7 +49,17 @@ const PlayerHub: React.FC = React.memo(() => {
     const activeHubId = hubSync.projections['hub'];
 
     // 3. Asset Resolution
-    const backgroundPath = liveImagePath !== undefined ? liveImagePath : (activeHubId || activeCampaignWallpaper);
+    /*
+      ⛔ **Trois états, et la nuance entre deux d'entre eux décide de ce que
+      voient les joueurs.** `undefined` veut dire « rien n'est projeté » et rend
+      la main au décor ; `null` veut dire « la projection est éteinte » et donne
+      un écran noir. Un ternaire ne le disait pas — voir `fondDuPlayerHub`.
+    */
+    const backgroundPath = fondDuPlayerHub({
+        imageEnDirect: liveImagePath,
+        projectionVersLeHub: activeHubId,
+        papierPeintDeLaCampagne: activeCampaignWallpaper,
+    });
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
     
     // 4. Feature Activators

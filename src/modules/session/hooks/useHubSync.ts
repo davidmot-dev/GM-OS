@@ -463,7 +463,17 @@ export const useHubSync = () => {
 
         const handleBroadcastSync = (payload: any) => {
             if (payload?.type === 'FULL_RESET') {
-                setLiveImagePath(null);
+                /*
+                  ⛔ **`undefined`, et surtout pas `null`.** Les deux ne veulent
+                  pas dire la même chose : `undefined` rend la main au décor de la
+                  campagne, `null` éteint l'écran. Voir `fondDuPlayerHub`.
+
+                  *`Ctrl+0` posait `null` le 2026-09-13* : David voulait fermer
+                  la carte de projection, et **tout l'écran passait au noir**.
+                  Une remise à zéro retire ce qu'on a posé ; elle n'éteint pas la
+                  table.
+                */
+                setLiveImagePath(undefined);
                 setLiveEntity(null);
                 setLiveMediaEstUneVideo(false);
                 return;

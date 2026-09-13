@@ -269,7 +269,10 @@ traîner y reste.*
 > à `Ctrl+9` se contentent d'ouvrir un écran : une frappe malheureuse coûte une projection à
 > refaire, pas un secret éventé.
 >
-> ⚠️ **Vos favoris épinglés restent**, et le fond aussi. Un favori épinglé n'a pas été laissé là par
+> ⚠️ **L'écran ne devient pas noir** : il revient au **décor de la campagne**. C'est la différence
+> entre « ranger ce qu'on montrait » et « éteindre la table ».
+>
+> ⚠️ **Vos favoris épinglés restent** aussi. Un favori épinglé n'a pas été laissé là par
 > distraction, il a été choisi — l'effacer le **dépinglerait**, et il faudrait tout recocher.
 
 ---
