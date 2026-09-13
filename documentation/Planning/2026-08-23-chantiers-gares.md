@@ -93,7 +93,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | ✅ Les **boutons de l'Ulanzi** | 12/09 → ✅ **ÉPROUVÉS EN RÉEL le 13/09** | David : *« tout fonctionne »*. La chaîne entière tient — appui, MQTT, Home Assistant, GM-OS. Les trois boutons publient (`buttonLeft`, `buttonSelect`, `buttonRight`) et **gardent leur défilé natif** : rien n'est confisqué à l'appareil. ⚠️ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les deux craintes qui ont guidé la mesure, et les deux étaient infondées |
 | Le **matériel débranché puis rebranché** | 12/09 | Écrit le jour même (§ 51) et **jamais éprouvé sur du vrai matériel**. Trois choses à regarder : le nom donné à l'enceinte tient-il après un cycle de débranchement ; une ambiance visée dessus la **retrouve**-t-elle ; et l'alerte d'absence n'apparaît-elle **qu'une fois**. *La signature repose sur l'hypothèse que Windows rend le même libellé au rebranchement — mesurée sur la documentation, pas sur ta machine.* |
 | Le **retour au Home entre deux moments** | 13/09 | Écrit le jour même (§ 52), **jamais vu sur une vraie lampe**. À juger en séance : le passage d'un moment éclairé à un moment sans lumière **fait-il clignoter la pièce** (Home puis scène suivante), et l'éclairage normal désigné est-il celui qu'on veut retrouver en sortant d'une scène tendue ? *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
-| Un **diaporama** pendant une vraie soirée | 13/09 → ✅ **essayé le soir même** | David : *« cela marche »* — et l'essai a rendu **deux défauts, tous deux antérieurs** : le fondu s'animait avant que l'image soit décodée, et les images gardaient leur taille naturelle (§ 56). ⚠️ **Reste à revoir après correctif** : le fondu passe-t-il maintenant pour un fondu, et six secondes est-ce la bonne durée à la table. Ancien libellé : Le profil d'essai n'a aucun média : l'horloge est éprouvée avec des minuteurs feints, le geste à l'écran, **le rendu jamais**. À juger à l'œil : le **fondu enchaîné** passe-t-il pour un fondu ou pour un saut ; six secondes est-ce trop long ou trop court à la table ; et un diaporama qui tourne **une soirée entière** tient-il — chaque tour résout le média et repasse par le pont. *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
+| ✅ Un **diaporama** pendant une vraie soirée | 13/09 → ✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** | David : *« diaporama est bon »*, après les trois correctifs du § 56. **La chaîne entière tient** — montage, cadence, fondu enchaîné, appel depuis un moment. ⭐ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les trois questions qui ne se mesurent pas dans un test (le fondu passe-t-il pour un fondu, six secondes est-ce la bonne durée, tient-il une soirée), et **les deux premières ont trouvé trois défauts que quatre mille tests n'avaient pas vus**. ⚠️ Ce qu'elle n'a toujours pas dit : la tenue sur **une soirée entière** — chaque tour résout le média et repasse par le pont. |
 | `Ctrl+0` sur un **vrai Player Hub** | 13/09 | Écrit le jour même (§ 53). Les tests éprouvent le **départ** du message, jamais son arrivée — aucune fenêtre de Hub n'est ouverte dans une instance d'essai. À regarder : l'image **et** la fiche **et** le titre disparaissent-ils ensemble, le fond reste-t-il, et les favoris épinglés survivent-ils ? *Un message qu'on envoie n'est pas un écran qui se vide.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
@@ -3386,6 +3386,16 @@ fois par heure.*
 quand on annonce l'image avant de la décoder ; l'empilement, lui, est **mesuré dans le moteur**.
 
 **Vérifié** : `tsc -b` propre, **4 486 tests** (374 fichiers, 1 ignoré), **173 tests E2E**.
+
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** — David : *« diaporama est bon »*. Les trois correctifs de
+cette section tiennent à la table.
+
+⭐ **Ce que la journée enseigne sur le prix d'un essai.** Le diaporama a demandé **trois
+allers-retours** après sa livraison, et chacun a rendu un défaut d'affichage qu'aucun des quatre
+mille tests ne pouvait voir : *« cela marche, à part le fondu »*, puis *« un temps mort puis un
+saut »*, puis *« la première image fond, les suivantes non »*. **Chaque formulation désignait sa
+cause** — la dernière nommait même la couche qui n'existe pas au premier tour. *Un meneur qui décrit
+ce qu'il voit en dit plus qu'une pile d'appels.*
 
 ### 57 · ⛔ Les moniteurs portaient leur nom système dans le storyboard (2026-09-13)
 

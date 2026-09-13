@@ -42,12 +42,18 @@
 
 ## 1 · Par quoi reprendre
 
-### ⚠️ Le diaporama, **après les deux correctifs du soir**
+### ✅ Le diaporama — **ÉPROUVÉ EN RÉEL le 2026-09-14**
 
-✅ Premier essai fait : *« cela marche »*, et il a rendu deux défauts antérieurs, corrigés au § 56.
-**Ce qui reste à revoir à l'œil** : le fondu passe-t-il maintenant pour un fondu, six secondes
-est-ce la bonne durée à la table, et est-ce que ça tient une soirée entière. *Aucun test ne peut
-répondre : jsdom n'a pas de moteur de mise en page, et le profil d'essai n'a aucun média.*
+David : *« diaporama est bon »*. La chaîne entière tient — montage, cadence, fondu enchaîné, appel
+depuis un moment de storyboard.
+
+⭐ **Ce que l'essai a coûté, et qui valait le prix** : trois allers-retours, trois défauts
+d'affichage qu'aucun des quatre mille tests ne pouvait voir — le fondu qui jouait avant le
+décodage, les images qui gardaient leur taille, et la couche sortante qui couvrait la nouvelle
+image. *Tous trouvés à l'écran, aucun par relecture.*
+
+⚠️ **Ce qui n'a toujours pas été vu** : la tenue sur une **soirée entière**. Chaque tour résout le
+média et repasse par le pont ; à six secondes par image, c'est six cents projections en une heure.
 
 ### ⚠️ La séquence de storyboard qui s'est mal exécutée
 
