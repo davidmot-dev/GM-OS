@@ -1,5 +1,12 @@
 # État et reprise — 2026-09-12
 
+> ⛔ **PÉRIMÉ — ce document s'arrête à la mi-journée du 12.** La suite (les quatre constats,
+> l'écran bloqué, les boutons de l'Ulanzi, le Master Storyboard, le matériel de table, la lumière
+> du storyboard) vit dans [`2026-09-13-etat-et-reprise.md`](./2026-09-13-etat-et-reprise.md).
+>
+> ⚠️ Ses chiffres ont vieilli : **4 230 tests et 23 E2E** y sont annoncés, il y en a désormais
+> **4 394 et 164**. *Un instantané daté ne se corrige pas, il se remplace — mais il doit dire où.*
+
 > **Base saine.** `tsc -b` propre, **4 230 tests verts** (353 fichiers, 1 ignoré), **23 tests E2E verts**, branche
 > `feature/tablet-hub-pwa`, **arbre propre, tout est poussé**.
 >
