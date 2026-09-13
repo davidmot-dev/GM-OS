@@ -93,6 +93,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | ✅ Les **boutons de l'Ulanzi** | 12/09 → ✅ **ÉPROUVÉS EN RÉEL le 13/09** | David : *« tout fonctionne »*. La chaîne entière tient — appui, MQTT, Home Assistant, GM-OS. Les trois boutons publient (`buttonLeft`, `buttonSelect`, `buttonRight`) et **gardent leur défilé natif** : rien n'est confisqué à l'appareil. ⚠️ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les deux craintes qui ont guidé la mesure, et les deux étaient infondées |
 | Le **matériel débranché puis rebranché** | 12/09 | Écrit le jour même (§ 51) et **jamais éprouvé sur du vrai matériel**. Trois choses à regarder : le nom donné à l'enceinte tient-il après un cycle de débranchement ; une ambiance visée dessus la **retrouve**-t-elle ; et l'alerte d'absence n'apparaît-elle **qu'une fois**. *La signature repose sur l'hypothèse que Windows rend le même libellé au rebranchement — mesurée sur la documentation, pas sur ta machine.* |
 | Le **retour au Home entre deux moments** | 13/09 | Écrit le jour même (§ 52), **jamais vu sur une vraie lampe**. À juger en séance : le passage d'un moment éclairé à un moment sans lumière **fait-il clignoter la pièce** (Home puis scène suivante), et l'éclairage normal désigné est-il celui qu'on veut retrouver en sortant d'une scène tendue ? *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
+| Un **diaporama** pendant une vraie soirée | 13/09 → ✅ **essayé le soir même** | David : *« cela marche »* — et l'essai a rendu **deux défauts, tous deux antérieurs** : le fondu s'animait avant que l'image soit décodée, et les images gardaient leur taille naturelle (§ 56). ⚠️ **Reste à revoir après correctif** : le fondu passe-t-il maintenant pour un fondu, et six secondes est-ce la bonne durée à la table. Ancien libellé : Le profil d'essai n'a aucun média : l'horloge est éprouvée avec des minuteurs feints, le geste à l'écran, **le rendu jamais**. À juger à l'œil : le **fondu enchaîné** passe-t-il pour un fondu ou pour un saut ; six secondes est-ce trop long ou trop court à la table ; et un diaporama qui tourne **une soirée entière** tient-il — chaque tour résout le média et repasse par le pont. *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
 | `Ctrl+0` sur un **vrai Player Hub** | 13/09 | Écrit le jour même (§ 53). Les tests éprouvent le **départ** du message, jamais son arrivée — aucune fenêtre de Hub n'est ouverte dans une instance d'essai. À regarder : l'image **et** la fiche **et** le titre disparaissent-ils ensemble, le fond reste-t-il, et les favoris épinglés survivent-ils ? *Un message qu'on envoie n'est pas un écran qui se vide.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
@@ -123,6 +124,11 @@ avec une case de plus pour ce qu'on a vu sans le traiter.
 > symptôme sans reproduction, on ne demande pas « qu'est-ce qui a causé ça ? » — on demande
 > **« quels chemins de ce code peuvent ne jamais finir ? »**, et ceux-là se comptent.*
 
+⭐ **Et la ligne d'Échap est sortie par le haut le 13/09** — voir le § 54. Son motif de renvoi
+était *« on n'a pas compté combien d'écrans sont dans ce cas »* : le comptage a rendu **une
+trentaine**, et un second défaut que personne ne cherchait. *Un motif de renvoi qui dit ce qui
+manque est un motif qui se lève ; « plus tard » ne se lève jamais.*
+
 ⚠️ **Vidée le 12/09 au soir, rouverte le soir même.** Les cinq lignes du matin sont sorties par le
 haut (§ 47 et § 48), et elle a resservi le jour même — ce qui est exactement ce qu'on lui demande.
 
@@ -131,7 +137,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
-| ⚠️ **Échap ne ferme pas les Paramètres**, et le modal avale alors tous les clics — constaté en écrivant `e2e/nommerLeMateriel.spec.ts` | Ouvrir les Paramètres, presser Échap : rien ne se passe. Le bouton « Fermer les paramètres », lui, marche | **C'est le défaut de la Médiathèque du § 47, sur un autre écran.** *Une famille de défauts ne se referme pas écran par écran* — la traiter demande de savoir combien de surcouches sont dans ce cas, ce qui n'a pas été compté |
+| ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
 
 ### 2 · Ce qui se décide à la table — axe N.3
@@ -3054,6 +3060,372 @@ rougir **2**.
 ⚠️ **Ce qu'aucun test ne dit** — voir § 1 : que l'écran des joueurs se vide **vraiment**. La fenêtre
 du Hub n'est pas ouverte dans une instance d'essai, et ce qui part par `sendSync` ne revient pas. On
 éprouve le départ, pas l'arrivée.
+
+### 54 · ⭐ Échap ferme les surcouches — la famille entière, pas l'écran signalé (2026-09-13)
+
+*David, le 12/09 : « Échap ne ferme pas les Paramètres, et le modal avale alors tous les clics ».
+La ligne a été différée au § 1 bis avec son motif : **le nombre de surcouches dans ce cas n'avait
+pas été compté**. Comptées le 13/09, elles étaient une trentaine — et le comptage a trouvé un
+second défaut que personne ne cherchait.*
+
+#### Ce que le comptage a rendu
+
+| Mesuré | Valeur |
+| --- | --- |
+| Fichiers portant un `fixed inset-0` | **40** |
+| Fichiers parlant d'`Escape` | **12** — et la moitié l'écoutaient sur un **champ de saisie**, pas sur la surcouche |
+| Boîtes servies par `ModalProvider` | `alert`, `confirm`, `prompt` et **29 variantes `custom`**, dont les Paramètres — **aucune n'écoutait** |
+
+⛔ **Les Paramètres n'étaient pas un écran, c'était une trentaine.** Un seul correctif, posé sur le
+`ModalProvider`, les couvre toutes. *Un défaut signalé sur un écran en cachait une trentaine.*
+
+#### ⛔ Et la seconde face, que le comptage a sortie toute seule
+
+`estUneFrappeDePastille` écarte les « boîtes ouvertes » en cherchant `[role="dialog"]` dans le DOM.
+**Cet attribut n'existait que dans deux fichiers côté meneur** (`ModalProvider`, `EditeurDeScene`).
+
+Médiathèque, Forge, aperçu plein écran, Oracle, visionneur de règles, QR réseau : **toutes ouvertes,
+toutes muettes pour cette garde**. Une lettre frappée hors d'un champ y lançait la pastille de
+Sound-OS **et** la scène de Light-OS, en pleine séance — exactement le mode d'échec pour lequel la
+garde avait été écrite le 30/08.
+
+*Une garde qui dépend d'un attribut qu'il faut penser à poser ne protège que les écrans dont
+l'auteur connaissait la garde.*
+
+#### La pièce unique : un registre des surcouches ouvertes
+
+Les deux faces se referment avec la même chose — **savoir ce qui est ouvert, et dans quel ordre**.
+
+- `surcouchesOuvertes.ts` — une pile, un **écouteur unique** posé à la première surcouche et retiré
+  à la dernière ; **seule celle du dessus** répond à Échap.
+- `useFermetureParEchap(actif, onFermer, nom)` — ce que les écrans emploient.
+- `estUneFrappeDePastille` **interroge le registre** au lieu de fouiller le DOM (les deux lectures
+  sont gardées : une boîte qui porterait l'attribut sans passer par le crochet reste couverte).
+
+⭐ **La garde énumérée disparaît.** La médiathèque nommait ses deux enfants pour se taire quand ils
+étaient ouverts (`if (previewItem || editingMediaId) return`) — et **ni l'un ni l'autre n'écoutait**
+de son côté : personne ne fermait rien. La pile n'a rien à connaître de ce qu'elle porte.
+
+#### La règle qui décide qui prend le crochet
+
+⛔ **Échap fait ce que fait le bouton de fermeture de l'écran — jamais plus.**
+
+- Sur un `confirm`, c'est **la voie d'annulation**, jamais la confirmation.
+- Sur le résolveur de conflit Nexus, c'est `cancel` — `replace` écrase une campagne et se dit
+  *irréversible*.
+- ⛔ **L'atelier de brainstorm en est exclu, et c'est une décision** : sa croix **réinitialise** la
+  série — 72 s d'inventaire et une demi-heure de fiches en revue, sans confirmation. *Ici le bouton
+  de fermeture fait plus que fermer, donc Échap ne le prend pas.*
+
+#### ⚠️ La règle des deux frappes, écrite puis retirée avant d'être livrée
+
+L'idée était qu'Échap dans un champ rende d'abord la main au champ, pour qu'une frappe distraite ne
+coûte pas une fiche à moitié tapée. **Le dépôt avait déjà tranché l'inverse** : `SpotlightSearch`
+ferme depuis son champ focalisé depuis toujours, et l'éditeur de scène de Light-OS **sélectionne**
+son champ à l'ouverture — la première frappe y aurait été muette. *Deux frappes pour sortir, c'est
+exactement ce que David a signalé comme « Échap ne ferme pas ».*
+
+La charge passe donc aux **éditions en ligne** : les trois du dépôt arrêtent désormais la
+propagation, sans quoi une frappe annulerait la saisie **et** refermerait l'écran derrière.
+
+#### Ce qui a pris le crochet
+
+`ModalProvider` (4 types), `NetworkQRCodeModal`, `MediaBrowser`, `TacticalDetailPanel`,
+`FullScreenPreview`, `SpotlightSearch`, `OraclePanel`, `EditeurDeScene`, `AIPromptOverlay`,
+`SessionSnapshotModal`, `AddEditWebLinkModal`, `AtlasMapDetail`, `RuleWorkshopViewer` (2 niveaux),
+`ForgeDashboard`, `AtelierDeCampagne`, `NexusConflictResolver`.
+
+⭐ **Trois écrans écoutaient déjà et ont perdu leur écouteur à eux** — `SpotlightSearch` en avait
+même **deux**, et comme elle s'ouvre par-dessus tout (z-9999), une frappe la fermait **avec** la
+boîte qu'elle recouvrait.
+
+#### Ce qui garde la famille refermée
+
+`echapFermeLesSurcouches.test.ts` balaie **tout `src/`** : toute surcouche doit prendre le crochet
+ou figurer dans `DISPENSEES` **avec son motif**. Trois gardes de plus sur la liste elle-même — un
+chemin disparu, un écran déjà réparé, un motif trop court. ⭐ *Elle a attrapé mes propres quatre
+motifs bâclés à la première exécution.*
+
+⚠️ **Elle lit des noms, pas des intentions** — un fichier qui importerait le crochet sans l'appeler
+lui échapperait. Ce qu'elle attrape est l'oubli, qui est le cas réel : les quarante l'étaient.
+
+#### ⛔ Le piège du § 3 s'est reproduit pendant la vérification
+
+La dégradation retirait l'appel et laissait l'import : **`tsc` a échoué, `vite build` n'a jamais
+tourné, et Playwright a mesuré l'ancien `dist`** — trois tests verts sur un correctif jamais
+construit. Refaite d'une façon qui compile (`actif: false`), elle rougit : deux tests sur trois.
+*Une dégradation doit compiler, sinon elle ne dégrade rien* — la règle du 13/09 au matin, repayée
+le soir même.
+
+#### ⭐ Le constat dormait dans un test, en commentaire
+
+`nommerLeMateriel.spec.ts` fermait les Paramètres au bouton en expliquant, en toutes lettres,
+qu'Échap ne marchait pas. Il n'en a pas moins passé. *Un test qui contourne un défaut le documente
+sans jamais le signaler.*
+
+C'est là que les trois tests du geste vivent désormais — et ils y sont **meilleurs** qu'isolés : la
+frappe part d'un **champ de saisie** (les tests du dessus viennent d'y taper), et le clic sur la
+barre latérale prouve ce que `toBeEnabled` ne prouve pas. Playwright dit d'ailleurs la phrase de
+David en langage d'outil : *`intercepts pointer events`*.
+
+**Ancres** : `surcouchesOuvertes.ts` (+ 13 tests), `useFermetureParEchap.ts`, `frappeDePastille.ts`
+(+ 1 test), `echapFermeLesSurcouches.test.ts` (4 gardes), `e2e/nommerLeMateriel.spec.ts` (3 tests
+du geste), et les seize écrans ci-dessus.
+
+**Vérifié** : `tsc -b` propre, **4 425 tests** (369 fichiers, 1 ignoré), **171 tests E2E**.
+
+### 55 · ⭐ Les diaporamas d'Image-OS, appelables depuis un moment (2026-09-13)
+
+*Demande de David : « je voudrais pouvoir créer des diaporamas avec plusieurs images et un fondu
+entre chacune d'entre elles, ensuite je veux pouvoir appeler ce diaporama dans un Storyboard ».*
+
+#### La décision qui a tout tenu : **l'horloge vit chez le meneur**
+
+Un diaporama est une liste ordonnée + une cadence, et **son minuteur tourne dans la fenêtre du
+meneur**. Il n'envoie aux écrans que des projections d'image ordinaires — *comme si le meneur les
+enchaînait à la main.*
+
+⭐ **Conséquence : le projecteur, le Player Hub, les tablettes, le pont IPC et la sauvegarde n'ont
+rien eu à apprendre.** Aucun canal de transport nouveau, aucun message à perdre au démarrage d'une
+fenêtre. *Le contraire — envoyer le montage à l'écran pour qu'il le déroule — aurait demandé de
+résoudre vingt images en base64 avant la première.*
+
+⚠️ **Ce que cette décision coûte, et c'est assumé** : la **durée du fondu** reste celle d'Image-OS
+(700 ms, commune à tous les changements d'image), parce qu'elle vit dans les écrans et qu'eux ne
+savent pas quel diaporama tourne. Seule la **durée d'affichage** est propre à chaque diaporama.
+
+#### ⛔ Le fondu n'existait qu'à moitié — et personne ne pouvait le savoir
+
+| Où | Ce qui se passait vraiment |
+| --- | --- |
+| **Le projecteur** | La sortante était **démontée à l'instant** où l'entrante arrivait : la nouvelle montait depuis le fond de l'écran. *Un passage par le noir, pas un fondu croisé.* |
+| **Le Player Hub** | `AnimatePresence mode="wait"` — l'entrante **attend que la sortante ait fini**. À 1,5 s chacune : **trois secondes d'écran noir** entre deux images. |
+
+⭐ **Ça n'avait jamais sauté aux yeux parce que rien n'enchaînait deux images tout seul.** Un meneur
+qui clique une image toutes les deux minutes ne voit pas la différence. Un diaporama la montre
+quatre-vingt fois par heure. *Une fonctionnalité nouvelle est un banc d'essai pour l'ancienne.*
+
+Le minutage est partagé (`useFonduCroise`), **le balisage non** : le projecteur pose l'image sur un
+flou d'elle-même, le Hub la couvre en fond. *C'est le comportement qui se partage, pas le
+balisage* — la leçon inverse a coûté la vidéo du Player Hub le 2026-09-05.
+
+#### Les règles qui protègent la table
+
+| Règle | Ce qu'elle évite |
+| --- | --- |
+| **Une image projetée à la main arrête le diaporama de cet écran** | Le meneur projette une image, et **six secondes plus tard elle est remplacée**. *Rien ne relierait le symptôme au diaporama lancé dix minutes plus tôt.* Le dernier geste du meneur gagne |
+| **Mais seulement sur le même écran** | Un diaporama sur le moniteur du fond n'a pas à s'arrêter parce qu'une fiche part au Hub |
+| **Un moment suivant l'ARRÊTE, il ne l'éteint pas** | Éteindre ne touche pas à l'horloge : elle **rallumerait** l'écran par-dessus le moment suivant |
+| **Sauf s'il rappelle le même** | Le relancer le ramènerait à sa première image alors que le meneur enchaîne deux moments sur la même ambiance |
+| **Une seule image ne tourne pas** | La reprojeter en boucle rejouerait son fondu d'entrée : *un décor fixe qui clignote* |
+| **Cadence bornée à 1,7 s** | Plus court que le fondu, l'image repartirait **avant d'être entrée** : un battement trouble |
+| **Une image supprimée est sautée** | *Une séance ne doit pas s'arrêter sur un ménage fait la semaine d'avant.* Le trou se dit dans l'écran du diaporama, jamais à la table |
+| **Arrêter n'éteint pas l'écran** | Arrêter le défilement et faire le noir sont deux gestes |
+
+#### ⛔ Le défaut trouvé **en écrivant le guide**, pas en relisant le code
+
+`projectSolo` écrit une ligne au **journal de séance** à chaque projection réussie. À six secondes
+par image, un diaporama y aurait déversé **dix lignes par minute** : au bout d'une heure, le fil de
+la soirée n'aurait plus contenu que ça. *Un journal qu'on ne peut plus lire ne vaut pas mieux qu'un
+journal absent.*
+
+⚠️ La marque qui distingue les deux cas **devait être lue avant le premier `await`** — elle est
+remise à faux avant que l'écriture n'ait lieu. Les deux directions sont éprouvées par dégradation.
+
+⭐ *Écrire ce qu'un module fait reste le meilleur détecteur de défaut employé sur ce dépôt* — la
+conclusion de la revue des guides des 04-05/09, vérifiée une fois de plus.
+
+#### ⛔ Et Image-OS n'était dans AUCUNE sauvegarde — **quatrième fois**
+
+Douze magasins sont collectés dans `SessionService` ; le sien n'en faisait pas partie. Ni les pads,
+ni les dossiers. Les diaporamas s'y seraient ajoutés au même néant — et les restaurer sans leurs
+pads n'aurait rendu que des listes vides, ce qui rendait la fonctionnalité **non fiable**.
+
+Après `entities`/`clues`/`sessions` (07/08), Music-OS (30/08) et Map-OS (04/09) : *une liste de ce
+qu'on sauvegarde, recopiée à la main, oublie toujours quelque chose.* **Quatre fois, le même
+mécanisme, et le code porte déjà deux commentaires qui le disent.**
+
+#### L'ancienne « séquence », absorbée — décision de David
+
+Une case à cocher par image, **une seule liste globale**, sans nom, sans cadence et sans fondu. Les
+flèches ◀ ▶ feuillettent désormais le diaporama en cours, et ne s'affichent que quand il y en a un.
+*Deux notions d'ordre dans un même module finissent toujours par diverger.*
+
+⚠️ Aucune migration : `active` reste dans les bibliothèques déjà sur le disque, **personne ne le
+lit**, et il disparaîtra à la prochaine écriture. *Il n'y a pas de migration à faire pour un champ
+qu'on cesse de lire* — au contraire de l'ajout d'un champ obligatoire.
+
+#### Ce qui reste hors de portée des essais
+
+⚠️ **Aucun test ne dit qu'un diaporama défile vraiment à la table.** Le profil E2E n'a aucun média,
+donc l'E2E garde le **geste** (créer, voir, se faire refuser un lancement à une image) et les tests
+unitaires gardent **l'horloge** avec des minuteurs feints. Ce qui reste à éprouver en séance est au
+§ 1 : le rendu du fondu croisé à l'œil, et la tenue d'une soirée entière.
+
+**Ancres** : `logic/deroulementDuDiaporama.ts` (+16 tests), `useImageStore.ts`
+(`diaporamaQuiTourne.test.ts`, 20 tests), `useFonduCroise.ts` (+5 tests),
+`components/PanneauDesDiaporamas.tsx`, `ProjectorView.tsx`, `PlayerHub.tsx`,
+`storyboard/imageOuDiaporama.ts` (+`diaporamaDuMoment.test.ts`, 12 tests),
+`store/SessionService.ts`, `types/schemas.ts`, `e2e/imageOs.spec.ts` (2 tests du geste),
+guides 24 et 13.
+
+**Vérifié** : `tsc -b` propre, **4 476 tests** (373 fichiers, 1 ignoré), **173 tests E2E**.
+
+### 56 · ⛔ Le fondu s'animait sur du vide, et les images gardaient leur taille (2026-09-13, au soir)
+
+*Premier essai des diaporamas par David : « **cela marche**, à part le mécanisme de fondu qui ne
+fonctionne pas bien, et le redimensionnement des images qui parfois ne prennent pas tout
+l'écran ».* Deux défauts, **tous deux antérieurs aux diaporamas**, et tous deux rendus visibles
+par eux.
+
+#### ⛔ 1. Le fondu partait avant l'image
+
+Le symptôme, donné par David : **un temps mort, puis un saut** — et *sur les deux écrans*.
+
+La cause : **l'adresse d'une image arrive avant l'image.** `useMediaUrl` rend un `data:` base64
+sorti d'IndexedDB, et le navigateur doit encore le **décoder** — de quelques dizaines à quelques
+centaines de millisecondes pour une grande image. L'animation d'opacité démarrait à la seconde où
+l'adresse arrivait, donc **sur un cadre vide** : on voyait l'ancienne image immobile, puis la
+nouvelle apparaître d'un coup à mi-fondu.
+
+⭐ **Le remède est de retarder le fondu, pas de l'allonger.** On décode d'abord ; le fondu ne
+commence que quand il a quelque chose à faire apparaître. *Une transition qui démarre avant son
+sujet n'est pas une transition trop courte, c'est une transition qui joue à vide.*
+
+⚠️ **`onload` ne suffit pas** : il dit que les octets sont là, pas qu'il y a des pixels. C'est
+`decode()` qui attend la seconde étape, et c'est elle qui coûte.
+
+⚠️ **Une image illisible résout quand même** : un fichier corrompu ne doit pas figer l'écran sur
+l'image d'avant pour toujours. *Mieux vaut un cadre vide qu'un écran qui n'obéit plus.*
+
+⚠️ **Ce que ça coûte, et c'est assumé** : une image lourde s'affiche un instant plus tard
+qu'avant — mais **en fondu**. *Le temps mort existait déjà ; il était pris sur le fondu au lieu
+d'être pris avant lui.*
+
+#### ⛔ 2. Une `<img>` sans dimension garde sa taille naturelle
+
+```
+class="relative z-10 max-w-[95%] max-h-[95%] object-contain"   ← avant
+```
+
+`object-contain` ne décide **rien** sur une boîte dont la taille n'est pas donnée, et `max-w`/`max-h`
+ne font que *plafonner*. Une image de 4 000 px était ramenée à l'écran ; **une image de 1 200 px
+restait à 1 200 px**, perdue au milieu de son propre flou.
+
+⭐ *Le « parfois » de David était la définition du fichier.* **Un défaut qui dépend de la donnée
+passe pour une lubie de l'écran** — c'est ce qui le rend si difficile à signaler, et ce qui lui a
+permis de vivre depuis toujours.
+
+⚠️ Et il **guettait le fondu** : si une couche avait gardé le plafond et l'autre non, l'image
+aurait **sauté de taille au milieu du fondu croisé** — un défaut qu'on aurait attribué au fondu.
+
+#### ⛔ 3. Et le correctif du fondu en cachait un troisième — **celui-là était de moi**
+
+*Second essai de David, le même soir : « le fondu de la première image fonctionne, mais après je
+n'ai pas de fondu entre les images suivantes ».*
+
+⭐ **Le « après » désignait la cause.** La seule différence entre la première image et les
+suivantes est la présence de la **couche sortante** — celle que j'avais ajoutée le matin même au
+§ 55. *Un symptôme qui distingue le premier cas de tous les autres nomme la chose qui n'existe pas
+au premier tour.*
+
+Les deux couches portaient la même `relative z-10` sur leur image nette, copiée de l'existant. Mais :
+
+| Couche | Contexte d'empilement ? | Conséquence |
+| --- | --- | --- |
+| **Entrante** | **oui** — elle anime son opacité | son `z-10` reste enfermé dedans ; elle-même ne vaut que `z-auto` |
+| **Sortante** | **non** — elle n'anime rien | son `z-10` **s'échappe** et écrase le `0` de sa sœur |
+
+**L'ancienne image passait donc par-dessus la nouvelle pendant tout le fondu.** Le fondu jouait en
+entier, **caché**, puis la couche du dessus disparaîssait d'un coup au bout des 700 ms. *Un fondu
+qui joue entièrement caché se voit comme une coupe franche.*
+
+⭐ **Mesuré, et non déduit.** `elementFromPoint` au centre du cadre, en plein fondu, dans le moteur
+de rendu d'Electron : `ancienne` sans les `z-index` explicites, `nouvelle` avec. *Un défaut
+d'empilement ne se raisonne pas — j'avais quatre hypothèses, la mesure en a gardé une.*
+
+⚠️ **La leçon qui vaut au-delà de ce fichier** : *l'ordre de deux couches superposées se dit, il
+ne se devine pas.* Un `z-index` implicite dépend de qui crée un contexte d'empilement — donc d'une
+animation, d'une opacité, d'un filtre : **des propriétés qu'on change pour des raisons visuelles,
+sans penser à l'ordre.** Les deux écrans portent désormais `z-0` / `z-10` en toutes lettres, le
+Player Hub compris — où le défaut n'existait pas encore.
+
+⚠️ **Et celui-ci était à moi.** Les deux autres du § 56 étaient antérieurs aux diaporamas ;
+celui-là est né de mon propre correctif du matin, et c'est **David qui l'a trouvé à l'écran**. Le
+motif du mois : *tous les défauts d'affichage de ce dépôt ont été trouvés à l'écran, aucun par
+relecture.*
+
+#### Un seul mécanisme pour les deux écrans
+
+Le Player Hub passait par `AnimatePresence`, qui lui a coûté **deux** défauts en un jour :
+`mode="wait"` (trois secondes de noir), puis le démarrage avant décodage. Il partage désormais
+`useFonduCroise` avec le projecteur — **le minutage, pas le balisage** : le projecteur pose l'image
+sur un flou d'elle-même, le Hub la couvre en fond.
+
+⚠️ **Le Hud garde sa seconde et demie** contre 700 ms au projecteur : c'est son langage depuis
+toujours. *L'écran de la table est un décor, pas un instrument.*
+
+⚠️ **Un film ne se croise pas** : deux vidéos superposées jouent leur son ensemble. Elles gardent
+la voie directe, sans fondu — même règle que le projecteur depuis le 31/08.
+
+⚠️ **Les tablettes gardent la coupe franche** : elles n'ont jamais eu de fondu, et David ne les a
+pas signalées. Ligne non ouverte, mentionnée pour qu'elle ne se découvre pas par surprise.
+
+#### La leçon
+
+⭐ **Une fonctionnalité nouvelle est un banc d'essai pour l'ancienne — deuxième fois le même
+jour.** Le matin, les diaporamas ont montré que le fondu passait par le noir. Le soir, ils ont
+montré qu'il jouait à vide et que les images gardaient leur taille. *Un meneur qui projette une
+image toutes les deux minutes ne peut voir aucun des trois ; un diaporama les montre quatre-vingt
+fois par heure.*
+
+**Ancres** : `useFonduCroise.ts` (décodage avant fondu, couture `charger` pour les essais, 8 tests),
+`ProjectorView.tsx` (rend `entrante` et non `resolvedUrl` ; `w-full h-full` ; `z-0`/`z-10`),
+`PlayerHub.tsx` (`AnimatePresence` retiré ; `z-0`/`z-10`), `index.css` (`gmos-fondu-sortant`),
+`tailleDeLImageProjetee.test.ts` (5 gardes). Dégradation éprouvée : **7 tests sur 8** rougissent
+quand on annonce l'image avant de la décoder ; l'empilement, lui, est **mesuré dans le moteur**.
+
+**Vérifié** : `tsc -b` propre, **4 486 tests** (374 fichiers, 1 ignoré), **173 tests E2E**.
+
+### 57 · ⛔ Les moniteurs portaient leur nom système dans le storyboard (2026-09-13)
+
+*David : « les noms des moniteurs ne sont pas corrects dans le storyboard ».*
+
+L'éditeur d'un moment listait `ecran.label` — **l'étiquette du système**, quand ce n'est pas
+l'identifiant brut. Les noms donnés par le meneur vivent dans `useHardwareStore`, rangés **par
+signature** pour survivre au rebranchement (§ 51), et rendus par `getDisplayLabel`.
+
+⚠️ **Ce qui rend l'oubli si facile à commettre** : le même composant nommait déjà correctement
+les **sorties audio**, trois listes plus haut, avec `getAudioLabel` — et il tenait déjà le magasin
+qui porte les deux. *Deux moitiés d'un même réglage, écrites au même endroit, et une seule fait le
+détour par le nom du meneur.*
+
+⭐ **Et ce n'était pas une famille — vérifié avant de le dire.** Les deux autres écrans qui
+proposent un moniteur (l'atlas, les liens web) passent par `ecransDeProjection`, qui prend
+`getDisplayLabel` en paramètre. L'écran des Réglages montre le libellé système **exprès** : c'est
+là qu'on nomme les moniteurs, il faut savoir lequel on nomme. *Compter avant de généraliser vaut
+aussi quand le compte rend « un ».*
+
+#### ⛔ Et la garde écrite pour l'empêcher de revenir s'est validée sur sa propre documentation
+
+La première version cherchait `getDisplayLabel` dans la source du fichier. Avec le défaut **remis**,
+elle passait toujours au vert : le commentaire qui explique le défaut **cite `getDisplayLabel`**.
+*Un appel et une citation ne se distinguent que si l'on retire les commentaires.*
+
+Troisième occurrence du motif après `nomsSansEcrivainNiLecteur`, qui avait réclamé le retrait d'une
+tolérance pour un nom cité dans un commentaire. **Une garde qui lit des noms ne peut pas lire des
+intentions — mais elle peut au moins ne lire que du code.**
+
+⭐ Et une seconde fois dans le même fichier : la garde cherchait d'abord le **sélecteur Zustand**
+(`.displays)`), ce qui ne voyait pas l'écran des Réglages, qui déstructure le magasin. *Sa propre
+liste de dispenses l'a dénoncée : elle dispensait un fichier qu'elle ne trouvait même pas.* Elle
+cherche désormais **le geste** — parcourir la liste — et non la façon de l'obtenir.
+
+**Ancres** : `StoryboardDashboard.tsx` (`getDisplayLabel(ecran.id)`),
+`nomDesEcransALEcran.test.ts` (3 gardes, dispense motivée pour les Réglages, lecture sans
+commentaires). Dégradation éprouvée : la garde nomme le fichier fautif.
+
+**Vérifié** : `tsc -b` propre, **4 489 tests** (375 fichiers, 1 ignoré), **173 tests E2E**.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

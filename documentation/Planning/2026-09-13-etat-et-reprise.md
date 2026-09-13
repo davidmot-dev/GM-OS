@@ -1,7 +1,10 @@
 # État et reprise — 2026-09-13
 
-> **Base saine.** `tsc -b` propre, **4 409 tests verts** (368 fichiers, 1 ignoré), **168 tests E2E
-> verts**, branche `feature/tablet-hub-pwa`, arbre propre.
+> **Base saine.** `tsc -b` propre, **4 489 tests verts** (375 fichiers, 1 ignoré), **173 tests E2E**,
+> branche `feature/tablet-hub-pwa`.
+>
+> ⚠️ **Une exécution E2E complète perd parfois un fichier sur un plantage du rendu** — c'est au
+> § 1 bis du registre, et ce n'est pas expliqué. Rejouer le fichier seul le rend vert.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule.
@@ -25,11 +28,26 @@
 | **L'instrumentation** | ⭐ Un moment de storyboard **rend des comptes**, moteur par moteur, et distingue « introuvable » de « module non chargé » — *deux silences identiques à la table, deux réparations opposées* |
 | **`Ctrl+0`** | ⭐ **Vider l'écran des joueurs d'un geste** (§ 53) — et `FULL_RESET`, reçu par `useHubSync` et **émis par personne** depuis toujours, trouve enfin son émetteur. *Sixième « chaîne complète sans bouton au bout »* |
 
-**Tests** : 4 230 → **4 409**. **E2E** : 23 → **168**, un fichier par module.
+| **Échap** | ⭐ **La famille entière se referme** (§ 54) : les Paramètres n'étaient pas un écran mais **une trentaine**, tous servis par le même `ModalProvider`. Et le comptage a sorti une **seconde face** — `[role="dialog"]` n'existait que dans deux fichiers, donc une lettre frappée dans la Médiathèque ou la Forge **lançait la pastille de son** |
+| **Les diaporamas** | ⭐ **Image-OS sait enchaîner des images** avec un fondu, et un moment de storyboard sait les appeler (§ 55). L'horloge vit chez le meneur : **aucun écran n'a rien eu à apprendre**. La fonctionnalité a servi de banc d'essai à l'ancienne — ⛔ **le fondu entre deux images passait par le NOIR** des deux côtés |
+| **Le fondu, après essai** | ⛔ **Il s'animait sur du vide** (§ 56) : l'adresse d'une image arrive **avant l'image**, et l'animation partait sans attendre le décodage. David : *« un temps mort puis un saut »*. On décode d'abord ; **un seul mécanisme pour les deux écrans** désormais |
+| **Les noms des moniteurs** | ⛔ Le storyboard affichait **l'étiquette système** au lieu du nom donné par le meneur — alors que le même composant nommait déjà correctement les **sorties audio** (§ 57) |
+| **L'ordre des couches** | ⛔ **Mon propre correctif du matin en cachait un** : la couche sortante n'anime rien, donc **ne crée aucun contexte d'empilement** — son `z-10` intérieur s'échappait et **couvrait la nouvelle image pendant tout le fondu**. *Un fondu qui joue caché se voit comme une coupe franche* (§ 56) |
+| **La taille des images** | ⛔ **Une `<img>` sans dimension garde sa taille naturelle** — les petites images flottaient au milieu de leur propre flou. *Le « parfois » de David était la définition du fichier* (§ 56) |
+| **La sauvegarde** | ⛔ **Image-OS n'y était pas** — ni les pads, ni les dossiers. **Quatrième fois** que cette liste oublie un magasin (§ 55) |
+
+**Tests** : 4 230 → **4 489**. **E2E** : 23 → **173**, un fichier par module.
 
 ---
 
 ## 1 · Par quoi reprendre
+
+### ⚠️ Le diaporama, **après les deux correctifs du soir**
+
+✅ Premier essai fait : *« cela marche »*, et il a rendu deux défauts antérieurs, corrigés au § 56.
+**Ce qui reste à revoir à l'œil** : le fondu passe-t-il maintenant pour un fondu, six secondes
+est-ce la bonne durée à la table, et est-ce que ça tient une soirée entière. *Aucun test ne peut
+répondre : jsdom n'a pas de moteur de mise en page, et le profil d'essai n'a aucun média.*
 
 ### ⚠️ La séquence de storyboard qui s'est mal exécutée
 
@@ -58,11 +76,17 @@ Trois lignes entrées en P6 le même jour, toutes **écrites et jamais éprouvé
 - **`Ctrl+0` sur un vrai Player Hub** — les tests éprouvent le **départ** du message, jamais son
   arrivée : aucune fenêtre de Hub n'est ouverte dans une instance d'essai.
 
-### ⚠️ Échap ne ferme pas les Paramètres
+### ✅ Échap ferme les Paramètres — **clos le 13/09**, voir le § 54
 
-Même famille que la Médiathèque (§ 47), sur un autre écran — et le modal avale alors tous les clics.
-**Le nombre de surcouches dans ce cas n'a pas été compté.** *Une famille de défauts ne se referme
-pas écran par écran.*
+La ligne est sortie par le haut, et **toute sa famille avec elle**. Ce qu'il faut en retenir pour la
+suite : son motif de renvoi était *« on n'a pas compté combien d'écrans sont dans ce cas »*, et
+c'est ce motif qui l'a levée — il suffisait de compter. *Un motif de renvoi qui dit ce qui manque
+est un motif qui se lève ; « plus tard » ne se lève jamais.*
+
+### ⚠️ Le plantage de rendu d'une exécution E2E complète
+
+Nouveau au § 1 bis, **et non expliqué**. `Target crashed`, jamais le même fichier, tous verts
+isolément. Six exécutions, dont deux où **la victime tournait avant le changement soupçonné**.
 
 ---
 
@@ -88,6 +112,75 @@ double** — et ça ne se voit qu'à la table.
 ---
 
 ## 3 · Ce qu'il ne faut pas repayer
+
+⛔ **Une garde qui lit des noms doit lire du CODE, pas des commentaires.** Celle des noms d'écran
+se validait sur sa propre documentation : le commentaire qui explique le défaut citait la fonction
+qu'elle cherchait. *Un appel et une citation ne se distinguent que si l'on retire les commentaires.*
+Troisième occurrence du motif.
+
+⚠️ **Une garde qui cherche une FORME de code manque les autres formes.** Chercher le sélecteur
+Zustand ne voyait pas le composant qui déstructure le magasin. *Chercher le geste, pas la manière.*
+
+⛔ **L'ordre de deux couches superposées se dit, il ne se devine pas.** Un `z-index` implicite
+dépend de qui crée un contexte d'empilement — donc d'une animation, d'une opacité, d'un filtre :
+**des propriétés qu'on change pour des raisons visuelles, sans penser à l'ordre.**
+
+⭐ **Un défaut d'empilement se mesure, il ne se raisonne pas.** Quatre hypothèses ; une mesure
+`elementFromPoint` en plein fondu, dans le moteur d'Electron, en a gardé une. *Trente minutes de
+déduction valaient moins qu'une mesure de deux minutes.*
+
+⭐ **Un symptôme qui distingue le premier cas de tous les autres nomme la chose qui n'existe pas au
+premier tour.** *« La première image fond, les suivantes non »* désignait la couche sortante.
+
+⛔ **Une transition qui démarre avant son sujet joue à vide.** Le fondu partait à la seconde où
+l'**adresse** de l'image arrivait, pas où l'image était décodée. On décode d'abord — *retarder le
+fondu, pas l'allonger.* Et `onload` ne suffit pas : il dit que les octets sont là, pas qu'il y a des
+pixels. C'est `decode()`.
+
+⛔ **Une `<img>` sans `w-full h-full` garde sa taille naturelle** ; `object-contain` ne décide rien
+sur une boîte sans dimension, et `max-w-[95%]` ne fait que plafonner.
+
+⚠️ **Un défaut qui dépend de la donnée passe pour une lubie de l'écran.** Le « parfois » de
+David était la définition du fichier — c'est ce qui a permis à ce défaut de vivre depuis toujours
+sans être signalé.
+
+⛔ **Une fonctionnalité nouvelle est un banc d'essai pour l'ancienne.** Le fondu entre deux images
+passait par le noir depuis toujours — la sortante démontée côté projecteur, `mode="wait"` côté
+Player Hub. *Personne ne pouvait le voir tant que rien n'enchaînait deux images tout seul.*
+
+⛔ **Ce qui coûte peu à la main coûte cher en boucle.** `projectSolo` écrit au journal de séance à
+chaque projection : une ligne pour un geste, **dix par minute** pour un diaporama. Trouvé **en
+écrivant le guide**, pas en relisant le code.
+
+⚠️ **Une marque lue après un `await` ne dit plus rien.** Celle qui distingue « le diaporama
+projette » de « le meneur projette » est remise à faux avant le premier `await`.
+
+⛔ **Une famille de défauts se compte avant de se traiter — et le comptage trouve autre chose.**
+En comptant les surcouches sans Échap (40 candidates, 12 concernées), on est tombé sur une
+**seconde** face : la garde du clavier cherchait `[role="dialog"]`, présent dans deux fichiers.
+
+⚠️ **Un test qui contourne un défaut le documente sans jamais le signaler.**
+`nommerLeMateriel.spec.ts` fermait les Paramètres au bouton *parce qu'Échap ne marchait pas*, et le
+disait en toutes lettres.
+
+⛔ **Une famille de défauts se compte avant de se traiter — et le comptage trouve autre chose.**
+En comptant les surcouches qui n'écoutent pas Échap (40 candidates, 12 concernées), on est tombé
+sur une **seconde** face : la garde du clavier cherchait `[role="dialog"]`, qui n'existait que dans
+deux fichiers. *Une garde qui dépend d'un attribut qu'il faut penser à poser ne protège que les
+écrans dont l'auteur connaissait la garde.*
+
+⛔ **Une garde écrite à la main qui énumère ses enfants ne garde que les enfants d'aujourd'hui.**
+La médiathèque se taisait quand son aperçu ou son éditeur était ouvert — et **aucun des deux
+n'écoutait** : personne ne fermait rien. *Énumérer ce qu'on protège, c'est déclarer ce qu'on oubliera.*
+
+⚠️ **Un test qui contourne un défaut le documente sans jamais le signaler.**
+`nommerLeMateriel.spec.ts` fermait les Paramètres au bouton *parce qu'Échap ne marchait pas*, et le
+disait en toutes lettres. Il passait au vert depuis la veille.
+
+⚠️ **Une règle plus prudente peut être la mauvaise.** Échap devait d'abord rendre la main au champ
+de saisie, pour ne pas coûter une fiche à moitié tapée. Le dépôt avait déjà tranché l'inverse
+(`SpotlightSearch`, l'éditeur de scène dont le champ est **sélectionné à l'ouverture**). *Deux
+frappes pour sortir, c'est exactement ce qui a été signalé comme « Échap ne ferme pas ».*
 
 ⛔ **Un lecteur et un écrivain qui n'emploient pas la même clé sont pires que deux écrivains :
 personne ne voit rien, et rien ne plante.** Les alias du matériel sont passés à une signature
