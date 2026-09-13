@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useFonduCroise } from '../modules/image/useFonduCroise';
+import { useFonduCroise, FONDU_COTE_JOUEURS_MS } from '../modules/image/useFonduCroise';
 
 // Modules & Stores
 import { useClockStore } from '../store/useClockStore';
@@ -27,9 +27,6 @@ import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 import FondProjete from './hub/FondProjete';
 import { fondDuPlayerHub } from './hub/fondDuPlayerHub';
-
-/** Voir le crochet du fondu, plus bas : le Hub s'allume et s'éteint plus lentement que le projecteur. */
-const FONDU_DU_HUB_MS = 1500;
 
 const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
@@ -71,7 +68,7 @@ const PlayerHub: React.FC = React.memo(() => {
       *l'écran de la table est un décor, pas un instrument.*
     */
     const { entrante: fondEntrant, sortante: fondSortant } =
-        useFonduCroise(liveMediaEstUneVideo ? null : resolvedBackground, FONDU_DU_HUB_MS);
+        useFonduCroise(liveMediaEstUneVideo ? null : resolvedBackground, FONDU_COTE_JOUEURS_MS);
     
     // 4. Feature Activators
     const isMapActive = !!(projectedMapUrl && projectionTarget === 'hub');
@@ -166,7 +163,7 @@ const PlayerHub: React.FC = React.memo(() => {
                                 estUneVideo={false}
                                 className="absolute inset-0 z-0 w-full h-full bg-cover bg-center"
                                 style={fondEntrant ? undefined : {
-                                    animation: `gmos-fondu-sortant ${FONDU_DU_HUB_MS}ms ease-in-out forwards`,
+                                    animation: `gmos-fondu-sortant ${FONDU_COTE_JOUEURS_MS}ms ease-in-out forwards`,
                                 }}
                             />
                         )}
@@ -182,7 +179,7 @@ const PlayerHub: React.FC = React.memo(() => {
                                    l'ordre finit par dépendre d'un `z-index` intérieur.
                                    *L'ordre de deux couches ne se devine pas, il se dit.* */
                                 className="absolute inset-0 z-10 w-full h-full bg-cover bg-center"
-                                style={{ animation: `gmos-fondu-entrant ${FONDU_DU_HUB_MS}ms ease-in-out` }}
+                                style={{ animation: `gmos-fondu-entrant ${FONDU_COTE_JOUEURS_MS}ms ease-in-out` }}
                             />
                         )}
                     </div>

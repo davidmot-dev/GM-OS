@@ -40,6 +40,7 @@ const sources = import.meta.glob('/src/**/*.tsx', {
 
 const projecteur = sources['/src/modules/image/components/ProjectorView.tsx'];
 const hub = sources['/src/components/PlayerHub.tsx'];
+const tablette = sources['/src/components/TabletHub.tsx'];
 
 describe('l’image du projecteur', () => {
     it('la garde regarde bien le bon fichier', () => {
@@ -113,6 +114,9 @@ describe('les deux couches du fondu', () => {
     it.each([
         ['le projecteur', () => projecteur],
         ['le Player Hub', () => hub],
+        /* Entrée le 2026-09-14 : elle était la dernière des trois surfaces sans
+           fondu, et donc la dernière où l'ordre des couches ne se posait pas. */
+        ['la tablette', () => tablette],
     ])('%s ordonne ses couches explicitement', (_nom, lire) => {
         const source = lire();
         expect(source).toBeTypeOf('string');

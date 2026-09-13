@@ -1,6 +1,6 @@
 # État et reprise — 2026-09-13, prolongé au 14
 
-> **Base saine.** `tsc -b` propre, **4 489 tests verts** (375 fichiers, 1 ignoré), **173 tests E2E**,
+> **Base saine.** `tsc -b` propre, **4 490 tests verts** (375 fichiers, 1 ignoré), **173 tests E2E**,
 > branche `feature/tablet-hub-pwa`.
 >
 > ⚠️ **Une exécution E2E complète perd parfois un fichier sur un plantage du rendu** — c'est au
@@ -34,6 +34,7 @@
 | **Échap** | ⭐ **La famille entière se referme** (§ 54) : les Paramètres n'étaient pas un écran mais **une trentaine**, tous servis par le même `ModalProvider`. Et le comptage a sorti une **seconde face** — `[role="dialog"]` n'existait que dans deux fichiers, donc une lettre frappée dans la Médiathèque ou la Forge **lançait la pastille de son** |
 | **Les diaporamas** | ⭐ **Image-OS sait enchaîner des images** avec un fondu, et un moment de storyboard sait les appeler (§ 55). L'horloge vit chez le meneur : **aucun écran n'a rien eu à apprendre**. La fonctionnalité a servi de banc d'essai à l'ancienne — ⛔ **le fondu entre deux images passait par le NOIR** des deux côtés |
 | **Le fondu, après essai** | ⛔ **Il s'animait sur du vide** (§ 56) : l'adresse d'une image arrive **avant l'image**, et l'animation partait sans attendre le décodage. David : *« un temps mort puis un saut »*. On décode d'abord ; **un seul mécanisme pour les deux écrans** désormais |
+| **La tablette** | ✅ **Elle fond comme les deux autres** (§ 58) — elle était la dernière surface à remplacer l'image d'un coup. La durée partagée quitte `PlayerHub` pour le crochet du fondu |
 | **Les noms des moniteurs** | ⛔ Le storyboard affichait **l'étiquette système** au lieu du nom donné par le meneur — alors que le même composant nommait déjà correctement les **sorties audio** (§ 57) |
 | **L'ordre des couches** | ⛔ **Mon propre correctif du matin en cachait un** : la couche sortante n'anime rien, donc **ne crée aucun contexte d'empilement** — son `z-10` intérieur s'échappait et **couvrait la nouvelle image pendant tout le fondu**. *Un fondu qui joue caché se voit comme une coupe franche* (§ 56) |
 | **La taille des images** | ⛔ **Une `<img>` sans dimension garde sa taille naturelle** — les petites images flottaient au milieu de leur propre flou. *Le « parfois » de David était la définition du fichier* (§ 56) |

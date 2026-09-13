@@ -50,6 +50,7 @@ import { usePerformanceControl } from '../hooks/usePerformanceControl';
 import { usePerformanceStore } from '../stores/usePerformanceStore';
 import type { DieResult } from '../modules/dice/DiceEngine';
 import FondProjete from './hub/FondProjete';
+import { useFonduCroise, FONDU_COTE_JOUEURS_MS } from '../modules/image/useFonduCroise';
 
 const TabletHub: React.FC = () => {
     const {
@@ -159,6 +160,14 @@ const TabletHub: React.FC = () => {
         ? liveImagePath
         : (activeHubId || activeCampaignWallpaper);
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
+
+    /*
+      **Le fondu entre deux images, comme sur le Player Hub.** Il ne commence
+      qu'une fois l'image **décodée** — sans quoi il s'animerait sur un cadre
+      vide, et la tablette montrerait un temps mort puis un saut.
+    */
+    const { entrante: fondEntrant, sortante: fondSortant } =
+        useFonduCroise(liveMediaEstUneVideo ? null : resolvedBackground, FONDU_COTE_JOUEURS_MS);
     const resolvedCampaignWallpaper = useMediaUrl(activeCampaignWallpaper || undefined);
 
     useEffect(() => {
@@ -267,13 +276,62 @@ const TabletHub: React.FC = () => {
                 className={`fixed inset-0 z-1 transition-all duration-1000 ease-in-out ${
                     (resolvedFavorites.length > 0 || liveEntity) ? 'brightness-[0.15] grayscale-[30%]' : 'brightness-[0.4] grayscale-[20%]'
                 }`}
-                style={{ opacity: resolvedBackground ? 1 : 0 }}
             >
-                {resolvedBackground && (
+                {/*
+                  ⛔ **La tablette remplaçait l'image d'un coup — corrigé le
+                  2026-09-14.**
+
+                  Elle était la dernière des trois surfaces sans fondu : le
+                  projecteur et le Player Hub en ont un depuis la veille, elle
+                  gardait une coupe franche. Ça ne se voyait pas tant que le
+                  meneur projetait une image toutes les deux minutes ; un
+                  diaporama le montre quatre-vingt fois par heure.
+
+                  Même mécanique que le Hub, **même durée** (décision de David) :
+                  les tablettes reflètent l'écran de la table.
+
+                  ⚠️ L'opacité du cadre a disparu avec le correctif : ce sont les
+                  couches qui portent le fondu. *La garder aurait fait fondre
+                  deux fois la même image, à deux rythmes.*
+                */}
+
+                {/* Un film ne se croise pas : il garde la voie directe. */}
+                {resolvedBackground && liveMediaEstUneVideo && (
                     <FondProjete
                         url={resolvedBackground}
-                        estUneVideo={liveMediaEstUneVideo}
+                        estUneVideo
                         className="absolute inset-0 w-full h-full bg-cover bg-center"
+                    />
+                )}
+
+                {/*
+                  La couche du dessous, à pleine opacité le temps d'être
+                  recouverte — sauf quand il n'y a plus rien à montrer, où c'est
+                  elle qui porte le fondu de sortie.
+
+                  `z-0` explicite : une couche qui n'anime rien ne crée aucun
+                  contexte d'empilement, et l'ordre finirait par dépendre du
+                  hasard. Le projecteur a payé pour cette règle.
+                */}
+                {!liveMediaEstUneVideo && fondSortant && fondSortant !== fondEntrant && (
+                    <FondProjete
+                        key={`sortant-${fondSortant}`}
+                        url={fondSortant}
+                        estUneVideo={false}
+                        className="absolute inset-0 z-0 w-full h-full bg-cover bg-center"
+                        style={fondEntrant ? undefined : {
+                            animation: `gmos-fondu-sortant ${FONDU_COTE_JOUEURS_MS}ms ease-in-out forwards`,
+                        }}
+                    />
+                )}
+
+                {!liveMediaEstUneVideo && fondEntrant && (
+                    <FondProjete
+                        key={`entrant-${fondEntrant}`}
+                        url={fondEntrant}
+                        estUneVideo={false}
+                        className="absolute inset-0 z-10 w-full h-full bg-cover bg-center"
+                        style={{ animation: `gmos-fondu-entrant ${FONDU_COTE_JOUEURS_MS}ms ease-in-out` }}
                     />
                 )}
             </div>

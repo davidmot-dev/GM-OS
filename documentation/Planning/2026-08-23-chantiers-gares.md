@@ -3437,6 +3437,45 @@ commentaires). Dégradation éprouvée : la garde nomme le fichier fautif.
 
 **Vérifié** : `tsc -b` propre, **4 489 tests** (375 fichiers, 1 ignoré), **173 tests E2E**.
 
+### 58 · ✅ La tablette fond comme les autres — la troisième surface (2026-09-14)
+
+*Demande de David, après que je l'ai signalée comme différence non traitée : « règle la question
+de la coupe franche sur tablettes ».*
+
+Elle était la **dernière des trois surfaces sans fondu** : le projecteur et le Player Hub en avaient
+un depuis la veille, la tablette remplaçait l'image d'un coup. Ça ne se voyait pas tant qu'une image
+partait toutes les deux minutes ; un diaporama le montre quatre-vingt fois par heure.
+
+Même mécanique, **même durée que le Hub** (1,5 s, tranché par David) : *les tablettes reflètent
+l'écran de la table, elles en suivent le rythme.*
+
+⭐ **La durée a changé de maison.** Elle vivait dans `PlayerHub.tsx` ; deux écrans qui la
+recopieraient finiraient par diverger le jour où l'un des deux se règle. Elle est désormais
+`FONDU_COTE_JOUEURS_MS`, exposée par le crochet du fondu — *une durée partagée appartient au
+mécanisme, pas à l'un de ses appelants.*
+
+⚠️ **L'opacité du cadre a dû partir.** La tablette pilotait son fond par une opacité sur le cadre
+(`opacity: resolvedBackground ? 1 : 0`, transition d'une seconde). La garder aurait fait **fondre
+deux fois la même image, à deux rythmes**. Ce sont les couches qui portent le fondu maintenant.
+
+⚠️ **Une vidéo garde la voie directe**, ici comme ailleurs : deux films superposés joueraient leur
+son ensemble. *Une image muette peut s'attarder, pas un film.*
+
+⭐ **Et la garde d'empilement couvrait deux écrans sur trois.** La tablette y entre — elle était
+la dernière surface où la question de l'ordre des couches ne se posait pas, donc la seule où le
+défaut du § 56 pouvait renaître sans que rien ne le dise.
+
+⛔ **Et j'avais écrit dans le guide, la veille, que les tablettes n'ont pas de fondu.** La phrase
+est devenue fausse avec ce chantier, et corrigée dans le même geste. *Une documentation qui décrit
+un manque devient un mensonge le jour où l'on comble le manque* — c'est le prix d'écrire ce qu'on
+ne fait pas, et il vaut quand même d'être payé.
+
+**Ancres** : `useFonduCroise.ts` (`FONDU_COTE_JOUEURS_MS`), `TabletHub.tsx`, `PlayerHub.tsx`,
+`tailleDeLImageProjetee.test.ts` (la garde d'empilement passe à trois écrans),
+guide 24 § « Les diaporamas ».
+
+**Vérifié** : `tsc -b` propre, **4 490 tests** (375 fichiers, 1 ignoré), **173 tests E2E**.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 ✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie

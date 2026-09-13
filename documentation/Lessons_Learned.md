@@ -1153,6 +1153,101 @@ où » avant l'explication. L'analyse peut attendre ; l'angoisse, non.
 
 ---
 
+## 🧭 Ce qu'on ne peut pas diagnostiquer, et ce qui rend un test complaisant (2026-09-12)
+
+*Une journée de dix chantiers, née d'une séance ratée : une séquence de storyboard qui n'a pas joué,
+un écran resté bloqué au démarrage, et des noms d'appareils perdus au rebranchement. Les trois
+avaient la même forme — **quelque chose d'invisible**, et rien pour le voir.*
+
+### 1. Un écran que personne n'a nommé ne peut pas être diagnostiqué
+
+- **Défi** : le démarrage se bloquait parfois sur un écran d'attente. Ni le splash ni
+  `LoadingOverlay` n'étaient en cause — c'était un troisième écran, « GM-OS BOOTING... », que
+  **personne n'avait nommé** et qui n'apparaissait dans aucune discussion.
+- **Ce qu'il fallait faire** : nommer les étapes du démarrage, les borner à quinze secondes, et
+  poser `isSystemReady` **dans tous les cas**.
+- **⛔ Le contrepoids, sans lequel le correctif serait pire que le défaut** : on échange un blocage
+  contre un démarrage **amputé**. *Un démarrage dégradé vaut mieux qu'une absence de démarrage* —
+  mais il faut alors que l'écran dise quelle étape a manqué, sinon on a remplacé une panne visible
+  par une panne silencieuse.
+- **⚠️ Piège** : **expirer n'est pas annuler.** Une promesse ne s'interrompt pas — on cesse de
+  l'attendre. Ce qu'elle fera plus tard reste à sa charge, et doit être sans effet de bord.
+- **Leçon** : *ce qui n'a pas de nom n'a pas de rapport de bogue.* La première réparation d'un état
+  invisible est de lui donner un nom, avant même de le corriger.
+
+### 2. Le défaut et l'impossibilité de le diagnostiquer peuvent être le même
+
+- **Défi** : une séquence de storyboard s'est mal exécutée en pleine partie. L'écran qui l'aurait
+  expliquée — le Master Storyboard — était **précisément celui qu'on ne pouvait pas ouvrir en
+  séance** : classé « préparation », il renvoyait au cockpit à chaque tentative.
+- **Leçon** : le storyboard est le seul écran de préparation **dont le contenu sert pendant qu'on
+  joue**. Une classification qui vaut pour tous les autres le faisait disparaître au moment où il
+  sert. *Une règle juste appliquée à un cas qu'elle n'avait pas prévu produit exactement l'inverse
+  de son intention.*
+- **⭐ Méthode** : le journal de l'application a tranché **avant toute hypothèse** — aucun `error`,
+  aucun `warn`. *Regarder les traces coûte deux minutes et écarte la moitié des suppositions.*
+
+### 3. Un lecteur et un écrivain qui n'emploient pas la même clé sont pires que deux écrivains
+
+- **Défi** : David — *« est-il possible de garder les noms que j'attribue aux sorties audio et aux
+  écrans quand je rebranche ? »* Les noms étaient **persistés**, mais rangés sous l'identifiant que
+  le système réattribue à chaque branchement. *Le nom était toujours là ; GM-OS cherchait ailleurs.*
+- **Solution** : une **signature stable** de l'appareil, et non son identifiant de session.
+- **⚠️ Ce qu'on échange, exactement** : on n'échange pas un identifiant faux contre un identifiant
+  vrai — **on échange un identifiant instable contre un identifiant stable.** La nuance compte :
+  l'ancien n'était pas faux, il était périssable.
+- **⛔ Et la moitié du correctif manquait** : l'écriture est passée à la nouvelle clé, **pas la
+  lecture des champs de saisie**. Un champ contrôlé dont la valeur ne change jamais **refuse la
+  frappe** — indiscernable d'un champ en lecture seule. *Deux écrivains divergent bruyamment ; un
+  lecteur et un écrivain désaccordés ne font aucun bruit du tout.*
+- **Corollaire d'essai** : trente-six tests avaient été écrits sur la signature, la migration et la
+  résolution — **la mécanique**. Aucun ne faisait l'aller-retour du meneur : taper un nom, le
+  relire. *C'est le seul qui aurait vu le défaut.*
+
+### 4. Un jeu d'essai qui se dégrade laisse les tests verts
+
+- **Défi** : figer une base de données témoin pour éprouver les migrations et le démarrage.
+- **⛔ Le piège central** : `campaigns.length > 0` **n'est pas un signal d'hydratation**. Le magasin
+  naît avec `INITIAL_DATA` — *une base neuve n'est jamais vide*, donc un profil vide affiche une
+  campagne de démonstration, et une garde qui refuse tout ressemble à une garde qui marche.
+- **⛔ La leçon qui vaut au-delà** : si le témoin cesse un jour de passer la porte qu'on croit tester
+  — parce qu'un champ a changé de nom, parce qu'un chemin s'est déplacé — **les tests restent
+  verts**. Un jeu d'essai doit donc porter sa propre garde : *un test qui ne peut plus échouer ne
+  prouve plus rien, et rien ne le dit.*
+- **⭐ Corollaire** : le **test de contrôle** compte autant que l'autre. Une seconde instance
+  démarre **sans** semence, et vérifie qu'elle ne voit pas ce que la première voyait.
+- **⭐ Et on ne fabrique pas une vieille base : on en gèle une jeune.** Fabriquer un format ancien,
+  c'est écrire de mémoire ce qu'on croit qu'il était.
+
+### 5. Sonder avant d'écrire — on ne devine ni un nom de champ, ni une unité, ni une forme
+
+- **Défi** : écrire un test de bout en bout par module, sur une application dont chaque écran a son
+  vocabulaire.
+- **⭐ Cinq surprises de forme dans un seul lot, et toutes ont fait accuser le code avant le test** :
+  `campagneId` en français au milieu de champs anglais · `autoFadeDuration` en **millisecondes** là
+  où l'écran affiche « 5.0 s » · les scènes de Light-OS rangées en **objet indexé** et non en
+  tableau · un libellé **en minuscules dans le DOM** et en majuscules à l'écran (c'est la CSS) · et
+  une demande de nom qui ouvre un **modal interne**, pas une invite du navigateur.
+- **Leçon** : chaque module demande une **sonde jetable** avant le premier test — lire les libellés,
+  la forme des données, les unités. *Trente secondes de sonde évitent une demi-heure d'accusation.*
+- **⛔ Et l'inverse est vrai aussi** : un test qui contredit le code n'a pas forcément raison.
+- **⚠️ Ce qu'aucun de ces tests ne dira** : une instance d'essai n'a ni média, ni clé d'API, ni
+  corpus. *Écrire des tests qui prétendraient les couvrir donnerait une couverture décorative.* Ce
+  qui reste vaut pourtant : **un vide muet se lit comme une panne**, donc l'état vide se teste.
+
+### 6. Tant qu'un service répond, une boucle fautive ne se voit pas
+
+- **Défi** : GM-OS devenait inutilisable hors de chez soi. La cause : un cycle de découverte du pont
+  Hue qui **s'arrête au premier succès** — donc, tant que le pont répond, personne ne voit qu'il
+  n'a pas de porte de sortie.
+- **⭐ Le remède, et sa moitié visible** : on s'arrête, **et on le dit**. Le meneur doit pouvoir
+  distinguer *« je n'ai pas essayé »* de *« le pont ne répond pas »*.
+- **⚠️ L'honnêteté du compte rendu** : il n'a **pas** été prouvé que cette boucle causait l'écran
+  bloqué. Deux défauts trouvés le même jour dans la même zone ne sont pas forcément le même défaut.
+  *Rapprocher deux symptômes est une hypothèse, pas une conclusion.*
+
+---
+
 ## 🎞️ Ce qu'une fonctionnalité neuve apprend sur l'ancienne (2026-09-13/14)
 
 *Deux demandes de David — « Échap ne ferme pas les Paramètres » et « créer des diaporamas avec un
@@ -1260,9 +1355,11 @@ fondu qui passait par le noir, Image-OS absent de toute sauvegarde, le fondu qui
 décodage, les images qui gardaient leur taille naturelle — puis l'empilement des deux couches,
 mesuré et non déduit.*
 
-*⚠️ **Le 12 septembre n'a pas de section ici** : les boutons de l'Ulanzi, `Ctrl+0`, les noms du
-matériel, le Master Storyboard inatteignable et le démarrage borné vivent aux §§ 47 à 53 du
-registre des chantiers.*
+*Mise à jour du même jour : 12 Septembre 2026 — l'écran de démarrage que personne n'avait nommé,
+le Master Storyboard inatteignable **en séance** alors que c'est lui qui aurait expliqué la
+séquence ratée, les noms du matériel rangés sous une clé périssable, la donnée gelée pour les
+tests et les cinq surprises de forme du premier lot E2E. ⚠️ Le détail chantier par chantier vit
+aux §§ 42 à 51 du registre ; **seules les leçons réemployables sont ici**.*
 
 *Mise à jour précédente : 11 Septembre 2026 — revue de code de l'application entière et les cinq lots de
 correction qui en sont sortis (le `NaN` de la barre de vie et les trois branches qui levaient, une

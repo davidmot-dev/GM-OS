@@ -57,6 +57,19 @@ export interface FonduCroise {
     sortante: string | null;
 }
 
+/**
+ * **Le fondu des surfaces côté joueurs — une seconde et demie.**
+ *
+ * Contre 700 ms au projecteur : c'est le langage du Player Hub depuis toujours,
+ * et *l'écran de la table est un décor, pas un instrument.*
+ *
+ * ⭐ **Les tablettes suivent le Hub**, décision de David le 2026-09-14 : elles
+ * reflètent l'écran de la table, donc même rythme, même lecture. La constante
+ * vit ici et non dans un écran, *parce qu'une durée recopiée dans deux fichiers
+ * finit par diverger le jour où l'un des deux se règle.*
+ */
+export const FONDU_COTE_JOUEURS_MS = 1500;
+
 /** Ce qui décide qu'une image est **prête à être montrée**. */
 export type ChargeurDImage = (url: string) => Promise<void>;
 

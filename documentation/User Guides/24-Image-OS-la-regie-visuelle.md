@@ -154,8 +154,10 @@ entre parenthèses est le nombre d'images.
   qu'elle soit **décodée** avant de commencer. Sans cette attente il s'animait sur un cadre vide, et
   on voyait *un temps mort puis un saut*. Le temps d'attente existait déjà — il était simplement
   pris sur le fondu.
-- ⚠️ **Les tablettes n'ont pas de fondu** : elles remplacent l'image d'un coup. Le Player Hub et
-  les moniteurs, oui.
+- **Les trois surfaces fondent désormais** : les moniteurs en 0,7 s, le Player Hub **et les
+  tablettes** en 1,5 s. Les tablettes reflètent l'écran de la table, elles en suivent donc le
+  rythme. ⚠️ Une **vidéo**, elle, est remplacée d'un coup partout — deux films superposés
+  joueraient leur son ensemble.
 - **Une image remplit l'écran autant qu'elle peut**, en gardant ses proportions : une image qui n'a
   pas le format de l'écran garde ses bandes, remplies par un flou d'elle-même.
 - Les diaporamas sont **sauvegardés** avec la bibliothèque depuis le 2026-09-13.
