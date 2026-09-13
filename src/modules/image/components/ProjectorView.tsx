@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { useFonduCroise } from '../useFonduCroise';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
@@ -36,6 +37,22 @@ const ProjectorView: React.FC = () => {
     const [imagePath, setImagePath] = useState<string | null>(null);
 
     const resolvedUrl = useMediaUrl(imagePath && !imagePath.startsWith('__') ? imagePath : undefined);
+    /*
+      **L'image d'avant reste sous celle qui arrive, le temps du fondu — et
+      rien ne bouge avant que la nouvelle soit décodée.**
+
+      Sans la première moitié, une image qui en remplace une autre monte depuis
+      le **fond de l'écran** : la table voit un passage par le noir.
+
+      ⛔ Sans la seconde, le fondu **s'anime sur du vide** : `resolvedUrl` porte
+      un `data:` base64 que le navigateur doit encore décoder, et l'animation
+      partait à la seconde où l'adresse arrivait. David, après essai : *« un
+      temps mort puis un saut »*. Voir [[useFonduCroise]].
+
+      ⚠️ **C'est donc `entrante` qu'on rend, jamais `resolvedUrl`** : la
+      dernière image **prête**, et non la dernière adresse reçue.
+    */
+    const { entrante, sortante } = useFonduCroise(resolvedUrl, FONDU_DE_LIMAGE_MS);
     const { initDB, getMediaBlob } = useMediaStore();
     const [mediaType, setMediaType] = useState<'image' | 'video' | 'youtube' | 'unknown'>('unknown');
     /* Le même fait que `mediaType`, lisible depuis un rappel qui ne re-rend pas. */
@@ -332,7 +349,7 @@ const ProjectorView: React.FC = () => {
                             className="w-full h-full object-contain"
                             style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}
                         />
-                    ) : resolvedUrl ? (
+                    ) : entrante ? (
                         <div
                             className="w-full h-full relative flex items-center justify-center transition-opacity ease-in-out"
                             style={{
@@ -340,6 +357,58 @@ const ProjectorView: React.FC = () => {
                                 transitionDuration: `${FONDU_DE_LIMAGE_MS}ms`,
                             }}
                         >
+                            {/*
+                              **La couche du dessous : l'image qui s'en va.**
+
+                              Aucune clé, **aucune animation** — elle est déjà à
+                              l'écran, et lui en donner une la ferait rentrer une
+                              seconde fois. Elle ne fait rien d'autre qu'attendre
+                              d'être recouverte, puis elle part. *C'est la
+                              différence entre un fondu croísé et un fondu au noir
+                              suivi d'un fondu depuis le noir.*
+                            */}
+                            {sortante && sortante !== entrante && (
+                                /*
+                                  ⛔ **`z-0` n'est pas décoratif : sans lui, l'ancienne
+                                  image passe PAR-DESSUS la nouvelle.**
+
+                                  David, le 2026-09-13 : *« le fondu de la première
+                                  image fonctionne, mais après je n'ai pas de fondu
+                                  entre les images suivantes »*. Le « après » désignait
+                                  la seule différence : la présence de cette couche.
+
+                                  Les deux couches portent la même `relative z-10` sur
+                                  leur image nette — copiée de l'existant. Mais la
+                                  couche **entrante** anime son opacité, ce qui lui
+                                  **crée un contexte d'empilement** : son `z-10` y reste
+                                  enfermé, et elle-même ne vaut que `z-auto`. Celle-ci
+                                  n'anime rien, donc n'en crée aucun : *son `z-10`
+                                  s'échappe et écrase le `0` de sa sœur.*
+
+                                  Résultat à l'écran : l'ancienne image reste opaque
+                                  pendant tout le fondu — la nouvelle apparaît
+                                  **derrière elle** — puis disparaît d'un coup au bout
+                                  des 700 ms. **Un fondu qui joue entièrement caché se
+                                  voit comme une coupe franche.**
+
+                                  ⚠️ Un `z-index` explicite sur un élément positionné
+                                  crée un contexte d'empilement : `z-0` suffit donc à
+                                  rendre le `z-10` intérieur à sa couche.
+                                */
+                                <div className="absolute inset-0 z-0 flex items-center justify-center" aria-hidden>
+                                    <img
+                                        src={sortante}
+                                        alt=""
+                                        className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-30 transform scale-110"
+                                    />
+                                    <img
+                                        src={sortante}
+                                        alt=""
+                                        className="relative z-10 w-full h-full object-contain shadow-2xl"
+                                    />
+                                </div>
+                            )}
+
                             {/*
                               **Deux couches, deux rôles.** Celle du dessus, avec
                               sa clé, rejoue le fondu d'ENTRÉE à chaque nouvelle
@@ -363,19 +432,44 @@ const ProjectorView: React.FC = () => {
                               sortie ; l'image ne s'éteindrait plus jamais.
                             */}
                             <div
-                                key={resolvedUrl}
-                                className="w-full h-full relative flex items-center justify-center"
+                                key={entrante}
+                                /* `z-10` **explicite** : l'ordre des couches ne doit pas
+                                   dépendre du contexte d'empilement que l'animation
+                                   crée — elle ne joue que pendant 700 ms, et l'ordre
+                                   doit tenir aussi après. Voir la couche du dessous. */
+                                className="w-full h-full relative z-10 flex items-center justify-center"
                                 style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}
                             >
                                 <img 
-                                    src={resolvedUrl} 
+                                    src={entrante} 
                                     alt="" 
                                     className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-30 transform scale-110" 
                                 />
+                                {/*
+                                  ⛔ **`w-full h-full`, et non `max-w-[95%]`.**
+
+                                  Une `<img>` sans dimension s'affiche à sa
+                                  **taille naturelle** : `object-contain` ne
+                                  décide rien, et `max-w/max-h` ne font que
+                                  plafonner. Une image de 4 000 px était donc
+                                  ramenée à l'écran, mais **une image de 1 200 px
+                                  restait à 1 200 px** au milieu du fond flou.
+
+                                  David, le 2026-09-13 : *« le redimensionnement
+                                  des images qui parfois ne prennent pas tout
+                                  l'écran »*. Le « parfois » était la définition
+                                  du fichier. *Un défaut qui dépend de la donnée
+                                  passe pour une lubie de l'écran.*
+
+                                  ⚠️ Les proportions restent gardées : une image
+                                  qui n'a pas le format de l'écran garde ses
+                                  bandes, et c'est le flou d'elle-même qui les
+                                  remplit — c'est à ça qu'il sert.
+                                */}
                                 <img 
-                                    src={resolvedUrl} 
+                                    src={entrante} 
                                     alt="GM-OS Projector" 
-                                    className="relative z-10 max-w-[95%] max-h-[95%] object-contain shadow-2xl" 
+                                    className="relative z-10 w-full h-full object-contain shadow-2xl" 
                                 />
                             </div>
                         </div>

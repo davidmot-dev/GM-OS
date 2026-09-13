@@ -30,6 +30,7 @@ async function image(gmos: GmOsLance) {
             cible: i.projectionTarget as string,
             dossiers: ((i.folders as unknown[]) ?? []).length,
             ecrans: ((i.displays as unknown[]) ?? []).length,
+            diaporamas: ((i.diaporamas as unknown[]) ?? []).length,
         };
     });
 }
@@ -121,5 +122,52 @@ test.describe('ranger les médias', () => {
             .toBeGreaterThan(avant);
 
         await expect(gmos.fenetre.locator('body')).toContainText('Cartes de la station');
+    });
+});
+
+
+test.describe('⭐ les diaporamas', () => {
+    /*
+      Demandés par David le 2026-09-13 : *« créer des diaporamas avec plusieurs
+      images et un fondu entre chacune d'entre elles, [puis] appeler ce
+      diaporama dans un Storyboard »*.
+
+      ⚠️ **Ce que ce fichier ne peut pas dire** : qu'un diaporama **tourne**.
+      Le profil d'essai n'a aucun média, donc aucun diaporama ne peut dépasser
+      zéro image. L'horloge, la boucle, la cadence relue à chaque tour et ce qui
+      l'arrête vivent dans `src/modules/image/diaporamaQuiTourne.test.ts`, avec
+      des minuteurs feints. *Ici on garde le geste : créer, voir, et se faire
+      refuser un lancement impossible.*
+    */
+    test('un diaporama se crée et apparaît', async () => {
+        const avant = (await image(gmos)).diaporamas;
+
+        await gmos.fenetre.getByText('Diaporamas', { exact: true }).first().click();
+        await gmos.fenetre.getByTitle('Nouveau diaporama').first().click();
+
+        /* Même piège que le dossier plus haut : le nom se demande dans un modal
+           interne, et un geste en deux temps testé en un seul échoue toujours. */
+        const modal = gmos.fenetre.locator('div.fixed.inset-0').last();
+        await modal.locator('input').first().fill('Le voyage en train');
+        await modal.getByRole('button', { name: /^(Confirm|Confirmer|OK|Valider)$/i }).last().click();
+
+        await expect.poll(async () => (await image(gmos)).diaporamas, { timeout: 10_000 })
+            .toBeGreaterThan(avant);
+
+        await expect(gmos.fenetre.locator('body')).toContainText('Le voyage en train');
+    });
+
+    /*
+      ⛔ **La règle des deux images, à l'écran.** Une seule image ne tourne pas :
+      la reprojeter en boucle rejouerait son fondu d'entrée toutes les six
+      secondes, soit *un décor fixe qui clignote*. Le bouton doit donc refuser,
+      et **le dire** — un bouton actif qui ne fait rien est pire.
+    */
+    test('et son lancement est refusé tant qu’il n’a pas deux images', async () => {
+        const lancer = gmos.fenetre.getByRole('button', { name: /^Lancer sur / }).first();
+
+        await expect(lancer).toBeVisible();
+        await expect(lancer).toBeDisabled();
+        await expect(lancer).toHaveAttribute('title', /au moins deux images/i);
     });
 });

@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
+import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity, Diaporama, DiaporamaEnCours } from './types';
+import {
+    imagesDuDiaporama, indexSuivant, cadenceDuDiaporama, peutTourner,
+    CADENCE_PAR_DEFAUT_MS,
+} from './logic/deroulementDuDiaporama';
 // L'import direct fermerait un cycle ; on passe donc par le global. **Mais on
 // le type** : c'est un `(window as any)` qui a laissé partir un événement sans
 // titre et avec un champ `severity` qui n'existe pas, sans que rien ne le dise.
@@ -65,16 +69,26 @@ interface ImageState {
      */
     volumeVideo: number;
     activeFolderId: string | null; 
-    currentView: 'library' | 'favorites' | 'recent';
+    currentView: 'library' | 'favorites' | 'recent' | 'diaporamas';
 
-    addMedia: (media: Omit<ImageMedia, 'id' | 'active' | 'isFavorite'>) => void;
+    /**
+     * **Les diaporamas du meneur** — demandés par David le 2026-09-13.
+     *
+     * Ils appartiennent à la bibliothèque : ils sont persistés et sauvegardés,
+     * comme les dossiers. *Un diaporama est un montage qu'on prépare ; ce n'est
+     * pas un réglage de la pièce.*
+     */
+    diaporamas: Diaporama[];
+    /** Celui qui tourne, et où. **Jamais persisté** — voir [[DiaporamaEnCours]]. */
+    diaporamaEnCours: DiaporamaEnCours | null;
+
+    addMedia: (media: Omit<ImageMedia, 'id' | 'isFavorite'>) => void;
     removeMedia: (id: string) => void;
-    toggleMediaActive: (id: string) => void;
     renameMedia: (id: string, newName: string) => void;
     toggleMediaFavorite: (id: string) => void;
     setProjectionTarget: (target: ProjectionTarget) => void;
     setProjection: (target: string, path: string | null) => void;
-    setCurrentView: (view: 'library' | 'favorites' | 'recent') => void;
+    setCurrentView: (view: 'library' | 'favorites' | 'recent' | 'diaporamas') => void;
     setVolumeVideo: (volume: number) => void;
     fetchDisplays: () => Promise<void>;
 
@@ -109,11 +123,36 @@ interface ImageState {
      */
     terminerLaFiche: () => Promise<void>;
 
-    projectSequence: () => void;
+    /*
+      **Les gestes du diaporama — 2026-09-13.**
+
+      L'horloge vit **ici**, dans la fenêtre du meneur, et ne fait qu'avancer
+      l'image projetée par le chemin habituel. ⭐ *C'est ce qui permet au
+      projecteur, au Player Hub, aux tablettes et à la sauvegarde de n'avoir
+      rien à apprendre* : ils ne voient qu'une suite de projections d'image,
+      comme si le meneur les enchaînait à la main.
+    */
+    creerDiaporama: (nom: string) => string;
+    renommerDiaporama: (id: string, nom: string) => void;
+    supprimerDiaporama: (id: string) => void;
+    ajouterAuDiaporama: (diaporamaId: string, mediaId: string) => void;
+    retirerDuDiaporama: (diaporamaId: string, rang: number) => void;
+    deplacerDansLeDiaporama: (diaporamaId: string, rang: number, direction: 1 | -1) => void;
+    reglerLaCadence: (diaporamaId: string, dureeParImageMs: number) => void;
+    /**
+     * Lance un diaporama. `cible` vise un écran pour ce lancement-là, sans
+     * changer celui qu'Image-OS pointe — même règle que `projectSolo`, et
+     * c'est ce dont un moment de storyboard a besoin.
+     */
+    lancerLeDiaporama: (id: string, cible?: string) => void;
+    /** Arrête l'horloge. **N'éteint pas l'écran** : la dernière image reste. */
+    arreterLeDiaporama: () => void;
+    /** Feuillette à la main, et **relève le minuteur** : la nouvelle image a droit à son temps plein. */
+    avancerLeDiaporama: (direction: 1 | -1) => void;
+
     blackout: () => void;
     blackoutAll: () => void;
     blackoutAllHub: () => void;
-    navigateSequence: (direction: -1 | 1) => void;
     applySnapshot: (snapshot: {
         projections?: Record<string, string | null>;
         mediaList?: ImageMedia[];
@@ -129,6 +168,94 @@ interface ImageState {
  */
 let abonnementAuxProjecteurs: (() => void) | null = null;
 
+/**
+ * **L'horloge du diaporama.**
+ *
+ * ⛔ **Un `setTimeout` qui se replante, et non un `setInterval`.** Un intervalle
+ * **fige sa période à la pose** : changer la cadence d'un diaporama en cours
+ * n'aurait rien changé à l'écran, et le meneur aurait réglé un curseur qui ne
+ * répond pas. *La leçon est celle des effets de Light-OS, payeé le 2026-09-07 :
+ * rendre une période réglable, c'est trouver qui la relit.* Ici, chaque tour
+ * relit `cadenceDuDiaporama`.
+ */
+let minuterieDuDiaporama: ReturnType<typeof setTimeout> | null = null;
+
+function arreterLaMinuterie(): void {
+    if (minuterieDuDiaporama === null) return;
+    clearTimeout(minuterieDuDiaporama);
+    minuterieDuDiaporama = null;
+}
+
+/**
+ * **Vrai le temps que le diaporama projette sa propre image.**
+ *
+ * ⛔ Sans cette marque, `projectSolo` ne pourrait pas distinguer *le diaporama
+ * qui avance* d'*un meneur qui projette autre chose* — et comme toute
+ * projection manuelle sur l'écran du diaporama doit l'arrêter (voir
+ * `projectSolo`), le diaporama **s'arrêterait lui-même à sa première image**.
+ */
+let projectionDuDiaporama = false;
+
+/**
+ * **Projette l'image du moment, et programme la suivante.**
+ *
+ * Une seule fonction pour les deux, parce que c'est un seul fait : *ce qui est
+ * à l'écran décide de quand vient la suite.*
+ *
+ * ⚠️ **Tout est relu à chaque tour** — le diaporama, ses images, sa cadence.
+ * Rien n'est capturé dans la fermeture : le meneur peut retirer une image,
+ * changer la cadence ou renommer le diaporama pendant qu'il tourne, et le tour
+ * suivant en tient compte. *Une horloge qui travaille sur une copie annonce
+ * l'état d'il y a six secondes.*
+ */
+function projeterLImageDuDiaporama(
+    get: () => ImageState,
+    set: (partiel: Partial<ImageState>) => void,
+): void {
+    arreterLaMinuterie();
+
+    const etat = get();
+    const enCours = etat.diaporamaEnCours;
+    if (!enCours) return;
+
+    const diaporama = etat.diaporamas.find(d => d.id === enCours.id);
+    if (!diaporama) { set({ diaporamaEnCours: null }); return; }
+
+    const images = imagesDuDiaporama(diaporama, etat.mediaList);
+    if (images.length === 0) { set({ diaporamaEnCours: null }); return; }
+
+    /* Une image supprimée raccourcit la liste sous les pieds de l'index : on le
+       ramène dans les bornes plutôt que de tomber sur `undefined`. */
+    const index = enCours.index % images.length;
+
+    projectionDuDiaporama = true;
+    try {
+        void etat.projectSolo(images[index], enCours.cible);
+    } finally {
+        /* Rendu **avant** le premier `await` de `projectSolo` : la garde qui le
+           lit s'exécute, elle aussi, avant. */
+        projectionDuDiaporama = false;
+    }
+
+    /* Une seule image : il n'y a rien à enchaîner, et la reprojeter en boucle
+       rejouerait son fondu d'entrée — un décor fixe qui clignote. */
+    if (!peutTourner(images)) return;
+
+    minuterieDuDiaporama = setTimeout(() => {
+        const frais = get();
+        const suite = frais.diaporamaEnCours;
+        if (!suite) return;
+        const diapoFrais = frais.diaporamas.find(d => d.id === suite.id);
+        const listeFraiche = diapoFrais ? imagesDuDiaporama(diapoFrais, frais.mediaList) : [];
+        if (listeFraiche.length === 0) { set({ diaporamaEnCours: null }); return; }
+        set({ diaporamaEnCours: {
+            ...suite,
+            index: indexSuivant(suite.index, listeFraiche.length, 1),
+        } });
+        projeterLImageDuDiaporama(get, set);
+    }, cadenceDuDiaporama(diaporama));
+}
+
 export const useImageStore = create<ImageState>()(
     persist(
         (set, get) => ({
@@ -142,6 +269,8 @@ export const useImageStore = create<ImageState>()(
             activeFolderId: null,
             currentView: 'library',
             projectedEntity: null,
+            diaporamas: [],
+            diaporamaEnCours: null,
 
             fetchDisplays: async () => {
                 const bridge = window.appBridge;
@@ -182,7 +311,7 @@ export const useImageStore = create<ImageState>()(
             },
 
             addMedia: (mediaData) => {
-                const newMedia: ImageMedia = { ...mediaData, id: crypto.randomUUID(), active: true, isFavorite: false, folderId: get().activeFolderId };
+                const newMedia: ImageMedia = { ...mediaData, id: crypto.randomUUID(), isFavorite: false, folderId: get().activeFolderId };
                 set((state) => ({ mediaList: [...state.mediaList, newMedia] }));
             },
 
@@ -193,7 +322,6 @@ export const useImageStore = create<ImageState>()(
                 }));
             },
 
-            toggleMediaActive: (id) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === id ? { ...m, active: !m.active } : m) })),
             renameMedia: (id, name) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === id ? { ...m, name } : m) })),
             toggleMediaFavorite: (id) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === id ? { ...m, isFavorite: !m.isFavorite } : m) })),
             setProjectionTarget: (projectionTarget) => set({ projectionTarget }),
@@ -212,8 +340,160 @@ export const useImageStore = create<ImageState>()(
             setActiveFolderId: (activeFolderId) => set({ activeFolderId }),
             moveMediaToFolder: (mediaId, folderId) => set((s) => ({ mediaList: s.mediaList.map(m => m.id === mediaId ? { ...m, folderId } : m) })),
 
+            /* ───────────────────────── Les diaporamas ─────────────────────────
+               Demandés par David le 2026-09-13. Ce qui décide — quelles images,
+               laquelle ensuite, combien de temps — vit dans
+               `logic/deroulementDuDiaporama.ts` et se teste sans écran. Ce qui
+               suit ne fait que **tenir l'horloge** et appeler la projection
+               habituelle.                                                      */
+
+            creerDiaporama: (nom) => {
+                const id = crypto.randomUUID();
+                set(s => ({ diaporamas: [...s.diaporamas, {
+                    id, nom, imageIds: [], dureeParImageMs: CADENCE_PAR_DEFAUT_MS,
+                }] }));
+                return id;
+            },
+
+            renommerDiaporama: (id, nom) => set(s => ({
+                diaporamas: s.diaporamas.map(d => d.id === id ? { ...d, nom } : d),
+            })),
+
+            supprimerDiaporama: (id) => {
+                /* Supprimer celui qui tourne arrête l'horloge : sans ça elle
+                   chercherait un diaporama absent à chaque tour. */
+                if (get().diaporamaEnCours?.id === id) get().arreterLeDiaporama();
+                set(s => ({ diaporamas: s.diaporamas.filter(d => d.id !== id) }));
+            },
+
+            /*
+              **Une image peut figurer deux fois dans un diaporama, exprès.**
+              Revenir sur un plan déjà vu est un geste de montage ; l'interdire
+              ferait de `imageIds` un ensemble, et un ensemble n'a pas d'ordre.
+            */
+            ajouterAuDiaporama: (diaporamaId, mediaId) => set(s => ({
+                diaporamas: s.diaporamas.map(d =>
+                    d.id === diaporamaId ? { ...d, imageIds: [...d.imageIds, mediaId] } : d),
+            })),
+
+            /* Par **rang** et non par identifiant — sinon retirer un doublon
+               retirerait les deux, ce que le meneur n'a pas demandé. */
+            retirerDuDiaporama: (diaporamaId, rang) => set(s => ({
+                diaporamas: s.diaporamas.map(d =>
+                    d.id === diaporamaId
+                        ? { ...d, imageIds: d.imageIds.filter((_, i) => i !== rang) }
+                        : d),
+            })),
+
+            deplacerDansLeDiaporama: (diaporamaId, rang, direction) => set(s => ({
+                diaporamas: s.diaporamas.map(d => {
+                    if (d.id !== diaporamaId) return d;
+                    const vers = rang + direction;
+                    /* Aux extrémités, on ne fait rien — **on n'enroule pas**. Une
+                       première image qui sauterait à la fin d'un clic de trop
+                       ressemblerait à une perte, pas à un déplacement. */
+                    if (vers < 0 || vers >= d.imageIds.length) return d;
+                    const imageIds = [...d.imageIds];
+                    [imageIds[rang], imageIds[vers]] = [imageIds[vers], imageIds[rang]];
+                    return { ...d, imageIds };
+                }),
+            })),
+
+            reglerLaCadence: (diaporamaId, dureeParImageMs) => set(s => ({
+                diaporamas: s.diaporamas.map(d =>
+                    d.id === diaporamaId ? { ...d, dureeParImageMs } : d),
+            })),
+
+            lancerLeDiaporama: (id, cible) => {
+                arreterLaMinuterie();
+                const etat = get();
+                const diaporama = etat.diaporamas.find(d => d.id === id);
+                if (!diaporama) {
+                    console.warn(`[Diaporama] ${id} introuvable.`);
+                    set({ diaporamaEnCours: null });
+                    return;
+                }
+
+                const images = imagesDuDiaporama(diaporama, etat.mediaList);
+                if (images.length === 0) {
+                    /* Rien à montrer : on le **dit**. Un diaporama vidé par des
+                       suppressions se lancerait sinon dans un silence complet,
+                       et le meneur croirait à une panne de projection. */
+                    gmToast(i18n.t('modules:image.diaporama.vide', { nom: diaporama.nom }));
+                    set({ diaporamaEnCours: null });
+                    return;
+                }
+
+                const ecran = cible || (get().projectionTarget as string);
+                set({ diaporamaEnCours: { id, index: 0, cible: ecran } });
+                projeterLImageDuDiaporama(get, set);
+            },
+
+            arreterLeDiaporama: () => {
+                arreterLaMinuterie();
+                /*
+                  **On n'éteint pas l'écran.** Arrêter le défilement et faire le
+                  noir sont deux gestes : le meneur qui arrête veut souvent
+                  **garder l'image où elle en est**. Le noir a son propre bouton,
+                  et un moment de storyboard éteint déjà ce qu'il a posé.
+                */
+                set({ diaporamaEnCours: null });
+            },
+
+            avancerLeDiaporama: (direction) => {
+                const enCours = get().diaporamaEnCours;
+                if (!enCours) return;
+                const diaporama = get().diaporamas.find(d => d.id === enCours.id);
+                if (!diaporama) { get().arreterLeDiaporama(); return; }
+                const images = imagesDuDiaporama(diaporama, get().mediaList);
+                if (images.length === 0) { get().arreterLeDiaporama(); return; }
+
+                set({ diaporamaEnCours: {
+                    ...enCours,
+                    index: indexSuivant(enCours.index, images.length, direction),
+                } });
+                /* Le minuteur repart de zéro : une image qu'on vient d'appeler à
+                   la main a droit à son temps plein, pas au reste de celui d'avant. */
+                projeterLImageDuDiaporama(get, set);
+            },
+
             projectSolo: async (media, cible) => {
                 const target = (cible || get().projectionTarget) as string;
+
+                /*
+                  ⛔ **Une image projetée à la main arrête le diaporama qui
+                  occupait cet écran.**
+
+                  Sans ça, le meneur projette une image, et **six secondes plus
+                  tard le diaporama la remplace** — un écran qui change tout seul,
+                  au milieu d'une scène, sans que rien ne relie le symptôme au
+                  diaporama lancé dix minutes plus tôt. *Le dernier geste du
+                  meneur gagne, toujours.*
+
+                  On ne coupe que sur **le même écran** : un diaporama sur le
+                  moniteur du fond n'a aucune raison de s'arrêter parce qu'une
+                  fiche part au Player Hub.
+                */
+                const diaporama = get().diaporamaEnCours;
+                if (diaporama && !projectionDuDiaporama && diaporama.cible === target) {
+                    get().arreterLeDiaporama();
+                }
+
+                /*
+                  ⛔ **Le journal ne reçoit pas les images d'un diaporama.**
+
+                  Chaque projection réussie écrit une ligne au fil de la séance.
+                  À six secondes par image, un diaporama y déverserait **dix
+                  lignes par minute** : au bout d'une heure, le fil du meneur ne
+                  contiendrait plus que ça, et les véritables événements de la
+                  soirée seraient introuvables. *Un journal qu'on ne peut plus
+                  lire ne vaut pas mieux qu'un journal absent.*
+
+                  ⚠️ **Lu ici et non plus bas** : la marque est remise à faux
+                  avant le premier `await`, donc elle ne dit plus rien au moment
+                  où l'écriture a lieu.
+                */
+                const viaDiaporama = projectionDuDiaporama;
                 
                 // 🔌 Appel Service (arrière-plan)
                 // Le service ImageService se charge de :
@@ -248,7 +528,7 @@ export const useImageStore = create<ImageState>()(
                       recevoir une donnée que personne ne lui passe ne se
                       distingue pas d'une branche morte.*
                     */
-                    journal()?.addEvent({
+                    if (!viaDiaporama) journal()?.addEvent({
                         type: 'SYSTEM',
                         title: i18n.t('modules:image.events.imageProjected.title'),
                         content: i18n.t('modules:image.events.imageProjected.content', {
@@ -440,33 +720,13 @@ export const useImageStore = create<ImageState>()(
                 if (!revenu) get().blackout();
             },
 
-            projectSequence: () => {
-                const activeMedia = get().mediaList.filter(m => m.active);
-                if (activeMedia.length === 0) return;
-                const currentId = get().projections[get().projectionTarget as string];
-                let targetMedia = activeMedia[0];
-                if (currentId) {
-                    const idx = get().mediaList.findIndex(m => m.id === currentId);
-                    const next = get().mediaList.find((m, i) => i > idx && m.active);
-                    if (next) targetMedia = next;
-                }
-                get().projectSolo(targetMedia);
-            },
 
-            navigateSequence: (direction) => {
-                const activeMedia = get().mediaList.filter(m => m.active);
-                if (activeMedia.length === 0) return;
-                const currentId = get().projections[get().projectionTarget as string];
-                if (!currentId) { get().projectSolo(activeMedia[0]); return; }
-                const mediaIds = get().mediaList.map(m => m.id);
-                activeMedia.sort((a, b) => mediaIds.indexOf(a.id) - mediaIds.indexOf(b.id));
-                const idx = activeMedia.findIndex(m => m.id === currentId);
-                let nextIdx = (idx + direction + activeMedia.length) % activeMedia.length;
-                get().projectSolo(activeMedia[nextIdx]);
-            },
 
             blackout: () => {
                 const target = get().projectionTarget as string;
+                /* Le noir voulu sur cet écran arrête ce qui l'occupait : sinon
+                   le diaporama le rallumerait à son tour suivant. */
+                if (get().diaporamaEnCours?.cible === target) get().arreterLeDiaporama();
                 /*
                   **Le noir voulu efface aussi le décor mis de côté.** Sinon une
                   image éteinte à la main ressusciterait à la fin de la prochaine
@@ -484,6 +744,8 @@ export const useImageStore = create<ImageState>()(
             },
 
             blackoutAll: () => {
+                /* Tout éteindre éteint aussi ce qui rallumerait. */
+                get().arreterLeDiaporama();
                 const targets = Object.keys(get().projections);
                 set({ projections: {}, imagePrecedente: {}, projectedEntity: null });
                 import('./logic/ImageService').then(({ ImageService }) => {
@@ -492,6 +754,7 @@ export const useImageStore = create<ImageState>()(
             },
 
             blackoutAllHub: () => {
+                if (get().diaporamaEnCours?.cible === 'hub') get().arreterLeDiaporama();
                 set({ projectedEntity: null });
                 import('./logic/ImageService').then(({ ImageService }) => {
                     ImageService.blackout('hub');
@@ -517,8 +780,9 @@ export const useImageStore = create<ImageState>()(
                 }
             },
 
-            reset: () => { get().blackoutAll(); set({ mediaList: [], projections: {}, imagePrecedente: {}, folders: [], activeFolderId: null, projectedEntity: null }); },
+            reset: () => { get().arreterLeDiaporama(); get().blackoutAll(); set({ mediaList: [], projections: {}, imagePrecedente: {}, folders: [], activeFolderId: null, projectedEntity: null }); },
             clearActiveProjections: () => {
+                get().arreterLeDiaporama();
                 set({ projections: {}, imagePrecedente: {}, projectedEntity: null });
             }
         }),
@@ -533,7 +797,14 @@ export const useImageStore = create<ImageState>()(
               unes par rapport aux autres — au contraire du volume général, qui
               décrit les enceintes d'ici et reste hors des sauvegardes.
             */
-            partialize: (s) => ({ mediaList: s.mediaList, projectionTarget: s.projectionTarget, folders: s.folders, projections: s.projections, imagePrecedente: s.imagePrecedente, volumeVideo: s.volumeVideo }),
+            /*
+              `diaporamas` est retenu, `diaporamaEnCours` **jamais** : le premier
+              est un montage préparé, le second l'état de la pièce à un instant.
+              Retrouver au démarrage un diaporama « en cours » dont l'horloge est
+              morte avec la fenêtre précédente donnerait un écran qui prétend
+              tourner et n'avance jamais.
+            */
+            partialize: (s) => ({ mediaList: s.mediaList, projectionTarget: s.projectionTarget, folders: s.folders, projections: s.projections, imagePrecedente: s.imagePrecedente, volumeVideo: s.volumeVideo, diaporamas: s.diaporamas }),
             onRehydrateStorage: () => (s) => {
                 if (!s) return;
                 // On vérifie dorénavant par "path" (m-127...) car les projections stockent les chemins

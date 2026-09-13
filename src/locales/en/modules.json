@@ -619,6 +619,28 @@
         "title": "🎭 Facing {{name}}",
         "content": "The party comes face to face with **{{name}}**{{subtitle}}."
       }
+    },
+    "diaporama": {
+      "ajouterDepuis": "Add from the library",
+      "arreter": "Stop",
+      "aucun": "No slideshow yet. Create one, add images in order, then call it from a storyboard moment.",
+      "cadence": "Each image",
+      "descendre": "Move down",
+      "deuxMinimum": "At least two images are needed to run a slideshow.",
+      "lancer": "Play on {{ecran}}",
+      "manquantes": "{{compte}} image(s) of this slideshow are no longer in the library. They are skipped when it plays.",
+      "monter": "Move up",
+      "nomDemande": "Slideshow name",
+      "nouveau": "New slideshow",
+      "pasDeVideo": "A video carries its own length: project it on its own, not in a slideshow.",
+      "renommer": "Rename",
+      "retirer": "Remove from slideshow",
+      "secondes": "s",
+      "supprimer": "Delete slideshow",
+      "supprimerConfirme": "Delete the slideshow “{{nom}}”? The images stay in the library.",
+      "titre": "Slideshows",
+      "vide": "The slideshow “{{nom}}” has no images left to show.",
+      "videPourLInstant": "No images yet. Add some from the library below."
     }
   },
   "journal": {
@@ -2914,7 +2936,9 @@
       "captured_map": "Tactical map captured",
       "captured_image": "Projected image captured",
       "capture_nothing": "Nothing to capture: no element is currently active",
-      "capture_unavailable": "No capture here: Sound-OS stacks its effects and Ambient-OS does not remember the applied scene — pick from the list"
+      "capture_unavailable": "No capture here: Sound-OS stacks its effects and Ambient-OS does not remember the applied scene — pick from the list",
+      "diaporama_label": "Image-OS slideshow",
+      "diaporama_none": "No slideshow"
     },
     "actions": {
       "duplicate": "Duplicate",

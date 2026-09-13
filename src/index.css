@@ -305,6 +305,20 @@ pre {
     to { opacity: 1; }
   }
 
+  /*
+    Le pendant du fondu d'entrée, pour une couche qu'on ne peut pas piloter par
+    une opacité en ligne — le fond du Player Hub, qui s'éteint pendant que le
+    crochet du fondu la tient encore montée.
+
+    ⚠️ `forwards` est indispensable **ici et nulle part ailleurs** : sans lui la
+    couche reviendrait à pleine opacité à la dernière image de l'animation, et
+    l'écran se rallumerait une fraction de seconde avant de disparaître.
+  */
+  @keyframes gmos-fondu-sortant {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
   @keyframes fadeInUp {
     from {
       opacity: 0;

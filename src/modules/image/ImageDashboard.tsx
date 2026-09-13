@@ -3,11 +3,12 @@ import React from 'react';
 import {
     Ban, Folder as FolderIcon, History as HistoryIcon,
     Star as StarIcon, Search as SearchIcon,
-    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight, Film
+    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight, Film, Images
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
 import ImagePad from './components/ImagePad';
+import PanneauDesDiaporamas from './components/PanneauDesDiaporamas';
 import { MediaBrowser } from '../../components/MediaBrowser';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { gmConfirm, gmPrompt } from '../../stores/useModalStore';
@@ -20,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 const ImageDashboard: React.FC = () => {
     const {
         mediaList, projectionTarget, setProjectionTarget,
-        projectSequence, navigateSequence, blackout, blackoutAll, addMedia, displays, fetchDisplays,
+        avancerLeDiaporama, arreterLeDiaporama, blackout, blackoutAll, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView, reset
     } = useImageStore();
@@ -96,6 +97,11 @@ const ImageDashboard: React.FC = () => {
             }
         });
     };
+
+    const diaporamaEnCours = useImageStore(state => state.diaporamaEnCours);
+    const nomDuDiaporamaEnCours = useImageStore(
+        state => state.diaporamas.find(d => d.id === state.diaporamaEnCours?.id)?.nom ?? '',
+    );
 
     const volumeVideo = useImageStore(state => state.volumeVideo);
     const setVolumeVideo = useImageStore(state => state.setVolumeVideo);
@@ -188,6 +194,13 @@ const ImageDashboard: React.FC = () => {
                         <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-app-surface/50 transition-colors cursor-pointer opacity-50">
                             <HistoryIcon size={18} />
                             <span className="text-sm font-medium">{t('image.sidebar.recentUploads')}</span>
+                        </div>
+                        <div
+                            onClick={() => setCurrentView('diaporamas')}
+                            className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${currentView === 'diaporamas' ? 'bg-accent/20 text-accent' : 'text-slate-400 hover:bg-app-surface/50'}`}
+                        >
+                            <Images size={18} />
+                            <span className="text-sm font-medium">{t('image.diaporama.titre')}</span>
                         </div>
                         <div
                             onClick={() => setCurrentView('favorites')}
@@ -340,28 +353,45 @@ const ImageDashboard: React.FC = () => {
                             />
                         </div>
 
-                        <div className="flex bg-app-surface/50 rounded-xl border border-app-border overflow-hidden">
-                            <button 
-                                onClick={() => navigateSequence(-1)}
-                                className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                                title={t('common:previous')}
-                            >
-                                <ChevronLeft size={20} />
-                            </button>
-                            <button
-                                onClick={projectSequence}
-                                className="bg-accent text-slate-950 px-6 py-2 font-bold text-sm tracking-wide shadow-glow-accent hover:brightness-110 active:scale-[0.98] transition-all"
-                            >
-                                {t('image.dashboard.diaporama')}
-                            </button>
-                            <button 
-                                onClick={() => navigateSequence(1)}
-                                className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border-l border-app-border"
-                                title={t('common:next')}
-                            >
-                                <ChevronRight size={20} />
-                            </button>
-                        </div>
+                        {/*
+                          **Les flèches feuillettent le diaporama en cours.**
+
+                          Elles pilotaient une « séquence » invisible : une case à
+                          cocher par image, une seule liste globale, sans nom, sans
+                          cadence et sans fondu. *Deux notions d'ordre dans un même
+                          module finissent toujours par diverger* — absorbée le
+                          2026-09-13, sur décision de David.
+
+                          Elles ne se montrent que quand un diaporama tourne : un
+                          bouton qui ne fait rien est pire qu'un bouton absent, on
+                          finit par ne plus le voir.
+                        */}
+                        {diaporamaEnCours && (
+                            <div className="flex bg-app-surface/50 rounded-xl border border-app-border overflow-hidden">
+                                <button
+                                    onClick={() => avancerLeDiaporama(-1)}
+                                    className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                                    title={t('common:previous')}
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <button
+                                    onClick={arreterLeDiaporama}
+                                    className="bg-emerald-500/20 text-emerald-300 px-6 py-2 font-bold text-sm tracking-wide hover:bg-emerald-500/30 active:scale-[0.98] transition-all flex items-center gap-2"
+                                    title={t('image.diaporama.arreter')}
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                    {nomDuDiaporamaEnCours}
+                                </button>
+                                <button
+                                    onClick={() => avancerLeDiaporama(1)}
+                                    className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border-l border-app-border"
+                                    title={t('common:next')}
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            </div>
+                        )}
 
 
                         <div className="w-10 h-10 rounded-full bg-app-surface border border-app-border flex items-center justify-center overflow-hidden">
@@ -370,6 +400,8 @@ const ImageDashboard: React.FC = () => {
                         </div>
                     </div>
                 </header>
+
+                {currentView === 'diaporamas' ? <PanneauDesDiaporamas /> : <>
 
                 {/* Filters & Tabs */}
                 <div className="flex items-center justify-between mt-2">
@@ -403,6 +435,7 @@ const ImageDashboard: React.FC = () => {
                         <p className="text-slate-500 font-bold text-sm group-hover:text-accent transition-colors">{t('image.dashboard.addNew')}</p>
                     </div>
                 </div>
+                </>}
             </main>
 
         </div>

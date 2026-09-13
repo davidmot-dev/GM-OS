@@ -20,7 +20,6 @@ interface ImagePadProps {
 const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
     // 🛡️ Sélecteurs stricts pour éviter les re-rendus de masse
     const projectSolo = useImageStore(state => state.projectSolo);
-    const toggleMediaActive = useImageStore(state => state.toggleMediaActive);
     const removeMedia = useImageStore(state => state.removeMedia);
     const toggleMediaFavorite = useImageStore(state => state.toggleMediaFavorite);
     const renameMedia = useImageStore(state => state.renameMedia);
@@ -128,15 +127,6 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                 >
                     <Star size={14} fill={media.isFavorite ? "currentColor" : "none"} />
                 </button>
-
-                <input
-                    type="checkbox"
-                    checked={media.active}
-                    onChange={() => toggleMediaActive(media.id)}
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-4 h-4 rounded border-app-border bg-app-surface/50 text-accent cursor-pointer focus:ring-0 focus:ring-offset-0"
-                    title={t('image.pad.includeSequenceTooltip')}
-                />
 
                 <button
                     onClick={(e) => { e.stopPropagation(); removeMedia(media.id); }}

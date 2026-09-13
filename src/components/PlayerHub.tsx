@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useFonduCroise } from '../modules/image/useFonduCroise';
 
 // Modules & Stores
 import { useClockStore } from '../store/useClockStore';
@@ -27,6 +27,9 @@ import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 import FondProjete from './hub/FondProjete';
 import { fondDuPlayerHub } from './hub/fondDuPlayerHub';
+
+/** Voir le crochet du fondu, plus bas : le Hub s'allume et s'éteint plus lentement que le projecteur. */
+const FONDU_DU_HUB_MS = 1500;
 
 const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
@@ -61,6 +64,14 @@ const PlayerHub: React.FC = React.memo(() => {
         papierPeintDeLaCampagne: activeCampaignWallpaper,
     });
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
+
+    /*
+      **Le fondu du Hub — une seconde et demie**, contre 700 ms au projecteur.
+      C'est son langage depuis toujours, et David ne l'a jamais remis en cause :
+      *l'écran de la table est un décor, pas un instrument.*
+    */
+    const { entrante: fondEntrant, sortante: fondSortant } =
+        useFonduCroise(liveMediaEstUneVideo ? null : resolvedBackground, FONDU_DU_HUB_MS);
     
     // 4. Feature Activators
     const isMapActive = !!(projectedMapUrl && projectionTarget === 'hub');
@@ -98,42 +109,83 @@ const PlayerHub: React.FC = React.memo(() => {
                         }}
                     />
                 ) : (
-                    <AnimatePresence mode="wait">
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            filter: `brightness(${(resolvedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(20%)`,
+                        }}
+                    >
                         {/*
                           ⛔ **Ce fond était une image CSS, et rien d'autre.** Une
                           `background-image` ne peut pas jouer un film : la vidéo
                           arrivait bien, et l'écran restait vide. Trouvé par David
-                          le 2026-09-05.
-
-                          L'animation reste sur l'enveloppe ; c'est
-                          [[FondProjete]] qui choisit l'élément à dessiner.
+                          le 2026-09-05. C'est [[FondProjete]] qui choisit
+                          l'élément à dessiner.
 
                           ⭐ **Le son est permis ici**, et seulement ici :
-                          l'écran de la table est unique, les tablettes sont
-                          cinq.
+                          l'écran de la table est unique, les tablettes sont cinq.
+
+                          ⛔ **Le fondu ne passe plus par `AnimatePresence`
+                          — 2026-09-13, au soir.** Il en a porté deux défauts :
+                          `mode="wait"` donnait **trois secondes de noir** entre
+                          deux images, et une fois le recouvrement obtenu,
+                          l'animation partait **avant que l'image soit décodée**.
+                          David, après essai : *« un temps mort puis un saut »*.
+
+                          Les deux écrans partagent désormais le même minutage,
+                          `useFonduCroise`, qui ne rend une image **qu'une fois
+                          décodée**. *Le balisage, lui, reste propre à chacun.*
                         */}
-                        <motion.div
-                            key={resolvedBackground || 'none'}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 1.5 }}
-                            className="absolute inset-0"
-                            style={{
-                                filter: `brightness(${(resolvedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(20%)`
-                            }}
-                        >
-                            {resolvedBackground && (
-                                <FondProjete
-                                    url={resolvedBackground}
-                                    estUneVideo={liveMediaEstUneVideo}
-                                    avecSon
-                                    niveauSonore={niveauSonVideo}
-                                    className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000"
-                                />
-                            )}
-                        </motion.div>
-                    </AnimatePresence>
+
+                        {/*
+                          ⚠️ **Un film ne se croise pas.** Deux vidéos superposées
+                          jouent leur son ensemble ; une image muette peut
+                          s'attarder, pas un film. Il garde donc la voie directe,
+                          sans fondu — la même règle que le projecteur.
+                        */}
+                        {resolvedBackground && liveMediaEstUneVideo && (
+                            <FondProjete
+                                url={resolvedBackground}
+                                estUneVideo
+                                avecSon
+                                niveauSonore={niveauSonVideo}
+                                className="absolute inset-0 w-full h-full bg-cover bg-center"
+                            />
+                        )}
+
+                        {/*
+                          La couche du dessous : l'image qui s'en va. Elle reste à
+                          pleine opacité le temps que l'autre la recouvre — **sauf
+                          quand il n'y a plus rien à montrer**, où c'est elle qui
+                          porte le fondu de sortie.
+                        */}
+                        {!liveMediaEstUneVideo && fondSortant && fondSortant !== fondEntrant && (
+                            <FondProjete
+                                key={`sortant-${fondSortant}`}
+                                url={fondSortant}
+                                estUneVideo={false}
+                                className="absolute inset-0 z-0 w-full h-full bg-cover bg-center"
+                                style={fondEntrant ? undefined : {
+                                    animation: `gmos-fondu-sortant ${FONDU_DU_HUB_MS}ms ease-in-out forwards`,
+                                }}
+                            />
+                        )}
+
+                        {!liveMediaEstUneVideo && fondEntrant && (
+                            <FondProjete
+                                key={`entrant-${fondEntrant}`}
+                                url={fondEntrant}
+                                estUneVideo={false}
+                                /* `z-10` explicite, comme au projecteur — qui a payé pour
+                                   la règle le 2026-09-13 : une couche qui anime son
+                                   opacité crée un contexte d'empilement, sa sœur non, et
+                                   l'ordre finit par dépendre d'un `z-index` intérieur.
+                                   *L'ordre de deux couches ne se devine pas, il se dit.* */
+                                className="absolute inset-0 z-10 w-full h-full bg-cover bg-center"
+                                style={{ animation: `gmos-fondu-entrant ${FONDU_DU_HUB_MS}ms ease-in-out` }}
+                            />
+                        )}
+                    </div>
                 )}
                 {!resolvedBackground && !isMapActive && <div className="absolute inset-0 bg-app-bg" />}
             </div>

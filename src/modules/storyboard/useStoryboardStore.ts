@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { laSceneQueLAmbianceOuvre } from '../session/logic/trame';
 import { envoyerLeTitre, normaliserLeTitre } from './titreProjete';
+import { imageOuDiaporama, occupeUnEcran } from './imageOuDiaporama';
 import {
     cequUnArretEteint, cequUnePriseDeMainEteint, eteindreLesSons,
     ilYAQuelqueChoseAEteindre, lesSonsAnnoncesPar, AUCUN_SON, type SonsDuMoment,
@@ -37,6 +38,22 @@ export interface StoryboardMoment {
     mapUrl?: string;           // Atlas-OS Map URL
     isMapVideo?: boolean;
     imageMediaId?: string;     // Image-OS Media ID
+    /**
+     * **Le diaporama du moment** — demandé par David le 2026-09-13.
+     *
+     * *« je veux pouvoir appeler ce diaporama après dans un Storyboard ».*
+     *
+     * ⚠️ **Exclusif avec `imageMediaId`** : un moment montre une image **ou**
+     * un diaporama, jamais les deux — ils viseraient le même écran, et le
+     * second effacerait le premier une demi-seconde après l'avoir posé. L'écran
+     * d'édition ne laisse choisir qu'un des deux, et
+     * [[imageOuDiaporama]] tranche pour les moments écrits autrement (import,
+     * sauvegarde ancienne, édition à la main).
+     *
+     * Il part sur `imageTarget`, exactement comme une image — *c'est la même
+     * place à l'écran, ce doit être le même réglage.*
+     */
+    diaporamaId?: string;
     soundPadId?: string;       // Sound-OS Pad ID
     ambientSceneId?: string;   // Ambient-OS Scene ID
 
@@ -197,6 +214,16 @@ export const useStoryboardStore = create<StoryboardState>()(
                 */
                 const cibleDeLImage = get().cibleDeLImageDuMoment;
                 if (cibleDeLImage) {
+                    /*
+                      ⛔ **On arrête l'horloge AVANT d'éteindre.** Éteindre un écran
+                      ne touche pas au diaporama qui l'occupait : il rallumerait
+                      l'écran à son tour suivant, **après la fin du moment**. Et
+                      dans l'autre ordre, la dernière image du diaporama
+                      rallumerait l'écran qu'on vient de noircir.
+                    */
+                    if (gWindow.useImageStore?.getState()?.diaporamaEnCours?.cible === cibleDeLImage) {
+                        gWindow.useImageStore.getState().arreterLeDiaporama();
+                    }
                     void import('../image/logic/ImageService')
                         .then(({ ImageService }) => ImageService.blackout(cibleDeLImage))
                         .catch(e => console.warn('[Storyboard] extinction de l’image impossible :', e));
@@ -524,7 +551,7 @@ export const useStoryboardStore = create<StoryboardState>()(
 
                   Le fondu, lui, vit dans les écrans — voir `ProjectorView`.
                 */
-                const cibleDeLImage = moment.imageMediaId
+                const cibleDeLImage = occupeUnEcran(moment)
                     ? (moment.imageTarget || (gWindow.useImageStore?.getState()?.projectionTarget as string) || 'hub')
                     : null;
                 const cibleAEteindre = get().cibleDeLImageDuMoment;
@@ -543,7 +570,54 @@ export const useStoryboardStore = create<StoryboardState>()(
                 }
                 set({ cibleDeLImageDuMoment: cibleDeLImage });
 
-                if (moment.imageMediaId) {
+                const pose = imageOuDiaporama(moment);
+
+                /*
+                  ⛔ **Un diaporama laissé par le moment précédent doit être
+                  ARRÊTÉ, pas seulement éteint.**
+
+                  Éteindre l'écran ne touche pas à son horloge : elle continuerait
+                  de tourner et **rallumerait** l'écran six secondes plus tard, par
+                  dessus le moment suivant. *Un fondu au noir qui se rallume tout
+                  seul, c'est le genre de défaut qu'on ne voit qu'à la table et
+                  qu'on ne rattache à rien.*
+
+                  On ne l'arrête pas quand le nouveau moment **rappelle le même
+                  diaporama** : le relancer le ferait repartir de sa première
+                  image, alors que le meneur repasse sur un moment qu'il enchaîne.
+                */
+                {
+                    const enCours = gWindow.useImageStore?.getState()?.diaporamaEnCours;
+                    const memeDiaporama = pose.quoi === 'diaporama' && enCours?.id === pose.diaporamaId;
+                    if (enCours && !memeDiaporama) {
+                        gWindow.useImageStore?.getState()?.arreterLeDiaporama();
+                    }
+                }
+
+                if (pose.quoi === 'diaporama') {
+                    if (!gWindow.useImageStore) {
+                        effets.push({ nom: 'Diaporama', sort: 'module-absent' });
+                        set({ cibleDeLImageDuMoment: null });
+                    } else {
+                        const imageStore = gWindow.useImageStore.getState();
+                        const diaporama = imageStore.diaporamas?.find(
+                            (d: { id: string }) => d.id === pose.diaporamaId);
+                        if (diaporama) {
+                            /* Déjà en cours et sur le même écran : on le laisse
+                               tourner. Le relancer le ramènerait à sa première
+                               image, ce que personne n'a demandé. */
+                            const enCours = imageStore.diaporamaEnCours;
+                            if (!enCours || enCours.id !== pose.diaporamaId) {
+                                imageStore.lancerLeDiaporama(pose.diaporamaId, moment.imageTarget);
+                            }
+                            effets.push({ nom: 'Diaporama', sort: 'joue' });
+                        } else {
+                            console.warn(`[Storyboard] Diaporama ${pose.diaporamaId} NOT FOUND.`);
+                            effets.push({ nom: 'Diaporama', sort: 'introuvable', cherche: pose.diaporamaId });
+                            set({ cibleDeLImageDuMoment: null });
+                        }
+                    }
+                } else if (pose.quoi === 'image') {
                     if (!gWindow.useImageStore) {
                         effets.push({ nom: 'Image', sort: 'module-absent' });
                         set({ cibleDeLImageDuMoment: null });

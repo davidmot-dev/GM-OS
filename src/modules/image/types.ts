@@ -2,7 +2,20 @@ export interface ImageMedia {
     id: string;
     name: string;
     path: string; // Absolute path or URL
-    active: boolean; // Is it part of the projection sequence?
+    /**
+     * ⚠️ **Retiré le 2026-09-13 — ne pas le remettre sans lire ceci.**
+     *
+     * Il disait *« cette image fait-elle partie de la séquence »*, une case à
+     * cocher par pad et **une seule séquence globale**, sans nom, sans cadence
+     * et sans fondu. Les diaporamas la remplacent entièrement, sur décision de
+     * David : *deux notions d'ordre dans un même module finissent toujours par
+     * diverger.*
+     *
+     * Les bibliothèques déjà sur le disque portent encore la clé `active` ;
+     * **personne ne la lit**, et elle disparaîtra à la prochaine écriture. *Il
+     * n'y a pas de migration à faire pour un champ qu'on cesse de lire* — au
+     * contraire de l'ajout d'un champ obligatoire.
+     */
     sizeInfo?: string; // e.g. "1920x1080 • 2.4MB"
     folderId?: string | null; // Virtual folder ID
     isFavorite?: boolean;
@@ -22,6 +35,48 @@ export interface ImageMedia {
      * ici.
      */
     type?: 'image' | 'video';
+}
+
+/**
+ * **Un diaporama : des images dans un ordre, et une cadence.**
+ *
+ * Demandé par David le 2026-09-13. À ne pas confondre avec un **dossier**, qui
+ * vit juste en dessous : *un dossier range, un diaporama ordonne et cadence.*
+ * Une même image peut appartenir à plusieurs diaporamas et à aucun dossier.
+ *
+ * ⚠️ **Il ne retient que des identifiants**, jamais des chemins : une image
+ * renommée ou déplacée reste à sa place dans le diaporama. Et un identifiant
+ * dont le média a disparu est **sauté** à la lecture — voir
+ * [[imagesDuDiaporama]] pour la raison, qui n'est pas de la tolérance.
+ */
+export interface Diaporama {
+    id: string;
+    nom: string;
+    /** L'ordre de passage. C'est cette liste qui fait foi, pas l'ordre de la bibliothèque. */
+    imageIds: string[];
+    /**
+     * Combien de temps chaque image reste, en millisecondes.
+     *
+     * **Une seule durée pour tout le diaporama** — choix de David contre une
+     * durée par image. Bornée à la lecture par [[cadenceDuDiaporama]].
+     */
+    dureeParImageMs: number;
+}
+
+/**
+ * **Le diaporama qui tourne en ce moment, et où.**
+ *
+ * ⛔ **Il n'est pas persisté.** C'est l'état de la pièce à un instant, pas de
+ * la bibliothèque : retrouver au démarrage un diaporama « en cours » dont
+ * l'horloge est morte avec la fenêtre précédente donnerait un écran qui
+ * prétend tourner et n'avance jamais.
+ */
+export interface DiaporamaEnCours {
+    id: string;
+    /** L'index dans les images **projetables**, pas dans `imageIds`. */
+    index: number;
+    /** L'écran visé. Figé au lancement : changer de cible en cours de route laisserait une image derrière. */
+    cible: string;
 }
 
 export interface ImageFolder {

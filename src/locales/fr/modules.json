@@ -619,6 +619,28 @@
         "title": "🎭 Face à {{name}}",
         "content": "Le groupe fait face à **{{name}}**{{subtitle}}."
       }
+    },
+    "diaporama": {
+      "ajouterDepuis": "Ajouter depuis la bibliothèque",
+      "arreter": "Arrêter",
+      "aucun": "Aucun diaporama pour l'instant. Créez-en un, ajoutez-y des images dans l'ordre, et appelez-le depuis un moment de storyboard.",
+      "cadence": "Chaque image",
+      "descendre": "Descendre d'un rang",
+      "deuxMinimum": "Il faut au moins deux images pour enchaîner.",
+      "lancer": "Lancer sur {{ecran}}",
+      "manquantes": "{{compte}} image(s) de ce diaporama ne sont plus dans la bibliothèque. Elles sont sautées à la projection.",
+      "monter": "Monter d'un rang",
+      "nomDemande": "Nom du diaporama",
+      "nouveau": "Nouveau diaporama",
+      "pasDeVideo": "Une vidéo porte sa propre durée : elle se projette seule, pas dans un diaporama.",
+      "renommer": "Renommer",
+      "retirer": "Retirer du diaporama",
+      "secondes": "s",
+      "supprimer": "Supprimer le diaporama",
+      "supprimerConfirme": "Supprimer le diaporama « {{nom}} » ? Les images restent dans la bibliothèque.",
+      "titre": "Diaporamas",
+      "vide": "Le diaporama « {{nom}} » n'a plus aucune image à montrer.",
+      "videPourLInstant": "Aucune image. Ajoutez-en depuis la bibliothèque, en bas."
     }
   },
   "journal": {
@@ -2914,7 +2936,9 @@
       "captured_map": "Carte du plateau capturée",
       "captured_image": "Image projetée capturée",
       "capture_nothing": "Rien à capturer : aucun élément n'est actif en ce moment",
-      "capture_unavailable": "Pas de capture ici : Sound-OS empile ses bruitages et Ambient-OS ne retient pas la scène appliquée — choisissez dans la liste"
+      "capture_unavailable": "Pas de capture ici : Sound-OS empile ses bruitages et Ambient-OS ne retient pas la scène appliquée — choisissez dans la liste",
+      "diaporama_label": "Diaporama d'Image-OS",
+      "diaporama_none": "Aucun diaporama"
     },
     "actions": {
       "duplicate": "Dupliquer",

@@ -14,6 +14,7 @@ import { useBibliothequeDesFiches } from '../modules/fiches/useBibliothequeDesFi
 import { useMusicStore } from '../modules/music/useMusicStore';
 import { useBestiaireStore } from '../modules/combat/useBestiaireStore';
 import { useMapStore } from '../modules/map/useMapStore';
+import { useImageStore } from '../modules/image/useImageStore';
 import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 import { useJournalStore } from '../modules/journal/useJournalStore';
 
@@ -37,6 +38,7 @@ export function construireLaSauvegarde() {
     const musicState = useMusicStore.getState();
     const bestiaireState = useBestiaireStore.getState();
     const bibliotheque = useBibliothequeDesFiches.getState().instantane;
+    const imageState = useImageStore.getState();
     const mapState = useMapStore.getState();
     const favoriteState = useFavoriteStore.getState();
 
@@ -120,6 +122,27 @@ export function construireLaSauvegarde() {
             bestiaire: {
                 gabarits: bestiaireState.gabarits,
                 repartitions: bestiaireState.repartitions,
+            },
+            /*
+              ⛔ **Image-OS n'etait dans aucune sauvegarde non plus** — releve
+              le 2026-09-13 en y ajoutant les diaporamas. **Quatrieme fois** que
+              cette liste oublie quelque chose, apres `entities`/`clues`/
+              `sessions`, Music-OS et Map-OS : *une liste de ce qu'on sauvegarde,
+              recopiee a la main, oublie toujours quelque chose.*
+
+              **Ce qui entre est de la preparation** : les pads de la
+              bibliotheque, leurs dossiers, et les diaporamas — un montage
+              d'images ordonne qui ne se retrouve nulle part ailleurs.
+
+              ⚠️ **Les projections n'y sont pas, et c'est delibere** : ce qui est
+              a l'ecran decrit la seance en cours. Les fichiers eux-memes non
+              plus — ils ont leur miroir depuis le 2026-08-29 ; ici ne voyagent
+              que les identifiants qui les designent.
+            */
+            image: {
+                mediaList: imageState.mediaList,
+                folders: imageState.folders,
+                diaporamas: imageState.diaporamas,
             },
             /*
               **Map-OS n'etait dans aucune sauvegarde** — releve le 2026-09-04
@@ -344,6 +367,30 @@ export const SessionService = {
                 Logger.info(
                     `[Session] ${carte.mapPresets?.length ?? 0} configuration(s) de carte et `
                     + `${carte.dangerZonePresets?.length ?? 0} modele(s) de zone restaures`,
+                );
+            }
+
+            /*
+              Meme prudence que partout ici : **une liste vide ne remplace jamais
+              une liste pleine**. Une sauvegarde anterieure au 2026-09-13 n'a pas
+              cette cle du tout, et le `?.length` l'ecarte.
+
+              ⚠️ Les trois champs se restaurent **separement** : un meneur peut
+              avoir des diaporamas et aucun dossier. *Les lier ferait dependre le
+              retour de l'un de la presence de l'autre.*
+            */
+            const image = (data.modules as {
+                image?: { mediaList?: unknown[]; folders?: unknown[]; diaporamas?: unknown[] };
+            }).image;
+            if (image?.mediaList?.length || image?.folders?.length || image?.diaporamas?.length) {
+                useImageStore.setState({
+                    ...(image.mediaList?.length ? { mediaList: image.mediaList as never } : {}),
+                    ...(image.folders?.length ? { folders: image.folders as never } : {}),
+                    ...(image.diaporamas?.length ? { diaporamas: image.diaporamas as never } : {}),
+                });
+                Logger.info(
+                    `[Session] ${image.mediaList?.length ?? 0} media(s) d'Image-OS et `
+                    + `${image.diaporamas?.length ?? 0} diaporama(s) restaures`,
                 );
             }
 

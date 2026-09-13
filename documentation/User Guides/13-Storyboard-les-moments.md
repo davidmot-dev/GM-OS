@@ -86,6 +86,22 @@ Chaque moment peut afficher un **titre** par-dessus l'image projetée, dans la p
 > [!TIP]
 > Un écran allumé au milieu d'une séquence **rattrape** le titre en cours : vous n'avez pas à relancer le moment.
 
+## 🖼️ Appeler un diaporama
+
+*Demandé par David le 2026-09-13.* Sous la liste **Image** du formulaire, une liste **Diaporama**
+propose les montages préparés dans Image-OS — le nombre entre parenthèses est celui de leurs images.
+
+- **Une image OU un diaporama, jamais les deux** : choisir l'un vide l'autre. *Ils visent la même
+  place à l'écran, et le second effacerait le premier une demi-seconde après l'avoir posé.*
+- Le sélecteur d'**écran** juste en dessous vaut pour les deux.
+- Le diaporama **boucle** tant que le moment dure, avec un fondu enchaîné entre chaque image.
+- Sa **cadence** appartient au diaporama, pas au moment : elle se règle dans Image-OS, et tous les
+  moments qui l'appellent la partagent.
+
+> Fabriquer le diaporama lui-même se fait dans **Image-OS › Diaporamas** — voir son guide.
+
+---
+
 ## 🎭 Une séquence est une parenthèse
 
 Lancer une séquence **referme la précédente**, mais chaque moteur a sa règle — et elles ne sont pas
@@ -94,6 +110,7 @@ arbitraires : elles suivent la façon dont chaque module se comporte quand un au
 | Ce que la précédente avait posé | En **changeant** de séquence | En **arrêtant** le moment |
 | :--- | :--- | :--- |
 | **Image** | s'éteint en fondu, sauf si la nouvelle en projette une | s'éteint |
+| **Diaporama** | ⭐ **il s'arrête**, sauf si la nouvelle rappelle **le même** — il continue alors sans repartir du début | il s'arrête, et l'écran s'éteint |
 | **Bruitage** | s'arrête **toujours** — Sound-OS empile, il ne remplace pas | s'arrête |
 | **Ambiance** | s'arrête, **sauf si la nouvelle apporte sa propre scène** | s'arrête |
 | **Musique** | s'arrête, **sauf si la nouvelle apporte sa musique** — les platines s'enchaînent alors en fondu croisé | ⭐ **elle reste** |

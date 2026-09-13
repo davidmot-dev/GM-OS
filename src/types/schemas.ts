@@ -126,6 +126,16 @@ export const FullSessionSchema = z.object({
             mapPresets: z.array(z.any()).optional(),
             dangerZonePresets: z.array(z.any()).optional(),
         }).optional(),
+        /*
+          **Image-OS, entre le 2026-09-13.** Meme raison que `music` ci-dessus :
+          non declaree, la cle serait ecrite dans la sauvegarde puis **jetee a
+          la relecture** par Zod, qui retire ce que `modules` ne nomme pas.
+        */
+        image: z.object({
+            mediaList: z.array(z.any()).optional(),
+            folders: z.array(z.any()).optional(),
+            diaporamas: z.array(z.any()).optional(),
+        }).optional(),
         favorite: z.object({ favorites: z.array(z.any()) }).optional(),
         /* Meme raison que `music` ci-dessus : non declaree, la cle serait jetee. */
         bestiaire: z.object({

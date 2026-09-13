@@ -23,8 +23,7 @@ import {
     Clapperboard,
     ArrowRight,
     GripVertical,
-    Copy
-} from 'lucide-react';
+    Copy, Images } from 'lucide-react';
 import { useAmbientStore } from '../ambient/useAmbientStore';
 import { useImageStore } from '../image/useImageStore';
 import { useHardwareStore } from '../../stores/useHardwareStore';
@@ -172,6 +171,7 @@ const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, u
                     {moment.lightSceneId && <div title={t('modules:storyboard.editor.light_label')} className="flex flex-col items-center gap-1"><Sun size={12} className="text-orange-400" /><div className="w-full h-0.5 bg-orange-400/30 rounded-full" /></div>}
                     {moment.mapUrl && <div title={t('modules:storyboard.editor.map_label')} className="flex flex-col items-center gap-1"><MapIcon size={12} className="text-emerald-400" /><div className="w-full h-0.5 bg-emerald-400/30 rounded-full" /></div>}
                     {moment.imageMediaId && <div title={t('modules:storyboard.editor.image_label')} className="flex flex-col items-center gap-1"><ImageIcon size={12} className="text-purple-400" /><div className="w-full h-0.5 bg-purple-400/30 rounded-full" /></div>}
+                    {moment.diaporamaId && <div title={t('modules:storyboard.editor.diaporama_label')} className="flex flex-col items-center gap-1"><Images size={12} className="text-purple-400" /><div className="w-full h-0.5 bg-purple-400/30 rounded-full" /></div>}
                     {moment.soundPadId && <div title={t('modules:storyboard.editor.sound_label')} className="flex flex-col items-center gap-1"><Volume2 size={12} className="text-rose-400" /><div className="w-full h-0.5 bg-rose-400/30 rounded-full" /></div>}
                 </div>
             </div>
@@ -244,6 +244,7 @@ const StoryboardDashboard: React.FC = () => {
     */
     const [mapEstVideo, setMapEstVideo] = useState(false);
     const [imageMediaId, setImageMediaId] = useState('');
+    const [diaporamaId, setDiaporamaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
     const [ambientSceneId, setAmbientSceneId] = useState('');
     /*
@@ -262,7 +263,7 @@ const StoryboardDashboard: React.FC = () => {
 
     const { scenes: ambientScenes } = useAmbientStore();
     const sortiesAudio = useSortiesAudioDisponibles();
-    const { getAudioLabel } = useHardwareStore();
+    const { getAudioLabel, getDisplayLabel } = useHardwareStore();
     const ecrans = useImageStore(e => e.displays);
     /*
       **Les écrans se relèvent en entrant ici.** La liste vit dans Image-OS et ne
@@ -319,6 +320,7 @@ const StoryboardDashboard: React.FC = () => {
         */
         setMapEstVideo(moment.isMapVideo ?? estUneVideo(moment.mapUrl || ''));
         setImageMediaId(moment.imageMediaId || '');
+        setDiaporamaId(moment.diaporamaId || '');
         setSoundPadId(moment.soundPadId || '');
         setAmbientSceneId(moment.ambientSceneId || '');
         setMusicOutputId(moment.musicOutputId || '');
@@ -444,7 +446,15 @@ const StoryboardDashboard: React.FC = () => {
             lightSceneId: lightSceneId || undefined,
             mapUrl: mapUrl || undefined,
             isMapVideo: mapUrl && mapEstVideo ? true : undefined,
-            imageMediaId: imageMediaId || undefined,
+            /*
+              ⚠️ **Un seul des deux part.** Ils visent la même place à l'écran :
+              un moment qui porterait les deux les enverrait l'un après l'autre,
+              et le second effacerait le premier. Les deux listes déroulantes
+              s'éteignent déjà l'une l'autre à la saisie ; cette ligne le garantit
+              **aussi pour un moment ouvert avant cette version**.
+            */
+            imageMediaId: diaporamaId ? undefined : (imageMediaId || undefined),
+            diaporamaId: diaporamaId || undefined,
             soundPadId: soundPadId || undefined,
             ambientSceneId: ambientSceneId || undefined,
             musicOutputId: musicOutputId || undefined,
@@ -759,13 +769,40 @@ const StoryboardDashboard: React.FC = () => {
                                     </label>
                                     <select 
                                         value={imageMediaId}
-                                        onChange={e => setImageMediaId(e.target.value)}
+                                        onChange={e => { setImageMediaId(e.target.value); if (e.target.value) setDiaporamaId(''); }}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
                                         title={t('modules:storyboard.editor.image_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
                                         {((window as unknown as Record<string, unknown>).useImageStore as { getState: () => { mediaList: Array<{ id: string, name: string }> } })?.getState()?.mediaList?.map((m) => (
                                             <option key={m.id} value={m.id}>{m.name}</option>
+                                        ))}
+                                    </select>
+
+                                    {/*
+                                      **Ou un diaporama — 2026-09-13.**
+
+                                      *« je veux pouvoir appeler ce diaporama après
+                                      dans un Storyboard ».* Il part sur le même
+                                      écran que l'image, parce que c'est la même
+                                      place : le sélecteur d'écran ci-dessous vaut
+                                      pour les deux.
+
+                                      ⚠️ **Choisir l'un vide l'autre.** Un moment
+                                      montre une image **ou** un diaporama ; les
+                                      laisser coexister donnerait deux ordres pour
+                                      un même écran, dont le second gagnerait une
+                                      demi-seconde après le premier.
+                                    */}
+                                    <select
+                                        value={diaporamaId}
+                                        onChange={e => { setDiaporamaId(e.target.value); if (e.target.value) setImageMediaId(''); }}
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
+                                        title={t('modules:storyboard.editor.diaporama_label')}
+                                    >
+                                        <option value="">{t('modules:storyboard.editor.diaporama_none')}</option>
+                                        {((window as unknown as Record<string, unknown>).useImageStore as { getState: () => { diaporamas?: Array<{ id: string, nom: string, imageIds: string[] }> } })?.getState()?.diaporamas?.map((d) => (
+                                            <option key={d.id} value={d.id}>{d.nom} ({d.imageIds.length})</option>
                                         ))}
                                     </select>
 
@@ -782,8 +819,31 @@ const StoryboardDashboard: React.FC = () => {
                                     >
                                         <option value="">{t('modules:storyboard.editor.screen_current')}</option>
                                         <option value="hub">{t('modules:storyboard.editor.screen_hub')}</option>
+                                        {/*
+                                          ⛔ **`ecran.label` est l'étiquette du système, pas
+                                          le nom donné par le meneur.**
+
+                                          David, le 2026-09-13 : *« les noms des moniteurs
+                                          ne sont pas corrects dans le storyboard »*. Cet
+                                          écran affichait ce que Windows appelle le
+                                          moniteur — quand ce n'est pas son identifiant
+                                          brut — alors que les alias vivent dans
+                                          `useHardwareStore`, rangés **par signature** pour
+                                          survivre au rebranchement (§ 51 du 12/09).
+
+                                          ⚠️ **Le même composant nommait déjà correctement
+                                          les sorties audio**, trois listes plus haut, avec
+                                          `getAudioLabel`. *Deux moitiés d'un même réglage
+                                          écrites au même endroit, et une seule fait le
+                                          détour par le nom du meneur.*
+
+                                          Les deux autres écrans qui proposent un moniteur
+                                          — l'atlas et les liens web — passent par
+                                          `ecransDeProjection`, qui prend `getDisplayLabel`
+                                          en paramètre. Celui-ci était le seul dehors.
+                                        */}
                                         {ecrans.map(ecran => (
-                                            <option key={ecran.id} value={ecran.id}>{ecran.label}</option>
+                                            <option key={ecran.id} value={ecran.id}>{getDisplayLabel(ecran.id)}</option>
                                         ))}
                                     </select>
 
