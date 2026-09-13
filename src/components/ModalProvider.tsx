@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
+import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
@@ -46,6 +47,33 @@ const ModalProvider: React.FC = () => {
             setInputValue(defaultValue as string);
         }
     }, [type, defaultValue]);
+
+    /*
+      **Échap ferme la boîte — les quatre types, d'un seul endroit.**
+
+      ⛔ Aucun ne l'écoutait. Ça se voyait sur les Paramètres, signalés par
+      David le 2026-09-12 (« Échap ne ferme pas les Paramètres, et le modal
+      avale alors tous les clics ») — mais les Paramètres ne sont qu'**une
+      variante `custom` sur vingt-neuf**, et `alert`, `confirm` et `prompt`
+      étaient logées à la même enseigne. *Un défaut signalé sur un écran en
+      cachait une trentaine.*
+
+      ⛔ **Échap prend toujours la sortie qui n'exécute rien.** Sur un
+      `confirm` c'est la voie d'annulation, jamais la confirmation : une touche
+      frappée par réflexe ne doit pas supprimer une campagne. Sur un `prompt`,
+      la saisie est abandonnée, pas validée.
+
+      ⚠️ L'ordre `closeModal()` **puis** le rappel est celui des boutons, et il
+      n'est pas indifférent : l'`onCancel` du choix de source de `PlaylistManager`
+      ouvre une autre boîte, que fermer après effacerait aussitôt ouverte. La
+      raison complète est en tête du bouton d'annulation, plus bas.
+    */
+    const fermerParEchap = () => {
+        if (type === 'alert') { closeModal(); onConfirm?.(); return; }
+        if (type === 'confirm') { closeModal(); onCancel?.(); return; }
+        closeModal();
+    };
+    useFermetureParEchap(!!type, fermerParEchap, `boîte ${type ?? ''}`.trim());
 
     if (!type && !isNetworkModalOpen) return null;
 

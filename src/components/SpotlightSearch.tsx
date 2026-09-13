@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { 
   Search, 
   CornerDownLeft, 
@@ -46,14 +47,25 @@ export const SpotlightSearch: React.FC = () => {
         }
     }, [selectedIndex]);
 
+    /*
+      **Trois voies menaient à la même fermeture ; il n'en reste qu'une.**
+
+      Échap était écouté deux fois — sur `window` dans `useSpotlight`, et sur
+      ce conteneur — et aucune des deux ne savait ce qui pouvait être ouvert
+      dessous. La recherche s'ouvre **par-dessus tout** (z-9999) : une frappe la
+      fermait donc **avec** la boîte qu'elle recouvrait.
+
+      ⭐ C'est aussi elle qui a servi de précédent le 2026-09-13 : elle ferme
+      depuis son champ focalisé **depuis toujours**, ce qui a fait écarter la
+      règle des deux frappes pour toute l'application.
+    */
+    useFermetureParEchap(isOpen, () => setIsOpen(false), 'Recherche rapide');
+
     if (!isOpen) return null;
 
     return (
         <div 
             className="fixed inset-0 z-[9999] flex items-start justify-center pt-[15vh] px-4 pointer-events-none"
-            onKeyDown={(e) => {
-                if (e.key === 'Escape') setIsOpen(false);
-            }}
         >
             {/* Backdrop */}
             <div 

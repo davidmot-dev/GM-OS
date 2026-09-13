@@ -8,6 +8,7 @@ import { ecransDeProjection, ecransOccupes } from '../../web/ecransDeProjection'
 import MenuDesEcrans from '../../../components/MenuDesEcrans';
 import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2, Footprints, MonitorPlay, X } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { Sparkles } from 'lucide-react';
@@ -55,6 +56,8 @@ const AtlasMapDetail: React.FC = () => {
     const fetchDisplays = useImageStore((e) => e.fetchDisplays);
     const { getDisplayLabel } = useHardwareStore();
     const [choixOuvert, setChoixOuvert] = useState(false);
+
+    useFermetureParEchap(isChoosingMedia, () => setIsChoosingMedia(false), 'Choix du média du lieu');
 
     /*
       **L'Atlas demande la liste des écrans lui-même.** `fetchDisplays` n'était

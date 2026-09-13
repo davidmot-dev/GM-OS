@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { X, Save } from 'lucide-react';
 import type { WebLink } from '../types';
 
@@ -27,6 +28,13 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
     const [name, setName] = useState(initialData?.name || '');
     const [url, setUrl] = useState(initialData?.url || '');
     const [color, setColor] = useState(initialData?.color || 'orange');
+
+    /*
+      ⚠️ `isOpen` décide, pas le montage : le composant est rendu en
+      permanence par son parent et se retire lui-même plus bas. L'inscription
+      doit suivre le drapeau, sinon un lien fermé garderait la main sur Échap.
+    */
+    useFermetureParEchap(isOpen, onClose, 'Lien web');
 
     if (!isOpen) return null;
 

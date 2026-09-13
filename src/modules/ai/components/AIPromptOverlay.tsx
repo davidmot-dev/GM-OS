@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { Sparkles, X, Send, Wand2, RefreshCw } from 'lucide-react';
 
 interface AIPromptOverlayProps {
@@ -47,6 +48,14 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
         }
     }, [isOpen, initialPrompt]);
 
+    /*
+      Elle se rend **par-dessus la fiche du lieu** de l'atlas. Son Échap vivait
+      sur la zone de texte : il ne répondait donc que le curseur dedans, et ne
+      rendait pas le clavier à la boîte — une lettre frappée à côté lançait
+      la pastille de son liée à cette touche.
+    */
+    useFermetureParEchap(isOpen, onClose, 'Invite de génération');
+
     if (!isOpen) return null;
 
     const handleSubmit = () => {
@@ -58,9 +67,6 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && e.ctrlKey) {
             handleSubmit();
-        }
-        if (e.key === 'Escape') {
-            onClose();
         }
     };
 

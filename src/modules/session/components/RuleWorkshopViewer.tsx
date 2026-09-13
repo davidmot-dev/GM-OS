@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import TexteMarkdown from '../../../components/TexteMarkdown';
 import LoupeDeLecture from '../../../components/LoupeDeLecture';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { useTranslation } from 'react-i18next';
 import { 
     Search, History, Scroll, 
@@ -100,6 +101,20 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
     const [editTitle, setEditTitle] = useState('');
     const [editContent, setEditContent] = useState('');
     const [editPath, setEditPath] = useState<string | null>(null);
+
+    /*
+      **Deux surcouches empilées, et l'ordre des deux lignes le dit.** La
+      lecture est en dessous, l'édition par-dessus (z-100 / z-110) : les
+      inscriptions suivent l'ordre d'appel, donc Échap referme l'éditeur avant
+      la lecture, jamais les deux à la fois.
+
+      ⚠️ L'éditeur abandonne la saisie, comme son propre bouton de fermeture —
+      *Échap fait ce que fait ce bouton, jamais plus*. Le texte en cours de
+      frappe est protégé autrement : une frappe dans un champ rend la main au
+      champ avant de fermer quoi que ce soit.
+    */
+    useFermetureParEchap(isReading, () => setIsReading(false), "Lecture d'une règle");
+    useFermetureParEchap(isEditing, () => setIsEditing(false), "Édition d'une règle");
 
     // Initial load of documents
     const loadDocs = React.useCallback(async () => {

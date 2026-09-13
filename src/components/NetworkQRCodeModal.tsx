@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Wifi, X, Smartphone } from 'lucide-react';
 import { useModalStore } from '../stores/useModalStore';
+import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 
 export const NetworkQRCodeModal: React.FC = () => {
     const { isNetworkModalOpen, closeNetworkModal } = useModalStore();
@@ -17,6 +18,14 @@ export const NetworkQRCodeModal: React.FC = () => {
             setNetworkInfo({ ip: window.location.hostname, port: parseInt(window.location.port) || 80 });
         }
     }, [isNetworkModalOpen]);
+
+    /*
+      Elle vit à côté du `ModalProvider` et non dedans — son drapeau est
+      distinct, et les deux peuvent être à l'écran en même temps. Elle
+      s'inscrit donc pour son propre compte : c'est la pile qui départage, et
+      celle du dessus est celle qu'Échap ferme.
+    */
+    useFermetureParEchap(isNetworkModalOpen, closeNetworkModal, 'Réseau local');
 
     if (!isNetworkModalOpen) return null;
 

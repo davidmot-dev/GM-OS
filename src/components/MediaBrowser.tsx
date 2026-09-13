@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { MediaItemThumbnail } from '../modules/image/components/MediaItemThumbnail';
 import { FullScreenPreview } from '../modules/image/components/FullScreenPreview';
 import { TacticalDetailPanel } from '../modules/image/components/TacticalDetailPanel';
+import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
     'image': <ImageIcon size={14} className="text-blue-400" />,
@@ -120,16 +121,14 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
       l'éditeur de média posent leur propre écoute d'Échap : sans cette garde,
       une seule frappe fermerait l'aperçu **et** la médiathèque derrière lui —
       et le meneur perdrait sa navigation pour avoir voulu refermer une image.
+
+      ⭐ **Cette garde était énumérée ; elle ne l'est plus.** Elle nommait ses
+      deux enfants (`previewItem`, `editingMediaId`) et tenait tant que personne
+      n'en ajoutait un troisième. Depuis le 2026-09-13, la pile de
+      `surcouchesOuvertes` répond à sa place : *seule celle du dessus ferme*, et
+      elle n'a rien à connaître de ce qu'elle porte.
     */
-    useEffect(() => {
-        const surEchap = (e: KeyboardEvent) => {
-            if (e.key !== 'Escape') return;
-            if (previewItem || editingMediaId) return;
-            onClose();
-        };
-        window.addEventListener('keydown', surEchap);
-        return () => window.removeEventListener('keydown', surEchap);
-    }, [onClose, previewItem, editingMediaId]);
+    useFermetureParEchap(true, onClose, 'Médiathèque');
     const [campaignFilterEnabled, setCampaignFilterEnabled] = useState(true);
     const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
     

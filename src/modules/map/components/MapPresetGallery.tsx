@@ -60,7 +60,7 @@ const MapPresetGallery: React.FC = () => {
                             className="w-full bg-app-bg border border-accent/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-accent"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSave();
-                                if (e.key === 'Escape') setIsSaving(false);
+                                if (e.key === 'Escape') { /* La frappe reste au champ : sans ça elle annulerait la saisie **et** refermerait l'écran derrière. */ e.stopPropagation(); setIsSaving(false); }
                             }}
                         />
                         <div className="flex gap-2">

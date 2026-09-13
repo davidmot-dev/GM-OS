@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal, Users, FolderTree } from 'lucide-react';
 import { forgeService } from '../ForgeService';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import ForgeProgress from '../rules/components/ForgeProgress';
 import RevueDuPilote from './RevueDuPilote';
 import PanneauDesPersonas from '../corpus/PanneauDesPersonas';
@@ -128,6 +129,7 @@ const ForgeDashboard: React.FC = () => {
   
   // NotebookLM Integration State
   const [isNotebookModalOpen, setIsNotebookModalOpen] = useState(false);
+  useFermetureParEchap(isNotebookModalOpen, () => setIsNotebookModalOpen(false), 'Carnet NotebookLM');
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
   const [selectedNotebook, setSelectedNotebook] = useState<Notebook | null>(null);
   const [notebookSources, setNotebookSources] = useState<NotebookSource[]>([]);

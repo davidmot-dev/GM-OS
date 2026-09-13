@@ -13,6 +13,7 @@ import {
     Eye
 } from 'lucide-react';
 import { useModalStore } from '../../../stores/useModalStore';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 
 interface SessionSnapshotModalProps {
     onClose: () => void;
@@ -29,6 +30,8 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
     
     const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
     const [isSaved, setIsSaved] = useState(false);
+
+    useFermetureParEchap(true, onClose, 'Instantané de séance');
 
     const relevantSessions = sessions
         .filter(s => s.campaignId === activeCampaignId && (s.status === 'planned' || s.status === 'active'))

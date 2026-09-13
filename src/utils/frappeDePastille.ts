@@ -1,3 +1,5 @@
+import { ilYAUneSurcoucheOuverte } from './surcouchesOuvertes';
+
 /**
  * **Cette frappe est-elle destinée à une pastille ?**
  *
@@ -32,7 +34,25 @@ export function estUneFrappeDePastille(evenement: KeyboardEvent): boolean {
     if (cible instanceof HTMLInputElement || cible instanceof HTMLTextAreaElement) return false;
     if (cible instanceof HTMLElement && cible.isContentEditable) return false;
 
-    // Une boîte ouverte a la main sur le clavier.
+    /*
+      **Une boîte ouverte a la main sur le clavier** — et on le demande
+      maintenant au registre, pas au DOM.
+
+      ⛔ La recherche de `[role="dialog"]` était une garde qui n'attrapait
+      presque rien : comptée le 2026-09-13, cet attribut n'existait que dans
+      **deux** fichiers côté meneur. Médiathèque, Forge, aperçu plein écran,
+      Oracle, visionneur de règles, QR réseau : toutes ouvertes, **toutes
+      muettes pour cette garde**. Une lettre frappée hors d'un champ y lançait
+      la pastille de Sound-OS et la scène de Light-OS, en séance.
+
+      *Une garde qui dépend d'un attribut qu'il faut penser à poser ne protège
+      que les écrans dont l'auteur connaissait la garde.*
+
+      Les deux lectures sont gardées : le registre pour les surcouches inscrites
+      par `useFermetureParEchap`, le DOM pour toute boîte qui porterait
+      l'attribut sans passer par le crochet.
+    */
+    if (ilYAUneSurcoucheOuverte()) return false;
     if (typeof document !== 'undefined' && document.querySelectorAll('[role="dialog"]').length > 0) {
         return false;
     }

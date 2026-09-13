@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import type { LightScene } from '../useLightStore';
 import { COULEUR_NEUTRE, couleurDeLaTuile } from '../logic/couleurDeLaTuile';
 
@@ -66,13 +67,18 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
         champDuNom.current?.select();
     }, []);
 
-    useEffect(() => {
-        const auClavier = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') { e.stopPropagation(); onAnnuler(); }
-        };
-        window.addEventListener('keydown', auClavier);
-        return () => window.removeEventListener('keydown', auClavier);
-    }, [onAnnuler]);
+    /*
+      **Échap annule** — il écoutait déjà, il s'inscrit maintenant (2026-09-13).
+      Le `stopPropagation` d'alors ne servait à rien : appelé depuis un écouteur
+      de `window`, il n'arrête aucun des autres écouteurs de `window`. Ce qui
+      rend vraiment le clavier à cette boîte, c'est le registre — et,
+      historiquement, le `role="dialog"` ci-dessous, qu'on garde.
+
+      ⚠️ Le champ du nom est **sélectionné à l'ouverture** : c'est cet écran
+      qui a fait écarter la règle des deux frappes, elle aurait rendu la
+      première muette ici.
+    */
+    useFermetureParEchap(true, onAnnuler, 'Scène de lumière');
 
     const valider = () => {
         const propre = nom.trim();

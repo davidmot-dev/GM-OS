@@ -592,6 +592,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                     setIsAddingItem(false);
                                                 }
                                                 if (e.key === 'Escape') {
+                                                    /* La frappe reste au champ : sans ça elle annulerait la saisie **et** refermerait l'écran derrière. */ e.stopPropagation(); 
                                                     setIsAddingItem(false);
                                                     setNewItemName('');
                                                 }

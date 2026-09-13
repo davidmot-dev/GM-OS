@@ -4,6 +4,7 @@ import {
     ListOrdered, FileText, Upload, Zap, X,
 } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { gmToast } from '../../../stores/useToastStore';
 import { forgeService } from '../ForgeService';
@@ -589,7 +590,9 @@ const SelecteurDeCarnet: React.FC<{
     onBasculerSource: (id: string) => void;
     onReconnecter: () => void;
     onFermer: () => void;
-}> = ({ carnets, carnetId, sources, sourcesRetenues, chargement, onChoisirCarnet, onBasculerSource, onReconnecter, onFermer }) => (
+}> = ({ carnets, carnetId, sources, sourcesRetenues, chargement, onChoisirCarnet, onBasculerSource, onReconnecter, onFermer }) => {
+    useFermetureParEchap(true, onFermer, 'Carnet et sources');
+    return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-12 bg-app-bg/80 backdrop-blur-sm animate-in fade-in">
         <div className="w-full max-w-4xl h-[70vh] bg-app-bg border border-accent/20 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col">
             <div className="p-6 border-b border-app-border/10 flex items-center justify-between bg-accent/5">
@@ -697,7 +700,8 @@ const SelecteurDeCarnet: React.FC<{
             </div>
         </div>
     </div>
-);
+    );
+};
 
 const Etape: React.FC<{
     numero: string; icone: React.ReactNode; titre: string; aide: string;

@@ -365,7 +365,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                             onChange={e => setRenommage({ id: g.id, nom: e.target.value })}
                                             onKeyDown={e => {
                                                 if (e.key === 'Enter') validerLeRenommage();
-                                                if (e.key === 'Escape') setRenommage(null);
+                                                if (e.key === 'Escape') { /* La frappe reste au champ : sans ça elle annulerait la saisie **et** refermerait l'écran derrière. */ e.stopPropagation(); setRenommage(null); }
                                             }}
                                             className="flex-1 bg-app-surface border border-accent/40 rounded-lg px-2 py-1 text-sm font-black"
                                         />

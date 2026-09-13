@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import {
     AlertTriangle,
     RefreshCw,
@@ -162,6 +163,14 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
     const handleStrategy = (strategy: NexusConflictStrategy) => {
         onResolve({ strategy });
     };
+
+    /*
+      **Échap annule l'import, il ne choisit aucune stratégie.** `replace`
+      écrase une campagne existante et le dit en toutes lettres : *irréversible*.
+      La seule voie qu'une touche frappée par réflexe peut prendre est celle qui
+      n'écrit rien.
+    */
+    useFermetureParEchap(true, () => handleStrategy('cancel'), 'Conflit Nexus');
 
     return (
         /* Backdrop overlay */

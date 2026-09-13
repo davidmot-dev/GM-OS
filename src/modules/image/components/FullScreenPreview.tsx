@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, Music, FileText, FileWarning } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import type { MediaItem } from '../../../stores/useMediaStore';
 import { useTranslation } from 'react-i18next';
 import { documentAffichable, extensionDe } from '../../../stores/typesDeMedia';
@@ -14,13 +15,13 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
     const { t } = useTranslation(['common', 'modules']);
     const url = useMediaUrl(media.id);
 
-    useEffect(() => {
-        const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose();
-        };
-        window.addEventListener('keydown', handleEsc);
-        return () => window.removeEventListener('keydown', handleEsc);
-    }, [onClose]);
+    /*
+      Elle s'ouvre **par-dessus la médiathèque**, qui écoute aussi Échap. C'est
+      la pile qui départage depuis le 2026-09-13 : l'aperçu est inscrit après,
+      donc il ferme seul. *Le meneur ne perd plus sa navigation pour avoir voulu
+      refermer une image.*
+    */
+    useFermetureParEchap(true, onClose, 'Aperçu plein écran');
 
     if (!url) return null;
 

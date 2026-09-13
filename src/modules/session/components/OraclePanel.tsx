@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNotebookLM } from '../hooks/useNotebookLM';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
 import HorsDePortee from './HorsDePortee';
 import { gmConfirm } from '../../../stores/useModalStore';
@@ -63,19 +64,19 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             }
         };
         
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && isOpen) {
-                onClose();
-            }
-        };
-
         document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('keydown', handleKeyDown);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [isOpen, onClose]);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    /*
+      **Son Échap était à lui seul, il entre dans la pile** (2026-09-13).
+
+      Il écoutait déjà, mais sans rien savoir de ce qui pouvait s'ouvrir
+      par-dessus — et surtout sans **prendre la main sur le clavier** : une
+      lettre frappée dans l'Oracle hors du champ de saisie lançait la pastille
+      de Sound-OS liée à cette touche.
+    */
+    useFermetureParEchap(isOpen, onClose, 'Oracle');
 
     // Sync gems with defaults when panel opens
     useEffect(() => {

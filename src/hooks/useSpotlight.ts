@@ -325,10 +325,6 @@ export const useSpotlight = () => {
 
       if (!isOpen) return;
 
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-      }
-
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         setSelectedIndex(prev => (prev + 1) % (results.length || 1));

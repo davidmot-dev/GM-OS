@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { MediaItem, MediaCollection } from '../../../stores/useMediaStore';
 import type { Campaign } from '../../session/useSessionOSStore';
 import { MediaItemThumbnail } from './MediaItemThumbnail';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { usagesDesMedias } from '../../../services/proprietairesDesMedias';
 
 interface TacticalDetailPanelProps {
@@ -40,6 +41,14 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 }) => {
     const { t, i18n } = useTranslation(['modules', 'common']);
     const [newTag, setNewTag] = useState('');
+
+    /*
+      **Il se rendait par-dessus la médiathèque sans jamais écouter Échap.**
+      La garde de la médiathèque le nommait pour se taire quand il était
+      ouvert — elle se taisait donc, et **personne ne fermait rien**. Il ferme
+      maintenant pour son compte, et la médiathèque derrière lui reste ouverte.
+    */
+    useFermetureParEchap(true, onClose, 'Fiche du média');
 
     /*
       **Qui se sert de ce fichier.**
