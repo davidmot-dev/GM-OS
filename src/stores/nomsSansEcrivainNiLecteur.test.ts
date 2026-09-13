@@ -153,16 +153,23 @@ const TOLERES: Record<string, string> = {
     'consignerLOuvertureDuCombat': "appelée par les autres actions du combat",
     'setSonie': "appelée par la mesure de sonie du magasin de musique",
     'updateEntityNotes': "appelée par une autre action de useNPCStore",
-    'imageAvantLeMoment': "le décor d'avant un moment, relu à sa fermeture (useStoryboardStore)",
     /*
-      ⚠️ **`sonsDuMoment` a quitté cette liste le 2026-09-13, et pas parce qu'il a
-      changé.** Un module frère (`lumiereDuMoment.ts`) le cite désormais **dans sa
+      ⚠️ **`sonsDuMoment` et `imageAvantLeMoment` ont quitté cette liste le
+      2026-09-13, et pas parce qu'ils ont changé.** Un module frère (`lumiereDuMoment.ts`) le cite désormais **dans sa
       documentation**, et ce contrôle compare du texte : il ne distingue pas un
       renvoi d'un usage. *Une garde qui lit des noms ne peut pas lire des
       intentions* — c'est écrit dans son en-tête, et c'en est un cas.
 
-      Si ce renvoi disparaît un jour, le contrôle redemandera la tolérance. C'est
-      du bruit, mais du bruit qui pose une question plutôt que d'en taire une.
+      Si ces renvois disparaissent un jour, le contrôle redemandera les
+      tolérances. C'est du bruit, mais du bruit qui pose une question plutôt
+      que d'en taire une.
+
+      ⛔ **Deux fois en deux jours : au troisième, il faudra écarter les
+      commentaires du corpus** plutôt que de retirer des tolérances une à une.
+      Ça renforcerait aussi le contrôle principal — *un nom qui n'apparaît que
+      dans un commentaire n'est pas employé* — mais découper les commentaires
+      d'un source TypeScript sans casser les chaînes ni les gabarits n'est pas
+      un geste à improviser au détour d'un raccourci clavier.
     */
     'lumiereDuMoment': "la scène de lumière posée par un moment, relue à la prise de main suivante et à l'arrêt (useStoryboardStore)",
     'undoStack': "la pile d’annulation du tableau blanc, relue chez elle",

@@ -3,6 +3,7 @@ import { useSessionStore, type ModuleID } from '../store/useSessionStore';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 import { useModalStore } from '../stores/useModalStore';
 import { PLACES_DE_RACCOURCI } from '../data/catalogueDesModules';
+import { effacerLePlayerHub } from '../modules/image/logic/effacerLePlayerHub';
 
 /**
  * **`Ctrl+1` à `Ctrl+9` ouvrent un module.**
@@ -79,6 +80,28 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
                     venuDe.current = session.activeModule;
                     session.setActiveModule('aide');
                 }
+                return;
+            }
+
+            /*
+              **`Ctrl+0` vide le Player Hub** — demandé par David le 2026-09-13 :
+              *« en tant que MJ je ne vois pas toujours l'écran Player Hub »*. Ce
+              qu'on y laisse traîner y reste, faute de le voir.
+
+              ⛔ **C'est la seule exception à la règle énoncée en tête de ce
+              fichier** — *« rien ne se déclenche, rien ne se projette »* — et
+              elle mérite d'être dite plutôt que glissée. Le motif de cette règle
+              est qu'*une image projetée devant les joueurs ne se rattrape pas* :
+              or ce geste ne peut que **retirer**, jamais montrer. Une frappe
+              malheureuse coûte une projection à refaire, pas un secret éventé.
+              *L'asymétrie est ce qui autorise l'exception.*
+
+              Le « 0 » se lit comme « rien », et il tombe à côté des neuf places
+              de modules — même famille de touches, mêmes gardes.
+            */
+            if (evenement.code === 'Digit0') {
+                evenement.preventDefault();
+                effacerLePlayerHub(window.appBridge);
                 return;
             }
 

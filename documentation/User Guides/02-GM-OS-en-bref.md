@@ -260,6 +260,18 @@ rapide que de savoir dans quel module chercher.
 Tous ces guides, dans GM-OS, avec leur propre moteur de recherche. Le même raccourci vous ramène
 d'où vous veniez.
 
+**Vider l'écran des joueurs** (`Ctrl+0`)
+Retire d'un coup ce que le Player Hub affiche — image projetée, fiche de PNJ, titre — sans avoir à
+savoir ce qui s'y trouvait. *Il existe parce qu'on ne regarde pas cet écran-là : ce qu'on y laisse
+traîner y reste.*
+
+> ⭐ **Il ne peut que retirer, jamais montrer.** C'est ce qui autorise un raccourci là où `Ctrl+1`
+> à `Ctrl+9` se contentent d'ouvrir un écran : une frappe malheureuse coûte une projection à
+> refaire, pas un secret éventé.
+>
+> ⚠️ **Vos favoris épinglés restent**, et le fond aussi. Un favori épinglé n'a pas été laissé là par
+> distraction, il a été choisi — l'effacer le **dépinglerait**, et il faudrait tout recocher.
+
 ---
 
 ## 💡 Ce qu'il faut retenir
@@ -271,6 +283,7 @@ d'où vous veniez.
   sert à corriger ce qu'il a mal rangé.
 - **Le premier soir, un seul écran suffit** — le cockpit. Le reste s'ajoute quand vous en avez
   besoin.
+- **`Ctrl+0` vide l'écran des joueurs** quand vous ne savez plus ce qui y est affiché.
 
 ---
 

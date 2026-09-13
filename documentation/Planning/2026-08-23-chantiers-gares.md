@@ -93,6 +93,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | ✅ Les **boutons de l'Ulanzi** | 12/09 → ✅ **ÉPROUVÉS EN RÉEL le 13/09** | David : *« tout fonctionne »*. La chaîne entière tient — appui, MQTT, Home Assistant, GM-OS. Les trois boutons publient (`buttonLeft`, `buttonSelect`, `buttonRight`) et **gardent leur défilé natif** : rien n'est confisqué à l'appareil. ⚠️ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les deux craintes qui ont guidé la mesure, et les deux étaient infondées |
 | Le **matériel débranché puis rebranché** | 12/09 | Écrit le jour même (§ 51) et **jamais éprouvé sur du vrai matériel**. Trois choses à regarder : le nom donné à l'enceinte tient-il après un cycle de débranchement ; une ambiance visée dessus la **retrouve**-t-elle ; et l'alerte d'absence n'apparaît-elle **qu'une fois**. *La signature repose sur l'hypothèse que Windows rend le même libellé au rebranchement — mesurée sur la documentation, pas sur ta machine.* |
 | Le **retour au Home entre deux moments** | 13/09 | Écrit le jour même (§ 52), **jamais vu sur une vraie lampe**. À juger en séance : le passage d'un moment éclairé à un moment sans lumière **fait-il clignoter la pièce** (Home puis scène suivante), et l'éclairage normal désigné est-il celui qu'on veut retrouver en sortant d'une scène tendue ? *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
+| `Ctrl+0` sur un **vrai Player Hub** | 13/09 | Écrit le jour même (§ 53). Les tests éprouvent le **départ** du message, jamais son arrivée — aucune fenêtre de Hub n'est ouverte dans une instance d'essai. À regarder : l'image **et** la fiche **et** le titre disparaissent-ils ensemble, le fond reste-t-il, et les favoris épinglés survivent-ils ? *Un message qu'on envoie n'est pas un écran qui se vide.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -2967,6 +2968,68 @@ jour même dans le module frère. *Une garde qui lit des noms ne peut pas lire d
 ⚠️ **À éprouver à la table** — voir § 1 : aucun de ces tests ne voit une vraie lampe. Ce qui se
 juge en séance : que le retour au Home ne fasse pas clignoter la pièce entre deux moments, et que
 l'éclairage normal soit bien celui qu'on veut retrouver en sortant d'une scène tendue.
+
+### 53 · ⭐ `Ctrl+0` vide l'écran des joueurs — et la réception attendait depuis toujours (2026-09-13)
+
+*David : « je voudrais la possibilité de fermer [la fenêtre du Player Hub] avec un raccourci dédié,
+car en tant que MJ je ne vois pas toujours l'écran Player Hub ».*
+
+#### ⭐ Sa raison décide de la conception
+
+Le meneur **ne regarde pas cet écran**. Le geste doit donc partir de **sa** fenêtre, et effacer sans
+qu'on ait à savoir ce qui était affiché. *Un bouton sur le Player Hub n'aurait servi qu'aux
+joueurs* — c'est la phrase de sa demande, pas la fonctionnalité, qui a tranché.
+
+#### ⛔ SIXIÈME « chaîne complète sans bouton au bout »
+
+`useHubSync` traite un message **`FULL_RESET`** qui vide l'image, la fiche et la vidéo.
+**Aucune occurrence ailleurs dans le dépôt : personne ne l'émettait.** La réception était construite
+et attendait.
+
+⚠️ Et elle a échappé à `nomsSansEcrivainNiLecteur` **parce qu'elle vit dans une chaîne de
+caractères**, pas dans un magasin. *Une garde qui inventorie des noms déclarés ne voit pas les
+protocoles.*
+
+#### Deux décisions, et une que j'ai prise contre l'option choisie
+
+David avait retenu « tout ce que le Player Hub affiche », **favoris épinglés compris**. En cherchant
+le canal, j'ai trouvé que leur présence n'est pas une projection : c'est un drapeau **persisté** sur
+la fiche (`isSyncedToPlayerHub`), posé un par un. Les effacer ne les cacherait pas, ça les
+**dépinglerait**.
+
+⭐ Ils sont donc épargnés, et c'est dit : *ce geste rattrape ce qu'on a laissé traîner sans le voir ;
+un favori épinglé n'a pas été laissé, il a été choisi.* Le fond de l'écran reste aussi — *l'image
+est le décor, les fiches passent devant.*
+
+#### ⛔ Une exception assumée à la règle des raccourcis
+
+`useRaccourcisDeNavigation` porte en tête : *« ils ne font qu'ouvrir un écran : rien ne se
+déclenche, rien ne se projette »*, parce qu'*une image projetée devant les joueurs ne se rattrape
+pas*.
+
+`Ctrl+0` enfreint cette règle — **et l'asymétrie est ce qui l'autorise** : il ne peut que
+**retirer**, jamais montrer. Une frappe malheureuse coûte une projection à refaire, pas un secret
+éventé. *Écrit à côté de la règle plutôt que glissé sans le dire.*
+
+#### ⛔⛔ Et une dégradation qui ne prouvait rien
+
+Première tentative de dégradation : les quatre tests E2E sont restés **verts**. Non parce que le
+code tenait, mais parce que la dégradation **ne compilait pas** — `npm run build` est
+`tsc -b && vite build`, `tsc` a échoué, `vite` n'a jamais tourné, et Playwright a mesuré **l'ancien
+`dist`**.
+
+⭐ *C'est le piège du § 47 retourné contre moi* : là-bas un test vert ne pouvait pas rougir à cause
+d'un chemin mangé par le shell ; ici à cause d'un artefact périmé. **Une dégradation doit compiler,
+sinon elle ne dégrade rien.** Refaite proprement, elle fait rougir **3 des 4**.
+
+**Ancres** : `image/logic/effacerLePlayerHub.ts` (+ 8 tests), `useRaccourcisDeNavigation.ts`
+(`Digit0`), `e2e/viderLePlayerHub.spec.ts` (4 tests, dont la garde des champs de saisie).
+
+**Vérifié** : `tsc -b` propre, **4 402 tests** (367 fichiers), **168 tests E2E**.
+
+⚠️ **Ce qu'aucun test ne dit** — voir § 1 : que l'écran des joueurs se vide **vraiment**. La fenêtre
+du Hub n'est pas ouverte dans une instance d'essai, et ce qui part par `sendSync` ne revient pas. On
+éprouve le départ, pas l'arrivée.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
