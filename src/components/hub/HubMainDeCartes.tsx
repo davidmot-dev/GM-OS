@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { DeckInterpreter } from '../../modules/session/logic/DeckInterpreter';
 import { voisinsAQuiDonner } from '../../modules/session/logic/aQuiDonnerUneCarte';
+import { paquetsOffertsAuxJoueurs, systemeDeLaCampagne } from '../../modules/session/logic/paquetsDuJeu';
 import { ResolvedImage } from '../ResolvedImage';
 
 /**
@@ -45,6 +46,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
     const cartesRestantes = useSessionOSStore(s => s.cartesRestantes);
     const demandesDeCarte = useSessionOSStore(s => s.demandesDeCarte);
     const players = useSessionOSStore(s => s.players);
+    const campaigns = useSessionOSStore(s => s.campaigns);
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
     /** `characterId → deviceId` : qui tient réellement un appareil, à l'instant. */
     const connectedCharacters = useSessionOSStore(s => s.connectedCharacters);
@@ -75,21 +77,34 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
         [players, t]);
 
     /*
-      **Les paquets où ce joueur a le droit de piocher.** Le manifeste porte
-      `ouvertAuxJoueurs`, et l'absence vaut fermé : les paquets d'avant ce jour
-      restent au meneur sans migration. Ce filtrage est un confort d'affichage,
-      pas une sécurité — le magasin du meneur refuse de toute façon un paquet
-      fermé, et c'est là que ça compte.
+      **Les paquets où ce joueur a le droit de piocher : de CE jeu, et ouverts.**
+
+      ⛔ **Il manquait la première moitié**, et David l'a vu le 2026-09-14 :
+      *« j'ai désactivé les cartes pour Blade Runner mais elles restent visibles
+      dans la tablette »*. Il avait sorti un paquet du jeu ; la bibliothèque du
+      meneur l'a retiré, la tablette a continué de l'offrir — elle ne regardait
+      que `ouvertAuxJoueurs`. *Deux lecteurs d'une même liste, dont un seul
+      connaissait la règle.* La règle vit maintenant dans `paquetsDuJeu.ts`, et
+      les deux écrans la prennent au même endroit.
+
+      Ce filtrage reste un confort d'affichage, pas une sécurité : le magasin du
+      meneur refuse de toute façon une pioche dans un paquet fermé, et c'est là
+      que ça compte.
     */
     const paquetsOuverts = React.useMemo(
-        () => (decks ?? []).filter(d => d.ouvertAuxJoueurs),
-        [decks],
+        () => paquetsOffertsAuxJoueurs(decks, systemeDeLaCampagne(campaigns, activeCampaignId)),
+        [decks, campaigns, activeCampaignId],
     );
 
     /*
       On ne montre que **sa** main. Celle des autres est diffusée — le meneur en
       a besoin — mais l'afficher ici ferait de la tablette une fenêtre sur le
       jeu du voisin.
+
+      ⚠️ **Et elle n'est PAS filtrée par jeu, exprès.** Une carte qu'on tient
+      existe : la cacher parce que son paquet a changé de jeu la rendrait
+      injouable et irrécupérable, sans que personne sache où elle est passée.
+      *On ne retire pas de la main ce qu'on se contente de ne plus proposer.*
     */
     const mesCartes = React.useMemo(() => {
         if (!characterId || !mainsDesPaquets) return [];

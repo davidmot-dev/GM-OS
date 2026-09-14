@@ -3,6 +3,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import type { CardFormat, CardOrientation, DeckManifest } from '../store/types';
+import { paquetsDuJeu, systemeDeLaCampagne } from '../logic/paquetsDuJeu';
 
 export const useDeckLibrary = () => {
     const { 
@@ -39,16 +40,17 @@ export const useDeckLibrary = () => {
         return systems.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
     }, [customSheetTemplates, customGameDrivers]);
 
-    const activeCampaign = useMemo(() => 
-        campaigns.find(c => c.id === activeCampaignId),
-        [campaigns, activeCampaignId]
+    const currentSystemId = useMemo(
+        () => systemeDeLaCampagne(campaigns, activeCampaignId),
+        [campaigns, activeCampaignId],
     );
-    
-    const currentSystemId = activeCampaign?.system || 'generic';
 
+    /* La même règle que la tablette, prise au même endroit — voir
+       `logic/paquetsDuJeu.ts`. Ici seulement, elle a un interrupteur : le meneur
+       range ses paquets, donc il lui faut pouvoir tous les voir. */
     const filteredDecks = useMemo(() => {
         if (showAllDecks) return decks;
-        return decks.filter(d => d.systemId === 'generic' || d.systemId === currentSystemId);
+        return paquetsDuJeu(decks, currentSystemId);
     }, [decks, currentSystemId, showAllDecks]);
 
     const resetForm = () => {
