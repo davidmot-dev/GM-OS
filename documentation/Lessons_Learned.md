@@ -1346,9 +1346,114 @@ banc d'essai à du code livré depuis des mois, et en a sorti quatre défauts.*
   ont été trouvés à l'écran, aucun par relecture* — et la formulation du meneur vaut mieux qu'une
   pile d'appels, à condition de la lire comme un indice et non comme une plainte.
 
+## 🔌 Ce qui accueille sans répondre, et les règles qui ne protègent que leur fichier (2026-09-14, au soir)
+
+*Trois signalements de David dans la même soirée, tous formulés comme des surprises d'écran :
+« la tablette pointe vers Eternal Quest », « les cartes restent visibles », « je voudrais échanger un
+PJ ». Les deux premiers étaient des défauts qu'aucune relecture n'aurait trouvés, et le troisième a
+surtout appris pourquoi il n'y avait presque rien à écrire.*
+
+### 1. Un refus se voit ; un silence poli ne se voit pas
+
+- **Défi** : la tablette affichait « The Eternal Quest », une campagne de démonstration, au lieu de
+  celle du soir. Le symptôme ressortait **à l'autre bout de l'application** — dans le nom d'une
+  campagne — alors que la cause était un port.
+- **La cause** : le QR-code écrivait le port **applicatif** (celui de Vite en développement) et non
+  celui du `SyncServer`. La tablette ouvrait sa WebSocket sur le serveur de rechargement à chaud.
+- **⭐ Mesuré avant d'être annoncé**, une WebSocket ouverte sur chacun des deux ports :
+  `ws://…:3001` répond `remote:registered` aussitôt ; `ws://…:5173` **reste ouverte et ne dit rien
+  en quatre secondes**.
+- **Leçon** : *Vite accepte la connexion et ne répond jamais.* Une connexion **refusée** aurait mis
+  la tablette en reconnexion toutes les cinq secondes, icône barrée, et David aurait su quoi
+  signaler. Accueillie et ignorée, elle s'affichait **connectée** et n'avait rien à dire.
+  **Entre un refus et un silence, c'est le silence qui coûte cher.**
+- **⛔ Corollaire de diagnostic, à garder** : *« The Eternal Quest » sur un écran veut dire qu'il n'a
+  jamais reçu l'état du meneur.* C'est `INITIAL_DATA`, que porte tout magasin neuf. On cherche alors
+  le **transport**, jamais les campagnes — une base neuve n'est jamais vide.
+
+### 2. Une déduction juste dans un régime et muette dans l'autre est pire qu'une valeur absente
+
+- **Ce qui était écrit**, et qui était vrai : *« la tablette charge l'application depuis le
+  SyncServer lui-même, donc son `window.location.port` EST le port de synchronisation. »*
+- **Vrai en production, faux dès que Vite sert la page** — et le QR-code l'y envoyait exprès, pour
+  garder le rechargement à chaud.
+- **Leçon** : une valeur absente se rattrape par un repli ; **une valeur fausse et plausible ne se
+  rattrape pas**, parce que rien ne la signale. *Quand une valeur ne peut pas être déduite dans tous
+  les régimes, on la **dit*** — d'où l'adresse qui porte désormais ses deux ports.
+- **⚠️ Et on l'écrit même là où elle est redondante** : en production les deux ports sont le même
+  nombre. *Rendre le paramètre conditionnel n'aurait fait qu'ajouter un cas où il peut manquer.*
+
+### 3. Une règle énoncée dans un commentaire ne protège que le fichier qui la porte
+
+- **Défi** : c'était la **troisième** fois que `port` et `mediaPort` étaient confondus — après le
+  proxy des médias, puis le pont des boutons de l'afficheur (12/09, trouvé par David le lendemain).
+- **⛔ Et la phrase qui l'interdisait était déjà écrite**, depuis la veille, à trois lignes de là :
+  *« la seule défense est de ne composer cette adresse qu'ici »*. Elle était juste. Deux autres
+  écrans composaient la leur à la main, deux dossiers plus loin.
+- **Leçon** : un commentaire documente une décision ; il n'en étend pas la portée. **Ce qui porte
+  une règle au-delà de son fichier, c'est une garde** — ici, un balayage du dépôt qui refuse tout
+  `?window=tablet|remote` écrit en toutes lettres.
+- **⭐ Et elle a mordu à sa première exécution**, sur un fichier que je venais de corriger à moitié
+  en y laissant l'ancienne adresse comme repli. *Une garde écrite après coup trouve d'abord les
+  oublis de son propre auteur.*
+
+### 4. Deux lecteurs d'une même liste, dont un seul connaît la règle
+
+- **Défi** : David — *« j'ai désactivé les cartes pour Blade Runner mais elles restent visibles dans
+  la tablette »*. Il avait sorti un paquet du jeu.
+- **La cause** : la bibliothèque du meneur filtrait par **jeu**, la tablette seulement par
+  **ouverture aux joueurs**. Le paquet quittait donc le seul écran où l'on aurait pu le voir
+  disparaître.
+- **Leçon** : *le défaut n'était pas une règle fausse — c'était une règle que le second lecteur ne
+  connaissait pas.* Deuxième occurrence dans Deck-OS après la liste « Donner à », qui ignorait la
+  campagne **et** la connexion.
+- **⛔ Ce que cela change pour la garde** : vérifier que la fonction est juste n'aurait rien
+  protégé. **Ce qu'il faut interdire, c'est le second filtrage écrit à la main.**
+- **⚠️ Un piège de nommage, à connaître** : le champ s'appelle **`system` sur la campagne** et
+  **`systemId` sur le paquet**. Deux noms pour la même chose, et c'est exactement ce qui fait écrire
+  une comparaison avec `undefined` — toujours fausse, donc une liste vide que personne ne sait
+  expliquer.
+- **⭐ Et on filtre ce qu'on propose, pas ce qu'on transporte** : le meneur continue de diffuser
+  tous les paquets, sans quoi une carte tenue dont le paquet a changé de jeu n'aurait plus d'image.
+
+### 5. Ce qui ne porte pas de clé étrangère n'a rien à réécrire
+
+- **Défi** : faire passer un personnage d'un joueur à un autre.
+- **⭐ Ce que le modèle a rendu** : un `PlayerCharacter` **ne porte aucun `playerId`**. Il appartient
+  à celui dans la liste de qui il se trouve. Déplacer l'entrée suffit — et comme son identifiant ne
+  bouge pas, la fiche, les notes privées, l'inventaire, sa place dans la séance (`sessionEntityIds`
+  contient des ids de **personnages**) et les cartes qu'il tient (`porteur`) suivent seuls.
+- **Leçon** : *un transfert qui renumérote a tout à réécrire ; celui qui garde l'identifiant n'a
+  rien à réécrire.* La conception ne consistait pas à ajouter du code, mais à **reconnaître qu'il
+  n'y en avait pas à ajouter** — et à l'écrire, sinon quelqu'un « complétera » un jour ce qui n'a
+  rien d'incomplet.
+- **⚠️ Le seul fil qui ne suit pas, et pourquoi aucune écriture ne le règle** : le verrou
+  d'appareil n'est pas un champ, c'est le **reflet** des clients connectés, recalculé à chaque
+  changement de la liste. *On ne défait pas un reflet ; on le dit.* Choix de David : prévenir, sans
+  éjecter.
+
+### 6. Lire les données du meneur remplace trois hypothèses
+
+- **Ce qui s'est passé** : les deux défauts ont été compris **avant** d'ouvrir un écran, dans la
+  sauvegarde automatique du soir — la campagne active y était nommée, ses sept sœurs aussi, et le
+  paquet resté ouvert y portait l'identifiant du pilote Blade Runner alors qu'il s'appelle
+  « Torg Action ».
+- **Leçon** : *deux minutes de lecture de données écartent la moitié des suppositions* — c'est le
+  même geste que « regarder les traces avant de formuler une hypothèse », appliqué à l'état plutôt
+  qu'au journal. La sauvegarde automatique, écrite pour le filet, sert aussi de **sonde**.
+- **⚠️ Et elle dit aussi ce qu'elle ne contient pas** : `activeCampaignName` n'y est pas — il n'est
+  pas persisté. Un champ absent d'une sauvegarde est un champ qui ne survit pas au redémarrage, et
+  la sauvegarde est le seul endroit où cela se lit d'un coup d'œil.
+
 ---
 
-*Dernière mise à jour : 14 Septembre 2026 — Échap ferme les surcouches (une famille de trente
+*Dernière mise à jour : 14 Septembre 2026, au soir — le QR-code qui envoyait la tablette parler à
+Vite (**qui accueille la connexion et ne répond jamais**, d'où un écran qui se croit connecté et
+reste sur la campagne de démonstration), la tablette qui offrait les paquets d'un autre jeu, et le
+transfert d'un PJ entre joueurs — qui a surtout appris **pourquoi il n'y avait presque rien à
+écrire**.*
+
+*Mise à jour du même jour : 14 Septembre 2026 — Échap ferme les surcouches (une famille de trente
 écrans derrière un défaut signalé sur un seul, et la garde du clavier qui n'attrapait presque
 rien), les diaporamas d'Image-OS et les **quatre défauts antérieurs** qu'ils ont révélés — le
 fondu qui passait par le noir, Image-OS absent de toute sauvegarde, le fondu qui s'animait avant le
