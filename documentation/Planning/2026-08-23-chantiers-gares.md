@@ -3476,6 +3476,262 @@ guide 24 § « Les diaporamas ».
 
 **Vérifié** : `tsc -b` propre, **4 490 tests** (375 fichiers, 1 ignoré), **173 tests E2E**.
 
+### 59 · ⛔ Le QR-code envoyait la tablette parler à Vite (2026-09-14)
+
+*Signalé par David : « la tablette joueur pointe vers Eternal Quest et pas vers la campagne en
+cours », puis, à la question de la voie d'entrée : « je suis passé par le QR-code ».*
+
+#### Ce que le symptôme désignait, et ce qu'il désignait vraiment
+
+« The Eternal Quest » n'est pas une campagne de David : c'est `INITIAL_DATA`, la campagne de
+démonstration que porte tout magasin `useSessionOSStore` **neuf**, avec son `activeCampaignId:
+'c-1'`. La voir, c'est voir un écran **qui n'a jamais reçu l'état du meneur**.
+
+Le pont répond **deux ports** à la question « où est l'application ? » :
+
+```js
+port:      devPort ? 5173 : 3001   // Vite en développement, le SyncServer en production
+mediaPort: 3001                    // le SyncServer, TOUJOURS
+```
+
+Le QR-code n'écrivait que `port`. En développement — le régime où David travaille — il envoyait donc
+la tablette sur **Vite**. Elle y charge l'application sans difficulté ; puis
+`portDeSynchronisation()` déduit le port de synchronisation de `window.location.port`, parce qu'elle
+affirmait ceci :
+
+> *« Elle charge l'application depuis le SyncServer lui-même : son `window.location.port` EST le
+> port de synchronisation. »*
+
+**L'affirmation est vraie en production et fausse dès que Vite sert la page.** La tablette ouvrait
+sa WebSocket sur le serveur de rechargement à chaud.
+
+#### ⭐ Mesuré avant d'être annoncé
+
+Une WebSocket ouverte sur chacun des deux ports, comme le ferait une tablette :
+
+```
+ws://…:3001  -> OUVERT, reponse immediate : remote:registered
+ws://…:5173  -> OUVERT, et AUCUN message en 4 s
+```
+
+**Vite accepte la connexion et ne dit jamais rien.** C'est tout le défaut : la tablette passait en
+`status: 'connected'`, affichait son icône de réseau, et n'a jamais reçu une seule campagne.
+
+> ⛔ *Un refus se voit ; un silence poli ne se voit pas.* Une connexion refusée aurait mis la
+> tablette en reconnexion toutes les cinq secondes, avec l'icône barrée — David aurait su quoi
+> signaler. Accueillie et ignorée, elle n'avait rien à dire, et le symptôme est ressorti à l'autre
+> bout de l'application : **dans le nom d'une campagne**.
+
+⚠️ **Et les images suivaient le même chemin.** `useMediaUrl` compose `/media/` et `/temp/` sur ce
+même port : la tablette les demandait à Vite, qui répond son `index.html`. *Une image qui arrive en
+`text/html` ne s'affiche pas* — le commentaire de `remote:get-connection-info` décrivait déjà ce
+mode d'échec, mot pour mot.
+
+#### ⛔ Troisième fois que ces deux champs sont confondus
+
+1. Le **proxy des médias** — la raison pour laquelle `mediaPort` existe ;
+2. Le **pont des boutons de l'afficheur**, le 2026-09-12, trouvé par David le lendemain : le panneau
+   affichait `http://…:5173/bouton`, Home Assistant y postait, et Vite répondait son `index.html` ;
+3. Le **QR-code**, ici — et il l'écrivait **depuis toujours**.
+
+⭐ **Le correctif du 13/09 avait laissé la phrase juste au mauvais endroit.** `adresseDuPontDesBoutons`
+porte depuis ce jour-là : *« la seule défense est de ne composer cette adresse qu'ici »*. Elle était
+vraie, et elle ne protégeait **que son propre fichier** — deux autres écrans composaient la leur à la
+main, deux dossiers plus loin. *Une règle énoncée dans un commentaire ne protège que le fichier qui
+la porte ; il faut une garde pour qu'elle porte plus loin.*
+
+#### Ce qui a été fait
+
+⭐ **On le lui dit, au lieu de le lui faire deviner.** L'adresse porte désormais les **deux** ports :
+
+```
+http://192.168.1.20:5173/?window=tablet&sync=3001
+                    └ où charger l'application    └ où est le SyncServer
+```
+
+`portDeSynchronisation()` lit trois sources dans cet ordre : **ce que l'adresse annonce**, puis d'où
+la page vient, puis le défaut. Les cinq lecteurs du port — les deux WebSockets et les trois
+compositions d'URL de média — passent tous par elle, donc **la synchronisation et les images se
+réparent du même geste**.
+
+⚠️ **Le rechargement à chaud est préservé** — décision de David entre les deux voies possibles.
+L'autre était de faire pointer le QR-code sur le `SyncServer`, qui sert `dist/` : une ligne, mais la
+tablette n'aurait plus montré que le dernier `npm run build`.
+
+⚠️ **En production les deux ports sont le même nombre.** Le paramètre y est redondant, et il est
+écrit quand même : *le rendre conditionnel n'aurait fait qu'ajouter un cas où il peut manquer.*
+
+⚠️ **La télécommande avait exactement le même défaut**, et personne ne l'avait signalée — elle est un
+client du navigateur, elle rejoint le `SyncServer` par le même chemin, et l'écran des Réglages lui
+composait la même adresse fautive. *Le second exemplaire d'un défaut ne se trouve qu'en cherchant qui
+d'autre fait le même geste.*
+
+#### Les gardes
+
+- **`portsDuRenderer.test.ts`** — 17 essais : l'annonce l'emporte sur la déduction, un port illisible
+  ne vaut pas moins qu'un port absent, les deux régimes, et **l'adresse porte les deux ports quand
+  ils diffèrent**. Dégradation faite : la déduction seule rend `5173 au lieu de 3001`, qui est le
+  défaut de David, mot pour mot.
+- **Une garde de dépôt** : plus personne ne compose `?window=tablet` ni `?window=remote` en toutes
+  lettres. ⛔ *Elle a mordu à la première exécution* — sur `Shell.tsx`, que je venais de corriger à
+  moitié en y laissant l'ancienne adresse comme repli.
+- ⚠️ **Elle lit le code sans les commentaires** : ceux que ce correctif a écrits citent l'ancienne
+  adresse pour l'expliquer. *Quatrième fois que cette précaution est nécessaire dans ce dépôt* —
+  après `nomsSansEcrivainNiLecteur` et `nomDesEcransALEcran`.
+- **`boutonsUlanzi.spec.ts`** — un essai de bout en bout de plus : l'adresse affichée annonce le port
+  de **cette instance**. ⚠️ Il ne verrait pas la confusion elle-même : en production, les deux ports
+  sont le même nombre. *Un test de bout en bout ne voit que ce que son environnement distingue* — il
+  garde le paramètre, pas la distinction.
+
+**Ancres** : `portsDuRenderer.ts` (`PARAMETRE_PORT_SYNC`, `adresseDeLaTablette`,
+`adresseDeLaTelecommande`, `portDeSynchronisation`), `NetworkQRCodeModal.tsx`,
+`GlobalSettingsModal.tsx`, `Shell.tsx`, `portsDuRenderer.test.ts`, `boutonsUlanzi.spec.ts`.
+
+**Vérifié** : `tsc -b` propre, **4 507 tests** (376 fichiers, 1 ignoré), **174 tests E2E**.
+⚠️ **Pas encore éprouvé en réel** — il faut que David rescanne le QR-code depuis une tablette.
+
+### 60 · ⛔ La tablette offrait les paquets d'un autre jeu (2026-09-14)
+
+*Signalé par David : « j'ai désactivé les cartes pour Blade Runner mais elles restent visibles dans
+la tablette ». Le geste, précisé : il avait **sorti le paquet de Blade Runner** — changé son
+système.*
+
+#### Une asymétrie entre deux lecteurs de la même liste
+
+| | filtre par **jeu** | filtre par **ouverture** |
+|---|---|---|
+| Bibliothèque du meneur (`useDeckLibrary`) | ✅ | — |
+| Onglet Cartes de la tablette (`HubMainDeCartes`) | ⛔ **aucun** | ✅ |
+
+La tablette ne regardait que `ouvertAuxJoueurs`. Un paquet rendu à un autre jeu quittait donc
+l'écran du meneur **et restait offert aux joueurs** — la seule liste où personne ne pouvait le voir
+disparaître, puisque le meneur, lui, ne l'affichait plus.
+
+⭐ **Le défaut n'était pas une règle fausse : c'était une règle que le second lecteur ne connaissait
+pas.** C'est le motif que Deck-OS avait déjà payé le 2026-08-30, quand la liste « Donner à »
+ignorait la campagne **et** la connexion. *Une règle qui vit dans un écran ne protège que cet
+écran.*
+
+#### Ce qui a été fait
+
+La règle vit maintenant dans `logic/paquetsDuJeu.ts` — pure, testée, et **prise au même endroit par
+les deux écrans** :
+
+- `systemeDeLaCampagne(campagnes, id)` → le jeu de la campagne ouverte, `generic` sinon ;
+- `paquetsDuJeu(paquets, jeu)` → ceux du jeu, **plus les universels** ;
+- `paquetsOffertsAuxJoueurs(paquets, jeu)` → les deux moitiés, pour la tablette.
+
+⚠️ **Le meneur garde son interrupteur** (`showAllDecks`, vrai par défaut) : il **range** ses paquets,
+donc il lui faut pouvoir les voir tous. La tablette n'en a pas — *un joueur ne range rien.*
+
+⚠️ **Un piège de nommage qui vaut d'être écrit** : le champ s'appelle **`system` sur la campagne** et
+**`systemId` sur le paquet**. Deux noms pour la même chose, et c'est exactement ce qui fait écrire
+`deck.systemId === campaign.systemId` — une comparaison avec `undefined`, toujours fausse, donc une
+liste vide que personne ne sait expliquer. La fonction est là aussi pour ça.
+
+⚠️ **Une carte déjà tenue en main n'est PAS filtrée**, exprès. *On ne retire pas de la main ce qu'on
+se contente de ne plus proposer* : la cacher parce que son paquet a changé de jeu la rendrait
+injouable et irrécupérable, sans que personne sache où elle est passée.
+
+⚠️ **Le meneur continue de diffuser tous les paquets.** Filtrer à la source casserait l'affichage
+d'une carte tenue dont le paquet appartient à un autre jeu. *On filtre ce qu'on propose, pas ce
+qu'on transporte.*
+
+#### La garde
+
+⛔ **Vérifier que la fonction est juste n'aurait rien protégé.** Ce qu'il faut interdire, c'est le
+**second filtrage écrit à la main** — c'était ça, le défaut. `paquetsDuJeu.test.ts` refuse donc tout
+`.filter(… ouvertAuxJoueurs …)` ailleurs que dans `paquetsDuJeu.ts`. Dégradation faite : l'ancien
+filtre remis, la garde nomme `HubMainDeCartes.tsx`.
+
+⚠️ **Ce qu'aucun test ne couvre** : personne ne rend l'onglet Cartes de la tablette. Les quatorze
+essais portent sur la règle, la garde porte sur son unicité — *l'écran lui-même n'est vu que par
+David.*
+
+#### ⭐ Ce que la donnée a dit avant le code
+
+La sauvegarde de 19 h 53 portait trois paquets, dont **« Torg Action » déclaré sous
+`custom-1774725549525`** — l'identifiant du pilote **Blade Runner**. C'est ce qui a permis de
+comprendre la plainte avant de toucher au code : un paquet nommé pour un jeu et rangé sous un autre,
+seul paquet ouvert aux joueurs, dans la seule campagne ouverte. *Lire les données du meneur coûte
+deux minutes et remplace trois hypothèses.*
+
+**Ancres** : `logic/paquetsDuJeu.ts`, `logic/paquetsDuJeu.test.ts`, `HubMainDeCartes.tsx`,
+`hooks/useDeckLibrary.ts`.
+
+**Vérifié** : `tsc -b` propre, **4 521 tests** (377 fichiers, 1 ignoré), **174 tests E2E**.
+⚠️ **Pas encore éprouvé en réel.**
+
+### 61 · ✅ Un PJ passe d'un joueur à un autre (2026-09-14)
+
+*Demande de David : « je voudrais pouvoir échanger un PJ d'un joueur vers un autre joueur ».*
+Tranché avec lui : **transfert simple** (A → B), et **on prévient** quand l'ancienne tablette tient
+encore le personnage, sans rien lui arracher.
+
+#### ⭐ Pourquoi il n'y avait presque rien à faire — et pourquoi il fallait l'écrire
+
+**Un `PlayerCharacter` ne porte aucun `playerId`.** Il appartient à celui dans la liste de qui il se
+trouve, et à personne d'autre. Déplacer l'entrée suffit donc, *et l'identifiant du personnage ne
+bouge pas* — or c'est lui que tout le reste vise :
+
+| Ce qui aurait pu être à réécrire | Ce qui le vise réellement |
+|---|---|
+| La fiche, les notes privées, l'inventaire, la santé | vivent **sur** le personnage |
+| Sa place dans la séance du soir | `sessionEntityIds` contient des ids de **personnages** |
+| Les cartes tenues en main | `porteur === character.id` |
+| Le combattant issu d'un PJ | `sourcePlayerId: character.id` — *le nom ment, la valeur est juste* |
+
+⭐ **La conception qui tient, c'est de ne pas renuméroter.** *Un transfert qui changerait
+l'identifiant aurait à réécrire tout ce tableau ; celui qui le garde n'a rien à réécrire.* C'est
+écrit en tête de `transfertDePersonnage.ts` — sans quoi quelqu'un « complétera » un jour ce qui n'a
+rien d'incomplet, et c'est ce jour-là que les cartes d'un joueur disparaîtront.
+
+#### ⚠️ Le seul fil qui ne suit pas : le verrou d'appareil
+
+`connectedCharacters` **n'est pas un champ qu'on écrit** : c'est le reflet des clients connectés,
+recalculé à chaque `remote:sync-clients`. Le transfert ne peut donc pas le défaire.
+
+Trois voies étaient possibles ; David a tranché pour la première :
+
+1. ✅ **Prévenir** — le transfert a lieu, et l'écran dit que la tablette de l'ancien joueur tient
+   encore ce PJ, qui doit appuyer sur « Quitter ». *Aucun IPC nouveau, rien d'irréversible.*
+2. Libérer d'office — il n'existe qu'un **« Éjecter TOUT le monde »** (`remote:eject-all`) ; il aurait
+   fallu ajouter une éjection ciblée, du pont jusqu'à la tablette.
+3. Refuser le transfert tant qu'un appareil tient le PJ — *le plus sûr, et le plus fermant : on ne
+   répare plus une erreur en pleine partie.*
+
+`leVerrouDeLAncienJoueur` existe pour que l'écran puisse le **dire**, faute de pouvoir le défaire.
+
+#### Deux détails qui ne se voient qu'à l'usage
+
+⛔ **Un refus rend la liste par RÉFÉRENCE**, pas une copie. Une copie ferait croire à un changement à
+tout ce qui compare par identité — la diffusion vers les tablettes en premier, qui rediffuserait la
+liste entière des joueurs pour un geste qui n'a pas eu lieu.
+
+⚠️ **La sélection se relâche avec le personnage.** Elle vise un PJ *chez le joueur ouvert* : le
+personnage parti, le panneau de droite ne trouvait plus rien et affichait son invite — un écran vide
+sans qu'on ait rien fermé.
+
+⭐ **La liste « Transférer vers… » est un geste, pas un état** : elle revient sur son intitulé après
+chaque usage. *Une liste qui garderait le nom choisi se lirait comme « ce personnage appartient
+à… »*, alors que le porteur, c'est la colonne de gauche qui le dit.
+
+#### Ce qui est éprouvé, et ce qui ne l'est pas
+
+Quinze essais sur la règle, dont le seul qui compte vraiment : **le personnage arrive identique**,
+identifiant, fiche, notes, inventaire et campagne compris. Dégradation faite — on renumérote à
+l'arrivée, deux essais rougissent.
+
+⚠️ **Aucun test ne pilote l'écran.** Personne ne conduit la grille des personnages de bout en bout,
+et l'écran des joueurs n'a pas de test E2E du tout. *La règle est gardée, le geste ne l'est pas.*
+
+**Ancres** : `logic/transfertDePersonnage.ts`, `logic/transfertDePersonnage.test.ts`,
+`store/entitySlice.ts` (`transfererLePersonnage`), `components/CharacterGrid.tsx`,
+`locales/{fr,en}/modules.json`, guide 10 § « Donner un personnage à un autre joueur ».
+
+**Vérifié** : `tsc -b` propre, **4 536 tests** (378 fichiers, 1 ignoré), **174 tests E2E**.
+⚠️ **Pas encore éprouvé en réel.**
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 ✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie
