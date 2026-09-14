@@ -3588,7 +3588,9 @@ d'autre fait le même geste.*
 `GlobalSettingsModal.tsx`, `Shell.tsx`, `portsDuRenderer.test.ts`, `boutonsUlanzi.spec.ts`.
 
 **Vérifié** : `tsc -b` propre, **4 507 tests** (376 fichiers, 1 ignoré), **174 tests E2E**.
-⚠️ **Pas encore éprouvé en réel** — il faut que David rescanne le QR-code depuis une tablette.
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** : David a rescanné, la tablette reçoit sa campagne. *C'est ce
+chantier qui débloquait les deux suivants* — tant qu'elle parlait à Vite, aucun des deux n'était
+observable.
 
 ### 60 · ⛔ La tablette offrait les paquets d'un autre jeu (2026-09-14)
 
@@ -3660,7 +3662,8 @@ deux minutes et remplace trois hypothèses.*
 `hooks/useDeckLibrary.ts`.
 
 **Vérifié** : `tsc -b` propre, **4 521 tests** (377 fichiers, 1 ignoré), **174 tests E2E**.
-⚠️ **Pas encore éprouvé en réel.**
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** : le paquet rendu à Torg a quitté l'onglet Cartes de la
+tablette.
 
 ### 61 · ✅ Un PJ passe d'un joueur à un autre (2026-09-14)
 
@@ -3730,7 +3733,9 @@ et l'écran des joueurs n'a pas de test E2E du tout. *La règle est gardée, le 
 `locales/{fr,en}/modules.json`, guide 10 § « Donner un personnage à un autre joueur ».
 
 **Vérifié** : `tsc -b` propre, **4 536 tests** (378 fichiers, 1 ignoré), **174 tests E2E**.
-⚠️ **Pas encore éprouvé en réel.**
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** : un PJ transféré, arrivé entier chez son nouveau joueur.
+⚠️ **Sauf un cas, qui ne se rencontre qu'en séance** : transférer pendant que l'ancien joueur est
+connecté dessus. GM-OS prévient sans éjecter, et personne n'a encore vu si l'avertissement suffit.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

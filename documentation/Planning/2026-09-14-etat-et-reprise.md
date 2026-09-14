@@ -14,6 +14,8 @@
 >
 > Il prend la suite de [`2026-09-13-etat-et-reprise.md`](./2026-09-13-etat-et-reprise.md), qui
 > couvrait la soirée du 13 et la nuit du 14.
+>
+> ✅ **Les trois chantiers de la soirée sont éprouvés en réel** — voir le § 1.
 
 ---
 
@@ -32,20 +34,19 @@ encore Y »*. Aucun des trois n'aurait été trouvé par relecture.
 
 ## 1 · Par quoi reprendre
 
-### ⛔ Les trois chantiers du 14 n'ont PAS été éprouvés en réel
+### ✅ Les trois chantiers du 14 sont éprouvés en réel
 
-C'est la première chose à faire, et elles sont ordonnées :
+David, le soir même : *« les points 1, 2 et 3 sont testés et c'est bon »*.
 
-1. **Rescanner le QR-code** depuis une tablette. **Rien d'autre ne peut être vérifié avant** : tant
-   que la tablette parle à Vite, elle ne reçoit ni campagne, ni paquets, ni images. *C'est le
-   chantier qui débloque les deux autres.*
-2. **Les paquets** : vérifier que « Torg Action », rendu à Torg, a bien disparu de l'onglet Cartes.
-3. **Le transfert d'un PJ** : le faire une fois, et regarder que la fiche, les notes et l'inventaire
-   sont arrivés avec.
+1. ✅ **Le QR-code** — rescanné, la tablette reçoit sa campagne. *C'est lui qui débloquait les deux
+   autres* : tant qu'elle parlait à Vite, aucun d'eux n'était observable.
+2. ✅ **Les paquets** — « Torg Action », rendu à Torg, a quitté l'onglet Cartes.
+3. ✅ **Le transfert d'un PJ** — arrivé entier chez son nouveau joueur.
 
-⚠️ **Et le troisième porte un cas qui ne se voit qu'en séance** : transférer un PJ **pendant que
-l'ancien joueur est connecté dessus**. GM-OS prévient, il n'éjecte pas — il faut voir si
-l'avertissement suffit, ou si l'éjection ciblée manque vraiment.
+⚠️ **Un seul cas reste non vu, et il ne se rencontre qu'en séance** : transférer un PJ **pendant que
+l'ancien joueur est connecté dessus**. GM-OS prévient, il n'éjecte pas — personne n'a encore vu si
+l'avertissement suffit, ou si l'éjection ciblée manque vraiment. *Les trois voies possibles sont
+écrites au § 61 ; celle qu'on n'a pas prise y est aussi.*
 
 ### ⚠️ Ce qui n'a jamais vu de vrai matériel
 
