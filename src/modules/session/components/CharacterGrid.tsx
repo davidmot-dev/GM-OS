@@ -4,7 +4,8 @@ import { fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/lo
 import { useSessionOSStore } from '../useSessionOSStore';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import type { PlayerCharacter, Campaign } from '../useSessionOSStore';
+import type { PlayerCharacter, Campaign, Player } from '../useSessionOSStore';
+import { leVerrouDeLAncienJoueur } from '../logic/transfertDePersonnage';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera } from 'lucide-react';
@@ -13,11 +14,58 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 
 const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
     const { t } = useTranslation(['modules']);
-    const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession, updatePlayer } = useSessionOSStore();
+    const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession, updatePlayer, transfererLePersonnage, connectedCharacters } = useSessionOSStore();
     
     const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
 
     const selectedPlayer = players.find(p => p.id === selectedPlayerId);
+
+    /*
+      **Le transfert d'un PJ vers un autre joueur** — demandé par David le
+      2026-09-14. Il vit ici et non dans `CharacterCard` : une carte ne connaît
+      qu'un joueur, et il en faut deux.
+
+      ⚠️ **On prévient quand l'ancien joueur le tient encore.** `connectedCharacters`
+      n'est pas un champ qu'on écrit : c'est le reflet des appareils connectés,
+      recalculé à chaque changement de la liste des clients. Le transfert ne peut
+      donc pas le défaire — *tranché avec David : on le dit, on ne l'arrache pas.*
+    */
+    const transferer = (personnageId: string, nom: string, versJoueurId: string) => {
+        const source = players.find(p => p.id === selectedPlayerId);
+        const cible = players.find(p => p.id === versJoueurId);
+        if (!source || !cible) return;
+
+        if (!window.confirm(t('modules:session.characters.transfer_confirm', {
+            name: nom, de: source.realName, vers: cible.realName,
+        }))) return;
+
+        const tenuPar = leVerrouDeLAncienJoueur(connectedCharacters, personnageId);
+        const refus = transfererLePersonnage(source.id, cible.id, personnageId);
+
+        if (refus === 'meme-joueur' || refus === 'deja-present') {
+            gmToast(t('modules:session.characters.transfer_refused_same'), 'error');
+            return;
+        }
+        if (refus !== null) {
+            gmToast(t('modules:session.characters.transfer_refused_missing'), 'error');
+            return;
+        }
+
+        /*
+          La sélection vise un personnage **chez le joueur ouvert**. Le
+          personnage parti, la fiche de droite ne trouve plus rien et affiche son
+          invite — un écran vide sans qu'on ait rien fermé. On relâche donc la
+          sélection avec lui.
+        */
+        if (selectedCharacterId === personnageId) setSelectedCharacter(null);
+
+        gmToast(t('modules:session.characters.transfer_done', { name: nom, vers: cible.realName }));
+        if (tenuPar) {
+            gmToast(t('modules:session.characters.transfer_still_connected', {
+                name: nom, de: source.realName, vers: cible.realName,
+            }), 'info');
+        }
+    };
     const resolvedPlayerAvatar = useMediaUrl(selectedPlayer?.avatarUrl);
     const [choixDuPortrait, setChoixDuPortrait] = useState(false);
 
@@ -105,6 +153,8 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                                 character={character}
                                 campaigns={campaigns}
                                 playerId={selectedPlayer.id}
+                                autresJoueurs={players.filter(p => p.id !== selectedPlayer.id)}
+                                onTransferer={(versJoueurId) => transferer(character.id, character.name, versJoueurId)}
                                 isSelected={selectedCharacterId === character.id}
                                 onSelect={() => setSelectedCharacter(character.id)}
                                 onLink={(campaignId) => linkCharacterToCampaign(selectedPlayer.id, character.id, campaignId)}
@@ -172,7 +222,10 @@ const CharacterCard: React.FC<{
     activeSession?: import('../store/types').GameSession | null;
     isProjectedInSession?: boolean;
     onToggleSession: (project: boolean) => void;
-}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession }) => {
+    /** Ceux vers qui ce personnage peut partir — le porteur actuel en est retiré. */
+    autresJoueurs: Player[];
+    onTransferer: (versJoueurId: string) => void;
+}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession, autresJoueurs, onTransferer }) => {
     const { t } = useTranslation(['modules']);
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
     /*
@@ -340,6 +393,38 @@ const CharacterCard: React.FC<{
                         </select>
                         <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-app-text/20 pointer-events-none" />
                     </div>
+                </div>
+
+                {/*
+                  **Changer de joueur.** Même grammaire que le choix de campagne
+                  juste au-dessus — mais sur sa propre ligne : les deux listes
+                  côte à côte sur une carte de cette largeur ne laisseraient
+                  lire ni l'une ni l'autre.
+
+                  ⚠️ **C'est un geste, pas un état** : la liste revient sur son
+                  intitulé après chaque usage (`value=""`). Une liste qui
+                  garderait le nom choisi se lirait comme *« ce personnage
+                  appartient à… »*, alors que le porteur, c'est la colonne de
+                  gauche qui le dit.
+                */}
+                <div className="relative">
+                    <select
+                        title={t('modules:session.characters.transfer_title')}
+                        value=""
+                        disabled={autresJoueurs.length === 0}
+                        onChange={e => { if (e.target.value) onTransferer(e.target.value); }}
+                        className="w-full py-1.5 text-xs rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:border-app-border/80 focus:ring-1 focus:ring-accent/50 focus:outline-none appearance-none pl-2 pr-6 transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                        <option value="" className="bg-app-bg">
+                            {autresJoueurs.length === 0
+                                ? t('modules:session.characters.transfer_no_other_player')
+                                : t('modules:session.characters.transfer_placeholder')}
+                        </option>
+                        {autresJoueurs.map(j => (
+                            <option key={j.id} value={j.id} className="bg-app-bg">{j.realName}</option>
+                        ))}
+                    </select>
+                    <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-app-text/20 pointer-events-none" />
                 </div>
             </div>
         </div>

@@ -114,6 +114,22 @@ avez sélectionné** à droite, avec ses personnages.
   et il reste modifiable ensuite.
 - **Retirer un joueur** : l'icône de corbeille, avec confirmation.
 
+### Donner un personnage à un autre joueur
+
+Sur la carte de chaque personnage, sous le choix de campagne, une liste **« Transférer vers… »**
+nomme les autres joueurs. Choisissez-en un, confirmez, et le personnage change de main.
+
+**Il part entier.** Sa fiche, ses notes privées, son inventaire, sa santé, sa place dans la séance du
+soir et les cartes qu'il tient le suivent — rien n'est à ressaisir, parce que c'est bien le même
+personnage qui change de propriétaire, et non une copie.
+
+> ⚠️ **Si l'ancien joueur est connecté sur sa tablette avec ce personnage**, GM-OS vous le dit après
+> le transfert. Sa tablette continue de le tenir tant qu'il n'a pas appuyé sur **« Quitter »** ; le
+> nouveau joueur ne pourra le choisir qu'ensuite. *GM-OS prévient, il ne déconnecte personne à votre
+> place.*
+
+La liste est grisée quand il n'y a qu'un seul joueur : il n'y a personne vers qui transférer.
+
 ### Fiches de Personnage Dynamiques
 
 Les fiches sont entièrement adaptables :

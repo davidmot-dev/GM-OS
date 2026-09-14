@@ -2779,7 +2779,15 @@
       "back_to_list": "Back",
       "name_placeholder": "Character Name",
       "class_race_placeholder": "Class / Race",
-      "sheet_placeholder": "Full character sheet coming soon"
+      "sheet_placeholder": "Full character sheet coming soon",
+      "transfer_title": "Transfer to another player",
+      "transfer_placeholder": "Transfer to…",
+      "transfer_confirm": "Transfer {{name}} from {{de}} to {{vers}}?\n\nThe character keeps its sheet, notes, inventory, place in the session and the cards it holds.",
+      "transfer_done": "{{name}} now belongs to {{vers}}.",
+      "transfer_still_connected": "{{de}}’s tablet still holds {{name}}: that player must press “Leave” before {{vers}} can take it.",
+      "transfer_no_other_player": "No other player",
+      "transfer_refused_same": "This character already belongs to that player.",
+      "transfer_refused_missing": "Transfer failed: the character or the destination player could not be found."
     },
     "deck_module": {
       "library": {

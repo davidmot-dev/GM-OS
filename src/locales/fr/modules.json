@@ -2779,7 +2779,15 @@
       "back_to_list": "Retour",
       "name_placeholder": "Nom du personnage",
       "class_race_placeholder": "Classe / Race",
-      "sheet_placeholder": "Fiche de personnage complète à venir"
+      "sheet_placeholder": "Fiche de personnage complète à venir",
+      "transfer_title": "Transférer vers un autre joueur",
+      "transfer_placeholder": "Transférer vers…",
+      "transfer_confirm": "Transférer {{name}} de {{de}} vers {{vers}} ?\n\nLe personnage garde sa fiche, ses notes, son inventaire, sa place dans la séance et les cartes qu'il tient.",
+      "transfer_done": "{{name}} appartient maintenant à {{vers}}.",
+      "transfer_still_connected": "La tablette de {{de}} tient encore {{name}} : ce joueur doit appuyer sur « Quitter » pour que {{vers}} puisse le prendre.",
+      "transfer_no_other_player": "Aucun autre joueur",
+      "transfer_refused_same": "Ce personnage est déjà chez ce joueur.",
+      "transfer_refused_missing": "Transfert impossible : le personnage ou le joueur d’arrivée est introuvable."
     },
     "deck_module": {
       "library": {

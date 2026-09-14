@@ -14,6 +14,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
+import { transfererLePersonnage } from '../logic/transfertDePersonnage';
 import { tousLesPilotes } from './tousLesPilotes';
 import type { GameDriver } from '../../../types/drivers';
 import type { Campaign } from '../../../types/campaign.types';
@@ -105,6 +106,18 @@ export interface EntitySliceActions {
     updatePlayer: (playerId: string, updates: Partial<Player>) => void;
     addCharacterToPlayer: (playerId: string, character: Omit<PlayerCharacter, 'id'>) => void;
     deleteCharacter: (playerId: string, characterId: string) => void;
+    /**
+     * **Faire passer un personnage d'un joueur à un autre.**
+     *
+     * Rend le motif du refus, ou `null` si le transfert a eu lieu — l'écran a
+     * besoin de savoir pourquoi rien n'a bougé. La règle vit dans
+     * `logic/transfertDePersonnage.ts`.
+     */
+    transfererLePersonnage: (
+        deJoueurId: string,
+        versJoueurId: string,
+        personnageId: string,
+    ) => import('../logic/transfertDePersonnage').RefusDeTransfert | null;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null, templateId?: string) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
     updateCharacterMaxHP: (playerId: string, characterId: string, maxHp: number) => void;
@@ -332,6 +345,20 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                     : p
             ),
         })),
+
+    /*
+      **Le magasin ne décide de rien ici** : il demande à `transfererLePersonnage`
+      et écrit ce qu'elle rend. Un refus rend la liste **par référence**, donc
+      `set` ne réveille aucun abonné — la synchronisation vers les tablettes ne
+      rediffuse pas la liste des joueurs pour un geste qui n'a pas eu lieu.
+    */
+    transfererLePersonnage: (deJoueurId, versJoueurId, personnageId) => {
+        const { joueurs, refus } = transfererLePersonnage(
+            get().players, deJoueurId, versJoueurId, personnageId,
+        );
+        if (refus === null) set({ players: joueurs });
+        return refus;
+    },
 
     linkCharacterToCampaign: (playerId, characterId, campaignId, templateId) =>
         set((state) => ({
