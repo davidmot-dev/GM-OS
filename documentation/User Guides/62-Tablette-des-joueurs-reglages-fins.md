@@ -11,12 +11,21 @@ Le meneur affiche un QR code depuis le bouton **Connecter Joueurs** de sa barre 
 ou tapez l'adresse affichée dessous :
 
 ```text
-http://<adresse-du-MJ>:3001/?window=tablet
+http://<adresse-du-MJ>:3001/?window=tablet&sync=3001
 ```
 
 > ⛔ **Correction.** Cette page donnait `http://[IP-DU-MJ]:3000/hub`. **Ni le port ni le chemin
 > n'étaient bons** — un joueur qui suivait ce guide n'arrivait nulle part. Le port applicatif est
 > **3001**, et c'est le paramètre `?window=tablet` qui ouvre le Hub joueur.
+
+Les deux nombres ne disent pas la même chose : le premier est **où charger l'application**, le
+`sync=` est **où joindre GM-OS**. Ils sont égaux chez la plupart des meneurs, et ils diffèrent
+lorsque GM-OS tourne depuis ses sources. **Recopiez donc l'adresse affichée à l'écran plutôt que
+celle-ci.**
+
+> ⚠️ **Si votre tablette affiche « The Eternal Quest »**, elle n'a pas reçu le `sync=`, ou pas le
+> bon. Elle se croit connectée et ne reçoit rien ; ce nom est celui de la campagne d'exemple livrée
+> avec GM-OS. Rescannez le QR code.
 
 Choisissez ensuite votre personnage. **Un seul appareil par personnage** : si la fiche est déjà
 prise, demandez au meneur de libérer les connexions.

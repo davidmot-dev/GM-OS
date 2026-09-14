@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { portDeSynchronisation } from '../utils/portsDuRenderer';
+import {
+    adresseDeLaTablette,
+    adresseDeLaTelecommande,
+    portDeSynchronisation,
+    type InfoDeConnexion,
+} from '../utils/portsDuRenderer';
 import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2, Brain, Palette } from 'lucide-react';
 import { AtelierDuTheme } from '../theme/AtelierDuTheme';
 import { flushApplication } from '../utils/appUtils';
@@ -33,7 +38,9 @@ type TabID = 'system' | 'ai' | 'tactical' | 'remote' | 'theme';
 const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) => {
     const { t, i18n } = useTranslation(['settings', 'common']);
     const [activeTab, setActiveTab] = useState<TabID>('system');
-    const [connectionInfo, setConnectionInfo] = useState<{ip: string, port: number} | null>(null);
+    /* Le type complet, `mediaPort` compris : le réduire à `{ip, port}` jetait le
+       seul champ qui dit où est le `SyncServer`. */
+    const [connectionInfo, setConnectionInfo] = useState<InfoDeConnexion | null>(null);
     const [pairingSecret, setPairingSecret] = useState<string>('');
     const [storageUsage, setStorageUsage] = useState<StorageUsage | null>(null);
     const { theme, setTheme, themeColor, setThemeColor, language, setLanguage } = useSessionStore();
@@ -84,11 +91,22 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
         }
     }, []);
 
-    /* Le pont dit le vrai port ; le défaut n'est qu'un repli tant qu'il n'a pas
-       répondu. Voir `src/utils/portsDuRenderer.ts`. */
-    const port = connectionInfo?.port || portDeSynchronisation();
-    const remoteUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:${port}/?window=remote` : '';
-    const tabletUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:${port}/?window=tablet` : '';
+    /*
+      ⛔ **Ces deux adresses portaient un seul port, et c'était le mauvais.**
+      `connectionInfo.port` est le port **applicatif** — Vite en développement —
+      et la tablette comme la télécommande en déduisaient leur port de
+      synchronisation. Toutes deux ouvraient leur WebSocket sur le serveur de
+      rechargement à chaud, qui l'accepte et ne dit jamais rien.
+
+      `adresseDeLaTablette` et `adresseDeLaTelecommande` portent les deux ports :
+      celui où charger l'application, et celui du `SyncServer`. Voir
+      `src/utils/portsDuRenderer.ts`.
+    */
+    /* Le port qu'un appareil rejoint : celui du `SyncServer`, jamais celui de
+       l'interface. C'est lui qui écoute, et lui qu'on annonce comme actif. */
+    const portDuSyncServer = connectionInfo?.mediaPort ?? portDeSynchronisation();
+    const remoteUrl = adresseDeLaTelecommande(connectionInfo) ?? '';
+    const tabletUrl = adresseDeLaTablette(connectionInfo) ?? '';
 
     // Le secret voyage dans le fragment : il n'est pas envoyé au serveur avec la
     // requête HTTP, donc il ne traîne ni dans les logs d'accès ni dans un Referer.
@@ -673,7 +691,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         <span className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.direct_connection')}</span>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-glow-emerald" />
-                                            <span className="text-ui-9 font-bold text-emerald-500 uppercase tracking-widest">{t('settings:remote.active')} ({port})</span>
+                                            <span className="text-ui-9 font-bold text-emerald-500 uppercase tracking-widest">{t('settings:remote.active')} ({portDuSyncServer})</span>
                                         </div>
                                     </div>
                                 </section>

@@ -3,18 +3,24 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Wifi, X, Smartphone } from 'lucide-react';
 import { useModalStore } from '../stores/useModalStore';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
+import { adresseDeLaTablette, type InfoDeConnexion } from '../utils/portsDuRenderer';
 
 export const NetworkQRCodeModal: React.FC = () => {
     const { isNetworkModalOpen, closeNetworkModal } = useModalStore();
-    const [networkInfo, setNetworkInfo] = useState<{ ip: string; port: number } | null>(null);
+    const [networkInfo, setNetworkInfo] = useState<InfoDeConnexion | null>(null);
 
     useEffect(() => {
         if (isNetworkModalOpen && window.appBridge?.remote?.getConnectionInfo) {
-            window.appBridge.remote.getConnectionInfo().then((info: { ip: string; port: number }) => {
+            window.appBridge.remote.getConnectionInfo().then((info: InfoDeConnexion) => {
                 setNetworkInfo(info);
             }).catch(console.error);
         } else if (isNetworkModalOpen) {
-            // Fallback pour le dev en web
+            /*
+              Repli pour le dev en web, hors Electron : il n'y a pas de pont
+              pour dire où est le SyncServer, donc `adresseDeLaTablette`
+              retombera sur son port par défaut. C'est le bon repli — le
+              SyncServer y est, puisque c'est Electron qui l'ouvre.
+            */
             setNetworkInfo({ ip: window.location.hostname, port: parseInt(window.location.port) || 80 });
         }
     }, [isNetworkModalOpen]);
@@ -29,9 +35,15 @@ export const NetworkQRCodeModal: React.FC = () => {
 
     if (!isNetworkModalOpen) return null;
 
-    const tabletUrl = networkInfo 
-        ? `http://${networkInfo.ip}:${networkInfo.port}/?window=tablet` 
-        : window.location.href;
+    /*
+      ⛔ **L'adresse ne se compose pas ici.** Elle portait
+      `http://${ip}:${port}/?window=tablet` — donc le port de **Vite** en
+      développement, où la tablette ouvrait sa WebSocket sur le serveur de
+      rechargement à chaud : connectée en apparence, muette en fait, et restée
+      sur la campagne de démonstration. Voir `adresseDeLaTablette`, qui porte
+      les deux ports.
+    */
+    const tabletUrl = adresseDeLaTablette(networkInfo) ?? window.location.href;
 
     return (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">

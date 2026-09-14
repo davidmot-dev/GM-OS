@@ -206,6 +206,34 @@ test.describe('les réglages à l’écran', () => {
         await expect(pont).toContainText(`:${gmos.ports.sync}/bouton`);
     });
 
+    /*
+      ⛔ **L'adresse de la tablette doit ANNONCER le port du SyncServer**, et pas
+      seulement être servie depuis lui.
+
+      Le 2026-09-14 elle ne portait qu'un port — le port applicatif, qui vaut
+      celui de **Vite** en développement. La tablette en déduisait son port de
+      synchronisation, ouvrait sa WebSocket sur le serveur de rechargement à
+      chaud *qui l'accepte et ne dit jamais rien*, et restait sur les données de
+      démonstration : David voyait « The Eternal Quest » au lieu de sa campagne.
+
+      ⚠️ **Ce que ce test peut, et ce qu'il ne peut pas** — même limite que son
+      voisin : ici l'application tourne en **production**, où les deux ports sont
+      le même nombre. Il ne verrait pas la confusion elle-même. Il voit que le
+      paramètre **existe** et qu'il nomme le serveur de CETTE instance — c'est
+      `portsDuRenderer.test.ts` qui garde la distinction.
+    */
+    test('l’adresse de la tablette annonce le port de synchronisation', async () => {
+        /* Elle vit dans l'onglet Télécommande, quand les boutons vivent dans
+           Système. On y va, et **on revient** : les essais qui suivent dans ce
+           fichier partagent la même instance et le même panneau ouvert. */
+        await gmos.fenetre.getByRole('button', { name: 'Télécommande' }).click();
+
+        const adresse = gmos.fenetre.locator('p').filter({ hasText: 'window=tablet' }).first();
+        await expect(adresse).toContainText(`sync=${gmos.ports.sync}`);
+
+        await gmos.fenetre.getByRole('button', { name: 'Système' }).click();
+    });
+
     test('les trois boutons ont leur liste déroulante', async () => {
         for (const nom of ['Bouton gauche', 'Bouton du milieu', 'Bouton droit']) {
             await expect(gmos.fenetre.getByLabel(nom, { exact: true })).toBeVisible();

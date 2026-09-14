@@ -39,11 +39,66 @@ function dansElectron(): boolean {
 }
 
 /**
+ * **Le nom du paramètre par lequel une tablette apprend son port de synchronisation.**
+ *
+ * Il est écrit dans le QR-code par `adresseDeLaTablette`, et lu ici. Personne
+ * d'autre ne le compose ni ne le lit.
+ */
+export const PARAMETRE_PORT_SYNC = 'sync';
+
+/**
+ * Le port que l'adresse de la page **dit explicitement**, ou `null`.
+ *
+ * ⚠️ Une valeur illisible rend `null` plutôt que de lever : la tablette
+ * retombe alors sur la déduction, puis sur le défaut. *Un paramètre fautif ne
+ * doit pas valoir moins qu'un paramètre absent.*
+ */
+function portAnnonceParLAdresse(): number | null {
+    if (typeof window === 'undefined') return null;
+    const annonce = new URLSearchParams(window.location.search).get(PARAMETRE_PORT_SYNC);
+    if (!annonce) return null;
+    const port = Number(annonce);
+    return Number.isInteger(port) && port > 0 && port <= 65535 ? port : null;
+}
+
+/**
  * Le port du `SyncServer` : WebSocket des tablettes, proxy des médias.
  *
- * Sur une tablette, celui d'où la page vient. Ailleurs, le défaut.
+ * Trois sources, dans cet ordre : **ce que l'adresse annonce**, puis d'où la
+ * page vient, puis le défaut.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ⛔ POURQUOI « D'OÙ LA PAGE VIENT » NE SUFFIT PAS
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * Cette fonction affirmait que la tablette *charge l'application depuis le
+ * SyncServer lui-même, donc son `window.location.port` EST le port de
+ * synchronisation*. C'est vrai en production, et **faux en développement** :
+ * `remote:get-connection-info` y rend délibérément le port de **Vite** comme
+ * port applicatif, pour garder le rechargement à chaud, et le QR-code y
+ * envoyait la tablette.
+ *
+ * ⭐ **Mesuré le 2026-09-14**, une WebSocket ouverte sur chacun des deux ports
+ * comme le ferait une tablette :
+ *
+ * ```
+ * ws://…:3001  -> OUVERT, reponse immediate : remote:registered
+ * ws://…:5173  -> OUVERT, et AUCUN message en 4 s
+ * ```
+ *
+ * *Vite accepte la connexion et ne dit jamais rien.* La tablette s'affichait
+ * donc **connectée**, ne recevait aucune campagne, et restait sur `INITIAL_DATA`
+ * — David voyait « The Eternal Quest » au lieu de sa campagne en cours. Les
+ * images passaient par le même port et arrivaient en `text/html`.
+ *
+ * *Une déduction juste dans un cas et muette dans l'autre est pire qu'une
+ * absence de valeur : elle ne laisse rien à rattraper.* D'où le paramètre — on
+ * le lui **dit**, au lieu de le lui faire deviner.
  */
 export function portDeSynchronisation(): number {
+    const annonce = portAnnonceParLAdresse();
+    if (annonce !== null) return annonce;
+
     if (typeof window !== 'undefined' && !dansElectron() && window.location.port) {
         const port = Number(window.location.port);
         if (Number.isInteger(port) && port > 0) return port;
@@ -94,4 +149,63 @@ export function adresseDuPontDesBoutons(info: InfoDeConnexion | null | undefined
 
     const port = info.mediaPort ?? PORT_SYNC_PAR_DEFAUT;
     return `http://${info.ip}:${port}/bouton`;
+}
+
+/**
+ * **L'adresse qu'on met dans le QR-code** — ou `null` sans réseau.
+ *
+ * Elle porte **deux ports, et c'est la seule façon d'être juste dans les deux
+ * régimes** :
+ *
+ * - `port` dit **où charger l'application**. En développement c'est Vite, et
+ *   c'est voulu : la tablette profite du rechargement à chaud.
+ * - `sync` dit **où est le SyncServer**, qui porte la WebSocket, `/media/` et
+ *   `/temp/`. Il ne se déduit d'aucune adresse dès que ce n'est pas lui qui
+ *   sert la page.
+ *
+ * ⛔ **Le défaut du 2026-09-14, signalé par David** : *« la tablette joueur
+ * pointe vers Eternal Quest et pas vers la campagne en cours »*. Le QR-code
+ * n'écrivait que `port`, donc `5173` en développement, et
+ * `portDeSynchronisation()` en déduisait le port de synchronisation. La
+ * tablette ouvrait sa WebSocket **sur le serveur de rechargement à chaud de
+ * Vite, qui l'accepte et ne dit jamais rien** : connectée en apparence, muette
+ * en fait, et restée sur les données de démonstration.
+ *
+ * ⭐ **Troisième fois que ces deux champs sont confondus**, après le proxy des
+ * médias et le pont des boutons de l'afficheur — dont le commentaire, juste
+ * au-dessus, décrit ce mode d'échec depuis le 2026-09-13. *Composer l'adresse à
+ * un seul endroit ne sert à rien tant qu'il reste un endroit où on la compose
+ * à la main.*
+ *
+ * ⚠️ En production les deux ports sont le même nombre : le paramètre y est
+ * redondant, et le rendre conditionnel n'aurait fait qu'ajouter un cas où il
+ * peut manquer.
+ */
+function adresseDUnClient(
+    info: InfoDeConnexion | null | undefined,
+    fenetre: 'tablet' | 'remote',
+): string | null {
+    if (!info?.ip) return null;
+
+    const portDeLApplication = info.port ?? info.mediaPort ?? PORT_SYNC_PAR_DEFAUT;
+    const portDuSync = info.mediaPort ?? PORT_SYNC_PAR_DEFAUT;
+    return `http://${info.ip}:${portDeLApplication}/?window=${fenetre}&${PARAMETRE_PORT_SYNC}=${portDuSync}`;
+}
+
+/** L'adresse du Hub joueur — celle du QR-code. */
+export function adresseDeLaTablette(info: InfoDeConnexion | null | undefined): string | null {
+    return adresseDUnClient(info, 'tablet');
+}
+
+/**
+ * L'adresse de la télécommande du meneur.
+ *
+ * ⚠️ **Elle souffrait du même défaut que la tablette**, et pour la même raison :
+ * elle est un client du navigateur, elle rejoint le `SyncServer` par le même
+ * chemin, et l'écran des Réglages lui composait une adresse au port applicatif.
+ * *Le second exemplaire d'un défaut ne se trouve qu'en cherchant qui d'autre
+ * fait le même geste.*
+ */
+export function adresseDeLaTelecommande(info: InfoDeConnexion | null | undefined): string | null {
+    return adresseDUnClient(info, 'remote');
 }

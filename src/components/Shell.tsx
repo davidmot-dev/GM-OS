@@ -55,6 +55,7 @@ import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical'
 import { useLayoutManager } from '../modules/session/hooks/useLayoutManager';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { gmToast } from '../stores/useToastStore';
+import { adresseDeLaTablette } from '../utils/portsDuRenderer';
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -216,7 +217,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
             // but the most reliable way for "deportable" is the URL.
             window.appBridge.session.launchHubWindow('tablet'); 
         } else {
-            const url = `${window.location.origin}/?window=tablet`;
+            /*
+              Hors Electron, aucun pont ne dit où est le `SyncServer` :
+              `adresseDeLaTablette` retombe sur son port par défaut, ce qui est
+              la bonne réponse — c'est Electron qui l'ouvre, et il ne bouge que
+              si le meneur le déplace lui-même. ⛔ `window.location.origin`
+              donnait celui de Vite, et la tablette en déduisait le sien.
+            */
+            const url = adresseDeLaTablette({ ip: window.location.hostname })
+                ?? window.location.href;
             prompt("Copiez cette URL sur votre tablette :", url);
         }
     };

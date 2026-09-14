@@ -17,8 +17,15 @@ Le joueur le scanne, et il est dans le Hub.
 > ⛔ **Correction.** Cette page envoyait le meneur dans « Paramètres OS → onglet Télécommande →
 > section Nexus Link ». **Ce chemin n'existe pas.** Le QR code est un bouton de la barre du haut.
 
-Ce que le QR code contient : `http://<adresse-du-MJ>:3001/?window=tablet`. Vous pouvez le taper à
-la main si le scan échoue — l'adresse s'affiche sous le code.
+Ce que le QR code contient : `http://<adresse-du-MJ>:3001/?window=tablet&sync=3001`. Vous pouvez le
+taper à la main si le scan échoue — **l'adresse s'affiche sous le code**, et c'est elle qu'il faut
+recopier, en entier.
+
+> ⛔ **Recopiez l'adresse affichée, pas celle-ci.** Le second nombre dit à la tablette **où joindre
+> GM-OS**, et il n'est pas toujours égal au premier. Une tablette qui ne le reçoit pas s'affiche
+> **connectée** et ne reçoit rien : elle montre alors une campagne de démonstration appelée « The
+> Eternal Quest ». *C'est le signe qu'elle parle au mauvais serveur, jamais un problème de
+> campagne.*
 
 Toutes les machines doivent être sur **le même réseau Wi-Fi**.
 
