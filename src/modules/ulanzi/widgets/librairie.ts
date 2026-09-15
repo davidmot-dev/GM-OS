@@ -470,6 +470,14 @@ export interface HorlogeAAfficher {
     remplis: number;
     total: number;
     couleur?: string;
+    /**
+     * **Elle se vide au lieu de monter** — un consommable, pas une tension.
+     *
+     * Change **où** est le bout de la course, et donc quand la barre passe au
+     * rouge au milieu de la table : le plein pour une alerte, le vide pour des
+     * vivres. Absent = elle monte, comme avant ce champ.
+     */
+    seVide?: boolean;
 }
 
 /**
@@ -581,6 +589,7 @@ export function horlogesPourLaTable(etat: {
     tensions?: {
         id: string; name: string; totalSegments: number; filledSegments: number;
         color?: string; surLAfficheur?: boolean; vueParLesJoueurs?: boolean;
+        sens?: 'remplissage' | 'epuisement';
     }[];
 }): HorlogeAAfficher[] {
     if (!etat.isClockProjected) return [];
@@ -608,6 +617,12 @@ export function horlogesPourLaTable(etat: {
         remplis: t.filledSegments,
         total: t.totalSegments,
         couleur: t.color,
+        /*
+          **Le sens traverse jusqu'aux 32 pixels.** Sans lui, des rations à zéro
+          seraient restées orange au milieu de la table pendant que l'écran du
+          meneur criait — *le caviardage se fait à la source, et le sens aussi.*
+        */
+        seVide: t.sens === 'epuisement',
     }));
 }
 

@@ -18,7 +18,27 @@ import {
 import { releverLaTableMaintenant, titreParDefaut } from '../logic/etatDeLaTable';
 import { entreePourLOuvertureDeScene, entreePourLaFermetureDeScene } from '../logic/journalDeLaTrame';
 import { useJournalStore } from '../../journal/useJournalStore';
+import { useClockStore } from '../../../store/useClockStore';
+import { annoncesDeLUsure, type UsureDUneJauge } from '../../clock/logic/sensDeLaJauge';
+import { gmToast } from '../../../stores/useToastStore';
 import type { AtlasMap } from '../../../types/chronicle.types';
+
+/**
+ * **Ce qu'une fin de scène a coûté aux jauges, dit à voix haute.**
+ *
+ * ⚠️ **L'usure est la seule chose de l'application qui fasse bouger une jauge
+ * sans que personne n'ait cliqué dessus.** Sans annonce, le meneur retrouverait
+ * ses rations à trois sans savoir quand elles sont passées de cinq, et
+ * soupçonnerait un défaut. *Un automatisme muet est indistinguable d'un bogue.*
+ *
+ * La mise en forme est dans `sensDeLaJauge`, pure et éprouvée ; ici il ne reste
+ * que le canal.
+ */
+function annoncerLUsureDesJauges(usures: UsureDUneJauge[]): void {
+    for (const annonce of annoncesDeLUsure(usures)) {
+        gmToast(annonce.texte, annonce.alarme ? 'warning' : 'info');
+    }
+}
 
 /**
  * Ce que ce slice doit voir chez son voisin, et rien de plus.
@@ -337,10 +357,8 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
         */
         const quand = Date.now();
         const avant = get();
-        const entree = entreePourLaFermetureDeScene(
-            avant.scenes.find((s) => s.id === id),
-            quand,
-        );
+        const scene = avant.scenes.find((s) => s.id === id);
+        const entree = entreePourLaFermetureDeScene(scene, quand);
 
         set((state) => ({
             scenes: state.scenes.map((s) => (s.id === id ? terminer(s, quand) : s)),
@@ -349,6 +367,30 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
         /* Hors du `set`, et sous garde d'enregistrement — voir `ouvrirLaScene`. */
         if (entree && useJournalStore.getState().isRecording) {
             useJournalStore.getState().addEvent(entree);
+        }
+
+        /*
+          **L'usure des jauges de Clock-OS — la seule chose de l'application qui
+          attendait qu'une scène se termine.**
+
+          *Portée demandée par David le 2026-09-15* : une jauge peut déclarer ce
+          qu'une scène lui coûte — une ration par scène, un segment de rituel par
+          scène.
+
+          ⚠️ **On l'accroche au vrai passage, pas à un second bouton.** Le
+          panneau des réserves de table en portait un, écrit le 2026-08-15 sous
+          le commentaire *« rien dans l'application ne sait quand une scène se
+          termine »*. C'était vrai ce jour-là ; la trame est arrivée deux jours
+          plus tard. *Un second geste pour « fin de scène » aurait garanti qu'un
+          soir on presse l'un et pas l'autre.*
+
+          ⚠️ **Et seulement si la scène se ferme VRAIMENT.** `terminerLaScene`
+          est idempotente — une scène déjà close se rend telle quelle — mais
+          l'usure, elle, ne l'est pas : sans cette garde, rouvrir le panneau et
+          recliquer « Terminer » mangerait une seconde ration en silence.
+        */
+        if (scene && !scene.termineeLe) {
+            annoncerLUsureDesJauges(useClockStore.getState().laSceneSeTermine());
         }
     },
 

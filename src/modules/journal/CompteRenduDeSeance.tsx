@@ -3,6 +3,7 @@ import { Sparkles, Users, ListChecks, Copy, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import { rendreLeCompteRendu, laSuiteEstVide } from './compteRendu';
 import type { Journal } from './types';
+import { libelleDeJauge } from '../clock/logic/sensDeLaJauge';
 
 /**
  * Le compte rendu d'une séance, en trois sections.
@@ -81,7 +82,7 @@ const CompteRenduDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
                         return `${pc.name}${vie} (${pc.state})`;
                     })} />
                     <Liste titre="PNJ" valeurs={(etat!.sessionEntities ?? []).map(n => `${n.name} (${n.status})`)} />
-                    <Liste titre="Horloges" valeurs={(etat!.clocks ?? []).map(c => `${c.name} : ${c.filled}/${c.total}`)} />
+                    <Liste titre="Horloges" valeurs={(etat!.clocks ?? []).map(libelleDeJauge)} />
                     <Liste titre="Préparation restée en plan" valeurs={etat!.pendingChecklist ?? []} />
                 </Section>
             )}

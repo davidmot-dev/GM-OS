@@ -91,8 +91,19 @@ function releverLEtatDeFin(
         .filter(item => !item.isCompleted)
         .map(item => item.text);
 
+    /*
+      **Le sens est capture avec le compte, pas devine a la relecture.** Une
+      jauge peut avoir ete retournee ou supprimee depuis ; l'instantane doit
+      porter ce qu'elle disait CE SOIR-LA. *C'est la meme regle que la duree
+      jouee d'une scene : ce qui n'est pas releve au moment ne se retrouve pas.*
+    */
     const clocks = (magasinDHorloges()?.tensions ?? [])
-        .map(c => ({ name: c.name, filled: c.filledSegments, total: c.totalSegments }));
+        .map(c => ({
+            name: c.name,
+            filled: c.filledSegments,
+            total: c.totalSegments,
+            seVide: c.sens === 'epuisement',
+        }));
 
     /*
       **Les notes prises pendant la séance, enfin ramassées.**
@@ -164,7 +175,10 @@ function magasinDeSeance() {
 function magasinDHorloges() {
     return (window as unknown as {
         useClockStore?: { getState: () => {
-            tensions?: { name: string; filledSegments: number; totalSegments: number }[];
+            tensions?: {
+                name: string; filledSegments: number; totalSegments: number;
+                sens?: 'remplissage' | 'epuisement';
+            }[];
         } };
     }).useClockStore?.getState();
 }

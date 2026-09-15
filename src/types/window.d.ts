@@ -105,6 +105,24 @@ declare global {
 
     interface AppBridge {
         image?: ImageBridge;
+        /**
+         * **Les calendriers fantastiques, sur le disque.**
+         *
+         * La lecture existait depuis toujours ; l'écriture arrive avec l'Atelier
+         * le 2026-09-15. ⚠️ **Ce pont était accédé par transtypage en ligne**
+         * dans `useClockStore` — deux fois — faute d'être déclaré ici : un
+         * `window as unknown as { appBridge?: { clock?: ... } }` à chaque
+         * appelant. *Un pont qu'on redeclare à chaque usage est un pont dont
+         * personne ne vérifie la forme.*
+         */
+        clock?: {
+            listCalendars: () => Promise<string[]>;
+            loadCalendar: (id: string) => Promise<Record<string, unknown> | null>;
+            saveCalendar: (
+                id: string, data: unknown,
+            ) => Promise<{ ok: boolean; motif?: string; chemin?: string }>;
+            deleteCalendar: (id: string) => Promise<{ ok: boolean; motif?: string }>;
+        };
         session?: {
             launchHubWindow: (tag?: string) => void;
             saveSession: (data: Record<string, unknown>) => Promise<boolean>;

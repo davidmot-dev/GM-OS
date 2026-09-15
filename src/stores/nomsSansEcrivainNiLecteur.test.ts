@@ -106,6 +106,17 @@ const LONGUEUR_MINIMALE = 6;
  * est fautif, c'est de ne pas savoir dans quel cas on est.
  */
 const TOLERES: Record<string, string> = {
+    /*
+      ⭐ **Cinq noms du calendrier ont quitté cette liste le 2026-09-15**, avec
+      l'Atelier des calendriers : `daysOfWeek`, `hoursPerDay`, `minutesPerHour`,
+      `daysPerWeek` et `loadCalendar`. Ils étaient tolérés ici parce que rien ne
+      les lisait — `daysPerWeek` depuis le 2026-09-07, avec la note « la semaine
+      du calendrier n'a jamais eu de longueur ».
+
+      *C'est ce test qui l'a dit, et personne d'autre :* il a rougi tout seul le
+      jour où ils ont trouvé un lecteur. **Un registre de ce qui ne sert à rien
+      vaut surtout par le moment où il se vide.**
+    */
     // Employés à l'intérieur de leur propre magasin — chaînes internes légitimes.
     'terminerLaFiche': 'appelée par une autre action du même magasin (useImageStore)',
     'removePing': 'appelée par le minuteur de son propre magasin (useMapStore)',
@@ -115,9 +126,6 @@ const TOLERES: Record<string, string> = {
     'imagePrecedente': "le décor qui revient quand une fiche s'en va — écrit et relu dans useImageStore",
     'fogRegistry': 'le cache de brouillard par carte, écrit et relu dans useMapStore',
     'lastSyncedEntityId': "garde-fou contre la resynchronisation d'un même PNJ, lu dans useVoiceStore",
-    'daysOfWeek': 'les noms des jours du calendrier, lus par le calcul de date (useClockStore)',
-    'hoursPerDay': 'la longueur du jour, lue par le calcul de date (useClockStore)',
-    'minutesPerHour': "la longueur de l'heure, lue par le calcul de date (useClockStore)",
     'volumeAvantCoupure': 'le volume retenu pendant une coupure, relu au rétablissement (useAudioMasterStore)',
     'signaturesConnues': "la signature qu'un appareil portait la dernière fois qu'on l'a vu — écrite au recensement et relue par `sortieAEmployer`, dans useHardwareStore",
     /*
@@ -143,7 +151,6 @@ const TOLERES: Record<string, string> = {
     'attachZoneToToken': '⚠️ 2026-09-07 : aucun écran ne sait attacher une zone de danger à un pion',
 
     // ⚠️ Déclarés et rien d'autre — ni écrivain, ni lecteur, nulle part.
-    'daysPerWeek': "⚠️ 2026-09-07 : UNE SEULE occurrence dans tout le dépôt, sa propre déclaration. Ses trois voisins du calendrier (daysOfWeek, hoursPerDay, minutesPerHour) sont lus par le calcul de date ; celui-là ne l'est pas — la semaine du calendrier n'a jamais eu de longueur",
 
     // Employés chez eux, mesuré le 2026-09-07 (3 occurrences ou plus dans leur propre magasin).
     'trackVolumes': "les volumes par piste, relus par le magasin des ambiances",
@@ -174,7 +181,6 @@ const TOLERES: Record<string, string> = {
     'lumiereDuMoment': "la scène de lumière posée par un moment, relue à la prise de main suivante et à l'arrêt (useStoryboardStore)",
     'undoStack': "la pile d’annulation du tableau blanc, relue chez elle",
     'redoStack': "la pile de rétablissement du tableau blanc, relue chez elle",
-    'loadCalendar': "appelée par une autre action de useClockStore",
 
     // ⚠️ Déclarés, parfois implémentés, et appelés par PERSONNE — mesuré le 2026-09-07.
     'isRemoteSyncing': "⚠️ useCombatStore : UNE seule occurrence : déclaré, même pas implémenté",

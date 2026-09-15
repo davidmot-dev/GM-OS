@@ -226,7 +226,13 @@ contextBridge.exposeInMainWorld('appBridge', {
     },
     clock: {
         listCalendars: () => ipcRenderer.invoke('clock:list-calendars'),
-        loadCalendar: (id: string) => ipcRenderer.invoke('clock:load-calendar', id)
+        loadCalendar: (id: string) => ipcRenderer.invoke('clock:load-calendar', id),
+        /* L'Atelier des calendriers, 2026-09-15. Le chemin est contenu côté
+           principal ; la forme du calendrier est contrôlée côté renderer, une
+           seule fois, par `formeDuCalendrier.ts`. */
+        saveCalendar: (id: string, data: unknown) =>
+            ipcRenderer.invoke('clock:save-calendar', id, data),
+        deleteCalendar: (id: string) => ipcRenderer.invoke('clock:delete-calendar', id)
     },
     utils: {
         formatFileUrl: (path: string) => {

@@ -266,9 +266,22 @@ describe('ce que la table a le droit de voir', () => {
 
     it('traduit les horloges projetées sans rien inventer', () => {
         expect(horlogesPourLaTable({ isClockProjected: true, tensions: TENSIONS })).toEqual([
-            { id: 'c1', nom: 'Alerte', remplis: 1, total: 4, couleur: '#00C853' },
-            { id: 'c2', nom: 'Fuite', remplis: 3, total: 6, couleur: undefined },
+            { id: 'c1', nom: 'Alerte', remplis: 1, total: 4, couleur: '#00C853', seVide: false },
+            { id: 'c2', nom: 'Fuite', remplis: 3, total: 6, couleur: undefined, seVide: false },
         ]);
+    });
+
+    /**
+     * ⛔ **Le sens traverse jusqu'aux 32 pixels** (2026-09-15). Sans lui, des
+     * rations à zéro seraient restées orange au milieu de la table pendant que
+     * l'écran du meneur criait — *le caviardage se fait à la source, et le sens
+     * aussi.*
+     */
+    it('emporte le sens d’une jauge qui se vide', () => {
+        const vivres = { ...TENSIONS[0], id: 'c3', name: 'Vivres', sens: 'epuisement' as const };
+
+        expect(horlogesPourLaTable({ isClockProjected: true, tensions: [vivres] })[0])
+            .toMatchObject({ id: 'c3', seVide: true });
     });
 });
 

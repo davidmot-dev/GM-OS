@@ -98,6 +98,7 @@
     },
     "calendar": "Calendrier",
     "choose_calendar": "Choisir un calendrier...",
+    "calendar_workshop": "Atelier des calendriers — composer une année sans écrire de JSON",
     "year": "Année",
     "day": "Jour",
     "month": "Mois",
@@ -121,6 +122,9 @@
     "gauge_add_named": "Créer « {{nom}} » — {{segments}} segments",
     "gauge_add_default": "Créer une jauge de {{segments}} segments (nommez-la ci-dessus pour la reconnaître)",
     "segments": "Segments",
+    "remaining": "restants",
+    "gauge_step": "Par scène",
+    "gauge_step_hint": "Ce qu'une fin de scène coûte à cette jauge — une ration de moins, un segment de rituel de plus. Vide : la scène ne lui fait rien.",
     "projection": {
       "show": "Visible partout : Player Hub, tablettes et afficheur de table — cliquez pour tout masquer",
       "hide": "Masqué partout : ni horloge ni jauges chez les joueurs ni sur l'afficheur — cliquez pour tout montrer"

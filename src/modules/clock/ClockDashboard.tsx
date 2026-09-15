@@ -19,13 +19,21 @@ import {
     Eye,
     EyeOff,
     Bell,
-    BellOff
+    BellOff,
+    Hourglass,
+    CalendarPlus
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
 import ChoixDeLaForme from './components/ChoixDeLaForme';
+import ChoixDuSens from './components/ChoixDuSens';
 import { FORME_PAR_DEFAUT, type FormeDeJauge } from './components/formesDeJauge';
+import {
+    SENS_PAR_DEFAUT, elleSeVide, pasDuClicPrincipal, sensDe, type SensDeLaJauge,
+} from './logic/sensDeLaJauge';
 import { nomDeLaJauge, SEGMENTS_PROPOSES, SEGMENTS_PAR_DEFAUT } from './logic/nomDeLaJauge';
+import { estBissextile } from './logic/formeDuCalendrier';
+import { AtelierDesCalendriers } from './atelier/AtelierDesCalendriers';
 import { COULEURS_DU_COMPTE } from '../ulanzi/widgets/compteARebours';
 
 /** Ce que l'afficheur montre quand une jauge n'a pas de couleur choisie. */
@@ -40,7 +48,10 @@ const ClockDashboard: React.FC = () => {
       campagne, et la forme réelle est portée par chaque jauge.
     */
     const [formeDesNouvelles, setFormeDesNouvelles] = React.useState<FormeDeJauge>(FORME_PAR_DEFAUT);
+    /* Même raison que la forme : l'intention du moment, pas une donnée de campagne. */
+    const [sensDesNouvelles, setSensDesNouvelles] = React.useState<SensDeLaJauge>(SENS_PAR_DEFAUT);
     const [nomDeLaNouvelle, setNomDeLaNouvelle] = React.useState('');
+    const [atelierOuvert, setAtelierOuvert] = React.useState(false);
 
     /**
      * **Le seul chemin de création d'une jauge**, quel que soit le geste.
@@ -55,6 +66,7 @@ const ClockDashboard: React.FC = () => {
             nomDeLaJauge(nomDeLaNouvelle, t('clock.gauge_default', { segments })),
             segments,
             formeDesNouvelles,
+            sensDesNouvelles,
         );
         setNomDeLaNouvelle('');
     };
@@ -78,6 +90,8 @@ const ClockDashboard: React.FC = () => {
         changerLaFormeDeLaJauge,
         changerLaCouleurDeLaJauge,
         remplirLaJauge,
+        changerLeSensDeLaJauge,
+        reglerLePasParScene,
         basculerSurLAfficheur,
         basculerLaVueDesJoueurs,
         setTimer,
@@ -137,6 +151,12 @@ const ClockDashboard: React.FC = () => {
 
     return (
         <div className="h-full grid grid-cols-12 gap-6 p-6 bg-app-bg/50 overflow-hidden">
+            <AtelierDesCalendriers
+                ouvert={atelierOuvert}
+                onFermer={() => setAtelierOuvert(false)}
+                onCalendriersChanges={() => { void fetchCalendars(); }}
+                idDepart={activeCalendarId}
+            />
             {/* Sidebar Controls */}
             <div className="col-span-3 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
                 <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
@@ -186,16 +206,34 @@ const ClockDashboard: React.FC = () => {
                             <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                 <div>
                                     <label className="text-xs text-slate-500 uppercase font-medium block mb-2">{t('clock.calendar')}</label>
-                                    <select
-                                        className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-accent"
-                                        value={activeCalendarId || ''}
-                                        onChange={(e) => selectCalendar(e.target.value)}
-                                    >
-                                        <option value="" disabled>{t('clock.choose_calendar')}</option>
-                                        {availableCalendars.map(calId => (
-                                            <option key={calId} value={calId}>{calId}</option>
-                                        ))}
-                                    </select>
+                                    <div className="flex gap-2">
+                                        <select
+                                            className="flex-1 min-w-0 bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-accent"
+                                            value={activeCalendarId || ''}
+                                            onChange={(e) => selectCalendar(e.target.value)}
+                                        >
+                                            <option value="" disabled>{t('clock.choose_calendar')}</option>
+                                            {availableCalendars.map(calId => (
+                                                <option key={calId} value={calId}>{calId}</option>
+                                            ))}
+                                        </select>
+                                        {/*
+                                          ⭐ **L'Atelier des calendriers, 2026-09-15.**
+                                          Avant lui, un calendrier ne se créait qu'en posant
+                                          un JSON à la main dans `databases/calendars/` — et
+                                          un seul existait, livré d'usine, en un mois de
+                                          construction.
+                                        */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setAtelierOuvert(true)}
+                                            title={t('clock.calendar_workshop')}
+                                            aria-label={t('clock.calendar_workshop')}
+                                            className="shrink-0 px-2 rounded border border-app-border text-app-text/50 hover:text-accent hover:border-accent/50 transition-colors"
+                                        >
+                                            <CalendarPlus size={14} />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {activeCalendarId && calendars[activeCalendarId] && fantasyDate && (
@@ -228,7 +266,7 @@ const ClockDashboard: React.FC = () => {
                                                 onChange={(e) => setFantasyDate({ monthIndex: parseInt(e.target.value) })}
                                             >
                                                 {calendars[activeCalendarId].months.map((m, idx) => {
-                                                    const isLeap = fantasyDate.year % 4 === 0;
+                                                    const isLeap = estBissextile(calendars[activeCalendarId], fantasyDate.year);
                                                     if (m.leapYearOnly && !isLeap) return null;
                                                     return <option key={idx} value={idx}>{m.displayName || m.name}</option>;
                                                 })}
@@ -435,6 +473,14 @@ const ClockDashboard: React.FC = () => {
                             onKeyDown={(e) => { if (e.key === 'Enter') creerLaJauge(SEGMENTS_PAR_DEFAUT); }}
                         />
                         <ChoixDeLaForme valeur={formeDesNouvelles} onChoisir={setFormeDesNouvelles} />
+                        {/*
+                          **Le sens se choisit AVANT la création, pas après.**
+                          Un consommable naît plein : le décider après coup
+                          obligerait à créer une jauge vide — qui crierait — puis
+                          à la remplir. *Le réglage qui change l'état de départ
+                          appartient au formulaire de départ.*
+                        */}
+                        <ChoixDuSens valeur={sensDesNouvelles} onChoisir={setSensDesNouvelles} />
                         <div className="flex gap-2 flex-wrap">
                             {SEGMENTS_PROPOSES.map(s => (
                                 <button
@@ -493,25 +539,46 @@ const ClockDashboard: React.FC = () => {
                                 <div className="flex flex-col items-center gap-3">
                                     <div
                                         className="cursor-pointer"
+                                        title={elleSeVide(clock)
+                                            ? 'Clic : consommer un segment — shift-clic ou clic droit : en rendre un'
+                                            : 'Clic : avancer d’un segment — shift-clic ou clic droit : reculer'}
                                         onClick={(e) => {
-                                            // Simple logic: left click adds, right click (handled separately) or shift-click removes
-                                            if (e.shiftKey) {
-                                                updateTensionSegments(clock.id, -1);
-                                            } else {
-                                                updateTensionSegments(clock.id, 1);
-                                            }
+                                            /*
+                                              **Le clic facile suit le sens de la
+                                              jauge** — tranché par David le
+                                              2026-09-15. Sur un consommable, le
+                                              geste de la soirée est de
+                                              consommer ; avant, c'était le geste
+                                              difficile. Shift-clic rend.
+
+                                              ⚠️ Le geste s'inverse donc selon la
+                                              jauge, et c'est assumé : *un geste
+                                              uniforme qui va dans le mauvais
+                                              sens n'est pas plus simple, il est
+                                              seulement plus régulier.*
+                                            */
+                                            const pas = pasDuClicPrincipal(clock);
+                                            updateTensionSegments(clock.id, e.shiftKey ? -pas : pas);
                                         }}
                                         onContextMenu={(e) => {
                                             e.preventDefault();
-                                            updateTensionSegments(clock.id, -1);
+                                            updateTensionSegments(clock.id, -pasDuClicPrincipal(clock));
                                         }}
                                     >
                                         <NarrativeClock clock={clock} theme={theme} size={100} />
                                     </div>
                                     <div className="text-center">
                                         <p className="text-xs font-bold text-slate-300 truncate w-full max-w-[120px] uppercase tracking-tight">{clock.name}</p>
+                                        {/*
+                                          `4 / 6 restants` plutôt que `4 / 6
+                                          segments` : sur un consommable, le
+                                          mot est la moitié de l'information.
+                                          Sans lui, rien dans la ligne ne dit
+                                          si quatre est une bonne nouvelle.
+                                        */}
                                         <p className="text-ui-10 text-slate-500 font-mono italic">
-                                            {clock.filledSegments} / {clock.totalSegments} {t('clock.segments')}
+                                            {clock.filledSegments} / {clock.totalSegments}{' '}
+                                            {elleSeVide(clock) ? t('clock.remaining') : t('clock.segments')}
                                         </p>
                                     </div>
 
@@ -527,6 +594,20 @@ const ClockDashboard: React.FC = () => {
                                             compact
                                             valeur={clock.forme ?? FORME_PAR_DEFAUT}
                                             onChoisir={(f) => changerLaFormeDeLaJauge(clock.id, f)}
+                                        />
+                                        {/*
+                                          **Changer d'avis sur le sens.** Une
+                                          jauge qu'on n'a pas encore touchée se
+                                          replace toute seule au départ de son
+                                          nouveau sens ; dès qu'elle a compté
+                                          quelque chose, le magasin garde ce
+                                          compte. *Deviner est bienvenu tant
+                                          qu'il n'y a rien à perdre.*
+                                        */}
+                                        <ChoixDuSens
+                                            compact
+                                            valeur={sensDe(clock)}
+                                            onChoisir={(s) => changerLeSensDeLaJauge(clock.id, s)}
                                         />
                                         {/*
                                           **La couleur de cette jauge SUR L'AFFICHEUR.**
@@ -625,6 +706,47 @@ const ClockDashboard: React.FC = () => {
                                                 : <EyeOff size={14} />}
                                         </button>
                                     </div>
+
+                                    {/*
+                                      **Ce qu'une fin de scène coûte à cette jauge.**
+
+                                      *Portée choisie par David le 2026-09-15.* Le
+                                      nombre est saisi **positif** : c'est le sens de
+                                      la jauge qui décide de la direction, et la
+                                      légende le dit à côté (`−1 / scène`,
+                                      `+1 / scène`). *Laisser saisir un signe aurait
+                                      créé deux façons d'écrire la même intention, et
+                                      donc une jauge qui remonte à chaque scène sans
+                                      que personne comprenne pourquoi.*
+
+                                      Vide = la scène ne lui fait rien, et c'est le cas
+                                      de toutes les jauges existantes.
+                                    */}
+                                    <label
+                                        className="opacity-30 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-ui-9 uppercase tracking-wider text-slate-600"
+                                        title={t('clock.gauge_step_hint')}
+                                    >
+                                        <Hourglass size={11} className="shrink-0" />
+                                        <span>{t('clock.gauge_step')}</span>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            max={clock.totalSegments}
+                                            value={clock.pasParScene ?? ''}
+                                            placeholder="0"
+                                            onChange={(e) => reglerLePasParScene(
+                                                clock.id,
+                                                e.target.value === '' ? null : Number(e.target.value),
+                                            )}
+                                            aria-label={t('clock.gauge_step_hint')}
+                                            className="w-10 bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 text-center font-mono text-app-text/80 focus:outline-none focus:border-accent"
+                                        />
+                                        {!!clock.pasParScene && (
+                                            <span className="font-mono text-slate-500">
+                                                {elleSeVide(clock) ? '−' : '+'}{clock.pasParScene}
+                                            </span>
+                                        )}
+                                    </label>
                                 </div>
                             </div>
                         ))}

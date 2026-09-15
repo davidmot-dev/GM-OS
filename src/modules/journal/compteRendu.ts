@@ -1,6 +1,7 @@
 import type { Journal, PourLaSuite } from './types';
 import type { Acte, Scene } from '../../types/trame.types';
 import { actesOrdonnes, scenesOrdonnees, etatDeLaScene } from '../session/logic/trame';
+import { libelleDeJauge } from '../clock/logic/sensDeLaJauge';
 
 /**
  * Le compte rendu d'une séance, en trois sections.
@@ -97,7 +98,7 @@ export function rendreLeCompteRendu(journal: Journal): string {
             bloc.push(...liste('PNJ', etat.sessionEntities.map(n => `${n.name} (${n.status})`)));
         }
         if (etat.clocks?.length) {
-            bloc.push(...liste('Horloges', etat.clocks.map(c => `${c.name} : ${c.filled}/${c.total}`)));
+            bloc.push(...liste('Horloges', etat.clocks.map(libelleDeJauge)));
         }
         if (etat.pendingChecklist?.length) {
             bloc.push(...liste('Préparation restée en plan', etat.pendingChecklist));

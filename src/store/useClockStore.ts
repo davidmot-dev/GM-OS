@@ -2,6 +2,23 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
 import type { FormeDeJauge } from '../modules/clock/components/formesDeJauge';
+import {
+    dateDeDepart,
+    estBissextile,
+    horodatageDeLaDate,
+    joursDeLAnnee,
+    leCalendrierEstFautif,
+    secondesParJour,
+    type CalendrierDatable,
+} from '../modules/clock/logic/formeDuCalendrier';
+import {
+    appliquerLUsure,
+    apresChangementDeSens,
+    departDeLaJauge,
+    usureDeLaScene,
+    type SensDeLaJauge,
+    type UsureDUneJauge,
+} from '../modules/clock/logic/sensDeLaJauge';
 
 /**
  * **Un horodatage est-il utilisable ?**
@@ -117,6 +134,33 @@ export interface TensionClock {
      * retirée des deux, l'afficheur est posé sur la table.
      */
     vueParLesJoueurs?: boolean;
+    /**
+     * **Dans quel sens cette jauge se lit-elle ?**
+     *
+     * *Demandé par David le 2026-09-15 :* **« j'ai des jauges qui augmentent,
+     * mais je n'ai pas de jauge qui diminue pour simuler la diminution de
+     * consommable »**.
+     *
+     * `epuisement` renverse tout ce qui entoure la jauge — sa naissance, son
+     * alarme, son clic, sa relecture — sans toucher à sa géométrie : les
+     * segments allumés sont **ce qu'il reste**. La règle et ses raisons vivent
+     * dans `modules/clock/logic/sensDeLaJauge.ts`, une seule fois, parce qu'il y
+     * a quatre écrans et un compte rendu qui la lisent.
+     *
+     * ⚠️ **Absent = elle monte**, exactement comme avant ce champ. Aucune
+     * migration.
+     */
+    sens?: SensDeLaJauge;
+    /**
+     * **Ce qu'une fin de scène coûte à cette jauge.** Toujours **positif** :
+     * c'est `sens` qui décide de la direction — une ration de moins, un segment
+     * de rituel de plus.
+     *
+     * Absent ou nul : la scène ne lui fait rien, et c'est le cas de toutes les
+     * jauges existantes. L'usure part de `trameSlice.terminerLaScene`, le seul
+     * endroit de l'application qui sache qu'une scène s'achève.
+     */
+    pasParScene?: number;
 }
 
 /**
@@ -223,8 +267,30 @@ interface ClockState {
 
 
     // Tension Actions
-    /** Ajoute une nouvelle jauge de tension */
-    addTensionClock: (name: string, totalSegments: number, forme?: FormeDeJauge) => void;
+    /**
+     * Ajoute une nouvelle jauge de tension.
+     *
+     * ⚠️ **`sens` décide aussi d'où elle part** : un consommable naît **plein**
+     * — on ne commence pas une expédition sans vivres. Sans ça, créer
+     * « Rations » puis penser au chevron était un geste en deux temps dont le
+     * second s'oublie.
+     */
+    addTensionClock: (
+        name: string, totalSegments: number, forme?: FormeDeJauge, sens?: SensDeLaJauge,
+    ) => void;
+    /** Retourne le sens d'une jauge — elle monte, ou elle se vide. */
+    changerLeSensDeLaJauge: (id: string, sens: SensDeLaJauge) => void;
+    /** Ce qu'une fin de scène coûte à cette jauge. `0` ou `null` la détache. */
+    reglerLePasParScene: (id: string, pas: number | null) => void;
+    /**
+     * **Une scène vient de se terminer.**
+     *
+     * Appelée par `trameSlice.terminerLaScene` — *le seul endroit qui sache
+     * qu'une scène s'achève*, et qui le sait depuis le 2026-08-17. Rend ce qui a
+     * bougé, pour que l'écran puisse l'annoncer : un magasin qui applique en
+     * silence prive le meneur de la seule chose qui l'intéresse.
+     */
+    laSceneSeTermine: () => UsureDUneJauge[];
     /** Change la forme sous laquelle une jauge se dessine. */
     changerLaFormeDeLaJauge: (id: string, forme: FormeDeJauge) => void;
     /**
@@ -368,14 +434,22 @@ export const useClockStore = create<ClockState>()(
                 return { timerRemaining: newRemaining, timerIsRunning: newRemaining > 0 };
             }),
 
-            addTensionClock: (name, totalSegments, forme) => set((state) => ({
+            addTensionClock: (name, totalSegments, forme, sens) => set((state) => ({
                 tensions: [
                     ...state.tensions,
                     {
                         id: crypto.randomUUID(),
                         name,
                         totalSegments,
-                        filledSegments: 0,
+                        sens,
+                        /*
+                          **Un consommable naît plein.** `departDeLaJauge` tient
+                          la règle, plutôt qu'un ternaire ici : elle sert aussi
+                          au changement de sens, et deux écritures de la même
+                          décision finissent toujours par diverger.
+                        */
+                        filledSegments: departDeLaJauge(
+                            sens ?? 'remplissage', totalSegments),
                         forme,
                         /*
                           **Une jauge naît secrète.** Écrit explicitement, et non
@@ -420,6 +494,55 @@ export const useClockStore = create<ClockState>()(
                 tensions: state.tensions.map((c) => (c.id === id ? { ...c, forme } : c))
             })),
 
+            /*
+              **Retourner une jauge replace son compte — mais seulement si
+              personne n'y a touché.** On pose « Alerte » à zéro, on se dit que
+              c'était « Rations » : sans ça, les vivres seraient vides et
+              hurlants dès la première seconde. Dès que le meneur a compté
+              quelque chose, on garde son compte. *Deviner est bienvenu tant
+              qu'il n'y a rien à perdre.*
+            */
+            changerLeSensDeLaJauge: (id, sens) => set((state) => ({
+                tensions: state.tensions.map((c) => (c.id === id
+                    ? { ...c, sens, filledSegments: apresChangementDeSens(c, sens) }
+                    : c)),
+            })),
+
+            /*
+              `null` ou zéro détache la jauge des fins de scène — et on écrit
+              `undefined`, pas `0` : c'est la même distinction que pour la
+              couleur, l'absence veut dire « rien de déclaré » et se relit comme
+              telle dans le panneau.
+            */
+            reglerLePasParScene: (id, pas) => set((state) => ({
+                tensions: state.tensions.map((c) => (c.id === id
+                    ? {
+                        ...c,
+                        pasParScene: (pas && Number.isFinite(pas) && pas > 0)
+                            ? Math.floor(pas)
+                            : undefined,
+                    }
+                    : c)),
+            })),
+
+            /*
+              **L'usure de fin de scène.**
+
+              ⚠️ **On n'écrit rien quand rien ne bouge**, et c'est le cas
+              courant : la plupart des tables ne déclareront aucun pas. Un `set`
+              inutile ferait repeindre les quatre écrans et repartir une
+              diffusion réseau à chaque scène fermée — `appliquerLUsure` rend la
+              liste d'origine par référence, mais la garde explicite ici évite
+              même de passer par `set`.
+            */
+            laSceneSeTermine: () => {
+                const usures = usureDeLaScene(get().tensions);
+                if (usures.length === 0) return usures;
+
+                set((state) => ({ tensions: appliquerLUsure(state.tensions, usures) }));
+                return usures;
+            },
+
             removeTensionClock: (id) => set((state) => ({
                 tensions: state.tensions.filter((c) => c.id !== id)
             })),
@@ -462,9 +585,30 @@ export const useClockStore = create<ClockState>()(
                     const calendar = await bridge.loadCalendar(id);
                     if (calendar) {
                         if (!calendar.id) calendar.id = id;
+
+                        /*
+                          ⛔ **Choisir un calendrier pose enfin sa date de départ.**
+
+                          `currentYear` et ses cinq compagnons étaient écrits dans
+                          le seul calendrier qui existe — Harptos déclare
+                          `1492` — et **lus par personne**. Mesuré le 2026-09-15 :
+                          le choisir affichait **l'an 56**, parce que la date
+                          venait de l'horloge système. *Un champ renseigné que
+                          rien ne lit est un mensonge patient : il a l'air d'une
+                          fonctionnalité.*
+
+                          ⚠️ **Seulement si le calendrier le dit**, et seulement
+                          au moment où on le choisit : reposer la date à chaque
+                          relecture écraserait le temps que la campagne a vécu.
+                        */
+                        const depart = dateDeDepart(calendar as CalendrierDatable);
+
                         set((state) => ({
                             calendars: { ...state.calendars, [calendar.id]: calendar },
-                            activeCalendarId: calendar.id
+                            activeCalendarId: calendar.id,
+                            ...(depart !== null && horodatageValide(depart)
+                                ? { timestamp: depart }
+                                : {}),
                         }));
                     }
                 } catch (err) {
@@ -480,22 +624,47 @@ export const useClockStore = create<ClockState>()(
                 const { timestamp, activeCalendarId, calendars } = get();
                 if (!activeCalendarId || !calendars[activeCalendarId]) return null;
 
-                const cal = calendars[activeCalendarId];
+                const cal = calendars[activeCalendarId] as CalendrierDatable;
+
+                /*
+                  ⛔⛔ **LA GARDE QUI EMPÊCHE LE GEL.**
+
+                  La boucle ci-dessous avance d'année en année **par
+                  soustraction**. Si une année dure zéro seconde — un calendrier
+                  **sans mois**, ou `hoursPerDay: 0` — la condition reste vraie,
+                  la soustraction ne retire rien, et **la boucle ne s'arrête
+                  jamais**. Mesuré le 2026-09-15 : cinquante millions de tours
+                  sans sortir. *Ce n'est pas une date fausse, c'est
+                  l'application figée, sans message et sans trace.*
+
+                  ⚠️ **La garde est ici et pas seulement dans l'Atelier** : les
+                  calendriers arrivent aussi par un fichier JSON posé à la main
+                  dans `databases/calendars/`, et c'est même le seul chemin qui
+                  ait jamais existé. *Une garde qui ne tient que dans l'écran
+                  laisse entrer tout ce qui ne passe pas par l'écran.*
+
+                  On rend `null`, ce que tous les appelants savent déjà lire :
+                  le pupitre n'affiche pas de date fantastique, et c'est
+                  infiniment préférable à un cockpit qui ne répond plus.
+                */
+                if (leCalendrierEstFautif(cal)) {
+                    console.warn(
+                        `[Clock-OS] Calendrier « ${cal.name ?? activeCalendarId} » inutilisable — `
+                        + 'aucune date fantastique ne sera calculée.',
+                    );
+                    return null;
+                }
+
                 const secondsPerMin = cal.minutesPerHour || 60;
                 const secondsPerHour = secondsPerMin * 60;
-                const secondsPerDay = cal.hoursPerDay * secondsPerHour;
+                const secondsPerDay = secondesParJour(cal);
 
                 let totalSeconds = Math.floor(timestamp / 1000);
 
-                const getDaysInYear = (year: number) => {
-                    let total = 0;
-                    const isLeap = year % 4 === 0;
-                    cal.months.forEach((m: { days: number; leapYearOnly?: boolean }) => {
-                        if (m.leapYearOnly && !isLeap) return;
-                        total += m.days;
-                    });
-                    return total;
-                };
+                /* La règle bissextile vivait ici, écrite à la main — `year % 4 === 0`,
+                   recopiée à cinq endroits. Aucun calendrier ne pouvait alors
+                   déclarer la sienne ; Harptos tombait juste par chance. */
+                const getDaysInYear = (year: number) => joursDeLAnnee(cal, year);
 
                 let year = 0;
                 let daysInYear = getDaysInYear(year);
@@ -511,7 +680,7 @@ export const useClockStore = create<ClockState>()(
                     totalSeconds += daysInYear * secondsPerDay;
                 }
 
-                const isLeap = year % 4 === 0;
+                const isLeap = estBissextile(cal, year);
                 let monthIndex = 0;
                 let day = 1;
 
@@ -543,46 +712,24 @@ export const useClockStore = create<ClockState>()(
                 return { year, monthIndex, day, hour, minute, second, dayOfWeek };
             },
 
+            /*
+              **La saisie manuelle et la date de départ passent par le MÊME
+              calcul.** Cette fonction portait sa propre arithmétique — la
+              somme des années, le saut des mois bissextiles, le `% 4` écrit une
+              fois de plus. *Deux inverses de la même fonction finissent toujours
+              par ne plus tomber sur le même jour.*
+
+              Un calendrier mal formé produirait un `NaN` par cette porte-ci :
+              `horodatageDeLaDate` refuse d'abord, `horodatageValide` ensuite.
+            */
             setFantasyDate: (updates) => {
                 const current = get().getFantasyDate();
                 if (!current) return;
 
-                const next = { ...current, ...updates };
-                const cal = get().calendars[get().activeCalendarId!];
+                const cal = get().calendars[get().activeCalendarId!] as CalendrierDatable;
+                const quand = horodatageDeLaDate(cal, { ...current, ...updates });
 
-                const secondsPerMin = cal.minutesPerHour || 60;
-                const secondsPerHour = secondsPerMin * 60;
-                const secondsPerDay = cal.hoursPerDay * secondsPerHour;
-
-                const getDaysInYear = (year: number) => {
-                    let total = 0;
-                    const isLeap = year % 4 === 0;
-                    cal.months.forEach((m: { days: number; leapYearOnly?: boolean }) => {
-                        if (m.leapYearOnly && !isLeap) return;
-                        total += m.days;
-                    });
-                    return total;
-                };
-
-                let totalSeconds = 0;
-                for (let y = 0; y < next.year; y++) {
-                    totalSeconds += getDaysInYear(y) * secondsPerDay;
-                }
-                const isLeap = next.year % 4 === 0;
-                for (let i = 0; i < next.monthIndex; i++) {
-                    const m = cal.months[i];
-                    if (m.leapYearOnly && !isLeap) continue;
-                    totalSeconds += m.days * secondsPerDay;
-                }
-                totalSeconds += (next.day - 1) * secondsPerDay;
-                totalSeconds += next.hour * secondsPerHour;
-                totalSeconds += next.minute * secondsPerMin;
-                totalSeconds += next.second;
-
-                // Un calendrier mal formé — un mois sans `days`, une année à
-                // zéro — produirait un `NaN` par cette porte-ci.
-                const enMillisecondes = totalSeconds * 1000;
-                if (horodatageValide(enMillisecondes)) set({ timestamp: enMillisecondes });
+                if (quand !== null && horodatageValide(quand)) set({ timestamp: quand });
             }
         }),
         {

@@ -11,6 +11,7 @@ import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
 import i18next from 'i18next';
+import { libelleDeJauge } from '../clock/logic/sensDeLaJauge';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor((ms / 1000) % 60);
@@ -166,7 +167,7 @@ export const useJournalStore = create<JournalState>()(
 
           if (snapshot.clocks && snapshot.clocks.length > 0) {
             const clockContent = snapshot.clocks
-              .map(c => `- **${c.name}**: ${c.filled}/${c.total} segments`)
+              .map(c => `- ${libelleDeJauge(c)}`)
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',

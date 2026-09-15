@@ -106,6 +106,55 @@ describe('l’horloge composée', () => {
         expect(couleurs(charge.draw).every(c => c === COULEURS_DU_COMPTE.pleine)).toBe(true);
     });
 
+    /**
+     * ⭐ **Le code couleur, demandé par David le 2026-09-15.** La couleur choisie
+     * s'efface à mesure qu'on approche du bout : elle distingue les horloges, elle
+     * ne masque pas l'échéance.
+     *
+     * ⚠️ **Le vrai gain sur 32 pixels : le rouge arrive au dernier QUART**, plus
+     * seulement au bout. La table voit venir au lieu de constater.
+     */
+    it('passe à l’orange à mi-course, même colorée', () => {
+        const charge = composerCompteARebours({ nom: 'Alerte', remplis: 2, total: 4, couleur: '#00C853' });
+        expect(charge.color).toBe(COULEURS_DU_COMPTE.tension);
+    });
+
+    it('passe au rouge au dernier quart, avant le bout', () => {
+        const charge = composerCompteARebours({ nom: 'Alerte', remplis: 3, total: 4, couleur: '#00C853' });
+        expect(charge.color).toBe(COULEURS_DU_COMPTE.pleine);
+    });
+
+    /**
+     * ⭐ **Une jauge qui se vide suit la même échelle, à l'envers.** ⛔ Sans le
+     * drapeau `seVide`, des rations à une unité seraient restées de leur couleur
+     * ordinaire au milieu de la table pendant que l'écran du meneur criait.
+     */
+    it.each([
+        [6, COULEURS_DU_COMPTE.plein],
+        [3, COULEURS_DU_COMPTE.tension],
+        [1, COULEURS_DU_COMPTE.pleine],
+        [0, COULEURS_DU_COMPTE.pleine],
+    ])('des vivres à %s/6 se dessinent dans la bonne teinte', (restants, attendue) => {
+        const charge = composerCompteARebours({
+            nom: 'Vivres', remplis: restants as number, total: 6, seVide: true,
+        });
+        expect(charge.color).toBe(attendue);
+    });
+
+    /**
+     * ⚠️ **Le cran de tension emploie le même pigment que le repos**, et c'est
+     * assumé : sur 32 pixels l'orange EST la couleur par défaut. Une horloge sans
+     * couleur choisie a donc une échelle à deux crans — *un troisième pigment
+     * indistinguable à deux pixels de hauteur aurait été pire qu'aucun.*
+     */
+    it('ne prétend pas montrer la tension d’une horloge sans couleur choisie', () => {
+        const repos = composerCompteARebours({ nom: 'X', remplis: 1, total: 6 });
+        const tension = composerCompteARebours({ nom: 'X', remplis: 3, total: 6 });
+
+        expect(tension.color).toBe(repos.color);
+        expect(repos.color).toBe(COULEURS_DU_COMPTE.plein);
+    });
+
     /** Un état incohérent ne doit pas dessiner plus de cases qu'il n'y en a. */
     it('borne les segments remplis au total', () => {
         const charge = composerCompteARebours({ nom: 'X', remplis: 99, total: 4 });

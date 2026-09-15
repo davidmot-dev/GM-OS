@@ -15,6 +15,7 @@ import {
     pastillesDeLaJauge,
     traitsDuCadran,
 } from './formesDeJauge';
+import { elleSeVide, graviteDeLaJauge, type GraviteDeLaJauge } from '../logic/sensDeLaJauge';
 
 interface NarrativeClockProps {
     clock: TensionClock;
@@ -30,6 +31,41 @@ interface CouleursDeJauge {
     fond: string;
     contour: string;
 }
+
+/**
+ * **Les trois crans d'alerte, et pourquoi ils ne viennent pas du thème.**
+ *
+ * *Demandé par David le 2026-09-15 : « est-ce qu'on pourrait introduire un code
+ * couleur (orange, rouge) quand ça s'épuise ? »*
+ *
+ * ⚠️ **Ils sont les mêmes dans les trois thèmes**, délibérément — comme le rouge
+ * du bout l'était déjà. Un cyberpunk qui alerterait en cyan et un old style en
+ * ambre obligeraient à réapprendre l'instrument à chaque changement d'habillage.
+ * *Un habillage se choisit ; une alarme se reconnaît.*
+ *
+ * ⚠️ **L'orange est franc (`#ea580c`) et non ambré** : l'ambre `#f59e0b` est
+ * déjà la couleur de remplissage du thème old style, où la tension serait alors
+ * indistinguable du calme.
+ */
+const TEINTES_D_ALERTE: Partial<Record<GraviteDeLaJauge, string>> = {
+    tension: '#ea580c',
+    urgence: '#ef4444',
+    critique: '#ef4444',
+};
+
+/**
+ * **Le creux d'une jauge qu'on a vidée.**
+ *
+ * ⚠️ **Une jauge à zéro n'a plus AUCUN segment allumé** — donc, au moment
+ * précis où l'alarme compte, la forme elle-même n'a rien à teinter : il ne
+ * restait que le compte et le cercle qui s'échappe. Sur la barre et les points,
+ * qui n'ont pas de cercle, l'épuisement était donc presque muet.
+ *
+ * On teinte le vide d'un rouge sourd : *ce n'est pas une jauge éteinte, c'est
+ * une jauge consommée.* Sourd et non vif, parce qu'il décrit une absence — le
+ * rouge franc reste réservé à ce qui reste.
+ */
+const TEINTE_DU_CREUX_CONSOMME = '#7f1d1d';
 
 /**
  * **Les variables s'appellent `--app-accent`, pas `--accent`.**
@@ -94,10 +130,41 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
     const forme = clock.forme ?? FORME_PAR_DEFAUT;
     const couleurs = couleursDeLaJauge(theme);
 
-    const pleine = totalSegments > 0 && filledSegments >= totalSegments;
+    /*
+      **Le bout de la course qui fait mal — et il n'est pas le même dans les
+      deux sens.**
+
+      ⛔ Cette ligne portait `filledSegments >= totalSegments`, écrit à la main.
+      C'est exactement pour ça qu'elle a ignoré le sens quand il est arrivé le
+      2026-09-15 : la règle vivait dans le rendu, où personne ne va la chercher
+      en ajoutant un champ au modèle. Des provisions pleines criaient donc au
+      danger, pendant que le zéro — le seul moment qui compte — ne disait rien.
+      *Une comparaison recopiée dans un écran est une règle que les trois autres
+      ne connaîtront jamais.* Une garde du dépôt interdit désormais de la
+      réécrire ailleurs.
+    */
+    const gravite = graviteDeLaJauge(clock);
+    const pleine = gravite === 'critique';
+    /*
+      **La couleur dit la distance au bout, pas seulement le bout.**
+
+      *Demandé par David le 2026-09-15, dans la foulée du sens.* On passe à
+      l'orange à mi-course et au rouge au dernier quart — en **fraction** et non
+      en segments comptés, pour qu'une jauge de quatre et une jauge de douze
+      s'alarment au même endroit de leur course. La pulsation, elle, reste
+      réservée au vrai bout : *si tout clignote, plus rien ne se remarque.*
+    */
+    const alerte = TEINTES_D_ALERTE[gravite];
     const fraction = fractionRemplie(filledSegments, totalSegments);
 
-    const halo = (rempli: boolean) => (rempli ? `drop-shadow(0 0 4px ${couleurs.halo})` : 'none');
+    /*
+      Le halo suit la teinte d'alerte : laisser le halo du thème autour d'un
+      segment rouge dessinerait une aura de la couleur d'accent, et c'est
+      précisément la couleur qu'on vient de quitter.
+    */
+    const halo = (rempli: boolean) => (rempli
+        ? `drop-shadow(0 0 4px ${alerte ? `${alerte}99` : couleurs.halo})`
+        : 'none');
 
     /*
       **Une jauge pleine passe au rouge dans sa forme, pas seulement dans son
@@ -107,8 +174,10 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
       parle — le compte, il faut le lire, et lire demande de s'arrêter.
     */
     const teinte = (rempli: boolean) => {
-        if (!rempli) return couleurs.vide;
-        return pleine ? '#ef4444' : couleurs.plein;
+        if (!rempli) {
+            return (pleine && elleSeVide(clock)) ? TEINTE_DU_CREUX_CONSOMME : couleurs.vide;
+        }
+        return alerte ?? couleurs.plein;
     };
 
     /** Le compte, au centre pour l'anneau, en tête pour les formes plates. */
@@ -118,7 +187,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
             y={y}
             textAnchor="middle"
             dominantBaseline="central"
-            fill={pleine ? '#ef4444' : couleurs.texte}
+            fill={alerte ?? couleurs.texte}
             className={`${taille} font-bold font-mono transition-colors ${pleine ? 'animate-pulse' : ''} ${theme === 'oldstyle' ? 'font-serif' : ''}`}
         >
             {filledSegments}/{totalSegments}
@@ -158,7 +227,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
                                 cy={p.cy}
                                 r={p.r}
                                 fill={i < filledSegments ? teinte(true) : 'none'}
-                                stroke={i < filledSegments ? 'none' : couleurs.vide}
+                                stroke={i < filledSegments ? 'none' : teinte(false)}
                                 strokeWidth="2.5"
                                 className="transition-all duration-300 ease-out"
                                 style={{ filter: halo(i < filledSegments) }}
@@ -181,7 +250,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
                             <path
                                 d={arcDuCadran(0, fraction)}
                                 fill="none"
-                                stroke={pleine ? '#ef4444' : couleurs.plein}
+                                stroke={alerte ?? couleurs.plein}
                                 strokeWidth="7"
                                 strokeLinecap="round"
                                 className="transition-all duration-300 ease-out"
@@ -209,7 +278,7 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
                                         y1={pivot.y}
                                         x2={pointe.x}
                                         y2={pointe.y}
-                                        stroke={pleine ? '#ef4444' : couleurs.texte}
+                                        stroke={alerte ?? couleurs.texte}
                                         strokeWidth="3"
                                         strokeLinecap="round"
                                         className="transition-all duration-300 ease-out"

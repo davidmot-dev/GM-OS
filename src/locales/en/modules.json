@@ -98,6 +98,7 @@
     },
     "calendar": "Calendar",
     "choose_calendar": "Choose a calendar...",
+    "calendar_workshop": "Calendar workshop - compose a year without writing JSON",
     "year": "Year",
     "day": "Day",
     "month": "Month",
@@ -121,6 +122,9 @@
     "gauge_add_named": "Create \"{{nom}}\" — {{segments}} segments",
     "gauge_add_default": "Create a {{segments}}-segment gauge (name it above to recognise it)",
     "segments": "Segments",
+    "remaining": "left",
+    "gauge_step": "Per scene",
+    "gauge_step_hint": "What the end of a scene costs this gauge - one ration less, one ritual segment more. Empty: scenes leave it alone.",
     "projection": {
       "show": "Visible everywhere: Player Hub, tablets and table display — click to hide it all",
       "hide": "Hidden everywhere: no clock or gauges for players or on the display — click to show it all"

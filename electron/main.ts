@@ -80,6 +80,7 @@ import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
 import { racineDesTables, cheminDUnUnivers, cheminDUneTable } from './cheminDesTables'
+import { cheminDUnCalendrier } from './cheminDesCalendriers'
 import { lireUneSource, EXTENSIONS_TEXTE, EXTENSIONS_IMAGE } from './lectureDeSource'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { poserLaCle } from './clesDesFournisseurs'
@@ -424,13 +425,58 @@ ipcMain.handle('clock:list-calendars', async () => {
     return [];
 });
 
+/*
+  ⛔ **Le chemin était composé à la main avec un `id` venu du renderer.**
+  `../../package` remontait hors du dossier. C'était une fuite en lecture tant
+  que personne n'écrivait ; l'Atelier écrit désormais, donc on contient les deux
+  côtés — voir `cheminDesCalendriers.ts`.
+*/
 ipcMain.handle('clock:load-calendar', async (_event, id: string) => {
-    const appRoot = process.env.APP_ROOT || '';
-    const filePath = path.join(appRoot, 'databases', 'calendars', `${id}.json`);
-    if (await fs.pathExists(filePath)) {
+    const filePath = cheminDUnCalendrier(process.env.APP_ROOT || '', id);
+    if (filePath && await fs.pathExists(filePath)) {
         return await fs.readJson(filePath);
     }
     return null;
+});
+
+/**
+ * **Enregistrer un calendrier depuis l'Atelier.**
+ *
+ * ⚠️ **Le contrôle de forme n'est PAS ici** : il vit dans
+ * `modules/clock/logic/formeDuCalendrier.ts`, pur et éprouvé, et l'Atelier
+ * refuse d'enregistrer un calendrier fautif. Ce canal ne garde que ce qu'il est
+ * seul à pouvoir garder : **le chemin**. *Recopier le contrôle ici en ferait une
+ * seconde définition, et c'est exactement le motif que ce projet paie le plus
+ * cher.*
+ */
+ipcMain.handle('clock:save-calendar', async (_event, id: string, data: unknown) => {
+    const filePath = cheminDUnCalendrier(process.env.APP_ROOT || '', id);
+    if (!filePath) return { ok: false, motif: 'chemin-refuse' };
+    if (!data || typeof data !== 'object') return { ok: false, motif: 'contenu-vide' };
+
+    try {
+        await fs.ensureDir(path.dirname(filePath));
+        // Indenté à quatre espaces, comme `harptos.json` : une réécriture ne doit
+        // pas faire d'un fichier relu un fichier remanié.
+        await fs.writeJson(filePath, data, { spaces: 4 });
+        return { ok: true, chemin: filePath };
+    } catch (err) {
+        console.error('[Clock-OS] écriture impossible :', filePath, err);
+        return { ok: false, motif: 'ecriture-impossible' };
+    }
+});
+
+ipcMain.handle('clock:delete-calendar', async (_event, id: string) => {
+    const filePath = cheminDUnCalendrier(process.env.APP_ROOT || '', id);
+    if (!filePath) return { ok: false, motif: 'chemin-refuse' };
+
+    try {
+        await fs.remove(filePath);
+        return { ok: true };
+    } catch (err) {
+        console.error('[Clock-OS] suppression impossible :', filePath, err);
+        return { ok: false, motif: 'suppression-impossible' };
+    }
 });
 
 // --- Web OS Handlers ---

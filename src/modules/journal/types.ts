@@ -269,7 +269,7 @@ export interface SessionSnapshot {
   /** Éléments de la checklist non cochés */
   pendingChecklist?: string[];
   /** État des jauges de tension (Clock-OS) */
-  clocks?: Array<{ name: string; filled: number; total: number }>;
+  clocks?: Array<{ name: string; filled: number; total: number; seVide?: boolean }>;
   /** Données vectorielles du Whiteboard */
   whiteboardSnapshot?: unknown; 
 }
