@@ -81,6 +81,10 @@ import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
 import { racineDesTables, cheminDUnUnivers, cheminDUneTable } from './cheminDesTables'
 import { cheminDUnCalendrier } from './cheminDesCalendriers'
+import {
+    balayerLesDonnees, dossierDuMiroir as dossierDuMiroirDesDonnees,
+    racineDesDonnees, refleterUnFichier,
+} from './miroirDesDonnees'
 import { lireUneSource, EXTENSIONS_TEXTE, EXTENSIONS_IMAGE } from './lectureDeSource'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { poserLaCle } from './clesDesFournisseurs'
@@ -353,6 +357,32 @@ ipcMain.handle('tables:load-table', async (_event, universe: string, tableName: 
  * Rend `{ ok, chemin }` ou `{ ok: false, motif }` — *un booléen nu ne dirait pas
  * si le refus vient du chemin ou du disque.*
  */
+/**
+ * **Un fichier de `databases/` vient d'être écrit : le miroir le reprend.**
+ *
+ * *Demandé par David le 2026-09-15 : « rajoute la database dans une
+ * sauvegarde ».*
+ *
+ * ⛔ **Pourquoi ici et pas dans la sauvegarde automatique.** Celle-ci part deux
+ * minutes après un **changement d'état de session** ; écrire une table ne touche
+ * aucun magasin, donc elle ne serait **jamais partie**. *Un filet qui ne se
+ * déclenche pas est pire qu'un filet absent : on croit l'avoir.*
+ *
+ * ⚠️ **Le miroir ne doit jamais faire échouer l'écriture qu'il suit.** Une
+ * copie impossible — disque plein, dossier verrouillé — se consigne et se tait :
+ * *perdre la sauvegarde d'une table est un incident ; perdre la table parce que
+ * sa sauvegarde a levé en serait un bien pire.*
+ */
+async function refleterDansLeMiroir(chemin: string): Promise<void> {
+    try {
+        const racine = racineDesDonnees(process.env.APP_ROOT || '');
+        const relatif = path.relative(racine, chemin);
+        await refleterUnFichier(racine, dossierDuMiroirDesDonnees(), relatif);
+    } catch (err) {
+        console.error('[Miroir] reflet impossible :', chemin, err);
+    }
+}
+
 ipcMain.handle('tables:save-table', async (_event, universe: string, tableName: string, data: unknown) => {
     const filePath = cheminDUneTable(process.env.APP_ROOT || '', universe, tableName);
     if (!filePath) return { ok: false, motif: 'chemin-refuse' };
@@ -363,6 +393,7 @@ ipcMain.handle('tables:save-table', async (_event, universe: string, tableName: 
         // Indenté à quatre espaces, comme les 46 tables déjà en place : une
         // réécriture ne doit pas faire d'un fichier relu un fichier remanié.
         await fs.writeJson(filePath, data, { spaces: 4 });
+        await refleterDansLeMiroir(filePath);
         return { ok: true, chemin: filePath };
     } catch (err) {
         console.error('[Tables] écriture impossible :', filePath, err);
@@ -459,6 +490,7 @@ ipcMain.handle('clock:save-calendar', async (_event, id: string, data: unknown) 
         // Indenté à quatre espaces, comme `harptos.json` : une réécriture ne doit
         // pas faire d'un fichier relu un fichier remanié.
         await fs.writeJson(filePath, data, { spaces: 4 });
+        await refleterDansLeMiroir(filePath);
         return { ok: true, chemin: filePath };
     } catch (err) {
         console.error('[Clock-OS] écriture impossible :', filePath, err);
@@ -1435,6 +1467,32 @@ app.on('activate', () => {
 nativeTheme.themeSource = 'dark';
 
 app.whenReady().then(async () => {
+    /*
+      ⭐ **Le balayage du miroir de `databases/`** — le second déclencheur.
+
+      Les écritures de l'application se reflètent toutes seules ; **celui-ci
+      attrape ce que le meneur a édité à la main**, hors de GM-OS, entre deux
+      démarrages. *Sans lui, le filet ne couvrirait que la moitié des façons
+      d'écrire dans ce dossier — et pas celle qui existait la première.*
+
+      ⚠️ **Il ne bloque pas le démarrage** : 1,3 Mo et 163 fichiers, mais c'est
+      un balayage de disque, et *rien de ce qui protège ne doit retarder ce qui
+      sert.* Une erreur se consigne et se tait.
+    */
+    void balayerLesDonnees(
+        racineDesDonnees(process.env.APP_ROOT || ''),
+        dossierDuMiroirDesDonnees(),
+    )
+        .then((bilan) => {
+            if (bilan.copies > 0 || bilan.refuses > 0) {
+                console.log(
+                    `[Miroir] databases : ${bilan.copies} copié(s), `
+                    + `${bilan.inchanges} inchangé(s), ${bilan.refuses} refusé(s).`,
+                );
+            }
+        })
+        .catch((err) => console.error('[Miroir] balayage impossible :', err));
+
     // Clean temp media on startup
     try {
         if (await fs.pathExists(TEMP_MEDIA_DIR)) {
