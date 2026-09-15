@@ -51,6 +51,19 @@ const SCHEMA = {
                     days: { type: 'integer' },
                     isIntercalary: { type: 'boolean' },
                     leapYearOnly: { type: 'boolean' },
+                    fetes: {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: {
+                                nom: { type: 'string' },
+                                jour: { type: 'integer' },
+                                duree: { type: 'integer' },
+                                description: { type: 'string' },
+                            },
+                            required: ['nom', 'jour'],
+                        },
+                    },
                 },
                 required: ['name', 'days'],
             },
@@ -87,6 +100,13 @@ function consigne(joursVises?: number): string {
             ? `L’année doit faire EXACTEMENT ${joursVises} jours hors année bissextile. `
               + 'Fais la somme avant de répondre.'
             : 'Choisis une longueur d’année cohérente et annonce-la dans la description.',
+        '',
+        'Un mois peut porter des `fetes` — des jours nommés DANS le mois :',
+        '`nom`, `jour` (le premier jour, à partir de 1) et `duree` en jours pour',
+        'une fête qui s’étale. Une fête doit tenir dans son mois.',
+        '⚠️ Ne confonds pas : un mois `isIntercalary` d’un jour est une fête HORS',
+        'calendrier, sans numéro de jour ; une `fete` est un jour DU mois qui porte',
+        'un nom. N’écris pas la même fête des deux façons.',
         '',
         '`daysOfWeek` nomme les jours de la semaine, dans l’ordre.',
         '`hoursPerDay` et `minutesPerHour` décrivent le jour : 24 et 60 si le monde',
@@ -145,11 +165,36 @@ export async function proposerUnCalendrier(
         if (days === null || days <= 0) continue;
 
         const nom = String(m.name ?? '').trim();
+
+        /*
+          ⚠️ **Une fête sans nom ou sans jour lisible est écartée, pas
+          rafistolée.** La poser au premier du mois l'y ancrerait au hasard, et
+          *une fête en moins se voit dans la mesure ; une fête déplacée ne se
+          voit nulle part.* Le contrôle relève ensuite celles qui débordent.
+        */
+        const fetes: NonNullable<CalendrierDatable['months'][number]['fetes']> = [];
+        for (const item of Array.isArray(m.fetes) ? m.fetes : []) {
+            const f = (item ?? {}) as Record<string, unknown>;
+            const jour = entier(f.jour);
+            const titre = String(f.nom ?? '').trim();
+            if (!titre || jour === null || jour < 1) continue;
+
+            const duree = entier(f.duree);
+            const propos = String(f.description ?? '').trim();
+            fetes.push({
+                nom: titre,
+                jour,
+                ...(duree !== null && duree > 1 ? { duree } : {}),
+                ...(propos ? { description: propos } : {}),
+            });
+        }
+
         months.push({
             name: nom,
             days,
             ...(m.isIntercalary ? { isIntercalary: true } : {}),
             ...(m.leapYearOnly ? { leapYearOnly: true } : {}),
+            ...(fetes.length > 0 ? { fetes } : {}),
         });
     }
 

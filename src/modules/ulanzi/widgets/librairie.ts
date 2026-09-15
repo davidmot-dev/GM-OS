@@ -11,6 +11,7 @@ import { composerJaugeDeTable, type ReserveAAfficher } from './jaugeDeTable';
 import { visiblePourUnJoueur, type RessourceDeTable } from '../../table/RessourcesDeTable';
 import { composerVoightKampff, SIGNAL_INITIAL, type EtatDuSignal } from './voightKampff';
 import type { ChargeDeWidget } from '../UlanziService';
+import { mentionDeLaFete } from '../../clock/logic/formeDuCalendrier';
 
 /**
  * **La librairie de widgets — le catalogue, et ce qui décide de ce qui défile.**
@@ -521,6 +522,9 @@ export function tempsPourLaTable(etat: {
     getFantasyDate?: () => {
         day: number; monthIndex: number; year: number;
         hour: number; minute: number; dayOfWeek?: string;
+        /* ⭐ La fête du jour, 2026-09-15. Déclarée par sa FORME et non par son
+           type : ce fichier reste pur et n'importe pas le modèle du calendrier. */
+        fete?: { nom: string; description?: string; rang: number; sur: number };
     } | null;
     activeCalendarId?: string | null;
     calendars?: Record<string, { months: { name: string; displayName?: string; isIntercalary?: boolean }[] }>;
@@ -551,6 +555,10 @@ export function tempsPourLaTable(etat: {
             minute: date.minute,
             jourDeLaSemaine: date.dayOfWeek,
             intercalaire: mois.isIntercalary,
+            /* ⭐ La fête part telle qu'elle se lit, déjà mise en forme par la
+               logique du calendrier — ce fichier reste pur et ne connaît aucune
+               règle de fête. */
+            ...(date.fete ? { fete: mentionDeLaFete(date.fete) ?? undefined } : {}),
         },
     };
 }

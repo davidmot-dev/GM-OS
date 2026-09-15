@@ -83,6 +83,69 @@ describe('proposerUnCalendrier — ce qui passe', () => {
     });
 });
 
+describe('les fêtes proposées', () => {
+    it('range les fêtes dans le mois qui les porte', async () => {
+        const c = await proposerUnCalendrier('x', {}, repond({
+            months: [{
+                name: 'Hammer', days: 30,
+                fetes: [
+                    { nom: 'Fête du Marteau', jour: 15 },
+                    { nom: 'Nuits', jour: 20, duree: 4, description: 'Quatre veillées.' },
+                ],
+            }],
+        }));
+
+        expect(c.months[0].fetes).toEqual([
+            { nom: 'Fête du Marteau', jour: 15 },
+            { nom: 'Nuits', jour: 20, duree: 4, description: 'Quatre veillées.' },
+        ]);
+    });
+
+    /** Une durée de 1 est le défaut : l'écrire n'apprendrait rien. */
+    it('n’écrit pas une durée d’un jour', async () => {
+        const c = await proposerUnCalendrier('x', {}, repond({
+            months: [{ name: 'H', days: 30, fetes: [{ nom: 'Solstice', jour: 1, duree: 1 }] }],
+        }));
+
+        expect(c.months[0].fetes![0]).not.toHaveProperty('duree');
+    });
+
+    /**
+     * ⚠️ *Une fête en moins se voit dans la mesure ; une fête déplacée ne se
+     * voit nulle part.* La poser au premier du mois l'y ancrerait au hasard.
+     */
+    it.each([
+        ['sans nom', { jour: 5 }],
+        ['sans jour', { nom: 'Floue' }],
+        ['au jour zéro', { nom: 'Absurde', jour: 0 }],
+        ['au jour illisible', { nom: 'Texte', jour: 'le quinze' }],
+    ])('écarte une fête %s', async (_, mauvaise) => {
+        const c = await proposerUnCalendrier('x', {}, repond({
+            months: [{ name: 'H', days: 30, fetes: [{ nom: 'Bonne', jour: 3 }, mauvaise] }],
+        }));
+
+        expect(c.months[0].fetes).toHaveLength(1);
+        expect(c.months[0].fetes![0].nom).toBe('Bonne');
+    });
+
+    it('n’écrit pas de tableau vide quand il n’y a aucune fête', async () => {
+        const c = await proposerUnCalendrier('x', {}, repond({
+            months: [{ name: 'H', days: 30, fetes: [] }],
+        }));
+
+        expect(c.months[0]).not.toHaveProperty('fetes');
+    });
+
+    /** ⚠️ Les deux formes se ressemblent : la consigne doit les distinguer. */
+    it('explique au modèle la différence entre un mois hors calendrier et une fête', async () => {
+        const appel = repond({ months: [{ name: 'A', days: 30 }] });
+        await proposerUnCalendrier('x', {}, appel);
+
+        const consigne = (appel as unknown as { mock: { calls: unknown[][] } }).mock.calls[0][1] as string;
+        expect(consigne).toContain('N’écris pas la même fête des deux façons');
+    });
+});
+
 describe('⛔ proposerUnCalendrier — ce qu’on refuse de rafistoler', () => {
     /**
      * ⚠️ *Un mois en moins se voit dans la mesure ; un mois inventé ne se voit

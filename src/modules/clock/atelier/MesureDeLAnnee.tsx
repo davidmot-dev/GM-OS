@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarDays, Clock3, Snowflake, Sparkles } from 'lucide-react';
+import { CalendarDays, Clock3, PartyPopper, Snowflake, Sparkles } from 'lucide-react';
 import { mesurerLeCalendrier, type CalendrierDatable } from '../logic/formeDuCalendrier';
 
 /**
@@ -121,6 +121,14 @@ export const MesureDeLAnnee: React.FC<Props> = ({ calendrier, joursVises }) => {
                 libelle="Semaine"
                 valeur={m.joursDeSemaine || '—'}
             />
+
+            {m.joursDeFete > 0 && (
+                <Case
+                    icone={<PartyPopper size={11} />}
+                    libelle="Jours de fête"
+                    valeur={m.joursDeFete}
+                />
+            )}
 
             <Case
                 alerte={m.heuresParJour <= 0}

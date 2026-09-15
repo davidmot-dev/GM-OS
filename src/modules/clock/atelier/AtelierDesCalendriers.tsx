@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     X, Plus, Trash2, Save, AlertTriangle, Info, CheckCircle2,
-    Loader2, Sparkles, ArrowUp, ArrowDown, CalendarPlus,
+    Loader2, Sparkles, ArrowUp, ArrowDown, CalendarPlus, PartyPopper,
 } from 'lucide-react';
 import {
     controlerLeCalendrier,
     cycleBissextile,
     identifiantDuCalendrier,
+    intercalairesHorsSemaine,
     leCalendrierEstFautif,
     type CalendrierDatable,
     type Constat,
@@ -156,6 +157,37 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
         [months[i], months[vise]] = [months[vise], months[i]];
         return { ...c, months };
     });
+
+    /* ─────────────────────────── Les fêtes ─────────────────────────── */
+
+    /*
+      ⭐ **Les fêtes sont portées par le MOIS**, et non par le calendrier avec un
+      index. Un index se désynchronise dès qu'on déplace un mois ici même : les
+      fêtes de Hammer se retrouveraient dans Alturiak **sans que rien ne le
+      signale**. Attachées au mois, elles le suivent et disparaissent avec lui.
+      *Rendre le défaut impossible à écrire plutôt que de le signaler.*
+    */
+    const ajouterUneFete = (i: number) => setCalendrier(c => ({
+        ...c,
+        months: c.months.map((m, n) => (n === i
+            ? { ...m, fetes: [...(m.fetes ?? []), { nom: 'Nouvelle fête', jour: 1 }] }
+            : m)),
+    }));
+
+    const majFete = (i: number, f: number, sur: Partial<NonNullable<CalendrierDatable['months'][number]['fetes']>[number]>) =>
+        setCalendrier(c => ({
+            ...c,
+            months: c.months.map((m, n) => (n === i
+                ? { ...m, fetes: (m.fetes ?? []).map((x, k) => (k === f ? { ...x, ...sur } : x)) }
+                : m)),
+        }));
+
+    const retirerUneFete = (i: number, f: number) => setCalendrier(c => ({
+        ...c,
+        months: c.months.map((m, n) => (n === i
+            ? { ...m, fetes: (m.fetes ?? []).filter((_, k) => k !== f) }
+            : m)),
+    }));
 
     /* ─────────────────────────────── L'IA ─────────────────────────────── */
 
@@ -419,6 +451,26 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                         </label>
                     </div>
 
+                    {/*
+                      ⛔ **Les jours hors calendrier comptaient dans la semaine.**
+                      Les six fêtes d'Harptos la décalaient de six jours par an.
+                      Corrigé le 2026-09-15 à la demande de David — et réglable,
+                      parce que d'autres mondes les comptent.
+                    */}
+                    <label className="flex items-center gap-2 text-xs text-app-text/60 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={intercalairesHorsSemaine(calendrier)}
+                            onChange={(e) => setCalendrier(c => ({
+                                ...c, intercalairesHorsSemaine: e.target.checked,
+                            }))}
+                        />
+                        Les jours hors calendrier sortent de la semaine
+                        <span className="text-app-text/30 italic">
+                            — à Harptos, les fêtes n'ont pas de jour de semaine
+                        </span>
+                    </label>
+
                     <label className="block space-y-1">
                         <span className="text-ui-9 uppercase tracking-wider text-app-text/40">
                             Jours de la semaine — séparés par des virgules
@@ -525,6 +577,14 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                                         <ArrowDown size={12} />
                                     </button>
                                     <button
+                                        onClick={() => ajouterUneFete(i)}
+                                        aria-label={`Ajouter une fête au mois ${i + 1}`}
+                                        title="Déclarer une fête dans ce mois"
+                                        className="p-1 text-app-text/30 hover:text-accent"
+                                    >
+                                        <PartyPopper size={12} />
+                                    </button>
+                                    <button
                                         onClick={() => retirerUnMois(i)}
                                         aria-label={`Retirer le mois ${i + 1}`}
                                         className="p-1 text-app-text/30 hover:text-red-400"
@@ -532,6 +592,59 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                                         <Trash2 size={12} />
                                     </button>
                                 </div>
+
+                                {/*
+                                  ⭐ **Les fêtes d'un mois, sous le mois qui les porte.**
+                                  *Demandé par David le 2026-09-15.* Avant, une fête ne
+                                  pouvait être qu'un mois d'un jour hors calendrier :
+                                  « le 15 de Hammer est la Fête du Marteau » était
+                                  inexprimable.
+
+                                  ⚠️ **Une fête est une PÉRIODE** — choix de David : « du
+                                  12 au 15, les Nuits du Marteau ». Le jour garde son
+                                  numéro, et l'écran dit où l'on en est : « (2/4) ».
+                                */}
+                                {(m.fetes ?? []).length > 0 && (
+                                    <div className="w-full pl-8 mt-1 space-y-1">
+                                        {(m.fetes ?? []).map((f, k) => (
+                                            <div key={k} className="flex flex-wrap items-center gap-1.5 text-xs">
+                                                <PartyPopper size={10} className="shrink-0 text-accent/60" />
+                                                <input
+                                                    type="text"
+                                                    value={f.nom}
+                                                    onChange={(e) => majFete(i, k, { nom: e.target.value })}
+                                                    aria-label={`Nom de la fête ${k + 1} du mois ${i + 1}`}
+                                                    placeholder="Nom de la fête"
+                                                    className="flex-1 min-w-[120px] bg-transparent border-b border-app-border/30 px-1 py-0.5 text-app-text/80 placeholder:text-app-text/25 focus:outline-none focus:border-accent"
+                                                />
+                                                <span className="text-app-text/30">du</span>
+                                                <input
+                                                    type="number" min={1} max={m.days}
+                                                    value={f.jour}
+                                                    onChange={(e) => majFete(i, k, { jour: Number(e.target.value) })}
+                                                    aria-label={`Premier jour de la fête ${k + 1} du mois ${i + 1}`}
+                                                    className="w-12 shrink-0 bg-app-bg/60 border border-app-border rounded px-1 py-0.5 text-center font-mono text-app-text/80 focus:outline-none focus:border-accent"
+                                                />
+                                                <span className="text-app-text/30">sur</span>
+                                                <input
+                                                    type="number" min={1}
+                                                    value={f.duree ?? 1}
+                                                    onChange={(e) => majFete(i, k, { duree: Number(e.target.value) })}
+                                                    aria-label={`Durée de la fête ${k + 1} du mois ${i + 1}`}
+                                                    className="w-12 shrink-0 bg-app-bg/60 border border-app-border rounded px-1 py-0.5 text-center font-mono text-app-text/80 focus:outline-none focus:border-accent"
+                                                />
+                                                <span className="text-app-text/30">j.</span>
+                                                <button
+                                                    onClick={() => retirerUneFete(i, k)}
+                                                    aria-label={`Retirer la fête ${k + 1} du mois ${i + 1}`}
+                                                    className="ml-auto p-0.5 text-app-text/25 hover:text-red-400"
+                                                >
+                                                    <Trash2 size={11} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

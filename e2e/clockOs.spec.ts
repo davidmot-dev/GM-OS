@@ -287,7 +287,7 @@ test.describe('⭐ l’atelier des calendriers', () => {
             .toContainText('30');
 
         await atelier().getByLabel('Jours du mois 1').fill('31');
-        await atelier().getByRole('button', { name: 'Ajouter' }).click();
+        await atelier().getByRole('button', { name: 'Ajouter', exact: true }).click();
 
         /* 31 + 30 : la somme se fait toute seule, et c'est tout l'intérêt. */
         await expect(atelier()).toContainText('61');
@@ -310,9 +310,30 @@ test.describe('⭐ l’atelier des calendriers', () => {
     });
 
     test('un calendrier écrit ici se retrouve dans le pupitre', async () => {
-        await atelier().getByRole('button', { name: 'Ajouter' }).click();
+        await atelier().getByRole('button', { name: 'Ajouter', exact: true }).click();
         await atelier().getByLabel('Nom du mois 1').fill('Givre');
         await atelier().getByLabel('Jours du mois 1').fill('40');
+
+        /*
+          ⭐ **Une fête DÉCLARÉE DANS un mois** — demandé par David le 2026-09-15.
+          Avant, une fête ne pouvait être qu'un mois d'un jour hors calendrier :
+          « le 15 de Givre est la Longue Nuit » était inexprimable.
+
+          ⚠️ Et c'est une **période**, pas un seul jour — son choix.
+        */
+        /*
+          ⚠️ **`{ name }` cherche une SOUS-CHAÎNE chez Playwright.** Le bouton des
+          mois s'appelle « Ajouter » et celui des fêtes « Ajouter une fête au
+          mois 1 » : le premier sélecteur en a trouvé deux le jour où le second est
+          apparu. D'où l'`exact: true` sur le bouton des mois. *Un sélecteur par
+          nom se casse quand un autre nom COMMENCE pareil — et rien ne le dit
+          avant l'exécution.*
+        */
+        await atelier().getByLabel('Ajouter une fête au mois 1').click();
+        await atelier().getByLabel('Nom de la fête 1 du mois 1').fill('La Longue Nuit');
+        await atelier().getByLabel('Premier jour de la fête 1 du mois 1').fill('15');
+        await atelier().getByLabel('Durée de la fête 1 du mois 1').fill('3');
+
         await atelier().getByPlaceholder(/Calendrier de la Fondation/).fill(CALENDRIER_JETABLE);
 
         await expect(atelier().getByRole('button', { name: 'Enregistrer' })).toBeEnabled();
@@ -325,6 +346,99 @@ test.describe('⭐ l’atelier des calendriers', () => {
         await expect(
             gmos.fenetre.locator(`option[value="${CALENDRIER_JETABLE}"]`).first(),
         ).toBeAttached({ timeout: 10_000 });
+    });
+
+    /**
+     * ⭐ **Le miroir de `databases/` — le filet demandé par David le 2026-09-15.**
+     *
+     * ⛔ **Ce dossier n'était dans AUCUNE sauvegarde**, et le trou grossissait à
+     * chaque table et chaque calendrier écrits depuis les Ateliers.
+     *
+     * ⚠️ **Et la sauvegarde automatique ne pouvait pas le porter** : elle part
+     * sur un changement d'état de session, or écrire un calendrier ne touche
+     * aucun magasin. Le miroir est donc branché sur **l'écriture elle-même** —
+     * c'est exactement ce que cet essai vérifie, et aucun essai unitaire ne peut
+     * le faire : il faut le vrai processus principal et le vrai disque.
+     */
+    test('⭐ le calendrier écrit part aussitôt dans le miroir de sauvegarde', async () => {
+        const fs = await import('node:fs/promises');
+        const chemin = await import('node:path');
+
+        /* Le miroir vit sous le profil jetable, dans `backups/databases/`. */
+        const chercher = async (dossier: string): Promise<string | null> => {
+            let entrees;
+            try {
+                entrees = await fs.readdir(dossier, { withFileTypes: true });
+            } catch {
+                return null;
+            }
+            for (const e of entrees) {
+                const vise = chemin.join(dossier, e.name);
+                if (e.isDirectory()) {
+                    const trouve = await chercher(vise);
+                    if (trouve) return trouve;
+                } else if (e.name === `${CALENDRIER_JETABLE}.json`
+                    && vise.includes(chemin.join('backups', 'databases'))) {
+                    return vise;
+                }
+            }
+            return null;
+        };
+
+        const reflet = await chercher(gmos.profil);
+
+        expect(reflet, 'le calendrier doit être dans le miroir de sauvegarde').not.toBeNull();
+
+        /* Et ce sont bien les octets écrits, pas un fichier vide. */
+        const contenu = JSON.parse(await fs.readFile(reflet!, 'utf-8'));
+        expect(contenu.months[0].name).toBe('Givre');
+        expect(contenu.months[0].fetes[0].nom).toBe('La Longue Nuit');
+    });
+
+    /**
+     * ⭐ **La fête se voit dans la date, et elle ne la remplace pas.**
+     *
+     * « 16 Givre 0 — La Longue Nuit (2/3) ». *Sans le numéro, le meneur qui
+     * compte « nous partons dans trois jours » perd son repère au milieu de sa
+     * propre fête.*
+     *
+     * ⚠️ **C'est l'aller-retour complet** : l'écran écrit la fête, le pont la
+     * pose sur le disque, le pupitre relit le fichier, et le calcul de date la
+     * retrouve. Aucun essai unitaire ne traverse tout ça.
+     */
+    test('⭐ la fête déclarée apparaît dans la date, avec son rang', async () => {
+        /*
+          ⚠️ **Une `<option>` dans un `<select>` fermé n'est jamais « visible ».**
+          Mon premier essai l'attendait avec `waitFor()`, dont le défaut est
+          l'état *visible* : il a tourné trente secondes sur un élément bel et
+          bien présent. On attend donc qu'elle soit **attachée**.
+        */
+        await gmos.fenetre.locator(`option[value="${CALENDRIER_JETABLE}"]`).first()
+            .waitFor({ state: 'attached', timeout: 10_000 });
+
+        await gmos.fenetre.locator('select').filter({ hasText: CALENDRIER_JETABLE })
+            .first().selectOption(CALENDRIER_JETABLE);
+
+        /* Le deuxième jour de la fête : on doit lire « (2/3) ». */
+        await gmos.fenetre.evaluate(() => (window as never as {
+            useClockStore: { getState: () => {
+                setFantasyDate: (d: Record<string, number>) => void;
+            } };
+        }).useClockStore.getState().setFantasyDate({ monthIndex: 0, day: 16 }));
+
+        await expect.poll(
+            async () => gmos.fenetre.evaluate(() => (window as never as {
+                useClockStore: { getState: () => {
+                    getFantasyDate: () => { fete?: { nom: string; rang: number; sur: number } } | null;
+                } };
+            }).useClockStore.getState().getFantasyDate()?.fete),
+            { timeout: 10_000, message: 'la fête doit avoir survécu à l’aller-retour par le disque' },
+        ).toMatchObject({ nom: 'La Longue Nuit', rang: 2, sur: 3 });
+
+        /* Et elle se lit à l'écran, à côté de la date, pas à sa place. */
+        const ligne = gmos.fenetre.locator('main').last();
+        await expect(ligne).toContainText('La Longue Nuit (2/3)');
+        await expect(ligne, 'le numéro du jour reste').toContainText('16');
     });
 
     /**

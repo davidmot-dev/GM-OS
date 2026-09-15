@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { ClockMode, ClockTheme } from '../../../store/useClockStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { useTranslation } from 'react-i18next';
+import { mentionDeLaFete } from '../logic/formeDuCalendrier';
 
 interface ClockVisualizerProps {
     theme: ClockTheme;
@@ -176,9 +177,23 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
             } else {
                 dateStr = `${fantasyDate.day} ${monthName} ${fantasyDate.year}`;
             }
+            /*
+              ⚠️ **Un jour hors calendrier n'a AUCUN jour de semaine**, et le
+              calcul rend désormais `undefined` dans ce cas au lieu d'en inventer
+              un. Cette garde tenait déjà : elle prend simplement son sens.
+            */
             if (fantasyDate.dayOfWeek) {
                 dateStr = `${fantasyDate.dayOfWeek} ${dateStr}`;
             }
+            /*
+              ⭐ **La fête qualifie la date, elle ne la remplace pas.**
+              *Demandé par David le 2026-09-15.* « 13 Hammer — Nuits du Marteau
+              (2/4) » : sans le numéro, le meneur qui compte « nous partons dans
+              trois jours » perd son repère au milieu de sa propre fête.
+            */
+            const fete = mentionDeLaFete(fantasyDate.fete ?? null);
+            if (fete) dateStr = `${dateStr} — ${fete}`;
+
             return dateStr;
         }
         return d.toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });

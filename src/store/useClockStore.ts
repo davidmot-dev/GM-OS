@@ -5,6 +5,9 @@ import type { FormeDeJauge } from '../modules/clock/components/formesDeJauge';
 import {
     dateDeDepart,
     estBissextile,
+    feteDuJour,
+    jourDeLaSemaine,
+    mentionDeLaFete,
     horodatageDeLaDate,
     joursDeLAnnee,
     leCalendrierEstFautif,
@@ -62,6 +65,32 @@ export interface FantasyCalendar {
         isIntercalary?: boolean;
         /** Présent uniquement lors des années bissextiles */
         leapYearOnly?: boolean;
+        /**
+         * **Les fêtes qui tombent DANS ce mois** — demandé par David le
+         * 2026-09-15 : *« je veux pouvoir déclarer des jours de fêtes »*.
+         *
+         * ⚠️ **Elles sont portées par le mois, et non par le calendrier avec un
+         * index de mois.** Un index se désynchronise dès qu'on déplace un mois
+         * dans l'Atelier : les fêtes de Hammer se retrouveraient dans Alturiak
+         * **sans que rien ne le signale**. Attachées au mois, elles le suivent
+         * quand il bouge et disparaissent avec lui. *Rendre le défaut
+         * impossible à écrire plutôt que de le signaler.*
+         *
+         * ⚠️ **Une fête dans un mois reste un jour de la semaine** : c'est le 15
+         * de Hammer, qui porte un nom. Seuls les mois `isIntercalary` sortent
+         * du calendrier, donc de la semaine.
+         *
+         * La forme, les bornes et le contrôle vivent dans
+         * `modules/clock/logic/formeDuCalendrier.ts`.
+         */
+        fetes?: {
+            nom: string;
+            /** Premier jour, 1-based, dans le mois qui la porte. */
+            jour: number;
+            /** Durée en jours. Absente ou inférieure à 1 : un jour. */
+            duree?: number;
+            description?: string;
+        }[];
     }[];
     /** Nombre de jours par semaine */
     daysPerWeek: number;
@@ -190,6 +219,15 @@ export interface FantasyDate {
     second: number;
     /** Nom du jour calculé selon le calendrier actif */
     dayOfWeek?: string;
+    /**
+     * **La fête qui tombe ce jour-là**, si le calendrier en déclare une.
+     *
+     * *Demandé par David le 2026-09-15.* Elle **ne remplace pas la date**, elle
+     * la qualifie : « 13 Hammer — Nuits du Marteau (2/4) ». *Sans le numéro,
+     * le meneur qui compte « nous partons dans trois jours » perd son repère
+     * au milieu de sa propre fête.*
+     */
+    fete?: { nom: string; description?: string; rang: number; sur: number };
 }
 
 /**
@@ -341,6 +379,50 @@ interface ClockState {
     basculerLaSonnerie: () => void;
 }
 
+/**
+ * **Le journal apprend qu'une fête commence.**
+ *
+ * *Demandé par David le 2026-09-15, avec les jours de fête.* Une fête qu'on
+ * déclare et qui ne se signale jamais n'est qu'une étiquette — *c'est le motif
+ * que ce dépôt a déjà payé quatre fois : la chaîne complète sans bouton au
+ * bout.*
+ *
+ * ⚠️ **On compare le NOM, pas la mention.** Une fête de quatre jours voit sa
+ * mention passer de « (1/4) » à « (4/4) » : comparer la mention écrirait quatre
+ * entrées pour une seule fête. *Entrer dans une fête est un événement ; y rester
+ * n'en est pas un.*
+ *
+ * ⚠️ **Et seulement depuis les gestes du meneur** — `setTimestamp`, `addTime`,
+ * `setFantasyDate`. La synchronisation entre fenêtres écrit par `setState` et ne
+ * passe donc pas par ici : *le hub ne doit pas consigner ce que le meneur a déjà
+ * consigné.*
+ */
+function annoncerLaFete(
+    nomAvant: string | undefined,
+    lireLaDate: () => FantasyDate | null,
+): void {
+    const fete = lireLaDate()?.fete;
+    if (!fete || fete.nom === nomAvant) return;
+
+    const journal = (window as unknown as {
+        useJournalStore?: { getState: () => {
+            isRecording?: boolean;
+            addEvent?: (e: { type: string; title: string; content: string }) => void;
+        } };
+    }).useJournalStore?.getState();
+
+    if (!journal?.isRecording || !journal.addEvent) return;
+
+    journal.addEvent({
+        type: 'SYSTEM',
+        title: `Fête : ${fete.nom}`,
+        content: [
+            mentionDeLaFete(fete) ?? fete.nom,
+            ...(fete.description ? [fete.description] : []),
+        ].join('\n'),
+    });
+}
+
 export const useClockStore = create<ClockState>()(
     persist(
         (set, get) => ({
@@ -392,10 +474,16 @@ export const useClockStore = create<ClockState>()(
               courante : refuser une saisie ne doit pas déplacer une horloge que
               le meneur avait posée.
             */
-            setTimestamp: (timestamp) => set((state) =>
-                horodatageValide(timestamp) ? { timestamp } : state),
+            setTimestamp: (timestamp) => {
+                const avant = get().getFantasyDate()?.fete?.nom;
+                set((state) => (horodatageValide(timestamp) ? { timestamp } : state));
+                annoncerLaFete(avant, get().getFantasyDate);
+            },
 
-            addTime: (seconds) => set((state) => {
+            addTime: (seconds) => {
+                const avant = get().getFantasyDate()?.fete?.nom;
+
+                set((state) => {
                 /*
                   **On répare l'horloge au lieu de rester bloqué dessus.**
 
@@ -409,8 +497,11 @@ export const useClockStore = create<ClockState>()(
                 */
                 const base = horodatageValide(state.timestamp) ? state.timestamp : Date.now();
                 const suivant = base + (seconds * 1000);
-                return horodatageValide(suivant) ? { timestamp: suivant } : state;
-            }),
+                    return horodatageValide(suivant) ? { timestamp: suivant } : state;
+                });
+
+                annoncerLaFete(avant, get().getFantasyDate);
+            },
 
             setTimer: (seconds) => set({
                 timerDuration: seconds,
@@ -703,13 +794,28 @@ export const useClockStore = create<ClockState>()(
                 const minute = Math.floor(totalSeconds / secondsPerMin);
                 const second = totalSeconds % secondsPerMin;
 
-                let dayOfWeek = undefined;
-                if (cal.daysOfWeek && cal.daysOfWeek.length > 0) {
-                    const totalDays = Math.floor(timestamp / (secondsPerDay * 1000));
-                    dayOfWeek = cal.daysOfWeek[totalDays % cal.daysOfWeek.length];
-                }
+                /*
+                  ⛔ **Le jour de la semaine comptait les jours HORS CALENDRIER.**
 
-                return { year, monthIndex, day, hour, minute, second, dayOfWeek };
+                  Il valait `⌊timestamp / jour⌋ % semaine` — tous les jours
+                  écoulés, fêtes intercalaires comprises. Or à Harptos les six
+                  fêtes sont **hors semaine** : elles la décalaient de six jours
+                  par an. *Corrigé le 2026-09-15, à la demande de David — et le
+                  jour affiché pour une date donnée change, parce qu'il était
+                  faux.*
+
+                  ⚠️ **Un jour hors calendrier n'a AUCUN jour de semaine**, et
+                  `jourDeLaSemaine` rend alors `undefined` : l'écran omet la
+                  mention au lieu d'en inventer une. *Demander quel jour de la
+                  semaine tombe le Milieu d'Hiver n'a pas plus de sens que de
+                  demander sa position dans un mois.*
+                */
+                const dayOfWeek = jourDeLaSemaine(cal, { year, monthIndex, day });
+
+                /* La fête qualifie la date, elle ne la remplace pas. */
+                const fete = feteDuJour(cal, monthIndex, day) ?? undefined;
+
+                return { year, monthIndex, day, hour, minute, second, dayOfWeek, fete };
             },
 
             /*
@@ -729,7 +835,10 @@ export const useClockStore = create<ClockState>()(
                 const cal = get().calendars[get().activeCalendarId!] as CalendrierDatable;
                 const quand = horodatageDeLaDate(cal, { ...current, ...updates });
 
-                if (quand !== null && horodatageValide(quand)) set({ timestamp: quand });
+                if (quand !== null && horodatageValide(quand)) {
+                    set({ timestamp: quand });
+                    annoncerLaFete(current.fete?.nom, get().getFantasyDate);
+                }
             }
         }),
         {

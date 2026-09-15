@@ -50,6 +50,15 @@ export interface TempsAAfficher {
         heure: number;
         minute: number;
         jourDeLaSemaine?: string;
+        /**
+         * ⭐ **La fête du jour**, déjà mise en forme (« Nuits du Marteau (2/4) »).
+         *
+         * *Demandé par David le 2026-09-15.* L'afficheur est **public par
+         * construction** : la table lit la fête en même temps que le meneur, et
+         * c'est bien l'objet d'une fête. Elle suit le même interrupteur que le
+         * reste de l'heure du monde — le caviardage se fait à la source.
+         */
+        fete?: string;
         /** Un mois intercalaire n'a pas de quantième. */
         intercalaire?: boolean;
     } | null;
@@ -108,7 +117,14 @@ export function texteDuTemps(temps: TempsAAfficher, maintenant: number): string 
         const d = temps.dateFantastique;
         const quantieme = d.intercalaire ? `${d.mois} ${d.annee}` : `${d.jour} ${d.mois} ${d.annee}`;
         const avecJour = d.jourDeLaSemaine ? `${d.jourDeLaSemaine} ${quantieme}` : quantieme;
-        return nomPourLaMatrice(`${avecJour} ${heureEnTexte(d.heure, d.minute)}`, 64);
+        /*
+          ⭐ **La fête passe AVANT l'heure et après la date.** Ce texte défile :
+          ce qui compte le plus doit être lu en premier, et l'heure d'un monde
+          imaginaire compte moins qu'un solstice. *Un texte qui défile se juge à
+          ce qu'on retient de son début.*
+        */
+        const avecFete = d.fete ? `${avecJour} — ${d.fete}` : avecJour;
+        return nomPourLaMatrice(`${avecFete} ${heureEnTexte(d.heure, d.minute)}`, 64);
     }
 
     /*
