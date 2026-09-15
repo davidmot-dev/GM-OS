@@ -78,6 +78,11 @@ sinon son premier passage, et le journal ne saurait plus rattacher ce qui s'y es
 5. **Vous terminez, ou vous arrêtez** — terminer close la scène ; arrêter la séance la suspend.
    Terminer dépose au journal une dernière entrée, avec la **durée jouée**.
 
+> ⭐ **Terminer une scène use aussi les jauges qui le demandent** (depuis le 2026-09-15). Une jauge
+> de Clock-OS peut porter un **« Par scène »** — une ration de moins, un segment de rituel de plus —
+> et c'est ce bouton-ci qui le déclenche. Chaque mouvement est annoncé ; refermer une scène déjà
+> close ne reprend rien une seconde fois. Voir le guide **36 — Clock-OS**.
+
 ## 5. Clore un acte
 
 Achever un acte **emporte ses scènes**. Celles où le groupe n'est jamais passé sont closes elles

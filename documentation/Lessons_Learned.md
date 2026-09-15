@@ -1445,9 +1445,179 @@ surtout appris pourquoi il n'y avait presque rien à écrire.*
   pas persisté. Un champ absent d'une sauvegarde est un champ qui ne survit pas au redémarrage, et
   la sauvegarde est le seul endroit où cela se lit d'un coup d'œil.
 
+## ⏳ Ce qu'un instrument raconte quand personne ne lui a dit dans quel sens le lire (2026-09-15)
+
+*Chantier : le § 66 du registre — une jauge de Clock-OS qui se vide.*
+
+### 1. Le mécanisme était là ; c'est le SENS qui manquait
+
+David demandait « une jauge qui diminue ». **Descendre une jauge était possible depuis toujours** :
+shift-clic et clic droit font `−1`, et un bouton « remplir d'un coup » avait même été posé deux
+semaines plus tôt *« pour un instrument qui se vide »*.
+
+Ce qui manquait n'était pas un geste, c'était que **rien autour de la jauge ne savait qu'elle se lit
+à l'envers** : elle naissait vide, son alarme se déclenchait au plein, son clic facile allait dans le
+mauvais sens, et le compte rendu la relisait à contresens.
+
+- **Leçon** : *quand une demande porte sur un comportement qui existe déjà à moitié, ce n'est pas la
+  fonction qui manque — c'est l'intention, et elle manque à TOUT ce qui entoure la fonction.* La
+  bonne question n'était pas « comment faire descendre une jauge » mais « qu'est-ce qui, dans
+  l'application, croit savoir ce que cette jauge raconte ? »
+
+### 2. Un instrument qui crie au mauvais moment est pire qu'un instrument muet
+
+Sur des provisions, l'écran teintait en rouge, faisait pulser le compte et échapper un cercle
+**quand elles étaient pleines** — c'est-à-dire à la bonne nouvelle. Et au zéro, le seul moment qui
+compte, il ne disait rien.
+
+- **Leçon** : *une alarme fausse ne se corrige pas toute seule dans la tête de celui qui la regarde ;
+  il apprend à ne plus la regarder.* Une alarme silencieuse coûte une information, une alarme
+  inversée coûte l'instrument.
+
+### 3. Le comptage des lecteurs a trouvé un cinquième que la demande ne nommait pas
+
+Quatre écrans dessinent une jauge, un cinquième la relit dans le compte rendu. Le compte les a tous
+sortis — et le cinquième, l'afficheur Ulanzi, portait **sa propre** comparaison, `remplis >= total`,
+sous une autre orthographe que celle du rendu React. Des rations à zéro seraient restées orange au
+milieu de la table pendant que l'écran du meneur criait — **et personne ne l'aurait rapproché du
+premier défaut**, puisqu'il aurait été corrigé.
+
+- **Leçon** : *une même règle écrite sous deux vocabulaires ne se trouve pas par recherche de texte
+  — elle se trouve en comptant les lecteurs.* C'est la sixième fois que « qui d'autre lit ça ? »
+  rapporte plus que la lecture du code concerné.
+- **Le corollaire, posé en garde du dépôt** : la comparaison ne s'écrit plus qu'à un endroit. ✅ La
+  garde a fait ses preuves **dans l'heure** — elle a pointé le rendu React avant que je l'aie
+  corrigé.
+
+### 4. ⛔ Un commentaire qui énonce un fait sur le reste du système se périme sans prévenir
+
+En cherchant où brancher l'usure de fin de scène, j'ai trouvé un bouton « Fin de scène » écrit le
+2026-08-15 sous ce commentaire :
+
+> *« Rien dans l'application ne sait quand une scène se termine : c'est le meneur qui le décide. »*
+
+C'était **juste, honnête, et documenté**. La trame est arrivée **deux jours plus tard**, avec un vrai
+passage de fin de scène. Depuis un mois, l'application sait — et ce bouton ne l'écoute pas.
+
+- **Leçon** : *un commentaire qui décrit son propre fichier vieillit avec lui ; un commentaire qui
+  affirme quelque chose sur le RESTE du système devient faux sans que son fichier bouge.* Rien ne
+  l'aurait signalé : il a fallu qu'une fonctionnalité nouvelle vienne chercher exactement ce fait.
+- **Et le réflexe qui va avec** : quand on trouve un geste manuel justifié par « l'application ne
+  sait pas », **vérifier la date** et redemander si c'est encore vrai.
+
+### 5. Un automatisme muet est indistinguable d'un bogue
+
+L'usure de fin de scène est la seule chose du logiciel qui fasse bouger une jauge **sans que
+personne n'ait cliqué dessus**. Sans annonce, le meneur retrouverait ses rations à trois sans savoir
+quand elles sont passées de cinq — et chercherait un défaut.
+
+- **Leçon** : *tout état qui change sans geste doit dire qu'il a changé, et pourquoi.* Le coût est
+  d'une ligne ; l'économie est une soirée de soupçon.
+
+### 6. Deux gestes idempotents ne composent pas en un geste idempotent
+
+Fermer une scène est idempotent — une scène déjà close se rend telle quelle. L'usure, elle, ne l'est
+pas. Les brancher naïvement aurait fait manger **une seconde ration** à chaque reclic sur
+« Terminer », en silence.
+
+- **Leçon** : *l'idempotence ne se propage pas à l'effet de bord qu'on accroche à une action
+  idempotente* — c'est à la couture de vérifier que la transition a vraiment eu lieu, pas à
+  l'action de le promettre.
+
+### 7. ⚠️ Un `dist/` périmé rend sept essais verts sur le code d'hier
+
+J'ai lancé `npx playwright test` au lieu de `npm run test:e2e`. **Sept essais sont passés au vert** —
+sur le paquet de la veille — et les trois nouveaux ont échoué en cherchant un bouton qui existait
+bel et bien dans les sources. Le piège est **écrit noir sur blanc** dans `lancerGmOs.ts` : *« un
+`dist/` périmé ferait passer des tests sur du code d'hier »*.
+
+- **Leçon** : *un avertissement lu n'est pas un avertissement appliqué.* Et le mode d'échec est le
+  pire : **des verts faux**, qui ne signalent rien.
+- **Le réflexe** : pour les E2E, toujours `npm run test:e2e`, jamais `npx playwright test` seul.
+
 ---
 
-*Dernière mise à jour : 14 Septembre 2026, au soir — le QR-code qui envoyait la tablette parler à
+## 🧊 Le gel — le seul mode d'échec qu'aucun garde-fou d'exécution ne rattrape (2026-09-15, au soir)
+
+*Chantier : le § 67 du registre — l'Atelier des calendriers.*
+
+### 1. ⛔ Une boucle synchrone ne se laisse pas interrompre — pas même par un `timeout`
+
+Un calendrier sans mois mettait `getFantasyDate` en boucle infinie. J'ai posé la garde, écrit les
+tests avec un `timeout: 3_000` sur chacun, puis **dégradé la garde pour vérifier qu'ils rougissaient**.
+
+Ils n'ont pas rougi : **ils ont pendu.** Il a fallu tuer vitest de l'extérieur après deux minutes.
+
+- **Leçon** : *le délai d'un test ne protège de rien face à une boucle synchrone.* Elle ne rend pas
+  la main à l'ordonnanceur, donc rien ne peut l'interrompre — ni vitest, ni un navigateur, ni un
+  superviseur. **Un gel n'est pas une lenteur** : c'est le seul mode d'échec qui échappe à tous les
+  garde-fous d'exécution. On ne peut que l'empêcher d'entrer.
+- **Et le corollaire de conception** : quand un défaut peut geler, **le contrôle cesse d'être le
+  confort du module et en devient la condition**. C'est ce qui a décidé de l'ordre des choses — le
+  socle pur et sa garde d'abord, l'écran ensuite.
+- ⚠️ **J'avais écrit l'inverse dans le test** (« le délai transforme le gel en échec lisible »).
+  C'est la dégradation qui m'a détrompé, pas la relecture. *Un commentaire qui explique pourquoi une
+  précaution marche est une hypothèse tant qu'on ne l'a pas cassée exprès.*
+
+### 2. Une fonctionnalité absente et une fonctionnalité inaccessible se ressemblent beaucoup
+
+**Un seul calendrier existait** dans le dépôt, livré d'usine, après un mois de construction. La
+tentation était d'en conclure que David ne se servait pas des calendriers. Le comptage disait autre
+chose : **il n'existait aucun chemin d'écriture.** Deux canaux IPC, `list` et `load`, et rien d'autre.
+
+- **Leçon** : *avant de conclure qu'une fonctionnalité ne sert pas, vérifier qu'elle est atteignable.*
+  Un usage à zéro mesure parfois le coût d'entrée, pas l'intérêt. C'est le même constat que pour les
+  46 tables tapées à la main la veille.
+
+### 3. ⛔ Un champ renseigné que rien ne lit est un mensonge patient
+
+`harptos.json` déclare `currentYear: 1492`. **Aucun lecteur dans tout le dépôt** : la date venait de
+l'horloge système, et choisir Harptos affichait **l'an 56**. Pareil pour `daysPerWeek`, *requis par
+le type et absent du seul fichier qui existe*.
+
+- **Leçon** : le motif habituel est « un champ que rien ne renseigne » ; **celui-ci est l'inverse, et
+  il est pire.** Un champ vide se remarque ; un champ rempli **a l'air d'une fonctionnalité**, et
+  personne ne vérifie ce qui a l'air de marcher.
+- **Ce qui le trouve** : compter les lecteurs, pas lire le fichier. `grep currentYear` a suffi.
+
+### 4. ⭐ Un registre de ce qui ne sert à rien vaut surtout par le moment où il se vide
+
+`nomsSansEcrivainNiLecteur` tient la liste des noms déclarés dans les magasins que personne ne lit.
+Il a **rougi tout seul** à la fin du chantier : cinq de ses tolérances — `daysOfWeek`, `hoursPerDay`,
+`minutesPerHour`, `daysPerWeek`, `loadCalendar` — étaient devenues inutiles, et il demandait qu'on
+les retire.
+
+- **Leçon** : *un test qui énumère le mort n'est pas une dette, c'est un capteur.* Il ne dit pas
+  seulement « ceci ne sert à rien » ; il dit aussi, sans qu'on le lui demande, **« ceci vient de
+  servir »** — et il nomme exactement ce que le chantier a fait vivre.
+
+### 5. Deux règles de nommage aux deux bouts d'un pont
+
+J'ai écrit la fabrique du nom de fichier **deux fois** : côté renderer pour l'afficher, côté principal
+pour écrire. Les deux copies étaient identiques à la lettre le jour même — et c'est exactement le
+motif que je passe mes journées à dénoncer.
+
+- **La correction n'est pas « factoriser », c'est SÉPARER LES RÔLES** : le renderer **produit**
+  l'identifiant, le processus principal **valide** le chemin — ce que lui seul peut faire, et ce que
+  le renderer ne doit surtout pas refaire. *Chacun garde ce qu'il est seul à pouvoir garder.*
+- **Leçon** : quand la même règle apparaît des deux côtés d'une frontière, la question n'est pas
+  « où la mettre en commun » mais **« laquelle des deux n'avait pas à exister »**.
+
+---
+
+---
+
+*Dernière mise à jour : 15 Septembre 2026, au soir — l'Atelier des calendriers : ⛔ **une boucle
+synchrone ne se laisse interrompre par aucun délai** (la dégradation n'a pas rougi, elle a pendu),
+une fonctionnalité inaccessible qui ressemblait à une fonctionnalité inutile, `currentYear: 1492`
+lu par personne, et le registre du mort qui **signale tout seul ce qui vient de servir**.*
+
+*Mise à jour du même jour : 15 Septembre 2026 — les jauges qui se vident : **le mécanisme existait,
+c'est le sens qui manquait** ; l'alarme qui criait à la bonne nouvelle ; le cinquième lecteur trouvé
+par comptage et non par recherche ; ⛔ **un commentaire vrai le jour de son écriture et faux deux
+jours plus tard** ; et un `dist/` périmé qui rend sept essais verts sur le code d'hier.*
+
+*Mise à jour précédente : 14 Septembre 2026, au soir — le QR-code qui envoyait la tablette parler à
 Vite (**qui accueille la connexion et ne répond jamais**, d'où un écran qui se croit connecté et
 reste sur la campagne de démonstration), la tablette qui offrait les paquets d'un autre jeu, et le
 transfert d'un PJ entre joueurs — qui a surtout appris **pourquoi il n'y avait presque rien à

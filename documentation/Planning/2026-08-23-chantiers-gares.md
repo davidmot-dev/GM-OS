@@ -4125,6 +4125,291 @@ guide 40 § « Importer une table ».
 
 **Vérifié** : `tsc -b` propre, **4 707 tests** (385 fichiers, 1 ignoré), **179 tests E2E**.
 
+### 66 · ⭐ Une jauge qui se vide — le consommable, et les cinq lecteurs qui l'ignoraient (2026-09-15)
+
+*David : « il y a quelque chose qui manque je pense dans Clock-OS, j'ai des jauges qui augmentent,
+mais je n'ai pas de jauge qui diminue pour simuler la diminution de consommable. Comment peut-on
+faire ? ».*
+
+#### ⚠️ Le mécanisme existait déjà — c'est le SENS qui manquait
+
+Descendre une jauge était possible depuis toujours : shift-clic et clic droit font `−1`, et
+`remplirLaJauge` avait été posé le 2026-08-31 pour exactement ce cas — le Voight-Kampff, *« un
+instrument qui se vide »*. Rien à construire de ce côté-là.
+
+Ce qui manquait, c'est que **rien autour de la jauge ne savait qu'elle se lit à l'envers**. Quatre
+choses se trompaient, chacune en silence :
+
+| Ce qui se trompait | Ce que ça donnait sur des vivres |
+|---|---|
+| `addTensionClock` écrivait `filledSegments: 0` | des rations **vides** à la création |
+| ⛔ `NarrativeClock` : `filledSegments >= totalSegments` | le **plein** hurlait, le **zéro** ne disait rien |
+| Clic gauche = `+1` | le geste de la soirée était le geste difficile |
+| Le compte rendu consignait `0/6` | se relit « rien ne s'est passé » au lieu de « ils n'ont plus rien » |
+
+> *Un instrument qui crie au mauvais moment est pire qu'un instrument muet : on apprend à ne plus le
+> regarder.*
+
+#### ⛔ Ils étaient CINQ, et le cinquième n'aurait été vu qu'à la table
+
+Le comptage des lecteurs a trouvé ce que la demande ne disait pas. `composerCompteARebours`, qui
+dessine la jauge sur les **32 pixels de l'Ulanzi**, portait **sa propre** comparaison — `remplis >=
+total`, autre orthographe du même jugement. Des rations à zéro seraient restées orange au milieu de
+la table pendant que l'écran du meneur criait.
+
+> *Une comparaison recopiée dans un écran est une règle que les quatre autres ne connaîtront jamais.*
+
+D'où `logic/sensDeLaJauge.ts`, pur, et **une garde du dépôt** qui interdit de réécrire la
+comparaison ailleurs. ✅ **Elle a fait ses preuves dans l'heure** : elle a pointé `NarrativeClock`
+avant que je l'aie corrigé.
+
+#### Les décisions de David
+
+| Question | Tranchée |
+|---|---|
+| Portée | Le sens **+ l'érosion de fin de scène** |
+| Le clic principal sur une jauge qui se vide | **Il consomme** — le geste facile suit le sens de la jauge |
+
+⚠️ **Le geste s'inverse donc selon la jauge, et c'est assumé** : *un geste uniforme qui va dans le
+mauvais sens n'est pas plus simple, il est seulement plus régulier.*
+
+⚠️ **Le pas par scène est stocké POSITIF** — c'est le sens qui décide de la direction. Une ration de
+moins et un segment de rituel de plus s'écrivent avec le même `1`. *Laisser saisir un signe aurait
+créé deux façons d'écrire la même intention, et donc une jauge qui remonte à chaque scène sans que
+personne comprenne pourquoi.*
+
+#### ⛔ Ce que l'érosion a révélé : un bouton écrit contre un fait qui a cessé d'être vrai
+
+Le panneau des réserves de table porte un bouton « Fin de scène », posé le 2026-08-15 sous ce
+commentaire :
+
+> *« Rien dans l'application ne sait quand une scène se termine : c'est le meneur qui le décide. »*
+
+**C'était vrai ce jour-là. La trame est arrivée le 17**, avec `terminerLaScene`. Depuis un mois,
+l'application sait — et l'Impulsion de Dune ne l'écoute pas. Les jauges sont donc branchées sur
+**le vrai passage**, jamais sur un second bouton : *deux gestes pour « fin de scène » garantissent
+qu'un soir on presse l'un et pas l'autre.*
+
+> ⭐ **La leçon, et elle vaut au-delà de ce chantier** : *un commentaire qui énonce un fait sur le
+> reste du système se périme sans prévenir.* Celui-ci était juste, honnête, et faux deux jours plus
+> tard — et rien ne l'aurait signalé si l'érosion n'avait pas cherché où se brancher.
+
+⚠️ **Et l'usure n'est pas idempotente, alors que `terminerLaScene` l'est.** Une scène déjà close se
+rend telle quelle ; sans garde, recliquer « Terminer » aurait mangé une seconde ration **en
+silence**. La garde est éprouvée par dégradation.
+
+⚠️ **L'usure est la seule chose de l'application qui fasse bouger une jauge sans que personne n'ait
+cliqué dessus** — d'où l'annonce systématique : *un automatisme muet est indistinguable d'un bogue.*
+
+#### ⭐ Le code couleur, demandé dans la foulée
+
+*David, après avoir essayé : « ça marche, est-ce qu'on pourrait introduire un code couleur (orange,
+rouge) quand cela s'épuise ? »*
+
+C'est le prolongement naturel d'`estCritique` : au lieu d'une question fermée — *au bout, oui ou
+non ?* — une **distance au bout**, `graviteDeLaJauge`. `critique` s'y ramène toujours à
+`estCritique` : *deux définitions du même bout finiraient par ne plus tomber sur le même segment.*
+
+⚠️ **Les seuils sont en FRACTION de la course, pas en segments comptés** — tranché par David sur
+comparaison des trois échelles. Orange à mi-course, rouge au dernier quart :
+
+| Total | Calme | Orange | Rouge | Pulsation |
+|---|---|---|---|---|
+| 4 | 4, 3 | 2 | 1 | 0 |
+| 6 | 6, 5, 4 | 3, 2 | 1 | 0 |
+| 12 | 12 … 7 | 6 … 4 | 3 … 1 | 0 |
+
+*Compter deux segments avant la fin aurait laissé une jauge de douze muette pendant ses neuf
+premiers.*
+
+⚠️ **Dans les deux sens**, également tranché : une alerte des gardes passe à l'orange comme des
+vivres. *Deux jauges côte à côte doivent se lire avec la même grammaire de couleur, sinon la couleur
+ne veut plus rien dire du tout.* Conséquence assumée : **les jauges existantes changent
+d'apparence**, sans qu'aucune donnée ne bouge.
+
+#### ⛔ Deux contraintes de dessin que le calcul ne voyait pas
+
+**1. À zéro, une jauge qui se vide n'a plus AUCUN segment allumé.** Au moment précis où l'alarme
+compte, la forme n'a donc rien à teindre : il ne restait que le compte et le cercle qui s'échappe —
+et la barre comme les points n'ont pas de cercle. **L'épuisement y aurait été presque muet.** Le
+creux prend un rouge sourd (`#7f1d1d`) : *ce n'est pas une jauge éteinte, c'est une jauge
+consommée.*
+
+**2. Sur l'Ulanzi, l'orange est DÉJÀ la couleur de repos** (`COULEURS_DU_COMPTE.plein` = `#FF8C1A`).
+Un cran de tension orange y serait donc muet pour une horloge sans couleur choisie. *Inventer un
+troisième pigment aurait été pire* : à deux pixels de hauteur et à travers une table, un jaune et un
+orange ne se distinguent pas, et **une jauge qui prétend dire trois choses en dit zéro**.
+
+> ⭐ **Le gain réel sur les 32 pixels n'est donc pas le troisième cran, c'est le déplacement du
+> second** : le rouge arrive au **dernier quart** et non plus au bout. *La table voit venir au lieu
+> de constater.* Et une horloge à qui le meneur a donné une couleur, elle, a bien les trois crans —
+> elle quitte la sienne pour l'orange.
+
+⚠️ **Le pigment n'est pas dans la logique**, et c'est délibéré : `sensDeLaJauge` ne connaît aucune
+couleur, il dit le cran. Trois thèmes CSS et une matrice de 32 pixels n'ont pas la même palette.
+*La règle se partage, le pigment non.* En revanche les trois crans sont **les mêmes dans les trois
+thèmes** : *un habillage se choisit, une alarme se reconnaît.*
+
+#### Ce qui est gardé
+
+- **`sensDeLaJauge.test.ts`** — 39 essais, dont la migration (une jauge d'hier monte et crie au
+  plein), les deux alarmes, le replacement au changement de sens, et **la garde du dépôt**.
+- **`usureDeFinDeScene.test.ts`** — 6 essais sur le *branchement*, dont ⛔ la non-double-ponction.
+- **La gravité** — 34 essais de plus, dont **les trois échelles complètes** (4, 6 et 12 segments) :
+  *elles SONT la décision — si ces tableaux changent, c'est le moment où le meneur voit venir le
+  manque qui change.*
+- **`compteARebours.test.ts`** — l'échelle sur les 32 pixels, **y compris l'aveu** : une horloge sans
+  couleur choisie n'a que deux crans, et un test le fige pour qu'on ne le découvre pas à la table.
+- **`clockOs.spec.ts`** — 6 essais de plus à l'écran : elle naît pleine, le clic consomme, le compte
+  dit « restants », l'orange à mi-course, le rouge au dernier quart, le creux teinté à zéro.
+  ⚠️ *Le câblage cran → pigment ne se vérifie QUE là* : une ligne de rendu qui retombe sur la
+  couleur du thème ne lève rien et ne rougit aucun test unitaire.
+- **Dégradations passées** : retirer la garde d'idempotence → 1 rouge ; retirer le sens
+  d'`estCritique` → 5 rouges ; aplatir la gravité à deux crans → **15 rouges**.
+
+#### ⚠️ Ce qui reste ouvert
+
+⚠️ **Les réserves de table n'écoutent toujours pas la trame.** Leur bouton « Fin de scène » reste
+manuel, et leur érosion — l'Impulsion de Dune — ne part pas quand une scène se ferme. **Volontaire,
+et à trancher par David** : aligner change le moment où une règle de jeu s'applique dans une
+campagne en cours. Le branchement tient en une ligne dans `trameSlice.terminerLaScene`, à côté de
+celui des jauges.
+
+⚠️ **Aucune usure n'a encore tourné une soirée entière.** Le calcul et le branchement sont éprouvés ;
+ce qu'on ne sait pas, c'est si un pas par scène est le bon grain — une table qui enchaîne huit scènes
+courtes videra six rations avant l'entracte.
+
+**Ancres** : `src/modules/clock/logic/sensDeLaJauge.ts` (`graviteDeLaJauge`, `margeAvantLeBout`,
+`SEUIL_DE_TENSION`, `SEUIL_D_URGENCE`), `src/modules/clock/components/NarrativeClock.tsx`
+(`TEINTES_D_ALERTE`, `TEINTE_DU_CREUX_CONSOMME`), `src/modules/clock/components/ChoixDuSens.tsx`,
+`src/store/useClockStore.ts` (`sens`, `pasParScene`, `changerLeSensDeLaJauge`, `reglerLePasParScene`,
+`laSceneSeTermine`), `src/modules/session/store/trameSlice.ts` (`terminerLaScene`, la garde
+`!scene.termineeLe`), `src/modules/ulanzi/widgets/compteARebours.ts` (`seVide`),
+`src/modules/journal/clotureDeSeance.ts` + `libelleDeJauge`.
+
+**Vérifié** : `tsc -b` propre, **4 789 tests** (387 fichiers, 1 ignoré), **185 tests E2E**.
+
+### 67 · ⭐ L'Atelier des calendriers — et le calendrier qui gelait GM-OS (2026-09-15)
+
+*David : « peut-on faire un module d'aide à la création de calendrier fantastique ? ».*
+
+Comme pour l'Atelier des tables, **le comptage d'abord** — et il a de nouveau reshapé la proposition.
+
+#### Ce que le comptage a trouvé avant qu'une ligne soit écrite
+
+**Un seul calendrier existait** : `harptos.json`, livré d'usine. En un mois de construction, jamais
+un second. La raison n'était pas le manque d'envie — **il n'existait aucun chemin d'écriture**.
+`clock:list-calendars` et `clock:load-calendar`, point.
+
+#### ⛔⛔ Et un calendrier mal formé ne rend pas une date fausse : il GÈLE l'application
+
+`getFantasyDate` avance d'année en année **par soustraction** :
+
+```ts
+while (totalSeconds >= daysInYear * secondsPerDay) { totalSeconds -= …; year++; }
+```
+
+Sur une année de longueur nulle — **aucun mois**, ou `hoursPerDay: 0` — la condition reste vraie, la
+soustraction ne retire rien, **et la boucle ne s'arrête jamais**. *Mesuré : cinquante millions de
+tours sans sortir.*
+
+> ⛔ **C'est ce qui a décidé de la forme du module.** Aujourd'hui c'est inatteignable, personne ne
+> pouvant écrire un calendrier. **Un écran de création rend ça atteignable au clavier.** Le contrôle
+> n'est donc pas le confort de l'Atelier, **il en est la condition** — et la même garde tient dans le
+> magasin, parce que les calendriers arrivent aussi par un JSON posé à la main.
+
+⛔ **La dégradation N'A PAS ROUGI : elle a PENDU.** Garde retirée, la suite de tests ne rend jamais la
+main — il a fallu tuer vitest de l'extérieur après deux minutes.
+
+> ⭐ **Et c'est la leçon la plus transportable de la journée** : le `timeout` posé sur un test **ne
+> sauve de rien**. Une boucle synchrone ne rend pas la main à l'ordonnanceur, donc aucun délai ne
+> peut l'interrompre — ni celui de vitest, ni celui d'un navigateur. *Un gel n'est pas une lenteur :
+> c'est le seul mode d'échec qu'aucun garde-fou d'exécution ne rattrape.* On ne peut que l'empêcher
+> d'entrer.
+
+#### ⛔ Trois familles de champs écrites et lues par personne
+
+| Champ | Ce qu'il disait | Lecteurs |
+|---|---|---|
+| `currentYear: 1492` + cinq `current*` | « Faerûn, an 1492 » | **zéro** |
+| `daysPerWeek` | **requis par le type** | **zéro** — et **absent du seul fichier existant** |
+
+**Mesuré** : choisir Harptos le 2026-09-15 affichait **l'an 56**. La date venait de `timestamp`,
+jamais du fichier. *Un champ renseigné que rien ne lit est un mensonge patient : il a l'air d'une
+fonctionnalité.* Ils vivent désormais — un E2E vérifie que choisir Harptos pose bien 1492.
+
+⭐ **Et c'est `nomsSansEcrivainNiLecteur` qui l'a dit, tout seul.** Le test a rougi le jour où
+`daysOfWeek`, `hoursPerDay`, `minutesPerHour`, `daysPerWeek` et `loadCalendar` ont trouvé un
+lecteur, en demandant qu'on retire leurs cinq lignes de tolérance. *Un registre de ce qui ne sert à
+rien vaut surtout par le moment où il se vide.*
+
+#### ⚠️ La règle bissextile était codée en dur, à cinq endroits
+
+`year % 4 === 0`, recopié dans `getFantasyDate`, `setFantasyDate` et le pupitre. **Harptos tombait
+juste par chance.** Elle se déclare maintenant par calendrier — `0` voulant dire « jamais », ce qui
+est une réponse légitime. *Une règle recopiée dans les écrans est une règle que le modèle ne peut
+plus changer.*
+
+#### La forme retenue
+
+| Pièce | Ce qu'elle tient |
+|---|---|
+| `logic/formeDuCalendrier.ts` | Le contrôle, la garde anti-gel, la règle bissextile, la date de départ, la mesure — **pur** |
+| `atelier/MesureDeLAnnee.tsx` | La longueur de l'année **en direct**, en tête de l'écran |
+| `atelier/AtelierDesCalendriers.tsx` | Composer, déplacer, reprendre, supprimer |
+| `logic/propositionDeCalendrier.ts` | L'IA qui propose — *le modèle propose, le contrôle relit, l'écran montre* |
+| `electron/cheminDesCalendriers.ts` | Le confinement du chemin |
+
+⭐ **La mesure est en TÊTE, avant les champs.** Une table trouée se voit ; *un calendrier dont
+l'année fait 358 jours au lieu de 360 a l'air parfait.* La longueur de l'année est le seul nombre que
+l'auteur a en tête, et c'est justement celui qu'aucune saisie ne montre : il est la somme de douze
+champs séparés.
+
+#### ⛔ Une fuite de chemin refermée au passage
+
+`clock:load-calendar` composait `path.join(appRoot, 'databases', 'calendars', id + '.json')` avec un
+`id` **venu du renderer**, sans rien regarder. `../../package` remontait hors du dossier. C'était une
+fuite en lecture ; *le jour où l'Atelier écrit, la même forme écrase n'importe quel fichier du
+dépôt.* Même règle que `cheminDesTables.ts` la veille.
+
+⚠️ **Et une duplication que j'ai écrite puis retirée dans la foulée** : la fabrique du nom de fichier
+existait des deux côtés du pont. Corrigé par la séparation qui s'imposait — **le renderer produit
+l'identifiant, le processus principal valide le chemin**, ce que lui seul peut faire. *Deux règles de
+nommage écrites des deux côtés d'un pont finiraient par ne plus tomber sur le même fichier, et
+l'écran afficherait un nom que personne n'écrirait.*
+
+#### Ce qui est gardé
+
+- **`formeDuCalendrier.test.ts`** — 36 essais : les deux fautes qui gèlent, le cycle déclarable (dont
+  les années négatives), la date de départ, et ⛔ **« Harptos ne porte aucune faute »**.
+- **`gelDeLHorloge.test.ts`** — 6 essais sur le magasin, éprouvés par **dégradation qui pend**.
+- **`propositionDeCalendrier.test.ts`** — 18 essais : ce qu'on écarte sans rafistoler, et ⛔ le
+  calendrier sans mois **laissé arriver jusqu'au contrôle** plutôt que corrigé sur place.
+- **`cheminDesCalendriers.test.ts`** — 24 essais de confinement.
+- **`clockOs.spec.ts`** — 5 essais de plus à l'écran, dont ⛔ **le refus d'enregistrer** et ⭐ **Harptos
+  à 1492**.
+
+#### ⚠️ Ce qui reste ouvert
+
+⚠️ **`databases/` n'est dans AUCUNE sauvegarde** — ni les calendriers, ni les tables que l'Atelier
+écrit depuis la veille. Le trou existait avant ; **il grossit à chaque chose que David crée.**
+Proposé avec le chantier, écarté par lui pour garder la portée — à rouvrir.
+
+⚠️ **L'IA n'a jamais été appelée pour de vrai.** Le fil, le schéma et le contrôle en aval sont
+éprouvés ; *personne n'a encore vu un calendrier sortir d'une phrase.*
+
+⚠️ **Le jour de la semaine ignore les jours hors calendrier.** `getFantasyDate` compte les jours
+écoulés modulo la semaine — or à Harptos les fêtes ne sont **pas** des jours de semaine. Relevé, non
+corrigé : c'est une règle de monde, et elle mérite d'être tranchée avant d'être écrite.
+
+**Ancres** : `src/modules/clock/logic/formeDuCalendrier.ts`,
+`src/modules/clock/logic/propositionDeCalendrier.ts`, `src/modules/clock/atelier/`,
+`src/store/useClockStore.ts` (la garde dans `getFantasyDate`, `dateDeDepart` dans `selectCalendar`),
+`electron/cheminDesCalendriers.ts`, `electron/main.ts` (`clock:save-calendar`,
+`clock:delete-calendar`), guide 36 § « Créer un calendrier ».
+
+**Vérifié** : `tsc -b` propre, **4 869 tests** (391 fichiers, 1 ignoré), **190 tests E2E**.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 ✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie
