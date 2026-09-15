@@ -274,14 +274,51 @@ export function controlerLaTable(table: TableData): Constat[] {
             });
         }
 
-        const possiblesSet = new Set(possibles);
-        const horsPortee = [...compte.keys()].filter(v => !possiblesSet.has(v)).sort((a, b) => a - b);
+        /*
+          ⚠️ **Au-DELÀ du dé, pas « pas tirable ».** La première version signalait
+          toute valeur couverte qu'on ne peut pas tirer — et sur un `d66`, une
+          plage de 11 à 26 en contient douze (17 à 20, 27 à 30…). Elles sont sans
+          effet : *rien ne tombe dedans, et couvrir large ne coûte rien.* Les
+          nommer faisait dire au contrôle « il faut un modificateur » là où il
+          n'en faut aucun.
+
+          Ce qui mérite d'être dit, c'est ce qui sort **de part et d'autre** de la
+          portée : là, le modificateur est bien la seule façon d'y arriver, et
+          c'est l'idiome d'`Alien/test_de_panique`. *Un test l'a trouvé en collant
+          une vraie table ; je l'avais écrit à l'envers.*
+        */
+        const plancher = possibles[0];
+        const plafond = possibles[possibles.length - 1];
+        const horsPortee = [...compte.keys()]
+            .filter(v => v < plancher || v > plafond)
+            .sort((a, b) => a - b);
         if (horsPortee.length > 0) {
+            /*
+              ⚠️ **On compte les ENTRÉES, pas seulement les valeurs.** « 14 valeurs
+              hors portée » ne dit pas si c'est une queue de table prévue pour un
+              modificateur ou une table entière collée sur le mauvais dé ; « 14
+              entrées sur 20 » le laisse voir d'un coup d'œil.
+
+              ⛔ **Et ça reste une `note`, pas un doute.** On ne peut pas
+              distinguer les deux cas par une règle : `Alien/test_de_panique`
+              déclare `1d6` et a **neuf entrées sur dix** au-dessus de six —
+              parfaitement voulu, le jet ajoute le stress. Tout seuil qui
+              attraperait la table mal collée accuserait aussi celle-là, et *un
+              contrôle qui se trompe est pire qu'un contrôle absent*. On compte,
+              on montre, on ne tranche pas.
+            */
+            const entreesConcernees = entrees.filter(
+                e => Number.isInteger(e.min) && Number.isInteger(e.max)
+                    && (e.min > plafond || e.max < plancher)).length;
+
             constats.push({
                 gravite: 'note',
                 code: 'hors-portee',
-                message: `${horsPortee.length} valeur(s) couvertes sortent de la portée du dé : `
-                    + 'elles ne sont atteignables qu’avec un modificateur.',
+                message: `${horsPortee.length} valeur(s) couvertes sortent de la portée du dé`
+                    + (entreesConcernees > 0
+                        ? ` — ${entreesConcernees} entrée(s) sur ${entrees.length} n’y sont `
+                          + 'atteignables qu’avec un modificateur.'
+                        : ' : elles ne sont atteignables qu’avec un modificateur.'),
                 valeurs: horsPortee,
             });
         }

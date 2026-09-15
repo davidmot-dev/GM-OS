@@ -204,6 +204,26 @@ describe('controlerLaTable', () => {
         expect(note.gravite).toBe('note');
     });
 
+    /**
+     * ⚠️ **Couvrir large sur un dé juxtaposé ne coûte rien, et ne se signale
+     * pas.** Une plage de 11 à 26 sur un `d66` contient douze valeurs qu'on ne
+     * peut pas tirer (17-20, 27-30…) : rien ne tombe dedans. La première
+     * version les nommait et conseillait un modificateur — *un contrôle qui
+     * conseille à tort se fait désarmer.* Trouvé en collant une vraie table.
+     */
+    it('ne reproche pas les creux d’un dé juxtaposé couverts par une plage', () => {
+        const t = table({
+            dice: 'd66',
+            entries: [
+                { min: 11, max: 26, title: 'a', description: '' },
+                { min: 31, max: 46, title: 'b', description: '' },
+                { min: 51, max: 66, title: 'c', description: '' },
+            ],
+        });
+
+        expect(controlerLaTable(t)).toEqual([]);
+    });
+
     it('doute d’une quantité de butin illisible, sans en faire une faute', () => {
         const t = table({
             entries: [{

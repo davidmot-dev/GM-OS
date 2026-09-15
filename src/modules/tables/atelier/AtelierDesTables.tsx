@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     X, Plus, Trash2, Save, Dices, AlertTriangle, Info, CheckCircle2,
-    Scissors, ArrowDownUp, Loader2,
+    Scissors, ArrowDownUp, Loader2, ClipboardPaste,
 } from 'lucide-react';
 import { pontDesTables } from '../pontDesTables';
 import { TableEngine } from '../TableEngine';
 import { controlerLaTable, decouperLaPortee, laTableEstFautive } from '../logic/formeDeLaTable';
 import { BandeDeCouverture } from './BandeDeCouverture';
+import { ImportDeTable } from './ImportDeTable';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { gmToast } from '../../../stores/useToastStore';
 import type { TableData, TableEntry } from '../types';
@@ -72,6 +73,7 @@ export const AtelierDesTables: React.FC<Props> = ({
     const [enCours, setEnCours] = useState(false);
     const [survolee, setSurvolee] = useState<number | null>(null);
     const [essai, setEssai] = useState<{ jet: number; entree: TableEntry } | null>(null);
+    const [importOuvert, setImportOuvert] = useState(false);
 
     useFermetureParEchap(ouvert, onFermer, 'Atelier des tables');
 
@@ -183,6 +185,30 @@ export const AtelierDesTables: React.FC<Props> = ({
     } as const;
 
     return (
+        <>
+        {/*
+          ⚠️ **Elle s'empile au-dessus, et c'est voulu.** Échap ferme la
+          surcouche du dessus : l'import d'abord, l'atelier ensuite. C'est le
+          registre des surcouches (§ 54) qui l'ordonne, pas l'ordre du JSX.
+        */}
+        <ImportDeTable
+            ouvert={importOuvert}
+            onFermer={() => setImportOuvert(false)}
+            de={table.dice}
+            entreesExistantes={table.entries.length}
+            onAppliquer={(entrees, nom, deImporte) => {
+                setEssai(null);
+                setTable(t => ({
+                    ...t,
+                    entries: entrees,
+                    /* Le nom ne remplace pas celui qu'on a déjà tapé ; le dé, si,
+                       parce qu'une table importée porte le sien et que le garder
+                       ferait de la bande un mensonge. */
+                    ...(nom && !t.name.trim() ? { name: nom } : {}),
+                    ...(deImporte ? { dice: deImporte } : {}),
+                }));
+            }}
+        />
         <div className="fixed inset-0 z-[180] flex bg-app-bg/95 backdrop-blur-sm"
             role="dialog" aria-modal="true" aria-label="Atelier des tables">
 
@@ -333,6 +359,11 @@ export const AtelierDesTables: React.FC<Props> = ({
 
                 {/* ── Les gestes ──────────────────────────────────────────── */}
                 <footer className="flex flex-wrap items-center gap-2 px-6 py-4 border-t border-app-border bg-app-surface/40">
+                    <button onClick={() => setImportOuvert(true)}
+                        title="Coller une table de manuel"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-app-border text-sm text-app-text/70 hover:text-app-text transition-colors">
+                        <ClipboardPaste size={14} />Importer
+                    </button>
                     <button onClick={decouper}
                         title="Répartir la portée du dé sur les entrées existantes"
                         className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-app-border text-sm text-app-text/70 hover:text-app-text transition-colors">
@@ -380,6 +411,7 @@ export const AtelierDesTables: React.FC<Props> = ({
                 </footer>
             </div>
         </div>
+        </>
     );
 };
 

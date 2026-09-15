@@ -159,6 +159,115 @@ test.describe('l’atelier des tables', () => {
         await expect(listes(gmos).nth(1).locator('option')).toContainText(['Essai de l’atelier']);
     });
 
+    /**
+     * ⭐ **Le collage, de bout en bout.** Ce que les essais unitaires ne peuvent
+     * pas voir : que l'aperçu chiffre avant qu'on applique, que l'import
+     * REMPLACE bien les entrées, et que la bande de couverture relit derrière —
+     * *c'est cette seconde lecture qui autorise à coller du texte brut.*
+     *
+     * ⚠️ Seul le chemin **déterministe** est éprouvé ici. « Ranger par l'IA »
+     * demande un modèle, et une instance d'essai n'en a pas : *un test qui
+     * prétendrait le couvrir donnerait une couverture décorative.*
+     */
+    test('coller une table de manuel la range, et la bande la relit', async () => {
+        /* L'essai précédent a refermé l'atelier : on le rouvre sur une table
+           neuve. *Un essai qui suppose l'état laissé par son voisin casse le
+           jour où l'on réordonne le fichier.* */
+        await gmos.fenetre.getByRole('button', { name: /Atelier des tables/i }).click();
+        await expect(atelier()).toBeVisible();
+
+        await atelier().getByRole('button', { name: 'Importer' }).click();
+        const importeur = gmos.fenetre.getByRole('dialog', { name: 'Importer une table' });
+        await expect(importeur).toBeVisible();
+
+        await importeur.getByLabel('Texte à importer').fill([
+            'Table des avaries',
+            '1-5   Rien de notable',
+            '6-12  Un bruit dans la coursive',
+            '13-17 Une ombre passe',
+            '18-19 Le courant saute',
+            '20    Elle est là',
+        ].join(String.fromCharCode(10)));
+
+        /* L'aperçu compte avant d'appliquer — et il dit ce qu'il n'a pas su
+           rattacher, ici le titre de la table. */
+        await expect(importeur).toContainText('5 entrée(s) lue(s)');
+        await expect(importeur).toContainText('1 ligne(s) non rattachée(s)');
+
+        gmos.fenetre.once('dialog', d => d.accept());
+        await importeur.getByRole('button', { name: 'Ranger tel quel' }).click();
+        await expect(importeur).toBeHidden();
+
+        /*
+          ⭐ **La relecture, et ce qu'elle dit vraiment.** Les bornes collées vont
+          jusqu'à 20, sur le `1d6` d'une table neuve. Il n'y a pourtant **aucun
+          trou** — les six valeurs sont couvertes par les deux premières entrées.
+          Ce que la bande signale, c'est que la plupart des entrées sont **hors
+          de portée** : c'est ça, le symptôme d'une table collée sur le mauvais
+          dé. *J'attendais « sans entrée » ; l'écran avait raison et mon essai
+          avait tort.*
+        */
+        await expect(atelier()).toContainText('6 valeurs tirables');
+        await expect(atelier()).toContainText('entrée(s) sur 5 n’y sont atteignables');
+
+        /* Le bon dé, et la remarque disparaît. */
+        await atelier().getByTitle('Le dé de cette table').selectOption('1d20');
+        await expect(atelier()).toContainText('couverture complète');
+        await expect(atelier()).not.toContainText('atteignables qu’avec un modificateur');
+
+        /* Et on le referme, pour laisser l'écran comme on l'a trouvé. */
+        await atelier().getByRole('button', { name: 'Fermer l’atelier' }).click();
+        await expect(atelier()).toBeHidden();
+    });
+
+    /**
+     * ⛔ **Le trou que David a désigné**, en demandant ce que l'import acceptait :
+     * *« est-ce que je peux importer des fichiers JSON ? »*. Non — et le prompt
+     * livré avec GM-OS fait justement produire du JSON à ChatGPT. *Un import qui
+     * refuse le format que l'application elle-même écrit.*
+     *
+     * Mesuré avant d'être comblé : un JSON collé donnait huit entrées de
+     * charabia — `11-15 {`, `16-24 "name": …`.
+     */
+    test('une table JSON collée est reconnue, avec son nom et son dé', async () => {
+        await gmos.fenetre.getByRole('button', { name: /Atelier des tables/i }).click();
+
+        /* ⚠️ **Sur une table NEUVE.** L'atelier garde en mémoire celle qu'on y a
+           laissée, et le nom importé ne remplace jamais un nom déjà tapé — c'est
+           voulu, et c'est ce qui a fait rougir cet essai la première fois. */
+        await atelier().getByRole('button', { name: 'Nouvelle table' }).click();
+
+        await atelier().getByRole('button', { name: 'Importer' }).click();
+        const importeur = gmos.fenetre.getByRole('dialog', { name: 'Importer une table' });
+
+        await importeur.getByLabel('Texte à importer').fill(JSON.stringify({
+            name: 'Avaries mineures',
+            dice: 'd66',
+            entries: [
+                { min: 11, max: 40, title: 'Fuite', description: 'Un sifflement.' },
+                { min: 41, max: 66, title: 'Court-circuit', description: 'Le noir.' },
+            ],
+        }, null, 4));
+
+        await expect(importeur).toContainText('Table JSON reconnue');
+        await expect(importeur).toContainText('2 entrée(s) lue(s)');
+        await expect(importeur).toContainText('« Avaries mineures »');
+        await expect(importeur).toContainText('dé d66');
+
+        gmos.fenetre.once('dialog', d => d.accept());
+        await importeur.getByRole('button', { name: 'Ranger tel quel' }).click();
+        await expect(importeur).toBeHidden();
+
+        /* Le nom ET le dé sont arrivés : la table est complète sans qu'on ait
+           rien retapé, et la bande le confirme. */
+        await expect(atelier().getByPlaceholder('Titre de la table')).toHaveValue('Avaries mineures');
+        await expect(atelier()).toContainText('36 valeurs tirables');
+        await expect(atelier()).toContainText('couverture complète');
+
+        await atelier().getByRole('button', { name: 'Fermer l’atelier' }).click();
+        await expect(atelier()).toBeHidden();
+    });
+
     test('et elle se supprime depuis l’atelier', async () => {
         await gmos.fenetre.getByRole('button', { name: /Atelier des tables/i }).click();
         await atelier().getByRole('button', { name: 'Essai de l’atelier' }).click();

@@ -70,4 +70,15 @@ export interface TableBridge {
     /** Écrit la table. Crée le dossier de l'univers au besoin. */
     saveTable: (universe: string, tableName: string, data: TableData) => Promise<ReponseDEcriture>;
     deleteTable: (universe: string, tableName: string) => Promise<ReponseDEcriture>;
+    /**
+     * Ouvre un dialogue système et rend ce que le fichier contient — texte,
+     * ou image en base64. `null` si le meneur a renoncé.
+     */
+    ouvrirUneSource: () => Promise<SourceLue | null>;
 }
+
+/** Ce qu'un fichier choisi rend. Voir `electron/lectureDeSource.ts`. */
+export type SourceLue =
+    | { genre: 'texte'; texte: string; nom: string }
+    | { genre: 'image'; donnees: string; mimeType: string; nom: string }
+    | { genre: 'refus'; motif: 'extension-inconnue' | 'illisible' | 'pdf-indisponible'; nom: string };

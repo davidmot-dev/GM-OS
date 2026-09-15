@@ -80,6 +80,7 @@ import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
 import { racineDesTables, cheminDUnUnivers, cheminDUneTable } from './cheminDesTables'
+import { lireUneSource, EXTENSIONS_TEXTE, EXTENSIONS_IMAGE } from './lectureDeSource'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { poserLaCle } from './clesDesFournisseurs'
 import { lireLesGuides } from './guidesDuManuel'
@@ -366,6 +367,36 @@ ipcMain.handle('tables:save-table', async (_event, universe: string, tableName: 
         console.error('[Tables] écriture impossible :', filePath, err);
         return { ok: false, motif: 'ecriture-impossible' };
     }
+});
+
+/**
+ * **Ouvrir un fichier pour l'import de l'Atelier.**
+ *
+ * Un seul dialogue pour les cinq formes que David a demandées : JSON, Markdown,
+ * texte, PDF et image. Ce qui en sort est du **texte** ou une **image en
+ * base64** — `lectureDeSource` ne comprend rien aux tables, et c'est l'écran qui
+ * décide ensuite.
+ *
+ * ⚠️ **Le chemin vient du dialogue système, jamais du renderer.** C'est ce qui
+ * dispense du confinement de `cheminDesTables` : le meneur a désigné ce fichier
+ * à la souris. *Mais il faut que ce soit vrai* — d'où l'absence totale de
+ * paramètre de chemin sur ce canal.
+ */
+ipcMain.handle('tables:ouvrir-une-source', async () => {
+    const { filePaths } = await dialog.showOpenDialog({
+        title: 'Importer une table',
+        properties: ['openFile'],
+        filters: [
+            { name: 'Tout ce qui se lit', extensions: [...EXTENSIONS_TEXTE, 'pdf', ...EXTENSIONS_IMAGE] },
+            { name: 'Table JSON', extensions: ['json'] },
+            { name: 'Texte et Markdown', extensions: ['md', 'markdown', 'txt', 'csv', 'tsv'] },
+            { name: 'PDF', extensions: ['pdf'] },
+            { name: 'Image', extensions: EXTENSIONS_IMAGE },
+        ],
+    });
+
+    if (!filePaths || filePaths.length === 0) return null;
+    return await lireUneSource(filePaths[0]);
 });
 
 /** Supprimer une table. Un fichier déjà absent n'est pas une erreur. */
