@@ -79,6 +79,7 @@ import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
+import { racineDesTables, cheminDUnUnivers, cheminDUneTable } from './cheminDesTables'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { poserLaCle } from './clesDesFournisseurs'
 import { lireLesGuides } from './guidesDuManuel'
@@ -300,9 +301,20 @@ ipcMain.handle('npc:load-database', async (_event, category: string, name: strin
 });
 
 // --- Table OS Handlers ---
+/*
+  ─────────────────────────────────────────────────────────────────────────────
+  TABLE-OS — LES ORACLES DE `databases/tables/`
+  ─────────────────────────────────────────────────────────────────────────────
+
+  ⛔ **Ces trois lecteurs joignaient `universe` et `tableName` tels quels**, et
+  ces deux chaînes viennent du renderer : un `..` sortait du dossier. C'était
+  déjà une fuite en lecture, et c'est devenu intenable le jour où l'Atelier des
+  tables a reçu le droit d'écrire — *on ne branche pas une écriture sur un chemin
+  qu'on ne contient pas*. Le confinement vit dans `cheminDesTables.ts`, éprouvé à
+  part.
+*/
 ipcMain.handle('tables:list-universes', async () => {
-    const appRoot = process.env.APP_ROOT || '';
-    const tablesPath = path.join(appRoot, 'databases', 'tables');
+    const tablesPath = racineDesTables(process.env.APP_ROOT || '');
     if (await fs.pathExists(tablesPath)) {
         const dirs = await fs.readdir(tablesPath, { withFileTypes: true });
         return dirs.filter(d => d.isDirectory()).map(d => d.name);
@@ -311,9 +323,8 @@ ipcMain.handle('tables:list-universes', async () => {
 });
 
 ipcMain.handle('tables:list-tables', async (_event, universe: string) => {
-    const appRoot = process.env.APP_ROOT || '';
-    const dbPath = path.join(appRoot, 'databases', 'tables', universe);
-    if (await fs.pathExists(dbPath)) {
+    const dbPath = cheminDUnUnivers(process.env.APP_ROOT || '', universe);
+    if (dbPath && await fs.pathExists(dbPath)) {
         const files = await fs.readdir(dbPath);
         return files.filter(f => f.endsWith('.json')).map(f => f.replace('.json', ''));
     }
@@ -321,12 +332,54 @@ ipcMain.handle('tables:list-tables', async (_event, universe: string) => {
 });
 
 ipcMain.handle('tables:load-table', async (_event, universe: string, tableName: string) => {
-    const appRoot = process.env.APP_ROOT || '';
-    const filePath = path.join(appRoot, 'databases', 'tables', universe, `${tableName}.json`);
-    if (await fs.pathExists(filePath)) {
+    const filePath = cheminDUneTable(process.env.APP_ROOT || '', universe, tableName);
+    if (filePath && await fs.pathExists(filePath)) {
         return await fs.readJson(filePath);
     }
     return null;
+});
+
+/**
+ * **Écrire une table.** Le dossier de l'univers est créé au besoin : créer un
+ * univers, c'est y déposer sa première table.
+ *
+ * ⚠️ **Le contenu n'est pas contrôlé ici.** `controlerLaTable` vit côté écran,
+ * où il peut *montrer* ce qui cloche ; refuser en silence dans le processus
+ * principal laisserait le meneur devant un bouton qui ne fait rien. La garde du
+ * dépôt, elle, refuse à la relecture ce qui aurait échappé aux deux.
+ *
+ * Rend `{ ok, chemin }` ou `{ ok: false, motif }` — *un booléen nu ne dirait pas
+ * si le refus vient du chemin ou du disque.*
+ */
+ipcMain.handle('tables:save-table', async (_event, universe: string, tableName: string, data: unknown) => {
+    const filePath = cheminDUneTable(process.env.APP_ROOT || '', universe, tableName);
+    if (!filePath) return { ok: false, motif: 'chemin-refuse' };
+    if (!data || typeof data !== 'object') return { ok: false, motif: 'contenu-vide' };
+
+    try {
+        await fs.ensureDir(path.dirname(filePath));
+        // Indenté à quatre espaces, comme les 46 tables déjà en place : une
+        // réécriture ne doit pas faire d'un fichier relu un fichier remanié.
+        await fs.writeJson(filePath, data, { spaces: 4 });
+        return { ok: true, chemin: filePath };
+    } catch (err) {
+        console.error('[Tables] écriture impossible :', filePath, err);
+        return { ok: false, motif: 'ecriture-impossible' };
+    }
+});
+
+/** Supprimer une table. Un fichier déjà absent n'est pas une erreur. */
+ipcMain.handle('tables:delete-table', async (_event, universe: string, tableName: string) => {
+    const filePath = cheminDUneTable(process.env.APP_ROOT || '', universe, tableName);
+    if (!filePath) return { ok: false, motif: 'chemin-refuse' };
+
+    try {
+        await fs.remove(filePath);
+        return { ok: true };
+    } catch (err) {
+        console.error('[Tables] suppression impossible :', filePath, err);
+        return { ok: false, motif: 'suppression-impossible' };
+    }
 });
 
 // --- Clock OS Handlers ---

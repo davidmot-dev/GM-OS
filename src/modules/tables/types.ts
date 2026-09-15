@@ -50,8 +50,24 @@ export interface TableResult {
     tableName: string;
 }
 
+/** Ce que le processus principal répond à une écriture. */
+export interface ReponseDEcriture {
+    ok: boolean;
+    /** Le fichier écrit, quand ça a marché. */
+    chemin?: string;
+    /**
+     * Pourquoi ça a échoué. *Un booléen nu ne dirait pas si le refus vient du
+     * chemin ou du disque* — et l'écran n'a pas le même mot à dire dans les deux
+     * cas.
+     */
+    motif?: 'chemin-refuse' | 'contenu-vide' | 'ecriture-impossible' | 'suppression-impossible';
+}
+
 export interface TableBridge {
     listUniverses: () => Promise<string[]>;
     listTables: (universe: string) => Promise<string[]>;
     loadTable: (universe: string, tableName: string) => Promise<TableData | null>;
+    /** Écrit la table. Crée le dossier de l'univers au besoin. */
+    saveTable: (universe: string, tableName: string, data: TableData) => Promise<ReponseDEcriture>;
+    deleteTable: (universe: string, tableName: string) => Promise<ReponseDEcriture>;
 }

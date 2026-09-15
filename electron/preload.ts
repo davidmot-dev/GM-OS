@@ -82,7 +82,11 @@ contextBridge.exposeInMainWorld('appBridge', {
     tables: {
         listUniverses: () => ipcRenderer.invoke('tables:list-universes'),
         listTables: (universe: string) => ipcRenderer.invoke('tables:list-tables', universe),
-        loadTable: (universe: string, tableName: string) => ipcRenderer.invoke('tables:load-table', universe, tableName)
+        loadTable: (universe: string, tableName: string) => ipcRenderer.invoke('tables:load-table', universe, tableName),
+        saveTable: (universe: string, tableName: string, data: unknown) =>
+            ipcRenderer.invoke('tables:save-table', universe, tableName, data),
+        deleteTable: (universe: string, tableName: string) =>
+            ipcRenderer.invoke('tables:delete-table', universe, tableName)
     },
     web: {
         openExternal: (url: string) => ipcRenderer.send('web:open-external', url),

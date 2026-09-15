@@ -18,6 +18,7 @@ import { objetsDepuisDeclaration, laDeclarationEstVide } from '../session/logic/
 import { proposerDesObjets } from '../session/logic/propositionDeButinIA';
 import { gmToast } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
+import { AtelierDesTables } from './atelier/AtelierDesTables';
 
 const TableDashboard: React.FC = () => {
     const {
@@ -63,6 +64,13 @@ const TableDashboard: React.FC = () => {
     } = useSessionOSStore();
 
     const [conversionEnCours, setConversionEnCours] = useState(false);
+
+    /*
+      **L'Atelier est une surcouche, pas un onglet.** Écrire une table est un
+      geste de préparation ; le pupitre, lui, sert pendant qu'on joue. Les
+      superposer garde le pupitre entier derrière, et Échap le rend.
+    */
+    const [atelierOuvert, setAtelierOuvert] = useState(false);
 
     // Find active session to update
     const activeSession = sessions.find(s => 
@@ -139,6 +147,15 @@ const TableDashboard: React.FC = () => {
     };
 
     return (
+        <>
+        <AtelierDesTables
+            ouvert={atelierOuvert}
+            onFermer={() => setAtelierOuvert(false)}
+            universDepart={selectedUniverse}
+            /* Le pupitre relit sa liste : une table qu'on vient d'écrire doit
+               pouvoir être tirée sans quitter l'écran. */
+            onTablesChangees={(u) => { fetchUniverses(); if (u === selectedUniverse) selectUniverse(u); }}
+        />
         <div className="flex h-full bg-app-bg text-app-text overflow-hidden">
             {/* Sidebar */}
             <aside className="w-80 border-r border-app-border bg-app-surface/50 p-6 flex flex-col space-y-6">
@@ -146,6 +163,14 @@ const TableDashboard: React.FC = () => {
                     <h2 className="text-xs font-bold uppercase tracking-widest text-accent mb-4 flex items-center gap-2">
                         <Database className="w-4 h-4" /> {t('random_tables.sidebar.config_title')}
                     </h2>
+
+                    <button
+                        onClick={() => setAtelierOuvert(true)}
+                        title="Créer ou corriger une table"
+                        className="mb-4 w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-accent/30 text-accent text-xs font-bold uppercase tracking-widest hover:bg-accent/10 transition-colors"
+                    >
+                        <Wand2 className="w-3.5 h-3.5" /> Atelier des tables
+                    </button>
 
                     <div className="space-y-4">
                         {/* Universe Select */}
@@ -365,6 +390,7 @@ const TableDashboard: React.FC = () => {
                 )}
             </main>
         </div>
+        </>
     );
 };
 
