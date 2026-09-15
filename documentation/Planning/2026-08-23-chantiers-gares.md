@@ -3852,7 +3852,278 @@ pas. Cette voie-là reste celle de ChatGPT, ou un chantier OCR à part.
 guide 40 § « L'Atelier des tables ».
 
 **Vérifié** : `tsc -b` propre, **4 617 tests** (381 fichiers, 1 ignoré), **177 tests E2E**.
-⚠️ **Pas encore éprouvé en réel.**
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-15** — David : *« j'ai testé c'est bon »*. La ligne de l'import
+s'ouvre dans la foulée.
+
+### 63 · ⭐ L'import de l'Atelier — coller un manuel, et laisser le contrôle relire (2026-09-15)
+
+*David, après avoir éprouvé l'Atelier : « ok j'ai testé c'est bon, on passe à la partie Import ».*
+La troisième couche de la proposition, laissée de côté exprès pour voir d'abord ce qui manquait à
+l'usage.
+
+#### Deux chemins, et deux boutons — pas un réglage
+
+| | Ce que ça fait | Ce que ça exige |
+| --- | --- | --- |
+| **Ranger tel quel** | Un lecteur déterministe, hors ligne | Rien |
+| **Ranger par l'IA** | Répartit titre / ambiance / effet | Un modèle |
+
+⛔ **Le collage ne coupe rien.** Le texte d'une ligne va dans le **titre**, entier. Découper « titre »
+et « ambiance » sur un point ou un tiret serait une devinette, et on lirait à voix haute des titres
+coupés au milieu. *La répartition est le travail de la passe IA, qui propose et se relit.*
+
+⭐ **Ce qui n'est PAS une devinette** : une ligne sans numéro qui en suit une numérotée appartient à
+celle-ci — c'est la forme des manuels, un résultat puis son paragraphe. Elle devient la description.
+
+⛔ **Et le piège qui aurait décalé des tables entières** : `11 — Fuite d'oxygène` **n'est pas une
+plage**. Un tiret ne fait une plage que s'il a des **chiffres des deux côtés**. C'est la ponctuation
+la plus courante des tables françaises, et six essais la gardent — tiret court, demi-cadratin,
+cadratin, point, parenthèse, deux-points.
+
+Le collage lit aussi les tableaux Markdown et les tabulations — les deux formes réelles du
+copier-coller depuis une page web et depuis un PDF. Ce qu'il ne sait pas rattacher est **compté et
+montré**, jamais avalé : *un import qui jette en silence laisse croire que la table est complète.*
+
+#### ⭐ Ce qui rend la passe IA acceptable, et qui n'est pas dans l'invite
+
+Ce n'est pas la qualité du prompt : c'est que **rien n'est appliqué sans repasser par
+`controlerLaTable`**, et que la bande de couverture s'affiche avant qu'on enregistre.
+
+> *Un modèle qui oublie les valeurs 17 à 20 produit une table parfaitement plausible ; la bande la
+> montre rouge en une seconde.*
+
+**Le modèle propose, le contrôle relit, l'écran montre.** C'est la seule raison pour laquelle on peut
+se permettre de laisser une machine écrire des oracles — et un essai fait exactement ce chemin : une
+réponse tronquée à 12 sur un `1d20`, et le constat qui nomme 13 à 20.
+
+⚠️ **Une entrée sans bornes lisibles est écartée, pas rafistolée.** Lui inventer un `min` la
+placerait au hasard : *une entrée perdue se voit dans la bande, une entrée déplacée ne se voit nulle
+part.*
+
+Le `Prompt Aide Création de Table.txt` de `databases/tables/MedFan/` entre donc dans l'application —
+*une consigne qui vit dans un fichier texte qu'on copie à la main est une consigne qu'on finit par ne
+plus copier.*
+
+#### ⛔ Deux fois, un essai a eu raison contre moi
+
+**1. Le contrôle accusait les creux d'un dé juxtaposé.** En collant une liste sur un `d66`,
+`decouperLaPortee` produit des plages contiguës — 11 à 26, 31 à 46 — qui contiennent douze valeurs
+non tirables. Le contrôle les signalait en conseillant « un modificateur ». *Elles sont sans effet :
+rien ne tombe dedans, et couvrir large ne coûte rien.* La remarque ne porte plus que sur ce qui sort
+**de part et d'autre** de la portée.
+
+**2. L'essai de bout en bout m'a repris sur ce qu'il fallait attendre.** J'avais écrit que coller une
+table de `1d20` dans une table de `1d6` ferait apparaître un trou. **Faux** : les six valeurs sont
+couvertes par les deux premières entrées, la couverture est *complète*. Le vrai symptôme est
+ailleurs — quatorze entrées **hors de portée**. *L'écran avait raison, mon essai avait tort.*
+
+La remarque compte désormais les **entrées** et non seulement les valeurs : « 14 entrées sur 20 » se
+lit d'un coup d'œil, « 14 valeurs » ne dit rien.
+
+⛔ **Mais elle reste une `note`, et il faut que ça se sache.** On ne peut pas distinguer par une règle
+la table collée sur le mauvais dé de la queue de table prévue pour un modificateur :
+`Alien/test_de_panique` déclare `1d6` et a **neuf entrées sur dix** au-dessus de six — parfaitement
+voulu. *Tout seuil qui attraperait la première accuserait la seconde.* On compte, on montre, on ne
+tranche pas.
+
+#### ⚠️ Une correction à ce que j'avais écrit
+
+Le § 62 disait : *« l'IA ne lira pas une photo de page de livre — `AIService` génère des images, il
+n'en lit pas »*. **C'est faux pour une moitié.** `generateJSON` accepte des pièces jointes et les
+passe en `inline_data` à Gemini. Deux réserves, qui font que ce n'est pas branché ici :
+
+- **seul le chemin Gemini** les honore — Ollama, Anthropic et les autres les ignorent en silence ;
+- **aucun appelant n'emprunte ce chemin** dans tout le dépôt : il n'a jamais été exercé.
+
+*Une capacité déclarée que personne n'appelle n'est pas une capacité, c'est une promesse.* Elle
+attend un chantier qui la vérifie.
+
+#### Ce qui est gardé
+
+- **`collageDUneTable.test.ts`** — 30 essais : les six ponctuations, le tableau Markdown, les
+  tabulations, le paragraphe rattaché, le d66 dont les bornes doivent être tirables, et le critère
+  qui compte : *ce qui sort du collage passe le contrôle.*
+- **`miseEnFormeParLIA.test.ts`** — 18 essais sur ce qu'on fait d'une réponse **abîmée** : bornes en
+  chaînes, entrée nulle, bornes inversées, tableau nu, réponse vide. La couture d'essai est injectée,
+  comme pour `useFonduCroise` : *on éprouve ce qu'on fait de la réponse, pas le modèle.*
+- **`tableOs.spec.ts`** — l'import de bout en bout : l'aperçu chiffre avant d'appliquer, il dit la
+  ligne non rattachée, et la bande relit derrière. ⚠️ **Seul le chemin déterministe** y est éprouvé :
+  une instance d'essai n'a pas de modèle, et *un test qui prétendrait le couvrir donnerait une
+  couverture décorative.*
+
+**Ancres** : `logic/collageDUneTable.ts`, `logic/miseEnFormeParLIA.ts`, `atelier/ImportDeTable.tsx`,
+`logic/formeDeLaTable.ts` (`hors-portee`), guide 40 § « Importer une table ».
+
+**Vérifié** : `tsc -b` propre, **4 665 tests** (383 fichiers, 1 ignoré), **178 tests E2E**.
+⚠️ **Pas encore éprouvé en réel** — et la passe IA ne l'a été par personne.
+
+### 64 · ⭐ Les cinq portes de l'import — dont celle que GM-OS refusait à son propre format (2026-09-15)
+
+*David, après l'import du § 63 : « explique-moi précisément les options de l'import ? Est-ce que je
+peux importer des fichiers JSON ? des PDF ? des fichiers MD ? ».* **La réponse était non aux trois.**
+
+#### ⛔ Ce que la question a mis au jour
+
+Il n'y avait **aucun sélecteur de fichier** : tout passait par la zone de collage. Et surtout :
+
+> **L'Atelier écrit du JSON et ne savait pas en lire.**
+
+Le prompt livré dans `databases/tables/MedFan/` fait produire du **JSON** à ChatGPT — c'est le flux
+que David emploie depuis toujours. Ce JSON-là ne pouvait entrer que par le disque, à la main.
+*Un import qui refuse le format que l'application elle-même produit.*
+
+⭐ **Mesuré avant d'être comblé**, plutôt que supposé : un JSON de table collé donnait **huit entrées
+de charabia** —
+
+```
+regime = "lignes", 8 entrées :
+  11-15  {
+  16-24  "name": "Avaries mineures",
+  25-33  "dice": "d66",
+```
+
+Visible dans l'aperçu, donc jamais destructeur, et parfaitement inutilisable.
+
+#### Les cinq portes
+
+| Porte | Comment |
+| --- | --- |
+| **Texte collé** | La zone, comme avant |
+| **Table JSON** | Reconnue seule, **avec son nom et son dé** |
+| **Fichier** `.json` `.md` `.txt` `.csv` | Ouvert, déposé dans la zone |
+| **PDF** | Texte extrait par `pdf-parse`, déposé dans la zone |
+| **Image** | Bandeau à part — **un seul chemin, le modèle** |
+
+⭐ **`pdf-parse` était déjà là**, dépendance du moteur RAG qui indexe les manuels. *La porte la plus
+chère à l'air libre coûtait une ligne de `require`.*
+
+⚠️ **Le texte lu atterrit dans la zone de collage, il n'est pas rangé directement.** *Le meneur voit
+ce qui a été lu avant de le ranger* — et un PDF mal extrait se corrige à la main au lieu d'être rangé
+de travers.
+
+⚠️ **L'image, elle, n'a nulle part à atterrir.** Elle s'annonce dans un bandeau qui dit « IA
+seulement » : *la montrer comme une source parmi les autres ferait croire que « Ranger tel quel » la
+lit.*
+
+⭐ **Un JSON importé pose aussi le dé de la table.** Le nom, non, s'il y en a déjà un de tapé — *on ne
+remplace pas ce que le meneur a écrit ; on remplace ce qui ferait mentir la bande.* L'essai de bout
+en bout a d'abord rougi là-dessus, et il avait raison de le faire.
+
+#### ⚠️ Deux confinements, et ils ne se ressemblent pas
+
+`cheminDesTables.ts` se défend contre une chaîne **arbitraire venue du renderer** — c'est le § 62.
+`lectureDeSource.ts` ne se défend de rien, **et c'est délibéré** : son chemin sort d'un
+`showOpenDialog`, désigné à la souris par le meneur. *Mais il faut que ce soit vrai, pas supposé* —
+d'où un canal IPC qui n'accepte **aucun paramètre de chemin**. Rien à valider parce que rien ne
+traverse.
+
+⚠️ **Un refus est une réponse, pas une exception.** « Pas le bon format », « illisible » et « les PDF
+sont indisponibles » n'appellent pas le même geste du meneur, et l'écran les distingue.
+
+#### Ce qui est gardé, et ce qui ne l'est pas
+
+- **`collageDUneTable.test.ts`** — 11 essais de plus sur le JSON : tableau nu, bornes en chaînes,
+  butin conservé, entrée sans bornes écartée **et montrée**, et le régime forcé à tort qui rend zéro
+  entrée *plutôt que du charabia*.
+- **`lectureDeSource.test.ts`** — 17 essais sur vrais fichiers temporaires, dont celui qui compte :
+  *tout ce que le dialogue propose, le lecteur sait le lire.* Une liste d'extensions recopiée dans le
+  dialogue finirait par diverger de celle qui lit.
+- **`tableOs.spec.ts`** — le JSON collé de bout en bout : reconnu, nom et dé appliqués, bande
+  complète sans qu'on ait rien retapé.
+
+⛔ **Ce qui n'est PAS éprouvé, et il faut que ça se sache :**
+
+1. **Le PDF.** Seul le fait que l'extension prenne la bonne branche est gardé. Fabriquer un PDF dans
+   un test reviendrait à écrire un encodeur, et l'éprouver sur un PDF fabriqué par nous ne dirait
+   rien des manuels réels — *un jeu d'essai qui ne ressemble pas à la donnée ne garde que lui-même.*
+   La branche est celle que le moteur RAG emprunte depuis des mois.
+2. **L'image.** Elle part en pièce jointe, et c'est tout ce qu'on garde. `generateJSON` ne l'honore
+   que sur le chemin **Gemini** ; les autres fournisseurs **l'ignorent en silence**. Et ce chemin
+   n'avait **jamais eu un seul appelant** dans le dépôt. *Une capacité déclarée que personne
+   n'appelle n'est pas une capacité, c'est une promesse* — celle-ci attend son premier essai réel.
+
+**Ancres** : `logic/collageDUneTable.ts` (`lireDuJson`), `electron/lectureDeSource.ts`,
+`electron/main.ts` (`tables:ouvrir-une-source`), `atelier/ImportDeTable.tsx`,
+`logic/miseEnFormeParLIA.ts` (pièces jointes), guide 40 § « Importer une table ».
+
+**Vérifié** : `tsc -b` propre, **4 698 tests** (384 fichiers, 1 ignoré), **179 tests E2E**.
+⚠️ **Pas encore éprouvé en réel** — et l'image encore moins que le reste.
+
+### 65 · ⭐ La vision devient locale — et le fil qui manquait depuis toujours (2026-09-15)
+
+*David : « je voudrais éviter d'utiliser Gemini pour mes PDF ou l'image, comment je peux faire ? ».*
+La question en contenait deux, et elles n'avaient pas la même réponse.
+
+#### Le PDF n'utilisait déjà pas Gemini
+
+L'extraction est **locale** — `pdf-parse`, dans le processus principal. « Ranger tel quel » l'est
+aussi. Un modèle n'intervient que si l'on presse « Ranger par l'IA », et c'est alors **le fournisseur
+actif**, pas Gemini en particulier. *Rien à changer : il fallait seulement le dire.*
+
+#### ⭐ L'image, elle, n'avait qu'un chemin — et la machine de David en portait un second
+
+Interrogé sur son Ollama, avant d'écrire une ligne :
+
+```
+gemma4:12b   completion, vision, audio, tools, thinking
+gemma4:26b   completion, vision, tools, thinking
+llama3.2:3b  completion, tools              ← pas de vision
+phi3         completion                     ← pas de vision
+```
+
+**Deux modèles qui voient, déjà installés.** Ce qui manquait n'était pas un modèle : c'était **un
+fil**.
+
+⛔ **Les pièces jointes s'arrêtaient dans `generateJSON`.** Il les servait à Gemini, qu'il traite
+lui-même, et **ne les relayait à personne d'autre** — ni `generateText`, ni `executeRequest` n'avaient
+de paramètre pour les porter. Plus bas, la branche Ollama composait ses messages en
+`{ role, content }`, un type écrit **en toutes lettres à dix endroits**.
+
+> *Un champ qu'aucun type n'accepte ne se perd pas avec fracas : il ne s'écrit simplement jamais.*
+
+Le fil passe maintenant de bout en bout : `generateJSON` → `generateText` → `executeRequest` →
+message Ollama, avec `images` en base64 **nu** — un `data:image/png;base64,…` recopié tel quel est
+accepté par l'API et rend une description de rien. Et les dix déclarations en ligne sont devenues
+**un type nommé**, `MessageOllama`.
+
+#### ⛔ La garde, sans laquelle le correctif serait pire que le défaut
+
+**Un modèle sans capacité `vision` reçoit l'image, l'ignore, et répond quand même.** On obtiendrait
+une table inventée de bout en bout — plausible, complète, fausse. Et **la bande de couverture serait
+verte**, parce qu'une table inventée est toujours bien formée. *Le mode d'échec le plus cher de ce
+dépôt est celui qui ne dit rien, et celui-ci aurait été particulièrement cruel.*
+
+`capaciteDuModele.ts` demande à Ollama ce que le modèle sait faire, **avant** l'envoi, et le bandeau
+de l'écran l'affiche dès qu'une image est chargée — pas au moment du clic.
+
+⚠️ **Trois réponses, pas deux.** « Il voit », « il ne voit pas », et **« on ne sait pas »** : un
+Ollama plus ancien ne déclare aucune capacité. On refuse **seulement** le cas où l'on sait que non ;
+l'incertitude prévient et laisse passer. *Une garde qui refuse ce qui marche finit par être
+contournée.*
+
+⚠️ **Et ce n'est pas une question de modèle, mais de code.** Un Claude parfaitement capable de voir
+ne verra rien tant que sa branche d'`AIService` ne met pas d'image dans sa requête. Le verdict le dit
+avec le remède : *« GM-OS n'envoie pas d'image à anthropic — passez sur Ollama avec un modèle qui
+voit, ou sur Gemini. »*
+
+#### Ce qui est gardé, et ce qui ne l'est pas
+
+- **`capaciteDuModele.test.ts`** — 9 essais : les trois réponses, les deux Ollama, Gemini qu'on
+  n'interroge pas, et les fournisseurs dont la branche ne transmet rien.
+- `MessageOllama` porte la raison de son existence, là où dix déclarations en ligne n'en portaient
+  aucune.
+
+⛔ **Ce qui n'est toujours pas éprouvé** : **aucune image n'a jamais été envoyée à un modèle** depuis
+ce dépôt, ni ici, ni avant. Le fil est posé, les capacités sont lues, la garde est en place — *et
+personne n'a encore vu une table sortir d'une photo.* C'est le premier essai à faire, et il demande
+une vraie page de manuel.
+
+**Ancres** : `src/modules/ai/capaciteDuModele.ts`, `src/modules/ai/AIService.ts` (`pieces`, branche
+Ollama), `electron/OllamaService.ts` (`MessageOllama`, `capacitesDuModele`),
+`electron/preload.ts` (`ollamaCapacites`), `atelier/ImportDeTable.tsx` (le bandeau),
+guide 40 § « Importer une table ».
+
+**Vérifié** : `tsc -b` propre, **4 707 tests** (385 fichiers, 1 ignoré), **179 tests E2E**.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 

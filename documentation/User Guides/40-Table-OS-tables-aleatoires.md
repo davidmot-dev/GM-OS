@@ -83,6 +83,59 @@ Bouton **Atelier des tables**, en haut de la colonne de gauche. Il écrit le fic
 > rendait l'entrée 66 — la pire blessure du jeu. Les deux sont corrigées, et un contrôle refuse
 > désormais qu'une table trouée soit livrée.
 
+### 0 bis. Importer une table de manuel
+
+Bouton **Importer**, en bas de l'atelier. Vous pouvez soit **coller du texte**, soit **ouvrir un
+fichier** — JSON, Markdown, texte, CSV, PDF ou image.
+
+| Ce que vous avez | Ce qui se passe |
+| :--- | :--- |
+| Une **table JSON** (celle que ChatGPT vous rend avec le prompt livré) | Reconnue toute seule, **avec son nom et son dé** |
+| Un fichier `.md`, `.txt`, `.csv` | Son contenu arrive dans la zone de collage |
+| Un **PDF** | Son texte est extrait et arrive dans la zone |
+| Une **image** de page de manuel | Elle s'annonce à côté — **seule l'IA peut la lire** |
+
+> 🔎 **Le texte d'un fichier arrive dans la zone plutôt que d'être rangé directement.** C'est voulu :
+> vous voyez ce qui a été lu avant de le ranger, et un PDF mal extrait se corrige à la main.
+
+Ensuite, deux boutons s'offrent :
+
+- **Ranger tel quel** : lecture déterministe, hors ligne. Chaque ligne devient un **titre**, entier.
+  Une ligne sans numéro qui en suit une numérotée devient sa **description** — c'est la forme des
+  manuels, un résultat puis son paragraphe.
+- **Ranger par l'IA** : le modèle répartit titre, ambiance et effet. Il **propose** ; la bande de
+  couverture relit derrière lui avant que vous n'enregistriez.
+
+L'aperçu **compte avant d'appliquer** : « 20 entrées lues · 1 ligne non rattachée », et il vous
+montre les lignes qu'il n'a pas su placer plutôt que de les avaler.
+
+Si votre texte ne porte aucun numéro — une simple liste de résultats —, les bornes sont **calculées
+sur le dé** de la table. Une liste de six lignes sur un `1d6` donne 1, 2, 3, 4, 5, 6 ; sur un `d66`,
+elle donne des bornes que le dé peut réellement sortir.
+
+> ⚠️ **L'import remplace les entrées de la table**, on vous le demande une fois. Un JSON importé pose
+> aussi **le dé** ; il ne remplace pas le **nom** si vous en avez déjà tapé un.
+
+> ⭐ **L'image marche en local, avec Ollama** — depuis le 2026-09-15. Il faut un modèle qui déclare
+> savoir voir : `gemma4:12b` et `gemma4:26b` le déclarent, `phi3` et `llama3.2:3b` non. Gemini
+> fonctionne aussi. **Rien d'autre** : Claude et les moteurs personnalisés reçoivent le texte seul.
+>
+> Le bandeau de l'image vous dit lequel des trois cas vous êtes, **avant** d'envoyer :
+> *« gemma4:12b voit »*, *« ce modèle ne voit pas »*, ou *« vision incertaine »*. Dans le deuxième
+> cas GM-OS refuse — un modèle qui ne voit pas répondrait quand même, en **inventant** la table.
+>
+> ⚠️ **Ce chemin n'a jamais été essayé en vrai**, ni ici ni ailleurs dans GM-OS : aucune image n'a
+> encore été envoyée à un modèle. C'est la première chose à vérifier si vous vous en servez.
+
+> 🔎 **Et le PDF, lui, n'appelle aucun modèle.** Son texte est extrait sur votre machine, et
+> « Ranger tel quel » est entièrement local. Un modèle n'intervient que si vous choisissez « Ranger
+> par l'IA ».
+
+> 🔎 **Si vous collez une table de `1d20` dans une table réglée sur `1d6`**, la bande ne montrera
+> aucun trou — les six valeurs sont couvertes par les premières entrées. Ce qu'elle dira, c'est que
+> *quatorze entrées sur vingt ne sont atteignables qu'avec un modificateur*. C'est le signe qu'il
+> faut changer le dé, pas la table.
+
 ### 1. Création Manuelle (JSON)
 Ajoutez vos fichiers `.json` dans le dossier : `databases/tables/[Nom_de_l_Univers]/`.
 Utilisez le modèle suivant (`databases/modele_table.json`) :
