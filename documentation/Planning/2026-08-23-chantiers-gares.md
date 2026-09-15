@@ -3737,6 +3737,123 @@ et l'écran des joueurs n'a pas de test E2E du tout. *La règle est gardée, le 
 ⚠️ **Sauf un cas, qui ne se rencontre qu'en séance** : transférer pendant que l'ancien joueur est
 connecté dessus. GM-OS prévient sans éjecter, et personne n'a encore vu si l'avertissement suffit.
 
+### 62 · ⭐ L'Atelier des tables — et les deux oracles qui mentaient depuis toujours (2026-09-15)
+
+*Demande de David : « est-ce qu'on pourrait faire un module dans Table-OS qui aide à la création des
+fichiers JSON ? Propose-moi quelque chose ».*
+
+#### ⛔ Ce que le comptage a trouvé avant qu'une ligne soit écrite
+
+Les 46 tables livrées, passées au crible **avant** de proposer quoi que ce soit. Deux étaient
+cassées :
+
+| Table | Dé déclaré | Jets qui ne tombent sur aucune entrée |
+| --- | --- | --- |
+| `Alien/blessures_critiques.json` | `1d66` | **45 %** |
+| `Alien/avaries_mineures_vaisseaux.json` | `1d66` | **33 %** |
+
+La forme juxtaposée s'écrit `d66` — *un seul chiffre, répété, et **rien devant***. `1d66` est une
+formule parfaitement valide, et c'est tout le piège : le moteur y lit un dé **uniforme à 66 faces**,
+quand les entrées vont de 11 à 66 par paires de d6.
+
+⛔ **Et `resolveEntry` ne dit jamais qu'il n'a rien trouvé** : il rend l'entrée la plus proche, et
+« la plus proche » au-dessus de la première borne veut dire **la dernière**.
+
+> **Un 17 sur la table des blessures critiques rendait l'entrée 66** — la pire blessure du jeu, lue à
+> voix haute, sans une ligne de journal.
+
+⭐ **Aucune de ces 46 tables n'écrivait un dé juxtaposé correctement.** La fonctionnalité est
+documentée dans le guide 40 depuis des mois ; les deux seules tables qui l'essayaient l'écrivaient
+mal. *Elle n'avait jamais fonctionné une seule fois.*
+
+⚠️ **Et ma première passe s'est trompée sur sept tables sur neuf.** Elle comptait comme fautives les
+entrées **au-delà de la portée du dé** — `test_de_panique` déclare `1d6` et va jusqu'à 20, parce que
+le jet de panique **ajoute le stress**, et Table-OS a un champ « Modificateur » exprès. Les
+sentinelles `-99` / `99` relèvent du même idiome. *Un contrôle qui accuse à tort se fait désarmer :
+il valait mieux le découvrir en lisant deux fichiers qu'après l'avoir livré.*
+
+#### Ce que ça a décidé du module
+
+Le problème n'était **pas de taper du JSON** — c'était que *rien ne relisait ce qu'on avait tapé*. Un
+trou de couverture est invisible dans un fichier : les bornes se suivent, chaque entrée est
+plausible, et il faudrait tenir la liste des valeurs du dé dans sa tête pour voir ce qui manque.
+
+D'où l'ordre de l'écran : **la bande de couverture d'abord**, les champs ensuite. Une case par
+valeur tirable — verte, rouge si personne ne la couvre, ambre si deux entrées se la disputent.
+*Un éditeur qui ne montre que ce qu'on a écrit ne vaut pas mieux qu'un éditeur de texte.*
+
+⚠️ **Une valeur, une case — jamais un ruban mis à l'échelle.** Un `d66` n'a pas 56 valeurs entre 11
+et 66, il en a 36. Dessiner un intervalle continu mentirait exactement là où la bande doit être
+juste : *ce qui n'est pas tirable n'est pas dessiné.*
+
+⭐ **Et le dé se choisit au lieu de se taper.** `1d66` devient **inexprimable** plutôt que rattrapé
+après coup — le geste de l'éditeur des tables de butin, pour la même raison. Le champ libre reste
+pour les formules qu'aucune liste ne prévoit, et le contrôle veille dessus en nommant la forme
+voulue : *un message qui ne dit pas quoi écrire à la place laisse chercher.*
+
+#### ⛔ Le préalable : on ne branche pas une écriture sur un chemin qu'on ne contient pas
+
+Les trois lecteurs de Table-OS composaient leur chemin ainsi :
+
+```ts
+path.join(appRoot, 'databases', 'tables', universe, `${tableName}.json`)
+```
+
+`universe` et `tableName` **viennent du renderer**, et rien ne les regardait — un `..` sortait du
+dossier. C'était une fuite en lecture tant que rien n'écrivait ; le jour où l'Atelier reçoit
+`saveTable`, la même forme devient un moyen d'écraser n'importe quel fichier du dépôt.
+
+`cheminDesTables.ts` referme les quatre, et il exige **un seul segment**, pas seulement « sous la
+racine » : `strictementSous` accepterait `Alien/secret/tresor`, un dossier imbriqué que
+`list-universes` ne montrerait jamais. *Un chemin qu'un seul des deux côtés sait produire est un
+chemin qui se perd.*
+
+#### Trois décisions qui se relisent
+
+⚠️ **Une seule lecture de la formule.** `TableEngine.rollDice` portait ses propres expressions
+régulières ; le contrôle en aurait eu une seconde copie. *Deux lectures auraient divergé le jour où
+l'une accepte `1d66` et pas l'autre* — c'est-à-dire le défaut ci-dessus, mais en pire : le contrôle
+aurait alors déclaré **saine** une table que le moteur casse. Un essai croise les deux — trois cents
+tirages par formule, tous dans les valeurs annoncées.
+
+⚠️ **L'Atelier prévient, il n'interdit pas.** Une table fautive est enregistrable après
+confirmation : le meneur travaille par étapes, et refuser une sauvegarde à moitié faite lui ferait
+tout perdre. **La garde du dépôt, elle, refuse ce qui serait livré** — les deux ne protègent pas la
+même chose.
+
+⚠️ **Le découpage automatique coupe la LISTE des valeurs, pas l'intervalle.** Couper `d66` en deux au
+milieu donnerait `11-38`, et 38 ne peut pas sortir. Le reste va aux **premières** plages : *les
+premières entrées d'une table sont les plus banales, c'est là qu'une valeur de plus se remarque le
+moins.*
+
+#### Ce qui est gardé, et ce qui ne l'est pas
+
+- **`formeDeLaTable.test.ts`** — 53 essais : lecture de formule, valeurs possibles, contrôle,
+  découpage, et le croisement moteur / contrôle.
+- **`tablesDuDepot.test.ts`** — balaie les 46 fichiers et refuse une table trouée. Dégradation
+  faite : le `1d66` remis, elle nomme le fichier **et le pourcentage**.
+- **`cheminDesTables.test.ts`** — 22 essais de confinement, dont celui qui atteint le `package.json`
+  du dépôt sans la garde.
+- **`tableOs.spec.ts`** — trois essais de bout en bout : la bande réagit au trou, **une table écrite
+  dans l'atelier se retrouve dans le pupitre**, et elle se supprime. *Le seul essai qui traverse le
+  pont, le confinement et le disque.*
+
+⚠️ **Ce qui n'est pas fait** : l'**import**. Coller le texte brut d'une table de manuel et le voir se
+ranger en entrées, puis le passer à l'IA à schéma imposé — la troisième couche de la proposition,
+laissée de côté avec David *pour qu'on voie d'abord ce qui manque à l'usage.* Le
+`Prompt Aide Création de Table.txt` vit donc toujours dans `databases/tables/MedFan/`.
+
+⚠️ **Et l'IA ne lira pas une photo de page de livre.** `AIService` génère des images, il n'en lit
+pas. Cette voie-là reste celle de ChatGPT, ou un chantier OCR à part.
+
+**Ancres** : `logic/formeDeLaTable.ts`, `atelier/AtelierDesTables.tsx`,
+`atelier/BandeDeCouverture.tsx`, `TableEngine.ts`, `electron/cheminDesTables.ts`,
+`electron/main.ts` (`tables:save-table`, `tables:delete-table`), `TableDashboard.tsx`,
+guide 40 § « L'Atelier des tables ».
+
+**Vérifié** : `tsc -b` propre, **4 617 tests** (381 fichiers, 1 ignoré), **177 tests E2E**.
+⚠️ **Pas encore éprouvé en réel.**
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 ✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie

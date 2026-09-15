@@ -32,6 +32,11 @@ Table-OS lit deux familles :
 > ⚠️ **La règle exacte : un seul chiffre, répété, et seulement 4, 6 ou 8.** `d44`, `d66`, `d88`,
 > `d444`, `d666`, `d888` fonctionnent. `d1010` et `d36` **non** — ils seront lus comme des dés
 > ordinaires, ou pas du tout.
+>
+> ⛔ **Et rien devant.** `1d66` est une formule valide, mais c'est un dé **ordinaire à 66 faces** :
+> les deux tiers des jets tombent alors sur des valeurs qu'aucune entrée ne couvre. C'est le défaut
+> qui a coûté deux tables jusqu'au 2026-09-15. L'Atelier propose ces dés dans une liste, ce qui rend
+> la faute impossible à écrire.
 
 ---
 
@@ -52,6 +57,31 @@ Bien que Table-OS soit un module unique, il se décline en plusieurs "sous-modul
 ## 📝 Alimenter le module (Data Ingestion)
 
 Il existe trois façons d'ajouter du contenu à Table-OS :
+
+### 0. L'Atelier des tables (le plus court chemin)
+
+Bouton **Atelier des tables**, en haut de la colonne de gauche. Il écrit le fichier JSON pour vous.
+
+- **Choisissez un univers**, ou tapez-en un nouveau : *un univers naît avec sa première table.*
+- **Le dé se choisit dans une liste.** Un champ libre reste à côté pour les formules rares.
+- **La bande colorée, sous le titre, est la raison d'être de cet écran.** Une case par valeur que le
+  dé peut sortir : **verte** si une entrée la couvre, **rouge** si aucune, **ambre** si deux s'en
+  disputent. Survolez une entrée : sa part s'éclaire.
+- **Découper** répartit la portée du dé sur les entrées existantes, sans trou ni recouvrement.
+- **Ranger** trie les entrées par borne basse.
+- **Essayer** tire sur la table sans quitter l'atelier.
+- **Enregistrer** écrit le `.json` au bon endroit. Si la table a des trous, on vous le demande une
+  fois — *vous travaillez peut-être par étapes.*
+
+> ⛔ **Pourquoi cette bande compte plus que le reste de l'écran.** Un trou de couverture est
+> **invisible** quand on relit un fichier : les bornes se suivent, chaque entrée est plausible. Et à
+> la table, il ne produit **aucune erreur** — il produit un résultat plausible et faux, parce que le
+> moteur rend l'entrée la plus proche sans le dire.
+>
+> Deux tables livrées avec GM-OS étaient dans ce cas jusqu'au 2026-09-15. `blessures_critiques`
+> déclarait `1d66` au lieu de `d66` : **45 % de ses jets ne tombaient sur aucune entrée**, et un 17
+> rendait l'entrée 66 — la pire blessure du jeu. Les deux sont corrigées, et un contrôle refuse
+> désormais qu'une table trouée soit livrée.
 
 ### 1. Création Manuelle (JSON)
 Ajoutez vos fichiers `.json` dans le dossier : `databases/tables/[Nom_de_l_Univers]/`.
