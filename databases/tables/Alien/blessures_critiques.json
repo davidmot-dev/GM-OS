@@ -1,6 +1,6 @@
 {
     "name": "Blessures Critiques",
-    "dice": "1d66",
+    "dice": "d66",
     "entries": [
         { "min": 11, "max": 11, "title": "Essoufflé", "description": "Le choc vous coupe le souffle.", "effect": "Aucun effet mécanique." },
         { "min": 12, "max": 12, "title": "Étourdi", "description": "Vous voyez des étoiles pendant quelques secondes.", "effect": "Aucun effet mécanique." },

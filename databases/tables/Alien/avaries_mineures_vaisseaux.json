@@ -1,6 +1,6 @@
 {
     "name": "Avaries Mineures de Vaisseaux",
-    "dice": "1d66",
+    "dice": "d66",
     "entries": [
         {
             "min": 11,

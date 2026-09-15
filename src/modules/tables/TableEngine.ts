@@ -1,44 +1,43 @@
 import type { TableData, TableEntry } from './types';
+import { lireLaFormule } from './logic/formeDeLaTable';
 
 export class TableEngine {
     /**
-     * Rolls a specific dice formula.
-     * Supports standard (1d20, 2d6) and concat (d66, d444) formulas.
+     * Lance une formule — standard (`1d20`, `2d6+5`) ou juxtaposée (`d66`).
+     *
+     * ⚠️ **La formule se lit dans `logic/formeDeLaTable.ts`, jamais ici.** Ce
+     * corps portait ses propres expressions régulières, et le contrôle de forme
+     * en aurait eu une seconde copie : *deux lectures auraient divergé le jour
+     * où l'une accepte `1d66` et pas l'autre* — c'est-à-dire précisément le
+     * défaut du 2026-09-15, mais en pire, puisque le contrôle aurait alors
+     * déclaré saine une table que ce moteur casse.
+     *
+     * ⛔ **Une formule illisible rend 1**, comme avant. C'est un repli discret,
+     * et c'est pour ça que `controlerLaTable` le signale : ici on ne peut plus
+     * rien dire, il n'y a pas d'écran au bout.
      */
     static rollDice(formula: string): number {
-        const cleanFormula = formula.toLowerCase().trim();
+        const de = lireLaFormule(formula);
 
-        // 1. Handle "Concatenation" dice (GM-OS v3 Legacy: d44, d66, d88, d666, etc.)
-        // These dice work by rolling multiple individual dice and stringing them together.
-        const concatMatch = cleanFormula.match(/^d([468])\1+$/);
-        if (concatMatch) {
-            const side = parseInt(concatMatch[1]);
-            const count = cleanFormula.length - 1; // Number of digits (e.g., d666 is 3)
-
-            let resultStr = "";
-            for (let i = 0; i < count; i++) {
-                resultStr += (Math.floor(Math.random() * side) + 1).toString();
+        if (de.genre === 'juxtapose') {
+            // Des chiffres collés, pas une somme : d66 rend 11 à 66, jamais 17.
+            let chiffres = "";
+            for (let i = 0; i < de.nombre; i++) {
+                chiffres += (Math.floor(Math.random() * de.faces) + 1).toString();
             }
-            return parseInt(resultStr);
+            return parseInt(chiffres);
         }
 
-        // 2. Handle Standard dice (1d10, 2d6, 1d100+5, etc.)
-        const standardMatch = cleanFormula.match(/^(\d+)?d(\d+)([+-]\d+)?$/);
-        if (standardMatch) {
-            const count = parseInt(standardMatch[1] || "1");
-            const sides = parseInt(standardMatch[2]);
-            const mod = parseInt(standardMatch[3] || "0");
-
+        if (de.genre === 'standard') {
             let total = 0;
-            for (let i = 0; i < count; i++) {
-                total += Math.floor(Math.random() * sides) + 1;
+            for (let i = 0; i < de.nombre; i++) {
+                total += Math.floor(Math.random() * de.faces) + 1;
             }
-            return total + mod;
+            return total + de.modificateur;
         }
 
-        // 3. Fallback for raw numbers (if someone just puts "100" in dice field)
-        const numericVal = parseInt(cleanFormula);
-        if (!isNaN(numericVal)) return numericVal;
+        // Un nombre nu dans le champ « dice » vaut ce nombre.
+        if (de.genre === 'fixe') return de.faces;
 
         return 1;
     }
