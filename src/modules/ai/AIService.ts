@@ -269,6 +269,18 @@ export class AIService {
      * côté est un réglage que personne ne contrôle plus.*
      */
     provider?: AIProvider,
+    /**
+     * **Les pièces jointes — et le fil qui manquait.**
+     *
+     * `generateJSON` les acceptait depuis toujours et ne les passait qu'à
+     * **Gemini**, qu'il sert lui-même. Tout ce qui repart par ici — Ollama en
+     * tête — les perdait en chemin, faute d'un paramètre pour les porter.
+     * *Une capacité déclarée que personne ne relaie n'est pas une capacité.*
+     *
+     * ⚠️ Un modèle sans capacité `vision` les **ignore en silence** : la garde
+     * est chez l'appelant, voir `capaciteDuModele.ts`.
+     */
+    pieces?: { data: string; mimeType: string }[],
   ): Promise<AIResponse> {
     const activeProvider = provider ?? useAIStore.getState().activeProvider;
     /*
@@ -304,7 +316,7 @@ export class AIService {
     */
     const requete = identifierLaRequete(libelle);
     return Promise.race([
-      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration, libelle, requete),
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema, plafondDeGeneration, libelle, requete, pieces),
       new Promise<AIResponse>((_, reject) =>
         setTimeout(() => {
           void window.appBridge?.ai?.ollamaAbort?.(requete.id);
@@ -330,6 +342,8 @@ export class AIService {
     _libelle?: string,
     /** Identité déjà fabriquée par l'appelant, pour que le plafond puisse l'annuler. */
     requete?: { id: string; libelle: string },
+    /** Voir `generateText` : ce qui n'arrivait qu'à Gemini. */
+    pieces?: { data: string; mimeType: string }[],
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -369,8 +383,36 @@ export class AIService {
           
           // Note: The current ollamaChat bridge might not support API Keys yet.
           // If needed, we'll have to upgrade the bridge or use proxyRequest for OpenAI-compatible Ollama Cloud providers.
+          /*
+            **Les pièces jointes traversent enfin jusqu'à Ollama** (2026-09-15),
+            et c'est ce qui rend la vision LOCALE possible : `gemma4:12b` et
+            `gemma4:26b` déclarent tous deux la capacité `vision`.
+
+            Elles arrivaient dans `generateJSON` depuis toujours et **s'y
+            arrêtaient** : seul le chemin Gemini les servait, et rien ne les
+            relayait plus bas. *Une capacité déclarée que personne ne relaie
+            n'est pas une capacité.*
+
+            Ollama les veut en base64 **nu**, sur le message lui-même. Un
+            `data:image/png;base64,…` recopié tel quel est accepté par l'API et
+            rend une description de rien — d'où le découpage.
+
+            ⚠️ **Un modèle sans `vision` les ignore en silence et répond quand
+            même.** La garde est avant l'appel, là où il reste un écran pour le
+            dire : voir `capaciteDuModele.ts`.
+          */
+          const images = (pieces ?? [])
+            .map(piece => (piece.data.includes('base64,')
+              ? piece.data.split('base64,')[1]
+              : piece.data))
+            .filter(Boolean);
+
           const text = await window.appBridge.ai.ollamaChat(model, [
-            { role: 'user', content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}` }
+            {
+              role: 'user',
+              content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}`,
+              ...(images.length > 0 ? { images } : {}),
+            }
           ], endpoint, attendJson || plafondDeGeneration
             ? {
                 ...(attendJson ? { json: true } : {}),
@@ -1617,7 +1659,7 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
 
     const response = await this.generateText(
       prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona, options.schema,
-      options.plafondDeGeneration, options.libelle, options.provider,
+      options.plafondDeGeneration, options.libelle, options.provider, attachments,
     );
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     

@@ -42,7 +42,7 @@ function journaliser(message: string): void {
  * même titre.*
  */
 export function sommaireDuSysteme(
-    messages: readonly { role: string; content: string }[],
+    messages: readonly MessageOllama[],
 ): string {
     const systeme = messages.find(m => m.role === 'system')?.content ?? '';
     if (!systeme) return 'aucun message systeme';
@@ -122,6 +122,30 @@ export interface OptionsDeChat {
 }
 
 /**
+ * **Un message envoyé à Ollama.**
+ *
+ * ⛔ **`images` manquait, et c'est tout ce qui séparait GM-OS de la vision
+ * locale.** Le type était écrit **en toutes lettres à dix endroits** — deux
+ * signatures ici, deux dans le préchargement, deux dans les types de `window`,
+ * et le constructeur de corps. Les pièces jointes traversaient `AIService`
+ * jusqu'à la branche Ollama, où elles tombaient : *un champ qu'aucun type
+ * n'accepte ne se perd pas avec fracas, il ne s'écrit simplement jamais.*
+ *
+ * Ollama les attend en base64 **sans en-tête `data:`**, sur le message lui-même.
+ *
+ * ⚠️ **Un modèle sans capacité `vision` les ignore en silence** et répond
+ * quand même. C'est pourquoi la garde ne vit pas ici mais avant l'appel — voir
+ * `src/modules/ai/capaciteDuModele.ts` : *ici, il n'y a plus d'écran au bout
+ * pour le dire.*
+ */
+export interface MessageOllama {
+    role: string;
+    content: string;
+    /** Images en base64 nu. Absent la plupart du temps. */
+    images?: string[];
+}
+
+/**
  * Le corps de la requête `/api/chat`, isolé pour être vérifiable.
  *
  * **`think: false` est le cœur de la correction du 2026-08-12.** `gemma4:12b`
@@ -140,7 +164,7 @@ export interface OptionsDeChat {
  */
 export function corpsDeChat(
     model: string,
-    messages: { role: string; content: string }[],
+    messages: MessageOllama[],
     options: OptionsDeChat = {},
     avecThink = true,
     /**
@@ -465,7 +489,7 @@ export class OllamaService {
      */
     async chat(
         model: string,
-        messages: { role: string; content: string }[],
+        messages: MessageOllama[],
         endpoint?: string,
         options?: OptionsDeChat,
         /** Nom et libellé de la requête — voir le registre `enVol`. */
@@ -670,7 +694,7 @@ export class OllamaService {
      */
     async chatStream(
         model: string,
-        messages: { role: string; content: string }[],
+        messages: MessageOllama[],
         onToken: (token: string) => void,
         endpoint?: string,
         options?: OptionsDeChat,
@@ -789,6 +813,43 @@ export class OllamaService {
     }
 
     /**
+     * **Ce que ce modèle sait faire, d'après Ollama lui-même.**
+     *
+     * Posé le 2026-09-15 pour une raison précise : **un modèle sans capacité
+     * `vision` reçoit une image, l'ignore, et répond quand même.** On obtient
+     * alors une table inventée à partir de rien — plausible, et fausse. *C'est
+     * le mode d'échec le plus cher de ce dépôt : celui qui ne dit rien.*
+     *
+     * `/api/show` rend un tableau `capabilities` (`completion`, `vision`,
+     * `tools`, `thinking`…). Mesuré sur le poste de David : `gemma4:12b` et
+     * `gemma4:26b` voient, `llama3.2:3b` et `phi3` non.
+     *
+     * ⚠️ **Une liste vide veut dire « je ne sais pas », pas « rien ».** Les
+     * Ollama plus anciens ne déclarent aucune capacité : l'appelant doit
+     * distinguer les deux, sous peine de refuser tout le temps chez quelqu'un
+     * dont le modèle voit très bien.
+     */
+    async capacitesDuModele(model: string, endpoint?: string): Promise<string[] | null> {
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
+        try {
+            const response = await net.fetch(`${url}/api/show`, {
+                method: 'POST',
+                body: JSON.stringify({ model }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!response.ok) return null;
+
+            const data = await response.json() as { capabilities?: unknown };
+            return Array.isArray(data.capabilities)
+                ? data.capabilities.filter((c): c is string => typeof c === 'string')
+                : null;
+        } catch (error) {
+            console.error(`[Ollama] capacités de ${model} illisibles :`, error);
+            return null;
+        }
+    }
+
+    /**
      * Génère une image via l'API Ollama (modèles expérimentaux type Flux)
      */
     async generateImage(model: string, prompt: string, endpoint?: string, requete?: Requete): Promise<string> {
@@ -834,7 +895,7 @@ export class OllamaService {
         ipcMain.handle('ai:ollama-chat', async (
             _event,
             model: string,
-            messages: { role: string; content: string }[],
+            messages: MessageOllama[],
             endpoint?: string,
             options?: OptionsDeChat,
             requete?: Requete,
@@ -855,11 +916,15 @@ export class OllamaService {
         /** Ce qui tourne, pour que le verrou puisse se montrer (axe D.3). */
         ipcMain.handle('ai:ollama-en-vol', async () => requetesEnVol());
 
+        /** Ce qu'un modèle sait faire — `null` quand Ollama ne le dit pas. */
+        ipcMain.handle('ai:ollama-capacites', async (_event, model: string, endpoint?: string) =>
+            await service.capacitesDuModele(model, endpoint));
+
         ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string, endpoint?: string, requete?: Requete) => {
             return await service.generateImage(model, prompt, endpoint, requete);
         });
 
-        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[], endpoint?: string, options?: OptionsDeChat, requete?: Requete) => {
+        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: MessageOllama[], endpoint?: string, options?: OptionsDeChat, requete?: Requete) => {
             try {
                 await service.chatStream(model, messages, (token) => {
                     if (!event.sender.isDestroyed()) {

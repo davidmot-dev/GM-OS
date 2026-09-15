@@ -86,7 +86,8 @@ contextBridge.exposeInMainWorld('appBridge', {
         saveTable: (universe: string, tableName: string, data: unknown) =>
             ipcRenderer.invoke('tables:save-table', universe, tableName, data),
         deleteTable: (universe: string, tableName: string) =>
-            ipcRenderer.invoke('tables:delete-table', universe, tableName)
+            ipcRenderer.invoke('tables:delete-table', universe, tableName),
+        ouvrirUneSource: () => ipcRenderer.invoke('tables:ouvrir-une-source')
     },
     web: {
         openExternal: (url: string) => ipcRenderer.send('web:open-external', url),
@@ -301,7 +302,7 @@ contextBridge.exposeInMainWorld('appBridge', {
         // Ollama Local AI
         ollamaChat: (
             model: string,
-            messages: { role: string; content: string }[],
+            messages: { role: string; content: string; images?: string[] }[],
             endpoint?: string,
             options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
             /**
@@ -313,9 +314,12 @@ contextBridge.exposeInMainWorld('appBridge', {
              */
             requete?: { id: string; libelle: string },
         ) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint, options, requete),
+        /** Ce qu'un modèle Ollama sait faire. `null` : Ollama ne le dit pas. */
+        ollamaCapacites: (model: string, endpoint?: string): Promise<string[] | null> =>
+            ipcRenderer.invoke('ai:ollama-capacites', model, endpoint),
         ollamaChatStream: (
             model: string,
-            messages: { role: string; content: string }[],
+            messages: { role: string; content: string; images?: string[] }[],
             endpoint?: string,
             // Les mêmes options que `ollamaChat`. Elles ne voyageaient pas :
             // le flux partait sans borne de génération ni `think: false`.

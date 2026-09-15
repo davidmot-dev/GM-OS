@@ -387,16 +387,17 @@ declare global {
              * est alors contraint par une grammaire, et la sortie ne peut plus
              * être autre chose que du JSON valide.
              */
+            ollamaCapacites: (model: string, endpoint?: string) => Promise<string[] | null>;
             ollamaChat: (
                 model: string,
-                messages: { role: string; content: string }[],
+                messages: { role: string; content: string; images?: string[] }[],
                 endpoint?: string,
                 options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
                 requete?: { id: string; libelle: string },
             ) => Promise<string>;
             ollamaChatStream: (
                 model: string,
-                messages: { role: string; content: string }[],
+                messages: { role: string; content: string; images?: string[] }[],
                 endpoint?: string,
                 options?: { num_ctx?: number; num_predict?: number },
                 requete?: { id: string; libelle: string },
