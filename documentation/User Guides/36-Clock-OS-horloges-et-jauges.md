@@ -112,6 +112,56 @@ Le bouton 📅 **à côté de la liste des calendriers** ouvre l'Atelier.
 > calendrier posé là est lu comme avant — mais s'il est mal formé, l'horloge refuse simplement de
 > calculer une date plutôt que de se figer.
 
+### ⭐ Déclarer des jours de fête
+
+*Ajouté le 2026-09-15.* Il y a **deux sortes de jours de fête**, et elles ne servent pas à la même
+chose.
+
+| | Un mois « Fête » | Une fête déclarée |
+| :--- | :--- | :--- |
+| Ce que c'est | Un jour **hors calendrier** — il ne compte dans aucun mois | **Un jour d'un mois** qui porte un nom |
+| Comment on l'écrit | Un mois d'**un jour**, case « Fête » cochée | Le bouton 🎉 sur la rangée du mois |
+| Son numéro | Aucun (« Milieu d'Hiver 1492 ») | Le sien (« 15 Hammer 1492 ») |
+| Son jour de semaine | **Aucun** | Le sien |
+| Exemple | Le Milieu d'Hiver d'Harptos | « Le 15 de Hammer est la Fête du Marteau » |
+
+> 💡 **Ne les mélangez pas** : si vous cochez « Fête » sur un mois *et* que vous y déclarez une
+> fête, l'Atelier vous le signale. Le mois entier est déjà la fête.
+
+#### Une fête est une période
+
+Le bouton 🎉 ajoute une ligne sous le mois : **un nom, un premier jour, une durée**. « Du 12, sur
+4 jours » donne les Nuits du Marteau du 12 au 15.
+
+L'horloge affiche alors : **« 13 Hammer 1492 — Nuits du Marteau (2/4) »**.
+
+> ⚠️ **Le numéro du jour reste**, et c'est voulu : *sans lui, vous qui comptez « nous partons dans
+> trois jours » perdez votre repère au milieu de votre propre fête.* La fête **qualifie** la date,
+> elle ne la remplace pas. Le « (2/4) » n'apparaît que si la fête dure plus d'un jour.
+
+#### Où la fête s'annonce
+
+| Où | Quoi |
+| :--- | :--- |
+| **L'horloge** | À côté de la date, chez vous et sur le Player Hub |
+| **L'afficheur de table** | Dans le défilé de l'heure du monde — ⚠️ la table la lit |
+| **Le journal de séance** | Une entrée **quand le temps arrive dessus** |
+
+> ⚠️ **Une fête de quatre jours n'écrit qu'UNE entrée de journal**, le jour où elle commence.
+> *Entrer dans une fête est un événement ; y rester n'en est pas un.*
+
+#### ⛔ La semaine ne se décale plus
+
+Une case sous les heures : **« Les jours hors calendrier sortent de la semaine »**, cochée par
+défaut.
+
+Avant le 2026-09-15, le calcul comptait **tous** les jours écoulés : les six fêtes d'Harptos
+décalaient la semaine de **six jours par an**. Elle repart maintenant du bon pied, et **un jour hors
+calendrier n'affiche aucun jour de semaine** — il n'en a pas.
+
+> ⚠️ **Le jour de semaine affiché pour une date d'Harptos a donc changé.** Il était faux. Décochez
+> la case si votre monde compte ses fêtes dans la semaine.
+
 #### ⚠️ Ce que l'IA ne remplace pas
 
 Elle rend des mois plausibles, ce qui est **exactement le piège** : onze mois au lieu de douze se lit
@@ -303,6 +353,9 @@ ajoute pas.*
 | **Mon calendrier ne s'enregistre pas** | Il porte une **faute** — le motif est écrit en bas de l'Atelier. Un calendrier sans mois figerait l'horloge. |
 | **La date fantastique ne s'affiche plus** | Le calendrier actif est mal formé. Ouvrez-le dans l'Atelier : les fautes y sont listées. |
 | **Mon calendrier ne démarre pas à la bonne année** | Renseignez **Année de départ** dans l'Atelier, puis resélectionnez le calendrier dans la liste. |
+| **Ma fête ne tombe jamais** | Son premier jour dépasse la durée du mois — l'Atelier le signale en bas. |
+| **Le jour de semaine a changé sur Harptos** | C'est le correctif du 15/09 : les fêtes hors calendrier ne décalent plus la semaine. L'ancien affichage était faux. |
+| **Une fête n'apparaît pas au journal** | Le journal doit être en cours d'enregistrement, et l'entrée n'est écrite qu'à l'ENTRÉE dans la fête. |
 | **L'afficheur Ulanzi ne montre plus les jauges** | Le bouton **Monitor** est éteint : c'est le même interrupteur. |
 | **Le minuteur affiche `00:00` en rouge alors que je ne l'ai pas lancé** | Il a été configuré puis vidé. Un minuteur jamais configuré reste neutre. |
 | **Aucun calendrier dans la liste** | Le mode fantastique lit `databases/calendars/`. Un seul y est livré. |

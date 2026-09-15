@@ -57,6 +57,8 @@ Une sauvegarde peut être **refusée**, et le journal de l'application le dit. C
   votre univers.*
 - **Les liens, ambiances, horloges, tableau blanc.**
 - **La bibliothèque des fiches de personnage.**
+- **Vos tables et vos calendriers** (`databases/`), depuis le 15/09 — par un miroir à part, voir
+  plus bas.
 
 ### Les images ont un **miroir**, pas des instantanés
 
@@ -72,6 +74,33 @@ Deux choses à savoir :
 - **Une image illisible ne bloque jamais la sauvegarde** : l'incident est noté et le passage
   continue. *Un filet qui refuse de poser la moitié qu'il peut poser ne vaut pas mieux qu'un filet
   absent.*
+
+### ⭐ `databases/` a son propre miroir, depuis le 2026-09-15
+
+C'est là que vivent vos **tables aléatoires** et vos **calendriers** — ceux que les Ateliers
+écrivent, et ceux que vous éditez à la main. **Ce dossier n'était dans aucune sauvegarde** : tant
+qu'il ne contenait que du contenu livré, réinstaller GM-OS le rendait. Depuis que vous y écrivez, il
+lui faut un filet.
+
+| | |
+| :--- | :--- |
+| **Où** | `backups/databases/`, à côté des sauvegardes — **l'arborescence est conservée telle quelle** |
+| **Quand** | À **chaque écriture** depuis un Atelier, **et au démarrage** pour ce que vous avez édité hors de GM-OS |
+| **Quoi** | Tout `databases/` — tables, calendriers, mais aussi PNJ, lieux, rumeurs, objets |
+
+> ⚠️ **Pourquoi deux déclencheurs.** La sauvegarde ordinaire part deux minutes après un changement
+> de **session** ; écrire une table n'en est pas un. Sans le déclenchement à l'écriture, ce filet ne
+> serait **jamais parti** — et *un filet qui ne se déclenche pas est pire qu'un filet absent : on
+> croit l'avoir.*
+
+**Il garde tout**, comme celui des images : un fichier que vous supprimez reste dans le miroir.
+*C'est précisément le mode de perte qu'un filet doit couvrir.*
+
+> 💡 **Restaurer, ici, c'est recopier un dossier.** Contrairement aux images — rangées sous des
+> identifiants qu'aucun humain ne sait remettre en place — chaque fichier garde son chemin. Clic
+> droit sur l'indicateur de sauvegarde, ouvrez `backups/databases/`, et recopiez ce qu'il vous faut
+> dans le `databases/` de GM-OS. **Il n'y a volontairement pas de bouton** : il n'apporterait que le
+> risque d'écraser.
 
 ## 5. Restaurer
 

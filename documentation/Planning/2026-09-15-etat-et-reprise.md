@@ -1,6 +1,6 @@
 # État et reprise — 2026-09-15, au soir
 
-> **Base saine.** `tsc -b` propre, **4 869 tests verts** (391 fichiers, 1 ignoré), **190 tests E2E**,
+> **Base saine.** `tsc -b` propre, **4 956 tests verts** (394 fichiers, 1 ignoré), **192 tests E2E**,
 > branche `feature/tablet-hub-pwa`.
 >
 > ⚠️ **Le plantage de rendu d'une exécution E2E complète** (§ 1 bis du registre) n'est toujours pas
@@ -13,8 +13,10 @@
 >
 > Il prend la suite de [`2026-09-14-etat-et-reprise.md`](./2026-09-14-etat-et-reprise.md).
 >
-> ✅ **Les trois chantiers de la journée sont éprouvés en réel** — *« ça marche »*, *« ok ça marche »*,
-> *« ok c'est bon ça fonctionne »*.
+> ✅ **Les quatre premiers chantiers sont éprouvés en réel** — *« ça marche »*, *« ok ça
+> marche »*, *« ok c'est bon ça fonctionne »*, *« ok ça marche »*.
+> ⚠️ **Le miroir de `databases/` (§ 69) attend encore ton écran** — il est éprouvé par un E2E qui
+> traverse le vrai disque, mais tu ne l'as pas vu.
 
 ---
 
@@ -25,6 +27,8 @@
 | **Les jauges qui se vident** | ⭐ Le **sens** d'une jauge — monte / s'épuise — et l'**usure de fin de scène**. Le mécanisme de descente existait déjà : c'est l'intention qui manquait à tout ce qui l'entoure (§ 66) |
 | **Le code couleur** | ⭐ Orange à mi-course, rouge au dernier quart, **en fractions** pour que 4 et 12 segments s'alarment au même endroit (§ 66) |
 | **L'Atelier des calendriers** | ⭐ Composer une année sans écrire de JSON — et ⛔ **la garde qui empêche un calendrier de GELER GM-OS** (§ 67) |
+| **`databases/` sauvegardé** | ✅ Un miroir à part, déclenché **à chaque écriture et au démarrage** — la sauvegarde automatique ne se serait **jamais** réveillée pour ça (§ 69) |
+| **Les jours de fête** | ⭐ Une fête **dans** un mois, et sur plusieurs jours ; annoncée à l'horloge, à la table et au journal. ⛔ Et la semaine que les jours hors calendrier **décalaient de six jours par an** (§ 68) |
 
 ⭐ **Le motif de la journée : trois demandes de fonctionnalité, trois défauts antérieurs trouvés en
 comptant avant d'écrire.** L'alarme d'une jauge qui criait à la bonne nouvelle ; un cinquième lecteur
@@ -34,16 +38,14 @@ sur l'Ulanzi que la demande ne nommait pas ; un calendrier capable de figer l'ap
 
 ## 1 · Par quoi reprendre
 
-### ⚠️ `databases/` n'est dans AUCUNE sauvegarde — et le trou grossit
+### ✅ `databases/` est dans un filet — CLOS le soir même (§ 69)
 
-Ni les **calendriers**, ni les **tables** que l'Atelier écrit depuis le 14. Le trou est antérieur aux
-deux Ateliers ; ce qui a changé, c'est que **David crée désormais du contenu qui vit là**.
+Écarté d'abord pour garder la portée, rouvert par David dans la foulée. Miroir à part sous
+`userData/backups/databases/`, **arborescence conservée** — restaurer, c'est recopier un dossier.
 
-Proposé le 15 avec le chantier des calendriers, **écarté par David** pour garder la portée. *C'est
-une décision de portée, pas un oubli* — mais c'est la première chose à rouvrir.
-
-> Le miroir des images (§ chantier 4 de la sauvegarde) montre la forme que ça prendrait : un miroir
-> incrémental plutôt que des instantanés. `databases/` pèse bien moins que les 261 Mo d'images.
+⚠️ **Ce qui reste** : l'espace ne redescend jamais tout seul (conséquence assumée du « garde
+tout »). À 1,3 Mo c'est théorique, mais **un geste de nettoyage explicite reste à écrire** — il est
+garé depuis le 29/08 pour le miroir des médias, où il pèse autrement plus lourd.
 
 ### ⚠️ Deux chemins d'IA jamais empruntés pour de vrai
 
@@ -56,12 +58,19 @@ une décision de portée, pas un oubli* — mais c'est la première chose à rou
 ⚠️ **Un vrai PDF de manuel** n'a jamais traversé l'Atelier non plus. C'est là que « Ranger par l'IA »
 cessera d'être optionnel : un manuel rend souvent un texte désordonné.
 
-### ⚠️ Le jour de la semaine ignore les jours hors calendrier
+### ✅ Le jour de la semaine — CLOS le soir même
 
-`getFantasyDate` compte les jours écoulés modulo la longueur de la semaine — or à Harptos **les fêtes
-ne sont pas des jours de semaine**. Relevé le 15, **non corrigé** : c'est une règle de monde, et elle
-mérite d'être tranchée par David avant d'être écrite. Certains calendriers comptent les fêtes, d'autres
-les sautent.
+Il ignorait les jours hors calendrier, qui décalaient la semaine de six jours par an à Harptos. David
+a demandé les jours de fête dans la foulée (§ 68), et la règle est désormais **déclarée par
+calendrier**.
+
+⚠️ **Le jour de semaine affiché pour une date d'Harptos a changé.** Il était faux ; c'est à
+constater à l'écran, pas un défaut.
+
+### ✅ Les jours de fête — éprouvés en réel
+
+Le § 68 a été vérifié à l'écran le soir même. **Les quatre chantiers du 15 sont donc clos et
+éprouvés.**
 
 ### ⚠️ Ce qui n'a jamais vu de vrai matériel
 

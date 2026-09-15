@@ -1605,9 +1605,130 @@ motif que je passe mes journées à dénoncer.
 
 ---
 
+## 🎉 Ce qu'on attache à quoi, et les sélecteurs qui se cassent en silence (2026-09-15, tard)
+
+*Chantier : le § 68 du registre — les jours de fête.*
+
+### 1. ⭐ Attacher à l'objet plutôt qu'à son index
+
+Le premier réflexe était de poser les fêtes sur le calendrier, avec un index de mois. **Un index se
+désynchronise dès qu'on déplace un mois** — et l'Atelier a justement des flèches pour ça : les fêtes
+de Hammer se seraient retrouvées dans Alturiak, **sans que rien ne le signale**.
+
+Attachées au mois lui-même, elles le suivent quand il bouge et disparaissent avec lui.
+
+- **Leçon** : *quand une donnée désigne une autre par sa POSITION, toute opération qui réordonne
+  devient une source de corruption muette.* La bonne question n'est pas « comment garder les index
+  à jour » mais **« qu'est-ce qui, attaché au bon endroit, rendrait la question inutile »**. C'est
+  le même geste que le dé choisi dans une liste : *rendre le défaut impossible à écrire plutôt que
+  de le signaler.*
+
+### 2. Deux choses qui se ressemblent ne sont pas deux façons d'écrire la même chose
+
+Un mois hors calendrier d'un jour et une fête déclarée dans un mois **ont l'air d'un doublon**. Ils ne
+le sont pas : l'un n'a ni numéro de jour ni jour de semaine, l'autre a les deux.
+
+- **Leçon** : la tentation est de fusionner. *Le test qui tranche n'est pas « est-ce que ça se
+  ressemble » mais « est-ce que ça se comporte pareil partout »* — et ici la réponse était non sur
+  deux points. On les garde distincts, et **on signale quand l'auteur les mélange** plutôt que de
+  choisir à sa place.
+
+### 3. ⛔ `null` comme réponse, pas comme échec
+
+Un jour hors calendrier **n'a aucun jour de semaine**. Le calcul en inventait un ; il rend désormais
+`null`, et l'écran omet la mention.
+
+- **Leçon** : *une fonction qui doit toujours répondre quelque chose finit par répondre n'importe
+  quoi.* Quand la question n'a pas de sens pour certaines entrées, le type doit le dire — sinon
+  c'est l'appelant qui hérite d'un mensonge plausible.
+
+### 4. ⛔ `getByRole(role, { name })` cherche une SOUS-CHAÎNE
+
+Le bouton des mois s'appelle « Ajouter ». J'ai ajouté un bouton « Ajouter une fête au mois 1 ».
+**Quatre essais E2E sont tombés d'un coup** sur une violation du mode strict — le premier sélecteur
+en trouvait deux.
+
+- **Leçon** : *un sélecteur par nom se casse quand un AUTRE nom commence pareil*, et rien ne le dit
+  avant l'exécution. Le réflexe : `exact: true` dès qu'un libellé est un préfixe plausible.
+- **Et le symptôme trompe** : l'erreur pointe l'essai qui échoue, pas le libellé qu'on vient
+  d'ajouter ailleurs.
+
+### 5. ⚠️ Une `<option>` dans un `<select>` fermé n'est jamais « visible »
+
+`waitFor()` attend l'état *visible* par défaut. Il a tourné trente secondes sur un élément bel et
+bien présent dans le DOM.
+
+- **Leçon** : pour ce qui existe sans être affiché, c'est `{ state: 'attached' }` — ou
+  `toBeAttached()`, que l'essai voisin utilisait déjà correctement. *J'avais le bon motif sous les
+  yeux et j'en ai écrit un autre.*
+
 ---
 
-*Dernière mise à jour : 15 Septembre 2026, au soir — l'Atelier des calendriers : ⛔ **une boucle
+## 🪢 Un filet qui ne se déclenche pas (2026-09-15, tard)
+
+*Chantier : le § 69 du registre — `databases/` dans une sauvegarde.*
+
+### 1. ⛔ La question n'est pas « où ranger la copie » mais « qui la déclenche »
+
+Le réflexe était d'ajouter `databases/` à la sauvegarde automatique. **Elle ne serait jamais
+partie** : elle se déclenche deux minutes après un changement d'**état de session**, or écrire une
+table passe par l'IPC et ne touche aucun magasin.
+
+- **Leçon** : *un filet qui ne se déclenche pas est pire qu'un filet absent — on croit l'avoir.*
+  Avant de choisir le format d'une sauvegarde, vérifier **ce qui la réveille**, et si cet événement
+  se produit vraiment quand la donnée change.
+- **Et le corollaire** : il a fallu **deux** déclencheurs, parce qu'il y a deux façons d'écrire dans
+  ce dossier — par l'application, et **à la main**, qui est la seule qui ait existé pendant des mois.
+  *Compter les écrivains avant de brancher le déclencheur, comme on compte les lecteurs avant de
+  changer une règle.*
+
+### 2. Un dossier en lecture seule n'a pas besoin de filet — jusqu'au jour où si
+
+`databases/` n'était dans aucune sauvegarde, et ça n'avait jamais posé de problème : c'était du
+contenu livré, qu'un `git checkout` rendait. **Les deux Ateliers ont changé sa nature en deux jours**,
+sans que rien ne signale que sa couverture venait de disparaître.
+
+- **Leçon** : *ajouter une écriture à un endroit qui n'en avait pas, c'est créer un trou de
+  sauvegarde le jour même.* Le réflexe manquant : quand on branche une écriture sur un dossier,
+  demander **tout de suite** qui le sauvegarde.
+
+### 3. ⚠️ Comparer le contenu, jamais les dates
+
+Un miroir incrémental doit décider ce qui a changé. La date de modification est le réflexe — et
+c'est un piège : elle se perd à la copie, se décale d'un système de fichiers à l'autre, et **remonte
+le temps** quand on restaure un fichier plus ancien.
+
+- **Leçon** : *un miroir qui se fie aux dates finit par croire à jour ce qui ne l'est pas —
+  silencieusement.* Comparer les octets quand le volume le permet ; ici 1,3 Mo, et la taille écarte
+  presque tout avant qu'on lise un octet.
+
+### 4. ⛔ Une dégradation lancée sur un seul essai ne prouve rien
+
+J'ai débranché le miroir et relancé **l'essai concerné seul**, avec `-g`. Il a rougi — mais pour la
+mauvaise raison : l'essai qui écrit le calendrier ne tournait pas non plus, donc **rien n'avait été
+écrit du tout**. L'absence de miroir ne prouvait rien.
+
+- **Leçon** : *une dégradation doit être rejouée dans le même contexte que le vert qu'elle
+  conteste.* Relancé sur le fichier entier : l'essai d'écriture vert, celui du miroir rouge — là,
+  ça dit quelque chose.
+- ⚠️ C'est la **deuxième fois de la journée** qu'une dégradation manque de me tromper : la
+  précédente n'avait pas rougi, elle avait pendu.
+
+---
+
+---
+
+*Dernière mise à jour : 15 Septembre 2026, très tard — `databases/` dans un filet : ⛔ **la question
+n'est pas où ranger la copie mais QUI la déclenche** (la sauvegarde automatique ne serait jamais
+partie), un dossier en lecture seule dont deux Ateliers ont changé la nature en deux jours, comparer
+le contenu et jamais les dates, et ⛔ **une dégradation lancée sur un seul essai ne prouve rien**.*
+
+*Mise à jour du même jour : 15 Septembre 2026, tard — les jours de fête : ⭐ **attacher à l'objet
+plutôt qu'à son index** (un index se désynchronise dès qu'on réordonne), deux choses qui se
+ressemblent sans se comporter pareil, `null` comme réponse et non comme échec, et ⛔ **`getByRole`
+qui cherche une sous-chaîne** — quatre essais tombés parce qu'un libellé en commençait un autre.*
+
+*Mise à jour du même jour : 15 Septembre 2026, au soir — l'Atelier des calendriers : ⛔ **une boucle
 synchrone ne se laisse interrompre par aucun délai** (la dégradation n'a pas rougi, elle a pendu),
 une fonctionnalité inaccessible qui ressemblait à une fonctionnalité inutile, `currentYear: 1492`
 lu par personne, et le registre du mort qui **signale tout seul ce qui vient de servir**.*

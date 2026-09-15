@@ -4391,16 +4391,14 @@ l'écran afficherait un nom que personne n'écrirait.*
 
 #### ⚠️ Ce qui reste ouvert
 
-⚠️ **`databases/` n'est dans AUCUNE sauvegarde** — ni les calendriers, ni les tables que l'Atelier
-écrit depuis la veille. Le trou existait avant ; **il grossit à chaque chose que David crée.**
-Proposé avec le chantier, écarté par lui pour garder la portée — à rouvrir.
+✅ **`databases/` est dans un filet depuis le soir même** — voir le § 69. Écarté d'abord pour garder
+la portée, rouvert par David dans la foulée.
 
 ⚠️ **L'IA n'a jamais été appelée pour de vrai.** Le fil, le schéma et le contrôle en aval sont
 éprouvés ; *personne n'a encore vu un calendrier sortir d'une phrase.*
 
-⚠️ **Le jour de la semaine ignore les jours hors calendrier.** `getFantasyDate` compte les jours
-écoulés modulo la semaine — or à Harptos les fêtes ne sont **pas** des jours de semaine. Relevé, non
-corrigé : c'est une règle de monde, et elle mérite d'être tranchée avant d'être écrite.
+✅ **Le jour de la semaine ignorait les jours hors calendrier — CLOS le soir même** par le § 68 :
+David a demandé les jours de fête dans la foulée, et la règle est désormais déclarée par calendrier.
 
 **Ancres** : `src/modules/clock/logic/formeDuCalendrier.ts`,
 `src/modules/clock/logic/propositionDeCalendrier.ts`, `src/modules/clock/atelier/`,
@@ -4409,6 +4407,203 @@ corrigé : c'est une règle de monde, et elle mérite d'être tranchée avant d'
 `clock:delete-calendar`), guide 36 § « Créer un calendrier ».
 
 **Vérifié** : `tsc -b` propre, **4 869 tests** (391 fichiers, 1 ignoré), **190 tests E2E**.
+
+### 68 · ⭐ Les jours de fête — et la semaine qu'ils décalaient depuis toujours (2026-09-15, tard)
+
+*David, après l'Atelier des calendriers : « oui je veux pouvoir déclarer des jours de fêtes ».*
+
+Ce « oui » répondait au reste ouvert du § 67 — *le jour de la semaine ignore les jours hors
+calendrier*. Mais la demande allait plus loin que le correctif.
+
+#### ⚠️ « Fête » voulait déjà dire quelque chose, et c'était très mince
+
+Une fête était un **mois d'un jour** marqué `isIntercalary` — c'est ainsi qu'Harptos porte ses six.
+Et ce drapeau ne faisait **qu'une seule chose** : retirer le numéro du jour dans la date affichée.
+
+Trois conséquences :
+
+| | |
+|---|---|
+| ⛔ **Aucune fête dans un mois** | « Le 15 de Hammer est la Fête du Marteau » était inexprimable : il aurait fallu couper Hammer en trois mois |
+| ⛔ **Une fête consommait un jour de semaine** | Le calcul comptait tous les jours écoulés modulo la semaine — les six fêtes d'Harptos la décalaient de **six jours par an** |
+| ⚠️ **Rien ne l'annonçait** | Le nom apparaissait dans la ligne de date parce qu'il *était* le nom du mois. Aucune mise en valeur, rien vers les joueurs, rien au journal |
+
+> ⭐ **Le troisième était le plus grave.** *Une fête qu'on déclare et qui ne se signale jamais n'est
+> qu'une étiquette* — le motif que ce dépôt a déjà payé quatre fois : la chaîne complète sans bouton
+> au bout.
+
+#### Les décisions de David
+
+| Question | Tranchée |
+|---|---|
+| La forme | **Une période**, pas un seul jour : « du 12 au 15, les Nuits du Marteau » |
+| L'annonce | **Les trois** : l'horloge, l'afficheur de table, et le journal de séance |
+| La semaine | **Les jours hors calendrier en sortent**, et c'est **réglable par calendrier** |
+
+#### ⭐ Les fêtes sont portées par le MOIS, pas par le calendrier
+
+Le premier réflexe était `fetes: [{ moisIndex, jour, … }]` sur le calendrier. **Un index se
+désynchronise dès qu'on déplace un mois dans l'Atelier** — et l'Atelier a justement des flèches pour
+ça : les fêtes de Hammer se seraient retrouvées dans Alturiak **sans que rien ne le signale**.
+
+Attachées au mois, elles le suivent quand il bouge et disparaissent avec lui. *Rendre le défaut
+impossible à écrire plutôt que de le signaler* — le principe déjà appliqué au choix du dé dans
+l'Atelier des tables.
+
+#### ⚠️ Deux sortes de jours qui se ressemblent, et qu'il ne faut pas confondre
+
+| | Mois `isIntercalary` | Fête déclarée |
+|---|---|---|
+| Ce que c'est | Un jour **hors calendrier** | **Un jour du mois** qui porte un nom |
+| Son numéro | Aucun | Le sien (« 15 Hammer ») |
+| Son jour de semaine | **Aucun** | Le sien |
+
+**Les deux coexistent, et c'est voulu.** *Ce ne sont pas deux façons d'écrire la même chose, ce sont
+deux choses.* Le contrôle signale quand on les mélange (`fete-dans-un-intercalaire`), et la consigne
+de l'IA les distingue explicitement.
+
+#### ⛔ `null` n'est pas une erreur, c'est une réponse
+
+Un jour hors calendrier **n'a aucun jour de semaine**. `rangDansLaSemaine` rend donc `null`, et
+l'écran omet la mention au lieu d'en inventer une — ce qu'il faisait.
+
+> *Demander quel jour de la semaine tombe le Milieu d'Hiver n'a pas plus de sens que de demander sa
+> position dans un mois.*
+
+⚠️ **Le correctif change ce qu'affichait hier** : le jour de semaine d'une date donnée d'Harptos
+n'est plus le même. Il était faux.
+
+#### ⚠️ La fête qualifie la date, elle ne la remplace pas
+
+« 13 Hammer — Nuits du Marteau (2/4) ». *Sans le numéro, le meneur qui compte « nous partons dans
+trois jours » perd son repère au milieu de sa propre fête.* Et le rang ne s'affiche que pour une
+fête de plusieurs jours : sinon tout serait suivi d'un « (1/1) » qui n'apprend rien.
+
+#### ⛔ Une fête de quatre jours n'écrit qu'UNE entrée de journal
+
+L'annonce compare le **nom** de la fête, pas sa mention. La mention passe de « (1/4) » à « (4/4) » :
+la comparer écrirait quatre entrées pour une seule fête. *Entrer dans une fête est un événement ; y
+rester n'en est pas un.*
+
+⚠️ Et seulement depuis les **gestes du meneur** — `setTimestamp`, `addTime`, `setFantasyDate`. La
+synchronisation entre fenêtres écrit par `setState` et ne passe pas par là : *le hub ne doit pas
+consigner ce que le meneur a déjà consigné.*
+
+#### Ce qui est gardé
+
+- **`fetesDuCalendrier.test.ts`** — 44 essais : la forme, les périodes, ⛔ la semaine qui reprend le
+  fil après un jour hors calendrier, et le contrôle (des **doutes**, jamais des fautes — *une fête mal
+  placée ne casse rien, elle ne tombe simplement jamais*).
+- **`annonceDesFetes.test.ts`** — 12 essais, dont ⛔ **la non-répétition** et les trois gestes.
+- **`propositionDeCalendrier.test.ts`** — 8 de plus : ce qu'on écarte sans rafistoler, et la consigne
+  qui distingue les deux sortes de jours.
+- **`clockOs.spec.ts`** — l'**aller-retour complet** : l'écran écrit la fête, le pont la pose sur le
+  disque, le pupitre relit le fichier, et la date la retrouve au rang 2/3. *Aucun essai unitaire ne
+  traverse tout ça.*
+- **Dégradations passées** : les jours hors calendrier recomptés → 2 rouges ; la comparaison par
+  mention au lieu du nom → 1 rouge.
+
+#### ⚠️ Deux pièges d'outillage payés en chemin
+
+⛔ **`getByRole(role, { name })` cherche une SOUS-CHAÎNE chez Playwright.** Le bouton des mois
+s'appelle « Ajouter », celui des fêtes « Ajouter une fête au mois 1 » : **le premier sélecteur en a
+trouvé deux le jour où le second est apparu**, et quatre essais sont tombés d'un coup. *Un sélecteur
+par nom se casse quand un autre nom COMMENCE pareil — et rien ne le dit avant l'exécution.*
+
+⚠️ **Une `<option>` dans un `<select>` fermé n'est jamais « visible ».** Mon `waitFor()` — dont le
+défaut est l'état *visible* — a tourné trente secondes sur un élément bel et bien présent. Il faut
+`{ state: 'attached' }`.
+
+**Ancres** : `src/modules/clock/logic/formeDuCalendrier.ts` (`feteDuJour`, `mentionDeLaFete`,
+`rangDansLaSemaine`, `jourDeLaSemaine`, `intercalairesHorsSemaine`), `src/store/useClockStore.ts`
+(`annoncerLaFete`, le calcul du jour de semaine), `src/modules/clock/components/ClockVisualizer.tsx`,
+`src/modules/ulanzi/widgets/heureDuMonde.ts`, `src/modules/clock/atelier/AtelierDesCalendriers.tsx`,
+guide 36 § « Déclarer des jours de fête ».
+
+✅ **Éprouvé en réel le 2026-09-15 au soir** — *« ok ça marche »*.
+
+**Vérifié** : `tsc -b` propre, **4 933 tests** (393 fichiers, 1 ignoré), **191 tests E2E**.
+
+### 69 · ✅ `databases/` entre dans le filet — et le déclencheur qui n'aurait jamais tiré (2026-09-15, tard)
+
+*David : « ok rajoute la database dans une sauvegarde ».*
+
+C'était le reste ouvert signalé trois fois dans la journée. **Le trou était antérieur aux deux
+Ateliers** : tant que `databases/` n'était que du contenu livré, un `git checkout` le rendait. Ce qui
+a changé, c'est que **David y écrit** — les tables depuis le 14, les calendriers depuis le 15.
+
+> *Un dossier en lecture seule n'a pas besoin de filet ; le jour où quelque chose y écrit, il en a
+> besoin **le même jour**.*
+
+#### La mesure d'abord, comme pour les images
+
+**1,3 Mo, 163 fichiers, 158 JSON.** Rien à voir avec les 261 Mo d'images qui avaient imposé un miroir
+incrémental. Ici la taille n'impose rien : c'est le **déclencheur** qui a décidé de la forme.
+
+#### ⛔ Ce qui aurait donné un filet qui ne se déclenche jamais
+
+La sauvegarde automatique part **deux minutes après un changement d'état de session**. Or écrire une
+table passe par l'IPC et **ne touche aucun magasin Zustand** : ranger `databases/` dans la sauvegarde
+automatique aurait produit un filet qui **ne serait jamais parti**.
+
+> ⛔ *Un filet qui ne se déclenche pas est pire qu'un filet absent : on croit l'avoir.*
+
+D'où **deux déclencheurs, et pas un** :
+
+| Quand | Ce qu'il attrape |
+|---|---|
+| **Après chaque écriture** (`tables:save-table`, `clock:save-calendar`) | Le geste du meneur, tout de suite |
+| **Au démarrage** | Ce qui a été édité **à la main, hors de GM-OS** — la seule façon d'écrire là qui ait existé pendant des mois |
+
+#### Les décisions
+
+| Question | Tranchée |
+|---|---|
+| Un fichier supprimé | **Le miroir le garde** — comme les images le 29/08 : *une suppression accidentelle qui se propage au filet le rend inutile le jour où il servirait* |
+| Le périmètre | **Tout `databases/`**, pas seulement tables et calendriers — les 700 Ko de PNJ et de lieux ne coûtent rien, et ils ont pu être édités à la main |
+| Où | `userData/backups/databases/` — ⛔ **jamais sous `APP_ROOT`** (R2) |
+
+⭐ **Le miroir reflète l'ARBORESCENCE, pas des identifiants.** Contrairement aux médias — 261 Mo sous
+des `m-<uuid>` qu'aucun humain ne sait remettre en place — chaque fichier garde son chemin.
+**Restaurer, c'est recopier un dossier**, et le clic droit sur l'indicateur de sauvegarde l'ouvre
+déjà. *C'est pourquoi il n'y a pas de bouton de restauration : ce serait un bouton de trop, et il
+apporterait le risque d'écraser.*
+
+#### ⚠️ Deux prudences que le module s'impose
+
+**On compare le CONTENU, pas les dates.** Une date de modification se perd à la copie, se décale d'un
+système de fichiers à l'autre, et remonte le temps quand on restaure un fichier plus ancien. *Un
+miroir qui se fie aux dates finit par croire à jour ce qui ne l'est pas — silencieusement.* Le coût
+est nul : la taille écarte la plupart des paires avant qu'on lise un octet.
+
+**Le miroir ne fait jamais échouer l'écriture qu'il suit.** Une copie impossible se consigne et se
+tait : *perdre la sauvegarde d'une table est un incident ; perdre la table parce que sa sauvegarde a
+levé en serait un bien pire.* Même chose pour le balayage de démarrage, qui ne bloque rien.
+
+#### Ce qui est gardé
+
+- **`miroirDesDonnees.test.ts`** — 21 essais : le confinement (⛔ **R2** et **R3**, éprouvés sur un
+  chemin hostile qui ne doit rien écrire dehors), les deux séparateurs qui mènent au même reflet, la
+  comparaison par contenu à taille égale, ⛔ **le fichier supprimé dont le reflet survit**, et le
+  balayage qui rattrape une édition faite hors de l'application.
+- **`clockOs.spec.ts`** — ⭐ **l'essai qu'aucun test unitaire ne peut faire** : le vrai processus
+  principal, le vrai disque. Le calendrier écrit par l'Atelier se retrouve dans le miroir du profil,
+  **avec sa fête**.
+- **Dégradation** : le reflet retiré de `clock:save-calendar` → le calendrier est bien sur le disque
+  (essai 16 vert) **et absent du miroir** (essai 17 rouge). *La dégradation a d'abord sembl\é passer
+  parce que je l'avais lancée avec `-g` : l'essai qui écrit le calendrier ne tournait pas, et
+  l'absence de miroir ne prouvait rien.*
+
+#### ⚠️ Ce qui reste
+
+⚠️ **L'espace ne redescend jamais tout seul** — conséquence assumée du « garde tout ». À 1,3 Mo c'est
+théorique, mais un geste de nettoyage explicite, qui dirait ce qu'il s'apprête à supprimer, reste à
+écrire (comme pour le miroir des médias, où il est garé depuis le 29/08).
+
+**Ancres** : `electron/miroirDesDonnees.ts`, `electron/main.ts` (`refleterDansLeMiroir`, le balayage
+dans `app.whenReady`), guide 91 § « Ce qui est sauvegardé ».
+
+**Vérifié** : `tsc -b` propre, **4 956 tests** (394 fichiers, 1 ignoré), **192 tests E2E**.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
