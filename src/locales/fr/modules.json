@@ -2586,6 +2586,9 @@
       }
     },
     "clues_manager": {
+      "generate_image": "Générer l'image",
+      "generate_image_save_first": "Enregistrez l'indice avant de générer son image",
+      "generate_image_title": "Image de « {{titre}} » — pièce à conviction",
       "title": "Gestion des Indices & Secrets",
       "subtitle": "Archivez et orchestrez la révélation des preuves de votre intrigue.",
       "new_fragment": "Nouveau Fragment",

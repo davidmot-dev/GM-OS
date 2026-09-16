@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
+import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import type { ProjectedEntity } from '../../image/types';
 
 const CluesManager: React.FC = () => {
@@ -21,12 +22,14 @@ const CluesManager: React.FC = () => {
     const { 
         clues, activeCampaignId, addClue, updateClue, deleteClue,
         atlasMaps, entities, editingClueId, setEditingClueId,
-        pendingPreFill, clearPendingPreFill
+        pendingPreFill, clearPendingPreFill,
+        generateClueImage, isGeneratingAIImage
     } = useSessionOSStore();
 
     const [editingClue, setEditingClue] = useState<Partial<Clue> | null>(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
+    const [showAIPrompt, setShowAIPrompt] = useState(false);
     const [justRevealed, setJustRevealed] = useState<string | null>(null);
     
     const { projectEntity, projectedEntity } = useImageStore();
@@ -255,6 +258,33 @@ const CluesManager: React.FC = () => {
                                             <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.clues_manager.add_visual')}</span>
                                         </div>
                                     )}
+                                </button>
+
+                                {/*
+                                  ⭐ **Le générateur d'image, branché sur les indices le
+                                  2026-09-15** — demande de David. Un indice portait déjà
+                                  un `mediaUrl`, mais il ne se remplissait qu'en piochant
+                                  dans la médiathèque : c'était **le seul objet illustrable
+                                  qui n'avait pas droit au générateur**, alors que les PNJ,
+                                  les cartes et les PJ l'avaient.
+
+                                  ⚠️ **Il faut un indice ENREGISTRÉ.** La génération écrit
+                                  dans le magasin par `updateClue` ; sur un indice qu'on est
+                                  en train de créer, elle écrirait dans le vide. *Un bouton
+                                  qui ne fait rien sans dire pourquoi est pire qu'un bouton
+                                  absent* — d'où le refus explicite et son infobulle.
+                                */}
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAIPrompt(true)}
+                                    disabled={!clues.some(c => c.id === editingClue.id)}
+                                    title={clues.some(c => c.id === editingClue.id)
+                                        ? t('modules:session.clues_manager.generate_image')
+                                        : t('modules:session.clues_manager.generate_image_save_first')}
+                                    className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-gm-purple/40 text-gm-purple text-ui-9 font-black uppercase tracking-widest hover:bg-gm-purple/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                >
+                                    <Sparkles size={13} />
+                                    {t('modules:session.clues_manager.generate_image')}
                                 </button>
                             </div>
 
@@ -542,6 +572,41 @@ const CluesManager: React.FC = () => {
                 allowedTypes={['image']}
                 title={t('modules:session.clues_manager.add_visual')}
             />
+
+            {/*
+              ⚠️ **Le formulaire garde l'indice en état LOCAL, la génération écrit
+              dans le MAGASIN.** Sans cette resynchronisation, l'image arriverait
+              bien — elle serait sur l'indice enregistré — mais *le meneur ne la
+              verrait pas*, et il la croirait perdue. On relit donc l'indice frais
+              et on replace son visuel dans le formulaire ouvert.
+
+              ⚠️ On ferme la boîte même en cas d'échec : le toast dit désormais ce
+              qui s'est passé, et *une boîte qui reste ouverte sans expliquer
+              pourquoi laisse croire que ça travaille encore.*
+            */}
+            {editingClue && (
+                <AIPromptOverlay
+                    isOpen={showAIPrompt}
+                    onClose={() => setShowAIPrompt(false)}
+                    isGenerating={isGeneratingAIImage}
+                    title={t('modules:session.clues_manager.generate_image_title', {
+                        titre: editingClue.title || t('modules:session.clues_manager.empty_selection'),
+                    })}
+                    onGenerate={async (instructions) => {
+                        const id = editingClue.id;
+                        if (!id) return;
+
+                        await generateClueImage(id, instructions);
+
+                        const frais = useSessionOSStore.getState().clues.find(c => c.id === id);
+                        if (frais?.mediaUrl) {
+                            setEditingClue(precedent =>
+                                (precedent ? { ...precedent, mediaUrl: frais.mediaUrl } : precedent));
+                        }
+                        setShowAIPrompt(false);
+                    }}
+                />
+            )}
         </div>
     );
 };

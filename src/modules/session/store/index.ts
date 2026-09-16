@@ -10,6 +10,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
+    handleGenerateClueImage,
     handleGenerateEntityPortrait,
     handleGenerateAtlasMapImage,
     handleGeneratePlayerPortrait,
@@ -105,6 +106,15 @@ interface CrossDomainActions {
     generateEntityPortrait: (entityId: string, instructions?: string) => Promise<void>;
     generateAtlasMapImage: (mapId: string, instructions?: string) => Promise<void>;
     generatePlayerPortrait: (playerId: string, characterId: string, instructions?: string) => Promise<void>;
+    /**
+     * **L'image d'un indice — le quatrième chemin, 2026-09-15.**
+     *
+     * Un indice portait déjà un `mediaUrl`, mais il ne se remplissait qu'en
+     * piochant dans la médiathèque : c'était **le seul objet illustrable sans
+     * générateur**. ⚠️ Il ne demande pas la même chose que les trois autres —
+     * une **pièce à conviction**, pas une illustration.
+     */
+    generateClueImage: (clueId: string, instructions?: string) => Promise<void>;
     /**
      * Écrit une campagne forgée depuis ses fiches.
      *
@@ -271,6 +281,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
             generateEntityPortrait: async (entityId, instructions) => handleGenerateEntityPortrait(set, get, entityId, instructions),
             generateAtlasMapImage: async (mapId, instructions) => handleGenerateAtlasMapImage(set, get, mapId, instructions),
             generatePlayerPortrait: async (playerId, characterId, instructions) => handleGeneratePlayerPortrait(set, get, playerId, characterId, instructions),
+            generateClueImage: async (clueId, instructions) => handleGenerateClueImage(set, get, clueId, instructions),
             appliquerLaCampagneForgee: (ecriture) => handleAppliquerLaCampagneForgee(set, get, ecriture),
             exportActiveCampaignToObsidian: () => handleExportActiveCampaignToObsidian(get),
 

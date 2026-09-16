@@ -2586,6 +2586,9 @@
       }
     },
     "clues_manager": {
+      "generate_image": "Generate the image",
+      "generate_image_save_first": "Save the clue before generating its image",
+      "generate_image_title": "Image for {{titre}} - piece of evidence",
       "title": "Clues Management",
       "subtitle": "Document the evidence and secrets of your plot.",
       "new_fragment": "New Fragment",

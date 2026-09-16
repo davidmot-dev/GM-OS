@@ -1,4 +1,5 @@
 import { gmToast } from '../../../stores/useToastStore';
+import { invitePourUnIndice } from './inviteDImage';
 import type { SessionOSStore } from '../store/index';
 import type {
     Campaign, Entity, AtlasMap, WikiEntry, EntityRelation, Acte, Scene, Clue,
@@ -100,6 +101,50 @@ export const handleAppliquerLaCampagneForgee = (
     );
 };
 
+/**
+ * **Tout ce qui demande une image passe par ici.**
+ *
+ * ⛔ **Les trois générateurs échouaient EN SILENCE.** Portrait de PNJ, carte
+ * d'atlas, portrait de PJ : chacun portait son `try / catch / finally`, et
+ * chaque `catch` faisait `console.error` **et rien d'autre** — alors que
+ * `gmToast` est importé en tête de ce même fichier et sert vingt lignes plus
+ * haut. Clé absente, service indisponible, image rejetée : le meneur cliquait,
+ * le voile tournait, s'arrêtait, et **rien ne se passait**.
+ *
+ * *C'est la panne muette que ce dépôt a déjà payée sur la projection de fiche —
+ * quatre mois cassée parce qu'un `catch` avalait l'exception.* Relevé le
+ * 2026-09-15 en branchant le quatrième, et corrigé pour les quatre : *je ne
+ * voulais pas ajouter un quatrième muet.*
+ *
+ * ⚠️ **Le message de l'erreur remonte tel quel**, parce qu'il dit quelque
+ * chose : `generateImage` lève « Clé API Gemini manquante », « image trop
+ * petite pour être vraie », « Bridge Ollama non disponible ». *Un toast
+ * générique ne vaudrait guère mieux qu'un silence : il dirait qu'on a échoué
+ * sans dire quoi réparer.*
+ *
+ * ⚠️ **Le voile se lève dans tous les cas** — ce que le `finally` garantissait
+ * déjà, et qu'il garantit maintenant une seule fois pour quatre appelants au
+ * lieu de quatre fois.
+ */
+async function demanderUneImage(
+    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
+    quoi: string,
+    invite: string,
+    poser: (mediaId: string) => void,
+): Promise<void> {
+    set({ isGeneratingAIImage: true });
+    try {
+        const { aiService } = await import('../../ai/AIService');
+        poser(await aiService.generateImage(invite));
+    } catch (err) {
+        const raison = err instanceof Error ? err.message : String(err);
+        console.error(`[Image IA] ${quoi} :`, err);
+        gmToast(`Image de ${quoi} impossible — ${raison}`, 'warning');
+    } finally {
+        set({ isGeneratingAIImage: false });
+    }
+}
+
 export const handleGenerateEntityPortrait = async (
     set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
     get: () => SessionOSStore,
@@ -108,18 +153,12 @@ export const handleGenerateEntityPortrait = async (
 ) => {
     const entity = get().entities.find((e) => e.id === entityId);
     if (!entity) return;
-    set({ isGeneratingAIImage: true });
-    try {
-        const { aiService } = await import('../../ai/AIService');
-        const cleanDesc = (entity.description || '').replace(/\n/g, ' ').substring(0, 300);
-        const prompt = instructions ?? `A professional fantasy RPG character portrait of ${entity.name}. ${cleanDesc}. High quality digital art, cinematic lighting, 8k.`;
-        const mediaId = await aiService.generateImage(prompt);
-        get().updateEntity(entityId, { avatar: mediaId });
-    } catch (err) {
-        console.error('AI Portrait Error:', err);
-    } finally {
-        set({ isGeneratingAIImage: false });
-    }
+
+    const cleanDesc = (entity.description || '').replace(/\n/g, ' ').substring(0, 300);
+    const prompt = instructions ?? `A professional fantasy RPG character portrait of ${entity.name}. ${cleanDesc}. High quality digital art, cinematic lighting, 8k.`;
+
+    await demanderUneImage(set, `portrait de ${entity.name}`, prompt,
+        (mediaId) => get().updateEntity(entityId, { avatar: mediaId }));
 };
 
 export const handleGenerateAtlasMapImage = async (
@@ -130,18 +169,12 @@ export const handleGenerateAtlasMapImage = async (
 ) => {
     const map = get().atlasMaps.find((m) => m.id === mapId);
     if (!map) return;
-    set({ isGeneratingAIImage: true });
-    try {
-        const { aiService } = await import('../../ai/AIService');
-        const cleanDesc = (map.narrativeDescription || '').replace(/\n/g, ' ').substring(0, 300);
-        const prompt = instructions ?? `Fantasy RPG environment art: ${map.name}. ${cleanDesc}. Cinematic, epic scale, high quality.`;
-        const mediaId = await aiService.generateImage(prompt);
-        get().updateAtlasMap(mapId, { fileUrl: mediaId, isVideo: false });
-    } catch (err) {
-        console.error('AI Map Error:', err);
-    } finally {
-        set({ isGeneratingAIImage: false });
-    }
+
+    const cleanDesc = (map.narrativeDescription || '').replace(/\n/g, ' ').substring(0, 300);
+    const prompt = instructions ?? `Fantasy RPG environment art: ${map.name}. ${cleanDesc}. Cinematic, epic scale, high quality.`;
+
+    await demanderUneImage(set, `carte ${map.name}`, prompt,
+        (mediaId) => get().updateAtlasMap(mapId, { fileUrl: mediaId, isVideo: false }));
 };
 
 export const handleGeneratePlayerPortrait = async (
@@ -154,17 +187,41 @@ export const handleGeneratePlayerPortrait = async (
     const player = get().players.find((p) => p.id === playerId);
     const char = player?.characters.find((c) => c.id === characterId);
     if (!char) return;
-    set({ isGeneratingAIImage: true });
-    try {
-        const { aiService } = await import('../../ai/AIService');
-        const prompt = `A heroic character portrait of ${char.name}. ${char.classRace}. Professional digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
-        const mediaId = await aiService.generateImage(prompt);
-        get().updateCharacterVisuals(playerId, characterId, { portraitUrl: mediaId });
-    } catch (err) {
-        console.error('AI Player Portrait Error:', err);
-    } finally {
-        set({ isGeneratingAIImage: false });
-    }
+
+    const prompt = `A heroic character portrait of ${char.name}. ${char.classRace}. Professional digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
+
+    await demanderUneImage(set, `portrait de ${char.name}`, prompt,
+        (mediaId) => get().updateCharacterVisuals(playerId, characterId, { portraitUrl: mediaId }));
+};
+
+/**
+ * **L'image d'un indice — le quatrième chemin, demandé le 2026-09-15.**
+ *
+ * Un indice portait déjà un `mediaUrl`, mais il ne se remplissait qu'en piochant
+ * dans la médiathèque : **c'était le seul objet illustrable qui n'avait pas
+ * droit au générateur.**
+ *
+ * ⚠️ **Et il ne demande pas la même chose que les trois autres.** Eux réclament
+ * une illustration ; un indice est **un objet qu'on pose devant un joueur**.
+ * Le registre — la pièce à conviction — vit dans `logic/inviteDImage.ts`, pur et
+ * éprouvé, *parce que c'est le choix d'auteur de ce chantier et qu'il mérite
+ * d'être lisible ailleurs que noyé dans un gabarit de chaîne.*
+ */
+export const handleGenerateClueImage = async (
+    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
+    get: () => SessionOSStore,
+    clueId: string,
+    instructions?: string,
+) => {
+    const clue = get().clues.find((c) => c.id === clueId);
+    if (!clue) return;
+
+    await demanderUneImage(
+        set,
+        `« ${clue.title || 'l’indice'} »`,
+        invitePourUnIndice(clue, instructions),
+        (mediaId) => get().updateClue(clueId, { mediaUrl: mediaId }),
+    );
 };
 
 /**
