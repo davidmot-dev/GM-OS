@@ -46,7 +46,12 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        zIndex: isDragging ? 50 : 1,
+        /*
+          La tuile dont le menu est ouvert passe DEVANT ses voisines. Sans ça,
+          la bulle qui déborde passerait sous les tuiles dessinées après elle —
+          *un élément ne peut pas sortir de l'ordre de peinture de son parent.*
+        */
+        zIndex: isMenuOpen ? 60 : isDragging ? 50 : 1,
         opacity: isDragging ? 0.5 : 1,
     };
 
@@ -142,7 +147,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             role="button"
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePadClick(); } }}
-            className={`aspect-square rounded-3xl border-2 flex flex-col items-center justify-center transition-all duration-300 relative group overflow-hidden shadow-2xl
+            className={`aspect-square rounded-3xl border-2 flex flex-col items-center justify-center transition-all duration-300 relative group shadow-2xl
                 ${isLearningThis
                     ? 'border-cyan-500 bg-cyan-900/40 shadow-glow-cyan'
                     : isPlaying
@@ -161,8 +166,10 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 } ${isOver && !isLearningThis ? 'border-accent bg-accent/10' : ''} cursor-pointer`}
         >
             {/* Premium Glossy Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.08] via-transparent to-transparent pointer-events-none opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+            {/* `rounded-3xl` porté ici depuis que la tuile ne rogne plus : c'est
+                elle qui arrondissait ces deux voiles. */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/[0.08] via-transparent to-transparent pointer-events-none opacity-50" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/10 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
 
             {/* Keybind Indicator */}
             {keyLabel && (
@@ -248,7 +255,23 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             </div>
 
             {isMenuOpen && !isLearningThis && (
-                <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar">
+                /*
+                  **Le menu déborde de la tuile — tranché par David le 2026-09-16.**
+
+                  Il était en `inset-0` : enfermé dans le carré, donc **sa taille
+                  dépendait de celle des pastilles**. Deux allers-retours en une
+                  soirée l'ont prouvé — il rognait sa dernière entrée quand la
+                  grille se densifiait, puis les tuiles assez grandes pour lui
+                  étaient *« trop grandes »*. *Un menu dont la taille dépend de
+                  la vignette qu'il recouvre n'a pas de taille à lui.*
+
+                  Il prend donc sa largeur propre et passe **par-dessus les
+                  tuiles voisines**, comme n'importe quelle bulle. Les libellés
+                  restent en toutes lettres : David a déjà dit qu'un menu « trois
+                  points » ne dit rien de ce qu'il cache — des icônes seules
+                  auraient aggravé exactement ça.
+                */
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[13rem] max-h-[22rem] bg-app-bg/98 border border-app-border/60 shadow-2xl z-50 flex flex-col items-center justify-start p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar">
                     <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
                     <button
                         onClick={handleEdit}
@@ -427,13 +450,23 @@ const PlaylistManager: React.FC = () => {
               clavier voit exactement ce que l'écran montre »* — c'était vrai sur
               l'axe des campagnes, faux sur celui-ci.
 
-              **Le nombre de colonnes suit la largeur** au lieu d'être figé à
-              cinq. La tuile est un `aspect-square` : le nombre de colonnes est
-              donc exactement ce qui décide de sa taille. Cinq colonnes restent
-              la mise en page des écrans moyens — *celle que David connaît* —, et
-              un écran large en prend une sixième, ce qui évite de repousser le
-              crossfader sous la ligne de flottaison. *Une grille qui grandit
-              vers le bas éloigne le geste qu'on fait le plus.*
+              ⭐ **On fixe une TAILLE de tuile, plus un nombre de colonnes.**
+              David, capture à l'appui : *« les pads sont trop grand, remets
+              comme avant »*. C'est le troisième réglage de cette grille en une
+              soirée — cinq colonnes, puis huit, puis six — et à chaque fois le
+              nombre de colonnes décidait de la taille des carrés, donc **le
+              résultat dépendait de la largeur de la fenêtre** : six colonnes
+              donnaient 253 px chez lui, et deux rangées pour huit pastilles.
+
+              `auto-fill` inverse la question : on énonce la taille voulue, la
+              grille en met autant que la largeur permet. *Ce qu'on veut tenir
+              stable, c'est la tuile ; le nombre de colonnes n'est qu'une
+              conséquence.*
+
+              ⚠️ **11rem et non 11 × 16 px** : la racine porte `font-size: 85%`,
+              donc un `rem` vaut **13,6 px** — c'est le piège déjà payé le 05/09
+              sur la conversion des 1 832 tailles. 11rem ≈ 150 px de plancher,
+              soit ~160 px réels et neuf tuiles par rangée sur son écran.
 
               ⛔ **Le plafond était à HUIT, et ça cassait le menu de la tuile.**
               David, capture à l'appui : *« maintenant le pad est devenu
@@ -445,7 +478,7 @@ const PlaylistManager: React.FC = () => {
               DANS ses cases, y compris ce qui ne sait pas rétrécir.* Six
               colonnes au plus, et le menu défile désormais plutôt que de rogner.
             */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-6 pb-8 w-full">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-6 pb-8 w-full">
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}

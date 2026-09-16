@@ -5287,8 +5287,42 @@ voyant sur une tuile plus petite. *Un identifiant technique ne dit rien au meneu
 quelque chose qu'à celui qui débogue, et celui-là a la console.* Signalé plutôt que retiré
 d'office — **c'est de l'affichage, et la décision lui appartient**.
 
+#### ⭐ Le troisième réglage de la grille, et la question qu'il fallait inverser
+
+*David, capture à l'appui : « les pads sont trop grand, remets comme avant ».* Six colonnes lui
+donnaient **253 px** et deux rangées pour huit pastilles, le mixeur repoussé en bas.
+
+> ⛔ **Cinq colonnes, puis huit, puis six : trois réglages en une soirée, et le défaut était dans
+> la QUESTION.** Un nombre de colonnes décide de la taille des carrés, donc **le résultat dépend de
+> la largeur de la fenêtre** — impossible à régler juste pour tout le monde en une seule valeur.
+> `auto-fill` + `minmax` inverse la question : *on énonce la taille voulue, la grille en met autant
+> que la largeur permet. Ce qu'on veut tenir stable, c'est la tuile ; le nombre de colonnes n'est
+> qu'une conséquence.*
+
+⚠️ **Le piège du `rem` a failli passer une fois de plus** : la racine porte `font-size: 85%`, donc
+un `rem` vaut **13,6 px**. `9.5rem` aurait donné des tuiles de 129 px — moitié moins qu'avant, bien
+au-delà de la demande. Le plancher est à **11rem ≈ 150 px**, soit ~160 px réels et neuf tuiles par
+rangée chez David. *Même piège que la conversion des 1 832 tailles du 05/09.*
+
+#### ⭐ Et la vraie racine du va-et-vient : le menu n'avait pas de taille à lui
+
+Le menu était en `inset-0` — **enfermé dans le carré, donc sa taille dépendait de celle des
+pastilles**. C'est ce qui a produit les deux plaintes successives : il rognait sa dernière entrée
+quand la grille se densifiait, puis les tuiles assez grandes pour lui étaient *« trop grandes »*.
+
+> **Un menu dont la taille dépend de la vignette qu'il recouvre n'a pas de taille à lui.** Il
+> devient une **bulle** (choix de David) : largeur propre, par-dessus les tuiles voisines. Trois
+> conséquences à tirer ensemble — la tuile ne rogne plus son contenu, ses deux voiles décoratifs
+> portent désormais leurs coins ronds eux-mêmes, et la tuile ouverte monte en `z-index` : *un
+> élément ne peut pas sortir de l'ordre de peinture de son parent.*
+
+⚠️ **Les libellés restent en toutes lettres.** Des icônes seules auraient tenu dans une petite
+tuile — et auraient aggravé exactement ce que David avait déjà reproché : *trois points ne disent
+rien de ce qu'ils cachent.*
+
+✅ **Vu à l'écran : « ça va ».**
+
 **Vérifié** : `tsc -b` propre, **5 077 tests** (403 fichiers, 1 ignoré).
-⚠️ **Jamais vu tourner** — sauf le débordement ci-dessus, qui l'a été.
 
 ---
 
