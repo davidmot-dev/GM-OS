@@ -1716,9 +1716,67 @@ mauvaise raison : l'essai qui écrit le calendrier ne tournait pas non plus, don
 
 ---
 
+## 🖼️ Brancher un quatrième chemin fait relire les trois autres (2026-09-16, nuit)
+
+*Chantier : le § 70 du registre — le générateur d'image sur les indices.*
+
+### 1. ⭐ Ajouter le quatrième, c'est l'occasion de compter les trois premiers
+
+La demande était simple : brancher le générateur sur les indices. En regardant où le brancher, j'ai
+trouvé **trois chemins déjà branchés qui échouaient tous en silence** — `console.error` et rien
+d'autre, alors que `gmToast` était importé vingt lignes plus haut et servait dans le même fichier.
+
+- **Leçon** : *le moment où l'on ajoute le N-ième exemplaire d'un motif est le seul moment où l'on
+  regarde les N−1 autres ensemble.* C'est là qu'une divergence saute aux yeux — et c'est pour ça
+  qu'il faut lire les frères avant d'écrire le nouveau, jamais après.
+- **Et la correction change de forme** : ce n'était plus « ajouter un toast au quatrième » mais
+  **« faire passer les quatre par une couture unique »**. La quadruple copie du `try/catch/finally`
+  disparaît au passage — ce n'était pas le but, c'est ce qui rend la correction durable.
+
+### 2. Deux copies de la même donnée, dont une seule reçoit l'écriture
+
+Le formulaire des indices garde l'indice en **état local** ; la génération écrit dans le **magasin**.
+Sans resynchronisation, l'image serait bien arrivée — sur l'indice enregistré — **mais le meneur ne
+l'aurait pas vue**, et il l'aurait crue perdue.
+
+- **Leçon** : ce dépôt trouve d'ordinaire *plusieurs écrivains pour une même donnée*. **Voici la
+  variante symétrique** : *deux copies de la même donnée, dont une seule reçoit l'écriture.* Le
+  symptôme est le pire qui soit — *ça a marché, et l'écran dit le contraire.*
+- **Ce qui l'attrape** : avant de brancher une action sur un formulaire, demander **où vit la
+  vérité pendant que le formulaire est ouvert**.
+
+### 3. ⚠️ Un registre visuel est un choix d'auteur, pas un détail de prompt
+
+Les trois générateurs existants demandent une *illustration*. Un indice est **un objet qu'on pose
+devant un joueur** : une scène illustrée montre *où* on l'a trouvé, une pièce à conviction montre
+*l'indice*.
+
+- **Leçon** : *une invite qui décide de ce que l'utilisateur va voir mérite de vivre dans un module
+  pur et éprouvé*, pas noyée dans un gabarit de chaîne au milieu d'un gestionnaire. Elle se relit,
+  elle se discute, et **on peut écrire un test qui dit « pas un portrait »**.
+
+### 4. ⛔ Le heredoc Python et les barres obliques inverses — la QUATRIÈME fois
+
+`
+` dans un heredoc `<<'PY'` est ressorti en **vrai saut de ligne** dans le fichier TypeScript, pour
+la quatrième fois de la session. Il a cassé un `replace(/
+/g, ' ')` et fait échouer un motif de
+remplacement que je croyais exact.
+
+- **La règle, maintenant sans exception** : *dès qu'un contenu porte une barre oblique inverse, il
+  passe par l'outil d'édition, jamais par un heredoc.* Quatre répétitions suffisent à établir que ce
+  n'est pas de l'inattention mais l'environnement.
+
 ---
 
-*Dernière mise à jour : 15 Septembre 2026, très tard — `databases/` dans un filet : ⛔ **la question
+---
+
+*Dernière mise à jour : 16 Septembre 2026, nuit — le générateur d'image sur les indices : ⭐
+**ajouter le quatrième exemplaire d'un motif est le seul moment où l'on regarde les trois autres
+ensemble** (et ils échouaient tous en silence), deux copies de la même donnée dont une seule reçoit
+l'écriture, et un registre visuel qui est un choix d'auteur et non un détail de prompt.*
+
+*Mise à jour de la veille : 15 Septembre 2026, très tard — `databases/` dans un filet : ⛔ **la question
 n'est pas où ranger la copie mais QUI la déclenche** (la sauvegarde automatique ne serait jamais
 partie), un dossier en lecture seule dont deux Ateliers ont changé la nature en deux jours, comparer
 le contenu et jamais les dates, et ⛔ **une dégradation lancée sur un seul essai ne prouve rien**.*

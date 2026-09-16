@@ -4605,6 +4605,177 @@ dans `app.whenReady`), guide 91 § « Ce qui est sauvegardé ».
 
 **Vérifié** : `tsc -b` propre, **4 956 tests** (394 fichiers, 1 ignoré), **192 tests E2E**.
 
+### 70 · ⭐ Le générateur d'image sur les indices — et les trois pannes muettes qu'il a révélées (2026-09-16, nuit)
+
+*David : « est-ce que tu peux brancher le générateur d'image IA sur la définition des indices ? ».*
+
+Les deux côtés existaient, et il manquait exactement la couture entre eux. Un indice portait déjà un
+`mediaUrl` — mais il ne se remplissait qu'en piochant dans la médiathèque. **Les indices étaient le
+seul objet illustrable sans générateur**, alors que les PNJ, les cartes d'atlas et les PJ en avaient
+un chacun.
+
+#### ⛔ Ce que le comptage a trouvé, encore une fois
+
+Les trois générateurs existants portaient chacun leur `try / catch / finally`, et **chaque `catch`
+faisait `console.error` et rien d'autre** — alors que `gmToast` est importé en tête du même fichier
+et sert vingt lignes plus haut.
+
+Clé absente, service indisponible, image rejetée : le meneur cliquait, le voile tournait, s'arrêtait,
+et **rien ne se passait**. Trois fois.
+
+> *C'est la panne muette que ce dépôt a déjà payée sur la projection de fiche — quatre mois cassée
+> parce qu'un `catch` avalait l'exception.* **Je ne voulais pas ajouter un quatrième muet** : les
+> quatre passent désormais par une couture unique, `demanderUneImage`, qui pose le voile, le lève, et
+> **dit ce qui a échoué**.
+
+⚠️ **Le message de l'erreur remonte tel quel**, parce qu'il dit quelque chose : `generateImage` lève
+« Clé API Gemini manquante », « image trop petite pour être vraie », « Bridge Ollama non disponible ».
+*Un toast générique ne vaudrait guère mieux qu'un silence : il dirait qu'on a échoué sans dire quoi
+réparer.*
+
+⭐ **Et la couture retire au passage la quadruple copie du `try/catch/finally`.** Ce n'était pas le
+but ; c'est ce qui rend la correction durable. *Une règle écrite quatre fois est une règle qui
+divergera.*
+
+#### ⭐ Un indice n'est pas un portrait — le registre
+
+Les trois générateurs demandent tous une **illustration**. Un indice, non : c'est **un objet qu'on
+pose devant un joueur**.
+
+*Registre tranché par David : la **pièce à conviction**.* Gros plan, fond neutre, éclairage qui
+montre la matière et l'usure — ce qu'on photographie pour un dossier, pas ce qu'on peint pour une
+couverture.
+
+| | Ce que ça montre |
+|---|---|
+| Une scène illustrée | **où** l'indice a été trouvé |
+| Une pièce à conviction | **l'indice** — que le joueur doit croire pouvoir prendre en main |
+
+⚠️ **On écarte explicitement le texte lisible** (`No readable text`). Ces modèles écrivent des lettres
+qui n'en sont pas : un parchemin couvert de faux mots attire l'œil dessus et détruit l'illusion.
+*Mieux vaut un document dont on devine l'écriture qu'un document dont on lit le charabia.*
+
+⚠️ **L'invite reste en anglais**, comme les trois autres. Ce n'est pas un choix de style : *changer de
+langue pour ce seul générateur donnerait des résultats visiblement moins bons sans que personne ne
+sache pourquoi.*
+
+Elle vit dans `logic/inviteDImage.ts`, pure et éprouvée — *parce que c'est le choix d'auteur de ce
+chantier, et qu'il mérite d'être lisible ailleurs que noyé dans un gabarit de chaîne.*
+
+#### ⚠️ Le piège d'intégration : deux états pour le même indice
+
+Le formulaire des indices garde l'indice en **état local** ; la génération écrit dans le **magasin**,
+par `updateClue`. Sans resynchronisation, **l'image serait bien arrivée — sur l'indice enregistré —
+mais le meneur ne l'aurait pas vue**, et il l'aurait crue perdue.
+
+L'écran relit donc l'indice frais et replace son visuel dans le formulaire ouvert.
+
+> C'est une variante du motif habituel : d'ordinaire ce dépôt trouve *plusieurs écrivains pour une
+> même donnée* ; ici c'est **deux copies de la même donnée**, dont une seule reçoit l'écriture.
+
+⚠️ **Le bouton refuse un indice non enregistré**, avec son motif dans l'infobulle : la génération
+écrirait dans le vide. *Un bouton qui ne fait rien sans dire pourquoi est pire qu'un bouton absent.*
+
+#### Ce qui est gardé
+
+- **`inviteDImage.test.ts`** — 10 essais : le registre, les bornes, la mise à plat, et les
+  instructions du meneur qui **remplacent** l'invite au lieu de s'y ajouter.
+- **`imageQuiEchoue.test.ts`** — 11 essais, dont ⛔ **les trois chemins existants qui doivent
+  désormais parler**, et le message qui dit *pourquoi* et *de quoi*.
+- **Dégradation** : le toast retiré de la couture → **5 rouges**, dont un par chemin.
+
+#### ⚠️ Ce qui reste
+
+⚠️ **Aucune image n'a été générée pour de vrai depuis ce chantier.** Le fil, l'invite et la garde sont
+en place ; *personne n'a vu sortir une pièce à conviction.* Et c'est le quatrième chemin d'IA en
+attente d'écran, avec la photo de manuel, le PDF réel et la composition de calendrier.
+
+**Ancres** : `src/modules/session/logic/inviteDImage.ts`,
+`src/modules/session/logic/crossDomainHelpers.ts` (`demanderUneImage`, `handleGenerateClueImage`),
+`src/modules/session/components/CluesManager.tsx`, guide 25 § « L'image d'un indice ».
+
+**Vérifié** : `tsc -b` propre, **4 977 tests** (396 fichiers, 1 ignoré), **192 tests E2E**.
+
+### 71 · ⚠️ EN COURS — « je n'arrive pas à taper dans un champ », et la sonde qui nommera le coupable (2026-09-16)
+
+*David : « je n'arrive pas à changer le titre d'un indice. De temps en temps, je n'arrive pas à
+modifier un champ texte ».*
+
+⚠️ **Ce chantier n'est pas clos : le défaut n'est PAS corrigé.** Ce qui est livré est un
+**instrument**, pas un correctif.
+
+#### Ce que le témoignage a donné, et ce qu'il a coûté de le demander
+
+Trois questions ont rapporté plus que deux heures de lecture :
+
+| Question | Réponse | Ce que ça élimine |
+|---|---|---|
+| Que se passe-t-il quand tu tapes ? | *« je n'arrive pas à taper, puis après 30 s à 1 min je récupère la main »* | Ce n'est ni un caractère écrasé, ni une perte de focus à chaque frappe |
+| Est-ce nouveau ? | **Antérieur à aujourd'hui** | Ce n'est aucun de mes six commits du jour |
+| Le reste de l'écran répond-il ? | ⭐ **Oui, normalement** | ⛔ **Le fil d'affichage n'est PAS bloqué** |
+| Où encore ? | Autres modules, boîtes de dialogue, la description de l'indice | Ce n'est pas propre aux indices |
+
+#### ⛔ Ma première sonde était la mauvaise, et c'est la leçon du chantier
+
+J'avais supposé un **fil d'affichage bloqué** — la seule explication qui me venait pour « 30 s puis
+ça se débloque » — et proposé un `PerformanceObserver` sur les tâches longues. David a approuvé.
+
+**Sa réponse suivante a invalidé l'hypothèse** : le reste de l'écran répond. Un observateur de tâches
+longues n'aurait **rien trouvé**, et son silence aurait été lu comme « rien d'anormal ».
+
+> ⛔ *Une mesure fondée sur une hypothèse fausse ne corrige pas l'hypothèse — elle la confirme.*
+> **Poser la question qui discrimine AVANT de choisir l'instrument**, jamais après.
+
+#### Les six pistes lues et écartées
+
+| Piste | Pourquoi ce n'est pas elle |
+|---|---|
+| L'`AIPromptOverlay` que je venais de monter | Il rend `null` tant qu'il est fermé |
+| La garde des pastilles (Sound/Light/Music) | `estUneFrappeDePastille` écarte bien `INPUT` et `TEXTAREA` |
+| Le vol de focus de la main de cartes | ⚠️ `ref={(n) => n?.focus()}` **se rejoue à chaque rendu** — mais gardé par une carte agrandie, et **tablette seulement** |
+| L'état local du formulaire d'indice | L'effet qui le réécrit est gardé par `editingClueId`, remis à `null` aussitôt |
+| L'enregistrement | `handleSave` écrit bien le titre saisi |
+| Le Spotlight | Ne lit que `Ctrl+K` et les flèches |
+
+#### L'instrument : `sondeDeLaFrappe.ts`
+
+Elle répond à la seule question qui reste : **où va la frappe ?**
+
+| Verdict | Ce que ça veut dire |
+|---|---|
+| `hors-champ` | La touche est arrivée à la fenêtre, **aucun champ n'avait le focus** |
+| `frappe-refusee` | Le champ avait le focus **et sa valeur n'a pas bougé** — avec `defaultPrevented`, `disabled`/`readOnly`, et si le focus a bougé |
+
+⚠️ **En phase de CAPTURE** : un écouteur de bulle ne verrait rien si quelqu'un appelait
+`stopPropagation` en chemin — *et c'est précisément l'une des causes qu'on cherche à distinguer. Une
+sonde qu'on peut faire taire ne mesure que les cas où elle n'était pas utile.*
+
+⚠️ **Elle écrit dans le journal de débogage PERSISTÉ**, pas dans la console, et elle est **montée au
+point d'entrée, sans condition**. Le défaut est intermittent : *un instrument qu'il faut armer
+d'avance est un instrument éteint au moment qui compte.* Le journal se lit par l'icône **Terminal**
+de la barre latérale, et il survit au rechargement.
+
+⚠️ **Silencieuse tant que les lettres s'inscrivent**, et muette pendant une rafale : *une seconde de
+blocage écrirait quarante lignes et noierait la seule qui compte.*
+
+#### Ce qui est gardé
+
+- **`sondeDeLaFrappe.test.ts`** — 16 essais : les trois verdicts, les touches qui n'écrivent rien,
+  les raccourcis, les champs muets (case à cocher), l'anti-noyade et le démontage.
+
+#### ⚠️ Ce qui reste — et c'est l'essentiel
+
+⛔ **Le défaut n'est pas corrigé.** La prochaine occurrence doit être suivie d'un coup d'œil au
+journal : **la ligne qu'on y trouvera nomme la famille de cause**, et le correctif suivra.
+
+⚠️ **Et si le journal reste vide pendant que le champ refuse**, c'est en soi une information
+décisive : la touche n'atteindrait même pas la fenêtre — donc quelque chose entre le système et le
+rendu, et il faudrait regarder du côté d'Electron.
+
+**Ancres** : `src/utils/sondeDeLaFrappe.ts`, `src/main.tsx` (le montage).
+
+**Vérifié** : `tsc -b` propre, **4 993 tests** (397 fichiers, 1 ignoré), **192 tests E2E**.
+
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
 ✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie

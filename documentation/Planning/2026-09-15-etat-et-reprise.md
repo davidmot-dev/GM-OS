@@ -1,6 +1,6 @@
 # État et reprise — 2026-09-15, au soir
 
-> **Base saine.** `tsc -b` propre, **4 956 tests verts** (394 fichiers, 1 ignoré), **192 tests E2E**,
+> **Base saine.** `tsc -b` propre, **4 977 tests verts** (396 fichiers, 1 ignoré), **192 tests E2E**,
 > branche `feature/tablet-hub-pwa`.
 >
 > ⚠️ **Le plantage de rendu d'une exécution E2E complète** (§ 1 bis du registre) n'est toujours pas
@@ -27,6 +27,7 @@
 | **Les jauges qui se vident** | ⭐ Le **sens** d'une jauge — monte / s'épuise — et l'**usure de fin de scène**. Le mécanisme de descente existait déjà : c'est l'intention qui manquait à tout ce qui l'entoure (§ 66) |
 | **Le code couleur** | ⭐ Orange à mi-course, rouge au dernier quart, **en fractions** pour que 4 et 12 segments s'alarment au même endroit (§ 66) |
 | **L'Atelier des calendriers** | ⭐ Composer une année sans écrire de JSON — et ⛔ **la garde qui empêche un calendrier de GELER GM-OS** (§ 67) |
+| **L'image d'un indice** | ⭐ Le générateur branché sur les indices — registre « pièce à conviction ». ⛔ Et **les trois générateurs existants échouaient en silence** (§ 70) |
 | **`databases/` sauvegardé** | ✅ Un miroir à part, déclenché **à chaque écriture et au démarrage** — la sauvegarde automatique ne se serait **jamais** réveillée pour ça (§ 69) |
 | **Les jours de fête** | ⭐ Une fête **dans** un mois, et sur plusieurs jours ; annoncée à l'horloge, à la table et au journal. ⛔ Et la semaine que les jours hors calendrier **décalaient de six jours par an** (§ 68) |
 
@@ -37,6 +38,24 @@ sur l'Ulanzi que la demande ne nommait pas ; un calendrier capable de figer l'ap
 ---
 
 ## 1 · Par quoi reprendre
+
+### ⛔ EN TÊTE : « je n'arrive pas à taper dans un champ » (§ 71)
+
+**Signalé par David le 2026-09-16, et NON CORRIGÉ.** Un champ de texte refuse la saisie pendant
+30 s à 1 min, puis se débloque tout seul. Plusieurs modules, boîtes de dialogue comprises. ⚠️
+**Antérieur à la journée du 15**, donc aucun de ses chantiers n'est en cause.
+
+⭐ **Le fait qui élimine la moitié des hypothèses** : pendant le blocage, **le reste de l'écran
+répond normalement**. Le fil d'affichage n'est donc pas bloqué.
+
+**Une sonde est posée** (`sondeDeLaFrappe.ts`, montée dans `main.tsx`). À la prochaine occurrence :
+ouvrir le journal de débogage — icône **Terminal** de la barre latérale — et lire la ligne. Elle
+dira `hors-champ` (le focus a été volé) ou `frappe-refusee` (avec `preventDefault`, `disabled`, ou
+aucune cause visible, ce qui désignerait alors le rendu).
+
+⚠️ **Un journal VIDE pendant un blocage serait aussi une réponse** : la touche n'atteindrait pas la
+fenêtre, et il faudrait regarder du côté d'Electron.
+
 
 ### ✅ `databases/` est dans un filet — CLOS le soir même (§ 69)
 
@@ -53,6 +72,7 @@ garé depuis le 29/08 pour le miroir des médias, où il pèse autrement plus lo
 | --- | --- |
 | **Une photo de page de manuel** (§ 65) | Le fil, la lecture des capacités et la garde sont posés. **Aucune image n'est jamais partie vers un modèle depuis ce dépôt.** À essayer avec `gemma4:12b` |
 | **Composer un calendrier** (§ 67) | Le schéma et le contrôle en aval sont éprouvés. *Personne n'a vu un calendrier sortir d'une phrase* |
+| **L'image d'un indice** (§ 70) | L'invite et la garde sont posées. *Personne n'a vu sortir une pièce à conviction* |
 | **Ranger une table par l'IA** (§ 63) | Jamais lancé contre un vrai modèle |
 
 ⚠️ **Un vrai PDF de manuel** n'a jamais traversé l'Atelier non plus. C'est là que « Ranger par l'IA »
