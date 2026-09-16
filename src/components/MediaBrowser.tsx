@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useMediaStore } from '../stores/useMediaStore';
+import { correspondALaRecherche } from './media/rechercheDeMedia';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
 import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
 import { usagesDesMedias } from '../services/proprietairesDesMedias';
@@ -248,13 +249,14 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
             }
         }
 
-        if (search) {
-            const searchLower = search.toLowerCase();
-            const nameMatch = m.name.toLowerCase().includes(searchLower);
-            const tagMatch = m.tags.some(t => t.toLowerCase().includes(searchLower));
-            const typeMatch = m.type.toLowerCase().includes(searchLower);
-            if (!nameMatch && !tagMatch && !typeMatch) return false;
-        }
+        /*
+          ⚠️ **La comparaison vit dans `media/rechercheDeMedia`, et elle y est
+          éprouvée.** Écrite ici, elle était littérale : `sirene` ne trouvait pas
+          *sirène*, et `taverne combat` ne trouvait pas *« combat à la
+          taverne »*. *Une recherche qui échoue sur un accent ne se lit pas
+          comme une recherche stricte : elle se lit comme un fichier perdu.*
+        */
+        if (!correspondALaRecherche(m, search)) return false;
         
         if (campaignFilterEnabled && activeCampaignId) {
             if (!m.campaignIds?.includes(activeCampaignId)) return false;
@@ -526,23 +528,89 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                 <main className="flex-1 h-full flex flex-col relative z-20">
                     
                     {/* Integrated HUD Toolbar */}
-                    <header className="h-24 border-b border-app-border/10 flex items-center px-10 bg-app-surface/40 backdrop-blur-3xl justify-between relative">
+                    {/*
+                      ⛔ **`z-30` n'est pas décoratif : sans lui, le menu de tri
+                      passe SOUS les vignettes.** Signalé par David le
+                      2026-09-16, capture à l'appui — la seconde entrée du menu
+                      « Date » était recouverte par une carte.
+
+                      La cause n'est pas le `z-50` du menu, qui est correct :
+                      c'est que **ce header crée un contexte d'empilement** —
+                      `backdrop-filter` en crée un, `backdrop-blur-3xl` ci-dessous
+                      en est un. Le `z-50` du menu est donc *enfermé* ici, et ne
+                      peut plus rien départager au-dehors.
+
+                      Or chaque vignette est `relative` **sans `z-index`**
+                      (+ `backdrop-blur-sm`, un contexte de plus) : même couche
+                      de peinture que ce header, mais **plus loin dans le
+                      document**, donc peinte par-dessus lui *tout entier*.
+                      *Un élément ne peut pas sortir de l'ordre de peinture de
+                      son parent.*
+
+                      Un `z-index` positif ici fait passer le header dans la
+                      couche au-dessus des positionnés sans `z-index` — les
+                      vignettes — et le menu suit.
+                    */}
+                    <header className="h-24 border-b border-app-border/10 flex items-center px-10 bg-app-surface/40 backdrop-blur-3xl justify-between relative z-30">
                         {/* Decorative HUD line */}
                         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]" />
                         
                         <div className="flex items-center gap-8 flex-1 max-w-5xl">
-                            {/* Search Tactical HUD */}
+                            {/*
+                              ⛔ **Le champ existait ; il était INVISIBLE.** David
+                              le 2026-09-16 : *« peux-tu rajouter un moteur de
+                              recherche, j'ai parfois du mal à trouver »* — il y
+                              en avait un, qui filtrait bien le nom, les
+                              étiquettes et le type.
+
+                              Son texte d'invite était en `text-app-text/5` —
+                              **5 % d'opacité** — et sa loupe en `/10` : sur le
+                              fond sombre, un rectangle vide sans le moindre
+                              indice. *C'est le piège de Light-OS en pire : là-bas
+                              le gris « que personne n'a choisi » donnait un
+                              contraste de 1,6 ; ici on est en dessous.*
+
+                              **Une fonctionnalité qu'on ne voit pas est une
+                              fonctionnalité absente**, et elle coûte plus cher
+                              qu'une absence : on la redemande, et on cherche à
+                              la main en attendant.
+                            */}
                             <div className="relative flex-1 group max-w-xl">
-                                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-app-text/10 group-focus-within:text-accent group-focus-within:drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.4)] transition-all duration-500" size={18} />
+                                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-app-text/40 group-focus-within:text-accent group-focus-within:drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.4)] transition-all duration-500" size={18} />
                                 <input 
                                     type="text" 
                                     placeholder={t('mediaBrowser.searchPlaceholder')} 
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full bg-app-bg/80 border border-app-border/10 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-500 placeholder:text-app-text/5 placeholder:uppercase placeholder:text-ui-10 placeholder:tracking-[0.2em] text-app-text"
+                                    className="w-full bg-app-bg/80 border border-app-border/30 rounded-2xl pl-14 pr-32 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-500 placeholder:text-app-text/35 placeholder:uppercase placeholder:text-ui-10 placeholder:tracking-[0.2em] text-app-text"
                                 />
-                                <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                    <div className="px-1.5 py-0.5 border border-accent/20 rounded text-ui-8 font-black text-accent/50 font-display">{t('mediaBrowser.scanMode')}</div>
+
+                                {/*
+                                  **Le compte de résultats, et le moyen d'effacer.**
+                                  Une recherche qui ne rend rien doit se
+                                  distinguer d'une médiathèque vide : *sans ce
+                                  nombre, « aucune donnée détectée » accuse la
+                                  bibliothèque alors que c'est le filtre qui
+                                  parle.* Et le `Échap`/la croix rendent la sortie
+                                  visible — on tape souvent trois lettres de trop.
+                                */}
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                    {search ? (
+                                        <>
+                                            <span className={`text-ui-9 font-black uppercase tracking-widest ${displayMedia.length === 0 ? 'text-amber-500' : 'text-accent'}`}>
+                                                {displayMedia.length}
+                                            </span>
+                                            <button
+                                                onClick={() => setSearch('')}
+                                                title={t('mediaBrowser.clearSearch')}
+                                                className="p-1.5 rounded-lg text-app-text/40 hover:text-app-text hover:bg-app-text/10 transition-colors"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <div className="px-1.5 py-0.5 border border-accent/20 rounded text-ui-8 font-black text-accent/50 font-display opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none">{t('mediaBrowser.scanMode')}</div>
+                                    )}
                                 </div>
                             </div>
 

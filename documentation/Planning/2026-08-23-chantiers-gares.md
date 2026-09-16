@@ -5324,6 +5324,71 @@ rien de ce qu'ils cachent.*
 
 **Vérifié** : `tsc -b` propre, **5 077 tests** (403 fichiers, 1 ignoré).
 
+### 75 · ⭐ Le Media Hub — un menu qui passait dessous, et une recherche invisible (nuit du 2026-09-16 au 17)
+
+Deux signalements de David à la suite, sur le même écran. **Les deux sont des fonctionnalités qui
+existaient et qu'on ne voyait pas.**
+
+#### ⛔ 1. Le menu de tri passait SOUS les vignettes
+
+*Capture à l'appui : la seconde entrée du menu « Date » recouverte par une carte.*
+
+> **Ce n'était pas le `z-50` du menu qui était faux** — il est correct, mais **enfermé**. Le
+> `<header>` porte `backdrop-blur-3xl`, et *un `backdrop-filter` crée un contexte d'empilement* :
+> le `z-50` ne peut donc plus rien départager au-dehors. Or chaque vignette est `relative` **sans
+> `z-index`** — même couche de peinture que le header, mais **plus loin dans le document**, donc
+> peinte par-dessus lui *tout entier*. **Un élément ne peut pas sortir de l'ordre de peinture de
+> son parent.**
+
+C'est la **troisième fois de la soirée** que ce principe tranche un défaut — après la bulle du
+menu des pastilles et son `z-index` de tuile. Correctif : `z-30` sur le header.
+
+⭐ **Le balayage « qui d'autre ? » a rassuré sur le diagnostic** : des trois autres menus déroulants
+du dépôt, **`OraclePanel` porte déjà `z-10` sur son en-tête flouté** — le même correctif, déjà en
+place. `HubMessenger` vit dans un panneau `fixed z-[100]` d'une seule colonne, `Select.tsx` est à
+`z-[1000]`. *Le Media Hub était l'exception, pas la règle.*
+
+⚠️ **Aucun test, et c'est délibéré** : jsdom ne calcule aucune mise en page, l'ordre d'empilement
+y est **inobservable**. Un test vérifiant la présence de la classe passerait pendant que le défaut
+reviendrait par un autre chemin — *un contrôle qui se trompe est pire qu'un contrôle absent.* Le
+raisonnement est écrit au-dessus de la ligne.
+
+#### ⛔ 2. « Peux-tu rajouter un moteur de recherche ? » — il y en avait un
+
+Il filtrait déjà le nom, les étiquettes et le type. Deux défauts le faisaient passer pour absent :
+
+| | |
+| --- | --- |
+| ⛔ **Le champ était invisible** | Texte d'invite à `text-app-text/5` — **5 % d'opacité** — et loupe à `/10`. Un rectangle vide sans indice. *Le piège de Light-OS en pire : là-bas le gris « que personne n'a choisi » donnait 1,6 de contraste ; ici on est en dessous.* |
+| ⚠️ **Il cherchait à la lettre près** | `sirene` ne trouvait pas *sirène* ; `taverne combat` ne trouvait pas *« combat à la taverne »*. *Une recherche qui échoue sur un accent ne se lit pas comme une recherche stricte : elle se lit comme un fichier perdu.* |
+
+> ⭐ **Une fonctionnalité qu'on ne voit pas est une fonctionnalité absente — et elle coûte plus
+> cher qu'une absence : on la redemande, et on cherche à la main en attendant.** C'est le
+> deuxième cas du genre en deux heures, après les onze pastilles cachées par un `.slice`.
+
+La comparaison passe dans `components/media/rechercheDeMedia.ts` : accents neutralisés des deux
+côtés, **tous les mots exigés, chacun n'importe où** (nom, étiquette ou type, même répartis entre
+eux) — *on cherche des morceaux de nom dont on se souvient ; exiger l'ordre, c'est demander de se
+rappeler ce qu'on est précisément en train de chercher.* 14 essais.
+
+Le champ affiche désormais le **nombre de résultats** (ambre s'il n'y en a aucun) et une croix pour
+effacer : *sans ce nombre, « aucune donnée détectée » accuse la bibliothèque alors que c'est le
+filtre qui parle.*
+
+⚠️ **Dixième copie de la désaccentuation dans le dépôt** (`archetypes`, `canevas`,
+`structureDeCampagne`, `inventaire`, `rechercheDansLeManuel`…). Inscrit dans le fichier plutôt que
+tu — les réunir est un chantier à part.
+
+⚠️ **Non touché, signalé** : la vue « Plus récents » plafonne l'affichage à 50 fichiers, donc le
+compte y décrit les vignettes à l'écran et non les correspondances. C'est une vue choisie
+explicitement, jamais le défaut.
+
+**Ancres** : `src/components/MediaBrowser.tsx` (header `z-30`, champ de recherche),
+`src/components/media/rechercheDeMedia.ts`.
+
+**Vérifié** : `tsc -b` propre, **5 091 tests** (404 fichiers, 1 ignoré).
+⚠️ **Jamais vu tourner.**
+
 ---
 
 ## La vue d'un coup d'œil
