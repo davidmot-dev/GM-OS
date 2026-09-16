@@ -4943,6 +4943,353 @@ ici pour qu'on cesse de les rechercher, avec leur ancre.*
 - **Les 125 classes d'animation** qui jouent enfin, dans 76 fichiers. *Rien ne les avait jamais vues
   jouer* : ce qui se voit maintenant est du neuf, y compris là où personne n'a rien demandé.
 
+### 72 · ⭐ La plage de lecture — une fonctionnalité promise par deux documents et écrite nulle part (2026-09-16)
+
+*David : « est-ce qu'on avait pas dit que dans Music-OS je voulais pouvoir définir une plage dans un
+morceau qui se jouerait en boucle ou pas ? ».*
+
+**Son souvenir était juste, et c'est ça qui mérite d'être noté.** Deux documents décrivaient la
+fonctionnalité **au présent** :
+
+| Où | Ce qui était écrit |
+| --- | --- |
+| Guide 71 § 3 | *« Chaque piste peut avoir un point d'entrée et de sortie défini. Le lecteur rebouclera automatiquement entre ces deux points »* |
+| `music-os-analysis.md` § 3 | *« Le moteur reboucle instantanément entre ces deux points »* |
+
+Et dans le code : `MusicPad.loopA` / `loopB` déclarés, initialisés à `null` **en cinq endroits**,
+**écrits par personne et lus par personne**. Aucun écran ne les posait. Le moteur ne connaissait que
+`audioElement.loop`, c'est-à-dire le morceau **entier**.
+
+> ⛔ **Le croisement de deux motifs déjà payés ici.** *Une promesse de guide sans code* — les trois de
+> Light-OS, le 07/09 — **et** *un champ déclaré des deux côtés et rempli par personne* — `activeDiceConfig`
+> le 03/09, `pad.isActive` avant lui. ⚠️ **Ce qui est neuf, c'est le porteur de la promesse** : ce
+> n'était pas une note de travail, c'était le **guide de l'utilisateur**. *Un document qu'on écrit en
+> même temps que le plan décrit une intention ; relu six mois plus tard, il se lit comme un état des
+> lieux — et il devient la mémoire de celui qui s'en sert.*
+
+#### ⭐ Deux réglages, pas trois — la décision d'auteur
+
+La demande contient déjà une plage **et** un choix (« en boucle ou pas »), soit trois comportements.
+Le bouton 🔁 de la platine existait, et il devient la moitié de la réponse : **la plage dit *quoi*
+jouer, 🔁 dit *si ça se répète*.**
+
+|  | 🔁 allumé | 🔁 éteint |
+| --- | --- | --- |
+| **sans plage** | le morceau entier tourne | il joue une fois |
+| **avec plage** | la plage tourne | la plage joue une fois, puis s'arrête |
+
+*Quatre comportements sans ajouter un seul contrôle — et surtout sans un troisième réglage qui aurait
+pu contredire les deux autres.*
+
+⚠️ **Les points ne s'appellent PAS A et B à l'écran**, bien que les champs persistés se nomment
+`loopA`/`loopB` depuis toujours : **les platines s'appellent déjà A et B**. *« Pose B sur la platine
+A » est une phrase que personne ne devrait avoir à démêler en séance.* Ce sont **Entrée** et
+**Sortie**.
+
+#### ⛔ Là où la boucle ne devait surtout pas vivre
+
+Une boucle se tient en surveillant la position de lecture. Deux endroits évidents, tous deux faux :
+
+- **pas dans un composant** — *un composant démonté n'exécute rien*. C'est mot pour mot la leçon du
+  fondu croisé du 30/08, où l'arrêt de la platine sortante vivait dans un `useEffect` du `Mixer` :
+  écran de Music-OS fermé, la platine jouait indéfiniment ;
+- **pas dans un `requestAnimationFrame`** — il se fige quand la fenêtre passe à l'arrière-plan, ce
+  qui est *l'état normal d'un GM-OS qui projette sur un second écran*.
+
+Elle vit donc dans le moteur, sur **deux mécanismes complémentaires** : un `setTimeout` armé pour
+l'instant exact de la sortie (précis, ré-armé à chaque lecture, déplacement, bouclage), **et**
+`timeupdate` comme filet — émis par l'élément audio lui-même, quatre fois par seconde, sans dépendre
+d'aucune horloge d'interface. *Une boucle qui se dégrade à un quart de seconde près vaut mieux
+qu'une boucle qui s'arrête.*
+
+#### ⚠️ Les quatre pièges payés en chemin
+
+| | |
+| --- | --- |
+| **La boucle native et la plage ne peuvent pas coexister** | `audioElement.loop` rembobine vers **zéro**, la plage vers **l'entrée**. Laissés ensemble sur une sortie qui touche la fin du fichier : *deux écrivains pour une même position, et c'est le hasard qui tranche* |
+| ⛔ **La plage meurt avec la piste** | `loadTrack` l'efface, et le magasin repose celle du nouveau pad **juste après**. Dans l'autre ordre, une plage 0:10→0:40 restée du morceau précédent ferait boucler trente secondes arbitraires — *sans que le meneur ait le moindre moyen de deviner d'où sortent ces bornes* |
+| **La durée n'est pas connue quand on pose la plage** | Les métadonnées d'un fichier fraîchement chargé ne sont pas lues. Le bornage n'a donc rien à border au chargement : il se rejoue sur `loadedmetadata`, **seul endroit possible**. C'est ce qui rattrape *un fichier remplacé sous un pad qui avait gardé ses points* — on borne plutôt que de refuser, **borner rend la plage approximative et visible, refuser la rendrait muette** |
+| **Un délai de zéro se replanifie sans fin** | Si la tête ne bouge pas (mise en tampon, piste finie), les rendez-vous s'enchaînent dans la même milliseconde. *Ce qui se replanifie tout seul doit avoir un pas minimal* — 10 ms |
+
+#### ⚠️ Ce que l'écran DIT, et pourquoi
+
+`plageValide` refuse trois cas : un seul point posé, deux points à l'envers, une plage plus courte
+que 0,25 s. **Refuser en silence aurait donné un bouton qui ne fait rien** — *le défaut préféré de ce
+projet.* Le verdict est donc écrit sous la forme d'onde : `0:12 → 1:45` en vert, **« Pose la
+sortie »** ou **« Plage invalide »** en ambre, **« Morceau entier »** quand il n'y en a pas.
+
+Et les points **se posent à la position écoutée**, pas dans un champ de secondes : *on cale une
+boucle à l'oreille, pas au chronomètre.* Le geste hérite du pointage du 30/08 — il marche donc à
+l'arrêt comme en lecture.
+
+#### Ce qui est gardé
+
+- **`plageDeLecture.test.ts`** — 24 essais sur l'arbitrage seul : les refus, le bornage à la durée,
+  la position de départ, le pas minimal.
+- **`plageDuPad.test.ts`** — 8 essais sur **le chemin**, et c'est le point : *une donnée correcte que
+  personne ne transporte laisse tous les tests au vert et le défaut intact.* Dont ⛔ **l'ordre
+  chargement → plage**, vérifié par `invocationCallOrder`, et **les DEUX platines prévenues** quand
+  le même pad est chargé des deux côtés (le préchargement le fait couramment).
+- **Le comptage des chemins** : `loadTrack` n'a que deux appelants, tous deux dans `loadToDeck` ; et
+  `loadToDeck` est le seul passage — pastille, glisser-déposer, clavier, restauration d'instantané.
+  *La question « qui d'autre charge une piste ? » avant d'annoncer que c'est fini.*
+
+#### ⚠️ Ce qui reste
+
+⚠️ **La forme d'onde est un décor** — 40 hauteurs en dur, les mêmes pour tous les morceaux
+(`Deck.tsx`). Le bandeau vert de la plage se pose dessus et le clic pour se placer fonctionne, mais
+**on ne voit pas le son** : poser une plage se fait à l'oreille, jamais à l'œil. Une vraie forme
+d'onde reste le seul vrai confort qui manque ici, et elle était déjà listée dans les perspectives v5
+de la doc d'analyse.
+
+⚠️ **La plage ne part pas vers les tablettes.** C'est un réglage de production côté meneur ; aucun
+écran distant n'a de raison de le connaître. *Écrit ici pour que ce soit un choix et non un oubli.*
+
+**Ancres** : `src/modules/music/logic/plageDeLecture.ts`, `MusicEngine.ts` (`definirLaPlage`,
+`surveillerLaSortie`, `bouclerOuFinir`, `appliquerLaBoucleNative`), `useMusicStore.ts`
+(`definirLaPlageDuPad`, `loadToDeck`), `components/Deck.tsx`, guide 71 § 3.
+
+**Vérifié** : `tsc -b` propre, **5 052 tests** (401 fichiers, 1 ignoré), dont **48 neufs**.
+
+#### ⛔ Éprouvé en réel le jour même — et la plage a cassé le fondu croisé
+
+*David, une heure plus tard : « le fade out fade in entre A et B ne fonctionne plus », le son
+traversant **d'un coup**. Une plage était posée.*
+
+⭐ **Le diagnostic a commencé par disculper le suspect évident.** Neuf essais écrits exprès
+traversent `triggerAutoFade` en vrai : la courbe est posée sur les deux gains, **étalée sur la
+durée réglée**, rien ne l'écrase par une pose immédiate, et elle part avec une plage de chaque
+côté. *Le chemin bouton → moteur était intact — il fallait le prouver avant de chercher
+ailleurs.*
+
+⛔⛔ **Et ces essais ont trouvé pourquoi personne n'avait jamais vu ce défaut : le `GainNode`
+simulé du banc d'essai n'avait pas de `setValueCurveAtTime`** — *la seule fonction qui trace la
+courbe du fondu*. Tout test qui aurait atteint `crossfadeTo` levait un `TypeError`, **ce qui
+prouve qu'aucun ne l'atteignait**. Le fondu automatique, cœur du module, n'était couvert par
+rien depuis toujours. *Un mock incomplet ne rend pas un test rouge : il rend une zone
+inaccessible, et le silence qui suit ressemble à une couverture.*
+
+**La cause** : la plage coupait la platine **sortante** en plein fondu. Arrivée à sa sortie, elle
+rembobinait à l'entrée — ou, 🔁 éteint, se mettait en **pause nette**. Le morceau disparaissait
+d'un coup pendant que l'autre montait : *ça s'entend exactement comme une bascule.*
+
+> **La plage dit ce qui se joue en écoute normale. Une platine qu'un fondu emmène au silence est
+> déjà condamnée — la couper une seconde fois n'aide personne.** La suspension se lève si le
+> meneur saisit le crossfader en route (la sortante revient à l'antenne avec sa plage), à
+> l'arrêt, et au fondu suivant. *Une suspension qu'on oublie de lever est la minuterie qui
+> survit à ce qu'elle devait arrêter, en plus discret.*
+
+⚠️ **Second défaut trouvé en chemin** : `play()` posait `currentTime` **sans la garde que
+`seek()` porte** — *une position posée avant que les métadonnées soient lues est ignorée en
+silence*. Le morceau démarrait donc à zéro au lieu de l'entrée, une fois sur deux, sans rien
+dire.
+
+✅✅ **ÉPROUVÉE EN RÉEL le 2026-09-16.** David : *« ça marche bien »*, puis *« si, j'ai entendu la
+boucle repasser »*. La plage a donc été posée, jouée, **entendue reboucler par son point
+d'entrée**, et traversée par un fondu croisé. *Le chantier sort de la catégorie P6 le jour de sa
+naissance — ce qui n'arrive presque jamais ici.*
+
+⚠️ **Le seul cas encore jamais entendu** : une plage qui **s'arrête seule 🔁 éteint**. C'est le
+quatrième carreau de la table des comportements, et le seul dont le chemin
+(`bouclerOuFinir` → `pause` + retour à l'entrée) n'a été vérifié que par des tests.
+
+#### ⭐ « Est-ce que tu dois revoir d'autres mécanismes de fade out ? » — la question de David, et sa récolte
+
+*Posée juste après la correction. Elle a trouvé un second chemin.*
+
+⛔ **Le crossfader n'est pas le seul fondu qui emmène une platine au silence.** `stopDeck` et
+« tout arrêter » passent par **`fadeOut`**, trois secondes de rampe qui n'ont rien à voir avec le
+crossfader — quatre appelants. Une plage qui atteignait sa sortie pendant ce fondu-là coupait le
+morceau net. *Même cause, même remède, deux chemins* : la suspension est posée là aussi, et levée
+par `annulerLArretDiffere` — le meneur qui relance la platine en plein fondu de sortie, cas que
+cette fonction existait déjà pour rattraper.
+
+⚠️ **Appris en écrivant ce test** : `play()` **sort par la porte de derrière quand la platine n'a
+pas de source**, *avant* d'annuler l'arrêt différé. Comportement d'origine et non un défaut — mais
+il est désormais écrit.
+
+✅ **Les quatre autres moteurs à fondu sont hors de cause, et pour une raison structurelle.**
+
+| Moteur | Comment il boucle | Verdict |
+| --- | --- | --- |
+| **Ambient-OS** | `AudioBufferSourceNode.loop = true` | ✅ boucle **native**, sample-exacte, indépendante des rampes de gain |
+| **Sound-OS** | idem | ✅ |
+| **Curation audio** (tactical-ai) | idem, et son fondu croisé n'arrête que l'**ancienne** source | ✅ |
+| **Carillon** de Clock-OS | attaque/déclin sur un oscillateur, un coup | ✅ ni boucle ni minuterie |
+
+> ⭐ **Music-OS était seul exposé parce qu'il est le seul dont la boucle est tenue par NOTRE
+> minuterie sur un `HTMLAudioElement`**, au lieu d'être portée par Web Audio. Les autres confient
+> leur boucle au moteur audio, qui ne sait pas l'interrompre à contretemps. *La plage a introduit
+> dans Music-OS un mécanisme que les autres modules n'ont pas — et c'est précisément là que le
+> fondu pouvait être coupé.*
+
+Et le trou du banc d'essai était borné : **`setValueCurveAtTime` n'est employé que par le
+crossfader**, il ne cachait donc que celui-là.
+
+### 73 · ⭐ « 5 pads c'est parfois peu » — et onze pastilles cachées dans les données (2026-09-16)
+
+*David : « Dans Music-OS 5 pads par scène c'est parfois peu, est-ce que tu pourrais en rajouter
+tout en maintenant la lisibilité au mieux ? »*
+
+#### ⛔ Ce n'était pas une limite, c'en était TROIS — dont une qui cachait des données
+
+| Où | Ce que ça plafonnait |
+| --- | --- |
+| `Array(5)` × 3 dans `useMusicStore` | la **création** d'une playlist |
+| `grid-cols-5` | la **mise en page**, figée à cinq colonnes |
+| ⛔ **`.slice(0, 5)` × 2** | **l'affichage** — et lui seul ne touchait pas aux données |
+
+`git log -S` tranche : **les playlists avaient SEIZE pastilles**, et la refonte `da7979d2`
+(« complete Music OS redesign ») a ramené la création à cinq **en ajoutant la coupe d'affichage**.
+Toute playlist née avant gardait donc ses seize pads, **dont onze qu'aucune tuile ne montrait
+plus**.
+
+> ⛔⛔ **Et la coupe n'était pas posée partout.** `padDuRaccourci` parcourt **tous** les pads :
+> **une pastille invisible avec une touche attribuée jouait toujours**. Le fichier du clavier
+> promet pourtant, en toutes lettres, que *« le clavier voit exactement ce que l'écran montre »* —
+> c'était vrai sur l'axe des campagnes (30/08), faux sur celui-ci. *Une promesse écrite dans un
+> commentaire ne garde qu'un axe : celui auquel pensait celui qui l'a écrite.*
+
+#### ⭐ Le nombre de pastilles n'est plus un réglage, c'est un geste
+
+Tuile **Ajouter** en bout de grille, croix au survol pour retirer. *Une grille fixe force un choix
+pour tout le monde : cinq est trop peu pour une taverne, seize est un mur de cases vides pour une
+scène de transition.*
+
+⚠️ **Retirer une pastille n'arrête JAMAIS le son.** Si elle jouait, la platine continue — *couper
+le son parce qu'on a rangé la grille serait la pire surprise possible en séance.* Et la
+confirmation ne se demande que pour une pastille **garnie** : une case vide n'est qu'un
+emplacement, une case garnie porte un morceau, un nom, une touche, une scène lumineuse et une
+plage de lecture.
+
+#### La lisibilité, puisque c'était la condition posée
+
+**La tuile est un `aspect-square` : le nombre de colonnes est exactement ce qui décide de sa
+taille.** Il suit désormais la largeur — cinq colonnes sur un écran moyen (*la mise en page que
+David connaît, inchangée*), jusqu'à huit sur un écran large. Motif : sa fenêtre fait ~1700 px, où
+cinq colonnes donnent des carrés de 330 px — seize pastilles y feraient **quatre rangées**, et
+`MusicDashboard` scrolle d'un seul bloc, donc **le crossfader passerait sous la ligne de
+flottaison**. *Une grille qui grandit vers le bas éloigne le geste qu'on fait le plus.*
+
+#### Ce qui est gardé
+
+- **`pastillesSansPlafond.test.tsx`** — 9 essais, dont celui qui tient **les deux bouts ensemble** :
+  ce que `padDuRaccourci` trouve doit être à l'écran. *Garder l'un des deux côtés n'aurait rien
+  gardé du tout.*
+- **Dégradation** : le `.slice(0, 5)` remis → **2 rouges**, dont la promesse clavier/écran.
+
+**Ancres** : `useMusicStore.ts` (`ajouterUnPad`, `retirerUnPad`),
+`components/PlaylistManager.tsx`, guide 71 § 4, `music-os-analysis.md`.
+
+**Vérifié** : `tsc -b` propre, **5 061 tests** (402 fichiers, 1 ignoré).
+⚠️ **Jamais vu tourner** : personne n'a encore ouvert Music-OS depuis. *Le cas qui compte n'est pas
+la tuile d'ajout — c'est la réapparition des anciennes pastilles, qui n'a de témoin que les
+données réelles de David.*
+
+### 74 · ⭐ Éditer une pastille — le nom, la couleur, la touche au même endroit (2026-09-16)
+
+*David : « quand j'édite un pad, je veux pouvoir changer le nom, la couleur du pad et assigner une
+touche raccourci, est-ce possible ? »*
+
+**Deux des trois existaient déjà — éparpillés.** Le nom derrière un `gmPrompt` du menu de la
+tuile ; la touche derrière un **mode global** (Key Learn) à activer dans l'en-tête avant de cliquer
+la pastille ; la couleur nulle part. *Un réglage qu'on atteint par trois chemins différents n'est
+pas trois fois plus accessible : il est introuvable deux fois sur trois.*
+
+#### ⭐ Le point technique qui a décidé de la forme
+
+**C'est parce que l'éditeur est une boîte que la capture de touche y est sans danger.**
+`estUneFrappeDePastille` rend `false` dès qu'une surcouche est ouverte : l'écouteur global de
+Music-OS est donc **muet** pendant l'édition. Sans ça, appuyer sur « K » pour l'attribuer aurait
+**lancé** la pastille liée à K, en pleine attribution.
+
+> ⚠️ **Et c'est la même raison qui interdit de réutiliser le Key Learn ici** : il attend sa frappe
+> sur cet écouteur-là, celui que la boîte fait taire. *Deux mécanismes qui se ressemblent, dont un
+> seul peut fonctionner dans ce contexte.* Les deux restent offerts — le mode global attribue **à
+> la chaîne**, l'éditeur **une à la fois** et prévient des conflits —, et le guide dit lequel sert
+> à quoi plutôt que de laisser deux pages se contredire.
+
+#### Les trois décisions d'auteur
+
+| | |
+| --- | --- |
+| **La couleur ne s'affiche qu'AU REPOS** | Une pastille qui joue garde le halo d'accent, commun à toutes. *Ce qui sonne doit se repérer d'un coup d'œil, et une couleur par pastille rendrait cet état-là illisible.* |
+| **Palette imposée de huit teintes** (tranché avec David) | Un sélecteur libre laisse piocher exactement le piège de Light-OS : `#334155`, contraste 1,6, **invisible**. |
+| ⚠️ **On stocke la CLÉ, jamais l'hexadécimal** | `'ambre'` et non `'#f59e0b'` : le jour où le thème change, on corrige la palette et **toutes les pastilles suivent**. Une valeur recopiée dans les données serait gelée pour toujours. |
+
+⚠️ **Les classes Tailwind sont écrites en toutes lettres**, jamais composées à l'exécution :
+`border-${teinte}-500` ne produit aucune règle. *C'est la panne de `tailwindcss-animate` du 03/09,
+en plus discret — une classe qui n'existe pas ne prévient pas.*
+
+#### ⚠️ Une touche ne commande qu'une pastille
+
+Règle de Light-OS reprise telle quelle. L'éditeur **nomme le détenteur avant d'enregistrer** et la
+lui retire à la validation — sinon l'une des deux est muette et **rien ne le dit**.
+
+⭐ **Le conflit se demande à `padDuRaccourci`**, celui-là même que le clavier interroge en séance.
+*Deux règles écrites séparément finiraient par diverger, et l'écart ne se verrait qu'au moment où
+l'on appuie.* Il sait aussi ce qu'une comparaison naïve ignorerait : deux campagnes différentes ont
+le droit à la même touche.
+
+⚠️ **Les frappes tenues avec Ctrl / Alt / Cmd sont refusées à la capture**, parce que la garde
+partagée les écarte en séance. *Accepter une touche que le clavier ignorera ensuite serait un
+réglage qui ment.*
+
+#### ⛔ Un défaut introduit au chantier 73, et réparé ici
+
+La croix « retirer » posée sur la tuile était en `bottom-2 right-2` — **exactement sous le bouton
+« … » du menu**. Deux commandes dans le même coin, dont une inatteignable. Le retrait rejoint le
+menu, à côté de « Vider » : *les gestes destructeurs se rangent ensemble, et on ne les rencontre
+pas par accident.* (« Vider » garde la case et jette son contenu ; « Retirer » reprend la case.)
+
+#### Ce qui est gardé
+
+**`editeurDePastille.test.tsx`** — 14 essais : le nom vidé qui ne donne pas une pastille sans nom,
+la clé de couleur et son retour à « Aucune », la capture, le refus de Ctrl, Échap qui n'attribue
+rien, **le vol de touche et son avertissement nommé**, et ⚠️ **la clé de couleur inconnue qui
+retombe sur « aucune »** — *rendre `undefined` donnerait une tuile sans bordure ni fond, donc une
+pastille invisible.*
+
+**Ancres** : `logic/couleursDePastille.ts`, `components/EditeurDePastille.tsx`,
+`ModalProvider.tsx` (variante `music-pad-edit`), `useMusicStore.ts` (`MusicPad.couleur`),
+guide 71 § 4.
+
+#### ⛔ Vu à l'écran dans la foulée : « le pad est devenu illisible »
+
+*David, capture à l'appui, une heure après le chantier 73.* Le menu d'une pastille débordait de sa
+tuile, sa dernière entrée rognée.
+
+> ⭐ **La cause n'était pas le bouton de trop, c'était le chantier 73.** Le menu a une **hauteur
+> fixe** — six lignes de boutons — tandis que la tuile rétrécit avec le nombre de colonnes. Mon
+> plafond à huit colonnes l'avait ramenée à ~190 px : la dernière entrée sortait du cadre **sans
+> déborder visiblement ni rien signaler**. *Rendre une grille plus dense rétrécit tout ce qui vit
+> DANS ses cases — y compris ce qui ne sait pas rétrécir.*
+
+**Trois corrections**, dont une proposée par David :
+
+- **La croix de retrait au milieu en bas de la tuile** (*sa proposition, et la bonne*) : les quatre
+  coins sont pris — touche, poignée, scène lumineuse, menu « … » — et **le milieu du bas est le
+  seul emplacement libre**. C'est exactement pourquoi ma première tentative l'avait posée *sous* le
+  bouton « … ».
+- **Six colonnes au plus** (tranché par David) au lieu de huit : ~265 px, le menu tient largement.
+- **Le menu défile** au lieu de rogner — un filet, *pour qu'un débordement ne redevienne jamais
+  silencieux*.
+
+⚠️ **Le retrait a donc changé de place DEUX fois en deux heures**, et les deux raisons sont
+différentes : d'abord inatteignable sous un bouton, ensuite responsable d'un débordement. *Une
+commande de plus dans une boîte de taille fixe pousse la dernière dehors.* 2 essais de plus la
+gardent hors du menu.
+
+✅ **Vu en passant, signalé, puis retiré sur accord de David** : la tuile affichait
+`[identifiant]` sous le nom — pour une pastille née d'une playlist créée au bouton « + », un
+**UUID de 36 caractères** qui passait à la ligne. Antérieur à ces chantiers, mais d'autant plus
+voyant sur une tuile plus petite. *Un identifiant technique ne dit rien au meneur ; il ne dit
+quelque chose qu'à celui qui débogue, et celui-là a la console.* Signalé plutôt que retiré
+d'office — **c'est de l'affichage, et la décision lui appartient**.
+
+**Vérifié** : `tsc -b` propre, **5 077 tests** (403 fichiers, 1 ignoré).
+⚠️ **Jamais vu tourner** — sauf le débordement ci-dessus, qui l'a été.
+
 ---
 
 ## La vue d'un coup d'œil

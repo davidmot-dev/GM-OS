@@ -11,12 +11,21 @@ afterEach(() => {
 class AudioContextMock {
     state = 'suspended';
     currentTime = 0;
+    /*
+      ⛔ **`setValueCurveAtTime` manquait ici depuis toujours**, trouvé le
+      2026-09-16 en cherchant pourquoi un fondu croisé traversait d'un coup.
+      C'est **la seule fonction qui trace la courbe du fondu automatique** :
+      sans elle dans le mock, tout test qui atteint `crossfadeTo` lève un
+      `TypeError`. Aucun ne l'atteignait — *le fondu automatique, cœur du
+      module, n'était couvert par rien.*
+    */
     createGain = vi.fn(() => ({
         gain: {
             value: 1,
             setValueAtTime: vi.fn(),
             linearRampToValueAtTime: vi.fn(),
             setTargetAtTime: vi.fn(),
+            setValueCurveAtTime: vi.fn(),
             cancelScheduledValues: vi.fn(),
         },
         connect: vi.fn(),

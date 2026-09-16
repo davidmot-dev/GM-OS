@@ -16,6 +16,12 @@ export interface MusicPad {
     loopB: number | null;
     linkedLightSceneId?: string;
     keybind?: string;
+    /**
+     * La teinte de la tuile — une **clé** de `logic/couleursDePastille`, jamais
+     * une valeur hexadécimale : le jour où le thème change, on corrige la palette
+     * et toutes les pastilles suivent. Absente = aucune couleur choisie.
+     */
+    couleur?: string;
 }
 
 export interface Playlist {
@@ -111,6 +117,28 @@ interface MusicState {
      */
     assignerLaPlaylist: (id: string, campagneId: string | null) => void;
     updatePad: (playlistId: string, padIndex: number, pad: Partial<MusicPad>) => void;
+    /**
+     * Pose ou retire la plage de lecture d'un pad — voir
+     * `logic/plageDeLecture`.
+     *
+     * Par **identifiant** et non par index, contrairement à `updatePad` : le
+     * geste part de la platine, qui ne connaît que `activePadId` et ignore dans
+     * quelle playlist se trouve ce qu'elle joue. *Faire remonter l'index
+     * jusqu'à l'écran de la platine aurait été lui demander de savoir ce qu'il
+     * n'a pas à savoir.*
+     */
+    definirLaPlageDuPad: (padId: string, entree: number | null, sortie: number | null) => void;
+    /**
+     * Ajoute une pastille vide à la fin d'une playlist.
+     *
+     * **Le nombre de pastilles n'est plus un réglage, c'est un geste.** Demandé
+     * par David le 2026-09-16 : *« 5 pads par scène c'est parfois peu »*. Une
+     * grille fixe force un choix pour tout le monde — cinq est trop peu pour
+     * une taverne, seize est un mur de cases vides pour une scène de transition.
+     */
+    ajouterUnPad: (playlistId: string) => void;
+    /** Retire une pastille. L'écran demande confirmation quand elle porte un morceau. */
+    retirerUnPad: (playlistId: string, padIndex: number) => void;
     reorderPads: (playlistId: string, oldIndex: number, newIndex: number) => void;
     clearPlaylistPads: (playlistId: string) => void;
     renamePlaylist: (id: string, name: string) => void;
@@ -345,6 +373,63 @@ export const useMusicStore = create<MusicState>()(
                     return { playlists: newPlaylists, deckA, deckB };
                 }),
 
+                definirLaPlageDuPad: (padId, entree, sortie) => {
+                    set((state) => ({
+                        playlists: state.playlists.map(p => ({
+                            ...p,
+                            pads: p.pads.map(pd => pd.id === padId ? { ...pd, loopA: entree, loopB: sortie } : pd)
+                        }))
+                    }));
+
+                    /*
+                      **Les deux platines, et pas seulement celle d'où vient le
+                      geste.** Le même pad peut être chargé des deux côtés — le
+                      préchargement existe précisément pour ça. Ne prévenir
+                      qu'une platine laisserait l'autre jouer le morceau entier
+                      en croyant respecter la plage.
+                    */
+                    const state = get();
+                    if (state.deckA.activePadId === padId) musicEngine.deckA.definirLaPlage(entree, sortie);
+                    if (state.deckB.activePadId === padId) musicEngine.deckB.definirLaPlage(entree, sortie);
+                },
+
+                ajouterUnPad: (playlistId) => set((state) => ({
+                    playlists: state.playlists.map(p => p.id === playlistId
+                        ? {
+                            ...p,
+                            pads: [...p.pads, {
+                                id: crypto.randomUUID(),
+                                /*
+                                  Le numéro suit la POSITION et non un compteur :
+                                  une pastille retirée au milieu ne doit pas
+                                  laisser un trou dans la numérotation de la
+                                  suivante. C'est un nom de départ, que le
+                                  meneur remplacera en déposant un fichier.
+                                */
+                                label: `Pad ${p.pads.length + 1}`,
+                                url: '',
+                                type: 'local' as const,
+                                loopA: null,
+                                loopB: null,
+                                linkedLightSceneId: undefined
+                            }]
+                        }
+                        : p)
+                })),
+
+                /*
+                  ⚠️ **Retirer une pastille ne touche PAS aux platines.** Si
+                  celle-ci jouait, elle continue — le son ne s'arrête pas parce
+                  qu'on a rangé la grille, et la platine garde son morceau
+                  jusqu'à ce qu'on l'arrête. *Couper le son sur un geste
+                  d'organisation serait la pire surprise possible en séance.*
+                */
+                retirerUnPad: (playlistId, padIndex) => set((state) => ({
+                    playlists: state.playlists.map(p => p.id === playlistId
+                        ? { ...p, pads: p.pads.filter((_, i) => i !== padIndex) }
+                        : p)
+                })),
+
                 reorderPads: (playlistId, oldIndex, newIndex) => set((state) => {
                     const playlist = state.playlists.find(p => p.id === playlistId);
                     if (!playlist) return state;
@@ -385,11 +470,19 @@ export const useMusicStore = create<MusicState>()(
                         // Force l'activation de l'audio sur interaction utilisateur
                         await musicEngine.resume();
 
+                        /*
+                          **La plage se repose APRÈS le chargement, toujours.**
+                          `loadTrack` efface celle de la piste précédente — elle
+                          découpait un autre morceau — donc c'est ici, et nulle
+                          part ailleurs, que celle du pad entre en vigueur.
+                        */
                         if (deck === 'A') {
                             await musicEngine.deckA.loadTrack(pad.url);
+                            musicEngine.deckA.definirLaPlage(pad.loopA, pad.loopB);
                             set((state) => ({ deckA: { ...state.deckA, activePadId: pad.id, activeTrackLabel: pad.label } }));
                         } else {
                             await musicEngine.deckB.loadTrack(pad.url);
+                            musicEngine.deckB.definirLaPlage(pad.loopA, pad.loopB);
                             set((state) => ({ deckB: { ...state.deckB, activePadId: pad.id, activeTrackLabel: pad.label } }));
                         }
 

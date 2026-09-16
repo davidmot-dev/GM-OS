@@ -31,6 +31,13 @@ import {
     type FonduEnCours,
 } from './logic/fonduCroise';
 import { brancherLeDucking } from '../voice/abonnementAuDucking';
+import {
+    delaiAvantLaSortie,
+    plageValide,
+    positionDeDepart,
+    sortieAtteinte,
+    type PlageDeLecture,
+} from './logic/plageDeLecture';
 
 export interface DeckState {
     isPlaying: boolean;
@@ -71,6 +78,45 @@ class MusicDeck {
     public onSonieMesuree: ((piste: string, lufs: number) => void) | null = null;
     /** L'arrêt programmé par `fadeOut` — annulable, voir `annulerLArretDiffere`. */
     private arretDiffere: ReturnType<typeof setTimeout> | null = null;
+
+    /**
+     * **La plage de lecture de la piste chargée** — voir `logic/plageDeLecture`.
+     *
+     * Elle appartient au pad, pas à la platine : c'est le magasin qui la repose
+     * à chaque chargement. ⚠️ **`loadTrack` l'efface**, et ce n'est pas du
+     * ménage : une plage 0:10→0:40 restée d'un morceau précédent ferait jouer
+     * trente secondes d'un morceau de six minutes, en boucle, sans rien dire.
+     */
+    private plage: PlageDeLecture | null = null;
+
+    /**
+     * Le rendez-vous avec la sortie de la plage.
+     *
+     * ⛔ **Il vit dans le moteur et NON dans un composant**, et surtout pas dans
+     * une boucle `requestAnimationFrame` : le fondu croisé a déjà payé cette
+     * leçon le 2026-08-30 — *un composant démonté n'exécute rien*, et une
+     * animation d'image se fige quand la fenêtre passe à l'arrière-plan. Une
+     * boucle qui s'arrête dès qu'on quitte l'écran de Music-OS serait pire
+     * qu'absente.
+     */
+    private rendezVousDeSortie: ReturnType<typeof setTimeout> | null = null;
+
+    /**
+     * **Vrai pendant qu'un fondu croisé emmène cette platine vers le silence.**
+     *
+     * ⛔ Signalé par David le 2026-09-16 — *« le fade out fade in entre A et B ne
+     * fonctionne plus, le son traverse d'un coup »*, une plage posée. Le fondu
+     * partait bien (9 essais le prouvent) ; c'est **la plage qui coupait la
+     * platine sortante en plein fondu** : arrivée à sa sortie, elle rembobinait
+     * à l'entrée — ou, 🔁 éteint, se mettait en pause **net**. Le morceau
+     * disparaissait donc d'un coup pendant que l'autre montait, ce qui s'entend
+     * exactement comme une bascule.
+     *
+     * *La plage dit ce qui se joue en écoute normale. Une platine qu'un fondu
+     * emmène au silence est déjà condamnée — la couper une seconde fois n'aide
+     * personne.*
+     */
+    private fonduDeSortieEnCours = false;
     private state: DeckState;
     private onStateChange: (state: DeckState) => void;
     private objectUrl: string | null = null;
@@ -116,10 +162,43 @@ class MusicDeck {
         };
 
         // Events listeners for state sync
-        this.audioElement.onplay = () => { this.state.isPlaying = true; this.updateState(); };
-        this.audioElement.onpause = () => { this.state.isPlaying = false; this.updateState(); };
+        this.audioElement.onplay = () => { this.state.isPlaying = true; this.updateState(); this.surveillerLaSortie(); };
+        this.audioElement.onpause = () => { this.state.isPlaying = false; this.updateState(); this.desarmerLaSortie(); };
         this.audioElement.onended = () => { if (!this.state.isLooping) { this.state.isPlaying = false; this.updateState(); } };
-        this.audioElement.onloadedmetadata = () => { this.state.duration = this.audioElement.duration; this.updateState(); };
+        this.audioElement.onloadedmetadata = () => {
+            this.state.duration = this.audioElement.duration;
+            /*
+              **La plage se revalide ici, et c'est le seul endroit possible.**
+              Le magasin la pose au chargement, donc **avant** que la durée du
+              fichier soit connue : le bornage de `plageValide` n'a alors rien
+              à border. Une sortie au-delà de la fin du morceau — un fichier
+              remplacé sous un pad qui gardait ses points — ne se voit qu'ici.
+            */
+            if (this.plage) {
+                this.plage = plageValide(this.plage.entree, this.plage.sortie, this.audioElement.duration);
+                this.appliquerLaBoucleNative();
+                this.surveillerLaSortie();
+            }
+            this.updateState();
+        };
+
+        /*
+          **Le filet du rendez-vous.** `timeupdate` est émis par l'élément audio
+          lui-même — quatre fois par seconde environ, et **sans dépendre de
+          l'horloge des images ni de celle des minuteries**. C'est peu précis,
+          donc ça ne peut pas tenir la boucle tout seul ; mais le jour où une
+          minuterie est bridée (fenêtre à l'arrière-plan) ou décalée par une
+          mise en tampon, c'est lui qui rattrape.
+
+          *Une boucle qui se dégrade à un quart de seconde près vaut mieux
+          qu'une boucle qui s'arrête.*
+        */
+        this.audioElement.ontimeupdate = () => {
+            if (this.fonduDeSortieEnCours) return;
+            if (this.plage && this.state.isPlaying && sortieAtteinte(this.audioElement.currentTime, this.plage)) {
+                this.bouclerOuFinir();
+            }
+        };
     }
 
     /**
@@ -186,6 +265,17 @@ class MusicDeck {
         // Une minuterie d'arrêt visait la piste précédente : elle n'a plus de
         // sujet, et laissée en vie elle arrêterait celle qu'on charge.
         this.annulerLArretDiffere();
+
+        /*
+          ⚠️ **La plage meurt avec la piste qu'elle découpait.** Le magasin
+          repose celle du nouveau pad juste après ce chargement ; la garder
+          d'ici là ferait jouer en boucle trente secondes arbitraires d'un
+          morceau qui n'a rien demandé — *et le meneur n'aurait aucun moyen de
+          deviner d'où sortent ces bornes.*
+        */
+        this.plage = null;
+        this.desarmerLaSortie();
+        this.appliquerLaBoucleNative();
 
         // On libère l'ancien handle avant de charger
         this.audioElement.pause();
@@ -280,6 +370,22 @@ class MusicDeck {
         this.gainNode.gain.cancelScheduledValues(now);
         this.gainNode.gain.setValueAtTime(this.state.volume, now);
 
+        /*
+          **La plage définit ce qui se joue** : lancer avec la tête hors de
+          l'extrait l'amène à l'entrée. Une position déjà dans la plage est
+          respectée — le meneur qui s'est placé à l'oreille dans son passage ne
+          veut pas être ramené au début parce qu'il a appuyé sur Lecture.
+        */
+        /*
+          ⚠️ **Par `seek` et non par `currentTime` en direct.** `seek` porte la
+          garde que cette ligne n'avait pas : *une position posée avant que les
+          métadonnées soient lues est **ignorée en silence** par le navigateur.*
+          Écrite à la main, elle faisait donc démarrer le morceau à zéro au lieu
+          de l'entrée, une fois sur deux et sans rien dire.
+        */
+        const depart = positionDeDepart(this.audioElement.currentTime, this.plage);
+        if (depart !== null) this.seek(depart);
+
         try {
             console.log(`[MusicDeck] Calling audioElement.play() for: ${this.audioElement.src}`);
             await this.audioElement.play();
@@ -302,6 +408,10 @@ class MusicDeck {
      * Arrête la lecture et revient au début de la piste.
      */
     stop() {
+        this.desarmerLaSortie();
+        // La platine quitte l'antenne : le fondu qui l'y emmenait est fini, et
+        // sa plage doit valoir de nouveau au prochain départ.
+        this.fonduDeSortieEnCours = false;
         this.audioElement.pause();
         this.audioElement.currentTime = 0;
         this.state.isPlaying = false;
@@ -329,6 +439,16 @@ class MusicDeck {
 
         this.annulerLArretDiffere();
 
+        /*
+          ⛔ **Le SECOND fondu qui emmène cette platine au silence** — trouvé le
+          2026-09-16 en répondant à la question de David, *« est-ce que tu dois
+          revoir d'autres mécanismes de fade out ? »*. Le crossfader n'était pas
+          seul : `stopDeck` et `stopAll` passent par ici, et une plage qui
+          atteint sa sortie pendant ces trois secondes coupe le morceau net au
+          lieu de le laisser descendre. *Même cause, même remède, deux chemins.*
+        */
+        this.suspendreLaPlagePendantLeFondu(true);
+
         this.gainNode.gain.cancelScheduledValues(now);
         this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
         this.gainNode.gain.linearRampToValueAtTime(0, now + durationSec);
@@ -355,6 +475,12 @@ class MusicDeck {
             clearTimeout(this.arretDiffere);
             this.arretDiffere = null;
         }
+        /*
+          La platine n'est plus promise au silence : sa plage revaut. C'est le
+          cas du meneur qui change d'avis en plein fondu de sortie — celui que
+          cette fonction existe déjà pour rattraper.
+        */
+        this.fonduDeSortieEnCours = false;
     }
 
     /**
@@ -363,7 +489,110 @@ class MusicDeck {
      */
     setLooping(value: boolean) {
         this.state.isLooping = value;
-        this.audioElement.loop = value;
+        this.appliquerLaBoucleNative();
+        this.updateState();
+    }
+
+    /**
+     * **La boucle native du navigateur et la plage ne peuvent pas coexister.**
+     *
+     * `audioElement.loop` reboucle sur le morceau **entier**. Laissé allumé
+     * sous une plage, il ne se déclencherait jamais (on n'atteint plus la fin
+     * du fichier) sauf si la sortie touche la fin — et là les deux mécanismes
+     * rembobineraient, l'un vers zéro, l'autre vers l'entrée. *Deux écrivains
+     * pour une même position, et c'est le hasard qui tranche.*
+     */
+    private appliquerLaBoucleNative() {
+        this.audioElement.loop = this.state.isLooping && !this.plage;
+    }
+
+    /**
+     * Pose (ou retire) la plage de lecture de la piste chargée.
+     *
+     * Appelée par le magasin au chargement d'un pad et à chaque fois que le
+     * meneur déplace un point. Les valeurs brutes viennent du pad ; c'est
+     * `plageValide` qui décide si elles font une plage — voir la table des
+     * quatre comportements dans `logic/plageDeLecture`.
+     */
+    definirLaPlage(entree: number | null, sortie: number | null) {
+        this.plage = plageValide(entree, sortie, this.audioElement.duration);
+        this.appliquerLaBoucleNative();
+        this.surveillerLaSortie();
+        this.updateState();
+    }
+
+    /** La plage en vigueur, pour l'écran qui la dessine. */
+    get plageDeLecture(): PlageDeLecture | null {
+        return this.plage;
+    }
+
+    /**
+     * Arme le rendez-vous avec la sortie de la plage.
+     *
+     * Ré-armé à chaque événement qui change la donne : lecture, déplacement de
+     * la tête, changement de plage, et bouclage. *Un rendez-vous pris sur une
+     * position périmée arrive au mauvais moment.*
+     */
+    /**
+     * Le moteur prévient la platine qu'un fondu croisé l'emmène au silence (ou
+     * qu'il ne l'y emmène plus — le meneur peut saisir le crossfader en cours
+     * de route, et la platine revient alors à l'antenne avec sa plage).
+     */
+    suspendreLaPlagePendantLeFondu(actif: boolean) {
+        this.fonduDeSortieEnCours = actif;
+        this.surveillerLaSortie();
+    }
+
+    private surveillerLaSortie() {
+        this.desarmerLaSortie();
+        if (!this.plage || !this.state.isPlaying || this.fonduDeSortieEnCours) return;
+
+        if (sortieAtteinte(this.audioElement.currentTime, this.plage)) {
+            this.bouclerOuFinir();
+            return;
+        }
+
+        const delai = delaiAvantLaSortie(this.audioElement.currentTime, this.plage);
+        if (delai === null) return;
+
+        this.rendezVousDeSortie = setTimeout(() => {
+            this.rendezVousDeSortie = null;
+            this.bouclerOuFinir();
+        }, delai);
+    }
+
+    private desarmerLaSortie() {
+        if (this.rendezVousDeSortie) {
+            clearTimeout(this.rendezVousDeSortie);
+            this.rendezVousDeSortie = null;
+        }
+    }
+
+    /**
+     * La sortie est atteinte : on rembobine à l'entrée, ou on s'arrête.
+     *
+     * C'est ici que le bouton 🔁 de la platine reprend tout son sens — il ne
+     * décide plus *si le fichier se répète* mais *si la plage se répète*.
+     *
+     * Sans boucle, on **pause et on revient à l'entrée** plutôt que d'appeler
+     * `stop()` : la platine reste prête à rejouer le même passage, ce qui est
+     * exactement ce qu'on veut d'un extrait. *Rembobiner à zéro obligerait à
+     * refaire le chemin à chaque fois.*
+     */
+    private bouclerOuFinir() {
+        if (!this.plage) return;
+        this.desarmerLaSortie();
+
+        if (this.state.isLooping) {
+            this.audioElement.currentTime = this.plage.entree;
+            this.updateState();
+            this.surveillerLaSortie();
+            return;
+        }
+
+        this.audioElement.pause();
+        this.audioElement.currentTime = this.plage.entree;
+        this.state.isPlaying = false;
         this.updateState();
     }
 
@@ -394,6 +623,13 @@ class MusicDeck {
         if (!Number.isFinite(duree) || duree <= 0) return false;
 
         this.audioElement.currentTime = Math.min(duree, Math.max(0, secondes));
+        /*
+          Le rendez-vous avec la sortie était pris pour l'ancienne position : il
+          arriverait trop tôt ou trop tard. On ne **borne pas** le déplacement à
+          la plage, en revanche — se placer hors de l'extrait est un geste
+          délibéré, et la lecture y rentrera d'elle-même.
+        */
+        this.surveillerLaSortie();
         this.updateState();
         return true;
     }
@@ -621,6 +857,15 @@ export class MusicEngine {
             clearTimeout(this.arretDeLaSortante);
             this.arretDeLaSortante = null;
         }
+
+        /*
+          **Les deux platines retrouvent leur plage.** Le meneur qui saisit le
+          crossfader en plein fondu ramène la sortante à l'antenne : sa plage
+          doit recommencer à valoir. *Une suspension qu'on oublie de lever est
+          la minuterie qui survit à ce qu'elle devait arrêter, en plus discret.*
+        */
+        this.deckA.suspendreLaPlagePendantLeFondu(false);
+        this.deckB.suspendreLaPlagePendantLeFondu(false);
         if (this.fondu) {
             this.crossfaderValue = this.positionDuCrossfader();
             this.fondu = null;
@@ -675,9 +920,21 @@ export class MusicEngine {
           conséquence, un peu trop tôt couperait la fin du morceau.
         */
         const sortante = platineOpposee(target);
+        const platineSortante = sortante === 'A' ? this.deckA : this.deckB;
+
+        /*
+          ⛔ **La plage de la platine sortante se tait pendant le fondu.** Sans
+          ça, un morceau qui atteint sa sortie en plein fondu rembobine — ou se
+          met en pause net, 🔁 éteint — et **le fondu s'entend comme une
+          bascule** (signalé par David le 2026-09-16). La platine entrante, elle,
+          récupère la sienne : c'est elle qui reste à l'antenne.
+        */
+        platineSortante.suspendreLaPlagePendantLeFondu(true);
+        (target === 'A' ? this.deckA : this.deckB).suspendreLaPlagePendantLeFondu(false);
+
         this.arretDeLaSortante = setTimeout(() => {
             this.arretDeLaSortante = null;
-            (sortante === 'A' ? this.deckA : this.deckB).stop();
+            platineSortante.stop();
         }, dureeSec * 1000 + 120);
     }
 

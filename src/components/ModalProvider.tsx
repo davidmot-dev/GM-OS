@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
     History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare,
-    Keyboard, Swords, ScrollText } from 'lucide-react';
+    Keyboard, Swords, ScrollText, Music2 } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
@@ -26,6 +26,7 @@ import SessionSummaryModal from '../modules/session/components/SessionSummaryMod
 import SessionFeedbackModal from '../modules/session/components/SessionFeedbackModal';
 import SnapshotVisualizerModal from '../modules/session/components/SnapshotVisualizerModal';
 import DamageCalculator from '../modules/combat/components/DamageCalculator';
+import { EditeurDePastille } from '../modules/music/components/EditeurDePastille';
 import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEditor';
 import NarrativeModal from '../modules/map/components/NarrativeModal';
 // Secondary imports consolidated above
@@ -239,6 +240,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'snapshot-viewer' && <Cast size={18} />}
                                         {customVariant === 'damage-calc' && <Zap size={18} />}
                                         {customVariant === 'danger-preset-editor' && <Settings2 size={18} />}
+                                        {customVariant === 'music-pad-edit' && <Music2 size={18} />}
                                         {customVariant === 'narrative-display' && <Sparkles size={18} />}
                                         {customVariant === 'loot-os' && <Package size={18} />}
                                         {customVariant === 'aide-du-meneur' && <Keyboard size={18} />}
@@ -272,6 +274,8 @@ const ModalProvider: React.FC = () => {
                                         {/* Littéral, comme au-dessus : cet écran n'a qu'un lecteur. */}
                                         {customVariant === 'atelier-adversaires' && 'Atelier des adversaires'}
                                         {customVariant === 'fiche-combattant' && 'Fiche du combattant'}
+                                        {/* Littéral comme ses voisins : cet écran n'a qu'un lecteur. */}
+                                        {customVariant === 'music-pad-edit' && 'Pastille'}
                                     </h3>
                                 </div>
                                 <button 
@@ -312,6 +316,13 @@ const ModalProvider: React.FC = () => {
                             )}
                             {customVariant === 'damage-calc' && <DamageCalculator />}
                             {customVariant === 'danger-preset-editor' && <DangerZonePresetEditor />}
+                            {customVariant === 'music-pad-edit' && (
+                                <EditeurDePastille
+                                    playlistId={(defaultValue as { playlistId: string; padIndex: number }).playlistId}
+                                    padIndex={(defaultValue as { playlistId: string; padIndex: number }).padIndex}
+                                    onClose={closeModal}
+                                />
+                            )}
                             {customVariant === 'narrative-display' && <NarrativeModal />}
                             {customVariant === 'loot-os' && <LootOS />}
                             {customVariant === 'atelier-adversaires' && (

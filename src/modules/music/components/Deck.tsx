@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Play, Pause, Square, Repeat, Activity } from 'lucide-react';
+import { Play, Pause, Square, Repeat, Activity, X } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import { musicEngine } from '../MusicEngine';
 import { secondesAuPointeur, pasDuClavier } from '../logic/pointageDeLecture';
 import { gainsALaPosition } from '../logic/fonduCroise';
+import { plageValide } from '../logic/plageDeLecture';
 
 interface DeckProps {
     side: 'A' | 'B';
 }
 
 const Deck: React.FC<DeckProps> = ({ side }) => {
-    const { deckA, deckB, playDeck, stopDeck, toggleLoop, triggerAutoFade } = useMusicStore();
+    const { deckA, deckB, playDeck, stopDeck, toggleLoop, triggerAutoFade, playlists, definirLaPlageDuPad } = useMusicStore();
     const deckState = side === 'A' ? deckA : deckB;
     const engineDeck = side === 'A' ? musicEngine.deckA : musicEngine.deckB;
 
@@ -88,6 +89,35 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
     /** La position montrée : celle du doigt s'il y en a un, sinon celle du moteur. */
     const positionAffichee = pointageEnCours ?? currentTime;
     const progress = duration > 0 ? (positionAffichee / duration) * 100 : 0;
+
+    /*
+      **La plage de lecture — demandée par David le 2026-09-16.**
+
+      Elle appartient au **pad**, pas à la platine : elle découpe un morceau, et
+      le morceau survit à la platine qui le joue. La platine ne connaît que
+      `activePadId`, d'où la recherche ici.
+
+      ⚠️ **Les points ne s'appellent PAS A et B**, bien que le champ persisté se
+      nomme `loopA`/`loopB` depuis toujours : les platines s'appellent déjà A et
+      B, et « poser B sur la platine A » est une phrase que personne ne devrait
+      avoir à démêler en séance. À l'écran, ce sont **Entrée** et **Sortie**.
+    */
+    const padCharge = useMemo(
+        () => playlists.flatMap(p => p.pads).find(p => p.id === deckState.activePadId) ?? null,
+        [playlists, deckState.activePadId]
+    );
+    const plage = plageValide(padCharge?.loopA, padCharge?.loopB, duration);
+    const unPointPose = !!padCharge && (padCharge.loopA !== null || padCharge.loopB !== null);
+
+    const poserLePoint = (bord: 'entree' | 'sortie') => {
+        if (!padCharge) return;
+        const ici = Math.round(positionAffichee * 10) / 10;
+        definirLaPlageDuPad(
+            padCharge.id,
+            bord === 'entree' ? ici : padCharge.loopA,
+            bord === 'sortie' ? ici : padCharge.loopB
+        );
+    };
 
     const waveformHeights = useMemo(() => {
         // Use a static "random-looking" sequence for the visualizer to avoid lint issues
@@ -194,6 +224,19 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                         />
                     ))}
                     
+                    {/* La plage, dessinée sous le voile de progression pour que le
+                        trait de lecture reste lisible en la traversant. Elle ne
+                        prend pas les clics : la forme d'onde reste un curseur. */}
+                    {plage && duration > 0 && (
+                        <div
+                            className="absolute inset-y-0 pointer-events-none bg-emerald-400/15 border-x-2 border-emerald-400/70"
+                            style={{
+                                left: `${(plage.entree / duration) * 100}%`,
+                                width: `${((plage.sortie - plage.entree) / duration) * 100}%`
+                            }}
+                        />
+                    )}
+
                     {/* Le voile de progression laisse passer les clics : c'est le
                         cadre au-dessus qui écoute. Pendant un glissement, le trait
                         se fige sur le doigt et cesse de suivre la lecture. */}
@@ -215,6 +258,61 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     </span>
                     <span>{formatTime(duration)}</span>
                 </div>
+
+                {/*
+                  **Les deux points se posent à l'endroit où l'on écoute.**
+
+                  Pas de champ où taper des secondes : on cale une boucle à
+                  l'oreille, pas au chronomètre. Le bouton prend la position
+                  affichée — celle du doigt s'il glisse sur la forme d'onde,
+                  celle de la lecture sinon — donc **le geste marche à l'arrêt
+                  comme en lecture**, comme le pointage dont il hérite.
+
+                  ⚠️ **Un seul point posé ne fait pas une plage**, et l'écran le
+                  DIT. `plageValide` refuse silencieusement une plage à moitié
+                  posée, à l'envers, ou trop courte ; laisser l'écran muet dans
+                  ces trois cas donnerait un bouton qui ne fait rien, sans dire
+                  pourquoi — *le défaut préféré de ce projet.*
+                */}
+                {padCharge && (
+                    <div className="flex items-center gap-1 px-0.5">
+                        <button
+                            onClick={() => poserLePoint('entree')}
+                            disabled={duration <= 0}
+                            title="Poser l'entrée de la plage à la position actuelle"
+                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-slate-500 hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            Entrée
+                        </button>
+                        <button
+                            onClick={() => poserLePoint('sortie')}
+                            disabled={duration <= 0}
+                            title="Poser la sortie de la plage à la position actuelle"
+                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-slate-500 hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            Sortie
+                        </button>
+
+                        <span className={`flex-1 text-ui-8 font-black font-mono tracking-tighter truncate text-center ${
+                            plage ? 'text-emerald-400' : unPointPose ? 'text-amber-500' : 'text-slate-700'
+                        }`}>
+                            {plage
+                                ? `${formatTime(plage.entree)} → ${formatTime(plage.sortie)}`
+                                : unPointPose
+                                    ? (padCharge.loopA === null ? 'Pose l\'entrée' : padCharge.loopB === null ? 'Pose la sortie' : 'Plage invalide')
+                                    : 'Morceau entier'}
+                        </span>
+
+                        <button
+                            onClick={() => definirLaPlageDuPad(padCharge.id, null, null)}
+                            disabled={!unPointPose}
+                            title="Retirer la plage — le morceau entier se joue de nouveau"
+                            className="p-1 rounded-md border border-app-border/50 bg-app-surface/50 text-slate-600 hover:text-red-500 hover:border-red-500/20 transition-all active:scale-[0.9] disabled:opacity-20 disabled:cursor-not-allowed"
+                        >
+                            <X size={10} />
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Transport Controls */}
@@ -242,7 +340,9 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                         ? 'bg-accent/10 border-accent/30 text-accent shadow-glow-accent'
                         : 'bg-app-surface/50 border-app-border/50 text-slate-600 hover:text-slate-300'
                         }`}
-                    title="Toggle Loop"
+                    title={plage
+                        ? (deckState.isLooping ? 'La plage tourne en boucle' : 'La plage joue une fois, puis s\'arrête')
+                        : (deckState.isLooping ? 'Le morceau entier tourne en boucle' : 'Le morceau joue une fois')}
                 >
                     <Repeat size={10} />
                 </button>

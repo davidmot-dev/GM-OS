@@ -12,7 +12,7 @@ Le module s'articule autour de trois zones de contrôle :
 
 1. **Les Platines (Decks A & B)** : Deux lecteurs audio indépendants capables de charger et de jouer des pistes simultanément.
 2. **La Console de Mixage (Mixer)** : Permet d'équilibrer le volume entre les deux platines et de réaliser des transitions professionnelles.
-3. **Le Gestionnaire de Playlists & Pads** : Une grille de 16 boutons (pads) pour lancer instantanément vos musiques préférées.
+3. **Le Gestionnaire de Playlists & Pads** : une grille de pastilles pour lancer instantanément vos musiques préférées — **autant que vous en ajoutez**.
 
 ## 🚀 Comment l'utiliser ?
 
@@ -37,26 +37,90 @@ Le module s'articule autour de trois zones de contrôle :
 > audio, pas sur un minuteur d'interface : interrompre un fondu en le saisissant reprend exactement
 > là où le son en est.
 
-### 3. Points de Boucle (Loops) 🔁
+### 3. La plage de lecture 🔁
 
-Idéal pour les musiques d'ambiance qui ne doivent jamais s'arrêter.
+Idéal pour les musiques d'ambiance qui ne doivent jamais s'arrêter — et pour les morceaux dont
+seule une partie vous intéresse.
 
-- Chaque piste peut avoir un point d'entrée et de sortie défini.
-- Le lecteur rebouclera automatiquement entre ces deux points, évitant ainsi les silences ou les intros non désirées à chaque répétition.
+> ⛔ **Correction.** Cette page annonçait ces points de boucle **depuis des mois alors qu'ils
+> n'existaient pas** : les deux champs dormaient dans les données, aucun écran ne permettait de les
+> poser, et le moteur ne savait pas les lire. Ils fonctionnent depuis le **2026-09-16**, et ce qui
+> suit décrit ce que fait vraiment l'application.
 
-### 4. Organiser vos Playlists
+Sous la forme d'onde de chaque platine, **deux boutons et un verdict** :
+
+- **Entrée** pose le début de la plage à la position actuelle, **Sortie** en pose la fin. Les deux
+  prennent la position affichée — celle du doigt si vous glissez sur la forme d'onde, celle de la
+  lecture sinon —, donc **on cale sa boucle à l'oreille, à l'arrêt comme en cours de lecture**.
+- La plage apparaît en vert sur la forme d'onde, et le texte du milieu dit ce qui se passe :
+  `0:12 → 1:45` quand elle est valide, **« Pose la sortie »** quand un seul point est posé,
+  **« Plage invalide »** si les deux points sont à l'envers ou trop rapprochés, et
+  **« Morceau entier »** quand il n'y en a pas.
+- La croix retire la plage : le morceau entier se joue de nouveau.
+
+**Le bouton 🔁 n'a pas changé de place, il a changé de portée.** Avec une plage, il ne décide plus
+si *le fichier* se répète mais si *la plage* se répète :
+
+|  | 🔁 allumé | 🔁 éteint |
+| --- | --- | --- |
+| **sans plage** | le morceau entier tourne | il joue une fois |
+| **avec plage** | la plage tourne | la plage joue une fois, puis s'arrête |
+
+> 🔎 **Lancer la lecture vous amène à l'entrée de la plage** si la tête est ailleurs — la plage
+> définit ce qui se joue. Mais si vous vous êtes placé **dans** la plage, cette position est
+> respectée : appuyer sur Lecture ne vous renvoie pas au début de votre passage.
+
+**La plage appartient au morceau, pas à la platine.** Elle est enregistrée avec la pastille, suit
+le morceau sur l'autre platine, et se retrouve à la séance suivante. Si vous remplacez le fichier
+sous une pastille qui avait des points, la sortie est ramenée à la fin du nouveau morceau plutôt
+que de rendre la pastille muette.
+
+### 4. Éditer une pastille
+
+Le menu **…** d'une pastille, puis **Éditer** : le nom, la couleur et la touche sont dans la même
+fenêtre.
+
+- **Le nom** est celui qui s'affiche sur la tuile.
+- **La couleur** se choisit dans une palette de huit teintes — toutes lisibles sur le fond sombre.
+  Un aperçu montre le rendu pendant que vous choisissez, et **Aucune** revient au gris d'origine.
+- **La touche** : cliquez sur *Assigner une touche*, puis appuyez. `Échap` annule sans rien changer.
+
+> ⚠️ **Une touche ne commande qu'une pastille.** Si celle que vous appuyez sert déjà ailleurs,
+> l'éditeur vous dit **laquelle** avant d'enregistrer, et la lui retire quand vous validez. Sans
+> cette règle, l'une des deux serait muette et rien ne l'expliquerait.
+
+> 🔎 **Les combinaisons avec `Ctrl`, `Alt` ou `Cmd` sont refusées**, et c'est volontaire : GM-OS les
+> ignore en séance pour ne pas déclencher une musique quand vous copiez du texte. Les proposer ici
+> serait un réglage qui ne marcherait jamais.
+
+**La couleur ne s'affiche qu'au repos.** Une pastille qui joue garde son halo orange, le même pour
+toutes : *ce qui sonne doit se repérer d'un coup d'œil, et une couleur par pastille rendrait cet
+état-là illisible.*
+
+### 5. Organiser vos Playlists
 
 - Créez des onglets thématiques (ex: "Combat", "Exploration", "Taverne").
-- Chaque onglet dispose de sa propre grille de 16 pads.
+- Chaque onglet dispose de sa propre grille de pastilles. **Elle n'a pas de taille fixe** : la tuile
+  **Ajouter**, en bout de grille, en crée une de plus ; la croix au survol d'une pastille la retire
+  (avec confirmation si elle porte un morceau).
+- Le nombre de colonnes suit la largeur de la fenêtre, pour que les pastilles restent grandes sans
+  repousser le crossfader hors de l'écran.
+
+> ⛔ **Correction.** Cette page annonçait « une grille de 16 pads ». C'était vrai avant la refonte
+> du module, qui a ramené les playlists à **cinq** pastilles — *et a coupé l'affichage à cinq sans
+> toucher aux données*. Les playlists nées avant gardaient donc leurs seize pastilles, **dont onze
+> qu'aucune tuile ne montrait et qu'une touche de clavier jouait quand même**. Depuis le
+> **2026-09-16**, la grille montre tout ce qu'elle contient : si vos anciennes atmosphères
+> réapparaissent, elles n'avaient jamais été perdues.
 - **Drag & Drop** : Réorganisez vos musiques par simple glisser-déposer sur la grille.
 
-### 5. Se placer dans un morceau
+### 6. Se placer dans un morceau
 
 La forme d'onde n'est pas qu'un décor : **cliquez dedans** pour sauter à cet instant. Au clavier,
 les flèches déplacent la lecture de **5 secondes**, et de **1 seconde** avec `Maj` — de quoi caler
 une entrée sur un temps fort sans rater la scène.
 
-### 6. Les playlists suivent la campagne
+### 7. Les playlists suivent la campagne
 
 Une playlist peut appartenir à une campagne, ou rester **commune** à toutes.
 
@@ -84,6 +148,12 @@ Le module **Music OS** supporte l'assignation de touches clavier à n'importe qu
 2. Cliquez sur le **Pad** auquel vous souhaitez assigner un raccourci.
 3. Appuyez sur la touche de votre clavier que vous souhaitez utiliser (ex: `Numpad 1`, `Espace`, `K`, etc.).
 4. Le raccourci est enregistré et s'affiche sur le pad. Quittez le mode Key Learn pour tester.
+
+> 🔎 **Deux chemins mènent au même réglage, et les deux restent valables.** Le mode Key Learn
+> ci-dessus attribue **à la chaîne** : il reste ouvert le temps de plusieurs pastilles, ce qui va
+> vite quand on équipe une playlist entière. L'éditeur d'une pastille (§ 4) fait la même chose
+> **pour une seule**, avec le nom et la couleur sous la main — et c'est le seul des deux qui vous
+> prévient quand la touche sert déjà ailleurs.
 
 ### Utilisation globale
 

@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { Music, Link, Edit3, Trash2, GripVertical, MoreHorizontal, Lightbulb } from 'lucide-react';
+import { Music, Link, Edit3, Trash2, GripVertical, MoreHorizontal, Lightbulb, Plus, X } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import { usePlaylistsVisibles } from '../usePlaylistsVisibles';
 import type { MusicPad as MusicPadType } from '../useMusicStore';
 import { gmPrompt, gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
+import { couleurDeLaPastille } from '../logic/couleursDePastille';
 
 import {
     DndContext,
@@ -23,7 +24,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRequestMediaBrowser: () => void }> = ({ pad, index, playlistId, onRequestMediaBrowser }) => {
-    const { playPad, loadToDeck, updatePad, deckA, deckB, isKeyLearnActive, activePadLearnInfo, setActiveLearnPad } = useMusicStore();
+    const { playPad, loadToDeck, updatePad, retirerUnPad, deckA, deckB, isKeyLearnActive, activePadLearnInfo, setActiveLearnPad } = useMusicStore();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isOver, setIsOver] = useState(false);
 
@@ -81,14 +82,17 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
         playPad(pad);
     };
 
+    /*
+      **Un seul endroit pour le nom, la couleur et la touche** — demandé par
+      David le 2026-09-16. C'était `gmPrompt("Nouveau Label :")`, et la touche
+      vivait ailleurs, derrière le mode global Key Learn. *Un réglage qu'on
+      atteint par trois chemins différents n'est pas trois fois plus accessible :
+      il est introuvable deux fois sur trois.*
+    */
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
-        gmPrompt("Nouveau Label :", pad.label, (newLabel) => {
-            if (newLabel) {
-                updatePad(playlistId, index, { label: newLabel });
-            }
-        });
         setIsMenuOpen(false);
+        gmCustom('music-pad-edit', { playlistId, padIndex: index });
     };
 
 
@@ -103,7 +107,29 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
         }
     };
 
+    const teinte = couleurDeLaPastille(pad.couleur);
+
     const keyLabel = pad.keybind ? pad.keybind.replace('Key', '').replace('Numpad', 'NUM ') : '';
+
+    /*
+      **Retirer une pastille vide ne demande rien ; retirer une pastille garnie
+      demande.** Une case vide n'est qu'un emplacement — la reprendre ne coûte
+      rien. Une case garnie porte un morceau, un nom, une touche de clavier, une
+      scène lumineuse et, depuis aujourd'hui, une plage de lecture : *tout ça
+      disparaît d'un clic, et rien ne le rend.*
+    */
+    const handleRetirer = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsMenuOpen(false);
+        if (!pad.url) {
+            retirerUnPad(playlistId, index);
+            return;
+        }
+        gmConfirm(
+            `Retirer « ${pad.label} » de cette playlist ? Le fichier reste dans la médiathèque, mais la touche, la scène lumineuse et la plage de lecture de cette pastille sont perdues.`,
+            () => retirerUnPad(playlistId, index)
+        );
+    };
 
     return (
         <div
@@ -127,7 +153,11 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                            `index.css`. Le `scale-[1.05]`, jusqu'ici annulé par
                            le `transform` du jitter, devient la marque fixe. */
                         ? 'bg-accent/40 border-accent animate-souffle-du-morceau scale-[1.05]'
-                        : 'bg-app-bg/40 border-app-border/50 hover:bg-app-surface/60 hover:border-accent/40 hover:shadow-glow-accent/20 hover:scale-[1.02]'
+                        /* La couleur marque l'identité AU REPOS seulement : une
+                           pastille qui joue garde le halo d'accent, commun à toutes.
+                           *Ce qui sonne doit se repérer d'un coup d'œil, et une
+                           couleur par pastille rendrait cet état-là illisible.* */
+                        : `${teinte.tuile} hover:shadow-glow-accent/20 hover:scale-[1.02]`
                 } ${isOver && !isLearningThis ? 'border-accent bg-accent/10' : ''} cursor-pointer`}
         >
             {/* Premium Glossy Overlay */}
@@ -157,7 +187,9 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 </div>
             )}
 
-            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-cyan-400 scale-110 drop-shadow-glow-cyan' : 'text-accent scale-110 drop-shadow-glow-accent') : 'text-slate-700 group-hover:text-accent/70'}`}>
+
+
+            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-cyan-400 scale-110 drop-shadow-glow-cyan' : 'text-accent scale-110 drop-shadow-glow-accent') : teinte.icone}`}>
                 {pad.type === 'link' ? <Link size={36} strokeWidth={1} /> : <Music size={36} strokeWidth={1} />}
             </div>
 
@@ -165,7 +197,16 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-slate-500 group-hover:text-slate-300'}`}>
                     {pad.label}
                 </span>
-                <div className="text-ui-7 font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{pad.id}]</div>
+                {/*
+                  ⛔ **L'identifiant interne ne s'affiche plus.** Il tenait une
+                  ligne sous le nom, en `text-white/20` : décoratif au mieux —
+                  et pour toute pastille née d'une playlist créée au bouton
+                  « + », c'était un **UUID de 36 caractères**, qui passait à la
+                  ligne et mangeait la tuile. *Un identifiant technique ne dit
+                  rien au meneur ; il ne dit quelque chose qu'à celui qui
+                  débogue, et celui-là a la console.* Retiré sur demande de
+                  David le 2026-09-16, après sa capture d'une tuile illisible.
+                */}
                 {isPlaying && (
                     <div className="flex justify-center gap-0.5 mt-1.5">
                         <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '0ms' }} />
@@ -174,6 +215,29 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                     </div>
                 )}
             </div>
+
+            {/*
+              **La croix de retrait au milieu en bas — demandé par David le
+              2026-09-16**, après que le menu a débordé de la tuile.
+
+              Les trois autres coins sont pris : la touche en haut à gauche, la
+              poignée de déplacement en haut à droite, la scène lumineuse en bas
+              à gauche, et le menu « … » en bas à droite. **Le milieu du bas est
+              le seul emplacement libre** — c'est d'ailleurs pourquoi ma première
+              tentative l'avait posée SOUS le bouton « … », inatteignable.
+
+              Elle sort du menu parce que le menu, lui, ne tient plus : sa
+              hauteur est fixe et je viens de rétrécir les tuiles. *Une commande
+              de plus dans une boîte de taille fixe pousse la dernière dehors,
+              et rien ne le signale.*
+            */}
+            <button
+                onClick={handleRetirer}
+                title="Retirer cette pastille"
+                className={`absolute bottom-2 left-1/2 -translate-x-1/2 p-1.5 rounded-lg text-slate-700 hover:text-red-500 hover:bg-red-500/10 transition-colors ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
+            >
+                <X size={12} />
+            </button>
 
             {/* More Menu Trigger */}
             <div
@@ -184,7 +248,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             </div>
 
             {isMenuOpen && !isLearningThis && (
-                <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar">
                     <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
                     <button
                         onClick={handleEdit}
@@ -278,7 +342,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
 
 const PlaylistManager: React.FC = () => {
-    const { reorderPads, updatePad } = useMusicStore();
+    const { reorderPads, updatePad, ajouterUnPad } = useMusicStore();
 
     /*
       La sélection et le filtrage par campagne vivent dans un seul endroit
@@ -350,17 +414,48 @@ const PlaylistManager: React.FC = () => {
                 allowedTypes={['audio']}
                 title="Sélectionner une Musique"
             />
-            <div className="grid grid-cols-5 gap-6 pb-8 w-full">
+            {/*
+              ⛔ **`.slice(0, 5)` retiré des DEUX endroits — il cachait des
+              données.** La refonte `da7979d2` a fait passer les playlists de
+              **seize** pastilles à cinq, et a coupé l'affichage au passage : les
+              playlists nées avant gardaient leurs seize pads, **dont onze que
+              plus aucune tuile ne montrait**.
+
+              Et la coupe n'était pas partout : `padDuRaccourci` parcourt tous
+              les pads, donc **une pastille invisible avec une touche attribuée
+              jouait toujours**. Le fichier du clavier promet pourtant que *« le
+              clavier voit exactement ce que l'écran montre »* — c'était vrai sur
+              l'axe des campagnes, faux sur celui-ci.
+
+              **Le nombre de colonnes suit la largeur** au lieu d'être figé à
+              cinq. La tuile est un `aspect-square` : le nombre de colonnes est
+              donc exactement ce qui décide de sa taille. Cinq colonnes restent
+              la mise en page des écrans moyens — *celle que David connaît* —, et
+              un écran large en prend une sixième, ce qui évite de repousser le
+              crossfader sous la ligne de flottaison. *Une grille qui grandit
+              vers le bas éloigne le geste qu'on fait le plus.*
+
+              ⛔ **Le plafond était à HUIT, et ça cassait le menu de la tuile.**
+              David, capture à l'appui : *« maintenant le pad est devenu
+              illisible »*. Le menu qui s'ouvre par-dessus une pastille a une
+              **hauteur fixe** — six lignes de boutons — alors que la tuile,
+              elle, rétrécit avec le nombre de colonnes : à 190 px, sa dernière
+              entrée sortait du cadre, **sans déborder visiblement ni rien
+              signaler**. *Rendre une grille plus dense rétrécit tout ce qui vit
+              DANS ses cases, y compris ce qui ne sait pas rétrécir.* Six
+              colonnes au plus, et le menu défile désormais plutôt que de rogner.
+            */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-6 pb-8 w-full">
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}
                 >
                     <SortableContext
-                        items={padIds.slice(0, 5)}
+                        items={padIds}
                         strategy={rectSortingStrategy}
                     >
-                        {activePlaylist.pads.slice(0, 5).map((pad, i) => {
+                        {activePlaylist.pads.map((pad, i) => {
                             const actualPLId = activePlaylist.id;
                             return (
                                 <Pad
@@ -374,6 +469,23 @@ const PlaylistManager: React.FC = () => {
                         })}
                     </SortableContext>
                 </DndContext>
+
+                {/*
+                  **La tuile d'ajout vit dans la grille, à la suite des autres.**
+                  Pas dans l'en-tête : *une pastille s'ajoute là où les
+                  pastilles sont*, et sa place dit d'elle-même qu'elle en
+                  fabrique une de plus. Elle est hors du `SortableContext` — on
+                  ne déplace pas un bouton, et l'inclure ferait de l'ajout une
+                  cible de dépôt.
+                */}
+                <button
+                    onClick={() => ajouterUnPad(activePlaylist.id)}
+                    title="Ajouter une pastille à cette playlist"
+                    className="aspect-square rounded-3xl border-2 border-dashed border-app-border/50 flex flex-col items-center justify-center gap-2 text-slate-700 transition-all duration-300 hover:border-accent/40 hover:text-accent hover:bg-app-surface/30 hover:scale-[1.02] active:scale-[0.98]"
+                >
+                    <Plus size={32} strokeWidth={1.5} />
+                    <span className="text-ui-9 font-black uppercase tracking-widest">Ajouter</span>
+                </button>
             </div>
         </div>
     );
