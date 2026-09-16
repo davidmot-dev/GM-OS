@@ -3,12 +3,34 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './i18n'
 import App from './App.tsx'
-import { initConsoleInterceptor } from './stores/useDebugStore'
+import { initConsoleInterceptor, useDebugStore } from './stores/useDebugStore'
+import { messageDeLaFrappePerdue, surveillerLaFrappe } from './utils/sondeDeLaFrappe'
 import { useSessionStore } from './store/useSessionStore'
 import { appliquerLeTheme } from './theme/themeDeLInterface'
 
 // Initialiser l'interception des logs console
 initConsoleInterceptor();
+
+/*
+  **La sonde de frappe — posée le 2026-09-16.**
+
+  *David : « je n'arrive pas à changer le titre d'un indice. De temps en temps,
+  je n'arrive pas à modifier un champ texte »* — le champ refuse la saisie
+  pendant 30 s à 1 min, **puis se débloque tout seul**, et ça arrive dans
+  plusieurs modules.
+
+  ⛔ Six pistes lues et écartées, aucune cause trouvée par la lecture. La sonde
+  ne corrige rien : **elle nommera le coupable à la prochaine occurrence**.
+
+  ⚠️ **Montée ici, avant tout le reste, et jamais sous condition.** Le défaut
+  est intermittent : *un instrument qu'il faut armer d'avance est un instrument
+  éteint au moment qui compte.* Elle est silencieuse tant que les lettres
+  s'inscrivent, et elle écrit dans le journal **persisté**, qui survit au
+  rechargement.
+*/
+surveillerLaFrappe((perdue) => {
+    useDebugStore.getState().addLog('warn', messageDeLaFrappePerdue(perdue), perdue);
+});
 
 /*
   **Le thème s'applique ici, et nulle part ailleurs.**
