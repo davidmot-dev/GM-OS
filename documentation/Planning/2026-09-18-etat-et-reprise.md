@@ -16,6 +16,25 @@
 
 ---
 
+## L'arbre est propre, tout est poussé
+
+`feature/tablet-hub-pwa` est **à jour avec `origin`** — `6f2e9f31..9e1dbeb8`, pré-push local passé.
+**Rien n'attend dans l'arbre de travail.**
+
+| Commit | Ce qu'il porte |
+| --- | --- |
+| `a63b2292` | `docs(refonte)` — l'architecture et le plan de la refonte d'interface (§ 76) |
+| `859e2b1f` | `perf(whiteboard,map)` — un magasin persisté écrit à **chaque** `set()` (§ 78) |
+| `0a026737` | `feat(light)` — l'audit du catalogue, la fusillade, les solistes, dix effets (§ 77) |
+| `aa716f18` | `feat(hub)` — les dés en 3D lisibles, et le décor de campagne (§ 79 et § 80) |
+| `9e1dbeb8` | `docs` — le registre 76 à 80, et ce document |
+
+⚠️ **Les dés et le décor sont dans un seul commit** : ils partagent `useHubSync` et les traductions.
+Les découper aurait produit un commit qui ne compile pas — *un historique lisible ne vaut pas un commit
+cassé.*
+
+---
+
 ## Ce que la nuit a produit
 
 | Quoi | Ce qui est entré |
