@@ -69,7 +69,7 @@ export const BulbFooter: React.FC = () => {
 
     const defaultColors: Record<string, string> = {
         'candle': '#ffb732',
-        'fire': '#ff4500',
+        'fire': '#ff8a1e',
         'arcane': '#a855f7',
         'dragon': '#f97316',
         'holy': '#fff9e5',
@@ -97,12 +97,38 @@ export const BulbFooter: React.FC = () => {
         'reacteur': '#e0f2fe',
         'passerelle': '#bae6fd',
         'alien': '#701a75',
-        'lever-soleil': '#450a0a'
+        'lever-soleil': '#450a0a',
+        /* `warp` alterne rouge/vert/bleu : on part du rouge, comme son premier temps. */
+        'warp': '#ff0000',
+        /* Le blanc chaud d'un éclair de bouche. */
+        'fusillade': '#fff4e0',
+        'deflagration': '#ffffff',
+        'impact': '#ff2000',
+        'panne': '#fff3d0',
+        'torche': '#ff8c21',
+        'incendie': '#e02a00',
+        'sonar': '#22d3ee',
+        'sirene': '#dc2626',
+        'chute-de-tension': '#fff7ed'
     };
 
     const handleEffectChange = (id: string, effectName: string) => {
         if (effectName === 'none') {
-            hueEngine.stopSoftwareEffect(id);
+            /*
+              ⛔ **Le seul arrêt qui doit rendre son état à la lampe.**
+
+              Une boucle d'effet écrit `bri`, `xy` et `on` directement sur le
+              pont sans passer par le magasin. L'arrêter ne faisait donc que
+              couper la boucle : **la lampe restait à la valeur où le dernier
+              battement l'avait laissée.** Choisir « Fixe » sur un fantôme
+              pouvait rendre une lampe presque éteinte, et sur un stroboscope
+              une lampe au minimum — sans que rien ne le dise.
+
+              C'est le seul des neuf appels de `stopSoftwareEffect` qui n'est
+              suivi d'aucune pose d'état. *Les huit autres n'ont rien à
+              restaurer : ils écrivent juste après.*
+            */
+            hueEngine.stopSoftwareEffect(id, 'rendreLEtat');
         } else {
             const defaultColor = defaultColors[effectName];
             if (defaultColor) {
@@ -120,7 +146,13 @@ export const BulbFooter: React.FC = () => {
 
     if (lightList.length === 0) {
         return (
-            <footer className="bg-app-surface/50 border-t border-app-border p-4 h-24 flex items-center justify-center">
+        /*
+          ⚠️ `shrink-0` — son voisin porte `flex-1`, et sans cette garde ce pied
+          de page peut être écrasé à zéro quand la place manque. *Le message qui
+          dirait « aucune lampe » est justement celui qui disparaîtrait* — et on
+          chercherait la panne ailleurs.
+        */
+        <footer className="bg-app-surface/50 border-t border-app-border p-4 h-24 shrink-0 flex items-center justify-center">
                 <span className="text-slate-500 font-bold text-xs">{t('light.footer.no_lights')}</span>
             </footer>
         );
@@ -167,6 +199,9 @@ export const BulbFooter: React.FC = () => {
                                                 <option value="neon" className="text-pink-500">{t('light.footer.effects.neon')}</option>
                                                 <option value="stroboscope" className="text-white">{t('light.footer.effects.stroboscope')}</option>
                                                 <option value="police" className="text-blue-500">{t('light.footer.effects.police')}</option>
+                                                <option value="sirene" className="text-red-500">{t('light.footer.effects.sirene')}</option>
+                                                <option value="panne" className="text-amber-200">{t('light.footer.effects.panne')}</option>
+                                                <option value="chute-de-tension" className="text-amber-300">{t('light.footer.effects.chute-de-tension')}</option>
                                             </optgroup>
 
                                             <optgroup label={t('light.footer.categories.nature')} className="bg-app-bg text-slate-400">
@@ -182,6 +217,8 @@ export const BulbFooter: React.FC = () => {
                                             <optgroup label={t('light.footer.categories.fantasy')} className="bg-app-bg text-slate-400">
                                                 <option value="candle" className="text-amber-500">{t('light.footer.effects.candle')}</option>
                                                 <option value="fire" className="text-red-500">{t('light.footer.effects.fire')}</option>
+                                                <option value="incendie" className="text-orange-600">{t('light.footer.effects.incendie')}</option>
+                                                <option value="torche" className="text-orange-400">{t('light.footer.effects.torche')}</option>
                                                 <option value="lave" className="text-orange-700">{t('light.footer.effects.lave')}</option>
                                                 <option value="arcane" className="text-purple-400">{t('light.footer.effects.arcane')}</option>
                                                 <option value="dragon" className="text-orange-500">{t('light.footer.effects.dragon')}</option>
@@ -194,12 +231,27 @@ export const BulbFooter: React.FC = () => {
                                                 <option value="trou-noir" className="text-indigo-950">{t('light.footer.effects.trou-noir')}</option>
                                                 <option value="hyperspace" className="text-cyan-300">{t('light.footer.effects.hyperspace')}</option>
                                                 <option value="reacteur" className="text-blue-100">{t('light.footer.effects.reacteur')}</option>
+                                                <option value="sonar" className="text-cyan-400">{t('light.footer.effects.sonar')}</option>
                                                 <option value="passerelle" className="text-sky-300">{t('light.footer.effects.passerelle')}</option>
                                                 <option value="alien" className="text-purple-700">{t('light.footer.effects.alien')}</option>
+                                                {/*
+                                                  ⛔ **`warp` existait partout sauf ici.** Il est codé
+                                                  dans le moteur (`HueEngine`, `case 'warp'`), nommé
+                                                  dans les deux langues (« Saut Spatial » / « Warp
+                                                  Speed ») et cité en exemple dans `useLightStore` —
+                                                  mais **aucune liste ne l'offrait**, donc personne ne
+                                                  pouvait le choisir. *Une chaîne complète dont il
+                                                  manque le bouton au bout : le même motif que
+                                                  l'arrêt de scène du 07/09, à l'envers.*
+                                                */}
+                                                <option value="warp" className="text-indigo-300">{t('light.footer.effects.warp')}</option>
                                             </optgroup>
 
                                             <optgroup label={t('light.footer.categories.alerts')} className="bg-app-bg text-slate-400">
                                                 <option value="alerte" className="text-red-600">{t('light.footer.effects.alerte')}</option>
+                                                <option value="fusillade" className="text-orange-300">{t('light.footer.effects.fusillade')}</option>
+                                                <option value="deflagration" className="text-orange-200">{t('light.footer.effects.deflagration')}</option>
+                                                <option value="impact" className="text-red-400">{t('light.footer.effects.impact')}</option>
                                                 <option value="heartbeat" className="text-red-600">{t('light.footer.effects.heartbeat')}</option>
                                                 <option value="radiation" className="text-emerald-400">{t('light.footer.effects.radiation')}</option>
                                                 <option value="toxique" className="text-lime-400">{t('light.footer.effects.toxique')}</option>

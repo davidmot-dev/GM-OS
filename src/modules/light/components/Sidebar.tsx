@@ -84,7 +84,21 @@ export const Sidebar: React.FC = () => {
     };
 
     return (
-        <aside className="col-span-3 bg-app-surface/95 backdrop-blur-md border-r border-app-border p-6 flex flex-col gap-8 text-app-text font-sans h-full">
+    /*
+      ⛔ **Ce panneau n'avait aucun défilement.** Son contenu — pont, intensité,
+      voix, trois actions rapides, éclairage normal et son explication — dépasse
+      la fenêtre dès qu'elle descend sous un millier de points de haut. Deux
+      conséquences, et la seconde était invisible :
+
+      1. son propre bas devenait **inatteignable** — la phrase de l'éclairage
+         normal était coupée en plein milieu ;
+      2. il **imposait sa hauteur à la rangée**, donc au `<main>` d'à côté, dont
+         le pied de page sortait de l'écran.
+
+      *Un panneau qui ne défile pas ne cache pas seulement sa propre fin : il
+      déforme ce qui est à côté de lui.*
+    */
+        <aside className="col-span-3 min-h-0 overflow-y-auto custom-scrollbar bg-app-surface/95 backdrop-blur-md border-r border-app-border p-6 flex flex-col gap-8 text-app-text font-sans h-full">
 
 
             {/* Connection Status & Sync */}

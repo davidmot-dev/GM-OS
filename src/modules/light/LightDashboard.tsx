@@ -24,11 +24,29 @@ const LightDashboard: React.FC = () => {
     }, [status]);
 
 
+    /*
+      ⛔ **`grid-rows-1` n'est pas décoratif — c'est le correctif.**
+
+      Sans lui, la rangée est en `auto` : elle se règle sur **le plus grand de
+      ses deux enfants**. Le panneau de gauche, qui ne défilait pas, imposait
+      donc sa hauteur au `<main>` d'à côté — et le pied de page des lampes
+      passait **sous la ligne de flottaison**, coupé par l'`overflow-hidden` du
+      châssis.
+
+      David, le 2026-09-17, sur un écran 2880×1800 à 200 % — soit 1440×900
+      points pour l'application : *« je ne vois plus mes lumières »*. Elles
+      n'étaient pas perdues, elles étaient en dessous de l'écran.
+
+      `grid-rows-1` vaut `minmax(0, 1fr)` : la rangée fait exactement la hauteur
+      disponible, et aucun enfant ne peut plus la pousser. *Une hauteur qui se
+      règle sur son contenu n'est pas une hauteur, c'est une promesse que le
+      contenu tiendra.*
+    */
     return (
-        <div className="grid grid-cols-12 h-full bg-app-bg text-app-text font-sans overflow-hidden">
+        <div className="grid grid-cols-12 grid-rows-1 h-full bg-app-bg text-app-text font-sans overflow-hidden">
             <Sidebar />
 
-            <main className="col-span-9 flex flex-col overflow-hidden relative">
+            <main className="col-span-9 min-h-0 flex flex-col overflow-hidden relative">
                 {/* Background glow base */}
                 <div className="absolute inset-0 bg-gradient-to-br from-app-surface/50 via-app-bg to-app-bg opacity-50 pointer-events-none" />
 

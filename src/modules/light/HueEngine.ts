@@ -1,6 +1,13 @@
 import { useLightStore, INTENSITE_SCENE_DEFAUT, VITESSE_EFFET_DEFAUT } from "./useLightStore";
 import type { HueLight, HueLightState } from "./useLightStore";
 import { sceneDeRepli } from "./logic/sceneDeRepli";
+import { etatARendre } from "./logic/etatARendre";
+import { prochainBattement, RAFALE_AU_REPOS } from "./logic/cadenceDeFusillade";
+import { estSoliste, solistesAdmis } from "./logic/solistesDeLEffet";
+import { cadencePartagee } from "./logic/budgetDuPont";
+import { BANDE_DE_LA_BOUGIE, BOURRASQUE, etatDuFeu, tirerLaChaleur } from "./logic/echelleDuFeu";
+import { EXTINCTION_DS, imageDeDeflagration } from "./logic/deflagration";
+import { imageDuSouffle, SOUFFLES } from "./logic/souffle";
 
 interface HueApiLight {
     state: {
@@ -85,8 +92,63 @@ export const brillanceEffective = (
 ): number => {
     const global = Number.isFinite(pourcentGlobal) ? pourcentGlobal : 100;
     const scene = Number.isFinite(pourcentDeScene) ? pourcentDeScene : INTENSITE_SCENE_DEFAUT;
-    return Math.max(0, Math.min(254, Math.round(bri * (global / 100) * (scene / 100))));
+    /*
+      ⛔ **Le plancher est 1, pas 0 — la plage d'une lampe Hue est 1 à 254.**
+
+      Zéro est hors spécification : selon le micrologiciel il est rejeté — *une
+      commande perdue dans un budget qui en tient dix par seconde* — ou ramené à
+      1. Et **dans les deux cas il n'éteint pas** : seul `on: false` coupe.
+
+      Le 2026-09-17, deux effets posaient `bri: 0` à la main (stroboscope,
+      fantôme) et ont été corrigés un par un. ⭐ *La vraie question était « qui
+      d'autre a la même rustine à poser ? »* — et la réponse était **ici** :
+      une brillance faible multipliée par un curseur global bas arrondit à zéro
+      toute seule. `setLightState` pouvait donc l'envoyer sans que personne
+      l'ait écrit. *Deux appelants avaient déjà posé leur `Math.max(1, …)`
+      localement, ce qui aurait dû nous mettre la puce à l'oreille.*
+
+      ⚠️ **Mais zéro reste atteignable, et c'est voulu.** Un multiplicateur
+      posé *exactement* à zéro est une décision — « rien » — et le test
+      `intensiteDesScenes` la garde depuis qu'elle a été prise. On distingue
+      donc les deux cas que le même nombre confondait :
+
+      | Cas | Ce qu'il veut dire | Résultat |
+      | --- | --- | --- |
+      | Un curseur **à zéro** | « rien », délibérément | `0` |
+      | Un produit qui **arrondit** à zéro | « aussi faible que possible » | `1` |
+
+      *Deux intentions qui tombaient sur la même valeur : c'est toujours là que
+      se cachent les défauts muets.*
+
+      ⛔ **Ce que ça ne règle pas** : `bri: 0` **n'éteint toujours pas** une
+      lampe. Le curseur global à zéro ne fait donc pas ce que son test dit
+      qu'il fait — il faudrait un `on: false`. Constat à part, non traité ici.
+    */
+    if (global === 0 || scene === 0 || bri === 0) return 0;
+    return Math.max(1, Math.min(254, Math.round(bri * (global / 100) * (scene / 100))));
 };
+
+/**
+ * **Ce qu'on fait de la lampe quand son effet s'arrête.** Trois réponses — et
+ * surtout pas une quatrième déguisée en booléen.
+ *
+ * | | Ce que la commande porte | Qui l'emploie |
+ * | --- | --- | --- |
+ * | `'sansRien'` | `effect: 'none'` seul | les huit appels suivis d'une pose d'état |
+ * | `'rendreLEtat'` | + l'état d'avant l'effet | le geste « Fixe » du pied de page, et la fin d'un coup unique |
+ * | `'eteindre'` | + `on: false` | **l'explosion**, dont le noir final EST l'effet |
+ *
+ * ⛔ **`bri: 0` n'éteint pas une lampe Hue** — la plage est 1 à 254, et seul
+ * `on: false` coupe. C'est la raison d'être de ce troisième mode : sans lui, la
+ * fin d'une explosion n'était pas un noir, c'était une lampe faible. Le
+ * commentaire du `stroboscope` l'avait noté en septembre et conclu que *« le
+ * vrai noir attend que l'arrêt sache restaurer »* — l'arrêt sait, depuis hier.
+ *
+ * ⚠️ *Ces trois gestes ne visent pas la même chose, et on ne les aligne pas :
+ * on les nomme.* Un booléen à deux valeurs pour trois intentions, c'est la
+ * faute que ce module a déjà payée quatre fois.
+ */
+export type FinDEffet = 'sansRien' | 'rendreLEtat' | 'eteindre';
 
 export class HueEngine {
     private softwareEffectIntervals: Record<string, ReturnType<typeof setInterval>> = {};
@@ -576,6 +638,20 @@ export class HueEngine {
     }
 
     /**
+     * **Combien de lampes jouent cet effet en ce moment.**
+     *
+     * Relu à **chaque battement** par les effets adaptatifs : une lampe qui
+     * rejoint ou quitte change le partage du budget, et les autres doivent s'en
+     * apercevoir. *Une part calculée une fois ment dès que le nombre de convives
+     * change.*
+     */
+    private lampesEnEffet(effectName: string): number {
+        const n = Object.values(useLightStore.getState().lights)
+            .filter(l => l.state?.effect === effectName).length;
+        return n || 1;
+    }
+
+    /**
      * La vitesse qui règle l'effet d'une lampe : celle de la scène qui l'a
      * allumé, ou la cadence d'origine si l'effet a été choisi à la main.
      */
@@ -667,7 +743,38 @@ export class HueEngine {
         }
     }
 
-    stopSoftwareEffect(id: string) {
+    /**
+     * **Arrête l'effet logiciel d'une lampe.**
+     *
+     * ─────────────────────────────────────────────────────────────────────────
+     * ⭐ `restaurerLEtat` — ET POURQUOI IL EST FAUX PAR DÉFAUT
+     * ─────────────────────────────────────────────────────────────────────────
+     *
+     * Une boucle d'effet écrit `bri`, `xy` et `on` **directement sur le pont**,
+     * en contournant `setLightState` pour ne pas faire rendre React dix fois
+     * par seconde. Le magasin garde donc l'état *d'avant l'effet* — c'est
+     * précisément ce qui rend la restauration possible : il suffit de le
+     * renvoyer.
+     *
+     * ⛔ **Mais presque personne ne la veut.** Sur les neuf appels de cette
+     * méthode, **un seul** : le geste « Fixe » du pied de page, qui n'est
+     * suivi de rien. Les huit autres posent un état juste après — une scène,
+     * un flash tactique, une extinction — et une restauration y serait une
+     * commande pour rien, dans un budget qui en tient dix par seconde.
+     *
+     * ⚠️ **Deux appels la poseraient même à l'envers.** `handleColorChange` et
+     * `toggleLight` appellent `setLightState` **avant**, *sans l'attendre* :
+     * le magasin n'est pas encore à jour quand on arrive ici. Restaurer y
+     * renverrait l'état **précédent** — la couleur que l'utilisateur vient de
+     * choisir serait effacée par son propre geste.
+     *
+     * *C'est la quatrième fois dans ce module que trois gestes de retour ne
+     * visent pas la même chose. On ne les aligne pas : on les nomme.*
+     *
+     * @param fin ce qu'on laisse à la lampe. Voir {@link FinDEffet} — le
+     *   défaut ne pose rien, parce que **presque personne ne veut autre chose**.
+     */
+    stopSoftwareEffect(id: string, fin: FinDEffet = 'sansRien') {
         if (this.softwareEffectIntervals[id]) {
             clearInterval(this.softwareEffectIntervals[id]);
             delete this.softwareEffectIntervals[id];
@@ -678,11 +785,38 @@ export class HueEngine {
         // Périme toute boucle encore suspendue sur une réponse du pont.
         this.generationEffet[id] = (this.generationEffet[id] ?? 0) + 1;
         useLightStore.getState().updateLightState(id, { effect: 'none' });
-        // Native effect clear
-        if (useLightStore.getState().status === 'connected') {
-            this.request('PUT', `/lights/${id}/state`, { effect: 'none' }).catch(() => { });
+
+        if (useLightStore.getState().status !== 'connected') return;
+
+        /*
+          **Une seule commande, jamais deux.** L'arrêt de l'effet natif et la
+          restauration voyagent ensemble : les séparer doublerait le trafic sur
+          un pont qui est déjà la ressource rare de ce module.
+        */
+        const charge: Record<string, unknown> = { effect: 'none' };
+        if (fin === 'rendreLEtat') {
+            const global = useLightStore.getState().globalBrightness;
+            Object.assign(charge, etatARendre(
+                useLightStore.getState().lights[id]?.state,
+                (bri) => brillanceEffective(bri, global),
+            ));
+        } else if (fin === 'eteindre') {
+            /*
+              ⚠️ **Le magasin doit l'apprendre, lui aussi.** La boucle d'effet
+              écrit sur le pont sans passer par `setLightState` ; si on éteint
+              sans le dire au magasin, l'interrupteur de la tuile resterait
+              allumé sur une lampe éteinte — *et le geste suivant du meneur
+              serait de l'éteindre une seconde fois, sans effet visible.*
+            */
+            charge.on = false;
+            charge.transitiontime = EXTINCTION_DS;
+            useLightStore.getState().updateLightState(id, { on: false });
         }
+
+        this.request('PUT', `/lights/${id}/state`, charge).catch(() => { });
     }
+
+
 
     /**
      * Démarre un effet logiciel sur une lampe.
@@ -719,6 +853,35 @@ export class HueEngine {
 
         let interval = 250; // Minimum 250ms for performance stability
         let tick = 0;
+        /**
+         * Les battements de rafale restants — l'état propre à `fusillade`.
+         *
+         * Il vit ici, dans la fermeture de la boucle de **cette** lampe : deux
+         * lampes en fusillade ont chacune le sien, et c'est exactement ce qui
+         * les décale. *Le désordre est la fonctionnalité.*
+         */
+        let rafale = RAFALE_AU_REPOS;
+        /**
+         * ⭐ **La catégorie qui manquait : le COUP UNIQUE.**
+         *
+         * Les effets d'origine sont tous des **boucles** — des ambiances. Or une
+         * déflagration, un impact, un sort qui part sont des **ponctuations** :
+         * ça arrive une fois et ça retombe. Le moteur n'en avait aucune notion.
+         *
+         * Un coup unique pose ici **ce qu'il laisse derrière lui** quand il a
+         * fini de retomber, et la boucle s'arrête de cette façon-là.
+         *
+         * ⚠️ *Ce n'était pas possible avant le 2026-09-17* : tant que l'arrêt ne
+         * restaurait rien, une explosion aurait laissé la pièce dans sa dernière
+         * braise. Le prérequis n'était pas une politesse, c'était la condition.
+         *
+         * ⭐ **Et ce n'est pas un booléen**, parce qu'il y a trois fins et non
+         * deux : *l'impact rend la lumière d'avant, l'explosion laisse le noir.*
+         * Le premier jet écrivait `fini = true` — la fin était donc la même pour
+         * tout le monde, et le noir de l'explosion n'avait nulle part où
+         * s'écrire.
+         */
+        let fini: FinDEffet | null = null;
 
         /*
           **Deux familles d'effets.** Les « dynamiques » recalculent leur attente
@@ -728,7 +891,8 @@ export class HueEngine {
         const dynamique = [
             'glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight',
             'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant',
-            'trou-noir', 'hyperspace', 'reacteur'
+            'trou-noir', 'hyperspace', 'reacteur', 'fusillade',
+            'deflagration', 'impact', 'panne', 'sonar', 'incendie'
         ].includes(effectName);
 
         /** L'attente du prochain tour, vitesse de la scène comprise. */
@@ -736,44 +900,387 @@ export class HueEngine {
 
         const loop = async () => {
             if (!toujoursALaBarre()) return;
+
+            /*
+              ⭐ **Cette lampe a-t-elle encore le droit de jouer ?**
+
+              Douze effets à cadence soutenue dépassent le budget du pont dès
+              quatre lampes — les trois plus rapides d'un facteur quatre. Plutôt
+              que de tout ralentir (*un stroboscope ralenti cesse d'être un
+              stroboscope*), on en fait jouer **moins, à la bonne vitesse**.
+
+              Le contrôle est **ici, à chaque battement, et pas au démarrage** :
+              les lampes d'une scène partent l'une après l'autre, et la première
+              ne sait pas encore combien la rejoindront. Celle qui découvre
+              qu'elle est en trop s'arrête — *en se restaurant*, donc en
+              retrouvant la couleur que la scène lui avait posée.
+            */
+            const admis = solistesAdmis(effectName);
+            if (admis !== null) {
+                const memeEffet = Object.entries(useLightStore.getState().lights)
+                    .filter(([, l]) => l.state?.effect === effectName)
+                    .map(([idLampe]) => idLampe);
+                if (!estSoliste(id, memeEffet, admis)) {
+                    this.stopSoftwareEffect(id, 'rendreLEtat');
+                    return;
+                }
+            }
+
             const freshState = useLightStore.getState().lights[id]?.state || state;
             const payload: Record<string, unknown> = {};
-            const baseBri = freshState.bri || 150;
+            /*
+              ⭐ **Il n'y a plus de `baseBri`, et c'est le résultat de la journée.**
+
+              Neuf effets partaient de la **brillance courante de la lampe**. Le
+              pied de page, lui, n'amorce que la *couleur* — jamais la brillance.
+              Un effet n'avait donc pas une forme, il en avait autant qu'il y a
+              de lampes : une respiration collée au plafond la moitié du cycle
+              sur une lampe à 254, une bougie qui éclairait la pièce.
+
+              ⭐ ***L'effet possède sa forme, le curseur possède son niveau.***
+              Chaque effet déclare désormais sa bande absolue, et
+              `brillanceEffective` applique par-dessus l'intensité de la tuile et
+              la brillance globale — c'est là, et seulement là, que se règle
+              « à quel point c'est fort ».
+
+              `baseXy` reste, et c'est voulu : le pied de page pose la couleur
+              par défaut de l'effet avant de le lancer, et une scène pose la
+              sienne. *Celui-là n'est pas emprunté à la lampe, il est choisi.*
+            */
             const baseXy = freshState.xy || [0.4, 0.4];
 
             switch (effectName) {
-                case 'candle':
-                case 'fire':
-                    payload.bri = Math.max(10, Math.min(254, baseBri + this.getRandomFloat(-40, 40)));
-                    payload.transitiontime = 2; // Very fast
+                /*
+                  ─────────────────────────────────────────────────────────────
+                  ⭐ TROIS FEUX, ET CE NE SONT PAS TROIS RÉGLAGES
+                  ─────────────────────────────────────────────────────────────
+
+                  ⛔ **`candle` et `fire` étaient le MÊME effet** jusqu'au
+                  2026-09-17 : corps partagé, même amplitude, même variance. La
+                  seule différence était la couleur posée par le pied de page —
+                  *« Feu » n'était qu'une bougie orange.*
+
+                  David, en le découvrant : *« feu de camp, bougie et incendie ce
+                  n'est pas la même chose »*. Les séparer par la seule amplitude
+                  en aurait fait trois réglages du même effet. **Chacun reçoit
+                  donc un geste qui n'appartient qu'à lui** :
+
+                  | | Le geste | Ce qu'on reconnaît |
+                  | --- | --- | --- |
+                  | Bougie | elle **manque de s'éteindre** puis repart | la flamme minuscule sur une mèche trop longue |
+                  | Feu de camp | il **crépite** — une brindille qui claque | le foyer qui respire |
+                  | Incendie | il **s'embrase**, et il **prend** | la poutre qui cède |
+                */
+                case 'candle': {
+                    /*
+                      ⛔ **Elle partait de la brillance courante de la lampe.**
+                      Sur une lampe à 254, la bougie éclairait la pièce — *et une
+                      bougie qui éclaire la pièce n'est pas une bougie.* Les deux
+                      autres feux ont reçu leur bande le 2026-09-17, pas elle.
+                    */
+                    const milieu = (BANDE_DE_LA_BOUGIE.bas + BANDE_DE_LA_BOUGIE.haut) / 2;
+                    const amplitude = (BANDE_DE_LA_BOUGIE.haut - BANDE_DE_LA_BOUGIE.bas) / 2;
                     payload.xy = this.applyXyVariance(baseXy, 0.015);
+                    if (Math.random() > 0.96) {
+                        /* Le courant d'air : elle tombe presque à rien, et
+                           revient. *C'est ça qu'on reconnaît d'une bougie — pas
+                           son tremblement, sa fragilité.* */
+                        payload.bri = BOURRASQUE;
+                        payload.transitiontime = 1;
+                    } else {
+                        payload.bri = Math.round(milieu + this.getRandomFloat(-amplitude, amplitude));
+                        payload.transitiontime = 2;
+                    }
                     break;
+                }
+
+                /*
+                  **Feu de camp — il tient sa bande, et c'est ce qui le définit.**
+
+                  ⛔ **Première version ratée, vue à l'écran par David le
+                  2026-09-17 :** *« j'ai l'impression que feu de camp et incendie
+                  sont pareil »*. Ils l'étaient. Deux couleurs de départ à peine
+                  distinctes (`#ff4500` / `#ff5a00`), quatre braises sur six
+                  proches de l'une d'elles, deux embrasements aux probabilités
+                  identiques (6 % / 7 %), et ±70 contre ±90 d'amplitude — *28 %
+                  d'écart, que l'œil ne voit pas sur une lampe.*
+
+                  ⭐ **La faute n'était pas dans les réglages, elle était dans le
+                  mécanisme** : les deux faisaient varier la brillance et la
+                  couleur **indépendamment, au hasard**. Deux bruits aléatoires
+                  autour d'un orange donnent le même résultat quelles que soient
+                  leurs amplitudes. *J'ai réglé des curseurs là où il fallait
+                  changer de mécanisme.*
+
+                  Ce qui les sépare désormais : **ils n'occupent plus la même
+                  plage de lumière.** Un foyer vit entre 80 et 175 — il ne monte
+                  jamais au blanc et ne s'effondre jamais. C'est une flaque de
+                  lumière chaude, pas un éclairage de pièce.
+                */
+                case 'fire':
+                    if (Math.random() > 0.95) {
+                        /* La brindille qui claque : bref, plus clair, jamais blanc. */
+                        payload.bri = 200;
+                        payload.transitiontime = 0;
+                        payload.xy = this.hexToXy('#ffb45a');
+                    } else {
+                        /* Une respiration lente, et un grain par-dessus. */
+                        payload.bri = Math.round(125 + Math.sin(tick * 0.35) * 32 + this.getRandomFloat(-18, 18));
+                        payload.transitiontime = 2;
+                        payload.xy = this.applyXyVariance(this.hexToXy('#ff8a1e'), 0.012);
+                    }
+                    break;
+
+                /*
+                  **Incendie — une seule variable pilote tout.**
+
+                  ⭐ **C'est le correctif de fond.** Dans une flamme réelle, le
+                  plus chaud est le plus brillant **et** le plus blanc ; la fumée
+                  qui retombe est sombre **et** rouge profond. Faire tirer `bri`
+                  et `xy` séparément produit du bruit orange ; les faire tirer
+                  **ensemble** produit du feu.
+
+                  `chaleur` va de 0 (braise mourante, rouge sang, sombre) à 1
+                  (cœur blanc-jaune, plein éclat), et règle les deux à la fois.
+                  L'exposant la biaise vers le haut : *un incendie rage, il
+                  n'hésite pas.*
+
+                  ⛔ **Et il part déjà haut.** La première version montait d'un
+                  socle de 110 sur une minute : pendant les vingt premières
+                  secondes, l'incendie était donc **plus sombre qu'un feu de
+                  camp**. L'idée du « feu qui prend » était jolie et coûtait
+                  précisément le moment où on le déclenche. Supprimée.
+                */
+                case 'incendie': {
+                    /* La corrélation vit dans `logic/echelleDuFeu` — c'est elle
+                       qui était fausse, c'est donc elle qui est testée. */
+                    const feu = etatDuFeu(tirerLaChaleur());
+                    payload.transitiontime = 1;
+                    payload.bri = feu.bri;
+                    payload.xy = this.hexToXy(feu.hex);
+                    interval = cadencePartagee(180, this.lampesEnEffet('incendie'));
+                    break;
+                }
 
                 case 'lightning':
                     payload.transitiontime = 0;
-                    if (Math.random() > 0.94) { // 6% chance to flash
+                    if (Math.random() > 0.94) { // 6 % de chance d'éclair
                         payload.bri = 254;
                         payload.xy = this.hexToXy('#ffffff');
                     } else {
-                        payload.bri = 20; // dark ambient grey
-                        payload.xy = this.hexToXy('#808080'); // Actually Hue grey is tricky, usually desaturated blueish
+                        /*
+                          ⛔ **Le gris n'existe pas pour une lampe.** `#808080`
+                          a exactement la chromaticité du blanc — seule la
+                          luminance les sépare, et c'est `bri` qui la porte. Ce
+                          `xy` était donc une commande pour rien, dans un budget
+                          de pont qui en tient dix par seconde.
+                          *On baisse la brillance, on ne « teinte » pas en gris.*
+                        */
+                        payload.bri = 20;
                     }
                     interval = 250;
                     break;
 
+                /*
+                  ⭐ **Déflagration** — un coup unique, puis le noir.
+
+                  ⛔ **Deux reproches de David le 2026-09-17**, l'un et l'autre
+                  écrits dans l'ancien code : *« explosion ne dure pas assez
+                  longtemps et à la fin cela doit devenir noir »*. Elle durait
+                  **1,54 s** — quatre images — et sa fin **rendait à la lampe
+                  l'état d'avant**, donc la lumière revenait.
+
+                  Les images vivent maintenant dans `logic/deflagration`, où la
+                  durée est une **somme lisible** et non le total muet de quatre
+                  `interval` posés dans quatre branches. *Une valeur qui n'existe
+                  que comme somme de morceaux ne peut être ni relue, ni vérifiée.*
+                */
+                case 'deflagration': {
+                    const image = imageDeDeflagration(tick);
+                    if (image) {
+                        payload.transitiontime = image.transitiontime;
+                        payload.bri = image.bri;
+                        payload.xy = this.hexToXy(image.hex);
+                        interval = image.interval;
+                    } else {
+                        /* ⭐ Le noir n'est pas une image : c'est la commande
+                           d'arrêt, qui porte `on: false`. *Une seule commande,
+                           jamais deux.* */
+                        fini = 'eteindre';
+                    }
+                    break;
+                }
+
+                /*
+                  ⭐ **Impact** — le coup unique le plus court du catalogue :
+                  deux commandes. *Une balle qui touche, un sort qui frappe.*
+                */
+                case 'impact':
+                    if (tick === 0) {
+                        payload.transitiontime = 0;
+                        payload.bri = 254;
+                        payload.xy = this.hexToXy('#ff2000');
+                        interval = 100;
+                    } else if (tick === 1) {
+                        payload.transitiontime = 2;
+                        payload.bri = 25;
+                        interval = 260;
+                    } else {
+                        /* *Un impact n'éteint pas la pièce* — contrairement à
+                           l'explosion, il rend la lumière qu'il a empruntée. */
+                        fini = 'rendreLEtat';
+                    }
+                    break;
+
+                /*
+                  **Panne de courant.** Grésillement, chute, deux relances qui
+                  échouent, puis le noir — et ça recommence. *Une panne qui ne se
+                  répète pas serait un coup unique ; celle-ci est une ambiance :
+                  le courant n'arrête pas de lâcher.*
+                */
+                case 'panne': {
+                    const phaseDePanne = tick % 14;
+                    payload.xy = this.hexToXy('#fff3d0');
+                    if (phaseDePanne < 4) {
+                        payload.transitiontime = 0;
+                        payload.bri = Math.random() > 0.4 ? 200 : 30;
+                        interval = 110;
+                    } else if (phaseDePanne === 4) {
+                        payload.transitiontime = 2;
+                        payload.bri = 1;
+                        interval = 2200;
+                    } else if (phaseDePanne === 6 || phaseDePanne === 9) {
+                        payload.transitiontime = 0;
+                        payload.bri = 160;
+                        interval = 130;
+                    } else {
+                        payload.transitiontime = 3;
+                        payload.bri = 1;
+                        interval = 1400 + Math.random() * 1600;
+                    }
+                    break;
+                }
+
+                /*
+                  **Torche qui faiblit.** Le feu, mais dont la braise baisse sur
+                  une dizaine de minutes jusqu'à un rougeoiement. ⭐ *Redoutable
+                  en donjon : personne ne voit que ça descend, et au bout d'une
+                  heure tout le monde parle moins fort.*
+                */
+                case 'torche': {
+                    /* De 200 à 35 en une dizaine de minutes, à 400 ms le battement. */
+                    const braise = Math.max(35, 200 - tick * 0.11);
+                    payload.transitiontime = 3;
+                    payload.bri = Math.max(10, braise + this.getRandomFloat(-25, 25));
+                    payload.xy = this.applyXyVariance(this.hexToXy('#ff8c21'), 0.012);
+                    interval = 400;
+                    break;
+                }
+
+                /*
+                  **Sonar.** Presque noir, et une pulsation toutes les quatre
+                  secondes. *Deux commandes par cycle : l'effet le moins cher du
+                  catalogue, et l'un des plus efficaces.*
+                */
+                case 'sonar':
+                    if (tick % 2 === 0) {
+                        payload.transitiontime = 0;
+                        payload.bri = 200;
+                        payload.xy = this.hexToXy('#22d3ee');
+                        interval = 200;
+                    } else {
+                        payload.transitiontime = 8;
+                        payload.bri = 6;
+                        interval = 3800;
+                    }
+                    break;
+
+                /*
+                  **Sirène lointaine.** Le rouge monte et redescend sans jamais
+                  claquer — *l'inverse exact du gyrophare, qui est dans la pièce ;
+                  celle-ci est au bout de la rue.*
+                */
+                case 'sirene':
+                    payload.transitiontime = 15;
+                    payload.bri = Math.max(10, 90 + Math.sin(tick * 0.9) * 80);
+                    payload.xy = this.hexToXy('#dc2626');
+                    interval = 1500;
+                    break;
+
+                /*
+                  **Chute de tension.** Une dérive très lente du blanc vers
+                  l'ambre sale, et retour. *Invisible sur l'instant, oppressant
+                  sur une heure* — c'est là que le Hue est le meilleur.
+                */
+                case 'chute-de-tension': {
+                    const paliers = ['#fff7ed', '#ffe6bf', '#f5c98a', '#d9a55f', '#f5c98a', '#ffe6bf'];
+                    payload.transitiontime = 100;
+                    payload.xy = this.hexToXy(paliers[tick % paliers.length]);
+                    payload.bri = 130 - Math.abs(3 - (tick % 6)) * 12;
+                    interval = 10000;
+                    break;
+                }
+
+                /*
+                  **La fusillade.** Le rythme entier vit dans
+                  `logic/cadenceDeFusillade` — rafales courtes, pauses longues,
+                  et ⭐ **une pause dont le plancher dépend du nombre de lampes
+                  qui tirent** : c'est ce qui tient le budget du pont sans
+                  renoncer au crépitement.
+
+                  Le compte des lampes se relit **à chaque battement**, jamais
+                  au démarrage : une lampe qui rejoint ou quitte la fusillade
+                  change le partage du budget, et les autres doivent s'en
+                  apercevoir. *Une part calculée une fois ment dès que le
+                  nombre de convives change.*
+                */
+                case 'fusillade': {
+                    const battement = prochainBattement(rafale, this.lampesEnEffet('fusillade'));
+                    rafale = battement.etat;
+
+                    payload.transitiontime = 0;
+                    if (battement.eclair) {
+                        payload.bri = 254;
+                        /* Un éclair de bouche est un blanc chaud, pas un blanc
+                           de projecteur. */
+                        payload.xy = this.hexToXy('#fff4e0');
+                    } else {
+                        /* ⛔ Le noir se joue à 1, jamais à 0 : la plage d'une
+                           lampe Hue est 1–254, et zéro n'éteint pas. Une pièce
+                           en fusillade n'est de toute façon pas noire. */
+                        payload.bri = 1;
+                    }
+                    interval = battement.attenteMs;
+                    break;
+                }
+
                 case 'police':
-                    payload.transitiontime = 2;
+                    /*
+                      ⛔ **Un gyrophare claque, il ne fond pas.** À 200 ms de
+                      fondu pour 300 ms de battement, les deux tiers du cycle
+                      étaient un dégradé rouge-violet-bleu : on ne voyait
+                      jamais ni le rouge ni le bleu purs.
+                    */
+                    payload.transitiontime = 0;
                     payload.bri = 254;
                     payload.xy = (tick % 2 === 0) ? this.hexToXy('#ff0000') : this.hexToXy('#0000ff');
                     interval = 300;
                     break;
 
-                case 'arcane': // Slow intense breathing
-                    payload.transitiontime = 15;
-                    payload.bri = baseBri + Math.sin(tick * 0.5) * 50;
+                /*
+                  **Arcane** — la même faute que `breathing`, en plus lent :
+                  18,8 s de période sur un socle emprunté à la lampe. Il garde son
+                  geste propre — *une chose qui respire lentement et fort*, avec
+                  une **apnée** au sommet qui inquiète — et sa dérive de couleur.
+                */
+                case 'arcane': {
+                    const image = imageDuSouffle(SOUFFLES.arcane, tick);
+                    payload.transitiontime = image.transitiontime;
+                    payload.bri = image.bri;
                     payload.xy = this.applyXyVariance(baseXy, 0.04);
-                    interval = 1500;
+                    interval = image.interval;
                     break;
+                }
 
                 case 'glitch':
                 case 'tv':
@@ -790,12 +1297,22 @@ export class HueEngine {
                     interval = 200;
                     break;
 
-                case 'underwater':
-                    payload.transitiontime = 20;
-                    payload.bri = Math.max(10, Math.min(254, baseBri + Math.sin(tick * 0.2) * 40));
+                /*
+                  **Sous l'eau** — la pire des cinq : **62,8 secondes** de période.
+                  À l'œil, une lampe qui ne bouge pas.
+
+                  C'est une **houle**, donc le seul souffle du catalogue *sans
+                  apnée ni repos* : elle ne s'arrête jamais. La dérive de couleur
+                  porte les caustiques.
+                */
+                case 'underwater': {
+                    const image = imageDuSouffle(SOUFFLES.underwater, tick);
+                    payload.transitiontime = image.transitiontime;
+                    payload.bri = image.bri;
                     payload.xy = this.applyXyVariance(baseXy, 0.05);
-                    interval = 2000;
+                    interval = image.interval;
                     break;
+                }
 
                 case 'dragon':
                     payload.transitiontime = 5;
@@ -846,19 +1363,54 @@ export class HueEngine {
                     payload.xy = this.hexToXy('#ffffff');
                     break;
 
+                /*
+                  ⭐ **Radiation** — ce n'était pas un souffle, c'était un compteur.
+
+                  Quatrième victime de la même sinusoïde (18,8 s de période), mais
+                  *une contamination ne respire pas* : elle a des **bouffées
+                  irrégulières** sur un fond sourd, comme l'aiguille qui s'affole
+                  puis retombe. Lui donner un souffle en aurait fait un cinquième
+                  réglage du même effet — **la faute des trois feux, en plus
+                  discret.**
+                */
                 case 'radiation':
-                    payload.transitiontime = 15;
-                    payload.bri = Math.max(10, Math.min(254, baseBri + Math.sin(tick * 0.5) * 100));
-                    payload.xy = baseXy;
-                    interval = 1500;
+                    payload.xy = this.applyXyVariance(baseXy, 0.01);
+                    if (Math.random() > 0.8) {
+                        /* L'aiguille part. */
+                        payload.transitiontime = 0;
+                        payload.bri = 235;
+                        interval = 300;
+                    } else {
+                        /* Le fond, qui ne rassure pas. */
+                        payload.transitiontime = 4;
+                        payload.bri = 70 + Math.round(this.getRandomFloat(-12, 12));
+                        interval = 1000;
+                    }
                     break;
 
-                case 'breathing':
-                    payload.transitiontime = 20;
-                    payload.bri = Math.max(10, Math.min(254, baseBri + Math.sin(tick * 0.3) * 100));
+                /*
+                  ⭐ **Respiration** — un souffle, pas une marée.
+
+                  ⛔ David le 2026-09-17, après avoir essayé tout le catalogue :
+                  *« je ne suis pas convaincu par tous, par exemple respiration »*.
+                  L'ancienne formule — `baseBri + sin(tick * 0.3) * 100`, un point
+                  toutes les 2 s — avait une période mesurée de **41,9 secondes**.
+                  Un souffle humain en dure 4 à 5.
+
+                  Deux fautes d'un coup, et aucune n'était un réglage :
+                  *la période était illisible* (`0,3` ne ressemble pas à quarante
+                  secondes), et *le socle était la brillance courante de la lampe*
+                  — que le pied de page n'amorce jamais. Sur une lampe à 254, la
+                  moitié du cycle était collée au plafond.
+                */
+                case 'breathing': {
+                    const image = imageDuSouffle(SOUFFLES.respiration, tick);
+                    payload.transitiontime = image.transitiontime;
+                    payload.bri = image.bri;
                     payload.xy = baseXy;
-                    interval = 2000;
+                    interval = image.interval;
                     break;
+                }
 
                 case 'lumiere-ville':
                     payload.transitiontime = 5;
@@ -869,17 +1421,40 @@ export class HueEngine {
                         payload.transitiontime = 1;
                         interval = 200;
                     } else {
-                        payload.bri = Math.max(80, baseBri + this.getRandomFloat(-20, 20));
+                        /* ⚠️ Même faute que la bougie : le halo d'un lampadaire
+                           au sodium a sa propre brillance, il n'emprunte pas
+                           celle de la lampe. */
+                        payload.bri = Math.round(130 + this.getRandomFloat(-20, 20));
                         payload.xy = [0.55, 0.40];
                         interval = 1000;
                     }
                     break;
 
+                /*
+                  ⚠️ **Forêt profonde — deux immobilités qui s'additionnaient.**
+
+                  La brillance parcourait ±50 en **251 secondes** (1,25 point par
+                  seconde : invisible), et la couleur alternait entre `#064e3b` et
+                  `#14532d` — *deux verts sombres que rien ne distingue sur une
+                  lampe.* Deux mouvements dont aucun ne bougeait.
+
+                  Son geste : **la canopée**. Une ombre verte qui dérive, et de
+                  loin en loin un rai de soleil qui traverse les feuilles. *Ce
+                  qu'on reconnaît d'un sous-bois, c'est le contraste entre les
+                  deux, pas la teinte moyenne.*
+                */
                 case 'foret-profonde':
-                    payload.transitiontime = 40;
-                    payload.bri = Math.max(30, Math.min(180, 100 + Math.sin(tick * 0.1) * 50));
-                    payload.xy = (tick % 2 === 0) ? this.hexToXy('#064e3b') : this.hexToXy('#14532d');
-                    interval = 4000;
+                    if (Math.random() > 0.93) {
+                        payload.transitiontime = 8;
+                        payload.bri = 175;
+                        payload.xy = this.hexToXy('#b7d96b');
+                        interval = 2500;
+                    } else {
+                        payload.transitiontime = 25;
+                        payload.bri = Math.round(this.getRandomFloat(45, 95));
+                        payload.xy = this.applyXyVariance(this.hexToXy('#0f3d22'), 0.02);
+                        interval = 3000;
+                    }
                     break;
 
                 case 'cyber-night':
@@ -891,8 +1466,26 @@ export class HueEngine {
                     break;
 
                 case 'disco':
-                    payload.transitiontime = 2;
-                    payload.xy = [Math.random(), Math.random()];
+                    /*
+                      ⛔ **Un `xy` tiré au hasard n'est pas une couleur.**
+                      `[Math.random(), Math.random()]` tombait hors du triangle
+                      de la lampe une fois sur deux, et pouvait être carrément
+                      invalide (`x + y > 1`). C'était le **seul** effet du
+                      catalogue à contourner le calage de gamut d'`hexToXy` —
+                      d'où des couleurs que le pont ramenait où il pouvait.
+                      *On tire une teinte, pas un point du plan.*
+
+                      Le fondu passe à zéro pour la même raison que le
+                      gyrophare : à 200 ms pour 300 ms de battement, la piste
+                      ne changeait jamais vraiment de couleur.
+                    */
+                    payload.transitiontime = 0;
+                    const discoColors = [
+                        '#ff0000', '#ff7f00', '#ffff00', '#7fff00',
+                        '#00ff00', '#00ff7f', '#00ffff', '#007fff',
+                        '#0000ff', '#7f00ff', '#ff00ff', '#ff007f',
+                    ];
+                    payload.xy = this.hexToXy(discoColors[Math.floor(Math.random() * discoColors.length)]);
                     payload.bri = 254;
                     interval = 300;
                     break;
@@ -914,9 +1507,23 @@ export class HueEngine {
 
                 case 'fantome':
                     payload.transitiontime = 10;
-                    payload.bri = Math.random() > 0.9 ? 0 : 40 + Math.sin(tick * 0.5) * 20;
+                    /*
+                      Deux corrections d'un coup, même famille que le
+                      stroboscope :
+
+                      ⛔ `bri: 0` ne coupe pas (plage 1–254) — la disparition
+                      du fantôme se jouait donc à une brillance minimale, pas à
+                      l'extinction. Elle y reste, mais dans la plage valide.
+
+                      ⚠️ Le fondu durait **1 s** pour un battement de 800 ms :
+                      la commande suivante arrivait avant la fin du fondu, donc
+                      *le fondu n'était jamais vu* — la lampe se contentait de
+                      suivre. Le battement passe à 1,2 s pour lui laisser sa
+                      place.
+                    */
+                    payload.bri = Math.random() > 0.9 ? 1 : 40 + Math.sin(tick * 0.5) * 20;
                     payload.xy = this.hexToXy('#e0f2fe');
-                    interval = 800;
+                    interval = 1200;
                     break;
 
                 case 'terminal':
@@ -928,7 +1535,23 @@ export class HueEngine {
 
                 case 'stroboscope':
                     payload.transitiontime = 0;
-                    payload.bri = (tick % 2 === 0) ? 254 : 0;
+                    /*
+                      ⛔ **`bri: 0` n'éteint pas une lampe Hue.** La plage est
+                      **1 à 254** ; zéro est hors spécification, et seul
+                      `on: false` coupe vraiment. Le temps « noir » du
+                      stroboscope était donc un temps *faible*, ce qui aplatit
+                      tout le battement — David le voyait sans pouvoir le
+                      nommer.
+
+                      ⚠️ **Pourquoi pas `on: false`, qui serait le vrai
+                      remède.** `stopSoftwareEffect` ne restaure ni `on` ni
+                      `bri` : un stroboscope arrêté sur un temps noir
+                      **laisserait la lampe éteinte**, et il faudrait la
+                      rallumer à la main. *On ne répare pas un battement mou en
+                      créant une lampe qui ne revient pas.* Le vrai noir attend
+                      que l'arrêt sache restaurer.
+                    */
+                    payload.bri = (tick % 2 === 0) ? 254 : 1;
                     payload.xy = this.hexToXy('#ffffff');
                     interval = 100;
                     break;
@@ -948,12 +1571,20 @@ export class HueEngine {
                     interval = 2000;
                     break;
 
-                case 'zen':
-                    payload.transitiontime = 60;
-                    payload.bri = 100 + Math.sin(tick * 0.1) * 30;
+                /*
+                  **Zen** — il ne faisait rien : 377 s de période pour ±30 de
+                  brillance, une pente de 0,5 point par seconde. *L'œil s'adapte
+                  plus vite que ça.* C'est un souffle long, avec des temps morts
+                  aux deux bouts — ce qui le sépare de la houle de `underwater`.
+                */
+                case 'zen': {
+                    const image = imageDuSouffle(SOUFFLES.zen, tick);
+                    payload.transitiontime = image.transitiontime;
+                    payload.bri = image.bri;
                     payload.xy = this.hexToXy('#fafaf9');
-                    interval = 6000;
+                    interval = image.interval;
                     break;
+                }
 
                 case 'neant':
                     payload.transitiontime = 30;
@@ -983,9 +1614,17 @@ export class HueEngine {
                     interval = 4000;
                     break;
 
+                /*
+                  ⚠️ **Le fondu de l'aspiration durait 2 s pour un battement de
+                  1 s** : la commande suivante arrivait avant sa fin, donc *le
+                  fondu n'était jamais vu* — la lampe se contentait de suivre.
+                  Même défaut que `fantome` en septembre ; c'est l'audit
+                  mécanique du 2026-09-17 qui l'a trouvé, pas une relecture.
+                */
                 case 'trou-noir':
                     payload.transitiontime = 20;
                     if (Math.random() > 0.9) { // Gravity pull
+                        payload.transitiontime = 9;
                         payload.bri = 5;
                         interval = 1000;
                     } else {
@@ -1050,6 +1689,17 @@ export class HueEngine {
             }
 
             tick++;
+
+            /*
+              Le coup unique a fini de retomber. On ne pose pas de dernier état
+              ici : `stopSoftwareEffect` porte la fin voulue — l'état d'avant ou
+              l'extinction — dans **la même commande** que l'arrêt de l'effet.
+              *Une de moins sur un pont qui en tient dix par seconde.*
+            */
+            if (fini) {
+                this.stopSoftwareEffect(id, fini);
+                return;
+            }
 
             try {
                 // Bypass setLightState to avoid polluting local store heavily and forcing React renders 10x a second
