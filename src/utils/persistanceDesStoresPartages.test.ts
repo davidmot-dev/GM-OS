@@ -28,10 +28,19 @@ const { useClockStore } = await import('../store/useClockStore');
 const { useWhiteboardStore } = await import('../modules/whiteboard/useWhiteboardStore');
 const { useFavoriteStore } = await import('../modules/favorite/useFavoriteStore');
 const { useMapStore } = await import('../modules/map/useMapStore');
+const { viderLesEcrituresDifferees } = await import('./ecritureReserveeAuMJ');
+
+/**
+ * ⭐ **L'écriture est différée depuis le 2026-09-17** — au plus 250 ms — pour
+ * qu'un geste continu ne sérialise pas tout le magasin cent fois par seconde. Un
+ * essai qui lit `localStorage` doit donc la **forcer** d'abord, sinon il mesure
+ * le délai au lieu de mesurer la garde.
+ */
+const surLeDisque = (cle: string) => { viderLesEcrituresDifferees(); return localStorage.getItem(cle); };
 
 /** Ce que le magasin contient réellement, une fois le JSON de Zustand déballé. */
 const persiste = (cle: string) => {
-    const brut = localStorage.getItem(cle);
+    const brut = surLeDisque(cle);
     return brut ? JSON.parse(brut).state : null;
 };
 
@@ -99,12 +108,12 @@ describe('les stores partagés entre fenêtres', () => {
             'la fenêtre « %s » n’écrase pas le magasin du MJ',
             (secondaire) => {
                 (store as any).setState(duMJ);
-                const ecritParLeMJ = localStorage.getItem(cle);
+                const ecritParLeMJ = surLeDisque(cle);
 
                 role.current = secondaire;
                 (store as any).setState(duHub);
 
-                expect(localStorage.getItem(cle)).toBe(ecritParLeMJ);
+                expect(surLeDisque(cle)).toBe(ecritParLeMJ);
                 expect(temoin(persiste(cle))).toBeGreaterThan(0);
             },
         );

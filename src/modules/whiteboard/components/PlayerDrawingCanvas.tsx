@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useWhiteboardStore, type DrawingPath, type Point } from '../useWhiteboardStore';
+import { limiteurDeCadence } from '../../../utils/limiteurDeCadence';
 import WhiteboardToolbar from './WhiteboardToolbar';
 
 export const PlayerDrawingCanvas: React.FC = () => {
@@ -184,6 +185,19 @@ export const PlayerDrawingCanvas: React.FC = () => {
         };
     };
 
+    /*
+      ⭐ **Même correctif que le canevas du MJ, et pour la même raison.**
+
+      ⛔ Chaque point appelait `setActivePath`, donc un `set()` sur un magasin
+      persisté — que Zustand écrit **à chaque `set()`**, sans condition. Et
+      `CrossWindowEventService` jette déjà tout ce qui arrive à moins de 50 ms.
+
+      ⚠️ *Le même défaut vivait dans deux fichiers* : le canevas du meneur et
+      celui des joueurs. Corriger l'un sans l'autre aurait laissé la tablette
+      saccader, et on aurait cherché ailleurs.
+    */
+    const diffusion = useRef(limiteurDeCadence());
+
     const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
         if (!isActive) return;
         const { x, y } = getCoordinates(e);
@@ -195,9 +209,21 @@ export const PlayerDrawingCanvas: React.FC = () => {
         if (!isActive) return;
         const { x, y } = getCoordinates(e);
 
+        /*
+          ⚠️ **Une seule fenêtre pour les deux diffusions.** Le laser et le tracé
+          partent du même geste ; les limiter séparément consommerait deux
+          fenêtres et l'un des deux passerait toujours après l'autre.
+
+          L'extinction du laser (`null`) n'est PAS limitée : elle ne part qu'une
+          fois, quand on change d'outil. *Ce qui arrête quelque chose ne se
+          limite jamais* — un arrêt perdu laisse un point rouge sur l'écran des
+          joueurs, et rien ne dit pourquoi.
+        */
+        const peutDiffuser = diffusion.current.tenter();
+
         // Synchronize laser pointer
         if (currentTool === 'laser') {
-            setLaserPointer({ x, y });
+            if (peutDiffuser) setLaserPointer({ x, y });
         } else if (laserPointer) {
             setLaserPointer(null);
         }
@@ -215,6 +241,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
         setCurrentPoints(newPoints);
 
         // SYNC: Share active trace
+        if (!peutDiffuser) return;
         setActivePath({
             id: 'active',
             points: newPoints,
@@ -228,6 +255,10 @@ export const PlayerDrawingCanvas: React.FC = () => {
     const stopDrawing = () => {
         if (!isDrawing) return;
         setIsDrawing(false);
+        /* ⛔ Sans cette réouverture, le dernier point — celui qui ferme la
+           forme — pourrait tomber dans une fenêtre close et n'être jamais
+           diffusé : *les autres écrans garderaient un trait tronqué.* */
+        diffusion.current.rouvrir();
 
         if (currentPoints.length >= 2) {
             const id = Math.random().toString(36).substr(2, 9);

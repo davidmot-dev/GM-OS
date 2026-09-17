@@ -316,18 +316,42 @@ export const useMapStore = create<MapState>()(
                 if (get().projectionTarget) get().syncToPlayers();
             },
 
+            /*
+              ⭐ **Un seul `set()`, là où il y en avait deux.**
+
+              ⛔ Zustand écrit sur le disque à **chaque** `set()` d'un magasin
+              persisté, sans condition. Ce déplacement en faisait deux — les
+              pions, puis les zones — donc **deux sérialisations complètes du
+              magasin de carte par mouvement de souris**, pendant tout un
+              glissement. Une troisième suivait par `syncToPlayers` en
+              projection.
+
+              ⚠️ *Le commentaire de `partialize` en bas de ce fichier affirme que
+              les projections ne sont pas persistées « to avoid massive
+              performance drops during real-time movement ».* C'est une croyance
+              fausse, et elle a coûté cher : **`partialize` ne décide pas SI l'on
+              écrit, seulement CE QU'ON écrit.** L'écriture avait lieu quand
+              même. Le vrai remède est dans `ecritureDifferee`.
+
+              Les zones rattachées suivent leur pion dans la même mutation — ce
+              qui, au passage, les empêche de se désolidariser le temps d'un
+              rendu intermédiaire.
+            */
             updateToken: (id: string, updates: Partial<MapToken>) => {
                 const oldToken = get().tokens.find(t => t.id === id);
-                set(state => ({ tokens: state.tokens.map(t => t.id === id ? { ...t, ...updates } : t) }));
-                if (oldToken && (updates.x !== undefined || updates.y !== undefined)) {
-                    const dx = (updates.x ?? oldToken.x) - oldToken.x;
-                    const dy = (updates.y ?? oldToken.y) - oldToken.y;
-                    if (dx !== 0 || dy !== 0) {
-                        set(state => ({
-                            dangerZones: state.dangerZones.map(z => z.parentTokenId === id ? { ...z, x: z.x + dx, y: z.y + dy } : z)
-                        }));
-                    }
-                }
+                const dx = oldToken ? (updates.x ?? oldToken.x) - oldToken.x : 0;
+                const dy = oldToken ? (updates.y ?? oldToken.y) - oldToken.y : 0;
+                const zonesSuivent = dx !== 0 || dy !== 0;
+
+                set(state => ({
+                    tokens: state.tokens.map(t => t.id === id ? { ...t, ...updates } : t),
+                    ...(zonesSuivent ? {
+                        dangerZones: state.dangerZones.map(z => z.parentTokenId === id
+                            ? { ...z, x: z.x + dx, y: z.y + dy }
+                            : z),
+                    } : {}),
+                }));
+
                 if (get().projectionTarget) get().syncToPlayers();
             },
 

@@ -1,6 +1,7 @@
 import { createJSONStorage } from 'zustand/middleware';
 import type { StateStorage } from 'zustand/middleware';
 import { isMainWindow } from './windowRole';
+import { ecritureDifferee, type StockageDiffere } from './ecritureDifferee';
 
 /**
  * **Lecture pour toutes les fenêtres, écriture pour la seule fenêtre MJ.**
@@ -89,5 +90,70 @@ export function ecritureReserveeAuMJ(source: Storage): StateStorage {
  * cette garde ne change rien à la forme de ce qui est stocké, seulement à
  * l'identité de qui a le droit de l'écrire.
  */
-export const stockageLocalDuMJ = () =>
-    createJSONStorage(() => ecritureReserveeAuMJ(localStorage));
+/**
+ * Tous les stockages différés en service, pour pouvoir les vider ensemble.
+ *
+ * ⭐ **Les écouteurs sont posés une fois, pas une fois par magasin.** Huit
+ * magasins passent par ici ; les brancher chacun donnerait vingt-quatre
+ * écouteurs qui font tous la même chose. *Et surtout : un seul point d'entrée
+ * pour forcer l'écriture est ce qui rend la chose vérifiable.*
+ */
+const stockagesDifferes = new Set<StockageDiffere<unknown>>();
+
+/**
+ * **Écrit sur-le-champ tout ce qui attendait.**
+ *
+ * Appelé par les filets de fermeture, et par les essais qui vérifient ce qui
+ * arrive vraiment dans `localStorage` — *un essai qui lit le disque doit pouvoir
+ * exiger que le disque soit à jour, sans connaître le délai.*
+ */
+export const viderLesEcrituresDifferees = (): void => {
+    stockagesDifferes.forEach(differe => differe.viderMaintenant());
+};
+
+/**
+ * ⚠️ **Les trois filets qui bornent la perte à un geste, pas à une séance.**
+ *
+ * L'écriture attend au plus 250 ms. Ces trois événements la forcent avant que la
+ * fenêtre ne disparaisse :
+ *
+ * | Événement | Ce qu'il attrape |
+ * | --- | --- |
+ * | `beforeunload` | la fermeture ordinaire de la fenêtre |
+ * | `pagehide` | le cas où `beforeunload` ne tire pas — il arrive |
+ * | `visibilitychange` → caché | le passage en arrière-plan, **avant** que le système ne puisse suspendre la fenêtre |
+ *
+ * ⛔ *Ce qui n'est pas attrapé* : une coupure de courant ou un plantage du
+ * processus. On y perd au pire un quart de seconde d'un déplacement de pion —
+ * **jamais une campagne**, qui passe par `PersistenceService` et IndexedDB.
+ */
+let filetsPoses = false;
+function poserLesFiletsDeFermeture(): void {
+    if (filetsPoses || typeof window === 'undefined') return;
+    filetsPoses = true;
+    window.addEventListener('beforeunload', viderLesEcrituresDifferees);
+    window.addEventListener('pagehide', viderLesEcrituresDifferees);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') viderLesEcrituresDifferees();
+    });
+}
+
+export const stockageLocalDuMJ = <S = unknown>(): StockageDiffere<S> => {
+    const differe = ecritureDifferee<S>(
+        createJSONStorage<S>(() => ecritureReserveeAuMJ(localStorage))!,
+        /*
+          ⛔ **La garde est posée ICI, au-dessus du tampon, et pas seulement dans
+          `ecritureReserveeAuMJ` en dessous.** Un tampon qui accepte une écriture
+          interdite la sert ensuite en lecture : une fenêtre secondaire qui se
+          réhydrate y relirait sa propre vue partielle. *Ce qui n'a pas le droit
+          d'être écrit n'a pas le droit d'être lu comme s'il l'avait été.*
+
+          Le refus du dessous reste, et c'est voulu : les deux étages ne se
+          doublent pas, ils gardent deux chemins — le tampon et le disque.
+        */
+        { autorise: isMainWindow },
+    );
+    stockagesDifferes.add(differe as StockageDiffere<unknown>);
+    poserLesFiletsDeFermeture();
+    return differe;
+};

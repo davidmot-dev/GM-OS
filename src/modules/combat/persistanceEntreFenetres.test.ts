@@ -24,6 +24,19 @@ vi.mock('../../utils/windowRole', () => ({
 }));
 
 const { useCombatStore } = await import('./useCombatStore');
+const { viderLesEcrituresDifferees } = await import('../../utils/ecritureReserveeAuMJ');
+
+/**
+ * ⭐ **L'écriture est différée depuis le 2026-09-17**, pour qu'un geste continu
+ * — dessiner, glisser un pion — ne sérialise pas tout le magasin cent fois par
+ * seconde. Un essai qui lit `localStorage` doit donc d'abord **forcer**
+ * l'écriture, sinon il mesure le délai au lieu de mesurer la garde.
+ *
+ * ⚠️ *Ce n'est pas un assouplissement* : ces essais ont trouvé un vrai défaut du
+ * nouveau mécanisme le jour même — le tampon servait en lecture des écritures
+ * que la garde avait refusées.
+ */
+const surLeDisque = () => { viderLesEcrituresDifferees(); return localStorage.getItem(CLE); };
 
 const CLE = 'gmos-combat-storage';
 
@@ -34,7 +47,7 @@ const unCombattant = (name: string) => ({
 
 /** Ce que le magasin contient réellement, une fois le JSON de Zustand déballé. */
 const persiste = () => {
-    const brut = localStorage.getItem(CLE);
+    const brut = surLeDisque();
     return brut ? JSON.parse(brut).state : null;
 };
 
@@ -53,26 +66,26 @@ describe('la persistance du plateau entre fenêtres', () => {
 
     it('le Player Hub ne persiste rien — c’est lui qui écrasait le plateau', () => {
         useCombatStore.getState().addCombatant(unCombattant('Xénomorphe'));
-        const duMJ = localStorage.getItem(CLE);
+        const duMJ = surLeDisque();
 
         // Le hub reçoit la synchronisation : `useHubSync` et
         // `CrossWindowEventService` font tous deux exactement ceci.
         role.current = 'hub';
         useCombatStore.setState(prev => ({ ...prev, combatants: [], round: 9 }));
 
-        expect(localStorage.getItem(CLE)).toBe(duMJ);
+        expect(surLeDisque()).toBe(duMJ);
         expect(persiste()?.combatants).toHaveLength(1);
         expect(persiste()?.round).toBe(1);
     });
 
     it('le projecteur non plus', () => {
         useCombatStore.getState().addCombatant(unCombattant('Sentinelle'));
-        const duMJ = localStorage.getItem(CLE);
+        const duMJ = surLeDisque();
 
         role.current = 'projector';
         useCombatStore.setState(prev => ({ ...prev, combatants: [] }));
 
-        expect(localStorage.getItem(CLE)).toBe(duMJ);
+        expect(surLeDisque()).toBe(duMJ);
     });
 
     /**
