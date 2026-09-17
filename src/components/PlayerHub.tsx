@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useFonduCroise, FONDU_COTE_JOUEURS_MS } from '../modules/image/useFonduCroise';
 
 // Modules & Stores
@@ -27,13 +27,14 @@ import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 import FondProjete from './hub/FondProjete';
 import { fondDuPlayerHub } from './hub/fondDuPlayerHub';
+import { DUREE_DE_MAINTIEN_MS } from '../modules/dice/logic/choregraphieDuJet';
 
 const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
     const hubSync = useHubSync();
     const {
         liveImagePath, liveMediaEstUneVideo, niveauSonVideo,
-        liveEntity, showDice, resolvedFavorites,
+        liveEntity, showDice, signalerLesDesPoses, resolvedFavorites,
         isClockProjected, timestamp, mode, theme, tensions,
         combatants, currentTurnIdx, round, isCombatProjected,
         activeCampaignWallpaper, voiceLevel
@@ -46,6 +47,44 @@ const PlayerHub: React.FC = React.memo(() => {
     const backgroundMode = useWhiteboardStore(s => s.backgroundMode);
     const lastRoll = useDiceStore(s => s.lastRoll);
     const enable3D = useDiceStore(s => s.enable3D);
+    const styleDesDes = useDiceStore(s => s.styleDesDes);
+
+    /*
+      ⭐ **Les dés s'effacent une fois posés ; le résultat reste.**
+
+      Demandé par David le 2026-09-17. La scène 3D prévient quand tout est posé :
+      on retire alors les dés — le composant a son propre fondu de sortie — et on
+      relance le compte de cinq secondes du panneau.
+
+      ⚠️ **Le drapeau se rearme sur l'identifiant du jet, pas sur `showDice`.**
+      Deux jets successifs pendant la même fenêtre d'affichage ne feraient pas
+      repasser `showDice` par `false` : *le dé du second jet ne serait jamais
+      lancé, et rien ne le dirait.*
+    */
+    const [desPoses, setDesPoses] = useState(false);
+    const maintienRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        setDesPoses(false);
+        if (maintienRef.current) clearTimeout(maintienRef.current);
+        return () => { if (maintienRef.current) clearTimeout(maintienRef.current); };
+    }, [lastRoll?.id]);
+
+    /*
+      ⭐ **Les dés restent posés deux secondes avant de s'effacer**, demandé par
+      David le 2026-09-17. *Se poser et disparaître dans le même instant ne laisse
+      pas voir ce qu'on vient de lancer.*
+
+      Le compte des cinq secondes du panneau part de **l'effacement**, pas de la
+      pose : la fenêtre de lecture promise reste entière.
+    */
+    const auReposDesDes = useCallback(() => {
+        if (maintienRef.current) clearTimeout(maintienRef.current);
+        maintienRef.current = setTimeout(() => {
+            setDesPoses(true);
+            signalerLesDesPoses();
+        }, DUREE_DE_MAINTIEN_MS);
+    }, [signalerLesDesPoses]);
     const activeHubId = hubSync.projections['hub'];
 
     // 3. Asset Resolution
@@ -284,10 +323,31 @@ const PlayerHub: React.FC = React.memo(() => {
                 />
             )}
 
-            {/* LAYER 60: DICE 3D (Behind results) */}
-            <div className="fixed inset-0 z-[60] pointer-events-none">
-                <PlayerDiceBox3D active={showDice && enable3D} lastRoll={lastRoll} />
-            </div>
+            {/*
+              COUCHE 80 : LES DÉS EN 3D, **devant** le panneau de résultat.
+
+              ⛔ **Ils étaient enfermés dans une couche à 60.** Le composant
+              demandait `z-[65]` pour lui-même, mais son parent portait `z-[60]`
+              et `z-index` crée un **contexte d'empilement** : *un élément ne peut
+              pas sortir de l'ordre de peinture de son parent.* Ce `z-[65]` ne
+              décidait donc rien, et les dés passaient derrière le panneau
+              (`z-[70]`).
+
+              C'est le même piège que le menu du Media Hub qui passait sous les
+              vignettes. ⚠️ **Deux couches qui disent la même chose, et c'est
+              celle du dessus qui décide** — l'enveloppe était redondante avec le
+              composant (tous deux `fixed inset-0 pointer-events-none`), et
+              nuisible. Elle est retirée.
+
+              Demandé par David le 2026-09-17 : *« je voudrais que les dés soient
+              placés devant la fenêtre de résultat »*.
+            */}
+            <PlayerDiceBox3D
+                active={showDice && enable3D && !desPoses}
+                lastRoll={lastRoll}
+                style={styleDesDes}
+                onRepos={auReposDesDes}
+            />
 
             {/* LAYER 70: DICE 2D RESULTS */}
             <HubDiceDisplay 

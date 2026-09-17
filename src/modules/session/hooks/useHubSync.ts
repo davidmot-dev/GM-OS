@@ -3,6 +3,8 @@ import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
+import { DUREE_DU_RESULTAT_MS } from '../../dice/logic/choregraphieDuJet';
+import { imageApresMessage, papierPeintDeLaCampagne, type CampagneConnue } from '../../../components/hub/fondDuPlayerHub';
 
 // 🛡️ Safe Dynamic Store Access Helpers
 const getStore = (name: string) => (typeof window !== 'undefined' ? (window as any)[name] : null);
@@ -156,7 +158,20 @@ export const useHubSync = () => {
     const entities = useMagasin('useSessionOSStore', s => s.entities, EMPTY_ARR);
     const activeCampaignId = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignId, null);
     const activeCampaignName = useMagasin('useSessionOSStore', s => s.activeCampaignName, '');
-    const activeCampaignWallpaper = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignWallpaper, null);
+    const wallpaperEnvoye = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignWallpaper, null);
+    const campaigns = useMagasin<CampagneConnue[]>('useSessionOSStore', s => s.campaigns, EMPTY_ARR as never);
+    /*
+      ⛔ **Le Hub attendait ce qu'il pouvait déduire.** `activeCampaignWallpaper`
+      est le seul des deux champs à **ne pas être persisté** : au lancement il
+      vaut `null`, et il ne se remplit qu'à l'arrivée d'une synchronisation
+      complète. Pendant ce temps l'écran des joueurs restait vide, alors que
+      `activeCampaignId` et `campaigns[].wallpaperUrl` étaient déjà sur son
+      disque.
+
+      ⭐ *La même vérité était déduite du côté du meneur et attendue du côté du
+      Hub.* Voir `papierPeintDeLaCampagne`.
+    */
+    const activeCampaignWallpaper = papierPeintDeLaCampagne(wallpaperEnvoye, campaigns, activeCampaignId);
     const sessions = useMagasin('useSessionOSStore', s => s.sessions, EMPTY_ARR);
     const transferRequests = useMagasin('useSessionOSStore', s => s.transferRequests, EMPTY_ARR);
     const clues = useMagasin('useSessionOSStore', s => s.clues, EMPTY_ARR);
@@ -368,11 +383,11 @@ export const useHubSync = () => {
                     if (data.type === 'hub-projection') {
                         const { type, data: payload } = data.payload;
                         if (type === 'image') {
-                            setLiveImagePath(payload || null);
+                            setLiveImagePath(imageApresMessage(payload));
                             setLiveMediaEstUneVideo(false);
                         }
                         if (type === 'video') {
-                            setLiveImagePath(payload || null);
+                            setLiveImagePath(imageApresMessage(payload));
                             setLiveMediaEstUneVideo(!!payload);
                         }
                         if (type === 'son-video') {
@@ -439,11 +454,11 @@ export const useHubSync = () => {
 
         const handleIpcUpdate = (type: string, data: any) => {
             if (type === 'image') {
-                setLiveImagePath(data || null);
+                setLiveImagePath(imageApresMessage(data));
                 setLiveMediaEstUneVideo(false);
             }
             else if (type === 'video') {
-                setLiveImagePath(data || null);
+                setLiveImagePath(imageApresMessage(data));
                 setLiveMediaEstUneVideo(!!data);
             }
             else if (type === 'son-video') {
@@ -462,6 +477,21 @@ export const useHubSync = () => {
         };
 
         const handleBroadcastSync = (payload: any) => {
+            /*
+              ⭐ **Le vrai noir est un geste explicite, et lui seul pose `null`.**
+
+              David le 2026-09-17 a voulu **garder les deux gestes** : le Hub au
+              repos rend le décor de la campagne, mais il reste des moments où
+              l'écran de la table doit être noir. *Deux intentions qui produisent
+              le même pixel ne sont pas la même intention.*
+            */
+            if (payload?.type === 'BLACKOUT') {
+                setLiveImagePath(null);
+                setLiveEntity(null);
+                setLiveMediaEstUneVideo(false);
+                return;
+            }
+
             if (payload?.type === 'FULL_RESET') {
                 /*
                   ⛔ **`undefined`, et surtout pas `null`.** Les deux ne veulent
@@ -632,15 +662,47 @@ export const useHubSync = () => {
         return () => { mounted = false; };
     }, [favorites, entities, activeCampaignId, characterId]);
 
+    /*
+      ─────────────────────────────────────────────────────────────────────────
+      ⭐ LE DÉROULÉ D'UN JET : LES DÉS ROULENT, S'EFFACENT, LE RÉSULTAT RESTE
+      ─────────────────────────────────────────────────────────────────────────
+
+      David le 2026-09-17 : *« les dés doivent disparaître et le résultat doit
+      rester affiché 5 secondes supplémentaires après »*.
+
+      ⛔ L'ancien déroulé n'avait **qu'une** durée : tout disparaissait cinq
+      secondes après le lancer. Or en 3D le panneau n'apparaît qu'au bout de
+      1,5 s — *il restait donc trois secondes et demie pour lire un résultat*,
+      pendant que les dés finissaient de rouler par-dessus.
+
+      ⭐ **Le compte de cinq secondes part maintenant de la POSE des dés**, que la
+      scène 3D signale. Mais il est **armé dès le lancer**, et le signal ne fait
+      que le redémarrer :
+
+      | | Ce qui se passe |
+      | --- | --- |
+      | Player Hub, 3D active | les dés se posent vers 2,5 s → le résultat tient jusqu'à ~7,5 s |
+      | Tablette, ou 3D coupée | personne ne signale → **la fenêtre reste celle d'aujourd'hui, 5 s** |
+      | Un dé qui ne se pose jamais | la scène déclare la pose d'office à 4 s ; et même sans elle, le compte initial ferme |
+
+      ⭐ ***Un filet qui dégrade vers le comportement existant ne peut pas
+      surprendre*** : au pire, on retrouve ce qu'on avait. *Un destinataire sans
+      expéditeur ne lève aucune erreur — il attend*, et ce dépôt l'a déjà payé sur
+      la tablette qui guettait un `dice:result` que personne n'émettait.
+    */
+    const fermerApresLeResultat = useCallback(() => {
+        if (diceTimerRef.current) clearTimeout(diceTimerRef.current);
+        diceTimerRef.current = setTimeout(() => setShowDice(false), DUREE_DU_RESULTAT_MS);
+    }, []);
+
     // Dice Trigger
     useEffect(() => {
         if (isDiceProjected && projectionTrigger !== lastDiceTriggerRef.current) {
             lastDiceTriggerRef.current = projectionTrigger;
             setShowDice(true);
-            if (diceTimerRef.current) clearTimeout(diceTimerRef.current);
-            diceTimerRef.current = setTimeout(() => setShowDice(false), 5000);
+            fermerApresLeResultat();
         }
-    }, [isDiceProjected, projectionTrigger]);
+    }, [isDiceProjected, projectionTrigger, fermerApresLeResultat]);
 
     return {
         status,
@@ -651,6 +713,11 @@ export const useHubSync = () => {
         voiceLevel,
         sessionSummary,
         showDice,
+        /**
+         * À appeler quand les dés en 3D sont posés : le résultat reste alors
+         * lisible {@link DUREE_DU_RESULTAT_MS} de plus.
+         */
+        signalerLesDesPoses: fermerApresLeResultat,
         resolvedFavorites,
         resolvedNpcs,
         resolvedAtlasMaps,

@@ -377,7 +377,13 @@
       "enable_3d": "Physics 3D Rendering",
       "enable_3d_desc": "Disable for better performance on remote hubs",
       "show_math": "Calculation Details",
-      "clear_history": "Clear History"
+      "clear_history": "Clear History",
+      "dice_style": "Dice material",
+      "styles": {
+        "resine": "Resin",
+        "verre": "Glass",
+        "metal": "Metal"
+      }
     }
   },
   "favorite": {
@@ -545,9 +551,11 @@
       "resetTooltip": "Reset the module",
       "blackout": {
         "target": "TARGET",
-        "targetTooltip": "Blackout target screen only",
+        "targetTooltip": "Stop projecting on the target screen — the campaign backdrop returns",
         "all": "ALL",
-        "allTooltip": "Blackout ALL screens"
+        "allTooltip": "Stop projecting on ALL screens — the backdrop returns",
+        "dark": "DARK",
+        "darkTooltip": "Truly black out the players' screen (Ctrl + Shift + 0)"
       },
       "restoreDefault": "RESTORE DEFAULT",
       "showLibrary": "Show Library"
@@ -784,8 +792,17 @@
         "steady": "Steady",
         "colorloop": "Colorloop",
         "candle": "Candle",
-        "fire": "Fire",
+        "fire": "Campfire",
         "police": "Police",
+        "fusillade": "Firefight",
+        "deflagration": "Explosion",
+        "impact": "Impact",
+        "panne": "Power Cut",
+        "torche": "Dying Torch",
+        "incendie": "Inferno",
+        "sonar": "Sonar",
+        "sirene": "Distant Siren",
+        "chute-de-tension": "Voltage Sag",
         "storm": "Storm",
         "glitch": "Glitch",
         "tv": "CRT TV",

@@ -10,6 +10,17 @@ interface HubDiceDisplayProps {
     enable3D: boolean;
 }
 
+/**
+ * ⭐ **Le panneau ne s'atténue plus.**
+ *
+ * Il passait à 40 % d'opacité quand la 3D était active, pour **laisser voir les
+ * dés derrière lui**. Depuis le 2026-09-17 les dés passent **devant** (demande de
+ * David), donc cette raison a disparu — et un panneau pâle sous des dés opaques
+ * serait le pire des deux mondes.
+ *
+ * *Une atténuation garde la raison de sa naissance ; quand cette raison change de
+ * camp, elle devient une gêne que plus personne ne sait expliquer.*
+ */
 export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRoll, enable3D }) => {
     const { t } = useTranslation(['modules', 'common']);
 
@@ -24,7 +35,7 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
                 showDice 
                     ? `scale-100 translate-y-0 animate-in zoom-in ${enable3D ? 'delay-[1500ms]' : ''}` 
                     : 'scale-95 translate-y-8 duration-700'
-            } ${showDice && enable3D ? 'opacity-40 hover:opacity-100 transition-opacity' : ''}`}>
+            }`}>
                 <div className="flex flex-col items-center gap-2 text-center">
                     <span className="text-accent text-xs font-black uppercase tracking-[0.5em] animate-pulse">{t('dice.status.success').toUpperCase()}</span>
                     <h2 className="text-app-text/80 text-xl font-black tracking-tight uppercase drop-shadow-lg">{lastRoll.title}</h2>

@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
 import { consignerLeJet } from '../modules/journal/consignerLeJet';
 import type { RollResult } from '../modules/dice/DiceEngine';
+import { STYLE_PAR_DEFAUT, type StyleDeDes } from '../modules/dice/logic/stylesDeDes';
 
 export interface QuickRoll {
     id: string;
@@ -17,6 +18,14 @@ export interface RollRecord extends RollResult {
     batchId?: string;
 }
 
+/**
+ * ⭐ **Le style des dés en 3D — un choix du meneur, pas une constante.**
+ *
+ * Demandé par David le 2026-09-17, en réponse à la question de la direction
+ * visuelle : *« est-ce que je peux choisir le style ? Résine / Verre ou Métal ? »*
+ * La matière lui appartient ; le **code couleur**, lui, ne bouge pas avec elle —
+ * *un style est une matière, pas une signification.*
+ */
 interface DiceState {
     lastRoll: RollRecord | null;
     history: RollRecord[];
@@ -24,9 +33,12 @@ interface DiceState {
     isDiceProjected: boolean;
     projectionTrigger: number;
     enable3D: boolean;
+    /** La matière des dés en 3D : résine, verre ou métal. */
+    styleDesDes: StyleDeDes;
     setLastRoll: (roll: RollRecord) => void;
     setIsDiceProjected: (projected: boolean) => void;
     setEnable3D: (enabled: boolean) => void;
+    setStyleDesDes: (style: StyleDeDes) => void;
     triggerDiceProjection: () => void;
     clearHistory: () => void;
     addQuickRoll: (label: string, formula: string) => void;
@@ -46,6 +58,7 @@ export const useDiceStore = create<DiceState>()(
             isDiceProjected: false,
             projectionTrigger: 0,
             enable3D: true,
+            styleDesDes: STYLE_PAR_DEFAUT,
             setLastRoll: (roll) => {
                 /*
                   **Le journal se sert ICI, au goulot des deux écrans qui
@@ -74,6 +87,7 @@ export const useDiceStore = create<DiceState>()(
             },
             setIsDiceProjected: (isDiceProjected) => set({ isDiceProjected }),
             setEnable3D: (enable3D) => set({ enable3D }),
+            setStyleDesDes: (styleDesDes) => set({ styleDesDes }),
             triggerDiceProjection: () => set({ projectionTrigger: Date.now() }),
             clearHistory: () => set({ history: [], lastRoll: null, isDiceProjected: false, projectionTrigger: 0 }),
             addQuickRoll: (label, formula) => set((state) => ({

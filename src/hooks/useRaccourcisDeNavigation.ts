@@ -4,6 +4,7 @@ import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 import { useModalStore } from '../stores/useModalStore';
 import { PLACES_DE_RACCOURCI } from '../data/catalogueDesModules';
 import { effacerLePlayerHub } from '../modules/image/logic/effacerLePlayerHub';
+import { noircirLePlayerHub } from '../modules/image/logic/noircirLePlayerHub';
 
 /**
  * **`Ctrl+1` à `Ctrl+9` ouvrent un module.**
@@ -101,7 +102,24 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
             */
             if (evenement.code === 'Digit0') {
                 evenement.preventDefault();
-                effacerLePlayerHub(window.appBridge);
+                /*
+                  ⭐ **Deux gestes voisins, et leur différence tient au `Maj`.**
+
+                  Depuis le 2026-09-17, le Hub au repos rend le **décor de la
+                  campagne** : `Ctrl+0` retire donc ce qui est projeté et laisse
+                  l'image de fond. `Ctrl+Maj+0` **éteint vraiment** l'écran de la
+                  table — David a voulu garder les deux.
+
+                  ⚠️ L'exception à *« rien ne se déclenche, rien ne se projette »*
+                  tient pour les deux, et pour la même raison : **ils ne peuvent
+                  que retirer.** Une frappe malheureuse coûte une projection à
+                  refaire, jamais un secret éventé.
+                */
+                if (evenement.shiftKey) {
+                    noircirLePlayerHub(window.appBridge);
+                } else {
+                    effacerLePlayerHub(window.appBridge);
+                }
                 return;
             }
 

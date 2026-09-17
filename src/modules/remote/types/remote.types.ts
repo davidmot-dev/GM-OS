@@ -60,6 +60,7 @@ import { type DiceConfig } from '../../../types/drivers';
 import type { RemoteLectureDuMeneur } from '../segmentDeLecture';
 import type { SessionMessage } from '../../../types/session.types';
 import type { RollRecord } from '../hooks/useRemoteSync';
+import { type StyleDeDes } from '../../dice/logic/stylesDeDes';
 
 /**
  * **Ce qui joue en ce moment, pour la ligne d'état de la télécommande.**
@@ -149,6 +150,18 @@ export interface RemoteSyncData {
         lastRoll: RollRecord | null;
         isDiceProjected: boolean;
         projectionTrigger: number;
+        /**
+         * ⛔ **Ces deux-là ne partaient pas**, et c'est ce qui rendait le choix de
+         * matière sans effet : *« je ne vois aucune différence entre résine /
+         * verre / métal »* (David, 2026-09-17). Le hub gardait ce qu'il avait lu
+         * dans `localStorage` à son démarrage.
+         *
+         * ⚠️ `enable3D` était dans ce cas **depuis toujours** — la case « Rendu
+         * 3D » ne faisait rien sur un hub déjà ouvert. *Le choix de matière n'a
+         * pas créé le défaut, il l'a rendu visible.*
+         */
+        enable3D: boolean;
+        styleDesDes: StyleDeDes;
     };
     /**
      * L'horloge du meneur.

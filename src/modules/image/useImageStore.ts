@@ -153,6 +153,15 @@ interface ImageState {
     blackout: () => void;
     blackoutAll: () => void;
     blackoutAllHub: () => void;
+    /**
+     * **Le vrai noir sur l'écran cible**, décor de campagne compris.
+     *
+     * ⚠️ À ne pas confondre avec {@link blackout}, qui depuis le 2026-09-17 rend
+     * le Hub à son décor au lieu de l'éteindre. *Deux intentions qui produisent
+     * le même pixel sur un écran de télévision n'en produisent pas le même sur le
+     * Hub.*
+     */
+    noirTotal: () => void;
     applySnapshot: (snapshot: {
         projections?: Record<string, string | null>;
         mediaList?: ImageMedia[];
@@ -752,6 +761,33 @@ export const useImageStore = create<ImageState>()(
                     ImageService.blackoutAll(targets);
                 });
             },
+
+            /*
+              ⭐ **Le geste qui tient la promesse du bouton.**
+
+              ⛔ **Première tentative, le 2026-09-17 au soir** : j'avais
+              rebranché les deux boutons rouges d'Image-OS sur ce geste, au motif
+              que leur infobulle disait « Éteindre l'écran ». Or ce sont ceux que
+              David utilise pour **arrêter une projection**. Le lendemain matin :
+              *« quand j'arrête de projeter je tombe sur un écran noir »*.
+
+              ⭐ ***Un libellé décrit une intention ; un geste quotidien EST une
+              intention.*** Quand les deux se contredisent, c'est le geste qui a
+              raison — on corrige le libellé, on ne détourne pas le bouton.
+
+              Le vrai noir a donc désormais **son propre bouton**, et
+              `Ctrl+Maj+0`.
+            */
+            noirTotal: () => {
+                const target = get().projectionTarget as string;
+                get().blackout();
+                if (target === 'hub') {
+                    import('./logic/noircirLePlayerHub').then(({ noircirLePlayerHub }) => {
+                        noircirLePlayerHub((window as { appBridge?: unknown }).appBridge as never);
+                    });
+                }
+            },
+
 
             blackoutAllHub: () => {
                 if (get().diaporamaEnCours?.cible === 'hub') get().arreterLeDiaporama();

@@ -10,6 +10,7 @@ import { useDiceStore } from '../../stores/useDiceStore';
 import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
+import { STYLES_DE_DES } from './logic/stylesDeDes';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -80,7 +81,9 @@ const DiceBoard: React.FC = () => {
         setLastRoll,
         clearHistory,
         enable3D,
-        setEnable3D
+        setEnable3D,
+        styleDesDes,
+        setStyleDesDes
     } = useDiceStore();
     // Le timer est désormais géré au niveau du Player Hub via projectionTrigger
 
@@ -498,6 +501,39 @@ const DiceBoard: React.FC = () => {
                                         <span className="text-ui-9 text-app-text/40">{t('dice.settings.enable_3d_desc')}</span>
                                     </div>
                                 </label>
+
+                                {/*
+                                  ⭐ **La matière des dés appartient au meneur.**
+                                  Demandé par David le 2026-09-17 : *« est-ce que
+                                  je peux choisir le style ? »*.
+
+                                  ⚠️ Le sélecteur ne s'affiche que si la 3D est
+                                  active — *un réglage qui ne change rien à
+                                  l'écran est un réglage qui fait douter du
+                                  reste.*
+                                */}
+                                {enable3D && (
+                                    <div className="flex flex-col gap-1.5">
+                                        <span className="text-xs font-bold text-app-text/80">{t('dice.settings.dice_style')}</span>
+                                        <div className="flex gap-1 p-1 rounded-lg bg-app-surface border border-app-border">
+                                            {STYLES_DE_DES.map(style => (
+                                                <button
+                                                    key={style}
+                                                    type="button"
+                                                    onClick={() => setStyleDesDes(style)}
+                                                    aria-pressed={styleDesDes === style}
+                                                    className={`px-3 py-1 rounded-md text-ui-10 font-bold uppercase tracking-wider transition-all ${
+                                                        styleDesDes === style
+                                                            ? 'bg-accent/20 text-accent border border-accent/40'
+                                                            : 'text-app-text/50 border border-transparent hover:text-app-text'
+                                                    }`}
+                                                >
+                                                    {t(`dice.settings.styles.${style}`)}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                              </div>
                         </div>
                     )}

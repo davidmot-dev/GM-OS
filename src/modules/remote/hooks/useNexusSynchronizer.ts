@@ -8,6 +8,7 @@ import { useFavoriteStore } from '../../favorite/useFavoriteStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import { useClockStore, jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import { segmentDuTableau } from '../segmentDuTableau';
+import { segmentDesDes } from '../segmentDesDes';
 import { segmentDeLecture } from '../segmentDeLecture';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useImageStore } from '../../image/useImageStore';
@@ -67,7 +68,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const payload: Record<string, unknown> = {};
             if (segmentName === 'dice') {
                 const s = useDiceStore.getState();
-                payload.dice = { lastRoll: s.lastRoll, isDiceProjected: s.isDiceProjected, projectionTrigger: s.projectionTrigger };
+                payload.dice = segmentDesDes(s);
             } else if (segmentName === 'clock') {
                 const s = useClockStore.getState();
                 payload.clock = { 
@@ -433,7 +434,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     wikiEntries: freshSessionOS.wikiEntries,
                     clues: freshSessionOS.clues,
                 }),
-                dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected, projectionTrigger: diceStore.projectionTrigger },
+                dice: segmentDesDes(diceStore),
                 map: { 
                     projectionTarget: mapStore.projectionTarget, 
                     projectedMapUrl: mapStore.projectedMapUrl, 

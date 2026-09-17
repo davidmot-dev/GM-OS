@@ -377,7 +377,13 @@
       "enable_3d": "Rendu 3D Physiques",
       "enable_3d_desc": "Désactivez pour plus de performance sur les hubs lointains",
       "show_math": "Détails du calcul",
-      "clear_history": "Vider l'historique"
+      "clear_history": "Vider l'historique",
+      "dice_style": "Matière des dés",
+      "styles": {
+        "resine": "Résine",
+        "verre": "Verre",
+        "metal": "Métal"
+      }
     }
   },
   "favorite": {
@@ -545,9 +551,11 @@
       "resetTooltip": "Réinitialiser le module",
       "blackout": {
         "target": "TARGET",
-        "targetTooltip": "Éteindre l'écran cible uniquement",
+        "targetTooltip": "Arrêter la projection sur l'écran cible — le décor de la campagne revient",
         "all": "ALL",
-        "allTooltip": "Éteindre TOUS les écrans"
+        "allTooltip": "Arrêter la projection sur TOUS les écrans — le décor revient",
+        "dark": "NOIR",
+        "darkTooltip": "Éteindre vraiment l'écran des joueurs (Ctrl + Maj + 0)"
       },
       "restoreDefault": "RESTORE DEFAULT",
       "showLibrary": "Afficher la bibliothèque"
@@ -792,8 +800,17 @@
         "steady": "Statique",
         "colorloop": "Cycle de Couleurs",
         "candle": "Bougie",
-        "fire": "Feu",
+        "fire": "Feu de camp",
         "police": "Police",
+        "fusillade": "Fusillade",
+        "deflagration": "Explosion",
+        "impact": "Impact",
+        "panne": "Panne de courant",
+        "torche": "Torche qui faiblit",
+        "incendie": "Incendie",
+        "sonar": "Sonar",
+        "sirene": "Sirène lointaine",
+        "chute-de-tension": "Chute de tension",
         "storm": "Orage",
         "glitch": "Glitch",
         "tv": "Télévision CRT",

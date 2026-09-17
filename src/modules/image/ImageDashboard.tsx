@@ -3,7 +3,7 @@ import React from 'react';
 import {
     Ban, Folder as FolderIcon, History as HistoryIcon,
     Star as StarIcon, Search as SearchIcon,
-    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight, Film, Images
+    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight, Film, Images, Moon
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 const ImageDashboard: React.FC = () => {
     const {
         mediaList, projectionTarget, setProjectionTarget,
-        avancerLeDiaporama, arreterLeDiaporama, blackout, blackoutAll, addMedia, displays, fetchDisplays,
+        avancerLeDiaporama, arreterLeDiaporama, blackout, blackoutAll, noirTotal, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView, reset
     } = useImageStore();
@@ -170,6 +170,31 @@ const ImageDashboard: React.FC = () => {
                             {t('image.dashboard.blackout.all')}
                         </button>
                     </div>
+
+                    {/*
+                      ⭐ **Le vrai noir a SON bouton, et il ne prend celui de
+                      personne.**
+
+                      ⛔ Le 2026-09-17 au soir, j'avais rebranché les deux boutons
+                      ci-dessus sur l'extinction, au motif que leur infobulle
+                      disait « Éteindre l'écran ». Or ce sont ceux que David
+                      utilise pour **arrêter une projection** : le lendemain
+                      matin, *« quand j'arrête de projeter je tombe sur un écran
+                      noir »*.
+
+                      ⭐ ***Un libellé décrit une intention ; un geste quotidien
+                      EST une intention.*** Quand les deux se contredisent, c'est
+                      le geste qui a raison — on corrige le libellé, on ne
+                      détourne pas le bouton.
+                    */}
+                    <button
+                        onClick={noirTotal}
+                        className="bg-app-bg border border-app-border text-app-text/60 hover:text-white hover:border-white/30 font-black py-3 rounded-2xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-[0.2em] group"
+                        title={t('image.dashboard.blackout.darkTooltip')}
+                    >
+                        <Moon size={16} className="group-hover:scale-110 transition-transform" />
+                        {t('image.dashboard.blackout.dark')}
+                    </button>
 
                     <button
                         onClick={() => gmConfirm(t('image.dashboard.resetConfirm'), () => reset())}
