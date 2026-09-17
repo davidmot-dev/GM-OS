@@ -5391,6 +5391,1282 @@ explicitement, jamais le défaut.
 
 ---
 
+### 76 · ⭐ La refonte de l'interface — un chantier ouvert, rien de commencé (2026-09-17)
+
+**Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
+*« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
+puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
+
+⛔ **RIEN N'EST COMMENCÉ.** David joue d'abord une partie sur la version actuelle. Ce § existe pour
+que le chantier soit *trouvable*, pas pour annoncer un travail fait.
+
+**Les deux documents**, et ils ne disent pas la même chose :
+- `documentation/Architecture/Refonte-Interface.md` — l'état mesuré, les couches visées, les invariants.
+- `documentation/Planning/2026-09-17-refonte-interface.md` — les six phases, les tâches, les essais,
+  l'intégration, et **les cinq questions posées à David — TOUTES tranchées le jour même** (voir ci-dessous).
+
+#### ⭐ Ce que la mesure a révélé — et j'avais annoncé l'inverse
+
+J'ai d'abord dit à David : *« il n'y a pas de couche sémantique, 100 usages de jetons »*. **Faux.**
+J'avais cherché `var(--)` dans le TSX sans voir les alias Tailwind qui portent les mêmes jetons.
+
+| Relevé le 2026-09-17 | |
+| --- | ---: |
+| Jetons de châssis `app-*` | **4 566** usages, 214 fichiers / 310 |
+| `shadow-glow-*` | 330 |
+| Palette Tailwind brute | 4 124 |
+| Déclarés, jamais employés | `glass-gradient`, `gm-teal`, `gm-orange` |
+
+⭐ **GM-OS a déjà un système de design ; il est adopté à moitié — et ce demi-état trompe.** On voit
+des `bg-emerald-500` partout et on conclut qu'il n'y a rien. Le châssis (fond, surface, bordure,
+texte) est tokenisé et respecté. Ce qui est écrit en dur, ce sont les couleurs d'**état**
+(succès / danger / alerte), le **texte secondaire** — 542 `text-slate-400/500`, soit *l'absence de
+`--app-text-muted`* — et la **catégorie**. *Une couleur en dur n'est pas une négligence quand aucun
+jeton ne la nomme : c'est le seul mot disponible.*
+
+#### ⭐ La forme du plan vient de là : trois manques à un fichier, un manque à 214
+
+`--etat-*`, `--app-text-muted`, `--elev-*` se posent dans **un seul fichier** et changent toute
+l'application en deux soirées, réversibles d'une ligne. Les **primitives** (`src/components/socle/`)
+se paient fichier par fichier, sur des semaines. **Les mélanger perdrait la seule propriété qui rend
+ce chantier sûr : voir le nouveau rendu en séance réelle AVANT d'engager la migration.**
+
+#### ⭐ L'exigence rappelée par David le soir même — et elle contraint tout le reste
+
+*« Je veux aussi que les thèmes de l'interface, voire même des éléments visuels de l'interface,
+s'adaptent avec le jeu. »*
+
+⛔ **J'avais écrit l'inverse.** L'invariant R2 de la première version disait *« le thème de JEU et le
+CHÂSSIS restent deux systèmes »* — **c'est faux, et ça l'était déjà dans le code.** `appliquerLeTheme`
+compose la palette d'atelier **puis laisse le jeu la recouvrir**, la polarité du jeu l'emporte, son
+échelle de texte pose la taille de racine, et ses polices sont posées puis retirées au changement de
+campagne. La règle est écrite depuis le 2026-08-23 : **« le jeu gagne, la main surcharge »**.
+
+Ce qui ne se mélange pas, ce ne sont pas les deux thèmes — ce sont les deux **vocabulaires** : les
+jetons traversent le pont, le vocabulaire de composants `.rpg-*` reste à l'iframe des fiches.
+*J'ai pris une frontière entre deux vocabulaires pour une frontière entre deux systèmes.*
+
+⚠️ **La contrainte qui en découle est la plus difficile à défaire du chantier** : *toute échelle
+ajoutée au châssis doit décider, le jour même, si le jeu peut la piloter* (tâche T1.6). Un jeton posé
+sans entrée dans `PONT` est un jeton que le jeu ne pourra **jamais** habiller — et le corriger plus
+tard veut dire rouvrir chaque module.
+
+#### ⛔ Un défaut trouvé en vérifiant le pont — quatre classes mortes
+
+`PONT` mappe `muted → --app-text-muted`. Mais **aucune des quatre palettes ne définit cette variable**
+et **`tailwind.config.js` n'expose aucun alias** — pendant que `JournalDashboard.tsx` emploie
+`text-app-text-muted` **quatre fois** (l. 315, 323, 345, 350). Ces classes ne produisent aucune règle :
+trois sont rattrapées par un `opacity-50` voisin, **celle de la ligne 350 s'affiche en pleine
+intensité** là où on voulait du texte secondaire.
+
+⭐ *Même motif que les 125 `animate-in` sans greffon du 2026-09-03 : une classe qui n'existe pas ne
+prévient pas — rien ne casse, il ne se passe simplement rien.* Et c'est la démonstration vivante de la
+contrainte ci-dessus : **un jeton branché d'un seul côté du pont est un jeton mort.** Le correctif est
+T1.1, et il est plus petit qu'il n'y paraît — le pont est écrit, il manque la valeur et l'alias.
+
+#### ✅ « Des éléments visuels » — les quatre lectures, TOUTES retenues
+
+✅ **TRANCHÉ le soir même : David retient LES QUATRE.** V1 forme, V2 matière, V3 ornement,
+V4 iconographie.
+
+**V1 entre en phases 1 et 3** (c'est un jeton, et les primitives doivent le lire *dès leur
+écriture*). **V2, V3 et V4 deviennent la phase 6** : elles ont besoin de *fichiers*, donc le dossier
+de thème d'un jeu cesse d'être une feuille de style pour devenir un **paquet** — `matieres/`,
+`ornements.json`, `icones.json` (§ 8.6 de l'architecture).
+
+⭐ **Aucun IPC nouveau n'est nécessaire, et c'est ce qui rend V2–V4 abordables** : `readDoc` lit déjà
+tout fichier texte sous `docs/` — donc les **SVG** et les manifestes — et le protocole `gmos://` sert
+déjà n'importe quel fichier local. D'où la décision : *ornements et icônes sont du SVG*, qui hérite
+de `currentColor` et suit donc l'accent du jeu au lieu de le contredire.
+
+⭐ **La règle qui rend V4 possible : la surcharge PARTIELLE.** Un jeu déclare les icônes qui lui
+importent, le reste retombe sur `lucide-react`. *Quinze icônes bien choisies font un thème ; quatre
+cents font un projet mort.*
+
+⚠️ **Deux garde-fous à poser avant la première texture** : le protocole `gmos` sert **n'importe quel
+chemin absolu**, or un thème est du contenu déposé — tout chemin venant d'un thème se résout dans le
+dossier du jeu et se refuse s'il en sort (même esprit que la liste close des hôtes de polices). Et le
+**vocabulaire des fentes d'ornement se fige une fois** : chaque fente ajoutée ensuite invalide les
+paquets déjà écrits par les jeux — *la seule décision du chantier qui engage quelqu'un d'autre que
+nous.*
+
+#### ✅ Les CINQ questions tranchées le jour même — 2026-09-17
+
+| # | Question | Décision | Ce qu'elle coûte |
+| --- | --- | --- | --- |
+| **Q1** | Les 4 thèmes d'interface survivent-ils ? | ✅ **Oui, et ils sont un axe INDÉPENDANT du jeu** | Chaque nouvelle échelle reçoit **4 jeux de valeurs** par défaut. Mais le **jeu n'en fournit qu'un** : il se pose par-dessus la palette active, donc le pont reste à une dimension |
+| **Q2** | Le thème clair est-il encore voulu ? | ✅ **Oui, explicitement** — *« je veux conserver un thème clair »* | Chaque jeton, halo et seuil validé **deux fois**. C'est la moitié de la phase 1 — et ce n'est plus un héritage, c'est une exigence |
+| **Q3** | Les 7 accents `gm-*` face à l'accent unique du jeu ? | ✅ **DÉRIVÉS de l'accent effectif** | Une fonction de dérivation, et ⚠️ **deux garanties au lieu d'une** — voir ci-dessous |
+| **Q4** | Jusqu'où va la migration des 214 fichiers ? | ✅ **L1 + L2, puis on rejuge** — 46 fichiers | La garde anti-couleurs-brutes reste **une liste**, jamais un « tout `src/` » |
+| **Q5** | Jusqu'où vont « les éléments visuels » ? | ✅ **Les quatre** — V1 forme, V2 matière, V3 ornement, V4 iconographie | V1 en phases 1 et 3 ; V2–V4 deviennent la **phase 6** |
+
+⭐ **Le piège de Q3, et il vaut d'être écrit.** La dérivation doit garantir **deux** choses : assez de
+contraste avec le fond *sur les quatre palettes, clair compris*, **et assez de distance entre frères**.
+Sept teintes d'une même famille peuvent finir trop proches pour être distinguées — et là on perd le
+repère qui dit « tu es dans Music », *c'est-à-dire la seule raison de garder sept accents*.
+**Une dérivation qui rend sept fois presque la même couleur ressemble à une dérivation qui marche.**
+⚠️ Et `gm-teal` / `gm-orange` ne sont employés **nulle part** : à supprimer plutôt qu'à dériver.
+
+⭐ **Q3 ne crée aucun arbitre nouveau** : l'accent effectif est déjà arbitré par `appliquerLeTheme`
+(jeu > main > palette), et la dérivation s'y branche — exactement le mécanisme qui produit
+`--app-accent-glow` et `--app-accent-rgb` depuis le 2026-08-24, *parce qu'une valeur recopiée dans une
+table que personne ne relit quand l'accent bouge finit toujours par mentir*.
+
+#### Les décisions déjà prises
+
+- **Pas de grand soir**, pas de bibliothèque tierce, **pas de refonte des mises en page** — on
+  rhabille.
+- **Le premier lot de migration est `combat` + `dice` + `image`** : exactement les trois maquettes
+  apportées, 23 fichiers, seuls modules où la comparaison « visé / obtenu » est immédiate.
+- **Stitch propose, David tranche, le code transpose.** Son code n'est pas collé : il génère du neuf,
+  qui ne connaît ni les magasins ni les vraies données — collé tel quel, il ferait *un 28ᵉ module qui
+  ne ressemble pas aux 27 autres*.
+- **Le MCP de Stitch est reporté.** Il n'améliore que la lecture des valeurs exactes ; réel mais
+  marginal tant qu'on ne boucle pas. ⚠️ Le jour venu : vérifier l'identité du paquet — **deux dépôts
+  GitHub portent une description strictement identique**.
+
+#### ⭐ Deux essais du plan que ce dépôt a déjà payés deux fois
+
+- **La garde de contraste** (T0.3) : un nombre WCAG sur chaque paire (texte, fond) des quatre thèmes.
+  `#334155` de Light-OS donnait **1,6** ; le champ de recherche du Media Hub était à **5 %**
+  d'opacité. *Aucune relecture ne les avait vus ; un nombre les aurait vus tous les deux.*
+- **Les captures Playwright** (T0.1) : `toHaveScreenshot` n'est employé **nulle part** dans le dépôt,
+  alors que `e2e/tousLesModules.spec.ts` ouvre déjà chaque panneau dans la vraie application.
+  ⚠️ Une refonte délibérée les fera **toutes** diverger : leur valeur n'est pas « rien n'a changé »
+  mais **« seul ce que je visais a changé »**.
+
+#### ⚠️ Le risque, et il n'est pas dans le code
+
+Les maquettes montrent 5 combattants, des noms courts, des PV à deux chiffres. Le vrai écran tient
+11 combattants, un nom de 24 signes et `148/155`. **Une bonne part de leur élégance est un luxe de
+place que les vraies données n'accordent pas** — d'où un essai « données hostiles » inscrit au plan.
+Et `:root` porte toujours `font-size: 85%` : un `rem` transposé d'une maquette sort 15 % trop petit.
+
+**Ancres** : `src/theme/themeDeLInterface.ts` (unique écrivain des `--app-*`), `tailwind.config.js`
+(alias `app-*`, `gm-*`, `shadow-glow-*`), `src/index.css` § `@theme`, `e2e/tousLesModules.spec.ts`.
+
+**État** : ⛔ **non commencé — mais plus rien ne le bloque.** Les cinq questions sont tranchées, la
+conception est écrite, et le premier geste est **T0.1** : les captures de référence, une soirée,
+aucun pixel changé. Seule la partie que David joue d'abord le précède.
+
+---
+
+### 77 · ⭐ Light-OS — l'audit du catalogue d'effets contre ce que le Hue sait faire (2026-09-17)
+
+**Demande de David**, en marge d'une demande de fusillade : *« peux-tu revoir les différents effets et
+t'assurer de leur cohérence en fonction des possibilités du Philips Hue ? »*
+
+⭐ **Six défauts trouvés et corrigés.** Aucun ne cassait quoi que ce soit : ils rendaient seulement
+l'effet **moins bon que ce que son code prétendait** — la catégorie que ni les tests ni une relecture
+ne voient, et que David voyait sans pouvoir la nommer.
+
+| # | Défaut | Ce qui se passait vraiment |
+| --- | --- | --- |
+| 1 | ⛔ **`warp` était injoignable** | Codé dans le moteur, nommé **dans les deux langues** (« Saut Spatial » / « Warp Speed »), cité en exemple dans `useLightStore` — et **offert dans aucune liste**. Il manquait *une ligne* |
+| 2 | ⛔ **`bri: 0` n'éteint pas une lampe Hue** | Plage réelle **1–254** ; seul `on: false` coupe. Le temps « noir » du `stroboscope` était un temps **faible** — d'où un battement mou. Idem pour la disparition du `fantome` |
+| 3 | ⛔ **`disco` tirait un `xy` au hasard** | `[Math.random(), Math.random()]` : hors du triangle une fois sur deux, parfois **invalide** (`x + y > 1`). **Seul effet du catalogue à contourner le calage de gamut** |
+| 4 | ⚠️ **Le gyrophare fondait** | 200 ms de fondu pour 300 ms de cycle : les deux tiers du temps en dégradé rouge-violet-bleu. *On ne voyait ni le rouge ni le bleu.* **Un gyrophare claque** |
+| 5 | ⚠️ **Le `fantome` fondait plus lentement qu'il ne battait** | Fondu 1 s, battement 800 ms : la commande suivante arrivait avant la fin — *le fondu n'était jamais vu* |
+| 6 | ⚠️ **`#808080` est un blanc** | Le gris n'existe pas pour une lampe : même chromaticité que le blanc, seule la luminance diffère. Ce `xy` de `lightning` était **une commande pour rien**, dans un budget qui en tient dix par seconde |
+
+#### ⭐ Le test qui garde la porte — `catalogueDesEffets.test.ts`
+
+Quatre règles lues dans le source, plus une cinquième qui garde le test lui-même :
+
+1. **Tout effet codé est proposé** — c'est elle qui tient `warp`.
+2. **Tout effet proposé est jouable** — le `switch` n'a pas de `default` : une porte sur rien ne dirait
+   rien.
+3. **`bri` reste dans 1–254**, examiné **en position de valeur** uniquement.
+4. **Toute couleur est dans le triangle de la lampe** — le gamut C est **recopié** dans le test et non
+   importé du moteur : *un test qui importe la constante qu'il vérifie valide le code contre
+   lui-même.* Un littéral est accepté s'il tombe dedans (`lumiere-ville` en pose un, légitime).
+5. **La tranche examinée contient bien le catalogue.**
+
+⛔ **La cinquième règle existe parce que le piège s'est produit en écrivant le fichier.** Le repère de
+fin (`// Apply global brightness`) apparaît **deux fois** dans `HueEngine`, et sa première occurrence
+est *avant* la boucle : la tranche était vide, et **deux règles passaient au vert sans rien examiner.**
+⭐ *Un test qui ne trouve rien ressemble à un test qui ne trouve rien à redire.*
+
+⚠️ Une règle a aussi crié sur un cas juste avant d'être resserrée — elle attrapait le `0` de
+`tick % 2 === 0`. *Un contrôle qui se trompe est pire qu'un contrôle absent* : une règle qui crie sur
+un modulo se fait désactiver, puis oublier.
+
+#### ⚠️ Quatre constats NON corrigés, et pourquoi
+
+| Constat | Pourquoi il reste ouvert |
+| --- | --- |
+| **`applyXyVariance` s'applique APRÈS le calage** (8 effets) | La variance ressort du gamut et se fait re-caler par le pont : *elle n'est pas celle qu'on croit*, surtout sur une couleur saturée. Corriger demande de caler **après** variance — donc de toucher aux huit |
+| **Le type d'ampoule n'est jamais lu** | `light.type` est stocké, jamais consulté. Une Hue **blanche** recevant un `xy` renvoie une erreur : sur une installation mixte, chaque effet coloré gaspille des créneaux sur des lampes qui ne peuvent pas obéir |
+| ⛔ **Rien ne protège le budget GLOBAL du pont** | `CADENCE_PLANCHER_MS` protège **une** lampe (10 cmd/s). Une scène de 4 lampes à 100 ms en demande **40** au pont qui en tient ~10. *C'est le vrai plafond de tout ce module* |
+| ✅ ~~**`stopSoftwareEffect` ne restaure ni `on` ni `bri`**~~ | **FAIT le 2026-09-17 même**, voir ci-dessous |
+
+#### ✅ Le prérequis — l'arrêt rend son état à la lampe (2026-09-17)
+
+*« Fais les prérequis »* — David, le soir même.
+
+⛔ **Le défaut.** Une boucle d'effet écrit `bri`, `xy` et `on` **directement sur le pont**, en
+contournant `setLightState` pour ne pas faire rendre React dix fois par seconde. L'arrêter ne faisait
+donc que couper la boucle : **la lampe restait là où le dernier battement l'avait laissée.** Choisir
+« Fixe » sur un fantôme pouvait rendre une lampe presque éteinte, sur un stroboscope une lampe au
+minimum — *sans message, sans erreur : on croyait la lampe cassée.*
+
+⭐ **Ce qui rend la réparation possible est la cause même du défaut.** Puisque la boucle contourne le
+magasin, **le magasin a gardé l'état d'avant l'effet**. Il suffit de le renvoyer. *Un état que
+personne n'écrit n'est pas perdu si quelqu'un a refusé de l'écraser.*
+
+#### ⛔ Et la restauration est FAUSSE par défaut — ce n'est pas de la prudence
+
+`stopSoftwareEffect` a **neuf appelants**. Un seul doit restaurer : le geste « Fixe » du pied de page,
+le seul qui ne soit suivi d'aucune pose d'état. Les huit autres écrivent juste après — une scène, un
+flash tactique, une extinction — et y restaurer serait **une commande pour rien** dans un budget qui
+en tient dix par seconde.
+
+⚠️ **Deux d'entre eux la poseraient même à l'envers.** `handleColorChange` et `toggleLight` appellent
+`setLightState` **avant**, *sans l'attendre* : le magasin n'est pas encore à jour quand l'arrêt
+survient. Restaurer y renverrait l'état **précédent** — *la couleur que l'utilisateur vient de choisir
+serait effacée par son propre geste.* Un test compte donc les appels restaurants et exige qu'il y en
+ait **exactement un** dans toute l'application.
+
+*Quatrième fois dans ce module que des gestes de retour se ressemblent sans viser la même chose.
+On ne les aligne pas : on les compte.*
+
+#### ⭐ « Qui d'autre a la même rustine à poser ? » — la racine était ailleurs
+
+Les deux `bri: 0` du matin avaient été corrigés **un par un**. La question a trouvé le vrai coupable :
+`brillanceEffective`, qui bornait à **zéro**. Une brillance faible multipliée par un curseur global bas
+y arrive toute seule — `setLightState` pouvait donc envoyer `bri: 0` **sans que personne l'ait écrit.**
+⚠️ *Deux appelants avaient déjà posé leur `Math.max(1, …)` localement : le signe était là.*
+
+⛔ **Mais un test existant exigeait le zéro** — *« un curseur global à zéro voulait déjà dire rien : on
+ne le trahit pas »*. Deux intentions tombaient sur la même valeur :
+
+| Cas | Ce qu'il veut dire | Résultat |
+| --- | --- | --- |
+| Un curseur **à zéro** | « rien », délibérément | `0` — décision d'auteur conservée |
+| Un produit qui **arrondit** à zéro | « aussi faible que possible » | `1` |
+
+*On ne réécrit pas une décision d'auteur parce qu'elle gêne un correctif : on sépare les deux cas
+qu'elle confondait.*
+
+⛔ **Ce qui reste vrai et non traité** : `bri: 0` **n'éteint toujours pas**. Le curseur global à zéro ne
+fait donc pas ce que son propre test dit qu'il fait — il faudrait un `on: false`. Constat à part.
+
+#### Ce qui est gardé
+
+- `logic/etatARendre.ts` — fonction **pure**, comme les autres `logic/` du module : le moteur ne fait
+  que lui lire le magasin. ⚠️ Elle porte la règle physique *« ni couleur ni brillance à une lampe
+  qu'on éteint »* — le pont refuse de modifier une ampoule éteinte, et la commande entière échoue.
+- L'arrêt de l'effet natif et la restauration voyagent dans **une seule commande**.
+- ⭐ **Le vrai stroboscope est désormais possible** : `on: false` pour le temps noir ne risque plus de
+  laisser une lampe éteinte. **Non fait** — à voir dans la pièce d'abord, le `bri: 1` actuel suffit
+  peut-être.
+
+**Vérifié** : `tsc -b` propre, **5 106 tests au vert** (406 fichiers, 1 ignoré).
+⚠️ **Jamais vu dans la pièce.**
+
+#### ✅ La fusillade — et le budget du pont enfin compté (2026-09-17)
+
+⭐ **C'est le premier effet du catalogue qui veuille battre vite ET longtemps**, donc le premier à se
+heurter au vrai plafond du module : le pont tient **dix commandes par seconde, toutes lampes
+confondues**, et `CADENCE_PLANCHER_MS` ne protège que d'**une** lampe emballée.
+
+**Ce qui la sauve : une fusillade est surtout du silence.** Des rafales courtes, des pauses longues —
+le débit *moyen* reste bas même quand la pointe est haute. Un coup occupe **deux battements** (l'éclair,
+puis le noir) : à 100 ms le battement, environ trois cents coups/minute. Moins qu'une arme réelle,
+assez pour que l'œil lise une rafale.
+
+⭐ **Le plancher de pause se calcule depuis le nombre de lampes qui tirent**, relu **à chaque
+battement** : une lampe qui rejoint ou quitte change le partage, et les autres doivent s'en apercevoir.
+*Une part calculée une fois ment dès que le nombre de convives change.* Le budget devient un réglage
+au lieu d'être un mur.
+
+⭐ **Et aucun chef d'orchestre.** Chaque lampe a sa boucle et son hasard : elles se décalent seules dès
+la première pause. *L'œil lit des tirs croisés là où il n'y a que de l'indépendance.*
+
+#### ⛔ L'essai de budget a réfuté ma première conception — deux fois
+
+Le fichier `cadenceDeFusillade.test.ts` **simule** les lampes sur une minute et mesure le débit. Aucun
+autre essai du dépôt ne vérifie cette limite. Il a servi immédiatement :
+
+| Tour | Ce qu'il a dit | La cause |
+| --- | --- | --- |
+| 1 | **11,9 cmd/s à six lampes** (pour dix admises) | Le plancher raisonnait sur une rafale **« de référence »** à trois coups, alors qu'elles vont de deux à cinq. ⭐ *Une moyenne n'acquitte pas les cas au-dessus d'elle.* La pause se calcule désormais sur la longueur **réelle** de la rafale |
+| 2 | **10,7 cmd/s à douze lampes** | ⚠️ **Un biais de MESURE, pas un défaut de conception** : la simulation s'arrêtait au milieu d'une rafale et divisait par une durée fixe — elle comptait des commandes sans compter leur pause. *Un biais de mesure ressemble trait pour trait à un défaut de conception, et il envoie corriger le mauvais fichier.* |
+
+#### ⭐ La catégorie qui manquait : le COUP UNIQUE
+
+Les trente-sept effets d'origine sont **tous des boucles** — des ambiances. Or une déflagration, un
+impact, un sort qui part sont des **ponctuations** : ça arrive une fois et ça retombe. Le moteur n'en
+avait aucune notion.
+
+⚠️ **Et ce n'était pas codable avant le prérequis du matin.** Un coup unique s'arrête tout seul en
+**rendant à la lampe l'état qu'elle avait avant** ; tant que l'arrêt ne restaurait rien, une explosion
+aurait laissé la pièce dans sa dernière braise. *Le prérequis n'était pas une politesse, c'était la
+condition.* Fin de coup unique = **zéro commande de plus** : la restauration EST le dernier état.
+
+#### Les sept effets ajoutés — 37 → 45
+
+| Effet | Type | Pourquoi il marche sur du Hue |
+| --- | --- | --- |
+| **Déflagration** | ⭐ coup unique | Blanc, orange, braise, plus rien. *Le Hue est médiocre en stroboscopie et excellent en décroissance lente — une explosion est surtout une décroissance* |
+| **Impact** | ⭐ coup unique | **Deux commandes** en tout. Une balle qui touche, un sort qui frappe |
+| **Fusillade** | boucle | Voir ci-dessus |
+| **Panne de courant** | boucle | Grésillement, chute, deux relances ratées, noir. *Une panne qui ne se répète pas serait un coup unique ; celle-ci est une ambiance* |
+| **Torche qui faiblit** | boucle longue | La braise baisse sur dix minutes. ⭐ *Personne ne voit que ça descend, et au bout d'une heure tout le monde parle moins fort* |
+| **Sonar** | boucle lente | **Deux commandes par cycle de quatre secondes** — le moins cher du catalogue, et l'un des plus efficaces |
+| **Sirène lointaine** | boucle lente | L'inverse du gyrophare : *celui-là est dans la pièce, celle-ci au bout de la rue* |
+| **Chute de tension** | boucle très lente | Dérive du blanc vers l'ambre sale sur une heure. *Invisible sur l'instant* — là où le Hue est le meilleur |
+
+#### ⭐ La garde de restauration a servi le jour même
+
+Le test qui comptait les appels restaurants est passé à **deux** en ajoutant les coups uniques. Il a
+donc forcé à **justifier** le second au lieu de le glisser — puis il a été réécrit pour **nommer ses
+deux ayants droit** (le pied de page, et la fin d'un coup unique) plutôt que d'attendre un chiffre.
+*Une garde qu'on se contente d'ajuster au nouveau nombre ne garde plus rien.*
+
+**Ancres** : `src/modules/light/logic/cadenceDeFusillade.ts` (+ son essai de budget),
+`HueEngine.ts` (le drapeau `fini` des coups uniques, les huit nouveaux `case`), `BulbFooter.tsx`,
+`src/locales/{fr,en}/modules.json`.
+
+**Vérifié** : `tsc -b` propre, **5 127 tests au vert** (407 fichiers, 1 ignoré). 45 effets au moteur,
+tous joignables — le test du catalogue l'exige.
+⚠️ **Jamais vu dans la pièce.** *Ce qui sort vraiment des lampes reste hors de portée de tout test.*
+
+#### ✅ Le budget du pont, pour TOUS les effets — les solistes (2026-09-17)
+
+*« Tu veux dire quoi comme vrai chantier ? »* — puis, sur la conception : *« je pencherais pour le
+soliste, mais est-ce vraiment qu'une lampe, ou est-ce qu'on peut en mettre 2 ? »*
+
+**La mesure d'abord.** Douze effets à cadence soutenue dépassent le budget dès quatre lampes :
+
+| Effet | Cadence | Demande à 4 lampes |
+| --- | ---: | ---: |
+| `stroboscope`, `hyperspace`, `terminal` | 100 ms | **40 cmd/s** |
+| `cyber-night`, `reacteur` | 150 ms | 26,7 |
+| `tv`, `warp`, `glitch` | 200 ms | 20 |
+| `fire`, `candle`, `lightning` | 250 ms | 16 |
+| `disco`, `police` | 300 ms | 13,3 |
+
+⚠️ **Ce n'est pas un risque futur, c'est l'état actuel.** Ces effets sont **déjà** dégradés : le pont
+accumule du retard, *et un pont en retard ne se voit pas à l'écran — il se voit dans la pièce, une
+demi-minute plus tard.*
+
+#### ⭐ Pourquoi des solistes plutôt qu'un ralentissement
+
+L'autre remède — un plancher de cadence qui monterait avec le nombre de lampes — était plus simple à
+écrire. Il a été écarté pour une raison de fond : **un stroboscope ralenti cesse d'être un
+stroboscope.** Sa nature *est* sa vitesse. On fait donc jouer **moins de lampes, à la bonne vitesse** ;
+les autres gardent la couleur que la scène leur a posée — *elles ne font rien, et ne rien faire ne
+coûte aucune commande.*
+
+#### ⭐ « Une seule lampe ? » — non : entre une et trois, et ça se déduit
+
+`solistes = intervalle ÷ 100`. La cadence de l'effet décide, ce n'est pas un choix arbitraire :
+
+| Cadence | Solistes | Lecture |
+| ---: | ---: | --- |
+| 100 ms | **1** | Le stroboscope mange le budget entier à lui seul — la physique ne laisse pas le choix |
+| 200 ms | **2** | |
+| 300 ms | **3** | Un gyrophare qui rebondit sur trois lampes vaut mieux que sur une |
+
+#### Les trois décisions de conception
+
+- ⭐ **La `fusillade` est EXEMPTÉE.** Son principe *est* le tir croisé sur toutes les lampes, et elle
+  allonge déjà ses pauses selon leur nombre. La rationner par-dessus l'étoufferait deux fois —
+  *et il n'y a pas de tir croisé à une lampe.*
+- **Le choix se refait à CHAQUE battement**, jamais au démarrage : les lampes d'une scène partent
+  l'une après l'autre, et la première ne sait pas combien la rejoindront. Celle qui découvre qu'elle
+  est en trop s'arrête **en se restaurant** — elle ne s'éteint pas, elle arrête de battre.
+- ⚠️ **Le tri des identifiants est ce qui rend le choix STABLE.** Sans lui, la lampe soliste changerait
+  à chaque arrivée et elles oscilleraient entre les deux rôles — *ce qui coûterait précisément les
+  commandes qu'on veut économiser.*
+
+#### ⛔ Deux angles morts qui se couvraient l'un l'autre
+
+`candle` et `glitch` **partagent le corps** de leur voisin dans le `switch` (`case 'candle': case
+'fire':`). Ils manquaient à la table — **et l'essai censé détecter l'oubli ne les voyait pas non plus**,
+parce qu'il s'arrêtait à l'absence de `break;`. Une bougie sur quatre lampes serait donc restée à
+16 cmd/s, sans que rien ne rougisse.
+
+⭐ *Un analyseur qui ignore ce qu'il ne sait pas lire ressemble à un analyseur qui n'a rien trouvé.*
+
+#### ⚠️ Le risque de cette conception, et ce qui le tient
+
+La table `CADENCE_NOMINALE` **recopie des valeurs qui vivent dans `HueEngine`** — *une seconde
+déclaration de la même vérité dérive toujours*, motif payé cinq fois le 2026-08-24. Un essai relit donc
+le moteur et exige l'accord **dans les deux sens** : aucune cadence déclarée qui mente, aucun effet
+rapide absent de la table.
+
+#### ⭐ La garde de restauration a servi une TROISIÈME fois
+
+Le compte des appels restaurants est passé de 1 à 2 (coups uniques) puis à 3 (solistes) **dans la même
+journée**. Les trois fois, il a forcé à *justifier* le nouvel appel au lieu de le glisser. Il nomme
+désormais ses ayants droit un par un. *Une garde qu'on se contente d'ajuster au nouveau chiffre ne
+garde plus rien.*
+
+**Ancres** : `src/modules/light/logic/solistesDeLEffet.ts` (+ son essai de non-dérive),
+`HueEngine.ts` (le contrôle en tête de `loop`).
+
+**Vérifié** : `tsc -b` propre, **5 150 tests au vert** (408 fichiers, 1 ignoré).
+⚠️ **Jamais vu dans la pièce** — et c'est ici que ça compte le plus : *une lampe qui cesse de battre
+au profit d'une autre est un changement qui se juge à l'œil, pas au calcul.*
+
+#### ⛔ « Est-ce qu'on a un effet incendie ? » — non, et le Feu n'était pas un feu (2026-09-17)
+
+La question de David a déterré mieux qu'une absence.
+
+⛔ **`candle` et `fire` étaient le MÊME effet.** Corps partagé dans le `switch`, même amplitude (±40),
+même fondu, même variance de couleur, même cadence. **La seule différence était la couleur de départ
+posée par le pied de page** — `#ffb732` contre `#ff4500`. *« Feu » n'était qu'une bougie orange.*
+
+David, en le découvrant : *« feu de camp, bougie et incendie ce n'est pas la même chose »*.
+
+#### ⭐ Trois feux, et ce ne sont pas trois réglages
+
+Les séparer par la seule amplitude en aurait fait trois curseurs du même effet. **Chacun reçoit donc un
+geste qui n'appartient qu'à lui** — c'est le geste qu'on reconnaît, pas l'amplitude :
+
+| | Le geste | Ce qu'on reconnaît |
+| --- | --- | --- |
+| **Bougie** | elle **manque de s'éteindre** puis repart | *ce qu'on reconnaît d'une bougie n'est pas son tremblement, c'est sa fragilité* |
+| **Feu de camp** | il **crépite** — une brindille qui claque | le foyer qui avale et rend de l'air |
+| **Incendie** | il **s'embrase**, et il **prend** (socle qui monte sur 2–3 min) | la poutre qui cède |
+
+#### ⭐ L'incendie est ADAPTATIF, pas soliste — et c'est l'inverse du stroboscope
+
+Décision de conception assumée : un incendie est **exactement** le moment où l'on veut *toutes* les
+lampes dedans. *Sa nature n'est pas sa vitesse, c'est sa texture* — six lampes qui battent à 600 ms
+sans être d'accord entre elles ressemblent davantage à un incendie que deux lampes rapides.
+
+⭐ Cela achève les **trois familles** du module, désormais écrites dans `logic/budgetDuPont.ts` :
+**soliste** (l'identité est la vitesse), **adaptatif** (l'identité est la texture), **lent** (déjà sous
+le budget).
+
+#### ✅ « Explosion » — elle existait, sous un nom qu'on ne cherche pas
+
+La `Déflagration` construite le matin même **était** l'explosion demandée. Redemandée le soir, donc
+introuvable : renommée **Explosion** dans les deux langues, avec l'accord de David. *Une fonctionnalité
+qu'on ne trouve pas est une fonctionnalité absente* — deuxième fois que ce dépôt paie cette phrase,
+après la recherche invisible du Media Hub.
+
+#### ⛔ Deux fautes commises en chemin, et ce qu'elles enseignent
+
+- ⛔ **La constante du budget avait été écrite DEUX FOIS dans la même journée** — `DEBIT_DU_PONT` dans
+  la fusillade, `BUDGET_DU_PONT` chez les solistes, par le même auteur, à deux heures d'écart, **après
+  avoir dénoncé ce motif dans les deux fichiers**. ⭐ *Une seconde déclaration de la même vérité dérive
+  toujours, et savoir qu'elle dérive n'empêche rien.* Réunie dans `logic/budgetDuPont.ts`.
+- ⛔ **Un renommage automatique a visé la mauvaise clé et cassé les deux fichiers de traduction.**
+  `"fire"` apparaît **quatre fois** dans `modules.json` — un type de dégâts, un état, l'effet lumineux,
+  un libellé de fiche. La recherche a trouvé le premier. ⭐ *Une clé de traduction n'est pas unique dans
+  un fichier de mille lignes ; un remplacement doit se donner une portée avant de se donner un motif.*
+  Réparé à la main, **sans `git checkout`** : ces fichiers portaient tout le travail du jour.
+
+**Ancres** : `HueEngine.ts` (les trois `case` séparés), `logic/budgetDuPont.ts` (la constante et
+`cadencePartagee`), `logic/solistesDeLEffet.ts` (`EFFETS_ADAPTATIFS`).
+
+**Vérifié** : `tsc -b` propre, **5 150 tests au vert** (408 fichiers, 1 ignoré). 46 effets.
+⚠️ **Jamais vu dans la pièce** — et les trois feux sont précisément ce qui se juge à l'œil.
+
+#### ⛔ « Je ne vois plus mes lumières » — un panneau sans défilement (2026-09-17, le soir)
+
+David lance GM-OS après la journée d'effets et ne voit plus ses lampes. **Elles n'étaient pas perdues :
+elles étaient sous la ligne de flottaison.**
+
+⭐ **L'indice était dans la capture d'écran, et ce n'était pas les lampes.** La phrase du bas du panneau
+de gauche — *« La pièce y revient quand un son se termine… »* — était **coupée en plein milieu**. Ce
+panneau débordait.
+
+⛔ **La cause, en une phrase.** `LightDashboard` est une grille `grid-cols-12 h-full` ; sa rangée était
+en `auto`, donc réglée sur **le plus grand de ses deux enfants**. L'`<aside>` n'avait **aucun
+`overflow-y-auto`** : son contenu (pont, intensité, voix, trois actions rapides, éclairage normal et son
+explication) dépassait la fenêtre, imposait sa hauteur à la rangée, donc au `<main>` d'à côté — et le
+`BulbFooter` sortait de l'écran, coupé par l'`overflow-hidden` du châssis.
+
+⭐ ***Un panneau qui ne défile pas ne cache pas seulement sa propre fin : il déforme ce qui est à côté
+de lui.***
+
+#### ⚠️ Pourquoi ça n'était jamais arrivé — et l'hypothèse de David était la bonne
+
+Écran 2880×1800, mais Windows à 200 % : l'application ne voit que **1440×900 points**. *« Cela doit
+venir de la résolution de l'écran ? »* — oui. La mise en page tenait à 1080p et ne tenait plus là.
+**Aucun test ne pouvait le dire** : ils tournent tous sans fenêtre.
+
+#### Les trois correctifs
+
+| | Où | Pourquoi |
+| --- | --- | --- |
+| `grid-rows-1` | `LightDashboard` | Vaut `minmax(0, 1fr)` : la rangée fait exactement la hauteur disponible, **aucun enfant ne peut plus la pousser**. *Une hauteur qui se règle sur son contenu n'est pas une hauteur, c'est une promesse que le contenu tiendra.* |
+| `overflow-y-auto min-h-0` | `Sidebar` | La cause. Le panneau défile au lieu de déborder |
+| `shrink-0` | `BulbFooter`, état vide | ⚠️ Trouvé en cherchant : le message « aucune lampe » était le seul du module à pouvoir être écrasé à zéro — *le message qui dirait ce qui ne va pas est justement celui qui disparaîtrait*, et on chercherait la panne ailleurs |
+
+#### ✅ Le défaut était unique — vérifié, pas supposé
+
+Balayage de tous les `.tsx` des modules à la recherche du motif « `col-span-*` + `h-full` sans
+`overflow` » : **un seul autre cas**, une boîte vide en pointillés de `ClockDashboard` dont le contenu
+tient sur deux lignes. *Pas d'instance dormante ailleurs.*
+
+⚠️ **Ce qui reste vrai** : rien ne garde ce genre de défaut. `tsc` et les 5 150 essais tournent **sans
+fenêtre** — une mise en page qui déborde ne les fera jamais rougir. Le seul filet possible serait un
+essai Playwright qui **redimensionne la fenêtre** et exige que le pied de page reste visible. Non fait,
+et c'est le candidat évident si le motif revient.
+
+**Ancres** : `src/modules/light/LightDashboard.tsx`, `components/Sidebar.tsx`, `components/BulbFooter.tsx`.
+
+**Vérifié** : `tsc -b` propre, **5 150 tests au vert** (408 fichiers, 1 ignoré).
+✅ **Confirmé à l'écran le 2026-09-17** — *indirectement, mais sûrement* : David a jugé les trois
+feux depuis les tuiles, ce qui suppose le sélecteur d'effet du pied de page — précisément ce que le
+débordement lui avait pris.
+
+#### ⛔ « Feu de camp et incendie sont pareil » — ils l'étaient (2026-09-17, le soir)
+
+Première version des trois feux, vue à l'écran par David : **deux d'entre eux étaient indiscernables.**
+
+**Pourquoi**, relevé dans le code plutôt que supposé :
+
+| | Feu de camp | Incendie |
+| --- | --- | --- |
+| Couleur de départ | `#ff4500` | `#ff5a00` — **quasi la même** |
+| Palette | ambre ±0,035 | 6 braises, dont **4 proches de `#ff4500`** |
+| Embrasement | 6 % vers un blanc chaud | 7 % vers un blanc chaud — **identique** |
+| Amplitude | ±70 | ±90 — *28 % d'écart, invisible sur une lampe* |
+
+⛔ **Et pire** : le socle de l'incendie partait à **110** et montait sur une minute. Pendant les vingt
+premières secondes, **l'incendie était plus sombre qu'un feu de camp** — dont la base est la brillance
+courante de la lampe, souvent 200 et plus. *L'idée du « feu qui prend » coûtait précisément le moment
+où on le déclenche.* Supprimée.
+
+#### ⭐ La faute n'était pas dans les réglages, elle était dans le mécanisme
+
+Les deux effets tiraient **la brillance et la couleur indépendamment, au hasard**, autour d'un orange.
+
+⭐ ***Deux bruits aléatoires autour d'une même teinte donnent le même résultat visuel, quelles que
+soient leurs amplitudes.*** J'avais réglé des curseurs là où il fallait changer de principe — et j'avais
+écrit dans le commentaire que les trois feux « ne sont pas trois réglages » tout en n'en faisant que ça.
+
+**Le principe qui les sépare** : dans une flamme réelle, la brillance et la couleur ne sont pas deux
+variables, c'en est **une seule** — la température. Le cœur est éclatant **et** blanc-jaune ; la fumée
+qui retombe est sombre **et** rouge sang. `logic/echelleDuFeu.ts` porte cette corrélation, et
+l'incendie ne tire plus qu'une seule valeur.
+
+Le feu de camp, lui, **tient sa bande** (75–175) et ne monte jamais au blanc. *Deux amplitudes
+différentes autour de la même moyenne ne se distinguent pas ; deux bandes séparées, si.*
+
+#### L'essai qui garde le mécanisme, pas le réglage
+
+`echelleDuFeu.test.ts` exige notamment que **la table des teintes monte vraiment** du sombre au clair.
+⚠️ *Mélanger cette table ne casserait rien d'autre* — aucune erreur, aucun autre essai rouge, juste du
+bruit orange qui ressemble à un feu de camp. **C'est exactement le défaut d'origine, et rien ne le
+voyait.** Plus un essai de séparation des bandes, mesuré sur 20 000 tirages.
+
+#### ⛔ Trois fois le même piège dans la journée : un repère qui n'est pas unique
+
+En remplaçant le bloc des deux feux, mon marqueur de fin — `/*` — a attrapé un commentaire **à
+l'intérieur du cas `lightning`** et a amputé cet effet. Récupéré par `git show HEAD:`.
+
+C'est la **troisième** fois de la journée :
+
+| Le repère | Ce qu'il a cassé |
+| --- | --- |
+| `// Apply global brightness` | Présent **deux fois** dans `HueEngine` : la tranche examinée par un essai était vide, **deux règles passaient au vert sans rien examiner** |
+| `"fire"` | Présent **quatre fois** dans `modules.json` : un renommage a visé un *type de dégâts* et cassé les deux fichiers de traduction |
+| `/*` | Présent partout dans un dépôt aussi commenté : a amputé `case 'lightning'` |
+
+⭐ ***Un repère choisi pour sa lisibilité n'est pas un repère choisi pour son unicité.*** Dans ce dépôt,
+où tout est commenté et nommé en clair, la lisibilité rend les repères **moins** uniques, pas plus.
+
+**Ancres** : `src/modules/light/logic/echelleDuFeu.ts` (+ ses 8 essais), `HueEngine.ts` (`case 'fire'`,
+`case 'incendie'`).
+
+**Vérifié** : `tsc -b` propre, **5 158 tests au vert** (409 fichiers, 1 ignoré).
+⚠️ Un premier passage avait rendu **3 erreurs de collecte** et trois fichiers non exécutés ; le passage
+suivant est intégralement vert. *C'est la fragilité connue des workers sous charge, pas une régression —
+mais elle mérite d'être dite plutôt que tue.*
+✅ **CLOS à l'écran le 2026-09-17** — David, après relance : *« ca fonctionne »*.
+
+#### ⛔ « Je ne suis pas convaincu par tous » — deuxième audit, mesuré (2026-09-17, tard)
+
+David après avoir essayé **tout le catalogue** : *« je ne suis pas convaincu par tous, par exemple
+respiration, ou alors explosion ne dure pas assez longtemps et à la fin cela doit devenir noir »*.
+
+⭐ **Ses deux exemples étaient littéralement dans le code.** Cette fois l'audit a été fait par un
+script qui mesure, pas par une relecture qui juge.
+
+| Effet | Ce qui n'allait pas, mesuré |
+| --- | --- |
+| **respiration** | période réelle **41,9 s** — un souffle humain en dure 4 à 5 |
+| `underwater` | **62,8 s** ; à l'œil, une lampe immobile |
+| `radiation`, `arcane` | 18,8 s chacun, même formule |
+| `zen` | **377 s** pour ±30 de brillance — 0,5 point par seconde, *l'œil s'adapte plus vite* |
+| `foret-profonde` | 251 s **et** deux verts (`#064e3b`/`#14532d`) que rien ne distingue : deux immobilités qui s'additionnaient |
+| **explosion** | **1,54 s**, et sa fin **rendait à la lampe l'état d'avant** — donc la lumière revenait |
+| `trou-noir` | fondu de **2 s** pour un battement de 1 s : *le fondu n'était jamais vu* |
+| `candle` | partait de la brillance de la lampe — sur une lampe à 254, **une bougie qui éclaire la pièce** |
+
+#### ⭐ La faute commune : l'effet empruntait son niveau à la lampe
+
+Neuf effets partaient de `baseBri`, **la brillance courante**. Or le pied de page n'amorce que la
+*couleur* avant de lancer un effet, jamais la brillance. Conséquence chiffrée sur `respiration` :
+
+| Lampe à | Part du cycle collée au plafond de 254 |
+| --- | --- |
+| 150 | 0 % |
+| 200 | **31,8 %** |
+| 254 | **50 %** |
+
+⭐ ***Un effet qui part de la brillance courante n'a pas une forme, il en a autant qu'il y a de
+lampes.*** La règle posée : **l'effet possède sa forme, le curseur possède son niveau.** Chaque effet
+déclare sa bande absolue ; l'intensité de la tuile et la brillance globale s'appliquent par-dessus,
+dans `brillanceEffective`, et nulle part ailleurs. `baseBri` **n'existe plus** dans la boucle — et un
+essai empêche son retour.
+
+⚠️ `baseXy` reste, et la différence n'est pas une nuance : *la couleur est choisie pour l'effet avant
+qu'il démarre ; elle n'est pas empruntée à ce que la lampe faisait avant.*
+
+#### ⭐ La seconde faute : une période qu'on ne peut pas relire
+
+`Math.sin(tick * 0.3)` avec un `interval` posé vingt lignes plus bas. ⭐ ***« 0,3 » ne ressemble pas à
+quarante secondes*** — et aucun essai ne pouvait le voir, puisque **rien dans ce code ne ressemblait à
+une durée**. Quatre souffles vivent maintenant dans `logic/souffle.ts`, en millisecondes lisibles, avec
+une asymétrie inspire/expire : *une sinusoïde monte et descend au même rythme, aucun être vivant ne
+fait ça.*
+
+Et c'est **moins cher** : des images-clés au lieu d'une courbe échantillonnée. Deux commandes par
+cycle au lieu de vingt, `transitiontime` faisant la rampe. *Le pont est médiocre en stroboscopie et
+excellent en rampe.*
+
+#### ⭐ Trois fins d'effet, et non deux
+
+`stopSoftwareEffect` prenait un **booléen**. Il y a trois fins : ne rien poser, rendre l'état d'avant,
+**éteindre**. Le noir final de l'explosion n'avait nulle part où s'écrire — et `bri: 0` n'éteint pas
+une Hue, seul `on: false` le fait. Le type `FinDEffet` les nomme. *Un booléen à deux valeurs pour trois
+intentions, c'est la faute que ce module a déjà payée quatre fois.*
+
+⚠️ L'explosion dure désormais **7,45 s** et **laisse la lampe éteinte** — décision de David. C'est la
+seule fin du catalogue qui oblige le meneur à un geste pour ranimer la lampe ; un essai vérifie qu'elle
+est **la seule**. *Une lampe qui ne revient pas doit être une décision, jamais un effet de bord.*
+
+#### ⛔ Trois gardes prises en défaut le même soir
+
+**1. Une règle bornée par une hypothèse.** « Aucun effet ne fond plus longtemps qu'il n'attend »
+existait, **limitée à six effets choisis à la main**, avec pour motif écrit qu'apparier chaque fondu à
+son battement était *impossible*. ⭐ **C'était une limite supposée, pas mesurée** : il suffit de lire
+les affectations dans l'ordre où elles sont écrites. Généralisée, la règle a trouvé seule le
+`trou-noir`. *Une garde bornée par une hypothèse ne garde que ce que l'hypothèse laissait passer.*
+
+**2. Une garde neuve qui ne gardait rien.** Le motif censé détecter l'emprunt de brillance s'est écrit
+avec un `\b` interprété comme **caractère retour-arrière** — une expression qui cherchait un caractère
+de contrôle. Elle est passée au vert sur un moteur où le défaut avait été **remis exprès**.
+
+⭐ ***Une garde neuve qu'on n'a pas vue rougir au moins une fois n'est pas encore une garde.*** C'est
+le même défaut que la tranche vide de la veille — *un contrôle qui ne trouve rien ressemble à un
+contrôle qui n'a rien à redire* — et il n'a été vu que parce que les deux défauts ont été réintroduits
+volontairement pour voir les règles rougir. Un essai d'auto-contrôle met désormais le détecteur à
+l'épreuve à chaque passage.
+
+**3. Un repli devenu faux.** L'analyseur de cadences supposait *« pas de nombre écrit ⇒ 250 ms par
+défaut »* — vrai jusqu'au jour où une cinquième façon d'écrire une cadence est apparue. Il a dénoncé
+quatre effets lents comme s'ils noyaient le pont. *Un repli est une supposition écrite une fois pour
+toutes ; il vieillit comme tout le reste.* On ne l'a pas assoupli : on lui a appris la famille, et il
+va lire les vraies valeurs **à la source**.
+
+**Ancres** : `logic/souffle.ts`, `logic/deflagration.ts`, `logic/echelleDuFeu.ts`
+(`BANDE_DE_LA_BOUGIE`), `HueEngine.ts` (`FinDEffet`, et la disparition de `baseBri`),
+`catalogueDesEffets.test.ts` (les deux règles générales).
+
+**Vérifié** : `tsc -b` propre, **5 191 tests au vert** (411 fichiers, 1 ignoré), dont **197 sur
+Light-OS**. Les deux nouvelles règles ont été **vues rougir** sur des défauts réintroduits exprès.
+⚠️ **À confirmer à l'écran** : dix effets ont changé de geste, et *ce qui sort vraiment des lampes
+reste hors de portée de tout test*.
+
+#### ⚠️ Ce qui reste ouvert sur Light-OS
+
+- ✅ ~~Le budget global n'est tenu que par la fusillade~~ — **CLOS le 2026-09-17 par les solistes**,
+  voir ci-dessus. ⚠️ Reste vrai : *le budget est raisonné effet par effet*. Deux effets rapides
+  **différents** joués en même temps se partageraient mal les dix commandes — cas rare (une scène joue
+  d'ordinaire un seul effet), non traité, à regarder si ça se voit.
+- ⚠️ **`applyXyVariance` s'applique après le calage de gamut** (huit effets).
+- ⚠️ **Le type d'ampoule n'est jamais lu** — une Hue blanche recevant un `xy` renvoie une erreur.
+- ⚠️ **`bri: 0` n'éteint toujours pas** : le curseur global à zéro ne fait pas ce que son propre test
+  dit qu'il fait. ✅ Le chemin existe désormais (`FinDEffet: 'eteindre'`), mais **le curseur ne
+  l'emprunte pas** — c'est un geste à part, non fait.
+- ⚠️ **Les sinusoïdes restantes n'ont pas été touchées, et c'est délibéré** : `aurore` (157 s),
+  `abysses` (126 s), `passerelle` (126 s), `neant` (94 s), `alien` (63 s). *Leur geste est ailleurs* —
+  un cycle de couleurs, un scintillement, un clignotement — et la brillance n'y est qu'une décoration.
+  ⭐ **Lent est une intention ; imperceptible est une panne** : seuls `zen` et `foret-profonde`
+  tombaient du mauvais côté, parce qu'ils n'avaient **aucun** autre geste.
+- ⚠️ **L'explosion coûte 5 cmd/s le temps de son flash** (200 ms). Au-delà de deux lampes, le pont
+  étalera ce flash sur ~100 ms au lieu de le rendre simultané. *Pour un flash c'est supportable ; pour
+  une rafale ça ne l'était pas* — d'où la cadence partagée de la fusillade, non appliquée ici.
+- ⭐ **Le vrai stroboscope est débloqué, non fait** : `on: false` pour le temps noir ne risque plus de
+  laisser une lampe éteinte. À voir dans la pièce d'abord — *les Hue rallument avec une rampe, et à
+  10 Hz le remède pourrait être pire que le mal.*
+
+**Ancres** : `src/modules/light/HueEngine.ts` (le `switch` de `loop`), `components/BulbFooter.tsx`
+(les listes et `defaultColors`), `src/modules/light/catalogueDesEffets.test.ts`.
+
+**Vérifié** : `tsc -b` propre, **5 098 tests au vert** (405 fichiers, 1 ignoré).
+⚠️ **Jamais vu dans la pièce** — six correctifs sur sept touchent ce que l'œil perçoit, et *ce qui
+sort vraiment des lampes reste hors de portée de tout test* (catégorie P6).
+
+---
+
+### 78 · ⛔ « Whiteboard OS saccade un peu » — un magasin persisté écrit à CHAQUE `set()` (2026-09-17, nuit)
+
+David, après la soirée d'essais : *« whiteboard os saccade un peu »*. Puis, en apprenant la cause :
+*« fais les corrections pour les modules impactés comme Map-OS je suppose ? »* — **l'intuition était
+juste, et c'était pire sur la carte.**
+
+#### ⭐ La cause : `partialize` ne décide pas SI l'on écrit, seulement CE QU'ON écrit
+
+Vérifié dans la source installée de Zustand 5.0.12, `node_modules/zustand/esm/middleware.mjs` :
+
+```js
+const setItem = () => {
+    const state = options.partialize({ ...get() });
+    return storage.setItem(options.name, { state, version });
+};
+api.setState = (state, replace) => { savedSetState(state, replace); return setItem(); };
+```
+
+**Il n'y a aucune condition.** Un `set()` qui ne touche qu'un champ volatile sérialise quand même tout
+le magasin et l'écrit sur le disque.
+
+⛔ **Et deux modules avaient écrit la croyance inverse, noir sur blanc :**
+
+| Fichier | Ce qu'il affirmait |
+| --- | --- |
+| `useWhiteboardStore` | *« Les persister causerait des écritures localStorage haute fréquence »* |
+| `useMapStore` | *« Projections are NOT persisted to avoid massive performance drops during real-time movement »* |
+
+Les deux avaient retiré des champs de `partialize` **en croyant supprimer l'écriture**. Elle avait lieu
+quand même — elle emportait simplement les tracés et les pions à la place.
+
+⭐ ***Une optimisation qui vise la charge quand le coût est la fréquence ne réduit rien ; elle
+rassure.*** Et elle laisse derrière elle un commentaire qui décourage de chercher au bon endroit.
+
+#### Ce que ça coûtait, mesuré
+
+Coût du seul `JSON.stringify`, **par mouvement de souris**, sur un tableau blanc :
+
+| Tracés | Points | Par écriture | Charge |
+| --- | --- | --- | --- |
+| 10 | 600 | 0,08 ms | 15 Ko |
+| 40 | 3 200 | 0,38 ms | 77 Ko |
+| 100 | 12 000 | **1,75 ms** | 285 Ko |
+| 200 | 30 000 | **4,18 ms** | 710 Ko |
+
+Le `localStorage.setItem`, **synchrone et bloquant**, s'ajoute par-dessus. ⭐ *Le coût est proportionnel
+à ce qui est déjà dessiné* — d'où « saccade **un peu** » : ça empire à mesure que le tableau se
+remplit, et ça repart à neuf quand on l'efface.
+
+⛔ **Sur la carte, c'était trois écritures par mouvement** : `updateToken` faisait **deux** mutations
+(les pions, puis les zones de danger rattachées), et `syncToPlayers` en ajoutait une troisième en
+projection.
+
+#### ⭐ On payait pour ce que personne ne recevait
+
+`CrossWindowEventService` **jette déjà** toute mise à jour du tableau arrivant moins de **50 ms** après
+la précédente (`WB_THROTTLE`). Le réseau ignorait donc environ quatre points sur cinq — mais le magasin
+les avait tous sérialisés, écrits sur le disque et notifiés à ses abonnés.
+
+⭐ ***Une limitation posée à l'arrivée ne fait pas d'économie : elle jette du travail déjà payé.***
+
+#### Les trois correctifs
+
+| | Où | Ce que ça change |
+| --- | --- | --- |
+| **Écriture différée** | `utils/ecritureDifferee.ts` | une seule écriture par fenêtre de **250 ms**, pour les **huit** magasins qui passent par `stockageLocalDuMJ` |
+| **Diffusion limitée** | `utils/limiteurDeCadence.ts` + les deux canevas | le tracé et le laser ne partent qu'à la cadence que le réseau consomme déjà |
+| **Une mutation au lieu de deux** | `useMapStore.updateToken` | le pion et sa zone rattachée voyagent ensemble |
+
+⭐ **Fenêtre fixe, et surtout pas un « debounce ».** Repousser l'échéance à chaque modification serait
+un piège : pendant un glissement de pion de dix secondes, les modifications ne s'arrêtent jamais, donc
+**l'écriture n'aurait jamais lieu**. Ici la première modification arme la fenêtre et les suivantes s'y
+agglutinent — *le pire cas est borné, et c'est ce qu'on veut d'un dépôt qui a perdu ses campagnes deux
+fois.*
+
+Trois filets forcent l'écriture avant la disparition de la fenêtre : `beforeunload`, `pagehide`, et
+`visibilitychange` → caché. ⚠️ **Les campagnes ne passent pas par ce chemin** (`PersistenceService`,
+IndexedDB) : on y risque au pire un quart de seconde d'un déplacement de pion.
+
+#### ⛔ Un essai de l'an dernier a arrêté un défaut de cette nuit
+
+`persistanceEntreFenetres.test.ts` est devenu rouge — et il avait **raison sur le fond, pas seulement
+sur le calendrier**. Mon tampon était posé **au-dessus** du refus d'écriture des fenêtres secondaires :
+il acceptait la valeur interdite, la gardait, et **la servait en lecture** pendant 250 ms. Une fenêtre
+secondaire qui se réhydrate y aurait relu **sa propre vue partielle** au lieu de celle du MJ — soit
+exactement le dégât que cette garde existe pour empêcher.
+
+⭐ ***Ce qui n'a pas le droit d'être écrit n'a pas le droit d'être lu comme s'il l'avait été.*** Le
+refus est désormais posé **avant** le tampon, et celui du dessous reste : les deux étages ne se
+doublent pas, ils gardent deux chemins — le tampon et le disque.
+
+#### La garde qui aurait crié en septembre
+
+`utils/ecritureHauteFrequence.test.ts` compte les appels à `localStorage.setItem` pendant cent points
+d'un trait et cent pas d'un glissement de pion. ⚠️ **Il ne mesure pas une durée** — *un essai qui mesure
+une durée devient rouge sur une machine chargée* — il compte les écritures, et elles ne dépendent pas
+de la machine.
+
+**Vu rougir** : les deux défauts ont été réintroduits exprès, cinq essais sur sept sont passés au
+rouge. *Une garde neuve qu'on n'a pas vue rougir au moins une fois n'est pas encore une garde* — la
+leçon de la veille, appliquée le jour même.
+
+#### ⚠️ Ce qui reste ouvert
+
+- **Ce qui n'est pas attrapé** : une coupure de courant ou un plantage du processus perd au pire
+  250 ms. Aucun filet ne couvre ça, et c'est assumé.
+- **Le redessin du canevas reste complet à chaque point** — il efface et redessine tous les tracés.
+  C'est du travail `canvas`, pas du disque, donc bien moins cher ; *mais c'est le prochain coût si la
+  saccade persiste sur un très grand tableau.*
+- **`syncToPlayers` part à chaque mouvement de pion en projection.** L'écriture est différée, mais la
+  diffusion, elle, ne l'est pas. Non traité, à regarder si la projection saccade.
+- ⚠️ **Les autres magasins persistés n'ont pas été audités un par un.** Le balayage a cherché les
+  écrivains à fréquence de doigt (`onMouseMove`, `onPointerMove`, `requestAnimationFrame`) : les seuls
+  trouvés sont le tableau blanc et la carte. Les boucles d'animation d'Ambient-OS écrivent de l'état
+  React local, pas un magasin.
+
+**Ancres** : `src/utils/ecritureDifferee.ts`, `src/utils/limiteurDeCadence.ts`,
+`src/utils/ecritureReserveeAuMJ.ts` (`viderLesEcrituresDifferees`, les filets),
+`src/modules/map/useMapStore.ts` (`updateToken`), `whiteboard/components/DrawingCanvas.tsx` et
+`PlayerDrawingCanvas.tsx`.
+
+**Vérifié** : `tsc -b` propre, **5 216 tests au vert** (414 fichiers, 1 ignoré).
+⚠️ **À confirmer à l'écran** : c'est David qui a senti la saccade, c'est lui qui peut la clore.
+
+---
+
+### 79 · ⭐ « Les dés en 3D sont affreux » — quatre manques, dont trois ne se règlent pas (2026-09-17, nuit)
+
+David : *« lorsque je jette les dés et que je projette sur Player Hub, les dés en 3D sont affreux »*.
+Puis, à la question de la direction visuelle : *« est-ce que je peux choisir le style ? Résine / Verre
+ou Métal ? »* — les trois existent désormais, au choix du meneur.
+
+#### ⛔ Ce qui n'allait pas, et pourquoi aucun réglage n'y pouvait rien
+
+| | Ce qu'il y avait |
+| --- | --- |
+| **Aucun chiffre** | des solides colorés nus avec un liseré blanc — *un dé sans chiffres n'est pas un dé* |
+| **L'atterrissage tiré au sort** | `Math.round(Math.random() * 4) * Math.PI / 2` : la face du dessus n'avait **aucun rapport** avec le résultat du jet |
+| **Du verre sans rien à réfracter** | `transmission: 0.7`, `roughness: 0.05`, et **ni carte d'environnement ni fond** |
+| **Un d100 sphérique** | `SphereGeometry(1.4, 32, 32)` — *une sphère n'est pas un dé* |
+
+⭐ ***Un matériau physique sans environnement n'a rien à réfléchir : il rend du gris.*** La transmission
+échantillonne ce qu'il y a derrière l'objet ; derrière, il n'y avait rien. Les deux réglages les plus
+coûteux de la scène ne produisaient donc qu'un aplat laiteux — *plus le rendu se voulait physique, plus
+il était plat.* S'y ajoutaient une ambiante à 1,2 et une hémisphérique à 1,0 qui, ensemble,
+**suppriment le relief**.
+
+#### ⛔ Deux défauts de plus, trouvés en chemin
+
+**1. Le nettoyage détruisait des ressources partagées.** Le démontage appelait `dispose()` sur les
+géométries **déclarées au niveau du module**. Au remontage suivant — un simple aller-retour de
+projection — elles étaient mortes et plus rien ne s'affichait. ⭐ *Ce qui est partagé par tous ne se
+libère pas par un.*
+
+**2. Le d10 n'était pas un trapézoèdre.** Ses « coordonnées standard » (pôles à `1,5 r`, anneau à
+`0,5 r`) rendent chaque cerf-volant **plié** : le solide avait **vingt** facettes au lieu de dix. Et les
+cinq du bas étaient **enroulées à l'envers**, ce que le code compensait par `side: THREE.DoubleSide`,
+commenté *« Safety for visibility »* — *une rustine qui décrivait le symptôme sans nommer la cause.*
+
+⭐ ***Un dé n'a de faces que le jour où on veut écrire dessus.*** Rien ne regardait les faces
+auparavant ; rien ne pouvait donc voir que le solide n'en avait pas. La condition de planéité, résolue
+plutôt que devinée, donne un rapport exact : `hPôle / hAnneau = 5 + 2√5 ≈ 9,472`.
+
+#### ⭐ On ne réécrit pas les coordonnées, on regroupe par face
+
+Poser des chiffres demande de connaître les **faces**, or three.js ne livre que des **triangles** : un
+dodécaèdre arrive en 36 triangles, pas en 12 pentagones. Le réflexe serait de retaper à la main les
+sommets des solides de Platon — ⭐ *exactement le genre de table qu'on recopie mal une fois sur deux, et
+dont l'erreur ne se voit que sur un dé, en séance.*
+
+On prend donc les géométries de la bibliothèque et on **regroupe leurs triangles par normale**. Le seul
+solide écrit à la main reste le d10, et il est désormais couvert par les mêmes essais que les autres —
+*c'est lui qui était faux.*
+
+**La numérotation suit la règle des vrais dés** : deux faces opposées font `n + 1`. Sur un dé posé on
+voit la face du dessus *et* ses flancs ; un 20 collé à un 19 se remarque. ⚠️ Le d4 en est exempté, et
+c'est correct : *le tétraèdre n'a pas de faces opposées.*
+
+#### Ce qui change à l'écran
+
+- **Des chiffres**, peints dans la couleur du dé pour que le contraste survive au code couleur ; les
+  `6` et les `9` sont soulignés — *posés sur une table, c'est le même dessin.*
+- **Le dé se pose sur sa valeur** : on amène la normale de la face qui porte le résultat vers le ciel,
+  avec un lacet aléatoire pour que deux dés ne se figent pas pareil.
+- **Une carte d'environnement** (`RoomEnvironment` + `PMREMGenerator`), une ambiante basse, une
+  lumière-clé qui porte une ombre, et un **sol qui ne reçoit que l'ombre** — *sans contact au sol, des
+  dés « posés » flottent dans le vide.*
+- **Des murs invisibles** : *un dé qui sort du cadre est un dé qu'on n'a pas vu tomber.*
+- **Un vrai d10** pour le d100, qui compte par dizaines de `00` à `90`.
+- **Trois matières au choix** — résine, verre, métal — dans les réglages du pupitre, le sélecteur
+  n'apparaissant que si la 3D est active. ⚠️ **Le code couleur ne bouge pas avec le style** : *un style
+  est une matière, pas une signification.*
+
+#### ⚠️ Deux pièges nommés dans le code
+
+- **La couleur du dé est peinte DANS la texture**, et le matériau reste blanc. Sinon il faudrait
+  multiplier la texture par la couleur — *et un chiffre clair multiplié par un dé coloré cesse d'être
+  clair*, alors que cette couleur porte une information (critique, équipement).
+- **Le remplissage des UV ne peut pas dépasser 0,5**, et ce n'est pas un curseur de confort : au-delà,
+  les sommets débordent dans la case voisine et le dé afficherait des morceaux du chiffre d'à côté. Le
+  code refuse la valeur plutôt que de la tolérer.
+- **`val` n'est pas toujours un nombre** — les dés Fate rendent un symbole. Un dé dont la valeur n'est
+  pas lisible sur son solide se pose sur une face au hasard : *un dé qui ne sait pas quoi montrer doit
+  quand même finir sa chute.*
+
+#### ⚠️ Ce qui reste ouvert
+
+- **Le verre est le plus risqué des trois.** La transmission a maintenant un environnement à réfracter,
+  mais le fond du rendu reste **transparent** par nécessité — il se superpose au Hub. À juger à l'écran.
+- **La physique reste artisanale** : gravité, rebond amorti, murs. Pas de collision entre dés — *deux
+  dés peuvent se traverser.* Aucune bibliothèque de physique n'est installée, et en ajouter une pour ça
+  serait cher.
+- **Le d4 montre sa face du dessus**, alors qu'un vrai d4 se lit au sommet. Simplification assumée.
+- **Rien de tout ceci n'est vérifiable par un essai** au-delà de la géométrie : *ce qui sort de la carte
+  graphique est hors de portée*, comme les lampes (catégorie P6).
+
+#### ⛔ Deuxième passe : « je ne vois aucune différence entre résine / verre / métal »
+
+David, après avoir essayé : *« ok c'est mieux, sauf que d'une part je voudrais que les dés soient
+placés devant la fenêtre de résultat. Deuxièmement je ne vois aucune différence entre résine / verre /
+métal »*.
+
+**Il avait raison, et ce n'était pas une affaire de matériau.**
+
+##### ⭐ Le réglage n'arrivait jamais au Hub
+
+Le segment `dice` du synchroniseur portait **trois** champs sur les cinq nécessaires :
+
+```ts
+payload.dice = { lastRoll: s.lastRoll, isDiceProjected: s.isDiceProjected, projectionTrigger: s.projectionTrigger };
+```
+
+Ni `enable3D` ni `styleDesDes` ne partaient. Le Player Hub gardait donc la valeur lue dans
+`localStorage` **à son démarrage**, et rien ne pouvait la changer tant qu'il restait ouvert.
+
+⚠️ **`enable3D` était dans ce cas depuis toujours** : la case « Rendu 3D » du pupitre ne faisait rien
+sur un hub déjà ouvert. *Le choix de matière n'a pas créé le défaut, il l'a rendu visible.*
+
+⭐ ***Un réglage qui ne voyage pas jusqu'à l'écran qui l'applique n'est pas un réglage : c'est un
+bouton.*** Même famille que les six « le chemin s'arrête avant le moteur » du pupitre de dés, et que les
+trois champs manquants du segment du tableau blanc le 2026-09-05.
+
+⛔ **Et le segment était écrit DEUX FOIS** — un littéral pour l'envoi rapide, un autre pour l'envoi
+complet. *Une seconde déclaration de la même vérité dérive toujours.* Les deux passent désormais par
+`segmentDesDes`, dont le **type de retour** rend un oubli impossible à compiler.
+
+⚠️ Le type ne peut rien contre la duplication, elle : un littéral anonyme affecté à
+`Record<string, unknown>` n'oblige à rien. **Seul un essai qui lit la source voit qu'on a recommencé à
+côté** — il existe, et il a été **vu rougir** sur le littéral réintroduit exprès.
+
+##### ⭐ Les dés étaient enfermés dans une couche
+
+Le composant demandait `z-[65]`, mais son parent portait `z-[60]`, et `z-index` crée un **contexte
+d'empilement**. ⭐ ***Un élément ne peut pas sortir de l'ordre de peinture de son parent*** — ce
+`z-[65]` ne décidait donc rien, et les dés passaient sous le panneau de résultat (`z-[70]`).
+
+C'est le même piège que le menu du Media Hub qui passait sous les vignettes. ⚠️ L'enveloppe était en
+plus **redondante** avec le composant (tous deux `fixed inset-0 pointer-events-none`) : *deux couches
+qui disent la même chose, et c'est celle du dessus qui décide.* Retirée ; les dés sont en `z-[80]`.
+
+**Le panneau ne s'atténue plus** (il tombait à 40 % quand la 3D était active) : cette atténuation
+existait **pour laisser voir les dés derrière lui**. Les dés passant devant, sa raison a changé de camp
+— *et un panneau pâle sous des dés opaques serait le pire des deux mondes.* Décision de David.
+
+##### Les trois matières s'écartent vraiment
+
+Elles se ressemblaient aussi trop pour être reconnues d'un coup d'œil. Elles diffèrent maintenant sur
+les trois axes que l'œil lit en premier :
+
+| | Métal | Transmission | Rugosité |
+| --- | --- | --- | --- |
+| Résine | 0 | 0 | **0,55** — mate, sous un vernis net |
+| Verre | 0 | **0,92** + atténuation teintée | 0,02 |
+| Métal | **1** | 0 | **0,14** — reflets nets |
+
+⚠️ **Le métal était à 0,28 de rugosité, et c'est pour ça qu'il ressemblait à du plastique** : *ce qui
+dit « métal » à l'œil, ce n'est pas la couleur, c'est la netteté du reflet.* Et le verre reçoit une
+**atténuation teintée** par la couleur du dé, sans quoi la transmission lave cette couleur — *or elle
+porte une information* (critique, équipement), pas une décoration.
+
+⭐ ***Deux matériaux qui ne diffèrent que par une décimale de rugosité sont le même matériau*** — la
+leçon des trois feux de Light-OS, transposée. Un essai exige désormais que chaque paire s'écarte d'au
+moins 0,3 sur un de ces axes.
+
+**Ancres** : `src/modules/remote/segmentDesDes.ts` (+ ses essais), `types/remote.types.ts` (le contrat
+`dice`), `useNexusSynchronizer.ts` (les deux chemins), `PlayerHub.tsx` (la couche retirée),
+`HubDiceDisplay.tsx`, `logic/stylesDeDes.ts`.
+
+**Vérifié** : `tsc -b` propre, `vite build` propre, **5 275 tests au vert** (416 fichiers, 1 ignoré).
+Les gardes du segment ont été **vues rougir** sur un littéral réintroduit exprès.
+⚠️ **À confirmer à l'écran** — et ⚠️ **le Hub doit être rouvert une fois** pour que la correction du
+transport prenne effet sur une fenêtre déjà lancée avant elle.
+
+#### ⭐ Troisième passe : les dés s'effacent, le résultat reste
+
+David : *« les dés doivent disparaître et le résultat doit rester affiché 5 secondes supplémentaires
+après »*.
+
+⛔ **L'ancien déroulé n'avait qu'une durée** : `setTimeout(() => setShowDice(false), 5000)` au lancer,
+et **tout** disparaissait ensemble. Or le panneau n'apparaît qu'au bout de 1,5 s quand la 3D est
+active : *il restait trois secondes et demie pour lire un résultat*, pendant que les dés finissaient de
+rouler par-dessus.
+
+##### ⭐ La pose est un événement, pas une durée
+
+Combien de temps met un jet à se poser ? *Ça dépend* — du nombre de dés, des rebonds, du hasard des
+vitesses initiales. Une durée fixe couperait les dés en plein vol, ou les laisserait posés à ne rien
+faire. **C'est donc la scène 3D qui signale la pose**, et le compte de cinq secondes part de là.
+
+##### ⛔ Un signal qu'on attend doit toujours avoir une échéance
+
+*Un destinataire sans expéditeur ne lève aucune erreur : il attend* — ce dépôt l'a payé sur la tablette,
+qui guettait un `dice:result` que personne n'émettait. Il y a donc **deux filets** :
+
+| | Ce qui se passe |
+| --- | --- |
+| Player Hub, 3D active | les dés se posent vers 2,5 s → le résultat tient jusqu'à ~7,5 s |
+| Tablette, ou 3D coupée | personne ne signale → **la fenêtre reste celle d'avant, 5 s** |
+| Un dé qui ne se pose jamais | la scène déclare la pose d'office à 4 s ; et même sans elle, le compte armé au lancer ferme |
+
+⭐ ***Un filet qui dégrade vers le comportement existant ne peut pas surprendre*** : au pire, on
+retrouve ce qu'on avait. Le compte est **armé dès le lancer** et le signal de pose ne fait que le
+*redémarrer* — c'est ce qui rend l'absence de signal inoffensive.
+
+##### ⚠️ Un piège nommé dans le code
+
+Le drapeau « les dés sont posés » se réarme sur **l'identifiant du jet**, pas sur `showDice`. Deux jets
+successifs pendant la même fenêtre d'affichage ne font pas repasser `showDice` par `false` : s'y fier
+laisserait *le second jet sans dés, sans que rien ne le dise.*
+
+**Ancres** : `src/modules/dice/logic/choregraphieDuJet.ts` (+ ses essais), `DiceBox3D.tsx` (`onRepos`
+et son plafond), `useHubSync.ts` (`signalerLesDesPoses`), `PlayerHub.tsx`.
+
+**Vérifié** : `tsc -b` propre, **5 285 tests au vert** (417 fichiers, 1 ignoré). Les essais de
+branchement ont été **vus rougir** sur trois câblages défaits exprès.
+⚠️ Les essais **ne mesurent pas le temps** — *un essai qui mesure une durée devient rouge sur une
+machine chargée* : ils vérifient les valeurs déclarées et le branchement.
+
+#### ⭐ Quatrième passe : les dés ne se traversent plus, et ils restent posés deux secondes
+
+David : *« est-ce que tu peux faire en sorte que les dés ne s'imbriquent pas les uns dans les autres, et
+est-ce que tu peux les laisser visibles 2 secondes de plus ? »*
+
+##### ⛔ Les dés ne se voyaient pas entre eux
+
+La chute ne connaissait que **le sol et les murs**. Deux dés lancés au même endroit se traversaient et
+finissaient posés l'un DANS l'autre — *la seule chose qu'un vrai dé ne fait jamais.*
+
+Aucun moteur physique n'est installé, et en ajouter un pour ça coûterait bien plus que le problème. On
+approche donc chaque dé par une **sphère**, et tout se joue sur son rayon :
+
+| Rayon | Ce que ça donne |
+| --- | --- |
+| **inscrit** | les coins continuent de se traverser |
+| **circonscrit** | les dés se repoussent de loin, avec un vide visible |
+| **la moyenne des deux** | un léger jeu, jamais d'imbrication |
+
+⭐ ***Quand la demande est « qu'ils ne s'imbriquent pas », une petite distance vaut mieux qu'un contact
+parfait*** : l'erreur penche du côté qui ne se voit pas. ⚠️ La moyenne se calcule **par solide** — 79 %
+du rayon circonscrit sur un cube, 90 % sur un icosaèdre : *une constante unique aurait été fausse pour
+cinq dés sur six.*
+
+⚠️ **La séparation s'applique aussi aux dés POSÉS**, et c'est le point : un dé qui vient se poser contre
+un autre déjà immobile doit encore être repoussé. La limiter aux dés en vol laisserait précisément
+l'imbrication finale — *celle qu'on voit.*
+
+##### ⛔ Et ils naissaient déjà imbriqués
+
+L'écart de départ **rétrécissait** quand les dés étaient nombreux : `Math.min(3, 13 / n)`. À dix dés il
+tombait à **1,3 — moins que la largeur d'un dé.** La séparation aurait eu à défaire un nœud au lieu
+d'éviter un contact.
+
+⭐ ***Ce qu'on empêche pendant la chute, il faut d'abord ne pas le créer au départ.*** L'écart est
+désormais un **plancher** : quand la rangée déborde du tapis, on passe à la suivante, les rangées sont
+égalisées et chacune est centrée.
+
+##### Les deux secondes
+
+Les dés restent **2 s posés** avant de s'effacer, et le compte des **5 s du résultat** part de
+l'effacement — la fenêtre de lecture promise reste entière. *Se poser et disparaître dans le même
+instant ne laisse pas voir ce qu'on vient de lancer.*
+
+#### ⛔ Deux gardes de plus prises en défaut, et une mutation qui n'avait pas eu lieu
+
+**1. Un repère cherché dans tout un fichier.** L'essai du maintien cherchait
+`clearTimeout(maintienRef.current)` **n'importe où** dans `PlayerHub` — or la chaîne existe aussi dans
+`auReposDesDes`. Il restait vert alors que l'annulation avait été retirée de l'effet. ⭐ ***Un repère
+cherché dans tout un fichier ne dit rien de l'endroit où il compte*** — quatrième fois de la journée
+qu'un repère mal situé mord. L'essai examine maintenant **le bloc de l'effet**, et lui seul.
+
+**2. ⛔ Une mutation qui ne s'est jamais appliquée.** En dégradant le code pour vérifier cette garde,
+mon `replace` visait un bloc écrit en `\n` dans un fichier en **CRLF** : il n'a rien remplacé, et
+`str.replace` ne dit rien quand il ne trouve rien. L'essai est donc passé au vert **sur du code
+intact**, en ayant l'air de valider la garde.
+
+⭐ ***Une mutation qui ne s'applique pas rend un essai vert, et ressemble exactement à une garde qui
+marche.*** Toute dégradation volontaire doit désormais **vérifier qu'elle a bien eu lieu** avant de
+juger l'essai. ⚠️ Ce dépôt a des **fins de ligne mixtes** — `PlayerHub.tsx` est en CRLF, `DiceBox3D.tsx`
+en LF : le détecter à chaque édition n'est pas une précaution, c'est une nécessité.
+
+**3. Un essai qui comptait au lieu de mesurer.** La séparation d'un amas était jugée par
+`separerLesDes(...) === 0`, c'est-à-dire *aucune inégalité stricte sur des flottants* — il en reste
+toujours. Mesuré : après 600 passes sur dix dés empilés, le pire chevauchement vaut **2,2 × 10⁻¹⁶**.
+L'amas était parfaitement démêlé et l'essai le déclarait en échec. ⭐ *Un seuil de comptage sur des
+flottants mesure l'arithmétique, pas le phénomène.*
+
+**Ancres** : `src/modules/dice/logic/separationDesDes.ts` (+ ses 24 essais),
+`logic/choregraphieDuJet.ts` (`DUREE_DE_MAINTIEN_MS`), `DiceBox3D.tsx` (le rayon de collision par
+solide, la séparation dans la boucle), `PlayerHub.tsx`.
+
+**Vérifié** : `tsc -b` propre, **5 310 tests au vert** (418 fichiers, 1 ignoré). Les gardes ont été
+**vues rougir** sur des dégradations dont l'application a été contrôlée.
+
+**Ancres** : `src/modules/dice/logic/facesDuDe.ts` (+ ses 30 essais), `logic/stylesDeDes.ts`,
+`DiceBox3D.tsx` (réécrit), `useDiceStore.ts` (`styleDesDes`), `DiceBoard.tsx` (le sélecteur).
+
+**Vérifié** : `tsc -b` propre, `vite build` propre — l'import `three/examples/jsm` s'empaquette bien —
+et **5 264 tests au vert** (415 fichiers, 1 ignoré).
+⚠️ **À confirmer à l'écran** : c'est David qui a vu que c'était affreux, c'est lui qui peut le clore.
+
+---
+
+### 80 · ⭐ Le décor de campagne sur le Player Hub — il existait, et rien ne le laissait revenir (2026-09-17, nuit)
+
+David : *« sur le Player Hub, peux-tu, sans qu'il n'y ait conflit, projeter l'image de base de la
+campagne lorsque le Player Hub n'affiche rien ? »*
+
+#### ⭐ La fonctionnalité existait déjà — de bout en bout
+
+Avant d'écrire une ligne, la chaîne a été suivie :
+
+| Étape | État |
+| --- | --- |
+| Le champ | `Campaign.wallpaperUrl` ✅ |
+| Le réglage | Formulaire de campagne → **Ambiance Visuelle** → « Définir l'Image de Campagne » ✅ |
+| Le transport | `useNexusSynchronizer` le résout et l'envoie dans `session.activeCampaignWallpaper` ✅ |
+| La réception | `applySyncPayload` l'applique au magasin de session ✅ |
+| L'affichage | `fondDuPlayerHub` retombe dessus quand rien n'est projeté ✅ |
+
+⚠️ **Et sa campagne ouverte en avait une** — vérifié dans sa sauvegarde automatique de 21 h 29 :
+« Anges de Feu » porte `m-e8d0ccd6…`, six autres campagnes sur sept n'en ont aucune.
+
+*Il aurait été facile de construire une seconde fois ce qui existait déjà.* Le défaut était ailleurs.
+
+#### ⛔ Quatre chemins écrivaient « éteins l'écran » là où il fallait « plus rien à montrer »
+
+`useHubSync` posait, à **quatre** endroits :
+
+```ts
+setLiveImagePath(data || null);
+```
+
+Or arrêter une projection envoie une **chaîne vide** (`ImageService.blackout` → `syncHubData('image', '')`).
+`'' || null` vaut `null` — et dans ce module `null` veut dire *« écran éteint »*, pas *« rien à
+montrer »*. Le décor ne revenait donc **jamais** après la première projection de la soirée.
+
+⚠️ **Le correctif du 2026-09-13 avait traité le chemin qui avait fait mal, pas la règle.** `FULL_RESET`
+posait déjà `undefined` — correctement, et un essai le gardait — pendant que les quatre autres chemins
+écrivaient `null`. ⭐ *La question « qui d'autre a la même rustine à poser ? » n'avait pas été posée,
+et les essais ne pouvaient pas la poser : ils gardaient la fonction, pas ses appelants.*
+
+⭐ ***Une distinction énoncée dans un commentaire et non tenue par une fonction ne survit pas à son
+quatrième appelant.*** Elle vit désormais dans `imageApresMessage`, et les quatre y passent.
+
+#### ⭐ Les deux gestes, tranchés par David
+
+Il a demandé à **garder les deux** : *« oui, garder les deux gestes »*.
+
+| Geste | Ce qu'il fait |
+| --- | --- |
+| Arrêter une projection, **`Ctrl+0`** | le Hub rend l'**image de la campagne** |
+| **`Ctrl+Maj+0`**, et les deux boutons « Éteindre l'écran » d'Image-OS | l'écran des joueurs devient **noir** |
+
+⭐ ***Deux intentions qui produisent le même pixel ne sont pas la même intention.*** Les confondre
+donnait un écran noir chaque fois qu'on refermait une image.
+
+⚠️ **Les boutons d'Image-OS ont été rebranchés exprès.** Leur infobulle dit « Éteindre l'écran » : avec
+le nouveau repos, `blackout()` ne l'aurait plus tenu. *Un bouton dont le libellé cesse d'être vrai est
+pire qu'un bouton absent — on cherche la panne ailleurs.*
+
+#### ⛔ Et j'ai écrasé un fichier d'essais existant
+
+En écrivant les nouveaux essais, j'ai **remplacé** `fondDuPlayerHub.test.ts` au lieu de le compléter :
+sept essais du 2026-09-13 ont disparu, dont celui qui garde précisément la distinction
+`undefined` / `null`. Récupéré par `git show HEAD:`, puis fusionné.
+
+⭐ ***Un fichier « nouveau » se vérifie avant d'être écrit, pas après.*** C'est la même famille que les
+repères non uniques de la veille : *une hypothèse commode — « ce fichier n'existe pas encore » — qui
+n'a coûté qu'un `git show` parce qu'il était commité.* S'il avait porté du travail non commité, il
+aurait été perdu.
+
+#### ⛔ Deuxième passe : « l'image de fond n'apparaît pas quand je lance le Player Hub »
+
+Le premier correctif réglait le **retour** du décor après une projection. Il ne réglait pas son
+apparition **au lancement**, et c'est une autre cause.
+
+Le Hub lisait **un seul champ**, `activeCampaignWallpaper` — et c'est le seul des deux à **ne pas être
+persisté** :
+
+| Champ | Persisté ? |
+| --- | --- |
+| `activeCampaignId` | ✅ |
+| `campaigns[].wallpaperUrl` | ✅ |
+| `activeCampaignWallpaper` | ⛔ **non** |
+
+Au lancement il vaut donc `null`, et il ne se remplit qu'à l'arrivée d'une synchronisation **complète**.
+Pendant ce temps l'écran des joueurs reste vide — alors que tout ce qu'il fallait était déjà sur son
+disque.
+
+⭐ ***La même vérité était DÉDUITE d'un côté et ATTENDUE de l'autre.*** Le synchroniseur du meneur
+écrit `activeCampaign?.wallpaperUrl || …` : il déduit. Le Hub, lui, attendait qu'on la lui envoie.
+*Un écran qui attend ce qu'il peut calculer reste vide aussi longtemps que le réseau met à répondre.*
+
+⚠️ **L'envoyé garde la priorité, et ce n'est pas un détail** : il est **déjà résolu** en adresse
+utilisable par n'importe quel écran, là où le repli local rend une **référence média** (`m-…`) qui ne se
+résout que dans une fenêtre partageant la base du meneur — le Hub et le projecteur, jamais une tablette
+servie depuis une autre origine. *Le repli comble une attente, il ne remplace pas le transport.*
+
+**Ancre** : `papierPeintDeLaCampagne` dans `src/components/hub/fondDuPlayerHub.ts`, branché dans
+`useHubSync`.
+
+#### ⛔ Troisième passe : j'avais détourné le bouton qu'il utilise (2026-09-18)
+
+David : *« quand j'arrête de projeter sur Player Hub, je tombe sur un écran noir, il ne revient pas sur
+l'image de la campagne »*.
+
+Ce n'était plus le défaut d'origine — c'était **ma décision de la veille**. Ayant introduit le « vrai
+noir », j'avais rebranché dessus les **deux boutons rouges d'Image-OS**, au motif que leur infobulle
+disait « Éteindre l'écran ». Or ce sont précisément ceux qu'il utilise pour **arrêter une projection**.
+
+⭐ ***Un libellé décrit une intention ; un geste quotidien EST une intention.*** Quand les deux se
+contredisent, **c'est le geste qui a raison** — on corrige le libellé, on ne détourne pas le bouton.
+
+| Geste | Ce qu'il fait maintenant |
+| --- | --- |
+| Boutons rouges **TARGET / ALL**, et `Ctrl+0` | arrêtent la projection — **le décor revient** |
+| Bouton **NOIR** (lune), et `Ctrl+Maj+0` | éteignent vraiment l'écran des joueurs |
+
+Les infobulles disent désormais ce que font les boutons, et `noirTotalPartout` — resté sans appelant
+après la correction — a été retiré plutôt que laissé en place : *une action déclarée et appelée par
+personne est une chaîne complète sans bouton au bout.*
+
+⚠️ Un essai garde maintenant l'attribution des trois boutons, **vu rougir** sur le détournement
+réintroduit exprès. *C'est la seule chose qui empêche de refaire le même arbitrage six mois plus tard,
+pour la même bonne raison.*
+
+**Ancres** : `src/components/hub/fondDuPlayerHub.ts` (`imageApresMessage`),
+`src/modules/image/logic/noircirLePlayerHub.ts`, `useHubSync.ts` (les quatre chemins et `BLACKOUT`),
+`useRaccourcisDeNavigation.ts` (`Ctrl+Maj+0`), `useImageStore.ts` (`noirTotal`, `noirTotalPartout`).
+
+**Vérifié** : `tsc -b` propre, **5 329 tests au vert** (418 fichiers, 1 ignoré). Les gardes des quatre
+chemins ont été **vues rougir** sur un chemin remis à `|| null`, la mutation ayant été contrôlée.
+⚠️ **À confirmer à l'écran** — et ⚠️ **six campagnes sur sept n'ont aucune image de fond** : le décor ne
+reviendra que sur celles qui en ont une.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -5407,6 +6683,11 @@ explicitement, jamais le défaut.
 | 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
 | 11 | **L'audit du 09/09 — les trous** | ✅ **TOUT EST TRAITÉ, décisions comprises** (§ 39) : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont, les neuf clés affichées en clair et leur angle mort, le storyboard qui signait du nom du meneur, le bouton du cockpit, la branche morte des tablettes, et la ligne de journal du moment. ⛔ **Une erreur d'audit corrigée en chemin** : `highlightMapToken` ne « n'avait jamais marché » — *la fonctionnalité existait déjà*, c'était une seconde façon impérative de la demander (§ 39b). La liste d'exceptions du contrôle du pont est **vide** | — | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
+| 12 | **Refonte de l'interface** | ⛔ **OUVERT, RIEN DE COMMENCÉ (17/09)** — trois maquettes apportées par David. ⭐ La mesure a montré que **le système de design existe et est adopté à moitié** : 4 566 jetons `app-*` contre 4 124 classes brutes, qui sont presque toutes des couleurs d'**état** sans jeton pour les nommer. Trois manques se posent dans **un fichier**, le quatrième (les primitives) coûte 214 fichiers — *le plan interdit de les mélanger* (§ 76). ⭐ **Second but, rappelé par David le soir même : l’interface doit s’adapter au JEU** — le pont existe déjà (8 jetons, polarité, polices), il s’agit de l’étendre, et **cette exigence contraint chaque échelle ajoutée** | **T0.1** — les captures Playwright de référence, une soirée, aucun pixel changé | **Rien** — les cinq questions sont tranchées. Seule la partie de David précède |
+| 13 | **Light-OS — effets** | ✅ **AUDIT + FUSILLADE + 7 EFFETS + LES SOLISTES le 17/09** — six défauts de cohérence matérielle corrigés (dont `warp` injoignable et `bri: 0` qui n'éteint pas), l'arrêt restaure enfin l'état, ⭐ **la catégorie COUP UNIQUE** est née, et la fusillade **compte le budget du pont** (son essai de simulation a réfuté ma conception deux fois). 37 → **46 effets** (dont ⭐ **trois feux enfin distincts** — la Bougie manque de s'éteindre, le Feu de camp crépite, l'Incendie s'embrase : ils étaient **deux copies d'un même corps**), et ⭐ **le budget du pont est enfin tenu par TOUS les effets** : un effet rapide ne joue que sur 1 à 3 lampes selon sa cadence, les autres gardent la couleur de la scène | — | Rien. ⚠️ **Rien n'a été vu dans la pièce** |
+| 14 | **La saccade du tableau blanc** | ✅ **CORRIGÉ le 17/09, sur trois étages** — ⛔ un magasin persisté écrit à **chaque** `set()`, et **deux modules avaient écrit la croyance inverse** dans leur `partialize`. Mesuré : **1,75 ms de `JSON.stringify` et 285 Ko écrits par point** sur un tableau de cent tracés, trois écritures par mouvement de pion sur la carte. ⭐ **Et on payait pour ce que personne ne recevait** : le réseau jetait déjà quatre points sur cinq. Écriture différée (250 ms, trois filets), diffusion limitée à la cadence réellement consommée, et une mutation au lieu de deux (§ 78). ⛔ **Un essai de 2026-08 a trouvé un vrai défaut de mon tampon** : il servait en lecture des écritures que la garde avait refusées | — | Rien. ⚠️ **À confirmer à l'écran** |
+| 15 | **Les dés en 3D du Player Hub** | ✅ **REFAITS le 17/09** — ⛔ quatre manques, dont trois qui ne se règlent pas : **aucun chiffre**, une orientation finale **tirée au sort** (donc sans rapport avec le jet), du **verre sans rien à réfracter**, et un **d100 sphérique**. ⭐ Deux défauts trouvés en chemin : le démontage **détruisait les géométries partagées** (plus rien ne s'affichait au remontage), et **le d10 n'était pas un trapézoèdre** — vingt facettes au lieu de dix, dont cinq à l'envers. ⭐ *Un dé n'a de faces que le jour où on veut écrire dessus.* Chiffres, atterrissage sur la valeur, environnement, ombre au sol, et **trois matières au choix du meneur** (§ 79) | — | Rien. ⭐ **2e passe** : ⛔ le réglage **n'arrivait jamais au Hub** (le segment `dice` portait 3 champs sur 5, et il était écrit **deux fois**) — *un réglage qui ne voyage pas jusqu'à l'écran qui l'applique n'est pas un réglage, c'est un bouton* ; et les dés étaient **enfermés** dans une couche `z-[60]` parente. ⭐ **3e passe** : les dés **s'effacent une fois posés** et le résultat tient **5 s de plus** — *la pose est un événement, pas une durée*, avec deux filets qui dégradent vers le comportement d'avant. ⭐ **4e passe** : les dés **ne se traversent plus** (sphères au rayon moyen, calculé par solide, séparation appliquée **aussi aux dés posés**) et le placement de départ ne les fait plus naître imbriqués ; ils restent **2 s posés** avant de s'effacer. ⛔ **Une mutation de contrôle ne s'était jamais appliquée** — fins de ligne mixtes — *et un essai vert sur du code intact ressemble à une garde qui marche*. ⚠️ **À confirmer à l'écran**, le verre en premier |
+| 16 | **Le décor de campagne au repos** | ✅ **CORRIGÉ le 17/09** — ⭐ **la fonctionnalité existait de bout en bout** (champ, réglage, transport, réception, affichage) et la campagne ouverte avait bien une image : ⛔ **quatre chemins écrivaient `data || null`**, et arrêter une projection envoie une chaîne vide — donc `null`, donc *écran éteint* au lieu de *rien à montrer*. Le correctif du 13/09 n'avait traité qu'un cinquième chemin. ⭐ **Les deux gestes sont désormais séparés** : `Ctrl+0` rend le décor, `Ctrl+Maj+0` éteint vraiment (§ 80) | — | Rien. ⭐ **2e passe** : il ne revenait toujours pas **au lancement** — le Hub lisait le seul champ **non persisté** des deux, au lieu de déduire le décor de `campaigns[]` qu'il a déjà sur son disque. ⛔ **3e passe** : j'avais **détourné les boutons rouges** qu'il utilise pour arrêter une projection — *un libellé décrit une intention, un geste quotidien EST une intention* ; le noir a désormais son propre bouton. ⚠️ **6 campagnes sur 7 n'ont aucune image de fond** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
@@ -5495,7 +6776,7 @@ sans que les joueurs sachent pourquoi »* **est** le référentiel, littéraleme
    trois Quarts, voir le rouge au quatrième, prendre une pause, fermer la séance
    et vérifier que l'afficheur **redevient une horloge**. Puis la séance de
    Blade Runner.
-5. **La librairie de widgets et son tableau de bord** (§ 12 du plan) — choisir
+5. **La librairie de widgets et son tableau de bord** (§ 13 du plan) — choisir
    par jeu, faire défiler à la cadence voulue. *Remplacera la couture provisoire
    qui teste « blade » dans le nom du jeu.*
 6. **Brancher Clock-OS sur l'Ulanzi** — *idée de David, le 2026-08-23, gardée
