@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import MOTEUR from './HueEngine.ts?raw';
 import PIED_DE_PAGE from './components/BulbFooter.tsx?raw';
 import FR from '../../locales/fr/modules.json';
+import GUIDE from '../../../documentation/User Guides/75-Light-OS-les-lumieres.md?raw';
 import EN from '../../locales/en/modules.json';
 
 /**
@@ -334,5 +335,45 @@ describe('le catalogue des effets — cohérence avec le matériel', () => {
             return MOTIF_EMPRUNT.test(corps);
         });
         expect(emprunts).toEqual([]);
+    });
+});
+
+/**
+ * ⭐ **Le guide du meneur décrit-il encore tous les effets ?**
+ *
+ * David, le 2026-09-18 : *« je veux que tu enrichisses et que tu documentes …
+ * tous les effets prédéfini et une explication de ce que cela fait »*. Le guide
+ * les liste désormais un par un — et une liste écrite à la main vieillit à la
+ * première nouveauté.
+ *
+ * ⚠️ **Ce guide avait déjà vécu ça** : il annonçait *« trente-neuf effets »* alors
+ * qu'ils étaient 48, après avoir longtemps cité « quatre effets, etc. ».
+ * *Un document écrit avec le code dit une intention ; relu six mois plus tard,
+ * il se lit comme un état des lieux.*
+ */
+describe('le guide du meneur suit le catalogue', () => {
+    it('décrit chaque effet offert, sous son nom français', () => {
+        const fr = (FR as any).light.footer.effects;
+        const jouables = offerts.filter(e => !HORS_BOUCLE.includes(e));
+
+        /* Témoin : un guide illisible passerait au vert sans rien garder. */
+        expect(GUIDE, 'le guide n’a pas été lu').toContain('catalogue complet');
+        expect(jouables.length).toBeGreaterThan(40);
+
+        /*
+          ⚠️ **On cherche le nom en GRAS, pas n'importe où dans la page.** La
+          première rédaction faisait `GUIDE.includes(nom)` — et une mutation qui
+          renommait la ligne en « Alerte Rouge MUTEE » passait au vert, puisque
+          la chaîne y était encore. *Un contrôle par sous-chaîne accepte tout ce
+          qui contient ce qu'il cherche.* Le catalogue écrit chaque effet en gras
+          dans la première colonne de son tableau : c'est ce contrat-là qu'on
+          garde.
+        */
+        const absents = jouables
+            .map(e => ({ e, nom: fr[cleDeTraduction(e)] as string }))
+            .filter(({ nom }) => nom && !GUIDE.includes(`**${nom}**`))
+            .map(({ e, nom }) => `${e} (« ${nom} »)`);
+
+        expect(absents, 'ces effets ne sont décrits nulle part dans le guide').toEqual([]);
     });
 });

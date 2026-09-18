@@ -85,21 +85,126 @@ c'est tout l'intérêt : changer l'ambiance sans quitter vos notes.
 > le vouloir. Les touches tenues avec **Ctrl, Alt ou Cmd** ne déclenchent jamais rien, et rien ne se
 > déclenche pendant que vous tapez dans un champ ou qu'une boîte est ouverte.
 
-## 🪄 Effets Spéciaux (Software Engine)
+## 🪄 Les effets — le catalogue complet
 
-GM-OS embarque un moteur d'effets ultra-réactif capable de simuler des ambiances dynamiques :
+GM-OS embarque **48 effets** jouables sur n'importe quelle lampe, plus vos propres ambiances. Ils se
+choisissent dans le menu déroulant sous chaque lampe, au pied de l'écran, et se rangent dans une tuile
+comme le reste.
 
-- **🕯️ Bougie / Feu** : Scintillement aléatoire de la luminosité et de la teinte (orangé).
-- **⚡ Orage** : Fond noir permanent entrecoupé de flashs blancs aléatoires ultra-rapides.
-- **🚓 Police** : Stroboscope alternant rouge et bleu.
-- **🔮 Arcane** : "Respiration" lente et intense de la luminosité avec légères variations chromatiques.
-- **🌊 Sous l'eau** : Mouvement lent et ondulatoire de la lumière (bleu/cyan).
-- **Et trente-quatre autres** : *Glitch*, *Néon défectueux*, *Radiation*, *Souffle de Dragon*,
-  *Trou Noir*, *Ruche Alien*, *Terminal Retro*, *Lave Fusion*, *Battement de Cœur*, *Aurore
-  Boréale*, *Méditation Zen*, *Le Néant*…
+Chaque effet est un **rythme** : une courbe de brillance, une ou deux teintes, une cadence. Ce qui les
+distingue n'est pas la couleur — c'est ce que la lumière *fait*.
 
-> 🔎 **Il y en a trente-neuf en tout**, là où ce guide en citait quatre et concluait par « etc. ».
-> *Grisaille* n'en fait pas partie. La liste complète est dans le sélecteur d'effet de chaque lampe.
+> [!NOTE]
+> **La couleur que vous posez sur une lampe ne change qu'onze de ces effets.** Les autres écrivent
+> leur palette eux-mêmes : une torche est orange, un gyrophare est rouge et bleu, et le sélecteur de
+> couleur n'y peut rien. Pour recolorer n'importe lequel des 48, il faut en faire une **ambiance** —
+> voir la section suivante.
+
+---
+
+### 🏙️ Urbain & Tech
+
+| Effet | Ce qu'il fait dans la pièce |
+| --- | --- |
+| **Lumières de la ville** | Un ambre de lampadaire, constant, que traverse de temps à autre le passage bref d'un phare. |
+| **Terminal Retro** | Le vert d'un écran cathodique, qui vibre en continu, très vite. |
+| **Cyberpunk Night** | Magenta et cyan qui se remplacent sèchement — une enseigne, pas une transition. |
+| **Néon Défectueux** | De longues secondes allumées, puis un grésillement court. C'est l'irrégularité qui fait le tube fatigué. |
+| **Stroboscope** | Blanc, plein, dix fois par seconde. À employer par salves : c'est le plus agressif du catalogue. |
+| **Police** | Rouge et bleu alternés, sans fondu. Le fondu tuerait le gyrophare — on ne verrait que du violet. |
+| **Sirène lointaine** | Le même rouge, mais qui monte et redescend lentement : le véhicule est dehors, pas dans la pièce. |
+| **Panne de courant** | Quatre battements hésitants, l'obscurité, puis le retour. Un cycle complet dure une quinzaine de secondes. |
+| **Chute de tension** | La lumière s'affaisse par paliers sur dix secondes, du blanc franc vers un jaune moribond. |
+
+### 🌲 Nature & Éléments
+
+| Effet | Ce qu'il fait dans la pièce |
+| --- | --- |
+| **Forêt d'Émeraude** | Un vert profond qui respire, avec de brèves éclaircies — le soleil entre deux branches. |
+| **Aurore Boréale** | Vert, cyan et violet qui se fondent l'un dans l'autre sur cinq secondes. Lent, jamais brusque. |
+| **Crépuscule** | Une descente de dix secondes par palier, de l'ambre vers le bleu de la nuit. |
+| **Sous-marin** | Une ondulation lente autour de la couleur que vous avez posée. ⭐ **Recolorable.** |
+| **Abysses** | Le même mouvement, mais très sombre et très bleu : la lumière vient d'en haut, de loin. |
+| **Lever de Soleil** | Une **progression** de cinq minutes : rouge profond, orange, or, blanc chaud, en montant en intensité. Elle va quelque part. |
+| **Aube dorée** | Un or chaud **tenu**, qui respire sur cinquante secondes. Elle ne va nulle part : c'est le matin déjà installé. |
+| **Stores** | ⚠️ **À poser sur deux ou trois lampes.** Chacune se place à un endroit différent du motif — l'une dans une bande claire, l'autre dans l'ombre — et le motif dérive lentement. *Sur une seule lampe, ce n'est qu'une pulsation.* |
+| **Orage** | Le noir presque complet, déchiré par des flashs blancs imprévisibles. |
+
+### ⚔️ Fantastique & Magie
+
+| Effet | Ce qu'il fait dans la pièce |
+| --- | --- |
+| **Bougie** | Une petite flamme : faible, nerveuse, sur une plage de brillance basse. Elle n'éclaire pas la pièce — c'est ce qui en fait une bougie. |
+| **Feu de camp** | Plus large et plus lent que la bougie, avec des bourrasques qui font monter la flamme. |
+| **Incendie** | La même famille, poussée au maximum : violent, clair, et il se ralentit tout seul quand plusieurs lampes le jouent. |
+| **Torche qui faiblit** | Un orange qui décline puis se reprend — la torche qu'on ranime en la secouant. |
+| **Lave Fusion** | Rouge sombre et orange qui roulent lentement l'un dans l'autre. |
+| **Arcanique** | Une respiration ample et intense autour de votre couleur, avec de légères dérives de teinte. ⭐ **Recolorable.** |
+| **Souffle de Dragon** | Des montées brusques suivies de retombées : ça respire fort, pas régulièrement. |
+| **Aura Sacrée** | Une pulsation régulière et lumineuse, très peu de variation de teinte. Solennel. ⭐ **Recolorable.** |
+| **Spectre / Fantôme** | Une lueur pâle qui apparaît et s'efface sans jamais s'éteindre tout à fait. |
+
+### 🚀 Espace & SF
+
+| Effet | Ce qu'il fait dans la pièce |
+| --- | --- |
+| **Le Néant** | Un violet presque éteint, immobile — et de rares étincelles blanches. L'attente, pas l'action. |
+| **Trou Noir** | Une lumière qui s'étire et s'effondre, en cycles lents. |
+| **Hyper-vitesse** | Des traits blancs et bleus à dix par seconde : le défilement, pas la destination. |
+| **Cœur de Réacteur** | Une pulsation bleue rapide et régulière, comme une machine en charge. |
+| **Sonar** | Un ping cyan bref, puis près de quatre secondes de silence sombre. C'est l'attente qui fait le sonar. |
+| **Passerelle Stellaire** | Un bleu calme qui monte et descend doucement — l'éclairage de service d'un vaisseau. |
+| **Ruche Alien** | Violet et orange qui alternent très lentement. Organique, jamais mécanique. |
+| **Saut Spatial** | Une accélération de traits qui se resserrent. Fait pour être lancé, pas laissé tourner. |
+
+### 🚨 Alertes & Danger
+
+| Effet | Ce qu'il fait dans la pièce |
+| --- | --- |
+| **Alerte Rouge** | Rouge qui pulse deux fois par seconde. Lisible de loin, tenable longtemps. |
+| **Fusillade** | Des rafales d'éclairs blancs séparées par des silences. ⭐ **Chaque lampe a sa propre rafale** : à plusieurs, elles se décalent et le tir se croise. Elle compte le budget du pont et allonge ses pauses quand vous en ajoutez. |
+| **Explosion** | ⚡ **Coup unique.** Un flash, une retombée, et **la lampe reste éteinte** — c'est le seul effet du catalogue qui laisse la pièce dans le noir. Il faut un geste pour la ranimer. |
+| **Impact** | ⚡ **Coup unique.** Une secousse brève, puis la lampe **retrouve la couleur de sa scène**. |
+| **Battement de Cœur** | Deux coups rapprochés, puis une pause. Le rythme cardiaque, pas une pulsation régulière. |
+| **Radiation** | Des crépitements verts irréguliers, comme un compteur qui s'affole par à-coups. |
+| **Nuage Toxique** | Un vert malsain qui ondule lentement. Plus lourd que Radiation, moins nerveux. |
+| **Glitch** | Des ruptures brutales et imprévisibles de brillance et de teinte. |
+| **Télévision CRT** | Le scintillement bleuté d'un écran dans une pièce sombre. |
+
+### ⚙️ Divers
+
+| Effet | Ce qu'il fait dans la pièce |
+| --- | --- |
+| **Disco Party** | Douze couleurs saturées qui se remplacent trois fois par seconde. |
+| **Lampe Torche** | Un faisceau blanc qui vacille : la pile faiblit. |
+| **Respiration** | Une montée et une descente régulières autour de votre couleur. Le plus neutre du catalogue. ⭐ **Recolorable.** |
+| **Méditation Zen** | Un blanc très doux qui enfle et retombe, plus lentement encore que Respiration. |
+
+---
+
+### ⚡ Les deux coups uniques
+
+**Explosion** et **Impact** ne tournent pas en boucle : ils arrivent une fois et retombent. Ils sont
+faits pour une ponctuation — le piège qui se déclenche, le sort qui part — pas pour une ambiance.
+
+⚠️ **Explosion est le seul effet qui laisse une lampe éteinte.** C'est voulu : une explosion qui se
+rallume toute seule n'est pas une explosion. Mais il faudra rallumer la lampe, ou relancer une scène.
+
+### 🔢 Pourquoi certains effets ne jouent que sur une ou deux lampes
+
+Le pont Hue accepte environ **dix commandes par seconde, toutes lampes confondues**. Sept effets
+battent assez vite pour dépasser ce budget à quatre lampes : *Hyper-vitesse, Stroboscope, Terminal,
+Cyberpunk Night, Cœur de Réacteur, Télévision CRT, Saut Spatial*.
+
+Plutôt que de tout ralentir — *un stroboscope ralenti cesse d'être un stroboscope* — GM-OS en fait
+jouer **moins, à la bonne vitesse**. Les lampes en trop s'arrêtent et **retrouvent la couleur de leur
+scène** : elles ne s'éteignent pas, elles cessent de battre.
+
+> [!NOTE]
+> **Fusillade et Incendie échappent à cette règle**, et c'est délibéré : ils se rationnent eux-mêmes
+> en allongeant leurs pauses selon le nombre de lampes. *Il n'y a pas de tir croisé à une lampe.*
+
+---
 
 ### ⏱️ Régler la vitesse d'un effet
 
@@ -132,6 +237,40 @@ Le réglage **agit immédiatement** si la scène est en cours : pas besoin de la
 > ⚠️ **À ne pas confondre avec le *Temps de transition*** de la barre du haut : celui-ci règle le
 > **fondu d'une scène à l'autre**, le curseur règle la **vitesse de l'animation** une fois la scène
 > installée.
+
+## 🎨 Mes ambiances — copier un effet et le faire vôtre
+
+Sur une lampe qui joue un effet du catalogue, un bouton **palette** apparaît à côté du sélecteur. Il
+duplique l'effet en une **ambiance** — une copie qui porte votre nom, votre teinte et votre rythme —
+et bascule la lampe dessus aussitôt.
+
+L'éditeur s'ouvre alors sous la lampe :
+
+| Réglage | Ce qu'il fait |
+| --- | --- |
+| **Le nom** | Il s'écrit directement, et c'est lui qui apparaîtra dans la liste. |
+| **La teinte** | Un sélecteur de couleur. Toute la palette de l'effet est **tirée** vers cette couleur. |
+| **La force** | De 0 à 100 %. À 0, la couleur d'origine est intacte ; à 100 %, tout devient la même teinte. |
+| **La vitesse** | De ×0,25 à ×3. Elle se **multiplie** avec celle de la tuile, elle ne la remplace pas. |
+
+Vos ambiances apparaissent **en tête** de la liste des effets, sous « Mes ambiances ». Elles sont
+retenues avec le reste de vos réglages et repartent dans la sauvegarde automatique.
+
+> [!TIP]
+> **La force par défaut est à 70 %, et ce n'est pas de la timidité.** À 100 %, un gyrophare devient
+> monochrome — et un gyrophare monochrome n'est plus un gyrophare. Ce qui fait un effet, ce n'est pas
+> sa teinte : c'est le **rapport** entre ses teintes et son rythme. À 70 %, Police viré au vert garde
+> son battement à deux temps, décalé dans une autre famille de couleurs.
+>
+> Poussez à 100 % quand vous voulez justement aplatir : une pulsation d'une seule couleur.
+
+> [!NOTE]
+> **Une ambiance descend toujours d'un effet réel**, et l'éditeur rappelle lequel. On ne duplique pas
+> une ambiance : une copie de copie ne dirait plus de quoi elle descend.
+>
+> Si l'effet d'origine venait à disparaître d'une version à l'autre, la lampe **retrouve la couleur de
+> sa scène** au lieu de battre dans le vide, et la console le dit.
+
 
 ## 🏠 L'éclairage normal de la pièce
 
@@ -242,7 +381,15 @@ les deux façons de le désigner, ce qu'il change pour les trois gestes de retou
 répare (la pièce s'éteignait à la fin du premier bruitage d'une soirée). **Les deux ont été
 éprouvés sur les lampes de la table le jour même.***
 
-*Guide révisé le 2026-09-04, code à l'appui. Précisé : **trente-neuf effets** là où la page en
+*Élargi le 2026-09-18 : **le catalogue complet des 48 effets**, un par un, avec ce que chacun fait
+dans la pièce — les descriptions sont dérivées du moteur, pas des noms. Ajoutés au même moment : les
+deux **coups uniques** et le seul qui laisse la pièce dans le noir, la raison pour laquelle sept
+effets ne jouent que sur une ou deux lampes (le pont tient dix commandes par seconde), et
+**« Mes ambiances »** — dupliquer un effet, le reteinter, le re-rythmer. ⚠️ Deux effets sont neufs de
+ce jour, **Aube dorée** et **Stores** ; le second n'a de sens que sur deux ou trois lampes.*
+
+*Guide révisé le 2026-09-04, code à l'appui. Précisé : **trente-neuf effets** — ils sont 48
+aujourd'hui — là où la page en
 citait quatre avant un « etc. » — et *Grisaille* n'en fait pas partie. Ajouté : la liste des **cinq
 modules** qui peuvent commander vos lampes sans passer par Light-OS, et le fait que le **Stop All
 les éteint**. Les 18 scènes, l'appairage du pont et la transition de 5 secondes par défaut sont
