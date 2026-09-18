@@ -83,8 +83,20 @@ const PlaceholderModule = ({ name }: { name: string }) => (
 
 function App() {
   const { activeModule, theme } = useSessionStore();
-  const sessionOSStore = useSessionOSStore();
-  const { activeCampaignId } = sessionOSStore;
+  /*
+    ⛔ **Cette ligne s'abonnait au magasin ENTIER pour lire un seul champ.**
+
+    `useSessionOSStore()` sans sélecteur rend l'état complet, et
+    `useSyncExternalStore` compare l'identité de l'objet : comme `set()` en
+    fabrique toujours un neuf, **`App` se re-rendait à chaque changement de la
+    session, quel qu'il soit** — et `App` est la racine, donc tout l'arbre avec.
+
+    Mesuré le 2026-09-18 par `e2e/profilageDesRendus.spec.ts`, sur la base
+    réelle : **79 composants re-rendus et 2,24 ms** pour une clé que rien ne
+    lit. Le coût ne venait pas du volume de données — il était le même sur la
+    campagne témoin — *il venait de la racine.*
+  */
+  const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
   const { isMediaHubOpen, closeMediaHub } = useModalStore();
   const { syncWithKeychain: syncAIKeys } = useAIStore();
   const { syncWithKeychain: syncHueKeys } = useLightStore();
