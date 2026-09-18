@@ -87,6 +87,10 @@ export const BulbFooter: React.FC = () => {
         'terminal': '#22c55e',
         'stroboscope': '#ffffff',
         'crepuscule': '#f59e0b',
+        /* L'or de l'aube tenue. Voir `HueEngine`, `case 'aube-doree'` : il
+           respire entre ce ton et un or plus pâle, sans jamais quitter les
+           ambres. */
+        'aube-doree': '#ffb347',
         'toxique': '#84cc16',
         'zen': '#fafaf9',
         'neant': '#2e1065',
@@ -211,6 +215,7 @@ export const BulbFooter: React.FC = () => {
                                                 <option value="underwater" className="text-cyan-500">{t('light.footer.effects.underwater')}</option>
                                                 <option value="abysses" className="text-blue-800">{t('light.footer.effects.abysses')}</option>
                                                 <option value="lever-soleil" className="text-orange-400">{t('light.footer.effects.lever-soleil')}</option>
+                                                <option value="aube-doree" className="text-amber-300">{t('light.footer.effects.aube-doree')}</option>
                                                 <option value="lightning" className="text-app-text/70">{t('light.footer.effects.storm')}</option>
                                             </optgroup>
 

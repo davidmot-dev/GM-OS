@@ -8,6 +8,7 @@ import { cadencePartagee } from "./logic/budgetDuPont";
 import { BANDE_DE_LA_BOUGIE, BOURRASQUE, etatDuFeu, tirerLaChaleur } from "./logic/echelleDuFeu";
 import { EXTINCTION_DS, imageDeDeflagration } from "./logic/deflagration";
 import { imageDuSouffle, SOUFFLES } from "./logic/souffle";
+import { fonduTenable } from "./logic/varianteDEffet";
 
 interface HueApiLight {
     state: {
@@ -1666,6 +1667,73 @@ export class HueEngine {
                     interval = 3000;
                     break;
 
+                /*
+                  ─────────────────────────────────────────────────────────────
+                  ⭐ AUBE DORÉE — une lumière TENUE, et non un lever de soleil
+                  ─────────────────────────────────────────────────────────────
+
+                  Demandé par David le 2026-09-18. ⚠️ `lever-soleil`, juste en
+                  dessous, existait déjà — et il fait tout autre chose : il
+                  **traverse** la nuit vers le jour, rouge profond → orange →
+                  or → blanc chaud, sur cinq minutes, en montant de 40 à 254.
+
+                  Celui-ci ne va nulle part. C'est le soleil du matin déjà
+                  installé dans la pièce : un or chaud qui **respire**, comme la
+                  lumière qui bouge derrière un rideau. *On ne le regarde pas
+                  arriver, on s'assoit dedans.*
+
+                  ⛔ **La distinction est écrite ici parce que ce dépôt a payé
+                  son absence.** `candle` et `fire` étaient le MÊME corps, et
+                  « Feu » n'était qu'une bougie orange — trouvé par David à
+                  l'écran, pas par une relecture. *Deux effets dont on ne sait
+                  pas dire en une phrase ce qui les sépare sont un seul effet.*
+
+                  ⭐ **La brillance et la teinte descendent ENSEMBLE**, pilotées
+                  par le même sinus. C'est la leçon des feux de camp et des
+                  incendies indiscernables : *deux bruits aléatoires autour d'une
+                  même teinte donnent le même résultat visuel, quelles que soient
+                  leurs amplitudes.* Ici, quand la lumière faiblit elle se
+                  réchauffe, exactement comme un rayon qui s'incline.
+
+                  Cadence à 2,5 s : l'effet est lent par nature, et il ne pèse
+                  quasiment rien sur un pont qui tient dix commandes par seconde.
+                  *Une aube qui clignote n'est pas une aube.*
+                */
+                case 'aube-doree': {
+                    /* Un cycle complet toutes les ~50 s : assez lent pour qu'on
+                       ne le surprenne pas, assez vivant pour que la pièce ne
+                       paraisse pas éteinte. */
+                    const souffle = Math.sin(tick * 0.125);
+
+                    /* 150 ↔ 210 : jamais assez bas pour assombrir la table,
+                       jamais assez haut pour écraser les couleurs. */
+                    payload.bri = Math.round(180 + souffle * 30);
+
+                    /* La teinte suit la même respiration : or pâle au sommet,
+                       or profond au creux. Les deux bornes restent dans les
+                       ambres — on respire, on ne change pas de couleur. */
+                    payload.xy = souffle > 0
+                        ? this.hexToXy('#ffd79a')
+                        : this.hexToXy('#ffb347');
+
+                    /*
+                      ⚠️ **Le fondu reste SOUS le battement**, et la première
+                      rédaction s'est trompée exprès du bon côté : j'avais posé
+                      3 000 ms de fondu pour 2 500 ms d'attente, en écrivant
+                      dans ce commentaire que les états se fondraient « l'un dans
+                      l'autre ». Le contrôle du catalogue l'a refusé, et il a
+                      raison — *quand le fondu dépasse l'attente, la commande
+                      suivante arrive avant la fin et la lampe n'atteint jamais
+                      les extrêmes.* Le souffle aurait été plat.
+
+                      2 400 pour 2 500 : la marche est invisible, et la forme
+                      voulue arrive quand même au bout.
+                    */
+                    payload.transitiontime = 24;
+                    interval = 2500;
+                    break;
+                }
+
                 case 'lever-soleil':
                     payload.transitiontime = 100; // 10s transitions
                     const sunriseStep = tick % 30; // 5-minute cycle
@@ -1686,6 +1754,33 @@ export class HueEngine {
                     useLightStore.getState().globalBrightness,
                     this.intensiteDeLEffet(id)
                 );
+            }
+
+            /*
+              ⛔ **LE FONDU SE RABOTE ICI, ET PAS DANS LES `case`.**
+
+              `catalogueDesEffets.test.ts` interdit déjà qu'un `transitiontime`
+              dépasse son `interval` — *la commande suivante arrive avant la fin
+              du fondu, la lampe se contente de suivre, et la forme voulue
+              n'apparaît jamais.* Mais il lit la **source**, où la vitesse vaut
+              toujours 1.
+
+              Or le curseur de vitesse d'une scène **divise l'attente sans
+              toucher au fondu**. Mesuré le 2026-09-18 : à vitesse 2, `holy`
+              fondait sur 1 500 ms pour un battement de 750, et `aube-doree` sur
+              2 400 pour 1 250. L'effet ne cassait pas — il **s'aplatissait**, et
+              une platitude ressemble à un effet mal réglé, pas à un défaut.
+
+              ⭐ *Une règle vérifiée là où on la lit, et pas là où la valeur
+              devient vraie, ne garde que la moitié du chemin.*
+
+              Le calcul se fait donc **après** la cadence réelle, au seul endroit
+              que les quarante-sept effets traversent. Un `case` qui pose un
+              fondu déjà tenable n'est pas touché ; ceux que la vitesse aurait
+              écrasés retrouvent leur forme.
+            */
+            if (typeof payload.transitiontime === 'number') {
+                payload.transitiontime = fonduTenable(payload.transitiontime, cadenceVoulue());
             }
 
             tick++;

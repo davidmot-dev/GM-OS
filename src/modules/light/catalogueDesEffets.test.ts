@@ -243,6 +243,26 @@ describe('le catalogue des effets — cohérence avec le matériel', () => {
         expect(MOTIF_EMPRUNT.test('const monBaseBriCalcule = 3;')).toBe(false);
     });
 
+    /**
+     * ⭐ **L'autre moitié de la règle du dessous — 2026-09-18.**
+     *
+     * La règle suivante lit la **source**, où la vitesse vaut toujours 1. Le
+     * curseur de vitesse d'une scène, lui, **divise l'attente sans toucher au
+     * fondu** : à vitesse 2, `holy` fondait sur 1 500 ms pour un battement de
+     * 750. L'effet ne cassait pas, il s'aplatissait.
+     *
+     * Le rabot vit désormais dans la boucle, après la cadence réelle. Ce
+     * contrôle garde sa présence : *une règle vérifiée là où on la lit, et pas
+     * là où la valeur devient vraie, ne garde que la moitié du chemin.*
+     */
+    it('⛔ et la règle est appliquée À L’EXÉCUTION, pas seulement lue ici', () => {
+        /* Le rabot est posé après la boucle : on lit donc le moteur entier. */
+        expect(MOTEUR, 'le moteur n’importe plus le rabot de fondu')
+            .toContain('fonduTenable');
+        expect(MOTEUR, '⛔ le rabot doit lire la cadence RÉELLE, vitesse comprise')
+            .toMatch(/fonduTenable\(\s*payload\.transitiontime\s*,\s*cadenceVoulue\(\)\s*\)/);
+    });
+
     it('aucun effet ne fond plus longtemps qu’il n’attend', () => {
         const jeton = /payload\.transitiontime\s*=\s*(\d+)|interval\s*=\s*(\d+)/g;
         const fautifs: string[] = [];
