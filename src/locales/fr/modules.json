@@ -857,6 +857,13 @@
         "tint": "Teinte vers laquelle tirer la palette",
         "force": "Force de la teinte",
         "speed": "Vitesse de l'ambiance"
+      },
+      "selecteur": {
+        "ouvrir": "Choisir un effet",
+        "chercher": "Chercher un effet ou une ambiance…",
+        "rien": "Aucun effet ne correspond.",
+        "ambiance_perdue": "Ambiance introuvable",
+        "aide": "Entrée : choisir · Échap : fermer · la palette duplique un effet en ambiance"
       }
     },
     "editor": {

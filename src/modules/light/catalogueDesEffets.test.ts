@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import MOTEUR from './HueEngine.ts?raw';
-import PIED_DE_PAGE from './components/BulbFooter.tsx?raw';
+import { CATALOGUE_DES_EFFETS, HORS_CATALOGUE } from './logic/catalogueDesEffets';
 import FR from '../../locales/fr/modules.json';
 import GUIDE from '../../../documentation/User Guides/75-Light-OS-les-lumieres.md?raw';
 import EN from '../../locales/en/modules.json';
@@ -52,8 +52,20 @@ const BOUCLE = MOTEUR.slice(
 /** Les noms d'effets que le moteur sait jouer. */
 const codes = [...BOUCLE.matchAll(/case '([a-z-]+)':/g)].map(m => m[1]);
 
-/** Les noms d'effets que l'interface propose. */
-const offerts = [...PIED_DE_PAGE.matchAll(/<option value="([a-z-]+)"/g)].map(m => m[1]);
+/**
+ * Les noms d'effets que l'interface propose.
+ *
+ * ⛔ **Ils se lisaient dans les `<option>` du pied de page jusqu'au 2026-09-18.**
+ * La liste déroulante a été remplacée par un écran volant — cinquante entrées
+ * dans un `<select>` ne se cherchent pas — et le catalogue vit désormais en
+ * **données**, dans `logic/catalogueDesEffets.ts`.
+ *
+ * ⚠️ On importe la liste au lieu de la relire au texte : c'est désormais un
+ * tableau TypeScript, et le compilateur garde sa forme mieux qu'une expression
+ * régulière. *Ce que la source ne peut plus mentir, le test n'a plus à le
+ * vérifier.*
+ */
+const offerts = [...CATALOGUE_DES_EFFETS.map(e => e.valeur), ...HORS_CATALOGUE];
 
 /**
  * Les deux entrées de la liste qui ne sont **pas** des effets logiciels :

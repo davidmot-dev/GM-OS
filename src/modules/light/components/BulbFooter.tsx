@@ -8,6 +8,7 @@ import {
     FORCE_MIN, FORCE_MAX,
 } from '../logic/varianteDEffet';
 import { VITESSE_EFFET_MIN, VITESSE_EFFET_MAX } from '../useLightStore';
+import SelecteurDEffet from './SelecteurDEffet';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -35,6 +36,19 @@ export const BulbFooter: React.FC = () => {
     const { t } = useTranslation('modules');
     const lightList = Object.values(lights);
 
+    /** Quelle lampe a son sélecteur ouvert. `null` = aucun. */
+    const [selecteurOuvert, setSelecteurOuvert] = React.useState<string | null>(null);
+
+    /** Le nom lisible d'un effet ou d'une ambiance, pour le bouton. */
+    const nomDeLEffet = (valeur: string): string => {
+        if (estUneVariante(valeur)) {
+            return variantes.find(v => v.id === idDepuisLIdentifiant(valeur))?.nom
+                ?? t('light.footer.selecteur.ambiance_perdue');
+        }
+        const cle = valeur === 'lightning' ? 'storm' : valeur === 'none' ? 'steady' : valeur;
+        return t(`light.footer.effects.${cle}`, { defaultValue: valeur });
+    };
+
     /* Les ambiances du meneur, et les trois gestes qui les manipulent. */
     const variantes = useLightStore(s => s.variantes);
     const creerUneVariante = useLightStore(s => s.creerUneVariante);
@@ -56,6 +70,11 @@ export const BulbFooter: React.FC = () => {
         const id = creerUneVariante(effetSource, nomSource);
         handleEffectChange(idLampe, identifiantDeVariante(id));
     };
+
+    /* Le sélecteur est monté **une seule fois**, pas une par lampe : c'est une
+       surcouche, et deux surcouches identiques empilées se disputeraient la
+       touche Échap. */
+    const lampeDuSelecteur = selecteurOuvert ? lights[selecteurOuvert] : null;
 
     /* Un limiteur pour tout le pied de page, mais qui compte par lampe : régler
        la deuxième ne doit pas faire attendre la première. */
@@ -217,111 +236,30 @@ export const BulbFooter: React.FC = () => {
                                         className="size-6 rounded border border-app-border cursor-pointer p-0 bg-transparent hover:border-accent/50 transition-colors"
                                         title={t('light.footer.change_color')}
                                     />
-                                    <div className="flex items-center bg-app-bg/80 border border-app-border rounded px-2 py-1 w-full hover:border-accent/30 transition-colors">
-                                        <span className="material-symbols-outlined text-sm text-slate-500 mr-2">tune</span>
-                                        <select
-                                            value={effect}
-                                            onChange={(e) => handleEffectChange(light.id, e.target.value)}
-                                            className="bg-transparent border-none p-0 text-xs font-bold text-accent focus:ring-0 cursor-pointer outline-none w-full"
-                                        >
-                                            <option value="none" className="bg-app-bg text-app-text/50">{t('light.footer.effects.steady')}</option>
-                                            <option value="colorloop" className="bg-app-bg text-accent">{t('light.footer.effects.colorloop')}</option>
+                                    {/*
+                                      ⛔ **La liste déroulante a été retirée le 2026-09-18.**
 
-                                            {/*
-                                              ⭐ **Les ambiances du meneur passent EN TÊTE.**
-                                              Ce sont les siennes : les chercher après
-                                              quarante-sept effets d'usine serait leur donner
-                                              le rang de l'exception. Le groupe disparaît
-                                              tant qu'il n'y en a aucune — *un groupe vide
-                                              est une promesse qui ne tient pas.*
-                                            */}
-                                            {variantes.length > 0 && (
-                                                <optgroup label={t('light.footer.categories.ambiances')} className="bg-app-bg text-slate-400">
-                                                    {variantes.map(v => (
-                                                        <option key={v.id} value={identifiantDeVariante(v.id)} className="text-amber-200">
-                                                            {v.nom}
-                                                        </option>
-                                                    ))}
-                                                </optgroup>
-                                            )}
-                                            
-                                            <optgroup label={t('light.footer.categories.urban')} className="bg-app-bg text-slate-400">
-                                                <option value="lumiere-ville" className="text-amber-500">{t('light.footer.effects.lumiere-ville')}</option>
-                                                <option value="terminal" className="text-green-500">{t('light.footer.effects.terminal')}</option>
-                                                <option value="cyber-night" className="text-fuchsia-500">{t('light.footer.effects.cyber-night')}</option>
-                                                <option value="neon" className="text-pink-500">{t('light.footer.effects.neon')}</option>
-                                                <option value="stroboscope" className="text-white">{t('light.footer.effects.stroboscope')}</option>
-                                                <option value="police" className="text-blue-500">{t('light.footer.effects.police')}</option>
-                                                <option value="sirene" className="text-red-500">{t('light.footer.effects.sirene')}</option>
-                                                <option value="panne" className="text-amber-200">{t('light.footer.effects.panne')}</option>
-                                                <option value="chute-de-tension" className="text-amber-300">{t('light.footer.effects.chute-de-tension')}</option>
-                                            </optgroup>
+                                      Elle portait **cinquante entrées** une fois les
+                                      ambiances du meneur ajoutées. David, après avoir
+                                      créé ses premières copies : *« je ne retrouve pas
+                                      les différentes copies d'un effet »*, puis *« la
+                                      liste déroulante n'est plus adaptée avec 40 items »*.
 
-                                            <optgroup label={t('light.footer.categories.nature')} className="bg-app-bg text-slate-400">
-                                                <option value="foret-profonde" className="text-emerald-600">{t('light.footer.effects.foret-profonde')}</option>
-                                                <option value="aurore" className="text-cyan-400">{t('light.footer.effects.aurore')}</option>
-                                                <option value="crepuscule" className="text-orange-600">{t('light.footer.effects.crepuscule')}</option>
-                                                <option value="underwater" className="text-cyan-500">{t('light.footer.effects.underwater')}</option>
-                                                <option value="abysses" className="text-blue-800">{t('light.footer.effects.abysses')}</option>
-                                                <option value="lever-soleil" className="text-orange-400">{t('light.footer.effects.lever-soleil')}</option>
-                                                <option value="aube-doree" className="text-amber-300">{t('light.footer.effects.aube-doree')}</option>
-                                                <option value="stores" className="text-amber-100">{t('light.footer.effects.stores')}</option>
-                                                <option value="lightning" className="text-app-text/70">{t('light.footer.effects.storm')}</option>
-                                            </optgroup>
-
-                                            <optgroup label={t('light.footer.categories.fantasy')} className="bg-app-bg text-slate-400">
-                                                <option value="candle" className="text-amber-500">{t('light.footer.effects.candle')}</option>
-                                                <option value="fire" className="text-red-500">{t('light.footer.effects.fire')}</option>
-                                                <option value="incendie" className="text-orange-600">{t('light.footer.effects.incendie')}</option>
-                                                <option value="torche" className="text-orange-400">{t('light.footer.effects.torche')}</option>
-                                                <option value="lave" className="text-orange-700">{t('light.footer.effects.lave')}</option>
-                                                <option value="arcane" className="text-purple-400">{t('light.footer.effects.arcane')}</option>
-                                                <option value="dragon" className="text-orange-500">{t('light.footer.effects.dragon')}</option>
-                                                <option value="holy" className="text-yellow-300">{t('light.footer.effects.holy')}</option>
-                                                <option value="fantome" className="text-blue-200">{t('light.footer.effects.fantome')}</option>
-                                            </optgroup>
-
-                                            <optgroup label={t('light.footer.categories.space')} className="bg-app-bg text-slate-400">
-                                                <option value="neant" className="text-violet-900">{t('light.footer.effects.neant')}</option>
-                                                <option value="trou-noir" className="text-indigo-950">{t('light.footer.effects.trou-noir')}</option>
-                                                <option value="hyperspace" className="text-cyan-300">{t('light.footer.effects.hyperspace')}</option>
-                                                <option value="reacteur" className="text-blue-100">{t('light.footer.effects.reacteur')}</option>
-                                                <option value="sonar" className="text-cyan-400">{t('light.footer.effects.sonar')}</option>
-                                                <option value="passerelle" className="text-sky-300">{t('light.footer.effects.passerelle')}</option>
-                                                <option value="alien" className="text-purple-700">{t('light.footer.effects.alien')}</option>
-                                                {/*
-                                                  ⛔ **`warp` existait partout sauf ici.** Il est codé
-                                                  dans le moteur (`HueEngine`, `case 'warp'`), nommé
-                                                  dans les deux langues (« Saut Spatial » / « Warp
-                                                  Speed ») et cité en exemple dans `useLightStore` —
-                                                  mais **aucune liste ne l'offrait**, donc personne ne
-                                                  pouvait le choisir. *Une chaîne complète dont il
-                                                  manque le bouton au bout : le même motif que
-                                                  l'arrêt de scène du 07/09, à l'envers.*
-                                                */}
-                                                <option value="warp" className="text-indigo-300">{t('light.footer.effects.warp')}</option>
-                                            </optgroup>
-
-                                            <optgroup label={t('light.footer.categories.alerts')} className="bg-app-bg text-slate-400">
-                                                <option value="alerte" className="text-red-600">{t('light.footer.effects.alerte')}</option>
-                                                <option value="fusillade" className="text-orange-300">{t('light.footer.effects.fusillade')}</option>
-                                                <option value="deflagration" className="text-orange-200">{t('light.footer.effects.deflagration')}</option>
-                                                <option value="impact" className="text-red-400">{t('light.footer.effects.impact')}</option>
-                                                <option value="heartbeat" className="text-red-600">{t('light.footer.effects.heartbeat')}</option>
-                                                <option value="radiation" className="text-emerald-400">{t('light.footer.effects.radiation')}</option>
-                                                <option value="toxique" className="text-lime-400">{t('light.footer.effects.toxique')}</option>
-                                                <option value="glitch" className="text-green-400">{t('light.footer.effects.glitch')}</option>
-                                                <option value="tv" className="text-cyan-200">{t('light.footer.effects.tv')}</option>
-                                            </optgroup>
-
-                                            <optgroup label={t('light.footer.categories.misc')} className="bg-app-bg text-slate-400">
-                                                <option value="disco" className="text-fuchsia-400">{t('light.footer.effects.disco')}</option>
-                                                <option value="flashlight" className="text-white">{t('light.footer.effects.flashlight')}</option>
-                                                <option value="breathing" className="text-app-text/60">{t('light.footer.effects.breathing')}</option>
-                                                <option value="zen" className="text-slate-100">{t('light.footer.effects.zen')}</option>
-                                            </optgroup>
-                                        </select>
-                                    </div>
+                                      ⭐ *Une liste déroulante de cinquante entrées n'est
+                                      plus une liste, c'est un couloir* — on y descend,
+                                      on dépasse ce qu'on cherchait, on remonte. Et rien
+                                      ne s'y cherche.
+                                    */}
+                                    <button
+                                        onClick={() => setSelecteurOuvert(light.id)}
+                                        className="flex items-center gap-2 bg-app-bg/80 border border-app-border rounded px-2 py-1 w-full hover:border-accent/30 transition-colors min-w-0"
+                                        title={t('light.footer.selecteur.ouvrir')}
+                                    >
+                                        <span className="material-symbols-outlined text-sm text-slate-500 shrink-0">tune</span>
+                                        <span className="text-xs font-bold text-accent truncate">
+                                            {nomDeLEffet(effect)}
+                                        </span>
+                                    </button>
 
                                     {/*
                                       **Dupliquer l'effet joué par cette lampe.**
@@ -444,6 +382,15 @@ export const BulbFooter: React.FC = () => {
                     );
                 })}
             </div>
+
+            {lampeDuSelecteur && (
+                <SelecteurDEffet
+                    effetActuel={lampeDuSelecteur.state.effect || 'none'}
+                    nomDeLaLampe={lampeDuSelecteur.name}
+                    onChoisir={(valeur) => handleEffectChange(lampeDuSelecteur.id, valeur)}
+                    onFermer={() => setSelecteurOuvert(null)}
+                />
+            )}
         </footer>
     );
 };

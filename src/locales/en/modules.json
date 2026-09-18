@@ -857,6 +857,13 @@
         "tint": "Hue to pull the palette toward",
         "force": "Hue strength",
         "speed": "Ambiance speed"
+      },
+      "selecteur": {
+        "ouvrir": "Choose an effect",
+        "chercher": "Search an effect or ambiance…",
+        "rien": "No effect matches.",
+        "ambiance_perdue": "Ambiance not found",
+        "aide": "Enter: choose · Esc: close · the palette duplicates an effect into an ambiance"
       }
     },
     "editor": {
