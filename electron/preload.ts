@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import type { FournisseurReseau } from './hotesDesFournisseurs'
 import type { GuideDuManuel } from './guidesDuManuel'
+import type { InventaireDuCorpus, BilanDeQuarantaine } from './groupesDuCorpus'
 
 // --------- Expose some API to the Renderer process ---------
 /*
@@ -385,6 +386,23 @@ contextBridge.exposeInMainWorld('appBridge', {
         confirmer: (id: string): Promise<{ ok: boolean }> => ipcRenderer.invoke('souris:confirmer', id),
         rendre: (id: string): Promise<{ ok: boolean; message?: string }> =>
             ipcRenderer.invoke('souris:rendre', id),
+    },
+    /**
+     * La purge d'un corpus — voir `purgeDesCorpus.ts`.
+     *
+     * ⚠️ Elle **deplace en quarantaine**, elle ne supprime jamais. Le nom du
+     * canal dit « purge » parce que c'est ce que le meneur demande ; ce que le
+     * disque subit est un demenagement, et l'ecran doit le dire comme tel.
+     */
+    purge: {
+        inventaireDuCorpus: (relatif: string): Promise<InventaireDuCorpus> =>
+            ipcRenderer.invoke('purge:inventaire-corpus', relatif),
+        mettreEnQuarantaine: (relatif: string, chemins: string[], etiquette: string): Promise<BilanDeQuarantaine> =>
+            ipcRenderer.invoke('purge:quarantaine', relatif, chemins, etiquette),
+        /** Les dossiers sous `systems/` ou `campaigns/` — `ai:list-dir` ne rend que des fichiers. */
+        dossiers: (racine: 'systems' | 'campaigns'): Promise<string[]> =>
+            ipcRenderer.invoke('purge:dossiers', racine),
+        ouvrirLaQuarantaine: (): Promise<void> => ipcRenderer.invoke('purge:ouvrir-quarantaine'),
     },
     obsidian: {
         listNotes: (vaultPath?: string) => ipcRenderer.invoke('obsidian:list-notes', vaultPath),

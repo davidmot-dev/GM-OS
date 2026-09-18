@@ -6,7 +6,7 @@ import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defau
 import { corpusOrphelins } from '../../../../electron/corpusSysteme';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import { tousLesPilotes } from '../store/tousLesPilotes';
-import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree, Swords } from 'lucide-react';
+import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree, Swords, Eraser } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore, gmCustom } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
@@ -14,6 +14,7 @@ import { nexusService } from '../../system/archive/NexusService';
 import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
 import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
+import DialogueDePurge from '../../../components/purge/DialogueDePurge';
 
 const TemplateDashboard: React.FC = () => {
     const { t } = useTranslation(['common', 'modules']);
@@ -32,6 +33,15 @@ const TemplateDashboard: React.FC = () => {
         activeCampaignId,
         campaigns
     } = useSessionOSStore();
+
+    /*
+      **La corbeille et la gomme ne font pas la même chose, et le titre le dit.**
+      La corbeille retire le pilote de la liste — c'est tout ce que
+      `deleteGameDriver` a jamais fait. La gomme va chercher son bestiaire, ses
+      paquets, ses consignes de cortex, ses widgets, et le dossier
+      `docs/systems/<jeu>/` que la prochaine forge retrouverait pour l'enrichir.
+    */
+    const [piloteAPurger, setPiloteAPurger] = useState<string | null>(null);
 
     // La Forge est un module, plus une vue de Session OS.
     const setActiveModule = useSessionStore(s => s.setActiveModule);
@@ -386,6 +396,15 @@ const TemplateDashboard: React.FC = () => {
                                                     <Trash2 size={14} />
                                                 </button>
                                             )}
+                                            {activeTab !== 'sheets' && (
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setPiloteAPurger(item.id); }}
+                                                    className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-red-400 hover:border-red-400/40 transition-all"
+                                                    title="Tout effacer — jusqu’au bestiaire, aux paquets et au dossier du corpus"
+                                                >
+                                                    <Eraser size={14} />
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 
@@ -652,6 +671,14 @@ const TemplateDashboard: React.FC = () => {
             <NexusConflictResolver
                 conflicts={conflictState}
                 onResolve={handleConflictResolve}
+            />
+        )}
+        {piloteAPurger && (
+            <DialogueDePurge
+                genre="pilote"
+                cibleId={piloteAPurger}
+                onClose={() => setPiloteAPurger(null)}
+                onPurge={() => setSelectedId(null)}
             />
         )}
         </>

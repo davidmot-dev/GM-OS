@@ -26,6 +26,9 @@ import type { EvenementMcp } from '../../electron/mcpActivity';
 // de node.
 import type { FournisseurReseau } from '../../electron/hotesDesFournisseurs';
 import type { GuideDuManuel } from '../../electron/guidesDuManuel';
+// Idem : `groupesDuCorpus` est pur, et c'est le contrat des canaux `purge:*`
+// qu'on partage. Les deux types du bilan viennent du module qui les rend.
+import type { InventaireDuCorpus, BilanDeQuarantaine } from '../../electron/groupesDuCorpus';
 
 declare global {
     export interface DisplayInfo {
@@ -500,6 +503,19 @@ declare global {
             couper: (id: string) => Promise<{ ok: boolean; message?: string; retourDans?: number }>;
             confirmer: (id: string) => Promise<{ ok: boolean }>;
             rendre: (id: string) => Promise<{ ok: boolean; message?: string }>;
+        };
+        /**
+         * La purge d'un corpus — `electron/purgeDesCorpus.ts`.
+         *
+         * ⚠️ Optionnelle comme ses voisines : hors Electron (le hub des joueurs,
+         * la tablette), le pont n'existe pas. L'appelant doit le vérifier, et
+         * `PurgeService` s'en charge une fois pour tous.
+         */
+        purge?: {
+            inventaireDuCorpus: (relatif: string) => Promise<InventaireDuCorpus>;
+            mettreEnQuarantaine: (relatif: string, chemins: string[], etiquette: string) => Promise<BilanDeQuarantaine>;
+            dossiers: (racine: 'systems' | 'campaigns') => Promise<string[]>;
+            ouvrirLaQuarantaine: () => Promise<void>;
         };
         obsidian?: {
             listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;

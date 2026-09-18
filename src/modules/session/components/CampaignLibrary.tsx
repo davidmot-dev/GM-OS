@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore } from 'lucide-react';
+import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore, Eraser } from 'lucide-react';
 import { ceQueLaClotureVaFaire } from '../logic/trame';
 import { motion } from 'framer-motion';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
@@ -10,9 +10,18 @@ import { nexusService } from '../../system/archive/NexusService';
 import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import DialogueDePurge from '../../../components/purge/DialogueDePurge';
 // Nexus-OS State
 const CampaignLibrary: React.FC = () => {
     const { t } = useTranslation(['common', 'modules']);
+    /*
+      **Deux gestes, et ils ne font pas la même chose.** La corbeille retire la
+      campagne de Session-OS ; la gomme va chercher ce qui porte encore son nom
+      ailleurs — journal, storyboard, réserves de table, combats garés — et le
+      dossier de ses fiches sur le disque. C'est la seconde qui répond à
+      *« il reste des résidus qui polluent la tentative suivante »*.
+    */
+    const [aPurger, setAPurger] = useState<string | null>(null);
     const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates, customGameDrivers, entities, atlasMaps, wikiEntries, clues } = useSessionOSStore();
 
     const getSystemName = (systemId: string) => {
@@ -231,6 +240,13 @@ const CampaignLibrary: React.FC = () => {
                                         >
                                             <Trash2 size={18} />
                                         </button>
+                                        <button
+                                            className="p-2 text-app-text/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            onClick={(e) => { e.stopPropagation(); setAPurger(campaign.id); }}
+                                            title="Tout effacer — jusqu’aux résidus dans les autres modules et au dossier de ses fiches"
+                                        >
+                                            <Eraser size={18} />
+                                        </button>
                                     </div>
                                 </div>
                                 <h3 className={`text-xl font-bold mb-1 transition-colors ${
@@ -307,6 +323,14 @@ const CampaignLibrary: React.FC = () => {
                 <NexusConflictResolver 
                     conflicts={conflictState} 
                     onResolve={handleConflictResolve}
+                />
+            )}
+
+            {aPurger && (
+                <DialogueDePurge
+                    genre="campagne"
+                    cibleId={aPurger}
+                    onClose={() => setAPurger(null)}
                 />
             )}
         </div>

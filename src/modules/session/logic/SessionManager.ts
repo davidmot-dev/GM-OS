@@ -281,7 +281,29 @@ export class SessionManager {
             // réclamait plus.
             actes: state.actes.filter(a => a.campaignId !== id),
             scenes: state.scenes.filter(s => s.campaignId !== id),
-            
+
+            /*
+              **Le butin, oublié à son arrivée le 2026-09-04.** Même motif exact
+              que les deux lignes au-dessus : `lootPool` et `lootHistory` ont été
+              ajoutés au magasin et à la liste des champs durables, mais pas à
+              cette cascade. Le trésor non distribué d'une campagne supprimée
+              restait donc en mémoire, invisible — tous les écrans filtrent par
+              campagne — et **revenait dans le comptage d'une campagne recréée**.
+
+              ⚠️ **`estDeLaCampagne` n'est PAS le bon filtre ici**, alors que
+              c'est celui de `clearLootPool` juste à côté. Il rend `true` pour un
+              objet sans marque, parce qu'*un butin d'avant la marque appartient
+              à la campagne qu'on regarde* — une règle d'affichage juste, qui
+              deviendrait ici une perte silencieuse : supprimer n'importe quelle
+              campagne emporterait tout le butin non marqué de toutes les autres.
+            */
+            /* `?? []` : ces deux champs sont arrivés le 2026-09-04, et un état
+               relu d'avant cette date ne les porte pas. Une cascade qui lève
+               laisserait la campagne à moitié supprimée. */
+            lootPool: (state.lootPool ?? []).filter(i => i.campaignId !== id),
+            lootHistory: (state.lootHistory ?? []).filter(e => e.campaignId !== id),
+
+
             players: state.players.map(p => ({
                 ...p,
                 characters: p.characters.map(c => 

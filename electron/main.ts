@@ -71,6 +71,7 @@ import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
 import { registerSourisHandlers } from './sourisDesJoueurs'
+import { registerPurgeHandlers } from './purgeDesCorpus'
 import { registerNexusHandlers } from './nexus_bridge'
 import { registerSecurityHandlers } from './SecurityManager'
 import { sessionManager } from './SessionManager'
@@ -135,6 +136,8 @@ registerObsidianHandlers();
 
 // Le verrou de la souris des joueurs — voir `sourisDesJoueurs.ts`.
 registerSourisHandlers();
+// La purge d'un corpus — elle déplace en quarantaine, elle ne supprime pas.
+registerPurgeHandlers();
 // Register Nexus-OS Bridge (Campaign Portability)
 registerNexusHandlers();
 // Register native Keychain Security
