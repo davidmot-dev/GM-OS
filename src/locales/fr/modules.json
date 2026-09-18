@@ -794,7 +794,8 @@
         "fantasy": "⚔️ Fantastique & Magie",
         "space": "🚀 Espace & SF",
         "alerts": "🚨 Alertes & Danger",
-        "misc": "⚙️ Divers"
+        "misc": "⚙️ Divers",
+        "ambiances": "Mes ambiances"
       },
       "effects": {
         "steady": "Statique",
@@ -834,6 +835,7 @@
         "abysses": "Abysses",
         "lever-soleil": "Lever de Soleil",
         "aube-doree": "Aube dorée",
+        "stores": "Stores",
         "lave": "Lave Fusion",
         "fantome": "Spectre / Fantôme",
         "neant": "Le Néant",
@@ -846,6 +848,15 @@
         "toxique": "Nuage Toxique",
         "disco": "Disco Party",
         "zen": "Méditation Zen"
+      },
+      "ambiances": {
+        "duplicate": "Dupliquer cet effet en ambiance",
+        "name": "Nom de l'ambiance",
+        "from": "d'après {{source}}",
+        "delete": "Supprimer cette ambiance",
+        "tint": "Teinte vers laquelle tirer la palette",
+        "force": "Force de la teinte",
+        "speed": "Vitesse de l'ambiance"
       }
     },
     "editor": {

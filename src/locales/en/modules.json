@@ -829,6 +829,7 @@
         "lave": "Molten Lava",
         "lever-soleil": "Sunrise",
         "aube-doree": "Golden Dawn",
+        "stores": "Blinds",
         "lumiere-ville": "City Lights",
         "neant": "The Void",
         "passerelle": "Starship Bridge",
@@ -845,7 +846,17 @@
         "misc": "⚙️ Misc",
         "nature": "🌲 Nature & Elements",
         "space": "🚀 Space & Sci-Fi",
-        "urban": "🏙️ Urban & Tech"
+        "urban": "🏙️ Urban & Tech",
+        "ambiances": "My ambiances"
+      },
+      "ambiances": {
+        "duplicate": "Duplicate this effect as an ambiance",
+        "name": "Ambiance name",
+        "from": "from {{source}}",
+        "delete": "Delete this ambiance",
+        "tint": "Hue to pull the palette toward",
+        "force": "Hue strength",
+        "speed": "Ambiance speed"
       }
     },
     "editor": {

@@ -103,6 +103,52 @@ describe('le fondu ne dépasse jamais le battement', () => {
     });
 });
 
+/**
+ * ⭐ **L'argument qui dispense de recaler la couleur.**
+ *
+ * Le gamut d'une lampe Hue est un **triangle**, donc un ensemble convexe. Un
+ * point pris entre deux points d'un convexe reste dedans : mélanger deux
+ * couleurs jouables donne toujours une couleur jouable.
+ *
+ * `HueEngine` s'appuie là-dessus pour ne PAS recaler après une teinte — *un
+ * recalage y serait du code qui ne s'exécute jamais, et un second endroit où la
+ * même couleur se décide.* Si l'argument tombe, ce test tombe avec lui.
+ */
+describe('le mélange ne sort jamais du triangle', () => {
+    /** Les sommets du gamut C, recopiés — un test ne valide pas le moteur contre lui-même. */
+    const R: readonly [number, number] = [0.692, 0.308];
+    const V: readonly [number, number] = [0.170, 0.700];
+    const B: readonly [number, number] = [0.153, 0.048];
+
+    const dansLeTriangle = ([x, y]: readonly [number, number]): boolean => {
+        const d = (px: number, py: number, qx: number, qy: number, rx: number, ry: number) =>
+            (px - rx) * (qy - ry) - (qx - rx) * (py - ry);
+        const s = [d(x, y, R[0], R[1], V[0], V[1]), d(x, y, V[0], V[1], B[0], B[1]),
+            d(x, y, B[0], B[1], R[0], R[1])];
+        return !(s.some(v => v < -1e-9) && s.some(v => v > 1e-9));
+    };
+
+    it('reste dans le gamut pour toute force, entre deux couleurs jouables', () => {
+        const paires: [readonly [number, number], readonly [number, number]][] = [
+            [R, V], [V, B], [B, R], [[0.45, 0.41], R], [[0.32, 0.33], B],
+        ];
+        for (const [a, b] of paires) {
+            for (let f = 0; f <= 1.0001; f += 0.05) {
+                const p = teinterVers(a, b, f);
+                expect(dansLeTriangle(p), `${a} → ${b} à ${f.toFixed(2)}`).toBe(true);
+            }
+        }
+    });
+
+    it('rapproche du triangle une couleur qui en débordait', () => {
+        /* `applyXyVariance` ajoute du bruit et peut faire sortir légèrement.
+           Tirer vers un point intérieur ne peut qu'améliorer les choses. */
+        const dehors: readonly [number, number] = [0.75, 0.33];
+        expect(dansLeTriangle(dehors)).toBe(false);
+        expect(dansLeTriangle(teinterVers(dehors, [0.4, 0.4], 0.7))).toBe(true);
+    });
+});
+
 describe('nommer une copie', () => {
     it('propose « (copie) », puis numérote', () => {
         expect(nomDeLaCopie('Torche', [])).toBe('Torche (copie)');

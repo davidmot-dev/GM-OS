@@ -3,6 +3,11 @@ import { useLightStore } from '../useLightStore';
 import type { HueLight } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { creerLimiteur } from '../logic/limiterLaCadence';
+import {
+    estUneVariante, identifiantDeVariante, idDepuisLIdentifiant,
+    FORCE_MIN, FORCE_MAX,
+} from '../logic/varianteDEffet';
+import { VITESSE_EFFET_MIN, VITESSE_EFFET_MAX } from '../useLightStore';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -29,6 +34,28 @@ export const BulbFooter: React.FC = () => {
     const { lights, updateLightState } = useLightStore();
     const { t } = useTranslation('modules');
     const lightList = Object.values(lights);
+
+    /* Les ambiances du meneur, et les trois gestes qui les manipulent. */
+    const variantes = useLightStore(s => s.variantes);
+    const creerUneVariante = useLightStore(s => s.creerUneVariante);
+    const modifierUneVariante = useLightStore(s => s.modifierUneVariante);
+    const supprimerUneVariante = useLightStore(s => s.supprimerUneVariante);
+
+    /**
+     * **Dupliquer l'effet d'une lampe, et basculer dessus dans la foulée.**
+     *
+     * ⚠️ **La bascule n'est pas un confort, c'est ce qui rend la copie
+     * visible.** Créer une ambiance sans la jouer laisserait le meneur devant
+     * une liste où un nom de plus est apparu, sans rien à l'écran ni dans la
+     * pièce — et l'éditeur, qui ne s'ouvre que sur l'ambiance jouée, resterait
+     * fermé. *Un geste dont le résultat ne se voit nulle part ressemble à un
+     * geste qui n'a pas marché.*
+     */
+    const dupliquer = (idLampe: string, effetSource: string) => {
+        const nomSource = t(`light.footer.effects.${effetSource}`, { defaultValue: effetSource });
+        const id = creerUneVariante(effetSource, nomSource);
+        handleEffectChange(idLampe, identifiantDeVariante(id));
+    };
 
     /* Un limiteur pour tout le pied de page, mais qui compte par lampe : régler
        la deuxième ne doit pas faire attendre la première. */
@@ -92,6 +119,9 @@ export const BulbFooter: React.FC = () => {
            ors. ⚠️ Cale sur le creux du souffle, pas sur son sommet — c'est la
            couleur que le meneur doit reconnaître dans la liste. */
         'aube-doree': '#ff9a12',
+        /* Le plein jour d'une bande, pas l'ombre : c'est la couleur que le
+           meneur associe à « stores ». */
+        'stores': '#fff1d0',
         'toxique': '#84cc16',
         'zen': '#fafaf9',
         'neant': '#2e1065',
@@ -196,6 +226,24 @@ export const BulbFooter: React.FC = () => {
                                         >
                                             <option value="none" className="bg-app-bg text-app-text/50">{t('light.footer.effects.steady')}</option>
                                             <option value="colorloop" className="bg-app-bg text-accent">{t('light.footer.effects.colorloop')}</option>
+
+                                            {/*
+                                              ⭐ **Les ambiances du meneur passent EN TÊTE.**
+                                              Ce sont les siennes : les chercher après
+                                              quarante-sept effets d'usine serait leur donner
+                                              le rang de l'exception. Le groupe disparaît
+                                              tant qu'il n'y en a aucune — *un groupe vide
+                                              est une promesse qui ne tient pas.*
+                                            */}
+                                            {variantes.length > 0 && (
+                                                <optgroup label={t('light.footer.categories.ambiances')} className="bg-app-bg text-slate-400">
+                                                    {variantes.map(v => (
+                                                        <option key={v.id} value={identifiantDeVariante(v.id)} className="text-amber-200">
+                                                            {v.nom}
+                                                        </option>
+                                                    ))}
+                                                </optgroup>
+                                            )}
                                             
                                             <optgroup label={t('light.footer.categories.urban')} className="bg-app-bg text-slate-400">
                                                 <option value="lumiere-ville" className="text-amber-500">{t('light.footer.effects.lumiere-ville')}</option>
@@ -217,6 +265,7 @@ export const BulbFooter: React.FC = () => {
                                                 <option value="abysses" className="text-blue-800">{t('light.footer.effects.abysses')}</option>
                                                 <option value="lever-soleil" className="text-orange-400">{t('light.footer.effects.lever-soleil')}</option>
                                                 <option value="aube-doree" className="text-amber-300">{t('light.footer.effects.aube-doree')}</option>
+                                                <option value="stores" className="text-amber-100">{t('light.footer.effects.stores')}</option>
                                                 <option value="lightning" className="text-app-text/70">{t('light.footer.effects.storm')}</option>
                                             </optgroup>
 
@@ -273,7 +322,98 @@ export const BulbFooter: React.FC = () => {
                                             </optgroup>
                                         </select>
                                     </div>
+
+                                    {/*
+                                      **Dupliquer l'effet joué par cette lampe.**
+
+                                      Le bouton ne s'offre que sur un effet du
+                                      catalogue : dupliquer une ambiance donnerait
+                                      une copie de copie dont plus personne ne
+                                      saurait dire de quoi elle descend. *Une
+                                      variante désigne toujours un effet réel.*
+                                    */}
+                                    {effect !== 'none' && effect !== 'colorloop' && !estUneVariante(effect) && (
+                                        <button
+                                            onClick={() => dupliquer(light.id, effect)}
+                                            className="shrink-0 size-7 rounded border border-app-border text-slate-400 hover:text-accent hover:border-accent/50 transition-colors flex items-center justify-center"
+                                            title={t('light.footer.ambiances.duplicate')}
+                                        >
+                                            <span className="material-symbols-outlined text-sm">palette</span>
+                                        </button>
+                                    )}
                                 </div>
+
+                                {/*
+                                  **L'éditeur d'ambiance** — il n'apparaît que sur la
+                                  lampe qui joue l'ambiance qu'on retouche, et il montre
+                                  son effet d'origine : sans ça, une liste de noms
+                                  inventés par le meneur ne dit plus de quoi chacun
+                                  descend.
+                                */}
+                                {estUneVariante(effect) && (() => {
+                                    const v = variantes.find(x => x.id === idDepuisLIdentifiant(effect));
+                                    if (!v) return null;
+                                    return (
+                                        <div className="mt-2 p-2 rounded-lg bg-app-bg/60 border border-app-border/40 flex flex-col gap-2">
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    value={v.nom}
+                                                    onChange={(e) => modifierUneVariante(v.id, { nom: e.target.value })}
+                                                    className="flex-1 bg-transparent border-none p-0 text-xs font-bold text-amber-200 outline-none min-w-0"
+                                                    title={t('light.footer.ambiances.name')}
+                                                />
+                                                <span className="text-ui-10 text-slate-500 shrink-0">
+                                                    {t('light.footer.ambiances.from', {
+                                                        source: t(`light.footer.effects.${v.source}`, { defaultValue: v.source }),
+                                                    })}
+                                                </span>
+                                                <button
+                                                    onClick={() => supprimerUneVariante(v.id)}
+                                                    className="shrink-0 text-slate-500 hover:text-red-400 transition-colors"
+                                                    title={t('light.footer.ambiances.delete')}
+                                                >
+                                                    <span className="material-symbols-outlined text-sm">delete</span>
+                                                </button>
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="color"
+                                                    value={v.teinte ?? '#ffb347'}
+                                                    onChange={(e) => modifierUneVariante(v.id, { teinte: e.target.value })}
+                                                    className="size-6 rounded border border-app-border cursor-pointer p-0 bg-transparent shrink-0"
+                                                    title={t('light.footer.ambiances.tint')}
+                                                />
+                                                <input
+                                                    type="range"
+                                                    min={FORCE_MIN} max={FORCE_MAX} step={0.05}
+                                                    value={v.force}
+                                                    onChange={(e) => modifierUneVariante(v.id, { force: parseFloat(e.target.value) })}
+                                                    title={t('light.footer.ambiances.force')}
+                                                    className="flex-1 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent min-w-0"
+                                                />
+                                                <span className="text-ui-10 font-mono text-slate-400 w-8 text-right shrink-0">
+                                                    {Math.round(v.force * 100)}%
+                                                </span>
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-sm text-slate-500 shrink-0">speed</span>
+                                                <input
+                                                    type="range"
+                                                    min={VITESSE_EFFET_MIN} max={VITESSE_EFFET_MAX} step={0.25}
+                                                    value={v.vitesse}
+                                                    onChange={(e) => modifierUneVariante(v.id, { vitesse: parseFloat(e.target.value) })}
+                                                    title={t('light.footer.ambiances.speed')}
+                                                    className="flex-1 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent min-w-0"
+                                                />
+                                                <span className="text-ui-10 font-mono text-slate-400 w-8 text-right shrink-0">
+                                                    ×{v.vitesse}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
 
                                 {/*
                                   **La brillance de la lampe**, qui n'existait

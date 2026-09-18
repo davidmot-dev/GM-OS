@@ -8,7 +8,8 @@ import { cadencePartagee } from "./logic/budgetDuPont";
 import { BANDE_DE_LA_BOUGIE, BOURRASQUE, etatDuFeu, tirerLaChaleur } from "./logic/echelleDuFeu";
 import { EXTINCTION_DS, imageDeDeflagration } from "./logic/deflagration";
 import { imageDuSouffle, SOUFFLES } from "./logic/souffle";
-import { fonduTenable } from "./logic/varianteDEffet";
+import { fonduTenable, teinterVers, estUneVariante, idDepuisLIdentifiant } from "./logic/varianteDEffet";
+import { imageDesStores, phaseDeLaLampe } from "./logic/lumiereDesStores";
 
 interface HueApiLight {
     state: {
@@ -852,6 +853,38 @@ export class HueEngine {
             return;
         }
 
+        /*
+          ⭐ **UNE AMBIANCE DU MENEUR JOUE LE CORPS D'UN AUTRE EFFET.**
+
+          Une variante n'a pas de `case` : elle emprunte celui de sa source, et
+          ne change que ce qui se pose **après** — la teinte et le rythme. C'est
+          la seule forme possible, parce que **36 des 47 effets écrivent leur
+          palette en dur** : pour eux, poser une couleur avant de lancer l'effet
+          ne fait rien du tout. *Le curseur de couleur existait, il n'avait
+          simplement aucun effet sur ces trente-six.*
+
+          ⚠️ Une variante dont la source a disparu ne joue **rien** — le
+          `switch` n'a pas de `default`. On s'arrête donc ici en le disant, plutôt
+          que de laisser une lampe muette et un meneur qui cherche pourquoi.
+        */
+        const variante = estUneVariante(effectName)
+            ? useLightStore.getState().variantes.find(
+                v => v.id === idDepuisLIdentifiant(effectName))
+            : undefined;
+
+        if (estUneVariante(effectName) && !variante) {
+            console.warn(
+                `[Light OS] L'ambiance ${effectName} n'existe plus : rien à jouer sur ${id}.`,
+            );
+            return;
+        }
+
+        /** Le corps d'effet réellement joué : la source d'une variante, ou l'effet lui-même. */
+        const effectName_ = variante ? variante.source : effectName;
+
+        /** La teinte vers laquelle la palette est tirée, si l'ambiance en pose une. */
+        const cibleDeTeinte = variante?.teinte ? this.hexToXy(variante.teinte) : null;
+
         let interval = 250; // Minimum 250ms for performance stability
         let tick = 0;
         /**
@@ -894,10 +927,21 @@ export class HueEngine {
             'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant',
             'trou-noir', 'hyperspace', 'reacteur', 'fusillade',
             'deflagration', 'impact', 'panne', 'sonar', 'incendie'
-        ].includes(effectName);
+        ].includes(effectName_);
 
-        /** L'attente du prochain tour, vitesse de la scène comprise. */
-        const cadenceVoulue = () => cadenceEffective(interval, this.vitesseDeLEffet(id));
+        /**
+         * L'attente du prochain tour, vitesse de la scène **et** de l'ambiance
+         * comprises.
+         *
+         * ⚠️ Les deux se **multiplient**, elles ne se substituent pas. Une scène
+         * ralentie qui joue une ambiance rapide doit donner quelque chose entre
+         * les deux — *si l'une écrasait l'autre, un des deux curseurs mentirait,
+         * et le meneur ne saurait pas lequel.*
+         */
+        const cadenceVoulue = () => cadenceEffective(
+            interval,
+            this.vitesseDeLEffet(id) * (variante?.vitesse ?? 1),
+        );
 
         const loop = async () => {
             if (!toujoursALaBarre()) return;
@@ -916,10 +960,28 @@ export class HueEngine {
               qu'elle est en trop s'arrête — *en se restaurant*, donc en
               retrouvant la couleur que la scène lui avait posée.
             */
-            const admis = solistesAdmis(effectName);
+            const admis = solistesAdmis(effectName_);
             if (admis !== null) {
+                /*
+                  ⛔ **Le comptage se fait sur la SOURCE, pas sur le nom
+                  affiché.** Une lampe qui joue une ambiance porte l'identifiant
+                  de l'ambiance, pas celui de l'effet dont elle descend. Deux
+                  ambiances tirées de `fusillade` sur deux lampes coûtent au pont
+                  exactement ce que coûtent deux fusillades — les compter
+                  séparément les déclarerait solistes toutes les deux, et le
+                  budget serait dépassé sans que rien ne le dise.
+
+                  *C'est la même famille de défaut que la tablette qui offrait les
+                  paquets d'un autre jeu : deux lecteurs d'une même liste, dont
+                  un seul connaît la règle.*
+                */
+                const variantes = useLightStore.getState().variantes;
+                const sourceDe = (effet: string | undefined): string | undefined => {
+                    if (!estUneVariante(effet)) return effet ?? undefined;
+                    return variantes.find(v => v.id === idDepuisLIdentifiant(effet!))?.source;
+                };
                 const memeEffet = Object.entries(useLightStore.getState().lights)
-                    .filter(([, l]) => l.state?.effect === effectName)
+                    .filter(([, l]) => sourceDe(l.state?.effect) === effectName_)
                     .map(([idLampe]) => idLampe);
                 if (!estSoliste(id, memeEffet, admis)) {
                     this.stopSoftwareEffect(id, 'rendreLEtat');
@@ -950,7 +1012,7 @@ export class HueEngine {
             */
             const baseXy = freshState.xy || [0.4, 0.4];
 
-            switch (effectName) {
+            switch (effectName_) {
                 /*
                   ─────────────────────────────────────────────────────────────
                   ⭐ TROIS FEUX, ET CE NE SONT PAS TROIS RÉGLAGES
@@ -1699,6 +1761,45 @@ export class HueEngine {
                   quasiment rien sur un pont qui tient dix commandes par seconde.
                   *Une aube qui clignote n'est pas une aube.*
                 */
+                /*
+                  ⭐ **STORES — l'illusion vit ENTRE les lampes, pas dans une lampe.**
+
+                  Demandé par David le 2026-09-18 : *« de la lumière passant à
+                  travers des stores (sur 2 ou 3 lumières) ? Si ce n'est pas
+                  possible ce n'est pas grave »*.
+
+                  ⛔ **Sur une seule lampe, ce ne serait qu'une pulsation de
+                  plus** : une ampoule éclaire uniformément, il n'y a ni lame ni
+                  ombre portée. C'est la précision « sur 2 ou 3 » qui rend l'effet
+                  possible — chaque lampe se place à un endroit différent du
+                  motif, l'une dans une bande claire, l'autre dans l'ombre. *La
+                  pièce devient inégale, et c'est exactement ce que font des
+                  stores.*
+
+                  ⚠️ **À poser sur plusieurs lampes, donc.** Seule, elle fonctionne
+                  — elle ne montre simplement pas ce pour quoi elle existe.
+
+                  Le décalage vient de l'identifiant de la lampe, par un calcul
+                  stable : des lames sont régulières, et une lampe doit retrouver
+                  **sa** bande d'une scène à l'autre. La forme de la courbe et son
+                  étalement vivent dans `logic/lumiereDesStores.ts`.
+                */
+                case 'stores': {
+                    const lame = imageDesStores(tick, phaseDeLaLampe(id));
+                    payload.bri = lame.bri;
+
+                    /* La lumière qui rase une lame se réchauffe ; celle qui passe
+                       tout droit reste franche. Teinte et brillance descendent
+                       donc ENSEMBLE — la leçon des feux indiscernables. */
+                    payload.xy = lame.part > 0.5
+                        ? this.hexToXy('#fff1d0')   // plein jour, à peine chaud
+                        : this.hexToXy('#e8b978');  // l'ombre, dorée
+
+                    payload.transitiontime = 18;
+                    interval = 2000;
+                    break;
+                }
+
                 case 'aube-doree': {
                     /* Un cycle complet toutes les ~50 s : assez lent pour qu'on
                        ne le surprenne pas, assez vivant pour que la pièce ne
@@ -1769,6 +1870,31 @@ export class HueEngine {
                     break;
             }
 
+            /*
+              ⛔ **Le `switch` n'a pas de `default` — et un effet inconnu n'y
+              produit RIEN.**
+
+              Jusqu'ici c'était sans conséquence : les noms venaient tous d'une
+              liste écrite à la main, et `catalogueDesEffets.test.ts` vérifie que
+              chacun a son `case`. Les **ambiances du meneur** changent ça : leur
+              `source` est une donnée persistée, qui survivra à un effet renommé
+              ou retiré du catalogue.
+
+              Sans ce garde-fou, la lampe recevrait un état **vide** — donc rien
+              — toutes les 250 ms, sans message : *une porte qui ouvre sur rien*,
+              exactement ce que le contrôle du catalogue existe pour interdire,
+              mais du côté que ce contrôle ne peut pas voir.
+            */
+            if (Object.keys(payload).length === 0) {
+                console.warn(
+                    `[Light OS] L'effet « ${effectName_} » n'existe pas dans le moteur`
+                    + (variante ? ` (ambiance « ${variante.nom} »)` : '')
+                    + ` : rien à jouer sur ${id}.`,
+                );
+                this.stopSoftwareEffect(id, 'rendreLEtat');
+                return;
+            }
+
             // Apply global brightness and the scene's intensity to the effect
             if (typeof payload.bri === 'number') {
                 payload.bri = brillanceEffective(
@@ -1801,6 +1927,38 @@ export class HueEngine {
               fondu déjà tenable n'est pas touché ; ceux que la vitesse aurait
               écrasés retrouvent leur forme.
             */
+            /*
+              ⭐ **LA TEINTE D'UNE AMBIANCE SE POSE ICI, ET NULLE PART AILLEURS.**
+
+              Après le `switch`, donc après que l'effet a choisi sa couleur —
+              c'est la seule façon d'atteindre les **36 effets sur 47 qui écrivent
+              leur palette en dur**. Une couleur posée avant ne toucherait que les
+              onze qui lisent `baseXy`.
+
+              ⛔ **On mélange, on ne remplace pas.** À force pleine, un gyrophare
+              deviendrait monochrome — et un gyrophare monochrome n'est plus un
+              gyrophare. *Ce qui fait un effet n'est pas sa teinte, c'est le
+              rapport entre ses teintes et son rythme.* La force par défaut est
+              donc 0,7, et le raisonnement vit dans `varianteDEffet.ts`.
+
+              ⭐ **Et il n'y a rien à recaler — le gamut est un TRIANGLE, donc
+              convexe.** Un point pris entre deux points d'un ensemble convexe
+              reste dans cet ensemble : mélanger deux couleurs jouables donne
+              toujours une couleur jouable. La cible sort de `hexToXy`, qui cale
+              déjà ; et si la couleur de départ débordait légèrement — ce que
+              `applyXyVariance` peut faire en ajoutant son bruit — la tirer vers
+              un point intérieur la **rapproche** du triangle au lieu de l'en
+              éloigner.
+
+              *Un recalage ici serait du code qui ne s'exécute jamais, et un
+              second endroit où la même couleur se décide.*
+            */
+            if (cibleDeTeinte && Array.isArray(payload.xy)) {
+                payload.xy = teinterVers(
+                    payload.xy as [number, number], cibleDeTeinte, variante!.force,
+                );
+            }
+
             if (typeof payload.transitiontime === 'number') {
                 payload.transitiontime = fonduTenable(payload.transitiontime, cadenceVoulue());
             }

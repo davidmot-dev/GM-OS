@@ -157,7 +157,31 @@ describe('qui a le droit de restaurer', () => {
      * le but : elle ne s'éteint pas, elle arrête de battre.*
      */
     it('le moteur restaure quand une lampe se retire du budget', () => {
-        expect(MOTEUR.match(RESTAURANT) ?? []).toHaveLength(1);
+        /* Deux appels dans le moteur depuis le 2026-09-18 : celui-ci et celui
+           de l'effet introuvable, décrit juste en dessous. */
+        expect(MOTEUR.match(RESTAURANT) ?? []).toHaveLength(2);
+    });
+
+    /**
+     * ⭐ **Le troisième ayant droit — 2026-09-18, avec les ambiances du meneur.**
+     *
+     * Le `switch` des effets n'a pas de `default` : un nom inconnu n'y produit
+     * **rien**, et la lampe recevrait un état vide toutes les 250 ms, sans
+     * message. C'était sans conséquence tant que les noms venaient d'une liste
+     * écrite à la main et gardée par `catalogueDesEffets`.
+     *
+     * ⛔ **Une ambiance change ça** : sa `source` est une donnée **persistée**,
+     * qui survivra à un effet renommé ou retiré du catalogue. La lampe doit
+     * alors retrouver la couleur de sa scène, pas battre dans le vide — *une
+     * porte qui ouvre sur rien, du côté que le contrôle du catalogue ne peut
+     * pas voir.*
+     */
+    it('le moteur restaure quand l’effet demandé n’existe pas', () => {
+        const debut = MOTEUR.indexOf('Object.keys(payload).length === 0');
+        expect(debut, 'la garde de l’effet introuvable a disparu').toBeGreaterThan(0);
+
+        const bloc = MOTEUR.slice(debut, debut + 700);
+        expect(bloc).toMatch(RESTAURANT);
     });
 
     /**
@@ -201,8 +225,11 @@ describe('qui a le droit de restaurer', () => {
      * raison écrite.
      */
     it('personne d’autre ne restaure', () => {
+        /* Trois ayants droit, chacun décrit par son propre `it` ci-dessus :
+           le pied de page (retour à « Fixe »), la lampe en trop dans le budget,
+           et l'effet introuvable d'une ambiance. */
         const source = MOTEUR + PIED_DE_PAGE;
-        expect(source.match(RESTAURANT) ?? []).toHaveLength(2);
+        expect(source.match(RESTAURANT) ?? []).toHaveLength(3);
     });
 
     /**

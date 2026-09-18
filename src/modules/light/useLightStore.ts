@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import {
+    type VarianteDEffet, nomDeLaCopie, bornerLaForce, FORCE_PAR_DEFAUT,
+} from './logic/varianteDEffet';
 
 // ----------------------
 // Types & Interfaces
@@ -118,6 +121,20 @@ interface LightState {
      */
     suivreLaVoix: boolean;
 
+    /**
+     * **Les ambiances du meneur** — des copies d'effets du catalogue, reteintées
+     * et re-rythmées.
+     *
+     * Demandées par David le 2026-09-18 : *« je me demande si on ne devrait pas
+     * faire un module de création d'ambiance »*. Pour ajouter un effet à la main
+     * il faut toucher quatre fichiers et connaître une règle non écrite sur le
+     * rapport fondu/battement — *donc chaque idée d'ambiance passait par moi.*
+     *
+     * ⚠️ Une variante n'est **pas** un effet : elle n'a pas de `case` dans le
+     * moteur, elle en emprunte un. Voir `logic/varianteDEffet.ts`.
+     */
+    variantes: VarianteDEffet[];
+
     // Scenes
     /** Catalogue des 18 scènes disponibles */
     scenes: Record<string, LightScene>;
@@ -162,6 +179,22 @@ interface LightState {
     setGlobalBrightness: (val: number) => void;
     setTransitionTime: (ms: number) => void;
     setSuivreLaVoix: (actif: boolean) => void;
+
+    // Actions - Ambiances du meneur
+    /**
+     * Crée une ambiance à partir d'un effet du catalogue, et rend son
+     * identifiant.
+     *
+     * ⚠️ **Elle rend l'identifiant qu'elle a attribué**, comme
+     * `addSheetTemplate` a appris à le faire après qu'un pilote eut gardé la
+     * référence d'un modèle qui n'avait jamais existé. *L'appelant ne peut pas
+     * supposer, il sait.*
+     */
+    creerUneVariante: (source: string, nomSource: string) => string;
+    /** Retouche une ambiance. Les valeurs absentes ne sont pas touchées. */
+    modifierUneVariante: (id: string, retouches: Partial<Omit<VarianteDEffet, 'id'>>) => void;
+    /** Oublie une ambiance. */
+    supprimerUneVariante: (id: string) => void;
 
     // Actions - Scenes
     /** Capture l'état actuel de toutes les lampes dans une scène */
@@ -270,6 +303,8 @@ export const useLightStore = create<LightState>()(
             */
             suivreLaVoix: false,
 
+            variantes: [],
+
             scenes: createDefaultScenes(),
             activeSceneId: null,
             lastManualSceneId: null,
@@ -376,6 +411,37 @@ export const useLightStore = create<LightState>()(
                 scenes[sceneId] = { ...scenes[sceneId], keyCode: keyCode ?? undefined };
                 return { scenes, sceneEnApprentissage: null };
             }),
+
+            creerUneVariante: (source, nomSource) => {
+                const id = `v-${Date.now()}`;
+                set((state) => ({
+                    variantes: [...state.variantes, {
+                        id,
+                        nom: nomDeLaCopie(nomSource, state.variantes.map(v => v.nom)),
+                        source,
+                        force: FORCE_PAR_DEFAUT,
+                        vitesse: VITESSE_EFFET_DEFAUT,
+                    }],
+                }));
+                return id;
+            },
+
+            modifierUneVariante: (id, retouches) => set((state) => ({
+                variantes: state.variantes.map(v => (v.id === id ? {
+                    ...v,
+                    ...retouches,
+                    /* Les deux réglages numériques repassent par leurs bornes,
+                       quelle que soit la porte par laquelle ils arrivent. Une
+                       vitesse nulle donnerait une attente infinie, et l'effet
+                       s'arrêterait sans rien dire. */
+                    ...(retouches.force !== undefined ? { force: bornerLaForce(retouches.force) } : {}),
+                    ...(retouches.vitesse !== undefined ? { vitesse: bornerVitesse(retouches.vitesse) } : {}),
+                } : v)),
+            })),
+
+            supprimerUneVariante: (id) => set((state) => ({
+                variantes: state.variantes.filter(v => v.id !== id),
+            })),
 
             setSceneEffectSpeed: (sceneId, speed) => set((state) => {
                 if (!state.scenes[sceneId]) return state;
@@ -541,7 +607,9 @@ export const useLightStore = create<LightState>()(
                 transitionTimeMs: state.transitionTimeMs,
                 isSyncEnabled: state.isSyncEnabled,
                 lastManualSceneId: state.lastManualSceneId,
-                defaultSceneId: state.defaultSceneId
+                defaultSceneId: state.defaultSceneId,
+                /* Les ambiances du meneur : du travail, pas un état de vue. */
+                variantes: state.variantes
             })
         }
     )
