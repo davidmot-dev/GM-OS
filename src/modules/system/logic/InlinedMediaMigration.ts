@@ -109,11 +109,33 @@ export interface ScannableFavorites {
 }
 
 /**
+ * Les fiches de NPC-OS — **l'angle mort de ce recensement jusqu'au 2026-09-18.**
+ *
+ * ⛔ Mesuré dans la sauvegarde automatique : `npc.savedEntities[0].avatar`
+ * portait **828 Ko** de base64, et cet outil ne pouvait pas le voir. Il ne lisait
+ * que le magasin de session et les favoris ; NPC-OS a le sien, et c'est
+ * précisément lui que `useNPCStore` remplit quand on demande un portrait à l'IA.
+ *
+ * ⚠️ **Le PNJ ouvert et sa copie rangée sont deux porteurs de la même image.**
+ * `useNPCStore` écrit l'avatar aux deux endroits quand la fiche est déjà rangée :
+ * n'en reprendre qu'un laisserait le mégaoctet dans l'autre, et il reviendrait au
+ * premier rechargement.
+ */
+export interface ScannableNpc {
+    currentEntity?: any | null;
+    savedEntities?: any[];
+}
+
+/**
  * Relève tous les médias inline. Les `apply` écrivent dans les objets fournis :
  * appeler cette fonction sur une copie permet de préparer la migration sans
  * modifier l'état vivant.
  */
-export function scanInlinedMedia(state: ScannableState, favorites: ScannableFavorites = {}): InlinedEntry[] {
+export function scanInlinedMedia(
+    state: ScannableState,
+    favorites: ScannableFavorites = {},
+    npc: ScannableNpc = {},
+): InlinedEntry[] {
     const entries: InlinedEntry[] = [];
 
     const consider = (
@@ -152,6 +174,11 @@ export function scanInlinedMedia(state: ScannableState, favorites: ScannableFavo
         for (const character of player?.characters || []) {
             consider(character, 'portraitUrl', 'Personnage', `personnage ${character?.name || character?.id || ''}`);
         }
+    }
+    consider(npc.currentEntity, 'avatar', 'Fiche NPC-OS ouverte',
+        `pnj ${npc.currentEntity?.name || npc.currentEntity?.id || ''}`);
+    for (const fiche of npc.savedEntities || []) {
+        consider(fiche, 'avatar', 'Fiche NPC-OS', `pnj ${fiche?.name || fiche?.id || ''}`);
     }
     for (const favorite of favorites.favorites || []) {
         consider(favorite, 'imageUrl', 'Favori', `favori ${favorite?.name || favorite?.id || ''}`);

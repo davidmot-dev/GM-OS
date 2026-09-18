@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Images, RefreshCw, ShieldCheck } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { useFavoriteStore } from '../../modules/favorite/useFavoriteStore';
+import { useNPCStore } from '../../modules/npc/useNPCStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { gmToast } from '../../stores/useToastStore';
 import {
@@ -13,6 +14,21 @@ import {
     type MigrationReport,
 } from '../../modules/system/logic/InlinedMediaMigration';
 import { formatBytes } from '../../modules/session/logic/storageDiagnostics';
+
+/**
+ * Les fiches de NPC-OS, copiées de même.
+ *
+ * ⛔ **Ce magasin manquait**, et il portait 828 Ko de base64 dans la sauvegarde
+ * du 2026-09-18. Cet écran lisait le magasin de session et les favoris ; NPC-OS
+ * a le sien, et c'est celui que remplit une demande de portrait à l'IA.
+ */
+function cloneNpcState() {
+    const npc = useNPCStore.getState();
+    return structuredClone({
+        currentEntity: npc.currentEntity ?? null,
+        savedEntities: npc.savedEntities || [],
+    });
+}
 
 /** Tranches d'état porteuses de médias, copiées pour travailler hors du store. */
 function cloneScannableState() {
@@ -41,9 +57,11 @@ export const InlinedMediaPanel: React.FC = () => {
 
     const handleScan = () => {
         try {
-            const entries = scanInlinedMedia(cloneScannableState(), {
-                favorites: useFavoriteStore.getState().favorites || [],
-            });
+            const entries = scanInlinedMedia(
+                cloneScannableState(),
+                { favorites: useFavoriteStore.getState().favorites || [] },
+                cloneNpcState(),
+            );
             setSummary(summarize(entries));
             setReport(null);
         } catch (err) {
@@ -62,8 +80,9 @@ export const InlinedMediaPanel: React.FC = () => {
             // fois la migration terminée, et seulement pour les champs repris.
             const state = cloneScannableState();
             const favorites = structuredClone({ favorites: useFavoriteStore.getState().favorites || [] });
+            const npc = cloneNpcState();
 
-            const entries = scanInlinedMedia(state, favorites);
+            const entries = scanInlinedMedia(state, favorites, npc);
             const media = useMediaStore.getState();
             await media.initDB();
 
@@ -76,6 +95,7 @@ export const InlinedMediaPanel: React.FC = () => {
             if (result.migrated > 0) {
                 useSessionOSStore.setState(state as any);
                 useFavoriteStore.setState(favorites as any);
+                useNPCStore.setState(npc as any);
             }
 
             setReport(result);

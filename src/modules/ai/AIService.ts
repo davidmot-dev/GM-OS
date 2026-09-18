@@ -7,7 +7,6 @@ import {
   type SceneEnContexte,
 } from '../journal/contexteDeLaTrame';
 import { scenesDansLEtat } from '../session/logic/trame';
-import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
 import { attenteAnnoncee, budgetDuMoment } from './budgetsDeTemps';
 import { tenterLaDiffusionLocale } from './modeDeContexte';
@@ -22,6 +21,7 @@ import { extraireLaRegle, laFicheRepondSeule } from './lacunes/ficheQuiRepond';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
 import type { Penchant } from '../../../electron/ragSelection';
 import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
+import { rangerLImageFabriquee, ErreurDeRangement } from './rangementDeLImage';
 
 interface GeminiResponse {
   candidates?: {
@@ -806,23 +806,12 @@ Use the names above verbatim. Do not invent a setting title.
              }
 
              if (uint8Array.byteLength > 1000) {
-                 const fileName = `ollama_flux_${Date.now()}.png`;
-                 if (window.appBridge?.npc?.saveAvatar) {
-                     const bufferCopy = (uint8Array.buffer as ArrayBuffer).slice(0);
-                     const localUrl = await window.appBridge.npc.saveAvatar(bufferCopy, fileName);
-                     
-                     try {
-                         const { useMediaStore } = await import('../../stores/useMediaStore');
-                         const addMedia = useMediaStore.getState().addMedia;
-                         const blob = new Blob([uint8Array], { type: 'image/png' });
-                         const file = new File([blob], fileName, { type: 'image/png' });
-                         await addMedia(file, ['AI Generated', 'Local Flux']);
-                     } catch (err) {
-                         console.warn("[AI Service] Media hub registration failed for Ollama:", err);
-                     }
-                     if (localUrl) return localUrl;
-                 }
-                 return `data:image/png;base64,${base64Data}`;
+                 return rangerLImageFabriquee({
+                     octets: uint8Array,
+                     nomDeFichier: `ollama_flux_${Date.now()}.png`,
+                     mimeType: 'image/png',
+                     etiquettes: ['AI Generated', 'Local Flux'],
+                 });
              }
           }
         } catch (ollamaErr) {
@@ -862,20 +851,12 @@ Use the names above verbatim. Do not invent a setting title.
           const octets = octetsDeLImage(base64);
 
           if (octets.byteLength > 1000) {
-            const fileName = `cloudflare_${Date.now()}.jpg`;
-            if (window.appBridge?.npc?.saveAvatar) {
-              const copie = (octets.buffer as ArrayBuffer).slice(0);
-              const localUrl = await window.appBridge.npc.saveAvatar(copie, fileName);
-              try {
-                const activeCampaignId = useSessionOSStore.getState().activeCampaignId;
-                const fichier = new File([new Blob([octets], { type: 'image/jpeg' })], fileName, { type: 'image/jpeg' });
-                await useMediaStore.getState().addMedia(fichier, ['AI Generated', 'Cloudflare'], activeCampaignId ? [activeCampaignId] : []);
-              } catch (hubErr) {
-                console.warn('[AI Service] Enregistrement au Media Hub échoué (Cloudflare) :', hubErr);
-              }
-              if (localUrl) return localUrl;
-            }
-            return `data:image/jpeg;base64,${base64}`;
+            return rangerLImageFabriquee({
+              octets,
+              nomDeFichier: `cloudflare_${Date.now()}.jpg`,
+              mimeType: 'image/jpeg',
+              etiquettes: ['AI Generated', 'Cloudflare'],
+            });
           }
           throw new Error('image trop petite pour être vraie');
         } catch (err) {
@@ -919,29 +900,12 @@ Use the names above verbatim. Do not invent a setting title.
             if (uint8Array.byteLength > 1000) {
               const mimeType = imgResponse.headers.get('content-type') || 'image/png';
               const extension = mimeType.split('/')[1] || 'png';
-              const fileName = `zimage_gen_${Date.now()}.${extension}`;
-              
-            if (window.appBridge?.npc?.saveAvatar) {
-              const bufferCopy = (uint8Array.buffer as ArrayBuffer).slice(0);
-              const localUrl = await window.appBridge.npc.saveAvatar(bufferCopy, fileName);
-              
-              // Register in Media Hub as well
-              try {
-                const { addMedia } = useMediaStore.getState();
-                const activeCampaignId = useSessionOSStore.getState().activeCampaignId;
-                const blob = new Blob([uint8Array], { type: mimeType });
-                const file = new File([blob], fileName, { type: mimeType });
-                await addMedia(file, ['AI Generated', 'NPC Portrait'], activeCampaignId ? [activeCampaignId] : []);
-                console.log(`[AI Service] Z-Image registered in Media Hub.`);
-              } catch (hubErr) {
-                console.warn(`[AI Service] Base64 for Media Hub failed (Z-Image):`, hubErr);
-              }
-
-              if (localUrl) return localUrl;
-            }
-              // Fallback Data URI si saveAvatar échoue
-              const base64 = btoa(String.fromCharCode(...uint8Array));
-              return `data:${mimeType};base64,${base64}`;
+              return rangerLImageFabriquee({
+                octets: uint8Array,
+                nomDeFichier: `zimage_gen_${Date.now()}.${extension}`,
+                mimeType,
+                etiquettes: ['AI Generated', 'NPC Portrait'],
+              });
             }
           }
         }
@@ -995,36 +959,31 @@ Use the names above verbatim. Do not invent a setting title.
       console.log(`[AI Service] Decoded buffer size: ${uint8Array.byteLength} bytes`);
 
       const extension = mimeType?.split('/')[1] || 'png';
-      const fileName = `ai_gen_${Date.now()}.${extension}`;
-      
-      if (window.appBridge?.npc?.saveAvatar && uint8Array.byteLength > 1000) {
-        console.log(`[AI Service] Saving image locally via bridge (${uint8Array.byteLength} bytes)...`);
-        // On s'assure de passer une COPIE du buffer pour éviter tout problème de détachement
-        const bufferCopy = (uint8Array.buffer as ArrayBuffer).slice(0);
-        const localUrl = await window.appBridge.npc.saveAvatar(bufferCopy, fileName);
 
-        // Register in Media Hub as well
-        try {
-          const { addMedia } = useMediaStore.getState();
-          const activeCampaignId = useSessionOSStore.getState().activeCampaignId;
-          const blob = new Blob([uint8Array], { type: mimeType || 'image/png' });
-          const file = new File([blob], fileName, { type: mimeType || 'image/png' });
-          await addMedia(file, ['AI Generated', 'NPC Portrait'], activeCampaignId ? [activeCampaignId] : []);
-          console.log(`[AI Service] Gemini Image registered in Media Hub.`);
-        } catch (hubErr) {
-          console.warn(`[AI Service] Base64 for Media Hub failed (Gemini):`, hubErr);
-        }
-
-        if (localUrl) {
-          console.log(`[AI Service] Image saved at: ${localUrl}`);
-          return localUrl;
-        }
+      if (uint8Array.byteLength > 1000) {
+        return rangerLImageFabriquee({
+          octets: uint8Array,
+          nomDeFichier: `ai_gen_${Date.now()}.${extension}`,
+          mimeType: mimeType || 'image/png',
+          etiquettes: ['AI Generated', 'NPC Portrait'],
+        });
       }
-      
-      console.warn("[AI Service] Local save failed or bridge unavailable, using Data URI fallback.");
-      return `data:${mimeType};base64,${base64Data}`;
-      
+
+      throw new Error('image trop petite pour être vraie');
+
     } catch (error: unknown) {
+      /*
+        ⛔ **Un échec de RANGEMENT ne doit pas devenir un avatar-robot.**
+
+        Ce `catch` dégrade vers un placeholder Dicebear quand le fournisseur n'a
+        rien rendu, et c'est bien : *dégrader plutôt qu'échouer.* Mais une image
+        fabriquée qu'on n'a pas su ranger est du travail perdu — la masquer
+        derrière un robot la cacherait exactement comme la data URI la cachait
+        avant. On la laisse remonter : les quatre appelants disent la raison au
+        meneur depuis la revue du 2026-09-16.
+      */
+      if (error instanceof ErreurDeRangement) throw error;
+
       const message = error instanceof Error ? error.message : String(error);
       console.error("[AI Service] Gemini Image Proxy Error:", message);
       return `https://api.dicebear.com/9.x/bottts/svg?seed=${Date.now()}`;
@@ -1749,7 +1708,7 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
         // Second attempt: sanitize common AI mistakes
         const sanitized = this.sanitizeJSON(jsonStr);
         return JSON.parse(sanitized) as T;
-      } catch (secondError) {
+      } catch {
         /*
           **Troisième tentative : les guillemets échappés qui font structure.**
 
@@ -1790,11 +1749,11 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
     let s = json.trim();
     
     // 1. Remove trailing commas before closing braces/brackets
-    s = s.replace(/,\s*([\}\]])/g, '$1');
+    s = s.replace(/,\s*([}\]])/g, '$1');
     
     // 2. Fix unquoted keys or keys with single quotes
     // Matches keys that are either unquoted (alphanumeric/underscore) or single-quoted
-    s = s.replace(/([{,]\s*)(['"])?([a-zA-Z0-9_]+)(['"])?\s*:/g, (_match, prefix, _q1, key, _q2) => {
+    s = s.replace(/([{,]\s*)(['"])?([a-zA-Z0-9_]+)(['"])?\s*:/g, (_match, prefix, _q1, key) => {
       return `${prefix}"${key}":`;
     });
 

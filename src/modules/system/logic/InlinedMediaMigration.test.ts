@@ -90,6 +90,25 @@ describe('scanInlinedMedia', () => {
         expect(entries.some(e => e.label.includes('Port'))).toBe(false);
     });
 
+    /*
+      ⛔ **L'angle mort du 2026-09-18.** La sauvegarde automatique portait
+      828 Ko de base64 dans `npc.savedEntities[0].avatar`, et ce recensement ne
+      pouvait pas le voir : il ne lisait que le magasin de session et les
+      favoris. NPC-OS a le sien, et c'est celui que remplit une demande de
+      portrait à l'IA.
+    */
+    it('relève les fiches de NPC-OS, y compris celle qui est ouverte', () => {
+        const entries = scanInlinedMedia({}, {}, {
+            currentEntity: { id: 'n0', name: 'Elis', avatar: PNG },
+            savedEntities: [
+                { id: 'n1', name: 'Deckard', avatar: PNG },
+                { id: 'n2', name: 'Rachel', avatar: 'm-deja-range' },
+            ],
+        });
+        expect(entries.map(e => e.field)).toEqual(['Fiche NPC-OS ouverte', 'Fiche NPC-OS']);
+        expect(entries.map(e => e.label)).toEqual(['pnj Elis', 'pnj Deckard']);
+    });
+
     it('relève aussi les deux champs des favoris', () => {
         const entries = scanInlinedMedia({}, {
             favorites: [{ id: 'f1', name: 'Épée', imageUrl: PNG, tokenUrl: PNG }],
