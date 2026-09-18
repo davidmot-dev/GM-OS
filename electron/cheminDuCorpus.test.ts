@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import { corpusVise, nomDeLaQuarantaine } from './cheminDuCorpus';
 import { grouperLeCorpus } from './groupesDuCorpus';
+import { parseRagIgnore, isIgnored } from './ragIgnore';
 
 const DOCS = path.resolve('/tmp/gmos-docs');
 
@@ -137,5 +138,47 @@ describe('ce qu’une campagne contient', () => {
         const corpus = grouperLeCorpus([{ chemin: 'fiches', octets: 1 }], 'campagne');
         expect(corpus).toHaveLength(1);
         expect(corpus[0].cle).toBe('source');
+    });
+});
+
+/**
+ * ⛔ **La quarantaine vit sous `docs/`, donc l'Oracle la verrait.**
+ *
+ * Une fiche « effacée » qui continue d'être citée serait pire que la pollution
+ * qu'on vient corriger : on aurait déplacé le problème, littéralement. D'où le
+ * `.ragignore` posé à la racine des purges **avant** le premier déplacement.
+ *
+ * ⚠️ **Cette garantie a été affirmée avant d'être éprouvée**, et pendant une
+ * journée elle n'a reposé que sur une lecture de la grammaire des motifs. Elle
+ * est vérifiée ici sur les **vrais chemins** qu'a produits la première purge
+ * réelle, le 2026-09-18 à 19 h 22 : 21 fiches de « Hadley Hope ».
+ */
+describe('le .ragignore de la quarantaine', () => {
+    /** Exactement ce qu'écrit `purgeDesCorpus` à la racine des purges. */
+    const portee = [{ base: '_purges', rules: parseRagIgnore([
+        "# Ce qui est ici a été retiré d'un corpus : l'Oracle ne doit plus le citer.",
+        '# Les fichiers restent lisibles et déplaçables à la main.',
+        '**',
+        '',
+    ].join('\n')) }];
+
+    it('exclut tout ce qui est rangé dessous, à n’importe quelle profondeur', () => {
+        const vrais = [
+            '_purges/2026-09-18-192245-hadley-hope/campaigns/hadley-hope/fiches/pitch-et-ton.md',
+            '_purges/2026-09-18-192245-hadley-hope/campaigns/hadley-hope/fiches/lieux-majeurs.md',
+            '_purges/2026-09-18-192245-hadley-hope/systems/alien/rules/degats.md',
+            '_purges/quelque-chose-a-la-racine.md',
+        ];
+        for (const chemin of vrais) {
+            expect(isIgnored(chemin, portee), chemin).not.toBeNull();
+        }
+    });
+
+    it('et ne touche à RIEN en dehors', () => {
+        // La garde ne vaut que si elle s'arrête à la porte : un `.ragignore` qui
+        // déborderait éteindrait l'Oracle sur le corpus vivant.
+        expect(isIgnored('campaigns/anges-de-feu/fiches/pitch.md', portee)).toBeNull();
+        expect(isIgnored('systems/alien/rules/degats.md', portee)).toBeNull();
+        expect(isIgnored('_purgestion/faux-ami.md', portee)).toBeNull();
     });
 });

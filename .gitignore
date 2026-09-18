@@ -73,6 +73,14 @@ backups/
 # exactement ce que l etape de revue existe pour empecher.
 docs/systems/*/drafts/
 
+# La quarantaine des purges -- ce que le meneur a retire d'un corpus.
+#
+# Elle n'a rien a faire dans le depot : c'est de la donnee de SA machine, et
+# l'y committer republierait sous un second chemin les fiches qu'on vient
+# justement de sortir du corpus. Un `git add -A` apres une purge le ferait
+# sans rien demander a personne.
+docs/_purges/
+
 # Espace de travail Obsidian ouvert sur la documentation : local a la machine.
 .obsidian/
 
