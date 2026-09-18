@@ -4,6 +4,7 @@ import { Images, RefreshCw, ShieldCheck } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { useFavoriteStore } from '../../modules/favorite/useFavoriteStore';
 import { useNPCStore } from '../../modules/npc/useNPCStore';
+import { sessionBackupManager } from '../../modules/session/logic/SessionBackupManager';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { gmToast } from '../../stores/useToastStore';
 import {
@@ -96,6 +97,36 @@ export const InlinedMediaPanel: React.FC = () => {
                 useSessionOSStore.setState(state as any);
                 useFavoriteStore.setState(favorites as any);
                 useNPCStore.setState(npc as any);
+
+                /*
+                  ⛔ **Sans cette ligne, la sauvegarde automatique refuse d'écrire
+                  — et elle a refusé pendant plus d'une heure le 2026-09-18.**
+
+                  Reprendre deux images de 2 Mo fait fondre l'état persisté de
+                  76 % : la garde anti-rétrécissement de `sauvegardeAutomatique`
+                  voit alors une charge qui fait moins de la moitié de la
+                  précédente, et traite ça comme une perte. C'est son travail,
+                  et il est juste : *c'est le moment où une perte se voit, ou
+                  elle ne se voit jamais.*
+
+                  Mais `baisseAttendue` existe précisément pour le cas légitime,
+                  et **seule la purge savait le poser**. Le meneur, lui, n'avait
+                  aucun moyen de dire que la baisse était voulue : il a dû sortir
+                  seize fichiers de son dossier de sauvegardes pour débloquer son
+                  propre filet.
+
+                  ⭐ *Une garde qui protège des données doit avoir une porte pour
+                  le cas légitime qu'elle bloque — sinon ce n'est plus une garde,
+                  c'est une impasse.* Et prévenir dans un message ne remplace pas
+                  un mécanisme : David avait été prévenu avant de migrer.
+
+                  Cet endroit est le seul qui **sache** que le rétrécissement est
+                  légitime, puisqu'il vient de le provoquer.
+                */
+                void sessionBackupManager.sauvegarderMaintenant(
+                    `après la reprise de ${result.migrated} média(s) en base64`,
+                    { baisseAttendue: true },
+                );
             }
 
             setReport(result);

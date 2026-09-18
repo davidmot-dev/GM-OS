@@ -6791,6 +6791,191 @@ défauts se trouvent. Le premier aperçu sur un vrai corpus est le geste qui jug
 
 ---
 
+### 82 · ⭐ 76 % de l'état persisté étaient deux images en base64 (2026-09-18, après-midi)
+
+David : *« est-ce que tu vois d'autres pistes à explorer pour la stabilité et la vitesse ? »*
+
+La réponse n'est pas venue d'une revue de code : elle est venue d'**ouvrir la sauvegarde automatique
+et de compter**.
+
+| Poids | Où |
+| --- | --- |
+| **1 250 Ko** | `clues[50].mediaUrl` — un JPEG entier, en base64 |
+| **828 Ko** | `npc.savedEntities[0].avatar` — idem |
+| 668 Ko | **tout le reste de l'application** |
+
+Les 51 autres indices portaient sagement un identifiant `m-652dcfa1…`. Un seul portait un mégaoctet.
+
+#### ⛔ Et le code pouvait le refaire
+
+Les quatre fournisseurs de `generateImage` finissaient tous par la même forme :
+
+```ts
+const localUrl = await saveAvatar(octets, nom);           // un chemin de fichier
+try { await addMedia(fichier, etiquettes); } catch { }    // ⛔ le retour JETÉ
+if (localUrl) return localUrl;
+return `data:image/jpeg;base64,${base64}`;                // ⛔ le repli muet
+```
+
+**`addMedia` rend l'identifiant du média — et les quatre le jetaient.** Les appelants nomment ce
+résultat `mediaId` et l'écrivent dans un magasin **persisté**.
+
+⭐ ***C'est le nom de la variable qui a caché le défaut.*** Et rien ne pouvait se plaindre : une data
+URI est une image parfaitement valide, elle s'affiche comme les autres.
+
+⚠️ **Ce que ça coûtait au-delà du poids.** Une image sans entrée au Media Hub est **hors du
+système** : le miroir des médias ne la sauvegarde pas, `MediaCleanupService` ne la voit ni comme
+usage ni comme orphelin, elle n'est pas dédupliquée — et un magasin persisté réécrit **tout** à
+chaque `set()`.
+
+#### ⚠️ La réparation existait déjà — j'ai failli en écrire un doublon
+
+En allant poser l'écran, `InlinedMediaPanel` et son service de 242 lignes étaient déjà là, avec la
+même forme en deux temps. *La leçon « vérifier que ça n'existe pas avant de le construire » a été
+payée à moitié : le service était écrit avant que je ne regarde.*
+
+Il couvrait **huit champs**, dont `clues[].mediaUrl` — il savait donc voir l'indice de 1 250 Ko, et
+il n'avait jamais été lancé. Son **angle mort réel** était ailleurs : il ne lisait que le magasin de
+session et les favoris. NPC-OS a le sien, et c'est celui que remplit une demande de portrait à l'IA.
+Greffé, avec sa subtilité — ⚠️ **la fiche ouverte et sa copie rangée sont DEUX porteurs de la même
+image**, et n'en réparer qu'un la ferait revenir au premier rechargement.
+
+#### ✅ Éprouvé en réel le jour même — et l'incident qui a suivi
+
+David a lancé la migration. Le journal le confirme : **2 812 229 → 683 961 octets**, exactement les
+−76 % annoncés.
+
+⛔ **Et la sauvegarde automatique a refusé d'écrire, à 17 h 23 puis à 18 h 29 :**
+
+> *« La sauvegarde ferait 683 961 octets contre 2 812 229 pour la précédente. Un rétrécissement de
+> plus de moitié qui ne s'explique pas est traité comme une perte, pas comme une sauvegarde. »*
+
+La garde a fait exactement son travail. Mais **le filet est resté en panne plus d'une heure**, et le
+meneur n'avait aucun moyen de dire « cette baisse est voulue » : `baisseAttendue` existe, et seule la
+purge sait le poser.
+
+⭐ ***Une garde qui protège des données doit avoir une porte pour le cas légitime qu'elle bloque —
+sinon ce n'est plus une garde, c'est une impasse.*** Prévenir dans un message ne suffit pas : je
+l'avais annoncé à David avant qu'il ne migre, et l'incident a eu lieu quand même.
+
+#### ✅ Le correctif de l'incident, posé le soir même
+
+`InlinedMediaPanel` demande maintenant une sauvegarde **en déclarant la baisse** après une migration
+réussie. Un contrôle lit la source de l'écran et tombe si la ligne disparaît — **vu rougir sur
+mutation**. Le filet du meneur a été rétabli à 18 h 36 : **683 955 octets**, sur l'état migré.
+
+**Ancres** : `src/modules/ai/rangementDeLImage.ts`, `AIService.ts` (les quatre chemins),
+`InlinedMediaMigration.ts` (`ScannableNpc`), `InlinedMediaPanel.tsx` (`baisseAttendue`).
+
+**Vérifié** : une garde lit la source d'`AIService` et refuse le retour d'un repli en data URI —
+**vue rougir sur mutation**. 5 377 tests Vitest, 192 E2E.
+
+---
+
+### 83 · ⭐ Le magasin de session sérialisait 1,9 Mo à chaque `set()` (2026-09-18, après-midi)
+
+Même motif que le § 78, mais sur le plus gros magasin de l'application : Zustand appelle `setItem()`
+à **chaque** `set()`, sans condition, et les tranches de ce magasin en comptent **163**.
+
+⚠️ **Le coût n'est pas le même que celui du tableau blanc.** Ce magasin écrit dans **IndexedDB**,
+donc l'écriture disque est asynchrone. Ce qui bloque, c'est le `JSON.stringify`, sur le fil
+principal. L'enveloppe est donc posée **au-dessus** du stockage JSON — posée en dessous, elle
+recevrait une chaîne déjà sérialisée et paierait quand même le vrai coût.
+
+#### ⚠️ Une erreur de comptage à ne pas refaire
+
+J'avais annoncé *« un seul magasin emploie l'écriture différée »*. **Faux** : j'avais cherché le nom
+de l'outil au lieu de la fabrique qui l'enveloppe. **Huit magasins** passent par `stockageLocalDuMJ()`
+— `useBibliothequeDesFiches`, `useClockStore`, `useCombatStore`, `useDiceStore`, `useFavoriteStore`,
+`useMapStore`, `useRaccourcisStore`, `useWhiteboardStore`.
+
+#### ⛔ La garde porte AVANT le tampon
+
+`autorise` reprend les **deux** conditions de `gmOnlyStateStorage`, et ce n'est pas une redite : un
+tampon qui accepte une écriture interdite la **sert ensuite en lecture** pendant 250 ms. Une
+réhydratation tombant dans cette fenêtre y relirait un état qui n'avait pas le droit d'exister —
+c'est-à-dire les mocks. *C'est le mécanisme exact de la seconde perte de campagnes.*
+
+Le magasin de session ne peut pas passer par `stockageLocalDuMJ` (il écrit dans IndexedDB), donc son
+inscription au registre des filets de fermeture est un **geste séparé** — et un geste séparé s'oublie.
+D'où `inscrireUnStockageDiffere`, seul point d'entrée.
+
+#### Quatre essais existants sont passés au rouge, et ils avaient raison
+
+`getItem` sert ce qui attend **avant** d'aller au disque, ce qui court-circuite le seul endroit posant
+le drapeau de relecture. Vérifié impossible en production — tant que la base n'est pas relue,
+l'écriture est refusée *avant* le tampon, donc il est vide à la première lecture. C'était une
+pollution entre essais, par un singleton de module.
+
+⚠️ **Une phrase du dépôt est devenue fausse et a été corrigée** : `ecritureReserveeAuMJ` affirmait
+*« jamais une campagne, qui passe par `PersistenceService` et IndexedDB »*. Ce qui rattrape n'est plus
+la nature du magasin, ce sont les trois filets de fermeture et la sauvegarde automatique.
+
+**Vérifié** : deux mutations posées — retirer la garde fait tomber les deux essais de refus, oublier
+l'inscription en fait tomber huit. 5 381 Vitest, **192 E2E contre une référence prise AVANT**.
+
+---
+
+### 84 · ⭐ Le profilage React — et pourquoi le chantier des sélecteurs n'aura pas lieu (2026-09-18, soir)
+
+97 composants appellent `useSessionOSStore()` sans sélecteur. La déduction était claire : tous se
+re-rendent à chaque changement. *Une déduction n'est pas une mesure*, et le chantier qu'elle
+justifierait se compte en soirées sur 97 fichiers.
+
+#### ⛔ Deux versions de cette mesure étaient fausses
+
+| Instrument | Ce qu'il disait | Pourquoi |
+| --- | --- | --- |
+| Attente par `requestAnimationFrame` | **0 ms** | 120 images × 16,67 ms = 2 000 ms des deux côtés — la cadence quantifiait tout |
+| Attente par tâche, temps au chronomètre | **0,23 ms** | noyé dans le plancher de `setTimeout` (~5 ms) |
+| **`actualDuration` de React** | **2,24 ms** | mesuré **dans** le commit |
+
+⭐ ***Un instrument dont le plancher dépasse le signal ne mesure pas zéro : il ne mesure rien.*** Et
+dans un build normal, `actualDuration` est absent — la spec s'ignore **en le disant** plutôt que de
+rapporter un 0 rassurant.
+
+#### Le harnais
+
+`GMOS_PROFILAGE=1 npm run build` alias `react-dom/client` vers la variante **profiling** de React, la
+seule qui renseigne `actualDuration`. ⚠️ **Sans la variable, le build de production est inchangé.**
+
+La spec installe un faux crochet React DevTools **avant** le chargement — React lit ce crochet à son
+initialisation et ne le relit jamais — puis écrit 120 fois une clé que **rien ne lit dans le dépôt**.
+Elle mesure aussi sur la **vraie base**, lue en seule lecture dans un profil jetable.
+
+⚠️ La campagne témoin porte 2 entités là où la vraie base en porte 125 : *mesurer sur le témoin
+répondrait à une autre question.*
+
+#### Le chiffre, et ce qu'il dit vraiment
+
+Sur la base réelle, pour une clé que personne n'affiche : **79 composants re-rendus, un commit
+complet, 2,24 ms entièrement perdus.**
+
+⭐ **Le coût ne dépend PAS du volume de données** — 3,1 ms sur la campagne témoin contre 2,24 sur
+125 entités. *Ce n'est pas la donnée qui coûte, c'est la structure.*
+
+`App.tsx` s'abonnait au magasin **entier** pour lire `activeCampaignId`, à la racine de l'arbre.
+Corrigé en sélecteur. Gain mesuré : 2,24 → **2,00 ms**, 79 → 76 composants.
+
+**Décevant, et c'est le résultat utile** : `App` se re-rend toujours 121 fois. La cause est ailleurs —
+`useNexusSynchronizer.ts:618` s'abonne à **tout** changement de session.
+
+#### La décision
+
+**Le chantier des 97 sélecteurs n'aura pas lieu.** 2 ms par changement, à la fréquence réelle des
+écritures de session — quelques-unes par minute, pas soixante par seconde — ne se voient pas en
+séance. Ce qui reste à tirer, c'est le fil du synchronisateur : *un abonnement à tout changement, à
+la racine, grossit avec l'application.*
+
+⭐ C'est la **deuxième fois de la journée** qu'une mesure contredit une annonce que j'avais faite :
+le minuteur de Clock-OS coûtait 0,0004 % du fil principal, et n'a pas été touché non plus.
+
+**Ancres** : `e2e/profilageDesRendus.spec.ts`, `vite.config.ts` (`GMOS_PROFILAGE`), `App.tsx`.
+
+**Vérifié** : 5 381 Vitest, **195 E2E** (192 de référence + 3 de profilage).
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -6813,6 +6998,9 @@ défauts se trouvent. Le premier aperçu sur un vrai corpus est le geste qui jug
 | 15 | **Les dés en 3D du Player Hub** | ✅ **REFAITS le 17/09** — ⛔ quatre manques, dont trois qui ne se règlent pas : **aucun chiffre**, une orientation finale **tirée au sort** (donc sans rapport avec le jet), du **verre sans rien à réfracter**, et un **d100 sphérique**. ⭐ Deux défauts trouvés en chemin : le démontage **détruisait les géométries partagées** (plus rien ne s'affichait au remontage), et **le d10 n'était pas un trapézoèdre** — vingt facettes au lieu de dix, dont cinq à l'envers. ⭐ *Un dé n'a de faces que le jour où on veut écrire dessus.* Chiffres, atterrissage sur la valeur, environnement, ombre au sol, et **trois matières au choix du meneur** (§ 79) | — | Rien. ⭐ **2e passe** : ⛔ le réglage **n'arrivait jamais au Hub** (le segment `dice` portait 3 champs sur 5, et il était écrit **deux fois**) — *un réglage qui ne voyage pas jusqu'à l'écran qui l'applique n'est pas un réglage, c'est un bouton* ; et les dés étaient **enfermés** dans une couche `z-[60]` parente. ⭐ **3e passe** : les dés **s'effacent une fois posés** et le résultat tient **5 s de plus** — *la pose est un événement, pas une durée*, avec deux filets qui dégradent vers le comportement d'avant. ⭐ **4e passe** : les dés **ne se traversent plus** (sphères au rayon moyen, calculé par solide, séparation appliquée **aussi aux dés posés**) et le placement de départ ne les fait plus naître imbriqués ; ils restent **2 s posés** avant de s'effacer. ⛔ **Une mutation de contrôle ne s'était jamais appliquée** — fins de ligne mixtes — *et un essai vert sur du code intact ressemble à une garde qui marche*. ⚠️ **À confirmer à l'écran**, le verre en premier |
 | 16 | **Le décor de campagne au repos** | ✅ **CORRIGÉ le 17/09** — ⭐ **la fonctionnalité existait de bout en bout** (champ, réglage, transport, réception, affichage) et la campagne ouverte avait bien une image : ⛔ **quatre chemins écrivaient `data || null`**, et arrêter une projection envoie une chaîne vide — donc `null`, donc *écran éteint* au lieu de *rien à montrer*. Le correctif du 13/09 n'avait traité qu'un cinquième chemin. ⭐ **Les deux gestes sont désormais séparés** : `Ctrl+0` rend le décor, `Ctrl+Maj+0` éteint vraiment (§ 80) | — | Rien. ⭐ **2e passe** : il ne revenait toujours pas **au lancement** — le Hub lisait le seul champ **non persisté** des deux, au lieu de déduire le décor de `campaigns[]` qu'il a déjà sur son disque. ⛔ **3e passe** : j'avais **détourné les boutons rouges** qu'il utilise pour arrêter une projection — *un libellé décrit une intention, un geste quotidien EST une intention* ; le noir a désormais son propre bouton. ⚠️ **6 campagnes sur 7 n'ont aucune image de fond** |
 | 17 | **Repartir de zéro sur un jeu ou une campagne** | ✅ **CONSTRUIT le 18/09** — ⛔ la cause n'était pas un oubli : le dossier `docs/systems/<jeu>/` survivait, et **la Forge enrichit un corpus existant** — donc reforger ne repartait *jamais* de zéro. `deleteGameDriver` tenait en **une ligne**, `deleteCampaign` ignorait sept modules dont le **butin**. ⭐ Un **registre des détenteurs** et un **test qui lit les sources** et refuse un magasin persisté non déclaré. Aperçu cochable lot par lot, **quarantaine** dans `docs/_purges/` et instantané préalable — rien n'est supprimé (§ 81). ⚠️ **`ai:list-dir` ne rend que des fichiers** : défaut préexistant laissé en place, à traiter | Ouvrir la gomme sur un jeu déjà forgé et lire l'aperçu | Rien. ⚠️ **Rien n'a été vu à l'écran** |
+| 18 | **Les images collées dans l'état** | ✅ **CORRIGÉ ET ÉPROUVÉ EN RÉEL le 18/09** — ⛔ **2 078 Ko sur 2 746** de la sauvegarde étaient DEUX images en base64, et les quatre fournisseurs pouvaient les refaire : `addMedia` rendait l'identifiant, **ils le jetaient**, et le repli muet rendait l'image entière. ⭐ *C'est le nom de la variable — `mediaId` — qui a caché le défaut.* La réparation **existait déjà** et n'avait jamais été lancée ; son angle mort était NPC-OS. Migration réelle : **2 812 229 → 683 961 octets** (§ 82). ⛔ **Et la sauvegarde a refusé d'écrire pendant plus d'une heure** — la garde anti-rétrécissement n'a pas de porte pour une baisse légitime | ✅ **Correctif posé le soir même** : la migration déclare la baisse, contrôle vu rougir. Filet rétabli à 18 h 36 | Rien |
+| 19 | **L'écriture du magasin de session** | ✅ **DIFFÉRÉE le 18/09** — 163 `set()` sérialisaient chacun l'état durable entier. Une écriture par fenêtre de 250 ms, l'enveloppe **au-dessus** du stockage JSON (le coût est le `stringify`, pas le disque : IndexedDB est asynchrone). ⛔ La garde porte **avant** le tampon, sans quoi une écriture interdite serait servie en lecture. ⚠️ **J'avais annoncé « un seul magasin diffère » : ils sont HUIT** (§ 83) | — | Rien. ⚠️ **Non vu en séance** |
+| 20 | **Le chantier des sélecteurs** | ⛔ **N'AURA PAS LIEU, et c'est une décision mesurée** — harnais de profilage React construit (`GMOS_PROFILAGE=1`, `actualDuration`, mesure sur la **vraie base**). Résultat : **79 composants et 2,24 ms** perdus par changement, mais ⭐ **le coût ne dépend pas du volume de données** — c'est la structure, pas la donnée. `App.tsx` s'abonnait au magasin entier pour UN champ : corrigé, gain 2,24 → 2,00 ms seulement. ⛔ **Deux versions de la mesure étaient fausses** (rAF puis chronomètre) (§ 84) | Tirer le fil de `useNexusSynchronizer`, qui s'abonne à TOUT changement | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

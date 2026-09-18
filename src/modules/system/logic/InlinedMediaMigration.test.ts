@@ -270,3 +270,38 @@ describe('migrateInlinedMedia', () => {
         expect(lib.addMedia).not.toHaveBeenCalled();
     });
 });
+
+/**
+ * ⛔ **L'incident du 2026-09-18, 17 h 23 — et le contrôle qui l'aurait vu.**
+ *
+ * La migration a parfaitement fonctionné : l'état persisté est passé de
+ * 2 812 229 à 683 961 octets. **Et la sauvegarde automatique a refusé d'écrire
+ * pendant plus d'une heure**, parce qu'une charge qui fait moins de la moitié
+ * de la précédente est traitée comme une perte.
+ *
+ * La garde a raison — *c'est le moment où une perte se voit, ou elle ne se voit
+ * jamais.* Mais `baisseAttendue` existe pour le cas légitime, et seule la purge
+ * savait le poser : le meneur a dû sortir seize fichiers de son dossier de
+ * sauvegardes pour débloquer son propre filet.
+ *
+ * ⭐ *Une garde qui protège des données doit avoir une porte pour le cas
+ * légitime qu'elle bloque.* Ce contrôle lit la source de l'écran : il n'est pas
+ * élégant, mais il tombe si quelqu'un retire la ligne — et le défaut, lui, ne
+ * se voit qu'une heure plus tard, dans un journal que personne n'ouvre.
+ */
+describe('la migration annonce son rétrécissement à la sauvegarde', () => {
+    const source = (async () =>
+        (await import('../../../components/settings/InlinedMediaPanel.tsx?raw')).default as string)();
+
+    it('demande une sauvegarde en déclarant la baisse attendue', async () => {
+        const code = await source;
+        /* ⚠️ Sans ce témoin, une lecture qui rend une chaîne vide passerait au
+           vert pour la pire raison. */
+        expect(code, 'la source du panneau n’a pas été lue').toContain('migrateInlinedMedia');
+
+        expect(code, 'le panneau ne demande plus de sauvegarde après migration')
+            .toContain('sauvegarderMaintenant');
+        expect(code, '⛔ la sauvegarde ne déclare pas `baisseAttendue` : elle sera REFUSÉE')
+            .toMatch(/sauvegarderMaintenant[\s\S]{0,200}baisseAttendue:\s*true/);
+    });
+});

@@ -1,10 +1,13 @@
-# État et reprise — nuit du 2026-09-17 au 18, **et la journée du 18**
+# État et reprise — nuit du 2026-09-17 au 18, **la journée et la soirée du 18**
 
-> **Base saine.** `tsc -b --force` propre, **5 368 tests verts** (422 fichiers, 1 ignoré, 4 tests
-> ignorés), branche `feature/tablet-hub-pwa`.
+> **Base saine.** `tsc -b --force` propre, **5 381 tests Vitest** et **195 tests E2E** (192 de
+> référence + 3 de profilage), branche `feature/tablet-hub-pwa`.
 >
-> ⚠️ **Mis à jour le 18 dans la journée** : la purge d'un pilote ou d'une campagne (§ 81) s'ajoute
-> aux cinq chantiers de la nuit. **Elle n'a pas été vue à l'écran.**
+> ⚠️ **Ce document couvre trois moments** : la nuit du 17 au 18 (§§ 76 à 80), la purge du matin
+> (§ 81), puis l'après-midi et la soirée consacrées à la stabilité et à la vitesse (§§ 82 à 84).
+>
+> ⛔ **Un reste bloquant, et un seul** : le `baisseAttendue` de la migration des images n'est pas
+> posé. Voir « Par quoi reprendre ».
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule.
@@ -32,7 +35,11 @@
 | `aa716f18` | `feat(hub)` — les dés en 3D lisibles, et le décor de campagne (§ 79 et § 80) |
 | `9e1dbeb8` | `docs` — le registre 76 à 80, et ce document |
 | `e0718ba1` | `feat(purge)` — tout effacer d'un pilote ou d'une campagne (§ 81) |
-| *ce commit* | `docs` — le registre 81, et la mise à jour de ce document |
+| `bcc4a2a0` | `docs` — le registre 81 |
+| `28d56f27` | `fix(images)` — une image fabriquée ne repart plus dans l'état persisté (§ 82) |
+| `9a05a855` | `perf(session)` — une écriture par fenêtre de 250 ms (§ 83) |
+| `d619a059` | `perf(rendus)` — le harnais de profilage React, et la racine qui s'abonnait à tout (§ 84) |
+| *ce commit* | `docs` — le registre 82 à 84, et la mise à jour de ce document |
 
 ⚠️ **Les dés et le décor sont dans un seul commit** : ils partagent `useHubSync` et les traductions.
 Les découper aurait produit un commit qui ne compile pas — *un historique lisible ne vaut pas un commit
@@ -71,7 +78,82 @@ d'écrire une ligne reste le geste le plus rentable de ce dépôt.*
 
 ---
 
+## Ce que l'après-midi et la soirée du 18 ont produit
+
+David : *« est-ce que tu vois d'autres pistes à explorer pour la stabilité et la vitesse ? »*
+
+| Quoi | Ce qui est entré |
+| --- | --- |
+| **Les images collées dans l'état** | ⛔ **2 078 Ko sur 2 746** de la sauvegarde étaient DEUX images en base64, et les quatre fournisseurs pouvaient les refaire. ✅ **Migré en réel : 2 812 229 → 683 961 octets** (§ 82) |
+| **L'écriture du magasin de session** | ⭐ Une écriture par fenêtre de 250 ms au lieu d'une par `set()` — ils étaient 163 (§ 83) |
+| **Le chantier des sélecteurs** | ⛔ **N'aura pas lieu, et c'est une décision mesurée** : harnais de profilage React construit, 2,24 ms perdus par changement, mais le coût ne vient pas du volume (§ 84) |
+| Le minuteur de Clock-OS | ⛔ **Non corrigé** : mesuré à 0,0004 % du fil principal |
+
+⭐ **Le motif de la journée : deux fois sur quatre, la mesure a contredit l'annonce que j'avais
+faite.** Le minuteur et les sélecteurs étaient des intuitions raisonnables et fausses ; les images en
+base64 n'étaient pas une intuition du tout — elles sont venues d'avoir **ouvert le fichier de
+sauvegarde et compté**.
+
+---
+
+## ⛔ L'incident de 17 h 23 — une garde sans porte de sortie
+
+La migration des images a parfaitement fonctionné. **Et la sauvegarde automatique a refusé d'écrire
+pendant plus d'une heure**, à 17 h 23 puis à 18 h 29 :
+
+> *« La sauvegarde ferait 683 961 octets contre 2 812 229 pour la précédente. Un rétrécissement de
+> plus de moitié qui ne s'explique pas est traité comme une perte, pas comme une sauvegarde. »*
+
+La garde a fait exactement son travail — c'est elle qui protège contre une perte silencieuse. Mais
+`baisseAttendue` existe **et seule la purge sait le poser** : le meneur n'avait aucun moyen de dire
+« cette baisse est voulue ».
+
+⭐ ***Une garde qui protège des données doit avoir une porte pour le cas légitime qu'elle bloque —
+sinon ce n'est plus une garde, c'est une impasse.***
+
+⚠️ **Et prévenir ne remplace pas un mécanisme.** J'avais annoncé le rétrécissement à David **avant**
+qu'il ne migre, en nommant la garde et le drapeau. L'incident a eu lieu quand même. *Un avertissement
+dans une conversation est une note de bas de page que personne ne relit au moment où elle compte.*
+
+### Ce qui a été fait, et ce qui reste
+
+Le déblocage a demandé **trois messages**, parce que mon premier conseil était faux : j'avais dit
+« sortez le fichier », alors que la garde compare à la **plus récente restante** — et les seize
+l'étaient toutes. Les 12 récentes faisaient 2,7 Mo, les 4 plus anciennes 1,5 Mo, et 684 Ko fait moins
+de la moitié des deux. *Sortir un fichier à la fois était une partie perdue d'avance.*
+
+Les seize sont désormais rangées dans `Security_Backup_GMOS/Avant-migration/` — la garde ne descend
+pas dans les sous-dossiers, donc elles ne bloquent plus et **rien n'est perdu**.
+
+⛔ **LE CORRECTIF DE FOND N'EST PAS POSÉ.** La migration doit déclarer elle-même la baisse, comme le
+fait la purge :
+
+```ts
+sessionBackupManager.sauvegarderMaintenant('après le rapatriement des images', { baisseAttendue: true });
+```
+
+Une ligne, au seul endroit qui **sait** que le rétrécissement est légitime. Sans elle, le prochain
+meneur qui migre retombera exactement dans cette heure.
+
+---
+
 ## 1 · Par quoi reprendre
+
+### ✅ LE `baisseAttendue` DE LA MIGRATION EST POSÉ
+
+Corrigé le 18 au soir, une fois GM-OS fermé. `InlinedMediaPanel` demande désormais une sauvegarde en
+déclarant la baisse, après une migration réussie — c'est le seul endroit qui **sache** que le
+rétrécissement est légitime, puisqu'il vient de le provoquer.
+
+Un contrôle lit la source de l'écran et tombe si la ligne disparaît. **Vu rougir sur mutation.**
+
+⚠️ **Le filet du meneur a été rétabli le soir même** : sauvegarde de fermeture à 18 h 36,
+**683 955 octets**, sur l'état migré. Les seize anciennes dorment dans
+`Security_Backup_GMOS/Avant-migration/`.
+
+### ✅ LA PURGE A ÉTÉ OUVERTE À L'ÉCRAN
+
+David l'a essayée le 18 au soir. ⚠️ **Aucun dossier `docs/_purges/` n'a été créé** : l'aperçu a donc été lu sans que rien ne soit purgé sur le disque — ce qui est exactement le geste recommandé pour un premier essai. *Le chemin d'écriture de la quarantaine, lui, n'a encore jamais servi en réel.*
 
 ### ⚠️ LA PURGE N'A JAMAIS ÉTÉ OUVERTE À L'ÉCRAN
 
@@ -109,6 +191,39 @@ pixel et ne coûte qu'une soirée. *Rien d'autre ne doit commencer avant elle.*
 ---
 
 ## 2 · Ce qu'il ne faut pas repayer
+
+### ⛔ Une garde qui bloque un cas légitime doit avoir une porte
+
+La garde anti-rétrécissement de la sauvegarde a refusé d'écrire pendant plus d'une heure après la
+migration des images — à raison, puisqu'elle ne pouvait pas savoir que la baisse de 76 % était voulue.
+`baisseAttendue` existe, et **seule la purge sait le poser**.
+
+⚠️ **J'avais prévenu David avant qu'il ne migre**, en nommant la garde et le drapeau. L'incident a eu
+lieu quand même. ⭐ *Un avertissement dans une conversation est une note de bas de page que personne ne
+relit au moment où elle compte — prévenir ne remplace pas un mécanisme.*
+
+Et le déblocage a demandé trois messages parce que mon premier conseil était faux : la garde compare à
+la **plus récente restante**, pas à un fichier en particulier. *Quand on conseille de retirer « le »
+fichier qui bloque, il faut d'abord vérifier qu'il n'y en a pas seize.*
+
+### ⛔ Un instrument dont le plancher dépasse le signal ne mesure pas zéro, il ne mesure rien
+
+Deux rédactions du profilage des rendus ont rendu **0 ms** et **0,23 ms** avant qu'une troisième ne
+donne 2,24 ms. La première attendait une image (16,67 ms de plancher), la seconde une tâche (~5 ms) ;
+seule `actualDuration`, mesurée **dans** le commit par React lui-même, voyait quelque chose.
+
+⭐ *Un zéro qui veut dire « je n'ai rien mesuré » ne doit jamais pouvoir se lire « il n'y a rien à
+mesurer ».* La spec refuse désormais de rapporter un chiffre quand le build n'est pas celui du
+profilage : elle s'ignore en le disant.
+
+### ⚠️ Vérifier qu'un outil n'existe pas, même quand on croit inventer
+
+`InlinedMediaPanel` et son service de 242 lignes étaient déjà là, avec la même forme en deux temps que
+ce que j'écrivais. Je l'ai vu en allant **poser l'écran**, pas avant. *La leçon du 17 a été payée à
+moitié : le service était écrit quand je l'ai découvert, et il a fallu le supprimer.*
+
+Ce qui restait à faire n'était pas de le reconstruire mais de trouver **pourquoi il n'avait pas
+attrapé les deux images** : il n'avait jamais été lancé, et il ne lisait pas le magasin de NPC-OS.
 
 ### ⛔ Un garde-fou qui ne peut pas échouer n'en est pas un
 
