@@ -1,7 +1,10 @@
-# État et reprise — nuit du 2026-09-17 au 18
+# État et reprise — nuit du 2026-09-17 au 18, **et la journée du 18**
 
-> **Base saine.** `tsc -b` propre, **5 329 tests verts** (418 fichiers, 1 ignoré), `vite build` propre,
-> branche `feature/tablet-hub-pwa`.
+> **Base saine.** `tsc -b --force` propre, **5 368 tests verts** (422 fichiers, 1 ignoré, 4 tests
+> ignorés), branche `feature/tablet-hub-pwa`.
+>
+> ⚠️ **Mis à jour le 18 dans la journée** : la purge d'un pilote ou d'une campagne (§ 81) s'ajoute
+> aux cinq chantiers de la nuit. **Elle n'a pas été vue à l'écran.**
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule.
@@ -28,6 +31,8 @@
 | `0a026737` | `feat(light)` — l'audit du catalogue, la fusillade, les solistes, dix effets (§ 77) |
 | `aa716f18` | `feat(hub)` — les dés en 3D lisibles, et le décor de campagne (§ 79 et § 80) |
 | `9e1dbeb8` | `docs` — le registre 76 à 80, et ce document |
+| `e0718ba1` | `feat(purge)` — tout effacer d'un pilote ou d'une campagne (§ 81) |
+| *ce commit* | `docs` — le registre 81, et la mise à jour de ce document |
 
 ⚠️ **Les dés et le décor sont dans un seul commit** : ils partagent `useHubSync` et les traductions.
 Les découper aurait produit un commit qui ne compile pas — *un historique lisible ne vaut pas un commit
@@ -51,7 +56,32 @@ suffi de suivre sa chaîne avant d'écrire une ligne pour trouver ce qui l'empê
 
 ---
 
+## Ce que la journée du 18 a produit
+
+David : *« quand je les efface il reste des résidus qui polluent la tentative suivante. »*
+
+| Quoi | Ce qui est entré |
+| --- | --- |
+| **Purger un pilote ou une campagne** | ⛔ La cause n'était **pas un oubli** : le dossier `docs/systems/<jeu>/` survivait, et **la Forge enrichit un corpus existant** — donc reforger ne repartait *jamais* de zéro. ⭐ Un **registre des détenteurs** et un **test qui lit les sources**, aperçu cochable lot par lot, **quarantaine** au lieu de suppression (§ 81) |
+
+⭐ **Le motif de la nuit s'est répété une sixième fois** : la demande nommait un symptôme (« des
+résidus »), et la cause était une fonctionnalité qui faisait correctement son travail sur une base
+qu'on croyait effacée. *Quatre demandes sur cinq cette nuit, et celle-ci : suivre la chaîne avant
+d'écrire une ligne reste le geste le plus rentable de ce dépôt.*
+
+---
+
 ## 1 · Par quoi reprendre
+
+### ⚠️ LA PURGE N'A JAMAIS ÉTÉ OUVERTE À L'ÉCRAN
+
+Le premier geste qui la juge : ouvrir la **gomme** sur un jeu déjà forgé — onglet **Pilotes** du
+tableau des modèles — et **lire l'aperçu sans rien purger**. Il ne touche à rien, et il dira d'un coup
+si les lots correspondent au dossier réel et si les comptes des modules ont un sens.
+
+⚠️ **Le lot « Manuel source et documents de la racine » est décoché par construction.** Si vous le
+cochez, c'est le PDF du livre et ses extractions qui partent en quarantaine — récupérables dans
+`docs/_purges/`, mais autant le savoir avant.
 
 ### ⚠️ EN TÊTE : rien de tout cela n'a été joué en séance
 
@@ -79,6 +109,42 @@ pixel et ne coûte qu'une soirée. *Rien d'autre ne doit commencer avant elle.*
 ---
 
 ## 2 · Ce qu'il ne faut pas repayer
+
+### ⛔ Un garde-fou qui ne peut pas échouer n'en est pas un
+
+`sessionBackupManager.sauvegarderMaintenant()` **ne lève jamais et ne rend rien** : un refus comme un
+échec se journalisent, et l'appelant reçoit le même `undefined` que pour une réussite.
+
+Un `try/catch` autour aurait donc *toujours* laissé passer — et le code aurait eu exactement l'air d'un
+code prudent. On demande son verdict au juge (`fautIlSauvegarder`, pur et public) **avant**, puis on
+vérifie que `lastBackupAt` a bougé, ce que seule une écriture réussie fait.
+
+⭐ *Avant d'envelopper un appel dans un filet, vérifier qu'il sait tomber dedans.*
+
+### ⛔ Un filtre d'affichage n'est pas un filtre de suppression
+
+`estDeLaCampagne` rend `true` pour un butin **sans marque** — règle juste, et voulue : *un butin d'avant
+la marque appartient à la campagne qu'on regarde.* Réutilisée dans la cascade de suppression, la même
+ligne aurait fait disparaître tout le butin non marqué de **toutes** les campagnes.
+
+⭐ *La fonction était à portée de main, bien nommée, et déjà employée dix lignes plus haut — c'est
+précisément ce qui la rendait dangereuse.*
+
+### ⭐ Un magasin ne se déclare pas par la forme de ses clés
+
+**Music-OS écrit `campagneId`, en français ; tout le reste écrit `campaignId`.** Une recherche de texte
+sur `campaignId` — le premier réflexe pour écrire une cascade de nettoyage — serait passée à côté sans
+rien signaler.
+
+C'est pourquoi le registre des détenteurs est une **liste explicite**, et pourquoi un test lit les
+sources pour exiger que chaque magasin persisté s'y déclare ou se déclare hors périmètre avec une
+raison. ⚠️ Il a attrapé **six** de mes propres approximations à sa première exécution.
+
+### ⚠️ Un dossier de quarantaine posé sous `docs/` est un dossier que l'Oracle indexe
+
+Déplacer les fiches d'un corpus vers `docs/_purges/` sans rien d'autre les aurait laissées **citables** :
+on aurait déplacé le problème, littéralement. Le `.ragignore` est donc écrit **avant** le premier
+déplacement — *l'exclusion doit exister avant le fichier qu'elle exclut, pas après.*
 
 ### ⛔ `partialize` ne décide pas SI l'on écrit, seulement CE QU'ON écrit
 

@@ -6667,6 +6667,130 @@ reviendra que sur celles qui en ont une.
 
 ---
 
+### 81 · ⭐ Repartir de zéro sur un jeu ou une campagne — et la Forge qui enrichissait ce qu'on croyait effacé (2026-09-18)
+
+David : *« il m'arrive de vouloir recommencer depuis le début la forge d'un système ou d'une campagne,
+mais quand je les efface il reste des résidus qui polluent la tentative suivante. Je voudrais un
+mécanisme qui me permette de vraiment tout effacer, en faisant attention à ne pas détruire d'autre
+chose. »*
+
+#### ⛔ La cause principale n'était pas un oubli — c'était une fonctionnalité qui faisait son travail
+
+Le dossier `docs/systems/<jeu>/` survivait entièrement à la suppression du pilote. Or **la Forge
+Système enrichit un corpus existant au lieu de le doubler** — décision du 2026-08-16, et une bonne
+décision — et le slug d'un même nom de jeu retombe sur le même dossier.
+
+Supprimer le pilote puis reforger le même jeu ne repartait donc **jamais** de zéro : la tentative
+d'avant était toujours là, mélangée à la nouvelle, sans que rien ne le dise.
+
+⭐ ***La pollution n'était pas un résidu oublié : c'était une fonctionnalité qui faisait son travail sur
+une base qu'on croyait effacée.*** C'est pourquoi aucune relecture de `deleteGameDriver` ne l'aurait
+trouvée — le défaut n'était pas dans la suppression, il était dans ce qu'elle ne touchait pas.
+
+#### La cause secondaire, elle, était bien un oubli de cascade
+
+| Geste | Ce qu'il nettoyait avant ce jour |
+| --- | --- |
+| `deleteCampaign` | 8 collections de Session-OS, et rien d'autre |
+| `deleteGameDriver` | ⛔ **une ligne** — un `filter` sur `customGameDrivers` |
+
+Ce qui survivait, relevé module par module :
+
+| Cible | Résidus trouvés |
+| --- | --- |
+| **Campagne** | journal de séance, moments de storyboard, réserves de table, favoris, **butin** (`lootPool` / `lootHistory`, jamais filtrés), combats garés (rangés par `sceneId`), playlists étiquetées |
+| **Pilote** | modèle de fiche, bestiaire (`jeuId`), paquets Deck-OS (`systemId`), surcharges de cortex (`systemOverrides`), widgets Ulanzi, journal des lacunes, **et tout le dossier du corpus** |
+
+#### ⚠️ Le piège qui tue un nettoyage écrit à la main
+
+**Music-OS écrit `campagneId`, en français ; tout le reste écrit `campaignId`.**
+
+Une recherche de texte sur `campaignId` — le premier réflexe pour écrire ce genre de cascade — serait
+passée à côté sans rien signaler. ⭐ *Un magasin ne se déclare pas par la forme de ses clés.* Même
+famille que les cinq lecteurs d'une jauge (§ 66), qui emploient d'autres noms et que seul le comptage
+trouve.
+
+#### Ce qui a été construit — un registre, pas une cascade de plus
+
+Le remède n'est pas d'allonger `deleteCampaign` d'un cran à chaque fois qu'on s'aperçoit d'un oubli :
+c'est **une liste que l'on ouvre**. Le modèle existe déjà dans le dépôt — `proprietairesDesMedias.ts`,
+né après six angles morts qui faisaient supprimer des fichiers encore utilisés.
+
+| Pièce | Ce qu'elle porte |
+| --- | --- |
+| `src/services/purge/detenteursDeLaCampagne.ts` / `detenteursDuPilote.ts` | **Le registre.** Chaque entrée sait *recenser* et *purger*. Ajouter un module qui retient quelque chose, c'est ajouter une entrée ici |
+| `src/services/purge/registreComplet.test.ts` | ⭐ **Le test qui empêche l'oubli suivant** |
+| `src/services/purge/PurgeService.ts` | L'orchestration : instantané, disque, magasins, bilan |
+| `electron/groupesDuCorpus.ts` (pur) | Range le corpus en lots cochables |
+| `electron/cheminDuCorpus.ts` (pur, testé) | **La barrière** : exactement deux segments, racine connue |
+| `electron/purgeDesCorpus.ts` | Les canaux `purge:*` — inventaire, quarantaine, dossiers |
+| `src/components/purge/DialogueDePurge.tsx` | L'écran, atteint par une **gomme** posée à côté de la corbeille |
+
+⭐ **Le test de complétude lit les sources**, trouve **tous** les magasins persistés, et exige que chacun
+soit dans un registre **ou** dans `HORS_PERIMETRE` avec une raison écrite. Il vérifie aussi l'inverse :
+pas de fantôme, donc pas de ligne qui continue d'excuser un magasin renommé. *Une liste sans contrôle
+n'est qu'une bonne intention datée* — et il a attrapé **six de mes propres approximations** à sa
+première exécution : six noms inscrits hors périmètre qui n'étaient pas des magasins persistés.
+
+#### Les deux décisions de David, à ne pas re-débattre
+
+**1 · Au cas par cas dans l'aperçu.** Les lots se cochent un par un. Ce que la Forge refabrique est
+coché d'avance ; le manuel source, l'index paginé, le thème et la correspondance des fiches ne le sont
+pas. ⭐ *L'inconnu se penche du côté qui ne détruit pas* — le lot fourre-tout, celui qui attrape le PDF
+du livre et ses extractions, est décoché par construction.
+
+**2 · Quarantaine et instantané.** Les fichiers sont **déplacés** dans
+`docs/_purges/<horodatage>-<nom>/`, arborescence gardée : les remettre est un glisser-déposer, et
+personne n'a de mécanisme de restauration à écrire ni à maintenir. La sauvegarde automatique passe
+avant. **Rien n'est jamais supprimé.**
+
+#### ⛔ Trois pièges payés en le construisant
+
+| Le piège | Ce qu'il aurait coûté |
+| --- | --- |
+| **`sauvegarderMaintenant` ne lève jamais et ne rend rien** | Un `try/catch` autour aurait **toujours** laissé passer. On lit le verdict de `fautIlSauvegarder` **avant**, puis on vérifie que `lastBackupAt` a bougé |
+| **Le dossier de quarantaine vit sous `docs/`** | L'Oracle aurait continué de citer les fiches « effacées ». Un `.ragignore` (`**`) est posé **avant** le premier déplacement |
+| **Session-OS efface les scènes** | Combat-OS, appelé après, ne saurait plus quels combats garés étaient les siens. La cible **fige** les identifiants à l'aperçu |
+
+⭐ ***Un garde-fou qui ne peut pas échouer n'en est pas un.*** Le premier de ces trois est le plus
+sournois : le code aurait eu exactement l'air d'un code prudent.
+
+#### Les garde-fous, et pourquoi chacun existe
+
+| Garde | Nature | Ce qu'il empêche |
+| --- | --- | --- |
+| Campagnes qui jouent le pilote | ⛔ **Barrage**, revérifié à l'exécution | Une campagne vivante dont le jeu disparaît devient injouable |
+| Deux pilotes sur le même dossier | ⚠️ **Avertissement**, pas barrage | Vider le corpus d'un autre jeu en silence. *Partager un corpus est parfois exactement ce qu'on a voulu* |
+| Modèle de fiche partagé ou intégré | Silencieux — il n'est pas emporté | Supprimer le modèle d'un autre jeu en croyant nettoyer le sien |
+| Un module muet au recensement | ⛔ La purge est refusée | Confirmer une liste qui n'était pas la vraie |
+| Le nom se retape | Saisie obligatoire | *« je croyais avoir sélectionné l'autre »* — que ni la quarantaine ni la sauvegarde ne rattrapent |
+
+#### ⚠️ Deux choses trouvées au passage
+
+**`estDeLaCampagne` n'est pas un filtre de suppression.** Il rend `true` pour un butin **sans marque** —
+une règle d'affichage juste (*un butin d'avant la marque appartient à la campagne qu'on regarde*) qui,
+employée dans la cascade, aurait fait disparaître tout le butin non marqué de **toutes** les campagnes.
+Le filtre de `deleteCampaign` compare donc l'identifiant, et rien d'autre.
+
+⛔ **`ai:list-dir` ne rend que des FICHIERS** (`e.isFile()`). Son seul appelant s'en sert pour lister les
+**dossiers** de campagnes — `corpusDeLaCampagne` dans `ServiceDeCampagne.ts` — et reçoit donc
+**toujours une liste vide** : `resoudreCorpusDeCampagne` conclut « dossier à créer » pour un dossier qui
+existe. C'est le défaut exact que le commentaire de `RAGService` décrit pour les systèmes, resté en
+place de l'autre côté. ⚠️ **Défaut préexistant, NON corrigé** — changer ce canal toucherait la
+vérification « déjà forgé » de l'Atelier. La purge passe par un canal neuf, `purge:dossiers`.
+**À traiter séparément.**
+
+**Ancres** : `src/services/purge/` (les quatre fichiers), `src/components/purge/DialogueDePurge.tsx`,
+`electron/groupesDuCorpus.ts`, `electron/cheminDuCorpus.ts`, `electron/purgeDesCorpus.ts`,
+`SessionManager.ts` (`deleteCampaign`, le butin), `CampaignLibrary.tsx` et `TemplateDashboard.tsx`
+(la gomme).
+
+**Vérifié** : `tsc -b --force` propre, **5 368 tests au vert** (422 fichiers, 1 ignoré, 4 tests
+ignorés), ESLint sans erreur. ⚠️ **Jamais essayé à l'écran** — et dans ce dépôt, c'est là que les
+défauts se trouvent. Le premier aperçu sur un vrai corpus est le geste qui juge ce chantier.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -6688,6 +6812,7 @@ reviendra que sur celles qui en ont une.
 | 14 | **La saccade du tableau blanc** | ✅ **CORRIGÉ le 17/09, sur trois étages** — ⛔ un magasin persisté écrit à **chaque** `set()`, et **deux modules avaient écrit la croyance inverse** dans leur `partialize`. Mesuré : **1,75 ms de `JSON.stringify` et 285 Ko écrits par point** sur un tableau de cent tracés, trois écritures par mouvement de pion sur la carte. ⭐ **Et on payait pour ce que personne ne recevait** : le réseau jetait déjà quatre points sur cinq. Écriture différée (250 ms, trois filets), diffusion limitée à la cadence réellement consommée, et une mutation au lieu de deux (§ 78). ⛔ **Un essai de 2026-08 a trouvé un vrai défaut de mon tampon** : il servait en lecture des écritures que la garde avait refusées | — | Rien. ⚠️ **À confirmer à l'écran** |
 | 15 | **Les dés en 3D du Player Hub** | ✅ **REFAITS le 17/09** — ⛔ quatre manques, dont trois qui ne se règlent pas : **aucun chiffre**, une orientation finale **tirée au sort** (donc sans rapport avec le jet), du **verre sans rien à réfracter**, et un **d100 sphérique**. ⭐ Deux défauts trouvés en chemin : le démontage **détruisait les géométries partagées** (plus rien ne s'affichait au remontage), et **le d10 n'était pas un trapézoèdre** — vingt facettes au lieu de dix, dont cinq à l'envers. ⭐ *Un dé n'a de faces que le jour où on veut écrire dessus.* Chiffres, atterrissage sur la valeur, environnement, ombre au sol, et **trois matières au choix du meneur** (§ 79) | — | Rien. ⭐ **2e passe** : ⛔ le réglage **n'arrivait jamais au Hub** (le segment `dice` portait 3 champs sur 5, et il était écrit **deux fois**) — *un réglage qui ne voyage pas jusqu'à l'écran qui l'applique n'est pas un réglage, c'est un bouton* ; et les dés étaient **enfermés** dans une couche `z-[60]` parente. ⭐ **3e passe** : les dés **s'effacent une fois posés** et le résultat tient **5 s de plus** — *la pose est un événement, pas une durée*, avec deux filets qui dégradent vers le comportement d'avant. ⭐ **4e passe** : les dés **ne se traversent plus** (sphères au rayon moyen, calculé par solide, séparation appliquée **aussi aux dés posés**) et le placement de départ ne les fait plus naître imbriqués ; ils restent **2 s posés** avant de s'effacer. ⛔ **Une mutation de contrôle ne s'était jamais appliquée** — fins de ligne mixtes — *et un essai vert sur du code intact ressemble à une garde qui marche*. ⚠️ **À confirmer à l'écran**, le verre en premier |
 | 16 | **Le décor de campagne au repos** | ✅ **CORRIGÉ le 17/09** — ⭐ **la fonctionnalité existait de bout en bout** (champ, réglage, transport, réception, affichage) et la campagne ouverte avait bien une image : ⛔ **quatre chemins écrivaient `data || null`**, et arrêter une projection envoie une chaîne vide — donc `null`, donc *écran éteint* au lieu de *rien à montrer*. Le correctif du 13/09 n'avait traité qu'un cinquième chemin. ⭐ **Les deux gestes sont désormais séparés** : `Ctrl+0` rend le décor, `Ctrl+Maj+0` éteint vraiment (§ 80) | — | Rien. ⭐ **2e passe** : il ne revenait toujours pas **au lancement** — le Hub lisait le seul champ **non persisté** des deux, au lieu de déduire le décor de `campaigns[]` qu'il a déjà sur son disque. ⛔ **3e passe** : j'avais **détourné les boutons rouges** qu'il utilise pour arrêter une projection — *un libellé décrit une intention, un geste quotidien EST une intention* ; le noir a désormais son propre bouton. ⚠️ **6 campagnes sur 7 n'ont aucune image de fond** |
+| 17 | **Repartir de zéro sur un jeu ou une campagne** | ✅ **CONSTRUIT le 18/09** — ⛔ la cause n'était pas un oubli : le dossier `docs/systems/<jeu>/` survivait, et **la Forge enrichit un corpus existant** — donc reforger ne repartait *jamais* de zéro. `deleteGameDriver` tenait en **une ligne**, `deleteCampaign` ignorait sept modules dont le **butin**. ⭐ Un **registre des détenteurs** et un **test qui lit les sources** et refuse un magasin persisté non déclaré. Aperçu cochable lot par lot, **quarantaine** dans `docs/_purges/` et instantané préalable — rien n'est supprimé (§ 81). ⚠️ **`ai:list-dir` ne rend que des fichiers** : défaut préexistant laissé en place, à traiter | Ouvrir la gomme sur un jeu déjà forgé et lire l'aperçu | Rien. ⚠️ **Rien n'a été vu à l'écran** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
