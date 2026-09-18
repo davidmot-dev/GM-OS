@@ -1709,12 +1709,34 @@ export class HueEngine {
                        jamais assez haut pour écraser les couleurs. */
                     payload.bri = Math.round(180 + souffle * 30);
 
-                    /* La teinte suit la même respiration : or pâle au sommet,
-                       or profond au creux. Les deux bornes restent dans les
-                       ambres — on respire, on ne change pas de couleur. */
+                    /*
+                      La teinte suit la même respiration : or clair au sommet,
+                      ambre au creux. Les deux bornes restent dans les ors — on
+                      respire, on ne change pas de couleur.
+
+                      ⛔ **Première rédaction : `#ffd79a` et `#ffb347`.** David,
+                      après l'avoir vue dans la pièce : *« pas assez dorée, c'est
+                      trop blanc »*. Il avait raison, et le **canal bleu** le dit
+                      d'un chiffre :
+
+                      | Effet | Bleu |
+                      | --- | --- |
+                      | `torche` (`#ff8c21`) | 33 |
+                      | l'or de `lever-soleil` (`#fbbf24`) | 36 |
+                      | ⛔ mon sommet d'aube (`#ffd79a`) | **154** |
+
+                      ⭐ *Sur une lampe Hue, c'est le bleu qui décide si une
+                      couleur chaude se lit comme de l'or ou comme du blanc
+                      chaud.* Quatre fois le bleu d'une torche ne pouvait pas
+                      donner de l'or — et ça ne se voit pas dans un hexadécimal,
+                      qui commence par `ff` dans les deux cas.
+
+                      Les deux bornes reviennent donc dans le voisinage de la
+                      torche, en gardant l'écart qui fait la respiration.
+                    */
                     payload.xy = souffle > 0
-                        ? this.hexToXy('#ffd79a')
-                        : this.hexToXy('#ffb347');
+                        ? this.hexToXy('#ffc247')   // bleu 71 — or clair
+                        : this.hexToXy('#ff9a12');  // bleu 18 — ambre profond
 
                     /*
                       ⚠️ **Le fondu reste SOUS le battement**, et la première

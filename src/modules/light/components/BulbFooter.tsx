@@ -88,9 +88,10 @@ export const BulbFooter: React.FC = () => {
         'stroboscope': '#ffffff',
         'crepuscule': '#f59e0b',
         /* L'or de l'aube tenue. Voir `HueEngine`, `case 'aube-doree'` : il
-           respire entre ce ton et un or plus pâle, sans jamais quitter les
-           ambres. */
-        'aube-doree': '#ffb347',
+           respire entre ce ton et un or plus clair, sans jamais quitter les
+           ors. ⚠️ Cale sur le creux du souffle, pas sur son sommet — c'est la
+           couleur que le meneur doit reconnaître dans la liste. */
+        'aube-doree': '#ff9a12',
         'toxique': '#84cc16',
         'zen': '#fafaf9',
         'neant': '#2e1065',
