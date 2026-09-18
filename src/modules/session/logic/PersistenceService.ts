@@ -7,6 +7,8 @@ import { inscrireLesSystemes } from './systemeDeclare';
 import { redimensionnerLesHorloges } from './horlogesADimensionner';
 import { rattacherLaSanteDesAdversaires } from './santeDesAdversaires';
 import { lesDonneesDeLaSession } from './donneesDeLaSession';
+import { ecritureDifferee } from '../../../utils/ecritureDifferee';
+import { inscrireUnStockageDiffere } from '../../../utils/ecritureReserveeAuMJ';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
@@ -101,16 +103,52 @@ const gmOnlyStateStorage: StateStorage = {
 };
 
 /**
+ * Le stockage du magasin de session : la garde, puis le tampon.
+ *
+ * ⛔ **`autorise` reprend les DEUX conditions de `gmOnlyStateStorage`, et ce
+ * n'est pas une redite.** Un tampon posé au-dessus d'un refus accepterait la
+ * valeur interdite et la **servirait en lecture** pendant 250 ms : une
+ * réhydratation tombant dans cette fenêtre y relirait un état qui n'avait pas le
+ * droit d'exister — c'est-à-dire, au démarrage, les mocks. *C'est le mécanisme
+ * exact de la seconde perte de campagnes, le 2026-08-24.*
+ *
+ * ⭐ *Ce qui n'a pas le droit d'être écrit n'a pas le droit d'être lu comme s'il
+ * l'avait été.* Le refus du dessous reste en place : les deux étages ne se
+ * doublent pas, ils gardent deux chemins — le tampon et le disque.
+ */
+const stockageDeSession = inscrireUnStockageDiffere(
+    ecritureDifferee<SessionOSStore>(
+        createJSONStorage<SessionOSStore>(() => gmOnlyStateStorage)!,
+        { autorise: () => isMainWindow() && laBaseAEteRelue },
+    ),
+);
+
+/**
  * PersistenceService handles Zustand persistence configuration.
  */
 export const PersistenceService: PersistOptions<SessionOSStore> = {
     name: SESSION_STORE_KEY,
     version: 10,
 
-    // IndexedDB plutôt que localStorage : pas de plafond à quelques mégaoctets,
-    // pas d'écriture synchrone qui bloque l'interface. La reprise des données
-    // déjà présentes dans localStorage est gérée par idbStateStorage.
-    storage: createJSONStorage(() => gmOnlyStateStorage),
+    /*
+      IndexedDB plutôt que localStorage : pas de plafond à quelques mégaoctets,
+      pas d'écriture synchrone qui bloque l'interface. La reprise des données
+      déjà présentes dans localStorage est gérée par idbStateStorage.
+
+      ⭐ **Et une écriture par fenêtre de 250 ms, depuis le 2026-09-18.**
+
+      Zustand appelle `setItem()` à **chaque** `set()`, sans condition — vérifié
+      dans la source installée, et c'est ce qui faisait saccader le tableau
+      blanc (§ 78). Les tranches de ce magasin comptent **163 `set()`**, et
+      chacun sérialisait l'état durable entier.
+
+      ⚠️ **Ici, le coût n'est pas l'écriture disque.** IndexedDB écrit de façon
+      asynchrone : c'est le `JSON.stringify` qui bloque, sur le fil principal, à
+      chaque changement. L'enveloppe est donc posée **au-dessus** du stockage
+      JSON, pas dedans — posée en dessous, elle recevrait une chaîne déjà
+      sérialisée et paierait quand même le vrai coût.
+    */
+    storage: stockageDeSession,
     
     migrate: (persistedState: unknown, version: number) => {
         console.log(`[Store Migration] Migrating from version ${version} to 10`);

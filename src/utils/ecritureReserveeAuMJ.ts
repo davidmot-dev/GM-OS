@@ -124,8 +124,15 @@ export const viderLesEcrituresDifferees = (): void => {
  * | `visibilitychange` → caché | le passage en arrière-plan, **avant** que le système ne puisse suspendre la fenêtre |
  *
  * ⛔ *Ce qui n'est pas attrapé* : une coupure de courant ou un plantage du
- * processus. On y perd au pire un quart de seconde d'un déplacement de pion —
- * **jamais une campagne**, qui passe par `PersistenceService` et IndexedDB.
+ * processus. On y perd au pire un quart de seconde.
+ *
+ * ⚠️ **Cette phrase disait « jamais une campagne, qui passe par
+ * `PersistenceService` et IndexedDB », et elle a cessé d'être vraie le
+ * 2026-09-18** : le magasin de session est différé lui aussi depuis ce jour. Ce
+ * qui la rattrape n'est plus la nature du magasin, ce sont **deux filets
+ * cumulés** — ces trois événements de fermeture, et la sauvegarde automatique
+ * qui part deux minutes après le dernier changement. *Un commentaire qui décrit
+ * une garantie qu'on vient de retirer est pire qu'un commentaire absent.*
  */
 let filetsPoses = false;
 function poserLesFiletsDeFermeture(): void {
@@ -137,6 +144,25 @@ function poserLesFiletsDeFermeture(): void {
         if (document.visibilityState === 'hidden') viderLesEcrituresDifferees();
     });
 }
+
+/**
+ * Inscrit un stockage différé au registre, et pose les filets de fermeture.
+ *
+ * ⛐ **C'est le seul point d'entrée, et il doit le rester.** Un stockage
+ * différé qui n'est pas dans ce registre garde jusqu'à 250 ms d'écritures que
+ * `beforeunload`, `pagehide` et `visibilitychange` ne viendront **pas** vider :
+ * la perte serait silencieuse, et elle ne se verrait qu'au redémarrage suivant.
+ *
+ * Existe parce que le magasin de session ne peut pas passer par
+ * `stockageLocalDuMJ` : il écrit dans **IndexedDB**, derrière sa propre garde
+ * (`PersistenceService`), et pas dans `localStorage`. *Deux stockages, deux
+ * gardes, un seul registre.*
+ */
+export const inscrireUnStockageDiffere = <S>(differe: StockageDiffere<S>): StockageDiffere<S> => {
+    stockagesDifferes.add(differe as StockageDiffere<unknown>);
+    poserLesFiletsDeFermeture();
+    return differe;
+};
 
 export const stockageLocalDuMJ = <S = unknown>(): StockageDiffere<S> => {
     const differe = ecritureDifferee<S>(
@@ -153,7 +179,5 @@ export const stockageLocalDuMJ = <S = unknown>(): StockageDiffere<S> => {
         */
         { autorise: isMainWindow },
     );
-    stockagesDifferes.add(differe as StockageDiffere<unknown>);
-    poserLesFiletsDeFermeture();
-    return differe;
+    return inscrireUnStockageDiffere(differe);
 };

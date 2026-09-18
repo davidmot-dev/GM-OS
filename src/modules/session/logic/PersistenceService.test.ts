@@ -41,6 +41,7 @@ vi.mock('./idbStorage', () => ({
 
 const { PersistenceService, SESSION_STORE_KEY, lEcritureEstOuverte, __refermerLEcriturePourTests } =
     await import('./PersistenceService');
+const { viderLesEcrituresDifferees } = await import('../../../utils/ecritureReserveeAuMJ');
 
 /** Le stockage tel que Zustand le reçoit, une fois `createJSONStorage` déballé. */
 const storage = (PersistenceService.storage as unknown as {
@@ -66,6 +67,14 @@ async function relire(): Promise<void> {
 beforeEach(async () => {
     role.current = 'gm';
     panne.enLecture = false;
+    /*
+      ⚠️ **Le tampon d'écriture différée est un singleton de module** : ce qu'un
+      essai y laisse en attente, le suivant le **relit** — `getItem` sert ce qui
+      attend avant d'aller au disque, et c'est voulu. Sans cette purge, la
+      relecture ci-dessous ne toucherait pas le stockage mimé et la garde
+      resterait fermée, pour une raison qui n'a rien à voir avec ce qu'on teste.
+    */
+    viderLesEcrituresDifferees();
     backing.clear();
     setItemSpy.mockClear();
     removeItemSpy.mockClear();
@@ -77,6 +86,9 @@ beforeEach(async () => {
 describe('PersistenceService — seule la fenêtre MJ écrit', () => {
     it('la fenêtre MJ écrit', async () => {
         await storage.setItem(SESSION_STORE_KEY, { state: { campaigns: [] }, version: 10 });
+        /* L'écriture est différée de 250 ms depuis le 2026-09-18 : un essai qui
+           lit le disque exige que le disque soit à jour, sans connaître le délai. */
+        viderLesEcrituresDifferees();
         expect(setItemSpy).toHaveBeenCalledOnce();
     });
 
@@ -152,6 +164,7 @@ describe('PersistenceService — on n’écrit pas avant d’avoir lu', () => {
 
         expect(lEcritureEstOuverte()).toBe(true);
         await storage.setItem(SESSION_STORE_KEY, { state: { campaigns: [] }, version: 10 });
+        viderLesEcrituresDifferees();
         expect(setItemSpy).toHaveBeenCalledOnce();
     });
 
@@ -187,6 +200,82 @@ describe('PersistenceService — on n’écrit pas avant d’avoir lu', () => {
         await relire();
         role.current = 'hub';
         await storage.setItem(SESSION_STORE_KEY, MOCKS);
+        expect(setItemSpy).not.toHaveBeenCalled();
+    });
+});
+
+/**
+ * ⭐ **L'écriture différée du magasin de session — 2026-09-18.**
+ *
+ * Zustand appelle `setItem()` à chaque `set()`, et les tranches de ce magasin en
+ * comptent 163. Le gain est réel, mais il ouvre trois questions, et chacune a
+ * son essai ici — *un tampon posé devant la couche qui a déjà perdu les
+ * campagnes deux fois ne se juge pas sur son bénéfice.*
+ */
+describe('PersistenceService — une seule écriture par fenêtre', () => {
+    it('agglutine cent modifications en une seule écriture', async () => {
+        for (let i = 0; i < 100; i++) {
+            await storage.setItem(SESSION_STORE_KEY, { state: { campaigns: [{ id: `c${i}` }] }, version: 10 });
+        }
+        expect(setItemSpy).not.toHaveBeenCalled();
+
+        viderLesEcrituresDifferees();
+        expect(setItemSpy).toHaveBeenCalledOnce();
+        // Et c'est la DERNIÈRE valeur qui atterrit, pas la première.
+        expect(setItemSpy.mock.calls[0][1]).toContain('c99');
+    });
+
+    /*
+      ⛔ **Le filet de fermeture, prouvé et pas supposé.** Ce magasin n'écrit pas
+      dans `localStorage` : il ne peut pas passer par `stockageLocalDuMJ`, donc
+      son inscription au registre est un geste séparé — et un geste séparé
+      s'oublie. Sans lui, jusqu'à 250 ms d'écritures disparaîtraient à la
+      fermeture, en silence, visibles seulement au démarrage suivant.
+    */
+    it('est inscrit au registre que la fermeture vide', async () => {
+        await storage.setItem(SESSION_STORE_KEY, { state: { campaigns: [{ id: 'c-tardive' }] }, version: 10 });
+
+        // `viderLesEcrituresDifferees` est exactement ce que `beforeunload`,
+        // `pagehide` et `visibilitychange` appellent.
+        viderLesEcrituresDifferees();
+
+        expect(setItemSpy).toHaveBeenCalledOnce();
+        expect(backing.get(SESSION_STORE_KEY)).toContain('c-tardive');
+    });
+
+    /*
+      ⛔ **La garde porte AVANT le tampon.** Un tampon qui accepte une écriture
+      interdite la sert ensuite en lecture : une fenêtre secondaire qui se
+      réhydrate y relirait sa propre vue partielle, et c'est le mécanisme de la
+      perte du 2026-08-07. *Ce qui n'a pas le droit d'être écrit n'a pas le droit
+      d'être lu comme s'il l'avait été.*
+    */
+    it('⛔ une écriture refusée n’est pas servie en lecture pendant la fenêtre', async () => {
+        backing.set(SESSION_STORE_KEY, ETAT_REEL);
+        role.current = 'hub';
+
+        await storage.setItem(SESSION_STORE_KEY, { state: { currentView: 'combat' }, version: 10 });
+
+        // Le Hub relit AVANT que la fenêtre de 250 ms ne se referme.
+        expect(await storage.getItem(SESSION_STORE_KEY)).toEqual(JSON.parse(ETAT_REEL));
+        viderLesEcrituresDifferees();
+        expect(setItemSpy).not.toHaveBeenCalled();
+        expect(backing.get(SESSION_STORE_KEY)).toBe(ETAT_REEL);
+    });
+
+    it('⛔ et rien n’est mis en attente avant que la base ait été relue', async () => {
+        __refermerLEcriturePourTests();
+        backing.set(SESSION_STORE_KEY, ETAT_REEL);
+
+        // Les données de démonstration : exactement ce qu'une écriture prématurée
+        // écraserait par-dessus la vraie base.
+        await storage.setItem(SESSION_STORE_KEY, {
+            state: { campaigns: [{ id: 'c-1', name: 'The Eternal Quest' }] }, version: 10,
+        });
+
+        // Ni en attente, ni sur le disque, ni servie en lecture.
+        expect(await storage.getItem(SESSION_STORE_KEY)).toEqual(JSON.parse(ETAT_REEL));
+        viderLesEcrituresDifferees();
         expect(setItemSpy).not.toHaveBeenCalled();
     });
 });
