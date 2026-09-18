@@ -6976,6 +6976,143 @@ le minuteur de Clock-OS coûtait 0,0004 % du fil principal, et n'a pas été tou
 
 ---
 
+### 85 · ⭐ La soirée Light-OS — deux effets, les ambiances du meneur, et une liste déroulante qui n'en était plus une (2026-09-18, soir)
+
+Quatre demandes de David dans la soirée, et **chacune a révélé autre chose qu'elle-même.**
+
+| Ce qu'il a demandé | Ce que ça a trouvé |
+| --- | --- |
+| *« un effet Aube dorée »* | ⛔ Le canal **bleu** décide si une couleur chaude est de l'or ou du blanc |
+| *« un module de création d'ambiance ? »* | ⛔ **36 effets sur 47** figent leur palette : le curseur de couleur ne servait à rien sur eux |
+| *« de la lumière à travers des stores »* | ⭐ L'illusion vit **entre** les lampes, et c'est sa propre précision qui la rendait possible |
+| *« je ne retrouve pas mes copies »* | ⛔ La chaîne était complète, **sans porte pour y revenir** |
+
+#### ⛔ Aube dorée : « pas assez dorée, c'est trop blanc »
+
+Premier jet refusé par David **dans la pièce**. Le chiffre le dit d'un coup d'œil :
+
+| Effet | Canal bleu |
+| --- | --- |
+| `torche` (`#ff8c21`) | 33 |
+| l'or de `lever-soleil` (`#fbbf24`) | 36 |
+| ⛔ mon sommet d'aube (`#ffd79a`) | **154** |
+
+⭐ ***Sur une lampe Hue, c'est le bleu qui décide si une couleur chaude se lit comme de l'or ou comme
+du blanc chaud.*** Et ça ne se voit pas dans un hexadécimal : `#ffd79a` et `#ff8c21` commencent tous
+les deux par `ff`, ils ont l'air de la même famille. **Seule la troisième composante les sépare.**
+
+L'effet lui-même est une lumière **tenue**, et la distinction d'avec `lever-soleil` est écrite dans le
+code : l'un *traverse* la nuit vers le jour en cinq minutes, l'autre est le matin déjà installé. *La
+précaution que l'affaire `candle`/`fire` a rendue obligatoire.*
+
+#### ⛔ Le fondu qui ne se voyait jamais — un défaut latent sur les 47 effets
+
+`catalogueDesEffets.test.ts` interdit qu'un `transitiontime` dépasse son `interval` : *la commande
+suivante arrive avant la fin du fondu, la lampe suit, et la forme voulue n'apparaît jamais.* Mais il
+lit la **source**, où la vitesse vaut toujours 1.
+
+Or le curseur de vitesse **divise l'attente sans toucher au fondu**. Mesuré : à ×2, `holy` fondait sur
+1 500 ms pour un battement de 750. **L'effet ne cassait pas — il s'aplatissait**, et une platitude
+ressemble à un mauvais réglage, pas à un défaut.
+
+⭐ ***Une règle vérifiée là où on la lit, et pas là où la valeur devient vraie, ne garde que la moitié
+du chemin.*** Le rabot vit désormais dans la boucle, après la cadence réelle. **Appliqué à tous sur
+décision de David.**
+
+#### ⭐ Les ambiances — et pourquoi la teinte se pose APRÈS l'effet
+
+David : *« je me demande si on ne devrait pas faire un module de création d'ambiance ? »*, puis, après
+discussion : *« on va commencer par la copie d'un effet existant. »*
+
+La forme est dictée par une mesure : **36 des 47 effets écrivent leur palette en dur**. Poser une
+couleur avant de lancer l'effet ne toucherait que les onze qui lisent `baseXy` — *le curseur de couleur
+existait déjà et n'avait aucun effet sur les trente-six autres, sans que rien ne le dise.*
+
+Une variante reteinte donc **après** le `switch`, au seul endroit que les 47 traversent.
+
+⛔ **On mélange, on ne remplace pas.** À force pleine un gyrophare devient monochrome, et un gyrophare
+monochrome n'est plus un gyrophare : *ce qui fait un effet n'est pas sa teinte, c'est le rapport entre
+ses teintes et son rythme.* Force par défaut à 0,7.
+
+⭐ **Et il n'y a rien à recaler après le mélange : le gamut est un TRIANGLE, donc convexe.** Un point
+pris entre deux points d'un convexe reste dedans. *Un recalage y serait du code qui ne s'exécute
+jamais, et un second endroit où la même couleur se décide* — un test garde l'argument.
+
+⚠️ Deux détails qui auraient coûté cher : la vitesse d'une ambiance **multiplie** celle de la scène au
+lieu de la remplacer (*si l'une écrasait l'autre, un des deux curseurs mentirait*), et le comptage du
+budget du pont se fait sur la **source** — deux ambiances tirées de `fusillade` coûtent au pont ce que
+coûtent deux fusillades.
+
+#### ⭐ Stores : l'illusion vit ENTRE les lampes
+
+*« de la lumière passant à travers des stores (sur 2 ou 3 lumières) ? Si ce n'est pas possible ce
+n'est pas grave. »*
+
+Sur une seule lampe, ce ne serait qu'une pulsation de plus : une ampoule éclaire uniformément, il n'y a
+ni lame ni ombre portée. ⭐ **C'est la précision « sur 2 ou 3 » qui rend l'effet possible** — chacune se
+place à un endroit différent du motif, et la pièce devient inégale.
+
+Le décalage vient de l'identifiant de la lampe par un calcul **stable** — des lames sont régulières, et
+une lampe doit retrouver *sa* bande d'une scène à l'autre, là où `fusillade` se décorrèle au hasard.
+Étalé par le **nombre d'or** : un pont Hue numérote `1`, `2`, `3`, et un simple modulo mettrait les
+trois lampes dans la même bande.
+
+#### ⛔ « Je ne retrouve pas les différentes copies d'un effet »
+
+Le symptôme disait une chose, le défaut en disait une autre. Ses copies **existaient**, elles
+**jouaient**, elles se **capturaient** dans une tuile. Mais elles n'étaient atteignables que tout en
+haut d'un menu de cinquante entrées, et modifiables que sur une lampe en train de les jouer.
+
+*La chaîne était complète et il n'y avait pas de porte pour y revenir* — le motif que ce dépôt a payé
+sept fois, dans l'autre sens cette fois : ce n'est pas le bouton qui manquait au bout, c'est le
+**retour**.
+
+Sa réponse a reformulé le problème : *« je pense que la liste déroulante n'est plus adaptée avec 40
+items, je pense qu'il faut passer par un écran volant. »* ⭐ ***Une liste déroulante de cinquante
+entrées n'est plus une liste, c'est un couloir*** — on y descend, on dépasse ce qu'on cherchait, on
+remonte, et rien ne s'y cherche.
+
+L'écran cherche par le nom, par l'identifiant du guide, et — pour une ambiance — **par l'effet dont
+elle descend** : taper « torche » ramène la torche *et* la bleue qu'on en a tirée. *Sans ça, une copie
+se perd derrière le nom qu'on lui a donné, ce qui était exactement le problème.*
+
+⭐ **Le catalogue est devenu une donnée.** Les 48 effets vivaient en `<option>` dans un `<select>` :
+*une liste qui n'existe que sous forme de balises ne peut être lue que par le navigateur.*
+
+#### ⚠️ Quatre contrôles du dépôt m'ont repris, et un que j'ai dû resserrer
+
+| Le contrôle | Ce qu'il a refusé |
+| --- | --- |
+| `catalogueDesEffets` | Un fondu de 3 000 ms pour un battement de 2 500 — **que mon commentaire défendait** |
+| `nomsSansEcrivainNiLecteur` | Mes trois actions de magasin, tant qu'aucun écran ne les appelait |
+| `etatARendre` | A exigé que je **décrive** mon nouvel ayant droit au lieu d'ajuster le compte de 2 à 3 |
+| David, à l'écran | « pas assez dorée » — et il avait raison, d'un facteur quatre |
+
+⛔ **Et le contrôle que j'ai écrit pour le guide est passé au vert sur sa propre mutation** : il
+cherchait le nom d'un effet par `includes`, et « Alerte Rouge MUTEE » contient encore « Alerte Rouge ».
+*Un contrôle par sous-chaîne accepte tout ce qui contient ce qu'il cherche.* Il cherche désormais le
+nom **en gras**, le contrat que tient la première colonne du tableau — et il rougit.
+
+#### Le guide du meneur
+
+Le § 75 liste désormais les **48 effets un par un**, avec ce que chacun fait *dans la pièce*, les deux
+coups uniques, la raison pour laquelle sept effets ne jouent que sur une ou deux lampes, et les onze
+effets recolorables. Les descriptions sont **dérivées du moteur**, pas des noms.
+
+⚠️ **Il a décrit l'ancien écran pendant une heure** : la section des ambiances a été réécrite le soir
+même, après que l'écran volant l'eut périmée. *Un guide écrit en même temps que le code vieillit à la
+vitesse du code.*
+
+**Ancres** : `HueEngine.ts` (`case 'aube-doree'`, `case 'stores'`, le rabot, la teinte),
+`logic/varianteDEffet.ts`, `logic/lumiereDesStores.ts`, `logic/rechercheDEffet.ts`,
+`logic/catalogueDesEffets.ts`, `components/SelecteurDEffet.tsx`, `useLightStore` (`variantes`).
+
+**Vérifié** : `tsc -b` propre, **5 418 tests Vitest**. ✅ Aube dorée, les ambiances et l'écran volant
+**éprouvés à l'écran par David**. ⚠️ **Stores ne l'a pas été** — et c'est le seul dont je ne peux pas
+prédire le rendu, puisqu'il ne se juge que sur deux ou trois lampes à la fois.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7001,6 +7138,7 @@ le minuteur de Clock-OS coûtait 0,0004 % du fil principal, et n'a pas été tou
 | 18 | **Les images collées dans l'état** | ✅ **CORRIGÉ ET ÉPROUVÉ EN RÉEL le 18/09** — ⛔ **2 078 Ko sur 2 746** de la sauvegarde étaient DEUX images en base64, et les quatre fournisseurs pouvaient les refaire : `addMedia` rendait l'identifiant, **ils le jetaient**, et le repli muet rendait l'image entière. ⭐ *C'est le nom de la variable — `mediaId` — qui a caché le défaut.* La réparation **existait déjà** et n'avait jamais été lancée ; son angle mort était NPC-OS. Migration réelle : **2 812 229 → 683 961 octets** (§ 82). ⛔ **Et la sauvegarde a refusé d'écrire pendant plus d'une heure** — la garde anti-rétrécissement n'a pas de porte pour une baisse légitime | ✅ **Correctif posé le soir même** : la migration déclare la baisse, contrôle vu rougir. Filet rétabli à 18 h 36 | Rien |
 | 19 | **L'écriture du magasin de session** | ✅ **DIFFÉRÉE le 18/09** — 163 `set()` sérialisaient chacun l'état durable entier. Une écriture par fenêtre de 250 ms, l'enveloppe **au-dessus** du stockage JSON (le coût est le `stringify`, pas le disque : IndexedDB est asynchrone). ⛔ La garde porte **avant** le tampon, sans quoi une écriture interdite serait servie en lecture. ⚠️ **J'avais annoncé « un seul magasin diffère » : ils sont HUIT** (§ 83) | — | Rien. ⚠️ **Non vu en séance** |
 | 20 | **Le chantier des sélecteurs** | ⛔ **N'AURA PAS LIEU, et c'est une décision mesurée** — harnais de profilage React construit (`GMOS_PROFILAGE=1`, `actualDuration`, mesure sur la **vraie base**). Résultat : **79 composants et 2,24 ms** perdus par changement, mais ⭐ **le coût ne dépend pas du volume de données** — c'est la structure, pas la donnée. `App.tsx` s'abonnait au magasin entier pour UN champ : corrigé, gain 2,24 → 2,00 ms seulement. ⛔ **Deux versions de la mesure étaient fausses** (rAF puis chronomètre) (§ 84) | Tirer le fil de `useNexusSynchronizer`, qui s'abonne à TOUT changement | Rien |
+| 21 | **Light-OS — la soirée du 18** | ✅ **DEUX EFFETS, LES AMBIANCES ET UN ÉCRAN VOLANT** — ⛔ *« pas assez dorée »* : sur une Hue, c'est le **canal bleu** qui décide entre l'or et le blanc (154 contre 33 pour la torche). ⛔ **36 effets sur 47 figent leur palette**, donc une ambiance reteinte **après** le switch — et on mélange à 70 %, sinon un gyrophare devient monochrome. ⭐ **Stores** : l'illusion vit **entre** les lampes, d'où un décalage stable étalé par le nombre d'or. ⛔ *« je ne retrouve pas mes copies »* — la chaîne était complète **sans porte pour y revenir** : la liste déroulante de 50 entrées devient un **écran volant** qui cherche, y compris par l'effet d'origine d'une copie. Corrigé au passage : le **fondu** n'était raboté que dans la source, pas après le curseur de vitesse (§ 85) | Poser **Stores** sur deux ou trois lampes | Rien. ⚠️ **Stores non vu dans la pièce** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

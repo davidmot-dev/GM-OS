@@ -1,10 +1,11 @@
 # État et reprise — nuit du 2026-09-17 au 18, **la journée et la soirée du 18**
 
-> **Base saine.** `tsc -b --force` propre, **5 381 tests Vitest** et **195 tests E2E** (192 de
+> **Base saine.** `tsc -b` propre, **5 418 tests Vitest** et **195 tests E2E** (192 de
 > référence + 3 de profilage), branche `feature/tablet-hub-pwa`.
 >
-> ⚠️ **Ce document couvre trois moments** : la nuit du 17 au 18 (§§ 76 à 80), la purge du matin
-> (§ 81), puis l'après-midi et la soirée consacrées à la stabilité et à la vitesse (§§ 82 à 84).
+> ⚠️ **Ce document couvre quatre moments** : la nuit du 17 au 18 (§§ 76 à 80), la purge du matin
+> (§ 81), l'après-midi consacrée à la stabilité et à la vitesse (§§ 82 à 84), et la soirée Light-OS
+> (§ 85).
 >
 > ⛔ **Un reste bloquant, et un seul** : le `baisseAttendue` de la migration des images n'est pas
 > posé. Voir « Par quoi reprendre ».
@@ -39,7 +40,15 @@
 | `28d56f27` | `fix(images)` — une image fabriquée ne repart plus dans l'état persisté (§ 82) |
 | `9a05a855` | `perf(session)` — une écriture par fenêtre de 250 ms (§ 83) |
 | `d619a059` | `perf(rendus)` — le harnais de profilage React, et la racine qui s'abonnait à tout (§ 84) |
-| *ce commit* | `docs` — le registre 82 à 84, et la mise à jour de ce document |
+| `5403c3f5` | `fix(sauvegarde)` — la migration déclare sa baisse, et la doc du 18 |
+| `afb1e1f1` | `fix(purge)` — la quarantaine sort du dépôt, son `.ragignore` éprouvé |
+| `8dd5677d` | `chore(campagne)` — le corpus de Hadley Hope quitte le dépôt, purgé par le meneur |
+| `1eb13707` | `feat(light)` — Aube dorée, et le fondu qui ne dépasse plus son battement (§ 85) |
+| `0fbe10b5` | `fix(light)` — Aube dorée était trop blanche : c'est le canal **bleu** qui décide |
+| `dc48856c` | `feat(light)` — les ambiances du meneur, et l'effet **Stores** |
+| `41b307a9` | `docs(light)` — le catalogue des 48 effets dans le guide |
+| `21550be6` | `feat(light)` — l'écran volant pour choisir un effet |
+| *ce commit* | `docs` — le registre 85, le guide réécrit, et la mise à jour de ce document |
 
 ⚠️ **Les dés et le décor sont dans un seul commit** : ils partagent `useHubSync` et les traductions.
 Les découper aurait produit un commit qui ne compile pas — *un historique lisible ne vaut pas un commit
@@ -137,7 +146,35 @@ meneur qui migre retombera exactement dans cette heure.
 
 ---
 
+## Ce que la soirée Light-OS a produit
+
+Quatre demandes de David, et **chacune a révélé autre chose qu'elle-même** (§ 85).
+
+| Quoi | Ce qui est entré |
+| --- | --- |
+| **Aube dorée** | ✅ Éprouvée à l'écran, au second essai. ⛔ Le premier était « trop blanc » : sur une Hue, c'est le **canal bleu** qui décide entre l'or et le blanc chaud |
+| **Le fondu** | ⛔ Un défaut latent sur les **47 effets** : le curseur de vitesse divisait l'attente sans toucher au fondu, et les effets accélérés s'**aplatissaient** |
+| **Les ambiances** | ✅ Éprouvées à l'écran. Dupliquer un effet, le reteinter, le re-rythmer — la teinte se pose **après** le switch, parce que 36 effets sur 47 écrivent leur palette |
+| **Stores** | ⚠️ **Non vu dans la pièce.** L'illusion vit **entre** les lampes : à poser sur deux ou trois |
+| **L'écran volant** | ✅ Éprouvé à l'écran. La liste déroulante dépassait 50 entrées — *ce n'était plus une liste, c'était un couloir* |
+
+⭐ **Le motif de la soirée** : *« je ne retrouve pas mes copies »* décrivait un symptome, pas le
+défaut. Les copies existaient, jouaient et se capturaient — **il n'y avait pas de porte pour y
+revenir.** C'est le motif des sept « chaînes complètes sans bouton au bout », mais dans l'autre sens :
+ce n'est pas le bouton qui manquait, c'est le retour.
+
+---
+
 ## 1 · Par quoi reprendre
+
+### ⚠️ EN TÊTE : **STORES** N'A PAS ÉTÉ VU DANS LA PIÈCE
+
+C'est le seul chantier de la journée que personne n'a jugé, et le seul dont je ne peux pas prédire le
+rendu — il ne se juge **que sur deux ou trois lampes à la fois**, puisque l'illusion vit dans l'écart
+entre elles. Sur une seule, il fonctionne mais ne montre rien de ce pour quoi il existe.
+
+⚠️ **Et le rabot de fondu touche les 47 effets.** Les effets accélérés devraient avoir repris du
+relief ; si l'un paraît différent de ce qu'il était, c'est là qu'il faut regarder.
 
 ### ✅ LE `baisseAttendue` DE LA MIGRATION EST POSÉ
 
@@ -165,7 +202,7 @@ si les lots correspondent au dossier réel et si les comptes des modules ont un 
 cochez, c'est le PDF du livre et ses extractions qui partent en quarantaine — récupérables dans
 `docs/_purges/`, mais autant le savoir avant.
 
-### ⚠️ EN TÊTE : rien de tout cela n'a été joué en séance
+### ⚠️ Rien de tout cela n'a été joué en séance
 
 Les cinq chantiers sont vérifiés **à l'écran**, un par un, sur demande. Aucun n'a traversé une vraie
 partie. *Un effet de lumière, un dé qui roule et un décor qui revient sont trois choses qui ne

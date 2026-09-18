@@ -238,23 +238,55 @@ Le réglage **agit immédiatement** si la scène est en cours : pas besoin de la
 > **fondu d'une scène à l'autre**, le curseur règle la **vitesse de l'animation** une fois la scène
 > installée.
 
+## 🔎 Choisir un effet — l'écran volant
+
+Sous chaque lampe, un bouton porte le **nom de l'effet en cours**. Un clic ouvre l'écran de choix, qui
+occupe le centre de l'application :
+
+- **Une recherche en tête.** Tapez « feu », « bleu », « aurore boreale » — *les accents et les
+  majuscules n'ont pas d'importance*. L'identifiant technique du guide fonctionne aussi :
+  `aube-doree` trouve Aube dorée.
+- **Vos ambiances d'abord**, chacune avec l'effet dont elle descend, et une corbeille pour l'oublier.
+- **Les six catégories** en pastilles, l'effet en cours mis en évidence.
+- **Une palette sur chaque effet** : elle en fait une ambiance, **sans fermer l'écran ni changer ce
+  que la lampe joue**. Vous pouvez en préparer trois d'affilée, puis choisir.
+
+**Échap ferme l'écran.** Dans le champ de recherche, Échap vide d'abord la recherche — il faut une
+seconde frappe pour fermer.
+
+> [!NOTE]
+> **Ce module a longtemps eu une liste déroulante**, et elle a été retirée le 2026-09-18. Avec les
+> 48 effets et les ambiances du meneur, elle dépassait la cinquantaine d'entrées. *Une liste
+> déroulante de cinquante entrées n'est plus une liste, c'est un couloir* — on y descend, on dépasse
+> ce qu'on cherchait, on remonte, et rien ne s'y cherche.
+
+---
+
 ## 🎨 Mes ambiances — copier un effet et le faire vôtre
 
-Sur une lampe qui joue un effet du catalogue, un bouton **palette** apparaît à côté du sélecteur. Il
-duplique l'effet en une **ambiance** — une copie qui porte votre nom, votre teinte et votre rythme —
-et bascule la lampe dessus aussitôt.
+Une **ambiance** est une copie d'un effet du catalogue, avec votre nom, votre teinte et votre rythme.
+L'effet d'origine n'est jamais modifié.
 
-L'éditeur s'ouvre alors sous la lampe :
+**Pour en créer une** : ouvrez l'écran de choix et cliquez la **palette** à droite de n'importe quel
+effet. Elle apparaît aussitôt en tête de l'écran, sous « Mes ambiances ».
+
+**Pour la régler** : posez-la sur une lampe. L'éditeur s'ouvre alors sous cette lampe, et vous réglez
+pendant que la pièce change.
 
 | Réglage | Ce qu'il fait |
 | --- | --- |
-| **Le nom** | Il s'écrit directement, et c'est lui qui apparaîtra dans la liste. |
+| **Le nom** | Il s'écrit directement, et c'est lui qui apparaîtra partout. |
 | **La teinte** | Un sélecteur de couleur. Toute la palette de l'effet est **tirée** vers cette couleur. |
 | **La force** | De 0 à 100 %. À 0, la couleur d'origine est intacte ; à 100 %, tout devient la même teinte. |
 | **La vitesse** | De ×0,25 à ×3. Elle se **multiplie** avec celle de la tuile, elle ne la remplace pas. |
 
-Vos ambiances apparaissent **en tête** de la liste des effets, sous « Mes ambiances ». Elles sont
-retenues avec le reste de vos réglages et repartent dans la sauvegarde automatique.
+Vos ambiances sont retenues avec le reste de vos réglages et repartent dans la sauvegarde automatique.
+Elles se capturent dans une tuile comme n'importe quel effet.
+
+> [!TIP]
+> **Chercher l'effet d'origine ramène ses copies.** Tapez « torche » et vous obtenez *Torche qui
+> faiblit* **et** la « Bleue de nuit » que vous en avez tirée — même si son nom ne contient pas le mot
+> « torche ». *Sans ça, une copie se perdrait derrière le nom qu'on lui a donné.*
 
 > [!TIP]
 > **La force par défaut est à 70 %, et ce n'est pas de la timidité.** À 100 %, un gyrophare devient
@@ -265,11 +297,16 @@ retenues avec le reste de vos réglages et repartent dans la sauvegarde automati
 > Poussez à 100 % quand vous voulez justement aplatir : une pulsation d'une seule couleur.
 
 > [!NOTE]
-> **Une ambiance descend toujours d'un effet réel**, et l'éditeur rappelle lequel. On ne duplique pas
+> **Une ambiance descend toujours d'un effet réel**, et l'écran rappelle lequel. On ne duplique pas
 > une ambiance : une copie de copie ne dirait plus de quoi elle descend.
 >
 > Si l'effet d'origine venait à disparaître d'une version à l'autre, la lampe **retrouve la couleur de
 > sa scène** au lieu de battre dans le vide, et la console le dit.
+
+> [!WARNING]
+> **La teinte d'une ambiance agit sur les 48 effets, y compris les 36 qui écrivent leur palette.**
+> C'est toute la raison d'être des ambiances : le sélecteur de couleur d'une lampe, lui, ne touche que
+> les onze effets recolorables du catalogue.
 
 
 ## 🏠 L'éclairage normal de la pièce
@@ -380,6 +417,11 @@ touche pas, et la différence avec le temps de transition. Puis l'**éclairage n
 les deux façons de le désigner, ce qu'il change pour les trois gestes de retour, et le défaut qu'il
 répare (la pièce s'éteignait à la fin du premier bruitage d'une soirée). **Les deux ont été
 éprouvés sur les lampes de la table le jour même.***
+
+*Élargi le 2026-09-18, en deux temps. Le soir : **l'écran volant** remplace la liste déroulante —
+elle dépassait la cinquantaine d'entrées une fois les ambiances ajoutées, et *rien ne s'y cherchait*.
+⚠️ **Cette page décrivait déjà l'ancien écran une heure après sa mise en service** : la section a été
+réécrite le même soir. *Un guide écrit en même temps que le code vieillit à la vitesse du code.*
 
 *Élargi le 2026-09-18 : **le catalogue complet des 48 effets**, un par un, avec ce que chacun fait
 dans la pièce — les descriptions sont dérivées du moteur, pas des noms. Ajoutés au même moment : les
