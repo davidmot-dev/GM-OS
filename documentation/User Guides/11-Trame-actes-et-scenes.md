@@ -36,13 +36,48 @@ quelles scènes seront jouées* — c'est tout ce que le modèle promet.
 | **Lieu** | Un lieu de l'Atlas. |
 | **PNJ présents** | Des entités de la galerie. |
 | **Indices** | Ce qui peut tomber ici. |
-| **Moment de storyboard** | L'ambiance qui l'accompagne — son, lumière, image. |
+| **Moment de storyboard** | L'ambiance qui l'accompagne — son, lumière, image. Une IA peut vous la **composer** : voir juste en dessous. |
 | **Personnages présents** | Qui est là. **Renseigné en jouant, pas en préparant.** |
 
 **La pastille de préparation** compte cinq choses : résumé, lieu, PNJ, indices, ambiance. Cinq sur
 cinq, elle est pleine. Les **personnages présents n'y entrent pas** : qui est là est un fait de
 partie, pas un élément qu'on prépare — les compter ferait chuter la pastille de toutes vos scènes
 déjà écrites, et pour une raison fausse.
+
+### ✨ Demander un éclairage à l'IA
+
+Sous le champ **Ambiance**, un bouton **« Proposer une ambiance »**. L'IA lit le **titre**, le
+**résumé**, le **lieu** et le **jeu de la campagne**, puis compose un éclairage **lampe par lampe** :
+une couleur, un effet pris dans le catalogue des 48, une brillance.
+
+Elle vous rend aussi **une phrase** qui dit ce que cet éclairage fait à la table — c'est souvent
+elle qui vous fera dire oui ou non.
+
+> ⛔ **Rien n'est écrit ni allumé tant que vous n'avez pas dit oui.** Vos lampes ne bougent pas
+> pendant que vous préparez : une pièce qui change de couleur un dimanche après-midi, à côté de
+> quelqu'un qui lit, serait une surprise et pas un service. Trois réponses : **Enregistrer**, **Une
+> autre**, **Refuser**.
+
+**Ce que fait « Enregistrer » :**
+1. l'ambiance est rangée dans la **première case libre du râtelier de votre campagne** — jamais
+   dans le pot commun, qui est à vous ;
+2. le **moment de storyboard** de la scène reçoit cette lumière. S'il n'y en avait pas, il en est
+   créé un, portant le nom de l'ambiance ;
+3. le champ **Ambiance** de la scène pointe dessus.
+
+Un bouton **« Jouer maintenant »** apparaît alors, si vous voulez l'entendre — la voir, plutôt —
+tout de suite.
+
+> ⚠️ **Il faut que GM-OS connaisse vos lampes.** L'IA compose pour *vos* lampes, avec leurs noms :
+> sans pont branché (ou sans le **mode simulé** de Light-OS), elle vous le dit et ne propose rien.
+> → [Light-OS](./75-Light-OS-les-lumieres.md)
+
+> ℹ️ **Si une lampe apparaît en orange dans la proposition**, c'est que l'IA a inventé son nom :
+> elle sera ignorée, et la lampe restera éteinte. De même, un effet qu'elle inventerait est ramené
+> à **fixe** plutôt que de donner une lampe qui *devrait* vaciller et ne le fait pas sans rien dire.
+
+> ℹ️ **Le râtelier de la campagne peut être plein** (dix-huit cases). L'écran vous le dit et
+> n'écrit rien : effacez une tuile dans Light-OS, ou rendez-en une commune.
 
 ## 3. Les quatre états d'une scène
 
@@ -121,3 +156,10 @@ Deux gestes pour rattraper la réalité d'une partie :
 
 *Guide écrit le 2026-09-04. Le module existe depuis le 2026-08-08 ; le parcours de jeu — passages,
 pause, reprise — est arrivé le 2026-08-17.*
+
+*Élargi le 2026-09-19 : **l'IA compose un éclairage pour une scène**, sur une demande de David —
+*« est-ce qu'on pourrait demander à une IA de conseiller une ambiance quand on prépare une scène
+dans la trame ? »*. Elle compose plutôt que de choisir parmi l'existant : *avec dix-huit tuiles sous
+les yeux, « laquelle convient ? » est une question à laquelle on répond déjà d'un coup d'œil.* Le
+rangement n'a été possible que le jour où chaque campagne a reçu son râtelier — *l'obstacle n'était
+pas le modèle, c'était la place.* ✅ **Éprouvé à l'écran le soir même** — *« c'est bien »*.*

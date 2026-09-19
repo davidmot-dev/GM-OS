@@ -7113,6 +7113,261 @@ prédire le rendu, puisqu'il ne se juge que sur deux ou trois lampes à la fois.
 
 ---
 
+### 86 · ⭐ Le miroir des lampes ne connaissait que GM-OS (2026-09-19, matin)
+
+David : *« je règle souvent les lumières à partir de mon PC, mais parfois aussi à partir de mon
+téléphone, est-ce que tu pourrais faire un bouton qui capture l'état actuel de mes lampes ? »*
+
+⭐ **Encore un rapport de bogue déguisé en souhait** — le bouton existait, et s'appelait déjà
+« Capturer l'état actuel des lampes ». Il lisait `useLightStore.lights`, **un miroir de ce que GM-OS
+avait envoyé**, rafraîchi depuis le pont **uniquement à l'appairage**. Un réglage fait au téléphone
+était donc invisible, et la tuile enregistrait une ambiance que plus personne ne voyait. *Un bouton
+dont le nom promet ce qu'il ne fait pas est pire qu'un bouton absent : rien ne dit qu'il s'est
+trompé.*
+
+#### ⛔ Le pont rend de l'EFFECTIF, le magasin garde du NOMINAL
+
+C'est le piège de toute relecture, et il n'est pas visible à l'œil :
+
+```
+bri côté pont = nominal × curseur global × intensité de la tuile
+```
+
+Recopier tel quel **rabaisse le nominal d'un cran à chaque lecture** — deux allers-retours et la
+scène s'éteint par étapes. `setLightState` en prévenait depuis toujours, en commentaire, sans que
+personne ait eu à s'en servir.
+
+⭐ ***La règle tient en une phrase : ou bien le pont répète ce qu'on lui a envoyé — rien n'a bougé,
+on garde le nominal — ou bien il dit autre chose, et c'est une valeur de la pièce, qu'on ramène au
+nominal en défaisant le curseur global seulement.***
+
+⚠️ L'intensité de la tuile entre dans la **comparaison** (et seulement pour les lampes qu'elle
+commande) mais **jamais dans la division** : le nominal du magasin est celui d'un geste direct, c'est
+ce qu'affiche le pied de page.
+
+#### ⛔ Deux lampes ne se relisent jamais
+
+| Lampe | Pourquoi | Ce qu'on garde |
+| --- | --- | --- |
+| Sous **effet logiciel** | sa brillance est l'image d'un battement : la relire fige une bougie sur un creux au hasard | l'état d'avant l'effet |
+| **Injoignable** | le pont répète un dernier état connu, parfois vieux de plusieurs jours | le nôtre |
+
+*Le pont fait foi sur ce qu'il voit, pas sur ce qu'il se rappelle.*
+
+#### Ce qui a été livré
+
+- un bouton **« Relire les lampes »** à droite de la barre du haut ;
+- la **capture d'une tuile relit le pont avant d'enregistrer** — ce que son nom promettait ;
+- `fetchLights()` ne fait plus qu'appeler la relecture : **un seul écrivain pour le miroir**.
+
+**Ancres** : `logic/relireLesLampes.ts` (21 essais, dont un qui **compare la reconnaissance à
+`brillanceEffective`** pour que les deux formules ne dérivent pas), `HueEngine.relireLesLampes`,
+`components/TopControls.tsx`, `components/SceneGrid.tsx` (`handleCapture`).
+
+**Vérifié** : `tsc -b` propre, suite Vitest verte. ⚠️ **Jamais éprouvé à l'écran** — et il ne peut
+pas l'être par l'E2E, qui débranche les appareils exprès (`GMOS_SANS_APPAREILS`).
+
+---
+
+### 87 · ⛔ Light-OS et Sound-OS n'étaient dans AUCUNE sauvegarde — et les y mettre ne suffisait pas (2026-09-19)
+
+Trouvé en cherchant où rattacher les tuiles à une campagne. `construireLaSauvegarde` collectait
+**douze** magasins ; ni `light` ni `sound` n'en faisaient partie. Les dix-huit tuiles et les seize
+pads par atmosphère — chemins de fichiers, notes MIDI, touches, scènes lumineuses liées — ne
+vivaient que dans le `localStorage` d'une application qui a **déjà perdu ses données deux fois**.
+
+⭐ **Cinquième et sixième fois** que cette liste oublie quelque chose, après `entities`/`clues`/
+`sessions`, Music-OS, Map-OS et Image-OS. Le fichier le disait déjà lui-même : *« une liste de ce
+qu'on sauvegarde, recopiée à la main, oublie toujours quelque chose. »* Elle l'oubliait encore.
+
+#### ⛔ Le contrôle qui se croit posé et ne refuse rien
+
+Partout ailleurs, la garde anti-écrasement est un `?.length` sur une liste. Ici elle ne refusait
+rien :
+
+| Magasin | Pourquoi le compte ne dit rien | Le vrai critère |
+| --- | --- | --- |
+| Light-OS | les **dix-huit** tuiles existent toujours, même neuves | qu'une tuile tienne l'état d'une lampe |
+| Sound-OS | la liste n'est **jamais vide** — `removeAtmosphere` recrée « Exploration » | qu'un pad tienne un **fichier** |
+
+⭐ ***La question qui les trouve est « cette liste peut-elle vraiment être vide ? », et la réponse est
+presque toujours non quand le magasin fabrique ses cases d'avance.***
+
+#### ⛔ Et le piège était le DÉCLENCHEUR, une seconde fois
+
+Mettre les deux modules dans la charge utile ne suffisait pas : **seul `useSessionOSStore` armait la
+sauvegarde**. Capturer une tuile ou ranger seize pads n'écrivait rien — il fallait toucher par
+ailleurs à sa campagne, ou fermer l'application. *Même piège que `databases/` le 15/09 : on vérifie
+ce qui entre dans le fichier, on oublie de vérifier qui appuie sur le bouton.*
+
+⚠️ **Et la correction évidente aurait été pire que le défaut.** S'abonner aux magasins entiers
+paraît plus sûr ; `useLightStore` change à **chaque battement d'effet**, et armer relâche deux
+minutes de repos avant d'écrire. Un abonnement large aurait remis le compteur à zéro en permanence,
+et **plus aucune sauvegarde ne serait partie pendant une séance**. ⭐ ***Un déclencheur trop sensible
+ne déclenche rien.***
+
+#### Trois décisions de frontière
+
+- **Les ambiances du meneur voyagent avec les tuiles** — obligatoire : une tuile peut porter
+  `variante:<id>`. *Ce qui est référencé part avec ce qui référence.*
+- **Les pads partent au repos** : `isActive` décrit la soirée. *Un pad qui revient allumé six mois
+  plus tard, sans qu'aucun son ne sorte, est un mensonge visuel.*
+- **Ni volume général, ni sortie audio, ni curseur global** : ils décrivent la pièce où l'on joue.
+
+**Ancres** : `store/SessionService.ts` (`light`, `sound`), `types/schemas.ts` (⚠️ `modules` n'est
+**pas** `.passthrough()` — non déclarée, la clé serait écrite puis **jetée à la relecture**),
+`light/logic/tuilePorteUnEtat.ts`, `sound/logic/padPorteUnSon.ts`,
+`light/logic/donneesDurables.ts` (**une seule liste** pour la charge et pour l'armement),
+`session/store/index.ts` (les deux abonnements).
+
+**Trouvé en réparant** : restaurer pouvait rendre **tous les gestes de Sound-OS muets** — les neuf
+actions de pad filtrent par `activeAtmosphereId`, et `SoundDashboard` retombe sur la première
+atmosphère, *donc la grille a l'air parfaitement normale.*
+
+**Vérifié** : `tsc -b` propre, suite verte, E2E rejoués. ✅ **Le contenu des deux nouvelles clés a
+été éprouvé à l'écran par David le jour même** — *« j'ai appliqué les tests cela fonctionne »*.
+
+---
+
+### 88 · ⭐ Les tuiles appartiennent à une campagne, et chacune a ses dix-huit cases (2026-09-19)
+
+Les dix-huit tuiles étaient **partagées par toutes les campagnes** : les ambiances d'*Alien* se
+mélangeaient à celles de *Rêves de Dragons*, et rattacher une tuile à l'une la retirait de la
+grille de l'autre. *On ne rangeait pas, on rétrécissait.* C'est ce qui bloquait l'idée d'une IA qui
+compose des ambiances — **l'obstacle n'était pas le modèle, c'était la place.**
+
+#### La règle n'a pas été recopiée, elle a déménagé
+
+Music-OS avait résolu le même problème le 30/08 — *« étiquette, pas cloison »*. Plutôt qu'un second
+classement, la règle est remontée dans `src/logic/rattachementALaCampagne.ts` ;
+`playlistsDeLaCampagne.ts` ne fait plus que la rhabiller, **et ses 126 essais passent sans
+modification**.
+
+#### ⚠️ Deux règles posées le matin se sont inversées l'après-midi
+
+| Règle, quand les cases étaient partagées | Ce qu'elle devient, une fois les râteliers séparés |
+| --- | --- |
+| Effacer une tuile **retire** son rattachement | Il **reste** — une case vide rattachée est la case libre de cette campagne |
+| Une case vide reste visible **partout** | Elle reste dans **son** râtelier — sinon la grille se remplit des cases libres des autres |
+
+Les deux protégeaient d'un râtelier qui rétrécit. Il ne rétrécit plus, donc les deux sont devenues
+des gênes. ⭐ ***Une règle juste peut s'inverser quand ce qu'elle protégeait change de forme.*** Les
+trois essais qui les encodaient ont échoué — *ils ont fait exactement leur travail.*
+
+#### Ce qui ne bouge pas, et c'est le point
+
+**Aucune migration, aucun identifiant changé.** Les dix-huit tuiles d'origine gardent
+`SCENE_01`…`SCENE_18` et n'ont pas d'étiquette : elles sont **communes**, visibles partout, comme
+hier. Les cinq détenteurs d'une référence lumineuse — pads de Sound-OS et Music-OS, pistes
+d'Ambient-OS, zones de danger, moments de storyboard — résolvent toujours.
+
+#### Six lecteurs, dont un qui n'est pas un écran
+
+La grille, le sélecteur partagé (Music/Sound/Ambient), la barre latérale, la zone de danger de
+Map-OS, le moment de storyboard — **et le clavier**. ⛔ C'est le pire des six : deux campagnes
+donnent naturellement la même touche à leur ambiance d'ouverture, la première trouvée l'emporte, et
+**la pièce change de couleur devant les joueurs.** Music-OS a payé exactement ce défaut en août :
+son clavier était resté le dernier chemin non cloisonné.
+
+#### ⛔ Et la fusion des instantanés — le même geste écrit QUATRE fois
+
+En réparant le snapshot de séance de Light-OS, les trois autres modules d'ambiance avaient le même
+trou :
+
+```
+set({ scenes })  set({ atmospheres })  set({ playlists })  set({ tracks })
+```
+
+Le remplacement en bloc. Rejouer un instantané six mois plus tard effaçait **tout ce qui avait été
+rangé depuis** — et depuis que playlists (30/08) puis tuiles (19/09) appartiennent à une campagne,
+**à travers les campagnes**. La règle s'écrit désormais une fois : *un instantané ne fait jamais
+disparaître un travail qui n'est pas le sien.*
+
+#### ⚠️ Un défaut introduit puis corrigé le même jour
+
+La section de grille avait été écrite comme un **composant déclaré dans le corps de `SceneGrid`** —
+un type neuf à chaque rendu, donc React démonte et remonte la section au lieu de la mettre à jour.
+Les tuiles portent deux curseurs, et traîner un curseur rend à chaque pixel : **le curseur se serait
+arraché de sous la souris au premier mouvement.** C'est une fonction de rendu, pas un composant.
+
+Corrigé aussi : `parseInt(sceneId.split('_')[1])` rendait la campagne au lieu du numéro — une tuile
+effacée se serait appelée **« Scene NaN »**.
+
+**Ancres** : `src/logic/rattachementALaCampagne.ts`, `src/logic/fusionDInstantane.ts`,
+`light/logic/tuilesDeLaCampagne.ts`, `light/logic/ratelierDeLaCampagne.ts`,
+`light/hooks/useTuilesVisibles.ts`, `useLightStore` (`campagneId`, `assignerLaTuile`,
+`garnirLeRatelier`), les quatre `logic/instantaneDeSeance.ts`.
+
+**Vérifié** : `tsc -b` propre, suite verte, E2E rejoués. ⚠️ **Jamais éprouvé à l'écran.**
+
+---
+
+### 89 · ⭐ L'IA compose un éclairage pour une scène de la trame (2026-09-19)
+
+La demande d'origine de la journée, revenue en fin de parcours : *« est-ce qu'on pourrait demander à
+une IA Ollama de conseiller une ambiance quand on prépare une scène dans la trame ? »*
+
+**Elle compose, elle ne choisit pas parmi l'existant.** C'est là qu'un modèle vaut quelque chose :
+une couleur par lampe et un effet parmi quarante-huit. *Avec dix-huit tuiles sous les yeux,
+« laquelle convient ? » est une question à laquelle le meneur répond déjà d'un coup d'œil.*
+
+#### ⛔ La validation est le cœur, pas un détail
+
+Un modèle qui invente un nom d'effet ne lève **aucune erreur** : le moteur ne trouve pas son `case`,
+la boucle n'est jamais lancée, la lampe reste fixe. *Une ambiance à moitié muette ressemble à une
+ambiance ratée, pas à une panne — et on ne s'en aperçoit qu'en séance.*
+
+| Ce que le modèle peut rendre | Ce qu'on en fait |
+| --- | --- |
+| Un effet qui n'existe pas | `none` — fixe, **sur la couleur demandée**, et l'écran le dit |
+| Une couleur qui n'est pas un hexadécimal | la lampe est écartée : *on n'invente pas une teinte* |
+| Une lampe inventée | ignorée, **et affichée en orange** dans la proposition |
+| Une lampe oubliée | **éteinte**, explicitement — *un oubli silencieux est pire qu'un noir assumé* |
+
+⛔ **On ne demande jamais de coordonnées `xy`** : c'est l'espace CIE avec un gamut par ampoule, un
+modèle y répond des nombres plausibles et faux. Il rend un hexadécimal, `hexToXy` fait le reste.
+
+#### L'ordre de l'invite
+
+⭐ *Ce qui décide du COMPTE s'énonce avant ce qui décide du CONTENU* — leçon de la Forge Système.
+« Exactement N entrées, une par lampe, dans cet ordre » est la **première** phrase, et la liste est
+construite à partir des vraies lampes du pont. On ne donne au modèle que les **identifiants**
+d'effet, jamais les noms traduits : *deux chaînes pour une même chose, et il rendra la mauvaise.*
+
+#### Où ça se range, et par quelle porte
+
+- dans la **première case libre du râtelier de la campagne** — jamais le pot commun, qui est au
+  meneur. *Il peut la rendre commune ensuite : c'est son geste, pas une décision de l'IA.*
+- le **moment de storyboard de la scène est complété**, jamais doublé — deux moments pour une
+  scène, ce sont deux portes vers la même chose. `addMoment` rend désormais son identifiant.
+- **rien n'est appliqué au pont avant l'enregistrement** : une pièce qui change de couleur un
+  dimanche après-midi serait une surprise, pas un service.
+
+**Ancres** : `light/logic/ambianceProposee.ts` (la validation, 25 essais),
+`light/logic/proposerUneAmbiance.ts` (l'invite et le schéma imposé au décodeur),
+`light/logic/caseLibreDuRatelier.ts`, `light/components/PropositionDAmbiance.tsx`,
+`session/components/TrameDashboard.tsx`.
+
+**Vérifié** : `tsc -b` propre, suite verte, E2E rejoués. ✅ **ÉPROUVÉ À L'ÉCRAN PAR DAVID le
+2026-09-19** — *« j'ai testé l'IA pour l'ambiance Light-OS, c'est bien »*. Le modèle respecte donc
+le compte de lampes et rend des identifiants d'effet que le moteur reconnaît : **la couche de
+validation n'a pas eu à rattraper l'invite**, mais elle reste la garde du jour où un modèle changera.
+
+⚠️ **Ce qui n'est toujours pas éprouvé par un essai automatique** : l'aller-retour lui-même.
+On peut vérifier ce qu'on fait d'une réponse, pas ce qu'Ollama répond — *une invite qui marche
+aujourd'hui n'a aucun harnais qui le dise demain.*
+
+*Le constat écrit le matin — « jamais éprouvé à l'écran » — est périmé depuis le soir même. Les
+deux questions qu'il posait sont tranchées : oui au compte exact de lampes, oui aux identifiants
+d'effet.*
+
+**Reste ouvert** : « Essayer sur les lampes » **avant** d'enregistrer. Appliquer des états non
+enregistrés demanderait de dupliquer `applyScene` — avec son piège connu des effets d'une scène
+précédente qui ne s'arrêtent pas — ou de la refactoriser. Le contournement livré est
+« Enregistrer puis Jouer ».
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7139,6 +7394,10 @@ prédire le rendu, puisqu'il ne se juge que sur deux ou trois lampes à la fois.
 | 19 | **L'écriture du magasin de session** | ✅ **DIFFÉRÉE le 18/09** — 163 `set()` sérialisaient chacun l'état durable entier. Une écriture par fenêtre de 250 ms, l'enveloppe **au-dessus** du stockage JSON (le coût est le `stringify`, pas le disque : IndexedDB est asynchrone). ⛔ La garde porte **avant** le tampon, sans quoi une écriture interdite serait servie en lecture. ⚠️ **J'avais annoncé « un seul magasin diffère » : ils sont HUIT** (§ 83) | — | Rien. ⚠️ **Non vu en séance** |
 | 20 | **Le chantier des sélecteurs** | ⛔ **N'AURA PAS LIEU, et c'est une décision mesurée** — harnais de profilage React construit (`GMOS_PROFILAGE=1`, `actualDuration`, mesure sur la **vraie base**). Résultat : **79 composants et 2,24 ms** perdus par changement, mais ⭐ **le coût ne dépend pas du volume de données** — c'est la structure, pas la donnée. `App.tsx` s'abonnait au magasin entier pour UN champ : corrigé, gain 2,24 → 2,00 ms seulement. ⛔ **Deux versions de la mesure étaient fausses** (rAF puis chronomètre) (§ 84) | Tirer le fil de `useNexusSynchronizer`, qui s'abonne à TOUT changement | Rien |
 | 21 | **Light-OS — la soirée du 18** | ✅ **DEUX EFFETS, LES AMBIANCES ET UN ÉCRAN VOLANT** — ⛔ *« pas assez dorée »* : sur une Hue, c'est le **canal bleu** qui décide entre l'or et le blanc (154 contre 33 pour la torche). ⛔ **36 effets sur 47 figent leur palette**, donc une ambiance reteinte **après** le switch — et on mélange à 70 %, sinon un gyrophare devient monochrome. ⭐ **Stores** : l'illusion vit **entre** les lampes, d'où un décalage stable étalé par le nombre d'or. ⛔ *« je ne retrouve pas mes copies »* — la chaîne était complète **sans porte pour y revenir** : la liste déroulante de 50 entrées devient un **écran volant** qui cherche, y compris par l'effet d'origine d'une copie. Corrigé au passage : le **fondu** n'était raboté que dans la source, pas après le curseur de vitesse (§ 85) | Poser **Stores** sur deux ou trois lampes | Rien. ⚠️ **Stores non vu dans la pièce** |
+| 22 | **Light-OS — relire les lampes** | ✅ **LIVRÉ le 19/09** — le miroir ne connaissait que ce que GM-OS avait envoyé, donc un réglage fait au **téléphone** était invisible et la capture enregistrait une ambiance que plus personne ne voyait. ⛔ **Le pont rend de l'EFFECTIF, le magasin garde du NOMINAL** : recopier tel quel éteint une scène par étapes en deux allers-retours. ⛔ Une lampe **sous effet** ou **injoignable** ne se relit jamais (§ 86) | Régler deux lampes au téléphone, puis « Relire les lampes » | Rien. ⚠️ **Non vu à l'écran, et l'E2E ne peut pas le couvrir** |
+| 23 | **Light-OS et Sound-OS dans la sauvegarde** | ✅ **LIVRÉ et ÉPROUVÉ À L'ÉCRAN le 19/09** (*« j'ai appliqué les tests cela fonctionne »*) — les deux n'étaient dans **aucune** sauvegarde : **5ᵉ et 6ᵉ** oubli de cette liste. ⛔ La garde « un instantané vide n'en remplace jamais un plein » **ne refusait rien** ici (18 tuiles et 1 atmosphère existent toujours). ⛔ Et le piège était le **DÉCLENCHEUR**, comme `databases/` : ⚠️ s'abonner large aurait tué la sauvegarde pendant les séances (§ 87) | Rien | Rien. ⚠️ La **restauration** en répétition reste à essayer |
+| 24 | **Les tuiles par campagne** | ✅ **LIVRÉ le 19/09** — chaque campagne a ses **18 cases**, plus un pot commun ; aucune migration, aucun identifiant changé. La règle de rattachement a **déménagé** dans `src/logic/` plutôt que d'être recopiée. ⛔ Le **clavier** était le 6ᵉ lecteur, et le pire. ⭐ Deux règles du matin se sont **inversées** l'après-midi. ⛔ La **fusion des instantanés** : le même remplacement en bloc écrit **quatre fois** (§ 88) | Ouvrir une campagne, vérifier les trois sections de la grille, **traîner un curseur de tuile** | Rien. ⚠️ **Non vu à l'écran** |
+| 25 | **L'IA compose une ambiance** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 19/09** (*« c'est bien »*) — sous le champ *Ambiance* d'une scène de la trame. Elle **compose** lampe par lampe plutôt que de choisir parmi l'existant. ⛔ La **validation est le cœur** : un effet inventé ne lève aucune erreur, il rend une lampe muette. Range dans le râtelier de la campagne, complète le moment de la scène sans le doubler (§ 89) | Light-OS en **mode simulé**, puis une scène → « Proposer une ambiance » | Rien. ⚠️ **Aucun essai automatique ne couvre l'aller-retour avec le modèle** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

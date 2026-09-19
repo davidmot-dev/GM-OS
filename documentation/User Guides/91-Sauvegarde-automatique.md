@@ -31,6 +31,22 @@ jamais touché.
 | **Avant de supprimer une campagne** | Immédiatement. C'est le geste le plus irréversible de l'application. |
 | **À la clôture d'une séance** | Immédiatement. |
 
+> ⭐ **« Votre dernier changement » ne voulait pas dire n'importe quel changement.** Jusqu'au
+> **2026-09-19**, seules les données de session armaient la sauvegarde — campagnes, séances, PNJ,
+> trame. Capturer une tuile dans Light-OS ou ranger seize pads dans Sound-OS **n'armait rien** : ce
+> travail n'était écrit que si vous touchiez par ailleurs à votre campagne, ou en fermant
+> l'application.
+>
+> Les deux modules arment désormais comme le reste. *La donnée entrait dans le fichier, et
+> personne n'appuyait sur le bouton — on vérifie toujours ce qui entre, rarement qui tire.*
+
+> ⚠️ **Ce qui n'arme toujours pas, et c'est voulu** : le curseur global de Light-OS, le volume
+> général de Sound-OS, la sortie audio, l'état des lampes rapporté par le pont. Ils décrivent *la
+> pièce où vous jouez*, ils ne sont pas sauvegardés, et surtout l'état des lampes change dix fois
+> par seconde sous un effet : **s'il armait, les deux minutes de repos ne seraient jamais
+> atteintes et plus aucune sauvegarde ne partirait pendant une séance.** *Un déclencheur trop
+> sensible ne déclenche rien.*
+
 ## 3. Quand ça refuse — et pourquoi c'est une bonne nouvelle
 
 Une sauvegarde peut être **refusée**, et le journal de l'application le dit. Cinq raisons :
@@ -55,10 +71,25 @@ Une sauvegarde peut être **refusée**, et le journal de l'application le dit. C
   **butin de séance**.
 - **Les playlists de Music-OS.** Pas les réglages de sortie audio : *ils décrivent votre pièce, pas
   votre univers.*
+- **Les atmosphères de Sound-OS**, depuis le 19/09 — chaque pad avec son **fichier**, son titre, son
+  volume, sa couleur, sa **note MIDI**, sa **touche de clavier** et sa scène lumineuse liée. Pas le
+  volume général ni la sortie audio, et **pas les pads en train de jouer** : *un pad qui revient
+  allumé six mois plus tard, sans qu'aucun son ne sorte, est un mensonge visuel.*
+- **Les tuiles de Light-OS**, depuis le 19/09 — l'état de chaque lampe, le nom, l'icône, la couleur
+  de repère, la touche de clavier, la vitesse et l'intensité de chaque ambiance ; **vos ambiances
+  personnelles** (les effets que vous avez dupliqués et reteintés) et l'**éclairage normal de la
+  pièce**. Pas le curseur global, ni le temps de transition, ni l'adresse du pont : même raison que
+  pour Music-OS. *Le jeton de votre pont, lui, n'a jamais à voyager dans un fichier — il vit au
+  trousseau.*
 - **Les liens, ambiances, horloges, tableau blanc.**
 - **La bibliothèque des fiches de personnage.**
 - **Vos tables et vos calendriers** (`databases/`), depuis le 15/09 — par un miroir à part, voir
   plus bas.
+
+> ⚠️ **Vos sons et vos musiques ne sont pas copiés, seulement désignés.** Un pad retient le
+> **chemin** de son fichier sur votre disque, comme une playlist de Music-OS. Déplacer votre
+> dossier de bruitages après coup casse les pads, et aucune sauvegarde ne le rattrape — seules les
+> **images** ont un miroir, parce qu'elles vivent dans le Media Hub et pas dans vos dossiers.
 
 ### Les images ont un **miroir**, pas des instantanés
 
@@ -144,3 +175,18 @@ n'était pas un bug de git : le service lui demandait littéralement cet effacem
 
 *Guide écrit le 2026-09-04. Le module a été construit et éprouvé en réel le 2026-08-28 (3
 sauvegardes, 7 vraies campagnes) ; le miroir des images le 2026-08-29, éprouvé aller **et** retour.*
+
+*Élargi le 2026-09-19 : **Light-OS n'était dans aucune sauvegarde** — trouvé en cherchant où
+rattacher les tuiles à une campagne. C'est le **cinquième** oubli de cette liste, après les PNJ et
+les indices, Music-OS, Map-OS et Image-OS : *une liste de ce qu'on sauvegarde, recopiée à la main,
+oublie toujours quelque chose.* Un essai garde désormais le principe. **Sound-OS a suivi le même jour**, pour la même raison : les
+deux manquaient depuis toujours, côte à côte. ⭐ Et les deux portaient **le même piège** — la garde
+qui empêche une sauvegarde vide d'écraser un travail plein comptait des cases que le magasin
+fabrique d'avance : dix-huit tuiles, une atmosphère par défaut. *Elle se croyait posée et ne
+refusait rien.*
+
+*Complété le 2026-09-19, après coup : mettre Light-OS et Sound-OS dans la charge utile ne suffisait
+pas — **rien dans ces deux modules ne déclenchait de sauvegarde**. Même piège que `databases/` le
+15/09 : *on vérifie ce qui entre dans le fichier, on oublie de vérifier qui appuie sur le bouton.*
+✅ **Le contenu des deux nouvelles clés a été vérifié à l'écran par David le jour même**, en
+ouvrant le fichier de sauvegarde.*

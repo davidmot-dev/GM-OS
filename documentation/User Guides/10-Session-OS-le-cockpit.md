@@ -224,6 +224,31 @@ Un Snapshot capture l'intégralité de l'état de l'application à un instant T 
 
 **Usage** : Sauvegardez un Snapshot à la fin d'une partie. Au début de la prochaine, chargez-le pour retrouver instantanément votre scène là où vous l'aviez laissée.
 
+### ✨ Ce qu'un Snapshot ne peut plus vous prendre
+
+Jusqu'au **2026-09-19**, restaurer un Snapshot **remplaçait en bloc** vos bibliothèques d'ambiance :
+les dix-huit tuiles de Light-OS, les atmosphères de Sound-OS, les playlists de Music-OS et les huit
+pistes d'Ambient-OS. Un Snapshot étant une photo prise à un instant, le rejouer six mois plus tard
+effaçait **tout ce que vous aviez rangé depuis**, sans rien en dire.
+
+La restauration **fusionne** désormais, selon une règle unique :
+
+> ⭐ **Un Snapshot ne fait jamais disparaître un travail qui n'est pas le sien.**
+
+| Ce que vous avez aujourd'hui | Ce que le Snapshot apporte | Résultat |
+| :--- | :--- | :--- |
+| Une case vide | n'importe quoi | vous recevez ce qui arrive |
+| Un travail | une case **vide** | **le vôtre est gardé** |
+| Un travail | le même, de la **même campagne** | il est restauré — c'est le but du bouton |
+| Un travail | celui d'une **autre campagne** | **le vôtre est gardé** |
+
+> ⚠️ **Rien n'est jamais supprimé.** Une ambiance que le Snapshot ne mentionne pas reste en
+> place, et ce qu'il apporte en plus s'ajoute à la suite — vos onglets ne se réordonnent pas sous
+> vos yeux au moment où vous restaurez.
+
+*Le défaut existait dans les **quatre** modules d'ambiance, écrit quatre fois séparément. Il est
+désormais corrigé une seule fois, au même endroit pour les quatre.*
+
 ---
 
 ## 📐 Layout Manager - Votre Plan de Travail

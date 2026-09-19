@@ -49,6 +49,49 @@ Trois gestes ramènent la pièce au repos. **Ils se ressemblent assez pour être
 *   **`sceneEnApprentissage`** est un **mode**, non persisté : rouvrir GM-OS en attente d'une touche laisserait le clavier muet sans dire pourquoi. `Escape` en sort.
 *   ⛔ **`isSyncEnabled` n'avait aucun écrivain** jusqu'à ce jour : lu dix fois dans Ambient-OS, Music-OS et Sound-OS, persisté, et `true` à jamais. L'interrupteur est dans `TopControls`. **Le voisin a été renommé** `mock_sync` → `mock_mode` : il porte le nom que le guide donnait à celui-ci, et bascule le pont en simulation.
 
+### 2 quinquies. Relire les lampes sur le pont (2026-09-19)
+
+Le magasin ne tenait **que le compte de ce que GM-OS avait envoyé** : `lights` n'était rafraîchi qu'à l'appairage. Un réglage fait depuis l'application Hue du téléphone était donc invisible, et `saveSceneSnapshot` enregistrait un état que plus personne ne voyait dans la pièce.
+
+*   **`HueEngine.relireLesLampes()`** est désormais le seul écrivain du miroir ; `fetchLights()` ne fait que l'appeler. La règle vit en logique pure dans **`logic/relireLesLampes.ts`**.
+*   ⛔ **Le pont rend de l'effectif, le magasin garde du nominal.** `bri` côté pont vaut `nominal × globalBrightness × sceneBrightness`. Recopier tel quel rabaisse le nominal d'un cran **à chaque lecture** : deux allers-retours suffisent à éteindre une scène par étapes — ce dont le commentaire de `setLightState` prévenait depuis toujours.
+*   **La règle** : ou bien le pont répète ce qu'on lui a envoyé (à `TOLERANCE_DE_BRILLANCE` près) et on garde le nominal, ou bien il dit autre chose et c'est une valeur de la pièce, ramenée au nominal en défaisant **le curseur global seulement**.
+*   ⚠️ **L'intensité de la tuile entre dans la comparaison, jamais dans la division**, et seulement pour les lampes que la tuile jouée commande. Sans ce tri, une lampe réglée au pied de page pendant qu'une tuile à 60 % joue passerait pour déplacée à chaque lecture.
+*   ⛔ **Deux lampes ne sont jamais relues** : celle qui joue un **effet logiciel** (sa brillance est l'image d'un battement) et celle que le pont dit **injoignable** (il ne répète qu'un souvenir).
+*   Un essai compare la reconnaissance à **`brillanceEffective`** : si la formule d'envoi change, il tombe. *Deux écritures d'une même formule dérivent en silence.*
+
+### 2 sexies. Le rattachement à une campagne (2026-09-19)
+
+*   **`LightScene.campagneId`** — *étiquette, pas cloison*. Absent ou `null` : la tuile est **commune**, visible partout. C'est le défaut, et c'est ce qui rend la bascule indolore : les dix-huit tuiles d'origine n'en portent pas. **Aucune migration.**
+*   La règle de classement est **partagée avec Music-OS** dans `src/logic/rattachementALaCampagne.ts` ; `light/logic/tuilesDeLaCampagne.ts` n'ajoute que ce qui est propre au râtelier lumineux. `music/logic/playlistsDeLaCampagne.ts` ne fait plus que la rhabiller.
+*   ⛔ **Six lecteurs** filtrent les tuiles, et le verdict doit être unique : la grille, le sélecteur partagé (Music/Sound/Ambient), la barre latérale, l'éditeur de zone de danger de Map-OS, le select du Storyboard, **et le clavier**. Les cinq écrans passent par `hooks/useTuilesVisibles.ts` ; le clavier appelle la **même fonction pure**, `tuileDuRaccourci`.
+*   ⚠️ **`tuilesOffertesAuRepli` garde une exception** : la désignation en cours reste offerte même si elle appartient à une autre campagne. `defaultSceneId` est global et **il agit** — le masquer donnerait un réglage qui commande les lampes sans apparaître nulle part.
+*   **`garnirLeRatelier(campagneId)`** complète un râtelier à `TAILLE_DU_RATELIER` (18). Idempotente, appelée à l'ouverture de `LightDashboard` pour la campagne **et** pour le pot commun. ⚠️ Dix-huit est un **plancher, pas un plafond** : rattacher une tuile commune à sa campagne lui en donne dix-neuf, et rien ne lui en retire.
+*   **Les identifiants** : `SCENE_NN` pour le pot commun, `SCENE_<campagne>_NN` pour une campagne. ⛔ **L'identifiant n'est pas le propriétaire** — `campagneId` l'est, et lui seul ; un identifiant ne change jamais, sous peine de casser les liens que cinq modules tiennent dessus. Le numéro se relit **après le dernier tiret bas** (`numeroDeCase`) : `split('_')[1]` rendait la campagne, et `parseInt` en faisait `NaN`.
+*   ⭐ **Deux règles se sont inversées le jour même** où les râteliers ont cessé d'être partagés : `clearScene` **garde** désormais le rattachement, et une case vide n'est plus visible hors de son râtelier. Les deux protégeaient d'un râtelier qui rétrécit. *Une règle juste peut s'inverser quand ce qu'elle protégeait change de forme.*
+
+### 2 septies. Ce que Light-OS met dans une sauvegarde (2026-09-19)
+
+⛔ **Le module n'était dans aucune sauvegarde** jusqu'à cette date — cinquième oubli de la liste de `construireLaSauvegarde`, après `entities`/`clues`/`sessions`, Music-OS, Map-OS et Image-OS.
+
+*   **`logic/donneesDurables.ts`** définit la part sauvegardée — `scenes`, `variantes`, `defaultSceneId` — **en un seul endroit**, lu par la charge utile *et* par l'abonnement qui arme la sauvegarde. Deux listes recopiées divergeraient, et l'écart serait muet dans les deux sens.
+*   ⚠️ **Les variantes voyagent avec les tuiles, obligatoirement** : une tuile peut porter `variante:<id>` comme effet. *Ce qui est référencé part avec ce qui référence.*
+*   **Ce qui n'y est pas** : `globalBrightness`, `transitionTimeMs`, `isSyncEnabled`, `lights`, l'état du pont. Ils décrivent la pièce, pas l'univers — et `lights` change dix fois par seconde sous un effet.
+*   ⛔ **La garde anti-écrasement ne peut pas compter les tuiles** : les dix-huit existent toujours. Le verdict est `logic/tuilePorteUnEtat.ts` — *qu'une tuile au moins tienne l'état d'une lampe*.
+*   **Le déclencheur** : `session/store/index.ts` s'abonne à `useLightStore` **sur les seuls champs durables**. ⚠️ Un abonnement au magasin entier remettrait à zéro les deux minutes de repos à chaque battement d'effet, et **plus aucune sauvegarde ne partirait pendant une séance**.
+*   **La restauration d'un instantané fusionne** (`logic/instantaneDeSeance.ts`, sur la règle commune `src/logic/fusionDInstantane.ts`) : *un instantané ne fait jamais disparaître un travail qui n'est pas le sien*. Il ne remplace une tuile pleine que si elle appartient au même propriétaire.
+
+### 2 octies. L'ambiance composée par l'IA (2026-09-19)
+
+Le geste vit dans **`session/components/TrameDashboard.tsx`**, sous le champ *Ambiance* d'une scène — c'est au moment où l'on écrit ce qui se joue qu'on sait ce que la pièce doit dire.
+
+*   **`logic/proposerUneAmbiance.ts`** construit l'invite et appelle `generateJSON` avec `sansPersona` et un **schéma imposé au décodeur**. ⭐ *Ce qui décide du COMPTE s'énonce avant ce qui décide du CONTENU* : « exactement N entrées, une par lampe, dans cet ordre » est la première phrase. On ne donne que les **identifiants** d'effet, jamais les noms traduits.
+*   **`logic/ambianceProposee.ts`** est le cœur : un effet inconnu devient `none`, une couleur non hexadécimale écarte la lampe, une lampe inventée est ignorée, une lampe oubliée est **éteinte**. ⛔ Un effet inventé ne lève **aucune erreur** — le moteur ne trouve pas son `case`, la lampe reste fixe, et *une ambiance à moitié muette ressemble à une ambiance ratée, pas à une panne*.
+*   ⛔ **On ne demande jamais de `xy` au modèle** : c'est l'espace CIE avec un gamut par ampoule. Il rend un hexadécimal, `hexToXy` fait le reste. La conversion est passée en **callback** pour que la logique reste pure.
+*   **`logic/caseLibreDuRatelier.ts`** choisit où ranger : la première case libre du râtelier de la campagne, **jamais le pot commun**. Sans campagne ouverte, on ne range pas et l'écran le dit.
+*   L'écriture passe par **`saveSceneSnapshot`** (avec des lampes fabriquées portant les états proposés) plutôt que par un second écrivain de `lightStates`, et **complète le moment de storyboard de la scène** au lieu d'en créer un second.
+*   ⚠️ **Rien n'est appliqué au pont avant l'enregistrement.** Le « Jouer maintenant » n'apparaît qu'après.
+
 ### 3. Hiérarchie des Overrides
 1.  **Tactical State** (Flash, Alerte) : Priorité absolue. Interrompt les effets en cours.
 2.  **Software Effects** (Loop) : Priorité haute.

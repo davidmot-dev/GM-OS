@@ -55,7 +55,7 @@ pour *comment on s'en sert*, voir [les guides utilisateur](../User%20Guides/00-I
 | Document | Ce qu'il couvre |
 | :--- | :--- |
 | [Master Soundscape Controller](./Audio_Master_Controller_Technical_Doc.md) | Le volume global, l'atténuation automatique, et le niveau dicté aux vidéos projetées. |
-| [Light-OS](./Light-OS_Technical_Doc.md) | Le pont Philips Hue, scènes natives et effets logiciels. |
+| [Light-OS](./Light-OS_Technical_Doc.md) | Le pont Philips Hue, scènes natives et effets logiciels. Depuis le 19/09 : la **relecture** du pont, les **râteliers par campagne**, ce qui entre dans la sauvegarde, et l’**ambiance composée par l’IA**. |
 | [Étiquetage pour le Cortex](./tactical-ai-tagging.md) | Les mots-clés qui permettent à l'IA de choisir une ambiance. |
 
 ## 📡 Transport et second écran

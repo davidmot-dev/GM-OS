@@ -58,6 +58,7 @@ Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quel
   chaque lampe à votre convenance.
 - **Sauvegarde** : survolez une tuile et cliquez l'**appareil photo 📷** en bas à gauche. L'état
   actuel de toutes les lampes y est mémorisé. Une tuile encore vide se capture d'un simple clic.
+  La capture **va d'abord demander au pont** ce que vos lampes font vraiment — voir juste en dessous.
 - **Personnalisation** : le **crayon ✏️** en bas à droite ouvre l'éditeur de la tuile — son **nom**,
   son **icône** (vingt-quatre proposées, ou n'importe quel nom de Material Symbol) et sa **couleur**.
   Cette couleur ne commande aucune lampe : elle **repère la tuile dans la grille** — son icône, sa
@@ -68,6 +69,38 @@ Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quel
   voyage.
 - **Effacement** : la croix ✕ en haut à gauche vide la tuile. Elle perd alors son nom, son icône, sa
   couleur, sa touche — et cesse d'être l'éclairage normal si elle l'était.
+
+### 📱 Quand vous réglez vos lampes depuis votre téléphone
+
+Light-OS tenait le compte de **ce qu'il avait lui-même envoyé** au pont. Tant que vous ne réglez vos
+lampes que depuis GM-OS, les deux disent la même chose. Mais dès que vous prenez l'application Hue
+sur votre téléphone — pour monter une lampe, en éteindre une, changer une teinte — l'application ne
+le voit pas : le pont obéit, et personne ne le lui dit.
+
+Deux gestes s'appuient là-dessus :
+
+- **Capturer une tuile** va maintenant **relire le pont avant d'enregistrer**. C'est ce que son nom
+  promettait depuis toujours : la tuile retient la pièce telle qu'elle est, pas telle que GM-OS la
+  croyait. L'icône tourne le temps de l'aller-retour — une fraction de seconde sur le réseau local.
+- **« Relire les lampes »**, à droite de la barre du haut, fait la même lecture sans rien
+  enregistrer. Les **curseurs et les couleurs du pied de page** se remettent alors sur vos vraies
+  lampes. C'est le bouton à cliquer quand vous revenez du téléphone et que vous voulez repartir de
+  ce que vous voyez.
+
+> ⚠️ **Deux lampes ne sont jamais relues**, et c'est voulu : celle qui **joue un effet** — sa
+> brillance à cet instant est l'image d'un battement, pas un réglage, et la relire figerait une
+> bougie sur le creux où la lecture est tombée — et celle que le pont dit **injoignable**, dont il ne
+> répète qu'un souvenir.
+
+> 💡 **Le curseur global est défait en chemin.** Si vous éclairez la pièce à 50 % et que votre
+> téléphone pousse une lampe à fond, la tuile enregistre de quoi **reproduire ce que vous voyez** une
+> fois le curseur repassé dessus. Une lampe que GM-OS avait réglée lui-même, elle, n'est pas touchée
+> — *sans quoi chaque relecture l'aurait baissée d'un cran, et la scène se serait éteinte par
+> étapes.*
+
+> ⚠️ **La relecture ne se fait pas toute seule.** Le pont Hue tient une dizaine de commandes par
+> seconde et les effets en consomment déjà : une interrogation permanente les ferait bégayer. C'est
+> donc un geste, au moment où vous en avez besoin.
 
 ### ⌨️ Lancer une scène à la touche
 
@@ -84,6 +117,51 @@ c'est tout l'intérêt : changer l'ambiance sans quitter vos notes.
 > lancer un bruitage **et** sa lumière — un cumul souvent utile, mais qui surprend si on l'a fait sans
 > le vouloir. Les touches tenues avec **Ctrl, Alt ou Cmd** ne déclenchent jamais rien, et rien ne se
 > déclenche pendant que vous tapez dans un champ ou qu'une boîte est ouverte.
+
+### 🔖 Vos tuiles, campagne par campagne
+
+Vous aviez **dix-huit tuiles en tout**, partagées par toutes vos campagnes : les ambiances d'*Alien*
+se mélangeaient à celles de *Rêves de Dragons*, et rattacher une tuile à l'une la retirait de la
+grille de l'autre. On ne rangeait pas, on rétrécissait.
+
+**Chaque campagne a désormais ses dix-huit cases**, plus un **pot commun**. La grille les montre
+séparément :
+
+| Section | Ce qu'on y trouve |
+| :--- | :--- |
+| **Cette campagne** | Dix-huit cases qui n'appartiennent qu'à la campagne ouverte. |
+| **Communes** | Les ambiances sans étiquette — une « Taverne », un « Combat » servent partout. |
+| **Campagne disparue** | Des tuiles rattachées à une campagne supprimée. Elles restent visibles pour que vous puissiez les re-rattacher ou les effacer. |
+
+> ⭐ **Rien ne disparaît le jour de la mise à jour.** Vos dix-huit tuiles actuelles n'ont pas
+> d'étiquette : elles sont donc **communes**, et vous les retrouvez dans toutes vos campagnes,
+> exactement comme hier. Il n'y a aucune migration à subir.
+
+#### Rattacher une tuile
+
+Ouvrez l'éditeur d'une tuile (le **crayon ✏️**) : la ligne **« Cette tuile appartient à »** propose
+*Toutes* ou *Cette campagne*.
+
+> ⚠️ **Capturer ne rattache pas.** Une tuile capturée reste commune. C'est voulu : la plupart des
+> ambiances servent dans plusieurs campagnes, et le rattachement est un geste, pas une conséquence.
+
+> ℹ️ **Dix-huit est un plancher, pas un plafond.** Si vous rattachez une tuile commune à votre
+> campagne, son râtelier en compte dix-neuf — on ne vous en retire pas une — et le pot commun se
+> recomplète à la prochaine ouverture de Light-OS.
+
+**Quatre choses suivent le réglage, et c'est le but :**
+- la **grille** de Light-OS ;
+- les listes des autres modules — lier une pastille de Sound-OS, de Music-OS ou une piste
+  d'Ambient-OS à une lumière, une **zone de danger** de Map-OS, un **moment de storyboard** ;
+- le **clavier**. Deux campagnes peuvent donner la même touche à leur ambiance d'ouverture sans se
+  marcher dessus — *et une campagne peut redéfinir une touche commune.*
+
+> ✨ **Votre éclairage normal reste toujours modifiable**, même s'il appartient à une autre
+> campagne : il commande vos lampes, donc il doit rester sous vos yeux dans la barre de gauche.
+
+> ℹ️ **Effacer une tuile (la croix ✕) lui laisse son rattachement.** Elle perd son nom, son
+> état et sa touche, mais la case reste celle de sa campagne — prête à recevoir une nouvelle
+> capture.
 
 ## 🪄 Les effets — le catalogue complet
 
@@ -436,3 +514,24 @@ citait quatre avant un « etc. » — et *Grisaille* n'en fait pas partie. Ajout
 modules** qui peuvent commander vos lampes sans passer par Light-OS, et le fait que le **Stop All
 les éteint**. Les 18 scènes, l'appairage du pont et la transition de 5 secondes par défaut sont
 exacts.*
+
+*Élargi le 2026-09-19, sur une demande de David : **« je règle aussi parfois les lumières depuis mon
+téléphone »**. Le miroir des lampes ne connaissait que ce que GM-OS avait envoyé — capturer une tuile
+après un réglage au téléphone enregistrait donc une ambiance que plus personne ne voyait, **et rien
+ne le disait**. La capture relit désormais le pont, et le bouton **« Relire les lampes »** fait la
+même lecture pour le pied de page. ⚠️ Jamais éprouvé à l'écran à cette date.*
+
+*Élargi le 2026-09-19 : **les tuiles peuvent appartenir à une campagne**, sur le modèle des
+atmosphères de Music-OS — *étiquette, pas cloison*. Sans étiquette, une tuile est commune : rien ne
+change tant que vous ne rattachez rien, et il n'y a aucune migration. ⚠️ Le réglage suit jusqu'au
+**clavier**, qui était le dernier chemin non cloisonné de Music-OS en août. Deux exceptions
+délibérées : une case **vide** reste toujours visible (c'est là qu'on capture) et l'**éclairage
+normal** reste toujours modifiable. ⚠️ Jamais éprouvé à l'écran à cette date.*
+
+*Élargi le 2026-09-19, seconde fois du jour : **chaque campagne a ses dix-huit cases**, et le pot
+commun garde les vôtres. ⚠️ Deux règles posées le matin même se sont **inversées** en cours de
+route, et c'est normal : quand les cases étaient partagées, effacer une tuile devait la rendre au
+pot commun et une case vide devait rester visible partout — deux protections contre un râtelier qui
+rétrécit. Le râtelier ne rétrécit plus, donc les deux protections sont devenues des gênes. *Une
+règle juste peut s'inverser quand ce qu'elle protégeait change de forme.* ⚠️ Jamais éprouvé à
+l'écran à cette date.*
