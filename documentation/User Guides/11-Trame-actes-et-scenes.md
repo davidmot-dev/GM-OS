@@ -53,10 +53,33 @@ une couleur, un effet pris dans le catalogue des 48, une brillance.
 Elle vous rend aussi **une phrase** qui dit ce que cet éclairage fait à la table — c'est souvent
 elle qui vous fera dire oui ou non.
 
-> ⛔ **Rien n'est écrit ni allumé tant que vous n'avez pas dit oui.** Vos lampes ne bougent pas
-> pendant que vous préparez : une pièce qui change de couleur un dimanche après-midi, à côté de
-> quelqu'un qui lit, serait une surprise et pas un service. Trois réponses : **Enregistrer**, **Une
-> autre**, **Refuser**.
+> ⛔ **Rien ne s'allume tout seul.** Vos lampes ne bougent pas pendant que vous préparez : une
+> pièce qui change de couleur un dimanche après-midi, à côté de quelqu'un qui lit, serait une
+> surprise et pas un service. Quatre réponses : **Essayer**, **Enregistrer**, **Une autre**,
+> **Refuser**.
+
+### 💡 Essayer sur vos lampes
+
+**« Essayer » allume l'ambiance dans la pièce, sans rien enregistrer.** Le bandeau passe en
+*« essai en cours »*, et le même bouton devient **« Revenir »** : vos lampes retrouvent alors
+exactement ce qu'elles montraient avant — la scène qui jouait, effets compris, ou simplement la
+lumière où vous les aviez laissées.
+
+> ⭐ **C'est un essai, pas un enregistrement.** Aucune case du râtelier n'est occupée. Avant ce
+> bouton il fallait *enregistrer* pour voir — donc consommer une case pour regarder une ambiance
+> qu'on allait peut-être refuser.
+
+Trois choses à savoir :
+
+- **« Une autre » pendant un essai change la pièce aussitôt.** L'essai suit ce que le panneau
+  affiche ; il ne vous laisse pas lire une proposition en en regardant une autre.
+- **Enchaîner les essais ne perd pas votre point de départ.** « Revenir » ramène toujours la pièce
+  d'avant le **premier** essai.
+- **Fermer la scène rend la pièce.** Un essai ne vous survit pas : il n'y aurait plus aucun bouton
+  pour le défaire.
+
+> ℹ️ **Le curseur global de Light-OS s'applique à l'essai**, comme à tout le reste : il dit le
+> volume de lumière de la pièce, pas celui d'une ambiance.
 
 **Ce que fait « Enregistrer » :**
 1. l'ambiance est rangée dans la **première case libre du râtelier de votre campagne** — jamais
@@ -65,8 +88,9 @@ elle qui vous fera dire oui ou non.
    créé un, portant le nom de l'ambiance ;
 3. le champ **Ambiance** de la scène pointe dessus.
 
-Un bouton **« Jouer maintenant »** apparaît alors, si vous voulez l'entendre — la voir, plutôt —
-tout de suite.
+Un bouton **« Jouer maintenant »** apparaît alors, si vous voulez la voir tout de suite. Si vous
+étiez en train de l'essayer, la pièce ne bouge pas : l'essai devient simplement la tuile qu'il
+vient de remplir.
 
 > ⚠️ **Il faut que GM-OS connaisse vos lampes.** L'IA compose pour *vos* lampes, avec leurs noms :
 > sans pont branché (ou sans le **mode simulé** de Light-OS), elle vous le dit et ne propose rien.

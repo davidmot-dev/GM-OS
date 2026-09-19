@@ -27,20 +27,43 @@ La cadence d'un effet est écrite dans son `case` (`interval`). La **vitesse de 
 *   **Application immédiate** : `appliquerVitesseDeScene(sceneId)` replanifie sur-le-champ les effets nés de cette scène. *Sans cet appel, un effet lent (crépuscule : 10 s) n'apprendrait sa nouvelle vitesse qu'au tour suivant, ce qui se lit comme un réglage en panne.*
 *   ⛔ **`setInterval` fige sa période** à la pose : c'est la raison pour laquelle les deux familles d'effets passent maintenant par une seule fonction `planifier()` interne — les dynamiques en `setTimeout` un tour à la fois, les autres en `setInterval` jusqu'à ce que la vitesse change.
 
-### 2 ter. Les trois portes du retour (2026-09-07)
-Trois gestes ramènent la pièce au repos. **Ils se ressemblent assez pour être confondus dans le code, et ils ne visent pas la même chose.**
+### 2 ter. Les portes du retour — trois le 2026-09-07, **quatre depuis le 2026-09-20**
+Quatre gestes ramènent la pièce au repos. **Ils se ressemblent assez pour être confondus dans le code, et ils ne visent pas la même chose.**
 
 | Méthode | Appelée par | Vise |
 | :--- | :--- | :--- |
 | `revertToManualScene()` | Sound-OS, Music-OS, Ambient-OS (×2), `restoreAfterTactical` | `lastManualSceneId`, puis `defaultSceneId`, puis extinction |
 | `revenirALEclairageNormal()` | le **Stop All** de `MasterAudioController` | `defaultSceneId` **directement**, puis extinction |
 | `extinguishAll()` | le bouton rouge de la `Sidebar` de Light-OS | rien : elle éteint |
+| `rendreLaPieceApresLEssai()` | « Revenir » de `PropositionDAmbiance` | **ce que la pièce montrait avant l'essai** — jamais une extinction |
 
 *   **La règle commune** est isolée dans `logic/sceneDeRepli.ts` : prendre le premier candidat qui **porte réellement l'état d'une lampe**. Une scène absente, ou existante mais vide, est sautée — *un repli qui ne fait rien consomme le tour de celui qui aurait marché*.
 *   ⛔ **Le défaut réparé** : avant ce jour, une soirée où aucune scène n'avait été cliquée finissait dans le noir à la fin du premier pad sonore — `lastManualSceneId` était `null`, et `applyScene(null)` éteint.
 *   ⚠️ **Le Stop All ne passe pas par `lastManualSceneId`**, volontairement : *on ne retombe pas sur la scène d'alerte qui jouait il y a trois secondes.*
 *   ⚠️ **`revenirALEclairageNormal` arrête d'abord tous les effets logiciels**, sur **toutes** les lampes connues. `applyScene` n'arrête que ceux des lampes qu'elle mentionne : une lampe absente de la scène normale garderait son orage en cours, et un geste nommé « tout arrêter » aurait laissé la pièce clignoter. Leur brillance, elle, n'est pas touchée.
 *   **`defaultSceneId`** vit dans le store, est persisté, et **tombe à `null` quand la tuile désignée est effacée** (`clearScene`). `null` partout = comportement d'avant, à l'identique.
+*   ⛔ **La quatrième porte existe parce que les trois autres visent une *scène*.** Sans scène jouée ni `defaultSceneId`, les trois tombent sur `extinguishAll` — or on essaie une ambiance en **préparant** une séance, pièce allumée. La visée est dans `logic/retourDEssai.ts` : **rejouer la scène qui tournait** (elle seule rallume les effets), ou **reposer le miroir** photographié au début de l'essai.
+*   ⛔ **La photographie COPIE les états.** L'essai écrit dans le miroir à chaque lampe posée (`setLightState` → `updateLightState`) : une photographie par référence suivrait l'essai et rendrait l'ambiance dont on voulait sortir. *Une photographie qui change avec son sujet n'est pas une photographie.*
+*   **`poserLesEtats(etats, intensite, sceneId?)`** est l'écrivain unique vers le pont depuis le 20/09 : `applyScene` et `essayerUneAmbiance` l'emploient toutes deux. `sceneId` absent = l'effet n'appartient à aucune tuile, donc vitesse et intensité pleines, comme un effet choisi à la main.
+
+### 2 ter bis. L'atelier d'effets — un effet qui est de la DONNÉE (2026-09-20)
+⛔ **Les 48 effets sont des `case` dans un `switch`.** Ajouter un effet demandait quatre fichiers et une règle non écrite sur le rapport fondu/battement — *donc chaque idée d'ambiance passait par un développeur.* Une **variante** contournait à moitié : elle décline un corps existant, elle n'en invente pas.
+
+Un **effet d'atelier** (`logic/effetDAtelier.ts`) est une suite d'étapes `{couleur, brillance %, durée ms, fondu ms}` plus un **aléa**. Il n'a **aucun `case`**.
+
+| Point | Règle |
+| :--- | :--- |
+| Identifiant | `atelier:<id>`, comme `variante:<id>` — `estUnEffetDAtelier` / `idDepuisLAtelier` |
+| Où il se joue | **avant le `switch`**, qui ne le reconnaît pas et le laisse passer : tout ce qui vient **après** (brillance globale, intensité de tuile, rabotage du fondu) s'applique donc sans une ligne de plus |
+| Famille de budget | **adaptatif** (`cadencePartagee`), jamais soliste |
+| Relecture | à **chaque passage**, pas au démarrage |
+| Bornes | dans le magasin (`modifierUnEffetDAtelier` → `effetBorne`), pas dans le champ de saisie |
+
+*   ⚠️ **Adaptatif et non soliste, et c'est un choix.** Un effet écrit par le meneur n'a pas d'identité déclarée dans le code : on ne peut pas savoir si sa vitesse *est* sa nature. Le rationnement soliste **éteindrait des lampes** sur un effet qu'il vient de composer. *Ralentir se voit et s'explique ; une lampe qui ne joue pas ne s'explique pas.*
+*   ⭐ **Relu à chaque passage** : c'est ce qui permet de régler une étape pendant que la lampe la joue. Même leçon que le curseur d'intensité du 09/09 — *une couleur ne se juge pas dans un champ de saisie.*
+*   ⛔ **Il peut disparaître sous la boucle** (supprimé à l'atelier, ou vidé de ses étapes) : c'est le **quatrième** ayant droit à `stopSoftwareEffect(id, 'rendreLEtat')`, recensé dans `etatARendre.test.ts`.
+*   ⚠️ **Il écrit `on`, contrairement aux 48.** Une étape à 0 % éteint ; sans `on: true` au passage suivant, *la première étape noire serait la dernière de l'effet*. Et le pont refuse une couleur sur une ampoule qu'on éteint.
+*   **Persistance** : `effetsDAtelier` est dans `partialize`, dans `tuilesDurables` (donc dans la sauvegarde **et** dans les champs qui l'arment) et déclaré dans `schemas.ts`. Les trois maillons ont été oubliés séparément dans ce dépôt — `lesEffetsDAtelierSontSauvegardes.test.ts` les garde tous les trois.
 
 ### 2 quater. Le clavier et la synchro (2026-09-07)
 

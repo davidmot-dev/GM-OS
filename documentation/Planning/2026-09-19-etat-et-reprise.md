@@ -135,9 +135,10 @@ un effet, une lampe ou une couleur passe par `light/logic/ambianceProposee.ts`.
 
 ## ⚠️ Ce qui reste ouvert
 
-- **« Essayer sur les lampes » avant d'enregistrer** une ambiance composée (§ 89). Demande soit de
-  dupliquer `applyScene` — avec son piège des effets d'une scène précédente qui ne s'arrêtent pas —
-  soit de la refactoriser. Le contournement livré est « Enregistrer puis Jouer ».
+- ~~**« Essayer sur les lampes » avant d'enregistrer** une ambiance composée (§ 89).~~ ✅ **Fait le
+  2026-09-20** (§ 92), par refactorisation comme annoncé. ⭐ Et le cœur du chantier n'était pas
+  d'allumer mais de **rendre la pièce** : les trois portes du retour visent une *scène* et auraient
+  **éteint le salon**. ⚠️ Non éprouvé à l'écran.
 - **Les specs E2E des gestes du jour.** La suite est verte, mais **aucune spec existante n'exerce ce
   qui a été ajouté** : elle prouve qu'on n'a rien cassé, pas que le neuf marche. ⚠️ Le chemin du pont
   Hue ne sera jamais couvert — `GMOS_SANS_APPAREILS` débranche le réseau exprès.

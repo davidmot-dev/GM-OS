@@ -7513,6 +7513,184 @@ Sound-OS** dont deux neufs éprouvés **dans les deux sens**. ⚠️ **Non épro
 
 ---
 
+### 92 · ⭐ Essayer une ambiance sur les lampes — le dernier reste de l'IA qui compose (2026-09-20)
+
+David : *« va pour le 1 »*, après que le registre a rendu les quatre restes de Light-OS. C'était le
+seul des quatre qui se code.
+
+#### Ce que le contournement coûtait
+
+La veille, regarder une ambiance proposée demandait **« Enregistrer » puis « Jouer »**. Autrement
+dit : *occuper une case du râtelier de la campagne pour regarder une ambiance qu'on allait
+peut-être refuser*, puis l'effacer. ⭐ **Le prix n'était pas le clic de plus, c'était la case** —
+elles sont dix-huit, et le § 88 venait tout juste de les rendre rares en les cloisonnant par
+campagne.
+
+#### ⛔ La règle d'hier n'interdisait pas ce bouton, et il fallait le vérifier
+
+Le composant portait ceci depuis la veille : *« Rien n'est appliqué au pont avant l'enregistrement
+— une ambiance qui s'allumerait pendant qu'on prépare une scène serait une surprise, pas un
+service. »* Lue vite, elle interdit l'essai.
+
+Elle dit en réalité autre chose : **rien ne s'allume *tout seul*.** Un bouton nommé « Essayer »
+n'est pas une surprise. ⭐ *Une règle se relit avant d'être invoquée contre un geste qu'elle n'a
+jamais visé — et se réécrit pour dire ce qu'elle voulait dire.*
+
+#### ⭐ Le cœur du chantier n'était pas d'allumer, c'était de **rendre la pièce**
+
+Allumer, c'est `applyScene` sans la tuile. Rendre, c'est une question à laquelle **aucune des trois
+portes du retour existantes ne répond** — et s'en servir aurait fait un dégât précis.
+
+| Porte | Vise | Ce qu'elle aurait fait après un essai |
+| :--- | :--- | :--- |
+| Retour automatique | la dernière scène jouée, puis l'éclairage normal | **le noir** |
+| Stop All | l'éclairage normal directement | **le noir** |
+| Extinction d'urgence | rien : elle éteint | le noir, et c'est son rôle |
+
+⛔ **Les trois visent une scène, et un après-midi de préparation n'en a joué aucune.** Les trois
+tombent alors sur `extinguishAll`. *On essaie une ambiance dans une pièce allumée, un dimanche, à
+côté de quelqu'un qui lit — le geste s'appelle « Revenir » et il aurait éteint le salon.*
+
+D'où une **quatrième visée**, et le dossier répète depuis un mois qu'il ne faut pas les aligner :
+**ce que la pièce montrait juste avant**. Elle ne se confond avec aucune des trois, et c'est ce qui
+justifie qu'elle existe.
+
+⭐ **La scène d'abord, le miroir à défaut.** Une scène qui jouait se **rejoue** : elle seule
+rallume les *effets*, là où reposer le dernier état d'une bougie la figerait sur l'image d'un
+battement.
+
+#### ⛔ La photographie qui suivait son sujet
+
+Le piège le plus discret du chantier, et il a son essai. L'essai pose ses lampes une par une, et
+**chaque pose écrit dans le miroir du magasin** (`setLightState` appelle `updateLightState`). Une
+photographie qui aurait gardé les objets du magasin se serait mise à jour toute seule — et
+« Revenir » aurait rendu **exactement l'ambiance dont on voulait sortir**.
+
+⭐ *Une photographie qui change avec son sujet n'est pas une photographie.* Les états sont copiés.
+
+#### Refactoriser plutôt que dupliquer, comme annoncé
+
+Le reste était écrit en ces termes : *« demande soit de dupliquer `applyScene` — avec son piège des
+effets d'une scène précédente qui ne s'arrêtent pas — soit de la refactoriser »*. La boucle qui
+parle au pont est sortie dans `poserLesEtats`, employée par les deux chemins : l'ordre des **deux**
+messages qu'exige un effet, le répit laissé au pont, la brillance nominale envoyée au travers de
+l'intensité — chacun de ces points a déjà coûté une soirée. *Deux écrivains pour une même façon de
+parler au pont finissent par diverger.*
+
+⚠️ **Et tout se tait d'abord**, y compris les lampes que l'essai ne mentionne pas — la leçon du
+Stop All. Une proposition couvre bien toutes les lampes, mais *une méthode ne se repose pas sur les
+bonnes manières de son appelant.*
+
+#### Les trois décisions d'écran
+
+| Question | Réponse | Pourquoi |
+| :--- | :--- | :--- |
+| « Une autre » pendant un essai ? | la pièce **suit le panneau** | sinon on lit une proposition en en regardant une autre — *un mensonge visuel* |
+| Trois essais d'affilée ? | « Revenir » rend la pièce d'avant le **premier** | la photographie n'est prise qu'une fois |
+| Fermer la scène en plein essai ? | la pièce est **rendue** | *une porte de sortie qui disparaît avec le panneau n'est pas une porte de sortie* |
+
+⭐ **Et enregistrer pendant un essai rejoue la tuile sous son identifiant.** La pièce ne change pas
+d'aspect, mais la grille dit enfin la vérité sur ce qui joue, et les effets se rattachent à la
+tuile — donc ses curseurs de vitesse et d'intensité les commandent. *Un essai anonyme n'obéit à
+aucun curseur.*
+
+**Ancres** : `light/logic/retourDEssai.ts` (la visée), `HueEngine.poserLesEtats` (l'écrivain
+unique), `HueEngine.essayerUneAmbiance` / `rendreLaPieceApresLEssai` / `oublierLEssai`,
+`light/components/PropositionDAmbiance.tsx` (le bouton à deux états et le nettoyage au démontage).
+
+**Vérifié** : `tsc -b` propre, **15 essais neufs** dont la garde du retour, éprouvée **rouge sur
+le code fautif** — brancher `revenirALEclairageNormal` à la place fait tomber trois essais, dont
+*« la pièce n'a pas retrouvé sa brillance : expected 40 to be 200 »*. ⚠️ **Non éprouvé à
+l'écran** — et il demande de vraies lampes.
+
+---
+
+### 93 · ⭐ L'atelier d'effets — un effet devient de la DONNÉE (2026-09-20)
+
+David : *« est-ce que tu as créé le module de création d'ambiance ? »* — non, et la question
+valait mieux que la réponse. ⭐ **Sa mémoire était exacte** : le magasin porte sa phrase du
+2026-09-18 en commentaire, *« je me demande si on ne devrait pas faire un module de création
+d'ambiance »*. La réponse d'alors avait été **les variantes**. Il en voulait la moitié qui
+manquait.
+
+#### Ce qu'une variante ne sait pas faire
+
+| | Sait | Ne sait pas |
+| :--- | :--- | :--- |
+| **Variante** | décliner — « la torche, mais bleue et plus lente » | inventer un **geste** |
+| **Atelier** | une suite d'étapes qui n'existe nulle part | — |
+
+Un orage lointain — deux éclairs blancs rapprochés, puis vingt secondes de bleu sombre — n'est la
+déclinaison d'aucun des quarante-huit. C'est une **suite**, et aucun corps existant n'a cette
+forme.
+
+#### ⭐ La décision qui a tout décidé : un effet peut-il être de la donnée ?
+
+Les 48 sont des `case` dans un `switch` — du **code**. Ajouter un effet demandait quatre fichiers
+et une règle non écrite sur le rapport fondu/battement : *chaque idée d'ambiance passait donc par
+un développeur.*
+
+La réduction qui débloque tout tient en une phrase : **une lampe Hue ne sait qu'obéir à « va à
+cette couleur et à cette brillance, en tant de temps »**. Tout le catalogue n'est que des façons
+d'enchaîner cet ordre-là. Un effet est donc exprimable en quatre nombres par étape — couleur,
+brillance, durée, fondu — **plus le désordre**.
+
+⭐ ***Le désordre n'est pas un ornement, c'est ce qui sépare une suite d'un geste.*** Une bougie
+sans lui est un métronome ; à 30 %, c'est une flamme. Les quarante-huit tirent tous au sort
+quelque part — **aucun n'est une boucle pure**, et c'est le relevé qui l'a montré.
+
+#### ⭐ Il se joue AVANT le `switch`, et le traverse quand même
+
+L'astuce qui évite de tout recopier : son identifiant (`atelier:…`) ne correspond à **aucun
+`case`**, donc le `switch` le laisse passer sans rien faire — et tout ce qui vient **après**
+s'applique comme pour les quarante-huit autres : brillance globale, intensité de la tuile,
+rabotage du fondu contre la cadence réelle.
+
+*Un effet neuf obéit aux mêmes curseurs que les anciens sans qu'on ait écrit une ligne pour ça.*
+
+#### ⛔ Trois décisions qui auraient pu mal tourner
+
+**1. Adaptatif, jamais soliste.** Un effet rapide du catalogue se rationne en **éteignant des
+lampes** (un stroboscope ralenti n'est plus un stroboscope). Appliquer ça ici aurait éteint des
+lampes sur un effet que le meneur vient d'écrire, et il aurait cherché longtemps. ⭐ *Ralentir se
+voit et s'explique ; une lampe qui ne joue pas ne s'explique pas.* On prend la **cadence
+partagée**.
+
+**2. Relu à chaque passage, pas au démarrage.** Sans ça, régler une étape pendant que la lampe la
+joue n'aurait **rien fait** — et l'atelier serait devenu un formulaire. *Une couleur ne se juge
+pas dans un champ de saisie* : même leçon que le curseur d'intensité du 09/09.
+
+**3. Il écrit `on`, contrairement aux 48.** Une étape à 0 % éteint la lampe — c'est ainsi qu'on
+fait un clignotement franc. Sans rallumer explicitement au passage suivant, **la première étape
+noire aurait été la dernière de l'effet**.
+
+#### ⭐ Le recensement mécanique a refusé le quatrième ayant droit
+
+`etatARendre.test.ts` compte les appels à `stopSoftwareEffect(id, 'rendreLEtat')` et **exige que
+chacun ait son propre `it`**. Un effet d'atelier peut disparaître sous la boucle — supprimé, ou
+vidé de ses étapes — ce qui en fait un quatrième. Le contrôle a rougi et a fait écrire la
+justification au lieu de laisser bomber le chiffre. *C'est exactement ce que son propre
+commentaire annonçait : « une garde qu'on se contente d'ajuster au nouveau chiffre ne garde plus
+rien ».*
+
+#### ⚠️ Et un `reset` qui laissait du travail derrière lui
+
+Trouvé en chemin : `useLightStore.reset()` ne vidait **pas** `variantes`. Il n'est appelé que par
+les essais — mais deux fichiers d'essais partagent le même magasin dans un worker, et le second
+héritait de ce que le premier avait écrit. Les deux champs de travail y entrent.
+
+**Ancres** : `light/logic/effetDAtelier.ts` (le modèle, `imageDeLEtape`, les bornes),
+`light/components/AtelierDEffet.tsx` (l'écran), `SelecteurDEffet.tsx` (section **Mes effets** et
+la porte d'entrée), `HueEngine` (la branche avant le `switch`), `useLightStore`
+(`effetsDAtelier` et ses trois gestes), `donneesDurables.ts` + `schemas.ts` + `SessionService`
+(les trois maillons de la sauvegarde).
+
+**Vérifié** : `tsc -b` propre, **28 essais neufs** (20 sur la logique, 7 sur le magasin et la
+sauvegarde, 1 au recensement), **5 608 essais** au vert (440 fichiers). ⚠️ **Non éprouvé à l'écran**, et il demande de vraies
+lampes.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7545,6 +7723,8 @@ Sound-OS** dont deux neufs éprouvés **dans les deux sens**. ⚠️ **Non épro
 | 25 | **L'IA compose une ambiance** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 19/09** (*« c'est bien »*) — sous le champ *Ambiance* d'une scène de la trame. Elle **compose** lampe par lampe plutôt que de choisir parmi l'existant. ⛔ La **validation est le cœur** : un effet inventé ne lève aucune erreur, il rend une lampe muette. Range dans le râtelier de la campagne, complète le moment de la scène sans le doubler (§ 89) | Light-OS en **mode simulé**, puis une scène → « Proposer une ambiance » | Rien. ⚠️ **Aucun essai automatique ne couvre l'aller-retour avec le modèle** |
 | 26 | **Le menu d'une atmosphère** | ✅ **CORRIGÉ le 19/09** — vu par David, capture à l'appui : le cadre était **coupé ET derrière les pads**. Trois causes empilées, dont un `overflow-x-auto` qui découpe aussi en vertical : un `z-index` ne suffisait pas, il a fallu un **portail**. ⭐ Le garde-fou a été **faux deux fois** — `toBeVisible()` et `click()` passaient sur le code fautif ; seul `elementFromPoint` voit ce qui est **peint** (§ 90) | Rien | Rien. ⚠️ Non revu à l'écran |
 | 27 | **Sound-OS par campagne** | ✅ **LIVRÉ le 19/09** — demandé par David, et c'était la dernière asymétrie des trois modules d'ambiance. Troisième module à employer la règle partagée, toujours sans copie. ⭐ Son clavier n'avait **pas** le défaut de Music-OS (il ne lit que l'active) mais son **repli** prenait la première de la liste brute. ⭐ Et la fusion d'instantané, écrite le matin sans propriétaire, a dû être rouverte : *ajouter un champ, c'est rouvrir toutes les fonctions qui décidaient sans lui* (§ 91) | Sélectionner une atmosphère, cliquer **Cette campagne**, changer de campagne | Rien. ⚠️ Non vu à l'écran |
+| 28 | **Essayer une ambiance sur les lampes** | ✅ **LIVRÉ le 20/09** — le dernier reste de l'IA qui compose. Avant lui il fallait **occuper une case du râtelier pour regarder une ambiance qu'on allait peut-être refuser**. ⛔ Le cœur n'était pas d'allumer mais de **rendre la pièce** : les **trois** portes du retour existantes visent une *scène* et auraient **éteint le salon** un après-midi de préparation. ⭐ Quatrième visée, et une photographie qui **copie** au lieu d'emprunter (§ 92) | Une scène → « Proposer une ambiance » → **Essayer**, puis **Revenir** | Rien. ⚠️ Non éprouvé à l'écran, et il demande de vraies lampes |
+| 29 | **L'atelier d'effets** | ✅ **LIVRÉ le 20/09** — créer un effet de zéro, là où « Mes ambiances » ne savait que **décliner** un des 48. ⭐ La décision qui débloque tout : **un effet peut être de la donnée** — quatre nombres par étape, plus le désordre, *qui est ce qui sépare une suite d'un geste*. Il se joue **avant le `switch`** et le traverse quand même, donc il obéit aux mêmes curseurs sans une ligne de plus. ⛔ Adaptatif et jamais soliste : *une lampe qui ne joue pas ne s'explique pas* (§ 93) | Écran de choix d'un effet → **Mes effets** → **Créer un effet**, puis **Essayer sur** une lampe | Rien. ⚠️ Non éprouvé à l'écran, et il demande de vraies lampes |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -387,6 +387,59 @@ Elles se capturent dans une tuile comme n'importe quel effet.
 > les onze effets recolorables du catalogue.
 
 
+## 🛠️ L'atelier — fabriquer un effet qui n'existe pas
+
+« Mes ambiances » **décline** un des 48 : la torche, mais bleue et plus lente. L'atelier, lui,
+**invente**. Un orage lointain — deux éclairs blancs rapprochés, puis vingt secondes de bleu
+sombre — n'est la déclinaison d'aucun effet existant.
+
+**Pour en créer un** : ouvrez l'écran de choix d'un effet, section **Mes effets**, bouton
+**« Créer un effet »**. L'atelier s'ouvre par-dessus.
+
+### Ce qu'est un effet, ici
+
+Une lampe Hue ne sait qu'une chose : *va à cette couleur et à cette brillance, en tant de temps*.
+Tout le catalogue n'est que des façons d'enchaîner cet ordre-là. Un effet d'atelier est donc une
+**suite d'étapes**, jouée en boucle, et chaque étape porte quatre nombres :
+
+| Réglage | Ce qu'il fait |
+| :--- | :--- |
+| **La couleur** | où la lampe va. |
+| **La luminosité** | en pourcentage. **À 0 %, la lampe s'éteint** pour la durée de l'étape — c'est ainsi qu'on fait un clignotement franc. |
+| **La durée** | le temps passé sur cette étape, fondu compris. |
+| **Le fondu** | le temps mis pour y arriver. **Zéro change d'un coup** ; égal à la durée, la lampe glisse sans jamais s'arrêter. |
+
+Les étapes se montent, se descendent et se suppriment. Il en reste toujours au moins une.
+
+### ⭐ Le désordre, et pourquoi c'est le réglage qui fait le plus
+
+Un curseur unique, en bas. Il tire au sort, à chaque passage, un écart sur la **luminosité** et
+sur la **durée** de l'étape.
+
+> [!TIP]
+> **Une bougie sans désordre est un métronome ; à 30 %, c'est une flamme.** Les quarante-huit
+> effets du catalogue tirent tous au sort quelque part — aucun n'est une boucle pure. Si votre
+> effet « fait machine », c'est presque toujours ce curseur qu'il lui manque.
+
+### Régler pendant que ça joue
+
+En bas de l'atelier, un bouton par lampe : **Essayer sur**. La lampe joue l'effet, et **chaque
+retouche se voit au passage suivant** — le moteur relit votre effet à chaque tour.
+
+> [!NOTE]
+> **Tout est enregistré au fur et à mesure** : il n'y a pas de bouton « Valider ». Fermer
+> l'atelier **rend la lampe** à ce qu'elle montrait.
+
+> [!WARNING]
+> **Une étape ne descend pas sous 100 ms**, et ce n'est pas de l'esthétique : le pont Hue tient une
+> dizaine de commandes par seconde, **toutes lampes confondues**. Si vous posez votre effet sur six
+> lampes, GM-OS **ralentit** la cadence pour tenir le budget — il préfère ralentir que d'en
+> éteindre : *une lampe qui ne joue pas ne s'explique pas.*
+
+> [!TIP]
+> **Vos effets se capturent dans une tuile** comme n'importe quel effet du catalogue, et ils partent
+> dans la sauvegarde automatique. *Une suite de huit étapes ne se retrouve pas de mémoire.*
+
 ## 🏠 L'éclairage normal de la pièce
 
 Votre lumière de jeu est aussi celle sous laquelle on lit ses notes et on sert à boire. **Désignez la
@@ -407,6 +460,7 @@ Deux façons de la désigner, au choix :
 | **Un son, une piste, une musique se termine** | retour à la dernière scène que vous avez cliquée — et **noir** si vous n'en avez cliqué aucune | retour à votre éclairage normal |
 | **Stop All** (barre du haut) | tout au noir | retour à votre éclairage normal |
 | **Extinction d'urgence** (bouton rouge de Light-OS) | tout au noir | **tout au noir** — inchangé |
+| **« Revenir » après un essai d'ambiance** (dans la trame) | la pièce **exactement comme elle était** | la pièce exactement comme elle était |
 
 > [!IMPORTANT]
 > **Le défaut que cela répare.** Si vous n'aviez cliqué aucune scène depuis le lancement, la fin du
@@ -425,6 +479,13 @@ Deux façons de la désigner, au choix :
 >
 > Seules les scènes **capturées** peuvent être désignées, et **effacer la tuile désignée retire la
 > désignation** — un repli qui vise une tuile vide ne ferait rien, en silence.
+
+> [!NOTE]
+> **Le retour d'un essai ne vise aucune scène**, et c'est pour cela qu'il est à part. Vous essayez
+> une ambiance en **préparant** une séance : la pièce est allumée, personne ne joue encore. Les
+> trois autres gestes vous auraient laissé dans le noir, puisqu'aucune scène n'a été cliquée.
+> « Revenir » repose ce que vos lampes montraient — ou rejoue la scène qui tournait, effets
+> compris. → [La trame](./11-Trame-actes-et-scenes.md)
 
 ## 🔄 Synchronisation Multi-Modules (Sync Mode)
 
