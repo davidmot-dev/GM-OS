@@ -1,10 +1,13 @@
 import type { LightScene } from '../useLightStore';
 import type { VarianteDEffet } from './varianteDEffet';
+import type { EffetDAtelier } from './effetDAtelier';
 
 /** La part de Light-OS qui entre dans une sauvegarde. */
 export interface TuilesDurables {
     scenes: Record<string, LightScene>;
     variantes: VarianteDEffet[];
+    /** Les effets de l'atelier — **du travail qui ne se refait pas de mémoire.** */
+    effetsDAtelier: EffetDAtelier[];
     defaultSceneId: string | null;
 }
 
@@ -31,10 +34,11 @@ export interface TuilesDurables {
 export const tuilesDurables = (etat: TuilesDurables): TuilesDurables => ({
     scenes: etat.scenes,
     variantes: etat.variantes,
+    effetsDAtelier: etat.effetsDAtelier,
     defaultSceneId: etat.defaultSceneId,
 });
 
 /** Les champs surveillés, déduits de la fonction ci-dessus. */
 export const CHAMPS_DURABLES_LUMIERE = Object.keys(
-    tuilesDurables({ scenes: {}, variantes: [], defaultSceneId: null }),
+    tuilesDurables({ scenes: {}, variantes: [], effetsDAtelier: [], defaultSceneId: null }),
 ) as (keyof TuilesDurables)[];

@@ -414,6 +414,7 @@ export const SessionService = {
                 light?: {
                     scenes?: Record<string, { lightStates?: Record<string, unknown> }>;
                     variantes?: unknown[];
+                    effetsDAtelier?: unknown[];
                     defaultSceneId?: string | null;
                 };
             }).light;
@@ -431,6 +432,17 @@ export const SessionService = {
             if (lumiere?.variantes?.length) {
                 useLightStore.setState({ variantes: lumiere.variantes as never });
                 Logger.info(`[Session] ${lumiere.variantes.length} ambiance(s) lumineuse(s) restaurée(s)`);
+            }
+            /*
+              ⚠️ **Troisième garde, troisième question.** Les effets de
+              l'atelier ne se déduisent ni des tuiles ni des ambiances : on peut
+              en avoir écrit sans avoir capturé une seule tuile, et l'inverse.
+              *Une liste qui peut être vide pour ses propres raisons a besoin de
+              son propre contrôle.*
+            */
+            if (lumiere?.effetsDAtelier?.length) {
+                useLightStore.setState({ effetsDAtelier: lumiere.effetsDAtelier as never });
+                Logger.info(`[Session] ${lumiere.effetsDAtelier.length} effet(s) d'atelier restauré(s)`);
             }
             /*
               ⛔ **Même piège qu'au-dessus, et c'est la deuxième fois du jour.**

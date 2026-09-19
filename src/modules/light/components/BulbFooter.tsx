@@ -7,6 +7,7 @@ import {
     estUneVariante, identifiantDeVariante, idDepuisLIdentifiant,
     FORCE_MIN, FORCE_MAX,
 } from '../logic/varianteDEffet';
+import { estUnEffetDAtelier, idDepuisLAtelier } from '../logic/effetDAtelier';
 import { VITESSE_EFFET_MIN, VITESSE_EFFET_MAX } from '../useLightStore';
 import SelecteurDEffet from './SelecteurDEffet';
 import { useTranslation } from 'react-i18next';
@@ -39,15 +40,26 @@ export const BulbFooter: React.FC = () => {
     /** Quelle lampe a son sélecteur ouvert. `null` = aucun. */
     const [selecteurOuvert, setSelecteurOuvert] = React.useState<string | null>(null);
 
-    /** Le nom lisible d'un effet ou d'une ambiance, pour le bouton. */
+    /** Le nom lisible d'un effet, d'une ambiance ou d'un effet d'atelier. */
     const nomDeLEffet = (valeur: string): string => {
         if (estUneVariante(valeur)) {
             return variantes.find(v => v.id === idDepuisLIdentifiant(valeur))?.nom
                 ?? t('light.footer.selecteur.ambiance_perdue');
         }
+        /* ⚠️ Sans cette branche, une lampe qui joue un effet d'atelier
+           afficherait `atelier:a-1758…` sur son bouton — *un identifiant à
+           l'écran est un défaut, même quand tout fonctionne.* */
+        if (estUnEffetDAtelier(valeur)) {
+            return effetsDAtelier.find(e => e.id === idDepuisLAtelier(valeur))?.nom
+                ?? t('light.footer.selecteur.ambiance_perdue');
+        }
         const cle = valeur === 'lightning' ? 'storm' : valeur === 'none' ? 'steady' : valeur;
         return t(`light.footer.effects.${cle}`, { defaultValue: valeur });
     };
+
+    /* Les effets de l'atelier : ils n'ont ici qu'un nom à rendre — ils se
+       règlent dans le sélecteur, qui porte l'atelier. */
+    const effetsDAtelier = useLightStore(s => s.effetsDAtelier);
 
     /* Les ambiances du meneur, et les trois gestes qui les manipulent. */
     const variantes = useLightStore(s => s.variantes);

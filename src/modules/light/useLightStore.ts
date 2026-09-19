@@ -3,6 +3,9 @@ import { persist } from 'zustand/middleware';
 import {
     type VarianteDEffet, nomDeLaCopie, bornerLaForce, FORCE_PAR_DEFAUT,
 } from './logic/varianteDEffet';
+import {
+    type EffetDAtelier, effetBorne, effetNeuf, nomLibre,
+} from './logic/effetDAtelier';
 import { tuilesApresInstantane } from './logic/instantaneDeSeance';
 import { casesAGarnir, nomParDefaut } from './logic/ratelierDeLaCampagne';
 
@@ -162,6 +165,17 @@ interface LightState {
      */
     variantes: VarianteDEffet[];
 
+    /**
+     * **Les effets fabriqués à l'atelier** — la suite de la demande du
+     * 2026-09-18, reprise le 20/09 : *« un atelier d'effets à part entière,
+     * créer un effet de zéro plutôt que copier un des 48 »*.
+     *
+     * ⚠️ **Un effet d'atelier n'emprunte le corps de personne**, contrairement
+     * à une variante : il n'est **que de la donnée**, une suite d'étapes que le
+     * moteur joue. Voir `logic/effetDAtelier.ts`.
+     */
+    effetsDAtelier: EffetDAtelier[];
+
     // Scenes
     /** Catalogue des 18 scènes disponibles */
     scenes: Record<string, LightScene>;
@@ -222,6 +236,13 @@ interface LightState {
     modifierUneVariante: (id: string, retouches: Partial<Omit<VarianteDEffet, 'id'>>) => void;
     /** Oublie une ambiance. */
     supprimerUneVariante: (id: string) => void;
+
+    /** Ouvre un effet neuf à l'atelier, et **rend son identifiant**. */
+    creerUnEffetDAtelier: () => string;
+    /** Retouche un effet d'atelier. Les valeurs absentes ne sont pas touchées. */
+    modifierUnEffetDAtelier: (id: string, retouches: Partial<Omit<EffetDAtelier, 'id'>>) => void;
+    /** Oublie un effet d'atelier. */
+    supprimerUnEffetDAtelier: (id: string) => void;
 
     // Actions - Scenes
     /** Capture l'état actuel de toutes les lampes dans une scène */
@@ -344,6 +365,7 @@ export const useLightStore = create<LightState>()(
             suivreLaVoix: false,
 
             variantes: [],
+            effetsDAtelier: [],
 
             scenes: createDefaultScenes(),
             activeSceneId: null,
@@ -481,6 +503,34 @@ export const useLightStore = create<LightState>()(
 
             supprimerUneVariante: (id) => set((state) => ({
                 variantes: state.variantes.filter(v => v.id !== id),
+            })),
+
+            creerUnEffetDAtelier: () => {
+                const id = `a-${Date.now()}`;
+                set((state) => ({
+                    effetsDAtelier: [
+                        ...state.effetsDAtelier,
+                        effetNeuf(id, nomLibre('Nouvel effet', state.effetsDAtelier.map(e => e.nom))),
+                    ],
+                }));
+                return id;
+            },
+
+            /*
+              ⚠️ **Tout repasse par les bornes, quelle que soit la porte.** Une
+              étape à 10 ms sur six lampes, ce sont six cents commandes par
+              seconde à un pont qui en tient dix — et rien, dans l'écran, ne
+              dirait que le pont prend du retard. *Le plancher se tient ici,
+              pas dans le champ de saisie : un champ se contourne.*
+            */
+            modifierUnEffetDAtelier: (id, retouches) => set((state) => ({
+                effetsDAtelier: state.effetsDAtelier.map(
+                    e => (e.id === id ? effetBorne({ ...e, ...retouches }) : e),
+                ),
+            })),
+
+            supprimerUnEffetDAtelier: (id) => set((state) => ({
+                effetsDAtelier: state.effetsDAtelier.filter(e => e.id !== id),
             })),
 
             setSceneEffectSpeed: (sceneId, speed) => set((state) => {
@@ -647,6 +697,16 @@ export const useLightStore = create<LightState>()(
 
             reset: () => {
                 set({
+                    /*
+                      ⚠️ **Le travail du meneur en fait partie.** `variantes`
+                      manquait ici, et `effetsDAtelier` aurait suivi : un
+                      `reset` qui laisse des données derrière lui est un piège
+                      pour tous les essais suivants — *deux fichiers d'essais
+                      partagent le même magasin dans un worker, et le second
+                      hérite de ce que le premier a écrit.*
+                    */
+                    variantes: [],
+                    effetsDAtelier: [],
                     scenes: createDefaultScenes(),
                     activeSceneId: null,
                     lastManualSceneId: null,
@@ -706,7 +766,10 @@ export const useLightStore = create<LightState>()(
                 lastManualSceneId: state.lastManualSceneId,
                 defaultSceneId: state.defaultSceneId,
                 /* Les ambiances du meneur : du travail, pas un état de vue. */
-                variantes: state.variantes
+                variantes: state.variantes,
+                /* Les effets de l'atelier : du travail aussi, et le plus cher —
+                   une suite d'étapes ne se retrouve pas de mémoire. */
+                effetsDAtelier: state.effetsDAtelier
             })
         }
     )

@@ -807,7 +807,8 @@
         "space": "🚀 Espace & SF",
         "alerts": "🚨 Alertes & Danger",
         "misc": "⚙️ Divers",
-        "ambiances": "Mes ambiances"
+        "ambiances": "Mes ambiances",
+        "atelier": "Mes effets"
       },
       "effects": {
         "steady": "Statique",
@@ -869,6 +870,13 @@
         "tint": "Teinte vers laquelle tirer la palette",
         "force": "Force de la teinte",
         "speed": "Vitesse de l'ambiance"
+      },
+      "atelier": {
+        "creer": "Créer un effet",
+        "vide": "Aucun effet à vous. En créer un ouvre l’atelier : une suite d’étapes, une couleur et une durée par étape.",
+        "resume": "{{etapes}} étape(s) — un effet à vous",
+        "regler": "Régler cet effet à l’atelier",
+        "supprimer": "Supprimer cet effet"
       },
       "selecteur": {
         "ouvrir": "Choisir un effet",

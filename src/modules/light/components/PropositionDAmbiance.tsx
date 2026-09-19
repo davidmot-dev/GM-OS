@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sparkles, Lightbulb, Play, Check, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Sparkles, Lightbulb, Play, Check, X, Undo2 } from 'lucide-react';
 import { useLightStore } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
@@ -30,10 +30,15 @@ interface Props {
  * quarante-huit. *Avec dix-huit tuiles sous les yeux, « laquelle convient ? »
  * est une question à laquelle le meneur répond déjà d'un coup d'œil.*
  *
- * ⛔ **Rien n'est appliqué au pont avant l'enregistrement.** Une ambiance qui
- * s'allumerait dans la pièce pendant qu'on prépare une scène — un dimanche
- * après-midi, à côté de quelqu'un qui lit — serait une surprise, pas un
- * service. Le geste est offert **après**, et il s'assume.
+ * ⛔ **Rien ne s'allume tout seul.** Une ambiance qui s'appliquerait dans la
+ * pièce pendant qu'on prépare une scène — un dimanche après-midi, à côté de
+ * quelqu'un qui lit — serait une surprise, pas un service.
+ *
+ * ⭐ **Mais « Essayer sur les lampes » existe depuis le 2026-09-20**, et il ne
+ * contredit pas la règle : c'est un bouton qui dit ce qu'il fait, et la pièce
+ * se rend d'un second clic. Ce qu'il remplace : « Enregistrer puis Jouer », qui
+ * obligeait à **occuper une case du râtelier pour regarder une ambiance qu'on
+ * allait peut-être refuser**.
  */
 export const PropositionDAmbiance: React.FC<Props> = ({
     scene, campagneId, momentExistantId, onRattache,
@@ -41,16 +46,41 @@ export const PropositionDAmbiance: React.FC<Props> = ({
     const [enCours, setEnCours] = useState(false);
     const [proposition, setProposition] = useState<AmbianceProposee | null>(null);
     const [caseEcrite, setCaseEcrite] = useState<string | null>(null);
+    const [essai, setEssai] = useState(false);
 
     const lampes = useLightStore(s => s.lights);
     const listeDesLampes = Object.values(lampes);
+
+    /** Les états qu'une proposition commande — une seule façon de les lire. */
+    const etatsDe = (p: AmbianceProposee | null) =>
+        etatsDeLaProposition(p, lampes, hex => hueEngine.hexToXy(hex));
+
+    /*
+      ⛔ **Un essai ne survit pas à l'écran qui l'a lancé.** Fermer la scène
+      pendant qu'on essaie laisserait la pièce sur une ambiance que plus aucun
+      bouton ne sait défaire — il faudrait un Stop All, qui vise autre chose et
+      qui **éteint** quand aucun éclairage normal n'est désigné. *Une porte de
+      sortie qui disparaît avec le panneau n'est pas une porte de sortie.*
+
+      Le `ref` existe parce que le nettoyage ne voit que la valeur du rendu où
+      il a été posé : sans lui, il croirait toujours qu'aucun essai ne tourne.
+    */
+    const essaiRef = useRef(false);
+    useEffect(() => { essaiRef.current = essai; }, [essai]);
+    useEffect(() => () => {
+        if (essaiRef.current) void hueEngine.rendreLaPieceApresLEssai();
+    }, []);
 
     const demander = async () => {
         if (enCours) return;
         setEnCours(true);
         setCaseEcrite(null);
         try {
-            setProposition(await proposerUneAmbiance(scene, listeDesLampes));
+            const nouvelle = await proposerUneAmbiance(scene, listeDesLampes);
+            setProposition(nouvelle);
+            /* Un essai en cours **suit le panneau** : sinon la pièce montrerait
+               la proposition d'avant pendant qu'on lit la nouvelle. */
+            if (essaiRef.current) await hueEngine.essayerUneAmbiance(etatsDe(nouvelle));
         } catch (e) {
             /*
               On distingue les deux refus, parce qu'ils appellent deux gestes
@@ -83,7 +113,7 @@ export const PropositionDAmbiance: React.FC<Props> = ({
             return;
         }
 
-        const etats = etatsDeLaProposition(proposition, lampes, hex => hueEngine.hexToXy(hex));
+        const etats = etatsDe(proposition);
 
         /*
           `saveSceneSnapshot` attend des lampes, pas des états : on lui en
@@ -128,7 +158,40 @@ export const PropositionDAmbiance: React.FC<Props> = ({
         }
 
         setCaseEcrite(cible);
+
+        /*
+          L'essai cesse d'en être un : ce que la pièce montre est maintenant une
+          tuile. On la rejoue **sous son identifiant** — la pièce ne change pas
+          d'aspect, mais la grille dit enfin la vérité sur ce qui joue, et les
+          effets se rattachent à la tuile, donc ses curseurs de vitesse et
+          d'intensité les commandent. *Un essai anonyme n'obéit à aucun
+          curseur.*
+        */
+        if (essai) {
+            hueEngine.oublierLEssai();
+            setEssai(false);
+            void hueEngine.applyScene(cible, true);
+        }
+
         gmToast(`« ${nom} » est rangée et rattachée à la scène.`, 'success');
+    };
+
+    /** Essayer, ou rendre la pièce — le même bouton, deux états. */
+    const basculerLEssai = async () => {
+        if (essai) {
+            setEssai(false);
+            await hueEngine.rendreLaPieceApresLEssai();
+            return;
+        }
+        if (!proposition) return;
+        setEssai(true);
+        await hueEngine.essayerUneAmbiance(etatsDe(proposition));
+    };
+
+    const refuser = () => {
+        if (essai) { setEssai(false); void hueEngine.rendreLaPieceApresLEssai(); }
+        setProposition(null);
+        setCaseEcrite(null);
     };
 
     const lampeConnue = (nom: string) =>
@@ -154,7 +217,14 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         <span className="text-sm font-bold text-app-text">
                             « {nomDeLAmbiance(proposition.nom, scene.titre)} »
                         </span>
-                        {caseEcrite && (
+                        {/* La pièce a changé : le dire ici, parce que le meneur
+                            peut regarder l'écran et non les lampes. */}
+                        {essai && (
+                            <span className="text-ui-9 font-bold uppercase tracking-widest text-amber-400 animate-pulse shrink-0">
+                                essai en cours
+                            </span>
+                        )}
+                        {caseEcrite && !essai && (
                             <span className="text-ui-9 font-bold uppercase tracking-widest text-emerald-400">
                                 rangée
                             </span>
@@ -204,6 +274,23 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                                 <Check size={12} /> Enregistrer
                             </button>
                         )}
+                        {!caseEcrite && (
+                            <button
+                                onClick={basculerLEssai}
+                                title={essai
+                                    ? 'Remet les lampes comme elles étaient avant l’essai.'
+                                    : 'Allume l’ambiance sur vos lampes, sans rien enregistrer.'}
+                                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-ui-10 font-bold uppercase tracking-widest border transition-colors ${
+                                    essai
+                                        ? 'border-amber-400/40 text-amber-400 hover:bg-amber-400/10'
+                                        : 'border-accent/30 text-accent/80 hover:text-accent hover:bg-accent/10'
+                                }`}
+                            >
+                                {essai
+                                    ? <><Undo2 size={12} /> Revenir</>
+                                    : <><Play size={12} /> Essayer</>}
+                            </button>
+                        )}
                         <button
                             onClick={demander}
                             disabled={enCours}
@@ -212,7 +299,7 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                             <Lightbulb size={12} /> Une autre
                         </button>
                         <button
-                            onClick={() => { setProposition(null); setCaseEcrite(null); }}
+                            onClick={refuser}
                             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-500 hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
                         >
                             <X size={12} /> Refuser

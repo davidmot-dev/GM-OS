@@ -859,7 +859,8 @@
         "nature": "🌲 Nature & Elements",
         "space": "🚀 Space & Sci-Fi",
         "urban": "🏙️ Urban & Tech",
-        "ambiances": "My ambiances"
+        "ambiances": "My ambiances",
+        "atelier": "My effects"
       },
       "ambiances": {
         "duplicate": "Duplicate this effect as an ambiance",
@@ -869,6 +870,13 @@
         "tint": "Hue to pull the palette toward",
         "force": "Hue strength",
         "speed": "Ambiance speed"
+      },
+      "atelier": {
+        "creer": "Create an effect",
+        "vide": "No effects of your own yet. Creating one opens the workshop: a sequence of steps, each with a colour and a duration.",
+        "resume": "{{etapes}} step(s) — your own effect",
+        "regler": "Tune this effect in the workshop",
+        "supprimer": "Delete this effect"
       },
       "selecteur": {
         "ouvrir": "Choose an effect",

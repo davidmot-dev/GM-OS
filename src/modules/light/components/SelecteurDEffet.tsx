@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, X, Palette, Trash2 } from 'lucide-react';
+import { Search, X, Palette, Trash2, Wand2, SlidersHorizontal } from 'lucide-react';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { useLightStore } from '../useLightStore';
 import {
@@ -8,6 +8,8 @@ import {
 } from '../logic/catalogueDesEffets';
 import { chercherUnEffet, type EffetCherchable } from '../logic/rechercheDEffet';
 import { identifiantDeVariante } from '../logic/varianteDEffet';
+import { identifiantDAtelier } from '../logic/effetDAtelier';
+import AtelierDEffet from './AtelierDEffet';
 
 /**
  * **Choisir un effet parmi cinquante — sans descendre un couloir.**
@@ -57,13 +59,33 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
     const creerUneVariante = useLightStore(s => s.creerUneVariante);
     const supprimerUneVariante = useLightStore(s => s.supprimerUneVariante);
 
+    const effetsDAtelier = useLightStore(s => s.effetsDAtelier);
+    const creerUnEffetDAtelier = useLightStore(s => s.creerUnEffetDAtelier);
+    const supprimerUnEffetDAtelier = useLightStore(s => s.supprimerUnEffetDAtelier);
+    /** L'effet ouvert à l'atelier, par-dessus cet écran — `null` sinon. */
+    const [atelier, setAtelier] = React.useState<string | null>(null);
+
     useFermetureParEchap(true, onFermer, 'Sélecteur d’effet');
 
     const nomDe = (valeur: string) =>
         t(`light.footer.effects.${valeur === 'lightning' ? 'storm' : valeur}`, { defaultValue: valeur });
 
     /** Le catalogue et les ambiances, sous la forme que la recherche sait lire. */
-    const tout: (EffetCherchable & { categorie?: CategorieDEffet; teinte?: string; idVariante?: string })[] = [
+    const tout: (EffetCherchable & {
+        categorie?: CategorieDEffet; teinte?: string; idVariante?: string; idAtelier?: string;
+    })[] = [
+        /*
+          ⭐ **Les effets de l'atelier passent devant, et devant les ambiances.**
+          Ce sont les seuls que le meneur a écrits lui-même : ils n'ont aucune
+          chance d'être retrouvés par le nom d'un effet du catalogue, puisqu'ils
+          n'en descendent pas. *Ce qu'on ne peut trouver que par soi-même se met
+          en haut.*
+        */
+        ...effetsDAtelier.map(e => ({
+            valeur: identifiantDAtelier(e.id),
+            nom: e.nom,
+            idAtelier: e.id,
+        })),
         ...variantes.map(v => ({
             valeur: identifiantDeVariante(v.id),
             nom: v.nom,
@@ -80,6 +102,7 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
 
     const trouves = chercherUnEffet(tout, recherche);
     const ambiances = trouves.filter(e => e.idVariante);
+    const mesEffets = trouves.filter(e => e.idAtelier);
     const parCategorie = (c: CategorieDEffet) => trouves.filter(e => e.categorie === c);
 
     const choisir = (valeur: string) => { onChoisir(valeur); onFermer(); };
@@ -135,6 +158,67 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                             {pastille('colorloop', t('light.footer.effects.colorloop'), 'text-accent', effetActuel === 'colorloop')}
                         </div>
                     )}
+
+                    {/*
+                      ⛔ **La porte de l'atelier est ici, et pas ailleurs.** Un
+                      effet neuf se crée au moment où l'on cherche un effet et
+                      qu'aucun des quarante-huit ne fait l'affaire — c'est le
+                      seul instant où l'idée existe. *Un atelier rangé dans les
+                      réglages ne s'ouvre jamais.*
+                    */}
+                    <section className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">
+                                {t('light.footer.categories.atelier')}
+                            </p>
+                            <button
+                                onClick={() => setAtelier(creerUnEffetDAtelier())}
+                                className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-lg border border-accent/30 text-accent/80 hover:text-accent hover:bg-accent/10 text-ui-10 font-bold uppercase tracking-widest transition-colors"
+                            >
+                                <Wand2 size={12} /> {t('light.footer.atelier.creer')}
+                            </button>
+                        </div>
+
+                        {mesEffets.length === 0 ? (
+                            <p className="text-ui-10 text-app-text/25 italic">
+                                {t('light.footer.atelier.vide')}
+                            </p>
+                        ) : mesEffets.map(e => (
+                            <div
+                                key={e.valeur}
+                                className={`flex items-center gap-2 p-2 rounded-lg border transition-all
+                                    ${effetActuel === e.valeur
+                                        ? 'bg-accent/15 border-accent/60'
+                                        : 'bg-app-bg/60 border-app-border/30'}`}
+                            >
+                                <button
+                                    onClick={() => choisir(e.valeur)}
+                                    className="flex-1 text-left min-w-0"
+                                >
+                                    <span className="block text-xs font-bold text-sky-200 truncate">{e.nom}</span>
+                                    <span className="block text-ui-10 text-app-text/40 truncate">
+                                        {t('light.footer.atelier.resume', {
+                                            etapes: effetsDAtelier.find(x => x.id === e.idAtelier)?.etapes.length ?? 0,
+                                        })}
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => setAtelier(e.idAtelier!)}
+                                    className="shrink-0 p-1 text-app-text/25 hover:text-accent transition-colors"
+                                    title={t('light.footer.atelier.regler')}
+                                >
+                                    <SlidersHorizontal size={14} />
+                                </button>
+                                <button
+                                    onClick={() => supprimerUnEffetDAtelier(e.idAtelier!)}
+                                    className="shrink-0 p-1 text-app-text/25 hover:text-red-400 transition-colors"
+                                    title={t('light.footer.atelier.supprimer')}
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        ))}
+                    </section>
 
                     {ambiances.length > 0 && (
                         <section className="flex flex-col gap-2">
@@ -213,6 +297,8 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                     {t('light.footer.selecteur.aide')}
                 </p>
             </div>
+
+            {atelier && <AtelierDEffet effetId={atelier} onFermer={() => setAtelier(null)} />}
         </div>
     );
 };

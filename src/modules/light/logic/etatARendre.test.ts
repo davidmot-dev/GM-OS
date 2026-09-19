@@ -157,9 +157,10 @@ describe('qui a le droit de restaurer', () => {
      * le but : elle ne s'éteint pas, elle arrête de battre.*
      */
     it('le moteur restaure quand une lampe se retire du budget', () => {
-        /* Deux appels dans le moteur depuis le 2026-09-18 : celui-ci et celui
-           de l'effet introuvable, décrit juste en dessous. */
-        expect(MOTEUR.match(RESTAURANT) ?? []).toHaveLength(2);
+        /* Trois appels dans le moteur depuis le 2026-09-20 : celui-ci, celui
+           de l'effet introuvable, et celui de l'effet d'atelier sans étape —
+           chacun décrit par son propre `it` ci-dessous. */
+        expect(MOTEUR.match(RESTAURANT) ?? []).toHaveLength(3);
     });
 
     /**
@@ -182,6 +183,25 @@ describe('qui a le droit de restaurer', () => {
 
         const bloc = MOTEUR.slice(debut, debut + 700);
         expect(bloc).toMatch(RESTAURANT);
+    });
+
+    /**
+     * ⭐ **Le quatrième ayant droit — 2026-09-20, avec l'atelier d'effets.**
+     *
+     * Un effet d'atelier n'est **que de la donnée**, et cette donnée se retouche
+     * pendant qu'une lampe la joue : le moteur la relit à chaque passage. Elle
+     * peut donc **disparaître sous la boucle** — on supprime l'effet à
+     * l'atelier, ou on lui retire sa dernière étape.
+     *
+     * ⛔ Sans cet arrêt, la lampe recevrait un état vide à chaque tour, sans un
+     * mot : *le même défaut que l'effet introuvable d'une ambiance, par une
+     * porte de plus.* Elle retrouve la couleur de sa scène.
+     */
+    it('le moteur restaure quand un effet d’atelier n’a plus d’étape', () => {
+        const debut = MOTEUR.indexOf("d'étape à jouer");
+        expect(debut, 'la garde de l’effet d’atelier vidé a disparu').toBeGreaterThan(0);
+
+        expect(MOTEUR.slice(debut, debut + 300)).toMatch(RESTAURANT);
     });
 
     /**
@@ -225,11 +245,11 @@ describe('qui a le droit de restaurer', () => {
      * raison écrite.
      */
     it('personne d’autre ne restaure', () => {
-        /* Trois ayants droit, chacun décrit par son propre `it` ci-dessus :
+        /* Quatre ayants droit, chacun décrit par son propre `it` ci-dessus :
            le pied de page (retour à « Fixe »), la lampe en trop dans le budget,
-           et l'effet introuvable d'une ambiance. */
+           l'effet introuvable d'une ambiance, et l'effet d'atelier sans étape. */
         const source = MOTEUR + PIED_DE_PAGE;
-        expect(source.match(RESTAURANT) ?? []).toHaveLength(3);
+        expect(source.match(RESTAURANT) ?? []).toHaveLength(4);
     });
 
     /**

@@ -125,6 +125,7 @@ export const FullSessionSchema = z.object({
         light: z.object({
             scenes: z.record(z.string(), z.any()).optional(),
             variantes: z.array(z.any()).optional(),
+            effetsDAtelier: z.array(z.any()).optional(),
             defaultSceneId: z.string().nullable().optional(),
         }).optional(),
         /*

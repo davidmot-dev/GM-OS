@@ -9,9 +9,12 @@ import { BANDE_DE_LA_BOUGIE, BOURRASQUE, etatDuFeu, tirerLaChaleur } from "./log
 import { EXTINCTION_DS, imageDeDeflagration } from "./logic/deflagration";
 import { imageDuSouffle, SOUFFLES } from "./logic/souffle";
 import { fonduTenable, teinterVers, estUneVariante, idDepuisLIdentifiant } from "./logic/varianteDEffet";
+import { estUnEffetDAtelier, idDepuisLAtelier, imageDeLEtape } from "./logic/effetDAtelier";
 import { imageDesStores, phaseDeLaLampe } from "./logic/lumiereDesStores";
 import { lampesRelues } from "./logic/relireLesLampes";
 import type { LampeDuPont } from "./logic/relireLesLampes";
+import { photographierLaPiece, retourDeLEssai } from "./logic/retourDEssai";
+import type { PieceAvantLEssai } from "./logic/retourDEssai";
 
 /**
  * **Le plancher d'une cadence d'effet, en millisecondes.**
@@ -161,6 +164,15 @@ export class HueEngine {
     private minuterieIntensite: ReturnType<typeof setTimeout> | null = null;
     /** Un rejeu d'intensité est-il en train de parler au pont ? */
     private rejeuIntensiteEnCours = false;
+    /**
+     * **Ce que la pièce montrait avant l'essai en cours**, ou `null` quand
+     * aucun essai ne tourne.
+     *
+     * Il vit dans le moteur et non dans l'écran qui l'a lancé : *une pièce qu'on
+     * a changée doit pouvoir être rendue même par quelqu'un d'autre que celui
+     * qui l'a changée.*
+     */
+    private avantLEssai: PieceAvantLEssai | null = null;
 
     // ------------------------------------------------------------------------
     // Discovery & Pairing
@@ -403,15 +415,36 @@ export class HueEngine {
             });
         }
 
-        const transTime = useLightStore.getState().transitionTimeMs;
         /* Lue une fois pour toute la scène : le curseur ne doit pas changer de
            valeur entre la première lampe et la dernière. */
         const intensite = scene.sceneBrightness ?? INTENSITE_SCENE_DEFAUT;
         useLightStore.getState().setActiveScene(sceneId, isAutomatic);
 
-        // Turn everything off first if not in snapshot?
-        // Or just apply the snapshot.
-        for (const [id, state] of Object.entries(scene.lightStates)) {
+        await this.poserLesEtats(scene.lightStates, intensite, sceneId);
+    }
+
+    /**
+     * **Poser une série d'états sur les lampes — le seul écrivain.**
+     *
+     * Extrait d'`applyScene` le 2026-09-20, quand l'essai d'une ambiance
+     * composée a eu besoin du même geste **sans tuile**. *Deux écrivains pour
+     * une même façon de parler au pont finissent par diverger* : l'ordre des
+     * deux messages qu'exige un effet, le répit laissé au pont, la brillance
+     * nominale envoyée au travers de l'intensité — chacun de ces points a déjà
+     * coûté une soirée.
+     *
+     * `sceneId` est **facultatif**, et son absence a un sens : l'effet n'est
+     * alors rattaché à aucune tuile, donc il tourne à vitesse et intensité
+     * pleines — exactement ce que fait un effet choisi à la main sur une lampe.
+     */
+    private async poserLesEtats(
+        etats: Record<string, HueLightState>,
+        intensite: number,
+        sceneId?: string,
+    ) {
+        const transTime = useLightStore.getState().transitionTimeMs;
+
+        for (const [id, state] of Object.entries(etats)) {
             this.stopSoftwareEffect(id); // Clean any previous logic
             if (state.effect && state.effect !== 'none') {
                 // IMPORTANT: Even if there is an effect, we must turn the light ON first and set its base state
@@ -526,6 +559,88 @@ export class HueEngine {
 
         console.log(`[HUE ENGINE] Stop All → éclairage normal : ${cible}`);
         await this.applyScene(cible, true);
+    }
+
+    /** Un essai est-il en train d'occuper la pièce ? */
+    get essaiEnCours(): boolean {
+        return this.avantLEssai !== null;
+    }
+
+    /**
+     * **Essayer une ambiance sur les lampes, sans tuile et sans rien écrire.**
+     *
+     * Demandé par David le 2026-09-20 ; c'était le dernier reste de l'IA qui
+     * compose (§ 89). Le contournement livré la veille était « Enregistrer puis
+     * Jouer » — il obligeait à **occuper une case du râtelier pour regarder une
+     * ambiance qu'on allait peut-être refuser.**
+     *
+     * ⛔ **Il ne contredit pas la règle qui interdisait d'allumer.** Cette règle
+     * dit qu'une ambiance ne doit pas s'allumer *toute seule* pendant qu'on
+     * prépare une scène. Ici le meneur appuie sur un bouton qui dit ce qu'il
+     * fait : *le geste est offert, et il s'assume.*
+     *
+     * ⚠️ **Tout se tait d'abord, y compris ce que l'essai ne mentionne pas.**
+     * Même leçon que le Stop All : une lampe absente garderait son orage en
+     * cours, et l'essai aurait l'air de clignoter sans raison. Une proposition
+     * couvre bien toutes les lampes (`etatsDeLaProposition` éteint les
+     * oubliées), mais *une méthode ne se repose pas sur les bonnes manières de
+     * son appelant.*
+     *
+     * Ni journal, ni scène active : **rien de tout ceci n'est un geste de
+     * table.** On prépare.
+     */
+    async essayerUneAmbiance(etats: Record<string, HueLightState>) {
+        /* La photographie est prise une seule fois : enchaîner trois
+           propositions doit rendre la pièce d'**avant la première**, pas celle
+           de l'essai précédent. */
+        if (!this.avantLEssai) {
+            const { lights, activeSceneId } = useLightStore.getState();
+            this.avantLEssai = photographierLaPiece(lights, activeSceneId);
+        }
+
+        Object.keys(useLightStore.getState().lights).forEach(id => this.stopSoftwareEffect(id));
+
+        /* Aucune tuile ne porte cet essai : pleine intensité, et les effets ne
+           se rattachent à aucune scène. Le curseur global, lui, s'applique
+           toujours — il dit le volume de la pièce, pas celui d'une ambiance. */
+        await this.poserLesEtats(etats, INTENSITE_SCENE_DEFAUT);
+    }
+
+    /**
+     * **Rendre la pièce telle qu'on l'a trouvée.**
+     *
+     * ⚠️ La visée est celle de `logic/retourDEssai.ts`, et elle n'est celle
+     * d'aucune des trois autres portes du retour : ni la dernière scène, ni
+     * l'éclairage normal, ni le noir. Les trois **éteindraient** une pièce où
+     * aucune scène n'a jamais été jouée — ce qui est le cas ordinaire d'un
+     * après-midi de préparation.
+     */
+    async rendreLaPieceApresLEssai() {
+        const avant = this.avantLEssai;
+        if (!avant) return;
+        /* Rendu avant d'agir : un retour qui échoue à mi-chemin ne doit pas
+           laisser croire qu'un essai tourne encore. */
+        this.avantLEssai = null;
+
+        const retour = retourDeLEssai(avant, useLightStore.getState().scenes);
+        if ('rejouer' in retour) {
+            await this.applyScene(retour.rejouer, true);
+            return;
+        }
+
+        Object.keys(useLightStore.getState().lights).forEach(id => this.stopSoftwareEffect(id));
+        await this.poserLesEtats(retour.reposer, INTENSITE_SCENE_DEFAUT);
+    }
+
+    /**
+     * **L'essai cesse d'en être un, et la pièce ne bouge pas.**
+     *
+     * Appelé quand l'ambiance essayée vient d'être enregistrée : ce que la
+     * pièce montre est désormais une tuile, avec ses gestes d'arrêt ordinaires.
+     * *On n'a plus de raison de garder une photographie d'avant.*
+     */
+    oublierLEssai() {
+        this.avantLEssai = null;
     }
 
     // ------------------------------------------------------------------------
@@ -891,6 +1006,29 @@ export class HueEngine {
             return;
         }
 
+        /*
+          ⭐ **UN EFFET D'ATELIER N'EMPRUNTE LE CORPS DE PERSONNE.**
+
+          C'est ce qui le sépare d'une ambiance : celle-ci décline un des
+          quarante-huit, celui-là **est une suite d'étapes** que le meneur a
+          écrite. Il n'a donc pas de `case` et n'en cherche pas un — il se joue
+          avant le `switch`, à partir de sa seule donnée.
+
+          ⚠️ Même garde qu'une ambiance disparue : un effet d'atelier supprimé
+          laisserait une lampe muette et un meneur qui cherche pourquoi.
+        */
+        const atelier = estUnEffetDAtelier(effectName)
+            ? useLightStore.getState().effetsDAtelier.find(
+                e => e.id === idDepuisLAtelier(effectName))
+            : undefined;
+
+        if (estUnEffetDAtelier(effectName) && !atelier) {
+            console.warn(
+                `[Light OS] L'effet d'atelier ${effectName} n'existe plus : rien à jouer sur ${id}.`,
+            );
+            return;
+        }
+
         /** Le corps d'effet réellement joué : la source d'une variante, ou l'effet lui-même. */
         const effectName_ = variante ? variante.source : effectName;
 
@@ -939,7 +1077,14 @@ export class HueEngine {
             'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant',
             'trou-noir', 'hyperspace', 'reacteur', 'fusillade',
             'deflagration', 'impact', 'panne', 'sonar', 'incendie'
-        ].includes(effectName_);
+            /*
+              ⚠️ **Un effet d'atelier est dynamique par construction** : chacune
+              de ses étapes porte sa propre durée, et son aléa la retire au sort
+              à chaque passage. Le ranger avec les cadences fixes l'aurait figé
+              sur l'attente de sa première étape — *une suite jouée au rythme de
+              son premier pas n'est plus la suite qu'on a écrite.*
+            */
+        ].includes(effectName_) || Boolean(atelier);
 
         /**
          * L'attente du prochain tour, vitesse de la scène **et** de l'ambiance
@@ -1023,6 +1168,63 @@ export class HueEngine {
               sienne. *Celui-là n'est pas emprunté à la lampe, il est choisi.*
             */
             const baseXy = freshState.xy || [0.4, 0.4];
+
+            /*
+              ⭐ **L'ATELIER SE JOUE ICI, AVANT LE `switch` — ET LE TRAVERSE
+              QUAND MÊME.**
+
+              Son identifiant (`atelier:…`) ne correspond à aucun `case` : le
+              `switch` le laisse donc passer sans rien faire, et tout ce qui
+              vient **après** s'applique comme pour les quarante-huit autres —
+              la brillance globale, l'intensité de la tuile, le rabotage du
+              fondu. *C'est la seule façon qu'un effet neuf obéisse aux mêmes
+              curseurs que les anciens sans qu'on ait à les recopier.*
+
+              ⚠️ **La cadence est PARTAGÉE, pas soliste.** Un effet écrit par le
+              meneur n'a pas d'identité déclarée dans le code : on ne peut pas
+              savoir si sa vitesse *est* sa nature. Le rationnement soliste
+              **éteindrait des lampes** sur un effet qu'il vient de composer, et
+              il chercherait longtemps pourquoi. Ralentir se voit et s'explique ;
+              une lampe qui ne joue pas ne s'explique pas.
+            */
+            if (atelier) {
+                /*
+                  ⭐ **Relu à CHAQUE passage, et c'est tout l'atelier.** On règle
+                  une étape pendant que la lampe la joue, et on voit le résultat
+                  au tour suivant — *c'est la seule façon de composer, parce
+                  qu'une couleur ne se juge pas dans un champ de saisie.* Le
+                  curseur d'intensité a payé la même leçon le 09/09.
+
+                  ⚠️ Et l'effet peut disparaître sous la boucle : on le supprime
+                  dans l'atelier pendant qu'une lampe le joue.
+                */
+                const vivant = useLightStore.getState().effetsDAtelier.find(
+                    e => e.id === idDepuisLAtelier(effectName));
+                const image = vivant ? imageDeLEtape(vivant, tick) : null;
+                if (!image) {
+                    console.warn(
+                        `[Light OS] L'effet d'atelier « ${vivant?.nom ?? effectName} » n'a plus`
+                        + ` d'étape à jouer : on rend la lampe ${id}.`,
+                    );
+                    this.stopSoftwareEffect(id, 'rendreLEtat');
+                    return;
+                }
+
+                payload.transitiontime = image.transitiontime;
+                /*
+                  ⚠️ **Une étape à 0 % éteint, et il faut donc rallumer.** Les
+                  quarante-huit n'écrivent jamais `on` : leur lampe est allumée
+                  et le reste. Une suite qui peut éteindre doit dire les deux —
+                  *sinon la première étape noire serait la dernière de l'effet.*
+                  Et le pont refuse une couleur sur une ampoule qu'on éteint.
+                */
+                payload.on = image.bri > 0;
+                if (image.bri > 0) {
+                    payload.bri = image.bri;
+                    payload.xy = this.hexToXy(image.couleur);
+                }
+                interval = cadencePartagee(image.interval, this.lampesEnEffet(effectName));
+            }
 
             switch (effectName_) {
                 /*
