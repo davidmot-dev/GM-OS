@@ -156,3 +156,38 @@ test.describe('⭐ le menu d’une atmosphère', () => {
         await gmos.fenetre.keyboard.press('Escape');
     });
 });
+
+/**
+ * ⛔ **L'interrupteur de campagne partait hors de l'écran.**
+ *
+ * Posé le 2026-09-19 *à l'intérieur* de la barre d'onglets, qui est en
+ * `overflow-x-auto` avec `no-scrollbar` et un dégradé sur le bord droit : dès
+ * qu'il y a assez d'atmosphères, tout ce qui suit les onglets sort du cadre
+ * **sans la moindre barre de défilement pour dire qu'il reste quelque chose**.
+ *
+ * ⚠️ David le voyait encore à trois atmosphères — le défaut était **latent**.
+ * C'est exactement pourquoi ce test en crée **quatre** : *un défaut latent ne
+ * se garde pas au seuil où on l'a trouvé, mais au-delà.*
+ *
+ * ⭐ *Une fonctionnalité qu'on ne voit pas est une fonctionnalité absente* — la
+ * leçon du Media Hub, reproduite le soir même où le portail la refermait.
+ */
+test.describe('⭐ l’interrupteur de campagne', () => {
+    test('reste visible quand les onglets débordent', async () => {
+        const ajouter = gmos.fenetre.getByTitle('Nouvelle Atmosphère');
+        for (let i = 0; i < 4; i++) await ajouter.click();
+
+        const bouton = gmos.fenetre.getByRole('button', { name: /^Cette campagne$/ }).first();
+        await expect(bouton, 'l’interrupteur n’est pas rendu').toBeVisible();
+
+        /*
+          `toBeVisible()` ne suffit pas : un élément pouss  é hors d'un conteneur
+          qui défile reste « visible » au sens du document. La question est
+          s'il est dans la **fenêtre**.
+        */
+        await expect(
+            bouton,
+            'l’interrupteur est sorti de l’écran : il faut défiler pour l’atteindre, et rien ne le dit',
+        ).toBeInViewport();
+    });
+});

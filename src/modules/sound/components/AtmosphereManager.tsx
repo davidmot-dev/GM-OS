@@ -4,6 +4,7 @@ import { Plus, MoreHorizontal, Edit2, Trash2, Check, Globe, Bookmark, Unlink } f
 import { useSoundStore } from '../useSoundStore';
 import type { Atmosphere } from '../useSoundStore';
 import { useAtmospheresVisibles } from '../hooks/useAtmospheresVisibles';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 
 const AtmosphereManager: React.FC = () => {
     const {
@@ -59,6 +60,25 @@ const AtmosphereManager: React.FC = () => {
         setMenu({ id, x: r.left, y: r.bottom + 8 });
     };
 
+    /*
+      ⛔ **Échap ferme ce menu — et il ne le fermait PAS.**
+
+      Trouvé le 2026-09-20 par le garde-fou écrit une heure plus tôt, qui a
+      échoué en essayant de cliquer ailleurs : *le menu porte un voile plein
+      écran*, et tant qu'il est là, **plus rien d'autre n'est cliquable**.
+
+      ⚠️ **C'est le portail qui a rendu ce défaut réel.** Avant lui, le voile
+      était enfermé dans un contexte d'empilement et ne couvrait pas grand-chose
+      — le même défaut existait, **inoffensif par accident**. *Un correctif qui
+      fait enfin marcher un mécanisme fait aussi marcher ce qu'il avait de
+      faux.*
+
+      Le registre partagé donne la règle : Échap ferme la surcouche du dessus,
+      et fait ce que ferait son bouton de fermeture — ici, refermer sans rien
+      exécuter.
+    */
+    useFermetureParEchap(menu !== null, () => setMenu(null), "Menu d'atmosphère");
+
     const handleAdd = () => {
         const name = `Atmosphère ${atmospheres.length + 1}`;
         /*
@@ -85,8 +105,27 @@ const AtmosphereManager: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center gap-3 py-2 overflow-x-auto no-scrollbar mask-fade-right min-h-[50px]">
-            <div className="flex items-center gap-2 p-1.5 bg-app-bg/40 backdrop-blur-xl border border-app-border/50 rounded-2xl shadow-inner">
+        /*
+          ⛔ **Ce qui défile et ce qui ne défile PAS.**
+
+          La barre entière était en `overflow-x-auto`, avec `no-scrollbar` et un
+          dégradé sur le bord droit. Tout ce qui suivait les onglets — le bouton
+          « + », puis l'interrupteur de campagne posé le 2026-09-19 — partait
+          donc **hors de l'écran dès qu'il y avait assez d'atmosphères**, et
+          *sans la moindre barre de défilement pour dire qu'il restait quelque
+          chose à droite.*
+
+          ⚠️ David le voyait encore à trois atmosphères : le défaut était
+          **latent**, pas actif. Il se serait réveillé à la quatrième, ou sur
+          une fenêtre plus étroite. *Une fonctionnalité qu'on ne voit pas est
+          une fonctionnalité absente* — la leçon du Media Hub, reproduite ici
+          le soir même où le portail la refermait deux lignes plus haut.
+
+          Seuls **les onglets** défilent désormais. Le « + » et l'interrupteur
+          sont ancrés à droite, toujours visibles.
+        */
+        <div className="flex items-center gap-3 py-2 min-h-[50px]">
+            <div className="flex items-center gap-2 p-1.5 bg-app-bg/40 backdrop-blur-xl border border-app-border/50 rounded-2xl shadow-inner overflow-x-auto no-scrollbar mask-fade-right min-w-0">
                 {atmospheres.map((atmos) => (
                     <div key={atmos.id} className="relative group flex items-center">
                         {editingId === atmos.id ? (

@@ -69,7 +69,14 @@ const DISPENSEES: ReadonlyArray<readonly [string, string]> = [
     // ── Des fonds de menus déroulants, déjà fermés au clic extérieur ──────
     ['/src/modules/map/components/MapControls.tsx', 'le fond cliquable d’un menu de sortie, pas une surcouche'],
     ['/src/modules/session/components/SocialGraph/SocialGraphFilters.tsx', 'le fond cliquable d’une liste de choix'],
-    ['/src/modules/sound/components/AtmosphereManager.tsx', 'le fond cliquable d’un menu d’atmosphère'],
+    /*
+      ⭐ **Dispense retirée le 2026-09-20.** Elle disait vrai tant que le menu
+      vivait dans la barre d'onglets : son voile y était enfermé dans un
+      contexte d'empilement et ne couvrait presque rien. Le portail posé la
+      veille l'a rendu **réel** — et un voile plein écran qu'Échap ne ferme pas
+      bloque toute l'application. *Un correctif qui fait enfin marcher un
+      mécanisme fait aussi marcher ce qu'il avait de faux.*
+    */
 
     // ── Portées par le ModalProvider, qui écoute pour elles ───────────────
     ['/src/modules/map/components/DangerZonePresetEditor.tsx', 'rendue comme variante `custom` : c’est le ModalProvider qui ferme'],

@@ -7479,8 +7479,37 @@ d'une campagne écrasant le rangement d'une autre.
 `sound/logic/instantaneDeSeance.ts` (le propriétaire), `components/AtmosphereManager.tsx`
 (l'interrupteur, recopié de `MusicHeader`).
 
-**Vérifié** : `tsc -b` propre, lint propre, **5 565 essais Vitest** au vert, E2E de Sound-OS,
-Music-OS et la traversée des modules rejoués. ⚠️ **Non éprouvé à l'écran.**
+#### ⛔ Le lendemain : l'interrupteur sortait de l'écran, et Échap ne fermait pas le menu
+
+David, le 20/09 : *« comment je peux lier un pad de Sound-OS sur une campagne ? »* — la réponse est
+**qu'un pad ne se lie pas, son atmosphère oui**, mais la question a fait relire l'écran. Deux
+défauts, et le second a été trouvé **par le garde-fou écrit pour le premier**.
+
+**1. L'interrupteur était DANS la barre qui défile.** `overflow-x-auto`, `no-scrollbar`, dégradé sur
+le bord droit : tout ce qui suivait les onglets partait hors écran dès qu'il y avait assez
+d'atmosphères, **sans la moindre barre de défilement pour le dire**. ⚠️ David le voyait encore à
+trois — le défaut était **latent**, et l'essai en crée donc **quatre** : *un défaut latent ne se
+garde pas au seuil où on l'a trouvé, mais au-delà.* Seuls les onglets défilent désormais.
+
+*Une fonctionnalité qu'on ne voit pas est une fonctionnalité absente* — la leçon du Media Hub,
+reproduite le soir même où le portail la refermait deux lignes plus haut.
+
+**2. ⭐ Et l'essai a échoué pour une raison qu'il ne cherchait pas.** Il n'arrivait plus à cliquer
+« + » : le menu d'atmosphère porte un **voile plein écran**, et **Échap ne le fermait pas**. Tant
+qu'il est là, plus rien n'est cliquable.
+
+⛔ **C'est le portail qui a rendu ce défaut réel.** Avant lui, le voile était enfermé dans un
+contexte d'empilement et ne couvrait presque rien : le même défaut existait, **inoffensif par
+accident**. ⭐ ***Un correctif qui fait enfin marcher un mécanisme fait aussi marcher ce qu'il avait
+de faux.***
+
+Le composant était **dispensé** d'Échap dans `echapFermeLesSurcouches.test.ts`, au motif du « fond
+cliquable d'un menu déroulant » — un motif qui disait vrai la veille. Le contrôle mécanique a
+refusé la dispense devenue caduque dès que le crochet a été posé. *Une dispense est une affirmation
+datée ; elle périme avec ce qu'elle décrit.*
+
+**Vérifié** : `tsc -b` propre, lint propre, **5 565 essais Vitest** au vert, **7 essais E2E de
+Sound-OS** dont deux neufs éprouvés **dans les deux sens**. ⚠️ **Non éprouvé à l'écran.**
 
 ---
 
