@@ -16,11 +16,11 @@
 >
 > Il prend la suite de [`2026-09-18-etat-et-reprise.md`](./2026-09-18-etat-et-reprise.md).
 >
-> ✅ **Deux chantiers éprouvés à l'écran** — le contenu des deux nouvelles clés de sauvegarde
-> (*« j'ai appliqué les tests cela fonctionne »*) et l'**ambiance composée par l'IA**
-> (*« c'est bien »*).
-> ⚠️ **Les deux autres ne l'ont pas été** — la relecture du pont (§ 86) et les râteliers par
-> campagne (§ 88) —, et c'est le principal reste de la journée.
+> ✅ **Trois chantiers éprouvés à l'écran** — le contenu des deux nouvelles clés de sauvegarde
+> (*« j'ai appliqué les tests cela fonctionne »*), l'**ambiance composée par l'IA**
+> (*« c'est bien »*) et le **menu d'une atmosphère** (*« la correction du cadre fonctionne »*).
+> ⚠️ **Trois ne l'ont pas été** — la relecture du pont (§ 86), les râteliers par campagne (§ 88)
+> et le rattachement de Sound-OS (§ 91) —, et c'est le principal reste de la journée.
 
 ---
 
@@ -36,7 +36,8 @@ pour que cette demande ait un sens.
 | **87** | Light-OS et Sound-OS n'étaient dans **aucune** sauvegarde, et rien ne déclenchait | ✅ **oui**, à l'écran |
 | **88** | Les tuiles appartiennent à une campagne — râteliers, filtre unique, fusion des instantanés | ⚠️ non |
 | **89** | L'IA compose un éclairage pour une scène de la trame | ✅ **oui**, à l'écran |
-| **90** | Le menu d'une atmosphère était coupé et derrière les pads — **vu par David** | ⚠️ corrigé, non revu |
+| **90** | Le menu d'une atmosphère était coupé et derrière les pads — **vu par David** | ✅ **oui**, à l'écran |
+| **91** | Sound-OS rattaché à une campagne — la dernière asymétrie des trois | ⚠️ non |
 
 ⭐ **Le fil de la journée** : la demande d'IA était bloquée non par le modèle mais par **la place**.
 Dix-huit tuiles partagées par toutes les campagnes ne laissent nulle part où ranger ce qu'une IA
@@ -140,8 +141,9 @@ un effet, une lampe ou une couleur passe par `light/logic/ambianceProposee.ts`.
 - **Les specs E2E des gestes du jour.** La suite est verte, mais **aucune spec existante n'exerce ce
   qui a été ajouté** : elle prouve qu'on n'a rien cassé, pas que le neuf marche. ⚠️ Le chemin du pont
   Hue ne sera jamais couvert — `GMOS_SANS_APPAREILS` débranche le réseau exprès.
-- **Sound-OS n'est pas rattaché à une campagne.** Light-OS et Music-OS le sont ; ses atmosphères ne
-  le sont pas. Rien ne presse, mais l'asymétrie est désormais la seule qui reste.
+- ~~**Sound-OS n'est pas rattaché à une campagne.**~~ ✅ **Fait le soir même** (§ 91), sur demande de
+  David dans la foulée. Les trois modules d'ambiance emploient désormais la même règle partagée.
+  ⚠️ Non éprouvé à l'écran.
 
 ---
 

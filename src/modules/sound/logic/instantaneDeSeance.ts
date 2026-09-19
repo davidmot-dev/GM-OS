@@ -1,8 +1,11 @@
 import { padPorteUnSon, type AtmosphereLisible } from './padPorteUnSon';
 import { fusionnerUnInstantane } from '../../../logic/fusionDInstantane';
 
-/** Une atmosphère, vue par la fusion : un identifiant et des pads. */
-export type AtmosphereFusionnable = AtmosphereLisible & { id: string };
+/** Une atmosphère, vue par la fusion : un identifiant, des pads, un propriétaire. */
+export type AtmosphereFusionnable = AtmosphereLisible & {
+    id: string;
+    campagneId?: string | null;
+};
 
 /**
  * **Les atmosphères après qu'on a restauré l'ambiance d'une séance.**
@@ -14,8 +17,14 @@ export type AtmosphereFusionnable = AtmosphereLisible & { id: string };
  *
  * La règle commune vit dans `src/logic/fusionDInstantane.ts`. Ce qui est propre
  * à Sound-OS tient en une phrase : **une atmosphère porte du travail quand un
- * pad tient un fichier.** Il n'y a pas de propriétaire ici — les atmosphères ne
- * sont pas encore rattachées à une campagne.
+ * pad tient un fichier.**
+ *
+ * ⭐ **Le propriétaire compte ici depuis le soir du 2026-09-19**, quand les
+ * atmosphères ont reçu leur `campagneId`. Sans lui, restaurer un instantané
+ * d'une campagne pouvait écraser le rangement d'une autre — le défaut que
+ * Music-OS portait déjà, et qu'on aurait recréé en ajoutant le rattachement
+ * sans y revenir. *Un champ neuf change la réponse de fonctions écrites avant
+ * lui.*
  */
 export function atmospheresApresInstantane<T extends AtmosphereFusionnable>(
     actuelles: readonly T[],
@@ -24,5 +33,7 @@ export function atmospheresApresInstantane<T extends AtmosphereFusionnable>(
     return fusionnerUnInstantane(actuelles, venues, {
         cle: a => a.id,
         porteDuTravail: a => Object.values(a?.pads ?? {}).some(padPorteUnSon),
+        /* `null` et `undefined` disent la même chose — *commune*. */
+        memeProprietaire: (a, v) => (a.campagneId ?? null) === (v.campagneId ?? null),
     });
 }

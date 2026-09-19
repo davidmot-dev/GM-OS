@@ -19,6 +19,25 @@ export interface Atmosphere {
     id: string;
     name: string;
     pads: Record<string, SoundPad>;
+    /**
+     * **La campagne propriétaire — étiquette, pas cloison.** Posée le
+     * 2026-09-19, après Music-OS (30/08) et Light-OS (le matin même) : Sound-OS
+     * était le dernier des trois modules d'ambiance sans rattachement.
+     *
+     * Absente ou `null` : l'atmosphère est **commune**, visible dans toutes les
+     * campagnes. C'est le défaut, et c'est ce qui rend la bascule indolore —
+     * les atmosphères écrites avant ce champ n'ont pas d'étiquette et restent
+     * donc toutes visibles. *Aucune migration.*
+     *
+     * ⚠️ **Créer une atmosphère la rattache à la campagne ouverte**, comme une
+     * playlist de Music-OS — et contrairement à une tuile de Light-OS, qui
+     * naît commune. La différence n'est pas un caprice : les tuiles sont
+     * **dix-huit cases partagées**, les atmosphères une bibliothèque sans fin.
+     * *On ne rationne pas ce qui ne coûte rien.*
+     *
+     * Le tri vit dans `logic/atmospheresDeLaCampagne.ts`.
+     */
+    campagneId?: string | null;
 }
 
 interface SoundState {
@@ -33,7 +52,13 @@ interface SoundState {
     activePadLearnId: string | null;
 
     // Actions
-    addAtmosphere: (name: string) => void;
+    /** `campagneId` non fourni : l'atmosphère naît **commune**. L'écran, lui, passe la campagne ouverte. */
+    addAtmosphere: (name: string, campagneId?: string | null) => void;
+    /**
+     * Change le propriétaire d'une atmosphère : une campagne, ou `null` pour la
+     * rendre commune. **Le seul écrivain de `campagneId`.**
+     */
+    assignerLAtmosphere: (id: string, campagneId: string | null) => void;
     removeAtmosphere: (id: string) => void;
     setActiveAtmosphereId: (id: string) => void;
     renameAtmosphere: (id: string, name: string) => void;
@@ -102,11 +127,15 @@ export const useSoundStore = create<SoundState>()(
             isKeyLearnActive: false,
             activePadLearnId: null,
 
-            addAtmosphere: (name) => set((state) => ({
+            addAtmosphere: (name, campagneId = null) => set((state) => ({
                 atmospheres: [
                     ...state.atmospheres,
-                    { id: crypto.randomUUID(), name, pads: createEmptyPads() }
+                    { id: crypto.randomUUID(), name, pads: createEmptyPads(), campagneId }
                 ]
+            })),
+
+            assignerLAtmosphere: (id, campagneId) => set((state) => ({
+                atmospheres: state.atmospheres.map(a => a.id === id ? { ...a, campagneId } : a)
             })),
 
             removeAtmosphere: (id) => set((state) => {

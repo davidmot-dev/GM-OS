@@ -1,4 +1,6 @@
 import { useSoundStore } from './useSoundStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
+import { atmosphereDuClavier } from './logic/atmospheresDeLaCampagne';
 import { soundController } from './SoundController';
 import type { SoundPad } from './useSoundStore';
 import { estUneFrappeDePastille } from '../../utils/frappeDePastille';
@@ -34,7 +36,26 @@ export class KeyboardEngine {
         if (!estUneFrappeDePastille(e)) return;
 
         const currentState = useSoundStore.getState();
-        const activeAtmos = currentState.atmospheres.find(a => a.id === currentState.activeAtmosphereId) || currentState.atmospheres[0];
+        /*
+          ⛔ **Le repli était `atmospheres[0]`** — la première de la liste brute,
+          qui depuis le 2026-09-19 peut appartenir à une **autre campagne**. Une
+          touche aurait alors lancé un bruitage d'ailleurs, devant les joueurs,
+          et l'écran n'aurait rien montré d'anormal puisque les onglets, eux,
+          sont filtrés. *Un repli qui ignore le cloisonnement le perce aussi
+          sûrement qu'une boucle.*
+
+          ⭐ Ce moteur ne lit que l'atmosphère **active** — il n'a donc jamais eu
+          le défaut que Music-OS a payé en août, où le clavier parcourait toutes
+          les playlists. Il n'avait que celui-ci.
+        */
+        const { activeCampaignId, campaigns } = useSessionOSStore.getState();
+        const activeAtmos = atmosphereDuClavier(
+            currentState.atmospheres,
+            activeCampaignId,
+            currentState.activeAtmosphereId,
+            campaigns.map(c => c.id),
+        );
+        if (!activeAtmos) return;
         const keyCode = e.code; // e.g. "KeyA", "Numpad1", "Digit2"
 
         // Learn Mode

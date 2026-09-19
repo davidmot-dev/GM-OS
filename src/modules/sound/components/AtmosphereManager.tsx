@@ -1,18 +1,28 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, MoreHorizontal, Edit2, Trash2, Check } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit2, Trash2, Check, Globe, Bookmark, Unlink } from 'lucide-react';
 import { useSoundStore } from '../useSoundStore';
 import type { Atmosphere } from '../useSoundStore';
+import { useAtmospheresVisibles } from '../hooks/useAtmospheresVisibles';
 
 const AtmosphereManager: React.FC = () => {
-    const { 
-        atmospheres, 
-        activeAtmosphereId, 
-        addAtmosphere, 
-        removeAtmosphere, 
-        setActiveAtmosphereId, 
-        renameAtmosphere 
+    const {
+        activeAtmosphereId,
+        addAtmosphere,
+        removeAtmosphere,
+        setActiveAtmosphereId,
+        renameAtmosphere,
+        assignerLAtmosphere,
     } = useSoundStore();
+
+    /*
+      **Les onglets de la campagne ouverte.** Le même verdict que le clavier,
+      qui appelle la même logique pure — *deux filtres écrits séparément
+      finiraient par diverger, et l'écart ne se verrait qu'en séance.*
+    */
+    const { visibles: atmospheres, classees, active, campagneId } = useAtmospheresVisibles();
+    const estCommune = (active?.campagneId ?? null) === null;
+    const orphelines = new Set(classees.orphelines.map(a => a.id));
 
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editValue, setEditValue] = useState('');
@@ -51,7 +61,14 @@ const AtmosphereManager: React.FC = () => {
 
     const handleAdd = () => {
         const name = `Atmosphère ${atmospheres.length + 1}`;
-        addAtmosphere(name);
+        /*
+          ⚠️ **Une atmosphère naît rattachée à la campagne ouverte**, comme une
+          playlist de Music-OS — et contrairement à une tuile de Light-OS, qui
+          naît commune. Les tuiles sont dix-huit cases partagées ; les
+          atmosphères, une bibliothèque sans fin. *On ne rationne pas ce qui ne
+          coûte rien.*
+        */
+        addAtmosphere(name, campagneId);
     };
 
     const startRename = (atmos: Atmosphere) => {
@@ -102,6 +119,12 @@ const AtmosphereManager: React.FC = () => {
                                     }`}
                                 >
                                     {atmos.name}
+                                    {/* Rattachée à une campagne qui n'existe plus : elle
+                                        reste visible, sinon le travail s'évanouirait sans
+                                        cause apparente — mais elle le dit. */}
+                                    {orphelines.has(atmos.id) && (
+                                        <Unlink size={9} className="text-amber-500 shrink-0" />
+                                    )}
                                 </button>
                                 
                                 {/* Hover Menu Trigger */}
@@ -179,6 +202,48 @@ const AtmosphereManager: React.FC = () => {
             >
                 <Plus size={18} />
             </button>
+
+            {/*
+              **À qui appartient l'atmosphère choisie.**
+
+              Sans campagne ouverte, il n'y a rien à rattacher *à* quoi que ce
+              soit : l'interrupteur disparaît plutôt que de proposer un geste
+              sans effet — même décision que pour les atmosphères de Music-OS,
+              prise par David le 2026-08-30.
+            */}
+            {campagneId !== null && active && (
+                <div className="flex items-center gap-2 shrink-0">
+                    <span
+                        className="text-ui-8 font-black uppercase tracking-widest text-slate-600 truncate max-w-[9rem]"
+                        title={active.name}
+                    >
+                        « {active.name} »
+                    </span>
+                    <div className="flex bg-app-surface/40 p-1 rounded-xl border border-app-border/50 shadow-inner">
+                        {([
+                            { pour: null, icone: <Globe size={11} />, texte: 'Toutes', actif: estCommune },
+                            { pour: campagneId, icone: <Bookmark size={11} />, texte: 'Cette campagne', actif: !estCommune },
+                        ] as const).map(({ pour, icone, texte, actif }) => (
+                            <button
+                                key={texte}
+                                onClick={() => assignerLAtmosphere(active.id, pour)}
+                                aria-pressed={actif}
+                                title={actif
+                                    ? `« ${active.name} » est déjà ${pour === null ? 'commune' : 'rattachée à cette campagne'}`
+                                    : pour === null
+                                        ? `Rendre « ${active.name} » commune — elle apparaîtra dans toutes les campagnes`
+                                        : `Rattacher « ${active.name} » à la campagne ouverte — elle n'apparaîtra plus ailleurs`}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${actif
+                                    ? 'bg-accent text-white shadow-glow-accent'
+                                    : 'text-slate-500 hover:text-slate-200 hover:bg-app-surface/60'}`}
+                            >
+                                {icone}
+                                <span>{texte}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

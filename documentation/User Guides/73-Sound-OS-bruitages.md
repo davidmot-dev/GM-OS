@@ -42,9 +42,30 @@ l'un à l'autre instantanément : « Forêt », « Donjon », « Combat spatial 
 Préparez-en une par lieu important de votre scénario, et le changement de décor sonore devient un
 seul clic.
 
-> ⚠️ **Les atmosphères ne sont pas rattachées à une campagne.** Contrairement aux playlists de
-> Music-OS, elles sont communes à toute l'installation : toutes vos campagnes voient les mêmes
-> onglets. Nommez-les en conséquence si vous menez plusieurs jeux.
+### 🔖 À qui appartient une atmosphère
+
+Depuis le **2026-09-19**, une atmosphère peut appartenir à une campagne. Sélectionnez-en une, et
+l'interrupteur à droite des onglets propose deux réponses :
+
+| Réglage | Ce que ça change |
+| :--- | :--- |
+| **Toutes** | L'atmosphère apparaît dans toutes vos campagnes. Un jeu de bruitages génériques — portes, pas, pluie — sert partout. |
+| **Cette campagne** | Elle ne se voit plus que dans la campagne ouverte, **et le clavier ne la joue plus ailleurs**. |
+
+> ⭐ **Rien ne disparaît le jour de la mise à jour.** Une atmosphère sans étiquette est commune, et
+> **toutes les vôtres le sont** tant que vous n'avez rien rattaché. Aucune migration à subir.
+
+> ⚠️ **Une atmosphère CRÉÉE est rattachée à la campagne ouverte** — comme une playlist de
+> Music-OS, et contrairement à une tuile de Light-OS, qui naît commune. La différence n'est pas un
+> caprice : les tuiles sont **dix-huit cases partagées**, les atmosphères une bibliothèque sans
+> fin. *On ne rationne pas ce qui ne coûte rien.* Un clic sur **Toutes** la rend commune.
+
+> ℹ️ **Une atmosphère rattachée à une campagne supprimée ne s'évanouit pas** : elle reste visible
+> partout, marquée d'un petit maillon brisé ⛓, pour que vous puissiez la re-rattacher ou la
+> supprimer.
+
+→ [Light-OS](./75-Light-OS-les-lumieres.md) et [Music-OS](./71-Music-OS.md) suivent la
+même règle.
 
 ---
 
@@ -108,3 +129,9 @@ n'est pas une coupure sèche, contrairement à ce qu'annonçait la tour de contr
 et non dans les Paramètres. Ajouté : le bouton de réinitialisation, qui détruit toutes les
 atmosphères ; le fait qu'elles ne sont pas rattachées à une campagne ; et la valeur exacte du
 tamisage des bruitages en Focus Chat.*
+
+*Élargi le 2026-09-19 : **les atmosphères peuvent appartenir à une campagne**, sur demande de
+David. Sound-OS était le dernier des trois modules d'ambiance sans rattachement. ⚠️ Le réglage
+suit **jusqu'au clavier** : son moteur ne lisait que l'atmosphère active — il n'avait donc pas le
+défaut que Music-OS a payé en août — mais son **repli** prenait la première de la liste brute,
+qui peut venir d'ailleurs. ⚠️ Jamais éprouvé à l'écran à cette date.*

@@ -7420,6 +7420,63 @@ l'écran par David** — mais le défaut, lui, avait été vu par lui d'abord.
 
 ---
 
+### 91 · ⭐ Sound-OS rattaché à une campagne — la dernière asymétrie des trois modules d'ambiance (2026-09-19, soir)
+
+David : *« comment puis-je lier Sound-OS à une campagne ? »*. La réponse était **on ne peut pas** :
+Music-OS l'avait depuis le 30/08, Light-OS depuis le matin même, Sound-OS non. C'était l'asymétrie
+notée le soir dans l'état de reprise, quelques heures avant qu'il ne la demande.
+
+#### Troisième module, toujours pas de copie
+
+La règle de classement vit dans `src/logic/rattachementALaCampagne.ts`, remontée le matin pour
+Light-OS. `sound/logic/atmospheresDeLaCampagne.ts` n'ajoute que ce qui lui est propre — et ce qui
+lui est propre, c'est surtout **ce qu'il n'a pas**.
+
+#### ⭐ Le clavier de Sound-OS n'avait pas le défaut de Music-OS — il en avait un autre
+
+`KeyboardEngine` ne parcourt **pas** toutes les atmosphères : il ne lit que l'**active**. Le défaut
+que Music-OS a payé le 30/08 — *« le clavier était le dernier chemin non cloisonné »* — ne pouvait
+donc pas se produire ici, et il n'y avait aucun `padDuRaccourci` à écrire.
+
+⛔ **Mais son repli était `atmospheres[0]`** — la première de la liste **brute**, qui peut désormais
+appartenir à une campagne qu'on ne joue pas. Une touche aurait lancé un bruitage d'ailleurs,
+**devant les joueurs**, et l'écran n'aurait rien montré d'anormal puisque les onglets, eux, sont
+filtrés.
+
+⭐ ***Un repli qui ignore le cloisonnement le perce aussi sûrement qu'une boucle.*** C'est le genre
+de trou qu'on ne trouve pas en cherchant « où lit-on la liste ? » mais en demandant **« que se
+passe-t-il quand la valeur attendue manque ? »**.
+
+#### ⭐ Un champ neuf change la réponse de fonctions écrites avant lui
+
+`atmospheresApresInstantane` — la fusion des instantanés, écrite le matin même — ne connaissait
+**pas** de propriétaire pour Sound-OS, et pour une raison qui était juste à l'heure où elle a été
+écrite : les atmosphères n'en avaient pas. Le soir, elles en ont un. Sans y revenir, on aurait
+**recréé chez Sound-OS le défaut qu'on venait de refermer chez Music-OS** : restaurer une séance
+d'une campagne écrasant le rangement d'une autre.
+
+*Ajouter un champ, c'est rouvrir toutes les fonctions qui décidaient sans lui.*
+
+#### La différence avec Light-OS, et pourquoi elle n'est pas un caprice
+
+| Module | À la création | Pourquoi |
+| --- | --- | --- |
+| Music-OS, Sound-OS | **rattachée** à la campagne ouverte | une bibliothèque sans fin |
+| Light-OS | **commune** | dix-huit cases **partagées** : rattacher d'office ferait disparaître une « Taverne » des autres campagnes |
+
+⭐ *On ne rationne pas ce qui ne coûte rien.*
+
+**Ancres** : `sound/logic/atmospheresDeLaCampagne.ts` (dont `atmosphereDuClavier`),
+`sound/hooks/useAtmospheresVisibles.ts`, `useSoundStore` (`campagneId`, `assignerLAtmosphere`,
+`addAtmosphere(name, campagneId)`), `sound/KeyboardEngine.ts` (le repli),
+`sound/logic/instantaneDeSeance.ts` (le propriétaire), `components/AtmosphereManager.tsx`
+(l'interrupteur, recopié de `MusicHeader`).
+
+**Vérifié** : `tsc -b` propre, lint propre, **5 565 essais Vitest** au vert, E2E de Sound-OS,
+Music-OS et la traversée des modules rejoués. ⚠️ **Non éprouvé à l'écran.**
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7451,6 +7508,7 @@ l'écran par David** — mais le défaut, lui, avait été vu par lui d'abord.
 | 24 | **Les tuiles par campagne** | ✅ **LIVRÉ le 19/09** — chaque campagne a ses **18 cases**, plus un pot commun ; aucune migration, aucun identifiant changé. La règle de rattachement a **déménagé** dans `src/logic/` plutôt que d'être recopiée. ⛔ Le **clavier** était le 6ᵉ lecteur, et le pire. ⭐ Deux règles du matin se sont **inversées** l'après-midi. ⛔ La **fusion des instantanés** : le même remplacement en bloc écrit **quatre fois** (§ 88) | Ouvrir une campagne, vérifier les trois sections de la grille, **traîner un curseur de tuile** | Rien. ⚠️ **Non vu à l'écran** |
 | 25 | **L'IA compose une ambiance** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 19/09** (*« c'est bien »*) — sous le champ *Ambiance* d'une scène de la trame. Elle **compose** lampe par lampe plutôt que de choisir parmi l'existant. ⛔ La **validation est le cœur** : un effet inventé ne lève aucune erreur, il rend une lampe muette. Range dans le râtelier de la campagne, complète le moment de la scène sans le doubler (§ 89) | Light-OS en **mode simulé**, puis une scène → « Proposer une ambiance » | Rien. ⚠️ **Aucun essai automatique ne couvre l'aller-retour avec le modèle** |
 | 26 | **Le menu d'une atmosphère** | ✅ **CORRIGÉ le 19/09** — vu par David, capture à l'appui : le cadre était **coupé ET derrière les pads**. Trois causes empilées, dont un `overflow-x-auto` qui découpe aussi en vertical : un `z-index` ne suffisait pas, il a fallu un **portail**. ⭐ Le garde-fou a été **faux deux fois** — `toBeVisible()` et `click()` passaient sur le code fautif ; seul `elementFromPoint` voit ce qui est **peint** (§ 90) | Rien | Rien. ⚠️ Non revu à l'écran |
+| 27 | **Sound-OS par campagne** | ✅ **LIVRÉ le 19/09** — demandé par David, et c'était la dernière asymétrie des trois modules d'ambiance. Troisième module à employer la règle partagée, toujours sans copie. ⭐ Son clavier n'avait **pas** le défaut de Music-OS (il ne lit que l'active) mais son **repli** prenait la première de la liste brute. ⭐ Et la fusion d'instantané, écrite le matin sans propriétaire, a dû être rouverte : *ajouter un champ, c'est rouvrir toutes les fonctions qui décidaient sans lui* (§ 91) | Sélectionner une atmosphère, cliquer **Cette campagne**, changer de campagne | Rien. ⚠️ Non vu à l'écran |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
