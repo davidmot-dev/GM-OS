@@ -16,11 +16,12 @@
 >
 > Il prend la suite de [`2026-09-18-etat-et-reprise.md`](./2026-09-18-etat-et-reprise.md).
 >
-> ✅ **Trois chantiers éprouvés à l'écran** — le contenu des deux nouvelles clés de sauvegarde
+> ✅ **Quatre chantiers éprouvés à l'écran** — le contenu des deux nouvelles clés de sauvegarde
 > (*« j'ai appliqué les tests cela fonctionne »*), l'**ambiance composée par l'IA**
-> (*« c'est bien »*) et le **menu d'une atmosphère** (*« la correction du cadre fonctionne »*).
-> ⚠️ **Trois ne l'ont pas été** — la relecture du pont (§ 86), les râteliers par campagne (§ 88)
-> et le rattachement de Sound-OS (§ 91) —, et c'est le principal reste de la journée.
+> (*« c'est bien »*), le **menu d'une atmosphère** (*« la correction du cadre fonctionne »*) et la
+> **relecture du pont** (*« tout fonctionne »*, nuit du 19 au 20).
+> ⚠️ **Deux ne l'ont pas été** — les râteliers par campagne (§ 88) et le rattachement de
+> Sound-OS (§ 91) —, et c'est le principal reste de la journée.
 
 ---
 
@@ -32,7 +33,7 @@ pour que cette demande ait un sens.
 
 | § | Chantier | Éprouvé ? |
 | --- | --- | --- |
-| **86** | Le miroir des lampes ne connaissait que GM-OS — « Relire les lampes » | ⚠️ non |
+| **86** | Le miroir des lampes ne connaissait que GM-OS — « Relire les lampes » | ✅ **oui**, à l'écran |
 | **87** | Light-OS et Sound-OS n'étaient dans **aucune** sauvegarde, et rien ne déclenchait | ✅ **oui**, à l'écran |
 | **88** | Les tuiles appartiennent à une campagne — râteliers, filtre unique, fusion des instantanés | ⚠️ non |
 | **89** | L'IA compose un éclairage pour une scène de la trame | ✅ **oui**, à l'écran |
@@ -56,8 +57,8 @@ un défaut en cache un autre. Dans l'ordre d'importance :
    **traîner ses deux curseurs** : c'est le geste que le découpage en sections aurait pu casser.
 2. ~~**L'IA** (§ 89)~~ — ✅ **fait le 19/09 au soir**, et les deux questions sont tranchées : le
    modèle respecte le compte de lampes et rend des identifiants que le moteur reconnaît.
-3. **La relecture des lampes** (§ 86) — régler deux lampes depuis le téléphone, cliquer
-   « Relire les lampes », vérifier que le pied de page montre la vraie pièce.
+3. ~~**La relecture des lampes** (§ 86)~~ — ✅ **faite**, dont l'essai qui comptait : global à
+   50 %, cinq relectures d'affilée, le pourcentage ne bouge pas.
 4. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
 
 ---
