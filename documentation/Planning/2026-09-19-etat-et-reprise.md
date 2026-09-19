@@ -16,12 +16,12 @@
 >
 > Il prend la suite de [`2026-09-18-etat-et-reprise.md`](./2026-09-18-etat-et-reprise.md).
 >
-> ✅ **Quatre chantiers éprouvés à l'écran** — le contenu des deux nouvelles clés de sauvegarde
+> ✅ **Cinq chantiers éprouvés à l'écran** — le contenu des deux nouvelles clés de sauvegarde
 > (*« j'ai appliqué les tests cela fonctionne »*), l'**ambiance composée par l'IA**
-> (*« c'est bien »*), le **menu d'une atmosphère** (*« la correction du cadre fonctionne »*) et la
-> **relecture du pont** (*« tout fonctionne »*, nuit du 19 au 20).
-> ⚠️ **Deux ne l'ont pas été** — les râteliers par campagne (§ 88) et le rattachement de
-> Sound-OS (§ 91) —, et c'est le principal reste de la journée.
+> (*« c'est bien »*), le **menu d'une atmosphère** (*« la correction du cadre fonctionne »*), la
+> **relecture du pont** (*« tout fonctionne »*) et les **râteliers par campagne** (*« c'est bon »*,
+> le 20/09).
+> ⚠️ **Un seul ne l'a pas été** : le rattachement de Sound-OS (§ 91), livré en dernier.
 
 ---
 
@@ -35,7 +35,7 @@ pour que cette demande ait un sens.
 | --- | --- | --- |
 | **86** | Le miroir des lampes ne connaissait que GM-OS — « Relire les lampes » | ✅ **oui**, à l'écran |
 | **87** | Light-OS et Sound-OS n'étaient dans **aucune** sauvegarde, et rien ne déclenchait | ✅ **oui**, à l'écran |
-| **88** | Les tuiles appartiennent à une campagne — râteliers, filtre unique, fusion des instantanés | ⚠️ non |
+| **88** | Les tuiles appartiennent à une campagne — râteliers, filtre unique, fusion des instantanés | ✅ **oui**, à l'écran |
 | **89** | L'IA compose un éclairage pour une scène de la trame | ✅ **oui**, à l'écran |
 | **90** | Le menu d'une atmosphère était coupé et derrière les pads — **vu par David** | ✅ **oui**, à l'écran |
 | **91** | Sound-OS rattaché à une campagne — la dernière asymétrie des trois | ⚠️ non |
@@ -52,9 +52,8 @@ sauvegardées nulle part), puis leur donner un propriétaire, puis un râtelier 
 **Éprouver à l'écran.** Cinq livraisons empilées sans vérification, c'est exactement la situation où
 un défaut en cache un autre. Dans l'ordre d'importance :
 
-1. **Les râteliers** (§ 88) — ouvrir une campagne, vérifier les trois sections de la grille
-   (*Cette campagne* / *Communes* / *Campagne disparue*), capturer une tuile, et surtout
-   **traîner ses deux curseurs** : c'est le geste que le découpage en sections aurait pu casser.
+1. ~~**Les râteliers** (§ 88)~~ — ✅ **faits**, curseurs compris : le découpage en sections n'a
+   pas cassé le geste qu'il menaçait.
 2. ~~**L'IA** (§ 89)~~ — ✅ **fait le 19/09 au soir**, et les deux questions sont tranchées : le
    modèle respecte le compte de lampes et rend des identifiants que le moteur reconnaît.
 3. ~~**La relecture des lampes** (§ 86)~~ — ✅ **faite**, dont l'essai qui comptait : global à
