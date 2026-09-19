@@ -86,3 +86,73 @@ test.describe('les commandes globales', () => {
         expect(master).toBeLessThanOrEqual(1);
     });
 });
+
+/**
+ * ⛔ **Le menu d'une atmosphère était coupé ET derrière les pads.**
+ *
+ * Signalé par David le 2026-09-19, capture à l'appui : *« quand j'essaie de
+ * mettre à jour un label, le cadre est caché derrière les pads »*. Trois causes
+ * empilées, et aucune ne se corrigeait par un `z-index` :
+ *
+ * - la barre d'onglets est `overflow-x-auto`, donc **l'axe vertical découpe
+ *   aussi** — en CSS, dès qu'un axe n'est pas `visible`, l'autre passe à `auto` ;
+ * - `SoundDashboard` est `overflow-hidden` : un second ciseau ;
+ * - il porte `backdrop-blur-sm`, donc un **contexte d'empilement** où le `z-50`
+ *   du menu était enfermé, pendant que les pads se peignaient plus loin.
+ *
+ * ⭐ *Un élément ne peut pas sortir de l'ordre de peinture de son parent* — la
+ * leçon du Media Hub, le 16/09. Le menu vit désormais dans un **portail**.
+ *
+ * ⚠️ **Ce test vaut par le CLIC, pas par la visibilité.** `toBeVisible()` ne
+ * regarde ni le découpage ni le recouvrement ; `click()` si : Playwright refuse
+ * un élément qu'un autre intercepte. *C'est le geste qui prouve, pas la
+ * présence dans le document.*
+ */
+test.describe('⭐ le menu d’une atmosphère', () => {
+    test('est peint AU-DESSUS des pads, et entièrement visible', async () => {
+        /* ⚠️ Insensible à la casse : l'onglet est mis en capitales par la CSS. */
+        const onglet = gmos.fenetre.getByRole('button', { name: /^exploration$/i }).first();
+        await onglet.click({ button: 'right' });
+
+        /* ⚠️ Le libellé est celui d'AVANT le correctif, et c'est voulu : un
+           test qui ne trouverait pas le même bouton dans les deux versions
+           prouverait un changement d'étiquette au lieu de prouver que le menu
+           est visible. *Un garde-fou qui échoue pour la mauvaise raison ne
+           garde rien.* */
+        const renommer = gmos.fenetre.getByRole('button', { name: /^Rename$/ });
+        await expect(renommer).toBeVisible();
+
+        /*
+          ⛔ **`toBeVisible()` ne suffit pas, et `click()` non plus.**
+          Mesuré le 2026-09-19 : les deux **passaient sur le code fautif**. Le
+          premier ne regarde ni le découpage ni le recouvrement ; le second
+          fait **défiler** l'élément dans son parent jusqu'à le rendre
+          atteignable — ce que le meneur, lui, ne peut pas faire.
+
+          ⭐ *La question juste n'est pas « puis-je l'atteindre ? » mais
+          « qu'est-ce qui est peint à cet endroit ? »* — et `elementFromPoint`
+          y répond depuis le point de vue de l'œil.
+        */
+        const verdict = await gmos.fenetre.evaluate(() => {
+            const bouton = [...document.querySelectorAll('button')]
+                .find(b => b.textContent?.trim() === 'Rename');
+            if (!bouton) return { trouve: false, recouvert: true, dessus: 'aucun bouton' };
+
+            const r = bouton.getBoundingClientRect();
+            const dessus = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+            return {
+                trouve: true,
+                recouvert: !dessus || !bouton.contains(dessus) && dessus !== bouton,
+                dessus: dessus?.className?.toString().slice(0, 80) ?? 'rien',
+            };
+        });
+
+        expect(verdict.trouve).toBe(true);
+        expect(
+            verdict.recouvert,
+            `le menu est recouvert — ce qui est peint à sa place : ${verdict.dessus}`,
+        ).toBe(false);
+
+        await gmos.fenetre.keyboard.press('Escape');
+    });
+});

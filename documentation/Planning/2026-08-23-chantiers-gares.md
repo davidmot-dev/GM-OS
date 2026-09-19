@@ -7368,6 +7368,58 @@ précédente qui ne s'arrêtent pas — ou de la refactoriser. Le contournement 
 
 ---
 
+### 90 · ⛔ Le menu d'une atmosphère était coupé ET derrière les pads (2026-09-19, soir)
+
+David, capture à l'appui : *« quand j'essaie de mettre à jour un label, le cadre est caché derrière
+les pads »*. Le menu *Rename / Delete* d'un onglet d'atmosphère.
+
+#### Trois causes empilées, et aucune ne se corrige par un `z-index`
+
+| Où | Ce que ça fait |
+| --- | --- |
+| `AtmosphereManager`, `overflow-x-auto` | ⛔ En CSS, dès qu'un axe n'est pas `visible`, l'autre passe à `auto`. Le menu qui pend sous une barre de 50 px est donc **découpé**. |
+| `SoundDashboard`, `overflow-hidden` | un second ciseau, plus haut |
+| Le même, `backdrop-blur-sm` | un **contexte d'empilement** : le `z-50` du menu y est enfermé, et les pads sont peints plus loin dans le document |
+
+⭐ C'est la leçon du Media Hub du 16/09 — *un élément ne peut pas sortir de l'ordre de peinture de
+son parent* — mais ⚠️ **là-bas un `z-index` sur le bandeau suffisait ; ici non**, parce qu'un vrai
+découpage s'y ajoute. On ne peut pas demander `overflow-x: auto` et `overflow-y: visible` : la
+spécification l'interdit.
+
+Le menu vit donc dans un **portail** sur `document.body`, positionné depuis le
+`getBoundingClientRect()` de l'onglet au moment du clic. Il échappe aux deux ciseaux et au contexte
+d'empilement. **Un seul menu, pas un par onglet** : deux menus identiques empilés se disputeraient
+le clic de fermeture.
+
+#### ⛔ Et le garde-fou a été FAUX deux fois avant d'être juste
+
+C'est la vraie leçon de ce chantier, et elle vaut plus que le correctif.
+
+| Essai | Verdict sur le code **fautif** | Pourquoi il ne gardait rien |
+| --- | --- | --- |
+| `toBeVisible()` | ✅ passait | il ne regarde ni le découpage ni le recouvrement |
+| `click()` | ✅ passait | Playwright **fait défiler** l'élément dans son parent jusqu'à le rendre atteignable — *ce que le meneur ne peut pas faire* |
+| `elementFromPoint` au centre du bouton | ⛔ **échoue**, en nommant `flex-1 p-8 overflow-y-auto` | il demande ce qui est **peint** à cet endroit, du point de vue de l'œil |
+
+⭐ ***La question juste n'est pas « puis-je l'atteindre ? » mais « qu'est-ce qui est peint à cet
+endroit ? ».*** Un test d'interface qui se contente d'atteindre un élément mesure la patience de
+l'automate, pas ce que voit le meneur.
+
+⚠️ **Et un troisième faux positif a failli passer** : la première version du test cherchait un
+bouton « Renommer » — un libellé que le correctif venait d'introduire. Il échouait donc sur
+l'ancien code **pour la mauvaise raison**, et la traduction des libellés (non demandée) a été
+retirée pour que la preuve soit propre. *Un garde-fou qui échoue pour la mauvaise raison ne garde
+rien.*
+
+**Ancres** : `sound/components/AtmosphereManager.tsx` (le portail, `basculerLeMenu`),
+`e2e/soundOs.spec.ts` (le garde-fou, **éprouvé dans les deux sens** : rouge sur le code fautif, vert
+sur le correctif).
+
+**Vérifié** : `tsc -b` propre, lint propre, **6 essais E2E de Sound-OS au vert**. ⚠️ **Non vu à
+l'écran par David** — mais le défaut, lui, avait été vu par lui d'abord.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7398,6 +7450,7 @@ précédente qui ne s'arrêtent pas — ou de la refactoriser. Le contournement 
 | 23 | **Light-OS et Sound-OS dans la sauvegarde** | ✅ **LIVRÉ et ÉPROUVÉ À L'ÉCRAN le 19/09** (*« j'ai appliqué les tests cela fonctionne »*) — les deux n'étaient dans **aucune** sauvegarde : **5ᵉ et 6ᵉ** oubli de cette liste. ⛔ La garde « un instantané vide n'en remplace jamais un plein » **ne refusait rien** ici (18 tuiles et 1 atmosphère existent toujours). ⛔ Et le piège était le **DÉCLENCHEUR**, comme `databases/` : ⚠️ s'abonner large aurait tué la sauvegarde pendant les séances (§ 87) | Rien | Rien. ⚠️ La **restauration** en répétition reste à essayer |
 | 24 | **Les tuiles par campagne** | ✅ **LIVRÉ le 19/09** — chaque campagne a ses **18 cases**, plus un pot commun ; aucune migration, aucun identifiant changé. La règle de rattachement a **déménagé** dans `src/logic/` plutôt que d'être recopiée. ⛔ Le **clavier** était le 6ᵉ lecteur, et le pire. ⭐ Deux règles du matin se sont **inversées** l'après-midi. ⛔ La **fusion des instantanés** : le même remplacement en bloc écrit **quatre fois** (§ 88) | Ouvrir une campagne, vérifier les trois sections de la grille, **traîner un curseur de tuile** | Rien. ⚠️ **Non vu à l'écran** |
 | 25 | **L'IA compose une ambiance** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 19/09** (*« c'est bien »*) — sous le champ *Ambiance* d'une scène de la trame. Elle **compose** lampe par lampe plutôt que de choisir parmi l'existant. ⛔ La **validation est le cœur** : un effet inventé ne lève aucune erreur, il rend une lampe muette. Range dans le râtelier de la campagne, complète le moment de la scène sans le doubler (§ 89) | Light-OS en **mode simulé**, puis une scène → « Proposer une ambiance » | Rien. ⚠️ **Aucun essai automatique ne couvre l'aller-retour avec le modèle** |
+| 26 | **Le menu d'une atmosphère** | ✅ **CORRIGÉ le 19/09** — vu par David, capture à l'appui : le cadre était **coupé ET derrière les pads**. Trois causes empilées, dont un `overflow-x-auto` qui découpe aussi en vertical : un `z-index` ne suffisait pas, il a fallu un **portail**. ⭐ Le garde-fou a été **faux deux fois** — `toBeVisible()` et `click()` passaient sur le code fautif ; seul `elementFromPoint` voit ce qui est **peint** (§ 90) | Rien | Rien. ⚠️ Non revu à l'écran |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

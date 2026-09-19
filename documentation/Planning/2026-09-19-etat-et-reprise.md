@@ -36,6 +36,7 @@ pour que cette demande ait un sens.
 | **87** | Light-OS et Sound-OS n'étaient dans **aucune** sauvegarde, et rien ne déclenchait | ✅ **oui**, à l'écran |
 | **88** | Les tuiles appartiennent à une campagne — râteliers, filtre unique, fusion des instantanés | ⚠️ non |
 | **89** | L'IA compose un éclairage pour une scène de la trame | ✅ **oui**, à l'écran |
+| **90** | Le menu d'une atmosphère était coupé et derrière les pads — **vu par David** | ⚠️ corrigé, non revu |
 
 ⭐ **Le fil de la journée** : la demande d'IA était bloquée non par le modèle mais par **la place**.
 Dix-huit tuiles partagées par toutes les campagnes ne laissent nulle part où ranger ce qu'une IA
@@ -84,6 +85,19 @@ Deuxième fois après `databases/` le 15/09.
 ⚠️ **Et l'armement large est un piège symétrique** : `useLightStore` change à chaque battement
 d'effet, et armer relâche deux minutes de repos. S'abonner au magasin entier aurait fait que **plus
 aucune sauvegarde ne parte pendant une séance**. *Un déclencheur trop sensible ne déclenche rien.*
+
+### ⛔ Un test d'interface qui *atteint* un élément ne prouve pas qu'on le **voit**
+
+Le menu d'une atmosphère était découpé par deux `overflow` et peint sous les pads. ⚠️ **`toBeVisible()`
+et `click()` passaient tous les deux sur le code fautif** : le premier ne regarde ni le découpage ni
+le recouvrement, le second **fait défiler** l'élément jusqu'à le rendre atteignable — *ce que le
+meneur ne peut pas faire*.
+
+⭐ *La question juste n'est pas « puis-je l'atteindre ? » mais « qu'est-ce qui est peint à cet
+endroit ? »* — `document.elementFromPoint`, qui échoue en **nommant** le coupable.
+
+⚠️ Et un troisième faux positif a failli passer : le test cherchait un libellé que le correctif
+venait d'introduire, donc il échouait sur l'ancien code **pour la mauvaise raison**.
 
 ### ⛔ Un composant déclaré dans le corps d'un autre est un type neuf à chaque rendu
 
