@@ -14,6 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { EditeurDeScene } from './EditeurDeScene';
 import { couleurDeLaTuile } from '../logic/couleurDeLaTuile';
 import { toucheLisible } from '../useLightKeyboardControls';
+import { gmToast } from '../../../stores/useToastStore';
+import { useTuilesVisibles } from '../hooks/useTuilesVisibles';
 
 /** Le pas du curseur : des quarts, pour que ×1 se retrouve sans viser. */
 const PAS_DE_VITESSE = 0.25;
@@ -23,25 +25,62 @@ const PAS_D_INTENSITE = 5;
 
 export const SceneGrid: React.FC = () => {
     const {
-        scenes, activeSceneId, defaultSceneId, sceneEnApprentissage,
+        scenes, activeSceneId, defaultSceneId, sceneEnApprentissage, status,
         saveSceneSnapshot, clearScene, setSceneEffectSpeed, setSceneBrightness,
-        setDefaultScene, apprendreUneTouche, updateSceneMetadata,
+        setDefaultScene, apprendreUneTouche, updateSceneMetadata, assignerLaTuile,
     } = useLightStore();
     const { t } = useTranslation('modules');
     const [sceneEnEdition, setSceneEnEdition] = useState<string | null>(null);
+    /** La tuile dont la capture est en vol. `null` = aucune. */
+    const [captureEnCours, setCaptureEnCours] = useState<string | null>(null);
 
-    // Sort scenes by ID to maintain grid order SCENE_01 to SCENE_18
-    const sortedScenes = Object.values(scenes).sort((a, b) => a.id.localeCompare(b.id));
+    /*
+      **Le râtelier de la campagne ouverte.** Les tuiles rattachées ailleurs
+      sortent de la grille ; les cases **vides** y restent toujours, quelle que
+      soit leur étiquette — ce sont les seuls endroits où l'on capture.
+    */
+    const { visibles, classees, campagneId } = useTuilesVisibles();
+
+    /*
+      **L'ordre de la grille, une fois pour les trois sections.** Les
+      identifiants d'un même râtelier finissent tous par `_01`…`_18`, donc
+      l'ordre alphabétique est l'ordre des cases. *Il ne vaut qu'à l'intérieur
+      d'un râtelier — c'est une raison de plus de les séparer à l'écran.*
+    */
+    const triees = (tuiles: LightScene[]) => [...tuiles].sort((a, b) => a.id.localeCompare(b.id));
 
     const handleApply = (id: string) => {
         hueEngine.applyScene(id);
     };
 
-    const handleCapture = (e: React.MouseEvent, id: string) => {
+    /**
+     * **Capturer, c'est d'abord relire.**
+     *
+     * Le miroir du magasin ne tenait que le compte de ce que GM-OS avait
+     * envoyé au pont. Or le meneur règle aussi ses lampes depuis son
+     * téléphone : la tuile enregistrait alors une ambiance que plus personne
+     * ne voyait dans la pièce, **et rien ne le disait** — le bouton s'appelle
+     * pourtant « Capturer l'état actuel des lampes ».
+     *
+     * ⚠️ Une lecture ratée ne doit pas annuler le geste : le pont peut être
+     * occupé, le réseau lent. On capture alors ce qu'on sait, et on le dit —
+     * *une capture approximative vaut mieux qu'un clic sans effet, à condition
+     * qu'elle s'annonce.*
+     */
+    const handleCapture = async (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
-        const currentLights = useLightStore.getState().lights;
-        saveSceneSnapshot(id, currentLights);
-        // Maybe visual feedback here
+        if (captureEnCours) return;
+        setCaptureEnCours(id);
+        try {
+            if (status === 'connected') await hueEngine.relireLesLampes();
+        } catch {
+            gmToast(t('light.grid.capture_stale'), 'warning');
+        } finally {
+            /* On relit le magasin **après** la relecture, jamais la valeur
+               capturée par le rendu : c'est tout l'objet du détour. */
+            saveSceneSnapshot(id, useLightStore.getState().lights);
+            setCaptureEnCours(null);
+        }
     };
 
     /*
@@ -71,10 +110,15 @@ export const SceneGrid: React.FC = () => {
         setSceneEnEdition(scene.id);
     };
 
-    return (
-        <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
-            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                {sortedScenes.map((scene: LightScene) => {
+    /**
+     * **Le rendu d’une tuile**, sorti de la boucle le 2026-09-19.
+     *
+     * La grille n’est plus une liste : c’est **le râtelier de la campagne, puis
+     * le pot commun**. Deux sections qui dessinent la même chose — et *deux
+     * copies de trois cents lignes de tuile auraient divergé à la première
+     * retouche.*
+     */
+    const renduDeLaTuile = (scene: LightScene) => {
                     const isActive = activeSceneId === scene.id;
                     const hasData = Object.keys(scene.lightStates).length > 0;
                     const aDesEffets = Object.values(scene.lightStates).some(s => s.effect && s.effect !== 'none');
@@ -96,7 +140,16 @@ export const SceneGrid: React.FC = () => {
                                 className="aspect-square rounded-xl bg-app-surface/30 border border-app-border/50 hover:border-accent/40 flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative"
                                 title={t('light.grid.capture_tooltip')}
                             >
-                                <span className="material-symbols-outlined text-app-text/40 text-3xl group-hover:text-accent transition-colors">add</span>
+                                {/*
+                                  **Le vol se voit.** La capture part maintenant
+                                  demander la pièce au pont : un aller-retour
+                                  sur le réseau local, court mais non nul. *Un
+                                  geste dont rien ne bouge pendant une demi-
+                                  seconde ressemble à un geste qui n'a pas pris.*
+                                */}
+                                <span className={`material-symbols-outlined text-app-text/40 text-3xl group-hover:text-accent transition-colors ${captureEnCours === scene.id ? 'animate-spin text-accent' : ''}`}>
+                                    {captureEnCours === scene.id ? 'progress_activity' : 'add'}
+                                </span>
                                 <span className="text-ui-10 font-bold text-app-text/40 uppercase tracking-tight group-hover:text-accent">{t('light.grid.capture')}</span>
                             </div>
                         );
@@ -312,7 +365,9 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.overwrite_tooltip')}
                             >
-                                <span className="material-symbols-outlined text-slate-500 text-sm hover:text-white">photo_camera</span>
+                                <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : 'text-slate-500 hover:text-white'}`}>
+                                    {captureEnCours === scene.id ? 'progress_activity' : 'photo_camera'}
+                                </span>
                             </div>
 
                             <div
@@ -332,15 +387,73 @@ export const SceneGrid: React.FC = () => {
                             </div>
                         </div>
                     );
-                })}
+    };
+
+    /**
+     * Une section de la grille : un titre discret, puis ses cases.
+     *
+     * ⛔ **C'est une fonction de rendu, pas un composant — et la distinction
+     * n'est pas cosmétique.** Un composant déclaré dans le corps d'un autre est
+     * un **type neuf à chaque rendu** : React démonte et remonte toute la
+     * section au lieu de la mettre à jour. Les tuiles portent deux curseurs, et
+     * traîner un curseur déclenche un rendu à chaque pixel — *le curseur se
+     * serait donc arraché de sous la souris au premier mouvement.*
+     */
+    const ratelier = (cle: string, titre: string, aide: string, tuiles: LightScene[]) => (
+        <div key={cle} className="flex flex-col gap-3">
+            <div className="flex items-baseline gap-3">
+                <h3 className="text-ui-10 font-bold uppercase tracking-widest text-slate-500">{titre}</h3>
+                <span className="text-ui-10 text-slate-600">{aide}</span>
             </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                {tuiles.map(renduDeLaTuile)}
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-8">
+            {/*
+              **Deux râteliers, et on ne les mélange pas.** Celui de la campagne
+              ouverte d'abord — c'est celui qu'on joue — puis le pot commun, dont
+              les ambiances servent partout. Sans campagne ouverte il n'y a qu'un
+              râtelier, et le titre disparaît avec la distinction.
+            */}
+            {campagneId === null ? (
+                <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                    {triees(visibles).map(renduDeLaTuile)}
+                </div>
+            ) : (
+                <>
+                    {ratelier(
+                        'campagne',
+                        t('light.grid.rack_campaign'),
+                        t('light.grid.rack_campaign_hint'),
+                        triees(classees.deLaCampagne),
+                    )}
+                    {ratelier(
+                        'communes',
+                        t('light.grid.rack_common'),
+                        t('light.grid.rack_common_hint'),
+                        triees(classees.communes),
+                    )}
+                    {classees.orphelines.length > 0 && ratelier(
+                        'orphelines',
+                        t('light.grid.rack_orphans'),
+                        t('light.grid.rack_orphans_hint'),
+                        triees(classees.orphelines),
+                    )}
+                </>
+            )}
 
             {sceneEnEdition && scenes[sceneEnEdition] && (
                 <EditeurDeScene
                     scene={scenes[sceneEnEdition]}
+                    campagneOuverte={campagneId}
                     onAnnuler={() => setSceneEnEdition(null)}
-                    onValider={(nom, icone, couleur) => {
+                    onValider={(nom, icone, couleur, pour) => {
                         updateSceneMetadata(sceneEnEdition, nom, icone, couleur);
+                        assignerLaTuile(sceneEnEdition, pour);
                         setSceneEnEdition(null);
                     }}
                 />

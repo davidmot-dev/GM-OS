@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { musicEngine } from './MusicEngine';
+import { playlistsApresInstantane } from './logic/instantaneDeSeance';
 import { platineDeDestination, positionDeLaPlatine } from './logic/fonduCroise';
 import { useJournalStore } from '../journal/useJournalStore';
 // Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
@@ -660,7 +661,19 @@ export const useMusicStore = create<MusicState>()(
                         if (snapshot.crossfader !== undefined) get().setCrossfader(snapshot.crossfader);
                         
                         // 2. Playlists and Active Playlist
-                        if (snapshot.playlists) set({ playlists: snapshot.playlists });
+                        /*
+                          ⛔ **On fusionne, on ne remplace plus en bloc.** Et
+                          c'est ici que le défaut coûtait le plus cher : les
+                          playlists appartiennent à une campagne depuis le
+                          2026-08-30, donc restaurer une séance d'une campagne
+                          pouvait effacer les atmosphères d'une autre.
+                          Voir `logic/instantaneDeSeance.ts`.
+                        */
+                        if (snapshot.playlists) {
+                            set(state => ({
+                                playlists: playlistsApresInstantane(state.playlists, snapshot.playlists),
+                            }));
+                        }
                         if (snapshot.activePlaylistId) set({ activePlaylistId: snapshot.activePlaylistId });
 
                         // 3. Decks

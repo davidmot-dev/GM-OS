@@ -17,6 +17,11 @@ import { useMapStore } from '../modules/map/useMapStore';
 import { useImageStore } from '../modules/image/useImageStore';
 import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 import { useJournalStore } from '../modules/journal/useJournalStore';
+import { useLightStore } from '../modules/light/useLightStore';
+import { tuilesQuiPortentUnEtat } from '../modules/light/logic/tuilePorteUnEtat';
+import { tuilesDurables } from '../modules/light/logic/donneesDurables';
+import { useSoundStore } from '../modules/sound/useSoundStore';
+import { atmosphereOuPointer, atmospheresAuRepos, atmospheresQuiPortentUnSon } from '../modules/sound/logic/padPorteUnSon';
 
 /**
  * **Ce qu'une sauvegarde contient — construit une fois, écrit par deux chemins.**
@@ -36,6 +41,8 @@ export function construireLaSauvegarde() {
     const clockState = useClockStore.getState();
     const whiteboardState = useWhiteboardStore.getState();
     const musicState = useMusicStore.getState();
+    const lightState = useLightStore.getState();
+    const soundState = useSoundStore.getState();
     const bestiaireState = useBestiaireStore.getState();
     const bibliotheque = useBibliothequeDesFiches.getState().instantane;
     const imageState = useImageStore.getState();
@@ -105,6 +112,61 @@ export function construireLaSauvegarde() {
             */
             music: {
                 playlists: musicState.playlists,
+            },
+            /*
+              ⛔ **Light-OS n'était dans AUCUNE sauvegarde** — **cinquième oubli
+              de cette liste**, après `entities`/`clues`/`sessions`, Music-OS,
+              Map-OS et Image-OS. Trouvé le 2026-09-19 en cherchant où rattacher
+              les tuiles à une campagne. *Une liste de ce qu'on sauvegarde,
+              recopiée à la main, oublie toujours quelque chose — et elle
+              l'oubliait une cinquième fois.*
+
+              Une tuile n'est pas un réglage : c'est l'état de chaque lampe, un
+              nom, une icône, une couleur de repère, une touche de clavier, une
+              vitesse d'effets et une intensité. Quelques minutes de travail
+              chacune, et elles ne vivaient que dans le `localStorage` d'une
+              application qui a déjà perdu ses données deux fois.
+
+              ⚠️ **Les ambiances du meneur voyagent avec les tuiles, et ce n'est
+              pas un confort.** Une tuile peut porter `variante:<id>` comme
+              effet : sans elles, la sauvegarde ramènerait des tuiles dont les
+              effets désignent des ambiances disparues — « ambiance perdue » au
+              pied de page, et l'effet ne joue plus. *Ce qui est référencé part
+              avec ce qui référence.*
+
+              **L'éclairage normal suit** : il désigne l'une de ces tuiles, il
+              fait partie de leur mise en place. Le curseur global, le temps de
+              transition et la synchro des modules, **non** — ils décrivent la
+              pièce où l'on joue, pas l'univers, exactement comme le volume
+              général de Music-OS juste au-dessus. Et le jeton du pont n'a rien
+              à faire dans un fichier : il vit au trousseau.
+            */
+            light: tuilesDurables(lightState),
+            /*
+              ⛔ **Sound-OS n'était dans aucune sauvegarde non plus** — **sixième
+              oubli de cette liste**, relevé le 2026-09-19 dans la foulée de
+              Light-OS. Les deux manquaient depuis toujours, côte à côte, et
+              personne ne s'en était aperçu : *une donnée qu'on crée sans y
+              penser est une donnée qu'on oublie de protéger.*
+
+              Une atmosphère, ce sont seize pads avec leur **chemin de fichier**,
+              leur titre, leur volume, leur couleur, leur **note MIDI**, leur
+              **touche de clavier** et leur scène lumineuse liée. Des heures de
+              rangement, qui ne vivaient que dans le `localStorage`.
+
+              ⚠️ **Les pads partent au repos.** `isActive` vit sur le pad, au
+              milieu de la préparation, mais il dit ce qui joue *ce soir* :
+              sauvegardé tel quel, il rendrait dans six mois une grille de pads
+              allumés dont aucun son ne sort. Même frontière que les projections
+              d'Image-OS.
+
+              **Le volume général et la sortie audio n'y sont pas** — ils
+              décrivent la pièce où l'on joue, et rouvrir une vieille sauvegarde
+              ne doit pas renvoyer le son sur la mauvaise carte au milieu d'une
+              séance. C'est mot pour mot la règle posée pour Music-OS.
+            */
+            sound: {
+                atmospheres: atmospheresAuRepos(soundState.atmospheres),
             },
             /*
               **Le bestiaire suit, et il fallait y penser tout de suite.**
@@ -334,6 +396,81 @@ export const SessionService = {
             if (music?.playlists?.length) {
                 useMusicStore.setState({ playlists: music.playlists as never });
                 Logger.info(`[Session] ${music.playlists.length} atmosphères restaurées`);
+            }
+            /*
+              ⛔ **Un râtelier vide n'en remplace jamais un plein — et « vide »
+              ne se compte pas ici comme ailleurs.** Les dix-huit tuiles
+              existent TOUJOURS, même dans une base qui n'a jamais rien
+              capturé : le `?.length` qui protège les playlists vaudrait donc
+              **18 quoi qu'il arrive**, et laisserait un râtelier neuf effacer
+              une soirée de captures. Le verdict vit dans
+              `light/logic/tuilePorteUnEtat.ts`.
+
+              ⚠️ **Les ambiances ont leur propre garde**, et pas la même : on
+              peut en avoir écrit sans avoir encore capturé une seule tuile.
+              Deux questions distinctes, deux contrôles.
+            */
+            const lumiere = (data.modules as {
+                light?: {
+                    scenes?: Record<string, { lightStates?: Record<string, unknown> }>;
+                    variantes?: unknown[];
+                    defaultSceneId?: string | null;
+                };
+            }).light;
+            const tuilesPleines = tuilesQuiPortentUnEtat(lumiere?.scenes);
+            if (tuilesPleines.length) {
+                useLightStore.setState({
+                    scenes: lumiere!.scenes as never,
+                    /* Il désigne l'une des tuiles qu'on vient de poser : le
+                       laisser pointer vers l'ancien râtelier n'aurait pas de
+                       sens. `null` est une réponse valable — « aucun ». */
+                    defaultSceneId: (lumiere!.defaultSceneId ?? null) as never,
+                });
+                Logger.info(`[Session] ${tuilesPleines.length} tuile(s) lumineuse(s) restaurée(s)`);
+            }
+            if (lumiere?.variantes?.length) {
+                useLightStore.setState({ variantes: lumiere.variantes as never });
+                Logger.info(`[Session] ${lumiere.variantes.length} ambiance(s) lumineuse(s) restaurée(s)`);
+            }
+            /*
+              ⛔ **Même piège qu'au-dessus, et c'est la deuxième fois du jour.**
+              `atmospheres` n'est **jamais vide** : le magasin naît avec
+              « Exploration » et ses seize pads muets, et `removeAtmosphere` la
+              recrée dès qu'on supprime la dernière. Un `?.length` vaudrait donc
+              au moins 1 dans une base neuve. Ce qui fait qu'une atmosphère
+              porte du travail, c'est qu'un pad au moins tienne un **fichier**.
+
+              ⚠️ **On ne restaure que les atmosphères, pas ce qui jouait.** Le
+              volume général et la sortie audio décrivent la pièce, comme pour
+              Music-OS.
+            */
+            const sonore = (data.modules as {
+                sound?: { atmospheres?: Array<{ pads?: Record<string, { filePath?: string | null }> }> };
+            }).sound;
+            const atmospheresPleines = atmospheresQuiPortentUnSon(sonore?.atmospheres);
+            if (atmospheresPleines.length) {
+                /*
+                  ⛔ **Une atmosphère active qui n'existe plus rend TOUS les
+                  gestes muets.** Les neuf actions de pad du magasin filtrent
+                  par `a.id === activeAtmosphereId` : si cet identifiant ne
+                  désigne plus rien, régler un volume, assigner un fichier ou
+                  déclencher un pad ne fait **rien du tout**, sans un mot.
+                  L'écran, lui, retombe sur la première atmosphère
+                  (`SoundDashboard`) — *le meneur verrait donc une grille
+                  normale où plus aucun clic n'a d'effet.*
+
+                  `removeAtmosphere` pose déjà exactement cette règle quand on
+                  supprime celle qui jouait. On la tient ici aussi.
+                */
+                const restaurees = sonore!.atmospheres as Array<{ id: string }>;
+                useSoundStore.setState({
+                    atmospheres: restaurees as never,
+                    activeAtmosphereId: atmosphereOuPointer(
+                        restaurees,
+                        useSoundStore.getState().activeAtmosphereId,
+                    ),
+                });
+                Logger.info(`[Session] ${atmospheresPleines.length} atmosphère(s) sonore(s) restaurée(s)`);
             }
             /*
               Meme prudence que pour les playlists : un bestiaire vide ne

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useLightStore } from './useLightStore';
 import { hueEngine } from './HueEngine';
+import { useSessionOSStore } from '../session/useSessionOSStore';
+import { tuileDuRaccourci } from './logic/tuilesDeLaCampagne';
 import { estUneFrappeDePastille } from '../../utils/frappeDePastille';
 
 /**
@@ -75,16 +77,32 @@ export const useLightKeyboardControls = () => {
                 return;
             }
 
-            const scene = Object.values(etat.scenes).find(s => s.keyCode === touche);
-            if (!scene) return;
-
             /*
-              **Une tuile vide ne répond pas.** Elle n'a l'état d'aucune lampe :
-              l'appliquer ne ferait rien, et la touche passerait pour morte.
-              `clearScene` retire déjà la touche, mais une sauvegarde ancienne
-              peut en porter une.
+              ⛔ **Le clavier est cloisonné comme les écrans, et c'est ici que
+              ça compte le plus.** Deux campagnes attribuent naturellement la
+              même touche à leur ambiance d'ouverture ; sans filtre, la première
+              trouvée l'emporte — celle qu'on ne joue pas — et **la pièce change
+              de couleur devant les joueurs**, un jour où rien ne se rattrape.
+              Music-OS a payé exactement ce défaut le 2026-08-30 : son clavier
+              était resté le dernier chemin non cloisonné.
+
+              *Le filtre est la même fonction que celle des six écrans.* Deux
+              filtres écrits séparément finiraient par diverger, et l'écart ne
+              se verrait qu'en séance.
+
+              Une tuile **vide** ne répond jamais : `tuileDuRaccourci` l'écarte,
+              parce qu'elle n'a l'état d'aucune lampe et que la touche passerait
+              pour morte. `clearScene` retire déjà la touche, mais une
+              sauvegarde ancienne peut en porter une.
             */
-            if (Object.keys(scene.lightStates).length === 0) return;
+            const { activeCampaignId, campaigns } = useSessionOSStore.getState();
+            const scene = tuileDuRaccourci(
+                Object.values(etat.scenes),
+                activeCampaignId,
+                touche,
+                campaigns.map(c => c.id),
+            );
+            if (!scene) return;
 
             evenement.preventDefault();
             hueEngine.applyScene(scene.id);

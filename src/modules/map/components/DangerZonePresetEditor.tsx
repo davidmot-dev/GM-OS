@@ -7,7 +7,7 @@ import {
     ChevronRight, ChevronDown, AlertCircle, Zap, Layers,
     Activity, Shield, Settings2, Sparkles
 } from 'lucide-react';
-import { useLightStore } from '../../light/useLightStore';
+import { useTuilesVisibles } from '../../light/hooks/useTuilesVisibles';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
 import { useSoundStore } from '../../sound/useSoundStore';
 
@@ -21,7 +21,9 @@ const DangerZonePresetEditor: React.FC = () => {
     const { dangerZonePresets, addDangerZonePreset, updateDangerZonePreset, removeDangerZonePreset } = useMapStore();
     
     // External Stores for Dropdowns
-    const { scenes: lightScenes } = useLightStore();
+    /* Le même verdict que la grille de Light-OS : une zone de danger ne doit
+       pas pouvoir viser l'ambiance d'une campagne qu'on ne joue pas. */
+    const { capturees: lightScenes } = useTuilesVisibles();
     const { tracks: ambientTracks } = useAmbientStore();
     const { atmospheres: soundAtmospheres, activeAtmosphereId } = useSoundStore();
 
@@ -255,7 +257,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                         label={t('map.dangerEditor.lightScene')}
                                         icon={Lightbulb}
                                         value={selectedPreset.hueSceneId || ''}
-                                        options={Object.values(lightScenes).map(s => ({ id: s.id, name: s.name }))}
+                                        options={lightScenes.map(s => ({ id: s.id, name: s.name }))}
                                         onChange={(val) => handleUpdate({ hueSceneId: val })}
                                         accent="amber"
                                         placeholder={t('common:none') || '-- Aucun --'}

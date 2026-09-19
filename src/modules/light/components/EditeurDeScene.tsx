@@ -51,15 +51,24 @@ const COULEURS = [
 
 interface Props {
     scene: LightScene;
-    onValider: (nom: string, icone: string, couleur: string) => void;
+    /** La campagne ouverte, ou `null` — auquel cas le rattachement ne s'affiche pas. */
+    campagneOuverte: string | null;
+    onValider: (nom: string, icone: string, couleur: string, campagneId: string | null) => void;
     onAnnuler: () => void;
 }
 
-export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler }) => {
+export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onValider, onAnnuler }) => {
     const { t } = useTranslation('modules');
     const [nom, setNom] = useState(scene.name);
     const [icone, setIcone] = useState(scene.icon);
     const [couleur, setCouleur] = useState(scene.color);
+    /*
+      **Le rattachement se valide avec le reste.** Music-OS l'applique au clic,
+      parce que son réglage vit dans un bandeau ; ici on est dans une boîte qui
+      porte « Annuler », et *un geste qui survit à « Annuler » dans une boîte qui
+      l'offre est un piège.*
+    */
+    const [campagneId, setCampagneId] = useState<string | null>(scene.campagneId ?? null);
     const champDuNom = useRef<HTMLInputElement>(null);
     const apercu = couleurDeLaTuile({ color: couleur });
 
@@ -83,7 +92,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
     const valider = () => {
         const propre = nom.trim();
         /* Un nom vide rendrait la tuile muette : on garde l'ancien. */
-        onValider(propre === '' ? scene.name : propre, icone, couleur);
+        onValider(propre === '' ? scene.name : propre, icone, couleur, campagneId);
     };
 
     return (
@@ -178,6 +187,53 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, onValider, onAnnuler })
                         {apercu ? t('light.editor.color_hint') : t('light.editor.color_hint_none')}
                     </p>
                 </div>
+
+                {/*
+                  **À qui appartient cette tuile.**
+
+                  Sans campagne ouverte, il n'y a rien à rattacher *à* quoi que
+                  ce soit : le réglage disparaît plutôt que de proposer un geste
+                  sans effet — même décision que pour les atmosphères de
+                  Music-OS, prise par David le 2026-08-30.
+
+                  ⚠️ **Commune est le défaut, et il le reste après une capture.**
+                  Le râtelier ne compte que dix-huit cases partagées : rattacher
+                  d'office ferait disparaître une « Taverne » des autres
+                  campagnes sans que personne ne l'ait demandé.
+                */}
+                {campagneOuverte !== null && (
+                    <div className="flex flex-col gap-2">
+                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">
+                            {t('light.editor.campaign')}
+                        </label>
+                        <div className="flex bg-app-bg p-1 rounded-lg border border-app-border">
+                            {([
+                                { pour: null, icone: 'public', texte: t('light.editor.campaign_common') },
+                                { pour: campagneOuverte, icone: 'bookmark', texte: t('light.editor.campaign_this') },
+                            ] as const).map(({ pour, icone: glyphe, texte }) => {
+                                const actif = campagneId === pour;
+                                return (
+                                    <button
+                                        key={texte}
+                                        onClick={() => setCampagneId(pour)}
+                                        aria-pressed={actif}
+                                        className={`flex-1 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-ui-10 font-bold uppercase tracking-widest transition-all ${actif
+                                            ? 'bg-accent text-white shadow-lg'
+                                            : 'text-slate-500 hover:text-slate-200'}`}
+                                    >
+                                        <span className="material-symbols-outlined text-sm">{glyphe}</span>
+                                        <span>{texte}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        <p className="text-ui-10 text-slate-500 leading-snug">
+                            {campagneId === null
+                                ? t('light.editor.campaign_hint_common')
+                                : t('light.editor.campaign_hint_this')}
+                        </p>
+                    </div>
+                )}
 
                 <div className="flex justify-end gap-2 pt-1">
                     <button

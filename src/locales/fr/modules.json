@@ -763,7 +763,12 @@
       "sync_on_tooltip": "Les sons, musiques et ambiances peuvent commander vos lampes. Cliquez pour reprendre la main.",
       "sync_off_tooltip": "Vos lampes n'obéissent qu'à vous. Cliquez pour laisser les modules audio les commander.",
       "mock_mode": "Mode simulé",
-      "mock_mode_tooltip": "Débranche le pont Hue et simule quatre lampes, pour préparer une ambiance sans matériel."
+      "mock_mode_tooltip": "Débranche le pont Hue et simule quatre lampes, pour préparer une ambiance sans matériel.",
+      "reread": "Relire les lampes",
+      "reread_tooltip": "Redemander au pont l'état réel de vos lampes — utile quand vous venez de les régler depuis votre téléphone.",
+      "reread_done": "Lampes relues sur le pont : {{nombre}}",
+      "reread_failed": "Le pont n'a pas répondu. Vos lampes restent telles que GM-OS les connaissait.",
+      "reread_offline": "Le pont Hue n'est pas connecté : il n'y a rien à relire."
     },
     "grid": {
       "capture": "Capturer",
@@ -782,7 +787,14 @@
       "key_learn_tooltip": "Associer une touche du clavier à cette scène",
       "key_change_tooltip": "Changer la touche de cette scène",
       "key_press": "Pressez une touche",
-      "key_escape": "Échap ou clic pour annuler"
+      "key_escape": "Échap ou clic pour annuler",
+      "capture_stale": "Le pont n'a pas répondu : la tuile garde ce que GM-OS connaissait des lampes.",
+      "rack_campaign": "Cette campagne",
+      "rack_campaign_hint": "Dix-huit cases qui n’appartiennent qu’à elle.",
+      "rack_common": "Communes",
+      "rack_common_hint": "Visibles dans toutes vos campagnes.",
+      "rack_orphans": "Campagne disparue",
+      "rack_orphans_hint": "Rattachées à une campagne qui n’existe plus — à re-rattacher ou à effacer."
     },
     "footer": {
       "no_lights": "Aucune lampe détectée.",
@@ -875,7 +887,12 @@
       "color_free": "Couleur personnalisée",
       "color_hint": "Elle marque la tuile dans la grille — icône, bordure, halo, étoile. Elle ne commande aucune lampe.",
       "color_none": "Aucune couleur (gris par défaut)",
-      "color_hint_none": "Sans couleur, la tuile reste grise. Choisissez-en une pour la repérer d'un coup d'œil dans la grille."
+      "color_hint_none": "Sans couleur, la tuile reste grise. Choisissez-en une pour la repérer d'un coup d'œil dans la grille.",
+      "campaign": "Cette tuile appartient à",
+      "campaign_common": "Toutes",
+      "campaign_this": "Cette campagne",
+      "campaign_hint_common": "Elle apparaît dans toutes vos campagnes. C’est le réglage par défaut : une « Taverne » sert partout.",
+      "campaign_hint_this": "Elle n’apparaît plus que dans la campagne ouverte — ni dans la grille, ni dans les listes des autres modules, ni au clavier."
     }
   },
   "loot": {

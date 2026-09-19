@@ -44,6 +44,9 @@ import { SnapshotService } from '../logic/SnapshotService';
 import { PersistenceService, syncStorageAcrossWindows } from '../logic/PersistenceService';
 import { lesDonneesDeLaSession, CHAMPS_DURABLES } from '../logic/donneesDeLaSession';
 import { sessionBackupManager } from '../logic/SessionBackupManager';
+import { useLightStore } from '../../light/useLightStore';
+import { useSoundStore } from '../../sound/useSoundStore';
+import { tuilesDurables, CHAMPS_DURABLES_LUMIERE } from '../../light/logic/donneesDurables';
 
 // ─────────────────────────────────────────────
 // Cross-domain actions type
@@ -355,6 +358,54 @@ useSessionOSStore.subscribe((etat, precedent) => {
     const apres = lesDonneesDeLaSession(etat);
     const avant = lesDonneesDeLaSession(precedent);
     if (CHAMPS_DURABLES.some(champ => apres[champ] !== avant[champ])) {
+        sessionBackupManager.signalerUnChangement();
+    }
+});
+
+/*
+  ⛔ **LES MODULES D'AMBIANCE ARMENT AUSSI, DEPUIS LE 2026-09-19.**
+
+  Light-OS et Sound-OS sont entrés dans la charge utile ce jour-là — ils n'étaient
+  dans **aucune** sauvegarde. Mais les y mettre ne suffisait pas : *la donnée
+  entrait dans la sauvegarde, et personne ne tirait.* Seul ce magasin-ci armait,
+  donc capturer une tuile ou ranger seize pads n'écrivait rien — il fallait
+  toucher par ailleurs à sa campagne, ou fermer l'application.
+
+  C'est **le même piège que `databases/` le 15/09** : on vérifie ce qui entre
+  dans le fichier, on oublie de vérifier **qui appuie sur le bouton**.
+
+  ⚠️ **ON NE S'ABONNE PAS AUX MAGASINS ENTIERS, ET C'EST TOUT LE SUJET.**
+  `useLightStore` change à chaque battement d'effet (`lights` suit le pont) et
+  à chaque clic de scène ; `useSoundStore` change à chaque pad qui démarre. Or
+  ce qui arme ici **relâche deux minutes de repos avant d'écrire** : un
+  abonnement large remettrait le compteur à zéro en permanence, et la
+  sauvegarde automatique **ne partirait plus jamais pendant une séance**. *Un
+  déclencheur trop sensible ne déclenche rien.*
+
+  On ne surveille donc que ce qui entre vraiment dans le fichier — et la liste
+  n'est pas recopiée : elle vient de `tuilesDurables`, celle-là même que
+  `construireLaSauvegarde` emploie pour bâtir la charge.
+*/
+useLightStore.subscribe((etat, precedent) => {
+    const apres = tuilesDurables(etat);
+    const avant = tuilesDurables(precedent);
+    if (CHAMPS_DURABLES_LUMIERE.some(champ => apres[champ] !== avant[champ])) {
+        sessionBackupManager.signalerUnChangement();
+    }
+});
+
+/*
+  Sound-OS n'a qu'un champ durable — `atmospheres`, celui que
+  `construireLaSauvegarde` emporte. Le volume général et la sortie audio
+  décrivent la pièce et ne sont pas sauvegardés : les surveiller armerait pour
+  rien.
+
+  ⚠️ `atmospheres` porte aussi `isActive`, qui change à chaque pad déclenché.
+  C'est accepté : ça arme un peu large, *et armer large est le bon côté de
+  l'erreur* — au pire on écrit une sauvegarde de plus.
+*/
+useSoundStore.subscribe((etat, precedent) => {
+    if (etat.atmospheres !== precedent.atmospheres) {
         sessionBackupManager.signalerUnChangement();
     }
 });

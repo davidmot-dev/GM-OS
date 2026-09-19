@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { soundEngine } from './SoundEngine';
+import { atmospheresApresInstantane } from './logic/instantaneDeSeance';
 
 export interface SoundPad {
     id: string; // PAD_01 to PAD_16
@@ -274,9 +275,20 @@ export const useSoundStore = create<SoundState>()(
 
                 if (snapshot.masterVolume !== undefined) get().setMasterVolume(snapshot.masterVolume);
                 
-                // 1. Restore the structures (atmospheres and pads)
+                /*
+                  ⛔ **On fusionne, on ne remplace plus en bloc.** Cette ligne
+                  faisait `set({ atmospheres: snapshot.atmospheres })` : une
+                  atmosphère rangée **après** la prise de l'instantané n'y
+                  figure pas, et disparaissait donc avec ses seize pads, leurs
+                  fichiers, leurs notes MIDI et leurs touches.
+
+                  Jumeau du défaut de Light-OS, trouvé le 2026-09-19 en le
+                  réparant. La règle vit dans `logic/instantaneDeSeance.ts`.
+                */
                 if (snapshot.atmospheres) {
-                    set({ atmospheres: snapshot.atmospheres });
+                    set(state => ({
+                        atmospheres: atmospheresApresInstantane(state.atmospheres, snapshot.atmospheres),
+                    }));
                 }
 
                 if (snapshot.activeAtmosphereId !== undefined) {

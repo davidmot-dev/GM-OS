@@ -11,6 +11,7 @@ import {
     etatDeLaScene, closeSansAvoirEteJouee, scenesACloreAvecLActe,
 } from '../logic/trame';
 import PastilleDePreparation from './trame/PastilleDePreparation';
+import { PropositionDAmbiance } from '../../light/components/PropositionDAmbiance';
 import type { Acte, Scene } from '../../../types/trame.types';
 
 /**
@@ -49,6 +50,9 @@ const TrameDashboard: React.FC = () => {
     const [selection, setSelection] = React.useState<{ type: 'acte' | 'scene'; id: string } | null>(null);
 
     const campagne = campaigns.find(c => c.id === activeCampaignId);
+    /* Le jeu de la campagne : une taverne de Rêves de Dragons n'éclaire pas
+       comme un sas d'Alien, et l'IA ne peut pas le deviner du résumé seul. */
+    const jeuDeLaCampagne = campagne?.system;
     const mesActes = actesOrdonnes(actes, activeCampaignId);
 
     // Les renvois ne proposent que ce qui appartient à cette campagne : un lieu
@@ -284,6 +288,8 @@ const TrameDashboard: React.FC = () => {
                             personnages={mesPersonnages}
                             indices={mesIndices}
                             ambiances={mesAmbiances}
+                            campagneId={activeCampaignId}
+                            jeu={jeuDeLaCampagne}
                             onChange={updates => modifierScene(sceneSelectionnee.id, updates)}
                         />
                     )}
@@ -402,10 +408,16 @@ const EditeurDeScene: React.FC<{
     personnages: { id: string; name: string }[];
     indices: { id: string; title: string }[];
     ambiances: { id: string; name: string }[];
+    /** La campagne ouverte, et le jeu qu'elle emploie — le contexte de l'IA. */
+    campagneId: string | null;
+    jeu?: string;
     onChange: (updates: Partial<Scene>) => void;
-}> = ({ scene, lieux, pnj, personnages, indices, ambiances, onChange }) => {
+}> = ({ scene, lieux, pnj, personnages, indices, ambiances, campagneId, jeu, onChange }) => {
     const bascule = (liste: string[], id: string) =>
         liste.includes(id) ? liste.filter(x => x !== id) : [...liste, id];
+
+    /* Le NOM du lieu, pas son identifiant : c'est ce que l'IA sait lire. */
+    const lieuDeLaScene = lieux.find(l => l.id === scene.lieuId)?.name;
 
     return (
         <div className="space-y-5">
@@ -449,6 +461,23 @@ const EditeurDeScene: React.FC<{
                 </Champ>
             </div>
             {/* On lie une ambiance, on ne la duplique pas : la même sert plusieurs scènes. */}
+
+            {/*
+              **L'IA compose l'éclairage de la scène.**
+
+              Posée ici et pas dans Light-OS : c'est au moment où l'on écrit ce
+              qui se joue qu'on sait ce que la pièce doit dire. *Le module des
+              lampes sait faire ; il ne sait pas pourquoi.*
+
+              Elle écrit dans le râtelier de la campagne et complète le moment
+              de la scène — jamais un second moment.
+            */}
+            <PropositionDAmbiance
+                scene={{ titre: scene.titre, resume: scene.resume, lieu: lieuDeLaScene, jeu }}
+                campagneId={campagneId}
+                momentExistantId={scene.momentDeStoryboardId}
+                onRattache={(momentId) => onChange({ momentDeStoryboardId: momentId })}
+            />
 
             {/*
                 **Qui est là, du côté des joueurs.** Sans ce champ, deux scènes

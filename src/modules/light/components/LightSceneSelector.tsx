@@ -1,10 +1,10 @@
 import React from 'react';
-import { useLightStore } from '../useLightStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useSoundStore } from '../../sound/useSoundStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { X, Lightbulb } from 'lucide-react';
+import { useTuilesVisibles } from '../hooks/useTuilesVisibles';
 
 interface LightSceneSelectorProps {
     data: {
@@ -17,13 +17,17 @@ interface LightSceneSelectorProps {
 }
 
 const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
-    const { scenes } = useLightStore();
     const { updatePad } = useMusicStore();
     const { setPadLightLink } = useSoundStore();
     const { setTrackLightLink } = useAmbientStore();
     const { closeModal } = useModalStore();
 
-    const capturedScenes = Object.values(scenes).filter(s => Object.keys(s.lightStates).length > 0);
+    /*
+      **Le même verdict que la grille.** Ce sélecteur est partagé par Music-OS,
+      Sound-OS et Ambient-OS : sans le filtre, lier une pastille depuis la
+      campagne ouverte aurait offert les ambiances d'une autre.
+    */
+    const { capturees: capturedScenes } = useTuilesVisibles();
 
     const handleSelect = (sceneId: string | null) => {
         if (data.type === 'music' && data.playlistId !== undefined && data.padIndex !== undefined) {

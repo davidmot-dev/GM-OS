@@ -25,6 +25,7 @@ import {
     GripVertical,
     Copy, Images } from 'lucide-react';
 import { useAmbientStore } from '../ambient/useAmbientStore';
+import { useTuilesVisibles } from '../light/hooks/useTuilesVisibles';
 import { useImageStore } from '../image/useImageStore';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useSortiesAudioDisponibles } from '../../hooks/useSortiesAudioDisponibles';
@@ -262,6 +263,9 @@ const StoryboardDashboard: React.FC = () => {
     const [titreDuree, setTitreDuree] = useState('');
 
     const { scenes: ambientScenes } = useAmbientStore();
+    /* Les tuiles que la campagne ouverte laisse voir — même verdict que
+       partout ailleurs, voir `light/hooks/useTuilesVisibles.ts`. */
+    const { capturees: tuilesLumineuses } = useTuilesVisibles();
     const sortiesAudio = useSortiesAudioDisponibles();
     const { getAudioLabel, getDisplayLabel } = useHardwareStore();
     const ecrans = useImageStore(e => e.displays);
@@ -730,8 +734,17 @@ const StoryboardDashboard: React.FC = () => {
                                         title={t('modules:storyboard.editor.light_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
-                                        {Object.values(((window as any).useLightStore?.getState() as { scenes: Record<string, { id: string, name: string }> })?.scenes || {}).map((s: any) => (
-                                            <option key={s.id} value={s.id}>{s.name}</option>
+                                        {/*
+                                          Le même verdict que la grille de
+                                          Light-OS. ⚠️ Cette liste se lisait par
+                                          `window.useLightStore.getState()`
+                                          **pendant le rendu** : elle ne se
+                                          rafraîchissait donc jamais, et une
+                                          tuile capturée juste avant n'y
+                                          apparaissait pas.
+                                        */}
+                                        {tuilesLumineuses.map(tuile => (
+                                            <option key={tuile.id} value={tuile.id}>{tuile.name}</option>
                                         ))}
                                     </select>
                                 </div>

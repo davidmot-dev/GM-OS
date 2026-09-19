@@ -110,6 +110,37 @@ export const FullSessionSchema = z.object({
         */
         music: z.object({ playlists: z.array(z.any()) }).optional(),
         /*
+          **Light-OS, entre le 2026-09-19 — cinquieme oubli de cette liste.**
+          Meme raison que `music` juste au-dessus : non declaree ici, la cle
+          serait ecrite dans la sauvegarde puis **jetee a la relecture** par
+          Zod, qui retire ce que `modules` ne nomme pas. Le defaut ideal : la
+          sauvegarde a l'air complete, et elle ne l'est qu'une fois.
+
+          ⚠️ `scenes` est un **enregistrement**, pas une liste — dix-huit
+          tuiles adressees par leur identifiant (`SCENE_01`…). Les cinq autres
+          detenteurs d'une reference lumineuse (pads de Sound-OS et Music-OS,
+          pistes d'Ambient-OS, zones de danger, moments de storyboard) les
+          designent par cet identifiant : il fait partie de ce qu'on protege.
+        */
+        light: z.object({
+            scenes: z.record(z.string(), z.any()).optional(),
+            variantes: z.array(z.any()).optional(),
+            defaultSceneId: z.string().nullable().optional(),
+        }).optional(),
+        /*
+          **Sound-OS, entre le 2026-09-19 — sixieme oubli, jumeau du
+          precedent.** Meme raison de le declarer ici : non nomme, Zod jetterait
+          la cle a la relecture.
+
+          ⚠️ Seules les **atmospheres** entrent : le volume general et la
+          sortie audio decrivent la piece ou l'on joue. Chaque atmosphere porte
+          seize pads, avec leurs chemins de fichiers, leurs notes MIDI, leurs
+          touches et leur scene lumineuse liee.
+        */
+        sound: z.object({
+            atmospheres: z.array(z.any()).optional(),
+        }).optional(),
+        /*
           **Map-OS et les favoris, entres le 2026-09-04.**
 
           Ni l'un ni l'autre n'etait dans aucune sauvegarde. Meme famille que

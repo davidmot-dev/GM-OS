@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware';
 import {
     type VarianteDEffet, nomDeLaCopie, bornerLaForce, FORCE_PAR_DEFAUT,
 } from './logic/varianteDEffet';
+import { tuilesApresInstantane } from './logic/instantaneDeSeance';
+import { casesAGarnir, nomParDefaut } from './logic/ratelierDeLaCampagne';
 
 // ----------------------
 // Types & Interfaces
@@ -87,6 +89,31 @@ export interface LightScene {
      * 2026-09-07, sur le modèle de Sound-OS et Music-OS.
      */
     keyCode?: string; 
+    /**
+     * **La campagne propriétaire — étiquette, pas cloison.** Posée le
+     * 2026-09-19, sur le modèle des atmosphères de Music-OS (2026-08-30).
+     *
+     * Absente ou `null` : la tuile est **commune**, visible dans toutes les
+     * campagnes. C'est le défaut, et c'est ce qui rend la bascule indolore —
+     * les dix-huit tuiles d'avant ce champ n'ont pas d'étiquette et restent
+     * donc toutes visibles. *Aucune migration : une migration est l'endroit où
+     * les données de ce projet sont déjà mortes deux fois.*
+     *
+     * ⚠️ **Une capture ne rattache rien.** Contrairement à Music-OS, où créer
+     * une atmosphère la rattache à la campagne ouverte : les tuiles sont
+     * **dix-huit cases partagées**, pas une bibliothèque sans fin, et une
+     * ambiance « Taverne » sert partout. Le rattachement est donc un geste
+     * explicite, dans l'éditeur de la tuile.
+     *
+     * ⛔ **`clearScene` la retire**, comme il retire déjà la touche et la
+     * désignation : une case vide rattachée ailleurs serait un **emplacement
+     * de capture invisible** dans toutes les autres campagnes. *Le râtelier ne
+     * doit jamais perdre une case sans que personne ne puisse la récupérer.*
+     *
+     * Le tri vit dans `logic/tuilesDeLaCampagne.ts`, parce qu'il sert à six
+     * écrans **et au clavier**.
+     */
+    campagneId?: string | null;
 }
 
 /**
@@ -215,6 +242,19 @@ interface LightState {
     setActiveScene: (sceneId: string | null, isAutomatic?: boolean) => void;
     /** Réinitialise une scène aux valeurs par défaut */
     clearScene: (sceneId: string) => void;
+    /**
+     * Change le propriétaire d'une tuile : une campagne, ou `null` pour la
+     * rendre commune. **Le seul écrivain de `campagneId`.**
+     */
+    assignerLaTuile: (sceneId: string, campagneId: string | null) => void;
+    /**
+     * **Complète un râtelier à dix-huit cases**, ou ne fait rien s'il les a.
+     *
+     * Appelée à l'ouverture de Light-OS, pour la campagne du jour **et** pour
+     * le pot commun. Idempotente : deux appels de suite ne créent rien la
+     * seconde fois.
+     */
+    garnirLeRatelier: (campagneId: string | null) => void;
     /** Indique si la synchronisation avec d'autres modules (ex: Combat) est active */
     isSyncEnabled: boolean;
     setSyncEnabled: (val: boolean) => void;
@@ -484,6 +524,25 @@ export const useLightStore = create<LightState>()(
                 lastManualSceneId: isAutomatic ? state.lastManualSceneId : sceneId
             })),
 
+            assignerLaTuile: (sceneId, campagneId) => set((state) => {
+                if (!state.scenes[sceneId]) return state;
+                return {
+                    scenes: {
+                        ...state.scenes,
+                        [sceneId]: { ...state.scenes[sceneId], campagneId },
+                    },
+                };
+            }),
+
+            garnirLeRatelier: (campagneId) => set((state) => {
+                const manquantes = casesAGarnir(state.scenes, campagneId);
+                if (manquantes.length === 0) return state;
+
+                const scenes = { ...state.scenes };
+                for (const tuile of manquantes) scenes[tuile.id] = tuile;
+                return { scenes };
+            }),
+
             clearScene: (sceneId: string) => set((state) => ({
                 /*
                   **Effacer la tuile désignée retire la désignation.** Une scène
@@ -496,7 +555,13 @@ export const useLightStore = create<LightState>()(
                     ...state.scenes,
                     [sceneId]: {
                         ...state.scenes[sceneId],
-                        name: `Scene ${parseInt(sceneId.split('_')[1])}`,
+                        /*
+                          ⛔ `parseInt(sceneId.split('_')[1])` marchait tant
+                          qu'il n'y avait qu'un râtelier. Sur
+                          `SCENE_c-1758…_07` il rendait la campagne, et la
+                          tuile effacée s'appelait **« Scene NaN »**.
+                        */
+                        name: nomParDefaut(sceneId),
                         icon: 'wb_incandescent',
                         color: '#334155',
                         lightStates: {},
@@ -504,7 +569,28 @@ export const useLightStore = create<LightState>()(
                         sceneBrightness: INTENSITE_SCENE_DEFAUT,
                         /* Une tuile vide ne doit pas garder une touche : elle
                            répondrait par un geste sans effet. */
-                        keyCode: undefined
+                        keyCode: undefined,
+                        /*
+                          ⭐ **Mais elle garde son rattachement, et c'est un
+                          retournement du 2026-09-19.**
+
+                          Tant que les dix-huit cases étaient *partagées*,
+                          effacer devait rendre la case au pot commun : une
+                          case vide rattachée ailleurs aurait été un
+                          emplacement de capture invisible, et le râtelier
+                          unique aurait perdu une case.
+
+                          Depuis que **chaque campagne a son râtelier**, c'est
+                          l'inverse : une case vide rattachée est exactement la
+                          case libre de cette campagne. La rendre au pot commun
+                          la ferait **quitter la grille où elle vient
+                          d'apparaître**, sous les yeux du meneur qui vient de
+                          l'effacer.
+
+                          *Une règle juste peut s'inverser quand ce qu'elle
+                          protégeait change de forme.*
+                        */
+                        campagneId: state.scenes[sceneId]?.campagneId ?? null
                     }
                 }
             })),
@@ -532,9 +618,20 @@ export const useLightStore = create<LightState>()(
 
                 if (!snapshot) return;
 
-                // 1. Restore the structures (all 18 scenes metadata and light states)
+                /*
+                  ⛔ **On fusionne, on ne remplace plus en bloc.** Cette ligne
+                  faisait `set({ scenes: snapshot.scenes })` : un instantané
+                  étant une photo des dix-huit cases, le rejouer six mois plus
+                  tard effaçait **tout ce qui avait été capturé depuis** — et,
+                  depuis que les tuiles appartiennent à une campagne, le
+                  travail des autres campagnes avec.
+
+                  La règle vit dans `logic/instantaneDeSeance.ts` : *un
+                  instantané ne fait jamais disparaître un travail qui n'est pas
+                  le sien.*
+                */
                 if (snapshot.scenes) {
-                    set({ scenes: snapshot.scenes });
+                    set(state => ({ scenes: tuilesApresInstantane(state.scenes, snapshot.scenes) }));
                 }
 
                 if (snapshot.globalBrightness !== undefined) {

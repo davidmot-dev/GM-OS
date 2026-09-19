@@ -4,9 +4,29 @@ import { TopControls } from './components/TopControls';
 import { SceneGrid } from './components/SceneGrid';
 import { BulbFooter } from './components/BulbFooter';
 import { useLightStore } from './useLightStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
 
 const LightDashboard: React.FC = () => {
     const { status } = useLightStore();
+    const campagneId = useSessionOSStore(s => s.activeCampaignId);
+
+    /*
+      **Chaque campagne reçoit ses dix-huit cases à la première ouverture.**
+
+      Ici et pas au démarrage de l'application : à ce moment-là le magasin
+      n'a pas fini d'être relu, et garnir un râtelier qu'on n'a pas encore lu
+      reviendrait à en fabriquer un deuxième. *Un écran qui s'ouvre est un
+      moment où l'on sait ce qu'on a.*
+
+      `garnirLeRatelier` est idempotente : rouvrir Light-OS ne crée rien. Le
+      **pot commun** est garni lui aussi — c'est là que vivent les dix-huit
+      tuiles d'origine, et une installation neuve doit y trouver ses cases.
+    */
+    useEffect(() => {
+        const { garnirLeRatelier } = useLightStore.getState();
+        garnirLeRatelier(null);
+        if (campagneId) garnirLeRatelier(campagneId);
+    }, [campagneId]);
 
     // Setup polling for mock lights state if in mock mode to simulate things
     useEffect(() => {

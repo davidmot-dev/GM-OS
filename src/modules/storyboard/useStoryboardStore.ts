@@ -165,7 +165,16 @@ interface StoryboardState {
     lumiereDuMoment: string | null;
 
     // Actions
-    addMoment: (moment: Omit<StoryboardMoment, 'id'>) => void;
+    /**
+     * Ajoute un moment **et rend son identifiant**.
+     *
+     * ⭐ Il ne rendait rien jusqu'au 2026-09-19, et l'unique appelant s'en
+     * passait : il ajoutait, puis fermait son éditeur. Mais rattacher le moment
+     * à autre chose — une scène de la trame — demande de savoir lequel vient
+     * d'être créé. *Relire le dernier de la liste marcherait presque toujours,
+     * et « presque » est exactement ce qu'on ne veut pas ici.*
+     */
+    addMoment: (moment: Omit<StoryboardMoment, 'id'>) => string;
     updateMoment: (id: string, updates: Partial<StoryboardMoment>) => void;
     deleteMoment: (id: string) => void;
     duplicateMoment: (id: string) => void;
@@ -277,9 +286,11 @@ export const useStoryboardStore = create<StoryboardState>()(
                 });
             },
 
-            addMoment: (momentData) => set((state) => ({
-                moments: [...state.moments, { ...momentData, id: crypto.randomUUID() }]
-            })),
+            addMoment: (momentData) => {
+                const id = crypto.randomUUID();
+                set((state) => ({ moments: [...state.moments, { ...momentData, id }] }));
+                return id;
+            },
 
             updateMoment: (id, updates) => set((state) => ({
                 moments: state.moments.map(m => m.id === id ? { ...m, ...updates } : m)

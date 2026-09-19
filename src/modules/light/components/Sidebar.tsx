@@ -3,9 +3,10 @@ import { useLightStore } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { useTranslation } from 'react-i18next';
 import { useVoiceStore } from '../../voice/useVoiceStore';
+import { useTuilesVisibles } from '../hooks/useTuilesVisibles';
 
 export const Sidebar: React.FC = () => {
-    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix, scenes, activeSceneId, defaultSceneId, setDefaultScene } = useLightStore();
+    const { status, bridgeIp, globalBrightness, setGlobalBrightness, suivreLaVoix, setSuivreLaVoix, activeSceneId, defaultSceneId, setDefaultScene } = useLightStore();
     /*
       **On dit pourquoi le mode ne fait rien, plutôt que de le rendre
       inaccessible.** Armé micro coupé, il attend sans rien montrer : un
@@ -16,10 +17,19 @@ export const Sidebar: React.FC = () => {
     const voixActive = useVoiceStore(e => e.isActive);
     const { t } = useTranslation('modules');
 
-    /** Les seules scènes qui peuvent servir de repli : celles qui portent un état. */
-    const scenesCapturees = Object.values(scenes)
-        .filter(scene => Object.keys(scene.lightStates).length > 0)
-        .sort((a, b) => a.id.localeCompare(b.id));
+    /*
+      **Les seules scènes qui peuvent servir de repli** : celles qui portent un
+      état, et que la campagne ouverte laisse voir.
+
+      ⚠️ **La désignation en cours reste offerte même si elle appartient à une
+      autre campagne.** `defaultSceneId` est global et **il agit** — le Stop All
+      et les retours automatiques y mènent. La masquer donnerait un réglage qui
+      commande les lampes sans apparaître nulle part, et que le meneur ne
+      pourrait donc pas changer. *Un réglage qui agit doit rester visible ;
+      c'est ce qui le distingue d'une panne.*
+    */
+    const { pourLeRepli } = useTuilesVisibles();
+    const scenesCapturees = [...pourLeRepli].sort((a, b) => a.id.localeCompare(b.id));
 
     const handlePair = async () => {
         if (!bridgeIp) {

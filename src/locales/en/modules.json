@@ -763,7 +763,12 @@
       "sync_on_tooltip": "Sounds, music and ambiences may drive your lights. Click to take back control.",
       "sync_off_tooltip": "Your lights obey you only. Click to let the audio modules drive them.",
       "mock_mode": "Simulated mode",
-      "mock_mode_tooltip": "Disconnects the Hue bridge and simulates four lamps, to prepare a mood without hardware."
+      "mock_mode_tooltip": "Disconnects the Hue bridge and simulates four lamps, to prepare a mood without hardware.",
+      "reread": "Re-read lights",
+      "reread_tooltip": "Ask the bridge for the real state of your lights — useful right after setting them from your phone.",
+      "reread_done": "Lights re-read from the bridge: {{nombre}}",
+      "reread_failed": "The bridge did not answer. Your lights stay as GM-OS knew them.",
+      "reread_offline": "The Hue bridge is not connected: there is nothing to re-read."
     },
     "grid": {
       "capture": "Capture",
@@ -782,7 +787,14 @@
       "key_learn_tooltip": "Bind a keyboard key to this scene",
       "key_change_tooltip": "Change this scene's key",
       "key_press": "Press a key",
-      "key_escape": "Esc or click to cancel"
+      "key_escape": "Esc or click to cancel",
+      "capture_stale": "The bridge did not answer: the tile keeps what GM-OS knew of the lights.",
+      "rack_campaign": "This campaign",
+      "rack_campaign_hint": "Eighteen slots that belong to it alone.",
+      "rack_common": "Shared",
+      "rack_common_hint": "Visible in every campaign.",
+      "rack_orphans": "Deleted campaign",
+      "rack_orphans_hint": "Attached to a campaign that no longer exists — re-attach or clear them."
     },
     "footer": {
       "no_lights": "No lights discovered.",
@@ -875,7 +887,12 @@
       "color_free": "Custom colour",
       "color_hint": "It marks the tile in the grid — icon, border, glow, star. It drives no lamp.",
       "color_none": "No colour (default grey)",
-      "color_hint_none": "With no colour the tile stays grey. Pick one to spot it at a glance in the grid."
+      "color_hint_none": "With no colour the tile stays grey. Pick one to spot it at a glance in the grid.",
+      "campaign": "This tile belongs to",
+      "campaign_common": "All",
+      "campaign_this": "This campaign",
+      "campaign_hint_common": "It shows up in every campaign. That is the default: a \"Tavern\" serves everywhere.",
+      "campaign_hint_this": "It only shows up in the open campaign — not in the grid, not in other modules’ lists, not on the keyboard."
     }
   },
   "loot": {

@@ -1,5 +1,5 @@
 import { useLightStore, INTENSITE_SCENE_DEFAUT, VITESSE_EFFET_DEFAUT } from "./useLightStore";
-import type { HueLight, HueLightState } from "./useLightStore";
+import type { HueLightState } from "./useLightStore";
 import { sceneDeRepli } from "./logic/sceneDeRepli";
 import { etatARendre } from "./logic/etatARendre";
 import { prochainBattement, RAFALE_AU_REPOS } from "./logic/cadenceDeFusillade";
@@ -10,21 +10,8 @@ import { EXTINCTION_DS, imageDeDeflagration } from "./logic/deflagration";
 import { imageDuSouffle, SOUFFLES } from "./logic/souffle";
 import { fonduTenable, teinterVers, estUneVariante, idDepuisLIdentifiant } from "./logic/varianteDEffet";
 import { imageDesStores, phaseDeLaLampe } from "./logic/lumiereDesStores";
-
-interface HueApiLight {
-    state: {
-        on: boolean;
-        bri: number;
-        hue: number;
-        sat: number;
-        effect: string;
-        xy: [number, number];
-        ct: number;
-        reachable: boolean;
-    };
-    type: string;
-    name: string;
-}
+import { lampesRelues } from "./logic/relireLesLampes";
+import type { LampeDuPont } from "./logic/relireLesLampes";
 
 /**
  * **Le plancher d'une cadence d'effet, en millisecondes.**
@@ -280,26 +267,51 @@ export class HueEngine {
         }
     }
 
-    async fetchLights() {
+    /**
+     * **Redemande au pont l'état de la pièce, et le fait entrer dans le miroir.**
+     *
+     * Le meneur règle ses lampes depuis GM-OS, mais aussi depuis son téléphone :
+     * le miroir du magasin, qui ne tenait que le compte de ce que l'application
+     * avait envoyé, ignorait tout du second. Une capture enregistrait alors une
+     * ambiance que plus personne ne voyait.
+     *
+     * ⚠️ Ce qui revient du pont n'est **pas** ce qu'on y garde — voir
+     * {@link lampesRelues}, qui porte toute la règle. Ici on ne fait que lui
+     * donner les curseurs en vigueur.
+     *
+     * @returns `true` si le miroir a été rafraîchi, `false` en mode simulé.
+     */
+    async relireLesLampes(): Promise<boolean> {
         const data = await this.request('GET', '/lights');
-        if (!data) return; // Mock or error
+        if (!data) return false; // Mock or error
 
-        const formattedLights: Record<string, HueLight> = {};
-        for (const [id, light] of Object.entries(data as Record<string, HueApiLight>)) {
-            formattedLights[id] = {
-                id,
-                name: light.name,
-                type: light.type,
-                state: {
-                    on: light.state.on,
-                    bri: light.state.bri,
-                    xy: light.state.xy,
-                    ct: light.state.ct,
-                    effect: 'none' // We track software effects locally
-                }
-            };
-        }
-        useLightStore.getState().setLights(formattedLights);
+        const { lights, globalBrightness, scenes, activeSceneId } = useLightStore.getState();
+        const sceneJouee = activeSceneId ? scenes[activeSceneId] : undefined;
+
+        useLightStore.getState().setLights(lampesRelues(
+            data as Record<string, LampeDuPont>,
+            lights,
+            {
+                pourcentGlobal: globalBrightness,
+                pourcentDeScene: sceneJouee?.sceneBrightness ?? INTENSITE_SCENE_DEFAUT,
+                /* Les lampes de la tuile jouée, et elles seules, sont passées
+                   par son curseur d'intensité en partant. */
+                lampesDeLaScene: sceneJouee ? Object.keys(sceneJouee.lightStates) : [],
+            },
+        ));
+        return true;
+    }
+
+    /**
+     * La lecture des lampes au moment de la connexion.
+     *
+     * *Un seul écrivain pour le miroir* : c'est le même chemin que le bouton
+     * « Relire les lampes ». Au branchement le miroir est vide — aucun état
+     * n'est persisté — et toutes les lampes sont donc adoptées telles que le
+     * pont les décrit.
+     */
+    async fetchLights() {
+        await this.relireLesLampes();
     }
 
     /**

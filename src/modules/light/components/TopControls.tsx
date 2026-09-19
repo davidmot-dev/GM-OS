@@ -1,11 +1,52 @@
+import React from 'react';
 import { useLightStore } from '../useLightStore';
 import { gmConfirm } from '../../../stores/useModalStore';
-import { RotateCcw } from 'lucide-react';
+import { gmToast } from '../../../stores/useToastStore';
+import { hueEngine } from '../HueEngine';
+import { RefreshCw, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const TopControls: React.FC = () => {
     const { transitionTimeMs, setTransitionTime, reset, isSyncEnabled, setSyncEnabled, status } = useLightStore();
     const { t } = useTranslation('modules');
+
+    /** La relecture est-elle en vol ? Le pont peut mettre une seconde à répondre. */
+    const [relectureEnCours, setRelectureEnCours] = React.useState(false);
+
+    /**
+     * **Aller redemander au pont ce qu'éclairent vraiment les lampes.**
+     *
+     * GM-OS ne tenait que le compte de ce qu'il avait lui-même envoyé. Le
+     * meneur, lui, règle aussi sa pièce depuis son téléphone — et tout ce qui
+     * lit le miroir (les curseurs du pied de page, et surtout la **capture**
+     * d'une tuile) travaillait alors sur une pièce d'hier.
+     *
+     * ⚠️ On ne le fait **pas** tout seul, en boucle : le pont tient de l'ordre
+     * de dix commandes par seconde et les effets logiciels en consomment déjà.
+     * *C'est un geste du meneur, au moment où il le veut.*
+     */
+    const relire = async () => {
+        if (relectureEnCours) return;
+        /*
+          On dit pourquoi le bouton ne fait rien plutôt que de l'éteindre : un
+          bouton inerte et muet se fait prendre pour une panne. C'est la règle
+          déjà suivie par le mode « suivre la voix » dans le panneau de gauche.
+        */
+        if (status !== 'connected') {
+            gmToast(t('light.top.reread_offline'), 'warning');
+            return;
+        }
+        setRelectureEnCours(true);
+        try {
+            await hueEngine.relireLesLampes();
+            const nombre = Object.keys(useLightStore.getState().lights).length;
+            gmToast(t('light.top.reread_done', { nombre }), 'success');
+        } catch {
+            gmToast(t('light.top.reread_failed'), 'error');
+        } finally {
+            setRelectureEnCours(false);
+        }
+    };
 
     return (
         <header className="p-6 border-b border-app-border flex items-center justify-between bg-app-surface/50 backdrop-blur-sm z-10 font-sans">
@@ -101,6 +142,31 @@ export const TopControls: React.FC = () => {
                     <span className="text-ui-10 font-bold uppercase tracking-widest leading-none">{t('light.top.reset_module')}</span>
                 </button>
             </div>
+
+            {/*
+              **Le bouton vit à droite, seul.** Le groupe de gauche tient déjà
+              quatre réglages et deux interrupteurs : le 2026-09-17, une barre
+              trop pleine avait poussé le pied de page des lampes sous la ligne
+              de flottaison sur un écran 1440×900. *Ce qu'on ajoute dans une
+              rangée pleine pousse ce qui y était — ici il y avait la place à
+              côté.*
+            */}
+            <button
+                onClick={relire}
+                disabled={relectureEnCours}
+                title={t('light.top.reread_tooltip')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all active:scale-95 group ${
+                    status === 'connected'
+                        ? 'bg-accent/5 hover:bg-accent/20 border-accent/20 text-accent/70 hover:text-accent'
+                        : 'bg-app-surface/30 border-app-border text-slate-500 hover:text-slate-400'
+                }`}
+            >
+                <RefreshCw
+                    size={14}
+                    className={relectureEnCours ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}
+                />
+                <span className="text-ui-10 font-bold uppercase tracking-widest leading-none">{t('light.top.reread')}</span>
+            </button>
 
         </header>
     );

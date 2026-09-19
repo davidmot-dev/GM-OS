@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ambientEngine } from './AmbientEngine';
+import { pistesApresInstantane } from './logic/instantaneDeSeance';
 import { useJournalStore } from '../journal/useJournalStore';
 // Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
@@ -466,9 +467,14 @@ export const useAmbientStore = create<AmbientState>()(
 
                 if (snapshot.masterVolume !== undefined) set({ masterVolume: snapshot.masterVolume });
 
-                // 1. Restore the structures (all 8 tracks metadata)
+                /*
+                  ⛔ **On fusionne, on ne remplace plus en bloc.** Une piste
+                  rangée après la prise de l'instantané se faisait écraser par
+                  une piste vide — *et une piste vide ne dit pas qu'elle a
+                  remplacé quelque chose.* Voir `logic/instantaneDeSeance.ts`.
+                */
                 if (snapshot.tracks) {
-                    set({ tracks: snapshot.tracks });
+                    set(state => ({ tracks: pistesApresInstantane(state.tracks, snapshot.tracks) }));
                 }
 
                 // 2. Trigger Playback/Loading for tracks that should be playing
