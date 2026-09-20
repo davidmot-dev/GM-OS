@@ -1,7 +1,7 @@
-# État et reprise — la journée du 2026-09-20, **les deux restes de Light-OS**
+# État et reprise — la journée du 2026-09-20, **Light-OS, puis le storyboard**
 
-> **Base saine.** `tsc -b` propre, **5 626 essais Vitest** (441 fichiers, 1 ignoré), E2E de
-> Light-OS et la traversée des modules au vert, branche `feature/tablet-hub-pwa`.
+> **Base saine.** `tsc -b` propre, **5 635 essais Vitest** (443 fichiers, 1 ignoré), E2E de
+> Light-OS, du storyboard et la traversée des modules au vert, branche `feature/tablet-hub-pwa`.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md), et elle y vit seule.
@@ -16,8 +16,9 @@
 | --- | --- | --- |
 | **92** | « Essayer sur les lampes » — le dernier reste de l'IA qui compose | ⚠️ non |
 | **93** | L'atelier d'effets — créer un effet de zéro, **et l'IA qui écrit la suite** | ✅ **oui** (*« ça marche très bien »*) |
+| **94** | Un moment de storyboard ne savait pas quels **sons** charger — le thème d'Ambient-OS | ⚠️ non |
 
-Les deux sont partis d'une même question de David — *« on avait laissé quelque chose en suspens au
+Les deux **premiers** sont partis d'une même question de David — *« on avait laissé quelque chose en suspens au
 niveau de Light-OS ? »* — posée au registre et non à ma mémoire, ce qui est exactement la
 procédure : **quatre restes rendus, vérifiés dans le code avant d'être annoncés.**
 
@@ -35,7 +36,10 @@ d'alors avait été **les variantes** ; il en réclamait la moitié qui manquait
    **Essayer**, puis **Revenir**. Ce qui compte : la pièce retrouve **exactement** ce qu'elle
    montrait.
 2. ~~**L'atelier** (§ 93)~~ — ✅ **fait le 20/09**, l'IA comprise : *« ça marche très bien »*.
-3. **La restauration** (§ 87, hérité du 19/09) — dans `npm run repetition`, jamais sur le vrai
+3. **Le thème d'ambiance dans un moment** (§ 94) — un moment → **Ambiance** → un thème, puis
+   une scène. Ce qui compte : le thème seul **démarre**, et le thème suivi d'une scène **ne
+   démarre pas** avant elle.
+4. **La restauration** (§ 87, hérité du 19/09) — dans `npm run repetition`, jamais sur le vrai
    profil. Toujours le seul point non barré de la veille.
 
 ---
@@ -61,6 +65,17 @@ se croit.* Un blanc glissé au milieu d'un orage passerait pour une intention.
 
 ⚠️ Et **le défaut d'un champ oublié doit être celui qui donne le meilleur résultat**, pas celui
 qui se calcule le plus vite : un `alea` absent vaut **25**, parce que zéro rendrait une machine.
+
+### ⛔ Un appel qui réussit n'est pas un geste qui a eu lieu
+
+`applyScene` d'Ambient-OS n'allume une piste que si elle porte une adresse. Sur huit emplacements
+vides elle **réussit parfaitement** et ne produit aucun son : pas de `warn`, pas de `catch`, et le
+rapport du moment disait « joue ». *Une ambiance qui ne sort pas ressemble à une ambiance
+discrète* — la forme la plus coûteuse du silence, celle qui ne ressemble même pas à une panne.
+
+⭐ D'où un cinquième sort au rapport, **`sans-matiere`**, et le mot compte autant que le sort :
+ni « introuvable », ni « module non chargé », mais « **aucun son chargé** ». *Trois causes,
+trois gestes.*
 
 ### ⭐ Un effet peut être de la DONNÉE
 
@@ -95,6 +110,8 @@ fichiers d'essais partagent le même magasin dans un worker, et le second hérit
 | Le recensement de `rendreLEtat` a **refusé** un quatrième ayant droit non décrit — exactement ce que son commentaire annonçait | § 93 |
 | `reset()` laissait `variantes` derrière lui | § 93 |
 | Une règle du composant (*« rien n'est appliqué au pont »*) lue vite interdisait le bouton qu'on venait demander — elle visait *« rien ne s'allume tout seul »* | § 92 |
+| La **capture** d'une ambiance était annoncée impossible dans le code ET dans le guide — vrai d'une *scène*, faux du **thème chargé**, que le magasin retenait sans lecteur | § 94 |
+| Un suspect nommé pour l'incident sans trace du 13/09 (*« ambiance interrompue »*) — ⚠️ la ligne du § 1 bis reste ouverte : *un diagnostic plausible n'est pas une reproduction* | § 94 |
 
 ---
 
@@ -112,5 +129,6 @@ fichiers d'essais partagent le même magasin dans un worker, et le second hérit
 ---
 
 *Écrit le 2026-09-20. Guides mis à jour : **11** (l'essai d'une ambiance), **75** (l'atelier,
-l'IA qui écrit la suite, et la quatrième porte du retour). Doc technique Light-OS : § 2 ter
-(quatre portes) et § 2 ter bis (l'atelier).*
+l'IA qui écrit la suite, et la quatrième porte du retour), **13** (le thème et la scène d'une
+ambiance, et la table de capture corrigée). Doc technique Light-OS : § 2 ter (quatre portes) et
+§ 2 ter bis (l'atelier).*

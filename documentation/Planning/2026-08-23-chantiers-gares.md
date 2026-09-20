@@ -7723,6 +7723,81 @@ lampes.
 
 ---
 
+### 94 · ⛔ Un moment de storyboard ne savait pas quels SONS charger (2026-09-20)
+
+David : *« dans le master storyboard, je ne peux pas choisir le thème sur lequel je veux charger
+une ambiance d'Ambient-OS »*. Ce n'était pas un oubli d'écran : **un maillon manquait**.
+
+#### Deux notions, une seule branchée
+
+| | Ce que c'est | Ce que le moment pouvait dire |
+| :--- | :--- | :--- |
+| **Le thème** (`presets`) | *quels sons* remplissent les huit pistes | ⛔ rien |
+| **La scène** (`scenes`) | *à quel volume* ces huit pistes jouent | ✅ `ambientSceneId` |
+
+Un moment ne savait donc régler que le **mélange**, jamais la **matière**. « Tension »
+s'appliquait au thème d'une scène précédente — ou à huit emplacements vides.
+
+#### ⛔ Et huit emplacements vides ne produisent aucune erreur
+
+`applyScene` n'allume une piste que si elle porte une adresse. Sans adresse, la boucle **passe** :
+pas de `warn`, pas de `catch`, pas de ligne au journal. L'appel réussit, le rapport du moment
+disait « Ambiance : joue », et la pièce restait silencieuse.
+
+⭐ ***Une ambiance qui ne sort pas ressemble à une ambiance discrète.*** C'est la forme la plus
+coûteuse du silence : elle ne ressemble même pas à une panne.
+
+⚠️ **C'est probablement l'incident sans trace du 13/09**, toujours ouvert au § 1 bis : *« la
+séquence de storyboard s'est mal exécutée en séance : pas d'image projetée, lumières éteintes,
+**ambiance interrompue** »*. La ligne reste ouverte tant qu'elle n'est pas reproduite — *un
+diagnostic plausible n'est pas une reproduction* — mais elle a maintenant un suspect nommé.
+
+#### Les quatre combinaisons, et celle qui a demandé une décision
+
+| Thème | Scène | Ce qui se passe |
+| :--- | :--- | :--- |
+| — | — | rien |
+| ✓ | — | le thème se charge **et démarre** |
+| — | ✓ | la scène dose ce qui est déjà chargé — les moments d'avant marchent tels quels |
+| ✓ | ✓ | le thème se charge **à l'arrêt**, puis la scène décide |
+
+⭐ **Le thème seul démarre, et c'est un choix de David.** Ambient-OS charge à l'arrêt — juste à
+l'écran, où l'on prépare avant de lancer. Mais *un moment de storyboard est un déclenchement :
+s'il ne produit aucun son, il passe pour une panne.*
+
+⛔ **Et surtout pas quand une scène suit** : les huit pistes sonneraient une seconde avant que la
+scène n'éteigne celles qu'elle ne veut pas. *Un coup de tonnerre au mauvais moment est pire qu'un
+silence.*
+
+#### ⭐ Un cinquième sort pour le rapport du moment
+
+Le rapport ne connaissait que `joue`, `introuvable`, `module-absent`, `non-demande`. Aucun ne dit
+*« l'appel a réussi et il n'y avait rien à jouer »* — et c'est exactement le cas. D'où
+**`sans-matiere`**, qui compte parmi les manques et se lit « **aucun son chargé** ».
+
+⚠️ **Le mot compte autant que le sort** : ni « introuvable » (la scène existe), ni « module non
+chargé » (il a répondu). Il manque un **thème**, et c'est cela que le meneur doit lire. *Trois
+causes, trois gestes.*
+
+#### ⭐ La capture avait quelque chose à prendre, et on l'ignorait
+
+Le guide et le code disaient tous deux « Ambiance : ⛔ rien à capturer », au motif qu'Ambient-OS
+ne retient pas quelle scène est appliquée. C'était vrai — **de la scène**. Le magasin retient en
+revanche `themeChargeId` depuis qu'il existe, et personne ne le lisait.
+
+⭐ ***Une capacité déclarée que personne ne lit n'est pas une capacité*** — la même phrase que
+les pièces jointes perdues en route vers Ollama, et que la couleur de grille sans écran.
+
+**Ancres** : `storyboard/ambianceDuMoment.ts` (l'ordre des gestes),
+`storyboard/logic/rapportDuMoment.ts` (`sans-matiere`), `useStoryboardStore`
+(`ambientThemeId` et le bloc 6), `StoryboardDashboard.tsx` (les deux listes, l'avertissement quand
+la scène est seule, et la capture du thème).
+
+**Vérifié** : `tsc -b` propre, lint sans rien de neuf, **12 essais neufs**. ⚠️ **Non éprouvé à
+l'écran.**
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7757,6 +7832,7 @@ lampes.
 | 27 | **Sound-OS par campagne** | ✅ **LIVRÉ le 19/09** — demandé par David, et c'était la dernière asymétrie des trois modules d'ambiance. Troisième module à employer la règle partagée, toujours sans copie. ⭐ Son clavier n'avait **pas** le défaut de Music-OS (il ne lit que l'active) mais son **repli** prenait la première de la liste brute. ⭐ Et la fusion d'instantané, écrite le matin sans propriétaire, a dû être rouverte : *ajouter un champ, c'est rouvrir toutes les fonctions qui décidaient sans lui* (§ 91) | Sélectionner une atmosphère, cliquer **Cette campagne**, changer de campagne | Rien. ⚠️ Non vu à l'écran |
 | 28 | **Essayer une ambiance sur les lampes** | ✅ **LIVRÉ le 20/09** — le dernier reste de l'IA qui compose. Avant lui il fallait **occuper une case du râtelier pour regarder une ambiance qu'on allait peut-être refuser**. ⛔ Le cœur n'était pas d'allumer mais de **rendre la pièce** : les **trois** portes du retour existantes visent une *scène* et auraient **éteint le salon** un après-midi de préparation. ⭐ Quatrième visée, et une photographie qui **copie** au lieu d'emprunter (§ 92) | Une scène → « Proposer une ambiance » → **Essayer**, puis **Revenir** | Rien. ⚠️ Non éprouvé à l'écran, et il demande de vraies lampes |
 | 29 | **L'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 20/09** (*« ça marche très bien »*) — créer un effet de zéro, là où « Mes ambiances » ne savait que **décliner** un des 48. ⭐ La décision qui débloque tout : **un effet peut être de la donnée** — quatre nombres par étape, plus le désordre, *qui est ce qui sépare une suite d'un geste*. Il se joue **avant le `switch`** et le traverse quand même, donc il obéit aux mêmes curseurs sans une ligne de plus. ⛔ Adaptatif et jamais soliste : *une lampe qui ne joue pas ne s'explique pas* (§ 93) | Écran de choix d'un effet → — | Rien. ✅ **Vu à l'écran** |
+| 30 | **Le thème d'ambiance dans un moment** | ✅ **CORRIGÉ le 20/09** — signalé par David : un moment ne savait dire que le **mélange** (la scène), jamais la **matière** (le thème). ⛔ Et une scène sur huit emplacements vides **réussit** sans produire un son : *une ambiance qui ne sort pas ressemble à une ambiance discrète*. Cinquième sort au rapport du moment (`sans-matiere`, lu « aucun son chargé »), et la **capture** du thème, qui existait dans le magasin sans lecteur (§ 94) | Un moment → **Ambiance** → choisir un thème, puis une scène | Rien. ⚠️ Non éprouvé à l'écran |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

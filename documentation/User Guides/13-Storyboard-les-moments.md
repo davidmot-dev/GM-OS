@@ -9,7 +9,7 @@ Le module **Master Storyboard** est le chef d'orchestre de votre partie. Il vous
 Le Storyboard utilise une **Table de Montage Horizontale** (façon pellicule de film) pour organiser vos "Moments". Un moment est une configuration prédéfinie qui impacte plusieurs modules simultanément :
 
 1. **Musique** : Lance une piste spécifique de vos playlists.
-2. **Ambiance (Ambient-OS)** : Rappelle un mixage complet de 8 pistes de fond.
+2. **Ambiance (Ambient-OS)** : Charge un **thème** — les huit sons de fond — et, si vous le voulez, la **scène** qui les dose (Calme, Tension, Action).
 3. **Effets Sonores (Sound-OS)** : Déclenche un pad SFX précis.
 4. **Lumières** : Applique une scène Hue (ex: Alerte Rouge, Nuit Calme).
 5. **Cartes (Atlas)** : Charge une carte spécifique pour les joueurs.
@@ -38,7 +38,7 @@ moment sur votre poste. Il n'y a pas de bouton global.
 | **Carte** | La carte chargée sur le plateau tactique |
 | **Image** | L'image projetée sur l'écran courant d'Image-OS |
 | **Bruitage** | ⛔ rien — Sound-OS **empile** ses sons, il n'y a pas de pad « actif » unique |
-| **Ambiance** | ⛔ rien — Ambient-OS applique ses scènes sans retenir laquelle |
+| **Ambiance** | ✅ **le thème chargé** — depuis le 20/09. La *scène*, elle, reste impossible : Ambient-OS ne retient pas laquelle est appliquée |
 
 > ⛔ **Deux de ces boutons ne marchaient pas, et ne le disaient pas.** *Carte* et *Image*
 > interrogeaient des champs qui n'existent pas (`currentMapUrl`, `activeMediaId`) : le clic ne
@@ -47,10 +47,13 @@ moment sur votre poste. Il n'y a pas de bouton global.
 
 <!-- -->
 
-> 🔎 **Les deux derniers ne sont pas cassés, ils sont impossibles.** Un bruitage et une ambiance se
-> choisissent dans la liste ; il n'existe aucun « état courant » à recopier. Le message qui
-> s'affichait à leur place était bâti sur les mauvaises clés de traduction — on lisait
-> *« Sound-OS : ex: Combat Final »*.
+> 🔎 **Le bruitage, lui, reste impossible.** Sound-OS empile ses sons : il n'existe aucun
+> « état courant » à recopier. Le message qui s'affichait à sa place était bâti sur les mauvaises
+> clés de traduction — on lisait *« Sound-OS : ex: Combat Final »*.
+>
+> ⭐ **L'ambiance a changé de camp le 2026-09-20.** Elle figurait ici comme impossible, et c'était
+> vrai d'une *scène* — mais Ambient-OS retient le **thème chargé**, et personne ne le lisait.
+> *Une capacité déclarée que personne ne lit n'est pas une capacité.*
 
 ### 3. Organiser votre Scénario (Drag & Drop)
 Le Storyboard fonctionne comme un logiciel de montage :
@@ -74,6 +77,44 @@ Un moment ne dit plus seulement *quoi* déclencher, mais *où* :
 
 > [!NOTE]
 > Le volume général et le ducking de la voix s'appliquent **aussi** aux sons détournés vers une autre enceinte.
+
+## 🌊 L'ambiance : le **thème** et la **scène**
+
+Ambient-OS porte deux notions, et un moment peut dire les deux :
+
+| | Ce que c'est | Dans le moment |
+| :--- | :--- | :--- |
+| **Le thème** | *quels sons* remplissent les huit pistes — Forêt, Taverne, Vaisseau | la première liste |
+| **La scène** | *à quel volume* ces huit pistes jouent — Calme, Tension, Action | la seconde |
+
+**Les quatre combinaisons, et ce qu'elles font :**
+
+| Thème | Scène | Ce qui se passe |
+| :--- | :--- | :--- |
+| — | — | rien : le moment ne touche pas à l'ambiance |
+| ✓ | — | le thème se charge **et démarre** |
+| — | ✓ | la scène dose **ce qui est déjà chargé** — utile pour faire monter la tension sans changer de décor |
+| ✓ | ✓ | le thème se charge **à l'arrêt**, puis la scène décide quelles pistes sonnent |
+
+> ⛔ **Le défaut que cela répare, et il était muet.** Avant le 2026-09-20, un moment ne pouvait
+> choisir que la **scène**. Or une scène ne charge aucun son : elle pose des volumes sur les huit
+> pistes en place — celles du moment précédent, **ou huit emplacements vides**. Dans ce dernier
+> cas, elle réussissait parfaitement et ne produisait **aucun son**, sans le moindre message.
+> *Une ambiance qui ne sort pas ressemble à une ambiance discrète.*
+
+> [!TIP]
+> **Posez un thème sur le premier moment d'une séquence**, et laissez les suivants ne porter que
+> leur scène : le décor sonore s'installe une fois, puis il monte et il descend.
+
+> [!NOTE]
+> **Un thème qui suit une scène ne démarre pas tout seul**, et c'est voulu : les huit pistes
+> sonneraient une seconde avant que la scène n'éteigne celles qu'elle ne veut pas. *Un coup de
+> tonnerre au mauvais moment est pire qu'un silence.*
+
+> [!WARNING]
+> **Si rien n'est chargé, le journal le dit maintenant** : *« Ambiance : aucun son chargé »*. Ce
+> n'est ni un thème introuvable ni un module absent — c'est qu'il vous manque un thème avant
+> votre scène.
 
 ## 🅰️ Le Titre à l'écran
 
