@@ -168,7 +168,7 @@ const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, u
                 {/* Linked Modules Strip */}
                 <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-3 gap-2">
                     {moment.musicPadId && <div title={t('modules:storyboard.editor.music_label')} className="flex flex-col items-center gap-1"><Music size={12} className="text-blue-400" /><div className="w-full h-0.5 bg-blue-400/30 rounded-full" /></div>}
-                    {moment.ambientSceneId && <div title={t('modules:storyboard.editor.ambient_label')} className="flex flex-col items-center gap-1"><Waves size={12} className="text-cyan-400" /><div className="w-full h-0.5 bg-cyan-400/30 rounded-full" /></div>}
+                    {(moment.ambientSceneId || moment.ambientThemeId) && <div title={t('modules:storyboard.editor.ambient_label')} className="flex flex-col items-center gap-1"><Waves size={12} className="text-cyan-400" /><div className="w-full h-0.5 bg-cyan-400/30 rounded-full" /></div>}
                     {moment.lightSceneId && <div title={t('modules:storyboard.editor.light_label')} className="flex flex-col items-center gap-1"><Sun size={12} className="text-orange-400" /><div className="w-full h-0.5 bg-orange-400/30 rounded-full" /></div>}
                     {moment.mapUrl && <div title={t('modules:storyboard.editor.map_label')} className="flex flex-col items-center gap-1"><MapIcon size={12} className="text-emerald-400" /><div className="w-full h-0.5 bg-emerald-400/30 rounded-full" /></div>}
                     {moment.imageMediaId && <div title={t('modules:storyboard.editor.image_label')} className="flex flex-col items-center gap-1"><ImageIcon size={12} className="text-purple-400" /><div className="w-full h-0.5 bg-purple-400/30 rounded-full" /></div>}
@@ -247,6 +247,7 @@ const StoryboardDashboard: React.FC = () => {
     const [imageMediaId, setImageMediaId] = useState('');
     const [diaporamaId, setDiaporamaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
+    const [ambientThemeId, setAmbientThemeId] = useState('');
     const [ambientSceneId, setAmbientSceneId] = useState('');
     /*
       **Où ça sort — demandé par David le 2026-08-31.** Vide veut dire « comme
@@ -262,7 +263,7 @@ const StoryboardDashboard: React.FC = () => {
     const [titreFondu, setTitreFondu] = useState(String(FONDU_PAR_DEFAUT));
     const [titreDuree, setTitreDuree] = useState('');
 
-    const { scenes: ambientScenes } = useAmbientStore();
+    const { scenes: ambientScenes, presets: ambientThemes, themeChargeId } = useAmbientStore();
     /* Les tuiles que la campagne ouverte laisse voir — même verdict que
        partout ailleurs, voir `light/hooks/useTuilesVisibles.ts`. */
     const { capturees: tuilesLumineuses } = useTuilesVisibles();
@@ -326,6 +327,7 @@ const StoryboardDashboard: React.FC = () => {
         setImageMediaId(moment.imageMediaId || '');
         setDiaporamaId(moment.diaporamaId || '');
         setSoundPadId(moment.soundPadId || '');
+        setAmbientThemeId(moment.ambientThemeId || '');
         setAmbientSceneId(moment.ambientSceneId || '');
         setMusicOutputId(moment.musicOutputId || '');
         setSoundOutputId(moment.soundOutputId || '');
@@ -345,6 +347,7 @@ const StoryboardDashboard: React.FC = () => {
         setMapUrl('');
         setImageMediaId('');
         setSoundPadId('');
+        setAmbientThemeId('');
         setAmbientSceneId('');
         setMusicOutputId('');
         setSoundOutputId('');
@@ -433,9 +436,23 @@ const StoryboardDashboard: React.FC = () => {
               applique ses scènes sans retenir laquelle : dans les deux cas, il
               n'existe aucun état courant à recopier.
             */
-            case 'sound':
-            case 'ambient': {
+            case 'sound': {
                 gmToast(t('modules:storyboard.editor.capture_unavailable'), 'warning');
+                break;
+            }
+            /*
+              ⭐ **Elle avait quelque chose à capturer, et on l'ignorait.** Le
+              commentaire ci-dessus disait vrai d'une *scène* — Ambient-OS ne
+              retient pas laquelle est appliquée. Mais il retient le **thème
+              chargé** (`themeChargeId`), depuis qu'il existe. *Une capacité
+              déclarée que personne ne lit n'est pas une capacité.*
+            */
+            case 'ambient': {
+                if (themeChargeId) {
+                    setAmbientThemeId(themeChargeId);
+                } else {
+                    gmToast(t('modules:storyboard.editor.capture_unavailable'), 'warning');
+                }
                 break;
             }
         }
@@ -460,6 +477,7 @@ const StoryboardDashboard: React.FC = () => {
             imageMediaId: diaporamaId ? undefined : (imageMediaId || undefined),
             diaporamaId: diaporamaId || undefined,
             soundPadId: soundPadId || undefined,
+            ambientThemeId: ambientThemeId || undefined,
             ambientSceneId: ambientSceneId || undefined,
             musicOutputId: musicOutputId || undefined,
             soundOutputId: soundOutputId || undefined,
@@ -650,6 +668,30 @@ const StoryboardDashboard: React.FC = () => {
                                     <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-cyan-400">
                                         <span className="flex items-center gap-2"><Waves size={14} /> {t('modules:storyboard.editor.ambient_label')}</span>
                                     </label>
+                                    {/*
+                                      ⛔ **LE THÈME D'ABORD, ET C'EST TOUT LE SUJET.**
+
+                                      Une *scène* d'Ambient-OS ne charge aucun son :
+                                      elle pose des volumes sur les huit pistes en
+                                      place. Sans thème, un moment appliquait donc
+                                      « Tension » à ce qui traînait — ou à huit
+                                      emplacements vides, **sans une erreur**.
+                                      Signalé par David le 2026-09-20.
+                                    */}
+                                    <select
+                                        value={ambientThemeId}
+                                        onChange={e => setAmbientThemeId(e.target.value)}
+                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-cyan-400 outline-none"
+                                        title={t('modules:storyboard.editor.ambient_theme_label')}
+                                    >
+                                        <option value="">{t('modules:storyboard.editor.ambient_theme_none')}</option>
+                                        {ambientThemes.map((theme) => (
+                                            <option key={theme.id} value={theme.id}>
+                                                {t(theme.name, { defaultValue: theme.name })}
+                                            </option>
+                                        ))}
+                                    </select>
+
                                     <select 
                                         value={ambientSceneId}
                                         onChange={e => setAmbientSceneId(e.target.value)}
@@ -658,9 +700,20 @@ const StoryboardDashboard: React.FC = () => {
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
                                         {ambientScenes.map((s) => (
-                                            <option key={s.id} value={s.id}>{s.name}</option>
+                                            <option key={s.id} value={s.id}>
+                                                {t(s.name, { defaultValue: s.name })}
+                                            </option>
                                         ))}
                                     </select>
+
+                                    {/* ⚠️ Le dire là où la décision se prend : un moment
+                                        qui ne pose que le mélange hérite de la matière
+                                        du moment précédent, ce qui est parfois voulu. */}
+                                    {ambientSceneId && !ambientThemeId && (
+                                        <p className="text-ui-10 text-amber-400/80 italic leading-snug">
+                                            {t('modules:storyboard.editor.ambient_sans_theme')}
+                                        </p>
+                                    )}
 
                                     {/*
                                       **La sortie de ce son-là, et de lui seul.**

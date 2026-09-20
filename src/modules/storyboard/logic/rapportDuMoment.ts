@@ -49,6 +49,17 @@ export type SortDUnEffet =
     | 'introuvable'
     /** Demandé, mais le module n'a pas répondu : il n'était pas chargé. */
     | 'module-absent'
+    /**
+     * Demandé, le module a répondu — **mais il n'y avait rien à jouer.**
+     *
+     * ⛔ Le cas d'Ambient-OS, trouvé le 2026-09-20 : une *scène* ne charge
+     * aucun son, elle pose des volumes sur les huit pistes en place. Appliquée
+     * alors qu'aucune piste ne porte d'adresse, elle réussit **parfaitement**
+     * et ne produit aucun son. *Une ambiance qui ne sort pas ressemble à une
+     * ambiance discrète* — et c'est précisément ce qu'on ne peut pas laisser
+     * passer sans le dire.
+     */
+    | 'sans-matiere'
     /** Le moment ne demandait rien de ce côté-là. */
     | 'non-demande';
 
@@ -67,7 +78,9 @@ export interface RapportDuMoment {
 
 /** Ce qui a été demandé et n'a pas eu lieu. */
 export function effetsManques(rapport: RapportDuMoment): EffetDuMoment[] {
-    return rapport.effets.filter(e => e.sort === 'introuvable' || e.sort === 'module-absent');
+    return rapport.effets.filter(
+        e => e.sort === 'introuvable' || e.sort === 'module-absent' || e.sort === 'sans-matiere',
+    );
 }
 
 /** Ce que le moment a réellement posé sur la table. */
@@ -91,8 +104,20 @@ export function resumeDuMoment(rapport: RapportDuMoment): string | null {
     const manques = effetsManques(rapport);
     if (manques.length === 0) return null;
 
+    /*
+      ⚠️ **Trois causes, trois gestes** — et le texte doit les séparer, parce
+      que le meneur n'ouvrira pas le journal pour ça : « introuvable » lui dit
+      de chercher sa donnée, « module non chargé » que ce n'est pas de sa faute,
+      « aucun son chargé » qu'il lui manque un **thème** avant sa scène.
+    */
+    const CAUSES: Record<string, string> = {
+        introuvable: 'introuvable',
+        'module-absent': 'module non chargé',
+        'sans-matiere': 'aucun son chargé',
+    };
+
     const dits = manques.map(e => {
-        const cause = e.sort === 'introuvable' ? 'introuvable' : 'module non chargé';
+        const cause = CAUSES[e.sort] ?? e.sort;
         return e.cherche ? `${e.nom} : ${cause} (${e.cherche})` : `${e.nom} : ${cause}`;
     });
 

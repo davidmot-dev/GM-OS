@@ -14,6 +14,12 @@ import {
 import {
     ceQueLaPriseDeMainFaitALaLumiere, ceQuUnArretFaitALaLumiere,
 } from './lumiereDuMoment';
+import {
+    gesteDAmbiance, demandeUneAmbiance, laMatiereEstPresente,
+} from './ambianceDuMoment';
+/* Type seul : effacé à la compilation, donc aucun cycle à l'exécution — et une
+   forme déclarée une fois vaut mieux qu'une forme recopiée ici. */
+import type { AmbientTheme } from '../ambient/useAmbientStore';
 import { Logger } from '../../utils/logger';
 /*
   ⛔ **Importé, et non lu sur `window` — c'est le défaut du 2026-09-12.**
@@ -55,6 +61,16 @@ export interface StoryboardMoment {
      */
     diaporamaId?: string;
     soundPadId?: string;       // Sound-OS Pad ID
+    /**
+     * **Le thème d'Ambient-OS à charger — les sons eux-mêmes.**
+     *
+     * ⛔ Il manquait jusqu'au 2026-09-20, signalé par David : un moment ne
+     * savait dire que le **mélange** (`ambientSceneId`), jamais la
+     * **matière**. Une scène ne charge rien — elle pose des volumes sur les
+     * huit pistes en place, ou sur huit emplacements vides, **sans une
+     * erreur**. Voir `ambianceDuMoment.ts`.
+     */
+    ambientThemeId?: string;
     ambientSceneId?: string;   // Ambient-OS Scene ID
 
     /*
@@ -705,16 +721,57 @@ export const useStoryboardStore = create<StoryboardState>()(
                     }
                 }
 
-                // 6. Ambient-OS
-                if (moment.ambientSceneId) {
+                /*
+                  6. Ambient-OS — **la matière d'abord, le mélange ensuite.**
+
+                  ⛔ Jusqu'au 2026-09-20 ce bloc n'appliquait qu'une *scène*, qui
+                  ne charge aucun son : elle posait des volumes sur ce qui se
+                  trouvait là. La règle vit dans `ambianceDuMoment.ts`.
+                */
+                const ambiance = gesteDAmbiance(moment);
+                if (demandeUneAmbiance(ambiance)) {
                     if (!gWindow.useAmbientStore) {
                         effets.push({ nom: 'Ambiance', sort: 'module-absent' });
                     } else {
-                        console.log(`[Storyboard] Ambient: Applying scene ${moment.ambientSceneId}`);
                         const ambientStore = gWindow.useAmbientStore.getState();
-                        await ambientStore.applyScene(moment.ambientSceneId, moment.ambientOutputId, true);
-                        sonsPoses.ambientSceneId = moment.ambientSceneId;
-                        effets.push({ nom: 'Ambiance', sort: 'joue' });
+
+                        if (ambiance.themeId) {
+                            const theme = ambientStore.presets.find((p: AmbientTheme) => p.id === ambiance.themeId);
+                            if (!theme) {
+                                /* ⚠️ Un thème supprimé depuis l'écriture du moment :
+                                   le nommer, sinon on cherche du côté du son. */
+                                effets.push({
+                                    nom: 'Ambiance', sort: 'introuvable', cherche: ambiance.themeId,
+                                });
+                            } else if (ambiance.jouerLeTheme) {
+                                console.log(`[Storyboard] Ambient: Launching theme ${theme.name}`);
+                                await ambientStore.lancerLeTheme(theme.universe, theme.name);
+                            } else {
+                                console.log(`[Storyboard] Ambient: Loading theme ${theme.name}`);
+                                await ambientStore.loadTheme(theme.universe, theme.name);
+                            }
+                        }
+
+                        if (ambiance.sceneId) {
+                            console.log(`[Storyboard] Ambient: Applying scene ${ambiance.sceneId}`);
+                            await ambientStore.applyScene(ambiance.sceneId, moment.ambientOutputId, true);
+                            sonsPoses.ambientSceneId = ambiance.sceneId;
+                        }
+
+                        /*
+                          ⛔ **La question qui transforme un silence en message**, et
+                          elle se pose APRÈS le chargement : c'est là seulement qu'on
+                          sait s'il y avait de quoi jouer. Une scène sur huit
+                          emplacements vides réussit parfaitement et ne produit aucun
+                          son — *une ambiance qui ne sort pas ressemble à une ambiance
+                          discrète.*
+                        */
+                        const dejaDit = effets.some(e => e.nom === 'Ambiance');
+                        if (!dejaDit) {
+                            effets.push(laMatiereEstPresente(gWindow.useAmbientStore.getState().tracks)
+                                ? { nom: 'Ambiance', sort: 'joue' }
+                                : { nom: 'Ambiance', sort: 'sans-matiere' });
+                        }
                     }
                 }
 

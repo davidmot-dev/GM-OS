@@ -80,6 +80,26 @@ describe('ce qui a manqué', () => {
         expect(resumeDuMoment(rapport([{ nom: 'Image', sort: 'introuvable' }])))
             .toContain('Le sas s’ouvre');
     });
+
+    /**
+     * ⭐ **La troisième cause — 2026-09-20, avec le thème d'Ambient-OS.**
+     *
+     * ⛔ Une *scène* ne charge aucun son : elle pose des volumes sur les huit
+     * pistes en place. Appliquée sur huit emplacements vides, elle **réussit**
+     * et ne produit rien. *Une ambiance qui ne sort pas ressemble à une
+     * ambiance discrète* — et sans ce sort, elle passait pour un succès.
+     *
+     * ⚠️ Et le mot doit envoyer au bon endroit : ni « introuvable » (la
+     * scène existe), ni « module non chargé » (il a répondu). Il manque un
+     * **thème**, et c'est cela qu'il faut lire.
+     */
+    it('dit « aucun son chargé » quand la matière manque', () => {
+        const resume = resumeDuMoment(rapport([{ nom: 'Ambiance', sort: 'sans-matiere' }]));
+
+        expect(resume).toContain('Ambiance');
+        expect(resume).toContain('aucun son chargé');
+        expect(resume, 'le meneur irait chercher une donnée disparue').not.toContain('introuvable');
+    });
 });
 
 describe('le tri', () => {
@@ -87,11 +107,13 @@ describe('le tri', () => {
         { nom: 'Musique', sort: 'joue' },
         { nom: 'Image', sort: 'introuvable' },
         { nom: 'Lumières', sort: 'module-absent' },
+        { nom: 'Ambiance', sort: 'sans-matiere' },
         { nom: 'Carte', sort: 'non-demande' },
     ]);
 
+    /** ⚠️ Un son qui ne sort pas a MANQUÉ, même si aucun appel n'a échoué. */
     it('sépare ce qui a manqué', () => {
-        expect(effetsManques(mixte).map(e => e.nom)).toEqual(['Image', 'Lumières']);
+        expect(effetsManques(mixte).map(e => e.nom)).toEqual(['Image', 'Lumières', 'Ambiance']);
     });
 
     it('et ce qui a eu lieu', () => {
