@@ -1,13 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Play, Square, Plus, Trash2, ChevronUp, ChevronDown, X } from 'lucide-react';
+import {
+    Play, Square, Plus, Trash2, ChevronUp, ChevronDown, X, Sparkles, Check, Lightbulb,
+} from 'lucide-react';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { useLightStore } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
+import { gmToast } from '../../../stores/useToastStore';
 import {
     identifiantDAtelier, etapeBornee,
     DUREE_MINIMALE_MS, DUREE_MAXIMALE_MS,
     type EtapeDEffet,
 } from '../logic/effetDAtelier';
+import { proposerUnEffet } from '../logic/proposerUnEffet';
+import {
+    etapesDeLaProposition, aleaDeLaProposition, nomDeLEffetPropose,
+    justificationDeLaProposition, type EffetPropose,
+} from '../logic/effetPropose';
 
 /**
  * **L'atelier : fabriquer un effet de zéro, et le voir pendant qu'on l'écrit.**
@@ -33,6 +41,15 @@ interface Props {
     effetId: string;
     onFermer: () => void;
 }
+
+/**
+ * **Un nom que le meneur n'a pas choisi.**
+ *
+ * ⚠️ *On ne renomme pas ce qu'il a nommé.* Une proposition apporte son nom, et
+ * c'est utile tant que l'effet s'appelle encore « Nouvel effet » ; le poser sur
+ * un effet baptisé effacerait une décision pour une suggestion.
+ */
+const NOM_PAR_DEFAUT = /^Nouvel effet( \d+)?$/;
 
 /** Un champ de nombre borné, avec son unité — trois fois la même forme. */
 const Nombre: React.FC<{
@@ -64,6 +81,11 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
 
     const listeDesLampes = Object.values(lampes);
     const [lampeDEssai, setLampeDEssai] = useState<string | null>(null);
+
+    /* Ce qu'on demande à l'IA, ce qu'elle rend, et si elle y travaille. */
+    const [demande, setDemande] = useState('');
+    const [enCours, setEnCours] = useState(false);
+    const [proposition, setProposition] = useState<EffetPropose | null>(null);
 
     useFermetureParEchap(true, onFermer, 'Atelier d’effet');
 
@@ -119,8 +141,72 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
         setLampeDEssai(idLampe);
     };
 
+    const demanderALIA = async () => {
+        if (enCours || !demande.trim()) return;
+        setEnCours(true);
+        try {
+            setProposition(await proposerUnEffet(demande));
+        } catch (e) {
+            /* Les deux refus appellent deux gestes différents : écrire quelque
+               chose, ou aller voir le moteur. *Un message unique enverrait le
+               meneur chercher au mauvais endroit.* */
+            gmToast(
+                e instanceof Error && e.message === 'DEMANDE_VIDE'
+                    ? 'Décrivez l’effet en quelques mots : « un orage lointain », « une forge ».'
+                    : 'L’IA n’a pas répondu. Réessayez, ou vérifiez le moteur dans les réglages.',
+                'error',
+            );
+        } finally {
+            setEnCours(false);
+        }
+    };
+
+    /** Les étapes de la proposition, déjà validées — lues deux fois, ici et à l'aperçu. */
+    const etapesProposees = etapesDeLaProposition(proposition);
+
+    /*
+      ⛔ **On remplace sur accord, jamais d'office.** L'atelier enregistre en
+      continu et n'a **pas d'annulation** : une proposition qui écraserait
+      directement effacerait le travail du meneur sans retour. *Un geste
+      irréversible se demande ; il ne se déduit pas.*
+    */
+    const remplacerParLaProposition = () => {
+        if (etapesProposees.length === 0) {
+            gmToast('Cette proposition n’a aucune étape jouable. Réessayez.', 'warning');
+            return;
+        }
+        modifier(effetId, {
+            etapes: etapesProposees,
+            alea: aleaDeLaProposition(proposition),
+            ...(NOM_PAR_DEFAUT.test(effet.nom)
+                ? { nom: nomDeLEffetPropose(proposition?.nom, effet.nom) }
+                : {}),
+        });
+        setProposition(null);
+    };
+
     /** La durée totale d'un tour, pour donner les proportions de l'aperçu. */
     const tour = etapes.reduce((somme, e) => somme + e.duree, 0) || 1;
+
+    /** La même bande, pour l'aperçu du haut comme pour celui d'une proposition. */
+    const bande = (suite: EtapeDEffet[]) => {
+        const total = suite.reduce((somme, e) => somme + e.duree, 0) || 1;
+        return (
+            <div className="flex h-8 rounded-lg overflow-hidden border border-app-border/20">
+                {suite.map((e, i) => (
+                    <div
+                        key={i}
+                        style={{
+                            width: `${(e.duree / total) * 100}%`,
+                            backgroundColor: e.couleur,
+                            opacity: 0.15 + (e.brillance / 100) * 0.85,
+                        }}
+                        title={`${e.brillance} % · ${e.duree} ms`}
+                    />
+                ))}
+            </div>
+        );
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
@@ -147,20 +233,94 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                   pièce. *C'est un plan, pas une photographie ; l'essai est là
                   pour le reste.*
                 */}
-                <div className="px-4 pt-4 flex flex-col gap-1.5">
-                    <div className="flex h-8 rounded-lg overflow-hidden border border-app-border/20">
-                        {etapes.map((e, i) => (
-                            <div
-                                key={i}
-                                style={{
-                                    width: `${(e.duree / tour) * 100}%`,
-                                    backgroundColor: e.couleur,
-                                    opacity: 0.15 + (e.brillance / 100) * 0.85,
-                                }}
-                                title={`${e.brillance} % · ${e.duree} ms`}
-                            />
-                        ))}
+                {/*
+                  ⭐ **L'IA est ici, en haut, et pas en bas.** Décrire l'effet
+                  qu'on cherche vient AVANT de le régler : *le meneur sait ce
+                  qu'il veut voir bien avant de savoir en quels nombres ça
+                  s'écrit.* C'est le geste le plus cher que le modèle rende dans
+                  Light-OS — composer une ambiance, c'était choisir des
+                  couleurs ; composer un effet, c'est trouver un rythme.
+                */}
+                <div className="px-4 pt-4 flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                        <input
+                            value={demande}
+                            onChange={e => setDemande(e.target.value)}
+                            onKeyDown={e => {
+                                if (e.key === 'Escape') { e.stopPropagation(); setDemande(''); return; }
+                                if (e.key === 'Enter') void demanderALIA();
+                            }}
+                            placeholder="Décrivez l’effet : « un orage lointain », « une forge »…"
+                            className="flex-1 bg-app-bg/60 border border-app-border/30 rounded-lg px-3 py-2 text-ui-10 text-app-text outline-none focus:border-accent/50 min-w-0"
+                        />
+                        <button
+                            onClick={demanderALIA}
+                            disabled={enCours || !demande.trim()}
+                            title="L’IA écrit une suite d’étapes. Rien n’est remplacé sans votre accord."
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent/5 hover:bg-accent/20 border border-accent/20 text-accent/80 hover:text-accent transition-all active:scale-95 disabled:opacity-40 shrink-0"
+                        >
+                            <Sparkles size={13} className={enCours ? 'animate-pulse' : ''} />
+                            <span className="text-ui-10 font-bold uppercase tracking-widest leading-none">
+                                {enCours ? 'L’IA compose…' : 'Proposer'}
+                            </span>
+                        </button>
                     </div>
+
+                    {proposition && (
+                        <div className="rounded-xl border border-accent/20 bg-app-bg/40 p-3 flex flex-col gap-2">
+                            <div className="flex items-baseline justify-between gap-3">
+                                <span className="text-xs font-bold text-app-text truncate">
+                                    « {nomDeLEffetPropose(proposition.nom, effet.nom)} »
+                                </span>
+                                <span className="text-ui-9 text-app-text/30 uppercase tracking-widest shrink-0 tabular-nums">
+                                    {etapesProposees.length} étape{etapesProposees.length > 1 ? 's' : ''}
+                                    {' · '}{aleaDeLaProposition(proposition)} % de désordre
+                                </span>
+                            </div>
+
+                            {etapesProposees.length > 0
+                                ? bande(etapesProposees)
+                                : (
+                                    /* ⚠️ Le dire plutôt que de montrer une bande vide : une
+                                       proposition illisible ressemble sinon à une panne. */
+                                    <p className="text-ui-10 text-amber-400 italic">
+                                        Aucune étape jouable là-dedans — les couleurs rendues ne sont
+                                        pas des hexadécimaux. Réessayez.
+                                    </p>
+                                )}
+
+                            {justificationDeLaProposition(proposition) && (
+                                <p className="text-ui-10 text-slate-400 italic leading-snug">
+                                    {justificationDeLaProposition(proposition)}
+                                </p>
+                            )}
+
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={remplacerParLaProposition}
+                                    disabled={etapesProposees.length === 0}
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-white text-ui-10 font-bold uppercase tracking-widest hover:brightness-110 disabled:opacity-40"
+                                >
+                                    <Check size={12} /> Remplacer les étapes
+                                </button>
+                                <button
+                                    onClick={demanderALIA}
+                                    disabled={enCours}
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-app-text text-ui-10 font-bold uppercase tracking-widest disabled:opacity-40"
+                                >
+                                    <Lightbulb size={12} /> Une autre
+                                </button>
+                                <button
+                                    onClick={() => setProposition(null)}
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-500 hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
+                                >
+                                    <X size={12} /> Refuser
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {bande(etapes)}
                     <p className="text-ui-9 text-app-text/30 uppercase tracking-widest">
                         un tour = {(tour / 1000).toFixed(1)} s · {etapes.length} étape{etapes.length > 1 ? 's' : ''}
                     </p>
