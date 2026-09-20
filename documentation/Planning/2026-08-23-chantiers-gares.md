@@ -7798,6 +7798,76 @@ l'écran.**
 
 ---
 
+### 95 · ⛔ Deux des trois volumes n'existaient pas — et le dosage d'un moment (2026-09-20)
+
+David : *« je voudrais pouvoir définir le volume de Music-OS, Ambient-OS et Sound-OS »* dans un
+moment de storyboard. La demande tenait en trois champs ; **la vérification avant de brancher a
+rendu tout autre chose.**
+
+#### Ce que le relevé a montré
+
+| Module | Son volume général | État réel |
+| :--- | :--- | :--- |
+| **Music-OS** | `setMasterVolume` → `musicEngine.setMasterVolume` | ✅ agissait |
+| **Sound-OS** | `setMasterVolume` → `set({ masterVolume })` **et rien d'autre** | ⛔ n'agissait sur rien |
+| **Ambient-OS** | idem, et **personne ne l'écrivait ni ne le lisait** | ⛔ champ mort |
+
+⛔ **Pour Sound-OS, la chaîne était complète sauf le dernier fil.**
+`SoundEngine.setMasterVolume` était écrite, soignée, elle menait même les **voies détournées**
+vers les autres enceintes — et elle n'avait **aucun appelant**.
+
+⭐ **Conséquence visible, et elle durait depuis toujours : le curseur de volume du soundboard de
+la tablette ne faisait rien.** `remote:sound:volume` → `audioActions.setVolume` →
+`useSoundStore.setMasterVolume` → un nombre rangé dans un magasin que rien ne lit. Un réglage
+offert à portée de pouce, sur une tablette posée sur la table, **muet**.
+
+⭐ ***C'est le motif « une chaîne complète sans bouton au bout », pris à l'envers : le bouton
+existait, c'est le fil qui manquait.*** Huitième occurrence de cette famille dans ce dépôt — et la
+première dans ce sens-là.
+
+⚠️ **Ambient-OS était un cran plus loin** : `masterVolume` y était initialisé, **persisté**,
+**restauré des instantanés**, envoyé dans `applySnapshot`… et aucun nœud du graphe audio ne le
+portait. *Un réglage persisté que personne n'applique coûte plus cher qu'un réglage absent : il se
+sauvegarde, il voyage, il se restaure, et il ne fait rien.*
+
+#### ⛔ Le nœud qu'il ne fallait pas réutiliser
+
+Ambient-OS a bien un `masterGain`, mais sa valeur est **1,3 — une compensation de gain**, pas un
+réglage. Y multiplier le volume du meneur aurait rendu la constante irrécupérable : *plus personne
+n'aurait su ce qui venait du code et ce qui venait de lui.* D'où un `volumeGain` séparé, et un
+**troisième facteur** dans le produit que les voies détournées reproduisent.
+
+#### ⭐ Le piège de cette fonctionnalité ne se produit qu'à UNE valeur
+
+« Couper la musique sur ce moment » s'écrit **0**. Or tout ce formulaire range ses champs
+facultatifs avec `valeur || undefined` — qui transforme ce zéro en « ne touche à rien ». Le moment
+aurait fait **l'inverse exact** de ce qu'on lui demande : la musique à plein volume sur le silence
+voulu.
+
+⭐ ***Un défaut qui ne se produit qu'à une seule valeur est un défaut qu'aucune relecture ne
+voit.*** L'état de l'écran est donc `number | null`, l'enregistrement emploie `?? undefined`, et un
+essai interdit nommément la confusion.
+
+#### Les décisions
+
+| Question | Réponse | Pourquoi |
+| :--- | :--- | :--- |
+| Saut ou fondu ? | **fondu, réglable par source** (choix de David) | *un saut de niveau s'entend comme une fausse manoeuvre, un fondu comme une intention* — et couper net un bruitage pendant que la musique descend est un geste légitime |
+| Quelle courbe ? | **rampe linéaire** | `setTargetAtTime` s'approche sans atteindre : un « coupe le son » finirait à un cheveu de zéro, **et le cheveu s'entend dans une pièce silencieuse** |
+| Quand poser ? | **après tout le reste** | un volume posé avant le démarrage d'une musique serait écrasé par elle |
+| Le niveau se rend-il ? | **non** | un moment **pose** un niveau, il ne l'emprunte pas. *C'est un réglage, pas une parenthèse* — et le guide le dit |
+
+**Ancres** : `storyboard/volumesDuMoment.ts` (la règle et le piège du zéro),
+`sound/SoundEngine.ts` + `useSoundStore` (le fil manquant), `ambient/AmbientEngine.ts`
+(`volumeGain`, le troisième facteur) + `useAmbientStore`, `music/MusicEngine.ts` (le fondu),
+`useStoryboardStore` (les six champs et le bloc 7), `StoryboardDashboard.tsx` (les trois lignes).
+
+**Vérifié** : `tsc -b` propre, lint sans rien de neuf, **11 essais neufs**. ⚠️ **Non éprouvé à
+l'écran** — et le curseur de la tablette mérite un essai à part, puisqu'il est réparé sans avoir
+été demandé.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7833,6 +7903,7 @@ l'écran.**
 | 28 | **Essayer une ambiance sur les lampes** | ✅ **LIVRÉ le 20/09** — le dernier reste de l'IA qui compose. Avant lui il fallait **occuper une case du râtelier pour regarder une ambiance qu'on allait peut-être refuser**. ⛔ Le cœur n'était pas d'allumer mais de **rendre la pièce** : les **trois** portes du retour existantes visent une *scène* et auraient **éteint le salon** un après-midi de préparation. ⭐ Quatrième visée, et une photographie qui **copie** au lieu d'emprunter (§ 92) | Une scène → « Proposer une ambiance » → **Essayer**, puis **Revenir** | Rien. ⚠️ Non éprouvé à l'écran, et il demande de vraies lampes |
 | 29 | **L'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 20/09** (*« ça marche très bien »*) — créer un effet de zéro, là où « Mes ambiances » ne savait que **décliner** un des 48. ⭐ La décision qui débloque tout : **un effet peut être de la donnée** — quatre nombres par étape, plus le désordre, *qui est ce qui sépare une suite d'un geste*. Il se joue **avant le `switch`** et le traverse quand même, donc il obéit aux mêmes curseurs sans une ligne de plus. ⛔ Adaptatif et jamais soliste : *une lampe qui ne joue pas ne s'explique pas* (§ 93) | Écran de choix d'un effet → — | Rien. ✅ **Vu à l'écran** |
 | 30 | **Le thème d'ambiance dans un moment** | ✅ **CORRIGÉ le 20/09** — signalé par David : un moment ne savait dire que le **mélange** (la scène), jamais la **matière** (le thème). ⛔ Et une scène sur huit emplacements vides **réussit** sans produire un son : *une ambiance qui ne sort pas ressemble à une ambiance discrète*. Cinquième sort au rapport du moment (`sans-matiere`, lu « aucun son chargé »), et la **capture** du thème, qui existait dans le magasin sans lecteur (§ 94) | Un moment → **Ambiance** → choisir un thème, puis une scène | Rien. ⚠️ Non éprouvé à l'écran |
+| 31 | **Le dosage des trois sources** | ✅ **LIVRÉ le 20/09** — demandé par David : régler le volume de Music-OS, Ambient-OS et Sound-OS depuis un moment. ⛔ **Deux des trois volumes n'existaient pas** : `SoundEngine.setMasterVolume` était écrite **sans appelant** (donc le curseur du soundboard de la **tablette** était muet), et Ambient-OS n'avait aucun nœud pour le porter alors qu'il était persisté et restauré. ⭐ Le piège tenait à **une seule valeur** : `0 || undefined` aurait fait l'inverse exact de « coupe le son » (§ 95) | Un moment → **Dosage des sources** → activer une ligne, curseur et fondu | Rien. ⚠️ Non éprouvé à l'écran |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -82,3 +82,36 @@ To avoid circular dependencies within the global `Shell` (which imports the `Mas
 - **MasterAudioController**: Located in the global `Shell` header.
 - **Visuals**: Glassmorphism design, dynamic CSS-variable-based gradients for the slider, and "Aura/Glow" effects for the Focus button.
 - **Panic Button**: A dedicated power icon (red in Modern, burgundy in Medieval) for immediate emergency stops.
+
+---
+
+## ⛔ Deux niveaux de volume, et la confusion a coûté cher (2026-09-20)
+
+Ce document décrit le volume **global** — `useAudioMasterStore`, un facteur unique appliqué par
+chaque moteur sur son `globalSyncGain`. Il existe **un second niveau**, par module, et ce n'est pas
+le même :
+
+| Niveau | Où | Ce qu'il fait |
+| :--- | :--- | :--- |
+| **Global** | `useAudioMasterStore.masterVolume` | un curseur dans l'en-tête, porté par les quatre moteurs |
+| **Par module** | `useMusicStore` / `useAmbientStore` / `useSoundStore` `.masterVolume` | le dosage d'**une** source |
+
+⛔ **Deux des trois volumes par module n'agissaient sur rien**, et personne ne s'en était aperçu —
+précisément parce que le curseur global, lui, marchait : *quand un réglage voisin fonctionne, un
+réglage mort ne se remarque pas.*
+
+- **Sound-OS** : `SoundEngine.setMasterVolume` était écrite, complète (voies détournées comprises)
+  et **sans appelant**. Le magasin se contentait de `set({ masterVolume })`. Conséquence : le
+  curseur du soundboard de la **tablette** (`remote:sound:volume`) était muet.
+- **Ambient-OS** : le champ était persisté, restauré des instantanés, envoyé dans `applySnapshot`
+  — et **aucun nœud du graphe ne le portait**. Il a désormais son `volumeGain`, distinct du
+  `masterGain` qui porte la **compensation de 1,3** : *mélanger un réglage et une constante rend la
+  constante irrécupérable.*
+
+⚠️ **Les trois acceptent un fondu** depuis cette date : `setMasterVolume(valeur, fonduMs?)`. Sans
+durée, on garde le lissage court d'un curseur qu'on traîne (`setTargetAtTime`, τ = 0,05) ; avec,
+c'est une **rampe linéaire** — `setTargetAtTime` n'atteint jamais sa cible, et le cheveu qui reste
+au-dessus de zéro s'entend dans une pièce silencieuse.
+
+Les moments de storyboard emploient ce paramètre : voir `storyboard/volumesDuMoment.ts` et le
+§ 95 du registre.

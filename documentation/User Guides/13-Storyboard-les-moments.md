@@ -116,6 +116,47 @@ Ambient-OS porte deux notions, et un moment peut dire les deux :
 > n'est ni un thème introuvable ni un module absent — c'est qu'il vous manque un thème avant
 > votre scène.
 
+## 🎚️ Le dosage des trois sources
+
+Un moment sait désormais **à quel volume** chaque source sonne. C'est ce qui fait la différence
+entre une révélation chuchotée et une charge de cavalerie — *elles emploient les mêmes trois
+modules ; ce qui les sépare est le dosage.*
+
+Trois lignes, une par source : **Musique**, **Ambiance**, **Bruitages**. Chacune s'active
+séparément.
+
+| État de la ligne | Ce que le moment fait |
+| :--- | :--- |
+| **éteinte** | il **ne touche pas** à cette source — elle reste où vous l'aviez laissée |
+| **allumée, curseur à 40 %** | il pose cette source à 40 % |
+| **allumée, curseur à 0 %** | il **coupe** cette source |
+
+> ⛔ **Ne rien dire et couper sont deux intentions différentes**, et l'écran vous fait choisir.
+> C'est aussi pour cela que l'activation est un bouton et non un curseur à zéro : *un curseur seul
+> ne saurait pas porter les deux.*
+
+### Le fondu, par source
+
+À côté de chaque curseur, un temps en millisecondes — **1 500 par défaut**. C'est le temps que met
+la source à atteindre son niveau.
+
+> [!TIP]
+> **Zéro coupe net**, ce qui est le geste d'un silence brutal. Au-delà, ça glisse : *un saut de
+> niveau en pleine scène s'entend comme une fausse manoeuvre, un fondu s'entend comme une
+> intention.* Et chaque source a le sien — couper net un bruitage pendant que la musique descend
+> lentement est un geste parfaitement légitime.
+
+> [!NOTE]
+> **Le niveau reste après le moment.** Un moment pose un volume, il ne l'emprunte pas : après une
+> scène chuchotée, la musique reste basse jusqu'à ce qu'un autre moment la remonte, ou que vous
+> touchiez le curseur du module. *C'est un réglage, pas une parenthèse.*
+
+> ⛔ **Ce que cela a réparé en chemin.** Sur les trois volumes, **un seul fonctionnait** avant le
+> 2026-09-20. Celui de Sound-OS était écrit dans le magasin et **porté au son par personne** — le
+> curseur du soundboard de votre tablette ne faisait donc rien du tout. Celui d'Ambient-OS n'avait
+> même pas de nœud dans le graphe audio : il était sauvegardé, restauré, et inerte. Les deux sont
+> branchés.
+
 ## 🅰️ Le Titre à l'écran
 
 Chaque moment peut afficher un **titre** par-dessus l'image projetée, dans la police du thème du jeu :
