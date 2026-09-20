@@ -94,6 +94,56 @@ Colonne de gauche, **Tags Tactiques**. Cliquez pour en sélectionner plusieurs, 
 *C'est ce bouton qui transforme les tags en vrai outil : `PNJ` + `Ennemi` en mode AND vous donne
 exactement les portraits d'adversaires.*
 
+⭐ **Chaque tag porte désormais son compte**, et la liste est classée par **usage** et non par
+ordre alphabétique : *ce qu'on cherche le plus souvent doit être ce qu'on atteint le plus vite.*
+Le compte dit aussi lesquels ne servent à rien — ce sont ceux à fusionner.
+
+### ✨ Les tags dans la barre de recherche, et le refus
+
+| Ce que vous tapez | Ce que ça veut dire |
+| :--- | :--- |
+| `taverne` | du texte — nom, type ou tag, comme avant |
+| `#taverne` | **exige** le tag |
+| `-combat` | **refuse** le tag |
+
+⛔ **Il n'y avait aucune façon de dire « pas ça »**, et c'est pourtant la moitié des recherches
+d'un meneur qui range : *« mes décors de taverne, sauf ceux que j'ai déjà employés en combat ».*
+
+> [!NOTE]
+> **Un refus ne se négocie pas.** Il s'applique même en mode `OR` — *dire « sauf les combats » et
+> voir quand même des combats serait un réglage qui ment.*
+
+> [!TIP]
+> Un tiret **au milieu** d'un mot reste du texte : `plan-b` cherche bien `plan-b`. Seul un jeton
+> qui **commence** par `-` est un refus.
+
+### 🏷️ Renommer, fusionner ou supprimer un tag — partout
+
+**Double-cliquez un tag** dans la colonne de gauche. Un champ s'ouvre :
+
+- **un nouveau nom** → le tag est renommé sur tous les fichiers qui le portent ;
+- **le nom d'un tag qui existe déjà** → les deux **fusionnent**, sans laisser de doublon ;
+- **vide** → le tag disparaît de toute la bibliothèque.
+
+⭐ **Les trois sont le même geste**, et c'est voulu : *renommer `tavernes` en `taverne` alors que
+`taverne` existe, c'est une fusion.* Trois écrans vous auraient demandé de savoir d'avance lequel
+des trois vous faites.
+
+> ⛔ **Ce que cela répare.** Rien ne permettait de corriger un tag une fois posé : `taverne`,
+> `tavernes` et `Taverne` faisaient trois entrées, trois filtres, chacun rendant un tiers des
+> fichiers. *Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.*
+
+### 📦 Étiqueter plusieurs fichiers d'un coup
+
+Sur chaque vignette, en haut à gauche, une **case** apparaît au survol. Dès qu'un fichier est
+coché, une barre s'ouvre au-dessus de la grille : tapez un tag, puis **Ajouter** ou **Retirer** —
+le geste porte sur toute la sélection. **Tout l'écran** coche ce que le filtre affiche.
+
+> [!TIP]
+> **C'est le geste de l'après-import.** Quarante fichiers déposés d'un bloc se taguaient un par
+> un, en rouvrant le panneau de détail à chaque fois — *le coût n'était pas le clic, c'était que
+> personne ne le faisait.*
+
 ### Les dossiers de collection
 
 Colonne de gauche, en haut. **Trois familles** :
@@ -137,6 +187,28 @@ anciens**, **Taille**, **Nom (A-Z)**.
 Au survol de la vignette apparaissent **Supprimer Asset** et le grand bouton rond **Sélectionner
 pour Transmission** — celui qui renvoie le fichier au module qui a ouvert le Hub. Un crayon permet
 de **Modifier l'identifiant** (le nom d'affichage ; le fichier d'origine n'est pas touché).
+
+### ✨ Le champ de tags vous aide
+
+Dans le panneau de détails, le champ de saisie fait trois choses qu'il ne faisait pas :
+
+| | |
+| :--- | :--- |
+| **Il propose** | dès la première lettre, les tags déjà employés qui commencent par ce que vous tapez |
+| **Il vous rattrape** | *« Vouliez-vous dire ? »* quand vous êtes à une lettre d'un tag connu — `tavrne` vous propose `taverne` |
+| **Il devine** | quand le champ est vide, il propose des tags tirés du **nom du fichier** et du **dossier** |
+
+> ⭐ **Le nom du fichier disait déjà tout.** `taverne-nuit-pluie.jpg` porte trois tags que personne
+> ne retapait : *le travail était fait, il n'était simplement pas lu.* Les nombres, les extensions
+> et les mots qui ne disent rien (`IMG`, `screenshot`, `final`, `copie`) sont écartés.
+
+> ⛔ **On propose, on ne pose jamais.** Un nom de fichier est un indice, pas une déclaration :
+> *un tag faux posé d'office est pire qu'un tag absent, parce qu'il se retrouve dans un filtre.*
+
+> [!NOTE]
+> **Une proposition préfère toujours un mot que vous employez déjà.** Si le fichier s'appelle
+> `tavernes.jpg` et que votre bibliothèque connaît `taverne`, c'est `taverne` qui est proposé —
+> sinon l'automatisme fabriquerait le doublon qu'on cherche à éviter, et **à grande échelle**.
 
 ### Le panneau de détails
 

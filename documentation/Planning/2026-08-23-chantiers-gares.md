@@ -7868,6 +7868,78 @@ l'écran** — et le curseur de la tablette mérite un essai à part, puisqu'il 
 
 ---
 
+### 96 · ⭐ Les étiquettes du Media Hub — empêcher le doublon, et réparer celui qui est là (2026-09-21)
+
+David : *« je voudrais que la gestion des tags dans le Media Hub soit plus intelligente »*. Quatre
+lectures possibles, toutes retenues — saisie assistée, étiquetage en lot, propositions
+automatiques, filtres plus fins.
+
+#### ⛔ Le défaut qui les engendre tous
+
+Le champ de saisie ne proposait **rien**. Chaque étiquette se retapait de mémoire, donc chaque
+frappe était une occasion de créer un quasi-doublon : `taverne`, `tavernes`, `Taverne`. Trois
+entrées dans la liste latérale, trois filtres rendant chacun un tiers des fichiers. Et **rien ne
+permettait de les fusionner ensuite**.
+
+⭐ ***Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.*** Les quatre demandes
+n'étaient pas quatre fonctionnalités : c'étaient les deux bouts d'un même problème — ce qui
+**empêche** le doublon, et ce qui **répare** celui qui existe.
+
+#### Les décisions qui font la différence
+
+| Question | Réponse | Pourquoi |
+| :--- | :--- | :--- |
+| Les accents ? | **gardés** à l'écriture, ignorés à la comparaison | *une bibliothèque française qui s'écrit sans accents a l'air cassée* — mais `foret` et `forêt` sont la même étiquette |
+| Le pluriel ? | le `s` tombe à partir de **quatre** lettres | sinon `bois` devient `boi` et `os` devient `o` |
+| Renommer / fusionner / supprimer ? | **un seul geste** | renommer vers une étiquette existante *est* une fusion ; vers rien, *est* une suppression. Trois écrans auraient demandé de savoir d'avance lequel on fait |
+| L'exclusion ? | **dans la barre**, pas dans la liste | une liste à cocher demanderait un **troisième état** par étiquette, sur cent étiquettes |
+| Un refus en mode OU ? | il s'applique quand même | *dire « sauf les combats » et voir des combats serait un réglage qui ment* |
+| L'IA à l'import ? | **non** (choix de David) | le nom du fichier suffit dans neuf cas sur dix, et il est gratuit, instantané, hors ligne |
+
+#### ⭐ Le nom du fichier disait déjà tout
+
+`taverne-nuit-pluie.jpg` porte trois étiquettes, et arrivait dans la bibliothèque sans aucune.
+*Le travail était fait, il n'était simplement pas lu.*
+
+⛔ **Mais une proposition préfère TOUJOURS un mot du vocabulaire existant.** Proposer `tavernes`
+quand la bibliothèque connaît `taverne`, ce serait fabriquer le doublon qu'on cherche à éviter
+— *par automatisme, donc à grande échelle.* Et on propose : on ne pose jamais. *Une étiquette
+fausse posée d'office est pire qu'une absence d'étiquette, parce qu'elle se retrouve dans un
+filtre.*
+
+#### ⭐ L'avertissement arrive AVANT la validation
+
+« Vouliez-vous dire ? » s'affiche pendant la frappe, quand la saisie est à **une** correction d'une
+étiquette connue. *C'est le seul moment où corriger ne coûte rien : après, il faut un second
+geste, et personne ne le fait.*
+
+La distance d'édition s'arrête au plafond au lieu de se calculer entièrement — *on ne mesure pas
+une ressemblance, on cherche une faute de frappe*, et c'est ce qui la rend tenable sur cent
+étiquettes à chaque lettre tapée.
+
+#### ⚠️ Deux gestes de masse, une même prudence
+
+`renommerDansLaBibliotheque` et `appliquerEnLot` rendent **uniquement les médias qui changent** :
+*réécrire les deux cents autres pour rien, c'est deux cents écritures IndexedDB et un miroir qui
+recopie tout.* Côté magasin, une **seule** transaction et un **seul** `set` — la leçon de
+l'import multiple, où trente écritures lancées ensemble étaient la course déjà payée.
+
+⛔ Et un échec au milieu n'arrête pas les autres : le compte rendu porte sur ce qui a
+**réellement** été écrit. *Un geste de masse qui s'arrête au milieu sans le dire laisse une
+bibliothèque à moitié renommée, ce qui est pire que pas de renommage du tout.*
+
+**Ancres** : `components/media/vocabulaireDesTags.ts` (forme, comparaison, distance, suggestions,
+renommage, lot), `components/media/tagsProposes.ts` (le nom du fichier),
+`components/media/filtreDeTags.ts` (`#tag`, `-tag`), `stores/useMediaStore` (`appliquerDesTags`),
+`components/MediaBrowser.tsx` (barre du lot, sélection, renommage, classement par usage),
+`image/components/TacticalDetailPanel.tsx` (la saisie assistée).
+
+**Vérifié** : `tsc -b` propre, lint sans rien de neuf, **57 essais neufs**, **5 703 essais** au
+vert (446 fichiers), 29 E2E.
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-21** — David : *« ça fonctionne »*.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7904,6 +7976,7 @@ l'écran** — et le curseur de la tablette mérite un essai à part, puisqu'il 
 | 29 | **L'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 20/09** (*« ça marche très bien »*) — créer un effet de zéro, là où « Mes ambiances » ne savait que **décliner** un des 48. ⭐ La décision qui débloque tout : **un effet peut être de la donnée** — quatre nombres par étape, plus le désordre, *qui est ce qui sépare une suite d'un geste*. Il se joue **avant le `switch`** et le traverse quand même, donc il obéit aux mêmes curseurs sans une ligne de plus. ⛔ Adaptatif et jamais soliste : *une lampe qui ne joue pas ne s'explique pas* (§ 93) | Écran de choix d'un effet → — | Rien. ✅ **Vu à l'écran** |
 | 30 | **Le thème d'ambiance dans un moment** | ✅ **CORRIGÉ le 20/09** — signalé par David : un moment ne savait dire que le **mélange** (la scène), jamais la **matière** (le thème). ⛔ Et une scène sur huit emplacements vides **réussit** sans produire un son : *une ambiance qui ne sort pas ressemble à une ambiance discrète*. Cinquième sort au rapport du moment (`sans-matiere`, lu « aucun son chargé »), et la **capture** du thème, qui existait dans le magasin sans lecteur (§ 94) | Un moment → **Ambiance** → choisir un thème, puis une scène | Rien. ⚠️ Non éprouvé à l'écran |
 | 31 | **Le dosage des trois sources** | ✅ **LIVRÉ le 20/09** — demandé par David : régler le volume de Music-OS, Ambient-OS et Sound-OS depuis un moment. ⛔ **Deux des trois volumes n'existaient pas** : `SoundEngine.setMasterVolume` était écrite **sans appelant** (donc le curseur du soundboard de la **tablette** était muet), et Ambient-OS n'avait aucun nœud pour le porter alors qu'il était persisté et restauré. ⭐ Le piège tenait à **une seule valeur** : `0 || undefined` aurait fait l'inverse exact de « coupe le son » (§ 95) | Un moment → **Dosage des sources** → activer une ligne, curseur et fondu | Rien. ⚠️ Non éprouvé à l'écran |
+| 32 | **Les étiquettes du Media Hub** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — les quatre demandes de David n'étaient pas quatre fonctionnalités mais **les deux bouts d'un même problème** : ce qui empêche le doublon (suggestions, « vouliez-vous dire ? », propositions alignées sur le vocabulaire existant) et ce qui répare celui qui est là (renommer = fusionner = supprimer, en un geste). ⭐ *Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.* Plus l'étiquetage en lot et le refus `-tag` dans la barre (§ 96) | Media Hub → taper un tag à une lettre près, — | Rien. ✅ **Vu à l'écran** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
