@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useMediaStore } from '../stores/useMediaStore';
 import { correspondALaRecherche } from './media/rechercheDeMedia';
+import { analyserLaRecherche, passeLeFiltreDeTags } from './media/filtreDeTags';
+import { tagsParUsage, appliquerEnLot, renommerDansLaBibliotheque, formeCanonique } from './media/vocabulaireDesTags';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
 import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
 import { usagesDesMedias } from '../services/proprietairesDesMedias';
@@ -52,6 +54,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         clearDB, 
         renameMedia,
         updateMediaTags,
+        appliquerDesTags,
         updateMediaCampaigns,
         collections, 
         addCollection, 
@@ -99,6 +102,18 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     const [typeFilter, setTypeFilter] = useState<MediaType | 'all'>('all');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [tagLogic, setTagLogic] = useState<'AND' | 'OR'>('OR');
+
+    /*
+      ⭐ **Étiqueter en lot.** Quarante fichiers importés d'un bloc se taguaient
+      un par un, en rouvrant le panneau de détail à chaque fois. *Le coût n'était
+      pas le clic : c'était que personne ne le faisait, donc que la bibliothèque
+      restait sans étiquettes.*
+    */
+    const [selectionMultiple, setSelectionMultiple] = useState<Set<string>>(new Set());
+    const [tagDuLot, setTagDuLot] = useState('');
+    /** L'étiquette qu'on est en train de renommer dans toute la bibliothèque. */
+    const [tagARenommer, setTagARenommer] = useState<string | null>(null);
+    const [nouveauNomDeTag, setNouveauNomDeTag] = useState('');
     const [smartFilter, setSmartFilter] = useState<'none' | 'recent' | 'untagged' | 'orphans'>('none');
     const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'size-desc' | 'name-asc'>('date-desc');
     const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
@@ -223,7 +238,53 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         }
     };
 
+    const basculerLaSelection = (id: string) => setSelectionMultiple(prev => {
+        const suite = new Set(prev);
+        if (suite.has(id)) suite.delete(id); else suite.add(id);
+        return suite;
+    });
+
+    /** Poser ou retirer une étiquette sur toute la sélection. */
+    const etiqueterLeLot = async (sens: 'ajouter' | 'retirer') => {
+        const tag = formeCanonique(tagDuLot);
+        if (!tag || selectionMultiple.size === 0) return;
+
+        const choisis = mediaList.filter(m => selectionMultiple.has(m.id));
+        const changements = appliquerEnLot(choisis, { [sens]: [tag] });
+        if (changements.length === 0) {
+            /* ⚠️ Le dire : *un geste sans effet passe pour une panne.* */
+            gmToast(t('mediaBrowser.tags.rienAFaire', { tag }), 'warning');
+            return;
+        }
+        const ecrits = await appliquerDesTags(changements);
+        gmToast(t(`mediaBrowser.tags.${sens}Fait`, { count: ecrits, tag }), 'success');
+        setTagDuLot('');
+    };
+
+    /**
+     * **Renommer, fusionner ou supprimer une étiquette partout.**
+     *
+     * ⭐ Les trois sont le même geste : renommer vers une étiquette qui existe
+     * **est** une fusion, et renommer vers rien **est** une suppression.
+     */
+    const renommerLeTag = async () => {
+        if (!tagARenommer) return;
+        const changements = renommerDansLaBibliotheque(
+            mediaList, tagARenommer, formeCanonique(nouveauNomDeTag),
+        );
+        const ecrits = await appliquerDesTags(changements);
+
+        /* La sélection de filtre pointait peut-être sur l'ancien nom : la
+           laisser là afficherait une liste vide sans raison apparente. */
+        setSelectedTags(prev => prev.filter(t => t !== tagARenommer));
+        gmToast(t('mediaBrowser.tags.renommeFait', { count: ecrits, tag: tagARenommer }), 'success');
+        setTagARenommer(null);
+        setNouveauNomDeTag('');
+    };
+
     // 4. Filtering Logic
+    /* La barre porte du texte, des étiquettes exigées et des étiquettes refusées. */
+    const rechercheLue = analyserLaRecherche(search);
     const filteredMedia = mediaList.filter(m => {
         if (allowedTypes && !allowedTypes.includes(m.type)) return false;
         if (typeFilter !== 'all' && m.type !== typeFilter) return false;
@@ -240,13 +301,20 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         */
         if (smartFilter === 'orphans' && !estOrphelin(m.id)) return false;
 
-        if (smartFilter !== 'untagged' && selectedTags.length > 0) {
-            const mediaTagsLower = m.tags.map(t => t.toLowerCase());
-            if (tagLogic === 'OR') {
-                if (!selectedTags.some(tag => mediaTagsLower.includes(tag.toLowerCase()))) return false;
-            } else { // AND
-                if (!selectedTags.every(tag => mediaTagsLower.includes(tag.toLowerCase()))) return false;
-            }
+        /*
+          ⭐ **Les étiquettes de la barre rejoignent celles de la liste.** Écrire
+          `#taverne` et cliquer « taverne » doivent faire la même chose, sinon
+          l'écran a deux vérités. L'exclusion, elle, n'existe que dans la barre :
+          la dire dans une liste à cocher demanderait un **troisième état** par
+          étiquette, sur cent étiquettes.
+        */
+        if (smartFilter !== 'untagged') {
+            const exiges = [...selectedTags, ...rechercheLue.inclus];
+            if (!passeLeFiltreDeTags(m.tags, {
+                inclus: exiges,
+                exclus: rechercheLue.exclus,
+                logique: tagLogic === 'AND' ? 'ET' : 'OU',
+            })) return false;
         }
 
         /*
@@ -256,7 +324,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
           taverne »*. *Une recherche qui échoue sur un accent ne se lit pas
           comme une recherche stricte : elle se lit comme un fichier perdu.*
         */
-        if (!correspondALaRecherche(m, search)) return false;
+        if (!correspondALaRecherche(m, rechercheLue.texte)) return false;
         
         if (campaignFilterEnabled && activeCampaignId) {
             if (!m.campaignIds?.includes(activeCampaignId)) return false;
@@ -279,7 +347,14 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     });
 
     const displayMedia = smartFilter === 'recent' ? sortedAndFilteredMedia.slice(0, 50) : sortedAndFilteredMedia;
-    const allTags = Array.from(new Set(mediaList.flatMap(m => m.tags))).sort();
+    /*
+      ⭐ **Classées par usage, et non par alphabet.** Une liste alphabétique met
+      `abysses` avant `taverne` employée quarante fois : *ce qu'on cherche le
+      plus souvent doit être ce qu'on atteint le plus vite.* Le compte dit aussi
+      lesquelles ne servent à rien — celles qu'il faudra fusionner.
+    */
+    const tagsClasses = tagsParUsage(mediaList);
+    const allTags = tagsClasses.map(e => e.tag);
 
     const formatSize = (bytes: number) => {
         if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
@@ -450,10 +525,60 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     {tagLogic}
                                 </button>
                             </div>
+                            {/*
+                              ⭐ **Renommer, fusionner, supprimer : un seul champ.**
+                              Renommer vers une étiquette qui existe EST une fusion ;
+                              renommer vers rien EST une suppression. *Trois écrans
+                              auraient demandé au meneur de savoir d'avance lequel des
+                              trois il fait.*
+                            */}
+                            {tagARenommer && (
+                                <div className="mb-4 px-1 flex flex-col gap-2">
+                                    <p className="text-ui-9 font-bold uppercase tracking-widest text-app-text/40">
+                                        {t('mediaBrowser.tags.renommerTitre', { tag: tagARenommer })}
+                                    </p>
+                                    <input
+                                        autoFocus
+                                        value={nouveauNomDeTag}
+                                        onChange={e => setNouveauNomDeTag(e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === 'Escape') { e.stopPropagation(); setTagARenommer(null); return; }
+                                            if (e.key === 'Enter') void renommerLeTag();
+                                        }}
+                                        list="vocabulaire-des-tags"
+                                        placeholder={t('mediaBrowser.tags.renommerVide')}
+                                        className="w-full bg-app-bg/60 border border-accent/30 rounded-xl px-4 py-2 text-ui-10 font-bold text-accent outline-none"
+                                    />
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => void renommerLeTag()}
+                                            className="px-3 py-1.5 rounded-xl border border-accent/40 text-accent text-ui-9 font-black uppercase tracking-widest hover:bg-accent/10"
+                                        >
+                                            {t('mediaBrowser.tags.appliquer')}
+                                        </button>
+                                        <button
+                                            onClick={() => setTagARenommer(null)}
+                                            className="px-3 py-1.5 rounded-xl text-app-text/40 text-ui-9 font-black uppercase tracking-widest hover:text-app-text"
+                                        >
+                                            {t('mediaBrowser.tags.annuler')}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="flex flex-wrap gap-2 px-1">
                                 {allTags.map(tag => (
                                     <button
                                         key={tag}
+                                        onDoubleClick={(e) => {
+                                            /* Le double-clic ouvre le renommage : il ne coûte
+                                               aucune place à l'écran, et il ne gêne pas le
+                                               clic simple qui filtre. */
+                                            e.stopPropagation();
+                                            setTagARenommer(tag);
+                                            setNouveauNomDeTag(tag);
+                                        }}
+                                        title={t('mediaBrowser.tags.doubleClic')}
                                         onClick={() => {
                                             setSelectedTags(prev => 
                                                 prev.includes(tag) 
@@ -466,6 +591,9 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                         className={`px-4 py-2 rounded-2xl text-ui-10 font-black uppercase tracking-[0.1em] border transition-all duration-300 ${selectedTags.includes(tag) ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/5 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60 hover:bg-app-text/10'}`}
                                     >
                                         {tag}
+                                        <span className="ml-2 opacity-40 tabular-nums">
+                                            {tagsClasses.find(e => e.tag === tag)?.compte ?? 0}
+                                        </span>
                                     </button>
                                 ))}
                                 {allTags.length === 0 && (
@@ -717,6 +845,61 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         </div>
                     </header>
 
+                    {/*
+                      ⚠️ **La barre n'apparaît qu'avec une sélection.** Un bandeau
+                      permanent qui dit « 0 sélectionné » occupe la place sans
+                      rien apprendre — et ce qui est toujours là cesse d'être lu.
+                    */}
+                    {selectionMultiple.size > 0 && (
+                        <div className="flex flex-wrap items-center gap-3 px-12 py-4 bg-accent/5 border-y border-accent/20">
+                            <span className="text-ui-10 font-black uppercase tracking-widest text-accent shrink-0">
+                                {t('mediaBrowser.tags.selection', { count: selectionMultiple.size })}
+                            </span>
+                            <input
+                                value={tagDuLot}
+                                onChange={e => setTagDuLot(e.target.value)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Escape') { e.stopPropagation(); setTagDuLot(''); return; }
+                                    if (e.key === 'Enter') void etiqueterLeLot('ajouter');
+                                }}
+                                list="vocabulaire-des-tags"
+                                placeholder={t('mediaBrowser.tags.placeholderLot')}
+                                className="flex-1 min-w-[10rem] bg-app-bg/60 border border-app-border/20 rounded-xl px-4 py-2 text-ui-10 font-bold text-accent outline-none focus:border-accent/50"
+                            />
+                            <button
+                                onClick={() => void etiqueterLeLot('ajouter')}
+                                disabled={!tagDuLot.trim()}
+                                className="px-3 py-2 rounded-xl border border-accent/30 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/10 disabled:opacity-30"
+                            >
+                                {t('mediaBrowser.tags.ajouter')}
+                            </button>
+                            <button
+                                onClick={() => void etiqueterLeLot('retirer')}
+                                disabled={!tagDuLot.trim()}
+                                className="px-3 py-2 rounded-xl border border-app-border/20 text-app-text/50 text-ui-10 font-black uppercase tracking-widest hover:text-red-400 hover:border-red-400/40 disabled:opacity-30"
+                            >
+                                {t('mediaBrowser.tags.retirer')}
+                            </button>
+                            <button
+                                onClick={() => setSelectionMultiple(new Set(displayMedia.map(m => m.id)))}
+                                className="px-3 py-2 rounded-xl text-app-text/40 text-ui-10 font-black uppercase tracking-widest hover:text-app-text"
+                            >
+                                {t('mediaBrowser.tags.toutSelectionner')}
+                            </button>
+                            <button
+                                onClick={() => setSelectionMultiple(new Set())}
+                                className="px-3 py-2 rounded-xl text-app-text/40 text-ui-10 font-black uppercase tracking-widest hover:text-app-text ml-auto"
+                            >
+                                {t('mediaBrowser.tags.deselectionner')}
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Le vocabulaire, offert à tous les champs d'étiquette de cet écran. */}
+                    <datalist id="vocabulaire-des-tags">
+                        {allTags.map(tag => <option key={tag} value={tag} />)}
+                    </datalist>
+
                     {/* Operational Content Area */}
                     <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-app-bg">
                         
@@ -753,6 +936,24 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     >
                                         {/* Visual Tactical Scan Lines */}
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-accent/20 opacity-0 group-hover:opacity-100 group-hover:animate-scan z-10 pointer-events-none" />
+
+                                        {/*
+                                          ⚠️ **La case reste visible dès qu'elle est cochée**, et
+                                          ne se montre au survol que sinon : *une sélection
+                                          qu'on ne voit qu'en survolant est une sélection qu'on
+                                          croit perdue.*
+                                        */}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); basculerLaSelection(media.id); }}
+                                            title={t('mediaBrowser.tags.selectionner')}
+                                            className={`absolute top-5 left-5 z-20 size-8 rounded-xl border flex items-center justify-center transition-all ${
+                                                selectionMultiple.has(media.id)
+                                                    ? 'bg-accent border-accent text-white opacity-100'
+                                                    : 'bg-app-bg/70 border-app-border/30 text-app-text/40 opacity-0 group-hover:opacity-100 hover:border-accent/50'
+                                            }`}
+                                        >
+                                            <Check size={14} />
+                                        </button>
 
                                         {/* Premium Thumbnail Container */}
                                         <div 

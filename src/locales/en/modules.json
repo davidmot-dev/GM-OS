@@ -602,6 +602,10 @@
         "none": "No usage — will be deleted on the next cleanup",
         "noneProtected": "No usage — locked, therefore spared",
         "unknown": "Unknown usage: {{modules}} did not answer"
+      },
+      "tags": {
+        "proche": "Did you mean?",
+        "proposees": "From the file name"
       }
     },
     "preview": {

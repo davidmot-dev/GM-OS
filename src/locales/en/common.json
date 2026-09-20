@@ -196,6 +196,24 @@
     "orphanBadgeTitle": "No module uses this file. It is not at risk unless you run the cleanup.",
     "importDone": "{{count}} files added to the Hub.",
     "duplicateConfirm": "\"{{name}}\" is already in the Hub, with the same size. Import it anyway?",
-    "clearSearch": "Clear search"
+    "clearSearch": "Clear search",
+    "tags": {
+      "selection": "{{count}} selected",
+      "placeholderLot": "A tag to add to or remove from the whole selection…",
+      "ajouter": "Add",
+      "retirer": "Remove",
+      "toutSelectionner": "Whole screen",
+      "deselectionner": "Deselect",
+      "selectionner": "Select for bulk tagging",
+      "rienAFaire": "Nothing to do: the selection is already like that for “{{tag}}”.",
+      "ajouterFait": "“{{tag}}” added to {{count}} media.",
+      "retirerFait": "“{{tag}}” removed from {{count}} media.",
+      "renommerTitre": "Rename “{{tag}}” everywhere",
+      "renommerVide": "A new name — leave empty to delete the tag everywhere",
+      "renommeFait": "“{{tag}}”: {{count}} media updated.",
+      "appliquer": "Apply",
+      "annuler": "Cancel",
+      "doubleClic": "Click to filter — double-click to rename, merge or delete"
+    }
   }
 }

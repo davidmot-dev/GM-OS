@@ -6,6 +6,11 @@ import type { Campaign } from '../../session/useSessionOSStore';
 import { MediaItemThumbnail } from './MediaItemThumbnail';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { usagesDesMedias } from '../../../services/proprietairesDesMedias';
+import { useMediaStore } from '../../../stores/useMediaStore';
+import {
+    formeCanonique, memeTag, suggestionsDeTag, tagsProches, tagsParUsage,
+} from '../../../components/media/vocabulaireDesTags';
+import { tagsProposes } from '../../../components/media/tagsProposes';
 
 interface TacticalDetailPanelProps {
     media: MediaItem;
@@ -41,6 +46,36 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 }) => {
     const { t, i18n } = useTranslation(['modules', 'common']);
     const [newTag, setNewTag] = useState('');
+
+    /*
+      ⭐ **Le vocabulaire de toute la bibliothèque, classé par usage.** Il est
+      lu ici et non reçu en prop : ce panneau s'ouvre depuis deux écrans, et
+      *une donnée qui doit traverser deux chemins finit par n'en traverser
+      qu'un.*
+    */
+    const mediaList = useMediaStore(s => s.mediaList);
+    const tagsConnus = tagsParUsage(mediaList).map(e => e.tag);
+
+    const saisie = formeCanonique(newTag);
+    const suggestions = saisie ? suggestionsDeTag(saisie, tagsConnus, 6) : [];
+    /* ⛔ *Le seul moment où corriger un quasi-doublon ne coûte rien, c'est
+       avant de valider.* Après, il faut un second geste, et personne ne le fait. */
+    const proches = saisie ? tagsProches(saisie, tagsConnus) : [];
+
+    /* Ce que le nom du fichier et le rangement laissent deviner. */
+    const propositions = tagsProposes({
+        nom: media.name,
+        collection: collections.find(c => c.mediaIds.includes(media.id))?.name ?? null,
+        connus: tagsConnus,
+        deja: media.tags,
+    }, 5);
+
+    const poserUnTag = async (brut: string) => {
+        const tag = formeCanonique(brut);
+        if (!tag || media.tags.some(t => memeTag(t, tag))) { setNewTag(''); return; }
+        await updateMediaTags(media.id, [...media.tags, tag]);
+        setNewTag('');
+    };
 
     /*
       **Il se rendait par-dessus la médiathèque sans jamais écouter Échap.**
@@ -209,15 +244,70 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                             onChange={e => setNewTag(e.target.value)}
                             className="w-full bg-app-bg/60 border border-app-border/10 rounded-2xl px-6 py-4 text-xs font-bold text-accent outline-none placeholder:text-app-text/10 uppercase tracking-[0.2em] focus:border-accent/30 transition-all font-display"
                             onKeyDown={async e => {
-                                if (e.key === 'Enter' && newTag.trim()) {
-                                    const tag = newTag.trim().toLowerCase();
-                                    if (!media.tags.includes(tag)) {
-                                        await updateMediaTags(media.id, [...media.tags, tag]);
-                                    }
-                                    setNewTag('');
-                                }
+                                if (e.key === 'Escape') { e.stopPropagation(); setNewTag(''); return; }
+                                if (e.key === 'Enter') await poserUnTag(newTag);
                             }}
                         />
+
+                        {/*
+                          ⛔ **L'avertissement arrive AVANT la validation.** C'est le
+                          seul moment où corriger un quasi-doublon ne coûte rien :
+                          après, il faut un second geste, et personne ne le fait.
+                        */}
+                        {proches.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-ui-9 font-bold uppercase tracking-widest text-amber-400/80">
+                                    {t('image.detail.tags.proche')}
+                                </span>
+                                {proches.map(tag => (
+                                    <button
+                                        key={tag}
+                                        onClick={() => void poserUnTag(tag)}
+                                        className="px-3 py-1.5 rounded-xl border border-amber-400/40 text-amber-400 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/10"
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Ce que le vocabulaire existant offre pendant la frappe. */}
+                        {suggestions.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                {suggestions.map(tag => (
+                                    <button
+                                        key={tag}
+                                        onClick={() => void poserUnTag(tag)}
+                                        className="px-3 py-1.5 rounded-xl border border-app-border/20 text-app-text/50 text-ui-10 font-black uppercase tracking-widest hover:border-accent/40 hover:text-accent"
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {/*
+                          ⭐ **Ce que le nom du fichier disait déjà.** `taverne-nuit.jpg`
+                          porte deux étiquettes que personne ne retapait : *le travail
+                          était fait, il n'était simplement pas lu.*
+                          ⛔ On propose, on ne pose jamais.
+                        */}
+                        {saisie === '' && propositions.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-ui-9 font-bold uppercase tracking-widest text-app-text/30">
+                                    {t('image.detail.tags.proposees')}
+                                </span>
+                                {propositions.map(tag => (
+                                    <button
+                                        key={tag}
+                                        onClick={() => void poserUnTag(tag)}
+                                        className="px-3 py-1.5 rounded-xl border border-dashed border-accent/30 text-accent/70 text-ui-10 font-black uppercase tracking-widest hover:bg-accent/10 hover:text-accent"
+                                    >
+                                        + {tag}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </section>
 

@@ -196,6 +196,24 @@
     "orphanBadgeTitle": "Aucun module ne se sert de ce fichier. Il n'est pas en danger tant que vous ne lancez pas le nettoyage.",
     "importDone": "{{count}} fichiers rangés dans le Hub.",
     "duplicateConfirm": "« {{name}} » existe déjà dans le Hub, avec la même taille. L'importer quand même ?",
-    "clearSearch": "Effacer la recherche"
+    "clearSearch": "Effacer la recherche",
+    "tags": {
+      "selection": "{{count}} sélectionné(s)",
+      "placeholderLot": "Une étiquette à poser ou à retirer sur toute la sélection…",
+      "ajouter": "Ajouter",
+      "retirer": "Retirer",
+      "toutSelectionner": "Tout l’écran",
+      "deselectionner": "Désélectionner",
+      "selectionner": "Sélectionner pour un étiquetage en lot",
+      "rienAFaire": "Rien à faire : la sélection est déjà comme ça pour « {{tag}} ».",
+      "ajouterFait": "« {{tag}} » posée sur {{count}} média(s).",
+      "retirerFait": "« {{tag}} » retirée de {{count}} média(s).",
+      "renommerTitre": "Renommer « {{tag}} » partout",
+      "renommerVide": "Un nouveau nom — vide pour supprimer l’étiquette partout",
+      "renommeFait": "« {{tag}} » : {{count}} média(s) mis à jour.",
+      "appliquer": "Appliquer",
+      "annuler": "Annuler",
+      "doubleClic": "Clic pour filtrer — double-clic pour renommer, fusionner ou supprimer"
+    }
   }
 }

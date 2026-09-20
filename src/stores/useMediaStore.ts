@@ -35,6 +35,15 @@ interface MediaStoreState {
     restaurerUnMedia: (metadata: MediaItem, blob: Blob) => Promise<boolean>;
     deleteMedia: (id: string) => Promise<void>;
     updateMediaTags: (id: string, tags: string[]) => Promise<void>;
+    /**
+     * **Écrire plusieurs listes d'étiquettes d'un seul geste.**
+     *
+     * Employée par l'étiquetage en lot et par le renommage d'une étiquette dans
+     * toute la bibliothèque. Elle rend le **nombre de médias touchés** —
+     * l'écran le dit, et *un geste qui ne dit pas ce qu'il a fait sur deux cents
+     * fichiers ne se vérifie pas.*
+     */
+    appliquerDesTags: (changements: { id: string; tags: string[] }[]) => Promise<number>;
     renameMedia: (id: string, newName: string) => Promise<void>;
     updateMediaCampaigns: (id: string, campaignIds: string[]) => Promise<void>;
     removeCampaignReference: (campaignId: string) => Promise<void>;
@@ -269,6 +278,49 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
             console.error('Failed to update media tags:', err);
             throw new Error('Failed to update tags.');
         }
+    },
+
+    /*
+      ⚠️ **Une seule transaction, et un seul `set`.** Écrire deux cents médias
+      un par un, c'est deux cents transactions IndexedDB et deux cents rendus de
+      la grille — la même leçon que l'import multiple du Media Hub, où trente
+      écritures lancées ensemble étaient déjà la course qu'on a payée.
+
+      ⛔ **Un échec sur un média n'arrête pas les autres**, et le compte rendu
+      porte sur ce qui a réellement été écrit : *un geste de masse qui s'arrête
+      au milieu sans le dire laisse une bibliothèque à moitié renommée, ce qui
+      est pire que pas de renommage du tout.*
+    */
+    appliquerDesTags: async (changements) => {
+        if (changements.length === 0) return 0;
+
+        const ecrits: { id: string; tags: string[] }[] = [];
+        try {
+            const db = await getDB();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+
+            for (const changement of changements) {
+                const item = await store.get(changement.id);
+                if (!item) continue;
+                item.tags = changement.tags;
+                await store.put(item);
+                ecrits.push(changement);
+            }
+            await tx.done;
+        } catch (err) {
+            console.error('[Media] Écriture des étiquettes interrompue :', err);
+        }
+
+        if (ecrits.length > 0) {
+            const parId = new Map(ecrits.map(c => [c.id, c.tags]));
+            set((state) => ({
+                mediaList: state.mediaList.map(
+                    m => (parId.has(m.id) ? { ...m, tags: parId.get(m.id)! } : m),
+                ),
+            }));
+        }
+        return ecrits.length;
     },
 
     renameMedia: async (id: string, newName: string) => {

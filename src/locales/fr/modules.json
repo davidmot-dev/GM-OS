@@ -602,6 +602,10 @@
         "none": "Aucun usage — sera supprimé au prochain nettoyage",
         "noneProtected": "Aucun usage — verrouillé, donc épargné",
         "unknown": "Usages inconnus : {{modules}} n’a pas répondu"
+      },
+      "tags": {
+        "proche": "Vouliez-vous dire ?",
+        "proposees": "D’après le nom du fichier"
       }
     },
     "preview": {
