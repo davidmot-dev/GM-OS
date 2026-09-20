@@ -191,6 +191,8 @@ export class AmbientEngine {
     private context: AudioContext;
     private masterGain: GainNode;
     private duckingGain: GainNode;
+    /** Le volume du module, posé par le meneur ou par un moment de storyboard. */
+    private volumeGain: GainNode;
     private globalSyncGain: GainNode;
     private compressor: DynamicsCompressorNode;
     private analyser: AnalyserNode;
@@ -200,6 +202,8 @@ export class AmbientEngine {
     /** Ce que valent le ducking de la voix et le réglage global, séparément. */
     private valeurDucking = 1.0;
     private valeurGlobale = 1.0;
+    /** La dernière valeur posée sur {@link volumeGain} — les voies détournées en ont besoin. */
+    private valeurVolume = 1.0;
 
     constructor() {
         // @ts-expect-error - Support for legacy browsers
@@ -218,6 +222,20 @@ export class AmbientEngine {
         this.masterGain = this.context.createGain();
         this.masterGain.gain.value = 1.3; // Compensation gain
 
+        /*
+          ⭐ **Le volume du module — un troisième facteur, et il lui fallait son
+          propre nœud.** `masterGain` porte une **compensation** (1,3) qui n'est
+          pas un réglage : mélanger les deux rendrait la constante
+          irrécupérable, et personne ne saurait plus ce qui vient du code et ce
+          qui vient du meneur.
+
+          ⛔ Jusqu'au 2026-09-20, `useAmbientStore.masterVolume` était écrit,
+          persisté, restauré des instantanés — et **lu par personne**. Aucun
+          nœud ne le portait.
+        */
+        this.volumeGain = this.context.createGain();
+        this.volumeGain.gain.value = 1.0;
+
         this.duckingGain = this.context.createGain();
         this.duckingGain.gain.value = 1.0;
 
@@ -228,7 +246,8 @@ export class AmbientEngine {
         this.analyser.fftSize = 256;
 
         this.compressor.connect(this.masterGain);
-        this.masterGain.connect(this.duckingGain);
+        this.masterGain.connect(this.volumeGain);
+        this.volumeGain.connect(this.duckingGain);
         this.duckingGain.connect(this.globalSyncGain);
         this.globalSyncGain.connect(this.analyser);
         this.analyser.connect(this.context.destination);
@@ -294,6 +313,48 @@ export class AmbientEngine {
     }
 
     /**
+     * **Le volume général de l'ambiance.**
+     *
+     * ⛔ Il n'existait pas avant le 2026-09-20 : le champ vivait dans le
+     * magasin sans que rien ne le porte au son. *Un réglage persisté que
+     * personne n'applique coûte plus cher qu'un réglage absent — il se
+     * restaure, il voyage dans les instantanés, et il ne fait rien.*
+     *
+     * @param fonduMs Le temps mis pour y aller. Absent, lissage court : *un
+     *        curseur doit répondre sous le doigt, un moment doit glisser.*
+     */
+    public setMasterVolume(volume: number, fonduMs?: number) {
+        const maintenant = this.context.currentTime;
+        this.valeurVolume = volume;
+
+        if (!fonduMs || fonduMs <= 0) {
+            this.volumeGain.gain.setTargetAtTime(volume, maintenant, 0.05);
+            this.menerLesVoiesDetournees(0.05);
+            return;
+        }
+
+        /*
+          ⚠️ **Une rampe linéaire, et pas une approche exponentielle.**
+          `setTargetAtTime` s'approche de sa cible sans jamais l'atteindre : un
+          « coupe le son » finirait à un cheveu de zéro, et le cheveu s'entend
+          dans une pièce silencieuse. On annule d'abord ce qui était programmé,
+          sinon deux moments rapprochés superposeraient deux rampes et le
+          niveau final ne serait celui d'aucun des deux.
+        */
+        const rampe = (gain: GainNode, cible: number) => {
+            gain.gain.cancelScheduledValues(maintenant);
+            gain.gain.setValueAtTime(gain.gain.value, maintenant);
+            gain.gain.linearRampToValueAtTime(cible, maintenant + fonduMs / 1000);
+        };
+
+        rampe(this.volumeGain, volume);
+        /* Les voies détournées portent le produit des trois atténuations : on
+           leur fait suivre la même rampe, vers le même produit. */
+        const cible = this.valeurDucking * this.valeurGlobale * volume;
+        for (const canal of this.sorties.canaux) rampe(canal.ducking, cible);
+    }
+
+    /**
      * **Les voies détournées suivent les deux réglages de la voie normale.**
      *
      * La chaîne principale les porte sur deux gains distincts — le ducking de la
@@ -302,7 +363,7 @@ export class AmbientEngine {
      * une multiplication : la reproduire est exact, pas approché.*
      */
     private menerLesVoiesDetournees(timeConstant: number) {
-        const cible = this.valeurDucking * this.valeurGlobale;
+        const cible = this.valeurDucking * this.valeurGlobale * this.valeurVolume;
         for (const canal of this.sorties.canaux) {
             canal.ducking.gain.setTargetAtTime(cible, this.context.currentTime, Math.max(0.001, timeConstant));
         }
@@ -327,7 +388,7 @@ export class AmbientEngine {
             return;
         }
         canal.entree.gain.value = this.masterGain.gain.value;
-        canal.ducking.gain.value = this.valeurDucking * this.valeurGlobale;
+        canal.ducking.gain.value = this.valeurDucking * this.valeurGlobale * this.valeurVolume;
         piste.router(canal.entree);
     }
 

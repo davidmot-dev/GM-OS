@@ -17,6 +17,7 @@ import {
 import {
     gesteDAmbiance, demandeUneAmbiance, laMatiereEstPresente,
 } from './ambianceDuMoment';
+import { volumesDuMoment, NOM_DE_LA_SOURCE } from './volumesDuMoment';
 /* Type seul : effacé à la compilation, donc aucun cycle à l'exécution — et une
    forme déclarée une fois vaut mieux qu'une forme recopiée ici. */
 import type { AmbientTheme } from '../ambient/useAmbientStore';
@@ -72,6 +73,25 @@ export interface StoryboardMoment {
      */
     ambientThemeId?: string;
     ambientSceneId?: string;   // Ambient-OS Scene ID
+
+    /*
+      **Le dosage des trois sources — demandé par David le 2026-09-20.**
+
+      ⭐ C'est ce qui manquait pour qu'un moment soit un **mixage** : il savait
+      déjà *quoi* jouer sur chaque source, jamais **dans quel rapport**. Une
+      révélation chuchotée et une charge de cavalerie emploient les mêmes trois
+      modules ; ce qui les sépare est le dosage.
+
+      ⚠️ **Absent veut dire « ne touche à rien », et zéro veut dire « coupe ».**
+      Les deux ne se confondent jamais — voir `volumesDuMoment.ts`, où vit la
+      règle et l'essai qui l'interdit.
+    */
+    musicVolume?: number;
+    musicVolumeFondu?: number;
+    ambientVolume?: number;
+    ambientVolumeFondu?: number;
+    soundVolume?: number;
+    soundVolumeFondu?: number;
 
     /*
       **Où ça sort — demandé par David le 2026-08-31.**
@@ -773,6 +793,34 @@ export const useStoryboardStore = create<StoryboardState>()(
                                 : { nom: 'Ambiance', sort: 'sans-matiere' });
                         }
                     }
+                }
+
+                /*
+                  7. **Le dosage des trois sources.**
+
+                  ⚠️ **Après tout le reste, et c'est voulu.** Un volume posé
+                  avant que la musique ne démarre serait écrasé par le
+                  démarrage ; posé après, il règle ce qui vient de commencer
+                  **et** ce qui continuait déjà.
+
+                  ⛔ **Deux des trois volumes n'existaient pas** avant le
+                  2026-09-20 : `SoundEngine.setMasterVolume` était écrit sans
+                  appelant, et Ambient-OS n'avait ni nœud ni méthode.
+                */
+                for (const reglage of volumesDuMoment(moment)) {
+                    const magasin = {
+                        music: gWindow.useMusicStore,
+                        ambient: gWindow.useAmbientStore,
+                        sound: gWindow.useSoundStore,
+                    }[reglage.source];
+
+                    const nom = NOM_DE_LA_SOURCE[reglage.source];
+                    if (!magasin) {
+                        effets.push({ nom, sort: 'module-absent' });
+                        continue;
+                    }
+                    magasin.getState().setMasterVolume(reglage.volume, reglage.fonduMs);
+                    effets.push({ nom, sort: 'joue' });
                 }
 
                 set({ sonsDuMoment: sonsPoses });

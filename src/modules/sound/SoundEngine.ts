@@ -300,15 +300,41 @@ export class SoundEngine {
     }
 
     /**
-     * Modifie le volume global (Master) de manière fluide.
+     * Modifie le volume général des bruitages, de manière fluide.
+     *
+     * ⛔ **Cette méthode n'a eu AUCUN appelant jusqu'au 2026-09-20.** Elle
+     * était écrite, complète, elle menait même les voies détournées — et
+     * `useSoundStore.setMasterVolume` se contentait d'écrire le nombre dans le
+     * magasin. *Le curseur de la tablette était donc muet depuis toujours :
+     * une chaîne complète à laquelle il manquait le dernier fil.*
+     *
      * @param volume Nouveau volume (0.0 à 1.0).
+     * @param fonduMs Le temps mis pour y aller. Absent, on garde le lissage
+     *        court d'un curseur qu'on traîne — *un curseur doit répondre sous
+     *        le doigt, un moment de storyboard doit glisser.*
      */
-    public setMasterVolume(volume: number) {
-        this.masterGain.gain.setTargetAtTime(volume, this.context.currentTime, 0.05);
-        // Le volume général mène les voies détournées avec les autres.
-        for (const canal of this.sorties.canaux) {
-            canal.entree.gain.setTargetAtTime(volume, this.context.currentTime, 0.05);
+    public setMasterVolume(volume: number, fonduMs?: number) {
+        for (const gain of [this.masterGain, ...this.sorties.canaux.map(c => c.entree)]) {
+            this.poserLeVolume(gain, volume, fonduMs);
         }
+    }
+
+    /**
+     * **Poser un volume, d'un lissage court ou d'un fondu demandé.**
+     *
+     * ⚠️ Le fondu **annule ce qui était programmé** et repart de la valeur
+     * courante : sans cela, deux moments rapprochés laisseraient deux rampes se
+     * superposer, et le niveau final ne serait celui d'aucun des deux.
+     */
+    private poserLeVolume(gain: GainNode, volume: number, fonduMs?: number) {
+        const maintenant = this.context.currentTime;
+        if (!fonduMs || fonduMs <= 0) {
+            gain.gain.setTargetAtTime(volume, maintenant, 0.05);
+            return;
+        }
+        gain.gain.cancelScheduledValues(maintenant);
+        gain.gain.setValueAtTime(gain.gain.value, maintenant);
+        gain.gain.linearRampToValueAtTime(volume, maintenant + fonduMs / 1000);
     }
 
     /**

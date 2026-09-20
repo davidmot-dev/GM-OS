@@ -3017,7 +3017,15 @@
       "capture_nothing": "Rien à capturer : aucun élément n'est actif en ce moment",
       "capture_unavailable": "Pas de capture ici : Sound-OS empile ses bruitages et Ambient-OS ne retient pas la scène appliquée — choisissez dans la liste",
       "diaporama_label": "Diaporama d'Image-OS",
-      "diaporama_none": "Aucun diaporama"
+      "diaporama_none": "Aucun diaporama",
+      "volumes_label": "Dosage des sources",
+      "volume_music": "Musique",
+      "volume_ambient": "Ambiance",
+      "volume_sound": "Bruitages",
+      "volume_inchange": "inchangé — ce moment n’y touche pas",
+      "volume_activer": "Régler cette source depuis ce moment",
+      "volume_laisser": "Laisser cette source où elle est",
+      "volume_fondu": "Temps mis pour atteindre ce niveau (ms). Zéro coupe net."
     },
     "actions": {
       "duplicate": "Dupliquer",

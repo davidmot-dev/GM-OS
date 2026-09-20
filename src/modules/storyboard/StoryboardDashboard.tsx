@@ -23,7 +23,7 @@ import {
     Clapperboard,
     ArrowRight,
     GripVertical,
-    Copy, Images } from 'lucide-react';
+    Copy, Images, SlidersHorizontal } from 'lucide-react';
 import { useAmbientStore } from '../ambient/useAmbientStore';
 import { useTuilesVisibles } from '../light/hooks/useTuilesVisibles';
 import { useImageStore } from '../image/useImageStore';
@@ -247,6 +247,18 @@ const StoryboardDashboard: React.FC = () => {
     const [imageMediaId, setImageMediaId] = useState('');
     const [diaporamaId, setDiaporamaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
+    /*
+      ⚠️ **`null` veut dire « ne touche à rien », et 0 veut dire « coupe ».**
+      Un nombre seul ne saurait pas porter les deux — et `volume || undefined`,
+      le réflexe de tout le reste de ce formulaire, avalerait le zéro.
+    */
+    const [musicVolume, setMusicVolume] = useState<number | null>(null);
+    const [musicVolumeFondu, setMusicVolumeFondu] = useState(1500);
+    const [ambientVolume, setAmbientVolume] = useState<number | null>(null);
+    const [ambientVolumeFondu, setAmbientVolumeFondu] = useState(1500);
+    const [soundVolume, setSoundVolume] = useState<number | null>(null);
+    const [soundVolumeFondu, setSoundVolumeFondu] = useState(1500);
+
     const [ambientThemeId, setAmbientThemeId] = useState('');
     const [ambientSceneId, setAmbientSceneId] = useState('');
     /*
@@ -327,6 +339,12 @@ const StoryboardDashboard: React.FC = () => {
         setImageMediaId(moment.imageMediaId || '');
         setDiaporamaId(moment.diaporamaId || '');
         setSoundPadId(moment.soundPadId || '');
+        setMusicVolume(typeof moment.musicVolume === 'number' ? moment.musicVolume : null);
+        setMusicVolumeFondu(moment.musicVolumeFondu ?? 1500);
+        setAmbientVolume(typeof moment.ambientVolume === 'number' ? moment.ambientVolume : null);
+        setAmbientVolumeFondu(moment.ambientVolumeFondu ?? 1500);
+        setSoundVolume(typeof moment.soundVolume === 'number' ? moment.soundVolume : null);
+        setSoundVolumeFondu(moment.soundVolumeFondu ?? 1500);
         setAmbientThemeId(moment.ambientThemeId || '');
         setAmbientSceneId(moment.ambientSceneId || '');
         setMusicOutputId(moment.musicOutputId || '');
@@ -347,6 +365,12 @@ const StoryboardDashboard: React.FC = () => {
         setMapUrl('');
         setImageMediaId('');
         setSoundPadId('');
+        setMusicVolume(null);
+        setMusicVolumeFondu(1500);
+        setAmbientVolume(null);
+        setAmbientVolumeFondu(1500);
+        setSoundVolume(null);
+        setSoundVolumeFondu(1500);
         setAmbientThemeId('');
         setAmbientSceneId('');
         setMusicOutputId('');
@@ -477,6 +501,18 @@ const StoryboardDashboard: React.FC = () => {
             imageMediaId: diaporamaId ? undefined : (imageMediaId || undefined),
             diaporamaId: diaporamaId || undefined,
             soundPadId: soundPadId || undefined,
+            /*
+              ⛔ **Surtout pas `|| undefined` ici.** Un volume à 0 est un
+              « coupe le son », et `0 || undefined` rend `undefined` : le moment
+              ferait l'inverse exact de ce qu'on lui demande, en laissant la
+              source à plein volume sur le silence voulu.
+            */
+            musicVolume: musicVolume ?? undefined,
+            musicVolumeFondu: musicVolume !== null ? musicVolumeFondu : undefined,
+            ambientVolume: ambientVolume ?? undefined,
+            ambientVolumeFondu: ambientVolume !== null ? ambientVolumeFondu : undefined,
+            soundVolume: soundVolume ?? undefined,
+            soundVolumeFondu: soundVolume !== null ? soundVolumeFondu : undefined,
             ambientThemeId: ambientThemeId || undefined,
             ambientSceneId: ambientSceneId || undefined,
             musicOutputId: musicOutputId || undefined,
@@ -733,6 +769,85 @@ const StoryboardDashboard: React.FC = () => {
                                             </option>
                                         ))}
                                     </select>
+                                </div>
+
+                                {/*
+                                  ⭐ **LE DOSAGE — ce qui fait d'un moment un mixage.**
+
+                                  Il savait déjà *quoi* jouer sur chaque source,
+                                  jamais **dans quel rapport**. Une révélation
+                                  chuchotée et une charge de cavalerie emploient
+                                  les mêmes trois modules : ce qui les sépare est
+                                  le dosage. Demandé par David le 2026-09-20.
+
+                                  ⚠️ Chaque source s'active séparément, parce que
+                                  **ne rien dire** et **couper** sont deux
+                                  intentions différentes — et qu'un curseur seul
+                                  ne saurait pas porter les deux.
+                                */}
+                                <div className="space-y-3">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-emerald-400">
+                                        <span className="flex items-center gap-2">
+                                            <SlidersHorizontal size={14} />
+                                            {t('modules:storyboard.editor.volumes_label')}
+                                        </span>
+                                    </label>
+
+                                    {([
+                                        ['music', musicVolume, setMusicVolume, musicVolumeFondu, setMusicVolumeFondu],
+                                        ['ambient', ambientVolume, setAmbientVolume, ambientVolumeFondu, setAmbientVolumeFondu],
+                                        ['sound', soundVolume, setSoundVolume, soundVolumeFondu, setSoundVolumeFondu],
+                                    ] as const).map(([cle, valeur, poser, fondu, poserLeFondu]) => (
+                                        <div key={cle} className="flex flex-wrap items-center gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => poser(valeur === null ? 1 : null)}
+                                                title={valeur === null
+                                                    ? t('modules:storyboard.editor.volume_activer')
+                                                    : t('modules:storyboard.editor.volume_laisser')}
+                                                className={`px-2 py-1 rounded-lg border text-ui-10 font-bold uppercase tracking-widest transition-colors w-28 shrink-0 text-left truncate ${
+                                                    valeur === null
+                                                        ? 'border-white/5 text-white/25 hover:text-white/60'
+                                                        : 'border-emerald-400/40 text-emerald-400 bg-emerald-400/10'
+                                                }`}
+                                            >
+                                                {t(`modules:storyboard.editor.volume_${cle}`)}
+                                            </button>
+
+                                            {valeur === null ? (
+                                                <span className="text-ui-10 text-white/20 italic flex-1 min-w-0">
+                                                    {t('modules:storyboard.editor.volume_inchange')}
+                                                </span>
+                                            ) : (
+                                                <>
+                                                    <input
+                                                        type="range"
+                                                        min={0}
+                                                        max={100}
+                                                        value={Math.round(valeur * 100)}
+                                                        onChange={e => poser(Number(e.target.value) / 100)}
+                                                        className="flex-1 accent-emerald-400 min-w-[6rem]"
+                                                    />
+                                                    <span className="text-ui-10 text-emerald-400/80 w-10 text-right tabular-nums shrink-0">
+                                                        {Math.round(valeur * 100)} %
+                                                    </span>
+                                                    {/* Le fondu de CETTE source — couper net un bruitage
+                                                        et laisser la musique glisser sont deux gestes. */}
+                                                    <input
+                                                        type="number"
+                                                        min={0}
+                                                        max={30000}
+                                                        step={100}
+                                                        value={fondu}
+                                                        onChange={e => poserLeFondu(Number(e.target.value))}
+                                                        title={t('modules:storyboard.editor.volume_fondu')}
+                                                        className="w-20 bg-black/40 border border-white/5 rounded-lg px-2 py-1 text-ui-10 text-right tabular-nums outline-none focus:border-emerald-400 shrink-0"
+                                                    />
+                                                    <span className="text-ui-9 text-white/25 shrink-0">ms</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="space-y-3">

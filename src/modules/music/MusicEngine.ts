@@ -785,11 +785,24 @@ export class MusicEngine {
      * Modifie le volume global de la musique.
      * @param value Nouveau volume (0.0 à 1.0).
      */
-    setMasterVolume(value: number) {
-        this.masterGain.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+    /**
+     * @param fonduMs Le temps mis pour atteindre la valeur. Absent, on garde le
+     *        lissage court d'un curseur qu'on traîne. Une rampe **linéaire**
+     *        au-delà : `setTargetAtTime` n'atteint jamais sa cible, et le
+     *        cheveu qui reste au-dessus de zéro s'entend dans une pièce
+     *        silencieuse.
+     */
+    setMasterVolume(value: number, fonduMs?: number) {
+        const maintenant = this.context.currentTime;
         // Le volume de la musique mène les voies détournées avec la voie normale.
-        for (const canal of this.sorties.canaux) {
-            canal.entree.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+        for (const gain of [this.masterGain, ...this.sorties.canaux.map(c => c.entree)]) {
+            if (!fonduMs || fonduMs <= 0) {
+                gain.gain.setTargetAtTime(value, maintenant, 0.05);
+                continue;
+            }
+            gain.gain.cancelScheduledValues(maintenant);
+            gain.gain.setValueAtTime(gain.gain.value, maintenant);
+            gain.gain.linearRampToValueAtTime(value, maintenant + fonduMs / 1000);
         }
     }
 

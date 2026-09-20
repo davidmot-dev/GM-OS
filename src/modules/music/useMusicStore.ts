@@ -106,7 +106,11 @@ interface MusicState {
       Une position d'agrément vit désormais dans l'état du composant. *Laisser
       la méthode en place aurait invité à refaire exactement la même chose.*
     */
-    setMasterVolume: (value: number) => void;
+    /**
+     * Le volume général de la musique. `fonduMs` sert aux moments de
+     * storyboard ; un curseur n'en passe pas et garde son lissage court.
+     */
+    setMasterVolume: (value: number, fonduMs?: number) => void;
     setAutoFadeDuration: (value: number) => void;
     setOutputDevice: (deviceId: string) => void;
 
@@ -300,9 +304,9 @@ export const useMusicStore = create<MusicState>()(
                     set({ crossfader: val });
                 },
 
-                setMasterVolume: (value) => {
+                setMasterVolume: (value, fonduMs) => {
                     const val = Math.max(0, Math.min(1, value));
-                    musicEngine.setMasterVolume(val);
+                    musicEngine.setMasterVolume(val, fonduMs);
                     set({ masterVolume: val });
                 },
 

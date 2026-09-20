@@ -79,7 +79,11 @@ interface AmbientState {
     toggleTrack: (index: number) => Promise<void>;
     setTrackVolume: (index: number, volume: number) => void;
     updateTrack: (index: number, updates: Partial<AmbientTrackState>) => void;
-    setMasterVolume: (volume: number) => void;
+    /**
+     * Le volume général de l'ambiance. `fonduMs` sert aux moments de
+     * storyboard ; un curseur n'en passe pas et garde son lissage court.
+     */
+    setMasterVolume: (volume: number, fonduMs?: number) => void;
     setOutputDevice: (deviceId: string) => void;
     fadeOutAll: () => void;
     /** L'identifiant du thème chargé, ou `null` si l'ambiance est composée à la main. */
@@ -374,7 +378,15 @@ export const useAmbientStore = create<AmbientState>()(
                 tracks: state.tracks.map((t, i) => i === index ? { ...t, ...updates } : t)
             })),
 
-            setMasterVolume: (volume) => {
+            /*
+              ⛔ **Ce champ ne faisait rien jusqu'au 2026-09-20.** Il était
+              initialisé, persisté, restauré des instantanés — et **aucun
+              nœud du graphe ne le portait**. Trouvé en cherchant où brancher
+              le volume d'un moment de storyboard. *Un réglage persisté que
+              personne n'applique coûte plus cher qu'un réglage absent.*
+            */
+            setMasterVolume: (volume, fonduMs) => {
+                ambientEngine.setMasterVolume(volume, fonduMs);
                 set({ masterVolume: volume });
             },
 

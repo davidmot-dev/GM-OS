@@ -74,7 +74,11 @@ interface SoundState {
     clearPad: (padId: string) => void;
     triggerPad: (padId: string) => Promise<void>;
 
-    setMasterVolume: (volume: number) => void;
+    /**
+     * Le volume général des bruitages. `fonduMs` sert aux moments de
+     * storyboard ; un curseur n'en passe pas et garde son lissage court.
+     */
+    setMasterVolume: (volume: number, fonduMs?: number) => void;
     setOutputDevice: (deviceId: string) => void;
 
     toggleMidiLearn: () => void;
@@ -278,7 +282,22 @@ export const useSoundStore = create<SoundState>()(
                 }
             },
 
-            setMasterVolume: (masterVolume) => set({ masterVolume }),
+            /*
+              ⛔ **Il manquait UN FIL, et il manquait depuis toujours.**
+              `soundEngine.setMasterVolume` existait, complète — voies
+              détournées comprises — et personne ne l'appelait : ce magasin
+              retenait le nombre, et rien ne le portait au son. Conséquence
+              visible : **le curseur du soundboard de la tablette ne faisait
+              rien** (`remote:sound:volume` → ici → nulle part).
+
+              Trouvé le 2026-09-20 en cherchant où brancher le volume d'un
+              moment de storyboard. *Une chaîne complète sans le dernier fil
+              ressemble à une chaîne complète.*
+            */
+            setMasterVolume: (masterVolume, fonduMs) => {
+                soundEngine.setMasterVolume(masterVolume, fonduMs);
+                set({ masterVolume });
+            },
             setOutputDevice: (outputDeviceId) => {
                 soundEngine.setOutputDevice(outputDeviceId);
                 set({ outputDeviceId });
