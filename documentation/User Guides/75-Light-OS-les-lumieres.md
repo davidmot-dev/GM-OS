@@ -411,6 +411,43 @@ Tout le catalogue n'est que des façons d'enchaîner cet ordre-là. Un effet d'a
 
 Les étapes se montent, se descendent et se suppriment. Il en reste toujours au moins une.
 
+### ✨ Demander la suite à l'IA
+
+En haut de l'atelier, un champ : **décrivez l'effet que vous cherchez** — *« un orage lointain »*,
+*« une forge »*, *« la respiration d'un vaisseau endormi »*. L'IA écrit la suite d'étapes, avec
+son désordre et une phrase qui dit ce qu'on verra dans la pièce.
+
+> ⛔ **Rien n'est remplacé tant que vous n'avez pas dit oui.** La proposition s'affiche en
+> aperçu, sous le champ, avec sa propre bande de couleurs. Trois réponses : **Remplacer les
+> étapes**, **Une autre**, **Refuser**. *L'atelier enregistre en continu et n'a pas
+> d'annulation — écraser d'office effacerait votre travail sans retour.*
+
+**Ce que « Remplacer les étapes » fait** : la suite et le désordre prennent la place des vôtres.
+Le **nom** n'est repris que si vous n'avez pas encore baptisé l'effet — *on ne renomme pas ce que
+vous avez nommé.*
+
+> [!TIP]
+> **Dites le geste, pas la couleur.** « Un orage lointain » donne un meilleur résultat que
+> « du bleu qui clignote » : ce qu'on reconnaît d'un orage, c'est le contraste entre l'éclair et
+> l'attente, pas la teinte du ciel. Le modèle a reçu cette règle, autant lui parler dans les
+> mêmes termes.
+
+> [!NOTE]
+> **La proposition passe par un contrôle avant d'arriver à l'écran.** Une étape dont la couleur
+> n'est pas un hexadécimal est **jetée** ; une durée sous 100 ms est remontée ; un fondu plus long
+> que son étape est ramené. Si tout est illisible, l'écran vous le dit au lieu de montrer une
+> bande vide. *Un modèle qui invente ne lève aucune erreur — il rend des nombres plausibles et
+> faux.*
+
+> ⚠️ **Il faut un moteur d'IA actif**, celui que vous avez choisi dans le Cortex — et sa clé,
+> pour ceux qui en demandent une. Sans lui, le bouton le dit et ne propose rien.
+>
+> ⭐ **Et le moteur change la fiabilité de la forme, pas la qualité de l'idée.** Avec **Ollama**,
+> la forme de la réponse est *contrainte* : GM-OS impose la grammaire au décodeur. Avec les
+> autres, elle est seulement *demandée* dans l'invite — et *une consigne s'ignore*. Vous verrez
+> donc plus souvent, ailleurs, une proposition amputée de quelques étapes ou un
+> « L'IA n'a pas répondu ». → [Le Cortex](./82-Cortex-OS.md)
+
 ### ⭐ Le désordre, et pourquoi c'est le réglage qui fait le plus
 
 Un curseur unique, en bas. Il tire au sort, à chaque passage, un écart sur la **luminosité** et

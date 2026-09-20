@@ -7679,14 +7679,46 @@ Trouvé en chemin : `useLightStore.reset()` ne vidait **pas** `variantes`. Il n'
 les essais — mais deux fichiers d'essais partagent le même magasin dans un worker, et le second
 héritait de ce que le premier avait écrit. Les deux champs de travail y entrent.
 
+#### ✨ Et l'IA écrit la suite — demandé dans la foulée
+
+David, le soir même : *« dans créer un effet rajoute la possibilité de se faire aider par l'IA
+comme fait précédemment »*. Le patron du § 89 se recopie — schéma imposé au décodeur,
+`sansPersona`, validation à part — mais **la nature de la demande change**.
+
+⭐ ***Composer une ambiance, c'était choisir des couleurs ; composer un effet, c'est trouver un
+rythme.*** Deux éclairs rapprochés puis vingt secondes de calme : *le meneur sait ce qu'il veut
+voir bien avant de savoir en quels nombres ça s'écrit.* C'est le geste le plus cher que le modèle
+rende dans Light-OS.
+
+**L'invite dit ce que chaque réglage PRODUIT, pas ce qu'il est.** `fondu = 0` fait un éclair,
+`fondu = duree` fait une dérive, `brillance = 0` sur une étape courte fait le noir qui donne le
+rythme. *Un modèle à qui l'on décrit un champ rend un champ rempli ; à qui l'on décrit un effet,
+il rend un effet.*
+
+⛔ **Et la validation jette là où les bornes repeignent.** `etapeBornee` remplace une couleur
+illisible par du blanc — bon pour une saisie humaine, que le meneur voit et corrige. Pour une
+sortie de modèle, non : *une étape manquante se voit ; une étape fausse se croit.* Un blanc glissé
+au milieu d'un orage passerait pour une intention.
+
+⚠️ **Un `alea` absent vaut 25 et non zéro** : un modèle qui oublie ce champ rendrait une boucle
+parfaitement régulière, qui ressemble à une machine. *Le défaut d'un champ oublié doit être celui
+qui donne le meilleur résultat, pas celui qui se calcule le plus vite.*
+
+⛔ **On remplace sur accord, jamais d'office** (tranché par David) : l'atelier enregistre en
+continu et **n'a pas d'annulation**. Le nom proposé n'est repris que si l'effet porte encore un nom
+par défaut — *on ne renomme pas ce que le meneur a nommé.*
+
 **Ancres** : `light/logic/effetDAtelier.ts` (le modèle, `imageDeLEtape`, les bornes),
+`light/logic/proposerUnEffet.ts` + `light/logic/effetPropose.ts` (l'IA et son contrôle),
 `light/components/AtelierDEffet.tsx` (l'écran), `SelecteurDEffet.tsx` (section **Mes effets** et
 la porte d'entrée), `HueEngine` (la branche avant le `switch`), `useLightStore`
 (`effetsDAtelier` et ses trois gestes), `donneesDurables.ts` + `schemas.ts` + `SessionService`
 (les trois maillons de la sauvegarde).
 
-**Vérifié** : `tsc -b` propre, **28 essais neufs** (20 sur la logique, 7 sur le magasin et la
-sauvegarde, 1 au recensement), **5 608 essais** au vert (440 fichiers). ⚠️ **Non éprouvé à l'écran**, et il demande de vraies
+**Vérifié** : `tsc -b` propre, **46 essais neufs** (20 sur le modèle, 18 sur la validation de ce
+que rend l'IA, 7 sur le magasin et la sauvegarde, 1 au recensement).
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-20** — David : *« ça marche très bien »*, l'atelier et l'IA qui
+écrit la suite. ⚠️ **Non éprouvé à l'écran**, et il demande de vraies
 lampes.
 
 ---
@@ -7724,7 +7756,7 @@ lampes.
 | 26 | **Le menu d'une atmosphère** | ✅ **CORRIGÉ le 19/09** — vu par David, capture à l'appui : le cadre était **coupé ET derrière les pads**. Trois causes empilées, dont un `overflow-x-auto` qui découpe aussi en vertical : un `z-index` ne suffisait pas, il a fallu un **portail**. ⭐ Le garde-fou a été **faux deux fois** — `toBeVisible()` et `click()` passaient sur le code fautif ; seul `elementFromPoint` voit ce qui est **peint** (§ 90) | Rien | Rien. ⚠️ Non revu à l'écran |
 | 27 | **Sound-OS par campagne** | ✅ **LIVRÉ le 19/09** — demandé par David, et c'était la dernière asymétrie des trois modules d'ambiance. Troisième module à employer la règle partagée, toujours sans copie. ⭐ Son clavier n'avait **pas** le défaut de Music-OS (il ne lit que l'active) mais son **repli** prenait la première de la liste brute. ⭐ Et la fusion d'instantané, écrite le matin sans propriétaire, a dû être rouverte : *ajouter un champ, c'est rouvrir toutes les fonctions qui décidaient sans lui* (§ 91) | Sélectionner une atmosphère, cliquer **Cette campagne**, changer de campagne | Rien. ⚠️ Non vu à l'écran |
 | 28 | **Essayer une ambiance sur les lampes** | ✅ **LIVRÉ le 20/09** — le dernier reste de l'IA qui compose. Avant lui il fallait **occuper une case du râtelier pour regarder une ambiance qu'on allait peut-être refuser**. ⛔ Le cœur n'était pas d'allumer mais de **rendre la pièce** : les **trois** portes du retour existantes visent une *scène* et auraient **éteint le salon** un après-midi de préparation. ⭐ Quatrième visée, et une photographie qui **copie** au lieu d'emprunter (§ 92) | Une scène → « Proposer une ambiance » → **Essayer**, puis **Revenir** | Rien. ⚠️ Non éprouvé à l'écran, et il demande de vraies lampes |
-| 29 | **L'atelier d'effets** | ✅ **LIVRÉ le 20/09** — créer un effet de zéro, là où « Mes ambiances » ne savait que **décliner** un des 48. ⭐ La décision qui débloque tout : **un effet peut être de la donnée** — quatre nombres par étape, plus le désordre, *qui est ce qui sépare une suite d'un geste*. Il se joue **avant le `switch`** et le traverse quand même, donc il obéit aux mêmes curseurs sans une ligne de plus. ⛔ Adaptatif et jamais soliste : *une lampe qui ne joue pas ne s'explique pas* (§ 93) | Écran de choix d'un effet → **Mes effets** → **Créer un effet**, puis **Essayer sur** une lampe | Rien. ⚠️ Non éprouvé à l'écran, et il demande de vraies lampes |
+| 29 | **L'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 20/09** (*« ça marche très bien »*) — créer un effet de zéro, là où « Mes ambiances » ne savait que **décliner** un des 48. ⭐ La décision qui débloque tout : **un effet peut être de la donnée** — quatre nombres par étape, plus le désordre, *qui est ce qui sépare une suite d'un geste*. Il se joue **avant le `switch`** et le traverse quand même, donc il obéit aux mêmes curseurs sans une ligne de plus. ⛔ Adaptatif et jamais soliste : *une lampe qui ne joue pas ne s'explique pas* (§ 93) | Écran de choix d'un effet → — | Rien. ✅ **Vu à l'écran** |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
