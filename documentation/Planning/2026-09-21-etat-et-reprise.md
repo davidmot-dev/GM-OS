@@ -15,6 +15,7 @@
 | § | Chantier | Éprouvé ? |
 | --- | --- | --- |
 | **96** | Les étiquettes du Media Hub — saisie assistée, lot, propositions, refus | ✅ **oui** (*« ça fonctionne »*) |
+| **97** | La boucle d'une vidéo se choisit — le « choix à confirmer » du 05/09, tranché | ⚠️ non, **et deux portes à éprouver** |
 
 ⭐ **Les quatre demandes n'étaient pas quatre fonctionnalités.** C'étaient les deux bouts d'un même
 problème : ce qui **empêche** le doublon, et ce qui **répare** celui qui est déjà là. Le champ de
@@ -26,14 +27,49 @@ permettait de les fusionner ensuite.
 ## Par quoi reprendre
 
 1. ~~**Éprouver les étiquettes à l'écran** (§ 96)~~ — ✅ **fait le 21/09** : *« ça fonctionne »*.
-2. **Les trois chantiers du 20/09 non vus** : l'essai d'une ambiance lumineuse (§ 92), le thème
+2. **La boucle d'une vidéo** (§ 97) — la **pastille d'Image-OS** au survol (ou le Media Hub) →
+   **Joue une fois**, puis projeter.
+   ⚠️ Ce qui compte : **sur les deux écrans**. Le moniteur lit le réglage dans la base, la
+   tablette le reçoit par le pont — ce sont deux chemins, et c'est là qu'un défaut se logerait.
+3. **Les trois chantiers du 20/09 non vus** : l'essai d'une ambiance lumineuse (§ 92), le thème
    d'ambiance dans un moment (§ 94), le dosage des sources (§ 95) — **dont le curseur du soundboard
    de la tablette**, réparé sans avoir été demandé.
-3. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
+4. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
 
 ---
 
 ## Ce qu'il ne faut pas repayer
+
+### ⭐ Une fonctionnalité qu'on ne voit pas est une fonctionnalité absente
+
+L'interrupteur de boucle existait au Media Hub, derrière un `+` qui n'annonce pas « détails » —
+et David l'a cherché dans **Image-OS**, là où le geste se fait. C'est le bon endroit pour
+chercher. Une seconde porte y est posée. ⚠️ **Deux portes, une seule vérité** : *deux portes vers
+un même réglage sont un confort ; deux réglages derrière deux portes sont un défaut.*
+
+Deuxième fois en deux jours qu'une porte manque — voir l'atelier d'effets, plus bas.
+
+### ⛔ Deux identifiants sur un même objet finissent toujours par être confondus
+
+Un pad d'Image-OS porte `media.id` (le pad) **et** `media.path` (le fichier au Media Hub). Le
+premier jet de l'interrupteur de boucle lisait `id` : bouton visible, fiche introuvable, clic sans
+effet, erreur dans une console que personne ne lit.
+
+⭐ *Celui qui est juste est celui que le reste du code emploie déjà* — `projectSolo` envoie
+`media.path`. Le garde-fou lit la **source**, parce qu'aucun type n'exprime cette règle et qu'un
+identifiant confondu ne lève aucune erreur : il rend `undefined`.
+
+### ⭐ Un champ neuf ne doit jamais rendre faux ce qui marchait avant lui
+
+`boucler` absent vaut **boucle** : toutes les vidéos déjà rangées continuent exactement comme
+avant. Le lire autrement aurait changé le comportement de toutes les ambiances d'un coup, sans que
+personne ne l'ait demandé.
+
+### ⛔ Deux lecteurs d'une même vérité, dont un qui ne peut pas la lire
+
+Une vidéo projetée est rendue par **deux** `<video>` : le moniteur et l'écran de la table. Le
+second est parfois une **tablette**, sur une autre origine, qui ne lit pas la base du meneur — le
+réglage doit donc **voyager**, comme la nature du média depuis le 05/09.
 
 ### ⭐ Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout
 
@@ -79,5 +115,5 @@ rendu porte sur ce qui a **réellement** été écrit.
 
 ---
 
-*Écrit le 2026-09-21. Guide mis à jour : **92** (les tags dans la barre, le renommage-fusion,
-l'étiquetage en lot, et le champ qui aide).*
+*Écrit le 2026-09-21. Guides mis à jour : **92** (les tags dans la barre, le renommage-fusion,
+l'étiquetage en lot, le champ qui aide, et la boucle d'une vidéo) et **24** (boucler ou jouer une fois).*

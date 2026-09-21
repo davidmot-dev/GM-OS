@@ -210,6 +210,19 @@ Dans le panneau de détails, le champ de saisie fait trois choses qu'il ne faisa
 > `tavernes.jpg` et que votre bibliothèque connaît `taverne`, c'est `taverne` qui est proposé —
 > sinon l'automatisme fabriquerait le doublon qu'on cherche à éviter, et **à grande échelle**.
 
+### 🔁 La boucle d'une vidéo
+
+Le panneau de détails d'une **vidéo** porte un bouton de plus : *Boucle sans fin* / *Joue une
+fois*. Il vaut pour tous les écrans — le moniteur de projection, l'écran de la table, les
+tablettes — et pour tous les chemins qui déclenchent cette vidéo.
+
+> ⭐ **Sans boucle, la vidéo garde sa dernière image** jusqu'au Blackout.
+
+> [!TIP]
+> **Le même interrupteur est sur la pastille d'Image-OS**, au survol, à côté de l'étoile — là où
+> vous déclenchez la vidéo. Deux portes, un seul réglage. →
+> [Image-OS](./24-Image-OS-la-regie-visuelle.md)
+
 ### Le panneau de détails
 
 Le bouton **ÉDITION DÉTAILLÉE** ouvre un panneau latéral qui donne, sur un seul média :

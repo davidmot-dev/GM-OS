@@ -1206,6 +1206,11 @@ décoderait le même film une seconde fois sur sa propre horloge.
 ⚠️ **Resté tel quel, et c'est un choix à confirmer** : une vidéo **boucle**, comportement d'origine.
 Bon pour une ambiance, discutable pour un plan de film. Un interrupteur par pad serait peu de chose.
 
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-21** — David, après avoir demandé comment projeter de petites
+vidéos : *« j'ai testé Image-OS c'est bon »*. ⚠️ **La boucle reste le choix à confirmer** : elle
+n'a pas été tranchée, elle a seulement été vécue une fois. *Un essai réussi ne répond pas à une
+question qu'on ne lui a pas posée.*
+
 ⭐ **Et la sortie se choisit depuis Web-OS**, demandé dans la foulée. Le bouton nommait la cible
 réglée **dans Image-OS** sans laisser en changer : *un réglage qui vit dans un module et décide dans
 un autre est une action à distance.* Le choix se fait là où le geste se fait — et **il ne déplace pas
@@ -7940,6 +7945,106 @@ vert (446 fichiers), 29 E2E.
 
 ---
 
+### 97 · ⭐ La boucle d'une vidéo se choisit — le choix à confirmer du 05/09 est tranché (2026-09-21)
+
+David, après avoir éprouvé la projection : *« c'est bien que cela boucle, mais je voudrais avoir
+le choix »*. La ligne traînait au § 22 à l'état de **choix à confirmer** depuis seize jours — la
+boucle était le comportement d'origine, jamais décidé.
+
+⭐ *Une ligne garée avec son motif se rouvre toute seule le jour où quelqu'un s'en sert.*
+
+#### ⛔ Le défaut à ne pas commettre : DEUX lecteurs
+
+Une vidéo projetée est rendue par **deux** `<video>` distincts — `ProjectorView` pour le moniteur,
+`FondProjete` pour l'écran de la table et les tablettes. Ne brancher que le premier aurait donné
+le plus absurde des résultats : *le même film tournant en rond d'un côté et s'arrêtant de
+l'autre.*
+
+#### ⛔ Et le second lecteur ne peut PAS lire le réglage
+
+Une tablette est sur une autre origine : elle ne lit pas la base du meneur. Elle reçoit une
+**adresse déjà résolue**, sans extension — c'est déjà pour cette raison qu'on lui **annonce** la
+nature du média depuis le 05/09. La boucle voyage donc par le même pont, dans un message
+`video-boucle`, **émis avant** la vidéo : *l'envoyer après laisserait un battement où le réglage
+d'avant s'applique.*
+
+⚠️ Et il se **rend** à chaque projection d'image, comme le drapeau voisin : *un réglage qu'on
+pose sans jamais le rendre s'applique à la vidéo suivante, qui ne l'a pas demandé.*
+
+#### ⭐ L'absence vaut BOUCLE, et c'est le point qui compte
+
+Toutes les vidéos déjà rangées n'ont pas ce champ. Les lire comme « joue une fois » aurait
+changé le comportement de **toutes les ambiances existantes d'un coup**, sans que personne ne
+l'ait demandé.
+
+⭐ ***Un champ neuf ne doit jamais rendre faux ce qui marchait avant lui.*** La règle vit dans
+`boucleDeLaVideo.ts` — un fichier de six lignes utiles, qui existe uniquement **parce que deux
+lecteurs la posent**.
+
+#### La fin d'une vidéo qui ne boucle pas
+
+✅ **Sa dernière image**, figée, jusqu'au Blackout (choix de David). *Rien ne quitte l'écran sans
+que le meneur l'ait demandé.* Les deux autres fins envisagées — le noir, ou l'image d'avant —
+éteignaient ou changeaient l'écran toutes seules au milieu d'une scène ; la seconde aurait en
+prime inventé **un quatrième geste de retour**, ce que Light-OS a appris à ne pas faire sans
+raison.
+
+#### ⭐ Le réglage vit sur le MÉDIA, pas sur la pastille
+
+La même vidéo se déclenche depuis Image-OS, depuis un moment de storyboard et depuis une
+tablette. *Un réglage posé sur un seul de ces chemins serait un réglage qu'on croit avoir posé.*
+
+**Ancres** : `components/media/boucleDeLaVideo.ts` (la règle), `stores/useMediaStore`
+(`boucler`, `basculerLaBoucle`), `image/logic/ImageService.ts` (l'émission),
+`session/hooks/useHubSync.ts` (`liveVideoBoucle`), `ProjectorView` et `hub/FondProjete` (les deux
+lecteurs), `TacticalDetailPanel` (l'interrupteur).
+
+#### ⛔ Et l'interrupteur était introuvable — corrigé dans la foulée
+
+David, une heure plus tard : *« je ne vois pas comment dire qu'une vidéo ne doit pas se
+répéter ? »*. Le réglage existait, au Media Hub, derrière un bouton **`+`** qui n'annonce pas
+« détails ». Et surtout : **il avait cherché dans Image-OS**, là où le geste se fait.
+
+⭐ ***Une fonctionnalité qu'on ne voit pas est une fonctionnalité absente*** — la leçon du Media
+Hub, dont la recherche est restée invisible à 5 % d'opacité. Une seconde porte est donc posée
+**sur la pastille d'Image-OS**, au survol, à côté de l'étoile.
+
+⚠️ **Deux portes, une seule vérité** : le réglage vit toujours sur le média, et les deux écrans
+lisent le même champ. *Deux portes vers un même réglage sont un confort ; deux réglages derrière
+deux portes sont un défaut.*
+
+⭐ Et c'est la **deuxième fois en deux jours** qu'une porte manque : l'atelier d'effets n'est
+atteignable que par une lampe, ce qui reste ouvert.
+
+#### ⛔ La seconde porte était fausse — DEUX identifiants sur un même objet
+
+David, aussitôt après : *« je ne sais pas cliquer sur le bouton de boucle sur le pad »*. Le bouton
+était là, visible, et il n'écrivait rien.
+
+⛔ **Un pad d'Image-OS porte deux identifiants.** `media.id` est celui **du pad** ; `media.path`
+est celui du **fichier dans le Media Hub** — et c'est `path` que `projectSolo` envoie au
+projecteur depuis toujours. L'interrupteur lisait `id` : il cherchait une fiche inexistante,
+affichait donc **toujours** « boucle », et le clic écrivait dans le vide. L'erreur partait dans la
+console, *que personne ne lit en séance.*
+
+⭐ ***Deux identifiants sur un même objet finissent toujours par être confondus ; celui qui est
+juste est celui que le reste du code emploie déjà.***
+
+⚠️ **Et le bouton ne s'affiche plus quand le Media Hub ne connaît pas le fichier** : un pad qui
+pointe un fichier libre du disque n'a nulle part où ranger le réglage. *Mieux vaut pas de bouton
+qu'un bouton qui n'écrit rien* — ce qui est exactement ce qu'on venait de livrer.
+
+⭐ **Le garde-fou lit la SOURCE**, comme le recensement de `rendreLEtat` : aucun type n'exprime
+« cet identifiant-ci et pas celui-là », et *un identifiant confondu ne lève aucune erreur — il
+rend simplement `undefined`.* Éprouvé **rouge sur le code fautif** : réinjecter `media.id` fait
+tomber deux essais de `pastilleDeBoucle.test.ts`.
+
+**Vérifié** : `tsc -b` propre, lint sans rien de neuf, **10 essais neufs**, **5 713 essais** au
+vert (448 fichiers), 29 E2E. ⚠️ **Non éprouvé à l'écran** — et les deux portes doivent l'être,
+puisque la seconde était fausse.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -7977,6 +8082,7 @@ vert (446 fichiers), 29 E2E.
 | 30 | **Le thème d'ambiance dans un moment** | ✅ **CORRIGÉ le 20/09** — signalé par David : un moment ne savait dire que le **mélange** (la scène), jamais la **matière** (le thème). ⛔ Et une scène sur huit emplacements vides **réussit** sans produire un son : *une ambiance qui ne sort pas ressemble à une ambiance discrète*. Cinquième sort au rapport du moment (`sans-matiere`, lu « aucun son chargé »), et la **capture** du thème, qui existait dans le magasin sans lecteur (§ 94) | Un moment → **Ambiance** → choisir un thème, puis une scène | Rien. ⚠️ Non éprouvé à l'écran |
 | 31 | **Le dosage des trois sources** | ✅ **LIVRÉ le 20/09** — demandé par David : régler le volume de Music-OS, Ambient-OS et Sound-OS depuis un moment. ⛔ **Deux des trois volumes n'existaient pas** : `SoundEngine.setMasterVolume` était écrite **sans appelant** (donc le curseur du soundboard de la **tablette** était muet), et Ambient-OS n'avait aucun nœud pour le porter alors qu'il était persisté et restauré. ⭐ Le piège tenait à **une seule valeur** : `0 || undefined` aurait fait l'inverse exact de « coupe le son » (§ 95) | Un moment → **Dosage des sources** → activer une ligne, curseur et fondu | Rien. ⚠️ Non éprouvé à l'écran |
 | 32 | **Les étiquettes du Media Hub** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — les quatre demandes de David n'étaient pas quatre fonctionnalités mais **les deux bouts d'un même problème** : ce qui empêche le doublon (suggestions, « vouliez-vous dire ? », propositions alignées sur le vocabulaire existant) et ce qui répare celui qui est là (renommer = fusionner = supprimer, en un geste). ⭐ *Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.* Plus l'étiquetage en lot et le refus `-tag` dans la barre (§ 96) | Media Hub → taper un tag à une lettre près, — | Rien. ✅ **Vu à l'écran** |
+| 33 | **La boucle d'une vidéo** | ✅ **LIVRÉ le 21/09** — le « choix à confirmer » du 05/09, rouvert par l'usage. ⛔ **Deux lecteurs** rendent une vidéo projetée, et le second (tablettes) **ne peut pas lire le réglage** : il voyage par le pont, émis avant la vidéo. ⭐ L'absence vaut boucle — *un champ neuf ne doit jamais rendre faux ce qui marchait avant lui*. Sans boucle, le film garde sa dernière image (§ 97) | La pastille d'Image-OS au survol, ou le Media Hub → **Joue une fois**, puis projeter | Rien. ⚠️ Non éprouvé à l'écran |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

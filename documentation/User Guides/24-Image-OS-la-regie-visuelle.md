@@ -38,7 +38,35 @@ En haut de l'interface, vous pouvez sélectionner l'écran de destination :
 et compagnie, et le pad les distingue par un pictogramme de pellicule et par sa
 vignette, qui montre la première image du film.
 
-Un clic la projette. Elle **tourne en boucle**, avec le son.
+Un clic la projette. Elle **tourne en boucle** par défaut, avec le son.
+
+### 🔁 Boucler, ou jouer une fois
+
+Depuis le 2026-09-21, **chaque vidéo choisit**, et le réglage s'atteint par **deux portes** :
+
+- **sur la pastille d'Image-OS** — survolez-la, une icône de **boucle** apparaît en haut à droite,
+  à côté de l'étoile. Allumée, la vidéo boucle ; éteinte, elle ne joue qu'une fois ;
+- **dans le Media Hub**, panneau de détails d'une vidéo : un bouton *Boucle sans fin* /
+  *Joue une fois*, avec sa phrase d'explication.
+
+C'est **le même réglage** : il vit sur la vidéo, pas sur la porte par laquelle on l'atteint.
+
+| Réglage | Pour quoi |
+| :--- | :--- |
+| **Boucle sans fin** (défaut) | une ambiance — la pluie de néon, le feu de cheminée, la nuée d'étoiles |
+| **Joue une fois** | un plan qui raconte quelque chose, où la reprise casserait l'effet |
+
+> ⭐ **Une vidéo qui ne boucle pas garde sa dernière image**, comme une image projetée, jusqu'au
+> Blackout. *Rien ne quitte l'écran sans que vous l'ayez demandé.*
+
+> [!NOTE]
+> **Le réglage appartient à la vidéo, pas à la pastille.** La même vidéo se déclenche depuis
+> Image-OS, depuis un moment de storyboard et depuis une tablette : *un réglage posé sur un seul de
+> ces chemins serait un réglage qu'on croit avoir posé.*
+
+> [!TIP]
+> **Vos vidéos existantes ne changent pas.** Sans réglage, une vidéo boucle — c'est ce qu'elles
+> faisaient toutes hier.
 
 > ⛔ **Ce n'était pas un manque, c'était une porte fermée.** L'écran de projection
 > savait jouer une vidéo depuis longtemps — mais le sélecteur de fichiers, lui,
