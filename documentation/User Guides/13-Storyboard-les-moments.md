@@ -168,6 +168,35 @@ Chaque moment peut afficher un **titre** par-dessus l'image projetée, dans la p
 > [!TIP]
 > Un écran allumé au milieu d'une séquence **rattrape** le titre en cours : vous n'avez pas à relancer le moment.
 
+### 🎨 Où, dans quelle police, de quelle couleur
+
+Sous le texte, quatre réglages apparaissent dès qu'il y a un titre.
+
+| Réglage | Ce qu'il offre |
+| :--- | :--- |
+| **Position** | **En haut** (le défaut), **au milieu**, **en bas** |
+| **Police** | *Celle du jeu* par défaut, ou l'une de celles des **réglages** — la même liste que l'atelier de thème |
+| **Couleur** | un sélecteur, blanc par défaut |
+| **Ombre** | **Forte** (le défaut), légère, aucune |
+
+> ⛔ **L'ombre n'est pas décorative.** C'est elle qui rend le texte lisible sur une image claire
+> comme sur une sombre. *Un titre illisible sur une image trop claire ressemble à un titre qui ne
+> s'est pas affiché* — d'où « aucune » offert, mais jamais par défaut.
+
+> [!TIP]
+> **Trois hauteurs, et pas un curseur.** *Un titre au tiers supérieur gauche n'est pas un réglage
+> qu'on refait deux fois pareil* — trois positions se retrouvent d'un moment à l'autre.
+
+> [!NOTE]
+> **Vos titres existants ne bougent pas d'un pixel.** Un moment écrit avant ce réglage n'a aucun de
+> ces quatre champs, et chaque absence vaut le comportement d'avant : en haut, police du jeu, blanc,
+> ombre forte.
+
+> [!WARNING]
+> **La police choisie est chargée par l'écran qui affiche le titre**, au moment où il arrive. Le
+> projecteur et l'écran de la table sont deux fenêtres distinctes : chacune la demande pour elle.
+
+
 ## 🖼️ Appeler un diaporama
 
 *Demandé par David le 2026-09-13.* Sous la liste **Image** du formulaire, une liste **Diaporama**

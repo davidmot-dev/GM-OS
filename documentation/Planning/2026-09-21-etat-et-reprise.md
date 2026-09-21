@@ -17,6 +17,7 @@
 | **96** | Les étiquettes du Media Hub — saisie assistée, lot, propositions, refus | ✅ **oui** (*« ça fonctionne »*) |
 | **97** | La boucle d'une vidéo se choisit — le « choix à confirmer » du 05/09, tranché | ⚠️ non, **et deux portes à éprouver** |
 | **98** | La porte de l'atelier d'effets — **et les E2E qui tournaient sur le build de la veille** | ✅ **oui** (*« ça fonctionne »*) |
+| **99** | L'habillage du titre d'un moment — position, police, couleur, ombre | ✅ **oui** le 22/09 (*« ok c'est bien »*) |
 
 ⭐ **Les quatre demandes n'étaient pas quatre fonctionnalités.** C'étaient les deux bouts d'un même
 problème : ce qui **empêche** le doublon, et ce qui **répare** celui qui est déjà là. Le champ de
@@ -96,6 +97,23 @@ effet, erreur dans une console que personne ne lit.
 ⭐ *Celui qui est juste est celui que le reste du code emploie déjà* — `projectSolo` envoie
 `media.path`. Le garde-fou lit la **source**, parce qu'aucun type n'exprime cette règle et qu'un
 identifiant confondu ne lève aucune erreur : il rend `undefined`.
+
+### ⛔⛔ Un essai qui ne fournit que les défauts ne peut pas distinguer « transmis » de « jeté »
+
+`lireLeTitre` reconstruisait le message champ par champ et **jetait** les quatre réglages
+d'habillage. L'essai de réception envoyait un message **sans** ces champs et vérifiait les
+défauts : il passait dans les deux cas. Je l'avais même *renforcé* une heure plus tôt en y
+épinglant ces défauts, sans voir qu'il ne pouvait rien distinguer.
+
+⭐ Troisième « clé non déclarée, écrite puis jetée en silence » : le schéma Zod de la sauvegarde,
+les pièces jointes vers Ollama, ce parseur. *Une liste de champs écrite à la main vieillit toujours
+moins vite que le message qu'elle lit.*
+
+### ⭐ Un helper qui fait table rase ne se partage pas
+
+`poserLesPolices` retire **tous** les liens qu'il a posés avant d'ajouter les siens — il sert au
+thème du jeu. L'employer pour la police d'un titre aurait arraché les polices de toute l'interface
+à chaque titre projeté.
 
 ### ⭐ Un champ neuf ne doit jamais rendre faux ce qui marchait avant lui
 

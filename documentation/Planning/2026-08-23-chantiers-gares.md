@@ -8131,6 +8131,92 @@ droit.
 
 ---
 
+### 99 · ⭐ Le titre d'un moment s'habille — position, police, couleur, ombre (2026-09-21)
+
+David : *« le texte qu'on peut mettre dans le Master Storyboard au niveau de l'Image, je voudrais
+pouvoir dire où le positionner Haut, Milieu, Bas et choisir la Police et la couleur du texte »*.
+
+Le titre existait depuis le 2026-08-31 et n'avait **aucun** réglage d'apparence : en haut, blanc,
+ombre forte, police de titre du thème. Quatre choses fixées par le code, dont trois qu'un meneur a
+de bonnes raisons de vouloir changer d'une scène à l'autre.
+
+#### ⭐ La liste de polices est celle des réglages, sur demande
+
+*« donne-moi les mêmes polices qu'il y a dans les paramètres, c'est possible ? »* — oui, et c'est
+mieux que ce que j'allais proposer. `POLICES_CONNUES` est la liste de l'atelier de thème : vingt et
+une familles, chacune avec sa requête Google Fonts et son repli.
+
+⛔ **Une seconde liste de polices aurait divergé de celle du thème** — le motif que ce dépôt a payé
+huit fois. Et un champ libre aurait été pire : *une police absente retombe en silence sur une autre,
+et rien ne le dit.*
+
+#### ⛔ Deux fenêtres, deux chargements
+
+Le projecteur et l'écran de la table sont deux documents distincts. Une police qui n'est pas dans
+`index.css` doit donc être **demandée par chacun**, à l'arrivée du titre.
+
+⛔ **Et surtout pas avec `poserLesPolices`** : ce helper *retire tous les liens qu'il a posés* avant
+d'ajouter les siens, parce qu'il sert au thème du jeu. S'en servir ici aurait arraché les polices de
+toute l'interface à chaque titre. ⭐ *Un helper qui fait table rase ne se partage pas.*
+
+#### ⭐ Chaque défaut est le comportement d'avant
+
+Les quatre champs sont facultatifs, et leur absence rend exactement ce que faisait le titre hier.
+Les essais l'épinglent nommément, y compris dans les trois assertions existantes qu'il a fallu
+rouvrir : *un champ neuf ne doit jamais rendre faux ce qui marchait avant lui.*
+
+⚠️ Et l'éditeur ne **range** que ce qui s'écarte du défaut : un moment qui n'a rien choisi reste un
+moment sans réglage, et se relira comme tel.
+
+#### ⛔ L'ombre n'est pas décorative
+
+C'est elle qui rend le texte lisible sur une image claire comme sur une sombre. Elle est offerte à
+trois crans, `fort` par défaut — jamais `aucun`. *Un titre illisible sur une image trop claire
+ressemble à un titre qui ne s'est pas affiché*, et le meneur cherchera du côté de la projection.
+
+⚠️ **Et une valeur inconnue se rattrape à la normalisation, pas au rendu.** Une position fantaisiste
+rendrait `undefined` dans la table de placement, donc aucune classe, donc un titre collé en haut à
+gauche. *Une valeur fausse se rattrape à l'entrée ou pas du tout.*
+
+**Ancres** : `storyboard/titreProjete.ts` (`POSITIONS`, `CONTOURS`, la normalisation),
+`components/TitreProjete.tsx` (`PLACEMENTS`, `OMBRES`, `chargerLaPolice`), `useStoryboardStore`
+(les quatre champs du moment), `StoryboardDashboard.tsx` (les quatre réglages).
+
+#### ⛔⛔ Et rien ne s'appliquait — une clé non déclarée, écrite puis jetée en silence
+
+David, capture à l'appui : *« j'ai fait une configuration mais cela ne s'applique pas »*. Position
+au milieu, Cormorant Garamond, rouge, ombre légère — et le titre s'affichait en haut, blanc, dans
+la police du thème.
+
+**`lireLeTitre` reconstruisait l'objet champ par champ**, et sa liste s'était arrêtée à
+`{ cible, texte, fondu, duree }`. Les quatre réglages partaient de l'éditeur, traversaient le
+pont, et étaient **jetés à la réception**, sans une erreur.
+
+⭐ ***Troisième fois dans ce dépôt*** : le schéma Zod de la sauvegarde qui n'était pas
+`passthrough` (§ 87), les pièces jointes perdues en route vers Ollama, et ce parseur. *Une liste de
+champs écrite à la main vieillit toujours moins vite que le message qu'elle lit.* On relaie
+désormais l'objet entier, et c'est `normaliserLeTitre` — seul juge — qui borne ce qui entre.
+
+#### ⛔ Et l'essai ne pouvait pas le voir
+
+L'essai de réception envoyait un message **sans** ces champs et vérifiait que les défauts
+s'appliquaient : il passait aussi bien quand le parseur relayait que quand il jetait. J'avais même
+**renforcé** cet essai une heure plus tôt en y épinglant les défauts — sans voir qu'il ne pouvait
+rien distinguer.
+
+⭐ ***Un essai qui ne fournit que les défauts ne peut pas distinguer « transmis » de « jeté ».***
+La garde envoie maintenant des valeurs **qui ne sont pas les défauts**, et elle tombe sur le
+parseur d'avant.
+
+**Vérifié** : `tsc -b` propre, lint sans rien de neuf, **5 727 essais Vitest** (449 fichiers, +14),
+**7 E2E de storyboard sur un `dist/` frais**. La garde de réception est éprouvée **rouge sur le
+parseur fautif**.
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-22** — David : *« ok c'est bien »*, après avoir vu la
+configuration rester sans effet puis s'appliquer. ⭐ *Deuxième chantier de la semaine éprouvé dans
+les deux états* — le défaut, puis le correctif.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8170,6 +8256,7 @@ droit.
 | 32 | **Les étiquettes du Media Hub** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — les quatre demandes de David n'étaient pas quatre fonctionnalités mais **les deux bouts d'un même problème** : ce qui empêche le doublon (suggestions, « vouliez-vous dire ? », propositions alignées sur le vocabulaire existant) et ce qui répare celui qui est là (renommer = fusionner = supprimer, en un geste). ⭐ *Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.* Plus l'étiquetage en lot et le refus `-tag` dans la barre (§ 96) | Media Hub → taper un tag à une lettre près, — | Rien. ✅ **Vu à l'écran** |
 | 33 | **La boucle d'une vidéo** | ✅ **LIVRÉ le 21/09** — le « choix à confirmer » du 05/09, rouvert par l'usage. ⛔ **Deux lecteurs** rendent une vidéo projetée, et le second (tablettes) **ne peut pas lire le réglage** : il voyage par le pont, émis avant la vidéo. ⭐ L'absence vaut boucle — *un champ neuf ne doit jamais rendre faux ce qui marchait avant lui*. Sans boucle, le film garde sa dernière image (§ 97) | La pastille d'Image-OS au survol, ou le Media Hub → **Joue une fois**, puis projeter | Rien. ⚠️ Non éprouvé à l'écran |
 | 34 | **La porte de l'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — l'atelier n'était atteignable que par une **lampe** : sans pont, aucune porte. ⭐ **Troisième porte manquante en deux jours.** Le même écran s'ouvre depuis la barre du haut, `onChoisir` devenu facultatif — *écrire un second écran aurait donné deux vocabulaires à tenir d'accord*. ⛔⛔ Et la vérification a trouvé pire : **les E2E tournaient sur le build de la veille**, et la porte ouvrait une **fenêtre illisible** — `backdrop-filter` sur le header retenait l'écran `fixed`, troisième fois dans ce dépôt (§ 98) | — | Rien. ✅ **Vu à l'écran**, défaut compris |
+| 35 | **L'habillage du titre d'un moment** | ✅ **LIVRÉ le 21/09, ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bien »*) — position (haut, milieu, bas), police, couleur, ombre. ⭐ La liste de polices est **celle des réglages**, sur demande de David : *une seconde liste aurait divergé de celle du thème*. ⛔ Deux fenêtres, deux chargements — et surtout pas `poserLesPolices`, qui fait table rase. ⭐ Chaque défaut est le comportement d'avant. ⛔⛔ **Et rien ne s'appliquait à la livraison** : `lireLeTitre` reconstruisait le message champ par champ et **jetait** les quatre nouveaux — troisième « clé non déclarée écrite puis jetée en silence » (§ 99) | — | Rien. ✅ **Vu à l'écran**, défaut compris |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
