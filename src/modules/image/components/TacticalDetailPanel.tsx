@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, Folder, Tag, Users, Check, Image as ImageIcon, Music, Film, FileText, Lock, Unlock, ShieldCheck, Unplug, Link2 } from 'lucide-react';
+import { X, Trash2, Folder, Tag, Users, Check, Image as ImageIcon, Music, Film, FileText, Lock, Unlock, ShieldCheck, Unplug, Link2, Repeat } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { MediaItem, MediaCollection } from '../../../stores/useMediaStore';
 import type { Campaign } from '../../session/useSessionOSStore';
@@ -11,6 +11,7 @@ import {
     formeCanonique, memeTag, suggestionsDeTag, tagsProches, tagsParUsage,
 } from '../../../components/media/vocabulaireDesTags';
 import { tagsProposes } from '../../../components/media/tagsProposes';
+import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
 
 interface TacticalDetailPanelProps {
     media: MediaItem;
@@ -54,6 +55,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
       qu'un.*
     */
     const mediaList = useMediaStore(s => s.mediaList);
+    const basculerLaBoucle = useMediaStore(s => s.basculerLaBoucle);
     const tagsConnus = tagsParUsage(mediaList).map(e => e.tag);
 
     const saisie = formeCanonique(newTag);
@@ -213,6 +215,36 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         )}
                     </div>
                 </section>
+
+                {/*
+                  ⭐ **La boucle d'une vidéo — demandée le 2026-09-21.** Elle reste
+                  le défaut : c'est l'usage courant, une ambiance. Sans elle, le
+                  film **garde sa dernière image** plutôt que de disparaître —
+                  *rien ne quitte l'écran sans que le meneur l'ait demandé.*
+                */}
+                {media.type === 'video' && (
+                    <section>
+                        <button
+                            onClick={() => void basculerLaBoucle(media.id)}
+                            className={`w-full flex items-center gap-4 px-6 py-4 rounded-3xl border transition-all ${
+                                laVideoBoucle(media)
+                                    ? 'bg-accent/5 border-accent/30 text-accent'
+                                    : 'bg-app-surface/40 border-app-border/10 text-app-text/40'
+                            }`}
+                        >
+                            <Repeat size={16} className="shrink-0" />
+                            <span className="flex-1 text-left text-ui-10 font-black uppercase tracking-[0.2em]">
+                                {laVideoBoucle(media)
+                                    ? t('image.detail.boucle.oui')
+                                    : t('image.detail.boucle.non')}
+                            </span>
+                            {laVideoBoucle(media) && <Check size={16} className="shrink-0" />}
+                        </button>
+                        <p className="mt-3 px-2 text-ui-9 font-bold uppercase tracking-widest text-app-text/20 leading-relaxed">
+                            {t('image.detail.boucle.aide')}
+                        </p>
+                    </section>
+                )}
 
                 {/* Tags Section */}
                 <section>

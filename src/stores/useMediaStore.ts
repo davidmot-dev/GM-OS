@@ -13,6 +13,13 @@ export interface MediaItem {
     tags: string[];
     campaignIds: string[];
     isPersistent?: boolean;
+    /**
+     * **Cette vidéo boucle-t-elle ?** Absent = oui — le comportement de tout ce
+     * qui a été importé avant ce réglage, et celui qu'on veut pour une
+     * ambiance. La règle vit dans `components/media/boucleDeLaVideo.ts`, parce
+     * que **deux lecteurs** la posent.
+     */
+    boucler?: boolean;
 }
 
 export interface MediaCollection {
@@ -55,6 +62,8 @@ interface MediaStoreState {
     renameCollection: (id: string, name: string) => Promise<void>;
     toggleMediaInCollection: (collectionId: string, mediaId: string) => Promise<void>;
     toggleMediaPersistence: (id: string) => Promise<void>;
+    /** Fait basculer une vidéo entre « boucle » et « joue une fois ». */
+    basculerLaBoucle: (id: string) => Promise<void>;
 }
 
 const DB_NAME = 'gmos-media-db';
@@ -133,7 +142,8 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
                 createdAt: item.createdAt,
                 tags: item.tags || [],
                 campaignIds: item.campaignIds || [],
-                isPersistent: !!item.isPersistent
+                isPersistent: !!item.isPersistent,
+                boucler: item.boucler
             })).sort((a, b) => b.createdAt - a.createdAt); // Newest first
 
             const collections: MediaCollection[] = allCollections.map(c => ({
@@ -202,7 +212,9 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
                 createdAt: item.createdAt,
                 tags: item.tags,
                 campaignIds: item.campaignIds,
-                isPersistent: item.isPersistent
+                isPersistent: item.isPersistent,
+                /* Un média neuf ne porte pas le réglage : l'absence vaut boucle,
+                   et c'est ce qu'on veut pour une ambiance. */
             };
 
             set((state) => ({
@@ -502,6 +514,36 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
         }
     },
     
+    /*
+      ⭐ **Le réglage vit sur le MÉDIA, pas sur la pastille.** Une même vidéo se
+      déclenche depuis Image-OS, depuis un moment de storyboard et depuis une
+      tablette : *un réglage posé sur un seul de ces chemins serait un réglage
+      qu'on croit avoir posé.*
+    */
+    basculerLaBoucle: async (id: string) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+
+            const item = await store.get(id);
+            if (!item) throw new Error('Media not found');
+
+            /* L'absence vaut boucle : le premier clic arrête donc la boucle. */
+            item.boucler = item.boucler === false;
+            await store.put(item);
+            await tx.done;
+
+            set((state) => ({
+                mediaList: state.mediaList.map(
+                    m => (m.id === id ? { ...m, boucler: item.boucler } : m),
+                ),
+            }));
+        } catch (err) {
+            console.error('[Media] Bascule de la boucle impossible :', err);
+        }
+    },
+
     toggleMediaPersistence: async (id: string) => {
         try {
             const db = await getDB();

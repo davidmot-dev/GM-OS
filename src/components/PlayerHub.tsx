@@ -33,7 +33,7 @@ const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
     const hubSync = useHubSync();
     const {
-        liveImagePath, liveMediaEstUneVideo, niveauSonVideo,
+        liveImagePath, liveMediaEstUneVideo, liveVideoBoucle, niveauSonVideo,
         liveEntity, showDice, signalerLesDesPoses, resolvedFavorites,
         isClockProjected, timestamp, mode, theme, tensions,
         combatants, currentTurnIdx, round, isCombatProjected,
@@ -185,6 +185,7 @@ const PlayerHub: React.FC = React.memo(() => {
                                 estUneVideo
                                 avecSon
                                 niveauSonore={niveauSonVideo}
+                                boucler={liveVideoBoucle}
                                 className="absolute inset-0 w-full h-full bg-cover bg-center"
                             />
                         )}

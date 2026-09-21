@@ -37,6 +37,14 @@ interface FondProjeteProps {
     avecSon?: boolean;
     /** Le niveau dicté par le meneur, entre 0 et 1. */
     niveauSonore?: number;
+    /**
+     * **Cette vidéo boucle-t-elle ?** Vrai par défaut — l'absence vaut boucle,
+     * et c'était le comportement d'avant ce réglage.
+     *
+     * ⚠️ Il arrive **par le pont**, pas par la base : une tablette ne peut pas
+     * lire le magasin des médias du meneur.
+     */
+    boucler?: boolean;
     className?: string;
     style?: React.CSSProperties;
 }
@@ -46,6 +54,7 @@ const FondProjete: React.FC<FondProjeteProps> = ({
     estUneVideo,
     avecSon = false,
     niveauSonore = 1,
+    boucler = true,
     className = '',
     style,
 }) => {
@@ -123,7 +132,10 @@ const FondProjete: React.FC<FondProjeteProps> = ({
                 key={url}
                 src={url}
                 autoPlay
-                loop
+                /* ⭐ Réglable par vidéo depuis le 2026-09-21. Sans boucle, le
+                   film **garde sa dernière image** : *rien ne disparaît de
+                   l'écran sans que le meneur l'ait demandé.* */
+                loop={boucler}
                 playsInline
                 muted={!avecSon}
                 className={`${className} object-cover`}

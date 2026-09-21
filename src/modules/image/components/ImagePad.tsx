@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
-import { X, Star, Edit2, Film } from 'lucide-react';
+import { X, Star, Edit2, Film, Repeat, Repeat1 } from 'lucide-react';
 import { estUneVideo } from '../../../stores/typesDeMedia';
 import type { ImageMedia } from '../types';
 import { useImageStore } from '../useImageStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { useMediaStore } from '../../../stores/useMediaStore';
+import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmPrompt } from '../../../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +24,36 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
     const projectSolo = useImageStore(state => state.projectSolo);
     const removeMedia = useImageStore(state => state.removeMedia);
     const toggleMediaFavorite = useImageStore(state => state.toggleMediaFavorite);
+
+    /*
+      ⛔ **L'interrupteur de boucle est ICI parce que c'est ici qu'on déclenche.**
+      Il existait déjà au Media Hub depuis le 2026-09-21 — et David ne l'a pas
+      trouvé : *« je ne vois pas comment dire qu'une vidéo ne doit pas se
+      répéter ? »*. Il avait cherché là où le geste se fait, ce qui est le bon
+      endroit pour chercher.
+
+      ⭐ *Une fonctionnalité qu'on ne voit pas est une fonctionnalité absente* —
+      la leçon de la recherche du Media Hub, cachée à 5 % d'opacité. Le réglage
+      reste le même et vit toujours sur le média : **deux portes, une seule
+      vérité.**
+    */
+    const basculerLaBoucle = useMediaStore(state => state.basculerLaBoucle);
+    /*
+      ⛔ **`media.path`, et surtout PAS `media.id`.** Un pad porte **deux**
+      identifiants : `id` est celui du pad, `path` est celui du fichier dans le
+      Media Hub. C'est `path` que `projectSolo` envoie au projecteur.
+
+      Le premier jet lisait `id` : l'interrupteur cherchait une fiche qui
+      n'existe pas, affichait donc toujours « boucle », et le clic écrivait dans
+      le vide — l'erreur partait dans la console, que personne ne lit. Trouvé par
+      David : *« je ne sais pas cliquer sur le bouton de boucle sur le pad »*.
+
+      ⭐ *Deux identifiants sur un même objet finissent toujours par être
+      confondus ; celui qui est juste est celui que le reste du code emploie
+      déjà.*
+    */
+    const fiche = useMediaStore(state => state.mediaList.find(m => m.id === media.path));
+    const boucle = laVideoBoucle(fiche);
     const renameMedia = useImageStore(state => state.renameMedia);
     const moveMediaToFolder = useImageStore(state => state.moveMediaToFolder);
     const folders = useImageStore(state => state.folders);
@@ -119,6 +151,27 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                 >
                     <Edit2 size={14} />
                 </button>
+
+                {/*
+                  Il n'a de sens que sur une vidéo — une image ne se répète pas —
+                  et **seulement si le Media Hub connaît ce fichier** : un pad qui
+                  pointe un fichier libre du disque n'a nulle part où ranger le
+                  réglage. *Mieux vaut pas de bouton qu'un bouton qui n'écrit
+                  rien.*
+                */}
+                {estVideo && fiche && (
+                    <button
+                        onClick={(e) => { e.stopPropagation(); void basculerLaBoucle(media.path); }}
+                        className={`p-1 rounded-md transition-colors ${
+                            boucle
+                                ? 'bg-accent text-app-bg shadow-glow-accent'
+                                : 'bg-app-surface/50 text-app-text/40 hover:text-accent'
+                        }`}
+                        title={boucle ? t('image.pad.boucleOui') : t('image.pad.boucleNon')}
+                    >
+                        {boucle ? <Repeat size={14} /> : <Repeat1 size={14} />}
+                    </button>
+                )}
 
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMediaFavorite(media.id); }}

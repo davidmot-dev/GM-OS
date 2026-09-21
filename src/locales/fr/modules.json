@@ -570,7 +570,9 @@
       "stop": "STOP",
       "projectSource": "Projeter sur {{target}}",
       "moveFolderTooltip": "Déplacer vers un dossier",
-      "includeSequenceTooltip": "Inclure dans la séquence"
+      "includeSequenceTooltip": "Inclure dans la séquence",
+      "boucleOui": "Boucle sans fin — cliquez pour ne la jouer qu’une fois",
+      "boucleNon": "Joue une fois, puis garde sa dernière image — cliquez pour boucler"
     },
     "detail": {
       "classification": "Classification Dossier",
@@ -606,6 +608,11 @@
       "tags": {
         "proche": "Vouliez-vous dire ?",
         "proposees": "D’après le nom du fichier"
+      },
+      "boucle": {
+        "oui": "Boucle sans fin",
+        "non": "Joue une fois",
+        "aide": "Sans boucle, la vidéo garde sa dernière image jusqu’au blackout."
       }
     },
     "preview": {

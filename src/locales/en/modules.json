@@ -570,7 +570,9 @@
       "stop": "STOP",
       "projectSource": "Project on {{target}}",
       "moveFolderTooltip": "Move to folder",
-      "includeSequenceTooltip": "Include in sequence"
+      "includeSequenceTooltip": "Include in sequence",
+      "boucleOui": "Loops forever — click to play it once",
+      "boucleNon": "Plays once, then holds its last frame — click to loop"
     },
     "detail": {
       "classification": "Folder Classification",
@@ -606,6 +608,11 @@
       "tags": {
         "proche": "Did you mean?",
         "proposees": "From the file name"
+      },
+      "boucle": {
+        "oui": "Loops forever",
+        "non": "Plays once",
+        "aide": "Without looping, the video holds its last frame until blackout."
       }
     },
     "preview": {

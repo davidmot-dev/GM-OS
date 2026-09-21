@@ -111,11 +111,16 @@ export interface ImageBridge {
     /**
      * `son-video` porte le niveau de la vidéo projetée, entre 0 et 1.
      *
+     * ⛔ `video-boucle` porte `'1'` ou `'0'`, et il doit voyager : **une
+     * tablette ne peut pas lire la base du meneur**, donc elle ne peut pas
+     * savoir si la vidéo boucle. Sans ce message, le même film tournerait en
+     * rond sur l'écran de la table et s'arrêterait sur le moniteur.
+     *
      * Voir [[gainDeLaVideo]] : une vidéo joue dans la fenêtre de projection et
      * ne peut pas rejoindre le bus audio du meneur. On lui envoie donc le niveau
      * qu'elle doit tenir, plutôt que de la brancher.
      */
-    syncHubData: (type: 'image' | 'video' | 'entity' | 'voice-level' | 'titre' | 'son-video', data: string) => void;
+    syncHubData: (type: 'image' | 'video' | 'entity' | 'voice-level' | 'titre' | 'son-video' | 'video-boucle', data: string) => void;
     launchDisplay: (paths: string[], target: ProjectionTarget) => void;
     /**
      * Demande au processus principal le titre affiché sur cet écran.

@@ -106,6 +106,14 @@ export const useHubSync = () => {
      */
     const [liveMediaEstUneVideo, setLiveMediaEstUneVideo] = useState(false);
     /**
+     * **La vidéo projetée boucle-t-elle ?**
+     *
+     * ⛔ Il faut qu'elle le dise : *une tablette ne peut pas lire la base du
+     * meneur*, donc elle ne peut pas déduire ce réglage. Part à `true` —
+     * l'absence vaut boucle, ici comme partout ailleurs.
+     */
+    const [liveVideoBoucle, setLiveVideoBoucle] = useState(true);
+    /**
      * Le niveau que la vidéo projetée doit tenir, dicté par le meneur.
      *
      * Part à 1 : *un silence qu'on ne s'explique pas coûte plus cher qu'un son
@@ -385,7 +393,12 @@ export const useHubSync = () => {
                         if (type === 'image') {
                             setLiveImagePath(imageApresMessage(payload));
                             setLiveMediaEstUneVideo(false);
+                            /* Même discipline que le drapeau au-dessus : *un
+                               réglage qu'on pose sans jamais le rendre s'applique
+                               à la vidéo suivante, qui ne l'a pas demandé.* */
+                            setLiveVideoBoucle(true);
                         }
+                        if (type === 'video-boucle') setLiveVideoBoucle(payload !== '0');
                         if (type === 'video') {
                             setLiveImagePath(imageApresMessage(payload));
                             setLiveMediaEstUneVideo(!!payload);
@@ -708,6 +721,7 @@ export const useHubSync = () => {
         status,
         liveImagePath,
         liveMediaEstUneVideo,
+        liveVideoBoucle,
         niveauSonVideo,
         liveEntity,
         voiceLevel,

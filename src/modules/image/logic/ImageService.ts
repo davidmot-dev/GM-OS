@@ -2,6 +2,7 @@ import type { ProjectionTarget } from '../types';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { natureDuMedia } from './natureDuMedia';
+import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
 
 /**
  * ImageService - Gère la logique métier de projection d'images.
@@ -75,6 +76,19 @@ export class ImageService {
                   s'affichait.* Trouvé par David.
                 */
                 const nature = natureDuMedia(mediaPath, useMediaStore.getState().mediaList);
+                /*
+                  ⛔ **La boucle voyage AVANT la vidéo**, et pour la même raison
+                  que la nature : la tablette ne peut pas lire la base du meneur,
+                  donc elle ne peut pas savoir si ce film tourne en rond.
+                  L'envoyer après laisserait un battement où le réglage d'avant
+                  s'applique.
+                */
+                if (nature === 'video') {
+                    const media = useMediaStore.getState().mediaList.find(m => m.id === mediaPath);
+                    window.appBridge?.image?.syncHubData?.(
+                        'video-boucle', laVideoBoucle(media) ? '1' : '0',
+                    );
+                }
                 window.appBridge?.image?.syncHubData(nature === 'video' ? 'video' : 'image', resolvedPath);
                 (window as any).useImageStore.getState().setProjection(target, marque);
                 return resolvedPath;

@@ -10,6 +10,7 @@ import { useImageStore } from '../useImageStore';
 import { useTranslation } from 'react-i18next';
 import { TitreProjete } from '../../../components/TitreProjete';
 import { videoDuMarqueur, adresseDIntegration, PREFIXE_YOUTUBE } from '../../web/youtube';
+import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
 import { useNiveauDuLecteurYouTube } from '../../web/pilotageDuLecteurYouTube';
 
 /**
@@ -55,6 +56,14 @@ const ProjectorView: React.FC = () => {
     const { entrante, sortante } = useFonduCroise(resolvedUrl, FONDU_DE_LIMAGE_MS);
     const { initDB, getMediaBlob } = useMediaStore();
     const [mediaType, setMediaType] = useState<'image' | 'video' | 'youtube' | 'unknown'>('unknown');
+    /*
+      ⭐ **La boucle est un réglage du média**, depuis le 2026-09-21 : *« c'est
+      bien que cela boucle, mais je voudrais avoir le choix »*. L'absence vaut
+      boucle — sans quoi toutes les ambiances déjà rangées s'arrêteraient d'un
+      coup. La règle est partagée avec le fond du Player Hub, qui rend l'autre
+      `<video>` de la même vidéo.
+    */
+    const [boucler, setBoucler] = useState(true);
     /* Le même fait que `mediaType`, lisible depuis un rappel qui ne re-rend pas. */
     const estUneVideo = useRef(false);
 
@@ -220,6 +229,9 @@ const ProjectorView: React.FC = () => {
                 const type = blob?.type.startsWith('video/') ? 'video' : 'image';
                 estUneVideo.current = type === 'video';
                 setMediaType(type);
+                setBoucler(laVideoBoucle(
+                    useMediaStore.getState().mediaList.find(m => m.id === imagePath),
+                ));
             } else {
                 estUneVideo.current = false;
                 setMediaType('image');
@@ -335,16 +347,19 @@ const ProjectorView: React.FC = () => {
                           **La vidéo a du son depuis le 2026-09-05.** Elle était
                           `muted` en dur : elle jouait, et personne ne l'entendait.
 
-                          `loop` est conservé — c'est le comportement d'origine, et
-                          il sert l'usage courant, une boucle d'ambiance. Une vidéo
-                          qui doit s'arrêter se coupe au blackout.
+                          ⭐ **La boucle se choisit par vidéo depuis le
+                          2026-09-21.** Elle reste le défaut — c'est l'usage
+                          courant, une ambiance — et une vidéo réglée sur
+                          « jouer une fois » **garde sa dernière image**, comme
+                          une image projetée : *rien ne disparaît de l'écran
+                          sans que le meneur l'ait demandé.*
                         */
                         <video 
                             ref={elementVideo}
                             key={imagePath || 'vid'} 
                             src={resolvedUrl} 
                             autoPlay 
-                            loop 
+                            loop={boucler}
                             playsInline
                             className="w-full h-full object-contain"
                             style={{ animation: `gmos-fondu-entrant ${FONDU_DE_LIMAGE_MS}ms ease-in-out` }}

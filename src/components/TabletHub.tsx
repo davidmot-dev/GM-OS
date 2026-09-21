@@ -56,7 +56,7 @@ const TabletHub: React.FC = () => {
     const {
         status,
         liveImagePath,
-        liveMediaEstUneVideo,
+        liveMediaEstUneVideo, liveVideoBoucle,
         liveEntity,
         sessionSummary,
         showDice,
@@ -300,6 +300,7 @@ const TabletHub: React.FC = () => {
                     <FondProjete
                         url={resolvedBackground}
                         estUneVideo
+                        boucler={liveVideoBoucle}
                         className="absolute inset-0 w-full h-full bg-cover bg-center"
                     />
                 )}
