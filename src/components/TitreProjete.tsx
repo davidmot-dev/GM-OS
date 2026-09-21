@@ -3,6 +3,7 @@ import {
     estPourCetEcran, lireLeTitre, minuterieDuTitre, useTitreProjeteStore,
     type TitreProjete as Titre,
 } from '../modules/storyboard/titreProjete';
+import { pileDePolice, requeteDePolices } from '../theme/editionDuTheme';
 
 /**
  * Le texte lui-même, et ses deux fondus.
@@ -35,13 +36,27 @@ const TexteDuTitre: React.FC<{ titre: Titre; surRetrait: () => void }> = ({ titr
         return () => { clearTimeout(sortie); clearTimeout(retrait); };
     }, [titre, surRetrait]);
 
+    /* La police demandée doit exister dans CETTE fenêtre : le projecteur et le
+       Player Hub sont deux documents distincts. */
+    useEffect(() => { if (titre?.police) chargerLaPolice(titre.police); }, [titre?.police]);
+
     return (
-        <div className="pointer-events-none absolute inset-x-0 top-[8%] z-40 flex justify-center px-8" aria-live="polite">
+        <div
+            className={`pointer-events-none absolute inset-x-0 z-40 flex justify-center px-8 ${PLACEMENTS[titre.position]}`}
+            aria-live="polite"
+        >
             <h1
                 style={{
-                    // **La police vient du thème du jeu**, posée par `useThemeDuJeu`
-                    // depuis le CSS de la campagne. Rien à régler ici.
-                    fontFamily: 'var(--font-display)',
+                    /*
+                      **La police du thème reste le défaut**, posée par
+                      `useThemeDuJeu` depuis le CSS de la campagne — c'était le
+                      seul choix jusqu'au 2026-09-21. Un titre peut désormais en
+                      demander une autre, prise dans la même liste que les
+                      réglages, et `pileDePolice` lui ajoute son repli.
+                    */
+                    fontFamily: titre.police ? pileDePolice(titre.police) : 'var(--font-display)',
+                    color: titre.couleur,
+                    textShadow: OMBRES[titre.contour],
                     opacity: visible ? 1 : 0,
                     transitionDuration: `${titre.fondu}s`,
                     /*
@@ -59,8 +74,7 @@ const TexteDuTitre: React.FC<{ titre: Titre; surRetrait: () => void }> = ({ titr
                     animation: `gmos-fondu-entrant ${titre.fondu}s ease-in-out`,
                 }}
                 className="max-w-[90%] text-center text-4xl sm:text-6xl font-black italic uppercase tracking-[0.2em]
-                           text-white transition-opacity ease-in-out
-                           [text-shadow:0_2px_24px_rgba(0,0,0,0.9),0_0_60px_rgba(0,0,0,0.7)]"
+                           transition-opacity ease-in-out"
             >
                 {titre.texte}
             </h1>
@@ -79,6 +93,56 @@ const TexteDuTitre: React.FC<{ titre: Titre; surRetrait: () => void }> = ({ titr
  * *Le storyboard ne vise pas les tablettes (décision de David) : elles reçoivent
  * le message et ne le lisent pas.*
  */
+/**
+ * **Où le titre se pose.** Trois hauteurs, et pas un curseur : *un titre au
+ * tiers supérieur gauche n'est pas un réglage qu'on refait deux fois pareil.*
+ */
+const PLACEMENTS: Record<Titre['position'], string> = {
+    haut: 'top-[8%]',
+    milieu: 'top-1/2 -translate-y-1/2',
+    bas: 'bottom-[8%]',
+};
+
+/**
+ * **L'ombre portée — elle n'est pas décorative.**
+ *
+ * ⛔ C'est elle qui rend le texte lisible sur une image claire comme sur une
+ * sombre. `fort` reproduit exactement ce que faisait le titre avant qu'on puisse
+ * en changer. *Un titre illisible sur une image trop claire ressemble à un titre
+ * qui ne s'est pas affiché* — d'où `aucun` offert, mais jamais par défaut.
+ */
+const OMBRES: Record<Titre['contour'], string> = {
+    aucun: 'none',
+    leger: '0 2px 12px rgba(0,0,0,0.65)',
+    fort: '0 2px 24px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.7)',
+};
+
+/**
+ * **Charger la police demandée, si elle n'est pas déjà là.**
+ *
+ * ⛔ **On n'emploie PAS `poserLesPolices`** : ce helper *retire* tous les liens
+ * qu'il a posés avant d'ajouter les siens, et il sert au thème du jeu. S'en
+ * servir ici arracherait les polices de toute l'interface à chaque titre. *Un
+ * helper qui fait table rase ne se partage pas.*
+ *
+ * ⚠️ Les familles marquées `deja` dans `POLICES_CONNUES` sont chargées par
+ * `index.css` pour toute l'application : `requeteDePolices` rend alors `null`, et
+ * il n'y a rien à injecter.
+ */
+function chargerLaPolice(famille: string): void {
+    if (!famille || typeof document === 'undefined') return;
+
+    const url = requeteDePolices([famille]);
+    if (!url) return;
+    if (document.head.querySelector(`link[data-police-de-titre="${CSS.escape(famille)}"]`)) return;
+
+    const lien = document.createElement('link');
+    lien.rel = 'stylesheet';
+    lien.href = url;
+    lien.setAttribute('data-police-de-titre', famille);
+    document.head.appendChild(lien);
+}
+
 export const TitreProjete: React.FC<{ cible: string }> = ({ cible }) => {
     const titre = useTitreProjeteStore(e => e.titre);
     const poserLeTitre = useTitreProjeteStore(e => e.poserLeTitre);

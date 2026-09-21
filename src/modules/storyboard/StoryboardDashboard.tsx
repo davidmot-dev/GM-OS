@@ -29,7 +29,11 @@ import { useTuilesVisibles } from '../light/hooks/useTuilesVisibles';
 import { useImageStore } from '../image/useImageStore';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useSortiesAudioDisponibles } from '../../hooks/useSortiesAudioDisponibles';
-import { FONDU_MAX, FONDU_MIN, FONDU_PAR_DEFAUT, DUREE_MAX } from './titreProjete';
+import {
+    FONDU_MAX, FONDU_MIN, FONDU_PAR_DEFAUT, DUREE_MAX,
+    POSITIONS, CONTOURS, COULEUR_PAR_DEFAUT,
+} from './titreProjete';
+import { POLICES_CONNUES } from '../../theme/editionDuTheme';
 import { estUneVideo } from '../../stores/typesDeMedia';
 
 // DND Kit Imports
@@ -274,6 +278,11 @@ const StoryboardDashboard: React.FC = () => {
     const [titre, setTitre] = useState('');
     const [titreFondu, setTitreFondu] = useState(String(FONDU_PAR_DEFAUT));
     const [titreDuree, setTitreDuree] = useState('');
+    /* Vide = le défaut d'avant ce réglage : haut, police du thème, blanc, ombre forte. */
+    const [titrePosition, setTitrePosition] = useState<string>('haut');
+    const [titrePolice, setTitrePolice] = useState('');
+    const [titreCouleur, setTitreCouleur] = useState(COULEUR_PAR_DEFAUT);
+    const [titreContour, setTitreContour] = useState<string>('fort');
 
     const { scenes: ambientScenes, presets: ambientThemes, themeChargeId } = useAmbientStore();
     /* Les tuiles que la campagne ouverte laisse voir — même verdict que
@@ -354,6 +363,10 @@ const StoryboardDashboard: React.FC = () => {
         setTitre(moment.titre || '');
         setTitreFondu(String(moment.titreFondu ?? FONDU_PAR_DEFAUT));
         setTitreDuree(moment.titreDuree ? String(moment.titreDuree) : '');
+        setTitrePosition(moment.titrePosition ?? 'haut');
+        setTitrePolice(moment.titrePolice ?? '');
+        setTitreCouleur(moment.titreCouleur ?? COULEUR_PAR_DEFAUT);
+        setTitreContour(moment.titreContour ?? 'fort');
         setIsEditing(true);
     };
 
@@ -380,6 +393,10 @@ const StoryboardDashboard: React.FC = () => {
         setTitre('');
         setTitreFondu(String(FONDU_PAR_DEFAUT));
         setTitreDuree('');
+        setTitrePosition('haut');
+        setTitrePolice('');
+        setTitreCouleur(COULEUR_PAR_DEFAUT);
+        setTitreContour('fort');
         setIsEditing(true);
     };
 
@@ -523,6 +540,12 @@ const StoryboardDashboard: React.FC = () => {
             // Vide veut dire permanent : on n'enregistre alors aucune durée.
             titreFondu: titre.trim() ? Number(titreFondu) || 0 : undefined,
             titreDuree: titre.trim() && Number(titreDuree) > 0 ? Number(titreDuree) : undefined,
+            /* On ne range que ce qui s'écarte du défaut : un moment qui n'a rien
+               choisi reste un moment sans réglage, et se relira comme tel. */
+            titrePosition: titre.trim() && titrePosition !== 'haut' ? titrePosition : undefined,
+            titrePolice: titre.trim() && titrePolice ? titrePolice : undefined,
+            titreCouleur: titre.trim() && titreCouleur !== COULEUR_PAR_DEFAUT ? titreCouleur : undefined,
+            titreContour: titre.trim() && titreContour !== 'fort' ? titreContour : undefined,
             campaignId: activeCampaignId,
             description: '',
             color: 'var(--accent)',
@@ -1068,6 +1091,80 @@ const StoryboardDashboard: React.FC = () => {
                                                     placeholder={t('modules:storyboard.editor.title_permanent')}
                                                     className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
                                                 />
+                                            </label>
+                                        </div>
+                                    )}
+
+                                    {/*
+                                      ⭐ **Où, dans quelle police, de quelle couleur** —
+                                      demandé par David le 2026-09-21. Les polices sont
+                                      celles des **réglages** (POLICES_CONNUES), sur sa
+                                      demande : *une seconde liste de polices finirait
+                                      par diverger de celle du thème.*
+                                    */}
+                                    {titre.trim() && (
+                                        <div className="flex flex-wrap gap-3">
+                                            <label className="flex-1 min-w-[7rem] flex flex-col gap-1">
+                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                    {t('modules:storyboard.editor.title_position')}
+                                                </span>
+                                                <select
+                                                    value={titrePosition}
+                                                    onChange={e => setTitrePosition(e.target.value)}
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                >
+                                                    {POSITIONS.map(p => (
+                                                        <option key={p} value={p}>
+                                                            {t(`modules:storyboard.editor.title_pos_${p}`)}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </label>
+
+                                            <label className="flex-1 min-w-[9rem] flex flex-col gap-1">
+                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                    {t('modules:storyboard.editor.title_font')}
+                                                </span>
+                                                <select
+                                                    value={titrePolice}
+                                                    onChange={e => setTitrePolice(e.target.value)}
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                >
+                                                    <option value="">{t('modules:storyboard.editor.title_font_theme')}</option>
+                                                    {POLICES_CONNUES.map(police => (
+                                                        <option key={police.famille} value={police.famille}>{police.famille}</option>
+                                                    ))}
+                                                </select>
+                                            </label>
+
+                                            <label className="flex flex-col gap-1">
+                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                    {t('modules:storyboard.editor.title_color')}
+                                                </span>
+                                                <input
+                                                    type="color"
+                                                    value={titreCouleur}
+                                                    onChange={e => setTitreCouleur(e.target.value)}
+                                                    className="h-[38px] w-14 bg-black/20 border border-white/5 rounded-xl cursor-pointer"
+                                                />
+                                            </label>
+
+                                            <label className="flex-1 min-w-[7rem] flex flex-col gap-1">
+                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                    {t('modules:storyboard.editor.title_outline')}
+                                                </span>
+                                                <select
+                                                    value={titreContour}
+                                                    onChange={e => setTitreContour(e.target.value)}
+                                                    title={t('modules:storyboard.editor.title_outline_help')}
+                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                >
+                                                    {CONTOURS.map(contour => (
+                                                        <option key={contour} value={contour}>
+                                                            {t(`modules:storyboard.editor.title_outline_${contour}`)}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </label>
                                         </div>
                                     )}

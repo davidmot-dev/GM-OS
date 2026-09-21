@@ -3040,7 +3040,19 @@
       "volume_inchange": "inchangé — ce moment n’y touche pas",
       "volume_activer": "Régler cette source depuis ce moment",
       "volume_laisser": "Laisser cette source où elle est",
-      "volume_fondu": "Temps mis pour atteindre ce niveau (ms). Zéro coupe net."
+      "volume_fondu": "Temps mis pour atteindre ce niveau (ms). Zéro coupe net.",
+      "title_position": "Position",
+      "title_pos_haut": "En haut",
+      "title_pos_milieu": "Au milieu",
+      "title_pos_bas": "En bas",
+      "title_font": "Police",
+      "title_font_theme": "Celle du jeu",
+      "title_color": "Couleur",
+      "title_outline": "Ombre",
+      "title_outline_aucun": "Aucune",
+      "title_outline_leger": "Légère",
+      "title_outline_fort": "Forte",
+      "title_outline_help": "L’ombre rend le texte lisible sur une image claire comme sur une sombre."
     },
     "actions": {
       "duplicate": "Dupliquer",

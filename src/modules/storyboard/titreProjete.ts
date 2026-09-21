@@ -49,7 +49,46 @@ export interface TitreProjete {
     fondu: number;
     /** Combien de temps il reste à l'écran. **`null` = permanent.** */
     duree: number | null;
+    /**
+     * **Où il se pose sur l'image** — demandé par David le 2026-09-21.
+     *
+     * ⚠️ `haut` est le défaut parce que c'était le seul comportement avant ce
+     * réglage : *un champ neuf ne doit jamais rendre faux ce qui marchait avant
+     * lui.* Les titres des moments déjà écrits ne bougent pas d'un pixel.
+     */
+    position: PositionDuTitre;
+    /**
+     * La famille de police, prise dans la **même liste que les réglages**
+     * (`POLICES_CONNUES`). Vide = la police de titre du thème du jeu, qui était
+     * le seul choix jusqu'ici.
+     */
+    police: string;
+    /** La couleur du texte, en hexadécimal. */
+    couleur: string;
+    /**
+     * L'ombre portée.
+     *
+     * ⛔ **Elle n'est pas décorative** : c'est elle qui rend un titre lisible
+     * sur une image claire comme sur une sombre. `fort` est le défaut, parce que
+     * c'est ce que faisait le titre avant qu'on puisse en changer — et parce
+     * qu'*un titre illisible sur une image trop claire ressemble à un titre qui
+     * ne s'est pas affiché.*
+     */
+    contour: ContourDuTitre;
 }
+
+/** Les trois hauteurs offertes. */
+export const POSITIONS = ['haut', 'milieu', 'bas'] as const;
+export type PositionDuTitre = typeof POSITIONS[number];
+
+/** Les trois ombres offertes. */
+export const CONTOURS = ['aucun', 'leger', 'fort'] as const;
+export type ContourDuTitre = typeof CONTOURS[number];
+
+/** Le blanc d'avant ce réglage. */
+export const COULEUR_PAR_DEFAUT = '#ffffff';
+
+const HEXADECIMAL = /^#[0-9a-f]{6}$/i;
 
 /** Bornes du fondu : zéro est net, au-delà de dix on ne voit plus le titre venir. */
 export const FONDU_MIN = 0;
@@ -69,12 +108,38 @@ export const DUREE_MAX = 600;
  */
 export function normaliserLeTitre(brut: {
     cible: string; texte: string; fondu?: number; duree?: number | null;
+    position?: string; police?: string; couleur?: string; contour?: string;
 }): TitreProjete {
     const fondu = Math.min(FONDU_MAX, Math.max(FONDU_MIN, Number(brut.fondu ?? FONDU_PAR_DEFAUT) || 0));
     const duree = brut.duree === null || brut.duree === undefined || Number(brut.duree) <= 0
         ? null
         : Math.min(DUREE_MAX, Math.max(DUREE_MIN, Number(brut.duree)));
-    return { cible: brut.cible, texte: brut.texte.trim(), fondu, duree };
+
+    /*
+      ⚠️ **Chaque défaut est le comportement d'avant ce réglage.** Un titre
+      écrit hier n'a aucun de ces champs et doit s'afficher exactement comme
+      hier : en haut, blanc, ombre forte, police de titre du thème.
+    */
+    const position = (POSITIONS as readonly string[]).includes(brut.position ?? '')
+        ? brut.position as PositionDuTitre
+        : 'haut';
+    const contour = (CONTOURS as readonly string[]).includes(brut.contour ?? '')
+        ? brut.contour as ContourDuTitre
+        : 'fort';
+    const couleur = typeof brut.couleur === 'string' && HEXADECIMAL.test(brut.couleur.trim())
+        ? brut.couleur.trim().toLowerCase()
+        : COULEUR_PAR_DEFAUT;
+
+    return {
+        cible: brut.cible,
+        texte: brut.texte.trim(),
+        fondu,
+        duree,
+        position,
+        police: typeof brut.police === 'string' ? brut.police.trim() : '',
+        couleur,
+        contour,
+    };
 }
 
 /**
@@ -126,7 +191,22 @@ export function lireLeTitre(charge: unknown): TitreProjete | null {
     try {
         const brut = JSON.parse(charge) as Partial<TitreProjete>;
         if (typeof brut?.cible !== 'string' || typeof brut?.texte !== 'string') return null;
-        return normaliserLeTitre({ cible: brut.cible, texte: brut.texte, fondu: brut.fondu, duree: brut.duree });
+        /*
+          ⛔ **TOUT ce que le message porte, et pas une liste écrite à la main.**
+
+          Ce parseur reconstruisait l'objet champ par champ, et sa liste s'était
+          arrêtée à `{ cible, texte, fondu, duree }`. Les quatre réglages
+          d'habillage ajoutés le 2026-09-21 partaient donc de l'éditeur,
+          traversaient le pont, et étaient **jetés à la réception** — sans une
+          erreur. David : *« j'ai fait une configuration mais cela ne s'applique
+          pas »*.
+
+          ⭐ ***Une clé non déclarée écrite puis jetée en silence*** : le même
+          défaut que le schéma Zod de la sauvegarde, qui n'était pas
+          `passthrough`. On relaie donc l'objet entier, et c'est
+          `normaliserLeTitre` — seul juge — qui borne ce qui entre.
+        */
+        return normaliserLeTitre({ ...brut, cible: brut.cible, texte: brut.texte });
     } catch {
         // Un message illisible ne doit pas faire tomber l'écran de projection.
         return null;

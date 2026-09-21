@@ -132,6 +132,17 @@ export interface StoryboardMoment {
     titreFondu?: number;
     /** Combien de temps il reste. **Absent ou nul : permanent.** */
     titreDuree?: number;
+    /*
+      **Où le titre se pose, dans quelle police et de quelle couleur** — demandé
+      par David le 2026-09-21. Tous facultatifs, et chaque absence vaut le
+      comportement d'avant : en haut, police de titre du thème, blanc, ombre
+      forte. *Un champ neuf ne doit jamais rendre faux ce qui marchait avant
+      lui.* Les bornes vivent dans `titreProjete.ts`.
+    */
+    titrePosition?: string;
+    titrePolice?: string;
+    titreCouleur?: string;
+    titreContour?: string;
 
     campaignId: string;
 }
@@ -712,6 +723,10 @@ export const useStoryboardStore = create<StoryboardState>()(
                         texte: moment.titre ?? '',
                         fondu: moment.titreFondu,
                         duree: moment.titreDuree,
+                        position: moment.titrePosition,
+                        police: moment.titrePolice,
+                        couleur: moment.titreCouleur,
+                        contour: moment.titreContour,
                     }));
                 }
 

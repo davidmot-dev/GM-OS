@@ -74,7 +74,14 @@ describe('à qui s’adresse un titre', () => {
 describe('lire un message reçu', () => {
     it('accepte un message bien formé', () => {
         const recu = lireLeTitre(JSON.stringify({ cible: 'hub', texte: 'Tyrell Corp.', fondu: 1.5, duree: 5 }));
-        expect(recu).toEqual({ cible: 'hub', texte: 'Tyrell Corp.', fondu: 1.5, duree: 5 });
+        /* ⭐ Les quatre réglages d'habillage sont arrivés le 2026-09-21, et
+           **leurs défauts sont le comportement d'avant** : en haut, police du
+           thème, blanc, ombre forte. On les épingle ici, parce que c'est ce
+           qu'un titre écrit hier doit continuer de rendre. */
+        expect(recu).toEqual({
+            cible: 'hub', texte: 'Tyrell Corp.', fondu: 1.5, duree: 5,
+            position: 'haut', police: '', couleur: '#ffffff', contour: 'fort',
+        });
     });
 
     /** *Un message illisible ne doit pas faire tomber l'écran de projection.* */
@@ -126,6 +133,7 @@ describe('un moment qui porte un titre', () => {
 
         expect(dernierTitre()).toEqual({
             cible: 'moniteur-2', texte: 'Los Angeles, novembre 2019', fondu: 2, duree: 6,
+            position: 'haut', police: '', couleur: '#ffffff', contour: 'fort',
         });
     });
 
@@ -163,7 +171,11 @@ describe('un moment qui porte un titre', () => {
 
         useStoryboardStore.getState().arreterLeMoment();
 
-        expect(dernierTitre()).toEqual({ cible: 'moniteur-2', texte: '', fondu: FONDU_PAR_DEFAUT, duree: null });
+        /* Le retrait n'habille rien : il porte les défauts, et un texte vide. */
+        expect(dernierTitre()).toEqual({
+            cible: 'moniteur-2', texte: '', fondu: FONDU_PAR_DEFAUT, duree: null,
+            position: 'haut', police: '', couleur: '#ffffff', contour: 'fort',
+        });
     });
 
     it('ne dit rien à personne quand le moment arrêté n’avait pas de titre', async () => {

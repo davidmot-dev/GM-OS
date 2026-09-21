@@ -3040,7 +3040,19 @@
       "volume_inchange": "unchanged — this moment leaves it alone",
       "volume_activer": "Set this source from this moment",
       "volume_laisser": "Leave this source where it is",
-      "volume_fondu": "Time taken to reach this level (ms). Zero cuts sharply."
+      "volume_fondu": "Time taken to reach this level (ms). Zero cuts sharply.",
+      "title_position": "Position",
+      "title_pos_haut": "Top",
+      "title_pos_milieu": "Middle",
+      "title_pos_bas": "Bottom",
+      "title_font": "Font",
+      "title_font_theme": "The game’s",
+      "title_color": "Colour",
+      "title_outline": "Shadow",
+      "title_outline_aucun": "None",
+      "title_outline_leger": "Light",
+      "title_outline_fort": "Strong",
+      "title_outline_help": "The shadow keeps the text readable on light and dark images alike."
     },
     "actions": {
       "duplicate": "Duplicate",
