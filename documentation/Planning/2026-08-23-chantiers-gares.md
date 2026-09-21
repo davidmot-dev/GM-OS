@@ -8124,8 +8124,10 @@ main sur un champ vide.
 
 **Vérifié** : `tsc -b` propre, lint propre, **375 essais** du périmètre lumière et du registre
 d'Échap au vert, **8 E2E de Light-OS sur un `dist/` frais** — dont trois neufs, tombés tous les
-trois quand on masque la porte. ⚠️ **La fenêtre illisible, elle, a été vue à l'écran par David** ;
-le correctif ne l'est pas encore.
+trois quand on masque la porte.
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-21** — David : *« ça fonctionne »*. ⭐ *C'est le seul chantier de
+ces deux jours dont il a vu le défaut avant le correctif* : la fenêtre illisible, puis l'écran
+droit.
 
 ---
 
@@ -8167,7 +8169,7 @@ le correctif ne l'est pas encore.
 | 31 | **Le dosage des trois sources** | ✅ **LIVRÉ le 20/09** — demandé par David : régler le volume de Music-OS, Ambient-OS et Sound-OS depuis un moment. ⛔ **Deux des trois volumes n'existaient pas** : `SoundEngine.setMasterVolume` était écrite **sans appelant** (donc le curseur du soundboard de la **tablette** était muet), et Ambient-OS n'avait aucun nœud pour le porter alors qu'il était persisté et restauré. ⭐ Le piège tenait à **une seule valeur** : `0 || undefined` aurait fait l'inverse exact de « coupe le son » (§ 95) | Un moment → **Dosage des sources** → activer une ligne, curseur et fondu | Rien. ⚠️ Non éprouvé à l'écran |
 | 32 | **Les étiquettes du Media Hub** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — les quatre demandes de David n'étaient pas quatre fonctionnalités mais **les deux bouts d'un même problème** : ce qui empêche le doublon (suggestions, « vouliez-vous dire ? », propositions alignées sur le vocabulaire existant) et ce qui répare celui qui est là (renommer = fusionner = supprimer, en un geste). ⭐ *Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.* Plus l'étiquetage en lot et le refus `-tag` dans la barre (§ 96) | Media Hub → taper un tag à une lettre près, — | Rien. ✅ **Vu à l'écran** |
 | 33 | **La boucle d'une vidéo** | ✅ **LIVRÉ le 21/09** — le « choix à confirmer » du 05/09, rouvert par l'usage. ⛔ **Deux lecteurs** rendent une vidéo projetée, et le second (tablettes) **ne peut pas lire le réglage** : il voyage par le pont, émis avant la vidéo. ⭐ L'absence vaut boucle — *un champ neuf ne doit jamais rendre faux ce qui marchait avant lui*. Sans boucle, le film garde sa dernière image (§ 97) | La pastille d'Image-OS au survol, ou le Media Hub → **Joue une fois**, puis projeter | Rien. ⚠️ Non éprouvé à l'écran |
-| 34 | **La porte de l'atelier d'effets** | ✅ **LIVRÉ le 21/09** — l'atelier n'était atteignable que par une **lampe** : sans pont, aucune porte. ⭐ **Troisième porte manquante en deux jours.** Le même écran s'ouvre depuis la barre du haut, `onChoisir` devenu facultatif — *écrire un second écran aurait donné deux vocabulaires à tenir d'accord*. ⛔⛔ Et la vérification a trouvé pire : **les E2E tournaient sur le build de la veille**, et la porte ouvrait une **fenêtre illisible** — `backdrop-filter` sur le header retenait l'écran `fixed`, troisième fois dans ce dépôt (§ 98) | Light-OS sans pont → **Mes effets** dans la barre du haut | Rien. ⚠️ Non éprouvé à l'écran |
+| 34 | **La porte de l'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — l'atelier n'était atteignable que par une **lampe** : sans pont, aucune porte. ⭐ **Troisième porte manquante en deux jours.** Le même écran s'ouvre depuis la barre du haut, `onChoisir` devenu facultatif — *écrire un second écran aurait donné deux vocabulaires à tenir d'accord*. ⛔⛔ Et la vérification a trouvé pire : **les E2E tournaient sur le build de la veille**, et la porte ouvrait une **fenêtre illisible** — `backdrop-filter` sur le header retenait l'écran `fixed`, troisième fois dans ce dépôt (§ 98) | — | Rien. ✅ **Vu à l'écran**, défaut compris |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

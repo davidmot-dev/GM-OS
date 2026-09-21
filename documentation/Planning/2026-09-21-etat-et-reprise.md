@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | **96** | Les étiquettes du Media Hub — saisie assistée, lot, propositions, refus | ✅ **oui** (*« ça fonctionne »*) |
 | **97** | La boucle d'une vidéo se choisit — le « choix à confirmer » du 05/09, tranché | ⚠️ non, **et deux portes à éprouver** |
-| **98** | La porte de l'atelier d'effets — **et les E2E qui tournaient sur le build de la veille** | ⚠️ non |
+| **98** | La porte de l'atelier d'effets — **et les E2E qui tournaient sur le build de la veille** | ✅ **oui** (*« ça fonctionne »*) |
 
 ⭐ **Les quatre demandes n'étaient pas quatre fonctionnalités.** C'étaient les deux bouts d'un même
 problème : ce qui **empêche** le doublon, et ce qui **répare** celui qui est déjà là. Le champ de
