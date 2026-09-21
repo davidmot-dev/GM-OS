@@ -16,6 +16,7 @@
 | --- | --- | --- |
 | **96** | Les étiquettes du Media Hub — saisie assistée, lot, propositions, refus | ✅ **oui** (*« ça fonctionne »*) |
 | **97** | La boucle d'une vidéo se choisit — le « choix à confirmer » du 05/09, tranché | ⚠️ non, **et deux portes à éprouver** |
+| **98** | La porte de l'atelier d'effets — **et les E2E qui tournaient sur le build de la veille** | ⚠️ non |
 
 ⭐ **Les quatre demandes n'étaient pas quatre fonctionnalités.** C'étaient les deux bouts d'un même
 problème : ce qui **empêche** le doublon, et ce qui **répare** celui qui est déjà là. Le champ de
@@ -48,6 +49,43 @@ chercher. Une seconde porte y est posée. ⚠️ **Deux portes, une seule vérit
 un même réglage sont un confort ; deux réglages derrière deux portes sont un défaut.*
 
 Deuxième fois en deux jours qu'une porte manque — voir l'atelier d'effets, plus bas.
+
+### ⛔⛔ Un harnais qui ne dit pas sur quoi il a tourné rend des verts qui ne prouvent rien
+
+`lancerGmOs` démarre Electron sur **`dist/`**, pas sur les sources — son propre commentaire
+l'avertit. **Toutes les exécutions E2E des 20 et 21/09 ont donc éprouvé le build de la veille.**
+Elles valaient comme non-régression sur ce build, et pas du tout comme preuve du code du jour.
+
+⚠️ **`npm run build` avant toute exécution E2E** qui prétend éprouver le code du jour. C'est le
+premier essai de l'atelier qui l'a révélé, en échouant pour cette seule raison.
+
+### ⛔⛔ Un contrôle mécanique qu'on explique au lieu de l'écouter ne sert à rien
+
+L'essai E2E a **trouvé** la fenêtre illisible une heure avant David : Playwright refusait de
+cliquer, `elementFromPoint` ne rendait rien. J'ai mis ça sur le compte du harnais et contourné par
+`dispatchEvent`. C'étaient les deux symptômes exacts d'un élément `fixed` retenu par un ascendant
+en `backdrop-filter`.
+
+⭐ C'est le **symétrique** du faux positif du menu d'atmosphère : là-bas l'essai passait sur du
+code fautif, ici il échouait sur un défaut réel et j'ai cru le harnais coupable.
+
+### ⭐ Un élément ne peut pas sortir de l'ordre de peinture de son parent — troisième fois
+
+Media Hub, menu d'atmosphère (§ 90), écran des effets. ⚠️ **`backdrop-filter` crée un bloc
+conteneur pour les éléments `fixed`** : un `fixed inset-0` monté sous un bandeau flouté vise le
+bandeau, pas la fenêtre. Remède constant : un portail vers `document.body`.
+
+### ⭐ Un garde qui protège un geste doit rendre la main quand il n'a plus rien à protéger
+
+Échap était arrêté **toujours** par le champ de recherche, qui porte `autoFocus` : l'écran des
+effets s'ouvrait donc dans un état où Échap ne pouvait plus jamais le fermer.
+
+### ⭐ Une porte manquante est un défaut, et c'est le motif de ces deux jours
+
+Trois fois : l'atelier d'effets atteignable seulement par une lampe, la boucle d'une vidéo rangée
+au Media Hub alors qu'on la cherche dans Image-OS, et la pastille posée ensuite sur le mauvais
+identifiant. *La fonctionnalité existe, et le chemin depuis l'endroit où le meneur se trouve n'a
+pas été pensé.*
 
 ### ⛔ Deux identifiants sur un même objet finissent toujours par être confondus
 
@@ -106,8 +144,10 @@ rendu porte sur ce qui a **réellement** été écrit.
 
 ## ⚠️ Ce qui reste ouvert
 
-- **L'atelier d'effets n'est atteignable que par une lampe** (hérité du 20/09) — une dizaine de
-  lignes pour une entrée depuis la barre du haut de Light-OS.
+- ~~**L'atelier d'effets n'est atteignable que par une lampe**~~ — ✅ **fait le 21/09** (§ 98).
+- ~~**À rouvrir : Playwright et `elementFromPoint` ne parlent pas des mêmes coordonnées**~~ —
+  ✅ **expliqué le 21/09, et ce n'était pas le harnais** : `backdrop-filter` sur le `<header>` de
+  Light-OS retenait l'écran `fixed`. Corrigé par un portail.
 - **Les specs E2E des gestes des deux jours.** Aucune n'exerce l'essai d'ambiance, l'atelier, le
   thème d'un moment, le dosage, ni les étiquettes.
 - **⏸ Les lampes qui suivent la voix** (§ 3 bis, ligne h) — construit le 31/08, jamais essayé au

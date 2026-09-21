@@ -8045,6 +8045,90 @@ puisque la seconde était fausse.
 
 ---
 
+### 98 · ⭐ La porte de l'atelier d'effets — et les E2E qui tournaient sur le build de la veille (2026-09-21)
+
+Point resté ouvert du § 93, fermé sur demande de David : *« peux-tu régler cela ? »*.
+
+#### ⛔ L'atelier n'était atteignable que par une lampe
+
+L'écran des effets s'ouvre depuis le pied de page d'une **lampe**. Sans pont branché ni mode
+simulé, il n'y a aucune lampe à l'écran, donc aucun bouton, donc **pas d'atelier** — alors qu'il
+compose très bien un effet sans elles.
+
+⭐ ***Troisième porte manquante en deux jours***, après la boucle d'une vidéo (cherchée dans
+Image-OS, rangée au Media Hub) et sa pastille branchée sur le mauvais identifiant. Le motif est
+constant : *la fonctionnalité existe, et le chemin pour y arriver n'a pas été pensé depuis là où
+le meneur se trouve.*
+
+#### ⚠️ Le même écran, pas une copie
+
+Un bouton **« Mes effets »** dans la barre du haut de Light-OS ouvre **`SelecteurDEffet`**, dont
+`onChoisir` devient **facultatif**. Sans lampe, l'écran sert à *gérer* — créer, régler, tirer une
+ambiance — et le geste de *poser* est désactivé, avec son motif dans l'infobulle et un
+« gestion seule » dans l'en-tête.
+
+⛔ *Écrire un second écran pour gérer les effets aurait donné deux vocabulaires à tenir d'accord.*
+Et un bouton actif qui n'écrit rien était exactement le défaut de la veille.
+
+#### ⛔⛔ Et la vérification a trouvé pire : **les E2E tournaient sur le build de la veille**
+
+`lancerGmOs` démarre Electron sur **`dist-electron/main.js`** et `dist/index.html` — pas sur les
+sources. Son propre commentaire l'avertit : *« un `dist/` périmé ferait passer des tests sur du code
+d'hier »*.
+
+⚠️ **Toutes les exécutions E2E des 20 et 21/09 ont donc éprouvé le build de la veille.** Elles
+valaient comme contrôles de non-régression sur ce build, et **pas du tout** comme preuve du code du
+jour. Le premier essai de l'atelier a échoué pour cette seule raison, et c'est ce qui l'a révélé.
+
+⭐ ***Un harnais qui ne dit pas sur quoi il a tourné rend des verts qui ne prouvent rien.*** À
+retenir : **`npm run build` avant toute exécution E2E qui prétend éprouver le code du jour.**
+
+#### ⛔⛔ La porte ouvrait une fenêtre illisible — et l'essai le disait déjà
+
+David, capture à l'appui : *« le bouton mes effets dans Light-OS ouvre une fenêtre illisible »*.
+L'écran volant se peignait décalé, rogné, les tuiles au travers.
+
+**La cause tient en une ligne** : le `<header>` de Light-OS porte `backdrop-blur-sm`, et
+`backdrop-filter` **crée un bloc conteneur pour les éléments `fixed` qu'il contient**. Monté
+là-dedans, `fixed inset-0` ne vise plus la fenêtre mais le **bandeau**, et `z-50` reste enfermé
+sous le `z-10` du header.
+
+⭐ ***Un élément ne peut pas sortir de l'ordre de peinture de son parent*** — troisième fois dans
+ce dépôt : le menu de tri du Media Hub, le menu d'atmosphère (§ 90), celui-ci. Remède identique :
+un **portail** vers `document.body`.
+
+⛔⛔ **Et l'essai E2E l'avait trouvé une heure plus tôt.** Playwright refusait de cliquer
+(*« element is outside of the viewport »*) et `elementFromPoint` ne rendait **rien** au centre de la
+boîte mesurée : les deux symptômes exacts d'un élément posé dans un autre repère. **Je l'ai
+expliqué par une limite du harnais et j'ai contourné par `dispatchEvent`.**
+
+⭐ ***Un contrôle mécanique qu'on explique au lieu de l'écouter ne sert à rien.*** C'est le
+symétrique du faux positif : là-bas l'essai passait sur du code fautif, ici il échouait sur un
+défaut réel et j'ai cru le harnais coupable. L'essai clique de nouveau pour de vrai, et
+`elementFromPoint` est désormais **la** garde de ce fichier.
+
+#### ⛔ Et un troisième défaut, découvert par le même essai
+
+Le champ de recherche porte `autoFocus`, et son `onKeyDown` arrêtait **toujours** Échap pour vider
+la recherche. L'écran s'ouvrait donc dans un état où **Échap ne pouvait plus jamais le fermer** —
+ce que le registre des surcouches interdit. Il ne l'arrête plus que s'il y a quelque chose à vider.
+
+⭐ *Un garde qui protège un geste doit rendre la main quand il n'a plus rien à protéger.*
+
+**Ancres** : `light/components/TopControls.tsx` (la porte),
+`light/components/SelecteurDEffet.tsx` (`onChoisir` facultatif, `peutPoser`),
+`e2e/lightOs.spec.ts` (trois essais, éprouvés **rouges** en masquant le bouton).
+
+**Ancres (suite)** : `SelecteurDEffet` — `createPortal` vers `document.body`, et Échap qui rend la
+main sur un champ vide.
+
+**Vérifié** : `tsc -b` propre, lint propre, **375 essais** du périmètre lumière et du registre
+d'Échap au vert, **8 E2E de Light-OS sur un `dist/` frais** — dont trois neufs, tombés tous les
+trois quand on masque la porte. ⚠️ **La fenêtre illisible, elle, a été vue à l'écran par David** ;
+le correctif ne l'est pas encore.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8083,6 +8167,7 @@ puisque la seconde était fausse.
 | 31 | **Le dosage des trois sources** | ✅ **LIVRÉ le 20/09** — demandé par David : régler le volume de Music-OS, Ambient-OS et Sound-OS depuis un moment. ⛔ **Deux des trois volumes n'existaient pas** : `SoundEngine.setMasterVolume` était écrite **sans appelant** (donc le curseur du soundboard de la **tablette** était muet), et Ambient-OS n'avait aucun nœud pour le porter alors qu'il était persisté et restauré. ⭐ Le piège tenait à **une seule valeur** : `0 || undefined` aurait fait l'inverse exact de « coupe le son » (§ 95) | Un moment → **Dosage des sources** → activer une ligne, curseur et fondu | Rien. ⚠️ Non éprouvé à l'écran |
 | 32 | **Les étiquettes du Media Hub** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — les quatre demandes de David n'étaient pas quatre fonctionnalités mais **les deux bouts d'un même problème** : ce qui empêche le doublon (suggestions, « vouliez-vous dire ? », propositions alignées sur le vocabulaire existant) et ce qui répare celui qui est là (renommer = fusionner = supprimer, en un geste). ⭐ *Un vocabulaire qu'on ne peut pas corriger se corrompt à chaque ajout.* Plus l'étiquetage en lot et le refus `-tag` dans la barre (§ 96) | Media Hub → taper un tag à une lettre près, — | Rien. ✅ **Vu à l'écran** |
 | 33 | **La boucle d'une vidéo** | ✅ **LIVRÉ le 21/09** — le « choix à confirmer » du 05/09, rouvert par l'usage. ⛔ **Deux lecteurs** rendent une vidéo projetée, et le second (tablettes) **ne peut pas lire le réglage** : il voyage par le pont, émis avant la vidéo. ⭐ L'absence vaut boucle — *un champ neuf ne doit jamais rendre faux ce qui marchait avant lui*. Sans boucle, le film garde sa dernière image (§ 97) | La pastille d'Image-OS au survol, ou le Media Hub → **Joue une fois**, puis projeter | Rien. ⚠️ Non éprouvé à l'écran |
+| 34 | **La porte de l'atelier d'effets** | ✅ **LIVRÉ le 21/09** — l'atelier n'était atteignable que par une **lampe** : sans pont, aucune porte. ⭐ **Troisième porte manquante en deux jours.** Le même écran s'ouvre depuis la barre du haut, `onChoisir` devenu facultatif — *écrire un second écran aurait donné deux vocabulaires à tenir d'accord*. ⛔⛔ Et la vérification a trouvé pire : **les E2E tournaient sur le build de la veille**, et la porte ouvrait une **fenêtre illisible** — `backdrop-filter` sur le header retenait l'écran `fixed`, troisième fois dans ce dépôt (§ 98) | Light-OS sans pont → **Mes effets** dans la barre du haut | Rien. ⚠️ Non éprouvé à l'écran |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

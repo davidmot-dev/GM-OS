@@ -393,8 +393,23 @@ Elles se capturent dans une tuile comme n'importe quel effet.
 **invente**. Un orage lointain — deux éclairs blancs rapprochés, puis vingt secondes de bleu
 sombre — n'est la déclinaison d'aucun effet existant.
 
-**Pour en créer un** : ouvrez l'écran de choix d'un effet, section **Mes effets**, bouton
-**« Créer un effet »**. L'atelier s'ouvre par-dessus.
+**Pour en créer un**, deux portes mènent au même écran :
+
+- **« Mes effets » dans la barre du haut** de Light-OS — la plus directe, et **elle ne demande
+  aucune lampe** ;
+- l'**écran de choix d'un effet** d'une lampe, section **Mes effets**.
+
+Puis le bouton **« Créer un effet »**, et l'atelier s'ouvre par-dessus.
+
+> ⛔ **Pourquoi la première porte existe.** L'atelier n'était atteignable que depuis le pied de
+> page d'une **lampe** : sans pont branché ni mode simulé, il n'y a aucune lampe à l'écran, donc
+> aucun bouton, donc pas d'atelier — alors qu'il compose très bien un effet sans elles.
+> *Une fonctionnalité qu'on ne peut pas atteindre n'existe pas.*
+
+> [!NOTE]
+> **Ouvert depuis la barre du haut, l'écran ne peut pas *poser* un effet** : il n'y a personne à
+> qui le poser. Il le dit (« gestion seule »), et les pastilles d'effet sont éteintes. Tout le
+> reste — créer, régler, dupliquer en ambiance — fonctionne.
 
 ### Ce qu'est un effet, ici
 
