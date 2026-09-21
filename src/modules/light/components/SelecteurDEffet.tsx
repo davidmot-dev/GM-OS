@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Search, X, Palette, Trash2, Wand2, SlidersHorizontal } from 'lucide-react';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
@@ -43,11 +44,24 @@ import AtelierDEffet from './AtelierDEffet';
  */
 
 interface Props {
-    /** L'effet que joue la lampe en ce moment. */
+    /** L'effet que joue la lampe, ou `''` quand il n'y a pas de lampe. */
     effetActuel: string;
     /** Le nom de la lampe, pour que le meneur sache ce qu'il règle. */
     nomDeLaLampe: string;
-    onChoisir: (valeur: string) => void;
+    /**
+     * **Poser l'effet choisi sur une lampe — facultatif depuis le 2026-09-21.**
+     *
+     * ⛔ **Son absence est une porte, pas une dégradation.** L'atelier d'effets
+     * vit dans cet écran, et cet écran ne s'ouvrait que depuis le pied de page
+     * d'une **lampe** : sans pont branché ni mode simulé, il n'y a aucune lampe,
+     * donc aucune porte — alors que l'atelier sait très bien travailler sans
+     * elles. *Une fonctionnalité qu'on ne peut pas atteindre n'existe pas.*
+     *
+     * Ouvert depuis la barre du haut de Light-OS, l'écran sert donc à **gérer** :
+     * créer un effet, le régler, en tirer une ambiance. Seul le geste de *poser*
+     * est indisponible, et il se dit.
+     */
+    onChoisir?: (valeur: string) => void;
     onFermer: () => void;
 }
 
@@ -105,7 +119,13 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
     const mesEffets = trouves.filter(e => e.idAtelier);
     const parCategorie = (c: CategorieDEffet) => trouves.filter(e => e.categorie === c);
 
-    const choisir = (valeur: string) => { onChoisir(valeur); onFermer(); };
+    /** Y a-t-il une lampe sur qui poser un effet ? */
+    const peutPoser = Boolean(onChoisir);
+    const choisir = (valeur: string) => {
+        if (!onChoisir) return;
+        onChoisir(valeur);
+        onFermer();
+    };
 
     /** Duplique sans fermer : on peut en faire plusieurs d'affilée. */
     const dupliquer = (valeur: string) => creerUneVariante(valeur, nomDe(valeur));
@@ -116,17 +136,42 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
         <button
             key={valeur}
             onClick={() => choisir(valeur)}
+            disabled={!peutPoser}
             className={`px-3 py-2 rounded-lg text-left text-xs font-bold border transition-all truncate
                 ${enCours
                     ? 'bg-accent/20 border-accent text-accent'
-                    : `bg-app-bg/60 border-app-border/30 hover:border-accent/50 ${teinte ?? 'text-app-text/80'}`}`}
-            title={nom}
+                    : `bg-app-bg/60 border-app-border/30 ${teinte ?? 'text-app-text/80'} ${
+                        peutPoser ? 'hover:border-accent/50' : 'opacity-50 cursor-default'
+                    }`}`}
+            title={peutPoser ? nom : t('light.footer.selecteur.sansLampe')}
         >
             {nom}
         </button>
     );
 
-    return (
+    /*
+      ⛔ **UN PORTAIL, ET IL N'EST PAS DÉCORATIF.**
+
+      Cet écran s'ouvre désormais aussi depuis la **barre du haut** de Light-OS,
+      dont le `<header>` porte `backdrop-blur-sm`. Or `backdrop-filter` **crée un
+      bloc conteneur pour les éléments `fixed` qu'il contient** : monté là,
+      l'écran n'était plus positionné par rapport à la fenêtre mais par rapport au
+      bandeau — décalé, rogné, et son `z-50` enfermé sous le `z-10` du header.
+      David, capture à l'appui : *« le bouton mes effets dans Light-OS ouvre une
+      fenêtre illisible »*.
+
+      ⭐ ***Un élément ne peut pas sortir de l'ordre de peinture de son parent*** —
+      la règle du Media Hub, puis du menu d'atmosphère (§ 90), et maintenant
+      d'ici. Le portail rend l'écran à `document.body`, d'où aucun ascendant ne
+      peut plus le retenir.
+
+      ⚠️ **Et c'est ce que l'essai E2E disait déjà.** Playwright refusait de
+      cliquer — *« element is outside of the viewport »* — et `elementFromPoint`
+      ne rendait rien au centre de la boîte mesurée : les deux symptomes d'un
+      élément positionné dans un autre repère. *Un contrôle mécanique qu'on
+      explique au lieu de l'écouter ne sert à rien.*
+    */
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
             <div className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl bg-app-surface border border-app-border/20 shadow-2xl overflow-hidden">
 
@@ -136,14 +181,32 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                         autoFocus
                         value={recherche}
                         onChange={(e) => setRecherche(e.target.value)}
-                        /* ⚠️ Échap dans un champ de saisie doit s'arrêter là : sans
-                           ce garde, la frappe viderait la recherche ET refermerait
-                           l'écran derrière. */
-                        onKeyDown={(e) => { if (e.key === 'Escape') { e.stopPropagation(); setRecherche(''); } }}
+                        /*
+                          ⚠️ Échap dans un champ de saisie vide la recherche au lieu
+                          de refermer l'écran derrière — mais **seulement s'il y a
+                          quelque chose à vider.**
+
+                          ⛔ Le premier jet arrêtait Échap **toujours**. Or ce champ
+                          porte `autoFocus` : l'écran s'ouvrait donc dans un état où
+                          **Échap ne pouvait plus jamais le fermer**, ce que le
+                          registre des surcouches interdit — *Échap ferme celle du
+                          dessus.* Trouvé par l'essai E2E, qui n'arrivait plus à
+                          rouvrir l'écran après l'avoir fermé.
+
+                          ⭐ *Un garde qui protège un geste doit rendre la main quand
+                          il n'a plus rien à protéger.*
+                        */
+                        onKeyDown={(e) => {
+                            if (e.key !== 'Escape' || !recherche) return;
+                            e.stopPropagation();
+                            setRecherche('');
+                        }}
                         placeholder={t('light.footer.selecteur.chercher')}
                         className="flex-1 bg-transparent border-none p-0 text-sm text-app-text outline-none min-w-0"
                     />
-                    <span className="text-ui-10 text-app-text/30 shrink-0 hidden sm:inline">{nomDeLaLampe}</span>
+                    <span className="text-ui-10 text-app-text/30 shrink-0 hidden sm:inline">
+                        {peutPoser ? nomDeLaLampe : t('light.footer.selecteur.gestionSeule')}
+                    </span>
                     <button onClick={onFermer} className="p-1 text-app-text/30 hover:text-app-text shrink-0">
                         <X size={18} />
                     </button>
@@ -193,7 +256,9 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                             >
                                 <button
                                     onClick={() => choisir(e.valeur)}
-                                    className="flex-1 text-left min-w-0"
+                                    disabled={!peutPoser}
+                                    title={peutPoser ? undefined : t('light.footer.selecteur.sansLampe')}
+                                    className={`flex-1 text-left min-w-0 ${peutPoser ? '' : 'cursor-default'}`}
                                 >
                                     <span className="block text-xs font-bold text-sky-200 truncate">{e.nom}</span>
                                     <span className="block text-ui-10 text-app-text/40 truncate">
@@ -235,7 +300,9 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                                 >
                                     <button
                                         onClick={() => choisir(a.valeur)}
-                                        className="flex-1 text-left min-w-0"
+                                        disabled={!peutPoser}
+                                        title={peutPoser ? undefined : t('light.footer.selecteur.sansLampe')}
+                                        className={`flex-1 text-left min-w-0 ${peutPoser ? '' : 'cursor-default'}`}
                                     >
                                         <span className="block text-xs font-bold text-amber-200 truncate">{a.nom}</span>
                                         <span className="block text-ui-10 text-app-text/40 truncate">
@@ -299,7 +366,8 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
             </div>
 
             {atelier && <AtelierDEffet effetId={atelier} onFermer={() => setAtelier(null)} />}
-        </div>
+        </div>,
+        document.body,
     );
 };
 

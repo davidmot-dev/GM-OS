@@ -114,3 +114,117 @@ test.describe('le temps de transition', () => {
             .toBeLessThan(1000);
     });
 });
+
+/**
+ * ⭐ **L'atelier d'effets, atteignable SANS LAMPE — la garde qui manquait.**
+ *
+ * ⛔ Le défaut, ouvert le 2026-09-20 et corrigé le 21 : l'écran des effets ne
+ * s'ouvrait que depuis le pied de page d'une **lampe**. Sans pont branché, il
+ * n'y a aucune lampe à l'écran, donc aucun bouton, donc **pas d'atelier** —
+ * alors qu'il sait très bien composer un effet sans elles.
+ *
+ * ⭐ *Une fonctionnalité qu'on ne peut pas atteindre n'existe pas.*
+ *
+ * ⚠️ **Et cette suite est le bon juge**, par accident heureux : elle tourne avec
+ * `GMOS_SANS_APPAREILS=1`, donc **sans aucune lampe**. C'est exactement l'état
+ * dans lequel le défaut se produisait — *un test qui n'a pas les conditions du
+ * défaut ne garde rien.*
+ */
+/**
+ * ⚠️ **Chaque essai ouvre l'écran lui-même.** Le premier jet les enchaînait, et
+ * ils ne passaient qu'ensemble : *un essai qui dépend de celui d'avant ne dit
+ * plus lequel des deux est cassé.*
+ */
+async function ouvrirLAtelier() {
+    /* On referme ce qu'un essai précédent aurait laissé ouvert. Échap sur un
+       écran déjà fermé ne fait rien, et c'est ce qui rend le geste sûr. */
+    await gmos.fenetre.keyboard.press('Escape');
+    await gmos.fenetre.keyboard.press('Escape');
+    await gmos.fenetre.getByRole('button', { name: /Mes effets/ }).first().click();
+    await gmos.fenetre.getByRole('button', { name: /Créer un effet/ }).first()
+        .waitFor({ timeout: 10_000 });
+}
+
+test.describe('⭐ l’atelier d’effets sans lampe', () => {
+    test('s’ouvre depuis la barre du haut', async () => {
+        await ouvrirLAtelier();
+
+        await expect(
+            gmos.fenetre.getByRole('button', { name: /Créer un effet/ }).first(),
+            'l’atelier n’est pas atteignable sans lampe',
+        ).toBeVisible();
+    });
+
+    test('et « Créer un effet » ouvre l’atelier, étapes comprises', async () => {
+        await ouvrirLAtelier();
+
+        /*
+          ⭐ **CE QUI EST PEINT À CET ENDROIT — et c'est la garde de ce fichier.**
+
+          Le premier jet de cet écran s'ouvrait **sans portail** depuis la barre du
+          haut, dont le `<header>` porte `backdrop-blur-sm`. `backdrop-filter`
+          créant un bloc conteneur pour les éléments `fixed`, l'écran se
+          positionnait par rapport au **bandeau** et non à la fenêtre : décalé,
+          rogné, illisible — David l'a vu avant moi, capture à l'appui.
+
+          ⚠️ **Cet essai le disait déjà, et je l'ai expliqué au lieu de
+          l'écouter** : Playwright refusait de cliquer (*« element is outside of
+          the viewport »*) et `elementFromPoint` ne rendait **rien** au centre de
+          la boîte mesurée. Les deux symptomes d'un élément posé dans un autre
+          repère. *Un contrôle mécanique qu'on explique au lieu de l'écouter ne
+          sert à rien.*
+
+          ⭐ *La question juste n'est pas « puis-je l'atteindre ? » mais
+          « qu'est-ce qui est peint à cet endroit ? »*
+        */
+        const bouton = gmos.fenetre.getByRole('button', { name: /Créer un effet/ }).first();
+        const boite = await bouton.boundingBox();
+        expect(boite, 'le bouton n’a aucune boîte').not.toBeNull();
+
+        const peint = await gmos.fenetre.evaluate(({ x, y }) => {
+            const cible = document.elementFromPoint(x, y);
+            if (!cible) return 'rien — le point est hors de la vue';
+            return cible.closest('button')?.textContent?.trim() ?? cible.className;
+        }, { x: boite!.x + boite!.width / 2, y: boite!.y + boite!.height / 2 });
+
+        expect(
+            peint,
+            'l’écran des effets n’est pas peint là où il se mesure — un ascendant le retient',
+        ).toMatch(/Créer un effet/);
+
+        await bouton.click();
+
+        await expect(gmos.fenetre.getByPlaceholder(/Nom de l’effet/)).toBeVisible();
+        await expect(
+            gmos.fenetre.getByRole('button', { name: /Ajouter une étape/ }),
+            'l’atelier s’ouvre sans son geste principal',
+        ).toBeVisible();
+
+        /* L'effet neuf est bien dans le magasin, avec ses deux étapes. */
+        const effets = await gmos.fenetre.evaluate(() => {
+            const l = (window as never as {
+                useLightStore: { getState: () => { effetsDAtelier: { etapes: unknown[] }[] } };
+            }).useLightStore.getState();
+            return l.effetsDAtelier.map(e => e.etapes.length);
+        });
+        expect(effets.length).toBeGreaterThan(0);
+        expect(
+            effets[0], 'un effet neuf doit bouger, donc porter deux étapes',
+        ).toBeGreaterThanOrEqual(2);
+    });
+
+    /**
+     * ⚠️ **Poser un effet reste impossible, et l'écran le dit.** Sans lampe, il
+     * n'y a personne à qui le poser : *un bouton qui n'écrit rien est pire que pas
+     * de bouton*, la leçon payée la veille sur la pastille de boucle.
+     */
+    test('mais il ne prétend pas pouvoir poser un effet', async () => {
+        await ouvrirLAtelier();
+
+        await expect(gmos.fenetre.getByText(/gestion seule/).first()).toBeVisible();
+        await expect(
+            gmos.fenetre.getByRole('button', { name: /^Bougie/ }).first(),
+            'l’écran laisse croire qu’on peut poser un effet',
+        ).toBeDisabled();
+    });
+});

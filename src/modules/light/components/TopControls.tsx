@@ -3,12 +3,32 @@ import { useLightStore } from '../useLightStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { hueEngine } from '../HueEngine';
-import { RefreshCw, RotateCcw } from 'lucide-react';
+import { RefreshCw, RotateCcw, Wand2 } from 'lucide-react';
+import SelecteurDEffet from './SelecteurDEffet';
 import { useTranslation } from 'react-i18next';
 
 export const TopControls: React.FC = () => {
     const { transitionTimeMs, setTransitionTime, reset, isSyncEnabled, setSyncEnabled, status } = useLightStore();
     const { t } = useTranslation('modules');
+
+    /*
+      ⛔ **La porte de l'atelier — posée le 2026-09-21, un jour après l'atelier
+      lui-même.**
+
+      L'écran des effets ne s'ouvrait que depuis le pied de page d'une **lampe** :
+      sans pont branché ni mode simulé, il n'y a aucune lampe à l'écran, donc
+      aucun bouton, donc **pas d'atelier** — alors qu'il sait très bien composer
+      un effet sans elles.
+
+      ⭐ *Une fonctionnalité qu'on ne peut pas atteindre n'existe pas*, et c'est
+      la **troisième fois en deux jours** qu'une porte manque dans ce dépôt —
+      après la boucle d'une vidéo, cherchée dans Image-OS et rangée au Media Hub.
+
+      ⚠️ **C'est le même écran, pas une copie.** Ouvert d'ici, il ne peut
+      simplement pas *poser* d'effet — il n'y a personne à qui le poser — et il
+      le dit. *Deux écrans pour un même vocabulaire finiraient par diverger.*
+    */
+    const [atelierOuvert, setAtelierOuvert] = React.useState(false);
 
     /** La relecture est-elle en vol ? Le pont peut mettre une seconde à répondre. */
     const [relectureEnCours, setRelectureEnCours] = React.useState(false);
@@ -151,6 +171,25 @@ export const TopControls: React.FC = () => {
               rangée pleine pousse ce qui y était — ici il y avait la place à
               côté.*
             */}
+            <button
+                onClick={() => setAtelierOuvert(true)}
+                title={t('light.top.atelier_tooltip')}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-accent/20 bg-accent/5 hover:bg-accent/20 text-accent/70 hover:text-accent transition-all active:scale-95"
+            >
+                <Wand2 size={14} />
+                <span className="text-ui-10 font-bold uppercase tracking-widest leading-none">
+                    {t('light.top.atelier')}
+                </span>
+            </button>
+
+            {atelierOuvert && (
+                <SelecteurDEffet
+                    effetActuel=""
+                    nomDeLaLampe=""
+                    onFermer={() => setAtelierOuvert(false)}
+                />
+            )}
+
             <button
                 onClick={relire}
                 disabled={relectureEnCours}

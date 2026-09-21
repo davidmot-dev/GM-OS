@@ -779,7 +779,9 @@
       "reread_tooltip": "Redemander au pont l'état réel de vos lampes — utile quand vous venez de les régler depuis votre téléphone.",
       "reread_done": "Lampes relues sur le pont : {{nombre}}",
       "reread_failed": "Le pont n'a pas répondu. Vos lampes restent telles que GM-OS les connaissait.",
-      "reread_offline": "Le pont Hue n'est pas connecté : il n'y a rien à relire."
+      "reread_offline": "Le pont Hue n'est pas connecté : il n'y a rien à relire.",
+      "atelier": "Mes effets",
+      "atelier_tooltip": "Créer et régler vos propres effets — sans avoir besoin d’une lampe branchée"
     },
     "grid": {
       "capture": "Capturer",
@@ -894,7 +896,9 @@
         "chercher": "Chercher un effet ou une ambiance…",
         "rien": "Aucun effet ne correspond.",
         "ambiance_perdue": "Ambiance introuvable",
-        "aide": "Entrée : choisir · Échap : fermer · la palette duplique un effet en ambiance"
+        "aide": "Entrée : choisir · Échap : fermer · la palette duplique un effet en ambiance",
+        "sansLampe": "Aucune lampe : ouvrez cet écran depuis une lampe pour poser un effet",
+        "gestionSeule": "gestion seule"
       }
     },
     "editor": {

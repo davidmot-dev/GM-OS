@@ -779,7 +779,9 @@
       "reread_tooltip": "Ask the bridge for the real state of your lights — useful right after setting them from your phone.",
       "reread_done": "Lights re-read from the bridge: {{nombre}}",
       "reread_failed": "The bridge did not answer. Your lights stay as GM-OS knew them.",
-      "reread_offline": "The Hue bridge is not connected: there is nothing to re-read."
+      "reread_offline": "The Hue bridge is not connected: there is nothing to re-read.",
+      "atelier": "My effects",
+      "atelier_tooltip": "Create and tune your own effects — no bulb needed"
     },
     "grid": {
       "capture": "Capture",
@@ -894,7 +896,9 @@
         "chercher": "Search an effect or ambiance…",
         "rien": "No effect matches.",
         "ambiance_perdue": "Ambiance not found",
-        "aide": "Enter: choose · Esc: close · the palette duplicates an effect into an ambiance"
+        "aide": "Enter: choose · Esc: close · the palette duplicates an effect into an ambiance",
+        "sansLampe": "No bulb: open this screen from a bulb to apply an effect",
+        "gestionSeule": "manage only"
       }
     },
     "editor": {
