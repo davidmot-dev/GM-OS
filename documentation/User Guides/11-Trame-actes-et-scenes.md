@@ -38,11 +38,56 @@ quelles scènes seront jouées* — c'est tout ce que le modèle promet.
 | **Indices** | Ce qui peut tomber ici. |
 | **Moment de storyboard** | L'ambiance qui l'accompagne — son, lumière, image. Une IA peut vous la **composer** : voir juste en dessous. |
 | **Personnages présents** | Qui est là. **Renseigné en jouant, pas en préparant.** |
+| **Rang dans l'intrigue** | Principale, secondaire, optionnelle — ou rien. Voir § 2.1. |
+| **Mène à** | Les suites possibles, chacune avec sa condition. Voir § 2.2. |
 
 **La pastille de préparation** compte cinq choses : résumé, lieu, PNJ, indices, ambiance. Cinq sur
 cinq, elle est pleine. Les **personnages présents n'y entrent pas** : qui est là est un fait de
 partie, pas un élément qu'on prépare — les compter ferait chuter la pastille de toutes vos scènes
 déjà écrites, et pour une raison fausse.
+
+### 2.1 · Le rang dans l'intrigue
+
+Quatre boutons sous le titre : **Principale**, **Secondaire**, **Optionnelle**, **Non classée**.
+
+Le rang se voit **partout où une ligne de scène s'affiche** — la trame, la préparation de séance, le
+panneau en séance, et **votre tablette** :
+
+| Rang | Ce que vous voyez |
+| :--- | :--- |
+| **Principale** | titre en gras, liseré bleu plein |
+| **Secondaire** | exactement l'apparence habituelle |
+| **Optionnelle** | italique allégée, liseré pointillé |
+| **Non classée** | exactement l'apparence habituelle |
+
+> ⚠️ **« Non classée » est une vraie réponse, et c'est le défaut.** Une scène qui ne porte rien
+> n'est pas « secondaire » : elle n'a pas été jugée. Vos scènes écrites avant ce réglage s'affichent
+> donc exactement comme avant. Cliquer à nouveau sur le rang actif la déclasse.
+
+Le rang **n'entre pas** dans la pastille de préparation : classer une scène n'est pas la préparer.
+
+### 2.2 · « Mène à » — dire où l'histoire peut aller
+
+Une scène peut déclarer **plusieurs suites**, chacune avec sa condition : *« si Hale accepte »*,
+*« s'il refuse »*, *« s'ils fouillent la cave »*. C'est ce qui transforme votre trame en plan de
+scénario.
+
+Deux façons de les écrire :
+
+- **Dans la fiche**, sous *« Mène à — les suites possibles »* : un menu pour ajouter, un champ pour
+  la condition, une icône pour retirer.
+- **Dans le graphe** (§ 7), en mode **Relier** : glissez d'une scène vers une autre.
+
+Les suites se lisent aussi **en séance** (avec un bouton *Ouvrir* qui lance la suite sans fermer la
+scène en cours) et **sur votre tablette**, sous la scène dépliée.
+
+> ⭐ **Ce n'est pas l'ordre des scènes, et les deux ne se contredisent jamais.** L'ordre dit comment
+> votre document est **rangé** ; « mène à » dit comment l'histoire peut **couler** — y compris
+> par-dessus les actes. La règle qui les réconcilie : **l'ordre ne se dessine que là où vous n'avez
+> rien dit.** Dès qu'une scène déclare une suite, son trait d'ordre disparaît du graphe.
+
+> ⚠️ Supprimer une scène **efface les flèches qui la visaient**. Vous ne resterez jamais avec une
+> suite qui pointe vers rien.
 
 ### ✨ Demander un éclairage à l'IA
 
@@ -168,6 +213,58 @@ Deux gestes pour rattraper la réalité d'une partie :
 
 ---
 
+## 7. Le graphe de la trame
+
+Dans l'en-tête de la trame, deux boutons : **Arbre** et **Graphe**. L'arbre sert à **écrire**, le
+graphe à **voir**.
+
+> ⭐ *Une liste montre ce qui est ; un graphe montre ce qui **manque**.* Un indice que plus aucune
+> scène ne livre, un PNJ qu'aucune scène ne convoque, un acte vide, un renvoi vers un lieu supprimé :
+> rien de tout cela ne se voit dans une liste.
+
+### Le curseur de niveau
+
+Six crans **cumulatifs** : **Trame** · **Lieux** · **PNJ** · **Indices** · **Personnages** ·
+**Ambiances**. Vous ouvrez au cran *PNJ*.
+
+> ⚠️ Ce n'est pas une commodité. Une campagne comme « Le secret de Milo » fait 3 actes, 29 scènes
+> et 43 PNJ : au dernier cran, une centaine de nœuds. Le curseur est ce qui rend l'écran lisible.
+
+S'y ajoutent **Toutes les scènes ▾** (ou *sans les optionnelles*, ou *intrigue principale seule*) et
+**Masquer les scènes closes**.
+
+### Les constats
+
+Sous la barre, ce que le graphe remarque. **Chaque nombre est cliquable** : il isole les coupables et
+monte au niveau qui les montre.
+
+> ⛔ Ils portent sur la trame **entière**, jamais sur ce qui est affiché. Un constat qui
+> disparaîtrait en masquant des scènes ferait croire qu'un défaut se répare quand on détourne le
+> regard.
+
+### Modifier depuis le graphe
+
+| Geste | Ce qu'il fait |
+| :--- | :--- |
+| **Clic sur un nœud** | ouvre son panneau : titre, rang, commencer/terminer, supprimer, ses liens |
+| **Glisser un nœud** | le déplace et l'épingle |
+| **Glisser une scène SUR un acte** | la rattache à cet acte — *avec confirmation* |
+| **Glisser une scène SUR une scène** | la pose juste après — *avec confirmation* |
+| **Mode Relier** | glisser crée un lien, cliquer un lien le retire |
+| **Libre / Figé** · **↺** | garde la disposition, ou la rend à la simulation |
+
+> ⚠️ **Hors du mode Relier, la toile n'écrit rien.** Un clic sur un trait est trop facile à rater.
+> Et le mode Relier **suspend le déplacement des nœuds** : sans ça, relier réarrangerait ce que vous
+> venez de ranger.
+
+> 💡 Les positions sont retenues **par campagne**, et indépendamment de celles du Nexus social —
+> déplacer un PNJ ici ne le déplace pas là-bas.
+
+Le graphe **n'écrit rien que vous n'ayez demandé** : il ne sait que ranger ses nœuds, et relayer vos
+gestes aux mêmes commandes que la fiche.
+
+---
+
 ## 💡 Ce qu'il faut retenir
 
 - La trame est **un plan glissant tant que la campagne vit, un registre une fois close.**
@@ -175,6 +272,8 @@ Deux gestes pour rattraper la réalité d'une partie :
   elle est marquée comme n'ayant pas eu lieu.
 - Vous n'êtes jamais obligé de préparer : une trame vide n'empêche rien, et une scène improvisée
   en pleine partie est un objet de plein droit.
+- **Le rang et les suites sont facultatifs.** Sans eux, la trame se lit exactement comme avant —
+  c'est l'ordre des scènes qui fait suite.
 
 ---
 
@@ -187,3 +286,12 @@ dans la trame ? »*. Elle compose plutôt que de choisir parmi l'existant : *ave
 les yeux, « laquelle convient ? » est une question à laquelle on répond déjà d'un coup d'œil.* Le
 rangement n'a été possible que le jour où chaque campagne a reçu son râtelier — *l'obstacle n'était
 pas le modèle, c'était la place.* ✅ **Éprouvé à l'écran le soir même** — *« c'est bien »*.*
+
+*Élargi le 2026-09-22, sur trois demandes de David de la même journée : **le rang dans l'intrigue**
+(*« indiquer qu'une scène fait partie de l'intrigue principale, ou est secondaire, voire
+optionnelle »*), **le graphe de la trame** (*« est-ce qu'on pourrait faire un module avec du
+mindmapping ? »* — la réponse fut non à un éditeur de diagrammes, dont les boîtes ne sauraient rien,
+et oui à un graphe de ce qui existe déjà), et **« cette scène mène à celle-là »** (*« pouvoir dire
+qu'une scène A mène vers une scène B ou une scène C »*). ⭐ **Les niveaux de visualisation sont son
+idée**, et elle était meilleure que les sept cases à cocher prévues. ✅ **Éprouvé à l'écran le jour
+même**, correctif des espaces compris.*

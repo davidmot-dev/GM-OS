@@ -8217,6 +8217,251 @@ les deux états* — le défaut, puis le correctif.
 
 ---
 
+### 100 · ⭐ Le rang d'une scène dans l'intrigue — principale, secondaire, optionnelle (2026-09-22)
+
+David : *« est-ce que dans les scènes de la trame je ne pourrais pas indiquer qu'une scène fait
+partie de l'intrigue principale, ou est secondaire, voire optionnelle, et que cela se reflète
+visuellement ? »*
+
+#### ⭐ L'absence est une quatrième réponse, et c'est le défaut
+
+Trois rangs, et **une scène qui ne porte rien n'est pas « secondaire » : elle n'a pas été jugée.**
+Les vingt-neuf scènes du « Secret de Milo » s'affichent donc exactement comme la veille. *Choisir un
+défaut aurait classé d'autorité des scènes que personne n'a classées* — et « secondaire » ne rend
+aucune classe non plus, pour la même raison : c'est le rang médian, lui donner un style aurait fait
+bouger l'écran pour une scène dont le meneur dit qu'elle est ordinaire.
+
+#### ⛔ Une ligne de scène s'affiche à QUATRE endroits
+
+La trame, la préparation de séance, le panneau en séance, et **la tablette**. C'est la leçon de
+`PastilleDePreparation`, assez payée pour être mise **sous essai** : un contrôle qui relit la source
+remonte depuis chaque `{scene.titre}` rendu jusqu'à l'ouverture de son élément et exige
+`styleDuTitre`. ⚠️ Sa première version épinglait le titre d'un **acte**, en gras depuis toujours :
+*un contrôle qui se trompe est pire qu'un contrôle absent.*
+
+#### ⛔ Deux mondes de style, donc on ne rend que l'ÉCART
+
+Les écrans du meneur emploient les jetons du thème ; la tablette a sa palette d'ardoise **et un titre
+déjà en `font-bold`**. Un « gras pour l'intrigue principale » écrit à la main y aurait été
+invisible, et une optionnelle en italique gras aurait paru **plus** appuyée qu'une secondaire. D'où
+`font-black` d'un côté et `italic font-normal` de l'autre — *le second mot n'existe que pour la
+tablette.*
+
+⚠️ **Et l'atténuation annoncée a été abandonnée** : elle se serait multipliée avec le grisé d'une
+scène terminée, et ce dépôt a déjà payé deux fois du texte trop pâle (`#334155` à 1,6 de contraste,
+la recherche du Media Hub à 5 % d'opacité). L'italique et le liseré pointillé disent la même chose.
+
+#### ⛔ L'étiquette en toutes lettres était le mauvais réflexe
+
+La ligne porte déjà jusqu'à trois étiquettes — « en cours », « prévue », « improvisée » — et *la
+place qu'on prend là est prise au titre*, qui se tronque. Le liseré coûte deux pixels ; l'infobulle
+dit le rang en mots, **composée** avec celle qui existait plutôt que de la remplacer.
+
+**Ancres** : `session/logic/importanceDeLaScene.ts` (le langage visuel, unique),
+`components/trame/MarqueDIntrigue.tsx`, `components/trame/ChoixDuRang.tsx` (partagé fiche/graphe),
+`remote/segmentDeLecture.ts` (`importance` **obligatoire**, pour que `tsc` refuse un mappage qui
+l'oublie — la parade au défaut du titre projeté, la veille).
+
+**Vérifié** : `tsc -b`, lint, essais neufs dont la garde des quatre écrans **prouvée rouge** par
+injection. ✅ **Vu à l'écran le 22/09** (capture de David, rang « Secondaire » choisi).
+
+---
+
+### 101 · ⭐ Le graphe de la trame — *une liste montre ce qui est, un graphe montre ce qui manque* (2026-09-22)
+
+David : *« est-ce que tu penses qu'on pourrait faire un module avec du mindmapping ou de Draw.io
+dans GM-OS ? »*
+
+#### ⛔ La réponse était non à Draw.io, et oui à l'autre moitié de la question
+
+Deux toiles existaient déjà (le `whiteboard` projeté aux joueurs, le `map` avec ses pions), et
+surtout : **les boîtes d'un diagramme libre ne sauraient rien.** Un rectangle marqué « Kessler »
+n'**est pas** le PNJ Kessler — rien à cliquer, rien que la recherche trouve, rien au journal. *Ce
+serait un cinquième écrivain de la même donnée.*
+
+⭐ **Le moteur, lui, était déjà payé** : `SocialGraph` fait 593 lignes de `react-force-graph-2d` +
+d3, avec ses filtres, son panneau et sa mémoire de positions. Et **les liens étaient déjà dans le
+modèle** : `acteId`, `lieuId`, `entiteIds`, `indiceIds`, `personnagesIds`, `momentDeStoryboardId`.
+Il n'y avait rien à saisir, seulement à montrer ensemble.
+
+#### ⭐ Les niveaux — l'idée de David, meilleure que les sept cases que j'allais construire
+
+*« je voudrais aussi pouvoir avoir différents niveaux de visualisation, niveau 0 : trame et scène,
+niveau 1 lieu, niveau 2 PNJ, etc. »* Sept bascules indépendantes font **128 vues** dont il faut
+choisir la bonne ; un seul curseur fait une **profondeur**. *La densité se règle par un geste, pas
+par une négociation.* Sur « Le secret de Milo » — 3 actes, 29 scènes, 43 PNJ — ce n'est pas une
+commodité, c'est ce qui rend l'écran utilisable.
+
+#### ⭐ Le lien que personne n'avait dessiné : scène *n* → scène *n+1*
+
+C'est lui qui fait qu'on lit une **trame** et non une pelote. Sans l'épine dorsale, un graphe de
+force rend un **oursin par acte**, et l'ordre de l'histoire — la seule chose qu'on vient chercher —
+disparaît.
+
+#### ⭐ Les orphelins sont DESSINÉS, et c'est la moitié de la valeur
+
+Dès que son niveau est atteint, **toute** la catégorie est là — même les indices qu'aucune scène ne
+livre, qui apparaissent en nœuds isolés. *Ne garder que les objets reliés aurait produit un graphe
+où tout va bien par construction.* ⛔ Mais **un renvoi mort ne devient jamais un nœud** : dessiner un
+lieu supprimé ferait croire qu'il existe. Il va aux **constats**.
+
+#### ⛔ Les constats portent sur la trame ENTIÈRE, jamais sur la vue
+
+*Un constat qui disparaîtrait en masquant les scènes closes ferait croire qu'un défaut se répare
+quand on détourne le regard.* ⚠️ Et celui que j'avais prévu — « ce PNJ n'apparaît que dans une
+scène » — a été **retiré** : 43 PNJ pour 29 scènes, il aurait crié quarante fois. *Un constat qui
+se déclenche toujours ne dit plus rien.*
+
+#### ⛔ La collision de positions, trouvée AVANT l'écran
+
+Le graphe de trame et le Nexus social montrent **les mêmes PNJ**. Réemployer `nodePositions` et
+`noeudsEpingles` aurait voulu dire que déplacer Kessler ici le déplaçait là-bas, et que « figer »
+l'un figeait l'autre — *un défaut qu'on aurait mis sur le compte de d3*. Trois champs à lui. ⭐ Ce
+qui **est** partagé, c'est la seule chose qui compte : `placerLeNoeud`, la règle `x/y` contre
+`fx/fy` qui a corrigé le remélange du 2026-09-03. *Les champs sont deux, la règle est une.*
+
+#### ⛔ Le défaut trouvé par l'essai de bout en bout
+
+« Intrigue principale seule » sur une campagne non classée rendait **deux actes seuls et pas une
+phrase** : la condition de vide comptait *tous* les nœuds, or les actes restent toujours là. *Ce qui
+manque là n'est pas des nœuds, ce sont des scènes.* L'écran dit désormais **laquelle de ses quatre
+raisons**.
+
+**Ancres** : `session/logic/grapheDeLaTrame.ts` (nœuds, niveaux, constats),
+`components/trame/GrapheDeLaTrame.tsx`, `TrameDashboard.tsx` (l'onglet Arbre/Graphe),
+`campaign.types.ts` (`positionsDeLaTrame`, `noeudsEpinglesDeLaTrame`, `trameFigee`).
+
+✅ **Éprouvé à l'écran le 22/09** — *« le graphe fonctionne bien »*.
+
+---
+
+### 102 · ⭐ Modifier la trame depuis le graphe — une seconde porte, jamais un second écrivain (2026-09-22)
+
+David : *« le graphe fonctionne bien, mais je voudrais pouvoir le modifier, est-ce possible ? »*
+
+Ma réserve de la veille disait *« un sixième écrivain de la trame »*. Elle ne disait pas « pas
+d'édition », elle disait **comment** : le graphe n'a pas sa propre logique. Il calcule ce qu'il faut
+écrire dans un module pur, puis appelle **`modifierScene`** — celle des cases à cocher de la fiche.
+*Il n'y a donc pas six écrivains : il y en a un, avec une seconde porte.*
+
+⭐ Et c'est le correctif du **2026-09-03** qui rend l'édition possible : chaque écriture reconstruit
+le graphe, donc remélangerait tout — sauf que `placerLeNoeud` sème les positions connues.
+
+#### ⛔ Deux défauts trouvés par les essais, aucun visible à la relecture
+
+- **Le panoramique se battait avec le mode liaison.** Couper `enableNodeDrag` ne suffisait pas : un
+  glisser qui ne saisit aucun nœud **déplace la vue**. La toile filait sous le pointeur et on
+  relâchait à côté de la cible — *le geste semblait rater une fois sur deux, sans rien dire.*
+- **Les traits étaient bombés**, par habitude. Or on les **clique** pour délier : une courbe ne
+  passe pas par le milieu des deux nœuds. *Un élément qu'on doit atteindre doit se trouver là où on
+  le croit.*
+
+#### ⚠️ Un mode, et pas un glisser de plus
+
+Glisser veut déjà dire « déplacer et épingler ». Faire porter les deux sens au même geste est la
+confusion classique des éditeurs de graphe : *on croit ranger, on relie.* Et **hors du mode liaison,
+la toile n'écrit rien** — un clic sur un trait est trop facile à rater. Le rattachement d'une scène
+à un acte, lui, **demande confirmation** : *sans question, un geste de rangement changerait l'acte
+d'une scène sans le dire.*
+
+#### ⭐ Un rang intercalaire, pas une renumérotation
+
+Poser une scène après une autre ne réécrit **qu'un enregistrement** — la règle que `deplacer` avait
+déjà posée : *réécrire tous les rangs ferait diverger deux campagnes qui partagent le même tableau
+plat, et rendrait un `git diff` de sauvegarde illisible.* ⚠️ Avec son repli écrit : passé un écart
+de 1e-6, on renumérote **l'acte de destination seul**. *Un compromis qui ne dit pas quand il cesse
+de tenir est un défaut à retardement.*
+
+#### ⚠️ Trois échecs d'essai qui n'étaient PAS dans le code
+
+La toile s'ouvre à une **échelle de 2** (110 px d'écran = 55 unités) ; je glissais **avant** que
+React n'ait appliqué le mode liaison ; et je désignais un nœud par un clic au centre, là où la
+simulation regroupe tout ce qui n'est pas épinglé. Les trois sont corrigés **dans les essais** :
+l'échelle est **mesurée** au lancement plutôt qu'inscrite en dur, l'entrée en mode liaison attend son
+bandeau, et la fiche se désigne par l'arbre. *Un essai qui désigne sa cible au hasard finit par
+échouer pour une raison qui n'a rien à voir.*
+
+**Ancres** : `session/logic/trame.ts` (`placerLaSceneApres`),
+`session/logic/grapheDeLaTrame.ts` (`renvoiEcrit`, `coupleDeRenvoi`), `trameSlice.ts`,
+`components/trame/GrapheDeLaTrame.tsx` (mode liaison, fil élastique, dépôt sur un nœud).
+
+✅ **Éprouvé à l'écran le 22/09** — *« ok c'est bien »*.
+
+---
+
+### 103 · ⭐ « Cette scène mène à celle-là » — et la normalisation qui empêchait d'écrire (2026-09-22)
+
+David : *« peut-être qu'il serait pertinent de pouvoir établir des liens entre des scènes de façon
+explicite »*, puis : *« par exemple pouvoir dire qu'une scène A mène vers une scène B ou une scène
+C »*.
+
+#### ⭐⭐ LA DÉCISION : *l'ordre ne se dessine que là où le meneur n'a rien dit*
+
+L'ordre des scènes dans un acte **était déjà** un enchaînement. Ajouter des liens explicites crée un
+second répondant à la même question — *une scène qui suit la 2 par l'ordre mais qui « mène à » la 5
+ne dit plus rien de fiable à personne* —, et c'est le motif que ce dépôt a payé le plus souvent :
+**plusieurs écrivains pour une même donnée.**
+
+La règle l'interdit sans rien interdire au meneur : dès qu'une scène porte une sortie, **son trait
+d'ordre disparaît**. Une trame à moitié câblée reste lisible, et aucune des deux vérités ne peut
+démentir l'autre. Chacune garde son rôle : **l'ordre range le document**, **l'enchaînement dit où
+l'histoire peut couler** — avec ses embranchements, et par-dessus les actes.
+
+⭐ **La hiérarchie visuelle s'est inversée pour ça** : le trait appuyé revient à ce que le meneur a
+**déclaré**, l'ordre passe au fil ténu. *Deux traits de même force auraient dit qu'ils répondent à la
+même question.*
+
+#### ⭐ Une seule relation, et c'est le LIBELLÉ qui porte tout
+
+*« si elle survit »*, *« en cas d'échec »*, *« s'ils fouillent la cave »* : voilà ce qu'est un plan
+de scénario. Trois natures techniques que personne ne distingue auraient été la faute déjà payée par
+la dérivation de Cthulhu Hack — *six Sauvegardes additionnées au lieu d'être offertes au choix.*
+
+⚠️ **Le champ vit sur la scène**, pas dans une collection : il voyage alors seul — un clone garde
+ses sorties, une fusion les réunit. *Une collection séparée aurait demandé d'apprendre à la
+sauvegarde, à la purge et aux cinq gestes de curation qu'elle existe.* Et le sens inverse **se
+déduit** : le stocker aurait fait deux écritures pour un lien, et un jour l'une sans l'autre.
+
+#### ⛔ Supprimer une scène efface les flèches qui la visaient
+
+Sans ça, toutes celles qui y menaient gardent une sortie vers le vide, lue comme valide jusqu'à
+cliquer. `supprimerScene` **et** la cascade de `supprimerActe` recousent. *La forme la plus courante
+du défaut muet dans ce dépôt.*
+
+#### ⛔ Et un lien vers une scène absente du dessin est JETÉ
+
+*`react-force-graph` invente un nœud pour une extrémité inconnue* : un fantôme sans nom au milieu de
+la toile. Les enchaînements se posent donc **à la fin**, une fois les nœuds connus — une sortie vise
+souvent un acte qu'on n'a pas encore parcouru, c'est même sa raison d'être.
+
+#### ⛔⛔ LE DÉFAUT VU PAR DAVID À L'ÉCRAN : *« je ne peux pas mettre d'espace entre les mots »*
+
+Capture à l'appui : « camérasurveillance ». Le libellé était **rogné à chaque frappe**. Le champ
+étant contrôlé, taper « caméra » puis l'espace écrivait `"caméra "`, que la normalisation rendait
+aussitôt `"caméra"` : *l'espace était mangé avant d'avoir existé*, et le mot suivant se collait.
+
+⭐ ***Une normalisation qui s'applique à la frappe empêche d'écrire.*** Le nettoyage n'a pas disparu,
+**il a changé de place** : on garde ce qui est tapé, et c'est l'affichage qui rogne, aux cinq
+endroits où la condition est rendue comme du texte. ⚠️ La borne de **longueur**, elle, reste à
+l'écriture : le champ la montre en refusant la frappe suivante, ce qui s'explique de soi-même.
+
+⛔ **Et TROIS de mes propres essais gardaient le défaut.** Ils exigeaient qu'un libellé d'espaces
+devienne vide à la lecture — ce qui supposait exactement le `trim()` fautif. *Ils passaient au vert
+sur le code qui empêchait d'écrire.* Retournés, avec leur raison sur place.
+
+⛔ **L'essai de bout en bout ne pouvait pas le voir non plus** : `fill()` pose la valeur d'un seul
+coup. Il tape désormais **caractère par caractère** (`pressSequentially`), et c'est prouvé — défaut
+réinjecté, essai rouge.
+
+**Ancres** : `types/trame.types.ts` (`EnchainementDeScene`),
+`session/logic/enchainementsDeLaTrame.ts` (`ordreEstDessine`, `libelleGarde` / `libelleLisible`),
+`trameSlice.ts` (trois actions + les deux recoutures), `GrapheDeLaTrame.tsx`, `TrameDashboard.tsx`,
+`PanneauDeTrameEnCours.tsx`, `remote/segmentDeLecture.ts` (`suites`, résolues en titres).
+
+✅ **Éprouvé à l'écran le 22/09** — *« ok c'est bon »*, après le correctif des espaces.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8257,6 +8502,10 @@ les deux états* — le défaut, puis le correctif.
 | 33 | **La boucle d'une vidéo** | ✅ **LIVRÉ le 21/09** — le « choix à confirmer » du 05/09, rouvert par l'usage. ⛔ **Deux lecteurs** rendent une vidéo projetée, et le second (tablettes) **ne peut pas lire le réglage** : il voyage par le pont, émis avant la vidéo. ⭐ L'absence vaut boucle — *un champ neuf ne doit jamais rendre faux ce qui marchait avant lui*. Sans boucle, le film garde sa dernière image (§ 97) | La pastille d'Image-OS au survol, ou le Media Hub → **Joue une fois**, puis projeter | Rien. ⚠️ Non éprouvé à l'écran |
 | 34 | **La porte de l'atelier d'effets** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 21/09** (*« ça fonctionne »*) — l'atelier n'était atteignable que par une **lampe** : sans pont, aucune porte. ⭐ **Troisième porte manquante en deux jours.** Le même écran s'ouvre depuis la barre du haut, `onChoisir` devenu facultatif — *écrire un second écran aurait donné deux vocabulaires à tenir d'accord*. ⛔⛔ Et la vérification a trouvé pire : **les E2E tournaient sur le build de la veille**, et la porte ouvrait une **fenêtre illisible** — `backdrop-filter` sur le header retenait l'écran `fixed`, troisième fois dans ce dépôt (§ 98) | — | Rien. ✅ **Vu à l'écran**, défaut compris |
 | 35 | **L'habillage du titre d'un moment** | ✅ **LIVRÉ le 21/09, ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bien »*) — position (haut, milieu, bas), police, couleur, ombre. ⭐ La liste de polices est **celle des réglages**, sur demande de David : *une seconde liste aurait divergé de celle du thème*. ⛔ Deux fenêtres, deux chargements — et surtout pas `poserLesPolices`, qui fait table rase. ⭐ Chaque défaut est le comportement d'avant. ⛔⛔ **Et rien ne s'appliquait à la livraison** : `lireLeTitre` reconstruisait le message champ par champ et **jetait** les quatre nouveaux — troisième « clé non déclarée écrite puis jetée en silence » (§ 99) | — | Rien. ✅ **Vu à l'écran**, défaut compris |
+| 36 | **Le rang d'une scène dans l'intrigue** | ✅ **LIVRÉ ET VU À L'ÉCRAN le 22/09** — principale, secondaire, optionnelle, sur les **quatre** écrans où une ligne de scène s'affiche, tablette comprise. ⭐ *L'absence est une quatrième réponse, et c'est le défaut.* ⛔ On ne rend que l'**écart**, jamais la base : le titre est déjà gras sur la tablette (§ 100) | Une scène → « Rang dans l'intrigue » | Rien |
+| 37 | **Le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« le graphe fonctionne bien »*) — actes, scènes, lieux, PNJ, indices, personnages, ambiances. ⭐ **Les niveaux sont l'idée de David** : un curseur plutôt que 128 vues possibles. ⭐ Les orphelins sont dessinés, les renvois morts vont aux **constats** (§ 101) | Trame narrative → **Graphe** | Rien |
+| 38 | **Modifier la trame depuis le graphe** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bien »*) — panneau, mode liaison, réorganisation par glisser. ⭐ *Une seconde porte, jamais un second écrivain.* ⛔ Deux défauts trouvés par les essais : le panoramique contre le mode liaison, et des traits bombés qu'on devait cliquer (§ 102) | Graphe → **Relier** | Rien |
+| 39 | **« Cette scène mène à celle-là »** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bon »*) — embranchements avec condition, sur les quatre écrans. ⭐⭐ *L'ordre ne se dessine que là où le meneur n'a rien dit.* ⛔⛔ **Une normalisation qui s'applique à la frappe empêche d'écrire** — et trois de mes essais gardaient le défaut (§ 103) | Une scène → « Mène à » | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
