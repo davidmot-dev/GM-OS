@@ -4783,13 +4783,48 @@ rendu, et il faudrait regarder du côté d'Electron.
 
 ### 4 · Garé par décision, et à ne pas rouvrir sans raison
 
-✅ **Vide au 2026-09-12 au soir.** Sa seule ligne — *Ulanzi D, les boutons physiques* — en est sortie
-le jour où sa raison d'être a disparu : voir le § 49.
+Elle a été **vide du 2026-09-12 au 2026-09-22** : sa seule ligne d'alors — *Ulanzi D, les boutons
+physiques* — en est sortie le jour où sa raison d'être a disparu (§ 49).
 
 > ⭐ **Et c'est la leçon de cette case.** Elle disait *« à ne pas rouvrir **sans raison** »*, et la
 > raison écrite était un coût d'infrastructure, pas une impossibilité. *Une ligne garée avec son
 > motif se rouvre toute seule le jour où le motif tombe ; une ligne garée sans motif ne se rouvre
 > jamais.*
+
+#### ⏸️ Ouvrir la télécommande du MJ sur le second écran — garé le 2026-09-22
+
+**Ce que ce serait.** Un bouton dans les Réglages, à côté du QR-code de la télécommande : *« Ouvrir
+sur le second écran »*. Il ouvrirait une fenêtre Electron native sur
+`?window=remote&sync=<port>`, **le jeton d'appairage injecté par le processus principal** dans le
+fragment — donc rien à copier, rien à scanner.
+
+**D'où ça vient.** David mène sur un **Zenbook Duo UX8406CA** : deux dalles 14" identiques
+(1440×900 logiques), celle du bas tactile et à plat sous les mains. Or la télécommande est déjà une
+console complète et dessinée pour le doigt — huit onglets : Pads, Dés, Sons, Scénario, Combat,
+Tableau, Notes, Messages. *L'écran du bas est la place d'un pupitre de régie, et le pupitre existe
+déjà.*
+
+**⛔ Le motif du gel, et il est précis : une route sans code existe déjà.** Le secret vit dans
+`pairing.json` (champ `secret`, 64 caractères) ; collé **une seule fois** en `#token=<secret>` à la
+fin de l'adresse, Edge en mode application le range en `localStorage` et l'efface de la barre. La
+fenêtre reste appairée ensuite, et un *Task Group* ScreenXpert la replace au lancement. **Le bouton
+ne ferait donc gagner qu'une manipulation unique** — ce n'est pas une fonctionnalité absente, c'est
+un confort.
+
+**⭐ Ce qui le rouvre tout seul** : le jour où le jeton doit tourner souvent (chaque `rotate()`
+oblige à recoller le fragment), ou le jour où la fenêtre doit s'ouvrir **avec GM-OS** et se placer
+elle-même — un Task Group ne sait pas rouvrir une adresse appairée si le stockage du navigateur a
+été purgé.
+
+**⚠️ Et ce qu'il ne faut PAS faire à la place** : ouvrir une seconde fenêtre **MJ** (`?window=gm`)
+en bas. L'écriture des données de campagne est réservée à une seule fenêtre — `ecritureReserveeAuMJ`
+porte sur sept magasins persistés, et c'est la garde posée après les pertes de campagnes d'août.
+
+**Ancres pour le jour où** : `components/GlobalSettingsModal.tsx` (les deux sections de QR-code),
+`utils/portsDuRenderer.ts` (`adresseDeLaTelecommande`, et ⛔ **les deux ports** — `sync` n'est pas
+optionnel), `electron/PairingManager.ts` (`getSecret`), `electron/main.ts` (`hubWindow` sert de
+modèle de fenêtre), `modules/remote/pairingToken.ts` (`capturePairingTokenFromUrl`, qui fait déjà
+tout le travail côté client). **Taille estimée** : une fenêtre et un canal IPC.
 
 ### 49 · ⭐ Les trois boutons de l'Ulanzi — le § 4 se vide (2026-09-12)
 
@@ -8793,6 +8828,86 @@ l'essai suivant.* D'où `oublierLaConnexionRetenue`, appelée avant chacun.
 
 ---
 
+### 111 · ⭐⭐ Le détour de sortie — et deux enceintes Bluetooth (2026-09-22, le soir)
+
+David, après redémarrage : *« j'ai toujours des problèmes de lag dans Ambient-OS quand j'exécute
+une séquence ; quand je lance Ambient-OS directement j'ai moins de soucis »*.
+
+**L'asymétrie était dans le transport, et elle était exacte :**
+
+| Geste | Route du son |
+| --- | --- |
+| Une tuile de scène dans Ambient-OS | `applyScene(scene.id)` — **aucune sortie demandée** → `AudioContext.setSinkId`, chaîne **native** |
+| La même scène dans une séquence | `applyScene(sceneId, moment.ambientOutputId)` → `MediaStreamAudioDestinationNode` → `<audio>` caché → `setSinkId` |
+
+⭐ **Et le détour était pris même quand il ne menait nulle part.** `estLaSortieParDefaut` ne
+reconnaissait que `''` et `'default'` : un moment qui nomme *l'enceinte sur laquelle le module est
+déjà* payait tout le trajet par le flux — son tampon, son ré-échantillonnage — pour arriver
+exactement là où la chaîne native arrivait. **La règle : le détour ne se prend que pour aller
+ailleurs.** Il existe pour envoyer *une* piste sur une autre enceinte, pas pour refaire le chemin du
+module.
+
+#### ⛔ Deux défauts trouvés en tirant le fil, et ils ne sont pas petits
+
+1. **`useAmbientStore.setOutputDevice` n'écrivait que le champ.** Il était le **seul des trois** :
+   `useSoundStore` et `useMusicStore` appellent leur moteur ici. Conséquences : l'ambiance sortait
+   sur la sortie de Windows tant qu'on n'avait pas **ouvert** Ambient-OS dans la session, et
+   **changer la sortie depuis la tablette ne faisait rien** — `remote/actions/audioActions` passe
+   par cette porte pour les trois voies, et c'était la fonctionnalité livrée le matin même (§ 104).
+   *Quand trois modules font pareil et qu'un seul diffère, la différence est la piste* — la leçon du
+   § 107, deux fois le même jour.
+2. **Aucune voie n'était jamais refermée.** `fermer()` et `fermerTout()` n'avaient **aucun
+   appelant** dans `src/` : chaque enceinte visée une fois dans la soirée gardait son `<audio>` en
+   lecture sur un flux vivant jusqu'à la fermeture de l'application, pour les trois moteurs.
+
+Et le réglage persisté ne s'appliquait que par le **montage d'un écran** : d'où l'étape de démarrage
+**« Sorties audio »**, posée **après** le recensement du matériel — `poserLaSortie` retrouve
+l'appareil par sa signature, et le carnet est vide avant. *Un réglage persisté qui n'est appliqué
+que par un écran n'est pas un réglage, c'est un effet de bord de la navigation.*
+
+#### ⭐⭐ Mais la cause principale n'était pas dans le code, et c'est David qui l'a donnée
+
+Question de sa part au milieu du correctif : *« j'utilise 2 enceintes bluetooth différentes,
+est-ce que cela peut avoir une influence sur la stabilité du signal ? »* — puis le détail : Music-OS
+sur les Edifier, **Ambient-OS et Sound-OS sur une autre petite enceinte**.
+
+**Deux flux A2DP en permanence, sur une seule radio.** Un temps d'antenne partagé, ~328 kbit/s par
+flux en SBC, deux horloges indépendantes à réconcilier par ré-échantillonnage continu, et la bande
+2,4 GHz partagée avec le Wi-Fi de la tablette. ⭐ **Et une séquence est précisément le geste qui
+fait parler les deux enceintes en même temps** — musique *et* ambiance *et* bruitage —, là où
+lancer Ambient-OS seul n'en réveille qu'une.
+
+⚠️ **Ce que le correctif fait et ne fait pas, et il faut le dire** : il retire **un étage** de
+tampon et de correction de dérive sur la petite enceinte — l'étage le plus fragile, et le
+Bluetooth est exactement le cas où il craque. Il ne fera jamais tenir deux flux A2DP sur une radio.
+*Décision de David le soir même : câble vers la petite enceinte.* La réparation matérielle et la
+réparation logicielle visaient deux causes réelles ; aucune ne remplace l'autre.
+
+> ⭐ **La leçon, et elle est chère** : quand le symptôme est un **saccadé continu**, on cherche le
+> **transport**, pas le graphe — c'est déjà ce que disaient les 48 kHz du § 107 le matin. Et *une
+> information sur l'installation valait dix hypothèses sur le code* : j'avais les deux bons
+> suspects dans le code, il me manquait la seule chose qui expliquait « moins de soucis ».
+
+⚠️ **Reste ouvert** : le **limiteur** d'Ambient-OS (ratio 12:1 à −24 dB, huit pistes sommées et
+amplifiées de 30 % avant) — seul des trois moteurs à en porter un, il écrase en permanence et
+relâche toutes les 250 ms. Le corriger change le son de **toutes** les ambiances : la décision
+appartient à David, et elle n'est pas prise.
+
+**Ancres** : `utils/sortiesAudio.ts` (`sortieDuModuleEst`, `estLaSortieDuModule`, la garde dans
+`canal()`), `ambient/AmbientEngine.ts` (`refermerLesVoiesInutiles`, `ramenerCeQuiPeutRentrer`,
+`AmbientTrack.sortVers`), `ambient/useAmbientStore.ts` (`setOutputDevice`),
+`system/logic/BootstrapService.ts` (étape « Sorties audio »), + 8 essais.
+✅ **ÉPROUVÉ EN RÉEL le 2026-09-22 au soir** — David, après avoir tiré le câble vers la petite
+enceinte : *« j'ai testé avec le câble ça fonctionne »*.
+
+⚠️ **Et la réserve était écrite d'avance, elle tient** : les deux réparations ont eu lieu **en même
+temps**, donc on sait que l'ensemble va bien, *pas lequel des deux a fait l'effet*. Les deux causes
+étaient réelles et mesurées — un étage de tampon en trop dans le code, deux flux A2DP sur une radio
+dans la pièce —, aucune n'était une hypothèse de confort. **On ne défait ni l'une ni l'autre pour
+savoir** : *un diagnostic qu'on ne peut plus départager ne vaut pas de casser ce qui marche.*
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8844,6 +8959,7 @@ l'essai suivant.* D'où `oublierLaConnexionRetenue`, appelée avant chacun.
 | 44 | **La lumière d'un moment** | ✅ **CORRIGÉ le 22/09** — *« l'effet n'est pas le même »* : **cinq chemins** écrasaient la scène déclarée avec celle liée à un son. ⭐ *Ce que le meneur a déclaré gagne sur ce qu'un enchaînement propose* — et le journal le dit (§ 108) | Un moment avec lumière **et** son lié | ⚠️ Non éprouvé |
 | 45 | **La source qui traîne** | ✅ **CORRIGÉ le 22/09** — *« un buffer qui ne se vide pas entre 2 séquences ? »*, l'intuition de David, et elle était juste : la piste se déclarait arrêtée alors qu'elle jouait encore 1,1 s. ⭐ Deux copies décalées de la même boucle = **filtre en peigne** (§ 109) | Enchaîner deux séquences avec ambiance | ⚠️ Non éprouvé |
 | 46 | **Cent allers-retours IPC/s** | ✅ **CORRIGÉ le 22/09** — *« la vidéo aussi lag »*. ⭐⭐ **Quand l'audio ET la vidéo souffrent, c'est le fil principal** : un IPC par média résolu, même en cache, deux fois par seconde. ⚠️ Une garantie bornée à 900 ms, et **dite** (§ 110) | Tablette connectée, projeter une vidéo | ⚠️ Non éprouvé |
+| 47 | **Le détour de sortie, et deux flux Bluetooth** | ✅ **CORRIGÉ le 22/09 au soir** — *« toujours du lag dans une séquence ; directement, moins de soucis »*. ⭐ **Le détour `MediaStream` était pris même vers l'enceinte que le contexte portait déjà** : la règle est qu'il ne sert qu'à aller **ailleurs**. ⛔ Deux défauts au passage — `useAmbientStore` était le **seul des trois** à ne pas appeler son moteur (donc la sortie changée depuis la **tablette** ne faisait rien), et **aucune voie n'était jamais refermée**. ⭐⭐ Mais la cause principale est **matérielle** : deux enceintes Bluetooth, donc deux flux A2DP sur une radio, et une séquence est le geste qui les fait parler ensemble (§ 111) | — | ✅ **ÉPROUVÉ EN RÉEL le 22/09** (*« j'ai testé avec le câble ça fonctionne »*). ⚠️ Les deux réparations ont eu lieu ensemble : on ne sait pas laquelle a fait l'effet, et on ne le cherchera pas |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

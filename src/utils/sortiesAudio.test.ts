@@ -112,6 +112,54 @@ describe('une sortie nommée', () => {
     });
 });
 
+/**
+ * **Le saccadé des séquences du 2026-09-22.** *« J'ai toujours des problèmes de
+ * lag dans Ambient-OS quand j'exécute une séquence ; quand je lance Ambient-OS
+ * directement j'ai moins de soucis »* — les deux gestes ne prenaient pas le même
+ * tuyau, et celui des séquences était payé pour rien.
+ */
+describe('la sortie que le module porte déjà', () => {
+    it('n’ouvre aucune voie détournée : la chaîne native y mène', () => {
+        const routeur = new SortiesAudio(contexte(), 'Essai');
+        routeur.sortieDuModuleEst('enceintes-de-la-table');
+
+        expect(routeur.canal('enceintes-de-la-table')).toBeNull();
+        expect(routeur.canaux).toEqual([]);
+    });
+
+    /** C'est tout l'objet du détour : servir une AUTRE enceinte en même temps. */
+    it('laisse le détour pour tout ce qui va ailleurs', () => {
+        const routeur = new SortiesAudio(contexte(), 'Essai');
+        routeur.sortieDuModuleEst('enceintes-de-la-table');
+
+        expect(routeur.canal('casque-du-mj')).not.toBeNull();
+    });
+
+    /**
+     * ⚠️ **C'est la sortie POSÉE qui compte, pas celle demandée.** Un moteur
+     * replié sur la sortie par défaut ne porte pas l'enceinte enregistrée : le
+     * détour reste alors la seule façon d'y aller.
+     */
+    it('redevient le détour quand le moteur s’est replié', () => {
+        const routeur = new SortiesAudio(contexte(), 'Essai');
+        routeur.sortieDuModuleEst('enceintes-de-la-table');
+        routeur.sortieDuModuleEst('');
+
+        expect(routeur.canal('enceintes-de-la-table')).not.toBeNull();
+    });
+
+    it('se reconnaît, pour que le moteur rapatrie ce qui peut rentrer', () => {
+        const routeur = new SortiesAudio(contexte(), 'Essai');
+        routeur.sortieDuModuleEst('enceintes-de-la-table');
+
+        expect(routeur.estLaSortieDuModule('enceintes-de-la-table')).toBe(true);
+        expect(routeur.estLaSortieDuModule('casque-du-mj')).toBe(false);
+        /* Personne n'a rien posé : le contexte suit Windows, et une enceinte
+           nommée n'est pas « celle du module ». */
+        expect(new SortiesAudio(contexte(), 'Essai').estLaSortieDuModule('default')).toBe(false);
+    });
+});
+
 describe('quand l’appareil se dérobe', () => {
     /**
      * **Un appareil disparu ne rend pas muet.** Le son sort des mauvaises

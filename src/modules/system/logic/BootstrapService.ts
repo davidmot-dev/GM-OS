@@ -8,6 +8,12 @@ import { useMapStore } from '../../map/useMapStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useDemarrageStore } from '../useDemarrageStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { ambientEngine } from '../../ambient/AmbientEngine';
+import { useAmbientStore } from '../../ambient/useAmbientStore';
+import { soundEngine } from '../../sound/SoundEngine';
+import { useSoundStore } from '../../sound/useSoundStore';
+import { musicEngine } from '../../music/MusicEngine';
+import { useMusicStore } from '../../music/useMusicStore';
 import {
     menerLeDemarrage, alerteDuDemarrage, type EtapeDeDemarrage,
 } from './etapesDuDemarrage';
@@ -111,6 +117,32 @@ export class BootstrapService {
                 nom: 'Matériel de table',
                 delaiMs,
                 faire: () => useHardwareStore.getState().recenserLeMateriel(),
+            },
+            {
+                /*
+                  ⭐ **Les sorties choisies, posées sans avoir à ouvrir les écrans
+                  des modules** — ajouté le 2026-09-22.
+
+                  ⛔ Le `setSinkId` de chaque moteur ne venait que du **montage**
+                  de son tableau de bord. Tant qu'on n'avait pas ouvert
+                  Ambient-OS dans la session, l'ambiance sortait sur la sortie de
+                  Windows — et les séquences, elles, n'attendent pas qu'on ouvre
+                  un écran. *Un réglage persisté qui n'est appliqué que par un
+                  écran n'est pas un réglage, c'est un effet de bord de la
+                  navigation.*
+
+                  ⚠️ **Après le recensement, jamais avant** : `poserLaSortie`
+                  retrouve l'appareil par sa signature, et le carnet est vide
+                  jusqu'à l'étape précédente. Posé trop tôt, chaque démarrage
+                  annoncerait la disparition d'enceintes bien présentes.
+                */
+                nom: 'Sorties audio',
+                delaiMs,
+                faire: async () => {
+                    await ambientEngine.setOutputDevice(useAmbientStore.getState().outputDeviceId);
+                    await soundEngine.setOutputDevice(useSoundStore.getState().outputDeviceId);
+                    await musicEngine.setOutputDevice(useMusicStore.getState().outputDeviceId);
+                },
             },
             {
                 nom: 'Services de fond',

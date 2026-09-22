@@ -358,6 +358,14 @@ export class SoundEngine {
                 appliquer: async (sinkId) => {
                     // @ts-expect-error AudioContext.setSinkId exists in modern browsers
                     await this.context.setSinkId(sinkId);
+                    /*
+                      ⭐ **La même rustine qu'Ambient-OS le 2026-09-22** : sans
+                      ça, un bruitage visé sur l'enceinte que ce contexte porte
+                      déjà prend une voie détournée — un flux et son tampon —
+                      pour arriver là où la chaîne native arrive. Voir
+                      `sortiesAudio`.
+                    */
+                    this.sorties.sortieDuModuleEst(sinkId);
                 },
             });
         } else {

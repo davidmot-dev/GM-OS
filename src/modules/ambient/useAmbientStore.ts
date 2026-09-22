@@ -400,8 +400,24 @@ export const useAmbientStore = create<AmbientState>()(
                 set({ masterVolume: volume });
             },
 
+            /**
+             * ⛔ **Ce magasin était le SEUL des trois à n'écrire que le champ.**
+             * Trouvé le 2026-09-22 : `useSoundStore` et `useMusicStore` appellent
+             * tous deux leur moteur ici, Ambient-OS non — le `setSinkId` ne
+             * venait que de l'écran du module, à son montage.
+             *
+             * Deux conséquences, et la seconde est un défaut à part entière :
+             * l'ambiance sortait sur la sortie de Windows tant qu'on n'avait pas
+             * **ouvert** Ambient-OS dans la session, et **changer la sortie
+             * depuis la tablette ne faisait rien** (`remote/actions/audioActions`
+             * passe par cette porte pour les trois voies).
+             *
+             * *Quand trois modules font pareil et qu'un seul diffère, la
+             * différence est la piste* — la leçon du saccadé de ce matin.
+             */
             setOutputDevice: (deviceId) => {
                 set({ outputDeviceId: deviceId });
+                void ambientEngine.setOutputDevice(deviceId);
             },
 
             fadeOutAll: async () => {

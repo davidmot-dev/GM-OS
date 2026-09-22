@@ -37,6 +37,34 @@
  * la sortie par défaut : les sons non routés suivent la chaîne d'origine, avec
  * le réglage global du module. C'est ce qui rend l'ajout sans risque pour tout
  * ce qui marchait hier.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ⛔ LE DÉTOUR NE SE PREND QUE POUR ALLER AILLEURS — 2026-09-22
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * David : *« j'ai toujours des problèmes de lag dans Ambient-OS quand j'exécute
+ * une séquence ; quand je lance Ambient-OS directement j'ai moins de soucis »*.
+ *
+ * Les deux gestes ne sortaient pas par le même tuyau :
+ *
+ * | Geste | Route |
+ * | --- | --- |
+ * | Une tuile de scène dans Ambient-OS | `AudioContext.setSinkId` — **native** |
+ * | La même scène dans une séquence | `MediaStreamAudioDestinationNode` → `<audio>` → `setSinkId` |
+ *
+ * ⭐ **Et le détour était pris même quand il ne menait nulle part** :
+ * `estLaSortieParDefaut` ne reconnaissait que `''` et `'default'`, donc un
+ * moment qui nomme *l'enceinte sur laquelle le module est déjà* payait tout le
+ * trajet par le flux — son tampon, son ré-échantillonnage — pour arriver
+ * exactement là où la chaîne native arrivait. C'est la même famille de cause
+ * que les 48 kHz retirés le matin même : *le hoquet ne venait pas du graphe, il
+ * venait du transport.*
+ *
+ * ⚠️ **La reconnaissance se fait sur l'identifiant, et c'est une garantie
+ * bornée.** Deux numéros différents peuvent désigner la même enceinte — un
+ * identifiant périmé, ou le rôle `'default'` du système face au numéro concret
+ * du même appareil. Dans ce cas on garde le détour : *se tromper du bon côté,
+ * c'est payer un tuyau de trop, jamais sortir sur la mauvaise enceinte.*
  */
 
 /** Une voie de sortie ouverte vers un appareil nommé. */
@@ -61,10 +89,39 @@ export class SortiesAudio {
     /** Le nom du moteur, pour que le journal dise qui route quoi. */
     private readonly nom: string;
     private readonly ouverts = new Map<string, CanalDeSortie>();
+    /**
+     * **Ce que le contexte du module porte déjà** — `''` pour la sortie du
+     * système. Tant que le moteur ne l'a pas dit, on suppose la sortie par
+     * défaut : *c'est l'état d'un contexte sur lequel personne n'a rien posé.*
+     */
+    private sortieDuModule = '';
 
     constructor(context: AudioContext, nom: string) {
         this.context = context;
         this.nom = nom;
+    }
+
+    /**
+     * **Ce que le contexte porte VRAIMENT**, à poser par le moteur juste après
+     * son `setSinkId`.
+     *
+     * ⚠️ **Jamais d'après le magasin.** Une sortie enregistrée peut avoir été
+     * retrouvée sous un autre numéro, ou avoir disparu — et le repli sur la
+     * sortie par défaut doit se voir ici. *Croire le contexte sur une enceinte
+     * qu'il n'a pas ferait renoncer au détour, c'est-à-dire sortir sur la
+     * mauvaise enceinte en silence.*
+     */
+    sortieDuModuleEst(deviceId: string | null | undefined): void {
+        this.sortieDuModule = estLaSortieParDefaut(deviceId) ? '' : deviceId!;
+    }
+
+    /**
+     * **Cette enceinte est-elle celle que le contexte porte déjà ?** Le moteur
+     * s'en sert pour ramener dans la chaîne native les pistes qu'un détour
+     * servait avant que le meneur ne change la sortie du module.
+     */
+    estLaSortieDuModule(deviceId: string | null | undefined): boolean {
+        return this.sortieDuModule !== '' && deviceId === this.sortieDuModule;
     }
 
     /** Les voies ouvertes — le moteur y propage volume général et ducking. */
@@ -80,6 +137,14 @@ export class SortiesAudio {
      */
     canal(deviceId: string | null | undefined): CanalDeSortie | null {
         if (estLaSortieParDefaut(deviceId)) return null;
+
+        /*
+          ⛔ **L'enceinte du module est déjà au bout de la chaîne native.**
+          Ouvrir une voie détournée vers elle ferait passer le son par le
+          pipeline de flux pour arriver au même endroit — c'est le saccadé des
+          séquences du 2026-09-22. Voir l'en-tête.
+        */
+        if (this.estLaSortieDuModule(deviceId)) return null;
 
         const existant = this.ouverts.get(deviceId!);
         if (existant) return existant;

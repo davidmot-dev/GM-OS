@@ -265,11 +265,10 @@ const AmbientDashboard: React.FC = () => {
                     <div className="flex flex-col items-end gap-2">
                         <select
                             value={outputDeviceId}
-                            onChange={(e) => {
-                                const newId = e.target.value;
-                                setOutputDevice(newId);
-                                ambientEngine.setOutputDevice(newId);
-                            }}
+                            /* Le magasin pose la sortie sur le moteur depuis le
+                               2026-09-22 — l'appeler ici aussi ferait deux
+                               écrivains pour un seul geste. */
+                            onChange={(e) => setOutputDevice(e.target.value)}
                             className="bg-app-surface border-none text-app-text/70 text-ui-10 rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
                             title={t('modules:ambient.dashboard.audio_output')}
                         >

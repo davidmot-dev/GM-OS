@@ -87,6 +87,68 @@ describe('AmbientEngine', () => {
         expect(ambientEngine['context'].setSinkId).toHaveBeenCalledWith('audio-out-1');
     });
 
+    /**
+     * **Le saccadé des séquences — 2026-09-22.** *« Quand je lance Ambient-OS
+     * directement j'ai moins de soucis »* : la tuile de scène ne demandait
+     * aucune sortie et suivait la chaîne native, là où un moment nomme une
+     * enceinte et ouvrait une voie détournée — *même quand elle menait à celle
+     * que le contexte portait déjà.*
+     */
+    describe('router une piste', () => {
+        /** La chaîne native, c'est le compresseur : l'entrée du master. */
+        const chaineNative = () => ambientEngine['compressor'];
+
+        beforeEach(() => {
+            // @ts-expect-error adding sinkId to mock
+            ambientEngine['context'].setSinkId = vi.fn().mockResolvedValue(undefined);
+        });
+
+        it('garde la chaîne native quand la sortie est celle du module', async () => {
+            await ambientEngine.setOutputDevice('enceintes-de-la-table');
+
+            ambientEngine.routerLaPiste(0, 'enceintes-de-la-table');
+
+            expect(ambientEngine.tracks[0].sortVers(chaineNative())).toBe(true);
+            expect(ambientEngine['sorties'].canaux).toEqual([]);
+        });
+
+        it('ouvre une voie détournée pour une autre enceinte', async () => {
+            await ambientEngine.setOutputDevice('enceintes-de-la-table');
+
+            ambientEngine.routerLaPiste(0, 'casque-du-mj');
+
+            const canaux = ambientEngine['sorties'].canaux;
+            expect(canaux.map(c => c.deviceId)).toEqual(['casque-du-mj']);
+            expect(ambientEngine.tracks[0].sortVers(canaux[0].entree)).toBe(true);
+        });
+
+        /**
+         * ⛔ `fermer()` n'avait aucun appelant : chaque enceinte visée une fois
+         * gardait son `<audio>` sur un flux vivant jusqu'à la fermeture de
+         * l'application.
+         */
+        it('referme la voie que plus aucune piste ne vise', () => {
+            ambientEngine.routerLaPiste(0, 'casque-du-mj');
+            expect(ambientEngine['sorties'].canaux).toHaveLength(1);
+
+            ambientEngine.routerLaPiste(0, 'default');
+
+            expect(ambientEngine['sorties'].canaux).toEqual([]);
+            expect(ambientEngine.tracks[0].sortVers(chaineNative())).toBe(true);
+        });
+
+        /** Une ambiance en cours ne doit pas rester sur son détour. */
+        it('rapatrie les pistes quand le module prend leur enceinte', async () => {
+            ambientEngine.routerLaPiste(0, 'enceintes-de-la-table');
+            expect(ambientEngine['sorties'].canaux).toHaveLength(1);
+
+            await ambientEngine.setOutputDevice('enceintes-de-la-table');
+
+            expect(ambientEngine.tracks[0].sortVers(chaineNative())).toBe(true);
+            expect(ambientEngine['sorties'].canaux).toEqual([]);
+        });
+    });
+
     describe('AmbientTrack', () => {
         it('should initialize with mono-summing routing', () => {
             const track = ambientEngine.tracks[0];

@@ -200,6 +200,8 @@ describe('ce que l’écran d’attente peut montrer', () => {
         await demarrer();
 
         expect(useDemarrageStore.getState().etapeEnCours).toBeNull();
-        expect(useDemarrageStore.getState().rendus).toHaveLength(5);
+        /* Six depuis le 2026-09-22 : « Sorties audio » pose sur les trois
+           contextes ce que le meneur avait choisi, après le recensement. */
+        expect(useDemarrageStore.getState().rendus).toHaveLength(6);
     });
 });

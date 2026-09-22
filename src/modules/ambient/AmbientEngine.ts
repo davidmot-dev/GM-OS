@@ -88,6 +88,18 @@ class AmbientTrack {
         this.destination = destination;
     }
 
+    /**
+     * **Où cette piste sort en ce moment** — la question que le moteur pose pour
+     * savoir si une voie détournée sert encore à quelqu'un.
+     *
+     * ⚠️ Une piste **arrêtée** répond quand même : elle garde son branchement et
+     * repartira par là. *Fermer la voie d'une piste au repos la rendrait muette
+     * à sa reprise, sans rien dire.*
+     */
+    sortVers(destination: AudioNode): boolean {
+        return this.destination === destination;
+    }
+
 
     /**
      * Récupère l'analyseur de fréquence de la piste.
@@ -457,11 +469,50 @@ export class AmbientEngine {
         const canal = this.sorties.canal(deviceId);
         if (!canal) {
             piste.router(this.compressor);
+            this.refermerLesVoiesInutiles();
             return;
         }
         canal.entree.gain.value = this.masterGain.gain.value;
         canal.ducking.gain.value = this.valeurDucking * this.valeurGlobale * this.valeurVolume;
         piste.router(canal.entree);
+        this.refermerLesVoiesInutiles();
+    }
+
+    /**
+     * **Une voie que plus aucune piste ne vise se referme.**
+     *
+     * ⛔ Trouvé le 2026-09-22 en cherchant le saccadé des séquences :
+     * `fermer()` et `fermerTout()` n'avaient **aucun appelant** dans `src/`.
+     * Chaque enceinte visée une fois dans la soirée gardait donc son
+     * `<audio>` en lecture sur un flux vivant jusqu'à la fermeture de
+     * l'application — *un tuyau qui ne porte plus rien coûte quand même ce que
+     * coûte un tuyau*, et ils s'additionnaient.
+     *
+     * ⚠️ On ne ferme que ce que **personne** ne vise, pistes arrêtées comprises :
+     * voir `AmbientTrack.sortVers`.
+     */
+    private refermerLesVoiesInutiles() {
+        for (const canal of this.sorties.canaux) {
+            if (this.tracks.some(piste => piste.sortVers(canal.entree))) continue;
+            this.sorties.fermer(canal.deviceId);
+        }
+    }
+
+    /**
+     * **Ce qu'un détour servait rentre dans la chaîne native**, dès que le
+     * meneur pose cette enceinte comme sortie du module.
+     *
+     * Sans ça, une ambiance en cours resterait sur sa voie détournée — et donc
+     * sur son saccadé — jusqu'à la séquence suivante.
+     */
+    private ramenerCeQuiPeutRentrer() {
+        for (const canal of this.sorties.canaux) {
+            if (!this.sorties.estLaSortieDuModule(canal.deviceId)) continue;
+            for (const piste of this.tracks) {
+                if (piste.sortVers(canal.entree)) piste.router(this.compressor);
+            }
+        }
+        this.refermerLesVoiesInutiles();
     }
 
     /**
@@ -505,6 +556,14 @@ export class AmbientEngine {
                 appliquer: async (sinkId) => {
                     // @ts-expect-error AudioContext.setSinkId exists in modern browsers
                     await this.context.setSinkId(sinkId);
+                    /*
+                      ⭐ **Ce que le contexte porte, dit au routeur** — et c'est
+                      `sinkId` qu'on lui donne, pas `deviceId` : quand on s'est
+                      replié sur la sortie par défaut, le détour reste la seule
+                      façon d'atteindre l'enceinte demandée. Voir `sortiesAudio`.
+                    */
+                    this.sorties.sortieDuModuleEst(sinkId);
+                    this.ramenerCeQuiPeutRentrer();
                 },
             });
         } else {

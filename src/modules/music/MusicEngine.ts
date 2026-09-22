@@ -1028,6 +1028,18 @@ export class MusicEngine {
             try {
                 // @ts-expect-error setSinkId exists in modern browsers
                 await this.context.setSinkId(deviceId === 'default' ? '' : deviceId);
+                /*
+                  ⭐ **La même rustine qu'Ambient-OS le 2026-09-22** : une
+                  platine visée sur l'enceinte que ce contexte porte déjà n'a
+                  rien à gagner d'une voie détournée, et son flux saccade. Voir
+                  `sortiesAudio`.
+
+                  ⚠️ Ce moteur est le seul des trois à ne pas passer par
+                  `poserLaSortie` : il ne sait donc pas si l'appareil a été
+                  retrouvé sous un autre numéro. C'est ce qu'on pose ici, et
+                  rien de plus — *ce qu'on n'a pas vérifié ne se déclare pas.*
+                */
+                this.sorties.sortieDuModuleEst(deviceId === 'default' ? '' : deviceId);
                 console.log(`[MusicEngine] Context Output device successfully changed to ${deviceId}`);
             } catch (error) {
                 console.error('[MusicEngine] Failed to set audio output device', error);

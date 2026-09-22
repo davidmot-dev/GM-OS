@@ -26,6 +26,7 @@
 | **108** | La lumière d'un moment, écrasée par les scènes liées à ses sons | ⚠️ non |
 | **109** | La source d'ambiance qui traîne entre deux séquences | ⚠️ non |
 | **110** | Cent allers-retours IPC par seconde — *« la vidéo aussi lag »* | ⚠️ non |
+| **111** | Le détour de sortie — et **deux enceintes Bluetooth** | ✅ **oui** (*« j'ai testé avec le câble ça fonctionne »*) — ⚠️ les deux réparations ensemble |
 
 ⭐ **Les quatre premières n'étaient pas quatre fonctionnalités, mais une seule montée en puissance.** Chaque
 demande est née de la précédente : classer les scènes a fait voir qu'on ne voyait pas la trame
@@ -51,8 +52,15 @@ raison de tenir une liste de ce qui n'a jamais été vu à l'écran.*
    permanence et relâche toutes les 250 ms : du **pompage**. *Le corriger change le son de toutes
    les ambiances*, donc la décision appartient à David. ⭐ Même forme d'asymétrie que les 48 kHz du
    § 107 — et c'est elle qui avait désigné le coupable.
-4. **Les cinq correctifs du soir** (§§ 106 à 110) — changer de morceau sans voir de bulle rouge,
+4. **Les six correctifs du soir** (§§ 106 à 111) — changer de morceau sans voir de bulle rouge,
    écouter une ambiance, et jouer un moment qui porte **à la fois** une lumière et un son lié.
+   ⭐ **Et le câble vers la petite enceinte** (§ 111, décidé par David) : une sortie filaire est un
+   **autre appareil Windows**, donc un autre `deviceId`. À reprendre dans cet ordre — la sortie
+   d'Ambient-OS, celle de Sound-OS, puis **vider** le champ de sortie des moments et des pads pour
+   qu'ils suivent celle du module. ⚠️ Le carnet des signatures ne rattrape **pas** ce cas : il
+   retrouve un appareil revenu sous un nouveau numéro, pas un appareil remplacé par un autre.
+   ⚠️ Et la latence tombe d'environ 200 ms à quelques millisecondes : **l'ambiance et les bruitages
+   seront désormais en avance sur la musique** restée en Bluetooth.
 5. **Les deux messages d'écran du § 105** — ils ne se montrent que le jour où un moniteur change
    d'identifiant. Rien à provoquer exprès : c'est un filet, pas une fonctionnalité.
 6. **Les trois chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
