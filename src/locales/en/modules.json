@@ -627,7 +627,9 @@
     "notifications": {
       "entityRemoved": "Removing {{name}} from Player Hub.",
       "projectionFailed": "Projection failed.",
-      "noPortrait": "{{name}} has no portrait to project."
+      "noPortrait": "{{name}} has no portrait to project.",
+      "screenGone": "The projection screen is gone — back to the Player Hub.",
+      "screenUnknown": "Projection screen not found: nothing was projected."
     },
     "events": {
       "imageProjected": {

@@ -17,6 +17,7 @@ const journal = () =>
         };
     }).useJournalStore?.getState();
 import { gmToast } from '../../stores/useToastStore';
+import { leRepliEstNecessaire, ECRAN_DU_HUB } from './logic/ecranJoignable';
 import i18n from '../../i18n';
 // import { ImageService } from './logic/ImageService'; // Broken by circular dependency
 
@@ -286,8 +287,24 @@ export const useImageStore = create<ImageState>()(
                 if (bridge?.image?.getDisplays) {
                     const displays = await bridge.image.getDisplays();
                     set({ displays });
-                    if (get().projectionTarget !== 'hub' && !displays.find(d => d.id === get().projectionTarget)) {
-                        set({ projectionTarget: 'hub' });
+                    /*
+                      ⛔ **Ce repli se faisait EN SILENCE, et ça a coûté une
+                      soirée le 2026-09-22.**
+
+                      Les identifiants d'écran viennent de Windows et **changent**
+                      au rebranchement comme au redémarrage. L'écran courant
+                      retombait donc sur le hub sans un mot — et un moment réglé
+                      sur « écran courant » envoyait alors sa vidéo au Player Hub,
+                      pendant que le meneur regardait un moniteur qui n'avait
+                      jamais reçu de fenêtre. *Il n'avait aucun moyen de relier le
+                      symptôme à un rebranchement d'il y a trois jours.*
+
+                      ⭐ *Un repli qui ne s'annonce pas est un mensonge par
+                      omission.*
+                    */
+                    if (leRepliEstNecessaire(get().projectionTarget, displays)) {
+                        set({ projectionTarget: ECRAN_DU_HUB });
+                        gmToast(i18n.t('modules:image.notifications.screenGone'), 'warning');
                     }
                 }
 

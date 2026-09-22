@@ -31,6 +31,24 @@ En haut de l'interface, vous pouvez sélectionner l'écran de destination :
 - **Entity (NPC/PC)** : GM-OS projette une fiche complète (nom, portrait, stats publiques) vers le Player Hub en mode "Diorama" tout en affichant l'image brute sur vos écrans secondaires.
 - **Écran au repos** : sans image projetée, l'écran reste noir et prêt.
 
+### ⚠️ Quand un écran disparaît — et pourquoi ça arrive
+
+Les identifiants d'écran viennent de Windows, et **ils changent** quand vous rebranchez un moniteur
+ou que vous redémarrez. L'écran que vous aviez choisi n'est alors plus reconnu.
+
+GM-OS retombe sur le **Player Hub** dans ce cas — et depuis le 2026-09-22, **il vous le dit** :
+*« L'écran de projection n'est plus là — retour au Player Hub. »* Il vous suffit de re-choisir votre
+moniteur dans le sélecteur.
+
+> ⛔ **Ce repli se faisait en silence, et ça coûtait cher.** Un moment de storyboard réglé sur
+> « Écran courant » envoyait alors sa vidéo au Player Hub, pendant que vous regardiez un moniteur
+> qui n'avait jamais reçu de fenêtre — donc votre **fond d'écran Windows**. Rien ne permettait de
+> relier le symptôme à un rebranchement d'il y a trois jours.
+
+> ⛔ **Et un écran visé explicitement qui n'existe plus se refuse désormais tout haut** :
+> *« Écran de projection introuvable : rien n'a été projeté. »* Avant, l'ordre était jeté sans un
+> mot. *Une projection qui échoue sans le dire ressemble à une fonctionnalité cassée.*
+
 ## 🎬 Les vidéos
 
 **Ajouté le 2026-09-05, à la demande de David.** Une vidéo se pose sur le tableau
@@ -244,3 +262,9 @@ table. Voir aussi [Web-OS](./28-Navigateur-integre.md) pour projeter une vidéo 
 qui n'existe nulle part. Ajouté : le bouton **RESTORE DEFAULT**, qui efface toute la bibliothèque et
 n'était mentionné dans aucun guide ; le fait que le noir voulu efface aussi le décor mis de côté ;
 et que le **Stop All** général déclenche ce noir.*
+
+*Élargi le 2026-09-22, après un signalement de David : « la vidéo ne se lance pas à partir du Master
+Storyboard », puis « ça fonctionne si je lance à partir d'Image-OS ». ⭐ **Elle partait pourtant
+bien** : la reproduction côte à côte a montré que les deux gestes envoient un ordre identique au
+caractère près. Le défaut n'était nulle part dans le chemin — il était dans ce que **personne ne
+disait**.*

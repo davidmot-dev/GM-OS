@@ -3,6 +3,9 @@ import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { natureDuMedia } from './natureDuMedia';
 import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
+import { ecranJoignable } from './ecranJoignable';
+import { gmToast } from '../../../stores/useToastStore';
+import i18n from '../../../i18n';
 
 /**
  * ImageService - Gère la logique métier de projection d'images.
@@ -33,6 +36,27 @@ export class ImageService {
             
             // 🛡️ CAS LOCAL (Monitor / Player / Monitor2/3/4)
             if (target !== 'hub') {
+                /*
+                  ⛔ **Un écran qui n'existe plus se refuse ICI, tout haut.**
+
+                  Sinon le processus principal jette l'ordre : `displays.find(...)`
+                  ne trouve rien, il écrit une ligne dans une console que personne
+                  ne regarde, et **retourne**. Aucune fenêtre n'est créée, et le
+                  meneur voit son fond d'écran Windows — une soirée perdue le
+                  2026-09-22 à chercher pourquoi *« la vidéo ne se lance pas à
+                  partir du Master Storyboard »*, alors que l'ordre était
+                  identique, au caractère près, à celui d'Image-OS.
+
+                  ⚠️ **On ne refuse jamais sur une liste vide** : elle veut dire
+                  « le recensement n'a pas encore eu lieu », pas « aucun écran ».
+                  Voir `ecranJoignable`.
+                */
+                const ecrans = (window as any).useImageStore?.getState()?.displays;
+                if (!ecranJoignable(target, ecrans).joignable) {
+                    console.error(`[ImageService] Écran ${target} introuvable — rien n'est projeté.`);
+                    gmToast(i18n.t('modules:image.notifications.screenUnknown'), 'warning');
+                    return null;
+                }
                 console.log(`[ImageService] Sending Local Projection via launchDisplay`);
                 bridge?.image?.launchDisplay([mediaPath], target);
                 

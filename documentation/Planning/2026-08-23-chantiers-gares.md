@@ -8526,6 +8526,78 @@ demandé, *« fonctionne bien »*. C'est en l'essayant que David a vu ce qui man
 
 ---
 
+### 105 · ⛔ « La vidéo ne se lance pas » — deux silences qui s'additionnent (2026-09-22)
+
+David : *« la vidéo ne se lance pas à partir du Master Storyboard »*, puis, cinq minutes plus tard :
+*« ça fonctionne si je lance à partir d'Image-OS »*. À l'écran : **son fond d'écran Windows**.
+
+#### ⭐⭐ LA LEÇON : le défaut n'était NULLE PART dans le chemin
+
+J'ai relu trois fois toute la chaîne — le moment, `projectSolo`, `ImageService`, le processus
+principal, l'écran de projection — **sans rien voir**, parce qu'il n'y avait rien à voir. C'est une
+reproduction **côte à côte**, avec le vrai magasin d'images, qui a tranché en dix lignes :
+
+```
+IMAGE-OS   launchDisplay = [["m-1757000000"], "moniteur-2"]
+MOMENT     launchDisplay = [["m-1757000000"], "moniteur-2"]
+```
+
+**Identique au caractère près.** ⭐ *Quand deux chemins produisent le même ordre et un résultat
+différent, ce n'est pas l'ordre qu'il faut relire : c'est l'état invisible autour.* Lire le code ne
+pouvait pas le trouver ; exécuter les deux gestes l'a montré tout de suite.
+
+#### ⛔ Le premier silence : un repli qui ne s'annonce pas
+
+Les identifiants d'écran viennent de Windows et **changent** au rebranchement comme au redémarrage —
+c'est déjà pour ça que les alias d'écrans et de sorties audio sont rangés **par signature** depuis
+le 2026-09-12. Image-OS se protège donc à chaque recensement :
+
+```js
+if (projectionTarget !== 'hub' && !displays.find(d => d.id === projectionTarget)) {
+    set({ projectionTarget: 'hub' });   // ⛔ sans un mot
+}
+```
+
+Un moment réglé sur « écran courant » envoyait alors sa vidéo au **Player Hub**, pendant que le
+meneur regardait un moniteur qui n'avait jamais reçu de fenêtre. *Il n'avait aucun moyen de relier
+le symptôme à un rebranchement d'il y a trois jours.*
+
+#### ⛔ Le second : un ordre jeté dans une console que personne ne regarde
+
+```js
+const targetDisplay = displays.find(d => d.id.toString() === target);
+if (!targetDisplay) { console.error(...); return; }   // ⛔ et rien d'autre
+```
+
+Aucune fenêtre créée, aucun message : **le fond d'écran Windows**. La vérification remonte désormais
+côté meneur, dans `projectMedia`, qui refuse **tout haut**.
+
+⚠️ **Et la garde ne refuse jamais sur une ignorance.** Une liste d'écrans vide veut dire *« le
+recensement n'a pas encore eu lieu »*, pas *« aucun écran »* : refuser là aurait bloqué **toute**
+projection au démarrage. *Une garde qui refuse tout ressemble à une garde qui marche* — la leçon du
+profil vide qui affichait « The Eternal Quest ».
+
+#### ⚠️ Ce que j'avais pris pour un troisième défaut, et qui n'en est pas un
+
+Un moment émet un message de titre **même quand le champ est vide**. Je l'ai signalé comme un
+message envoyé pour rien — le code dit le contraire, et il a raison : *un titre vide **retire** celui
+qui est affiché*, ce qui rend « ce moment n'a pas de titre » et « ce moment efface le titre du
+précédent » volontairement identiques. Laissé tel quel.
+
+**Ancres** : `image/logic/ecranJoignable.ts` (la règle, avec son refus de statuer sur une liste
+vide), `image/useImageStore.ts` (`fetchDisplays` annonce son repli),
+`image/logic/ImageService.ts` (`projectMedia` refuse tout haut), `modules.json` (deux clés, deux
+langues).
+
+**Vérifié** : `tsc -b`, lint sans erreur, **5 873 essais** dont 8 neufs et la parité i18n, **13 E2E**
+d'Image-OS et du storyboard sur un `dist/` frais.
+
+✅ **Le symptôme est levé** — *« ça fonctionne »* après avoir re-choisi l'écran dans Image-OS, ce
+qui confirme la cause. ⚠️ **Les deux messages, eux, restent à voir à l'écran** : ils ne se montrent
+que le jour où un moniteur change d'identifiant.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8571,6 +8643,7 @@ demandé, *« fonctionne bien »*. C'est en l'essayant que David a vu ce qui man
 | 38 | **Modifier la trame depuis le graphe** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bien »*) — panneau, mode liaison, réorganisation par glisser. ⭐ *Une seconde porte, jamais un second écrivain.* ⛔ Deux défauts trouvés par les essais : le panoramique contre le mode liaison, et des traits bombés qu'on devait cliquer (§ 102) | Graphe → **Relier** | Rien |
 | 39 | **« Cette scène mène à celle-là »** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bon »*) — embranchements avec condition, sur les quatre écrans. ⭐⭐ *L'ordre ne se dessine que là où le meneur n'a rien dit.* ⛔⛔ **Une normalisation qui s'applique à la frappe empêche d'écrire** — et trois de mes essais gardaient le défaut (§ 103) | Une scène → « Mène à » | Rien |
 | 40 | **Le son sur la tablette** | ✅ **LIVRÉ le 22/09** — trois voies (bruitages, musique, ambiances), chacune avec son curseur **et sa sortie**. ⛔ Music-OS et Ambient-OS n'avaient **aucune** action de télécommande. ⛔ *La tablette ne peut pas lister les sorties* : `enumerateDevices()` y rendrait les siennes — une liste plausible et fausse (§ 104) | Onglet **Pads** → les deux lignes en tête | Rien |
+| 41 | **Les deux silences de la projection** | ✅ **CORRIGÉ le 22/09** — *« la vidéo ne se lance pas à partir du Master Storyboard »*. ⭐⭐ **Le défaut n'était nulle part dans le chemin** : les deux gestes envoyaient un ordre identique au caractère près. Un repli sur le hub qui ne s'annonçait pas, et un ordre jeté dans une console — les deux parlent maintenant (§ 105) | Rebrancher un moniteur, puis projeter | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
