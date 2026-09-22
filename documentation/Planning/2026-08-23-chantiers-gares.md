@@ -8462,6 +8462,70 @@ réinjecté, essai rouge.
 
 ---
 
+### 104 · ⭐ Le son sur la tablette — trois voies, et où elles sortent (2026-09-22)
+
+David, après avoir enfin essayé le curseur réparé le 20/09 : *« sur la tablette remote GM-OS, je ne
+peux pas choisir où va sortir le son. D'autre part, le slider du soundboard fonctionne bien, mais il
+n'y a pas de slider dans les pads. »*
+
+#### ⛔ Le trou était plus large que la demande
+
+L'onglet **Pads** lance de la musique et des ambiances. **Music-OS et Ambient-OS n'avaient AUCUNE
+action de télécommande** — ni volume, ni sortie. On pouvait donc lancer un morceau depuis la
+tablette et **pas le baisser**. *Une chaîne complète sans bouton au bout*, cinquième occurrence du
+motif dans ce dépôt — et la quatrième, en septembre, était déjà ce même curseur de bruitages.
+
+#### ⛔ La tablette NE PEUT PAS lister les sorties
+
+`enumerateDevices()` y rend **ses propres** haut-parleurs. Le meneur aurait choisi « écouteurs
+Bluetooth » et rien n'aurait bougé sur son PC — *avec une liste qui aurait pourtant eu l'air
+juste*. ⭐ **Une liste plausible et fausse coûte plus cher qu'une liste absente.** La liste part
+donc du meneur, et le choix y revient en message.
+
+⭐ **Et le recensement était déjà fait.** `useHardwareStore` tient les sorties **avec l'alias du
+meneur** — « Enceintes du salon » plutôt que « Realtek(R) Audio (High Definition Audio Device) ».
+*Il n'y avait rien à énumérer, seulement à transporter.*
+
+#### ⭐ Les trois voies prennent la même forme
+
+`masterVolume` ne portait que les bruitages. Le pont transporte désormais un bloc `audio` — les
+sorties, et pour chaque voie son volume et sa destination. *Une voie qui se règle autrement que ses
+sœurs finit par se comporter autrement.*
+
+⚠️ **Les trois sorties restent indépendantes**, comme sur l'écran du meneur : c'est ce qui permet à
+un moment de storyboard d'envoyer la musique sur les grandes enceintes et les bruitages sur la
+petite. *Une sortie unique sur la tablette aurait été une quatrième vérité.*
+
+⚠️ Et une sortie débranchée **s'avoue** plutôt que de retomber en silence sur « par défaut » :
+*le meneur croirait avoir changé de sortie sans le vouloir.*
+
+#### ⛔ Mon propre essai m'a pris en faute
+
+Les deux lignes de volume n'étaient rendues que dans la branche « aucun pad configuré » : elles
+n'existaient donc **que sur un univers vide**, c'est-à-dire jamais quand elles servent. *Une
+fonctionnalité qui n'apparaît que là où elle ne sert pas est une fonctionnalité absente.*
+
+#### ⭐ Deux gardes anciennes ont fait leur travail
+
+- **Le registre des actions** (`registry.test.ts`) a exigé que les six nouveaux noms y figurent.
+- **La garde d'Échap** a repéré le menu de sortie comme une surcouche sans issue clavier. Il entre
+  dans les dispenses avec sa raison, à côté des autres fonds de menus déroulants : *la tablette n'a
+  ni clavier ni meneur devant*, et le menu se ferme en touchant à côté.
+
+⚠️ **Et `?? 1` n'aurait pas suffi pour les volumes** : un magasin peut porter `NaN`, et `NaN ?? 1`
+vaut `NaN` — le curseur de la tablette serait devenu vide, sans rien dire. *Le même piège que
+`valeur || undefined` qui avale un zéro légitime, pris par l'autre bout.*
+
+**Ancres** : `remote/reglagesAudio.ts` (le bloc transporté, typé en retour),
+`remote/components/LigneDeVolume.tsx` (la ligne partagée par les trois voies),
+`remote/actions/audioActions.ts` (les six actions), `useNexusSynchronizer.ts`,
+`types/remote.types.ts` (`audio` remplace `masterVolume`).
+
+✅ **Éprouvé à l'écran le 22/09** — le curseur des bruitages, réparé le 20/09 sans avoir été
+demandé, *« fonctionne bien »*. C'est en l'essayant que David a vu ce qui manquait à côté.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8506,6 +8570,7 @@ réinjecté, essai rouge.
 | 37 | **Le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« le graphe fonctionne bien »*) — actes, scènes, lieux, PNJ, indices, personnages, ambiances. ⭐ **Les niveaux sont l'idée de David** : un curseur plutôt que 128 vues possibles. ⭐ Les orphelins sont dessinés, les renvois morts vont aux **constats** (§ 101) | Trame narrative → **Graphe** | Rien |
 | 38 | **Modifier la trame depuis le graphe** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bien »*) — panneau, mode liaison, réorganisation par glisser. ⭐ *Une seconde porte, jamais un second écrivain.* ⛔ Deux défauts trouvés par les essais : le panoramique contre le mode liaison, et des traits bombés qu'on devait cliquer (§ 102) | Graphe → **Relier** | Rien |
 | 39 | **« Cette scène mène à celle-là »** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bon »*) — embranchements avec condition, sur les quatre écrans. ⭐⭐ *L'ordre ne se dessine que là où le meneur n'a rien dit.* ⛔⛔ **Une normalisation qui s'applique à la frappe empêche d'écrire** — et trois de mes essais gardaient le défaut (§ 103) | Une scène → « Mène à » | Rien |
+| 40 | **Le son sur la tablette** | ✅ **LIVRÉ le 22/09** — trois voies (bruitages, musique, ambiances), chacune avec son curseur **et sa sortie**. ⛔ Music-OS et Ambient-OS n'avaient **aucune** action de télécommande. ⛔ *La tablette ne peut pas lister les sorties* : `enumerateDevices()` y rendrait les siennes — une liste plausible et fausse (§ 104) | Onglet **Pads** → les deux lignes en tête | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

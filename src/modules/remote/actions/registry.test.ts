@@ -17,6 +17,13 @@ const EXPECTED_TYPES = [
     'sound:trigger', 'remote:sound:trigger',
     'sound:volume', 'remote:sound:volume',
     'sound:stop-all', 'remote:sound:stop-all',
+    'sound:sortie', 'remote:sound:sortie',
+    // Musique et ambiance — aucune action jusqu'au 2026-09-22 : la tablette
+    // savait les lancer, jamais les doser ni dire où elles sortent.
+    'music:volume', 'remote:music:volume',
+    'music:sortie', 'remote:music:sortie',
+    'ambient:volume', 'remote:ambient:volume',
+    'ambient:sortie', 'remote:ambient:sortie',
     // Combat
     'combat:update-hp', 'remote:combat:hp',
     'combat:next-turn', 'remote:combat:next',

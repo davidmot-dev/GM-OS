@@ -1,4 +1,6 @@
 import { useSoundStore } from '../../sound/useSoundStore';
+import { useMusicStore } from '../../music/useMusicStore';
+import { useAmbientStore } from '../../ambient/useAmbientStore';
 import type { ActionRegistry } from './types';
 
 const trigger = (payload: any) => {
@@ -60,10 +62,58 @@ const stopAll = async () => {
     }
 };
 
+/**
+ * **Le volume d'une voie et sa sortie, commandés depuis la tablette.**
+ *
+ * Demandé par David le 2026-09-22 : *« je ne peux pas choisir où va sortir le
+ * son »*, et *« il n'y a pas de slider dans les pads »*.
+ *
+ * ⛔ **Music-OS et Ambient-OS n'avaient AUCUNE action.** La tablette savait
+ * lancer un morceau et une ambiance, jamais les doser — *une chaîne complète
+ * sans bouton au bout*, le motif que ce dépôt a déjà payé quatre fois. Et
+ * aucune des trois voies ne pouvait changer de sortie.
+ *
+ * ⚠️ **Chaque voie écrit dans SON magasin**, qui prévient son moteur. On ne
+ * parle jamais au moteur d'ici : *un second écrivain qui court-circuite le
+ * magasin laisse l'écran du meneur afficher autre chose que ce qui sort* —
+ * exactement le défaut du curseur de bruitages, muet jusqu'au 2026-09-20.
+ */
+const MAGASINS = {
+    sound: () => useSoundStore.getState(),
+    music: () => useMusicStore.getState(),
+    ambient: () => useAmbientStore.getState(),
+} as const;
+
+type VoieCommandee = keyof typeof MAGASINS;
+
+const setVolumeDe = (voie: VoieCommandee) => (payload: unknown) => {
+    const volume = (payload as { volume?: number })?.volume;
+    /* `Number.isFinite` et pas seulement `typeof` : un `NaN` reçu du réseau
+       couperait le son sans lever d'erreur. */
+    if (typeof volume !== 'number' || !Number.isFinite(volume)) return;
+    MAGASINS[voie]().setMasterVolume(volume);
+};
+
+const setSortie = (voie: VoieCommandee) => (payload: unknown) => {
+    const sortie = (payload as { sortie?: string })?.sortie;
+    if (typeof sortie !== 'string' || sortie.length === 0) return;
+    MAGASINS[voie]().setOutputDevice(sortie);
+};
+
 export const audioActions: ActionRegistry = {
     'sound:trigger': trigger,
     'remote:sound:trigger': trigger,
     'sound:volume': setVolume,
+    'sound:sortie': setSortie('sound'),
+    'remote:sound:sortie': setSortie('sound'),
+    'music:volume': setVolumeDe('music'),
+    'remote:music:volume': setVolumeDe('music'),
+    'music:sortie': setSortie('music'),
+    'remote:music:sortie': setSortie('music'),
+    'ambient:volume': setVolumeDe('ambient'),
+    'remote:ambient:volume': setVolumeDe('ambient'),
+    'ambient:sortie': setSortie('ambient'),
+    'remote:ambient:sortie': setSortie('ambient'),
     'remote:sound:volume': setVolume,
     'sound:stop-all': stopAll,
     'remote:sound:stop-all': stopAll,

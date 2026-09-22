@@ -11,6 +11,8 @@ import { segmentDuTableau } from '../segmentDuTableau';
 import { segmentDesDes } from '../segmentDesDes';
 import { segmentDeLecture } from '../segmentDeLecture';
 import { useMusicStore } from '../../music/useMusicStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { reglagesAudio } from '../reglagesAudio';
 import { useImageStore } from '../../image/useImageStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
 
@@ -191,6 +193,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const combatStore = useCombatStore.getState();
             const freshSessionOS = useSessionOSStore.getState();
             const favoriteStore = useFavoriteStore.getState();
+            const materiel = useHardwareStore.getState();
             const musicStore = useMusicStore.getState();
             const imageStore = useImageStore.getState();
             const ambientStore = useAmbientStore.getState();
@@ -383,7 +386,19 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
             const fullState = {
                 sounds, moments: storyboardStore.moments.filter(m => String(m.campaignId) === String(currentCampaignId)).map(m => ({ id: m.id, name: m.name })),
-                masterVolume: soundStore.masterVolume,
+                /*
+                  ⭐ **Les trois voies partent ensemble, avec la liste des sorties
+                  DU MENEUR.** La tablette ne peut pas l'établir : `enumerateDevices()`
+                  y rendrait ses propres haut-parleurs, et le choix ne changerait
+                  rien — *avec une liste qui aurait pourtant l'air juste.*
+                */
+                audio: reglagesAudio({
+                    appareils: materiel.audioDevices,
+                    nomDeLaSortie: materiel.getAudioLabel,
+                    sound: soundStore,
+                    music: musicStore,
+                    ambient: ambientStore,
+                }),
                 combat: { 
                     combatants: resolvedCombatants, 
                     currentTurnIdx: combatStore.currentTurnIdx, 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { reglagesAudio } from '../reglagesAudio';
 import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { useClientStore } from '../../../stores/useClientStore';
 import { type RemoteSyncData, type RemoteActionType } from '../types/remote.types';
@@ -25,7 +26,9 @@ export interface RollRecord extends BaseRollResult {
 const INITIAL_SYNC_DATA: RemoteSyncData = {
     sounds: [],
     moments: [],
-    masterVolume: 1.0,
+    /* Les défauts d'avant la première synchronisation : tout à fond, sortie par
+       défaut, et **aucune sortie listée** — la tablette n'en invente pas. */
+    audio: reglagesAudio({}),
     combat: { combatants: [], currentTurnIdx: 0, round: 1 },
     notes: { public: '', private: '' },
     whiteboard: {

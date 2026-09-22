@@ -1,8 +1,8 @@
 # État et reprise — le 2026-09-22, **la trame devient un plan de scénario**
 
-> **Base saine.** `tsc -b` propre, **5 845 essais Vitest** (454 fichiers, 1 ignoré), **14 E2E de
-> graphe** sur un `dist/` frais, plus la traversée des 27 modules, la curation et l'ouverture de
-> scène au vert. Branche `feature/tablet-hub-pwa`.
+> **Base saine.** `tsc -b` propre, **5 865 essais Vitest** (455 fichiers, 1 ignoré), **14 E2E de
+> graphe** sur un `dist/` frais, plus la traversée des 27 modules, Sound-OS, la curation et
+> l'ouverture de scène au vert. Branche `feature/tablet-hub-pwa`.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md).
@@ -19,28 +19,36 @@
 | **101** | Le graphe de la trame — actes, scènes, lieux, PNJ, indices, personnages, ambiances | ✅ **oui** (*« le graphe fonctionne bien »*) |
 | **102** | Modifier la trame depuis le graphe — panneau, mode liaison, réorganisation | ✅ **oui** (*« ok c'est bien »*) |
 | **103** | « Cette scène mène à celle-là » — embranchements avec condition | ✅ **oui** (*« ok c'est bon »*) |
+| **104** | Le son sur la tablette — trois voies, et où elles sortent | ✅ **la moitié** : le curseur des bruitages *« fonctionne bien »*, le reste à essayer |
 
-⭐ **Les quatre n'étaient pas quatre fonctionnalités, mais une seule montée en puissance.** Chaque
+⭐ **Les quatre premières n'étaient pas quatre fonctionnalités, mais une seule montée en puissance.** Chaque
 demande est née de la précédente : classer les scènes a fait voir qu'on ne voyait pas la trame
 d'ensemble ; le graphe a fait vouloir l'éditer ; l'éditer a fait manquer le seul lien que le modèle
 ne portait pas — *celui qui dit où l'histoire peut aller.*
+
+⭐ **Et le cinquième est né d'une vérification.** David a enfin essayé le curseur de bruitages de sa
+tablette — réparé le 20/09 sans avoir été demandé —, a constaté qu'il marchait, **et a vu du même
+coup ce qui manquait à côté**. *Éprouver une chose fait trouver la suivante ; c'est la meilleure
+raison de tenir une liste de ce qui n'a jamais été vu à l'écran.*
 
 ---
 
 ## Par quoi reprendre
 
 1. **Rien n'est en suspens sur la trame.** Les quatre chantiers sont éprouvés à l'écran.
-2. **Les quatre chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
-   thème d'ambiance dans un moment (§ 94), le dosage des sources (§ 95) — **dont le curseur du
-   soundboard de la tablette, réparé sans avoir été demandé** —, et la boucle d'une vidéo (§ 97).
-3. **La refonte de l'interface** (§ 76) — toujours à l'arrêt, rien ne la bloque. Le premier geste
+2. **Le son de la tablette** (§ 104) — les deux lignes de l'onglet **Pads**, et les trois choix de
+   sortie. ⚠️ Il faut **rafraîchir la page de la tablette** : elle lit `dist/`, et le bloc `audio`
+   a remplacé `masterVolume` dans le pont.
+3. **Les trois chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
+   thème d'ambiance dans un moment (§ 94), et la boucle d'une vidéo (§ 97).
+4. **La refonte de l'interface** (§ 76) — toujours à l'arrêt, rien ne la bloque. Le premier geste
    reste **T0.1** : les captures de référence, une soirée, aucun pixel changé.
    ⭐ *Décidé le 22/09 en répondant à une question de David* : la phase 2 donnera à Stitch **une
    fiche de contraintes** à côté des captures — données hostiles (11 combattants, `148/155`), le
    `font-size: 85%` de `:root`, les quatre thèmes dont le clair, et le contrat de sortie (des
    **valeurs**, pas des composants). *La capture porte la structure, le prompt porte ce qu'une
    image ne montre pas.*
-4. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
+5. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
 
 ---
 
@@ -98,6 +106,15 @@ Ils ont coûté plus que les défauts eux-mêmes :
 3. **Je désignais un nœud par un clic au centre**, là où la simulation regroupe tout ce qui n'est
    pas épinglé. *Un essai qui désigne sa cible au hasard finit par échouer pour une raison qui n'a
    rien à voir.*
+
+### ⭐ Une liste plausible et fausse coûte plus cher qu'une liste absente
+
+La tablette ne peut pas énumérer les sorties audio : `enumerateDevices()` y rend **les siennes**. Le
+meneur aurait choisi « écouteurs Bluetooth » et rien n'aurait bougé sur son PC. La liste vient donc
+de chez lui, avec **les noms qu'il a donnés** — `useHardwareStore` les tenait déjà.
+
+⚠️ Et `?? 1` n'aurait pas suffi pour les volumes : un magasin peut porter `NaN`, et `NaN ?? 1` vaut
+`NaN`. *Le même piège que `valeur || undefined` qui avale un zéro légitime, pris par l'autre bout.*
 
 ### ⛔ Une collision de positions, trouvée avant l'écran
 

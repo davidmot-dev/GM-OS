@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { Music, Waves, Image as ImageIcon, Search, X } from 'lucide-react';
 import { type RemoteUniversalPad, type RemoteComptesDePads } from '../types/remote.types';
+import { type RemoteReglagesAudio, type NomDeVoie } from '../reglagesAudio';
+import LigneDeVolume from './LigneDeVolume';
 
 /**
  * **La grille de pads, refaite le 2026-09-05.**
@@ -25,6 +27,9 @@ import { type RemoteUniversalPad, type RemoteComptesDePads } from '../types/remo
 interface RemoteUniversalPadsProps {
     pads: RemoteUniversalPad[];
     comptes?: RemoteComptesDePads;
+    audio: RemoteReglagesAudio;
+    onVolume: (voie: NomDeVoie, volume: number) => void;
+    onSortie: (voie: NomDeVoie, sortie: string) => void;
     onTrigger: (id: string) => void;
 }
 
@@ -38,7 +43,9 @@ const FAMILLES = [
 const aplati = (texte: string) =>
     texte.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({ pads, comptes, onTrigger }) => {
+const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
+    pads, comptes, audio, onVolume, onSortie, onTrigger,
+}) => {
     const [filtre, setFiltre] = useState('');
 
     const parFamille = useMemo(() => {
@@ -51,16 +58,50 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({ pads, comptes
 
     const totalRetenu = parFamille.reduce((n, f) => n + f.pads.length, 0);
 
+    /*
+      ⭐ **Les deux lignes de volume, demandées par David le 2026-09-22** :
+      *« le slider du soundboard fonctionne bien, mais il n'y a pas de slider
+      dans les pads »*. Cet onglet lance de la musique et des ambiances sans
+      pouvoir les doser — et sans pouvoir dire où elles sortent.
+
+      ⚠️ **Elles sont rendues même quand la grille est vide.** Une ambiance peut
+      tourner alors qu'aucun pad n'est configuré sur cet univers : *un réglage
+      qui disparaît avec la liste qu'il ne commande pas est un réglage perdu au
+      moment où il sert.*
+    */
+    const reglages = (
+        <div className="flex flex-col gap-2">
+            <LigneDeVolume
+                voie="music" reglages={audio} icone={<Music size={15} />}
+                onVolume={(v) => onVolume('music', v)}
+                onSortie={(sortie) => onSortie('music', sortie)}
+            />
+            <LigneDeVolume
+                voie="ambient" reglages={audio} icone={<Waves size={15} />}
+                onVolume={(v) => onVolume('ambient', v)}
+                onSortie={(sortie) => onSortie('ambient', sortie)}
+            />
+        </div>
+    );
+
     if (!pads || pads.length === 0) {
         return (
-            <div className="text-center py-16 rounded-2xl border border-white/5 bg-white/[0.02]">
-                <p className="text-sm italic text-slate-500">Aucun pad configuré sur cet univers.</p>
+            <div className="flex flex-col gap-3">
+                {reglages}
+                <div className="text-center py-16 rounded-2xl border border-white/5 bg-white/[0.02]">
+                    <p className="text-sm italic text-slate-500">Aucun pad configuré sur cet univers.</p>
+                </div>
             </div>
         );
     }
 
     return (
         <div className="flex flex-col gap-4">
+            {/* ⛔ **Les deux lignes sont rendues ICI AUSSI, et l'essai l'a exigé.**
+                Ma première version ne les posait que dans la branche « aucun pad » :
+                elles n'existaient donc **que** sur un univers vide, c'est-à-dire
+                jamais quand elles servent. */}
+            {reglages}
             <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                 <input

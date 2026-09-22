@@ -107,6 +107,15 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 
 > ⚠️ **Les bruitages ne sont pas ici** : ils ont leur propre onglet, **Sons**.
 
+> ✅ **Deux lignes de volume sont arrivées le 2026-09-22**, en tête de l'onglet : **Musique** et
+> **Ambiances**, chacune avec son curseur **et le choix de sa sortie**. Cet onglet savait les
+> lancer et **pas les doser** — signalé par David : *« le slider du soundboard fonctionne bien,
+> mais il n'y a pas de slider dans les pads »*.
+>
+> Elles restent affichées **même si aucun pad n'est configuré** : une ambiance peut tourner sans
+> qu'un seul pad existe sur cet univers, et *un réglage qui disparaît avec la liste qu'il ne
+> commande pas est un réglage perdu au moment où il sert.*
+
 ### 2. 🎲 Dés
 - Lancez des dés (D4, D6, D8, D10, D12, D20, D100) d'une simple pression.
 - Le résultat s'affiche instantanément sur l'écran de votre PC.
@@ -123,7 +132,7 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 
 ### 3. 🔊 Sons
 - **Synchronisation** : Les boutons affichent les vrais noms de vos Pads configurés sur PC.
-- **Volume Maître** : une ligne en haut du panneau.
+- **Volume Maître** : une ligne en haut du panneau, **avec le choix de la sortie**.
 - **Filtre** : au-delà de huit bruitages, un champ de recherche apparaît.
 
 > ✅ **Densifié le 2026-09-05.** Les déclencheurs tenaient en **deux colonnes quelle que soit la
@@ -132,6 +141,28 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 >
 > ⚠️ **« Tout couper » n'est plus ici** : il est dans la ligne d'état, atteignable depuis tous les
 > onglets. Il n'avait rien à faire au fond du troisième.
+
+---
+
+#### 🔌 Choisir où le son sort, depuis la tablette
+
+Chaque ligne de volume — **Bruitages** dans l'onglet Sons, **Musique** et **Ambiances** dans
+l'onglet Pads — porte à sa droite un bouton qui nomme sa sortie. Un appui déroule la liste.
+
+**Les noms sont les vôtres.** Ce sont les alias que vous avez donnés dans les Paramètres —
+« Enceintes du salon » plutôt que « Realtek(R) Audio (High Definition Audio Device) ».
+
+> ⛔ **La liste est celle de votre PC, jamais celle de la tablette.** Et c'est la raison d'être de
+> tout ce mécanisme : une tablette qui listerait ses **propres** haut-parleurs vous laisserait
+> choisir « écouteurs Bluetooth » sans que rien ne change — *avec une liste qui aurait pourtant
+> l'air juste.*
+
+> ⭐ **Les trois sorties sont indépendantes**, comme sur votre PC : c'est ce qui permet à un moment
+> de storyboard d'envoyer la musique sur les grandes enceintes et les bruitages sur la petite.
+
+> ⚠️ **Une sortie débranchée s'avoue** : le bouton passe en ambre et affiche « Sortie absente ».
+> *Retomber en silence sur « par défaut » vous ferait croire que vous avez changé de sortie sans
+> le vouloir.*
 
 ### 4. 🎬 Scénario
 - Retrouvez tous les moments du **storyboard** de la campagne active.
@@ -332,3 +363,10 @@ crayon blanc, gomme comprise. Puis, le soir, trois demandes de David — **« Co
 coupait que les bruitages**, **le résultat des dés qui n'arrivait jamais**, et **les notes élargies
 à la trame, au wiki et aux indices**. Enfin la **messagerie** et le **coffre Obsidian**, qui ont
 ajouté un huitième onglet.*
+
+*Élargi le 2026-09-22, sur un signalement de David : **« sur la tablette remote GM-OS, je ne peux
+pas choisir où va sortir le son. D'autre part, le slider du soundboard fonctionne bien, mais il n'y
+a pas de slider dans les pads. »** ⛔ Le trou était plus large qu'il n'y paraît : **Music-OS et
+Ambient-OS n'avaient aucune action de télécommande** — la tablette savait les lancer, jamais les
+doser, et aucune des trois voies ne pouvait changer de sortie. ✅ **Éprouvé à l'écran** — le
+curseur des bruitages, réparé le 20/09, fonctionne.*

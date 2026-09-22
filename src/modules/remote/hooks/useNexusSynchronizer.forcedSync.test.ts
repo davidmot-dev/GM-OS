@@ -33,7 +33,7 @@ const storeVide = vi.hoisted(() => () => ({
         sessions: [], campaigns: [], entities: [], players: [], clues: [], atlasMaps: [],
         customSheetTemplates: [], customGameDrivers: [], activeCampaignId: null,
         combatants: [], moments: [], atmospheres: [], notes: {}, pads: [], favorites: [],
-        paths: [], tensions: [], isSystemSyncing: false, masterVolume: 1,
+        paths: [], tensions: [], isSystemSyncing: false, masterVolume: 1, outputDeviceId: 'default',
     }),
     subscribe: () => () => { /* pas d'abonnement en test */ },
 }));
@@ -43,7 +43,7 @@ vi.mock('../../sound/useSoundStore', () => ({
         ...storeVide(),
         getState: () => {
             franchissements.n += 1;
-            return { atmospheres: [], activeAtmosphereId: null, masterVolume: 1 };
+            return { atmospheres: [], activeAtmosphereId: null, masterVolume: 1, outputDeviceId: 'default' };
         },
     },
 }));

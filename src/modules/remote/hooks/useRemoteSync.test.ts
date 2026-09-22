@@ -54,7 +54,7 @@ describe('useRemoteSync', () => {
 
     it('should initialize with default sync data', () => {
         const { result } = renderHook(() => useRemoteSync());
-        expect(result.current.syncData.masterVolume).toBe(1.0);
+        expect(result.current.syncData.audio.sound.volume).toBe(1.0);
         expect(result.current.syncData.sounds).toEqual([]);
     });
 
@@ -71,13 +71,17 @@ describe('useRemoteSync', () => {
         act(() => {
             mockWebSocket.onmessage!({
                 data: JSON.stringify({
-                    type: 'sync:masterVolume',
-                    payload: 0.5
+                    /* Le volume des bruitages vit désormais dans le bloc `audio`,
+                       avec ses deux sœurs et les sorties (2026-09-22). */
+                    type: 'sync:audio',
+                    payload: { sorties: [], sound: { volume: 0.5, sortie: 'default' },
+                        music: { volume: 1, sortie: 'default' },
+                        ambient: { volume: 1, sortie: 'default' } }
                 })
             });
         });
 
-        expect(result.current.syncData.masterVolume).toBe(0.5);
+        expect(result.current.syncData.audio.sound.volume).toBe(0.5);
     });
 
     it('should perform deep merging for combat updates', () => {

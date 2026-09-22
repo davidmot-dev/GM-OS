@@ -35,6 +35,8 @@ export interface RemoteCombatant {
     healthSystem?: HealthSystem;
 }
 
+import type { RemoteReglagesAudio } from '../reglagesAudio';
+
 export interface RemoteSound {
     id: string;
     title: string;
@@ -97,7 +99,16 @@ export interface RemoteComptesDePads {
 export interface RemoteSyncData {
     sounds: RemoteSound[];
     moments: RemoteMoment[];
-    masterVolume: number;
+    /**
+     * **Les trois voies de son, et où elles sortent.**
+     *
+     * ⛔ Remplaçait `masterVolume`, qui ne portait que les bruitages : la
+     * tablette pouvait régler Sound-OS et **ni Music-OS ni Ambient-OS**, et ne
+     * pouvait choisir aucune sortie. Les trois ont désormais la même forme —
+     * *une voie qui se règle autrement que ses sœurs finit par se comporter
+     * autrement.* Voir `reglagesAudio`.
+     */
+    audio: RemoteReglagesAudio;
     combat: {
         combatants: RemoteCombatant[];
         currentTurnIdx: number;
@@ -219,6 +230,16 @@ export type RemoteActionType =
     | 'remote:sound:trigger' 
     | 'remote:sound:volume' 
     | 'remote:sound:stop-all'
+    /*
+      **Les trois voies se règlent depuis la tablette, et choisissent leur
+      sortie** — demandé par David le 2026-09-22. ⛔ Music-OS et Ambient-OS
+      n'avaient AUCUN nom d'action : on pouvait les lancer, jamais les doser.
+    */
+    | 'remote:sound:sortie'
+    | 'remote:music:volume'
+    | 'remote:music:sortie'
+    | 'remote:ambient:volume'
+    | 'remote:ambient:sortie'
     | 'remote:combat:next' 
     | 'remote:combat:hp' 
     | 'remote:story:trigger'

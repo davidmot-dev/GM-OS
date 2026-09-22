@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { Volume2, Search, X } from 'lucide-react';
 import { type RemoteSound } from '../types/remote.types';
+import { type RemoteReglagesAudio } from '../reglagesAudio';
+import LigneDeVolume from './LigneDeVolume';
 
 /**
  * **Les bruitages, densifiés le 2026-09-05.**
@@ -17,8 +19,9 @@ import { type RemoteSound } from '../types/remote.types';
 
 interface RemoteSoundboardProps {
     sounds: RemoteSound[];
-    masterVolume: number;
+    audio: RemoteReglagesAudio;
     onVolumeChange: (vol: number) => void;
+    onSortie: (sortie: string) => void;
     onTrigger: (id: string) => void;
 }
 
@@ -26,7 +29,7 @@ const aplati = (texte: string) =>
     texte.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
-    sounds, masterVolume, onVolumeChange, onTrigger,
+    sounds, audio, onVolumeChange, onSortie, onTrigger,
 }) => {
     const [filtre, setFiltre] = useState('');
 
@@ -38,23 +41,19 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
 
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3 px-3 h-11 rounded-xl bg-white/[0.03] border border-white/5">
-                <Volume2 size={15} className="text-slate-500 shrink-0" />
-                <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={masterVolume}
-                    onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-                    className="flex-1 h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-accent"
-                    title="Volume maître"
-                    aria-label="Volume maître"
-                />
-                <span className="text-xs font-black text-accent tabular-nums w-10 text-right shrink-0">
-                    {Math.round(masterVolume * 100)}%
-                </span>
-            </div>
+            {/*
+              ⭐ **La ligne était écrite à la main ici ; elle est désormais partagée.**
+              Musique et Ambiances en auraient fait deux copies — *trois lignes du
+              même geste finissent par ne plus se comporter pareil.* Elle gagne au
+              passage le choix de la **sortie**, qui manquait aux trois.
+            */}
+            <LigneDeVolume
+                voie="sound"
+                reglages={audio}
+                icone={<Volume2 size={15} />}
+                onVolume={onVolumeChange}
+                onSortie={onSortie}
+            />
 
             {sounds && sounds.length > 8 && (
                 <div className="relative">

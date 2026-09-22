@@ -69,6 +69,8 @@ const DISPENSEES: ReadonlyArray<readonly [string, string]> = [
     // ── Des fonds de menus déroulants, déjà fermés au clic extérieur ──────
     ['/src/modules/map/components/MapControls.tsx', 'le fond cliquable d’un menu de sortie, pas une surcouche'],
     ['/src/modules/session/components/SocialGraph/SocialGraphFilters.tsx', 'le fond cliquable d’une liste de choix'],
+    ['/src/modules/remote/components/LigneDeVolume.tsx',
+        'le fond cliquable du choix de sortie, sur la tablette : ni clavier, ni meneur devant'],
     /*
       ⭐ **Dispense retirée le 2026-09-20.** Elle disait vrai tant que le menu
       vivait dans la barre d'onglets : son voile y était enfermé dans un

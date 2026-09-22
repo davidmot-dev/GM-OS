@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useRemoteSync } from './hooks/useRemoteSync';
 import { type RemoteActionType } from './types/remote.types';
+import { type NomDeVoie } from './reglagesAudio';
 import RemoteUniversalPads from './components/RemoteUniversalPads';
 import RemoteDicePad from './components/RemoteDicePad';
 import RemoteSoundboard from './components/RemoteSoundboard';
@@ -97,6 +98,24 @@ const RemoteControl: React.FC = () => {
                 .map((perso) => ({ id: perso.id, nom: perso.name })));
     }, [syncData.session]);
 
+    /*
+      ⚠️ **Deux tables plutôt qu'une chaîne construite.** `remote:${voie}:volume`
+      compile en `string`, que `RemoteActionType` refuse — et c'est tant mieux :
+      *un nom d'action fabriqué à l'exécution passe la compilation et échoue en
+      silence à la réception.* Ici, un nom absent du registre ne compile pas.
+    */
+    const VOLUME_DE = {
+        sound: 'remote:sound:volume',
+        music: 'remote:music:volume',
+        ambient: 'remote:ambient:volume',
+    } as const satisfies Record<NomDeVoie, RemoteActionType>;
+
+    const SORTIE_DE = {
+        sound: 'remote:sound:sortie',
+        music: 'remote:music:sortie',
+        ambient: 'remote:ambient:sortie',
+    } as const satisfies Record<NomDeVoie, RemoteActionType>;
+
     const renderContent = () => {
         switch (activeTab) {
             case 'pads':
@@ -104,6 +123,9 @@ const RemoteControl: React.FC = () => {
                     <RemoteUniversalPads
                         pads={syncData.universalPads}
                         comptes={syncData.comptesDePads}
+                        audio={syncData.audio}
+                        onVolume={(voie, volume) => sendAction(VOLUME_DE[voie], { volume })}
+                        onSortie={(voie, sortie) => sendAction(SORTIE_DE[voie], { sortie })}
                         onTrigger={(id) => sendAction('remote:pad:trigger', { id })}
                     />
                 );
@@ -120,8 +142,9 @@ const RemoteControl: React.FC = () => {
                 return (
                     <RemoteSoundboard
                         sounds={syncData.sounds}
-                        masterVolume={syncData.masterVolume}
+                        audio={syncData.audio}
                         onVolumeChange={(vol) => sendAction('remote:sound:volume', { volume: vol })}
+                        onSortie={(sortie) => sendAction('remote:sound:sortie', { sortie })}
                         onTrigger={(id) => sendAction('remote:sound:trigger', { id })}
                     />
                 );
