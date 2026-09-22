@@ -72,7 +72,22 @@ export interface DispositionDuNexus {
  * Rendu à part pour être éprouvé seul : c'est deux lignes de conséquence pour
  * un défaut qui se voit à chaque ouverture du Nexus.
  */
-export function placerLeNoeud(id: string, disposition?: DispositionDuNexus): Partial<GraphNode> {
+export interface PositionAppliquee {
+    x?: number;
+    y?: number;
+    fx?: number;
+    fy?: number;
+}
+
+/*
+  ⭐ **Le type de retour a été resserré le 2026-09-22, et c'est ce qui permet au
+  graphe de la trame d'employer cette fonction telle quelle.** Il rendait
+  `Partial<GraphNode>` — donc un objet qui prétendait pouvoir porter un `type:
+  'pc' | 'npc'`, vrai seulement du Nexus social. Un second graphe n'aurait pas pu
+  s'en servir sans contorsion, et *la contorsion aurait été d'en recopier les
+  quatre lignes* — celles qui portent la correction du remélange.
+*/
+export function placerLeNoeud(id: string, disposition?: DispositionDuNexus): PositionAppliquee {
     const epingle = disposition?.epingles?.[id];
     const capture = disposition?.positionDe?.(id);
 

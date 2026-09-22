@@ -6,6 +6,10 @@ import {
     etatDeLaScene, closeSansAvoirEteJouee,
 } from '../logic/trame';
 import PastilleDePreparation from './trame/PastilleDePreparation';
+import MarqueDIntrigue from './trame/MarqueDIntrigue';
+import {
+    importanceDeLaScene, styleDuTitre, infobulle, infobulleDeLImportance,
+} from '../logic/importanceDeLaScene';
 import type { GameSession } from '../../../types/session.types';
 import type { Scene } from '../../../types/trame.types';
 
@@ -142,18 +146,25 @@ const PanneauDeTrameDeSeance: React.FC<{ session: GameSession }> = ({ session })
 const CaseDeScene: React.FC<{ scene: Scene; choisie: boolean; onBascule: () => void }> = ({ scene, choisie, onBascule }) => {
     const etat = etatDeLaScene(scene);
     const jamaisJouee = closeSansAvoirEteJouee(scene);
+    /* **C'est ici que le rang sert le plus** : choisir ce qu'on joue ce soir, et
+       savoir d'avance ce qu'on coupera si l'heure tourne. */
+    const importance = importanceDeLaScene(scene);
     return (
         <button
             onClick={onBascule}
-            title={jamaisJouee ? 'Close sans avoir été jouée' : undefined}
+            title={infobulle(
+                jamaisJouee && 'Close sans avoir été jouée',
+                infobulleDeLImportance(importance),
+            )}
             className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-left transition-all ${
                 choisie
                     ? 'bg-accent/15 border-accent/40 text-app-text'
                     : 'bg-app-bg/30 border-app-border/20 text-app-text/50 hover:text-app-text/80'
             }`}
         >
+            <MarqueDIntrigue scene={scene} />
             <PastilleDePreparation scene={scene} />
-            <span className={`flex-1 min-w-0 text-sm truncate ${
+            <span className={`flex-1 min-w-0 text-sm truncate ${styleDuTitre(importance)} ${
                 etat === 'terminee'
                     ? `line-through ${jamaisJouee ? 'text-app-text/20' : 'text-app-text/40'}`
                     : ''

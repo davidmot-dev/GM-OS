@@ -1,6 +1,8 @@
-import type { Acte, Scene } from '../../types/trame.types';
+import type { Acte, ImportanceDeScene, Scene } from '../../types/trame.types';
 import type { WikiEntry, Clue } from '../../types/chronicle.types';
 import { actesOrdonnes, scenesOrdonnees, etatDeLaScene, type EtatDeScene } from '../session/logic/trame';
+import { importanceDeLaScene } from '../session/logic/importanceDeLaScene';
+import { sortiesDeLaScene, libelleLisible } from '../session/logic/enchainementsDeLaTrame';
 
 /**
  * **Ce que le meneur lit sur sa tablette pendant qu'il joue.**
@@ -36,6 +38,34 @@ export interface RemoteScene {
     etat: EtatDeScene;
     /** Vrai quand la scène a été close sans avoir jamais été jouée. */
     jamaisJouee: boolean;
+    /**
+     * Le rang de la scène dans l'intrigue, ou `null` si le meneur ne l'a pas
+     * jugée.
+     *
+     * ⛔ **Obligatoire, et `null` plutôt qu'absent — exprès.** Le mappage plus
+     * bas reconstruit chaque scène **champ par champ**, et c'est précisément la
+     * forme qui a jeté en silence les réglages du titre projeté le 2026-09-21 :
+     * *une clé non déclarée est écrite puis jetée sans une erreur.* Déclaré
+     * facultatif, ce champ aurait pu être oublié là-bas sans que `tsc` bronche.
+     * Déclaré obligatoire, il est **exigé**.
+     *
+     * ⚠️ Normalisé ici par `importanceDeLaScene`, jamais sur la tablette : *un
+     * état déduit à deux endroits finit par diverger*, la même règle que `etat`.
+     */
+    importance: ImportanceDeScene | null;
+    /**
+     * **Les suites possibles, par leur TITRE.**
+     *
+     * ⛔ **Résolues ici, jamais sur la tablette.** Elle ne reçoit ni la liste des
+     * scènes ni de quoi chercher un identifiant : lui envoyer `vers: 'scene-17'`
+     * l'aurait obligée à afficher un identifiant, ou rien. *Le transport porte ce
+     * qui sert au geste, pas ce qui existe* — le même arbitrage que le wiki envoyé
+     * sans ses images.
+     *
+     * ⚠️ Obligatoire, comme `importance` : le mappage plus bas reconstruit chaque
+     * scène champ par champ, et une clé facultative y serait oubliée en silence.
+     */
+    suites: { titre: string; libelle?: string }[];
 }
 
 export interface RemoteActe {
@@ -109,6 +139,10 @@ export function segmentDeLecture(
             notesDuMeneur: scene.notesDuMeneur,
             etat: etatDeLaScene(scene),
             jamaisJouee: !!scene.termineeLe && (scene.passages ?? []).length === 0,
+            importance: importanceDeLaScene(scene),
+            suites: sortiesDeLaScene(toutesLesScenes, scene)
+                /* Nettoyé ici : la tablette ne rejuge rien, comme pour l'état. */
+                .map((sortie) => ({ titre: sortie.vers.titre, libelle: libelleLisible(sortie.libelle) })),
         })),
     }));
 

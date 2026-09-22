@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { EyeOff, FileText, Layers, BookOpen, Search, X, Lightbulb, Vault } from 'lucide-react';
 import { type RemoteLectureDuMeneur, type RemoteActe, type RemoteScene } from '../segmentDeLecture';
+import MarqueDIntrigue from '../../session/components/trame/MarqueDIntrigue';
+import {
+    styleDuTitre, infobulle, infobulleDeLImportance,
+} from '../../session/logic/importanceDeLaScene';
 import RemoteObsidian from './RemoteObsidian';
 import type { CoffreObsidian } from '../hooks/useRemoteSync';
 import { chroniquesParType, LIBELLE_DE_CATEGORIE } from '../chroniquesParType';
@@ -51,11 +55,26 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
     const etat = ETATS[scene.etat];
     return (
         <div className={`rounded-lg border ${scene.etat === 'en-cours' ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-white/5 bg-white/[0.02]'}`}>
-            <button onClick={basculer} className="w-full flex items-center gap-2 px-2.5 py-2 text-left">
+            <button
+                onClick={basculer}
+                title={infobulle(infobulleDeLImportance(scene.importance))}
+                className="w-full flex items-center gap-2 px-2.5 py-2 text-left"
+            >
+                {/*
+                  ⭐ **Le même liseré que sur l'écran du meneur.** C'est ici qu'on
+                  lit sa trame en jouant : savoir qu'une scène est optionnelle au
+                  moment où l'on hésite à la lancer vaut plus que de le savoir en
+                  préparation.
+
+                  ⚠️ Le titre est en `font-bold` par défaut sur la tablette —
+                  d'où `font-normal` dans `styleDuTitre` pour l'optionnelle, sans
+                  quoi elle paraîtrait plus appuyée qu'une scène secondaire.
+                */}
+                <MarqueDIntrigue scene={scene} />
                 <span className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${etat.teinte}`}>
                     {etat.mot}
                 </span>
-                <span className={`flex-1 min-w-0 text-xs font-bold truncate ${scene.etat === 'terminee' ? 'text-slate-600 line-through' : 'text-slate-200'}`}>
+                <span className={`flex-1 min-w-0 text-xs font-bold truncate ${styleDuTitre(scene.importance)} ${scene.etat === 'terminee' ? 'text-slate-600 line-through' : 'text-slate-200'}`}>
                     {scene.titre}
                 </span>
                 {/*
@@ -75,8 +94,27 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                             {scene.notesDuMeneur}
                         </p>
                     )}
-                    {!scene.resume && !scene.notesDuMeneur && (
+                    {!scene.resume && !scene.notesDuMeneur && scene.suites.length === 0 && (
                         <p className="text-ui-11 italic text-slate-600">Rien d'écrit sur cette scène.</p>
+                    )}
+
+                    {/*
+                      ⭐ **Où ça peut aller ensuite.** C'est en pleine partie qu'on se
+                      pose la question, tablette en main — et jusqu'ici la réponse
+                      vivait sur l'écran du PC, c'est-à-dire hors de portée.
+                    */}
+                    {scene.suites.length > 0 && (
+                        <div className="flex flex-col gap-1 pt-1 border-t border-white/5">
+                            <span className="text-ui-9 font-black uppercase tracking-wider text-sky-400/60">
+                                Peut mener à
+                            </span>
+                            {scene.suites.map((suite, index) => (
+                                <span key={`${suite.titre}-${index}`} className="flex items-baseline gap-1.5 text-ui-11">
+                                    <span className="text-sky-300/80 font-bold">{suite.titre}</span>
+                                    {suite.libelle && <span className="italic text-slate-500">{suite.libelle}</span>}
+                                </span>
+                            ))}
+                        </div>
                     )}
                 </div>
             )}

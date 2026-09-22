@@ -1,5 +1,6 @@
 import React from 'react';
-import { Play, Square, Plus, ExternalLink, CheckCircle2, Circle, PauseCircle, ChevronRight, ChevronDown } from 'lucide-react';
+import { Play, Square, Plus, ExternalLink, CheckCircle2, Circle, PauseCircle, ChevronRight, ChevronDown, ArrowRight,
+} from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
@@ -9,6 +10,11 @@ import {
 } from '../logic/trame';
 import { gmConfirm } from '../../../stores/useModalStore';
 import PastilleDePreparation from './trame/PastilleDePreparation';
+import MarqueDIntrigue from './trame/MarqueDIntrigue';
+import {
+    importanceDeLaScene, styleDuTitre, infobulle, infobulleDeLImportance,
+} from '../logic/importanceDeLaScene';
+import { sortiesDeLaScene, libelleLisible } from '../logic/enchainementsDeLaTrame';
 import type { GameSession } from '../../../types/session.types';
 import type { Scene } from '../../../types/trame.types';
 
@@ -187,6 +193,13 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                             ambiance={moments.find(m => m.id === scene.momentDeStoryboardId)}
                             momentEnCours={!!scene.momentDeStoryboardId && activeMomentId === scene.momentDeStoryboardId}
                             triggerMoment={triggerMoment} arreterLeMoment={arreterLeMoment}
+                    toutesLesScenes={scenes}
+                    onOuvrirLaSuite={(id) => {
+                        /* La suite arrive avec son décor, comme toute scène
+                           qu'on ouvre d'ici — et celle-ci reste ouverte. */
+                        const suite = scenes.find(sc => sc.id === id);
+                        if (suite) ouvrirEtProjeter(suite);
+                    }}
                     onOuvrir={() => ouvrirEtProjeter(scene)}
                     onTerminer={() => terminerLaScene(scene.id)}
                     onModifier={u => modifierScene(scene.id, u)}
@@ -208,7 +221,14 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                             ambiance={moments.find(m => m.id === scene.momentDeStoryboardId)}
                             momentEnCours={!!scene.momentDeStoryboardId && activeMomentId === scene.momentDeStoryboardId}
                             triggerMoment={triggerMoment} arreterLeMoment={arreterLeMoment}
-                            onOuvrir={() => ouvrirEtProjeter(scene)}
+                            toutesLesScenes={scenes}
+                    onOuvrirLaSuite={(id) => {
+                        /* La suite arrive avec son décor, comme toute scène
+                           qu'on ouvre d'ici — et celle-ci reste ouverte. */
+                        const suite = scenes.find(sc => sc.id === id);
+                        if (suite) ouvrirEtProjeter(suite);
+                    }}
+                    onOuvrir={() => ouvrirEtProjeter(scene)}
                             onTerminer={() => terminerLaScene(scene.id)}
                             onModifier={u => modifierScene(scene.id, u)}
                         />
@@ -229,7 +249,14 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                             ambiance={moments.find(m => m.id === scene.momentDeStoryboardId)}
                             momentEnCours={!!scene.momentDeStoryboardId && activeMomentId === scene.momentDeStoryboardId}
                             triggerMoment={triggerMoment} arreterLeMoment={arreterLeMoment}
-                            onOuvrir={() => ouvrirEtProjeter(scene)}
+                            toutesLesScenes={scenes}
+                    onOuvrirLaSuite={(id) => {
+                        /* La suite arrive avec son décor, comme toute scène
+                           qu'on ouvre d'ici — et celle-ci reste ouverte. */
+                        const suite = scenes.find(sc => sc.id === id);
+                        if (suite) ouvrirEtProjeter(suite);
+                    }}
+                    onOuvrir={() => ouvrirEtProjeter(scene)}
                             onTerminer={() => terminerLaScene(scene.id)}
                             onModifier={u => modifierScene(scene.id, u)}
                         />
@@ -313,12 +340,20 @@ const LigneDeSceneJouee: React.FC<{
     onOuvrir: () => void;
     onTerminer: () => void;
     onModifier: (updates: Partial<Scene>) => void;
+    /** Toutes les scènes — une suite peut viser un autre acte. */
+    toutesLesScenes: Scene[];
+    /** Commencer la scène désignée, sans fermer celle-ci. */
+    onOuvrirLaSuite: (id: string) => void;
 }> = ({
     scene, etat, prevueCeSoir = false, onOuvrir, onTerminer,
     troupe, pnjDeLaCampagne, lieux, onModifier,
     ambiance, momentEnCours, triggerMoment, arreterLeMoment,
+    toutesLesScenes, onOuvrirLaSuite,
 }) => {
     const jamaisJouee = closeSansAvoirEteJouee(scene);
+    const importance = importanceDeLaScene(scene);
+    /* Les cibles disparues ne sont pas rendues : voir `sortiesDeLaScene`. */
+    const suites = sortiesDeLaScene(toutesLesScenes, scene);
     const [depliee, setDepliee] = React.useState(false);
     const presents = scene.personnagesIds ?? [];
 
@@ -351,15 +386,19 @@ const LigneDeSceneJouee: React.FC<{
                 title={depliee ? 'Replier' : 'Qui est là, et ce qui s’y dit'}
                 className="shrink-0 p-0.5 rounded text-app-text/30 hover:text-app-text transition-colors"
             >{depliee ? <ChevronDown size={13} /> : <ChevronRight size={13} />}</button>
+            <MarqueDIntrigue scene={scene} />
             <PastilleDePreparation scene={scene} />
             {etat === 'en-pause' && <PauseCircle size={12} className="text-app-text/30 shrink-0" />}
             <span
-                className={`flex-1 min-w-0 text-sm truncate ${
+                className={`flex-1 min-w-0 text-sm truncate ${styleDuTitre(importance)} ${
                     etat === 'terminee'
                         ? `line-through ${jamaisJouee ? 'text-app-text/20' : 'text-app-text/40'}`
                         : 'text-app-text'
                 }`}
-                title={jamaisJouee ? 'Close avec son acte, sans avoir été jouée' : scene.titre}
+                title={infobulle(
+                    jamaisJouee ? 'Close avec son acte, sans avoir été jouée' : scene.titre,
+                    infobulleDeLImportance(importance),
+                )}
             >
                 {scene.titre}
             </span>
@@ -412,6 +451,49 @@ const LigneDeSceneJouee: React.FC<{
                         <p className="text-ui-12 leading-relaxed text-app-text/80 whitespace-pre-wrap">
                             {scene.resume}
                         </p>
+                    </div>
+                )}
+
+                {/*
+                  ⭐ **Où ça peut aller ensuite, et le bouton pour y aller.**
+                  Demandé par David le 2026-09-22 avec les enchaînements. C'est la
+                  question qu'on se pose à la fin d'une scène, et la réponse vivait
+                  dans l'écran de préparation — *soit hors de portée au moment où
+                  elle sert.*
+
+                  ⚠️ **Ouvrir la suite ne ferme PAS celle-ci.** Plusieurs scènes
+                  peuvent tourner ensemble — c'est l'exigence qui a écarté le
+                  pointeur unique le 2026-08-17 — et le meneur clot la précédente
+                  quand il l'a décidé, pas quand un bouton le décide pour lui.
+                */}
+                {suites.length > 0 && (
+                    <div>
+                        <p className="text-ui-9 font-black uppercase tracking-widest text-sky-300/50 mb-1.5">
+                            Peut mener à
+                        </p>
+                        <div className="flex flex-col gap-1">
+                            {suites.map(suite => (
+                                <div
+                                    key={suite.vers.id}
+                                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-sky-500/5 border border-sky-400/20"
+                                >
+                                    <ArrowRight size={11} className="shrink-0 text-sky-300/70" />
+                                    <span className="shrink-0 max-w-[45%] truncate text-ui-11 font-bold text-sky-200/90">
+                                        {suite.vers.titre}
+                                    </span>
+                                    {libelleLisible(suite.libelle) && (
+                                        <span className="flex-1 min-w-0 truncate text-ui-10 italic text-app-text/45">
+                                            {libelleLisible(suite.libelle)}
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={() => onOuvrirLaSuite(suite.vers.id)}
+                                        title="Commencer cette scène — celle-ci reste ouverte"
+                                        className="ml-auto shrink-0 flex items-center gap-1 px-2 py-1 rounded text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all"
+                                    ><Play size={10} /> Ouvrir</button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
 

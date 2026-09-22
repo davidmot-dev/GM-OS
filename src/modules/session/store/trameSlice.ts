@@ -14,9 +14,16 @@ import {
     actesOrdonnes, scenesOrdonnees, prochainOrdre, deplacer,
     ouvrirLaScene as ouvrir, terminerLaScene as terminer,
     suspendreLesScenes, reprendreLesScenes, clonerLaScene as cloner, titreDisponible,
+    /* Aliasé comme ses voisins : l'action du magasin porte le même nom, et
+       une action qui s'appelle elle-même serait une récursion muette. */
+    placerLaSceneApres as placerApres,
 } from '../logic/trame';
 import { releverLaTableMaintenant, titreParDefaut } from '../logic/etatDeLaTable';
 import { entreePourLOuvertureDeScene, entreePourLaFermetureDeScene } from '../logic/journalDeLaTrame';
+import {
+    enchainementAjoute, enchainementRetire, enchainementLibelle,
+    enchainementsSansLesScenes,
+} from '../logic/enchainementsDeLaTrame';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { annoncesDeLUsure, type UsureDUneJauge } from '../../clock/logic/sensDeLaJauge';
@@ -117,6 +124,25 @@ export interface TrameSliceActions {
     deplacerScene: (id: string, sens: 'haut' | 'bas') => void;
     /** Déplace une scène vers un autre acte, à la fin. */
     rattacherSceneAUnActe: (id: string, acteId: string) => void;
+    /**
+     * Pose une scène juste après une autre — dans l'acte de celle-ci.
+     *
+     * Le geste du graphe : *glisser une scène sur une autre.* Il couvre le
+     * changement de rang **et** le changement d'acte, voir `placerLaSceneApres`.
+     */
+    placerLaSceneApres: (id: string, cibleId: string) => void;
+
+    /* ---- « Cette scène mène à celle-là », depuis le 2026-09-22 ---------- */
+
+    /**
+     * Ouvre une sortie de `id` vers `versId`, avec sa condition.
+     *
+     * ⚠️ **Une scène peut en avoir plusieurs** — c'est la demande même : *« une
+     * scène A mène vers une scène B ou une scène C »*.
+     */
+    ajouterUnEnchainement: (id: string, versId: string, libelle?: string) => void;
+    retirerUnEnchainement: (id: string, versId: string) => void;
+    libellerUnEnchainement: (id: string, versId: string, libelle: string) => void;
 
     /* ---- Le parcours réel, depuis le 2026-08-17 ------------------------- */
 
@@ -202,9 +228,17 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
     supprimerActe: (id) =>
         (set as unknown as (fn: (state: AvecSeances) => Partial<AvecSeances>) => void)((state) => {
             const emportees = new Set(state.scenes.filter((s) => s.acteId === id).map((s) => s.id));
+            /* La cascade laisse autant de flèches pendantes qu'elle emporte de
+               scènes : on recoud celles qui restent. */
+            const recousues = enchainementsSansLesScenes(state.scenes, emportees);
             return {
                 actes: state.actes.filter((a) => a.id !== id),
-                scenes: state.scenes.filter((s) => s.acteId !== id),
+                scenes: state.scenes
+                    .filter((s) => s.acteId !== id)
+                    .map((s) => {
+                        const maj = recousues.find((r) => r.id === s.id);
+                        return maj ? { ...s, enchainements: maj.enchainements } : s;
+                    }),
                 // Une séance qui annoncerait un acte disparu afficherait un vide
                 // sans dire pourquoi. On oublie la référence en même temps que
                 // sa cible.
@@ -255,11 +289,27 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
             scenes: state.scenes.map((s) => (s.id === id ? { ...s, ...updates } : s)),
         })),
 
+    /*
+      ⛔ **Supprimer une scène doit effacer les flèches qui la visaient.** Sans
+      ça, toutes celles qui y menaient gardent une sortie vers le vide, et le
+      meneur la lit comme une sortie valide jusqu'à cliquer. *Une suppression qui
+      laisse des renvois pendants est la forme la plus courante du défaut muet
+      dans ce dépôt* — la purge d'un pilote l'a montré le 2026-09-18.
+    */
     supprimerScene: (id) =>
-        (set as unknown as (fn: (state: AvecSeances) => Partial<AvecSeances>) => void)((state) => ({
-            scenes: state.scenes.filter((s) => s.id !== id),
-            sessions: oublierDansLesSeances(state.sessions ?? [], { sceneIds: new Set([id]) }),
-        })),
+        (set as unknown as (fn: (state: AvecSeances) => Partial<AvecSeances>) => void)((state) => {
+            const disparues = new Set([id]);
+            const recousues = enchainementsSansLesScenes(state.scenes, disparues);
+            return {
+                scenes: state.scenes
+                    .filter((s) => s.id !== id)
+                    .map((s) => {
+                        const maj = recousues.find((r) => r.id === s.id);
+                        return maj ? { ...s, enchainements: maj.enchainements } : s;
+                    }),
+                sessions: oublierDansLesSeances(state.sessions ?? [], { sceneIds: disparues }),
+            };
+        }),
 
     deplacerScene: (id, sens) => {
         const scene = get().scenes.find((s) => s.id === id);
@@ -285,6 +335,61 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
                 // de tous les écrans qui filtrent par campagne.
                 s.id === id ? { ...s, acteId, campaignId: acte.campaignId, ordre } : s,
             ),
+        }));
+    },
+
+    placerLaSceneApres: (id, cibleId) => {
+        const aEcrire = placerApres(get().scenes, id, cibleId);
+        if (aEcrire.length === 0) return;
+
+        set((state) => ({
+            scenes: state.scenes.map((s) => {
+                const maj = aEcrire.find((e) => e.id === s.id);
+                if (!maj) return s;
+                if (!maj.acteId) return { ...s, ordre: maj.ordre };
+                /* Les deux liens bougent ensemble — même règle que
+                   `rattacherSceneAUnActe` : une scène dont `campaignId` ne suit
+                   pas son acte disparaît de tous les écrans qui filtrent. */
+                const acte = get().actes.find((a) => a.id === maj.acteId);
+                return acte
+                    ? { ...s, acteId: acte.id, campaignId: acte.campaignId, ordre: maj.ordre }
+                    : { ...s, ordre: maj.ordre };
+            }),
+        }));
+    },
+
+    /*
+      **Les trois gestes d'un enchaînement.** Tout le calcul est dans
+      `enchainementsDeLaTrame` : ici on ne fait que poser ce qu'il rend. Un geste
+      sans effet — vers soi-même, ou une sortie qui existe déjà — n'écrit rien.
+    */
+    ajouterUnEnchainement: (id, versId, libelle) => {
+        const scene = get().scenes.find((s) => s.id === id);
+        if (!scene) return;
+        const updates = enchainementAjoute(scene, versId, libelle);
+        if (!updates) return;
+        set((state) => ({
+            scenes: state.scenes.map((s) => (s.id === id ? { ...s, ...updates } : s)),
+        }));
+    },
+
+    retirerUnEnchainement: (id, versId) => {
+        const scene = get().scenes.find((s) => s.id === id);
+        if (!scene) return;
+        const updates = enchainementRetire(scene, versId);
+        if (!updates) return;
+        set((state) => ({
+            scenes: state.scenes.map((s) => (s.id === id ? { ...s, ...updates } : s)),
+        }));
+    },
+
+    libellerUnEnchainement: (id, versId, libelle) => {
+        const scene = get().scenes.find((s) => s.id === id);
+        if (!scene) return;
+        const updates = enchainementLibelle(scene, versId, libelle);
+        if (!updates) return;
+        set((state) => ({
+            scenes: state.scenes.map((s) => (s.id === id ? { ...s, ...updates } : s)),
         }));
     },
 

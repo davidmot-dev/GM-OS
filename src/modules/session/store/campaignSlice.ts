@@ -43,6 +43,14 @@ export interface CampaignSliceActions {
     epinglerLeNoeud: (campaignId: string, noeudId: string, position: { x: number; y: number }) => void;
     /** Rend un nœud à la simulation. Sans `noeudId`, les rend tous. */
     detacherLesNoeuds: (campaignId: string, noeudId?: string) => void;
+
+    /* ── Le graphe de la trame — ses propres champs, voir `Campaign` ──────── */
+
+    figerLeGrapheDeTrame: (campaignId: string, positions: Record<string, { x: number; y: number }>) => void;
+    libererLeGrapheDeTrame: (campaignId: string) => void;
+    reinitialiserLeGrapheDeTrame: (campaignId: string) => void;
+    epinglerDansLaTrame: (campaignId: string, noeudId: string, position: { x: number; y: number }) => void;
+    detacherDeLaTrame: (campaignId: string, noeudId?: string) => void;
 }
 
 export type CampaignSlice = CampaignSliceState & CampaignSliceActions;
@@ -219,6 +227,60 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
                 const reste = { ...(c.noeudsEpingles ?? {}) };
                 delete reste[noeudId];
                 return { ...c, noeudsEpingles: reste };
+            }),
+        })),
+
+    /*
+      **Les mêmes cinq gestes, sur les champs du graphe de trame.**
+
+      ⛔ Ils ne réemploient PAS ceux du Nexus, et la raison est écrite dans
+      `Campaign` : les deux graphes montrent les mêmes PNJ, donc partager les
+      positions aurait fait bouger l'un quand on range l'autre.
+
+      ⚠️ Et « réinitialiser » efface les épingles aussi — même règle qu'au
+      Nexus : *un « remettre à zéro » qui garde trois nœuds immobiles envoie le
+      meneur chercher longtemps pourquoi.*
+    */
+    figerLeGrapheDeTrame: (campaignId, positions) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId ? { ...c, positionsDeLaTrame: positions, trameFigee: true } : c
+            ),
+        })),
+
+    libererLeGrapheDeTrame: (campaignId) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId ? { ...c, trameFigee: false } : c
+            ),
+        })),
+
+    reinitialiserLeGrapheDeTrame: (campaignId) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId
+                    ? { ...c, positionsDeLaTrame: undefined, noeudsEpinglesDeLaTrame: undefined, trameFigee: false }
+                    : c
+            ),
+        })),
+
+    epinglerDansLaTrame: (campaignId, noeudId, position) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId
+                    ? { ...c, noeudsEpinglesDeLaTrame: { ...(c.noeudsEpinglesDeLaTrame ?? {}), [noeudId]: position } }
+                    : c
+            ),
+        })),
+
+    detacherDeLaTrame: (campaignId, noeudId) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) => {
+                if (c.id !== campaignId) return c;
+                if (!noeudId) return { ...c, noeudsEpinglesDeLaTrame: undefined };
+                const reste = { ...(c.noeudsEpinglesDeLaTrame ?? {}) };
+                delete reste[noeudId];
+                return { ...c, noeudsEpinglesDeLaTrame: reste };
             }),
         })),
 });

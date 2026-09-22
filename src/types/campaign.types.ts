@@ -140,4 +140,23 @@ export interface Campaign {
      * Une décision passe donc devant une capture, verrouillé ou non.
      */
     noeudsEpingles?: Record<string, { x: number; y: number }>;
+
+    /* ── Le graphe de la TRAME, et pourquoi il ne partage pas les trois champs
+         du dessus ────────────────────────────────────────────────────────────
+
+      ⛔ **Découvert en préparant l'écran, le 2026-09-22.** Le graphe de la trame
+      et le Nexus social montrent les **mêmes PNJ**. Réemployer `nodePositions`
+      et `noeudsEpingles` aurait voulu dire que déplacer Kessler dans la trame le
+      déplaçait aussi dans le Nexus, et que « figer » l'un figeait l'autre —
+      *un défaut qu'on aurait mis sur le compte de d3*.
+
+      ⭐ Ce qui EST partagé, c'est la seule chose qui compte : `placerLeNoeud`,
+      la règle `x/y` contre `fx/fy` qui a corrigé le remélange du 2026-09-03. Les
+      champs sont deux, la règle est une. */
+
+    /** L'instantané pris au figeage du graphe de trame. */
+    positionsDeLaTrame?: Record<string, { x: number; y: number }>;
+    /** Les nœuds de la trame posés à la main. Une décision, pas une capture. */
+    noeudsEpinglesDeLaTrame?: Record<string, { x: number; y: number }>;
+    trameFigee?: boolean;
 }

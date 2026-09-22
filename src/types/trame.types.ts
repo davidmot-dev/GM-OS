@@ -55,6 +55,64 @@
 export type OrigineDeScene = 'preparee' | 'improvisee';
 
 /**
+ * La place d'une scène dans l'histoire — demandé par David le 2026-09-22 :
+ * *« indiquer qu'une scène fait partie de l'intrigue principale, ou est
+ * secondaire, voire optionnelle, et que cela se reflète visuellement ».*
+ *
+ * **Distinct d'`OrigineDeScene`, et il ne faut pas les confondre.** L'origine
+ * dit *comment la scène est née* — le code le sait, on ne le demande jamais.
+ * L'importance dit *ce que le meneur en attend*, et c'est un jugement que lui
+ * seul peut porter. Une scène improvisée peut très bien être le cœur de
+ * l'intrigue.
+ *
+ * ⚠️ **Trois valeurs, et l'absence en est une quatrième.** Une scène qui ne
+ * porte rien n'est pas « secondaire » : elle n'a pas été jugée. C'est le cas des
+ * vingt-neuf scènes du « Secret de Milo » et de tout ce qui a été écrit avant ce
+ * champ — et elles doivent s'afficher exactement comme la veille. *Choisir un
+ * défaut aurait classé d'autorité des scènes que personne n'a classées.*
+ */
+export type ImportanceDeScene = 'principale' | 'secondaire' | 'optionnelle';
+
+/**
+ * **Une scène mène à une autre** — demandé par David le 2026-09-22 : *« pouvoir
+ * dire qu'une scène A mène vers une scène B ou une scène C ».*
+ *
+ * ⭐ **Une seule relation, orientée, avec un libellé libre — et c'est le libellé
+ * qui porte tout.** *« si elle survit »*, *« en cas d'échec »*, *« s'ils
+ * fouillent la cave »* : voilà ce qu'est un plan de scénario. Trois natures
+ * techniques que personne ne distingue auraient été la faute déjà payée par la
+ * dérivation de Cthulhu Hack — *six Sauvegardes additionnées au lieu d'être
+ * offertes au choix.*
+ *
+ * ⛔ **Et il ne faut surtout pas le confondre avec `ordre`.** Ce sont deux
+ * questions distinctes :
+ *
+ * - **`ordre`** dit comment le document du meneur est **rangé** — ce que l'arbre
+ *   montre, ce qu'on prépare dans l'ordre ;
+ * - **`enchainements`** dit comment l'histoire peut **couler** — avec ses
+ *   embranchements, et par-dessus les actes.
+ *
+ * ⭐ **La règle qui interdit qu'ils se contredisent : l'ordre ne se dessine que
+ * là où le meneur n'a rien dit.** Dès qu'une scène porte un enchaînement sortant,
+ * son trait d'ordre disparaît du graphe. Une trame à moitié câblée reste donc
+ * lisible, et *aucune des deux vérités ne peut démentir l'autre.* Voir
+ * `ordreEstDessine`.
+ */
+export interface EnchainementDeScene {
+    /**
+     * L'identifiant de la scène vers laquelle on peut aller.
+     *
+     * ⚠️ **Un identifiant, jamais un contenu** — la règle de tous les renvois de
+     * ce modèle. Et il peut pointer dans le vide : la scène cible a pu être
+     * supprimée, ce que le constat « renvoie à quelque chose de supprimé » signale
+     * au lieu de le taire.
+     */
+    vers: string;
+    /** Ce qui décide de cette branche, en quelques mots. Facultatif. */
+    libelle?: string;
+}
+
+/**
  * Une tranche de jeu passée dans une scène, bornée.
  *
  * **Pourquoi une LISTE et non deux dates.** Décision de David le 2026-08-17,
@@ -116,6 +174,41 @@ export interface Scene {
     resume: string;
     notesDuMeneur?: string;
     origine: OrigineDeScene;
+
+    /**
+     * Ce que le meneur attend de cette scène : l'intrigue principale, une
+     * intrigue secondaire, ou du jeu optionnel.
+     *
+     * Facultatif, et lu partout par `importanceDeLaScene` — **l'absence n'est
+     * pas « secondaire »**, c'est une scène qui n'a pas été jugée, et elle
+     * s'affiche comme avant ce champ. Voir `ImportanceDeScene`.
+     *
+     * **Il n'entre pas dans le taux de préparation**, pour la même raison que
+     * `personnagesIds` : le compter ferait chuter la pastille de toutes les
+     * scènes déjà écrites, et pour une raison fausse. *Classer une scène n'est
+     * pas la préparer.*
+     */
+    importance?: ImportanceDeScene;
+
+    /**
+     * **Les scènes vers lesquelles celle-ci peut mener**, chacune avec sa
+     * condition.
+     *
+     * Plusieurs sorties sont la raison d'être du champ : *« une scène A mène vers
+     * une scène B ou une scène C »*. Voir `EnchainementDeScene` pour la
+     * distinction avec `ordre`, qui est la décision importante de ce champ.
+     *
+     * Facultatif, et lu partout par `enchainementsDeLaScene` : les scènes
+     * écrites avant le 2026-09-22 n'en portent pas, et une trame sans
+     * enchaînement se lit exactement comme la veille.
+     *
+     * ⚠️ **Il voyage avec la scène, et c'est pourquoi il vit ici plutôt que dans
+     * une collection à part** : un clone garde ses sorties, une fusion les
+     * réunit, une suppression emporte les siennes. *Une collection séparée aurait
+     * demandé d'apprendre à la sauvegarde, à la purge et aux cinq gestes de
+     * curation qu'elle existe.*
+     */
+    enchainements?: EnchainementDeScene[];
 
     /*
       LES RENVOIS SONT DES IDENTIFIANTS, JAMAIS DES CONTENUS.

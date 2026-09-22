@@ -2,6 +2,7 @@ import React from 'react';
 import {
     Layers, Plus, ChevronUp, ChevronDown, Trash2, Users, Key,
     Clapperboard, CheckCircle2, Circle, Sparkles, CornerDownRight, Play, Square, Copy,
+    ListTree, Network, ArrowRight, Unlink,
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
@@ -11,6 +12,15 @@ import {
     etatDeLaScene, closeSansAvoirEteJouee, scenesACloreAvecLActe,
 } from '../logic/trame';
 import PastilleDePreparation from './trame/PastilleDePreparation';
+import MarqueDIntrigue from './trame/MarqueDIntrigue';
+import GrapheDeLaTrame from './trame/GrapheDeLaTrame';
+import ChoixDuRang from './trame/ChoixDuRang';
+import {
+    sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
+} from '../logic/enchainementsDeLaTrame';
+import {
+    importanceDeLaScene, styleDuTitre, infobulle, infobulleDeLImportance,
+} from '../logic/importanceDeLaScene';
 import { PropositionDAmbiance } from '../../light/components/PropositionDAmbiance';
 import type { Acte, Scene } from '../../../types/trame.types';
 
@@ -35,6 +45,7 @@ const TrameDashboard: React.FC = () => {
         ajouterActe, modifierActe, supprimerActe, deplacerActe,
         ajouterScene, modifierScene, supprimerScene, deplacerScene,
         ouvrirLaScene, terminerLaScene, clonerLaScene,
+        ajouterUnEnchainement, retirerUnEnchainement, libellerUnEnchainement,
     } = useSessionOSStore();
     const moments = useStoryboardStore(s => s.moments);
 
@@ -48,6 +59,26 @@ const TrameDashboard: React.FC = () => {
 
     const [acteOuvert, setActeOuvert] = React.useState<string | null>(null);
     const [selection, setSelection] = React.useState<{ type: 'acte' | 'scene'; id: string } | null>(null);
+    /*
+      **Deux façons de regarder la même trame.** L'arbre sert à l'écrire, le
+      graphe à la voir — *une liste montre ce qui est, un graphe montre ce qui
+      manque.* Le graphe n'écrit rien de la trame : il n'est pas un second
+      éditeur, et c'est ce qui permet de le poser ici sans risque.
+    */
+    const [vue, setVue] = React.useState<'arbre' | 'graphe'>('arbre');
+
+    /** Depuis le graphe, revenir à la fiche : on rouvre l'arbre dessus. */
+    const ouvrirLaFicheDepuisLeGraphe = (type: string, refId: string) => {
+        if (type !== 'acte' && type !== 'scene') return;
+        if (type === 'scene') {
+            const scene = scenes.find(s => s.id === refId);
+            if (scene) setActeOuvert(scene.acteId);
+        } else {
+            setActeOuvert(refId);
+        }
+        setSelection({ type, id: refId });
+        setVue('arbre');
+    };
 
     const campagne = campaigns.find(c => c.id === activeCampaignId);
     /* Le jeu de la campagne : une taverne de Rêves de Dragons n'éclaire pas
@@ -148,14 +179,49 @@ const TrameDashboard: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={creerActe}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-white text-ui-11 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
-                >
-                    <Plus size={14} /> Ajouter un acte
-                </button>
+                <div className="flex items-center gap-3">
+                    {/* La porte du graphe. *Une fonctionnalité dont le chemin
+                        n'existe pas est une fonctionnalité absente* — quatre
+                        fois payé en trois jours. */}
+                    <div className="flex items-center gap-1 p-1 rounded-xl bg-app-bg/40 border border-app-border/20">
+                        {([['arbre', 'Arbre', ListTree], ['graphe', 'Graphe', Network]] as const).map(([id, mot, Icone]) => (
+                            <button
+                                key={id}
+                                onClick={() => setVue(id)}
+                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                    vue === id ? 'bg-accent/20 text-accent' : 'text-app-text/35 hover:text-app-text/70'
+                                }`}
+                            ><Icone size={13} /> {mot}</button>
+                        ))}
+                    </div>
+                    <button
+                        onClick={creerActe}
+                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-white text-ui-11 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+                    >
+                        <Plus size={14} /> Ajouter un acte
+                    </button>
+                </div>
             </header>
 
+            {vue === 'graphe' && (
+                <div className="flex-1 min-h-0 p-6">
+                    <GrapheDeLaTrame onOuvrirLaFiche={ouvrirLaFicheDepuisLeGraphe} />
+                </div>
+            )}
+
+            {/*
+              ⛔ **`hidden` ne suffisait PAS ici, et l’essai de bout en bout l’a
+              prouvé en mesurant la toile à `x = -109`.** `hidden` et `grid` sont
+              deux utilitaires de la même famille `display` : lequel gagne dépend
+              de leur ordre dans la feuille produite, pas de l’ordre où on les
+              écrit. L’arbre restait donc disposé, et poussait le graphe hors de la
+              fenêtre. *Un écran décalé ne lève aucune erreur.*
+
+              ⭐ On rend donc l’une **ou** l’autre. Rien n’est perdu au passage :
+              l’acte ouvert et la sélection vivent dans cet état-ci, pas dans le DOM
+              de l’arbre.
+            */}
+            {vue === 'arbre' && (
             <div className="flex-1 min-h-0 grid grid-cols-12 gap-6 p-6">
                 {/* Colonne gauche : l'arborescence */}
                 <div className="col-span-5 overflow-y-auto custom-scrollbar space-y-3 pr-1">
@@ -283,6 +349,15 @@ const TrameDashboard: React.FC = () => {
                     {sceneSelectionnee && (
                         <EditeurDeScene
                             scene={sceneSelectionnee}
+                            toutesLesScenes={scenes}
+                            onEnchainer={(versId) => ajouterUnEnchainement(sceneSelectionnee.id, versId)}
+                            onDesenchainer={(versId) => retirerUnEnchainement(sceneSelectionnee.id, versId)}
+                            onLibeller={(versId, libelle) => libellerUnEnchainement(sceneSelectionnee.id, versId, libelle)}
+                            onChoisirLaScene={(id) => {
+                                const cible = scenes.find(sc => sc.id === id);
+                                if (cible) setActeOuvert(cible.acteId);
+                                setSelection({ type: 'scene', id });
+                            }}
                             lieux={mesLieux}
                             pnj={mesPnj}
                             personnages={mesPersonnages}
@@ -302,6 +377,7 @@ const TrameDashboard: React.FC = () => {
                     )}
                 </div>
             </div>
+            )}
         </div>
     );
 };
@@ -326,6 +402,7 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
     onBasculerLEtat: () => void; onTerminer: () => void; onCloner: () => void;
 }) {
     const etat = etatDeLaScene(scene);
+    const importance = importanceDeLaScene(scene);
     return (
         <div
             onClick={onSelect}
@@ -333,17 +410,25 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
                 actif ? 'bg-accent/15 border border-accent/30' : 'border border-transparent hover:bg-white/5'
             }`}
         >
+            {/* Le rang avant la préparation : il dit ce qu'on attend de la scène,
+                elle dit ce que la fiche porte. Deux questions distinctes. */}
+            <MarqueDIntrigue scene={scene} />
             <PastilleDePreparation scene={scene} />
             {/* L'état de jeu se lit ici, à côté de la préparation et jamais
                 confondu avec elle : une scène bien préparée n'est pas une scène
                 déjà traversée. */}
+            {/* On COMPOSE l'infobulle : celle qui était là disait une chose rare,
+                et la remplacer par le rang l'aurait échangée contre une autre. */}
             <span
-                className={`flex-1 min-w-0 text-xs truncate ${
+                className={`flex-1 min-w-0 text-xs truncate ${styleDuTitre(importance)} ${
                     etat === 'terminee'
                         ? `line-through ${closeSansAvoirEteJouee(scene) ? 'text-app-text/20' : 'text-app-text/40'}`
                         : ''
                 }`}
-                title={closeSansAvoirEteJouee(scene) ? 'Close avec son acte, sans avoir été jouée' : undefined}
+                title={infobulle(
+                    closeSansAvoirEteJouee(scene) && 'Close avec son acte, sans avoir été jouée',
+                    infobulleDeLImportance(importance),
+                )}
             >{scene.titre}</span>
             {etat === 'en-cours' && (
                 <span className="text-ui-8 font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
@@ -403,6 +488,12 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
 
 const EditeurDeScene: React.FC<{
     scene: Scene;
+    /** Toutes les scènes du magasin — une sortie peut viser un autre acte. */
+    toutesLesScenes: Scene[];
+    onEnchainer: (versId: string) => void;
+    onDesenchainer: (versId: string) => void;
+    onLibeller: (versId: string, libelle: string) => void;
+    onChoisirLaScene: (id: string) => void;
     lieux: { id: string; name: string }[];
     pnj: { id: string; name: string }[];
     personnages: { id: string; name: string }[];
@@ -412,12 +503,25 @@ const EditeurDeScene: React.FC<{
     campagneId: string | null;
     jeu?: string;
     onChange: (updates: Partial<Scene>) => void;
-}> = ({ scene, lieux, pnj, personnages, indices, ambiances, campagneId, jeu, onChange }) => {
+}> = ({
+    scene, toutesLesScenes, onEnchainer, onDesenchainer, onLibeller, onChoisirLaScene,
+    lieux, pnj, personnages, indices, ambiances, campagneId, jeu, onChange,
+}) => {
     const bascule = (liste: string[], id: string) =>
         liste.includes(id) ? liste.filter(x => x !== id) : [...liste, id];
 
     /* Le NOM du lieu, pas son identifiant : c'est ce que l'IA sait lire. */
     const lieuDeLaScene = lieux.find(l => l.id === scene.lieuId)?.name;
+
+    const sorties = sortiesDeLaScene(toutesLesScenes, scene);
+    const entrees = entreesDeLaScene(toutesLesScenes, scene.id);
+    /* On ne propose que la même campagne : une suite vers la trame d'une autre
+       campagne serait un lien invisible à la relecture — la règle que les autres
+       listes de cette fiche suivent déjà. */
+    const dejaLies = new Set(sorties.map(sortie => sortie.vers.id));
+    const aProposer = toutesLesScenes
+        .filter(autre => autre.campaignId === scene.campaignId
+            && autre.id !== scene.id && !dejaLies.has(autre.id));
 
     return (
         <div className="space-y-5">
@@ -427,6 +531,93 @@ const EditeurDeScene: React.FC<{
                     onChange={e => onChange({ titre: e.target.value })}
                     className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-accent/50 outline-none"
                 />
+            </Champ>
+
+            {/*
+              ⭐ **Le rang dans l'intrigue** — demandé par David le 2026-09-22.
+              Posé juste sous le titre, parce que c'est la même question : *de
+              quoi cette scène est-elle le nom dans l'histoire ?*
+
+              ⚠️ **« Non classée » est une vraie réponse, et c'est le défaut.**
+              Sans elle, le meneur ne pourrait plus revenir en arrière après
+              avoir cliqué — et les scènes écrites avant ce champ se
+              retrouveraient classées d'autorité, ce que personne n'a demandé.
+            */}
+            <Champ label="Rang dans l'intrigue">
+                <ChoixDuRang scene={scene} onChange={onChange} />
+                <p className="text-ui-11 text-app-text/30 italic leading-relaxed px-1">
+                    L'intrigue principale s'affiche en gras, l'optionnelle en italique, et chacune
+                    porte son liseré — sur la trame, en séance, dans le graphe et sur ta tablette.
+                </p>
+            </Champ>
+
+            {/*
+              ⭐ **« Cette scène mène à celle-là »** — demandé par David le
+              2026-09-22. Posé dans la fiche **en plus** du graphe : *une
+              fonctionnalité qui n'existe qu'au bout d'un geste de toile est une
+              fonctionnalité absente pour qui n'ouvre pas la toile* — la porte
+              manquante, quatre fois payée en trois jours.
+
+              ⚠️ Et ce n'est PAS l'ordre des scènes : l'ordre range le document, la
+              sortie dit où l'histoire peut aller. Voir `EnchainementDeScene`.
+            */}
+            <Champ label="Mène à — les suites possibles">
+                <div className="space-y-2">
+                    {sorties.length === 0 && (
+                        <p className="text-ui-11 text-app-text/25 italic px-1">
+                            Aucune suite déclarée. Sans rien ici, c'est l'ordre de l'acte qui fait suite.
+                        </p>
+                    )}
+                    {sorties.map(sortie => (
+                        <div key={sortie.vers.id} className="flex items-center gap-2 p-2 rounded-xl bg-sky-500/5 border border-sky-400/20">
+                            <ArrowRight size={12} className="shrink-0 text-sky-300/70" />
+                            <button
+                                onClick={() => onChoisirLaScene(sortie.vers.id)}
+                                className="shrink-0 max-w-[40%] truncate text-xs font-bold text-sky-200/90 hover:text-sky-100 text-left"
+                            >{sortie.vers.titre}</button>
+                            <input
+                                value={sortie.libelle ?? ''}
+                                onChange={e => onLibeller(sortie.vers.id, e.target.value)}
+                                maxLength={LIBELLE_MAXIMUM}
+                                placeholder="à quelle condition ? « si elle survit », « en cas d'échec »"
+                                className="flex-1 min-w-0 bg-app-bg/40 px-2 py-1.5 rounded-lg text-ui-11 border border-app-border/20 focus:border-sky-400/50 outline-none placeholder:text-app-text/25"
+                            />
+                            <button
+                                onClick={() => onDesenchainer(sortie.vers.id)}
+                                title="Retirer cette suite"
+                                className="shrink-0 p-1 rounded text-app-text/30 hover:text-red-400"
+                            ><Unlink size={12} /></button>
+                        </div>
+                    ))}
+                    {/* Une scène ne se propose jamais elle-même, ni ce qui est déjà lié. */}
+                    {aProposer.length > 0 && (
+                        <select
+                            value=""
+                            onChange={e => { if (e.target.value) onEnchainer(e.target.value); }}
+                            className="w-full bg-app-bg/40 px-4 py-2.5 rounded-xl border border-dashed border-app-border/25 text-xs focus:border-sky-400/50 outline-none cursor-pointer"
+                        >
+                            <option value="">+ ajouter une suite…</option>
+                            {aProposer.map(autre => (
+                                <option key={autre.id} value={autre.id}>{autre.titre}</option>
+                            ))}
+                        </select>
+                    )}
+                    {entrees.length > 0 && (
+                        <p className="text-ui-11 text-app-text/35 px-1 leading-relaxed">
+                            On y arrive depuis&nbsp;
+                            {entrees.map((entree, index) => (
+                                <React.Fragment key={entree.depuis.id}>
+                                    {index > 0 && ', '}
+                                    <button
+                                        onClick={() => onChoisirLaScene(entree.depuis.id)}
+                                        className="underline decoration-dotted hover:text-app-text/70"
+                                    >{entree.depuis.titre}</button>
+                                    {libelleLisible(entree.libelle) && <span className="italic"> ({libelleLisible(entree.libelle)})</span>}
+                                </React.Fragment>
+                            ))}
+                        </p>
+                    )}
+                </div>
             </Champ>
 
             <Champ label="Ce qui s'y joue">

@@ -56,6 +56,68 @@ export function deplacer<T extends { id: string; ordre: number }>(
     ];
 }
 
+/**
+ * **Poser une scène juste après une autre**, dans l'acte de celle-ci.
+ *
+ * Le geste du graphe, demandé par David le 2026-09-22 : *glisser une scène sur
+ * une autre pour la ranger là.* Il couvre les deux cas d'un seul mouvement —
+ * changer de rang dans son acte, ou **changer d'acte** au passage.
+ *
+ * ⭐ **Elle ne réécrit pas tous les rangs, et c'est la règle de ce fichier.**
+ * `deplacer` explique pourquoi : *réécrire tous les rangs à chaque déplacement
+ * ferait diverger deux campagnes qui partagent le même tableau plat, et rendrait
+ * un `git diff` de sauvegarde illisible.* Un rang **intercalaire** — la moyenne
+ * de ses deux voisins — ne touche donc qu'un seul enregistrement.
+ *
+ * ⚠️ **Et le repli quand il n'y a plus de place.** Intercaler cinquante fois au
+ * même endroit divise l'écart par deux à chaque fois : à un moment il n'y a plus
+ * de nombre entre les deux. Passé ce seuil, on renumérote **l'acte de
+ * destination seul** — jamais la campagne. *Un compromis qui ne dit pas quand il
+ * cesse de tenir est un défaut à retardement.*
+ *
+ * Rend les champs à écrire, `acteId` compris quand la scène change d'acte. Rien
+ * du tout si l'un des deux identifiants est inconnu, ou si l'on pose une scène
+ * sur elle-même — *un geste sans effet n'est pas une erreur.*
+ */
+export function placerLaSceneApres(
+    scenes: readonly Scene[],
+    sceneId: string,
+    cibleId: string,
+): { id: string; acteId?: string; ordre: number }[] {
+    if (sceneId === cibleId) return [];
+
+    const scene = scenes.find(s => s.id === sceneId);
+    const cible = scenes.find(s => s.id === cibleId);
+    if (!scene || !cible) return [];
+
+    const acteId = cible.acteId;
+    const changeDActe = scene.acteId !== acteId;
+    /* La scène déplacée est retirée du calcul : sinon elle serait son propre
+       voisin, et l'écart mesuré serait celui qu'elle occupe déjà. */
+    const voisines = scenesOrdonnees(scenes, acteId).filter(s => s.id !== sceneId);
+    const index = voisines.findIndex(s => s.id === cibleId);
+    const suivante = voisines[index + 1];
+
+    if (!suivante) {
+        return [{ id: sceneId, ...(changeDActe ? { acteId } : {}), ordre: cible.ordre + 1 }];
+    }
+
+    const ecart = suivante.ordre - cible.ordre;
+    if (ecart > 1e-6) {
+        return [{ id: sceneId, ...(changeDActe ? { acteId } : {}), ordre: cible.ordre + ecart / 2 }];
+    }
+
+    /* Plus de place : on renumérote l'acte de destination, la scène insérée à sa
+       place voulue. Un entier par scène, et l'écart redevient franc. */
+    const rangees = [...voisines];
+    rangees.splice(index + 1, 0, scene);
+    return rangees.map((s, rang) => ({
+        id: s.id,
+        ...(s.id === sceneId && changeDActe ? { acteId } : {}),
+        ordre: rang,
+    }));
+}
+
 /* ─────────────────────────────────────────────
    OÙ EN EST-ON — l'état de jeu d'une scène
    ───────────────────────────────────────────── */
