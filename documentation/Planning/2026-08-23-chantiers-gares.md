@@ -8598,6 +8598,120 @@ que le jour où un moniteur change d'identifiant.
 
 ---
 
+### 106 · ⛔ Les fausses erreurs de Music-OS — un démontage qui criait à la panne (2026-09-22)
+
+David, capture de la console à l'appui : deux `AudioElement Error [blob:…]` en une minute,
+**alors que tout s'entendait**.
+
+Deux défauts s'additionnaient, aucun dans la lecture :
+
+- ⛔ **`src = ""` n'est pas un démontage, c'est un chargement qui échoue.** La chaîne vide se
+  résout contre l'adresse du document : l'élément tente de charger la page elle-même, n'y trouve
+  aucun média, et lève `error`. Piège classique de `<audio>` ; `removeAttribute` + `load()` est la
+  façon prévue.
+- ⛔ **Le gestionnaire n'était jamais détaché.** Celui de la piste **précédente** attrapait donc
+  l'erreur du démontage et journalisait **l'adresse de l'ancienne piste**. *Une erreur qui nomme la
+  mauvaise piste est pire qu'une erreur qui ne nomme rien.*
+
+⚠️ **Et sa raison ne s'affichait pas** : `MediaError` n'a **aucune propriété énumérable**, d'où le
+« AudioElement Error [blob:…] : » suivi de rien. Le code et le message se déplient à la main.
+
+⭐ **Ce que ça coûtait vraiment** : une bulle rouge au meneur en pleine partie, pour rien — et
+surtout, **une vraie panne audio aurait produit exactement le même message**, noyée parmi deux
+fausses alertes par minute. *Un bruit de fond rend invisible le signal qu'on écoute.*
+
+⚠️ Un détail de la mise au point : l'essai qui relit la source trouvait d'abord **mon propre
+commentaire**, qui cite la phrase. Il vise le gabarit et non la prose — *un essai qui lit la source
+doit distinguer le code du récit.*
+
+**Ancres** : `music/MusicEngine.ts`, `music/demontageDeLaPiste.test.ts` (trois règles relues en
+source, **prouvées rouges**). ⚠️ **Non éprouvé à l'écran.**
+
+---
+
+### 107 · ⛔ Ambient-OS imposait sa cadence à la carte son (2026-09-22)
+
+David : *« le son qui sort d'Ambient-OS est saccadé »*.
+
+⭐ **L'asymétrie était la preuve**, et elle se lisait en quatre lignes :
+
+| Moteur | Son contexte |
+| --- | --- |
+| Music-OS | défaut natif, *« Native default for stability »* |
+| Sound-OS | défaut natif |
+| Voice-OS | 48 kHz forcés, **avec leur raison** (RNNoise) et un avertissement si la carte refuse |
+| **Ambient-OS** | **48 kHz forcés sans aucune raison**, depuis le 2026-03-02 |
+
+Quand la carte tourne à 44 100 Hz — le cas courant —, imposer 48 000 oblige le navigateur à
+ré-échantillonner **tout le flux** : une cause connue de micro-coupures. Et rien ici n'a besoin
+d'une cadence particulière, `decodeAudioData` adaptant les fichiers au contexte.
+
+⭐ *Quand trois modules font pareil et qu'un seul diffère, la différence est la piste — surtout si
+c'est lui qui est en panne.* Le commentaire de Music-OS se lit comme une leçon déjà apprise là-bas,
+jamais reportée ici.
+
+⚠️ **Deux suspects écartés en chemin**, et c'est David qui les a écartés en cinq secondes : le
+micro (il n'était pas ouvert, donc pas de tempête d'écriture sur le magasin de la voix) et
+l'animation des spectres (ça saccade écran fermé).
+
+⚠️ **Et la guérison n'est pas garantie** : si sa carte est déjà à 48 kHz, la contrainte ne coûtait
+rien. Le retrait reste juste — *une contrainte sans raison, que seul le module en panne porte, se
+retire.*
+
+**Ancres** : `ambient/AmbientEngine.ts`, `ambient/cadenceDesMoteurs.test.ts` (les quatre moteurs
+relus, **prouvé rouge**). ⚠️ **Non éprouvé à l'écran.**
+
+---
+
+### 108 · ⭐ La lumière d'un moment écrasée par les scènes liées à ses sons (2026-09-22)
+
+David : *« quand je joue la lumière Intro de Light-OS et dans une séquence de storyboard, l'effet
+n'est pas le même »* — les couleurs différaient, et **rejouer la tuile réparait**.
+
+#### ⭐ La méthode, apprise une heure plus tôt
+
+Les deux chemins posaient des états **identiques** : `applyScene(id)` et `applyScene(id, true)` ne
+diffèrent que par le journal et `lastManualSceneId`. C'est la même forme que le défaut de la vidéo
+(§ 105), et **la leçon a servi tout de suite** : au lieu de relire, comparer les deux appels — puis
+demander *ce qui diffère à l'œil*. Deux réponses de David ont désigné le coupable : *les couleurs*,
+et *rejouer la tuile répare*. Donc **quelque chose écrit après**.
+
+#### ⛔ Cinq écrivains pour une même donnée
+
+Un moment pose sa scène, puis déclenche ses sons — et **cinq chemins** appliquent la leur :
+
+| Qui | Où |
+| --- | --- |
+| une piste d'ambiance qui démarre | `useAmbientStore` |
+| une piste d'ambiance qui s'arrête et passe le relais | `useAmbientStore` |
+| un pad de bruitage | `SoundController`, deux fois |
+| un pad de musique | `useMusicStore`, **300 ms plus tard** |
+
+⭐ **La règle tranchée par David** : *ce que le meneur a déclaré dans le moment gagne sur ce qu'un
+enchaînement propose* — **et ça se dit**.
+
+⛔ **Réordonner n'aurait pas suffi** : les pistes d'ambiance démarrent de façon asynchrone et
+Music-OS pose la sienne après coup. Le moment **tient** donc les lampes, et les relâche une seconde
+après — le plus long délai connu étant ces 300 ms.
+
+⚠️ **La réservation vit hors de React et n'est jamais persistée** : rangée dans un magasin, elle
+survivrait à un rechargement et **les scènes liées resteraient muettes pour toujours**. Un correctif
+qui casse plus large que le défaut qu'il répare.
+
+#### ⭐ Deux gardes ont travaillé à ma place
+
+- **J'avais manqué le cinquième chemin** — le relais d'une piste qui s'arrête. La garde des quatre,
+  écrite dans le même quart d'heure, l'a trouvé à sa première exécution.
+- **Une garde du 2026-08-20 a réagi** : elle compte les appels directs au pont et en exigeait cinq.
+  Abaissée à quatre, **avec sa raison** : *le peigne compte moins d'appels parce qu'il y a moins
+  d'écrivains.*
+
+**Ancres** : `light/logic/lumiereReservee.ts` (la porte unique et la relache différée),
+`rapportDuMoment.ts` (`liee-ecartee`, qui n'est **pas** un manque), les cinq chemins,
+`lumiereReservee.test.ts` (17 essais, garde **prouvée rouge**). ⚠️ **Non éprouvé à l'écran.**
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8644,6 +8758,9 @@ que le jour où un moniteur change d'identifiant.
 | 39 | **« Cette scène mène à celle-là »** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 22/09** (*« ok c'est bon »*) — embranchements avec condition, sur les quatre écrans. ⭐⭐ *L'ordre ne se dessine que là où le meneur n'a rien dit.* ⛔⛔ **Une normalisation qui s'applique à la frappe empêche d'écrire** — et trois de mes essais gardaient le défaut (§ 103) | Une scène → « Mène à » | Rien |
 | 40 | **Le son sur la tablette** | ✅ **LIVRÉ le 22/09** — trois voies (bruitages, musique, ambiances), chacune avec son curseur **et sa sortie**. ⛔ Music-OS et Ambient-OS n'avaient **aucune** action de télécommande. ⛔ *La tablette ne peut pas lister les sorties* : `enumerateDevices()` y rendrait les siennes — une liste plausible et fausse (§ 104) | Onglet **Pads** → les deux lignes en tête | Rien |
 | 41 | **Les deux silences de la projection** | ✅ **CORRIGÉ le 22/09** — *« la vidéo ne se lance pas à partir du Master Storyboard »*. ⭐⭐ **Le défaut n'était nulle part dans le chemin** : les deux gestes envoyaient un ordre identique au caractère près. Un repli sur le hub qui ne s'annonçait pas, et un ordre jeté dans une console — les deux parlent maintenant (§ 105) | Rebrancher un moniteur, puis projeter | Rien |
+| 42 | **Les fausses erreurs de Music-OS** | ✅ **CORRIGÉ le 22/09** — deux `AudioElement Error` par minute **alors que tout s'entendait** : `src = ""` n'est pas un démontage, et le gestionnaire de la piste précédente les attrapait. ⭐ *Un bruit de fond rend invisible le signal qu'on écoute* (§ 106) | Changer de morceau, regarder la console | ⚠️ Non éprouvé |
+| 43 | **La cadence d'Ambient-OS** | ✅ **CORRIGÉ le 22/09** — *« le son est saccadé »*. Seul des quatre moteurs à imposer 48 kHz, **sans raison**, depuis mars. ⭐ *Quand trois modules font pareil et qu'un seul diffère, la différence est la piste* (§ 107) | Écouter une ambiance | ⚠️ Non éprouvé — sans garantie si la carte est déjà à 48 kHz |
+| 44 | **La lumière d'un moment** | ✅ **CORRIGÉ le 22/09** — *« l'effet n'est pas le même »* : **cinq chemins** écrasaient la scène déclarée avec celle liée à un son. ⭐ *Ce que le meneur a déclaré gagne sur ce qu'un enchaînement propose* — et le journal le dit (§ 108) | Un moment avec lumière **et** son lié | ⚠️ Non éprouvé |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

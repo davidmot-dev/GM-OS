@@ -277,9 +277,31 @@ class MusicDeck {
         this.desarmerLaSortie();
         this.appliquerLaBoucleNative();
 
+        /*
+          ⛔ **DÉTACHER LE GESTIONNAIRE AVANT DE DÉMONTER — 2026-09-22.**
+
+          David, capture à l'appui : deux `AudioElement Error [blob:…]` dans la
+          console, une par changement de morceau, **alors que tout s'entendait**.
+
+          Le gestionnaire n'était jamais détaché : celui de la piste **précédente**
+          était encore là au démontage, et c'est lui qui attrapait l'erreur. Il
+          journalisait donc l'adresse de **l'ancienne** piste — *l'erreur nommait
+          la mauvaise piste, ce qui est pire que de ne rien nommer* — et il
+          affichait une bulle rouge au meneur, en pleine partie, pour rien.
+        */
+        this.audioElement.onerror = null;
+
         // On libère l'ancien handle avant de charger
         this.audioElement.pause();
-        this.audioElement.src = "";
+        /*
+          ⛔ **`src = ""` n'est pas un démontage, c'est un chargement qui échoue.**
+          La chaîne vide se résout contre l'adresse du document : l'élément tente
+          de charger la page elle-même, n'y trouve aucun média, et lève `error`.
+          `removeAttribute` + `load()` est la façon prévue d'arrêter un élément
+          média sans rien casser.
+        */
+        this.audioElement.removeAttribute('src');
+        this.audioElement.load();
 
         if (this.objectUrl) {
             URL.revokeObjectURL(this.objectUrl);
@@ -332,11 +354,19 @@ class MusicDeck {
         this.appliquerLaNormalisation();
         this.audioElement.src = finalUrl;
         
-        // Listen for errors on the audio element immediately
+        /*
+          ⚠️ **Une erreur journalisée sous une forme qui ne s'affiche pas est une
+          erreur perdue.** `MediaError` n'a **aucune propriété énumérable** : le
+          panneau de débogage rendait donc « AudioElement Error [blob:…] : » suivi
+          de **rien**. On déplie le code et le message à la main.
+        */
         this.audioElement.onerror = () => {
             const err = this.audioElement.error;
             const msg = `Erreur Audio: ${err?.message || 'Inconnue'} (Code ${err?.code})`;
-            console.error(`[MusicDeck] AudioElement Error [${finalUrl}]:`, err);
+            console.error(
+                `[MusicDeck] AudioElement Error [${finalUrl}] `
+                + `code=${err?.code ?? '?'} : ${err?.message || 'sans message'}`,
+            );
             gmToast(msg, 'error');
         };
 

@@ -1,5 +1,6 @@
 import { useSoundStore } from './useSoundStore';
 import { soundEngine } from './SoundEngine';
+import { appliquerLaSceneLiee } from '../light/logic/lumiereReservee';
 import { useLightStore } from '../light/useLightStore';
 import { hueEngine } from '../light/HueEngine';
 
@@ -60,7 +61,9 @@ export class SoundController {
             // Trigger Light if linked and sync enabled
             const { isSyncEnabled } = useLightStore.getState();
             if (isSyncEnabled && pad.linkedLightSceneId) {
-                hueEngine.applyScene(pad.linkedLightSceneId, true);
+                /* ⛔ Par la porte unique : un moment qui a déclaré sa lumière
+                   tient les lampes. Voir `lumiereReservee`. */
+                appliquerLaSceneLiee(hueEngine, pad.linkedLightSceneId);
             }
         }
     }
@@ -99,7 +102,7 @@ export class SoundController {
             // Apply the light scene of the most recently checked active pad
             const nextPad = otherActivePadsWithLights[otherActivePadsWithLights.length - 1];
             console.log(`[SoundController] Reverting to light of another active pad: ${nextPad.title} (${nextPad.linkedLightSceneId})`);
-            hueEngine.applyScene(nextPad.linkedLightSceneId!, true);
+            appliquerLaSceneLiee(hueEngine, nextPad.linkedLightSceneId);
         } else {
             // No other pads with lights are active, return to original state
             console.log('[SoundController] No other active pads with lights. Reverting to manual scene.');

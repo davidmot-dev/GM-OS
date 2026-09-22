@@ -314,8 +314,13 @@ export const useAmbientStore = create<AmbientState>()(
                             const { isSyncEnabled } = useLightStore.getState();
 
                             if (isSyncEnabled && track.linkedLightSceneId) {
-                                // The track is now playing, so apply its linked scene
-                                hueEngine.applyScene(track.linkedLightSceneId, true);
+                                /* ⛔ **Par la porte unique, jamais directement.** Un
+                                   moment de storyboard qui a déclaré sa lumière tient
+                                   les lampes : la scène liée à cette piste s'abstient
+                                   alors, au lieu d'écraser ce que le meneur a choisi.
+                                   Voir `lumiereReservee`. */
+                                const { appliquerLaSceneLiee } = await import('../light/logic/lumiereReservee');
+                                appliquerLaSceneLiee(hueEngine, track.linkedLightSceneId);
                             }
                         } catch (e) {
                             console.warn("[AmbientStore] Light trigger skipped or failed", e);
@@ -358,7 +363,12 @@ export const useAmbientStore = create<AmbientState>()(
 
                     if (otherActiveWithLights.length > 0) {
                         const nextTrack = otherActiveWithLights[otherActiveWithLights.length - 1];
-                        hueEngine.applyScene(nextTrack.linkedLightSceneId!, true);
+                        /* ⛔ Le relais passe par la porte unique lui aussi : un moment
+                           qui coupe une piste ne doit pas voir la scène d'une autre
+                           piste écraser la sienne. ⭐ **Ce cinquième chemin, je l'avais
+                           manqué — c'est la garde des quatre qui l'a trouvé.** */
+                        const { appliquerLaSceneLiee } = await import('../light/logic/lumiereReservee');
+                        appliquerLaSceneLiee(hueEngine, nextTrack.linkedLightSceneId);
                     } else {
                         hueEngine.revertToManualScene();
                     }

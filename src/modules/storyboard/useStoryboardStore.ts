@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { laSceneQueLAmbianceOuvre } from '../session/logic/trame';
 import { envoyerLeTitre, normaliserLeTitre } from './titreProjete';
+import {
+    reserverLesLumieres, relacherLesLumieresBientot, lesLumieresSontReservees,
+} from '../light/logic/lumiereReservee';
 import { imageOuDiaporama, occupeUnEcran } from './imageOuDiaporama';
 import {
     cequUnArretEteint, cequUnePriseDeMainEteint, eteindreLesSons,
@@ -558,6 +561,19 @@ export const useStoryboardStore = create<StoryboardState>()(
                     } else {
                         console.log(`[Storyboard] Light: Applying scene ${moment.lightSceneId}`);
                         gWindow.hueEngine.applyScene(moment.lightSceneId, true);
+                        /*
+                          ⭐ **Le moment prend les lampes, et les garde.**
+
+                          Sans ça, les sons qu'il déclenche juste après appliquent
+                          LEUR scène liée par-dessus celle-ci — quatre chemins le
+                          font — et les couleurs changent. Défaut trouvé par David
+                          le 2026-09-22 : *« l'effet n'est pas le même »*, et
+                          rejouer la tuile depuis Light-OS réparait.
+
+                          ⚠️ Rendues plus bas, **après un délai** : Music-OS pose
+                          la sienne 300 ms plus tard. Voir `lumiereReservee`.
+                        */
+                        reserverLesLumieres(moment.id);
                         effets.push({ nom: 'Lumières', sort: 'joue' });
                         /* Ce que CE moment a posé — et donc ce qu'il devra rendre. */
                         set({ lumiereDuMoment: moment.lightSceneId });
@@ -852,6 +868,24 @@ export const useStoryboardStore = create<StoryboardState>()(
                   qui n'existe que les mauvais jours ne permet pas de comparer.*
                   Le meneur, lui, n'est dérangé que s'il manque quelque chose.
                 */
+                /*
+                  ⭐ **On rend les lampes, et on dit ce qu'on a écarté.**
+
+                  David, le 2026-09-22 : *« celle du moment, et le dire »*. Une
+                  scène liée à un son qui s'est abstenue apparaît au rapport — sans
+                  quoi le meneur croirait que le lien de son bruitage est cassé.
+
+                  ⚠️ **Relâchées après un délai**, pas tout de suite : Music-OS pose
+                  la sienne 300 ms plus tard, et les pistes d'ambiance démarrent
+                  de façon asynchrone.
+                */
+                if (lesLumieresSontReservees()) {
+                    const ecartees = relacherLesLumieresBientot();
+                    for (const sceneEcartee of ecartees) {
+                        effets.push({ nom: 'Lumières', sort: 'liee-ecartee', cherche: sceneEcartee });
+                    }
+                }
+
                 const rapport = { moment: moment.name, effets };
                 Logger.info('[Storyboard] ' + traceDuMoment(rapport));
 

@@ -78,6 +78,29 @@ Un moment ne dit plus seulement *quoi* déclencher, mais *où* :
 > [!NOTE]
 > Le volume général et le ducking de la voix s'appliquent **aussi** aux sons détournés vers une autre enceinte.
 
+## 💡 La lumière du moment gagne
+
+Un moment déclare une scène lumineuse. Mais les sons qu'il lance peuvent en porter une
+eux aussi — un pad de bruitage, un morceau, une piste d'ambiance ont chacun leur
+« scène liée ». Depuis le 2026-09-22, la règle est tranchée :
+
+> ⭐ **Ce que vous avez déclaré dans le moment gagne sur ce qu'un enchaînement propose.**
+
+Pendant qu'un moment se déclenche, il **tient les lampes** : les scènes liées à ses sons
+s'abstiennent au lieu d'écraser la vôtre. Elles fonctionnent normalement le reste du
+temps — lancez un bruitage à la main, sa lumière suit comme avant.
+
+> ⛔ **Avant, elles gagnaient — en silence.** David, le 22/09 : *« quand je joue la
+> lumière Intro de Light-OS et dans une séquence de storyboard, l'effet n'est pas le
+> même »*. Sa scène était bien posée, puis **cinq chemins** pouvaient appliquer la leur
+> par-dessus. Rejouer la tuile depuis Light-OS réparait — ce qui rendait le défaut
+> d'autant plus déroutant.
+
+> 💡 **Et le journal le dit.** Quand une scène liée s'est abstenue, la ligne du moment
+> porte *« Lumières = liee-ecartee »* avec la scène concernée. Pas d'alerte à l'écran :
+> ce n'est pas une panne. Mais vous ne chercherez jamais pourquoi le lien lumineux de
+> votre bruitage « ne marche plus ».
+
 ## 🌊 L'ambiance : le **thème** et la **scène**
 
 Ambient-OS porte deux notions, et un moment peut dire les deux :

@@ -206,10 +206,32 @@ export class AmbientEngine {
     private valeurVolume = 1.0;
 
     constructor() {
+        /*
+          ⛔ **AUCUNE CADENCE FORCÉE — les 48 kHz sont retirés le 2026-09-22.**
+
+          David : *« le son qui sort d'Ambient-OS est saccadé »*. Il était le
+          **seul des quatre moteurs** à imposer une cadence — et le seul à
+          hoqueter :
+
+          | Moteur | Son contexte |
+          | --- | --- |
+          | Music-OS | défaut natif, *« Native default for stability »* |
+          | Sound-OS | défaut natif |
+          | Voice-OS | 48 kHz forcés, **avec leur raison** (RNNoise) et un avertissement si la carte refuse |
+          | Ambient-OS | 48 kHz forcés **sans aucune raison**, depuis le 2026-03-02 |
+
+          Quand la carte son tourne à 44 100 Hz — le cas courant —, imposer 48 000
+          oblige le navigateur à ré-échantillonner **tout le flux** vers la cadence
+          réelle du matériel : une cause connue de micro-coupures périodiques.
+
+          ⭐ **Rien ici n'a besoin d'une cadence particulière** : `decodeAudioData`
+          adapte les fichiers au contexte, quel qu'il soit. Le commentaire de
+          Music-OS se lit comme une leçon déjà apprise — quelqu'un l'a retirée
+          là-bas, et n'est jamais revenu ici. *Une contrainte sans raison, que
+          seul le module en panne porte, se retire.*
+        */
         // @ts-expect-error - Support for legacy browsers
-        this.context = new (window.AudioContext || window.webkitAudioContext)({
-            sampleRate: 48000
-        });
+        this.context = new (window.AudioContext || window.webkitAudioContext)();
 
         // Master Chain
         this.compressor = this.context.createDynamicsCompressor();

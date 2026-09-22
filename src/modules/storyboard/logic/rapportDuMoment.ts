@@ -50,6 +50,20 @@ export type SortDUnEffet =
     /** Demandé, mais le module n'a pas répondu : il n'était pas chargé. */
     | 'module-absent'
     /**
+     * **Une scène lumineuse liée à un son a été écartée** — 2026-09-22.
+     *
+     * ⛔ Le défaut trouvé par David : *« quand je joue la lumière Intro de
+     * Light-OS et dans une séquence de storyboard, l'effet n'est pas le même »*.
+     * Le moment posait bien sa scène, puis ses sons appliquaient la leur
+     * par-dessus. La règle qu'il a tranchée : **ce que le meneur a déclaré dans
+     * le moment gagne sur ce qu'un enchaînement propose.**
+     *
+     * On l'inscrit au rapport plutôt que de le taire : *un réglage ignoré sans
+     * un mot se lit comme un réglage qui ne marche pas*, et le meneur
+     * chercherait pourquoi son bruitage n'a plus d'effet lumineux.
+     */
+    | 'liee-ecartee'
+    /**
      * Demandé, le module a répondu — **mais il n'y avait rien à jouer.**
      *
      * ⛔ Le cas d'Ambient-OS, trouvé le 2026-09-20 : une *scène* ne charge

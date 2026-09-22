@@ -1,6 +1,6 @@
 # État et reprise — le 2026-09-22, **la trame devient un plan de scénario**
 
-> **Base saine.** `tsc -b` propre, **5 873 essais Vitest** (456 fichiers, 1 ignoré), **14 E2E de
+> **Base saine.** `tsc -b` propre, **5 899 essais Vitest** (459 fichiers, 1 ignoré), **14 E2E de
 > graphe** sur un `dist/` frais, plus la traversée des 27 modules, Sound-OS, la curation et
 > l'ouverture de scène au vert. Branche `feature/tablet-hub-pwa`.
 >
@@ -21,6 +21,9 @@
 | **103** | « Cette scène mène à celle-là » — embranchements avec condition | ✅ **oui** (*« ok c'est bon »*) |
 | **104** | Le son sur la tablette — trois voies, et où elles sortent | ✅ **la moitié** : le curseur des bruitages *« fonctionne bien »*, le reste à essayer |
 | **105** | Les deux silences de la projection — *« la vidéo ne se lance pas »* | ✅ **symptôme levé**, les deux messages restent à voir |
+| **106** | Les fausses erreurs de Music-OS — un démontage qui criait à la panne | ⚠️ non |
+| **107** | La cadence d'Ambient-OS — *« le son est saccadé »* | ⚠️ non |
+| **108** | La lumière d'un moment, écrasée par les scènes liées à ses sons | ⚠️ non |
 
 ⭐ **Les quatre premières n'étaient pas quatre fonctionnalités, mais une seule montée en puissance.** Chaque
 demande est née de la précédente : classer les scènes a fait voir qu'on ne voyait pas la trame
@@ -40,18 +43,20 @@ raison de tenir une liste de ce qui n'a jamais été vu à l'écran.*
 2. **Le son de la tablette** (§ 104) — les deux lignes de l'onglet **Pads**, et les trois choix de
    sortie. ⚠️ Il faut **rafraîchir la page de la tablette** : elle lit `dist/`, et le bloc `audio`
    a remplacé `masterVolume` dans le pont.
-3. **Les deux messages d'écran du § 105** — ils ne se montrent que le jour où un moniteur change
+3. **Les trois correctifs du soir** (§§ 106 à 108) — changer de morceau sans voir de bulle rouge,
+   écouter une ambiance, et jouer un moment qui porte **à la fois** une lumière et un son lié.
+4. **Les deux messages d'écran du § 105** — ils ne se montrent que le jour où un moniteur change
    d'identifiant. Rien à provoquer exprès : c'est un filet, pas une fonctionnalité.
-4. **Les trois chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
+5. **Les trois chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
    thème d'ambiance dans un moment (§ 94), et la boucle d'une vidéo (§ 97).
-5. **La refonte de l'interface** (§ 76) — toujours à l'arrêt, rien ne la bloque. Le premier geste
+6. **La refonte de l'interface** (§ 76) — toujours à l'arrêt, rien ne la bloque. Le premier geste
    reste **T0.1** : les captures de référence, une soirée, aucun pixel changé.
    ⭐ *Décidé le 22/09 en répondant à une question de David* : la phase 2 donnera à Stitch **une
    fiche de contraintes** à côté des captures — données hostiles (11 combattants, `148/155`), le
    `font-size: 85%` de `:root`, les quatre thèmes dont le clair, et le contrat de sortie (des
    **valeurs**, pas des composants). *La capture porte la structure, le prompt porte ce qu'une
    image ne montre pas.*
-6. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
+7. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
 
 ---
 
@@ -109,6 +114,16 @@ Ils ont coûté plus que les défauts eux-mêmes :
 3. **Je désignais un nœud par un clic au centre**, là où la simulation regroupe tout ce qui n'est
    pas épinglé. *Un essai qui désigne sa cible au hasard finit par échouer pour une raison qui n'a
    rien à voir.*
+
+### ⭐ La méthode a servi deux fois dans la soirée
+
+Le défaut de la lumière (§ 108) avait la même forme que celui de la vidéo (§ 105) : *« ça marche
+depuis le module, pas depuis le storyboard »*. La seconde fois, je n'ai pas relu trois fois — j'ai
+comparé les deux appels, constaté qu'ils étaient équivalents, **puis demandé à David ce qui
+différait à l'œil**. Deux réponses (*les couleurs* ; *rejouer la tuile répare*) ont désigné le
+coupable en une minute : quelque chose écrit **après**.
+
+⭐ *Une question précise au meneur vaut trois relectures du code — lui seul voit le symptôme.*
 
 ### ⭐⭐ Quand deux chemins produisent le même ordre et un résultat différent, l'erreur est autour
 

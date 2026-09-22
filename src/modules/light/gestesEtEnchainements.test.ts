@@ -133,9 +133,19 @@ describe('ce qu’un moment de storyboard déclenche', () => {
 
 describe('qui a le droit de signer du nom du meneur', () => {
     it('trouve les appels venus des autres modules', () => {
-        /* Cinq au 2026-09-09 : zones de la carte (2), Sound-OS (2), Music-OS,
-           instantané, storyboard. Le seuil protège le peigne, pas le compte. */
-        expect(appelsExterieurs.length).toBeGreaterThanOrEqual(5);
+        /*
+          Cinq au 2026-09-09 : zones de la carte (2), Sound-OS (2), Music-OS,
+          instantané, storyboard. Le seuil protège le peigne, pas le compte.
+
+          ⭐ **Abaissé à quatre le 2026-09-22, et c'est un progrès.** Les scènes
+          liées à un son ne parlent plus au pont directement : elles passent par
+          `appliquerLaSceneLiee`, qui s'abstient quand un moment de storyboard
+          tient les lampes. *Le peigne compte moins d'appels parce qu'il y a
+          moins d'écrivains* — voir `lumiereReservee`, et la garde des cinq
+          chemins dans `lumiereReservee.test.ts`, qui prend le relais de
+          celui-ci sur ces appels-là.
+        */
+        expect(appelsExterieurs.length).toBeGreaterThanOrEqual(4);
     });
 
     it('les fait tous passer pour des enchaînements', () => {

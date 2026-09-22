@@ -632,9 +632,14 @@ export const useMusicStore = create<MusicState>()(
                         const { isSyncEnabled } = useLightStore.getState();
 
                         if (isSyncEnabled && pad.linkedLightSceneId) {
+                            /* ⛔ **Par la porte unique, et le délai est la raison
+                               pour laquelle la réservation survit au déclenchement** :
+                               ces 300 ms arrivent après la fin du moment, et
+                               écraseraient sa lumière. Voir `DELAI_DE_RELACHE_MS`. */
+                            const { appliquerLaSceneLiee } = await import('../light/logic/lumiereReservee');
                             // Delay to let audio loading/decoding breathe
                             setTimeout(() => {
-                                hueEngine.applyScene(pad.linkedLightSceneId!, true);
+                                appliquerLaSceneLiee(hueEngine, pad.linkedLightSceneId);
                             }, 300);
                         }
                     } catch (e) {
