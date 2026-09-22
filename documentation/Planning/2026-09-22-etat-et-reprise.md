@@ -1,6 +1,6 @@
 # État et reprise — le 2026-09-22, **la trame devient un plan de scénario**
 
-> **Base saine.** `tsc -b` propre, **5 899 essais Vitest** (459 fichiers, 1 ignoré), **14 E2E de
+> **Base saine.** `tsc -b` propre, **5 905 essais Vitest** (460 fichiers, 1 ignoré), **14 E2E de
 > graphe** sur un `dist/` frais, plus la traversée des 27 modules, Sound-OS, la curation et
 > l'ouverture de scène au vert. Branche `feature/tablet-hub-pwa`.
 >
@@ -24,6 +24,8 @@
 | **106** | Les fausses erreurs de Music-OS — un démontage qui criait à la panne | ⚠️ non |
 | **107** | La cadence d'Ambient-OS — *« le son est saccadé »* | ⚠️ non |
 | **108** | La lumière d'un moment, écrasée par les scènes liées à ses sons | ⚠️ non |
+| **109** | La source d'ambiance qui traîne entre deux séquences | ⚠️ non |
+| **110** | Cent allers-retours IPC par seconde — *« la vidéo aussi lag »* | ⚠️ non |
 
 ⭐ **Les quatre premières n'étaient pas quatre fonctionnalités, mais une seule montée en puissance.** Chaque
 demande est née de la précédente : classer les scènes a fait voir qu'on ne voyait pas la trame
@@ -43,20 +45,26 @@ raison de tenir une liste de ce qui n'a jamais été vu à l'écran.*
 2. **Le son de la tablette** (§ 104) — les deux lignes de l'onglet **Pads**, et les trois choix de
    sortie. ⚠️ Il faut **rafraîchir la page de la tablette** : elle lit `dist/`, et le bloc `audio`
    a remplacé `masterVolume` dans le pont.
-3. **Les trois correctifs du soir** (§§ 106 à 108) — changer de morceau sans voir de bulle rouge,
+3. ⚠️ **Le compresseur d'Ambient-OS — la question restée ouverte.** Il est le **seul** des trois
+   moteurs à en porter un, réglé en limiteur : seuil − 24 dB, **ratio 12:1**, attaque 3 ms, relâche
+   250 ms — et on lui envoie huit pistes sommées, amplifiées de 30 % avant. Il écrase donc en
+   permanence et relâche toutes les 250 ms : du **pompage**. *Le corriger change le son de toutes
+   les ambiances*, donc la décision appartient à David. ⭐ Même forme d'asymétrie que les 48 kHz du
+   § 107 — et c'est elle qui avait désigné le coupable.
+4. **Les cinq correctifs du soir** (§§ 106 à 110) — changer de morceau sans voir de bulle rouge,
    écouter une ambiance, et jouer un moment qui porte **à la fois** une lumière et un son lié.
-4. **Les deux messages d'écran du § 105** — ils ne se montrent que le jour où un moniteur change
+5. **Les deux messages d'écran du § 105** — ils ne se montrent que le jour où un moniteur change
    d'identifiant. Rien à provoquer exprès : c'est un filet, pas une fonctionnalité.
-5. **Les trois chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
+6. **Les trois chantiers du 20-21/09 jamais vus** : l'essai d'une ambiance lumineuse (§ 92), le
    thème d'ambiance dans un moment (§ 94), et la boucle d'une vidéo (§ 97).
-6. **La refonte de l'interface** (§ 76) — toujours à l'arrêt, rien ne la bloque. Le premier geste
+7. **La refonte de l'interface** (§ 76) — toujours à l'arrêt, rien ne la bloque. Le premier geste
    reste **T0.1** : les captures de référence, une soirée, aucun pixel changé.
    ⭐ *Décidé le 22/09 en répondant à une question de David* : la phase 2 donnera à Stitch **une
    fiche de contraintes** à côté des captures — données hostiles (11 combattants, `148/155`), le
    `font-size: 85%` de `:root`, les quatre thèmes dont le clair, et le contrat de sortie (des
    **valeurs**, pas des composants). *La capture porte la structure, le prompt porte ce qu'une
    image ne montre pas.*
-7. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
+8. **La restauration** (§ 87) — dans `npm run repetition`, jamais sur le vrai profil.
 
 ---
 
@@ -114,6 +122,21 @@ Ils ont coûté plus que les défauts eux-mêmes :
 3. **Je désignais un nœud par un clic au centre**, là où la simulation regroupe tout ce qui n'est
    pas épinglé. *Un essai qui désigne sa cible au hasard finit par échouer pour une raison qui n'a
    rien à voir.*
+
+### ⭐⭐ Quand l'audio ET la vidéo souffrent ensemble, c'est le fil principal
+
+La phrase qui a tout débloqué, lâchée par David alors que je cherchais encore dans le graphe audio :
+*« la vidéo aussi lag »*. Deux symptômes dans deux domaines sans rapport ne désignent ni l'un ni
+l'autre — ils désignent **ce qu'ils partagent**. J'ai changé de piste sur-le-champ et trouvé en
+trois minutes : cent allers-retours IPC par seconde (§ 110).
+
+⚠️ **Et l'état de la machine fait partie du diagnostic.** Sa RAM était à **84 %** avec 4,9 Go
+libres sur 31, allumée depuis **4 jours et 11 heures**, et Windows avait mis en route sa compression
+mémoire. À ce niveau, le système pagine en arrière-plan — cause classique de saccades audio et
+vidéo simultanées. *Un correctif logiciel ne répare pas une machine qui étouffe, et l'inverse est
+vrai aussi : les deux comptaient.*
+
+⭐ Le réflexe à garder : **`Get-CimInstance Win32_OperatingSystem`** avant de chercher longtemps.
 
 ### ⭐ La méthode a servi deux fois dans la soirée
 

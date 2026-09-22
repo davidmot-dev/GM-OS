@@ -39,14 +39,76 @@ function mediaOrigin(conn: ConnectionInfo): string {
 }
 
 /** Adresse du poste MJ sur le réseau local, ou null s'il n'y en a pas. */
-async function getLanConnection(): Promise<ConnectionInfo | null> {
-    if (!window.appBridge?.remote?.getConnectionInfo) return null;
+/**
+ * **Combien de temps on garde la réponse du processus principal.**
+ *
+ * ⛔ **Le défaut trouvé le 2026-09-22** : David, tablette connectée, *« j'ai
+ * encore des saccades dans l'ambiance »*, puis *« la vidéo aussi lag »*. Les
+ * deux ensemble disaient que ce n'était pas l'audio, mais **le fil principal qui
+ * sature**.
+ *
+ * `getLanConnection` fait un **aller-retour IPC**, et il était attendu à chaque
+ * appel de `resolveToSendableUrl` — **même sur un cache plein**. Or la
+ * synchronisation de la tablette résout dix familles de médias (avatars,
+ * portraits, cartes, indices, pads…) **en séquence**, jusqu'à deux fois par
+ * seconde. Sur une campagne de 43 PNJ, cela dépasse **cent allers-retours par
+ * seconde** : le rendu vidéo et le fil audio se partagent ce qui reste.
+ *
+ * ⭐ **L'ordre reste le bon** — interroger avant de croire le cache, parce que le
+ * dossier temporaire du meneur a pu être vidé — mais il n'a pas à être payé
+ * *par média* : **une fois par diffusion suffit.** *Le dossier ne se vide pas
+ * entre deux avatars du même envoi.*
+ */
+const DUREE_DE_LA_CONNEXION_MS = 900;
+
+let connexionRetenue: { valeur: ConnectionInfo | null; quand: number } | null = null;
+
+/**
+ * ⛔ **La demande EN COURS, et pas seulement la réponse.**
+ *
+ * La synchronisation résout plusieurs médias **en parallèle** (`Promise.all`) :
+ * sans ça, les dix partent avant que le premier aller-retour ne réponde, et le
+ * cache n'épargne rien du tout. *Un cache qui ne se remplit qu'après la rafale
+ * ne sert pas la rafale.*
+ */
+let demandeEnCours: Promise<ConnectionInfo | null> | null = null;
+
+/** Oublie la réponse retenue — pour les essais, et pour une reconnexion. */
+export function oublierLaConnexionRetenue(): void {
+    connexionRetenue = null;
+    demandeEnCours = null;
+}
+
+function getLanConnection(): Promise<ConnectionInfo | null> {
+    if (!window.appBridge?.remote?.getConnectionInfo) return Promise.resolve(null);
+
+    const maintenant = Date.now();
+    if (connexionRetenue && maintenant - connexionRetenue.quand < DUREE_DE_LA_CONNEXION_MS) {
+        return Promise.resolve(connexionRetenue.valeur);
+    }
+    if (demandeEnCours) return demandeEnCours;
+
+    demandeEnCours = demanderLaConnexion().finally(() => { demandeEnCours = null; });
+    return demandeEnCours;
+}
+
+async function demanderLaConnexion(): Promise<ConnectionInfo | null> {
+    /* Regardé une seconde fois : la garde vit chez l'appelant, et l'attente qui
+       sépare les deux laisse au pont le temps de disparaître. */
+    const demander = window.appBridge?.remote?.getConnectionInfo;
+    if (!demander) return null;
     try {
-        const conn = await window.appBridge.remote.getConnectionInfo();
-        if (!conn?.ip || !conn.port) return null;
+        const conn = await demander();
+        /* On retient aussi les réponses négatives : sans ça, une machine sans
+           réseau local paierait l'aller-retour à chaque média, pour rien. */
+        const retenir = (valeur: ConnectionInfo | null) => {
+            connexionRetenue = { valeur, quand: Date.now() };
+            return valeur;
+        };
+        if (!conn?.ip || !conn.port) return retenir(null);
         syncMediaEpoch(conn);
-        if (conn.ip === '127.0.0.1' || conn.ip === 'localhost') return null;
-        return conn;
+        if (conn.ip === '127.0.0.1' || conn.ip === 'localhost') return retenir(null);
+        return retenir(conn);
     } catch (e) {
         console.error('[MediaResolver] Error getting connection info:', e);
         return null;

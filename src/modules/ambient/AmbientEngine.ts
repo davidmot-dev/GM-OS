@@ -29,6 +29,23 @@ class AmbientTrack {
     private buffer: AudioBuffer | null = null;
     private isPlaying: boolean = false;
     private currentUrl: string | null = null;
+    /**
+     * **La source qui finit son fondu de sortie, et sa minuterie.**
+     *
+     * ⛔ **Le défaut trouvé par David le 2026-09-22**, dont il avait eu
+     * l'intuition : *« un buffer qui ne se vide pas toujours bien entre 2
+     * séquences »*. `stop()` posait `isPlaying = false` **immédiatement**, alors
+     * que la source joue encore pendant tout le fondu — une seconde et des
+     * poussières. Un `play()` dans cette fenêtre ne voyait que le drapeau,
+     * créait une **seconde** source sur le même nœud de gain, et les deux copies
+     * de la même boucle jouaient décalées.
+     *
+     * ⭐ **C'est un filtre en peigne** : elles s'additionnent et s'annulent par
+     * intermittence. À l'oreille, une saccade — et le routage anti-phase, qui
+     * recopie le canal gauche sur les deux sorties, la rend plus nette encore.
+     */
+    private sortante: AudioBufferSourceNode | null = null;
+    private minuterieDeSortie: ReturnType<typeof setTimeout> | null = null;
     /** Là où la piste sort en ce moment — voir `router`. */
     private destination: AudioNode;
 
@@ -126,8 +143,36 @@ class AmbientTrack {
      * @param volume Volume cible (0.0 à 1.0).
      * @param fadeTime Durée du fondu en secondes.
      */
+    /**
+     * **Coupe pour de bon ce qui traîne**, minuterie comprise.
+     *
+     * ⚠️ Appelée avant toute nouvelle source : *le fondu de sortie était de
+     * toute façon déjà perdu* — `play()` remet le gain partagé à zéro puis le
+     * remonte, et la vieille source restait audible à travers cette remontée.
+     * La couper est donc strictement meilleur que la laisser.
+     */
+    private couperLaSortante() {
+        if (this.minuterieDeSortie) {
+            clearTimeout(this.minuterieDeSortie);
+            this.minuterieDeSortie = null;
+        }
+        if (!this.sortante) return;
+        try {
+            this.sortante.stop();
+            this.sortante.disconnect();
+        } catch {
+            /* Déjà arrétée : il n'y a rien à rattraper, et lever ici ferait
+               échouer le démarrage de la piste suivante. */
+        }
+        this.sortante = null;
+    }
+
     play(volume: number = 0.5, fadeTime: number = 1.5) {
         if (!this.buffer || this.isPlaying) return;
+
+        /* ⛔ **Avant tout le reste** : sans ça, deux copies de la même boucle
+           jouent décalées tant que le fondu de la précédente n'est pas fini. */
+        this.couperLaSortante();
 
         // Ensure context is resumed for remote triggers
         if (this.context.state === 'suspended') {
@@ -161,12 +206,17 @@ class AmbientTrack {
         this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
         this.gainNode.gain.linearRampToValueAtTime(0, now + fadeTime);
 
+        /* Un second arrêt avant la fin du premier ne doit pas empiler les
+           minuteries : chacune gardait une référence sur une vieille source. */
+        this.couperLaSortante();
+
         const sourceToStop = this.source;
-        setTimeout(() => {
-            if (sourceToStop) {
-                sourceToStop.stop();
-                sourceToStop.disconnect();
-            }
+        this.sortante = sourceToStop;
+        this.minuterieDeSortie = setTimeout(() => {
+            this.minuterieDeSortie = null;
+            /* Si une nouvelle lecture est passée entre-temps, elle a déjà
+               coupé celle-ci et en tient une autre : on ne touche à rien. */
+            if (this.sortante === sourceToStop) this.couperLaSortante();
         }, fadeTime * 1000 + 100);
 
         this.isPlaying = false;

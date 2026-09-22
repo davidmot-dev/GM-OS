@@ -5,7 +5,19 @@ vi.mock('idb', () => ({
     openDB: vi.fn(async () => ({ get: idb.get })),
 }));
 
-const { resolveToSendableUrl } = await import('./mediaResolver');
+const { resolveToSendableUrl, oublierLaConnexionRetenue } = await import('./mediaResolver');
+
+/*
+  ⛔ **La connexion au réseau local est retenue une seconde — y compris entre
+  deux essais.** Ajouté le 2026-09-22 pour épargner cent allers-retours IPC par
+  seconde au fil principal (voir `connexionRetenue.test.ts`) : le revers est
+  qu'un cache de module **survit d'un essai à l'autre**, et cinq essais d'ici
+  ont échoué en héritant de la connexion du précédent.
+
+  ⭐ *Un cache qui accélère le produit ralentit toujours quelqu'un : ici, c'est
+  l'essai suivant.* On l'oublie avant chacun.
+*/
+beforeEach(() => oublierLaConnexionRetenue());
 
 describe('mediaResolver - resolveToSendableUrl', () => {
     beforeEach(() => {
@@ -183,6 +195,20 @@ describe('mediaResolver — médias par référence', () => {
         getConnectionInfo.mockResolvedValue({
             ip: '192.168.0.211', port: 3001, mediaPort: 3001, mediaEpoch: 'epoque-2',
         });
+
+        /*
+          ⚠️ **La détection de l'époque est désormais différée d'au plus
+          `DUREE_DE_LA_CONNEXION_MS`** — 900 ms — depuis qu'on retient la réponse
+          du processus principal, le 2026-09-22. Cet oubli **représente ce délai
+          écoulé**, et l'écrire ici plutôt que de le taire est le point : la
+          garantie n'est plus « immédiate », elle est « à la diffusion suivante ».
+
+          ⭐ **Et elle tient toujours** : le dossier temporaire n'est vidé qu'au
+          **démarrage du processus principal**, donc l'époque ne change jamais
+          pendant qu'une fenêtre vit. *Une garantie affaiblie doit être bornée et
+          dite, jamais supposée sans conséquence.*
+        */
+        oublierLaConnexionRetenue();
 
         const url = await resolveToSendableUrl(id);
         expect(cacheMedia).toHaveBeenCalledTimes(2);

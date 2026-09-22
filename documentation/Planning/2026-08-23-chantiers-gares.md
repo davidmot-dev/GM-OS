@@ -8712,6 +8712,87 @@ qui casse plus large que le défaut qu'il répare.
 
 ---
 
+### 109 · ⛔ La source qui traîne entre deux séquences — l'intuition de David (2026-09-22)
+
+Après le retrait des 48 kHz (§ 107), la saccade persistait. David : *« regarde si le problème ne
+vient pas du fichier d'ambiance ou alors un buffer qui ne se vide pas toujours bien entre 2
+séquences ? »* — **la seconde hypothèse était la bonne.**
+
+```js
+stop(fadeTime = 1.0) {
+    …fondu du gain vers 0 sur fadeTime…
+    setTimeout(() => { sourceToStop.stop(); sourceToStop.disconnect(); }, fadeTime * 1000 + 100);
+    this.isPlaying = false;   // ⛔ tout de suite
+    this.source = null;       // ⛔ tout de suite
+}
+```
+
+⛔ **La piste se déclare arrêtée immédiatement, alors qu'elle joue encore pendant 1,1 seconde.** Et
+`play()` ne vérifie que ce drapeau : un enchaînement dans cette fenêtre crée une **seconde source sur
+le même nœud de gain**, et deux copies de la même boucle jouent décalées.
+
+⭐ **C'est un filtre en peigne** : elles s'additionnent et s'annulent par intermittence — une
+saccade à l'oreille. Le **routage anti-phase** d'Ambient-OS, qui recopie le canal gauche sur les
+deux sorties, la rend plus nette encore.
+
+⚠️ **Le fondu de sortie était de toute façon déjà perdu** : `play()` remet le gain partagé à zéro
+puis le remonte, et la vieille source restait audible à travers cette remontée. La couper est donc
+strictement meilleur que la laisser.
+
+**Ancres** : `ambient/AmbientEngine.ts` (`couperLaSortante`, `sortante`, `minuterieDeSortie`).
+⚠️ **Non éprouvé à l'écran.**
+
+---
+
+### 110 · ⭐⭐ Cent allers-retours IPC par seconde — *« la vidéo aussi lag »* (2026-09-22)
+
+⭐ **C'est cette phrase de David qui a tout résolu**, lâchée alors que je cherchais encore dans le
+graphe audio. ***Quand l'audio ET la vidéo souffrent ensemble, ce n'est ni l'un ni l'autre : c'est le
+fil principal qui sature.*** J'ai changé de piste sur-le-champ, et trouvé en trois minutes.
+
+```js
+const conn = await getLanConnection();          // ⛔ un aller-retour IPC
+if (mediaCache.has(src)) return mediaCache.get(src)!;   // le cache n'est lu qu'APRÈS
+```
+
+`getLanConnection` interroge le processus principal, et était attendu à **chaque** appel de
+`resolveToSendableUrl` — **même sur un cache plein**. Or la synchronisation de la tablette résout
+**dix familles de médias** (pads, avatars des combattants, avatars des joueurs, portraits des
+personnages, avatars des PNJ, cartes, indices, fond d'écran, favoris…) **en séquence**, jusqu'à
+**deux fois par seconde**. Sur une campagne de 43 PNJ, cela dépasse **cent allers-retours par
+seconde** : le rendu vidéo et le fil audio se partagent ce qui reste.
+
+⭐ **Et ça n'arrive que tablette connectée** — ce que David faisait depuis la veille.
+
+#### ⚠️ Une garantie bornée, et dite
+
+L'ordre était **voulu** : interroger avant de croire le cache, parce que le dossier temporaire du
+meneur a pu être vidé. Mais il n'a pas à être payé *par média* — **une fois par diffusion suffit**,
+le dossier ne se vidant pas entre deux avatars du même envoi.
+
+La détection de ce vidage est donc **différée d'au plus 900 ms**. Elle tient quand même : le dossier
+n'est vidé qu'au **démarrage du processus principal**, donc l'époque ne change jamais pendant qu'une
+fenêtre vit. ⭐ *Une garantie affaiblie doit être bornée et dite, jamais supposée sans conséquence*
+— c'est écrit dans l'essai qui la gardait, à l'endroit où quelqu'un la relira.
+
+#### ⛔ Retenir la réponse ne suffisait pas : il faut retenir la DEMANDE
+
+La synchronisation résout aussi des médias **en parallèle**. Les dix partaient avant que le premier
+aller-retour ne réponde, et le cache n'épargnait rien. *Un cache qui ne se remplit qu'après la
+rafale ne sert pas la rafale.*
+
+⚠️ **Et les réponses négatives se retiennent aussi** : sans ça, une machine sans réseau local
+paierait l'aller-retour à chaque média — *le cas le plus lent pour celui qui ne s'en sert pas.*
+
+⚠️ **Cinq essais existants sont tombés**, et pour une raison instructive : un cache de module
+**survit d'un essai à l'autre**. *Un cache qui accélère le produit ralentit toujours quelqu'un — ici,
+l'essai suivant.* D'où `oublierLaConnexionRetenue`, appelée avant chacun.
+
+**Ancres** : `utils/mediaResolver.ts` (`DUREE_DE_LA_CONNEXION_MS`, `demandeEnCours`,
+`oublierLaConnexionRetenue`), `utils/connexionRetenue.test.ts`. ⚠️ **Non éprouvé à l'écran.**
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8761,6 +8842,8 @@ qui casse plus large que le défaut qu'il répare.
 | 42 | **Les fausses erreurs de Music-OS** | ✅ **CORRIGÉ le 22/09** — deux `AudioElement Error` par minute **alors que tout s'entendait** : `src = ""` n'est pas un démontage, et le gestionnaire de la piste précédente les attrapait. ⭐ *Un bruit de fond rend invisible le signal qu'on écoute* (§ 106) | Changer de morceau, regarder la console | ⚠️ Non éprouvé |
 | 43 | **La cadence d'Ambient-OS** | ✅ **CORRIGÉ le 22/09** — *« le son est saccadé »*. Seul des quatre moteurs à imposer 48 kHz, **sans raison**, depuis mars. ⭐ *Quand trois modules font pareil et qu'un seul diffère, la différence est la piste* (§ 107) | Écouter une ambiance | ⚠️ Non éprouvé — sans garantie si la carte est déjà à 48 kHz |
 | 44 | **La lumière d'un moment** | ✅ **CORRIGÉ le 22/09** — *« l'effet n'est pas le même »* : **cinq chemins** écrasaient la scène déclarée avec celle liée à un son. ⭐ *Ce que le meneur a déclaré gagne sur ce qu'un enchaînement propose* — et le journal le dit (§ 108) | Un moment avec lumière **et** son lié | ⚠️ Non éprouvé |
+| 45 | **La source qui traîne** | ✅ **CORRIGÉ le 22/09** — *« un buffer qui ne se vide pas entre 2 séquences ? »*, l'intuition de David, et elle était juste : la piste se déclarait arrêtée alors qu'elle jouait encore 1,1 s. ⭐ Deux copies décalées de la même boucle = **filtre en peigne** (§ 109) | Enchaîner deux séquences avec ambiance | ⚠️ Non éprouvé |
+| 46 | **Cent allers-retours IPC/s** | ✅ **CORRIGÉ le 22/09** — *« la vidéo aussi lag »*. ⭐⭐ **Quand l'audio ET la vidéo souffrent, c'est le fil principal** : un IPC par média résolu, même en cache, deux fois par seconde. ⚠️ Une garantie bornée à 900 ms, et **dite** (§ 110) | Tablette connectée, projeter une vidéo | ⚠️ Non éprouvé |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
