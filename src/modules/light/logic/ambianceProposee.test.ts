@@ -113,6 +113,16 @@ describe('retrouver la lampe que le modèle désignait', () => {
         expect(lampeDesignee('Lampe-du-fond', LAMPES)).toBe('2');
     });
 
+    /**
+     * Le cas réel du 2026-09-25 : une lampe nommée `" JdR plafond 2"` dans
+     * l'application Hue, que le modèle recopie sans l'espace. *C'est cette
+     * règle que le panneau emprunte pour dire « inconnue ».*
+     */
+    it('malgré une espace en tête du nom, côté pont', () => {
+        const avecEspace = { '4': { ...LAMPES['1'], id: '4', name: ' JdR plafond 2' } };
+        expect(lampeDesignee('JdR plafond 2', avecEspace)).toBe('4');
+    });
+
     it('et rend null pour une lampe qui n’existe pas', () => {
         expect(lampeDesignee('Applique murale', LAMPES)).toBeNull();
         expect(lampeDesignee('', LAMPES)).toBeNull();

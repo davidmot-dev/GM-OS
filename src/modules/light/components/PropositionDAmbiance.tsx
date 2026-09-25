@@ -5,7 +5,7 @@ import { hueEngine } from '../HueEngine';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { proposerUneAmbiance, type ScenePourLAmbiance } from '../logic/proposerUneAmbiance';
-import { etatsDeLaProposition, nomDeLAmbiance, type AmbianceProposee } from '../logic/ambianceProposee';
+import { etatsDeLaProposition, lampeDesignee, nomDeLAmbiance, type AmbianceProposee } from '../logic/ambianceProposee';
 import { caseLibreDuRatelier } from '../logic/caseLibreDuRatelier';
 import { couleurValide } from '../logic/ambianceProposee';
 
@@ -194,8 +194,14 @@ export const PropositionDAmbiance: React.FC<Props> = ({
         setCaseEcrite(null);
     };
 
-    const lampeConnue = (nom: string) =>
-        listeDesLampes.some(l => l.name.toLowerCase() === nom?.toLowerCase());
+    /*
+      ⛔ **La même règle que le moteur, jamais une seconde.** Le panneau
+      comparait les noms à la lettre, le moteur sans espaces ni ponctuation :
+      une lampe dont le nom commençait par une espace (2026-09-25)
+      s'allumait tout en s'affichant « inconnue, ignorée ». *Un écran qui
+      contredit les lampes envoie le meneur chercher une panne qui n'existe pas.*
+    */
+    const lampeConnue = (nom: string) => lampeDesignee(nom, lampes) !== null;
 
     return (
         <div className="flex flex-col gap-3">
