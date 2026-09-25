@@ -45,6 +45,7 @@ import { normaliser } from '../rules/canevas';
 import type {
     ProjetDeCampagne, PnjProjete, IndiceProjete,
 } from './ForgeDeCampagne';
+import { memeTitreSansEspaces } from './titreLisible';
 
 // ─────────────────────────────────────────────
 // Ce qui n'a pas abouti
@@ -301,12 +302,35 @@ export function ecrireLaCampagne(
     let ordreActe = apres(actesExistants);
     for (const projete of projet.actes) {
         if (!projete.titre?.trim()) continue;
-        if (annuaireDesActes.chercher(projete.titre).etat === 'exact') {
+        const trouve = annuaireDesActes.chercher(projete.titre);
+        if (trouve.etat === 'exact') {
+            /* Même conservé, l'acte doit répondre à son titre du livre : c'est
+               celui que portent les fiches de ses scènes. */
+            if (projete.titreDuLivre) annuaireDesActes.inscrire(projete.titreDuLivre, trouve.id);
+            conserves.push({ quoi: 'acte', nom: projete.titre });
+            continue;
+        }
+        /*
+          ⚠️ **Un acte déjà en place sous son titre du livre est le même acte.**
+          « Anges de Feu » a été forgée avant `titreLisible` : ses actes portent
+          `S TA R T I N G S C E N E`, réduit par `cellule()`. Les reconnaître
+          espaces mis à part évite un doublon à la reforge — et on les inscrit
+          sous le titre lisible pour que la suite les trouve aussi.
+        */
+        const dejaLa = actesExistants.find(a =>
+            memeTitreSansEspaces(a.titre, projete.titre)
+            || (projete.titreDuLivre && memeTitreSansEspaces(a.titre, projete.titreDuLivre)));
+        if (dejaLa) {
+            annuaireDesActes.inscrire(projete.titre, dejaLa.id);
+            if (projete.titreDuLivre) annuaireDesActes.inscrire(projete.titreDuLivre, dejaLa.id);
             conserves.push({ quoi: 'acte', nom: projete.titre });
             continue;
         }
         const id = neuf('acte');
         annuaireDesActes.inscrire(projete.titre, id);
+        /* Les scènes cherchent leur acte par le `partie:` de leurs fiches — le
+           titre du livre. */
+        if (projete.titreDuLivre) annuaireDesActes.inscrire(projete.titreDuLivre, id);
         actes.push({
             id,
             campaignId,

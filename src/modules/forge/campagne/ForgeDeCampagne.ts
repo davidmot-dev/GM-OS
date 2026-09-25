@@ -39,6 +39,14 @@ export interface ChampsDeCampagne {
 
 export interface ActeProjete {
     titre: string;
+    /**
+     * **Le titre tel que le livre l'écrit**, quand `titre` a été rendu lisible
+     * (2026-09-25, voir `titreLisible.ts`). ⛔ Il n'est pas décoratif : les
+     * scènes retrouvent leur acte par le `partie:` de leurs fiches, qui porte
+     * CE titre-là. Sans lui, toutes les scènes d'un livre en capitales espacées
+     * seraient écartées faute d'acte.
+     */
+    titreDuLivre?: string;
     resume?: string;
     notesDuMeneur?: string;
 }
@@ -337,7 +345,8 @@ export function etablirLesActes(
         if (lus.length > 0) {
             return {
                 actes: lus.map(a => ({
-                    titre: a.titre,
+                    titre: a.titreLisible ?? a.titre,
+                    ...(a.titreLisible ? { titreDuLivre: a.titre } : {}),
                     ...(a.enjeu ? { resume: a.enjeu } : {}),
                 })),
             };

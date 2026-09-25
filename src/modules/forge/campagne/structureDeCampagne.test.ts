@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lireLaStructure, retirerLaNumerotation, retirerLAlternativeRedondante } from './structureDeCampagne';
+import { lireLaStructure, retirerLaNumerotation, retirerLAlternativeRedondante, actesARendreLisibles } from './structureDeCampagne';
 
 /**
  * Ce que ces tests protègent : **le titre exact des actes**.
@@ -196,5 +196,55 @@ describe('retirerLAlternativeRedondante', () => {
 
         expect(actes).toHaveLength(1);
         expect(actes[0].titre).toBe('Scénario 3: Voyage en Mésopotamie');
+    });
+});
+
+/**
+ * **La ligne réelle d'« Anges de Feu »**, telle que le carnet l'a rendue le
+ * 2026-09-24 : la double espace entre les mots n'existe que dans la cellule
+ * brute — c'est elle qu'on lit.
+ */
+describe('lireLaStructure — un livre en capitales espacées', () => {
+    const TABLEAU = [
+        '| Ordre | Titre exact | Enjeu | Sections |',
+        '|:--- |:--- |:--- |:--- |',
+        '| 1 | S TA R T I N G  S C E N E | Un test qui dégénère. | S TA R T I N G  S C E N E |',
+        '| 3 | ### T H E  I N V E S T I G A T I O N | L’enquête. | ### T H E  I N V E S T I G A T I O N |',
+        '| 4 | Les Ruines | Un titre ordinaire. | Les Ruines |',
+    ].join('\n');
+
+    it('garde le titre du livre pour la Forge, et donne un titre lisible pour la trame', () => {
+        const [un, deux, trois] = lireLaStructure(TABLEAU);
+        expect(un.titre).toBe('S TA R T I N G S C E N E');
+        expect(un.titreLisible).toBe('Starting Scene');
+        expect(deux.titreLisible).toBe('The Investigation');
+        expect(trois.titreLisible).toBeUndefined();
+    });
+});
+
+describe('actesARendreLisibles', () => {
+    const STRUCTURE = [
+        '| Ordre | Titre exact | Enjeu | Sections |',
+        '|:--- |:--- |:--- |:--- |',
+        '| 1 | S TA R T I N G  S C E N E | — | — |',
+        '| 2 | B R I E F I N G | — | — |',
+        '| 3 | Les Ruines | — | — |',
+    ].join('\n');
+
+    /** **Le cas réel** : en base, la double espace a disparu. */
+    it('propose le titre lisible pour l’acte réduit en base', () => {
+        expect(actesARendreLisibles(STRUCTURE, [
+            { id: 'a-1', titre: 'S TA R T I N G S C E N E' },
+            { id: 'a-2', titre: 'B R I E F I N G' },
+            { id: 'a-3', titre: 'Les Ruines' },
+        ])).toEqual([
+            { id: 'a-1', avant: 'S TA R T I N G S C E N E', apres: 'Starting Scene' },
+            { id: 'a-2', avant: 'B R I E F I N G', apres: 'Briefing' },
+        ]);
+    });
+
+    it('ne propose rien pour un acte déjà nettoyé, ni sans fiche de structure', () => {
+        expect(actesARendreLisibles(STRUCTURE, [{ id: 'a-1', titre: 'Starting Scene' }])).toEqual([]);
+        expect(actesARendreLisibles(undefined, [{ id: 'a-1', titre: 'B R I E F I N G' }])).toEqual([]);
     });
 });

@@ -346,3 +346,46 @@ describe('la résolution graduée des renvois', () => {
         expect(ecrit.conserves).toEqual([]);
     });
 });
+
+/**
+ * **Un livre en capitales espacées — « Anges de Feu », 2026-09-25.**
+ *
+ * L'acte arrive lisible (`Final Confrontation`) ; ses scènes le cherchent par
+ * le `partie:` de leurs fiches, qui porte le titre DU LIVRE. Sans
+ * `titreDuLivre`, toutes les scènes seraient écartées faute d'acte.
+ */
+describe('ecrireLaCampagne — un titre d’acte rendu lisible', () => {
+    const LIVRE = '### F I N A L C O N F R O N T A T I O N';
+    const projet = (): ProjetDeCampagne => ({
+        ...projetVide(),
+        campagne: { name: 'Anges de Feu' },
+        actes: [{ titre: 'Final Confrontation', titreDuLivre: LIVRE }],
+        scenes: [{ titre: 'L’arrivée au complexe', acte: LIVRE }],
+    });
+
+    it('écrit l’acte sous son titre lisible, et y rattache ses scènes', () => {
+        const ecrit = ecrireLaCampagne(projet(), options());
+        expect(ecrit.actes.map(a => a.titre)).toEqual(['Final Confrontation']);
+        expect(ecrit.scenes).toHaveLength(1);
+        expect(ecrit.scenes[0].acteId).toBe(ecrit.actes[0].id);
+    });
+
+    /** Reforger une campagne forgée avant ce jour ne crée pas un second acte. */
+    it('reconnaît l’acte déjà en place sous son titre du livre — pas de doublon', () => {
+        const ecrit = ecrireLaCampagne(projet(), {
+            ...options(),
+            existant: { actes: [{ id: 'acte-ancien', campaignId: 'c-1', ordre: 0, titre: LIVRE, resume: '' } as never] },
+        });
+        expect(ecrit.actes).toHaveLength(0);
+        expect(ecrit.scenes[0].acteId).toBe('acte-ancien');
+    });
+
+    it('et l’acte déjà nettoyé répond encore au titre du livre', () => {
+        const ecrit = ecrireLaCampagne(projet(), {
+            ...options(),
+            existant: { actes: [{ id: 'acte-propre', campaignId: 'c-1', ordre: 0, titre: 'Final Confrontation', resume: '' } as never] },
+        });
+        expect(ecrit.actes).toHaveLength(0);
+        expect(ecrit.scenes[0].acteId).toBe('acte-propre');
+    });
+});

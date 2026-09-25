@@ -12,6 +12,8 @@ import { lireLesFichesDeLaCampagne, partiesDesFiches, type LectureDesFichesDeCam
 import i18next from 'i18next';
 import { forgerLaCampagne, type ResultatDeForge, type AvancementDeForge } from './ForgeDeCampagne';
 import { ecrireLaCampagne, type EcritureDeLaCampagne } from './ecritureDeLaCampagne';
+import { actesARendreLisibles } from './structureDeCampagne';
+import { normaliser } from '../rules/canevas';
 import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
 
 /**
@@ -36,6 +38,7 @@ const ForgeDeLaTrame: React.FC = () => {
     const customGameDrivers = useSessionOSStore(s => s.customGameDrivers);
     const appliquerLaCampagneForgee = useSessionOSStore(s => s.appliquerLaCampagneForgee);
     const actesExistants = useSessionOSStore(s => s.actes);
+    const modifierActe = useSessionOSStore(s => s.modifierActe);
     const scenesExistantes = useSessionOSStore(s => s.scenes);
     const entitesExistantes = useSessionOSStore(s => s.entities);
     const cartesExistantes = useSessionOSStore(s => s.atlasMaps);
@@ -106,6 +109,26 @@ const ForgeDeLaTrame: React.FC = () => {
         () => (lecture ? partiesDesFiches(lecture.fiches) : []),
         [lecture],
     );
+
+    /*
+      **Les actes déjà forgés dont le titre est resté celui du PDF** — 2026-09-25.
+      « Anges de Feu » portait `S TA R T I N G S C E N E` : la double espace
+      entre les mots est perdue en base, seule la fiche de structure la garde.
+      On propose ; rien ne s'écrit sans un clic.
+    */
+    const actesIllisibles = React.useMemo(() => {
+        if (!lecture || !campagneExistante) return [];
+        const structure = lecture.fiches.find(f => normaliser(f.sujet) === normaliser('Structure en actes'));
+        return actesARendreLisibles(
+            structure?.contenu,
+            actesExistants.filter(a => a.campaignId === campagneExistante.id),
+        );
+    }, [lecture, campagneExistante, actesExistants]);
+
+    const rendreLesActesLisibles = () => {
+        for (const r of actesIllisibles) modifierActe(r.id, { titre: r.apres });
+        gmToast(`${actesIllisibles.length} titre${actesIllisibles.length > 1 ? 's' : ''} d’acte rendu${actesIllisibles.length > 1 ? 's' : ''} lisible${actesIllisibles.length > 1 ? 's' : ''}.`, 'success');
+    };
 
     const forger = async () => {
         if (!lecture || lecture.fiches.length === 0) return;
@@ -252,6 +275,27 @@ const ForgeDeLaTrame: React.FC = () => {
                         <div className="space-y-2">
                             <Compte icone={<ScrollText size={13} />} nombre={lecture.fiches.length} quoi="fiches publiées" />
                             <Compte icone={<Clapperboard size={13} />} nombre={actesDuDisque.length} quoi="actes attestés" />
+                            {actesIllisibles.length > 0 && (
+                                <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 space-y-2">
+                                    <p className="text-ui-11 text-amber-200/90 leading-relaxed">
+                                        Le livre écrit ses titres en <b>lettres espacées</b>, et la trame
+                                        de cette campagne les a gardés tels quels :
+                                    </p>
+                                    <ul className="space-y-1">
+                                        {actesIllisibles.map(r => (
+                                            <li key={r.id} className="text-ui-11 text-app-text/60 leading-snug">
+                                                <span className="opacity-60">{r.avant}</span> → <b className="text-app-text/90">{r.apres}</b>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        onClick={rendreLesActesLisibles}
+                                        className="w-full px-3 py-2 rounded-lg bg-amber-400/15 border border-amber-400/30 text-amber-200 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/25 transition-all"
+                                    >
+                                        Rendre ces titres lisibles
+                                    </button>
+                                </div>
+                            )}
                             {actesDuDisque.length > 0 && (
                                 <p className="text-ui-11 text-app-text/40 leading-relaxed">
                                     {actesDuDisque.join(' · ')}

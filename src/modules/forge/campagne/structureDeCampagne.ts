@@ -1,3 +1,4 @@
+import { titreLisible, memeTitreSansEspaces } from './titreLisible';
 /**
  * Lecture de la structure rendue par le carnet — la liste ordonnée des actes.
  *
@@ -21,6 +22,14 @@ export interface ActeLu {
     ordre: number;
     /** Le titre **tel que le livre l'écrit** : c'est lui qui bornera les requêtes. */
     titre: string;
+    /**
+     * **Le titre à montrer dans la trame**, quand il diffère du précédent —
+     * 2026-09-25. Un livre en capitales espacées (`S TA R T I N G  S C E N E`)
+     * garde son titre brut pour la Forge — il nomme les fiches par acte et part
+     * dans les invites —, mais la trame reçoit `Starting Scene`. Voir
+     * `titreLisible.ts`.
+     */
+    titreLisible?: string;
     /** L'enjeu, en une ou deux phrases. */
     enjeu: string;
     /** Titres de section cités, pour amorcer la résolution des pages. */
@@ -121,6 +130,15 @@ function cellulesDeLigne(ligne: string): string[] | null {
     return cellules;
 }
 
+/**
+ * La deuxième cellule telle que le carnet l'a écrite — **sans** réduire les
+ * espaces, contrairement à `cellule()`. Voir `titreLisible.ts`.
+ */
+function titreBrutDeLigne(ligne: string): string | undefined {
+    const brutes = ligne.trim().replace(/^\|/, '').replace(/\|$/, '').split('|');
+    return brutes[1]?.trim();
+}
+
 /** Vrai pour la ligne d'en-tête : « Ordre | Titre exact | … ». */
 function estEntete(cellules: string[]): boolean {
     const premiere = sansAccent(cellules[0] ?? '');
@@ -158,7 +176,7 @@ export function lireLaStructure(contenu: string): ActeLu[] {
     const actes: ActeLu[] = [];
     const vus = new Set<string>();
 
-    const ajouter = (titre: string, enjeu: string, sections: string[]) => {
+    const ajouter = (titre: string, enjeu: string, sections: string[], titreBrut?: string) => {
         const propre = retirerLAlternativeRedondante(
             retirerLaNumerotation(titre).replace(/^[«"'`\s]+|[»"'`\s]+$/g, '').trim(),
         );
@@ -169,7 +187,17 @@ export function lireLaStructure(contenu: string): ActeLu[] {
         const clef = sansAccent(propre);
         if (vus.has(clef)) return;
         vus.add(clef);
-        actes.push({ ordre: actes.length, titre: propre, enjeu: enjeu.trim(), sections });
+        /* Sur la cellule BRUTE : c'est la seule qui garde la double espace
+           entre les mots d'un titre en lettres espacées. */
+        const lisible = titreBrut !== undefined
+            ? retirerLAlternativeRedondante(titreLisible(
+                retirerLaNumerotation(titreBrut.replace(/\*\*/g, '')).replace(/^[«"'`\s]+|[»"'`\s]+$/g, ''),
+            ))
+            : propre;
+        actes.push({
+            ordre: actes.length, titre: propre, enjeu: enjeu.trim(), sections,
+            ...(lisible && lisible !== propre ? { titreLisible: lisible } : {}),
+        });
     };
 
     for (const ligne of contenu.replace(/\r\n/g, '\n').split('\n')) {
@@ -181,7 +209,7 @@ export function lireLaStructure(contenu: string): ActeLu[] {
             // ligne plus courte reste exploitable — un titre seul vaut mieux
             // qu'un acte perdu.
             const [, titre = '', enjeu = '', sections = ''] = cellules;
-            ajouter(titre, enjeu, decouperSections(sections));
+            ajouter(titre, enjeu, decouperSections(sections), titreBrutDeLigne(ligne));
             continue;
         }
 
@@ -214,4 +242,36 @@ export function lireLaStructure(contenu: string): ActeLu[] {
     }
 
     return actes;
+}
+
+/** Un acte déjà dans la trame, et le titre lisible qu'il devrait porter. */
+export interface ActeARendreLisible {
+    id: string;
+    avant: string;
+    apres: string;
+}
+
+/**
+ * **Les actes déjà forgés dont le titre est resté celui du PDF.**
+ *
+ * « Anges de Feu » a été forgée avant `titreLisible` : ses actes portent
+ * `S TA R T I N G S C E N E`, et la double espace qui séparait les mots est
+ * perdue en base. **Seule la fiche de structure la garde encore** — c'est donc
+ * elle qui dit ce que chaque acte aurait dû s'appeler, et on reconnaît l'acte
+ * espaces mis à part. Rien n'est écrit ici : l'écran propose, le meneur accepte.
+ */
+export function actesARendreLisibles(
+    structure: string | undefined,
+    actes: readonly { id: string; titre: string }[],
+): ActeARendreLisible[] {
+    if (!structure) return [];
+    const renommages: ActeARendreLisible[] = [];
+    for (const lu of lireLaStructure(structure)) {
+        if (!lu.titreLisible) continue;
+        const acte = actes.find(a => memeTitreSansEspaces(a.titre, lu.titre));
+        if (acte && acte.titre !== lu.titreLisible) {
+            renommages.push({ id: acte.id, avant: acte.titre, apres: lu.titreLisible });
+        }
+    }
+    return renommages;
 }
