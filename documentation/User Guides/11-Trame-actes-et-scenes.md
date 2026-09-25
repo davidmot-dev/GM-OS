@@ -259,6 +259,7 @@ monte au niveau qui les montre.
 | **Glisser une scène SUR un acte** | la rattache à cet acte — *avec confirmation* |
 | **Glisser une scène SUR une scène** | la pose juste après — *avec confirmation* |
 | **Mode Relier** | glisser crée un lien, cliquer un lien le retire |
+| **Ranger** | pose toute la trame d'un coup — voir ci-dessous |
 | **Libre / Figé** · **↺** | garde la disposition, ou la rend à la simulation |
 
 > ⚠️ **Hors du mode Relier, la toile n'écrit rien.** Un clic sur un trait est trop facile à rater.
@@ -270,6 +271,34 @@ monte au niveau qui les montre.
 
 Le graphe **n'écrit rien que vous n'ayez demandé** : il ne sait que ranger ses nœuds, et relayer vos
 gestes aux mêmes commandes que la fiche.
+
+### Ranger la trame
+
+*Nouveau le 2026-09-25.* Laissée à elle-même, la toile est une simulation physique : elle ne connaît
+ni « avant » ni « après », et ranger une trame de cinq actes à la main revient à se battre contre
+elle. **Ranger** pose tout d'un coup :
+
+- **Chaque acte est un bloc**, avec un cadre discret autour, et les blocs se suivent comme les mots
+  d'une page.
+- **Un acte prend la forme de sa trame :**
+  - une **chaîne** quand l'histoire y avance pas à pas — une scène se place à droite de celle qui y
+    mène, et la ligne se replie en serpentin quand elle devient trop longue ;
+  - une **étoile** quand il est ouvert — une scène qui mène à trois autres ou plus se met au centre,
+    ses pistes en cercle autour ; et quand on entre dans l'acte par plusieurs portes depuis ailleurs,
+    c'est l'acte lui-même qui prend le centre. *Une enquête ouverte est une étoile.*
+- **La page prend les proportions de votre fenêtre** : les chaînes s'allongent ou se replient pour
+  remplir la largeur disponible.
+- **Lieux, PNJ, indices** se rangent en petite grappe sous la première scène qui les convoque.
+  Ceux qu'aucune scène ne convoque vont en rangées sous la trame, une par sorte : un orphelin qu'on
+  voit à l'écart est un constat qu'on lit sans le chercher.
+
+> ⚠️ **Ranger remplace vos épingles** — la toile vous le demande avant. Tout reste ensuite
+> déplaçable à la main, et **rien n'est écrit dans la trame** : seules les positions changent.
+
+<!-- -->
+
+> 🔎 **Un retour en arrière ne décale rien.** Un enchaînement qui ramène au QG ferait une boucle, et
+> une boucle n'a pas de profondeur : seuls les liens vers l'avant décident de la place d'une scène.
 
 ---
 

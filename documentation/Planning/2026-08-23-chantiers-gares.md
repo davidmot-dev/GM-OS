@@ -144,7 +144,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | --- | --- | --- |
 | ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
-| ⚠️ **Une carte projetée sur un moniteur s'affiche dans TOUTES les fenêtres de projection ouvertes** — en couche 0, sous leur image. `projectionTarget` vaut `'monitor'` sans dire lequel, et `ProjectorView` dessine la carte dès que `mapTarget === 'monitor' && isProjectorWindow` | Projeter une carte sur le moniteur 2 pendant que le moniteur 1 est ouvert **sans image** : la carte y apparaît aussi | **Antérieur au 25/09, et jamais signalé à l'écran.** Le corriger demande de faire voyager `ecranDeLaCarte` (§ 114) jusqu'aux projecteurs — un champ de plus dans le protocole entre fenêtres, donc un chantier à part. *Une image opaque le cache ; un écran au repos le montre.* |
+| ✅ ~~**Une carte projetée sur un moniteur s'affiche dans TOUTES les fenêtres de projection ouvertes**~~ — **corrigé le soir même, § 118** — en couche 0, sous leur image. `projectionTarget` vaut `'monitor'` sans dire lequel, et `ProjectorView` dessine la carte dès que `mapTarget === 'monitor' && isProjectorWindow` | Projeter une carte sur le moniteur 2 pendant que le moniteur 1 est ouvert **sans image** : la carte y apparaît aussi | **Antérieur au 25/09, et jamais signalé à l'écran.** Le corriger demande de faire voyager `ecranDeLaCarte` (§ 114) jusqu'aux projecteurs — un champ de plus dans le protocole entre fenêtres, donc un chantier à part. *Une image opaque le cache ; un écran au repos le montre.* |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -4797,7 +4797,10 @@ physiques* — en est sortie le jour où sa raison d'être a disparu (§ 49).
 > motif se rouvre toute seule le jour où le motif tombe ; une ligne garée sans motif ne se rouvre
 > jamais.*
 
-#### ⏸️ Ouvrir la télécommande du MJ sur le second écran — garé le 2026-09-22
+#### ✅ Ouvrir la télécommande du MJ sur le second écran — garé le 2026-09-22, **construit le 2026-09-25 (§ 121)**
+
+> ⭐ **Rouvert par la raison la plus simple : David l'a demandé.** Le motif du gel était un confort
+> qu'une manipulation remplaçait ; il n'interdisait rien. La ligne reste ici pour son raisonnement.
 
 **Ce que ce serait.** Un bouton dans les Réglages, à côté du QR-code de la télécommande : *« Ouvrir
 sur le second écran »*. Il ouvrirait une fenêtre Electron native sur
@@ -9107,6 +9110,126 @@ tenue jusqu'à l'arrêt du moment.
 
 ---
 
+### 118 · La carte sur UN moniteur — le constat du § 1 bis sort par le haut (2026-09-25)
+
+Constaté le matin même en écrivant le § 114, et laissé ouvert faute de symptôme signalé : David a
+demandé la correction le soir.
+
+`projectionTarget` valait `'monitor'` **sans dire lequel**, et `ProjectorView` dessinait la carte dès
+que `mapTarget === 'monitor' && isProjectorWindow` : projeter sur le moniteur 2 l'allumait aussi, en
+couche 0, sous l'image du moniteur 1. *Une image opaque le cachait ; un écran au repos le montrait.*
+
+`ecranDeLaCarte` (§ 114) **voyage désormais avec la cible** jusqu'aux projecteurs, et
+`fenetreMontreLaCarte` ne l'allume que sur **cet** écran. Écran inconnu — projection d'avant, état
+relu — : le comportement d'avant, *un réglage absent ne doit pas éteindre ce qui marchait.* Et comme
+la cible, le moniteur **appartient au MJ** : `stripProjectionDeLaCarte` le retire des messages d'une
+fenêtre secondaire — la leçon du § 117, appliquée au champ qu'on ajoutait.
+
+**Ancres** : `map/fenetreDeLaCarte.ts` (+ 6 essais), `services/CrossWindowEventService.ts`
+(`stripProjectionDeLaCarte`, le moniteur dans les deux diffusions), `image/components/ProjectorView.tsx`.
+⚠️ **Non vu à l'écran** — il faut deux moniteurs de projection ouverts.
+
+---
+
+### 119 · Les titres en lettres espacées d'un PDF — « Anges de Feu » (2026-09-25)
+
+Vu par David sur le graphe : `###AFTERMATH`, `###THEINVESTIGA…`. Le PDF de *Fiery Angels* compose ses
+titres en capitales espacées ; son texte rend une espace entre chaque lettre, **deux entre les mots** :
+`S TA R T I N G  S C E N E`. Le carnet les a recopiés « tels que le livre les écrit », comme on le lui
+demande.
+
+⛔ **La double espace était la seule trace des mots, et `cellule()` la réduisait** — en base, les actes
+portaient `S TA R T I N G S C E N E`, que plus rien ne peut redécouper. D'où trois gestes :
+
+1. **`titreLisible`** recolle les lettres **sur la cellule brute**, retire les dièses, et remet en casse
+   de titre des capitales purement typographiques. Un titre ordinaire n'est pas touché : il faut trois
+   jetons dont une majorité d'une lettre.
+2. ⛔ **Le titre du livre reste pour la Forge** — il nomme les fiches par acte et part dans les
+   invites —, et l'acte projeté le porte en `titreDuLivre`. **Sans lui, toutes les scènes d'« Anges de
+   Feu » auraient été écartées à la reforge** : elles retrouvent leur acte par le `partie:` de leurs
+   fiches, qui porte ce titre-là. Trouvé en suivant le fil avant d'écrire, et tenu par un essai.
+3. **Les actes déjà forgés** : la Forge de la trame propose de les renommer d'après la **fiche de
+   structure** — seule à garder les mots —, et un acte est reconnu **espaces mis à part** pour qu'une
+   reforge ne crée pas de doublon.
+
+**Ancres** : `forge/campagne/titreLisible.ts`, `structureDeCampagne.ts` (`titreBrutDeLigne`,
+`titreLisible`, `actesARendreLisibles`), `ecritureDeLaCampagne.ts` (l'annuaire des actes sous leurs
+deux noms), `ForgeDeLaTrame.tsx` (l'encadré), + 14 essais.
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25** — les captures suivantes portent *Starting Scene*, *The
+Investigation*, *Final Confrontation*.
+
+---
+
+### 120 · ⭐⭐ Ranger le graphe de la trame — cinq essais, une chronologie qui se pose (2026-09-25)
+
+David, capture à l'appui : *« le graphe de la trame narrative est illisible et très difficile à ranger
+correctement »*. ⛔ **La cause n'était pas un réglage de forces** : une simulation physique ne connaît
+ni avant ni après, et ranger à la main revenait à se battre contre elle. *Une chronologie ne s'obtient
+pas d'une physique ; elle se pose.*
+
+Le bouton **Ranger** calcule une disposition, l'épingle en **une** écriture (`rangerLeGrapheDeTrame`),
+et cadre la toile. **Cinq essais le même soir, et chacun a montré ce que le précédent cachait** :
+
+| Essai | Ce que David a vu | Ce que ça apprenait |
+| --- | --- | --- |
+| 1. Une colonne par acte | *« trop serrées, il faut aussi travailler la dimension horizontale »* | quinze scènes sur un trait, les enchaînements superposés au trait |
+| 2. Le temps de gauche à droite | *« s'étendre dans les deux dimensions »* | un ruban de 1 600 sur 100 |
+| 3. Des blocs en serpentin | *« introduire des notions en étoile ? »* | une grille fabrique les croisements d'une trame ouverte |
+| 4. Chaîne **ou** étoile | *« gère mieux la largeur »* | viser 16:9 rendait une colonne sur un écran large |
+| 5. Des chaînes de largeur variable | ✅ *« ok c'est bien »* | — |
+
+**Ce qui reste :**
+- ⭐ **La forme vient de la trame.** Un acte où une scène mène à trois autres, ou où l'on entre par
+  trois portes, est une **étoile** — le carrefour au centre, ou l'acte lui-même. Sinon, une **chaîne**
+  en serpentin. *Une enquête ouverte EST une étoile : la poser en cercle fait des croisements des
+  rayons.*
+- **Vers l'avant seulement** : un retour au QG ferait une boucle, et une boucle n'a pas de profondeur.
+- **La page suit les proportions de LA toile**, mesurées au clic, en essayant 3 à 8 rangs par ligne
+  et plusieurs largeurs. Le journal dit ce qui a été visé et obtenu — `toile L×H → page L×H` — : au
+  cinquième essai je ne savais pas si la mesure ou le choix était en cause, *et c'est une question
+  qu'on ne doit poser qu'une fois.*
+- Tout est **épinglé**, annexes comprises : laissées à la simulation, elles dérivaient en arcs. Les
+  orphelins en rangées sous la trame. Un cadre discret par acte, et les traits acte → scène se taisent
+  quand la position dit l'appartenance.
+
+⚠️ **Et une leçon payée trois fois dans la soirée** : j'ai modifié `src/` **pendant** les essais de
+David — après avoir noté la règle en mémoire le matin même. *Une réponse « GM-OS est fermé » vaut
+jusqu'au prochain essai.* Les deux essais suivants ont été précédés de la question.
+
+**Ancres** : `session/logic/rangementDeLaTrame.ts` (`rangerLaTrame`, `centreDeLEtoile`, + 14 essais),
+`session/store/campaignSlice.ts` (`rangerLeGrapheDeTrame`), `trame/GrapheDeLaTrame.tsx` (le bouton,
+le cadre des actes, la mesure et sa ligne de journal).
+
+---
+
+### 121 · ⭐ Le pupitre de l'écran du bas — le § 4 se vide d'une ligne (2026-09-25)
+
+Garé le 2026-09-22 parce qu'une route sans code existait (coller le jeton une fois dans Edge, replacer
+la fenêtre par ScreenXpert). David l'a demandé : *une ligne garée avec son motif se rouvre le jour où
+on la veut.*
+
+**Réglages → Télécommande** : *Ouvrir sur l'écran du bas* (qui devient *Fermer*) et *L'ouvrir au
+lancement de GM-OS*.
+
+- ⭐ **La fenêtre est un CLIENT, comme la tablette** : `?window=remote`, le jeton d'appairage injecté
+  par GM-OS en fragment, **aucun preload** — avec le pont Electron, elle risquait de se prendre pour
+  une fenêtre locale du meneur, une route jamais éprouvée.
+- **L'écran juste SOUS celui de GM-OS**, jamais « le deuxième » : David a deux écrans de table, et le
+  pupitre n'a rien à faire chez les joueurs. Sans dalle en dessous, le refus se dit.
+- ⛔ **Sa propre session de stockage** (`persist:pupitre`). *Trouvé avant d'écrire* : en développement,
+  la fenêtre MJ et elle seraient servies par la **même origine** (Vite) et partageraient le
+  `localStorage` des campagnes — *deux fenêtres qui écrivent au même endroit, c'est ce qui a déjà vidé
+  l'application.*
+- **Elle part avec GM-OS** : restée seule, sans cadre et en plein écran, elle empêcherait
+  l'application de se fermer.
+
+**Ancres** : `electron/pupitreDuBas.ts` (`ecranDuBas`, `adresseDuPupitre`, + 6 essais),
+`components/settings/PupitreDuBas.tsx`, `stores/useHardwareStore.ts` (`pupitreAuLancement`),
+`App.tsx` (l'ouverture au lancement). ✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25** — *« ok ça fonctionne
+bien »*.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -9165,6 +9288,10 @@ tenue jusqu'à l'arrêt du moment.
 | 51 | **Le bruitage d'un moment** | ✅ **LIVRÉ, la liste ÉPROUVÉE le 25/09** — ⛔ `PAD_03` existe **dans chaque atmosphère** : un moment jouait le pad n°3 de l'atmosphère active **au moment du jeu**. L'atmosphère est retenue, et un pad d'ailleurs joue sous une clé à part (§ 115) | Un pad d'une atmosphère **inactive** | ⚠️ Le son lui-même non confirmé |
 | 52 | **La photo prise avant d'attendre** | ✅ **CORRIGÉ le 25/09** — la synchronisation Nexus lisait l'état en direct avant une douzaine de résolutions de médias. ⛔ **Annoncé à tort comme la cause de la carte du Hub** (§ 116) | — | Sans symptôme propre |
 | 53 | **La cible de la carte appartient au MJ** | ✅ **CORRIGÉ ET ÉPROUVÉ À L'ÉCRAN le 25/09** — ⭐⭐ trouvé par **une trace dans chaque fenêtre**, après une hypothèse fausse : le MJ adoptait le `null` d'une fenêtre secondaire 24 ms après la projection. ⛔ **Le tableau blanc avait déjà cette garde, trois lignes plus bas** (§ 117) | — | Rien |
+| 54 | **La carte sur UN moniteur** | ✅ **CORRIGÉ le 25/09** — le constat du § 1 bis sort par le haut : `'monitor'` ne disait pas lequel, et la carte s'allumait dans toutes les fenêtres de projection. Le moniteur voyage, et appartient au MJ (§ 118) | Deux moniteurs de projection ouverts | ⚠️ Non vu |
+| 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
+| 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
+| 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

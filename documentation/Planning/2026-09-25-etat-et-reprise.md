@@ -1,8 +1,7 @@
-# État et reprise — le 2026-09-25, **la carte d'un moment, et la garde qui manquait à la carte**
+# État et reprise — le 2026-09-25, **la carte d'un moment, la garde qui manquait à la carte, et une trame qui se range**
 
-> **Base saine.** `tsc -b` propre, **5 937 essais Vitest** (463 fichiers, 1 ignoré). Branche
-> `feature/tablet-hub-pwa`, **sept commits d'avance sur `origin`, non poussés** — et chacun des
-> quatre commits de code du jour compile seul.
+> **Base saine.** `tsc -b` propre, **5 979 essais Vitest** (467 fichiers, 1 ignoré), la validation
+> d'avant l'envoi au vert. Branche `feature/tablet-hub-pwa`, **tout est poussé**.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md).
@@ -21,6 +20,10 @@
 | **115** | Le bruitage d'un moment, pris dans toutes les atmosphères | ✅ **la liste** (*« fonctionne bien »*) ; le son d'une atmosphère inactive, non confirmé |
 | **116** | La photo prise avant d'attendre — la synchronisation Nexus | — sans symptôme propre |
 | **117** | La cible de projection de la carte appartient au MJ | ✅ **oui** (*« ok c'est bon »*) |
+| **118** | La carte sur UN moniteur — le constat du § 1 bis, corrigé le soir | ⚠️ non — il faut deux moniteurs de projection ouverts |
+| **119** | Les titres en lettres espacées d'un PDF (« Anges de Feu ») | ✅ **oui** — les captures suivantes portent *Starting Scene* |
+| **120** | Ranger le graphe de la trame — cinq essais | ✅ **oui** (*« ok c'est bien »*) |
+| **121** | Le pupitre de l'écran du bas du Zenbook Duo | ✅ **oui** (*« ok ça fonctionne bien »*) |
 
 Et un commit de données : les **fiches de Cœur de Ténèbre** (trois actes, quinze fiches), forgées le
 22/09 et restées hors du dépôt.
@@ -34,16 +37,16 @@ elle. *La demande de David désigne l'endroit ; elle ne dit pas la profondeur.*
 
 ## Par quoi reprendre
 
-1. **Pousser les sept commits** — rien ne l'a été aujourd'hui.
+1. **Rendre lisibles les actes d'« Anges de Feu »** si ce n'est pas fait : Forge de la trame →
+   Anges de Feu → *Rendre ces titres lisibles* (§ 119).
 2. **Les deux cas de la carte jamais vus** (§ 114, repris au § 1 du registre) : un moment dont la
    carte part sur un **moniteur**, puis *Arrêter* — l'écran doit devenir noir ; et une carte
    **projetée à la main** avant un moment qui en projette une autre — elle doit revenir sur son
    écran.
 3. **Un bruitage d'une atmosphère inactive** (§ 115) — c'est ce son qui doit sortir, et le pad de
    même numéro de l'atmosphère affichée ne doit pas s'allumer.
-4. ⚠️ **Le constat laissé ouvert** (§ 1 bis) : une carte projetée sur un moniteur s'affiche dans
-   **toutes** les fenêtres de projection ouvertes. Antérieur, jamais signalé ; le corriger fait
-   voyager `ecranDeLaCarte` entre fenêtres — un chantier à part, à ne lancer que si David le voit.
+4. **La carte sur un moniteur, avec deux moniteurs de projection ouverts** (§ 118) : elle ne doit
+   apparaître que sur celui qu'on a choisi.
 5. **Repris du 22/09, rien n'a bougé** : le **compresseur d'Ambient-OS** (décision de David, pas
    prise), les correctifs audio des §§ 106 à 110 jamais éprouvés, la **refonte de l'interface**
    (§ 76, premier geste T0.1), la **restauration** (§ 87, dans `npm run repetition`).
@@ -85,12 +88,37 @@ Les atmosphères portent `campagneId`, pas `campaignId`. Le champ étant faculta
 fautive compilait — **c'est l'essai du filtre par campagne qui l'a attrapé**. *Un champ facultatif
 mal nommé n'est pas une erreur de type, c'est une donnée absente.*
 
-### ⛔ J'ai modifié `src/` pendant les essais de David — deux fois
+### ⛔ J'ai modifié `src/` pendant les essais de David — trois fois
 
 Dans la boucle « David essaie → je lis `main.log` → je corrige », l'application tourne
 forcément. J'ai enchaîné lecture et correctif sans redemander, une fois après avoir écrit *« je ne
-ferai que lire »*. La mémoire `gm-os-demander-avant-editer` le porte désormais : **une réponse
+ferai que lire »*, et une troisième fois sur le graphe, le soir, **après** avoir noté la règle. La mémoire `gm-os-demander-avant-editer` le porte désormais : **une réponse
 « GM-OS est fermé » vaut jusqu'au prochain essai, pas au-delà.**
+
+### ⭐⭐ Une chronologie ne s'obtient pas d'une physique ; elle se pose
+
+Le graphe de la trame était une simulation de forces : elle ne connaît ni avant ni après. Cinq essais
+dans la soirée pour le ranger (§ 120) — et le plus instructif est le quatrième : *une enquête ouverte
+EST une étoile*, et la forcer dans une grille fabriquait les croisements. **La forme d'une
+disposition doit venir de la forme de la donnée**, pas d'un gabarit.
+
+⚠️ **Et au cinquième, je ne savais pas si la mesure ou le choix était en cause.** Le rangement écrit
+désormais dans le journal ce qu'il a visé et obtenu. *Une question qu'on se pose deux fois mérite une
+ligne de journal.*
+
+### ⛔ Garder ce qui borne, rendre lisible ce qui s'affiche
+
+Les titres du PDF d'« Anges de Feu » (§ 119) servaient **deux maîtres** : la Forge — qui nomme les
+fiches par acte et y retrouve les scènes — et la trame, qui les montre. Nettoyer à la source aurait
+fait écarter **toutes** les scènes à la reforge. Le titre du livre reste en coulisse, le titre
+lisible va à l'écran. *Avant de changer une valeur, chercher tous ceux qui la comparent.*
+
+### ⛔ Deux fenêtres de la même origine partagent leur stockage
+
+Le pupitre de l'écran du bas (§ 121) aurait été servi, en développement, par la même origine que la
+fenêtre MJ — et aurait partagé le `localStorage` des campagnes. Trouvé **avant** d'écrire, parce que
+la question était déjà posée par les pertes d'août : *qui d'autre écrit ici ?* Réponse : une session
+à part (`persist:pupitre`).
 
 ### ⚠️ Découper un commit en reconstruisant un fichier : vérifier que chaque commit compile
 

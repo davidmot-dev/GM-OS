@@ -99,6 +99,24 @@ citée comme une source.
 
 ---
 
+## 7. Les titres en lettres espacées
+
+*Corrigé le 2026-09-25, sur « Anges de Feu ».* Certains PDF composent leurs titres en capitales
+espacées, et leur texte rend une espace entre chaque lettre : `S TA R T I N G  S C E N E`,
+`### T H E  I N V E S T I G A T I O N`. La trame en héritait tels quels.
+
+- **Les nouvelles forges** donnent des titres d'actes lisibles — *Starting Scene*, *The
+  Investigation* — et retirent les `###`. La Forge garde en coulisse le titre du livre : c'est par
+  lui que les scènes retrouvent leur acte.
+- **Une campagne déjà forgée** : dans la **Forge de la trame**, choisissez-la. Si ses actes portent
+  des lettres espacées, un encadré orange les liste avec leur correction, et **Rendre ces titres
+  lisibles** les renomme. C'est la fiche de structure qui sait où finissent les mots — la trame, elle,
+  les a perdus.
+- **Reforger** une campagne dont les actes ont gardé leur titre du livre ne crée pas de doublon : l'acte
+  est reconnu, espaces mis à part.
+
+---
+
 ## 💡 Ce qu'il faut retenir
 
 - **Fiches d'abord, forge ensuite.** L'Atelier n'est pas une formalité : c'est là que le travail se

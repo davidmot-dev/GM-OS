@@ -25,7 +25,9 @@ compte en séance.
 5. **Projeter la Carte** — choisissez le Player Hub ou un moniteur.
 
    > ⛔ **Corrigé le 2026-09-25 :** projeter sur le Player Hub une carte **déjà sur un moniteur**
-   > fermait le moniteur sans l'afficher sur le Hub — elle n'était plus nulle part.
+   > fermait le moniteur sans l'afficher sur le Hub — elle n'était plus nulle part. Et une carte
+   > projetée sur **un** moniteur s'affichait aussi, en fond, sur **tous** les autres écrans de
+   > projection ouverts ; elle ne s'affiche plus que sur celui que vous avez choisi.
 
 Tant que vous n'avez pas cliqué sur *Projeter*, **rien ne part chez les joueurs**. Vous pouvez tout
 préparer à froid.

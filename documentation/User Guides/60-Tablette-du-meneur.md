@@ -23,6 +23,27 @@ C'est une page web : rien à installer, on scanne un QR code.
 > autorise l'appareil. Recopier l'adresse sans ce fragment ne suffit pas — scannez le code, ou
 > copiez la ligne entière.
 
+### 🖥️ Sur l'écran du bas d'un PC à deux écrans
+
+*Nouveau le 2026-09-25.* Sur un portable à deux dalles empilées — un Zenbook Duo —, l'écran du bas,
+tactile et posé à plat sous vos mains, est la place naturelle de ce pupitre. Sous le QR code :
+
+- **Ouvrir sur l'écran du bas** — la télécommande s'y ouvre en plein écran, sans cadre, **déjà
+  appairée** : rien à scanner. Le bouton devient **Fermer la télécommande du bas**.
+- **L'ouvrir au lancement de GM-OS** — décochée par défaut : une fenêtre qui s'ouvre seule doit avoir
+  été demandée.
+
+On la ferme aussi depuis elle-même avec **Alt+F4**, et elle part toujours avec GM-OS.
+
+> 🔎 **Elle vise l'écran situé juste SOUS celui de GM-OS**, jamais « le deuxième écran » : vos écrans
+> de table ne peuvent pas la recevoir par erreur. Sans dalle en dessous — clavier posé dessus —, un
+> bandeau le dit.
+
+<!-- -->
+
+> ⚠️ **C'est la télécommande, pas une seconde fenêtre du meneur.** Une seule fenêtre écrit vos
+> campagnes ; celle-ci se connecte comme votre tablette, et garde ses propres données à part.
+
 ---
 
 ## 🧭 L'écran, refait le 2026-09-05
