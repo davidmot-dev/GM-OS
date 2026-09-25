@@ -19,7 +19,7 @@ import {
     sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
 } from '../../logic/enchainementsDeLaTrame';
 import ChoixDuRang from './ChoixDuRang';
-import { rangerEnColonnes } from '../../logic/rangementDeLaTrame';
+import { rangerLaTrame } from '../../logic/rangementDeLaTrame';
 
 /**
  * **La trame vue d'ensemble** — demandé par David le 2026-09-22.
@@ -201,7 +201,11 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const ranger = () => {
         if (!activeCampaignId) return;
         const complet = grapheDeLaTrame(activeCampaignId, source, { niveau: NIVEAU_MAXIMUM, portee: 'tout' });
-        const { epingles } = rangerEnColonnes(complet);
+        /* Les proportions de LA fenêtre : viser 16:9 rendait une colonne sur un
+           écran large (troisième essai du 2026-09-25). */
+        const { epingles } = rangerLaTrame(complet, {
+            proportions: taille.hauteur > 0 ? taille.largeur / taille.hauteur : undefined,
+        });
         const appliquer = () => {
             POSITIONS_VIVANTES.clear();
             cadrerApresRangement.current = true;
@@ -209,7 +213,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
         };
         const dejaArrange = fige || Object.keys(campagne?.noeudsEpinglesDeLaTrame ?? {}).length > 0;
         if (dejaArrange) {
-            gmConfirm('Ranger la trame en colonnes ? Les positions que tu as épinglées seront remplacées.', appliquer);
+            gmConfirm('Ranger la trame ? Les positions que tu as épinglées seront remplacées.', appliquer);
         } else {
             appliquer();
         }
@@ -602,7 +606,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
 
                 <button
                     onClick={ranger}
-                    title="Une colonne par acte, de gauche à droite ; ses scènes dessous, dans leur ordre. Tu peux ensuite ajuster à la main."
+                    title="Chaque acte selon sa forme : une chaîne qui se lit de gauche à droite, ou une étoile autour de son carrefour. Tu peux ensuite ajuster à la main."
                     className="flex items-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
                 ><Columns3 size={13} /> Ranger</button>
 

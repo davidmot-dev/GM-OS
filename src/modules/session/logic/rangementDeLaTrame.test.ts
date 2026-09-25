@@ -1,15 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import {
-    rangerEnColonnes, PAS_HORIZONTAL, HAUTEUR_MAXIMALE_DE_RANG, COLONNES_PAR_LIGNE,
+    rangerLaTrame, PAS_HORIZONTAL, COLONNES_PAR_LIGNE,
 } from './rangementDeLaTrame';
 import type { GrapheDeTrame, NoeudDeTrame, LienDeTrame } from './grapheDeLaTrame';
 
 /**
- * **Des blocs d'actes qui occupent les deux dimensions.**
+ * **Chaque acte selon sa forme : une chaîne, ou une étoile.**
  *
- * Demandé par David le 2026-09-25, en trois essais : une colonne par acte
- * (*« trop serrées »*), puis le temps de gauche à droite (*« il faudrait
- * s'étendre dans les deux dimensions »* — un ruban de 1 600 sur 100), puis ceci.
+ * Demandé par David le 2026-09-25, en quatre essais : une colonne par acte
+ * (*« trop serrées »*), le temps de gauche à droite (*« s'étendre dans les deux
+ * dimensions »*), des blocs en serpentin (*« introduire des notions en
+ * étoile ? »*), puis ceci.
  */
 
 const noeud = (type: NoeudDeTrame['type'], refId: string): NoeudDeTrame =>
@@ -17,7 +18,7 @@ const noeud = (type: NoeudDeTrame['type'], refId: string): NoeudDeTrame =>
 const lien = (source: string, target: string, nature: LienDeTrame['nature']): LienDeTrame =>
     ({ source, target, nature });
 
-/** Un acte linéaire de `n` scènes : `pfx0 → pfx1 → …`. */
+/** Un acte linéaire de `n` scènes : `acte-0 → acte-1 → …`. */
 function acteLineaire(acte: string, n: number): GrapheDeTrame {
     const scenes = Array.from({ length: n }, (_, i) => noeud('scene', `${acte}-${i}`));
     return {
@@ -29,121 +30,128 @@ function acteLineaire(acte: string, n: number): GrapheDeTrame {
     };
 }
 
+/** Un acte en étoile : `acte-hub` mène à `n` pistes. */
+function acteEnEtoile(acte: string, n: number): GrapheDeTrame {
+    const pistes = Array.from({ length: n }, (_, i) => noeud('scene', `${acte}-${i}`));
+    const hub = noeud('scene', `${acte}-hub`);
+    return {
+        noeuds: [noeud('acte', acte), hub, ...pistes],
+        liens: [
+            ...[hub, ...pistes].map(s => lien(`acte:${acte}`, s.id, 'appartenance')),
+            ...pistes.map(s => lien(hub.id, s.id, 'enchainement')),
+        ],
+    };
+}
+
+/** Un acte ouvert : `n` scènes sans rien entre elles — on y entre par plusieurs portes. */
+function acteOuvert(acte: string, n: number): GrapheDeTrame {
+    const scenes = Array.from({ length: n }, (_, i) => noeud('scene', `${acte}-${i}`));
+    return {
+        noeuds: [noeud('acte', acte), ...scenes],
+        liens: scenes.map(s => lien(`acte:${acte}`, s.id, 'appartenance')),
+    };
+}
+
 const fusion = (...graphes: GrapheDeTrame[]): GrapheDeTrame => ({
     noeuds: graphes.flatMap(g => g.noeuds),
     liens: graphes.flatMap(g => g.liens),
 });
 
-/** Acte 1 : trois scènes en suite. Acte 2 : un éventail — h mène à e1, e2, e3. */
-const GRAPHE: GrapheDeTrame = fusion(acteLineaire('a1', 3), {
-    noeuds: [
-        noeud('acte', 'a2'), noeud('scene', 'h'), noeud('scene', 'e1'), noeud('scene', 'e2'), noeud('scene', 'e3'),
-        noeud('pnj', 'holden'), noeud('lieu', 'qg'), noeud('indice', 'perdu'),
-    ],
-    liens: [
-        ...['h', 'e1', 'e2', 'e3'].map(s => lien('acte:a2', `scene:${s}`, 'appartenance')),
-        ...['e1', 'e2', 'e3'].map(s => lien('scene:h', `scene:${s}`, 'enchainement')),
-        /* Un retour en arrière, et un saut d'acte : ils ne doivent rien décaler. */
-        lien('scene:e3', 'scene:h', 'enchainement'),
-        lien('scene:a1-2', 'scene:h', 'enchainement'),
-        lien('scene:a1-0', 'pnj:holden', 'pnj'),
-        lien('scene:h', 'pnj:holden', 'pnj'),
-        lien('scene:a1-1', 'lieu:qg', 'lieu'),
-    ],
-});
+const distance = (a: { x: number; y: number }, b: { x: number; y: number }) => Math.hypot(a.x - b.x, a.y - b.y);
 
-describe('rangerEnColonnes', () => {
-    const { epingles } = rangerEnColonnes(GRAPHE);
-    const p = (id: string) => epingles[id];
-
+describe('rangerLaTrame — une chaîne', () => {
     it('une suite courte se lit de gauche à droite', () => {
-        expect(p('scene:a1-1').x - p('scene:a1-0').x).toBe(PAS_HORIZONTAL);
-        expect(p('scene:a1-2').x - p('scene:a1-1').x).toBe(PAS_HORIZONTAL);
-        expect(p('scene:a1-0').y).toBe(p('scene:a1-2').y);
+        const { epingles: e } = rangerLaTrame(acteLineaire('a', 3));
+        expect(e['scene:a-1'].x - e['scene:a-0'].x).toBe(PAS_HORIZONTAL);
+        expect(e['scene:a-2'].x - e['scene:a-1'].x).toBe(PAS_HORIZONTAL);
+        expect(e['scene:a-0'].y).toBe(e['scene:a-2'].y);
     });
 
-    it('un éventail s’empile dans le rang suivant', () => {
-        const [e1, e2, e3] = ['scene:e1', 'scene:e2', 'scene:e3'].map(p);
-        expect(e1.x).toBe(e2.x);
-        expect(e2.x).toBe(e3.x);
-        expect(e1.x - p('scene:h').x).toBe(PAS_HORIZONTAL);
-        expect(e2.y).toBeGreaterThan(e1.y);
-        expect(e3.y).toBeGreaterThan(e2.y);
+    it('l’acte est au-dessus du milieu de sa chaîne', () => {
+        const { epingles: e } = rangerLaTrame(acteLineaire('a', 3));
+        expect(e['acte:a'].x).toBe(e['scene:a-1'].x);
+        expect(e['acte:a'].y).toBeLessThan(e['scene:a-0'].y - 40);
     });
 
-    it('un retour en arrière ne décale rien — une boucle n’a pas de profondeur', () => {
-        expect(p('scene:h').x).toBeLessThan(p('scene:e1').x);
-    });
-
-    it('l’acte est au-dessus du milieu de son bloc', () => {
-        expect(p('acte:a1').x).toBe(p('scene:a1-1').x);
-        expect(p('acte:a1').y).toBeLessThan(p('scene:a1-0').y);
-    });
-
-    it('un rang trop haut se replie en une colonne de plus', () => {
-        const scenes = Array.from({ length: HAUTEUR_MAXIMALE_DE_RANG + 2 }, (_, i) => noeud('scene', `x${i}`));
-        const { epingles: e } = rangerEnColonnes({
-            noeuds: [noeud('acte', 'z'), noeud('scene', 'hub'), ...scenes],
-            liens: [
-                lien('acte:z', 'scene:hub', 'appartenance'),
-                ...scenes.flatMap(s => [
-                    lien('acte:z', s.id, 'appartenance'),
-                    lien('scene:hub', s.id, 'enchainement'),
-                ]),
-            ],
-        });
-        expect(new Set(scenes.map(s => e[s.id].x)).size).toBe(2);
-    });
-
-    /** Laissées à la simulation, elles dérivaient en arcs — la capture le montrait. */
-    it('épingle les annexes SOUS la première scène qui les convoque', () => {
-        expect(Math.abs(p('pnj:holden').x - p('scene:a1-0').x)).toBeLessThan(PAS_HORIZONTAL / 2);
-        expect(p('pnj:holden').y).toBeGreaterThan(p('scene:a1-0').y);
-        expect(p('lieu:qg')).toBeDefined();
-    });
-
-    /** *Un orphelin qu'on voit à l'écart est un constat qu'on lit sans le chercher.* */
-    it('met l’orpheline sous toute la trame', () => {
-        const scenes = Object.entries(epingles).filter(([id]) => id.startsWith('scene:')).map(([, v]) => v.y);
-        expect(p('indice:perdu').y).toBeGreaterThan(Math.max(...scenes));
-    });
-
-    it('rend un rangement vide pour une trame vide', () => {
-        expect(rangerEnColonnes({ noeuds: [], liens: [] })).toEqual({ epingles: {} });
-    });
-});
-
-describe('rangerEnColonnes — les deux dimensions', () => {
-    /** **Le test qui garde la seconde remarque de David** : plus de ruban. */
     it('une longue suite se replie, en serpentin', () => {
-        const { epingles: e } = rangerEnColonnes(acteLineaire('long', 10));
+        const { epingles: e } = rangerLaTrame(acteLineaire('long', 10));
         const xs = new Set(Array.from({ length: 10 }, (_, i) => e[`scene:long-${i}`].x));
         expect(xs.size).toBe(COLONNES_PAR_LIGNE);
-
-        /* La ligne suivante repart d'où la précédente s'arrête : la scène 4
-           est sous la scène 3, et non revenue à gauche. */
         const derniere = e[`scene:long-${COLONNES_PAR_LIGNE - 1}`];
         const premiereSuivante = e[`scene:long-${COLONNES_PAR_LIGNE}`];
         expect(premiereSuivante.x).toBe(derniere.x);
         expect(premiereSuivante.y).toBeGreaterThan(derniere.y);
     });
 
-    it('cinq actes occupent un rectangle aux proportions d’un écran, pas un ruban', () => {
-        const { epingles: e } = rangerEnColonnes(fusion(
-            ...['un', 'deux', 'trois', 'quatre', 'cinq'].map(a => acteLineaire(a, 8)),
-        ));
+    it('un retour en arrière ne fait pas une étoile — une boucle n’a pas de profondeur', () => {
+        const g = acteLineaire('a', 3);
+        g.liens.push(lien('scene:a-2', 'scene:a-0', 'enchainement'));
+        const { epingles: e } = rangerLaTrame(g);
+        expect(e['scene:a-0'].y).toBe(e['scene:a-2'].y);
+    });
+});
+
+describe('rangerLaTrame — une étoile', () => {
+    /** **Le test qui garde la troisième remarque de David.** */
+    it('la scène carrefour au centre, ses pistes en cercle autour', () => {
+        const { epingles: e } = rangerLaTrame(acteEnEtoile('enq', 6));
+        const centre = e['scene:enq-hub'];
+        const rayons = Array.from({ length: 6 }, (_, i) => distance(e[`scene:enq-${i}`], centre));
+        for (const r of rayons) expect(r).toBeCloseTo(rayons[0], 5);
+        expect(rayons[0]).toBeGreaterThan(100);
+    });
+
+    it('un acte où l’on entre par plusieurs portes tourne autour de l’acte lui-même', () => {
+        const { epingles: e } = rangerLaTrame(acteOuvert('inv', 8));
+        const centre = e['acte:inv'];
+        const rayons = Array.from({ length: 8 }, (_, i) => distance(e[`scene:inv-${i}`], centre));
+        for (const r of rayons) expect(r).toBeCloseTo(rayons[0], 5);
+    });
+
+    it('les pistes voisines laissent la place à deux titres', () => {
+        const { epingles: e } = rangerLaTrame(acteEnEtoile('enq', 12));
+        const voisines = distance(e['scene:enq-0'], e['scene:enq-1']);
+        expect(voisines).toBeGreaterThan(150);
+    });
+
+    it('deux pistes ne font pas une étoile', () => {
+        const { epingles: e } = rangerLaTrame(acteEnEtoile('petit', 2));
+        expect(e['scene:petit-0'].x).toBe(e['scene:petit-1'].x);
+    });
+
+    it('le carrefour garde l’acte au-dessus de l’étoile', () => {
+        const { epingles: e } = rangerLaTrame(acteEnEtoile('enq', 5));
+        const plusHaute = Math.min(...Array.from({ length: 5 }, (_, i) => e[`scene:enq-${i}`].y));
+        expect(e['acte:enq'].y).toBeLessThan(plusHaute);
+    });
+});
+
+describe('rangerLaTrame — la page', () => {
+    const TRAME = fusion(
+        acteLineaire('un', 3), acteLineaire('deux', 3), acteOuvert('trois', 9),
+        acteLineaire('quatre', 8), acteLineaire('cinq', 6),
+    );
+
+    const rapportDe = (e: Record<string, { x: number; y: number }>) => {
         const xs = Object.values(e).map(v => v.x);
         const ys = Object.values(e).map(v => v.y);
-        const rapport = (Math.max(...xs) - Math.min(...xs)) / (Math.max(...ys) - Math.min(...ys));
-        expect(rapport).toBeGreaterThan(0.8);
-        expect(rapport).toBeLessThan(3.5);
+        return (Math.max(...xs) - Math.min(...xs)) / (Math.max(...ys) - Math.min(...ys));
+    };
+
+    /** Le troisième essai visait 16:9 et rendait une colonne sur un écran large. */
+    it('suit les proportions de la fenêtre', () => {
+        const large = rapportDe(rangerLaTrame(TRAME, { proportions: 2.5 }).epingles);
+        const haute = rapportDe(rangerLaTrame(TRAME, { proportions: 0.8 }).epingles);
+        expect(large).toBeGreaterThan(haute);
+        expect(large).toBeGreaterThan(1.2);
     });
 
     it('deux blocs ne se chevauchent jamais', () => {
+        const { epingles: e } = rangerLaTrame(TRAME, { proportions: 2.4 });
         const actes = ['un', 'deux', 'trois', 'quatre', 'cinq'];
-        const { epingles: e } = rangerEnColonnes(fusion(...actes.map((a, i) => acteLineaire(a, 3 + i * 2))));
         const boite = (a: string) => {
-            const points = Object.entries(e).filter(([id]) => id === `acte:${a}` || id.startsWith(`scene:${a}-`)).map(([, v]) => v);
+            const points = Object.entries(e)
+                .filter(([id]) => id === `acte:${a}` || id.startsWith(`scene:${a}-`)).map(([, v]) => v);
             return {
                 g: Math.min(...points.map(v => v.x)), d: Math.max(...points.map(v => v.x)),
                 h: Math.min(...points.map(v => v.y)), b: Math.max(...points.map(v => v.y)),
@@ -155,5 +163,19 @@ describe('rangerEnColonnes — les deux dimensions', () => {
             const separes = A.d < B.g || B.d < A.g || A.b < B.h || B.b < A.h;
             expect(separes, `${a} et ${b}`).toBe(true);
         }
+    });
+
+    it('épingle les annexes sous leur scène, et les orphelines sous toute la trame', () => {
+        const g = acteLineaire('a', 2);
+        g.noeuds.push(noeud('pnj', 'holden'), noeud('indice', 'perdu'));
+        g.liens.push(lien('scene:a-0', 'pnj:holden', 'pnj'));
+        const { epingles: e } = rangerLaTrame(g);
+        expect(Math.abs(e['pnj:holden'].x - e['scene:a-0'].x)).toBeLessThan(PAS_HORIZONTAL / 2);
+        expect(e['pnj:holden'].y).toBeGreaterThan(e['scene:a-0'].y);
+        expect(e['indice:perdu'].y).toBeGreaterThan(e['pnj:holden'].y);
+    });
+
+    it('rend un rangement vide pour une trame vide', () => {
+        expect(rangerLaTrame({ noeuds: [], liens: [] })).toEqual({ epingles: {} });
     });
 });
