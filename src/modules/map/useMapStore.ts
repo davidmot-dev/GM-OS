@@ -140,8 +140,10 @@ interface MapState {
      * `'monitor'` — lequel, `'monitor'` ne le dit pas.
      *
      * Écrit par `projeterLaCarteSur`, lu par le Storyboard pour rendre la
-     * projection d'avant un moment (2026-09-25). Il vit dans la fenêtre du MJ
-     * et ne voyage pas : les projecteurs n'en ont pas l'usage.
+     * projection d'avant un moment (2026-09-25) — **et par les projecteurs**,
+     * où il voyage avec la cible : sans lui, `'monitor'` allumait la carte dans
+     * toutes les fenêtres de projection (`fenetreDeLaCarte.ts`). Comme la
+     * cible, il appartient au MJ : une fenêtre secondaire ne le réécrit pas.
      */
     ecranDeLaCarte: string | null;
     /**

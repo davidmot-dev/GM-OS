@@ -3,6 +3,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { useFonduCroise } from '../useFonduCroise';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
+import { fenetreMontreLaCarte } from '../../map/fenetreDeLaCarte';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
@@ -274,13 +275,22 @@ const ProjectorView: React.FC = () => {
         });
     }, [imagePath, mediaType]);
 
-    const { projectedMapUrl, projectionTarget: mapTarget } = useMapStore();
+    const { projectedMapUrl, projectionTarget: mapTarget, ecranDeLaCarte } = useMapStore();
     const { projectionTarget: whiteboardTarget, backgroundMode } = useWhiteboardStore();
     
     // Logic: Active if either the store target matches OR the bridge sent the special signal
     // We separate "intent" (is this window a map window?) from "readiness" (do we have the data?)
     // "monitor" is a generic target that should match any projector window
-    const isMapWindow = mapTarget === targetId || (mapTarget === 'monitor' && isProjectorWindow) || imagePath === '__tactical_map__';
+    /* ⛔ `'monitor'` ne dit pas LEQUEL : sans l'écran, la carte s'affichait dans
+       toutes les fenêtres de projection ouvertes (2026-09-25). La règle vit
+       dans `fenetreDeLaCarte.ts`, avec ses essais. */
+    const isMapWindow = fenetreMontreLaCarte({
+        cibleDeLaCarte: mapTarget,
+        ecranDeLaCarte,
+        idDeLaFenetre: targetId,
+        estUnProjecteur: isProjectorWindow,
+        imageAffichee: imagePath,
+    });
     const isWhiteboardWindow = whiteboardTarget === targetId || (whiteboardTarget === 'monitor' && isProjectorWindow) || imagePath === '__whiteboard__';
     
     const isMapActive = !!(projectedMapUrl && isMapWindow);

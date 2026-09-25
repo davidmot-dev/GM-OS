@@ -212,6 +212,14 @@ describe('flux de la carte — ce qu’une fenêtre secondaire peut dire', () =>
         expect(stores.map.getState().projectionTarget).toBe('hub');
     });
 
+    it('ni SON moniteur — la carte ne change pas d’écran sur la parole d’une autre fenêtre', () => {
+        stores.map.setState({ projectionTarget: 'monitor', ecranDeLaCarte: 'moniteur-2' });
+
+        receive('map', { projectionTarget: 'monitor', ecranDeLaCarte: null });
+
+        expect(stores.map.getState().ecranDeLaCarte).toBe('moniteur-2');
+    });
+
     it('mais adopte ses pings — ça, c’est légitime', () => {
         stores.map.setState({ projectionTarget: 'hub', projectedPings: [] });
         const ping = { id: 'p-1', x: 10, y: 20, color: '#06b6d4' };

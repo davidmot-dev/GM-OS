@@ -28,6 +28,21 @@ export function stripProjectionTarget(payload: any): any {
 }
 
 /**
+ * **La carte a deux champs qui appartiennent au MJ** : la cible, et le moniteur
+ * qui la porte (`ecranDeLaCarte`, 2026-09-25). Une fenêtre secondaire envoie sa
+ * copie des deux dans chacune de ses mises à jour — et une copie en retard
+ * éteindrait la projection, ou la ferait changer d'écran.
+ */
+export function stripProjectionDeLaCarte(payload: any): any {
+    const sansCible = stripProjectionTarget(payload);
+    if (!sansCible || typeof sansCible !== 'object' || !('ecranDeLaCarte' in sansCible)) return sansCible;
+
+    const copy = sansCible === payload ? { ...payload } : sansCible;
+    delete copy.ecranDeLaCarte;
+    return copy;
+}
+
+/**
  * Service de synchronisation entre les fenêtres locales (MJ, Player Hub, projecteur).
  *
  * Le transport lui-même est délégué à `WindowTransport`, qui aiguille chaque type
@@ -158,7 +173,7 @@ class CrossWindowEventService {
                     */
                     this.applyRemoteUpdate(
                         'map',
-                        senderRole === 'gm' ? payload : stripProjectionTarget(payload),
+                        senderRole === 'gm' ? payload : stripProjectionDeLaCarte(payload),
                     );
                     // Le payload brut d'une fenêtre secondaire n'atteint plus les
                     // autres : le relais ne le livre qu'au MJ (voir
@@ -386,7 +401,8 @@ class CrossWindowEventService {
             const now = Date.now();
             const isProjectionChange = 
                 state.projectedMapUrl !== prevState.projectedMapUrl || 
-                state.projectionTarget !== prevState.projectionTarget;
+                state.projectionTarget !== prevState.projectionTarget ||
+                state.ecranDeLaCarte !== prevState.ecranDeLaCarte;
             
             // We use a timeout to guarantee that the last throttled state is eventually broadcasted
             if (this.throttleTimer) {
@@ -400,6 +416,7 @@ class CrossWindowEventService {
                     state.projectedTokens !== prevState.projectedTokens ||
                     state.projectedPings !== prevState.projectedPings ||
                     state.projectionTarget !== prevState.projectionTarget ||
+                    state.ecranDeLaCarte !== prevState.ecranDeLaCarte ||
                     state.projectedWeatherType !== prevState.projectedWeatherType ||
                     state.projectedWeatherIntensity !== prevState.projectedWeatherIntensity ||
                     state.projectedTimeOfDay !== prevState.projectedTimeOfDay ||
@@ -414,7 +431,10 @@ class CrossWindowEventService {
                     
                     // Lean Payload: Only send what is necessary
                     const payload: any = {
-                        projectionTarget: state.projectionTarget
+                        projectionTarget: state.projectionTarget,
+                        /* Le moniteur voyage avec la cible : sans lui, `'monitor'`
+                           allumait la carte dans toutes les fenêtres (2026-09-25). */
+                        ecranDeLaCarte: state.ecranDeLaCarte,
                     };
 
                     // 1. Tokens, Pings, Magic Effects (Frequent but light)
@@ -576,6 +596,7 @@ class CrossWindowEventService {
         const map = useMapStore.getState();
         this.broadcast('map', {
             projectionTarget: map.projectionTarget,
+            ecranDeLaCarte: map.ecranDeLaCarte,
             projectedMapUrl: map.projectedMapUrl,
             projectedIsVideo: map.projectedIsVideo,
             projectedTokens: map.projectedTokens,
