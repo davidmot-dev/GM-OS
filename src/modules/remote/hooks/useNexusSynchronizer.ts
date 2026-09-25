@@ -198,11 +198,6 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const imageStore = useImageStore.getState();
             const ambientStore = useAmbientStore.getState();
 
-            const clockStore = useClockStore.getState();
-            const whiteboardStore = useWhiteboardStore.getState();
-            const diceStore = useDiceStore.getState();
-            const mapStore = useMapStore.getState();
-            const reservesStore = useRessourcesDeTableStore.getState();
 
             const { sessions, campaigns, entities, players, activeCampaignId: currentCampaignId, clues, atlasMaps, customSheetTemplates, customGameDrivers } = freshSessionOS;
 
@@ -383,6 +378,29 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     ? await resolveToSendableUrl((fav as { tokenUrl?: string }).tokenUrl!)
                     : undefined,
             })));
+
+            /*
+              ⛔ **L'état en direct se lit APRÈS les résolutions, jamais avant.**
+
+              Ces cinq lectures se faisaient en tête, avant une douzaine
+              d'`await` — les médias des entités, de l'Atlas, des indices, des
+              favoris. Une synchronisation partie au début d'un moment de
+              storyboard (la musique, les lumières, le moment lui-même
+              l'éveillent) arrivait donc au Player Hub **environ une seconde
+              plus tard, avec la carte d'avant la projection** : la carte
+              apparaissait, puis s'effaçait devant le décor. Trouvé par David
+              le 2026-09-25 ; le moniteur n'était pas touché, le projecteur ne
+              lisant pas cette voie.
+
+              *Une photo prise avant d'attendre montre ce qui était, pas ce qui
+              est.* Rien de ce qui suit n'est attendu : l'envoi part avec l'état
+              du moment où il part.
+            */
+            const clockStore = useClockStore.getState();
+            const whiteboardStore = useWhiteboardStore.getState();
+            const diceStore = useDiceStore.getState();
+            const mapStore = useMapStore.getState();
+            const reservesStore = useRessourcesDeTableStore.getState();
 
             const fullState = {
                 sounds, moments: storyboardStore.moments.filter(m => String(m.campaignId) === String(currentCampaignId)).map(m => ({ id: m.id, name: m.name })),
