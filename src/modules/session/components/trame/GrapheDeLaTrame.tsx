@@ -201,10 +201,9 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const ranger = () => {
         if (!activeCampaignId) return;
         const complet = grapheDeLaTrame(activeCampaignId, source, { niveau: NIVEAU_MAXIMUM, portee: 'tout' });
-        const { epingles, semis } = rangerEnColonnes(complet);
+        const { epingles } = rangerEnColonnes(complet);
         const appliquer = () => {
             POSITIONS_VIVANTES.clear();
-            for (const [id, position] of Object.entries(semis)) POSITIONS_VIVANTES.set(id, position);
             cadrerApresRangement.current = true;
             rangerLeGrapheDeTrame(activeCampaignId, epingles);
         };
@@ -215,6 +214,30 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
             appliquer();
         }
     };
+
+    /**
+     * **Un acte est-il rangé ?** Lui et toutes ses scènes sont épinglés. C'est ce
+     * qui décide de dessiner son cadre, et de taire les traits acte → scène :
+     * dans un rangement, *la position dit l'appartenance* — les traits ne
+     * feraient qu'un éventail de plus sur le bloc.
+     */
+    const scenesDesActes = React.useMemo(() => {
+        const parActe = new Map<string, NoeudDeTrame[]>();
+        for (const lien of graphe.liens) {
+            if (lien.nature !== 'appartenance') continue;
+            const acte = typeof lien.source === 'string' ? lien.source : (lien.source as NoeudDeTrame).id;
+            const cible = typeof lien.target === 'string' ? lien.target : (lien.target as NoeudDeTrame).id;
+            const scene = graphe.noeuds.find(n => n.id === cible);
+            if (scene) parActe.set(acte, [...(parActe.get(acte) ?? []), scene]);
+        }
+        return parActe;
+    }, [graphe]);
+
+    const acteRange = React.useCallback((acteId: string) => {
+        const acte = graphe.noeuds.find(n => n.id === acteId);
+        const sesScenes = scenesDesActes.get(acteId) ?? [];
+        return acte?.fx !== undefined && sesScenes.length > 0 && sesScenes.every(sc => sc.fx !== undefined);
+    }, [graphe.noeuds, scenesDesActes]);
 
     const noeudParId = React.useCallback(
         (id: string | null) => (id ? graphe.noeuds.find(n => n.id === id) ?? null : null),
@@ -685,6 +708,34 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                 ctx.beginPath();
                                 ctx.arc(noeud.x ?? 0, noeud.y ?? 0, RAYONS[noeud.type] + 4, 0, 2 * Math.PI);
                                 ctx.fill();
+                            }}
+                            linkVisibility={(lien: LienDeTrame) => lien.nature !== 'appartenance'
+                                || !acteRange(typeof lien.source === 'string' ? lien.source : (lien.source as NoeudDeTrame).id)}
+                            /*
+                              **Le cadre de chaque acte rangé** — un fond discret sous
+                              ses scènes, pour qu'on lise d'un coup d'œil où l'acte
+                              commence et finit. Calculé sur les positions du moment :
+                              il suit ce que le meneur ajuste à la main.
+                            */
+                            onRenderFramePre={(ctx: CanvasRenderingContext2D) => {
+                                for (const [acteId, sesScenes] of scenesDesActes) {
+                                    if (!acteRange(acteId)) continue;
+                                    const acte = graphe.noeuds.find(n => n.id === acteId);
+                                    const points = [acte, ...sesScenes].filter(Boolean) as NoeudDeTrame[];
+                                    const xs = points.map(n => n.x ?? 0);
+                                    const ys = points.map(n => n.y ?? 0);
+                                    const gauche = Math.min(...xs) - 70;
+                                    const haut = Math.min(...ys) - 22;
+                                    const largeur = Math.max(...xs) + 70 - gauche;
+                                    const hauteur = Math.max(...ys) + 34 - haut;
+                                    ctx.beginPath();
+                                    ctx.roundRect(gauche, haut, largeur, hauteur, 14);
+                                    ctx.fillStyle = 'rgba(148,163,184,.045)';
+                                    ctx.fill();
+                                    ctx.strokeStyle = 'rgba(148,163,184,.14)';
+                                    ctx.lineWidth = 1;
+                                    ctx.stroke();
+                                }
                             }}
                             linkColor={(lien: LienDeTrame) =>
                                 LIENS[lien.nature]?.couleur ?? `${COULEUR_DU_TYPE[lien.nature as TypeDeNoeud] ?? '#94a3b8'}44`}
