@@ -125,7 +125,17 @@ export async function eteindreLesSons(aEteindre: SonsDuMoment): Promise<void> {
     if (aEteindre.soundPadId) {
         try {
             gWindow.soundEngine?.stop?.(aEteindre.soundPadId);
-            gWindow.useSoundStore?.getState?.()?.setPadActive?.(aEteindre.soundPadId, false);
+            /*
+              ⚠️ **On n'éteint que le pad que Sound-OS montre.** Un bruitage
+              pris dans une autre atmosphère joue sous une clé à part
+              (`bruitageDuMoment.ts`) : la passer à `setPadActive` créerait un
+              pad fantôme dans l'atmosphère affichée.
+            */
+            const sound = gWindow.useSoundStore?.getState?.();
+            const affichee = sound?.atmospheres?.find((a: { id: string }) => a.id === sound.activeAtmosphereId);
+            if (affichee?.pads?.[aEteindre.soundPadId]) {
+                sound.setPadActive?.(aEteindre.soundPadId, false);
+            }
         } catch (e) {
             console.warn('[Storyboard] arrêt du bruitage impossible :', e);
         }

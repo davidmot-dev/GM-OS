@@ -35,6 +35,7 @@ import {
 } from './titreProjete';
 import { POLICES_CONNUES } from '../../theme/editionDuTheme';
 import { estUneVideo } from '../../stores/typesDeMedia';
+import { bruitagesProposes, type EtatDeSoundOS } from './bruitageDuMoment';
 
 // DND Kit Imports
 import {
@@ -225,7 +226,7 @@ const SortableMoment: React.FC<SortableMomentProps> = (props) => {
 const StoryboardDashboard: React.FC = () => {
     const { t } = useTranslation(['modules']);
     const { moments, triggerMoment, arreterLeMoment, addMoment, updateMoment, deleteMoment, activeMomentId, setMoments, duplicateMoment } = useStoryboardStore();
-    const { activeCampaignId, atlasMaps } = useSessionOSStore();
+    const { activeCampaignId, atlasMaps, campaigns } = useSessionOSStore();
 
     const [isEditing, setIsEditing] = useState(false);
     const [editingMoment, setEditingMoment] = useState<StoryboardMoment | null>(null);
@@ -254,6 +255,8 @@ const StoryboardDashboard: React.FC = () => {
     const [imageMediaId, setImageMediaId] = useState('');
     const [diaporamaId, setDiaporamaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
+    /* L'atmosphère qui porte le pad : `PAD_03` existe dans chacune. */
+    const [soundAtmosphereId, setSoundAtmosphereId] = useState('');
     /*
       ⚠️ **`null` veut dire « ne touche à rien », et 0 veut dire « coupe ».**
       Un nombre seul ne saurait pas porter les deux — et `volume || undefined`,
@@ -353,6 +356,15 @@ const StoryboardDashboard: React.FC = () => {
         setImageMediaId(moment.imageMediaId || '');
         setDiaporamaId(moment.diaporamaId || '');
         setSoundPadId(moment.soundPadId || '');
+        /*
+          Un moment plus ancien n'a pas d'atmosphère : il jouait celle qui est
+          active. On la lui donne à l'ouverture — la liste le montre alors sous
+          sa rubrique, et l'enregistrer fige ce qu'il jouait jusqu'ici.
+        */
+        setSoundAtmosphereId(moment.soundAtmosphereId
+            || (moment.soundPadId
+                ? ((window as any).useSoundStore?.getState()?.activeAtmosphereId ?? '')
+                : ''));
         setMusicVolume(typeof moment.musicVolume === 'number' ? moment.musicVolume : null);
         setMusicVolumeFondu(moment.musicVolumeFondu ?? 1500);
         setAmbientVolume(typeof moment.ambientVolume === 'number' ? moment.ambientVolume : null);
@@ -385,6 +397,7 @@ const StoryboardDashboard: React.FC = () => {
         setMapRevelee(false);
         setImageMediaId('');
         setSoundPadId('');
+        setSoundAtmosphereId('');
         setMusicVolume(null);
         setMusicVolumeFondu(1500);
         setAmbientVolume(null);
@@ -528,6 +541,7 @@ const StoryboardDashboard: React.FC = () => {
             imageMediaId: diaporamaId ? undefined : (imageMediaId || undefined),
             diaporamaId: diaporamaId || undefined,
             soundPadId: soundPadId || undefined,
+            soundAtmosphereId: soundPadId && soundAtmosphereId ? soundAtmosphereId : undefined,
             /*
               ⛔ **Surtout pas `|| undefined` ici.** Un volume à 0 est un
               « coupe le son », et `0 || undefined` rend `undefined` : le moment
@@ -888,20 +902,33 @@ const StoryboardDashboard: React.FC = () => {
                                         <span className="flex items-center gap-2"><Volume2 size={14} /> {t('modules:storyboard.editor.sound_label')}</span>
                                     </label>
                                     <select 
-                                        value={soundPadId}
-                                        onChange={e => setSoundPadId(e.target.value)}
+                                        value={soundPadId ? `${soundAtmosphereId}::${soundPadId}` : ''}
+                                        onChange={e => {
+                                            const [atmosphere = '', pad = ''] = e.target.value ? e.target.value.split('::') : [];
+                                            setSoundAtmosphereId(atmosphere);
+                                            setSoundPadId(pad);
+                                        }}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-rose-400 outline-none"
                                         title={t('modules:storyboard.editor.sound_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
-                                        {(() => {
-                                            const state = (window as any).useSoundStore?.getState() as { activeAtmosphereId: string, atmospheres: Array<{ id: string, pads: Record<string, { id: string, title?: string, filePath?: string }> }> } | undefined;
-                                            const atmosId = state?.activeAtmosphereId;
-                                            const atmosphere = state?.atmospheres.find(a => a.id === atmosId);
-                                            return atmosphere ? Object.values(atmosphere.pads).filter(p => p.filePath).map(p => (
-                                                <option key={p.id} value={p.id}>{p.title || p.id}</option>
-                                            )) : null;
-                                        })()}
+                                        {/*
+                                          **Toutes les atmosphères, pas la seule active** —
+                                          signalé par David le 2026-09-25. Une rubrique par
+                                          atmosphère, selon la règle de Sound-OS lui-même
+                                          pour la campagne ouverte (`bruitagesProposes`).
+                                        */}
+                                        {bruitagesProposes(
+                                            (window as any).useSoundStore?.getState() as EtatDeSoundOS | undefined,
+                                            activeCampaignId ?? null,
+                                            campaigns.map(c => c.id),
+                                        ).map(({ atmosphere, pads }) => (
+                                            <optgroup key={atmosphere.id} label={atmosphere.name}>
+                                                {pads.map(p => (
+                                                    <option key={p.id} value={`${atmosphere.id}::${p.id}`}>{p.title || p.id}</option>
+                                                ))}
+                                            </optgroup>
+                                        ))}
                                     </select>
 
                                     {/* La sortie de ce bruitage-là. Vide : celle de Sound-OS. */}

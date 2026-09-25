@@ -6,6 +6,7 @@ import {
 } from '../light/logic/lumiereReservee';
 import { imageOuDiaporama, occupeUnEcran } from './imageOuDiaporama';
 import { releverLaCarte, rendreLaCarte } from './carteAvantLeMoment';
+import { bruitageDuMoment } from './bruitageDuMoment';
 import {
     cequUnArretEteint, cequUnePriseDeMainEteint, eteindreLesSons,
     ilYAQuelqueChoseAEteindre, lesSonsAnnoncesPar, AUCUN_SON, type SonsDuMoment,
@@ -87,6 +88,14 @@ export interface StoryboardMoment {
      */
     diaporamaId?: string;
     soundPadId?: string;       // Sound-OS Pad ID
+    /**
+     * **L'atmosphère de Sound-OS qui porte ce pad** — 2026-09-25. Les pads
+     * s'appellent `PAD_01` à `PAD_16` dans chaque atmosphère : sans elle,
+     * `soundPadId` désigne le pad de l'atmosphère **active au moment du jeu**.
+     * Absente (moment plus ancien) : c'est ce sens-là qui est gardé. Voir
+     * `bruitageDuMoment.ts`.
+     */
+    soundAtmosphereId?: string;
     /**
      * **Le thème d'Ambient-OS à charger — les sons eux-mêmes.**
      *
@@ -814,20 +823,19 @@ export const useStoryboardStore = create<StoryboardState>()(
                         effets.push({ nom: 'Bruitage', sort: 'module-absent' });
                     } else {
                         const soundStore = gWindow.useSoundStore.getState();
-                        const atmosId = soundStore.activeAtmosphereId;
-                        const atmosphere = soundStore.atmospheres.find((a: { id: string }) => a.id === atmosId);
-
-                        const pad = atmosphere?.pads[moment.soundPadId];
-                        if (pad && pad.filePath) {
-                            console.log(`[Storyboard] Sound: Playing SFX ${pad.title} (${pad.id})`);
-                            await gWindow.soundEngine.loadAudio(pad.id, pad.filePath);
-                            gWindow.soundEngine.play(pad.id, pad.volume, undefined, moment.soundOutputId);
-                            soundStore.setPadActive(pad.id, true);
-                            sonsPoses.soundPadId = pad.id;
+                        /* L'atmosphère que le moment a nommée — l'active pour
+                           un moment écrit avant le 2026-09-25. */
+                        const bruitage = bruitageDuMoment(moment, soundStore);
+                        if (bruitage) {
+                            const { pad, cle } = bruitage;
+                            console.log(`[Storyboard] Sound: Playing SFX ${pad.title} (${cle})`);
+                            await gWindow.soundEngine.loadAudio(cle, pad.filePath);
+                            gWindow.soundEngine.play(cle, pad.volume, undefined, moment.soundOutputId);
+                            /* Seul un pad que Sound-OS montre peut s'allumer. */
+                            if (bruitage.dansLAtmosphereActive) soundStore.setPadActive(pad.id, true);
+                            sonsPoses.soundPadId = cle;
                             effets.push({ nom: 'Bruitage', sort: 'joue' });
                         } else {
-                            /* ⚠️ Le pad est cherché dans l'ambiance ACTIVE : en
-                               changer suffit à le rendre introuvable. */
                             console.warn(`[Storyboard] Sound: Pad ID ${moment.soundPadId} NOT FOUND or no file.`);
                             effets.push({ nom: 'Bruitage', sort: 'introuvable', cherche: moment.soundPadId });
                         }
