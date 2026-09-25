@@ -98,8 +98,8 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | Le **retour au Home entre deux moments** | 13/09 | Écrit le jour même (§ 52), **jamais vu sur une vraie lampe**. À juger en séance : le passage d'un moment éclairé à un moment sans lumière **fait-il clignoter la pièce** (Home puis scène suivante), et l'éclairage normal désigné est-il celui qu'on veut retrouver en sortant d'une scène tendue ? *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
 | ✅ Un **diaporama** pendant une vraie soirée | 13/09 → ✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** | David : *« diaporama est bon »*, après les trois correctifs du § 56. **La chaîne entière tient** — montage, cadence, fondu enchaîné, appel depuis un moment. ⭐ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les trois questions qui ne se mesurent pas dans un test (le fondu passe-t-il pour un fondu, six secondes est-ce la bonne durée, tient-il une soirée), et **les deux premières ont trouvé trois défauts que quatre mille tests n'avaient pas vus**. ⚠️ Ce qu'elle n'a toujours pas dit : la tenue sur **une soirée entière** — chaque tour résout le média et repasse par le pont. |
 | `Ctrl+0` sur un **vrai Player Hub** | 13/09 | Écrit le jour même (§ 53). Les tests éprouvent le **départ** du message, jamais son arrivée — aucune fenêtre de Hub n'est ouverte dans une instance d'essai. À regarder : l'image **et** la fiche **et** le titre disparaissent-ils ensemble, le fond reste-t-il, et les favoris épinglés survivent-ils ? *Un message qu'on envoie n'est pas un écran qui se vide.* |
-| La **carte d'un moment qui s'en va** | 25/09 | Écrit le jour même (§ 114), vu par la trace sur le Hub seulement. Deux cas à regarder : un moment dont la carte part sur un **moniteur**, puis *Arrêter* — l'écran doit devenir **noir**, sans que la fenêtre se ferme ; et une carte **projetée à la main** depuis Map-OS avant un moment qui en projette une autre — à l'arrêt, **la vôtre revient sur son écran**. |
-| Un **bruitage pris dans une atmosphère inactive** | 25/09 | La liste est vue (§ 115), pas le son : choisir un pad d'une atmosphère **qui n'est pas** celle affichée dans Sound-OS, jouer le moment. C'est **ce** son qui doit sortir, et le pad de même numéro de l'atmosphère affichée **ne doit pas s'allumer**. |
+| La **carte d'un moment qui s'en va** | 25/09 → ✅ **le moniteur ÉPROUVÉ le 25/09 au soir** | L'arrêt vers un moniteur est vu (David : *« validé »*). ⚠️ **Reste un cas** : une carte **projetée à la main** depuis Map-OS avant un moment qui en projette une autre — à l'arrêt, **la vôtre doit revenir sur son écran**. |
+| ✅ Un **bruitage pris dans une atmosphère inactive** | 25/09 → ✅ **ÉPROUVÉ le 25/09 au soir** | David : *« validé »*. Le son de l'atmosphère nommée sort, le pad affiché ne s'allume pas. *La ligne reste ici, close, parce qu'elle a servi.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -9018,8 +9018,8 @@ projection de la carte ; la fenêtre devient noire et reste ouverte.
 **Ancres** : `storyboard/carteAvantLeMoment.ts` (`releverLaCarte`, `rendreLaCarte`),
 `map/useMapStore.ts` (`ecranDeLaCarte`), `storyboard/carteDuMoment.test.ts`.
 ✅ **Vu par la trace le 2026-09-25** : sur le Hub, la carte reste jusqu'à l'arrêt, puis cible **et**
-carte passent à `null` ensemble. ⚠️ **Jamais vu** : l'arrêt vers un **moniteur**, et le retour
-d'une carte que le meneur projetait lui-même (voir § 1).
+carte passent à `null` ensemble. ✅ **L'arrêt vers un moniteur ÉPROUVÉ le soir même.** ⚠️ **Jamais
+vu** : le retour d'une carte que le meneur projetait lui-même (voir § 1).
 
 ---
 
@@ -9051,7 +9051,7 @@ orthographe compilait — et le filtre par campagne n'aurait rien filtré.
 **Ancres** : `storyboard/bruitageDuMoment.ts` (`bruitagesProposes`, `bruitageDuMoment`),
 `storyboard/sonsDuMoment.ts` (la garde de `setPadActive`), + 8 essais.
 ✅ **La liste ÉPROUVÉE À L'ÉCRAN le 2026-09-25** (*« la liste des bruitages fonctionne bien »*).
-⚠️ Le son d'un pad pris dans une atmosphère **inactive** n'a pas été confirmé (§ 1).
+✅ **Et le son d'un pad pris dans une atmosphère inactive, ÉPROUVÉ le soir même.**
 
 ---
 
@@ -9127,7 +9127,7 @@ fenêtre secondaire — la leçon du § 117, appliquée au champ qu'on ajoutait.
 
 **Ancres** : `map/fenetreDeLaCarte.ts` (+ 6 essais), `services/CrossWindowEventService.ts`
 (`stripProjectionDeLaCarte`, le moniteur dans les deux diffusions), `image/components/ProjectorView.tsx`.
-⚠️ **Non vu à l'écran** — il faut deux moniteurs de projection ouverts.
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25 au soir**, deux moniteurs de projection ouverts.
 
 ---
 
@@ -9156,7 +9156,8 @@ portaient `S TA R T I N G S C E N E`, que plus rien ne peut redécouper. D'où t
 `titreLisible`, `actesARendreLisibles`), `ecritureDeLaCampagne.ts` (l'annuaire des actes sous leurs
 deux noms), `ForgeDeLaTrame.tsx` (l'encadré), + 14 essais.
 ✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25** — les captures suivantes portent *Starting Scene*, *The
-Investigation*, *Final Confrontation*.
+Investigation*, *Final Confrontation* ; et **le renommage des actes existants** depuis la Forge de la
+trame, fait par David le soir même.
 
 ---
 
@@ -9284,11 +9285,11 @@ bien »*.
 | 47 | **Le détour de sortie, et deux flux Bluetooth** | ✅ **CORRIGÉ le 22/09 au soir** — *« toujours du lag dans une séquence ; directement, moins de soucis »*. ⭐ **Le détour `MediaStream` était pris même vers l'enceinte que le contexte portait déjà** : la règle est qu'il ne sert qu'à aller **ailleurs**. ⛔ Deux défauts au passage — `useAmbientStore` était le **seul des trois** à ne pas appeler son moteur (donc la sortie changée depuis la **tablette** ne faisait rien), et **aucune voie n'était jamais refermée**. ⭐⭐ Mais la cause principale est **matérielle** : deux enceintes Bluetooth, donc deux flux A2DP sur une radio, et une séquence est le geste qui les fait parler ensemble (§ 111) | — | ✅ **ÉPROUVÉ EN RÉEL le 22/09** (*« j'ai testé avec le câble ça fonctionne »*). ⚠️ Les deux réparations ont eu lieu ensemble : on ne sait pas laquelle a fait l'effet, et on ne le cherchera pas |
 | 48 | **« Inconnue, ignorée »** | ✅ **CORRIGÉ le 25/09** — *« un problème de connexion avec une lampe »* : ce n'en était pas un. Le nom portait **une espace en tête**, et le panneau comparait à la lettre quand le moteur ignore espaces et ponctuation — **la lampe s'allumait pendant que l'écran la disait ignorée** (§ 112) | Un nom de lampe avec une espace en trop | ⚠️ Non vu — la lampe a été renommée avant |
 | 49 | **La carte d'un moment : écran et révélation** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 25/09** — moniteur, puis Player Hub. ⛔ `reveal_all` n'agit que si Map-OS est ouvert : un **PNG transparent d'un pixel** à la place. ⛔ La modale de Map-OS perdait la carte en passant d'un moniteur au Hub (§ 113) | — | Rien |
-| 50 | **La carte s'en va avec son moment** | ✅ **LIVRÉ le 25/09**, vu par la trace sur le Hub — *ce que le moment a allumé s'éteint, ce que le meneur avait allumé revient*, écran compris. ⛔ Sans carte avant le moment, celle du moment restait chez les joueurs (§ 114) | Arrêter un moment dont la carte est sur un **moniteur** ; rendre une carte projetée à la main | ⚠️ Ces deux cas jamais vus |
-| 51 | **Le bruitage d'un moment** | ✅ **LIVRÉ, la liste ÉPROUVÉE le 25/09** — ⛔ `PAD_03` existe **dans chaque atmosphère** : un moment jouait le pad n°3 de l'atmosphère active **au moment du jeu**. L'atmosphère est retenue, et un pad d'ailleurs joue sous une clé à part (§ 115) | Un pad d'une atmosphère **inactive** | ⚠️ Le son lui-même non confirmé |
+| 50 | **La carte s'en va avec son moment** | ✅ **LIVRÉ le 25/09**, vu par la trace sur le Hub — *ce que le moment a allumé s'éteint, ce que le meneur avait allumé revient*, écran compris. ⛔ Sans carte avant le moment, celle du moment restait chez les joueurs (§ 114) | Rendre une carte projetée à la main | ✅ le moniteur vu le 25/09 ; ⚠️ le retour d'une carte projetée à la main, jamais vu |
+| 51 | **Le bruitage d'un moment** | ✅ **LIVRÉ, la liste ÉPROUVÉE le 25/09** — ⛔ `PAD_03` existe **dans chaque atmosphère** : un moment jouait le pad n°3 de l'atmosphère active **au moment du jeu**. L'atmosphère est retenue, et un pad d'ailleurs joue sous une clé à part (§ 115) | — | ✅ le son vu le 25/09 au soir |
 | 52 | **La photo prise avant d'attendre** | ✅ **CORRIGÉ le 25/09** — la synchronisation Nexus lisait l'état en direct avant une douzaine de résolutions de médias. ⛔ **Annoncé à tort comme la cause de la carte du Hub** (§ 116) | — | Sans symptôme propre |
 | 53 | **La cible de la carte appartient au MJ** | ✅ **CORRIGÉ ET ÉPROUVÉ À L'ÉCRAN le 25/09** — ⭐⭐ trouvé par **une trace dans chaque fenêtre**, après une hypothèse fausse : le MJ adoptait le `null` d'une fenêtre secondaire 24 ms après la projection. ⛔ **Le tableau blanc avait déjà cette garde, trois lignes plus bas** (§ 117) | — | Rien |
-| 54 | **La carte sur UN moniteur** | ✅ **CORRIGÉ le 25/09** — le constat du § 1 bis sort par le haut : `'monitor'` ne disait pas lequel, et la carte s'allumait dans toutes les fenêtres de projection. Le moniteur voyage, et appartient au MJ (§ 118) | Deux moniteurs de projection ouverts | ⚠️ Non vu |
+| 54 | **La carte sur UN moniteur** | ✅ **CORRIGÉ le 25/09** — le constat du § 1 bis sort par le haut : `'monitor'` ne disait pas lequel, et la carte s'allumait dans toutes les fenêtres de projection. Le moniteur voyage, et appartient au MJ (§ 118) | — | ✅ vu le 25/09 au soir |
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |

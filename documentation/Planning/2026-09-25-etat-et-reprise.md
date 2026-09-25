@@ -16,12 +16,12 @@
 | --- | --- | --- |
 | **112** | « Inconnue, ignorée » — une lampe dont le nom commençait par une espace | ⚠️ **non** — David a renommé la lampe avant le correctif |
 | **113** | La carte d'un moment choisit son écran, et peut arriver révélée | ✅ **oui**, moniteur puis Player Hub |
-| **114** | La carte s'en va avec son moment | ✅ **à moitié** — vu par la trace sur le Hub ; le moniteur et le retour d'une carte projetée à la main, non |
-| **115** | Le bruitage d'un moment, pris dans toutes les atmosphères | ✅ **la liste** (*« fonctionne bien »*) ; le son d'une atmosphère inactive, non confirmé |
+| **114** | La carte s'en va avec son moment | ✅ **presque** — le Hub par la trace, **le moniteur à l'écran** ; le retour d'une carte projetée à la main, non |
+| **115** | Le bruitage d'un moment, pris dans toutes les atmosphères | ✅ **oui** — la liste, puis le son d'une atmosphère inactive |
 | **116** | La photo prise avant d'attendre — la synchronisation Nexus | — sans symptôme propre |
 | **117** | La cible de projection de la carte appartient au MJ | ✅ **oui** (*« ok c'est bon »*) |
-| **118** | La carte sur UN moniteur — le constat du § 1 bis, corrigé le soir | ⚠️ non — il faut deux moniteurs de projection ouverts |
-| **119** | Les titres en lettres espacées d'un PDF (« Anges de Feu ») | ✅ **oui** — les captures suivantes portent *Starting Scene* |
+| **118** | La carte sur UN moniteur — le constat du § 1 bis, corrigé le soir | ✅ **oui**, deux moniteurs ouverts |
+| **119** | Les titres en lettres espacées d'un PDF (« Anges de Feu ») | ✅ **oui** — y compris le renommage des actes existants |
 | **120** | Ranger le graphe de la trame — cinq essais | ✅ **oui** (*« ok c'est bien »*) |
 | **121** | Le pupitre de l'écran du bas du Zenbook Duo | ✅ **oui** (*« ok ça fonctionne bien »*) |
 
@@ -37,17 +37,14 @@ elle. *La demande de David désigne l'endroit ; elle ne dit pas la profondeur.*
 
 ## Par quoi reprendre
 
-1. **Rendre lisibles les actes d'« Anges de Feu »** si ce n'est pas fait : Forge de la trame →
-   Anges de Feu → *Rendre ces titres lisibles* (§ 119).
-2. **Les deux cas de la carte jamais vus** (§ 114, repris au § 1 du registre) : un moment dont la
-   carte part sur un **moniteur**, puis *Arrêter* — l'écran doit devenir noir ; et une carte
-   **projetée à la main** avant un moment qui en projette une autre — elle doit revenir sur son
-   écran.
-3. **Un bruitage d'une atmosphère inactive** (§ 115) — c'est ce son qui doit sortir, et le pad de
-   même numéro de l'atmosphère affichée ne doit pas s'allumer.
-4. **La carte sur un moniteur, avec deux moniteurs de projection ouverts** (§ 118) : elle ne doit
-   apparaître que sur celui qu'on a choisi.
-5. **Repris du 22/09, rien n'a bougé** : le **compresseur d'Ambient-OS** (décision de David, pas
+> ✅ **Vérifié par David le soir même** : les actes d'« Anges de Feu » renommés, l'arrêt d'une
+> carte sur un moniteur, le bruitage d'une atmosphère inactive, et la carte avec deux moniteurs de
+> projection ouverts.
+
+1. **Le dernier cas de la carte jamais vu** (§ 114, repris au § 1 du registre) : une carte
+   **projetée à la main** avant un moment qui en projette une autre — à l'arrêt, elle doit revenir
+   sur son écran.
+2. **Repris du 22/09, rien n'a bougé** : le **compresseur d'Ambient-OS** (décision de David, pas
    prise), les correctifs audio des §§ 106 à 110 jamais éprouvés, la **refonte de l'interface**
    (§ 76, premier geste T0.1), la **restauration** (§ 87, dans `npm run repetition`).
 
