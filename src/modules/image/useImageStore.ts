@@ -793,7 +793,7 @@ export const useImageStore = create<ImageState>()(
               raison — on corrige le libellé, on ne détourne pas le bouton.
 
               Le vrai noir a donc désormais **son propre bouton**, et
-              `Ctrl+Maj+0`.
+              `Ctrl+Maj+N` (`Ctrl+Maj+0` jusqu'au 2026-09-25 : Windows le réserve).
             */
             noirTotal: () => {
                 const target = get().projectionTarget as string;

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useSessionStore, type ModuleID } from '../store/useSessionStore';
+import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 import { useModalStore } from '../stores/useModalStore';
 import { PLACES_DE_RACCOURCI } from '../data/catalogueDesModules';
@@ -38,7 +39,12 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
 
         const auClavier = (evenement: KeyboardEvent) => {
             if (!evenement.ctrlKey && !evenement.metaKey) return;
-            if (evenement.altKey || evenement.shiftKey) return;
+            if (evenement.altKey) return;
+            /*
+              **`Maj` n'est admis que pour le N** — `Ctrl+Maj+N`, l'écran noir.
+              Voir plus bas pourquoi ce n'est plus `Ctrl+Maj+0`.
+            */
+            if (evenement.shiftKey && evenement.code !== 'KeyN') return;
 
             const cible = evenement.target;
             if (cible instanceof HTMLInputElement || cible instanceof HTMLTextAreaElement) return;
@@ -85,6 +91,33 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
             }
 
             /*
+              **`Ctrl+T` ouvre Table-OS, `Ctrl+²` ramène au Cockpit** —
+              demandés par David le 2026-09-25.
+
+              Deux places fixes, hors des neuf qu'on assigne : elles ne
+              dépendent pas du rangement de la barre. Le Cockpit est une *vue*
+              de Session-OS et non un module — d'où les deux gestes : ouvrir
+              Session-OS, puis y choisir la vue. Sans le second, on
+              reviendrait sur la dernière vue ouverte (la galerie de PNJ, la
+              trame…), ce qui n'est pas « revenir au Cockpit ».
+
+              `²` est la touche à gauche du 1 sur un clavier français : la
+              place zéro, devant `Ctrl+1…9`. Son `code` est `Backquote`, quelle
+              que soit la disposition.
+            */
+            if (evenement.code === 'KeyT') {
+                evenement.preventDefault();
+                useSessionStore.getState().setActiveModule('table');
+                return;
+            }
+            if (evenement.code === 'Backquote') {
+                evenement.preventDefault();
+                useSessionStore.getState().setActiveModule('dashboard');
+                useSessionOSStore.getState().setCurrentView('cockpit');
+                return;
+            }
+
+            /*
               **`Ctrl+0` vide le Player Hub** — demandé par David le 2026-09-13 :
               *« en tant que MJ je ne vois pas toujours l'écran Player Hub »*. Ce
               qu'on y laisse traîner y reste, faute de le voir.
@@ -103,23 +136,39 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
             if (evenement.code === 'Digit0') {
                 evenement.preventDefault();
                 /*
-                  ⭐ **Deux gestes voisins, et leur différence tient au `Maj`.**
-
                   Depuis le 2026-09-17, le Hub au repos rend le **décor de la
                   campagne** : `Ctrl+0` retire donc ce qui est projeté et laisse
-                  l'image de fond. `Ctrl+Maj+0` **éteint vraiment** l'écran de la
-                  table — David a voulu garder les deux.
-
-                  ⚠️ L'exception à *« rien ne se déclenche, rien ne se projette »*
-                  tient pour les deux, et pour la même raison : **ils ne peuvent
-                  que retirer.** Une frappe malheureuse coûte une projection à
-                  refaire, jamais un secret éventé.
+                  l'image de fond. Pour **éteindre vraiment** l'écran de la
+                  table, c'est `Ctrl+Maj+N` — David a voulu garder les deux.
                 */
-                if (evenement.shiftKey) {
-                    noircirLePlayerHub(window.appBridge);
-                } else {
-                    effacerLePlayerHub(window.appBridge);
-                }
+                effacerLePlayerHub(window.appBridge);
+                return;
+            }
+
+            /*
+              **`Ctrl+Maj+N` éteint le Player Hub** — N comme *noir*.
+
+              ⛔ **C'était `Ctrl+Maj+0` jusqu'au 2026-09-25, et ce geste n'a
+              jamais rien éteint, deux fois de suite.** D'abord parce que la
+              garde d'entrée rejetait toute frappe avec `Maj` : la branche était
+              inatteignable. Puis, une fois la garde réparée, parce que
+              **Windows réserve `Ctrl+Maj+0`** — raccourci de bascule de
+              disposition clavier (`HKCU\Control Panel\Input Method\Hot Keys\
+              00000104`), le même qui prive Excel de « afficher les colonnes ».
+              La frappe n'atteint aucune fenêtre ; l'essai, qui envoie le
+              `keydown` lui-même, passait au vert. *Un essai qui fabrique
+              l'événement ne dit rien de ce que le système laisse passer.*
+
+              ⚠️ **Ne pas choisir une touche de cette liste Windows** : on y
+              trouve aussi `Ctrl+Espace` et `Ctrl+.`.
+
+              L'exception à *« rien ne se déclenche, rien ne se projette »*
+              tient comme pour `Ctrl+0`, et pour la même raison : **ce geste ne
+              peut que retirer.**
+            */
+            if (evenement.code === 'KeyN' && evenement.shiftKey) {
+                evenement.preventDefault();
+                noircirLePlayerHub(window.appBridge);
                 return;
             }
 

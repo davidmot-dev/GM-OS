@@ -260,6 +260,10 @@ rapide que de savoir dans quel module chercher.
 Tous ces guides, dans GM-OS, avec leur propre moteur de recherche. Le même raccourci vous ramène
 d'où vous veniez.
 
+**Revenir au Cockpit** (`Ctrl+²`) **et ouvrir Table-OS** (`Ctrl+T`)
+Deux places fixes, hors des neuf que vous assignez. `Ctrl+²` — la touche à gauche du 1 — ouvre
+Session-OS **sur le Cockpit**, même si vous l'aviez quitté sur la galerie de PNJ ou la trame.
+
 **Refermer ce qui est ouvert** (`Échap`)
 N'importe quelle boîte, n'importe quelle surcouche : les Paramètres, la Médiathèque, l'Oracle, une
 fiche, un aperçu plein écran, une demande de confirmation. **Une seule frappe, et seulement celle
@@ -283,7 +287,8 @@ traîner y reste.*
 > refaire, pas un secret éventé.
 >
 > ⚠️ **L'écran ne devient pas noir** : il revient au **décor de la campagne**. C'est la différence
-> entre « ranger ce qu'on montrait » et « éteindre la table ».
+> entre « ranger ce qu'on montrait » et « éteindre la table ». **Pour éteindre vraiment la table,
+> c'est `Ctrl+Maj+N`.**
 >
 > ⚠️ **Vos favoris épinglés restent** aussi. Un favori épinglé n'a pas été laissé là par
 > distraction, il a été choisi — l'effacer le **dépinglerait**, et il faudrait tout recocher.

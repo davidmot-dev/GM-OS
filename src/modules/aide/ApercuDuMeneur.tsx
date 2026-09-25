@@ -158,6 +158,10 @@ const ApercuDuMeneur: React.FC = () => {
                         <Ligne touches={['Ctrl', 'H']}>Ouvre l’aide, et ramène d’où l’on vient.</Ligne>
                         <Ligne touches={['Ctrl', 'K']}>Ouvre et ferme la palette.</Ligne>
                         <Ligne touches={['Ctrl', '1…9']}>Ouvre le module assigné à cette place.</Ligne>
+                        <Ligne touches={['Ctrl', '²']}>Ramène au Cockpit de Session-OS, d'où que l'on vienne.</Ligne>
+                        <Ligne touches={['Ctrl', 'T']}>Ouvre Table-OS.</Ligne>
+                        <Ligne touches={['Ctrl', '0']}>Vide le Player Hub : il revient au décor de la campagne.</Ligne>
+                        <Ligne touches={['Ctrl', 'Maj', 'N']}>Éteint le Player Hub — écran noir.</Ligne>
                         <Ligne touches={['↑', '↓']}>Parcourt les résultats de la palette.</Ligne>
                         <Ligne touches={['Entrée']}>Ouvre le résultat sélectionné.</Ligne>
                         <Ligne touches={['Échap']}>Referme la palette, une boîte, une image en plein écran.</Ligne>
