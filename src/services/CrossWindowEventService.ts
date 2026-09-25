@@ -138,8 +138,28 @@ class CrossWindowEventService {
                     this.broadcastFullState();
                     break;
                 case 'map':
-                    // Apply the slave's update to Master store
-                    this.applyRemoteUpdate('map', payload);
+                    /*
+                      ⛔ **La cible de projection de la carte appartient au MJ —
+                      la même règle que le tableau, ci-dessous, posée ici le
+                      2026-09-25 seulement.**
+
+                      Une fenêtre secondaire envoie des pings et des jetons
+                      déplacés, et c'est légitime ; mais chacune de ses mises à
+                      jour porte aussi SA copie de `projectionTarget`, qui peut
+                      être en retard sur celle du MJ. L'adopter éteignait la
+                      projection : un moment de storyboard projetait sa carte sur
+                      le Player Hub, et **24 ms plus tard** le MJ reprenait le
+                      `null` d'une fenêtre secondaire et le rediffusait à tous.
+                      David : *« la carte apparaît une seconde puis disparaît »*.
+                      Établi par une trace posée dans chaque fenêtre.
+
+                      *Le tableau avait payé ce défaut et reçu sa garde ; la
+                      carte, voisine de trois lignes, ne l'avait pas reçue.*
+                    */
+                    this.applyRemoteUpdate(
+                        'map',
+                        senderRole === 'gm' ? payload : stripProjectionTarget(payload),
+                    );
                     // Le payload brut d'une fenêtre secondaire n'atteint plus les
                     // autres : le relais ne le livre qu'au MJ (voir
                     // electron/relayPolicy.ts, `relayAudience`). C'est donc à lui

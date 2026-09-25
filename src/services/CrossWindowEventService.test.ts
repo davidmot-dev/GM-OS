@@ -195,6 +195,34 @@ describe('filtrage des messages', () => {
     });
 });
 
+/**
+ * **La cible de projection de la carte appartient au MJ.**
+ *
+ * Trouvé par David le 2026-09-25 : un moment projetait sa carte sur le Player
+ * Hub, et 24 ms plus tard le MJ adoptait le `projectionTarget: null` d'une
+ * fenêtre secondaire — la carte « apparaît une seconde puis disparaît ». Le
+ * tableau blanc avait déjà cette garde ; la carte, non.
+ */
+describe('flux de la carte — ce qu’une fenêtre secondaire peut dire', () => {
+    it('le MJ garde SA cible quand une fenêtre secondaire en envoie une autre', () => {
+        stores.map.setState({ projectionTarget: 'hub', projectedMapUrl: 'carte-egouts' });
+
+        receive('map', { projectionTarget: null });
+
+        expect(stores.map.getState().projectionTarget).toBe('hub');
+    });
+
+    it('mais adopte ses pings — ça, c’est légitime', () => {
+        stores.map.setState({ projectionTarget: 'hub', projectedPings: [] });
+        const ping = { id: 'p-1', x: 10, y: 20, color: '#06b6d4' };
+
+        receive('map', { projectionTarget: null, projectedPings: [ping] });
+
+        expect(stores.map.getState().projectedPings).toEqual([ping]);
+        expect(stores.map.getState().projectionTarget).toBe('hub');
+    });
+});
+
 describe('flux du tableau blanc — volume du payload', () => {
     /**
      * Abonné réel du store, récupéré depuis le `subscribe` substitué.
