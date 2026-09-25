@@ -9254,8 +9254,8 @@ et `Ctrl+Maj+0` ne porte plus rien, essai à l'appui. ⚠️ La même liste Wind
 
 **Ancres** : `hooks/useRaccourcisDeNavigation.ts` (+ 10 essais par vrai `keydown`),
 `modules/aide/ApercuDuMeneur.tsx` (qui liste enfin `Ctrl+0` et `Ctrl+Maj+N`),
-`User Guides/02-GM-OS-en-bref.md`. ⚠️ **`Ctrl+T` et `Ctrl+²` non vus à l'écran** ; `Ctrl+Maj+N` non
-plus.
+`User Guides/02-GM-OS-en-bref.md`. ✅ **ÉPROUVÉS À L'ÉCRAN le 2026-09-25** — les trois
+(`Ctrl+T`, `Ctrl+²`, `Ctrl+Maj+N`), David : *« j'ai tout testé »*.
 
 ---
 
