@@ -506,6 +506,22 @@ contextBridge.exposeInMainWorld('appBridge', {
         getSecret: (): Promise<string> => ipcRenderer.invoke('pairing:get-secret'),
         rotate: (): Promise<string> => ipcRenderer.invoke('pairing:rotate'),
     },
+    /**
+     * **Le pupitre de l'écran du bas** — la télécommande du meneur sur la dalle
+     * tactile du Zenbook Duo (2026-09-25). Voir `electron/pupitreDuBas.ts`.
+     */
+    pupitre: {
+        ouvrir: (): Promise<{ ok: true } | { ok: false; raison: 'pas-d-ecran-du-bas' | 'pas-de-fenetre-mj' }> =>
+            ipcRenderer.invoke('pupitre:ouvrir'),
+        fermer: (): Promise<boolean> => ipcRenderer.invoke('pupitre:fermer'),
+        estOuvert: (): Promise<boolean> => ipcRenderer.invoke('pupitre:est-ouvert'),
+        /** Fermé depuis la fenêtre elle-même (Alt+F4) : le bouton doit le savoir. */
+        surFermeture: (rappel: () => void) => {
+            const ecoute = () => rappel();
+            ipcRenderer.on('pupitre:ferme', ecoute);
+            return () => { ipcRenderer.off('pupitre:ferme', ecoute); };
+        },
+    },
     logger: {
         info: (message: string, ...args: unknown[]) => ipcRenderer.send('log:message', 'info', message, ...args),
         warn: (message: string, ...args: unknown[]) => ipcRenderer.send('log:message', 'warn', message, ...args),

@@ -78,7 +78,8 @@ import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
 import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
-import { registerPairingHandlers } from './PairingManager'
+import { registerPairingHandlers, pairingManager } from './PairingManager'
+import { registerPupitreHandlers } from './pupitreDuBas'
 import { shouldRejectUnauthorized } from './netTrust'
 import { racineDesTables, cheminDUnUnivers, cheminDUneTable } from './cheminDesTables'
 import { cheminDUnCalendrier } from './cheminDesCalendriers'
@@ -188,6 +189,18 @@ const MEDIA_EPOCH = `${Date.now()}`;
 
 // Périmètre des fichiers que le SyncServer accepte d'exposer sur le réseau local.
 mediaAccess.init(APP_ROOT, TEMP_MEDIA_DIR);
+
+/*
+  **Le pupitre de l'écran du bas** — la télécommande du meneur, ouverte par
+  GM-OS sur la dalle tactile du Zenbook Duo (2026-09-25). Un client comme la
+  tablette : voir `pupitreDuBas.ts`.
+*/
+registerPupitreHandlers({
+    fenetreMJ: () => win,
+    devUrl: VITE_DEV_SERVER_URL,
+    portDuSync: REMOTE_PORT,
+    secret: () => pairingManager.getSecret(),
+});
 
 function createWindow() {
     win = new BrowserWindow({

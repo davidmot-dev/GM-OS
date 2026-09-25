@@ -47,6 +47,13 @@ export interface AudioDeviceInfo {
 }
 
 interface HardwareState {
+    /**
+     * **Ouvrir la télécommande sur l'écran du bas au lancement de GM-OS** —
+     * 2026-09-25, le pupitre du Zenbook Duo (`electron/pupitreDuBas.ts`).
+     * Faux par défaut : une fenêtre qui s'ouvre seule doit avoir été demandée.
+     */
+    pupitreAuLancement: boolean;
+    setPupitreAuLancement: (actif: boolean) => void;
     audioDevices: AudioDeviceInfo[];
     displays: DisplayInfo[];
     /** signature stable → nom donné par le meneur (les anciennes clés survivent). */
@@ -100,6 +107,8 @@ interface HardwareState {
 export const useHardwareStore = create<HardwareState>()(
     persist(
         (set, get) => ({
+            pupitreAuLancement: false,
+            setPupitreAuLancement: (pupitreAuLancement) => set({ pupitreAuLancement }),
             audioDevices: [],
             displays: [],
             audioAliases: {},
@@ -257,7 +266,8 @@ export const useHardwareStore = create<HardwareState>()(
             partialize: (state) => ({
                 audioAliases: state.audioAliases,
                 displayAliases: state.displayAliases,
-                signaturesConnues: state.signaturesConnues
+                signaturesConnues: state.signaturesConnues,
+                pupitreAuLancement: state.pupitreAuLancement,
             })
         }
     )

@@ -259,6 +259,13 @@ declare global {
             getSecret: () => Promise<string>;
             rotate: () => Promise<string>;
         };
+        /** La télécommande du meneur sur l'écran du bas du Zenbook Duo (2026-09-25). */
+        pupitre?: {
+            ouvrir: () => Promise<{ ok: true } | { ok: false; raison: 'pas-d-ecran-du-bas' | 'pas-de-fenetre-mj' }>;
+            fermer: () => Promise<boolean>;
+            estOuvert: () => Promise<boolean>;
+            surFermeture: (rappel: () => void) => () => void;
+        };
         app?: {
             quit: () => void;
             onDisplayChanged: (callback: (count: number) => void) => () => void;

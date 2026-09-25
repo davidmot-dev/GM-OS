@@ -1,4 +1,6 @@
-import { useState, useEffect, Suspense, lazy, useCallback } from 'react';
+import { useState, useEffect, useRef, Suspense, lazy, useCallback } from 'react';
+import { useHardwareStore } from './stores/useHardwareStore';
+import { ouvrirLePupitre } from './components/settings/PupitreDuBas';
 import { useSessionStore } from './store/useSessionStore';
 import Shell from './components/Shell';
 import { useModalStore } from './stores/useModalStore';
@@ -161,6 +163,19 @@ function App() {
       BootstrapService.bootstrap();
     }
   }, [isMainPC, isHydrated, isSystemReady]);
+
+  /*
+    **Le pupitre de l'écran du bas, au lancement — s'il a été demandé.**
+    (2026-09-25) Une fois le système prêt, et une seule fois : le double effet
+    du mode strict l'ouvrirait deux fois. Un refus — pas d'écran sous GM-OS —
+    se dit par un bandeau, jamais par un silence.
+  */
+  const pupitreTente = useRef(false);
+  useEffect(() => {
+    if (!isMainPC || !isSystemReady || pupitreTente.current) return;
+    pupitreTente.current = true;
+    if (useHardwareStore.getState().pupitreAuLancement) void ouvrirLePupitre();
+  }, [isMainPC, isSystemReady]);
 
   /*
     **Le coffre du Nexus Wiki se rebranche à chaque lancement.**
