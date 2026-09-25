@@ -9229,6 +9229,34 @@ lancement de GM-OS*.
 `App.tsx` (l'ouverture au lancement). ✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25** — *« ok ça fonctionne
 bien »*.
 
+### 122 · `Ctrl+T` et `Ctrl+²` — et `Ctrl+Maj+0`, qui n'avait jamais rien éteint (2026-09-25)
+
+Demandés par David : **`Ctrl+T` ouvre Table-OS**, **`Ctrl+²` ramène au Cockpit** de Session-OS.
+Deux places fixes, hors des neuf qu'on assigne. Le Cockpit est une **vue**, pas un module : le
+raccourci ouvre Session-OS **puis** choisit la vue — sans le second geste, on revenait sur la
+dernière vue ouverte (galerie de PNJ, trame…). `²` se lit par `e.code === 'Backquote'`, comme les
+chiffres par `Digit1` : indifférent à la disposition.
+
+⛔ **Trouvé en lisant le hook** : la garde d'entrée rejetait **toute** frappe avec `Maj`, donc la
+branche `Ctrl+Maj+0` écrite le 17/09 (§ 80) était **inatteignable** — le guide promettait un geste
+qui ne faisait rien. `Maj` n'est plus admis que pour le 0. *Une branche qu'une garde en amont rend
+inatteignable compile, se relit, et ne sert à rien* ; aucun essai ne frappait la touche.
+
+⛔⛔ **Et réparée, elle ne marchait toujours pas** — David, le soir même. **Windows réserve
+`Ctrl+Maj+0`** : `HKCU\Control Panel\Input Method\Hot Keys\00000104` (modificateurs `06`, touche
+`0x30`), bascule directe de disposition clavier — le même qui prive Excel de « afficher les
+colonnes ». La frappe n'atteint **aucune** fenêtre. L'essai passait au vert parce qu'il **fabrique
+le `keydown` lui-même** : *un essai qui fabrique l'événement ne dit rien de ce que le système laisse
+passer.* **David a choisi de changer la touche plutôt que Windows** — un réglage caché de la
+machine revient avec une mise à jour : l'écran noir est désormais **`Ctrl+Maj+N`** (*N comme noir*),
+et `Ctrl+Maj+0` ne porte plus rien, essai à l'appui. ⚠️ La même liste Windows réserve aussi
+`Ctrl+Espace` et `Ctrl+.` — ne pas les proposer.
+
+**Ancres** : `hooks/useRaccourcisDeNavigation.ts` (+ 10 essais par vrai `keydown`),
+`modules/aide/ApercuDuMeneur.tsx` (qui liste enfin `Ctrl+0` et `Ctrl+Maj+N`),
+`User Guides/02-GM-OS-en-bref.md`. ⚠️ **`Ctrl+T` et `Ctrl+²` non vus à l'écran** ; `Ctrl+Maj+N` non
+plus.
+
 ---
 
 ## La vue d'un coup d'œil
