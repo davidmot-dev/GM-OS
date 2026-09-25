@@ -53,7 +53,14 @@ export const PAS_HORIZONTAL = 190;
 export const PAS_VERTICAL = 84;
 /** Au-delà, un rang se replie en une colonne de plus. */
 export const HAUTEUR_MAXIMALE_DE_RANG = 5;
-/** Combien de colonnes par ligne, dans une chaîne, avant de replier. */
+/**
+ * Combien de rangs par ligne, dans une chaîne, avant de replier — **les valeurs
+ * essayées**. Quatre fixes ne se combinaient pas assez pour remplir une fenêtre
+ * large (cinquième essai, 2026-09-25) : le rangement essaie chacune et garde
+ * celle dont la page ressemble le plus à la fenêtre.
+ */
+export const COLONNES_ESSAYEES: readonly number[] = [3, 4, 5, 6, 8];
+/** La valeur retenue quand rien ne départage. */
 export const COLONNES_PAR_LIGNE = 4;
 /** À partir de combien de pistes un point devient le centre d'une étoile. */
 export const BRANCHES_D_UNE_ETOILE = 3;
@@ -72,6 +79,12 @@ export interface Position { x: number; y: number }
 export interface RangementDeLaTrame {
     /** Tout ce qui est rangé : posé, et épinglé. */
     epingles: Record<string, Position>;
+    /**
+     * **Ce que le rangement a visé et obtenu** — pour le journal. Sans elle, une
+     * page trop étroite ne dit pas si c'est la fenêtre qui a été mal mesurée ou
+     * le rangement qui a mal choisi (cinquième essai, 2026-09-25).
+     */
+    page: { largeur: number; hauteur: number; colonnesParLigne: number };
 }
 
 export interface OptionsDeRangement {
@@ -157,7 +170,9 @@ function rangerEnEtoile(acte: string, scenes: readonly string[], centre: string)
 }
 
 /** Une chaîne : les rangs de gauche à droite, repliés en serpentin. */
-function rangerEnChaine(acte: string, scenes: readonly string[], menesPar: Map<string, string[]>): Bloc {
+function rangerEnChaine(
+    acte: string, scenes: readonly string[], menesPar: Map<string, string[]>, parLigne: number,
+): Bloc {
     const rang = rangs(scenes, menesPar);
 
     const parRang: string[][] = [];
@@ -171,10 +186,10 @@ function rangerEnChaine(acte: string, scenes: readonly string[], menesPar: Map<s
     }
 
     const positions = new Map<string, Position>();
-    const largeurEnColonnes = Math.max(1, Math.min(colonnes.length, COLONNES_PAR_LIGNE));
+    const largeurEnColonnes = Math.max(1, Math.min(colonnes.length, parLigne));
     let y = TETE_DE_BLOC;
-    for (let debut = 0, ligne = 0; debut < colonnes.length; debut += COLONNES_PAR_LIGNE, ligne++) {
-        const cetteLigne = colonnes.slice(debut, debut + COLONNES_PAR_LIGNE);
+    for (let debut = 0, ligne = 0; debut < colonnes.length; debut += parLigne, ligne++) {
+        const cetteLigne = colonnes.slice(debut, debut + parLigne);
         cetteLigne.forEach((colonne, j) => {
             /* Une ligne impaire repart de la droite : son premier rang est sous
                le dernier de la ligne précédente. */
@@ -220,24 +235,32 @@ export function rangerLaTrame(graphe: GrapheDeTrame, options: OptionsDeRangement
         menesPar.set(vers, [...(menesPar.get(vers) ?? []), de]);
     }
 
-    const blocs: Bloc[] = actes.map(a => {
+    /* La forme de chaque acte ne dépend pas de la page : une étoile reste une
+       étoile. Seule la largeur des chaînes varie d'un essai à l'autre. */
+    const centres = new Map(actes.map(a => [a.id, centreDeLEtoile(a.id, scenesDe.get(a.id) ?? [], menesPar)] as const));
+    const blocsPour = (parLigne: number): Bloc[] => actes.map(a => {
         const scenes = scenesDe.get(a.id) ?? [];
-        const centre = centreDeLEtoile(a.id, scenes, menesPar);
-        return centre ? rangerEnEtoile(a.id, scenes, centre) : rangerEnChaine(a.id, scenes, menesPar);
+        const centre = centres.get(a.id);
+        return centre ? rangerEnEtoile(a.id, scenes, centre) : rangerEnChaine(a.id, scenes, menesPar, parLigne);
     });
 
     /*
-      **Les blocs comme des mots dans une page.** La largeur de la page n'est pas
-      calculée d'avance : avec des blocs de tailles très différentes — une étoile
-      haute à côté de chaînes plates — une formule rendait 1,2 quand la fenêtre
-      en demandait 2,5. On essaie donc quelques largeurs, et on garde celle dont
-      les proportions sont les plus proches de celles de la fenêtre.
+      **Les blocs comme des mots dans une page.** Ni la largeur de la page ni
+      celle des chaînes ne sont calculées d'avance : avec des blocs de tailles
+      très différentes — une étoile haute à côté de chaînes plates —, une formule
+      rendait 1,2 quand la fenêtre en demandait 2,5. On essaie donc des
+      combinaisons, et on garde celle dont les proportions sont les plus proches
+      de celles de la fenêtre.
     */
     const largeurDe = (ligne: Bloc[]) =>
         ligne.reduce((t, b) => t + b.largeur, 0) + ENTRE_BLOCS * (ligne.length - 1);
     const hauteurDe = (ligne: Bloc[]) => Math.max(...ligne.map(b => b.hauteur));
+    const dimensions = (page: Bloc[][]) => ({
+        largeur: Math.max(0, ...page.map(largeurDe)),
+        hauteur: page.reduce((t, l) => t + hauteurDe(l), 0) + ENTRE_BLOCS * Math.max(0, page.length - 1),
+    });
 
-    const mettreEnPage = (largeurVisee: number): Bloc[][] => {
+    const mettreEnPage = (blocs: Bloc[], largeurVisee: number): Bloc[][] => {
         const page: Bloc[][] = [];
         let courante: Bloc[] = [];
         for (const bloc of blocs) {
@@ -251,21 +274,21 @@ export function rangerLaTrame(graphe: GrapheDeTrame, options: OptionsDeRangement
         return page;
     };
 
-    const dimensions = (page: Bloc[][]) => ({
-        largeur: Math.max(0, ...page.map(largeurDe)),
-        hauteur: page.reduce((t, l) => t + hauteurDe(l), 0) + ENTRE_BLOCS * Math.max(0, page.length - 1),
-    });
-
-    const plusLarge = Math.max(0, ...blocs.map(b => b.largeur));
-    const toutSurUneLigne = blocs.length ? largeurDe(blocs) : 0;
-    let lignes: Bloc[][] = mettreEnPage(toutSurUneLigne);
+    let lignes: Bloc[][] = [];
+    let colonnesRetenues = COLONNES_PAR_LIGNE;
     let ecart = Infinity;
-    for (let i = 0; i <= 40; i++) {
-        const essai = mettreEnPage(plusLarge + ((toutSurUneLigne - plusLarge) * i) / 40);
-        const { largeur, hauteur } = dimensions(essai);
-        if (hauteur <= 0) continue;
-        const e = Math.abs(Math.log((largeur / hauteur) / proportions));
-        if (e < ecart - 1e-9) { ecart = e; lignes = essai; }
+    /* La valeur par défaut d'abord : à égalité, c'est elle qui reste. */
+    for (const parLigne of [COLONNES_PAR_LIGNE, ...COLONNES_ESSAYEES.filter(c => c !== COLONNES_PAR_LIGNE)]) {
+        const blocs = blocsPour(parLigne);
+        const plusLarge = Math.max(0, ...blocs.map(b => b.largeur));
+        const toutSurUneLigne = blocs.length ? largeurDe(blocs) : 0;
+        for (let i = 0; i <= 40; i++) {
+            const essai = mettreEnPage(blocs, plusLarge + ((toutSurUneLigne - plusLarge) * i) / 40);
+            const { largeur, hauteur } = dimensions(essai);
+            if (hauteur <= 0) continue;
+            const e = Math.abs(Math.log((largeur / hauteur) / proportions));
+            if (e < ecart - 1e-9) { ecart = e; lignes = essai; colonnesRetenues = parLigne; }
+        }
     }
 
     const { largeur: largeurTotale, hauteur: hauteurTotale } = dimensions(lignes);
@@ -326,5 +349,5 @@ export function rangerLaTrame(graphe: GrapheDeTrame, options: OptionsDeRangement
         if (liste.length) y += (Math.ceil(liste.length / parRangee) + 1) * 36;
     }
 
-    return { epingles };
+    return { epingles, page: { largeur: largeurTotale, hauteur: hauteurTotale, colonnesParLigne: colonnesRetenues } };
 }

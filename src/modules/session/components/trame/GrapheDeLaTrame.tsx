@@ -20,6 +20,7 @@ import {
 } from '../../logic/enchainementsDeLaTrame';
 import ChoixDuRang from './ChoixDuRang';
 import { rangerLaTrame } from '../../logic/rangementDeLaTrame';
+import { Logger } from '../../../../utils/logger';
 
 /**
  * **La trame vue d'ensemble** — demandé par David le 2026-09-22.
@@ -201,11 +202,22 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const ranger = () => {
         if (!activeCampaignId) return;
         const complet = grapheDeLaTrame(activeCampaignId, source, { niveau: NIVEAU_MAXIMUM, portee: 'tout' });
-        /* Les proportions de LA fenêtre : viser 16:9 rendait une colonne sur un
-           écran large (troisième essai du 2026-09-25). */
-        const { epingles } = rangerLaTrame(complet, {
-            proportions: taille.hauteur > 0 ? taille.largeur / taille.hauteur : undefined,
+        /*
+          Les proportions de LA toile, **mesurées au moment du clic** — et non
+          l'état `taille`, qui peut dater du dernier redimensionnement. Viser
+          16:9 rendait une colonne sur un écran large (troisième essai du
+          2026-09-25), et au cinquième la page restait étroite sans qu'on sache
+          si la mesure ou le choix était en cause : le journal le dit désormais.
+        */
+        const cadre = conteneur.current?.getBoundingClientRect();
+        const largeurVue = cadre?.width || taille.largeur;
+        const hauteurVue = cadre?.height || taille.hauteur;
+        const { epingles, page } = rangerLaTrame(complet, {
+            proportions: hauteurVue > 0 ? largeurVue / hauteurVue : undefined,
         });
+        Logger.info(`[Trame] Rangement — toile ${Math.round(largeurVue)}×${Math.round(hauteurVue)}`
+            + ` → page ${Math.round(page.largeur)}×${Math.round(page.hauteur)},`
+            + ` ${page.colonnesParLigne} rangs par ligne`);
         const appliquer = () => {
             POSITIONS_VIVANTES.clear();
             cadrerApresRangement.current = true;

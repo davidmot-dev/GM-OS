@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-    rangerLaTrame, PAS_HORIZONTAL, COLONNES_PAR_LIGNE,
+    rangerLaTrame, PAS_HORIZONTAL,
 } from './rangementDeLaTrame';
 import type { GrapheDeTrame, NoeudDeTrame, LienDeTrame } from './grapheDeLaTrame';
 
@@ -74,11 +74,12 @@ describe('rangerLaTrame — une chaîne', () => {
     });
 
     it('une longue suite se replie, en serpentin', () => {
-        const { epingles: e } = rangerLaTrame(acteLineaire('long', 10));
+        const { epingles: e, page } = rangerLaTrame(acteLineaire('long', 10));
         const xs = new Set(Array.from({ length: 10 }, (_, i) => e[`scene:long-${i}`].x));
-        expect(xs.size).toBe(COLONNES_PAR_LIGNE);
-        const derniere = e[`scene:long-${COLONNES_PAR_LIGNE - 1}`];
-        const premiereSuivante = e[`scene:long-${COLONNES_PAR_LIGNE}`];
+        expect(xs.size).toBe(page.colonnesParLigne);
+        expect(xs.size).toBeLessThan(10);
+        const derniere = e[`scene:long-${page.colonnesParLigne - 1}`];
+        const premiereSuivante = e[`scene:long-${page.colonnesParLigne}`];
         expect(premiereSuivante.x).toBe(derniere.x);
         expect(premiereSuivante.y).toBeGreaterThan(derniere.y);
     });
@@ -146,6 +147,18 @@ describe('rangerLaTrame — la page', () => {
         expect(large).toBeGreaterThan(1.2);
     });
 
+    /**
+     * **Le cinquième essai** : sur une fenêtre large, chaque bloc finissait seul
+     * sur sa ligne et la moitié droite restait vide.
+     */
+    it('remplit une fenêtre large — la page n’est pas plus haute que large', () => {
+        const { page } = rangerLaTrame(fusion(
+            acteLineaire('un', 3), acteLineaire('deux', 3), acteLineaire('trois', 14),
+            acteLineaire('quatre', 7), acteLineaire('cinq', 5),
+        ), { proportions: 2.2 });
+        expect(page.largeur / page.hauteur).toBeGreaterThan(1.6);
+    });
+
     it('deux blocs ne se chevauchent jamais', () => {
         const { epingles: e } = rangerLaTrame(TRAME, { proportions: 2.4 });
         const actes = ['un', 'deux', 'trois', 'quatre', 'cinq'];
@@ -176,6 +189,6 @@ describe('rangerLaTrame — la page', () => {
     });
 
     it('rend un rangement vide pour une trame vide', () => {
-        expect(rangerLaTrame({ noeuds: [], liens: [] })).toEqual({ epingles: {} });
+        expect(rangerLaTrame({ noeuds: [], liens: [] }).epingles).toEqual({});
     });
 });
