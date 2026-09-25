@@ -103,6 +103,14 @@ elle qui vous fera dire oui ou non.
 > surprise et pas un service. Quatre réponses : **Essayer**, **Enregistrer**, **Une autre**,
 > **Refuser**.
 
+<!-- -->
+
+> 🔎 **« inconnue, ignorée » en jaune à côté d'une lampe : c'est un NOM, pas une connexion.**
+> GM-OS connaît toutes les lampes de votre pont, y compris celles qui sont éteintes ou hors de
+> portée. Une lampe « inconnue » est un nom que l'IA a écrit et qu'aucune de vos lampes ne porte.
+> Vérifiez son nom dans l'application Hue — une espace en trop au début suffisait, jusqu'au
+> 2026-09-25, à la faire marquer « ignorée » alors qu'elle s'allumait bel et bien.
+
 ### 💡 Essayer sur vos lampes
 
 **« Essayer » allume l'ambiance dans la pièce, sans rien enregistrer.** Le bandeau passe en

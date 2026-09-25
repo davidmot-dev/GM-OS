@@ -52,6 +52,9 @@ dans le code, qui absorbe toutes les autres.**
 >
 > Revérifié le **2026-09-09** après le § 36 : `tsc -b` propre, **3 940 tests au vert**
 > (330 fichiers, 1 ignoré, 4 tests ignorés).
+>
+> Revérifié le **2026-09-25** après les §§ 112 à 117 : `tsc -b` propre, **5 937 tests au vert**
+> (463 fichiers, 1 ignoré, 4 tests ignorés) — **et chacun des quatre commits du jour compile seul**.
 
 > ⭐ **LA REVUE DES GUIDES EST TERMINÉE — voies A et B (2026-09-04/05).** Trente-huit guides relus
 > écran par écran, **cent deux défauts trouvés**, tous traités : réparés, tranchés par David, ou
@@ -95,6 +98,8 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | Le **retour au Home entre deux moments** | 13/09 | Écrit le jour même (§ 52), **jamais vu sur une vraie lampe**. À juger en séance : le passage d'un moment éclairé à un moment sans lumière **fait-il clignoter la pièce** (Home puis scène suivante), et l'éclairage normal désigné est-il celui qu'on veut retrouver en sortant d'une scène tendue ? *Un fondu qui se voit à l'œil ne se mesure pas dans un test.* |
 | ✅ Un **diaporama** pendant une vraie soirée | 13/09 → ✅ **ÉPROUVÉ EN RÉEL le 2026-09-14** | David : *« diaporama est bon »*, après les trois correctifs du § 56. **La chaîne entière tient** — montage, cadence, fondu enchaîné, appel depuis un moment. ⭐ *La ligne reste ici, close, parce qu'elle a servi* : elle portait les trois questions qui ne se mesurent pas dans un test (le fondu passe-t-il pour un fondu, six secondes est-ce la bonne durée, tient-il une soirée), et **les deux premières ont trouvé trois défauts que quatre mille tests n'avaient pas vus**. ⚠️ Ce qu'elle n'a toujours pas dit : la tenue sur **une soirée entière** — chaque tour résout le média et repasse par le pont. |
 | `Ctrl+0` sur un **vrai Player Hub** | 13/09 | Écrit le jour même (§ 53). Les tests éprouvent le **départ** du message, jamais son arrivée — aucune fenêtre de Hub n'est ouverte dans une instance d'essai. À regarder : l'image **et** la fiche **et** le titre disparaissent-ils ensemble, le fond reste-t-il, et les favoris épinglés survivent-ils ? *Un message qu'on envoie n'est pas un écran qui se vide.* |
+| La **carte d'un moment qui s'en va** | 25/09 | Écrit le jour même (§ 114), vu par la trace sur le Hub seulement. Deux cas à regarder : un moment dont la carte part sur un **moniteur**, puis *Arrêter* — l'écran doit devenir **noir**, sans que la fenêtre se ferme ; et une carte **projetée à la main** depuis Map-OS avant un moment qui en projette une autre — à l'arrêt, **la vôtre revient sur son écran**. |
+| Un **bruitage pris dans une atmosphère inactive** | 25/09 | La liste est vue (§ 115), pas le son : choisir un pad d'une atmosphère **qui n'est pas** celle affichée dans Sound-OS, jouer le moment. C'est **ce** son qui doit sortir, et le pad de même numéro de l'atmosphère affichée **ne doit pas s'allumer**. |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
@@ -139,6 +144,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | --- | --- | --- |
 | ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
+| ⚠️ **Une carte projetée sur un moniteur s'affiche dans TOUTES les fenêtres de projection ouvertes** — en couche 0, sous leur image. `projectionTarget` vaut `'monitor'` sans dire lequel, et `ProjectorView` dessine la carte dès que `mapTarget === 'monitor' && isProjectorWindow` | Projeter une carte sur le moniteur 2 pendant que le moniteur 1 est ouvert **sans image** : la carte y apparaît aussi | **Antérieur au 25/09, et jamais signalé à l'écran.** Le corriger demande de faire voyager `ecranDeLaCarte` (§ 114) jusqu'aux projecteurs — un champ de plus dans le protocole entre fenêtres, donc un chantier à part. *Une image opaque le cache ; un écran au repos le montre.* |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -8908,6 +8914,199 @@ savoir** : *un diagnostic qu'on ne peut plus départager ne vaut pas de casser c
 
 ---
 
+### 112 · « Inconnue, ignorée » — le panneau et le moteur ne reconnaissaient pas une lampe de la même façon (2026-09-25)
+
+David, capture à l'appui : *« j'ai visiblement un problème de connexion avec une lampe Philips Hue »* —
+la proposition d'ambiance marquait **« JdR plafond 2 — inconnue, ignorée »** en jaune.
+
+**Ce n'était pas une connexion.** Le nom de la lampe, lu dans la console de GM-OS, était
+**`" JdR plafond 2"` — une espace en tête**, saisie dans l'application Hue. Le modèle l'avait recopié
+sans elle. Et deux règles se contredisaient :
+
+| Qui | Comment il reconnaît une lampe |
+| --- | --- |
+| Le panneau (`lampeConnue`) | le nom **à la lettre**, casse mise à part |
+| Le moteur (`lampeDesignee`) | sans accents, **sans espaces ni ponctuation** |
+
+**La lampe s'allumait pendant que l'écran la disait ignorée.** Le panneau emprunte désormais la
+règle du moteur. *Un écran qui contredit les lampes envoie le meneur chercher une panne qui n'existe
+pas.*
+
+⭐ **Et le diagnostic est court à refaire** : `relireLesLampes` garde **toutes** les lampes du pont,
+injoignables comprises — « inconnue » ne peut donc jamais vouloir dire « hors de portée ». Le vrai
+nom se lit dans la console :
+`Object.values(useLightStore.getState().lights).map(l => [l.id, JSON.stringify(l.name)])` — le
+`JSON.stringify` rend les espaces visibles. ⚠️ Les noms ne sont persistés **nulle part** : ils sont
+relus au pont à chaque connexion, et le journal d'Ollama (`~/ollama_debug.log`) dit ce que le
+modèle a rendu.
+
+**Ancres** : `light/components/PropositionDAmbiance.tsx` (`lampeConnue`),
+`light/logic/ambianceProposee.test.ts` (le cas réel, espace en tête).
+⚠️ **Le correctif n'a pas été vu à l'écran** : David a renommé la lampe avant — le jaune a disparu
+par le renommage, pas par le code.
+
+---
+
+### 113 · ⭐ La carte d'un moment choisit son écran, et peut arriver révélée (2026-09-25)
+
+David : *« lorsque je définis une carte, je voudrais pouvoir dire où elle est projetée et si elle
+est révélée entièrement ou non »*.
+
+Deux réglages sous la liste des cartes, qui n'apparaissent qu'avec une carte : **l'écran** (Player
+Hub, un moniteur nommé, ou vide) et **« Carte entièrement révélée »**. Vides, le moment fait comme
+avant — la carte se charge dans Map-OS et la projection en cours la suit.
+
+⭐ **Une seconde porte, pas un second écrivain** : le geste de projection vivait dans
+`MapProjectionModal` ; il est extrait dans `map/projectionDeLaCarte.ts`, et la modale comme le
+moment l'empruntent. La règle d'exclusivité avec le tableau blanc ne peut plus s'oublier dans l'une
+des deux.
+
+#### ⛔ Trois pièges, tous évités avant l'écran
+
+1. **`triggerFogCommand('reveal_all')` existe, et il aurait menti.** Seul `MapCanvas` l'exécute —
+   donc seulement quand l'écran de Map-OS est ouvert. Depuis le Storyboard, la commande aurait
+   attendu en silence, puis **révélé la carte au moment où le meneur ouvre Map-OS**, au milieu d'une
+   autre scène. D'où `BROUILLARD_LEVE` : **un PNG transparent d'un pixel**, que les deux toiles
+   étirent aux dimensions de la carte — vérifié octet par octet (RGBA, alpha nul).
+2. **L'ordre.** `setMap` relit le brouillard enregistré dans IndexedDB **puis** l'écrit : lever le
+   brouillard sans l'attendre, c'est le voir recouvert par l'ancien. Un essai garde l'ordre, et
+   **échoue quand on retire l'`await`** — vérifié.
+3. **La révélation s'enregistre**, comme « Tout révéler » dans Map-OS. Ne lever que le brouillard
+   *projeté* aurait été défait au premier jeton déplacé : `syncToPlayers` renvoie celui du meneur.
+   *Ce que les joueurs ont vu reste vu.*
+
+#### ⛔ Et un défaut de la modale, trouvé en chemin
+
+`syncToPlayers` garde la cible qu'il trouve (`projectionTarget || 'hub'`). Projeter sur le Hub une
+carte **déjà sur un moniteur** la laissait donc en `'monitor'` — puis on fermait les moniteurs, **et
+elle n'était plus nulle part**. La cible se pose désormais avant la synchronisation.
+
+**Ancres** : `map/projectionDeLaCarte.ts` (`projeterLaCarteSur`, `BROUILLARD_LEVE`),
+`storyboard/useStoryboardStore.ts` (`mapTarget`, `mapBrouillard`), l'éditeur dans
+`StoryboardDashboard.tsx`, + 12 essais. ✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25** sur un moniteur,
+puis sur le Player Hub une fois le § 117 posé.
+
+---
+
+### 114 · ⭐ La carte s'en va avec son moment — la parenthèse, projection comprise (2026-09-25)
+
+David : *« est-ce que si je change de moment ou j'arrête le moment en cours, la projection de la
+carte s'arrête ? »* — **la réponse était non**, et dans un cas c'était un défaut :
+
+- à l'arrêt, `setMap` rechargeait la carte d'avant, mais la projection restait où le moment l'avait
+  mise ;
+- ⛔ **sans carte avant le moment**, celle du moment restait **chez les joueurs** pendant que Map-OS
+  était vide chez le meneur — `syncToPlayers` n'envoie la carte que **si elle existe**, donc « plus
+  de carte » ne partait jamais ;
+- en changeant pour un moment **sans** carte, celle du précédent restait projetée.
+
+**La règle de l'image depuis le 31/08, étendue à la carte** : *ce que le moment a allumé s'éteint
+avec lui, ce que le meneur avait allumé revient* — écran compris. `ecranDeLaCarte` retient le
+moniteur, que `'monitor'` ne nommait pas ; il vit dans la fenêtre du MJ et ne voyage pas.
+
+⚠️ **On ne relève qu'au premier moment d'une séquence.** Relever à chaque moment ferait prendre la
+carte du moment précédent pour « celle d'avant ». Un essai le garde, et **échoue quand on retire la
+garde** — vérifié.
+
+⭐ **Éteindre ne ferme pas les fenêtres.** Map-OS arrête sa projection par `closeAllDisplays`, qui
+emporte **toutes** les fenêtres de moniteur — l'image d'un autre écran comprise. Le moment vide la
+projection de la carte ; la fenêtre devient noire et reste ouverte.
+
+**Ancres** : `storyboard/carteAvantLeMoment.ts` (`releverLaCarte`, `rendreLaCarte`),
+`map/useMapStore.ts` (`ecranDeLaCarte`), `storyboard/carteDuMoment.test.ts`.
+✅ **Vu par la trace le 2026-09-25** : sur le Hub, la carte reste jusqu'à l'arrêt, puis cible **et**
+carte passent à `null` ensemble. ⚠️ **Jamais vu** : l'arrêt vers un **moniteur**, et le retour
+d'une carte que le meneur projetait lui-même (voir § 1).
+
+---
+
+### 115 · ⛔ Le bruitage d'un moment : `PAD_03` existe dans CHAQUE atmosphère (2026-09-25)
+
+David : *« dans la définition d'un moment, la liste des sons de Sound-OS n'est pas complète, elle
+ne reflète pas toutes les playlists »*. La liste ne montrait que l'atmosphère **active** — et le
+déclenchement ne cherchait que là.
+
+⛔ **Le défaut était sous la liste.** Les pads s'appellent `PAD_01` à `PAD_16` **dans chaque
+atmosphère**. Un moment qui ne retenait que `PAD_03` jouait *« le pad n°3 de l'atmosphère active au
+moment du jeu »* : **changer d'atmosphère dans Sound-OS changeait le son de tous les moments**, sans
+un mot. Élargir la liste seule aurait offert des pads qui ne joueraient jamais. *Un identifiant qui
+n'est unique que dans un contexte désigne ce contexte autant que la chose.*
+
+- Le moment retient **`soundAtmosphereId`**. La liste montre une rubrique par atmosphère, selon la
+  règle de Sound-OS lui-même pour la campagne (`atmospheresVisibles`).
+- ⭐ **Un pad d'une autre atmosphère joue sous une clé à part** (`a-combat:PAD_01`) : sous `PAD_01`,
+  il couperait le pad de même numéro de l'atmosphère affichée et l'**allumerait à tort**. Et
+  l'arrêt n'appelle `setPadActive` que pour un pad que Sound-OS montre — sinon il créerait un pad
+  fantôme.
+- **Un moment ancien garde son sens** : à l'ouverture, l'éditeur lui donne l'atmosphère active ;
+  l'enregistrer fige ce qu'il jouait jusqu'ici.
+
+⚠️ **Attrapé par l'essai, pas par `tsc`** : les atmosphères nomment leur campagne **`campagneId`**
+(le nom que lit `Rattachable`), pas `campaignId`. Le champ étant facultatif, la mauvaise
+orthographe compilait — et le filtre par campagne n'aurait rien filtré.
+
+**Ancres** : `storyboard/bruitageDuMoment.ts` (`bruitagesProposes`, `bruitageDuMoment`),
+`storyboard/sonsDuMoment.ts` (la garde de `setPadActive`), + 8 essais.
+✅ **La liste ÉPROUVÉE À L'ÉCRAN le 2026-09-25** (*« la liste des bruitages fonctionne bien »*).
+⚠️ Le son d'un pad pris dans une atmosphère **inactive** n'a pas été confirmé (§ 1).
+
+---
+
+### 116 · La photo prise avant d'attendre — l'état en direct de la synchronisation Nexus (2026-09-25)
+
+`handleSync` lisait la carte, l'horloge, le tableau, les dés et les réserves **en tête**, puis
+attendait une douzaine de résolutions de médias (PNJ, Atlas, indices, favoris…) **avant** d'envoyer :
+une synchronisation partie au début d'un moment arrivait au Hub **avec l'état d'avant**. Les cinq
+lectures se font désormais juste avant l'assemblage. *Une photo prise avant d'attendre montre ce
+qui était, pas ce qui est.*
+
+⛔ **Ce n'était pas le symptôme que je cherchais — et je l'avais annoncé comme tel.** David a
+redémarré et réessayé : *« ça n'a pas fonctionné »*. Le retard était réel (l'essai le reproduit,
+et échoue sur l'ancien code), mais la carte du Hub disparaissait pour une autre raison — § 117.
+*Un mécanisme plausible qui explique le délai n'est pas une preuve qu'il est à l'œuvre.*
+
+**Ancres** : `remote/hooks/useNexusSynchronizer.ts`,
+`useNexusSynchronizer.etatEnDirect.test.ts`. ⚠️ **Sans symptôme propre à regarder.**
+
+---
+
+### 117 · ⭐⭐ La cible de projection de la carte appartient au MJ — la garde que le tableau avait déjà (2026-09-25)
+
+David : *« lorsque j'envoie sur le Player Hub, la carte apparaît une seconde pour disparaître et
+laisser place au fond d'écran »*. Sur un moniteur, rien.
+
+⭐ **Après une hypothèse fausse (§ 116), une trace plutôt qu'une deuxième.** Un abonnement posé dans
+le magasin de la carte, donc **dans chaque fenêtre**, écrivait dans `main.log` qui changeait
+`projectionTarget` ou `projectedMapUrl`, de quoi à quoi, et la pile d'appel. Un seul essai a suffi :
+
+```
+10:09:20.611  mj   cible null → hub      projeterLaCarteSur ← triggerMoment
+10:09:20.614  hub  cible null → hub      applyRemoteUpdate
+10:09:20.641  mj   cible hub → null      applyRemoteUpdate  ← un message d'une fenêtre SECONDAIRE
+10:09:20.735  hub  cible hub → null      applyRemoteUpdate
+```
+
+**Le meneur adoptait la cible de projection d'une fenêtre secondaire**, puis la rediffusait à
+tous. Chaque mise à jour d'une fenêtre secondaire porte sa copie de `projectionTarget`, qui peut
+être en retard. ⛔ **Le tableau blanc avait payé exactement ce défaut** — le commentaire est dans le
+même fichier : *« L'adopter éteignait la projection : le maître prenait le `null` du hub, puis le
+rediffusait à tout le monde »* —, et reçu `stripProjectionTarget`. **La carte, trois lignes plus
+haut, ne l'avait jamais reçue.** C'est la question de ce dépôt : *qui d'autre a la même rustine à
+poser ?*
+
+Les pings et les jetons déplacés d'une fenêtre secondaire restent acceptés : c'est légitime.
+
+> ⭐ **La leçon de méthode.** Deux essais m'ont coûté un aller-retour chacun ; la trace, un seul, et
+> elle a désigné la ligne. *Quand une hypothèse a déjà échoué, la suivante se mesure — elle ne se
+> devine pas.* La trace est retirée avec le correctif.
+
+**Ancres** : `services/CrossWindowEventService.ts` (le `case 'map'` de l'instance maîtresse),
+`CrossWindowEventService.test.ts` (2 essais, qui échouent sur l'ancien code).
+✅ **ÉPROUVÉ À L'ÉCRAN le 2026-09-25** — David : *« ok c'est bon »* ; la trace montrait la carte
+tenue jusqu'à l'arrêt du moment.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -8960,6 +9159,12 @@ savoir** : *un diagnostic qu'on ne peut plus départager ne vaut pas de casser c
 | 45 | **La source qui traîne** | ✅ **CORRIGÉ le 22/09** — *« un buffer qui ne se vide pas entre 2 séquences ? »*, l'intuition de David, et elle était juste : la piste se déclarait arrêtée alors qu'elle jouait encore 1,1 s. ⭐ Deux copies décalées de la même boucle = **filtre en peigne** (§ 109) | Enchaîner deux séquences avec ambiance | ⚠️ Non éprouvé |
 | 46 | **Cent allers-retours IPC/s** | ✅ **CORRIGÉ le 22/09** — *« la vidéo aussi lag »*. ⭐⭐ **Quand l'audio ET la vidéo souffrent, c'est le fil principal** : un IPC par média résolu, même en cache, deux fois par seconde. ⚠️ Une garantie bornée à 900 ms, et **dite** (§ 110) | Tablette connectée, projeter une vidéo | ⚠️ Non éprouvé |
 | 47 | **Le détour de sortie, et deux flux Bluetooth** | ✅ **CORRIGÉ le 22/09 au soir** — *« toujours du lag dans une séquence ; directement, moins de soucis »*. ⭐ **Le détour `MediaStream` était pris même vers l'enceinte que le contexte portait déjà** : la règle est qu'il ne sert qu'à aller **ailleurs**. ⛔ Deux défauts au passage — `useAmbientStore` était le **seul des trois** à ne pas appeler son moteur (donc la sortie changée depuis la **tablette** ne faisait rien), et **aucune voie n'était jamais refermée**. ⭐⭐ Mais la cause principale est **matérielle** : deux enceintes Bluetooth, donc deux flux A2DP sur une radio, et une séquence est le geste qui les fait parler ensemble (§ 111) | — | ✅ **ÉPROUVÉ EN RÉEL le 22/09** (*« j'ai testé avec le câble ça fonctionne »*). ⚠️ Les deux réparations ont eu lieu ensemble : on ne sait pas laquelle a fait l'effet, et on ne le cherchera pas |
+| 48 | **« Inconnue, ignorée »** | ✅ **CORRIGÉ le 25/09** — *« un problème de connexion avec une lampe »* : ce n'en était pas un. Le nom portait **une espace en tête**, et le panneau comparait à la lettre quand le moteur ignore espaces et ponctuation — **la lampe s'allumait pendant que l'écran la disait ignorée** (§ 112) | Un nom de lampe avec une espace en trop | ⚠️ Non vu — la lampe a été renommée avant |
+| 49 | **La carte d'un moment : écran et révélation** | ✅ **LIVRÉ ET ÉPROUVÉ À L'ÉCRAN le 25/09** — moniteur, puis Player Hub. ⛔ `reveal_all` n'agit que si Map-OS est ouvert : un **PNG transparent d'un pixel** à la place. ⛔ La modale de Map-OS perdait la carte en passant d'un moniteur au Hub (§ 113) | — | Rien |
+| 50 | **La carte s'en va avec son moment** | ✅ **LIVRÉ le 25/09**, vu par la trace sur le Hub — *ce que le moment a allumé s'éteint, ce que le meneur avait allumé revient*, écran compris. ⛔ Sans carte avant le moment, celle du moment restait chez les joueurs (§ 114) | Arrêter un moment dont la carte est sur un **moniteur** ; rendre une carte projetée à la main | ⚠️ Ces deux cas jamais vus |
+| 51 | **Le bruitage d'un moment** | ✅ **LIVRÉ, la liste ÉPROUVÉE le 25/09** — ⛔ `PAD_03` existe **dans chaque atmosphère** : un moment jouait le pad n°3 de l'atmosphère active **au moment du jeu**. L'atmosphère est retenue, et un pad d'ailleurs joue sous une clé à part (§ 115) | Un pad d'une atmosphère **inactive** | ⚠️ Le son lui-même non confirmé |
+| 52 | **La photo prise avant d'attendre** | ✅ **CORRIGÉ le 25/09** — la synchronisation Nexus lisait l'état en direct avant une douzaine de résolutions de médias. ⛔ **Annoncé à tort comme la cause de la carte du Hub** (§ 116) | — | Sans symptôme propre |
+| 53 | **La cible de la carte appartient au MJ** | ✅ **CORRIGÉ ET ÉPROUVÉ À L'ÉCRAN le 25/09** — ⭐⭐ trouvé par **une trace dans chaque fenêtre**, après une hypothèse fausse : le MJ adoptait le `null` d'une fenêtre secondaire 24 ms après la projection. ⛔ **Le tableau blanc avait déjà cette garde, trois lignes plus bas** (§ 117) | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

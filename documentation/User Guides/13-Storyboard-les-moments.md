@@ -10,9 +10,9 @@ Le Storyboard utilise une **Table de Montage Horizontale** (façon pellicule de 
 
 1. **Musique** : Lance une piste spécifique de vos playlists.
 2. **Ambiance (Ambient-OS)** : Charge un **thème** — les huit sons de fond — et, si vous le voulez, la **scène** qui les dose (Calme, Tension, Action).
-3. **Effets Sonores (Sound-OS)** : Déclenche un pad SFX précis.
+3. **Effets Sonores (Sound-OS)** : Déclenche un pad SFX précis, pris dans **n'importe laquelle** de vos atmosphères.
 4. **Lumières** : Applique une scène Hue (ex: Alerte Rouge, Nuit Calme).
-5. **Cartes (Atlas)** : Charge une carte spécifique pour les joueurs.
+5. **Cartes (Atlas)** : Charge une carte spécifique pour les joueurs — et, si vous le voulez, **l'écran** où elle part et si elle arrive **entièrement révélée**.
 6. **Images** : Affiche une illustration ou un portrait de PNJ sur le Hub.
 
 ## 🚀 Comment l'utiliser ?
@@ -65,6 +65,56 @@ Le Storyboard fonctionne comme un logiciel de montage :
 Cliquez simplement sur le gros bouton **PLAY** au centre d'une carte.
 - Tous les modules liés s'ajusteront instantanément.
 - Une lueur pulsée entoure la séquence active pour vous aider à vous repérer.
+
+---
+
+## 🗺️ La carte d'un moment : où elle part, et comment elle arrive
+
+*Nouveau le 2026-09-25.* Dès qu'un moment porte une carte, deux réglages apparaissent sous la liste
+des cartes :
+
+| Réglage | Ce qu'il fait | Laissé vide |
+| :--- | :--- | :--- |
+| **Écran de la carte** | Projette la carte **sur le Player Hub** ou **sur un moniteur** nommé | La carte se charge dans Map-OS, et la projection en cours — s'il y en a une — la suit |
+| **Carte entièrement révélée** | La carte arrive **sans brouillard** | Elle arrive avec le brouillard que vous lui aviez laissé |
+
+> ⚠️ **La révélation s'enregistre**, exactement comme *Tout révéler* dans Map-OS : ce que les
+> joueurs ont vu reste vu. C'est voulu — si seul l'écran des joueurs était révélé, le premier pion
+> que vous déplaceriez leur renverrait votre brouillard, et la carte se recouvrirait en pleine scène.
+
+<!-- -->
+
+> 🔎 **La carte se projette avec le même geste que le bouton *Projeter* de Map-OS**, donc avec la
+> même règle : elle **remplace le tableau blanc** s'il était projeté.
+
+<!-- -->
+
+> ⚠️ **Une carte et une image sur le même écran : la carte passe devant.** Sur le Player Hub, une
+> carte projetée recouvre l'image du moment. Visez deux écrans différents si vous voulez les deux.
+
+---
+
+## 🔔 Le bruitage : toutes vos atmosphères
+
+*Corrigé le 2026-09-25.* La liste des bruitages d'un moment montre **une rubrique par atmosphère**
+de Sound-OS — celles de la campagne ouverte et les communes, comme dans Sound-OS lui-même —, et
+seulement les pads qui portent un son.
+
+> ⛔ **Elle ne montrait que l'atmosphère active, et ce n'était pas le pire.** Dans Sound-OS, les pads
+> portent les mêmes numéros dans chaque atmosphère. Un moment ne retenait que le numéro : il jouait
+> donc *« le pad n°3 de l'atmosphère active au moment où vous le lancez »* — changer d'atmosphère
+> changeait le son de tous vos moments. Un moment retient désormais **l'atmosphère et le pad**.
+
+<!-- -->
+
+> 🔎 **Un pad d'une autre atmosphère joue à côté de Sound-OS, sans le déranger** : il ne coupe pas
+> le pad de même numéro que vous avez sous les yeux, et ne l'allume pas.
+
+<!-- -->
+
+> 🔎 **Vos moments d'avant ce jour ne changent pas.** Ils jouent le pad de l'atmosphère active,
+> comme avant. Quand vous en ouvrez un, il apparaît sous l'atmosphère active ; l'enregistrer fige ce
+> choix.
 
 ---
 
@@ -244,6 +294,7 @@ arbitraires : elles suivent la façon dont chaque module se comporte quand un au
 | Ce que la précédente avait posé | En **changeant** de séquence | En **arrêtant** le moment |
 | :--- | :--- | :--- |
 | **Image** | s'éteint en fondu, sauf si la nouvelle en projette une | s'éteint |
+| **Carte** | ⭐ **la table revient à ce qu'elle montrait avant la séquence**, sauf si la nouvelle apporte sa carte | ⭐ **la table revient à ce qu'elle montrait avant la séquence** — écran compris |
 | **Diaporama** | ⭐ **il s'arrête**, sauf si la nouvelle rappelle **le même** — il continue alors sans repartir du début | il s'arrête, et l'écran s'éteint |
 | **Bruitage** | s'arrête **toujours** — Sound-OS empile, il ne remplace pas | s'arrête |
 | **Ambiance** | s'arrête, **sauf si la nouvelle apporte sa propre scène** | s'arrête |
@@ -277,6 +328,15 @@ arbitraires : elles suivent la façon dont chaque module se comporte quand un au
 > la main entre-temps, la séquence n'y touche pas. Et l'ambiance s'éteint **piste par piste**, en
 > ne coupant que celles que sa propre scène avait allumées — la pluie que vous aviez lancée avant
 > la séquence continue de tomber.
+
+> ⭐ **La carte suit la règle de l'image depuis le 2026-09-25.** Ce que le moment a allumé
+> s'éteint avec lui : si rien n'était projeté avant, la projection s'arrête — l'écran devient noir,
+> sa fenêtre reste ouverte. Ce que **vous** aviez projeté revient : votre carte, **sur son écran**.
+> Et après plusieurs moments à carte d'affilée, l'arrêt ramène ce qu'il y avait avant **le premier**,
+> pas la carte du moment précédent.
+>
+> ⛔ **Avant ce jour, la carte d'un moment restait à l'écran des joueurs** — y compris quand Map-OS
+> était vide chez vous.
 
 > [!IMPORTANT]
 > **Le Storyboard ne va pas jusqu'aux tablettes des joueurs.** Il pilote vos enceintes, vos écrans
