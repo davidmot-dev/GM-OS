@@ -2,7 +2,7 @@ import React from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 import {
     Lock, Unlock, RotateCcw, Pin, PinOff, ExternalLink, Network, AlertTriangle, Info,
-    Link2, Unlink, Trash2, Play, Square,
+    Link2, Unlink, Trash2, Play, Square, Columns3,
 } from 'lucide-react';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { useStoryboardStore } from '../../../storyboard/useStoryboardStore';
@@ -11,7 +11,7 @@ import { gmToast } from '../../../../stores/useToastStore';
 import { placerLeNoeud } from '../../logic/socialNexusUtils';
 import { scenesEmportees, etatDeLaScene } from '../../logic/trame';
 import {
-    grapheDeLaTrame, constatsDeLaTrame, typesDuNiveau, NIVEAUX,
+    grapheDeLaTrame, constatsDeLaTrame, typesDuNiveau, NIVEAUX, NIVEAU_MAXIMUM,
     COULEUR_DU_TYPE, LIBELLE_DU_TYPE, renvoiEcrit, coupleDeRenvoi, coupleDEnchainement, idDuNoeud,
     type NoeudDeTrame, type LienDeTrame, type PorteeDeLIntrigue, type TypeDeNoeud,
 } from '../../logic/grapheDeLaTrame';
@@ -19,6 +19,7 @@ import {
     sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
 } from '../../logic/enchainementsDeLaTrame';
 import ChoixDuRang from './ChoixDuRang';
+import { rangerEnColonnes } from '../../logic/rangementDeLaTrame';
 
 /**
  * **La trame vue d'ensemble** — demandé par David le 2026-09-22.
@@ -81,7 +82,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     */
     const {
         actes, scenes, atlasMaps, entities, clues, players, campaigns, activeCampaignId, sessions,
-        figerLeGrapheDeTrame, libererLeGrapheDeTrame, reinitialiserLeGrapheDeTrame,
+        figerLeGrapheDeTrame, libererLeGrapheDeTrame, reinitialiserLeGrapheDeTrame, rangerLeGrapheDeTrame,
         epinglerDansLaTrame, detacherDeLaTrame, navigateToNpcDetail,
         modifierScene, modifierActe, supprimerScene, supprimerActe,
         ouvrirLaScene, terminerLaScene, placerLaSceneApres, rattacherSceneAUnActe,
@@ -111,7 +112,10 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const [depart, setDepart] = React.useState<string | null>(null);
     const graphe2d = React.useRef<{
         screen2GraphCoords?: (x: number, y: number) => { x: number; y: number };
+        zoomToFit?: (duree?: number, marge?: number) => void;
     } | null>(null);
+    /** Cadrer la toile quand la simulation se pose, après un rangement. */
+    const cadrerApresRangement = React.useRef(false);
     /* Le fil élastique. Dans une référence : il change à chaque pixel, et l'écrire
        dans l'état ferait un rendu React par mouvement de souris. */
     const fil = React.useRef<{ x: number; y: number } | null>(null);
@@ -180,7 +184,37 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                 POSITIONS_VIVANTES.set(noeud.id, { x: noeud.x, y: noeud.y });
             }
         }
+        if (cadrerApresRangement.current) {
+            cadrerApresRangement.current = false;
+            graphe2d.current?.zoomToFit?.(600, 40);
+        }
     }, [graphe.noeuds]);
+
+    /**
+     * **Ranger en colonnes** — demandé par David le 2026-09-25 : *« le graphe de
+     * la trame est illisible et très difficile à ranger correctement »*.
+     *
+     * ⚠️ **Sur la trame ENTIÈRE, pas sur la vue.** Ranger au niveau « Trame »
+     * puis monter aux PNJ ne doit pas laisser les scènes masquées par un filtre
+     * flotter sans place : toutes reçoivent la leur, même invisibles.
+     */
+    const ranger = () => {
+        if (!activeCampaignId) return;
+        const complet = grapheDeLaTrame(activeCampaignId, source, { niveau: NIVEAU_MAXIMUM, portee: 'tout' });
+        const { epingles, semis } = rangerEnColonnes(complet);
+        const appliquer = () => {
+            POSITIONS_VIVANTES.clear();
+            for (const [id, position] of Object.entries(semis)) POSITIONS_VIVANTES.set(id, position);
+            cadrerApresRangement.current = true;
+            rangerLeGrapheDeTrame(activeCampaignId, epingles);
+        };
+        const dejaArrange = fige || Object.keys(campagne?.noeudsEpinglesDeLaTrame ?? {}).length > 0;
+        if (dejaArrange) {
+            gmConfirm('Ranger la trame en colonnes ? Les positions que tu as épinglées seront remplacées.', appliquer);
+        } else {
+            appliquer();
+        }
+    };
 
     const noeudParId = React.useCallback(
         (id: string | null) => (id ? graphe.noeuds.find(n => n.id === id) ?? null : null),
@@ -542,6 +576,12 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                             : 'bg-app-bg/40 border-app-border/20 text-app-text/45 hover:text-app-text/80'
                     }`}
                 ><Link2 size={13} /> Relier</button>
+
+                <button
+                    onClick={ranger}
+                    title="Une colonne par acte, de gauche à droite ; ses scènes dessous, dans leur ordre. Tu peux ensuite ajuster à la main."
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
+                ><Columns3 size={13} /> Ranger</button>
 
                 <button
                     onClick={figerOuLiberer}

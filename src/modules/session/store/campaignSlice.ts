@@ -50,6 +50,13 @@ export interface CampaignSliceActions {
     libererLeGrapheDeTrame: (campaignId: string) => void;
     reinitialiserLeGrapheDeTrame: (campaignId: string) => void;
     epinglerDansLaTrame: (campaignId: string, noeudId: string, position: { x: number; y: number }) => void;
+    /**
+     * **Remplace toutes les épingles d'un coup** — le rangement en colonnes du
+     * 2026-09-25. Une seule écriture pour trente nœuds : trente appels à
+     * `epinglerDansLaTrame` feraient trente écritures persistées et trente
+     * rendus du graphe. Libère aussi la toile figée : ranger, c'est repartir.
+     */
+    rangerLeGrapheDeTrame: (campaignId: string, epingles: Record<string, { x: number; y: number }>) => void;
     detacherDeLaTrame: (campaignId: string, noeudId?: string) => void;
 }
 
@@ -269,6 +276,15 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
             campaigns: state.campaigns.map((c) =>
                 c.id === campaignId
                     ? { ...c, noeudsEpinglesDeLaTrame: { ...(c.noeudsEpinglesDeLaTrame ?? {}), [noeudId]: position } }
+                    : c
+            ),
+        })),
+
+    rangerLeGrapheDeTrame: (campaignId, epingles) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId
+                    ? { ...c, noeudsEpinglesDeLaTrame: { ...epingles }, positionsDeLaTrame: undefined, trameFigee: false }
                     : c
             ),
         })),
