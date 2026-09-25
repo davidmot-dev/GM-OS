@@ -2,20 +2,13 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Monitor, Cast, ExternalLink } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
-import { useMapStore } from '../useMapStore';
+import { projeterLaCarteSur } from '../projectionDeLaCarte';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
-import { claimProjection } from '../../../services/projectionExclusivity';
 
 const MapProjectionModal: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
     const { displays, fetchDisplays } = useImageStore();
-    const { 
-        mapUrl, syncToPlayers, isVideo, fogDataUrl, tokens, pings, magicEffects,
-        weatherType, weatherIntensity,
-        mapWidth, mapHeight, isGridEnabled, gridSize, gridColor, gridOpacity 
-    } = useMapStore();
-
 
     const { closeModal } = useModalStore();
     const { getDisplayLabel } = useHardwareStore();
@@ -26,51 +19,15 @@ const MapProjectionModal: React.FC = () => {
         }
     }, [fetchDisplays]);
 
+    /* Les deux gestes vivent dans `projectionDeLaCarte`, que le Storyboard
+       emprunte aussi : une seule règle d'exclusivité pour les deux portes. */
     const handleProjectToHub = () => {
-        // La carte et le tableau ne cohabitent pas. Libérer avant de projeter :
-        // l'ordre inverse diffuserait un état où les deux sont actifs.
-        claimProjection('map');
-
-        // Sync everything to Player Hub. `start` : c'est ici, et seulement ici,
-        // qu'un geste du MJ démarre la projection de la carte.
-        syncToPlayers({ start: true });
-        
-        // Ensure physical displays are closed when projecting to Hub (Exclusivity)
-        if (window.appBridge?.image?.closeAllDisplays) {
-            window.appBridge.image.closeAllDisplays();
-        }
-        
+        projeterLaCarteSur('hub');
         closeModal();
     };
 
     const handleProjectToMonitor = (displayId: string) => {
-        const bridge = window.appBridge;
-        if (bridge?.image?.launchDisplay && mapUrl) {
-            claimProjection('map');
-
-            // We consolidate the state update in ONE call to avoid multiple broadcasts/race conditions
-            // We set projectionTarget to 'monitor' so Hub doesn't show it, while physical displays do
-            useMapStore.setState({
-                projectionTarget: 'monitor',
-                projectedMapUrl: mapUrl,
-                projectedIsVideo: isVideo,
-                projectedFogDataUrl: fogDataUrl,
-                projectedTokens: [...tokens],
-                projectedPings: [...pings],
-                projectedMagicEffects: [...magicEffects],
-                projectedWeatherType: weatherType,
-                projectedWeatherIntensity: weatherIntensity,
-                projectedMapWidth: mapWidth,
-                projectedMapHeight: mapHeight,
-                projectedIsGridEnabled: isGridEnabled,
-                projectedGridSize: gridSize,
-                projectedGridColor: gridColor,
-                projectedGridOpacity: gridOpacity
-            });
-
-            // Signal tactical map mode to the projector window
-            bridge.image.launchDisplay(['__tactical_map__'], displayId);
-        }
+        projeterLaCarteSur(displayId);
         closeModal();
     };
 

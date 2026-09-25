@@ -136,6 +136,15 @@ interface MapState {
 
     projectionTarget: 'hub' | 'monitor' | null;
     /**
+     * **Le moniteur qui porte la carte**, quand `projectionTarget` vaut
+     * `'monitor'` — lequel, `'monitor'` ne le dit pas.
+     *
+     * Écrit par `projeterLaCarteSur`, lu par le Storyboard pour rendre la
+     * projection d'avant un moment (2026-09-25). Il vit dans la fenêtre du MJ
+     * et ne voyage pas : les projecteurs n'en ont pas l'usage.
+     */
+    ecranDeLaCarte: string | null;
+    /**
      * Rafraîchit l'instantané projeté de la carte.
      *
      * `start: true` **démarre** la projection si aucune n'est active — réservé au
@@ -212,6 +221,7 @@ export const useMapStore = create<MapState>()(
             mapOutputDeviceId: 'default',
 
             projectionTarget: null,
+            ecranDeLaCarte: null,
             projectedMapUrl: null,
             projectedIsVideo: false,
             projectedFogDataUrl: null,
@@ -535,6 +545,7 @@ export const useMapStore = create<MapState>()(
 
             clearProjectedState: () => set({
                 projectionTarget: null,
+                ecranDeLaCarte: null,
                 projectedMapUrl: null,
                 projectedIsVideo: false,
                 projectedFogDataUrl: null,
@@ -544,6 +555,7 @@ export const useMapStore = create<MapState>()(
 
             resetProjectionState: () => set({
                 projectionTarget: null,
+                ecranDeLaCarte: null,
                 projectedMapUrl: null,
                 projectedIsVideo: false,
                 projectedFogDataUrl: null,
@@ -751,3 +763,4 @@ export const useMapStore = create<MapState>()(
 if (typeof window !== 'undefined') {
     (window as Window & { useMapStore?: any }).useMapStore = useMapStore;
 }
+

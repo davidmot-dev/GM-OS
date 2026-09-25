@@ -248,6 +248,9 @@ const StoryboardDashboard: React.FC = () => {
       défaut, et le défaut ressemble à un choix.*
     */
     const [mapEstVideo, setMapEstVideo] = useState(false);
+    /* Où la carte part, et si elle arrive révélée — vide : comme avant. */
+    const [mapTarget, setMapTarget] = useState('');
+    const [mapRevelee, setMapRevelee] = useState(false);
     const [imageMediaId, setImageMediaId] = useState('');
     const [diaporamaId, setDiaporamaId] = useState('');
     const [soundPadId, setSoundPadId] = useState('');
@@ -345,6 +348,8 @@ const StoryboardDashboard: React.FC = () => {
           est un choix et doit être respecté.
         */
         setMapEstVideo(moment.isMapVideo ?? estUneVideo(moment.mapUrl || ''));
+        setMapTarget(moment.mapTarget || '');
+        setMapRevelee(moment.mapBrouillard === 'revelee');
         setImageMediaId(moment.imageMediaId || '');
         setDiaporamaId(moment.diaporamaId || '');
         setSoundPadId(moment.soundPadId || '');
@@ -376,6 +381,8 @@ const StoryboardDashboard: React.FC = () => {
         setMusicPadId('');
         setLightSceneId('');
         setMapUrl('');
+        setMapTarget('');
+        setMapRevelee(false);
         setImageMediaId('');
         setSoundPadId('');
         setMusicVolume(null);
@@ -508,6 +515,9 @@ const StoryboardDashboard: React.FC = () => {
             lightSceneId: lightSceneId || undefined,
             mapUrl: mapUrl || undefined,
             isMapVideo: mapUrl && mapEstVideo ? true : undefined,
+            /* Sans carte, ni écran ni brouillard : ils ne diraient rien. */
+            mapTarget: mapUrl && mapTarget ? mapTarget : undefined,
+            mapBrouillard: mapUrl && mapRevelee ? 'revelee' as const : undefined,
             /*
               ⚠️ **Un seul des deux part.** Ils visent la même place à l'écran :
               un moment qui porterait les deux les enverrait l'un après l'autre,
@@ -964,6 +974,47 @@ const StoryboardDashboard: React.FC = () => {
                                             <option key={m.id} value={m.fileUrl}>{m.name}</option>
                                         ))}
                                     </select>
+
+                                    {/*
+                                      **Où elle part, et comment elle arrive** —
+                                      demandé par David le 2026-09-25. N'apparaît
+                                      qu'avec une carte : sans elle, ces deux
+                                      réglages ne diraient rien.
+
+                                      Vide : comme avant — la carte se charge
+                                      dans Map-OS et la projection en cours, s'il
+                                      y en a une, la suit.
+                                    */}
+                                    {mapUrl && (
+                                        <>
+                                            <select
+                                                value={mapTarget}
+                                                onChange={e => setMapTarget(e.target.value)}
+                                                className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-emerald-400/80 focus:border-emerald-400 outline-none"
+                                                title={t('modules:storyboard.editor.map_screen_label')}
+                                            >
+                                                <option value="">{t('modules:storyboard.editor.map_screen_current')}</option>
+                                                <option value="hub">{t('modules:storyboard.editor.screen_hub')}</option>
+                                                {ecrans.map(ecran => (
+                                                    <option key={ecran.id} value={ecran.id}>{getDisplayLabel(ecran.id)}</option>
+                                                ))}
+                                            </select>
+                                            <label className="flex items-center gap-2 px-1 text-ui-11 font-bold text-emerald-400/80 cursor-pointer select-none">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={mapRevelee}
+                                                    onChange={e => setMapRevelee(e.target.checked)}
+                                                    className="accent-emerald-400"
+                                                />
+                                                {t('modules:storyboard.editor.map_revealed')}
+                                            </label>
+                                            {mapRevelee && (
+                                                <p className="px-1 text-ui-10 text-slate-500 italic leading-snug">
+                                                    {t('modules:storyboard.editor.map_revealed_hint')}
+                                                </p>
+                                            )}
+                                        </>
+                                    )}
                                 </div>
 
                                 <div className="space-y-3">

@@ -5,6 +5,7 @@ import {
     reserverLesLumieres, relacherLesLumieresBientot, lesLumieresSontReservees,
 } from '../light/logic/lumiereReservee';
 import { imageOuDiaporama, occupeUnEcran } from './imageOuDiaporama';
+import { releverLaCarte, rendreLaCarte } from './carteAvantLeMoment';
 import {
     cequUnArretEteint, cequUnePriseDeMainEteint, eteindreLesSons,
     ilYAQuelqueChoseAEteindre, lesSonsAnnoncesPar, AUCUN_SON, type SonsDuMoment,
@@ -47,6 +48,27 @@ export interface StoryboardMoment {
     lightSceneId?: string;     // Light-OS Scene
     mapUrl?: string;           // Atlas-OS Map URL
     isMapVideo?: boolean;
+    /*
+      **Où la carte est projetée, et si elle arrive révélée** — demandé par
+      David le 2026-09-25 : *« lorsque je définis une carte, je voudrais pouvoir
+      dire où elle est projetée et si elle est révélée entièrement ou non ».*
+
+      Tous deux facultatifs, et **l'absence veut dire « comme avant »** : la
+      carte se charge dans Map-OS, la projection en cours la suit, et elle
+      arrive avec le brouillard qu'on lui avait laissé.
+    */
+    /** `'hub'` ou l'identifiant d'un moniteur. Absent : ne touche pas à la projection. */
+    mapTarget?: string;
+    /**
+     * `'revelee'` : la carte arrive sans brouillard. Absent : son brouillard
+     * enregistré.
+     *
+     * ⚠️ **La révélation s'enregistre**, exactement comme « Tout révéler » dans
+     * Map-OS : ce que les joueurs ont vu reste vu. Ne lever que le brouillard
+     * projeté serait défait au premier jeton déplacé — `syncToPlayers` renvoie
+     * celui du meneur, et la carte se recouvrirait en pleine scène.
+     */
+    mapBrouillard?: 'revelee';
     imageMediaId?: string;     // Image-OS Media ID
     /**
      * **Le diaporama du moment** — demandé par David le 2026-09-13.
@@ -155,6 +177,14 @@ export interface ImageAvantLeMoment {
     mapUrl: string | null;
     mapName: string | null;
     isVideo: boolean;
+    /**
+     * **Où la carte était projetée**, pour l'y rendre — voir
+     * `carteAvantLeMoment.ts` (2026-09-25). Absent : relevé avant ce jour, la
+     * projection n'est pas touchée.
+     */
+    projection?: 'hub' | 'monitor' | null;
+    /** Le moniteur, quand `projection` vaut `'monitor'`. */
+    ecran?: string | null;
 }
 
 interface StoryboardState {
@@ -322,12 +352,10 @@ export const useStoryboardStore = create<StoryboardState>()(
                     void gWindow.hueEngine.revenirALEclairageNormal(true);
                 }
 
+                /* La carte d'avant revient — et l'écran où elle était. */
                 if (imageAvantLeMoment && gWindow.useMapStore) {
-                    gWindow.useMapStore.getState().setMap(
-                        imageAvantLeMoment.mapUrl,
-                        imageAvantLeMoment.isVideo,
-                        imageAvantLeMoment.mapName ?? 'Sans titre',
-                    );
+                    void rendreLaCarte(imageAvantLeMoment, gWindow.useMapStore)
+                        .catch(e => console.warn('[Storyboard] retour de la carte impossible :', e));
                 }
                 set({
                     activeMomentId: null, imageAvantLeMoment: null,
@@ -592,18 +620,52 @@ export const useStoryboardStore = create<StoryboardState>()(
                 if (moment.mapUrl && !gWindow.useMapStore) {
                     effets.push({ nom: 'Carte', sort: 'module-absent' });
                 }
+                /*
+                  **Un moment sans carte rend celle d'avant la séquence.**
+                  (2026-09-25) Sans cette branche, la carte du moment précédent
+                  restait projetée pendant tout le suivant — l'image, elle,
+                  s'éteint ainsi depuis le 31/08.
+                */
+                const carteDAvant = get().imageAvantLeMoment;
+                if (!moment.mapUrl && carteDAvant && gWindow.useMapStore) {
+                    set({ imageAvantLeMoment: null });
+                    await rendreLaCarte(carteDAvant, gWindow.useMapStore);
+                }
                 if (moment.mapUrl && gWindow.useMapStore) {
                     console.log(`[Storyboard] Map: Setting URL ${moment.mapUrl}`);
                     effets.push({ nom: 'Carte', sort: 'joue' });
                     const mapStore = gWindow.useMapStore.getState();
-                    set({
-                        imageAvantLeMoment: {
-                            mapUrl: mapStore.mapUrl ?? null,
-                            mapName: mapStore.mapName ?? null,
-                            isVideo: !!mapStore.isVideo,
-                        },
-                    });
-                    mapStore.setMap(moment.mapUrl, moment.isMapVideo || false);
+                    /*
+                      ⚠️ **On ne relève qu'au premier moment d'une séquence.**
+                      Relever à chaque moment ferait prendre la carte du moment
+                      précédent pour « celle d'avant » : l'arrêt rendrait la
+                      séquence, et non ce que le meneur avait à l'écran.
+                    */
+                    if (!carteDAvant) {
+                        set({ imageAvantLeMoment: releverLaCarte(gWindow.useMapStore) });
+                    }
+                    /*
+                      ⛔ **Attendre `setMap` avant de toucher au brouillard.** Il
+                      relit le brouillard enregistré dans IndexedDB, puis
+                      l'écrit : lever le brouillard sans l'attendre, c'est le
+                      voir **recouvert** une milliseconde plus tard par
+                      l'ancien.
+                    */
+                    await mapStore.setMap(moment.mapUrl, moment.isMapVideo || false);
+
+                    if (moment.mapBrouillard === 'revelee') {
+                        const { BROUILLARD_LEVE } = await import('../map/projectionDeLaCarte');
+                        await gWindow.useMapStore.getState().setFogDataUrl(BROUILLARD_LEVE);
+                    }
+
+                    /* Après le brouillard, pour que l'écran reçoive d'emblée
+                       la carte telle qu'elle doit être vue. */
+                    if (moment.mapTarget) {
+                        const { projeterLaCarteSur } = await import('../map/projectionDeLaCarte');
+                        if (!projeterLaCarteSur(moment.mapTarget)) {
+                            effets.push({ nom: 'Projection de la carte', sort: 'introuvable', cherche: moment.mapTarget });
+                        }
+                    }
                 }
 
                 /*
