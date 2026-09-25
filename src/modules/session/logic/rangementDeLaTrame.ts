@@ -1,7 +1,7 @@
 import type { GrapheDeTrame, NoeudDeTrame, TypeDeNoeud } from './grapheDeLaTrame';
 
 /**
- * **Ranger la trame — un bloc par acte, et le temps de gauche à droite.**
+ * **Ranger la trame — des blocs d'actes qui occupent les deux dimensions.**
  *
  * *Demandé par David le 2026-09-25, capture à l'appui : « le graphe de la trame
  * narrative est illisible et très difficile à ranger correctement ».*
@@ -14,42 +14,55 @@ import type { GrapheDeTrame, NoeudDeTrame, TypeDeNoeud } from './grapheDeLaTrame
  *
  * ---
  *
- * **Première version, le même jour : une colonne par acte, ses scènes empilées
- * dessous.** David, après essai : *« les colonnes sont trop serrées, il faut
- * aussi travailler sur la dimension horizontale »*. « The Investigation »
- * portait quinze scènes sur un seul trait vertical, et ses enchaînements se
- * superposaient au trait. **Une colonne ne sait dire qu'une dimension ; une
- * trame en a deux — ce qui suit, et ce qui bifurque.**
+ * **Trois essais le même jour, et chacun a appris quelque chose à David :**
  *
- * **La disposition d'aujourd'hui :**
- * - chaque acte est un **bloc**, les blocs se suivent de gauche à droite ;
- * - dans un bloc, une scène se pose **une couche à droite** de celle qui y mène —
- *   par l'ordre du document ou par un enchaînement déclaré ; ce qui part du même
- *   point s'**empile** dans sa couche. Une suite linéaire devient une ligne, une
- *   enquête ouverte un éventail ;
- * - ⚠️ **seuls les liens vers l'avant comptent** (vers une scène plus loin dans
- *   l'ordre) : un retour en arrière — « revenir au QG » — ferait une boucle, et
- *   une boucle n'a pas de profondeur ;
- * - une couche trop haute se replie en plusieurs colonnes, pour qu'un bloc ne
- *   devienne pas une tour ;
- * - lieux, PNJ, indices… **épinglés eux aussi**, en grappe près de la première
- *   scène qui les convoque. Laissés à la simulation, ils dérivaient en arcs —
- *   la capture le montrait. Ceux qu'aucune scène ne convoque vont en rangées
- *   sous la trame, une par sorte : *un orphelin qu'on voit à l'écart est un
+ * 1. *Une colonne par acte, ses scènes dessous* — « trop serrées, il faut aussi
+ *    travailler sur la dimension horizontale ». Quinze scènes sur un trait
+ *    vertical, les enchaînements superposés au trait.
+ * 2. *Le temps de gauche à droite, les branches empilées* — « c'est mieux mais
+ *    toujours peu lisible, il faudrait s'étendre dans les deux dimensions ». Un
+ *    ruban de 1 600 sur 100 : les suites linéaires s'étiraient sur une ligne, et
+ *    les enchaînements entre actes couraient le long de cette ligne, par-dessus
+ *    les nœuds.
+ * 3. **Aujourd'hui** — la progression garde le sens de la lecture, mais elle **se
+ *    replie** : *une dimension ne suffit jamais à une trame, qu'on la mette
+ *    debout ou couchée.*
+ *
+ * **La disposition :**
+ * - dans un acte, une scène se pose **un rang à droite** de celle qui y mène —
+ *   par l'ordre du document ou par un enchaînement déclaré, vers l'avant
+ *   seulement (*un retour au QG ferait une boucle, et une boucle n'a pas de
+ *   profondeur*) ; ce qui part du même point s'**empile** ;
+ * - les rangs se replient **en serpentin**, quatre par ligne : la deuxième ligne
+ *   repart de droite à gauche, pour que le passage d'une ligne à l'autre soit un
+ *   petit trait vertical et non un trait qui traverse le bloc ;
+ * - les **blocs** d'actes se suivent comme des mots dans une page, sur une
+ *   largeur calculée pour que l'ensemble ait les **proportions d'un écran** ;
+ * - lieux, PNJ, indices : **sous le titre** de la première scène qui les
+ *   convoque, en petite grappe. Ceux qu'aucune scène ne convoque, en rangées
+ *   sous la trame, une par sorte — *un orphelin qu'on voit à l'écart est un
  *   constat qu'on lit sans le chercher.*
  *
  * ⚠️ **Rien n'est écrit dans la trame.** Ce module rend des positions ; l'écran
  * les épingle comme le ferait un glisser. Le meneur ajuste ensuite à la main.
  */
 
-/** Entre deux couches d'un même acte : la place d'un titre de scène. */
+/** Entre deux rangs d'un même acte : la place d'un titre de scène. */
 export const PAS_HORIZONTAL = 190;
-/** Entre deux scènes d'une même couche. */
-export const PAS_VERTICAL = 64;
-/** L'espace qui sépare deux actes. */
-export const ENTRE_ACTES = 140;
-/** Au-delà, une couche se replie en une colonne de plus. */
-export const HAUTEUR_MAXIMALE_DE_COUCHE = 6;
+/** Entre deux scènes empilées : le point, son titre, et deux rangées d'annexes. */
+export const PAS_VERTICAL = 84;
+/** Au-delà, un rang se replie en une colonne de plus. */
+export const HAUTEUR_MAXIMALE_DE_RANG = 5;
+/** Combien de colonnes par ligne, dans un acte, avant de replier. */
+export const COLONNES_PAR_LIGNE = 4;
+/** L'espace réservé au titre de l'acte, en haut de son bloc. */
+const TETE_DE_BLOC = 56;
+/** Entre deux lignes d'un même acte. */
+const ENTRE_LIGNES = 24;
+/** Entre deux blocs, dans les deux sens. */
+const ENTRE_BLOCS = 90;
+/** Les proportions visées pour l'ensemble — celles d'un écran. */
+const PROPORTIONS = 16 / 9;
 
 export interface Position { x: number; y: number }
 
@@ -62,6 +75,63 @@ const idDe = (bout: string | NoeudDeTrame): string => (typeof bout === 'string' 
 
 /** L'ordre d'affichage des orphelins, rangée par rangée. */
 const ORDRE_DES_ANNEXES: readonly TypeDeNoeud[] = ['lieu', 'pnj', 'indice', 'pj', 'ambiance'];
+
+interface Bloc {
+    acte: string;
+    largeur: number;
+    hauteur: number;
+    /** Positions relatives au coin haut-gauche du bloc. */
+    positions: Map<string, Position>;
+}
+
+/** Un acte, rangé à part : ses rangs, repliés en serpentin. */
+function rangerUnActe(acte: string, scenes: readonly string[], menesPar: Map<string, string[]>): Bloc {
+    const ordre = new Map(scenes.map((s, i) => [s, i] as const));
+
+    /* Le rang : un de plus que le plus profond des scènes qui y mènent — vers
+       l'avant seulement. L'ordre du document garantit qu'on les a déjà vues. */
+    const rang = new Map<string, number>();
+    for (const scene of scenes) {
+        const avant = (menesPar.get(scene) ?? []).filter(de => (ordre.get(de) ?? Infinity) < ordre.get(scene)!);
+        rang.set(scene, avant.length ? Math.max(...avant.map(de => rang.get(de)! + 1)) : 0);
+    }
+
+    /* Les colonnes : un rang trop haut se découpe en plusieurs. */
+    const parRang: string[][] = [];
+    for (const scene of scenes) (parRang[rang.get(scene)!] ??= []).push(scene);
+    const colonnes: string[][] = [];
+    for (const membres of parRang) {
+        if (!membres) continue;
+        for (let i = 0; i < membres.length; i += HAUTEUR_MAXIMALE_DE_RANG) {
+            colonnes.push(membres.slice(i, i + HAUTEUR_MAXIMALE_DE_RANG));
+        }
+    }
+
+    /* Les lignes, en serpentin. */
+    const positions = new Map<string, Position>();
+    const largeurEnColonnes = Math.max(1, Math.min(colonnes.length, COLONNES_PAR_LIGNE));
+    let y = TETE_DE_BLOC;
+    for (let debut = 0, ligne = 0; debut < colonnes.length; debut += COLONNES_PAR_LIGNE, ligne++) {
+        const cetteLigne = colonnes.slice(debut, debut + COLONNES_PAR_LIGNE);
+        cetteLigne.forEach((colonne, j) => {
+            /* Une ligne impaire repart de la droite : son premier rang est sous
+               le dernier de la ligne précédente. */
+            const place = ligne % 2 === 0 ? j : largeurEnColonnes - 1 - j;
+            colonne.forEach((scene, k) => {
+                positions.set(scene, {
+                    x: place * PAS_HORIZONTAL + PAS_HORIZONTAL / 2,
+                    y: y + k * PAS_VERTICAL,
+                });
+            });
+        });
+        const hauteur = Math.max(...cetteLigne.map(c => c.length));
+        y += hauteur * PAS_VERTICAL + ENTRE_LIGNES;
+    }
+
+    const largeur = largeurEnColonnes * PAS_HORIZONTAL;
+    positions.set(acte, { x: largeur / 2, y: 18 });
+    return { acte, largeur, hauteur: Math.max(y, TETE_DE_BLOC + PAS_VERTICAL), positions };
+}
 
 export function rangerEnColonnes(graphe: GrapheDeTrame): RangementDeLaTrame {
     const epingles: Record<string, Position> = {};
@@ -90,55 +160,49 @@ export function rangerEnColonnes(graphe: GrapheDeTrame): RangementDeLaTrame {
         menesPar.set(vers, [...(menesPar.get(vers) ?? []), de]);
     }
 
-    /* Chaque acte, rangé à part : ses couches, puis ses positions relatives. */
-    const disposes = actes.map(acte => {
-        const scenes = scenesDe.get(acte.id) ?? [];
-        const rang = new Map(scenes.map((s, i) => [s, i] as const));
+    const blocs = actes.map(a => rangerUnActe(a.id, scenesDe.get(a.id) ?? [], menesPar));
 
-        /* La couche : un de plus que la plus profonde des scènes qui y mènent
-           — vers l'avant seulement. L'ordre du document garantit qu'on les a
-           déjà calculées. */
-        const couche = new Map<string, number>();
-        for (const scene of scenes) {
-            const avant = (menesPar.get(scene) ?? []).filter(de => (rang.get(de) ?? Infinity) < rang.get(scene)!);
-            couche.set(scene, avant.length ? Math.max(...avant.map(de => couche.get(de)! + 1)) : 0);
+    /* Les blocs comme des mots dans une page : une largeur qui donne à
+       l'ensemble les proportions d'un écran, jamais moins que le plus large. */
+    const aire = blocs.reduce((t, b) => t + (b.largeur + ENTRE_BLOCS) * (b.hauteur + ENTRE_BLOCS), 0);
+    const largeurVisee = Math.max(
+        ...blocs.map(b => b.largeur), Math.sqrt(aire * PROPORTIONS),
+    );
+
+    const lignes: Bloc[][] = [];
+    let courante: Bloc[] = [];
+    let largeurCourante = 0;
+    for (const bloc of blocs) {
+        const ajout = (courante.length ? ENTRE_BLOCS : 0) + bloc.largeur;
+        if (courante.length && largeurCourante + ajout > largeurVisee) {
+            lignes.push(courante);
+            courante = [];
+            largeurCourante = 0;
         }
+        largeurCourante += (courante.length ? ENTRE_BLOCS : 0) + bloc.largeur;
+        courante.push(bloc);
+    }
+    if (courante.length) lignes.push(courante);
 
-        const parCouche: string[][] = [];
-        for (const scene of scenes) (parCouche[couche.get(scene)!] ??= []).push(scene);
+    const largeurDe = (ligne: Bloc[]) =>
+        ligne.reduce((t, b) => t + b.largeur, 0) + ENTRE_BLOCS * (ligne.length - 1);
+    const hauteurDe = (ligne: Bloc[]) => Math.max(...ligne.map(b => b.hauteur));
+    const largeurTotale = Math.max(0, ...lignes.map(largeurDe));
+    const hauteurTotale = lignes.reduce((t, l) => t + hauteurDe(l), 0) + ENTRE_BLOCS * Math.max(0, lignes.length - 1);
 
-        const positions = new Map<string, Position>();
-        let colonne = 0;
-        let lignes = 0;
-        for (const membres of parCouche) {
-            if (!membres) continue;
-            membres.forEach((scene, i) => {
-                positions.set(scene, {
-                    x: (colonne + Math.floor(i / HAUTEUR_MAXIMALE_DE_COUCHE)) * PAS_HORIZONTAL,
-                    y: ((i % HAUTEUR_MAXIMALE_DE_COUCHE) + 1) * PAS_VERTICAL,
-                });
-            });
-            colonne += Math.ceil(membres.length / HAUTEUR_MAXIMALE_DE_COUCHE);
-            lignes = Math.max(lignes, Math.min(membres.length, HAUTEUR_MAXIMALE_DE_COUCHE));
+    /* Centré sur l'origine : la force de centrage de la simulation n'a alors
+       rien à corriger. */
+    let haut = -hauteurTotale / 2;
+    for (const ligne of lignes) {
+        let gauche = -largeurTotale / 2;
+        for (const bloc of ligne) {
+            for (const [id, p] of bloc.positions) epingles[id] = { x: gauche + p.x, y: haut + p.y };
+            gauche += bloc.largeur + ENTRE_BLOCS;
         }
-
-        return { acte, positions, largeur: Math.max(1, colonne) * PAS_HORIZONTAL, lignes };
-    });
-
-    /* Les blocs côte à côte, le tout centré sur l'origine. */
-    const largeurTotale = disposes.reduce((t, d) => t + d.largeur, 0) + ENTRE_ACTES * Math.max(0, disposes.length - 1);
-    const lignesMax = Math.max(0, ...disposes.map(d => d.lignes));
-    const haut = -((lignesMax + 1) * PAS_VERTICAL) / 2;
-
-    let gauche = -largeurTotale / 2;
-    for (const { acte, positions, largeur } of disposes) {
-        /* L'acte au-dessus du milieu de son bloc. */
-        epingles[acte.id] = { x: gauche + largeur / 2 - PAS_HORIZONTAL / 2, y: haut };
-        for (const [scene, p] of positions) epingles[scene] = { x: gauche + p.x, y: haut + p.y };
-        gauche += largeur + ENTRE_ACTES;
+        haut += hauteurDe(ligne) + ENTRE_BLOCS;
     }
 
-    /* Les annexes, en grappe près de la première scène qui les convoque. */
+    /* Les annexes, sous le titre de la première scène qui les convoque. */
     const premiereScene = new Map<string, string>();
     for (const lien of graphe.liens) {
         if (lien.nature === 'appartenance' || lien.nature === 'suite' || lien.nature === 'enchainement') continue;
@@ -158,24 +222,24 @@ export function rangerEnColonnes(graphe: GrapheDeTrame): RangementDeLaTrame {
             orphelines.set(noeud.type, [...(orphelines.get(noeud.type) ?? []), noeud.id]);
             continue;
         }
-        /* Sous la scène et vers la droite : le titre de la scène est dessous,
-           la grappe commence après lui. Quatre par rangée. */
+        /* Cinq par rangée, centrées sous la scène, après son titre. */
         const n = grappes.get(scene) ?? 0;
         grappes.set(scene, n + 1);
         epingles[noeud.id] = {
-            x: epingles[scene].x + 40 + (n % 4) * 20,
-            y: epingles[scene].y + 16 + Math.floor(n / 4) * 14,
+            x: epingles[scene].x + ((n % 5) - 2) * 16,
+            y: epingles[scene].y + 30 + Math.floor(n / 5) * 14,
         };
     }
 
     /* Les orphelines, une rangée par sorte, sous toute la trame. */
-    let y = haut + (lignesMax + 3) * PAS_VERTICAL;
-    const parRangee = Math.max(1, Math.floor(Math.max(largeurTotale, PAS_HORIZONTAL) / 60));
+    let y = hauteurTotale / 2 + ENTRE_BLOCS;
+    const pas = 60;
+    const parRangee = Math.max(1, Math.floor(Math.max(largeurTotale, PAS_HORIZONTAL) / pas));
     for (const type of ORDRE_DES_ANNEXES) {
         const liste = orphelines.get(type) ?? [];
         liste.forEach((id, i) => {
             epingles[id] = {
-                x: -largeurTotale / 2 + (i % parRangee) * 60,
+                x: -largeurTotale / 2 + (i % parRangee) * pas,
                 y: y + Math.floor(i / parRangee) * 36,
             };
         });
