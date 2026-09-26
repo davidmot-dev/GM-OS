@@ -58,6 +58,13 @@ describe('isIgnored', () => {
         expect(isIgnored('systems/alien/raw/page-12.md', scopes)).not.toBeNull();
     });
 
+    it('un dossier exclu à la racine l\'est à toute profondeur — les `theme/` des jeux', () => {
+        // `intention.md` vit dans `systems/<jeu>/theme/` : note d'atelier, pas contenu de jeu.
+        const racine = [scope('', 'theme/')];
+        expect(isIgnored('systems/alien/theme/intention.md', racine)).not.toBeNull();
+        expect(isIgnored('systems/alien/rules/theme-et-ambiance.md', racine)).toBeNull();
+    });
+
     it('ancre un motif qui contient une barre', () => {
         const ancre = [scope('campaigns/coc7', 'Aux Portes/scenario.pdf')];
         expect(isIgnored('campaigns/coc7/Aux Portes/scenario.pdf', ancre)).not.toBeNull();
