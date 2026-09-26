@@ -50,6 +50,11 @@ async function preparerLaVitrine(gmos: GmOsLance): Promise<void> {
 
     const fenetre = await gmos.application.browserWindow(gmos.fenetre);
     await fenetre.evaluate((w, [l, h]) => { w.unmaximize(); w.setContentSize(l, h); }, [LARGEUR, HAUTEUR]);
+    /*
+      ⛔ **Muette.** La vitrine fait jouer les deux platines de Music-OS pour de
+      vrai : sans ça, la musique sortirait dans les enceintes du meneur.
+    */
+    await fenetre.evaluate(w => w.webContents.setAudioMuted(true));
 
     /*
       ⛔ **L'hydratation n'est pas la semence.** La base relue porte d'abord
@@ -122,8 +127,8 @@ test.describe('la vitrine', () => {
 
     test.afterAll(async () => { await gmos?.fermer(); });
 
-    test('les trois écrans des maquettes', async () => {
-        test.setTimeout(300_000);
+    test('le noyau pour Stitch — onze captures', async () => {
+        test.setTimeout(480_000);
 
         const semence = derniereSauvegarde();
         expect(semence, `aucune sauvegarde dans ${DOSSIER_DES_SAUVEGARDES}`).not.toBeNull();
@@ -168,6 +173,185 @@ test.describe('la vitrine', () => {
             await gmos.fenetre.screenshot({ path: path.join(SORTIE, fichier) });
             console.log(`[Vitrine] ${fichier}`);
         }
+
+        /*
+          ── **Le reste du noyau pour Stitch** (§ 0 du plan de la refonte), chaque
+          écran dans l'état que l'inventaire décrit
+          (`documentation/Planning/2026-09-25-inventaire-des-ecrans.md`). ──
+        */
+        const capturer = async (fichier: string) => {
+            await gmos.fenetre.waitForTimeout(2_500);
+            await attendreLaFinDeLAccueil(gmos);
+            await gmos.fenetre.screenshot({ path: path.join(SORTIE, fichier) });
+            console.log(`[Vitrine] ${fichier}`);
+        };
+        const dans = <T>(fn: () => T | Promise<T>) => gmos.fenetre.evaluate(fn);
+
+        /* 3.1 · Musique : les deux platines qui jouent, fondu croisé à mi-course. */
+        await ouvrirLeModule(gmos, 'Musique');
+        const platines = await dans(async () => {
+            type Pad = { label: string; url: string };
+            const musique = (window as never as { useMusicStore: { getState: () => {
+                playlists: { id: string; name: string; pads: (Pad | null)[] }[];
+                setActivePlaylistId: (id: string) => void;
+                loadToDeck: (d: 'A' | 'B', p: Pad) => Promise<void>;
+                playDeck: (d: 'A' | 'B') => Promise<void>;
+                setCrossfader: (v: number) => void;
+            } } }).useMusicStore.getState();
+            const liste = musique.playlists.find(p => p.pads.filter(x => x?.url).length >= 2);
+            if (!liste) return 'aucune playlist de deux morceaux';
+            const [a, b] = liste.pads.filter((x): x is Pad => !!x?.url);
+            musique.setActivePlaylistId(liste.id);
+            await musique.loadToDeck('A', a);
+            await musique.loadToDeck('B', b);
+            await musique.playDeck('A').catch(() => undefined);
+            await musique.playDeck('B').catch(() => undefined);
+            musique.setCrossfader(0.5);
+            return `${liste.name} : ${a.label} / ${b.label}`;
+        });
+        console.log(`[Vitrine] platines — ${platines}`);
+        await capturer('4-musique.png');
+
+        /* 2.4 · Cartographie : une carte de la campagne, brouillard partiellement levé, des jetons. */
+        await ouvrirLeModule(gmos, 'Cartographie');
+        const carte = await dans(async () => {
+            const session = (window as never as { useSessionOSStore: { getState: () => {
+                activeCampaignId: string | null;
+                atlasMaps: { name: string; fileUrl: string; isVideo?: boolean; campaignId?: string }[];
+            } } }).useSessionOSStore.getState();
+            const choisie = session.atlasMaps.find(m => m.campaignId === session.activeCampaignId && !m.isVideo && m.fileUrl);
+            if (!choisie) return null;
+            const magasin = (window as never as { useMapStore: { getState: () => {
+                setMap: (u: string, v?: boolean, n?: string) => Promise<void>;
+            } } }).useMapStore;
+            await magasin.getState().setMap(choisie.fileUrl, false, choisie.name);
+            return choisie.name;
+        });
+        console.log(`[Vitrine] carte — ${carte ?? 'aucune carte dans la campagne active'}`);
+        if (carte) {
+            /* Le brouillard se pose sur les dimensions de la carte : on attend qu'elle soit décodée. */
+            await gmos.fenetre.waitForFunction(() => {
+                const m = (window as never as { useMapStore: { getState: () => { mapWidth: number } } }).useMapStore.getState();
+                return m.mapWidth > 0;
+            }, undefined, { timeout: 20_000 }).catch(() => undefined);
+            await dans(() => {
+                const magasin = (window as never as { useMapStore: { getState: () => {
+                    mapWidth: number; mapHeight: number;
+                    setFogDataUrl: (u: string) => void;
+                    clearTokens: () => void;
+                    addToken: (t: Record<string, unknown>) => void;
+                } } }).useMapStore.getState();
+                const { mapWidth: l, mapHeight: h } = magasin;
+                if (!l || !h) return;
+                /* Noir = brouillard, transparent = levé (`FogEngine`) : deux clairières reliées. */
+                const toile = document.createElement('canvas');
+                toile.width = l; toile.height = h;
+                const c = toile.getContext('2d')!;
+                c.fillStyle = 'black';
+                c.fillRect(0, 0, l, h);
+                c.globalCompositeOperation = 'destination-out';
+                for (const [x, y, r] of [[0.3, 0.55, 0.22], [0.55, 0.45, 0.16]] as const) {
+                    c.beginPath();
+                    c.arc(l * x, h * y, Math.min(l, h) * r, 0, Math.PI * 2);
+                    c.fill();
+                }
+                magasin.setFogDataUrl(toile.toDataURL('image/png'));
+                magasin.clearTokens();
+                for (const [name, x, y] of [
+                    ['Rick Deckard', 0.26, 0.5], ['Rachael Tyrell', 0.32, 0.6], ['Gaff', 0.36, 0.48],
+                    ['Roy Batty', 0.58, 0.44],
+                ] as const) {
+                    /* Taille 1 = une case : un point à peine visible sur une carte entière. */
+                    magasin.addToken({ name, avatar: '', x: l * x, y: h * y, size: 3, isVisible: true });
+                }
+            });
+        }
+        await capturer('5-carte.png');
+
+        /* 2.7 · Light-OS : les tuiles de la campagne, une scène active (aucune lampe : `GMOS_SANS_APPAREILS`). */
+        await ouvrirLeModule(gmos, 'Light-OS');
+        const scene = await dans(() => {
+            const lumiere = (window as never as { useLightStore: { getState: () => {
+                scenes: Record<string, { id: string; name: string; campagneId?: string | null }>;
+                setActiveScene: (id: string | null) => void;
+            } } }).useLightStore.getState();
+            const campagne = (window as never as { useSessionOSStore: { getState: () => { activeCampaignId: string | null } } })
+                .useSessionOSStore.getState().activeCampaignId;
+            const toutes = Object.values(lumiere.scenes);
+            const choisie = toutes.find(s => s.campagneId === campagne && s.name) ?? toutes.find(s => s.name);
+            if (choisie) lumiere.setActiveScene(choisie.id);
+            return choisie?.name ?? null;
+        });
+        console.log(`[Vitrine] scène de lumière — ${scene ?? 'aucune'}`);
+        await capturer('6-lumiere.png');
+
+        /* 1.3 et 1.4 · La trame de la campagne active : l'arbre, puis le graphe. */
+        await ouvrirLeModule(gmos, 'Tableau de Bord');
+        await dans(() => {
+            (window as never as { useSessionOSStore: { getState: () => { setCurrentView: (v: string) => void } } })
+                .useSessionOSStore.getState().setCurrentView('trame');
+        });
+        /* Les actes s'ouvrent repliés : on déplie le plus fourni, pour que ses scènes et leurs statuts se voient. */
+        const acte = await dans(() => {
+            const s = (window as never as { useSessionOSStore: { getState: () => {
+                activeCampaignId: string | null;
+                actes: { id: string; campaignId: string; titre: string }[];
+                scenes: { acteId: string }[];
+            } } }).useSessionOSStore.getState();
+            const actes = s.actes.filter(a => a.campaignId === s.activeCampaignId);
+            const compte = (id: string) => s.scenes.filter(sc => sc.acteId === id).length;
+            return actes.sort((a, b) => compte(b.id) - compte(a.id))[0]?.titre ?? null;
+        });
+        if (acte) await gmos.fenetre.getByText(acte, { exact: true }).first().click();
+        await capturer('7-trame-arbre.png');
+        await gmos.fenetre.getByRole('button', { name: /^Graphe$/ }).first().click();
+        /* Le graphe s'ouvre en disposition libre ; « Ranger » le met en chaîne ou en étoile. */
+        await gmos.fenetre.getByRole('button', { name: /Ranger/ }).first().click().catch(() => undefined);
+        /*
+          Ranger remplace les positions épinglées, donc il demande confirmation.
+          Dans l'instance jetable, le confirmer ne touche à rien du vrai profil.
+        */
+        const confirmer = gmos.fenetre.getByRole('button', { name: /^Confirmer$/ });
+        if (await confirmer.isVisible().catch(() => false)) await confirmer.click();
+        await capturer('8-trame-graphe.png');
+
+        /* 1.26 · Horloge : un minuteur lancé, trois jauges dont une dans son dernier quart. */
+        await ouvrirLeModule(gmos, 'Horloge & Temps');
+        await dans(() => {
+            const horloge = (window as never as { useClockStore: { getState: () => {
+                tensions: { id: string; name: string }[];
+                setTimer: (s: number) => void; startTimer: () => void; setTimerLabel: (l: string) => void;
+                addTensionClock: (n: string, t: number) => void;
+                updateTensionSegments: (id: string, d: number) => void;
+            } } }).useClockStore;
+            const h = horloge.getState();
+            h.setTimer(25 * 60);
+            h.setTimerLabel('Avant l\'arrivée de la LAPD');
+            h.startTimer();
+            for (const [nom, total, remplis] of [
+                ['Alerte de la Tyrell Corp.', 8, 7], ['Traque de Roy Batty', 6, 3], ['Réserve de Sang-froid', 4, 1],
+            ] as const) {
+                horloge.getState().addTensionClock(nom, total);
+                const jauge = horloge.getState().tensions.find(t => t.name === nom);
+                if (jauge) horloge.getState().updateTensionSegments(jauge.id, remplis);
+            }
+        });
+        await capturer('9-horloge.png');
+
+        /* 1.22 · Combat en régime table — « mettre plus d'emphase sur cette fonctionnalité ». */
+        await ouvrirLeModule(gmos, 'Combat-OS');
+        await gmos.fenetre.getByTitle(/Passer à la table/).first().click();
+        await capturer('10-combat-table.png');
+        await gmos.fenetre.getByTitle(/Repasser en atelier/).first().click();
+
+        /* Combat en thème clair : le bouton palette fait tourner les quatre thèmes de base. */
+        for (let i = 0; i < 4; i++) {
+            const actuel = await dans(() => document.documentElement.getAttribute('data-theme'));
+            if (actuel === 'claire') break;
+            await gmos.fenetre.locator('button[title*="cyberpunk"], button[title*="medieval"], button[title*="modern"]').first().click();
+            await gmos.fenetre.waitForTimeout(400);
+        }
+        await capturer('11-combat-clair.png');
     });
 });
 

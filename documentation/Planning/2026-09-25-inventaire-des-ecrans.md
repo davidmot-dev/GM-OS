@@ -224,7 +224,13 @@ Le reste de l'inventaire sert au **filet** (T0.1) et à la **migration** (phase 
 
 1. **Les captures pour Stitch, par la vitrine** (`e2e/vitrine.spec.ts`, éprouvée le 25/09) : le
    noyau du plan, chaque écran mis en scène dans l'état décrit ici — sans séance de captures à la
-   main.
+   main. ✅ **Faites le 2026-09-26** : onze captures dans `e2e-resultats/vitrine/`, en une minute
+   (`$env:GMOS_VITRINE='1'; npx playwright test e2e/vitrine.spec.ts`, construction à jour) —
+   Combat, Dés, Image, Musique (deux platines qui jouent, fenêtre **muette**), Carte (brouillard
+   percé, jetons), Light-OS (scène active), Trame en arbre (l'acte le plus fourni déplié) et en
+   graphe (rangé), Horloge (minuteur lancé, une jauge à 7/8), Combat en régime table, Combat en
+   thème clair. Thème de base : Cyberpunk, celui de David. Les prompts :
+   [`2026-09-26-prompts-stitch.md`](./2026-09-26-prompts-stitch.md).
 2. **La donnée gelée** : la campagne témoin (`e2e/donnees/campagne-temoin.json`, 8 Ko aujourd'hui)
    enrichie pour mettre chaque écran ★ et ◆ dans son état.
 3. **T0.1** : les captures automatiques de référence, écran par écran, sur cette donnée gelée.
