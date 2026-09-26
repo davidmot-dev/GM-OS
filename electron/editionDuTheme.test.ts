@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { extraireJetons } from '../src/theme/jetonsDeTheme';
 import { ecrireLesJetons, JETONS_EDITABLES } from '../src/theme/editionDuTheme';
+import { jetonDuContrat } from '../src/theme/contratDuTheme';
 
 /**
  * **L'atelier de thème, éprouvé sur les vrais fichiers du dépôt.**
@@ -76,11 +77,19 @@ describe('l’atelier de thème sur les thèmes réels', () => {
          * couvrir les jetons du SDK. Si un thème en déclare un que l'atelier
          * ignore, le meneur ne pourrait pas le régler — et ne saurait pas
          * pourquoi.
+         *
+         * ⚠️ **Avec une exception depuis le contrat v1.2 (2026-09-26)** : les
+         * jetons **V2** — états, forme, relief, verre, matière — que le cahier
+         * demande de livrer dès maintenant, et que GM-OS n'applique pas encore.
+         * Les régler n'aurait aucun effet à l'écran ; l'atelier les apprendra
+         * avec la refonte qui les appliquera. Tout autre jeton hors atelier
+         * reste une faute.
          */
-        it('n’a aucun jeton que l’atelier ne saurait éditer', () => {
+        it('n’a aucun jeton que l’atelier ne saurait éditer — hors jetons V2', () => {
             const connus = new Set(JETONS_EDITABLES.map(j => j.cle));
             const inconnus = Object.keys(extraireJetons(lire(jeu)).jetons)
-                .filter(cle => !connus.has(cle));
+                .filter(cle => !connus.has(cle))
+                .filter(cle => jetonDuContrat(cle)?.statut !== 'V2');
 
             expect(inconnus).toEqual([]);
         });

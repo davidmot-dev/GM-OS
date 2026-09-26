@@ -23,16 +23,13 @@ import type { RapportDeTheme } from '../src/theme/validationDuTheme';
  * Builder — fait AUSSI échouer l'essai, pour qu'on la retire de la liste. *La
  * liste ne peut que raccourcir, et un thème nouveau n'y figure pas : il doit
  * être accepté.*
+ *
+ * ✅ **Vide le soir même.** Les six thèmes, reconstruits par RPG Theme Builder
+ * d'après leur rapport, sont tous acceptés. La liste reste pour le jour où un
+ * changement du contrat refuserait d'un coup des thèmes déjà livrés.
  */
 
-const REFUS_CONNUS: Record<string, string[]> = {
-    alien: ['§ 1.1'],
-    'blade-runner': ['§ 1.1'],
-    dune: ['§ 1.1', '§ 3.5', '§ 6 muted', '§ 6 accent'],
-    noc: ['§ 1.1', '§ 3.5', '§ 6 muted', '§ 6 accent'],
-    'star-trek': ['§ 1.1', '§ 3.5', '§ 6 text', '§ 6 muted', '§ 6 accent-contrast'],
-    torg: ['§ 1.1', '§ 3.5', '§ 4.5 radius-lg', '§ 6 muted', '§ 6 muted', '§ 6 accent'],
-};
+const REFUS_CONNUS: Record<string, string[]> = {};
 
 const RACINE = path.resolve(__dirname, '..');
 
@@ -60,6 +57,6 @@ describe('les thèmes de jeu du dépôt, devant le contrat', () => {
     it('le rapport d\'un thème, en texte, sort en erreur quand il est refusé', () => {
         const alien = spawnSync(process.execPath, ['scripts/theme-valider.mjs', 'alien'], { cwd: RACINE, encoding: 'utf-8' });
         expect(alien.stdout).toContain('Rapport du validateur GM-OS — thème « alien »');
-        expect(alien.status).toBe(REFUS_CONNUS.alien.length ? 1 : 0);
+        expect(alien.status).toBe((REFUS_CONNUS.alien ?? []).length ? 1 : 0);
     });
 });

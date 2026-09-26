@@ -1,28 +1,28 @@
 /* ==========================================================================
    RPG THEME — DUNE: IMPERIUM (visual approximation)
-   Compatible avec rpg-core.css — no DOM changes required.
+   Contrat GM-OS v1.2 — jetons de l’interface et démonstration SDK
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-:root[data-theme="dune-imperium"] {
-  color-scheme: light;
+:root[data-theme="dune"] {
+  color-scheme: dark;
 
   --rpg-bg: #302d29;
   --rpg-surface: #241d1b;
-  --rpg-surface-2: #e7dcc5;
+  --rpg-surface-2: #3b322b;
   --rpg-paper: #eee4ce;
 
   --rpg-ink: #2d2925;
   --rpg-text: #f5ecdc;
-  --rpg-muted: #776e62;
+  --rpg-muted: #b9a995;
 
-  --rpg-accent: #5a171b;
+  --rpg-accent: #dda179;
   --rpg-accent-2: #a7653e;
-  --rpg-accent-contrast: #fff8eb;
+  --rpg-accent-contrast: #241d1b;
 
-  --rpg-border: rgba(90, 23, 27, .72);
-  --rpg-border-soft: rgba(77, 61, 47, .25);
+  --rpg-border: rgba(221, 161, 121, .72);
+  --rpg-border-soft: rgba(221, 161, 121, .25);
 
   --rpg-font-display: "Cormorant Garamond", Georgia, serif;
   --rpg-font-body: "Montserrat", Arial, sans-serif;
@@ -33,18 +33,41 @@
   --rpg-radius-md: 0px;
   --rpg-radius-lg: 0px;
 
+  /* 4.2 · États — V2 */
+  --rpg-success: #a9c477;
+  --rpg-danger: #eb747b;
+  --rpg-warning: #e7c66d;
+  --rpg-info: #8db8c6;
+
+  /* 4.5–4.7 · Forme, relief et verre — V2 */
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 2px 8px rgba(20, 15, 12, .24);
+  --rpg-elevation-2: 0 18px 50px rgba(20, 15, 12, .35);
+  --rpg-elevation-3: 0 26px 70px rgba(20, 15, 12, .48);
   --rpg-shadow: 0 18px 50px rgba(20, 15, 12, .35);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(36, 29, 27, .84);
+  --rpg-glass-border: rgba(221, 161, 121, .25);
+  --rpg-glass-blur: 5px;
+
+  /* 7 · Matière — V2 */
+  --rpg-texture-bg: none;
+  --rpg-texture-panel: repeating-linear-gradient(115deg, rgba(235, 215, 180, .08) 0 1px, transparent 1px 6px);
+  --rpg-texture-opacity: .18;
   --rpg-title-tracking: .14em;
   --rpg-kicker-tracking: .18em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-app {
+:root[data-theme="dune"] .rpg-app {
   background:
     radial-gradient(circle at 50% 10%, rgba(167,101,62,.14), transparent 32rem),
     #302d29;
 }
 
-:root[data-theme="dune-imperium"] .rpg-page {
+:root[data-theme="dune"] .rpg-page {
+  color: var(--rpg-ink);
   background:
     linear-gradient(115deg, transparent 0 72%, rgba(255,255,255,.18) 72.15% 72.35%, transparent 72.5%),
     radial-gradient(circle at 8% 5%, rgba(180,111,68,.13), transparent 18rem),
@@ -53,7 +76,7 @@
 }
 
 /* faint geometric/orbital linework */
-:root[data-theme="dune-imperium"] .rpg-page::before {
+:root[data-theme="dune"] .rpg-page::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -66,57 +89,57 @@
   mask-image: linear-gradient(to left, #000, transparent 48%);
 }
 
-:root[data-theme="dune-imperium"] .rpg-header,
-:root[data-theme="dune-imperium"] .rpg-content,
-:root[data-theme="dune-imperium"] .rpg-footer {
+:root[data-theme="dune"] .rpg-header,
+:root[data-theme="dune"] .rpg-content,
+:root[data-theme="dune"] .rpg-footer {
   z-index: 1;
 }
 
-:root[data-theme="dune-imperium"] .rpg-header {
+:root[data-theme="dune"] .rpg-header {
   text-align: center;
   padding-top: 42px;
 }
 
-:root[data-theme="dune-imperium"] .rpg-header::after {
+:root[data-theme="dune"] .rpg-header::after {
   content: "";
   display: block;
   height: 1px;
   margin-top: 18px;
-  background: linear-gradient(90deg, transparent, var(--rpg-accent) 9% 91%, transparent);
+  background: linear-gradient(90deg, transparent, #5a171b 9% 91%, transparent);
 }
 
-:root[data-theme="dune-imperium"] .rpg-title {
-  color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-title {
+  color: #5a171b;
   font-weight: 600;
   line-height: .9;
 }
 
-:root[data-theme="dune-imperium"] .rpg-kicker {
+:root[data-theme="dune"] .rpg-kicker {
   color: var(--rpg-accent-2);
   font-size: .76rem;
 }
 
-:root[data-theme="dune-imperium"] .rpg-section-title {
-  color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-section-title {
+  color: #5a171b;
   font-weight: 600;
   letter-spacing: .12em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-section-title::after {
+:root[data-theme="dune"] .rpg-section-title::after {
   content: "";
   display: block;
   width: 100%;
   height: 1px;
   margin-top: 7px;
-  background: var(--rpg-accent);
+  background: #5a171b;
 }
 
-:root[data-theme="dune-imperium"] .rpg-subtitle {
+:root[data-theme="dune"] .rpg-subtitle {
   color: #7b5540;
   letter-spacing: .04em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-panel {
+:root[data-theme="dune"] .rpg-panel {
   background:
     linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,0)),
     rgba(235, 222, 195, .82);
@@ -124,21 +147,21 @@
   box-shadow: none;
 }
 
-:root[data-theme="dune-imperium"] .rpg-panel::before,
-:root[data-theme="dune-imperium"] .rpg-panel::after {
+:root[data-theme="dune"] .rpg-panel::before,
+:root[data-theme="dune"] .rpg-panel::after {
   content: "";
   position: absolute;
   width: 9px;
   height: 9px;
-  border: 1px solid var(--rpg-accent);
+  border: 1px solid #5a171b;
   border-radius: 50%;
   background: var(--rpg-paper);
 }
 
-:root[data-theme="dune-imperium"] .rpg-panel::before { left: -5px; top: -5px; }
-:root[data-theme="dune-imperium"] .rpg-panel::after  { right: -5px; bottom: -5px; }
+:root[data-theme="dune"] .rpg-panel::before { left: -5px; top: -5px; }
+:root[data-theme="dune"] .rpg-panel::after  { right: -5px; bottom: -5px; }
 
-:root[data-theme="dune-imperium"] .rpg-callout {
+:root[data-theme="dune"] .rpg-callout {
   color: var(--rpg-text);
   background:
     radial-gradient(circle at 50% 0, rgba(167,101,62,.20), transparent 55%),
@@ -147,7 +170,7 @@
   box-shadow: inset 0 0 34px rgba(0,0,0,.25);
 }
 
-:root[data-theme="dune-imperium"] .rpg-callout__cap {
+:root[data-theme="dune"] .rpg-callout__cap {
   color: #f3dfc3;
   background: transparent;
   border-bottom: 1px solid rgba(191,120,72,.55);
@@ -157,97 +180,91 @@
   letter-spacing: .16em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-button {
-  color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-button {
+  color: #5a171b;
   background: rgba(255,255,255,.10);
-  border-color: var(--rpg-accent);
+  border-color: #5a171b;
   letter-spacing: .10em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-button:hover {
-  color: var(--rpg-accent-contrast);
-  background: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-button:hover {
+  color: #fff8eb;
+  background: #5a171b;
 }
 
-:root[data-theme="dune-imperium"] .rpg-button:focus-visible {
+:root[data-theme="dune"] .rpg-button:focus-visible {
   outline: 2px solid var(--rpg-accent-2);
   outline-offset: 3px;
 }
 
-:root[data-theme="dune-imperium"] .rpg-input,
-:root[data-theme="dune-imperium"] .rpg-select,
-:root[data-theme="dune-imperium"] .rpg-textarea {
+:root[data-theme="dune"] .rpg-input,
+:root[data-theme="dune"] .rpg-select,
+:root[data-theme="dune"] .rpg-textarea {
   color: var(--rpg-ink);
   background: rgba(255, 249, 235, .58);
   border-color: rgba(90,23,27,.42);
 }
 
-:root[data-theme="dune-imperium"] .rpg-input:focus,
-:root[data-theme="dune-imperium"] .rpg-select:focus,
-:root[data-theme="dune-imperium"] .rpg-textarea:focus {
-  border-color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-input:focus,
+:root[data-theme="dune"] .rpg-select:focus,
+:root[data-theme="dune"] .rpg-textarea:focus {
+  border-color: #5a171b;
   box-shadow: 0 0 0 3px rgba(90,23,27,.13);
 }
 
-:root[data-theme="dune-imperium"] .rpg-list li::before {
+:root[data-theme="dune"] .rpg-list li::before {
   width: 7px;
   height: 7px;
   top: .52em;
-  border: 1px solid var(--rpg-accent);
+  border: 1px solid #5a171b;
   background: transparent;
   border-radius: 50%;
 }
 
-:root[data-theme="dune-imperium"] .rpg-rule {
-  background: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-rule {
+  background: #5a171b;
   opacity: .75;
 }
 
-:root[data-theme="dune-imperium"] .rpg-stat {
+:root[data-theme="dune"] .rpg-stat {
   background: rgba(225, 207, 175, .72);
   border-color: rgba(90,23,27,.35);
 }
 
-:root[data-theme="dune-imperium"] .rpg-stat__label {
-  color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-stat__label {
+  color: #5a171b;
   letter-spacing: .08em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-stat__value {
+:root[data-theme="dune"] .rpg-stat__value {
   color: var(--rpg-ink);
   font-family: var(--rpg-font-display);
 }
 
-:root[data-theme="dune-imperium"] .rpg-meter {
+:root[data-theme="dune"] .rpg-meter {
   background: rgba(84,64,48,.13);
   border-color: rgba(90,23,27,.4);
 }
 
-:root[data-theme="dune-imperium"] .rpg-meter__fill {
-  background: linear-gradient(90deg, var(--rpg-accent), var(--rpg-accent-2));
+:root[data-theme="dune"] .rpg-meter__fill {
+  background: linear-gradient(90deg, #5a171b, var(--rpg-accent-2));
 }
 
-:root[data-theme="dune-imperium"] .rpg-table th {
-  color: var(--rpg-accent);
-  border-bottom-color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-table th {
+  color: #5a171b;
+  border-bottom-color: #5a171b;
   letter-spacing: .08em;
 }
 
-:root[data-theme="dune-imperium"] .rpg-footer {
+:root[data-theme="dune"] .rpg-footer {
   color: #766759;
   border-top: 1px solid rgba(90,23,27,.32);
 }
 
-:root[data-theme="dune-imperium"] .rpg-page-chip {
-  color: var(--rpg-accent);
-  border-color: var(--rpg-accent);
+:root[data-theme="dune"] .rpg-page-chip {
+  color: #5a171b;
+  border-color: #5a171b;
   background: rgba(255,248,232,.35);
   font-family: var(--rpg-font-display);
   font-size: .9rem;
-}
-
-@media (max-width: 780px) {
-  :root[data-theme="dune-imperium"] .rpg-title {
-    letter-spacing: .08em;
-  }
 }

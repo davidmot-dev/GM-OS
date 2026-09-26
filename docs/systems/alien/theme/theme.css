@@ -1,6 +1,6 @@
 /* ==========================================================================
    RPG THEME — ALIEN
-   Compatible avec rpg-core.css
+   Contrat GM-OS v1.2 — jetons de l’interface et démonstration SDK
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap');
@@ -27,13 +27,35 @@
   --rpg-font-display: "Montserrat", "Arial Narrow", Arial, sans-serif;
   --rpg-font-body: "Helvetica Neue", Arial, sans-serif;
   --rpg-font-ui: "Montserrat", Arial, sans-serif;
-  --rpg-font-mono: "IBM Plex Mono", "OCR A Std", monospace;
+  --rpg-font-mono: "IBM Plex Mono", monospace;
 
   --rpg-radius-sm: 0px;
   --rpg-radius-md: 0px;
   --rpg-radius-lg: 0px;
 
+  /* 4.2 · États — V2 */
+  --rpg-success: #a9c86f;
+  --rpg-danger: #ef7867;
+  --rpg-warning: #dfb95d;
+  --rpg-info: #78aade;
+
+  /* 4.5–4.7 · Forme, relief et verre — V2 */
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.36);
+  --rpg-elevation-2: 0 18px 55px rgba(0, 0, 0, 0.50);
+  --rpg-elevation-3: 0 24px 70px rgba(0, 0, 0, 0.58);
   --rpg-shadow: 0 18px 55px rgba(0, 0, 0, 0.50);
+  --rpg-glow: rgba(143, 183, 177, 0.24);
+  --rpg-glow-strength: 0.28;
+  --rpg-glass-bg: rgba(6, 12, 13, 0.84);
+  --rpg-glass-border: rgba(143, 183, 177, 0.26);
+  --rpg-glass-blur: 4px;
+
+  /* 7 · Matière — V2 */
+  --rpg-texture-bg: repeating-linear-gradient(0deg, rgba(143, 183, 177, 0.10) 0 1px, transparent 1px 4px);
+  --rpg-texture-panel: none;
+  --rpg-texture-opacity: 0.18;
   --rpg-title-tracking: 0.34em;
   --rpg-kicker-tracking: 0.48em;
 }

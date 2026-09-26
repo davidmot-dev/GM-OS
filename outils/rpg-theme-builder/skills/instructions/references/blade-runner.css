@@ -1,6 +1,6 @@
 /* ==========================================================================
    RPG THEME — BLADE RUNNER
-   Compatible avec rpg-core.css
+   Contrat GM-OS v1.2 — jetons de l’interface et démonstration SDK
    Références visuelles : mise en page éditoriale néo-noir, cadres techniques,
    papier gris froid, accents corail / ambre.
    Polices : approximations libres (Barlow Condensed, Source Serif 4, IBM Plex Mono).
@@ -39,7 +39,29 @@
   --rpg-radius-md: 0px;
   --rpg-radius-lg: 0px;
 
+  /* 4.2 · États — V2 */
+  --rpg-success: #80cfa5;
+  --rpg-danger: #e74d8e;
+  --rpg-warning: #d9b56c;
+  --rpg-info: #84bcd2;
+
+  /* 4.5–4.7 · Forme, relief et verre — V2 */
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 3px 10px rgba(0, 0, 0, 0.32);
+  --rpg-elevation-2: 0 22px 70px rgba(0, 0, 0, 0.48);
+  --rpg-elevation-3: 0 28px 80px rgba(0, 0, 0, 0.56);
   --rpg-shadow: 0 22px 70px rgba(0, 0, 0, 0.48);
+  --rpg-glow: rgba(255, 95, 86, 0.28);
+  --rpg-glow-strength: 0.4;
+  --rpg-glass-bg: rgba(7, 17, 28, 0.82);
+  --rpg-glass-border: rgba(195, 154, 88, 0.28);
+  --rpg-glass-blur: 8px;
+
+  /* 7 · Matière — V2 */
+  --rpg-texture-bg: none;
+  --rpg-texture-panel: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 4px);
+  --rpg-texture-opacity: 0.14;
   --rpg-title-tracking: 0.18em;
   --rpg-kicker-tracking: 0.24em;
 }
@@ -359,26 +381,4 @@
   background: rgba(195, 154, 88, 0.04);
   border-color: rgba(195, 154, 88, 0.62);
   border-radius: 0;
-}
-
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
-
-@media (max-width: 780px) {
-  :root[data-theme="blade-runner"] .rpg-title {
-    letter-spacing: 0.10em;
-  }
-
-  :root[data-theme="blade-runner"] .rpg-page::before {
-    inset: 6px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root[data-theme="blade-runner"] *,
-  :root[data-theme="blade-runner"] *::before,
-  :root[data-theme="blade-runner"] *::after {
-    scroll-behavior: auto;
-  }
 }

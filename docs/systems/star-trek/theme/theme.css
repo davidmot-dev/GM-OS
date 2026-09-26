@@ -1,53 +1,76 @@
 /* ==========================================================================
    RPG THEME — STAR TREK ADVENTURES
-   Compatible avec rpg-core.css
+   Contrat GM-OS v1.2 — jetons de l’interface et démonstration SDK
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Rajdhani:wght@500;600;700&display=swap');
 
-:root[data-theme="startrek"] {
-  color-scheme: light;
+:root[data-theme="star-trek"] {
+  color-scheme: dark;
 
   --rpg-bg: #343434;
-  --rpg-surface: #ffffff;
-  --rpg-surface-2: #f5f7f7;
+  --rpg-surface: #202c36;
+  --rpg-surface-2: #293944;
   --rpg-paper: #ffffff;
 
   --rpg-ink: #17191a;
-  --rpg-text: #17191a;
-  --rpg-muted: #5f676b;
+  --rpg-text: #edf3f5;
+  --rpg-muted: #b2c1ca;
 
   --rpg-accent: #5f93b5;
   --rpg-accent-2: #77bbb9;
-  --rpg-accent-contrast: #ffffff;
+  --rpg-accent-contrast: #07131b;
 
   --rpg-border: #b8bec1;
   --rpg-border-soft: #d9dde0;
 
-  --rpg-font-display: "Rajdhani", "Eurostile", "Microgramma", sans-serif;
+  --rpg-font-display: "Rajdhani", Arial, sans-serif;
   --rpg-font-body: Arial, "Helvetica Neue", sans-serif;
-  --rpg-font-ui: "Exo 2", "Eurostile", Arial, sans-serif;
+  --rpg-font-ui: "Exo 2", Arial, sans-serif;
   --rpg-font-mono: "Exo 2", ui-monospace, monospace;
 
   --rpg-radius-sm: 12px;
   --rpg-radius-md: 20px;
   --rpg-radius-lg: 28px;
 
+  /* 4.2 · États — V2 */
+  --rpg-success: #88c2a9;
+  --rpg-danger: #ed8792;
+  --rpg-warning: #efc875;
+  --rpg-info: #adabd8;
+
+  /* 4.5–4.7 · Forme, relief et verre — V2 */
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 3px 12px rgba(0, 0, 0, 0.14);
+  --rpg-elevation-2: 0 16px 45px rgba(0, 0, 0, 0.20);
+  --rpg-elevation-3: 0 24px 64px rgba(0, 0, 0, 0.30);
   --rpg-shadow: 0 16px 45px rgba(0, 0, 0, 0.20);
+  --rpg-glow: rgba(95, 147, 181, 0.32);
+  --rpg-glow-strength: 0.5;
+  --rpg-glass-bg: rgba(32, 44, 54, 0.78);
+  --rpg-glass-border: rgba(184, 190, 193, 0.28);
+  --rpg-glass-blur: 14px;
+
+  /* 7 · Matière — V2 */
+  --rpg-texture-bg: none;
+  --rpg-texture-panel: none;
+  --rpg-texture-opacity: 0;
   --rpg-title-tracking: 0.035em;
   --rpg-kicker-tracking: 0.04em;
 }
 
-:root[data-theme="startrek"] .rpg-page {
+:root[data-theme="star-trek"] .rpg-page {
+  color: var(--rpg-ink);
   background: #ffffff;
 }
 
-:root[data-theme="startrek"] .rpg-header {
+:root[data-theme="star-trek"] .rpg-header {
   padding-top: 76px;
   border-bottom: 1px solid var(--rpg-border-soft);
 }
 
-:root[data-theme="startrek"] .rpg-header::before {
+:root[data-theme="star-trek"] .rpg-header::before {
   content: "";
   position: absolute;
   left: -165px;
@@ -59,64 +82,64 @@
   box-shadow: 22px 0 0 -21px rgba(95, 147, 181, 0.52);
 }
 
-:root[data-theme="startrek"] .rpg-kicker::before,
-:root[data-theme="startrek"] .rpg-section-title::before {
+:root[data-theme="star-trek"] .rpg-kicker::before,
+:root[data-theme="star-trek"] .rpg-section-title::before {
   content: "::";
   margin-right: 0.18em;
 }
 
-:root[data-theme="startrek"] .rpg-title {
+:root[data-theme="star-trek"] .rpg-title {
   font-weight: 500;
 }
 
-:root[data-theme="startrek"] .rpg-panel {
+:root[data-theme="star-trek"] .rpg-panel {
   border-radius: 26px;
   box-shadow: none;
 }
 
-:root[data-theme="startrek"] .rpg-callout {
+:root[data-theme="star-trek"] .rpg-callout {
   color: var(--rpg-ink);
   background: #ffffff;
   border: 1.5px solid var(--rpg-accent-2);
   border-radius: 26px;
 }
 
-:root[data-theme="startrek"] .rpg-callout__cap {
+:root[data-theme="star-trek"] .rpg-callout__cap {
   width: calc(78% + 28px);
   margin-top: -27px;
   border-radius: 24px 0 26px 0;
   background: var(--rpg-accent-2);
 }
 
-:root[data-theme="startrek"] .rpg-callout__cap::before {
+:root[data-theme="star-trek"] .rpg-callout__cap::before {
   content: "::";
   margin-right: 0.20em;
 }
 
-:root[data-theme="startrek"] .rpg-button {
+:root[data-theme="star-trek"] .rpg-button {
   border-radius: 999px;
 }
 
-:root[data-theme="startrek"] .rpg-list li::before {
+:root[data-theme="star-trek"] .rpg-list li::before {
   border-radius: 2px;
   background: var(--rpg-ink);
 }
 
-:root[data-theme="startrek"] .rpg-stat {
+:root[data-theme="star-trek"] .rpg-stat {
   background: #f5f7f7;
 }
 
-:root[data-theme="startrek"] .rpg-stat__value {
+:root[data-theme="star-trek"] .rpg-stat__value {
   color: var(--rpg-ink);
 }
 
-:root[data-theme="startrek"] .rpg-footer {
+:root[data-theme="star-trek"] .rpg-footer {
   color: var(--rpg-accent);
   background: #ffffff;
   border-top: 1px solid var(--rpg-border-soft);
 }
 
-:root[data-theme="startrek"] .rpg-page-chip {
+:root[data-theme="star-trek"] .rpg-page-chip {
   width: 42px;
   min-width: 42px;
   height: 42px;

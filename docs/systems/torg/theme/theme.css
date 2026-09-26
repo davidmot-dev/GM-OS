@@ -1,29 +1,29 @@
 /* ==========================================================================
    RPG THEME — TORG ETERNITY
-   Compatible avec rpg-core.css — skin visuel uniquement
+   Contrat GM-OS v1.2 — jetons de l’interface et démonstration SDK
    Référence visuelle : livre de règles / pages "Prime Terre" et "Les Cosms"
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Oswald:wght@500;600;700&display=swap');
 
-:root[data-theme="torg-eternity"] {
-  color-scheme: light;
+:root[data-theme="torg"] {
+  color-scheme: dark;
 
   --rpg-bg: #17394a;
   --rpg-surface: #20292b;
-  --rpg-surface-2: #d4c9ae;
+  --rpg-surface-2: #2d3f44;
   --rpg-paper: #e7dfcb;
 
   --rpg-ink: #17191a;
   --rpg-text: #f5f0e5;
-  --rpg-muted: #706b60;
+  --rpg-muted: #b9c6c1;
 
-  --rpg-accent: #2d6178;
+  --rpg-accent: #8bc0d0;
   --rpg-accent-2: #a27a3e;
-  --rpg-accent-contrast: #ffffff;
+  --rpg-accent-contrast: #132936;
 
-  --rpg-border: #62583f;
-  --rpg-border-soft: rgba(75, 65, 47, 0.30);
+  --rpg-border: #b59862;
+  --rpg-border-soft: rgba(181, 152, 98, 0.28);
 
   /* Approximations libres : le titrage source est un display condensé/gravé,
      le corps un serif éditorial classique. */
@@ -34,15 +34,37 @@
 
   --rpg-radius-sm: 0px;
   --rpg-radius-md: 0px;
-  --rpg-radius-lg: 999px;
+  --rpg-radius-lg: 0px;
 
+  /* 4.2 · États — V2 */
+  --rpg-success: #a4c59c;
+  --rpg-danger: #e47773;
+  --rpg-warning: #e4c16d;
+  --rpg-info: #b4a7d4;
+
+  /* 4.5–4.7 · Forme, relief et verre — V2 */
+  --rpg-border-width: 3px;
+  --rpg-border-style: double;
+  --rpg-elevation-1: 0 3px 10px rgba(0, 0, 0, 0.25);
+  --rpg-elevation-2: 0 18px 48px rgba(0, 0, 0, 0.42);
+  --rpg-elevation-3: 0 26px 70px rgba(0, 0, 0, 0.52);
   --rpg-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
+  --rpg-glow: rgba(139, 192, 208, 0.28);
+  --rpg-glow-strength: 0.38;
+  --rpg-glass-bg: rgba(32, 41, 43, 0.82);
+  --rpg-glass-border: rgba(181, 152, 98, 0.28);
+  --rpg-glass-blur: 7px;
+
+  /* 7 · Matière — V2 */
+  --rpg-texture-bg: repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 8px);
+  --rpg-texture-panel: none;
+  --rpg-texture-opacity: 0.14;
   --rpg-title-tracking: 0.055em;
   --rpg-kicker-tracking: 0.075em;
 }
 
 /* Fond bleu cosmique, sans asset obligatoire. */
-:root[data-theme="torg-eternity"] .rpg-app {
+:root[data-theme="torg"] .rpg-app {
   background:
     radial-gradient(circle at 18% 15%, rgba(126, 194, 219, 0.20), transparent 25rem),
     radial-gradient(circle at 78% 72%, rgba(48, 115, 145, 0.25), transparent 30rem),
@@ -51,7 +73,8 @@
 }
 
 /* Papier ivoire vieilli + double cadre métal/bronze. */
-:root[data-theme="torg-eternity"] .rpg-page {
+:root[data-theme="torg"] .rpg-page {
+  color: var(--rpg-ink);
   border: 9px solid #263538;
   outline: 3px solid #9a7a43;
   outline-offset: -14px;
@@ -62,7 +85,7 @@
     #e7dfcb;
 }
 
-:root[data-theme="torg-eternity"] .rpg-page::before {
+:root[data-theme="torg"] .rpg-page::before {
   content: "";
   position: absolute;
   inset: 16px;
@@ -75,7 +98,7 @@
 }
 
 /* Bandeau éditorial massif, proche des titres de chapitre. */
-:root[data-theme="torg-eternity"] .rpg-header {
+:root[data-theme="torg"] .rpg-header {
   margin: 18px 18px 0;
   padding-top: 44px;
   padding-bottom: 24px;
@@ -83,7 +106,7 @@
   border-bottom: 10px solid #252b29;
 }
 
-:root[data-theme="torg-eternity"] .rpg-header::after {
+:root[data-theme="torg"] .rpg-header::after {
   content: "";
   position: absolute;
   left: var(--rpg-gutter);
@@ -93,7 +116,7 @@
   background: #a27a3e;
 }
 
-:root[data-theme="torg-eternity"] .rpg-title {
+:root[data-theme="torg"] .rpg-title {
   color: #111516;
   font-weight: 700;
   line-height: 0.94;
@@ -102,17 +125,17 @@
     4px 5px 0 rgba(0,0,0,0.18);
 }
 
-:root[data-theme="torg-eternity"] .rpg-kicker {
+:root[data-theme="torg"] .rpg-kicker {
   color: #2d6178;
 }
 
-:root[data-theme="torg-eternity"] .rpg-section-title {
+:root[data-theme="torg"] .rpg-section-title {
   color: #17191a;
   text-align: center;
   letter-spacing: 0.02em;
 }
 
-:root[data-theme="torg-eternity"] .rpg-section-title::after {
+:root[data-theme="torg"] .rpg-section-title::after {
   content: "";
   display: block;
   width: min(100%, 420px);
@@ -122,17 +145,17 @@
     linear-gradient(90deg, #252b29 0 47%, transparent 47% 49%, #a27a3e 49% 51%, transparent 51% 53%, #252b29 53%);
 }
 
-:root[data-theme="torg-eternity"] .rpg-subtitle {
+:root[data-theme="torg"] .rpg-subtitle {
   color: #111516;
   letter-spacing: 0.035em;
 }
 
-:root[data-theme="torg-eternity"] .rpg-body {
+:root[data-theme="torg"] .rpg-body {
   line-height: 1.46;
 }
 
 /* Cartouches "plaque métallique". */
-:root[data-theme="torg-eternity"] .rpg-panel {
+:root[data-theme="torg"] .rpg-panel {
   background:
     linear-gradient(135deg, rgba(255,255,255,0.25), transparent 18%),
     radial-gradient(circle at 80% 20%, rgba(122,91,48,0.09), transparent 25%),
@@ -143,7 +166,7 @@
     0 10px 24px rgba(0,0,0,0.18);
 }
 
-:root[data-theme="torg-eternity"] .rpg-callout {
+:root[data-theme="torg"] .rpg-callout {
   color: var(--rpg-text);
   background:
     linear-gradient(180deg, rgba(255,255,255,0.06), transparent 30%),
@@ -154,7 +177,7 @@
     inset 0 0 22px rgba(0,0,0,0.45);
 }
 
-:root[data-theme="torg-eternity"] .rpg-callout__cap {
+:root[data-theme="torg"] .rpg-callout__cap {
   color: #f5f0e5;
   background:
     linear-gradient(180deg, #3b4b4e, #1d292c);
@@ -163,13 +186,13 @@
   letter-spacing: 0.08em;
 }
 
-:root[data-theme="torg-eternity"] .rpg-rule {
+:root[data-theme="torg"] .rpg-rule {
   height: 5px;
   background:
     linear-gradient(180deg, #252b29 0 2px, #a27a3e 2px 3px, #252b29 3px 5px);
 }
 
-:root[data-theme="torg-eternity"] .rpg-list li::before {
+:root[data-theme="torg"] .rpg-list li::before {
   width: 8px;
   height: 8px;
   top: 0.48em;
@@ -178,39 +201,39 @@
   transform: rotate(45deg);
 }
 
-:root[data-theme="torg-eternity"] .rpg-input,
-:root[data-theme="torg-eternity"] .rpg-select,
-:root[data-theme="torg-eternity"] .rpg-textarea {
+:root[data-theme="torg"] .rpg-input,
+:root[data-theme="torg"] .rpg-select,
+:root[data-theme="torg"] .rpg-textarea {
   background: rgba(249, 244, 230, 0.82);
   border: 1px solid #62583f;
 }
 
-:root[data-theme="torg-eternity"] .rpg-input:focus,
-:root[data-theme="torg-eternity"] .rpg-select:focus,
-:root[data-theme="torg-eternity"] .rpg-textarea:focus {
+:root[data-theme="torg"] .rpg-input:focus,
+:root[data-theme="torg"] .rpg-select:focus,
+:root[data-theme="torg"] .rpg-textarea:focus {
   border-color: #2d6178;
   box-shadow: 0 0 0 3px rgba(45, 97, 120, 0.20);
 }
 
-:root[data-theme="torg-eternity"] .rpg-button {
+:root[data-theme="torg"] .rpg-button {
   color: #f5f0e5;
   background: #263236;
   border: 2px solid #9a7a43;
   box-shadow: inset 0 0 0 2px #172326;
 }
 
-:root[data-theme="torg-eternity"] .rpg-button:hover {
+:root[data-theme="torg"] .rpg-button:hover {
   color: #ffffff;
   background: #2d6178;
   border-color: #c09a59;
 }
 
-:root[data-theme="torg-eternity"] .rpg-button:focus-visible {
+:root[data-theme="torg"] .rpg-button:focus-visible {
   outline: 3px solid #2d6178;
   outline-offset: 3px;
 }
 
-:root[data-theme="torg-eternity"] .rpg-stat {
+:root[data-theme="torg"] .rpg-stat {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.12), transparent),
     #263236;
@@ -218,30 +241,30 @@
   box-shadow: inset 0 0 0 2px #172326;
 }
 
-:root[data-theme="torg-eternity"] .rpg-stat__label {
+:root[data-theme="torg"] .rpg-stat__label {
   color: #d9bd84;
 }
 
-:root[data-theme="torg-eternity"] .rpg-stat__value {
+:root[data-theme="torg"] .rpg-stat__value {
   color: #ffffff;
 }
 
-:root[data-theme="torg-eternity"] .rpg-meter {
+:root[data-theme="torg"] .rpg-meter {
   border-color: #62583f;
   background: #c9bea4;
 }
 
-:root[data-theme="torg-eternity"] .rpg-meter__fill {
+:root[data-theme="torg"] .rpg-meter__fill {
   background:
     linear-gradient(90deg, #21495b, #4b879d);
 }
 
-:root[data-theme="torg-eternity"] .rpg-table th {
+:root[data-theme="torg"] .rpg-table th {
   color: #111516;
   border-bottom: 4px solid #252b29;
 }
 
-:root[data-theme="torg-eternity"] .rpg-footer {
+:root[data-theme="torg"] .rpg-footer {
   margin: 0 18px 18px;
   color: #dcebf0;
   background:
@@ -249,7 +272,7 @@
   border-top: 3px solid #9a7a43;
 }
 
-:root[data-theme="torg-eternity"] .rpg-page-chip {
+:root[data-theme="torg"] .rpg-page-chip {
   min-width: 44px;
   height: 44px;
   color: #ffffff;
@@ -258,20 +281,4 @@
   border: 2px solid #11191c;
   border-radius: 50%;
   box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-}
-
-@media (max-width: 780px) {
-  :root[data-theme="torg-eternity"] .rpg-page {
-    border-width: 6px;
-    outline-width: 2px;
-    outline-offset: -10px;
-  }
-
-  :root[data-theme="torg-eternity"] .rpg-header {
-    margin: 12px 12px 0;
-  }
-
-  :root[data-theme="torg-eternity"] .rpg-footer {
-    margin: 0 12px 12px;
-  }
 }
