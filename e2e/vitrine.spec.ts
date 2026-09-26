@@ -187,6 +187,48 @@ test.describe('la vitrine', () => {
         };
         const dans = <T>(fn: () => T | Promise<T>) => gmos.fenetre.evaluate(fn);
 
+        /*
+          ⛔ **Ce qui défile ne se voit pas sur une capture.** Le panneau de réglages
+          de la carte compte treize sections, et Stitch a réorganisé la carte
+          **sans voir la moitié de ses commandes** (2026-09-26). On repère le
+          conteneur qui défile autour d'un texte, et on le capture page par page.
+        */
+        const capturerEnDefilant = async (prefixe: string, repere: string, maxPages = 6) => {
+            const pages = await gmos.fenetre.evaluate((source) => {
+                document.querySelectorAll('[data-vitrine-defilement]').forEach(e => e.removeAttribute('data-vitrine-defilement'));
+                const motif = new RegExp(source, 'i');
+                const titre = [...document.querySelectorAll('*')]
+                    .find(e => e.children.length === 0 && motif.test(e.textContent ?? ''));
+                let boite: HTMLElement | null = (titre as HTMLElement | undefined)?.parentElement ?? null;
+                while (boite && !(boite.scrollHeight > boite.clientHeight + 20 && /(auto|scroll)/.test(getComputedStyle(boite).overflowY))) {
+                    boite = boite.parentElement;
+                }
+                if (!boite) return 0;
+                boite.setAttribute('data-vitrine-defilement', '');
+                boite.scrollTop = 0;
+                return Math.ceil(boite.scrollHeight / (boite.clientHeight * 0.85));
+            }, repere);
+            for (let i = 0; i < Math.min(pages, maxPages); i++) {
+                if (i > 0) {
+                    await dans(() => {
+                        const b = document.querySelector<HTMLElement>('[data-vitrine-defilement]');
+                        if (b) b.scrollTop += b.clientHeight * 0.85;
+                    });
+                }
+                await capturer(`${prefixe}-${i + 1}.png`);
+            }
+            return pages;
+        };
+
+        /* 1.25 · Les modes de Dice-OS — « la fenêtre avec les modes doit être mieux agencée ». */
+        await ouvrirLeModule(gmos, 'Dice-OS');
+        const listeDesModes = gmos.fenetre.locator('select:has(option[value="yze"])').first();
+        for (const mode of ['pool', 'yze', 'formula', 'threshold']) {
+            await listeDesModes.selectOption(mode).catch(() => undefined);
+            await capturer(`2-des-mode-${mode}.png`);
+        }
+        await listeDesModes.selectOption('standard').catch(() => undefined);
+
         /* 3.1 · Musique : les deux platines qui jouent, fondu croisé à mi-course. */
         await ouvrirLeModule(gmos, 'Musique');
         const platines = await dans(async () => {
@@ -267,6 +309,8 @@ test.describe('la vitrine', () => {
             });
         }
         await capturer('5-carte.png');
+        /* Treize sections de réglages : brouillard, formes, magie, danger, météo, heure, grille, combat… */
+        await capturerEnDefilant('5-carte-reglages', 'Gestion des Couches');
 
         /* 2.7 · Light-OS : les tuiles de la campagne, une scène active (aucune lampe : `GMOS_SANS_APPAREILS`). */
         await ouvrirLeModule(gmos, 'Light-OS');
@@ -283,7 +327,19 @@ test.describe('la vitrine', () => {
             return choisie?.name ?? null;
         });
         console.log(`[Vitrine] scène de lumière — ${scene ?? 'aucune'}`);
+        /*
+          ⚠️ **Sans pont Hue, aucune lampe à l'écran** — or la note de David porte
+          justement sur « la disposition des lampes en dessous ». Le mode simulé
+          de Light-OS en fournit ; `GMOS_SANS_APPAREILS` garantit qu'aucune vraie
+          lampe ne bouge.
+        */
+        await dans(() => {
+            (window as never as { useLightStore: { getState: () => { setConnection: (s: string) => void } } })
+                .useLightStore.getState().setConnection('mock');
+        });
         await capturer('6-lumiere.png');
+        await capturerEnDefilant('6-lumiere-tuiles', 'Cette campagne');
+        await capturerEnDefilant('6-lumiere-panneau', 'Actions rapides');
 
         /* 1.3 et 1.4 · La trame de la campagne active : l'arbre, puis le graphe. */
         await ouvrirLeModule(gmos, 'Tableau de Bord');

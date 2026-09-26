@@ -1,0 +1,93 @@
+import { test, expect } from '@playwright/test';
+import {
+    lancerGmOs, attendreLHydratation, ouvrirLeModule, CAMPAGNE_TEMOIN, LES_PANNEAUX, type GmOsLance,
+} from './lancerGmOs';
+
+/**
+ * **T0.1 · Les captures de référence — un écran par panneau.**
+ *
+ * Phase 0 de la refonte (`documentation/Planning/2026-09-17-refonte-interface.md`,
+ * § 3). Un chantier qui change l'habillage de deux cents fichiers a besoin de
+ * savoir ce qu'il a changé **sans le vouloir**.
+ *
+ * ⚠️ **Ce qu'elles prouvent, et ce qu'elles ne prouvent pas.** Une refonte
+ * délibérée les fera **toutes** diverger. Leur valeur n'est donc pas « rien n'a
+ * changé », c'est **« seul ce que je visais a changé »** : on les régénère à
+ * chaque étape acceptée, et on *regarde* l'écart des modules qu'on n'a pas
+ * touchés. *Une capture qu'on régénère sans la lire ne teste plus rien.*
+ *
+ *   npx playwright test e2e/ecransDeReference.spec.ts                      comparer
+ *   npx playwright test e2e/ecransDeReference.spec.ts --update-snapshots   régénérer
+ *
+ * Il faut une construction à jour (`npm run build`). Les images de référence
+ * vivent à côté de ce fichier, dans `ecransDeReference.spec.ts-snapshots/` : elles
+ * sont **versionnées**, c'est ce qui permet de comparer d'un commit à l'autre.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * CE QUI REND UNE CAPTURE REPRODUCTIBLE
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * - **La donnée gelée** : la campagne témoin (`e2e/donnees/campagne-temoin.json`),
+ *   jamais la sauvegarde du jour — elle change tous les soirs.
+ * - **L'heure figée** : les horloges, les dates et les « il y a 3 min » de
+ *   l'interface lisent `Date`.
+ * - **Les animations coupées**, le curseur caché, et la capture en pixels CSS —
+ *   indépendante de la mise à l'échelle de Windows.
+ * - **La même taille** : 1440 × 900, une dalle du Zenbook.
+ *
+ * ⚠️ Les images dépendent de la machine (polices installées, rendu du GPU) :
+ * elles valent pour le poste de David. Elles ne tournent pas avant l'envoi.
+ */
+
+const LARGEUR = 1440;
+const HAUTEUR = 900;
+/** Un soir de partie, toujours le même. */
+const L_HEURE = new Date('2026-06-20T21:00:00');
+
+/** Un fichier par panneau : `Horloge & Temps` → `horloge-temps.png`. */
+const nomDeFichier = (panneau: string) =>
+    panneau.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.png';
+
+let gmos: GmOsLance;
+
+test.beforeAll(async () => {
+    gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
+    await attendreLHydratation(gmos);
+
+    const fenetre = await gmos.application.browserWindow(gmos.fenetre);
+    await fenetre.evaluate((w, [l, h]) => { w.unmaximize(); w.setContentSize(l, h); }, [LARGEUR, HAUTEUR]);
+    await fenetre.evaluate(w => w.webContents.setAudioMuted(true));
+    await gmos.fenetre.clock.setFixedTime(L_HEURE);
+
+    /* L'écran d'accueil reste cinq secondes, tiré au hasard parmi quatre. */
+    await expect(gmos.fenetre.locator('[data-ecran-d-accueil]')).toHaveCount(0, { timeout: 15_000 });
+});
+
+test.afterAll(async () => { await gmos?.fermer(); });
+
+test.describe('les écrans de référence', () => {
+    for (const panneau of LES_PANNEAUX) {
+        test(panneau, async () => {
+            await ouvrirLeModule(gmos, panneau);
+            await expect.poll(() => gmos.fenetre.locator('main').last().innerText(), { timeout: 15_000 }).not.toBe('');
+            /* Les modules chargés à la demande, leurs images et leurs polices. */
+            await gmos.fenetre.waitForTimeout(1_500);
+
+            await expect(gmos.fenetre).toHaveScreenshot(nomDeFichier(panneau), {
+                animations: 'disabled',
+                caret: 'hide',
+                scale: 'css',
+                /* Un pixel anti-crénelé de travers n'est pas un changement d'habillage. */
+                maxDiffPixelRatio: 0.005,
+                timeout: 15_000,
+            });
+
+            /*
+              ⚠️ **Cortex IA n'est pas un module, c'est un panneau latéral** : il
+              reste ouvert à droite après son clic, et couvrait un tiers de
+              chaque écran capturé ensuite. On le referme par son bouton.
+            */
+            if (panneau === 'Cortex IA') await ouvrirLeModule(gmos, panneau);
+        });
+    }
+});

@@ -15,6 +15,7 @@
     "test:e2e": "npm run build && playwright test",
     "repetition": "node scripts/repetition.mjs",
     "theme:valider": "node scripts/theme-valider.mjs",
+    "refonte:releve": "node scripts/refonte-releve.mjs",
     "notebooklm": "node scripts/notebooklm-guides.mjs",
     "prepare": "node scripts/installer-les-hooks.mjs"
   },

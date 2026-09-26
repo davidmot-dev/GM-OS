@@ -363,3 +363,34 @@ async function verifierLIsolation(application: ElectronApplication, profil: stri
         );
     }
 }
+
+/**
+ * Les libellés exacts des boutons, relevés dans l'application.
+ *
+ * ⚠️ **Écrits en dur, et c'est voulu.** Les dériver de l'application les ferait
+ * s'accorder avec elle quoi qu'elle devienne — un module renommé ou disparu ne
+ * ferait alors plus rougir personne. *Une liste attendue n'a de valeur que si
+ * elle peut contredire le code.*
+ */
+export const LES_PANNEAUX = [
+    'Tableau de Bord',
+    'Journal de Jeu',
+    'Forge',
+    'Musique',
+    'Effets Sonores',
+    'Ambiances',
+    'Voice-OS',
+    'Favoris',
+    'Nexus Wiki',
+    'Cortex IA',
+    'Combat-OS',
+    'Dice-OS',
+    'Générateur PNJ',
+    'Cartographie',
+    'Image-OS',
+    'Horloge & Temps',
+    'Light-OS',
+    'Tables Aléatoires',
+    'Navigateur Web',
+    'Tableau Blanc',
+] as const;
