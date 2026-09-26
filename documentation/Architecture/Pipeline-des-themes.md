@@ -78,6 +78,32 @@ début de chaque conversation. À chaque nouvelle version du cahier, remplacer l
 
 ## 4 · Le validateur
 
+✅ **Construit le 2026-09-26 (P0).**
+
+```text
+npm run theme:valider -- dune          le rapport, prêt à coller dans ChatGPT
+npm run theme:valider -- dune --json   le même, pour une machine
+npm run theme:valider -- --tous        le verdict de chaque thème du dépôt
+```
+
+| Pièce | Rôle |
+| --- | --- |
+| `src/theme/contratDuTheme.ts` | Le contrat en données : 45 jetons (statut, section, format, bornes), les 10 paires de contraste, les hôtes, les emplacements. **`PONT` en est dérivé** |
+| `src/theme/validationDuTheme.ts` | Le validateur, pur ; il relit le thème avec l'analyseur de GM-OS (`blocsDeJetons`, `declarationsDuBloc`) |
+| `scripts/theme-valider.mjs` | La commande. Node 24 lit le TypeScript ; un crochet de résolution de dix lignes remplace tout paquet |
+| `electron/contratDuTheme.test.ts` | Lit **les tableaux du cahier** et les compare au contrat, jeton par jeton, bornes comprises |
+| `electron/validationDesThemes.test.ts` | Passe tous les thèmes du dépôt par la vraie commande ; **cliquet** sur les refus connus |
+
+Deux lectures du cahier que le validateur fait, et qui restent à trancher avec David :
+
+- **§ 4.3** — seule la **première** police d'une pile doit arriver (erreur) ; un repli absent
+  (« OCR A Std » chez Alien) est seulement signalé, puisque le navigateur le saute sans effet.
+- **§ 11** — une règle `@` (`@media`…) **avant la fin des jetons** est refusée : GM-OS relèverait
+  les jetons sans sa condition. **Après**, dans la partie des composants SDK, elle est sans effet
+  et seulement signalée.
+
+Ce que le validateur devait faire, et fait :
+
 - **Réutilise ce qui existe** : l'analyseur des jetons (`extraireJetons`), le calcul de contraste
   et la liste des hôtes de polices de `src/theme/`. Aucun second analyseur.
 - **Le contrat vit en données dans `src/theme/`**, en TypeScript : ce que GM-OS applique
@@ -111,14 +137,25 @@ phase 1), son absence à l'écran est **normale** : le rapport du validateur dit
 
 ## 6 · La vitrine pour un thème
 
-`e2e/vitrine.spec.ts`, sur demande (`GMOS_VITRINE=1`) : instance jetable semée par la dernière
-sauvegarde, médias restaurés, taille du Zenbook. **Elle doit encore apprendre à charger le thème
-d'un jeu** : son corpus est un dossier vide par isolation, il faut y copier le dossier `theme/`
-du jeu avant le lancement.
+✅ **Construite le 2026-09-26 (P0).** Il faut une construction à jour (`npm run build`), puis :
 
-Ce que les captures doivent montrer, au minimum : le poste du meneur, un panneau, une boîte de
-dialogue, un élément actif, un danger, un texte estompé. Les fiches de personnage n'y figurent pas :
-elles sont indépendantes des thèmes.
+```powershell
+$env:GMOS_VITRINE_JEU='dune'; npx playwright test e2e/vitrine.spec.ts
+```
+
+Instance jetable semée par la dernière sauvegarde, à la taille du Zenbook. Le dossier `theme/` du
+jeu — et lui seul — est copié dans son corpus vide ; la campagne active reçoit ce jeu par son
+« Chemin des Règles ». **Aucun jeu n'a donc besoin d'une campagne pour être montré.** Vingt
+secondes, cinq captures dans `e2e-resultats/vitrine/<jeu>/` : le Cockpit (par `Ctrl+²`), un
+combat en cours, un jet de dés, l'aide, la palette par-dessus un écran.
+
+⚠️ **Le pilote reste celui de la campagne** : seul le thème change. Sur les captures de Dune, le
+Combat-OS dit donc « Blade Runner » — c'est normal.
+
+⚠️ **GM-OS ne relit le thème qu'au changement de campagne.** Un `theme.css` modifié pendant que
+l'application tourne ne s'applique qu'en rouvrant la campagne.
+
+Les fiches de personnage n'y figurent pas : elles sont indépendantes des thèmes.
 
 ## 7 · Ce que ce pipeline écarte, et pourquoi
 
@@ -140,6 +177,6 @@ reste alors la cible.
 | Étape | Contenu | État |
 | --- | --- | --- |
 | **Consignes** | `AGENTS.md` (garde-fous pour tout agent dans le dépôt) · `theme/` exclu de l'index de l'Oracle | ✅ 2026-09-26 |
-| **P0** | Le contrat en données · le validateur et sa commande · l'essai sur tous les thèmes du dépôt · la vitrine qui charge un thème de jeu | À faire |
-| **Premier usage** | Réparer **Dune, NOC, Star Trek et Torg**, sous les seuils de contraste (mesuré le 26/09), en donnant leur rapport à RPG Theme Builder | Après P0 |
+| **P0** | Le contrat en données · le validateur et sa commande · l'essai sur tous les thèmes du dépôt · la vitrine qui charge un thème de jeu | ✅ 2026-09-26 |
+| **Premier usage** | Réparer **Dune, NOC, Star Trek et Torg** (polarité fausse, contrastes sous le minimum, un arrondi de 999px chez Torg) en donnant leur rapport à RPG Theme Builder. **Les six thèmes** doivent aussi recevoir leur `intention.md` : c'est la seule erreur d'Alien et de Blade Runner | À faire |
 | **Plus tard** | Les formats de revue en JSON ; Codex relecteur du code de la refonte | Si besoin |

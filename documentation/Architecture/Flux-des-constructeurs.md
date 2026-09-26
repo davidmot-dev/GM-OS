@@ -67,5 +67,5 @@ Ce document décrit la boucle commune. Chaque chantier garde sa page, qui porte 
 | **Emplacement** | `docs/systems/<jeu>/theme/` | `docs/fiches/<Jeu>/`, et la correspondance dans `docs/systems/<jeu>/fiche/` |
 | **Ce que GM-OS en lit** | 13 réglages aujourd'hui, plus en V2 | Les **clés de données** de la fiche, par le moteur de fiches |
 | **Le risque principal** | Un contraste faux sur le fond de GM-OS | **Une clé renommée** à la régénération, qui casse la correspondance en silence |
-| **Validateur** | `theme:valider` — à construire (P0) | `fiche:valider` — à construire ; sa pièce maîtresse existe déjà |
-| **Vitrine** | Les écrans de GM-OS, thème du jeu actif | La fiche ouverte dans le moteur, zones visibles, face au PDF |
+| **Validateur** | `npm run theme:valider -- <jeu>` ✅ | `fiche:valider` — à construire ; sa pièce maîtresse existe déjà |
+| **Vitrine** | Les écrans de GM-OS, thème du jeu actif (`GMOS_VITRINE_JEU=<jeu>`) ✅ | La fiche ouverte dans le moteur, zones visibles, face au PDF |

@@ -5651,6 +5651,31 @@ fiches devra fixer** dans `Pipeline-des-fiches.md`. ⛔ **Découvert en chemin**
 n'emploie aucun jeton ni composant `.rpg-*` — le cahier des thèmes affirmait l'inverse, corrigé en
 v1.2.
 
+#### ✅ 2026-09-26 — P0 des thèmes : le contrat en données, le validateur, la vitrine d'un jeu
+
+- **Le contrat en données** : `src/theme/contratDuTheme.ts` (45 jetons, 10 paires de contraste).
+  **`PONT` en est dérivé**, et `electron/contratDuTheme.test.ts` compare le contrat **aux tableaux
+  du cahier**, bornes comprises — trois fautes introduites exprès, trois attrapées.
+- **Le validateur** : `npm run theme:valider -- <jeu>` (`--json`, `--tous`) rend un rapport prêt à
+  coller dans ChatGPT et sort en erreur si le thème est refusé. **Aucun paquet** : Node 24 lit le
+  TypeScript, un crochet de résolution supplée aux imports sans extension.
+- **Le verdict sur les six thèmes** : **aucun n'est accepté**. Alien et Blade Runner n'ont contre
+  eux que l'absence d'`intention.md` ; Dune, NOC, Star Trek et Torg ont la **polarité fausse**
+  (`light` sur un fond sombre) et des contrastes sous le minimum, plus deux défauts que l'audit du
+  matin n'avait pas vus — l'arrondi de **999px** de Torg, le texte sur l'accent de Star Trek (3,32).
+  `electron/validationDesThemes.test.ts` fige ces erreurs en **cliquet** : la liste ne peut que
+  raccourcir.
+- **La vitrine d'un jeu** : `GMOS_VITRINE_JEU=<jeu>` — cinq captures en vingt secondes, sans que
+  le jeu ait besoin d'une campagne. Sur Dune, l'accent à 1,03 **se voit** : l'élément actif de la
+  barre latérale, le titre « OS », l'entrée « Cockpit » et la sélection de la palette disparaissent.
+- ⚠️ **GM-OS ne relit le thème qu'au changement de campagne** (`useThemeDuJeu`) : un `theme.css`
+  modifié pendant qu'il tourne ne s'applique qu'en rouvrant la campagne.
+- **À trancher avec David** : deux lectures du cahier que le validateur assouplit (un **repli** de
+  police absent, une `@media` **après** les jetons : signalés, pas refusés) — voir
+  `Pipeline-des-themes.md` § 4.
+- **Suite** : réparer les quatre thèmes et donner aux six leur `intention.md`, par RPG Theme
+  Builder, rapport en main.
+
 ---
 
 ### 77 · ⭐ Light-OS — l'audit du catalogue d'effets contre ce que le Hue sait faire (2026-09-17)
