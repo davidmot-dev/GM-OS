@@ -80,6 +80,14 @@ describe('validerLeTheme — le cas normal', () => {
     it('mesure les dix paires du § 6', () => {
         expect(valider(feuille()).contrastes).toHaveLength(10);
     });
+
+    it('§ 4.8 : un cadre complet ajoute ses deux paires, et passe', () => {
+        const r = valider(feuille({ 'frame-bg': '#e8e0d0', 'frame-text': '#1a1208', 'frame-accent': '#6b4a12' }));
+        expect(r.accepte).toBe(true);
+        expect(r.contrastes).toHaveLength(12);
+        expect(r.contrastes.map(c => `${c.avant}/${c.fond}`)).toEqual(
+            expect.arrayContaining(['frame-text/frame-bg', 'frame-accent/frame-bg']));
+    });
 });
 
 describe('validerLeTheme — ce qu\'il refuse', () => {
@@ -143,6 +151,18 @@ describe('validerLeTheme — ce qu\'il refuse', () => {
 
     it('§ 6 : un texte illisible sur le fond', () => {
         expect(regles(feuille({ text: '#202428' }))).toContain('§ 6');
+    });
+
+    /*
+      Le piège du cadre : un fond de cadre clair sans son propre texte. GM-OS y
+      pose `text`, choisi clair pour un contenu sombre — il disparaît. On mesure
+      ce que l'écran montrera.
+    */
+    it('§ 6 : un cadre sans frame-text mesure text à sa place', () => {
+        const r = valider(feuille({ 'frame-bg': '#f0ece4', 'frame-accent': '#6b4a12' }));
+        expect(r.accepte).toBe(false);
+        expect(r.contrastes.map(c => `${c.avant}/${c.fond}`)).toContain('text/frame-bg');
+        expect(r.erreurs.find(e => e.regle === '§ 6')?.message).toContain('faute de `frame-text`');
     });
 
     it('§ 7 : une matière qui sort du dossier, ou qui n\'existe pas', () => {

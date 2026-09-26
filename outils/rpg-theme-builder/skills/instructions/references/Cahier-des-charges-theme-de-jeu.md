@@ -1,6 +1,6 @@
 # Cahier des charges — thème de jeu pour GM-OS
 
-**Contrat v1.2 — 2026-09-26.** Destinataire : l'assistant qui construit les thèmes de jeu.
+**Contrat v1.3 — 2026-09-27.** Destinataire : l'assistant qui construit les thèmes de jeu.
 
 Ce document est une **contrainte**, pas une inspiration. Il dit exactement ce que GM-OS lit dans un
 thème, ce qu'il ignore et ce qu'il refuse. Tout ce qui n'y figure pas n'aura **aucun effet** dans
@@ -205,8 +205,8 @@ halo.
 
 ### 4.7 · Transparence et verre — nouveaux
 
-GM-OS pose des panneaux semi-transparents par-dessus le fond : la barre latérale, les boîtes, les
-surcouches.
+GM-OS pose des panneaux semi-transparents par-dessus le fond : les boîtes, les surcouches, et la
+barre latérale quand le jeu ne déclare pas de cadre (§ 4.8).
 
 | Jeton | Rôle | Statut | Format |
 | --- | --- | --- | --- |
@@ -214,11 +214,30 @@ surcouches.
 | `--rpg-glass-border` | Bordure de ce panneau | V2 | `rgba()`, opacité 0.05 à 0.6 |
 | `--rpg-glass-blur` | Flou de ce qui est derrière | V2 | `0px` à `24px` |
 
+### 4.8 · Le cadre — nouveau
+
+Le **cadre**, c'est ce qui entoure les modules : la barre latérale et le bandeau du haut. Un jeu
+**PEUT** lui donner une autre polarité que le contenu : un cadre de bois sombre autour d'un
+parchemin, une console noire autour de fiches blanches.
+
+| Jeton | Rôle | Statut | Format |
+| --- | --- | --- | --- |
+| `--rpg-frame-bg` | Fond de la barre latérale et du bandeau du haut | V2 | `#rrggbb`, opaque |
+| `--rpg-frame-text` | Texte et icônes du cadre | V2 | `#rrggbb`, opaque |
+| `--rpg-frame-accent` | Élément actif du cadre : module ouvert, bouton allumé | V2 | `#rrggbb`, opaque |
+
+- **Absents, ils valent `bg`, `text` et `accent`** : le cadre suit le contenu, comme aujourd'hui.
+  N'en déclare que si le jeu le justifie.
+- Si tu déclares `frame-bg`, **déclare aussi `frame-text` et `frame-accent`**. Sinon GM-OS pose
+  `text` et `accent` sur ton fond de cadre, et c'est eux que le validateur mesure (§ 6) : un texte
+  sombre, choisi pour un contenu clair, disparaît sur un cadre sombre.
+- Le cadre est **opaque** : `glass-bg` ne s'y applique pas quand `frame-bg` est déclaré.
+
 ## 5 · La transparence — ce qui peut l'être, et ce qui ne le peut pas
 
 | Jetons | Transparence |
 | --- | --- |
-| `bg`, `surface`, `surface-2`, `text`, `muted`, `accent`, `accent-contrast`, couleurs d'état | ⛔ **Interdite.** GM-OS en calcule le contraste et en dérive des couleurs : une couleur transparente n'a pas de contraste défini |
+| `bg`, `surface`, `surface-2`, `text`, `muted`, `accent`, `accent-contrast`, couleurs d'état, `frame-bg`, `frame-text`, `frame-accent` | ⛔ **Interdite.** GM-OS en calcule le contraste et en dérive des couleurs : une couleur transparente n'a pas de contraste défini |
 | `border`, `border-soft` | Permise, opacité **0.08 à 1** |
 | `glass-bg` | **Obligatoire** si déclaré, opacité **0.4 à 0.95**. En dessous, le texte n'est plus lisible sur une image |
 | `glass-border`, `glow`, les ombres | Libre |
@@ -236,6 +255,11 @@ Le meneur lit son écran **à un mètre, dans une pièce tamisée**. Ratios WCAG
 | `accent` sur `bg` | **3** | 4.5 |
 | `accent-contrast` sur `accent` | **4.5** | 7 |
 | Chaque couleur d'état sur `bg` | **3** | 4.5 |
+| `frame-text` sur `frame-bg` | **4.5** | 7 |
+| `frame-accent` sur `frame-bg` | **3** | 4.5 |
+
+Les deux dernières paires ne se mesurent que si `frame-bg` est déclaré. Sans `frame-text` ou
+`frame-accent`, ce sont `text` et `accent` qui se mesurent sur `frame-bg` (§ 4.8).
 
 Calcule-les avant de livrer. Aujourd'hui, l'atelier de GM-OS **signale** les trois premières
 paires sous le minimum ; le contrôleur de thème en construction **refusera** tout thème sous le
@@ -328,7 +352,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 ```css
 /* ==========================================================================
    RPG THEME — <NOM DU JEU>
-   Contrat GM-OS v1.2
+   Contrat GM-OS v1.3
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=<Police+Titre>:wght@500;700&family=<Police+Mono>:wght@400;600&display=swap');
@@ -384,6 +408,11 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
   --rpg-glass-border: rgba(r, g, b, 0.15);
   --rpg-glass-blur: 12px;
 
+  /* 4.8 · Cadre — facultatif : seulement si le cadre change de polarité */
+  /* --rpg-frame-bg: #rrggbb; */
+  /* --rpg-frame-text: #rrggbb; */
+  /* --rpg-frame-accent: #rrggbb; */
+
   /* 7 · Matières */
   --rpg-texture-bg: none;
   --rpg-texture-panel: none;
@@ -401,6 +430,8 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 - [ ] Toutes les couleurs opaques sont en `#rrggbb` ; aucune n'est transparente (§ 5).
 - [ ] Chaque paire du § 6 atteint son minimum, et tu as indiqué les ratios obtenus au meneur.
 - [ ] Les couleurs d'état se distinguent entre elles et de l'accent.
+- [ ] Si tu déclares un cadre (§ 4.8), ses trois jetons sont là et ses deux paires atteignent leur
+      minimum.
 - [ ] Chaque police nommée est importée depuis un hôte autorisé ou est une police système.
 - [ ] Toutes les valeurs sont dans leurs bornes (§ 4).
 - [ ] Les chemins de matières et d'ornements restent dans `theme/`, et les SVG respectent le § 8.
@@ -420,6 +451,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 | **v1** | 2026-09-26 | Premier contrat écrit. GM-OS lit **13 réglages** (6 couleurs, 2 polices, 5 tailles), la polarité et les polices importées. Les jetons **V2** sont réservés et annoncés : forme, relief, verre, états, matières, ornements. |
 | **v1.1** | 2026-09-26 | ⛔ Le **piège « page de livre »** (§ 4.1) : dans GM-OS, le texte est posé sur `bg`, pas seulement sur `surface` — quatre des six thèmes existants y tombent. **Polarité vérifiable** (§ 3.5). **`intention.md` obligatoire**, avec les limites signalées et leur classe (§ 1.1). Le déroulé du travail vit dans [`Pipeline-des-themes.md`](./Pipeline-des-themes.md). |
 | **v1.2** | 2026-09-26 | ⛔ **Un seul consommateur** (§ 2) : les fiches de personnage sont **indépendantes des thèmes** (décision de David) et ne lisent jamais `theme.css` — la v1 affirmait l'inverse. Les composants `.rpg-*` et les jetons `paper`, `ink`, `accent-2`, `font-ui` passent au statut **SDK** : facultatifs, sans effet dans GM-OS. La classe de limite « fiches seulement » disparaît. |
+| **v1.3** | 2026-09-27 | ⭐ **Le cadre** (§ 4.8) : trois jetons **V2**, `frame-bg`, `frame-text`, `frame-accent`, pour une barre latérale et un bandeau d'une autre polarité que le contenu, et leurs deux paires de contraste (§ 6). Absents, ils valent `bg`, `text` et `accent` : aucun thème existant ne change. Né du relevé des quatre thèmes de base de GM-OS, dont deux (Médiéval, Moderne) ont un cadre sombre autour d'un contenu clair. |
 
 Un jeton annoncé **V2** peut encore changer de nom ou de bornes avant d'être appliqué ; tout
 changement sera inscrit ici. **Un jeton qui ne figure pas dans ce document n'est lu par personne.**

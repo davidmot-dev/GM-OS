@@ -303,16 +303,20 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
 
     const contrastes: MesureDeContraste[] = [];
     for (const p of PAIRES_DU_CONTRAT) {
-        const avant = jetons[p.avant];
+        /* Sans `frame-text`, c'est `text` qui s'affiche sur le cadre : on
+           mesure ce que l'écran montrera, pas ce que le thème a déclaré. */
+        const nomDevant = jetons[p.avant] === undefined && p.repli ? p.repli : p.avant;
+        const avant = jetons[nomDevant];
         const fond = jetons[p.fond];
         if (avant === undefined || fond === undefined) continue;
         const ratio = contraste(avant, fond);
         const verdict: VerdictDeContraste = ratio === null ? 'non mesurable'
             : ratio < p.minimum ? 'refusé'
                 : ratio < p.recommande ? 'sous le recommandé' : 'bon';
-        contrastes.push({ avant: p.avant, fond: p.fond, ratio, minimum: p.minimum, recommande: p.recommande, verdict });
+        contrastes.push({ avant: nomDevant, fond: p.fond, ratio, minimum: p.minimum, recommande: p.recommande, verdict });
         if (verdict === 'refusé') {
-            erreur('§ 6', `Contraste \`${p.avant}\` sur \`${p.fond}\` : ${ratio} (${avant} sur ${fond}), minimum ${p.minimum}.`, p.avant);
+            const aDefaut = nomDevant === p.avant ? '' : `, faute de \`${p.avant}\``;
+            erreur('§ 6', `Contraste \`${nomDevant}\` sur \`${p.fond}\`${aDefaut} : ${ratio} (${avant} sur ${fond}), minimum ${p.minimum}.`, nomDevant);
         }
     }
 

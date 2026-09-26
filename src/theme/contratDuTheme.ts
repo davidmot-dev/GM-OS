@@ -18,7 +18,7 @@
  */
 
 /** La version du cahier des charges que ce fichier traduit. */
-export const VERSION_DU_CONTRAT = '1.2';
+export const VERSION_DU_CONTRAT = '1.3';
 
 /**
  * - **LU** : GM-OS l'applique aujourd'hui ;
@@ -55,7 +55,7 @@ export interface JetonDuContrat {
     /** Le nom sans le préfixe `--rpg-`. */
     cle: string;
     /** La section du cahier qui le décrit. */
-    section: '4.1' | '4.2' | '4.3' | '4.4' | '4.5' | '4.6' | '4.7' | '7';
+    section: '4.1' | '4.2' | '4.3' | '4.4' | '4.5' | '4.6' | '4.7' | '4.8' | '7';
     statut: StatutDeJeton;
     obligatoire?: boolean;
     format: FormatDeJeton;
@@ -142,6 +142,11 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'glass-border', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.05, alphaMax: 0.6 } },
     { cle: 'glass-blur', section: '4.7', statut: 'V2', format: px(24) },
 
+    // § 4.8 · Le cadre — absents, ils valent bg, text et accent
+    { cle: 'frame-bg', section: '4.8', statut: 'V2', format: OPAQUE },
+    { cle: 'frame-text', section: '4.8', statut: 'V2', format: OPAQUE },
+    { cle: 'frame-accent', section: '4.8', statut: 'V2', format: OPAQUE },
+
     // § 7 · Matières
     { cle: 'texture-bg', section: '7', statut: 'V2', format: MATIERE },
     { cle: 'texture-panel', section: '7', statut: 'V2', format: MATIERE },
@@ -167,6 +172,12 @@ export interface PaireDeContraste {
     fond: string;
     minimum: number;
     recommande: number;
+    /**
+     * Le jeton que GM-OS emploie à la place de `avant` quand le thème ne le
+     * déclare pas — c'est alors lui qu'on mesure. Le cadre (§ 4.8) : sans
+     * `frame-text`, c'est `text` qui s'affiche sur `frame-bg`.
+     */
+    repli?: string;
 }
 
 export const PAIRES_DU_CONTRAT: readonly PaireDeContraste[] = [
@@ -180,6 +191,8 @@ export const PAIRES_DU_CONTRAT: readonly PaireDeContraste[] = [
     { avant: 'danger', fond: 'bg', minimum: 3, recommande: 4.5 },
     { avant: 'warning', fond: 'bg', minimum: 3, recommande: 4.5 },
     { avant: 'info', fond: 'bg', minimum: 3, recommande: 4.5 },
+    { avant: 'frame-text', fond: 'frame-bg', minimum: 4.5, recommande: 7, repli: 'text' },
+    { avant: 'frame-accent', fond: 'frame-bg', minimum: 3, recommande: 4.5, repli: 'accent' },
 ];
 
 /**
