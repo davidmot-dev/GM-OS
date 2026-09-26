@@ -5643,6 +5643,14 @@ GM-OS les consomme par la couture `window.RPGSheet` + `postMessage` — **sans c
 que la fiche doit exposer. **Chantier distinct**, à ouvrir sur le modèle du cahier des charges des
 thèmes.
 
+⭐ **Le 2026-09-26, les deux flux sont harmonisés, les chantiers restent indépendants** (David :
+*« la gestion des fiches est indépendante de la gestion des thèmes »*). Le constructeur de fiches,
+*Character Sheet HTML Studio*, entre dans `outils/rpg-sheet-builder/` ; la boucle commune vit dans
+`documentation/Architecture/Flux-des-constructeurs.md`, les spécificités et **ce que le cahier des
+fiches devra fixer** dans `Pipeline-des-fiches.md`. ⛔ **Découvert en chemin** : le moteur de fiches
+n'emploie aucun jeton ni composant `.rpg-*` — le cahier des thèmes affirmait l'inverse, corrigé en
+v1.2.
+
 ---
 
 ### 77 · ⭐ Light-OS — l'audit du catalogue d'effets contre ce que le Hue sait faire (2026-09-17)

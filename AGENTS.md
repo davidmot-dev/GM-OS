@@ -9,6 +9,9 @@ cas de doute, demande à David avant d'agir.**
 > ChatGPT. Leur contrat est
 > [`documentation/Architecture/Cahier-des-charges-theme-de-jeu.md`](documentation/Architecture/Cahier-des-charges-theme-de-jeu.md)
 > et leur déroulé [`documentation/Architecture/Pipeline-des-themes.md`](documentation/Architecture/Pipeline-des-themes.md).
+> Les fiches de personnage suivent la même boucle, avec *Character Sheet HTML Studio* :
+> [`documentation/Architecture/Flux-des-constructeurs.md`](documentation/Architecture/Flux-des-constructeurs.md).
+> Les sources des deux constructeurs sont dans `outils/`.
 
 ## Ce qui est interdit, et pourquoi
 
