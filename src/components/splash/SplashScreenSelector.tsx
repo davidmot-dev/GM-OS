@@ -24,7 +24,8 @@ const SplashScreenSelector: React.FC<SplashScreenSelectorProps> = ({ onComplete 
     }, [onComplete]);
 
     return (
-        <div className="fixed inset-0 z-[9999]">
+        /* `data-ecran-d-accueil` : la vitrine l'attend par ce nom — la palette porte les mêmes classes. */
+        <div className="fixed inset-0 z-[9999]" data-ecran-d-accueil="">
             <SelectedSplash />
         </div>
     );

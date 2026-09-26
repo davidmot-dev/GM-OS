@@ -82,7 +82,8 @@ async function preparerLaVitrine(gmos: GmOsLance): Promise<void> {
 }
 
 async function attendreLaFinDeLAccueil(gmos: GmOsLance): Promise<void> {
-    await expect(gmos.fenetre.locator('div.fixed.inset-0.z-\\[9999\\]')).toHaveCount(0, { timeout: 15_000 });
+    /* Par son attribut, pas par ses classes : la palette porte les mêmes (`fixed inset-0 z-[9999]`). */
+    await expect(gmos.fenetre.locator('[data-ecran-d-accueil]')).toHaveCount(0, { timeout: 15_000 });
 }
 
 /**
@@ -241,9 +242,6 @@ test.describe('la vitrine d\'un thème de jeu', () => {
                 fond, { timeout: 20_000 },
             );
         }
-        /* Le basculement de campagne peut ramener l'écran d'accueil : on l'attend de nouveau. */
-        await gmos.fenetre.waitForTimeout(500);
-        await attendreLaFinDeLAccueil(gmos);
 
         await mettreEnSceneUnCombat(gmos);
 
@@ -251,12 +249,21 @@ test.describe('la vitrine d\'un thème de jeu', () => {
         fs.mkdirSync(sortie, { recursive: true });
         const capturer = async (fichier: string) => {
             await gmos.fenetre.waitForTimeout(2_000);
+            /* Revenu après le basculement de campagne, plus tard qu'on ne le devine : on le vérifie à chaque capture. */
+            await attendreLaFinDeLAccueil(gmos);
             await gmos.fenetre.screenshot({ path: path.join(sortie, fichier) });
             console.log(`[Vitrine] ${jeu}/${fichier}`);
         };
 
-        /* Le poste du meneur, par le vrai raccourci. */
-        await gmos.fenetre.keyboard.press('Control+Backquote');
+        /*
+          Le poste du meneur, par le bouton de la barre latérale. ⚠️ Pas par
+          `Ctrl+²` : la frappe simulée n'y arrivait qu'une fois sur deux (la
+          capture montrait alors Musique-OS, où s'ouvre la sauvegarde), alors
+          que le raccourci marche à la main — éprouvé par David le 2026-09-25.
+        */
+        await attendreLaFinDeLAccueil(gmos);
+        await ouvrirLeModule(gmos, 'Tableau de Bord');
+        await expect(gmos.fenetre.getByText(/Master Cockpit/i).first()).toBeVisible({ timeout: 10_000 });
         await capturer('1-cockpit.png');
 
         /* Un élément actif, un danger, une jauge à zéro. */

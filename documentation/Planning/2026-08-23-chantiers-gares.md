@@ -5676,6 +5676,34 @@ v1.2.
 - **Suite** : réparer les quatre thèmes et donner aux six leur `intention.md`, par RPG Theme
   Builder, rapport en main.
 
+#### ✅ 2026-09-26 (soir) — les six thèmes réparés par RPG Theme Builder, tous acceptés
+
+- **Le flux a tenu tel qu'écrit** : une demande par jeu (rapport + `theme.css` actuel, dans
+  `e2e-resultats/themes-a-reparer/`), **un seul aller-retour chacun**, fichiers déposés tels
+  quels, validateur, vitrine avant/après. David a choisi de passer par le constructeur plutôt que
+  de me laisser retoucher.
+- **Ce qui a changé à l'écran** : Dune (accent 1,03 → 6,16), NOC (1,35 → 6,14), Torg (accent et
+  estompé, arrondis 999px → 0) et surtout **Star Trek**, dont la surface blanche est devenue
+  graphite — les noms des combattants, invisibles à 1,42, se lisent. Alien et Blade Runner
+  n'ont changé que par leurs jetons V2 et leur `intention.md`. Les six ont reçu les jetons V2
+  (états, forme, relief, verre, matière).
+- ⭐ **Le piège que la demande a nommé, et que le constructeur a suivi** : un fond sombre et une
+  surface claire ne laissent **aucune** couleur de texte lisible sur les deux (il faudrait une
+  luminance ≥ 0,33 et ≤ 0,16 à la fois). La surface doit rejoindre la polarité du fond.
+- **Restent des avertissements V2**, non bloquants : des couleurs d'état trop proches de l'accent
+  ou entre elles (Alien, Blade Runner, Dune, Torg). À régler au prochain passage.
+- **Trois défauts de la vitrine trouvés en capturant** : la palette porte les mêmes classes que
+  l'écran d'accueil (attribut `data-ecran-d-accueil` posé) ; l'écran d'accueil revient après un
+  basculement de campagne ; `Ctrl+²` simulé par Playwright n'arrive pas une fois sur deux (à la
+  main il marche) — la vitrine passe par le bouton.
+- **Défauts de GM-OS vus sur les captures, pour la refonte** : ⛔ **Montserrat (Alien) déborde** —
+  « Tableau de Bo… », « MODE SESSION OS » coupé en haut, « GM-OS_v6.5.0 » coupé à droite : la
+  mise en page suppose une police étroite. Les **cartes de Combat-OS gardent leur bleu ardoise**
+  en dur, quel que soit le thème. Le « Combat-OS OS » du § 1 bis se lit maintenant.
+- **Deux pièges d'essais payés** : l'essai de l'atelier exigeait que tout jeton soit éditable —
+  il tolère désormais les jetons V2 ; les copies de référence du constructeur (`alien.css`,
+  `blade-runner.css`) ont dû suivre, comme leur essai l'exige.
+
 ---
 
 ### 77 · ⭐ Light-OS — l'audit du catalogue d'effets contre ce que le Hue sait faire (2026-09-17)

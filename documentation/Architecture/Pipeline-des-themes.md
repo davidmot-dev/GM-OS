@@ -178,5 +178,5 @@ reste alors la cible.
 | --- | --- | --- |
 | **Consignes** | `AGENTS.md` (garde-fous pour tout agent dans le dépôt) · `theme/` exclu de l'index de l'Oracle | ✅ 2026-09-26 |
 | **P0** | Le contrat en données · le validateur et sa commande · l'essai sur tous les thèmes du dépôt · la vitrine qui charge un thème de jeu | ✅ 2026-09-26 |
-| **Premier usage** | Réparer **Dune, NOC, Star Trek et Torg** (polarité fausse, contrastes sous le minimum, un arrondi de 999px chez Torg) en donnant leur rapport à RPG Theme Builder. **Les six thèmes** doivent aussi recevoir leur `intention.md` : c'est la seule erreur d'Alien et de Blade Runner | À faire |
+| **Premier usage** | Réparer **Dune, NOC, Star Trek et Torg** (polarité fausse, contrastes sous le minimum, un arrondi de 999px chez Torg) en donnant leur rapport à RPG Theme Builder. **Les six thèmes** doivent aussi recevoir leur `intention.md` : c'est la seule erreur d'Alien et de Blade Runner | ✅ 2026-09-26 — **les six acceptés**, un aller-retour chacun |
 | **Plus tard** | Les formats de revue en JSON ; Codex relecteur du code de la refonte | Si besoin |
