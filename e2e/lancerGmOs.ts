@@ -86,6 +86,13 @@ export interface OptionsDeLancement {
      * journal**.
      */
     semence?: string;
+
+    /**
+     * Dépose des fichiers dans le profil jetable **avant** le démarrage — le
+     * miroir des médias, par exemple, que l'application ne lit que sous
+     * `userData`. Tout ce qu'elle y écrit reste dans le profil, et part avec lui.
+     */
+    preparerLeProfil?: (profil: string) => void;
 }
 
 export interface GmOsLance {
@@ -117,6 +124,7 @@ export async function lancerGmOs(options: OptionsDeLancement = {}): Promise<GmOs
     }
 
     const profil = fs.mkdtempSync(path.join(os.tmpdir(), 'gmos-e2e-'));
+    options.preparerLeProfil?.(profil);
     const ports = portsDeCeWorker();
 
     const application = await electron.launch({
