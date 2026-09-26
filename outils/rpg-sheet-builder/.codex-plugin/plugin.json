@@ -1,0 +1,22 @@
+{
+  "author": {
+    "name": "David Mot"
+  },
+  "description": "Transforme des fiches de personnage de jeux de rôle fournies en PDF en reproductions HTML interactives, autonomes et très fidèles visuellement.",
+  "interface": {
+    "capabilities": [
+      "skills"
+    ],
+    "category": "Developer Tools",
+    "defaultPrompt": [
+      "Je te donne une fiche de personnage PDF. Analyse-la complètement et transforme-la en fiche HTML interactive autonome avec une fi"
+    ],
+    "developerName": "David Mot",
+    "displayName": "Character Sheet HTML Studio",
+    "longDescription": "Transforme des fiches de personnage de jeux de rôle fournies en PDF en reproductions HTML interactives, autonomes et très fidèles visuellement.",
+    "shortDescription": "Transforme des fiches de personnage de jeux de rôle fournies en PDF en reproductions HTML interactives, autonomes et très fidèles visuellement."
+  },
+  "name": "gpt-57cda0ce7ee94beef5f7f7c640a1525c",
+  "skills": "./skills/",
+  "version": "0.2.1+bundle.b2f812da47ab5a69f30213b42f3f06ea"
+}

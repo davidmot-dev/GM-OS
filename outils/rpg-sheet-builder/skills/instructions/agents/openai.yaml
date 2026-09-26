@@ -1,0 +1,6 @@
+interface:
+  default_prompt: Je te donne une fiche de personnage PDF. Analyse-la complètement
+    et transforme-la en fiche HTML interactive autonome avec une fidélité maximale.
+  display_name: Character Sheet HTML Studio
+  short_description: 'Transforme des fiches de personnage de jeux de rôle fournies
+    en '
