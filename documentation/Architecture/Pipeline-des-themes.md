@@ -1,16 +1,19 @@
 # Pipeline des thèmes de jeu — qui fait quoi, dans quel ordre
 
-**Version 1.1 — 2026-09-26.** Adapté de la proposition « Architecture V2 — pipeline multi-agent de
-construction de thèmes GM-OS » (26/09), confrontée au dépôt réel. **v1.1** : le constructeur n'est
-plus un GPT mais **Codex**, l'extension d'OpenAI dans VS Code — il travaille dans le dépôt.
+**Version 1.2 — 2026-09-26.** Adapté de la proposition « Architecture V2 — pipeline multi-agent de
+construction de thèmes GM-OS » (26/09), confrontée au dépôt réel.
 
-**Pour** : David (le meneur, qui juge), Codex (qui construit les thèmes), et Claude Code
-(l'outillage et l'intégration).
+**Pour** : David (le meneur), **RPG Theme Builder** (un assistant dans ChatGPT, qui construit les
+thèmes), et Claude Code (l'outillage, le dépôt des fichiers, l'intégration).
 
 **Source de vérité** : [`Cahier-des-charges-theme-de-jeu.md`](./Cahier-des-charges-theme-de-jeu.md).
 Ce document-ci dit **comment on travaille** ; le cahier des charges dit **ce qui est permis**. En cas
-de désaccord, le cahier l'emporte. Les consignes que Codex lit seul sont dans
-[`AGENTS.md`](../../AGENTS.md), à la racine du dépôt.
+de désaccord, le cahier l'emporte.
+
+> ⚠️ **La v1.1 supposait que le constructeur était Codex, dans VS Code** — une déduction faite à
+> partir des extensions installées, sans demander. C'était faux : RPG Theme Builder vit dans une
+> fenêtre ChatGPT et **n'a pas accès au dépôt**. *Une déduction sur l'outil de quelqu'un se
+> vérifie auprès de lui.*
 
 ---
 
@@ -18,67 +21,71 @@ de désaccord, le cahier l'emporte. Les consignes que Codex lit seul sont dans
 
 ```text
 Le contrat décide ce qui est possible.
-Codex décide comment l'exprimer visuellement.
+RPG Theme Builder décide comment l'exprimer visuellement.
 Le validateur prouve la conformité.
 La vitrine montre le résultat réel.
-David juge et décide.
+David juge, décide, et fait le lien entre les deux fenêtres.
 ```
 
 Aucune IA ne contourne le contrat. **Ce qui se prouve par du code ne se demande pas à un
-modèle** : Codex ne recalcule pas un contraste, il lit le rapport du validateur.
+modèle** : RPG Theme Builder ne recalcule pas un contraste, il lit le rapport du validateur.
 
 ## 2 · Le pipeline
+
+RPG Theme Builder ne voit pas le dépôt, et Claude Code ne voit pas ChatGPT. David passe de l'un à
+l'autre ; **Claude Code s'occupe des fichiers**, pour que David n'ait jamais à les ranger à la
+main.
 
 ```text
 Références (PDF, captures, images) + la demande de David
    ↓
-① Codex ─ écrit dans docs/systems/<jeu>/theme/ : theme.css + intention.md
+① RPG Theme Builder ─ theme.css + intention.md (dans la fenêtre ChatGPT)
+   ↓   David copie la réponse (ou télécharge les fichiers) et la donne à Claude Code
+② Claude Code ─ dépose les fichiers tels quels dans docs/systems/<jeu>/theme/
    ↓
-② Codex ─ lance le validateur
-   ↓ refusé ─→ Codex corrige d'après le rapport ─→ ①
+③ Claude Code ─ lance le validateur → rapport
+   ↓ refusé ─→ David colle le rapport dans ChatGPT ─→ ①
    ↓ accepté
-③ Vitrine ─ captures de GM-OS avec le thème du jeu actif
+④ Claude Code ─ lance la vitrine → captures de GM-OS avec le thème du jeu actif
    ↓
-④ David ─ juge sur image ; Codex classe ses remarques (§ 5)
-   ↓ à retoucher ─→ ①
+⑤ David ─ juge sur image ; au besoin, joint les captures dans ChatGPT,
+          RPG Theme Builder classe les remarques (§ 5) ─→ ①
    ↓ bon
-⑤ Commit ─ par David ou Claude Code ; l'essai des thèmes tourne avant chaque envoi
+⑥ Claude Code ─ commit ; l'essai des thèmes tourne avant chaque envoi
 ```
 
-**Le dépôt fait le pont.** Codex lit le cahier des charges, écrit le thème et lance le validateur
-lui-même : plus de copier-coller entre deux fenêtres. David n'intervient qu'aux deux moments qui
-lui appartiennent — **la demande** et **le jugement sur image**. Aucune API n'est payée : Codex
-tourne sur l'abonnement ChatGPT de David.
+**Pourquoi pas d'automatisation.** Aucune API n'est payée. Un assistant ChatGPT ne peut être appelé
+par un programme que par des *Actions*, qui exigent un serveur HTTPS **public** : exposer la
+machine du meneur pour économiser deux copier-coller par tour serait un mauvais échange.
+
+**Ce que David doit donner à RPG Theme Builder** : le **cahier des charges**, une fois pour
+toutes. S'il en est l'auteur, en *connaissance* jointe à l'assistant ; sinon, en pièce jointe au
+début de chaque conversation. À chaque nouvelle version du cahier, remplacer le fichier.
 
 ## 3 · Les rôles
 
 | Rôle | Fait | Ne fait pas |
 | --- | --- | --- |
-| **Codex** | Lit les références et le cahier ; écrit `theme.css` (jetons **et** composants `.rpg-*` des fiches) et `intention.md` ; lance le validateur et corrige ; classe les remarques visuelles | Écrire hors de `docs/systems/<jeu>/theme/` sans demande explicite ; toute commande git qui écrit ; modifier le contrat ; recalculer ce que le validateur prouve ; inventer un jeton ou un emplacement d'ornement ; régler l'interface par des sélecteurs CSS |
-| **David** | Fournit les références ; demande ; **juge sur image** ; décide ; fait commiter | — |
+| **RPG Theme Builder** | Lit les références et le cahier ; écrit `theme.css` (jetons **et** composants `.rpg-*` des fiches) et `intention.md` ; corrige d'après le rapport ; classe les remarques visuelles | Recalculer ce que le validateur prouve ; inventer un jeton ou un emplacement d'ornement ; régler l'interface par des sélecteurs CSS |
+| **David** | Fournit les références ; demande ; fait le lien entre les deux fenêtres ; **juge sur image** ; décide | Ranger les fichiers à la main |
+| **Claude Code** | Dépose les fichiers **tels quels** ; lance le validateur et la vitrine ; rend le rapport et les captures ; commite ; construit et entretient l'outillage ; fait évoluer le contrat **avec David** | **Retoucher un thème** : une correction passe par RPG Theme Builder, sinon deux auteurs se contredisent au tour suivant |
 | **Validateur** | Vérifie le contrat de bout en bout ; rend un rapport chiffré ; refuse | Réparer un thème en silence |
 | **Vitrine** | Lance GM-OS jetable avec le thème du jeu et capture les écrans de référence | Juger |
-| **Claude Code** | Construit et entretient le validateur, la vitrine, le contrat en données ; intègre et commite ; fait évoluer le contrat **avec David** | Écrire le thème à la place de Codex |
-
-⚠️ **Deux agents dans le même dépôt.** Un seul écrivain par fichier : Codex reste dans le dossier
-du thème, Claude Code hors de lui. Si l'un voit dans `git status` des changements qu'il n'a pas
-faits, ils ne sont pas à lui.
 
 ## 4 · Le validateur
 
 - **Réutilise ce qui existe** : l'analyseur des jetons (`extraireJetons`), le calcul de contraste
   et la liste des hôtes de polices de `src/theme/`. Aucun second analyseur.
 - **Le contrat vit en données dans `src/theme/`**, en TypeScript : ce que GM-OS applique
-  (`PONT`) en est **dérivé**, le validateur l'importe, un essai vérifie que les tableaux du cahier
-  des charges le reflètent, et un **JSON en est généré** pour les outils qui le veulent. *Trois
-  copies écrites à la main — le cahier, un JSON, le code — finiraient par se contredire ; deux
-  fichiers d'accord peuvent être faux ensemble.*
+  (`PONT`) en est **dérivé**, le validateur l'importe, et un essai vérifie que les tableaux du
+  cahier des charges le reflètent. *Trois copies écrites à la main — le cahier, un JSON, le code —
+  finiraient par se contredire ; deux fichiers d'accord peuvent être faux ensemble.*
 - **Vérifie tout le cahier** : structure, format du bloc, jetons obligatoires, formats et bornes,
   transparence, contrastes, **polarité conforme au fond réel**, polices, chemins, SVG,
   `intention.md` présent.
 - **Rend un rapport à trois colonnes** pour chaque jeton : **appliqué maintenant**, **annoncé
   (V2)**, **fiches seulement** — plus les erreurs, les avertissements et les contrastes chiffrés.
-  En JSON pour la machine, et en résumé lisible pour David.
+  En JSON pour la machine, et **en texte prêt à coller dans ChatGPT**.
 - **Sort en erreur** si le thème est refusé.
 - **Un essai le passe sur tous les thèmes du dépôt**, y compris les quatre thèmes de base de GM-OS
   une fois devenus des paquets (refonte, décision D3). Un seul outil pour les deux chantiers.
@@ -89,8 +96,8 @@ Chaque remarque sur une capture reçoit **une** classe :
 
 | Classe | Sens | Suite |
 | --- | --- | --- |
-| **RÉALISABLE** | Un jeton du contrat l'exprime | Codex corrige |
-| **PARTIELLEMENT RÉALISABLE** | Seulement approchable (par la forme, la matière, les ornements…) | Codex approche, et l'inscrit dans les limites d'`intention.md` |
+| **RÉALISABLE** | Un jeton du contrat l'exprime | RPG Theme Builder corrige |
+| **PARTIELLEMENT RÉALISABLE** | Seulement approchable (par la forme, la matière, les ornements…) | Il approche, et l'inscrit dans les limites d'`intention.md` |
 | **NON EXPRIMABLE** | Le contrat ne le permet pas (géométrie d'un composant, mise en page) | **On s'arrête là.** Si David y tient, ça devient une demande d'évolution du contrat, jamais un contournement |
 | **FICHES SEULEMENT** | Concerne les fiches, pas l'interface | Composants `.rpg-*` |
 
@@ -114,10 +121,10 @@ habille.
 
 | Proposition d'origine | Écartée | Raison |
 | --- | --- | --- |
-| Un pont Node.js et une machine à états des travaux | Oui | Codex travaille dans le dépôt : le dépôt est le pont |
+| Un pont Node.js et une machine à états des travaux | Oui | Aucune API : David fait le lien, Claude Code gère les fichiers |
 | Une branche et un **worktree** par thème | Oui | Un thème est un commit. ⛔ Et un worktree mal nettoyé peut **vider le vrai `node_modules`** — payé le 2026-09-25 |
-| Codex **relecteur** d'un thème | Sans objet | Codex **écrit** le thème ; le validateur le contrôle. Codex relecteur reste une piste pour le **code** de la refonte |
-| Claude « implémenteur » du thème | Oui | Codex écrit le thème, composants des fiches compris ; deux auteurs pour un fichier, c'est deux vérités |
+| **Codex** relecteur d'un thème | Reporté | Sur un fichier de données, le validateur couvre ce qu'il relèverait. Il servira mieux à relire le **code** de la refonte |
+| Claude « implémenteur » du thème | Oui | RPG Theme Builder écrit le thème, composants des fiches compris ; Claude Code **dépose** sans retoucher |
 | Un `theme-spec.json` recopiant les jetons | Réduit | Il doublerait `theme.css`. Seules l'intention et les limites restent, dans `intention.md` |
 | La documentation dans `docs/theme-automation/` | ⛔ **Non** | **`docs/` est le corpus que l'Oracle indexe** : ces pages entreraient dans ses réponses en pleine partie. La place est `documentation/`. Pour la même raison, les dossiers `theme/` sont exclus de l'index (`docs/.ragignore`) |
 | `tools/`, `.theme-lab/`, points d'accès REST ou MCP, tableau de bord | Oui | Rien à héberger |
@@ -129,7 +136,7 @@ reste alors la cible.
 
 | Étape | Contenu | État |
 | --- | --- | --- |
-| **Consignes** | `AGENTS.md` à la racine · `theme/` exclu de l'index de l'Oracle | ✅ 2026-09-26 |
-| **P0** | Le contrat en données · le validateur et sa commande `npm run theme:valider -- <jeu>` · l'essai sur tous les thèmes du dépôt · la vitrine qui charge un thème de jeu | À faire |
-| **Premier usage** | Réparer **Dune, NOC, Star Trek et Torg**, sous les seuils de contraste (mesuré le 26/09) — Codex partant de leur rapport | Après P0 |
+| **Consignes** | `AGENTS.md` (garde-fous pour tout agent dans le dépôt) · `theme/` exclu de l'index de l'Oracle | ✅ 2026-09-26 |
+| **P0** | Le contrat en données · le validateur et sa commande · l'essai sur tous les thèmes du dépôt · la vitrine qui charge un thème de jeu | À faire |
+| **Premier usage** | Réparer **Dune, NOC, Star Trek et Torg**, sous les seuils de contraste (mesuré le 26/09), en donnant leur rapport à RPG Theme Builder | Après P0 |
 | **Plus tard** | Les formats de revue en JSON ; Codex relecteur du code de la refonte | Si besoin |
