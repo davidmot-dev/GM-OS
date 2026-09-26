@@ -1,6 +1,6 @@
 # Cahier des charges — thème de jeu pour GM-OS
 
-**Contrat v1.1 — 2026-09-26.** Destinataire : l'assistant qui construit les thèmes de jeu.
+**Contrat v1.2 — 2026-09-26.** Destinataire : l'assistant qui construit les thèmes de jeu.
 
 Ce document est une **contrainte**, pas une inspiration. Il dit exactement ce que GM-OS lit dans un
 thème, ce qu'il ignore et ce qu'il refuse. Tout ce qui n'y figure pas n'aura **aucun effet** dans
@@ -14,7 +14,7 @@ Un dossier par jeu, déposé par le meneur dans `docs/systems/<jeu>/theme/` :
 
 ```text
 theme/
-├── theme.css            OBLIGATOIRE — les jetons (§ 4) et les composants .rpg-* des fiches
+├── theme.css            OBLIGATOIRE — les jetons (§ 4) ; rien d'autre n'atteint GM-OS (§ 2)
 ├── intention.md         OBLIGATOIRE — l'intention visuelle et les limites signalées (§ 1.1)
 ├── matieres/*.svg       facultatif — textures de fond et de panneau (§ 7)
 ├── ornements.json       facultatif — les ornements, par emplacement (§ 8)
@@ -42,24 +42,26 @@ fidèlement, avec sa classe.
 | --- | --- |
 | **PARTIELLEMENT RÉALISABLE** | Approché par les jetons disponibles ; dis ce qui manque |
 | **NON EXPRIMABLE** | Le contrat ne le permet pas : géométrie d'un composant, mise en page, emplacement d'ornement absent |
-| **FICHES SEULEMENT** | Rendu dans les fiches, invisible dans l'interface |
 
 ⭐ **Une limite signalée vaut mieux qu'une fausse implémentation sans effet.** N'essaie jamais de
 contourner le contrat par une règle CSS : GM-OS ne la lirait pas, et le meneur croirait l'effet
 présent.
 
-## 2 · Deux consommateurs, un seul fichier
+## 2 · Un seul consommateur : l'interface de GM-OS
 
-`theme.css` sert à deux programmes qui ne lisent pas la même chose :
+`theme.css` habille **l'interface de GM-OS** — le poste du meneur. Elle ne lit **que les jetons
+`--rpg-*` listés au § 4**, la ligne `color-scheme` et les `@import` de polices. **Aucune règle CSS
+ne l'atteint** : ni sélecteur, ni classe, ni mise en page. Une intention visuelle passe **par un
+jeton, ou elle n'existe pas**.
 
-| Consommateur | Ce qu'il lit |
-| --- | --- |
-| **Les fiches de personnage** (une page HTML dans GM-OS) | Tout le fichier : jetons **et** composants `.rpg-*` |
-| **L'interface de GM-OS** (le poste du meneur) | **Uniquement les jetons `--rpg-*` listés au § 4**, la ligne `color-scheme` et les `@import` de polices |
+⛔ **Les fiches de personnage ne sont pas concernées.** Dans GM-OS, une fiche est une reproduction
+fidèle du PDF du jeu, construite par un autre outil, et **indépendante des thèmes** : elle ne lit
+jamais `theme.css`.
 
-Continue donc à produire les composants `.rpg-*` pour les fiches, comme avant. Mais sache que
-**l'interface de GM-OS ne voit aucune règle CSS** : ni sélecteur, ni classe, ni mise en page. Une
-intention visuelle pour l'interface passe **par un jeton, ou elle n'existe pas**.
+**Les composants `.rpg-*` du SDK de thèmes** (`.rpg-panel`, `.rpg-button`…) ne servent qu'à la
+page de démonstration du SDK (`docs/ui/rpg-theme-sdk/`). GM-OS ne les lit nulle part. Tu **PEUX**
+en livrer pour cette démonstration, à la suite du bloc des jetons, mais ils sont **sans effet dans
+GM-OS** : n'y consacre pas l'effort du thème, et ne compte jamais sur eux pour rendre une intention.
 
 ## 3 · Le format — ce que GM-OS sait lire
 
@@ -93,7 +95,7 @@ ne voit rien, et ne te le dit pas.
 - **LU** : GM-OS l'applique aujourd'hui ;
 - **V2** : le nouveau GM-OS l'appliquera. Livre-le dès maintenant : la version actuelle l'ignore
   sans erreur ;
-- **FICHES** : l'interface l'ignore, seules les fiches s'en servent.
+- **SDK** : sans effet dans GM-OS ; ne sert qu'à la page de démonstration du SDK. Facultatif.
 
 Un jeton absent n'est **pas une erreur** : GM-OS garde la valeur de son thème de base. Seuls les
 jetons marqués **obligatoires** doivent être présents.
@@ -108,25 +110,25 @@ jetons marqués **obligatoires** doivent être présents.
 | `--rpg-text` | Texte principal | LU | `#rrggbb`, opaque | ✅ |
 | `--rpg-muted` | Texte secondaire : légendes, aides, valeurs inactives | LU | `#rrggbb`, opaque | ✅ |
 | `--rpg-accent` | Couleur d'identité : bouton principal, élément actif, sélection | LU | `#rrggbb`, opaque | ✅ |
-| `--rpg-accent-2` | Accent secondaire | FICHES | libre | |
+| `--rpg-accent-2` | Accent secondaire de la démonstration | SDK | libre | |
 | `--rpg-accent-contrast` | Texte posé **sur** l'accent (bouton plein) | V2 | `#rrggbb`, opaque | |
 | `--rpg-border` | Bordure des panneaux | LU | `#rrggbb` ou `rgba()` | ✅ |
 | `--rpg-border-soft` | Séparateurs discrets | V2 | `rgba()` RECOMMANDÉ | |
-| `--rpg-paper`, `--rpg-ink` | Page et encre d'une fiche | FICHES | libre | |
+| `--rpg-paper`, `--rpg-ink` | Page et encre de la démonstration | SDK | libre | |
 
-⛔ **Le piège du vocabulaire « page de livre ».** Dans les fiches, `bg` est la table autour de la
-page et `surface` la page où le texte est posé. **Dans GM-OS, le texte est posé directement sur
+⛔ **Le piège du vocabulaire « page de livre ».** Dans le SDK et sa page de démonstration, `bg`
+est la table autour de la page et `surface` la page où le texte est posé. **Dans GM-OS, le texte est posé directement sur
 `bg`**, et aussi sur `surface`. Par conséquent :
 
 - `text`, `muted` et `accent` **DOIVENT** être lisibles **sur `bg` ET sur `surface`** (§ 6) ;
 - `color-scheme` **DOIT** décrire la polarité de **`bg`** : `dark` si le fond est sombre, même si
-  la page de la fiche est claire.
+  la page de démonstration est claire.
 
 Mesuré le 2026-09-26 sur les six thèmes existants : **quatre tombent dans ce piège**. Le texte de
 Star Trek, sombre pour une page blanche, a un contraste de 1,42 sur son fond gris foncé ; l'accent
-de Dune, 1,03 ; Dune déclare `light` sur un fond sombre. Si la fiche et l'interface ne peuvent pas
-partager les mêmes valeurs, **privilégie l'interface pour les jetons du § 4** et donne à la fiche
-ses propres variables dans les composants `.rpg-*`.
+de Dune, 1,03 ; Dune déclare `light` sur un fond sombre. Si la démonstration du SDK et
+l'interface ne peuvent pas partager les mêmes valeurs, **l'interface l'emporte** : c'est la seule
+qui compte.
 
 ### 4.2 · Couleurs d'état — nouvelles
 
@@ -151,7 +153,7 @@ choisit.
 | `--rpg-font-display` | Titres, noms de module, grands nombres | LU — **obligatoire** | pile de polices |
 | `--rpg-font-mono` | Chiffres, dés, valeurs, code | LU | pile de polices |
 | `--rpg-font-body` | Texte courant de l'interface | V2 | pile de polices |
-| `--rpg-font-ui` | Police des fiches | FICHES | pile de polices |
+| `--rpg-font-ui` | Police d'interface de la démonstration | SDK | pile de polices |
 | `--rpg-title-tracking` | Espacement des lettres des titres | V2 | `0em` à `0.5em` |
 | `--rpg-kicker-tracking` | Espacement des petites étiquettes | V2 | `0em` à `0.6em` |
 | `--rpg-title-transform` | Casse des titres | V2 | `none`, `uppercase` ou `small-caps` |
@@ -318,7 +320,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 - Tout chemin qui sort du dossier `theme/`, et toute ressource chargée depuis le web autre que les
   polices des deux hôtes autorisés.
 - Toute tentative de régler l'interface par des sélecteurs (`.sidebar`, `body`, `button`…) : sans
-  effet dans GM-OS, et source de collisions dans les fiches.
+  effet dans GM-OS.
 - `!important` dans le bloc des jetons.
 
 ## 12 · Squelette à suivre
@@ -326,7 +328,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 ```css
 /* ==========================================================================
    RPG THEME — <NOM DU JEU>
-   Contrat GM-OS v1.1
+   Contrat GM-OS v1.2
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=<Police+Titre>:wght@500;700&family=<Police+Mono>:wght@400;600&display=swap');
@@ -388,7 +390,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
   --rpg-texture-opacity: 0;
 }
 
-/* Composants .rpg-* des fiches de personnage, à la suite — ignorés par l'interface. */
+/* Facultatif : composants .rpg-* pour la page de démonstration du SDK — sans effet dans GM-OS. */
 ```
 
 ## 13 · Liste de contrôle avant de livrer
@@ -417,6 +419,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 | --- | --- | --- |
 | **v1** | 2026-09-26 | Premier contrat écrit. GM-OS lit **13 réglages** (6 couleurs, 2 polices, 5 tailles), la polarité et les polices importées. Les jetons **V2** sont réservés et annoncés : forme, relief, verre, états, matières, ornements. |
 | **v1.1** | 2026-09-26 | ⛔ Le **piège « page de livre »** (§ 4.1) : dans GM-OS, le texte est posé sur `bg`, pas seulement sur `surface` — quatre des six thèmes existants y tombent. **Polarité vérifiable** (§ 3.5). **`intention.md` obligatoire**, avec les limites signalées et leur classe (§ 1.1). Le déroulé du travail vit dans [`Pipeline-des-themes.md`](./Pipeline-des-themes.md). |
+| **v1.2** | 2026-09-26 | ⛔ **Un seul consommateur** (§ 2) : les fiches de personnage sont **indépendantes des thèmes** (décision de David) et ne lisent jamais `theme.css` — la v1 affirmait l'inverse. Les composants `.rpg-*` et les jetons `paper`, `ink`, `accent-2`, `font-ui` passent au statut **SDK** : facultatifs, sans effet dans GM-OS. La classe de limite « fiches seulement » disparaît. |
 
 Un jeton annoncé **V2** peut encore changer de nom ou de bornes avant d'être appliqué ; tout
 changement sera inscrit ici. **Un jeton qui ne figure pas dans ce document n'est lu par personne.**

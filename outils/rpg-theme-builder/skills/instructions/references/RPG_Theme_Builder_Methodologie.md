@@ -1,7 +1,8 @@
 # RPG Theme Builder — Méthodologie
 
-> ⚠️ **Portée de ce document : les fiches de personnage.** Il décrit le SDK de thèmes, ses
-> composants `.rpg-*` et sa page de démonstration. **Pour l'interface de GM-OS, le
+> ⚠️ **Portée de ce document : le SDK de thèmes**, ses composants `.rpg-*` et sa page de
+> démonstration. Les fiches de personnage de GM-OS sont **indépendantes des thèmes** et ne sont
+> pas concernées. **Pour l'interface de GM-OS, le
 > [cahier des charges](Cahier-des-charges-theme-de-jeu.md) prévaut** sur tout ce qui suit :
 > emplacement et livrables (§ 10 ci-dessous), jetons supplémentaires, formats de couleur,
 > contrastes mesurés **sur le fond** et pas seulement sur la page. En cas de conflit, c'est lui

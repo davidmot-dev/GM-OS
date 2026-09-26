@@ -1,6 +1,6 @@
 {
   "name": "gpt-c3dd10c7db79e1a8da986d7e93843dfb",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Description : Analyse des captures, PDF et références graphiques de jeux de rôle afin de créer des thèmes CSS compatibles avec un système d’interface commun, sans modifier la structure HTML de l’application.",
   "author": {
     "name": "David Mot"
