@@ -38,7 +38,13 @@
  * libre et où le SDK fonctionne tel quel, sans une ligne de modification.
  * C'est la même séparation que le SDK documente lui-même sous « deux
  * consommateurs ».
+ *
+ * ⚠️ **Corrigé le 2026-09-26 (contrat v1.2)** : les fiches sont indépendantes
+ * des thèmes, décision de David. L'interface est le **seul** consommateur, et
+ * le contrat qu'elle honore vit dans `contratDuTheme.ts`.
  */
+
+import { JETONS_DU_CONTRAT, HOTES_DE_POLICES } from './contratDuTheme';
 
 /** Les jetons `--rpg-*` d'un thème, plus sa polarité. */
 export interface JetonsDuJeu {
@@ -73,18 +79,36 @@ export function extraireJetons(css: string): JetonsDuJeu {
     const jetons: Record<string, string> = {};
     let clarte: 'dark' | 'light' | undefined;
 
-    for (const bloc of css.matchAll(BLOC_RACINE)) {
-        const corps = bloc[1];
-
+    for (const { corps } of blocsDeJetons(css)) {
         const polarite = CLARTE.exec(corps);
         if (polarite) clarte = polarite[1] as 'dark' | 'light';
 
-        for (const d of corps.matchAll(DECLARATION)) {
-            jetons[d[1].replace('--rpg-', '')] = d[2].trim();
-        }
+        for (const [cle, valeur] of declarationsDuBloc(corps)) jetons[cle] = valeur;
     }
 
     return { jetons, clarte };
+}
+
+/**
+ * **Les blocs de jetons, tels que la lecture les voit.**
+ *
+ * Exposé pour le validateur (`validationDuTheme.ts`) : il doit juger *ce que
+ * GM-OS lit*, et un second analyseur finirait par voir autre chose. `entete`
+ * est le sélecteur (`:root[data-theme="alien"]`), `corps` ce qu'il y a entre
+ * les accolades — coupé à la première `}`, comme la lecture le coupe. `fin`
+ * est la position qui suit l'accolade fermante.
+ */
+export function blocsDeJetons(css: string): { entete: string; corps: string; fin: number }[] {
+    return [...css.matchAll(BLOC_RACINE)].map(m => ({
+        entete: m[0].slice(0, m[0].indexOf('{')).trim(),
+        corps: m[1],
+        fin: m.index! + m[0].length,
+    }));
+}
+
+/** Les déclarations `--rpg-*` d'un corps de bloc, dans l'ordre, doublons compris. */
+export function declarationsDuBloc(corps: string): [cle: string, valeur: string][] {
+    return [...corps.matchAll(DECLARATION)].map(d => [d[1].replace('--rpg-', ''), d[2].trim()]);
 }
 
 /**
@@ -98,17 +122,14 @@ export function extraireJetons(css: string): JetonsDuJeu {
  * On ne rend que ce que le thème déclare **vraiment** : une clé absente laisse
  * la valeur du thème d'interface en place, au lieu d'écrire `undefined` par
  *-dessus une couleur qui marchait.
+ *
+ * **Dérivé du contrat depuis le 2026-09-26** (`contratDuTheme.ts`) : le cahier
+ * des charges promet au constructeur ce que le pont applique, et les deux ne
+ * peuvent plus diverger.
  */
-const PONT: Record<string, string> = {
-    bg: '--app-bg',
-    surface: '--app-surface',
-    text: '--app-text',
-    muted: '--app-text-muted',
-    accent: '--app-accent',
-    border: '--app-border',
-    'font-display': '--font-display',
-    'font-mono': '--font-mono',
-};
+const PONT: Record<string, string> = Object.fromEntries(
+    JETONS_DU_CONTRAT.filter(j => j.versLInterface).map(j => [j.cle, j.versLInterface!]),
+);
 
 /**
  * Les jetons de police que le pont applique **réellement** à l'interface.
@@ -157,15 +178,7 @@ export function cheminDuTheme(racine: string): string {
     return `${racine}/theme/theme.css`;
 }
 
-/**
- * Les hôtes autorisés pour les polices d'un thème.
- *
- * Un fichier de thème est du code exécuté par l'interface : on n'y suit pas
- * n'importe quelle URL. La liste reste courte à dessein — l'ouvrir demandera
- * une décision, pas un oubli.
- */
-const HOTES_DE_POLICES = ['fonts.googleapis.com', 'fonts.bunny.net'];
-
+/* Les hôtes autorisés vivent dans le contrat (§ 3.6) : le validateur refuse ce que ce chargeur ignorerait. */
 const IMPORT_CSS = /@import\s+url\(\s*['"]?([^'")]+)['"]?\s*\)/g;
 
 /**
