@@ -1,0 +1,23 @@
+{
+  "interface": {
+    "capabilities": [
+      "skills"
+    ],
+    "category": "Developer Tools",
+    "defaultPrompt": [
+      "Donne-moi 3-4 fichiers images avec le th\u00e8me que tu veux r\u00e9aliser"
+    ],
+    "developerName": "David Mot",
+    "displayName": "RPG Theme Builder",
+    "longDescription": "Description : Analyse des captures, PDF et r\u00e9f\u00e9rences graphiques de jeux de r\u00f4le afin de cr\u00e9er des th\u00e8mes CSS compatibles avec un syst\u00e8me d\u2019interface commun, sans modifier la structure HTML de l\u2019application.",
+    "shortDescription": "Description : Analyse des captures, PDF et r\u00e9f\u00e9rences graphiques de jeux de r\u00f4le afin de cr\u00e9er des th\u00e8mes CSS compatibles avec un syst\u00e8me d\u2019interface commun, sans modifier la structure HTML de l\u2019application."
+  },
+  "name": "gpt-c3dd10c7db79e1a8da986d7e93843dfb",
+  "version": "0.5.0",
+  "description": "Description : Analyse des captures, PDF et r\u00e9f\u00e9rences graphiques de jeux de r\u00f4le afin de cr\u00e9er des th\u00e8mes CSS compatibles avec un syst\u00e8me d\u2019interface commun, sans modifier la structure HTML de l\u2019application.",
+  "author": {
+    "name": "David Mot"
+  },
+  "keywords": [],
+  "skills": "./skills"
+}

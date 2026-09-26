@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "name": "Cahier-des-charges-theme-de-jeu.md",
+      "path": "references/Cahier-des-charges-theme-de-jeu.md",
+      "role": "SOURCE DE VÉRITÉ pour l'interface de GM-OS — prévaut sur tout le reste"
+    },
+    {
+      "name": "RPG_Theme_Builder_Methodologie.md",
+      "path": "references/RPG_Theme_Builder_Methodologie.md",
+      "role": "Méthode d'analyse et composants .rpg-* des fiches"
+    },
+    {
+      "name": "README.md",
+      "path": "references/README.md",
+      "role": "Documentation du SDK de thèmes (fiches)"
+    },
+    {
+      "name": "rpg-core.css",
+      "path": "references/rpg-core.css",
+      "role": "Le socle commun des fiches — ne pas modifier"
+    },
+    {
+      "name": "alien.css",
+      "path": "references/alien.css",
+      "role": "Thème de référence conforme au contrat GM-OS (sombre, angles vifs)"
+    },
+    {
+      "name": "blade-runner.css",
+      "path": "references/blade-runner.css",
+      "role": "Thème de référence conforme au contrat GM-OS (sombre)"
+    }
+  ]
+}

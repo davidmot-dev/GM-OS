@@ -1,0 +1,4 @@
+interface:
+  default_prompt: Donne-moi 3-4 fichiers images avec le thème que tu veux réaliser
+  display_name: RPG Theme Builder
+  short_description: 'Description : Analyse des captures, PDF et références graphiques'

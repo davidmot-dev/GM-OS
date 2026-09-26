@@ -1,0 +1,26 @@
+{
+  "name": "gpt-c3dd10c7db79e1a8da986d7e93843dfb",
+  "version": "0.5.0",
+  "description": "Description : Analyse des captures, PDF et références graphiques de jeux de rôle afin de créer des thèmes CSS compatibles avec un système d’interface commun, sans modifier la structure HTML de l’application.",
+  "author": {
+    "name": "David Mot"
+  },
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "capabilities": [
+          "skills"
+        ],
+        "category": "Developer Tools",
+        "defaultPrompt": [
+          "Donne-moi 3-4 fichiers images avec le thème que tu veux réaliser"
+        ],
+        "developerName": "David Mot",
+        "displayName": "RPG Theme Builder",
+        "longDescription": "Description : Analyse des captures, PDF et références graphiques de jeux de rôle afin de créer des thèmes CSS compatibles avec un système d’interface commun, sans modifier la structure HTML de l’application.",
+        "shortDescription": "Description : Analyse des captures, PDF et références graphiques de jeux de rôle afin de créer des thèmes CSS compatibles avec un système d’interface commun, sans modifier la structure HTML de l’application."
+      }
+    }
+  }
+}
