@@ -5,7 +5,7 @@ import { useSessionStore } from '../store/useSessionStore';
 import { gmToast } from '../stores/useToastStore';
 import { jeuDeLaCampagneActive } from './jeuDeLaCampagne';
 import { cheminDuTheme, extraireJetons, pontVersLInterface } from './jetonsDeTheme';
-import { appliquerLeTheme, PALETTES, type ThemeID } from './themeDeLInterface';
+import { appliquerLeTheme, accentDuTheme } from './themeDeLInterface';
 import { poserLesPolices } from './themeDuJeu';
 import {
     cheminDeLOriginal, contraste, ecrireLesJetons, ecrireLImportDePolices, echelleDeTexte,
@@ -285,7 +285,7 @@ export const AtelierDuTheme: React.FC = () => {
       « le jeu gagne, la main surcharge » du 2026-08-23. Le dire ici évite de
       chercher pourquoi une couleur enregistrée ne se voit pas.
     */
-    const accentSurcharge = !!themeColor && themeColor !== PALETTES[theme as ThemeID]?.accent;
+    const accentSurcharge = !!themeColor && themeColor !== accentDuTheme(theme);
 
     return (
         <div className="flex-1 flex flex-col min-h-0">

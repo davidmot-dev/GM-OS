@@ -66,6 +66,12 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
   arbitré à part, « la main surcharge »), puis traduit le tout par **une seule table**, dérivée du
   contrat comme `PONT`.
 - **Preuve** : captures T0.1 identiques ; les essais de `themeDeLInterface` et du pont passent.
+- ✅ **Fait le 2026-09-27.** Les 20 captures sont identiques ; une garde nouvelle,
+  `src/theme/apparenceDAujourdhui.test.ts`, fige les variables posées par **chacun des quatre
+  thèmes** avant la première modification (les captures ne montrent que le thème par défaut).
+  Le contrat distingue désormais **où va un jeton** (`versLInterface`, lu par les thèmes de base
+  via `VARIABLE_DU_JETON`) et **si le jeu peut le piloter** (statut LU, lu par `PONT`) : le verre
+  a déjà sa variable, le jeu ne l'emprunte pas encore.
 - *Pourquoi en premier* : tout le reste ajoute des lignes à cette table. Sans elle, chaque échelle
   s'ajouterait deux fois, côté base et côté jeu — le motif des deux tables de 2026-08-24.
 

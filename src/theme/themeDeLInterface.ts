@@ -43,6 +43,7 @@
  */
 
 import { tailleDeRacine, echelleDeTexte } from './editionDuTheme';
+import { VARIABLE_DU_JETON } from './contratDuTheme';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 
@@ -59,17 +60,26 @@ export interface ThemeDuJeuApplique {
     clarte?: 'dark' | 'light';
 }
 
-export interface PaletteDInterface {
-    /** L'accent par défaut du thème. La main peut le surcharger — voir `appliquerLeTheme`. */
-    accent: string;
-    bg: string;
-    surface: string;
-    border: string;
-    text: string;
-    /** Police des titres, `--font-display`. */
-    policeTitre: string;
-    /** Police à chasse fixe, `--font-mono`. */
-    policeMono: string;
+/**
+ * **Un thème de base est un paquet de jetons du contrat** — décision D3 de la
+ * refonte, posée le 2026-09-27 (phase 1, P1.1).
+ *
+ * *Un thème de base est le paquet par défaut ; un thème de jeu le surcharge —
+ * un seul mécanisme.* Les jetons portent donc **les noms du cahier des
+ * charges** (`bg`, `font-display`, `glass-bg`…) et passent par la même table
+ * que ceux d'un jeu (`VARIABLE_DU_JETON`, dérivée du contrat). Avant, la
+ * palette avait son propre vocabulaire (`policeTitre`, `verre.fond`) : chaque
+ * échelle nouvelle se serait écrite deux fois.
+ *
+ * Les valeurs sont **celles d'aujourd'hui**, au caractère près — la garde
+ * `apparenceDAujourdhui.test.ts` le vérifie.
+ */
+export interface ThemeDeBase {
+    /**
+     * Les jetons du contrat, sans le préfixe `--rpg-`. `accent` est l'accent
+     * par défaut ; la main peut le surcharger — voir `appliquerLeTheme`.
+     */
+    jetons: Record<string, string>;
     /**
      * Ce que le thème demande aux contrôles natifs.
      *
@@ -77,81 +87,92 @@ export interface PaletteDInterface {
      * moteur ne devine pas la polarité d'une page, il faut la lui dire.
      */
     clarte: 'dark' | 'light';
-    verre: { fond: string; bordure: string; reflet: string };
+    /** Le reflet du verre, `--glass-highlight` : il n'a pas de jeton dans le contrat. */
+    reflet: string;
     /** Les pastilles proposées dans les réglages, pour surcharger l'accent à la main. */
     palettes: string[];
 }
 
-export const PALETTES: Record<ThemeID, PaletteDInterface> = {
+export const PALETTES: Record<ThemeID, ThemeDeBase> = {
     cyberpunk: {
-        accent: '#06b6d4',
-        bg: '#020617',
-        surface: '#0f172a',
-        border: '#1e293b',
-        text: '#f8fafc',
-        policeTitre: '"Orbitron", "JetBrains Mono", sans-serif',
-        policeMono: "'JetBrains Mono', monospace",
-        clarte: 'dark',
-        verre: {
-            fond: 'rgba(2, 6, 23, 0.6)',
-            bordure: 'rgba(34, 211, 238, 0.15)',
-            reflet: 'rgba(34, 211, 238, 0.25)',
+        jetons: {
+            accent: '#06b6d4',
+            bg: '#020617',
+            surface: '#0f172a',
+            border: '#1e293b',
+            text: '#f8fafc',
+            'font-display': '"Orbitron", "JetBrains Mono", sans-serif',
+            'font-mono': "'JetBrains Mono', monospace",
+            'glass-bg': 'rgba(2, 6, 23, 0.6)',
+            'glass-border': 'rgba(34, 211, 238, 0.15)',
         },
+        clarte: 'dark',
+        reflet: 'rgba(34, 211, 238, 0.25)',
         palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'],
     },
 
     medieval: {
-        accent: '#d4af37',
-        bg: '#181411',
-        surface: '#24201c',
-        border: '#332c26',
-        text: '#e7e5e4',
-        policeTitre: '"Cinzel", "MedievalSharp", serif',
-        policeMono: "'UnifrakturMaguntia', cursive",
-        clarte: 'dark',
-        verre: {
-            fond: 'rgba(28, 25, 23, 0.65)',
-            bordure: 'rgba(217, 119, 6, 0.12)',
-            reflet: 'rgba(217, 119, 6, 0.2)',
+        jetons: {
+            accent: '#d4af37',
+            bg: '#181411',
+            surface: '#24201c',
+            border: '#332c26',
+            text: '#e7e5e4',
+            'font-display': '"Cinzel", "MedievalSharp", serif',
+            'font-mono': "'UnifrakturMaguntia', cursive",
+            'glass-bg': 'rgba(28, 25, 23, 0.65)',
+            'glass-border': 'rgba(217, 119, 6, 0.12)',
         },
+        clarte: 'dark',
+        reflet: 'rgba(217, 119, 6, 0.2)',
         palettes: ['#d4af37', '#b91c1c', '#7c2d12', '#4c1d95', '#1e40af'],
     },
 
     modern: {
-        accent: '#3b82f6',
-        bg: '#0f172a',
-        surface: '#1e293b',
-        border: '#334155',
-        text: '#f8fafc',
-        policeTitre: '"Outfit", "Inter", sans-serif',
-        policeMono: "'JetBrains Mono', monospace",
-        clarte: 'dark',
-        verre: {
-            fond: 'rgba(15, 23, 42, 0.5)',
-            bordure: 'rgba(255, 255, 255, 0.1)',
-            reflet: 'rgba(255, 255, 255, 0.2)',
+        jetons: {
+            accent: '#3b82f6',
+            bg: '#0f172a',
+            surface: '#1e293b',
+            border: '#334155',
+            text: '#f8fafc',
+            'font-display': '"Outfit", "Inter", sans-serif',
+            'font-mono': "'JetBrains Mono', monospace",
+            'glass-bg': 'rgba(15, 23, 42, 0.5)',
+            'glass-border': 'rgba(255, 255, 255, 0.1)',
         },
+        clarte: 'dark',
+        reflet: 'rgba(255, 255, 255, 0.2)',
         palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b'],
     },
 
     claire: {
-        accent: '#c2410c',
-        bg: '#fbfbf9',
-        surface: '#ffffff',
-        border: '#e7e5e4',
-        text: '#2c2420',
-        policeTitre: '"Inter", sans-serif',
-        // Son bloc CSS n'en déclarait pas : il héritait du `:root` de base.
-        policeMono: "'JetBrains Mono', monospace",
-        clarte: 'light',
-        verre: {
-            fond: 'rgba(255, 255, 255, 0.6)',
-            bordure: 'rgba(0, 0, 0, 0.08)',
-            reflet: 'rgba(255, 255, 255, 0.5)',
+        jetons: {
+            accent: '#c2410c',
+            bg: '#fbfbf9',
+            surface: '#ffffff',
+            border: '#e7e5e4',
+            text: '#2c2420',
+            'font-display': '"Inter", sans-serif',
+            // Son bloc CSS n'en déclarait pas : il héritait du `:root` de base.
+            'font-mono': "'JetBrains Mono', monospace",
+            'glass-bg': 'rgba(255, 255, 255, 0.6)',
+            'glass-border': 'rgba(0, 0, 0, 0.08)',
         },
+        clarte: 'light',
+        reflet: 'rgba(255, 255, 255, 0.5)',
         palettes: ['#c2410c', '#0f766e', '#7c3aed', '#b91c1c', '#1e40af'],
     },
 };
+
+/** Le thème de base qui porte ce nom ; un identifiant inconnu retombe sur cyberpunk. */
+export function themeDeBase(theme: string): ThemeDeBase {
+    return PALETTES[theme as ThemeID] ?? PALETTES.cyberpunk;
+}
+
+/** L'accent par défaut d'un thème de base — ce que `setTheme` pose, et ce qu'une surcharge « héritée » vaut. */
+export function accentDuTheme(theme: string): string {
+    return themeDeBase(theme).jetons.accent;
+}
 
 /**
  * `#rrggbb` → `"r, g, b"`, la forme qu'attend `--app-accent-rgb`.
@@ -167,25 +188,26 @@ export function composantesRVB(hex: string): string | null {
     return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
 }
 
-/** Les douze variables du thème, prêtes à poser. */
+/**
+ * Les variables d'un thème de base, prêtes à poser.
+ *
+ * Les jetons passent par **la table du contrat** (`VARIABLE_DU_JETON`) : un
+ * jeton ajouté au paquet d'un thème de base, et qui a sa variable dans le
+ * contrat, atteint l'écran sans une ligne de plus ici.
+ */
 export function variablesDuTheme(
-    palette: PaletteDInterface,
+    theme: ThemeDeBase,
     accentEffectif: string,
 ): Record<string, string> {
     const rvb = composantesRVB(accentEffectif);
 
-    const vars: Record<string, string> = {
-        '--app-accent': accentEffectif,
-        '--app-bg': palette.bg,
-        '--app-surface': palette.surface,
-        '--app-border': palette.border,
-        '--app-text': palette.text,
-        '--font-display': palette.policeTitre,
-        '--font-mono': palette.policeMono,
-        '--glass-bg': palette.verre.fond,
-        '--glass-border': palette.verre.bordure,
-        '--glass-highlight': palette.verre.reflet,
-    };
+    const vars: Record<string, string> = {};
+    for (const [jeton, valeur] of Object.entries(theme.jetons)) {
+        const variable = VARIABLE_DU_JETON[jeton];
+        if (variable) vars[variable] = valeur;
+    }
+    vars['--app-accent'] = accentEffectif;
+    vars['--glass-highlight'] = theme.reflet;
 
     /*
       **Dérivées, et seulement quand l'accent est lisible.** Une couleur qu'on
@@ -229,7 +251,7 @@ export function appliquerLeTheme(
 ): void {
     if (typeof document === 'undefined') return;
 
-    const palette = PALETTES[theme as ThemeID] ?? PALETTES.cyberpunk;
+    const palette = themeDeBase(theme);
     const racine = document.documentElement;
 
     /*
@@ -248,10 +270,10 @@ export function appliquerLeTheme(
     // `|| undefined` et non `?.trim()` seul : `??` ne traverse pas la chaîne
     // vide, et une surcharge blanche donnerait alors un accent vide.
     const surcharge = accentSurcharge?.trim() || undefined;
-    const choisieALaMain = !!surcharge && surcharge !== palette.accent;
+    const choisieALaMain = !!surcharge && surcharge !== palette.jetons.accent;
     const accent = choisieALaMain
         ? surcharge
-        : jeu?.jetons.accent ?? surcharge ?? palette.accent;
+        : jeu?.jetons.accent ?? surcharge ?? palette.jetons.accent;
 
     racine.setAttribute('data-theme', theme);
     /*

@@ -128,7 +128,13 @@ export function declarationsDuBloc(corps: string): [cle: string, valeur: string]
  * peuvent plus diverger.
  */
 const PONT: Record<string, string> = Object.fromEntries(
-    JETONS_DU_CONTRAT.filter(j => j.versLInterface).map(j => [j.cle, j.versLInterface!]),
+    /*
+      **LU seulement** (2026-09-27) : un jeton V2 qui a déjà sa variable l'a
+      pour les thèmes de base (`VARIABLE_DU_JETON`). Le jeu ne l'emprunte
+      qu'une fois le jeton passé à LU — sinon le cahier dirait « sans effet
+      aujourd'hui » d'un réglage qui change l'écran.
+    */
+    JETONS_DU_CONTRAT.filter(j => j.versLInterface && j.statut === 'LU').map(j => [j.cle, j.versLInterface!]),
 );
 
 /**

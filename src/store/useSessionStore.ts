@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import i18n from '../i18n';
 import { DEFAULT_LANGUAGE } from '../config/languages';
-import { PALETTES, type ThemeID } from '../theme/themeDeLInterface';
+import { PALETTES, accentDuTheme, type ThemeID } from '../theme/themeDeLInterface';
 import type { MomentDeJeu } from '../modules/ai/budgetsDeTemps';
 
 export type { ThemeID };
@@ -70,7 +70,7 @@ export const useSessionStore = create<SessionState>()(
         (set, get) => ({
             activeModule: 'dashboard',
             theme: 'cyberpunk',
-            themeColor: THEME_PALETTES['cyberpunk'].accent,
+            themeColor: accentDuTheme('cyberpunk'),
             surchargeDuRegime: null,
             isAIPanelOpen: false,
             isMessengerOpen: false,
@@ -81,7 +81,7 @@ export const useSessionStore = create<SessionState>()(
             setActiveModule: (activeModule) => set({ activeModule }),
             setTheme: (theme) => set({ 
                 theme,
-                themeColor: THEME_PALETTES[theme]?.accent || '#3b82f6'
+                themeColor: accentDuTheme(theme)
             }),
             setThemeColor: (themeColor) => set({ themeColor }),
             forcerLeRegime: (surchargeDuRegime) => set({ surchargeDuRegime }),

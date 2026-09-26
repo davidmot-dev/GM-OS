@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
     JETONS_DU_CONTRAT, PAIRES_DU_CONTRAT, HOTES_DE_POLICES, EMPLACEMENTS_D_ORNEMENT, VERSION_DU_CONTRAT,
+    VARIABLE_DU_JETON,
 } from '../src/theme/contratDuTheme';
 import { pontVersLInterface } from '../src/theme/jetonsDeTheme';
 import { JETONS_EDITABLES } from '../src/theme/editionDuTheme';
@@ -121,14 +122,29 @@ describe('le contrat en données suit le cahier des charges', () => {
 });
 
 describe('ce que GM-OS applique est dérivé du contrat', () => {
-    it('le pont transporte exactement les jetons qui déclarent une variable de l\'interface', () => {
+    it('le pont du jeu transporte exactement les jetons LU qui déclarent une variable de l\'interface', () => {
         const tous = Object.fromEntries(JETONS_DU_CONTRAT.map(j => [j.cle, 'x']));
-        const attendues = JETONS_DU_CONTRAT.filter(j => j.versLInterface).map(j => j.versLInterface).sort();
+        const attendues = JETONS_DU_CONTRAT.filter(j => j.versLInterface && j.statut === 'LU').map(j => j.versLInterface).sort();
         expect(Object.keys(pontVersLInterface(tous)).sort()).toEqual(attendues);
     });
 
-    it('seuls des jetons LU atteignent l\'interface', () => {
-        for (const j of JETONS_DU_CONTRAT.filter(x => x.versLInterface)) expect(j.statut, j.cle).toBe('LU');
+    /*
+      Depuis la phase 1 de la refonte (2026-09-27), un jeton V2 peut avoir sa
+      variable : les thèmes de base s'en servent déjà. Mais le cahier dit au
+      constructeur qu'un jeton V2 est « sans effet aujourd'hui » — le jeu ne
+      doit donc pas pouvoir l'emprunter. Passer à LU est ce qui le lui ouvre.
+    */
+    it('un jeton V2 n\'atteint jamais l\'interface par le thème du jeu', () => {
+        // V2 seulement : un jeton SDK a ses propres règles (`paper` sert de repli à `surface`).
+        for (const j of JETONS_DU_CONTRAT.filter(x => x.statut === 'V2')) {
+            expect(pontVersLInterface({ [j.cle]: '#123456' }), j.cle).toEqual({});
+        }
+    });
+
+    it('la table des thèmes de base contient tout le pont du jeu', () => {
+        for (const j of JETONS_DU_CONTRAT.filter(x => x.versLInterface)) {
+            expect(VARIABLE_DU_JETON[j.cle], j.cle).toBe(j.versLInterface);
+        }
     });
 
     /*

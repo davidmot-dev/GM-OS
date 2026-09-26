@@ -21,8 +21,7 @@ import { contraste } from './editionDuTheme';
 
 /** Ce que la palette d'un thème de base sait nommer aujourd'hui, sous les noms du contrat. */
 function jetonsDeLaPalette(theme: ThemeID): Record<string, string> {
-    const p = PALETTES[theme];
-    return { bg: p.bg, surface: p.surface, text: p.text, accent: p.accent };
+    return PALETTES[theme].jetons;
 }
 
 const THEMES = Object.keys(PALETTES) as ThemeID[];
@@ -48,7 +47,7 @@ describe('les quatre thèmes de base, devant les seuils du contrat', () => {
           s'affichent à contre-jour.
         */
         it(`${theme} : la polarité suit le fond`, () => {
-            const sombre = contraste('#ffffff', PALETTES[theme].bg)! > contraste('#000000', PALETTES[theme].bg)!;
+            const sombre = contraste('#ffffff', PALETTES[theme].jetons.bg)! > contraste('#000000', PALETTES[theme].jetons.bg)!;
             expect(PALETTES[theme].clarte).toBe(sombre ? 'dark' : 'light');
         });
     }
@@ -61,7 +60,7 @@ describe('les quatre thèmes de base, devant les seuils du contrat', () => {
     */
     for (const theme of THEMES) {
         it(`${theme} : chaque pastille d'accent proposée se lit sur le fond — hors défauts connus`, () => {
-            const fond = PALETTES[theme].bg;
+            const fond = PALETTES[theme].jetons.bg;
             const faibles = PALETTES[theme].palettes
                 .filter(c => contraste(c, fond)! < 3)
                 .sort();

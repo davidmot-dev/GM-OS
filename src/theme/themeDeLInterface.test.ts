@@ -6,6 +6,7 @@ import {
     appliquerLeTheme,
     type ThemeID,
 } from './themeDeLInterface';
+import { VARIABLE_DU_JETON } from './contratDuTheme';
 
 /**
  * **La réconciliation des deux tables de thèmes — étape 1 de l'axe « thème par
@@ -43,10 +44,10 @@ describe('la table unique', () => {
     it('déclare les quatre thèmes en entier', () => {
         for (const t of THEMES) {
             const p = PALETTES[t];
-            for (const cle of ['accent', 'bg', 'surface', 'border', 'text', 'policeTitre', 'policeMono'] as const) {
-                expect(p[cle], `${t}.${cle}`).toBeTruthy();
+            for (const cle of ['accent', 'bg', 'surface', 'border', 'text', 'font-display', 'font-mono', 'glass-bg', 'glass-border']) {
+                expect(p.jetons[cle], `${t}.${cle}`).toBeTruthy();
             }
-            expect(p.verre.fond, `${t}.verre`).toBeTruthy();
+            expect(p.reflet, `${t}.reflet`).toBeTruthy();
             expect(p.palettes.length, `${t}.palettes`).toBeGreaterThan(0);
         }
     });
@@ -58,16 +59,29 @@ describe('la table unique', () => {
      * que la réconciliation n'a changé aucun pixel.
      */
     it('garde les valeurs de la table qui gagnait à l’écran', () => {
-        expect(PALETTES.cyberpunk.accent).toBe('#06b6d4');   // et non le #22d3ee de la CSS
-        expect(PALETTES.medieval.accent).toBe('#d4af37');    // et non le #d97706 de la CSS
-        expect(PALETTES.modern.bg).toBe('#0f172a');          // et non le #020617 de la CSS
-        expect(PALETTES.medieval.border).toBe('#332c26');    // et non le #44403c de la CSS
+        expect(PALETTES.cyberpunk.jetons.accent).toBe('#06b6d4');   // et non le #22d3ee de la CSS
+        expect(PALETTES.medieval.jetons.accent).toBe('#d4af37');    // et non le #d97706 de la CSS
+        expect(PALETTES.modern.jetons.bg).toBe('#0f172a');          // et non le #020617 de la CSS
+        expect(PALETTES.medieval.jetons.border).toBe('#332c26');    // et non le #44403c de la CSS
     });
 
     it('garde les valeurs que seule la CSS déclarait', () => {
-        expect(PALETTES.claire.text).toBe('#2c2420');
-        expect(PALETTES.medieval.policeMono).toContain('UnifrakturMaguntia');
-        expect(PALETTES.cyberpunk.verre.fond).toBe('rgba(2, 6, 23, 0.6)');
+        expect(PALETTES.claire.jetons.text).toBe('#2c2420');
+        expect(PALETTES.medieval.jetons['font-mono']).toContain('UnifrakturMaguntia');
+        expect(PALETTES.cyberpunk.jetons['glass-bg']).toBe('rgba(2, 6, 23, 0.6)');
+    });
+
+    /**
+     * Un thème de base parle la langue du contrat (P1.1, 2026-09-27). Un nom
+     * mal écrit — `glass_bg`, `font-titre` — ne serait lu par personne, et
+     * rien d'autre ne le dirait.
+     */
+    it('un thème de base ne déclare que des jetons du contrat qui atteignent l’écran', () => {
+        for (const t of THEMES) {
+            for (const cle of Object.keys(PALETTES[t].jetons)) {
+                expect(VARIABLE_DU_JETON[cle], `${t} : --rpg-${cle}`).toBeTruthy();
+            }
+        }
     });
 
     it('claire est le seul thème clair', () => {
@@ -81,7 +95,7 @@ describe('la table unique', () => {
 describe('les variables posées', () => {
     /** Le défaut que David voyait sans pouvoir le nommer. */
     it('la lueur suit l’accent — c’est le correctif du 2026-08-24', () => {
-        const v = variablesDuTheme(PALETTES.cyberpunk, PALETTES.cyberpunk.accent);
+        const v = variablesDuTheme(PALETTES.cyberpunk, PALETTES.cyberpunk.jetons.accent);
         expect(v['--app-accent']).toBe('#06b6d4');
         expect(v['--app-accent-rgb']).toBe('6, 182, 212');
         expect(v['--app-accent-glow']).toBe('rgba(6, 182, 212, 0.45)');
@@ -101,7 +115,7 @@ describe('les variables posées', () => {
     });
 
     it('pose les dix variables que l’interface consomme', () => {
-        const v = variablesDuTheme(PALETTES.claire, PALETTES.claire.accent);
+        const v = variablesDuTheme(PALETTES.claire, PALETTES.claire.jetons.accent);
         for (const nom of [
             '--app-accent', '--app-bg', '--app-surface', '--app-border', '--app-text',
             '--font-display', '--font-mono', '--glass-bg', '--glass-border', '--glass-highlight',
@@ -143,7 +157,7 @@ describe('appliquerLeTheme', () => {
     it('un thème inconnu retombe sur cyberpunk sans lever', () => {
         expect(() => appliquerLeTheme('n-importe-quoi')).not.toThrow();
         expect(document.documentElement.style.getPropertyValue('--app-accent'))
-            .toBe(PALETTES.cyberpunk.accent);
+            .toBe(PALETTES.cyberpunk.jetons.accent);
     });
 
     it('la surcharge de la main gagne sur l’accent du thème', () => {
@@ -154,7 +168,7 @@ describe('appliquerLeTheme', () => {
     it('une surcharge vide laisse l’accent du thème', () => {
         appliquerLeTheme('modern', '   ');
         expect(document.documentElement.style.getPropertyValue('--app-accent'))
-            .toBe(PALETTES.modern.accent);
+            .toBe(PALETTES.modern.jetons.accent);
     });
 });
 
@@ -178,7 +192,7 @@ describe('le thème du jeu par-dessus le thème d’atelier', () => {
     };
 
     it('recouvre les couleurs de l’atelier', () => {
-        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.accent, startrek);
+        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.jetons.accent, startrek);
         const r = document.documentElement;
 
         expect(r.style.getPropertyValue('--app-bg')).toBe('#343434');
@@ -192,12 +206,12 @@ describe('le thème du jeu par-dessus le thème d’atelier', () => {
      * blanc — le défaut déjà payé une fois.
      */
     it('impose sa polarité, même sous un thème d’atelier sombre', () => {
-        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.accent, startrek);
+        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.jetons.accent, startrek);
         expect(document.documentElement.style.colorScheme).toBe('light');
     });
 
     it('la lueur suit l’accent DU JEU', () => {
-        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.accent, startrek);
+        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.jetons.accent, startrek);
         expect(document.documentElement.style.getPropertyValue('--app-accent-glow'))
             .toBe('rgba(95, 147, 181, 0.45)');
     });
@@ -210,7 +224,7 @@ describe('le thème du jeu par-dessus le thème d’atelier', () => {
      * jeu son accent à tous les coups.
      */
     it('un accent HÉRITÉ laisse gagner le jeu', () => {
-        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.accent, startrek);
+        appliquerLeTheme('cyberpunk', PALETTES.cyberpunk.jetons.accent, startrek);
         expect(document.documentElement.style.getPropertyValue('--app-accent')).toBe('#5f93b5');
     });
 
@@ -229,22 +243,22 @@ describe('le thème du jeu par-dessus le thème d’atelier', () => {
      * déclare pas reste au thème d'atelier.
      */
     it('un thème partiel laisse l’atelier combler le reste', () => {
-        appliquerLeTheme('medieval', PALETTES.medieval.accent, {
+        appliquerLeTheme('medieval', PALETTES.medieval.jetons.accent, {
             variables: { '--app-bg': '#000000' },
             jetons: {},
         });
         const r = document.documentElement;
 
         expect(r.style.getPropertyValue('--app-bg')).toBe('#000000');
-        expect(r.style.getPropertyValue('--app-surface')).toBe(PALETTES.medieval.surface);
+        expect(r.style.getPropertyValue('--app-surface')).toBe(PALETTES.medieval.jetons.surface);
         expect(r.style.getPropertyValue('--font-display')).toContain('Cinzel');
     });
 
     it('sans thème de jeu, rien ne change par rapport à avant', () => {
-        appliquerLeTheme('medieval', PALETTES.medieval.accent);
+        appliquerLeTheme('medieval', PALETTES.medieval.jetons.accent);
         const r = document.documentElement;
 
-        expect(r.style.getPropertyValue('--app-bg')).toBe(PALETTES.medieval.bg);
+        expect(r.style.getPropertyValue('--app-bg')).toBe(PALETTES.medieval.jetons.bg);
         expect(r.style.colorScheme).toBe('dark');
     });
 });

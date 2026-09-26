@@ -60,9 +60,16 @@ export interface JetonDuContrat {
     obligatoire?: boolean;
     format: FormatDeJeton;
     /**
-     * La variable de l'interface qu'il alimente, pour les jetons que le pont
-     * transporte. Les échelles sont LU sans passer par le pont : elles ont leur
-     * propre application, dans `themeDeLInterface.ts`.
+     * La variable de l'interface qu'il alimente.
+     *
+     * **Deux lecteurs, une seule table** (phase 1 de la refonte, 2026-09-27) :
+     * les thèmes de base passent par **tous** ces jetons ; un thème de jeu
+     * n'emprunte que ceux qui sont **LU** (`PONT`, dans `jetonsDeTheme.ts`).
+     * Un jeton V2 peut donc déjà habiller l'interface par le thème de base
+     * sans que le jeu le pilote : c'est passer à LU qui le lui ouvre.
+     *
+     * Les échelles de taille sont LU sans variable : elles ont leur propre
+     * application, dans `themeDeLInterface.ts`.
      */
     versLInterface?: string;
 }
@@ -138,8 +145,8 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'glow-strength', section: '4.6', statut: 'V2', format: { type: 'nombre', min: 0, max: 1 } },
 
     // § 4.7 · Transparence et verre
-    { cle: 'glass-bg', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.4, alphaMax: 0.95 } },
-    { cle: 'glass-border', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.05, alphaMax: 0.6 } },
+    { cle: 'glass-bg', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.4, alphaMax: 0.95 }, versLInterface: '--glass-bg' },
+    { cle: 'glass-border', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.05, alphaMax: 0.6 }, versLInterface: '--glass-border' },
     { cle: 'glass-blur', section: '4.7', statut: 'V2', format: px(24) },
 
     // § 4.8 · Le cadre — absents, ils valent bg, text et accent
@@ -152,6 +159,16 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'texture-panel', section: '7', statut: 'V2', format: MATIERE },
     { cle: 'texture-opacity', section: '7', statut: 'V2', format: { type: 'nombre', min: 0, max: 0.35 } },
 ];
+
+/**
+ * **Jeton → variable de l'interface, pour tous les jetons qui en ont une.**
+ *
+ * C'est la table des thèmes de base. Celle du jeu, `PONT`, en est le
+ * sous-ensemble LU.
+ */
+export const VARIABLE_DU_JETON: Readonly<Record<string, string>> = Object.fromEntries(
+    JETONS_DU_CONTRAT.filter(j => j.versLInterface).map(j => [j.cle, j.versLInterface!]),
+);
 
 /** Le jeton du contrat qui porte ce nom, ou `undefined` s'il n'est lu par personne. */
 export function jetonDuContrat(cle: string): JetonDuContrat | undefined {
