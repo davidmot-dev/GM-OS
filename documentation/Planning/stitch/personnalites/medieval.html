@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<!-- Polices médiévales Cinzel, EB Garamond et Playfair Display -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&amp;family=Cinzel+Decorative:wght@700&amp;family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&amp;family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+
+    /* Textures & filigranes médiévaux */
+    .bg-parchment-desk {
+      background-color: #dfcfb2;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(255, 250, 240, 0.45) 0%, transparent 70%),
+        radial-gradient(circle at 15% 85%, rgba(180, 150, 100, 0.25) 0%, transparent 60%),
+        radial-gradient(circle at 85% 15%, rgba(160, 130, 80, 0.2) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, rgba(60, 42, 26, 0.02) 0px, rgba(60, 42, 26, 0.02) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(60, 42, 26, 0.015) 0px, rgba(60, 42, 26, 0.015) 1px, transparent 1px, transparent 6px);
+    }
+    .bg-dark-wood {
+      background-color: #1a120b;
+      background-image: 
+        linear-gradient(180deg, rgba(46, 32, 20, 0.85) 0%, rgba(20, 13, 7, 0.98) 100%),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 2px, transparent 2px, transparent 12px);
+    }
+    .bg-vellum-card {
+      background-color: #f7f2e7;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(235, 222, 198, 0.5) 100%);
+    }
+    .bg-vellum-inset {
+      background-color: #ebe0ca;
+      box-shadow: inset 0 1px 3px rgba(44, 29, 17, 0.25);
+    }
+
+    /* Bordures doubles et ferronneries */
+    .medieval-double-border {
+      border: 3px double #5c4228;
+    }
+    .medieval-wood-border {
+      border-color: #4a3525;
+    }
+    .parchment-border {
+      border: 1px solid #7c5c3b;
+      box-shadow: 0 0 0 1px #d6c4a5 inset, 0 3px 10px rgba(28, 17, 8, 0.18);
+    }
+    .brass-groove {
+      box-shadow: 0 1px 0 rgba(212, 175, 55, 0.25), inset 0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "wood-dark": "#160e07",
+            "wood-mid": "#24170d",
+            "wood-light": "#362415",
+            "wood-border": "#4a3525",
+            "brass": "#b38f4d",
+            "brass-light": "#d4af37",
+            "brass-dark": "#7a5c20",
+            "ink-black": "#1b1108",
+            "ink-brown": "#2c1d11",
+            "ink-muted": "#6a5744",
+            "parchment-base": "#e5d5b8",
+            "parchment-card": "#f7f2e7",
+            "parchment-deep": "#dfcfb2",
+            "blood-dark": "#701212",
+            "blood": "#8f1d1d",
+            "blood-light": "#a82a2a",
+            "ink-emerald": "#1b6342",
+            "ink-sapphire": "#264f6b",
+            "wax-gold": "#c59b27"
+          },
+          fontFamily: {
+            "cinzel": ["Cinzel", "serif"],
+            "garamond": ["EB Garamond", "serif"],
+            "playfair": ["Playfair Display", "serif"]
+          },
+          borderRadius: {
+            DEFAULT: "2px",
+            sm: "2px",
+            md: "2px",
+            lg: "2px",
+            xl: "2px",
+            full: "2px"
+          },
+          spacing: {
+            margin: "16px",
+            gutter: "14px"
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-wood-dark font-garamond text-ink-brown antialiased select-none min-h-screen">
+<!-- BANDEAU SUPÉRIEUR : CHÊNE ANCIEN & MOULURES LAITON -->
+<header class="fixed top-0 left-0 right-0 h-16 bg-wood-dark border-b-2 border-brass-dark/80 z-50 px-margin flex items-center justify-between shadow-2xl brass-groove">
+<!-- GAUCHE : IDENTIFIANT & SCEAUX DU GRIMOIRE -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border border-brass-dark/60 bg-wood-mid/90 px-2.5 py-1">
+<span class="w-2.5 h-2.5 bg-brass-light border border-brass-dark"></span>
+<span class="font-cinzel font-bold text-base uppercase text-brass-light tracking-widest">GM-OS</span>
+<span class="font-cinzel text-[10px] text-brass/80 bg-wood-dark px-1.5 py-0.5 border border-brass-dark/40 tracking-wider">V6 NEXUS-PROTOCOL</span>
+</div>
+<div class="h-6 w-px bg-brass-dark/50"></div>
+<div class="flex items-center gap-2 bg-wood-mid px-2.5 py-1 border border-brass-dark/40">
+<span class="w-2 h-2 rounded-none bg-ink-emerald border border-brass-dark"></span>
+<span class="font-cinzel text-[11px] text-parchment-base/70 uppercase">CORTEX IA :</span>
+<span class="font-cinzel text-[11px] text-parchment-base font-bold uppercase tracking-wider">OPÉRATIONNEL [99.8%]</span>
+</div>
+</div>
+<!-- DROITE : COMMANDES, VOLUMES ET LIENS DU GRIMOIRE -->
+<div class="flex items-center gap-3">
+<!-- Jauge sonore cloche / master -->
+<div class="flex items-center gap-2 bg-wood-mid px-2.5 py-1 border border-brass-dark/50">
+<span class="material-symbols-outlined text-brass text-[18px]">volume_up</span>
+<span class="font-cinzel text-[10px] text-parchment-base/70 uppercase tracking-widest">MASTER</span>
+<span class="font-cinzel font-bold text-xs text-parchment-card">100%</span>
+<div class="w-16 h-2 bg-wood-dark border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-brass-light w-full"></div>
+</div>
+</div>
+<!-- Focus Chat -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-wood-mid hover:bg-wood-light text-parchment-card border border-brass-dark/70 hover:border-brass transition-colors">
+<span class="material-symbols-outlined text-[16px] text-brass">chat</span>
+<span class="font-cinzel text-[11px] font-semibold uppercase tracking-wider">Focus Chat</span>
+</button>
+<!-- Sélecteur Table / Atelier -->
+<div class="flex items-stretch bg-wood-dark border border-brass-dark/80 p-0.5">
+<button class="px-2.5 py-1 font-cinzel text-[11px] uppercase bg-brass-dark/80 text-parchment-card font-bold border border-brass/50 shadow-inner">Table</button>
+<button class="px-2.5 py-1 font-cinzel text-[11px] uppercase text-parchment-base/70 hover:text-parchment-card transition-colors">Atelier</button>
+</div>
+<!-- Bouton d'urgence : STOP ALL (Cire rouge) -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-blood-dark hover:bg-blood text-parchment-card border border-blood-light transition-colors font-cinzel font-bold tracking-wider shadow">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span class="text-[11px] uppercase">Stop All</span>
+</button>
+<!-- Connecter Joueurs -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-wood-mid hover:bg-wood-light text-parchment-card border border-brass-dark/70 hover:border-brass transition-colors">
+<span class="material-symbols-outlined text-[16px] text-brass-light">hub</span>
+<span class="font-cinzel text-[11px] font-semibold uppercase tracking-wider">Connecter Joueurs</span>
+</button>
+<!-- État du lien -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-wood-mid border border-brass-dark/60">
+<span class="w-2 h-2 bg-ink-emerald"></span>
+<span class="font-cinzel text-[10px] text-parchment-card font-bold uppercase tracking-widest">LINK [4/4]</span>
+</div>
+<!-- Profil Bailli -->
+<div class="w-8 h-8 rounded-none bg-brass-dark/90 border border-brass flex items-center justify-center shadow">
+<span class="material-symbols-outlined text-parchment-card text-[18px]">person</span>
+</div>
+</div>
+</header>
+<!-- BARRE LATÉRALE GAUCHE : PUPITRE EN BOIS CIRÉ & REGISTRES -->
+<aside class="fixed left-0 top-16 bottom-0 w-[220px] bg-wood-dark border-r-2 border-brass-dark/80 z-40 flex flex-col justify-between overflow-y-auto">
+<div class="py-4">
+<div class="px-4 pb-2 mb-1 flex items-center justify-between border-b border-brass-dark/30">
+<span class="font-cinzel text-[10px] text-brass/90 tracking-widest uppercase font-bold">AVENTURE TACTIQUE</span>
+<span class="text-brass/40 text-xs">§</span>
+</div>
+<nav class="flex flex-col gap-0.5 px-2">
+<a aria-current="page" class="flex items-center px-3 py-2 bg-wood-mid text-brass-light border-l-4 border-brass font-cinzel font-bold text-xs uppercase tracking-wider shadow-inner" data-path="combat-os" href="#">
+          Combat-OS
+        </a>
+<a class="flex items-center px-3 py-2 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-xs uppercase tracking-wider" data-path="dice-os" href="#">
+          Dice-OS
+        </a>
+<a class="flex items-center px-3 py-2 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-xs uppercase tracking-wider" data-path="generateur-pnj" href="#">
+          Générateur PNJ
+        </a>
+<a class="flex items-center px-3 py-2 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-xs uppercase tracking-wider" data-path="cartographie" href="#">
+          Cartographie
+        </a>
+</nav>
+<div class="h-px bg-brass-dark/40 mx-3 my-4"></div>
+<div class="px-4 pb-2 mb-1 flex items-center justify-between border-b border-brass-dark/30">
+<span class="font-cinzel text-[10px] text-brass/90 tracking-widest uppercase font-bold">MODULES OUTILS</span>
+<span class="text-brass/40 text-xs">§</span>
+</div>
+<nav class="flex flex-col gap-0.5 px-2">
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="mediatheque" href="#">Médiathèque</a>
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="image-os" href="#">Image-OS</a>
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="horloge-et-temps" href="#">Horloge &amp; Temps</a>
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="light-os" href="#">Light-OS</a>
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="tables-aleatoires" href="#">Tables Aléatoires</a>
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="navigateur-web" href="#">Navigateur Web</a>
+<a class="flex items-center px-3 py-1.5 text-parchment-base/70 hover:text-parchment-card hover:bg-wood-mid/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider" data-path="tableau-blanc" href="#">Tableau Blanc</a>
+</nav>
+</div>
+<!-- Bas de barre latérale : État du pupitre -->
+<div class="p-3 border-t border-brass-dark/60 bg-wood-mid/80 flex flex-col gap-2">
+<div class="flex items-center justify-between text-parchment-base/75 font-cinzel text-[10px]">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-ink-emerald"></span> SYSTÈME SÉCURISÉ
+        </span>
+<span class="font-bold text-brass tracking-wider">24ms</span>
+</div>
+<button class="w-full flex items-center justify-center gap-1.5 py-1.5 bg-wood-dark hover:bg-wood-light text-brass hover:text-brass-light border border-brass-dark/60 transition-colors font-cinzel text-[11px] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">settings</span>
+<span>Paramètres Régie</span>
+</button>
+</div>
+</aside>
+<!-- ESPACE CENTRAL DE GUERRE : PARCHEMIN VIEILLI & ENCRES BRUNES -->
+<div class="pl-[220px]">
+<main class="relative pt-16 w-full min-h-screen bg-parchment-desk text-ink-brown">
+<div class="flex flex-col w-full px-margin py-4 gap-gutter">
+<!-- EN-TÊTE DU GRIMOIRE MARTIAL : RUBANS & ENLUMINURES -->
+<header class="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 bg-parchment-card parchment-border shadow-md">
+<!-- Ferrements de coins médiévaux -->
+<div class="absolute -top-1 -left-1 w-3 h-3 bg-brass-dark border border-brass"></div>
+<div class="absolute -bottom-1 -right-1 w-3 h-3 bg-brass-dark border border-brass"></div>
+<div class="absolute -top-1 -right-1 w-3 h-3 bg-brass-dark border border-brass"></div>
+<div class="absolute -bottom-1 -left-1 w-3 h-3 bg-brass-dark border border-brass"></div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-parchment-deep border-2 border-brass-dark/80 flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-ink-brown text-[28px]">shield</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-3">
+<span class="font-cinzel font-black text-2xl uppercase tracking-wider text-ink-brown">COMBAT-OS</span>
+<span class="font-cinzel text-[10px] uppercase tracking-widest text-ink-muted bg-parchment-deep px-2 py-0.5 border border-brass-dark/40 font-bold">§ ANNALES DE GUERRE</span>
+</div>
+<span class="font-garamond italic text-sm text-ink-muted tracking-wide">Registre Tactique • Épée, Feu &amp; Destinée</span>
+</div>
+</div>
+<!-- ONGLETS DE RUBANS MARTIAUX (SCÈNES) -->
+<div class="flex items-center gap-1 bg-parchment-deep p-1 border border-brass-dark/50">
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-wax-gold text-ink-black border border-brass font-cinzel font-bold shadow">
+<span class="text-xs">I.</span>
+<span class="text-xs uppercase tracking-wider">Bastion Nord</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-ink-muted hover:text-ink-brown hover:bg-parchment-card/80 transition-colors font-cinzel font-semibold">
+<span class="text-xs text-ink-muted/80">II.</span>
+<span class="text-xs uppercase tracking-wider">Crypte Tyrell</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-ink-muted hover:text-ink-brown hover:bg-parchment-card/80 transition-colors font-cinzel font-semibold">
+<span class="text-xs text-ink-muted/80">III.</span>
+<span class="text-xs uppercase tracking-wider">Le Pont Cendré</span>
+</button>
+<button class="p-1.5 text-ink-muted hover:text-ink-brown hover:bg-parchment-card transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</header>
+<!-- CHAMP DE BATAILLE : GRILLE 12 COLONNES -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- COLONNE CENTRALE : LES 4 COMBATTANTS (8 COLONNES) -->
+<div class="lg:col-span-8 flex flex-col gap-4">
+<!-- BANDEAU DE ROUND & HORLOGE DU DESTIN -->
+<div class="flex items-center justify-between p-3.5 bg-parchment-card parchment-border">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-wax-gold text-[24px]">hourglass_top</span>
+<div class="flex flex-col">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted tracking-widest font-bold">ORDRE D'INITIATIVE</span>
+<span class="font-cinzel font-bold text-lg text-ink-brown tracking-wide">TOUR DU CAPITAINE DECKARD</span>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-parchment-deep px-3 py-1 border border-brass-dark/50">
+<span class="font-cinzel text-[11px] uppercase text-ink-muted font-bold">SABLIER :</span>
+<span class="font-cinzel font-bold text-base text-ink-black tracking-wider">02:44</span>
+</div>
+</div>
+<!-- COMBATTANT 1 : RICK DECKARD (ACTIF) -->
+<div class="relative bg-parchment-card p-4 parchment-border flex flex-col md:flex-row gap-4 items-stretch">
+<!-- Coins ornés -->
+<div class="absolute -top-1 -left-1 w-2.5 h-2.5 bg-wax-gold border border-brass-dark"></div>
+<div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-wax-gold border border-brass-dark"></div>
+<div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-wax-gold border border-brass-dark"></div>
+<div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-wax-gold border border-brass-dark"></div>
+<!-- Portrait peint -->
+<div class="w-full md:w-32 h-36 bg-parchment-deep shrink-0 relative overflow-hidden border-2 border-brass-dark shadow-inner">
+<img class="w-full h-full object-cover filter contrast-105" data-alt="Grizzled medieval veteran detective knight Rick Deckard wearing worn chainmail under a heavy leather surcoat, moody torchlight illumination, dark oil painting portrait style with rich shadows and gritty textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdp2vKOz0JGFUIUWmc5XxZlOHHWODatwI84oh1BapckrEycXiGkj82Z901BuU7sujvVYN7DtyUk3F5afauG8iCheNZoNW8z11UeuJbR5ykGZfO-7F_Knj6ehgb6pQNAY79PqpAXIw24WX4ztomD4udgU046kFVijR3bUFXukQz3lYjLDXMPSBNLsfuyIUG8-TYb1oYr91Ha8Exc9rhO8Tqlmzf7ASYDDcDtXVNT9iiA7tDaizcf9hECQ"/>
+<div class="absolute bottom-0 inset-x-0 bg-wood-dark/90 px-1 py-0.5 text-center border-t border-brass-dark">
+<span class="font-cinzel text-[10px] uppercase font-bold text-brass-light tracking-widest">TRAQUEUR</span>
+</div>
+</div>
+<!-- Fiche & Statistiques -->
+<div class="flex-1 flex flex-col justify-between gap-2">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-cinzel font-bold text-lg uppercase tracking-wider text-ink-black">Rick Deckard</h3>
+<span class="font-cinzel text-[10px] px-2 py-0.5 bg-wax-gold text-ink-black font-bold border border-brass-dark">ACTIF</span>
+</div>
+<p class="font-garamond italic text-sm text-ink-muted">Ancien Bailli des Lames • Lame d'Acier Valérien</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted tracking-widest font-bold">INITIATIVE</span>
+<span class="font-cinzel font-bold text-2xl text-ink-black">18</span>
+</div>
+</div>
+<!-- JAUGES MARTIALES D'ENCRE -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Vitalité Corporelle</span>
+<span class="font-cinzel font-bold text-sm text-ink-emerald">38 / 45</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-ink-emerald w-[84%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Endurance / Vigueur</span>
+<span class="font-cinzel font-bold text-sm text-ink-sapphire">14 / 20</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-ink-sapphire w-[70%]"></div>
+</div>
+</div>
+</div>
+<!-- ACTIONS INSTANTANÉES DECKARD -->
+<div class="flex flex-wrap items-center gap-2 pt-1 border-t border-brass-dark/20">
+<button class="px-3 py-1 bg-brass text-ink-black border border-brass-dark font-cinzel text-[11px] uppercase font-bold hover:bg-brass-light transition-colors shadow">
+                    Fendre le Bouclier
+                  </button>
+<button class="px-3 py-1 bg-parchment-deep text-ink-brown border border-brass-dark/60 font-cinzel text-[11px] uppercase font-semibold hover:bg-parchment-card transition-colors">
+                    Tir d'Arbalète
+                  </button>
+<button class="px-3 py-1 bg-parchment-deep text-ink-brown border border-brass-dark/60 font-cinzel text-[11px] uppercase font-semibold hover:bg-parchment-card transition-colors">
+                    Pariade Rapide
+                  </button>
+</div>
+</div>
+</div>
+<!-- COMBATTANT 2 : RACHAEL TYRELL (ALLIÉE ENVOÛTEUSE) -->
+<div class="relative bg-parchment-card p-4 parchment-border flex flex-col md:flex-row gap-4 items-stretch">
+<div class="absolute -top-1 -left-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="w-full md:w-32 h-36 bg-parchment-deep shrink-0 relative overflow-hidden border-2 border-brass-dark shadow-inner">
+<img class="w-full h-full object-cover filter contrast-105" data-alt="Elegant medieval sorceress noblewoman Rachael Tyrell with dark styled hair in an elaborate braided chignon, velvet gown with dark fur trim and golden filigree brooches, solemn expression, renaissance lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTSk184sB8qoCPBuqvTS5fuUedy7b4RkR2-tvu9dzOy08VJ0eGTqJaisJB-R8_HE_-k5PjsRY4w7P8NPyj_N2btHXm2b8-fa8NWZ7dnSJYNnCGsQmKMsLLNo4v8YpT1vKlgjN2naEJFGqzOdPlXfdk1Ywy2ynVwdlSkc9ixm2orMGlRddKnda4inQ_0zaw_LoryYGGiRaOARI5f53wAgwxZc5egbYobE7xUlQS_t12qIvr1_jWtpTaGg"/>
+<div class="absolute bottom-0 inset-x-0 bg-wood-dark/90 px-1 py-0.5 text-center border-t border-brass-dark">
+<span class="font-cinzel text-[10px] uppercase font-bold text-brass-light tracking-widest">ENVOÛTEUSE</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between gap-2">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-cinzel font-bold text-lg uppercase tracking-wider text-ink-black">Rachael Tyrell</h3>
+<span class="font-cinzel text-[10px] px-2 py-0.5 bg-parchment-deep text-ink-brown font-bold border border-brass-dark/60">SÉRÉNITÉ</span>
+</div>
+<p class="font-garamond italic text-sm text-ink-muted">Héritière Arcanique • Glyphes de Protection</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted tracking-widest font-bold">INITIATIVE</span>
+<span class="font-cinzel font-bold text-2xl text-ink-black">15</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Vitalité Corporelle</span>
+<span class="font-cinzel font-bold text-sm text-ink-emerald">28 / 30</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-ink-emerald w-[93%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Flux de Mana</span>
+<span class="font-cinzel font-bold text-sm text-ink-sapphire">32 / 40</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-ink-sapphire w-[80%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-brass-dark/20">
+<span class="font-cinzel text-[10px] uppercase font-bold text-ink-muted">RÉSERVE ARCANES : 4 PARCHEMINS ACTIFS</span>
+</div>
+</div>
+</div>
+<!-- COMBATTANT 3 : GAFF (ALLIÉ ÉCLAIREUR / ORACLE) -->
+<div class="relative bg-parchment-card p-4 parchment-border flex flex-col md:flex-row gap-4 items-stretch">
+<div class="absolute -top-1 -left-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-brass-dark/60 border border-brass-dark"></div>
+<div class="w-full md:w-32 h-36 bg-parchment-deep shrink-0 relative overflow-hidden border-2 border-brass-dark shadow-inner">
+<img class="w-full h-full object-cover filter contrast-105" data-alt="Mysterious medieval ranger and origami talisman crafter Gaff wearing an embroidered hood and dark wool cloak, holding a tiny folded parchment unicorn, eerie atmospheric tavern lantern light, dramatic chiaroscuro." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy2BcA_m6KRXEqBH7BKBIkNMsvw_iB_LAbtMLBTExfBH7-8DWrtAIc3BVHyjS2lQh3PayHDWFu1NsRWy_SxYifrfVQdFGXTTcTwK7kOG_XEZPSvaDlqVjzcgswzkJX5sVq1vNVBlFmp0buRsSqsS3tSpQpDReXgqfix98QNrMN9cpJWVB6dV3CAV_vAPLPX7X-LTqaZ-cPML8CvPhy7EWtvGfllhtxC2uQbQsqyQCc4FbIn3KmpRb8Tg"/>
+<div class="absolute bottom-0 inset-x-0 bg-wood-dark/90 px-1 py-0.5 text-center border-t border-brass-dark">
+<span class="font-cinzel text-[10px] uppercase font-bold text-brass-light tracking-widest">AUGURE</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between gap-2">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-cinzel font-bold text-lg uppercase tracking-wider text-ink-black">Gaff</h3>
+<span class="font-cinzel text-[10px] px-2 py-0.5 bg-parchment-deep text-ink-brown font-bold border border-brass-dark/60">EMBUSCADE</span>
+</div>
+<p class="font-garamond italic text-sm text-ink-muted">Oracle des Ruelles • Dagues d'Argent Silencieuses</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted tracking-widest font-bold">INITIATIVE</span>
+<span class="font-cinzel font-bold text-2xl text-ink-black">12</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Vitalité Corporelle</span>
+<span class="font-cinzel font-bold text-sm text-wax-gold">18 / 32</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-wax-gold w-[56%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Vigilance Tactique</span>
+<span class="font-cinzel font-bold text-sm text-ink-sapphire">09 / 10</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-ink-sapphire w-[90%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-brass-dark/20">
+<span class="font-cinzel text-[10px] uppercase font-bold text-ink-muted">TALISMAN PLIÉ : LA LICORNE DE CIRE PRÊTE</span>
+</div>
+</div>
+</div>
+<!-- COMBATTANT 4 : ROY BATTY (NÉMÉSIS HOSTILE - SCEAU MENAÇANT) -->
+<div class="relative bg-parchment-card p-4 border-2 border-blood shadow-lg flex flex-col md:flex-row gap-4 items-stretch">
+<!-- Sceau d'hostile menaçant en haut à droite -->
+<div class="absolute -top-3 -right-2 px-2.5 py-1 bg-blood text-parchment-card font-cinzel text-[10px] uppercase font-bold shadow flex items-center gap-1 border border-blood-dark">
+<span class="material-symbols-outlined text-[14px]">skull</span> HOSTILE MENAÇANT
+              </div>
+<div class="w-full md:w-32 h-36 bg-parchment-deep shrink-0 relative overflow-hidden border-2 border-blood-dark shadow-inner">
+<img class="w-full h-full object-cover filter contrast-110" data-alt="Ferocious medieval rogue berserker Roy Batty with pale cropped hair, intense burning blue eyes, battle scars, black iron gothic plate armor, gripping a spiked warhammer under rain and fire embers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8qpVyzmusARZNjzn6ygrWUF2gJMdtc0YJyVtf7Fw-f7Ougg_Tzo69fr23BJVwdLzWR28_OfBEfUAzMmNoYN9KPvDYMupnlni3oCgYCAOHmkW3my0LHcmURSh9D4MuI2fhFWNSNi6rr8rOVMX-7KhLRKFV9WcIXTsnBwcLMFxv3VfotWCS86D0f3bLBLpWZvYriOT5B9-31A8ZkUV9YtrdQQ-4w6x31CMFv_5SoTojImsCv3CCdCwE3A"/>
+<div class="absolute bottom-0 inset-x-0 bg-blood-dark/95 px-1 py-0.5 text-center border-t border-blood">
+<span class="font-cinzel text-[10px] uppercase text-parchment-card font-bold tracking-wider">BERSERKER</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between gap-2">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-cinzel font-bold text-lg uppercase tracking-wider text-blood">Roy Batty</h3>
+<span class="font-cinzel text-[10px] px-2 py-0.5 bg-blood-dark text-parchment-card font-bold border border-blood">RAGE MARTIALE</span>
+</div>
+<p class="font-garamond italic text-sm text-ink-muted">Maître Replicant Déchu • Masse d'Armes &amp; Flammes</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-cinzel text-[10px] uppercase text-blood tracking-widest font-bold">INITIATIVE</span>
+<span class="font-cinzel font-bold text-2xl text-blood">21</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-blood font-bold">Vitalité Ennemie</span>
+<span class="font-cinzel font-bold text-sm text-blood">52 / 60</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-blood w-[86%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted font-bold">Frénésie Noire</span>
+<span class="font-cinzel font-bold text-sm text-wax-gold">90 / 100</span>
+</div>
+<div class="h-2 w-full bg-parchment-deep border border-brass-dark/60 overflow-hidden">
+<div class="h-full bg-wax-gold w-[90%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-blood/20">
+<span class="font-cinzel text-[10px] uppercase font-bold text-blood tracking-wide">CAPACITÉ : « LARMES DANS LA PLUIE » EN CHARGE</span>
+<span class="font-cinzel text-[10px] text-ink-muted font-semibold uppercase">CIBLAGE : RICK DECKARD</span>
+</div>
+</div>
+</div>
+</div>
+<!-- COLONNE DROITE : CONTRÔLES DE COMBAT & SYSTÈME BLADE RUNNER (4 COLONNES) -->
+<div class="lg:col-span-4 flex flex-col gap-4">
+<!-- CARTOUCHE DE RÉGIE MARTIALE -->
+<div class="bg-parchment-card p-4 parchment-border flex flex-col gap-3.5">
+<div class="flex items-center justify-between border-b border-brass-dark/30 pb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-ink-brown text-[20px]">swords</span>
+<span class="font-cinzel font-bold text-base uppercase tracking-wider text-ink-black">Régie Martiale</span>
+</div>
+<span class="font-cinzel font-bold text-xs text-ink-black bg-parchment-deep px-2 py-0.5 border border-brass-dark/50">ROUND 01</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Bouton Tour Suivant façon sceau d'or -->
+<button class="w-full py-2.5 bg-wax-gold hover:bg-brass-light text-ink-black font-cinzel text-xs uppercase tracking-wider font-bold border border-brass-dark shadow flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]">forward</span>
+<span>Passer au Tour Suivant</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-1.5 bg-parchment-deep hover:bg-parchment-base text-ink-brown font-cinzel text-[11px] uppercase font-bold border border-brass-dark/60 transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[15px]">pause</span> Suspendre
+                  </button>
+<button class="py-1.5 bg-parchment-deep hover:bg-parchment-base text-ink-brown font-cinzel text-[11px] uppercase font-bold border border-brass-dark/60 transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[15px]">restart_alt</span> Réinit.
+                  </button>
+</div>
+</div>
+<!-- MOTEUR DE RÈGLES // BLADE RUNNER RPG -->
+<div class="bg-parchment-deep p-3 flex flex-col gap-1 border border-brass-dark/50 shadow-inner">
+<div class="flex items-center justify-between border-b border-brass-dark/20 pb-1">
+<span class="font-cinzel text-[10px] uppercase text-ink-muted tracking-widest font-bold">SYSTÈME ACTIF</span>
+<span class="font-cinzel text-[10px] uppercase text-ink-black font-black tracking-wider">BLADE RUNNER V4</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-garamond text-sm text-ink-muted">Dés de Prouesse :</span>
+<span class="font-cinzel font-bold text-sm text-ink-black">D12 + D8</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-garamond text-sm text-ink-muted">Modificateur de Froidure :</span>
+<span class="font-cinzel font-bold text-xs text-blood-dark">-1 ÉCHELON</span>
+</div>
+</div>
+</div>
+<!-- CARTOUCHE DE JET SYSTÈME IMMÉDIAT (DÉS EN OS & IVOIRE) -->
+<div class="bg-parchment-card p-4 parchment-border flex flex-col gap-3.5">
+<div class="flex items-center justify-between border-b border-brass-dark/30 pb-2">
+<span class="font-cinzel font-bold text-xs uppercase tracking-wider text-ink-black">Lancer de dés de duel</span>
+<span class="material-symbols-outlined text-ink-muted text-[18px]">casino</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- Dé A -->
+<div class="bg-parchment-deep p-3 flex flex-col items-center justify-center border border-brass-dark/60 shadow-inner">
+<span class="font-cinzel text-[9px] uppercase text-ink-muted font-bold tracking-widest">DÉ PRINCIPAL (A)</span>
+<span class="font-cinzel font-black text-3xl text-ink-black my-0.5">11</span>
+<span class="font-cinzel text-[9px] uppercase text-ink-emerald font-bold tracking-wider">SUCCÈS CRITIQUE</span>
+</div>
+<!-- Dé B -->
+<div class="bg-parchment-deep p-3 flex flex-col items-center justify-center border border-brass-dark/60 shadow-inner">
+<span class="font-cinzel text-[9px] uppercase text-ink-muted font-bold tracking-widest">DÉ SECONDAIRE (B)</span>
+<span class="font-cinzel font-black text-3xl text-ink-black my-0.5">06</span>
+<span class="font-cinzel text-[9px] uppercase text-ink-muted font-bold tracking-wider">RÉUSSITE</span>
+</div>
+</div>
+<button class="w-full py-2 bg-parchment-deep hover:bg-parchment-base text-ink-brown font-cinzel text-xs uppercase tracking-wider font-bold border border-brass-dark/60 transition-colors shadow">
+                Relancer le Sort Martial
+              </button>
+</div>
+<!-- CHRONIQUE D'AFFRONTEMENT & COMBAT LOG (PARCHEMIN DES COUPS) -->
+<div class="bg-parchment-card p-4 parchment-border flex flex-col gap-2.5">
+<div class="flex items-center justify-between border-b border-brass-dark/30 pb-1.5">
+<span class="font-cinzel font-bold text-xs uppercase tracking-wider text-ink-black">Chronique Écrite</span>
+<span class="font-cinzel text-[10px] text-ink-muted font-bold uppercase tracking-widest">PARCHEMIN DES COUPS</span>
+</div>
+<div class="flex flex-col gap-1.5 max-h-56 overflow-y-auto pr-1">
+<div class="p-2 bg-parchment-deep border-l-2 border-blood">
+<span class="font-cinzel text-[10px] text-blood font-bold tracking-wider">[ROY BATTY]</span>
+<p class="font-garamond text-xs text-ink-brown leading-tight">Frappe furieuse contre Gaff (-14 PV - Saignement).</p>
+</div>
+<div class="p-2 bg-parchment-deep border-l-2 border-brass-dark">
+<span class="font-cinzel text-[10px] text-ink-black font-bold tracking-wider">[DECKARD]</span>
+<p class="font-garamond text-xs text-ink-brown leading-tight">Riposte à la pointe du pavois (Succès Majeur).</p>
+</div>
+<div class="p-2 bg-parchment-deep border-l-2 border-ink-sapphire">
+<span class="font-cinzel text-[10px] text-ink-sapphire font-bold tracking-wider">[RACHAEL]</span>
+<p class="font-garamond text-xs text-ink-brown leading-tight">Déploie le voile arcanique de brume sur le groupe.</p>
+</div>
+</div>
+<div class="pt-1">
+<input class="w-full bg-parchment-deep border border-brass-dark/60 px-2.5 py-1.5 font-garamond italic text-xs text-ink-black placeholder:text-ink-muted focus:outline-none focus:bg-parchment-base transition-colors" placeholder="Inscrire un haut fait ou arrêt de mort..." type="text"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

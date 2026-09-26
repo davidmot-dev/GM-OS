@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline-variant": "#3c494c",
+          "inverse-on-surface": "#2a3043",
+          "surface-container": "#191f31",
+          "rpg-on-status": "#020617",
+          "secondary-container": "#3f465c",
+          "on-error-container": "#ffdad6",
+          "rpg-accent": "#22d3ee",
+          "surface-bright": "#33394c",
+          "on-secondary": "#283044",
+          "on-primary": "#00363e",
+          "rpg-surface": "#0f172a",
+          "on-tertiary-container": "#444f63",
+          "rpg-text": "#f8fafc",
+          "on-background": "#dce1fb",
+          "rpg-warning": "#f59e0b",
+          "on-surface-variant": "#bbc9cd",
+          "rpg-accent-contrast": "#020617",
+          "rpg-bg": "#020617",
+          "on-secondary-container": "#adb4ce",
+          "primary-container": "#22d3ee",
+          "outline": "#859397",
+          "primary-fixed-dim": "#2fd9f4",
+          "surface-tint": "#2fd9f4",
+          "surface-variant": "#2e3447",
+          "on-primary-fixed": "#001f25",
+          "secondary-fixed": "#dae2fd",
+          "surface": "#0c1324",
+          "on-primary-fixed-variant": "#004e5a",
+          "on-tertiary-fixed": "#111c2d",
+          "rpg-muted": "#898c95",
+          "tertiary-container": "#b6c1d9",
+          "tertiary-fixed": "#d8e3fb",
+          "surface-container-lowest": "#070d1f",
+          "surface-container-low": "#151b2d",
+          "rpg-danger": "#ef4444",
+          "surface-container-high": "#23293c",
+          "rpg-success": "#10b981",
+          "rpg-info": "#3b82f6",
+          "on-surface": "#dce1fb",
+          "surface-dim": "#0c1324",
+          "on-tertiary-fixed-variant": "#3c475a",
+          "on-primary-container": "#005763",
+          "primary-fixed": "#a2eeff",
+          "secondary-fixed-dim": "#bec6e0",
+          "on-secondary-fixed": "#131b2e",
+          "rpg-border": "#1e293b",
+          "primary": "#8aebff",
+          "rpg-surface-2": "#1e293b",
+          "surface-container-highest": "#2e3447",
+          "on-secondary-fixed-variant": "#3f465c",
+          "tertiary-fixed-dim": "#bcc7de",
+          "error-container": "#93000a",
+          "background": "#0c1324",
+          "tertiary": "#d2ddf5",
+          "secondary": "#bec6e0",
+          "inverse-surface": "#dce1fb",
+          "on-tertiary": "#263143",
+          "on-error": "#690005",
+          "error": "#ffb4ab",
+          "inverse-primary": "#006877"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter": "12px",
+          "space-sm": "8px",
+          "space-lg": "16px",
+          "space-md": "12px",
+          "space-xl": "24px",
+          "space-xs": "4px",
+          "margin": "16px"
+        },
+        "fontFamily": {
+          "label-xs": [
+            "Space Mono"
+          ],
+          "body-sm": [
+            "Space Mono"
+          ],
+          "number-md": [
+            "Space Mono"
+          ],
+          "display-md": [
+            "Syne"
+          ],
+          "title-md": [
+            "Syne"
+          ],
+          "display-lg": [
+            "Syne"
+          ],
+          "number-lg": [
+            "Space Mono"
+          ],
+          "label-sm": [
+            "Space Mono"
+          ],
+          "body-md": [
+            "Space Mono"
+          ]
+        },
+        "fontSize": {
+          "label-xs": [
+            "10px",
+            {
+              "lineHeight": "12px",
+              "letterSpacing": "0.18em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "400"
+            }
+          ],
+          "number-md": [
+            "16px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-md": [
+            "24px",
+            {
+              "lineHeight": "30px",
+              "letterSpacing": "0.05em",
+              "fontWeight": "700"
+            }
+          ],
+          "title-md": [
+            "17px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0.08em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "34px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "0.06em",
+              "fontWeight": "800"
+            }
+          ],
+          "number-lg": [
+            "28px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.14em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body-md text-on-surface selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-surface-container-lowest border-r border-rpg-border z-50 flex flex-col justify-between select-none"><div class="flex flex-col h-full"><div class="h-14 px-margin flex items-center justify-between border-b border-rpg-border bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-2 h-2 bg-rpg-accent animate-pulse"></div><span class="font-label-sm text-label-sm uppercase tracking-wider text-rpg-accent">SYS.NAV</span></div><span class="font-label-xs text-label-xs text-rpg-muted uppercase">27-MOD</span></div><nav class="flex-1 overflow-y-auto py-space-sm" data-active-classes="bg-surface-container-high text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]"><div class="px-space-md py-space-xs font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">AVENTURE</div><div class="flex flex-col mb-space-sm"><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">swords</span>Combat-OS</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">casino</span>Dice-OS</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="generateur" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">auto_awesome</span>Générateur...</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">map</span>Cartographie</a><a aria-current="page" class="flex items-center px-space-md py-space-xs uppercase transition-colors bg-surface-container-high text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]" data-path="trame-narrative" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">account_tree</span>Trame Narrative</a></div><div class="px-space-md py-space-xs font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest border-t border-rpg-border pt-space-sm">AUDIO</div><div class="flex flex-col mb-space-sm"><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">music_note</span>Musique</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">graphic_eq</span>Effets Sonores</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">surround_sound</span>Ambiances</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">record_voice_over</span>Voice-OS</a></div><div class="px-space-md py-space-xs font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest border-t border-rpg-border pt-space-sm">OUTILS</div><div class="flex flex-col mb-space-sm"><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">perm_media</span>Médiathèque</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="image-os" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">image</span>Image-OS</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="horloge-et-temps" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">schedule</span>Horloge &amp; Temps</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">wb_incandescent</span>Light-OS</a><a class="flex items-center px-space-md py-space-xs font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="tables-aleatoires" href="#"><span class="material-symbols-outlined text-[16px] mr-space-sm text-rpg-muted">reorder</span>Tables Aléat...</a></div></nav><div class="h-12 border-t border-rpg-border bg-surface-container-lowest px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><button class="text-rpg-muted hover:text-rpg-accent transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">terminal</span></button><button class="text-rpg-muted hover:text-rpg-accent transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">bug_report</span></button><button class="text-rpg-muted hover:text-rpg-accent transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">tune</span></button></div><div class="flex items-center gap-space-xs font-label-xs text-label-xs text-rpg-muted"><span>V6.4.2</span></div></div></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-surface-container-lowest/95 backdrop-blur-md border-b border-rpg-border z-40 flex items-center justify-between px-margin select-none"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><span class="font-title-md text-title-md uppercase tracking-widest text-primary">GM-OS V6</span><span class="font-label-sm text-label-sm text-rpg-muted">//</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">NEXUS-PROTOCOL</span></div><div class="h-4 w-[1px] bg-rpg-border"></div><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[18px]">volume_up</span><div class="w-24 h-1.5 bg-surface-container-high rounded-none relative flex items-center"><div class="h-full w-full bg-rpg-accent"></div></div><span class="font-label-xs text-label-xs text-rpg-accent font-bold">100%</span></div><div class="h-4 w-[1px] bg-rpg-border"></div><button class="px-space-sm py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase tracking-wider border border-rpg-border flex items-center gap-space-xs transition-colors" type="button"><span class="material-symbols-outlined text-[14px] text-rpg-accent">chat_bubble</span>FOCUS CHAT</button></div><div class="flex items-center gap-space-md"><button class="h-8 px-space-md bg-rpg-danger hover:brightness-110 text-rpg-on-status font-label-xs text-label-xs font-bold uppercase tracking-widest flex items-center gap-space-xs transition-all shadow-[0_0_8px_rgba(239,68,68,0.4)]" type="button"><span class="material-symbols-outlined text-[16px]">dangerous</span>STOP ALL</button><div class="flex items-center border border-rpg-border bg-surface-container-lowest"><button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider bg-surface-container-high text-rpg-accent" type="button">ATELIER</button><button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">TABLE</button></div><button class="h-8 px-space-sm bg-surface-container-high hover:bg-surface-container-highest text-rpg-accent font-label-xs text-label-xs uppercase tracking-wider border border-rpg-accent/30 flex items-center gap-space-xs transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">link</span>CONNECTER JOUEURS</button><div class="flex items-center gap-space-xs px-space-sm py-1 border border-rpg-border bg-surface-container-low"><div class="w-1.5 h-1.5 bg-rpg-success rounded-full animate-ping"></div><span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-success">SYS-LINK ACTIVE</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-14 bg-background min-h-screen"><div class="w-full p-margin"><div class="flex flex-col w-full text-on-surface select-none">
+<!-- TOP MODULE BAR -->
+<header class="h-16 px-margin bg-surface-container-lowest flex items-center justify-between shadow-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 bg-surface-container-high flex items-center justify-center text-rpg-accent">
+<span class="material-symbols-outlined text-[24px]">account_tree</span>
+</div>
+<div class="flex flex-col">
+<span class="font-display-md text-display-md uppercase tracking-wider text-rpg-accent leading-none">TRAME NARRATIVE</span>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-widest mt-1">ANGES DE FEU — 5 ACTES ARCHIVÉS</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<!-- VIEW SWITCHER -->
+<div class="flex items-center bg-surface-container-low p-1 gap-1">
+<button class="px-space-md py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">account_tree</span>
+          [ARBRE]
+        </button>
+<button class="px-space-md py-1 font-label-xs text-label-xs uppercase tracking-wider bg-rpg-accent text-rpg-accent-contrast font-bold shadow-[0_0_12px_rgba(34,211,238,0.4)] flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">hub</span>
+          [GRAPHE]
+        </button>
+</div>
+<!-- ADD ACT BUTTON -->
+<button class="h-9 px-space-md bg-surface-container-high hover:bg-surface-container-highest text-rpg-accent font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+        + AJOUTER UN ACTE
+      </button>
+</div>
+</header>
+<!-- BARRE D'OUTILS ET FILTRES -->
+<section class="bg-surface-container-low px-margin py-space-sm flex flex-col gap-space-xs shadow-sm">
+<!-- ROW 1: TABS & ACTION BUTTONS -->
+<div class="flex items-center justify-between flex-wrap gap-space-sm">
+<div class="flex items-center flex-wrap gap-space-sm">
+<!-- 6 LAYERS PILLS -->
+<div class="flex items-center bg-surface-container-lowest p-1 gap-1">
+<button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider bg-rpg-accent text-rpg-accent-contrast font-bold shadow-[0_0_8px_rgba(34,211,238,0.3)]" type="button">[TRAME]</button>
+<button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">[LIEUX]</button>
+<button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">[PNJ]</button>
+<button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">[INDICES]</button>
+<button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">[PERSONNAGES]</button>
+<button class="px-space-sm py-1 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">[AMBIANCES]</button>
+</div>
+<div class="h-4 w-px bg-rpg-border"></div>
+<!-- SCENE FILTER DROPDOWN -->
+<div class="relative">
+<button class="h-8 px-space-sm bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-space-xs" type="button">
+<span>Toutes les scènes</span>
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">expand_more</span>
+</button>
+</div>
+<!-- TOGGLE HIDE CLOSED -->
+<label class="flex items-center gap-space-xs cursor-pointer select-none px-space-xs py-1">
+<input class="w-3.5 h-3.5 accent-rpg-accent bg-surface-container-lowest rounded-none cursor-pointer" type="checkbox"/>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Masquer les scènes closes</span>
+</label>
+</div>
+<!-- ACTION BUTTONS -->
+<div class="flex items-center gap-space-xs">
+<button class="h-8 px-space-sm bg-surface-container-high hover:bg-surface-container-highest text-rpg-accent font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">sync_alt</span>
+          [⇋ RELIER]
+        </button>
+<button class="h-8 px-space-sm bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">grid_view</span>
+          [⊞ RANGER]
+        </button>
+<button class="h-8 px-space-sm bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">lock_open</span>
+          [🔓 LIBRE]
+        </button>
+<button class="h-8 px-space-sm bg-surface-container-high hover:bg-surface-container-highest text-rpg-muted hover:text-rpg-danger font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">restart_alt</span>
+          [↺ Réinitialiser]
+        </button>
+</div>
+</div>
+<!-- ROW 2: CONSTATS EN PASTILLES -->
+<div class="flex items-center gap-space-xs flex-wrap pt-1">
+<div class="flex items-center gap-1 px-space-sm py-0.5 bg-error-container text-on-error-container font-label-xs text-label-xs tracking-wider">
+<span>⚠️ 9 indices que plus aucune scène ne livre</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-0.5 bg-error-container text-on-error-container font-label-xs text-label-xs tracking-wider">
+<span>⚠️ 24 scènes qui renvoient à des entités supprimées</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-0.5 bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs tracking-wider">
+<span>ℹ️ 10 PNJ qu'aucune scène ne convoque</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-0.5 bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs tracking-wider">
+<span>ℹ️ 3 scènes sans PNJ ni indices</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-0.5 bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs tracking-wider">
+<span>ℹ️ 11 scènes sans lieux</span>
+</div>
+</div>
+</section>
+<!-- MAIN WORKING AREA (GRAPH CANVAS + RIGHT INSPECTOR) -->
+<div class="relative w-full h-[760px] bg-surface-container-lowest overflow-hidden flex">
+<!-- GRAPH CANVAS -->
+<div class="relative flex-1 h-full overflow-hidden select-none bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px]">
+<!-- SVG CONNECTIONS / DIRECTED ARROWS -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow-cyan" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="8" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#22d3ee"></path>
+</marker>
+<marker id="arrow-muted" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="8" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#444f63"></path>
+</marker>
+<marker id="arrow-active" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="8" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#2fd9f4"></path>
+</marker>
+</defs>
+<!-- Connections from Node 2 (Labo RIT) to Node 1 (Chambre 314) -->
+<path d="M 180 230 C 230 230, 270 290, 310 290" fill="none" marker-end="url(#arrow-cyan)" stroke="#22d3ee" stroke-dasharray="4 2" stroke-width="2"></path>
+<!-- Connections from Node 1 (Chambre 314) to Node 3 (Doc Badger) -->
+<path d="M 530 290 C 580 290, 600 200, 650 200" fill="none" marker-end="url(#arrow-active)" stroke="#2fd9f4" stroke-width="2.5"></path>
+<!-- Connections from Node 1 (Chambre 314) to Node 4 (Bright Eyes) -->
+<path d="M 530 310 C 590 310, 610 420, 650 420" fill="none" marker-end="url(#arrow-active)" stroke="#2fd9f4" stroke-width="2"></path>
+<!-- Node 3 to Node 5 (Runciter's Zoological) -->
+<path d="M 860 200 C 900 200, 910 290, 940 290" fill="none" marker-end="url(#arrow-muted)" stroke="#3f465c" stroke-width="1.5"></path>
+<!-- Node 4 to Node 5 -->
+<path d="M 860 420 C 900 420, 910 320, 940 310" fill="none" marker-end="url(#arrow-muted)" stroke="#3f465c" stroke-width="1.5"></path>
+<!-- Distant connections -->
+<path d="M 170 380 C 220 380, 260 320, 310 310" fill="none" marker-end="url(#arrow-muted)" stroke="#3f465c" stroke-dasharray="2 2" stroke-width="1.5"></path>
+</svg>
+<!-- NODE 2: Labo RIT Sector-4 (JOUÉE) -->
+<div class="absolute left-[30px] top-[190px] w-[180px] bg-surface-container-high p-space-sm shadow-md transition-transform hover:scale-105 z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">ACTE II</span>
+<span class="px-1.5 py-0.5 bg-surface-container-highest text-rpg-muted font-label-xs text-label-xs">JOUÉE</span>
+</div>
+<div class="font-title-md text-title-md text-on-surface truncate">Labo RIT Sector-4</div>
+<div class="flex items-center gap-space-xs mt-2">
+<div class="flex items-center gap-0.5" title="Lieu: Secteur 4">
+<span class="w-1.5 h-1.5 bg-rpg-success inline-block"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">S-4</span>
+</div>
+<div class="flex items-center gap-0.5" title="PNJ: Dr Vane">
+<span class="w-1.5 h-1.5 bg-rpg-warning inline-block"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Vane</span>
+</div>
+</div>
+<!-- Satellite badge Acte -->
+<div class="absolute -top-2 -left-2 w-4 h-4 bg-rpg-info rotate-45 flex items-center justify-center shadow-sm" title="Acte: Enquête"></div>
+</div>
+<!-- NODE PRIOR (Briefing) -->
+<div class="absolute left-[20px] top-[350px] w-[170px] bg-surface-container p-space-sm opacity-60 shadow-sm z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">ACTE I</span>
+<span class="px-1.5 py-0.5 bg-surface-container-highest text-rpg-muted font-label-xs text-label-xs">JOUÉE</span>
+</div>
+<div class="font-title-md text-title-md text-on-surface truncate">Briefing &amp; Conclave</div>
+<div class="flex items-center gap-space-xs mt-2">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">QG Apex</span>
+</div>
+</div>
+<!-- NODE 1: Chambre 314 : Perquisition (SELECTED / ACTIVE with cyan glow) -->
+<div class="absolute left-[310px] top-[250px] w-[220px] bg-surface-container-high p-space-md shadow-[0_0_20px_rgba(34,211,238,0.35)] ring-2 ring-rpg-accent z-20">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 bg-rpg-accent animate-ping"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-accent font-bold">ACTE III</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-label-xs text-label-xs font-bold tracking-wider">EN COURS</span>
+</div>
+<div class="font-display-md text-display-md text-rpg-accent font-bold leading-tight my-1">Chambre 314 : Perquisition</div>
+<!-- SATELLITE BADGES -->
+<div class="flex items-center justify-between pt-2 border-t border-rpg-border mt-2">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-on-surface">Motel Neon</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 bg-rpg-warning"></span>
+<span class="font-label-xs text-label-xs text-on-surface">2 PNJ</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-rpg-accent">search</span>
+<span class="font-label-xs text-label-xs text-on-surface">4 Ind.</span>
+</div>
+</div>
+<!-- SATELLITE DECORATIVE PIN -->
+<div class="absolute -top-3 -right-3 w-6 h-6 bg-surface-container-lowest flex items-center justify-center ring-1 ring-rpg-accent">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">pin_drop</span>
+</div>
+</div>
+<!-- NODE 3: Doc Badger : L'Interrogatoire (PRÉVUE) -->
+<div class="absolute left-[650px] top-[160px] w-[210px] bg-surface-container-high p-space-sm shadow-md transition-transform hover:scale-105 z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">ACTE III</span>
+<span class="px-1.5 py-0.5 bg-surface-container-highest text-rpg-accent font-label-xs text-label-xs">PRÉVUE</span>
+</div>
+<div class="font-title-md text-title-md text-on-surface">Doc Badger : L'Interrogatoire</div>
+<div class="flex items-center gap-space-md mt-2">
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-warning"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Doc Badger</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Clinique</span>
+</div>
+</div>
+<div class="absolute -top-2 -left-2 w-3.5 h-3.5 bg-rpg-info rotate-45 flex items-center justify-center" title="Acte III"></div>
+</div>
+<!-- NODE 4: Bright Eyes Beauty Salon (ANNULÉE) -->
+<div class="absolute left-[650px] top-[380px] w-[210px] bg-surface-container p-space-sm opacity-80 shadow-md z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">ACTE III</span>
+<span class="px-1.5 py-0.5 bg-rpg-danger/20 text-rpg-danger font-label-xs text-label-xs font-bold">ANNULÉE</span>
+</div>
+<div class="font-title-md text-title-md text-on-surface line-through decoration-rpg-danger/60">Bright Eyes Beauty Salon</div>
+<div class="flex items-center gap-space-md mt-2">
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Salon 09</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-warning"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Tessa</span>
+</div>
+</div>
+</div>
+<!-- NODE 5: Runciter's Zoological (EN PAUSE) -->
+<div class="absolute left-[940px] top-[270px] w-[200px] bg-surface-container-high p-space-sm shadow-md transition-transform hover:scale-105 z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">ACTE IV</span>
+<span class="px-1.5 py-0.5 bg-rpg-warning/20 text-rpg-warning font-label-xs text-label-xs">EN PAUSE</span>
+</div>
+<div class="font-title-md text-title-md text-on-surface">Runciter's Zoological</div>
+<div class="flex items-center gap-space-md mt-2">
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Dôme Nord</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-warning"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">Runciter</span>
+</div>
+</div>
+<div class="absolute -top-2 -left-2 w-3.5 h-3.5 bg-rpg-info rotate-45 flex items-center justify-center" title="Acte IV"></div>
+</div>
+<!-- BOTTOM GRAPH BAR ACROSS CANVAS (LÉGENDE) -->
+<div class="absolute bottom-0 left-0 right-0 h-10 bg-surface-container-lowest/95 backdrop-blur-sm px-margin flex items-center justify-between z-30 shadow-md">
+<div class="flex items-center gap-space-lg">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">LÉGENDE :</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 bg-rpg-info rotate-45 inline-block"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface">ACTE</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 bg-rpg-accent inline-block"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface">SCÈNE</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 bg-rpg-success rounded-full inline-block"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface">LIEU</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 bg-rpg-warning rounded-full inline-block"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface">PNJ</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="w-1.5 h-1.5 bg-rpg-accent rounded-full animate-pulse"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-accent font-bold">34 SCÈNES DÉPLOYÉES</span>
+</div>
+</div>
+</div>
+<!-- RIGHT INSPECTOR PANEL (PANNEAU DU NŒUD CHOISI: "Chambre 314 : Perquisition") -->
+<aside class="w-[360px] h-full bg-surface-container-low flex flex-col justify-between shadow-xl z-30">
+<!-- TOP INSPECTOR HEADER & NODE TITLE -->
+<div class="flex flex-col">
+<div class="px-space-md py-space-sm bg-surface-container-high flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">tune</span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-accent">INSPECTEUR DE NŒUD</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-label-xs text-label-xs font-bold">EN COURS</span>
+</div>
+<div class="p-space-md bg-surface-container-lowest">
+<div class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted mb-1">SCÈNE SÉLECTIONNÉE</div>
+<div class="font-title-md text-title-md uppercase text-on-surface leading-snug">Chambre 314 : Perquisition</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant mt-1">ID: SCN-0314 // ACTE III — L'ÉTAU</div>
+</div>
+<!-- TOP ACTIONS ROW -->
+<div class="p-space-sm bg-surface-container flex flex-col gap-1.5">
+<div class="grid grid-cols-2 gap-1.5">
+<!-- [COMMENCER] -->
+<button class="h-9 px-space-xs bg-rpg-accent hover:brightness-110 text-rpg-accent-contrast font-label-xs text-label-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+              COMMENCER
+            </button>
+<!-- [TERMINER] -->
+<button class="h-9 px-space-xs bg-surface-container-high hover:bg-surface-container-highest text-rpg-success font-label-xs text-label-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+              TERMINER
+            </button>
+</div>
+<div class="grid grid-cols-2 gap-1.5">
+<!-- [DÉTACHER] -->
+<button class="h-8 px-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase tracking-wider flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">link_off</span>
+              DÉTACHER
+            </button>
+<!-- [OUVRIR LA FICHE] -->
+<button class="h-8 px-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase tracking-wider flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+              OUVRIR FICHE
+            </button>
+</div>
+<!-- [SUPPRIMER] RED DANGER TONE -->
+<button class="h-8 w-full bg-error-container hover:brightness-110 text-on-error-container font-label-xs text-label-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1 transition-all" type="button">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+            SUPPRIMER LE NŒUD
+          </button>
+</div>
+<!-- SECTION 1: SORTIES DE LA SCÈNE (OUTGOING CONNECTIONS) -->
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-rpg-accent font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">call_made</span>
+              SORTIES DE LA SCÈNE (2)
+            </span>
+<span class="font-label-xs text-label-xs text-rpg-muted">VERS LE FUTUR</span>
+</div>
+<div class="flex flex-col gap-1.5 mt-1">
+<!-- SORTIE 1 -->
+<div class="p-2 bg-surface-container-high flex items-center justify-between">
+<div class="flex flex-col min-w-0 pr-2">
+<span class="font-label-sm text-label-sm text-on-surface truncate">Doc Badger : L'Interrogatoire</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Piste médicale • Séquence A</span>
+</div>
+<button class="px-2 py-1 bg-surface-container-lowest hover:bg-error-container text-rpg-muted hover:text-on-error-container font-label-xs text-label-xs uppercase tracking-wider transition-colors shrink-0" type="button">
+                RETIRER
+              </button>
+</div>
+<!-- SORTIE 2 -->
+<div class="p-2 bg-surface-container-high flex items-center justify-between">
+<div class="flex flex-col min-w-0 pr-2">
+<span class="font-label-sm text-label-sm text-on-surface truncate">Bright Eyes Beauty Salon</span>
+<span class="font-label-xs text-label-xs text-rpg-danger uppercase">Piste infiltrée • Annulée</span>
+</div>
+<button class="px-2 py-1 bg-surface-container-lowest hover:bg-error-container text-rpg-muted hover:text-on-error-container font-label-xs text-label-xs uppercase tracking-wider transition-colors shrink-0" type="button">
+                RETIRER
+              </button>
+</div>
+<!-- + AJOUTER UNE SORTIE -->
+<button class="h-8 w-full mt-1 bg-surface-container hover:bg-surface-container-high text-rpg-accent font-label-xs text-label-xs uppercase tracking-wider flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">add</span>
+              + Ajouter une sortie
+            </button>
+</div>
+</div>
+<div class="h-px bg-rpg-border mx-space-md"></div>
+<!-- SECTION 2: ENTRÉES DE LA SCÈNE (INCOMING CONNECTIONS) -->
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">call_received</span>
+              ENTRÉES DE LA SCÈNE (2)
+            </span>
+<span class="font-label-xs text-label-xs text-rpg-muted">ORIGINES</span>
+</div>
+<div class="flex flex-col gap-1.5 mt-1">
+<!-- ENTRÉE 1 -->
+<div class="p-2 bg-surface-container-high flex items-center justify-between">
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface truncate">Labo RIT Sector-4</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Conclue • Donnée cryptée acquise</span>
+</div>
+<span class="material-symbols-outlined text-rpg-success text-[16px]">check</span>
+</div>
+<!-- ENTRÉE 2 -->
+<div class="p-2 bg-surface-container-high flex items-center justify-between">
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface truncate">Briefing &amp; Conclave</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Prologue • Acte initial</span>
+</div>
+<span class="material-symbols-outlined text-rpg-muted text-[16px]">history</span>
+</div>
+</div>
+</div>
+</div>
+<!-- BOTTOM METRICS IN INSPECTOR -->
+<div class="p-space-md bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">lock</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-wider">VERROUILLAGE ÉDITION</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-bold">SESSION LIVE #42</span>
+</div>
+</aside>
+</div>
+</div></div></main></div></body></html>

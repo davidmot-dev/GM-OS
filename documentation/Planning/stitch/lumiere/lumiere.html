@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<!-- Typography as required: Orbitron (titles), Inter (UI & body text), Space Mono (numbers & DMX telemetry) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Orbitron:wght@500;600;700;800;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #080d1a;
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c1324;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 2px;
+    }
+    /* Cyberpunk beveled tile chamfer helper */
+    .bevel-pad {
+      clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+    .touch-target {
+      min-height: 48px;
+      min-width: 48px;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#080d1a",
+            "surface-dim": "#050914",
+            "surface-container-lowest": "#060a16",
+            "surface-container-low": "#0d1527",
+            "surface-container": "#131d35",
+            "surface-container-high": "#1a2642",
+            "surface-container-highest": "#233355",
+            "primary": "#22d3ee",
+            "primary-container": "#0891b2",
+            "on-primary": "#020617",
+            "rpg-accent": "#22d3ee",
+            "rpg-danger": "#ef4444",
+            "rpg-warning": "#f59e0b",
+            "rpg-success": "#10b981",
+            "rpg-info": "#38bdf8",
+            "rpg-text": "#f1f5f9",
+            "rpg-muted": "#94a3b8",
+            "rpg-border": "#1e293b",
+            "tertiary-fixed": "#e879f9"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "inter": ["Inter", "sans-serif"],
+            "mono": ["Space Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-inter text-rpg-text min-h-screen antialiased overflow-x-hidden">
+<!-- Left Sidebar (Permanent 220px GM-OS Shell) -->
+<aside class="fixed left-0 top-0 h-full w-[220px] bg-surface-container-lowest z-50 flex flex-col justify-between border-r border-rpg-border">
+<div class="flex flex-col">
+<div class="h-16 px-4 flex items-center justify-between border-b border-rpg-border bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">terminal</span>
+<div class="flex flex-col">
+<span class="font-orbitron font-bold text-[15px] tracking-wider text-rpg-text leading-none">GM-OS</span>
+<span class="font-mono text-[10px] text-rpg-muted tracking-widest leading-none mt-1">V6 // NEXUS</span>
+</div>
+</div>
+<div class="h-2 w-2 rounded-full bg-rpg-accent animate-pulse"></div>
+</div>
+<div class="p-2 flex flex-col gap-3">
+<!-- Aventure -->
+<div class="flex flex-col">
+<span class="px-2 py-1 font-mono text-[10px] text-rpg-muted uppercase tracking-widest">Aventure</span>
+<nav class="flex flex-col gap-0.5">
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">swords</span>Combat-OS
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">casino</span>Dice-OS
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">psychology</span>Générateur
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">map</span>Cartographie
+            </a>
+</nav>
+</div>
+<!-- Audio -->
+<div class="flex flex-col">
+<span class="px-2 py-1 font-mono text-[10px] text-rpg-muted uppercase tracking-widest">Audio</span>
+<nav class="flex flex-col gap-0.5">
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">music_note</span>Musique
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">volume_up</span>Effets Sonores
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">graphic_eq</span>Ambiances
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">record_voice_over</span>Voice-OS
+            </a>
+</nav>
+</div>
+<!-- Outils -->
+<div class="flex flex-col">
+<span class="px-2 py-1 font-mono text-[10px] text-rpg-muted uppercase tracking-widest">Outils</span>
+<nav class="flex flex-col gap-0.5">
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">folder_open</span>Médiathèque
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">photo_camera</span>Image-OS
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">schedule</span>Horloge &amp; Temps
+            </a>
+<!-- Active Page Light-OS -->
+<a aria-current="page" class="flex items-center gap-2 px-2.5 py-1.5 uppercase tracking-wider bg-primary text-surface-dim font-bold shadow-[0_0_14px_rgba(34,211,238,0.4)]" href="#">
+<span class="material-symbols-outlined text-[16px]">lightbulb</span>Light-OS
+            </a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 text-rpg-muted hover:bg-surface-container hover:text-rpg-text transition-colors font-inter text-[12px] font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[16px]">reorder</span>Tables Aléatoires
+            </a>
+</nav>
+</div>
+</div>
+</div>
+<!-- Status bottom -->
+<div class="p-3 border-t border-rpg-border bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2 text-rpg-muted">
+<span class="material-symbols-outlined text-[18px] hover:text-rpg-accent cursor-pointer transition-colors">dns</span>
+<span class="material-symbols-outlined text-[18px] hover:text-rpg-accent cursor-pointer transition-colors">memory</span>
+<span class="material-symbols-outlined text-[18px] text-rpg-success cursor-pointer">wifi_tethering</span>
+</div>
+<span class="font-mono text-[11px] text-rpg-muted font-bold">PAD.OK</span>
+</div>
+</aside>
+<!-- Shell Wrapper -->
+<div class="pl-[220px]">
+<!-- Top Global Header (64px) -->
+<header class="fixed top-0 left-[220px] right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 px-5 flex items-center justify-between border-b border-rpg-border">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 font-inter text-[12px] uppercase tracking-wider font-semibold">
+<span class="text-rpg-muted font-mono">SUBSYS:</span>
+<span class="text-rpg-accent font-orbitron font-bold">LIGHT-OS // TABLE TACTILE FULL-PAD</span>
+</div>
+<div class="h-4 w-px bg-rpg-border"></div>
+<div class="flex items-center gap-2 bg-surface-container-low px-2.5 py-1 border border-rpg-border">
+<div class="h-2 w-2 rounded-full bg-rpg-success animate-ping"></div>
+<span class="font-mono text-[11px] text-rpg-success uppercase font-bold tracking-widest">CORTEX LIVE • HUE SYNC</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<!-- Master volume preview -->
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 border border-rpg-border">
+<span class="material-symbols-outlined text-[18px] text-rpg-muted">volume_up</span>
+<input class="w-16 h-1 bg-surface-container-high accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="100"/>
+<span class="font-mono text-[11px] text-rpg-text w-8 text-right font-bold">100%</span>
+</div>
+<button class="flex items-center gap-1.5 px-3 h-9 bg-surface-container-low hover:bg-surface-container text-rpg-text border border-rpg-border font-inter text-[11px] font-bold uppercase tracking-wider transition-all" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">mic</span>FOCUS CHAT
+        </button>
+<button class="flex items-center gap-1.5 px-3 h-9 bg-rpg-danger/20 text-rpg-danger hover:bg-rpg-danger hover:text-surface-dim border border-rpg-danger/50 font-inter text-[11px] font-bold uppercase tracking-wider transition-all shadow-[0_0_10px_rgba(239,68,68,0.2)]" onclick="emergencyStopAll()" type="button">
+<span class="material-symbols-outlined text-[17px]">emergency_home</span>STOP ALL
+        </button>
+<div class="flex border border-rpg-border bg-surface-container-low">
+<button class="px-3 h-9 font-inter text-[11px] uppercase tracking-wider text-rpg-muted hover:text-rpg-text" type="button">ATELIER</button>
+<button class="px-3 h-9 font-inter text-[11px] uppercase tracking-wider bg-surface-container-high text-rpg-accent font-bold border-l border-rpg-border" type="button">TABLE TACTILE</button>
+</div>
+<button class="flex items-center gap-1.5 px-3 h-9 bg-primary hover:bg-primary/90 text-surface-dim font-inter text-[11px] uppercase tracking-wider font-extrabold shadow-[0_0_14px_rgba(34,211,238,0.35)]" type="button">
+<span class="material-symbols-outlined text-[16px]">sensors</span>CONNECTER
+        </button>
+<div class="w-9 h-9 rounded bg-primary flex items-center justify-center font-bold text-surface-dim">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area: Touch-Optimized Layout (1440x900 viewport target) -->
+<main class="w-full pt-16 min-h-[calc(100vh-64px)] flex flex-row relative bg-surface">
+<!-- Center Work Area: Large Full-Pad Matrix + Bottom Floating Tactical HUD -->
+<section class="flex-1 flex flex-col p-4 pb-28 min-w-0 overflow-y-auto">
+<!-- Header Info Bar of Subsystem -->
+<div class="flex items-center justify-between mb-4 bg-surface-container-lowest/80 border border-rpg-border px-4 py-2.5">
+<div class="flex items-center gap-3">
+<span class="font-orbitron text-[18px] text-rpg-accent font-bold tracking-widest">RÉGIE TOUCH-PAD</span>
+<span class="font-inter text-[12px] text-rpg-muted tracking-wide hidden md:inline">Mode tactile grand format • Cibles tactiles &gt;= 48px</span>
+</div>
+<div class="flex items-center gap-3 font-mono text-[11px]">
+<span class="text-rpg-muted">SCÈNE ACTIVE :</span>
+<span class="text-rpg-accent font-bold px-2 py-0.5 bg-surface-container border border-rpg-accent/40" id="current-active-scene-name">INTRO // DÉMARRAGE</span>
+</div>
+</div>
+<!-- Section 1: Campagne Active (Blade Runner : Nexus 2019) -->
+<div class="mb-5">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-rpg-border/60"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-rpg-accent text-[20px]">movie_filter</span><h2 class="font-orbitron text-[13px] font-bold uppercase tracking-wider text-rpg-text">CETTE CAMPAGNE // BLADE RUNNER : NEXUS 2019</h2><span class="font-mono text-[11px] text-rpg-muted">(18 Scènes &amp; Slots dédiés)</span></div><div class="flex items-center gap-3 font-mono text-[11px]"><span class="text-rpg-muted uppercase tracking-wider">TRANSITION :</span><div class="flex gap-1" id="campaign-transition-selector"><button class="trans-btn px-2 py-0.5 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text text-[11px] font-bold border border-rpg-border" type="button">INST.</button><button class="trans-btn px-2 py-0.5 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text text-[11px] font-bold border border-rpg-border" type="button">2S</button><button class="trans-btn px-2 py-0.5 bg-rpg-accent text-surface-dim text-[11px] font-extrabold border border-rpg-accent shadow-[0_0_8px_#22d3ee]" type="button">5S</button><button class="trans-btn px-2 py-0.5 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text text-[11px] font-bold border border-rpg-border" type="button">15S</button></div></div></div>
+<!-- 10 Large Tactile Pads Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:grid-cols-6" id="campaign-pads-grid"><!-- 1. INTRO (Active) -->
+<button class="scene-tile active group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border-2 border-rpg-accent flex flex-col justify-between p-3 cursor-pointer transition-all shadow-[0_0_20px_rgba(34,211,238,0.4)] text-left focus:outline-none" data-name="INTRO" type="button">
+<div class="flex items-center justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-accent shadow-[0_0_6px_#22d3ee]"></span>
+<span class="font-mono text-[11px] font-bold text-rpg-accent uppercase tracking-wider status-badge">ACTIF</span>
+</div>
+<div class="p-1 text-rpg-muted hover:text-rpg-accent transition-colors" onclick="openSceneEditor(event, 'Intro')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-rpg-accent drop-shadow-[0_0_12px_rgba(34,211,238,0.7)] group-hover:scale-105 transition-transform">wb_twilight</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Intro</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-accent"><span class="material-symbols-outlined text-[13px]">light_mode</span>100%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 2. INTERROGATOIRE -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-warning/60 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="INTERROGATOIRE" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-warning shadow-[0_0_6px_#f59e0b]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-warning transition-colors" onclick="openSceneEditor(event, 'Interrogatoire')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-rpg-warning group-hover:scale-105 transition-transform">visibility</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Interrogatoire</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-warning"><span class="material-symbols-outlined text-[13px]">light_mode</span>100%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 3. NÉON PLUVIEUX -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-info/60 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="NÉON PLUVIEUX" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-info shadow-[0_0_6px_#38bdf8]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-info transition-colors" onclick="openSceneEditor(event, 'Néon pluvieux')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-rpg-info group-hover:scale-105 transition-transform">water_drop</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Néon pluvieux</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-info"><span class="material-symbols-outlined text-[13px]">light_mode</span>75%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×0.75</span>
+</div>
+</div>
+</button>
+<!-- 4. FUSILLADE -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-danger/60 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="FUSILLADE" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-danger shadow-[0_0_6px_#ef4444]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-danger transition-colors" onclick="openSceneEditor(event, 'Fusillade')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-rpg-danger group-hover:scale-105 transition-transform">local_fire_department</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Fusillade</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-danger"><span class="material-symbols-outlined text-[13px]">light_mode</span>100%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×3</span>
+</div>
+</div>
+</button>
+<!-- 5. BUREAU HOLDEN -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-amber-300 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="BUREAU HOLDEN" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-amber-500 shadow-[0_0_6px_#f59e0b]"></span>
+<div class="p-1 text-rpg-muted hover:text-amber-300 transition-colors" onclick="openSceneEditor(event, 'Bureau Holden')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-amber-400 group-hover:scale-105 transition-transform">desktop_windows</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Bureau Holden</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-amber-400"><span class="material-symbols-outlined text-[13px]">light_mode</span>60%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 6. AUTOPSIE AU LABO -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-cyan-300 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="AUTOPSIE AU LABO" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_6px_#67e8f9]"></span>
+<div class="p-1 text-rpg-muted hover:text-cyan-300 transition-colors" onclick="openSceneEditor(event, 'Autopsie au labo')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-cyan-300 group-hover:scale-105 transition-transform">biotech</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Autopsie au labo</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-cyan-300"><span class="material-symbols-outlined text-[13px]">light_mode</span>100%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 7. CHAMBRE ELIS VALE -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-amber-300 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="CHAMBRE ELIS VALE" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-amber-300 shadow-[0_0_6px_#fcd34d]"></span>
+<div class="p-1 text-rpg-muted hover:text-amber-300 transition-colors" onclick="openSceneEditor(event, 'Chambre Elis Vale')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-amber-300 group-hover:scale-105 transition-transform">bed</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Chambre Elis</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-amber-300"><span class="material-symbols-outlined text-[13px]">light_mode</span>40%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 8. HOTEL YUKON -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rose-500 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="HOTEL YUKON" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
+<div class="p-1 text-rpg-muted hover:text-rose-400 transition-colors" onclick="openSceneEditor(event, 'Hotel Yukon')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-rose-500 group-hover:scale-105 transition-transform">apartment</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Hotel Yukon</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rose-500"><span class="material-symbols-outlined text-[13px]">light_mode</span>80%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 9. BRIGHT EYES -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-purple-400 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="BRIGHT EYES" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-purple-400 shadow-[0_0_6px_#c084fc]"></span>
+<div class="p-1 text-rpg-muted hover:text-purple-300 transition-colors" onclick="openSceneEditor(event, 'Bright Eyes')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-purple-400 group-hover:scale-105 transition-transform">device_hub</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Bright Eyes</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-purple-400"><span class="material-symbols-outlined text-[13px]">light_mode</span>90%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1.5</span>
+</div>
+</div>
+</button>
+<!-- 10. AURELIAN -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-emerald-400 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="AURELIAN" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]"></span>
+<div class="p-1 text-rpg-muted hover:text-emerald-400 transition-colors" onclick="openSceneEditor(event, 'Aurelian')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-emerald-400 group-hover:scale-105 transition-transform">spa</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Aurelian</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-emerald-400"><span class="material-symbols-outlined text-[13px]">light_mode</span>65%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 11. SEA WALL -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-info/60 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="SEA WALL" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-info shadow-[0_0_6px_#38bdf8]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-info transition-colors" onclick="openSceneEditor(event, 'Sea Wall')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-rpg-info group-hover:scale-105 transition-transform">tsunami</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Sea Wall</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-info"><span class="material-symbols-outlined text-[13px]">light_mode</span>85%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1.2</span>
+</div>
+</div>
+</button>
+<!-- 12. WALLACE CORP -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-amber-300 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="WALLACE CORP" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fcd34d]"></span>
+<div class="p-1 text-rpg-muted hover:text-amber-300 transition-colors" onclick="openSceneEditor(event, 'Wallace Corp')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-amber-300 group-hover:scale-105 transition-transform">domain</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Wallace Corp</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-amber-300"><span class="material-symbols-outlined text-[13px]">light_mode</span>70%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×0.8</span>
+</div>
+</div>
+</button>
+<!-- 13. MEMORY STORE -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-purple-400 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="MEMORY STORE" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-purple-400 shadow-[0_0_6px_#c084fc]"></span>
+<div class="p-1 text-rpg-muted hover:text-purple-300 transition-colors" onclick="openSceneEditor(event, 'Memory Store')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-purple-400 group-hover:scale-105 transition-transform">memory</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Memory Store</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-purple-400"><span class="material-symbols-outlined text-[13px]">light_mode</span>50%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 14. APPARTEMENT RAY -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-cyan-300 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="APPARTEMENT RAY" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_6px_#67e8f9]"></span>
+<div class="p-1 text-rpg-muted hover:text-cyan-300 transition-colors" onclick="openSceneEditor(event, 'Appartement Ray')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[40px] text-cyan-300 group-hover:scale-105 transition-transform">cottage</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Appartement</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-cyan-300"><span class="material-symbols-outlined text-[13px]">light_mode</span>60%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- 15. Slot Libre A -->
+<button class="h-[130px] bevel-pad bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-rpg-border hover:border-rpg-accent flex flex-col items-center justify-center p-3 cursor-pointer transition-all group focus:outline-none" onclick="quickCapture('Campagne_Slot_1')" type="button">
+<div class="h-9 w-9 rounded-full bg-surface-container flex items-center justify-center text-rpg-muted group-hover:text-rpg-accent group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+</div>
+<span class="font-inter font-bold text-[11px] text-rpg-text uppercase mt-2">+ CAPTURER</span>
+<span class="font-mono text-[10px] text-rpg-muted">SLOT 15</span>
+</button>
+<!-- 16. Slot Libre B -->
+<button class="h-[130px] bevel-pad bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-rpg-border hover:border-rpg-accent flex flex-col items-center justify-center p-3 cursor-pointer transition-all group focus:outline-none" onclick="quickCapture('Campagne_Slot_2')" type="button">
+<div class="h-9 w-9 rounded-full bg-surface-container flex items-center justify-center text-rpg-muted group-hover:text-rpg-accent group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+</div>
+<span class="font-inter font-bold text-[11px] text-rpg-text uppercase mt-2">+ CAPTURER</span>
+<span class="font-mono text-[10px] text-rpg-muted">SLOT 16</span>
+</button>
+<!-- 17. Slot Libre C -->
+<button class="h-[130px] bevel-pad bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-rpg-border hover:border-rpg-accent flex flex-col items-center justify-center p-3 cursor-pointer transition-all group focus:outline-none" onclick="quickCapture('Campagne_Slot_3')" type="button">
+<div class="h-9 w-9 rounded-full bg-surface-container flex items-center justify-center text-rpg-muted group-hover:text-rpg-accent group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+</div>
+<span class="font-inter font-bold text-[11px] text-rpg-text uppercase mt-2">+ CAPTURER</span>
+<span class="font-mono text-[10px] text-rpg-muted">SLOT 17</span>
+</button>
+<!-- 18. Slot Libre D -->
+<button class="h-[130px] bevel-pad bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-rpg-border hover:border-rpg-accent flex flex-col items-center justify-center p-3 cursor-pointer transition-all group focus:outline-none" onclick="quickCapture('Campagne_Slot_4')" type="button">
+<div class="h-9 w-9 rounded-full bg-surface-container flex items-center justify-center text-rpg-muted group-hover:text-rpg-accent group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+</div>
+<span class="font-inter font-bold text-[11px] text-rpg-text uppercase mt-2">+ CAPTURER</span>
+<span class="font-mono text-[10px] text-rpg-muted">SLOT 18</span>
+</button></div>
+</div>
+<!-- Section 2: Communes & Slots Libres -->
+<div class="mb-4">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-rpg-border/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-muted text-[20px]">public</span>
+<h2 class="font-orbitron text-[13px] font-bold uppercase tracking-wider text-rpg-text">
+                SCÈNES COMMUNES &amp; SLOTS LIBRES
+              </h2>
+</div>
+<span class="font-mono text-[10px] text-rpg-muted uppercase">PRÉRÉGLAGES RAPIDES &amp; CAPTURES EN VOL</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"><!-- Communes 1: INDICE -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-success flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="INDICE" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-success shadow-[0_0_6px_#10b981]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-success transition-colors" onclick="openSceneEditor(event, 'Indice')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[38px] text-rpg-success group-hover:scale-105 transition-transform">search</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Indice</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-success"><span class="material-symbols-outlined text-[13px]">light_mode</span>100%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- Communes 2: BLADE RUNNER -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-accent flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="BLADE RUNNER" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-accent shadow-[0_0_6px_#22d3ee]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-accent transition-colors" onclick="openSceneEditor(event, 'Blade Runner')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[38px] text-rpg-accent group-hover:scale-105 transition-transform">nightlight</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Blade Runner</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-accent"><span class="material-symbols-outlined text-[13px]">light_mode</span>85%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- Communes 3: CITY FLY -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-fuchsia-400 flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="CITY FLY" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-fuchsia-400 shadow-[0_0_6px_#e879f9]"></span>
+<div class="p-1 text-rpg-muted hover:text-fuchsia-400 transition-colors" onclick="openSceneEditor(event, 'City Fly')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[38px] text-fuchsia-400 group-hover:scale-105 transition-transform">flight</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">City Fly</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-fuchsia-400"><span class="material-symbols-outlined text-[13px]">light_mode</span>90%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×1</span>
+</div>
+</div>
+</button>
+<!-- Communes 4: ATTAQUE AÉRIENNE -->
+<button class="scene-tile group relative h-[130px] bevel-pad bg-surface-container-low hover:bg-surface-container border border-rpg-border hover:border-rpg-danger flex flex-col justify-between p-3 cursor-pointer transition-all shadow-sm text-left focus:outline-none" data-name="ATTAQUE AÉRIENNE" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="h-2.5 w-2.5 rounded-full bg-rpg-danger shadow-[0_0_6px_#ef4444]"></span>
+<div class="p-1 text-rpg-muted hover:text-rpg-danger transition-colors" onclick="openSceneEditor(event, 'Attaque Aérienne')" title="Réglages de la scène">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+</div>
+<div class="flex items-center justify-center my-auto">
+<span class="material-symbols-outlined text-[38px] text-rpg-danger group-hover:scale-105 transition-transform">crisis_alert</span>
+</div>
+<div class="w-full flex flex-col gap-0.5 pt-1 border-t border-rpg-border/40">
+<span class="font-inter font-bold text-[12px] text-rpg-text uppercase truncate">Attaque Aérienne</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted">
+<span class="flex items-center gap-1 text-rpg-danger"><span class="material-symbols-outlined text-[13px]">light_mode</span>100%</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">speed</span>×2</span>
+</div>
+</div>
+</button>
+<!-- Slot Libre 01 -->
+<button class="h-[130px] bevel-pad bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-rpg-border hover:border-rpg-accent flex flex-col items-center justify-center p-3 cursor-pointer transition-all group focus:outline-none" onclick="quickCapture('Commune_01')" type="button">
+<div class="h-9 w-9 rounded-full bg-surface-container flex items-center justify-center text-rpg-muted group-hover:text-rpg-accent group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+</div>
+<span class="font-inter font-bold text-[11px] text-rpg-text uppercase mt-2">+ CAPTURER</span>
+<span class="font-mono text-[10px] text-rpg-muted">SLOT 01</span>
+</button>
+<!-- Slot Libre 02 -->
+<button class="h-[130px] bevel-pad bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-rpg-border hover:border-rpg-accent flex flex-col items-center justify-center p-3 cursor-pointer transition-all group focus:outline-none" onclick="quickCapture('Commune_02')" type="button">
+<div class="h-9 w-9 rounded-full bg-surface-container flex items-center justify-center text-rpg-muted group-hover:text-rpg-accent group-hover:scale-110 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+</div>
+<span class="font-inter font-bold text-[11px] text-rpg-text uppercase mt-2">+ CAPTURER</span>
+<span class="font-mono text-[10px] text-rpg-muted">SLOT 02</span>
+</button></div>
+</div>
+</section>
+<!-- Bottom Floating Translucent Tactical HUD Palette (>= 48px Touch Targets) -->
+<div class="fixed bottom-4 left-[236px] right-[336px] z-40 bg-surface-container-lowest/90 backdrop-blur-md border border-rpg-accent/30 p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex flex-wrap items-center justify-between gap-3 bevel-pad"><!-- 3 Tactical Pulses (44px) -->
+<div class="flex items-center gap-2 flex-1">
+<button class="h-12 flex-1 px-3 bg-red-950/40 hover:bg-red-900/60 border border-rpg-danger/60 text-rpg-danger flex items-center justify-center gap-2 font-inter font-bold text-[12px] uppercase tracking-wider transition-all shadow-[0_0_10px_rgba(239,68,68,0.2)] active:scale-95 touch-target" onclick="tacticalPulse('critical')" type="button">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+<span>ROUGE CRITIQUE</span>
+</button>
+<button class="h-12 flex-1 px-3 bg-sky-950/40 hover:bg-sky-900/60 border border-rpg-info/60 text-rpg-info flex items-center justify-center gap-2 font-inter font-bold text-[12px] uppercase tracking-wider transition-all shadow-[0_0_10px_rgba(56,189,248,0.2)] active:scale-95 touch-target" onclick="tacticalPulse('arcane')" type="button">
+<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>
+<span>BLEU ARCANES</span>
+</button>
+<button class="h-12 flex-1 px-3 bg-emerald-950/40 hover:bg-emerald-900/60 border border-rpg-success/60 text-rpg-success flex items-center justify-center gap-2 font-inter font-bold text-[12px] uppercase tracking-wider transition-all shadow-[0_0_10px_rgba(16,185,129,0.2)] active:scale-95 touch-target" onclick="tacticalPulse('heal')" type="button">
+<span class="material-symbols-outlined text-[20px]">healing</span>
+<span>VERT SOIN</span>
+</button>
+</div>
+<!-- Distinct 'Arrêter la scène' Action Button with [Échap] -->
+<button class="h-12 px-5 bg-surface-container-high hover:bg-surface-container border border-rpg-accent/60 text-rpg-accent flex items-center gap-2 font-inter font-extrabold text-[12px] uppercase tracking-wider transition-all active:scale-95 shadow-[0_0_14px_rgba(34,211,238,0.2)] touch-target" id="btn-stop-scene" onclick="stopActiveScene()" type="button">
+<span class="material-symbols-outlined text-[20px]">stop_circle</span>
+<span>ARRÊTER LA SCÈNE [ÉCHAP]</span>
+</button></div>
+<!-- Right Panel: Tactile Hardware Control Rack (Dedicated Fixed 320px) -->
+<aside class="w-[320px] bg-surface-container-lowest border-l border-rpg-border flex flex-col justify-between shrink-0 h-[calc(100vh-64px)] sticky top-16 overflow-y-auto"><div class="p-3.5 flex flex-col gap-3.5 overflow-y-auto pb-4">
+<!-- 1. Bridge Status & Audio/Voice Sync Controls -->
+<div class="bg-surface-container-low border border-rpg-border p-3 flex flex-col gap-2.5">
+<div class="flex items-center justify-between pb-2 border-b border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">hub</span>
+<span class="font-orbitron font-bold text-[11px] text-rpg-text uppercase tracking-wider">PONT PHILIPS HUE</span>
+</div>
+<span class="font-mono text-[11px] text-rpg-success font-bold flex items-center gap-1.5">
+<span class="h-2 w-2 rounded-full bg-rpg-success animate-ping"></span> EN LIGNE
+      </span>
+</div>
+<!-- Synchro Audio Toggle -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-col">
+<span class="font-inter text-[11px] font-bold text-rpg-text uppercase">SYNCHRO AUDIO</span>
+<span class="font-mono text-[10px] text-rpg-muted">Rythme live &amp; intensité</span>
+</div>
+<label class="cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-surface-container-highest peer-checked:bg-rpg-accent transition-colors relative bevel-pad">
+<div class="w-3.5 h-3.5 bg-rpg-text peer-checked:bg-surface-dim absolute top-0.5 left-1 peer-checked:left-5 transition-all"></div>
+</div>
+</label>
+</div>
+<!-- La Lumière Suit la Voix with Voice Meter Indicator -->
+<div class="flex items-center justify-between pt-1 border-t border-rpg-border/50">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-inter text-[11px] font-bold text-rpg-text uppercase">LUMIÈRE SUIT LA VOIX</span>
+<span class="material-symbols-outlined text-[14px] text-rpg-accent animate-pulse">mic</span>
+</div>
+<span class="font-mono text-[10px] text-rpg-muted">Modulation dynamique MJ</span>
+</div>
+<label class="cursor-pointer">
+<input checked="" class="sr-only peer" id="voice-follow-toggle" type="checkbox"/>
+<div class="w-10 h-5 bg-surface-container-highest peer-checked:bg-rpg-accent transition-colors relative bevel-pad">
+<div class="w-3.5 h-3.5 bg-rpg-text peer-checked:bg-surface-dim absolute top-0.5 left-1 peer-checked:left-5 transition-all"></div>
+</div>
+</label>
+</div>
+</div>
+<!-- 2. Master Dimmer / Intensité Globale -->
+<div class="bg-surface-container-low border border-rpg-border p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-orbitron text-[11px] font-bold text-rpg-muted uppercase tracking-wider">INTENSITÉ GLOBALE</span>
+<span class="font-mono text-[18px] text-rpg-accent font-bold" id="master-dimmer-display">100%</span>
+</div>
+<div class="relative flex items-center h-11 bg-surface-container-highest px-3 border border-rpg-border">
+<span class="material-symbols-outlined text-[18px] text-rpg-muted">brightness_low</span>
+<input class="w-full h-2.5 mx-2.5 bg-surface-dim accent-rpg-accent cursor-pointer" id="master-dimmer-slider" max="100" min="0" type="range" value="100"/>
+<span class="material-symbols-outlined text-[20px] text-rpg-accent">brightness_high</span>
+</div>
+<div class="flex justify-between items-center text-rpg-muted font-mono text-[10px]">
+<span>0% (BLACKOUT)</span>
+<span>NOMINAL 80%</span>
+<span>100% MAX</span>
+</div>
+</div>
+<!-- 3. Vertical Lamp List with Multi-Select Checkboxes, Effect Dropdown, Bulb Icon, Slider & ON/OFF -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-1.5">
+<span class="font-orbitron text-[11px] font-bold text-rpg-muted uppercase tracking-wider">LAMPES DU SYSTÈME</span>
+<span class="font-mono text-[10px] text-rpg-accent">(4 Détectées)</span>
+</div>
+<span class="font-mono text-[10px] text-rpg-muted">SÉLECTION</span>
+</div>
+<!-- Lamp 1: Chandelier Table -->
+<div class="lamp-card bg-surface-container-low border border-rpg-border p-2.5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<input checked="" class="accent-rpg-accent w-3.5 h-3.5 cursor-pointer" title="Sélectionner cette lampe" type="checkbox"/>
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">lightbulb</span>
+<span class="font-inter font-bold text-[12px] text-rpg-text">Chandelier Table</span>
+</div>
+<button class="lamp-power-btn h-7 px-2.5 bg-surface-container hover:bg-rpg-accent/20 text-rpg-accent font-mono text-[11px] font-bold border border-rpg-accent/40 flex items-center gap-1 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[14px]">power_settings_new</span>
+<span class="state-label">ON</span>
+</button>
+</div>
+<div class="flex items-center justify-between gap-2">
+<!-- Effect Selector -->
+<div class="flex items-center gap-1 bg-surface-container px-2 py-0.5 border border-rpg-border">
+<span class="font-mono text-[10px] text-rpg-muted uppercase">EFFET:</span>
+<select class="bg-transparent font-inter text-[11px] text-rpg-text focus:outline-none cursor-pointer">
+<option class="bg-surface-container">Statique</option>
+<option class="bg-surface-container">Respiration</option>
+<option class="bg-surface-container">Scintillement</option>
+<option class="bg-surface-container">Strobe</option>
+</select>
+</div>
+<!-- Dimmer Slider + Val -->
+<div class="flex items-center gap-1.5 flex-1 justify-end">
+<input class="lamp-slider flex-1 max-w-[90px] h-2 bg-surface-container-highest accent-rpg-accent cursor-pointer" data-lamp="1" max="100" min="0" type="range" value="100"/>
+<span class="font-mono text-[11px] text-rpg-text font-bold w-8 text-right lamp-val">100%</span>
+</div>
+</div>
+</div>
+<!-- Lamp 2: Corner Wall Gauche -->
+<div class="lamp-card bg-surface-container-low border border-rpg-border p-2.5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<input checked="" class="accent-rpg-info w-3.5 h-3.5 cursor-pointer" title="Sélectionner cette lampe" type="checkbox"/>
+<span class="material-symbols-outlined text-[18px] text-rpg-info">lightbulb</span>
+<span class="font-inter font-bold text-[12px] text-rpg-text">Corner Wall Gauche</span>
+</div>
+<button class="lamp-power-btn h-7 px-2.5 bg-surface-container hover:bg-rpg-info/20 text-rpg-info font-mono text-[11px] font-bold border border-rpg-info/40 flex items-center gap-1 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[14px]">power_settings_new</span>
+<span class="state-label">ON</span>
+</button>
+</div>
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1 bg-surface-container px-2 py-0.5 border border-rpg-border">
+<span class="font-mono text-[10px] text-rpg-muted uppercase">EFFET:</span>
+<select class="bg-transparent font-inter text-[11px] text-rpg-text focus:outline-none cursor-pointer">
+<option class="bg-surface-container">Statique</option>
+<option class="bg-surface-container">Respiration</option>
+<option class="bg-surface-container">Vague</option>
+</select>
+</div>
+<div class="flex items-center gap-1.5 flex-1 justify-end">
+<input class="lamp-slider flex-1 max-w-[90px] h-2 bg-surface-container-highest accent-rpg-info cursor-pointer" data-lamp="2" max="100" min="0" type="range" value="80"/>
+<span class="font-mono text-[11px] text-rpg-text font-bold w-8 text-right lamp-val">80%</span>
+</div>
+</div>
+</div>
+<!-- Lamp 3: Bibliothèque Accent -->
+<div class="lamp-card bg-surface-container-low border border-rpg-border p-2.5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<input checked="" class="accent-fuchsia-400 w-3.5 h-3.5 cursor-pointer" title="Sélectionner cette lampe" type="checkbox"/>
+<span class="material-symbols-outlined text-[18px] text-fuchsia-400">lightbulb</span>
+<span class="font-inter font-bold text-[12px] text-rpg-text">Bibliothèque Accent</span>
+</div>
+<button class="lamp-power-btn h-7 px-2.5 bg-surface-container hover:bg-fuchsia-400/20 text-fuchsia-400 font-mono text-[11px] font-bold border border-fuchsia-400/40 flex items-center gap-1 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[14px]">power_settings_new</span>
+<span class="state-label">ON</span>
+</button>
+</div>
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1 bg-surface-container px-2 py-0.5 border border-rpg-border">
+<span class="font-mono text-[10px] text-rpg-muted uppercase">EFFET:</span>
+<select class="bg-transparent font-inter text-[11px] text-rpg-text focus:outline-none cursor-pointer">
+<option class="bg-surface-container">Statique</option>
+<option class="bg-surface-container">Respiration</option>
+<option class="bg-surface-container">Scintillement</option>
+</select>
+</div>
+<div class="flex items-center gap-1.5 flex-1 justify-end">
+<input class="lamp-slider flex-1 max-w-[90px] h-2 bg-surface-container-highest accent-fuchsia-400 cursor-pointer" data-lamp="3" max="100" min="0" type="range" value="60"/>
+<span class="font-mono text-[11px] text-rpg-text font-bold w-8 text-right lamp-val">60%</span>
+</div>
+</div>
+</div>
+<!-- Lamp 4: Rétro Desk MJ -->
+<div class="lamp-card bg-surface-container-low border border-rpg-border p-2.5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<input checked="" class="accent-rpg-warning w-3.5 h-3.5 cursor-pointer" title="Sélectionner cette lampe" type="checkbox"/>
+<span class="material-symbols-outlined text-[18px] text-rpg-warning">lightbulb</span>
+<span class="font-inter font-bold text-[12px] text-rpg-text">Rétro Desk MJ</span>
+</div>
+<button class="lamp-power-btn h-7 px-2.5 bg-surface-container hover:bg-rpg-warning/20 text-rpg-warning font-mono text-[11px] font-bold border border-rpg-warning/40 flex items-center gap-1 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[14px]">power_settings_new</span>
+<span class="state-label">ON</span>
+</button>
+</div>
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1 bg-surface-container px-2 py-0.5 border border-rpg-border">
+<span class="font-mono text-[10px] text-rpg-muted uppercase">EFFET:</span>
+<select class="bg-transparent font-inter text-[11px] text-rpg-text focus:outline-none cursor-pointer">
+<option class="bg-surface-container">Statique</option>
+<option class="bg-surface-container">Bougie</option>
+<option class="bg-surface-container">Respiration</option>
+</select>
+</div>
+<div class="flex items-center gap-1.5 flex-1 justify-end">
+<input class="lamp-slider flex-1 max-w-[90px] h-2 bg-surface-container-highest accent-rpg-warning cursor-pointer" data-lamp="4" max="100" min="0" type="range" value="90"/>
+<span class="font-mono text-[11px] text-rpg-text font-bold w-8 text-right lamp-val">90%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 4. Separate 'Éclairage Normal' Dropdown Selector with Explanatory Text -->
+<div class="bg-surface-container-low border border-rpg-border p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-amber-400 font-bold font-inter text-[12px] uppercase">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+<span>ÉCLAIRAGE NORMAL</span>
+</div>
+<span class="font-mono text-[10px] text-rpg-muted uppercase">RETOUR SCÈNE</span>
+</div>
+<select class="w-full bg-surface-container-highest border border-rpg-border text-rpg-text font-inter text-[12px] font-semibold p-2 focus:outline-none cursor-pointer" id="normal-room-scene-select">
+<option selected="" value="blade-runner">Scène : Blade Runner (Par défaut)</option>
+<option value="intro">Scène : Intro</option>
+<option value="bureau-holden">Scène : Bureau Holden</option>
+<option value="chambre-elis">Scène : Chambre Elis</option>
+<option value="indice">Scène : Indice (Lumière Blanche)</option>
+</select>
+<p class="font-inter text-[11px] text-rpg-muted leading-tight mt-1">
+      La pièce y revient quand un son se termine, et quand vous coupez tout.
+    </p>
+</div>
+<!-- 5. PRÉPARATION • ATELIER Panel (Dedicated Setup Block) -->
+<div class="bg-surface-container-low border border-rpg-border p-3 flex flex-col gap-2.5">
+<div class="flex items-center justify-between pb-1.5 border-b border-rpg-border">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-rpg-muted text-[16px]">build_circle</span>
+<span class="font-orbitron font-bold text-[11px] text-rpg-muted uppercase tracking-wider">PRÉPARATION • ATELIER</span>
+</div>
+<span class="font-mono text-[10px] text-rpg-accent font-bold">CONFIG</span>
+</div>
+<!-- Découvrir / Appairer Pont Hue -->
+<div class="grid grid-cols-2 gap-2">
+<button class="h-8 px-2 bg-surface-container hover:bg-surface-container-high border border-rpg-border text-rpg-text font-inter text-[11px] font-bold uppercase flex items-center justify-center gap-1 transition-all" onclick="showToast('Recherche du Pont Philips Hue...')" type="button">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">radar</span>
+<span>DÉCOUVRIR</span>
+</button>
+<button class="h-8 px-2 bg-surface-container hover:bg-surface-container-high border border-rpg-border text-rpg-text font-inter text-[11px] font-bold uppercase flex items-center justify-center gap-1 transition-all" onclick="showToast('Appairage du Pont Hue validé')" type="button">
+<span class="material-symbols-outlined text-[15px] text-rpg-success">link</span>
+<span>APPAIRER</span>
+</button>
+</div>
+<!-- Toggles: Synchro des modules & Mode simulé -->
+<div class="flex items-center justify-between pt-1">
+<span class="font-inter text-[11px] text-rpg-text font-semibold">Synchro des modules</span>
+<label class="cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-4.5 bg-surface-container-highest peer-checked:bg-rpg-accent transition-colors relative bevel-pad">
+<div class="w-3 h-3 bg-rpg-text peer-checked:bg-surface-dim absolute top-0.5 left-0.5 peer-checked:left-5 transition-all"></div>
+</div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-inter text-[11px] text-rpg-text font-semibold">Mode simulé (sans Hue)</span>
+<label class="cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-4.5 bg-surface-container-highest peer-checked:bg-rpg-accent transition-colors relative bevel-pad">
+<div class="w-3 h-3 bg-rpg-text peer-checked:bg-surface-dim absolute top-0.5 left-0.5 peer-checked:left-5 transition-all"></div>
+</div>
+</label>
+</div>
+<!-- Actions: Mes effets & Relire les lampes -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-8 px-2 bg-surface-container hover:bg-surface-container-high border border-rpg-border text-rpg-text font-inter text-[11px] font-bold uppercase flex items-center justify-center gap-1 transition-all" onclick="showToast('Ouverture du catalogue : Mes Effets')" type="button">
+<span class="material-symbols-outlined text-[15px] text-tertiary-fixed">auto_awesome</span>
+<span>MES EFFETS</span>
+</button>
+<button class="h-8 px-2 bg-surface-container hover:bg-surface-container-high border border-rpg-border text-rpg-text font-inter text-[11px] font-bold uppercase flex items-center justify-center gap-1 transition-all" onclick="showToast('Lampes Philips Hue actualisées')" type="button">
+<span class="material-symbols-outlined text-[15px] text-rpg-info">refresh</span>
+<span>RELIRE LAMPES</span>
+</button>
+</div>
+<!-- Reset Module Action -->
+<button class="w-full h-8 mt-0.5 bg-red-950/30 hover:bg-red-900/50 border border-rpg-danger/40 text-rpg-danger font-inter text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all" onclick="confirm('Réinitialiser tous les modules Light-OS ?') &amp;&amp; showToast('Module Light-OS réinitialisé')" type="button">
+<span class="material-symbols-outlined text-[15px]">restart_alt</span>
+<span>RÉINITIALISER LE MODULE</span>
+</button>
+</div>
+</div>
+<!-- 6. Master Blackout Button at panel bottom -->
+<div class="p-3.5 border-t border-rpg-border bg-surface-container-lowest mt-auto shrink-0">
+<button class="w-full h-14 bg-rpg-danger hover:bg-red-600 text-surface-dim bevel-pad flex items-center justify-center gap-2.5 font-orbitron font-black text-[13px] uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(239,68,68,0.5)] active:scale-95 touch-target" id="btn-master-blackout" onclick="triggerEmergencyBlackout()" type="button">
+<span class="material-symbols-outlined text-[24px]">power_off</span>
+<span>BLACKOUT D'URGENCE</span>
+</button>
+</div></aside>
+</main>
+</div>
+<!-- Interactive JavaScript Engine for Tablet Touch Workstation -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // 1. Transition buttons switcher
+      const transButtons = document.querySelectorAll('.trans-btn');
+      transButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          transButtons.forEach(b => {
+            b.className = 'trans-btn h-12 px-3.5 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text font-mono text-[12px] font-bold border border-rpg-border transition-all active:scale-95 touch-target';
+          });
+          btn.className = 'trans-btn active h-12 px-3.5 bg-rpg-accent text-surface-dim font-mono text-[12px] font-extrabold border border-rpg-accent shadow-[0_0_12px_rgba(34,211,238,0.5)] active:scale-95 touch-target';
+        });
+      });
+
+      // 2. Pad activation logic: 1-click active halo + Active Badge + Color borders
+      const sceneTiles = document.querySelectorAll('.scene-tile');
+      const activeSceneNameLabel = document.getElementById('current-active-scene-name');
+
+      sceneTiles.forEach(tile => {
+        tile.addEventListener('click', () => {
+          // Deactivate all tiles
+          sceneTiles.forEach(t => {
+            t.classList.remove('active', 'border-2', 'border-rpg-accent', 'shadow-[0_0_22px_rgba(34,211,238,0.45)]');
+            t.classList.add('border-rpg-border');
+            const badge = t.querySelector('.status-badge');
+            if (badge && badge.textContent === 'ACTIF') {
+              badge.textContent = 'PRÊT';
+              badge.className = 'font-mono text-[10px] text-rpg-muted uppercase status-badge';
+            }
+          });
+
+          // Activate clicked tile
+          tile.classList.remove('border-rpg-border');
+          tile.classList.add('active', 'border-2', 'border-rpg-accent', 'shadow-[0_0_22px_rgba(34,211,238,0.45)]');
+
+          const badge = tile.querySelector('.status-badge');
+          if (badge) {
+            badge.textContent = 'ACTIF';
+            badge.className = 'font-mono text-[10px] font-bold text-rpg-accent uppercase tracking-wider status-badge';
+          }
+
+          const sceneName = tile.getAttribute('data-name');
+          if (activeSceneNameLabel && sceneName) {
+            activeSceneNameLabel.textContent = sceneName + ' // EN JEU';
+          }
+        });
+      });
+
+      // 3. Master dimmer slider
+      const masterSlider = document.getElementById('master-dimmer-slider');
+      const masterDisplay = document.getElementById('master-dimmer-display');
+      if (masterSlider && masterDisplay) {
+        masterSlider.addEventListener('input', (e) => {
+          masterDisplay.textContent = e.target.value + '%';
+        });
+      }
+
+      // 4. Individual lamp sliders
+      const lampSliders = document.querySelectorAll('.lamp-slider');
+      lampSliders.forEach(slider => {
+        slider.addEventListener('input', (e) => {
+          const valElem = e.target.parentElement.querySelector('.lamp-val');
+          if (valElem) {
+            valElem.textContent = e.target.value + '%';
+          }
+        });
+      });
+
+      // 5. Lamp direct ON/OFF toggles
+      const lampPowerButtons = document.querySelectorAll('.lamp-power-btn');
+      lampPowerButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('.lamp-card');
+          const slider = card.querySelector('.lamp-slider');
+          const valElem = card.querySelector('.lamp-val');
+          const stateLabel = btn.querySelector('.state-label');
+          const isOff = btn.classList.toggle('bg-red-950/30');
+
+          if (isOff) {
+            btn.classList.remove('text-rpg-accent', 'text-rpg-info', 'text-fuchsia-400', 'text-rpg-warning');
+            btn.classList.add('text-rpg-danger', 'border-rpg-danger/40');
+            stateLabel.textContent = 'OFF';
+            slider.dataset.prevVal = slider.value;
+            slider.value = 0;
+            valElem.textContent = '0%';
+          } else {
+            btn.classList.remove('text-rpg-danger', 'border-rpg-danger/40');
+            stateLabel.textContent = 'ON';
+            slider.value = slider.dataset.prevVal || 80;
+            valElem.textContent = slider.value + '%';
+          }
+        });
+      });
+
+      // Keyboard Esc to restore normal room lighting
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          restoreRoomLighting();
+        }
+      });
+    });
+
+    // Global Tactical Functions
+    window.restoreRoomLighting = function() {
+      // Deactivate all scene pads
+      const sceneTiles = document.querySelectorAll('.scene-tile');
+      sceneTiles.forEach(t => {
+        t.classList.remove('active', 'border-2', 'border-rpg-accent', 'shadow-[0_0_22px_rgba(34,211,238,0.45)]');
+        t.classList.add('border-rpg-border');
+        const badge = t.querySelector('.status-badge');
+        if (badge && badge.textContent === 'ACTIF') {
+          badge.textContent = 'PRÊT';
+          badge.className = 'font-mono text-[10px] text-rpg-muted uppercase status-badge';
+        }
+      });
+
+      // Reset Master Dimmer to standard 85%
+      const masterSlider = document.getElementById('master-dimmer-slider');
+      const masterDisplay = document.getElementById('master-dimmer-display');
+      if (masterSlider && masterDisplay) {
+        masterSlider.value = 85;
+        masterDisplay.textContent = '85%';
+      }
+
+      // Reset individual lamp sliders to 85%
+      document.querySelectorAll('.lamp-slider').forEach(s => {
+        s.value = 85;
+        const valElem = s.parentElement.querySelector('.lamp-val');
+        if (valElem) valElem.textContent = '85%';
+      });
+
+      const label = document.getElementById('current-active-scene-name');
+      if (label) label.textContent = 'SALLE TABLE // BLANC CHAUD 2700K';
+
+      showToast('ÉCLAIRAGE NORMAL RESTAURÉ (2700K)');
+    };
+
+    window.triggerEmergencyBlackout = function() {
+      // Deactivate all scene pads
+      document.querySelectorAll('.scene-tile').forEach(t => {
+        t.classList.remove('active', 'border-2', 'border-rpg-accent', 'shadow-[0_0_22px_rgba(34,211,238,0.45)]');
+        t.classList.add('border-rpg-border');
+      });
+
+      // Master Dimmer 0%
+      const masterSlider = document.getElementById('master-dimmer-slider');
+      const masterDisplay = document.getElementById('master-dimmer-display');
+      if (masterSlider && masterDisplay) {
+        masterSlider.value = 0;
+        masterDisplay.textContent = '0%';
+      }
+
+      // Turn all lamp sliders to 0
+      document.querySelectorAll('.lamp-slider').forEach(s => {
+        s.value = 0;
+        const valElem = s.parentElement.querySelector('.lamp-val');
+        if (valElem) valElem.textContent = '0%';
+      });
+
+      const label = document.getElementById('current-active-scene-name');
+      if (label) label.textContent = 'BLACKOUT TOTAL // ÉTEINT';
+
+      showToast('ALERTE : BLACKOUT D\'URGENCE EXÉCUTÉ');
+    };
+
+    window.emergencyStopAll = function() {
+      triggerEmergencyBlackout();
+    };
+
+    window.tacticalPulse = function(type) {
+      let msg = '';
+      if (type === 'critical') msg = 'PULSION : ROUGE CRITIQUE (DEGATS)';
+      else if (type === 'arcane') msg = 'PULSION : BLEU ARCANES (FLUX MAGIQUE)';
+      else if (type === 'heal') msg = 'PULSION : VERT SOIN (RÉGÉNÉRATION)';
+      showToast(msg);
+    };
+
+    window.openSceneEditor = function(e, sceneName) {
+      e.stopPropagation();
+      showToast('ÉDITION SCÈNE : ' + sceneName);
+    };
+
+    window.quickCapture = function(slot) {
+      const name = prompt('Nommer la capture rapide pour le Slot ' + slot + ' :', 'Scene_Tactile_' + slot);
+      if (name) {
+        showToast('SLOT ' + slot + ' ENREGISTRÉ : ' + name.toUpperCase());
+      }
+    };
+
+    function showToast(text) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-20 right-8 z-50 px-4 py-2 bg-surface-container-high border-2 border-rpg-accent text-rpg-text font-mono text-[11px] font-bold tracking-wider shadow-[0_0_20px_rgba(34,211,238,0.4)] bevel-pad';
+      toast.textContent = text;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1600);
+    }
+  </script>
+</body></html>

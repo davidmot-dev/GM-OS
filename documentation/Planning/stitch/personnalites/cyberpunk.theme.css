@@ -1,0 +1,60 @@
+/* ==========================================================================
+   PERSONNALITÉ DE BASE — CYBERPUNK
+   Contrat GM-OS v1.3 · relevée sur cyberpunk.html (Stitch, prompt 8) le 2026-09-27
+   Étape T2.3 : des VALEURS seulement. Rien ici n'est lu par GM-OS.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root[data-theme="cyberpunk"] {
+  color-scheme: dark;
+
+  /* 4.1 · Couleurs de base — surface et surface-2 rendues opaques (Stitch : rgba 0.82 et 0.8) */
+  --rpg-bg: #020617;
+  --rpg-surface: #060c1a;
+  --rpg-surface-2: #0d162d;
+  --rpg-text: #e2e8f0;
+  --rpg-muted: #94a3b8;
+  --rpg-accent: #00f0ff;
+  --rpg-accent-contrast: #020617;
+  --rpg-border: rgba(0, 240, 255, 0.22);
+  --rpg-border-soft: rgba(255, 255, 255, 0.08);
+
+  /* 4.2 · États — le magenta est l'hostile de Stitch */
+  --rpg-success: #10b981;
+  --rpg-danger: #ff007f;
+  --rpg-warning: #facc15;
+  --rpg-info: #3b82f6;
+
+  /* 4.3 · Typographie */
+  --rpg-font-display: "Orbitron", "Inter", sans-serif;
+  --rpg-font-body: "Inter", sans-serif;
+  --rpg-font-mono: "JetBrains Mono", monospace;
+  --rpg-title-tracking: 0.08em;
+  --rpg-kicker-tracking: 0.14em;
+  --rpg-title-transform: uppercase;
+
+  /* 4.5 · Forme — arrondi nul ; les coins coupés à 45° n'ont pas de jeton (voir valeurs.md) */
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 0px;
+  --rpg-radius-lg: 0px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  /* 4.6 · Relief et lumière */
+  --rpg-elevation-1: none;
+  --rpg-elevation-2: 0 4px 20px rgba(0, 0, 0, 0.6);
+  --rpg-elevation-3: 0 0 0 1px #020617, 0 8px 32px rgba(0, 0, 0, 0.85);
+  --rpg-glow: rgba(0, 240, 255, 0.35);
+  --rpg-glow-strength: 0.8;
+
+  /* 4.7 · Verre */
+  --rpg-glass-bg: rgba(8, 15, 30, 0.72);
+  --rpg-glass-border: rgba(0, 240, 255, 0.22);
+  --rpg-glass-blur: 16px;
+
+  /* 7 · Matières — trame de balayage et grille de points */
+  --rpg-texture-bg: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0.35) 2px, transparent 2px, transparent 4px);
+  --rpg-texture-panel: radial-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px);
+  --rpg-texture-opacity: 0.3;
+}

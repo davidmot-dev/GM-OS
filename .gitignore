@@ -90,3 +90,7 @@ docs/_purges/
 test-results/
 e2e-resultats/
 scripts/.notebooklm-etat.json
+
+# Les exports bruts de Stitch (zips, HTML, images) : des propositions, pas des sources.
+# Une direction retenue est recopiée dans documentation/Planning/stitch/.
+/Stitch/

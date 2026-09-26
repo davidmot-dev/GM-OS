@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #0c1324; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: #22d3ee; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-tint": "#2fd9f4",
+            "inverse-on-surface": "#2a3043",
+            "error": "#ffb4ab",
+            "rpg-border": "#1e293b",
+            "rpg-warning": "#f59e0b",
+            "rpg-text": "#f8fafc",
+            "secondary-fixed-dim": "#bec6e0",
+            "surface-container-high": "#23293c",
+            "rpg-surface-2": "#1e293b",
+            "rpg-on-status": "#020617",
+            "primary": "#8aebff",
+            "on-secondary-fixed": "#131b2e",
+            "tertiary": "#d2ddf5",
+            "rpg-accent-contrast": "#020617",
+            "surface-container": "#191f31",
+            "on-surface": "#dce1fb",
+            "on-primary-fixed-variant": "#004e5a",
+            "tertiary-container": "#b6c1d9",
+            "secondary": "#bec6e0",
+            "on-tertiary-container": "#444f63",
+            "rpg-danger": "#ef4444",
+            "primary-container": "#22d3ee",
+            "on-error": "#690005",
+            "surface-variant": "#2e3447",
+            "rpg-bg": "#020617",
+            "inverse-primary": "#006877",
+            "surface-dim": "#0c1324",
+            "on-secondary-container": "#adb4ce",
+            "on-secondary-fixed-variant": "#3f465c",
+            "rpg-info": "#3b82f6",
+            "rpg-surface": "#0f172a",
+            "on-surface-variant": "#bbc9cd",
+            "surface": "#0c1324",
+            "on-tertiary": "#263143",
+            "primary-fixed-dim": "#2fd9f4",
+            "surface-container-lowest": "#070d1f",
+            "secondary-fixed": "#dae2fd",
+            "outline": "#859397",
+            "background": "#0c1324",
+            "primary-fixed": "#a2eeff",
+            "on-primary-fixed": "#001f25",
+            "rpg-accent": "#22d3ee",
+            "on-secondary": "#283044",
+            "rpg-success": "#10b981",
+            "on-primary": "#00363e",
+            "secondary-container": "#3f465c",
+            "on-tertiary-fixed-variant": "#3c475a",
+            "inverse-surface": "#dce1fb",
+            "on-tertiary-fixed": "#111c2d",
+            "tertiary-fixed": "#d8e3fb",
+            "surface-bright": "#33394c",
+            "error-container": "#93000a",
+            "on-background": "#dce1fb",
+            "surface-container-low": "#151b2d",
+            "on-error-container": "#ffdad6",
+            "surface-container-highest": "#2e3447",
+            "rpg-muted": "#898c95",
+            "on-primary-container": "#005763",
+            "tertiary-fixed-dim": "#bcc7de",
+            "outline-variant": "#3c494c"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            title: ["Orbitron", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            mono: ["Space Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-rpg-bg text-rpg-text selection:bg-rpg-accent selection:text-rpg-accent-contrast font-body h-screen w-screen overflow-hidden">
+<!-- BANDEAU SUPÉRIEUR PERMANENT (GM-OS V6 // NEXUS-PROTOCOL) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-rpg-surface border-b border-rpg-border z-50 flex items-center justify-between px-4 select-none">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">terminal</span>
+<span class="font-title font-bold text-[16px] tracking-wider text-rpg-text uppercase">GM-OS V6</span>
+<span class="font-mono text-[12px] text-rpg-muted tracking-widest">// NEXUS-PROTOCOL</span>
+</div>
+<div class="h-4 w-[1px] bg-rpg-border"></div>
+<div class="flex items-center gap-2 bg-rpg-surface-2 px-2.5 py-1 border border-rpg-border">
+<span class="w-2 h-2 bg-rpg-accent animate-ping rounded-full"></span>
+<span class="font-body text-[11px] text-rpg-accent uppercase font-bold tracking-wider">CORTEX ACTIVE</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-2.5 py-1 border border-rpg-border">
+<span class="material-symbols-outlined text-rpg-success text-[15px]">wifi</span>
+<span class="font-body text-[11px] text-on-surface uppercase font-bold tracking-wider">SYSTEM LINK ACTIVE</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 bg-surface-container px-2.5 py-1 border border-rpg-border min-h-[44px]">
+<span class="material-symbols-outlined text-rpg-muted text-[18px]">volume_up</span>
+<input class="w-20 h-1.5 bg-rpg-surface-2 accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="100"/>
+<span class="font-mono text-[13px] text-rpg-accent">100%</span>
+</div>
+<button class="flex items-center gap-2 px-3 min-h-[44px] bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-on-surface font-body text-[12px] uppercase font-semibold transition-all">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">mic</span>
+<span>FOCUS CHAT</span>
+</button>
+<div class="flex border border-rpg-border">
+<button class="px-3 min-h-[44px] font-body text-[12px] font-bold uppercase transition-all bg-surface-container-high text-on-surface">ATELIER</button>
+<button class="px-3 min-h-[44px] font-body text-[12px] font-bold uppercase transition-all bg-primary-container text-on-primary-container">TABLE</button>
+</div>
+<button class="flex items-center gap-2 px-3 min-h-[44px] bg-rpg-accent text-rpg-accent-contrast font-body text-[12px] uppercase font-bold hover:shadow-[0_0_12px_rgba(34,211,238,0.5)] transition-all">
+<span class="material-symbols-outlined text-[18px]">sensors</span>
+<span>CONNECTER JOUEURS</span>
+</button>
+<button class="flex items-center gap-2 px-3 min-h-[44px] bg-rpg-danger text-rpg-on-status font-body text-[12px] font-bold uppercase hover:bg-red-500 transition-all shadow-[0_0_8px_rgba(239,68,68,0.4)]">
+<span class="material-symbols-outlined text-[18px]">power_settings_new</span>
+<span>STOP ALL</span>
+</button>
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[20px]">person</span>
+</div>
+</div>
+</header>
+<!-- BARRE LATÉRALE FIXE GAUCHE (AVENTURE / AUDIO / OUTILS) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col justify-between select-none">
+<div class="overflow-y-auto">
+<div class="py-2">
+<div class="px-3 py-1 font-body text-[11px] text-rpg-muted font-bold tracking-widest uppercase">AVENTURE</div>
+<nav class="flex flex-col">
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+<span class="font-body text-[13px] uppercase font-medium">Combat-OS</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">casino</span>
+<span class="font-body text-[13px] uppercase font-medium">Dice-OS</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+<span class="font-body text-[13px] uppercase font-medium">Générateur</span>
+</a>
+<!-- Actif : Cartographie -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-surface-container-high text-primary border-r-2 border-rpg-accent transition-all font-semibold" href="#">
+<span class="material-symbols-outlined text-[18px] text-primary">map</span>
+<span class="font-body text-[13px] uppercase">Cartographie</span>
+</a>
+</nav>
+</div>
+<div class="h-[1px] bg-rpg-border mx-2"></div>
+<div class="py-2">
+<div class="px-3 py-1 font-body text-[11px] text-rpg-muted font-bold tracking-widest uppercase">AUDIO</div>
+<nav class="flex flex-col">
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">music_note</span>
+<span class="font-body text-[13px] uppercase font-medium">Musique</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">graphic_eq</span>
+<span class="font-body text-[13px] uppercase font-medium">Effets Sonores</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">waves</span>
+<span class="font-body text-[13px] uppercase font-medium">Ambiances</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">record_voice_over</span>
+<span class="font-body text-[13px] uppercase font-medium">Voice-OS</span>
+</a>
+</nav>
+</div>
+<div class="h-[1px] bg-rpg-border mx-2"></div>
+<div class="py-2">
+<div class="px-3 py-1 font-body text-[11px] text-rpg-muted font-bold tracking-widest uppercase">OUTILS / GLOBAL</div>
+<nav class="flex flex-col">
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">folder</span>
+<span class="font-body text-[13px] uppercase font-medium">Médiathèque</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">image</span>
+<span class="font-body text-[13px] uppercase font-medium">Image-OS</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-body text-[13px] uppercase font-medium">Horloge &amp; Temps</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">lightbulb</span>
+<span class="font-body text-[13px] uppercase font-medium">Light-OS</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">reorder</span>
+<span class="font-body text-[13px] uppercase font-medium">Tables Aléatoires</span>
+</a>
+</nav>
+</div>
+</div>
+<div class="p-2 border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between text-rpg-muted">
+<button class="p-2 hover:text-rpg-accent transition-colors" title="Profil MJ"><span class="material-symbols-outlined text-[18px]">badge</span></button>
+<button class="p-2 hover:text-rpg-accent transition-colors" title="Lancer dés express"><span class="material-symbols-outlined text-[18px]">casino</span></button>
+<button class="p-2 hover:text-rpg-accent transition-colors" title="Désignation cible"><span class="material-symbols-outlined text-[18px]">adjust</span></button>
+<button class="p-2 hover:text-rpg-accent transition-colors" title="Dock tactile"><span class="material-symbols-outlined text-[18px]">dock</span></button>
+<button class="p-2 hover:text-rpg-accent transition-colors" title="Paramètres"><span class="material-symbols-outlined text-[18px]">settings</span></button>
+<button class="p-2 hover:text-rpg-danger transition-colors" title="Déconnexion"><span class="material-symbols-outlined text-[18px]">power_settings_new</span></button>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL CARTOGRAPHIE -->
+<div class="pl-[220px] pt-14 h-screen w-full flex flex-col overflow-hidden bg-rpg-bg">
+<!-- EN-TÊTE MODULE CARTOGRAPHIE -->
+<div class="h-12 bg-surface-container-lowest border-b border-rpg-border px-4 flex items-center justify-between shrink-0 select-none">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">map</span>
+<h1 class="font-title font-bold text-[18px] tracking-wider text-rpg-text uppercase">CARTOGRAPHIE</h1>
+</div>
+<div class="h-4 w-px bg-surface-variant"></div>
+<span class="font-mono text-[11px] text-rpg-muted uppercase tracking-widest">// SUBSYSTEM 05-A • PLATEAU TACTIQUE SYNCHRONISÉ</span>
+<div class="flex items-center gap-1.5 bg-surface-container px-2.5 py-1 border border-rpg-border">
+<span class="font-body text-[11px] text-rpg-muted font-semibold">SCÈNE :</span>
+<span class="font-body text-[12px] text-primary font-bold tracking-wide">SECTEUR 04 - TOUR LAPD</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<!-- Commandes de vue & Cortex supérieur -->
+<button class="flex items-center gap-1.5 px-3 min-h-[34px] bg-primary/10 border border-primary/40 text-primary hover:bg-primary hover:text-rpg-accent-contrast transition-all font-body text-[12px] font-bold uppercase" title="IA Tactique active">
+<span class="material-symbols-outlined text-[16px]">psychology</span>
+<span>CORTEX TACTIQUE</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 min-h-[34px] bg-surface-container-high hover:bg-surface-variant text-on-surface border border-rpg-border transition-all font-body text-[12px] font-semibold uppercase" title="Recadrer la vue sur l'action">
+<span class="material-symbols-outlined text-[16px]">center_focus_strong</span>
+<span>RECADRER VUE</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 min-h-[34px] bg-surface-container hover:bg-primary hover:text-rpg-accent-contrast text-on-surface border border-rpg-border transition-all font-body text-[12px] font-bold uppercase" title="Projeter vers les écrans des joueurs">
+<span class="material-symbols-outlined text-[16px]">cast</span>
+<span>PROJETER LA CARTE</span>
+</button>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container border border-rpg-border">
+<span class="w-2 h-2 rounded-full bg-rpg-success animate-pulse"></span>
+<span class="font-body text-[11px] text-rpg-success font-bold uppercase tracking-wider">SYNCHRO JOUEURS ACTIVE</span>
+</div>
+</div>
+</div>
+<!-- ZONE CENTRALE : PLATEAU TACTIQUE + PANNEAU LATÉRAL 320PX -->
+<div class="flex flex-1 w-full overflow-hidden relative">
+<!-- 1. GRANDE ZONE PLATEAU TACTIQUE -->
+<div class="flex-1 relative h-full bg-surface-container-lowest overflow-hidden flex flex-col select-none" id="tactical-board-viewport">
+<!-- FOND DE CARTE : LAPD SECTEUR -->
+<div class="absolute inset-0 bg-cover bg-center transition-all duration-300" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfG-xj7_qYK2SlEfMMjqx-NtOMVIa7wJF3Z2NYJgi2ibU-QDBOXlcfJjIbIL1H_1qRHrNrePXaZ7f3cc1qeFlI_ZQo17iqDCNpgwDcSDBVH0q02iVjrWQKS-9VLXI-yuiv_KKWZX6QXdUgSxWrTI_b5OxYRncdtfun_7lVJVlJyC0lLXM62Ba_WduzEmGMsG0WN_NqjwPe_skz93ZtDshQ5lKgVifvYoU0O_tAURMwZ5wDeQeO_mm-9Q')">
+<!-- GRILLE TACTIQUE VECTORIELLE -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-30" height="100%" width="100%">
+<defs>
+<pattern height="64" id="tactical-grid-pattern" patternunits="userSpaceOnUse" width="64">
+<path d="M 64 0 L 0 0 0 64" fill="none" stroke="#22d3ee" stroke-opacity="0.5" stroke-width="1"></path>
+<circle cx="64" cy="64" fill="#8aebff" opacity="0.6" r="1.5"></circle>
+</pattern>
+</defs>
+<rect fill="url(#tactical-grid-pattern)" height="100%" width="100%"></rect>
+</svg>
+<!-- BROUILLARD DE GUERRE AVEC DÉCOUPES DE VISION -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<mask id="fog-mask">
+<rect fill="#ffffff" height="100%" width="100%"></rect>
+<circle cx="42%" cy="52%" fill="#000000" r="180"></circle>
+<circle cx="53%" cy="46%" fill="#000000" r="150"></circle>
+<circle cx="60%" cy="58%" fill="#000000" r="135"></circle>
+</mask>
+<radialgradient cx="50%" cy="50%" id="deckard-halo" r="50%">
+<stop offset="0%" stop-color="#22d3ee" stop-opacity="0.35"></stop>
+<stop offset="85%" stop-color="#22d3ee" stop-opacity="0.05"></stop>
+<stop offset="100%" stop-color="#22d3ee" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+<rect fill="#020617" height="100%" mask="url(#fog-mask)" opacity="0.94" width="100%"></rect>
+<circle cx="42%" cy="52%" fill="url(#deckard-halo)" r="180"></circle>
+</svg>
+<!-- COUCHE PIONS ET ÉLÉMENTS TACTIQUES SUR LA CARTE -->
+<div class="absolute inset-0 pointer-events-none">
+<!-- PION 1 : RICK DECKARD (ACTIF) -->
+<div class="absolute top-[52%] left-[42%] -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-grab group">
+<div class="relative flex items-center justify-center">
+<div class="absolute -inset-2 bg-primary/25 rounded-full animate-ping"></div>
+<div class="w-13 h-13 p-1 rounded-full bg-surface-container-high border-2 border-primary shadow-[0_0_16px_rgba(34,211,238,0.7)] flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[24px]">person</span>
+</div>
+<div class="absolute -bottom-5 whitespace-nowrap bg-surface-container-lowest border border-primary/50 px-2 py-0.5">
+<span class="font-body text-[11px] text-primary font-bold">R. DECKARD</span>
+</div>
+</div>
+</div>
+<!-- PION 2 : RACHAEL -->
+<div class="absolute top-[46%] left-[53%] -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-grab">
+<div class="relative flex items-center justify-center">
+<div class="w-11 h-11 rounded-full bg-surface-container-high border border-primary/70 shadow-[0_0_12px_rgba(138,235,255,0.4)] flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[22px]">face_3</span>
+</div>
+<div class="absolute -bottom-5 whitespace-nowrap bg-surface-container-lowest border border-rpg-border px-2 py-0.5">
+<span class="font-body text-[11px] text-on-surface font-semibold">RACHAEL</span>
+</div>
+</div>
+</div>
+<!-- PION 3 : GAFF -->
+<div class="absolute top-[58%] left-[60%] -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-grab">
+<div class="relative flex items-center justify-center">
+<div class="w-11 h-11 rounded-full bg-surface-container-high border border-primary/70 shadow-[0_0_12px_rgba(138,235,255,0.4)] flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[22px]">badge</span>
+</div>
+<div class="absolute -bottom-5 whitespace-nowrap bg-surface-container-lowest border border-rpg-border px-2 py-0.5">
+<span class="font-body text-[11px] text-on-surface font-semibold">GAFF</span>
+</div>
+</div>
+</div>
+<!-- PION HOSTILE : ROY BATTY -->
+<div class="absolute top-[38%] left-[33%] -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-pointer">
+<div class="relative flex items-center justify-center">
+<div class="w-11 h-11 rounded-full bg-error-container border-2 border-rpg-danger flex items-center justify-center shadow-[0_0_14px_rgba(239,68,68,0.7)] animate-pulse">
+<span class="material-symbols-outlined text-error text-[22px]">skull</span>
+</div>
+<div class="absolute -bottom-5 whitespace-nowrap bg-error text-rpg-on-status px-2 py-0.5 font-bold font-body text-[11px] uppercase">
+                  ROY BATTY
+                </div>
+</div>
+</div>
+<!-- EFFET MAGIQUE / HOLO POSÉ -->
+<div class="absolute top-[56%] left-[34%] -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center">
+<div class="w-16 h-16 rounded-full border border-primary/60 bg-primary/10 flex items-center justify-center animate-spin" style="animation-duration: 12s;">
+<span class="material-symbols-outlined text-primary text-[20px]">flare</span>
+</div>
+<span class="bg-surface-container-lowest px-2 py-0.5 font-body text-[11px] text-primary mt-1 border border-primary/30">HOLO-SCAN 9M</span>
+</div>
+<!-- ZONE DE DANGER POSÉE -->
+<div class="absolute top-[32%] left-[58%] -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center">
+<div class="w-20 h-16 border-2 border-dashed border-rpg-danger/80 bg-rpg-danger/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-rpg-danger text-[22px]">warning</span>
+</div>
+<span class="bg-rpg-danger text-rpg-on-status px-2 py-0.5 font-body text-[11px] font-bold mt-1 uppercase">VIDE SÉCURITÉ</span>
+</div>
+<!-- POINT DE PING JOUEURS -->
+<div class="absolute top-[48%] left-[47%] -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary-container/40 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.9)] animate-bounce">
+<span class="material-symbols-outlined text-primary-container text-[20px]">near_me</span>
+</div>
+<span class="bg-surface-container-highest px-2 py-0.5 font-body text-[11px] text-primary mt-1 border border-rpg-border font-bold">PING MJ : CONVOI</span>
+</div>
+</div>
+</div>
+<!-- BARRE D'ACTIONS COMPLÈTE EN JEU DIRECT (AU-DESSUS DE LA CARTE) -->
+<div class="absolute top-3 left-3 right-3 z-20 flex flex-wrap items-center gap-2 bg-surface-container-high/95 backdrop-blur-md p-2 border border-rpg-border shadow-2xl">
+<!-- Étiquette Bloc -->
+<div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container-lowest border border-rpg-border">
+<span class="material-symbols-outlined text-primary-container text-[18px]">bolt</span>
+<span class="font-title font-bold text-[12px] text-rpg-text uppercase tracking-wider">EN JEU DIRECT</span>
+</div>
+<div class="h-8 w-px bg-surface-variant"></div>
+<!-- SECTION BROUILLARD DE GUERRE : Révéler / Masquer -->
+<div class="flex items-center gap-1 bg-surface-container p-1 border border-rpg-border">
+<span class="font-body text-[11px] text-rpg-muted px-1.5 font-bold uppercase">BROUILLARD</span>
+<button class="flex items-center gap-1.5 px-3 min-h-[38px] bg-primary-container text-on-primary-container font-body text-[12px] font-bold uppercase transition-all shadow-sm" title="Mode révélation">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>RÉVÉLER</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 min-h-[38px] bg-surface-container-high hover:bg-surface-variant text-on-surface font-body text-[12px] font-bold uppercase transition-all" title="Mode masquer">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+<span>MASQUER</span>
+</button>
+</div>
+<!-- FORMES D'APPLICATION : Pinceau / Zone (polygone/rect) / Rond (cercle) -->
+<div class="flex items-center gap-1 bg-surface-container p-1 border border-rpg-border">
+<span class="font-body text-[11px] text-rpg-muted px-1.5 font-bold uppercase">FORME</span>
+<button class="flex items-center gap-1 px-2.5 min-h-[38px] bg-primary-container text-on-primary-container font-body text-[12px] font-bold uppercase" title="Pinceau libre">
+<span class="material-symbols-outlined text-[18px]">brush</span>
+<span>PINCEAU</span>
+</button>
+<button class="flex items-center gap-1 px-2.5 min-h-[38px] bg-surface-container-high hover:bg-surface-variant text-on-surface font-body text-[12px] font-semibold uppercase" title="Zone rectangulaire ou polygonale">
+<span class="material-symbols-outlined text-[18px]">crop_square</span>
+<span>ZONE</span>
+</button>
+<button class="flex items-center gap-1 px-2.5 min-h-[38px] bg-surface-container-high hover:bg-surface-variant text-on-surface font-body text-[12px] font-semibold uppercase" title="Rond / Cercle">
+<span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span>
+<span>ROND</span>
+</button>
+</div>
+<!-- ACTIONS GLOBALES RAPIDES -->
+<div class="flex items-center gap-1">
+<button class="flex items-center gap-1 px-2.5 min-h-[38px] bg-surface-container hover:bg-surface-variant text-primary border border-rpg-border font-body text-[11px] font-bold uppercase" title="Révéler toute la carte">
+<span class="material-symbols-outlined text-[16px]">clear_all</span>
+<span>TOUT RÉVÉLER</span>
+</button>
+<button class="flex items-center gap-1 px-2.5 min-h-[38px] bg-surface-container hover:bg-surface-variant text-on-surface-variant border border-rpg-border font-body text-[11px] font-bold uppercase" title="Masquer toute la carte">
+<span class="material-symbols-outlined text-[16px]">foggy</span>
+<span>TOUT MASQUER</span>
+</button>
+</div>
+<div class="h-8 w-px bg-surface-variant"></div>
+<!-- OUTILS TACTIQUES DIRECTS : Ping, Effet magique, Zone de danger -->
+<div class="flex items-center gap-1">
+<button class="flex items-center gap-1.5 px-3 min-h-[38px] bg-surface-container hover:bg-surface-variant text-primary border border-rpg-border font-body text-[12px] font-bold uppercase transition-all" title="Placer un ping synchronisé vers les joueurs">
+<span class="material-symbols-outlined text-[18px]">target</span>
+<span>PING JOUEURS</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 min-h-[38px] bg-surface-container hover:bg-surface-variant text-on-surface border border-rpg-border font-body text-[12px] font-semibold uppercase transition-all" title="Poser un effet magique sur la carte (sélecteur type &amp; forme)">
+<span class="material-symbols-outlined text-secondary text-[18px]">auto_fix_high</span>
+<span>EFFET MAGIQUE</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 min-h-[38px] bg-surface-container hover:bg-surface-variant text-rpg-danger border border-rpg-border font-body text-[12px] font-semibold uppercase transition-all" title="Poser une zone de danger (sélecteur de forme)">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span>ZONE DANGER</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 2. PANNEAU LATÉRAL DROIT STRICT (320PX) SÉPARANT PARTIE & PRÉPARATION -->
+<aside class="w-[320px] h-full bg-rpg-surface border-l border-rpg-border flex flex-col justify-between shrink-0 overflow-y-auto select-none shadow-2xl">
+<div class="flex flex-col p-3 gap-3">
+<!-- ================================================= -->
+<!-- BLOC A : ACTIONS EN PARTIE (EN JEU DIRECT)       -->
+<!-- ================================================= -->
+<div class="flex flex-col bg-surface-container-high border border-rpg-border p-3 gap-3">
+<div class="flex items-center justify-between pb-1 border-b border-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">play_circle</span>
+<span class="font-title font-bold text-[14px] text-rpg-text uppercase tracking-wider">ACTIONS EN PARTIE</span>
+</div>
+<span class="font-body text-[11px] text-on-primary-container bg-primary-container px-2 py-0.5 font-bold uppercase tracking-wider">LIVE</span>
+</div>
+<!-- BOUTON VISION DE L'ORACLE (PROJECTION SANS BROUILLARD) -->
+<button class="w-full flex items-center justify-center gap-2 min-h-[44px] bg-surface-variant hover:bg-primary-container hover:text-on-primary-container text-primary font-body text-[12px] font-bold uppercase tracking-wider transition-all border border-primary/30" title="Projeter instantanément la vue intégrale sans brouillard aux joueurs">
+<span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+<span>VISION DE L'ORACLE</span>
+</button>
+<!-- LIAISON COMBAT-OS (TOUR DE COMBAT ET ACTEURS ENGAGÉS) -->
+<div class="flex flex-col gap-2 bg-surface-container p-2.5 border border-rpg-border">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">swords</span>
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">LIAISON COMBAT-OS</span>
+</div>
+<div class="flex items-center gap-1">
+<!-- Tour de combat intégré -->
+<span class="font-body text-[11px] text-rpg-muted">ROUND</span>
+<span class="font-mono text-[14px] text-primary font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-rpg-border">02</span>
+<button class="p-1 min-h-[30px] min-w-[30px] bg-surface-container-high hover:bg-surface-bright text-on-surface border border-rpg-border flex items-center justify-center" title="Round précédent">◀</button>
+<button class="p-1 min-h-[30px] min-w-[30px] bg-primary text-on-primary hover:bg-primary-container font-bold border border-rpg-border flex items-center justify-center" title="Round suivant">▶</button>
+</div>
+</div>
+<!-- Pions du combat à poser sur la carte -->
+<span class="font-body text-[11px] text-on-surface-variant font-medium">PIONS DU COMBAT (ACTEURS ENGAGÉS) :</span>
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between p-2 bg-surface-container-high border border-rpg-border hover:border-primary/50 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-rpg-success"></span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Deckard</span>
+<span class="font-mono text-[11px] text-rpg-muted">Init: 18</span>
+</div>
+<button class="px-2 py-1 bg-surface-variant hover:bg-primary hover:text-on-primary text-primary font-body text-[11px] font-semibold uppercase" title="Glisser ou poser sur le plateau">POSER</button>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container-high border border-rpg-border hover:border-primary/50 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-rpg-success"></span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Rachael</span>
+<span class="font-mono text-[11px] text-rpg-muted">Init: 14</span>
+</div>
+<button class="px-2 py-1 bg-surface-variant hover:bg-primary hover:text-on-primary text-primary font-body text-[11px] font-semibold uppercase" title="Glisser ou poser sur le plateau">POSER</button>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container-high border border-rpg-border hover:border-rpg-danger/60 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-rpg-danger"></span>
+<span class="font-body text-[12px] text-rpg-danger font-bold">Roy Batty</span>
+<span class="font-mono text-[11px] text-rpg-muted">Init: 22</span>
+</div>
+<button class="px-2 py-1 bg-error-container hover:bg-rpg-danger hover:text-white text-error font-body text-[11px] font-semibold uppercase" title="Glisser ou poser sur le plateau">POSER</button>
+</div>
+</div>
+</div>
+<!-- EFFETS ATMOSPHÉRIQUES & MOMENT DE LA JOURNÉE -->
+<div class="flex flex-col gap-2 bg-surface-container p-2.5 border border-rpg-border">
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">EFFETS ATMOSPHÉRIQUES</span>
+<div class="grid grid-cols-4 gap-1">
+<button class="py-1.5 text-center font-body text-[11px] font-semibold uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Aucun</button>
+<button class="py-1.5 text-center font-body text-[11px] font-bold uppercase bg-primary-container text-on-primary-container border border-primary">Pluie</button>
+<button class="py-1.5 text-center font-body text-[11px] font-semibold uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Neige</button>
+<button class="py-1.5 text-center font-body text-[11px] font-semibold uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Brume</button>
+</div>
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider mt-1">MOMENT DE LA JOURNÉE</span>
+<div class="grid grid-cols-5 gap-1">
+<button class="py-1 text-center font-body text-[11px] font-medium uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Aube</button>
+<button class="py-1 text-center font-body text-[11px] font-medium uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Jour</button>
+<button class="py-1 text-center font-body text-[11px] font-medium uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Gris</button>
+<button class="py-1 text-center font-body text-[11px] font-medium uppercase bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-rpg-border">Crépusc.</button>
+<button class="py-1 text-center font-body text-[11px] font-bold uppercase bg-primary-container text-on-primary-container border border-primary">Nuit</button>
+</div>
+</div>
+<!-- GESTION DES 7 COUCHES TACTIQUES (AVEC ŒIL ON/OFF SEULEMENT, AUCUN POURCENTAGE) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between py-1">
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">GESTIONNAIRE DES COUCHES</span>
+<span class="font-body text-[11px] text-primary font-bold">7 COUCHES</span>
+</div>
+<!-- 1. Brouillard de Guerre -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]">foggy</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Brouillard de Guerre</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- 2. Grille Tactique -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">grid_4x4</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Grille Tactique</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- 3. Pions & Acteurs -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-success text-[18px]">group</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Pions &amp; Acteurs</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- 4. Effets Magiques -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">bolt</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Effets Magiques</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- 5. Zones de Danger -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-danger text-[18px]">warning</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Zones de Danger</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- 6. Climat & Météo -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-info text-[18px]">rainy</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Climat &amp; Météo</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- 7. Ambiance & Heure -->
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">dark_mode</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Ambiance &amp; Heure</span>
+</div>
+<button class="text-primary hover:text-white transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center" title="Afficher/Masquer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ================================================= -->
+<!-- BLOC B : PRÉPARATION • ATELIER (AVANT-JEU)         -->
+<!-- ================================================= -->
+<div class="flex flex-col bg-surface-container border border-rpg-border p-3 gap-3">
+<div class="flex items-center justify-between pb-1 border-b border-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">build</span>
+<span class="font-title font-bold text-[14px] text-rpg-text uppercase tracking-wider">PRÉPARATION • ATELIER</span>
+</div>
+<span class="font-body text-[11px] text-rpg-muted bg-surface-container-high px-2 py-0.5 uppercase font-bold">CONFIG</span>
+</div>
+<!-- CONFIGURATIONS SAUVÉES (PRESETS) : Sauver / Charger -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">PRESETS DU PLATEAU</span>
+<button class="flex items-center gap-1 px-2.5 py-1 bg-surface-variant hover:bg-primary hover:text-on-primary text-primary transition-all font-body text-[11px] font-bold uppercase border border-primary/30">
+<span class="material-symbols-outlined text-[14px]">save</span>
+<span>SAUVER L'ÉTAT</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between p-2 bg-surface-container-high border border-primary/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">folder_special</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">01. Enquête Tyrell Corp</span>
+</div>
+<span class="font-body text-[11px] text-primary font-bold">ACTIF</span>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container-lowest border border-rpg-border hover:bg-surface-container-high cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-muted text-[18px]">folder</span>
+<span class="font-body text-[12px] text-on-surface-variant">02. Hangar Yukon Hotel</span>
+</div>
+<button class="font-body text-[11px] text-primary hover:underline font-bold uppercase">CHARGER</button>
+</div>
+</div>
+</div>
+<!-- CARTE & MÉDIAS : Importer / Supprimer sécurisé -->
+<div class="flex flex-col gap-2">
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">CARTE &amp; MÉDIAS</span>
+<div class="grid grid-cols-4 gap-2">
+<button class="col-span-3 flex items-center justify-center gap-2 min-h-[44px] bg-primary-container text-on-primary-container hover:bg-primary transition-all font-body text-[12px] font-bold uppercase shadow-sm">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+<span>IMPORTER UNE CARTE</span>
+</button>
+<button class="col-span-1 flex items-center justify-center min-h-[44px] bg-error-container text-error hover:bg-rpg-danger hover:text-white transition-all border border-rpg-danger/40" title="Supprimer la carte actuelle (sécurisé)">
+<span class="material-symbols-outlined text-[20px]">delete_forever</span>
+</button>
+</div>
+</div>
+<!-- RÉGLAGES DE LA GRILLE TACTIQUE -->
+<div class="flex flex-col gap-2 bg-surface-container-lowest p-2.5 border border-rpg-border">
+<div class="flex items-center justify-between">
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">RÉGLAGES GRILLE TACTIQUE</span>
+<span class="font-mono text-[12px] text-primary font-bold">1,5m / 5ft</span>
+</div>
+<!-- Taille -->
+<div class="flex items-center justify-between gap-2">
+<span class="font-body text-[11px] text-on-surface-variant font-medium">Taille de case</span>
+<div class="flex items-center gap-1">
+<button class="w-7 h-7 bg-surface-container border border-rpg-border text-on-surface font-mono text-[13px]">-</button>
+<span class="font-mono text-[12px] px-2 py-0.5 bg-surface-container border border-rpg-border">64px</span>
+<button class="w-7 h-7 bg-surface-container border border-rpg-border text-on-surface font-mono text-[13px]">+</button>
+</div>
+</div>
+<!-- Opacité -->
+<div class="flex items-center justify-between gap-2">
+<span class="font-body text-[11px] text-on-surface-variant font-medium">Opacité</span>
+<input class="w-28 h-1.5 bg-rpg-surface-2 accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="30"/>
+</div>
+<!-- Couleur de la grille -->
+<div class="flex items-center justify-between gap-2">
+<span class="font-body text-[11px] text-on-surface-variant font-medium">Couleur</span>
+<div class="flex items-center gap-1.5">
+<button class="w-5 h-5 rounded-full bg-[#22d3ee] ring-2 ring-white" title="Cyan"></button>
+<button class="w-5 h-5 rounded-full bg-white opacity-70 hover:opacity-100" title="Blanc"></button>
+<button class="w-5 h-5 rounded-full bg-[#f59e0b] opacity-70 hover:opacity-100" title="Ambre"></button>
+<button class="w-5 h-5 rounded-full bg-[#10b981] opacity-70 hover:opacity-100" title="Émeraude"></button>
+</div>
+</div>
+</div>
+<!-- MODÈLES DE ZONES DE DANGER -->
+<div class="flex items-center justify-between p-2 bg-surface-container-high border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-danger text-[18px]">category</span>
+<span class="font-body text-[12px] text-rpg-text font-bold">Zones de danger</span>
+</div>
+<button class="px-2.5 py-1 min-h-[36px] bg-surface-variant hover:bg-surface-bright text-primary border border-rpg-border font-body text-[11px] font-bold uppercase transition-all">
+                GÉRER MODÈLES
+              </button>
+</div>
+<!-- AUDIO DE LA CARTE (SOUNDSCAPE LIÉ) -->
+<div class="flex flex-col gap-1.5 bg-surface-container-lowest p-2.5 border border-rpg-border">
+<div class="flex items-center justify-between">
+<span class="font-body text-[11px] text-rpg-muted uppercase font-bold tracking-wider">AUDIO DE LA CARTE</span>
+<span class="font-body text-[11px] text-rpg-success font-bold uppercase">SYNCHRO SCÈNE</span>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container border border-rpg-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">waves</span>
+<div class="flex flex-col">
+<span class="font-body text-[12px] text-rpg-text font-bold truncate">Pluie Acide &amp; Sirènes LAPD</span>
+<span class="font-body text-[11px] text-rpg-muted">Soundscape continu</span>
+</div>
+</div>
+<button class="p-1.5 text-primary hover:text-white" title="Contrôle audio">
+<span class="material-symbols-outlined text-[20px]">pause_circle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- FOOTER SYSTÈME DU PANNEAU LATÉRAL -->
+<div class="p-3 bg-surface-container-lowest border-t border-rpg-border flex items-center justify-between shrink-0">
+<span class="font-mono text-[11px] text-rpg-muted uppercase tracking-widest">REGIE V6 • SYNCHRONISÉ</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-rpg-success rounded-full"></span>
+<span class="font-mono text-[11px] text-rpg-success uppercase font-bold">0 LATENCE</span>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</body></html>

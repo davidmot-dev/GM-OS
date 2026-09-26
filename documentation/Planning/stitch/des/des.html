@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Orbitron:wght@600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+/* Touch & Cockpit specifics */
+.touch-target { min-height: 48px; }
+.touch-target-lg { min-height: 54px; }
+.polygon-btn {
+  clip-path: polygon(6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px), 0% 6px);
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-variant": "#2e3447", "primary": "#22d3ee", "on-tertiary-container": "#444f63", "secondary-fixed": "#dae2fd", "on-secondary": "#283044", "background": "#070d19", "primary-fixed": "#a2eeff", "surface-container-low": "#0f172a", "outline": "#475569", "on-surface-variant": "#94a3b8", "tertiary-fixed": "#d8e3fb", "surface-container": "#15203b", "surface-container-high": "#1e2947", "surface-tint": "#22d3ee", "rpg-danger": "#ef4444", "on-secondary-fixed-variant": "#3f465c", "tertiary-fixed-dim": "#bcc7de", "on-surface": "#f1f5f9", "on-primary": "#00363e", "rpg-muted": "#64748b", "rpg-on-status": "#020617", "error": "#ffb4ab", "on-primary-container": "#00363e", "surface-container-highest": "#283556", "inverse-on-surface": "#2a3043", "rpg-surface-2": "#1e293b", "secondary-fixed-dim": "#bec6e0", "rpg-bg": "#070d19", "tertiary": "#cbd5e1", "surface": "#0c1324", "surface-dim": "#070d19", "inverse-surface": "#dce1fb", "on-background": "#f8fafc", "on-tertiary": "#1e293b", "on-tertiary-fixed-variant": "#3c475a", "rpg-text": "#f8fafc", "rpg-border": "#1e293b", "rpg-accent": "#06b6d4", "surface-bright": "#2e3d63", "on-secondary-fixed": "#131b2e", "on-error-container": "#ffdad6", "on-secondary-container": "#adb4ce", "on-error": "#690005", "on-tertiary-fixed": "#111c2d", "rpg-info": "#38bdf8", "inverse-primary": "#006877", "rpg-accent-contrast": "#020617", "rpg-surface": "#0c1324", "primary-fixed-dim": "#22d3ee", "error-container": "#93000a", "surface-container-lowest": "#030712", "on-primary-fixed": "#001f25", "secondary-container": "#243252", "on-primary-fixed-variant": "#004e5a", "rpg-warning": "#f59e0b", "rpg-success": "#10b981", "primary-container": "#06b6d4", "secondary": "#94a3b8", "outline-variant": "#334155", "tertiary-container": "#334155" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "16px", "space-sm": "8px", "space-xs": "4px", "space-xl": "24px", "gutter": "12px", "space-md": "12px", "margin": "16px" }, "fontFamily": { "label-xs": [ "Inter", "sans-serif" ], "display-md": [ "Orbitron", "sans-serif" ], "number-lg": [ "Space Mono", "monospace" ], "label-sm": [ "Inter", "sans-serif" ], "display-lg": [ "Orbitron", "sans-serif" ], "number-md": [ "Space Mono", "monospace" ], "body-md": [ "Inter", "sans-serif" ], "title-md": [ "Orbitron", "sans-serif" ], "body-sm": [ "Inter", "sans-serif" ] }, "fontSize": { "label-xs": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.12em", "fontWeight": "700" } ], "display-md": [ "24px", { "lineHeight": "30px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "number-lg": [ "32px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-sm": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" } ], "display-lg": [ "36px", { "lineHeight": "42px", "letterSpacing": "0.06em", "fontWeight": "800" } ], "number-md": [ "16px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "title-md": [ "18px", { "lineHeight": "24px", "letterSpacing": "0.06em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-rpg-bg text-rpg-text font-body-sm text-body-sm selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface border-r border-rpg-border z-50 flex flex-col justify-between select-none"><div class="flex flex-col h-full overflow-hidden"><div class="h-16 px-space-md border-b border-rpg-border flex items-center gap-space-sm bg-surface-container-lowest"><span class="material-symbols-outlined text-primary text-[22px]">terminal</span><div class="flex flex-col"><span class="font-display-md text-title-md tracking-wider text-rpg-text leading-none uppercase" style="font-family: 'Orbitron', sans-serif;">GM-OS</span><span class="font-label-xs text-[11px] text-primary tracking-widest uppercase" style="font-family: 'Inter', sans-serif;">V6.0 // CONTROL</span></div></div><div class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-space-md"><div class="space-y-space-xs"><div class="px-space-sm py-space-xs font-label-xs text-[11px] text-rpg-muted tracking-widest uppercase flex items-center justify-between" style="font-family: 'Inter', sans-serif;"><span>AVENTURE</span><span class="w-1.5 h-1.5 bg-primary/40"></span></div><nav class="space-y-1"><a class="flex items-center gap-space-sm px-space-sm py-2.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase touch-target" data-path="combat-os" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">swords</span><span class="truncate">Combat-OS</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2.5 transition-colors uppercase bg-primary-container text-rpg-accent-contrast font-bold shadow-[0_0_16px_rgba(6,182,212,0.4)] font-label-sm text-[12px] touch-target" data-path="dice-os" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">casino</span><span class="truncate">Dice-OS</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase touch-target" data-path="generateur" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">auto_awesome</span><span class="truncate">Générateur ...</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase touch-target" data-path="cartographie" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">map</span><span class="truncate">Cartographie</span></a></nav></div><div class="space-y-space-xs"><div class="px-space-sm py-space-xs font-label-xs text-[11px] text-rpg-muted tracking-widest uppercase flex items-center justify-between" style="font-family: 'Inter', sans-serif;"><span>AUDIO</span><span class="w-1.5 h-1.5 bg-outline/40"></span></div><nav class="space-y-1"><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="musique" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">graphic_eq</span><span class="truncate">Musique</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="effets-sonores" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">volume_up</span><span class="truncate">Effets Sonores</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="ambiances" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">surround_sound</span><span class="truncate">Ambiances</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="voice-os" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">record_voice_over</span><span class="truncate">Voice-OS</span></a></nav></div><div class="space-y-space-xs"><div class="px-space-sm py-space-xs font-label-xs text-[11px] text-rpg-muted tracking-widest uppercase flex items-center justify-between" style="font-family: 'Inter', sans-serif;"><span>OUTILS</span><span class="w-1.5 h-1.5 bg-outline/40"></span></div><nav class="space-y-1"><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="mediatheque" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">folder_special</span><span class="truncate">Médiathèque</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="image-os" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">photo_camera</span><span class="truncate">Image-OS</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="horloge-temps" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">schedule</span><span class="truncate">Horloge &amp; T...</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="light-os" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">highlight</span><span class="truncate">Light-OS</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-label-sm text-[12px] uppercase" data-path="tables-aleatoires" href="#" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[18px]">list_alt</span><span class="truncate">Tables Aléat...</span></a></nav></div></div><div class="border-t border-rpg-border p-space-sm bg-surface-container-lowest"><div class="flex items-center justify-between text-on-surface-variant"><button class="p-2 hover:bg-rpg-surface-2 hover:text-primary transition-colors touch-target flex items-center justify-center" title="Double écran" type="button"><span class="material-symbols-outlined text-[20px]">desktop_windows</span></button><button class="p-2 hover:bg-rpg-surface-2 hover:text-primary transition-colors touch-target flex items-center justify-center text-primary" title="Table Tactile Immersion" type="button"><span class="material-symbols-outlined text-[20px]">touch_app</span></button><button class="p-2 hover:bg-rpg-surface-2 hover:text-primary transition-colors touch-target flex items-center justify-center" title="Luminosité salle" type="button"><span class="material-symbols-outlined text-[20px]">brightness_medium</span></button><button class="p-2 hover:bg-rpg-surface-2 hover:text-primary transition-colors touch-target flex items-center justify-center" title="Paramètres système" type="button"><span class="material-symbols-outlined text-[20px]">settings</span></button></div></div></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md border-b border-rpg-border z-40 px-space-lg flex items-center justify-between select-none"><div class="flex items-center gap-space-lg"><div class="flex items-baseline gap-space-sm"><span class="font-display-md text-title-md tracking-wider text-rpg-text" style="font-family: 'Orbitron', sans-serif;">GM-OS <span class="text-primary">V6</span></span><span class="font-label-xs text-[11px] text-outline tracking-wider font-semibold" style="font-family: 'Inter', sans-serif;">// NEXUS-PROTOCOL</span></div><div class="h-5 w-px bg-rpg-border"></div><div class="flex items-center gap-space-xs px-2.5 py-1.5 bg-surface-container-low border border-rpg-border"><span class="w-2.5 h-2.5 bg-rpg-success rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span><span class="font-label-xs text-[11px] text-on-surface-variant uppercase tracking-wider font-bold" style="font-family: 'Inter', sans-serif;">CORTEX IA : ONLINE</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">volume_up</span><span class="font-label-xs text-[11px] tracking-wider font-bold" style="font-family: 'Inter', sans-serif;">MST 100%</span><div class="w-16 h-2 bg-surface-container border border-rpg-border overflow-hidden"><div class="w-full h-full bg-primary shadow-[0_0_8px_rgba(6,182,212,0.8)]"></div></div></div></div><div class="flex items-center gap-space-md"><div class="flex items-center bg-surface-container border border-rpg-border p-1"><button class="px-3 py-1.5 font-label-xs text-[11px] tracking-wider uppercase text-on-surface-variant hover:text-rpg-text hover:bg-surface-container-high transition-colors" style="font-family: 'Inter', sans-serif;" type="button">ATELIER</button><span class="w-px h-4 bg-rpg-border mx-0.5"></span><button class="px-3 py-1.5 font-label-xs text-[11px] tracking-wider uppercase bg-primary text-rpg-accent-contrast font-bold shadow-[0_0_10px_rgba(34,211,238,0.4)]" style="font-family: 'Inter', sans-serif;" type="button">TABLE</button></div><button class="h-10 px-space-sm bg-surface-container border border-rpg-border hover:border-primary text-rpg-text font-label-sm text-[12px] tracking-wider uppercase flex items-center gap-2 transition-colors touch-target" style="font-family: 'Inter', sans-serif;" type="button"><span class="material-symbols-outlined text-[18px] text-primary">chat</span><span>Focus Chat</span></button><button class="h-10 px-space-sm bg-surface-container border border-rpg-border hover:border-primary text-rpg-text font-label-sm text-[12px] tracking-wider uppercase flex items-center gap-2 transition-colors touch-target" style="font-family: 'Inter', sans-serif;" type="button"><span class="material-symbols-outlined text-[18px] text-primary">sensors</span><span>Connecter Joueurs</span></button><button class="h-10 px-space-md bg-rpg-danger hover:bg-error text-white font-label-sm text-[12px] uppercase flex items-center gap-2 tracking-wider shadow-[0_0_14px_rgba(239,68,68,0.5)] transition-all touch-target font-bold" style="font-family: 'Inter', sans-serif;" type="button"><span class="material-symbols-outlined text-[20px]">power_settings_new</span><span>STOP ALL</span></button><div class="flex items-center gap-2 px-2.5 py-1.5 bg-surface-container-high border border-primary/40"><span class="w-2.5 h-2.5 bg-primary animate-ping"></span><span class="font-label-xs text-[11px] text-primary tracking-widest uppercase font-bold" style="font-family: 'Inter', sans-serif;">SYS LINK ACTIF</span></div><div class="w-9 h-9 rounded bg-primary text-rpg-accent-contrast flex items-center justify-center font-bold shadow-[0_0_10px_rgba(6,182,212,0.5)]"><span class="material-symbols-outlined text-[22px]">person</span></div></div></header><main class="relative pt-16 bg-rpg-bg min-h-screen"><div class="flex flex-col w-full">
+<div class="p-space-lg max-w-[1360px] mx-auto w-full flex flex-col gap-space-lg select-none">
+<!-- EN-TÊTE DU MODULE DICE-OS : CONSOLE TACTILE GRAND FORMAT -->
+<header class="bg-surface-container-low border border-rpg-border p-space-md shadow-lg flex flex-wrap items-center justify-between gap-space-md"><div class="flex flex-col"><div class="flex items-center gap-space-md"><span class="font-display-md text-display-md text-primary tracking-wider uppercase font-extrabold" style="font-family: 'Orbitron', sans-serif;">DICE-OS</span><span class="px-3 py-1 bg-primary/15 border border-primary/40 text-primary font-label-sm text-[12px] uppercase font-bold tracking-widest" style="font-family: 'Inter', sans-serif;">CONSOLE DE LANCER TACTILE</span></div><span class="font-label-xs text-[11px] text-on-surface-variant tracking-widest uppercase mt-1" style="font-family: 'Inter', sans-serif;">// SUBSYSTEM 02 // MOTEUR UNIFIÉ MULTI-SYSTÈMES • AFFICHAGE COCKPIT IMMERSIF</span></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-2 px-space-md py-2.5 bg-surface-container border border-primary/30 text-primary font-label-sm text-[12px] uppercase font-bold" style="font-family: 'Inter', sans-serif;"><span class="material-symbols-outlined text-[20px]">tune</span><span>CONFIGURATION ACTIVE</span></div><button class="touch-target px-space-md bg-surface-container-high hover:bg-surface-bright border border-rpg-border text-on-surface font-label-sm text-[12px] uppercase flex items-center gap-2 transition-all active:scale-95 font-bold" id="btn-reset" style="font-family: 'Inter', sans-serif;" title="Réinitialiser l'interface de lancer" type="button"><span class="material-symbols-outlined text-[18px]">restart_alt</span><span>Réinitialiser</span></button><button class="touch-target w-12 bg-surface-container-high hover:bg-surface-bright border border-rpg-border text-on-surface flex items-center justify-center transition-all active:scale-95" title="Paramètres Dice-OS" type="button"><span class="material-symbols-outlined text-[22px]">settings</span></button></div></header>
+<!-- DIVISION PRINCIPALE : ZONE CENTRALE (8 cols) & ZONE MONITORING GRAND FORMAT (4 cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- ZONE CENTRALE COCKPIT (8 cols) -->
+<section class="lg:col-span-8 flex flex-col gap-space-md">
+<!-- CARTE PARAMÈTRES DU JET -->
+<div class="bg-surface-container-low border border-rpg-border p-space-lg shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-rpg-border">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">tune</span>
+<span class="font-title-md text-title-md uppercase text-rpg-text tracking-wide font-bold" style="font-family: 'Orbitron', sans-serif;">PARAMÈTRES DU JET</span>
+</div>
+<div class="px-3 py-1 bg-surface-container-highest border border-primary/40 text-primary font-label-xs text-[11px] uppercase font-bold tracking-widest" style="font-family: 'Inter', sans-serif;">MOTEUR ACTIF</div>
+</div>
+<!-- Moteur de règles (12 modes) avec zone tactile confortable -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-[12px] text-on-surface-variant uppercase tracking-wider font-bold" for="mode-select" style="font-family: 'Inter', sans-serif;">Moteur de règles (12 modes)</label>
+<div class="relative">
+<select class="w-full touch-target-lg px-4 bg-surface-container-lowest text-primary font-body-md text-[14px] font-bold focus:outline-none focus:border-primary border-2 border-rpg-border appearance-none cursor-pointer tracking-wide" id="mode-select" style="font-family: 'Inter', sans-serif;">
+<option value="standard">1. Standard d20 / d6</option>
+<option value="somme-explosive">2. Somme explosive</option>
+<option value="formule-libre">3. Formule libre</option>
+<option value="jet-seuil">4. Jet de seuil</option>
+<option value="pool-succes">5. Pool de dés (succès)</option>
+<option value="pool-explosif">6. Pool explosif</option>
+<option value="avantage">7. Avantage</option>
+<option value="desavantage">8. Désavantage</option>
+<option value="yze">9. Year Zero Engine</option>
+<option selected="" value="blade-runner">10. Dés échelonnés (Blade Runner)</option>
+<option value="fate-fudge">11. FATE / Fudge</option>
+<option value="rolemaster">12. Rolemaster</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-primary text-[24px]">arrow_drop_down</span>
+</div>
+</div>
+<!-- CARTE TACTILE : CONFIGURATION DU JET // DÉS ÉCHELONNÉS -->
+<div class="p-space-md bg-surface-container border border-rpg-border flex flex-col gap-space-md shadow-inner">
+<div class="flex items-center justify-between pb-1 border-b border-rpg-border/60">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-label-sm text-[12px] text-primary uppercase font-bold tracking-wider" style="font-family: 'Orbitron', sans-serif;">CONFIGURATION DU JET // DÉS ÉCHELONNÉS</span>
+</div>
+<span class="px-2.5 py-1 bg-surface-container-high border border-rpg-border text-on-surface font-label-xs text-[11px] font-bold" style="font-family: 'Inter', sans-serif;">BLADE RUNNER RPG</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md items-stretch">
+<!-- 3 Sélecteurs tactiles larges + Modificateurs contextuels -->
+<div class="md:col-span-8 flex flex-col gap-space-md">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+<!-- Sélecteur Attribut -->
+<div class="flex flex-col gap-1 p-2 bg-surface-container-low border border-rpg-border">
+<label class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold tracking-wider" for="select-attribute" style="font-family: 'Inter', sans-serif;">Attribut</label>
+<div class="relative">
+<select class="w-full touch-target px-3 bg-surface-container-lowest text-primary font-number-md text-[15px] font-bold border border-rpg-border focus:border-primary cursor-pointer" id="select-attribute" onchange="updatePoolSummary()" style="font-family: 'Inter', sans-serif;">
+<option value="A = D12">A = D12</option>
+<option selected="" value="B = D10">B = D10</option>
+<option value="C = D8">C = D8</option>
+<option value="D = D6">D = D6</option>
+</select>
+</div>
+</div>
+<!-- Sélecteur Compétence -->
+<div class="flex flex-col gap-1 p-2 bg-surface-container-low border border-rpg-border">
+<label class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold tracking-wider" for="select-skill" style="font-family: 'Inter', sans-serif;">Compétence</label>
+<div class="relative">
+<select class="w-full touch-target px-3 bg-surface-container-lowest text-secondary font-number-md text-[15px] font-bold border border-rpg-border focus:border-primary cursor-pointer" id="select-skill" onchange="updatePoolSummary()" style="font-family: 'Inter', sans-serif;">
+<option value="A = D12">A = D12</option>
+<option value="B = D10">B = D10</option>
+<option selected="" value="C = D8">C = D8</option>
+<option value="D = D6">D = D6</option>
+</select>
+</div>
+</div>
+<!-- Sélecteur Équipement -->
+<div class="flex flex-col gap-1 p-2 bg-surface-container-low border border-rpg-border">
+<label class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold tracking-wider" for="select-gear" style="font-family: 'Inter', sans-serif;">Équipement <span class="text-rpg-muted font-normal">(facultatif)</span></label>
+<div class="relative">
+<select class="w-full touch-target px-3 bg-surface-container-lowest text-rpg-text font-number-md text-[15px] font-bold border border-rpg-border focus:border-primary cursor-pointer" id="select-gear" onchange="updatePoolSummary()" style="font-family: 'Inter', sans-serif;">
+<option selected="" value="Aucun">Aucun</option>
+<option value="A = D12">A = D12</option>
+<option value="B = D10">B = D10</option>
+<option value="C = D8">C = D8</option>
+<option value="D = D6">D = D6</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Modificateur contextuel : 3 boutons tactiles massifs (min 48px) -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold tracking-wider" style="font-family: 'Inter', sans-serif;">Modificateur contextuel</span>
+<div class="grid grid-cols-3 gap-2">
+<button class="touch-target-lg bg-primary-container text-rpg-accent-contrast font-label-sm text-[12px] uppercase font-extrabold tracking-wider transition-all shadow-[0_0_16px_rgba(6,182,212,0.4)] border-2 border-primary active:scale-95 flex items-center justify-center" id="mod-normal" onclick="setModifier('normal')" style="font-family: 'Inter', sans-serif;" type="button">[ Normal ]</button>
+<button class="touch-target-lg bg-surface-container-high hover:bg-surface-bright text-rpg-text font-label-sm text-[12px] uppercase font-bold tracking-wider transition-all border border-rpg-border active:scale-95 flex items-center justify-center" id="mod-advantage" onclick="setModifier('advantage')" style="font-family: 'Inter', sans-serif;" type="button">[ Avantage ]</button>
+<button class="touch-target-lg bg-surface-container-high hover:bg-surface-bright text-rpg-text font-label-sm text-[12px] uppercase font-bold tracking-wider transition-all border border-rpg-border active:scale-95 flex items-center justify-center" id="mod-disadvantage" onclick="setModifier('disadvantage')" style="font-family: 'Inter', sans-serif;" type="button">[ Désavantage ]</button>
+</div>
+</div>
+</div>
+<!-- Synthèse de la poignée rétroéclairée cyan -->
+<div class="md:col-span-4 bg-surface-container-lowest p-space-md border-2 border-primary/50 flex flex-col items-center justify-center text-center gap-1.5 shadow-[inset_0_0_24px_rgba(6,182,212,0.15)] relative overflow-hidden">
+<div class="absolute -right-8 -bottom-8 w-24 h-24 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase tracking-widest font-bold" style="font-family: 'Inter', sans-serif;">RÉSUMÉ DE LA POIGNÉE</span>
+<div class="font-number-lg text-[22px] md:text-[24px] text-primary font-bold tracking-tight my-1 drop-shadow-[0_0_12px_rgba(34,211,238,0.7)]" id="pool-summary-box" style="font-family: 'Space Mono', monospace;">POIGNÉE : D10 + D8</div>
+<span class="font-label-xs text-[11px] text-on-surface-variant font-semibold tracking-wide" id="pool-subtext" style="font-family: 'Inter', sans-serif;">Attribut B + Compétence C</span>
+</div>
+</div>
+</div>
+<!-- APERÇU DU MODE 'JET DE SEUIL' AVEC POLYÈDRES PHYSIQUES TACTILES -->
+<div class="p-space-md bg-surface-container-low border border-rpg-border flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">filter_alt</span>
+<span class="font-label-sm text-[12px] text-secondary uppercase font-bold tracking-wider" style="font-family: 'Orbitron', sans-serif;">APERÇU CONTEXTUEL : MODE « JET DE SEUIL »</span>
+</div>
+<span class="px-2.5 py-1 bg-surface-container-highest border border-rpg-border text-on-surface-variant font-label-xs text-[11px] font-semibold" style="font-family: 'Inter', sans-serif;">Alternance rapide</span>
+</div>
+<!-- 4 mini-cartes tactiles de paramètres seuil -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1">
+<div class="bg-surface-container p-2.5 flex flex-col gap-0.5 border border-rpg-border">
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold" style="font-family: 'Inter', sans-serif;">Quantité</span>
+<span class="font-number-md text-[17px] text-rpg-text font-bold" style="font-family: 'Space Mono', monospace;">2 dés</span>
+</div>
+<div class="bg-surface-container p-2.5 flex flex-col gap-0.5 border border-rpg-border">
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold" style="font-family: 'Inter', sans-serif;">Modificateur</span>
+<span class="font-number-md text-[17px] text-primary font-bold" style="font-family: 'Space Mono', monospace;">+3</span>
+</div>
+<div class="bg-surface-container p-2.5 flex flex-col gap-0.5 border border-rpg-border">
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold" style="font-family: 'Inter', sans-serif;">Répétitions</span>
+<span class="font-number-md text-[17px] text-rpg-text font-bold" style="font-family: 'Space Mono', monospace;">1 fois</span>
+</div>
+<div class="bg-surface-container p-2.5 flex flex-col gap-0.5 border border-rpg-border">
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase font-bold" style="font-family: 'Inter', sans-serif;">Seuil &amp; Règle</span>
+<span class="font-number-md text-[17px] text-rpg-warning font-bold" style="font-family: 'Space Mono', monospace;">≥ 10</span>
+</div>
+</div>
+<!-- Polyèdres physiques (d4, d6, d8, d10, d12, d20, d100) sous forme de gros boutons polygonaux tactiles -->
+<div class="flex flex-col gap-2 pt-2 border-t border-rpg-border/60">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] text-on-surface-variant uppercase tracking-wider font-bold" style="font-family: 'Inter', sans-serif;">Dés physiques polyédriques (réservé exclusivement aux modes Jet de seuil / Pool)</span>
+<span class="font-label-xs text-[11px] text-primary/70 font-semibold" style="font-family: 'Inter', sans-serif;">Toucher pour lancer direct</span>
+</div>
+<div class="grid grid-cols-4 sm:grid-cols-7 gap-2">
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d4')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d4</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">1-4</span>
+</button>
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d6')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d6</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">1-6</span>
+</button>
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d8')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d8</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">1-8</span>
+</button>
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d10')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d10</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">0-9</span>
+</button>
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d12')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d12</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">1-12</span>
+</button>
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d20')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d20</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">1-20</span>
+</button>
+<button class="touch-target-lg bg-surface-container hover:bg-surface-bright hover:border-primary border-2 border-rpg-border flex flex-col items-center justify-center gap-0.5 group transition-all active:scale-95 shadow-sm" onclick="quickPoly('d100')" type="button">
+<span class="font-number-md text-[17px] text-on-surface-variant group-hover:text-primary font-bold" style="font-family: 'Space Mono', monospace;">d100</span>
+<span class="text-[11px] text-rpg-muted font-bold" style="font-family: 'Inter', sans-serif;">%</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BOUTON MASSIF « LANCER LES DÉS » EN CYAN NÉON (#06b6d4) DE GRANDE HAUTEUR (h-20) -->
+<div class="pt-2">
+<button class="w-full h-20 bg-[#06b6d4] hover:bg-[#22d3ee] text-[#020617] text-[24px] md:text-[28px] tracking-widest uppercase font-extrabold flex items-center justify-center gap-space-md shadow-[0_0_30px_rgba(6,182,212,0.65)] hover:shadow-[0_0_40px_rgba(6,182,212,0.9)] transition-all active:scale-[0.98] border-2 border-[#a5f3fc]" id="btn-roll-main" onclick="executeRoll()" style="font-family: 'Orbitron', sans-serif;" type="button">
+<span class="material-symbols-outlined text-[36px] font-bold">casino</span>
+<span>LANCER LES DÉS</span>
+</button>
+</div>
+</div>
+<!-- RANGÉE INFÉRIEURE : LES 5 JETS RAPIDES ENREGISTRÉS SOUS FORME DE TUILES TACTILES INSTANTANÉES -->
+<div class="bg-surface-container-low border border-rpg-border p-space-md shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">bolt</span>
+<span class="font-label-sm text-[12px] uppercase text-rpg-text tracking-wider font-bold" style="font-family: 'Orbitron', sans-serif;">JETS RAPIDES ENREGISTRÉS</span>
+<span class="px-2 py-0.5 bg-surface-container-high border border-rpg-border text-on-surface-variant font-label-xs text-[11px] font-bold" style="font-family: 'Inter', sans-serif;">5 PRÉRÉGLAGES</span>
+</div>
+<button class="touch-target px- space-md px-3 bg-surface-container hover:bg-surface-bright text-primary font-label-sm text-[12px] uppercase flex items-center gap-1.5 transition-all border border-primary/40 font-bold active:scale-95" style="font-family: 'Inter', sans-serif;" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>AJOUTER</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+<!-- Tuile 1 -->
+<div class="touch-target-lg group bg-surface-container hover:bg-surface-container-high p-3 flex flex-col justify-between cursor-pointer transition-all border-2 border-rpg-border hover:border-primary/60 active:scale-95 shadow-sm" onclick="triggerPreset('Attaque Épée Longue', '1d20+7')">
+<div class="flex items-start justify-between gap-1">
+<span class="font-label-xs text-[11px] text-rpg-text font-bold uppercase truncate" style="font-family: 'Inter', sans-serif;">Épée Longue</span>
+<span class="material-symbols-outlined text-[16px] text-rpg-muted group-hover:text-primary transition-colors">touch_app</span>
+</div>
+<span class="font-number-md text-[18px] text-primary font-bold mt-1" style="font-family: 'Space Mono', monospace;">1d20+7</span>
+</div>
+<!-- Tuile 2 -->
+<div class="touch-target-lg group bg-surface-container hover:bg-surface-container-high p-3 flex flex-col justify-between cursor-pointer transition-all border-2 border-rpg-border hover:border-primary/60 active:scale-95 shadow-sm" onclick="triggerPreset('Dégâts Blaster', '1d8+4')">
+<div class="flex items-start justify-between gap-1">
+<span class="font-label-xs text-[11px] text-rpg-text font-bold uppercase truncate" style="font-family: 'Inter', sans-serif;">Dégâts Blaster</span>
+<span class="material-symbols-outlined text-[16px] text-rpg-muted group-hover:text-primary transition-colors">touch_app</span>
+</div>
+<span class="font-number-md text-[18px] text-primary font-bold mt-1" style="font-family: 'Space Mono', monospace;">1d8+4</span>
+</div>
+<!-- Tuile 3 -->
+<div class="touch-target-lg group bg-surface-container hover:bg-surface-container-high p-3 flex flex-col justify-between cursor-pointer transition-all border-2 border-rpg-border hover:border-primary/60 active:scale-95 shadow-sm" onclick="triggerPreset('Lancer D66', '1d66')">
+<div class="flex items-start justify-between gap-1">
+<span class="font-label-xs text-[11px] text-rpg-text font-bold uppercase truncate" style="font-family: 'Inter', sans-serif;">Lancer D66</span>
+<span class="material-symbols-outlined text-[16px] text-rpg-muted group-hover:text-primary transition-colors">touch_app</span>
+</div>
+<span class="font-number-md text-[18px] text-primary font-bold mt-1" style="font-family: 'Space Mono', monospace;">1d66</span>
+</div>
+<!-- Tuile 4 -->
+<div class="touch-target-lg group bg-surface-container hover:bg-surface-container-high p-3 flex flex-col justify-between cursor-pointer transition-all border-2 border-rpg-border hover:border-primary/60 active:scale-95 shadow-sm" onclick="triggerPreset('Test Empathie', 'D10+D8')">
+<div class="flex items-start justify-between gap-1">
+<span class="font-label-xs text-[11px] text-rpg-text font-bold uppercase truncate" style="font-family: 'Inter', sans-serif;">Test Empathie</span>
+<span class="material-symbols-outlined text-[16px] text-rpg-muted group-hover:text-primary transition-colors">touch_app</span>
+</div>
+<span class="font-number-md text-[18px] text-primary font-bold mt-1" style="font-family: 'Space Mono', monospace;">D10+D8</span>
+</div>
+<!-- Tuile 5 -->
+<div class="touch-target-lg group bg-surface-container hover:bg-surface-container-high p-3 flex flex-col justify-between cursor-pointer transition-all border-2 border-rpg-border hover:border-primary/60 active:scale-95 shadow-sm" onclick="triggerPreset('Observation', '2d6+5')">
+<div class="flex items-start justify-between gap-1">
+<span class="font-label-xs text-[11px] text-rpg-text font-bold uppercase truncate" style="font-family: 'Inter', sans-serif;">Observation</span>
+<span class="material-symbols-outlined text-[16px] text-rpg-muted group-hover:text-primary transition-colors">touch_app</span>
+</div>
+<span class="font-number-md text-[18px] text-primary font-bold mt-1" style="font-family: 'Space Mono', monospace;">2d6+5</span>
+</div>
+</div>
+</div>
+</section>
+<!-- COLONNE DROITE : RÉSULTAT DU DERNIER JET MONUMENTAL & HISTORIQUE (4 cols) -->
+<aside class="lg:col-span-4 flex flex-col gap-space-md w-full">
+<!-- BLOC MONUMENTAL DU DERNIER JET MONITORÉ -->
+<div class="bg-surface-container-low p-space-md shadow-2xl flex flex-col gap-space-md relative overflow-hidden border-2 border-rpg-border">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[22px]">visibility</span>
+<span class="font-label-sm text-[12px] uppercase tracking-wider font-bold" style="font-family: 'Orbitron', sans-serif;">DERNIER JET MONITORÉ</span>
+</div>
+<!-- Bouton 'PROJETER' en haut -->
+<button class="touch-target text-primary hover:text-white transition-all flex items-center gap-1.5 px-3 py-1 bg-surface-container hover:bg-primary/20 border-2 border-primary/50 shadow-[0_0_12px_rgba(6,182,212,0.25)] active:scale-95" title="Diffuser le jet sur l'écran joueurs" type="button">
+<span class="material-symbols-outlined text-[18px]">tv</span>
+<span class="font-label-sm text-[12px] uppercase font-bold tracking-wider" style="font-family: 'Inter', sans-serif;">PROJETER</span>
+</button>
+</div>
+<!-- Qualification système -->
+<div class="text-on-surface-variant font-label-xs text-[11px] tracking-wide" id="result-system-label" style="font-family: 'Inter', sans-serif;">Système : Blade Runner — Dés échelonnés (Attribut B + Compétence C)</div>
+<!-- CŒUR MONUMENTAL DU RÉSULTAT (Lisible à 1 mètre) -->
+<div class="bg-surface-container-lowest p-space-lg flex flex-col items-center justify-center text-center gap-2 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)] border-2 border-rpg-border relative">
+<span class="font-label-xs text-[11px] text-rpg-muted uppercase tracking-widest font-extrabold" style="font-family: 'Inter', sans-serif;">RÉSULTAT TOTAL</span>
+<!-- Space Mono géant pour le score -->
+<div class="font-number-lg text-[44px] md:text-[52px] text-rpg-warning tracking-tight font-extrabold leading-none my-1 drop-shadow-[0_0_20px_rgba(245,158,11,0.5)]" id="main-result-display" style="font-family: 'Orbitron', sans-serif;">0 SUCCÈS</div>
+<!-- Degrés de réussite en toutes lettres bien détachés -->
+<div class="w-full py-2 px-3 bg-rpg-danger/90 border border-rpg-danger text-white font-label-sm text-[12px] md:text-[13px] uppercase font-extrabold tracking-widest shadow-[0_0_16px_rgba(239,68,68,0.5)]" id="status-badge" style="font-family: 'Inter', sans-serif;">
+        ÉCHEC CRITIQUE • 1 ÉCUEIL
+      </div>
+</div>
+<!-- FACES OBTENUES DÉTAILLÉES AVEC RELIEF DIÉGÉTIQUE & QUALIFICATION EN TOUTES LETTRES -->
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-center justify-between text-on-surface-variant font-label-xs text-[11px] uppercase font-bold tracking-wider" style="font-family: 'Inter', sans-serif;">
+<span>FACES OBTENUES DÉTAILLÉES</span>
+<span class="text-rpg-muted font-normal">Relief diégétique</span>
+</div>
+<div class="grid grid-cols-2 gap-space-sm" id="dice-container">
+<!-- Dé Attribut -->
+<div class="bg-surface-container p-space-md flex flex-col items-center justify-center gap-2 border-2 border-rpg-danger/60 shadow-[0_4px_16px_rgba(0,0,0,0.5)] relative">
+<span class="font-label-xs text-[11px] text-rpg-danger font-extrabold uppercase tracking-wider" style="font-family: 'Inter', sans-serif;">ATTRIBUT (D10)</span>
+<div class="w-20 h-20 bg-surface-container-lowest flex items-center justify-center shadow-[inset_0_4px_12px_rgba(0,0,0,0.9)] border-2 border-rpg-danger/50 relative overflow-hidden">
+<div class="absolute inset-0 bg-rpg-danger/10 pointer-events-none"></div>
+<span class="font-number-lg text-[38px] text-rpg-danger font-extrabold leading-none" style="font-family: 'Space Mono', monospace;">1</span>
+</div>
+<span class="px-3 py-1 bg-rpg-danger/20 border border-rpg-danger/50 font-label-xs text-[11px] text-rpg-danger uppercase font-extrabold tracking-wider" style="font-family: 'Inter', sans-serif;">Écueil</span>
+</div>
+<!-- Dé Compétence -->
+<div class="bg-surface-container p-space-md flex flex-col items-center justify-center gap-2 border-2 border-rpg-border shadow-[0_4px_16px_rgba(0,0,0,0.5)] relative">
+<span class="font-label-xs text-[11px] text-primary font-extrabold uppercase tracking-wider" style="font-family: 'Inter', sans-serif;">COMPÉTENCE (D8)</span>
+<div class="w-20 h-20 bg-surface-container-lowest flex items-center justify-center shadow-[inset_0_4px_12px_rgba(0,0,0,0.9)] border-2 border-rpg-border relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+<span class="font-number-lg text-[38px] text-primary font-extrabold leading-none" style="font-family: 'Space Mono', monospace;">4</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-high border border-rpg-border font-label-xs text-[11px] text-on-surface-variant uppercase font-bold tracking-wider" style="font-family: 'Inter', sans-serif;">Neutre</span>
+</div>
+</div>
+</div>
+</div>
+<!-- EN DESSOUS : L'HISTORIQUE COMPACT AVEC QUALIFICATION EN TOUTES LETTRES -->
+<div class="bg-surface-container-low border border-rpg-border p-space-md shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between pb-1 border-b border-rpg-border/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-muted text-[18px]">history</span>
+<span class="font-label-sm text-[12px] uppercase tracking-wider text-rpg-text font-bold" style="font-family: 'Orbitron', sans-serif;">HISTORIQUE RÉCENT</span>
+</div>
+<button class="font-label-xs text-[11px] text-on-surface-variant hover:text-rpg-danger uppercase transition-colors font-bold touch-target px-2 flex items-center" onclick="clearHistory()" style="font-family: 'Inter', sans-serif;" type="button">Vider</button>
+</div>
+<div class="flex flex-col gap-2" id="history-list">
+<!-- Entrée 1 : Blade Runner -->
+<div class="p-2.5 bg-surface-container flex flex-col gap-1 border border-rpg-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-number-md text-[12px] text-rpg-muted font-bold" style="font-family: 'Space Mono', monospace;">22:28:10</span>
+<span class="font-label-xs text-[11px] text-secondary font-bold uppercase" style="font-family: 'Inter', sans-serif;">Blade Runner</span>
+<span class="font-label-xs text-[11px] text-rpg-danger font-extrabold uppercase px-1.5 py-0.5 bg-rpg-danger/10 border border-rpg-danger/30" style="font-family: 'Inter', sans-serif;">Échec critique</span>
+</div>
+<div class="flex items-center justify-between pt-0.5">
+<span class="font-number-md text-[13px] text-rpg-text font-bold" style="font-family: 'Space Mono', monospace;">Faces: [ 1 ] [ 4 ]</span>
+<span class="font-label-xs text-[11px] text-on-surface-variant font-semibold" style="font-family: 'Inter', sans-serif;">Total: 0 succès (1 écueil)</span>
+</div>
+</div>
+<!-- Entrée 2 : Appel de Cthulhu -->
+<div class="p-2.5 bg-surface-container flex flex-col gap-1 border border-rpg-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-number-md text-[12px] text-rpg-muted font-bold" style="font-family: 'Space Mono', monospace;">22:24:05</span>
+<span class="font-label-xs text-[11px] text-secondary font-bold uppercase" style="font-family: 'Inter', sans-serif;">Appel de Cthulhu</span>
+<span class="font-label-xs text-[11px] text-rpg-success font-extrabold uppercase px-1.5 py-0.5 bg-rpg-success/10 border border-rpg-success/30" style="font-family: 'Inter', sans-serif;">Succès majeur</span>
+</div>
+<div class="flex items-center justify-between pt-0.5">
+<span class="font-number-md text-[13px] text-primary font-bold" style="font-family: 'Space Mono', monospace;">Faces: [ 18 ]</span>
+<span class="font-label-xs text-[11px] text-on-surface-variant font-semibold" style="font-family: 'Inter', sans-serif;">18 ≤ 65 — Réussite significative</span>
+</div>
+</div>
+<!-- Entrée 3 : Rolemaster -->
+<div class="p-2.5 bg-surface-container flex flex-col gap-1 border border-rpg-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-number-md text-[12px] text-rpg-muted font-bold" style="font-family: 'Space Mono', monospace;">22:19:40</span>
+<span class="font-label-xs text-[11px] text-secondary font-bold uppercase" style="font-family: 'Inter', sans-serif;">Rolemaster</span>
+<span class="font-label-xs text-[11px] text-rpg-danger font-extrabold uppercase px-1.5 py-0.5 bg-rpg-danger/10 border border-rpg-danger/30" style="font-family: 'Inter', sans-serif;">Échec total</span>
+</div>
+<div class="flex items-center justify-between pt-0.5">
+<span class="font-number-md text-[13px] text-rpg-text font-bold" style="font-family: 'Space Mono', monospace;">Faces: [ 97 ]</span>
+<span class="font-label-xs text-[11px] text-on-surface-variant font-semibold" style="font-family: 'Inter', sans-serif;">97 ≥ 45 — Échec total</span>
+</div>
+</div>
+<!-- Entrée 4 : Blade Runner -->
+<div class="p-2.5 bg-surface-container flex flex-col gap-1 border border-rpg-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-number-md text-[12px] text-rpg-muted font-bold" style="font-family: 'Space Mono', monospace;">22:15:18</span>
+<span class="font-label-xs text-[11px] text-secondary font-bold uppercase" style="font-family: 'Inter', sans-serif;">Blade Runner</span>
+<span class="font-label-xs text-[11px] text-rpg-success font-extrabold uppercase px-1.5 py-0.5 bg-rpg-success/10 border border-rpg-success/30" style="font-family: 'Inter', sans-serif;">Réussite critique</span>
+</div>
+<div class="flex items-center justify-between pt-0.5">
+<span class="font-number-md text-[13px] text-primary font-bold" style="font-family: 'Space Mono', monospace;">Faces: [ 10 ] [ 8 ]</span>
+<span class="font-label-xs text-[11px] text-on-surface-variant font-semibold" style="font-family: 'Inter', sans-serif;">Total: 2 succès nets</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</div>
+<script>
+  let currentModifier = 'normal';
+
+  function setModifier(type) {
+    currentModifier = type;
+    const btnNorm = document.getElementById('mod-normal');
+    const btnAdv = document.getElementById('mod-advantage');
+    const btnDis = document.getElementById('mod-disadvantage');
+    
+    [btnNorm, btnAdv, btnDis].forEach(b => {
+      b.className = "touch-target-lg bg-surface-container-high hover:bg-surface-bright text-rpg-text font-label-sm text-[12px] uppercase font-bold tracking-wider transition-all border border-rpg-border active:scale-95 flex items-center justify-center";
+    });
+
+    if (type === 'normal') {
+      btnNorm.className = "touch-target-lg bg-primary-container text-rpg-accent-contrast font-label-sm text-[12px] uppercase font-extrabold tracking-wider transition-all shadow-[0_0_16px_rgba(6,182,212,0.4)] border-2 border-primary active:scale-95 flex items-center justify-center";
+    } else if (type === 'advantage') {
+      btnAdv.className = "touch-target-lg bg-primary-container text-rpg-accent-contrast font-label-sm text-[12px] uppercase font-extrabold tracking-wider transition-all shadow-[0_0_16px_rgba(6,182,212,0.4)] border-2 border-primary active:scale-95 flex items-center justify-center";
+    } else if (type === 'disadvantage') {
+      btnDis.className = "touch-target-lg bg-rpg-danger text-white font-label-sm text-[12px] uppercase font-extrabold tracking-wider transition-all shadow-[0_0_16px_rgba(239,68,68,0.5)] border-2 border-rpg-danger active:scale-95 flex items-center justify-center";
+    }
+    updatePoolSummary();
+  }
+
+  function updatePoolSummary() {
+    const attr = document.getElementById('select-attribute').value;
+    const skill = document.getElementById('select-skill').value;
+    const gear = document.getElementById('select-gear').value;
+    const box = document.getElementById('pool-summary-box');
+    const sub = document.getElementById('pool-subtext');
+
+    const dAttr = attr.split(' = ')[1] || 'D10';
+    const dSkill = skill.split(' = ')[1] || 'D8';
+    let poolText = `${dAttr} + ${dSkill}`;
+    let subText = `Attribut ${attr.charAt(0)} + Compétence ${skill.charAt(0)}`;
+
+    if (gear && gear !== 'Aucun') {
+      const dGear = gear.split(' = ')[1] || 'D6';
+      poolText += ` + ${dGear}`;
+      subText += ` + Équip. ${gear.charAt(0)}`;
+    }
+    if (currentModifier === 'advantage') poolText += ' (AV)';
+    if (currentModifier === 'disadvantage') poolText += ' (DÉSAV)';
+
+    box.textContent = `POIGNÉE : ${poolText}`;
+    sub.textContent = subText;
+  }
+
+  function quickPoly(die) {
+    const sides = parseInt(die.replace('d', ''), 10);
+    const roll = Math.floor(Math.random() * sides) + 1;
+    updateDisplayWithPoly(die, roll);
+  }
+
+  function updateDisplayWithPoly(die, val) {
+    const mainResult = document.getElementById('main-result-display');
+    const statusBadge = document.getElementById('status-badge');
+    const label = document.getElementById('result-system-label');
+    const diceBox = document.getElementById('dice-container');
+
+    if (!mainResult || !statusBadge || !label || !diceBox) return;
+
+    label.textContent = "Lancer Rapide Tactile — " + die.toUpperCase();
+    mainResult.textContent = val;
+    mainResult.className = "font-number-lg text-[44px] md:text-[52px] text-primary tracking-tight font-extrabold leading-none my-1 drop-shadow-[0_0_20px_rgba(34,211,238,0.6)]";
+
+    statusBadge.textContent = "VALEUR BRUTE : " + val;
+    statusBadge.className = "w-full py-2 px-3 bg-surface-container-high border border-primary text-primary font-label-sm text-[12px] md:text-[13px] uppercase font-extrabold tracking-widest shadow-[0_0_14px_rgba(6,182,212,0.3)]";
+
+    diceBox.innerHTML = `
+      <div class="col-span-2 bg-surface-container p-space-md flex flex-col items-center justify-center gap-2 border-2 border-primary/50 shadow-[0_4px_16px_rgba(0,0,0,0.5)]">
+        <span class="font-label-xs text-[11px] text-primary font-extrabold uppercase tracking-wider">${die.toUpperCase()} MONOGRAMME</span>
+        <div class="w-20 h-20 bg-surface-container-lowest flex items-center justify-center shadow-[inset_0_4px_12px_rgba(0,0,0,0.9)] border-2 border-primary">
+          <span class="font-number-lg text-[38px] text-primary font-extrabold leading-none">${val}</span>
+        </div>
+        <span class="px-3 py-1 bg-surface-container-high border border-rpg-border font-label-xs text-[11px] text-on-surface-variant uppercase font-bold tracking-wider">Résultat Direct</span>
+      </div>
+    `;
+
+    addHistoryEntry("Jet Rapide " + die, "Face [ " + val + " ]", "VALEUR " + val, "text-primary font-bold");
+  }
+
+  function triggerPreset(title, formula) {
+    const mainResult = document.getElementById('main-result-display');
+    const statusBadge = document.getElementById('status-badge');
+    const label = document.getElementById('result-system-label');
+
+    if (!mainResult || !statusBadge || !label) return;
+
+    label.textContent = "Préréglage : " + title + " (" + formula + ")";
+
+    if (formula === "1d20+7") {
+      const d = Math.floor(Math.random() * 20) + 1;
+      const total = d + 7;
+      mainResult.textContent = total;
+      const success = total >= 16;
+      mainResult.className = success 
+        ? "font-number-lg text-[44px] md:text-[52px] text-rpg-success tracking-tight font-extrabold leading-none my-1 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]" 
+        : "font-number-lg text-[44px] md:text-[52px] text-rpg-danger tracking-tight font-extrabold leading-none my-1 drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]";
+      statusBadge.textContent = success ? "TOUCHÉ (NAT " + d + ") • SUCCÈS" : "MANQUÉ (NAT " + d + ") • ÉCHEC";
+      statusBadge.className = success 
+        ? "w-full py-2 px-3 bg-rpg-success/90 border border-rpg-success text-white font-label-sm text-[12px] md:text-[13px] uppercase font-extrabold tracking-widest shadow-[0_0_16px_rgba(16,185,129,0.5)]" 
+        : "w-full py-2 px-3 bg-rpg-danger/90 border border-rpg-danger text-white font-label-sm text-[12px] md:text-[13px] uppercase font-extrabold tracking-widest shadow-[0_0_16px_rgba(239,68,68,0.5)]";
+      addHistoryEntry(title, formula + " = " + total, success ? "Touché" : "Manqué", success ? "text-rpg-success font-extrabold" : "text-rpg-danger font-extrabold");
+    } else {
+      executeRoll();
+    }
+  }
+
+  function executeRoll() {
+    const attrVal = document.getElementById('select-attribute')?.value || 'B = D10';
+    const skillVal = document.getElementById('select-skill')?.value || 'C = D8';
+
+    const sidesA = parseInt(attrVal.split('D')[1], 10) || 10;
+    const sidesB = parseInt(skillVal.split('D')[1], 10) || 8;
+
+    const bRoll = Math.floor(Math.random() * sidesA) + 1;
+    const gRoll = Math.floor(Math.random() * sidesB) + 1;
+
+    let successes = 0;
+    if (bRoll >= 6) successes++;
+    if (gRoll >= 6) successes++;
+    const mishap = (bRoll === 1);
+
+    const mainResult = document.getElementById('main-result-display');
+    const statusBadge = document.getElementById('status-badge');
+    const label = document.getElementById('result-system-label');
+    const diceBox = document.getElementById('dice-container');
+
+    if (!mainResult || !statusBadge || !label || !diceBox) return;
+
+    label.textContent = `Système : Blade Runner — Dés échelonnés (D${sidesA} + D${sidesB})`;
+
+    if (successes > 0) {
+      mainResult.textContent = successes === 1 ? "1 SUCCÈS" : successes + " SUCCÈS";
+      mainResult.className = "font-number-lg text-[44px] md:text-[52px] text-rpg-success tracking-tight font-extrabold leading-none my-1 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]";
+      statusBadge.textContent = successes > 1 ? "RÉUSSITE CRITIQUE • 2 SUCCÈS NETS" : "SUCCÈS STANDARD • ACTION VALIDÉE";
+      statusBadge.className = "w-full py-2 px-3 bg-rpg-success/90 border border-rpg-success text-white font-label-sm text-[12px] md:text-[13px] uppercase font-extrabold tracking-widest shadow-[0_0_16px_rgba(16,185,129,0.5)]";
+    } else {
+      mainResult.textContent = "0 SUCCÈS";
+      mainResult.className = "font-number-lg text-[44px] md:text-[52px] text-rpg-warning tracking-tight font-extrabold leading-none my-1 drop-shadow-[0_0_20px_rgba(245,158,11,0.5)]";
+      statusBadge.textContent = mishap ? "ÉCHEC CRITIQUE • 1 ÉCUEIL" : "ÉCHEC TOTAL • 0 SUCCÈS";
+      statusBadge.className = "w-full py-2 px-3 bg-rpg-danger/90 border border-rpg-danger text-white font-label-sm text-[12px] md:text-[13px] uppercase font-extrabold tracking-widest shadow-[0_0_16px_rgba(239,68,68,0.5)]";
+    }
+
+    const bQual = bRoll === 1 ? "Écueil" : (bRoll >= 6 ? "Succès" : "Neutre");
+    const gQual = gRoll === 1 ? "Écueil" : (gRoll >= 6 ? "Succès" : "Neutre");
+
+    const bColor = bRoll === 1 ? "text-rpg-danger border-rpg-danger/60" : (bRoll >= 6 ? "text-rpg-success border-rpg-success/60" : "text-primary border-rpg-border");
+    const gColor = gRoll === 1 ? "text-rpg-danger border-rpg-danger/60" : (gRoll >= 6 ? "text-rpg-success border-rpg-success/60" : "text-primary border-rpg-border");
+
+    diceBox.innerHTML = `
+      <div class="bg-surface-container p-space-md flex flex-col items-center justify-center gap-2 border-2 ${bColor} shadow-[0_4px_16px_rgba(0,0,0,0.5)] relative">
+        <span class="font-label-xs text-[11px] font-extrabold uppercase tracking-wider ${bRoll === 1 ? 'text-rpg-danger' : (bRoll >= 6 ? 'text-rpg-success' : 'text-primary')}" style="font-family: 'Inter', sans-serif;">ATTRIBUT (D${sidesA})</span>
+        <div class="w-20 h-20 bg-surface-container-lowest flex items-center justify-center shadow-[inset_0_4px_12px_rgba(0,0,0,0.9)] border-2 ${bColor} relative overflow-hidden">
+          <span class="font-number-lg text-[38px] font-extrabold leading-none ${bRoll === 1 ? 'text-rpg-danger' : (bRoll >= 6 ? 'text-rpg-success' : 'text-rpg-text')}" style="font-family: 'Space Mono', monospace;">${bRoll}</span>
+        </div>
+        <span class="px-3 py-1 bg-surface-container-high border border-rpg-border font-label-xs text-[11px] uppercase font-extrabold tracking-wider ${bRoll === 1 ? 'text-rpg-danger' : (bRoll >= 6 ? 'text-rpg-success' : 'text-on-surface-variant')}" style="font-family: 'Inter', sans-serif;">${bQual}</span>
+      </div>
+
+      <div class="bg-surface-container p-space-md flex flex-col items-center justify-center gap-2 border-2 ${gColor} shadow-[0_4px_16px_rgba(0,0,0,0.5)] relative">
+        <span class="font-label-xs text-[11px] font-extrabold uppercase tracking-wider ${gRoll === 1 ? 'text-rpg-danger' : (gRoll >= 6 ? 'text-rpg-success' : 'text-primary')}" style="font-family: 'Inter', sans-serif;">COMPÉTENCE (D${sidesB})</span>
+        <div class="w-20 h-20 bg-surface-container-lowest flex items-center justify-center shadow-[inset_0_4px_12px_rgba(0,0,0,0.9)] border-2 ${gColor} relative overflow-hidden">
+          <span class="font-number-lg text-[38px] font-extrabold leading-none ${gRoll === 1 ? 'text-rpg-danger' : (gRoll >= 6 ? 'text-rpg-success' : 'text-rpg-text')}" style="font-family: 'Space Mono', monospace;">${gRoll}</span>
+        </div>
+        <span class="px-3 py-1 bg-surface-container-high border border-rpg-border font-label-xs text-[11px] uppercase font-extrabold tracking-wider ${gRoll === 1 ? 'text-rpg-danger' : (gRoll >= 6 ? 'text-rpg-success' : 'text-on-surface-variant')}" style="font-family: 'Inter', sans-serif;">${gQual}</span>
+      </div>
+    `;
+
+    const now = new Date();
+    const timeStr = now.toTimeString().substring(0, 8);
+    const badgeText = successes > 0 ? (successes > 1 ? "Réussite critique" : "Succès standard") : (mishap ? "Échec critique" : "Échec total");
+    const badgeClass = successes > 0 ? "text-rpg-success font-extrabold" : "text-rpg-danger font-extrabold";
+
+    addHistoryEntry(`Blade Runner D${sidesA}+D${sidesB}`, `Faces: [ ${bRoll} ] [ ${gRoll} ]`, badgeText, badgeClass);
+  }
+
+  function addHistoryEntry(title, formula, tag, tagClass) {
+    const list = document.getElementById('history-list');
+    if (!list) return;
+
+    const now = new Date();
+    const timeStr = now.toTimeString().substring(0, 8);
+
+    const row = document.createElement('div');
+    row.className = "p-2.5 bg-surface-container flex flex-col gap-1 border border-rpg-border shadow-sm";
+    row.innerHTML = `
+      <div class="flex items-center justify-between">
+        <span class="font-number-md text-[12px] text-rpg-muted font-bold" style="font-family: 'Space Mono', monospace;">${timeStr}</span>
+        <span class="font-label-xs text-[11px] text-secondary font-bold uppercase" style="font-family: 'Inter', sans-serif;">${title}</span>
+        <span class="font-label-xs text-[11px] uppercase ${tagClass} px-1.5 py-0.5 bg-surface-container-high border border-rpg-border" style="font-family: 'Inter', sans-serif;">${tag}</span>
+      </div>
+      <div class="flex items-center justify-between pt-0.5">
+        <span class="font-number-md text-[13px] text-primary font-bold" style="font-family: 'Space Mono', monospace;">${formula}</span>
+        <span class="font-label-xs text-[11px] text-on-surface-variant font-semibold" style="font-family: 'Inter', sans-serif;">Archivé Tactile</span>
+      </div>
+    `;
+
+    list.insertBefore(row, list.firstChild);
+    while (list.children.length > 5) {
+      list.removeChild(list.lastChild);
+    }
+  }
+
+  function clearHistory() {
+    const list = document.getElementById('history-list');
+    if (list) list.innerHTML = '<div class="p-3 text-center text-rpg-muted font-label-xs text-[11px] uppercase tracking-wider font-bold">Aucun jet archivé</div>';
+  }
+
+  document.getElementById('btn-reset')?.addEventListener('click', () => {
+    document.getElementById('select-attribute').value = "B = D10";
+    document.getElementById('select-skill').value = "C = D8";
+    document.getElementById('select-gear').value = "Aucun";
+    setModifier('normal');
+    executeRoll();
+  });
+</script></main></div></body></html>

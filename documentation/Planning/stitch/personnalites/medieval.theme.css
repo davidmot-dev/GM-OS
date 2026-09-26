@@ -1,0 +1,68 @@
+/* ==========================================================================
+   PERSONNALITÉ DE BASE — MÉDIÉVAL
+   Contrat GM-OS v1.3 · relevée sur medieval.html (Stitch, prompt 8) le 2026-09-27
+   Étape T2.3 : des VALEURS seulement. Rien ici n'est lu par GM-OS.
+
+   Deux polarités à l'écran : un cadre (bois sombre) autour d'un contenu clair.
+   Le cadre (§ 4.8, contrat v1.3) porte la sienne.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root[data-theme="medieval"] {
+  color-scheme: light;
+
+  /* 4.1 · Couleurs de base — parchemin, vélin, encre */
+  --rpg-bg: #dfcfb2;
+  --rpg-surface: #f7f2e7;
+  --rpg-surface-2: #ebe0ca;
+  --rpg-text: #1b1108;
+  --rpg-muted: #5c4a38;
+  --rpg-accent: #7a5c20;
+  --rpg-accent-contrast: #f7f2e7;
+  --rpg-border: #7c5c3b;
+  --rpg-border-soft: rgba(122, 92, 32, 0.25);
+
+  /* 4.2 · États — encres : émeraude, sang, cire, saphir */
+  --rpg-success: #1b6342;
+  --rpg-danger: #8f1d1d;
+  --rpg-warning: #b04f00;
+  --rpg-info: #3d3a82;
+
+  /* 4.3 · Typographie — les chiffres restent en Cinzel, comme chez Stitch */
+  --rpg-font-display: "Cinzel", "EB Garamond", serif;
+  --rpg-font-body: "EB Garamond", "Georgia", serif;
+  --rpg-font-mono: "Cinzel", "EB Garamond", serif;
+  --rpg-title-tracking: 0.06em;
+  --rpg-kicker-tracking: 0.12em;
+  --rpg-title-transform: uppercase;
+
+  /* 4.5 · Forme — presque droite ; le liseré intérieur fait la double bordure */
+  --rpg-radius-sm: 2px;
+  --rpg-radius-md: 2px;
+  --rpg-radius-lg: 2px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  /* 4.6 · Relief et lumière — ombres d'encre, aucune lueur */
+  --rpg-elevation-1: inset 0 0 0 1px #d6c4a5, 0 3px 10px rgba(28, 17, 8, 0.18);
+  --rpg-elevation-2: 0 10px 24px rgba(28, 17, 8, 0.28);
+  --rpg-elevation-3: 0 25px 50px -12px rgba(28, 17, 8, 0.45);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+
+  /* 4.7 · Verre — du vélin presque opaque, pas du verre */
+  --rpg-glass-bg: rgba(247, 242, 231, 0.94);
+  --rpg-glass-border: rgba(124, 92, 59, 0.45);
+  --rpg-glass-blur: 0px;
+
+  /* 4.8 · Le cadre — barre latérale et bandeau, en bois sombre */
+  --rpg-frame-bg: #160e07;
+  --rpg-frame-text: #e5d5b8;
+  --rpg-frame-accent: #d4af37;
+
+  /* 7 · Matières — parchemin taché, grain de vélin */
+  --rpg-texture-bg: radial-gradient(circle at 50% 30%, rgba(255, 250, 240, 0.45) 0%, transparent 70%), radial-gradient(circle at 15% 85%, rgba(180, 150, 100, 0.25) 0%, transparent 60%), repeating-linear-gradient(0deg, rgba(60, 42, 26, 0.03) 0px, rgba(60, 42, 26, 0.03) 1px, transparent 1px, transparent 4px);
+  --rpg-texture-panel: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(235, 222, 198, 0.5) 100%);
+  --rpg-texture-opacity: 0.35;
+}

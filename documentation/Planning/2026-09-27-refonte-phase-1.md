@@ -1,0 +1,181 @@
+# Refonte de l'interface — le plan de la phase 1
+
+**Pour** : David, qui le relit avant qu'on code, et Claude Code, qui l'exécute. **Le 2026-09-27.**
+
+Remplace le § 4 du [plan de la refonte](./2026-09-17-refonte-interface.md), écrit le 17/09. Celui-ci
+ignorait trois choses décidées depuis : **les noms du contrat des thèmes** (D4), **les quatre
+personnalités complètes** (D3, relevées en T2.3) et **le cadre** (contrat v1.3).
+
+## 0 · En une phrase
+
+À la fin de la phase 1, **les quatre thèmes de base sont des paquets de jetons `--rpg-*`, lus par le
+même mécanisme que les thèmes de jeu**, et l'interface sait afficher les personnalités de Stitch.
+Tu les juges alors dans ta vraie application (T2.4), et **un seul interrupteur** revient à
+l'apparence d'aujourd'hui.
+
+## 1 · Où on part — vérifié dans le code le 2026-09-27
+
+- `src/theme/themeDeLInterface.ts` écrit **10 variables** (plus 2 dérivées de l'accent) : fond,
+  surface, bordure, texte, accent, deux polices, trois de verre. **Aucune** variable de texte
+  secondaire, d'état, d'arrondi, d'ombre, de cadre ou de matière.
+- Les palettes de base ont **leur propre forme** (`PaletteDInterface` : `policeTitre`, `verre.fond`…),
+  différente de celle des jetons de jeu. Deux vocabulaires pour une même chose.
+- `PONT` (`jetonsDeTheme.ts`) traduit les jetons de jeu en `--app-*` ; il est **dérivé du contrat**
+  et un essai vérifie que seuls les jetons LU l'empruntent. ⚠️ Il déclare déjà
+  `muted → --app-text-muted`, **que rien n'écrit ni ne lit** (défaut connu, T1.1 du 17/09).
+- Ce que l'interface emploie en dur, et que la phase 1 doit pouvoir piloter :
+
+| Classe | Occurrences dans `src/` |
+| --- | --- |
+| `rounded`, `rounded-sm` à `rounded-3xl` | 2 193 |
+| `shadow-sm` à `shadow-2xl` | 339 |
+| `shadow-glow-*` | 334 |
+| couleurs d'état en dur (`emerald`, `red`, `amber`, `green`, `rose`, `yellow`) | 2 048 |
+| `text-slate-400` / `text-slate-500` | 220 / 343 |
+| `theme === 'medieval'` / `'claire'` dans le code | 51 / 3 |
+| règles `[data-theme='claire']` dans `index.css` | 33 |
+
+- **La barre latérale et le bandeau** sont deux éléments de `Shell.tsx` (l. 267 et 544).
+- **Le filet de la phase 0 est en place** : captures de référence de 20 panneaux (T0.1), garde des
+  couleurs d'état (T0.2), garde de contraste (T0.3), relevé des couleurs (T0.4).
+
+## 2 · Les trois principes
+
+1. **D'abord à pixel constant, ensuite le nouveau look.** Chaque échelle entre avec des valeurs
+   qui **reproduisent l'apparence d'aujourd'hui** ; les captures de T0.1 le prouvent (zéro
+   différence). Les personnalités n'arrivent qu'à la fin, d'un bloc, derrière un interrupteur.
+   *Si une capture bouge pendant la construction, c'est un défaut, pas un choix.*
+2. **Un seul vocabulaire.** Un thème de base s'écrit en jetons `--rpg-*`, comme un thème de jeu.
+   Le jeu recouvre ce qu'il déclare (D5), le reste vient du thème de base, et **une seule table**
+   traduit le tout en `--app-*`.
+3. **Chaque jeton décide le jour même si le jeu peut le piloter** (R2). En pratique : tout jeton
+   que la phase 1 branche passe de **V2** à **LU** dans le contrat, qui passera en v1.4 à la fin.
+
+## 3 · Les étapes
+
+Chaque étape est **un commit**, réversible seul. Avant chaque séance de code : *« GM-OS
+tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, et les captures
+`npx playwright test e2e/ecransDeReference.spec.ts`.
+
+### P1.1 · Les thèmes de base deviennent des paquets de jetons — à pixel constant
+
+- `PALETTES` devient une table de **jetons du contrat** par thème (`bg`, `surface`, `text`,
+  `accent`, `font-display`, `glass-bg`…), avec **les valeurs d'aujourd'hui**. Les pastilles
+  d'accent restent à part : elles ne sont pas un jeton.
+- `appliquerLeTheme` fusionne **jetons de base + jetons du jeu** (le jeu gagne, D5 ; l'accent reste
+  arbitré à part, « la main surcharge »), puis traduit le tout par **une seule table**, dérivée du
+  contrat comme `PONT`.
+- **Preuve** : captures T0.1 identiques ; les essais de `themeDeLInterface` et du pont passent.
+- *Pourquoi en premier* : tout le reste ajoute des lignes à cette table. Sans elle, chaque échelle
+  s'ajouterait deux fois, côté base et côté jeu — le motif des deux tables de 2026-08-24.
+
+### P1.2 · Les couleurs qui manquent — à pixel constant
+
+| Jeton | Variable | Alias Tailwind | Valeur neutre (aujourd'hui) |
+| --- | --- | --- | --- |
+| `muted` | `--app-text-muted` | `text-app-muted` | slate-400 (thèmes sombres) ; celle des règles de `claire` |
+| *(dérivé)* | `--app-text-subtle` | `text-app-subtle` | slate-500 ; dérivé de `muted` quand le jeu le déclare |
+| `surface-2` | `--app-surface-2` | `bg-app-surface-2` | — (nouvelle, aucun emploi à ce stade) |
+| `accent-contrast` | `--app-accent-contrast` | `text-app-on-accent` | le texte posé aujourd'hui sur l'accent |
+| `border-soft` | `--app-border-soft` | `border-app-soft` | `app-border` à 50 % |
+| `success`, `danger`, `warning`, `info` | `--etat-*` + fond et bordure dérivés | `text-etat-succes`, `bg-etat-danger/15`… | emerald-500, red-500, amber-500, sky-500 |
+| `frame-bg`, `frame-text`, `frame-accent` | `--app-frame-*` | — | absents : `bg`, `text`, `accent` |
+
+- **Le cadre** se branche sur deux éléments seulement : `Shell.tsx` redéfinit, **sur la barre
+  latérale et le bandeau**, `--app-bg`, `--app-text` et `--app-accent` à partir de `--app-frame-*`.
+  Tout ce qui est dedans suit, sans toucher un composant de plus. Le texte estompé du cadre se
+  **dérive** (`color-mix` du texte et du fond du cadre) : le contrat n'en a pas.
+- **Preuve** : captures identiques (aucun composant n'emploie encore les alias, sauf le cadre, dont
+  les valeurs par défaut sont celles d'aujourd'hui). T0.3 s'étend aux nouvelles paires.
+
+### P1.3 · Le texte secondaire — la seule substitution de la phase
+
+- `text-slate-400` → `text-app-muted`, `text-slate-500` → `text-app-subtle`, **module par module**,
+  un commit chacun, captures T0.1 relues à chaque fois. ⚠️ `slate-500` veut parfois dire
+  « désactivé » et non « secondaire » : ces cas-là ne bougent pas (T1.4 du 17/09).
+- Les règles `[data-theme='claire'] .text-slate-*` d'`index.css` tombent au fur et à mesure : le
+  jeton fait leur travail.
+- **Les 2 048 couleurs d'état, elles, ne bougent pas** : c'est la phase 4, module par module, avec la
+  garde T0.2. La phase 1 crée les jetons ; elle ne migre pas les états.
+
+### P1.4 · La forme et le relief — à pixel constant, effet global
+
+- Dans `tailwind.config.js`, les **arrondis** (`rounded-sm` … `rounded-3xl`) et les **ombres**
+  (`shadow-sm` … `shadow-2xl`) pointent vers des variables : `--rayon-sm/md/lg`, `--elev-1/2/3`.
+  Valeurs neutres : **exactement celles de Tailwind**. `rounded-full` ne bouge jamais.
+- **C'est le levier de la phase** : 2 193 arrondis et 339 ombres obéissent ensuite au thème **sans
+  qu'on ouvre un seul composant**. Le Cyberpunk devient carré et le Médiéval presque droit d'un
+  coup, au moment P1.7.
+- `border-width`, `border-style`, `title-tracking`, `kicker-tracking`, `title-transform` : variables
+  posées, **consommées par les primitives** (phase 3). Les 1 905 `uppercase` écrits en dur ne sont
+  pas repris ici.
+- `glow`, `glow-strength` : `--app-accent-glow` reste dérivé de l'accent quand le thème n'en dit
+  rien ; `glow: none` l'éteint. Les 334 `shadow-glow-*` à couleur fixe attendent la phase 4.
+- `font-body` : `font-sans` pointe aujourd'hui vers **la police des titres**. On l'envoie vers
+  `--font-body`, dont la valeur neutre est… la police des titres. Le Médiéval pourra ensuite écrire
+  en Garamond et titrer en Cinzel.
+- **Preuve** : captures identiques.
+
+### P1.5 · Le verre et les matières — à pixel constant
+
+- `glass-bg`, `glass-border`, `glass-blur` alimentent les `--glass-*` existants.
+- Les textures de fond, aujourd'hui des règles `[data-theme=…] .bg-texture-overlay` dans
+  `index.css`, deviennent `--rpg-texture-bg` et `--rpg-texture-opacity` : **un jeu pourra enfin
+  donner sa matière**. Les SVG (grille du Cyberpunk, grain du parchemin) viennent en P1.7.
+- **Preuve** : captures identiques.
+
+### P1.6 · Le contrat en v1.4 et les gardes
+
+- Tous les jetons branchés en P1.2 à P1.5 passent de **V2** à **LU** : cahier, contrat en données,
+  essai de concordance ; la copie de RPG Theme Builder suit. *Le jeu peut désormais les piloter,
+  et le constructeur doit le savoir.*
+- **La garde de distinction** : un essai compare les quatre thèmes deux à deux sur sept traits (fond,
+  surface, texte, accent, fond du cadre, arrondi des cartes, police de titre) et **rougit si deux
+  thèmes diffèrent sur moins de trois**. Seuils : 60 de distance de couleur, 4 px d'arrondi, une
+  autre famille de police. Calculé sur les valeurs de T2.3 : de 7/7 (Cyberpunk et Clair) à **3/7 pour
+  Moderne et Clair** (cadre, arrondi, police) — **sans le cadre, ils tomberaient à 2 et seraient
+  refusés**.
+- **T0.3 couvre toutes les paires** du contrat pour les quatre thèmes, cadre compris.
+- **Les accents dérivés `gm-*`** (T1.7 du 17/09, R7) : ils se calculent depuis l'accent effectif,
+  avec contraste et distance entre frères.
+
+### P1.7 · Les personnalités — derrière un interrupteur
+
+- Les valeurs de T2.3 ([`stitch/personnalites/*.theme.css`](./stitch/personnalites/valeurs.md))
+  entrent comme **deuxième jeu de paquets**. Un seul interrupteur choisit « aujourd'hui » ou
+  « personnalités ». ✅ **David, 2026-09-27 : un réglage dans les Paramètres**, pour basculer en
+  pleine séance et comparer. Il vit avec le choix du thème, se retient d'une session à l'autre, et
+  **ne change rien d'autre** : ni le thème choisi, ni l'accent, ni le thème du jeu, qui continue de
+  recouvrir ce qu'il déclare.
+- Les pastilles d'accent de chaque thème sont revues pour le nouveau fond — le Médiéval en a quatre
+  sous le minimum aujourd'hui (`PASTILLES_ILLISIBLES`, T0.3).
+- Les SVG : grille du Cyberpunk, grain du parchemin, coins en laiton, coins coupés.
+- **Ici, les captures changent — c'est le but.** Elles sont refaites, et tu les regardes avant
+  qu'on les accepte comme nouvelle référence.
+
+## 4 · Ce que la phase 1 ne fait PAS
+
+- **Elle ne migre aucun module** : les 2 048 couleurs d'état, les 334 halos à couleur fixe, les
+  51 branches `medieval` restent. C'est la phase 4.
+- **Elle ne crée aucune primitive** (`<Panneau>`, `<Bouton>`…) : phase 3. Les jetons de bordure et
+  de casse attendent leurs consommateurs là-bas.
+- **Elle ne réagence aucun écran** : les directions retenues de Stitch attendent la phase 4 (D1).
+- **Elle ne change pas les thèmes de jeu** : les six restent acceptés à chaque étape
+  (`npm run theme:valider -- --tous`).
+
+## 5 · Ce que tu verras, et quand
+
+| Après | Ce qui change à l'écran |
+| --- | --- |
+| P1.1 à P1.6 | **Rien.** C'est le point : les captures le prouvent à chaque commit |
+| P1.3 | Rien non plus, sauf un texte secondaire mal classé — relu module par module |
+| P1.7, interrupteur sur « personnalités » | Les quatre thèmes de Stitch : couleurs, polices du texte, arrondis, ombres, cadre, matières. Les écrans gardent leur mise en page |
+
+**Estimation** : P1.1 et P1.2, une soirée ; P1.3, une soirée (vingt modules) ; P1.4 à P1.6, une
+soirée ; P1.7, une soirée. Soit **quatre soirées**, contre une à deux prévues le 17/09 : l'écart
+vient de D3, qui a fait entrer les quatre personnalités complètes.
+
+## 6 · Les décisions de David — 2026-09-27
+
+1. ✅ **L'interrupteur de P1.7 est un réglage dans les Paramètres**, pas une constante.
+2. ✅ **L'ordre est gardé** : le texte secondaire (P1.3) avant la forme et le relief (P1.4).

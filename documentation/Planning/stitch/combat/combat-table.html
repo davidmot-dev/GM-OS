@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #020617;
+        color: #f8fafc;
+        font-family: 'Inter', sans-serif;
+      }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
+    .font-mono-code { font-family: 'Space Mono', monospace; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#0c1324",
+            "rpg-muted": "#898c95",
+            "on-error": "#690005",
+            "on-secondary-fixed": "#131b2e",
+            "surface-container-high": "#23293c",
+            "rpg-warning": "#f59e0b",
+            "primary": "#8aebff",
+            "primary-container": "#22d3ee",
+            "error-container": "#93000a",
+            "surface-container": "#191f31",
+            "surface-tint": "#2fd9f4",
+            "surface-variant": "#2e3447",
+            "rpg-accent-contrast": "#020617",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#283044",
+            "primary-fixed": "#a2eeff",
+            "outline": "#859397",
+            "surface": "#0c1324",
+            "rpg-bg": "#020617",
+            "secondary": "#bec6e0",
+            "inverse-surface": "#dce1fb",
+            "tertiary-fixed": "#d8e3fb",
+            "rpg-accent": "#22d3ee",
+            "tertiary-container": "#b6c1d9",
+            "error": "#ffb4ab",
+            "secondary-fixed": "#dae2fd",
+            "on-tertiary-container": "#444f63",
+            "rpg-surface-2": "#1e293b",
+            "on-tertiary": "#263143",
+            "on-primary-fixed-variant": "#004e5a",
+            "on-surface": "#dce1fb",
+            "surface-container-highest": "#2e3447",
+            "rpg-danger": "#ef4444",
+            "outline-variant": "#3c494c",
+            "on-primary": "#00363e",
+            "inverse-on-surface": "#2a3043",
+            "background": "#0c1324",
+            "rpg-border": "#1e293b",
+            "on-tertiary-fixed-variant": "#3c475a",
+            "surface-container-low": "#151b2d",
+            "on-primary-container": "#005763",
+            "on-secondary-fixed-variant": "#3f465c",
+            "tertiary": "#d2ddf5",
+            "surface-bright": "#33394c",
+            "rpg-text": "#f8fafc",
+            "on-primary-fixed": "#001f25",
+            "on-secondary-container": "#adb4ce",
+            "on-surface-variant": "#bbc9cd",
+            "rpg-on-status": "#020617",
+            "rpg-info": "#3b82f6",
+            "tertiary-fixed-dim": "#bcc7de",
+            "on-background": "#dce1fb",
+            "surface-container-lowest": "#070d1f",
+            "rpg-success": "#10b981",
+            "secondary-fixed-dim": "#bec6e0",
+            "primary-fixed-dim": "#2fd9f4",
+            "on-tertiary-fixed": "#111c2d",
+            "secondary-container": "#3f465c",
+            "rpg-surface": "#0f172a",
+            "inverse-primary": "#006877"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-sm": "8px",
+            "margin": "16px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "gutter": "12px",
+            "space-lg": "16px",
+            "space-xl": "24px"
+          },
+          fontFamily: {
+            "title-md": ["Orbitron", "Syne", "sans-serif"],
+            "display-md": ["Orbitron", "Syne", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "body-md": ["Inter", "Space Mono", "sans-serif"],
+            "label-xs": ["Space Mono", "monospace"],
+            "body-sm": ["Inter", "Space Mono", "sans-serif"],
+            "display-lg": ["Orbitron", "sans-serif"],
+            "label-sm": ["Space Mono", "monospace"]
+          },
+          fontSize: {
+            "label-xs": ["11px", { lineHeight: "14px", letterSpacing: "0.14em", fontWeight: "700" }],
+            "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "body-sm": ["12px", { lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "400" }],
+            "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "title-md": ["16px", { lineHeight: "22px", letterSpacing: "0.06em", fontWeight: "700" }],
+            "number-md": ["15px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "700" }],
+            "number-lg": ["26px", { lineHeight: "30px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "display-md": ["22px", { lineHeight: "28px", letterSpacing: "0.05em", fontWeight: "700" }],
+            "display-lg": ["30px", { lineHeight: "36px", letterSpacing: "0.06em", fontWeight: "800" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-rpg-bg text-rpg-text font-body-md select-none antialiased">
+<!-- HEADER NAVIGATION FIXE -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-rpg-surface border-b border-rpg-border z-50 flex items-center justify-between px-margin">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-rpg-accent">terminal</span>
+<span class="font-orbitron font-bold text-title-md text-rpg-accent tracking-wider uppercase">GM-OS V6</span>
+</div>
+<span class="h-4 w-px bg-rpg-border"></span>
+<div class="flex items-center gap-space-xs px-2.5 py-1 bg-surface-container-high border border-rpg-accent">
+<span class="w-2 h-2 bg-rpg-accent animate-ping"></span>
+<span class="font-mono-code text-[11px] uppercase text-rpg-accent font-bold tracking-wider">SYS: COMBAT-OS</span>
+</div>
+<span class="h-4 w-px bg-rpg-border"></span>
+<div class="flex items-center gap-space-xs">
+<span class="font-mono-code text-[11px] text-rpg-muted">CORTEX</span>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-mono-code text-[11px] uppercase font-bold">ACTIVE</span>
+</div>
+</div>
+<!-- COMMANDES RAPIDES DU BANDEAU & COMMUTATEUR TABLE / ATELIER -->
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs px-2.5 py-1 bg-surface-container-low border border-rpg-border">
+<span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span>
+<span class="font-mono-code text-[11px] text-on-surface font-bold">MST 100%</span>
+</div>
+<button class="flex items-center gap-space-xs px-3 py-1 bg-surface-container-high border border-rpg-border text-on-surface hover:border-rpg-accent hover:text-rpg-accent transition-colors">
+<span class="material-symbols-outlined text-[16px]">mic</span>
+<span class="font-mono-code text-[11px] uppercase font-bold">Focus Chat</span>
+</button>
+<button class="flex items-center gap-space-xs px-3 py-1 bg-rpg-danger text-rpg-on-status font-mono-code text-[11px] uppercase font-bold hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span>Stop All</span>
+</button>
+<!-- Commutateur Régime [Atelier / Table] -->
+<div class="flex border border-rpg-accent bg-surface-container-lowest p-0.5 shadow-sm">
+<button class="px-3 py-1 font-mono-code text-[11px] text-rpg-muted hover:text-on-surface uppercase font-bold">Atelier</button>
+<button class="px-3 py-1 bg-rpg-accent text-rpg-accent-contrast font-mono-code text-[11px] font-bold uppercase shadow">[TABLE (FORCÉ)]</button>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 bg-rpg-success"></span>
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Link Active</span>
+</div>
+<button class="flex items-center gap-space-xs px-3 py-1 bg-surface-container-low border border-rpg-border text-on-surface hover:border-rpg-accent hover:text-rpg-accent font-mono-code text-[11px] uppercase font-bold">
+<span class="material-symbols-outlined text-[16px]">hub</span>
+<span>Connecter Joueurs</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+</div>
+</div>
+</header>
+<!-- SIDEBAR FIXE NAVIGATION -->
+<aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col justify-between overflow-y-auto">
+<div class="py-space-md">
+<div class="px-space-md pb-space-xs">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase tracking-widest">// Aventure</span>
+</div>
+<nav class="flex flex-col mb-space-md">
+<a aria-current="page" class="flex items-center gap-space-xs px-space-md py-1.5 transition-colors uppercase bg-rpg-accent/15 border-l-2 border-rpg-accent text-rpg-accent font-bold font-mono-code text-[12px]" href="#">
+<span class="material-symbols-outlined text-[16px]">swords</span>Combat-OS
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">casino</span>Dice-OS
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>Générateur...
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">map</span>Cartographie
+        </a>
+</nav>
+<div class="px-space-md pb-space-xs">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase tracking-widest">// Audio</span>
+</div>
+<nav class="flex flex-col mb-space-md">
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">music_note</span>Musique
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">graphic_eq</span>Effets Sonores
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">surround_sound</span>Ambiances
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">record_voice_over</span>Voice-OS
+        </a>
+</nav>
+<div class="px-space-md pb-space-xs">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase tracking-widest">// Outils</span>
+</div>
+<nav class="flex flex-col">
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">perm_media</span>Médiathèque
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">image</span>Image-OS
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">schedule</span>Horloge &amp; T...
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">highlight</span>Light-OS
+        </a>
+<a class="flex items-center gap-space-xs px-space-md py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-mono-code text-[12px] uppercase" href="#">
+<span class="material-symbols-outlined text-[16px]">list_alt</span>Tables Aléat...
+        </a>
+</nav>
+</div>
+</aside>
+<!-- CONTENEUR PRINCIPAL -->
+<div class="pl-[220px]">
+<main class="w-full pt-14 bg-rpg-bg min-h-screen">
+<div class="flex flex-col w-full text-rpg-text">
+<!-- ONGLETS DE SCÈNES ET BANDEAU D'ÉTAT SUPÉRIEUR -->
+<div class="w-full bg-surface-container-lowest border-b border-rpg-border flex flex-col">
+<!-- Onglets de scènes -->
+<div class="flex items-center gap-1 px-margin pt-2 border-b border-surface-container">
+<button class="px-4 py-1.5 bg-surface-container-high border-t-2 border-rpg-accent text-rpg-accent font-mono-code text-[12px] uppercase font-bold flex items-center gap-2">
+<span class="w-2 h-2 bg-rpg-accent"></span>
+              SCÈNE 01 : TOIT BRADBURY (ACTIF)
+            </button>
+<button class="px-4 py-1.5 bg-surface-container-low text-rpg-muted hover:text-on-surface font-mono-code text-[12px] uppercase font-bold transition-colors">
+              SCÈNE 02 : TYRELL PENTHOUSE
+            </button>
+<button class="px-4 py-1.5 bg-surface-container-low text-rpg-muted hover:text-on-surface font-mono-code text-[12px] uppercase font-bold transition-colors">
+              SCÈNE 03 : EMBUSCADE RUE SECTEUR 4
+            </button>
+<button class="ml-auto px-2.5 py-1 text-rpg-muted hover:text-rpg-accent font-mono-code text-[12px] uppercase">
+              + NOUVELLE SCÈNE
+            </button>
+</div>
+<!-- Ligne statut table -->
+<div class="px-margin py-2 flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs bg-rpg-accent/20 border border-rpg-accent px-3 py-1 shadow-sm">
+<span class="w-2 h-2 bg-rpg-accent animate-pulse"></span>
+<span class="font-mono-code text-[11px] uppercase tracking-wider text-rpg-accent font-bold">[TABLE (FORCÉ)]</span>
+</div>
+<span class="font-mono-code text-[12px] text-on-surface uppercase tracking-wide">
+                // TACTICAL COMBAT-OS LIVE DISPLAY (PORTÉE 1 MÈTRE)
+              </span>
+</div>
+<div class="flex items-center gap-space-lg font-mono-code text-[12px]">
+<div>
+<span class="text-rpg-muted uppercase">ENTITÉS : </span>
+<span class="text-rpg-accent font-bold">11 COMBATTANTS</span>
+</div>
+<div>
+<span class="text-rpg-muted uppercase">EN LICE : </span>
+<span class="text-rpg-success font-bold">08 ACTIFS</span>
+</div>
+<div>
+<span class="text-rpg-muted uppercase">NEUTRALISÉS : </span>
+<span class="text-rpg-danger font-bold">03 DÉCHUS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- GRILLE PRINCIPALE 12 COLONNES -->
+<div class="grid grid-cols-12 gap-gutter p-margin">
+<!-- COLONNE GAUCHE (8 COLONNES) : LISTE DES 11 COMBATTANTS STRICTEMENT UNIFORMISÉS -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-space-sm">
+<!-- 1. ROY BATTY (ACTIF - HALO CYAN) -->
+<div class="bg-surface-container-high p-3.5 shadow-xl relative overflow-hidden ring-2 ring-rpg-accent">
+<div class="absolute left-0 top-0 bottom-0 w-2.5 bg-rpg-accent"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<!-- LIGNE 1 : INIT + NOM (<30c) + CAMP + CIBLE + ÉTATS + CORTEX + SUPPR -->
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-rpg-accent text-rpg-accent-contrast flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 shadow">
+                      24
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Roy Batty">
+                        Roy Batty
+                      </span>
+<!-- Sélecteur de camp -->
+<select class="bg-rpg-danger/20 border border-rpg-danger text-rpg-danger font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="hostile">[Hostile]</option>
+<option value="pj">[PJ]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<!-- Sélecteur de Cible -->
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Rick Deckard</option>
+<option>Rachael Tyrell</option>
+<option>Gaff</option>
+<option>Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Altérations d'état + Bouton "+" + Cortex ✨ + Supprimer ✕ -->
+<div class="flex items-center gap-1.5 ml-auto">
+<span class="px-2 py-0.5 bg-rpg-warning/20 border border-rpg-warning text-rpg-warning font-mono-code text-[11px] font-bold uppercase">[À terre]</span>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<!-- LIGNE 2 : DOUBLE JAUGE SANTÉ & SANG-FROID -->
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container">
+<!-- Jauge Santé -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">148 / 155 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-success" style="width: 95%;"></div>
+</div>
+</div>
+<!-- Jauge Sang-froid -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">12 / 12</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+<!-- LIGNE 3 : COMMANDES STRICTES & UNIFORMISÉES DE DÉGÂTS/SOINS/FICHE -->
+<div class="flex items-center justify-between gap-2 pt-1">
+<!-- Champ numérique dégâts avec "−" et "+" -->
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="10"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<!-- Bouton Type de dégâts "Percutant" -->
+<button class="h-8 px-2.5 bg-surface-container border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<!-- Bouton "Soins" -->
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<!-- Bouton "Fiche" -->
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<!-- Bouton "Calculer" -->
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 2. RICK DECKARD (PJ) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-success"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      21
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Rick Deckard">
+                        Rick Deckard
+                      </span>
+<select class="bg-rpg-success/20 border border-rpg-success text-rpg-success font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="pj">[PJ]</option>
+<option value="hostile">[Hostile]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Roy Batty</option>
+<option>Pris Stratton</option>
+<option>Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">64 / 85 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-success" style="width: 75%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">8 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 80%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="5"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 3. RACHAEL TYRELL (PJ) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-success"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      19
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Rachael Tyrell">
+                        Rachael Tyrell
+                      </span>
+<select class="bg-rpg-success/20 border border-rpg-success text-rpg-success font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="pj">[PJ]</option>
+<option value="hostile">[Hostile]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Cible: Aucune</option>
+<option>Roy Batty</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">38 / 42 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-success" style="width: 90%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">6 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 60%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 4. PRIS STRATTON (HOSTILE) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-danger"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      18
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Pris Stratton">
+                        Pris Stratton
+                      </span>
+<select class="bg-rpg-danger/20 border border-rpg-danger text-rpg-danger font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="hostile">[Hostile]</option>
+<option value="pj">[PJ]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Rick Deckard</option>
+<option>Gaff</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<span class="px-2 py-0.5 bg-rpg-danger/20 border border-rpg-danger text-rpg-danger font-mono-code text-[11px] font-bold uppercase">[Aveuglé]</span>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-danger font-bold">12 / 68 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-danger" style="width: 17%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">4 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 40%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="12"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 5. EDUARDO GAFF (ALLIÉ) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-info"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      15
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Eduardo Gaff">
+                        Eduardo Gaff
+                      </span>
+<select class="bg-rpg-info/20 border border-rpg-info text-rpg-info font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="allie">[Allié]</option>
+<option value="pj">[PJ]</option>
+<option value="hostile">[Hostile]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Roy Batty</option>
+<option>Cible: Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">50 / 50 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-success" style="width: 100%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">9 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 90%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 6. CAPITAINE BRYANT (PJ) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-success"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      14
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Capitaine Bryant">
+                        Capitaine Bryant
+                      </span>
+<select class="bg-rpg-success/20 border border-rpg-success text-rpg-success font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="pj">[PJ]</option>
+<option value="hostile">[Hostile]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Cible: Aucune</option>
+<option>Roy Batty</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">41 / 55 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-warning" style="width: 74%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">7 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 70%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 7. J.F. SEBASTIAN (NEUTRE) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-secondary"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      09
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="J.F. Sebastian">
+                        J.F. Sebastian
+                      </span>
+<select class="bg-surface-bright border border-outline text-on-surface font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="neutre">[Neutre]</option>
+<option value="pj">[PJ]</option>
+<option value="hostile">[Hostile]</option>
+<option value="allie">[Allié]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Cible: Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">18 / 20 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-success" style="width: 90%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">5 / 8</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 62%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- 8. COMBATTANT ACTIF SOUTIEN : PATROUILLEUR K9 (ALLIÉ) -->
+<div class="bg-surface-container p-3.5 shadow-md relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-info"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container-highest text-on-surface flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 border border-rpg-border">
+                      08
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wide truncate max-w-[230px]" title="Patrouilleur K9">
+                        Patrouilleur K9
+                      </span>
+<select class="bg-rpg-info/20 border border-rpg-info text-rpg-info font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="allie">[Allié]</option>
+<option value="pj">[PJ]</option>
+<option value="hostile">[Hostile]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Roy Batty</option>
+<option>Cible: Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                      +
+                    </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                      ✨
+                    </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                      ✕
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-text font-bold">25 / 25 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-success" style="width: 100%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-accent font-bold">10 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container-lowest border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-accent" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-text p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container-high border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                    Percutant
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-rpg-success hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Soins
+                  </button>
+<button class="h-8 px-3 bg-surface-container-high border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                    Fiche
+                  </button>
+<button class="h-8 px-4 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-95 font-mono-code text-[11px] uppercase font-bold transition-all shadow">
+                    Calculer
+                  </button>
+</div>
+</div>
+</div>
+<!-- SECTEUR HORS DE COMBAT (GRISÉS EN BAS DE LISTE) -->
+<div class="mt-2 pt-2 border-t border-surface-container-high">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase tracking-widest block mb-2">
+                // COMBATTANTS HORS DE COMBAT / DÉCHUS (0 PV)
+              </span>
+<!-- 9. LEON KOWALSKI (0 PV - HORS DE COMBAT - GRISÉ) -->
+<div class="bg-surface-container-lowest opacity-60 p-3.5 shadow-inner relative overflow-hidden border border-rpg-border mb-space-sm hover:opacity-90 transition-opacity">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-muted"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container text-rpg-muted flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 line-through">
+                        12
+                      </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-muted uppercase tracking-wide truncate max-w-[230px] line-through" title="Leon Kowalski">
+                          Leon Kowalski
+                        </span>
+<select class="bg-surface-container border border-rpg-border text-rpg-muted font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="hostile">[Hostile]</option>
+<option value="pj">[PJ]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-rpg-muted font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Cible: Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<span class="px-2 py-0.5 bg-surface-container text-rpg-danger font-mono-code text-[11px] font-bold uppercase">[Hors de combat]</span>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                        +
+                      </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                        ✨
+                      </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                        ✕
+                      </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-muted font-bold">0 / 110 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-muted" style="width: 0%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-muted font-bold">0 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-muted" style="width: 0%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container">
+<button class="w-8 h-8 flex items-center justify-center text-rpg-muted hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-muted p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-rpg-muted hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container border border-rpg-border text-rpg-muted font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                      Percutant
+                    </button>
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-muted hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Soins
+                    </button>
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-muted hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Fiche
+                    </button>
+<button class="h-8 px-4 bg-surface-container-high text-rpg-muted hover:text-on-surface hover:border-rpg-accent border border-rpg-border font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Calculer
+                    </button>
+</div>
+</div>
+</div>
+<!-- 10. ZHORA SALOME (0 PV - DÉCHUE - GRISÉ) -->
+<div class="bg-surface-container-lowest opacity-60 p-3.5 shadow-inner relative overflow-hidden border border-rpg-border mb-space-sm hover:opacity-90 transition-opacity">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-muted"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container text-rpg-muted flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 line-through">
+                        07
+                      </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-muted uppercase tracking-wide truncate max-w-[230px] line-through" title="Zhora Salome">
+                          Zhora Salome
+                        </span>
+<select class="bg-surface-container border border-rpg-border text-rpg-muted font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="hostile">[Hostile]</option>
+<option value="pj">[PJ]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-rpg-muted font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Cible: Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<span class="px-2 py-0.5 bg-surface-container text-rpg-danger font-mono-code text-[11px] font-bold uppercase">[Hors de combat]</span>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                        +
+                      </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                        ✨
+                      </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                        ✕
+                      </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-muted font-bold">0 / 45 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-muted" style="width: 0%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-muted font-bold">0 / 10</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-muted" style="width: 0%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container">
+<button class="w-8 h-8 flex items-center justify-center text-rpg-muted hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-muted p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-rpg-muted hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container border border-rpg-border text-rpg-muted font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                      Percutant
+                    </button>
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-muted hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Soins
+                    </button>
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-muted hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Fiche
+                    </button>
+<button class="h-8 px-4 bg-surface-container-high text-rpg-muted hover:text-on-surface hover:border-rpg-accent border border-rpg-border font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Calculer
+                    </button>
+</div>
+</div>
+</div>
+<!-- 11. HODGE - SÉCURITÉ TYRELL (0 PV - INCONSCIENT - GRISÉ) -->
+<div class="bg-surface-container-lowest opacity-60 p-3.5 shadow-inner relative overflow-hidden border border-rpg-border hover:opacity-90 transition-opacity">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-rpg-muted"></div>
+<div class="flex flex-col gap-2.5 pl-2">
+<div class="flex items-center justify-between gap-2 flex-wrap">
+<div class="flex items-center gap-2">
+<div class="w-12 h-10 bg-surface-container text-rpg-muted flex items-center justify-center font-mono-code font-bold text-number-md shrink-0 line-through">
+                        04
+                      </div>
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-title-md text-rpg-muted uppercase tracking-wide truncate max-w-[230px] line-through" title="Hodge">
+                          Hodge
+                        </span>
+<select class="bg-surface-container border border-rpg-border text-rpg-muted font-mono-code text-[11px] font-bold px-2 py-0.5 rounded cursor-pointer uppercase focus:outline-none">
+<option selected="" value="hostile">[Hostile]</option>
+<option value="pj">[PJ]</option>
+<option value="allie">[Allié]</option>
+<option value="neutre">[Neutre]</option>
+</select>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Cible:</span>
+<select class="bg-transparent text-rpg-muted font-mono-code text-[11px] focus:outline-none cursor-pointer">
+<option selected="">Cible: Aucune</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 ml-auto">
+<span class="px-2 py-0.5 bg-surface-container text-rpg-danger font-mono-code text-[11px] font-bold uppercase">[Hors de combat]</span>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-on-surface font-mono-code text-sm font-bold flex items-center justify-center transition-colors" title="Ajouter une altération d'état">
+                        +
+                      </button>
+<button class="px-2 h-7 bg-surface-container-lowest hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-border text-rpg-accent font-mono-code text-[12px] flex items-center gap-1 transition-colors" title="Conseil du Cortex">
+                        ✨
+                      </button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-rpg-danger hover:text-rpg-on-status border border-rpg-border text-rpg-muted hover:border-rpg-danger font-mono-code text-[12px] font-bold flex items-center justify-center transition-colors" title="Supprimer du combat">
+                        ✕
+                      </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1 border-t border-surface-container">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Santé</span>
+<span class="text-rpg-muted font-bold">0 / 30 PV</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-muted" style="width: 0%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-code text-[11px]">
+<span class="text-rpg-muted uppercase">Sang-froid</span>
+<span class="text-rpg-muted font-bold">0 / 8</span>
+</div>
+<div class="w-full h-3.5 bg-surface-container border border-rpg-border overflow-hidden">
+<div class="h-full bg-rpg-muted" style="width: 0%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2 pt-1">
+<div class="flex items-center border border-rpg-border bg-surface-container">
+<button class="w-8 h-8 flex items-center justify-center text-rpg-muted hover:bg-surface-container-high font-mono-code font-bold text-sm">−</button>
+<input class="w-12 h-8 text-center bg-transparent border-0 font-mono-code text-[12px] font-bold text-rpg-muted p-0 focus:ring-0" type="number" value="0"/>
+<button class="w-8 h-8 flex items-center justify-center text-rpg-muted hover:bg-surface-container-high font-mono-code font-bold text-sm">+</button>
+</div>
+<button class="h-8 px-2.5 bg-surface-container border border-rpg-border text-rpg-muted font-mono-code text-[11px] uppercase hover:border-rpg-accent transition-colors">
+                      Percutant
+                    </button>
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-muted hover:bg-rpg-success hover:text-rpg-on-status font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Soins
+                    </button>
+<button class="h-8 px-3 bg-surface-container border border-rpg-border text-rpg-muted hover:text-rpg-accent hover:border-rpg-accent font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Fiche
+                    </button>
+<button class="h-8 px-4 bg-surface-container-high text-rpg-muted hover:text-on-surface hover:border-rpg-accent border border-rpg-border font-mono-code text-[11px] uppercase font-bold transition-all">
+                      Calculer
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- COLONNE DROITE (4 COLONNES) : RÉGIME TABLE STRICT DE HAUT EN BAS -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-space-md">
+<!-- 1. EN HAUT : ROUND ("ROUND 01") ET "TOUR SUIVANT ▶" PROÉMINENT -->
+<div class="bg-surface-container p-space-md shadow-xl border border-rpg-border flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
+<span class="font-mono-code text-[11px] uppercase text-rpg-muted tracking-widest">// PHASE TACTIQUE</span>
+<span class="w-2.5 h-2.5 bg-rpg-accent animate-ping"></span>
+</div>
+<div class="bg-surface-container-lowest p-space-md flex flex-col items-center justify-center border border-rpg-border shadow-inner">
+<span class="font-mono-code text-[11px] uppercase text-rpg-accent font-bold tracking-widest">COMBAT EN DIRECT</span>
+<div class="font-orbitron text-number-lg text-rpg-text font-black mt-1 text-center tracking-widest">
+                  ROUND 01
+                </div>
+</div>
+<!-- Grand bouton proéminent TOUR SUIVANT -->
+<button class="w-full h-14 bg-rpg-danger hover:brightness-110 active:scale-[0.98] text-rpg-on-status font-orbitron text-title-md uppercase font-bold flex items-center justify-center gap-3 shadow-lg transition-all tracking-wider" id="btn-next-turn">
+<span class="material-symbols-outlined text-[28px]">fast_forward</span>
+<span>TOUR SUIVANT ▶</span>
+</button>
+</div>
+<!-- 2. AUTO INITIATIVE (Régime Table) -->
+<div class="bg-surface-container p-space-md shadow-xl border border-rpg-border flex flex-col gap-space-sm">
+<span class="font-mono-code text-[11px] uppercase text-rpg-accent font-bold tracking-widest">
+                // AUTO INITIATIVE
+              </span>
+<div class="grid grid-cols-2 gap-space-xs mt-1">
+<button class="h-10 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+<span>Jet système</span>
+</button>
+<button class="h-10 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">style</span>
+<span>Cartes 1-10</span>
+</button>
+<button class="h-10 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">casino</span>
+<span>Le Dé</span>
+</button>
+<button class="h-10 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Standard</span>
+</button>
+</div>
+<!-- Sélecteur Ordre Croissant / Décroissant -->
+<div class="flex items-center gap-2 mt-1 p-2 bg-surface-container-lowest border border-rpg-border">
+<span class="font-mono-code text-[11px] text-rpg-muted uppercase">Règle d'ordre:</span>
+<select class="bg-transparent text-on-surface font-mono-code text-[11px] font-bold focus:outline-none cursor-pointer flex-1">
+<option selected="">Ordre décroissant (Défaut)</option>
+<option>Ordre croissant</option>
+</select>
+</div>
+</div>
+<!-- 3. BOUTONS DE TRI DE L'INITIATIVE -->
+<div class="bg-surface-container p-space-md shadow-xl border border-rpg-border flex flex-col gap-space-sm">
+<span class="font-mono-code text-[11px] uppercase text-rpg-muted tracking-widest">
+                // TRI DE L'INITIATIVE
+              </span>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="h-11 bg-surface-container-high hover:border-rpg-accent border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_downward</span>
+<span>Trier décroissant</span>
+</button>
+<button class="h-11 bg-surface-container-high hover:border-rpg-accent border border-rpg-border text-on-surface font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+<span>Trier croissant</span>
+</button>
+</div>
+</div>
+<!-- 4. EN BAS : CONFIGURATION ATELIER (VERROUILLÉE) AVEC CADENAS 🔒 -->
+<div class="bg-surface-container-lowest p-space-md border border-rpg-border shadow-xl flex flex-col gap-space-sm mt-auto">
+<div class="flex items-center justify-between text-rpg-warning border-b border-surface-container pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span class="font-mono-code text-[11px] font-bold uppercase tracking-widest">
+                    CONFIGURATION ATELIER (VERROUILLÉE)
+                  </span>
+</div>
+<span class="text-base">🔒</span>
+</div>
+<p class="font-mono-code text-[11px] text-rpg-muted leading-relaxed">
+                Régime Table forcé actif : les outils de préparation structurelle et d'édition d'atelier sont mis en sommeil pour sécuriser le jeu direct.
+              </p>
+<!-- Les outils d'atelier grisés / désactivés selon la consigne stricte -->
+<div class="grid grid-cols-1 gap-1.5 mt-2">
+<button class="w-full h-9 bg-surface-container text-rpg-muted border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-start px-3 gap-2 opacity-50 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>+ Ajouter un Combattant</span>
+</button>
+<button class="w-full h-9 bg-surface-container text-rpg-muted border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-start px-3 gap-2 opacity-50 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">group_add</span>
+<span>Fabriquer des adversaires</span>
+</button>
+<button class="w-full h-9 bg-surface-container text-rpg-muted border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-start px-3 gap-2 opacity-50 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">calculate</span>
+<span>Calculateur de dégâts</span>
+</button>
+<button class="w-full h-9 bg-surface-container text-rpg-muted border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-start px-3 gap-2 opacity-50 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span>Sync PV vers la session</span>
+</button>
+<div class="grid grid-cols-2 gap-1.5 mt-1">
+<button class="h-9 bg-surface-container text-rpg-muted border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1 opacity-50 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+<span>Fin de combat</span>
+</button>
+<button class="h-9 bg-surface-container text-rpg-danger border border-rpg-border font-mono-code text-[11px] uppercase font-bold flex items-center justify-center gap-1 opacity-40 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Reset combat</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // Micro-interaction tactile pour le bouton tour suivant
+    const nextBtn = document.getElementById('btn-next-turn');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextBtn.classList.add('brightness-125');
+        setTimeout(() => nextBtn.classList.remove('brightness-125'), 150);
+      });
+    }
+  </script>
+</body></html>

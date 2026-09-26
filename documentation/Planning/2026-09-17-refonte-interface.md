@@ -97,6 +97,28 @@ les quinze soirées suivantes se prend **après** avoir vu, jamais avant.
 *Un chantier qui change 214 fichiers d'habillage a besoin de savoir ce qu'il a
 changé sans le vouloir.*
 
+✅ **Posée le 2026-09-26.**
+
+| Tâche | Ce qui existe | Commande |
+| --- | --- | --- |
+| **T0.1** | `e2e/ecransDeReference.spec.ts` — 20 panneaux, campagne témoin, **heure figée** (samedi 20 juin 2026, 21 h), animations coupées, 1440 × 900 en pixels CSS. Références versionnées (3,5 Mo). **Deux passages identiques** ; une couleur d'accent changée fait rougir (3 % de pixels, seuil 0,5 %) | `npx playwright test e2e/ecransDeReference.spec.ts` (`--update-snapshots` pour régénérer) — construction à jour |
+| **T0.2** | `electron/couleursBrutes.test.ts` — `MODULES_MIGRES` vide ; chaque module migré y entre et n'en sort plus | dans `npx vitest run` |
+| **T0.3** | `src/theme/contrasteDesThemesDeBase.test.ts` — les quatre palettes aux seuils du contrat, la polarité, et les pastilles d'accent proposées | dans `npx vitest run` |
+| **T0.4** | Le comptage (`src/theme/releveDesCouleurs.ts`), partagé par la garde et la commande | `npm run refonte:releve` |
+
+⭐ **Trouvé par T0.3 à son premier passage** : Médiéval propose **quatre pastilles d'accent sur
+cinq illisibles** sur son propre fond (rouge 2,83, bleu 2,10, brun 1,95, violet 1,67 — seuil 3).
+Figées en cliquet (`PASTILLES_ILLISIBLES`) ; leurs remplaçantes se choisissent en phase 1, avec la
+personnalité Médiévale.
+
+**Le relevé de départ (T0.4)** — 738 fichiers de `src/`, essais exclus : **6 251 couleurs brutes**
+et **5 136 jetons de châssis**. Le comptage est plus large que celui de l'architecture (4 124) : il
+compte aussi `white`, `black` et les bordures latérales. Les plus chargés : `modules/session` 2 070,
+`components` 627, `modules/forge` 448, `modules/remote` 417, `modules/map` 337.
+
+⚠️ **Ce que T0.1 ne voit pas encore** : la campagne témoin est pauvre (8 Ko) — Light-OS, la
+Musique, la Carte s'y ouvrent vides. L'enrichir est l'étape 2 de l'inventaire (§ 10).
+
 ### T0.1 · Captures de référence, un panneau à la fois
 
 `e2e/tousLesModules.spec.ts` ouvre déjà **chaque panneau de la barre latérale**
@@ -142,6 +164,10 @@ gelés dans l'architecture (§ 2.2). C'est contre eux qu'on mesurera la fin.
 
 ## 4 · Phase 1 · Les échelles manquantes — un fichier, effet global
 
+⭐ **Remplacé le 2026-09-27 par [`2026-09-27-refonte-phase-1.md`](./2026-09-27-refonte-phase-1.md)**,
+qui intègre les noms du contrat (D4), les quatre personnalités de T2.3 (D3) et le cadre (contrat
+v1.3). La suite de cette section est l'état du 17/09, gardé pour mémoire.
+
 Tout entre dans `themeDeLInterface.ts` (R1 : un seul écrivain), avec les alias
 correspondants dans `tailwind.config.js`.
 
@@ -185,6 +211,34 @@ précisément le travail pour lequel le filet a été posé en premier.
 | **T2.3** | Claude | Chaque direction traduite en **valeurs C0 seulement** — aucune structure, aucun composant repris |
 | **T2.4** | David | Jugement **dans l'application réelle**, sept campagnes, de préférence un soir de jeu |
 | **T2.5** | David | **Décision** : une direction, ou aucune |
+
+⭐ **En cours depuis le 2026-09-26** — tout vit dans [`stitch/`](./stitch/README.md) :
+
+- **T2.1 ✅** — onze captures par la vitrine, neuf prompts, et un `DESIGN.md` d'entrée (le format
+  ouvert de Google, importé dans Stitch) aux noms des jetons de GM-OS.
+- **T2.2 en cours** — **la grammaire d'écran est retenue** (prompt 1 : en-tête, barres d'outils,
+  zone de travail, panneau de réglages à droite) et **la Musique réorganisée aussi** (prompt 2 :
+  trois colonnes, forme d'onde, pads à quatre par ligne), **la Cartographie** (prompt 3 : le jeu
+  séparé de la préparation), **Light-OS** (prompt 4 : lampes en liste à droite, réglage de la
+  tuile séparé de son activation) et **les Dés** (prompt 5 : le résultat domine, les champs
+  suivent le mode), puis, en habillage, **le Combat** (prompt 6, régimes Atelier et Table),
+  **la Trame** (prompt 7 : cinq statuts lisibles, nœuds du graphe nommés) et **l'Horloge**
+  (prompt 7 : un cadran par thème, réglages de jauge dans un menu). Chacun a demandé deux tours.
+  **T2.2 ✅ le 2026-09-27** avec **les quatre personnalités** (prompt 8 : Moderne, Cyberpunk,
+  Médiéval, Clair — références de style, pas de contenu). Le prompt 9 n'a pas été lancé : Stitch
+  n'a qu'un système de design par projet.
+- **T2.3 ✅ le 2026-09-27** — les quatre personnalités en valeurs `--rpg-*`, **acceptées par le
+  validateur des thèmes de jeu** ([`valeurs.md`](./stitch/personnalites/valeurs.md)). ✅ **Le
+  cadre, tranché par David le même jour** : Médiéval et Moderne ont une barre latérale et un bandeau
+  d'une autre polarité que leur contenu — sans eux, Moderne et Clair se confondaient. Trois jetons
+  `--rpg-frame-*`, **contrat v1.3** (§ 4.8). Le détail :
+  [`stitch/README.md`](./stitch/README.md).
+- ⚠️ **Trois leçons de ce premier tour.** Stitch **invente des fonctions** malgré la consigne — on
+  les retire par un prompt ciblé, écran par écran. **L'image jointe à son export peut être en
+  retard sur son code** : Claude Code rend lui-même le HTML exporté pour juger. Et **Stitch ne
+  connaît que ce que montrent les captures** : le bas du panneau de la carte, le mode des dés
+  échelonnés, absents des images, ont été devinés de travers ou déclarés inventés — avant de
+  retirer une commande, la chercher dans le code.
 
 **Pourquoi ne pas coller le code de Stitch.** Il génère du neuf : il ne connaît ni
 les magasins, ni l'i18n, ni les 27 modules, ni la forme des vraies données. Collé

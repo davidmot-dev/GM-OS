@@ -1,0 +1,60 @@
+/* ==========================================================================
+   PERSONNALITÉ DE BASE — CLAIR
+   Contrat GM-OS v1.3 · relevée sur clair.html (Stitch, prompt 8) le 2026-09-27
+   Étape T2.3 : des VALEURS seulement. Rien ici n'est lu par GM-OS.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root[data-theme="claire"] {
+  color-scheme: light;
+
+  /* 4.1 · Couleurs de base */
+  --rpg-bg: #f8fafc;
+  --rpg-surface: #ffffff;
+  --rpg-surface-2: #f1f5f9;
+  --rpg-text: #0f172a;
+  --rpg-muted: #475569;
+  --rpg-accent: #1d4ed8;
+  --rpg-accent-contrast: #ffffff;
+  --rpg-border: #e2e8f0;
+  --rpg-border-soft: rgba(15, 23, 42, 0.08);
+
+  /* 4.2 · États — foncés pour rester lisibles sur blanc ; info distinct de l'accent */
+  --rpg-success: #047857;
+  --rpg-danger: #b91c1c;
+  --rpg-warning: #a16207;
+  --rpg-info: #0369a1;
+
+  /* 4.3 · Typographie — Inter, comme demandé (Stitch a gardé Plus Jakarta Sans) */
+  --rpg-font-display: "Inter", sans-serif;
+  --rpg-font-body: "Inter", sans-serif;
+  --rpg-font-mono: "JetBrains Mono", monospace;
+  --rpg-title-tracking: 0em;
+  --rpg-kicker-tracking: 0.08em;
+  --rpg-title-transform: none;
+
+  /* 4.5 · Forme */
+  --rpg-radius-sm: 6px;
+  --rpg-radius-md: 8px;
+  --rpg-radius-lg: 14px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  /* 4.6 · Relief et lumière — ombre nette et courte, aucun halo */
+  --rpg-elevation-1: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --rpg-elevation-2: 0 4px 12px rgba(15, 23, 42, 0.10);
+  --rpg-elevation-3: 0 16px 40px rgba(15, 23, 42, 0.18);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+
+  /* 4.7 · Verre — presque opaque : un verre clair sur une image se lit mal */
+  --rpg-glass-bg: rgba(255, 255, 255, 0.92);
+  --rpg-glass-border: rgba(15, 23, 42, 0.10);
+  --rpg-glass-blur: 8px;
+
+  /* 7 · Matières */
+  --rpg-texture-bg: none;
+  --rpg-texture-panel: none;
+  --rpg-texture-opacity: 0;
+}

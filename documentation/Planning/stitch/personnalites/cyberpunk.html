@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>COMBAT-OS // NEXUS PROTOCOL</title>
+<!-- Google Fonts : Orbitron, Inter, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700;800&amp;family=Orbitron:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "cp-bg": "#020617",
+            "cp-deep": "#030712",
+            "cp-glass": "rgba(8, 15, 30, 0.72)",
+            "cp-glass-high": "rgba(13, 22, 45, 0.8)",
+            "cp-glass-card": "rgba(6, 12, 26, 0.82)",
+            "cp-cyan": "#00f0ff",
+            "cp-cyan-dark": "#008b99",
+            "cp-cyan-dim": "rgba(0, 240, 255, 0.12)",
+            "cp-magenta": "#ff007f",
+            "cp-magenta-dark": "#99004c",
+            "cp-amber": "#facc15",
+            "cp-emerald": "#10b981",
+            "cp-border": "rgba(0, 240, 255, 0.22)",
+            "cp-border-subtle": "rgba(255, 255, 255, 0.08)",
+            "cp-border-magenta": "rgba(255, 0, 127, 0.45)"
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          boxShadow: {
+            'neon-cyan': '0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 10px rgba(0, 240, 255, 0.15)',
+            'neon-cyan-glow': '0 0 25px rgba(0, 240, 255, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.2)',
+            'neon-magenta': '0 0 25px rgba(255, 0, 127, 0.45), inset 0 0 15px rgba(255, 0, 127, 0.2)',
+            'neon-amber': '0 0 15px rgba(250, 204, 21, 0.35)',
+            'neon-emerald': '0 0 12px rgba(16, 185, 129, 0.4)'
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      border-radius: 0 !important;
+    }
+    body {
+      background-color: #020617;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Diagetic scanline CRT grid */
+    .cyber-scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    .cyber-grid {
+      background-image: 
+        radial-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 24px 24px, 48px 48px, 48px 48px;
+    }
+
+    /* 45° chamfer clip paths */
+    .clip-chamfer-tr-bl {
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .clip-chamfer-tl-br {
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    }
+    .clip-chamfer-tr {
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+    .clip-chamfer-bl {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .clip-chamfer-both-top {
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 8px);
+    }
+    .clip-corner-cut {
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+  </style>
+</head>
+<body class="bg-cp-bg font-sans text-slate-200 antialiased select-none min-h-screen">
+<!-- Scanline & CRT Texture Overlay -->
+<div class="fixed inset-0 cyber-scanlines z-50 pointer-events-none opacity-40"></div>
+<div class="fixed inset-0 cyber-grid z-0 pointer-events-none opacity-40"></div>
+<!-- TOP HEADER / BANDEAU SUPÉRIEUR -->
+<header class="fixed top-0 left-0 right-0 h-16 bg-[#040816]/90 backdrop-blur-xl border-b border-cp-cyan/30 z-40 px-4 flex items-center justify-between shadow-[0_4px_20px_rgba(0,240,255,0.12)]">
+<!-- Brand & Status -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 bg-cp-cyan shadow-[0_0_8px_#00f0ff] animate-pulse"></span>
+<span class="font-display font-black text-lg uppercase text-cp-cyan tracking-widest drop-shadow-[0_0_8px_rgba(0,240,255,0.7)]">GM-OS</span>
+<span class="font-mono text-[10px] text-slate-400 bg-slate-900/80 px-2 py-0.5 border border-cp-cyan/30 tracking-widest uppercase">V6 NEXUS-PROTOCOL</span>
+</div>
+<div class="h-6 w-px bg-cp-border"></div>
+<div class="flex items-center gap-2 bg-[#061024]/80 px-2.5 py-1 border border-cp-cyan/30 clip-chamfer-tr-bl">
+<span class="w-2 h-2 rounded-none bg-cp-emerald shadow-[0_0_8px_#10b981] animate-ping"></span>
+<span class="font-mono text-[10px] text-slate-300 uppercase">CORTEX IA :</span>
+<span class="font-mono text-[10px] text-cp-emerald font-bold tracking-wider uppercase">[OPÉRATIONNEL 99.8%]</span>
+</div>
+</div>
+<!-- Controls / Quick Master Deck -->
+<div class="flex items-center gap-3">
+<!-- Master Volume -->
+<div class="flex items-center gap-2 bg-[#061024]/80 px-2.5 py-1 border border-cp-border clip-chamfer-tr-bl">
+<span class="material-symbols-outlined text-cp-cyan text-[18px]">volume_up</span>
+<span class="font-mono text-[10px] text-slate-400 uppercase">MASTER</span>
+<span class="font-mono text-[13px] font-bold text-cp-cyan">100%</span>
+<div class="w-16 h-2 bg-black border border-cp-cyan/30 overflow-hidden">
+<div class="h-full bg-cp-cyan w-full shadow-[0_0_6px_#00f0ff]"></div>
+</div>
+</div>
+<!-- Focus Chat -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-[#0a142c]/80 hover:bg-cp-cyan/20 text-slate-200 border border-cp-border hover:border-cp-cyan transition-all clip-chamfer-tr">
+<span class="material-symbols-outlined text-[16px] text-cp-cyan">chat</span>
+<span class="font-mono text-[11px] uppercase tracking-wider font-semibold">Focus Chat</span>
+</button>
+<!-- Table / Atelier Mode Switcher -->
+<div class="flex items-stretch bg-black/60 border border-cp-cyan/40 p-0.5">
+<button class="px-3 py-1 font-mono text-[11px] uppercase bg-cp-cyan text-black font-bold tracking-wider shadow-[0_0_10px_rgba(0,240,255,0.6)]">Table</button>
+<button class="px-3 py-1 font-mono text-[11px] uppercase text-slate-400 hover:text-cp-cyan transition-colors tracking-wider">Atelier</button>
+</div>
+<!-- Stop All -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-cp-magenta/20 hover:bg-cp-magenta text-slate-100 hover:text-black border border-cp-magenta shadow-neon-magenta transition-all font-mono font-bold tracking-wider clip-chamfer-tl-br">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span class="text-[11px] uppercase">Stop All</span>
+</button>
+<!-- Connecter Joueurs -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-[#0a142c]/80 hover:bg-cp-cyan/20 text-slate-200 border border-cp-border hover:border-cp-cyan transition-all font-mono tracking-wider clip-chamfer-tr">
+<span class="material-symbols-outlined text-[16px] text-cp-cyan">hub</span>
+<span class="text-[11px] uppercase">Connecter Joueurs</span>
+</button>
+<!-- Link [4/4] -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-[#061024]/80 border border-cp-border">
+<span class="w-2 h-2 bg-cp-emerald shadow-[0_0_6px_#10b981]"></span>
+<span class="font-mono text-[11px] text-slate-200 uppercase tracking-widest font-semibold">LINK [4/4]</span>
+</div>
+<!-- Avatar -->
+<div class="w-8 h-8 bg-cp-cyan border border-cp-cyan shadow-[0_0_10px_rgba(0,240,255,0.6)] flex items-center justify-center clip-chamfer-tr">
+<span class="material-symbols-outlined text-black text-[18px]">person</span>
+</div>
+</div>
+</header>
+<!-- SIDEBAR NAVIGATION GAUCHE -->
+<aside class="fixed left-0 top-16 bottom-0 w-[220px] bg-[#030713]/95 backdrop-blur-xl border-r border-cp-cyan/30 z-30 flex flex-col justify-between overflow-y-auto">
+<div class="py-3">
+<!-- Section 1 -->
+<div class="px-4 pb-2 mb-1 flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-cp-cyan"></span>
+<span class="font-mono text-[10px] text-slate-400 tracking-widest uppercase font-bold">AVENTURE TACTIQUE</span>
+</div>
+<nav class="flex flex-col gap-0.5 px-2">
+<a aria-current="page" class="flex items-center px-3 py-2 bg-cp-cyan/15 text-cp-cyan border-l-2 border-cp-cyan font-mono text-[12px] uppercase font-bold tracking-wider shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] clip-chamfer-tr" data-path="combat-os" href="#">
+          Combat-OS
+        </a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="dice-os" href="#">
+          Dice-OS
+        </a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="generateur-pnj" href="#">
+          Générateur PNJ
+        </a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="cartographie" href="#">
+          Cartographie
+        </a>
+</nav>
+<div class="h-px bg-cp-border/40 mx-3 my-3"></div>
+<!-- Section 2 -->
+<div class="px-4 pb-2 mb-1 flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-cp-amber"></span>
+<span class="font-mono text-[10px] text-slate-400 tracking-widest uppercase font-bold">MODULES OUTILS</span>
+</div>
+<nav class="flex flex-col gap-0.5 px-2">
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="mediatheque" href="#">
+          Médiathèque
+        </a>
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="image-os" href="#">
+          Image-OS
+        </a>
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="horloge-et-temps" href="#">
+          Horloge &amp; Temps
+        </a>
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="light-os" href="#">
+          Light-OS
+        </a>
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="tables-aleatoires" href="#">
+          Tables Aléatoires
+        </a>
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="navigateur-web" href="#">
+          Navigateur Web
+        </a>
+<a class="flex items-center px-3 py-1.5 text-slate-400 hover:text-cp-cyan hover:bg-[#091530]/60 transition-all font-mono text-[11px] uppercase tracking-wider" data-path="tableau-blanc" href="#">
+          Tableau Blanc
+        </a>
+</nav>
+</div>
+<!-- Bottom Footer System Ping -->
+<div class="p-3 border-t border-cp-border bg-[#02050f] flex flex-col gap-2">
+<div class="flex items-center justify-between text-slate-400 font-mono text-[10px]">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-cp-emerald shadow-[0_0_6px_#10b981]"></span>
+          SYSTÈME SÉCURISÉ
+        </span>
+<span class="text-cp-cyan font-bold">24ms</span>
+</div>
+<button class="w-full flex items-center justify-center gap-1.5 py-1.5 bg-[#091530]/80 hover:bg-cp-cyan/20 text-slate-300 hover:text-cp-cyan border border-cp-border hover:border-cp-cyan transition-all font-mono text-[10px] uppercase font-bold tracking-wider clip-chamfer-tr">
+<span class="material-symbols-outlined text-[15px]">settings</span>
+<span>Paramètres Régie</span>
+</button>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL DE COMBAT -->
+<div class="pl-[220px]">
+<main class="relative pt-16 w-full min-h-screen bg-cp-bg">
+<div class="relative w-full p-4 flex flex-col gap-3 min-h-[calc(100vh-4rem)]">
+<!-- MODULE HEADER : CYBERPUNK NEXUS PROTOCOL -->
+<header class="relative z-10 flex flex-wrap items-center justify-between gap-3 p-3.5 bg-cp-glass border border-cp-cyan/40 backdrop-blur-xl shadow-neon-cyan clip-chamfer-tr-bl">
+<div class="flex items-center gap-3">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2.5 h-2.5 bg-cp-cyan shadow-[0_0_12px_#00f0ff] animate-ping"></span>
+<h1 class="font-display font-extrabold text-xl text-cp-cyan tracking-wider uppercase drop-shadow-[0_0_10px_rgba(0,240,255,0.7)]">
+                  COMBAT-OS // NEXUS PROTOCOL
+                </h1>
+<span class="font-mono text-[10px] bg-cp-magenta text-slate-950 px-2 py-0.5 font-black uppercase tracking-widest shadow-[0_0_8px_#ff007f]">
+                  TACTICAL MATRIX V7.2
+                </span>
+</div>
+<p class="font-mono text-[11px] text-slate-400 uppercase mt-0.5 tracking-wider">
+                SECTEUR 04-SECTOR TYRELL // PLUIE CONTINUE // BRUIT THERMAL ELEVE
+              </p>
+</div>
+</div>
+<!-- ACTIVE SCENE BISEAUTÉ TABS -->
+<nav aria-label="Secteurs tactiques" class="flex items-center gap-1.5 bg-black/60 p-1 border border-cp-border">
+<button class="relative px-3 py-1.5 font-display text-[11px] uppercase tracking-wider text-black bg-cp-cyan font-bold shadow-[0_0_15px_rgba(0,240,255,0.6)] clip-chamfer-tr transition-all">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">apartment</span>
+                TOIT SECTEUR TYRELL
+              </span>
+</button>
+<button class="relative px-3 py-1.5 font-display text-[11px] uppercase tracking-wider text-slate-300 hover:text-cp-cyan bg-[#091530]/60 hover:bg-[#0c1f44] border border-cp-border/50 transition-all clip-chamfer-tr">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">water_drop</span>
+                APPARTEMENT 9732
+              </span>
+</button>
+<button class="relative px-3 py-1.5 font-display text-[11px] uppercase tracking-wider text-slate-300 hover:text-cp-cyan bg-[#091530]/60 hover:bg-[#0c1f44] border border-cp-border/50 transition-all clip-chamfer-tr">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">factory</span>
+                LAB BRADBURY
+              </span>
+</button>
+<button class="px-2 py-1.5 bg-[#091530]/80 text-slate-400 hover:text-cp-cyan border border-cp-border hover:border-cp-cyan transition-colors" title="Ajouter Secteur">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</nav>
+</header>
+<!-- MAIN COMBAT CANVAS: 12 COLUMNS -->
+<div class="relative z-10 grid grid-cols-12 gap-3 flex-1">
+<!-- LEFT & CENTER : ROSTER DES COMBATTANTS (8 COLONNES) -->
+<section aria-label="Liste des combattants en lice" class="col-span-12 xl:col-span-8 flex flex-col gap-3">
+<!-- TIMELINE / TOURS SUMMARY BAR -->
+<div class="flex items-center justify-between px-3 py-2 bg-cp-glass border border-cp-border backdrop-blur-xl">
+<div class="flex items-center gap-2">
+<span class="font-display text-[11px] uppercase tracking-widest text-cp-cyan font-bold">INITIATIVE ACTUELLE :</span>
+<span class="font-mono text-[11px] bg-[#0c1a38] text-cp-cyan px-2 py-0.5 border border-cp-cyan/40 font-bold tracking-wider">
+                  24 // TOUR EN COURS
+                </span>
+</div>
+<div class="flex items-center gap-4 font-mono text-[11px]">
+<span class="flex items-center gap-1.5 text-cp-emerald font-bold">
+<span class="w-2 h-2 bg-cp-emerald shadow-[0_0_6px_#10b981]"></span>
+                  3 ALLIÉS EN LIGNE
+                </span>
+<span class="flex items-center gap-1.5 text-cp-magenta font-bold">
+<span class="w-2 h-2 bg-cp-magenta shadow-[0_0_8px_#ff007f] animate-pulse"></span>
+                  1 CIBLE HOSTILE
+                </span>
+</div>
+</div>
+<!-- COMBATANT 1: RICK DECKARD (ACTIVE TURN - HALO NÉON CYAN GLOW VIBRANT) -->
+<article class="relative flex flex-col md:flex-row items-stretch bg-cp-glass-card backdrop-blur-xl p-3 border-2 border-cp-cyan shadow-neon-cyan-glow clip-chamfer-tr-bl transition-all">
+<!-- Active Badge -->
+<div class="absolute -top-2.5 left-5 bg-cp-cyan px-2.5 py-0.5 text-black font-display text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-[0_0_12px_#00f0ff] clip-chamfer-tr">
+<span class="material-symbols-outlined text-[13px] animate-spin">rotate_right</span>
+                TOUR ACTIF
+              </div>
+<!-- Mugshot / Avatar -->
+<div class="relative w-full md:w-36 h-36 flex-shrink-0 bg-black border border-cp-cyan/50 overflow-hidden clip-chamfer-bl">
+<img class="w-full h-full object-cover filter contrast-110 brightness-95" data-alt="Cyberpunk noir style tactical mugshot portrait of Rick Deckard, cinematic rain drenched trench coat, neon cyan and amber rim lighting, gritty photorealistic cyberpunk aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmRLK9allVj-kpjfDAi6Sxr_8z6XGF3QdFsX5ipBJm184HTVs0Sxhvzh9glQgij58u45WeI5JOneI7t0Cz5yozNGoZ8HmLsam_shttJzWm9VlWbtsZD5heROYB9v4HFFvkO6AzAcUa8N5JGMiUY2B8YBvJ10pVH7n7FFXkHoCOD-6ImPBA45ViEAlbykHzM6dTyb0Wyzr_5xv_mMhGRZiEoHBzepZNRom-LNtY4D-TdW7_TncrioMYgw"/>
+<div class="absolute bottom-0 inset-x-0 bg-black/90 border-t border-cp-cyan/40 px-1 py-0.5 text-center font-display text-[9px] text-cp-cyan font-bold tracking-widest uppercase">
+                  BLADE RUNNER
+                </div>
+</div>
+<!-- Combatant Meta & Stats -->
+<div class="flex-1 flex flex-col justify-between p-2 md:px-4 gap-1.5">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-display text-base text-cp-cyan font-bold uppercase tracking-wider drop-shadow-[0_0_6px_rgba(0,240,255,0.6)]">
+                        RICK DECKARD
+                      </h3>
+<span class="bg-[#091a38] text-slate-300 border border-cp-cyan/30 px-2 py-0.2 font-mono text-[10px] uppercase font-semibold">
+                        PC // BLADE-01
+                      </span>
+</div>
+<p class="font-sans text-[12px] text-slate-300 uppercase mt-0.5 font-medium tracking-wide">
+                      ARME EN MAIN : PK-D STEYR BLASTER CAL.44 // CHARGEUR : 4/5
+                    </p>
+</div>
+<div class="text-right">
+<span class="font-display text-[10px] text-slate-400 block uppercase tracking-wider">INITIATIVE</span>
+<span class="font-mono text-2xl text-cp-cyan font-extrabold drop-shadow-[0_0_10px_rgba(0,240,255,0.8)]">24</span>
+</div>
+</div>
+<!-- Health & Stress Gauges -->
+<div class="flex flex-col gap-1.5 bg-[#030816]/80 p-2 border border-cp-border">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-slate-200 uppercase font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-emerald">favorite</span>
+                      SANTÉ TACTIQUE
+                    </span>
+<span class="text-cp-emerald font-bold font-mono">85 / 100</span>
+</div>
+<div class="w-full h-2 bg-black border border-cp-emerald/40 overflow-hidden">
+<div class="h-full bg-cp-emerald w-[85%] shadow-neon-emerald"></div>
+</div>
+<div class="flex items-center justify-between font-mono text-[11px] mt-0.5">
+<span class="text-slate-300 uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-amber">bolt</span>
+                      STRESS COGNITIF
+                    </span>
+<span class="text-cp-amber font-bold font-mono">3 / 8 PT</span>
+</div>
+<div class="w-full h-1.5 bg-black border border-cp-amber/40 overflow-hidden">
+<div class="h-full bg-cp-amber w-[37%] shadow-neon-amber"></div>
+</div>
+</div>
+<!-- Conditions & Quick Trigger -->
+<div class="flex flex-wrap items-center justify-between gap-1 pt-0.5">
+<div class="flex items-center gap-1.5">
+<span class="bg-[#091730] text-cp-cyan border border-cp-cyan/30 px-2 py-0.5 font-mono text-[10px] uppercase">
+                      À COUVERT [+2 DEF]
+                    </span>
+<span class="bg-[#091730] text-cp-cyan border border-cp-cyan/30 px-2 py-0.5 font-mono text-[10px] uppercase">
+                      VISEE LASER ACTIVE
+                    </span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1 bg-[#091530] hover:bg-cp-cyan/20 text-slate-200 border border-cp-border hover:border-cp-cyan font-mono text-[11px] uppercase transition-colors clip-chamfer-tr">
+                      TIR PRECIS
+                    </button>
+<button class="px-3 py-1 bg-cp-cyan hover:bg-[#38f8ff] text-black font-display font-black text-[11px] uppercase tracking-wider shadow-[0_0_12px_rgba(0,240,255,0.7)] transition-all active:scale-95 clip-chamfer-tr">
+                      ENGAGER
+                    </button>
+</div>
+</div>
+</div>
+</article>
+<!-- COMBATANT 2: RACHAEL TYRELL (SUPPORT / ALLIÉ) -->
+<article class="relative flex flex-col md:flex-row items-stretch bg-cp-glass-card backdrop-blur-xl p-3 border border-cp-border shadow-[0_4px_15px_rgba(0,0,0,0.5)] clip-chamfer-tr-bl transition-all hover:border-cp-cyan/50">
+<div class="relative w-full md:w-36 h-36 flex-shrink-0 bg-black border border-cp-border overflow-hidden clip-chamfer-bl">
+<img class="w-full h-full object-cover filter contrast-105" data-alt="Cinematic high contrast noir cyberpunk portrait of Rachael Tyrell, elegant retrofuturistic tailored suit, dark lighting, cold cyan and magenta backlights, soft atmospheric cigarette smoke" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqhYuhH9fQ3F5c5O0ZCT5RDbSMDqI6zLfm_YPxZ1nUjDaSVKMOg7rD2smbxGiqP4vQk36LhXJ4WeawmuWFfDMojVs05-4Rb3cIS6Nt3JDkYOKVXjB8B8PwzjGcTqsZY1clGnVrSzYf_Ve6nJBoCbPv0aaaKhhn-ITrfujxnEFFaFqsxZQyrXLOUpsHH5opXpewCa8IkGMlNxiMz1jxzoweXiCnz13oAXoMXeOBlQqudr3Vw85X6EbqeQ"/>
+<div class="absolute bottom-0 inset-x-0 bg-black/90 border-t border-cp-border px-1 py-0.5 text-center font-display text-[9px] text-slate-300 uppercase tracking-widest">
+                  REPLICANT PROTO
+                </div>
+</div>
+<div class="flex-1 flex flex-col justify-between p-2 md:px-4 gap-1.5">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-display text-base text-slate-100 font-bold uppercase tracking-wider">
+                        RACHAEL TYRELL
+                      </h3>
+<span class="bg-[#091730] text-slate-400 border border-cp-border px-2 py-0.2 font-mono text-[10px] uppercase">
+                        PNJ // REPL-7
+                      </span>
+</div>
+<p class="font-sans text-[12px] text-slate-300 uppercase mt-0.5 font-medium tracking-wide">
+                      COMPÉTENCE : ANANALYSEUR VOIGHT-KAMPFF TACTIQUE // DÉFENSE CIVIL
+                    </p>
+</div>
+<div class="text-right">
+<span class="font-display text-[10px] text-slate-400 block uppercase tracking-wider">INITIATIVE</span>
+<span class="font-mono text-2xl text-slate-100 font-bold">18</span>
+</div>
+</div>
+<!-- Health & Stress Gauges -->
+<div class="flex flex-col gap-1.5 bg-[#030816]/80 p-2 border border-cp-border">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-slate-200 uppercase font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-emerald">favorite</span>
+                      SANTÉ SYSTÈME
+                    </span>
+<span class="text-cp-emerald font-bold font-mono">60 / 60</span>
+</div>
+<div class="w-full h-2 bg-black border border-cp-emerald/40 overflow-hidden">
+<div class="h-full bg-cp-emerald w-full shadow-neon-emerald"></div>
+</div>
+<div class="flex items-center justify-between font-mono text-[11px] mt-0.5">
+<span class="text-slate-300 uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-amber">psychology</span>
+                      INSTABILITÉ SYNAPTIQUE
+                    </span>
+<span class="text-cp-amber font-bold font-mono">5 / 10 PT</span>
+</div>
+<div class="w-full h-1.5 bg-black border border-cp-amber/40 overflow-hidden">
+<div class="h-full bg-cp-amber w-1/2 shadow-neon-amber"></div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-1 pt-0.5">
+<div class="flex items-center gap-1.5">
+<span class="bg-[#091730] text-slate-300 border border-cp-border px-2 py-0.5 font-mono text-[10px] uppercase">
+                      PROTOCOLE EMPATHIE ACTIF
+                    </span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1 bg-[#091530] hover:bg-cp-cyan/20 text-slate-200 border border-cp-border hover:border-cp-cyan font-mono text-[11px] uppercase transition-colors clip-chamfer-tr">
+                      SOUTIEN ANALYSE
+                    </button>
+</div>
+</div>
+</div>
+</article>
+<!-- COMBATANT 3: GAFF (INVESTIGATEUR EN RETRAIT) -->
+<article class="relative flex flex-col md:flex-row items-stretch bg-cp-glass-card backdrop-blur-xl p-3 border border-cp-border shadow-[0_4px_15px_rgba(0,0,0,0.5)] clip-chamfer-tr-bl transition-all hover:border-cp-cyan/50">
+<div class="relative w-full md:w-36 h-36 flex-shrink-0 bg-black border border-cp-border overflow-hidden clip-chamfer-bl">
+<img class="w-full h-full object-cover filter contrast-105" data-alt="Cyberpunk investigative agent portrait of Gaff holding an origami crane, neon umbrellas reflection, slick fedora hat, rain streaks on visor, moody neo-noir atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYPtyEYv3Y0GdVWmbv_zkgOg6kbKVLW39Q6u2uvyvZ1Tt4SxZl1KmoFBm8cSuHoumkyYgNyIZRvrvK1fpU3Tj6vLyviNLxea9E-ah2eyWSDjaKoZHvAKkEPp4me1u4lU1raZKxCEA3mqs3GnXBOHfZJVtf1UaEOJPBNNhbsXi6enl8YHpfD2SV_QMkQIF5KkDrunYkMapLSYjEnKh5wwYyCW6RMCiNkK_IYcOrJxOM1Cls8Jl7ySNY5A"/>
+<div class="absolute bottom-0 inset-x-0 bg-black/90 border-t border-cp-border px-1 py-0.5 text-center font-display text-[9px] text-slate-300 uppercase tracking-widest">
+                  SURVEILLANT LAPD
+                </div>
+</div>
+<div class="flex-1 flex flex-col justify-between p-2 md:px-4 gap-1.5">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-display text-base text-slate-100 font-bold uppercase tracking-wide">
+                        GAFF
+                      </h3>
+<span class="bg-[#091730] text-slate-400 border border-cp-border px-2 py-0.2 font-mono text-[10px] uppercase">
+                        PNJ // LAPD-SPEC
+                      </span>
+</div>
+<p class="font-sans text-[12px] text-slate-300 uppercase mt-0.5 font-medium tracking-wide">
+                      CANNE TACTIQUE TAZER // APPEL RENFORTS SPINNER
+                    </p>
+</div>
+<div class="text-right">
+<span class="font-display text-[10px] text-slate-400 block uppercase tracking-wider">INITIATIVE</span>
+<span class="font-mono text-2xl text-slate-100 font-bold">14</span>
+</div>
+</div>
+<!-- Health & Delay Gauges -->
+<div class="flex flex-col gap-1.5 bg-[#030816]/80 p-2 border border-cp-border">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-slate-200 uppercase font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-amber">favorite</span>
+                      INTÉGRITÉ PHYSIQUE
+                    </span>
+<span class="text-cp-amber font-bold font-mono">48 / 75</span>
+</div>
+<div class="w-full h-2 bg-black border border-cp-amber/40 overflow-hidden">
+<div class="h-full bg-cp-amber w-[64%] shadow-neon-amber"></div>
+</div>
+<div class="flex items-center justify-between font-mono text-[11px] mt-0.5">
+<span class="text-slate-300 uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-cyan">schedule</span>
+                      DÉLAI SPINNER
+                    </span>
+<span class="text-cp-cyan font-bold font-mono">02 ROUNDS</span>
+</div>
+<div class="w-full h-1.5 bg-black border border-cp-cyan/40 overflow-hidden">
+<div class="h-full bg-cp-cyan w-2/3 shadow-[0_0_6px_#00f0ff]"></div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-1 pt-0.5">
+<div class="flex items-center gap-1.5">
+<span class="bg-[#091730] text-slate-300 border border-cp-border px-2 py-0.5 font-mono text-[10px] uppercase">
+                      OBSERVATION PASSIVE
+                    </span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1 bg-[#091530] hover:bg-cp-cyan/20 text-slate-200 border border-cp-border hover:border-cp-cyan font-mono text-[11px] uppercase transition-colors clip-chamfer-tr">
+                      RADIO LAPD
+                    </button>
+</div>
+</div>
+</div>
+</article>
+<!-- COMBATANT 4: ROY BATTY (HOSTILE CRITIQUE - MAGENTA / VIOLET NÉON) -->
+<article class="relative flex flex-col md:flex-row items-stretch bg-cp-glass-card backdrop-blur-xl p-3 border-2 border-cp-magenta shadow-neon-magenta clip-chamfer-tr-bl transition-all">
+<!-- Hostile Badge -->
+<div class="absolute -top-2.5 left-5 bg-cp-magenta px-2.5 py-0.5 text-slate-950 font-display text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-[0_0_12px_#ff007f] clip-chamfer-tr">
+<span class="material-symbols-outlined text-[13px] animate-pulse">warning</span>
+                HOSTILE MAJEUR // SEUIL CRITIQUE
+              </div>
+<div class="relative w-full md:w-36 h-36 flex-shrink-0 bg-black border border-cp-magenta/60 overflow-hidden clip-chamfer-bl">
+<img class="w-full h-full object-cover filter contrast-125" data-alt="Fierce bleached blond replicant Roy Batty with rain pouring down his pale face, eyes glowing with synthetic amber intensity, heavy industrial rain, cinematic cyberpunk lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJxT7USrvuPGuVoVusfHquz0dfMZiH3GKvrYrgrKg38jchS94BqrnP5Z2r5Bjf0VJ_XA3zW7Fr0ShBEXNHdZ_7q9AQ7bXH_uFYQd4jdZb9QgbCi0-DEC10pW03QQvYtLHwtk4PpMnWR_wUXyixfnoPw6G1_BEBcD8n7MGelxHS59DGnIi3yDDQFV-5qIM-xRSoU-Bep57w5hx0D3FPrlz1yPMqidW4HX9ZiRVh5wViCjL_dW2IE1GcJg"/>
+<div class="absolute bottom-0 inset-x-0 bg-cp-magenta/90 border-t border-cp-magenta px-1 py-0.5 text-center font-display text-[9px] text-slate-950 font-black uppercase tracking-widest">
+                  NEXUS-6 COMBAT
+                </div>
+</div>
+<div class="flex-1 flex flex-col justify-between p-2 md:px-4 gap-1.5">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-display text-base text-cp-magenta font-extrabold uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,0,127,0.7)]">
+                        ROY BATTY
+                      </h3>
+<span class="bg-cp-magenta/20 text-cp-magenta border border-cp-magenta px-2 py-0.2 font-mono text-[10px] uppercase font-bold">
+                        LEADER // N6-MAA10816
+                      </span>
+</div>
+<p class="font-sans text-[12px] text-rose-300 uppercase mt-0.5 font-medium tracking-wide">
+                      SURHUMAIN // FORCE MILITAIRE // DERNIER CYCLE BIOLOGIQUE
+                    </p>
+</div>
+<div class="text-right">
+<span class="font-display text-[10px] text-slate-400 block uppercase tracking-wider">INITIATIVE</span>
+<span class="font-mono text-2xl text-cp-magenta font-black drop-shadow-[0_0_10px_rgba(255,0,127,0.8)]">29</span>
+</div>
+</div>
+<!-- Health & Critical Countdown Gauges -->
+<div class="flex flex-col gap-1.5 bg-[#12040b]/90 p-2 border border-cp-magenta/40">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="text-cp-magenta uppercase font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">skull</span>
+                      INTÉGRITÉ CHÂSSIS
+                    </span>
+<span class="text-cp-magenta font-bold font-mono">22 / 120 [CRITIQUE]</span>
+</div>
+<div class="w-full h-2 bg-black border border-cp-magenta/50 overflow-hidden">
+<div class="h-full bg-cp-magenta w-[18%] animate-pulse shadow-neon-magenta"></div>
+</div>
+<div class="flex items-center justify-between font-mono text-[11px] mt-0.5">
+<span class="text-rose-300 uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-cp-magenta">hourglass_bottom</span>
+                      DÉCOMPTE VITAL INEXORABLE
+                    </span>
+<span class="text-cp-magenta font-bold font-mono">03 CYCLES RESTANTS</span>
+</div>
+<div class="w-full h-1.5 bg-black border border-cp-magenta/40 overflow-hidden">
+<div class="h-full bg-cp-magenta w-1/4"></div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-1 pt-0.5">
+<div class="flex items-center gap-1.5">
+<span class="bg-cp-magenta/20 text-cp-magenta border border-cp-magenta/50 px-2 py-0.5 font-mono text-[10px] uppercase font-bold">
+                      FRÉNÉSIE DU CONDAMNÉ
+                    </span>
+<span class="bg-[#091730] text-slate-300 border border-cp-border px-2 py-0.5 font-mono text-[10px] uppercase">
+                      +4 DÉGÂTS CÀC
+                    </span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1 bg-[#091530] hover:bg-cp-magenta/20 text-slate-200 border border-cp-border hover:border-cp-magenta font-mono text-[11px] uppercase transition-colors clip-chamfer-tr">
+                      RÉACTION
+                    </button>
+<button class="px-3 py-1 bg-cp-magenta hover:bg-[#ff2a95] text-slate-950 font-display font-black text-[11px] uppercase shadow-neon-magenta transition-all active:scale-95 clip-chamfer-tr">
+                      RÉSOLU AUTO
+                    </button>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- RIGHT COLUMN : RÉGIE TACTIQUE COMBAT (4 COLONNES) -->
+<aside aria-label="Commandes tactiques de combat" class="col-span-12 xl:col-span-4 flex flex-col gap-3">
+<!-- 1. CHRONOMÉTRIE TACTIQUE -->
+<div class="bg-cp-glass border border-cp-border backdrop-blur-xl p-3.5 flex flex-col gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.6)] clip-chamfer-tr-bl">
+<div class="flex items-center justify-between pb-1 border-b border-cp-border/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cp-cyan text-[20px]">timer</span>
+<span class="font-display font-bold text-sm text-slate-100 uppercase tracking-wider">CHRONOMÉTRIE TACTIQUE</span>
+</div>
+<span class="font-mono text-[9px] bg-[#091730] text-cp-cyan border border-cp-cyan/30 px-2 py-0.5 font-bold uppercase">
+                  SYSTÈME BLADE RUNNER RPG
+                </span>
+</div>
+<div class="grid grid-cols-2 gap-2 my-1">
+<div class="bg-[#04091a]/80 border border-cp-border p-2.5 flex flex-col items-center justify-center clip-chamfer-tr">
+<span class="font-mono text-[10px] text-slate-400 uppercase tracking-wider">ROUND ACTIF</span>
+<span class="font-mono text-3xl text-cp-cyan font-black drop-shadow-[0_0_10px_rgba(0,240,255,0.7)]">01</span>
+</div>
+<div class="bg-[#04091a]/80 border border-cp-border p-2.5 flex flex-col items-center justify-center clip-chamfer-tr">
+<span class="font-mono text-[10px] text-slate-400 uppercase tracking-wider">PHASE D'ORDRE</span>
+<span class="font-mono text-3xl text-slate-100 font-black">1 / 4</span>
+</div>
+</div>
+<!-- Primary Action : TOUR SUIVANT -->
+<button class="w-full py-2.5 bg-cp-cyan hover:bg-[#48f9ff] text-slate-950 font-display font-black text-xs uppercase tracking-widest shadow-neon-cyan transition-all flex items-center justify-center gap-2 active:scale-[0.98] clip-chamfer-tr" id="btn-next-turn">
+<span class="material-symbols-outlined text-[20px]">skip_next</span>
+                TOUR SUIVANT [ESPACE]
+              </button>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 bg-[#091530]/90 hover:bg-cp-cyan/20 text-slate-200 hover:text-cp-cyan border border-cp-border hover:border-cp-cyan font-mono text-[10px] uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-1 clip-chamfer-tr">
+<span class="material-symbols-outlined text-[15px]">replay</span> NOUVEAU ROUND
+                </button>
+<button class="py-2 bg-[#091530]/90 hover:bg-cp-cyan/20 text-slate-200 hover:text-cp-cyan border border-cp-border hover:border-cp-cyan font-mono text-[10px] uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-1 clip-chamfer-tr">
+<span class="material-symbols-outlined text-[15px]">shuffle</span> RE-ROLL INITIATIVE
+                </button>
+</div>
+</div>
+<!-- 2. JET SYSTÈME DIRECT -->
+<div class="bg-cp-glass border border-cp-border backdrop-blur-xl p-3.5 flex flex-col gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.6)] clip-chamfer-tr-bl">
+<div class="flex items-center justify-between pb-1 border-b border-cp-border/50">
+<span class="font-display font-bold text-sm text-slate-100 uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-cp-amber text-[20px]">casino</span>
+                  JET SYSTÈME DIRECT
+                </span>
+<span class="font-mono text-[10px] text-cp-amber uppercase tracking-widest font-black">DÉ DIEGÉTIQUE</span>
+</div>
+<div class="grid grid-cols-4 gap-1.5 text-center">
+<button class="p-2 bg-[#050c1f] hover:bg-cp-cyan/20 border border-cp-border hover:border-cp-cyan transition-all flex flex-col items-center clip-chamfer-tr">
+<span class="font-mono text-base text-cp-cyan font-black">D6</span>
+<span class="font-mono text-[9px] text-slate-400 uppercase">BASE</span>
+</button>
+<button class="p-2 bg-[#050c1f] hover:bg-cp-cyan/20 border border-cp-border hover:border-cp-cyan transition-all flex flex-col items-center clip-chamfer-tr">
+<span class="font-mono text-base text-cp-cyan font-black">D8</span>
+<span class="font-mono text-[9px] text-slate-400 uppercase">COMP</span>
+</button>
+<button class="p-2 bg-[#050c1f] hover:bg-cp-cyan/20 border border-cp-border hover:border-cp-cyan transition-all flex flex-col items-center clip-chamfer-tr">
+<span class="font-mono text-base text-cp-cyan font-black">D10</span>
+<span class="font-mono text-[9px] text-slate-400 uppercase">EXPERT</span>
+</button>
+<button class="p-2 bg-[#050c1f] hover:bg-cp-amber/20 border border-cp-amber/40 hover:border-cp-amber transition-all flex flex-col items-center clip-chamfer-tr">
+<span class="font-mono text-base text-cp-amber font-black">D12</span>
+<span class="font-mono text-[9px] text-slate-400 uppercase">MAÎTRE</span>
+</button>
+</div>
+<!-- Quick Dice Result Panel -->
+<div class="bg-[#030816]/90 border border-cp-border p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-mono text-[10px] text-slate-400 uppercase tracking-wider">DERNIER JET // ATT. DECKARD</span>
+<span class="font-mono text-[11px] text-slate-100 font-bold uppercase mt-0.5">D10 (8) + D8 (6) : SUCCÈS MAJEUR</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-8 h-8 bg-black border border-cp-cyan flex items-center justify-center font-mono text-base text-cp-cyan font-black shadow-[0_0_8px_rgba(0,240,255,0.4)]">8</div>
+<div class="w-8 h-8 bg-black border border-cp-cyan flex items-center justify-center font-mono text-base text-cp-cyan font-black shadow-[0_0_8px_rgba(0,240,255,0.4)]">6</div>
+</div>
+</div>
+<button class="w-full py-2 bg-[#091530]/90 hover:bg-cp-cyan/20 text-slate-200 hover:text-cp-cyan border border-cp-border hover:border-cp-cyan font-mono text-[11px] uppercase font-bold tracking-wider transition-colors flex items-center justify-center gap-2 clip-chamfer-tr">
+<span class="material-symbols-outlined text-[16px]">touch_app</span>
+                DÉCLENCHER JET COMPLEXE (MODIFIÉ)
+              </button>
+</div>
+<!-- 3. ACTIONS RAPIDES COMBAT -->
+<div class="bg-cp-glass border border-cp-border backdrop-blur-xl p-3.5 flex flex-col gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.6)] flex-1 clip-chamfer-tr-bl">
+<div class="flex items-center justify-between pb-1 border-b border-cp-border/50">
+<span class="font-display font-bold text-sm text-slate-100 uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-cp-cyan text-[20px]">bolt</span>
+                  ACTIONS RAPIDES COMBAT
+                </span>
+<span class="font-mono text-[10px] text-slate-400 uppercase">MODE TABLE</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- Action 1 -->
+<button class="p-2.5 bg-[#050c1f] hover:bg-[#0c1f44] border border-cp-border hover:border-cp-cyan text-left transition-all flex flex-col gap-1 group clip-chamfer-tr">
+<div class="flex items-center justify-between">
+<span class="font-display text-[10px] font-bold text-slate-100 uppercase group-hover:text-cp-cyan tracking-wide">TIR EN SURPRISE</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-cp-cyan">ads_click</span>
+</div>
+<span class="font-mono text-[9px] text-slate-400 tracking-tight">+2 DÉS // CRITIQUE AUTOMATIQUE</span>
+</button>
+<!-- Action 2 -->
+<button class="p-2.5 bg-[#050c1f] hover:bg-[#0c1f44] border border-cp-border hover:border-cp-cyan text-left transition-all flex flex-col gap-1 group clip-chamfer-tr">
+<div class="flex items-center justify-between">
+<span class="font-display text-[10px] font-bold text-slate-100 uppercase group-hover:text-cp-cyan tracking-wide">MANOEUVRE ÉVASIVE</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-cp-cyan">shield</span>
+</div>
+<span class="font-mono text-[9px] text-slate-400 tracking-tight">-2 DÉS D'ATTAQUE SUBIS</span>
+</button>
+<!-- Action 3 -->
+<button class="p-2.5 bg-[#050c1f] hover:bg-[#0c1f44] border border-cp-border hover:border-cp-amber text-left transition-all flex flex-col gap-1 group clip-chamfer-tr">
+<div class="flex items-center justify-between">
+<span class="font-display text-[10px] font-bold text-slate-100 uppercase group-hover:text-cp-amber tracking-wide">INTOX. SYNAPTIQUE</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-cp-amber">medication</span>
+</div>
+<span class="font-mono text-[9px] text-slate-400 tracking-tight">EFFET SURCHARGÉ // COÛT 1 PT</span>
+</button>
+<!-- Action 4 -->
+<button class="p-2.5 bg-[#050c1f] hover:bg-[#0c1f44] border border-cp-border hover:border-cp-magenta text-left transition-all flex flex-col gap-1 group clip-chamfer-tr">
+<div class="flex items-center justify-between">
+<span class="font-display text-[10px] font-bold text-slate-100 uppercase group-hover:text-cp-magenta tracking-wide">DÉSARMAR LA CIBLE</span>
+<span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-cp-magenta">front_hand</span>
+</div>
+<span class="font-mono text-[9px] text-slate-400 tracking-tight">OPPOSITION FORCE BRUTE</span>
+</button>
+</div>
+<!-- 4. LECTEUR AUDIO SYNTH-NOIR: RAIN BATTLE -->
+<div class="mt-auto pt-2 bg-[#030816]/90 border border-cp-border p-2.5 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-cp-cyan animate-pulse">graphic_eq</span>
+<span class="font-mono text-[10px] uppercase font-bold text-slate-200 tracking-wider">
+                    SYNTH-NOIR: RAIN BATTLE
+                  </span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1 h-3 bg-cp-cyan animate-pulse"></span>
+<span class="w-1 h-5 bg-cp-cyan animate-pulse delay-75"></span>
+<span class="w-1 h-2.5 bg-cp-cyan animate-pulse delay-150"></span>
+<span class="w-1 h-4 bg-cp-cyan animate-pulse delay-100"></span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</div>
+<script>
+    const nextTurnBtn = document.getElementById('btn-next-turn');
+    if (nextTurnBtn) {
+      nextTurnBtn.addEventListener('click', () => {
+        const activeArticle = document.querySelector('article.shadow-neon-cyan-glow');
+        if (activeArticle) {
+          activeArticle.classList.toggle('opacity-90');
+        }
+      });
+    }
+  </script>
+</body></html>

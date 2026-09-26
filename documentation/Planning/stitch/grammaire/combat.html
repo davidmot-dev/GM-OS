@@ -1,0 +1,474 @@
+<!DOCTYPE html><html class="dark" lang="fr" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-tint":"#2fd9f4","inverse-on-surface":"#2a3043","error":"#ffb4ab","rpg-border":"#1e293b","rpg-warning":"#f59e0b","rpg-text":"#f8fafc","secondary-fixed-dim":"#bec6e0","surface-container-high":"#23293c","rpg-surface-2":"#1e293b","rpg-on-status":"#020617","primary":"#8aebff","on-secondary-fixed":"#131b2e","tertiary":"#d2ddf5","rpg-accent-contrast":"#020617","surface-container":"#191f31","on-surface":"#dce1fb","on-primary-fixed-variant":"#004e5a","tertiary-container":"#b6c1d9","secondary":"#bec6e0","on-tertiary-container":"#444f63","rpg-danger":"#ef4444","primary-container":"#22d3ee","on-error":"#690005","surface-variant":"#2e3447","rpg-bg":"#020617","inverse-primary":"#006877","surface-dim":"#0c1324","on-secondary-container":"#adb4ce","on-secondary-fixed-variant":"#3f465c","rpg-info":"#3b82f6","rpg-surface":"#0f172a","on-surface-variant":"#bbc9cd","surface":"#0c1324","on-tertiary":"#263143","primary-fixed-dim":"#2fd9f4","surface-container-lowest":"#070d1f","secondary-fixed":"#dae2fd","outline":"#859397","background":"#0c1324","primary-fixed":"#a2eeff","on-primary-fixed":"#001f25","rpg-accent":"#22d3ee","on-secondary":"#283044","rpg-success":"#10b981","on-primary":"#00363e","secondary-container":"#3f465c","on-tertiary-fixed-variant":"#3c475a","inverse-surface":"#dce1fb","on-tertiary-fixed":"#111c2d","tertiary-fixed":"#d8e3fb","surface-bright":"#33394c","error-container":"#93000a","on-background":"#dce1fb","surface-container-low":"#151b2d","on-error-container":"#ffdad6","surface-container-highest":"#2e3447","rpg-muted":"#898c95","on-primary-container":"#005763","tertiary-fixed-dim":"#bcc7de","outline-variant":"#3c494c"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"12px","space-xs":"4px","space-xl":"24px","gutter":"12px","margin":"16px","space-lg":"16px","space-sm":"8px"},fontFamily:{"display-lg":["Syne"],"display-md":["Syne"],"title-md":["Syne"],"number-lg":["Space Mono"],"body-sm":["Space Mono"],"label-xs":["Space Mono"],"label-sm":["Space Mono"],"number-md":["Space Mono"],"body-md":["Space Mono"]},fontSize:{"display-lg":["34px",{"lineHeight":"40px","letterSpacing":"0.06em","fontWeight":"800"}],"display-md":["24px",{"lineHeight":"30px","letterSpacing":"0.05em","fontWeight":"700"}],"title-md":["17px",{"lineHeight":"22px","letterSpacing":"0.08em","fontWeight":"700"}],"number-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"400"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.18em","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.14em","fontWeight":"700"}],"number-md":["16px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}]}}}}</script></head><body class="bg-rpg-bg text-rpg-text selection:bg-rpg-accent selection:text-rpg-accent-contrast"><header class="fixed top-0 left-0 right-0 h-14 bg-rpg-surface border-b border-rpg-border z-50 flex items-center justify-between px-margin select-none"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[20px]">terminal</span><span class="font-title-md text-title-md tracking-wider text-rpg-text uppercase" style="font-family: Orbitron, sans-serif;">GM-OS V6</span><span class="font-label-xs text-label-xs text-rpg-muted">// NEXUS-PROTOCOL</span></div><div class="h-4 w-[1px] bg-rpg-border"></div><div class="flex items-center gap-space-xs bg-rpg-surface-2 px-2 py-0.5 border border-rpg-border"><span class="w-1.5 h-1.5 bg-rpg-accent animate-ping"></span><span class="font-label-xs text-label-xs text-rpg-accent uppercase font-bold">CORTEX ACTIVE</span></div><div class="flex items-center gap-space-xs bg-surface-container px-2 py-0.5 border border-rpg-border"><span class="material-symbols-outlined text-rpg-success text-[14px]">wifi</span><span class="font-label-xs text-label-xs text-on-surface uppercase">SYSTEM LINK ACTIVE</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm bg-surface-container px-2 py-1 border border-rpg-border"><span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span><input class="w-20 h-1 bg-rpg-surface-2 accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="100"><span class="font-number-md text-body-sm text-rpg-accent">100%</span></div><button class="flex items-center gap-space-xs px-2.5 py-1.5 bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-on-surface font-label-xs text-label-xs uppercase transition-all"><span class="material-symbols-outlined text-rpg-accent text-[16px]">mic</span><span class="">FOCUS CHAT</span></button><div class="flex border border-rpg-border"><button class="px-3 py-1 font-label-xs text-label-xs font-bold uppercase transition-all bg-surface-container-high text-on-surface">ATELIER</button><button class="px-3 py-1 font-label-xs text-label-xs font-bold uppercase transition-all bg-primary-container text-on-primary-container">TABLE</button></div><button class="flex items-center gap-space-xs px-2.5 py-1.5 bg-rpg-accent text-rpg-accent-contrast font-label-xs text-label-xs uppercase font-bold hover:shadow-[0_0_12px_rgba(34,211,238,0.5)] transition-all"><span class="material-symbols-outlined text-[16px]">sensors</span><span class="">CONNECTER JOUEURS</span></button><button class="flex items-center gap-space-xs px-3 py-1.5 bg-rpg-danger text-rpg-on-status font-label-xs text-label-xs font-bold uppercase hover:bg-red-500 transition-all shadow-[0_0_8px_rgba(239,68,68,0.4)]"><span class="material-symbols-outlined text-[16px]">power_settings_new</span><span class="">STOP ALL</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col justify-between select-none"><div class="overflow-y-auto"><div class="py-space-sm"><div class="px-3 py-1 font-label-xs text-label-xs text-rpg-muted tracking-widest uppercase">AVENTURE</div><nav class="flex flex-col" data-active-classes="bg-surface-container-high text-primary border-r-2 border-rpg-accent"><a aria-current="page" class="flex items-center gap-space-sm px-3 py-2 transition-all bg-surface-container-high text-primary border-r-2 border-rpg-accent" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px]">swords</span><span class="font-label-sm text-label-sm uppercase">Combat-OS</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px]">casino</span><span class="font-label-sm text-label-sm uppercase">Dice-OS</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="generateur" href="#"><span class="material-symbols-outlined text-[16px]">psychology</span><span class="font-label-sm text-label-sm uppercase">Générateur</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px]">map</span><span class="font-label-sm text-label-sm uppercase">Cartographie</span></a></nav></div><div class="h-[1px] bg-rpg-border mx-2"></div><div class="py-space-sm"><div class="px-3 py-1 font-label-xs text-label-xs text-rpg-muted tracking-widest uppercase">AUDIO</div><nav class="flex flex-col" data-active-classes="bg-surface-container-high text-primary border-r-2 border-rpg-accent"><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px]">music_note</span><span class="font-label-sm text-label-sm uppercase">Musique</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px]">graphic_eq</span><span class="font-label-sm text-label-sm uppercase">Effets Sonores</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px]">waves</span><span class="font-label-sm text-label-sm uppercase">Ambiances</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px]">record_voice_over</span><span class="font-label-sm text-label-sm uppercase">Voice-OS</span></a></nav></div><div class="h-[1px] bg-rpg-border mx-2"></div><div class="py-space-sm"><div class="px-3 py-1 font-label-xs text-label-xs text-rpg-muted tracking-widest uppercase">OUTILS / GLOBAL</div><nav class="flex flex-col" data-active-classes="bg-surface-container-high text-primary border-r-2 border-rpg-accent"><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px]">folder</span><span class="font-label-sm text-label-sm uppercase">Médiathèque</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="image-os" href="#"><span class="material-symbols-outlined text-[16px]">image</span><span class="font-label-sm text-label-sm uppercase">Image-OS</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="horloge-temps" href="#"><span class="material-symbols-outlined text-[16px]">schedule</span><span class="font-label-sm text-label-sm uppercase">Horloge &amp; Temps</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px]">lightbulb</span><span class="font-label-sm text-label-sm uppercase">Light-OS</span></a><a class="flex items-center gap-space-sm px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="tables-aleatoires" href="#"><span class="material-symbols-outlined text-[16px]">reorder</span><span class="font-label-sm text-label-sm uppercase">Tables Aléatoires</span></a></nav></div></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between text-rpg-muted"><button class="hover:text-rpg-accent transition-colors" title="Profil MJ"><span class="material-symbols-outlined text-[18px]">badge</span></button><button class="hover:text-rpg-accent transition-colors" title="Lancer dés express"><span class="material-symbols-outlined text-[18px]">casino</span></button><button class="hover:text-rpg-accent transition-colors" title="Désignation cible"><span class="material-symbols-outlined text-[18px]">adjust</span></button><button class="hover:text-rpg-accent transition-colors" title="Dock tactile inférieur"><span class="material-symbols-outlined text-[18px]">dock</span></button><button class="hover:text-rpg-accent transition-colors" title="Paramètres système"><span class="material-symbols-outlined text-[18px]">settings</span></button><button class="hover:text-rpg-danger transition-colors" title="Déconnexion / Veille"><span class="material-symbols-outlined text-[18px]">power_settings_new</span></button></div></aside><div class="pl-[220px]"><main class="relative pt-14 min-h-screen bg-rpg-bg"><div class="flex flex-col w-full">
+<div class="px-margin pt-space-lg pb-space-xl flex flex-col gap-space-lg max-w-[1600px] mx-auto w-full">
+<!-- MODULE HEADER -->
+<header class="flex flex-col gap-space-md">
+<div class="flex flex-wrap items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-2 py-0.5 bg-primary-container text-on-primary-container font-label-xs text-label-xs uppercase">ENGAGEMENT TACTIQUE</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">// SUBSYSTEM 04-A</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-primary tracking-widest uppercase" style="font-family: Orbitron, sans-serif;">COMBAT-OS</h1>
+<div class="flex items-center gap-space-sm text-secondary">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">memory</span>
+<p class="font-label-sm text-label-sm uppercase tracking-wider">BLADE RUNNER : LE JEU DE RÔLE • SECTEUR 04-DOWNTOWN</p>
+</div>
+</div>
+<div class="flex items-center gap-space-md bg-surface-container px-space-md py-space-sm">
+<div class="flex flex-col text-right">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">ÉTAT RÉGIE</span>
+<span class="font-number-md text-number-md text-rpg-text">CORTEX VERROUILLÉ</span>
+</div>
+<div class="flex items-center gap-space-xs px-3 py-1 bg-rpg-surface-2">
+<span class="w-2 h-2 bg-rpg-success animate-pulse"></span>
+<span class="font-label-xs text-label-xs text-rpg-success uppercase font-bold tracking-widest">COMBAT EN COURS - ROUND 01</span>
+</div>
+</div>
+</div>
+<!-- NOTIFICATION / CONTEXT ALERT BANNER -->
+<aside aria-label="Alerte contextuelle de scène" class="bg-surface-container-high px-space-md py-space-sm flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="material-symbols-outlined text-rpg-warning text-[20px] shrink-0">crisis_alert</span>
+<span class="font-body-md text-body-md text-rpg-text truncate" style="font-family: Inter, sans-serif;">Plusieurs scènes sont en cours — à laquelle ce combat appartient-il ?</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs" id="scene-selector-chips"><button class="px-2.5 py-1 bg-surface-container hover:bg-rpg-surface-2 text-on-surface-variant hover:text-rpg-text font-label-sm text-label-sm uppercase transition-colors tracking-wider" onclick="selectScene(this)" style="font-family: Inter, sans-serif;">L'interrogatoire préliminaire de suspect</button><button class="px-2.5 py-1 bg-surface-container hover:bg-rpg-surface-2 text-on-surface-variant hover:text-rpg-text font-label-sm text-label-sm uppercase transition-colors tracking-wider" onclick="selectScene(this)" style="font-family: Inter, sans-serif;">Le test d'empathie Voight-Kampff</button><button class="px-2.5 py-1 bg-primary text-on-primary font-label-sm text-label-sm uppercase shadow-[0_0_12px_rgba(34,211,238,0.35)] tracking-wider font-bold" onclick="selectScene(this)" style="font-family: Inter, sans-serif;">L'affrontement violent à mort</button><button class="px-2.5 py-1 bg-surface-container hover:bg-rpg-surface-2 text-on-surface-variant hover:text-rpg-text font-label-sm text-label-sm uppercase transition-colors tracking-wider" onclick="selectScene(this)" style="font-family: Inter, sans-serif;">L'autopsie au RIT Crime Lab</button></div>
+</aside>
+</header>
+<!-- STICKY ACTION & TELEMETRY TOOLBAR -->
+<div class="sticky top-14 z-30 bg-rpg-surface-2/95 backdrop-blur-md px-space-md py-space-sm shadow-xl flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="h-11 px-5 bg-primary-container hover:bg-primary text-on-primary-container font-label-sm text-label-sm uppercase flex items-center gap-space-sm shadow-[0_0_16px_rgba(34,211,238,0.4)] transition-all active:translate-y-0.5" id="next-turn-btn">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span class="">TOUR SUIVANT ▶</span>
+</button>
+<button class="h-11 px-4 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase flex items-center gap-space-sm transition-all" onclick="rollInitiative()">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">casino</span>
+<span class="">JET SYSTÈME INITIATIVE</span>
+</button>
+<div class="hidden lg:flex items-center gap-space-xs">
+<button class="h-11 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-xs text-label-xs uppercase flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">person_add</span>
+<span class="">+ AJOUTER UN COMBATTANT</span>
+</button>
+<button class="h-11 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-xs text-label-xs uppercase flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+<span class="">FABRIQUER DES ADVERSAIRES</span>
+</button>
+<button class="h-11 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-xs text-label-xs uppercase flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-[16px]">calculate</span>
+<span class="">CALCULATEUR DE DÉGÂTS</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-space-md ml-auto">
+<button class="flex items-center gap-space-xs px-3 py-2 bg-surface-container hover:bg-surface-container-high text-secondary hover:text-on-surface font-label-xs text-label-xs uppercase transition-colors" onclick="sortCombatants()">
+<span class="material-symbols-outlined text-[16px]">swap_vert</span>
+<span class="">TRIER PAR INITIATIVE</span>
+</button>
+<div class="flex items-baseline gap-space-xs px-4 py-1.5 bg-surface-container-lowest">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">PHASE :</span>
+<span class="font-number-lg text-number-lg text-primary" id="round-counter">ROUND 01</span>
+</div>
+</div>
+</div>
+<!-- MAIN TWO-COLUMN WORKSPACE -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+<!-- LEFT / CENTRAL COLUMN: ROSTER DE COMBAT (8 COLUMNS) -->
+<section aria-label="Liste des combattants" class="xl:col-span-8 flex flex-col gap-space-md">
+<!-- COMBATTANT 1 (ACTIF / TARGET OF GLOW) -->
+<article class="combat-card active-turn bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-[0_0_24px_rgba(34,211,238,0.25)] relative overflow-hidden" data-id="1" data-init="18">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary-container"></div>
+<div class="flex flex-wrap items-start justify-between gap-space-md pl-space-xs">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-surface-container-high text-primary shadow-[inset_0_0_12px_rgba(34,211,238,0.3)]">
+<span class="font-label-xs text-label-xs text-rpg-muted">INIT</span>
+<span class="font-number-lg text-number-lg text-primary">18</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<h3 class="text-body-md text-rpg-text font-bold tracking-wider" style="font-family: Inter, sans-serif;">Rick Deckard</h3>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">PJ • BLADE RUNNER</span>
+<span class="px-2 py-0.5 bg-primary-container text-on-primary-container font-label-xs text-label-xs font-bold uppercase animate-pulse">ACTIF</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" style="font-family: Inter, sans-serif;">Unité Répression des Répliquants • Matricule B-263-54</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors" onclick="quickHeal(1)">
+                CALCULER SOINS / DÉGÂTS
+              </button>
+<button class="h-9 px-3 bg-rpg-surface-2 hover:bg-surface-container-high text-primary font-label-xs text-label-xs uppercase transition-colors">
+                FICHE
+              </button>
+</div>
+</div>
+<!-- GAUGES & ACTION TELEMETRY -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs pl-space-xs">
+<!-- JAUGE SANTE -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">POINTS DE VIE</span>
+<span class="font-number-md text-number-md text-rpg-success">10 / 10 <span class="font-label-xs text-label-xs text-rpg-muted">[STABLE]</span></span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-success w-full transition-all duration-300"></div>
+</div>
+</div>
+<!-- JAUGE SANG-FROID -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">SANG-FROID</span>
+<span class="font-number-md text-number-md text-primary">08 / 10</span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-accent w-4/5 transition-all duration-300"></div>
+</div>
+</div>
+<!-- CIBLE ACTUELLE -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<label class="font-label-xs text-label-xs text-secondary uppercase" for="target-select-1">CIBLE ACTUELLE</label>
+<select class="h-7 bg-rpg-surface-2 text-rpg-text font-body-sm text-body-sm px-2 focus:outline-none focus:bg-surface-container-high cursor-pointer" id="target-select-1">
+<option selected="" value="none">Aucune</option>
+<option value="roy">Roy Batty - Nexus-6</option>
+<option value="pris">Pris</option>
+</select>
+</div>
+</div>
+</article>
+<!-- COMBATTANT 4 (HOSTILE MAJEUR / ROY BATTY) -->
+<article class="combat-card bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-md relative overflow-hidden" data-id="4" data-init="21">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-rpg-danger"></div>
+<div class="flex flex-wrap items-start justify-between gap-space-md pl-space-xs">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-surface-container text-rpg-danger">
+<span class="font-label-xs text-label-xs text-rpg-muted">INIT</span>
+<span class="font-number-lg text-number-lg text-rpg-danger">21</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<h3 class="text-body-md text-rpg-text font-bold tracking-wider" style="font-family: Inter, sans-serif;">Roy Batty - Nexus-6</h3>
+<span class="px-2 py-0.5 bg-rpg-danger text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">HOSTILE • LEADER</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-rpg-warning font-label-xs text-label-xs uppercase">HOSTILE AGRESSIF</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" style="font-family: Inter, sans-serif;">Modèle Combat Militaire • Infiltration Spatiale N6MAA10816</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors" onclick="quickHeal(4)">
+                CALCULER SOINS / DÉGÂTS
+              </button>
+<button class="h-9 px-3 bg-rpg-surface-2 hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors">
+                FICHE
+              </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs pl-space-xs">
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">POINTS DE VIE</span>
+<span class="font-number-md text-number-md text-rpg-warning">14 / 15 <span class="font-label-xs text-label-xs text-rpg-muted">[ÉRAFLURE]</span></span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-warning w-[93%] transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">SANG-FROID</span>
+<span class="font-number-md text-number-md text-rpg-text">12 / 12</span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-primary w-full transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<label class="font-label-xs text-label-xs text-secondary uppercase" for="target-select-4">CIBLE ACTUELLE</label>
+<select class="h-7 bg-rpg-surface-2 text-rpg-text font-body-sm text-body-sm px-2 focus:outline-none focus:bg-surface-container-high cursor-pointer" id="target-select-4">
+<option selected="" value="deckard">Rick Deckard</option>
+<option value="gaff">Gaff</option>
+<option value="rachael">Rachael Tyrell</option>
+</select>
+</div>
+</div>
+</article>
+<!-- COMBATTANT 2: RACHAEL TYRELL -->
+<article class="combat-card bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-md relative overflow-hidden" data-id="2" data-init="16">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-surface-variant"></div>
+<div class="flex flex-wrap items-start justify-between gap-space-md pl-space-xs">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-surface-container text-secondary">
+<span class="font-label-xs text-label-xs text-rpg-muted">INIT</span>
+<span class="font-number-lg text-number-lg text-secondary">16</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<h3 class="text-body-md text-rpg-text font-bold tracking-wider" style="font-family: Inter, sans-serif;">Rachael Tyrell</h3>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">PJ • SUJET SPÉCIAL</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" style="font-family: Inter, sans-serif;">Tyrell Corporation • Protocole Nexus-7 expérimental</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors" onclick="quickHeal(2)">
+                CALCULER SOINS / DÉGÂTS
+              </button>
+<button class="h-9 px-3 bg-rpg-surface-2 hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors">
+                FICHE
+              </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs pl-space-xs">
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">POINTS DE VIE</span>
+<span class="font-number-md text-number-md text-rpg-success">10 / 10 <span class="font-label-xs text-label-xs text-rpg-muted">[STABLE]</span></span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-success w-full transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">SANG-FROID</span>
+<span class="font-number-md text-number-md text-rpg-warning">06 / 10</span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-warning w-3/5 transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<label class="font-label-xs text-label-xs text-secondary uppercase" for="target-select-2">CIBLE ACTUELLE</label>
+<select class="h-7 bg-rpg-surface-2 text-rpg-text font-body-sm text-body-sm px-2 focus:outline-none focus:bg-surface-container-high cursor-pointer" id="target-select-2">
+<option selected="" value="deckard">Rick Deckard</option>
+<option value="none">Aucune</option>
+<option value="roy">Roy Batty</option>
+</select>
+</div>
+</div>
+</article>
+<!-- COMBATTANT 3: GAFF -->
+<article class="combat-card bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-md relative overflow-hidden" data-id="3" data-init="15">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-surface-variant"></div>
+<div class="flex flex-wrap items-start justify-between gap-space-md pl-space-xs">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-surface-container text-secondary">
+<span class="font-label-xs text-label-xs text-rpg-muted">INIT</span>
+<span class="font-number-lg text-number-lg text-secondary">15</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<h3 class="text-body-md text-rpg-text font-bold tracking-wider" style="font-family: Inter, sans-serif;">Gaff</h3>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">PJ • INSPECTEUR</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" style="font-family: Inter, sans-serif;">LAPD Répression • Canne tactique &amp; Origami</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors" onclick="quickHeal(3)">
+                CALCULER SOINS / DÉGÂTS
+              </button>
+<button class="h-9 px-3 bg-rpg-surface-2 hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors">
+                FICHE
+              </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs pl-space-xs">
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">POINTS DE VIE</span>
+<span class="font-number-md text-number-md text-rpg-success">10 / 10 <span class="font-label-xs text-label-xs text-rpg-muted">[STABLE]</span></span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-success w-full transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">SANG-FROID</span>
+<span class="font-number-md text-number-md text-primary">09 / 10</span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-primary w-[90%] transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<label class="font-label-xs text-label-xs text-secondary uppercase" for="target-select-3">CIBLE ACTUELLE</label>
+<select class="h-7 bg-rpg-surface-2 text-rpg-text font-body-sm text-body-sm px-2 focus:outline-none focus:bg-surface-container-high cursor-pointer" id="target-select-3">
+<option selected="" value="none">En observation</option>
+<option value="pris">Pris</option>
+<option value="roy">Roy Batty</option>
+</select>
+</div>
+</div>
+</article>
+<!-- COMBATTANT 5: PRIS -->
+<article class="combat-card bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-md relative overflow-hidden" data-id="5" data-init="12">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-rpg-danger"></div>
+<div class="flex flex-wrap items-start justify-between gap-space-md pl-space-xs">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-surface-container text-rpg-danger">
+<span class="font-label-xs text-label-xs text-rpg-muted">INIT</span>
+<span class="font-number-lg text-number-lg text-rpg-danger">12</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<h3 class="text-body-md text-rpg-text font-bold tracking-wider" style="font-family: Inter, sans-serif;">Pris</h3>
+<span class="px-2 py-0.5 bg-rpg-danger text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">HOSTILE • PNJ</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" style="font-family: Inter, sans-serif;">Modèle Basique Plaisir • Agilité Acrobatique N6MAA10817</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors" onclick="quickHeal(5)">
+                CALCULER SOINS / DÉGÂTS
+              </button>
+<button class="h-9 px-3 bg-rpg-surface-2 hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase transition-colors">
+                FICHE
+              </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs pl-space-xs">
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">POINTS DE VIE</span>
+<span class="font-number-md text-number-md text-rpg-success">08 / 08 <span class="font-label-xs text-label-xs text-rpg-muted">[STABLE]</span></span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-rpg-success w-full transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-secondary uppercase">SANG-FROID</span>
+<span class="font-number-md text-number-md text-rpg-text">08 / 08</span>
+</div>
+<div class="w-full h-2 bg-rpg-surface-2 overflow-hidden">
+<div class="h-full bg-primary w-full transition-all duration-300"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm">
+<label class="font-label-xs text-label-xs text-secondary uppercase" for="target-select-5">CIBLE ACTUELLE</label>
+<select class="h-7 bg-rpg-surface-2 text-rpg-text font-body-sm text-body-sm px-2 focus:outline-none focus:bg-surface-container-high cursor-pointer" id="target-select-5">
+<option selected="" value="gaff">Gaff</option>
+<option value="deckard">Rick Deckard</option>
+</select>
+</div>
+</div>
+</article>
+</section>
+<!-- RIGHT COLUMN: SIDE REGULATION PANEL (4 COLUMNS / 320px+ TACTICAL DOCK) -->
+<aside aria-label="Contrôles et tactique" class="xl:col-span-4 flex flex-col gap-space-md"><div class="bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-md border border-rpg-border"><div class="flex items-center justify-between border-b border-rpg-border pb-space-sm"><h2 class="font-title-md text-title-md text-primary uppercase tracking-wider font-bold">CONTRÔLES DE COMBAT</h2><span class="material-symbols-outlined text-rpg-accent text-[20px]">tune</span></div><div class="flex items-center justify-between p-space-sm bg-surface-container-lowest border border-rpg-border"><div class="flex flex-col"><span class="font-label-sm text-label-sm text-rpg-muted uppercase font-bold tracking-wider" style="font-family: 'Inter', sans-serif;">SYSTÈME ACTIF</span><span class="text-body-md text-rpg-text font-bold" style="font-family: 'Inter', sans-serif;">Blade Runner : Le jeu de rôle</span></div><label class="relative inline-flex items-center cursor-pointer"><input checked="" class="sr-only peer" type="checkbox"><div class="w-11 h-6 bg-rpg-surface-2 peer-focus:outline-none peer-checked:bg-primary-container relative transition-colors"><div class="absolute top-[2px] left-[2px] bg-rpg-accent-contrast w-5 h-5 transition-transform peer-checked:translate-x-5"></div></div></label></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider" style="font-family: Inter, sans-serif;">SÉLECTEUR DE DÉS D'INITIATIVE</span><div class="grid grid-cols-2 gap-space-xs"><button class="py-2 px-2 bg-primary text-on-primary font-label-sm text-label-sm font-bold uppercase transition-all shadow-[0_0_12px_rgba(34,211,238,0.35)]" id="init-mode-cards" onclick="setInitMode('cards')" style="font-family: 'Inter', sans-serif;">Cartes (1-10)</button><button class="py-2 px-2 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm uppercase transition-all" id="init-mode-d20" onclick="setInitMode('d20')" style="font-family: 'Inter', sans-serif;">d20 Standard</button></div></div><div class="pt-space-xs flex flex-col gap-space-sm"><button class="h-12 w-full px-5 bg-primary-container hover:bg-primary text-on-primary-container font-label-sm text-label-sm uppercase flex items-center justify-between shadow-[0_0_16px_rgba(34,211,238,0.4)] transition-all active:translate-y-0.5 font-bold" id="side-next-turn-btn" onclick="document.getElementById('next-turn-btn')?.click()"><span class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">play_arrow</span><span class="">TOUR SUIVANT ▶</span></span><span class="font-number-md text-number-md bg-surface-container-lowest/40 px-2 py-0.5">ROUND 01</span></button><button class="h-10 px-4 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs uppercase flex items-center justify-center gap-space-sm transition-all border border-rpg-border font-bold" onclick="rollInitiative()"><span class="material-symbols-outlined text-rpg-accent text-[18px]">casino</span><span class="">JET SYSTÈME INITIATIVE</span></button></div></div><div class="bg-rpg-surface p-space-lg flex flex-col gap-space-md shadow-md border border-rpg-border"><div class="flex items-center justify-between border-b border-rpg-border pb-space-sm"><h3 class="font-title-md text-title-md text-rpg-text uppercase tracking-wider font-bold">OUTIL RAPIDE DE DÉGÂTS</h3><span class="material-symbols-outlined text-rpg-danger text-[18px]">swords</span></div><div class="flex items-center gap-space-sm"><button class="w-12 h-12 bg-surface-container hover:bg-surface-container-high text-on-surface font-number-lg text-number-lg flex items-center justify-center transition-colors border border-rpg-border" onclick="stepDamage(-1)">−</button><div class="flex-1 h-12 bg-surface-container-lowest border border-rpg-border flex items-center justify-center"><span class="font-number-lg text-number-lg text-primary" id="damage-value">01</span></div><button class="w-12 h-12 bg-surface-container hover:bg-surface-container-high text-on-surface font-number-lg text-number-lg flex items-center justify-center transition-colors border border-rpg-border" onclick="stepDamage(1)">+</button></div><div class="flex flex-col gap-space-xs"><span class="font-label-xs text-label-xs text-secondary uppercase font-bold tracking-wider">TYPE D'ACTION</span><div class="grid grid-cols-2 gap-space-xs"><button class="dmg-type-btn py-2 bg-primary-container text-on-primary-container font-label-xs text-label-xs uppercase font-bold" onclick="selectDmgType(this)">[PERCUTANT]</button><button class="dmg-type-btn py-2 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-xs text-label-xs uppercase font-bold" onclick="selectDmgType(this)">[SOINS]</button></div></div><button class="h-11 w-full bg-rpg-danger hover:bg-red-500 text-rpg-on-status font-label-sm text-label-sm uppercase font-bold tracking-wider shadow-[0_0_12px_rgba(239,68,68,0.35)] transition-all active:translate-y-0.5" onclick="applyDamage()">CALCULER DÉGÂTS / SOINS</button></div></aside>
+</div>
+</div>
+</div>
+<script>
+  let currentRound = 1;
+  let activeTurnIndex = 0;
+  let damageAmount = 1;
+
+  function selectScene(btn) {
+    const parent = document.getElementById('scene-selector-chips');
+    const buttons = parent.querySelectorAll('button');
+    buttons.forEach(b => {
+      b.className = "px-2.5 py-1 bg-surface-container hover:bg-rpg-surface-2 text-on-surface-variant hover:text-rpg-text font-label-xs text-label-xs uppercase transition-colors";
+    });
+    btn.className = "px-2.5 py-1 bg-primary text-on-primary font-label-xs text-label-xs uppercase shadow-[0_0_12px_rgba(34,211,238,0.35)]";
+    appendLog(`Scène réassignée: "${btn.innerText.trim()}"`);
+  }
+
+  function setInitMode(mode) {
+    const btnCards = document.getElementById('init-mode-cards');
+    const btnD20 = document.getElementById('init-mode-d20');
+    if (mode === 'cards') {
+      btnCards.className = "py-2 px-2 bg-primary text-on-primary font-label-xs text-label-xs font-bold uppercase transition-all";
+      btnD20.className = "py-2 px-2 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-xs text-label-xs uppercase transition-all";
+      appendLog("Système d'initiative basculé sur Cartes (1-10)");
+    } else {
+      btnD20.className = "py-2 px-2 bg-primary text-on-primary font-label-xs text-label-xs font-bold uppercase transition-all";
+      btnCards.className = "py-2 px-2 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-xs text-label-xs uppercase transition-all";
+      appendLog("Système d'initiative basculé sur d20 Standard");
+    }
+  }
+
+  function stepDamage(delta) {
+    damageAmount = Math.max(1, damageAmount + delta);
+    document.getElementById('damage-value').innerText = damageAmount < 10 ? '0' + damageAmount : damageAmount;
+  }
+
+  function selectDmgType(btn) {
+    document.querySelectorAll('.dmg-type-btn').forEach(b => {
+      b.className = "dmg-type-btn py-2 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-xs text-label-xs uppercase";
+    });
+    btn.className = "dmg-type-btn py-2 bg-primary-container text-on-primary-container font-label-xs text-label-xs uppercase font-bold";
+  }
+
+  function applyDamage() {
+    appendLog(`Application de ${damageAmount} dégât(s) sur la cible.`);
+  }
+
+  function quickHeal(id) {
+    appendLog(`Calculateur soins/dégâts ouvert pour l'entité #${id}`);
+  }
+
+  function appendLog(text) {
+    const log = document.getElementById('combat-log');
+    if (!log) return;
+    const now = new Date();
+    const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+    const row = document.createElement('div');
+    row.className = "text-secondary";
+    row.innerHTML = `<span class="text-rpg-accent">${time}</span> &bull; ${text}`;
+    log.prepend(row);
+  }
+
+  const nextBtn = document.getElementById('next-turn-btn');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const cards = Array.from(document.querySelectorAll('.combat-card'));
+      if (cards.length === 0) return;
+
+      cards.forEach(c => {
+        c.classList.remove('shadow-[0_0_24px_rgba(34,211,238,0.25)]');
+        c.querySelector('.active-pulse-badge')?.remove();
+      });
+
+      activeTurnIndex = (activeTurnIndex + 1) % cards.length;
+      if (activeTurnIndex === 0) {
+        currentRound++;
+        const roundText = currentRound < 10 ? '0' + currentRound : currentRound;
+        document.getElementById('round-counter').innerText = `ROUND ${roundText}`;
+        appendLog(`Nouveau Round engagé : ROUND ${roundText}`);
+      }
+
+      const activeCard = cards[activeTurnIndex];
+      activeCard.classList.add('shadow-[0_0_24px_rgba(34,211,238,0.25)]');
+      const name = activeCard.querySelector('h3')?.innerText || 'Combattant';
+      appendLog(`Tour passé à : ${name}`);
+    });
+  }
+
+  function sortCombatants() {
+    const container = document.querySelector('section[aria-label="Liste des combattants"]');
+    const cards = Array.from(container.querySelectorAll('.combat-card'));
+    cards.sort((a, b) => parseInt(b.dataset.init, 10) - parseInt(a.dataset.init, 10));
+    cards.forEach(c => container.appendChild(c));
+    appendLog("Liste des combattants ordonnée selon l'Initiative décroissante.");
+  }
+
+  function rollInitiative() {
+    const cards = document.querySelectorAll('.combat-card');
+    cards.forEach(card => {
+      const newInit = Math.floor(Math.random() * 20) + 1;
+      card.dataset.init = newInit;
+      const numSpan = card.querySelector('.font-number-lg');
+      if (numSpan) numSpan.innerText = newInit < 10 ? '0' + newInit : newInit;
+    });
+    appendLog("Jet global d'initiative résolu (1d20 pour tous les intervenants).");
+    sortCombatants();
+  }
+</script></main></div>
+
+
+
+</body></html>

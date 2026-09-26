@@ -1,0 +1,68 @@
+/* ==========================================================================
+   PERSONNALITÉ DE BASE — MODERNE
+   Contrat GM-OS v1.3 · relevée sur moderne.html (Stitch, prompt 8) le 2026-09-27
+   Étape T2.3 : des VALEURS seulement. Rien ici n'est lu par GM-OS.
+
+   Deux polarités à l'écran : un cadre (ardoise) autour d'un contenu clair.
+   Le cadre (§ 4.8, contrat v1.3) porte la sienne.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root[data-theme="modern"] {
+  color-scheme: light;
+
+  /* 4.1 · Couleurs de base */
+  --rpg-bg: #e9eef5;
+  --rpg-surface: #ffffff;
+  --rpg-surface-2: #f8fafc;
+  --rpg-text: #0f172a;
+  --rpg-muted: #475569;
+  --rpg-accent: #1d4ed8;
+  --rpg-accent-contrast: #ffffff;
+  --rpg-border: #e2e8f0;
+  --rpg-border-soft: rgba(15, 23, 42, 0.08);
+
+  /* 4.2 · États */
+  --rpg-success: #047857;
+  --rpg-danger: #b91c1c;
+  --rpg-warning: #a16207;
+  --rpg-info: #6d28d9;
+
+  /* 4.3 · Typographie */
+  --rpg-font-display: "Plus Jakarta Sans", sans-serif;
+  --rpg-font-body: "Plus Jakarta Sans", sans-serif;
+  --rpg-font-mono: "JetBrains Mono", monospace;
+  --rpg-title-tracking: 0em;
+  --rpg-kicker-tracking: 0.06em;
+  --rpg-title-transform: none;
+
+  /* 4.5 · Forme — arrondis francs */
+  --rpg-radius-sm: 6px;
+  --rpg-radius-md: 12px;
+  --rpg-radius-lg: 14px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  /* 4.6 · Relief et lumière — ombres douces et diffuses */
+  --rpg-elevation-1: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --rpg-elevation-2: 0 10px 30px -6px rgba(15, 23, 42, 0.16);
+  --rpg-elevation-3: 0 24px 48px -12px rgba(15, 23, 42, 0.28);
+  --rpg-glow: rgba(37, 99, 235, 0.25);
+  --rpg-glow-strength: 0.3;
+
+  /* 4.7 · Verre */
+  --rpg-glass-bg: rgba(255, 255, 255, 0.85);
+  --rpg-glass-border: rgba(15, 23, 42, 0.08);
+  --rpg-glass-blur: 12px;
+
+  /* 4.8 · Le cadre — barre latérale et bandeau, en ardoise */
+  --rpg-frame-bg: #0b1120;
+  --rpg-frame-text: #e2e8f0;
+  --rpg-frame-accent: #60a5fa;
+
+  /* 7 · Matières */
+  --rpg-texture-bg: none;
+  --rpg-texture-panel: none;
+  --rpg-texture-opacity: 0;
+}

@@ -7,21 +7,48 @@
 
 ## Mode d'emploi
 
-1. **Une conversation Stitch par prompt.** Colle d'abord le **bloc de contexte** (§ 1), puis le
-   prompt, et joins les captures indiquées.
+0. ⭐ **Importe d'abord [`stitch/DESIGN.md`](./stitch/DESIGN.md) dans le projet Stitch.** C'est
+   un fichier au format ouvert de Google ([spécification](https://github.com/google-labs-code/design.md)) :
+   des jetons aux noms de GM-OS (fond, surface, accent, états, arrondis, polices), partant du
+   thème Cyberpunk actuel, et en prose le contexte, les contraintes et la règle sur les maquettes.
+   Ses couleurs passent le contrat de GM-OS (vérifié par `validerLeTheme`). Une fois importé, **le
+   bloc de contexte (§ 1) devient inutile** : ne le colle que si Stitch n'a pas pris le fichier.
+1. **Une conversation Stitch par prompt**, dans ce même projet : colle le prompt et joins les
+   captures indiquées.
 2. **L'ordre compte** (décision D2) : la **grammaire commune** d'abord (prompt 1), puis les écrans
    qui s'y rangent (prompts 2 à 7), puis les **quatre personnalités** (prompt 8).
 3. Réglages de Stitch : **application web, bureau**, cadre de **1440 × 900**.
-4. Demande toujours l'**export en Tailwind** (prompt 9). Rapporte-moi les exports et les images.
+4. Pour chaque direction retenue, rapporte-moi **son `DESIGN.md` exporté** — c'est ce que je
+   traduis — plus l'image, et l'export Tailwind en complément (prompt 9).
 5. ⛔ **On ne colle jamais le code de Stitch dans GM-OS** (plan § 5) : je traduis chaque direction
-   en **valeurs de jetons** (T2.3), et tu juges dans ta vraie application (T2.4).
+   en **valeurs de jetons** (T2.3), et tu juges dans ta vraie application (T2.4). Le `DESIGN.md`
+   reste l'outil de travail de Stitch ; **le contrat des thèmes reste la référence de GM-OS**.
 
-Les trois maquettes que tu avais déjà (Combat, Dés, Image) peuvent être jointes en référence de
-style au prompt 1.
+### Les maquettes des guides — des références de style, jamais des modèles
+
+`documentation/User Guides/` contient **14 maquettes** (`*_mockup.png`), une en tête de chaque
+guide. Ce sont des **illustrations d'ambiance générées par IA**, pas des écrans de GM-OS :
+format carré, libellés anglais, et **des fonctions qui n'existent pas** (« Previous turn »,
+« Add status », actions Attack / Dash / Hide dans le combat ; égaliseur et synchro BPM dans la
+musique). Elles donnent en revanche une direction de style nette : verre sombre, halos, grosses
+valeurs chiffrées.
+
+Joins-les **en plus** des captures, là où chaque prompt l'indique (« Référence de style »). Le
+bloc de contexte dit à Stitch de n'en prendre que l'ambiance — sinon il recopierait les fausses
+fonctions.
+
+| Maquette | Prompt |
+| --- | --- |
+| `combat_mockup.png`, `dice_mockup.png`, `image_mockup.png` | 1 (la grammaire) |
+| `music_mockup.png` | 2 |
+| `map_mockup.png` | 3 |
+| `light_mockup.png` | 4 |
+| `dice_mockup.png` | 5 |
+| `combat_mockup.png` | 6 et 8 |
 
 ---
 
-## 1 · Le bloc de contexte — à coller en tête de chaque conversation
+## 1 · Le bloc de contexte — seulement si Stitch n'a pas importé `DESIGN.md`
 
 ```text
 Contexte : tu redessines GM-OS, une application de bureau (Electron) pour un meneur de jeu de rôle.
@@ -49,6 +76,13 @@ Contraintes :
   flou), matière de fond. Pas d'effet qui ne se résume pas à ces variables.
 - Chaque jeu de rôle peut remplacer ces variables par les siennes : le design ne doit pas
   dépendre d'une couleur précise pour être compréhensible.
+
+Deux sortes d'images jointes :
+- les CAPTURES (fichiers numérotés, 1440 × 900) sont les vrais écrans : c'est leur contenu qui
+  fait foi ;
+- les RÉFÉRENCES DE STYLE (fichiers « _mockup ») ne donnent que l'ambiance — matières, lumière,
+  typographie, densité. N'en reprends ni les fonctions, ni les libellés anglais, ni la mise en
+  page : plusieurs de leurs boutons n'existent pas dans le logiciel.
 ```
 
 ---
@@ -57,7 +91,7 @@ Contraintes :
 
 ### Prompt 1 — La grammaire commune (décision D2)
 
-**Joindre** : `1-combat.png`, `4-musique.png`, `5-carte.png` (et les trois maquettes en référence).
+**Joindre** : `1-combat.png`, `4-musique.png`, `5-carte.png`. **Référence de style** : `combat_mockup.png`, `dice_mockup.png`, `image_mockup.png`.
 
 ```text
 Voici trois écrans très différents du même logiciel : un combat (liste de combattants), une
@@ -79,7 +113,7 @@ latérale et le bandeau du haut. Produis les trois écrans avec la même grammai
 
 ### Prompt 2 — Musique (réagencement permis)
 
-**Joindre** : `4-musique.png`, et l'image retenue au prompt 1.
+**Joindre** : `4-musique.png`, et l'image retenue au prompt 1. **Référence de style** : `music_mockup.png`.
 
 ```text
 Applique la grammaire de l'image jointe à la console de musique (capture 4-musique).
@@ -92,11 +126,13 @@ les pads de la playlist (une tuile par morceau, couleur, raccourci clavier), « 
 le master, le fondu croisé A↔B au centre, la durée du fondu automatique, le choix de la sortie
 audio, « Key learn ».
 Tu peux réagencer librement. Les commandes de lecture doivent être grandes et touchables au doigt.
+Retire aussi l'égaliseur rapide, le « Sync ratio » et le bloc « Dossiers & raccourcis » : ils
+n'existent pas dans le logiciel.
 ```
 
 ### Prompt 3 — Cartographie (réagencement permis)
 
-**Joindre** : `5-carte.png`, et l'image retenue au prompt 1.
+**Joindre** : `5-carte.png` **et les quatre `5-carte-reglages-*.png`** (le panneau de réglages entier : il ne tient pas dans l'écran), et l'image retenue au prompt 1. **Référence de style** : `map_mockup.png`.
 
 ```text
 Applique la grammaire à la carte tactique (capture 5-carte). Le meneur dit : « tous les
@@ -112,7 +148,7 @@ Donne à la carte le plus de place possible.
 
 ### Prompt 4 — Light-OS (réagencement permis)
 
-**Joindre** : `6-lumiere.png`, et l'image retenue au prompt 1.
+**Joindre** : `6-lumiere.png`, **`6-lumiere-tuiles-*.png` et `6-lumiere-panneau-*.png`** (les tuiles et le panneau défilent ; les lampes, en bas, viennent du mode simulé), et l'image retenue au prompt 1. **Référence de style** : `light_mockup.png`.
 
 ```text
 Applique la grammaire au pilotage des lumières (capture 6-lumiere). Le meneur dit : « la
@@ -130,7 +166,7 @@ Allège ce qu'une tuile affiche au repos.
 
 ### Prompt 5 — Dés (réagencement permis)
 
-**Joindre** : `2-des.png`, et l'image retenue au prompt 1.
+**Joindre** : `2-des.png` **et les quatre `2-des-mode-*.png`** (réserve, YZE, formule, seuil — chaque mode a ses réglages), et l'image retenue au prompt 1. **Référence de style** : `dice_mockup.png`.
 
 ```text
 Applique la grammaire au lanceur de dés (capture 2-des). Le meneur dit : « la partie avec les
@@ -142,7 +178,7 @@ doivent dominer ; l'historique et les jets enregistrés passent au second plan.
 
 ### Prompt 6 — Combat (habillage et clarté, sans déplacer les blocs)
 
-**Joindre** : `1-combat.png`, `10-combat-table.png`, et l'image retenue au prompt 1.
+**Joindre** : `1-combat.png`, `10-combat-table.png`, et l'image retenue au prompt 1. **Référence de style** : `combat_mockup.png`.
 
 ```text
 Applique la grammaire au suivi de combat (capture 1-combat), SANS déplacer les grands blocs :
@@ -175,7 +211,7 @@ Applique la grammaire à deux écrans, sans changer leur structure :
 
 ### Prompt 8 — Les quatre personnalités (décision D3)
 
-**Joindre** : `1-combat.png`, `11-combat-clair.png`, et l'écran de combat retenu au prompt 6.
+**Joindre** : `1-combat.png`, `11-combat-clair.png`, et l'écran de combat retenu au prompt 6. **Référence de style** : `combat_mockup.png` (pour Cyberpunk).
 
 ```text
 Le logiciel propose quatre thèmes de base : Moderne, Cyberpunk, Médiéval et Clair. Aujourd'hui
@@ -196,16 +232,18 @@ thème d'un coup d'œil, même en noir et blanc.
 ### Prompt 9 — L'export (à la fin de chaque conversation)
 
 ```text
-Exporte le résultat en Tailwind. Donne aussi, à part, la liste des valeurs employées :
-couleurs (fond, surface, texte, texte estompé, accent, bordure, états), polices et tailles,
-rayons, épaisseurs de bordure, ombres, halos, verre, matières.
+Mets à jour le DESIGN.md du projet avec cette direction, en gardant les noms des couleurs
+(primary, background, surface, surface-raised, text, text-muted, border, success, danger,
+warning, info) et en décrivant dans « Elevation & Depth » les ombres, le halo, le verre et la
+matière en valeurs CSS. Puis exporte le résultat en Tailwind.
 ```
 
 ---
 
 ## 3 · Ce que tu me rapportes
 
-Pour chaque direction que tu veux essayer : l'image, l'export Tailwind et la liste des valeurs.
+Pour chaque direction que tu veux essayer : **son `DESIGN.md` exporté**, l'image, et l'export
+Tailwind.
 Je la traduis en valeurs de jetons (T2.3), sans reprendre ni structure ni composant, et tu la
 juges dans ta vraie application avec tes campagnes (T2.4). La décision (T2.5) vient **après**
 avoir vu.

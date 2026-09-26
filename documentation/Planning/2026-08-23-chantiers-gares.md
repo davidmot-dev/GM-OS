@@ -5699,7 +5699,11 @@ v1.2.
 - **Défauts de GM-OS vus sur les captures, pour la refonte** : ⛔ **Montserrat (Alien) déborde** —
   « Tableau de Bo… », « MODE SESSION OS » coupé en haut, « GM-OS_v6.5.0 » coupé à droite : la
   mise en page suppose une police étroite. Les **cartes de Combat-OS gardent leur bleu ardoise**
-  en dur, quel que soit le thème. Le « Combat-OS OS » du § 1 bis se lit maintenant.
+  en dur, quel que soit le thème. Le « Combat-OS OS » du § 1 bis se lit maintenant. Et, vus par
+  les captures de référence de la phase 0 : dans **Horloge & Temps**, les trois boutons de thème
+  visuel (« Moderne / Cyberpunk / Old style ») **se chevauchent** ; les **noms des jauges sont
+  tronqués** (« Alerte de la Tyr… »). ⭐ Et **Médiéval propose quatre pastilles d'accent
+  illisibles** sur son propre fond (garde T0.3, voir le plan de la refonte § 3).
 - **Deux pièges d'essais payés** : l'essai de l'atelier exigeait que tout jeton soit éditable —
   il tolère désormais les jetons V2 ; les copies de référence du constructeur (`alien.css`,
   `blade-runner.css`) ont dû suivre, comme leur essai l'exige.
