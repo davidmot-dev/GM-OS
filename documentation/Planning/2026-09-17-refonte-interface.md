@@ -9,6 +9,51 @@
 
 ---
 
+## 0 · ⭐ Les décisions du 2026-09-26 — elles amendent tout ce qui suit
+
+*Prises par David après avoir annoté l'inventaire des écrans
+([`2026-09-25-inventaire-des-ecrans.md`](./2026-09-25-inventaire-des-ecrans.md)) : 32 notes, dont
+une bonne part demande de **réorganiser**, pas seulement d'habiller.*
+
+| # | Décision | Ce qu'elle change |
+| --- | --- | --- |
+| **D1** | ✅ **Le réagencement entre dans la refonte**, pour les écrans que David a marqués : Carte (2.4), Musique (3.1, 3.2), Light-OS (2.7), Dés (1.24, 1.25), Tables (1.31), Paramètres (6.1), Voice-OS (3.5) | Le § 12 disait *« pas de refonte des mises en page »* : **levé pour ces écrans seulement**. Garde-fous : l'agencement se **valide sur image avant d'être codé** (vitrine + planche) ; **jamais dans le même commit** que le style ; les autres écrans ne bougent pas |
+| **D2** | ✅ **Cohérence entre les écrans** | Avant tout réagencement : une **grammaire d'écran commune** — où vivent le titre du module, la barre d'actions, la zone principale, les réglages, le panneau latéral — et les primitives qui la portent. Chaque écran réagencé l'est **dans** cette grammaire. *Trois bons agencements inventés séparément ne se ressemblent pas* |
+| **D3** | ✅ **Une différence marquée entre les quatre thèmes de base** | Mesuré le 26/09 : un thème ne change aujourd'hui que **5 couleurs, 2 polices, le verre et une texture**. Cyberpunk et Moderne partagent la même gamme d'ardoise ; aucun thème ne change la forme. Chaque thème de base devient une **personnalité complète** — couleurs, forme, relief, matière, typographie, ornements. **V1–V3 remontent** : ils étaient réservés aux thèmes de jeu (phase 6), ils deviennent le bagage des thèmes de base. Un thème de base = *le paquet par défaut* ; un thème de jeu le surcharge — un seul mécanisme |
+| **D4** | ✅ **Un cahier des charges pour le constructeur de thèmes** — un GPT d'OpenAI | [`Cahier-des-charges-theme-de-jeu.md`](../Architecture/Cahier-des-charges-theme-de-jeu.md), contrat v1. Il **fige les noms** des nouvelles échelles (`--rpg-success/danger/warning/info`, `--rpg-elevation-*`, `--rpg-glow`, `--rpg-glass-*`, `--rpg-texture-*`, `--rpg-border-width/style`, `--rpg-title-transform`) et les **quatre emplacements d'ornement**. ⭐ *Le vocabulaire `--rpg-*` peut s'étendre* (David : « un travail entre deux IA qu'on peut modifier ») : un seul vocabulaire sert l'interface **et** les fiches |
+
+**Ce que ça change à l'ordre des phases :**
+
+1. **Phase 0** — le filet, inchangé, **plus la vitrine** (`e2e/vitrine.spec.ts`, éprouvée le 25/09 :
+   vraies campagnes, vrais médias, taille réelle du Zenbook, écrans mis en scène).
+2. **Phase 1** — les échelles manquantes, **nommées d'après le cahier des charges** ; et les
+   **quatre personnalités** reçoivent leurs valeurs de forme, de relief et de matière, avec une
+   **garde de distinction** : un essai qui rougit si deux thèmes de base deviennent trop proches.
+   Les **51 branches `theme === 'medieval'`** et les ~30 règles de rattrapage du thème clair
+   d'`index.css` se résorbent dans les jetons.
+3. **Phase 2** — Stitch reçoit **la grammaire d'abord** (un système appliqué à trois écrans
+   différents), **puis les quatre personnalités**. Pour les écrans de D1, il propose aussi
+   l'agencement — on ne colle toujours jamais son code.
+4. **Phase 3** — les primitives **et les gabarits de la grammaire**.
+5. **Phase 4** — la migration ; les écrans de D1 y reçoivent leur réagencement, en commits séparés.
+6. **Phase 6** — se réduit aux **icônes** (V4) et au **chargeur des paquets de jeu** ; forme,
+   matière et ornements sont faits pour les thèmes de base en phases 1 et 3.
+
+**Le noyau pour Stitch** (inventaire, § 9) devient : Combat, Dés, Image (les trois maquettes),
+Musique, Carte, Light-OS, Trame, Horloge, Combat en régime table (1.22 et 2.5 : *« mettre plus
+d'emphase sur cette fonctionnalité »*), et Combat en thème clair.
+
+✅ **D5 · Le jeu décide aussi de la forme — tranché par David le 2026-09-26.** Quand un thème de
+jeu déclare sa forme (arrondis, bordures, relief, matière, ornements), **elle remplace celle du
+thème de base**, comme ses couleurs et ses polices. La règle *« le jeu gagne, la main surcharge »*
+vaut donc pour **tout** jeton déclaré, sans exception par famille. Ce que le jeu ne déclare pas
+reste celui du thème de base.
+
+⛔ **Correction du § 11** : la branche de la refonte **ne part pas de `main`** — `main` est au
+25 mars, 872 commits derrière `feature/tablet-hub-pwa`. Elle part de la branche courante.
+
+---
+
 ## 1 · L'objectif — deux buts, et le second contraint le premier
 
 **A · Le fini.** Amener GM-OS au niveau des trois maquettes **sans refaire les

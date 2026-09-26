@@ -144,6 +144,8 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | --- | --- | --- |
 | ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
+| ⚠️ **L'en-tête écrit « Combat-OS OS »**, « Dice-OS OS »… et à 1440 px de large le titre passe sur trois lignes (celui de Dice-OS est rogné en haut), tandis que la droite de l'en-tête déborde (`GM-OS_V` coupé) | `Shell.tsx:551` ajoute `<span>OS</span>` après `t('modules:names.…')`, alors que la plupart des noms portent déjà « -OS ». Visible sur toute capture de la vitrine (`e2e/vitrine.spec.ts`) | **Trouvé le 2026-09-25 par la vitrine**, premier essai de faisabilité de la refonte. C'est de l'habillage : il se traite dans la refonte ou juste avant, pas en passant |
+| ⚠️ **Combat-OS : « PERCUTANT » et « FICHE » se chevauchent** sur la carte d'un combattant, à 1440 px — pas sur toutes les cartes (celle de Gaff est propre), donc la largeur du nom décide | La vitrine : 11 combattants sous le pilote Blade Runner, `1-combat.png` | Même trouvaille, même motif de renvoi. *C'est la largeur réelle du Zenbook qui l'a montré — aucun essai ne tournait à cette taille* |
 | ✅ ~~**Une carte projetée sur un moniteur s'affiche dans TOUTES les fenêtres de projection ouvertes**~~ — **corrigé le soir même, § 118** — en couche 0, sous leur image. `projectionTarget` vaut `'monitor'` sans dire lequel, et `ProjectorView` dessine la carte dès que `mapTarget === 'monitor' && isProjectorWindow` | Projeter une carte sur le moniteur 2 pendant que le moniteur 1 est ouvert **sans image** : la carte y apparaît aussi | **Antérieur au 25/09, et jamais signalé à l'écran.** Le corriger demande de faire voyager `ecranDeLaCarte` (§ 114) jusqu'aux projecteurs — un champ de plus dans le protocole entre fenêtres, donc un chantier à part. *Une image opaque le cache ; un écran au repos le montre.* |
 
 ### 2 · Ce qui se décide à la table — axe N.3
@@ -5597,6 +5599,49 @@ Et `:root` porte toujours `font-size: 85%` : un `rem` transposé d'une maquette 
 **État** : ⛔ **non commencé — mais plus rien ne le bloque.** Les cinq questions sont tranchées, la
 conception est écrite, et le premier geste est **T0.1** : les captures de référence, une soirée,
 aucun pixel changé. Seule la partie que David joue d'abord le précède.
+
+#### ⭐ 2026-09-25/26 — l'inventaire, la vitrine, quatre décisions et un contrat
+
+- **L'inventaire des écrans** (`2026-09-25-inventaire-des-ecrans.md`) : 76 écrans relevés dans le
+  code, annotés par David — **32 notes**. Player Hub, projection et pupitre **hors refonte pour
+  l'instant**.
+- **La vitrine** (`e2e/vitrine.spec.ts`, sur demande : `GMOS_VITRINE=1`) : instance jetable semée
+  par la sauvegarde du jour **et** une copie du miroir des médias, remis par le vrai bouton
+  « Restaurer depuis la sauvegarde » (221 médias), captures à la taille du Zenbook (1440×900,
+  double densité), écrans **mis en scène** (11 combattants, un vrai jet). ⭐ **Elle a trouvé deux
+  défauts au premier essai** — voir § 1 bis. ⚠️ *Les données hostiles se mettent en scène dans la
+  langue du pilote* : sous Blade Runner, des points de vie sont ignorés (Santé / Sang-froid).
+- **Quatre décisions de David** — réagencement, cohérence, personnalités des thèmes, cahier des
+  charges : **§ 0 du plan**, qui amende l'ordre des phases.
+- **Le contrat du constructeur de thèmes** (un GPT d'OpenAI) :
+  `documentation/Architecture/Cahier-des-charges-theme-de-jeu.md`, v1. ⛔ **Mesuré en l'écrivant :
+  GM-OS ne lit que 13 réglages** (6 couleurs, 2 polices, 5 tailles) — le `--rpg-radius: 0px`
+  d'Alien, ses ombres, l'espacement de ses titres sont **jetés en silence**.
+
+#### Les demandes de l'inventaire qui ne sont PAS de la refonte
+
+*La refonte habille et réagence ; elle n'ajoute pas de fonctions.* Ces lignes sont de vrais
+chantiers, à ouvrir séparément — **ici pour ne pas se perdre, pas pour être faites en passant**.
+
+| Écran | Demande de David | Nature |
+| --- | --- | --- |
+| 1.13 Bibliothèque des campagnes | Une image de fond et un petit synopsis | Fonctionnalité |
+| 1.17 Atelier des règles | Pouvoir préciser des paramètres | Fonctionnalité — à préciser avec David |
+| 3.3 Effets sonores | Des icônes sur les onglets d'atmosphère | Fonctionnalité |
+| 1.5 Galerie de PNJ | La fiche n'est pas toujours en accord avec le système de jeu | Donnée, pas apparence |
+| 1.8 Chronique / wiki, 1.23 Atelier des adversaires | Difficiles d'accès | Navigation |
+| 1.10 MJ Focus | *« Je ne vois pas ce que c'est »* — jamais trouvé (s'ouvre depuis *Préparation de séance*) | Navigation |
+| 6.7 Calcul des dégâts | Pas clair, ni sur ce qu'il fait | Compréhension |
+| 1.16 Livre de règles, 6.2 Atelier du thème | Des options pas claires | Libellés |
+| 1.33 Loot-OS | *« Il faudrait être mieux accompagné »* | Parcours |
+
+#### Le même contrat manque pour les fiches de personnage
+
+David, le 2026-09-26 : *« j'ai exactement la même chose pour la création des fiches de
+personnages, mais cela est un autre chantier »*. Les fiches HTML sont construites par un GPT, et
+GM-OS les consomme par la couture `window.RPGSheet` + `postMessage` — **sans contrat écrit** de ce
+que la fiche doit exposer. **Chantier distinct**, à ouvrir sur le modèle du cahier des charges des
+thèmes.
 
 ---
 
