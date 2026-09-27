@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#020617]" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LOOT-OS : GESTION DU BUTIN</title>
+<!-- Google Fonts: Orbitron, Inter, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Forms & Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            diegetic: {
+              bg: '#020617',
+              panel: '#0f172a',
+              card: '#151b2d',
+              border: '#1e293b',
+              accent: '#06b6d4',
+              accentGlow: 'rgba(6, 182, 212, 0.15)',
+              text: '#f8fafc',
+              muted: '#898c95'
+            }
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace']
+          },
+          borderRadius: {
+            none: '0px',
+            DEFAULT: '0px',
+            sm: '0px',
+            md: '0px',
+            lg: '0px',
+            xl: '0px',
+            '2xl': '0px',
+            full: '0px'
+          }
+        }
+      }
+    };
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="diegetic-theme">
+    * {
+      border-radius: 0px !important;
+    }
+    
+    /* Custom clean scrollbars for console aesthetic */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border: 1px solid #06b6d4;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="h-full w-full font-inter text-diegetic-text overflow-hidden bg-[#020617] flex items-center justify-center relative select-none">
+<!-- BEGIN: Blurred Background Simulation (GM-OS in background) -->
+<div class="absolute inset-0 z-0 pointer-events-none opacity-25 filter blur-md bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-slate-800 via-[#020617] to-black" data-purpose="background-scenery">
+<div class="p-8 grid grid-cols-4 gap-6">
+<div class="h-40 border border-slate-700 bg-slate-900/40"></div>
+<div class="h-40 border border-slate-700 bg-slate-900/40"></div>
+<div class="h-40 border border-slate-700 bg-slate-900/40"></div>
+<div class="h-40 border border-slate-700 bg-slate-900/40"></div>
+<div class="col-span-3 h-96 border border-slate-700 bg-slate-900/40"></div>
+<div class="col-span-1 h-96 border border-slate-700 bg-slate-900/40"></div>
+</div>
+</div>
+<!-- END: Blurred Background Simulation -->
+<!-- Backdrop overlay -->
+<div class="absolute inset-0 bg-[#020617]/85 backdrop-blur-sm z-10"></div>
+<!-- BEGIN: Modal Container -->
+<main class="relative z-20 w-[1050px] h-[720px] max-w-[95vw] max-h-[95vh] bg-[#0f172a] border border-[#1e293b] shadow-2xl flex flex-col overflow-hidden" data-purpose="modal-window">
+<!-- BEGIN: Modal Header -->
+<header class="h-14 bg-[#151b2d] border-b border-[#1e293b] flex items-center justify-between px-5 shrink-0" data-purpose="window-header">
+<div class="flex items-center space-x-3">
+<!-- Hologram Cube Icon -->
+<svg class="w-5 h-5 text-diegetic-accent" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+<line x1="12" x2="12" y1="22.08" y2="12"></line>
+</svg>
+<h1 class="font-orbitron tracking-wider text-base font-bold text-diegetic-text">
+          LOOT-OS : GESTION DU BUTIN
+        </h1>
+</div>
+<!-- Close Window Button -->
+<button aria-label="Fermer la console" class="text-diegetic-muted hover:text-white hover:bg-red-500/20 w-8 h-8 flex items-center justify-center border border-transparent hover:border-red-500/50 transition-colors" data-purpose="close-modal-button" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</header>
+<!-- END: Modal Header -->
+<!-- BEGIN: Guided Workflow Stepper Tabs -->
+<nav class="grid grid-cols-3 bg-[#0a0f1d] border-b border-[#1e293b] shrink-0 text-sm font-orbitron" data-purpose="stepper-navigation">
+<!-- Step 1: Générer -->
+<button class="tab-btn py-3 px-4 flex items-center justify-center space-x-2 border-r border-[#1e293b] border-b-2 border-b-diegetic-accent bg-[#0f172a] text-diegetic-accent font-bold transition-colors" id="btn-tab-generate" onclick="switchTab('tab-generate')" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+</svg>
+<span>1. GÉNÉRER</span>
+</button>
+<!-- Step 2: Pool Actif -->
+<button class="tab-btn py-3 px-4 flex items-center justify-center space-x-2 border-r border-[#1e293b] border-b-2 border-b-transparent text-diegetic-muted hover:text-diegetic-text transition-colors" id="btn-tab-pool" onclick="switchTab('tab-pool')" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="14" rx="2" ry="2" width="20" x="2" y="7"></rect>
+<path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+</svg>
+<span>2. POOL ACTIF</span>
+<span class="ml-2 font-mono text-[11px] bg-diegetic-accent/20 text-diegetic-accent px-1.5 py-0.5 border border-diegetic-accent/40 font-bold">
+          [3 EN ATTENTE]
+        </span>
+</button>
+<!-- Step 3: Historique -->
+<button class="tab-btn py-3 px-4 flex items-center justify-center space-x-2 border-b-2 border-b-transparent text-diegetic-muted hover:text-diegetic-text transition-colors" id="btn-tab-history" onclick="switchTab('tab-history')" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>3. HISTORIQUE</span>
+<span class="ml-2 font-mono text-[11px] bg-slate-800 text-diegetic-muted px-1.5 py-0.5 border border-[#1e293b]">
+          [3 DISTRIBUÉS]
+        </span>
+</button>
+</nav>
+<!-- END: Guided Workflow Stepper Tabs -->
+<!-- BEGIN: Modal Content Layout -->
+<div class="flex-1 flex overflow-hidden" data-purpose="modal-body-layout">
+<!-- BEGIN: Zone A - Main Interactive Area -->
+<section class="flex-1 p-6 overflow-y-auto border-r border-[#1e293b] flex flex-col" data-purpose="central-action-zone">
+<!-- ================= PANEL 1: GÉNÉRER ================= -->
+<div class="tab-content flex flex-col space-y-6" id="tab-generate">
+<!-- Rapid AI Generator Block -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-4 flex flex-col space-y-3" data-purpose="ai-generator-module">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<svg class="w-4 h-4 text-diegetic-accent" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"></path>
+</svg>
+<h2 class="font-orbitron text-xs font-bold text-diegetic-text tracking-wide uppercase">Générateur Rapide (IA)</h2>
+</div>
+<!-- Lite / Full Segmented Controls -->
+<div class="flex items-center border border-[#1e293b] bg-[#0a0f1d] text-[11px] font-orbitron">
+<button class="px-2.5 py-1 text-diegetic-accent bg-diegetic-accent/10 border-r border-[#1e293b] font-bold" type="button">
+                  ⚡ LITE (Rapide)
+                </button>
+<button class="px-2.5 py-1 text-diegetic-muted hover:text-white transition-colors" type="button">
+                  📖 FULL (Contexte campagne)
+                </button>
+</div>
+</div>
+<!-- Input area -->
+<div class="flex flex-col space-y-2">
+<input class="w-full bg-[#0a0f1d] border border-[#1e293b] text-diegetic-text text-sm px-3.5 py-2.5 focus:border-diegetic-accent focus:ring-0 placeholder:text-diegetic-muted/60" placeholder="Décrivez le contenu..." type="text" value="Un coffre de pirate maudit sous les néons de Chinatown..."/>
+<div class="flex items-center justify-between">
+<span class="text-[12px] text-diegetic-muted italic">
+                  L'IA créera des objets structurés et cohérents basés sur votre description.
+                </span>
+<button class="font-orbitron font-bold text-xs uppercase bg-diegetic-accent text-slate-950 px-4 py-2 hover:bg-cyan-400 active:bg-cyan-300 transition-colors flex items-center space-x-1.5" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+<span>GÉNÉRER LES OBJETS</span>
+</button>
+</div>
+</div>
+</div>
+<!-- System Tables Block -->
+<div class="flex flex-col space-y-3" data-purpose="system-tables-module">
+<div class="flex items-center space-x-2">
+<svg class="w-4 h-4 text-diegetic-accent" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+<path d="M2 17l10 5 10-5"></path>
+<path d="M2 12l10 5 10-5"></path>
+</svg>
+<h2 class="font-orbitron text-xs font-bold text-diegetic-text tracking-wide uppercase">Tables de Système</h2>
+</div>
+<!-- Search Field -->
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-diegetic-muted text-xs pointer-events-none">
+                🔍
+              </span>
+<input class="w-full bg-[#151b2d] border border-[#1e293b] pl-9 pr-3 py-2 text-xs text-diegetic-text focus:border-diegetic-accent focus:ring-0 placeholder:text-diegetic-muted/60" placeholder="Rechercher une table de butin..." type="text"/>
+</div>
+<!-- Table Rows List -->
+<div class="space-y-2">
+<!-- Item 1: TEST -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-3 flex items-center justify-between hover:border-slate-600 transition-colors">
+<div class="flex flex-col">
+<span class="font-orbitron text-xs font-bold text-white tracking-wide">TEST</span>
+<div class="text-[12px] text-diegetic-muted mt-0.5 flex items-center space-x-2 font-inter">
+<span>3 entrées</span>
+<span class="text-slate-600">•</span>
+<span>Mode : <strong class="text-slate-300 font-medium">Chaque ligne testée</strong></span>
+</div>
+</div>
+<button class="border border-diegetic-accent text-diegetic-accent hover:bg-diegetic-accent hover:text-black font-orbitron font-bold text-xs px-3.5 py-1.5 transition-colors flex items-center space-x-1.5" type="button">
+<span>🎲 TIRER</span>
+</button>
+</div>
+<!-- Item 2: Table 2 -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-3 flex items-center justify-between hover:border-slate-600 transition-colors">
+<div class="flex flex-col">
+<span class="font-orbitron text-xs font-bold text-white tracking-wide">Table 2</span>
+<div class="text-[12px] text-diegetic-muted mt-0.5 flex items-center space-x-2 font-inter">
+<span>2 entrées</span>
+<span class="text-slate-600">•</span>
+<span>Mode : <strong class="text-slate-300 font-medium">Un seul tiré</strong></span>
+</div>
+</div>
+<button class="border border-diegetic-accent text-diegetic-accent hover:bg-diegetic-accent hover:text-black font-orbitron font-bold text-xs px-3.5 py-1.5 transition-colors flex items-center space-x-1.5" type="button">
+<span>🎲 TIRER</span>
+</button>
+</div>
+<!-- Item 3: Armement Corpo Tyrell -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-3 flex items-center justify-between hover:border-slate-600 transition-colors">
+<div class="flex flex-col">
+<span class="font-orbitron text-xs font-bold text-white tracking-wide">Armement Corpo Tyrell</span>
+<div class="text-[12px] text-diegetic-muted mt-0.5 flex items-center space-x-2 font-inter">
+<span>8 entrées</span>
+<span class="text-slate-600">•</span>
+<span>Mode : <strong class="text-slate-300 font-medium">Un seul tiré</strong></span>
+</div>
+</div>
+<button class="border border-diegetic-accent text-diegetic-accent hover:bg-diegetic-accent hover:text-black font-orbitron font-bold text-xs px-3.5 py-1.5 transition-colors flex items-center space-x-1.5" type="button">
+<span>🎲 TIRER</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= PANEL 2: POOL ACTIF ================= -->
+<div class="tab-content hidden flex-col space-y-4" id="tab-pool">
+<div class="flex items-center justify-between pb-1 border-b border-[#1e293b]">
+<span class="text-xs font-orbitron uppercase text-diegetic-muted tracking-wider">Objets générés en attente d'attribution</span>
+<span class="text-[11px] font-mono text-diegetic-accent font-bold">4 ÉLÉMENTS DANS LA RÉSERVE</span>
+</div>
+<!-- Cards Stack -->
+<div class="space-y-3">
+<!-- Card 1: Puce Tyrell (RARE) -->
+<div class="bg-[#151b2d] border-l-4 border-l-cyan-400 border border-[#1e293b] p-3.5 flex flex-col space-y-2.5" data-purpose="loot-card">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-sm text-white">Puce mémorielle cryptée Tyrell</h3>
+<p class="text-[12px] text-diegetic-muted font-inter">Données industrielles volées dans les laboratoires de réplicants.</p>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-[11px] font-mono uppercase bg-slate-800 text-slate-300 px-1.5 py-0.5 border border-slate-700">Objet</span>
+<span class="text-[11px] font-orbitron font-bold uppercase bg-cyan-950 text-cyan-400 border border-cyan-500/50 px-2 py-0.5">RARE</span>
+</div>
+</div>
+<!-- Quick Dispatch Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-[#1e293b]/70">
+<span class="text-[12px] font-orbitron text-diegetic-muted uppercase">Donner à :</span>
+<div class="flex items-center space-x-1.5">
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-diegetic-accent hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rick Deckard</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-diegetic-accent hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rachael Tyrell</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-diegetic-accent hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Gaff</button>
+</div>
+</div>
+</div>
+<!-- Card 2: Scanner (ÉPIQUE) -->
+<div class="bg-[#151b2d] border-l-4 border-l-[#a855f7] border border-[#1e293b] p-3.5 flex flex-col space-y-2.5" data-purpose="loot-card">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-sm text-white">Scanner Voight-Kampff portatif</h3>
+<p class="text-[12px] text-diegetic-muted font-inter">Optique calibrée pour détecter les micro-dilatations de pupille.</p>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-[11px] font-mono uppercase bg-slate-800 text-slate-300 px-1.5 py-0.5 border border-slate-700">Objet</span>
+<span class="text-[11px] font-orbitron font-bold uppercase bg-purple-950 text-[#c084fc] border border-[#a855f7]/50 px-2 py-0.5">ÉPIQUE</span>
+</div>
+</div>
+<!-- Quick Dispatch Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-[#1e293b]/70">
+<span class="text-[12px] font-orbitron text-diegetic-muted uppercase">Donner à :</span>
+<div class="flex items-center space-x-1.5">
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-[#a855f7] hover:text-white border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rick Deckard</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-[#a855f7] hover:text-white border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rachael Tyrell</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-[#a855f7] hover:text-white border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Gaff</button>
+</div>
+</div>
+</div>
+<!-- Card 3: Chinyen Corp (COMMUN) -->
+<div class="bg-[#151b2d] border-l-4 border-l-slate-400 border border-[#1e293b] p-3.5 flex flex-col space-y-2.5" data-purpose="loot-card">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-sm text-white">Chinyen Corp (Crédits LAPD)</h3>
+<p class="text-[12px] text-diegetic-muted font-inter">450 crédits standard en coupures numériques.</p>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-[11px] font-mono uppercase bg-slate-800 text-slate-300 px-1.5 py-0.5 border border-slate-700">Monnaie</span>
+<span class="text-[11px] font-orbitron font-bold uppercase bg-slate-800 text-slate-300 border border-slate-600 px-2 py-0.5">COMMUN</span>
+</div>
+</div>
+<!-- Quick Dispatch Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-[#1e293b]/70">
+<span class="text-[12px] font-orbitron text-diegetic-muted uppercase">Donner à :</span>
+<div class="flex items-center space-x-1.5">
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-slate-300 hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rick Deckard</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-slate-300 hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rachael Tyrell</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-slate-300 hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Gaff</button>
+</div>
+</div>
+</div>
+<!-- Card 4: Clé passe-partout (PEU COMMUN) -->
+<div class="bg-[#151b2d] border-l-4 border-l-[#10b981] border border-[#1e293b] p-3.5 flex flex-col space-y-2.5" data-purpose="loot-card">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-sm text-white">Clé passe-partout de l'Hôtel Yukon</h3>
+<p class="text-[12px] text-diegetic-muted font-inter">Passe magnétique encodé pour les chambres des étages 3 et 4.</p>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-[11px] font-mono uppercase bg-slate-800 text-slate-300 px-1.5 py-0.5 border border-slate-700">Objet</span>
+<span class="text-[11px] font-orbitron font-bold uppercase bg-emerald-950 text-[#34d399] border border-[#10b981]/50 px-2 py-0.5">PEU COMMUN</span>
+</div>
+</div>
+<!-- Quick Dispatch Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-[#1e293b]/70">
+<span class="text-[12px] font-orbitron text-diegetic-muted uppercase">Donner à :</span>
+<div class="flex items-center space-x-1.5">
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-[#10b981] hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rick Deckard</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-[#10b981] hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Rachael Tyrell</button>
+<button class="text-xs font-inter bg-[#0a0f1d] hover:bg-[#10b981] hover:text-black border border-[#1e293b] px-2.5 py-1 text-diegetic-text transition-colors" type="button">Gaff</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action: Purge Pool -->
+<div class="pt-2 flex justify-end">
+<button class="border border-red-500/60 bg-red-950/20 hover:bg-red-500/20 text-red-400 font-orbitron font-bold text-xs uppercase px-4 py-2 transition-colors flex items-center space-x-1.5" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="3 6 5 6 21 6"></polyline>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+</svg>
+<span>TOUT VIDER</span>
+</button>
+</div>
+</div>
+<!-- ================= PANEL 3: HISTORIQUE ================= -->
+<div class="tab-content hidden flex-col space-y-4" id="tab-history">
+<div class="flex items-center justify-between pb-1 border-b border-[#1e293b]">
+<span class="text-xs font-orbitron uppercase text-diegetic-muted tracking-wider">Ce qui a déjà été donné durant la séance</span>
+<span class="text-[11px] font-mono text-diegetic-muted font-bold">SESSION ACTUELLE</span>
+</div>
+<div class="space-y-2">
+<!-- Row 1 -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-3 flex items-center justify-between font-inter text-xs">
+<div class="flex items-center space-x-2">
+<span class="text-diegetic-accent">✔</span>
+<span class="font-bold text-white">Pistolet Blaster de patrouille</span>
+<span class="text-diegetic-muted">→ donné à</span>
+<span class="px-2 py-0.5 bg-[#0a0f1d] border border-[#1e293b] text-cyan-300 font-medium">Rick Deckard</span>
+</div>
+<span class="font-mono text-diegetic-muted text-[11px]">il y a 5 min</span>
+</div>
+<!-- Row 2 -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-3 flex items-center justify-between font-inter text-xs">
+<div class="flex items-center space-x-2">
+<span class="text-diegetic-accent">✔</span>
+<span class="font-bold text-white">Injecteur d'Adrénostim</span>
+<span class="text-diegetic-muted">→ donné à</span>
+<span class="px-2 py-0.5 bg-[#0a0f1d] border border-[#1e293b] text-cyan-300 font-medium">Gaff</span>
+</div>
+<span class="font-mono text-diegetic-muted text-[11px]">il y a 18 min</span>
+</div>
+<!-- Row 3 -->
+<div class="bg-[#151b2d] border border-[#1e293b] p-3 flex items-center justify-between font-inter text-xs">
+<div class="flex items-center space-x-2">
+<span class="text-diegetic-accent">✔</span>
+<span class="font-bold text-white">Badge d'accès Secteur 4</span>
+<span class="text-diegetic-muted">→ donné à</span>
+<span class="px-2 py-0.5 bg-[#0a0f1d] border border-[#1e293b] text-cyan-300 font-medium">Rachael Tyrell</span>
+</div>
+<span class="font-mono text-diegetic-muted text-[11px]">il y a 32 min</span>
+</div>
+</div>
+<!-- Bottom Action: Purge History -->
+<div class="pt-4 flex justify-end">
+<button class="border border-red-500/60 bg-red-950/20 hover:bg-red-500/20 text-red-400 font-orbitron font-bold text-xs uppercase px-4 py-2 transition-colors flex items-center space-x-1.5" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="3 6 5 6 21 6"></polyline>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+</svg>
+<span>TOUT VIDER</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Zone A - Main Interactive Area -->
+<!-- BEGIN: Zone B - Right Companion Panel (~280px) -->
+<aside class="w-[280px] bg-[#0a0f1d] p-5 flex flex-col justify-between shrink-0" data-purpose="gm-companion-sidebar">
+<div class="flex flex-col space-y-6">
+<!-- Résumé Trésor Widget -->
+<div class="border border-[#1e293b] bg-[#0f172a] p-4 flex flex-col space-y-3" data-purpose="treasure-summary">
+<div class="flex items-center justify-between border-b border-[#1e293b] pb-2">
+<h2 class="font-orbitron text-xs font-bold uppercase tracking-wider text-diegetic-text">
+                RÉSUMÉ TRÉSOR
+              </h2>
+<svg class="w-3.5 h-3.5 text-diegetic-accent" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" x2="12" y1="8" y2="12"></line>
+<line x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+</div>
+<!-- Stat: Valeur Totale -->
+<div class="flex flex-col">
+<span class="text-[11px] font-inter text-diegetic-muted uppercase tracking-wider">Valeur Totale</span>
+<div class="flex items-baseline space-x-1.5 mt-0.5">
+<span class="font-mono text-2xl font-bold text-amber-400">1 850</span>
+<span class="font-mono text-amber-400/80 text-sm">¤</span>
+</div>
+</div>
+<!-- Stat: Objets Remarquables -->
+<div class="flex items-center justify-between pt-2 border-t border-[#1e293b]/70">
+<span class="text-[12px] font-inter text-diegetic-muted">Objets Remarquables</span>
+<span class="font-mono text-sm font-bold text-[#c084fc] bg-purple-950/40 border border-[#a855f7]/40 px-2 py-0.5">
+                2
+              </span>
+</div>
+</div>
+<!-- Conseils GM Box -->
+<div class="border border-[#1e293b] bg-[#0f172a] p-4 flex flex-col space-y-2" data-purpose="gm-advice">
+<div class="flex items-center space-x-2 text-diegetic-accent">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<h2 class="font-orbitron text-xs font-bold uppercase tracking-wider text-diegetic-text">
+                CONSEILS GM
+              </h2>
+</div>
+<p class="font-inter text-xs text-diegetic-muted italic leading-relaxed pt-1">
+              « La rareté attire la convoitise. Préparez une rencontre sociale si le butin est trop visible. »
+            </p>
+</div>
+</div>
+<!-- System Status Stamp -->
+<div class="pt-4 border-t border-[#1e293b] flex items-center justify-between text-[11px] font-mono text-diegetic-muted/70">
+<span>STATUT SYSTÈME</span>
+<span class="text-emerald-400 flex items-center">
+<span class="w-1.5 h-1.5 bg-emerald-400 inline-block mr-1.5"></span>EN LIGNE
+          </span>
+</div>
+</aside>
+<!-- END: Zone B - Right Companion Panel -->
+</div>
+<!-- END: Modal Content Layout -->
+</main>
+<!-- END: Modal Container -->
+<!-- BEGIN: Interactive Tab Switching Script -->
+<script data-purpose="tab-switcher">
+    function switchTab(targetId) {
+      // Hide all panels
+      document.querySelectorAll('.tab-content').forEach(panel => {
+        panel.classList.add('hidden');
+        panel.classList.remove('flex');
+      });
+
+      // Show selected panel
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+        targetPanel.classList.add('flex');
+      }
+
+      // Reset button styles
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-b-diegetic-accent', 'bg-[#0f172a]', 'text-diegetic-accent', 'font-bold');
+        btn.classList.add('border-b-transparent', 'text-diegetic-muted');
+      });
+
+      // Highlight active button
+      const activeBtn = document.getElementById('btn-' + targetId);
+      if (activeBtn) {
+        activeBtn.classList.add('border-b-diegetic-accent', 'bg-[#0f172a]', 'text-diegetic-accent', 'font-bold');
+        activeBtn.classList.remove('border-b-transparent', 'text-diegetic-muted');
+      }
+    }
+  </script>
+<!-- END: Interactive Tab Switching Script -->
+</body></html>

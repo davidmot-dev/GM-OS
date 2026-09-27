@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-950" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS — Fiche du Combattant (Fiche Dossier Police LAPD)</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;800;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyan: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              950: '#083344',
+            },
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              950: '#451a03',
+            },
+            slate: {
+              850: '#111c33',
+              900: '#0f172a',
+              950: '#020617',
+            },
+            danger: '#ef4444',
+            muted: '#898c95',
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'diegetic': '0 0 0 1px #1e293b, 0 25px 50px -12px rgba(2, 6, 23, 0.95), 0 0 40px -10px rgba(6, 182, 212, 0.15)',
+            'lapd-border': 'inset 0 1px 0 0 rgba(245, 158, 11, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Diegetic Styles -->
+<style data-purpose="diegetic-styling">
+    * {
+      border-radius: 0px !important;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .hud-scanline {
+      background: linear-gradient(
+        rgba(15, 23, 42, 0) 50%, 
+        rgba(0, 0, 0, 0.28) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 180, 0, 0.02),
+        rgba(0, 240, 255, 0.01),
+        rgba(255, 0, 80, 0.02)
+      );
+      background-size: 100% 3px, 6px 100%;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+      border-left: 1px solid #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+  </style>
+<!-- END: Custom Diegetic Styles -->
+</head>
+<body class="h-full bg-slate-950 font-inter text-slate-100 antialiased overflow-hidden select-none">
+<!-- BEGIN: Blurred Combat Background Overlay -->
+<div class="fixed inset-0 z-0 bg-[#020617]/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-5" data-purpose="modal-overlay">
+<!-- BEGIN: Combatant File Modal Window (LAPD Police Dossier Variant) -->
+<main aria-labelledby="modal-title" aria-modal="true" class="relative w-full max-w-[920px] max-h-[95vh] flex flex-col bg-slate-900 border border-slate-800 shadow-diegetic hud-scanline overflow-hidden" data-purpose="fighter-dossier-modal" role="dialog">
+<!-- Ligne d'accentuation bicolore : LAPD Amber & Cyan -->
+<div class="h-[2px] w-full bg-gradient-to-r from-amber-500 via-cyan-400 to-transparent shrink-0"></div>
+<!-- BEGIN: Modal Header (Dossier Archive // Division Répression) -->
+<header class="px-6 py-4 bg-slate-950/90 border-b border-slate-800 shrink-0" data-purpose="modal-header">
+<!-- Onglet Supérieur Stylisé & Contrôles -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<!-- Onglet LAPD Archival Tag -->
+<div class="px-3 py-1 bg-amber-500/10 border-l-2 border-l-amber-500 border border-amber-500/30 font-orbitron font-bold text-[11px] text-amber-400 uppercase tracking-widest flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-amber-400 animate-pulse"></span>
+              DOSSIER ARCHIVE // DIVISION RÉPRESSION (LAPD-REP-DIV)
+            </div>
+<span class="hidden sm:inline-flex items-center px-2 py-0.5 border border-cyan-500/30 bg-cyan-950/60 font-mono text-[10px] text-cyan-300 uppercase tracking-widest">
+              DOC-REF // TYRELL-CORP-SEC-09
+            </span>
+</div>
+<!-- Bouton Fermeture Unique -->
+<button aria-label="Fermer la fenêtre" class="px-2.5 py-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 border border-transparent hover:border-slate-700 transition-colors font-mono text-sm" type="button">
+            ✕
+          </button>
+</div>
+<!-- Fiche d'identification générale du sujet traqué -->
+<div class="flex flex-wrap items-baseline justify-between gap-3 pt-1 border-t border-slate-800/70">
+<div class="flex flex-wrap items-baseline gap-3">
+<h1 class="font-orbitron font-black text-xl text-slate-50 tracking-wide uppercase" id="modal-title">
+              Roy Batty
+            </h1>
+<span class="text-xs font-mono text-cyan-400 bg-cyan-950/50 px-2 py-0.5 border border-cyan-500/20">
+              MODÈLE : NEXUS-6 // COMBAT OFF-WORLD
+            </span>
+</div>
+<!-- Badges de classification policière diegétiques -->
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 bg-red-950/80 border border-danger/70 font-mono text-xs font-bold text-danger uppercase tracking-wider">
+              MANDAT // RETRAIT IMMÉDIAT
+            </span>
+<span class="px-2 py-0.5 bg-slate-800/90 border border-slate-700 font-mono text-xs text-emerald-400 uppercase tracking-wider">
+              ACTIF EN COMBAT
+            </span>
+<span class="px-2 py-0.5 bg-slate-900 border border-slate-700 font-mono text-[11px] text-amber-300 uppercase tracking-tight">
+              LECTURE SEULE STRICTE
+            </span>
+</div>
+</div>
+</header>
+<!-- END: Modal Header -->
+<!-- BEGIN: Scrollable Content Body -->
+<div class="px-6 py-5 overflow-y-auto space-y-4" data-purpose="modal-scroll-content">
+<!-- BEGIN: Section 01 - Identité & Signalement Police (Structure Tabulaire) -->
+<section class="border border-slate-800 bg-slate-950/60 p-4" data-purpose="block-identification">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-800">
+<div class="flex items-center gap-2">
+<span class="font-orbitron text-xs font-bold text-amber-400 tracking-wider">SECTION 01 //</span>
+<span class="font-orbitron text-xs font-semibold text-slate-200 uppercase tracking-wide">FICHE SIGNALÉTIQUE &amp; ENREGISTREMENT TYRELL</span>
+</div>
+<span class="font-mono text-[11px] text-muted tracking-tight">DOSSIER LAPD #819-BATTY</span>
+</div>
+<!-- Table structurée d'identification policière -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-800 border border-slate-800 text-xs">
+<div class="bg-slate-900/95 p-2.5">
+<span class="block text-[10px] font-mono text-muted uppercase tracking-wider mb-1">SUJET IDENTIFIÉ</span>
+<span class="font-inter font-bold text-slate-100">Batty, Roy</span>
+</div>
+<div class="bg-slate-900/95 p-2.5">
+<span class="block text-[10px] font-mono text-muted uppercase tracking-wider mb-1">MATRICULE FABRICANT</span>
+<span class="font-mono font-bold text-cyan-300">N6MAA10816</span>
+</div>
+<div class="bg-slate-900/95 p-2.5">
+<span class="block text-[10px] font-mono text-muted uppercase tracking-wider mb-1">DATE D'INCEPTION</span>
+<span class="font-mono text-slate-200">08 JAN 2016</span>
+</div>
+<div class="bg-slate-900/95 p-2.5">
+<span class="block text-[10px] font-mono text-muted uppercase tracking-wider mb-1">ESPÉRANCE ESTIMÉE</span>
+<span class="font-mono font-semibold text-danger">4 Ans (Phase Terminale)</span>
+</div>
+<div class="bg-slate-900/95 p-2.5 md:col-span-2">
+<span class="block text-[10px] font-mono text-muted uppercase tracking-wider mb-1">AFFECTATION INITIALE / SÉRIE</span>
+<span class="font-inter text-slate-300">Défense Tactique Off-World / Brigade Assaut Kolonie</span>
+</div>
+<div class="bg-slate-900/95 p-2.5 md:col-span-2">
+<span class="block text-[10px] font-mono text-muted uppercase tracking-wider mb-1">DERNIÈRE LOCALISATION CONFIRMÉE</span>
+<span class="font-inter text-slate-300">Bradbury Building - Secteur 04 (Los Angeles)</span>
+</div>
+</div>
+</section>
+<!-- END: Section 01 - Identité -->
+<!-- BEGIN: Section 02 - Matrice Compacte des 4 Attributs YZ-Engine -->
+<section class="border border-slate-800 bg-slate-950/60 p-4" data-purpose="block-attributes">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-800">
+<div class="flex items-center gap-2">
+<span class="font-orbitron text-xs font-bold text-cyan-400 tracking-wider">SECTION 02 //</span>
+<span class="font-orbitron text-xs font-semibold text-slate-200 uppercase tracking-wide">MATRICE D'ATTRIBUTS (YZ-ENGINE)</span>
+</div>
+<span class="font-mono text-[11px] text-muted">ÉCHELLE DÉ : A=d12 | B=d10 | C=d8 | D=d6</span>
+</div>
+<!-- Matrice compacte à 4 cadrans avec micro-dégradés diegétiques -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<!-- Cadran 1 : Vigueur -->
+<div class="relative bg-gradient-to-b from-slate-900 via-slate-900/90 to-cyan-950/30 border border-slate-800 p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-inter font-semibold text-slate-300 uppercase tracking-wider">VIGUEUR</span>
+<span class="px-1.5 py-0.5 bg-cyan-950/80 border border-cyan-500/40 font-mono text-[10px] font-bold text-cyan-300">BIO-RENFORCÉ</span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-slate-800/60">
+<span class="font-orbitron font-extrabold text-3xl text-cyan-400">A</span>
+<span class="font-mono text-sm font-bold text-slate-200 tracking-wider">(d12)</span>
+</div>
+</div>
+<!-- Cadran 2 : Agilité -->
+<div class="relative bg-gradient-to-b from-slate-900 via-slate-900/90 to-cyan-950/30 border border-slate-800 p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-inter font-semibold text-slate-300 uppercase tracking-wider">AGILITÉ</span>
+<span class="px-1.5 py-0.5 bg-cyan-950/80 border border-cyan-500/40 font-mono text-[10px] font-bold text-cyan-300">SURHUMAINE</span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-slate-800/60">
+<span class="font-orbitron font-extrabold text-3xl text-cyan-400">A</span>
+<span class="font-mono text-sm font-bold text-slate-200 tracking-wider">(d12)</span>
+</div>
+</div>
+<!-- Cadran 3 : Intelligence -->
+<div class="relative bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-850/40 border border-slate-800 p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-inter font-semibold text-slate-300 uppercase tracking-wider">INTELLIGENCE</span>
+<span class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 font-mono text-[10px] font-bold text-slate-300">ANALYTIQUE</span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-slate-800/60">
+<span class="font-orbitron font-extrabold text-3xl text-slate-100">B</span>
+<span class="font-mono text-sm font-bold text-slate-300 tracking-wider">(d10)</span>
+</div>
+</div>
+<!-- Cadran 4 : Empathie -->
+<div class="relative bg-gradient-to-b from-slate-900 via-slate-900/90 to-red-950/20 border border-slate-800 p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-inter font-semibold text-slate-400 uppercase tracking-wider">EMPATHIE</span>
+<span class="px-1.5 py-0.5 bg-red-950/60 border border-red-800/40 font-mono text-[10px] font-bold text-red-300">RUPTURE VK</span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-slate-800/60">
+<span class="font-orbitron font-extrabold text-3xl text-slate-500">D</span>
+<span class="font-mono text-sm font-bold text-slate-500 tracking-wider">(d6)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 02 - Matrice Attributs -->
+<!-- BEGIN: Section 03 - Pistes Vitales (Santé & Sang-Froid avec Segments Lumineux) -->
+<section class="border border-slate-800 bg-slate-950/60 p-4" data-purpose="block-vitals">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-800">
+<div class="flex items-center gap-2">
+<span class="font-orbitron text-xs font-bold text-amber-400 tracking-wider">SECTION 03 //</span>
+<span class="font-orbitron text-xs font-semibold text-slate-200 uppercase tracking-wide">PISTES VITALES (MONITORING BIOMÉTRIQUE)</span>
+</div>
+<span class="font-mono text-[11px] text-cyan-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-cyan-400"></span> CALIBRATION OPTIMALE
+            </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Santé Physique -->
+<div class="bg-slate-900 border border-slate-800 p-3.5 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-inter font-bold text-slate-200 uppercase tracking-wider">INTÉGRITÉ CORPORELLE (SANTÉ)</span>
+<span class="font-mono text-[11px] text-amber-400 bg-amber-950/60 px-2 py-0.5 border border-amber-500/30">STATUT : ÉRAFLURE</span>
+</div>
+<div class="flex items-baseline justify-between mb-2">
+<span class="font-mono text-xs text-muted">Réserve de blessures</span>
+<span class="font-mono text-xl font-bold text-slate-100 tracking-tight">
+                  14 <span class="text-xs font-normal text-muted">/ 15 PV</span>
+</span>
+</div>
+<!-- Jauge segmentée discrète (15 segments discrets) -->
+<div class="grid grid-cols-15 gap-0.5 w-full h-2.5 bg-slate-950 p-0.5 border border-slate-800 flex" style="display: flex;">
+<!-- 14 segments actifs émeraudes / cyan -->
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<div class="flex-1 h-full bg-emerald-500 mr-0.5"></div>
+<!-- 1 segment perdu -->
+<div class="flex-1 h-full bg-slate-800"></div>
+</div>
+</div>
+<!-- Sang-Froid (Mental) -->
+<div class="bg-slate-900 border border-slate-800 p-3.5 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-inter font-bold text-slate-200 uppercase tracking-wider">STABILITÉ SYNAPTIQUE (SANG-FROID)</span>
+<span class="font-mono text-[11px] text-cyan-300 bg-cyan-950/60 px-2 py-0.5 border border-cyan-500/30">STATUT : LUCIDE / FIXE</span>
+</div>
+<div class="flex items-baseline justify-between mb-2">
+<span class="font-mono text-xs text-muted">Seuil de panique / stress</span>
+<span class="font-mono text-xl font-bold text-slate-100 tracking-tight">
+                  12 <span class="text-xs font-normal text-muted">/ 12 SF</span>
+</span>
+</div>
+<!-- Jauge segmentée (12 segments pleins cyan) -->
+<div class="grid grid-cols-12 gap-0.5 w-full h-2.5 bg-slate-950 p-0.5 border border-slate-800 flex" style="display: flex;">
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400 mr-0.5"></div>
+<div class="flex-1 h-full bg-cyan-400"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 03 - Pistes Vitales -->
+<!-- BEGIN: Section 04 - Compétences Réparties par Domaine -->
+<section class="border border-slate-800 bg-slate-950/60 p-4" data-purpose="block-skills">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-800">
+<div class="flex items-center gap-2">
+<span class="font-orbitron text-xs font-bold text-cyan-400 tracking-wider">SECTION 04 //</span>
+<span class="font-orbitron text-xs font-semibold text-slate-200 uppercase tracking-wide">COMPÉTENCES DU SUJET (PAR DOMAINE OPÉRATIONNEL)</span>
+</div>
+<span class="font-mono text-[11px] text-muted">RÉPARTITION SPÉCIALISÉE</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<!-- Domaine 1 : Physique & Combat -->
+<div class="bg-slate-900/90 border border-slate-800 flex flex-col">
+<div class="px-3 py-1.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+<span class="text-[11px] font-orbitron font-bold text-cyan-300 uppercase tracking-wider">01. PHYSIQUE &amp; ASSAUT</span>
+<span class="font-mono text-[10px] text-muted">DOMAINE A</span>
+</div>
+<div class="p-2 space-y-1.5 flex-1">
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Combat corps à corps</span>
+<span class="font-mono text-xs font-bold text-cyan-300 bg-cyan-950/80 px-2 py-0.5 border border-cyan-800/60">A (d12)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Force brute</span>
+<span class="font-mono text-xs font-bold text-cyan-300 bg-cyan-950/80 px-2 py-0.5 border border-cyan-800/60">A (d12)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Mobilité</span>
+<span class="font-mono text-xs font-bold text-cyan-300 bg-cyan-950/80 px-2 py-0.5 border border-cyan-800/60">A (d12)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Endurance</span>
+<span class="font-mono text-xs font-bold text-cyan-300 bg-cyan-950/80 px-2 py-0.5 border border-cyan-800/60">A (d12)</span>
+</div>
+</div>
+</div>
+<!-- Domaine 2 : Technique & Armement -->
+<div class="bg-slate-900/90 border border-slate-800 flex flex-col">
+<div class="px-3 py-1.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+<span class="text-[11px] font-orbitron font-bold text-slate-300 uppercase tracking-wider">02. TECHNIQUE &amp; ARMES</span>
+<span class="font-mono text-[10px] text-muted">DOMAINE B</span>
+</div>
+<div class="p-2 space-y-1.5 flex-1">
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Armes à feu</span>
+<span class="font-mono text-xs font-bold text-slate-100 bg-slate-800 px-2 py-0.5 border border-slate-700">B (d10)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Technologie</span>
+<span class="font-mono text-xs font-semibold text-slate-300 bg-slate-800 px-2 py-0.5 border border-slate-700">C (d8)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Discrétion</span>
+<span class="font-mono text-xs font-bold text-slate-100 bg-slate-800 px-2 py-0.5 border border-slate-700">B (d10)</span>
+</div>
+</div>
+</div>
+<!-- Domaine 3 : Perception & Profil Synaptique -->
+<div class="bg-slate-900/90 border border-slate-800 flex flex-col">
+<div class="px-3 py-1.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+<span class="text-[11px] font-orbitron font-bold text-amber-300 uppercase tracking-wider">03. PERCEPTION &amp; INTEL</span>
+<span class="font-mono text-[10px] text-muted">DOMAINE C</span>
+</div>
+<div class="p-2 space-y-1.5 flex-1">
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-300">Observation</span>
+<span class="font-mono text-xs font-bold text-slate-100 bg-slate-800 px-2 py-0.5 border border-slate-700">B (d10)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 bg-slate-950/70 border border-slate-800">
+<span class="text-xs font-medium text-slate-400">Psychologie / Empathie</span>
+<span class="font-mono text-xs font-medium text-slate-400 bg-slate-950 px-2 py-0.5 border border-slate-800">D (d6)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 04 - Compétences Réparties -->
+</div>
+<!-- END: Scrollable Content Body -->
+<!-- BEGIN: Modal Footer -->
+<footer class="mt-auto px-6 py-4 bg-slate-950 border-t border-slate-800 shrink-0 space-y-3" data-purpose="modal-footer">
+<!-- RÈGLE 2 : Source en pied certifiée (Archive LAPD / Tyrell) -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 py-2 bg-slate-900/95 border-l-2 border-l-amber-500 border-r border-y border-slate-800 text-[11px] font-mono">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 bg-amber-400"></span>
+<span class="text-slate-400 uppercase tracking-tight">SOURCE DE CERTIFICATION :</span>
+<span class="text-amber-300 font-semibold">
+              Valeurs lues sur la fiche de campagne — à jour
+            </span>
+</div>
+<span class="text-muted tracking-tight">
+            MATRICULE ARCHIVE // LAPD-REP-N6MAA10816 // ARCH-REF-TYRELL
+          </span>
+</div>
+<!-- Zone d'action unique autorisée (Au bestiaire uniquement) -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+<div class="flex items-center gap-2">
+<span class="inline-block w-1.5 h-1.5 bg-cyan-400"></span>
+<span class="text-xs font-mono text-muted tracking-tight">
+              MODE INVESTIGATION POLICE // LECTURE SEULE STRICTE
+            </span>
+</div>
+<div class="flex items-center gap-3">
+<!-- Bouton Unique Autorisé : Au bestiaire -->
+<button class="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold text-slate-100 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-amber-400/80 transition-colors uppercase tracking-wider" title="Conserver l'entité comme référence dans le bestiaire" type="button">
+<!-- Icône signet / archive dossier -->
+<svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="square"></path>
+</svg>
+<span>Au bestiaire</span>
+</button>
+<!-- Note: Action 'Dans la campagne' masquée car déjà présent dans la campagne active -->
+</div>
+</div>
+</footer>
+<!-- END: Modal Footer -->
+</main>
+<!-- END: Combatant File Modal Window -->
+</div>
+<!-- END: Blurred Combat Background Overlay -->
+</body></html>

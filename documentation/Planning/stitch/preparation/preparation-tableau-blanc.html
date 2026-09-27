@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base { 
+      html, body { margin: 0; padding: 0; } 
+      body { overscroll-behavior: none; } 
+      main > :first-child { margin-top: 0 !important; } 
+      main > :last-child { margin-bottom: 0 !important; } 
+    } 
+    ::-webkit-scrollbar { display: none; }
+    * { border-radius: 0px !important; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "rpg-accent-contrast": "#020617",
+            "surface-container-lowest": "#070d1f",
+            "surface-container": "#191f31",
+            "on-secondary-fixed": "#131b2e",
+            "rpg-surface-2": "#1e293b",
+            "error-container": "#93000a",
+            "surface-container-high": "#23293c",
+            "rpg-text": "#f8fafc",
+            "inverse-surface": "#dce1fb",
+            "tertiary-fixed": "#d8e3fb",
+            "rpg-danger": "#ef4444",
+            "inverse-primary": "#006877",
+            "secondary-container": "#3f465c",
+            "error": "#ffb4ab",
+            "on-primary-fixed-variant": "#004e5a",
+            "primary-fixed": "#a2eeff",
+            "on-surface": "#dce1fb",
+            "rpg-success": "#10b981",
+            "primary-container": "#22d3ee",
+            "primary-fixed-dim": "#2fd9f4",
+            "on-tertiary-fixed": "#111c2d",
+            "rpg-accent": "#22d3ee",
+            "surface-bright": "#33394c",
+            "tertiary-fixed-dim": "#bcc7de",
+            "on-primary": "#00363e",
+            "secondary": "#bec6e0",
+            "primary": "#8aebff",
+            "rpg-surface": "#0f172a",
+            "on-secondary-container": "#adb4ce",
+            "rpg-info": "#3b82f6",
+            "rpg-warning": "#f59e0b",
+            "on-error-container": "#ffdad6",
+            "background": "#0c1324",
+            "surface-tint": "#2fd9f4",
+            "on-background": "#dce1fb",
+            "surface-variant": "#2e3447",
+            "on-primary-container": "#005763",
+            "inverse-on-surface": "#2a3043",
+            "secondary-fixed": "#dae2fd",
+            "surface-container-highest": "#2e3447",
+            "surface": "#0c1324",
+            "on-secondary-fixed-variant": "#3f465c",
+            "secondary-fixed-dim": "#bec6e0",
+            "on-surface-variant": "#bbc9cd",
+            "on-tertiary-fixed-variant": "#3c475a",
+            "outline": "#859397",
+            "on-tertiary": "#263143",
+            "on-tertiary-container": "#444f63",
+            "rpg-on-status": "#020617",
+            "surface-dim": "#0c1324",
+            "on-secondary": "#283044",
+            "outline-variant": "#3c494c",
+            "on-primary-fixed": "#001f25",
+            "rpg-border": "#1e293b",
+            "rpg-bg": "#020617",
+            "rpg-muted": "#898c95",
+            "tertiary": "#d2ddf5",
+            "on-error": "#690005",
+            "surface-container-low": "#151b2d",
+            "tertiary-container": "#b6c1d9"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "inter": ["Inter", "sans-serif"],
+            "mono": ["Space Mono", "monospace"],
+            "body-md": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "label-xs": ["Inter", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "title-md": ["Orbitron", "sans-serif"],
+            "display-lg": ["Orbitron", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "display-md": ["Orbitron", "sans-serif"]
+          },
+          fontSize: {
+            "number-md": ["16px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "700" }],
+            "display-md": ["24px", { "lineHeight": "30px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.14em", "fontWeight": "700" }],
+            "display-lg": ["34px", { "lineHeight": "40px", "letterSpacing": "0.06em", "fontWeight": "800" }],
+            "title-md": ["17px", { "lineHeight": "22px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "number-lg": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.16em", "fontWeight": "700" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-inter text-on-surface antialiased select-none">
+<!-- Barre latérale GM-OS permanente (220 px) -->
+<aside class="fixed left-0 top-0 h-full w-[220px] bg-surface-container-lowest z-50 flex flex-col border-r border-rpg-border">
+<div class="h-16 px-space-md flex items-center gap-space-sm border-b border-rpg-border bg-surface-container-low">
+<div class="w-2.5 h-2.5 bg-primary-container animate-pulse"></div>
+<div class="flex flex-col">
+<span class="font-orbitron text-[15px] font-bold uppercase tracking-widest text-primary-container">GM-OS</span>
+<span class="font-mono text-[11px] text-on-surface-variant tracking-wider">V6.0.4-TACTICAL</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-2 px-1">
+<div class="mb-4">
+<div class="px-2 py-1 font-inter text-[11px] font-bold uppercase text-on-surface-variant tracking-widest flex items-center gap-1.5">
+<span class="w-1 h-2 bg-primary-container inline-block"></span>AVENTURE
+        </div>
+<nav class="flex flex-col gap-0.5">
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="cockpit-session" href="#">
+<span>01. Cockpit</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="combat-os" href="#">
+<span>02. Combat-OS</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="dice-os" href="#">
+<span>03. Dice-OS</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="generateur-pnj" href="#">
+<span>04. Générateur PNJ</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="cartographie" href="#">
+<span>05. Cartographie</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="trame-narrative" href="#">
+<span>06. Trame narrative</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+</nav>
+</div>
+<div class="mb-4">
+<div class="px-2 py-1 font-inter text-[11px] font-bold uppercase text-on-surface-variant tracking-widest flex items-center gap-1.5">
+<span class="w-1 h-2 bg-outline inline-block"></span>AUDIO
+        </div>
+<nav class="flex flex-col gap-0.5">
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="musique" href="#">
+<span>07. Musique</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="effets-sonores" href="#">
+<span>08. Effets sonores</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="ambiances" href="#">
+<span>09. Ambiances</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="voice-os" href="#">
+<span>10. Voice-OS</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+</nav>
+</div>
+<div class="mb-4">
+<div class="px-2 py-1 font-inter text-[11px] font-bold uppercase text-on-surface-variant tracking-widest flex items-center gap-1.5">
+<span class="w-1 h-2 bg-outline inline-block"></span>OUTILS / SYSTÈME
+        </div>
+<nav class="flex flex-col gap-0.5">
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="mediatheque" href="#">
+<span>11. Médiathèque</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="image-os" href="#">
+<span>12. Image-OS</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="horloge-temps" href="#">
+<span>13. Horloge &amp; Temps</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="atlas-lieux" href="#">
+<span>14. Atlas &amp; Lieux</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="tables-aleatoires" href="#">
+<span>15. Tables aléatoires</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<!-- Actif : Tableau blanc -->
+<a aria-current="page" class="px-2 py-1.5 uppercase tracking-wider transition-colors flex items-center justify-between bg-primary-container text-rpg-accent-contrast font-bold font-inter text-[11px]" data-path="tableau-blanc" href="#">
+<span>16. Tableau blanc</span><span class="w-1 h-1 bg-rpg-accent-contrast"></span>
+</a>
+</nav>
+</div>
+<div class="mb-2">
+<div class="px-2 py-1 font-inter text-[11px] font-bold uppercase text-on-surface-variant tracking-widest flex items-center gap-1.5">
+<span class="w-1 h-2 bg-outline inline-block"></span>GLOBAL
+        </div>
+<nav class="flex flex-col gap-0.5">
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="favoris" href="#">
+<span>17. Favoris</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="nexus-wiki" href="#">
+<span>18. Nexus Wiki</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+<a class="px-2 py-1.5 font-inter text-[11px] uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-between" data-path="cortex-ia" href="#">
+<span>19. Cortex IA</span><span class="w-1 h-1 bg-surface-variant"></span>
+</a>
+</nav>
+</div>
+</div>
+<div class="p-2 border-t border-rpg-border bg-surface-container-low flex items-center justify-between">
+<span class="font-mono text-[11px] text-on-surface-variant">PING: 14MS</span>
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 bg-rpg-success"></div>
+<span class="font-inter text-[11px] font-bold text-rpg-success uppercase">LIVESTREAM</span>
+</div>
+</div>
+</aside>
+<!-- Zone Contenu principale -->
+<div class="pl-[220px]">
+<!-- Bandeau supérieur global GM-OS -->
+<header class="fixed top-0 left-[220px] right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 border-b border-rpg-border px-margin flex items-center justify-between">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 border border-rpg-border">
+<span class="font-inter text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">SYS:</span>
+<span class="font-mono text-[11px] text-primary-container font-bold">NEXUS-PROTOCOL // 1440x900</span>
+</div>
+<div class="flex items-center gap-space-xs border border-rpg-border p-0.5 bg-rpg-bg">
+<button class="px-space-md py-1 bg-primary-container text-rpg-accent-contrast font-inter text-[11px] uppercase font-bold tracking-wider" type="button">[ATELIER]</button>
+<button class="px-space-md py-1 bg-transparent text-on-surface-variant hover:text-on-surface font-inter text-[11px] uppercase font-bold tracking-wider transition-colors" type="button">[TABLE]</button>
+</div>
+<div class="hidden xl:flex items-center gap-space-sm bg-surface-container-low px-space-md py-1 border border-rpg-border">
+<span class="material-symbols-outlined text-primary text-[18px]">volume_up</span>
+<div class="flex flex-col">
+<span class="font-inter text-[11px] text-on-surface-variant leading-none font-bold">MASTER GAIN</span>
+<div class="w-24 h-1.5 bg-rpg-bg border border-rpg-border mt-1">
+<div class="h-full w-3/4 bg-primary-container"></div>
+</div>
+</div>
+<span class="font-mono text-[14px] font-bold text-primary-container">78%</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="h-10 px-space-md bg-surface-container-low border border-rpg-border text-on-surface-variant hover:text-on-surface hover:border-primary-container transition-colors font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-primary-container text-[18px]">chat</span>
+<span>FOCUS CHAT</span>
+</button>
+<button class="h-10 px-space-md bg-surface-container-low border border-rpg-border text-on-surface-variant hover:text-on-surface hover:border-primary-container transition-colors font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-rpg-success text-[18px]">hub</span>
+<span>CONNECT (4/4)</span>
+</button>
+<button class="h-10 px-space-lg bg-rpg-danger hover:bg-error-container text-on-error font-inter text-[11px] font-bold uppercase tracking-wider border border-rpg-danger flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">emergency_home</span>
+<span>STOP ALL</span>
+</button>
+<div class="w-8 h-8 border border-rpg-border bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+</div>
+</div>
+</header>
+<!-- Zone Module G12 : Variante Régie Tactique Dual-Barre & Cibles Élargies Table -->
+<main class="relative pt-16 bg-surface">
+<div class="flex flex-col w-full h-[calc(100vh-64px)] overflow-hidden bg-surface-container-lowest text-on-surface select-none">
+<!-- En-tête du module G12 : Titre Orbitron et commandes régie rapides -->
+<div class="flex-none h-16 bg-surface-container-low px-margin flex items-center justify-between z-30 border-b border-rpg-border">
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 bg-primary-container inline-block"></span>
+<h1 class="font-orbitron text-[18px] uppercase tracking-wider text-primary font-bold">
+                TABLEAU BLANC // CROQUIS DE SÉANCE
+              </h1>
+</div>
+<span class="font-inter text-[11px] uppercase tracking-wider text-on-surface-variant font-medium">
+              MODULE G12 // SCHÉMA DIRECT &amp; PROJECTION TACTILE DE TABLE // SESSION ACTIVE
+            </span>
+</div>
+<!-- Commandes régie : Annuler, Rétablir, Tout effacer (rouge alerte), Projeter (cyan 44px) -->
+<div class="flex items-center gap-space-sm">
+<button class="h-11 px-space-md bg-surface-container-high hover:bg-surface-variant text-on-surface font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-rpg-border active:bg-primary active:text-rpg-accent-contrast" id="btn-undo" title="Annuler le dernier tracé" type="button">
+<span class="material-symbols-outlined text-[18px]">undo</span>
+<span>Annuler</span>
+</button>
+<button class="h-11 px-space-md bg-surface-container-high hover:bg-surface-variant text-on-surface font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-rpg-border active:bg-primary active:text-rpg-accent-contrast" id="btn-redo" title="Rétablir le tracé" type="button">
+<span class="material-symbols-outlined text-[18px]">redo</span>
+<span>Rétablir</span>
+</button>
+<button class="h-11 px-space-md bg-rpg-danger hover:bg-error-container text-white font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-rpg-danger shadow-sm active:opacity-90" id="btn-clear" title="Effacer l'intégralité du croquis" type="button">
+<span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+<span>Tout effacer</span>
+</button>
+<div class="w-px h-8 bg-surface-variant mx-1"></div>
+<button class="h-11 px-space-lg bg-primary-container hover:bg-primary-fixed text-rpg-accent-contrast font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-space-sm transition-all border border-primary-container active:scale-[0.98]" id="btn-project" type="button">
+<span class="material-symbols-outlined text-[20px]">cast_connected</span>
+<span>📺 PROJETER AUX JOUEURS</span>
+<span class="inline-flex w-2.5 h-2.5 bg-rpg-accent-contrast animate-ping"></span>
+</button>
+</div>
+</div>
+<!-- Section Centrale : Disposition Dual-Barre (Barre verticale 48x48 + Canevas + Badge) -->
+<div class="relative flex-1 w-full flex overflow-hidden">
+<!-- Barre d'outils verticale à gauche : Gros boutons carrés 48x48 px ergonomiques pour table tactile -->
+<div class="w-16 flex-none bg-surface-container-low border-r border-rpg-border flex flex-col items-center py-3 gap-2.5 z-30 select-none shadow-md">
+<span class="font-inter text-[11px] font-bold text-on-surface-variant uppercase tracking-widest text-center writing-mode-vertical rotate-180 mb-1">OUTILS</span>
+<!-- Crayon -->
+<button class="tool-btn active-tool w-12 h-12 bg-primary-container text-rpg-accent-contrast flex flex-col items-center justify-center border border-primary-container transition-colors group relative" data-tool="pen" title="Crayon de traçage rapide" type="button">
+<span class="material-symbols-outlined text-[24px]">edit</span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-tight">STYL</span>
+</button>
+<!-- Gomme -->
+<button class="tool-btn w-12 h-12 bg-surface-container-high text-on-surface hover:bg-surface-variant flex flex-col items-center justify-center border border-rpg-border transition-colors group relative" data-tool="eraser" title="Gomme tactile" type="button">
+<span class="material-symbols-outlined text-[24px]">ink_eraser</span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-tight">GOM</span>
+</button>
+<!-- Rectangle -->
+<button class="tool-btn w-12 h-12 bg-surface-container-high text-on-surface hover:bg-surface-variant flex flex-col items-center justify-center border border-rpg-border transition-colors group relative" data-tool="rect" title="Forme géométrique Rectangle" type="button">
+<span class="material-symbols-outlined text-[24px]">crop_square</span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-tight">RECT</span>
+</button>
+<!-- Cercle -->
+<button class="tool-btn w-12 h-12 bg-surface-container-high text-on-surface hover:bg-surface-variant flex flex-col items-center justify-center border border-rpg-border transition-colors group relative" data-tool="circle" title="Cercle tactique / Zone d'effet" type="button">
+<span class="material-symbols-outlined text-[24px]">radio_button_unchecked</span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-tight">CIRC</span>
+</button>
+<!-- Pions / Texte -->
+<button class="tool-btn w-12 h-12 bg-surface-container-high text-on-surface hover:bg-surface-variant flex flex-col items-center justify-center border border-rpg-border transition-colors group relative" data-tool="pawn" title="Pions de combat &amp; Annotations texte" type="button">
+<span class="material-symbols-outlined text-[24px]">token</span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-tight">PION</span>
+</button>
+<div class="w-8 h-px bg-rpg-border my-1"></div>
+<!-- Raccourci Cible Rapide -->
+<button class="w-12 h-12 bg-surface-container-lowest text-primary hover:bg-surface-container-high flex flex-col items-center justify-center border border-rpg-border transition-colors" title="Réticule d'alignement rapide" type="button">
+<span class="material-symbols-outlined text-[22px]">filter_center_focus</span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-tight">CIBLE</span>
+</button>
+</div>
+<!-- Zone du Plan Tactique (Viewport + Blueprint SVG + Dessin direct) -->
+<div class="relative flex-1 h-full overflow-hidden cursor-crosshair bg-surface-container-lowest" id="blueprint-viewport">
+<!-- Grille matricielle d'ambiance -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="20" id="tactical-subgrid" patternunits="userSpaceOnUse" width="20">
+<path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2e3447" stroke-width="0.5"></path>
+</pattern>
+<pattern height="80" id="tactical-grid" patternunits="userSpaceOnUse" width="80">
+<rect fill="url(#tactical-subgrid)" height="80" width="80"></rect>
+<path d="M 80 0 L 0 0 0 80" fill="none" stroke="#22d3ee" stroke-opacity="0.25" stroke-width="0.8"></path>
+<circle cx="0" cy="0" fill="#22d3ee" fill-opacity="0.4" r="1.5"></circle>
+</pattern>
+</defs>
+<rect fill="url(#tactical-grid)" height="100%" width="100%"></rect>
+</svg>
+<!-- Croquis Vectoriel Architectural (SVG conforme) -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="xMidYMid meet" viewbox="0 0 1200 660">
+<!-- Salles et pièces -->
+<g class="opacity-95" id="rooms">
+<!-- Sas maintenance #01 -->
+<rect fill="#0f172a" height="150" width="240" x="80" y="140"></rect>
+<path d="M 80 140 L 320 140 L 320 290 L 80 290 Z" fill="none" stroke="#8aebff" stroke-width="2.5"></path>
+<text class="font-inter text-[11px] font-bold uppercase tracking-widest opacity-80" fill="#8aebff" x="95" y="165">SAS MAINTENANCE #01</text>
+<!-- Réserve hydrogène - Secteur 04 -->
+<rect fill="#0f172a" height="190" width="280" x="520" y="100"></rect>
+<path d="M 520 100 L 800 100 L 800 290 L 520 290 Z" fill="none" stroke="#8aebff" stroke-width="2.5"></path>
+<text class="font-inter text-[11px] font-bold uppercase tracking-widest opacity-80" fill="#8aebff" x="535" y="125">RÉSERVE HYDROGÈNE - SECTEUR 04</text>
+<!-- Couloir Principal Est-Ouest (18.00 m) -->
+<rect fill="#151b2d" height="180" width="1040" x="80" y="290"></rect>
+<line stroke="#8aebff" stroke-width="3" x1="80" x2="1120" y1="290" y2="290"></line>
+<line stroke="#8aebff" stroke-width="3" x1="80" x2="1120" y1="470" y2="470"></line>
+<!-- Murs de structure épais pointillés -->
+<line stroke="#2e3447" stroke-dasharray="4,4" stroke-width="1.2" x1="80" x2="1120" y1="270" y2="270"></line>
+<line stroke="#2e3447" stroke-dasharray="4,4" stroke-width="1.2" x1="80" x2="1120" y1="490" y2="490"></line>
+<!-- Décrochés et obstacles -->
+<rect fill="#23293c" height="60" stroke="#8aebff" stroke-width="1.5" width="30" x="420" y="310"></rect>
+<rect fill="#23293c" height="60" stroke="#8aebff" stroke-width="1.5" width="40" x="740" y="390"></rect>
+<text class="font-inter text-[11px] font-bold uppercase tracking-wider" fill="#bbc9cd" x="415" y="390">ABRI // CAISSE RENFORCÉE</text>
+<text class="font-inter text-[11px] font-bold uppercase tracking-wider" fill="#bbc9cd" x="735" y="470">CONSOLE BLINDÉE</text>
+<!-- Portes & Accès -->
+<!-- Porte Sas Maintenance -->
+<line stroke="#020617" stroke-width="5" x1="220" x2="280" y1="290" y2="290"></line>
+<path d="M 220 290 A 60 60 0 0 1 280 230" fill="none" stroke="#22d3ee" stroke-dasharray="3,3" stroke-width="1.5"></path>
+<line stroke="#22d3ee" stroke-width="2" x1="220" x2="280" y1="290" y2="230"></line>
+<!-- Porte blindée #02 [VERROUILLÉE] -->
+<line stroke="#020617" stroke-width="5" x1="620" x2="700" y1="290" y2="290"></line>
+<rect fill="#f59e0b" height="8" stroke="#020617" stroke-width="1" width="70" x="625" y="286"></rect>
+<text class="font-inter text-[11px] uppercase font-bold" fill="#f59e0b" x="600" y="278">PORTE BLINDÉE #02 [VERROUILLÉE]</text>
+<!-- Sas hermétique section 9 -->
+<line stroke="#ef4444" stroke-dasharray="6,3" stroke-width="3" x1="980" x2="980" y1="290" y2="470"></line>
+<text class="font-inter text-[11px] uppercase font-bold tracking-wider" fill="#ef4444" transform="rotate(90 985 385)" x="985" y="385">SAS HERMÉTIQUE SECTION 9</text>
+</g>
+<!-- Cote télémétrique du couloir (Space Mono) -->
+<g id="annotations">
+<line stroke="#8aebff" stroke-width="1.2" x1="100" x2="960" y1="510" y2="510"></line>
+<line stroke="#8aebff" stroke-width="1.5" x1="100" x2="100" y1="500" y2="520"></line>
+<line stroke="#8aebff" stroke-width="1.5" x1="960" x2="960" y1="500" y2="520"></line>
+<text class="font-mono text-[14px] uppercase font-bold tracking-widest text-center" fill="#8aebff" x="460" y="528">
+                  COULOIR EST — 18.00 M
+                </text>
+</g>
+<!-- LIGNE DE VISÉE : 8,5 M // VUE DÉGAGÉE -->
+<g id="line-of-sight">
+<line opacity="0.9" stroke="#22d3ee" stroke-dasharray="5,4" stroke-width="2" x1="280" x2="880" y1="380" y2="360"></line>
+<rect fill="#070d1f" height="26" stroke="#22d3ee" stroke-width="1" width="175" x="515" y="355"></rect>
+<text class="font-mono text-[13px] uppercase font-bold" fill="#22d3ee" x="525" y="373">
+                  8,5 M // VUE DÉGAGÉE
+                </text>
+</g>
+<!-- 3 PIONS TACTIQUES -->
+<g class="cursor-pointer" id="pawns">
+<!-- PION 1 : PJ - Deckard -->
+<g id="token-deckard" transform="translate(280, 380)">
+<circle cx="0" cy="0" fill="#151b2d" r="28" stroke="#22d3ee" stroke-width="3"></circle>
+<circle cx="0" cy="0" fill="#005763" r="20"></circle>
+<text class="font-orbitron text-[16px] font-bold" fill="#f8fafc" text-anchor="middle" x="0" y="5">D</text>
+<circle class="animate-spin" cx="0" cy="0" fill="none" r="32" stroke="#22d3ee" stroke-dasharray="4,2" stroke-width="1" style="transform-origin: 0 0; animation-duration: 12s;"></circle>
+<rect fill="#070d1f" height="24" stroke="#22d3ee" stroke-width="1" width="130" x="-65" y="38"></rect>
+<text class="font-inter text-[11px] font-bold tracking-wider" fill="#8aebff" text-anchor="middle" x="0" y="54">PJ - DECKARD</text>
+</g>
+<!-- PION 2 : PJ - Gaff -->
+<g id="token-gaff" transform="translate(180, 420)">
+<circle cx="0" cy="0" fill="#151b2d" r="26" stroke="#8aebff" stroke-width="2.5"></circle>
+<circle cx="0" cy="0" fill="#1e293b" r="18"></circle>
+<text class="font-orbitron text-[15px] font-bold" fill="#8aebff" text-anchor="middle" x="0" y="5">G</text>
+<rect fill="#070d1f" height="24" stroke="#8aebff" stroke-width="1" width="110" x="-55" y="34"></rect>
+<text class="font-inter text-[11px] font-bold tracking-wider" fill="#8aebff" text-anchor="middle" x="0" y="50">PJ - GAFF</text>
+</g>
+<!-- PION 3 : Hostile - Réplicant -->
+<g id="token-hostile" transform="translate(880, 360)">
+<circle cx="0" cy="0" fill="#151b2d" r="28" stroke="#ef4444" stroke-width="3"></circle>
+<circle cx="0" cy="0" fill="#93000a" r="20"></circle>
+<line stroke="#ffb4ab" stroke-width="2" x1="-14" x2="14" y1="0" y2="0"></line>
+<line stroke="#ffb4ab" stroke-width="2" x1="0" x2="0" y1="-14" y2="14"></line>
+<circle cx="0" cy="0" fill="none" r="10" stroke="#ffb4ab" stroke-width="1"></circle>
+<rect fill="#070d1f" height="24" stroke="#ef4444" stroke-width="1" width="155" x="-77.5" y="38"></rect>
+<text class="font-inter text-[11px] font-bold tracking-wider" fill="#ef4444" text-anchor="middle" x="0" y="54">HOSTILE - RÉPLICANT</text>
+</g>
+</g>
+</svg>
+<!-- Traceur tactile direct Canvas -->
+<canvas class="absolute inset-0 w-full h-full z-10 touch-none pointer-events-auto" id="drawing-canvas"></canvas>
+<!-- Badge Télémétrique Statut Tablette Maître -->
+<div class="absolute top-3 right-3 bg-surface-container-low px-3 py-2 flex items-center gap-2.5 z-20 border border-rpg-border shadow-md">
+<span class="w-2.5 h-2.5 bg-rpg-success animate-pulse"></span>
+<div class="flex flex-col">
+<span class="font-inter text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">FLUX TABLETTE MAÎTRE</span>
+<span class="font-mono text-[11px] uppercase font-bold text-rpg-success tracking-wider">CANAL #01 // LATENCE 8MS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Volet Inférieur Horizontal Dédié au Contrôle des Traits, Couleurs, Mesure et Prévisualisation Joueurs -->
+<div class="flex-none bg-surface-container-high px-margin py-2.5 z-30 border-t border-rpg-border flex flex-wrap items-center justify-between gap-space-md shadow-2xl">
+<!-- Bloc 1: Sélecteur d'épaisseur tactile -->
+<div class="flex items-center gap-2 bg-surface-container-low p-1 border border-rpg-border">
+<span class="font-inter text-[11px] text-on-surface-variant uppercase px-2 font-bold tracking-wider">ÉPAISSEUR:</span>
+<button class="size-btn h-11 px-3.5 bg-transparent text-on-surface hover:bg-surface-variant font-inter text-[11px] uppercase tracking-wider transition-colors flex items-center gap-2 border border-transparent" data-width="2" type="button">
+<span class="w-1.5 h-1.5 bg-current inline-block"></span>
+<span class="font-mono font-bold">2PX</span>
+</button>
+<button class="size-btn active-size h-11 px-3.5 bg-primary-container text-rpg-accent-contrast font-inter text-[11px] uppercase font-bold tracking-wider transition-colors flex items-center gap-2 border border-primary-container" data-width="5" type="button">
+<span class="w-2.5 h-2.5 bg-current inline-block"></span>
+<span class="font-mono font-bold">5PX</span>
+</button>
+<button class="size-btn h-11 px-3.5 bg-transparent text-on-surface hover:bg-surface-variant font-inter text-[11px] uppercase tracking-wider transition-colors flex items-center gap-2 border border-transparent" data-width="10" type="button">
+<span class="w-3.5 h-3.5 bg-current inline-block"></span>
+<span class="font-mono font-bold">10PX</span>
+</button>
+</div>
+<!-- Bloc 2: Nuancier direct avec cibles tactiles de 36px -->
+<div class="flex items-center gap-2 bg-surface-container-low p-1 border border-rpg-border">
+<span class="font-inter text-[11px] text-on-surface-variant uppercase px-2 font-bold tracking-wider">COULEUR:</span>
+<div class="flex items-center gap-1.5">
+<!-- Cyan Tactique -->
+<button class="color-btn active-color w-9 h-9 bg-primary-container flex items-center justify-center border-2 border-white hover:scale-105 transition-transform" data-color="#06b6d4" title="Cyan Tactique" type="button">
+<span class="material-symbols-outlined text-rpg-accent-contrast text-[20px] font-bold">check</span>
+</button>
+<!-- Blanc Craie -->
+<button class="color-btn w-9 h-9 bg-rpg-text flex items-center justify-center border border-rpg-border hover:scale-105 transition-transform" data-color="#f8fafc" title="Blanc Craie" type="button">
+<span class="material-symbols-outlined text-rpg-accent-contrast text-[20px] font-bold hidden">check</span>
+</button>
+<!-- Rouge Alerte -->
+<button class="color-btn w-9 h-9 bg-rpg-danger flex items-center justify-center border border-rpg-border hover:scale-105 transition-transform" data-color="#ef4444" title="Rouge Alerte" type="button">
+<span class="material-symbols-outlined text-white text-[20px] font-bold hidden">check</span>
+</button>
+<!-- Jaune Ambre -->
+<button class="color-btn w-9 h-9 bg-rpg-warning flex items-center justify-center border border-rpg-border hover:scale-105 transition-transform" data-color="#f59e0b" title="Jaune Ambre" type="button">
+<span class="material-symbols-outlined text-rpg-accent-contrast text-[20px] font-bold hidden">check</span>
+</button>
+<!-- Vert Émeraude -->
+<button class="color-btn w-9 h-9 bg-rpg-success flex items-center justify-center border border-rpg-border hover:scale-105 transition-transform" data-color="#10b981" title="Vert Émeraude" type="button">
+<span class="material-symbols-outlined text-rpg-accent-contrast text-[20px] font-bold hidden">check</span>
+</button>
+</div>
+</div>
+<!-- Bloc 3: Bascule Règle de mesure tactile -->
+<div class="flex items-center">
+<button class="h-11 px-space-md bg-surface-container-low hover:bg-surface-variant text-on-surface font-inter text-[11px] uppercase tracking-wider flex items-center gap-2 transition-colors border border-rpg-border shadow-sm" id="btn-measure" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary-container">straighten</span>
+<span class="font-bold">RÈGLE / MESURE RAPIDE</span>
+<span class="font-mono text-[11px] text-on-surface-variant font-bold ml-1" id="measure-status">[OFF]</span>
+</button>
+</div>
+<!-- Bloc 4: Encart Prévisualisation Compacte 'RETOUR JOUEURS / PROJECTION' -->
+<div class="flex items-center gap-3 bg-surface-container-lowest px-2.5 py-1 border border-rpg-border shadow-inner">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-inter text-[11px] font-bold uppercase tracking-wider text-primary">RETOUR JOUEURS</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-tight">VUE DIFFUSÉE TACTIQUE</span>
+</div>
+<!-- Miniature dynamique stylisée de l'écran projeté -->
+<div class="relative w-28 h-11 bg-surface-container-low border border-primary-container/40 overflow-hidden flex items-center justify-center">
+<div class="absolute inset-0 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:6px_6px] opacity-25"></div>
+<!-- Mini corridor blueprint visual -->
+<div class="relative w-full h-full flex items-center justify-around px-1">
+<div class="w-2.5 h-2.5 border border-primary rounded-none"></div>
+<div class="w-7 h-0.5 bg-primary/70"></div>
+<div class="w-2 h-2 bg-rpg-danger"></div>
+</div>
+<span class="absolute bottom-0 right-1 font-mono text-[11px] text-primary-container leading-none opacity-80">1:1</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Script d'interaction tactile et moteur de dessin direct -->
+<script>
+    (function () {
+      const canvas = document.getElementById('drawing-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let currentTool = 'pen';
+      let strokeWidth = 5;
+      let strokeColor = '#06b6d4';
+      let isDrawing = false;
+      let measureActive = false;
+
+      function resizeCanvas() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      function getCoordinates(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      }
+
+      function startDraw(e) {
+        if (measureActive) return;
+        isDrawing = true;
+        const { x, y } = getCoordinates(e);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      }
+
+      function draw(e) {
+        if (!isDrawing || measureActive) return;
+        const { x, y } = getCoordinates(e);
+
+        if (currentTool === 'eraser') {
+          ctx.strokeStyle = '#070d1f';
+          ctx.lineWidth = strokeWidth * 4;
+        } else {
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = strokeWidth;
+        }
+        ctx.lineCap = 'square';
+        ctx.lineJoin = 'miter';
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+
+      function endDraw() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        ctx.closePath();
+      }
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      window.addEventListener('mouseup', endDraw);
+
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+      window.addEventListener('touchend', endDraw);
+
+      // Gestion des boutons d'outils verticaux
+      const toolButtons = document.querySelectorAll('.tool-btn');
+      toolButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          toolButtons.forEach(b => {
+            b.classList.remove('bg-primary-container', 'text-rpg-accent-contrast', 'border-primary-container');
+            b.classList.add('bg-surface-container-high', 'text-on-surface', 'border-rpg-border');
+          });
+          btn.classList.add('bg-primary-container', 'text-rpg-accent-contrast', 'border-primary-container');
+          btn.classList.remove('bg-surface-container-high', 'text-on-surface', 'border-rpg-border');
+          currentTool = btn.dataset.tool;
+        });
+      });
+
+      // Gestion de la sélection d'épaisseur
+      const sizeButtons = document.querySelectorAll('.size-btn');
+      sizeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeButtons.forEach(b => {
+            b.classList.remove('bg-primary-container', 'text-rpg-accent-contrast', 'border-primary-container');
+            b.classList.add('bg-transparent', 'text-on-surface', 'border-transparent');
+          });
+          btn.classList.add('bg-primary-container', 'text-rpg-accent-contrast', 'border-primary-container');
+          btn.classList.remove('bg-transparent', 'text-on-surface', 'border-transparent');
+          strokeWidth = parseInt(btn.dataset.width, 10);
+        });
+      });
+
+      // Gestion du nuancier de couleur
+      const colorButtons = document.querySelectorAll('.color-btn');
+      colorButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          colorButtons.forEach(b => {
+            b.classList.remove('border-2', 'border-white');
+            b.classList.add('border', 'border-rpg-border');
+            const check = b.querySelector('.material-symbols-outlined');
+            if (check) check.classList.add('hidden');
+          });
+          btn.classList.add('border-2', 'border-white');
+          btn.classList.remove('border-rpg-border');
+          const check = btn.querySelector('.material-symbols-outlined');
+          if (check) check.classList.remove('hidden');
+          strokeColor = btn.dataset.color;
+          if (currentTool === 'eraser') {
+            const penBtn = document.querySelector('[data-tool="pen"]');
+            if (penBtn) penBtn.click();
+          }
+        });
+      });
+
+      // Effacer tout le croquis
+      const clearBtn = document.getElementById('btn-clear');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          if (confirm('EFFACER TOUT LE CROQUIS TACTILE ?')) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+        });
+      }
+
+      // Règle / Mesure rapide
+      const measureBtn = document.getElementById('btn-measure');
+      const measureStatus = document.getElementById('measure-status');
+      if (measureBtn && measureStatus) {
+        measureBtn.addEventListener('click', () => {
+          measureActive = !measureActive;
+          if (measureActive) {
+            measureStatus.textContent = '[ACTIF - 1M:30PX]';
+            measureStatus.classList.remove('text-on-surface-variant');
+            measureStatus.classList.add('text-primary-container');
+            measureBtn.classList.add('bg-surface-variant', 'border-primary-container');
+          } else {
+            measureStatus.textContent = '[OFF]';
+            measureStatus.classList.add('text-on-surface-variant');
+            measureStatus.classList.remove('text-primary-container');
+            measureBtn.classList.remove('bg-surface-variant', 'border-primary-container');
+          }
+        });
+      }
+
+      // Projeter aux joueurs toggle
+      const projectBtn = document.getElementById('btn-project');
+      if (projectBtn) {
+        let projecting = true;
+        projectBtn.addEventListener('click', () => {
+          projecting = !projecting;
+          if (projecting) {
+            projectBtn.className = 'h-11 px-space-lg bg-primary-container hover:bg-primary-fixed text-rpg-accent-contrast font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-space-sm transition-all border border-primary-container active:scale-[0.98]';
+            projectBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">cast_connected</span><span>📺 PROJETER AUX JOUEURS</span><span class="inline-flex w-2.5 h-2.5 bg-rpg-accent-contrast animate-ping"></span>';
+          } else {
+            projectBtn.className = 'h-11 px-space-lg bg-surface-container-high text-on-surface hover:bg-surface-variant font-inter text-[11px] font-bold uppercase tracking-wider flex items-center gap-space-sm transition-all border border-rpg-border';
+            projectBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">cast</span><span>PROJECTION EN PAUSE</span>';
+          }
+        });
+      }
+
+      // Actions Annuler / Rétablir
+      const undoBtn = document.getElementById('btn-undo');
+      if (undoBtn) {
+        undoBtn.addEventListener('click', () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+      }
+    })();
+  </script>
+</body></html>

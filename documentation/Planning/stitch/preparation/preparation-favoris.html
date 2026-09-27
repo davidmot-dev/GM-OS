@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"rpg-accent-contrast":"#020617","tertiary":"#d2ddf5","surface":"#0c1324","surface-container-highest":"#2e3447","primary-fixed":"#a2eeff","secondary-fixed":"#dae2fd","on-secondary-fixed-variant":"#3f465c","outline":"#859397","rpg-text":"#f8fafc","error":"#ffb4ab","secondary-fixed-dim":"#bec6e0","background":"#0c1324","on-secondary":"#283044","tertiary-container":"#b6c1d9","on-primary":"#00363e","surface-container-high":"#23293c","rpg-accent":"#22d3ee","on-secondary-fixed":"#131b2e","rpg-info":"#3b82f6","primary-container":"#22d3ee","on-error":"#690005","rpg-success":"#10b981","secondary":"#bec6e0","on-primary-fixed-variant":"#004e5a","surface-container":"#191f31","on-tertiary-fixed-variant":"#3c475a","on-background":"#dce1fb","inverse-surface":"#dce1fb","surface-container-low":"#151b2d","on-primary-fixed":"#001f25","on-secondary-container":"#adb4ce","error-container":"#93000a","on-tertiary":"#263143","inverse-on-surface":"#2a3043","outline-variant":"#3c494c","secondary-container":"#3f465c","rpg-border":"#1e293b","primary-fixed-dim":"#2fd9f4","surface-container-lowest":"#070d1f","tertiary-fixed-dim":"#bcc7de","surface-dim":"#0c1324","surface-tint":"#2fd9f4","tertiary-fixed":"#d8e3fb","rpg-bg":"#020617","surface-bright":"#33394c","rpg-surface-2":"#1e293b","rpg-on-status":"#020617","rpg-surface":"#0f172a","on-error-container":"#ffdad6","primary":"#8aebff","on-tertiary-fixed":"#111c2d","on-surface":"#dce1fb","on-tertiary-container":"#444f63","rpg-danger":"#ef4444","surface-variant":"#2e3447","on-primary-container":"#005763","rpg-muted":"#898c95","rpg-warning":"#f59e0b","on-surface-variant":"#bbc9cd","inverse-primary":"#006877"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xs":"4px","space-md":"12px","space-xl":"24px","gutter":"12px","margin":"16px","space-sm":"8px","space-lg":"16px"},"fontFamily":{"number-lg":["Space Mono"],"number-md":["Space Mono"],"title-md":["Syne"],"body-md":["Space Mono"],"label-xs":["Space Mono"],"label-sm":["Space Mono"],"display-md":["Syne"],"display-lg":["Syne"],"body-sm":["Space Mono"]},"fontSize":{"number-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"number-md":["16px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"700"}],"title-md":["17px",{"lineHeight":"22px","letterSpacing":"0.08em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.18em","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.14em","fontWeight":"700"}],"display-md":["24px",{"lineHeight":"30px","letterSpacing":"0.05em","fontWeight":"700"}],"display-lg":["34px",{"lineHeight":"40px","letterSpacing":"0.06em","fontWeight":"800"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"400"}]}}}}</script></head><body class="bg-rpg-bg text-on-surface font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest z-50 flex items-center justify-between px-margin border-b border-rpg-border"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><span class="w-2.5 h-2.5 bg-rpg-accent animate-pulse"></span><span class="font-title-md text-title-md text-primary tracking-widest">GM-OS // NEXUS PROTOCOL</span><span class="font-label-xs text-label-xs px-space-xs py-0.5 bg-surface-container text-rpg-accent border border-rpg-border uppercase">v6.4.2-LST</span></div><div class="h-6 w-px bg-rpg-border"></div><div class="flex items-center gap-space-xs font-label-xs text-label-xs text-rpg-success uppercase tracking-wider"><span class="w-1.5 h-1.5 bg-rpg-success"></span>SYNC: NOMINAL (18MS)</div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 border border-rpg-border"><span class="material-symbols-outlined text-rpg-accent text-[16px]">volume_up</span><input aria-label="Master Volume" class="w-20 h-1 bg-surface-container-highest accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="75"/><span class="font-number-md text-number-md text-primary text-[12px]">75%</span></div><button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container border border-rpg-border text-on-surface hover:border-rpg-accent hover:text-rpg-accent transition-colors font-label-sm text-label-sm uppercase tracking-wider"><span class="material-symbols-outlined text-[16px]">chat</span>FOCUS CHAT</button><div class="flex items-center border border-rpg-border p-0.5 bg-surface-container-lowest"><button class="px-space-md py-1 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors">[ATELIER]</button><span class="text-rpg-border">|</span><button class="px-space-md py-1 font-label-sm text-label-sm uppercase tracking-wider bg-primary-container text-on-primary-container font-bold">[TABLE]</button></div><button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container-high border border-rpg-accent/40 text-primary hover:bg-surface-bright transition-colors font-label-sm text-label-sm uppercase tracking-wider"><span class="material-symbols-outlined text-[16px]">hub</span>CONNECTER JOUEURS</button><button class="flex items-center gap-space-xs px-space-md py-1.5 bg-rpg-danger text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 transition-opacity"><span class="material-symbols-outlined text-[16px]">power_settings_new</span>STOP ALL</button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><aside class="fixed left-0 top-16 bottom-0 w-[220px] bg-surface-container-lowest border-r border-rpg-border z-40 flex flex-col justify-between overflow-y-auto"><div class="p-space-sm space-y-space-md"><section><div class="px-space-sm py-1 font-label-xs text-label-xs text-outline uppercase tracking-widest flex items-center justify-between"><span>AVENTURE</span><span class="material-symbols-outlined text-[14px]">swords</span></div><nav class="mt-1 space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold"><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="cockpit-session" href="#">Cockpit / Session</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="combat-os" href="#">Combat-OS</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="dice-os" href="#">Dice-OS</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="generateur-pnj" href="#">Générateur PNJ</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="cartographie" href="#">Cartographie</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="trame-narrative" href="#">Trame narrative</a></nav></section><div class="h-px bg-rpg-border"></div><section><div class="px-space-sm py-1 font-label-xs text-label-xs text-outline uppercase tracking-widest flex items-center justify-between"><span>AUDIO</span><span class="material-symbols-outlined text-[14px]">graphic_eq</span></div><nav class="mt-1 space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold"><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="musique" href="#">Musique</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="effets-sonores" href="#">Effets sonores</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="ambiances" href="#">Ambiances</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="voice-os" href="#">Voice-OS</a></nav></section><div class="h-px bg-rpg-border"></div><section><div class="px-space-sm py-1 font-label-xs text-label-xs text-outline uppercase tracking-widest flex items-center justify-between"><span>OUTILS / SYSTÈME</span><span class="material-symbols-outlined text-[14px]">terminal</span></div><nav class="mt-1 space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold"><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="mediatheque" href="#">Médiathèque</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="image-os" href="#">Image-OS</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="horloge-temps" href="#">Horloge &amp; Temps</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="atlas-lieux" href="#">Atlas &amp; Lieux</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="tables-aleatoires" href="#">Tables aléatoires</a></nav></section><div class="h-px bg-rpg-border"></div><section><div class="px-space-sm py-1 font-label-xs text-label-xs text-outline uppercase tracking-widest flex items-center justify-between"><span>GLOBAL</span><span class="material-symbols-outlined text-[14px]">memory</span></div><nav class="mt-1 space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold"><a aria-current="page" class="block px-space-sm py-1.5 transition-colors tracking-wide bg-primary-container text-on-primary-container font-bold" data-path="favoris" href="#">Favoris</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="nexus-wiki" href="#">Nexus Wiki</a><a class="block px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors tracking-wide" data-path="cortex-ia" href="#">Cortex IA</a></nav></section></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-low"><div class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-wider flex items-center justify-between"><span>GRID RESOLUTION</span><span>1440×900</span></div><div class="font-label-xs text-label-xs text-primary uppercase tracking-widest mt-1">TACTICAL NEXUS OK</div></div></aside><div class="pl-[220px]"><main class="w-full pt-16 bg-rpg-bg min-h-screen"><div class="flex flex-col w-full">
+<!-- REGIE HEADER SECTION -->
+<section class="bg-surface-container-lowest p-margin">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-sm mb-1">
+<span class="inline-block w-2 h-2 bg-rpg-accent"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted">MODULE OPÉRATIONNEL ACTIF</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-primary tracking-wider uppercase">FAVORIS DE CAMPAGNE // G11</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-1">ACCÈS RAPIDE AUX ENTITÉS CLÉS // ANGES DE FEU — BLADE RUNNER RPG</p>
+</div>
+<div class="flex flex-wrap items-center gap-space-md">
+<!-- Recherche -->
+<div class="relative flex items-center bg-rpg-bg px-space-md py-2 w-72">
+<span class="material-symbols-outlined text-outline text-[18px] mr-2">search</span>
+<input class="bg-transparent text-on-surface font-body-sm text-body-sm w-full focus:outline-none placeholder-outline" placeholder="Rechercher dans les favoris..." type="text"/>
+</div>
+<!-- Sélecteur de tri -->
+<button class="h-11 px-space-md bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-space-xs hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">swap_vert</span>
+<span>Tri : Récents</span>
+<span class="material-symbols-outlined text-[16px] text-outline ml-1">expand_more</span>
+</button>
+<!-- Exporter -->
+<button class="h-11 px-space-md bg-surface-container-high text-on-surface hover:text-rpg-accent hover:bg-surface-bright transition-colors font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>📥 Exporter</span>
+</button>
+<!-- Badge d'état -->
+<div class="h-11 px-space-md bg-surface-container-highest text-rpg-warning font-label-xs text-label-xs tracking-widest uppercase flex items-center gap-space-xs font-bold">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+<span>12 FAVORIS ÉPINGLÉS</span>
+</div>
+</div>
+</div>
+</section>
+<!-- CONTENT WORKSPACE -->
+<div class="flex flex-col lg:flex-row gap-gutter p-margin">
+<!-- COLONNE GAUCHE (280px) -->
+<aside class="w-full lg:w-[280px] shrink-0 flex flex-col gap-space-lg">
+<!-- Bouton Action Primaire -->
+<button class="h-11 w-full bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase tracking-widest font-bold flex items-center justify-center gap-space-xs shadow-md hover:opacity-90 active:scale-[0.99] transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>+ NOUVELLE ENTRÉE</span>
+</button>
+<!-- Section Filtres Par Entité -->
+<div class="bg-surface-container p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-widest font-bold">FILTRES PAR ENTITÉ</span>
+<span class="material-symbols-outlined text-[14px] text-outline">tune</span>
+</div>
+<nav class="flex flex-col gap-1">
+<button class="w-full text-left px-space-sm py-2 bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase tracking-wider font-bold flex items-center justify-between">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">apps</span>
+<span>Toutes les entités</span>
+</span>
+<span class="font-number-md text-number-md text-[13px]">[12]</span>
+</button>
+<button class="w-full text-left px-space-sm py-2 bg-surface-container-high text-on-surface hover:text-rpg-accent hover:bg-surface-bright transition-colors font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-between">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">person</span>
+<span>PNJ</span>
+</span>
+<span class="font-number-md text-number-md text-[13px] text-outline">[4]</span>
+</button>
+<button class="w-full text-left px-space-sm py-2 bg-surface-container-high text-on-surface hover:text-rpg-accent hover:bg-surface-bright transition-colors font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-between">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">domain</span>
+<span>Lieux</span>
+</span>
+<span class="font-number-md text-number-md text-[13px] text-outline">[3]</span>
+</button>
+<button class="w-full text-left px-space-sm py-2 bg-surface-container-high text-on-surface hover:text-rpg-accent hover:bg-surface-bright transition-colors font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-between">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">inventory_2</span>
+<span>Objets</span>
+</span>
+<span class="font-number-md text-number-md text-[13px] text-outline">[3]</span>
+</button>
+<button class="w-full text-left px-space-sm py-2 bg-surface-container-high text-on-surface hover:text-rpg-accent hover:bg-surface-bright transition-colors font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-between">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">menu_book</span>
+<span>Lore</span>
+</span>
+<span class="font-number-md text-number-md text-[13px] text-outline">[2]</span>
+</button>
+</nav>
+</div>
+<!-- Section Dossiers -->
+<div class="bg-surface-container p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-widest font-bold">DOSSIERS TACTIQUES</span>
+<span class="material-symbols-outlined text-[14px] text-outline">folder_open</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Dossier 1 Déployé -->
+<div class="bg-surface-container-high p-space-sm">
+<div class="flex items-center justify-between text-primary font-label-sm text-label-sm uppercase tracking-wider font-bold cursor-pointer">
+<span class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">folder</span>
+<span class="truncate">📁 Enquête Bradbury &amp; Tyrell</span>
+</span>
+<span class="font-number-md text-number-md text-[12px] bg-surface-container px-1 text-primary">7</span>
+</div>
+<div class="mt-2 pl-4 text-outline font-label-xs text-label-xs uppercase tracking-wide flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-rpg-success inline-block"></span>
+<span>Dossier actif</span>
+</div>
+</div>
+<!-- Dossier 2 -->
+<div class="bg-surface-container-low p-space-sm hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<span class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-[16px] text-outline">folder</span>
+<span class="truncate">📁 Pègre &amp; Marché Noir Animoid</span>
+</span>
+<span class="font-number-md text-number-md text-[12px] text-outline">5</span>
+</div>
+</div>
+</div>
+<button class="mt-space-xs text-left px-space-xs py-1 text-outline hover:text-rpg-accent transition-colors font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">create_new_folder</span>
+<span>+ Nouveau dossier</span>
+</button>
+</div>
+<!-- Métriques de charge -->
+<div class="bg-surface-container-low p-space-md flex flex-col gap-space-xs">
+<div class="flex justify-between items-center text-outline font-label-xs text-label-xs uppercase">
+<span>ALLOCATION MÉMOIRE</span>
+<span class="font-number-md text-number-md text-rpg-accent text-[12px]">68%</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest">
+<div class="h-full bg-rpg-accent w-[68%]"></div>
+</div>
+</div>
+</aside>
+<!-- ZONE PRINCIPALE : GRILLE DES FAVORIS (12 ENTRÉES) -->
+<main class="flex-1 flex flex-col gap-space-xl">
+<!-- DOSSIER 1 : ENQUÊTE BRADBURY & TYRELL (7 ÉLÉMENTS) -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between bg-surface-container-high px-space-md py-2">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">snippet_folder</span>
+<h2 class="font-title-md text-title-md text-primary uppercase tracking-wide">DOSSIER 1 // Enquête Bradbury &amp; Tyrell</h2>
+</div>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-outline">7 ÉLÉMENTS ÉPINGLÉS</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- 1. Roy Batty -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Futuristic cyberpunk portrait of Roy Batty, platinum hair, piercing blue eyes in a dark neon-drenched dystopian rain of Los Angeles 2019, highly dramatic lighting with cyan backlight and hard brutalist tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1KtwQRs3UGOSHY6vVXgHsEWbyxXPuWdTCqjqYlaDteaVJqmSkeJ6-cELCXsgl9P8ZaI63gWlmZu5x15MY7XVJiSOIukTlwTZFI7s15LHT6o-vW0aLcFm4y2TjR4g0mb9WxE5FDRTd8XgioAvzxuLrGLOk4ki-yCxF28Fgo9sI_Fsryop9fXN-5DLYcsa-ipkZq_T69v20TzjjD9kBWsaosZujKiv877-r3t2S3909quHyxO7neg0xVA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-primary-container px-2 py-0.5 text-on-primary-container font-label-xs text-label-xs uppercase font-bold">
+                PNJ
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Roy Batty</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Replicant Nexus-6 de combat // Leader cellule dissidente</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 2. Tour du LAPD -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Monolithic cyberpunk LAPD police headquarters tower rising into a smoggy dystopian night sky with flying spinners, volumetric neon searchlights cutting through heavy rain." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvYDrM0hQEKVt89qrEpc4hay4gLGUdxpquCAUJ5ovdn5EDR2CHO50d7u4t7nS2-5cHLZSMRNDmRoeTyvNQHa8w1W39I0Viy5t8CJEigrJXuChlvgUlbYQFMkNR-JbMgABvWqqrNdoyWt_pHW_Dsx-LWbudqz7EFJmoi9ySZgncYoIHbggVGndMivgBbtqS-_wGAUR2Be0UM0RN7BymKlHc_UI6SKFEmMtbuwFlAAcgKyp6jK9soxgAkA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-surface-container-highest px-2 py-0.5 text-on-surface font-label-xs text-label-xs uppercase font-bold">
+                Lieu
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Tour du LAPD</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Quartier général métropolitain // Salle de briefing 4B</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 3. Micro-filtre Tyrell #810 -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Macro cybernetic micro-filter electronic hardware component engraved with Tyrell serial number 810 resting on dark tactical workstation under cold cyan LED spotlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaVgYpyrsoY8Pha9zkJIKtXcGNwKHtLSgH1-4_JPdq1XF0Jr5YYfcw0n1_RP1VlkqyZm_P5ZAz0iNu_frnM8sEYWKU0z8Ry8yeVy9juCyAuaqxJKqIA4vJAaUy_xw2hX9vKAbR_Xgn3ZJlPyC1MJqEex4UCPd83zcLUzrA9GRJPn26lxCH5P5kkXGpACoi6GE0UUnO1Vblake6WDVirNwqLH9_5k2ORXZNnhGeMZX45grJicDTlQTWIA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-secondary-container px-2 py-0.5 text-on-secondary-container font-label-xs text-label-xs uppercase font-bold">
+                Objet
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Micro-filtre Tyrell #810</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Composant respiratoire synthétique // Traces génétiques</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 4. Rachael Tyrell -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Elegant retro-futuristic portrait of Rachael Tyrell with 1940s victory rolls hairstyle, dark shoulder-padded suit, smoking cigarette in dramatic golden amber Venetian blind lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWR2XUMs3LNN2YzrduR0ouBkv4bJrICUb3_jBYccOaVgBK-didveiM0REOHfSb_Yw162-cAljKTg_riATjxFMAtmvutNWu_HsZ1oKTZze9UqAvwjANkmFs_gwy_GLRnCe9XVwtuxGPqpVxFf1kwYy66Yn6ajYPSck-jDVp39_ypt-r2HbKXS2KPt7lu4Mj_2ioMF8PWkcJ1EKs3-WFTYT4QtoudNJvEFoESwHStGpAbhicD07u2M46ng"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-primary-container px-2 py-0.5 text-on-primary-container font-label-xs text-label-xs uppercase font-bold">
+                PNJ
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Rachael Tyrell</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Sujet expérimental // Souvenirs implantés d'Elden Tyrell</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 5. Bradbury Building -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Atmospheric interior view of the decayed Bradbury Building atrium, ornate Victorian iron grillwork, broken glass skylight leaking acidic rain, gloomy shadowy cyberpunk atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1z2ZemLQ2MqYsxUr4E4vZfUPRLYud_Ntby6xJ1q2H6U7gwUbx2-3SDLHvb4xvD8V2VTfjzSODR8W7eYdyqXhBR2SiBIV9HNIxhJ323IWj36dMaPhTPPQ8TyaXZg5J-aU9Csbz_0uYunUIe6cGbOy_4PDh53lPpzmxd6LFI7EDZzyT7dNnb8LXapCLykhzWel-VJP0LJu3om3oO-V_gXwktSFwvPShsQ_LBvue04j1dKUZWseoP-T2gg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-surface-container-highest px-2 py-0.5 text-on-surface font-label-xs text-label-xs uppercase font-bold">
+                Lieu
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Bradbury Building</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Appartement J.F. Sebastian // Verrière délabrée</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 6. Protocole Nexus-8 -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Digital schematic terminal glowing with technical blueprints of cybernetic DNA chains and Nexus-8 longevity specs in sharp cyan and monochrome green wireframe graphics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKmcKbNN1btvgTtY8gXBwV0dN2J5yqytLXJGryF_WFEFlnkalyTtwhE6GV3h2nKLX39wh458elngvxMm8ZNamjE8Gdt-hlBZkMo03PlKlXVxOS6YJGtsc4IxGUtun7x1kZQmccOEvEvWrtn0Vx03F0YKREjJLYbCuUZi-nVu4oYmwhtKt5apjUDXOIKRWjxz-D6JR1DJ8hljDdKU20RSEoKrZ4K5Ft1w-OYfrA3XszuthiTzN53ZPOdw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-surface-variant px-2 py-0.5 text-primary-fixed font-label-xs text-label-xs uppercase font-bold">
+                Lore
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Protocole Nexus-8</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Suppression de la limite de durée de vie de 4 ans // Directive secrète</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 7. Kit de test Voight-Kampff -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Close up of a Voight-Kampff machine with optical sensor eye mechanism, rhythmic bellows expanding, illuminated by amber dial lights on dark metal surface in high detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0UXl13gthPlzjPHASRHyRSkGehXJd-nJ3xwXxqZnBsc7TOPO6hvwYnP_D8loX7RK3Tum4mIxCMu0qIedbB_T7yqttuR45HdP4TsrmTaBoDIGx40J1egsw8IhpniP7Dicjcggw3ArvNTQKaKUplL8re0Jma8edPTSB1jqLe3JSANFwtN2xkjklNZnNC9P_eJS8q9Rqc1hipCCYzSonLGalczDCe8oBej0MNwIXY9YSTJUbvJgsI8u51w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-secondary-container px-2 py-0.5 text-on-secondary-container font-label-xs text-label-xs uppercase font-bold">
+                Objet
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Kit de test Voight-Kampff</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Appareil de mesure des fluctuations pupillaires et capillaires</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- DOSSIER 2 : PÈGRE & MARCHÉ NOIR ANIMOID (5 ÉLÉMENTS) -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between bg-surface-container-high px-space-md py-2">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[20px]">folder_special</span>
+<h2 class="font-title-md text-title-md text-primary uppercase tracking-wide">DOSSIER 2 // Pègre &amp; Marché Noir Animoid</h2>
+</div>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-outline">5 ÉLÉMENTS ÉPINGLÉS</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- 8. L'Aurelian -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Intense cyberpunk character portrait of an animoid black-market cyber-surgeon called L Aurelian, ocular magnification lenses strapped over his forehead, humid neon alley atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVfEJxRyj7wpRsKiRGw-cUhD1tRTOgmihrFNFCCpfRlE0aI22vBVYjhUVT9HSrDSlDpP7o4nPVHM51K4dyP2QbWoQFkODgfQOzPNcZrEHNKY96D6zJT414am3vQkI_Aykovugc89M6QsYOezYmqLa_nbVnxVTESvp1RDTv3kdONhw__JpvIRP1LhpH0yYmqZRIW7WY7X4c1tt-r0h-8JGRoRKgo6reGUDlpqwtoBYg-wombaXcJDbBeg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-primary-container px-2 py-0.5 text-on-primary-container font-label-xs text-label-xs uppercase font-bold">
+                PNJ
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">L'Aurelian</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Courtier clandestin en tissus biotiques synthétiques</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 9. Écaille de serpent synthétique -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Microscopic inspection view of an iridescent synthetic reptile scale held with forensic metal tweezers under an ultraviolet tactical scanner lamp in dark crime lab." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRxLJGlpOhrruoOcxpTYsAms46L6xY8eucHKqoMC3ts4DNpyCnebfSCsDc34aLWUdptuoyb5HPWTZQlwHBoSVm2cJp0H5Mpx6bnFg6Sl9MDpTiLlcNwRBx_gN5qiNVjPHmM8xI-z5WKqo4yjANpfhCUQtETIO3flwK7-sE_7UA7gDI1hIOCaYzIZD9Fx2TQkyjH4-pMMey1E1wAaWLLWZQ_O3Uhhd12VDMST7hEq2AgeJjp9D0csQDEg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-secondary-container px-2 py-0.5 text-on-secondary-container font-label-xs text-label-xs uppercase font-bold">
+                Objet
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Écaille de serpent synthétique</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Numéro de série microscopique 0993217 // Fabriquée par Abdul Ben Hassan</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 10. Hôtel Yukon (Chambre 314) -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Dismal run-down cyberpunk hotel room with flickering neon sign flashing outside the rain-streaked window, bed, antique telephone and dark shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc-yRZP_10RNrWmthsgBCZajthli2LDzXnmUYsr7JW45uSn31JdORiAdpV-7rMw6w85dG-H4Wq6B_0Ugv_fx8PYE4bR1pTdhDXImaJ_Nb57deimIFw8E8zrLDXMAT0QVmQK2TRZOl5jZJxudJjwc0O-R1kjHK__NnhfBZ6mMXhCVzO9JxgsBnL4AEhKy8B1HKgMQbdfL4NAUFX8BA2Qkl0FXAUY0aPhfnSTA7A3WYQiEa1-jTNLhWIWg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-surface-container-highest px-2 py-0.5 text-on-surface font-label-xs text-label-xs uppercase font-bold">
+                Lieu
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Hôtel Yukon (Chambre 314)</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Ancienne planque de Zhora // Écailles et photos retrouvées dans la baignoire</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 11. Gaff -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Cinematic portrait of Gaff holding a cane with an origami tinfoil unicorn in his gloved fingers, stylish dark hat, rainy neon urban backdrop in dark noir aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKz-7UiakGy7Za2Uxalx51xcnbL8vlYjp5LnWDZ8t3mzvg9o-xVXcdykbi6WjOMFsWx-yT9NY76dEuUVeYUrg4U1-GXeGC3-Ai92J_BPNNFoSAK1brAhUVTK01_3CD1ATk5cP1HJqI5a-97XRMAUhXq_UQk37SWgTDyFuwNjcZJYaWKajn23nMMh8xV0Szeixs-yDzZ-MJ48w4BE_6rodpJtDU3SOWpfMcn5bDurqlfXGHivEwTunWoQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-primary-container px-2 py-0.5 text-on-primary-container font-label-xs text-label-xs uppercase font-bold">
+                PNJ
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Gaff</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Officier de liaison LAPD // Maître du jargon Cityspeak</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+<!-- 12. Réseau Clandestine Esper -->
+<article class="bg-rpg-surface hover:bg-surface-container-high transition-all shadow-md flex flex-col">
+<div class="relative h-44 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="A dark retro-futuristic Esper video analysis console displaying layered 3D scan frames, high-density wireframes, CRT scanlines in dark blue and green phosphor glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPScDj2TX9UMnMbBVC0C8yct3EwAii6k0enubA4DBWr-IZabLnsmbclxk5PTihGraWwX3E6fMQZQr3kC1wJjyEzgnxdWOnh9_kU-TBKt50Bf4CMyzfTPlHCK6N5r4s7UBwyWufVqmXy0cmWCpdNxm3xwFG0zqzGTpZCKgliITzW9ODvkon7uTnk4ze2VbWLwtgKXfd5MeADNelf1KLKDF5OE1YhIGHzXAidW8PRJjlO8-4uEMyHiz8Ng"/>
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-transparent to-transparent"></div>
+<button class="absolute top-2 right-2 w-8 h-8 bg-surface-container-lowest/90 flex items-center justify-center text-rpg-warning">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<div class="absolute bottom-2 left-2 bg-surface-variant px-2 py-0.5 text-primary-fixed font-label-xs text-label-xs uppercase font-bold">
+                Lore
+              </div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-text font-bold tracking-wide">Réseau Clandestine Esper</h3>
+<p class="font-body-sm text-body-sm text-outline mt-1 line-clamp-1">Canal de décodage visuel haute fidélité non homologué</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-outline">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONSULTATION</span>
+<span class="font-number-md text-number-md text-[13px] text-rpg-accent">Dernière vue il y a 3 j</span>
+</div>
+</div>
+</article>
+</div>
+</section>
+</main>
+</div>
+</div></main></div></body></html>

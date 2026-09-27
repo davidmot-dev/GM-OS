@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-950 text-slate-100" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // Capture d'État</title>
+<!-- Tailwind CSS CDN with Forms & Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Orbitron, Inter, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Custom Config -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
+          },
+          colors: {
+            cyan: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              950: '#083344',
+            },
+            slate: {
+              850: '#0f172a',
+              900: '#0a0f1d',
+              950: '#020617',
+            },
+            amber: {
+              400: '#fbbf24',
+              950: '#451a03',
+            }
+          },
+          boxShadow: {
+            'cyan-halo': '0 0 25px -4px rgba(6, 182, 212, 0.35), 0 0 1px 1px rgba(6, 182, 212, 0.6)',
+            'cyan-accent': 'inset 0 1px 0 0 rgba(6, 182, 212, 0.7)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Diegetic Styles -->
+<style data-purpose="diegetic-brutalist">
+    /* Brutal Diegetic rules - zero roundings strictly enforced */
+    *, *::before, *::after {
+      border-radius: 0px !important;
+    }
+    
+    /* Subtle scanline effect for Cockpit ambient depth */
+    .cockpit-scanline {
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.03),
+        rgba(0, 255, 0, 0.01),
+        rgba(0, 0, 255, 0.03)
+      );
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
+
+    /* Target selection glow effect */
+    .selected-session-indicator {
+      box-shadow: inset 3px 0 0 0 #06b6d4, 0 0 15px -3px rgba(6, 182, 212, 0.25);
+    }
+  </style>
+<!-- END: Custom Diegetic Styles -->
+</head>
+<body class="h-full w-full overflow-hidden bg-slate-950 font-sans text-slate-200 select-none">
+<!-- BEGIN: Blurred Cockpit Background Simulation -->
+<div aria-hidden="true" class="fixed inset-0 z-0 flex flex-col justify-between p-6 opacity-35 filter blur-[6px] pointer-events-none" data-purpose="cockpit-backdrop">
+<!-- Mock Cockpit Top Nav -->
+<header class="flex items-center justify-between border-b border-slate-800 pb-4">
+<div class="flex items-center space-x-4">
+<div class="h-8 w-8 bg-cyan-500/20 border border-cyan-500"></div>
+<div class="h-4 w-48 bg-slate-800"></div>
+</div>
+<div class="flex space-x-6">
+<div class="h-4 w-20 bg-slate-800"></div>
+<div class="h-4 w-24 bg-cyan-950 border border-cyan-800"></div>
+<div class="h-4 w-16 bg-slate-800"></div>
+</div>
+</header>
+<!-- Mock Cockpit Main Workspace Grid -->
+<main class="grid grid-cols-12 gap-6 my-auto">
+<div class="col-span-3 h-96 bg-slate-900 border border-slate-800"></div>
+<div class="col-span-6 h-96 bg-slate-900 border border-slate-800 flex flex-col p-4 space-y-4">
+<div class="h-8 w-1/3 bg-slate-800"></div>
+<div class="h-48 w-full bg-slate-850 border border-slate-800"></div>
+<div class="h-12 w-full bg-slate-800"></div>
+</div>
+<div class="col-span-3 h-96 bg-slate-900 border border-slate-800"></div>
+</main>
+<!-- Mock Cockpit Footer Indicators -->
+<footer class="flex items-center justify-between border-t border-slate-800 pt-4">
+<div class="h-4 w-64 bg-slate-900"></div>
+<div class="h-4 w-32 bg-slate-900"></div>
+</footer>
+</div>
+<!-- END: Blurred Cockpit Background Simulation -->
+<!-- CRT Grid scanline overlay for diegetic atmosphere -->
+<div class="cockpit-scanline fixed inset-0 z-10"></div>
+<!-- BEGIN: Modal Backdrop Overlay -->
+<div class="fixed inset-0 z-20 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-[8px]" data-purpose="modal-container">
+<!-- BEGIN: Capture State Modal Window -->
+<section aria-labelledby="modal-headline" aria-modal="true" class="w-full max-w-[700px] bg-slate-900 border border-slate-800 shadow-cyan-halo relative flex flex-col" data-purpose="capture-modal-panel" role="dialog">
+<!-- Diegetic Top Edge Cyan Line Accenter -->
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></div>
+<!-- BEGIN: Modal Header -->
+<header class="flex items-stretch justify-between border-b border-slate-800 bg-slate-950/60" data-purpose="modal-header">
+<!-- Icon & Title Cluster -->
+<div class="flex items-center space-x-3.5 px-4 py-3.5">
+<!-- Floppy Icon Plate (F4 reference) -->
+<div class="flex items-center justify-center w-8 h-8 bg-cyan-950/70 border border-cyan-500/80 text-cyan-400">
+<svg aria-hidden="true" class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V7l-4-4zm-7 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
+</svg>
+</div>
+<!-- Title & Protocol Code -->
+<div>
+<h1 class="font-display text-[15px] font-bold tracking-wider text-slate-100 uppercase" id="modal-headline">
+              CAPTURE D'ÉTAT <span class="text-cyan-500 font-mono text-sm">//</span> SAUVEGARDER LA CONFIGURATION ACTUELLE
+            </h1>
+<p class="font-mono text-[11px] text-cyan-400/80 uppercase tracking-widest leading-none mt-0.5">
+              SYSTÈME SNAPSHOT INSTANTANÉ • CONSOLE GM
+            </p>
+</div>
+</div>
+<!-- Close / Escape Button -->
+<button aria-label="Fermer la boîte de dialogue" class="flex items-center px-4 space-x-1.5 border-l border-slate-800 text-slate-400 hover:text-cyan-400 hover:bg-slate-800/40 transition-colors duration-150 focus:outline-none focus:bg-slate-800 focus:text-cyan-400" type="button">
+<span class="font-mono text-xs tracking-wider text-slate-500">[Échap]</span>
+<svg aria-hidden="true" class="w-4 h-4 stroke-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="square"></path>
+</svg>
+</button>
+</header>
+<!-- END: Modal Header -->
+<!-- BEGIN: Modal Body Content -->
+<div class="p-6 space-y-6" data-purpose="modal-body">
+<!-- Section: Overview Description -->
+<div class="space-y-3">
+<p class="text-[14px] leading-relaxed text-slate-300 font-normal">
+            Cette action enregistre l'état actif de tous vos modules (Musique, Ambiances, Lumières, Projection média, Cartographie) associé à une séance pour restauration instantanée.
+          </p>
+<!-- Module Pill Badges (Included in snapshot) -->
+<div class="flex flex-wrap gap-2 pt-1" data-purpose="included-modules-summary">
+<!-- Audio Module Badge -->
+<div class="inline-flex items-center space-x-2 px-2.5 py-1 bg-slate-950 border border-slate-800 text-[12px] text-slate-300 font-medium">
+<span class="text-cyan-400 text-sm">♫</span>
+<span>Musique &amp; Ambiances</span>
+</div>
+<!-- Lighting Module Badge -->
+<div class="inline-flex items-center space-x-2 px-2.5 py-1 bg-slate-950 border border-slate-800 text-[12px] text-slate-300 font-medium">
+<span class="text-amber-400 text-sm leading-none">💡</span>
+<span>Light-OS</span>
+</div>
+<!-- Image / Media Projection Badge -->
+<div class="inline-flex items-center space-x-2 px-2.5 py-1 bg-slate-950 border border-slate-800 text-[12px] text-slate-300 font-medium">
+<span class="text-cyan-400 text-sm leading-none">🖼</span>
+<span>Image-OS</span>
+</div>
+<!-- Mapping Badge -->
+<div class="inline-flex items-center space-x-2 px-2.5 py-1 bg-slate-950 border border-slate-800 text-[12px] text-slate-300 font-medium">
+<span class="text-emerald-400 text-sm leading-none">🗺</span>
+<span>Cartographie</span>
+</div>
+</div>
+</div>
+<!-- Section: Session Picker -->
+<div class="space-y-3 pt-1" data-purpose="target-session-selector">
+<div class="flex items-center justify-between">
+<span class="font-display text-xs font-bold tracking-widest uppercase text-slate-400">
+              CHOISIR UNE SÉANCE CIBLE
+            </span>
+<span class="font-mono text-[11px] text-slate-500">
+              [SÉLECTION UNIQUE]
+            </span>
+</div>
+<!-- Sessions List Grid -->
+<div aria-label="Séances prévues disponibles" class="space-y-2" role="radiogroup">
+<!-- Item 1: Session #4 (SELECTED BY DEFAULT) -->
+<label class="relative flex items-center justify-between p-3.5 bg-slate-950 border-2 border-cyan-500 selected-session-indicator cursor-pointer transition-all block group" data-purpose="session-radio-option">
+<input checked="" class="sr-only" name="target_session" type="radio" value="session_4"/>
+<div class="flex items-start space-x-3.5">
+<!-- Clock / Calendar Icon -->
+<div class="mt-0.5 text-cyan-400 flex items-center justify-center w-6 h-6 bg-slate-900 border border-cyan-500/40">
+<svg aria-hidden="true" class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2.5">
+<span class="font-display text-sm font-bold text-slate-100">Séance #4</span>
+<span class="font-mono text-xs text-slate-400">— Samedi 12 septembre 2026</span>
+</div>
+<!-- Status & Replacement Warnings -->
+<div class="flex items-center space-x-2 mt-1.5">
+<span class="px-2 py-0.5 text-[11px] font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-600/60 uppercase">
+                      ACTIVE
+                    </span>
+<span class="px-2 py-0.5 text-[11px] font-mono font-bold bg-amber-950/80 text-amber-400 border border-amber-600/60 uppercase">
+                      ⚠ Instantané existant (sera remplacé)
+                    </span>
+</div>
+</div>
+</div>
+<!-- Selected Tick Marker -->
+<div class="flex items-center justify-center w-5 h-5 border border-cyan-400 bg-cyan-500 text-slate-950">
+<svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="square"></path>
+</svg>
+</div>
+</label>
+<!-- Item 2: Session #5 (PLANNED) -->
+<label class="relative flex items-center justify-between p-3.5 bg-slate-950/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-all block group" data-purpose="session-radio-option">
+<input class="sr-only" name="target_session" type="radio" value="session_5"/>
+<div class="flex items-start space-x-3.5">
+<div class="mt-0.5 text-slate-500 flex items-center justify-center w-6 h-6 bg-slate-900 border border-slate-800">
+<svg aria-hidden="true" class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2.5">
+<span class="font-display text-sm font-semibold text-slate-300">Séance #5</span>
+<span class="font-mono text-xs text-slate-400">— Samedi 26 septembre 2026</span>
+</div>
+<div class="flex items-center space-x-2 mt-1.5">
+<span class="px-2 py-0.5 text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-700 uppercase">
+                      PLANIFIÉE
+                    </span>
+<span class="text-[12px] font-mono text-slate-400">
+                      Aucun instantané enregistré
+                    </span>
+</div>
+</div>
+</div>
+<!-- Unchecked Marker Box -->
+<div class="w-5 h-5 border border-slate-700 bg-slate-900"></div>
+</label>
+<!-- Item 3: Session #3 (COMPLETED) -->
+<label class="relative flex items-center justify-between p-3.5 bg-slate-950/40 border border-slate-800/80 opacity-70 hover:opacity-100 hover:border-slate-700 cursor-pointer transition-all block group" data-purpose="session-radio-option">
+<input class="sr-only" name="target_session" type="radio" value="session_3"/>
+<div class="flex items-start space-x-3.5">
+<div class="mt-0.5 text-slate-600 flex items-center justify-center w-6 h-6 bg-slate-900 border border-slate-800">
+<svg aria-hidden="true" class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2.5">
+<span class="font-display text-sm font-semibold text-slate-400">Séance #3</span>
+<span class="font-mono text-xs text-slate-500">— Samedi 28 août 2026</span>
+</div>
+<div class="flex items-center space-x-2 mt-1.5">
+<span class="px-2 py-0.5 text-[11px] font-mono text-slate-500 bg-slate-900 border border-slate-800 uppercase">
+                      TERMINÉE
+                    </span>
+<span class="text-[12px] font-mono text-slate-500">
+                      Instantané archivé
+                    </span>
+</div>
+</div>
+</div>
+<!-- Unchecked Marker Box -->
+<div class="w-5 h-5 border border-slate-800 bg-slate-900"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- END: Modal Body Content -->
+<!-- BEGIN: Modal Footer -->
+<footer class="flex flex-col bg-slate-950 border-t border-slate-800" data-purpose="modal-footer">
+<!-- Actions Row -->
+<div class="flex items-center justify-between p-4 px-6">
+<!-- Secondary Action Button (Cancel) -->
+<button class="h-[44px] px-6 bg-slate-800 hover:bg-slate-700 text-slate-300 font-display text-xs uppercase font-bold tracking-wider border border-slate-700 transition-colors focus:outline-none focus:border-slate-500 active:bg-slate-900" type="button">
+            Annuler
+          </button>
+<!-- Primary Action Button (Capture) -->
+<button class="h-[44px] px-8 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-display text-xs uppercase font-extrabold tracking-wider border border-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-all flex items-center space-x-2.5 focus:outline-none active:bg-cyan-600" type="button">
+<svg aria-hidden="true" class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V7l-4-4zm-7 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
+</svg>
+<span>CAPTURER L'ÉTAT ACTUEL</span>
+</button>
+</div>
+<!-- Terminal Status Bar Note -->
+<div class="bg-slate-900/90 border-t border-slate-850 px-6 py-1.5 flex items-center justify-between text-[11px] font-mono text-slate-400">
+<div class="flex items-center space-x-2">
+<span class="inline-block w-1.5 h-1.5 bg-emerald-400 animate-pulse"></span>
+<span>Prêt pour l'enregistrement d'état</span>
+</div>
+<span class="text-slate-500 uppercase tracking-widest text-[10px]">SNAPSHOT_ID // AUTO-GEN</span>
+</div>
+</footer>
+<!-- END: Modal Footer -->
+</section>
+<!-- END: Capture State Modal Window -->
+</div>
+<!-- END: Modal Backdrop Overlay -->
+</body></html>

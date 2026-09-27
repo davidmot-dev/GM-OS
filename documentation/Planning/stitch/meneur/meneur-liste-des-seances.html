@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>GM-OS — Chronique Temporelle des Séances</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #020617;
+        font-family: 'Space Mono', monospace;
+      }
+      * {
+        border-radius: 0px !important;
+      }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    input[type='range'] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type='range']::-webkit-slider-runnable-track {
+      background: #1e293b;
+      height: 4px;
+    }
+    input[type='range']::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 12px;
+      width: 6px;
+      background: #22d3ee;
+      margin-top: -4px;
+    }
+    .font-orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+    .timeline-rail {
+      background: linear-gradient(180deg, rgba(34,211,238,0.85) 0%, rgba(34,211,238,0.4) 60%, rgba(30,41,59,0.8) 100%);
+      box-shadow: 0 0 10px rgba(34,211,238,0.25);
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "rpg-bg": "#020617",
+            "rpg-surface": "#0b1220",
+            "rpg-surface-2": "#141e33",
+            "rpg-border": "#1e293b",
+            "rpg-accent": "#22d3ee",
+            "rpg-accent-contrast": "#020617",
+            "rpg-text": "#f8fafc",
+            "rpg-muted": "#94a3b8",
+            "rpg-success": "#10b981",
+            "rpg-warning": "#f59e0b",
+            "rpg-danger": "#ef4444",
+            "rpg-info": "#38bdf8",
+            "on-surface": "#dce1fb",
+            "on-surface-variant": "#cbd5e1"
+          },
+          fontFamily: {
+            display: ["Orbitron", "sans-serif"],
+            mono: ["Space Mono", "monospace"],
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-rpg-bg text-on-surface font-mono select-none antialiased">
+<!-- TOPBAR GM-OS -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-rpg-surface border-b border-rpg-border z-50 flex items-center justify-between px-4">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 bg-rpg-accent shadow-[0_0_8px_#22d3ee] animate-pulse"></div>
+<span class="font-display font-black text-[16px] text-rpg-accent tracking-widest">GM-OS <span class="text-on-surface font-bold">v6</span></span>
+</div>
+<div class="h-4 w-px bg-rpg-border"></div>
+<div class="flex items-center gap-2 text-[11px] text-rpg-muted tracking-widest">
+<span class="text-rpg-accent font-bold">SYS:</span> NEXUS-CHRONO 
+        <span class="px-1.5 py-0.5 bg-rpg-surface-2 text-rpg-success border border-rpg-success/30 font-bold">ONLINE</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden sm:flex items-center gap-2 bg-rpg-surface-2 px-3 py-1 border border-rpg-border">
+<span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span>
+<input class="w-16 h-1 accent-rpg-accent" max="100" min="0" type="range" value="78"/>
+<span class="text-[11px] text-rpg-accent font-bold">78%</span>
+</div>
+<button class="flex items-center gap-1.5 px-3 py-1 bg-rpg-surface-2 border border-rpg-border text-rpg-text text-[11px] font-bold hover:border-rpg-accent transition-colors">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">chat</span>
+<span class="tracking-wider">FOCUS CHAT</span>
+</button>
+<div class="flex items-center border border-rpg-border bg-black/40 p-0.5">
+<button class="px-2.5 py-1 text-[11px] text-rpg-muted hover:text-on-surface transition-colors font-bold tracking-wider">ATELIER</button>
+<button class="px-2.5 py-1 text-[11px] bg-rpg-accent text-rpg-accent-contrast font-black tracking-wider">TABLE</button>
+</div>
+<button class="flex items-center gap-1.5 px-3 py-1 bg-rpg-surface-2 border border-rpg-border text-on-surface text-[11px] font-bold hover:border-rpg-accent transition-colors">
+<span class="material-symbols-outlined text-[15px] text-rpg-info">sensors</span>
+<span class="hidden md:inline tracking-wider">CONNECTER JOUEURS</span>
+<span class="px-1 bg-cyan-950 text-rpg-accent text-[11px] font-bold">4/4</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1 bg-rpg-danger text-rpg-accent-contrast text-[11px] font-black tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-[0_0_8px_rgba(239,68,68,0.4)]">
+<span class="material-symbols-outlined text-[16px]">emergency_home</span>
+<span>STOP ALL</span>
+</button>
+<div class="w-8 h-8 bg-rpg-accent text-rpg-accent-contrast flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+</div>
+</header>
+<!-- SIDEBAR GAUCHE -->
+<aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col justify-between overflow-y-auto">
+<div class="py-3">
+<div class="px-4 pb-2">
+<span class="text-[11px] text-rpg-muted tracking-widest uppercase font-bold">AVENTURE</span>
+</div>
+<nav class="flex flex-col mb-4">
+<a class="flex items-center justify-between px-4 py-2 bg-rpg-accent/10 border-l-2 border-rpg-accent text-rpg-accent font-bold text-[11px]" href="#">
+<span>Cockpit / Session</span>
+<span class="text-[11px] text-rpg-accent">&gt;</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Combat-OS</span>
+<span class="text-[11px] text-rpg-muted">INIT</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Dice-OS</span>
+<span class="text-[11px] text-rpg-muted">3D</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Générateur PNJ</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Cartographie</span>
+<span class="text-[11px] text-rpg-info font-bold">GRID</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Trame narrative</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Deck-OS</span>
+<span class="text-[11px] text-rpg-warning font-bold">TAROT</span>
+</a>
+</nav>
+<div class="px-4 pb-2">
+<span class="text-[11px] text-rpg-muted tracking-widest uppercase font-bold">AUDIO</span>
+</div>
+<nav class="flex flex-col mb-4">
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Musique</span>
+<span class="w-2 h-2 bg-rpg-success"></span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Effets Sonores</span>
+<span class="text-[11px] text-rpg-muted">PAD</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Ambiances</span>
+<span class="text-[11px] text-rpg-muted">LOOP</span>
+</a>
+</nav>
+<div class="px-4 pb-2">
+<span class="text-[11px] text-rpg-muted tracking-widest uppercase font-bold">OUTILS / SYSTÈME</span>
+</div>
+<nav class="flex flex-col">
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Médiathèque</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Horloge &amp; Temps</span>
+<span class="text-[11px] text-rpg-muted">SYNC</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2 text-on-surface-variant text-[11px] hover:bg-rpg-surface-2 hover:text-on-surface border-l-2 border-transparent transition-all" href="#">
+<span>Light-OS</span>
+<span class="text-[11px] text-rpg-warning">DMX</span>
+</a>
+</nav>
+</div>
+<div class="p-3 border-t border-rpg-border bg-black/40">
+<div class="flex items-center justify-between text-[11px] text-rpg-muted">
+<span>TIMELINE OS</span>
+<span class="text-rpg-accent font-bold">RUBAN v2</span>
+</div>
+<div class="mt-1 text-[11px] text-slate-500 tracking-wider">NODE: REG-CHRONO-02</div>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL -->
+<div class="pl-[220px]">
+<main class="w-full pt-14 px-6 pb-12 bg-rpg-bg min-h-screen">
+<div class="flex flex-col w-full max-w-[1560px] mx-auto">
+<!-- EN-TÊTE VARIATION 2 : RUBAN TEMPOREL -->
+<header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6 border-b border-rpg-border mt-4">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-[11px] text-rpg-muted tracking-widest uppercase">
+<span class="text-rpg-accent font-bold">// SESSION-OS</span>
+<span class="text-slate-600">/</span>
+<span>CHRONIQUE LINÉAIRE &amp; RUBAN TEMPOREL</span>
+<span class="text-slate-600">/</span>
+<span class="text-rpg-info">BLADE RUNNER RPG</span>
+</div>
+<h1 class="font-display font-extrabold text-[24px] sm:text-[28px] text-rpg-text tracking-wider uppercase flex items-center gap-3">
+<span>SÉANCES DE LA CAMPAGNE ANGES DE FEU</span>
+<span class="text-[12px] font-mono px-2 py-0.5 bg-cyan-950 text-rpg-accent border border-rpg-accent/40 font-bold">RUBAN ACTIF</span>
+</h1>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="hidden sm:flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 h-8 bg-rpg-surface-2 text-rpg-accent border border-rpg-accent/30 text-[11px] font-bold uppercase">
+<span class="w-1.5 h-1.5 bg-rpg-accent animate-pulse"></span>
+                CAMPAGNE ACTIVE
+              </span>
+<span class="inline-flex items-center px-3 h-8 bg-rpg-surface-2 text-on-surface-variant border border-rpg-border text-[11px] font-bold uppercase">
+                5 SÉANCES RÉPERTORIÉES
+              </span>
+</div>
+<a class="inline-flex items-center gap-2 h-9 px-4 bg-rpg-surface-2 hover:bg-slate-800 text-rpg-text border border-rpg-border hover:border-rpg-accent text-[11px] font-bold uppercase tracking-wider transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">arrow_back</span>
+              RETOUR COCKPIT
+            </a>
+</div>
+</header>
+<!-- BARRE D'ACTION PRIMAIRE ET CONTRÔLE CHRONOLOGIQUE -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 bg-rpg-surface border border-rpg-border p-3">
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center gap-2 h-10 px-5 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-[0.99] text-[12px] font-black uppercase tracking-widest transition-all shadow-[0_0_14px_rgba(34,211,238,0.4)]" id="btn-create-session">
+<span class="material-symbols-outlined text-[18px] font-black">add</span>
+<span>+ CRÉER UNE SÉANCE</span>
+</button>
+<div class="hidden md:flex items-center gap-2 text-[11px] text-rpg-muted px-2 border-l border-rpg-border">
+<span class="text-rpg-accent font-bold">AXE :</span> ORDRE ANTÉCHRONOLOGIQUE (T_0 À T_-4)
+            </div>
+</div>
+<div class="flex items-center gap-4 text-[11px] text-rpg-muted">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 bg-rpg-warning"></span>
+<span class="text-slate-300">PLANIFIÉE (1)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 bg-rpg-accent shadow-[0_0_6px_#22d3ee]"></span>
+<span class="text-rpg-accent font-bold">EN COURS (1)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 bg-rpg-success"></span>
+<span class="text-slate-400">TERMINÉES (3)</span>
+</div>
+</div>
+</div>
+<!-- GRILLE PRINCIPALE : FRISE VERTICALE + PANNEAU CADRAGE / ACTES -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- FRISE CHRONOLOGIQUE LINÉAIRE (CONNECTÉE) : 8 COLONNES -->
+<section aria-label="Frise chronologique des séances" class="lg:col-span-8 flex flex-col relative pl-2 sm:pl-4">
+<!-- RAIL VERTICAL LUMINEUX CYAN -->
+<div class="timeline-rail absolute left-[27px] sm:left-[35px] top-6 bottom-10 w-[3px] pointer-events-none"></div>
+<!-- NŒUD 1 : SÉANCE N°5 (PLANIFIÉE) -->
+<div class="relative flex items-start gap-4 sm:gap-6 mb-8 group">
+<!-- Nœud sur le rail -->
+<div class="shrink-0 w-11 sm:w-14 flex items-center justify-center pt-2 relative z-10">
+<div class="w-8 h-8 sm:w-9 sm:h-9 bg-rpg-surface border-2 border-rpg-warning flex items-center justify-center shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+<span class="font-display font-black text-[12px] text-rpg-warning">#5</span>
+</div>
+</div>
+<!-- Connecteur horizontal vers la carte -->
+<div class="absolute left-[33px] sm:left-[43px] top-[25px] w-4 sm:w-6 h-[2px] bg-rpg-warning/70 pointer-events-none"></div>
+<!-- Bloc séance élargi -->
+<article class="flex-1 bg-rpg-surface border border-rpg-border p-5 hover:border-rpg-warning/60 transition-colors">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-rpg-border">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="text-[11px] font-bold text-rpg-muted tracking-wider uppercase">SÉANCE N°5</span>
+<span class="text-slate-600">•</span>
+<h2 class="font-display font-bold text-[16px] text-rpg-text tracking-wide">
+                      SAMEDI 26 SEPTEMBRE 2026
+                    </h2>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 bg-amber-950/40 border border-rpg-warning text-rpg-warning text-[11px] font-bold tracking-widest uppercase self-start sm:self-auto">
+                    PLANIFIÉE
+                  </span>
+</div>
+<div class="py-3">
+<p class="font-mono text-[13px] text-slate-300 italic leading-relaxed">
+                    « Infiltration des sous-sols de l'Arcologie Wallace pour récupérer les matrices de test Nexus-8 et neutraliser le réseau clandestin. »
+                  </p>
+</div>
+<!-- Métadonnées régie & Checklist -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 pb-4 border-t border-rpg-border/60 text-[11px]">
+<div class="flex items-center gap-2 bg-rpg-surface-2 px-3 py-2 border border-rpg-border">
+<span class="text-rpg-muted uppercase font-bold tracking-wider">CHECKLIST :</span>
+<span class="font-bold text-rpg-warning">3 / 6</span>
+<div class="w-12 h-1.5 bg-black border border-rpg-border ml-auto">
+<div class="h-full bg-rpg-warning w-1/2"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-rpg-surface-2 px-3 py-2 border border-rpg-border">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">groups</span>
+<span><strong class="text-on-surface font-bold">4</strong> PNJ liés <span class="text-rpg-muted">(Batty, Pris...)</span></span>
+</div>
+<div class="flex items-center gap-2 bg-rpg-surface-2 px-3 py-2 border border-rpg-border">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">badge</span>
+<span><strong class="text-on-surface font-bold">4</strong> PJ prévus <span class="text-rpg-muted">(Deckard, Gaff...)</span></span>
+</div>
+</div>
+<!-- Action node -->
+<div class="flex items-center justify-between pt-2 border-t border-rpg-border">
+<div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-rpg-warning">schedule</span>
+<span>SESSION PRÉVUE À 20:30</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="btn-delete inline-flex items-center gap-1 h-9 px-3 text-slate-400 hover:text-rpg-danger hover:bg-red-950/20 text-[11px] font-bold uppercase transition-colors" title="Supprimer la séance">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+<span>SUPPRIMER</span>
+</button>
+<button class="inline-flex items-center gap-1.5 h-9 px-4 bg-rpg-surface-2 border border-rpg-accent text-rpg-accent hover:bg-rpg-accent hover:text-rpg-accent-contrast text-[11px] font-bold uppercase tracking-wider transition-all">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+<span>PRÉPARER LA SÉANCE</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- NŒUD 2 : SÉANCE N°4 (EN COURS / ACTIVE) -->
+<div class="relative flex items-start gap-4 sm:gap-6 mb-8 group">
+<!-- Nœud sur le rail (Vibrant Cyan) -->
+<div class="shrink-0 w-11 sm:w-14 flex items-center justify-center pt-2 relative z-10">
+<div class="w-8 h-8 sm:w-9 sm:h-9 bg-rpg-accent border-2 border-white flex items-center justify-center shadow-[0_0_16px_#22d3ee] animate-pulse">
+<span class="font-display font-black text-[12px] text-rpg-accent-contrast">#4</span>
+</div>
+</div>
+<!-- Connecteur horizontal néon -->
+<div class="absolute left-[33px] sm:left-[43px] top-[25px] w-4 sm:w-6 h-[3px] bg-rpg-accent shadow-[0_0_8px_#22d3ee] pointer-events-none"></div>
+<!-- Bloc séance élargi - Encadré néon vibrant cyan avec barrette 3px -->
+<article class="flex-1 bg-rpg-surface border-2 border-rpg-accent shadow-[0_0_24px_rgba(34,211,238,0.3)] p-5 relative">
+<!-- Barrette cyan 3px le long du bord gauche -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-rpg-accent shadow-[0_0_8px_#22d3ee]"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-rpg-border pl-1">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="text-[11px] font-bold text-rpg-accent tracking-widest uppercase">// SÉANCE N°4</span>
+<span class="text-slate-600">•</span>
+<h2 class="font-display font-black text-[17px] text-white tracking-wide">
+                      SAMEDI 12 SEPTEMBRE 2026
+                    </h2>
+</div>
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-rpg-accent text-rpg-accent-contrast text-[11px] font-black tracking-widest uppercase shadow-[0_0_10px_#22d3ee] self-start sm:self-auto">
+<span class="w-2 h-2 bg-rpg-accent-contrast rounded-full animate-ping"></span>
+                    EN COURS
+                  </span>
+</div>
+<div class="py-3 pl-1">
+<p class="font-mono text-[13px] text-rpg-text leading-relaxed font-bold">
+                    « Poursuite d'Ellis Vale dans le Bradbury Building sous une pluie battante et confrontation armée sur les toits. »
+                  </p>
+</div>
+<!-- Métadonnées régie & Checklist terminée -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 pb-4 border-t border-cyan-900/60 text-[11px] pl-1">
+<div class="flex items-center gap-2 bg-cyan-950/40 px-3 py-2 border border-rpg-accent/40">
+<span class="text-rpg-accent uppercase font-bold tracking-wider">CHECKLIST :</span>
+<span class="font-bold text-rpg-success">4 / 4 TERMINÉE</span>
+<span class="material-symbols-outlined text-[16px] text-rpg-success ml-auto">check_circle</span>
+</div>
+<div class="flex items-center gap-2 bg-cyan-950/40 px-3 py-2 border border-rpg-accent/40">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">warning</span>
+<span><strong class="text-rpg-accent font-bold">3</strong> PNJ en piste <span class="text-slate-400">(Roy, Gaff)</span></span>
+</div>
+<div class="flex items-center gap-2 bg-cyan-950/40 px-3 py-2 border border-rpg-accent/40">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">badge</span>
+<span><strong class="text-white font-bold">3</strong> PJ présents / <span class="text-rpg-danger font-bold">1 absent</span></span>
+</div>
+</div>
+<!-- Action node - Bouton plein cyan "REPRENDRE LA SÉANCE" -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-cyan-900/60 pl-1">
+<div class="text-[11px] text-rpg-accent font-bold uppercase tracking-wider flex items-center gap-2">
+<span class="w-2 h-2 bg-rpg-accent animate-ping"></span>
+<span>CANAL RÉGIE VERROUILLÉ EN COURS DE PARTIE</span>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+<button class="inline-flex items-center justify-center h-10 px-3 text-slate-500 cursor-not-allowed opacity-60 border border-slate-700 text-[11px] font-bold" title="Suppression bloquée pendant la session active">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+</button>
+<button class="inline-flex items-center justify-center gap-2 h-10 px-6 bg-rpg-accent text-rpg-accent-contrast hover:brightness-110 active:scale-[0.99] text-[11px] font-black uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(34,211,238,0.5)]">
+<span class="material-symbols-outlined text-[18px] font-black">play_arrow</span>
+<span>REPRENDRE LA SÉANCE</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- NŒUD 3 : SÉANCE N°3 (TERMINÉE) -->
+<div class="relative flex items-start gap-4 sm:gap-6 mb-8 group">
+<!-- Nœud sur le rail -->
+<div class="shrink-0 w-11 sm:w-14 flex items-center justify-center pt-2 relative z-10">
+<div class="w-8 h-8 sm:w-9 sm:h-9 bg-rpg-surface border border-rpg-border text-slate-400 flex items-center justify-center">
+<span class="font-display font-bold text-[12px]">#3</span>
+</div>
+</div>
+<div class="absolute left-[33px] sm:left-[43px] top-[25px] w-4 sm:w-6 h-px bg-rpg-border pointer-events-none"></div>
+<article class="flex-1 bg-rpg-surface/80 border border-rpg-border p-4 hover:border-slate-600 transition-colors">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-rpg-border">
+<div class="flex items-center gap-2.5">
+<span class="text-[11px] font-bold text-rpg-muted tracking-wider uppercase">SÉANCE N°3</span>
+<span class="text-slate-600">•</span>
+<h2 class="font-display font-bold text-[15px] text-slate-200 tracking-wide">
+                      SAMEDI 28 AOÛT 2026
+                    </h2>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 bg-emerald-950/30 border border-rpg-success/40 text-rpg-success text-[11px] font-bold tracking-widest uppercase self-start sm:self-auto">
+                    TERMINÉE
+                  </span>
+</div>
+<div class="py-2.5">
+<p class="font-mono text-[12px] text-slate-400 italic">
+                    « Vol du micro-filtre Tyrell au laboratoire de cryogénie RIT et enquête au marché nocturne d'Animoid Row. »
+                  </p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-rpg-border text-[11px] text-rpg-muted">
+<div class="flex items-center gap-4">
+<span>CHECKLIST: <strong class="text-slate-300">4/4</strong></span>
+<span>•</span>
+<span><strong class="text-slate-300">3</strong> PNJ liés</span>
+<span>•</span>
+<span><strong class="text-slate-300">4</strong> PJ présents</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="btn-delete text-slate-500 hover:text-rpg-danger p-1 text-[11px] transition-colors" title="Supprimer">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+<button class="h-8 px-3 bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border text-on-surface text-[11px] font-bold uppercase transition-colors">
+                      Consulter
+                    </button>
+</div>
+</div>
+</article>
+</div>
+<!-- NŒUD 4 : SÉANCE N°2 (TERMINÉE) -->
+<div class="relative flex items-start gap-4 sm:gap-6 mb-8 group">
+<!-- Nœud sur le rail -->
+<div class="shrink-0 w-11 sm:w-14 flex items-center justify-center pt-2 relative z-10">
+<div class="w-8 h-8 sm:w-9 sm:h-9 bg-rpg-surface border border-rpg-border text-slate-400 flex items-center justify-center">
+<span class="font-display font-bold text-[12px]">#2</span>
+</div>
+</div>
+<div class="absolute left-[33px] sm:left-[43px] top-[25px] w-4 sm:w-6 h-px bg-rpg-border pointer-events-none"></div>
+<article class="flex-1 bg-rpg-surface/80 border border-rpg-border p-4 hover:border-slate-600 transition-colors">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-rpg-border">
+<div class="flex items-center gap-2.5">
+<span class="text-[11px] font-bold text-rpg-muted tracking-wider uppercase">SÉANCE N°2</span>
+<span class="text-slate-600">•</span>
+<h2 class="font-display font-bold text-[15px] text-slate-200 tracking-wide">
+                      SAMEDI 15 AOÛT 2026
+                    </h2>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 bg-emerald-950/30 border border-rpg-success/40 text-rpg-success text-[11px] font-bold tracking-widest uppercase self-start sm:self-auto">
+                    TERMINÉE
+                  </span>
+</div>
+<div class="py-2.5">
+<p class="font-mono text-[12px] text-slate-400 italic">
+                    « Interrogatoire préliminaire de Leon Kowalski à la tour LAPD et test de Voight-Kampff prolongé. »
+                  </p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-rpg-border text-[11px] text-rpg-muted">
+<div class="flex items-center gap-4">
+<span>CHECKLIST: <strong class="text-slate-300">5/5</strong></span>
+<span>•</span>
+<span><strong class="text-slate-300">2</strong> PNJ liés</span>
+<span>•</span>
+<span><strong class="text-slate-300">3</strong> PJ présents</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="btn-delete text-slate-500 hover:text-rpg-danger p-1 text-[11px] transition-colors" title="Supprimer">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+<button class="h-8 px-3 bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border text-on-surface text-[11px] font-bold uppercase transition-colors">
+                      Consulter
+                    </button>
+</div>
+</div>
+</article>
+</div>
+<!-- NŒUD 5 : SÉANCE N°1 (TERMINÉE - ORIGINE DU RUBAN) -->
+<div class="relative flex items-start gap-4 sm:gap-6 group">
+<!-- Nœud terminal sur le rail -->
+<div class="shrink-0 w-11 sm:w-14 flex items-center justify-center pt-2 relative z-10">
+<div class="w-8 h-8 sm:w-9 sm:h-9 bg-rpg-surface border border-rpg-border text-slate-500 flex items-center justify-center">
+<span class="font-display font-bold text-[12px]">#1</span>
+</div>
+</div>
+<div class="absolute left-[33px] sm:left-[43px] top-[25px] w-4 sm:w-6 h-px bg-rpg-border pointer-events-none"></div>
+<article class="flex-1 bg-rpg-surface/70 border border-rpg-border p-4 hover:border-slate-600 transition-colors">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-rpg-border">
+<div class="flex items-center gap-2.5">
+<span class="text-[11px] font-bold text-rpg-muted tracking-wider uppercase">SÉANCE N°1</span>
+<span class="text-slate-600">•</span>
+<h2 class="font-display font-bold text-[15px] text-slate-300 tracking-wide">
+                      SAMEDI 01 AOÛT 2026
+                    </h2>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 bg-emerald-950/30 border border-rpg-success/40 text-rpg-success text-[11px] font-bold tracking-widest uppercase self-start sm:self-auto">
+                    TERMINÉE
+                  </span>
+</div>
+<div class="py-2.5">
+<p class="font-mono text-[12px] text-slate-400 italic">
+                    « Briefing initial par le Capitaine Bryant et découverte de la cellule terroriste Nexus-6 à Chinatown. »
+                  </p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-rpg-border text-[11px] text-rpg-muted">
+<div class="flex items-center gap-4">
+<span>CHECKLIST: <strong class="text-slate-300">3/3</strong></span>
+<span>•</span>
+<span><strong class="text-slate-300">2</strong> PNJ liés</span>
+<span>•</span>
+<span><strong class="text-slate-300">4</strong> PJ présents</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="btn-delete text-slate-500 hover:text-rpg-danger p-1 text-[11px] transition-colors" title="Supprimer">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+<button class="h-8 px-3 bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border text-on-surface text-[11px] font-bold uppercase transition-colors">
+                      Consulter
+                    </button>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- PANNEAU DROIT (300px) : NAVIGATION PAR DATE & REPÈRES D'ACTES -->
+<aside aria-label="Navigation chronologique et cadrage" class="lg:col-span-4 flex flex-col gap-4">
+<!-- BLOC REPÈRES D'ACTES DE LA CAMPAGNE -->
+<div class="bg-rpg-surface border border-rpg-border p-4">
+<div class="flex items-center justify-between border-b border-rpg-border pb-3 mb-3">
+<h3 class="font-display font-bold text-[13px] text-rpg-accent tracking-wider uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">timeline</span>
+                  REPÈRES D'ACTES
+                </h3>
+<span class="text-[11px] text-rpg-muted">ARC 1.0</span>
+</div>
+<div class="space-y-3">
+<!-- Acte 1 -->
+<div class="p-3 bg-rpg-surface-2 border-l-2 border-rpg-success border border-rpg-border">
+<div class="flex items-center justify-between text-[11px] mb-1">
+<span class="font-display font-bold text-rpg-success uppercase">ACTE 1 : L'INTERROGATOIRE</span>
+<span class="text-rpg-muted font-bold">100% CLOS</span>
+</div>
+<p class="text-[11px] text-slate-300 leading-snug">Séances 1 à 3 — Identification des réplicants infiltrés au sein de la corporation.</p>
+</div>
+<!-- Acte 2 -->
+<div class="p-3 bg-rpg-surface-2 border-l-2 border-rpg-accent border border-rpg-border shadow-[0_0_10px_rgba(34,211,238,0.15)]">
+<div class="flex items-center justify-between text-[11px] mb-1">
+<span class="font-display font-bold text-rpg-accent uppercase">ACTE 2 : INFILTRATION</span>
+<span class="text-rpg-accent font-bold animate-pulse">EN COURS (50%)</span>
+</div>
+<p class="text-[11px] text-slate-200 leading-snug">Séances 4 &amp; 5 — Traque dans le Bradbury et descente sous l'Arcologie.</p>
+</div>
+<!-- Acte 3 (Futur) -->
+<div class="p-3 bg-black/40 border-l-2 border-slate-700 border border-rpg-border opacity-70">
+<div class="flex items-center justify-between text-[11px] mb-1">
+<span class="font-display font-bold text-slate-400 uppercase">ACTE 3 : RETRAIT DÉFINITIF</span>
+<span class="text-slate-500 font-bold">VERROUILLÉ</span>
+</div>
+<p class="text-[11px] text-slate-500 leading-snug">Séances 6+ — Confrontation finale et choix moral du groupe.</p>
+</div>
+</div>
+</div>
+<!-- NAVIGATION RAPIDE PAR DATE -->
+<div class="bg-rpg-surface border border-rpg-border p-4">
+<div class="flex items-center justify-between border-b border-rpg-border pb-3 mb-3">
+<h3 class="font-display font-bold text-[13px] text-rpg-text tracking-wider uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">calendar_month</span>
+                  NAVIGATION PAR DATE
+                </h3>
+<span class="text-[11px] text-rpg-muted">AN 2026</span>
+</div>
+<div class="divide-y divide-rpg-border text-[11px]">
+<button class="w-full flex items-center justify-between py-2 text-left hover:text-rpg-warning transition-colors group">
+<span class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-rpg-warning"></span>
+<span class="text-on-surface group-hover:text-rpg-warning">26 Septembre 2026</span>
+</span>
+<span class="text-rpg-warning font-bold">Séance 5</span>
+</button>
+<button class="w-full flex items-center justify-between py-2 text-left hover:text-rpg-accent transition-colors group">
+<span class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-rpg-accent animate-ping"></span>
+<span class="text-rpg-accent font-bold">12 Septembre 2026</span>
+</span>
+<span class="text-rpg-accent font-bold">Séance 4 [ACTIVE]</span>
+</button>
+<button class="w-full flex items-center justify-between py-2 text-left hover:text-on-surface text-slate-400 transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-slate-600"></span>
+<span>28 Août 2026</span>
+</span>
+<span>Séance 3</span>
+</button>
+<button class="w-full flex items-center justify-between py-2 text-left hover:text-on-surface text-slate-400 transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-slate-600"></span>
+<span>15 Août 2026</span>
+</span>
+<span>Séance 2</span>
+</button>
+<button class="w-full flex items-center justify-between py-2 text-left hover:text-on-surface text-slate-400 transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-slate-600"></span>
+<span>01 Août 2026</span>
+</span>
+<span>Séance 1</span>
+</button>
+</div>
+</div>
+<!-- EXPORT RÉSUMÉ MARKDOWN & OUTILS -->
+<div class="bg-rpg-surface border border-rpg-border p-4 flex flex-col gap-3">
+<button class="w-full flex items-center justify-between h-11 px-4 bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border text-rpg-text text-[11px] font-bold uppercase tracking-wider transition-colors" id="btn-export">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">download</span>
+                  EXPORTER RÉSUMÉ MARKDOWN
+                </span>
+<span class="text-[11px] text-rpg-muted font-mono">.MD</span>
+</button>
+<button class="w-full flex items-center justify-between h-11 px-4 bg-rpg-surface-2 hover:border-rpg-warning/50 text-slate-400 hover:text-rpg-warning border border-rpg-border text-[11px] font-bold uppercase tracking-wider transition-colors" id="btn-archive">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+                  ARCHIVER LE RUBAN
+                </span>
+<span class="material-symbols-outlined text-[16px]">lock</span>
+</button>
+<!-- RÈGLE DE TABLE STRICTEMENT VISIBLE -->
+<div class="p-3 bg-black/50 border-l-2 border-rpg-accent text-[11px] text-slate-400 leading-relaxed mt-1">
+<strong class="text-white font-bold">RÈGLE DE TABLE :</strong> La suppression directe de la séance en cours est verrouillée par la station de jeu pour éviter toute rupture du journal d'enquête.
+              </div>
+</div>
+</aside>
+</div>
+</div>
+<!-- TOAST DE NOTIFICATION DIÉGÉTIQUE -->
+<div class="fixed bottom-6 right-6 hidden bg-rpg-surface border-2 border-rpg-accent text-rpg-text px-5 py-3 shadow-[0_0_24px_rgba(34,211,238,0.5)] z-50 text-[11px] font-bold flex items-center gap-3" id="status-toast">
+<span class="w-2.5 h-2.5 bg-rpg-accent animate-ping"></span>
+<span id="toast-message">COMMANDE SYSTÈME ENREGISTRÉE</span>
+</div>
+</main>
+</div>
+<script>
+    (function () {
+      const toast = document.getElementById('status-toast');
+      const toastMessage = document.getElementById('toast-message');
+
+      function notify(msg) {
+        if (!toast || !toastMessage) return;
+        toastMessage.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 2800);
+      }
+
+      // Suppressions
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm('Confirmer la suppression de cette séance du ruban chronologique ?')) {
+            const row = btn.closest('.group');
+            if (row) {
+              row.style.opacity = '0.3';
+              setTimeout(() => {
+                row.remove();
+                notify('SÉANCE SUPPRIMÉE DU RUBAN TEMPOREL');
+              }, 250);
+            }
+          }
+        });
+      });
+
+      // Création
+      const btnCreate = document.getElementById('btn-create-session');
+      if (btnCreate) {
+        btnCreate.addEventListener('click', () => {
+          notify('CRÉATION DU NŒUD SÉANCE N°6 SUR LE RUBAN...');
+        });
+      }
+
+      // Export
+      const btnExport = document.getElementById('btn-export');
+      if (btnExport) {
+        btnExport.addEventListener('click', () => {
+          notify('TÉLÉCHARGEMENT DU RUBAN CHRONOLOGIQUE (.MD)...');
+        });
+      }
+
+      // Archivage
+      const btnArchive = document.getElementById('btn-archive');
+      if (btnArchive) {
+        btnArchive.addEventListener('click', () => {
+          if (confirm('Verrouiller et transférer ce ruban dans les archives centrales ?')) {
+            notify('ARCHIVAGE DU RUBAN CONFIRMÉ');
+          }
+        });
+      }
+    })();
+  </script>
+</body></html>

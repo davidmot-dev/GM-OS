@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#020617]" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calculateur de Dégâts — GM-OS (Console Tactile Directe)</title>
+<!-- Google Fonts: Orbitron, Space Mono, Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              DEFAULT: '#0f172a',
+              raised: '#1e293b',
+              backdrop: '#020617',
+            },
+            muted: '#898c95',
+            accent: {
+              cyan: '#06b6d4',
+            },
+            status: {
+              danger: '#ef4444',
+              success: '#10b981',
+              warning: '#f59e0b',
+            }
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-resets">
+    /* Brutal Diegetic Console: All sharp edges 0px */
+    *, *::before, *::after {
+      border-radius: 0px !important;
+    }
+
+    /* Custom tactical scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border: 1px solid #334155;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+  </style>
+</head>
+<body class="h-full w-full m-0 p-0 font-sans text-[#f8fafc] bg-[#020617] overflow-hidden antialiased select-none flex items-center justify-center">
+<!-- BEGIN: BlurredCombatBackdrop -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-0 overflow-hidden flex flex-col justify-between p-8 opacity-25 filter blur-[2px]">
+<div class="flex justify-between items-center border-b border-[#1e293b] pb-4">
+<div class="font-orbitron tracking-widest text-lg text-[#06b6d4]">COMBAT ROUND 04 // ACTIF</div>
+<div class="font-mono text-sm text-[#898c95]">SECTEUR : APPARTEMENT 97C — TYRELL PYRAMID</div>
+</div>
+<div class="grid grid-cols-4 gap-6 my-auto">
+<div class="border border-[#1e293b] bg-[#0f172a]/70 p-4 h-32 flex flex-col justify-between">
+<span class="text-xs font-mono text-[#898c95]">INITIATIVE #1</span>
+<span class="font-bold text-base">Rick Deckard</span>
+<span class="font-mono text-sm text-[#10b981]">12/14 PV</span>
+</div>
+<div class="border border-[#1e293b] bg-[#0f172a]/70 p-4 h-32 flex flex-col justify-between">
+<span class="text-xs font-mono text-[#898c95]">INITIATIVE #2</span>
+<span class="font-bold text-base">Roy Batty</span>
+<span class="font-mono text-sm text-[#10b981]">148/155 PV</span>
+</div>
+<div class="border border-[#1e293b] bg-[#0f172a]/70 p-4 h-32 flex flex-col justify-between">
+<span class="text-xs font-mono text-[#898c95]">INITIATIVE #3</span>
+<span class="font-bold text-base">Rachael Tyrell</span>
+<span class="font-mono text-sm text-[#10b981]">9/10 PV</span>
+</div>
+<div class="border border-[#1e293b] bg-[#0f172a]/70 p-4 h-32 flex flex-col justify-between">
+<span class="text-xs font-mono text-[#898c95]">INITIATIVE #4</span>
+<span class="font-bold text-base">Pris Stratton</span>
+<span class="font-mono text-sm text-[#ef4444]">0/12 PV</span>
+</div>
+</div>
+<div class="border-t border-[#1e293b] pt-4 flex justify-between font-mono text-xs text-[#898c95]">
+<span>DISTRIBUTION DES ACTIONS : TOURS REPLICANTS COMPLETS</span>
+<span>SYSTÈME GM-OS V4.9</span>
+</div>
+</div>
+<!-- Heavy dark overlay backdrop -->
+<div class="fixed inset-0 bg-[#020617]/85 backdrop-blur-sm z-10"></div>
+<!-- END: BlurredCombatBackdrop -->
+<!-- BEGIN: ModalContainer -->
+<main aria-labelledby="modal-title" class="relative z-20 w-[920px] max-w-[96vw] bg-[#0f172a] border border-[#1e293b] shadow-[0_20px_50px_rgba(0,0,0,0.95)] flex flex-col max-h-[95vh]" role="dialog" style="box-shadow: 0 0 0 1px #1e293b, 0 25px 60px -10px rgba(0, 0, 0, 0.95);">
+<!-- BEGIN: ModalHeader -->
+<header class="h-16 px-6 bg-[#0f172a] border-b border-[#1e293b] flex items-center justify-between shrink-0">
+<div class="flex items-center space-x-3">
+<!-- Cyan Lightning Icon -->
+<span class="text-[#06b6d4] flex items-center justify-center w-8 h-8 bg-[#06b6d4]/10 border border-[#06b6d4]/30">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+<path d="M13 2L3 14h7v8l11-14h-8l0-6z"></path>
+</svg>
+</span>
+<div>
+<h1 class="font-orbitron font-bold text-lg tracking-wider text-[#f8fafc] uppercase" id="modal-title">
+          Calculateur de Dégâts
+        </h1>
+<span class="text-[11px] font-mono text-[#898c95] uppercase tracking-wider block">Console Tactile Grand Format — Table Directe</span>
+</div>
+</div>
+<!-- Close Button [X] -->
+<button aria-label="Fermer la fenêtre" class="w-12 h-12 border border-[#1e293b] hover:border-[#ef4444] bg-[#1e293b]/30 hover:bg-[#ef4444]/20 text-[#898c95] hover:text-[#f8fafc] flex items-center justify-center transition-colors focus:outline-none" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="square" stroke-linejoin="miter"></path>
+</svg>
+</button>
+</header>
+<!-- END: ModalHeader -->
+<!-- BEGIN: ModalBody -->
+<div class="p-6 space-y-5 overflow-y-auto">
+<!-- BEGIN: Temps1CeQuiEntre (Tactile Grand Format) -->
+<section class="border border-[#1e293b] bg-[#020617]/60 p-4" data-purpose="step-1-input">
+<div class="flex items-center justify-between mb-3 border-b border-[#1e293b]/70 pb-2">
+<div class="flex items-center space-x-2">
+<span class="w-5 h-5 bg-[#06b6d4] text-[#020617] font-mono font-bold text-xs flex items-center justify-center">1</span>
+<h2 class="text-xs font-bold tracking-wider text-[#f8fafc] uppercase font-sans">
+              Temps 1 // Ce qui entre (Paramètres d'impact)
+            </h2>
+</div>
+<span class="text-[11px] font-mono text-[#898c95] uppercase">Tactile 1 mètre — Commandes larges</span>
+</div>
+<div class="grid grid-cols-12 gap-4 items-stretch">
+<!-- Grande Dalle Numérique Space Mono & Ajustements Tactiles (col-span-6) -->
+<div class="col-span-12 lg:col-span-6 flex flex-col justify-between space-y-2">
+<div class="flex items-center justify-between">
+<label class="text-[11px] font-semibold text-[#898c95] uppercase tracking-wider block">
+                Valeur d'impact
+              </label>
+<!-- Raccourci tactile cliquable Dernier Jet -->
+<button class="h-6 px-2.5 bg-[#1e293b]/60 hover:bg-[#06b6d4]/20 border border-[#1e293b] hover:border-[#06b6d4] text-[11px] font-mono text-[#898c95] hover:text-[#06b6d4] transition-colors flex items-center space-x-1 cursor-pointer" id="btn-recall" type="button">
+<span>Dernier jet : <strong class="text-[#f8fafc]">7</strong></span>
+</button>
+</div>
+<!-- Pavé de saisie principal : [-5] [-1] [ VALEUR 10 ] [+1] [+5] (Hauteur tactile > 56px) -->
+<div class="flex items-stretch h-16 border border-[#1e293b] bg-[#020617]">
+<!-- Quick -5 -->
+<button aria-label="Diminuer de 5" class="w-12 h-full bg-[#1e293b]/30 hover:bg-[#1e293b] active:bg-[#06b6d4]/30 border-r border-[#1e293b] text-[#898c95] hover:text-[#f8fafc] font-mono text-sm font-bold flex items-center justify-center transition-colors" id="btn-dec-5" type="button">
+                -5
+              </button>
+<!-- -1 Large -->
+<button aria-label="Diminuer de 1" class="w-16 h-full bg-[#1e293b]/50 hover:bg-[#1e293b] active:bg-[#06b6d4]/30 border-r border-[#1e293b] text-[#f8fafc] font-mono text-2xl font-bold flex items-center justify-center transition-colors" id="btn-decrement" type="button">
+                −
+              </button>
+<!-- Valeur Centrale Immense -->
+<div class="flex-1 flex flex-col items-center justify-center h-full px-2 bg-[#020617]">
+<span class="font-mono text-4xl font-bold tracking-tight text-[#f8fafc] leading-none" id="impact-display">10</span>
+<span class="text-[11px] font-mono text-[#06b6d4] uppercase tracking-widest mt-0.5">points</span>
+</div>
+<!-- +1 Large -->
+<button aria-label="Augmenter de 1" class="w-16 h-full bg-[#1e293b]/50 hover:bg-[#1e293b] active:bg-[#06b6d4]/30 border-l border-[#1e293b] text-[#f8fafc] font-mono text-2xl font-bold flex items-center justify-center transition-colors" id="btn-increment" type="button">
+                +
+              </button>
+<!-- Quick +5 -->
+<button aria-label="Augmenter de 5" class="w-12 h-full bg-[#1e293b]/30 hover:bg-[#1e293b] active:bg-[#06b6d4]/30 border-l border-[#1e293b] text-[#898c95] hover:text-[#f8fafc] font-mono text-sm font-bold flex items-center justify-center transition-colors" id="btn-inc-5" type="button">
+                +5
+              </button>
+</div>
+</div>
+<!-- Boutons à bascule très nets : DÉGÂTS (écarlate) vs SOINS (émeraude) (col-span-3) -->
+<div class="col-span-6 lg:col-span-3 flex flex-col justify-between">
+<label class="text-[11px] font-semibold text-[#898c95] uppercase tracking-wider mb-2 block">
+              Nature de l'effet
+            </label>
+<div class="grid grid-cols-2 gap-2 h-16">
+<button aria-pressed="true" class="h-full border-2 border-[#ef4444] bg-[#ef4444] text-[#020617] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors" id="btn-mode-degats" type="button">
+<span class="text-sm font-black uppercase">DÉGÂTS</span>
+<span class="text-[11px] font-sans font-semibold opacity-90">Soustrait PV</span>
+</button>
+<button aria-pressed="false" class="h-full border border-[#1e293b] bg-[#020617] hover:border-[#10b981]/60 text-[#898c95] hover:text-[#10b981] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors" id="btn-mode-soins" type="button">
+<span class="text-sm font-bold uppercase">SOINS</span>
+<span class="text-[11px] font-sans opacity-70">Ajoute PV</span>
+</button>
+</div>
+</div>
+<!-- Boutons à bascule : PERCUTANT vs PERFORANT (col-span-3) -->
+<div class="col-span-6 lg:col-span-3 flex flex-col justify-between">
+<label class="text-[11px] font-semibold text-[#898c95] uppercase tracking-wider mb-2 block">
+              Type d'énergie
+            </label>
+<div class="grid grid-cols-2 gap-2 h-16">
+<button aria-pressed="true" class="h-full border-2 border-[#06b6d4] bg-[#06b6d4]/20 text-[#06b6d4] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors" id="btn-type-percutant" type="button">
+<span class="text-sm font-black uppercase">PERCUTANT</span>
+<span class="text-[11px] font-sans opacity-80">Cinétique</span>
+</button>
+<button aria-pressed="false" class="h-full border border-[#1e293b] bg-[#020617] hover:border-[#898c95] text-[#898c95] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors" id="btn-type-perforant" type="button">
+<span class="text-sm font-bold uppercase">PERFORANT</span>
+<span class="text-[11px] font-sans opacity-70">Balistique</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Temps1CeQuiEntre -->
+<!-- BEGIN: Temps2Et3EnDirect (Synthèse par Combattant) -->
+<section class="border border-[#1e293b] bg-[#020617]/40 p-4" data-purpose="step-2-and-3-direct-table">
+<div class="flex items-center justify-between mb-3 border-b border-[#1e293b]/70 pb-2">
+<div class="flex items-center space-x-2">
+<span class="w-5 h-5 bg-[#06b6d4] text-[#020617] font-mono font-bold text-xs flex items-center justify-center">2 &amp; 3</span>
+<h2 class="text-xs font-bold tracking-wider text-[#f8fafc] uppercase font-sans">
+              Temps 2 &amp; 3 en direct // Synthèse et Impact Immédiat par Combattant
+            </h2>
+</div>
+<!-- Bouton Tout cocher / Décocher tactile large -->
+<button class="h-9 px-4 border border-[#1e293b] hover:border-[#06b6d4] bg-[#1e293b]/50 hover:bg-[#06b6d4]/10 text-xs font-mono font-bold text-[#898c95] hover:text-[#06b6d4] transition-colors" id="btn-toggle-all" type="button">
+            [ TOUT COCHER / DÉCOCHER ]
+          </button>
+</div>
+<!-- Liste directe des 5 combattants avec transformation Space Mono intégrée -->
+<div class="space-y-2.5" id="combatants-list">
+<!-- Combattant 1: Rick Deckard (COCHE - Transformation Grand Format Directe) -->
+<div class="p-3.5 border-2 border-[#06b6d4] bg-[#0f172a] hover:bg-[#162038] transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center space-x-4 min-w-[260px]">
+<!-- Grand checkbox tactile min 24px -->
+<input checked="" class="w-6 h-6 bg-[#020617] border-2 border-[#06b6d4] text-[#06b6d4] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#06b6d4]" type="checkbox"/>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-bold text-base text-[#f8fafc]">Rick Deckard</span>
+<span class="text-[11px] font-mono px-1.5 py-0.5 bg-[#1e293b] text-[#898c95]">Humain</span>
+</div>
+<span class="text-[11px] font-mono text-[#898c95]">Règle normale • Pas de modificateur</span>
+</div>
+</div>
+<!-- Jauge actuelle visuelle -->
+<div class="flex items-center space-x-3 w-48">
+<div class="flex-1 h-3 bg-[#1e293b] overflow-hidden flex">
+<div class="bg-[#10b981] h-full" style="width: 85.7%;"></div>
+</div>
+<span class="font-mono text-xs font-bold text-[#10b981] w-16 text-right">12/14 PV</span>
+</div>
+<!-- Transformation en grand format Space Mono immédiat : 12 -> 2 PV (-10 PV) -->
+<div class="flex items-center justify-end space-x-3 bg-[#020617] px-4 py-2 border border-[#ef4444]/40 min-w-[210px]">
+<div class="text-right">
+<span class="font-mono text-xl font-bold text-[#f8fafc] tracking-tight">
+                12 <span class="text-[#ef4444] font-black">→</span> <span class="text-[#ef4444]">2 PV</span>
+</span>
+<span class="block text-[11px] font-mono font-bold text-[#ef4444] tracking-wide">-10 PV infligés</span>
+</div>
+<div class="w-12 h-3 bg-[#1e293b] overflow-hidden">
+<div class="bg-[#ef4444] h-full" style="width: 14.2%;"></div>
+</div>
+</div>
+</div>
+<!-- Combattant 2: Roy Batty (COCHE - Résistant Percutant -> 148 -> 143 PV + Badge Ambre) -->
+<div class="p-3.5 border-2 border-[#06b6d4] bg-[#0f172a] hover:bg-[#162038] transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center space-x-4 min-w-[260px]">
+<input checked="" class="w-6 h-6 bg-[#020617] border-2 border-[#06b6d4] text-[#06b6d4] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#06b6d4]" type="checkbox"/>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-bold text-base text-[#f8fafc]">Roy Batty</span>
+<span class="text-[11px] font-mono px-2 py-0.5 bg-[#f59e0b] text-[#020617] font-bold tracking-wider">RÉSISTANT : MOITIÉ</span>
+</div>
+<span class="text-[11px] font-mono text-[#06b6d4]">Nexus-6 combat • Dégâts percutants divisés par 2</span>
+</div>
+</div>
+<!-- Jauge actuelle visuelle -->
+<div class="flex items-center space-x-3 w-48">
+<div class="flex-1 h-3 bg-[#1e293b] overflow-hidden flex">
+<div class="bg-[#10b981] h-full" style="width: 95.5%;"></div>
+</div>
+<span class="font-mono text-xs font-bold text-[#10b981] w-16 text-right">148/155</span>
+</div>
+<!-- Transformation en grand format Space Mono immédiat : 148 -> 143 PV (-5 PV) -->
+<div class="flex items-center justify-end space-x-3 bg-[#020617] px-4 py-2 border border-[#f59e0b]/40 min-w-[210px]">
+<div class="text-right">
+<span class="font-mono text-xl font-bold text-[#f8fafc] tracking-tight">
+                148 <span class="text-[#ef4444] font-black">→</span> <span class="text-[#10b981]">143 PV</span>
+</span>
+<span class="block text-[11px] font-mono font-bold text-[#f59e0b] tracking-wide">-5 PV (résistance)</span>
+</div>
+<div class="w-12 h-3 bg-[#1e293b] overflow-hidden">
+<div class="bg-[#10b981] h-full" style="width: 92.2%;"></div>
+</div>
+</div>
+</div>
+<!-- Combattant 3: Rachael Tyrell (NON COCHE - Estompé mais activable tactilement) -->
+<div class="p-3 border border-[#1e293b] bg-[#0f172a]/50 hover:bg-[#1e293b]/40 opacity-75 hover:opacity-100 transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center space-x-4 min-w-[260px]">
+<input class="w-6 h-6 bg-[#020617] border-2 border-[#1e293b] text-[#06b6d4] focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-bold text-sm text-[#f8fafc]">Rachael Tyrell</span>
+<span class="text-[11px] font-mono px-1.5 py-0.5 bg-[#1e293b] text-[#898c95]">Nexus-7</span>
+</div>
+<span class="text-[11px] font-mono text-[#898c95]">Aucun impact prévu (non sélectionnée)</span>
+</div>
+</div>
+<div class="flex items-center space-x-3 w-48">
+<div class="flex-1 h-3 bg-[#1e293b] overflow-hidden flex">
+<div class="bg-[#10b981] h-full" style="width: 90%;"></div>
+</div>
+<span class="font-mono text-xs font-bold text-[#10b981] w-16 text-right">9/10 PV</span>
+</div>
+<div class="flex items-center justify-end px-4 py-2 min-w-[210px] text-right">
+<span class="font-mono text-xs text-[#898c95] uppercase tracking-wider">[ Inchangé : 9 PV ]</span>
+</div>
+</div>
+<!-- Combattant 4: Gaff (NON COCHE - Estompé) -->
+<div class="p-3 border border-[#1e293b] bg-[#0f172a]/50 hover:bg-[#1e293b]/40 opacity-75 hover:opacity-100 transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center space-x-4 min-w-[260px]">
+<input class="w-6 h-6 bg-[#020617] border-2 border-[#1e293b] text-[#06b6d4] focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-bold text-sm text-[#f8fafc]">Gaff</span>
+<span class="text-[11px] font-mono px-1.5 py-0.5 bg-[#1e293b] text-[#898c95]">Officier Police</span>
+</div>
+<span class="text-[11px] font-mono text-[#898c95]">Aucun impact prévu (non sélectionné)</span>
+</div>
+</div>
+<div class="flex items-center space-x-3 w-48">
+<div class="flex-1 h-3 bg-[#1e293b] overflow-hidden flex">
+<div class="bg-[#10b981] h-full" style="width: 100%;"></div>
+</div>
+<span class="font-mono text-xs font-bold text-[#10b981] w-16 text-right">11/11 PV</span>
+</div>
+<div class="flex items-center justify-end px-4 py-2 min-w-[210px] text-right">
+<span class="font-mono text-xs text-[#898c95] uppercase tracking-wider">[ Inchangé : 11 PV ]</span>
+</div>
+</div>
+<!-- Combattant 5: Pris Stratton (NON COCHE - Neutralisée 0 PV) -->
+<div class="p-3 border border-[#1e293b] bg-[#0f172a]/30 hover:bg-[#1e293b]/20 opacity-50 hover:opacity-80 transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center space-x-4 min-w-[260px]">
+<input class="w-6 h-6 bg-[#020617] border-2 border-[#1e293b] text-[#ef4444] focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-bold text-sm text-[#898c95]">Pris Stratton</span>
+<span class="text-[11px] font-mono px-1.5 py-0.5 bg-[#ef4444]/20 text-[#ef4444] font-bold">K.O. / 0 PV</span>
+</div>
+<span class="text-[11px] font-mono text-[#ef4444]">Neutralisée — Cible inactive</span>
+</div>
+</div>
+<div class="flex items-center space-x-3 w-48">
+<div class="flex-1 h-3 bg-[#1e293b] overflow-hidden flex">
+<div class="bg-[#ef4444] h-full" style="width: 0%;"></div>
+</div>
+<span class="font-mono text-xs font-bold text-[#ef4444] w-16 text-right">0/12 PV</span>
+</div>
+<div class="flex items-center justify-end px-4 py-2 min-w-[210px] text-right">
+<span class="font-mono text-xs text-[#ef4444] uppercase tracking-wider">[ Neutralisée ]</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Temps2Et3EnDirect -->
+</div>
+<!-- END: ModalBody -->
+<!-- BEGIN: ModalFooter (Synthèse globale + Actions > 48px) -->
+<footer class="p-5 bg-[#0f172a] border-t border-[#1e293b] flex flex-col md:flex-row items-center justify-between gap-4 shrink-0">
+<!-- Encadré de synthèse globale d'impact -->
+<div class="flex items-center space-x-3 border border-[#06b6d4]/40 bg-[#06b6d4]/10 px-4 py-2.5 w-full md:w-auto">
+<span class="w-2.5 h-2.5 bg-[#06b6d4]"></span>
+<span class="font-mono text-xs font-bold tracking-wider text-[#f8fafc]">
+        SYNTHÈSE : <span class="text-[#06b6d4]">2 combattants affectés</span> • <span class="text-[#ef4444]">15 PV totaux déduits</span>
+</span>
+</div>
+<!-- Boutons d'action tactiles grand format (Hauteur 52px) -->
+<div class="flex items-center space-x-3 w-full md:w-auto justify-end">
+<!-- Annuler -->
+<button class="h-[52px] px-6 border border-[#1e293b] hover:border-[#898c95] bg-[#1e293b]/40 hover:bg-[#1e293b] text-[#f8fafc] text-xs font-mono font-bold tracking-wider uppercase transition-colors" id="btn-cancel" type="button">
+        Annuler
+      </button>
+<!-- Appliquer l'impact (Plein cyan 52px) -->
+<button class="h-[52px] px-8 border border-[#06b6d4] bg-[#06b6d4] hover:bg-[#0891b2] text-[#020617] text-sm font-orbitron font-extrabold tracking-wider uppercase shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all" id="btn-apply" type="button">
+        APPLIQUER L'IMPACT
+      </button>
+</div>
+</footer>
+<!-- END: ModalFooter -->
+</main>
+<!-- END: ModalContainer -->
+<!-- BEGIN: InteractiveHandlers -->
+<script data-purpose="event-handlers">
+    document.addEventListener('DOMContentLoaded', () => {
+      // Stepper & Quick Values
+      const display = document.getElementById('impact-display');
+      const btnDec = document.getElementById('btn-decrement');
+      const btnInc = document.getElementById('btn-increment');
+      const btnDec5 = document.getElementById('btn-dec-5');
+      const btnInc5 = document.getElementById('btn-inc-5');
+      const btnRecall = document.getElementById('btn-recall');
+
+      let currentVal = 10;
+
+      function updateDisplay() {
+        display.textContent = currentVal;
+      }
+
+      btnDec.addEventListener('click', () => {
+        if (currentVal > 0) {
+          currentVal--;
+          updateDisplay();
+        }
+      });
+
+      btnInc.addEventListener('click', () => {
+        currentVal++;
+        updateDisplay();
+      });
+
+      btnDec5.addEventListener('click', () => {
+        currentVal = Math.max(0, currentVal - 5);
+        updateDisplay();
+      });
+
+      btnInc5.addEventListener('click', () => {
+        currentVal += 5;
+        updateDisplay();
+      });
+
+      btnRecall.addEventListener('click', () => {
+        currentVal = 7;
+        updateDisplay();
+      });
+
+      // Type toggles
+      const btnPerc = document.getElementById('btn-type-percutant');
+      const btnPerf = document.getElementById('btn-type-perforant');
+
+      btnPerc.addEventListener('click', () => {
+        btnPerc.className = "h-full border-2 border-[#06b6d4] bg-[#06b6d4]/20 text-[#06b6d4] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+        btnPerf.className = "h-full border border-[#1e293b] bg-[#020617] hover:border-[#898c95] text-[#898c95] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+      });
+
+      btnPerf.addEventListener('click', () => {
+        btnPerf.className = "h-full border-2 border-[#06b6d4] bg-[#06b6d4]/20 text-[#06b6d4] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+        btnPerc.className = "h-full border border-[#1e293b] bg-[#020617] hover:border-[#898c95] text-[#898c95] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+      });
+
+      // Mode toggles (Dégâts vs Soins)
+      const btnDegats = document.getElementById('btn-mode-degats');
+      const btnSoins = document.getElementById('btn-mode-soins');
+
+      btnDegats.addEventListener('click', () => {
+        btnDegats.className = "h-full border-2 border-[#ef4444] bg-[#ef4444] text-[#020617] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+        btnSoins.className = "h-full border border-[#1e293b] bg-[#020617] hover:border-[#10b981]/60 text-[#898c95] hover:text-[#10b981] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+      });
+
+      btnSoins.addEventListener('click', () => {
+        btnSoins.className = "h-full border-2 border-[#10b981] bg-[#10b981] text-[#020617] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+        btnDegats.className = "h-full border border-[#1e293b] bg-[#020617] hover:border-[#ef4444]/60 text-[#898c95] hover:text-[#ef4444] font-mono font-bold text-xs tracking-wider flex flex-col items-center justify-center transition-colors";
+      });
+
+      // Toggle all checkboxes
+      const btnToggleAll = document.getElementById('btn-toggle-all');
+      btnToggleAll.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('#combatants-list input[type="checkbox"]');
+        const anyUnchecked = Array.from(checkboxes).some(cb => !cb.checked);
+        checkboxes.forEach(cb => {
+          cb.checked = anyUnchecked;
+        });
+      });
+    });
+  </script>
+<!-- END: InteractiveHandlers -->
+</body></html>

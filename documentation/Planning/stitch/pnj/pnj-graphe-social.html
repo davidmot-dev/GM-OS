@@ -1,0 +1,330 @@
+<!DOCTYPE html><html class="dark" lang="fr"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;background-color:#020617;color:#f8fafc;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-container":"#3f465c","rpg-success":"#10b981","inverse-on-surface":"#2a3043","tertiary-fixed":"#d8e3fb","rpg-accent":"#22d3ee","error-container":"#93000a","surface-bright":"#33394c","surface-container-low":"#151b2d","surface-container-lowest":"#070d1f","rpg-accent-contrast":"#020617","rpg-warning":"#f59e0b","rpg-danger":"#ef4444","on-tertiary":"#263143","tertiary-fixed-dim":"#bcc7de","on-error-container":"#ffdad6","surface-container-high":"#23293c","rpg-info":"#3b82f6","on-surface-variant":"#bbc9cd","on-tertiary-fixed-variant":"#3c475a","background":"#0c1324","on-error":"#690005","surface-container":"#191f31","primary-fixed-dim":"#2fd9f4","surface":"#0c1324","secondary":"#bec6e0","rpg-surface-2":"#1e293b","on-secondary-container":"#adb4ce","on-secondary-fixed-variant":"#3f465c","rpg-border":"#1e293b","primary-container":"#22d3ee","on-secondary":"#283044","secondary-fixed":"#dae2fd","surface-dim":"#0c1324","tertiary":"#d2ddf5","on-primary-fixed":"#001f25","rpg-muted":"#898c95","on-primary-fixed-variant":"#004e5a","inverse-primary":"#006877","inverse-surface":"#dce1fb","primary":"#8aebff","outline-variant":"#3c494c","rpg-on-status":"#020617","rpg-text":"#f8fafc","rpg-bg":"#020617","surface-tint":"#2fd9f4","outline":"#859397","on-surface":"#dce1fb","on-background":"#dce1fb","on-primary-container":"#005763","on-secondary-fixed":"#131b2e","secondary-fixed-dim":"#bec6e0","primary-fixed":"#a2eeff","tertiary-container":"#b6c1d9","surface-container-highest":"#2e3447","rpg-surface":"#0f172a","on-tertiary-fixed":"#111c2d","error":"#ffb4ab","surface-variant":"#2e3447","on-primary":"#00363e","on-tertiary-container":"#444f63"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"12px","space-sm":"8px","margin":"16px","space-lg":"16px","space-xl":"24px","gutter":"12px","space-xs":"4px"},fontFamily:{"display-md":["Syne"],"label-xs":["Space Mono"],"title-md":["Syne"],"body-sm":["Space Mono"],"label-sm":["Space Mono"],"number-md":["Space Mono"],"display-lg":["Syne"],"number-lg":["Space Mono"],"body-md":["Space Mono"]},fontSize:{"display-md":["24px",{lineHeight:"30px",letterSpacing:"0.05em",fontWeight:"700"}],"label-xs":["10px",{lineHeight:"12px",letterSpacing:"0.18em",fontWeight:"700"}],"title-md":["17px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"400"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.14em",fontWeight:"700"}],"number-md":["16px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"700"}],"display-lg":["34px",{lineHeight:"40px",letterSpacing:"0.06em",fontWeight:"800"}],"number-lg":["28px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-md":["14px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text font-body-sm text-body-sm antialiased selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface z-50 flex flex-col justify-between border-r border-rpg-border select-none"><div class="flex flex-col"><div class="h-14 px-space-md border-b border-rpg-border flex items-center justify-between bg-surface-container-lowest"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[20px]">token</span><div class="flex flex-col"><span class="font-title-md text-title-md leading-none text-rpg-text tracking-wider">GM-OS V6</span><span class="font-label-xs text-label-xs text-rpg-accent leading-none mt-space-xs">// NEXUS-PROTOCOL</span></div></div><span class="material-symbols-outlined text-rpg-muted text-[16px]">terminal</span></div><nav class="flex flex-col py-space-sm overflow-y-auto max-h-[calc(100vh-120px)]" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]"><div class="px-space-md pt-space-sm pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-accent uppercase tracking-widest">// PNJ &amp; Acteurs</span></div><div class="flex flex-col"><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="galerie-pnj" href="#">Galerie PNJ</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="fiche-pnj" href="#">Fiche PNJ</a><a aria-current="page" class="flex items-center px-space-md py-space-xs transition-colors uppercase bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]" data-path="graphe-social" href="#">Graphe Social</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="generateur-pnj-atelier" href="#">Générateur PNJ Atelier</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="generateur-pnj-table" href="#">Générateur PNJ Table</a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Tactique &amp; Monde</span></div><div class="flex flex-col"><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="combat-os" href="#">Combat-OS</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="dice-os" href="#">Dice-OS</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="cartographie" href="#">Cartographie</a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Audio &amp; Régie</span></div><div class="flex flex-col"><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="voice-os" href="#">Voice-OS</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="musique" href="#">Musique</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="ambiances" href="#">Ambiances</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="cortex-ia" href="#">Cortex IA</a></div></nav></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between"><div class="flex items-center gap-space-xs"><button class="p-space-xs bg-rpg-surface border border-rpg-border text-rpg-accent hover:bg-rpg-surface-2" title="Moniteur Principal" type="button"><span class="material-symbols-outlined text-[16px]">desktop_windows</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Écran Inférieur Tactile" type="button"><span class="material-symbols-outlined text-[16px]">tablet</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Vue Joueurs" type="button"><span class="material-symbols-outlined text-[16px]">cast</span></button></div><button class="p-space-xs bg-rpg-danger/20 border border-rpg-danger text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Déconnexion Régie" type="button"><span class="material-symbols-outlined text-[16px]">power_settings_new</span></button></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface border-b border-rpg-border z-40 px-space-md flex items-center justify-between select-none"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs border border-rpg-accent/30 bg-rpg-accent/10 px-space-sm py-space-xs"><span class="w-2 h-2 rounded-full bg-rpg-accent animate-pulse"></span><span class="font-label-xs text-label-xs text-rpg-accent font-bold tracking-widest uppercase">Cortex Actif</span></div><div class="flex items-center gap-space-xs border border-rpg-success/30 bg-rpg-success/10 px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-success text-[14px]">wifi_tethering</span><span class="font-label-xs text-label-xs text-rpg-success font-bold uppercase tracking-wider">Link Active</span></div><div class="h-6 w-px bg-rpg-border hidden xl:block"></div><div class="hidden xl:flex items-center gap-space-sm bg-rpg-surface-2 border border-rpg-border px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">Master Vol</span><div class="w-24 h-2 bg-rpg-bg border border-rpg-border"><div class="h-full bg-rpg-accent w-[82%]"></div></div><span class="font-number-md text-number-md text-rpg-accent text-[12px] leading-none">82%</span></div><button class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-rpg-accent text-[16px]">mic</span><span class="font-label-xs text-label-xs uppercase tracking-wider">Focus Chat</span></button></div><div class="flex items-center gap-space-md"><div class="flex border border-rpg-border"><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-surface-2 text-on-surface-variant hover:text-on-surface border-r border-rpg-border transition-colors" type="button">Atelier</button><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-accent text-rpg-accent-contrast font-bold" type="button">Table</button></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary/20 border border-primary text-primary hover:bg-primary hover:text-rpg-accent-contrast transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">sensors</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-wider">Connecter Joueurs</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-rpg-danger text-rpg-accent-contrast hover:bg-rpg-danger/90 font-bold transition-all shadow-[0_0_12px_rgba(239,68,68,0.5)]" type="button"><span class="material-symbols-outlined text-[16px]">emergency</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-widest">Stop All</span></button><div class="flex items-center gap-space-xs border-l border-rpg-border pl-space-md"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-14 w-full bg-rpg-bg min-h-screen"><div class="flex flex-col w-full h-[calc(100vh-56px)] overflow-hidden select-none bg-rpg-bg text-rpg-text">
+<!-- Top Module Header -->
+<div class="h-14 px-space-md bg-surface-container-lowest flex items-center justify-between flex-shrink-0 z-30 shadow-md">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">hub</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-title-md text-title-md tracking-wider text-rpg-accent uppercase">SESSION 05</span>
+<span class="font-display-md text-title-md text-rpg-text tracking-widest">// NEXUS SOCIAL</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pl-space-md">
+<div class="flex items-center gap-space-xs px-space-sm py-1 bg-surface-container-high">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-success animate-ping"></span>
+<span class="font-label-xs text-label-xs text-rpg-success tracking-widest uppercase">GRAPHE RELATIONNEL ACTIF</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-1 bg-surface-container-high">
+<span class="font-number-md text-number-md text-primary leading-none text-body-sm">14</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant tracking-wider uppercase">ENTITÉS CONNECTÉES</span>
+</div>
+</div>
+</div>
+<!-- Quick Operations -->
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-rpg-text transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span>
+<span class="font-label-sm text-label-sm uppercase">Retour Cockpit</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-rpg-accent transition-colors" type="button">
+<span class="material-symbols-outlined text-rpg-accent text-[16px]">psychology</span>
+<span class="font-label-sm text-label-sm uppercase">Oracle</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-rpg-text transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span class="font-label-sm text-label-sm uppercase">Règles</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-1.5 bg-rpg-accent text-rpg-accent-contrast font-bold hover:shadow-[0_0_12px_rgba(34,211,238,0.5)] transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">photo_camera</span>
+<span class="font-label-sm text-label-sm uppercase">Snapshot</span>
+</button>
+</div>
+</div>
+<!-- Sub-Toolbar & Controls -->
+<div class="h-12 px-space-md bg-surface-container-low flex items-center justify-between flex-shrink-0 z-20 shadow-sm">
+<div class="flex items-center gap-space-md">
+<!-- Graph Transformation Tools -->
+<div class="flex items-center bg-surface-container-lowest p-1 gap-1">
+<button class="p-1.5 hover:bg-surface-container text-on-surface-variant hover:text-rpg-accent" id="zoom-in" title="Zoom avant" type="button">
+<span class="material-symbols-outlined text-[18px]">zoom_in</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-on-surface-variant hover:text-rpg-accent" id="zoom-out" title="Zoom arrière" type="button">
+<span class="material-symbols-outlined text-[18px]">zoom_out</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-on-surface-variant hover:text-rpg-accent" id="zoom-reset" title="Réinitialiser zoom" type="button">
+<span class="material-symbols-outlined text-[18px]">fit_screen</span>
+</button>
+<div class="w-px h-5 bg-surface-container-highest my-auto"></div>
+<button class="p-1.5 hover:bg-surface-container text-on-surface-variant hover:text-rpg-accent" title="Cadrer la vue" type="button">
+<span class="material-symbols-outlined text-[18px]">crop_free</span>
+</button>
+<button class="p-1.5 bg-surface-container text-rpg-accent" id="lock-btn" title="Verrouillage des nœuds" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-on-surface-variant hover:text-rpg-accent" title="Afficher/Masquer étiquettes" type="button">
+<span class="material-symbols-outlined text-[18px]">label</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container text-on-surface-variant hover:text-rpg-accent" title="Mode réorganisation auto" type="button">
+<span class="material-symbols-outlined text-[18px]">reorder</span>
+</button>
+</div>
+<!-- Filters & Dropdowns -->
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest leading-none mb-1">Filtrer par type</span>
+<select class="bg-surface-container-lowest text-rpg-text font-body-sm text-body-sm px-space-sm py-1 focus:outline-none focus:text-rpg-accent cursor-pointer">
+<option>Tous les Types</option>
+<option>Majeur (Acteur)</option>
+<option>Secondaire</option>
+<option>Bio-synthétique</option>
+<option>IA Matricielle</option>
+</select>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest leading-none mb-1">Filtrer par faction</span>
+<select class="bg-surface-container-lowest text-rpg-text font-body-sm text-body-sm px-space-sm py-1 focus:outline-none focus:text-rpg-accent cursor-pointer">
+<option>Toutes les Factions</option>
+<option>Wallace Corp</option>
+<option>LAPD (Blade Runner Div.)</option>
+<option>Réplicants Clandestins</option>
+<option>Tyrell Legacy</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Search Input -->
+<div class="flex items-center bg-surface-container-lowest px-space-sm py-1.5 w-80">
+<span class="material-symbols-outlined text-rpg-muted text-[18px] mr-space-xs">search</span>
+<input class="bg-transparent text-rpg-text font-body-sm text-body-sm focus:outline-none w-full placeholder:text-rpg-muted" placeholder="Rechercher un personnage ou une relation..." type="text">
+</div>
+</div>
+<!-- Central Canvas & Right Sidebar Area -->
+<div class="flex flex-1 relative overflow-hidden">
+<!-- SVG Interactive Graph Canvas -->
+<div class="relative flex-1 h-full w-full bg-[#030712] overflow-hidden cursor-grab active:cursor-grabbing" id="graph-viewport">
+<!-- Background Matrix Grid Lines -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="48" id="matrix-grid" patternUnits="userSpaceOnUse" width="48">
+<path d="M 48 0 L 0 0 0 48" fill="none" opacity="0.3" stroke="#22d3ee" stroke-width="0.5"></path>
+<circle cx="0" cy="0" fill="#22d3ee" opacity="0.5" r="1"></circle>
+</pattern>
+</defs>
+<rect fill="url(#matrix-grid)" height="100%" width="100%"></rect>
+</svg>
+<!-- Interactive SVG Network Layer -->
+<svg class="absolute inset-0 w-full h-full" id="network-svg" viewBox="0 0 1200 800">
+<defs>
+<!-- Neon Glow Filters -->
+<filter height="140%" id="glow-cyan" width="140%" x="-20%" y="-20%">
+<feGaussianBlur result="blur" stdDeviation="3"></feGaussianBlur>
+<feMerge>
+<feMergeNode in="blur"></feMergeNode>
+<feMergeNode in="SourceGraphic"></feMergeNode>
+</feMerge>
+</filter>
+<filter height="140%" id="glow-red" width="140%" x="-20%" y="-20%">
+<feGaussianBlur result="blur" stdDeviation="3"></feGaussianBlur>
+<feMerge>
+<feMergeNode in="blur"></feMergeNode>
+<feMergeNode in="SourceGraphic"></feMergeNode>
+</feMerge>
+</filter>
+</defs>
+<!-- Edges (Color matched to legend: Jaune=Famille, Vert=Allié, Rouge=Hostile, Violet=Ami, Bleu=Neutre, Orange=Rival) -->
+<g id="edges" opacity="0.85" stroke-linecap="round" stroke-width="2">
+<!-- Léah to Ray McCoy (Orange / Rival) -->
+<path d="M 520 280 C 650 250, 780 380, 930 460" stroke="#f59e0b" stroke-dasharray="4 2"></path>
+<!-- Léah to Sarah (Jaune / Famille) -->
+<path d="M 520 280 Q 450 340, 360 410" filter="url(#glow-cyan)" stroke="#eab308" stroke-width="3"></path>
+<!-- Léah to Ézéchiel (Rouge / Hostile) -->
+<path d="M 520 280 C 530 360, 560 440, 600 500" filter="url(#glow-red)" stroke="#ef4444" stroke-width="2.5"></path>
+<!-- Léah to L'Aurélien (Vert / Allié) -->
+<path d="M 520 280 Q 480 180, 440 100" stroke="#10b981" stroke-width="2.5"></path>
+<!-- Ézéchiel to Ray McCoy (Orange / Rival) -->
+<path d="M 600 500 L 930 460" stroke="#f59e0b" stroke-width="3"></path>
+<!-- Sarah to Noah (Violet / Ami) -->
+<path d="M 360 410 L 200 480" stroke="#a855f7" stroke-width="2"></path>
+<!-- Noah to Séraphine (Vert / Allié) -->
+<path d="M 200 480 L 240 240" stroke="#10b981" stroke-width="2"></path>
+<!-- Séraphine to L'Aurélien (Bleu / Neutre) -->
+<path d="M 240 240 Q 340 160, 440 100" stroke="#3b82f6" stroke-dasharray="6 3" stroke-width="1.5"></path>
+<!-- Sarah to Lilith Tyrell (Bleu / Neutre) -->
+<path d="M 360 410 Q 370 580, 380 720" stroke="#3b82f6" stroke-width="1.5"></path>
+<!-- Ézéchiel to Lilith Tyrell (Rouge / Hostile) -->
+<path d="M 600 500 Q 480 630, 380 720" stroke="#ef4444" stroke-width="2.5"></path>
+<!-- Ray McCoy to Chien de McCoy (Jaune / Famille) -->
+<path d="M 930 460 L 1080 520" stroke="#eab308" stroke-width="3"></path>
+<!-- Ray McCoy to David Holden (Vert / Allié) -->
+<path d="M 930 460 Q 1040 320, 1120 170" stroke="#10b981" stroke-width="2"></path>
+<!-- Ray McCoy to Emil Run (Rouge / Hostile) -->
+<path d="M 930 460 Q 1050 630, 1110 710" stroke="#ef4444" stroke-width="2"></path>
+</g>
+</svg>
+<!-- Dynamic Nodes Placement Container -->
+<div class="absolute inset-0 pointer-events-none" id="nodes-container">
+<!-- Nœud : L'Aurélien -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 36.6%; top: 12.5%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-[0_0_12px_rgba(34,211,238,0.3)] group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="A cold cyberpunk synth informant portrait of L'Aurélien, moody blue rim lighting, cybernetic implants on temples, dark minimalist background, photorealistic gritty Blade Runner style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAR17RB1AdTOMozrWH5vy4s4tGqhfRppgwMPe8PBFWsrs_kf3MuUaTtBXBDf-90jiMBrEinITxN0l59395VYORt49NJ8chkdjFQnFW7bFIIgofxV1BX_jVjMf1tf1kmbdEoM9nS5v5P3LW1QxLBLsSGtPAxs0VG57NmQKc6MB8H3lAQhOWvGSwZUQh_xTS3ZwvwBgM_iToO0TQ-QpxGJ5DppHEMFMDxTihf2mz2Y3oG0RqVJXn4Kp52Hw">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-accent"></span>
+</div>
+<span class="font-label-sm text-body-sm text-rpg-text mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">L'Aurélien</span>
+</div>
+<!-- Nœud : Séraphine -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 20%; top: 30%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Cyberpunk woman Seraphine, Wallace corporate operative, slicked hair, sharp amber corporate neon reflection, stark brutalist shadow lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnN84q_cyk8ffHlYDpPlC1bY5G2iUmN6pD29wZ7gUXnMBLXmugVI13ApKKoarSNHqaThB2qIgRfckx-NKGZv7clnoeGd0J2EJARU5f862NBxjfCbtiXWhZoNcFQWhUdMB9F-RKD61vSLSWrfs_sJWsILhU3OKr5w06o5YM7WL80rOi4WMFcKGeDH7MSspQRWQTuxAs8uxHE1bxFV7ymFdupnthLSnV2ImKD9wGw0Yq7gLq7vjLurGUxA">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-success"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Séraphine</span>
+</div>
+<!-- Nœud : Léah (Central Focus) -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 43.3%; top: 35%;">
+<div class="relative w-16 h-16 bg-surface-container-high p-1 shadow-[0_0_20px_rgba(34,211,238,0.6)] group-hover:scale-110 transition-transform ring-2 ring-rpg-accent">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of Leah, a charismatic rebel synthetic leader, atmospheric cyberpunk dusk lighting, subtle orange flare, intense gaze, futuristic collar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNVwdHcAPCQ3xUp4QWF9jpGAnmrjQ4yA5t_wMWZ-jBVM5MggnNuYVh2RhWfFy3NyXxBVUQciOkYOhNmsFnTFRw-pVIKyhY4iydpsbuCw0BPV6eU1F8fmBvj3Z_w88FZwp8Qo6jRtC-XLo-oOi03KLPgwtJF69UKWCOe62PbHb2kCEi-mcNWOSTTEpxGxBotTBV1v2wQo50SxPzEAV0mAIrV8tAcgx3Q6nliB3DNvuTx86Qax7GSa6B_w">
+<span class="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-rpg-accent animate-pulse"></span>
+</div>
+<span class="font-title-md text-title-md text-rpg-accent mt-2 px-2.5 py-0.5 bg-surface-container-lowest/95 font-bold tracking-wider">Léah</span>
+</div>
+<!-- Nœud : Noah -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 16.6%; top: 60%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Portrait of Noah, street doctor with head bandage and green optic scanner, dark neon cyberpunk clinic alleyway background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxluGRn82i7fO74tdciPzs3g-64FUxH74hnYlpZ1IOwueaIbYVG4AOxVcsuTYdMqUo6btlIQDPYD60gBLh4ydcM_EHuvCrr_uUO_qW-42hiFKQ5eZJZ5A6DYFwVw-u4Av5zSBtE4OqIwIZWdS5b6TdIqwo0mLClSrTbX2skiFwPuYw6s1nKFNyYcUYvl5E1NvIVdZG2YP9YjFi_HrcTRK7cLGXBOPuBPAXJ415iTmkR5Lnz0IRu3mERQ">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-warning"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Noah</span>
+</div>
+<!-- Nœud : Sarah -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 30%; top: 51.2%;">
+<div class="relative w-14 h-14 bg-surface-container-high p-0.5 shadow-[0_0_12px_rgba(234,179,8,0.4)] group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sarah, mysterious young synthetic child with faint luminescence in pale blue eyes, rain soaked reflective dark room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA42DnJcfaO4jDadPxzOzQIBJcT79BmvsejKSufzOeDWNjlwtJdFDBl1HvmjxkhrXtPSSK2eXqUz1Q-8hMKjAeV1CSoxyaNJ2PQVaUGuiLSewBTno_p7YIJOD0Nw2wOVcgX3LNIxMpL0pBQOQF0jrU_L2Iqsu7NLLjzNGQEs4gj7XtXo8MGn6qF5wlZ8qTpOM21rVwwhNJWkvk__Gsb_KPc4muLaXoUk6zttolqmU9bdLIpDR0DxiVEJA">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-yellow-400"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Sarah</span>
+</div>
+<!-- Nœud : Ézéchiel (Ray McCoy) - SELECTED -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 50%; top: 62.5%;">
+<div class="relative w-16 h-16 bg-surface-container-high p-1 shadow-[0_0_24px_rgba(239,68,68,0.7)] group-hover:scale-110 transition-transform ring-2 ring-rpg-danger">
+<img class="w-full h-full object-cover" data-alt="Grizzled hardened blade runner detective Ezekiel Ray McCoy, brown trench coat, smoke swirling in neon red rain, intense weary expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDKXud6GK49Y0nHkaKj7k8QIcla831FI3JvjxYDeGd6VTffIPQU80KA5hczdMsqAe-jH5-G6Us6LanBMmsb7fTbJe2R5VTrkxntwaL-wYH2GiF8LbHsdgSQoXMYNkbictsP9DUINzKgtVT1RJMm9DX7dLPYdvhv-8EuiUHt-f70swZCVlduUrM_ReNfTNhq2IulVArM2A9T7vG5RApfKD9i3ryl4u1O0NNkb9M8EQLvk9MKYdu-iu7EA">
+
+</div>
+<span class="font-title-md text-body-sm text-rpg-danger mt-2 px-2 py-0.5 bg-surface-container-lowest/95 font-bold tracking-wider">Ézéchiel (Ray McCoy)</span>
+</div>
+<!-- Nœud : Ray McCoy (Alternate) -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 77.5%; top: 57.5%;">
+<div class="relative w-14 h-14 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Detective Ray McCoy clean corporate profile, lapel badge, neon cyan police cruiser reflection, high contrast studio shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl1ju9rGejj9KuQFyNHyuGI2nn_DcrF06Sfl5NrVfQygtVid4Q6Zw511cHemlpgNGsm_p1Jjui8azbO2qh5Hj_EUnCjDMKR2GsLk3YzzosowyQQqJZjVMbIE30mSyL-qWLce-gKVAX8m_TQegjuRTbHV1pxVFv1kYCwN45r0nkGn4Hap8vNlw2TI97KNSnoIFVQkHOQfGATQgGU9jEgwt3v_E29C3O3eTg0ZiEWK4uCaMpDFSMrCjn_A">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-warning"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Ray McCoy</span>
+</div>
+<!-- Nœud : Chien de McCoy -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 90%; top: 65%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Cybernetic augmented canine dog companion with glowing sensor harness sitting alert in dark industrial rain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcPmW22Zk-7GG1gK_QVuCK23Gxhm7SHBMQxwHU0P8wNfYkjs8v8oGZHhQ3oAUAJLi_iRXln2BUb8Tqcx7iWa1IX89tyKtQI-BUG6dT-CF4nl-2wDkZ2DMQJRae8dkZ4Bnomrk_IIW8loC79EwhpFNZt8UeFFkGin1zxVS_vP22p2GdC8PARmGoHsQxEfo_VHVrP3fGDioWs69mbQfQXu7FTXtY2VDN86XPnEsYm-m03DOZLDIugg44yw">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-yellow-400"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Chien de McCoy</span>
+</div>
+<!-- Nœud : Lilith Tyrell -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 31.6%; top: 90%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Lilith Tyrell aristocratic corporate heiress, high collar geometric gold dress, harsh shadows, obsidian penthouse background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAtfg-6cw_C4sJDz3AdHrySXvyzEC1fLNHcD6TaxIOElFy1DzgJZprRnthMssr_MOt0_1FrBgNq6JRs8a1YDBtq9A2YPmGc-pH6kxGgQFBJsDFp7m0k9IhJLKePoujgBMdVEpqwpocKqfQtpO2X6zNAsUw54-stfZtbXfP3TQ1LD-uYFhJ_Tr8wNq1CjzVsA1ibU5KtOE3skz1iHiCTB5YMNORUqdfp9W0AhcfyDgrDlSH9VnswvHZEg">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-accent"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Lilith Tyrell</span>
+</div>
+<!-- Nœud : David Holden -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 93.3%; top: 21.2%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Senior Blade Runner investigator David Holden, stern face, scar across jawline, dim neon office interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7WfcqDGjuZu_SJcAlGXIfm8-7VsaBSIZvcwvd_F5S93aqiFr98pw401hW1CPHSfvEtg-m3wSsk-Mh80NSGGCuHnvM_k43ScKOAGHqsXdIKJkIDSJLKr8n7vRbWDQksMsIOnOML9D4N-kgLjpQQZ_w0yDRo_waTcfzgxsUwX6VkXLTHI08d7Oqhqu1eQRDynpnWT4Bh0e2RtldSmt7oJy6XsJt00ZDsOLs_7KhRyX6xFnU_tsDdiYQLA">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-success"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">David Holden</span>
+</div>
+<!-- Nœud : Émil Run -->
+<div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center group cursor-pointer" style="left: 92.5%; top: 88.7%;">
+<div class="relative w-12 h-12 bg-surface-container-high p-0.5 shadow-md group-hover:scale-110 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Underworld arms broker Emil Run with tinted red cyber-goggles, smirk, dark underground nightclub neon background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHWOc8qp8U9MamnhhMpWynZ-ANqEm-NiHWbBIDPsgQvsW886hhjiZg-NaLqHLsUSgq9PPyUdxB9FUxZdAfPgGPyNhlB4uUah6StbyAxWST6MfGD3erxMNU1Br8I2aNC9GFOx0JSa_h51VzFnKmCNWvgCZVWw7hDEVG9ccteZzUFP2KPkz9f_wwOrN6_lKCKNJWKd_2MmPmY0HvBhPYDAI1b18aWX_9vHbrbQKn_80MrFpKyM4dAd2YaA">
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rpg-danger"></span>
+</div>
+<span class="font-label-sm text-body-sm text-on-surface mt-1.5 px-2 py-0.5 bg-surface-container-lowest/90 font-bold tracking-wider">Émil Run</span>
+</div>
+</div>
+<!-- Encart Légende des Liens (Bottom Left of Canvas) -->
+<div class="absolute bottom-4 left-4 w-80 bg-surface-container-lowest/95 backdrop-blur-md p-space-md shadow-xl z-20 border border-rpg-border"><div class="flex items-center gap-space-xs mb-space-xs pb-1 border-b border-rpg-border"><span class="material-symbols-outlined text-rpg-accent text-[18px]">account_tree</span><span class="font-label-xs text-label-xs text-on-surface tracking-widest uppercase font-bold">LÉGENDE DES LIENS</span></div><div class="grid grid-cols-2 gap-x-space-md gap-y-1.5 mt-2"><!-- Famille --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Famille</span></div><!-- Allié --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-rpg-success shadow-[0_0_8px_rgba(16,185,129,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Allié</span></div><!-- Ami --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Ami</span></div><!-- Neutre --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-rpg-info shadow-[0_0_8px_rgba(59,130,246,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Neutre</span></div><!-- Rival --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Rival</span></div><!-- Hostile --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-rpg-danger shadow-[0_0_8px_rgba(239,68,68,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Hostile</span></div><!-- Subordonné --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-secondary shadow-sm flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Subordonné</span></div><!-- Supérieur --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(138,235,255,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Supérieur</span></div><!-- Amour --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-error shadow-[0_0_8px_rgba(255,180,171,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Amour</span></div><!-- Mentor --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-rpg-accent shadow-[0_0_8px_rgba(34,211,238,0.6)] flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-wider font-bold">Mentor</span></div><!-- Autre --><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-outline shadow-sm flex-shrink-0"></span><span class="font-label-sm text-label-sm text-rpg-muted uppercase tracking-wider font-bold">Autre</span></div></div></div>
+</div>
+<!-- Right Settings & Node Detail Sidebar (300px) -->
+<aside class="w-[300px] h-full bg-surface-container-lowest flex flex-col justify-between flex-shrink-0 z-20 shadow-2xl overflow-y-auto">
+<div class="p-space-md flex flex-col">
+<!-- Panel Header -->
+<div class="flex flex-col gap-1 pb-space-sm bg-surface-container-low p-space-sm mb-space-md">
+<span class="font-label-xs text-label-xs text-rpg-accent uppercase tracking-widest">// TÉLÉMESURE ENTITÉ</span>
+<h2 class="font-title-md text-title-md text-rpg-text uppercase leading-tight font-bold">
+            DÉTAILS DU NŒUD SÉLECTIONNÉ
+          </h2>
+<span class="font-label-sm text-label-sm text-rpg-danger font-bold tracking-wider">// ÉZÉCHIEL (RAY MCCOY)</span>
+</div>
+<!-- Large Target Portrait & Meta -->
+<div class="relative w-full h-44 bg-surface-container overflow-hidden mb-space-md shadow-inner group">
+<img class="w-full h-full object-cover" data-alt="Close up cinematic portrait of detective Ezekiel Ray McCoy, heavy rain atmosphere, dark cyberpunk noir detective, trenchcoat collar raised, scarred visage, grim look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZEVQJ9UwWNiUbMhKKSs2FjZlfn3tcDfepepDfbWMWeHrltRltDrHessC6aW549d1FAVu3g5nEGXd7a3ZuSkaRswke_pN6XAv88jz9A0h2EYdmcr0ezbylKZBHQzUE-rn6naJNbxaw0IGEhtp6snlYPO2RiLNLePNmPPSratldyFvvM42Muc8aeGXADOdPBhYOkVHQr1Kh4G2DeUIDHFdm8aQaaTvxd9y7YuNiNtfQOUm3boZp8DKCkw">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
+<div class="absolute bottom-2 left-2 right-2 flex justify-between items-end">
+<div>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">FACTION AFFILIÉE</span>
+<p class="font-title-md text-body-sm text-primary font-bold">LAPD // UNITÉ BLADE RUNNER</p>
+</div>
+
+</div>
+</div>
+<!-- Telemetry Stats Mini-grid -->
+
+<!-- Relations Directes -->
+<!-- Tabs Navigation --><div class="flex border-b border-rpg-border mb-space-md"><button type="button" class="flex-1 py-1.5 font-label-sm text-label-sm uppercase font-bold text-rpg-accent border-b-2 border-rpg-accent bg-rpg-accent/10 text-center transition-colors">Relations</button><button type="button" class="flex-1 py-1.5 font-label-sm text-label-sm uppercase text-on-surface-variant hover:text-rpg-text hover:bg-surface-container text-center transition-colors">Modifier</button></div><!-- Relations Directes --><div class="flex flex-col gap-space-xs mb-space-md"><div class="flex items-center justify-between pb-1"><span class="font-label-xs text-label-xs text-on-surface uppercase tracking-widest font-bold">RELATIONS DIRECTES (4)</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">TYPE // DÉTAIL</span></div><!-- Relation 1 : Deckard (Hostile) --><div class="bg-surface-container-low p-2 flex flex-col gap-1"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rpg-danger flex-shrink-0"></span><span class="font-label-sm text-body-sm text-rpg-text font-bold">Rick Deckard</span></div><span class="font-label-xs text-label-xs text-rpg-danger uppercase font-bold">HOSTILE</span></div><p class="font-body-sm text-[12px] text-on-surface-variant pl-3.5 leading-snug">Ancien partenaire traqué ; mandat de retrait actif.</p></div><!-- Relation 2 : Léah (Allié) --><div class="bg-surface-container-low p-2 flex flex-col gap-1"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rpg-success flex-shrink-0"></span><span class="font-label-sm text-body-sm text-rpg-text font-bold">Léah</span></div><span class="font-label-xs text-label-xs text-rpg-success uppercase font-bold">ALLIÉ SECRÈTE</span></div><p class="font-body-sm text-[12px] text-on-surface-variant pl-3.5 leading-snug">Pacte mutuel de protection contre la corpo.</p></div><!-- Relation 3 : Ray McCoy (Rival) --><div class="bg-surface-container-low p-2 flex flex-col gap-1"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rpg-warning flex-shrink-0"></span><span class="font-label-sm text-body-sm text-rpg-text font-bold">Ray McCoy</span></div><span class="font-label-xs text-label-xs text-rpg-warning uppercase font-bold">RIVALITÉ / CLONE</span></div><p class="font-body-sm text-[12px] text-on-surface-variant pl-3.5 leading-snug">Double synthétique en confrontation identitaire.</p></div><!-- Relation 4 : Lilith Tyrell (Hostile) --><div class="bg-surface-container-low p-2 flex flex-col gap-1"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rpg-danger flex-shrink-0"></span><span class="font-label-sm text-body-sm text-rpg-text font-bold">Lilith Tyrell</span></div><span class="font-label-xs text-label-xs text-rpg-danger uppercase font-bold">HOSTILE // CIBLE CONTRAT</span></div><p class="font-body-sm text-[12px] text-on-surface-variant pl-3.5 leading-snug">Commanditaire de la prime de capture prioritaire.</p></div></div><!-- Perception Entrante Section --><div class="flex flex-col gap-space-xs mb-space-md"><div class="flex items-center justify-between pb-1 border-t border-rpg-border pt-space-sm"><span class="font-label-xs text-label-xs text-on-surface uppercase tracking-widest font-bold">PERCEPTION ENTRANTE</span><span class="font-label-xs text-label-xs text-rpg-accent uppercase">REGARDS TIERS</span></div><div class="bg-surface-container-low p-2 flex flex-col gap-1 border-l-2 border-rpg-accent"><div class="flex items-center justify-between"><span class="font-label-sm text-body-sm text-rpg-text font-bold">LAPD Central</span><span class="font-label-xs text-label-xs text-rpg-danger uppercase font-bold">MENACE CRITIQUE</span></div><p class="font-body-sm text-[12px] text-on-surface-variant leading-snug">Perçu comme renégat armé potentiellement instable.</p></div><div class="bg-surface-container-low p-2 flex flex-col gap-1 border-l-2 border-rpg-success"><div class="flex items-center justify-between"><span class="font-label-sm text-body-sm text-rpg-text font-bold">Réseau Clandestin</span><span class="font-label-xs text-label-xs text-rpg-success uppercase font-bold">RECOURS ULTIME</span></div><p class="font-body-sm text-[12px] text-on-surface-variant leading-snug">Considéré comme un protecteur imprévisible mais indispensable.</p></div></div>
+</div>
+<!-- Action Panel Buttons Footer -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-sm flex-shrink-0"><button class="w-full h-10 bg-surface-container hover:bg-surface-container-high text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-space-xs transition-colors border border-rpg-border hover:border-rpg-accent" type="button"><span class="material-symbols-outlined text-rpg-accent text-[18px]">add_link</span><span class="">Ajouter une connexion</span></button><button class="w-full h-11 bg-rpg-accent hover:bg-rpg-accent/90 text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-space-xs transition-shadow shadow-[0_0_12px_rgba(34,211,238,0.4)]" type="button"><span class="material-symbols-outlined text-[18px]">badge</span><span class="">Voir le profil complet</span></button></div>
+</aside>
+</div>
+</div>
+<script>
+  // Micro-interactions for Zoom & Node Lock Status
+  const lockBtn = document.getElementById('lock-btn');
+  let isLocked = true;
+  if(lockBtn) {
+    lockBtn.addEventListener('click', () => {
+      isLocked = !isLocked;
+      const icon = lockBtn.querySelector('.material-symbols-outlined');
+      if (isLocked) {
+        icon.textContent = 'lock';
+        lockBtn.classList.add('text-rpg-accent', 'bg-surface-container');
+        lockBtn.classList.remove('text-on-surface-variant');
+      } else {
+        icon.textContent = 'lock_open';
+        lockBtn.classList.remove('text-rpg-accent', 'bg-surface-container');
+        lockBtn.classList.add('text-on-surface-variant');
+      }
+    });
+  }
+
+  // Interactive Node Highlighting
+  const nodes = document.querySelectorAll('#nodes-container > div');
+  nodes.forEach(node => {
+    node.addEventListener('click', () => {
+      nodes.forEach(n => {
+        const ring = n.querySelector('div');
+        if (ring) {
+          ring.classList.remove('ring-2', 'ring-rpg-accent', 'shadow-[0_0_20px_rgba(34,211,238,0.7)]');
+        }
+      });
+      const activeDiv = node.querySelector('div');
+      if (activeDiv) {
+        activeDiv.classList.add('ring-2', 'ring-rpg-accent', 'shadow-[0_0_20px_rgba(34,211,238,0.7)]');
+      }
+    });
+  });
+</script></main></div>
+
+</body></html>

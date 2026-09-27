@@ -5733,6 +5733,22 @@ v1.2.
   Moderne et Clair se confondaient. **Le validateur mesure `text` sur le cadre quand `frame-text`
   manque** : ce que l'écran montrera. La copie de RPG Theme Builder est à jour, **David l'a chargée
   dans ChatGPT**.
+- ⭐ **Stitch, deuxième tour — décidé par David le 2026-09-27**, pour la cohérence de toute
+  l'application : le reste des sections 0 à 6 de l'inventaire (Image-OS, le son, les PNJ, les
+  outils de séance, le poste du meneur, les surcouches, la préparation, Médiathèque / Paramètres /
+  Nexus), prompts 10 à 17 dans `2026-09-27-prompts-stitch-tour-2.md`. La vitrine sait les capturer
+  (`GMOS_VITRINE=2`, 65 captures vérifiées le 2026-09-27). ✅ **Terminé le 2026-09-28** : huit lots retenus, une soixantaine
+  d'écrans (`stitch/README.md`, bilan en fin). **Ne change rien à l'écran avant la
+  phase 4** : P1.2 reste la suite du code.
+- 🐞 **Garé — Chroniques : le texte des événements s'affiche en Markdown brut** (trouvé par la
+  vitrine le 2026-09-28, capture G9) : « ### ⚔️ Rapport de Combat … **Fin du Round** » apparaît
+  tel quel, et l'emoji ⚔️ sort en caractères cassés (`âš”ï¸`) — un texte UTF-8 relu comme du
+  Latin-1 quelque part entre le rapport de combat et la chronologie. Pas corrigé (`src/`).
+- 🐞 **Garé — Image-OS, vignettes vides après une restauration** (trouvé par la vitrine le
+  2026-09-27). `useMediaUrl` cherche l'image dans la base à la création de la tuile et **ne
+  réessaie pas** tant que le chemin ne change pas : les tuiles montées pendant « Restaurer depuis
+  la sauvegarde » gardent `url("")` jusqu'à ce qu'on quitte le module. Les diaporamas, montés
+  après, s'affichent. Pas corrigé (`src/`, hors du sujet Stitch).
 - **Le plan de la phase 1** (`2026-09-27-refonte-phase-1.md`) remplace le § 4 du plan général. Deux
   décisions de David : **l'interrupteur des personnalités est un réglage des Paramètres** ; l'ordre
   est gardé (texte secondaire avant arrondis). Estimation : quatre soirées.

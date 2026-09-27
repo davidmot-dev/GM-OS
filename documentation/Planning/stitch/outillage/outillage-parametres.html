@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"secondary-fixed":"#dae2fd","on-secondary-container":"#adb4ce","primary-fixed":"#a2eeff","outline-variant":"#3c494c","on-primary-fixed":"#001f25","outline":"#859397","on-secondary":"#283044","rpg-surface":"#0f172a","rpg-muted":"#898c95","rpg-warning":"#f59e0b","on-secondary-fixed":"#131b2e","on-background":"#dce1fb","primary":"#8aebff","primary-fixed-dim":"#2fd9f4","rpg-accent-contrast":"#020617","on-surface-variant":"#bbc9cd","rpg-border":"#1e293b","on-error-container":"#ffdad6","background":"#0c1324","rpg-text":"#f8fafc","tertiary-fixed":"#d8e3fb","rpg-on-status":"#020617","surface-container-highest":"#2e3447","surface-bright":"#33394c","on-tertiary":"#263143","tertiary":"#d2ddf5","surface-dim":"#0c1324","primary-container":"#22d3ee","surface-variant":"#2e3447","rpg-bg":"#020617","on-secondary-fixed-variant":"#3f465c","on-primary-container":"#005763","secondary-container":"#3f465c","rpg-danger":"#ef4444","inverse-surface":"#dce1fb","inverse-primary":"#006877","surface":"#0c1324","error":"#ffb4ab","tertiary-container":"#b6c1d9","on-tertiary-fixed":"#111c2d","surface-container-low":"#151b2d","surface-container-high":"#23293c","surface-container":"#191f31","secondary-fixed-dim":"#bec6e0","surface-container-lowest":"#070d1f","on-error":"#690005","rpg-success":"#10b981","error-container":"#93000a","rpg-surface-2":"#1e293b","on-primary-fixed-variant":"#004e5a","rpg-accent":"#22d3ee","secondary":"#bec6e0","on-primary":"#00363e","tertiary-fixed-dim":"#bcc7de","on-tertiary-container":"#444f63","inverse-on-surface":"#2a3043","surface-tint":"#2fd9f4","on-tertiary-fixed-variant":"#3c475a","rpg-info":"#3b82f6","on-surface":"#dce1fb"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"16px","space-xs":"4px","space-sm":"8px","margin":"16px","space-md":"12px","gutter":"12px","space-xl":"24px"},"fontFamily":{"number-md":["Space Mono"],"display-lg":["Syne"],"title-md":["Syne"],"display-md":["Syne"],"number-lg":["Space Mono"],"body-md":["Space Mono"],"body-sm":["Space Mono"],"label-sm":["Space Mono"],"label-xs":["Space Mono"]},"fontSize":{"number-md":["16px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"700"}],"display-lg":["34px",{"lineHeight":"40px","letterSpacing":"0.06em","fontWeight":"800"}],"title-md":["17px",{"lineHeight":"22px","letterSpacing":"0.08em","fontWeight":"700"}],"display-md":["24px",{"lineHeight":"30px","letterSpacing":"0.05em","fontWeight":"700"}],"number-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.14em","fontWeight":"700"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.18em","fontWeight":"700"}]}}}}</script></head><body class="bg-rpg-bg text-rpg-text font-body-md text-body-md min-h-screen selection:bg-rpg-accent selection:text-rpg-accent-contrast antialiased relative overflow-hidden"><div class="fixed inset-0 z-0 opacity-25 pointer-events-none select-none flex flex-col justify-between p-space-lg"><div class="flex justify-between items-center border-b border-rpg-border pb-space-sm"><div class="flex gap-space-lg"><span class="font-title-md text-title-md text-rpg-accent">GM-OS // DESK_01</span><span class="font-label-sm text-label-sm text-rpg-muted">REGIME TABLE : COMBAT EXPÉDITION</span></div><div class="font-number-md text-number-md text-on-surface">T+02:44:19</div></div><div class="grid grid-cols-12 gap-gutter my-auto"><div class="col-span-3 h-64 bg-rpg-surface border border-rpg-border p-space-sm"><div class="h-4 bg-rpg-surface-2 mb-2 w-2/3"></div><div class="space-y-2"><div class="h-2 bg-surface-container-high w-full"></div><div class="h-2 bg-surface-container-high w-4/5"></div><div class="h-2 bg-surface-container-high w-1/2"></div></div></div><div class="col-span-6 h-64 bg-rpg-surface border border-rpg-border p-space-sm flex flex-col justify-between"><div class="h-4 bg-rpg-surface-2 w-1/3"></div><div class="grid grid-cols-4 gap-2"><div class="h-16 bg-surface-container-high border border-rpg-border"></div><div class="h-16 bg-surface-container-high border border-rpg-border"></div><div class="h-16 bg-surface-container-high border border-rpg-border"></div><div class="h-16 bg-surface-container-high border border-rpg-border"></div></div></div><div class="col-span-3 h-64 bg-rpg-surface border border-rpg-border p-space-sm"><div class="h-4 bg-rpg-surface-2 mb-2 w-1/2"></div><div class="h-20 bg-surface-container-high border border-rpg-border"></div></div></div><div class="flex justify-between border-t border-rpg-border pt-space-sm font-label-xs text-label-xs text-rpg-muted"><span>MONITEUR CENTRAL 1440x900</span><span>MASTER OUTPUT LOCKED</span></div></div><div class="fixed inset-0 bg-rpg-bg/80 backdrop-blur-md z-10"></div><div class="relative z-20 min-h-screen flex items-center justify-center p-space-lg"><div class="w-full max-w-[1100px] bg-rpg-surface border border-rpg-accent shadow-[0_0_0_1px_#020617,0_8px_32px_rgba(0,0,0,0.85),0_0_24px_rgba(34,211,238,0.25)] flex flex-col"><header class="h-14 px-space-lg bg-surface-container-low border-b border-rpg-border flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="w-2.5 h-2.5 bg-rpg-accent shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div><h1 class="font-title-md text-title-md uppercase text-rpg-accent tracking-wider">PARAMÈTRES // CONFIGURATION GLOBALE</h1><span class="px-space-sm py-0.5 bg-surface-container-high border border-rpg-border font-label-xs text-label-xs text-primary">CONF_ROOT_v2.7</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-label-xs text-label-xs text-rpg-muted"><span class="w-1.5 h-1.5 bg-rpg-success"></span><span>EN LIGNE</span></div><button class="px-space-md py-1.5 border border-rpg-border text-on-surface-variant hover:border-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors font-label-sm text-label-sm uppercase flex items-center gap-space-xs"><span>ESC / FERMER [✕]</span></button></div></header><main class="w-full bg-rpg-surface"><div class="flex flex-col w-full">
+<div class="flex flex-col lg:flex-row w-full bg-rpg-surface min-h-[720px] max-h-[820px] overflow-hidden">
+<!-- COLONNE NAVIGATION GAUCHE (280px) -->
+<aside class="w-full lg:w-[280px] shrink-0 bg-surface-container-lowest flex flex-col justify-between">
+<nav class="flex flex-col">
+<!-- Rubrique 01: SYSTÈME (ACTIVE) -->
+<button class="text-left p-space-md bg-surface-container-low transition-colors relative group" id="nav-item-01">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-rpg-accent"></div>
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-rpg-accent tracking-wider">01. SYSTÈME</span>
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">radio_button_checked</span>
+</div>
+<p class="font-body-sm text-body-sm text-rpg-text mt-1">Apparence, langue, état</p>
+</button>
+<!-- Rubrique 02: TACTIQUE -->
+<button class="text-left p-space-md hover:bg-surface-container-low transition-colors group" id="nav-item-02">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-secondary group-hover:text-rpg-text tracking-wider">02. TACTIQUE</span>
+<span class="material-symbols-outlined text-outline text-[18px]">adjust</span>
+</div>
+<p class="font-body-sm text-body-sm text-rpg-muted mt-1">Portées et statuts du Cortex</p>
+</button>
+<!-- Rubrique 03: IA & CORTEX -->
+<button class="text-left p-space-md hover:bg-surface-container-low transition-colors group" id="nav-item-03">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-secondary group-hover:text-rpg-text tracking-wider">03. IA &amp; CORTEX</span>
+<span class="material-symbols-outlined text-outline text-[18px]">memory</span>
+</div>
+<p class="font-body-sm text-body-sm text-rpg-muted mt-1">Comptes et modèles</p>
+</button>
+<!-- Rubrique 04: TÉLÉCOMMANDE -->
+<button class="text-left p-space-md bg-surface-container-high/30 hover:bg-surface-container-low transition-colors group" id="nav-item-04">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-rpg-text tracking-wider flex items-center gap-1.5">
+<span>04. TÉLÉCOMMANDE</span>
+</span>
+<span class="px-1.5 py-0.5 bg-rpg-surface-2 text-primary font-label-xs text-label-xs tracking-normal">DÉPLOYÉ</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Tablettes et téléphone</p>
+</button>
+<!-- Rubrique 05: THÈME DU JEU -->
+<button class="text-left p-space-md hover:bg-surface-container-low transition-colors group" id="nav-item-05">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-secondary group-hover:text-rpg-text tracking-wider">05. THÈME DU JEU</span>
+<span class="material-symbols-outlined text-outline text-[18px]">palette</span>
+</div>
+<p class="font-body-sm text-body-sm text-rpg-muted mt-1">Les couleurs du jeu ouvert</p>
+</button>
+</nav>
+<!-- JAUGE STOCKAGE & STATUS DU NOEUD -->
+<div class="p-space-md bg-surface-container-lowest">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">RÉSERVOIR CORTEX LOCAL</span>
+<span class="font-number-md text-number-md text-primary">68%</span>
+</div>
+<div class="w-full h-2 bg-rpg-bg overflow-hidden flex">
+<div class="h-full bg-rpg-accent w-[68%]"></div>
+</div>
+<div class="mt-space-sm flex justify-between font-label-xs text-label-xs text-rpg-muted">
+<span>NOEUD 192.168.1.42</span>
+<span class="text-rpg-success">STABLE // 12ms</span>
+</div>
+</div>
+</aside>
+<!-- ZONE PRINCIPALE DE RÉGLAGE (SCROLLABLE) -->
+<section class="flex-1 overflow-y-auto max-h-[720px] p-space-lg flex flex-col gap-space-xl bg-rpg-surface">
+<!-- ================= SECTION 1: SYSTÈME ================= -->
+<div class="flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">tune</span>
+<h2 class="font-display-md text-display-md text-rpg-text uppercase tracking-wider">SECTION 01 // SYSTÈME : APPARENCE, LANGUE &amp; ÉTAT</h2>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase px-2 py-1 bg-surface-container">MODIFICATION À CHAUD</span>
+</div>
+<!-- BLOC 1: THÈME DE L'INTERFACE -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-md">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-title-md text-title-md text-rpg-accent uppercase">THÈME DE L'INTERFACE</h3>
+<span class="font-label-xs text-label-xs text-rpg-muted">MODULE VISUEL PRINCIPAL</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Définit la personnalité graphique, les contrastes et les textures de la console.</p>
+</div>
+<!-- Grille des 4 thèmes -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Theme 1: CYBERPUNK (Actif) -->
+<button class="flex flex-col text-left p-space-sm bg-rpg-bg shadow-[0_0_12px_rgba(34,211,238,0.25)] relative transition-all group min-h-[104px]">
+<div class="absolute inset-0 bg-gradient-to-b from-rpg-accent/10 to-transparent pointer-events-none"></div>
+<div class="flex items-center justify-between w-full mb-2">
+<span class="font-title-md text-title-md text-rpg-accent">CYBERPUNK</span>
+<span class="px-1.5 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-label-xs text-label-xs">[ACTIF]</span>
+</div>
+<div class="w-full h-8 bg-[#020617] flex items-center justify-between px-2 mb-2">
+<div class="w-3 h-3 bg-rpg-accent"></div>
+<div class="flex gap-1">
+<div class="w-6 h-1.5 bg-rpg-accent"></div>
+<div class="w-3 h-1.5 bg-primary-container"></div>
+</div>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted mt-auto">Base marine sombre &amp; néon cyan</span>
+</button>
+<!-- Theme 2: MÉDIÉVAL -->
+<button class="flex flex-col text-left p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors min-h-[104px]">
+<div class="flex items-center justify-between w-full mb-2">
+<span class="font-title-md text-title-md text-rpg-text">MÉDIÉVAL</span>
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">local_fire_department</span>
+</div>
+<div class="w-full h-8 bg-[#1f170f] flex items-center justify-between px-2 mb-2">
+<div class="w-3 h-3 bg-rpg-warning"></div>
+<div class="w-12 h-1.5 bg-[#d97706]"></div>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted mt-auto">Sceau de cire &amp; ambre chaud</span>
+</button>
+<!-- Theme 3: MODERNE -->
+<button class="flex flex-col text-left p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors min-h-[104px]">
+<div class="flex items-center justify-between w-full mb-2">
+<span class="font-title-md text-title-md text-rpg-text">MODERNE</span>
+<span class="material-symbols-outlined text-rpg-info text-[18px]">desktop_windows</span>
+</div>
+<div class="w-full h-8 bg-[#0f172a] flex items-center justify-between px-2 mb-2">
+<div class="w-3 h-3 bg-rpg-info"></div>
+<div class="w-12 h-1.5 bg-rpg-info"></div>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted mt-auto">Ardoise graphite &amp; bleu électrique</span>
+</button>
+<!-- Theme 4: CLAIR -->
+<button class="flex flex-col text-left p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors min-h-[104px]">
+<div class="flex items-center justify-between w-full mb-2">
+<span class="font-title-md text-title-md text-rpg-text">CLAIR</span>
+<span class="material-symbols-outlined text-on-surface text-[18px]">light_mode</span>
+</div>
+<div class="w-full h-8 bg-[#e2e8f0] flex items-center justify-between px-2 mb-2">
+<div class="w-3 h-3 bg-[#020617]"></div>
+<div class="w-12 h-1.5 bg-[#475569]"></div>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted mt-auto">Haut contraste lumière du jour</span>
+</button>
+</div>
+</div>
+<!-- BLOC 2: COULEUR D'ACCENTUATION -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-md">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-accent uppercase">COULEUR D'ACCENTUATION</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Teinte dominante appliquée aux boutons d'action, sélections actives et halos tactiques.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-gutter">
+<!-- Nuance 1: Cyan (Sélectionné) -->
+<button class="flex items-center gap-space-sm p-space-sm bg-rpg-bg relative">
+<span class="w-5 h-5 bg-[#06b6d4] shrink-0 flex items-center justify-center text-rpg-accent-contrast font-bold text-xs">✓</span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-rpg-text">CYAN FLUO</span>
+<span class="font-number-md text-number-md text-primary">#06b6d4</span>
+</div>
+</button>
+<!-- Nuance 2: Ambre -->
+<button class="flex items-center gap-space-sm p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors">
+<span class="w-5 h-5 bg-[#f59e0b] shrink-0"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-rpg-text">AMBRE DORÉ</span>
+<span class="font-number-md text-number-md text-secondary">#f59e0b</span>
+</div>
+</button>
+<!-- Nuance 3: Vert -->
+<button class="flex items-center gap-space-sm p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors">
+<span class="w-5 h-5 bg-[#10b981] shrink-0"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-rpg-text">VERT MATRICE</span>
+<span class="font-number-md text-number-md text-secondary">#10b981</span>
+</div>
+</button>
+<!-- Nuance 4: Pourpre -->
+<button class="flex items-center gap-space-sm p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors">
+<span class="w-5 h-5 bg-[#a855f7] shrink-0"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-rpg-text">POURPRE NÉON</span>
+<span class="font-number-md text-number-md text-secondary">#a855f7</span>
+</div>
+</button>
+<!-- Nuance 5: Rouge -->
+<button class="flex items-center gap-space-sm p-space-sm bg-surface-container-high hover:bg-surface-container-highest transition-colors">
+<span class="w-5 h-5 bg-[#ef4444] shrink-0"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-rpg-text">ROUGE ALERTE</span>
+<span class="font-number-md text-number-md text-secondary">#ef4444</span>
+</div>
+</button>
+</div>
+</div>
+<!-- BLOC 3: LANGUE DU SYSTÈME -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="max-w-xl">
+<h3 class="font-title-md text-title-md text-rpg-accent uppercase">LANGUE DU SYSTÈME</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Langue d'affichage de l'interface, des règles et des synthèses automatisées.</p>
+</div>
+<div class="flex items-center gap-space-sm bg-rpg-bg px-space-md py-2.5 min-w-[260px] justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">translate</span>
+<span class="font-body-md text-body-md text-rpg-text">Français (France) [FR]</span>
+</div>
+<span class="material-symbols-outlined text-rpg-muted text-[18px]">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- ================= SECTION 2: TÉLÉCOMMANDE ================= -->
+<div class="flex flex-col gap-space-lg pt-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">cell_tower</span>
+<h2 class="font-display-md text-display-md text-rpg-text uppercase tracking-wider">SECTION 02 // TÉLÉCOMMANDE : LIAISON SATELLITE &amp; TABLETTES</h2>
+</div>
+<span class="font-label-xs text-label-xs text-primary uppercase px-2 py-1 bg-surface-container">IP : 192.168.1.42:8080</span>
+</div>
+<!-- BLOC 1: QR CODES DE CONNEXION SANS FIL -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-md">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-accent uppercase">DISPOSITIFS DE DIFFUSION SANS FIL (QR CODES)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Scannez ces repères optiques pour connecter instantanément un appareil déporté sur le réseau local.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- QR CODE 1: PUPITRE MENEUR -->
+<div class="p-space-md bg-rpg-bg flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-2 mb-space-sm">
+<span class="font-title-md text-title-md text-rpg-text uppercase">PUPITRE DU MENEUR (CONSOLE TACTILE)</span>
+<span class="px-1.5 py-0.5 bg-rpg-surface-2 text-rpg-accent font-label-xs text-label-xs">PORT 8080</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">Contrôle déporté des dés, audio et storyboard sur smartphone ou tablette MJ.</p>
+<div class="flex flex-col sm:flex-row items-center gap-space-md bg-surface-container-low p-space-md">
+<!-- QR Code Vectoriel Précis (Pupitre MJ) -->
+<div class="bg-rpg-text p-2 shrink-0 flex items-center justify-center">
+<svg class="w-28 h-28 text-rpg-bg" fill="currentColor" viewbox="0 0 29 29">
+<!-- Coin Supérieur Gauche -->
+<rect height="7" width="7" x="0" y="0"></rect>
+<rect fill="#f8fafc" height="5" width="5" x="1" y="1"></rect>
+<rect height="3" width="3" x="2" y="2"></rect>
+<!-- Coin Supérieur Droit -->
+<rect height="7" width="7" x="22" y="0"></rect>
+<rect fill="#f8fafc" height="5" width="5" x="23" y="1"></rect>
+<rect height="3" width="3" x="24" y="2"></rect>
+<!-- Coin Inférieur Gauche -->
+<rect height="7" width="7" x="0" y="22"></rect>
+<rect fill="#f8fafc" height="5" width="5" x="1" y="23"></rect>
+<rect height="3" width="3" x="2" y="24"></rect>
+<!-- Matrice de bits stylisée QR -->
+<rect height="4" width="2" x="9" y="1"></rect>
+<rect height="2" width="4" x="13" y="0"></rect>
+<rect height="3" width="2" x="19" y="3"></rect>
+<rect height="2" width="3" x="8" y="8"></rect>
+<rect height="4" width="2" x="13" y="7"></rect>
+<rect height="2" width="4" x="17" y="8"></rect>
+<rect height="3" width="3" x="10" y="13"></rect>
+<rect height="2" width="4" x="15" y="14"></rect>
+<rect height="2" width="4" x="8" y="18"></rect>
+<rect height="4" width="2" x="14" y="18"></rect>
+<rect height="3" width="3" x="18" y="18"></rect>
+<rect height="3" width="4" x="23" y="9"></rect>
+<rect height="5" width="3" x="24" y="14"></rect>
+<rect height="3" width="3" x="9" y="24"></rect>
+<rect height="2" width="4" x="14" y="24"></rect>
+<rect height="4" width="2" x="20" y="24"></rect>
+<rect height="2" width="4" x="24" y="22"></rect>
+</svg>
+</div>
+<div class="flex flex-col gap-2 w-full">
+<span class="font-label-xs text-label-xs text-rpg-muted">URI RÉGIE HORS-LIGNE :</span>
+<span class="font-body-sm text-body-sm text-primary select-all bg-surface-container-high px-2 py-1 break-all">http://192.168.1.42:8080/gm-touch</span>
+<button class="mt-1 h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text font-label-sm text-label-sm uppercase flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>COPIER LIEN</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- QR CODE 2: TABLETTE JOUEURS -->
+<div class="p-space-md bg-rpg-bg flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-2 mb-space-sm">
+<span class="font-title-md text-title-md text-rpg-text uppercase">TABLETTES DES JOUEURS (AFFICHAGE JOUEURS)</span>
+<span class="px-1.5 py-0.5 bg-rpg-surface-2 text-rpg-success font-label-xs text-label-xs">PUBLIC</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">Retour de brouillard de guerre, illustrations projetées et fiches de personnages.</p>
+<div class="flex flex-col sm:flex-row items-center gap-space-md bg-surface-container-low p-space-md">
+<!-- QR Code Vectoriel Précis (Joueurs) -->
+<div class="bg-rpg-text p-2 shrink-0 flex items-center justify-center">
+<svg class="w-28 h-28 text-rpg-bg" fill="currentColor" viewbox="0 0 29 29">
+<!-- Coin Supérieur Gauche -->
+<rect height="7" width="7" x="0" y="0"></rect>
+<rect fill="#f8fafc" height="5" width="5" x="1" y="1"></rect>
+<rect height="3" width="3" x="2" y="2"></rect>
+<!-- Coin Supérieur Droit -->
+<rect height="7" width="7" x="22" y="0"></rect>
+<rect fill="#f8fafc" height="5" width="5" x="23" y="1"></rect>
+<rect height="3" width="3" x="24" y="2"></rect>
+<!-- Coin Inférieur Gauche -->
+<rect height="7" width="7" x="0" y="22"></rect>
+<rect fill="#f8fafc" height="5" width="5" x="1" y="23"></rect>
+<rect height="3" width="3" x="2" y="24"></rect>
+<!-- Variantes matrice joueurs -->
+<rect height="2" width="4" x="10" y="2"></rect>
+<rect height="4" width="3" x="16" y="1"></rect>
+<rect height="2" width="4" x="8" y="10"></rect>
+<rect height="3" width="4" x="14" y="9"></rect>
+<rect height="4" width="2" x="20" y="8"></rect>
+<rect height="4" width="2" x="9" y="15"></rect>
+<rect height="3" width="4" x="13" y="14"></rect>
+<rect height="2" width="3" x="19" y="15"></rect>
+<rect height="4" width="3" x="24" y="10"></rect>
+<rect height="3" width="4" x="23" y="16"></rect>
+<rect height="3" width="3" x="8" y="24"></rect>
+<rect height="4" width="3" x="13" y="23"></rect>
+<rect height="2" width="4" x="18" y="24"></rect>
+<rect height="3" width="3" x="24" y="24"></rect>
+</svg>
+</div>
+<div class="flex flex-col gap-2 w-full">
+<span class="font-label-xs text-label-xs text-rpg-muted">URI SALLE COMMUNE :</span>
+<span class="font-body-sm text-body-sm text-primary select-all bg-surface-container-high px-2 py-1 break-all">http://192.168.1.42:8080/player-hub</span>
+<button class="mt-1 h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text font-label-sm text-label-sm uppercase flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>COPIER LIEN</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BLOC 2: ACTIONS MATÉRIELLES & SÉCURITÉ -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-md">
+<div>
+<h3 class="font-title-md text-title-md text-rpg-accent uppercase">ACTIONS MATÉRIELLES &amp; SÉCURITÉ</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Gestion de l'affichage secondaire et révocation des accès réseau.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Action 1: Écran du bas -->
+<div class="flex flex-col gap-2 bg-rpg-bg p-space-md justify-between">
+<div>
+<span class="font-title-md text-title-md text-rpg-text uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">splitscreen_bottom</span>
+<span>DOUBLE POSTE 1440x900</span>
+</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Projette l'interface tactile sur le moniteur tactile secondaire 1440x900.</p>
+</div>
+<button class="h-11 px-space-md bg-rpg-accent hover:bg-primary-fixed-dim text-rpg-accent-contrast font-label-sm text-label-sm uppercase flex items-center justify-center gap-space-sm transition-all shadow-[0_0_12px_rgba(34,211,238,0.4)]">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+<span>OUVRIR SUR L'ÉCRAN DU BAS</span>
+</button>
+</div>
+<!-- Action 2: Révocation Sécurité -->
+<div class="flex flex-col gap-2 bg-rpg-bg p-space-md justify-between">
+<div>
+<span class="font-title-md text-title-md text-rpg-danger uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px]">explore</span>
+<span>ISOLATION DU BUS LOCAL</span>
+</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Déconnecte immédiatement toutes les tablettes et régénère les clés d'accès.</p>
+</div>
+<button class="h-11 px-space-md bg-rpg-danger/10 hover:bg-rpg-danger text-rpg-danger hover:text-rpg-accent-contrast font-label-sm text-label-sm uppercase flex items-center justify-center gap-space-sm transition-all">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+<span>RÉVOQUER LES APPAREILS</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- PANNEAU INFÉRIEUR DE VALIDATION MODALE -->
+<div class="h-16 px-space-lg bg-surface-container-lowest flex items-center justify-between shrink-0">
+<button class="h-11 px-space-md bg-surface-container-high hover:bg-surface-container-highest text-secondary hover:text-rpg-text font-label-sm text-label-sm uppercase transition-colors flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>RÉINITIALISER LES RÉGLAGES</span>
+</button>
+<div class="flex items-center gap-space-md">
+<span class="font-label-xs text-label-xs text-rpg-muted hidden sm:inline">DERNIÈRE SYNCHRO : 14:02:18</span>
+<button class="h-11 px-space-xl bg-rpg-accent hover:bg-primary-fixed-dim text-rpg-accent-contrast font-label-sm text-label-sm uppercase flex items-center gap-space-sm shadow-[0_0_16px_rgba(34,211,238,0.5)] transition-all">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>ENREGISTRER LES MODIFICATIONS [ENTRÉE]</span>
+</button>
+</div>
+</div>
+<script>
+    (function () {
+      // Interactive logic for color nuancier selection
+      const colorChips = document.querySelectorAll('.grid button[class*="Nuance"], .grid button span[class*="bg-["]');
+      // Navigation feedback
+      const navButtons = document.querySelectorAll('aside nav button');
+      navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          navButtons.forEach(b => {
+            b.classList.remove('bg-surface-container-low');
+            const ind = b.querySelector('.w-1');
+            if (ind) ind.remove();
+          });
+          btn.classList.add('bg-surface-container-low');
+          const indicator = document.createElement('div');
+          indicator.className = 'absolute left-0 top-0 bottom-0 w-1 bg-rpg-accent';
+          btn.appendChild(indicator);
+        });
+      });
+    })();
+  </script>
+</div></main><footer class="h-10 px-space-lg bg-surface-container-lowest border-t border-rpg-border flex items-center justify-between font-label-xs text-label-xs text-rpg-muted"><div class="flex gap-space-md"><span>STATION RÉGIE : POSTE_A</span><span>BUS TÉLÉMÉTRIE : NOMINAL</span></div><div><span>ESC : ANNULER // F5 : SAUVEGARDER CONFIG</span></div></footer></div></div></body></html>

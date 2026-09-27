@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>GM-OS — Tables Aléatoires (Console Tactile &amp; Déclenchement Rapide)</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #020617;
+        color: #f8fafc;
+        border-radius: 0px !important;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      * {
+        border-radius: 0px !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #22d3ee;
+    }
+    .neon-glow-cyan {
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.45), inset 0 0 10px rgba(34, 211, 238, 0.2);
+    }
+    .font-orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+    .font-mono-tech {
+      font-family: 'Space Mono', monospace;
+    }
+    .font-sans-ui {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "rpg-danger": "#ef4444",
+            "surface-container-highest": "#2e3447",
+            "on-primary-fixed-variant": "#004e5a",
+            "rpg-surface": "#0f172a",
+            "primary-fixed": "#a2eeff",
+            "tertiary": "#d2ddf5",
+            "on-tertiary-container": "#444f63",
+            "tertiary-container": "#b6c1d9",
+            "inverse-on-surface": "#2a3043",
+            "rpg-info": "#3b82f6",
+            "surface-container-lowest": "#070d1f",
+            "tertiary-fixed-dim": "#bcc7de",
+            "rpg-accent": "#22d3ee",
+            "error": "#ffb4ab",
+            "rpg-accent-contrast": "#020617",
+            "inverse-primary": "#006877",
+            "secondary-fixed": "#dae2fd",
+            "on-tertiary-fixed-variant": "#3c475a",
+            "rpg-bg": "#020617",
+            "primary-fixed-dim": "#2fd9f4",
+            "on-error": "#690005",
+            "surface-variant": "#2e3447",
+            "outline-variant": "#3c494c",
+            "secondary-fixed-dim": "#bec6e0",
+            "on-background": "#dce1fb",
+            "on-primary": "#00363e",
+            "secondary-container": "#3f465c",
+            "rpg-surface-2": "#1e293b",
+            "on-tertiary": "#263143",
+            "tertiary-fixed": "#d8e3fb",
+            "rpg-muted": "#898c95",
+            "outline": "#859397",
+            "primary": "#8aebff",
+            "background": "#0c1324",
+            "surface-tint": "#2fd9f4",
+            "surface-container": "#191f31",
+            "surface": "#0c1324",
+            "on-secondary": "#283044",
+            "on-primary-fixed": "#001f25",
+            "rpg-text": "#f8fafc",
+            "on-secondary-fixed": "#131b2e",
+            "rpg-border": "#1e293b",
+            "rpg-warning": "#f59e0b",
+            "on-tertiary-fixed": "#111c2d",
+            "surface-container-high": "#23293c",
+            "rpg-on-status": "#020617",
+            "inverse-surface": "#dce1fb",
+            "primary-container": "#22d3ee",
+            "surface-bright": "#33394c",
+            "on-secondary-container": "#adb4ce",
+            "on-surface-variant": "#bbc9cd",
+            "surface-dim": "#0c1324",
+            "rpg-success": "#10b981",
+            "secondary": "#bec6e0",
+            "on-primary-container": "#005763",
+            "error-container": "#93000a",
+            "on-error-container": "#ffdad6",
+            "on-surface": "#dce1fb",
+            "surface-container-low": "#151b2d",
+            "on-secondary-fixed-variant": "#3f465c"
+          },
+          fontFamily: {
+            orbitron: ["Orbitron", "sans-serif"],
+            mono: ["Space Mono", "monospace"],
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-rpg-bg text-rpg-text font-sans antialiased min-h-screen selection:bg-rpg-accent selection:text-rpg-accent-contrast">
+<!-- ASIDE SYSTEME GM-OS (PERSISTANT) -->
+<aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface border-r border-rpg-border z-50 flex flex-col justify-between select-none">
+<div class="flex flex-col">
+<div class="h-14 px-4 flex items-center justify-between border-b border-rpg-border bg-rpg-surface-2/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">terminal</span>
+<span class="font-orbitron text-sm font-bold tracking-widest text-rpg-text uppercase">GM-OS <span class="text-rpg-accent">V6</span></span>
+</div>
+<span class="px-1.5 py-0.5 bg-rpg-border text-on-surface-variant font-mono text-[11px] font-bold uppercase">TACTILE</span>
+</div>
+<div class="p-2 border-b border-rpg-border bg-rpg-bg/50">
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted uppercase mb-1">
+<span>Statut Système</span>
+<span class="text-rpg-success font-bold">SYNCHRO 100%</span>
+</div>
+<div class="w-full h-1 bg-rpg-surface-2">
+<div class="h-full bg-rpg-accent w-full"></div>
+</div>
+</div>
+<nav class="py-2 flex flex-col gap-0.5">
+<div class="px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-rpg-muted font-bold">Modules Aventure</div>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="combat-os" href="#">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Combat-OS</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="dice-os" href="#">
+<span class="material-symbols-outlined text-[16px]">casino</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Dice-OS</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="generateur-pnj" href="#">
+<span class="material-symbols-outlined text-[16px]">badge</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Générateur PNJ</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="cartographie" href="#">
+<span class="material-symbols-outlined text-[16px]">map</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Cartographie</span>
+</a>
+<div class="mt-2 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-rpg-muted font-bold">Outils de Régie</div>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="mediatheque" href="#">
+<span class="material-symbols-outlined text-[16px]">perm_media</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Médiathèque</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="image-os" href="#">
+<span class="material-symbols-outlined text-[16px]">image</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Image-OS</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="horloge-et-temps" href="#">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Horloge &amp; Temps</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="light-os" href="#">
+<span class="material-symbols-outlined text-[16px]">lightbulb</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Light-OS</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-3" data-path="tables-aleatoires" href="#">
+<span class="material-symbols-outlined text-[16px]">dataset</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Tables Aléatoires</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="navigateur-web" href="#">
+<span class="material-symbols-outlined text-[16px]">travel_explore</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Navigateur Web</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors pl-3.5" data-path="tableau-blanc" href="#">
+<span class="material-symbols-outlined text-[16px]">draw</span>
+<span class="font-sans text-[12px] uppercase tracking-wide">Tableau Blanc</span>
+</a>
+</nav>
+</div>
+<div class="p-2 border-t border-rpg-border bg-rpg-bg flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 bg-rpg-success animate-pulse"></div>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase">Tactile Ready</span>
+</div>
+<span class="font-mono text-[11px] text-rpg-accent">1440x900</span>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL AVEC HEADER SUPÉRIEUR -->
+<div class="pl-[220px]">
+<!-- BANDEAU DE COMMANDE SUPÉRIEUR SURDIMENSIONNÉ (TACTILE 54PX) -->
+<header class="fixed top-0 left-[220px] right-0 h-16 bg-rpg-surface/95 border-b border-rpg-border z-40 flex items-center justify-between px-4 select-none backdrop-blur-md">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="font-orbitron text-sm font-bold text-rpg-text uppercase tracking-widest leading-tight">Cortex Actif</span>
+<span class="font-mono text-[11px] text-rpg-muted">SESSION N°04 // MODE TACTILE CONSOLE</span>
+</div>
+<div class="h-8 w-px bg-rpg-border"></div>
+<div class="flex items-center gap-2 bg-rpg-bg px-3 h-11 border border-rpg-border">
+<span class="font-mono text-[11px] text-on-surface-variant uppercase font-bold">Master Vol</span>
+<div class="flex items-center gap-1 h-4">
+<div class="w-1.5 h-2.5 bg-rpg-success"></div>
+<div class="w-1.5 h-3.5 bg-rpg-success"></div>
+<div class="w-1.5 h-3 bg-rpg-success"></div>
+<div class="w-1.5 h-4 bg-rpg-warning"></div>
+<div class="w-1.5 h-1.5 bg-rpg-border"></div>
+</div>
+<span class="font-mono text-xs text-rpg-text font-bold">-6dB</span>
+</div>
+<button class="h-11 px-3 bg-rpg-surface-2 text-on-surface-variant border border-rpg-border hover:text-rpg-text active:bg-rpg-surface flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+<span class="font-mono text-[11px] font-bold uppercase tracking-wider">Chat</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-rpg-bg p-0.5 border border-rpg-border h-11">
+<button class="px-3 h-full font-mono text-[11px] uppercase text-on-surface-variant hover:text-rpg-text active:bg-rpg-surface-2 transition-colors">Atelier</button>
+<button class="px-3 h-full font-mono text-[11px] uppercase bg-rpg-accent text-rpg-accent-contrast font-bold shadow-sm">Table Tactile</button>
+</div>
+<button class="h-11 px-4 bg-rpg-danger/20 border border-rpg-danger text-rpg-danger hover:bg-rpg-danger hover:text-rpg-on-status active:scale-95 transition-all font-mono text-[11px] uppercase font-bold tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">gpp_maybe</span>
+<span>Stop All</span>
+</button>
+<button class="h-11 px-3 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent active:bg-rpg-border transition-colors font-mono text-[11px] uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">sensors</span>
+<span>Joueurs</span>
+<span class="w-2.5 h-2.5 bg-rpg-success"></span>
+</button>
+<div class="w-11 h-11 bg-primary flex items-center justify-center cursor-pointer border border-primary-fixed">
+<span class="material-symbols-outlined text-on-primary text-[22px]">person</span>
+</div>
+</div>
+</header>
+<!-- ZONE DE TRAVAIL PRINCIPALE -->
+<main class="relative pt-16 w-full min-h-[calc(100vh-64px)] bg-rpg-bg p-4 flex flex-col gap-4">
+<!-- EN-TÊTE DU MODULE TACTILE (CIBLES 48-52PX) -->
+<section class="flex flex-wrap items-center justify-between border border-rpg-border bg-rpg-surface p-3 gap-3">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h1 class="font-orbitron text-xl md:text-2xl font-black tracking-wider text-rpg-text uppercase flex items-center gap-2">
+<span class="text-rpg-accent drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">TABLES</span> ALÉATOIRES
+            </h1>
+<span class="px-2 py-0.5 bg-rpg-accent/15 border border-rpg-accent/40 font-mono text-[11px] text-rpg-accent font-bold uppercase">CONSOLE TACTILE</span>
+</div>
+<span class="font-mono text-[11px] text-rpg-muted tracking-widest uppercase mt-0.5">
+            // SUBSYSTEM 08-T • DÉCLENCHEMENT RAPIDE &amp; PILOTAGE SÉANCE
+          </span>
+</div>
+<div class="flex items-center gap-3">
+<div class="h-12 px-3 bg-rpg-surface-2 border border-rpg-border flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 bg-rpg-success animate-ping"></span>
+<span class="font-mono text-xs font-bold text-rpg-success uppercase tracking-wider">
+              PRÊT AU DÉCLENCHEMENT
+            </span>
+</div>
+<button class="h-12 px-4 bg-rpg-surface-2 border border-rpg-border text-on-surface hover:text-rpg-accent hover:border-rpg-accent active:bg-rpg-surface transition-colors font-mono text-xs uppercase font-bold flex items-center gap-2" onclick="toggleWorkshopModal()" type="button">
+<span class="material-symbols-outlined text-[20px] text-rpg-accent">edit_note</span>
+<span>Atelier &amp; Édition</span>
+</button>
+</div>
+</section>
+<!-- PAVÉ DE COMMANDE TACTILE (CIBLES LARGES 48PX-54PX) -->
+<section class="bg-rpg-surface border-2 border-rpg-border p-3 flex flex-col gap-3">
+<div class="grid grid-cols-12 gap-3 items-end">
+<!-- Sélecteur Univers (52px) -->
+<div class="col-span-12 md:col-span-3 flex flex-col gap-1.5">
+<label class="font-mono text-[11px] text-rpg-muted uppercase tracking-wider font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">public</span>
+              1. Univers / Jeu
+            </label>
+<div class="relative bg-rpg-bg border-2 border-rpg-border hover:border-rpg-accent focus-within:border-rpg-accent transition-colors">
+<select class="w-full h-[52px] bg-transparent pl-3 pr-10 font-sans text-sm font-semibold text-rpg-text uppercase appearance-none outline-none cursor-pointer" id="select-universe">
+<option class="bg-rpg-bg text-rpg-text" value="br">Blade Runner: Le Jeu de Rôle</option>
+<option class="bg-rpg-bg text-rpg-text" value="cp">Cyberpunk Red</option>
+<option class="bg-rpg-bg text-rpg-text" value="al">Alien RPG</option>
+<option class="bg-rpg-bg text-rpg-text" value="ct">Cthulhu Hack</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 pointer-events-none text-[22px] text-rpg-accent">expand_more</span>
+</div>
+</div>
+<!-- Sélecteur Table (52px) -->
+<div class="col-span-12 md:col-span-4 flex flex-col gap-1.5">
+<label class="font-mono text-[11px] text-rpg-muted uppercase tracking-wider font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">table_rows</span>
+              2. Table Active
+            </label>
+<div class="relative bg-rpg-bg border-2 border-rpg-border hover:border-rpg-accent focus-within:border-rpg-accent transition-colors">
+<select class="w-full h-[52px] bg-transparent pl-3 pr-10 font-sans text-sm font-semibold text-rpg-text uppercase appearance-none outline-none cursor-pointer truncate" id="select-table">
+<option class="bg-rpg-bg text-rpg-text" value="sec04">Rencontres Nocturnes du Secteur 04</option>
+<option class="bg-rpg-bg text-rpg-text" value="loot">Caches Clandestines de Matériel</option>
+<option class="bg-rpg-bg text-rpg-text" value="hazard">Complications Atmosphériques</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 pointer-events-none text-[22px] text-rpg-accent">expand_more</span>
+</div>
+</div>
+<!-- Badge D100 & Modificateurs Tactiles [-5] [-1] [+1] [+5] -->
+<div class="col-span-12 md:col-span-3 flex flex-col gap-1.5">
+<label class="font-mono text-[11px] text-rpg-muted uppercase tracking-wider font-bold flex items-center justify-between">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">tune</span>
+                Modificateur Actif
+              </span>
+<span class="text-rpg-accent font-mono text-[11px]" id="mod-display-tag">VALEUR: +5</span>
+</label>
+<div class="flex items-center h-[52px] bg-rpg-bg border-2 border-rpg-border">
+<div class="h-full px-2.5 bg-rpg-accent/15 border-r-2 border-rpg-border flex items-center justify-center font-orbitron font-extrabold text-sm text-rpg-accent tracking-widest shrink-0">
+                D100
+              </div>
+<!-- Boutons tactiles rapides -->
+<div class="grid grid-cols-4 w-full h-full divide-x-2 divide-rpg-border">
+<button class="h-full font-mono text-xs font-bold text-rpg-text hover:bg-rpg-surface-2 active:bg-rpg-accent active:text-rpg-accent-contrast transition-colors" onclick="adjustMod(-5)" title="Moins 5" type="button">-5</button>
+<button class="h-full font-mono text-xs font-bold text-rpg-text hover:bg-rpg-surface-2 active:bg-rpg-accent active:text-rpg-accent-contrast transition-colors" onclick="adjustMod(-1)" title="Moins 1" type="button">-1</button>
+<button class="h-full font-mono text-xs font-bold text-rpg-text hover:bg-rpg-surface-2 active:bg-rpg-accent active:text-rpg-accent-contrast transition-colors" onclick="adjustMod(1)" title="Plus 1" type="button">+1</button>
+<button class="h-full font-mono text-xs font-bold text-rpg-text hover:bg-rpg-surface-2 active:bg-rpg-accent active:text-rpg-accent-contrast transition-colors" onclick="adjustMod(5)" title="Plus 5" type="button">+5</button>
+</div>
+</div>
+</div>
+<!-- Champ Jet Manuel + Gros Bouton "VALIDER JET" -->
+<div class="col-span-12 md:col-span-2 flex flex-col gap-1.5">
+<label class="font-mono text-[11px] text-rpg-muted uppercase tracking-wider font-bold">Jet Manuel</label>
+<div class="flex items-center h-[52px] border-2 border-rpg-border bg-rpg-bg">
+<input class="w-14 h-full bg-transparent px-2 text-center text-rpg-text font-mono text-base font-bold outline-none focus:bg-rpg-surface-2" id="manual-dice" max="100" min="1" placeholder="42" type="number"/>
+<button class="flex-1 h-full px-2 bg-rpg-surface-2 border-l-2 border-rpg-border text-rpg-text hover:text-rpg-accent hover:border-rpg-accent active:bg-rpg-border font-mono text-[11px] font-bold uppercase tracking-wider leading-tight flex items-center justify-center text-center transition-colors" onclick="applyManualRoll()" type="button">
+                Valider Jet
+              </button>
+</div>
+</div>
+</div>
+<!-- GRAND BOUTON POUSSOIR PLEIN CYAN NÉON (TACTILE 54PX) -->
+<button class="w-full h-[54px] bg-rpg-accent text-rpg-accent-contrast font-orbitron text-lg uppercase font-black flex items-center justify-center gap-3 tracking-widest neon-glow-cyan active:scale-[0.99] hover:bg-primary-fixed transition-all select-none" id="roll-trigger-btn" onclick="executeRoll()" type="button">
+<span class="material-symbols-outlined text-[28px]">casino</span>
+<span>LANCER D100 [ESPACE]</span>
+<span class="material-symbols-outlined text-[24px]">touch_app</span>
+</button>
+</section>
+<!-- ZONE RÉSULTAT (9 COLS) & HISTORIQUE TACTILE (320PX / 3 COLS) -->
+<div class="grid grid-cols-12 gap-4 items-start flex-1">
+<!-- BLOC GAUCHE / CENTRE : LES 2 PANNEAUX DU RÉSULTAT -->
+<div class="col-span-12 lg:col-span-8 xl:col-span-9 flex flex-col gap-3">
+<!-- 1. PANNEAU TÉLÉMÉTRIE DU TIRAGE (COMPTEUR NUMÉRIQUE SPACE MONO) -->
+<section class="bg-rpg-surface border-2 border-rpg-accent p-4 shadow-[0_0_20px_rgba(2,6,23,0.8)] relative">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<!-- Décomposition & Étiquettes discrètes -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-mono text-[11px] font-bold uppercase">TÉLÉMÉTRIE DU TIRAGE</span>
+<span class="font-mono text-[11px] text-rpg-muted uppercase" id="result-source">
+                    // TABLE : RENCONTRES NOCTURNES DU SECTEUR 04 (P. 112)
+                  </span>
+</div>
+<div class="flex items-center gap-3 font-mono text-sm text-on-surface-variant pt-1">
+<span>JET BRUT : <strong class="text-rpg-text font-bold text-base" id="raw-roll">68</strong></span>
+<span class="text-rpg-border">|</span>
+<span>MODIFICATEUR : <strong class="text-rpg-accent font-bold text-base" id="applied-mod">+5</strong></span>
+<span class="text-rpg-border">|</span>
+<span class="text-rpg-muted text-xs">HORODATAGE : <span class="text-rpg-text font-bold" id="roll-timestamp">22:41:09</span></span>
+</div>
+</div>
+<!-- Gros Compteur Numérique Space Mono 36px -->
+<div class="flex items-center gap-3 bg-rpg-bg px-4 py-2 border-2 border-rpg-accent/60">
+<div class="flex flex-col text-right">
+<span class="font-mono text-[11px] font-bold text-rpg-accent tracking-widest uppercase">TOTAL</span>
+<span class="font-mono text-[11px] text-rpg-muted uppercase">CALCULÉ</span>
+</div>
+<div class="font-mono text-[36px] leading-none font-bold text-rpg-accent drop-shadow-[0_0_12px_rgba(34,211,238,0.7)]" id="total-roll-display">
+                  73
+                </div>
+</div>
+</div>
+</section>
+<!-- 2. PANNEAU NARRATION & MÉCANIQUE (ORBITRON / ALERTES VISUELLES) -->
+<article class="bg-rpg-surface border-2 border-rpg-border p-5 flex flex-col gap-4 shadow-xl">
+<!-- Titre franc en Orbitron -->
+<div class="border-b-2 border-rpg-border pb-3 flex items-start justify-between gap-3">
+<div class="flex flex-col gap-1">
+<span class="font-mono text-[11px] text-rpg-accent font-bold uppercase tracking-widest flex items-center gap-1.5">
+<span class="w-2 h-2 bg-rpg-accent inline-block"></span>
+                  RÉSULTAT SÉANCE #04 • ENTRÉE ACTIVE
+                </span>
+<h2 class="font-orbitron text-xl md:text-2xl font-black text-rpg-text uppercase tracking-wide leading-tight" id="result-title">
+                  TRANSACTION CLANDESTINE INTERROMPUE
+                </h2>
+</div>
+<span class="px-2.5 py-1 bg-rpg-surface-2 border border-rpg-border font-mono text-[11px] font-bold text-rpg-muted shrink-0 uppercase">
+                PLAGE D100: 66-80
+              </span>
+</div>
+<!-- Texte narratif immersif -->
+<div class="bg-rpg-bg p-4 border-l-4 border-rpg-accent">
+<span class="font-mono text-[11px] text-rpg-muted uppercase font-bold tracking-wider block mb-1">Narration MJ</span>
+<p class="font-sans text-[15px] leading-relaxed text-on-surface" id="result-desc">
+                Deux agents en civil de la Division Répression coincent un informateur Replicant derrière un stand de nouilles fumant sous la pluie battante. Une sacoche renforcée glisse au sol lors de l'altercation.
+              </p>
+</div>
+<!-- Encadré Effet Mécanique avec alertes visuelles franches -->
+<div class="bg-rpg-surface-2 border-2 border-rpg-warning p-4 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-rpg-warning font-orbitron text-xs font-black uppercase tracking-wider">
+<span class="material-symbols-outlined text-[20px] animate-pulse">warning</span>
+<span>EFFET MÉCANIQUE &amp; TEST IMMÉDIAT</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-warning/20 text-rpg-warning font-mono text-[11px] font-bold uppercase">MALUS RÉGIE</span>
+</div>
+<p class="font-mono text-xs md:text-sm text-rpg-text leading-relaxed bg-rpg-bg/80 p-2.5 border border-rpg-border" id="result-mechanics">
+                Test d'Observation (Agilité) à -2 pour intervenir discrètement. Si fouille de la sacoche : contient 1x Scanner de poche Voight-Kampff portatif, 3x Cartouches de munitions perforantes et une puce chiffrée Tyrell Corp.
+              </p>
+</div>
+<!-- BARRE D'ACTIONS TACTILES INFÉRIEURES (3 GRANDS PAVÉS TACTILES 52PX) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+<!-- Pavé 1 : Verser au butin -->
+<button class="h-[52px] bg-rpg-surface-2 border-2 border-rpg-border hover:border-rpg-accent hover:bg-rpg-surface active:bg-rpg-accent active:text-rpg-accent-contrast transition-all font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2.5 text-rpg-text group shadow-md" onclick="dispatchTableAction('loot')" type="button">
+<span class="material-symbols-outlined text-[22px] text-rpg-accent group-hover:scale-110 transition-transform">inventory_2</span>
+<span>Verser au butin</span>
+</button>
+<!-- Pavé 2 : Proposer des objets -->
+<button class="h-[52px] bg-rpg-surface-2 border-2 border-rpg-border hover:border-rpg-accent hover:bg-rpg-surface active:bg-rpg-accent active:text-rpg-accent-contrast transition-all font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2.5 text-rpg-text group shadow-md" onclick="dispatchTableAction('ai-items')" type="button">
+<span class="material-symbols-outlined text-[22px] text-rpg-accent group-hover:scale-110 transition-transform">auto_awesome</span>
+<span>Proposer des objets</span>
+</button>
+<!-- Pavé 3 : Log session -->
+<button class="h-[52px] bg-rpg-surface-2 border-2 border-rpg-border hover:border-rpg-accent hover:bg-rpg-surface active:bg-rpg-accent active:text-rpg-accent-contrast transition-all font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2.5 text-rpg-text group shadow-md" onclick="dispatchTableAction('log')" type="button">
+<span class="material-symbols-outlined text-[22px] text-rpg-accent group-hover:scale-110 transition-transform">post_add</span>
+<span>Log session</span>
+</button>
+</div>
+<!-- Toast de confirmation tactile -->
+<div class="hidden bg-rpg-accent text-rpg-accent-contrast p-2.5 font-mono text-xs font-black uppercase text-center tracking-widest border-2 border-primary-fixed" id="action-toast">
+              ACTION ENREGISTRÉE AU REGISTRE TACTIQUE
+            </div>
+</article>
+</div>
+<!-- PANNEAU DROIT (320PX) : HISTORIQUE TACTILE INDIVIDUEL -->
+<aside class="col-span-12 lg:col-span-4 xl:col-span-3 w-full flex flex-col bg-rpg-surface border-2 border-rpg-border">
+<!-- En-tête historique -->
+<div class="flex items-center justify-between p-3.5 border-b-2 border-rpg-border bg-rpg-surface-2/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">history</span>
+<span class="font-orbitron text-xs font-bold uppercase text-rpg-text tracking-wider">HISTORIQUE TACTILE</span>
+</div>
+<button class="font-mono text-[11px] text-rpg-muted hover:text-rpg-danger active:scale-95 uppercase font-bold transition-colors py-1 px-2 border border-transparent hover:border-rpg-danger/40" onclick="clearHistory()" type="button">
+              Effacer l'historique
+            </button>
+</div>
+<!-- Note tactile d'instruction -->
+<div class="px-3 py-1.5 bg-rpg-bg/80 border-b border-rpg-border font-mono text-[11px] text-rpg-muted uppercase">
+            // TAPOTER UNE CARTE POUR RÉINJECTER
+          </div>
+<!-- Liste des cartes tactiles (faciles à tapoter au doigt) -->
+<div class="flex flex-col p-2 gap-2 overflow-y-auto max-h-[500px]" id="history-container">
+<!-- Carte Historique 1 (Actif) -->
+<button class="w-full text-left p-3 bg-rpg-bg hover:bg-rpg-surface-2 border-2 border-rpg-accent transition-all flex flex-col gap-1 active:scale-[0.98] group" onclick="replayHistory('73', '68', '+5', 'TRANSACTION CLANDESTINE INTERROMPUE', 'Deux agents en civil de la Division Répression coincent un informateur Replicant derrière un stand de nouilles fumant sous la pluie battante. Une sacoche renforcée glisse au sol lors de l\'altercation.', 'Test d\'Observation (Agilité) à -2 pour intervenir discrètement. Si fouille de la sacoche : contient 1x Scanner de poche Voight-Kampff portatif, 3x Cartouches de munitions perforantes et une puce chiffrée Tyrell Corp.', '22:41:09')" type="button">
+<div class="flex items-center justify-between">
+<span class="font-mono text-lg font-bold text-rpg-accent group-hover:text-primary-fixed">JET: 73</span>
+<span class="font-mono text-[11px] text-rpg-muted">22:41:09</span>
+</div>
+<span class="font-sans text-xs font-bold text-rpg-text group-hover:text-rpg-accent line-clamp-1 uppercase">Transaction Clandestine Interrompue</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted pt-1 border-t border-rpg-border/60">
+<span>BRUT: 68 (+5)</span>
+<span class="text-rpg-accent font-bold">RÉINJECTER</span>
+</div>
+</button>
+<!-- Carte Historique 2 -->
+<button class="w-full text-left p-3 bg-rpg-bg hover:bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent transition-all flex flex-col gap-1 active:scale-[0.98] group" onclick="replayHistory('19', '14', '+5', 'ALERTE SPINNER LAPD', 'Une patrouille aérienne abaisse soudainement ses projecteurs xénon à travers le brouillard acide. Les sirènes saturent la ruelle.', 'Test de Discrétion collectif. Échec : interrogatoire immédiat avec malus de suspicion.', '22:15:22')" type="button">
+<div class="flex items-center justify-between">
+<span class="font-mono text-lg font-bold text-on-surface-variant group-hover:text-rpg-accent">JET: 19</span>
+<span class="font-mono text-[11px] text-rpg-muted">22:15:22</span>
+</div>
+<span class="font-sans text-xs font-bold text-rpg-text group-hover:text-rpg-accent line-clamp-1 uppercase">Alerte Spinner LAPD</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted pt-1 border-t border-rpg-border/60">
+<span>BRUT: 14 (+5)</span>
+<span class="text-on-surface-variant font-bold">RÉINJECTER</span>
+</div>
+</button>
+<!-- Carte Historique 3 -->
+<button class="w-full text-left p-3 bg-rpg-bg hover:bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent transition-all flex flex-col gap-1 active:scale-[0.98] group" onclick="replayHistory('88', '83', '+5', 'COUPURE DE COURANT SOUS-SECTEUR', 'Un transformateur grésille avant d\'exploser trois blocs plus loin. Les néons clignotent et s\'éteignent, plongeant le carrefour dans l\'obscurité complète.', 'Zone plongée dans le noir absolu pendant 2d10 rounds. Vision nocturne ou lampe requise.', '21:58:40')" type="button">
+<div class="flex items-center justify-between">
+<span class="font-mono text-lg font-bold text-on-surface-variant group-hover:text-rpg-accent">JET: 88</span>
+<span class="font-mono text-[11px] text-rpg-muted">21:58:40</span>
+</div>
+<span class="font-sans text-xs font-bold text-rpg-text group-hover:text-rpg-accent line-clamp-1 uppercase">Coupure de courant sous-secteur</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted pt-1 border-t border-rpg-border/60">
+<span>BRUT: 83 (+5)</span>
+<span class="text-on-surface-variant font-bold">RÉINJECTER</span>
+</div>
+</button>
+<!-- Carte Historique 4 -->
+<button class="w-full text-left p-3 bg-rpg-bg hover:bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent transition-all flex flex-col gap-1 active:scale-[0.98] group" onclick="replayHistory('42', '37', '+5', 'ÉPAVE DE DRONE DE LIVRAISON', 'Un châssis de drone de livraison automatisée gît encastré dans une grille d\'aération. Ses voyants de détresse pulsent faiblement en ambre.', 'Test de Piratage / Électronique : récupération possible de 2x Cellules d\'énergie standard.', '21:30:12')" type="button">
+<div class="flex items-center justify-between">
+<span class="font-mono text-lg font-bold text-on-surface-variant group-hover:text-rpg-accent">JET: 42</span>
+<span class="font-mono text-[11px] text-rpg-muted">21:30:12</span>
+</div>
+<span class="font-sans text-xs font-bold text-rpg-text group-hover:text-rpg-accent line-clamp-1 uppercase">Épave de drone de livraison</span>
+<div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted pt-1 border-t border-rpg-border/60">
+<span>BRUT: 37 (+5)</span>
+<span class="text-on-surface-variant font-bold">RÉINJECTER</span>
+</div>
+</button>
+</div>
+<!-- Raccourci bas de panneau vers Atelier (Tactile 48px) -->
+<div class="p-3 border-t-2 border-rpg-border bg-rpg-bg mt-auto">
+<button class="w-full h-12 bg-rpg-surface-2 border-2 border-rpg-border hover:border-rpg-accent active:bg-rpg-border text-on-surface hover:text-rpg-accent font-mono text-xs uppercase font-bold flex items-center justify-center gap-2 transition-colors" onclick="toggleWorkshopModal()" type="button">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">tune</span>
+<span>Accéder à l'Atelier</span>
+</button>
+</div>
+</aside>
+</div>
+<!-- MODALE TIROIR ATELIER DES TABLES (COMPATIBLE TACTILE) -->
+<dialog class="bg-transparent backdrop:bg-rpg-bg/85 backdrop:backdrop-blur-sm p-0 m-auto fixed inset-0 max-w-[540px] w-full border-none z-50" id="workshop-modal">
+<div class="bg-rpg-surface border-2 border-rpg-accent p-6 flex flex-col gap-4 text-rpg-text shadow-2xl">
+<div class="flex items-center justify-between border-b-2 border-rpg-border pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">build</span>
+<span class="font-orbitron text-sm font-bold uppercase tracking-wider">CONSOLE ATELIER DES TABLES</span>
+</div>
+<button class="text-rpg-muted hover:text-rpg-danger p-1" onclick="toggleWorkshopModal()">
+<span class="material-symbols-outlined text-[22px]">close</span>
+</button>
+</div>
+<p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+            L'atelier permet de calibrer les pondérations D100, d'injecter des tirages conditionnels ou d'exporter les sous-systèmes vers les règles locales.
+          </p>
+<div class="flex flex-col gap-1 bg-rpg-bg p-3 border border-rpg-border">
+<span class="font-mono text-[11px] text-rpg-muted uppercase">Table en cours d'édition :</span>
+<span class="font-sans text-sm text-rpg-accent font-bold">Rencontres Nocturnes du Secteur 04</span>
+</div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 h-12 bg-rpg-surface-2 border border-rpg-border text-on-surface font-mono text-xs uppercase font-bold" onclick="toggleWorkshopModal()">
+              Fermer
+            </button>
+<button class="px-5 h-12 bg-rpg-accent text-rpg-accent-contrast font-mono text-xs uppercase font-black" onclick="toggleWorkshopModal()">
+              Éditer la structure
+            </button>
+</div>
+</div>
+</dialog>
+</main>
+</div>
+<!-- SCRIPT LOGIQUE CONSOLE & SHORTCUTS -->
+<script>
+    const mockTableEntries = [
+      {
+        min: 1, max: 20,
+        title: "ALERTE SPINNER LAPD",
+        desc: "Une patrouille aérienne abaisse soudainement ses projecteurs xénon à travers le brouillard acide. Les sirènes saturent la ruelle.",
+        mech: "Test de Discrétion collectif. Échec : interrogatoire immédiat avec malus de suspicion."
+      },
+      {
+        min: 21, max: 45,
+        title: "ÉPAVE DE DRONE DE LIVRAISON",
+        desc: "Un châssis de drone de livraison automatisée gît encastré dans une grille d'aération. Ses voyants de détresse pulsent faiblement en ambre.",
+        mech: "Test de Piratage / Électronique : récupération possible de 2x Cellules d'énergie standard."
+      },
+      {
+        min: 46, max: 65,
+        title: "INFILTRATION DE GAZ TOXIQUE",
+        desc: "Une conduite industrielle éventrée crache des vapeurs blanchâtres au goût d'amande amère dans tout le couloir d'accès.",
+        mech: "Test d'Endurance immédiat. Échec : 1 point de Dégât et désorientation pendant 1 round."
+      },
+      {
+        min: 66, max: 80,
+        title: "TRANSACTION CLANDESTINE INTERROMPUE",
+        desc: "Deux agents en civil de la Division Répression coincent un informateur Replicant derrière un stand de nouilles fumant sous la pluie battante. Une sacoche renforcée glisse au sol lors de l'altercation.",
+        mech: "Test d'Observation (Agilité) à -2 pour intervenir discrètement. Si fouille de la sacoche : contient 1x Scanner de poche Voight-Kampff portatif, 3x Cartouches de munitions perforantes et une puce chiffrée Tyrell Corp."
+      },
+      {
+        min: 81, max: 100,
+        title: "COUPURE DE COURANT SOUS-SECTEUR",
+        desc: "Un transformateur grésille avant d'exploser trois blocs plus loin. Les néons clignotent et s'éteignent, plongeant le carrefour dans l'obscurité complète.",
+        mech: "Zone plongée dans le noir absolu pendant 2d10 rounds. Vision nocturne ou lampe requise."
+      }
+    ];
+
+    let currentMod = 5;
+
+    function adjustMod(delta) {
+      currentMod += delta;
+      const sign = currentMod >= 0 ? '+' : '';
+      document.getElementById('mod-display-tag').textContent = `VALEUR: ${sign}${currentMod}`;
+    }
+
+    function getEntryForTotal(tot) {
+      const clamped = Math.max(1, Math.min(100, tot));
+      return mockTableEntries.find(e => clamped >= e.min && clamped <= e.max) || mockTableEntries[0];
+    }
+
+    function getTimestamp() {
+      const now = new Date();
+      return String(now.getHours()).padStart(2, '0') + ':' + 
+             String(now.getMinutes()).padStart(2, '0') + ':' + 
+             String(now.getSeconds()).padStart(2, '0');
+    }
+
+    function renderResult(raw, mod, entry, timestamp) {
+      const total = Math.max(1, Math.min(100, raw + mod));
+      const sign = mod >= 0 ? '+' + mod : mod.toString();
+      const timeStr = timestamp || getTimestamp();
+
+      document.getElementById('raw-roll').textContent = raw;
+      document.getElementById('applied-mod').textContent = sign;
+      document.getElementById('total-roll-display').textContent = total;
+      document.getElementById('roll-timestamp').textContent = timeStr;
+      document.getElementById('result-title').textContent = entry.title;
+      document.getElementById('result-desc').textContent = entry.desc;
+      document.getElementById('result-mechanics').textContent = entry.mech;
+
+      if (!timestamp) {
+        addHistoryItem(total, raw, sign, entry.title, entry.desc, entry.mech, timeStr);
+      }
+    }
+
+    function executeRoll() {
+      const raw = Math.floor(Math.random() * 100) + 1;
+      const entry = getEntryForTotal(raw + currentMod);
+      renderResult(raw, currentMod, entry);
+    }
+
+    function applyManualRoll() {
+      const input = document.getElementById('manual-dice');
+      const val = parseInt(input.value, 10);
+      if (!isNaN(val) && val >= 1 && val <= 100) {
+        const entry = getEntryForTotal(val + currentMod);
+        renderResult(val, currentMod, entry);
+        input.value = '';
+      }
+    }
+
+    function addHistoryItem(total, raw, modStr, title, desc, mech, timeStr) {
+      const container = document.getElementById('history-container');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = "w-full text-left p-3 bg-rpg-bg hover:bg-rpg-surface-2 border-2 border-rpg-accent transition-all flex flex-col gap-1 active:scale-[0.98] group";
+      
+      const safeTitle = title.replace(/'/g, "\\'");
+      const safeDesc = desc.replace(/'/g, "\\'");
+      const safeMech = mech.replace(/'/g, "\\'");
+      
+      btn.setAttribute('onclick', `replayHistory('${total}', '${raw}', '${modStr}', '${safeTitle}', '${safeDesc}', '${safeMech}', '${timeStr}')`);
+      
+      btn.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-lg font-bold text-rpg-accent group-hover:text-primary-fixed">JET: ${total}</span>
+          <span class="font-mono text-[11px] text-rpg-muted">${timeStr}</span>
+        </div>
+        <span class="font-sans text-xs font-bold text-rpg-text group-hover:text-rpg-accent line-clamp-1 uppercase">${title}</span>
+        <div class="flex items-center justify-between font-mono text-[11px] text-rpg-muted pt-1 border-t border-rpg-border/60">
+          <span>BRUT: ${raw} (${modStr})</span>
+          <span class="text-rpg-accent font-bold">RÉINJECTER</span>
+        </div>
+      `;
+
+      container.insertBefore(btn, container.firstChild);
+    }
+
+    function replayHistory(total, raw, mod, title, desc, mech, timestamp) {
+      document.getElementById('raw-roll').textContent = raw;
+      document.getElementById('applied-mod').textContent = mod;
+      document.getElementById('total-roll-display').textContent = total;
+      document.getElementById('roll-timestamp').textContent = timestamp || getTimestamp();
+      document.getElementById('result-title').textContent = title;
+      document.getElementById('result-desc').textContent = desc;
+      document.getElementById('result-mechanics').textContent = mech;
+    }
+
+    function clearHistory() {
+      document.getElementById('history-container').innerHTML = '';
+    }
+
+    function dispatchTableAction(type) {
+      const toast = document.getElementById('action-toast');
+      const msgs = {
+        'loot': 'OBJETS VERSÉS AU BUTIN DE SÉANCE',
+        'ai-items': 'EXTRACTION IA DES OBJETS EN COURS...',
+        'log': 'ÉVÉNEMENT INSCRIT AU JOURNAL DE CAMPAGNE'
+      };
+      toast.textContent = msgs[type] || 'ACTION CONFIRMÉE';
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2200);
+    }
+
+    function toggleWorkshopModal() {
+      const dlg = document.getElementById('workshop-modal');
+      if (dlg.open) {
+        dlg.close();
+      } else {
+        dlg.showModal();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        executeRoll();
+      }
+    });
+  </script>
+</body></html>

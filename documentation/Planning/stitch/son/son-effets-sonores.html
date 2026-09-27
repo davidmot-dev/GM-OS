@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;background-color:#020617;color:#f8fafc;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-primary-container":"#005763","error-container":"#93000a","surface-dim":"#0c1324","error":"#ffb4ab","background":"#0c1324","tertiary-fixed":"#d8e3fb","rpg-muted":"#898c95","on-secondary":"#283044","inverse-primary":"#006877","tertiary-fixed-dim":"#bcc7de","inverse-surface":"#dce1fb","secondary-fixed-dim":"#bec6e0","rpg-border":"#1e293b","rpg-on-status":"#020617","surface-bright":"#33394c","on-secondary-fixed":"#131b2e","tertiary":"#d2ddf5","on-background":"#dce1fb","primary":"#8aebff","on-error":"#690005","surface-tint":"#2fd9f4","on-tertiary":"#263143","secondary-fixed":"#dae2fd","surface-variant":"#2e3447","on-secondary-container":"#adb4ce","tertiary-container":"#b6c1d9","on-tertiary-fixed-variant":"#3c475a","on-primary-fixed-variant":"#004e5a","on-tertiary-container":"#444f63","rpg-surface":"#0f172a","secondary":"#bec6e0","rpg-text":"#f8fafc","primary-fixed-dim":"#2fd9f4","primary-container":"#22d3ee","surface-container-lowest":"#070d1f","surface-container-highest":"#2e3447","surface":"#0c1324","on-surface":"#dce1fb","on-primary-fixed":"#001f25","rpg-warning":"#f59e0b","on-secondary-fixed-variant":"#3f465c","on-tertiary-fixed":"#111c2d","rpg-danger":"#ef4444","outline":"#859397","surface-container-high":"#23293c","on-surface-variant":"#bbc9cd","rpg-accent":"#22d3ee","primary-fixed":"#a2eeff","rpg-bg":"#020617","outline-variant":"#3c494c","secondary-container":"#3f465c","surface-container-low":"#151b2d","on-error-container":"#ffdad6","surface-container":"#191f31","rpg-accent-contrast":"#020617","rpg-surface-2":"#1e293b","on-primary":"#00363e","rpg-info":"#3b82f6","rpg-success":"#10b981","inverse-on-surface":"#2a3043"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"12px","space-xl":"24px","space-lg":"16px","margin":"16px","space-xs":"4px","space-sm":"8px","gutter":"12px"},fontFamily:{"number-lg":["Space Mono"],"label-xs":["Space Mono"],"body-sm":["Space Mono"],"body-md":["Space Mono"],"title-md":["Syne"],"display-lg":["Syne"],"number-md":["Space Mono"],"label-sm":["Space Mono"],"display-md":["Syne"]},fontSize:{"number-lg":["28px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"label-xs":["10px",{lineHeight:"12px",letterSpacing:"0.18em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"400"}],"body-md":["14px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"400"}],"title-md":["17px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"display-lg":["34px",{lineHeight:"40px",letterSpacing:"0.06em",fontWeight:"800"}],"number-md":["16px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"700"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.14em",fontWeight:"700"}],"display-md":["24px",{lineHeight:"30px",letterSpacing:"0.05em",fontWeight:"700"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text font-body-sm text-body-sm antialiased selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface z-50 flex flex-col justify-between border-r border-rpg-border select-none"><div class="flex flex-col"><div class="h-14 px-space-md border-b border-rpg-border flex items-center justify-between bg-surface-container-lowest"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[20px]">hexagon</span><div class="flex flex-col"><span class="font-title-md text-title-md leading-none text-rpg-text tracking-wider">GM-OS</span><span class="font-label-xs text-label-xs text-rpg-accent leading-none mt-space-xs">V6.0.4 CORE</span></div></div><span class="material-symbols-outlined text-rpg-muted text-[16px]">terminal</span></div><nav class="flex flex-col py-space-sm overflow-y-auto max-h-[calc(100vh-120px)]" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]"><div class="px-space-md pt-space-sm pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Aventure</span></div><div class="flex flex-col"><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px]">swords</span><span class="font-label-sm text-label-sm uppercase">Combat-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px]">casino</span><span class="font-label-sm text-label-sm uppercase">Dice-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="generateur" href="#"><span class="material-symbols-outlined text-[16px]">auto_awesome</span><span class="font-label-sm text-label-sm uppercase">Générateur</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px]">map</span><span class="font-label-sm text-label-sm uppercase">Cartographie</span></a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-accent uppercase tracking-widest">// Audio Matrix</span></div><div class="flex flex-col"><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px]">music_note</span><span class="font-label-sm text-label-sm uppercase">Musique</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-xs transition-colors bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px]">graphic_eq</span><span class="font-label-sm text-label-sm uppercase">Effets Sonores</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px]">surround_sound</span><span class="font-label-sm text-label-sm uppercase">Ambiances</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px]">record_voice_over</span><span class="font-label-sm text-label-sm uppercase">Voice-OS</span></a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Systèmes &amp; Outils</span></div><div class="flex flex-col"><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px]">perm_media</span><span class="font-label-sm text-label-sm uppercase">Médiathèque</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="image-os" href="#"><span class="material-symbols-outlined text-[16px]">image</span><span class="font-label-sm text-label-sm uppercase">Image-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="horloge-et-temps" href="#"><span class="material-symbols-outlined text-[16px]">schedule</span><span class="font-label-sm text-label-sm uppercase">Horloge &amp; Temps</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px]">lightbulb</span><span class="font-label-sm text-label-sm uppercase">Light-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="nexus-wiki" href="#"><span class="material-symbols-outlined text-[16px]">menu_book</span><span class="font-label-sm text-label-sm uppercase">Nexus Wiki</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="cortex-ia" href="#"><span class="material-symbols-outlined text-[16px]">psychology</span><span class="font-label-sm text-label-sm uppercase">Cortex IA</span></a></div></nav></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between"><div class="flex items-center gap-space-xs"><button class="p-space-xs bg-rpg-surface border border-rpg-border text-rpg-accent hover:bg-rpg-surface-2" title="Moniteur Principal" type="button"><span class="material-symbols-outlined text-[16px]">desktop_windows</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Écran Inférieur Tactile" type="button"><span class="material-symbols-outlined text-[16px]">tablet</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Vue Joueurs" type="button"><span class="material-symbols-outlined text-[16px]">cast</span></button></div><button class="p-space-xs bg-rpg-danger/20 border border-rpg-danger text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Déconnexion Régie" type="button"><span class="material-symbols-outlined text-[16px]">power_settings_new</span></button></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface border-b border-rpg-border z-40 px-space-md flex items-center justify-between select-none"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs border border-rpg-accent/30 bg-rpg-accent/10 px-space-sm py-space-xs"><span class="w-2 h-2 rounded-full bg-rpg-accent animate-pulse"></span><span class="font-label-xs text-label-xs text-rpg-accent font-bold tracking-widest uppercase">Cortex Active</span></div><div class="flex items-center gap-space-xs border border-rpg-success/30 bg-rpg-success/10 px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-success text-[14px]">wifi_tethering</span><span class="font-label-xs text-label-xs text-rpg-success font-bold uppercase tracking-wider">Link Active</span></div><div class="h-6 w-px bg-rpg-border hidden xl:block"></div><div class="hidden xl:flex items-center gap-space-sm bg-rpg-surface-2 border border-rpg-border px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">MST</span><div class="w-24 h-2 bg-rpg-bg border border-rpg-border"><div class="h-full bg-rpg-accent w-full"></div></div><span class="font-number-md text-number-md text-rpg-accent text-[12px] leading-none">100%</span></div><button class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-rpg-accent text-[16px]">mic</span><span class="font-label-xs text-label-xs uppercase tracking-wider">Focus Chat</span></button></div><div class="flex items-center gap-space-md"><div class="flex border border-rpg-border"><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-surface-2 text-on-surface-variant hover:text-on-surface border-r border-rpg-border" type="button">Atelier</button><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-accent text-rpg-accent-contrast font-bold" type="button">Table</button></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary/20 border border-primary text-primary hover:bg-primary hover:text-rpg-accent-contrast transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">sensors</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-wider">Connecter Joueurs</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-rpg-danger text-rpg-accent-contrast hover:bg-rpg-danger/90 font-bold transition-all shadow-[0_0_12px_rgba(239,68,68,0.5)]" type="button"><span class="material-symbols-outlined text-[16px]">emergency</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-widest">Stop All</span></button><div class="flex items-center gap-space-xs border-l border-rpg-border pl-space-md"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-14 w-full bg-rpg-bg min-h-screen"><div class="flex flex-col w-full p-space-md bg-rpg-bg text-rpg-text">
+<!-- Module Main Stage Container (12-col responsive grid with right control dock) -->
+<div class="flex flex-col xl:flex-row gap-space-md w-full">
+<!-- LEFT & CENTER: WORKSPACE (SFX SOUNDBOARD CORE) -->
+<div class="flex-1 flex flex-col gap-space-md min-w-0">
+<!-- 1. En-tête du module -->
+<div class="bg-rpg-surface p-space-md flex flex-wrap items-center justify-between gap-space-sm shadow-md">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center justify-center w-10 h-10 bg-primary-container text-rpg-accent-contrast">
+<span class="material-symbols-outlined text-[24px]">graphic_eq</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h1 class="font-display-md text-display-md text-primary tracking-wider leading-none">EFFETS SONORES</h1>
+<span class="font-label-sm text-label-sm text-rpg-muted">// RÉGIE AUDIO &amp; SOUNDBOARD</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Déclenchement instantané à faible latence • Assignation par pads tactiles</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<div class="flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-space-xs">
+<span class="w-2 h-2 rounded-full bg-rpg-success animate-pulse"></span>
+<span class="font-label-xs text-label-xs text-rpg-success uppercase">1 CANAL ACTIF • V6.5.0</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-space-xs">
+<span class="material-symbols-outlined text-rpg-muted text-[14px]">memory</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">BUFFER : 48KHZ PCM</span>
+</div>
+</div>
+</div>
+<!-- 2. Barres d'outils (Ligne 1: Campagnes & Filtres) -->
+<div class="bg-surface-container-low p-space-sm flex flex-wrap items-center justify-between gap-space-sm shadow-sm">
+<!-- Campagnes -->
+<div class="flex items-center gap-space-xs flex-wrap">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary text-rpg-accent-contrast font-title-md text-title-md tracking-wider shadow-[0_0_12px_rgba(34,211,238,0.5)]" type="button">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>BLADE RUNNER</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-rpg-surface-2 hover:bg-primary hover:text-rpg-accent-contrast text-on-surface-variant transition-colors" title="Ajouter une campagne" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+<!-- Filtres contextuels -->
+<div class="flex items-center gap-space-xs bg-surface-container-lowest p-space-xs">
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs font-label-xs text-label-xs text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[14px]">public</span>
+<span>TOUTES</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-rpg-accent/20 text-rpg-accent font-bold font-label-xs text-label-xs shadow-inner" type="button">
+<span class="material-symbols-outlined text-[14px]">bookmark</span>
+<span>CETTE CAMPAGNE</span>
+</button>
+</div>
+</div>
+<!-- 2. Barres d'outils (Ligne 2: Outils & Transport rapide) -->
+<div class="bg-rpg-surface px-space-md py-space-sm flex flex-wrap items-center justify-between gap-space-sm shadow-sm">
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-rpg-surface-2 hover:bg-surface-container-high text-rpg-text transition-colors" id="midi-learn-btn" type="button">
+<span class="material-symbols-outlined text-rpg-warning text-[16px]">bolt</span>
+<span class="font-label-sm text-label-sm uppercase">MIDI LEARN</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-rpg-surface-2 hover:bg-surface-container-high text-rpg-text transition-colors" id="key-learn-btn" type="button">
+<span class="material-symbols-outlined text-primary text-[16px]">keyboard</span>
+<span class="font-label-sm text-label-sm uppercase">KEY LEARN</span>
+</button>
+<div class="flex items-center bg-surface-container-lowest px-space-sm py-space-xs gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">speaker_group</span>
+<span class="font-body-sm text-body-sm text-rpg-text">DEFAULT - HAUT-PARLEURS TABLE</span>
+<span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-error-container text-on-error-container hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Arrêt progressif de tous les pads (3 s)" type="button"><span class="material-symbols-outlined text-[16px]">timer</span><span class="font-label-sm text-label-sm uppercase font-bold">Arrêt progressif (3 s)</span></button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-rpg-surface-2 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Réinitialiser tous les déclencheurs" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span class="font-label-sm text-label-sm uppercase">RÉINITIALISER</span>
+</button>
+</div>
+</div>
+<!-- 3. Zone de travail centrale : Grille de 16 pads colorés (4 colonnes x 4 rangées) -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md w-full select-none">
+<!-- PAD 01 (EN COURS DE LECTURE - ACTIF VIOLET/CYAN) -->
+<div class="relative group h-[165px] bg-surface-container-high p-space-md flex flex-col justify-between cursor-pointer transition-all duration-150 shadow-[0_0_20px_rgba(34,211,238,0.35)] ring-2 ring-primary">
+<div class="flex items-center justify-between w-full">
+<span class="material-symbols-outlined text-[16px] text-primary">touch_app</span>
+<div class="flex items-center gap-space-xs bg-primary text-rpg-accent-contrast px-space-xs py-[2px] font-label-xs text-label-xs font-bold">
+<span>PAD_01</span>
+<span class="material-symbols-outlined text-[12px]">bolt</span>
+</div>
+</div>
+<div class="flex flex-col my-auto">
+<span class="font-title-md text-title-md text-rpg-text leading-tight uppercase font-bold">VOIGHT-KAMPFF SETUP.MP3</span>
+<span class="font-body-sm text-body-sm text-primary font-number-md tracking-wider mt-space-xs truncate">m-3f883426-dffc-481...</span>
+</div>
+<div class="w-full flex flex-col gap-1">
+<div class="flex justify-between items-center text-[10px] font-label-xs text-primary">
+<span class="animate-pulse">LECTURE // 01.4s</span>
+<span>03.2s</span>
+</div>
+<!-- Jauge progression animée -->
+<div class="w-full h-2 bg-surface-container-lowest overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary via-primary-fixed-dim to-primary w-2/3 animate-[pulse_1.5s_infinite]"></div>
+</div>
+</div>
+</div>
+<!-- PAD 02 (OCCUPÉ) -->
+<div class="group h-[165px] bg-rpg-surface hover:bg-surface-container-high p-space-md flex flex-col justify-between cursor-pointer transition-all duration-150 shadow-sm hover:shadow-md">
+<div class="flex items-center justify-between w-full">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary">sensors</span>
+<div class="flex items-center gap-space-xs bg-surface-container-highest text-secondary-fixed px-space-xs py-[2px] font-label-xs text-label-xs font-bold">
+<span>PAD_02</span>
+<span class="text-rpg-warning">#1</span>
+</div>
+</div>
+<div class="flex flex-col my-auto">
+<span class="font-title-md text-title-md text-rpg-text leading-tight uppercase font-bold">ESPER SCANNER</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-number-md tracking-wider mt-space-xs truncate">m-094d75a0-6aa9-4...</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-surface-variant w-0 group-hover:w-full transition-all duration-300"></div>
+</div>
+</div>
+<!-- PAD 03 (OCCUPÉ) -->
+<div class="group h-[165px] bg-rpg-surface hover:bg-surface-container-high p-space-md flex flex-col justify-between cursor-pointer transition-all duration-150 shadow-sm hover:shadow-md">
+<div class="flex items-center justify-between w-full">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary">keyboard_voice</span>
+<div class="flex items-center gap-space-xs bg-surface-container-highest text-secondary-fixed px-space-xs py-[2px] font-label-xs text-label-xs font-bold">
+<span>PAD_03</span>
+<span class="material-symbols-outlined text-[12px] text-rpg-accent">bolt</span>
+</div>
+</div>
+<div class="flex flex-col my-auto">
+<span class="font-title-md text-title-md text-rpg-text leading-tight uppercase font-bold">LE TEST DE VOIGHT-KAMPFF</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-number-md tracking-wider mt-space-xs truncate">DECKARD-RACHEL_04.WAV</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-surface-variant w-0 group-hover:w-full transition-all duration-300"></div>
+</div>
+</div>
+<!-- PAD 04 (OCCUPÉ - WEAPON/ACTION) -->
+<div class="group h-[165px] bg-rpg-surface hover:bg-surface-container-high p-space-md flex flex-col justify-between cursor-pointer transition-all duration-150 shadow-sm hover:shadow-md">
+<div class="flex items-center justify-between w-full">
+<span class="material-symbols-outlined text-[16px] text-rpg-warning">crisis_alert</span>
+<div class="flex items-center gap-space-xs bg-secondary-container text-on-secondary px-space-xs py-[2px] font-label-xs text-label-xs font-bold">
+<span>PAD_04</span>
+<span class="material-symbols-outlined text-[12px] text-primary">lightbulb</span>
+<span class="text-rpg-warning">#4</span>
+</div>
+</div>
+<div class="flex flex-col my-auto">
+<span class="font-title-md text-title-md text-rpg-text leading-tight uppercase font-bold">MINIGUN SPEED BURST B.WAV</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-number-md tracking-wider mt-space-xs truncate">m-54bf7634-03f3-44...</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-surface-variant w-0 group-hover:w-full transition-all duration-300"></div>
+</div>
+</div>
+<!-- ROW 2: EMPTY PADS (05 to 08) -->
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_05</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_06</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_07</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_08</span>
+</div>
+<!-- ROW 3: EMPTY PADS (09 to 12) -->
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_09</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_10</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_11</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_12</span>
+</div>
+<!-- ROW 4: EMPTY PADS (13 to 16) -->
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_13</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_14</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_15</span>
+</div>
+<div class="group h-[165px] bg-surface-container-lowest hover:bg-surface-container-low p-space-md flex flex-col items-center justify-center cursor-pointer transition-all border-dashed hover:border-solid">
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-primary text-[28px] transition-colors">add</span>
+<span class="font-label-sm text-label-sm text-rpg-muted group-hover:text-primary uppercase tracking-widest mt-space-xs">EMPTY PAD</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant/40 mt-1">PAD_16</span>
+</div>
+</div>
+<!-- Footer télémétrique sound engine status -->
+<div class="flex items-center justify-between p-space-xs bg-surface-container-lowest text-on-surface-variant font-label-xs text-label-xs uppercase">
+<div class="flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-accent"></span>
+<span>1 ACTIVE CHANNELS // LATENCY: 8.2MS</span>
+</div>
+<div class="tracking-widest">GM-OS SOUND ENGINE V6.5.0 // STREAM: DIRECT-IO</div>
+</div>
+</div>
+<!-- RIGHT: REGIE SFX & MONITORING PANEL (320px) -->
+<div class="w-full xl:w-[320px] flex flex-col gap-space-md shrink-0">
+<!-- Module Rack Header -->
+<div class="bg-rpg-surface p-space-md flex items-center justify-between shadow-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-rpg-text uppercase tracking-wider font-bold">RÉGIE SFX &amp; MONITORING</span>
+</div>
+<button class="text-rpg-muted hover:text-rpg-text" title="Verrouillage régie" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+</div>
+<!-- Section: Sortie Audio -->
+<!-- Section: Matrice MIDI & Périphériques -->
+<div class="bg-surface-container-low p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// MATRICE MIDI</span>
+</div>
+<div class="bg-surface-container-lowest p-space-sm flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-rpg-muted"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">NO MIDI DEVICE</span>
+</div>
+<button class="p-space-xs hover:text-rpg-text hover:bg-surface-container-high transition-colors" title="Actualiser périphériques" type="button">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+</button>
+</div>
+</div>
+<!-- Section: Raccourcis Clavier (Key Learn) -->
+<div class="bg-surface-container-low p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// ASSIGNATIONS ACTIVES</span>
+<span class="font-label-xs text-label-xs text-rpg-accent font-bold">KEY MAP</span>
+</div>
+<div class="flex flex-col gap-space-xs font-body-sm text-body-sm">
+<div class="flex items-center justify-between bg-rpg-surface px-space-sm py-space-xs">
+<span class="text-on-surface-variant truncate mr-2">VOIGHT-KAMPFF</span>
+</div>
+<div class="flex items-center justify-between bg-rpg-surface px-space-sm py-space-xs">
+<span class="text-on-surface-variant truncate mr-2">ESPER SCAN</span>
+</div>
+<div class="flex items-center justify-between bg-rpg-surface px-space-sm py-space-xs">
+<span class="text-on-surface-variant truncate mr-2">MINIGUN SPEED</span>
+</div>
+</div>
+</div>
+<!-- Section: Master Volume SFX -->
+<div class="bg-surface-container-low p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// VOLUME MASTER SFX</span>
+</div>
+<!-- Fader horizontal stylisé -->
+<div class="relative w-full h-8 bg-surface-container-lowest flex items-center px-2 cursor-pointer group">
+<div class="absolute left-0 top-0 bottom-0 bg-primary/20 w-full group-hover:bg-primary/30 transition-all"></div>
+<div class="relative w-full flex items-center">
+<div class="h-2 w-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary w-full"></div>
+</div>
+<div class="w-4 h-6 bg-primary shadow-[0_0_10px_rgba(34,211,238,0.8)] -ml-2 shrink-0"></div>
+</div>
+</div>
+</div>
+<!-- Section: Commandes d'Urgence -->
+<div class="mt-auto flex flex-col gap-space-sm pt-space-sm"><button class="w-full flex items-center justify-center gap-space-sm py-space-md px-space-md bg-error-container text-on-error-container hover:bg-rpg-danger hover:text-rpg-accent-contrast font-title-md text-title-md font-bold tracking-wider transition-all shadow-[0_0_14px_rgba(239,68,68,0.3)]" id="sfx-mute-btn" title="Arrêt progressif de tous les pads (3 s)" type="button"><span class="material-symbols-outlined text-[20px]">timer</span><span>Arrêt progressif (3 s)</span></button></div>
+</div>
+</div>
+</div>
+<script>
+  // Micro-interactions simples pour l'état SFX
+  document.getElementById('sfx-mute-btn')?.addEventListener('click', function() {
+    const isMuted = this.classList.contains('bg-rpg-danger');
+    if (!isMuted) {
+      this.classList.remove('bg-error-container', 'text-on-error-container');
+      this.classList.add('bg-rpg-danger', 'text-rpg-accent-contrast');
+      this.innerHTML = '<span class="material-symbols-outlined text-[20px]">volume_up</span><span>RÉACTIVER LES SFX</span>';
+      document.getElementById('volume-indicator').textContent = 'MUTED';
+    } else {
+      this.classList.remove('bg-rpg-danger', 'text-rpg-accent-contrast');
+      this.classList.add('bg-error-container', 'text-on-error-container');
+      this.innerHTML = '<span class="material-symbols-outlined text-[20px]">volume_off</span><span>SILENCE RAPIDE (MUTE SFX)</span>';
+      document.getElementById('volume-indicator').textContent = '100%';
+    }
+  });
+
+  const learnToggles = ['midi-learn-btn', 'key-learn-btn'];
+  learnToggles.forEach(id => {
+    const btn = document.getElementById(id);
+    btn?.addEventListener('click', () => {
+      btn.classList.toggle('bg-primary');
+      btn.classList.toggle('text-rpg-accent-contrast');
+    });
+  });
+</script></main></div></body></html>

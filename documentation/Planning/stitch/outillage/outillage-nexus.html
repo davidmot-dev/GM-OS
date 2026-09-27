@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-highest": "#2e3447", "rpg-info": "#3b82f6", "primary-fixed": "#a2eeff", "rpg-surface": "#0f172a", "on-surface-variant": "#bbc9cd", "on-error": "#690005", "on-primary-container": "#005763", "surface-dim": "#0c1324", "on-primary-fixed": "#001f25", "secondary-fixed": "#dae2fd", "primary": "#8aebff", "surface-container-high": "#23293c", "on-background": "#dce1fb", "tertiary": "#d2ddf5", "surface-tint": "#2fd9f4", "outline-variant": "#3c494c", "rpg-muted": "#898c95", "error-container": "#93000a", "on-tertiary-fixed-variant": "#3c475a", "on-primary-fixed-variant": "#004e5a", "rpg-text": "#f8fafc", "tertiary-fixed-dim": "#bcc7de", "on-primary": "#00363e", "surface-container": "#191f31", "on-secondary-container": "#adb4ce", "inverse-surface": "#dce1fb", "rpg-accent": "#22d3ee", "surface-container-low": "#151b2d", "primary-container": "#22d3ee", "secondary-container": "#3f465c", "rpg-bg": "#020617", "on-error-container": "#ffdad6", "background": "#0c1324", "rpg-warning": "#f59e0b", "rpg-on-status": "#020617", "rpg-surface-2": "#1e293b", "rpg-danger": "#ef4444", "surface": "#0c1324", "surface-container-lowest": "#070d1f", "inverse-on-surface": "#2a3043", "on-surface": "#dce1fb", "outline": "#859397", "on-secondary-fixed": "#131b2e", "primary-fixed-dim": "#2fd9f4", "inverse-primary": "#006877", "rpg-border": "#1e293b", "secondary-fixed-dim": "#bec6e0", "rpg-success": "#10b981", "tertiary-container": "#b6c1d9", "on-tertiary-container": "#444f63", "surface-variant": "#2e3447", "error": "#ffb4ab", "tertiary-fixed": "#d8e3fb", "on-secondary": "#283044", "rpg-accent-contrast": "#020617", "on-secondary-fixed-variant": "#3f465c", "secondary": "#bec6e0", "on-tertiary-fixed": "#111c2d", "on-tertiary": "#263143", "surface-bright": "#33394c" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xl": "24px", "space-xs": "4px", "space-md": "12px", "space-sm": "8px", "gutter": "12px", "space-lg": "16px", "margin": "16px" }, "fontFamily": { "body-md": [ "Space Mono" ], "body-sm": [ "Space Mono" ], "title-md": [ "Syne" ], "label-sm": [ "Space Mono" ], "label-xs": [ "Space Mono" ], "number-lg": [ "Space Mono" ], "number-md": [ "Space Mono" ], "display-md": [ "Syne" ], "display-lg": [ "Syne" ] }, "fontSize": { "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "body-sm": [ "12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" } ], "title-md": [ "17px", { "lineHeight": "22px", "letterSpacing": "0.08em", "fontWeight": "700" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.14em", "fontWeight": "700" } ], "label-xs": [ "10px", { "lineHeight": "12px", "letterSpacing": "0.18em", "fontWeight": "700" } ], "number-lg": [ "28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "number-md": [ "16px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "700" } ], "display-md": [ "24px", { "lineHeight": "30px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "display-lg": [ "34px", { "lineHeight": "40px", "letterSpacing": "0.06em", "fontWeight": "800" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-surface-container-lowest border-r border-rpg-border z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center justify-between border-b border-rpg-border bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-2.5 h-2.5 bg-rpg-accent shadow-[0_0_8px_#22d3ee]"></div><span class="font-display-md text-display-md text-primary tracking-wider uppercase">GM-OS</span></div><span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-surface-container-highest text-rpg-accent border border-rpg-border">v4.2</span></div><div class="px-space-md py-space-sm border-b border-rpg-border bg-surface-dim flex items-center justify-between"><span class="font-label-xs text-label-xs uppercase text-rpg-muted tracking-widest">Modules Système</span><span class="w-1.5 h-1.5 rounded-full bg-rpg-success animate-pulse"></span></div><nav class="flex flex-col py-space-xs" data-active-classes="bg-surface-container-high text-primary border-l-2 border-rpg-accent shadow-[inset_0_0_8px_rgba(34,211,238,0.15)]"><a class="group flex items-center gap-space-sm px-space-md py-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors border-l-2 border-transparent" data-path="table-regie" href="#"><span class="material-symbols-outlined text-base text-rpg-muted group-hover:text-primary transition-colors">grid_view</span><span class="truncate">01. Table Régie</span></a><a class="group flex items-center gap-space-sm px-space-md py-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors border-l-2 border-transparent" data-path="entites-pnj" href="#"><span class="material-symbols-outlined text-base text-rpg-muted group-hover:text-primary transition-colors">groups</span><span class="truncate">02. Entités &amp; PNJ</span></a><a class="group flex items-center gap-space-sm px-space-md py-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors border-l-2 border-transparent" data-path="audio-ambiance" href="#"><span class="material-symbols-outlined text-base text-rpg-muted group-hover:text-primary transition-colors">volume_up</span><span class="truncate">03. Audio &amp; Amb.</span></a><div class="flex flex-col"><a class="group flex items-center gap-space-sm px-space-md py-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors border-l-2 border-transparent" data-path="codex-regles" href="#"><span class="material-symbols-outlined text-base text-rpg-muted group-hover:text-primary transition-colors">menu_book</span><span class="truncate">04. Codex &amp; Règles</span></a><div class="pl-8 pr-space-md py-space-xs flex flex-col gap-1 bg-surface-container-lowest/60 border-y border-rpg-border/40"><a aria-current="page" class="flex items-center gap-1.5 py-1 px-2 font-label-xs transition-colors bg-surface-container-high text-primary border-l-2 border-rpg-accent shadow-[inset_0_0_8px_rgba(34,211,238,0.15)]" data-path="nexus-wiki" href="#"><span class="material-symbols-outlined text-xs">arrow_right</span><span class="truncate">Nexus Wiki</span></a><a class="flex items-center gap-1.5 py-1 px-2 font-label-xs text-label-xs text-rpg-muted hover:text-on-surface transition-colors" data-path="regles-combat" href="#"><span class="material-symbols-outlined text-xs">remove</span><span class="truncate">Tables &amp; Résolutions</span></a></div></div><a class="group flex items-center gap-space-sm px-space-md py-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors border-l-2 border-transparent" data-path="parametres" href="#"><span class="material-symbols-outlined text-base text-rpg-muted group-hover:text-primary transition-colors">tune</span><span class="truncate">05. Paramètres</span></a></nav></div><div class="p-space-md border-t border-rpg-border bg-surface-container-lowest"><div class="flex flex-col gap-1.5 p-2 bg-surface-dim border border-rpg-border"><div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted"><span>MONITEUR A/B</span><span class="text-rpg-success font-bold">SYNCED</span></div><div class="flex items-center justify-between font-label-xs text-label-xs text-on-surface"><span>LATENCE</span><span class="font-number-md text-label-xs text-rpg-accent">4.2ms</span></div></div></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-surface-container-lowest/95 backdrop-blur-md border-b border-rpg-border z-40 px-space-margin flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm px-space-sm py-1 bg-surface-dim border border-rpg-border"><span class="inline-block w-2 h-2 rounded-full bg-rpg-success shadow-[0_0_6px_#10b981]"></span><span class="font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted">SESSION :</span><span class="font-label-xs text-label-xs font-bold text-rpg-text tracking-wide">SECTEUR-09 [ONLINE]</span></div><div class="flex items-center gap-2 border border-rpg-border bg-surface-container-low p-0.5"><button class="px-3 py-1 font-label-xs text-label-xs uppercase bg-surface-container-highest text-rpg-muted hover:text-on-surface transition-colors" type="button">Atelier</button><button class="px-3 py-1 font-label-xs text-label-xs uppercase font-bold bg-rpg-accent text-rpg-accent-contrast shadow-[0_0_10px_rgba(34,211,238,0.4)]" type="button">Table Live</button></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm bg-surface-dim px-space-sm py-1 border border-rpg-border"><span class="material-symbols-outlined text-sm text-rpg-accent">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">MASTER</span><input class="w-24 h-1.5 bg-surface-container-highest accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="78"/><span class="font-number-md text-label-xs text-rpg-text">78%</span></div><button class="flex items-center gap-1.5 px-3 py-1.5 bg-rpg-danger hover:bg-error-container text-rpg-text border border-rpg-danger/60 font-label-sm text-label-sm uppercase font-bold tracking-wider shadow-[0_0_12px_rgba(239,68,68,0.3)] transition-all" type="button"><span class="material-symbols-outlined text-sm font-bold">emergency_home</span><span>STOP ALL</span></button><div class="h-6 w-px bg-rpg-border"></div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-14 w-full bg-surface min-h-screen px-space-margin py-space-margin"><div class="flex flex-col w-full text-rpg-text">
+<!-- En-tête de Module H4 -->
+<section class="flex flex-col gap-space-sm bg-surface-container-lowest p-space-md shadow-md mb-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 bg-rpg-accent shadow-[0_0_10px_#22d3ee]"></span>
+<h1 class="font-display-md text-display-md text-primary tracking-wider uppercase">NEXUS WIKI // COFFRE DE CAMPAGNE (OBSIDIAN)</h1>
+</div>
+<p class="font-label-sm text-label-sm text-rpg-muted tracking-wide uppercase mt-1">
+          MODULE H4 // SYNCHRONISATION DU VAULT LOCAL : ANGES DE FEU // <span class="text-rpg-text font-bold">142 NOTES ACTIVES</span>
+</p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-rpg-surface border border-rpg-success/50">
+<span class="w-2 h-2 rounded-full bg-rpg-success shadow-[0_0_6px_#10b981]"></span>
+<span class="font-label-xs text-label-xs text-rpg-success uppercase font-bold tracking-widest">VAULT SYNCHRONISÉ</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-rpg-surface border border-rpg-border">
+<span class="material-symbols-outlined text-sm text-rpg-accent">share</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">LIENS INTERNES :</span>
+<span class="font-number-md text-label-xs text-rpg-accent">384</span>
+</div>
+</div>
+</div>
+<!-- Barre d'outils secondaire de l'en-tête -->
+<div class="flex flex-wrap items-center justify-between pt-space-sm border-t border-rpg-border gap-space-sm">
+<div class="flex flex-wrap items-center gap-2">
+<button class="h-9 px-space-md bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold tracking-wider hover:shadow-[0_0_12px_rgba(34,211,238,0.6)] flex items-center gap-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>+ NOUVELLE NOTE</span>
+</button>
+<button class="h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text font-label-sm text-label-sm uppercase font-bold border border-rpg-border flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-rpg-accent">sync</span>
+<span>RECHARGER LE COFFRE</span>
+</button>
+<button class="h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text font-label-sm text-label-sm uppercase font-bold border border-rpg-border flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-on-surface-variant">open_in_new</span>
+<span>OUVRIR DANS OBSIDIAN</span>
+</button>
+</div>
+<div class="flex items-center bg-surface-dim border border-rpg-border p-0.5">
+<button class="px-space-md py-1 font-label-xs text-label-xs uppercase font-bold bg-rpg-accent text-rpg-accent-contrast transition-colors flex items-center gap-1" id="toggle-read" type="button">
+<span class="material-symbols-outlined text-xs">visibility</span>
+<span>LECTURE</span>
+</button>
+<button class="px-space-md py-1 font-label-xs text-label-xs uppercase text-rpg-muted hover:text-on-surface transition-colors flex items-center gap-1" id="toggle-edit" type="button">
+<span class="material-symbols-outlined text-xs">edit_note</span>
+<span>ÉDITION</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Workspace Principal (Layout Tri-colonne diégétique) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md items-start w-full">
+<!-- COLONNE GAUCHE : ARBORESCENCE DU VAULT (320-340px / 3 cols) -->
+<aside class="xl:col-span-3 flex flex-col bg-surface-container-lowest border border-rpg-border h-full">
+<!-- Moteur de recherche du coffre -->
+<div class="p-space-sm bg-surface-container-low border-b border-rpg-border">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-2.5 text-base text-rpg-muted">search</span>
+<input class="w-full h-10 bg-rpg-bg pl-9 pr-3 text-body-sm font-body-sm text-rpg-text placeholder:text-rpg-muted border border-rpg-border focus:border-rpg-accent focus:outline-none" placeholder="Rechercher dans le coffre... (Ctrl+Shift+F)" type="text"/>
+</div>
+</div>
+<!-- Arborescence des dossiers & notes -->
+<div class="p-space-sm flex flex-col gap-1 overflow-y-auto max-h-[670px] select-none text-body-sm font-body-sm">
+<!-- Dossier 1 : PNJ (Expanded) -->
+<div class="flex flex-col">
+<div class="flex items-center justify-between px-2 py-1.5 hover:bg-surface-container-high cursor-pointer text-primary">
+<div class="flex items-center gap-1.5 font-bold tracking-wide">
+<span class="material-symbols-outlined text-base">folder_open</span>
+<span>PNJ (Personnages Non-Joueurs)</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted font-number-md">28</span>
+</div>
+<div class="flex flex-col ml-3 pl-2 border-l border-rpg-border py-1 gap-0.5">
+<!-- Active Note -->
+<a class="flex items-center justify-between px-2 py-1.5 bg-rpg-surface-2 text-primary border-l-2 border-rpg-accent shadow-[inset_0_0_8px_rgba(34,211,238,0.2)] font-bold" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-accent">description</span>
+<span class="truncate">Roy Batty</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-accent font-mono">[ACTIF]</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Rick Deckard</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Rachael Tyrell</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Gaff</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Pris Stratton</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">J.F. Sebastian</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Dr. Eldon Tyrell</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Leon Kowalski</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text transition-colors" href="#">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Zhora Salome</span>
+</div>
+</a>
+</div>
+</div>
+<!-- Dossier 2 : Lieux & Secteurs -->
+<div class="flex flex-col mt-1">
+<div class="flex items-center justify-between px-2 py-1.5 hover:bg-surface-container-high cursor-pointer text-on-surface">
+<div class="flex items-center gap-1.5 font-bold tracking-wide">
+<span class="material-symbols-outlined text-base text-rpg-muted">folder</span>
+<span>Lieux &amp; Secteurs</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted font-number-md">18</span>
+</div>
+<div class="flex flex-col ml-3 pl-2 border-l border-rpg-border py-1 gap-0.5">
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Tour Tyrell</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Bradbury Building</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Animoid Row</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Yukon Hotel</span>
+</a>
+</div>
+</div>
+<!-- Dossier 3 : Séances & Chroniques -->
+<div class="flex flex-col mt-1">
+<div class="flex items-center justify-between px-2 py-1.5 hover:bg-surface-container-high cursor-pointer text-on-surface">
+<div class="flex items-center gap-1.5 font-bold tracking-wide">
+<span class="material-symbols-outlined text-base text-rpg-muted">folder</span>
+<span>Séances &amp; Chroniques</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted font-number-md">12</span>
+</div>
+<div class="flex flex-col ml-3 pl-2 border-l border-rpg-border py-1 gap-0.5">
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Séance 01 - Briefing</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Séance 02 - L'Interrogatoire</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Séance 03 - Poursuite Bradbury</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Séance 04 - Infiltration Arcologie</span>
+</a>
+</div>
+</div>
+<!-- Dossier 4 : Intrigues & Enquêtes -->
+<div class="flex flex-col mt-1">
+<div class="flex items-center justify-between px-2 py-1.5 hover:bg-surface-container-high cursor-pointer text-on-surface">
+<div class="flex items-center gap-1.5 font-bold tracking-wide">
+<span class="material-symbols-outlined text-base text-rpg-muted">folder</span>
+<span>Intrigues &amp; Enquêtes</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted font-number-md">16</span>
+</div>
+<div class="flex flex-col ml-3 pl-2 border-l border-rpg-border py-1 gap-0.5">
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Conspiration Nexus-8</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Protocole Voight-Kampff</span>
+</a>
+<a class="flex items-center gap-1.5 px-2 py-1 text-on-surface-variant hover:bg-surface-container hover:text-rpg-text" href="#">
+<span class="material-symbols-outlined text-sm text-rpg-muted">description</span>
+<span class="truncate">Réseau de contrebande Animoid</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Télémétrie / Stats en bas de coffre -->
+<div class="p-space-sm bg-surface-dim border-t border-rpg-border mt-auto">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<span>Dernière synchro : Aujourd'hui 14:32</span>
+<span class="text-rpg-accent font-bold">4 DOSSIERS</span>
+</div>
+</div>
+</aside>
+<!-- COLONNE CENTRALE : NOTE ACTIVE "ROY BATTY" (6 cols) -->
+<main class="xl:col-span-6 flex flex-col bg-surface-container-lowest border border-rpg-border min-h-[740px]">
+<!-- En-tête de la note -->
+<div class="p-space-lg bg-surface-container-low border-b border-rpg-border flex flex-col gap-space-sm">
+<!-- Fil d'Ariane -->
+<div class="flex items-center gap-1.5 font-label-xs text-label-xs uppercase text-rpg-muted tracking-wider">
+<span>Anges de Feu</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span>PNJ</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-rpg-accent font-bold">Roy Batty.md</span>
+</div>
+<!-- Titre Principal de Note -->
+<h2 class="font-display-md text-display-md text-primary tracking-wide">
+          Roy Batty — Nexus-6 Leader de Combat
+        </h2>
+<!-- Métadonnées & Tags (0px radius) -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="px-2 py-0.5 bg-rpg-surface-2 border border-rpg-border font-label-xs text-label-xs text-rpg-text uppercase font-bold">
+            TYPE: <span class="text-rpg-accent">REPLICANT NEXUS-6</span>
+</span>
+<span class="px-2 py-0.5 bg-rpg-danger/20 border border-rpg-danger font-label-xs text-label-xs text-error uppercase font-bold">
+            STATUT: HOSTILE / TRAQUÉ
+          </span>
+<span class="px-2 py-0.5 bg-rpg-surface-2 border border-rpg-border font-label-xs text-label-xs text-rpg-text uppercase font-bold">
+            SECTEUR: <span class="text-secondary">BRADBURY</span>
+</span>
+<div class="flex items-center gap-1 ml-auto">
+<span class="font-label-xs text-label-xs text-rpg-accent font-mono bg-surface-dim px-1.5 py-0.5 border border-rpg-accent/30">#boss</span>
+<span class="font-label-xs text-label-xs text-rpg-accent font-mono bg-surface-dim px-1.5 py-0.5 border border-rpg-accent/30">#nexus-6</span>
+<span class="font-label-xs text-label-xs text-rpg-accent font-mono bg-surface-dim px-1.5 py-0.5 border border-rpg-accent/30">#combat</span>
+<span class="font-label-xs text-label-xs text-rpg-accent font-mono bg-surface-dim px-1.5 py-0.5 border border-rpg-accent/30">#rep-div</span>
+</div>
+</div>
+</div>
+<!-- Corps Markdown Rendu avec confort de lecture à 1m -->
+<div class="p-space-xl flex flex-col gap-space-lg text-body-md font-body-md leading-relaxed text-on-surface">
+<!-- Callout / Citation Diégétique -->
+<blockquote class="p-space-md bg-rpg-surface border-l-4 border-rpg-accent italic text-rpg-text font-body-md shadow-sm">
+          « J'ai vu tant de choses que vous, humains, ne pourriez pas croire... De grands vaisseaux de guerre en flammes surgissant de l'épaule d'Orion... »
+        </blockquote>
+<!-- Section 01 -->
+<section class="flex flex-col gap-space-xs">
+<h3 class="font-title-md text-title-md text-primary tracking-wide border-b border-rpg-border pb-1">
+            01. Description &amp; Profil
+          </h3>
+<p class="text-body-md text-on-surface">
+            Modèle militaire de pointe créé par la <span class="text-rpg-accent font-bold">Wallace/Tyrell Corporation</span>. Capacité physique surhumaine, intellect tactique supérieur. Échappé des colonies spatiales de l'Off-World, il cherche à prolonger la durée de vie limitée des Nexus-6. Sa dangerosité est maximale en combat rapproché, et il dispose d'une tolérance exceptionnelle aux dégâts cinétiques et thermiques.
+          </p>
+</section>
+<!-- Section 02 -->
+<section class="flex flex-col gap-space-xs">
+<h3 class="font-title-md text-title-md text-primary tracking-wide border-b border-rpg-border pb-1">
+            02. Liaisons &amp; Relations Clés
+          </h3>
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-sm mt-1">arrow_right</span>
+<span>
+                Fait partie du groupe d'évadés avec 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Pris Stratton]]
+                </button> 
+                et 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Leon Kowalski]]
+                </button>.
+              </span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-sm mt-1">arrow_right</span>
+<span>
+                Traqué activement par le Blade Runner 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Rick Deckard]]
+                </button> 
+                sous les ordres de 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Gaff]]
+                </button>.
+              </span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-sm mt-1">arrow_right</span>
+<span>
+                A forcé le passage vers le 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Bradbury Building]]
+                </button> 
+                en exploitant la naïveté de 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[J.F. Sebastian]]
+                </button>.
+              </span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-sm mt-1">arrow_right</span>
+<span>
+                Tente d'accéder au laboratoire central de la 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Tour Tyrell]]
+                </button> 
+                pour confronter 
+                <button class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-rpg-accent/40 text-rpg-accent hover:border-rpg-accent hover:bg-rpg-surface-2 transition-colors font-bold font-mono text-label-sm" type="button">
+                  [[Dr. Eldon Tyrell]]
+                </button>.
+              </span>
+</div>
+</div>
+</section>
+<!-- Section 03 -->
+<section class="flex flex-col gap-space-xs">
+<h3 class="font-title-md text-title-md text-primary tracking-wide border-b border-rpg-border pb-1">
+            03. Indices &amp; Révélations pour les Joueurs
+          </h3>
+<ul class="flex flex-col gap-2 pt-1">
+<li class="flex items-start gap-2">
+<span class="w-1.5 h-1.5 bg-rpg-warning mt-2"></span>
+<span>L'origami laissé par Gaff au <button class="text-rpg-accent font-bold hover:underline" type="button">[[Yukon Hotel]]</button> confirme sa présence dans le secteur 04.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="w-1.5 h-1.5 bg-rpg-warning mt-2"></span>
+<span>La blessure par balle reçue lors de la <button class="text-rpg-accent font-bold hover:underline" type="button">[[Séance 03 - Poursuite Bradbury]]</button> a endommagé son système moteur droit.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="w-1.5 h-1.5 bg-rpg-warning mt-2"></span>
+<span>Dossier médical classifié lié à la <button class="text-rpg-accent font-bold hover:underline" type="button">[[Conspiration Nexus-8]]</button>.</span>
+</li>
+</ul>
+</section>
+<!-- Section 04 : Actions & Fiches Directes -->
+<section class="flex flex-col gap-space-sm pt-space-sm border-t border-rpg-border">
+<h3 class="font-title-md text-title-md text-primary tracking-wide">
+            04. Actions &amp; Règles Associées
+          </h3>
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="h-11 px-space-md bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold tracking-wider hover:shadow-[0_0_12px_rgba(34,211,238,0.5)] flex items-center gap-2 transition-all" type="button">
+<span class="material-symbols-outlined text-base">swords</span>
+<span>OUVRIR LA FICHE COMBAT</span>
+</button>
+<button class="h-11 px-space-md bg-rpg-surface-2 border border-rpg-border hover:bg-surface-container-high text-rpg-text font-label-sm text-label-sm uppercase font-bold tracking-wider flex items-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-rpg-accent">hub</span>
+<span>VOIR SUR LE GRAPHE SOCIAL</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- COLONNE DROITE : INSPECTION, BACKLINKS & OUTLINE (3 cols) -->
+<aside class="xl:col-span-3 flex flex-col gap-space-md">
+<!-- Bloc Table des Matières -->
+<div class="bg-surface-container-lowest border border-rpg-border p-space-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-rpg-border mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">TABLE DES MATIÈRES</span>
+<span class="material-symbols-outlined text-sm text-rpg-muted">format_list_bulleted</span>
+</div>
+<nav class="flex flex-col gap-1 text-body-sm font-body-sm">
+<a class="px-2 py-1 text-rpg-accent hover:bg-surface-container border-l-2 border-rpg-accent font-bold" href="#">
+            01. Description &amp; Profil
+          </a>
+<a class="px-2 py-1 text-on-surface-variant hover:text-rpg-text hover:bg-surface-container border-l-2 border-transparent" href="#">
+            02. Liaisons &amp; Relations Clés
+          </a>
+<a class="px-2 py-1 text-on-surface-variant hover:text-rpg-text hover:bg-surface-container border-l-2 border-transparent" href="#">
+            03. Indices &amp; Révélations
+          </a>
+<a class="px-2 py-1 text-on-surface-variant hover:text-rpg-text hover:bg-surface-container border-l-2 border-transparent" href="#">
+            04. Actions &amp; Règles
+          </a>
+</nav>
+</div>
+<!-- Bloc Backlinks / Notes liées entrant -->
+<div class="bg-surface-container-lowest border border-rpg-border p-space-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-rpg-border mb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">NOTES LIÉES ENTRANT</span>
+<span class="font-label-xs text-label-xs bg-rpg-surface-2 px-1 text-rpg-accent font-bold">5</span>
+</div>
+<span class="material-symbols-outlined text-sm text-rpg-muted">link</span>
+</div>
+<div class="flex flex-col gap-2 font-body-sm text-body-sm">
+<!-- Backlink 1 -->
+<a class="p-2 bg-rpg-surface border border-rpg-border hover:border-rpg-accent transition-colors flex flex-col gap-1 group" href="#">
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold group-hover:text-rpg-accent truncate">[[Séance 03]]</span>
+<span class="font-label-xs text-label-xs text-rpg-muted font-mono">p.14</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant line-clamp-2">
+              « ...affrontement direct avec Roy Batty sur les toits détrempés du Bradbury. »
+            </p>
+</a>
+<!-- Backlink 2 -->
+<a class="p-2 bg-rpg-surface border border-rpg-border hover:border-rpg-accent transition-colors flex flex-col gap-1 group" href="#">
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold group-hover:text-rpg-accent truncate">[[Bradbury Building]]</span>
+<span class="font-label-xs text-label-xs text-rpg-muted font-mono">LIEU</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant line-clamp-2">
+              « Appartement de J.F. Sebastian occupé par Roy Batty et Pris Stratton. »
+            </p>
+</a>
+<!-- Backlink 3 -->
+<a class="p-2 bg-rpg-surface border border-rpg-border hover:border-rpg-accent transition-colors flex flex-col gap-1 group" href="#">
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold group-hover:text-rpg-accent truncate">[[Rick Deckard]]</span>
+<span class="font-label-xs text-label-xs text-rpg-muted font-mono">PNJ</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant line-clamp-2">
+              « Mission prioritaire d'élimination assignée contre Roy Batty. »
+            </p>
+</a>
+<!-- Backlink 4 -->
+<a class="p-2 bg-rpg-surface border border-rpg-border hover:border-rpg-accent transition-colors flex flex-col gap-1 group" href="#">
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold group-hover:text-rpg-accent truncate">[[Conspiration Nexus-8]]</span>
+<span class="font-label-xs text-label-xs text-rpg-muted font-mono">DOSSIER</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant line-clamp-2">
+              « Protocole d'auto-destruction génétique contourné par les unités militaires. »
+            </p>
+</a>
+<!-- Backlink 5 -->
+<a class="p-2 bg-rpg-surface border border-rpg-border hover:border-rpg-accent transition-colors flex flex-col gap-1 group" href="#">
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold group-hover:text-rpg-accent truncate">[[Pris Stratton]]</span>
+<span class="font-label-xs text-label-xs text-rpg-muted font-mono">PNJ</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant line-clamp-2">
+              « En attente des directives tactiques de Roy Batty dans l'atelier mécanique. »
+            </p>
+</a>
+</div>
+</div>
+<!-- Commandes d'export et copie -->
+<div class="bg-surface-container-lowest border border-rpg-border p-space-md flex flex-col gap-2">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted font-bold">ACTIONS LOCALES</span>
+<button class="h-10 px-space-sm bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-on-surface font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1.5 transition-colors" id="btn-copy-md" type="button">
+<span class="material-symbols-outlined text-sm text-rpg-accent">content_copy</span>
+<span>COPIER LE MARKDOWN</span>
+</button>
+<button class="h-10 px-space-sm bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-on-surface font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm text-rpg-accent">edit</span>
+<span>ÉDITER CETTE FICHE</span>
+</button>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  (function () {
+    const btnRead = document.getElementById('toggle-read');
+    const btnEdit = document.getElementById('toggle-edit');
+    const btnCopy = document.getElementById('btn-copy-md');
+
+    if (btnRead && btnEdit) {
+      btnRead.addEventListener('click', () => {
+        btnRead.className = 'px-space-md py-1 font-label-xs text-label-xs uppercase font-bold bg-rpg-accent text-rpg-accent-contrast transition-colors flex items-center gap-1';
+        btnEdit.className = 'px-space-md py-1 font-label-xs text-label-xs uppercase text-rpg-muted hover:text-on-surface transition-colors flex items-center gap-1';
+      });
+
+      btnEdit.addEventListener('click', () => {
+        btnEdit.className = 'px-space-md py-1 font-label-xs text-label-xs uppercase font-bold bg-rpg-accent text-rpg-accent-contrast transition-colors flex items-center gap-1';
+        btnRead.className = 'px-space-md py-1 font-label-xs text-label-xs uppercase text-rpg-muted hover:text-on-surface transition-colors flex items-center gap-1';
+      });
+    }
+
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        const originalText = btnCopy.innerHTML;
+        btnCopy.innerHTML = '<span class="material-symbols-outlined text-sm text-rpg-success">check</span><span>COPIÉ DANS LE CLIPBOARD</span>';
+        setTimeout(() => {
+          btnCopy.innerHTML = originalText;
+        }, 1800);
+      });
+    }
+  })();
+</script></main></div></body></html>

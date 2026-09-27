@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { 'colors': { 'error-container': '#93000a', 'secondary-fixed': '#dae2fd', 'on-surface': '#dce1fb', 'on-secondary-fixed': '#131b2e', 'tertiary': '#d2ddf5', 'on-tertiary-fixed': '#111c2d', 'rpg-accent-contrast': '#020617', 'inverse-surface': '#dce1fb', 'surface-container': '#191f31', 'inverse-primary': '#006877', 'surface-tint': '#2fd9f4', 'rpg-surface-2': '#1e293b', 'surface-dim': '#0c1324', 'on-secondary': '#283044', 'surface-container-lowest': '#070d1f', 'rpg-accent': '#22d3ee', 'background': '#0c1324', 'surface-bright': '#33394c', 'surface-variant': '#2e3447', 'surface-container-highest': '#2e3447', 'on-tertiary-container': '#444f63', 'primary-container': '#22d3ee', 'tertiary-container': '#b6c1d9', 'rpg-text': '#f8fafc', 'rpg-muted': '#898c95', 'secondary-fixed-dim': '#bec6e0', 'on-primary-fixed-variant': '#004e5a', 'on-error-container': '#ffdad6', 'on-error': '#690005', 'rpg-surface': '#0f172a', 'secondary-container': '#3f465c', 'on-tertiary': '#263143', 'surface-container-high': '#23293c', 'rpg-border': '#1e293b', 'rpg-danger': '#ef4444', 'surface-container-low': '#151b2d', 'tertiary-fixed': '#d8e3fb', 'secondary': '#bec6e0', 'tertiary-fixed-dim': '#bcc7de', 'on-secondary-fixed-variant': '#3f465c', 'on-primary-container': '#005763', 'error': '#ffb4ab', 'rpg-info': '#3b82f6', 'primary': '#8aebff', 'rpg-on-status': '#020617', 'on-surface-variant': '#bbc9cd', 'on-primary': '#00363e', 'rpg-success': '#10b981', 'on-tertiary-fixed-variant': '#3c475a', 'on-secondary-container': '#adb4ce', 'on-primary-fixed': '#001f25', 'primary-fixed': '#a2eeff', 'primary-fixed-dim': '#2fd9f4', 'rpg-warning': '#f59e0b', 'rpg-bg': '#020617', 'outline-variant': '#3c494c', 'surface': '#0c1324', 'inverse-on-surface': '#2a3043', 'outline': '#859397', 'on-background': '#dce1fb' }, 'borderRadius': { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, 'spacing': { 'space-xs': '4px', 'gutter': '12px', 'space-md': '12px', 'space-xl': '24px', 'space-lg': '16px', 'space-sm': '8px', 'margin': '16px' }, 'fontFamily': { 'title-md': ['Syne'], 'number-md': ['Space Mono'], 'body-sm': ['Space Mono'], 'body-md': ['Space Mono'], 'display-lg': ['Syne'], 'label-sm': ['Space Mono'], 'number-lg': ['Space Mono'], 'display-md': ['Syne'], 'label-xs': ['Space Mono'] }, 'fontSize': { 'title-md': ['17px', { 'lineHeight': '22px', 'letterSpacing': '0.08em', 'fontWeight': '700' }], 'number-md': ['16px', { 'lineHeight': '20px', 'letterSpacing': '0em', 'fontWeight': '700' }], 'body-sm': ['12px', { 'lineHeight': '18px', 'letterSpacing': '0.02em', 'fontWeight': '400' }], 'body-md': ['14px', { 'lineHeight': '22px', 'letterSpacing': '0em', 'fontWeight': '400' }], 'display-lg': ['34px', { 'lineHeight': '40px', 'letterSpacing': '0.06em', 'fontWeight': '800' }], 'label-sm': ['11px', { 'lineHeight': '14px', 'letterSpacing': '0.14em', 'fontWeight': '700' }], 'number-lg': ['28px', { 'lineHeight': '32px', 'letterSpacing': '-0.02em', 'fontWeight': '700' }], 'display-md': ['24px', { 'lineHeight': '30px', 'letterSpacing': '0.05em', 'fontWeight': '700' }], 'label-xs': ['10px', { 'lineHeight': '12px', 'letterSpacing': '0.18em', 'fontWeight': '700' }] } } } };</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface antialiased select-none"><aside class="fixed left-0 top-0 h-full w-[220px] bg-surface-container-lowest border-r border-rpg-border z-40 flex flex-col justify-between"><div class="flex flex-col"><div class="h-14 px-space-lg flex items-center justify-between border-b border-rpg-border bg-surface-container-low"><div class="flex items-center gap-space-sm"><span class="w-2 h-2 bg-rpg-accent animate-pulse"></span><span class="font-title-md text-title-md tracking-wider text-rpg-accent uppercase">GM-OS</span></div><span class="font-label-xs text-label-xs text-rpg-muted px-space-xs py-0.5 border border-rpg-border">v4.8</span></div><div class="p-space-sm"><div class="font-label-xs text-label-xs text-rpg-muted px-space-sm py-space-xs uppercase tracking-widest">Modules Tactiques</div><nav class="flex flex-col gap-1 mt-space-xs" data-active-classes="bg-surface-container text-rpg-accent border-l-2 border-rpg-accent font-bold"><a class="flex items-center gap-space-sm px-space-sm py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase tracking-wider" data-path="tactical-command" href="#"><span class="material-symbols-outlined text-[16px]">terminal</span><span>01. Table Régie</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase tracking-wider" data-path="entity-matrix" href="#"><span class="material-symbols-outlined text-[16px]">groups</span><span>02. Entités &amp; PNJ</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase tracking-wider" data-path="sound-and-fx" href="#"><span class="material-symbols-outlined text-[16px]">graphic_eq</span><span>03. Audio &amp; Ambiance</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase tracking-wider" data-path="cortex-rules" href="#"><span class="material-symbols-outlined text-[16px]">memory</span><span>04. Codex &amp; Règles</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-space-sm transition-colors uppercase tracking-wider bg-surface-container text-rpg-accent border-l-2 border-rpg-accent font-bold" data-path="global-settings-modal" href="#"><span class="material-symbols-outlined text-[16px]">settings</span><span>05. Paramètres</span></a></nav></div></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest"><div class="flex items-center justify-between px-space-sm py-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase">Régie Desk</span><span class="font-number-md text-body-sm text-rpg-success">EN LIGNE</span></div></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-surface-container-low/95 backdrop-blur-md border-b border-rpg-border z-30 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs font-label-xs text-label-xs text-rpg-muted uppercase"><span class="text-on-surface">RÉSOLUTION:</span><span>1440×900 DUAL</span></div><div class="h-4 w-px bg-rpg-border"></div><div class="flex items-center gap-space-sm"><span class="font-label-xs text-label-xs px-space-sm py-1 bg-rpg-danger/20 text-rpg-danger border border-rpg-danger/40 uppercase tracking-widest font-bold">PANIC STOP</span><span class="font-label-xs text-label-xs px-space-sm py-1 bg-surface-container-high text-on-surface border border-rpg-border uppercase">ATELIER</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><span class="font-label-xs text-label-xs text-rpg-muted uppercase">FLUX MASTER</span><div class="w-24 h-2 bg-rpg-bg border border-rpg-border"><div class="h-full bg-rpg-accent w-3/4"></div></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-14 w-full min-h-screen bg-rpg-bg"><div class="flex flex-col w-full">
+<!-- FOND DIÉGÉTIQUE MODAL AVEC EFFET CATHODIQUE & BACKDROP FLOU -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-surface-container-lowest/85 backdrop-blur-xl">
+<!-- CADRE PRINCIPAL MODALE GM-OS (1440x880 OPTIMISÉ POUR RÉGIE TACTILE) -->
+<div class="relative w-full max-w-[1400px] h-[860px] bg-surface-container-lowest text-on-surface flex flex-col overflow-hidden shadow-2xl" id="theme-modal-root">
+<!-- SCANLINE SUBTILE TÉLÉMÉTRIE -->
+<div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-rpg-accent/[0.015] to-transparent bg-[length:100%_4px] opacity-70 z-40"></div>
+<!-- 1. EN-TÊTE DE LA MODALE -->
+<header class="h-16 px-space-lg bg-surface-container-low flex items-center justify-between z-30 shrink-0">
+<div class="flex items-center gap-space-md">
+<div class="w-3 h-3 bg-rpg-accent animate-pulse shadow-[0_0_8px_#22d3ee]"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="font-title-md text-title-md tracking-wider text-rpg-accent uppercase">PARAMÈTRES // CONFIGURATION DU THÈME DU JEU</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 bg-rpg-warning text-rpg-on-status tracking-widest font-bold">ÉDITION À CHAUD</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-wider">ATELIER DE PERSONNALISATION VISUELLE // JEU ACTIF : BLADE RUNNER (YZ-ENGINE)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2 px-space-sm py-1 bg-surface-container font-label-xs text-label-xs text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-rpg-success"></span>
+<span>ÉCRAN TABLE CONNECTÉ (DISPLAY-02)</span>
+</div>
+<button class="h-10 px-space-md bg-surface-container-high hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors font-label-sm text-label-sm uppercase flex items-center gap-space-xs text-on-surface" id="modal-close-trigger">
+<span>ESC / FERMER [✕]</span>
+</button>
+</div>
+</header>
+<!-- CORPS DE LA MODALE : VOLET GAUCHE + ATELIER CENTRAL + APERÇU DIRECT -->
+<div class="flex-1 flex min-h-0 overflow-hidden">
+<!-- 2. VOLET LATÉRAL GAUCHE (NAVIGATION DES PARAMÈTRES) -->
+<aside class="w-[240px] bg-surface-container-lowest flex flex-col justify-between p-space-sm shrink-0">
+<div class="flex flex-col gap-1">
+<div class="font-label-xs text-label-xs text-rpg-muted px-space-sm py-space-xs uppercase tracking-widest">Registres Système</div>
+<button class="w-full text-left px-space-sm py-space-md hover:bg-surface-container-low transition-colors flex flex-col gap-0.5">
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">tune</span>
+<span>01. SYSTÈME</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted">Apparence, langue, état</span>
+</button>
+<button class="w-full text-left px-space-sm py-space-md hover:bg-surface-container-low transition-colors flex flex-col gap-0.5">
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">radar</span>
+<span>02. TACTIQUE</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted">Portées et statuts Cortex</span>
+</button>
+<button class="w-full text-left px-space-sm py-space-md hover:bg-surface-container-low transition-colors flex flex-col gap-0.5">
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">psychology</span>
+<span>03. IA &amp; CORTEX</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted">Comptes et modèles LLM</span>
+</button>
+<button class="w-full text-left px-space-sm py-space-md hover:bg-surface-container-low transition-colors flex flex-col gap-0.5">
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">devices</span>
+<span>04. TÉLÉCOMMANDE</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted">Tablettes et téléphones</span>
+</button>
+<!-- ONGLET ACTIF 05 -->
+<div class="relative bg-surface-container px-space-sm py-space-md flex flex-col gap-0.5 shadow-[inset_0_0_12px_rgba(34,211,238,0.12)]">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-rpg-accent"></div>
+<div class="font-label-sm text-label-sm text-rpg-accent flex items-center gap-1.5 font-bold">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">palette</span>
+<span>05. THÈME DU JEU</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface">Les couleurs du jeu ouvert</span>
+</div>
+</div>
+<!-- ENCART BAS DE VOLET : STATUT THÈME -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Statut Fichier</span>
+<span class="font-label-xs text-label-xs text-rpg-accent font-bold">ACTIF</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+              Thème personnalisé actif : <strong class="text-on-surface">Blade Runner Cyber-Noir v1.4</strong>.
+            </p>
+<div class="flex items-center gap-1 font-label-xs text-label-xs text-rpg-muted">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">lock</span>
+<span>SYNCHRONISÉ AVEC LE SCÉNARIO</span>
+</div>
+<button class="w-full h-8 mt-1 bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-xs text-label-xs uppercase transition-colors">
+              Créer un thème dédié
+            </button>
+</div>
+</aside>
+<!-- 3. ZONE CENTRALE (ATELIER DE CONFIGURATION DÉTAILLÉ) -->
+<main class="flex-1 overflow-y-auto p-space-lg flex flex-col gap-space-xl bg-surface-container-lowest">
+<!-- BANDEAU EXPLICATIF -->
+<div class="p-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">info</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+                Chaque option modifie l'affichage en régie et sur l'écran joueur. Les vignettes schématiques indiquent l'emplacement exact de chaque composant impacté.
+              </p>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest shrink-0">MODULE: TACTICAL-THEME-V4</span>
+</div>
+<!-- GROUPE 01 // COULEURS -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-1 bg-surface-container-low px-space-md py-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-bold">01</span>
+<h3 class="font-title-md text-title-md text-on-surface uppercase tracking-wider">GROUPE 01 // COULEURS CHROMATIQUES DU JEU</h3>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">5 PARAMÈTRES RÉGIE</span>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- COULEUR 1: FOND -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Fond -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1 shrink-0 flex flex-col justify-between shadow-[0_0_8px_rgba(245,158,11,0.4)]">
+<div class="h-2 w-full bg-rpg-warning"></div>
+<div class="flex gap-1 h-6">
+<div class="w-3 h-full bg-surface-container-highest"></div>
+<div class="flex-1 h-full bg-surface-container-highest"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Fond (Background)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Le fond principal de l'application, du canevas et des fiches de jeu.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Périmètre externe et toile de fond globale
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-number-md text-on-surface">#020617</span>
+<div class="flex items-center gap-1">
+<input class="w-10 h-10 bg-transparent cursor-pointer p-0" type="color" value="#020617"/>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright font-label-xs text-label-xs uppercase">RÉINIT</button>
+</div>
+</div>
+</div>
+<!-- COULEUR 2: SURFACE -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Surface -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1 shrink-0 flex flex-col justify-between">
+<div class="h-2 w-full bg-surface-container-lowest"></div>
+<div class="flex gap-1 h-6">
+<div class="w-3 h-full bg-surface-container-lowest"></div>
+<div class="flex-1 h-full bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.6)]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Surface &amp; Panneaux</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Les caissons, cartes de combattants et modules de régie tactique.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Boîtes de commandes et panneaux combat
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-number-md text-on-surface">#0F172A</span>
+<div class="flex items-center gap-1">
+<input class="w-10 h-10 bg-transparent cursor-pointer p-0" type="color" value="#0f172a"/>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright font-label-xs text-label-xs uppercase">RÉINIT</button>
+</div>
+</div>
+</div>
+<!-- COULEUR 3: ACCENTUATION -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Accent -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1 shrink-0 flex flex-col justify-between">
+<div class="h-2 w-full flex justify-end gap-1">
+<div class="w-4 h-full bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+</div>
+<div class="flex gap-1 h-6">
+<div class="w-3 h-full bg-surface-container-lowest"></div>
+<div class="flex-1 h-full bg-surface-container-lowest flex items-center justify-center">
+<div class="w-6 h-2 bg-rpg-warning shadow-[0_0_6px_rgba(245,158,11,0.8)]"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Accentuation (Primaire)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Les sélections actives, halos diégétiques et boutons décisifs sous pression.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Boutons CTA primaires et éléments sélectionnés
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-number-md text-rpg-accent">#06B6D4</span>
+<div class="flex items-center gap-1">
+<input class="w-10 h-10 bg-transparent cursor-pointer p-0" type="color" value="#06b6d4"/>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright font-label-xs text-label-xs uppercase">RÉINIT</button>
+</div>
+</div>
+</div>
+<!-- COULEUR 4: TEXTE & TYPOGRAPHIE -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Texte -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1.5 shrink-0 flex flex-col justify-center gap-1">
+<div class="h-1.5 w-10 bg-rpg-warning shadow-[0_0_6px_rgba(245,158,11,0.8)]"></div>
+<div class="h-1 w-12 bg-rpg-warning shadow-[0_0_6px_rgba(245,158,11,0.8)]"></div>
+<div class="h-1 w-8 bg-rpg-warning shadow-[0_0_6px_rgba(245,158,11,0.8)]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Texte &amp; Typographie</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Tout le texte courant, descriptions, fiches de PNJ et règles de combat.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Libellés, titres de combat et champs narratifs
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-number-md text-on-surface">#F8FAFC</span>
+<div class="flex items-center gap-1">
+<input class="w-10 h-10 bg-transparent cursor-pointer p-0" type="color" value="#f8fafc"/>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright font-label-xs text-label-xs uppercase">RÉINIT</button>
+</div>
+</div>
+</div>
+<!-- COULEUR 5: BORDURES -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Bordures -->
+<div class="w-16 h-12 bg-surface-container-lowest p-1 shrink-0 flex items-center justify-center">
+<div class="w-12 h-8 bg-surface-container shadow-[0_0_0_2px_#f59e0b]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Bordures</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Les filets de séparation et contours de modules à arêtes vives diégétiques.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Tranches et arêtes techniques délimitant les blocs
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-number-md text-on-surface">#1E293B</span>
+<div class="flex items-center gap-1">
+<input class="w-10 h-10 bg-transparent cursor-pointer p-0" type="color" value="#1e293b"/>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright font-label-xs text-label-xs uppercase">RÉINIT</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- GROUPE 02 // POLICES -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-1 bg-surface-container-low px-space-md py-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-bold">02</span>
+<h3 class="font-title-md text-title-md text-on-surface uppercase tracking-wider">GROUPE 02 // POLICES TYPOGRAPHIQUES</h3>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">3 RÔLES STRUCTURELS</span>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- POLICE 1: TITRES DISPLAY -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique En-têtes -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1.5 shrink-0 flex flex-col justify-start">
+<div class="h-3 w-12 bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.9)] mb-1"></div>
+<div class="h-1 w-full bg-surface-container-highest"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Police des Titres (Display)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Les grands intitulés de modules, en-têtes de combat et logos de section.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Bandeaux de régie et grands titres d'entités
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-3 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase shadow-[0_0_8px_rgba(34,211,238,0.4)]">Orbitron</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">Syne</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">Montserrat</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">Cinzel</button>
+</div>
+</div>
+<!-- POLICE 2: CORPS -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Corps -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1.5 shrink-0 flex flex-col justify-end gap-1">
+<div class="h-1.5 w-6 bg-surface-container-highest"></div>
+<div class="h-2 w-12 bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+<div class="h-2 w-10 bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Police du Texte (Corps)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Les descriptions, libellés de compétences, citations et lore de campagne.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Paragraphes de lecture continue et fiches de règles
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-3 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase shadow-[0_0_8px_rgba(34,211,238,0.4)]">Inter</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">Roboto</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">Source Sans</button>
+</div>
+</div>
+<!-- POLICE 3: CHIFFRES MONO -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette schématique Chiffres -->
+<div class="w-16 h-12 bg-rpg-surface-2 p-1.5 shrink-0 flex items-center justify-end">
+<div class="w-6 h-6 bg-rpg-warning flex items-center justify-center text-rpg-on-status font-bold font-number-md text-[10px] shadow-[0_0_8px_rgba(245,158,11,0.9)]">21</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Police des Chiffres (Mono)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      Les initiatives, compteurs de tours, PV et résultats de dés (chasse fixe).
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Compteurs de santé, horloges et dés
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-3 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase shadow-[0_0_8px_rgba(34,211,238,0.4)]">Space Mono</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">JetBrains Mono</button>
+</div>
+</div>
+</div>
+</section>
+<!-- GROUPE 03 // TAILLES -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-1 bg-surface-container-low px-space-md py-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-bold">03</span>
+<h3 class="font-title-md text-title-md text-on-surface uppercase tracking-wider">GROUPE 03 // ÉCHELLES &amp; CALIBRAGE</h3>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">LISIBILITÉ À 1 MÈTRE</span>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- TAILLE 1: CORPS -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<div class="w-16 h-12 bg-rpg-surface-2 p-1.5 shrink-0 flex flex-col justify-center gap-1">
+<div class="h-2 w-10 bg-rpg-warning shadow-[0_0_6px_rgba(245,158,11,0.8)]"></div>
+<div class="h-1.5 w-8 bg-surface-container-highest"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Échelle du Texte Courant</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      La taille de lecture normale (minimum 14 px pour le confort en jeu nocturne).
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Blocs narratifs et listes de talents
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-4 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase">14 PX (NORMAL)</button>
+<button class="h-10 px-4 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">15 PX</button>
+<button class="h-10 px-4 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">16 PX (LARGE)</button>
+</div>
+</div>
+<!-- TAILLE 2: MÉTRIQUES -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<div class="w-16 h-12 bg-rpg-surface-2 p-1.5 shrink-0 flex items-center justify-center">
+<span class="font-number-lg text-number-md text-rpg-warning font-bold shadow-[0_0_8px_rgba(245,158,11,0.9)]">PV</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Taille des Métriques &amp; PV</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      La taille des valeurs numériques critiques visibles sans effort à distance.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Indicateurs d'initiative et jauges vitales
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-4 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">24 PX</button>
+<button class="h-10 px-4 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase">28 PX (RÉGIE)</button>
+<button class="h-10 px-4 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">32 PX (TACTILE)</button>
+</div>
+</div>
+</div>
+</section>
+<!-- GROUPE 04 // FORMES -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-1 bg-surface-container-low px-space-md py-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-bold">04</span>
+<h3 class="font-title-md text-title-md text-on-surface uppercase tracking-wider">GROUPE 04 // GÉOMÉTRIE &amp; BORDURES</h3>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">ESTHÉTIQUE INDUSTRIELLE</span>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- FORME 1: RADIUS -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<!-- Vignette Coins -->
+<div class="w-16 h-12 bg-surface-container-lowest p-1 shrink-0 flex items-center justify-center">
+<div class="w-10 h-7 bg-surface-container border-2 border-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.6)]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Rayon des Arêtes (Border Radius)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      L'arrondi appliqué aux boutons, cartes, badges et conteneurs de régie.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Coins et sommets de toutes les tuiles
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-3 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase shadow-[0_0_8px_rgba(34,211,238,0.4)]">0 PX (VIF BRUTALISTE)</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase rounded-[6px]">6 PX (ADOUCI)</button>
+<button class="h-10 px-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase rounded-[12px]">12 PX (ROND)</button>
+</div>
+</div>
+<!-- FORME 2: ÉPAISSEUR -->
+<div class="p-space-md bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md flex-1">
+<div class="w-16 h-12 bg-surface-container-lowest p-1.5 shrink-0 flex items-center justify-center">
+<div class="w-12 h-1 bg-rpg-warning shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-on-surface">Épaisseur des Bordures</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                      L'épaisseur des filets de démarcation laser et cadres de modules.
+                    </p>
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-warning"></span> Zone surlignée : Filets de partition et encadrements
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-10 px-4 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm uppercase shadow-[0_0_8px_rgba(34,211,238,0.4)]">1 PX</button>
+<button class="h-10 px-4 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">2 PX</button>
+<button class="h-10 px-4 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase">3 PX</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- 4. VOLET DROIT // APERÇU VIVANT EN DIRECT (SIMULATION TABLE) -->
+<aside class="w-[420px] bg-surface-container-low flex flex-col shrink-0 p-space-md overflow-y-auto">
+<div class="flex flex-col pb-space-sm bg-surface-container-lowest p-space-sm mb-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-accent uppercase font-bold tracking-wider">APERÇU EN DIRECT // SIMULATION TABLE</span>
+<span class="w-2 h-2 rounded-full bg-rpg-success animate-ping"></span>
+</div>
+<span class="font-body-sm text-body-sm text-rpg-muted">Se met à jour instantanément selon vos réglages</span>
+</div>
+<!-- ÉCHANTILLONS RÉELS DU JEU BLADE RUNNER -->
+<div class="flex flex-col gap-space-md">
+<!-- CARTE DU COMBATTANT (TÉMOIN LIVE) -->
+<div class="bg-rpg-surface p-space-md flex flex-col gap-space-sm bg-surface-container-high transition-all" id="preview-card">
+<!-- EN-TÊTE CARTE -->
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface uppercase tracking-wide">Roy Batty</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 bg-rpg-danger text-rpg-on-status font-bold uppercase">HOSTILE</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">NEXUS-6 REPLICANT // COMBAT SÉRIE</span>
+</div>
+<!-- GROS CHIFFRE D'INITIATIVE -->
+<div class="flex flex-col items-end">
+<span class="font-label-xs text-label-xs text-rpg-muted">INITIATIVE</span>
+<span class="font-number-lg text-number-lg text-rpg-accent font-bold leading-none">21</span>
+</div>
+</div>
+<!-- JAUGE PV -->
+<div class="flex flex-col gap-1 mt-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface-variant uppercase">SANTÉ MATRICIELLE</span>
+<span class="font-number-md text-number-md text-rpg-success">14 / 15 PV</span>
+</div>
+<div class="w-full h-2 bg-surface-container-lowest p-[1px]">
+<div class="h-full bg-rpg-success w-[93%]"></div>
+</div>
+</div>
+<!-- JAUGE SANG-FROID -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface-variant uppercase">STRESS &amp; SANG-FROID</span>
+<span class="font-number-md text-number-md text-rpg-accent">12 / 12</span>
+</div>
+<div class="w-full h-2 bg-surface-container-lowest p-[1px]">
+<div class="h-full bg-rpg-accent w-full"></div>
+</div>
+</div>
+<!-- CIBLE ENGAGÉE -->
+<div class="p-space-xs bg-surface-container flex items-center justify-between mt-1">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Cible verrouillée :</span>
+<span class="font-label-sm text-label-sm text-rpg-warning uppercase font-bold">RICK DECKARD (PORTÉE CONTACT)</span>
+</div>
+<!-- BOUTONS D'ACTION SUR LA CARTE -->
+<div class="grid grid-cols-3 gap-2 mt-2">
+<button class="col-span-2 h-11 bg-rpg-accent hover:bg-primary-fixed text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1 shadow-[0_0_12px_rgba(34,211,238,0.35)] transition-all">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+<span>CALCULER DÉGÂTS</span>
+</button>
+<button class="h-11 bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>FICHE</span>
+</button>
+</div>
+</div>
+<!-- ÉCHANTILLON DE BADGES ET STATUTS COMBAT -->
+<div class="flex flex-col gap-space-xs bg-surface-container p-space-sm">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Échantillons des Badges d'état diégétiques :</span>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="h-6 px-space-sm bg-rpg-danger text-rpg-on-status font-label-xs text-label-xs font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">warning</span> CRITIQUE
+                </span>
+<span class="h-6 px-space-sm bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> STABLE
+                </span>
+<span class="h-6 px-space-sm bg-rpg-warning text-rpg-on-status font-label-xs text-label-xs font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">bolt</span> ENRAGÉ
+                </span>
+<span class="h-6 px-space-sm bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase flex items-center">
+                  COUVERTURE TOTALE
+                </span>
+</div>
+</div>
+<!-- JETONS CSS APPLIQUÉS EN DIRECT (MONITORING TÉLÉMÉTRIQUE) -->
+<div class="bg-surface-container-lowest p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-accent uppercase font-bold">JETONS CSS INJECTÉS EN SESSION :</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">LIVE TOKENS</span>
+</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant flex flex-col gap-0.5 pt-1">
+<div>--rpg-bg: <span class="text-on-surface">#020617</span>;</div>
+<div>--rpg-surface: <span class="text-on-surface">#0F172A</span>;</div>
+<div>--rpg-accent: <span class="text-rpg-accent">#06B6D4</span>;</div>
+<div>--font-display: <span class="text-on-surface">"Orbitron", sans-serif</span>;</div>
+<div>--font-mono: <span class="text-on-surface">"Space Mono", monospace</span>;</div>
+<div>--radius-tactical: <span class="text-rpg-warning">0px</span>;</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- 5. PIED DE FENÊTRE MODALE -->
+<footer class="h-16 px-space-lg bg-surface-container-low flex items-center justify-between z-30 shrink-0">
+<!-- MENTIONS LÉGALES & SHA THÈME -->
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-rpg-accent"></span>
+<span class="font-label-xs text-label-xs text-on-surface uppercase">Dernière sauvegarde du thème : Aujourd'hui à 14:38</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">// EMPREINTE SHA: 8F2A-CYBER</span>
+</div>
+<!-- AVERTISSEMENT AMBRE EXPLICITE -->
+<span class="font-label-xs text-label-xs text-rpg-warning flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[14px]">warning</span> Ce système de jeu utilise le thème actif. Cliquez sur "Enregistrer" pour appliquer à la table.
+          </span>
+</div>
+<!-- ACTIONS MAJEURES DU BAS -->
+<div class="flex items-center gap-space-sm">
+<button class="h-11 px-space-md bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-sm text-label-sm uppercase transition-colors">
+            ANNULER (RÉTABLIR COPIE D'ORIGINE)
+          </button>
+<button class="h-11 px-space-md bg-surface-container-highest hover:bg-surface-bright text-rpg-accent font-label-sm text-label-sm uppercase transition-colors">
+            CRÉER UN THÈME
+          </button>
+<button class="h-11 px-space-lg bg-rpg-accent hover:bg-primary-fixed text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold tracking-wider shadow-[0_0_16px_rgba(34,211,238,0.5)] transition-all flex items-center gap-2" id="save-theme-cta">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>ENREGISTRER LE THÈME [ENTRÉE]</span>
+</button>
+</div>
+</footer>
+</div>
+</div>
+<script>
+    // Micro-interactions diégétiques de la modale GM-OS
+    (function initGMThemeModal() {
+      const closeBtn = document.getElementById('modal-close-trigger');
+      const saveBtn = document.getElementById('save-theme-cta');
+      const rootModal = document.getElementById('theme-modal-root');
+
+      // Clavier : ESC pour fermer / ENTRÉE pour enregistrer
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (rootModal) {
+            rootModal.classList.add('opacity-50');
+            setTimeout(() => { rootModal.classList.remove('opacity-50'); }, 200);
+          }
+        } else if (e.key === 'Enter') {
+          if (saveBtn) {
+            saveBtn.classList.add('scale-95');
+            setTimeout(() => { saveBtn.classList.remove('scale-95'); }, 150);
+          }
+        }
+      });
+
+      if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          saveBtn.innerText = "THÈME DÉPLOYÉ SUR DISPOSITIFS !";
+          setTimeout(() => {
+            saveBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span><span>ENREGISTRER LE THÈME [ENTRÉE]</span>';
+          }, 1800);
+        });
+      }
+    })();
+  </script>
+</div></main></div></body></html>

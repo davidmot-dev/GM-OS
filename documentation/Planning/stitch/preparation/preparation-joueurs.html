@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      *, ::after, ::before {
+        box-sizing: border-box;
+        border-radius: 0 !important;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #020617;
+        color: #f8fafc;
+        font-family: 'Inter', sans-serif;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .font-orbitron { font-family: 'Orbitron', 'Syne', sans-serif; }
+    .font-mono-code { font-family: 'Space Mono', monospace; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#283044",
+            "surface-container-high": "#23293c",
+            "surface-container-lowest": "#070d1f",
+            "on-primary": "#00363e",
+            "error": "#ffb4ab",
+            "secondary-fixed-dim": "#bec6e0",
+            "primary-fixed": "#a2eeff",
+            "tertiary-fixed": "#d8e3fb",
+            "surface-dim": "#0c1324",
+            "rpg-text": "#f8fafc",
+            "on-tertiary-fixed": "#111c2d",
+            "rpg-bg": "#020617",
+            "on-background": "#dce1fb",
+            "rpg-muted": "#898c95",
+            "outline-variant": "#3c494c",
+            "surface-container-highest": "#2e3447",
+            "on-error": "#690005",
+            "secondary-fixed": "#dae2fd",
+            "surface-container-low": "#151b2d",
+            "rpg-danger": "#ef4444",
+            "rpg-on-status": "#020617",
+            "on-secondary-fixed-variant": "#3f465c",
+            "on-surface-variant": "#bbc9cd",
+            "primary": "#8aebff",
+            "on-tertiary-container": "#444f63",
+            "rpg-accent": "#06b6d4",
+            "rpg-surface-2": "#1e293b",
+            "rpg-info": "#3b82f6",
+            "inverse-primary": "#006877",
+            "on-surface": "#dce1fb",
+            "rpg-border": "#1e293b",
+            "on-tertiary": "#263143",
+            "surface-container": "#191f31",
+            "surface-tint": "#2fd9f4",
+            "rpg-accent-contrast": "#020617",
+            "secondary-container": "#3f465c",
+            "surface-variant": "#2e3447",
+            "on-secondary-container": "#adb4ce",
+            "tertiary": "#d2ddf5",
+            "inverse-on-surface": "#2a3043",
+            "on-primary-fixed-variant": "#004e5a",
+            "inverse-surface": "#dce1fb",
+            "outline": "#859397",
+            "primary-container": "#06b6d4",
+            "background": "#0c1324",
+            "rpg-surface": "#0f172a",
+            "surface": "#0c1324",
+            "on-primary-fixed": "#001f25",
+            "on-error-container": "#ffdad6",
+            "on-primary-container": "#005763",
+            "secondary": "#bec6e0",
+            "tertiary-container": "#b6c1d9",
+            "primary-fixed-dim": "#2fd9f4",
+            "surface-bright": "#33394c",
+            "rpg-success": "#10b981",
+            "tertiary-fixed-dim": "#bcc7de",
+            "rpg-warning": "#f59e0b",
+            "on-secondary-fixed": "#131b2e",
+            "on-tertiary-fixed-variant": "#3c475a",
+            "error-container": "#93000a"
+          },
+          spacing: {
+            "space-xl": "24px",
+            "margin": "16px",
+            "space-lg": "16px",
+            "space-xs": "4px",
+            "space-sm": "8px",
+            "gutter": "12px",
+            "space-md": "12px"
+          },
+          fontFamily: {
+            "title-md": ["Orbitron", "Syne", "sans-serif"],
+            "body-md": ["Space Mono", "monospace"],
+            "display-md": ["Orbitron", "Syne", "sans-serif"],
+            "display-lg": ["Orbitron", "Syne", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "label-xs": ["Space Mono", "monospace"],
+            "body-sm": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "label-sm": ["Space Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-rpg-bg font-body-sm text-rpg-text selection:bg-rpg-accent selection:text-rpg-accent-contrast">
+<!-- BANDEAU SUPÉRIEUR OFFICIEL GM-OS -->
+<header class="fixed top-0 left-0 right-0 z-50 h-14 bg-rpg-surface border-b border-rpg-border flex items-center justify-between px-margin select-none">
+<div class="flex items-center gap-space-md">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-orbitron font-extrabold text-title-md text-rpg-accent uppercase tracking-wider">GM-OS V6</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">// NEXUS-PROTOCOL</span>
+</div>
+<div class="h-4 w-px bg-rpg-border"></div>
+<div class="flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-lowest border border-rpg-border">
+<span class="w-1.5 h-1.5 bg-rpg-success animate-pulse"></span>
+<span class="font-label-xs text-label-xs text-rpg-success tracking-widest uppercase">CORTEX ACTIF</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs bg-surface-container-lowest border border-rpg-border px-space-sm py-1">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">volume_up</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">MASTER</span>
+<span class="font-number-md text-number-md text-rpg-text">100%</span>
+</div>
+<div class="flex items-center border border-rpg-border bg-surface-container-lowest p-0.5">
+<button class="px-space-sm py-1 font-label-xs text-label-xs font-bold uppercase bg-rpg-accent text-rpg-accent-contrast" type="button">ATELIER</button>
+<button class="px-space-sm py-1 font-label-xs text-label-xs font-bold uppercase text-rpg-muted hover:text-rpg-text hover:bg-rpg-surface-2 transition-colors" type="button">TABLE</button>
+</div>
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">forum</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">FOCUS CHAT</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">group_add</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">CONNECTER JOUEURS</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 bg-rpg-danger text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold hover:brightness-110 active:brightness-90 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">dangerous</span>
+<span>STOP ALL</span>
+</button>
+<div class="flex items-center gap-space-xs pl-space-xs border-l border-rpg-border">
+<span class="w-2 h-2 bg-rpg-accent shadow-[0_0_8px_#06b6d4]"></span>
+<span class="font-label-xs text-label-xs text-rpg-accent tracking-widest hidden xl:inline">SYSTEM LINK ACTIVE</span>
+<div class="w-8 h-8 bg-primary flex items-center justify-center ml-space-xs">
+<span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- BARRE LATÉRALE GAUCHE (220px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col justify-between overflow-y-auto">
+<div class="py-space-sm">
+<div class="px-space-md py-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted block mb-space-xs">TACTIQUE</span>
+<nav class="flex flex-col gap-0.5">
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="tableau-de-bord" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">grid_view</span>Tableau de Bord
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="journal-de-jeu" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">history_edu</span>Journal de Jeu
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="forge" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">build</span>Forge
+          </a>
+</nav>
+</div>
+<div class="h-px bg-rpg-border my-space-xs mx-space-sm"></div>
+<div class="px-space-md py-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted block mb-space-xs">AUDIO</span>
+<nav class="flex flex-col gap-0.5">
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="musique" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">music_note</span>Musique
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="effets-sonores" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">file_download_done</span>Effets Sonores
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="ambiances" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">surround_sound</span>Ambiances
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="voice-os" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">mic</span>Voice-OS
+          </a>
+</nav>
+</div>
+<div class="h-px bg-rpg-border my-space-xs mx-space-sm"></div>
+<div class="px-space-md py-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted block mb-space-xs">GLOBAL</span>
+<nav class="flex flex-col gap-0.5">
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="favoris" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">star</span>Favoris
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="nexus-wiki" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">local_library</span>Nexus Wiki
+          </a>
+<a class="px-space-md py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm uppercase flex items-center transition-colors" data-path="cortex-ia" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-muted">neurology</span>Cortex IA
+          </a>
+</nav>
+</div>
+<div class="h-px bg-rpg-border my-space-xs mx-space-sm"></div>
+<div class="px-space-md py-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-muted block mb-space-xs">SESSION-OS</span>
+<nav class="flex flex-col gap-0.5">
+<a aria-current="page" class="px-space-md py-1.5 font-label-sm uppercase flex items-center transition-colors shadow-[0_0_12px_rgba(6,182,212,0.2)] bg-rpg-accent/15 border-l-2 border-rpg-accent text-rpg-accent font-bold" data-path="roster-des-joueurs" href="#">
+<span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">badge</span>Roster des Joueurs
+          </a>
+</nav>
+</div>
+</div>
+<div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">desktop_windows</span>
+<span class="material-symbols-outlined text-[18px] text-rpg-muted">stay_current_portrait</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">1440x900 DUAL</span>
+</div>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL -->
+<div class="pl-[220px]">
+<main class="relative pt-14 min-h-screen bg-rpg-bg w-full">
+<div class="flex flex-col w-full h-[calc(100vh-56px)] select-none overflow-hidden bg-rpg-bg text-rpg-text">
+<!-- 1. EN-TÊTE DU MODULE (Haute Régie) -->
+<header class="flex-none flex items-center justify-between px-space-md py-space-sm bg-rpg-surface border-b border-rpg-border">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-rpg-accent tracking-widest uppercase">// SESSION-OS // JOUEURS &amp; TABLETTES</span>
+<h1 class="font-orbitron font-extrabold text-[22px] tracking-wide text-rpg-text uppercase mt-0.5">ROSTER DES JOUEURS</h1>
+</div>
+<!-- Navigation & Utilitaires directes -->
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text border border-rpg-border font-label-sm text-label-sm uppercase flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">arrow_back</span>
+<span>RETOUR AU COCKPIT</span>
+</button>
+<button class="h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text border border-rpg-border font-label-sm text-label-sm uppercase flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">auto_awesome</span>
+<span>L'Oracle</span>
+</button>
+<button class="h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text border border-rpg-border font-label-sm text-label-sm uppercase flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">menu_book</span>
+<span>Règles</span>
+</button>
+<button class="h-9 px-space-md bg-rpg-surface-2 hover:bg-surface-container-highest text-rpg-text border border-rpg-border font-label-sm text-label-sm uppercase flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">camera</span>
+<span>Snapshot</span>
+</button>
+</div>
+</header>
+<!-- 2. AGENCEMENT VARIANTE B : DUAL-PANEL & FICHE D'OPÉRATEUR -->
+<div class="flex-1 flex overflow-hidden">
+<!-- VOLET GAUCHE : MATRICE DE COMMANDE JOUEURS (340px) -->
+<aside class="w-[340px] flex-none bg-rpg-surface border-r border-rpg-border flex flex-col justify-between">
+<div class="flex flex-col flex-1 overflow-hidden">
+<!-- En-tête volet gauche -->
+<div class="p-space-md pb-space-xs flex items-center justify-between border-b border-rpg-border/50 bg-surface-container-lowest">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 bg-rpg-accent shadow-[0_0_6px_#06b6d4]"></span>
+<span class="font-orbitron font-bold text-label-sm text-rpg-accent uppercase tracking-widest">ROSTER DES JOUEURS</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-wider">6 CONNECTEURS</span>
+</div>
+<!-- Champ de recherche brut -->
+<div class="px-space-md py-space-sm border-b border-rpg-border bg-rpg-surface">
+<div class="relative flex items-center bg-rpg-bg border border-rpg-border focus-within:border-rpg-accent">
+<span class="material-symbols-outlined absolute left-2 text-[16px] text-rpg-muted">search</span>
+<input class="w-full bg-transparent pl-8 pr-2 py-1.5 text-body-sm font-body-sm text-rpg-text placeholder:text-rpg-muted focus:outline-none" placeholder="Rechercher un joueur..." type="text"/>
+</div>
+</div>
+<!-- Liste compacte et dense des 6 joueurs -->
+<div class="flex-1 overflow-y-auto p-space-sm flex flex-col gap-1">
+<!-- 1. Thomas D. (Actif / Sélectionné) -->
+<div class="relative bg-rpg-surface-2 border-l-[3px] border-rpg-accent border-y border-r border-rpg-border p-2 flex items-center justify-between cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.15)]">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-8 h-8 flex-none bg-surface-container-high border border-rpg-accent flex items-center justify-center text-rpg-accent font-orbitron font-bold text-xs">
+                      TD
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-sm font-bold text-rpg-text truncate leading-tight">Thomas D.</span>
+<span class="font-label-xs text-[10px] text-rpg-muted">2 personnages</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-none">
+<span class="px-1.5 py-0.5 bg-surface-container-highest border border-outline-variant font-label-xs text-[9px] text-rpg-muted tracking-wide uppercase">HORS LIGNE</span>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-muted hover:text-rpg-danger transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+</button>
+</div>
+</div>
+<!-- 2. Marie L. -->
+<div class="relative bg-rpg-surface hover:bg-rpg-surface-2 border border-rpg-border p-2 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-8 h-8 flex-none bg-surface-container-lowest border border-rpg-border flex items-center justify-center text-on-surface-variant font-orbitron font-bold text-xs">
+                      ML
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-sm font-bold text-rpg-text truncate leading-tight">Marie L.</span>
+<span class="font-label-xs text-[10px] text-rpg-muted">1 personnage</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-none">
+<span class="px-1.5 py-0.5 bg-surface-container-highest border border-outline-variant font-label-xs text-[9px] text-rpg-muted tracking-wide uppercase">HORS LIGNE</span>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-muted hover:text-rpg-danger transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+</button>
+</div>
+</div>
+<!-- 3. Lucas M. -->
+<div class="relative bg-rpg-surface hover:bg-rpg-surface-2 border border-rpg-border p-2 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-8 h-8 flex-none bg-surface-container-lowest border border-rpg-border flex items-center justify-center text-on-surface-variant font-orbitron font-bold text-xs">
+                      LM
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-sm font-bold text-rpg-text truncate leading-tight">Lucas M.</span>
+<span class="font-label-xs text-[10px] text-rpg-muted">1 personnage</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-none">
+<span class="px-1.5 py-0.5 bg-surface-container-highest border border-outline-variant font-label-xs text-[9px] text-rpg-muted tracking-wide uppercase">HORS LIGNE</span>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-muted hover:text-rpg-danger transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+</button>
+</div>
+</div>
+<!-- 4. Daniel V. -->
+<div class="relative bg-rpg-surface hover:bg-rpg-surface-2 border border-rpg-border p-2 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-8 h-8 flex-none bg-surface-container-lowest border border-rpg-border flex items-center justify-center text-on-surface-variant font-orbitron font-bold text-xs">
+                      DV
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-sm font-bold text-rpg-text truncate leading-tight">Daniel V.</span>
+<span class="font-label-xs text-[10px] text-rpg-muted">1 personnage</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-none">
+<span class="px-1.5 py-0.5 bg-rpg-success text-rpg-accent-contrast font-label-xs text-[9px] font-bold tracking-wide uppercase">EN LIGNE</span>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-muted hover:text-rpg-danger transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+</button>
+</div>
+</div>
+<!-- 5. Christophe B. -->
+<div class="relative bg-rpg-surface hover:bg-rpg-surface-2 border border-rpg-border p-2 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-8 h-8 flex-none bg-surface-container-lowest border border-rpg-border flex items-center justify-center text-on-surface-variant font-orbitron font-bold text-xs">
+                      CB
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-sm font-bold text-rpg-text truncate leading-tight">Christophe B.</span>
+<span class="font-label-xs text-[10px] text-rpg-muted">1 personnage</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-none">
+<span class="px-1.5 py-0.5 bg-rpg-success text-rpg-accent-contrast font-label-xs text-[9px] font-bold tracking-wide uppercase">EN LIGNE</span>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-muted hover:text-rpg-danger transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+</button>
+</div>
+</div>
+<!-- 6. Gabriel T. -->
+<div class="relative bg-rpg-surface hover:bg-rpg-surface-2 border border-rpg-border p-2 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-8 h-8 flex-none bg-surface-container-lowest border border-rpg-border flex items-center justify-center text-on-surface-variant font-orbitron font-bold text-xs">
+                      GT
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-sm font-bold text-rpg-text truncate leading-tight">Gabriel T.</span>
+<span class="font-label-xs text-[10px] text-rpg-muted">1 personnage</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-none">
+<span class="px-1.5 py-0.5 bg-rpg-success text-rpg-accent-contrast font-label-xs text-[9px] font-bold tracking-wide uppercase">EN LIGNE</span>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-muted hover:text-rpg-danger transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bas volet gauche : Bouton Ajouter un Joueur -->
+<div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest">
+<button class="w-full h-11 bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-accent/60 text-rpg-accent font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>+ AJOUTER UN JOUEUR</span>
+</button>
+</div>
+</aside>
+<!-- ZONE CENTRALE & DROITE : MONITORING OPÉRATEUR & 2 COLONNES DE PERSONNAGES -->
+<section class="flex-1 flex flex-col justify-between overflow-hidden bg-rpg-bg p-space-md">
+<div class="flex flex-col gap-space-md flex-1 overflow-y-auto">
+<!-- 1. BANDEAU SUPÉRIEUR JOUEUR ACTIF / OPÉRATEUR DE TABLE -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="relative w-12 h-12 bg-surface-container-high border-2 border-rpg-accent flex items-center justify-center flex-none">
+<span class="material-symbols-outlined text-rpg-accent text-[28px]">person</span>
+<span class="absolute -bottom-1 -right-1 w-3 h-3 bg-rpg-danger border border-rpg-bg"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-baseline gap-space-sm">
+<h2 class="font-orbitron font-extrabold text-lg text-rpg-text uppercase tracking-wide">THOMAS D.</h2>
+<span class="font-label-xs text-label-xs text-rpg-accent uppercase tracking-widest">// OPÉRATEUR DE TABLE ACTIF</span>
+</div>
+<div class="flex items-center gap-space-md mt-1">
+<span class="flex items-center gap-1.5 font-label-sm text-label-sm text-rpg-muted">
+<span class="w-2 h-2 bg-rpg-danger"></span>
+                        Hors ligne (tablette déconnectée)
+                      </span>
+<span class="text-rpg-border">|</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold">2 personnages enregistrés</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col items-end">
+<span class="font-label-xs text-[10px] text-rpg-muted uppercase tracking-widest">ID SYSTÈME</span>
+<span class="font-mono-code font-bold text-label-sm text-rpg-accent tracking-widest bg-surface-container-lowest px-2 py-0.5 border border-rpg-border">PL-0091-THM</span>
+</div>
+</div>
+</div>
+<!-- En-tête de section Personnages -->
+<div class="flex items-center justify-between px-0.5">
+<div class="flex items-baseline gap-space-sm">
+<h3 class="font-orbitron font-bold text-title-md text-rpg-text uppercase tracking-wider">TOUS LES PERSONNAGES</h3>
+<span class="font-mono-code text-label-sm text-rpg-accent font-bold tracking-widest">(2 AU TOTAL)</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">DISPOSITION TACTIQUE ACTIVE</span>
+</div>
+<!-- 2. DEUX COLONNES DISTINCTES DE PERSONNAGES (FICHES D'INTERVENTION TACTIQUE) -->
+<div class="grid grid-cols-2 gap-space-md flex-1">
+<!-- COLONNE 1 : ALDRIC LE PALADIN -->
+<div class="bg-rpg-surface border border-rpg-border flex flex-col justify-between p-space-md shadow-lg">
+<div class="flex flex-col gap-space-md">
+<!-- En-tête fiche tactique avec Portrait & Badge -->
+<div class="flex items-start gap-space-md pb-space-sm border-b border-rpg-border">
+<div class="w-20 h-20 flex-none bg-surface-container-lowest border-2 border-rpg-accent/60 flex items-center justify-center overflow-hidden">
+<img alt="Cybernetic fantasy paladin portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd_NEmJBlnICqof7LMIg8gmcglvlDekbSyIvTYnhoGZEY-9qH9mBnqfYPrp5FrkDztTvzXsCwQ6PiARv-j2N_211Emup54qoH3fguqoCKyZTA4M3uoizEM6HZdk7kc7CSw6or8N4plLSeIMNRi0xTXK_d5F8lxQlvr0919n82JAw1eTyx5rEZxIzAtzAillGSyqCbmcsGJ1BsLk9gOxBft_g8LEJgKu6D1_xBKTdDFynIizL4aNl1GFw"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container-highest border border-rpg-border font-label-xs text-[10px] text-rpg-accent font-bold uppercase tracking-wider">CLASSE NIVEAU 5</span>
+<span class="font-mono-code text-[11px] text-rpg-muted">#CHAR-01</span>
+</div>
+<h4 class="font-orbitron font-extrabold text-base text-rpg-text uppercase tracking-wide truncate mt-1">Aldric le Paladin</h4>
+<span class="font-body-sm text-body-sm text-rpg-muted">Humain / Serment des Anciens</span>
+</div>
+</div>
+<!-- Section POINTS DE VIE mise en majesté tactile -->
+<div class="bg-surface-container-lowest border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-rpg-danger">favorite</span>
+<span class="font-orbitron font-bold text-label-sm uppercase tracking-wider text-rpg-text">POINTS DE VIE</span>
+</div>
+<!-- Compteur interactif avec boutons incrémentaux larges 44px -->
+<div class="flex items-center gap-2">
+<button aria-label="Diminuer les points de vie" class="w-11 h-11 bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-rpg-text hover:border-rpg-accent font-mono-code text-lg font-bold flex items-center justify-center transition-colors active:bg-rpg-accent active:text-rpg-accent-contrast" type="button">−</button>
+<div class="px-3 py-1 bg-rpg-bg border border-rpg-border min-w-[120px] text-center">
+<span class="font-mono-code font-bold text-number-md text-rpg-text tracking-wider">42 / 58 PV</span>
+</div>
+<button aria-label="Augmenter les points de vie" class="w-11 h-11 bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-rpg-text hover:border-rpg-accent font-mono-code text-lg font-bold flex items-center justify-center transition-colors active:bg-rpg-accent active:text-rpg-accent-contrast" type="button">+</button>
+</div>
+</div>
+<!-- Jauge néon verte -->
+<div class="w-full h-3 bg-rpg-bg border border-rpg-border overflow-hidden p-0.5">
+<div class="h-full bg-rpg-success shadow-[0_0_8px_#10b981]" style="width: 72%;"></div>
+</div>
+</div>
+<!-- Rangée d'actions opérationnelles directes -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-xs text-[10px] text-rpg-muted uppercase tracking-wider">ACTIONS OPÉRATIONNELLES</span>
+<div class="grid grid-cols-12 gap-2">
+<button class="col-span-3 h-10 bg-rpg-surface-2 hover:bg-surface-container-highest border border-rpg-border text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">description</span>
+<span>FICHE</span>
+</button>
+<button class="col-span-4 h-10 bg-rpg-surface-2 hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-accent text-rpg-accent font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1.5 transition-colors shadow-[0_0_8px_rgba(6,182,212,0.25)]" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+<span>⚔ COMBAT</span>
+</button>
+<button class="col-span-1 h-10 bg-rpg-surface-2 hover:bg-surface-container-highest border border-rpg-border text-rpg-text flex items-center justify-center transition-colors" title="Projeter sur l'écran joueurs" type="button">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">visibility</span>
+</button>
+<div class="col-span-4">
+<select class="w-full h-10 bg-surface-container-lowest border border-rpg-border px-2 text-label-sm font-label-sm text-on-surface uppercase focus:outline-none focus:border-rpg-accent">
+<option selected="">Anges de Feu</option>
+<option>Campagne Principale</option>
+<option>Aucune campagne</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Menu de transfert direct d'opérateur -->
+<div class="pt-space-sm border-t border-rpg-border flex items-center gap-space-sm mt-space-md bg-surface-container-lowest p-2">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase flex-none tracking-wider">TRANSFERT :</span>
+<select class="flex-1 h-8 bg-rpg-bg border border-rpg-border px-2 text-label-sm font-label-sm text-rpg-muted hover:text-rpg-text focus:text-rpg-text uppercase focus:outline-none focus:border-rpg-accent">
+<option disabled="" selected="">Transférer vers...</option>
+<option>Marie L.</option>
+<option>Lucas M.</option>
+<option>Daniel V.</option>
+<option>Christophe B.</option>
+<option>Gabriel T.</option>
+</select>
+</div>
+</div>
+<!-- COLONNE 2 : TEST MARINE -->
+<div class="bg-rpg-surface border border-rpg-border flex flex-col justify-between p-space-md shadow-lg">
+<div class="flex flex-col gap-space-md">
+<!-- En-tête fiche tactique avec Portrait & Badge -->
+<div class="flex items-start gap-space-md pb-space-sm border-b border-rpg-border">
+<div class="w-20 h-20 flex-none bg-surface-container-lowest border-2 border-rpg-accent/60 flex items-center justify-center overflow-hidden">
+<img alt="Futuristic sci-fi colonial marine portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB48SWpjBu6mQqEd4n0dll9mtEjf2WY4Ii7cicvt4GWCG7LUoN4PFRjV6tCqowG0DUQwSQXVMH9TDlnd7HLuioFv3kRSj8DRnnfua-rlcFmaB5-3CUXBkHYpBLdxTsZPDwzYoMxxq2FCXXDfhDVSm-1rd8lnsG1fzuB4G3LmEOvwRs7tA3lebgLf55JoxDPHLSNu2vbURx4TrWkBLOYSwTfoVs_5h-ZepYgkh2EXoTxF8c1EV6zDntb_g"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container-highest border border-rpg-border font-label-xs text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">CLASSE NIVEAU 1</span>
+<span class="font-mono-code text-[11px] text-rpg-muted">#CHAR-02</span>
+</div>
+<h4 class="font-orbitron font-extrabold text-base text-rpg-text uppercase tracking-wide truncate mt-1">TEST Marine</h4>
+<span class="font-body-sm text-body-sm text-rpg-muted">Humain / Vétéran Colonial</span>
+</div>
+</div>
+<!-- Section POINTS DE VIE mise en majesté tactile -->
+<div class="bg-surface-container-lowest border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-rpg-danger">favorite</span>
+<span class="font-orbitron font-bold text-label-sm uppercase tracking-wider text-rpg-text">POINTS DE VIE</span>
+</div>
+<!-- Compteur interactif avec boutons incrémentaux larges 44px -->
+<div class="flex items-center gap-2">
+<button aria-label="Diminuer les points de vie" class="w-11 h-11 bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-rpg-text hover:border-rpg-accent font-mono-code text-lg font-bold flex items-center justify-center transition-colors active:bg-rpg-accent active:text-rpg-accent-contrast" type="button">−</button>
+<div class="px-3 py-1 bg-rpg-bg border border-rpg-border min-w-[120px] text-center">
+<span class="font-mono-code font-bold text-number-md text-rpg-text tracking-wider">1 / 1 PV</span>
+</div>
+<button aria-label="Augmenter les points de vie" class="w-11 h-11 bg-rpg-surface-2 hover:bg-surface-container-high border border-rpg-border text-rpg-text hover:border-rpg-accent font-mono-code text-lg font-bold flex items-center justify-center transition-colors active:bg-rpg-accent active:text-rpg-accent-contrast" type="button">+</button>
+</div>
+</div>
+<!-- Jauge néon verte -->
+<div class="w-full h-3 bg-rpg-bg border border-rpg-border overflow-hidden p-0.5">
+<div class="h-full bg-rpg-success shadow-[0_0_8px_#10b981]" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Rangée d'actions opérationnelles directes -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-xs text-[10px] text-rpg-muted uppercase tracking-wider">ACTIONS OPÉRATIONNELLES</span>
+<div class="grid grid-cols-12 gap-2">
+<button class="col-span-3 h-10 bg-rpg-surface-2 hover:bg-surface-container-highest border border-rpg-border text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">description</span>
+<span>FICHE</span>
+</button>
+<button class="col-span-4 h-10 bg-rpg-surface-2 hover:bg-rpg-accent hover:text-rpg-accent-contrast border border-rpg-accent text-rpg-accent font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1.5 transition-colors shadow-[0_0_8px_rgba(6,182,212,0.25)]" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+<span>⚔ COMBAT</span>
+</button>
+<button class="col-span-1 h-10 bg-rpg-surface-2 hover:bg-surface-container-highest border border-rpg-border text-rpg-text flex items-center justify-center transition-colors" title="Projeter sur l'écran joueurs" type="button">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent">visibility</span>
+</button>
+<div class="col-span-4">
+<select class="w-full h-10 bg-surface-container-lowest border border-rpg-border px-2 text-label-sm font-label-sm text-on-surface uppercase focus:outline-none focus:border-rpg-accent">
+<option selected="">Aucune campagne</option>
+<option>Anges de Feu</option>
+<option>Campagne Principale</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Menu de transfert direct d'opérateur -->
+<div class="pt-space-sm border-t border-rpg-border flex items-center gap-space-sm mt-space-md bg-surface-container-lowest p-2">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase flex-none tracking-wider">TRANSFERT :</span>
+<select class="flex-1 h-8 bg-rpg-bg border border-rpg-border px-2 text-label-sm font-label-sm text-rpg-muted hover:text-rpg-text focus:text-rpg-text uppercase focus:outline-none focus:border-rpg-accent">
+<option disabled="" selected="">Transférer vers...</option>
+<option>Marie L.</option>
+<option>Lucas M.</option>
+<option>Daniel V.</option>
+<option>Christophe B.</option>
+<option>Gabriel T.</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. BOUTON PRINCIPAL PLEINE LARGEUR EN BAS DE ZONE (+ AJOUTER UN PERSONNAGE) -->
+<div class="flex-none pt-space-md border-t border-rpg-border mt-space-md">
+<button class="w-full h-11 bg-rpg-accent hover:brightness-110 active:brightness-95 text-rpg-accent-contrast font-orbitron font-extrabold text-sm uppercase tracking-widest flex items-center justify-center gap-space-sm shadow-[0_0_20px_rgba(6,182,212,0.45)] transition-all" type="button">
+<span class="material-symbols-outlined text-[20px] font-bold">person_add</span>
+<span>+ AJOUTER UN PERSONNAGE</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

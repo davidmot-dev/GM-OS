@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-950" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // Console de Saisie Univers</title>
+<!-- Tailwind CSS v3 avec plugins forms et container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Polices Google : Orbitron (Titres Cyberpunk) et Inter (Interface & Saisie) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Configuration Tailwind -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#06b6d4',
+              cyanHover: '#22d3ee',
+              deep: '#020617',
+              surface: '#0f172a',
+              inputBg: '#070d1f',
+              border: '#1e293b'
+            }
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+<!-- Styles personnalisés pour le respect strict du thème Cyberpunk Brutal Diegetic -->
+<style data-purpose="cyberpunk-theme">
+    /* Règle absolue du design : angles stricts à 0 degré sur l'ensemble de l'interface modale */
+    * {
+      border-radius: 0px !important;
+    }
+
+    /* Halo diegétique cyan sur le module modal */
+    .cyber-modal-container {
+      box-shadow: 0 0 24px rgba(6, 182, 212, 0.25), 0 0 0 1px #020617;
+    }
+
+    /* Halo réactif sur les éléments d'interaction */
+    .cyan-glow:focus {
+      outline: none;
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.45);
+    }
+    
+    .cyan-btn-glow {
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
+    }
+    
+    .cyan-btn-glow:hover {
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.65);
+    }
+  </style>
+</head>
+<body class="h-full w-full overflow-hidden bg-slate-950 font-inter text-slate-100 select-none">
+<!-- BEGIN: BlurredCockpitBackground -->
+<!-- Arrière-plan figurant l'application GM-OS floutée et assombrie (cockpit) -->
+<div aria-hidden="true" class="fixed inset-0 z-0 bg-[#020617] flex flex-col justify-between p-6 pointer-events-none">
+<!-- Simulation de la console sous-jacente -->
+<header class="flex justify-between items-center border-b border-slate-900 pb-4 opacity-30">
+<div class="flex items-center space-x-3">
+<div class="w-7 h-7 bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-orbitron font-bold text-xs">GM</div>
+<span class="font-orbitron tracking-widest text-xs uppercase text-slate-400">GM-OS // SYSTEM DESK v4.2</span>
+</div>
+<div class="flex items-center space-x-4 text-xs font-mono text-slate-500">
+<span>SESSION: OMEGA-01</span>
+<span>LATENCE: 12ms</span>
+</div>
+</header>
+<div class="grid grid-cols-6 gap-4 opacity-20 my-auto">
+<div class="h-44 border border-slate-800 bg-slate-900/40 p-3"></div>
+<div class="h-44 border border-slate-800 bg-slate-900/40 p-3 col-span-2"></div>
+<div class="h-44 border border-slate-800 bg-slate-900/40 p-3"></div>
+<div class="h-44 border border-slate-800 bg-slate-900/40 p-3 col-span-2"></div>
+</div>
+<footer class="border-t border-slate-900 pt-3 text-right opacity-30">
+<span class="text-xs font-mono text-slate-600">TABLE DIRECTE — CONSOLE TACTILE GRAND FORMAT</span>
+</footer>
+</div>
+<!-- END: BlurredCockpitBackground -->
+<!-- BEGIN: ModalBackdrop -->
+<!-- Couche modale floutée diegétique -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020617]/85 backdrop-blur-[8px]">
+<!-- BEGIN: SaisieUniversModal -->
+<!-- Boîte modale format standardisé (500px) arêtes brutes et finitions diegétiques -->
+<section aria-labelledby="modal-title" aria-modal="true" class="cyber-modal-container relative w-full max-w-[500px] bg-[#0f172a] border border-[#06b6d4] flex flex-col" data-purpose="dialog-nouvel-univers" role="dialog">
+<!-- BEGIN: ModalHeader -->
+<!-- En-tête commune du module avec caisson carré et fermeture rapide -->
+<header class="flex items-stretch justify-between border-b border-[#1e293b] bg-[#090f1d] min-h-[56px]" data-purpose="modal-header">
+<!-- Bloc titre et pictogramme -->
+<div class="flex items-center space-x-3.5 px-4 py-2">
+<!-- Icône carrée diegétique -->
+<div aria-hidden="true" class="w-9 h-9 border border-[#06b6d4]/50 bg-[#06b6d4]/10 flex items-center justify-center text-[#06b6d4]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" stroke-linecap="square" stroke-linejoin="miter"></path>
+</svg>
+</div>
+<!-- Libellé structurant en Orbitron -->
+<h2 class="font-orbitron font-bold text-base tracking-wide text-white uppercase leading-none" id="modal-title">
+            Saisie // Univers
+          </h2>
+</div>
+<!-- Bouton Fermer diegétique avec indication de raccourci clavier -->
+<button aria-label="Fermer la boîte de dialogue" class="flex items-center justify-center px-4 space-x-1.5 border-l border-[#1e293b] bg-slate-900/60 hover:bg-[#1e293b] hover:text-white text-slate-400 transition-colors focus:outline-none focus:bg-[#1e293b]" title="Fermer [Échap]" type="button">
+<span class="text-xs tracking-wider text-slate-400 font-mono hidden sm:inline">[Échap]</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="square"></path>
+</svg>
+</button>
+</header>
+<!-- END: ModalHeader -->
+<!-- BEGIN: ModalBody -->
+<!-- Corps de formulaire épuré, centré sur la saisie textuelle nette -->
+<form class="flex flex-col m-0" data-purpose="form-creation" id="form-nouvel-univers" onsubmit="event.preventDefault();">
+<div class="p-6 space-y-3" data-purpose="modal-content">
+<!-- Label du champ -->
+<label class="block font-inter font-bold text-[13px] text-slate-200 tracking-normal" for="universe-name-input">
+            Nom du nouvel univers
+          </label>
+<!-- Zone d'input diegétique avec hauteur tactile de 44px -->
+<div class="relative">
+<input autofocus="" class="cyan-glow w-full h-[44px] px-3 bg-[#070d1f] border border-[#06b6d4] text-white text-sm placeholder:text-slate-500 font-inter focus:border-[#06b6d4] focus:ring-0 transition-shadow tracking-normal" id="universe-name-input" name="universe_name" placeholder="Ex: Blade Runner 2049, Cyberpunk Edgerunners..." required="" type="text"/>
+</div>
+<!-- Indication contextuelle subtile -->
+<p class="text-xs text-slate-400 font-inter pt-1">
+            Définit l'environnement narratif maître pour les fiches de combat et règles associées.
+          </p>
+</div>
+<!-- END: ModalBody -->
+<!-- BEGIN: ModalFooter -->
+<!-- Pied du cadre avec séparation nette et boutons tactiles normés -->
+<footer class="flex items-center justify-end gap-3 px-5 py-4 border-t border-[#1e293b] bg-[#090f1d]" data-purpose="modal-actions">
+<!-- Action secondaire d'annulation -->
+<button class="h-[44px] px-5 bg-[#1e293b] hover:bg-slate-700 text-slate-100 font-inter font-medium text-sm transition-colors border border-transparent hover:border-slate-500 active:bg-slate-800" data-purpose="btn-cancel" type="button">
+            Annuler
+          </button>
+<!-- Action principale de validation -->
+<button class="cyan-btn-glow h-[44px] px-6 bg-[#06b6d4] hover:bg-[#22d3ee] active:bg-cyan-400 text-[#020617] font-inter font-bold text-sm tracking-wide transition-all border border-cyan-300" data-purpose="btn-submit" type="submit">
+            Créer
+          </button>
+</footer>
+<!-- END: ModalFooter -->
+</form>
+</section>
+<!-- END: SaisieUniversModal -->
+</div>
+<!-- END: ModalBackdrop -->
+<!-- BEGIN: KeyboardInteractivityScript -->
+<!-- Script minimaliste pour assurer l'accessibilité de fermeture clavier -->
+<script data-purpose="modal-interactions">
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const modal = document.querySelector('[role="dialog"]');
+        if (modal) {
+          modal.style.opacity = '0.4';
+          setTimeout(() => { modal.style.opacity = '1'; }, 150);
+        }
+      }
+    });
+  </script>
+<!-- END: KeyboardInteractivityScript -->
+</body></html>

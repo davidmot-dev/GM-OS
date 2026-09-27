@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;background-color:#020617;color:#f8fafc;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-primary-container":"#005763","error-container":"#93000a","surface-dim":"#0c1324","error":"#ffb4ab","background":"#0c1324","tertiary-fixed":"#d8e3fb","rpg-muted":"#898c95","on-secondary":"#283044","inverse-primary":"#006877","tertiary-fixed-dim":"#bcc7de","inverse-surface":"#dce1fb","secondary-fixed-dim":"#bec6e0","rpg-border":"#1e293b","rpg-on-status":"#020617","surface-bright":"#33394c","on-secondary-fixed":"#131b2e","tertiary":"#d2ddf5","on-background":"#dce1fb","primary":"#8aebff","on-error":"#690005","surface-tint":"#2fd9f4","on-tertiary":"#263143","secondary-fixed":"#dae2fd","surface-variant":"#2e3447","on-secondary-container":"#adb4ce","tertiary-container":"#b6c1d9","on-tertiary-fixed-variant":"#3c475a","on-primary-fixed-variant":"#004e5a","on-tertiary-container":"#444f63","rpg-surface":"#0f172a","secondary":"#bec6e0","rpg-text":"#f8fafc","primary-fixed-dim":"#2fd9f4","primary-container":"#22d3ee","surface-container-lowest":"#070d1f","surface-container-highest":"#2e3447","surface":"#0c1324","on-surface":"#dce1fb","on-primary-fixed":"#001f25","rpg-warning":"#f59e0b","on-secondary-fixed-variant":"#3f465c","on-tertiary-fixed":"#111c2d","rpg-danger":"#ef4444","outline":"#859397","surface-container-high":"#23293c","on-surface-variant":"#bbc9cd","rpg-accent":"#22d3ee","primary-fixed":"#a2eeff","rpg-bg":"#020617","outline-variant":"#3c494c","secondary-container":"#3f465c","surface-container-low":"#151b2d","on-error-container":"#ffdad6","surface-container":"#191f31","rpg-accent-contrast":"#020617","rpg-surface-2":"#1e293b","on-primary":"#00363e","rpg-info":"#3b82f6","rpg-success":"#10b981","inverse-on-surface":"#2a3043"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"12px","space-xl":"24px","space-lg":"16px","margin":"16px","space-xs":"4px","space-sm":"8px","gutter":"12px"},fontFamily:{"number-lg":["Space Mono"],"label-xs":["Space Mono"],"body-sm":["Space Mono"],"body-md":["Space Mono"],"title-md":["Syne"],"display-lg":["Syne"],"number-md":["Space Mono"],"label-sm":["Space Mono"],"display-md":["Syne"]},fontSize:{"number-lg":["28px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"label-xs":["10px",{lineHeight:"12px",letterSpacing:"0.18em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"400"}],"body-md":["14px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"400"}],"title-md":["17px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"display-lg":["34px",{lineHeight:"40px",letterSpacing:"0.06em",fontWeight:"800"}],"number-md":["16px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"700"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.14em",fontWeight:"700"}],"display-md":["24px",{lineHeight:"30px",letterSpacing:"0.05em",fontWeight:"700"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text font-body-sm text-body-sm antialiased selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface z-50 flex flex-col justify-between border-r border-rpg-border select-none"><div class="flex flex-col"><div class="h-14 px-space-md border-b border-rpg-border flex items-center justify-between bg-surface-container-lowest"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[20px]">hexagon</span><div class="flex flex-col"><span class="font-title-md text-title-md leading-none text-rpg-text tracking-wider">GM-OS</span><span class="font-label-xs text-label-xs text-rpg-accent leading-none mt-space-xs">V6.0.4 CORE</span></div></div><span class="material-symbols-outlined text-rpg-muted text-[16px]">terminal</span></div><nav class="flex flex-col py-space-sm overflow-y-auto max-h-[calc(100vh-120px)]" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]"><div class="px-space-md pt-space-sm pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Aventure</span></div><div class="flex flex-col"><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px]">swords</span><span class="font-label-sm text-label-sm uppercase">Combat-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px]">casino</span><span class="font-label-sm text-label-sm uppercase">Dice-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="generateur" href="#"><span class="material-symbols-outlined text-[16px]">auto_awesome</span><span class="font-label-sm text-label-sm uppercase">Générateur</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px]">map</span><span class="font-label-sm text-label-sm uppercase">Cartographie</span></a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-accent uppercase tracking-widest">// Audio Matrix</span></div><div class="flex flex-col"><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px]">music_note</span><span class="font-label-sm text-label-sm uppercase">Musique</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px]">graphic_eq</span><span class="font-label-sm text-label-sm uppercase">Effets Sonores</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px]">surround_sound</span><span class="font-label-sm text-label-sm uppercase">Ambiances</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-xs transition-colors bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px]">record_voice_over</span><span class="font-label-sm text-label-sm uppercase">Voice-OS</span></a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Systèmes &amp; Outils</span></div><div class="flex flex-col"><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px]">perm_media</span><span class="font-label-sm text-label-sm uppercase">Médiathèque</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="image-os" href="#"><span class="material-symbols-outlined text-[16px]">image</span><span class="font-label-sm text-label-sm uppercase">Image-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="horloge-et-temps" href="#"><span class="material-symbols-outlined text-[16px]">schedule</span><span class="font-label-sm text-label-sm uppercase">Horloge &amp; Temps</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px]">lightbulb</span><span class="font-label-sm text-label-sm uppercase">Light-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="nexus-wiki" href="#"><span class="material-symbols-outlined text-[16px]">menu_book</span><span class="font-label-sm text-label-sm uppercase">Nexus Wiki</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors" data-path="cortex-ia" href="#"><span class="material-symbols-outlined text-[16px]">psychology</span><span class="font-label-sm text-label-sm uppercase">Cortex IA</span></a></div></nav></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between"><div class="flex items-center gap-space-xs"><button class="p-space-xs bg-rpg-surface border border-rpg-border text-rpg-accent hover:bg-rpg-surface-2" title="Moniteur Principal" type="button"><span class="material-symbols-outlined text-[16px]">desktop_windows</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Écran Inférieur Tactile" type="button"><span class="material-symbols-outlined text-[16px]">tablet</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Vue Joueurs" type="button"><span class="material-symbols-outlined text-[16px]">cast</span></button></div><button class="p-space-xs bg-rpg-danger/20 border border-rpg-danger text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Déconnexion Régie" type="button"><span class="material-symbols-outlined text-[16px]">power_settings_new</span></button></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface border-b border-rpg-border z-40 px-space-md flex items-center justify-between select-none"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs border border-rpg-accent/30 bg-rpg-accent/10 px-space-sm py-space-xs"><span class="w-2 h-2 rounded-full bg-rpg-accent animate-pulse"></span><span class="font-label-xs text-label-xs text-rpg-accent font-bold tracking-widest uppercase">Cortex Active</span></div><div class="flex items-center gap-space-xs border border-rpg-success/30 bg-rpg-success/10 px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-success text-[14px]">wifi_tethering</span><span class="font-label-xs text-label-xs text-rpg-success font-bold uppercase tracking-wider">Link Active</span></div><div class="h-6 w-px bg-rpg-border hidden xl:block"></div><div class="hidden xl:flex items-center gap-space-sm bg-rpg-surface-2 border border-rpg-border px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">MST</span><div class="w-24 h-2 bg-rpg-bg border border-rpg-border"><div class="h-full bg-rpg-accent w-full"></div></div><span class="font-number-md text-number-md text-rpg-accent text-[12px] leading-none">100%</span></div><button class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-rpg-accent text-[16px]">mic</span><span class="font-label-xs text-label-xs uppercase tracking-wider">Focus Chat</span></button></div><div class="flex items-center gap-space-md"><div class="flex border border-rpg-border"><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-surface-2 text-on-surface-variant hover:text-on-surface border-r border-rpg-border" type="button">Atelier</button><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-accent text-rpg-accent-contrast font-bold" type="button">Table</button></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary/20 border border-primary text-primary hover:bg-primary hover:text-rpg-accent-contrast transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">sensors</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-wider">Connecter Joueurs</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-rpg-danger text-rpg-accent-contrast hover:bg-rpg-danger/90 font-bold transition-all shadow-[0_0_12px_rgba(239,68,68,0.5)]" type="button"><span class="material-symbols-outlined text-[16px]">emergency</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-widest">Stop All</span></button><div class="flex items-center gap-space-xs border-l border-rpg-border pl-space-md"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-14 w-full bg-rpg-bg min-h-screen"><div class="flex flex-col w-full text-rpg-text font-body-sm p-space-md gap-space-md select-none">
+<!-- EN-TÊTE MODULE CONFORME GM-OS -->
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-sm bg-rpg-surface border border-rpg-border p-space-md shadow-md">
+<div class="flex items-center gap-space-md">
+<div class="p-space-xs bg-rpg-surface-2 border border-rpg-accent/40 text-rpg-accent">
+<span class="material-symbols-outlined text-[24px]">graphic_eq</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-display-md text-display-md text-rpg-accent tracking-wider uppercase">VOICE-OS</span>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-widest">// DSP PROTOCOL V6.2</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">MODULATEUR VOCAL DU MENEUR • FILTRAGE NEURONAL TEMPS-RÉEL</p>
+</div>
+</div>
+<!-- PASTILLES D'ÉTAT SUPÉRIEURES -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border px-space-sm py-[5px]">
+<span class="w-2 h-2 rounded-full bg-rpg-warning animate-pulse"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">STATUT :</span>
+<span class="font-label-xs text-label-xs text-rpg-warning font-bold" id="badge-mic-state">EN ATTENTE</span>
+</div>
+<div class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border px-space-sm py-[5px]">
+<span class="material-symbols-outlined text-rpg-accent text-[14px]">speed</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">LATENCE :</span>
+<span class="font-number-md text-[11px] text-rpg-accent">12MS</span>
+</div>
+<div class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border px-space-sm py-[5px]">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-rpg-muted">DSP :</span>
+<span class="font-label-xs text-label-xs text-rpg-success font-bold">ACTIF</span>
+</div>
+</div>
+</div>
+<!-- BARRE D'ACTIONS OPÉRATIONNELLES IMMÉDIATES -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-lowest border border-rpg-border p-space-sm">
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- GRAND BOUTON DIFFUSER -->
+<button class="group flex items-center gap-space-sm px-space-lg py-space-sm bg-rpg-surface-2 border border-rpg-accent/60 text-rpg-accent hover:bg-rpg-accent hover:text-rpg-accent-contrast transition-all duration-150 cursor-pointer shadow-[0_0_10px_rgba(34,211,238,0.15)]" id="btn-master-broadcast" type="button">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">cell_tower</span>
+<div class="flex flex-col text-left">
+<span class="font-label-xs text-label-xs leading-none tracking-widest uppercase">CANAL MJ TABLE</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-rpg-text group-hover:text-rpg-accent-contrast" id="label-broadcast">((•)) DIFFUSER LA VOIX (MICRO OFF)</span>
+</div>
+</button>
+<!-- RETOUR CASQUE -->
+<button class="flex items-center gap-space-xs px-space-md py-space-sm bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-rpg-text hover:border-rpg-accent transition-colors cursor-pointer" id="btn-toggle-cue" type="button">
+<span class="material-symbols-outlined text-[18px]">headphones</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Retour Casque : <span class="text-rpg-danger font-bold" id="cue-state">OFF</span></span>
+</button>
+<!-- SYNCHRO PNJ -->
+<button class="flex items-center gap-space-xs px-space-md py-space-sm bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-rpg-text hover:border-rpg-accent transition-colors cursor-pointer" id="btn-toggle-synchro" type="button">
+<span class="material-symbols-outlined text-[18px]">theater_comedy</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Synchro PNJ : <span class="text-rpg-accent font-bold" id="sync-state">AUTO</span></span>
+</button>
+</div>
+<!-- TÉLÉMÉTRIE MATRICIELLE RAPIDE -->
+</div>
+<!-- CORPS PRINCIPAL // RATIO ÉQUILIBRÉ : ZONE CENTRALE DE TRAVAIL + PANNEAU EFFETS 320PX -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- GAUCHE & CENTRE : MODÈLES VOCAUX & MONITEUR MICRO (9 COLONNES) -->
+<div class="lg:col-span-8 xl:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- COLONNE PROFILS & PRESETS (4 COLONNES DÉDIÉES) -->
+<div class="md:col-span-5 flex flex-col gap-space-md">
+<!-- CONTENEUR MODÈLES DU MENEUR -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between border-b border-rpg-border pb-space-xs">
+<span class="font-title-md text-[13px] text-rpg-accent uppercase tracking-wider">// MODÈLES VOCAUX</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">BANQUE GLOBALE</span>
+</div>
+<!-- LISTE DES PROFILS -->
+<div class="flex flex-col gap-space-xs" id="preset-list">
+<!-- PRESET 1 : CLAIR (ACTIF) -->
+<button class="voice-card active group text-left p-space-sm bg-rpg-accent/10 border-2 border-rpg-accent shadow-[0_0_12px_rgba(34,211,238,0.25)] flex items-start gap-space-sm transition-all cursor-pointer" data-preset="clair" type="button">
+<span class="material-symbols-outlined text-rpg-accent text-[22px] group-hover:scale-105">record_voice_over</span>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-[14px] text-rpg-accent tracking-wide uppercase">Clair</span>
+<span class="font-label-xs text-label-xs px-1 bg-rpg-accent text-rpg-accent-contrast uppercase font-bold">ACTIF</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant truncate">Voix naturelle avec compression légère</p>
+</div>
+</button>
+<!-- PRESET 2 : SPECTRE -->
+<button class="voice-card group text-left p-space-sm bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent/50 flex items-start gap-space-sm transition-all cursor-pointer" data-preset="spectre" type="button">
+<span class="material-symbols-outlined text-on-surface-variant text-[22px] group-hover:text-rpg-accent">cloud</span>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-[14px] text-rpg-text tracking-wide uppercase group-hover:text-rpg-accent">Spectre</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">ESPACE</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant truncate">Voix éthérée avec forte réverbération spatiale</p>
+</div>
+</button>
+<!-- PRESET 3 : OGRE -->
+<button class="voice-card group text-left p-space-sm bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent/50 flex items-start gap-space-sm transition-all cursor-pointer" data-preset="ogre" type="button">
+<span class="material-symbols-outlined text-on-surface-variant text-[22px] group-hover:text-rpg-accent">skull</span>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-[14px] text-rpg-text tracking-wide uppercase group-hover:text-rpg-accent">Ogre</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant truncate">Voix caverneuse, grave et saturée</p>
+</div>
+</button>
+<!-- PRESET 4 : ANDROÏDE -->
+<button class="voice-card group text-left p-space-sm bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent/50 flex items-start gap-space-sm transition-all cursor-pointer" data-preset="androide" type="button">
+<span class="material-symbols-outlined text-on-surface-variant text-[22px] group-hover:text-rpg-accent">smart_toy</span>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-[14px] text-rpg-text tracking-wide uppercase group-hover:text-rpg-accent">Androïde</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant truncate">Effet métallique, bitcrush et distorsion</p>
+</div>
+</button>
+<!-- PRESET 5 : DRAGON -->
+<button class="voice-card group text-left p-space-sm bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent/50 flex items-start gap-space-sm transition-all cursor-pointer" data-preset="dragon" type="button">
+<span class="material-symbols-outlined text-on-surface-variant text-[22px] group-hover:text-rpg-accent">local_fire_department</span>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-[14px] text-rpg-text tracking-wide uppercase group-hover:text-rpg-accent">Dragon</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant truncate">Grogne profond avec sub-basses telluriques</p>
+</div>
+</button>
+</div>
+</div>
+<!-- SECTION VOIX DES PNJ -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between border-b border-rpg-border pb-space-xs">
+<span class="font-title-md text-[13px] text-on-surface uppercase tracking-wider">// VOIX DES PNJ</span>
+<span class="font-label-xs text-label-xs text-rpg-accent">1 CONFIGURÉ</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<button class="voice-card group text-left p-space-sm bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent flex items-center justify-between transition-colors cursor-pointer" data-preset="asha" type="button">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 bg-rpg-bg border border-rpg-border flex items-center justify-center text-rpg-accent">
+<span class="material-symbols-outlined text-[16px]">account_box</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-[13px] text-rpg-text group-hover:text-rpg-accent uppercase">Asha</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Réglage sur-mesure</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-rpg-muted group-hover:text-rpg-text text-[18px]">tune</span>
+</button>
+</div>
+<button class="w-full flex items-center justify-center gap-space-xs p-space-sm bg-rpg-surface-2 hover:bg-rpg-surface border border-dashed border-rpg-border hover:border-rpg-accent text-on-surface-variant hover:text-rpg-accent transition-colors font-label-xs text-label-xs uppercase tracking-wider mt-space-xs" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+            + NOUVEAU PROFIL PNJ
+          </button>
+</div>
+</div>
+<!-- VUMÈTRE RADIAL / ORBITAL & ROUTAGE MATÉRIEL (7 COLONNES DÉDIÉES) -->
+<div class="md:col-span-7 flex flex-col gap-space-md">
+<!-- VUMÈTRE ORBITAL CENTRAL MAJESTUEUX -->
+<div class="relative bg-rpg-surface border border-rpg-border p-space-lg flex flex-col items-center justify-center min-h-[380px] overflow-hidden">
+<!-- RETRO-TRACÉ D'ARRIÈRE-PLAN SVG -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+<svg class="w-full h-full max-w-[340px] max-h-[340px]" viewbox="0 0 200 200">
+<circle class="text-rpg-accent" cx="100" cy="100" fill="none" r="90" stroke="currentColor" stroke-dasharray="2 4" stroke-width="0.5"></circle>
+<circle class="text-rpg-border" cx="100" cy="100" fill="none" r="70" stroke="currentColor" stroke-width="1"></circle>
+<line class="text-rpg-border" stroke="currentColor" stroke-width="0.5" x1="100" x2="100" y1="0" y2="200"></line>
+<line class="text-rpg-border" stroke="currentColor" stroke-width="0.5" x1="0" x2="200" y1="100" y2="100"></line>
+</svg>
+</div>
+<!-- INDICATEUR DE STATUT FLOTTANT -->
+<div class="absolute top-space-md left-space-md flex flex-col">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Flux d'entrée</span>
+<span class="font-number-md text-[13px] text-rpg-accent" id="input-freq">48.0 kHz</span>
+</div>
+<div class="absolute top-space-md right-space-md flex flex-col text-right">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">Gain Entrée</span>
+<span class="font-number-md text-[13px] text-rpg-success">+0.0 dB</span>
+</div>
+<!-- STRUCTURE DU VUMÈTRE ORBITAL -->
+<div class="relative flex items-center justify-center my-space-md">
+<!-- ANNEAU EXTÉRIEUR DYNAMIQUE -->
+<div class="w-56 h-56 rounded-full border border-rpg-accent/30 flex items-center justify-center transition-all duration-300" id="orb-ring-outer">
+<!-- ANNEAU MÉDIAN AVEC HALO DISCRET -->
+<div class="w-44 h-44 rounded-full border-2 border-dashed border-rpg-accent/40 flex items-center justify-center transition-all duration-150" id="orb-ring-mid">
+<!-- COEUR MICROPHONE TACTILE -->
+<button class="w-28 h-28 rounded-full bg-rpg-surface-2 border-2 border-rpg-accent/80 hover:border-rpg-accent flex flex-col items-center justify-center text-rpg-accent hover:shadow-[0_0_24px_rgba(34,211,238,0.4)] transition-all cursor-pointer group" id="orb-btn-mic" type="button">
+<span class="material-symbols-outlined text-[36px] transition-transform group-hover:scale-110" id="orb-mic-icon">mic_off</span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest mt-1 text-rpg-muted group-hover:text-rpg-accent font-bold" id="orb-mic-status">MUTED</span>
+</button>
+</div>
+</div>
+<!-- PARTICULES D'IMPULSION TACTILES DÉCORATIVES -->
+<div class="absolute -bottom-2 font-number-md text-number-md text-rpg-accent tracking-widest" id="peak-indicator">-inf dB</div>
+</div>
+<!-- LIGNE D'ÉTAT DÉTAILLÉE DU SIGNAL -->
+<div class="w-full max-w-sm flex flex-col gap-1 mt-space-sm z-10">
+<div class="flex justify-between items-center font-label-xs text-label-xs text-rpg-muted">
+<span>PEAK METER</span>
+<span class="text-rpg-accent font-number-md text-[11px]" id="meter-level">-42 dB</span>
+</div>
+<div class="w-full h-2 bg-rpg-bg border border-rpg-border flex overflow-hidden">
+<div class="h-full bg-rpg-accent transition-all duration-75 w-0" id="meter-bar"></div>
+</div>
+</div>
+</div>
+<!-- ROUTAGE ET SÉLECTION MATÉRIELLE (MIC / SORTIE) -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between border-b border-rpg-border pb-space-xs">
+<span class="font-title-md text-[13px] text-rpg-text uppercase tracking-wider">// INTERFACES MATÉRIELLES</span>
+<button class="flex items-center gap-space-xs font-label-xs text-label-xs text-rpg-accent hover:underline cursor-pointer" id="btn-refresh-devices" type="button">
+<span class="material-symbols-outlined text-[14px]">refresh</span>
+              ACTUALISER
+            </button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-space-xs">
+<!-- ENTRÉE MICRO -->
+<div class="flex flex-col gap-1">
+<label class="font-label-xs text-label-xs text-rpg-muted flex items-center gap-space-xs uppercase">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">mic</span>
+                Microphone d'entrée
+              </label>
+<div class="relative">
+<select class="w-full bg-rpg-bg border border-rpg-border hover:border-rpg-accent px-space-sm py-2 font-body-sm text-[12px] text-rpg-text focus:outline-none appearance-none cursor-pointer">
+<option selected="">Micro Système par Défaut (Focusrite 2i2)</option>
+<option>Micro USB Broadcast (Elgato Wave:3)</option>
+<option>Casque Micro Bluetooth (Sony WH-1000XM5)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[18px] text-rpg-muted pointer-events-none">arrow_drop_down</span>
+</div>
+</div>
+<!-- SORTIE TABLE / RETOUR -->
+<div class="flex flex-col gap-1">
+<label class="font-label-xs text-label-xs text-rpg-muted flex items-center gap-space-xs uppercase">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">volume_up</span>
+                Sortie Audio Régie
+              </label>
+<div class="relative">
+<select class="w-full bg-rpg-bg border border-rpg-border hover:border-rpg-accent px-space-sm py-2 font-body-sm text-[12px] text-rpg-text focus:outline-none appearance-none cursor-pointer">
+<option selected="">Sortie Système par Défaut (Haut-parleurs Table)</option>
+<option>Line Out 1/2 (Vers Ampli Salle)</option>
+<option>Sortie Virtuelle Câble A (Stream Discord)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[18px] text-rpg-muted pointer-events-none">arrow_drop_down</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DROITE : PANNEAU DES RÉGLAGES DU SIGNAL & EFFETS DSP (COMPACTÉ À 320PX) -->
+<div class="lg:col-span-4 xl:col-span-3 w-full max-w-full flex flex-col gap-space-md">
+<!-- CONTENEUR GLOBAL RÉGLAGES -->
+<div class="bg-rpg-surface border border-rpg-border flex flex-col shadow-lg">
+<!-- EN-TÊTE DU PANNEAU -->
+<div class="p-space-md border-b border-rpg-border bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">tune</span>
+<span class="font-title-md text-[13px] text-rpg-text tracking-wide uppercase">SIGNAL &amp; EFFETS DSP</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-md">
+<!-- SECTION 1 : SÉCURITÉ & NETTOYAGE DU SIGNAL -->
+<div class="flex flex-col gap-space-sm pb-space-sm border-b border-rpg-border">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-accent font-bold uppercase tracking-wider">// 01. NETTOYAGE &amp; SÉCURITÉ</span>
+<span class="material-symbols-outlined text-rpg-muted text-[14px]" title="Traitements de pré-amplification et suppression des artéfacts">info</span>
+</div>
+<!-- TOGGLE ANTI-LARSEN -->
+<div class="flex items-center justify-between p-space-xs bg-rpg-surface-2 border border-rpg-border">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-rpg-text">Anti-Larsen Hybride</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Atténue le larsen micro/enceintes</span>
+</div>
+<button class="w-10 h-5 bg-rpg-success p-0.5 flex items-center justify-end transition-colors cursor-pointer" id="toggle-larsen" type="button">
+<span class="w-4 h-4 bg-rpg-accent-contrast shadow"></span>
+</button>
+</div>
+<!-- SÉLECTEUR DÉBRUITAGE -->
+<div class="flex flex-col gap-1 p-space-xs bg-rpg-surface-2 border border-rpg-border">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-rpg-text">Débruitage Vocal</span>
+<span class="font-label-xs text-label-xs text-rpg-accent font-bold uppercase">RNNoise IA</span>
+</div>
+<div class="grid grid-cols-3 gap-1 mt-1">
+<button class="denoise-btn py-1 font-label-xs text-label-xs uppercase bg-rpg-bg text-on-surface-variant border border-rpg-border hover:border-rpg-accent cursor-pointer" type="button">AUCUN</button>
+<button class="denoise-btn py-1 font-label-xs text-label-xs uppercase bg-rpg-bg text-on-surface-variant border border-rpg-border hover:border-rpg-accent cursor-pointer" type="button">NAVIGAT.</button>
+<button class="denoise-btn active py-1 font-label-xs text-label-xs uppercase bg-rpg-accent text-rpg-accent-contrast font-bold border border-rpg-accent cursor-pointer" type="button">NEURONAL</button>
+</div>
+<p class="font-label-xs text-[9px] text-rpg-muted leading-tight mt-1">
+                Module RNNoise actif : supprime souffles et bruits de fond sans dégrader les attaques syllabiques.
+              </p>
+</div>
+<!-- TOGGLE NOISE GATE -->
+<div class="flex items-center justify-between p-space-xs bg-rpg-surface-2 border border-rpg-border">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-rpg-text">Porte de Bruit (Gate)</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Coupure sous -48 dB</span>
+</div>
+<button class="w-10 h-5 bg-rpg-accent p-0.5 flex items-center justify-end transition-colors cursor-pointer" id="toggle-gate" type="button">
+<span class="w-4 h-4 bg-rpg-accent-contrast shadow"></span>
+</button>
+</div>
+<!-- TOGGLE AUTO-DUCKING -->
+<div class="flex items-center justify-between p-space-xs bg-rpg-surface-2 border border-rpg-border">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-rpg-text">Auto-Ducking Musique</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">-18dB sur musique en parole</span>
+</div>
+<button class="w-10 h-5 bg-rpg-accent p-0.5 flex items-center justify-end transition-colors cursor-pointer" id="toggle-ducking" type="button">
+<span class="w-4 h-4 bg-rpg-accent-contrast shadow"></span>
+</button>
+</div>
+</div>
+<!-- SECTION 2 : MODELEURS VOCAUX (FADERS) -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-rpg-accent font-bold uppercase tracking-wider">// 02. MODELEURS VOCAUX</span>
+<button class="font-label-xs text-label-xs text-rpg-muted hover:text-rpg-danger underline uppercase cursor-pointer" id="btn-reset-dsp" type="button">Reset Faders</button>
+</div>
+<!-- FADER 1 : PITCH SHIFT -->
+<div class="flex flex-col gap-1 bg-rpg-surface-2 p-space-xs border border-rpg-border">
+<div class="flex justify-between items-center">
+<span class="font-label-xs text-label-xs text-rpg-text font-bold">PITCH SHIFT (HAUTEUR)</span>
+<span class="font-number-md text-[11px] text-rpg-accent" id="val-pitch">0 ST</span>
+</div>
+<input class="w-full accent-cyan-400 bg-rpg-bg h-1 cursor-pointer" id="slider-pitch" max="12" min="-12" step="1" type="range" value="0"/>
+<div class="flex justify-between text-[9px] text-rpg-muted font-number-md">
+<span>-12 ST</span>
+<span>0 ST</span>
+<span>+12 ST</span>
+</div>
+</div>
+<!-- FADER 2 : FORMANT -->
+<div class="flex flex-col gap-1 bg-rpg-surface-2 p-space-xs border border-rpg-border">
+<div class="flex justify-between items-center">
+<span class="font-label-xs text-label-xs text-rpg-text font-bold">FORMANT (TIMBRE CORPOREL)</span>
+<span class="font-number-md text-[11px] text-rpg-accent" id="val-formant">0</span>
+</div>
+<input class="w-full accent-cyan-400 bg-rpg-bg h-1 cursor-pointer" id="slider-formant" max="10" min="-10" step="1" type="range" value="0"/>
+<div class="flex justify-between text-[9px] text-rpg-muted font-number-md">
+<span>GRAVE</span>
+<span>0</span>
+<span>AIGU</span>
+</div>
+</div>
+<!-- FADER 3 : RÉVERBÉRATION -->
+<div class="flex flex-col gap-1 bg-rpg-surface-2 p-space-xs border border-rpg-border">
+<div class="flex justify-between items-center">
+<span class="font-label-xs text-label-xs text-rpg-text font-bold">RÉVERBÉRATION SPATIALE</span>
+<span class="font-number-md text-[11px] text-rpg-accent" id="val-reverb">0%</span>
+</div>
+<input class="w-full accent-cyan-400 bg-rpg-bg h-1 cursor-pointer" id="slider-reverb" max="100" min="0" step="5" type="range" value="0"/>
+<div class="flex justify-between text-[9px] text-rpg-muted font-number-md">
+<span>SEC (DRY)</span>
+<span>50%</span>
+<span>100% (WET)</span>
+</div>
+</div>
+<!-- FADER 4 : DISTORSION -->
+<div class="flex flex-col gap-1 bg-rpg-surface-2 p-space-xs border border-rpg-border">
+<div class="flex justify-between items-center">
+<span class="font-label-xs text-label-xs text-rpg-text font-bold">DISTORSION HARMONIQUE</span>
+<span class="font-number-md text-[11px] text-rpg-accent" id="val-dist">0%</span>
+</div>
+<input class="w-full accent-cyan-400 bg-rpg-bg h-1 cursor-pointer" id="slider-dist" max="100" min="0" step="5" type="range" value="0"/>
+</div>
+<!-- FADER 5 : COMPRESSION -->
+<div class="flex flex-col gap-1 bg-rpg-surface-2 p-space-xs border border-rpg-border">
+<div class="flex justify-between items-center">
+<span class="font-label-xs text-label-xs text-rpg-text font-bold">COMPRESSION DYNAMIQUE</span>
+<span class="font-number-md text-[11px] text-rpg-accent" id="val-comp">40%</span>
+</div>
+<input class="w-full accent-cyan-400 bg-rpg-bg h-1 cursor-pointer" id="slider-comp" max="100" min="0" step="5" type="range" value="40"/>
+</div>
+<!-- FADER 6 : BITCRUSH -->
+<div class="flex flex-col gap-1 bg-rpg-surface-2 p-space-xs border border-rpg-border">
+<div class="flex justify-between items-center">
+<span class="font-label-xs text-label-xs text-rpg-text font-bold">BITCRUSH &amp; DOWNSAMPLE</span>
+<span class="font-number-md text-[11px] text-rpg-accent" id="val-crush">0%</span>
+</div>
+<input class="w-full accent-cyan-400 bg-rpg-bg h-1 cursor-pointer" id="slider-crush" max="100" min="0" step="5" type="range" value="0"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initVoiceOS() {
+    let isBroadcasting = false;
+    let isHeadphoneCue = false;
+    let isSynchroPNJ = true;
+    let audioSimInterval = null;
+
+    const btnBroadcast = document.getElementById('btn-master-broadcast');
+    const labelBroadcast = document.getElementById('label-broadcast');
+    const badgeMic = document.getElementById('badge-mic-state');
+    const orbBtn = document.getElementById('orb-btn-mic');
+    const orbIcon = document.getElementById('orb-mic-icon');
+    const orbStatus = document.getElementById('orb-mic-status');
+    const orbRingMid = document.getElementById('orb-ring-mid');
+    const orbRingOuter = document.getElementById('orb-ring-outer');
+    const meterBar = document.getElementById('meter-bar');
+    const meterLevel = document.getElementById('meter-level');
+    const peakIndicator = document.getElementById('peak-indicator');
+
+    function toggleBroadcast() {
+      isBroadcasting = !isBroadcasting;
+      if (isBroadcasting) {
+        btnBroadcast.classList.remove('bg-rpg-surface-2', 'border-rpg-accent/60', 'text-rpg-accent');
+        btnBroadcast.classList.add('bg-rpg-accent', 'text-rpg-accent-contrast', 'shadow-[0_0_20px_rgba(34,211,238,0.5)]');
+        labelBroadcast.textContent = '((•)) DIFFUSION ACTIVE (EN LIVE)';
+        labelBroadcast.classList.remove('text-rpg-text');
+        labelBroadcast.classList.add('text-rpg-accent-contrast');
+
+        badgeMic.textContent = 'EN DIFFUSION';
+        badgeMic.classList.remove('text-rpg-warning');
+        badgeMic.classList.add('text-rpg-success');
+
+        orbBtn.classList.add('bg-rpg-accent', 'text-rpg-accent-contrast', 'shadow-[0_0_30px_rgba(34,211,238,0.7)]');
+        orbIcon.textContent = 'mic';
+        orbStatus.textContent = 'LIVE ON AIR';
+        orbStatus.classList.remove('text-rpg-muted');
+        orbStatus.classList.add('text-rpg-accent-contrast');
+
+        orbRingOuter.classList.add('animate-pulse', 'border-rpg-accent');
+        orbRingMid.classList.add('border-rpg-accent');
+
+        startAudioSimulation();
+      } else {
+        btnBroadcast.classList.remove('bg-rpg-accent', 'text-rpg-accent-contrast', 'shadow-[0_0_20px_rgba(34,211,238,0.5)]');
+        btnBroadcast.classList.add('bg-rpg-surface-2', 'border-rpg-accent/60', 'text-rpg-accent');
+        labelBroadcast.textContent = '((•)) DIFFUSER LA VOIX (MICRO OFF)';
+        labelBroadcast.classList.add('text-rpg-text');
+        labelBroadcast.classList.remove('text-rpg-accent-contrast');
+
+        badgeMic.textContent = 'EN ATTENTE';
+        badgeMic.classList.remove('text-rpg-success');
+        badgeMic.classList.add('text-rpg-warning');
+
+        orbBtn.classList.remove('bg-rpg-accent', 'text-rpg-accent-contrast', 'shadow-[0_0_30px_rgba(34,211,238,0.7)]');
+        orbIcon.textContent = 'mic_off';
+        orbStatus.textContent = 'MUTED';
+        orbStatus.classList.add('text-rpg-muted');
+        orbStatus.classList.remove('text-rpg-accent-contrast');
+
+        orbRingOuter.classList.remove('animate-pulse', 'border-rpg-accent');
+        orbRingMid.classList.remove('border-rpg-accent');
+
+        stopAudioSimulation();
+      }
+    }
+
+    btnBroadcast.addEventListener('click', toggleBroadcast);
+    orbBtn.addEventListener('click', toggleBroadcast);
+
+    function startAudioSimulation() {
+      if (audioSimInterval) clearInterval(audioSimInterval);
+      audioSimInterval = setInterval(() => {
+        const val = Math.floor(Math.random() * 55) + 30; // 30% à 85%
+        meterBar.style.width = val + '%';
+        const db = (-48 + (val * 0.45)).toFixed(1);
+        meterLevel.textContent = db + ' dB';
+        peakIndicator.textContent = db + ' dB';
+      }, 100);
+    }
+
+    function stopAudioSimulation() {
+      if (audioSimInterval) clearInterval(audioSimInterval);
+      meterBar.style.width = '0%';
+      meterLevel.textContent = '-inf dB';
+      peakIndicator.textContent = '-inf dB';
+    }
+
+    // TOGGLE CUE & SYNCHRO
+    const btnCue = document.getElementById('btn-toggle-cue');
+    const cueState = document.getElementById('cue-state');
+    btnCue.addEventListener('click', () => {
+      isHeadphoneCue = !isHeadphoneCue;
+      cueState.textContent = isHeadphoneCue ? 'ON' : 'OFF';
+      cueState.className = isHeadphoneCue ? 'text-rpg-success font-bold' : 'text-rpg-danger font-bold';
+    });
+
+    const btnSync = document.getElementById('btn-toggle-synchro');
+    const syncState = document.getElementById('sync-state');
+    btnSync.addEventListener('click', () => {
+      isSynchroPNJ = !isSynchroPNJ;
+      syncState.textContent = isSynchroPNJ ? 'AUTO' : 'OFF';
+      syncState.className = isSynchroPNJ ? 'text-rpg-accent font-bold' : 'text-rpg-muted font-bold';
+    });
+
+    // SÉLECTION DES PRESETS VOCAUX
+    const presetButtons = document.querySelectorAll('.voice-card');
+    const presetValues = {
+      clair: { pitch: 0, formant: 0, reverb: 0, dist: 0, comp: 40, crush: 0 },
+      spectre: { pitch: 3, formant: 4, reverb: 65, dist: 5, comp: 30, crush: 0 },
+      ogre: { pitch: -7, formant: -6, reverb: 25, dist: 35, comp: 70, crush: 10 },
+      androide: { pitch: 0, formant: 2, reverb: 15, dist: 45, comp: 60, crush: 55 },
+      dragon: { pitch: -10, formant: -8, reverb: 40, dist: 50, comp: 80, crush: 20 },
+      asha: { pitch: 2, formant: 3, reverb: 20, dist: 0, comp: 50, crush: 0 }
+    };
+
+    const sPitch = document.getElementById('slider-pitch');
+    const sFormant = document.getElementById('slider-formant');
+    const sReverb = document.getElementById('slider-reverb');
+    const sDist = document.getElementById('slider-dist');
+    const sComp = document.getElementById('slider-comp');
+    const sCrush = document.getElementById('slider-crush');
+
+    const vPitch = document.getElementById('val-pitch');
+    const vFormant = document.getElementById('val-formant');
+    const vReverb = document.getElementById('val-reverb');
+    const vDist = document.getElementById('val-dist');
+    const vComp = document.getElementById('val-comp');
+    const vCrush = document.getElementById('val-crush');
+
+    function applyPresetValues(vals) {
+      sPitch.value = vals.pitch;
+      vPitch.textContent = (vals.pitch > 0 ? '+' : '') + vals.pitch + ' ST';
+
+      sFormant.value = vals.formant;
+      vFormant.textContent = vals.formant;
+
+      sReverb.value = vals.reverb;
+      vReverb.textContent = vals.reverb + '%';
+
+      sDist.value = vals.dist;
+      vDist.textContent = vals.dist + '%';
+
+      sComp.value = vals.comp;
+      vComp.textContent = vals.comp + '%';
+
+      sCrush.value = vals.crush;
+      vCrush.textContent = vals.crush + '%';
+    }
+
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        presetButtons.forEach(b => {
+          b.classList.remove('bg-rpg-accent/10', 'border-2', 'border-rpg-accent', 'shadow-[0_0_12px_rgba(34,211,238,0.25)]');
+          b.classList.add('bg-rpg-surface-2', 'border', 'border-rpg-border');
+          const badge = b.querySelector('.bg-rpg-accent');
+          if (badge && badge.textContent === 'ACTIF') badge.remove();
+        });
+
+        btn.classList.remove('bg-rpg-surface-2', 'border', 'border-rpg-border');
+        btn.classList.add('bg-rpg-accent/10', 'border-2', 'border-rpg-accent', 'shadow-[0_0_12px_rgba(34,211,238,0.25)]');
+
+        const key = btn.dataset.preset;
+        if (presetValues[key]) {
+          applyPresetValues(presetValues[key]);
+        }
+      });
+    });
+
+    // LISTENERS FADERS MANUELS
+    sPitch.addEventListener('input', e => vPitch.textContent = (e.target.value > 0 ? '+' : '') + e.target.value + ' ST');
+    sFormant.addEventListener('input', e => vFormant.textContent = e.target.value);
+    sReverb.addEventListener('input', e => vReverb.textContent = e.target.value + '%');
+    sDist.addEventListener('input', e => vDist.textContent = e.target.value + '%');
+    sComp.addEventListener('input', e => vComp.textContent = e.target.value + '%');
+    sCrush.addEventListener('input', e => vCrush.textContent = e.target.value + '%');
+
+    // RESET DSP
+    document.getElementById('btn-reset-dsp').addEventListener('click', () => {
+      applyPresetValues(presetValues.clair);
+    });
+
+    // DÉBRUITAGE RADIO BUTTONS
+    const denoiseBtns = document.querySelectorAll('.denoise-btn');
+    denoiseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        denoiseBtns.forEach(b => {
+          b.classList.remove('bg-rpg-accent', 'text-rpg-accent-contrast', 'font-bold', 'border-rpg-accent');
+          b.classList.add('bg-rpg-bg', 'text-on-surface-variant', 'border-rpg-border');
+        });
+        btn.classList.remove('bg-rpg-bg', 'text-on-surface-variant', 'border-rpg-border');
+        btn.classList.add('bg-rpg-accent', 'text-rpg-accent-contrast', 'font-bold', 'border-rpg-accent');
+      });
+    });
+
+    // SIMPLE TOGGLES
+    ['toggle-larsen', 'toggle-gate', 'toggle-ducking'].forEach(id => {
+      const toggle = document.getElementById(id);
+      toggle.addEventListener('click', () => {
+        const isActive = toggle.classList.contains('bg-rpg-accent') || toggle.classList.contains('bg-rpg-success');
+        if (isActive) {
+          toggle.classList.remove('bg-rpg-accent', 'bg-rpg-success', 'justify-end');
+          toggle.classList.add('bg-rpg-bg', 'justify-start');
+        } else {
+          toggle.classList.remove('bg-rpg-bg', 'justify-start');
+          toggle.classList.add(id === 'toggle-larsen' ? 'bg-rpg-success' : 'bg-rpg-accent', 'justify-end');
+        }
+      });
+    });
+  })();
+</script></main></div></body></html>

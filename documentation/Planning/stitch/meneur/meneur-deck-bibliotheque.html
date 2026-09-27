@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400..800&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-variant":"#2e3447","on-secondary-container":"#adb4ce","on-primary-fixed-variant":"#004e5a","error-container":"#93000a","primary-container":"#22d3ee","surface-container-low":"#151b2d","rpg-on-status":"#020617","error":"#ffb4ab","on-error-container":"#ffdad6","on-background":"#dce1fb","surface":"#0c1324","inverse-surface":"#dce1fb","on-tertiary-container":"#444f63","outline":"#859397","surface-bright":"#33394c","on-error":"#690005","on-primary-container":"#005763","rpg-warning":"#f59e0b","on-secondary-fixed-variant":"#3f465c","on-secondary-fixed":"#131b2e","secondary-container":"#3f465c","rpg-surface-2":"#1e293b","secondary-fixed-dim":"#bec6e0","surface-dim":"#0c1324","primary":"#8aebff","on-primary-fixed":"#001f25","surface-container":"#191f31","on-tertiary-fixed-variant":"#3c475a","surface-container-lowest":"#070d1f","surface-container-highest":"#2e3447","rpg-success":"#10b981","rpg-info":"#3b82f6","on-surface":"#dce1fb","rpg-danger":"#ef4444","rpg-text":"#f8fafc","rpg-surface":"#0f172a","tertiary-fixed-dim":"#bcc7de","on-primary":"#00363e","tertiary":"#d2ddf5","on-surface-variant":"#bbc9cd","primary-fixed":"#a2eeff","rpg-border":"#1e293b","background":"#0c1324","rpg-muted":"#898c95","rpg-accent":"#22d3ee","inverse-primary":"#006877","on-tertiary-fixed":"#111c2d","tertiary-container":"#b6c1d9","surface-container-high":"#23293c","primary-fixed-dim":"#2fd9f4","rpg-bg":"#020617","secondary":"#bec6e0","secondary-fixed":"#dae2fd","outline-variant":"#3c494c","surface-tint":"#2fd9f4","tertiary-fixed":"#d8e3fb","rpg-accent-contrast":"#020617","on-tertiary":"#263143","inverse-on-surface":"#2a3043","on-secondary":"#283044"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-sm":"8px","space-md":"12px","space-xs":"4px","space-lg":"16px",gutter:"12px","space-xl":"24px",margin:"16px"},fontFamily:{"display-md":["Syne"],"label-sm":["Space Mono"],"label-xs":["Space Mono"],"title-md":["Syne"],"number-md":["Space Mono"],"body-sm":["Space Mono"],"number-lg":["Space Mono"],"display-lg":["Syne"],"body-md":["Space Mono"]},fontSize:{"display-md":["24px",{lineHeight:"30px",letterSpacing:"0.05em",fontWeight:"700"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.14em",fontWeight:"700"}],"label-xs":["10px",{lineHeight:"12px",letterSpacing:"0.18em",fontWeight:"700"}],"title-md":["17px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"number-md":["16px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"400"}],"number-lg":["28px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"display-lg":["34px",{lineHeight:"40px",letterSpacing:"0.06em",fontWeight:"800"}],"body-md":["14px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface border-r border-rpg-border z-50 flex flex-col justify-between select-none"><div class="flex flex-col h-full"><div class="h-14 border-b border-rpg-border px-space-md flex items-center justify-between bg-rpg-bg/40"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[18px]">terminal</span><span class="font-label-xs text-label-xs uppercase tracking-widest text-rpg-text">SYS//INDEX</span></div><span class="font-number-md text-[10px] text-rpg-muted px-space-xs py-0.5 border border-rpg-border bg-rpg-surface-2">V6.2</span></div><div class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-space-lg"><div class="space-y-1"><div class="px-space-xs font-label-xs text-label-xs uppercase text-rpg-muted tracking-wider flex items-center gap-1.5 pb-1"><span class="w-1.5 h-1.5 bg-rpg-accent inline-block"></span>AVENTURE</div><nav class="flex flex-col space-y-0.5" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-[3px] border-l-rpg-accent font-bold pl-[9px]"><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="cockpit-session-os" href="#">Cockpit / Session</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="combat-os" href="#">Combat-OS</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="dice-os" href="#">Dice-OS</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="generateur-pnj" href="#">Générateur PNJ</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="cartographie" href="#">Cartographie</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="trame-narrative" href="#">Trame narrative</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="storyboard" href="#">Storyboard</a><a aria-current="page" class="flex items-center h-8 px-space-md transition-colors bg-rpg-surface-2 text-rpg-accent border-l-[3px] border-l-rpg-accent font-bold pl-[9px]" data-path="deck-os" href="#">DECK-OS</a></nav></div><div class="space-y-1"><div class="px-space-xs font-label-xs text-label-xs uppercase text-rpg-muted tracking-wider flex items-center gap-1.5 pb-1"><span class="w-1.5 h-1.5 bg-rpg-info inline-block"></span>AUDIO</div><nav class="flex flex-col space-y-0.5" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-[3px] border-l-rpg-accent font-bold pl-[9px]"><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="audio-musique" href="#">Musique</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="audio-effets-sonores" href="#">Effets Sonores</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="audio-ambiances" href="#">Ambiances</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="audio-voice-os" href="#">Voice-OS</a></nav></div><div class="space-y-1"><div class="px-space-xs font-label-xs text-label-xs uppercase text-rpg-muted tracking-wider flex items-center gap-1.5 pb-1"><span class="w-1.5 h-1.5 bg-outline-variant inline-block"></span>OUTILS / GLOBAL</div><nav class="flex flex-col space-y-0.5" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-[3px] border-l-rpg-accent font-bold pl-[9px]"><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="outils-mediatheque" href="#">Médiathèque</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="outils-image-os" href="#">Image-OS</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="outils-horloge-temps" href="#">Horloge & Temps</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="outils-light-os" href="#">Light-OS</a><a class="font-label-sm text-label-sm flex items-center h-8 px-space-md text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors border-l-[3px] border-l-transparent" data-path="outils-tables-aleatoires" href="#">Tables Aléatoires</a></nav></div></div><div class="h-12 border-t border-rpg-border px-space-md bg-rpg-bg/60 flex items-center justify-between"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2 transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">settings</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2 transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">monitor</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2 transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">splitscreen</span></button><button class="p-1 text-rpg-danger hover:bg-error-container hover:text-on-error transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">power_settings_new</span></button></div></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface/95 backdrop-blur-md border-b border-rpg-border z-40 flex items-center justify-between px-space-lg select-none"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm border-r border-rpg-border pr-space-lg"><span class="material-symbols-outlined text-rpg-accent text-[20px]">hub</span><span class="font-title-md text-title-md uppercase tracking-wider text-rpg-text">GM-OS V6</span><span class="font-label-xs text-label-xs text-rpg-accent bg-rpg-surface-2 px-space-xs py-0.5 border border-outline-variant">NEXUS-PROTOCOL</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 bg-rpg-surface-2 border border-rpg-border"><span class="w-2 h-2 bg-rpg-success animate-pulse"></span><span class="font-label-xs text-label-xs text-rpg-text tracking-widest">CORTEX ACTIVE</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm bg-rpg-bg px-space-md py-1 border border-rpg-border"><span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">MST</span><div class="w-16 h-1.5 bg-rpg-surface-2 relative overflow-hidden"><div class="w-full h-full bg-rpg-accent"></div></div><span class="font-number-md text-[11px] text-rpg-accent">100%</span></div><button class="h-8 px-space-md bg-rpg-surface-2 border border-rpg-border text-on-surface hover:bg-surface-variant font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 transition-colors" type="button"><span class="material-symbols-outlined text-[14px]">chat_bubble</span>FOCUS CHAT</button><button class="h-8 px-space-md bg-error-container text-on-error border border-rpg-danger font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 hover:brightness-125 transition-all shadow-[0_0_8px_rgba(239,68,68,0.35)]" type="button"><span class="material-symbols-outlined text-[14px]">cancel</span>STOP ALL</button><div class="flex border border-rpg-border bg-rpg-bg"><button class="h-8 px-space-sm font-label-xs text-label-xs uppercase bg-rpg-accent text-rpg-accent-contrast font-bold" type="button">ATELIER [FORCÉ]</button><button class="h-8 px-space-sm font-label-xs text-label-xs uppercase text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2 transition-colors" type="button">TABLE</button><button class="h-8 px-space-sm font-label-xs text-label-xs uppercase text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2 transition-colors" type="button">AUTO</button></div><button class="h-8 px-space-md bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent font-label-xs text-label-xs uppercase tracking-wider flex items-center gap-1 transition-colors" type="button"><span class="material-symbols-outlined text-[14px] text-rpg-accent">sensors</span>CONNECTER JOUEURS</button><div class="flex items-center gap-space-xs px-space-sm py-1 bg-rpg-bg border border-rpg-border"><span class="w-1.5 h-1.5 bg-rpg-accent"></span><span class="font-label-xs text-label-xs text-rpg-accent tracking-widest">LINK ACTIVE</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-14 w-full px-margin"><div class="flex flex-col w-full text-rpg-text select-none pb-12">
+<!-- EN-TÊTE DU MODULE DECK-OS -->
+<div class="flex items-center justify-between py-space-md border-b border-rpg-border bg-rpg-bg/60">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-accent text-[22px]">style</span>
+<h1 class="font-display-md text-display-md tracking-wider text-rpg-accent uppercase">
+          DECK-OS // BIBLIOTHÈQUE DE PAQUETS
+        </h1>
+</div>
+<p class="font-body-sm text-body-sm text-rpg-muted tracking-wide uppercase">
+        GESTION DES PAQUETS DE CARTES ET ÉLÉMENTS NARRATIFS
+      </p>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2 bg-rpg-surface border border-rpg-border px-space-md py-2">
+<span class="w-2 h-2 bg-rpg-success inline-block shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+<span class="font-label-sm text-label-sm text-rpg-text uppercase tracking-widest">
+          5 PAQUETS CONFIGURÉS • CAMPAGNE ACTIVE
+        </span>
+</div>
+<div class="flex items-center gap-1 bg-rpg-surface border border-rpg-border p-1">
+<button class="h-8 px-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:text-rpg-accent hover:bg-rpg-surface-2 transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span> RETOUR COCKPIT
+        </button>
+<button class="h-8 px-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:text-rpg-accent hover:bg-rpg-surface-2 transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">psychology</span> ORACLE
+        </button>
+<button class="h-8 px-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:text-rpg-accent hover:bg-rpg-surface-2 transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">menu_book</span> RÈGLES
+        </button>
+<button class="h-8 px-space-sm font-label-sm text-label-sm uppercase text-on-surface-variant hover:text-rpg-accent hover:bg-rpg-surface-2 transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">photo_camera</span> SNAPSHOT
+        </button>
+</div>
+</div>
+</div>
+<!-- BARRE D'OUTILS DU MODULE -->
+<div class="flex items-center justify-between py-space-md border-b border-rpg-border my-space-md bg-rpg-surface/80 px-space-md">
+<div class="flex items-center gap-space-lg">
+<button class="h-[44px] px-space-lg bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 hover:brightness-110 shadow-[0_0_12px_rgba(34,211,238,0.4)] transition-all" type="button">
+<span class="material-symbols-outlined text-[20px] font-bold">add</span>
+        + NOUVEAU PAQUET
+      </button>
+<div class="flex border border-rpg-border bg-rpg-bg">
+<button class="h-[44px] px-space-md font-label-sm text-label-sm uppercase tracking-wider text-rpg-muted hover:text-rpg-text hover:bg-rpg-surface-2 transition-colors" id="tab-all" onclick="filterDecks('all')" type="button">
+          [ TOUT VOIR ]
+        </button>
+<button class="h-[44px] px-space-md font-label-sm text-label-sm uppercase tracking-wider bg-rpg-surface-2 text-rpg-accent border-l border-rpg-border font-bold" id="tab-active" onclick="filterDecks('active')" type="button">
+          [ SYSTÈME ACTIF ]
+        </button>
+</div>
+</div>
+<div class="flex items-center gap-space-sm bg-rpg-bg border border-rpg-border px-space-md h-[44px]">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">verified</span>
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">SYSTÈME EN COURS :</span>
+<span class="font-label-sm text-label-sm text-rpg-text font-bold uppercase tracking-wider">
+        BLADE RUNNER RPG (YEAR ZERO)
+      </span>
+</div>
+</div>
+<!-- ZONE DE TRAVAIL PRINCIPALE (GRILLE + PANNEAU LATÉRAL) -->
+<div class="grid grid-cols-12 gap-space-lg">
+<!-- GRILLE DES 5 PAQUETS TACTIQUES (9 COLONNES) -->
+<div class="col-span-9 flex flex-col gap-space-md">
+<!-- PAQUET 1 -->
+<div class="deck-card bg-rpg-surface border border-rpg-border hover:border-outline transition-all flex flex-col justify-between p-space-md relative" data-system="torg">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-rpg-muted px-2 py-0.5 bg-rpg-surface-2 border border-rpg-border uppercase">
+                TORG ETERNITY
+              </span>
+<span class="font-label-sm text-label-sm text-rpg-muted">Format Poker — Paysage</span>
+</div>
+<h2 class="font-title-md text-title-md text-rpg-text uppercase tracking-wide mt-1">
+              TORG ACTION
+            </h2>
+</div>
+<div class="flex items-baseline gap-1 bg-rpg-bg border border-rpg-border px-space-md py-1">
+<span class="font-number-lg text-number-lg text-rpg-accent leading-none">39</span>
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">CARTES</span>
+</div>
+</div>
+<div class="my-space-md py-space-sm border-t border-b border-rpg-border/60 flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-3 h-3 bg-rpg-success inline-block"></span>
+<span class="font-label-sm text-label-sm text-rpg-text font-bold uppercase tracking-wider">
+              OUVERT AUX JOUEURS
+            </span>
+<span class="font-label-sm text-label-sm text-rpg-accent bg-rpg-accent/10 border border-rpg-accent/30 px-2 py-0.5 ml-2">
+              Les joueurs piochent depuis leur tablette
+            </span>
+</div>
+<span class="font-label-sm text-label-sm text-rpg-muted">DRAWS EN DIRECT : AUTORISÉS</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="h-10 px-space-lg bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 hover:brightness-110 transition-all" type="button">
+            CHARGER ➔
+          </button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-text hover:text-rpg-accent hover:border-rpg-accent transition-colors" title="Modifier le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-danger hover:bg-error-container hover:text-on-error transition-colors" title="Supprimer le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- PAQUET 2 -->
+<div class="deck-card bg-rpg-surface border border-rpg-border hover:border-outline transition-all flex flex-col justify-between p-space-md relative" data-system="torg">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-rpg-muted px-2 py-0.5 bg-rpg-surface-2 border border-rpg-border uppercase">
+                TORG ETERNITY
+              </span>
+<span class="font-label-sm text-label-sm text-rpg-muted">Format Poker — Portrait</span>
+</div>
+<h2 class="font-title-md text-title-md text-rpg-text uppercase tracking-wide mt-1">
+              TORG DESTIN
+            </h2>
+</div>
+<div class="flex items-baseline gap-1 bg-rpg-bg border border-rpg-border px-space-md py-1">
+<span class="font-number-lg text-number-lg text-rpg-accent leading-none">5</span>
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">CARTES</span>
+</div>
+</div>
+<div class="my-space-md py-space-sm border-t border-b border-rpg-border/60 flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">lock</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">
+              MENEUR SEUL
+            </span>
+<span class="font-label-sm text-label-sm text-rpg-muted bg-rpg-surface-2 border border-rpg-border px-2 py-0.5 ml-2">
+              Accès verrouillé pour les clients
+            </span>
+</div>
+<span class="font-label-sm text-label-sm text-rpg-muted">REGISTRE : PRIVÉ MJ</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="h-10 px-space-lg bg-rpg-surface-2 border border-rpg-border text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 hover:bg-surface-variant hover:text-rpg-accent transition-all" type="button">
+            CHARGER ➔
+          </button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-text hover:text-rpg-accent hover:border-rpg-accent transition-colors" title="Modifier le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-danger hover:bg-error-container hover:text-on-error transition-colors" title="Supprimer le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- PAQUET 3 -->
+<div class="deck-card bg-rpg-surface border border-rpg-border hover:border-outline transition-all flex flex-col justify-between p-space-md relative" data-system="torg">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-rpg-muted px-2 py-0.5 bg-rpg-surface-2 border border-rpg-border uppercase">
+                TORG ETERNITY
+              </span>
+<span class="font-label-sm text-label-sm text-rpg-muted">Format Poker — Portrait</span>
+</div>
+<h2 class="font-title-md text-title-md text-rpg-text uppercase tracking-wide mt-1">
+              TORG COSM
+            </h2>
+</div>
+<div class="flex items-baseline gap-1 bg-rpg-bg border border-rpg-border px-space-md py-1">
+<span class="font-number-lg text-number-lg text-rpg-accent leading-none">10</span>
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">CARTES</span>
+</div>
+</div>
+<div class="my-space-md py-space-sm border-t border-b border-rpg-border/60 flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">lock</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">
+              MENEUR SEUL
+            </span>
+<span class="font-label-sm text-label-sm text-rpg-muted bg-rpg-surface-2 border border-rpg-border px-2 py-0.5 ml-2">
+              Effets cosmologiques cachés
+            </span>
+</div>
+<span class="font-label-sm text-label-sm text-rpg-muted">REGISTRE : PRIVÉ MJ</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="h-10 px-space-lg bg-rpg-surface-2 border border-rpg-border text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 hover:bg-surface-variant hover:text-rpg-accent transition-all" type="button">
+            CHARGER ➔
+          </button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-text hover:text-rpg-accent hover:border-rpg-accent transition-colors" title="Modifier le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-danger hover:bg-error-container hover:text-on-error transition-colors" title="Supprimer le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- PAQUET 4 (ACTIF DU SYSTÈME EN COURS) -->
+<div class="deck-card bg-rpg-surface border-l-[3px] border-l-rpg-accent border-y border-r border-rpg-border shadow-[0_0_16px_rgba(34,211,238,0.15)] flex flex-col justify-between p-space-md relative" data-system="bladerunner">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-rpg-accent px-2 py-0.5 bg-rpg-accent/10 border border-rpg-accent uppercase font-bold">
+                BLADE RUNNER RPG
+              </span>
+<span class="font-label-sm text-label-sm text-rpg-muted">Format Tarot — Portrait</span>
+<span class="font-label-sm text-label-sm text-rpg-accent-contrast bg-rpg-accent font-bold px-2 py-0.5 uppercase tracking-widest ml-2">
+                EN SERVICE
+              </span>
+</div>
+<h2 class="font-title-md text-title-md text-rpg-text uppercase tracking-wide mt-1">
+              TAROT CYBERPUNK - ARCANE MATRIX
+            </h2>
+</div>
+<div class="flex items-baseline gap-1 bg-rpg-bg border border-rpg-accent px-space-md py-1 shadow-[inset_0_0_8px_rgba(34,211,238,0.2)]">
+<span class="font-number-lg text-number-lg text-rpg-accent leading-none">54</span>
+<span class="font-label-sm text-label-sm text-rpg-text uppercase font-bold">CARTES</span>
+</div>
+</div>
+<div class="my-space-md py-space-sm border-t border-b border-rpg-border/60 flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-3 h-3 bg-rpg-success inline-block shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+<span class="font-label-sm text-label-sm text-rpg-text font-bold uppercase tracking-wider">
+              OUVERT AUX JOUEURS
+            </span>
+<span class="font-label-sm text-label-sm text-rpg-accent bg-rpg-accent/10 border border-rpg-accent/30 px-2 py-0.5 ml-2">
+              Synchronisation active du deck
+            </span>
+</div>
+<span class="font-label-sm text-label-sm text-rpg-accent font-bold">REGISTRE : DIFFUSION ACTIVE</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="h-10 px-space-lg bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 hover:brightness-110 shadow-[0_0_12px_rgba(34,211,238,0.5)] transition-all" type="button">
+            CHARGER ➔
+          </button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-text hover:text-rpg-accent hover:border-rpg-accent transition-colors" title="Modifier le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-danger hover:bg-error-container hover:text-on-error transition-colors" title="Supprimer le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- PAQUET 5 -->
+<div class="deck-card bg-rpg-surface border border-rpg-border hover:border-outline transition-all flex flex-col justify-between p-space-md relative" data-system="bladerunner">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-rpg-accent px-2 py-0.5 bg-rpg-accent/10 border border-rpg-accent uppercase font-bold">
+                BLADE RUNNER RPG
+              </span>
+<span class="font-label-sm text-label-sm text-rpg-muted">Format Mini-Card</span>
+</div>
+<h2 class="font-title-md text-title-md text-rpg-text uppercase tracking-wide mt-1">
+              INDICES DE SECTEUR REPLICANT
+            </h2>
+</div>
+<div class="flex items-baseline gap-1 bg-rpg-bg border border-rpg-border px-space-md py-1">
+<span class="font-number-lg text-number-lg text-rpg-accent leading-none">22</span>
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">CARTES</span>
+</div>
+</div>
+<div class="my-space-md py-space-sm border-t border-b border-rpg-border/60 flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">lock</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">
+              MENEUR SEUL
+            </span>
+<span class="font-label-sm text-label-sm text-rpg-muted bg-rpg-surface-2 border border-rpg-border px-2 py-0.5 ml-2">
+              Indices d'enquête protégés
+            </span>
+</div>
+<span class="font-label-sm text-label-sm text-rpg-muted">REGISTRE : ENQUÊTE SECTORIELLE</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="h-10 px-space-lg bg-rpg-surface-2 border border-rpg-border text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 hover:bg-surface-variant hover:text-rpg-accent transition-all" type="button">
+            CHARGER ➔
+          </button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-text hover:text-rpg-accent hover:border-rpg-accent transition-colors" title="Modifier le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-10 h-10 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center text-rpg-danger hover:bg-error-container hover:text-on-error transition-colors" title="Supprimer le paquet" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- PANNEAU LATÉRAL DROIT : RÉGIE DE DISTRIBUTION (~300PX) -->
+<div class="col-span-3 flex flex-col gap-space-md">
+<!-- BOÎTE TITRE LATÉRALE -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md">
+<h3 class="font-display-md text-title-md text-rpg-accent uppercase tracking-wider">
+          RÉGIE DE DISTRIBUTION
+        </h3>
+<p class="font-body-sm text-body-sm text-rpg-muted uppercase tracking-wider mt-1">
+          TÉLÉMÉTRIE TABLETTES JOUEURS
+        </p>
+</div>
+<!-- SECTION 1 : STATUT DU DECK PLAYER -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between border-b border-rpg-border pb-2">
+<span class="font-label-sm text-label-sm uppercase text-rpg-muted">STATUT DU DECK PLAYER</span>
+<span class="w-2 h-2 bg-rpg-success inline-block"></span>
+</div>
+<div class="bg-rpg-bg p-space-sm border border-rpg-border flex flex-col gap-2 mt-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">PAQUET ACTIF :</span>
+<span class="font-label-sm text-label-sm text-rpg-text font-bold uppercase">TAROT CYBERPUNK</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">DIFFUSION :</span>
+<span class="font-label-sm text-label-sm text-rpg-success font-bold uppercase">EN JEU (PROJETÉ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-rpg-muted uppercase">CLIENTS CONNECTÉS :</span>
+<span class="font-number-md text-number-md text-rpg-accent">4 FLUX</span>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent text-rpg-text font-label-sm text-label-sm uppercase font-bold flex items-center justify-center gap-1 transition-colors mt-1" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">visibility</span>
+          VOIR LE RETOUR TABLETTE
+        </button>
+</div>
+<!-- SECTION 2 : RÈGLES DE PIOCHE GLOBALES -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="border-b border-rpg-border pb-2">
+<span class="font-label-sm text-label-sm uppercase text-rpg-muted">RÈGLES DE PIOCHE GLOBALES</span>
+</div>
+<div class="flex flex-col gap-2 mt-1">
+<label class="flex items-center justify-between p-2 bg-rpg-bg border border-rpg-border cursor-pointer hover:border-outline-variant">
+<span class="font-label-sm text-label-sm text-rpg-text uppercase">MODE STANDARD</span>
+<input checked="" class="accent-[#22d3ee] w-4 h-4 bg-rpg-bg" name="draw-mode" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-2 bg-rpg-bg border border-rpg-border cursor-pointer hover:border-outline-variant">
+<span class="font-label-sm text-label-sm text-rpg-text uppercase">DÉFAUSSE AUTOMATIQUE</span>
+<input checked="" class="accent-[#22d3ee] w-4 h-4 bg-rpg-bg" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-2 bg-rpg-bg border border-rpg-border cursor-pointer hover:border-outline-variant">
+<span class="font-label-sm text-label-sm text-rpg-text uppercase">AUTORISATION DE DÉFAUSSE DIRECTE</span>
+<input class="accent-[#22d3ee] w-4 h-4 bg-rpg-bg" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- SECTION 3 : ACTIONS RAPIDES D'ATELIER -->
+<div class="bg-rpg-surface border border-rpg-border p-space-md flex flex-col gap-space-sm">
+<div class="border-b border-rpg-border pb-2">
+<span class="font-label-sm text-label-sm uppercase text-rpg-muted">ACTIONS RAPIDES D'ATELIER</span>
+</div>
+<div class="flex flex-col gap-2 mt-1">
+<button class="w-full h-10 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:text-rpg-accent hover:border-rpg-accent font-label-sm text-label-sm uppercase font-bold flex items-center justify-between px-space-md transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">file_upload</span>
+              IMPORTER CSV / JSON
+            </span>
+<span class="text-rpg-muted font-number-md">CMD//01</span>
+</button>
+<button class="w-full h-10 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:text-rpg-accent hover:border-rpg-accent font-label-sm text-label-sm uppercase font-bold flex items-center justify-between px-space-md transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+              DUPLIQUER PAQUET
+            </span>
+<span class="text-rpg-muted font-number-md">CMD//02</span>
+</button>
+<button class="w-full h-10 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:text-rpg-accent hover:border-rpg-accent font-label-sm text-label-sm uppercase font-bold flex items-center justify-between px-space-md transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+              ARCHIVER PAQUET
+            </span>
+<span class="text-rpg-muted font-number-md">CMD//03</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function filterDecks(mode) {
+    const decks = document.querySelectorAll('.deck-card');
+    const tabAll = document.getElementById('tab-all');
+    const tabActive = document.getElementById('tab-active');
+
+    if (mode === 'all') {
+      decks.forEach(deck => deck.style.display = 'flex');
+      tabAll.className = "h-[44px] px-space-md font-label-sm text-label-sm uppercase tracking-wider bg-rpg-surface-2 text-rpg-accent font-bold";
+      tabActive.className = "h-[44px] px-space-md font-label-sm text-label-sm uppercase tracking-wider text-rpg-muted hover:text-rpg-text hover:bg-rpg-surface-2 transition-colors border-l border-rpg-border";
+    } else {
+      decks.forEach(deck => {
+        if (deck.getAttribute('data-system') === 'bladerunner') {
+          deck.style.display = 'flex';
+        } else {
+          deck.style.display = 'none';
+        }
+      });
+      tabActive.className = "h-[44px] px-space-md font-label-sm text-label-sm uppercase tracking-wider bg-rpg-surface-2 text-rpg-accent border-l border-rpg-border font-bold";
+      tabAll.className = "h-[44px] px-space-md font-label-sm text-label-sm uppercase tracking-wider text-rpg-muted hover:text-rpg-text hover:bg-rpg-surface-2 transition-colors";
+    }
+  }
+</script></main></div></body></html>

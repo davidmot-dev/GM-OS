@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>GM-OS // Anges de Feu</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Orbitron:wght@500;700;800;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+        background-color: #020617;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      * {
+        border-radius: 0px !important;
+        box-sizing: border-box;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .font-orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+    .font-inter {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono {
+      font-family: 'Space Mono', monospace;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "rpg-bg": "#020617",
+            "rpg-surface": "#080e1e",
+            "rpg-surface-2": "#0f172a",
+            "rpg-surface-high": "#162038",
+            "rpg-surface-bright": "#1e2c4c",
+            "rpg-border": "#1e293b",
+            "rpg-border-cyan": "rgba(34, 211, 238, 0.4)",
+            "rpg-accent": "#22d3ee",
+            "rpg-accent-glow": "rgba(34, 211, 238, 0.15)",
+            "rpg-accent-contrast": "#020617",
+            "rpg-text": "#f8fafc",
+            "rpg-text-dim": "#94a3b8",
+            "rpg-muted": "#64748b",
+            "rpg-success": "#10b981",
+            "rpg-warning": "#f59e0b",
+            "rpg-danger": "#ef4444",
+            "rpg-info": "#3b82f6"
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
+            display: ['Orbitron', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-rpg-bg text-rpg-text font-inter select-none overflow-hidden h-screen w-screen">
+<!-- BANDEAU SYSTÈME SUPÉRIEUR PERMANENT (GM-OS V6) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-[#050b18] border-b border-rpg-border z-50 px-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 bg-rpg-accent animate-pulse shadow-[0_0_8px_#22d3ee]"></div>
+<span class="font-orbitron font-bold text-[15px] text-rpg-accent tracking-widest uppercase">GM-OS</span>
+<span class="font-mono text-[11px] font-bold bg-[#0c162d] text-rpg-accent border border-rpg-border-cyan px-2 py-0.5 tracking-wider">V6 NEXUS-PROTOCOL</span>
+</div>
+<div class="h-4 w-px bg-rpg-border"></div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rpg-success inline-block shadow-[0_0_6px_#10b981]"></span>
+<span class="font-mono text-[11px] text-rpg-text-dim tracking-widest uppercase">SYS_READY 1440x900</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<!-- Master Volume -->
+<div class="flex items-center gap-2 bg-rpg-surface border border-rpg-border px-2.5 py-1">
+<span class="material-symbols-outlined text-rpg-accent text-[16px]">volume_up</span>
+<input class="w-20 h-1 bg-[#1e293b] accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="78"/>
+<span class="font-mono text-[11px] text-rpg-accent font-bold">78%</span>
+</div>
+<!-- Focus Chat -->
+<button class="h-8 px-3 flex items-center gap-1.5 bg-rpg-surface border border-rpg-border text-rpg-text-dim hover:text-rpg-text hover:bg-rpg-surface-2 transition-colors font-mono text-[11px] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Focus Chat</span>
+</button>
+<!-- Toggle Table / Atelier -->
+<div class="flex border border-rpg-border bg-[#030712] p-0.5">
+<button class="h-7 px-3 bg-rpg-accent text-rpg-accent-contrast font-orbitron font-bold text-[11px] tracking-wider uppercase">Table</button>
+<button class="h-7 px-3 text-rpg-text-dim hover:text-rpg-text hover:bg-rpg-surface font-orbitron text-[11px] tracking-wider uppercase transition-colors">Atelier</button>
+</div>
+<!-- Connecter Joueurs -->
+<button class="h-8 px-3 flex items-center gap-1.5 bg-rpg-surface border border-rpg-border-cyan text-rpg-accent hover:bg-rpg-surface-2 transition-colors font-mono text-[11px] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">sensors</span>
+<span>Connecter Joueurs</span>
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-success animate-ping ml-0.5"></span>
+</button>
+<!-- Stop All -->
+<button class="h-8 px-3 flex items-center gap-1.5 bg-red-950/80 text-red-200 border border-rpg-danger hover:bg-rpg-danger hover:text-white transition-colors font-mono text-[11px] uppercase font-bold tracking-wider">
+<span class="material-symbols-outlined text-[16px]">dangerous</span>
+<span>Stop All</span>
+</button>
+<div class="h-4 w-px bg-rpg-border"></div>
+<!-- Profile -->
+<div class="w-7 h-7 bg-rpg-surface-2 border border-rpg-border-cyan flex items-center justify-center text-rpg-accent">
+<span class="material-symbols-outlined text-[17px]">shield_person</span>
+</div>
+</div>
+</header>
+<!-- SIDEBAR GAUCHE PERMANENTE GM-OS -->
+<aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-[#050b18] border-r border-rpg-border z-40 overflow-y-auto flex flex-col py-3 select-none">
+<div class="px-3 mb-2 flex items-center justify-between">
+<span class="font-mono text-[11px] text-rpg-muted uppercase tracking-widest">CONSOLE MODULES</span>
+<span class="font-mono text-[11px] text-rpg-accent">V6.0</span>
+</div>
+<div class="flex-1 flex flex-col gap-3 px-2">
+<!-- Section Aventure -->
+<section>
+<div class="px-2 py-0.5 font-mono text-[11px] text-rpg-accent tracking-widest uppercase flex items-center justify-between bg-rpg-surface/80 border-l border-rpg-accent">
+<span>// Aventure</span>
+<span class="material-symbols-outlined text-[13px]">shield</span>
+</div>
+<nav class="flex flex-col gap-0.5 mt-1 font-mono text-[11px]">
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">tune</span><span>Cockpit / Session</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 bg-rpg-accent/15 text-rpg-accent font-bold border-l-2 border-rpg-accent uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">swords</span><span>Fiche Campagne</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">casino</span><span>Dice-OS</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">badge</span><span>Générateur PNJ</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">map</span><span>Cartographie</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">account_tree</span><span>Trame narrative</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">style</span><span>Deck-OS</span>
+</a>
+</nav>
+</section>
+<!-- Section Audio -->
+<section>
+<div class="px-2 py-0.5 font-mono text-[11px] text-rpg-accent tracking-widest uppercase flex items-center justify-between bg-rpg-surface/80 border-l border-rpg-accent">
+<span>// Audio</span>
+<span class="material-symbols-outlined text-[13px]">graphic_eq</span>
+</div>
+<nav class="flex flex-col gap-0.5 mt-1 font-mono text-[11px]">
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">music_note</span><span>Musique</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">volume_up</span><span>Effets Sonores</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">surround_sound</span><span>Ambiances</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">mic</span><span>Voice-OS</span>
+</a>
+</nav>
+</section>
+<!-- Section Outils / Système -->
+<section>
+<div class="px-2 py-0.5 font-mono text-[11px] text-rpg-accent tracking-widest uppercase flex items-center justify-between bg-rpg-surface/80 border-l border-rpg-accent">
+<span>// Outils / Système</span>
+<span class="material-symbols-outlined text-[13px]">terminal</span>
+</div>
+<nav class="flex flex-col gap-0.5 mt-1 font-mono text-[11px]">
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">perm_media</span><span>Médiathèque</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">schedule</span><span>Horloge &amp; Temps</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">lightbulb</span><span>Light-OS</span>
+</a>
+<a class="flex items-center gap-2 px-2 py-1 text-rpg-text-dim hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase" href="#">
+<span class="material-symbols-outlined text-[15px]">data_table</span><span>Tables Aléatoires</span>
+</a>
+</nav>
+</section>
+</div>
+<!-- Status link -->
+<div class="mt-auto px-3 pt-2 border-t border-rpg-border flex items-center justify-between font-mono text-[11px]">
+<span class="text-rpg-muted">STATUS</span>
+<span class="text-rpg-success flex items-center gap-1 font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-success"></span>
+        LINK_SECURE
+      </span>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL (1440x900 SANS AUCUN DÉFILEMENT GLOBAL, EXACTEMENT 844px HAUTEUR DISPONIBLE) -->
+<div class="pl-[220px] pt-14 h-screen w-screen overflow-hidden">
+<main class="h-full w-full p-2.5 flex flex-col gap-2 overflow-hidden bg-rpg-bg">
+<!-- EN-TÊTE DE MODULE : BANDEAU PANORAMIQUE (HAUTEUR FIXE ~72px) -->
+<section class="relative w-full h-[72px] shrink-0 bg-[#060c1c] border border-rpg-border overflow-hidden flex items-center justify-between px-3">
+<!-- Fond diégétique Los Angeles cyberpunk -->
+<div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-screen pointer-events-none" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCeG4POo9d-69xGMVbA0UkzgskP3f-S93mAW04n9zLE-YBobceHPo1LLbcFx6kR5jLTCrvIbHZ2YnnX5NCmZELFIALPJ5x8MxuZH0Zb7otmGNEsNnkI0brb4ZCLpKSxjmaj1I5WtrBYtcaaF05h0g29chfVbmd9JV90wsBACi55i6Pplt-odX2G34_ck1l5u1IMWbohKSypgmOZTBjuNabw2Vtobcnym6y44WW86XUFvsV_RsgXvgMuIA')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-[#050b18] via-[#050b18]/90 to-[#050b18]/70 pointer-events-none"></div>
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rpg-accent via-cyan-400/50 to-transparent"></div>
+<!-- Côté Gauche : Titre et Navigation -->
+<div class="relative z-10 flex items-center gap-3">
+<button class="h-8 px-2.5 flex items-center gap-1.5 bg-[#0e172e] hover:bg-[#162244] border border-rpg-border text-rpg-text font-mono text-[11px] uppercase transition-all shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">arrow_back</span>
+<span>Retour à la bibliothèque</span>
+</button>
+<div class="h-7 w-px bg-rpg-border"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2.5">
+<h1 class="font-orbitron font-extrabold text-[19px] text-white tracking-widest uppercase leading-none">Anges de Feu</h1>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-rpg-success/20 text-rpg-success border border-rpg-success/40 font-mono text-[11px] font-bold uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-success animate-ping"></span>
+                Campagne Active
+              </span>
+</div>
+<div class="flex items-center gap-2 font-mono text-[11px] mt-0.5">
+<span class="text-rpg-text-dim uppercase font-semibold">Blade Runner : Le Jeu de Rôle</span>
+<span class="text-rpg-muted">/</span>
+<span class="px-1.5 py-0 bg-rpg-info/20 text-rpg-info border border-rpg-info/40 text-[11px] font-bold uppercase tracking-wider">Pilote Actif</span>
+<span class="text-rpg-muted">/</span>
+<span class="text-rpg-muted text-[11px]">SYS_BUILD.4981-BR</span>
+</div>
+</div>
+</div>
+<!-- Côté Droit : Commandes d'Actions -->
+<div class="relative z-10 flex items-center gap-2">
+<button class="h-8 px-3 flex items-center gap-1.5 bg-[#0e172e] hover:bg-[#162244] border border-rpg-border text-rpg-text font-mono text-[11px] uppercase transition-colors">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">edit_note</span>
+<span>Modifier la Campagne</span>
+</button>
+<button class="h-8 px-3 flex items-center gap-1.5 bg-[#0e172e] hover:bg-[#162244] border border-rpg-border text-rpg-text font-mono text-[11px] uppercase transition-colors">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">share</span>
+<span>Exporter vers Obsidian</span>
+</button>
+<div class="h-7 w-px bg-rpg-border mx-1"></div>
+<div class="px-2 py-1 bg-rpg-surface border border-rpg-border text-rpg-accent font-mono text-[11px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>CANVAS_01</span>
+</div>
+</div>
+</section>
+<!-- AGENCEMENT INTERNE : DISPOSITION À 2 PANNEAUX MAJEURS ASYMÉTRIQUES (~65% / ~35%) -->
+<div class="flex-1 min-h-0 w-full grid grid-cols-12 gap-2 overflow-hidden">
+<!-- ================= ZONE PRINCIPALE GAUCHE/CENTRE (~65%, col-span-8) ================= -->
+<div class="col-span-8 flex flex-col gap-2 h-full min-h-0 overflow-hidden">
+<!-- EN HAUT : CARTE REPLIABLE "APERÇU DE LA CAMPAGNE" (HORIZONTAL ET TRÈS COMPACT) -->
+<section class="bg-rpg-surface border border-rpg-border p-2.5 shrink-0 flex flex-col gap-1.5" id="campaign-overview-block">
+<div class="flex items-center justify-between pb-1 border-b border-rpg-border/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">info</span>
+<span class="font-orbitron font-bold text-[12px] text-white tracking-wider uppercase">Aperçu de la Campagne</span>
+</div>
+<button class="font-mono text-[11px] text-rpg-accent hover:text-white uppercase flex items-center gap-1 transition-colors px-2 py-0.5 bg-[#0e172e] border border-rpg-border" id="toggle-overview-btn">
+<span id="toggle-icon">▲</span>
+<span id="toggle-label">Masquer</span>
+</button>
+</div>
+<!-- Contenu horizontal compact -->
+<div class="grid grid-cols-12 gap-2 text-inter text-[12px] leading-snug items-start" id="overview-content">
+<div class="col-span-6 text-rpg-text-dim border-r border-rpg-border/50 pr-2">
+<p>
+                  Une nouvelle génération de Réplicants 'bootleg' menace le monopole de Wallace Corp et les fondations de la société los-angélienne. Traque impitoyable et dilemmes moraux au cœur du brouillard toxique.
+                </p>
+</div>
+<div class="col-span-6 bg-rpg-surface-2 border border-rpg-border/70 p-2">
+<div class="font-mono text-[11px] font-bold text-rpg-accent uppercase tracking-wider mb-1 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-rpg-accent"></span>
+                  Synopsis Actuel
+                </div>
+<p class="font-inter text-[11px] text-slate-300 italic leading-tight">
+                  « L'enquête commence avec l'interrogatoire bâclé d'Ellis Vale, un technicien de Wallace Corp, révélant la présence de Réplicants bootleg en fuite vers le secteur portuaire d'Animoid Row. »
+                </p>
+</div>
+</div>
+</section>
+<!-- AU CENTRE : "SÉANCES DE LA CAMPAGNE" (5 SÉANCES • 1 ACTIVE) OCCUPANT TOUTE LA HAUTEUR RESTANTE -->
+<section class="bg-rpg-surface border border-rpg-border p-2.5 flex-1 min-h-0 flex flex-col justify-between overflow-hidden">
+<!-- En-tête des séances -->
+<div class="flex items-center justify-between pb-1.5 mb-1 border-b border-rpg-border shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[17px] text-rpg-accent">calendar_month</span>
+<span class="font-orbitron font-bold text-[13px] text-white tracking-wider uppercase">Séances de la Campagne</span>
+</div>
+<div class="flex items-center gap-3 font-mono text-[11px]">
+<span class="text-rpg-text-dim">5 SÉANCES</span>
+<span class="text-rpg-accent font-bold px-1.5 py-0.5 bg-rpg-accent/10 border border-rpg-accent/30">1 ACTIVE</span>
+</div>
+</div>
+<!-- 5 Cartes de séances réparties verticalement sur l'espace disponible -->
+<div class="flex-1 min-h-0 flex flex-col justify-between gap-1.5 overflow-hidden">
+<!-- Séance #5 : PRÉVUE -->
+<article class="p-2 bg-rpg-surface-2 border border-rpg-border hover:border-rpg-text-dim/40 transition-colors flex flex-col justify-between flex-1 min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="font-orbitron font-bold text-[15px] text-rpg-text tracking-tight">#5</span>
+<span class="font-mono text-[12px] font-bold text-slate-200 uppercase">Samedi 26 Septembre 2026</span>
+</div>
+<span class="px-2 py-0.5 bg-amber-500/20 text-rpg-warning border border-rpg-warning/40 font-mono text-[11px] font-bold uppercase tracking-wider">
+                    Prévue
+                  </span>
+</div>
+<p class="font-inter text-[12px] text-slate-300 truncate my-0.5">
+                  Infiltration des sous-sols de l'Arcologie Wallace pour récupérer les matrices de test Nexus-8 avant le grand confinement...
+                </p>
+<div class="flex items-center justify-between pt-0.5 border-t border-rpg-border/40">
+<span class="font-mono text-[11px] text-rpg-muted">LOG_STATUS: PENDING</span>
+<button class="font-mono text-[11px] text-rpg-accent hover:text-white uppercase font-bold underline transition-colors">
+                    Modifier le résumé
+                  </button>
+</div>
+</article>
+<!-- Séance #4 : EN COURS - ACTIVE AVEC HALO CYAN -->
+<article class="p-2 bg-rpg-surface-high border-2 border-rpg-accent shadow-[0_0_15px_rgba(34,211,238,0.2)] relative transition-all flex flex-col justify-between flex-1 min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="font-orbitron font-black text-[16px] text-rpg-accent tracking-tight">#4</span>
+<span class="font-mono text-[12px] font-bold text-white uppercase tracking-wide">Samedi 12 Septembre 2026</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-accent text-rpg-accent-contrast font-orbitron font-extrabold text-[11px] uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_8px_#22d3ee]">
+<span class="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+                    En Cours
+                  </span>
+</div>
+<p class="font-inter text-[12px] text-white font-medium truncate my-0.5">
+                  Poursuite d'Ellis Vale dans le Bradbury Building sous une pluie battante et confrontation armée avec les unités d'élite...
+                </p>
+<div class="flex items-center justify-between pt-0.5 border-t border-rpg-accent/30">
+<span class="font-mono text-[11px] text-rpg-accent font-bold flex items-center gap-1">
+<span class="w-1 h-1 bg-rpg-accent"></span>
+                    LIVE_SESSION: ACTIVE_REGIE
+                  </span>
+<button class="font-mono text-[11px] text-rpg-accent hover:text-white uppercase font-bold underline transition-colors">
+                    Modifier le résumé
+                  </button>
+</div>
+</article>
+<!-- Séance #3 : TERMINÉE -->
+<article class="p-2 bg-rpg-surface-2 border border-rpg-border hover:border-rpg-text-dim/40 transition-colors flex flex-col justify-between flex-1 min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="font-orbitron font-bold text-[15px] text-rpg-muted tracking-tight">#3</span>
+<span class="font-mono text-[12px] font-bold text-slate-300 uppercase">Samedi 28 Août 2026</span>
+</div>
+<span class="px-2 py-0.5 bg-emerald-500/15 text-rpg-success border border-rpg-success/30 font-mono text-[11px] font-bold uppercase tracking-wider">
+                    Terminée
+                  </span>
+</div>
+<p class="font-inter text-[12px] text-rpg-text-dim truncate my-0.5">
+                  Vol du micro-filtre Tyrell au laboratoire de cryogénie RIT et enquête sous couverture au marché noir d'Animoid Row...
+                </p>
+<div class="flex items-center justify-between pt-0.5 border-t border-rpg-border/40">
+<span class="font-mono text-[11px] text-rpg-muted">ARCHIVE_HASH: #BR-8821</span>
+<button class="font-mono text-[11px] text-rpg-text-dim hover:text-rpg-accent uppercase font-bold underline transition-colors">
+                    Modifier le résumé
+                  </button>
+</div>
+</article>
+<!-- Séance #2 : TERMINÉE -->
+<article class="p-2 bg-rpg-surface-2 border border-rpg-border hover:border-rpg-text-dim/40 transition-colors flex flex-col justify-between flex-1 min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="font-orbitron font-bold text-[15px] text-rpg-muted tracking-tight">#2</span>
+<span class="font-mono text-[12px] font-bold text-slate-300 uppercase">Samedi 15 Août 2026</span>
+</div>
+<span class="px-2 py-0.5 bg-emerald-500/15 text-rpg-success border border-rpg-success/30 font-mono text-[11px] font-bold uppercase tracking-wider">
+                    Terminée
+                  </span>
+</div>
+<p class="font-inter text-[12px] text-rpg-text-dim truncate my-0.5">
+                  Interrogatoire préliminaire de Leon Kowalski à la tour LAPD et test de Voight-Kampff prolongé avec anomalie pupillaire...
+                </p>
+<div class="flex items-center justify-between pt-0.5 border-t border-rpg-border/40">
+<span class="font-mono text-[11px] text-rpg-muted">ARCHIVE_HASH: #BR-8419</span>
+<button class="font-mono text-[11px] text-rpg-text-dim hover:text-rpg-accent uppercase font-bold underline transition-colors">
+                    Modifier le résumé
+                  </button>
+</div>
+</article>
+<!-- Séance #1 : TERMINÉE -->
+<article class="p-2 bg-rpg-surface-2 border border-rpg-border hover:border-rpg-text-dim/40 transition-colors flex flex-col justify-between flex-1 min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="font-orbitron font-bold text-[15px] text-rpg-muted tracking-tight">#1</span>
+<span class="font-mono text-[12px] font-bold text-slate-300 uppercase">Samedi 01 Août 2026</span>
+</div>
+<span class="px-2 py-0.5 bg-emerald-500/15 text-rpg-success border border-rpg-success/30 font-mono text-[11px] font-bold uppercase tracking-wider">
+                    Terminée
+                  </span>
+</div>
+<p class="font-inter text-[12px] text-rpg-text-dim truncate my-0.5">
+                  Briefing initial par le Capitaine Bryant et découverte de la cellule clandestine Nexus-6 dans les bas-fonds de Chinatown...
+                </p>
+<div class="flex items-center justify-between pt-0.5 border-t border-rpg-border/40">
+<span class="font-mono text-[11px] text-rpg-muted">ARCHIVE_HASH: #BR-8104</span>
+<button class="font-mono text-[11px] text-rpg-text-dim hover:text-rpg-accent uppercase font-bold underline transition-colors">
+                    Modifier le résumé
+                  </button>
+</div>
+</article>
+</div>
+</section>
+</div>
+<!-- ================= ZONE LATÉRALE DROITE (~35%, col-span-4) ================= -->
+<div class="col-span-4 flex flex-col gap-2 h-full min-h-0 overflow-hidden">
+<!-- SECTION SUPÉRIEURE : GALERIE PNJ (27) AVEC MOSAÏQUE DENSE ET FICHE ACTIF -->
+<section class="bg-rpg-surface border border-rpg-border p-2.5 flex-1 min-h-0 flex flex-col overflow-hidden">
+<div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-rpg-border shrink-0">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">groups</span>
+<span class="font-orbitron font-bold text-[12px] text-white tracking-wider uppercase">Galerie PNJ (27)</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono text-[11px] text-rpg-success">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-success shadow-[0_0_5px_#10b981]"></span>
+<span>SYNC_OK</span>
+</div>
+</div>
+<!-- Grille 6 colonnes dense des 27 portraits -->
+<div class="grid grid-cols-6 gap-1 p-1 bg-rpg-surface-2 border border-rpg-border flex-1 min-h-0 content-start overflow-hidden" id="npc-grid">
+<!-- PNJ 1 (Actif par défaut) -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden focus:outline-none ring-2 ring-rpg-accent shadow-[0_0_6px_#22d3ee]" data-name="Ellis Vale" data-role="Technicien Wallace Corp" data-status="Hostile / Traqué" data-system="NEXUS-8 BIO-ENG">
+<img class="w-full h-full object-cover" data-alt="Portrait Ellis Vale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfrrn790pVyj2ecvI5L8EFLmf_kidDCrVDWLknWvuhsLgyJP0VReAXx3oMV5WSSj8zsMX8ZZQ1L8_A_LESN9aZDHnzNcbP2lU10nMsYVOhTdXVMDXaF251HznWIwuBJe_clhXzuzYHP3dZ1jjNEhBGBNk2zM-Hc6fNAEBPCElKSerINw5yiaZ2mHp0gnBHu_1X6anofgbaNAAc1dvnb31QGjf3ueigHV5EaBe8uEw3PNdiGHwU_WCOkg"/>
+</button>
+<!-- PNJ 2 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Roy Batty" data-role="Leader Replicant Infiltré" data-status="Nexus-6 Militaire" data-system="COMBAT SPEC-A">
+<img class="w-full h-full object-cover" data-alt="Portrait Roy Batty" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-V9aSMkosZiOZJP7wuKXHxj6j-yhm-PRKMieaSgNRl_fPgWOqKf_hPZ2_svzUG8lSu60xOPkUvDSOIRc1tNWYUGHGX26ME91Murr9c8jUdI9kegRbqRJIaekXS2xaukJUEcmLioXJArGaKHiW9CBv2tmZMhyZua_SnXYQVwiZuJQ60lp3-C7s2iSP1szAZkTQZgfgrD0eiP6qz5wvzyL83umLh3CqmTKPknOaNP8fkR4gXy9hRDeVWg"/>
+</button>
+<!-- PNJ 3 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Rachael Tyrell" data-role="Assistante Exécutive" data-status="Sujet Expérimental Voight-Kampff" data-system="PROTOTYPE NEXUS-7">
+<img class="w-full h-full object-cover" data-alt="Portrait Rachael Tyrell" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU8V9Stl9XTeKvqAHmPDF0YP2F7KNQlccfNSfZphCcEDnwmd6t806UCDHKEvIAw04_uvi5DWNaRVW3A9MSUZjkptLfbXCkuHZXVA6KFIBG9IVNkDLgmmkX_avcSwTiiVWGQRsJcOOhoQSe1hh1O3Kdx69mM0GCEPOkeKSiXPAsS_kN80noJ6vBj5z3Lu62rpDkVeJEodGEYrVBW5nA6XrdCR4ZcF25xQ1PmiHumZJ_jicJwidNSH7BTQ"/>
+</button>
+<!-- PNJ 4 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Rick Deckard" data-role="Ex-Blade Runner LAPD" data-status="Consultant Sous Contrat" data-system="RETIREMENT UNIT">
+<img class="w-full h-full object-cover" data-alt="Portrait Rick Deckard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHoEeUgoOTf5wUo185gwc-8LUBz3wItlR-iZw7T3u6RMu6hHcwtM-0jw2xxHe4ZeY05nD9uYnQdotJwcvbR3fg5qQau76_H-rMbolSQP_0qqW4JV9al2myZys6s8P6PbWE8MasObOiKjM8X24BZl3LJRfZKr3LF32x1EQOA2cLGjWzD9fQn7fXCWLYja-9mT-Tb07ERSacs8SOJEKvXftG0Mt66wpOkm4oQixkMpPpJ_PJ_LTw1D2DuQ"/>
+</button>
+<!-- PNJ 5 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Gaff" data-role="Officier de Liaison LAPD" data-status="Surveillance Rapprochée" data-system="SPECIAL BRANCH">
+<img class="w-full h-full object-cover" data-alt="Portrait Gaff" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMJsgIFrRmQ45r_6Hlv_tpK91-1--ET5Kgtl6PtL8mRVXtKtZWDuZoy7_5toWCoNQGKkiGlo3uLGR8bk0oJ40XMnSiGOJMcqGxiBhvDQgON_SQA13TiiILHZI403p451SLxVkgxZcIlmqd80eTQqqyYYcxkDWLewq8PIipa9ISG-LcpddCO2bukSO8_PZx_7_ogflQCWypVuBmdWkMJ9TymryCdl2nlHA0Z92HOKS98y0Mou21zM_Mug"/>
+</button>
+<!-- PNJ 6 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Capitaine Bryant" data-role="Chef de Division LAPD" data-status="Supérieur Hiérarchique" data-system="LAPD COMMAND">
+<img class="w-full h-full object-cover" data-alt="Portrait Bryant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7lDu6XMwZFqUwKgM04egPjWf6AH5vVWD_pwhGbR01uWdSdYxWc7krCBZ3LiXuvvsznSXlUs6lSe1U41JrJUfpQo_mlg9BAJCBF_fmvA_3nhLpcg0KGvryV5eMEvvH3UNIXC01AWJq0_tr-GmobXm1eJL8SqwlJbPdvQvmC_hNHaqnij-7FfIiJoBLHLkOalEx-ZVwoZBEk45UUWXhQPTnXbDl8nh6aA2xNqpOLWUOCXgGkJDB2__G2g"/>
+</button>
+<!-- PNJ 7 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Leon Kowalski" data-role="Ouvrier Décharge Toxique" data-status="Nexus-6 / Force Brute" data-system="HEAVY LOADER N6">
+<img class="w-full h-full object-cover" data-alt="Portrait Leon Kowalski" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUpQgDMOpMyZErcTGMS-zV7P2K1iJncSHLcH0kBJI87e9zlTaRxM47M4Kk8NK0ECSYuyBdCgeTWTeVXd3odLlVbaH86j9MGx6pKiz4HkHmBEgyg1g2WP99AfVjKcel_0cRP2A5Wod66Z1LrnAj4Ovt_XOIkXugIhxzuPeZypZTkrVJH0OfjFiLFH0zmuvZHIXjjixSy1r6lOI5r0TdTsUqj13eNdjqJxkXzswSbS-JxrjDGrZsyIbl4A"/>
+</button>
+<!-- PNJ 8 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Dave Holden" data-role="Opérateur Voight-Kampff" data-status="Hospitalisé / Soins Intensifs" data-system="RET-UNIT #09">
+<img class="w-full h-full object-cover" data-alt="Portrait Holden" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv0iQPL_9RSTuyjrwCXEOFiAnFkdprOGEeYZNtAJam52ta2MUoDiCx7DjzPEA__Ybbikx3YjuEXBxqwVU5YwjZKyRJeCv6iIzWh75bTfdRxpJVz1hAtHArTMAXfJ8QrQbaJrfxzVryoO6T29jwULCiOyL96-u9BzARNw6vG32kQVuY_BpqYM3tk-wLc0nMjKb0jo-S26Qv2oPpQVb3Rc8r80TozpauaUouaLd1Q_aZjSUdleDnRwcDPQ"/>
+</button>
+<!-- PNJ 9 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Zhora Salome" data-role="Danseuse / Exécuteur" data-status="Nexus-6 / Spécialiste Meurtre" data-system="RETRAINED RET-7">
+<img class="w-full h-full object-cover" data-alt="Portrait Zhora" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHzOhyVX_o2QpdkuOMCvsRuVwP5ddMHcaMhBAFvDl6vzkelli2TwkLYjZl_Fd-pL6Ijna-RyQuftjn7OiSCqtBCmepvzlFKm0vbODKwrAvK_Q85G7bLhdOcPjA73ZjeZv7mHK85oAmu84JL8cAJuu7-fKp9j3o1bQd1k1q8c2o5AhYg6dAB3eBE5kRA_RBjuSi-nGx3MJsFD41rZMeUqT84atzqM_1QjwwVJOKbtJAmUDfbRbN23A9jw"/>
+</button>
+<!-- PNJ 10 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Pris Stratton" data-role="Modèle de Loisir Militaire" data-status="Nexus-6 / Infiltrée" data-system="INFILTRATION BASIC">
+<img class="w-full h-full object-cover" data-alt="Portrait Pris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-y4N6NY_BRie9vFnm9T8_2jkwVQVLmcNTe_Avg2c5H_8Hu8IigvBZBKJBgd4T4F_9k3YHPUmCAWsKwRmmfiAMGcayZBFAB-eYL4G2qZS-RUhtDtetp4qQ8sfRmRbtnD5U8UA3ltn5P3s_cVaUcyVcovAxc7tXwbXFBdIYPhCEXBM_XavQVvdxB_raOVpbcVmF5BtYutUSC03A_JOSY98J4gxc3oQV0_5bOjcxVAREQEEeEmuGalwo1g"/>
+</button>
+<!-- PNJ 11 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="J.F. Sebastian" data-role="Ingénieur Génétique" data-status="Syndrome de Mathusalem" data-system="TYRELL SUBCONTRACT">
+<img class="w-full h-full object-cover" data-alt="Portrait Sebastian" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZNhp-_EK2r4ng1zRjePmqxQEKF-CZIjCQazG-d8ZSd6CbnDq3O83SQpA0BmOR7uso1B7iULaALIQLBpf16OqkIKEIj96tX_wsRsipMcEbcxdwHnjB97yVsNOgckQaGqfeeF5Dn8DLWOIuuHJTjYGC61ca8ikWzliQlSS2JzFRvauFE9sAWsfaESVSWgZb6OviZQbdngOkGoygC8JUPLdDKwmSZ6xzKnTBN4oTyXHGryZaO_PfSXe1Tg"/>
+</button>
+<!-- PNJ 12 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Dr. Eldon Tyrell" data-role="Fondateur Tyrell Corp" data-status="Décédé / Archive Mémoire" data-system="GENETIC PATRIARCH">
+<img class="w-full h-full object-cover" data-alt="Portrait Eldon Tyrell" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbHthjQ3IULB5C-e3yerAX5U7yaiEWmkVIg2RmG80OYpmFihd0bRLmvDKUbjTs3A_K0Jfb71ulv4_LllSobk2dZ-Dd4Tlysnxce9q0DfRWdTf4NgMoylNLpeKzR4x2fRpOwYqRtJmlPzsl-RxNtJeMzWpKpBs2iuS9jTSjubmfbypd22I2vPTTZZuf0w7xQgtPNsqnqhgU_qfk0ePzMkrpg4v9yDxwlpZtr1qUh935RuWRl5M5e-UEQQ"/>
+</button>
+<!-- PNJ 13 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Niander Wallace" data-role="Directeur Wallace Corp" data-status="Immunité Diplomatique" data-system="WALLACE HIGH-COMMAND">
+<img class="w-full h-full object-cover" data-alt="Portrait Wallace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbxXx7qV3ydPypJvmMoQQ1PLevtBHkbY81711_nUs0qNTMPMN0UxBJfdXXapn5IeSD7fMIg7_zcx3GW8nA83VHQZeFr8eVpDgb5eWuraDsHEj8rJaORZ589hznt0Jy1VJgzcxlwJS02EWSTGCBSoMMSiHRKmkBTpz4Z87Pmbm8pzvr5B75VpGlGyfQI1sWwyhpx1jCokf4hsorTEcAnmtAKom_cw4g4kT_5m7cKT1ayQ9fBUuTYVTN-Q"/>
+</button>
+<!-- PNJ 14 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Luv" data-role="Exécutrice Wallace" data-status="Armée / Extrêmement Dangereuse" data-system="APEX REPLICANT">
+<img class="w-full h-full object-cover" data-alt="Portrait Luv" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4DPAPULVnzsbwFD6lVikvPo9tnrqV8X96Szo3ZH5L77SA9xnXwb934Kp6-J-mfvs2ncJDXyn7JYV7NLie0rCBtg2kZTafasc2bkc-YGAjxwVn_-0seawa53gHoTKH8YqhOGHJgLg1dS4MLGgymdJlLEoTPHe4yD982P6nPBD5VmJrAMVdHVniUKZBqODc2j6EKOMAFz8a1G41Pj2bXo9nMRuY9frCGIaZaeiRqMtb7dEkaSG4PoGekA"/>
+</button>
+<!-- PNJ 15 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Sapper Morton" data-role="Fermier Génétique" data-status="Nexus-8 / Déserteur Calantha" data-system="MEDIC CORPS 08">
+<img class="w-full h-full object-cover" data-alt="Portrait Sapper Morton" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjbtFOyJU57JDf8A5OSjKIPquiqt4Ax-BdAg73ij3Cevr9Z2KZ56MKRwFco3TM-P6NZPKfSzpxfwEexFgdDIvLKcZY_SxTsql_iTJQp3kfirJiKqgxAxTzKFfiwxYj41JwE4XzpadHcYRVaN84sD3zEPF1gH_WQJq6fKRzRYrGoCs6ccBfRcdu0_4nMq1PG6klR8xHstPOwUQpFj_VWpvpuHjuNeBtpSahdebs8YkulR2pk0749dp3MQ"/>
+</button>
+<!-- PNJ 16 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Freysa Sadeghpour" data-role="Cheffe Résistance" data-status="Nexus-8 Unie / Clandestine" data-system="FREEDOM CELL">
+<img class="w-full h-full object-cover" data-alt="Portrait Freysa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSqxJfUwhaED7-xfgfQFU6AuDVtZbjvBv4sciMg3i_O3UeG69BA2JDt02OJ1bjhkOkDjy7DRax79rs4fL-NaXs5YuCsNJgV0vlSA-OVw__LrCX_8pDHDiw6EXIM2y3fTA61rIIc0uzK450y9muEhWdAbFflqbSmN2ndEH17QKgmjw9cgYMqz1MHc7ZBYv6WbGJyuXV_E17OExMbATmpH_M40_uX_tNFtq3yqKg8G8iePaCWY_rdbYwog"/>
+</button>
+<!-- PNJ 17 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Dr. Ana Stelline" data-role="Créatrice de Souvenirs" data-status="Isolée en Bulle Stérile" data-system="STELLINE LABS">
+<img class="w-full h-full object-cover" data-alt="Portrait Ana Stelline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJc319h1OFrPaju_dVmqbsR9sjXMr_L1vc5-CUz6Sqppf7tUae6TiT2KckgskUjXs9YSuwLA96jepP1N4aMc8j4tMWXn82ATOQ58blN1W9oLp9A3NkqjqzmLJWJKPLgjLCdpWJcGCAhhjqWi8tu6hVU2ZyMaWSB3JdNPQPKbrfX6rF6tM0IARYvSjKNLKrE2kARX98xhWmGt1Zi3O5cF8VHme52khJfnsBHH6kq17IgYKKgDBm99opng"/>
+</button>
+<!-- PNJ 18 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Mister Cotton" data-role="Maître du Dépotoir Orphanage" data-status="Trafiquant d'Enfants" data-system="ILLEGAL CONTRACT">
+<img class="w-full h-full object-cover" data-alt="Portrait Cotton" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATbWgxwaz8By7kplEsyEKVxKTALzaZCogVo_E90CYvoM5tOwrMUfKJSlad1QhAoGFdlbvyjc21Y6bxrfLg68ljEfgyagiCFZrqLrJQceu--EsybTUuClX_i4eMy4tBbpmKwJ1C069-_0Im0Ofyj5TFSKDfbG8E84ee3aQJmoXusPdnyCRspOFqCF4yIHTuV2IB2agCBrGPq6QlqQ7v7ACgmxcDRxTUmnFyqFIOmlLYl9i4XP18PU83ZA"/>
+</button>
+<!-- PNJ 19 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Hannibal Chew" data-role="Concepteur d'Yeux Génétiques" data-status="Sous-Traitant Marché Froid" data-system="EYE SPEC-BIO">
+<img class="w-full h-full object-cover" data-alt="Portrait Chew" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRrAaRzoRLDFfqRV99zhAtZnhSaxCahsZBxRSMmc5SM3BJfgfgb7_JqhZVFKb8Ewe90hVGx1tCwOwj5QzzSY4pWJEBfDT5U--QM0HoEaijuhQYI_0zBPvkAjRZLSGPfefOX87AbhSavPRg_IPDuUICmiy2HSrdfmckQcu-1hixeBZccAujD8rIY7N36y-ySBTKR-K1KyvJLi9rV-AH4vXwlYe-l_8_tw7PzC0geQIY4M54udhHpyEDZg"/>
+</button>
+<!-- PNJ 20 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Taffey Lewis" data-role="Propriétaire Snake Pit" data-status="Indicateur Notoire" data-system="UNDERWORLD BIZ">
+<img class="w-full h-full object-cover" data-alt="Portrait Taffey Lewis" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3CVZRWZqQ_SlfkVp7ujFmmLE9anX5zQZPXfH3yIUkLkoAK3ru6vI_mJsqSgSAstD3oJcJx1J9KnRtzsCekStHUDu2Db7KzZDJEBvWqMXg2xIm18ujcTin-neCPO6_fQKSHqOEiBItkdXHVJ7r7cUUGU0555GXt60Hy3a9rzKXJck7rhRHl0mdyFb7xSUVbUW-tsQaYk7oCVifJ97ECsPw46-8_RTvFClla-d88Ns1_G8stYHIYyB-nQ"/>
+</button>
+<!-- PNJ 21 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Abdul Ben Hassan" data-role="Fabricant d'Écailles" data-status="Artisan Animoid Row" data-system="SYNTHETIC FAUNA">
+<img class="w-full h-full object-cover" data-alt="Portrait Ben Hassan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiLgCAsTxm1n_fDFP1HxdY-tdtD7n6ze-z_ck1OX6qbeabIBEo5PonNvzm1ISESjRCa2bJ2z1PIsHiC0jtFqFFAXDMAxtHRkxXRBsYBQE6l6KUXNdQRHzfYubzXrOk4CT3iJZbg26JjfTc9gh0MquO-kj6wABZsBWW5UU4N6q-hbuH4OlK4yjGFHDJhWdg9-6TJm1xyxyq5xJ4SiIaL9jFVrzzVD7pTeNEtGI4FuFGp93fI9vI2NheQ"/>
+</button>
+<!-- PNJ 22 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="K (Officier KD6-3.7)" data-role="Blade Runner LAPD" data-status="Nexus-9 Conforme" data-system="REP-BLADE RUNNER">
+<img class="w-full h-full object-cover" data-alt="Portrait K" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTPMx9D2qrnqPZSy8Q8SVJuKpOiamJWgv41tzyguUUQzjkrvr5wd7tyVFc5dmsYr5lDEj_ZZpQNVln51btVcwDC9jKLxWKjNgiEotC82HUCrqvADIfCGzRK2G070ir1gXDDMDv-y1GaWfU08cuREFBec-VkK2jJWuDicdr8dWnD0LzUsILtEKH7a5BD7ArRNlMyidtTVNwL3SUySUpF0or5MycAYS7zbDgPNfJDthG5nhYmUqvzl5KsQ"/>
+</button>
+<!-- PNJ 23 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Lieutenant Joshi" data-role="Commandante LAPD Secteur 4" data-status="Chaîne de Commandement" data-system="LAPD EXECUTIVE">
+<img class="w-full h-full object-cover" data-alt="Portrait Joshi" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBczsKu73Yesa1N1ImVtdmTD7yg3pDraJ-k9dfG03PtOIPpuDEiGJ7L7DmQYO8lR21dLg9iVbAZ3suqrUN7AWG0mpo0zQo2kTzVTGOZgQF5ROSS-BkRAqXMvadW4oy7BDbqVzBDuGUqcOrTeEtNE9jNitL5g0_6uW_8l6d9DltrUqBC9r-Jm8TuOlArp-CicBguQ7tvej-KNB6DmdyCXGlSS3KdWYPdRF4cL8jldqNT2cLq-RoE0WrdKQ"/>
+</button>
+<!-- PNJ 24 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Joi Unit #642" data-role="Compagne Holographique" data-status="Active / Projecteur Émanateur" data-system="WALLACE AI MATRIX">
+<img class="w-full h-full object-cover" data-alt="Portrait Joi" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs7TODSK914PTiLIqJny_eduCSvC-Ovqujy-I7Q8YX6oaSLPv6Ohm8SzFU3PIw1BdCC5Op462PiXvPVoYiym7-HiD9RZ8RuQi138qeZEyamCpyn8lC-0O5yM5JRyTIYt03qg3sHS3o73OCWIUM3DA6hZzdlQ5apKesTvEAhPntDi9RV8_c8uVEoQD--iwSUlY_P0iXKInMCWZb2ufO7fLH1sDfdIVl0gv59w1QSMRga1XlbbSdB4zbqw"/>
+</button>
+<!-- PNJ 25 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Mariette" data-role="Doxie de Rue / Résistance" data-status="Observatrice Terrestre" data-system="STREET SURVEIL">
+<img class="w-full h-full object-cover" data-alt="Portrait Mariette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7AC9q3GYhymW9x4GqjXjpVwK2mLItZgeVHbLjOSrz8JHUWx5YEp0t1LQVyNMPEPcCBzV76TXc_Fzxv2jQSvY4hJ5GnfeEN4v-UaP5xaNqyxOgeto5AkP6ZQOK1EilJ0TfWprweRGw10rGVqifaW0foWe-JjGIGeBpPgOtCQEhjPys9ZGWAcYEs9cG9aTjGYbFo_Ter9xw3QsL6oz6WhPwhfU_sIx2HeLNaVxULyIq5jS9gVqidU2ZnQ"/>
+</button>
+<!-- PNJ 26 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Nandez" data-role="Technicien Archives LAPD" data-status="Opérateur Registre Central" data-system="LAPD TECH CORPS">
+<img class="w-full h-full object-cover" data-alt="Portrait Nandez" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv5ketbU4DVJL-dh2Ykdz5P7Vy56Jbyd0ILu3peiIrObKxYUA6TgPRcf-dRQ5JMzJDSC0s0B6ZMGHiZZTjBZcwklqRX1e6viUpqlsh1jA99s0QEMR0qpabSvgO77pKdPk7Mvh8bkr_q-3P6JCVBbo1wPngMldy77t8wNiTTCKGkP7N3rcz2SaWV8yxw4ut0xOocFs0a_MZW6_Tccp1fIrmCGm20Posb40ZnfHx2nsxNoCFn5arLp_xYw"/>
+</button>
+<!-- PNJ 27 -->
+<button class="npc-btn relative aspect-square bg-[#0b1329] overflow-hidden hover:opacity-100 opacity-80 transition-opacity" data-name="Dosh" data-role="Marchand de Marché Noir" data-status="Cible de Surveillance #44" data-system="BLACK NET RUNNER">
+<img class="w-full h-full object-cover" data-alt="Portrait Dosh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD89Py-PQmTSgM32FQ9pLFtoWPWD1x9Tsf1-bjlmg1LSv-ZxYukNBCan7H19eY09uK_3yqKKWgN1Fke183uqekTPr9PKGvgHYol0gHdmtOsaWykWr8C13H6NebMFcJCsSZOnpwoLTfPpoSOgiNixW1IjQViqk7z4BZWO8RlpOyp8WhFA73Gs3Tu8aXBI_8k95l2Zaocs861qGEXTq3sCXyftlO7OWtPuvSYxbdomoGRUo4wjj8lg5ftZw"/>
+</button>
+</div>
+<!-- Fiche contextuelle rapide du PNJ survolé/sélectionné -->
+<div class="mt-1.5 p-1.5 bg-rpg-surface-2 border border-rpg-border flex items-center justify-between shrink-0" id="npc-detail-card">
+<div class="flex flex-col min-w-0 pr-2">
+<div class="flex items-center gap-2">
+<span class="font-orbitron font-bold text-[12px] text-rpg-accent uppercase truncate" id="npc-name">Ellis Vale</span>
+<span class="font-mono text-[11px] px-1 bg-[#101b33] text-cyan-300 border border-cyan-500/30" id="npc-system">NEXUS-8 BIO-ENG</span>
+</div>
+<span class="font-inter text-[11px] text-rpg-text-dim truncate" id="npc-desc">Technicien Wallace Corp • Hostile / Traqué</span>
+</div>
+<button class="h-6 px-2 bg-[#0e172e] hover:bg-rpg-surface-high border border-rpg-border text-rpg-accent font-mono text-[11px] uppercase shrink-0 transition-colors">
+                Fiche
+              </button>
+</div>
+</section>
+<!-- SECTION INFÉRIEURE : "LIEUX ACTIFS (6)" LISTE COMPACTE AVEC VIGNETTES CARRÉES -->
+<section class="bg-rpg-surface border border-rpg-border p-2.5 shrink-0 flex flex-col h-[225px] overflow-hidden">
+<div class="flex items-center justify-between pb-1.5 mb-1 border-b border-rpg-border shrink-0">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">location_on</span>
+<span class="font-orbitron font-bold text-[12px] text-white tracking-wider uppercase">Lieux Actifs (6)</span>
+</div>
+<span class="font-mono text-[11px] text-rpg-accent font-bold">GRID_NAV</span>
+</div>
+<!-- Liste compacte des 6 lieux (vignettes carrées, texte clair >=11px) -->
+<div class="flex-1 min-h-0 flex flex-col justify-between gap-1 overflow-hidden">
+<!-- Lieu 1 -->
+<div class="flex items-center gap-2 p-1 bg-rpg-surface-2 hover:bg-rpg-surface-high border border-rpg-border/60 transition-colors group cursor-pointer">
+<div class="w-8 h-8 bg-cover bg-center shrink-0 border border-rpg-border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCEKV2WDsR6erz7r9w8_zdVI3HuMSoXFxswbNFbxS0URK53nbe8Ts_O-Jnw5EE_vZqA-1ef4iLT5kKtb-dfFlvIqVNmQcbz0yOT8tsprlPS4zymC0l9hLS-uueI8UCZ41wKzrAqgkGQf5_Au009C2PQ7mnqeKHRfeQEZrpxDudAk4vackKMYyQBPle9fnk_CKgErZmFUDXAcblySY575qC5se2qjK6O6X6zokntTDo8rjjhdYahIvIjNg')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-orbitron font-bold text-[11px] text-slate-200 truncate group-hover:text-rpg-accent transition-colors leading-tight">Tour du LAPD</span>
+<span class="font-mono text-[11px] text-rpg-muted truncate leading-tight">Quartier Général • Secteur 4</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-rpg-muted group-hover:text-rpg-accent transition-colors">chevron_right</span>
+</div>
+<!-- Lieu 2 -->
+<div class="flex items-center gap-2 p-1 bg-rpg-surface-2 hover:bg-rpg-surface-high border border-rpg-border/60 transition-colors group cursor-pointer">
+<div class="w-8 h-8 bg-cover bg-center shrink-0 border border-rpg-border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAmjHl1aboFakTZFflThbg5ftBHanQ3Y61CeMAWF1Pp3ogJMl7bRP8VCShw1q-ba1s81uZlRpnzRHm_neTYEapAgg8P2VcddQjKg8OPKNT1AXXANi_tKouQuI0TzmvuEoPMPh_SBWJ1UKJxEJgu_CCyCSF4Qkj70Mdj7rw49bqoJnRDXyNRqgwj6WYHJAJDgkeVbEwyvne15ZkZnt6INvGxtWgd10f6oPH87Vw3kM2Uo8lBW2hO_HjYlg')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-orbitron font-bold text-[11px] text-slate-200 truncate group-hover:text-rpg-accent transition-colors leading-tight">Laboratoire Criminel RIT</span>
+<span class="font-mono text-[11px] text-rpg-muted truncate leading-tight">Division Médico-Légale</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-rpg-muted group-hover:text-rpg-accent transition-colors">chevron_right</span>
+</div>
+<!-- Lieu 3 -->
+<div class="flex items-center gap-2 p-1 bg-rpg-surface-2 hover:bg-rpg-surface-high border border-rpg-border/60 transition-colors group cursor-pointer">
+<div class="w-8 h-8 bg-cover bg-center shrink-0 border border-rpg-border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBxLbKj6iuxNvXeQkSYxdAIfYuzABYjo6F82FUrEyfI35Lz0Z5ojFzniA6uI4N3GL2Kn2yza1Px53Jj4cWsZ3E2xfgzb851chuiKdOdHWmdtA25wQqXD93UXnPqzzUuFNaueLaobtD2O-VC0ixlAznTCgdP03HadacEK4wcpdcf2AOWca2b3NqpNX_4EfpThUYGa7N1-MqcJsqg541A1_wnrhkZOeTKtusESg03HHql9-PaUKQeDGU5kw')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-orbitron font-bold text-[11px] text-slate-200 truncate group-hover:text-rpg-accent transition-colors leading-tight">Bureau de Holden</span>
+<span class="font-mono text-[11px] text-rpg-muted truncate leading-tight">Section Voight-Kampff</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-rpg-muted group-hover:text-rpg-accent transition-colors">chevron_right</span>
+</div>
+<!-- Lieu 4 -->
+<div class="flex items-center gap-2 p-1 bg-rpg-surface-2 hover:bg-rpg-surface-high border border-rpg-border/60 transition-colors group cursor-pointer">
+<div class="w-8 h-8 bg-cover bg-center shrink-0 border border-rpg-border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQ2jnH375l0NTq7L8gh-SR37JytXQOt-M6gglFh_3cjgeaMP2bgD5dQgNYGA0ilDEpE5H_IcpqOYu9ibz6TiVoDnfl-QlSWAJwJfg1PsswTCY4FM9L1HlXW4-Hvb3U-NtEGM8NY7vTZHG6XG9NETV-pKjfW21EgTBCa5v2ZhHl99McnN7aSk6KL8KloEwU59_PCON0CL0lczzeG87XiUYLZmZElRJzNajL9WYj-0ozUUCVsN5w30m4yA')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-orbitron font-bold text-[11px] text-slate-200 truncate group-hover:text-rpg-accent transition-colors leading-tight">Serveur Central LAPD &amp; Mur Est</span>
+<span class="font-mono text-[11px] text-rpg-muted truncate leading-tight">Périmètre Extérieur • No-Go</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-rpg-muted group-hover:text-rpg-accent transition-colors">chevron_right</span>
+</div>
+<!-- Lieu 5 -->
+<div class="flex items-center gap-2 p-1 bg-rpg-surface-2 hover:bg-rpg-surface-high border border-rpg-border/60 transition-colors group cursor-pointer">
+<div class="w-8 h-8 bg-cover bg-center shrink-0 border border-rpg-border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBoYKPFFUJLFobNo9ZsifEfw88ocv1gfWUQsc-1F9HyPVsavci0XlXK_4TmAgLYM11tZYpfLxxOOFBKzVlA6iuYXlDEsiTgiV086jF_1eiSV5jsJyeDOMmwKyLGOPCe_PUGZv33RcAtXQl24cSvuPBf1McirWdbygkBUFh7bgk_O3TgyAp8fEUkndgVXASLt8m1XJPSN2ktrco_qnNNgYzzQVbXIJsxRtDS2I590O4HneWZFF_Ykp5Q1A')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-orbitron font-bold text-[11px] text-slate-200 truncate group-hover:text-rpg-accent transition-colors leading-tight">Cellules de Détention</span>
+<span class="font-mono text-[11px] text-rpg-muted truncate leading-tight">Sous-Sol Sécurisé N-3</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-rpg-muted group-hover:text-rpg-accent transition-colors">chevron_right</span>
+</div>
+<!-- Lieu 6 -->
+<div class="flex items-center gap-2 p-1 bg-rpg-surface-2 hover:bg-rpg-surface-high border border-rpg-border/60 transition-colors group cursor-pointer">
+<div class="w-8 h-8 bg-cover bg-center shrink-0 border border-rpg-border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB02_4c1BjKd_FunYppJlUolEj8JBewPP1bE0eHq93CUzP9S6H4gKy3cygd6z7UeUOn4W8Iv0RWlrncExpdWvtiH9qfG8TN1DtMgTexWIGDOgBoDXsTdqrX7gx5jc9TJhuDYmiPTlrWR8rUPAYo88ZhAIjPAbLQOh0OsXv6vqagejVIFAUB_uV81yhbCcnTmQSgnoC7q2ODmSkie7OlOUD26uOGQmXl-Fs9ypvf_RBdiddQWZgcV4HNXg')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-orbitron font-bold text-[11px] text-slate-200 truncate group-hover:text-rpg-accent transition-colors leading-tight">Siège de Wallace Corp</span>
+<span class="font-mono text-[11px] text-rpg-muted truncate leading-tight">Arcologie • District 1</span>
+</div>
+<span class="material-symbols-outlined text-[15px] text-rpg-muted group-hover:text-rpg-accent transition-colors">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interactions JS intégrées -->
+<script>
+    // Repliement / Dépliement du bloc Aperçu de la Campagne
+    const toggleBtn = document.getElementById('toggle-overview-btn');
+    const overviewContent = document.getElementById('overview-content');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const toggleLabel = document.getElementById('toggle-label');
+    let isOverviewOpen = true;
+
+    if (toggleBtn && overviewContent) {
+      toggleBtn.addEventListener('click', () => {
+        isOverviewOpen = !isOverviewOpen;
+        if (isOverviewOpen) {
+          overviewContent.classList.remove('hidden');
+          toggleIcon.textContent = '▲';
+          toggleLabel.textContent = 'Masquer';
+        } else {
+          overviewContent.classList.add('hidden');
+          toggleIcon.textContent = '▼';
+          toggleLabel.textContent = 'Déplier';
+        }
+      });
+    }
+
+    // Gestion du focus et du survol dynamique des PNJ
+    const npcButtons = document.querySelectorAll('.npc-btn');
+    const npcName = document.getElementById('npc-name');
+    const npcSystem = document.getElementById('npc-system');
+    const npcDesc = document.getElementById('npc-desc');
+
+    function updateNpcCard(btn) {
+      const name = btn.getAttribute('data-name');
+      const role = btn.getAttribute('data-role');
+      const status = btn.getAttribute('data-status');
+      const system = btn.getAttribute('data-system');
+
+      if (npcName) npcName.textContent = name;
+      if (npcSystem) npcSystem.textContent = system;
+      if (npcDesc) npcDesc.textContent = `${role} • ${status}`;
+    }
+
+    npcButtons.forEach(btn => {
+      // Clic pour sélectionner définitivement
+      btn.addEventListener('click', () => {
+        npcButtons.forEach(b => {
+          b.classList.remove('ring-2', 'ring-rpg-accent', 'opacity-100', 'shadow-[0_0_6px_#22d3ee]');
+          b.classList.add('opacity-80');
+        });
+        btn.classList.remove('opacity-80');
+        btn.classList.add('ring-2', 'ring-rpg-accent', 'opacity-100', 'shadow-[0_0_6px_#22d3ee]');
+        updateNpcCard(btn);
+      });
+
+      // Survol dynamique
+      btn.addEventListener('mouseenter', () => {
+        updateNpcCard(btn);
+      });
+    });
+  </script>
+</body></html>

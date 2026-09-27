@@ -1,0 +1,421 @@
+<!DOCTYPE html><html class="dark" lang="fr"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;background-color:#020617;color:#f8fafc;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-container":"#3f465c","rpg-success":"#10b981","inverse-on-surface":"#2a3043","tertiary-fixed":"#d8e3fb","rpg-accent":"#22d3ee","error-container":"#93000a","surface-bright":"#33394c","surface-container-low":"#151b2d","surface-container-lowest":"#070d1f","rpg-accent-contrast":"#020617","rpg-warning":"#f59e0b","rpg-danger":"#ef4444","on-tertiary":"#263143","tertiary-fixed-dim":"#bcc7de","on-error-container":"#ffdad6","surface-container-high":"#23293c","rpg-info":"#3b82f6","on-surface-variant":"#bbc9cd","on-tertiary-fixed-variant":"#3c475a","background":"#0c1324","on-error":"#690005","surface-container":"#191f31","primary-fixed-dim":"#2fd9f4","surface":"#0c1324","secondary":"#bec6e0","rpg-surface-2":"#1e293b","on-secondary-container":"#adb4ce","on-secondary-fixed-variant":"#3f465c","rpg-border":"#1e293b","primary-container":"#22d3ee","on-secondary":"#283044","secondary-fixed":"#dae2fd","surface-dim":"#0c1324","tertiary":"#d2ddf5","on-primary-fixed":"#001f25","rpg-muted":"#898c95","on-primary-fixed-variant":"#004e5a","inverse-primary":"#006877","inverse-surface":"#dce1fb","primary":"#8aebff","outline-variant":"#3c494c","rpg-on-status":"#020617","rpg-text":"#f8fafc","rpg-bg":"#020617","surface-tint":"#2fd9f4","outline":"#859397","on-surface":"#dce1fb","on-background":"#dce1fb","on-primary-container":"#005763","on-secondary-fixed":"#131b2e","secondary-fixed-dim":"#bec6e0","primary-fixed":"#a2eeff","tertiary-container":"#b6c1d9","surface-container-highest":"#2e3447","rpg-surface":"#0f172a","on-tertiary-fixed":"#111c2d","error":"#ffb4ab","surface-variant":"#2e3447","on-primary":"#00363e","on-tertiary-container":"#444f63"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"12px","space-sm":"8px","margin":"16px","space-lg":"16px","space-xl":"24px","gutter":"12px","space-xs":"4px"},fontFamily:{"display-md":["Syne"],"label-xs":["Space Mono"],"title-md":["Syne"],"body-sm":["Space Mono"],"label-sm":["Space Mono"],"number-md":["Space Mono"],"display-lg":["Syne"],"number-lg":["Space Mono"],"body-md":["Space Mono"]},fontSize:{"display-md":["24px",{lineHeight:"30px",letterSpacing:"0.05em",fontWeight:"700"}],"label-xs":["10px",{lineHeight:"12px",letterSpacing:"0.18em",fontWeight:"700"}],"title-md":["17px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"400"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.14em",fontWeight:"700"}],"number-md":["16px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"700"}],"display-lg":["34px",{lineHeight:"40px",letterSpacing:"0.06em",fontWeight:"800"}],"number-lg":["28px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-md":["14px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text font-body-sm text-body-sm antialiased selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface z-50 flex flex-col justify-between border-r border-rpg-border select-none"><div class="flex flex-col"><div class="h-14 px-space-md border-b border-rpg-border flex items-center justify-between bg-surface-container-lowest"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-rpg-accent text-[20px]">token</span><div class="flex flex-col"><span class="font-title-md text-title-md leading-none text-rpg-text tracking-wider">GM-OS V6</span><span class="font-label-xs text-label-xs text-rpg-accent leading-none mt-space-xs">// NEXUS-PROTOCOL</span></div></div><span class="material-symbols-outlined text-rpg-muted text-[16px]">terminal</span></div><nav class="flex flex-col py-space-sm overflow-y-auto max-h-[calc(100vh-120px)]" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]"><div class="px-space-md pt-space-sm pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-accent uppercase tracking-widest">// PNJ &amp; Acteurs</span></div><div class="flex flex-col"><a aria-current="page" class="flex items-center px-space-md py-space-xs transition-colors uppercase bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold pl-[10px]" data-path="galerie-pnj" href="#">Galerie PNJ</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="fiche-pnj" href="#">Fiche PNJ</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="graphe-social" href="#">Graphe Social</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="generateur-pnj-atelier" href="#">Générateur PNJ Atelier</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="generateur-pnj-table" href="#">Générateur PNJ Table</a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Tactique &amp; Monde</span></div><div class="flex flex-col"><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="combat-os" href="#">Combat-OS</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="dice-os" href="#">Dice-OS</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="cartographie" href="#">Cartographie</a></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// Audio &amp; Régie</span></div><div class="flex flex-col"><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="voice-os" href="#">Voice-OS</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="musique" href="#">Musique</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="ambiances" href="#">Ambiances</a><a class="flex items-center px-space-md py-space-xs text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-colors font-label-sm text-label-sm uppercase" data-path="cortex-ia" href="#">Cortex IA</a></div></nav></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between"><div class="flex items-center gap-space-xs"><button class="p-space-xs bg-rpg-surface border border-rpg-border text-rpg-accent hover:bg-rpg-surface-2" title="Moniteur Principal" type="button"><span class="material-symbols-outlined text-[16px]">desktop_windows</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Écran Inférieur Tactile" type="button"><span class="material-symbols-outlined text-[16px]">tablet</span></button><button class="p-space-xs bg-rpg-surface border border-rpg-border text-on-surface-variant hover:text-on-surface hover:bg-rpg-surface-2" title="Vue Joueurs" type="button"><span class="material-symbols-outlined text-[16px]">cast</span></button></div><button class="p-space-xs bg-rpg-danger/20 border border-rpg-danger text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Déconnexion Régie" type="button"><span class="material-symbols-outlined text-[16px]">power_settings_new</span></button></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface border-b border-rpg-border z-40 px-space-md flex items-center justify-between select-none"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs border border-rpg-accent/30 bg-rpg-accent/10 px-space-sm py-space-xs"><span class="w-2 h-2 rounded-full bg-rpg-accent animate-pulse"></span><span class="font-label-xs text-label-xs text-rpg-accent font-bold tracking-widest uppercase">Cortex Actif</span></div><div class="flex items-center gap-space-xs border border-rpg-success/30 bg-rpg-success/10 px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-success text-[14px]">wifi_tethering</span><span class="font-label-xs text-label-xs text-rpg-success font-bold uppercase tracking-wider">Link Active</span></div><div class="h-6 w-px bg-rpg-border hidden xl:block"></div><div class="hidden xl:flex items-center gap-space-sm bg-rpg-surface-2 border border-rpg-border px-space-sm py-space-xs"><span class="material-symbols-outlined text-rpg-muted text-[16px]">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">Master Vol</span><div class="w-24 h-2 bg-rpg-bg border border-rpg-border"><div class="h-full bg-rpg-accent w-[82%]"></div></div><span class="font-number-md text-number-md text-rpg-accent text-[12px] leading-none">82%</span></div><button class="flex items-center gap-space-xs bg-rpg-surface-2 border border-rpg-border hover:border-rpg-accent px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-rpg-accent text-[16px]">mic</span><span class="font-label-xs text-label-xs uppercase tracking-wider">Focus Chat</span></button></div><div class="flex items-center gap-space-md"><div class="flex border border-rpg-border"><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-surface-2 text-on-surface-variant hover:text-on-surface border-r border-rpg-border transition-colors" type="button">Atelier</button><button class="px-space-md py-space-xs font-label-xs text-label-xs uppercase bg-rpg-accent text-rpg-accent-contrast font-bold" type="button">Table</button></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary/20 border border-primary text-primary hover:bg-primary hover:text-rpg-accent-contrast transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">sensors</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-wider">Connecter Joueurs</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-rpg-danger text-rpg-accent-contrast hover:bg-rpg-danger/90 font-bold transition-all shadow-[0_0_12px_rgba(239,68,68,0.5)]" type="button"><span class="material-symbols-outlined text-[16px]">emergency</span><span class="font-label-xs text-label-xs font-bold uppercase tracking-widest">Stop All</span></button><div class="flex items-center gap-space-xs border-l border-rpg-border pl-space-md"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-14 w-full bg-rpg-bg min-h-screen"><div class="flex flex-col w-full">
+<div class="flex flex-col xl:flex-row w-full gap-space-md p-space-md bg-surface-container-lowest">
+<div class="flex-1 flex flex-col gap-space-md min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-space-md p-space-md bg-surface-container-low shadow-sm">
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-[24px]">group_work</span>
+<span class="font-display-md text-display-md text-primary tracking-wider uppercase">SESSION OS // NPC GALLERY</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="font-label-xs text-label-xs text-secondary uppercase tracking-widest">CAMPAGNE_ACTIVE: ONLINE</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high">
+<span class="font-label-xs text-label-xs text-secondary uppercase tracking-widest">NOMBRE:</span>
+<span class="font-number-md text-number-md text-primary leading-none">28</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-secondary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span>
+<span class="font-label-sm text-label-sm uppercase">Retour Cockpit</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high text-rpg-accent hover:text-on-surface hover:bg-secondary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+<span class="font-label-sm text-label-sm uppercase">Oracle</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high text-rpg-warning hover:text-on-surface hover:bg-secondary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span class="font-label-sm text-label-sm uppercase">Règles</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high text-primary hover:text-on-surface hover:bg-secondary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">camera</span>
+<span class="font-label-sm text-label-sm uppercase">Snapshot</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-md p-space-sm bg-surface-container-low">
+<div class="flex flex-wrap items-center gap-space-sm flex-1 min-w-[280px]">
+<button class="flex items-center justify-center gap-space-xs px-space-md h-11 bg-primary text-rpg-accent-contrast font-label-sm text-label-sm uppercase hover:bg-primary-fixed shadow-[0_0_12px_rgba(138,235,255,0.35)] transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="">Nouveau PNJ</span>
+</button>
+<div class="relative flex-1 min-w-[220px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-rpg-muted text-[18px]">search</span>
+<input class="w-full h-11 pl-10 pr-4 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm placeholder:text-rpg-muted focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Rechercher un PNJ ou un monstre..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-lowest p-space-xs">
+<button class="px-space-md py-space-xs bg-primary text-on-primary font-label-sm text-label-sm uppercase shadow-sm" type="button">Tous (28)</button>
+<button class="px-space-md py-space-xs bg-transparent text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase transition-colors" type="button">PNJ (16)</button>
+<button class="px-space-md py-space-xs bg-transparent text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase transition-colors" type="button">Monstres (4)</button>
+<button class="px-space-md py-space-xs bg-transparent text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase transition-colors" type="button">Alliés (5)</button>
+<button class="px-space-md py-space-xs bg-transparent text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase transition-colors" type="button">Hostiles (3)</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-space-md">
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cyberpunk portrait of Ellis Vale, a gaunt muscular Wallace Corp technician with short dark hair, sharp cybernetic stare, dim blue ambient lighting, gritty neo-noir shadows, cinematic Blade Runner aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEoLctT8ZxUit3pT0lSp1ulkJH-3dn92JTt8DJRqC_TVUu2NJWfU0ZSuWph2uhmILhXKqcNP5Rl-RiA7sxSIds8g5FfgXGUUGaj_OPZeNWgjjAi4HBXe_l21GcmXfaW4ZbYYbkNfCSPjy90Jzw6UwMwjevZZd-QkAHXuTZ1GGizQU3Lcnd48WztkH9I6by9ZMzA-QMuW8DoefbblEcGh7COxMmABW8DfnYSHrcQNlICCTdz_xJbbNEtA">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-rpg-danger text-rpg-accent-contrast font-label-xs text-label-xs uppercase">HOSTILE</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Ellis Vale</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Un technicien de Wallace Corp. Musclé et filiforme. Regard scrutateur et froid.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-rpg-danger">4 / 4 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-rpg-danger w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of Ezequiel Ray McCoy, an aging rugged detective with scarred face, melancholic eyes, trenchcoat collar turned up against neon rain, oil painted dystopian style, cyberpunk Blade Runner tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIfwC6TE3x8RwKaedY0wcStIC3kKZFiKsvud6Ledb5J1-KKNwRdNcxVngRLqc3SoBWbtt-c2Kmv_nd92KVYP01Xpxn_rxu7cmXR-VPuQRrtjZksndt07wMETgfQ2FHbkKtp-P6EkmicHQ9D2YmOXghj7top2a-aI_V61aWP_oPXErcSUIfimgISuQhntEQRbPNNixYmtIZx5F3_0DmcJtJTwbTIfCza30Nf1XqzcA1zwsaAF37cSyutA">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-rpg-danger text-rpg-accent-contrast font-label-xs text-label-xs uppercase">HOSTILE</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Ézéchiel (Ray McCoy)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Réplicant bootleg, copie altérée du légendaire Blade Runner disparu.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-rpg-danger">4 / 4 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-rpg-danger w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of Noah, an enigmatic and calm synthetic woman with flawless porcelain features, subtle orange rim light, dark slicked hair, intense gaze, futuristic cyberpunk high-tech portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7ChHh8XaeuDoT2MnYfoZEHy8gpab-EsVAomn4cb8j-fu0jVnRnVA0_nPuF2CoNIg414mL2oC5pawLhRWbKcxD8-dpCp01lroeCO_StRIn6jDw7eOLbEH1_FKcAaZzpjtMXC7ZnK4n1AI8AWWThCpEvEpL6tZRLoEywU7QvYOFRS6-rDw8z2cjzYJ7Tkix2-UGpP8OL3rATi2mE0h9qQ0PDEMjgulu-vnf62qK3Gltow_qh7RULVXkxQ">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-secondary-container text-on-surface font-label-xs text-label-xs uppercase">NEUTRE</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Noah</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Réplicant bootleg, copie clandestine d'un modèle d'assistance diplomatique.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-secondary">4 / 4 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-secondary w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-muted hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of Lilith Tyrell, sophisticated high-class woman in sharp structured corporate attire, gold shoulder pads, dark smoking room ambiance, dramatic cinematic shadows, Tyrell Corporation executive style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdn4BE1f6r_BhGOO-ABAwX8aS0zGuArChvjkT3czVw1q-_lxl2L7VrhBRXPnQ_4aDP-b7K6Z1i22LKzGEQyfMaEe4qjZWHw5Qa3GjqlP8N9nRt9yxWRxf0WXMfJgaavB05Atk-d10O0CHkmEHKex-E867xpw9tp0z6-7HxEC1LchKd3MhDtZt_ohES_OadgV8ucF_HFawhOPEKXbQiCL_hHvXvH_T-Bb08oonCn93ZRmW8nIXUJzA92w">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-rpg-success text-rpg-accent-contrast font-label-xs text-label-xs uppercase">ALLIÉ // CORP</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Lilith Tyrell</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Directrice exécutive de la filiale Secteur 4. Allégeance discrète mais solide.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-rpg-success">6 / 6 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-rpg-success w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-muted hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of Sarah, a young street urchin girl with vivid determined eyes, wet messy hair, oversized rain jacket covered in glowing neon pin badges, damp cyberpunk alleyway background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCi_0QnYHMYgTZp1Kk0_rL1iJazTY6e0iK6qkESeBmNS8z_hBAaPPEuosT_paviugD12qEr2PXNvxCCouEACn_6TCmWGCl9LVYm9gN84VtZ1aX3LQJKCSLEeeG7DavZsZObbOmYMMmUQMbW1Z9M6sGRuZ70fT5vLwJX072LyVMGQ3sCZniX2TPD4slXCYec6qANkqeOwzYEvGHUtcv08jU0FAtwXEjsz9Guf9jt0wAmSpbZzcQ_fiY6Tg">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-rpg-success text-rpg-accent-contrast font-label-xs text-label-xs uppercase">ALLIÉ</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Sarah</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Informatrice locale du bazar Animoid. Connaît chaque conduit de ventilation.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-rpg-success">3 / 3 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-rpg-success w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-muted hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of LAPD Inspector David Holden, weary middle-aged detective with bruised jaw, heavy brown trench coat, LAPD badge pinned to lapel, smoke drifting from cigarette, noir lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBte8Jemo58q2BYRgg2WiNlGyiS7VNITfs39ATJ3Tysjs7s3lown-bJio36giS0VUoRynmEzeD45DuqBoFVwcOLINznZavLtZtF0uXmKwqUhXo6hKC4rrIarI1tXu4_ImeHl4OjtUAEcVFy3zQMpmmvPx4H_SMwxG0clwpLdr5PuYdsVxH-c-V88jLU333YeTSAcTPwjyFN4t1k-1zuzuMffZs-wv6MkVMyx0bFZScoIDLXXaQo0ZH7Xw">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-surface-container-highest text-on-surface font-label-xs text-label-xs uppercase">PNJ // LAPD</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">David Holden</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Inspecteur principal LAPD Rep-Detect. Fatigué, suspicieux, mais méthodique.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-primary">5 / 5 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-primary w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-muted hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of Emil Run, ruthless cybernetic combatant with visible mechanical implants on temple, buzzcut hair, menacing grin, toxic yellow and red lens flares, dark gritty combat suit." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvUtovMjVO4IOPyx9KujuFqBVC60zwpEcHA4sLyQoI5F1Xq4NAhH3G4EWIHd8ZoREIJW4fCnXtqRvXkOs-aRyonqg1mm5LfBJnegn3OAYJPYomOg1ebxyvECCVMX5ZlR0XwD-9zQuGyhdO1LgUDzteRfGUFYMa6PheVjdGS_FpYe7_WVuSpide1X2a0W9UGLxfytp1XiPbws7X_kRQGaW9jEg5sRHH5S9V3O6aJcAPfXVDiaJunqIMWw">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-rpg-danger text-rpg-accent-contrast font-label-xs text-label-xs uppercase">HOSTILE</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Émil Run</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Mercenaire déchu de l'unité Nexus-8. Expert en armes automatiques lourdes.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-rpg-danger">7 / 7 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-rpg-danger w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-danger hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+<article class="flex flex-col bg-surface-container-low hover:bg-surface-container transition-all group relative">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A loyal cybernetically enhanced dog companion with an artificial optical eye glowing soft blue, damp scruffy fur, sitting in a rain-slicked alleyway, dystopian neo-noir setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDocSBGFA3hD8OoXONOpbS2UDB8dF3RK2Pls9XYBpI5t_ev-PpzSavjCvmOuEbnqQqu_9WsejuiWLkEk2vFQgzpSsqARSDmx5wQSxqcvDLM7GBhMBqywycAQ7s_NH3uiKw2pvuoO_ZdfMp4nImW4PdG_Fzd9RtbcFNi6BvYIlAcAtY1x8dyyHpoSNDEFG7GEHHH-ujRRxunfwvGUWWuLIdI1wzZLH3LJIY3N9KrnxjeUcB3vCeWjzf-mQ">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/20 to-transparent"></div>
+<div class="absolute top-2 right-2">
+<span class="px-space-xs py-0.5 bg-rpg-success text-rpg-accent-contrast font-label-xs text-label-xs uppercase">ALLIÉ</span>
+</div>
+
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface uppercase group-hover:text-primary transition-colors">Chien de McCoy</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">Canidé synthétique dressé pour la détection de bio-signatures non autorisées.</p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-label-xs text-label-xs">
+<span class="text-rpg-muted uppercase">Vitalité</span>
+<span class="font-number-md text-number-md text-rpg-success">2 / 2 HP</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest">
+<div class="h-full bg-rpg-success w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 py-space-xs bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-sm text-label-sm uppercase transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span class="">Fiche</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-rpg-muted hover:bg-rpg-danger hover:text-rpg-accent-contrast transition-colors" title="Engager le combat" type="button">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+</button>
+<button class="p-space-xs bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors" title="Projeter la vue joueur" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+</div>
+<aside class="w-full xl:w-[320px] flex-shrink-0 flex flex-col gap-space-md">
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-primary uppercase tracking-widest">// DOSSIER CAMPAGNE</span>
+<span class="material-symbols-outlined text-primary text-[18px]">auto_stories</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface uppercase">Anges de Feu</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Blade Runner: Le Jeu de Rôle</span>
+</div>
+<div class="flex justify-between items-center pt-space-sm text-rpg-muted font-label-xs text-label-xs uppercase">
+<span class="">Progression de la Session</span>
+<span class="font-number-md text-number-md text-primary">Étape 0/1</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest">
+<div class="h-full bg-primary w-1/4"></div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-primary uppercase">PNJ &amp; Monstres</span>
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">TACTICAL DATABASE</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">database</span>
+</div>
+<div class="flex flex-col gap-space-xs font-label-sm text-label-sm uppercase">
+<div class="flex items-center justify-between p-space-xs bg-surface-container-high text-on-surface">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">dashboard</span>
+<span class="">Cockpit Table</span>
+</span>
+<span class="font-number-md text-number-md text-primary">LIVE</span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">swords</span>
+<span class="">Rencontres</span>
+</span>
+<span class="font-number-md text-number-md text-rpg-danger">3 Prêtes</span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">timeline</span>
+<span class="">Master Storyboard</span>
+</span>
+<span class="font-number-md text-number-md text-secondary">ACTE 1</span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">hub</span>
+<span class="">Social Nexus</span>
+</span>
+<span class="font-number-md text-number-md text-primary">SYNC</span>
+</div>
+</div>
+</div>
+
+</aside>
+</div>
+</div></main></div>
+
+</body></html>

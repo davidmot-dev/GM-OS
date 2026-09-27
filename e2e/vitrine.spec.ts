@@ -36,7 +36,15 @@ const MIROIR_DES_MEDIAS = process.env.GMOS_VITRINE_MIROIR
 const LARGEUR = 1440;
 const HAUTEUR = 900;
 
+/**
+ * La semence : la dernière sauvegarde du dossier, ou **un fichier désigné**
+ * par `GMOS_VITRINE_SEMENCE`. Ajouté le 2026-09-27 : les sauvegardes récentes
+ * n'avaient plus de journal (supprimés par David), celle du 22/09 en a un de
+ * 111 événements — c'est elle qui montre le Journal dans son état.
+ */
 function derniereSauvegarde(): string | null {
+    const designee = process.env.GMOS_VITRINE_SEMENCE;
+    if (designee) return fs.existsSync(designee) ? designee : null;
     if (!fs.existsSync(DOSSIER_DES_SAUVEGARDES)) return null;
     const fichiers = fs.readdirSync(DOSSIER_DES_SAUVEGARDES)
         .filter(n => /^gmos-auto-.*\.json$/.test(n))
@@ -120,6 +128,83 @@ async function mettreEnSceneUnCombat(gmos: GmOsLance): Promise<void> {
     });
 }
 
+/** Capturer l'écran entier, et ce qui défile, page par page. */
+function outilsDeCapture(gmos: GmOsLance, sortie: string) {
+    const capturer = async (fichier: string) => {
+        await gmos.fenetre.waitForTimeout(2_500);
+        await attendreLaFinDeLAccueil(gmos);
+        await gmos.fenetre.screenshot({ path: path.join(sortie, fichier) });
+        console.log(`[Vitrine] ${fichier}`);
+    };
+
+    /*
+      ⛔ **Ce qui défile ne se voit pas sur une capture.** Le panneau de réglages
+      de la carte compte treize sections, et Stitch a réorganisé la carte
+      **sans voir la moitié de ses commandes** (2026-09-26). On repère le
+      conteneur qui défile autour d'un texte, et on le capture page par page.
+    */
+    const capturerEnDefilant = async (prefixe: string, repere: string, maxPages = 6) => {
+        const pages = await gmos.fenetre.evaluate((source) => {
+            document.querySelectorAll('[data-vitrine-defilement]').forEach(e => e.removeAttribute('data-vitrine-defilement'));
+            const motif = new RegExp(source, 'i');
+            const titre = [...document.querySelectorAll('*')]
+                .find(e => e.children.length === 0 && motif.test(e.textContent ?? ''));
+            let boite: HTMLElement | null = (titre as HTMLElement | undefined)?.parentElement ?? null;
+            while (boite && !(boite.scrollHeight > boite.clientHeight + 20 && /(auto|scroll)/.test(getComputedStyle(boite).overflowY))) {
+                boite = boite.parentElement;
+            }
+            if (!boite) return 0;
+            boite.setAttribute('data-vitrine-defilement', '');
+            boite.scrollTop = 0;
+            return Math.ceil(boite.scrollHeight / (boite.clientHeight * 0.85));
+        }, repere);
+        for (let i = 0; i < Math.min(pages, maxPages); i++) {
+            if (i > 0) {
+                await gmos.fenetre.evaluate(() => {
+                    const b = document.querySelector<HTMLElement>('[data-vitrine-defilement]');
+                    if (b) b.scrollTop += b.clientHeight * 0.85;
+                });
+            }
+            await capturer(`${prefixe}-${i + 1}.png`);
+        }
+        return pages;
+    };
+
+    return { capturer, capturerEnDefilant };
+}
+
+/**
+ * **L'instance de la vitrine, campagnes ET images du meneur.** Commune aux
+ * deux tours pour Stitch : la semence porte les campagnes, le miroir copié les
+ * images, remises dans la base par le vrai bouton.
+ */
+async function lancerLaVitrineAvecSesMedias(): Promise<GmOsLance> {
+    const semence = derniereSauvegarde();
+    expect(semence, `aucune sauvegarde dans ${DOSSIER_DES_SAUVEGARDES}`).not.toBeNull();
+    expect(fs.existsSync(MIROIR_DES_MEDIAS), `miroir absent : ${MIROIR_DES_MEDIAS}`).toBe(true);
+    console.log(`[Vitrine] semence : ${semence}`);
+
+    const gmos = await lancerGmOs({
+        semence: semence!,
+        /* Copié, jamais lié : l'instance ne doit pas pouvoir écrire dans le vrai miroir. */
+        preparerLeProfil: profil => {
+            fs.cpSync(MIROIR_DES_MEDIAS, path.join(profil, 'backups', 'medias'), { recursive: true });
+        },
+    });
+    await preparerLaVitrine(gmos);
+
+    /* Les images : par le vrai bouton, comme le ferait le meneur. */
+    await ouvrirLeModule(gmos, 'Image-OS');
+    const restaurer = gmos.fenetre.getByRole('button', { name: /Restaurer depuis la sauvegarde/ });
+    await expect(restaurer).toBeVisible({ timeout: 20_000 });
+    await restaurer.click();
+    const avis = gmos.fenetre.getByText(/média\(s\) restauré\(s\)/);
+    await expect(avis).toBeVisible({ timeout: 180_000 });
+    /* La notification recouvrait le bas de la première capture. */
+    await expect(avis).toBeHidden({ timeout: 20_000 }).catch(() => undefined);
+    return gmos;
+}
+
 test.describe('la vitrine', () => {
     test.skip(process.env.GMOS_VITRINE !== '1', 'Sur demande seulement : GMOS_VITRINE=1');
 
@@ -130,29 +215,7 @@ test.describe('la vitrine', () => {
     test('le noyau pour Stitch — onze captures', async () => {
         test.setTimeout(480_000);
 
-        const semence = derniereSauvegarde();
-        expect(semence, `aucune sauvegarde dans ${DOSSIER_DES_SAUVEGARDES}`).not.toBeNull();
-        expect(fs.existsSync(MIROIR_DES_MEDIAS), `miroir absent : ${MIROIR_DES_MEDIAS}`).toBe(true);
-        console.log(`[Vitrine] semence : ${semence}`);
-
-        gmos = await lancerGmOs({
-            semence: semence!,
-            /* Copié, jamais lié : l'instance ne doit pas pouvoir écrire dans le vrai miroir. */
-            preparerLeProfil: profil => {
-                fs.cpSync(MIROIR_DES_MEDIAS, path.join(profil, 'backups', 'medias'), { recursive: true });
-            },
-        });
-        await preparerLaVitrine(gmos);
-
-        /* Les images : par le vrai bouton, comme le ferait le meneur. */
-        await ouvrirLeModule(gmos, 'Image-OS');
-        const restaurer = gmos.fenetre.getByRole('button', { name: /Restaurer depuis la sauvegarde/ });
-        await expect(restaurer).toBeVisible({ timeout: 20_000 });
-        await restaurer.click();
-        const avis = gmos.fenetre.getByText(/média\(s\) restauré\(s\)/);
-        await expect(avis).toBeVisible({ timeout: 180_000 });
-        /* La notification recouvrait le bas de la première capture. */
-        await expect(avis).toBeHidden({ timeout: 20_000 }).catch(() => undefined);
+        gmos = await lancerLaVitrineAvecSesMedias();
 
         await mettreEnSceneUnCombat(gmos);
 
@@ -179,46 +242,8 @@ test.describe('la vitrine', () => {
           écran dans l'état que l'inventaire décrit
           (`documentation/Planning/2026-09-25-inventaire-des-ecrans.md`). ──
         */
-        const capturer = async (fichier: string) => {
-            await gmos.fenetre.waitForTimeout(2_500);
-            await attendreLaFinDeLAccueil(gmos);
-            await gmos.fenetre.screenshot({ path: path.join(SORTIE, fichier) });
-            console.log(`[Vitrine] ${fichier}`);
-        };
+        const { capturer, capturerEnDefilant } = outilsDeCapture(gmos, SORTIE);
         const dans = <T>(fn: () => T | Promise<T>) => gmos.fenetre.evaluate(fn);
-
-        /*
-          ⛔ **Ce qui défile ne se voit pas sur une capture.** Le panneau de réglages
-          de la carte compte treize sections, et Stitch a réorganisé la carte
-          **sans voir la moitié de ses commandes** (2026-09-26). On repère le
-          conteneur qui défile autour d'un texte, et on le capture page par page.
-        */
-        const capturerEnDefilant = async (prefixe: string, repere: string, maxPages = 6) => {
-            const pages = await gmos.fenetre.evaluate((source) => {
-                document.querySelectorAll('[data-vitrine-defilement]').forEach(e => e.removeAttribute('data-vitrine-defilement'));
-                const motif = new RegExp(source, 'i');
-                const titre = [...document.querySelectorAll('*')]
-                    .find(e => e.children.length === 0 && motif.test(e.textContent ?? ''));
-                let boite: HTMLElement | null = (titre as HTMLElement | undefined)?.parentElement ?? null;
-                while (boite && !(boite.scrollHeight > boite.clientHeight + 20 && /(auto|scroll)/.test(getComputedStyle(boite).overflowY))) {
-                    boite = boite.parentElement;
-                }
-                if (!boite) return 0;
-                boite.setAttribute('data-vitrine-defilement', '');
-                boite.scrollTop = 0;
-                return Math.ceil(boite.scrollHeight / (boite.clientHeight * 0.85));
-            }, repere);
-            for (let i = 0; i < Math.min(pages, maxPages); i++) {
-                if (i > 0) {
-                    await dans(() => {
-                        const b = document.querySelector<HTMLElement>('[data-vitrine-defilement]');
-                        if (b) b.scrollTop += b.clientHeight * 0.85;
-                    });
-                }
-                await capturer(`${prefixe}-${i + 1}.png`);
-            }
-            return pages;
-        };
 
         /* 1.25 · Les modes de Dice-OS — « la fenêtre avec les modes doit être mieux agencée ». */
         await ouvrirLeModule(gmos, 'Dice-OS');
@@ -408,6 +433,474 @@ test.describe('la vitrine', () => {
             await gmos.fenetre.waitForTimeout(400);
         }
         await capturer('11-combat-clair.png');
+    });
+});
+
+/**
+ * **Le deuxième tour pour Stitch — décidé par David le 2026-09-27.**
+ *
+ * Le premier tour n'a montré à Stitch que le noyau (neuf écrans) ; David veut
+ * une application cohérente partout : *« ce n'est pas parce que je n'ai pas eu
+ * de vraie plainte qu'il ne faut pas en profiter pour revoir le design »*.
+ * Ici, le reste des sections 0 à 6 de l'inventaire, rangé par lot — un lot,
+ * un prompt (`documentation/Planning/2026-09-27-prompts-stitch-tour-2.md`).
+ *
+ *   $env:GMOS_VITRINE='2'; npx playwright test e2e/vitrine.spec.ts
+ *
+ * ⭐ **Une capture manquée ne coûte pas les autres.** Chaque écran s'ouvre
+ * dans son propre essai ; un échec est noté, la surcouche refermée, et la
+ * liste des manques fait rougir le test **à la fin**, avec toutes les
+ * captures déjà sur le disque.
+ */
+test.describe('la vitrine, deuxième tour', () => {
+    test.skip(process.env.GMOS_VITRINE !== '2', 'Sur demande seulement : GMOS_VITRINE=2');
+
+    let gmos: GmOsLance;
+
+    test.afterAll(async () => { await gmos?.fermer(); });
+
+    test('le reste de l\'inventaire, par lot', async () => {
+        test.setTimeout(900_000);
+
+        gmos = await lancerLaVitrineAvecSesMedias();
+        await mettreEnSceneUnCombat(gmos);
+
+        const sortie = path.join(SORTIE, 'tour-2');
+        fs.mkdirSync(sortie, { recursive: true });
+        const { capturer, capturerEnDefilant } = outilsDeCapture(gmos, sortie);
+        const f = gmos.fenetre;
+
+        const manques: string[] = [];
+        const essayer = async (nom: string, geste: () => Promise<void>) => {
+            try {
+                await geste();
+            } catch (e) {
+                manques.push(nom);
+                console.log(`[Vitrine] ⚠️ ${nom} — ${String(e).split('\n')[0]}`);
+                await f.keyboard.press('Escape').catch(() => undefined);
+            }
+        };
+        const bouton = (nom: RegExp) => f.getByRole('button', { name: nom }).first();
+        /* Une surcouche se referme par Échap : le registre unique des surcouches. */
+        const refermer = async () => { await f.keyboard.press('Escape'); await f.waitForTimeout(500); };
+        /*
+          ⛔ **À la table, une vue de préparation renvoie au cockpit**
+          (`affiniteDesVues.ts`). La semence du 22/09 arrive séance ouverte, donc
+          à la table : sept captures du lot G montraient le cockpit. On force
+          l'atelier, comme le bouton du bandeau.
+        */
+        const enAtelier = async () => {
+            const repasser = f.getByTitle(/^Repasser en atelier/).first();
+            if (await repasser.isVisible().catch(() => false)) {
+                await repasser.click();
+                await f.waitForTimeout(500);
+            }
+        };
+        const vue = async (v: string) => {
+            await ouvrirLeModule(gmos, 'Tableau de Bord');
+            await enAtelier();
+            await f.evaluate((v) => {
+                (window as never as { useSessionOSStore: { getState: () => { setCurrentView: (v: string) => void } } })
+                    .useSessionOSStore.getState().setCurrentView(v);
+            }, v);
+        };
+
+        /*
+          ⛔ **Une séance ouverte chasse les écrans de préparation** vers le
+          cockpit (`useLayoutManager`, moment « partie »), quel que soit le
+          régime forcé. La semence du 22/09 arrive séance ouverte : on la met de
+          côté ici, et l'étape E0 la rouvre pour les lots qui en ont besoin.
+        */
+        await f.evaluate(() => {
+            /* Le moment vaut « partie » dès qu'UNE séance, de n'importe quelle campagne, est `active` (`momentDeJeu`). */
+            const s = (window as never as { useSessionOSStore: { getState: () => {
+                sessions: { id: string; status: string }[];
+                updateSession: (id: string, m: Record<string, unknown>) => void;
+            } } }).useSessionOSStore.getState();
+            for (const seance of s.sessions.filter(x => x.status === 'active')) s.updateSession(seance.id, { status: 'planned' });
+        });
+        /* L'inventaire décrit chaque écran en atelier, sauf ceux « régime table ». */
+        await enAtelier();
+
+        /* ── Lot A · Image-OS (2.1 à 2.3, et 6.8) ── */
+        await essayer('A · Image-OS', async () => {
+            await ouvrirLeModule(gmos, 'Image-OS');
+            const mise = await f.evaluate(() => {
+                type Media = { id: string; path: string; folderId?: string | null; isFavorite?: boolean };
+                const img = (window as never as { useImageStore: { getState: () => {
+                    mediaList: Media[]; projectionTarget: string;
+                    setActiveFolderId: (id: string | null) => void;
+                    setProjection: (cible: string, chemin: string | null) => void;
+                    toggleMediaFavorite: (id: string) => void;
+                    creerDiaporama: (nom: string) => string;
+                    ajouterAuDiaporama: (d: string, m: string) => void;
+                    setCurrentView: (v: string) => void;
+                } } }).useImageStore.getState();
+                const images = img.mediaList.filter(m => !/\.(mp4|webm|mov|mkv)$/i.test(m.path));
+                /* Un dossier ouvert : le plus fourni. */
+                const compte = new Map<string, number>();
+                for (const m of images) if (m.folderId) compte.set(m.folderId, (compte.get(m.folderId) ?? 0) + 1);
+                const dossier = [...compte.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+                const duDossier = images.filter(m => !dossier || m.folderId === dossier);
+                img.setActiveFolderId(dossier);
+                /*
+                  Une image projetée : l'état seul, aucune fenêtre ne s'ouvre.
+                  ⚠️ Les projections rangent l'IDENTIFIANT du média (`ImagePad`),
+                  pas son chemin : avec le chemin, aucune tuile ne s'allumait.
+                */
+                if (duDossier[0]) img.setProjection(img.projectionTarget, duDossier[0].id);
+                for (const m of images.slice(0, 6)) if (!m.isFavorite) img.toggleMediaFavorite(m.id);
+                const diaporama = img.creerDiaporama('Planque de Deckard');
+                for (const m of duDossier.slice(0, 8)) img.ajouterAuDiaporama(diaporama, m.id);
+                img.setCurrentView('library');
+                return `${images.length} images, ${duDossier.length} dans le dossier ouvert`;
+            });
+            console.log(`[Vitrine] Image-OS — ${mise}`);
+            /*
+              ⛔ **Les tuiles nées pendant la restauration restent vides.**
+              `useMediaUrl` cherche l'image dans la base à la création de la
+              tuile et ne réessaie pas tant que le chemin ne change pas : les
+              tuiles, montées avant l'écriture des images, gardaient `url("")`
+              (mesuré le 2026-09-27). On quitte le module et on y revient.
+            */
+            const tuilesPleines = () => f.evaluate(() => [...document.querySelectorAll<HTMLElement>('[style*="background-image"]')]
+                .filter(e => /url\(['"]?[^'")]/.test(e.style.backgroundImage)).length);
+            /* La restauration peut écrire ses images après le premier aller-retour : on recommence. */
+            for (let essai = 0; essai < 5; essai++) {
+                await ouvrirLeModule(gmos, 'Dice-OS');
+                await ouvrirLeModule(gmos, 'Image-OS');
+                await f.waitForTimeout(3_000);
+                if (await tuilesPleines() >= 4) break;
+            }
+            /*
+              ⚠️ **Les vignettes arrivent après la restauration.** La première
+              capture, prise aussitôt, montrait des tuiles sans image — alors que
+              les diaporamas, capturés ensuite, avaient les leurs.
+            */
+            await f.waitForFunction(() => [...document.querySelectorAll<HTMLElement>('[style*="background-image"]')]
+                .filter(e => /url\(['"]?[^'")]/.test(e.style.backgroundImage)).length >= 4, undefined, { timeout: 30_000 })
+                .catch(async () => {
+                    /* Ce que portent vraiment les tuiles : on mesure au lieu de deviner. */
+                    const tuiles = await f.evaluate(() => [...document.querySelectorAll<HTMLElement>('.aspect-video')]
+                        .slice(0, 4)
+                        .map(t => [...t.querySelectorAll<HTMLElement>('div')].map(d => d.style.backgroundImage).find(b => b !== undefined && b !== '') ?? '(aucun fond)')
+                        .map(b => b.slice(0, 80)));
+                    console.log(`[Vitrine] ⚠️ vignettes de la bibliothèque toujours vides — ${JSON.stringify(tuiles)}`);
+                });
+            await f.waitForTimeout(3_000);
+            await capturer('A1-image-bibliotheque.png');
+            for (const [v, fichier] of [
+                ['diaporamas', 'A2-image-diaporamas.png'],
+                ['favorites', 'A3-image-favoris.png'],
+                ['recent', 'A4-image-recents.png'],
+            ] as const) {
+                await f.evaluate((v) => {
+                    (window as never as { useImageStore: { getState: () => { setCurrentView: (v: string) => void } } })
+                        .useImageStore.getState().setCurrentView(v);
+                }, v);
+                await capturer(fichier);
+            }
+        });
+        await essayer('A5 · choix de l\'écran de projection', async () => {
+            await ouvrirLeModule(gmos, 'Cartographie');
+            await bouton(/Projeter la Carte/i).click({ timeout: 8_000 });
+            await capturer('A5-choix-de-l-ecran.png');
+            await refermer();
+        });
+
+        /* ── Lot B · Le son (3.3 à 3.5) — la fenêtre est muette ── */
+        await essayer('B1 · Effets sonores', async () => {
+            await ouvrirLeModule(gmos, 'Effets Sonores');
+            await f.evaluate(async () => {
+                const son = (window as never as { useSoundStore: { getState: () => {
+                    atmospheres: { id: string; pads: Record<string, { id: string; filePath: string | null }> }[];
+                    activeAtmosphereId: string | null;
+                    triggerPad: (id: string) => Promise<void>;
+                } } }).useSoundStore.getState();
+                const atmosphere = son.atmospheres.find(a => a.id === son.activeAtmosphereId) ?? son.atmospheres[0];
+                const pad = atmosphere && Object.values(atmosphere.pads).find(p => p.filePath);
+                if (pad) await son.triggerPad(pad.id).catch(() => undefined);
+            });
+            await capturer('B1-effets-sonores.png');
+        });
+        await essayer('B2 · Ambiances', async () => {
+            await ouvrirLeModule(gmos, 'Ambiances');
+            await f.evaluate(async () => {
+                const ambiance = (window as never as { useAmbientStore: { getState: () => {
+                    tracks: { url: string; isPlaying: boolean }[];
+                    toggleTrack: (i: number) => Promise<void>;
+                    setTrackVolume: (i: number, v: number) => void;
+                } } }).useAmbientStore.getState();
+                const pleines = ambiance.tracks.map((t, i) => ({ t, i })).filter(x => x.t.url).slice(0, 3);
+                const niveaux = [0.85, 0.5, 0.25];
+                for (const [n, { t, i }] of pleines.entries()) {
+                    if (!t.isPlaying) await ambiance.toggleTrack(i).catch(() => undefined);
+                    ambiance.setTrackVolume(i, niveaux[n]);
+                }
+            });
+            await capturer('B2-ambiances.png');
+        });
+        await essayer('B3 · Voice-OS', async () => {
+            await ouvrirLeModule(gmos, 'Voice-OS');
+            await capturer('B3-voice-os.png');
+        });
+
+        /* ── Lot C · Les PNJ (1.5, 1.6, 6.5, 4.4, 4.5) ── */
+        await essayer('C1 · Galerie de PNJ', async () => {
+            await vue('npc-gallery');
+            await capturer('C1-pnj-galerie.png');
+        });
+        await essayer('C2 · Fiche de PNJ', async () => {
+            const nom = await f.evaluate(() => {
+                const s = (window as never as { useSessionOSStore: { getState: () => {
+                    activeCampaignId: string | null;
+                    entities: { id: string; name: string; type: string; campaignId: string; avatar?: string }[];
+                    setSelectedEntity: (id: string | null) => void;
+                } } }).useSessionOSStore.getState();
+                const pnj = s.entities.filter(e => e.type === 'npc' && e.campaignId === s.activeCampaignId);
+                const choisi = pnj.find(e => e.avatar) ?? pnj[0];
+                if (choisi) s.setSelectedEntity(choisi.id);
+                return choisi?.name ?? null;
+            });
+            if (!nom) throw new Error('aucun PNJ dans la campagne active');
+            await capturer('C2-pnj-fiche.png');
+        });
+        await essayer('C3 · Graphe social', async () => {
+            await vue('social-graph');
+            await capturer('C3-graphe-social.png');
+        });
+        await essayer('C4 · Générateur PNJ', async () => {
+            await ouvrirLeModule(gmos, 'Générateur PNJ');
+            /* La semence peut arriver déjà à la table (séance ouverte) : on part du régime qu'on trouve. */
+            const aLaTable = await f.getByTitle(/^Repasser en atelier/).count() > 0;
+            const [ici, labas] = aLaTable
+                ? ['C5-generateur-pnj-table.png', 'C4-generateur-pnj.png']
+                : ['C4-generateur-pnj.png', 'C5-generateur-pnj-table.png'];
+            const bascule = () => f.getByTitle(/^(Passer à la table|Repasser en atelier)/).first().click({ timeout: 8_000 });
+            await capturer(ici);
+            await bascule();
+            await capturer(labas);
+            await bascule();
+        });
+
+        /* ── Lot D · Les outils de séance (1.31 à 1.33, 1.23, 6.6, 6.7) ── */
+        await essayer('D1 · Tables aléatoires', async () => {
+            await ouvrirLeModule(gmos, 'Tables Aléatoires');
+            await capturer('D1-tables.png');
+            await f.getByTitle('Créer ou corriger une table').first().click({ timeout: 8_000 });
+            await capturer('D2-tables-atelier.png');
+            await refermer();
+        });
+        await essayer('D3 · Loot-OS', async () => {
+            await vue('cockpit');
+            await bouton(/^Loot-OS$/).click({ timeout: 8_000 });
+            await capturer('D3-loot-generer.png');
+            for (const [onglet, fichier] of [[/Pool Actif/i, 'D4-loot-reserve.png'], [/^Historique$/i, 'D5-loot-historique.png']] as const) {
+                await bouton(onglet).click({ timeout: 5_000 });
+                await capturer(fichier);
+            }
+            await refermer();
+        });
+        await essayer('D6 · Calcul des dégâts', async () => {
+            await ouvrirLeModule(gmos, 'Combat-OS');
+            await bouton(/Calculateur de Dégâts/i).click({ timeout: 8_000 });
+            await capturer('D6-calcul-des-degats.png');
+            await refermer();
+        });
+        await essayer('D7 · Fiche d\'un combattant', async () => {
+            await ouvrirLeModule(gmos, 'Combat-OS');
+            await f.getByTitle('Revoir la fiche de ce combattant').first().click({ timeout: 8_000 });
+            await capturer('D7-fiche-combattant.png');
+            await refermer();
+        });
+        await essayer('D8 · Atelier des adversaires', async () => {
+            await ouvrirLeModule(gmos, 'Combat-OS');
+            await bouton(/Fabriquer des adversaires/i).click({ timeout: 8_000 });
+            await capturer('D8-atelier-des-adversaires.png');
+            await refermer();
+        });
+
+        /* ── Lot G · La préparation (1.7, 1.8, 1.13 à 1.18, 1.27, 4.1 à 4.3, 4.6, 2.6) ── */
+        for (const [v, fichier] of [
+            ['library', 'G1-bibliotheque-des-campagnes.png'],
+            ['players', 'G2-joueurs.png'],
+            ['campaign-form', 'G4-campagne-formulaire.png'],
+            ['rulebook', 'G5-grimoire.png'],
+            ['rule-workshop', 'G6-atelier-des-regles.png'],
+            ['templates', 'G7-modeles-de-fiche.png'],
+            ['world-atlas', 'G8-atlas.png'],
+            ['timeline-wiki', 'G9-chroniques.png'],
+            /* Deux vues du lot E, mais de préparation : une séance ouverte les renverrait au cockpit. */
+            ['session-prep', 'E4-preparation.png'],
+            ['deck-library', 'E6-deck-bibliotheque.png'],
+        ] as const) {
+            await essayer(`${fichier} · vue ${v}`, async () => {
+                await vue(v);
+                await capturer(fichier);
+            });
+        }
+        for (const [module, fichier] of [
+            ['Forge', 'G10-forge.png'],
+            ['Favoris', 'G11-favoris.png'],
+            ['Tableau Blanc', 'G12-tableau-blanc.png'],
+        ] as const) {
+            await essayer(`${fichier} · ${module}`, async () => {
+                await ouvrirLeModule(gmos, module);
+                await capturer(fichier);
+            });
+        }
+        await essayer('G13 · Atelier des calendriers', async () => {
+            await ouvrirLeModule(gmos, 'Horloge & Temps');
+            /* Le bouton ne vit que dans le mode « fantasy » (calendrier inventé). */
+            await f.evaluate(() => {
+                (window as never as { useClockStore: { getState: () => { setMode: (m: string) => void } } })
+                    .useClockStore.getState().setMode('fantasy');
+            });
+            await f.getByTitle(/Atelier des calendriers/).first().click({ timeout: 8_000 });
+            await capturer('G13-atelier-des-calendriers.png');
+            await refermer();
+        });
+
+        /* ── Lot H · Médiathèque, Nexus, Paramètres, navigateur, aide (6.1 à 6.3, 4.7, 4.8, 5.1) ── */
+        await essayer('H1 · Médiathèque', async () => {
+            /* Le « Media Hub » du code s'appelle « Médiathèque » à l'écran ; la barre latérale vient d'abord. */
+            await ouvrirLeModule(gmos, 'Médiathèque');
+            await capturer('H1-mediatheque.png');
+            await refermer();
+        });
+        await essayer('H2 · Paramètres', async () => {
+            await f.getByTitle('Paramètres de l\'OS').first().click({ timeout: 8_000 });
+            for (const [i, onglet] of ['Système', 'Tactique', 'IA', 'Télécommande', 'Thème du jeu'].entries()) {
+                await bouton(new RegExp(`^${onglet}$`)).click({ timeout: 5_000 });
+                await capturer(`H2-parametres-${i + 1}.png`);
+            }
+            await capturerEnDefilant('H3-atelier-du-theme', '^Couleurs$', 4);
+            await refermer();
+        });
+        for (const [module, fichier] of [
+            ['Nexus Wiki', 'H4-nexus.png'],
+            ['Navigateur Web', 'H5-navigateur.png'],
+        ] as const) {
+            await essayer(`${fichier} · ${module}`, async () => {
+                await ouvrirLeModule(gmos, module);
+                await capturer(fichier);
+            });
+        }
+        await essayer('H6 · Aide', async () => {
+            await f.keyboard.press('Control+KeyH');
+            await capturer('H6-aide.png');
+            await refermer();
+        });
+
+        /*
+          ⚠️ **L'ordre compte** : une séance ouverte renvoie la vue des détails
+          de la campagne au cockpit. Ce qui en a besoin passe AVANT la séance.
+        */
+        await essayer('F5 · Fin de séance', async () => {
+            await vue('campaign-details');
+            await capturer('G3-campagne-details.png');
+            /* Le bouton n'apparaît qu'au survol de la séance : on le force. */
+            await f.getByTitle('Éditer', { exact: true }).first().click({ force: true, timeout: 8_000 });
+            await capturer('F5-fin-de-seance.png');
+            await refermer();
+        });
+
+        /* ── Lot E · Le poste du meneur (1.1, 1.2, 1.9 à 1.11, 1.19, 1.28 à 1.30) ── */
+        /*
+          ⚠️ **La sauvegarde n'a pas de séance en cours** : le premier essai a
+          capturé un cockpit « Aucune session active » et un journal « Historique
+          vide ». On prend le journal le plus fourni, on ouvre sa campagne, et on
+          remet sa dernière séance en cours — dans l'instance jetable seulement.
+        */
+        await essayer('E0 · une séance en cours', async () => {
+            const seance = await f.evaluate(() => {
+                const journal = (window as never as { useJournalStore: { getState: () => {
+                    journals: { id: string; title: string; campaignId?: string; events: unknown[] }[];
+                    setActiveJournal: (id: string | null) => void;
+                } } }).useJournalStore.getState();
+                const s = (window as never as { useSessionOSStore: { getState: () => {
+                    activeCampaignId: string | null;
+                    campaigns: { id: string; name: string }[];
+                    sessions: { id: string; campaignId: string; number: number }[];
+                    setActiveCampaign: (id: string | null) => void;
+                    updateCampaign: (id: string, m: Record<string, unknown>) => void;
+                    updateSession: (id: string, m: Record<string, unknown>) => void;
+                    setSelectedSession: (id: string | null) => void;
+                } } }).useSessionOSStore.getState();
+                const parTaille = [...journal.journals].sort((a, b) => b.events.length - a.events.length);
+                const choisi = parTaille.find(j => j.campaignId === s.activeCampaignId && j.events.length >= 10)
+                    ?? parTaille.find(j => j.campaignId) ?? parTaille[0];
+                const campagne = choisi?.campaignId ?? s.activeCampaignId;
+                if (!campagne) return null;
+                if (campagne !== s.activeCampaignId) s.setActiveCampaign(campagne);
+                const derniere = s.sessions.filter(x => x.campaignId === campagne).sort((a, b) => b.number - a.number)[0];
+                if (derniere) {
+                    s.updateSession(derniere.id, { status: 'active' });
+                    s.updateCampaign(campagne, { activeSessionId: derniere.id });
+                    /* Le focus MJ édite la séance SÉLECTIONNÉE ; sans elle : « Session introuvable ». */
+                    s.setSelectedSession(derniere.id);
+                }
+                if (choisi) journal.setActiveJournal(choisi.id);
+                return `${s.campaigns.find(c => c.id === campagne)?.name} — séance #${derniere?.number ?? '?'} — journal « ${choisi?.title ?? 'aucun'} » (${choisi?.events.length ?? 0} événements, ${journal.journals.length} journaux)`;
+            });
+            console.log(`[Vitrine] séance — ${seance}`);
+            if (!seance) throw new Error('aucune campagne à mettre en séance');
+            await f.waitForTimeout(2_000);
+        });
+        for (const [v, fichier] of [
+            ['cockpit', 'E1-cockpit.png'],
+            ['storyboard', 'E2-storyboard.png'],
+            ['session-focus', 'E3-mj-focus.png'],
+            ['deck-player', 'E5-deck-lecteur.png'],
+        ] as const) {
+            await essayer(`${fichier} · vue ${v}`, async () => {
+                await vue(v);
+                await capturer(fichier);
+            });
+        }
+        await essayer('E7 · Oracle', async () => {
+            await vue('cockpit');
+            await f.getByTitle('Consulter l\'Oracle IA').first().click({ timeout: 8_000 });
+            await capturer('E7-oracle.png');
+            await refermer();
+        });
+        await essayer('E8 · Journal de jeu', async () => {
+            await ouvrirLeModule(gmos, 'Journal de Jeu');
+            await capturer('E8-journal.png');
+            await capturerEnDefilant('E8-journal-suite', 'Compte rendu|État des lieux|Revue', 5);
+        });
+
+        /* ── Lot F · Le châssis et les surcouches communes (0.3, 6.9 à 6.12) ── */
+        await essayer('F1 · Palette', async () => {
+            await vue('cockpit');
+            await f.keyboard.press('Control+KeyK');
+            await f.keyboard.type('Roy');
+            await capturer('F1-palette.png');
+            await refermer();
+        });
+        await essayer('F2 · Confirmation', async () => {
+            /* « Ranger » le graphe demande confirmation : une vraie boîte, qu'on annule. */
+            await vue('trame');
+            await bouton(/^Graphe$/).click({ timeout: 8_000 });
+            await bouton(/Ranger/).click({ timeout: 5_000 });
+            await expect(bouton(/^Confirmer$/)).toBeVisible({ timeout: 5_000 });
+            await capturer('F2-confirmation.png');
+            await refermer();
+        });
+        await essayer('F3 · Saisie', async () => {
+            await ouvrirLeModule(gmos, 'Ambiances');
+            await f.getByRole('button', { name: /Nouvel Univers/i }).or(f.getByTitle(/Nouvel Univers/i)).first().click({ timeout: 8_000 });
+            await capturer('F3-saisie.png');
+            await refermer();
+        });
+        await essayer('F4 · Instantanés', async () => {
+            /* Le bouton « Snapshot » du bandeau ouvre les instantanés de la séance (`SessionSnapshotModal`). */
+            await vue('cockpit');
+            await bouton(/^Snapshot$/i).click({ timeout: 8_000 });
+            await capturer('F4-instantanes.png');
+            await refermer();
+        });
+        expect(manques, `écrans non capturés : ${manques.join(' · ')}`).toEqual([]);
     });
 });
 

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-primary-container":"#005763","on-surface-variant":"#bbc9cd","secondary-container":"#3f465c","rpg-bg":"#020617","rpg-warning":"#f59e0b","rpg-surface-2":"#1e293b","primary-fixed":"#a2eeff","on-primary-fixed":"#001f25","on-secondary-fixed-variant":"#3f465c","surface-variant":"#2e3447","tertiary-fixed":"#d8e3fb","rpg-surface":"#0f172a","on-background":"#dce1fb","on-tertiary-container":"#444f63","rpg-success":"#10b981","surface-bright":"#33394c","inverse-primary":"#006877","on-primary-fixed-variant":"#004e5a","inverse-surface":"#dce1fb","on-tertiary-fixed-variant":"#3c475a","on-tertiary":"#263143","surface-dim":"#0c1324","on-secondary":"#283044","rpg-border":"#1e293b","tertiary":"#d2ddf5","error-container":"#93000a","inverse-on-surface":"#2a3043","on-tertiary-fixed":"#111c2d","rpg-info":"#3b82f6","primary-container":"#22d3ee","rpg-muted":"#898c95","primary-fixed-dim":"#2fd9f4","secondary":"#bec6e0","on-secondary-container":"#adb4ce","on-secondary-fixed":"#131b2e","rpg-accent-contrast":"#020617","surface-container-lowest":"#070d1f","tertiary-fixed-dim":"#bcc7de","on-error-container":"#ffdad6","on-error":"#690005","rpg-danger":"#ef4444","on-primary":"#00363e","surface-container-high":"#23293c","surface-container":"#191f31","primary":"#8aebff","on-surface":"#dce1fb","error":"#ffb4ab","rpg-accent":"#22d3ee","rpg-text":"#f8fafc","rpg-on-status":"#020617","outline-variant":"#3c494c","surface-container-low":"#151b2d","background":"#0c1324","surface-tint":"#2fd9f4","secondary-fixed":"#dae2fd","secondary-fixed-dim":"#bec6e0","surface-container-highest":"#2e3447","tertiary-container":"#b6c1d9","surface":"#0c1324","outline":"#859397"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-md":"12px","space-xs":"4px","margin":"16px","space-sm":"8px","space-lg":"16px","space-xl":"24px","gutter":"12px"},"fontFamily":{"display-md":["Syne"],"body-sm":["Space Mono"],"number-lg":["Space Mono"],"body-md":["Space Mono"],"label-sm":["Space Mono"],"label-xs":["Space Mono"],"title-md":["Syne"],"number-md":["Space Mono"],"display-lg":["Syne"]},"fontSize":{"display-md":["24px",{"lineHeight":"30px","letterSpacing":"0.05em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"400"}],"number-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.14em","fontWeight":"700"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.18em","fontWeight":"700"}],"title-md":["17px",{"lineHeight":"22px","letterSpacing":"0.08em","fontWeight":"700"}],"number-md":["16px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"700"}],"display-lg":["34px",{"lineHeight":"40px","letterSpacing":"0.06em","fontWeight":"800"}]}}}};</script></head><body class="bg-rpg-bg text-on-surface font-body-md text-body-md antialiased selection:bg-rpg-accent selection:text-rpg-accent-contrast"><aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface border-r border-rpg-border z-50 flex flex-col justify-between select-none"><div class="flex flex-col h-full"><div class="h-14 px-space-md flex items-center justify-between border-b border-rpg-border bg-surface-container-lowest"><div class="flex items-center gap-space-xs"><div class="w-2 h-2 bg-rpg-accent animate-pulse"></div><span class="font-title-md text-title-md text-primary tracking-wider uppercase">GM-OS</span><span class="font-label-xs text-label-xs text-on-surface-variant">v6.4</span></div><span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-surface-variant text-rpg-accent border border-rpg-border">SYS:OK</span></div><div class="overflow-y-auto flex-1 py-space-sm px-space-xs space-y-space-md"><div class="space-y-space-xs"><div class="px-space-xs py-1 flex items-center justify-between"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// 01_AVENTURE</span><span class="font-label-xs text-label-xs text-rpg-muted">[7]</span></div><nav class="flex flex-col gap-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold border-l-2 border-rpg-accent"><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">swords</span>Combat-OS</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">casino</span>Dice-OS</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="generateur-pnj" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">badge</span>Générateur PNJ</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">map</span>Cartographie</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="trame-narrative" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">account_tree</span>Trame Narrative</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="master-storyboard" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">view_kanban</span>Master Storyboard</a><a aria-current="page" class="flex items-center px-space-sm py-1.5 tracking-wider uppercase transition-colors bg-primary-container text-on-primary-container font-bold border-l-2 border-rpg-accent" data-path="session-os-actif" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">terminal</span>Session-OS Actif</a></nav></div><div class="space-y-space-xs"><div class="px-space-xs py-1 flex items-center justify-between"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// 02_AUDIO_BUS</span><span class="font-label-xs text-label-xs text-rpg-muted">[4]</span></div><nav class="flex flex-col gap-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold border-l-2 border-rpg-accent"><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">graphic_eq</span>Musique</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">volume_up</span>Effets Sonores</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">surround_sound</span>Ambiances</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">record_voice_over</span>Voice-OS</a></nav></div><div class="space-y-space-xs"><div class="px-space-xs py-1 flex items-center justify-between"><span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">// 03_OUTILS</span><span class="font-label-xs text-label-xs text-rpg-muted">[5]</span></div><nav class="flex flex-col gap-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold border-l-2 border-rpg-accent"><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">folder_open</span>Médiathèque</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="image-os" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">wallpaper</span>Image-OS</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="horloge-temps" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">schedule</span>Horloge &amp; Temps</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">highlight</span>Light-OS</a><a class="flex items-center px-space-sm py-1.5 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface font-label-sm text-label-sm tracking-wider uppercase transition-colors" data-path="tables-aleatoires" href="#"><span class="material-symbols-outlined text-[16px] mr-2 text-rpg-accent">format_list_numbered</span>Tables Aléatoires</a></nav></div></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-lowest flex items-center justify-between"><div class="flex flex-col"><span class="font-label-xs text-label-xs text-rpg-muted">LATENCY // RTT</span><span class="font-number-md text-number-md text-rpg-success">12 ms</span></div><div class="flex items-center gap-1"><div class="w-1.5 h-3 bg-rpg-success"></div><div class="w-1.5 h-3 bg-rpg-success"></div><div class="w-1.5 h-3 bg-rpg-border"></div></div></div></div></aside><div class="pl-[220px]"><header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface/95 backdrop-blur border-b border-rpg-border z-40 flex items-center justify-between px-space-lg select-none"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-2"><span class="font-title-md text-title-md text-rpg-text tracking-widest uppercase">GM-OS V6</span><span class="font-label-xs text-label-xs text-rpg-muted px-1.5 py-0.5 bg-surface-container-high border border-rpg-border">NEXUS-PROTOCOL</span></div><div class="h-4 w-px bg-rpg-border hidden md:block"></div><div class="hidden lg:flex items-center gap-2 bg-surface-container-lowest px-2.5 py-1 border border-rpg-border"><span class="material-symbols-outlined text-[16px] text-rpg-accent">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted">MASTER:</span><span class="font-number-md text-number-md text-on-surface">82%</span><div class="w-16 h-1.5 bg-surface-variant ml-1 flex"><div class="h-full bg-rpg-accent w-[82%]"></div></div></div><div class="hidden xl:flex items-center gap-2 bg-surface-container-lowest px-2.5 py-1 border border-rpg-border"><span class="material-symbols-outlined text-[16px] text-rpg-info">chat</span><span class="font-label-xs text-label-xs text-rpg-muted">FOCUS CHAT:</span><span class="font-label-xs text-label-xs text-on-surface font-bold">TABLE LIVE</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center bg-surface-container-lowest p-0.5 border border-rpg-border"><button class="px-2.5 py-1 font-label-xs text-label-xs tracking-wider uppercase transition-colors bg-rpg-surface-2 text-on-surface font-bold" type="button">ATELIER</button><button class="px-2.5 py-1 font-label-xs text-label-xs tracking-wider uppercase transition-colors text-on-surface-variant hover:text-on-surface" type="button">TABLE</button></div><div class="hidden sm:flex items-center gap-1.5 px-2 py-1 bg-surface-container-lowest border border-rpg-border"><div class="w-2 h-2 rounded-full bg-rpg-success animate-ping"></div><span class="font-label-xs text-label-xs text-on-surface uppercase">CORTEX ACTIVE</span></div><button class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high hover:bg-surface-variant text-on-surface border border-rpg-border transition-colors" type="button"><span class="material-symbols-outlined text-[16px] text-rpg-accent">wifi_tethering</span><span class="font-label-sm text-label-sm uppercase hidden sm:inline">CONNECTER JOUEURS</span></button><button class="flex items-center gap-1.5 px-3 py-1.5 bg-rpg-danger hover:bg-error-container text-on-error border border-rpg-border transition-colors" type="button"><span class="material-symbols-outlined text-[16px] animate-pulse">eject</span><span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">STOP ALL</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-14 min-h-screen bg-rpg-bg px-space-lg py-space-lg"><div class="flex flex-col w-full text-on-surface">
+<!-- ==========================================
+       MODULE HEADER : NAVIGATION & SÉANCE ACTIONS
+       ========================================== -->
+<header class="w-full bg-surface-container-lowest p-space-md mb-space-md shadow-md flex flex-wrap items-center justify-between gap-space-md">
+<!-- Action Retour & Titrage -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors font-label-xs text-label-xs uppercase" href="#">
+<span class="material-symbols-outlined text-[14px]">arrow_back</span>
+<span>Retour à la liste des séances</span>
+</a>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-widest">//</span>
+<span class="font-label-xs text-label-xs text-primary tracking-widest uppercase font-bold">ANGES DE FEU // CAMPAGNE ACTIVE</span>
+</div>
+<h1 class="font-display-md text-display-md uppercase tracking-wider text-rpg-text">
+        PRÉPARER LA SÉANCE N°1 — SAMEDI 28 AOÛT 2026
+      </h1>
+</div>
+<!-- Sélecteur de statut & Validation -->
+<div class="flex items-center gap-space-md">
+<!-- Status Pills -->
+<div class="flex items-center bg-surface-container-low p-1 gap-1">
+<button class="px-3 py-1.5 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">
+          PLANIFIÉE
+        </button>
+<button class="px-3 py-1.5 font-label-xs text-label-xs uppercase tracking-wider bg-primary-container text-on-primary-container font-bold flex items-center gap-1.5 shadow-sm" type="button">
+<span class="w-2 h-2 bg-on-primary-container"></span>
+          EN COURS
+        </button>
+<button class="px-3 py-1.5 font-label-xs text-label-xs uppercase tracking-wider text-rpg-muted hover:text-on-surface transition-colors" type="button">
+          TERMINÉE
+        </button>
+</div>
+<!-- Action Primaire -->
+<button class="h-11 px-space-lg bg-rpg-accent hover:bg-primary-fixed-dim text-rpg-accent-contrast font-label-sm text-label-sm uppercase font-bold flex items-center gap-2 transition-colors shadow-md" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>ENREGISTRER ET FERMER</span>
+</button>
+</div>
+</header>
+<!-- ==========================================
+       SECTION 1 : AVANT LA PARTIE (PREPARATION)
+       ========================================== -->
+<section class="flex flex-col gap-space-sm mb-space-lg">
+<!-- Header de section chronologique -->
+<div class="flex items-center gap-2 bg-surface-container px-space-md py-1.5 shadow-sm">
+<span class="w-2.5 h-2.5 bg-rpg-accent"></span>
+<span class="font-title-md text-title-md uppercase text-primary tracking-widest">1. AVANT LA PARTIE</span>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-wider">— PRÉPARATION &amp; CADRAGE TACTIQUE</span>
+</div>
+<!-- Grille 60% / 40% -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- COLONNE GAUCHE (60% = col-span-7) -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Bloc Narration & Secrets (Deux panneaux côte à côte) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Panneau Synopsis Joueurs -->
+<div class="bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-2 mb-2 bg-surface-container-lowest px-2 py-1">
+<span class="font-title-md text-title-md uppercase text-rpg-text">SYNOPSIS JOUEURS</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-secondary-container text-on-surface font-bold uppercase">PUBLIC</span>
+</div>
+<p class="font-label-xs text-label-xs text-primary tracking-wide mb-2 uppercase">
+                MDD • PUBLIC — VISIBLE DANS LEUR JOURNAL DE QUÊTE
+              </p>
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-lowest p-space-sm leading-relaxed space-y-2">
+<p>Les détectives sont appelés au laboratoire de cryogénie RIT suite au vol d'un micro-filtre Tyrell de série Nexus-6.</p>
+<p>L'inspection préliminaire révèle une effraction sans alarme et la trace d'un véhicule de fuite non identifié.</p>
+<p>Les premiers témoins orientent l'enquête vers l'échoppe de l'Aurelian dans le marché d'Animoid Row.</p>
+</div>
+</div>
+<div class="pt-2 text-right">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase">DIFFUSION TABLE : SYNCHRONISÉE</span>
+</div>
+</div>
+<!-- Panneau Secrets du Meneur -->
+<div class="bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-2 mb-2 bg-surface-container-lowest px-2 py-1">
+<span class="font-title-md text-title-md uppercase text-rpg-danger">SECRETS DU MENEUR</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 bg-rpg-danger text-rpg-on-status font-bold uppercase">
+                  🔒 TOP SECRET
+                </span>
+</div>
+<p class="font-label-xs text-label-xs text-rpg-danger tracking-wide mb-2 uppercase font-bold">
+                JAMAIS PARTAGÉ AUX JOUEURS
+              </p>
+<div class="space-y-space-sm">
+<div class="bg-surface-container-lowest p-space-sm shadow-inner">
+<div class="flex items-center gap-1.5 text-rpg-warning font-label-xs text-label-xs mb-1 uppercase font-bold">
+<span class="material-symbols-outlined text-[14px]">key</span>
+<span>SECRET #01</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                    Le vol a été commandité par Roy Batty lui-même pour ralentir la dégradation cellulaire de Pris avant leur fuite.
+                  </p>
+</div>
+<div class="bg-surface-container-lowest p-space-sm shadow-inner">
+<div class="flex items-center gap-1.5 text-rpg-warning font-label-xs text-label-xs mb-1 uppercase font-bold">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span>SECRET #02</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                    L'inspecteur Gaff surveille discrètement les allées et venues de l'équipe et interviendra si Deckard est compromis.
+                  </p>
+</div>
+</div>
+</div>
+<div class="pt-2 text-right">
+<span class="font-label-xs text-label-xs text-rpg-danger uppercase font-bold">CANAL LOCAL GM STRICT</span>
+</div>
+</div>
+</div>
+<!-- Bloc Checklist de Préparation -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-2 mb-3 bg-surface-container-lowest px-space-sm py-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">checklist</span>
+<span class="font-title-md text-title-md uppercase text-rpg-text">CHECKLIST DE PRÉPARATION</span>
+</div>
+<span class="font-label-xs text-label-xs font-number-md text-primary tracking-wider">STATUS : 2/4 TERMINÉ</span>
+</div>
+<div class="space-y-2">
+<!-- Tâche 1 (Cochée) -->
+<label class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input checked="" class="hidden peer" type="checkbox"/>
+<span class="w-5 h-5 bg-rpg-success text-rpg-on-status flex items-center justify-center font-bold text-[14px]">
+                ✓
+              </span>
+<span class="font-body-md text-body-md text-on-surface line-through text-rpg-muted">
+                Importer le plan tactique du laboratoire RIT et calibrer la grille métrique
+              </span>
+</label>
+<!-- Tâche 2 (Cochée) -->
+<label class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input checked="" class="hidden peer" type="checkbox"/>
+<span class="w-5 h-5 bg-rpg-success text-rpg-on-status flex items-center justify-center font-bold text-[14px]">
+                ✓
+              </span>
+<span class="font-body-md text-body-md text-on-surface line-through text-rpg-muted">
+                Calibrer la playlist d'ambiance pluvieuse Deck A / Deck B
+              </span>
+</label>
+<!-- Tâche 3 (Non cochée) -->
+<label class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input class="hidden peer" type="checkbox"/>
+<span class="w-5 h-5 bg-surface-container-high text-transparent flex items-center justify-center font-bold text-[14px]">
+                ✓
+              </span>
+<span class="font-body-md text-body-md text-on-surface">
+                Finaliser les statistiques de combat pour les deux réplicants de garde
+              </span>
+</label>
+<!-- Tâche 4 (Non cochée) -->
+<label class="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input class="hidden peer" type="checkbox"/>
+<span class="w-5 h-5 bg-surface-container-high text-transparent flex items-center justify-center font-bold text-[14px]">
+                ✓
+              </span>
+<span class="font-body-md text-body-md text-on-surface">
+                Imprimer ou pré-télécharger l'indice visuel #04 (l'écaille de serpent synthétique)
+              </span>
+</label>
+</div>
+</div>
+</div>
+<!-- COLONNE DROITE (40% = col-span-5) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Carte Date de la partie -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest block mb-1">DATE DE LA PARTIE</span>
+<div class="flex items-center gap-3 bg-surface-container-lowest p-space-sm">
+<span class="material-symbols-outlined text-rpg-accent text-[24px]">calendar_month</span>
+<div class="flex flex-col">
+<span class="font-display-md text-display-md text-rpg-text uppercase">Samedi 28 août 2026</span>
+<span class="font-label-xs text-label-xs font-number-md text-primary">20:30 UTC+2 • CRÉNEAU DE 4H</span>
+</div>
+</div>
+</div>
+<!-- Carte Ressources Annexes -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest block mb-2">RESSOURCES ANNEXES</span>
+<div class="space-y-2">
+<!-- Lien Web -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px]">open_in_browser</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface font-bold uppercase truncate">Dossier Tyrell Corp</span>
+<span class="font-label-xs text-label-xs text-rpg-muted truncate">http://nexus-wiki.local/sec-04</span>
+</div>
+</div>
+<button class="px-2.5 py-1 bg-surface-container hover:bg-surface-variant text-primary font-label-xs text-label-xs uppercase" type="button">
+                Ouvrir
+              </button>
+</div>
+<!-- Fichier Local -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">description</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface font-bold uppercase truncate">scenario_anges_de_feu_part1.pdf</span>
+<span class="font-label-xs text-label-xs text-rpg-muted truncate">/storage/docs/campaigns/</span>
+</div>
+</div>
+<button class="px-2.5 py-1 bg-surface-container hover:bg-surface-variant text-on-surface font-label-xs text-label-xs uppercase" type="button">
+                Preload
+              </button>
+</div>
+</div>
+</div>
+<!-- Carte PNJ & Monstres liés à la séance -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">PNJ &amp; MONSTRES LIÉS À LA SÉANCE</span>
+<span class="font-label-xs text-label-xs text-primary font-number-md">[3 ENREGISTRÉS]</span>
+</div>
+<!-- Barre de recherche rapide -->
+<div class="flex items-center gap-1 mb-space-sm">
+<div class="relative flex-1">
+<input class="w-full bg-surface-container-lowest px-2.5 py-1.5 font-body-sm text-body-sm text-on-surface placeholder:text-rpg-muted focus:outline-none" placeholder="Rechercher un PNJ ou monstre..." type="text"/>
+</div>
+<button class="px-3 py-1.5 bg-surface-container hover:bg-surface-variant text-primary font-label-xs text-label-xs uppercase font-bold flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">add</span>
+              Ajouter
+            </button>
+</div>
+<!-- Liste des PNJ liés -->
+<div class="space-y-1.5">
+<!-- PNJ 1 -->
+<div class="flex items-center justify-between p-2 bg-surface-container-lowest">
+<div class="flex items-center gap-2 min-w-0">
+<span class="px-1.5 py-0.5 bg-rpg-danger text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">Hostile</span>
+<span class="font-title-md text-title-md text-rpg-text truncate">Roy Batty</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">— Nexus-6 Combat</span>
+</div>
+<button class="text-rpg-muted hover:text-rpg-danger p-1 transition-colors" title="Retirer de la séance" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- PNJ 2 -->
+<div class="flex items-center justify-between p-2 bg-surface-container-lowest">
+<div class="flex items-center gap-2 min-w-0">
+<span class="px-1.5 py-0.5 bg-rpg-info text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">Allié / Neutre</span>
+<span class="font-title-md text-title-md text-rpg-text truncate">Gaff</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">— Inspecteur LAPD</span>
+</div>
+<button class="text-rpg-muted hover:text-rpg-danger p-1 transition-colors" title="Retirer de la séance" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- PNJ 3 -->
+<div class="flex items-center justify-between p-2 bg-surface-container-lowest">
+<div class="flex items-center gap-2 min-w-0">
+<span class="px-1.5 py-0.5 bg-secondary-container text-on-surface font-label-xs text-label-xs font-bold uppercase">Neutre</span>
+<span class="font-title-md text-title-md text-rpg-text truncate">L'Aurelian</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">— Marchand Animoid Row</span>
+</div>
+<button class="text-rpg-muted hover:text-rpg-danger p-1 transition-colors" title="Retirer de la séance" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Carte Participation des PJ (Présence Table) -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">PARTICIPATION DES PJ (PRÉSENCE TABLE)</span>
+<span class="font-label-xs text-label-xs text-rpg-success font-number-md font-bold">3 PRÉSENTS / 1 ABSENT</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant mb-space-sm uppercase">
+            Cliquez sur un personnage pour basculer son statut
+          </p>
+<div class="space-y-1.5">
+<!-- PJ 1 -->
+<button class="w-full flex items-center justify-between p-2 bg-surface-container-lowest hover:bg-surface-container transition-colors text-left" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-success text-[18px]">check_box</span>
+<span class="font-title-md text-title-md text-rpg-text">Rick Deckard</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">PRÉSENT</span>
+</button>
+<!-- PJ 2 -->
+<button class="w-full flex items-center justify-between p-2 bg-surface-container-lowest hover:bg-surface-container transition-colors text-left" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-success text-[18px]">check_box</span>
+<span class="font-title-md text-title-md text-rpg-text">Rachael Tyrell</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">PRÉSENTE</span>
+</button>
+<!-- PJ 3 -->
+<button class="w-full flex items-center justify-between p-2 bg-surface-container-lowest hover:bg-surface-container transition-colors text-left" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-success text-[18px]">check_box</span>
+<span class="font-title-md text-title-md text-rpg-text">Gaff <span class="font-label-xs text-label-xs text-rpg-muted">(PJ suppléant)</span></span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-success text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">PRÉSENT</span>
+</button>
+<!-- PJ 4 (Absent) -->
+<button class="w-full flex items-center justify-between p-2 bg-surface-container-lowest opacity-70 hover:opacity-100 hover:bg-surface-container transition-colors text-left" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-danger text-[18px]">disabled_by_default</span>
+<span class="font-title-md text-title-md text-on-surface-variant line-through">Leon Kowalski</span>
+</div>
+<span class="px-2 py-0.5 bg-rpg-danger text-rpg-on-status font-label-xs text-label-xs font-bold uppercase">ABSENT / EXCUSÉ</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       SECTION 2 : PENDANT LA PARTIE (LIVE COCKPIT)
+       ========================================== -->
+<section class="flex flex-col gap-space-sm mb-space-lg">
+<!-- Header de section chronologique -->
+<div class="flex items-center gap-2 bg-surface-container px-space-md py-1.5 shadow-sm">
+<span class="w-2.5 h-2.5 bg-rpg-warning"></span>
+<span class="font-title-md text-title-md uppercase text-rpg-warning tracking-widest">2. PENDANT LA PARTIE</span>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-wider">— TÉLÉMÉTRIE &amp; LOGS TACTIQUES DIRECTS</span>
+</div>
+<!-- Grand Bloc Notes de Séance -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-2 mb-space-sm bg-surface-container-lowest px-space-sm py-1.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">terminal</span>
+<span class="font-title-md text-title-md uppercase text-rpg-text">NOTES DE SÉANCE — PRISE DIRECTE AU COCKPIT</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rpg-warning animate-pulse"></span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 bg-surface-container-high text-rpg-warning font-bold uppercase tracking-wider">
+            LECTURE SEULE ICI • SAISIE EN JEU DIRECT
+          </span>
+</div>
+</div>
+<!-- Journal de notes live -->
+<div class="bg-surface-container-lowest p-space-md font-body-md text-body-md text-on-surface space-y-2.5 leading-relaxed">
+<div class="flex items-baseline gap-2">
+<span class="font-number-md text-number-md text-primary font-bold">21:15</span>
+<span class="text-rpg-muted">—</span>
+<span>Les joueurs ont choisi d'interroger le légiste avant d'examiner le sas de ventilation.</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-number-md text-number-md text-primary font-bold">21:48</span>
+<span class="text-rpg-muted">—</span>
+<span>Deckard a réussi son jet d'Observation (succès avec d12) et a trouvé la fibre d'imperméable sans déclencher le piège.</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-number-md text-number-md text-primary font-bold">22:30</span>
+<span class="text-rpg-muted">—</span>
+<span>Conflit évité de justesse avec la patrouille de police locale grâce à Rachael.</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       SECTION 3 : APRÈS LA PARTIE (DEBRIEFING)
+       ========================================== -->
+<section class="flex flex-col gap-space-sm pb-space-lg">
+<!-- Header de section chronologique -->
+<div class="flex items-center gap-2 bg-surface-container px-space-md py-1.5 shadow-sm">
+<span class="w-2.5 h-2.5 bg-rpg-info"></span>
+<span class="font-title-md text-title-md uppercase text-rpg-info tracking-widest">3. APRÈS LA PARTIE</span>
+<span class="font-label-xs text-label-xs text-rpg-muted tracking-wider">— ANALYSE &amp; CAPITALISATION POST-MORTEM</span>
+</div>
+<!-- Grand Bloc Débriefing & Retours -->
+<div class="bg-surface-container-low p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-2 mb-space-sm bg-surface-container-lowest px-space-sm py-1.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-info text-[18px]">rate_review</span>
+<span class="font-title-md text-title-md uppercase text-rpg-text">DÉBRIEFING &amp; RETOURS DES JOUEURS</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">SYNTHÈSE À CHAUD CONSIGNÉE</span>
+</div>
+<!-- Zone de texte d'évaluation -->
+<div class="bg-surface-container-lowest p-space-md">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          Retours recueillis à chaud : Très bonne tension sur la scène du laboratoire. Les joueurs ont adoré l'ambiance sonore pluvieuse. Prévoir un peu plus d'indices matériels pour l'étape du marché car ils ont hésité sur la direction à prendre.
+        </p>
+</div>
+</div>
+</section>
+</div></main></div></body></html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-950 text-slate-100" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // Assistant IA - Le Sage [Vue Scindée Consultation &amp; Source]</title>
+<!-- Tailwind CSS CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts Configuration: Orbitron, Inter, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          colors: {
+            diegetic: {
+              bg: '#020617',
+              panel: '#0f172a',
+              card: '#0a1120',
+              cyan: '#06b6d4',
+              cyanDark: '#083344',
+              crimson: '#ef4444',
+              amber: '#f59e0b',
+            }
+          },
+          boxShadow: {
+            'cyan-glow': '0 0 24px rgba(6, 182, 212, 0.25), inset 0 0 1px rgba(6, 182, 212, 0.3)',
+            'cyan-focus': '0 0 15px rgba(6, 182, 212, 0.45)',
+          }
+        }
+      }
+    }
+</script>
+<!-- BEGIN: Custom Diegetic Styles -->
+<style data-purpose="diegetic-theme">
+    /* Brutal Diegetic Console: Hard edges 0px, custom scrollbars, subtle scanlines */
+    * {
+      border-radius: 0px !important;
+    }
+    
+    /* Diegetic Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border: 1px solid #06b6d4;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+
+    /* Subtle backdrop scanlines */
+    .scanline-bg {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.02));
+      background-size: 100% 3px, 4px 100%;
+    }
+</style>
+<!-- END: Custom Diegetic Styles -->
+</head>
+<body class="h-full w-full bg-[#020617] font-inter antialiased overflow-hidden select-none text-slate-100">
+<!-- BEGIN: Master Cockpit Blurred Background Overlay -->
+<div aria-hidden="true" class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+<img alt="GM Master Cockpit" class="w-full h-full object-cover object-center filter blur-md scale-105 opacity-25" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC_Tx_8y3gt8_GpSP8vqbLaIOED5n4bpQnc9hcoeVnC0FDfL2s2foRCzxgu-n0LOnI3B_lSvbyxp51gjX54aY7XBpicpdNWiWP7SlUWzmMHVQPMGARLiNNLPAGjsyp7aNO01MHo-ScG5jjR7V6Rm0UqhTXqEOvLscAUuZAT7k6uTMU0FAd9erkVXhGDSATdOFZkNIIubgLQ_wtsh1mZ5pOCb2c7TrzSabuaj6qOxN68y3JCpESOtyvHRgVwi_KHTSYVrI"/>
+<div class="absolute inset-0 bg-[#020617]/90 backdrop-blur-md scanline-bg"></div>
+</div>
+<!-- END: Master Cockpit Blurred Background Overlay -->
+<!-- BEGIN: Floating Oracle Modal Container -->
+<main class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8">
+<!-- Diegetic Panoramic Modal Box: 1200px wide, ~840px tall, 0px edges, cyan border -->
+<div class="relative w-full max-w-[1200px] h-[840px] max-h-[95vh] bg-[#0f172a] border border-[#06b6d4] shadow-cyan-glow flex flex-col justify-between overflow-hidden" data-purpose="oracle-modal-window-split">
+<!-- BEGIN: Unified Top Header -->
+<header class="h-16 px-4 bg-[#0a1120] border-b border-[#06b6d4]/40 flex items-center justify-between gap-3 shrink-0">
+<!-- Left Side: Persona Cartridge & Tagline -->
+<div class="flex items-center gap-3">
+<!-- Persona Selector Dropdown -->
+<div class="relative group">
+<button class="h-10 px-3 bg-[#083344] hover:bg-[#0e485e] text-[#06b6d4] border border-[#06b6d4] flex items-center gap-2.5 transition-colors cursor-pointer" type="button">
+<!-- Animated Icon -->
+<svg class="w-5 h-5 text-[#22d3ee] animate-pulse shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 2v4m0 12v4M2 12h4m12 0h4m-3.172-6.828l-2.828 2.828m-8 8l-2.828 2.828m0-13.656l2.828 2.828m8 8l2.828 2.828" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<div class="text-left font-orbitron">
+<span class="block text-[9px] uppercase tracking-widest text-[#06b6d4]/80 leading-none">Persona Actif</span>
+<span class="text-xs font-bold text-white tracking-wide leading-tight">LE SAGE (Règles et mécaniques)</span>
+</div>
+<svg class="w-4 h-4 ml-1 text-[#06b6d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Dropdown List of 8 Personas -->
+<div class="hidden group-hover:block absolute top-full left-0 mt-1 w-80 bg-[#0a1120] border border-[#06b6d4] shadow-2xl z-50 divide-y divide-slate-800">
+<div class="px-3 py-2 bg-[#020617] text-[11px] font-mono uppercase text-[#06b6d4] tracking-wider font-bold">
+              Sélectionner un Persona IA
+            </div>
+<button class="w-full px-3 py-2 text-left bg-[#083344] text-white flex items-center justify-between border-l-2 border-[#06b6d4]">
+<div>
+<div class="font-orbitron text-xs font-bold text-[#22d3ee]">1. Le Sage</div>
+<div class="text-[11px] text-slate-300">Règles et mécaniques de jeu</div>
+</div>
+<span class="text-[10px] font-mono text-[#22d3ee] font-bold">[ACTIF]</span>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">2. Le Scribe</div>
+<div class="text-[11px] text-slate-400">Chroniqueur de session &amp; faits marquants</div>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">3. L'Oracle</div>
+<div class="text-[11px] text-slate-400">Narration, improvisation &amp; rebondissements</div>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">4. Le Barde</div>
+<div class="text-[11px] text-slate-400">Lore, légendes &amp; poésie ambiante</div>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">5. L'Alchimiste</div>
+<div class="text-[11px] text-slate-400">Butin, potions &amp; profils de PNJ</div>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">6. L'Acteur</div>
+<div class="text-[11px] text-slate-400">Incarnation, dialogues &amp; attitudes PNJ</div>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">7. Le Cartographe</div>
+<div class="text-[11px] text-slate-400">Description sensorielle des lieux</div>
+</button>
+<button class="w-full px-3 py-2 text-left hover:bg-slate-800/80 text-slate-300 hover:text-white transition-colors">
+<div class="font-orbitron text-xs font-semibold">8. Le Stratège</div>
+<div class="text-[11px] text-slate-400">Tactique de combat &amp; environnement hostile</div>
+</button>
+</div>
+</div>
+<div class="hidden xl:flex items-center gap-2 pl-3 border-l border-slate-800 text-[11px] font-mono text-slate-400">
+<span class="w-1.5 h-1.5 bg-[#06b6d4]"></span>
+<span>Index d'arbitrage synchronisé</span>
+</div>
+</div>
+<!-- Right Side: Source Selector & Action Buttons -->
+<div class="flex items-center gap-2 sm:gap-3">
+<!-- Source Selector (Campagne | Système Actif) -->
+<div aria-label="Sélecteur de Source" class="flex border border-slate-700 p-0.5 bg-[#020617]" role="group">
+<button class="px-3 py-1.5 font-orbitron text-xs font-bold text-slate-400 hover:text-slate-200 transition-colors cursor-pointer" type="button">
+            Campagne
+          </button>
+<button class="px-3 py-1.5 font-orbitron text-xs font-bold bg-[#06b6d4] text-[#020617] tracking-wider shadow-sm cursor-pointer" type="button">
+            Système (Actif)
+          </button>
+</div>
+<!-- Action: Vider la discussion -->
+<button class="h-10 px-3 bg-[#020617] hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center gap-1.5 font-mono text-xs transition-colors cursor-pointer" title="Vider la discussion" type="button">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span class="hidden md:inline">Vider la discussion</span>
+</button>
+<!-- Action: Ouvrir NotebookLM dans le navigateur -->
+<button class="h-10 px-3 bg-[#020617] hover:bg-[#083344] border border-[#06b6d4]/60 text-[#22d3ee] flex items-center gap-1.5 font-mono text-xs transition-colors cursor-pointer" title="Ouvrir NotebookLM dans le navigateur" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span class="hidden md:inline">Ouvrir NotebookLM dans le navigateur ↗</span>
+</button>
+<!-- Close Button -->
+<button class="h-10 px-3 bg-[#450a0a]/70 hover:bg-[#7f1d1d] text-[#f87171] hover:text-white border border-[#ef4444]/60 flex items-center gap-1.5 font-mono text-xs font-bold transition-colors cursor-pointer group" title="Fermer la fenêtre (Échap)" type="button">
+<svg class="w-4 h-4 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5"></path>
+</svg>
+<span class="tracking-wider">✕ ÉCHAP</span>
+</button>
+</div>
+</header>
+<!-- END: Unified Top Header -->
+<!-- BEGIN: Split-Screen Body (50% / 50%) -->
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#06b6d4]/30 overflow-hidden bg-[#090f1d]">
+<!-- ============================================== -->
+<!-- LEFT PANEL: 01 // DISCUSSION EN DIRECT        -->
+<!-- ============================================== -->
+<section class="flex flex-col h-full overflow-hidden bg-[#0a1120]" data-purpose="discussion-panel">
+<!-- Panel Sub-header -->
+<div class="h-10 px-4 bg-[#020617] border-b border-slate-800 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 bg-[#06b6d4]"></span>
+<span class="font-orbitron text-xs font-bold text-[#06b6d4] tracking-wider">01 // DISCUSSION EN DIRECT</span>
+</div>
+<span class="font-mono text-[10px] text-slate-500 uppercase tracking-widest">Canal Arbitrage Vocal &amp; Texte</span>
+</div>
+<!-- Scrollable Discussion Area -->
+<div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5" data-purpose="discussion-log-stream">
+<!-- Meneur (User) Message Bubble -->
+<article class="flex flex-col items-end w-full" data-purpose="user-question-block">
+<div class="flex items-center gap-2 mb-1 mr-1 font-mono text-xs text-slate-400">
+<span class="inline-block w-1.5 h-1.5 bg-[#06b6d4]"></span>
+<span class="font-orbitron font-bold text-slate-300 tracking-wider">LE MENEUR</span>
+<span class="text-slate-500 text-[11px]">21:49:12</span>
+</div>
+<div class="max-w-[90%] bg-[#082032] border border-[#06b6d4]/50 p-3.5 text-white font-medium text-sm sm:text-base leading-relaxed shadow-md">
+              Comment se résout un test de Voight-Kampff ?
+            </div>
+</article>
+<!-- Sage (AI Assistant) Detailed Response -->
+<article class="flex flex-col items-start w-full" data-purpose="ai-response-block">
+<!-- Badge / Label Header -->
+<div class="flex items-center gap-2 mb-1.5 ml-1 font-mono text-xs">
+<span class="inline-block w-1.5 h-1.5 bg-[#22d3ee] animate-ping"></span>
+<span class="font-orbitron font-bold text-[#06b6d4] tracking-wider">LE SAGE // RÉSOLUTION DE RÈGLE</span>
+<span class="text-slate-500 font-mono text-[10px]">BLADE RUNNER RPG (YZE)</span>
+</div>
+<!-- Content Card -->
+<div class="w-full bg-[#0f172a] border border-[#06b6d4]/40 p-4 text-slate-200 text-xs sm:text-[13px] leading-relaxed space-y-3 shadow-cyan-glow">
+<!-- Paragraphe 1 -->
+<p>
+                Dans le système officiel de <strong>Blade Runner RPG</strong> (Year Zero Engine), le test de Voight-Kampff ne représente pas un simple jet de compétence binaire, mais une confrontation psychologique et physiologique méthodique. L'appareil capte la dilatation microscopique des capillaires faciaux et les micro-fluctuations de l'iris en réponse à des stimuli verbaux calibrés. Mécaniquement, l'interrogatoire oppose la capacité d'<strong>Empathie</strong> de l'inspecteur à la réserve de stabilité et au conditionnement biologique du sujet suspecté.
+              </p>
+<!-- Paragraphe 2 : Explication des dés -->
+<p>
+                Pour amorcer la procédure, le Blade Runner constitue une réserve de dés combinant son attribut d'<strong>Empathie</strong> avec sa compétence de <strong>Psychologie</strong> (ou <strong>Observation</strong> selon l'approche analytique choisie). Dans le système à dés échelonnés (d6, d8, d10, d12), l'inspecteur jette généralement deux dés de forte valeur (par exemple un d10 et un d8). De son côté, le suspect oppose un seuil de difficulté ou un jet d'opposition basé sur son score de <strong>Dissimulation</strong> ou d'Agilité mentale s'il dissimule consciemment sa véritable nature.
+              </p>
+<!-- Protocole en 3 étapes -->
+<div class="p-3 bg-[#020617] border-l-2 border-[#06b6d4] space-y-2.5 font-mono">
+<div class="text-[11px] uppercase tracking-wider text-[#22d3ee] font-orbitron font-bold">
+                  Protocole Opératoire en 3 Étapes :
+                </div>
+<div class="flex gap-2 text-[11px] text-slate-300">
+<span class="text-[#06b6d4] font-bold shrink-0">01 —</span>
+<div>
+<strong class="text-white">Établissement de la Ligne de Base :</strong> Pose de la machine et étalonnage du sujet. Chaque question préparatoire calibre le temps de réponse pupillaire (test passif d'Observation).
+                  </div>
+</div>
+<div class="flex gap-2 text-[11px] text-slate-300">
+<span class="text-[#06b6d4] font-bold shrink-0">02 —</span>
+<div>
+<strong class="text-white">L'Épreuve de Provocation :</strong> Lecture d'une série de stimuli à forte charge morale (animaux blessés, dilemmes affectifs). L'inspecteur jette ses dés : chaque succès (6+) perfore le masque du sujet et augmente le niveau de certitude.
+                  </div>
+</div>
+<div class="flex gap-2 text-[11px] text-slate-300">
+<span class="text-[#06b6d4] font-bold shrink-0">03 —</span>
+<div>
+<strong class="text-white">Analyse du Dénouement :</strong> Si les succès de l'inspecteur égalent ou dépassent le seuil de résistance du sujet, le verdict biologique tombe (Humain vérifié ou Réplicant démasqué). En cas d'échec, le sujet peut basculer en crise d'angoisse ou initier une réaction violente.
+                  </div>
+</div>
+</div>
+<!-- Paragraphe 3 : Complications -->
+<p>
+                Les complications en jeu surviennent principalement lors des échecs critiques ou sur les « 1 » obtenus lors des jets poussés (pushed rolls). Si l'inspecteur force son analyse sans succès suffisant, la lentille subit une erreur de calibration ou produit un faux négatif critique. Pire encore, le suspect Nexus peut décrypter l'intention de l'agent, interrompre brusquement la séance sous prétexte d'outrage, tenter de détruire le soufflet optique ou initier un assaut létal immédiat.
+              </p>
+<!-- Paragraphe 4 : Conseils d'interprétation pour le meneur -->
+<p class="text-slate-300 italic border-t border-slate-800 pt-2.5">
+<span class="not-italic font-bold text-[#06b6d4] font-mono text-[11px] uppercase block mb-1">Mise en scène pour le Meneur :</span>
+                Décrivez le ronronnement étouffé du diaphragme optique à chaque hésitation, l'aiguille galvanique qui s'affole au moindre battement de cils et l'odeur d'ozone émise par les circuits de l'appareil. Laissez un silence pesant de cinq secondes après chaque réponse du joueur suspect avant d'annoncer les tressaillements de l'iris.
+              </p>
+</div>
+</article>
+</div>
+<!-- Left Input Area (Tactile Form) -->
+<div class="p-3 bg-[#020617] border-t border-[#06b6d4]/40 shrink-0">
+<form class="flex items-center gap-2" onsubmit="event.preventDefault();">
+<div class="relative flex-1">
+<input class="w-full h-11 bg-[#0a1120] border border-slate-700 focus:border-[#06b6d4] focus:ring-0 text-white placeholder-slate-500 px-3 text-xs sm:text-sm font-inter transition-all outline-none" placeholder="Posez une question au Sage sur les règles ou la campagne..." type="text" value="Posez une question au Sage sur les règles ou la campagne..."/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[9px] text-slate-500 uppercase tracking-widest hidden sm:inline">
+                Prompt Actif
+              </span>
+</div>
+<button class="h-11 px-5 bg-[#06b6d4] hover:bg-[#22d3ee] text-[#020617] font-orbitron font-extrabold text-xs tracking-wider flex items-center gap-2 transition-colors cursor-pointer shadow-cyan-glow shrink-0 active:scale-95" type="submit">
+<span>ENVOYER</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5"></path>
+</svg>
+</button>
+</form>
+</div>
+</section>
+<!-- ============================================== -->
+<!-- RIGHT PANEL: 02 // EXTRAIT DE LA SOURCE - NOTEBOOKLM -->
+<!-- ============================================== -->
+<section class="flex flex-col h-full overflow-hidden bg-[#070c18]" data-purpose="source-reference-panel">
+<!-- Panel Sub-header with Tooling -->
+<div class="h-10 px-4 bg-[#020617] border-b border-slate-800 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 bg-[#22d3ee]"></span>
+<span class="font-orbitron text-xs font-bold text-white tracking-wider">02 // EXTRAIT DE LA SOURCE - NOTEBOOKLM</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="h-7 px-2.5 bg-[#0a1120] hover:bg-[#083344] text-[#06b6d4] border border-[#06b6d4]/40 flex items-center gap-1.5 font-mono text-[10px] font-bold transition-colors cursor-pointer" title="Rafraîchir la source">
+<svg class="w-3 h-3 text-[#22d3ee]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span>Rafraîchir la source</span>
+</button>
+<button class="h-7 px-2.5 bg-[#0a1120] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 flex items-center gap-1.5 font-mono text-[10px] font-bold transition-colors cursor-pointer" title="Annoter l'extrait">
+<svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span>Annoter</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Source Content -->
+<div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 font-inter text-slate-300 text-xs sm:text-[13px] leading-relaxed" data-purpose="source-text-view">
+<!-- Document Citation Header Badge -->
+<div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-[#0a1120] border border-slate-800 font-mono text-[11px]">
+<div class="flex items-center gap-2">
+<span class="text-[#06b6d4] font-bold">[DOCUMENT OFFICIEL]</span>
+<span class="text-white font-semibold">Livre de Base Blade Runner RPG (YZE)</span>
+</div>
+<div class="text-[#22d3ee] font-bold tracking-wider">
+              RÉF : PAGES 64-67
+            </div>
+</div>
+<!-- Direct Book Text Citation -->
+<div class="relative p-4 bg-[#0a1424] border-l-4 border-[#06b6d4] border-y border-r border-slate-800 space-y-3 font-serif sm:font-sans">
+<div class="font-orbitron text-xs font-bold text-white tracking-wide uppercase not-italic">
+              Section IV : Protocole de Diagnostic de Déviance Empathique (Voight-Kampff)
+            </div>
+<p class="text-slate-300 italic">
+              « Le test Voight-Kampff mesure les réactions involontaires du système nerveux autonome : dilatation de la pupille, micro-frémissements du muscle ciliaire et rougissement capillaire imperceptible à l'œil nu. L'examinateur administre une suite de 20 à 30 questions ciblées destinées à provoquer une résonance émotionnelle immédiate. »
+            </p>
+<p class="text-slate-300 italic">
+              « Tout individu humain sain produit une réponse involontaire dans un créneau de 0,4 à 0,8 seconde. Les modèles Nexus-6 et Nexus-7 simulent le raisonnement logique mais trahissent un retard de transmission synaptique de l'ordre de 1,2 seconde face aux énoncés impliquant la souffrance animale ou l'abandon filial. »
+            </p>
+</div>
+<!-- Modifiers Matrix (Data Table / Box) -->
+<div class="bg-[#020617] border border-[#06b6d4]/40 p-3.5 space-y-3">
+<div class="flex items-center justify-between border-b border-slate-800 pb-2">
+<span class="font-orbitron text-xs font-bold text-[#22d3ee] uppercase">
+                Encadré Technique : Modificateurs de Pupillométrie
+              </span>
+<span class="font-mono text-[10px] text-slate-400">TABLE 4.2 // P. 66</span>
+</div>
+<div class="space-y-2 font-mono text-[11px]">
+<div class="flex items-center justify-between py-1 border-b border-slate-900">
+<span class="text-slate-300">Sujet sous narcotique / alcoolisé :</span>
+<span class="text-[#ef4444] font-bold">-1 Dé d'Empathie (Malus inspecteur)</span>
+</div>
+<div class="flex items-center justify-between py-1 border-b border-slate-900">
+<span class="text-slate-300">Éclairage ambiant clignotant / néons défaillants :</span>
+<span class="text-[#ef4444] font-bold">-1 Dé d'Observation</span>
+</div>
+<div class="flex items-center justify-between py-1 border-b border-slate-900">
+<span class="text-slate-300">Machine Voight-Kampff étalonnée en atelier Tyrell :</span>
+<span class="text-[#10b981] font-bold">+1 Succès automatique sur la ligne de base</span>
+</div>
+<div class="flex items-center justify-between py-1 border-b border-slate-900">
+<span class="text-slate-300">Sujet Réplicant modèle Nexus-8 (avec faux souvenirs) :</span>
+<span class="text-[#f59e0b] font-bold">Opposition Dissimulation +2 Dés</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<span class="text-slate-300">Interrogatoire poussé (&gt; 45 minutes continues) :</span>
+<span class="text-[#ef4444] font-bold">Jet de Stress immédiat pour les deux partis</span>
+</div>
+</div>
+</div>
+<!-- Official Excerpt: Stress & Pushed Rolls -->
+<div class="space-y-2 bg-[#0a1120] p-3.5 border border-slate-800">
+<div class="font-orbitron text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-[#f59e0b]"></span>
+<span>Jets Poussés et Risque d'Escalade Violente (p. 67)</span>
+</div>
+<p class="text-slate-400 text-xs">
+              Lorsque l'inspecteur décide de <strong class="text-slate-200">pousser son jet</strong>, chaque symbole « 1 » obtenu inflige un point de dégât de Stress mental à l'agent. Si deux « 1 » apparaissent sur un jet poussé dans l'enceinte fermée d'un interrogatoire, le sujet détecte la fébrilité du Blade Runner : la machine subit une surtension de calibrage optique et le suspect Nexus est autorisé à jouer une action d'opportunité immédiate avant le prochain tour d'initiative.
+            </p>
+</div>
+<!-- Citation Source Meta Note -->
+<div class="p-3 bg-[#020617] border border-slate-800 text-[10px] font-mono text-slate-400 flex items-center justify-between">
+<div>
+<span class="text-slate-500">INDEXATION :</span> Livret des Règles VF // Chapitre 04 : Résolution des Enquêtes
+            </div>
+<div class="text-[#06b6d4]">
+              SYNCHRONISÉ AVEC LE DOSSIER DE CAMPAGNE
+            </div>
+</div>
+</div>
+<!-- Right Panel Bottom Status Strip -->
+<div class="h-11 px-4 bg-[#020617] border-t border-slate-800 flex items-center justify-between shrink-0 font-mono text-[11px]">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+<span>Index NotebookLM : 24 documents référencés (648 Ko)</span>
+</div>
+<span class="text-slate-500 uppercase tracking-wider text-[10px]">Lecture Diégétique Active</span>
+</div>
+</section>
+</div>
+<!-- END: Split-Screen Body -->
+</div>
+</main>
+<!-- END: Floating Oracle Modal Container -->
+</body></html>

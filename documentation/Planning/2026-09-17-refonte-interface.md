@@ -239,6 +239,15 @@ précisément le travail pour lequel le filet a été posé en premier.
   connaît que ce que montrent les captures** : le bas du panneau de la carte, le mode des dés
   échelonnés, absents des images, ont été devinés de travers ou déclarés inventés — avant de
   retirer une commande, la chercher dans le code.
+- ⭐ **Un deuxième tour, décidé par David le 2026-09-27** : *« ce n'est pas parce que je n'ai pas
+  eu de vraie plainte qu'il ne faut pas en profiter pour revoir un peu le design, surtout si on
+  veut une cohérence dans l'ensemble de l'application »*. Le noyau n'avait montré que neuf
+  écrans ; **Image-OS, pourtant dans le noyau, n'avait eu aucun prompt**. Le périmètre : tout le
+  reste des sections 0 à 6 de l'inventaire (la section 7 reste hors refonte), en huit lots —
+  prompts 10 à 17, [`2026-09-27-prompts-stitch-tour-2.md`](./2026-09-27-prompts-stitch-tour-2.md).
+  Captures : `GMOS_VITRINE=2` (`e2e/vitrine.spec.ts`, « la vitrine, deuxième tour »).
+  ✅ **Terminé le 2026-09-28** : les huit lots retenus, une soixantaine d'écrans, rangés dans
+  [`stitch/`](./stitch/README.md) (bilan et trois leçons en fin de README).
 
 **Pourquoi ne pas coller le code de Stitch.** Il génère du neuf : il ne connaît ni
 les magasins, ni l'i18n, ni les 27 modules, ni la forme des vraies données. Collé

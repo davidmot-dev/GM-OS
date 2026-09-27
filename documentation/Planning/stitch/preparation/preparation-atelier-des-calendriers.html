@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-error-container":"#ffdad6","tertiary-fixed-dim":"#bcc7de","tertiary":"#d2ddf5","surface-container-high":"#23293c","on-secondary":"#283044","rpg-danger":"#ef4444","error-container":"#93000a","on-primary":"#00363e","on-primary-fixed-variant":"#004e5a","inverse-on-surface":"#2a3043","on-primary-container":"#005763","on-secondary-container":"#adb4ce","inverse-surface":"#dce1fb","on-tertiary-container":"#444f63","on-secondary-fixed":"#131b2e","inverse-primary":"#006877","on-tertiary-fixed-variant":"#3c475a","secondary-container":"#3f465c","surface-variant":"#2e3447","tertiary-container":"#b6c1d9","on-primary-fixed":"#001f25","on-surface":"#dce1fb","rpg-accent":"#22d3ee","background":"#0c1324","rpg-on-status":"#020617","primary-fixed":"#a2eeff","surface-bright":"#33394c","rpg-surface-2":"#1e293b","secondary-fixed":"#dae2fd","on-background":"#dce1fb","rpg-success":"#10b981","surface-container":"#191f31","on-surface-variant":"#bbc9cd","on-tertiary":"#263143","rpg-text":"#f8fafc","error":"#ffb4ab","secondary-fixed-dim":"#bec6e0","outline-variant":"#3c494c","surface-tint":"#2fd9f4","surface-dim":"#0c1324","surface-container-low":"#151b2d","rpg-muted":"#898c95","on-error":"#690005","rpg-accent-contrast":"#020617","surface-container-highest":"#2e3447","primary":"#8aebff","on-secondary-fixed-variant":"#3f465c","rpg-border":"#1e293b","on-tertiary-fixed":"#111c2d","primary-fixed-dim":"#2fd9f4","primary-container":"#22d3ee","surface-container-lowest":"#070d1f","rpg-bg":"#020617","secondary":"#bec6e0","surface":"#0c1324","tertiary-fixed":"#d8e3fb","outline":"#859397","rpg-warning":"#f59e0b","rpg-surface":"#0f172a","rpg-info":"#3b82f6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin":"16px","space-xs":"4px","space-md":"12px","space-sm":"8px","space-lg":"16px","space-xl":"24px","gutter":"12px"},"fontFamily":{"number-md":["Space Mono"],"body-sm":["Space Mono"],"body-md":["Space Mono"],"display-md":["Syne"],"label-xs":["Space Mono"],"label-sm":["Space Mono"],"number-lg":["Space Mono"],"display-lg":["Syne"],"title-md":["Syne"]},"fontSize":{"number-md":["16px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"display-md":["24px",{"lineHeight":"30px","letterSpacing":"0.05em","fontWeight":"700"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.18em","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.14em","fontWeight":"700"}],"number-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"display-lg":["34px",{"lineHeight":"40px","letterSpacing":"0.06em","fontWeight":"800"}],"title-md":["17px",{"lineHeight":"22px","letterSpacing":"0.08em","fontWeight":"700"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 h-16 z-50 bg-rpg-surface border-b border-rpg-border flex items-center justify-between px-margin shadow-[0_4px_20px_rgba(2,6,23,0.8)]"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-3 h-3 bg-rpg-accent rotate-45 flex-shrink-0 animate-pulse"></div><div class="flex flex-col"><span class="font-display-md text-title-md tracking-wider text-rpg-text uppercase">GM-OS <span class="text-rpg-accent font-bold">V6</span></span><span class="font-label-xs text-label-xs text-rpg-muted tracking-widest">NEXUS-PROTOCOL // 1440.SYS</span></div></div><div class="h-6 w-px bg-rpg-border"></div><div class="flex items-center gap-space-sm px-space-sm py-1 bg-surface-container border border-rpg-border"><div class="w-2 h-2 rounded-full bg-rpg-success shadow-[0_0_8px_#10b981]"></div><span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">CORTEX IA</span><span class="font-label-xs text-label-xs text-rpg-success font-bold">ACTIVE</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm bg-surface-container px-space-sm py-1.5 border border-rpg-border"><span class="material-symbols-outlined text-[16px] text-rpg-accent">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted uppercase">VOL</span><input class="w-20 h-1.5 bg-rpg-bg accent-rpg-accent cursor-pointer" max="100" min="0" type="range" value="100"/><span class="font-number-md text-body-sm text-rpg-text font-bold w-9 text-right">100%</span></div><button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container hover:bg-rpg-surface-2 border border-rpg-border text-rpg-text transition-colors"><span class="material-symbols-outlined text-[16px] text-rpg-accent">mic</span><span class="font-label-sm text-label-sm tracking-wider uppercase">Focus Chat</span></button><button class="flex items-center gap-space-xs px-space-md py-1.5 bg-error-container hover:bg-rpg-danger border border-rpg-danger text-rpg-text transition-all"><span class="material-symbols-outlined text-[16px] text-rpg-text">gpp_bad</span><span class="font-label-sm text-label-sm tracking-wider uppercase font-bold">STOP ALL</span></button><div class="flex border border-rpg-border bg-surface-container p-0.5"><button class="px-space-md py-1 bg-rpg-accent text-rpg-accent-contrast font-label-sm text-label-sm font-bold tracking-wider">ATELIER</button><button class="px-space-md py-1 text-on-surface-variant hover:text-rpg-text font-label-sm text-label-sm tracking-wider transition-colors">TABLE</button></div><div class="h-6 w-px bg-rpg-border"></div><button class="flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container hover:bg-rpg-surface-2 border border-rpg-border text-rpg-text transition-colors"><span class="material-symbols-outlined text-[16px] text-rpg-accent">hub</span><span class="font-label-sm text-label-sm tracking-wider uppercase">Connecter Joueurs</span></button><div class="flex items-center gap-space-xs px-space-sm py-1 bg-surface-container border border-rpg-border"><span class="w-1.5 h-1.5 rounded-full bg-rpg-accent animate-ping"></span><span class="font-label-xs text-label-xs text-rpg-accent font-bold uppercase tracking-wider">SYS-LINK ON</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><aside class="fixed left-0 top-16 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col py-space-md"><div class="px-space-md pb-space-sm mb-space-xs border-b border-rpg-border/50 flex items-center justify-between"><span class="font-label-xs text-label-xs text-rpg-muted tracking-widest uppercase">AVENTURE</span><span class="font-number-md text-label-xs text-rpg-accent">01</span></div><nav class="flex flex-col mb-space-md" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold"><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px]">swords</span><span>Combat-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px]">casino</span><span>Dice-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="generateur" href="#"><span class="material-symbols-outlined text-[16px]">psychology</span><span>Générateur...</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px]">map</span><span>Cartographie</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="trame-narrative" href="#"><span class="material-symbols-outlined text-[16px]">history_edu</span><span>Trame Narrative</span></a></nav><div class="px-space-md pb-space-sm mb-space-xs border-b border-rpg-border/50 flex items-center justify-between"><span class="font-label-xs text-label-xs text-rpg-muted tracking-widest uppercase">AUDIO</span><span class="font-number-md text-label-xs text-rpg-accent">02</span></div><nav class="flex flex-col mb-space-md" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold"><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px]">music_note</span><span>Musique</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px]">equalizer</span><span>Effets Sonores</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px]">air</span><span>Ambiances</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px]">record_voice_over</span><span>Voice-OS</span></a></nav><div class="px-space-md pb-space-sm mb-space-xs border-b border-rpg-border/50 flex items-center justify-between"><span class="font-label-xs text-label-xs text-rpg-muted tracking-widest uppercase">OUTILS</span><span class="font-number-md text-label-xs text-rpg-accent">03</span></div><nav class="flex flex-col" data-active-classes="bg-rpg-surface-2 text-rpg-accent border-l-2 border-rpg-accent font-bold"><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px]">perm_media</span><span>Médiathèque</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="image-os" href="#"><span class="material-symbols-outlined text-[16px]">image</span><span>Image-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="horloge-temps" href="#"><span class="material-symbols-outlined text-[16px]">schedule</span><span>Horloge &amp; Temps</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px]">lightbulb</span><span>Light-OS</span></a><a class="flex items-center gap-space-sm px-space-md py-2 text-on-surface-variant hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors font-body-sm text-body-sm" data-path="tables-aleatoires" href="#"><span class="material-symbols-outlined text-[16px]">table_chart</span><span>Tables Aléat...</span></a></nav></div><div class="p-space-sm border-t border-rpg-border bg-surface-container-low flex items-center justify-between"><button class="p-1.5 text-on-surface-variant hover:text-rpg-accent transition-colors"><span class="material-symbols-outlined text-[18px]">settings</span></button><button class="p-1.5 text-on-surface-variant hover:text-rpg-accent transition-colors"><span class="material-symbols-outlined text-[18px]">terminal</span></button><button class="p-1.5 text-on-surface-variant hover:text-rpg-accent transition-colors"><span class="material-symbols-outlined text-[18px]">fullscreen</span></button><button class="p-1.5 text-on-surface-variant hover:text-rpg-danger transition-colors"><span class="material-symbols-outlined text-[18px]">power_settings_new</span></button></div></aside><div class="pl-[220px]"><main class="relative pt-16 min-h-screen bg-rpg-bg w-full"><div class="flex flex-col w-full relative">
+<!-- ARRIÈRE-PLAN GM-OS SOUS-JACENT (HORLOGE & TEMPS EN ARRIÈRE-PLAN ATTÉNUÉ) -->
+<div class="relative w-full opacity-20 filter blur-[1px] pointer-events-none select-none p-margin space-y-space-md">
+<div class="flex items-center justify-between bg-surface-container p-space-md">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-rpg-accent">schedule</span>
+<span class="font-display-md text-display-md text-rpg-text">MODULE HORLOGE &amp; TEMPS // CALENDRIER MONDIAL</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<span class="font-number-md text-number-md text-rpg-accent">1492 CV — HARPTOS</span>
+<span class="font-label-sm text-label-sm bg-surface-container-high px-space-sm py-1 text-on-surface">SYNCHRO LUNAIRE OK</span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-8 h-72 bg-surface-container-low p-space-md flex flex-col justify-between">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Éphéméride &amp; Écoulement Temporel</div>
+<div class="font-display-lg text-display-lg text-on-surface tracking-widest text-center py-space-xl">14 : 32 : 00 — TARSAKH 12</div>
+<div class="h-2 w-full bg-surface-container-highest"></div>
+</div>
+<div class="col-span-4 h-72 bg-surface-container-low p-space-md space-y-space-sm">
+<div class="font-label-sm text-label-sm text-rpg-muted uppercase">Phases Selûne</div>
+<div class="h-44 bg-surface-container"></div>
+</div>
+</div>
+</div>
+<!-- CADRE MODAL OVERLAY (FORGE CHRONOLOGIQUE G13) -->
+<div class="fixed inset-0 top-16 left-[220px] z-50 flex items-center justify-center p-space-md bg-surface-container-lowest/80 backdrop-blur-md">
+<!-- FENÊTRE PRINCIPALE DU MODAL -->
+<div class="w-full max-w-[1240px] max-h-[840px] h-[92vh] bg-rpg-surface flex flex-col shadow-2xl shadow-surface-container-lowest/90 relative overflow-hidden">
+<!-- LIGNE D'ACCENT SUPÉRIEURE LASER -->
+<div class="w-full h-0.5 bg-gradient-to-r from-transparent via-rpg-accent to-transparent"></div>
+<!-- EN-TÊTE DU MODAL (BRUTALISTE & DIÉGÉTIQUE) -->
+<div class="h-14 bg-surface-container-high px-space-lg flex items-center justify-between flex-shrink-0">
+<div class="flex items-center gap-space-md">
+<div class="w-8 h-8 bg-rpg-accent/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">calendar_month</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="font-display-md text-title-md uppercase tracking-wider text-rpg-text">ATELIER DU CALENDRIER</span>
+<span class="text-on-surface-variant font-label-xs text-label-xs">//</span>
+<span class="font-label-sm text-label-sm text-rpg-accent tracking-widest uppercase">FORGE CHRONOLOGIQUE G13</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Régie Système — Configuration diégétique temporelle multi-mondes</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-1">
+<span class="w-1.5 h-1.5 bg-rpg-accent"></span>
+<span class="font-label-xs text-label-xs text-rpg-accent uppercase">MATRICE 365J ACTIVE</span>
+</div>
+<button class="w-8 h-8 bg-surface-container hover:bg-rpg-danger hover:text-rpg-accent-contrast text-on-surface-variant flex items-center justify-center transition-colors" title="Fermer la console">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<!-- CORPS DU MODAL (2 COLONNES : 58% CONFIGURATION / 42% APERÇU) -->
+<div class="flex-1 flex overflow-hidden">
+<!-- COLONNE GAUCHE (58% : CONFIGURATION & FLUX SCROLLABLE) -->
+<div class="w-[58%] h-full overflow-y-auto p-space-lg space-y-space-lg bg-surface-container-low/40">
+<!-- BLOC 1 : IDENTITÉ & CHARGEMENT RAPIDE -->
+<div class="bg-surface-container p-space-md space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="font-label-sm text-label-sm text-rpg-accent uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[15px]">badge</span>
+<span>01. Identification &amp; Gabarit</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">ID: REG-HARPTOS-1492</span>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-6 space-y-space-xs">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider block">Nom du Calendrier</label>
+<input class="w-full h-10 bg-rpg-bg px-space-sm font-body-sm text-body-sm text-rpg-text focus:outline-none focus:bg-surface-container-high transition-colors" type="text" value="Calendrier de Harptos (Faerûn / Royaumes Oubliés)"/>
+</div>
+<div class="col-span-6 space-y-space-xs">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider block">Sélectionner un Modèle</label>
+<select class="w-full h-10 bg-rpg-bg px-space-sm font-body-sm text-body-sm text-rpg-text focus:outline-none focus:bg-surface-container-high transition-colors">
+<option selected="">Calendrier de Harptos (365 jours / 12 mois + 5 fêtes)</option>
+<option>Grégorien standard (365 jours)</option>
+<option>Golarion / Absalom (365 jours)</option>
+<option>Ébéron (336 jours / 12 mois de 28j)</option>
+</select>
+</div>
+</div>
+<!-- IA ASSIST PROMPT FEATURE -->
+<div class="bg-surface-container-high/60 p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-rpg-accent">
+<span class="material-symbols-outlined text-[16px]">auto_fix_high</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Composer d'après une description (IA)</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-muted">Assistance générative</span>
+</div>
+<div class="flex gap-space-xs">
+<input class="flex-1 h-9 bg-rpg-bg px-space-sm font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none" placeholder="Ex: Monde de Barovie, 12 lunes froides, 28 jours par mois, solstice funeste..." type="text"/>
+<button class="px-space-md h-9 bg-surface-container hover:bg-rpg-surface-2 text-rpg-accent font-label-sm text-label-sm tracking-wider uppercase transition-colors">Générer</button>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant">L'IA propose une structure selon votre description, rien n'est enregistré automatiquement.</p>
+</div>
+<!-- BOÎTE ALERTES SYSTÈME -->
+<div class="flex items-center gap-space-sm p-space-sm bg-rpg-success/10">
+<span class="material-symbols-outlined text-rpg-success text-[18px]">verified</span>
+<div class="flex-1 flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-rpg-success uppercase font-bold tracking-wider">Couverture annuelle valide : 365 jours calculés</span>
+<span class="text-on-surface-variant font-body-sm">Nom requis : OK (Validé)</span>
+</div>
+</div>
+</div>
+<!-- BLOC 2 : PARAMÈTRES TEMPORELS FONDAMENTAUX -->
+<div class="bg-surface-container p-space-md space-y-space-md">
+<div class="font-label-sm text-label-sm text-rpg-accent uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[15px]">tune</span>
+<span>02. Paramètres Temporels Fondamentaux</span>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-3 space-y-space-xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Heures / Jour</span>
+<div class="h-10 bg-rpg-bg flex items-center justify-between px-space-sm">
+<span class="font-number-md text-number-md text-rpg-text">24</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">HR</span>
+</div>
+</div>
+<div class="col-span-3 space-y-space-xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Minutes / Heure</span>
+<div class="h-10 bg-rpg-bg flex items-center justify-between px-space-sm">
+<span class="font-number-md text-number-md text-rpg-text">60</span>
+<span class="font-label-xs text-label-xs text-rpg-muted">MIN</span>
+</div>
+</div>
+<div class="col-span-6 space-y-space-xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Année de Départ</span>
+<div class="h-10 bg-rpg-bg flex items-center justify-between px-space-sm">
+<span class="font-number-md text-number-md text-rpg-accent">1492 CV</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant truncate max-w-[140px]">Trois Drapeaux</span>
+</div>
+</div>
+</div>
+<div class="space-y-space-xs pt-space-xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Règle Bissextile Spécifique</span>
+<div class="h-10 bg-rpg-bg flex items-center justify-between px-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[18px]">shield</span>
+<span class="font-body-sm text-body-sm text-rpg-text">Tous les 4 ans (Jour du Bouclier / Shieldmeet après Pleine-Lune)</span>
+</div>
+<span class="font-label-xs text-label-xs text-rpg-warning font-bold uppercase">+1J / 4 ANS</span>
+</div>
+</div>
+<label class="flex items-center gap-space-sm bg-surface-container-high/40 p-space-sm cursor-pointer select-none">
+<input checked="" class="w-4 h-4 accent-rpg-accent cursor-pointer bg-rpg-bg" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-rpg-text">Les jours hors calendrier sortent de la semaine (intercalaires indépendants sans décan)</span>
+</label>
+</div>
+<!-- BLOC 3 : STRUCTURE DE LA SEMAINE (DÉCAN / 10 JOURS) -->
+<div class="bg-surface-container p-space-md space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="font-label-sm text-label-sm text-rpg-accent uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[15px]">view_week</span>
+<span>03. Structure de la Semaine (Décan de 10 Jours)</span>
+</div>
+<span class="font-number-md text-label-xs text-on-surface-variant">10 JOURS / SEMAINE</span>
+</div>
+<div class="grid grid-cols-5 gap-space-xs">
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J1</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Premier-jour</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J2</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Deuxième-j.</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J3</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Troisième-j.</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J4</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Quatrième-j.</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J5</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Cinquième-j.</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J6</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Sixième-jour</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J7</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Septième-j.</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J8</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Huitième-j.</div>
+</div>
+<div class="bg-surface-container-high p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-muted">J9</span>
+<div class="font-body-sm text-body-sm text-rpg-text font-bold truncate">Neuvième-j.</div>
+</div>
+<div class="bg-rpg-surface-2 p-space-xs text-center space-y-0.5">
+<span class="font-label-xs text-label-xs text-rpg-accent">J10</span>
+<div class="font-body-sm text-body-sm text-rpg-accent font-bold truncate">Rideau / 10e</div>
+</div>
+</div>
+</div>
+<!-- BLOC 4 : SÉQUENCE ORDONNÉE DES MOIS ET FÊTES INTERCALAIRES -->
+<div class="bg-surface-container p-space-md space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="font-label-sm text-label-sm text-rpg-accent uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[15px]">format_list_numbered</span>
+<span>04. Séquence Annuelle Chronologique</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">17 ÉLÉMENTS ORDONNÉS</span>
+</div>
+<!-- LISTE COMPLÈTE HARPTOS -->
+<div class="space-y-space-xs font-body-sm text-body-sm">
+<!-- 1. Marteau -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">01</span>
+<span class="font-display-md text-title-md text-rpg-text">Marteau</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(Cœur de l'Hiver)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- [FÊTE 1] Fête de l'Hiver -->
+<div class="h-9 bg-rpg-warning/15 px-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">[FÊTE] Fête de l'Hiver (Midwinter)</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">— 1 jour sacré hors-mois</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 2. Alturiak -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">02</span>
+<span class="font-display-md text-title-md text-rpg-text">Alturiak</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(La Griffe de l'Hiver)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 3. Ches -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">03</span>
+<span class="font-display-md text-title-md text-rpg-text">Ches</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(Le Dégel)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 4. Tarsakh -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">04</span>
+<span class="font-display-md text-title-md text-rpg-text">Tarsakh</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(Les Tempêtes)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- [FÊTE 2] Verdure -->
+<div class="h-9 bg-rpg-warning/15 px-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">[FÊTE] Verdure (Greengrass)</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">— 1 jour, fête printanière</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 5. Mirtul -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">05</span>
+<span class="font-display-md text-title-md text-rpg-text">Mirtul</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(La Fonte)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 6. Kythorn -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">06</span>
+<span class="font-display-md text-title-md text-rpg-text">Kythorn</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(Les Fleurs)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 7. Flamerule -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">07</span>
+<span class="font-display-md text-title-md text-rpg-text">Flamerule</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(La Marée Solaire)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- [FÊTE 3] Pleine-Lune & Bouclier -->
+<div class="h-9 bg-rpg-warning/15 px-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">[FÊTE] Pleine-Lune (Midsummer) &amp; Bouclier</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">— Solstice + Jour du Bouclier (bissextile)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1J (+1J BIS)</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 8. Eleasis -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">08</span>
+<span class="font-display-md text-title-md text-rpg-text">Eleasis</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(La Haute Canicule)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 9. Eleint -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">09</span>
+<span class="font-display-md text-title-md text-rpg-text">Eleint</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(L'Atténuation)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- [FÊTE 4] Grandes Moissons -->
+<div class="h-9 bg-rpg-warning/15 px-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">[FÊTE] Grandes Moissons (Highharvestide)</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">— Équinoxe d'automne</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 10. Marpenoth -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">10</span>
+<span class="font-display-md text-title-md text-rpg-text">Marpenoth</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(La Chute des Feuilles)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 11. Uktar -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">11</span>
+<span class="font-display-md text-title-md text-rpg-text">Uktar</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(Le Dépérissement)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- [FÊTE 5] La Fête de la Lune -->
+<div class="h-9 bg-rpg-warning/15 px-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-rpg-warning text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm text-rpg-warning font-bold uppercase tracking-wider">[FÊTE] La Fête de la Lune (Feast of the Moon)</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">— Honneur aux Ancêtres</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-rpg-warning hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- 12. Nightal -->
+<div class="h-10 bg-rpg-bg px-space-sm flex items-center justify-between hover:bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="font-number-md text-label-xs text-rpg-muted w-5">12</span>
+<span class="font-display-md text-title-md text-rpg-text">Nightal</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">(La Clôture)</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-number-md text-body-sm text-rpg-accent">30 jours</span>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_upward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-text"><span class="material-symbols-outlined text-[14px]">arrow_downward</span></button>
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-rpg-danger"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- ACTION AJOUT -->
+<button class="w-full h-11 bg-surface-container-high hover:bg-rpg-surface-2 text-rpg-accent font-label-sm text-label-sm tracking-wider uppercase flex items-center justify-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>+ Ajouter un mois ou une fête intercalaire</span>
+</button>
+</div>
+</div>
+<!-- COLONNE DROITE (42% : APERÇU DYNAMIQUE DE L'ANNÉE & MINI-CALENDRIER) -->
+<div class="w-[42%] h-full flex flex-col bg-surface-container-lowest overflow-hidden">
+<!-- BANDEAU HAUT APERÇU -->
+<div class="p-space-md bg-surface-container space-y-space-xs flex-shrink-0">
+<div class="flex items-center justify-between">
+<div class="font-display-md text-title-md text-rpg-text tracking-wider uppercase flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">visibility</span>
+<span>APERÇU DE L'ANNÉE (1492 CV)</span>
+</div>
+<span class="font-number-md text-label-xs text-rpg-accent font-bold">1440.REGIE // OK</span>
+</div>
+<!-- COMPTEURS STATISTIQUES TÉLÉMÉTRIE -->
+<div class="grid grid-cols-3 gap-space-xs pt-space-xs">
+<div class="bg-rpg-bg p-space-xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase block">Total Année</span>
+<span class="font-number-md text-number-md text-rpg-text font-bold">365 <span class="text-label-xs text-rpg-muted font-normal">Jours</span></span>
+</div>
+<div class="bg-rpg-bg p-space-xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase block">12 Mois</span>
+<span class="font-number-md text-number-md text-rpg-accent font-bold">360 <span class="text-label-xs text-rpg-muted font-normal">Jours</span></span>
+</div>
+<div class="bg-rpg-bg p-space-xs">
+<span class="font-label-xs text-label-xs text-rpg-warning uppercase block">5 Fêtes</span>
+<span class="font-number-md text-number-md text-rpg-warning font-bold">5 <span class="text-label-xs text-rpg-muted font-normal">Jours</span></span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-xs text-label-xs pt-1">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span>Cadence : 12 mois × 30 jours (3 décans de 10 jours) + 5 fêtes solaires intercalaires.</span>
+</div>
+</div>
+<!-- GRILLE MATRICE DYNAMIQUE SCROLLABLE (MINI-CARTES DES 12 MOIS + 5 FÊTES) -->
+<div class="flex-1 overflow-y-auto p-space-md space-y-space-md">
+<!-- MOIS 1 : MARTEAU -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">01. MARTEAU (30 JOURS)</span>
+<span class="text-on-surface-variant">Hiver</span>
+</div>
+<!-- MINI GRILLE 3 DÉCANS DE 10 JOURS -->
+<div class="grid grid-cols-10 gap-0.5 font-number-md text-[9px] text-center text-rpg-text select-none">
+<div class="bg-rpg-bg py-1 text-on-surface-variant">01</div><div class="bg-rpg-bg py-1 text-on-surface-variant">02</div><div class="bg-rpg-bg py-1 text-on-surface-variant">03</div><div class="bg-rpg-bg py-1 text-on-surface-variant">04</div><div class="bg-rpg-bg py-1 text-on-surface-variant">05</div><div class="bg-rpg-bg py-1 text-on-surface-variant">06</div><div class="bg-rpg-bg py-1 text-on-surface-variant">07</div><div class="bg-rpg-bg py-1 text-on-surface-variant">08</div><div class="bg-rpg-bg py-1 text-on-surface-variant">09</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">10</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">11</div><div class="bg-rpg-bg py-1 text-on-surface-variant">12</div><div class="bg-rpg-bg py-1 text-on-surface-variant">13</div><div class="bg-rpg-bg py-1 text-on-surface-variant">14</div><div class="bg-rpg-bg py-1 text-on-surface-variant">15</div><div class="bg-rpg-bg py-1 text-on-surface-variant">16</div><div class="bg-rpg-bg py-1 text-on-surface-variant">17</div><div class="bg-rpg-bg py-1 text-on-surface-variant">18</div><div class="bg-rpg-bg py-1 text-on-surface-variant">19</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">20</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">21</div><div class="bg-rpg-bg py-1 text-on-surface-variant">22</div><div class="bg-rpg-bg py-1 text-on-surface-variant">23</div><div class="bg-rpg-bg py-1 text-on-surface-variant">24</div><div class="bg-rpg-bg py-1 text-on-surface-variant">25</div><div class="bg-rpg-bg py-1 text-on-surface-variant">26</div><div class="bg-rpg-bg py-1 text-on-surface-variant">27</div><div class="bg-rpg-bg py-1 text-on-surface-variant">28</div><div class="bg-rpg-bg py-1 text-on-surface-variant">29</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">30</div>
+</div>
+</div>
+<!-- FÊTE 1 INTERCALAIRE -->
+<div class="bg-rpg-warning/20 p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-rpg-warning">
+<span class="material-symbols-outlined text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Fête de l'Hiver (Midwinter)</span>
+</div>
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR INTERCALAIRE</span>
+</div>
+<!-- MOIS 2 : ALTURIAK -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">02. ALTURIAK (30 JOURS)</span>
+<span class="text-on-surface-variant">Hiver</span>
+</div>
+<div class="grid grid-cols-10 gap-0.5 font-number-md text-[9px] text-center text-rpg-text select-none">
+<div class="bg-rpg-bg py-1 text-on-surface-variant">01</div><div class="bg-rpg-bg py-1 text-on-surface-variant">02</div><div class="bg-rpg-bg py-1 text-on-surface-variant">03</div><div class="bg-rpg-bg py-1 text-on-surface-variant">04</div><div class="bg-rpg-bg py-1 text-on-surface-variant">05</div><div class="bg-rpg-bg py-1 text-on-surface-variant">06</div><div class="bg-rpg-bg py-1 text-on-surface-variant">07</div><div class="bg-rpg-bg py-1 text-on-surface-variant">08</div><div class="bg-rpg-bg py-1 text-on-surface-variant">09</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">10</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">11</div><div class="bg-rpg-bg py-1 text-on-surface-variant">12</div><div class="bg-rpg-bg py-1 text-on-surface-variant">13</div><div class="bg-rpg-bg py-1 text-on-surface-variant">14</div><div class="bg-rpg-bg py-1 text-on-surface-variant">15</div><div class="bg-rpg-bg py-1 text-on-surface-variant">16</div><div class="bg-rpg-bg py-1 text-on-surface-variant">17</div><div class="bg-rpg-bg py-1 text-on-surface-variant">18</div><div class="bg-rpg-bg py-1 text-on-surface-variant">19</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">20</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">21</div><div class="bg-rpg-bg py-1 text-on-surface-variant">22</div><div class="bg-rpg-bg py-1 text-on-surface-variant">23</div><div class="bg-rpg-bg py-1 text-on-surface-variant">24</div><div class="bg-rpg-bg py-1 text-on-surface-variant">25</div><div class="bg-rpg-bg py-1 text-on-surface-variant">26</div><div class="bg-rpg-bg py-1 text-on-surface-variant">27</div><div class="bg-rpg-bg py-1 text-on-surface-variant">28</div><div class="bg-rpg-bg py-1 text-on-surface-variant">29</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">30</div>
+</div>
+</div>
+<!-- MOIS 3 : CHES -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">03. CHES (30 JOURS)</span>
+<span class="text-on-surface-variant">Printemps</span>
+</div>
+<div class="grid grid-cols-10 gap-0.5 font-number-md text-[9px] text-center text-rpg-text select-none">
+<div class="bg-rpg-bg py-1 text-on-surface-variant">01</div><div class="bg-rpg-bg py-1 text-on-surface-variant">02</div><div class="bg-rpg-bg py-1 text-on-surface-variant">03</div><div class="bg-rpg-bg py-1 text-on-surface-variant">04</div><div class="bg-rpg-bg py-1 text-on-surface-variant">05</div><div class="bg-rpg-bg py-1 text-on-surface-variant">06</div><div class="bg-rpg-bg py-1 text-on-surface-variant">07</div><div class="bg-rpg-bg py-1 text-on-surface-variant">08</div><div class="bg-rpg-bg py-1 text-on-surface-variant">09</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">10</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">11</div><div class="bg-rpg-bg py-1 text-on-surface-variant">12</div><div class="bg-rpg-bg py-1 text-on-surface-variant">13</div><div class="bg-rpg-bg py-1 text-on-surface-variant">14</div><div class="bg-rpg-bg py-1 text-on-surface-variant">15</div><div class="bg-rpg-bg py-1 text-on-surface-variant">16</div><div class="bg-rpg-bg py-1 text-on-surface-variant">17</div><div class="bg-rpg-bg py-1 text-on-surface-variant">18</div><div class="bg-rpg-bg py-1 text-on-surface-variant">19</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">20</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">21</div><div class="bg-rpg-bg py-1 text-on-surface-variant">22</div><div class="bg-rpg-bg py-1 text-on-surface-variant">23</div><div class="bg-rpg-bg py-1 text-on-surface-variant">24</div><div class="bg-rpg-bg py-1 text-on-surface-variant">25</div><div class="bg-rpg-bg py-1 text-on-surface-variant">26</div><div class="bg-rpg-bg py-1 text-on-surface-variant">27</div><div class="bg-rpg-bg py-1 text-on-surface-variant">28</div><div class="bg-rpg-bg py-1 text-on-surface-variant">29</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">30</div>
+</div>
+</div>
+<!-- MOIS 4 : TARSAKH -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">04. TARSAKH (30 JOURS)</span>
+<span class="text-on-surface-variant">Printemps</span>
+</div>
+<div class="grid grid-cols-10 gap-0.5 font-number-md text-[9px] text-center text-rpg-text select-none">
+<div class="bg-rpg-bg py-1 text-on-surface-variant">01</div><div class="bg-rpg-bg py-1 text-on-surface-variant">02</div><div class="bg-rpg-bg py-1 text-on-surface-variant">03</div><div class="bg-rpg-bg py-1 text-on-surface-variant">04</div><div class="bg-rpg-bg py-1 text-on-surface-variant">05</div><div class="bg-rpg-bg py-1 text-on-surface-variant">06</div><div class="bg-rpg-bg py-1 text-on-surface-variant">07</div><div class="bg-rpg-bg py-1 text-on-surface-variant">08</div><div class="bg-rpg-bg py-1 text-on-surface-variant">09</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">10</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">11</div><div class="bg-rpg-bg py-1 text-on-surface-variant">12</div><div class="bg-rpg-bg py-1 text-on-surface-variant">13</div><div class="bg-rpg-bg py-1 text-on-surface-variant">14</div><div class="bg-rpg-bg py-1 text-on-surface-variant">15</div><div class="bg-rpg-bg py-1 text-on-surface-variant">16</div><div class="bg-rpg-bg py-1 text-on-surface-variant">17</div><div class="bg-rpg-bg py-1 text-on-surface-variant">18</div><div class="bg-rpg-bg py-1 text-on-surface-variant">19</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">20</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">21</div><div class="bg-rpg-bg py-1 text-on-surface-variant">22</div><div class="bg-rpg-bg py-1 text-on-surface-variant">23</div><div class="bg-rpg-bg py-1 text-on-surface-variant">24</div><div class="bg-rpg-bg py-1 text-on-surface-variant">25</div><div class="bg-rpg-bg py-1 text-on-surface-variant">26</div><div class="bg-rpg-bg py-1 text-on-surface-variant">27</div><div class="bg-rpg-bg py-1 text-on-surface-variant">28</div><div class="bg-rpg-bg py-1 text-on-surface-variant">29</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">30</div>
+</div>
+</div>
+<!-- FÊTE 2 INTERCALAIRE -->
+<div class="bg-rpg-warning/20 p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-rpg-warning">
+<span class="material-symbols-outlined text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Verdure (Greengrass)</span>
+</div>
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR PRINTANIER</span>
+</div>
+<!-- MOIS 5 & 6 (GROUPÉS POUR L'APERÇU) -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">05. MIRTUL &amp; 06. KYTHORN (60J)</span>
+<span class="text-on-surface-variant">Printemps / Été</span>
+</div>
+<div class="h-8 bg-rpg-bg flex items-center justify-between px-space-sm text-on-surface font-body-sm text-body-sm">
+<span>Mirtul (30j) + Kythorn (30j)</span>
+<span class="font-number-md text-label-xs text-rpg-muted">6 DÉCANS COMPLETS</span>
+</div>
+</div>
+<!-- MOIS 7 : FLAMERULE -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">07. FLAMERULE (30 JOURS)</span>
+<span class="text-on-surface-variant">Été</span>
+</div>
+<div class="grid grid-cols-10 gap-0.5 font-number-md text-[9px] text-center text-rpg-text select-none">
+<div class="bg-rpg-bg py-1 text-on-surface-variant">01</div><div class="bg-rpg-bg py-1 text-on-surface-variant">02</div><div class="bg-rpg-bg py-1 text-on-surface-variant">03</div><div class="bg-rpg-bg py-1 text-on-surface-variant">04</div><div class="bg-rpg-bg py-1 text-on-surface-variant">05</div><div class="bg-rpg-bg py-1 text-on-surface-variant">06</div><div class="bg-rpg-bg py-1 text-on-surface-variant">07</div><div class="bg-rpg-bg py-1 text-on-surface-variant">08</div><div class="bg-rpg-bg py-1 text-on-surface-variant">09</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">10</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">11</div><div class="bg-rpg-bg py-1 text-on-surface-variant">12</div><div class="bg-rpg-bg py-1 text-on-surface-variant">13</div><div class="bg-rpg-bg py-1 text-on-surface-variant">14</div><div class="bg-rpg-bg py-1 text-on-surface-variant">15</div><div class="bg-rpg-bg py-1 text-on-surface-variant">16</div><div class="bg-rpg-bg py-1 text-on-surface-variant">17</div><div class="bg-rpg-bg py-1 text-on-surface-variant">18</div><div class="bg-rpg-bg py-1 text-on-surface-variant">19</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">20</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">21</div><div class="bg-rpg-bg py-1 text-on-surface-variant">22</div><div class="bg-rpg-bg py-1 text-on-surface-variant">23</div><div class="bg-rpg-bg py-1 text-on-surface-variant">24</div><div class="bg-rpg-bg py-1 text-on-surface-variant">25</div><div class="bg-rpg-bg py-1 text-on-surface-variant">26</div><div class="bg-rpg-bg py-1 text-on-surface-variant">27</div><div class="bg-rpg-bg py-1 text-on-surface-variant">28</div><div class="bg-rpg-bg py-1 text-on-surface-variant">29</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">30</div>
+</div>
+</div>
+<!-- FÊTE 3 INTERCALAIRE : PLEINE-LUNE & BOUCLIER -->
+<div class="bg-rpg-warning/20 p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-rpg-warning">
+<span class="material-symbols-outlined text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Pleine-Lune &amp; Jour du Bouclier</span>
+</div>
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR (+1 BISSEXTILE)</span>
+</div>
+<!-- MOIS 8 & 9 : ELEASIS & ELEINT -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">08. ELEASIS &amp; 09. ELEINT (60J)</span>
+<span class="text-on-surface-variant">Canicule &amp; Atténuation</span>
+</div>
+<div class="h-8 bg-rpg-bg flex items-center justify-between px-space-sm text-on-surface font-body-sm text-body-sm">
+<span>Eleasis (30j) + Eleint (30j)</span>
+<span class="font-number-md text-label-xs text-rpg-muted">6 DÉCANS COMPLETS</span>
+</div>
+</div>
+<!-- FÊTE 4 INTERCALAIRE : GRANDES MOISSONS -->
+<div class="bg-rpg-warning/20 p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-rpg-warning">
+<span class="material-symbols-outlined text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Grandes Moissons (Highharvestide)</span>
+</div>
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR SACRÉ</span>
+</div>
+<!-- MOIS 10 & 11 : MARPENOTH & UKTAR -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">10. MARPENOTH &amp; 11. UKTAR (60J)</span>
+<span class="text-on-surface-variant">Automne</span>
+</div>
+<div class="h-8 bg-rpg-bg flex items-center justify-between px-space-sm text-on-surface font-body-sm text-body-sm">
+<span>Marpenoth (30j) + Uktar (30j)</span>
+<span class="font-number-md text-label-xs text-rpg-muted">6 DÉCANS COMPLETS</span>
+</div>
+</div>
+<!-- FÊTE 5 INTERCALAIRE : FÊTE DE LA LUNE -->
+<div class="bg-rpg-warning/20 p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-rpg-warning">
+<span class="material-symbols-outlined text-[16px]">stars</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Fête de la Lune (Feast of the Moon)</span>
+</div>
+<span class="font-number-md text-label-xs text-rpg-warning font-bold">1 JOUR ANCESTRAL</span>
+</div>
+<!-- MOIS 12 : NIGHTAL -->
+<div class="bg-surface-container p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="font-display-md text-label-sm text-rpg-accent font-bold uppercase tracking-wider">12. NIGHTAL (30 JOURS)</span>
+<span class="text-on-surface-variant">Hiver</span>
+</div>
+<div class="grid grid-cols-10 gap-0.5 font-number-md text-[9px] text-center text-rpg-text select-none">
+<div class="bg-rpg-bg py-1 text-on-surface-variant">01</div><div class="bg-rpg-bg py-1 text-on-surface-variant">02</div><div class="bg-rpg-bg py-1 text-on-surface-variant">03</div><div class="bg-rpg-bg py-1 text-on-surface-variant">04</div><div class="bg-rpg-bg py-1 text-on-surface-variant">05</div><div class="bg-rpg-bg py-1 text-on-surface-variant">06</div><div class="bg-rpg-bg py-1 text-on-surface-variant">07</div><div class="bg-rpg-bg py-1 text-on-surface-variant">08</div><div class="bg-rpg-bg py-1 text-on-surface-variant">09</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">10</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">11</div><div class="bg-rpg-bg py-1 text-on-surface-variant">12</div><div class="bg-rpg-bg py-1 text-on-surface-variant">13</div><div class="bg-rpg-bg py-1 text-on-surface-variant">14</div><div class="bg-rpg-bg py-1 text-on-surface-variant">15</div><div class="bg-rpg-bg py-1 text-on-surface-variant">16</div><div class="bg-rpg-bg py-1 text-on-surface-variant">17</div><div class="bg-rpg-bg py-1 text-on-surface-variant">18</div><div class="bg-rpg-bg py-1 text-on-surface-variant">19</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">20</div>
+<div class="bg-rpg-bg py-1 text-on-surface-variant">21</div><div class="bg-rpg-bg py-1 text-on-surface-variant">22</div><div class="bg-rpg-bg py-1 text-on-surface-variant">23</div><div class="bg-rpg-bg py-1 text-on-surface-variant">24</div><div class="bg-rpg-bg py-1 text-on-surface-variant">25</div><div class="bg-rpg-bg py-1 text-on-surface-variant">26</div><div class="bg-rpg-bg py-1 text-on-surface-variant">27</div><div class="bg-rpg-bg py-1 text-on-surface-variant">28</div><div class="bg-rpg-bg py-1 text-on-surface-variant">29</div><div class="bg-surface-container-high py-1 text-rpg-accent font-bold">30</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- PIED DU MODAL (COMMANDES D'ACTION FINALES) -->
+<div class="h-16 bg-surface-container-high px-space-lg flex items-center justify-between flex-shrink-0">
+<div class="flex items-center gap-space-md">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase">RÉFÉRENCE CALENDRIER ACTIF :</span>
+<span class="font-number-md text-label-xs text-rpg-accent">HARPTOS-1492-STD</span>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="px-space-lg h-11 bg-surface-container hover:bg-rpg-surface-2 text-rpg-text font-label-sm text-label-sm tracking-wider uppercase transition-colors">
+            Annuler
+          </button>
+<button class="px-space-xl h-11 bg-rpg-accent hover:bg-primary text-rpg-accent-contrast font-label-sm text-label-sm font-bold tracking-wider uppercase flex items-center gap-space-xs transition-all shadow-[0_0_16px_rgba(34,211,238,0.4)]">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>ENREGISTRER LE CALENDRIER</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

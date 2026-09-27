@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-fixed-dim":"#bec6e0","secondary-container":"#3f465c","rpg-bg":"#020617","primary-container":"#22d3ee","on-error-container":"#ffdad6","surface":"#0c1324","on-tertiary-fixed":"#111c2d","rpg-on-status":"#020617","primary":"#8aebff","on-tertiary":"#263143","outline":"#859397","on-secondary":"#283044","rpg-border":"#1e293b","surface-container-highest":"#2e3447","inverse-surface":"#dce1fb","error-container":"#93000a","surface-container-low":"#151b2d","rpg-surface":"#0f172a","on-secondary-fixed":"#131b2e","on-primary-container":"#005763","rpg-accent-contrast":"#020617","on-primary-fixed-variant":"#004e5a","on-surface":"#dce1fb","rpg-text":"#f8fafc","secondary":"#bec6e0","on-secondary-fixed-variant":"#3f465c","on-surface-variant":"#bbc9cd","error":"#ffb4ab","surface-container-lowest":"#070d1f","surface-bright":"#33394c","on-tertiary-fixed-variant":"#3c475a","on-secondary-container":"#adb4ce","surface-container-high":"#23293c","on-error":"#690005","rpg-accent":"#22d3ee","primary-fixed":"#a2eeff","rpg-success":"#10b981","inverse-primary":"#006877","tertiary-fixed":"#d8e3fb","on-tertiary-container":"#444f63","on-primary-fixed":"#001f25","rpg-danger":"#ef4444","tertiary":"#d2ddf5","surface-variant":"#2e3447","background":"#0c1324","surface-container":"#191f31","surface-tint":"#2fd9f4","rpg-warning":"#f59e0b","on-primary":"#00363e","inverse-on-surface":"#2a3043","tertiary-container":"#b6c1d9","secondary-fixed":"#dae2fd","tertiary-fixed-dim":"#bcc7de","surface-dim":"#0c1324","primary-fixed-dim":"#2fd9f4","on-background":"#dce1fb","rpg-muted":"#898c95","rpg-surface-2":"#1e293b","outline-variant":"#3c494c","rpg-info":"#3b82f6"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"12px","space-lg":"16px","space-xl":"24px","gutter":"12px","space-xs":"4px","space-sm":"8px","margin":"16px"},fontFamily:{"body-sm":["Space Mono"],"number-lg":["Space Mono"],"display-lg":["Syne"],"title-md":["Syne"],"body-md":["Space Mono"],"label-sm":["Space Mono"],"display-md":["Syne"],"label-xs":["Space Mono"],"number-md":["Space Mono"]},fontSize:{"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"400"}],"number-lg":["28px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"display-lg":["34px",{lineHeight:"40px",letterSpacing:"0.06em",fontWeight:"800"}],"title-md":["17px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"body-md":["14px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"400"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.14em",fontWeight:"700"}],"display-md":["24px",{lineHeight:"30px",letterSpacing:"0.05em",fontWeight:"700"}],"label-xs":["10px",{lineHeight:"12px",letterSpacing:"0.18em",fontWeight:"700"}],"number-md":["16px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"700"}]}}}};</script></head><body class="bg-rpg-bg text-rpg-text font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 h-14 bg-rpg-surface border-b border-rpg-border z-50 flex items-center justify-between px-margin"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-2.5 h-2.5 bg-rpg-accent shadow-[0_0_8px_#22d3ee]"></div><span class="font-title-md text-title-md tracking-wider text-rpg-text uppercase">GM-OS <span class="text-rpg-accent">V6</span></span><span class="font-label-xs text-label-xs text-rpg-muted px-space-xs py-0.5 bg-rpg-bg border border-rpg-border">NEXUS-PROTOCOL</span></div><div class="h-6 w-px bg-rpg-border"></div><div class="flex items-center gap-space-sm bg-rpg-bg px-space-md py-1 border border-rpg-border"><span class="material-symbols-outlined text-rpg-accent text-[16px]">volume_up</span><span class="font-label-xs text-label-xs text-rpg-muted">MASTER</span><div class="flex items-center gap-0.5 h-3"><div class="w-1 h-2 bg-rpg-success"></div><div class="w-1 h-2.5 bg-rpg-success"></div><div class="w-1 h-3 bg-rpg-success"></div><div class="w-1 h-2.5 bg-rpg-warning"></div><div class="w-1 h-3.5 bg-rpg-warning"></div><div class="w-1 h-2 bg-rpg-danger opacity-30"></div></div><span class="font-number-md text-number-md text-primary">-4.2 dB</span></div></div><div class="flex items-center gap-space-md"><button class="h-8 px-space-md bg-rpg-surface-2 border border-rpg-border font-label-xs text-label-xs text-on-surface-variant hover:border-rpg-accent hover:text-rpg-text transition-colors flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">forum</span><span>FOCUS CHAT</span></button><div class="flex bg-rpg-bg border border-rpg-border p-0.5"><button class="px-space-md py-1 font-label-xs text-label-xs bg-rpg-accent text-rpg-accent-contrast font-bold">ATELIER</button><button class="px-space-md py-1 font-label-xs text-label-xs text-rpg-muted hover:text-rpg-text transition-colors">TABLE</button></div><button class="h-8 px-space-md bg-rpg-surface-2 border border-rpg-accent/40 font-label-xs text-label-xs text-rpg-accent hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">wifi_tethering</span><span>CONNECTER JOUEURS</span><span class="w-1.5 h-1.5 rounded-full bg-rpg-success animate-pulse"></span></button><button class="h-8 px-space-md bg-rpg-danger text-rpg-on-status font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all flex items-center gap-space-xs shadow-[0_0_12px_rgba(239,68,68,0.4)]"><span class="material-symbols-outlined text-[16px]">fitbit_hourly_activity</span><span>STOP ALL</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-[220px] bg-rpg-surface border-r border-rpg-border z-40 overflow-y-auto"><div class="p-space-sm space-y-space-md"><div class="space-y-1"><div class="px-space-sm py-1 font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">AVENTURE</div><nav class="space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold shadow-[0_0_12px_rgba(34,211,238,0.25)] border-l-2 border-rpg-accent"><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="cockpit-session" href="#"><span class="material-symbols-outlined text-[16px]">terminal</span><span>Cockpit / Session</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="combat-os" href="#"><span class="material-symbols-outlined text-[16px]">swords</span><span>Combat-OS</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="dice-os" href="#"><span class="material-symbols-outlined text-[16px]">casino</span><span>Dice-OS</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="generateur-pnj" href="#"><span class="material-symbols-outlined text-[16px]">badge</span><span>Générateur PNJ</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="cartographie" href="#"><span class="material-symbols-outlined text-[16px]">map</span><span>Cartographie</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="trame-narrative" href="#"><span class="material-symbols-outlined text-[16px]">account_tree</span><span>Trame narrative</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="deck-os" href="#"><span class="material-symbols-outlined text-[16px]">style</span><span>Deck-OS</span></a></nav></div><div class="h-px bg-rpg-border"></div><div class="space-y-1"><div class="px-space-sm py-1 font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">AUDIO</div><nav class="space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold shadow-[0_0_12px_rgba(34,211,238,0.25)] border-l-2 border-rpg-accent"><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="musique" href="#"><span class="material-symbols-outlined text-[16px]">graphic_eq</span><span>Musique</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="effets-sonores" href="#"><span class="material-symbols-outlined text-[16px]">file_download_done</span><span>Effets Sonores</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="ambiances" href="#"><span class="material-symbols-outlined text-[16px]">surround_sound</span><span>Ambiances</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="voice-os" href="#"><span class="material-symbols-outlined text-[16px]">record_voice_over</span><span>Voice-OS</span></a></nav></div><div class="h-px bg-rpg-border"></div><div class="space-y-1"><div class="px-space-sm py-1 font-label-xs text-label-xs text-rpg-muted uppercase tracking-widest">OUTILS / SYSTÈME</div><nav class="space-y-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold shadow-[0_0_12px_rgba(34,211,238,0.25)] border-l-2 border-rpg-accent"><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="mediatheque" href="#"><span class="material-symbols-outlined text-[16px]">perm_media</span><span>Médiathèque</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="horloge-temps" href="#"><span class="material-symbols-outlined text-[16px]">schedule</span><span>Horloge &amp; Temps</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="light-os" href="#"><span class="material-symbols-outlined text-[16px]">light_group</span><span>Light-OS</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:bg-rpg-surface-2 hover:text-on-surface transition-all" data-path="tables-aleatoires" href="#"><span class="material-symbols-outlined text-[16px]">reorder</span><span>Tables Aléatoires</span></a></nav></div></div></aside><div class="pl-[220px]"><main class="relative pt-14 min-h-screen bg-rpg-bg w-full"><div class="flex flex-col w-full p-margin gap-space-lg">
+<!-- EN-TÊTE DU MODULE DE CAMPAGNES -->
+<header class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-md border-b border-rpg-border">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-sm text-rpg-accent font-label-xs text-label-xs tracking-widest uppercase">
+<span class="inline-block w-1.5 h-1.5 bg-rpg-accent"></span>
+<span>// SESSION-OS // GESTION GLOBALE</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-rpg-text tracking-wider uppercase">
+        BIBLIOTHÈQUE DES CAMPAGNES
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Sélectionnez un univers à gérer ou créez une nouvelle aventure.
+      </p>
+</div>
+<!-- BADGE D'ÉTAT SUPÉRIEUR DROIT -->
+<div class="flex items-center gap-space-sm bg-rpg-surface px-space-md py-space-sm border border-rpg-border self-start lg:self-auto">
+<div class="w-2 h-2 rounded-full bg-rpg-accent shadow-[0_0_8px_#22d3ee] animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-rpg-text tracking-widest uppercase">
+        7 CAMPAGNES ENREGISTRÉES <span class="text-rpg-muted px-1">•</span> <span class="text-rpg-accent">1 ACTIVE</span>
+</span>
+</div>
+</header>
+<!-- BARRE D'OUTILS & FILTRES SYSTÈME -->
+<section class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md bg-rpg-surface p-space-sm border border-rpg-border">
+<!-- Recherche avec raccourci clavier -->
+<div class="relative flex-1 max-w-xl">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-rpg-muted text-[18px]">search</span>
+<input class="w-full h-11 bg-rpg-bg pl-10 pr-20 text-rpg-text font-body-sm text-body-sm border border-rpg-border focus:border-rpg-accent focus:outline-none placeholder:text-rpg-muted" id="campaign-search" placeholder="Rechercher des campagnes..." type="text"/>
+<div class="absolute right-space-sm top-1/2 -translate-y-1/2 px-space-xs py-0.5 bg-rpg-surface-2 border border-rpg-border text-rpg-muted font-label-xs text-label-xs">
+        CTRL+F
+      </div>
+</div>
+<!-- Actions globales du module -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="h-11 px-space-md bg-rpg-surface-2 border border-rpg-danger/40 text-rpg-danger hover:bg-rpg-danger hover:text-rpg-on-status transition-colors flex items-center gap-space-xs font-label-sm text-label-sm tracking-wider uppercase" onclick="confirmDeactivation()">
+<span class="material-symbols-outlined text-[16px]">power_settings_new</span>
+<span>DÉSACTIVER LA CAMPAGNE</span>
+</button>
+<button class="h-11 px-space-md bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent transition-colors flex items-center gap-space-xs font-label-sm text-label-sm tracking-wider uppercase" onclick="triggerImportModal()">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+<span>IMPORTER UNE ARCHIVE</span>
+</button>
+<button class="h-11 px-space-lg bg-rpg-accent text-rpg-accent-contrast font-bold flex items-center gap-space-xs hover:shadow-[0_0_16px_rgba(34,211,238,0.5)] active:scale-95 transition-all font-label-sm text-label-sm tracking-wider uppercase" onclick="triggerCreateModal()">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>+ CRÉER UNE CAMPAGNE</span>
+</button>
+</div>
+</section>
+<!-- GRILLE DES 7 CAMPAGNES -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- 1. ANGES DE FEU [ACTIVE] -->
+<article class="flex flex-col bg-rpg-surface border-2 border-rpg-accent shadow-[0_0_16px_rgba(34,211,238,0.25)] relative transition-all group">
+<!-- Vignette avec image -->
+<div class="relative h-44 w-full bg-cover bg-center overflow-hidden" data-alt="Dystopian Los Angeles street in a heavy relentless rainstorm, towering neon-lit brutalist skyscrapers in shades of electric cyan and deep indigo, sleek spinner flying vehicles cutting through dark smog, illuminated wet asphalt reflecting neon signage, cinematic neo-noir atmosphere inspired by Blade Runner." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAOeaut6Lw7--_Hakj7WTDAt8U7QkwdomyeSWvpEDtLGg_gJKSIj0Tt-Xdnfz2txLVUzOe4OiGOoN_6sMqMR6PWapGRU6YDDJlZaQKLjVtJSwBDJdlz3UlUmGp-ciABTYx6gsIYdHYmZ5qoCofTBrWbC-Tw5xDr-CTl6pXfDt7MtDBm3D5p1icZNDkXVe9V2aSWd4R6Iz8KAaGXjhDoPyc94TPEhzlqI8xEESm5LX4s_N8q2-0Fk3xucg')">
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-rpg-surface/40 to-transparent"></div>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-space-xs px-space-sm py-1 bg-rpg-accent text-rpg-accent-contrast font-label-xs text-label-xs font-bold uppercase tracking-wider shadow-[0_0_10px_#22d3ee]">
+<span class="w-1.5 h-1.5 rounded-full bg-rpg-bg animate-pulse"></span>
+<span>ACTIVE</span>
+</div>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-bg/90 border border-rpg-border px-space-sm py-0.5 text-rpg-accent font-label-xs text-label-xs">
+          BLADE RUNNER RPG
+        </div>
+</div>
+<!-- Corps de la carte -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-start justify-between gap-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+              Anges de Feu
+            </h2>
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">verified</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-3 leading-relaxed">
+            Une nouvelle génération de Réplicants 'bootleg' menace le monopole de Wallace Corp et les fondations de la société los-angélienne. Traque sous haute tension.
+          </p>
+</div>
+<!-- Pied de carte -->
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (142 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('Anges de Feu')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-accent text-rpg-accent-contrast font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider hover:brightness-110 active:scale-[0.99] transition-all">
+<span>GÉRER LA CAMPAGNE</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- 2. AGENTS DE DUNE -->
+<article class="flex flex-col bg-rpg-surface border border-rpg-border hover:border-rpg-accent/60 transition-all group">
+<!-- Vignette avec image -->
+<div class="relative h-44 w-full bg-cover bg-center overflow-hidden" data-alt="Vast rolling sand dunes of the planet Arrakis under a scorching dual sun, spice blow atmospheric shimmering orange and ochre dust clouds, massive futuristic ornithopter with beating wings hovering over a colossal sand crawler, epic sci-fi scale with atmospheric haze and harsh solar highlights." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCCMiZnAlc4OKNJQF4J1gBlJspllX9x-xlrIYHZ_Vd2gAhYbsEt0ZFGr4XCuVESgV4DusdFTpint_Vcrsg3dWuWcTTGcJylqsFpEp95C6H2weRgS-aaFDvgIW7Q1EW1_gMSkar-ShXd5gw8Mt_pVIBAHYoETQuIu1Ab_Gt1TghETKmZOnkv4OwmmHtjnMgpzy7zumGFWDOiZjrZQw_QKWwHoA7hNbqJYVqYitgPClz2Hb1uRIjT5gzDjg')">
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-rpg-surface/40 to-transparent"></div>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-bg/90 border border-rpg-border px-space-sm py-0.5 text-on-surface-variant font-label-xs text-label-xs">
+          DUNE RPG
+        </div>
+</div>
+<!-- Corps de la carte -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+            Agents de Dune
+          </h2>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-3 leading-relaxed">
+            Une aventure introductive où les héritiers de la Maison Nagara sont envoyés sur Arrakis pour sécuriser l'extraction d'épice face aux conspirations Harkonnen.
+          </p>
+</div>
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (86 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('Agents de Dune')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider transition-all">
+<span>GÉRER</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- 3. LE CŒUR DE TÉNÈBRE -->
+<article class="flex flex-col bg-rpg-surface border border-rpg-border hover:border-rpg-accent/60 transition-all group">
+<!-- Vignette avec image -->
+<div class="relative h-44 w-full bg-cover bg-center overflow-hidden" data-alt="Interior corridor of an abandoned deep space orbital research station, stark cold industrial architecture with exposed conduits and rusted bulkhead doors, flickering amber emergency beacon lighting cutting through suffocating darkness, eerie bio-organic moisture dripping onto grated metallic deck floors." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdaJrvV6vIcR8YhdWUiQ35SDGQumxCMCoYoAhu-Ph1PMtnZXBtJbOUM_Jty3-qg_Kc1YCZnoqjJw3-mIK42ZMTn1EpTErPMxaFpMXtwNeFiRQ6MZRPQ6ZBqoKRwZzI0Isc2DIdgIWELve2Lz2Ec25mFruk4iTk77l_FAjqdDdflI8ry-FRnlQ5Sm17XnkxlvMAyxwScZ3OZKY3ZxE4BtuYF1cnKFp3AHLybBn5DoQcb_YE8Lbj0GufzA')">
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-rpg-surface/40 to-transparent"></div>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-bg/90 border border-rpg-border px-space-sm py-0.5 text-on-surface-variant font-label-xs text-label-xs">
+          ALIEN RPG
+        </div>
+</div>
+<!-- Corps de la carte -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+            Le Cœur de Ténèbre
+          </h2>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-3 leading-relaxed">
+            Une équipe scientifique de l'Institut Geholgod est envoyée par la Weyland-Yutani sur la station Erebos pour étudier une anomalie biologique hautement létale.
+          </p>
+</div>
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (94 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('Le Cœur de Ténèbre')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider transition-all">
+<span>GÉRER</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- 4. À LA CLAIRE FONTAINE -->
+<article class="flex flex-col bg-rpg-surface border border-rpg-border hover:border-rpg-accent/60 transition-all group">
+<!-- Vignette avec image -->
+<div class="relative h-44 w-full bg-cover bg-center overflow-hidden" data-alt="Ethereal dreamlike fantasy landscape with floating mossy stone islands, crystalline cascading waterfall dissolving into iridescent silver mists, ancient medieval ruins overgrown with glowing indigo flora, celestial dragons silhouetted against a pastel lavender and twilight sky." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBo1ISaXmXSBLDNmUYr0KR7BDATDR0uMxobqxoqSNOg632IbcTD5AUIvUFIloK-zpupiPmOatOmjcGNIcafIRFpSa4SvLNRsPLoeRCRdWyppMf1FrftCTZljZkKNsAJTK7kFNB-wbAMqA0nuY2Ge1JbM2AQLQHxMpRzpqDY13o5UZpQcUM8QpsUg2Ohnyo4xc7Jp-ETg-DZNYBm1Kivu6tPax1oQ8VCSk-OpW38goGiKIObWrfc6gjdCw')">
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-rpg-surface/40 to-transparent"></div>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-bg/90 border border-rpg-border px-space-sm py-0.5 text-on-surface-variant font-label-xs text-label-xs">
+          RÊVE DE DRAGON
+        </div>
+</div>
+<!-- Corps de la carte -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+            À la claire fontaine
+          </h2>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-3 leading-relaxed">
+            Une errance poétique à travers les hauts-rêves où les voyageurs cherchent à dissiper le brouillard qui ronge les mémoires du dernier sanctuaire.
+          </p>
+</div>
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (64 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('À la claire fontaine')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider transition-all">
+<span>GÉRER</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- 5. LE SECRET DE MILO (SANS IMAGE) -->
+<article class="flex flex-col bg-rpg-surface border border-rpg-border hover:border-rpg-accent/60 transition-all group">
+<!-- Zone élégante sans image avec hachures / pointillé -->
+<div class="relative h-44 w-full bg-rpg-bg flex flex-col items-center justify-center border-b border-rpg-border overflow-hidden">
+<!-- Fond hachuré technique SVG -->
+<div class="absolute inset-0 opacity-15 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<button class="relative z-10 flex flex-col items-center gap-space-xs p-space-sm border border-dashed border-rpg-border hover:border-rpg-accent bg-rpg-surface/80 text-on-surface-variant hover:text-rpg-accent transition-all group/btn">
+<span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">+ Ajouter une image de fond</span>
+</button>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-surface border border-rpg-border px-space-sm py-0.5 text-on-surface-variant font-label-xs text-label-xs">
+          CTHULHU HACK
+        </div>
+</div>
+<!-- Corps de la carte -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+            Le Secret de Milo
+          </h2>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-3 leading-relaxed">
+            Une série d'enquêtes ésotériques débutant dans les ruines d'un couvent italien pour remonter la piste d'un culte vénérant les profondeurs abyssales.
+          </p>
+</div>
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (38 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('Le Secret de Milo')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider transition-all">
+<span>GÉRER</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- 6. NEON HORIZON (SANS IMAGE) -->
+<article class="flex flex-col bg-rpg-surface border border-rpg-border hover:border-rpg-accent/60 transition-all group">
+<!-- Zone sans image avec motif technique -->
+<div class="relative h-44 w-full bg-rpg-bg flex flex-col items-center justify-center border-b border-rpg-border overflow-hidden">
+<div class="absolute inset-0 opacity-15 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<button class="relative z-10 flex flex-col items-center gap-space-xs p-space-sm border border-dashed border-rpg-border hover:border-rpg-accent bg-rpg-surface/80 text-on-surface-variant hover:text-rpg-accent transition-all group/btn">
+<span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">+ Ajouter une image de fond</span>
+</button>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-surface border border-rpg-border px-space-sm py-0.5 text-on-surface-variant font-label-xs text-label-xs">
+          CYBERPUNK RED
+        </div>
+</div>
+<!-- Corps de la carte -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+            Neon Horizon
+          </h2>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-3 leading-relaxed">
+            Dans les bas-fonds de Night City, une bande de mercenaires accepte un contrat non officiel pour infiltrer le sous-sol d'une mégacorporation médicale.
+          </p>
+</div>
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (52 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('Neon Horizon')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider transition-all">
+<span>GÉRER</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- 7. LES VEILLEURS DU CRÉPUSCULE (AVEC IMAGE, SANS SYNOPSIS) -->
+<article class="flex flex-col bg-rpg-surface border border-rpg-border hover:border-rpg-accent/60 transition-all group">
+<!-- Vignette avec image -->
+<div class="relative h-44 w-full bg-cover bg-center overflow-hidden" data-alt="Primordial dense dark Nordic fantasy forest of Davokar, colossal moss-covered gnarled oak and fir trees enshrouded in ominous drifting gray mist, ancient weathered stone monolith with carved runic symbols glowing faint green, eerie atmospheric dark fantasy lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7MMveaENZOgOV0C8WHkeswOO1BmEnS795IMU7leMJL6xcbxDK_-JO0jr-rmxTK3T9VuqAyb7RVcnPUUNZDHIBdeRjSaJOGMxIa-_fGz0cKHl5F5kgj9wKeIWiBVoD_eE5BMY3pQ36XN98jI4IrNN4tTVRZBmzkKPVuhQp4E657qXUbLxrDUWslWeJhIKjjaLMkkzLsRdV-RRXPzSujlrQfWflulChQK9VQpoDR-B9qRatVMz1fpTVlw')">
+<div class="absolute inset-0 bg-gradient-to-t from-rpg-surface via-rpg-surface/40 to-transparent"></div>
+<div class="absolute bottom-space-sm right-space-sm bg-rpg-bg/90 border border-rpg-border px-space-sm py-0.5 text-on-surface-variant font-label-xs text-label-xs">
+          SYMBAROUM
+        </div>
+</div>
+<!-- Corps de la carte avec zone "Écrire un synopsis" -->
+<div class="flex-1 p-space-md flex flex-col justify-between gap-space-md">
+<div class="space-y-space-xs">
+<h2 class="font-title-md text-title-md text-rpg-text tracking-wide group-hover:text-rpg-accent transition-colors">
+            Les Veilleurs du Crépuscule
+          </h2>
+<!-- Zone sobre d'invite à la saisie de synopsis -->
+<div class="py-space-md px-space-sm bg-rpg-bg border border-dashed border-rpg-border text-center flex flex-col items-center justify-center gap-1 group/syn">
+<span class="material-symbols-outlined text-rpg-muted text-[18px]">edit_note</span>
+<button class="font-label-xs text-label-xs text-rpg-accent hover:underline uppercase tracking-wider">
+              + Écrire un synopsis
+            </button>
+</div>
+</div>
+<div class="space-y-space-sm pt-space-sm border-t border-rpg-border">
+<div class="flex items-center justify-between font-label-xs text-label-xs text-rpg-muted">
+<button class="hover:text-rpg-accent transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Exporter (71 médias)</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="hover:text-rpg-text transition-colors flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Modifier</span>
+</button>
+<button class="text-rpg-danger/80 hover:text-rpg-danger transition-colors flex items-center gap-0.5" onclick="confirmDelete('Les Veilleurs du Crépuscule')">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Supprimer</span>
+</button>
+</div>
+</div>
+<button class="w-full h-9 bg-rpg-surface-2 border border-rpg-border text-rpg-text hover:border-rpg-accent hover:text-rpg-accent font-bold font-label-sm text-label-sm flex items-center justify-center gap-space-xs uppercase tracking-wider transition-all">
+<span>GÉRER</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- POP-UP CONFIRMATION DÉSACTIVATION (DISCRET ET MODAL) -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-rpg-bg/85 backdrop-blur-sm p-4" id="modal-container">
+<div class="w-full max-w-md bg-rpg-surface border border-rpg-border p-space-lg space-y-space-md shadow-[0_0_24px_rgba(0,0,0,0.8)]">
+<div class="flex items-center gap-space-sm text-rpg-danger font-label-sm text-label-sm tracking-wider uppercase">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span id="modal-title">CONFIRMATION REQUISE</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" id="modal-desc">
+        Voulez-vous désactiver la campagne active "Anges de Feu" et basculer en mode veille ?
+      </p>
+<div class="flex justify-end gap-space-sm pt-space-sm border-t border-rpg-border">
+<button class="h-9 px-space-md bg-rpg-surface-2 text-rpg-text font-label-xs text-label-xs uppercase" onclick="closeModal()">
+          ANNULER
+        </button>
+<button class="h-9 px-space-md bg-rpg-danger text-rpg-on-status font-bold font-label-xs text-label-xs uppercase" id="modal-confirm-btn" onclick="closeModal()">
+          CONFIRMER
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function confirmDeactivation() {
+    const modal = document.getElementById('modal-container');
+    const title = document.getElementById('modal-title');
+    const desc = document.getElementById('modal-desc');
+    title.innerText = 'DÉSACTIVATION DE CAMPAGNE';
+    desc.innerText = 'Voulez-vous désactiver la campagne "Anges de Feu" ? La table sera déconnectée et les séances verrouillées.';
+    modal.classList.remove('hidden');
+  }
+
+  function confirmDelete(campaignName) {
+    const modal = document.getElementById('modal-container');
+    const title = document.getElementById('modal-title');
+    const desc = document.getElementById('modal-desc');
+    title.innerText = 'SUPPRESSION DÉFINITIVE';
+    desc.innerText = 'Êtes-vous certain de vouloir purger définitivement "' + campaignName + '" ? Cette action est irréversible.';
+    modal.classList.remove('hidden');
+  }
+
+  function triggerCreateModal() {
+    const modal = document.getElementById('modal-container');
+    const title = document.getElementById('modal-title');
+    const desc = document.getElementById('modal-desc');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+    title.innerText = 'NOUVELLE CAMPAGNE';
+    desc.innerText = 'Créer une nouvelle campagne depuis un gabarit vierge ou un modèle de règles officiel ?';
+    confirmBtn.className = 'h-9 px-space-md bg-rpg-accent text-rpg-accent-contrast font-bold font-label-xs text-label-xs uppercase';
+    confirmBtn.innerText = 'INITIALISER';
+    modal.classList.remove('hidden');
+  }
+
+  function triggerImportModal() {
+    const modal = document.getElementById('modal-container');
+    const title = document.getElementById('modal-title');
+    const desc = document.getElementById('modal-desc');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+    title.innerText = 'IMPORTATION DE BUNDLE';
+    desc.innerText = 'Sélectionnez une archive .nexus ou un dossier de campagne compatible pour déploiement.';
+    confirmBtn.className = 'h-9 px-space-md bg-rpg-accent text-rpg-accent-contrast font-bold font-label-xs text-label-xs uppercase';
+    confirmBtn.innerText = 'PARCOURIR';
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-container').classList.add('hidden');
+  }
+
+  // Filtrage simple en direct
+  document.getElementById('campaign-search')?.addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll('article').forEach(card => {
+      const title = card.querySelector('h2')?.innerText.toLowerCase() || '';
+      const text = card.innerText.toLowerCase();
+      if (title.includes(term) || text.includes(term)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+
+  // Raccourci Ctrl+F pour focuser la recherche
+  window.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+      e.preventDefault();
+      const input = document.getElementById('campaign-search');
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }
+  });
+</script></main></div></body></html>

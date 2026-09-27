@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>GM-OS // Atelier des Règles - Console de Forge &amp; Régie Dual-View</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #020617;
+        color: #f8fafc;
+        font-family: 'Inter', sans-serif;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      * {
+        border-radius: 0px !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+    @keyframes neonPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+    .neon-cursor {
+      display: inline-block;
+      width: 9px;
+      height: 18px;
+      background-color: #06b6d4;
+      vertical-align: middle;
+      animation: neonPulse 0.9s infinite ease-in-out;
+      box-shadow: 0 0 8px #06b6d4;
+    }
+</style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "rpg-bg": "#020617",
+            "rpg-surface": "#0f172a",
+            "rpg-surface-2": "#1e293b",
+            "rpg-surface-3": "#283548",
+            "rpg-border": "#1e293b",
+            "rpg-border-light": "#334155",
+            "rpg-text": "#f8fafc",
+            "rpg-muted": "#94a3b8",
+            "rpg-accent": "#06b6d4",
+            "rpg-accent-contrast": "#020617",
+            "rpg-success": "#10b981",
+            "rpg-danger": "#ef4444",
+            "rpg-warning": "#f59e0b",
+            "surface-container-lowest": "#070d1f",
+            "surface-container-low": "#151b2d",
+            "surface-container": "#191f31",
+            "surface-container-high": "#23293c",
+            "surface-container-highest": "#2e3447"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            orbitron: ["Orbitron", "sans-serif"],
+            mono: ["Space Mono", "monospace"],
+            syne: ["Syne", "sans-serif"]
+          }
+        }
+      }
+    };
+</script>
+</head>
+<body class="bg-rpg-bg text-rpg-text min-h-screen selection:bg-rpg-accent selection:text-rpg-accent-contrast antialiased overflow-x-hidden">
+<!-- NAVIGATION LATÉRALE GLOBALE GM-OS (MINIMALISTE STATIQUE) -->
+<aside class="fixed left-0 top-0 h-full w-[220px] bg-rpg-surface border-r border-rpg-border z-40 flex flex-col">
+<div class="h-14 px-3 flex items-center gap-2 border-b border-rpg-border bg-rpg-surface-2">
+<div class="w-2 h-2 bg-rpg-accent animate-pulse"></div>
+<span class="font-orbitron text-xs font-bold tracking-widest text-rpg-accent truncate uppercase">GM-OS CORE</span>
+</div>
+<div class="flex-1 overflow-y-auto px-1 py-2 space-y-3">
+<div class="space-y-1">
+<div class="px-2 py-1 text-[11px] font-bold uppercase text-rpg-muted tracking-widest border-b border-rpg-border/60">AVENTURE</div>
+<nav class="space-y-0.5">
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-accent">grid_view</span>Cockpit / Session
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">swords</span>Combat-OS
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">casino</span>Dice-OS
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">group</span>Générateur PNJ
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">map</span>Cartographie
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] bg-rpg-accent text-rpg-accent-contrast font-bold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2">menu_book</span>Grimoire / Règles
+        </a>
+</nav>
+</div>
+<div class="space-y-1">
+<div class="px-2 py-1 text-[11px] font-bold uppercase text-rpg-muted tracking-widest border-b border-rpg-border/60">AUDIO &amp; OUTILS</div>
+<nav class="space-y-0.5">
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">music_note</span>Musique &amp; FX
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">perm_media</span>Médiathèque
+        </a>
+<a class="flex items-center px-2 py-1.5 text-[11px] text-rpg-muted hover:bg-rpg-surface-2 hover:text-rpg-text transition-colors uppercase font-medium" href="#">
+<span class="material-symbols-outlined text-[15px] mr-2 text-rpg-muted">schedule</span>Horloge &amp; Temps
+        </a>
+</nav>
+</div>
+</div>
+<div class="p-2 border-t border-rpg-border bg-rpg-bg flex items-center justify-between text-[11px]">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span>
+<span class="text-rpg-muted font-mono font-bold">24MS</span>
+</div>
+<span class="text-rpg-muted font-mono font-bold">PORT: 8088</span>
+</div>
+</aside>
+<!-- CONTENU PRINCIPAL -->
+<div class="pl-[220px]">
+<!-- BARRE SUPÉRIEURE DE NAVIGATION GLOBALE -->
+<header class="fixed top-0 left-[220px] right-0 h-14 bg-rpg-surface border-b border-rpg-border z-30 px-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rpg-accent text-[20px]">terminal</span>
+<span class="font-orbitron text-xs font-bold text-rpg-text uppercase tracking-widest">
+          GM-OS V6 // <span class="text-rpg-accent">NEXUS-PROTOCOL</span>
+</span>
+</div>
+<div class="h-5 w-[1px] bg-rpg-border"></div>
+<div class="flex items-center gap-2 bg-rpg-bg px-2 py-1 border border-rpg-border">
+<span class="material-symbols-outlined text-[14px] text-rpg-muted">volume_up</span>
+<span class="text-[11px] font-bold text-rpg-muted uppercase">MASTER</span>
+<div class="w-20 h-1.5 bg-rpg-surface-2 relative overflow-hidden">
+<div class="h-full w-3/4 bg-rpg-accent"></div>
+</div>
+<span class="font-mono text-[11px] text-rpg-accent font-bold">75%</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-rpg-bg border border-rpg-border p-0.5">
+<button class="h-7 px-3 bg-rpg-accent text-rpg-accent-contrast text-[11px] font-bold uppercase transition-colors" type="button">ATELIER</button>
+<button class="h-7 px-3 text-rpg-muted hover:text-rpg-text text-[11px] font-bold uppercase transition-colors" type="button">TABLE</button>
+</div>
+<button class="h-8 px-3 bg-rpg-surface-2 hover:bg-rpg-surface-3 text-rpg-text border border-rpg-accent/40 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">link</span>CONNECTER JOUEURS
+      </button>
+<button class="h-8 px-3 bg-rpg-danger hover:bg-red-600 text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">power_settings_new</span>STOP ALL
+      </button>
+</div>
+</header>
+<!-- ARRIÈRE-PLAN DE L'ATELIER (SEMI-ASSOMBRI PAR EFFET DUAL-VIEW CONSOLE) -->
+<main class="relative pt-14 min-h-screen bg-rpg-bg flex flex-col">
+<!-- BANDEAU ATELIER -->
+<section class="w-full bg-surface-container-lowest px-4 py-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-b border-rpg-border">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-orbitron text-sm font-bold text-rpg-text uppercase tracking-wider">
+            ATELIER DES RÈGLES <span class="text-rpg-accent">// CORPUS &amp; FICHES</span>
+</span>
+<span class="bg-rpg-accent text-rpg-accent-contrast font-mono text-[11px] px-2 py-0.5 uppercase font-bold">
+            12 FICHES ACTIVES
+          </span>
+<span class="bg-surface-container-high text-rpg-success font-mono text-[11px] px-2 py-0.5 uppercase font-bold flex items-center gap-1 border border-rpg-border">
+<span class="w-1.5 h-1.5 bg-rpg-success"></span> CORPUS NOTEBOOKLM CONNECTÉ
+          </span>
+</div>
+<p class="font-mono text-[11px] text-rpg-muted uppercase tracking-widest">
+          // GRIMOIRE G6 — BIBLIOTHÈQUE MARKDOWN // PROFIL ACTIF : BLADE RUNNER RPG (YEAR ZERO ENGINE)
+        </p>
+</div>
+<!-- COMMANDES RAPIDES D'EN-TÊTE -->
+<div class="flex items-center gap-2 shrink-0">
+<div class="bg-surface-container px-2.5 py-1.5 flex items-center gap-1.5 border border-rpg-border">
+<span class="material-symbols-outlined text-[14px] text-rpg-muted">filter_alt</span>
+<span class="font-mono text-[11px] text-rpg-muted uppercase">FILTRE :</span>
+<span class="font-mono text-[11px] text-rpg-accent font-bold uppercase">TOUTES (12)</span>
+</div>
+<button class="h-9 px-3 bg-surface-container-high hover:bg-rpg-surface-3 text-rpg-text font-mono text-[11px] font-bold uppercase flex items-center gap-1.5 border border-rpg-border transition-colors" id="btn-sync-disk" type="button">
+<span class="material-symbols-outlined text-[15px] text-rpg-accent">sync</span>
+          RELIRE LE DISQUE
+        </button>
+<button class="h-9 px-4 bg-rpg-accent hover:brightness-110 text-rpg-accent-contrast font-orbitron text-[11px] uppercase font-bold flex items-center gap-1.5 shadow-md transition-all" id="btn-open-create-modal" type="button">
+<span class="material-symbols-outlined text-[16px]">add_box</span>
+          + CRÉER UNE RÈGLE
+        </button>
+</div>
+</section>
+<!-- ARRIÈRE-PLAN BI-PANNEAU : LISTE GAUCHE (12 FICHES) + FICHE VOIGHT-KAMPFF OUVERTE -->
+<div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-3 p-3 filter brightness-[0.70] pointer-events-none select-none">
+<!-- COLONNE GAUCHE (4/12) : 12 FICHES -->
+<aside class="lg:col-span-4 flex flex-col gap-2">
+<div class="bg-surface-container p-2 flex flex-col gap-1 border border-rpg-border">
+<div class="relative w-full flex items-center bg-surface-container-lowest px-2 py-1.5 border border-rpg-border">
+<span class="material-symbols-outlined text-rpg-muted text-[15px] mr-2">search</span>
+<input class="w-full bg-transparent text-rpg-text font-mono text-[11px] placeholder:text-rpg-muted/60 focus:outline-none uppercase" disabled="" placeholder="Rechercher une fiche..." type="text" value="VOIGHT-KAMPFF"/>
+<span class="font-mono text-[11px] text-rpg-muted bg-surface-container px-1 py-0.5 ml-1">CTRL+K</span>
+</div>
+<div class="flex items-center justify-between text-rpg-muted font-mono text-[11px] px-1 pt-1">
+<span>INDEXÉ SUR : /BLADE_RUNNER_G6/</span>
+<span class="text-rpg-accent">LATENCE 1.2ms</span>
+</div>
+</div>
+<div class="bg-surface-container-low flex flex-col max-h-[680px] overflow-y-auto space-y-1 p-1 border border-rpg-border">
+<!-- 01 ACTIF -->
+<article class="p-2.5 bg-surface-container-highest relative border-l-4 border-rpg-accent">
+<div class="flex items-start justify-between gap-1">
+<span class="font-orbitron text-xs font-bold text-rpg-accent uppercase">01. Le test de Voight-Kampff</span>
+<span class="bg-rpg-accent text-rpg-accent-contrast font-mono text-[11px] px-1 py-0.5 uppercase font-bold shrink-0">RÈGLE FORGÉE</span>
+</div>
+<div class="flex items-center justify-between mt-1.5 font-mono text-[11px] text-rpg-muted uppercase">
+<span>SYNAPSE IA // NOTEBOOKLM</span>
+<span class="text-rpg-text font-bold">BLADE RUNNER CORE</span>
+</div>
+</article>
+<!-- 02 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<div class="flex items-start justify-between gap-1">
+<span class="font-orbitron text-xs font-bold text-rpg-text uppercase">02. Poursuite en Spinner &amp; Crash</span>
+<span class="bg-surface-container-highest text-rpg-accent font-mono text-[11px] px-1 py-0.5 uppercase font-bold">RÈGLE FORGÉE</span>
+</div>
+<div class="flex items-center justify-between mt-1 font-mono text-[11px] text-rpg-muted uppercase">
+<span>VÉHICULES // MANŒUVRES</span>
+<span>RÈGLE MAISON</span>
+</div>
+</article>
+<!-- 03 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-slate-300 uppercase">03. Détection de Réplicant Nexus-8</span>
+</article>
+<!-- 04 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-rpg-text uppercase">04. Stress &amp; Panique (Dés d'angoisse)</span>
+</article>
+<!-- 05 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-slate-300 uppercase">05. Soins d'urgence &amp; Trauma chirurgical</span>
+</article>
+<!-- 06 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-slate-300 uppercase">06. Tir de barrage &amp; Portée Extrême</span>
+</article>
+<!-- 07 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-rpg-text uppercase">07. Empathie artificielle &amp; Origami</span>
+</article>
+<!-- 08 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-slate-300 uppercase">08. Protocole d'interrogatoire LAPD</span>
+</article>
+<!-- 09 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-rpg-text uppercase">09. Piratage de terminal Tyrell</span>
+</article>
+<!-- 10 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-slate-300 uppercase">10. Marché noir d'Animoid Row</span>
+</article>
+<!-- 11 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-rpg-text uppercase">11. Effets de la pluie toxique acide</span>
+</article>
+<!-- 12 -->
+<article class="p-2 bg-surface-container border border-rpg-border/40">
+<span class="font-orbitron text-xs font-bold text-slate-300 uppercase">12. Écueils et Dépassement de soi</span>
+</article>
+</div>
+</aside>
+<!-- COLONNE CENTRALE (8/12) : FICHE ACTIVE DU TEST DE VOIGHT-KAMPFF -->
+<main class="lg:col-span-8 flex flex-col bg-surface-container p-4 gap-3 border border-rpg-border">
+<!-- BARRE DE LA FICHE : TITRE ORBITRON + ACTIONS -->
+<div class="flex items-center justify-between gap-2 bg-surface-container-high p-3 border border-rpg-border">
+<div>
+<div class="flex items-center gap-2">
+<h1 class="font-orbitron text-base font-bold text-rpg-text uppercase tracking-wide">
+                LE TEST DE VOIGHT-KAMPFF
+              </h1>
+<span class="bg-rpg-accent text-rpg-accent-contrast font-mono text-[11px] px-1.5 py-0.5 font-bold uppercase">
+                RÈGLE FORGÉE // SYNAPSE IA
+              </span>
+</div>
+<span class="font-mono text-[11px] text-rpg-muted uppercase">FICHE ID: #VK-88402-LAPD • DERNIÈRE SYNCHRO: IL Y A 4 MIN</span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="h-8 px-2.5 bg-surface-container-highest text-rpg-text font-mono text-[11px] uppercase flex items-center gap-1 border border-rpg-border" type="button">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">edit_note</span>
+              Éditer la règle
+            </button>
+<button class="h-8 px-2.5 bg-surface-container-highest text-rpg-text font-mono text-[11px] uppercase flex items-center gap-1 border border-rpg-border" type="button">
+<span class="material-symbols-outlined text-[14px] text-rpg-success">cast</span>
+              Partager aux joueurs
+            </button>
+<button class="h-8 px-2.5 bg-surface-container-highest text-rpg-accent font-mono text-[11px] uppercase flex items-center gap-1 border border-rpg-border" type="button">
+<span class="material-symbols-outlined text-[14px]">download</span>
+              Exporter vers Obsidian
+            </button>
+</div>
+</div>
+<!-- VISUEL SCANLINE BRUTALISTE -->
+<div class="relative w-full h-32 bg-surface-container-lowest overflow-hidden flex items-end p-3 border border-rpg-border">
+<div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCESRgJGwoqqx7El9oac3D3RjHR2sbDSvLV5AEGfwJ_sVGEBoNsTgquXRE5z5SzBJ9RqzpPUgCjrroUhyyFeG8IsFPVBJEBffNs9WxFaqQRRE_WGEUv7mCM8qpQqHqpB12zYfhkU8XZKMrXBGDw1GWd5VchXIBzzNnz4SVLSdAtXrOBzNGNKLBlBesItHzj3lZ-AomX1aU2NqX5fJVAgCKgE_NggzJHSM79URrh9A7h9o_DfW5T6dPG_Q');"></div>
+<div class="relative z-10 flex items-center justify-between w-full">
+<div>
+<span class="font-mono text-[11px] text-rpg-accent uppercase">// TÉLÉMESURE VK-99</span>
+<div class="font-mono text-sm text-rpg-text font-bold">PUPILLARY DILATION: 0.042 mm</div>
+</div>
+<span class="font-mono text-[11px] text-rpg-danger font-bold bg-surface-container-highest px-2 py-1 border border-rpg-danger/60">
+              RÉACTION SYNTHÉTIQUE SUSPECTÉE
+            </span>
+</div>
+</div>
+<!-- EXTRAIT MARKDOWN -->
+<div class="bg-surface-container-low p-3 flex flex-col gap-2 font-mono text-[12px] text-slate-300 border border-rpg-border">
+<h2 class="font-orbitron text-xs font-bold text-rpg-accent uppercase">1. Protocole d'administration du test Voight-Kampff</h2>
+<p class="leading-relaxed">
+            Le test Voight-Kampff est une méthode de diagnostic psychologique avancée exploitant la réaction involontaire des muscles ciliaires et les micro-fluctuations thermiques capillaires en réponse à des stimuli verbaux émotionnellement perturbants. Latence normale: &lt;650ms. Latence Réplicant: 1 200 à 2 400ms.
+          </p>
+</div>
+</main>
+</div>
+<!-- SURFACE FOREGROUND : CONSOLE DE FORGE & RÉGIE DUAL-VIEW (FENÊTRE MODALE ACTIVE MISE EN SCÈNE) -->
+<div class="fixed inset-0 z-50 bg-[#020617]/85 backdrop-blur-[2px] flex items-center justify-center p-3 md:p-6 overflow-y-auto" id="modal-create-rule">
+<!-- CONSOLE TACTIQUE AVANCÉE FORGE GM-OS (ARÊTES À 0px, FILETS CYAN NETS) -->
+<div class="w-full max-w-3xl bg-surface-container border-2 border-rpg-accent shadow-[0_0_25px_rgba(6,182,212,0.35)] flex flex-col my-auto relative">
+<!-- EN-TÊTE CONSOLE TACTIQUE AVEC BORDURE CYAN NETTE -->
+<div class="flex items-center justify-between bg-surface-container-highest px-4 py-3 border-b-2 border-rpg-accent">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-rpg-accent text-[22px] drop-shadow-[0_0_6px_rgba(6,182,212,0.6)]">psychology</span>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-orbitron text-sm md:text-base font-bold text-rpg-text uppercase tracking-widest">
+                  CRÉER UNE RÈGLE // SYNAPSE FORGE
+                </h2>
+<span class="hidden sm:inline-block font-mono text-[11px] bg-surface-container-lowest text-rpg-accent border border-rpg-accent/60 px-1.5 py-0.2">v6.4</span>
+</div>
+<p class="font-mono text-[11px] text-rpg-muted uppercase tracking-wider mt-0.5">
+                CHOISIR UN MODE DE RÉDACTION // PROTOCOLE ATELIER G6
+              </p>
+</div>
+</div>
+<button class="w-8 h-8 bg-surface-container border border-rpg-border hover:bg-rpg-danger hover:border-rpg-danger hover:text-white text-rpg-muted flex items-center justify-center font-mono text-sm font-bold transition-colors cursor-pointer" id="btn-close-modal" title="Fermer la console" type="button">
+            ✕
+          </button>
+</div>
+<!-- LES DEUX ONGLETS SUPÉRIEURS TACTIQUES -->
+<div class="grid grid-cols-2 bg-surface-container-lowest p-1.5 gap-1.5 border-b border-rpg-border">
+<!-- ONGLET 1 : L'ÉCRIRE MOI-MÊME (STYLE SECONDAIRE SOBRE) -->
+<button class="h-10 px-3 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text border border-rpg-border font-mono text-[11px] uppercase font-bold flex items-center justify-center gap-2 transition-colors" id="tab-manual" type="button">
+<span class="material-symbols-outlined text-[16px] text-rpg-muted">edit_note</span>
+<span>L'ÉCRIRE MOI-MÊME (MARKDOWN PUR)</span>
+</button>
+<!-- ONGLET 2 : LA GÉNÉRER AVEC L'IA (ACTIF, FOND CYAN VIF, ICÔNE ÉTINCELLE/FORGE) -->
+<button class="h-10 px-3 bg-rpg-accent text-rpg-accent-contrast border-2 border-rpg-accent font-orbitron text-[11px] uppercase font-extrabold flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(6,182,212,0.4)] transition-all" id="tab-ai" type="button">
+<span class="material-symbols-outlined text-[18px] text-rpg-accent-contrast">bolt</span>
+<span>LA GÉNÉRER AVEC L'IA (FORGE SYNAPSE)</span>
+</button>
+</div>
+<!-- CORPS DES PARAMÉTRAGES TACTIQUES EN CAISSONS TECHNIQUES -->
+<div class="p-4 md:p-5 flex flex-col gap-3.5 bg-surface-container-low">
+<!-- CAISSON 1 : SUJET DE LA RÈGLE (AVEC CURSEUR NÉON CYAN) -->
+<div class="bg-surface-container p-3 border border-rpg-border flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-orbitron text-[11px] text-rpg-accent font-bold uppercase tracking-wider flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-rpg-accent"></span>
+                SUJET DE LA RÈGLE OU CONCEPT MÉCANIQUE :
+              </label>
+<span class="font-mono text-[11px] text-rpg-muted">ENCODAGE : UTF-8 // CONTEXTE LAPD</span>
+</div>
+<div class="relative w-full flex items-center bg-surface-container-lowest border-2 border-rpg-border focus-within:border-rpg-accent px-3 py-2 transition-colors">
+<input class="w-full bg-transparent text-rpg-text font-mono text-xs md:text-sm font-bold uppercase tracking-wider focus:outline-none placeholder:text-rpg-muted/40" id="input-rule-subject" placeholder="Ex: Le test de Voight-Kampff..." type="text" value="Le test de Voight-Kampff"/>
+<span class="neon-cursor ml-1 shrink-0" title="Curseur Tactique Néon"></span>
+<span class="ml-2 px-1.5 py-0.5 bg-surface-container text-rpg-accent font-mono text-[11px] border border-rpg-border shrink-0">LOCKED</span>
+</div>
+</div>
+<!-- CAISSON 2 : PARAMÈTRES MÉCANIQUES (SÉLECTEURS COMPACTS EN GRILLE) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<!-- SÉLECTEUR 1 : SYSTÈME ET DÉS -->
+<div class="bg-surface-container p-3 border border-rpg-border flex flex-col gap-1.5">
+<label class="font-orbitron text-[11px] text-rpg-muted font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">casino</span>
+                SYSTÈME CIBLE &amp; TYPE DE DÉS :
+              </label>
+<div class="h-10 bg-surface-container-lowest px-3 flex items-center justify-between text-rpg-text font-mono text-[11px] border border-rpg-border hover:border-rpg-border-light cursor-pointer">
+<span class="font-bold text-rpg-text">Dés échelonnés (d6..d12 YZE)</span>
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">arrow_drop_down</span>
+</div>
+</div>
+<!-- SÉLECTEUR 2 : TYPE D'ÉPREUVE -->
+<div class="bg-surface-container p-3 border border-rpg-border flex flex-col gap-1.5">
+<label class="font-orbitron text-[11px] text-rpg-muted font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-rpg-accent">tune</span>
+                TYPE D'ÉPREUVE / RÈGLE :
+              </label>
+<div class="h-10 bg-surface-container-lowest px-3 flex items-center justify-between text-rpg-text font-mono text-[11px] border border-rpg-border hover:border-rpg-border-light cursor-pointer">
+<span class="font-bold text-rpg-accent">Épreuve psychologique contestée</span>
+<span class="material-symbols-outlined text-rpg-accent text-[18px]">tune</span>
+</div>
+</div>
+</div>
+<!-- CAISSON 3 : SOURCES DU CARNET NOTEBOOKLM (GRILLE 2x2 TACTILE AVEC PUCES D'ÉTAT NETTES) -->
+<div class="bg-surface-container p-3.5 border border-rpg-border flex flex-col gap-2.5">
+<div class="flex items-center justify-between border-b border-rpg-border/70 pb-2">
+<span class="font-orbitron text-[11px] text-rpg-accent font-bold uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-rpg-accent">library_books</span>
+                SOURCES DU CARNET NOTEBOOKLM CONNECTÉ (3 SÉLECTIONNÉES)
+              </span>
+<span class="font-mono text-[11px] text-rpg-muted">CORPUS ID: #BLD-RNR-2049</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-rpg-text font-mono text-[11px]">
+<!-- CHECKBOX 1 (ACTIVE) -->
+<label class="flex items-center gap-2.5 bg-surface-container-lowest p-2.5 border-l-2 border-rpg-accent hover:bg-surface-container-high cursor-pointer transition-colors select-none">
+<input checked="" class="w-4 h-4 accent-cyan-400 bg-surface-container border border-rpg-accent cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-bold text-rpg-text truncate uppercase">Livre de base Blade Runner (Chapitre 04)</span>
+<span class="text-[11px] text-rpg-muted">RÈGLES DE BASE • P. 62-78</span>
+</div>
+</label>
+<!-- CHECKBOX 2 (ACTIVE) -->
+<label class="flex items-center gap-2.5 bg-surface-container-lowest p-2.5 border-l-2 border-rpg-accent hover:bg-surface-container-high cursor-pointer transition-colors select-none">
+<input checked="" class="w-4 h-4 accent-cyan-400 bg-surface-container border border-rpg-accent cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-bold text-rpg-text truncate uppercase">Dossier d'enquête LAPD #810 - Affaire Tyrell</span>
+<span class="text-[11px] text-rpg-muted">TRANSCRIPT ENQUÊTEURS LAPD</span>
+</div>
+</label>
+<!-- CHECKBOX 3 (DÉCOCHÉE) -->
+<label class="flex items-center gap-2.5 bg-surface-container-lowest/60 p-2.5 border-l-2 border-rpg-border hover:bg-surface-container-high cursor-pointer transition-colors select-none opacity-60">
+<input class="w-4 h-4 accent-cyan-400 bg-surface-container border border-rpg-border cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-bold text-slate-300 truncate uppercase">Manuel de combat urbain &amp; Spinners (2049)</span>
+<span class="text-[11px] text-rpg-muted">TACTIQUES VÉHICULES // EXCLU</span>
+</div>
+</label>
+<!-- CHECKBOX 4 (ACTIVE) -->
+<label class="flex items-center gap-2.5 bg-surface-container-lowest p-2.5 border-l-2 border-rpg-accent hover:bg-surface-container-high cursor-pointer transition-colors select-none">
+<input checked="" class="w-4 h-4 accent-cyan-400 bg-surface-container border border-rpg-accent cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-bold text-rpg-text truncate uppercase">Supplément Nexus-8 &amp; Biométrie synthétique</span>
+<span class="text-[11px] text-rpg-muted">DONNÉES BIOMÉTRIQUES VK-99</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- BAS DE MODALE : RAPPEL EXPLICATIF ET GRAND BOUTON D'ACTION 44px -->
+<div class="bg-surface-container-highest p-3.5 md:p-4 border-t-2 border-rpg-accent flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+<!-- RAPPEL EXPLICATIF FORMAT CONSOLE -->
+<div class="flex items-center gap-2 text-rpg-muted font-mono text-[11px]">
+<span class="material-symbols-outlined text-rpg-accent text-[18px] shrink-0">info</span>
+<span class="leading-tight">
+              L'IA proposera 3 règles candidates à forger et injectera les balises Markdown.
+            </span>
+</div>
+<!-- ACTIONS : ANNULER & GRAND BOUTON 44px -->
+<div class="flex items-center gap-2 shrink-0 justify-end">
+<button class="h-[44px] px-4 bg-surface-container hover:bg-surface-container-low text-rpg-muted hover:text-rpg-text font-mono text-[11px] uppercase font-bold border border-rpg-border transition-colors cursor-pointer" id="btn-cancel-modal" type="button">
+              ANNULER
+            </button>
+<button class="h-[44px] px-5 bg-rpg-accent hover:bg-cyan-300 text-rpg-accent-contrast font-orbitron text-xs uppercase font-extrabold flex items-center justify-center gap-2 border border-rpg-accent shadow-[0_0_15px_rgba(6,182,212,0.45)] transition-all cursor-pointer" id="btn-submit-forge" type="button">
+<span class="material-symbols-outlined text-[18px] font-bold">bolt</span>
+<span>PROPOSER DES RÈGLES (3)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- SCRIPTS D'INTERACTIVITÉ & ÉVÉNEMENTS CONSOLE -->
+<script>
+  (function initForgeConsole() {
+    const modal = document.getElementById('modal-create-rule');
+    const openBtn = document.getElementById('btn-open-create-modal');
+    const closeBtn = document.getElementById('btn-close-modal');
+    const cancelBtn = document.getElementById('btn-cancel-modal');
+    const submitBtn = document.getElementById('btn-submit-forge');
+    const syncBtn = document.getElementById('btn-sync-disk');
+    const tabManual = document.getElementById('tab-manual');
+    const tabAi = document.getElementById('tab-ai');
+
+    function closeModal() {
+      if (modal) modal.classList.add('hidden');
+    }
+    function openModal() {
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    // Basculement onglets
+    if (tabManual && tabAi) {
+      tabManual.addEventListener('click', () => {
+        tabManual.className = "h-10 px-3 bg-rpg-accent text-rpg-accent-contrast border-2 border-rpg-accent font-orbitron text-[11px] uppercase font-extrabold flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(6,182,212,0.4)] transition-all";
+        tabManual.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-[16px] text-rpg-accent-contrast";
+        tabAi.className = "h-10 px-3 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text border border-rpg-border font-mono text-[11px] uppercase font-bold flex items-center justify-center gap-2 transition-colors";
+        tabAi.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-[16px] text-rpg-muted";
+      });
+      tabAi.addEventListener('click', () => {
+        tabAi.className = "h-10 px-3 bg-rpg-accent text-rpg-accent-contrast border-2 border-rpg-accent font-orbitron text-[11px] uppercase font-extrabold flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(6,182,212,0.4)] transition-all";
+        tabAi.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-[18px] text-rpg-accent-contrast";
+        tabManual.className = "h-10 px-3 bg-surface-container hover:bg-surface-container-high text-rpg-muted hover:text-rpg-text border border-rpg-border font-mono text-[11px] uppercase font-bold flex items-center justify-center gap-2 transition-colors";
+        tabManual.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-[16px] text-rpg-muted";
+      });
+    }
+
+    // Raccourci Échap
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Bouton Proposer des règles (Simulation)
+    if (submitBtn) {
+      submitBtn.addEventListener('click', () => {
+        const originalHtml = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> SYNAPSE EN COURS...';
+        setTimeout(() => {
+          submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span> 3 PROPOSITIONS PRÊTES !';
+          setTimeout(() => {
+            closeModal();
+            submitBtn.innerHTML = originalHtml;
+          }, 700);
+        }, 900);
+      });
+    }
+
+    if (syncBtn) {
+      syncBtn.addEventListener('click', () => {
+        const original = syncBtn.innerHTML;
+        syncBtn.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin text-rpg-accent">refresh</span> LECTURE DU DISQUE...';
+        setTimeout(() => {
+          syncBtn.innerHTML = '<span class="material-symbols-outlined text-[15px] text-rpg-success">done</span> 12 FICHES SYNCHRONISÉES';
+          setTimeout(() => { syncBtn.innerHTML = original; }, 1200);
+        }, 800);
+      });
+    }
+  })();
+</script>
+</body></html>

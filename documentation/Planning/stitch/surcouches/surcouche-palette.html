@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-950 text-slate-100" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // RECHERCHE SPOTLIGHT - DUAL PANEL</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Orbitron, Inter, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              void: '#020617',
+              surface: '#0f172a',
+              raised: '#1e293b',
+              accent: '#06b6d4',
+              muted: '#898c95',
+              border: '#1e293b',
+            }
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'cyan-glow': '0 0 24px rgba(6, 182, 212, 0.22)',
+            'cyan-input': '0 0 12px rgba(6, 182, 212, 0.28)',
+          }
+        }
+      }
+    };
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="diegetic-brutalism">
+    /* Règle stricte : 0px d'arrondi sur tout le système */
+    *, ::before, ::after {
+      border-radius: 0px !important;
+    }
+    
+    /* Clignotement de curseur console diégétique */
+    @keyframes console-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .caret-blink {
+      animation: console-blink 1s steps(1) infinite;
+    }
+
+    /* Scrollbar technique diégétique */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #06b6d4;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="h-full w-full font-inter select-none overflow-hidden bg-[#020617] text-slate-100 antialiased relative">
+<!-- BEGIN: Diegetic Background Workspace (GM-OS Mock) -->
+<div class="absolute inset-0 flex flex-col pointer-events-none filter blur-[2px] opacity-40" data-purpose="background-context">
+<!-- Header factice de fond -->
+<div class="h-10 border-b border-slate-800 bg-[#070d19] flex items-center justify-between px-4">
+<div class="flex items-center space-x-3">
+<span class="font-orbitron font-bold text-xs tracking-widest text-cyan-400">GM-OS // SYSTEM CORE</span>
+<span class="text-xs text-slate-500 font-mono">SECTEUR 04 :: BLADE RUNNER</span>
+</div>
+<div class="text-xs font-mono text-slate-400">HORLOGE: 23:42:09</div>
+</div>
+<!-- Espace de travail flouté arrière -->
+<div class="flex-1 grid grid-cols-12 gap-3 p-4 bg-[#020617]">
+<div class="col-span-3 border border-slate-800 bg-[#0a101f] p-3">
+<div class="h-4 w-28 bg-slate-800 mb-4"></div>
+<div class="space-y-2">
+<div class="h-8 bg-slate-900 border border-slate-800"></div>
+<div class="h-8 bg-slate-900 border border-slate-800"></div>
+<div class="h-8 bg-slate-900 border border-slate-800"></div>
+</div>
+</div>
+<div class="col-span-9 border border-slate-800 bg-[#0a101f] p-4">
+<div class="h-6 w-64 bg-slate-800 mb-6"></div>
+<div class="grid grid-cols-2 gap-4">
+<div class="h-40 bg-slate-900 border border-slate-800"></div>
+<div class="h-40 bg-slate-900 border border-slate-800"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Diegetic Background Workspace -->
+<!-- BEGIN: Modal Backdrop -->
+<div class="fixed inset-0 bg-[#020617]/85 backdrop-blur-sm z-50 flex justify-center items-start pt-[68px] px-4" data-purpose="spotlight-overlay">
+<!-- BEGIN: Main Spotlight Frame (Largeur ~800px) -->
+<section aria-label="Recherche Globale GM-OS" class="w-full max-w-[800px] bg-[#0f172a] border border-[#06b6d4]/50 shadow-cyan-glow flex flex-col relative" role="search">
+<!-- BEGIN: Window Title Bar (Cadre Commun GM-OS) -->
+<header class="h-11 bg-[#0a101f] border-b border-[#1e293b] flex items-center justify-between pl-0 pr-2">
+<div class="flex items-center h-full">
+<!-- Pictogramme d'accent caisson technique -->
+<div class="w-11 h-full bg-[#06b6d4]/10 border-r border-[#06b6d4]/30 flex items-center justify-center text-[#06b6d4]">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="square" stroke-linejoin="miter"></path>
+</svg>
+</div>
+<!-- Titre principal Orbitron & Raccourci -->
+<div class="flex items-center gap-2 pl-3">
+<h1 class="font-orbitron font-bold text-xs tracking-wider text-slate-100 uppercase">
+              RECHERCHE <span class="text-[#06b6d4]">//</span> SPOTLIGHT
+            </h1>
+<span class="font-mono text-[11px] text-[#898c95] bg-[#1e293b] px-1.5 py-0.5 border border-slate-700">
+              Ctrl+K
+            </span>
+</div>
+</div>
+<!-- Bouton fermer diégétique standard -->
+<button aria-label="Fermer la recherche" class="flex items-center gap-1.5 text-xs font-mono text-[#898c95] hover:text-cyan-400 hover:bg-[#1e293b] px-2 py-1 transition-colors border border-transparent hover:border-slate-700" type="button">
+<span>[Échap]</span>
+<span class="text-sm leading-none font-bold">✕</span>
+</button>
+</header>
+<!-- END: Window Title Bar -->
+<!-- BEGIN: Primary Search Input Area -->
+<div class="p-3 bg-[#0a1122] border-b border-[#1e293b]">
+<div class="relative flex items-center bg-[#070d1f] border border-[#06b6d4] shadow-cyan-input min-h-[50px] px-3.5">
+<!-- Icône Loupe -->
+<div class="text-[#06b6d4] flex-shrink-0 mr-3">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="square" stroke-linejoin="miter"></path>
+</svg>
+</div>
+<!-- Champ de saisie actif simulé avec texte "roy|" -->
+<div class="flex-1 flex items-center font-inter text-base text-slate-100 tracking-wide font-normal">
+<span>roy</span>
+<span class="w-[2px] h-5 bg-[#06b6d4] ml-0.5 caret-blink"></span>
+</div>
+<!-- Raccourci contextuel -->
+<div class="flex-shrink-0 ml-2">
+<span class="font-mono text-[11px] text-[#898c95] bg-[#162137] px-2 py-1 border border-slate-700 select-none">
+              [Échap] pour effacer
+            </span>
+</div>
+</div>
+</div>
+<!-- END: Primary Search Input Area -->
+<!-- BEGIN: Dual-Panel Body (60% Liste / 40% Preview Télémétrique) -->
+<div class="flex flex-row divide-x divide-[#1e293b] bg-[#0f172a] min-h-[420px] max-h-[480px]">
+<!-- VOLET GAUCHE (60% DE LARGEUR) : LISTE DES RÉSULTATS GROUPÉS -->
+<div class="w-[60%] overflow-y-auto custom-scrollbar divide-y divide-[#1e293b]/60 flex flex-col">
+<!-- 1. GROUPE: ENTITÉS -->
+<div class="py-2" data-purpose="group-entities">
+<div class="px-3.5 py-1 flex items-center gap-2 text-[#06b6d4]">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span class="font-orbitron font-bold text-[10px] tracking-widest uppercase">Entités</span>
+</div>
+<!-- Item Sélectionné : Roy Batty -->
+<article class="group mx-2 mt-1 p-2 bg-[#1e293b] border-l-[3px] border-[#06b6d4] shadow-[0_0_14px_rgba(6,182,212,0.18)] flex items-center justify-between cursor-pointer" data-purpose="result-item-active" tabindex="0">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 bg-[#080d19] border border-[#06b6d4] flex-shrink-0 flex items-center justify-center relative">
+<span class="font-orbitron font-bold text-[11px] text-[#06b6d4]">RB</span>
+<div class="absolute inset-0 bg-[#06b6d4]/10 pointer-events-none"></div>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-inter font-bold text-sm text-slate-100 truncate">Roy Batty</span>
+<span class="font-mono text-[9px] text-cyan-300 bg-cyan-950/80 border border-cyan-500/50 px-1 py-0.2">PNJ HOSTILE</span>
+</div>
+<p class="font-inter text-[11px] text-slate-300 truncate mt-0.5">Nexus-6 • Chef de groupe</p>
+</div>
+</div>
+<div class="flex-shrink-0 pl-2">
+<span class="font-mono text-[10px] font-bold text-[#06b6d4] bg-[#06b6d4]/10 border border-[#06b6d4] px-1.5 py-0.5 shadow-sm">
+                OUVRIR ↵
+              </span>
+</div>
+</article>
+</div>
+<!-- 2. GROUPE: AUDIO -->
+<div class="py-2" data-purpose="group-audio">
+<div class="px-3.5 py-1 flex items-center gap-2 text-slate-400">
+<svg class="w-3.5 h-3.5 text-[#06b6d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span class="font-orbitron font-bold text-[10px] tracking-widest uppercase">Audio</span>
+</div>
+<article class="mx-2 mt-1 p-2 hover:bg-[#1e293b]/70 border-l-[3px] border-transparent hover:border-slate-500 flex items-center justify-between cursor-pointer transition-colors" tabindex="0">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 bg-[#080d19] border border-slate-800 flex-shrink-0 flex items-center justify-center text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" stroke-linecap="square" stroke-width="1.8"></path>
+<path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="square" stroke-width="1.8"></path>
+</svg>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-inter font-medium text-xs text-slate-200 truncate">Roy's Theme</span>
+<p class="font-inter text-[11px] text-[#898c95] truncate mt-0.5">Musique • Bande originale Blade Runner • Piste 04</p>
+</div>
+</div>
+<div class="flex-shrink-0 pl-2">
+<span class="font-mono text-[10px] text-slate-400 bg-slate-900 border border-slate-800 px-1.5 py-0.5">03:46</span>
+</div>
+</article>
+</div>
+<!-- 3. GROUPE: RÈGLES & WIKI -->
+<div class="py-2" data-purpose="group-wiki">
+<div class="px-3.5 py-1 flex items-center gap-2 text-slate-400">
+<svg class="w-3.5 h-3.5 text-[#06b6d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span class="font-orbitron font-bold text-[10px] tracking-widest uppercase">Règles &amp; Wiki</span>
+</div>
+<article class="mx-2 mt-1 p-2 hover:bg-[#1e293b]/70 border-l-[3px] border-transparent hover:border-slate-500 flex items-center justify-between cursor-pointer transition-colors" tabindex="0">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 bg-[#080d19] border border-slate-800 flex-shrink-0 flex items-center justify-center text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="square" stroke-width="1.8"></path>
+</svg>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-inter font-medium text-xs text-slate-200 truncate">Nexus-6 : la série de Roy</span>
+<p class="font-inter text-[11px] text-[#898c95] truncate mt-0.5">Wiki • Replicants &amp; Modèles Tyrell</p>
+</div>
+</div>
+<div class="flex-shrink-0 pl-2">
+<span class="font-mono text-[9px] text-[#898c95] px-1 py-0.5 border border-slate-800 uppercase">LIVRE DE BASE</span>
+</div>
+</article>
+</div>
+<!-- 4. GROUPE: ACTIONS & OUTILS -->
+<div class="py-2" data-purpose="group-actions">
+<div class="px-3.5 py-1 flex items-center gap-2 text-slate-400">
+<svg class="w-3.5 h-3.5 text-[#06b6d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"></path>
+</svg>
+<span class="font-orbitron font-bold text-[10px] tracking-widest uppercase">Actions &amp; Outils</span>
+</div>
+<article class="mx-2 mt-1 p-2 hover:bg-[#1e293b]/70 border-l-[3px] border-transparent hover:border-slate-500 flex items-center justify-between cursor-pointer transition-colors" tabindex="0">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 bg-[#080d19] border border-slate-800 flex-shrink-0 flex items-center justify-center text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="square" stroke-width="1.8"></path>
+</svg>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-inter font-medium text-xs text-slate-200 truncate">Ouvrir Combat-OS</span>
+<p class="font-inter text-[11px] text-[#898c95] truncate mt-0.5">Module • Gestion de l'affrontement tactique</p>
+</div>
+</div>
+<div class="flex-shrink-0 pl-2">
+<span class="font-mono text-[9px] text-cyan-400 bg-cyan-950/40 border border-cyan-800/60 px-1.5 py-0.5">EXÉCUTER</span>
+</div>
+</article>
+</div>
+</div>
+<!-- VOLET DROIT (40% DE LARGEUR) : PANNEAU D'APERÇU DIRECT (PREVIEW TÉLÉMÉTRIQUE) -->
+<aside class="w-[40%] bg-[#080d19] p-4 flex flex-col justify-between" data-purpose="telemetric-preview">
+<div class="space-y-4">
+<!-- En-tête de l'aperçu -->
+<div class="flex items-center justify-between border-b border-[#1e293b] pb-2">
+<span class="font-orbitron font-bold text-[10px] tracking-widest text-[#06b6d4] uppercase">APERÇU FICHE</span>
+<span class="font-mono text-[10px] text-[#898c95]">N6MAA10816</span>
+</div>
+<!-- Portrait + Identité -->
+<div class="flex items-start gap-3 bg-[#0a101f] border border-[#1e293b] p-2.5">
+<div class="w-14 h-14 bg-[#020617] border border-[#06b6d4] flex-shrink-0 relative overflow-hidden flex flex-col items-center justify-center">
+<span class="font-orbitron font-bold text-base text-[#06b6d4]">RB</span>
+<span class="font-mono text-[8px] text-cyan-500/80 tracking-tighter">NEXUS-6</span>
+<div class="absolute inset-0 bg-gradient-to-t from-[#06b6d4]/20 via-transparent to-transparent pointer-events-none"></div>
+</div>
+<div class="flex flex-col">
+<h2 class="font-inter font-bold text-sm text-slate-100 leading-snug">Roy Batty</h2>
+<span class="font-mono text-[10px] text-rose-400 mt-0.5">Statut : Hostile</span>
+<span class="font-inter text-[11px] text-[#898c95]">Nexus-6 Combat</span>
+</div>
+</div>
+<!-- Télémétrie rapide : PV & SF -->
+<div class="space-y-2.5 bg-[#0a101f] border border-[#1e293b] p-3">
+<div class="space-y-1">
+<div class="flex justify-between items-center text-xs">
+<span class="font-inter text-slate-300">Santé</span>
+<span class="font-mono font-bold text-cyan-400">14 / 15 PV</span>
+</div>
+<div class="w-full h-1.5 bg-slate-900 border border-slate-700">
+<div class="h-full bg-[#06b6d4]" style="width: 93%;"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-center text-xs">
+<span class="font-inter text-slate-300">Sang-froid</span>
+<span class="font-mono font-bold text-emerald-400">12 / 12 SF</span>
+</div>
+<div class="w-full h-1.5 bg-slate-900 border border-slate-700">
+<div class="h-full bg-emerald-400" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action rapide Fiche -->
+<div class="pt-3">
+<button class="w-full bg-[#06b6d4] hover:bg-[#0891b2] text-[#020617] font-mono font-bold text-xs py-2 px-3 flex items-center justify-center gap-1.5 transition-colors border border-[#06b6d4] shadow-sm" type="button">
+<span>OUVRIR FICHE</span>
+<span class="bg-[#020617] text-[#06b6d4] px-1 py-0.2 text-[10px]">[Entrée]</span>
+</button>
+</div>
+</aside>
+</div>
+<!-- END: Dual-Panel Body -->
+<!-- BEGIN: Window Status & Footer Shortcuts -->
+<footer class="h-10 bg-[#0a101f] border-t border-[#1e293b] px-4 flex items-center justify-between">
+<!-- Raccourcis de navigation pour le meneur -->
+<div class="flex items-center gap-3.5 text-xs font-inter text-[#898c95]">
+<span class="flex items-center gap-1">
+<kbd class="font-mono text-[10px] bg-[#1e293b] text-slate-300 border border-slate-700 px-1 py-0.2">↑ ↓</kbd>
+<span>Naviguer</span>
+</span>
+<span class="flex items-center gap-1">
+<kbd class="font-mono text-[10px] bg-[#1e293b] text-slate-300 border border-slate-700 px-1 py-0.2">↹</kbd>
+<span>Aperçu</span>
+</span>
+<span class="flex items-center gap-1">
+<kbd class="font-mono text-[10px] bg-[#1e293b] text-slate-300 border border-slate-700 px-1 py-0.2">Entrée</kbd>
+<span>Ouvrir</span>
+</span>
+<span class="flex items-center gap-1">
+<kbd class="font-mono text-[10px] bg-[#1e293b] text-slate-300 border border-slate-700 px-1 py-0.2">Échap</kbd>
+<span>Fermer</span>
+</span>
+</div>
+<!-- Décompte de résultats diégétique -->
+<div class="font-mono text-xs text-[#898c95] flex items-center gap-1.5">
+<span class="inline-block w-1.5 h-1.5 bg-[#06b6d4]"></span>
+<span><span class="text-cyan-400 font-bold">4</span> résultats pour « roy »</span>
+</div>
+</footer>
+<!-- END: Window Status & Footer Shortcuts -->
+</section>
+<!-- END: Main Spotlight Frame -->
+</div>
+<!-- END: Modal Backdrop -->
+</body></html>

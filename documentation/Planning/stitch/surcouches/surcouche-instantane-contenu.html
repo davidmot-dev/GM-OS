@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // Inspection Instantané - Séance N°4</title>
+<!-- Google Fonts: Orbitron, Inter, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyan: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              DEFAULT: '#06b6d4',
+            },
+            slate: {
+              800: '#1e293b',
+              850: '#151b2d',
+              900: '#0b1120',
+              950: '#020617',
+            },
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+            }
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'cyan-glow': '0 0 28px -4px rgba(6, 182, 212, 0.45), 0 0 12px -2px rgba(6, 182, 212, 0.3)',
+            'cyan-btn': '0 0 14px rgba(6, 182, 212, 0.5)',
+          }
+        }
+      }
+    };
+  </script>
+<!-- Custom CSS for specific HUD touches and scanlines -->
+<style data-purpose="hud-styling">
+    /* Brutal Diegetic aesthetic: hard cuts, scanlines, sharp borders */
+    * {
+      border-radius: 0px !important;
+    }
+    
+    .scanlines-overlay {
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.32) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.02),
+        rgba(0, 255, 0, 0.01),
+        rgba(0, 0, 255, 0.02)
+      );
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
+
+    .modal-frame {
+      border: 1px solid #1e293b;
+      outline: 1px solid rgba(6, 182, 212, 0.65);
+      box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.35), inset 0 0 15px rgba(6, 182, 212, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-[#020617] text-slate-100 font-inter antialiased min-h-screen w-screen overflow-hidden select-none flex items-center justify-center p-0 m-0 relative">
+<!-- BEGIN: BlurredCockpitBackground -->
+<!-- Contextual GM-OS interface blurred in the background -->
+<div aria-hidden="true" class="absolute inset-0 w-full h-full bg-[#020617] overflow-hidden pointer-events-none">
+<!-- Top Cockpit Bar Mockup -->
+<div class="w-full h-12 border-b border-slate-800 bg-[#070c18] px-6 flex items-center justify-between opacity-40">
+<div class="flex items-center space-x-4">
+<span class="font-orbitron tracking-widest text-cyan-400 text-sm font-bold">GM-OS // SYSTEM CORE</span>
+<span class="font-mono text-xs text-slate-500">v4.8.2-CYBERPUNK</span>
+</div>
+<div class="flex items-center space-x-6 font-mono text-xs text-slate-400">
+<span>LAT: 12ms</span>
+<span>DSP: READY</span>
+<span>DMX: 4/4 OK</span>
+</div>
+</div>
+<!-- Cockpit Grid Columns Mockup -->
+<div class="grid grid-cols-12 gap-4 p-6 h-[calc(100vh-48px)] opacity-30">
+<div class="col-span-3 border border-slate-800 bg-slate-900/60 p-4"></div>
+<div class="col-span-6 border border-slate-800 bg-slate-900/60 p-4 flex flex-col gap-4">
+<div class="h-64 border border-slate-800 bg-slate-950/80"></div>
+<div class="flex-1 border border-slate-800 bg-slate-950/80"></div>
+</div>
+<div class="col-span-3 border border-slate-800 bg-slate-900/60 p-4"></div>
+</div>
+</div>
+<!-- END: BlurredCockpitBackground -->
+<!-- BEGIN: BackdropFilterOverlay -->
+<div class="absolute inset-0 bg-[#020617]/85 backdrop-blur-[8px] z-10 scanlines-overlay"></div>
+<!-- END: BackdropFilterOverlay -->
+<!-- BEGIN: ModalContainer -->
+<div class="relative z-20 w-[740px] max-w-[95vw] bg-[#0b1120] modal-frame flex flex-col" data-purpose="instantane-restore-modal">
+<!-- BEGIN: ModalHeader -->
+<header class="flex items-stretch border-b border-slate-800 bg-[#080d1a]" data-purpose="modal-header">
+<!-- Icon Indicator Box -->
+<div class="w-14 h-14 flex items-center justify-center border-r border-slate-800 text-cyan-400 bg-slate-900/80">
+<!-- Restoration / Eye / Snapshot Icon -->
+<svg class="w-6 h-6 stroke-cyan-400 fill-none" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+<path d="M3 3v5h5"></path>
+<path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+<path d="M16 21h5v-5"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+</div>
+<!-- Title Banner -->
+<div class="flex-1 px-5 flex items-center">
+<h1 class="font-orbitron font-bold text-[16px] tracking-wide text-white uppercase">
+          CONTENU DE L'INSTANTANÉ — SÉANCE N°4
+        </h1>
+</div>
+<!-- Close Shortcut Box -->
+<button class="px-4 border-l border-slate-800 font-mono text-xs text-slate-400 hover:text-cyan-400 hover:bg-slate-850 flex items-center gap-1.5 transition-colors" data-purpose="close-modal-header-btn" title="Fermer la fenêtre (Échap)" type="button">
+<span>[Échap]</span>
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 6L6 18M6 6l12 12"></path>
+</svg>
+</button>
+</header>
+<!-- END: ModalHeader -->
+<!-- BEGIN: ModalBody -->
+<main class="p-6 flex flex-col gap-4 bg-[#0a0f1d]" data-purpose="modal-content">
+<!-- Status and Timestamp Bar -->
+<div class="flex items-center justify-between pb-1 border-b border-slate-800/80 font-mono" data-purpose="status-header-bar">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 text-[11px] font-bold tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/40 uppercase">
+<span class="w-1.5 h-1.5 bg-emerald-400 mr-1.5 animate-pulse"></span>
+            PRÊT POUR LA RESTAURATION
+          </span>
+</div>
+<div class="text-[12px] text-slate-400 flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="square" stroke-width="2"></path>
+</svg>
+<span>Enregistré le <strong class="text-slate-200">12/09/2026</strong> à <strong class="text-cyan-400">22:30</strong></span>
+</div>
+</div>
+<!-- MODULE 1: Audio & Soundscape -->
+<section class="bg-[#151b2d] border border-[#1e293b] p-4 flex flex-col gap-3" data-purpose="module-audio">
+<!-- Module Header -->
+<div class="flex items-center justify-between border-b border-slate-800 pb-2">
+<div class="flex items-center gap-2 text-cyan-400">
+<!-- Vinyl/Audio Icon -->
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2a10 10 0 0 1 10 10"></path>
+</svg>
+<h2 class="font-orbitron text-xs font-bold tracking-wider uppercase text-slate-200">
+              AUDIO &amp; SOUNDSCAPE
+            </h2>
+</div>
+<span class="font-mono text-[11px] text-slate-400 bg-slate-900 px-2 py-0.5 border border-slate-800">
+            MOTEUR ACTIF
+          </span>
+</div>
+<!-- Module Grid Content -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[13px]">
+<!-- Deck A -->
+<div class="bg-[#0d1222] p-2.5 border border-slate-800/90 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-wider">Deck A // Lecture</span>
+<span class="text-[10px] font-mono px-1.5 py-0.2 bg-cyan-950 text-cyan-300 border border-cyan-800">BOUCLE ACTIVE</span>
+</div>
+<p class="font-semibold text-white truncate text-[13px]" title="03. Los Ángeles, Nov 2019 - Eye On The City">
+              03. Los Ángeles, Nov 2019 - Eye On The City
+            </p>
+<div class="flex items-center justify-between font-mono text-[11px] text-slate-400 mt-1">
+<span>Position : <span class="text-cyan-300">01:24</span> / 02:08</span>
+<div class="w-20 bg-slate-800 h-1.5 overflow-hidden">
+<div class="bg-cyan-500 h-full w-[65%]"></div>
+</div>
+</div>
+</div>
+<!-- Deck B -->
+<div class="bg-[#0d1222] p-2.5 border border-slate-800/90 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">Deck B // Standby</span>
+<span class="text-[10px] font-mono px-1.5 py-0.2 bg-slate-800 text-slate-400 border border-slate-700">EN ATTENTE</span>
+</div>
+<p class="font-medium text-slate-300 truncate text-[13px]" title="05. First Encounter">
+              05. First Encounter
+            </p>
+<div class="font-mono text-[11px] text-slate-500">
+              Prêt pour fondu enchaîné (Cue 00:00)
+            </div>
+</div>
+<!-- Ambiances (Full Width) -->
+<div class="col-span-1 md:col-span-2 bg-[#0d1222] px-3 py-2 border border-slate-800/90 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Couche Ambiance :</span>
+<span class="text-white font-medium text-[13px]">Arcologie — Pluie &amp; Néon</span>
+</div>
+<div class="flex items-center gap-2 font-mono text-[11px] text-cyan-400">
+<span>VOL : 80%</span>
+<div class="w-16 bg-slate-800 h-1.5 overflow-hidden">
+<div class="bg-cyan-400 h-full w-[80%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MODULE 2: Lumière & DMX -->
+<section class="bg-[#151b2d] border border-[#1e293b] p-4 flex flex-col gap-3" data-purpose="module-light">
+<!-- Module Header -->
+<div class="flex items-center justify-between border-b border-slate-800 pb-2">
+<div class="flex items-center gap-2 text-cyan-400">
+<!-- Lightbulb / DMX Icon -->
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 18h6"></path>
+<path d="M10 22h4"></path>
+<path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17h8v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
+</svg>
+<h2 class="font-orbitron text-xs font-bold tracking-wider uppercase text-slate-200">
+              LIGHT-OS // SCÈNE ACTIVE
+            </h2>
+</div>
+<span class="font-mono text-[11px] text-emerald-400 bg-slate-900 px-2 py-0.5 border border-slate-800">
+            DMX SYNC OK
+          </span>
+</div>
+<!-- Light Details Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[13px]">
+<div class="bg-[#0d1222] p-2.5 border border-slate-800/90 flex flex-col gap-1.5">
+<span class="text-[11px] font-mono text-slate-400 uppercase">Scène programmée</span>
+<div class="flex items-center justify-between">
+<span class="font-bold text-white text-[14px] tracking-wide">NÉON PLUVIEUX</span>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 bg-cyan-400 border border-black inline-block" title="Cyan"></span>
+<span class="w-3 h-3 bg-amber-500 border border-black inline-block" title="Ambre"></span>
+</div>
+</div>
+<p class="font-mono text-[11px] text-slate-400">
+              Intensité globale : <span class="text-white font-bold">100%</span> (Teinte : Cyan / Ambre)
+            </p>
+</div>
+<div class="bg-[#0d1222] p-2.5 border border-slate-800/90 flex flex-col justify-between">
+<span class="text-[11px] font-mono text-slate-400 uppercase">État du pont DMX</span>
+<div class="flex items-center gap-2">
+<div class="flex gap-1">
+<span class="w-2 h-2 bg-emerald-400"></span>
+<span class="w-2 h-2 bg-emerald-400"></span>
+<span class="w-2 h-2 bg-emerald-400"></span>
+<span class="w-2 h-2 bg-emerald-400"></span>
+</div>
+<span class="text-[13px] font-semibold text-slate-200">4 sources synchronisées</span>
+</div>
+<span class="font-mono text-[11px] text-slate-400">Ruban LED Desk, Spot 1 &amp; 2, Hublot Ambiance</span>
+</div>
+</div>
+</section>
+<!-- MODULE 3: Visuels & Carte -->
+<section class="bg-[#151b2d] border border-[#1e293b] p-4 flex flex-col gap-3" data-purpose="module-visuals">
+<!-- Module Header -->
+<div class="flex items-center justify-between border-b border-slate-800 pb-2">
+<div class="flex items-center gap-2 text-cyan-400">
+<!-- Map & Display Icon -->
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="0" width="18" x="3" y="3"></rect>
+<path d="M3 9h18"></path>
+<path d="M9 21V9"></path>
+</svg>
+<h2 class="font-orbitron text-xs font-bold tracking-wider uppercase text-slate-200">
+              PROJECTION &amp; CARTOGRAPHIE
+            </h2>
+</div>
+<span class="font-mono text-[11px] text-cyan-400 bg-slate-900 px-2 py-0.5 border border-slate-800">
+            ÉCRAN TACTIQUE 4K
+          </span>
+</div>
+<!-- Visuals Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[13px]">
+<!-- Projection -->
+<div class="bg-[#0d1222] p-2.5 border border-slate-800/90 flex flex-col gap-1">
+<span class="text-[11px] font-mono text-slate-400 uppercase">Image projetée (Player Hub)</span>
+<div class="flex items-center gap-2 mt-1">
+<svg class="w-4 h-4 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="square" stroke-width="2"></path>
+</svg>
+<span class="font-mono text-cyan-300 font-semibold truncate text-[13px]" title="mccoy_spinner_attack.png">
+                mccoy_spinner_attack.png
+              </span>
+</div>
+<span class="font-mono text-[11px] text-slate-500">Mode : Plein écran synchrone</span>
+</div>
+<!-- Active Map -->
+<div class="bg-[#0d1222] p-2.5 border border-slate-800/90 flex flex-col gap-1">
+<span class="text-[11px] font-mono text-slate-400 uppercase">Carte active (Tactical Map)</span>
+<span class="font-bold text-white text-[13px] truncate">
+              Bradbury Building - Niveau 01
+            </span>
+<div class="flex items-center justify-between font-mono text-[11px] text-slate-400">
+<span class="text-amber-400">Brouillard de guerre : ACTIF</span>
+<span class="text-slate-300">4 PJ au vestibule</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- END: ModalBody -->
+<!-- BEGIN: ModalFooter -->
+<footer class="p-4 bg-[#080d1a] border-t border-slate-800 flex items-center justify-between" data-purpose="modal-actions-footer">
+<!-- Secondary Close Button -->
+<button class="h-11 px-6 bg-transparent hover:bg-slate-800 border border-slate-700 hover:border-slate-500 font-orbitron font-semibold text-xs tracking-wider text-slate-300 transition-all focus:outline-none focus:ring-1 focus:ring-slate-400" data-purpose="cancel-action-button" type="button">
+        FERMER
+      </button>
+<!-- Primary Restore Action Button -->
+<button class="h-11 px-8 bg-cyan-500 hover:bg-cyan-400 text-[#020617] font-orbitron font-black text-xs tracking-widest uppercase transition-all shadow-cyan-btn flex items-center gap-2 hover:brightness-110 active:translate-y-px" data-purpose="restore-state-button" type="button">
+<!-- Flash / Restore icon -->
+<svg class="w-4 h-4 fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" fill-rule="evenodd"></path>
+</svg>
+        RESTAURER CET ÉTAT
+      </button>
+</footer>
+<!-- END: ModalFooter -->
+</div>
+<!-- END: ModalContainer -->
+</body></html>
