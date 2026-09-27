@@ -5442,14 +5442,15 @@ explicitement, jamais le défaut.
 
 ---
 
-### 76 · ⭐ La refonte de l'interface — un chantier ouvert, rien de commencé (2026-09-17)
+### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phase 1 en cours depuis le 2026-09-27**
 
 **Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
-⛔ **RIEN N'EST COMMENCÉ.** David joue d'abord une partie sur la version actuelle. Ce § existe pour
-que le chantier soit *trouvable*, pas pour annoncer un travail fait.
+⭐ **Où on en est — 2026-09-27** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
+fait**. **Reprendre à P1.2** du [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la
+fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
 - `documentation/Architecture/Refonte-Interface.md` — l'état mesuré, les couches visées, les invariants.
@@ -5596,9 +5597,7 @@ Et `:root` porte toujours `font-size: 85%` : un `rem` transposé d'une maquette 
 **Ancres** : `src/theme/themeDeLInterface.ts` (unique écrivain des `--app-*`), `tailwind.config.js`
 (alias `app-*`, `gm-*`, `shadow-glow-*`), `src/index.css` § `@theme`, `e2e/tousLesModules.spec.ts`.
 
-**État** : ⛔ **non commencé — mais plus rien ne le bloque.** Les cinq questions sont tranchées, la
-conception est écrite, et le premier geste est **T0.1** : les captures de référence, une soirée,
-aucun pixel changé. Seule la partie que David joue d'abord le précède.
+**État au 17/09** : non commencé — *dépassé, voir l'entrée du 2026-09-27 à la fin de ce §.*
 
 #### ⭐ 2026-09-25/26 — l'inventaire, la vitrine, quatre décisions et un contrat
 
@@ -5707,6 +5706,45 @@ v1.2.
 - **Deux pièges d'essais payés** : l'essai de l'atelier exigeait que tout jeton soit éditable —
   il tolère désormais les jetons V2 ; les copies de référence du constructeur (`alien.css`,
   `blade-runner.css`) ont dû suivre, comme leur essai l'exige.
+
+#### ⭐ 2026-09-26/27 — le filet, Stitch, les personnalités en valeurs, le contrat v1.3, P1.1
+
+**Où reprendre : P1.2** du [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Avant de coder :
+*« GM-OS tourne-t-il ? »*.
+
+- **Phase 0 faite** (`6cba00c1`) : captures de référence de 20 panneaux
+  (`e2e/ecransDeReference.spec.ts`, exige `npm run build`), garde des couleurs d'état, garde de
+  contraste des thèmes de base (elle a trouvé les **quatre pastilles illisibles du Médiéval**),
+  relevé des couleurs (`npm run refonte:releve`).
+- **Stitch, T2.1 à T2.3** — tout vit dans `documentation/Planning/stitch/` (`README.md` : ce qu'on
+  garde, ce qui reste à régler à l'intégration, écran par écran). Retenus : la grammaire d'écran,
+  Musique, Cartographie, Light-OS, Dés (réagencés), Combat en Atelier et en Table, Trame, Horloge
+  (habillés), et **les quatre personnalités** — références de style, pas de contenu. Chaque écran a
+  demandé deux tours. ⭐ **Trois leçons** : Stitch invente des fonctions ; il ne connaît que ce que
+  montrent les captures (avant de faire retirer une commande, la chercher dans le code — Claude Code
+  s'est trompé une fois) ; **il n'a qu'un système de design par projet** (les cinq `DESIGN.md`
+  exportés étaient identiques), d'où un prompt par personnalité avec des valeurs explicites.
+- **T2.3** : les personnalités en jetons `--rpg-*` (`stitch/personnalites/*.theme.css`), **relevées
+  dans le navigateur** — les exports Moderne et Clair portaient la configuration du projet, pas la
+  leur — et **acceptées par le validateur**. Corrigés en chemin : l'or du Médiéval (1,9 de
+  contraste sur le parchemin), des états trop proches.
+- ✅ **Le cadre — contrat v1.3** (`1dc90718`, tranché par David) : trois jetons `frame-*` pour une
+  barre latérale et un bandeau d'une autre polarité que le contenu (Médiéval, Moderne). Sans lui,
+  Moderne et Clair se confondaient. **Le validateur mesure `text` sur le cadre quand `frame-text`
+  manque** : ce que l'écran montrera. La copie de RPG Theme Builder est à jour, **David l'a chargée
+  dans ChatGPT**.
+- **Le plan de la phase 1** (`2026-09-27-refonte-phase-1.md`) remplace le § 4 du plan général. Deux
+  décisions de David : **l'interrupteur des personnalités est un réglage des Paramètres** ; l'ordre
+  est gardé (texte secondaire avant arrondis). Estimation : quatre soirées.
+- ✅ **P1.1 fait** (`5417bb9e`) : les thèmes de base sont des **paquets de jetons du contrat**, lus
+  par une seule table (`VARIABLE_DU_JETON`). Le contrat distingue **où va un jeton**
+  (`versLInterface`) et **si le jeu peut le piloter** (statut LU, seul lu par `PONT`). Preuves :
+  20 captures identiques, et **`src/theme/apparenceDAujourdhui.test.ts`**, qui fige les variables
+  des quatre thèmes relevées avant la modification — *les captures ne montrent que le thème par
+  défaut*.
+- ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
+  chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
+  réglage, éteint par défaut.
 
 ---
 
@@ -9385,7 +9423,7 @@ et `Ctrl+Maj+0` ne porte plus rien, essai à l'appui. ⚠️ La même liste Wind
 | 10 | **Light-OS, la journée du 09/09** | ✅ **TROIS CHANTIERS, vérifiés à l'écran** — l'intensité par tuile, la brillance par lampe, et le bouton qui arrête une scène sans éteindre la pièce (§ 37), puis trois suggestions prises au mot — **deux** chemins de flash qui ignoraient le curseur global, l'arrêt absent du journal, et Échap (§ 38). ⛔ **Le troisième n'était pas un manque, c'était un geste écrit le 07/09 que rien n'appelait** : quatrième fois en trois jours que la chaîne est complète et que le bouton manque au bout | — | Rien |
 | 11 | **L'audit du 09/09 — les trous** | ✅ **TOUT EST TRAITÉ, décisions comprises** (§ 39) : le PDF que la Forge n'a jamais lu, le contrôle du contrat du pont, les neuf clés affichées en clair et leur angle mort, le storyboard qui signait du nom du meneur, le bouton du cockpit, la branche morte des tablettes, et la ligne de journal du moment. ⛔ **Une erreur d'audit corrigée en chemin** : `highlightMapToken` ne « n'avait jamais marché » — *la fonctionnalité existait déjà*, c'était une seconde façon impérative de la demander (§ 39b). La liste d'exceptions du contrôle du pont est **vide** | — | Rien |
 | 8 | **Revue des guides, écran par écran** | ✅ **CLOSE le 05/09** — 38 guides, dix lots, **cent deux trouvailles toutes traitées** : réparées, tranchées par David, ou documentées avec leur raison (§§ 12 à 17). ⛔ **Cette ligne a dit « ouverte, réparer N1 » jusqu'au 07/09** alors que N1 était réparé depuis le 04/09 (`NexusService.ts:1642`, fusion par identifiant) et la voie B close le 05/09 au § 17 — *le registre s'est contredit lui-même sur deux lignes distantes de 700, exactement ce qu'il reproche aux autres documents* | — | Rien |
-| 12 | **Refonte de l'interface** | ⛔ **OUVERT, RIEN DE COMMENCÉ (17/09)** — trois maquettes apportées par David. ⭐ La mesure a montré que **le système de design existe et est adopté à moitié** : 4 566 jetons `app-*` contre 4 124 classes brutes, qui sont presque toutes des couleurs d'**état** sans jeton pour les nommer. Trois manques se posent dans **un fichier**, le quatrième (les primitives) coûte 214 fichiers — *le plan interdit de les mélanger* (§ 76). ⭐ **Second but, rappelé par David le soir même : l’interface doit s’adapter au JEU** — le pont existe déjà (8 jetons, polarité, polices), il s’agit de l’étendre, et **cette exigence contraint chaque échelle ajoutée** | **T0.1** — les captures Playwright de référence, une soirée, aucun pixel changé | **Rien** — les cinq questions sont tranchées. Seule la partie de David précède |
+| 12 | **Refonte de l'interface** | ⭐ **PHASE 1 EN COURS (27/09)** — phase 0 (le filet) faite ; Stitch fait : huit écrans et **quatre personnalités** retenus, leurs valeurs relevées et acceptées par le validateur (T2.3) ; **contrat v1.3** (le cadre) ; **P1.1 fait** — les thèmes de base sont des paquets de jetons, **à pixel constant** (20 captures identiques). ⛔ **David ne veut pas que son interface change maintenant** : tout jusqu'à P1.6 se fait sans changement visible, les personnalités arrivent en P1.7 derrière **un réglage des Paramètres** (§ 76) | **P1.2** — texte secondaire, états, texte sur l'accent, cadre, à pixel constant ([plan](./2026-09-27-refonte-phase-1.md)) | Rien |
 | 13 | **Light-OS — effets** | ✅ **AUDIT + FUSILLADE + 7 EFFETS + LES SOLISTES le 17/09** — six défauts de cohérence matérielle corrigés (dont `warp` injoignable et `bri: 0` qui n'éteint pas), l'arrêt restaure enfin l'état, ⭐ **la catégorie COUP UNIQUE** est née, et la fusillade **compte le budget du pont** (son essai de simulation a réfuté ma conception deux fois). 37 → **46 effets** (dont ⭐ **trois feux enfin distincts** — la Bougie manque de s'éteindre, le Feu de camp crépite, l'Incendie s'embrase : ils étaient **deux copies d'un même corps**), et ⭐ **le budget du pont est enfin tenu par TOUS les effets** : un effet rapide ne joue que sur 1 à 3 lampes selon sa cadence, les autres gardent la couleur de la scène | — | Rien. ⚠️ **Rien n'a été vu dans la pièce** |
 | 14 | **La saccade du tableau blanc** | ✅ **CORRIGÉ le 17/09, sur trois étages** — ⛔ un magasin persisté écrit à **chaque** `set()`, et **deux modules avaient écrit la croyance inverse** dans leur `partialize`. Mesuré : **1,75 ms de `JSON.stringify` et 285 Ko écrits par point** sur un tableau de cent tracés, trois écritures par mouvement de pion sur la carte. ⭐ **Et on payait pour ce que personne ne recevait** : le réseau jetait déjà quatre points sur cinq. Écriture différée (250 ms, trois filets), diffusion limitée à la cadence réellement consommée, et une mutation au lieu de deux (§ 78). ⛔ **Un essai de 2026-08 a trouvé un vrai défaut de mon tampon** : il servait en lecture des écritures que la garde avait refusées | — | Rien. ⚠️ **À confirmer à l'écran** |
 | 15 | **Les dés en 3D du Player Hub** | ✅ **REFAITS le 17/09** — ⛔ quatre manques, dont trois qui ne se règlent pas : **aucun chiffre**, une orientation finale **tirée au sort** (donc sans rapport avec le jet), du **verre sans rien à réfracter**, et un **d100 sphérique**. ⭐ Deux défauts trouvés en chemin : le démontage **détruisait les géométries partagées** (plus rien ne s'affichait au remontage), et **le d10 n'était pas un trapézoèdre** — vingt facettes au lieu de dix, dont cinq à l'envers. ⭐ *Un dé n'a de faces que le jour où on veut écrire dessus.* Chiffres, atterrissage sur la valeur, environnement, ombre au sol, et **trois matières au choix du meneur** (§ 79) | — | Rien. ⭐ **2e passe** : ⛔ le réglage **n'arrivait jamais au Hub** (le segment `dice` portait 3 champs sur 5, et il était écrit **deux fois**) — *un réglage qui ne voyage pas jusqu'à l'écran qui l'applique n'est pas un réglage, c'est un bouton* ; et les dés étaient **enfermés** dans une couche `z-[60]` parente. ⭐ **3e passe** : les dés **s'effacent une fois posés** et le résultat tient **5 s de plus** — *la pose est un événement, pas une durée*, avec deux filets qui dégradent vers le comportement d'avant. ⭐ **4e passe** : les dés **ne se traversent plus** (sphères au rayon moyen, calculé par solide, séparation appliquée **aussi aux dés posés**) et le placement de départ ne les fait plus naître imbriqués ; ils restent **2 s posés** avant de s'effacer. ⛔ **Une mutation de contrôle ne s'était jamais appliquée** — fins de ligne mixtes — *et un essai vert sur du code intact ressemble à une garde qui marche*. ⚠️ **À confirmer à l'écran**, le verre en premier |
