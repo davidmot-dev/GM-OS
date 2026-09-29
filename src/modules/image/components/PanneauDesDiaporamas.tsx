@@ -76,12 +76,12 @@ const PanneauDesDiaporamas: React.FC = () => {
             {/* ── La liste des diaporamas ───────────────────────────────── */}
             <div className="w-72 flex-shrink-0 flex flex-col gap-3">
                 <div className="flex items-center justify-between px-1">
-                    <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <h3 className="text-xs font-semibold text-app-subtle uppercase tracking-wider">
                         {t('image.diaporama.titre')}
                     </h3>
                     <button
                         onClick={nouveau}
-                        className="text-slate-400 hover:text-accent transition-colors"
+                        className="text-app-muted hover:text-accent transition-colors"
                         title={t('image.diaporama.nouveau')}
                     >
                         <Plus size={16} />
@@ -103,7 +103,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                 className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
                                     choisi?.id === d.id
                                         ? 'bg-accent/20 text-accent'
-                                        : 'text-slate-400 hover:bg-app-surface/50'
+                                        : 'text-app-muted hover:bg-app-surface/50'
                                 }`}
                             >
                                 <Images size={15} className={tourne ? 'text-emerald-400' : ''} />
@@ -127,7 +127,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                             onClick={() => gmPrompt(t('image.diaporama.nomDemande'), choisi.nom, (nom) => {
                                 if (nom?.trim()) renommerDiaporama(choisi.id, nom.trim());
                             })}
-                            className="p-2 rounded-lg text-slate-400 hover:text-accent hover:bg-app-surface transition-colors"
+                            className="p-2 rounded-lg text-app-muted hover:text-accent hover:bg-app-surface transition-colors"
                             title={t('image.diaporama.renommer')}
                         >
                             <Pencil size={15} />
@@ -175,7 +175,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                 t('image.diaporama.supprimerConfirme', { nom: choisi.nom }),
                                 () => supprimerDiaporama(choisi.id),
                             )}
-                            className="p-2 rounded-lg text-slate-500 hover:text-rose-400 transition-colors"
+                            className="p-2 rounded-lg text-app-subtle hover:text-rose-400 transition-colors"
                             title={t('image.diaporama.supprimer')}
                         >
                             <Trash2 size={15} />
@@ -220,7 +220,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                         <button
                                             onClick={() => deplacerDansLeDiaporama(choisi.id, rang, -1)}
                                             disabled={rang === 0}
-                                            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-app-surface disabled:opacity-20 transition-colors"
+                                            className="p-1.5 rounded-lg text-app-muted hover:text-white hover:bg-app-surface disabled:opacity-20 transition-colors"
                                             title={t('image.diaporama.monter')}
                                         >
                                             <ChevronUp size={15} />
@@ -228,14 +228,14 @@ const PanneauDesDiaporamas: React.FC = () => {
                                         <button
                                             onClick={() => deplacerDansLeDiaporama(choisi.id, rang, 1)}
                                             disabled={rang === images.length - 1}
-                                            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-app-surface disabled:opacity-20 transition-colors"
+                                            className="p-1.5 rounded-lg text-app-muted hover:text-white hover:bg-app-surface disabled:opacity-20 transition-colors"
                                             title={t('image.diaporama.descendre')}
                                         >
                                             <ChevronDown size={15} />
                                         </button>
                                         <button
                                             onClick={() => retirerDuDiaporama(choisi.id, rang)}
-                                            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition-colors"
+                                            className="p-1.5 rounded-lg text-app-subtle hover:text-rose-400 transition-colors"
                                             title={t('image.diaporama.retirer')}
                                         >
                                             <Trash2 size={14} />
@@ -248,7 +248,7 @@ const PanneauDesDiaporamas: React.FC = () => {
 
                     {/* ── La réserve : ce qu'on peut y ajouter ──────────────── */}
                     <div className="border-t border-app-border pt-4">
-                        <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                        <h3 className="text-xs font-semibold text-app-subtle uppercase tracking-wider mb-3">
                             {t('image.diaporama.ajouterDepuis')}
                         </h3>
                         <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2">
