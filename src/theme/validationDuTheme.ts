@@ -30,7 +30,7 @@ import {
     TAILLES_MAXIMALES, VERSION_DU_CONTRAT, jetonDuContrat,
     type FormatDeJeton, type JetonDuContrat,
 } from './contratDuTheme';
-import { blocsDeJetons, declarationsDuBloc, extraireJetons } from './jetonsDeTheme';
+import { blocsDeJetons, declarationsDuBloc, extraireJetons, nomDuBloc } from './jetonsDeTheme';
 import { contraste, POLICES_CONNUES } from './editionDuTheme';
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -204,7 +204,7 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
         if (/!important/i.test(corps)) {
             erreur('§ 11', `\`!important\` dans le bloc \`${entete}\` : interdit dans le bloc des jetons.`);
         }
-        const id = /data-theme=["']?([\w-]+)/.exec(entete)?.[1];
+        const id = nomDuBloc(entete);
         if (id && id !== theme.jeu) {
             avertir('§ 3.1', `Le bloc dit \`data-theme="${id}"\` et le dossier s'appelle \`${theme.jeu}\`. Sans effet dans GM-OS ; RECOMMANDÉ : le nom du dossier.`);
         }

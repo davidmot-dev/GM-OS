@@ -63,7 +63,26 @@ export interface JetonsDuJeu {
  * les deux serait une deuxième déclaration de la même vérité — donc une
  * occasion de les faire diverger.
  */
-const BLOC_RACINE = /(?::root|html)(?:\[data-theme=["']?[\w-]+["']?\])?\s*\{([^}]*)\}/g;
+/*
+  **Le nom du bloc peut porter une espace** — corrigé le 2026-09-30, trouvé sur
+  Cthulhu Hack. Le cahier demande le NOM DU DOSSIER dans `data-theme`, et deux
+  dossiers en ont une (`cthulhu hack`, `reves de dragons`) : RPG Theme Builder
+  a suivi la règle, et l'analyseur, qui n'acceptait qu'un mot, ne voyait plus
+  aucun jeton. Entre guillemets, tout sauf le guillemet ; sans, un mot.
+
+  ⛔ **Une seule expression, trois lecteurs** : la lecture des jetons, l'atelier
+  (`editionDuTheme.ts`) et le nom relu par le validateur (`nomDuBloc`). Il y en
+  avait deux copies et une troisième variante — corriger l'une aurait laissé
+  l'atelier incapable de retoucher un thème que GM-OS sait lire.
+*/
+const VALEUR_DU_NOM = String.raw`(?:"[^"\]]*"|'[^'\]]*'|[\w-]+)`;
+export const BLOC_RACINE = new RegExp(String.raw`(?::root|html)(?:\[data-theme=${VALEUR_DU_NOM}\])?\s*\{([^}]*)\}`, 'g');
+
+/** Le nom que le bloc donne au thème (`:root[data-theme="cthulhu hack"]` → `cthulhu hack`), ou `null`. */
+export function nomDuBloc(entete: string): string | null {
+    const m = /data-theme=(?:"([^"\]]*)"|'([^'\]]*)'|([\w-]+))/.exec(entete);
+    return m ? (m[1] ?? m[2] ?? m[3]) : null;
+}
 
 const DECLARATION = /(--rpg-[\w-]+)\s*:\s*([^;]+)\s*;/g;
 const CLARTE = /color-scheme\s*:\s*(dark|light)\s*;/;

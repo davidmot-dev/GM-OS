@@ -534,9 +534,9 @@ body {
 }
 
 /* Overlays and backdrops should be very subtle */
-:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-xl,
-:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-2xl,
-:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-3xl {
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-xl:not(:root[data-cadre] .cadre-gmos),
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-2xl:not(:root[data-cadre] .cadre-gmos),
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-3xl:not(:root[data-cadre] .cadre-gmos) {
   background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
@@ -654,7 +654,10 @@ body {
   **Le cadre plein** (§ 4.8, P1.7) : un cadre déclaré est opaque. La barre
   latérale et le bandeau prennent sa couleur, par-dessus leur verre. ⚠️ Les
   règles du dessus voilent de blanc tout `backdrop-blur-xl` avec un sélecteur
-  plus fort que celui-ci : elles excluent donc `.cadre-gmos` elles-mêmes.
+  plus fort que celui-ci : elles excluent donc `.cadre-gmos` elles-mêmes — celles
+  du thème clair d'aujourd'hui **seulement quand un cadre est déclaré**
+  (2026-09-30, Cthulhu Hack sous Clair : barre latérale délavée), sans quoi le
+  Clair seul aurait perdu son voile.
 */
 :root[data-cadre] .cadre-gmos {
   background-color: var(--app-frame-bg) !important;

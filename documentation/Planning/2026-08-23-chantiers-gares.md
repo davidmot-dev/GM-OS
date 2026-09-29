@@ -5830,6 +5830,19 @@ v1.2.
     Chaque série règle l'interrupteur elle-même — le défaut ayant changé, une série qui s'y fierait
     surveillerait l'autre. ⚠️ Première écriture : deux références prises au mauvais moment (Cortex
     IA ouvert sur le tableau de bord au lieu de Nexus Wiki) — réécrites, puis 40/40 deux fois.
+- ✅ **Cthulhu Hack, premier thème fait de bout en bout avec le guide 95 (2026-09-30)** — accepté
+  par le validateur **tel que RPG Theme Builder l'a livré**, après trois corrections de GM-OS :
+  1. ⛔ **l'analyseur refusait un nom de bloc avec une espace** — `:root[data-theme="Chtulhu Hack"]`
+     ne livrait aucun jeton. Le cahier demande le nom du dossier, et deux dossiers en ont une
+     (`cthulhu hack`, `reves de dragons`). **Trois copies** de la même expression (lecture,
+     atelier, nom relu par le validateur) : une seule, `BLOC_RACINE` + `nomDuBloc`, dans
+     `jetonsDeTheme.ts` ;
+  2. **sous Clair + personnalités, le voile blanc du thème clair recouvrait le cadre déclaré** :
+     exclu du voile **seulement quand un cadre est déclaré** (sinon le Clair seul aurait changé) ;
+  3. **la vitrine supposait Blade Runner actif** : « Lancer » n'existe qu'en réserve de dés ; un
+     système à dés ordinaires lance par la face (nom accessible « d20 d20 »).
+  Le Secret de Milo prend le thème ; son interrupteur de campagne est éprouvé. Avertissements
+  restants, pour RPG Theme Builder un jour : trois couleurs d'état trop proches (V2).
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.

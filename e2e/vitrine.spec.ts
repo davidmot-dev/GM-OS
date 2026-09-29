@@ -1005,7 +1005,16 @@ test.describe('la vitrine d\'un thème de jeu', () => {
 
         /* Des chiffres, et un jet qui vient de tomber. */
         await ouvrirLeModule(gmos, 'Dice-OS');
-        await gmos.fenetre.getByRole('button', { name: /^Lancer$/i }).first().click();
+        /*
+          ⚠️ **« Lancer » n'existe qu'en réserve de dés** (Year Zero, échelonnés).
+          Un système à dés ordinaires lance par le clic sur une face. La vitrine
+          supposait Blade Runner actif ; le 2026-09-30, la sauvegarde avait Le
+          Secret de Milo (Cthulhu Hack) : trente secondes d'attente, puis échec.
+        */
+        const lancer = gmos.fenetre.getByRole('button', { name: /^Lancer$/i });
+        if (await lancer.count()) await lancer.first().click();
+        // Le nom accessible d'une face est « d20 d20 » : le texte de l'image, puis le libellé.
+        else await gmos.fenetre.getByRole('button', { name: /^d20(\s|$)/i }).first().click();
         await capturer('3-des.png');
 
         /* Du texte courant, des touches, des cartes : l'aide, par son raccourci. */

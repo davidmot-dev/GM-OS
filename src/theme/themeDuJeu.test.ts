@@ -1,8 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
     extraireJetons, pontVersLInterface, cheminDuTheme,
-    extraireImportsDePolice, premiereFamille, POLICES_APPLIQUEES,
+    extraireImportsDePolice, premiereFamille, POLICES_APPLIQUEES, nomDuBloc,
 } from './jetonsDeTheme';
+import { ecrireLesJetons } from './editionDuTheme';
 import { incorporerLesMatieres } from './themeDuJeu';
 
 /**
@@ -195,5 +196,39 @@ describe('incorporerLesMatieres', () => {
             'texture-bg': "url('matieres/grain.png')", 'texture-panel': "url('matieres/absente.svg')", accent: '#ff0000',
         }, lire, 'systems/alien');
         expect(r).toEqual({ accent: '#ff0000' });
+    });
+});
+
+/**
+ * **Un nom de bloc avec une espace** — trouvé le 2026-09-30 sur Cthulhu Hack :
+ * le cahier demande le nom du dossier, et le dossier s'appelle `cthulhu hack`.
+ * L'analyseur n'acceptait qu'un mot : il ne voyait plus aucun jeton.
+ */
+describe('le nom du bloc peut porter une espace', () => {
+    const feuille = (entete: string) => `${entete} {\n  color-scheme: light;\n  --rpg-bg: #e2e0d7;\n  --rpg-accent: #485b33;\n}\n`;
+
+    it.each([
+        ':root[data-theme="cthulhu hack"]',
+        ":root[data-theme='reves de dragons']",
+        'html[data-theme="Chtulhu Hack"]',
+        ':root[data-theme=alien]',
+        ':root',
+    ])('%s : les jetons sont lus', (entete) => {
+        const { jetons, clarte } = extraireJetons(feuille(entete));
+        expect(jetons).toEqual({ bg: '#e2e0d7', accent: '#485b33' });
+        expect(clarte).toBe('light');
+    });
+
+    it('le nom est relu tel quel, espace comprise', () => {
+        expect(nomDuBloc(':root[data-theme="cthulhu hack"]')).toBe('cthulhu hack');
+        expect(nomDuBloc(":root[data-theme='reves de dragons']")).toBe('reves de dragons');
+        expect(nomDuBloc(':root[data-theme=alien]')).toBe('alien');
+        expect(nomDuBloc(':root')).toBeNull();
+    });
+
+    it('l’atelier réécrit un thème dont le bloc porte une espace', () => {
+        const css = feuille(':root[data-theme="cthulhu hack"]');
+        const reecrit = ecrireLesJetons(css, { accent: '#306441' });
+        expect(extraireJetons(reecrit).jetons.accent).toBe('#306441');
     });
 });

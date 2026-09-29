@@ -37,7 +37,7 @@
  * semaines. Un seul fichier, deux lecteurs.
  */
 
-import { cheminDuTheme } from './jetonsDeTheme';
+import { cheminDuTheme, BLOC_RACINE } from './jetonsDeTheme';
 
 /**
  * **Le thème tel qu'il était avant la première retouche.**
@@ -416,7 +416,7 @@ export function policeFournie(famille: string): 'application' | 'import' | 'loca
    ──────────────────────────────────────────────────────────────────────────── */
 
 /** Le même motif que la lecture (`jetonsDeTheme.ts`) : les deux doivent voir le même bloc. */
-const BLOC_RACINE = /(?::root|html)(?:\[data-theme=["']?[\w-]+["']?\])?\s*\{([^}]*)\}/g;
+// `BLOC_RACINE` vient de `jetonsDeTheme` : une seule expression pour lire et pour réécrire.
 
 const IMPORT_GOOGLE = /@import\s+url\(\s*['"]?(https:\/\/fonts\.googleapis\.com[^'")]+)['"]?\s*\)\s*;?/;
 
