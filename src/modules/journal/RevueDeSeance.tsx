@@ -60,7 +60,7 @@ const RevueDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
                     <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">
                         Revue de la séance
                     </h3>
-                    <p className="text-ui-11 text-slate-500 mt-1 max-w-xl leading-relaxed">
+                    <p className="text-ui-11 text-app-subtle mt-1 max-w-xl leading-relaxed">
                         Scène par scène. Ce qui est retenu ici part au résumé ; le reste demeure au
                         journal sans y aller. Rien n'est effacé.
                     </p>
@@ -131,7 +131,7 @@ const Compteur: React.FC<{
         alerte ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
             : accent ? 'bg-accent/10 border-accent/30 text-accent'
                 : sourd ? 'bg-app-bg/40 border-app-border/20 text-slate-600'
-                    : 'bg-app-surface/40 border-app-border/30 text-slate-400'
+                    : 'bg-app-surface/40 border-app-border/30 text-app-muted'
     }`}>
         {valeur} {mot}
     </span>
@@ -157,7 +157,7 @@ const ARanger: React.FC<{
                 <p className="text-ui-11 font-black uppercase tracking-widest text-amber-200">
                     À ranger
                 </p>
-                <p className="text-ui-10 text-slate-500 leading-relaxed">
+                <p className="text-ui-10 text-app-subtle leading-relaxed">
                     Deux scènes étaient ouvertes à la fois : l'outil n'a pas voulu choisir à votre place.
                 </p>
             </div>
@@ -261,7 +261,7 @@ const BlocDeScene: React.FC<{
                                     e.target.value = '';
                                 }}
                                 title="Absorber une autre scène dans celle-ci : elles n'en faisaient qu'une"
-                                className="appearance-none bg-app-bg border border-app-border/30 rounded-lg pl-7 pr-2 py-2 text-ui-10 font-bold text-slate-500 hover:text-accent hover:border-accent/40 transition-all cursor-pointer"
+                                className="appearance-none bg-app-bg border border-app-border/30 rounded-lg pl-7 pr-2 py-2 text-ui-10 font-bold text-app-subtle hover:text-accent hover:border-accent/40 transition-all cursor-pointer"
                             >
                                 <option value="">Absorber…</option>
                                 {autres.map(a => (
@@ -270,7 +270,7 @@ const BlocDeScene: React.FC<{
                             </select>
                             <Combine
                                 size={14}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500"
+                                className="absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none text-app-subtle"
                             />
                         </div>
                     )}
@@ -279,7 +279,7 @@ const BlocDeScene: React.FC<{
                         title={ecartee
                             ? 'La remettre dans la chronique'
                             : 'La mettre de côté : elle reste au journal, mais ne part pas au résumé'}
-                        className="shrink-0 p-2 rounded-lg border border-app-border/30 text-slate-500 hover:text-accent hover:border-accent/40 transition-all"
+                        className="shrink-0 p-2 rounded-lg border border-app-border/30 text-app-subtle hover:text-accent hover:border-accent/40 transition-all"
                     >
                         {ecartee ? <Eye size={14} /> : <EyeOff size={14} />}
                     </button>

@@ -40,7 +40,7 @@ const eventIcons: Record<string, React.ReactNode> = {
   // en relisant le fil.
   PJ: <UserRound className="size-4 text-cyan-300" />,
   LOCATION: <MapPin className="size-4 text-amber-400" />,
-  NOTE: <FileText className="size-4 text-slate-400" />,
+  NOTE: <FileText className="size-4 text-app-muted" />,
   SYSTEM: <Settings className="size-4 text-indigo-400" />,
   ORACLE: <HelpCircle className="size-4 text-purple-400" />,
   DICE: <Dices className="size-4 text-fuchsia-400" />,
@@ -252,7 +252,7 @@ const JournalDashboard: React.FC = () => {
                 </button>
                 </HorsDePortee>
               </div>
-              <div className="flex items-center gap-3 mt-3 text-ui-9 text-slate-500 font-mono uppercase tracking-tighter">
+              <div className="flex items-center gap-3 mt-3 text-ui-9 text-app-subtle font-mono uppercase tracking-tighter">
                 <span className="flex items-center gap-1"><Clock className="size-2.5" /> {j.duration || '--:--'}</span>
                 <span className="flex items-center gap-1"><Book className="size-2.5" /> {j.events.length}</span>
               </div>
@@ -302,7 +302,7 @@ const JournalDashboard: React.FC = () => {
             <button 
               onClick={handleExport}
               disabled={!activeJournal}
-              className="p-2.5 bg-app-surface border border-app-border hover:bg-app-bg rounded-xl text-slate-400 hover:text-white transition-all shadow-lg disabled:opacity-20"
+              className="p-2.5 bg-app-surface border border-app-border hover:bg-app-bg rounded-xl text-app-muted hover:text-white transition-all shadow-lg disabled:opacity-20"
               title={t('modules:journal.dashboard.export_journal')}
             >
               <Download className="size-5" />
@@ -398,7 +398,7 @@ const JournalDashboard: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">{t('modules:journal.dashboard.final_note_title')}</h3>
-                    <p className="text-ui-10 text-slate-500 font-bold uppercase tracking-tighter opacity-80">{t('modules:journal.dashboard.final_note_desc')}</p>
+                    <p className="text-ui-10 text-app-subtle font-bold uppercase tracking-tighter opacity-80">{t('modules:journal.dashboard.final_note_desc')}</p>
                   </div>
                 </div>
                 <textarea
