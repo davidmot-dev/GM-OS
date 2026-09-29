@@ -30,7 +30,7 @@ const VocalShaperSlider: React.FC<{
     unit?: string;
 }> = ({ label, value, min, max, step = 1, onChange, unit = '' }) => (
     <div className="flex flex-col gap-2">
-        <div className="flex justify-between text-ui-10 font-bold uppercase tracking-widest text-slate-500">
+        <div className="flex justify-between text-ui-10 font-bold uppercase tracking-widest text-app-subtle">
             <span>{label}</span>
             <span className="text-accent">{value}{unit}</span>
         </div>
@@ -146,19 +146,19 @@ const VoiceDashboard: React.FC = () => {
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-700'}`} />
-                        <span className="text-ui-10 font-black uppercase tracking-widest text-slate-400">
+                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
                             {t('modules:voice.dashboard.mic_status')}: {isActive ? t('modules:voice.dashboard.active') : t('modules:voice.dashboard.standby')}
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Activity size={14} className="text-accent" />
-                        <span className="text-ui-10 font-black uppercase tracking-widest text-slate-400">
+                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
                             {t('modules:voice.dashboard.latency')}: 12ms
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Zap size={14} className={isWorkletReady ? "text-amber-500" : "text-slate-600"} />
-                        <span className="text-ui-10 font-black uppercase tracking-widest text-slate-400">
+                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
                             {t('modules:voice.dashboard.dsp_load')}: {isWorkletReady ? '4%' : 'N/A'}
                         </span>
                         {!isWorkletReady && isActive && (
@@ -192,13 +192,13 @@ const VoiceDashboard: React.FC = () => {
                 <div className="flex gap-2">
                     <button 
                         onClick={() => toggleMonitor()}
-                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-slate-500 border border-transparent hover:text-slate-300'}`}
+                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-slate-300'}`}
                     >
                         🎧 {t('modules:voice.dashboard.monitor')}
                     </button>
                     <button 
                         onClick={() => toggleSyncNPC()}
-                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-slate-500 border border-transparent hover:text-slate-300'}`}
+                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-slate-300'}`}
                     >
                         🔄 {t('modules:voice.dashboard.sync_npc')}
                     </button>
@@ -225,7 +225,7 @@ const VoiceDashboard: React.FC = () => {
                             onClick={() => applyPreset(preset.id)}
                             className={`flex items-center gap-3 p-3 rounded-xl transition-all group overflow-hidden relative ${activePresetId === preset.id 
                                 ? 'bg-accent/10 text-accent border border-accent/30' 
-                                : 'text-slate-500 hover:bg-app-surface/5 hover:text-slate-300 border border-transparent'}`}
+                                : 'text-app-subtle hover:bg-app-surface/5 hover:text-slate-300 border border-transparent'}`}
                         >
                             <div className={`${activePresetId === preset.id ? 'text-accent' : 'text-slate-600 group-hover:text-accent'} transition-colors`}>
                                 {getIcon(preset.icon)}
@@ -267,7 +267,7 @@ const VoiceDashboard: React.FC = () => {
                                         appliquerProfil(pnj.voiceProfile!);
                                         gmToast(`Voix de ${pnj.name} rappelée.`, 'info');
                                     }}
-                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-app-surface/5 hover:text-slate-300 border border-transparent hover:border-cyan-500/20 transition-all group"
+                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-app-subtle hover:bg-app-surface/5 hover:text-slate-300 border border-transparent hover:border-cyan-500/20 transition-all group"
                                 >
                                     <AudioLines size={16} className="text-slate-600 group-hover:text-cyan-300 transition-colors shrink-0" />
                                     <div className="flex flex-col items-start min-w-0">
@@ -292,7 +292,7 @@ const VoiceDashboard: React.FC = () => {
                           Windows — *lequel se décide au branchement d'une
                           webcam, pas au moment de jouer.*
                         */}
-                        <div className="flex items-center gap-2 text-slate-500">
+                        <div className="flex items-center gap-2 text-app-subtle">
                             <Mic2 size={14} />
                             <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.audio_input')}</h3>
                         </div>
@@ -309,7 +309,7 @@ const VoiceDashboard: React.FC = () => {
                             ))}
                         </select>
 
-                        <div className="flex items-center gap-2 text-slate-500">
+                        <div className="flex items-center gap-2 text-app-subtle">
                             <Volume2 size={14} />
                             <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.audio_output')}</h3>
                         </div>
@@ -374,7 +374,7 @@ const VoiceDashboard: React.FC = () => {
                             onClick={() => toggleLive()}
                             className={`group relative overflow-hidden px-12 py-4 rounded-full font-black text-lg transition-all duration-500 border shadow-2xl ${isLive 
                                 ? 'bg-red-600 text-white border-red-500 animate-pulse ring-4 ring-red-600/20' 
-                                : 'bg-app-bg text-slate-400 border-app-border hover:border-accent/50 hover:text-accent'}`}
+                                : 'bg-app-bg text-app-muted border-app-border hover:border-accent/50 hover:text-accent'}`}
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 <Radio size={20} className={isLive ? 'animate-bounce' : ''} />
@@ -390,8 +390,8 @@ const VoiceDashboard: React.FC = () => {
                 {/* Right Sidebar: Vocal Shapers */}
                 <aside className="w-80 border-l border-app-border/50 p-6 flex flex-col gap-6 bg-app-surface/10 overflow-y-auto custom-scrollbar">
                     <div className="flex items-center gap-2 mb-2">
-                        <Settings2 size={16} className="text-slate-500" />
-                        <h3 className="text-ui-10 font-black text-slate-500 uppercase tracking-[0.2em]">{t('modules:voice.shapers.title')}</h3>
+                        <Settings2 size={16} className="text-app-subtle" />
+                        <h3 className="text-ui-10 font-black text-app-subtle uppercase tracking-[0.2em]">{t('modules:voice.shapers.title')}</h3>
                     </div>
 
                     <div className="flex flex-col gap-6">
@@ -438,7 +438,7 @@ const VoiceDashboard: React.FC = () => {
                     <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col gap-3">
                         <button 
                             onClick={() => toggleAntiLarsen()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-slate-400'}`}
                         >
                             <span className="text-ui-10 font-black uppercase tracking-widest">🛡️ {t('modules:voice.shapers.anti_larsen')}</span>
                             <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.antiLarsen ? 'bg-emerald-500' : 'bg-slate-700'}`}>
@@ -457,7 +457,7 @@ const VoiceDashboard: React.FC = () => {
                         */}
                         <div className="flex flex-col gap-2 p-3 rounded-xl border border-transparent bg-app-surface/50">
                             <div className="flex items-center justify-between">
-                                <span className="text-ui-10 font-black uppercase tracking-widest text-slate-400">
+                                <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
                                     🧹 {t('modules:voice.shapers.noise_suppression')}
                                 </span>
                                 {/*
@@ -480,7 +480,7 @@ const VoiceDashboard: React.FC = () => {
                                         title={t(`modules:voice.shapers.debruitage_${mode}_hint`)}
                                         className={`flex-1 px-2 py-2 rounded-lg text-ui-9 font-black uppercase tracking-tighter transition-all border ${currentEffects.debruitage === mode
                                             ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                                            : 'bg-app-bg border-transparent text-slate-500 hover:text-slate-300'}`}
+                                            : 'bg-app-bg border-transparent text-app-subtle hover:text-slate-300'}`}
                                     >
                                         {t(`modules:voice.shapers.debruitage_${mode}`)}
                                     </button>
@@ -495,14 +495,14 @@ const VoiceDashboard: React.FC = () => {
                               c'est précisément ce réglage qui décide si vos fins
                               de phrase arrivent aux joueurs.
                             */}
-                            <p className="text-ui-9 leading-snug text-slate-500 italic">
+                            <p className="text-ui-9 leading-snug text-app-subtle italic">
                                 {t(`modules:voice.shapers.debruitage_${currentEffects.debruitage}_hint`)}
                             </p>
                         </div>
 
                         <button 
                             onClick={() => toggleNoiseGate()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-slate-400'}`}
                         >
                             <span className="text-ui-10 font-black uppercase tracking-widest">🔇 {t('modules:voice.shapers.noise_gate')}</span>
                             <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseGate ? 'bg-accent' : 'bg-slate-700'}`}>
@@ -512,7 +512,7 @@ const VoiceDashboard: React.FC = () => {
  
                         <button 
                             onClick={() => toggleDucking()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.duckingEnabled ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.duckingEnabled ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-slate-400'}`}
                         >
                             <span className="text-ui-10 font-black uppercase tracking-widest">🔊 {t('modules:voice.shapers.auto_ducking')}</span>
                             <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.duckingEnabled ? 'bg-amber-500' : 'bg-slate-700'}`}>
@@ -556,7 +556,7 @@ const VoiceDashboard: React.FC = () => {
                     </div>
 
                     <div className="mt-8 pt-8 border-t border-app-border/50 flex flex-col gap-6">
-                        <div className="flex items-center gap-2 text-slate-500 mb-2">
+                        <div className="flex items-center gap-2 text-app-subtle mb-2">
                             <Volume2 size={16} />
                             <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.master_output')}</h3>
                         </div>
@@ -581,7 +581,7 @@ const VoiceDashboard: React.FC = () => {
                                     onChange={(e) => updateEffect('gateThreshold', parseInt(e.target.value))}
                                     className="flex-1 h-1.5 bg-app-surface rounded-full appearance-none cursor-pointer accent-accent self-center"
                                 />
-                                <span className="text-ui-10 font-bold text-slate-500 w-12 text-right">{currentEffects.gateThreshold}dB</span>
+                                <span className="text-ui-10 font-bold text-app-subtle w-12 text-right">{currentEffects.gateThreshold}dB</span>
                             </div>
                         </div>
                     </div>
