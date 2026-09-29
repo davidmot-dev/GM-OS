@@ -141,7 +141,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                     {!isEditing ? (
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-accent/20 text-slate-400 hover:text-accent transition-all"
+                            className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-accent/20 text-app-muted hover:text-accent transition-all"
                             title={t('common:edit')}
                         >
                             <Edit3 size={18} />
@@ -166,7 +166,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                     )}
                     <button
                         onClick={() => selectFavorite(null)}
-                        className="p-1 rounded-lg hover:bg-app-surface text-slate-400 hover:text-white transition-colors ml-2"
+                        className="p-1 rounded-lg hover:bg-app-surface text-app-muted hover:text-white transition-colors ml-2"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
@@ -205,7 +205,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             {/* Campaign & Owner Selectors */}
                             <div className="space-y-4 pt-2">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('common:aventure')}</label>
+                                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest ml-1">{t('common:aventure')}</label>
                                     <select
                                         value={formData.campaignId || ''}
                                         onChange={e => setFormData({ ...formData, campaignId: e.target.value || undefined, ownerId: undefined })}
@@ -239,7 +239,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                             <div className="space-y-4">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.portrait_label')}</label>
+                                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest ml-1">{t('modules:favorite.media.portrait_label')}</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
@@ -250,7 +250,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                         />
                                         <button
                                             onClick={() => setBrowserTarget('imageUrl')}
-                                            className="p-2 rounded-lg bg-app-surface border border-app-border text-slate-400 hover:text-accent transition-colors"
+                                            className="p-2 rounded-lg bg-app-surface border border-app-border text-app-muted hover:text-accent transition-colors"
                                             title={t('modules:favorite.media.browse_hub')}
                                         >
                                             <FolderOpen size={14} />
@@ -258,7 +258,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     </div>
                                 </section>
                                 <section className="space-y-2 text-left">
-                                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.token_label')}</label>
+                                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest ml-1">{t('modules:favorite.media.token_label')}</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
@@ -269,7 +269,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                         />
                                         <button
                                             onClick={() => setBrowserTarget('tokenUrl')}
-                                            className="p-2 rounded-lg bg-app-surface border border-app-border text-slate-400 hover:text-accent transition-colors"
+                                            className="p-2 rounded-lg bg-app-surface border border-app-border text-app-muted hover:text-accent transition-colors"
                                             title={t('modules:favorite.media.browse_hub')}
                                         >
                                             <FolderOpen size={14} />
@@ -290,7 +290,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t('modules:favorite.detail.traits')}</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-app-subtle">{t('modules:favorite.detail.traits')}</h4>
                         {isEditing && (
                             <button
                                 onClick={() => {
@@ -345,7 +345,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <p className="text-ui-10 text-slate-500 uppercase font-bold tracking-wider mb-1">
+                                        <p className="text-ui-10 text-app-subtle uppercase font-bold tracking-wider mb-1">
                                             {t([`modules:favorite.attributes.${key.trim().toLowerCase()}`, key])}
                                         </p>
                                         <p className="text-sm font-bold text-slate-200">{value}</p>
@@ -358,7 +358,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t('modules:favorite.detail.gauges')}</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-app-subtle">{t('modules:favorite.detail.gauges')}</h4>
                         {isEditing && (
                             <button
                                 onClick={() => {
@@ -392,7 +392,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                         stats[newKey] = val;
                                                         setFormData({ ...formData, stats: stats });
                                                     }}
-                                                    className="bg-transparent text-slate-400 focus:text-white focus:outline-none w-24"
+                                                    className="bg-transparent text-app-muted focus:text-white focus:outline-none w-24"
                                                 />
                                                 <button
                                                     onClick={() => {
@@ -406,7 +406,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <span className="text-slate-400">{stat}</span>
+                                            <span className="text-app-muted">{stat}</span>
                                         )}
 
                                         {isEditing ? (
@@ -441,7 +441,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                 </div>
 
                 <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t('modules:favorite.detail.lore')}</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-app-subtle">{t('modules:favorite.detail.lore')}</h4>
                     {isEditing ? (
                         <textarea
                             value={formData.lore || ''}
@@ -450,7 +450,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             placeholder={t('common:standby')}
                         />
                     ) : (
-                        <p className="text-sm text-slate-400 leading-relaxed italic">
+                        <p className="text-sm text-app-muted leading-relaxed italic">
                             {entity.lore || t('modules:favorite.detail.no_lore')}
                         </p>
                     )}
@@ -459,7 +459,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                 {entity.type === 'npc' && (
                     <div className="space-y-4 pt-4 border-t border-white/5">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-slate-500">
+                            <div className="flex items-center gap-2 text-app-subtle">
                                 <MessageSquare size={16} />
                                 <h4 className="text-xs font-bold uppercase tracking-widest">{t('modules:favorite.detail.dialogue_prep')}</h4>
                             </div>
@@ -558,7 +558,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
                                 ${entity.isSyncedToPlayerHub
                                     ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
-                                    : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                                    : 'bg-app-bg border-white/10 text-app-subtle hover:text-slate-300 hover:border-white/20'}`}
                         >
                             <span className="material-symbols-outlined text-sm">{entity.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
                             {t('modules:favorite.detail.hub_sync')}

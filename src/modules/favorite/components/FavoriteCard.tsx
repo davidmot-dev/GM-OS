@@ -104,13 +104,13 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                 <h3 className={`text-lg font-bold transition-colors ${isSelected ? typeColor : `group-hover:${typeColor} text-slate-200`}`}>
                     {entity.name}
                 </h3>
-                <p className="text-xs text-slate-400 uppercase font-bold tracking-widest mt-1">
+                <p className="text-xs text-app-muted uppercase font-bold tracking-widest mt-1">
                     {t(`modules:favorite.sidebar.categories.${entity.type}`)} {entity.subtitle ? `• ${t(`modules:npc.categories.${entity.subtitle}`, { defaultValue: entity.subtitle })}` : ''}
                 </p>
             </div>
 
             <div className="flex items-center justify-between mt-2 pt-4 border-t border-app-border/50">
-                <span className="text-xs text-slate-500 italic">{t('modules:favorite.card.last_viewed')}: {formatTimeAgo(entity.lastViewed)}</span>
+                <span className="text-xs text-app-subtle italic">{t('modules:favorite.card.last_viewed')}: {formatTimeAgo(entity.lastViewed)}</span>
 
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
