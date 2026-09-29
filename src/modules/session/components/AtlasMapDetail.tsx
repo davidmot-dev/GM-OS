@@ -285,13 +285,13 @@ const AtlasMapDetail: React.FC = () => {
                                 {choixOuvert && (
                                     <div className="absolute bottom-full left-0 mb-2 z-30 w-56 max-h-64 overflow-y-auto no-scrollbar bg-app-bg/95 backdrop-blur-md border border-app-border rounded-xl shadow-2xl p-2 flex flex-col gap-1">
                                         <div className="flex items-center justify-between px-1 pb-1 shrink-0">
-                                            <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">
+                                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">
                                                 Projeter sur
                                             </span>
                                             <button
                                                 onClick={() => setChoixOuvert(false)}
                                                 aria-label="Fermer le choix de l'écran"
-                                                className="p-1 rounded text-slate-500 hover:text-app-text"
+                                                className="p-1 rounded text-app-subtle hover:text-app-text"
                                             >
                                                 <X size={14} />
                                             </button>

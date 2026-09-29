@@ -47,7 +47,7 @@ const SessionPrep: React.FC = () => {
     if (!activeCampaignId) return (
         <div className="flex-1 flex flex-col items-center justify-center p-10 bg-app-bg">
             <AlertCircle size={48} className="text-slate-700 mb-4" />
-            <p className="text-slate-400 font-bold uppercase tracking-widest">{t('modules:session.prep.no_active_campaign')}</p>
+            <p className="text-app-muted font-bold uppercase tracking-widest">{t('modules:session.prep.no_active_campaign')}</p>
             <button 
                 onClick={() => setCurrentView('library')}
                 className="mt-6 px-6 py-2 bg-accent text-white rounded-lg font-bold"

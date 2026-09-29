@@ -44,7 +44,7 @@ const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({
                         <span className="material-symbols-outlined text-violet-400">visibility</span>
                         Contenu du Snapshot
                     </h2>
-                    <p className="text-slate-400 text-sm mt-1">
+                    <p className="text-app-muted text-sm mt-1">
                         Session : <span className="text-violet-300">{sessionName}</span> • 
                         Capturé le {new Date(snapshot.timestamp).toLocaleString()}
                     </p>
@@ -52,7 +52,7 @@ const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({
                 {onClose && (
                     <button 
                         onClick={onClose}
-                        className="p-2 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors"
+                        className="p-2 hover:bg-slate-700 rounded-full text-app-muted hover:text-white transition-colors"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
@@ -70,7 +70,7 @@ const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all ${
                                 activeTab === tab.id 
                                     ? 'bg-violet-600/20 text-violet-300 border border-violet-500/30 shadow-lg shadow-violet-500/5' 
-                                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                                    : 'text-app-muted hover:bg-slate-800 hover:text-slate-200'
                             }`}
                         >
                             <span className="material-symbols-outlined text-lg">{tab.icon}</span>
@@ -85,7 +85,7 @@ const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg">
-                                    <div className="text-slate-400 text-xs uppercase tracking-wider mb-2 font-bold">Audio Actif</div>
+                                    <div className="text-app-muted text-xs uppercase tracking-wider mb-2 font-bold">Audio Actif</div>
                                     <ul className="space-y-2 text-sm text-slate-200">
                                         {snapshot.music && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span> Music OS actif</li>}
                                         {snapshot.sound && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Sound OS ({snapshot.sound.activePadIds.length} pads)</li>}
@@ -93,7 +93,7 @@ const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({
                                     </ul>
                                 </div>
                                 <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg">
-                                    <div className="text-slate-400 text-xs uppercase tracking-wider mb-2 font-bold">Visuels & Web</div>
+                                    <div className="text-app-muted text-xs uppercase tracking-wider mb-2 font-bold">Visuels & Web</div>
                                     <ul className="space-y-2 text-sm text-slate-200">
                                         {snapshot.light && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Light OS (Scène active)</li>}
                                         {snapshot.image && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Image OS ({Object.keys(snapshot.image.projections).length} projections)</li>}
@@ -108,7 +108,7 @@ const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({
                                     <span className="material-symbols-outlined text-3xl text-violet-400">auto_awesome</span>
                                 </div>
                                 <h3 className="text-lg font-medium text-white mb-2">Prêt pour la Restauration</h3>
-                                <p className="text-slate-400 max-w-sm text-sm">
+                                <p className="text-app-muted max-w-sm text-sm">
                                     Ce snapshot contient l'intégralité de la configuration capturée. 
                                     Sélectionnez un module à gauche pour voir les détails techniques JSON.
                                 </p>

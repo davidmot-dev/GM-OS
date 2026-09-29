@@ -191,21 +191,21 @@ const SessionFeedbackModal: React.FC = () => {
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-400">
+                                                        <div className="w-full h-full flex items-center justify-center text-xs font-bold text-app-muted">
                                                             {f.characterName.substring(0, 2).toUpperCase()}
                                                         </div>
                                                     )}
                                                 </div>
                                                 <div>
                                                     <h5 className="font-bold text-sm text-slate-200">{f.characterName}</h5>
-                                                    <span className="text-ui-9 text-slate-500 font-mono">
+                                                    <span className="text-ui-9 text-app-subtle font-mono">
                                                         {new Date(f.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                                                     </span>
                                                 </div>
                                             </div>
 
                                             {/* Ratings grid for this player */}
-                                            <div className="flex flex-col gap-1 text-ui-10 uppercase font-bold text-slate-400 items-end bg-black/20 p-2.5 rounded-xl border border-white/5">
+                                            <div className="flex flex-col gap-1 text-ui-10 uppercase font-bold text-app-muted items-end bg-black/20 p-2.5 rounded-xl border border-white/5">
                                                 <div className="flex items-center gap-2">
                                                     <span>{t('modules:session.feedback.fun')}</span>
                                                     {renderStars(f.funRating, 12)}

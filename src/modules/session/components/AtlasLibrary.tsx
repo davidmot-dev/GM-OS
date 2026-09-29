@@ -28,7 +28,7 @@ const MapCard: React.FC<{
     onToggleVisited: () => void
 }> = ({ map, isSelected, isProjected, isPinned, onClick, onDelete, onTogglePin, onToggleVisited }) => {
     const { t } = useTranslation();
-    const typeMeta = TYPE_META[map.type] || { labelKey: 'modules:session.world_atlas.library.unknown_type', icon: <Map size={10} />, color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
+    const typeMeta = TYPE_META[map.type] || { labelKey: 'modules:session.world_atlas.library.unknown_type', icon: <Map size={10} />, color: 'text-app-muted bg-slate-500/10 border-slate-500/20' };
 
     return (
         <div

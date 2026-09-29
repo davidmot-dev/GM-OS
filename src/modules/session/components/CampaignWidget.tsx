@@ -19,18 +19,18 @@ const CampaignWidget: React.FC = () => {
         <div className="bg-slate-800/40 rounded-xl border border-slate-700/50 p-4 transition-all hover:border-gm-gold/30">
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                    <p className="text-ui-10 uppercase font-bold text-slate-500 tracking-widest mb-1">Active Campaign</p>
+                    <p className="text-ui-10 uppercase font-bold text-app-subtle tracking-widest mb-1">Active Campaign</p>
                     <h3 className="text-slate-100 font-bold tracking-tight text-lg line-clamp-1">{campaignName}</h3>
                 </div>
                 <button
                     onClick={() => gmAlert('Campaign configurations like export/import will be available in the next update.')}
-                    className="p-1.5 text-slate-500 hover:text-gm-gold hover:bg-gm-gold/10 rounded-lg transition-all"
+                    className="p-1.5 text-app-subtle hover:text-gm-gold hover:bg-gm-gold/10 rounded-lg transition-all"
                 >
                     <Settings size={16} />
                 </button>
             </div>
             <div className="mt-4 flex flex-col gap-2">
-                <div className="flex justify-between text-xs text-slate-400">
+                <div className="flex justify-between text-xs text-app-muted">
                     <span>Session Progress</span>
                     <span>Stage {sessionNumber}/{sessionMax}</span>
                 </div>

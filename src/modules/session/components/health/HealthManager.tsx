@@ -326,7 +326,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
 
           <div className={`px-2 py-0.5 rounded-md text-ui-8 font-black uppercase tracking-widest border transition-all ${
               health.state === 'healthy' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-              health.state === 'dead' ? 'bg-slate-500/10 text-slate-400 border-slate-500/20' : 
+              health.state === 'dead' ? 'bg-slate-500/10 text-app-muted border-slate-500/20' : 
               health.state === 'critical' ? 'bg-red-600/20 text-red-500 border-red-500/40 shadow-glow-red/40 animate-pulse' :
               health.state === 'wounded' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
               'bg-amber-500/10 text-amber-400 border-amber-500/20'

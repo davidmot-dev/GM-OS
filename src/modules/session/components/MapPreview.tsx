@@ -20,7 +20,7 @@ const MapPreview: React.FC = () => {
                 <h5 className="text-slate-100 font-bold tracking-tight">
                     {mapUrl ? 'Current Tactical Map' : 'No Map Active'}
                 </h5>
-                <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
+                <div className="flex items-center gap-2 text-xs text-app-muted mt-1">
                     <MapPin size={12} />
                     <span>{mapUrl ? 'Sector 7G • Underdark Region' : 'Connect a map via Map OS'}</span>
                 </div>
@@ -81,7 +81,7 @@ const MapPreview: React.FC = () => {
                     </>
                 ) : (
                     <div className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center opacity-50">
-                        <span className="text-slate-500 font-bold tracking-widest uppercase text-xs">Waiting for Projection</span>
+                        <span className="text-app-subtle font-bold tracking-widest uppercase text-xs">Waiting for Projection</span>
                     </div>
                 )}
             </div>

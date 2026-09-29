@@ -23,7 +23,7 @@ import { Calculator } from 'lucide-react';
 
 const ROLE_COLORS = {
     ally: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
-    neutral: 'bg-slate-500/10 text-slate-400 border-slate-500/20 hover:bg-slate-500/20',
+    neutral: 'bg-slate-500/10 text-app-muted border-slate-500/20 hover:bg-slate-500/20',
     hostile: 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20',
     boss: 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]',
 };
@@ -360,7 +360,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         ) : (
                             <div className="flex items-center justify-between">
                                 <div className="flex flex-col">
-                                    <h2 className={`text-4xl font-display font-black tracking-tight ${selectedNpc.status === 'dead' ? 'text-slate-500 line-through' : 'text-accent'}`}>{selectedNpc.name}</h2>
+                                    <h2 className={`text-4xl font-display font-black tracking-tight ${selectedNpc.status === 'dead' ? 'text-app-subtle line-through' : 'text-accent'}`}>{selectedNpc.name}</h2>
                                     <p className="text-app-text/40 text-sm italic">{selectedNpc.description}</p>
                                 </div>
                                 <div className="flex items-center gap-2">

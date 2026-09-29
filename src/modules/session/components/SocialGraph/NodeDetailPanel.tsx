@@ -69,7 +69,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
         <div className="absolute top-6 bottom-6 right-6 w-96 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 flex flex-col shadow-2xl animate-fade-in z-50">
             <button 
                 onClick={onClose}
-                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-all text-slate-400 hover:text-white"
+                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-all text-app-muted hover:text-white"
                 title={t('modules:session.social_graph.physics.close')}
             >
                 <X size={20} />
@@ -146,13 +146,13 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
             <div className="flex gap-2 mb-8 border-b border-white/10 pb-4">
                 <button 
                     onClick={() => setIsEditing(false)}
-                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${!isEditing ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}
+                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${!isEditing ? 'bg-white/10 text-white' : 'text-app-subtle hover:text-white'}`}
                 >
                     {t('modules:session.social_graph.node_detail.tabs.relations')}
                 </button>
                 <button 
                     onClick={() => setIsEditing(true)}
-                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}
+                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-white/10 text-white' : 'text-app-subtle hover:text-white'}`}
                 >
                     {t('modules:session.social_graph.node_detail.tabs.edit')}
                 </button>
@@ -162,7 +162,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
             <div className="space-y-6 flex-1 overflow-y-auto pr-2 no-scrollbar">
                 {!isEditing ? (
                     <section>
-                        <div className="flex items-center gap-2 mb-3 text-slate-400">
+                        <div className="flex items-center gap-2 mb-3 text-app-muted">
                             <Info size={14} />
                             <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.relations_title')}</h3>
                         </div>
@@ -182,13 +182,13 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                                 <div className="flex items-center gap-1.5 mt-1">
                                                     {isOutbound ? (
                                                         <>
-                                                            <span className="text-ui-8 text-slate-500 font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
+                                                            <span className="text-ui-8 text-app-subtle font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
                                                             <MoveRight size={10} className="text-neonCyan" />
                                                         </>
                                                     ) : (
                                                         <>
                                                             <MoveLeft size={10} className="text-accent" />
-                                                            <span className="text-ui-8 text-slate-500 font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
+                                                            <span className="text-ui-8 text-app-subtle font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
                                                         </>
                                                     )}
                                                 </div>
@@ -199,7 +199,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                             </span>
 
                                         </div>
-                                        <p className="text-slate-400 text-xs leading-relaxed italic border-l-2 border-white/5 pl-3 py-1">"{rel.description}"</p>
+                                        <p className="text-app-muted text-xs leading-relaxed italic border-l-2 border-white/5 pl-3 py-1">"{rel.description}"</p>
                                     </div>
                                 );
                             })}
@@ -210,7 +210,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                         {renderRelationForm()}
                         
                         <div className="space-y-4 py-4">
-                            <div className="flex items-center gap-2 text-slate-400">
+                            <div className="flex items-center gap-2 text-app-muted">
                                 <Trash2 size={14} />
                                 <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.manage_existing')}</h3>
                             </div>
@@ -236,7 +236,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                                                 onClick={() => isOutbound ? onRemoveRelation(otherId, rel.type) : null}
                                                 title={isOutbound ? t('modules:session.social_graph.node_detail.remove_relation_title') : t('modules:session.social_graph.node_detail.incoming_perception')}
                                                 disabled={!isOutbound}
-                                                className={`p-2 rounded-lg transition-all ${isOutbound ? 'hover:bg-red-500/20 text-slate-500 hover:text-red-400' : 'opacity-20 cursor-not-allowed'}`}
+                                                className={`p-2 rounded-lg transition-all ${isOutbound ? 'hover:bg-red-500/20 text-app-subtle hover:text-red-400' : 'opacity-20 cursor-not-allowed'}`}
                                             >
                                                 <Trash2 size={14} />
                                             </button>

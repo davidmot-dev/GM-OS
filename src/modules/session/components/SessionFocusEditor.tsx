@@ -47,7 +47,7 @@ const SessionFocusEditor: React.FC = () => {
         return (
             <div className="flex-1 flex flex-col items-center justify-center bg-app-bg p-10">
                 <BookOpen size={64} className="text-slate-800 mb-6" />
-                <p className="text-slate-500 font-bold uppercase tracking-widest">{t('modules:session.focus.not_found')}</p>
+                <p className="text-app-subtle font-bold uppercase tracking-widest">{t('modules:session.focus.not_found')}</p>
                 <button 
                     onClick={() => setCurrentView('session-prep')}
                     className="mt-6 px-6 py-2 bg-app-surface text-app-text/60 rounded-lg font-bold"
@@ -283,17 +283,17 @@ const SessionFocusEditor: React.FC = () => {
                                             return (
                                                 <div className="grid grid-cols-3 gap-4 bg-black/20 p-5 rounded-2xl border border-white/5 mb-2">
                                                     <div className="flex flex-col gap-1 items-center text-center">
-                                                        <span className="text-ui-10 text-slate-400 font-bold uppercase tracking-wider">{t('modules:session.feedback.fun')}</span>
+                                                        <span className="text-ui-10 text-app-muted font-bold uppercase tracking-wider">{t('modules:session.feedback.fun')}</span>
                                                         <span className="font-mono text-accent text-sm font-black">{funAvg} / 5</span>
                                                         {renderStarsShort(funAvg)}
                                                     </div>
                                                     <div className="flex flex-col gap-1 items-center text-center">
-                                                        <span className="text-ui-10 text-slate-400 font-bold uppercase tracking-wider">{t('modules:session.feedback.story')}</span>
+                                                        <span className="text-ui-10 text-app-muted font-bold uppercase tracking-wider">{t('modules:session.feedback.story')}</span>
                                                         <span className="font-mono text-accent text-sm font-black">{storyAvg} / 5</span>
                                                         {renderStarsShort(storyAvg)}
                                                     </div>
                                                     <div className="flex flex-col gap-1 items-center text-center">
-                                                        <span className="text-ui-10 text-slate-400 font-bold uppercase tracking-wider">{t('modules:session.feedback.combat')}</span>
+                                                        <span className="text-ui-10 text-app-muted font-bold uppercase tracking-wider">{t('modules:session.feedback.combat')}</span>
                                                         <span className="font-mono text-accent text-sm font-black">{combatAvg} / 5</span>
                                                         {renderStarsShort(combatAvg)}
                                                     </div>
@@ -316,14 +316,14 @@ const SessionFocusEditor: React.FC = () => {
                                                                     {char?.portraitUrl ? (
                                                                         <ResolvedImage src={char.portraitUrl} alt={f.characterName} className="w-full h-full object-cover" />
                                                                     ) : (
-                                                                        <div className="w-full h-full flex items-center justify-center text-ui-10 font-bold text-slate-400">
+                                                                        <div className="w-full h-full flex items-center justify-center text-ui-10 font-bold text-app-muted">
                                                                             {f.characterName.substring(0, 2).toUpperCase()}
                                                                         </div>
                                                                     )}
                                                                 </div>
                                                                 <span className="font-bold text-xs text-slate-200">{f.characterName}</span>
                                                             </div>
-                                                            <span className="text-ui-9 text-slate-500 font-mono">
+                                                            <span className="text-ui-9 text-app-subtle font-mono">
                                                                 {new Date(f.timestamp).toLocaleDateString()}
                                                             </span>
                                                         </div>

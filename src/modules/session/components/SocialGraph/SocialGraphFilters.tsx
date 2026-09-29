@@ -28,12 +28,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ label, value, option
 
     return (
         <div className="space-y-1 relative">
-            <label className="text-ui-9 font-bold text-slate-500 uppercase px-1">{label}</label>
+            <label className="text-ui-9 font-bold text-app-subtle uppercase px-1">{label}</label>
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white flex justify-between items-center hover:border-neonCyan/50 transition-all"
             >
-                <span className={!selectedOption ? 'text-slate-500' : ''}>
+                <span className={!selectedOption ? 'text-app-subtle' : ''}>
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
                 <ChevronDown size={14} className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -126,27 +126,27 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
         <div className="absolute top-6 left-6 z-10 flex flex-col gap-4 max-w-2xl">
             <div className="flex gap-4">
                 <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex gap-2 shadow-2xl">
-                    <button onClick={onZoomIn} className="p-3 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white" title={t('modules:session.social_graph.tooltips.zoom_in')}>
+                    <button onClick={onZoomIn} className="p-3 hover:bg-white/10 rounded-xl transition-all text-app-muted hover:text-white" title={t('modules:session.social_graph.tooltips.zoom_in')}>
                         <ZoomIn size={20} />
                     </button>
-                    <button onClick={onZoomOut} className="p-3 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white" title={t('modules:session.social_graph.tooltips.zoom_out')}>
+                    <button onClick={onZoomOut} className="p-3 hover:bg-white/10 rounded-xl transition-all text-app-muted hover:text-white" title={t('modules:session.social_graph.tooltips.zoom_out')}>
                         <ZoomOut size={20} />
                     </button>
                     <button 
                         onClick={onToggleHeader} 
-                        className={`p-3 rounded-xl transition-all ${isHeaderHidden ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-slate-400 hover:text-white hover:bg-white/10'}`} 
+                        className={`p-3 rounded-xl transition-all ${isHeaderHidden ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-app-muted hover:text-white hover:bg-white/10'}`} 
                         title={isHeaderHidden ? t('modules:session.social_graph.tooltips.immersive_on') : t('modules:session.social_graph.tooltips.immersive_off')}
                     >
                         <Maximize2 size={20} />
                     </button>
                     <div className="w-px h-8 bg-white/10 self-center mx-1" />
-                    <button onClick={onZoomReset} className="p-3 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white" title={t('modules:session.social_graph.tooltips.reset_view')}>
+                    <button onClick={onZoomReset} className="p-3 hover:bg-white/10 rounded-xl transition-all text-app-muted hover:text-white" title={t('modules:session.social_graph.tooltips.reset_view')}>
                         <Search size={20} className="rotate-45" />
                     </button>
                     <div className="w-px h-8 bg-white/10 self-center mx-1" />
                     <button 
                         onClick={onToggleLock} 
-                        className={`p-3 rounded-xl transition-all ${isLocked ? 'text-neonCyan bg-neonCyan/20 shadow-glow border border-neonCyan/30' : 'text-slate-400 hover:text-white hover:bg-white/10'}`} 
+                        className={`p-3 rounded-xl transition-all ${isLocked ? 'text-neonCyan bg-neonCyan/20 shadow-glow border border-neonCyan/30' : 'text-app-muted hover:text-white hover:bg-white/10'}`} 
                         title={isLocked ? t('modules:session.social_graph.tooltips.lock_on') : t('modules:session.social_graph.tooltips.lock_off')}
                     >
                         {isLocked ? <Lock size={20} /> : <Unlock size={20} />}
@@ -170,7 +170,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     )}
                     <button 
                         onClick={onResetLayout} 
-                        className="p-3 hover:bg-red-500/20 rounded-xl transition-all text-slate-400 hover:text-red-400" 
+                        className="p-3 hover:bg-red-500/20 rounded-xl transition-all text-app-muted hover:text-red-400" 
                         title={t('modules:session.social_graph.tooltips.reset_layout')}
                     >
                         <RefreshCw size={20} />
@@ -178,7 +178,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     <div className="w-px h-8 bg-white/10 self-center mx-1" />
                     <button 
                         onClick={() => setIsSettingsOpen(!isSettingsOpen)} 
-                        className={`p-3 rounded-xl transition-all ${isSettingsOpen ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-slate-400 hover:text-white hover:bg-white/10'}`} 
+                        className={`p-3 rounded-xl transition-all ${isSettingsOpen ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-app-muted hover:text-white hover:bg-white/10'}`} 
                         title={t('modules:session.social_graph.tooltips.physics_settings')}
                     >
                         <Sliders size={20} />
@@ -187,7 +187,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
 
 
                 <div className="flex-1 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center shadow-2xl min-w-[300px]">
-                    <div className="px-3 text-slate-500">
+                    <div className="px-3 text-app-subtle">
                         <Search size={18} />
                     </div>
                     <input 
@@ -206,14 +206,14 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                 <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 shadow-2xl animate-fade-in animate-slide-up-subtle w-[350px] space-y-6 mt-4">
                     <div className="flex items-center justify-between border-b border-white/5 pb-3">
                         <span className="text-ui-10 font-black uppercase text-accent tracking-widest">{t('modules:session.social_graph.physics.settings_title')}</span>
-                        <button onClick={() => setIsSettingsOpen(false)} className="text-slate-500 hover:text-white text-ui-10 font-bold uppercase transition-colors">{t('modules:session.social_graph.physics.close')}</button>
+                        <button onClick={() => setIsSettingsOpen(false)} className="text-app-subtle hover:text-white text-ui-10 font-bold uppercase transition-colors">{t('modules:session.social_graph.physics.close')}</button>
                     </div>
 
 
                     {/* Charge Slider */}
                     <div className="space-y-3">
                         <div className="flex justify-between items-center text-ui-10 uppercase font-bold tracking-wider">
-                            <span className="text-slate-400">{t('modules:session.social_graph.physics.charge_label')}</span>
+                            <span className="text-app-muted">{t('modules:session.social_graph.physics.charge_label')}</span>
                             <span className="text-neonCyan">{physicsSettings.charge}</span>
                         </div>
 
@@ -237,7 +237,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     {/* Distance Slider */}
                     <div className="space-y-3">
                         <div className="flex justify-between items-center text-ui-10 uppercase font-bold tracking-wider">
-                            <span className="text-slate-400">{t('modules:session.social_graph.physics.distance_label')}</span>
+                            <span className="text-app-muted">{t('modules:session.social_graph.physics.distance_label')}</span>
                             <span className="text-neonCyan">{physicsSettings.distance}px</span>
                         </div>
 
@@ -261,7 +261,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     {/* Collision Slider */}
                     <div className="space-y-3">
                         <div className="flex justify-between items-center text-ui-10 uppercase font-bold tracking-wider">
-                            <span className="text-slate-400">{t('modules:session.social_graph.physics.collision_label')}</span>
+                            <span className="text-app-muted">{t('modules:session.social_graph.physics.collision_label')}</span>
                             <span className="text-neonCyan">{physicsSettings.collision}px</span>
                         </div>
 
@@ -288,7 +288,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             setPhysicsSettings.setDistance(150);
                             setPhysicsSettings.setCollision(40);
                         }}
-                        className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-ui-10 font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-all"
+                        className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-ui-10 font-bold text-app-muted hover:text-white uppercase tracking-widest transition-all"
                     >
                         {t('modules:session.social_graph.physics.default_btn')}
                     </button>

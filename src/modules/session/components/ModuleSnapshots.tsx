@@ -32,7 +32,7 @@ const ModuleSnapshots: React.FC = () => {
         if (n.includes('fear') || n.includes('peur') || n.includes('fright')) return <HeartCrack size={14} className="text-red-500" />;
         if (n.includes('inspired') || n.includes('inspir')) return <Zap size={14} className="text-blue-400" />;
         if (n.includes('poison') || n.includes('toxin') || n.includes('bleed') || n.includes('saign')) return <Skull size={14} className="text-emerald-500" />;
-        return <CheckCircle size={14} className="text-slate-400" />;
+        return <CheckCircle size={14} className="text-app-muted" />;
     };
 
     return (

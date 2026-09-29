@@ -563,7 +563,7 @@ const SocialGraph: React.FC = () => {
 
             {!selectedNodeId && (
                 <div className="absolute bottom-10 left-10 p-6 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-10">
-                    <div className="flex items-center gap-3 text-slate-400 mb-4">
+                    <div className="flex items-center gap-3 text-app-muted mb-4">
                         <Users size={16} />
                         <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.legend_title')}</span>
                     </div>

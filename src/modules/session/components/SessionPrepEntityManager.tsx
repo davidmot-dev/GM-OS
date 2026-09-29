@@ -37,7 +37,7 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
             case 'ally': return <Shield size={12} className="text-emerald-500" />;
             case 'hostile': return <Skull size={12} className="text-red-500" />;
             case 'boss': return <Skull size={14} className="text-gm-gold" />;
-            case 'neutral': return <User size={12} className="text-slate-400" />;
+            case 'neutral': return <User size={12} className="text-app-muted" />;
             default: return null;
         }
     };

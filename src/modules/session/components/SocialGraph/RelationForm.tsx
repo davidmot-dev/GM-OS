@@ -80,7 +80,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
                         alliance pour la physique, et porte son nom pour l'œil.
                     */}
                     <div className="space-y-1">
-                        <label className="text-ui-9 font-bold text-slate-500 uppercase px-1">{t('modules:session.social_graph.relation_form.libelle_label')}</label>
+                        <label className="text-ui-9 font-bold text-app-subtle uppercase px-1">{t('modules:session.social_graph.relation_form.libelle_label')}</label>
                         <input
                             type="text"
                             placeholder={t('modules:session.social_graph.relation_form.libelle_placeholder')}
@@ -92,7 +92,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
 
 
                     <div className="space-y-1">
-                        <label className="text-ui-9 font-bold text-slate-500 uppercase px-1">{t('modules:session.social_graph.relation_form.desc_label')}</label>
+                        <label className="text-ui-9 font-bold text-app-subtle uppercase px-1">{t('modules:session.social_graph.relation_form.desc_label')}</label>
                         <input 
                             type="text"
                             placeholder={t('modules:session.social_graph.relation_form.desc_placeholder')}

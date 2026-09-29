@@ -95,7 +95,7 @@ const SectionEditor: React.FC<{
         <div className="border border-app-border/40 rounded-xl overflow-hidden">
             {/* Section Header */}
             <div className="flex items-center gap-3 p-3 bg-app-surface/60">
-                <button onClick={() => setIsOpen(!isOpen)} className="text-slate-500 hover:text-white transition-colors">
+                <button onClick={() => setIsOpen(!isOpen)} className="text-app-subtle hover:text-white transition-colors">
                     {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                 </button>
                 <input
