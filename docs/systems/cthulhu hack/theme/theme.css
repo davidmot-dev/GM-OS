@@ -1,0 +1,64 @@
+/* CTHULHU HACK — Archives d'Arkham | Contrat GM-OS v1.4
+   Dossier demandé : Chtulhu Hack. Les jetons LU ⚙ nécessitent
+   l'activation des personnalités. V2 : préparés, actuellement ignorés.
+   Les fiches de personnage restent indépendantes de ce thème.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Oswald:wght@400;500;600&display=swap');
+
+:root[data-theme="Chtulhu Hack"] {
+  color-scheme: light;
+
+  /* Couleurs : papier ivoire grisé, encre et olive. */
+  --rpg-bg: #e2e0d7;
+  --rpg-surface: #f2eee4;
+  --rpg-surface-2: #e8e4d9;
+  --rpg-text: #282c25;
+  --rpg-muted: #66675c;
+  --rpg-accent: #485b33;
+  --rpg-accent-contrast: #fff9e8;
+  --rpg-border: #97978a;
+  --rpg-border-soft: rgba(66, 70, 57, 0.18);
+
+  /* États V2 : couleurs distinctes, assourdies et lisibles. */
+  --rpg-success: #306441;
+  --rpg-danger: #994238;
+  --rpg-warning: #856321;
+  --rpg-info: #3c6375;
+
+  /* Polices approchées des pages : titres étroits et texte de livre. */
+  --rpg-font-display: "Oswald", "Arial Narrow", sans-serif;
+  --rpg-font-body: "Libre Baskerville", Georgia, serif;
+  --rpg-font-mono: "Courier New", Courier, monospace;
+  --rpg-title-tracking: 0.02em;
+  --rpg-kicker-tracking: 0.1em;
+  --rpg-title-transform: none;
+
+  /* Forme de dossier d'archives, presque rectiligne. */
+  --rpg-radius-sm: 1px;
+  --rpg-radius-md: 2px;
+  --rpg-radius-lg: 4px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  /* Feuilles posées : ombre mate, aucune lueur. */
+  --rpg-elevation-1: 0 1px 3px rgba(24, 30, 23, 0.14);
+  --rpg-elevation-2: 0 4px 12px rgba(24, 30, 23, 0.2);
+  --rpg-elevation-3: 0 12px 32px rgba(17, 25, 18, 0.28);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+
+  /* Surcouches claires, peu transparentes, sans effet de verre. */
+  --rpg-glass-bg: rgba(242, 238, 228, 0.95);
+  --rpg-glass-border: rgba(66, 70, 57, 0.4);
+  --rpg-glass-blur: 0px;
+
+  /* Cadre opaque : vert noir de couverture, olive pâle actif. */
+  --rpg-frame-bg: #172019;
+  --rpg-frame-text: #eee9d9;
+  --rpg-frame-accent: #bdcc8d;
+
+  /* Papier discret ; matière de panneau réservée à V2. */
+  --rpg-texture-bg: url('matieres/papier-archives.svg');
+  --rpg-texture-panel: url('matieres/papier-archives.svg');
+  --rpg-texture-opacity: 0.08;
+}

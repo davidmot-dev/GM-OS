@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" seed="19" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="luminanceToAlpha" result="mask"/>
+      <feComposite in="SourceGraphic" in2="mask" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="192" height="192" fill="currentColor" filter="url(#grain)"/>
+  <g fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.22">
+    <path d="M8 34l14-2m42 20l25 1m44-31l20 3M28 112l18 2m35 48l23-3m22-53l35 2M13 177l15-1m114 11l19-3"/>
+    <path d="M40 14l1 8m73 29l-1 12m-5 35l2 10m65 24l-1 13m-115 9l1 7"/>
+  </g>
+</svg>
