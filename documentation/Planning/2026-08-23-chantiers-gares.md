@@ -5743,15 +5743,22 @@ v1.2.
   phase 4** : P1.2 reste la suite du code. ✅ **Les idées « à décider » sont tranchées par David
   le 2026-09-29** (tableau « Les idées tranchées », en fin de `stitch/README.md`) : elles seront
   reprises à la migration.
-- 🐞 **Garé — Chroniques : le texte des événements s'affiche en Markdown brut** (trouvé par la
-  vitrine le 2026-09-28, capture G9) : « ### ⚔️ Rapport de Combat … **Fin du Round** » apparaît
-  tel quel, et l'emoji ⚔️ sort en caractères cassés (`âš”ï¸`) — un texte UTF-8 relu comme du
-  Latin-1 quelque part entre le rapport de combat et la chronologie. Pas corrigé (`src/`).
-- 🐞 **Garé — Image-OS, vignettes vides après une restauration** (trouvé par la vitrine le
-  2026-09-27). `useMediaUrl` cherche l'image dans la base à la création de la tuile et **ne
-  réessaie pas** tant que le chemin ne change pas : les tuiles montées pendant « Restaurer depuis
-  la sauvegarde » gardent `url("")` jusqu'à ce qu'on quitte le module. Les diaporamas, montés
-  après, s'affichent. Pas corrigé (`src/`, hors du sujet Stitch).
+- ✅ **Corrigé le 2026-09-29 — Chroniques : le texte des événements s'affichait en Markdown brut**
+  (trouvé par la vitrine le 2026-09-28, capture G9) : « ### ⚔️ Rapport de Combat … **Fin du
+  Round** » apparaissait tel quel, l'emoji en `âš”ï¸`. **Deux causes.** Le Markdown : la
+  description est posée dans un `<p>` par `TimelineView`, alors que le rapport de combat
+  (`combat.report.*`) l'écrit en Markdown — elle passe désormais par `TexteMarkdown`. L'emoji :
+  **il est cassé dans la donnée**, pas à l'affichage — la sauvegarde du 22/09 porte les octets de
+  « âš”ï¸ ». L'événement date du 7 août ; `fr/modules.json` était alors abîmé (relu en cp1252),
+  réparé le 18/08 (`f3c7c672`). La source ne le produit plus, mais **les événements anciens le
+  gardent** : `utils/reparerLeMojibake.ts` les rend lisibles **à la lecture** (chroniques et
+  formulaire d'édition), sans réécrire les données de David. ⚠️ L'export d'archive Nexus les
+  exporte tels qu'ils sont en base.
+- ✅ **Corrigé le 2026-09-29 — Image-OS, vignettes vides après une restauration** (trouvé par la
+  vitrine le 2026-09-27). `useMediaUrl` cherchait l'image dans la base à la création de la tuile
+  et **ne réessayait pas** tant que le chemin ne changeait pas. Il se relance maintenant quand le
+  média entre dans `mediaList` (ce que font `restaurerUnMedia`, `addMedia` et `initDB`) ; garde :
+  `src/hooks/useMediaUrl.test.ts`, qui échoue sans le correctif.
 - **Le plan de la phase 1** (`2026-09-27-refonte-phase-1.md`) remplace le § 4 du plan général. Deux
   décisions de David : **l'interrupteur des personnalités est un réglage des Paramètres** ; l'ordre
   est gardé (texte secondaire avant arrondis). Estimation : quatre soirées.

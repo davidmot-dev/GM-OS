@@ -49,8 +49,9 @@ hors refonte.
 2. ✅ **Idées de Stitch tranchées par David le 2026-09-29** : les douze sont dans le tableau
    « Les idées tranchées », à la fin de `stitch/README.md`. Onze sont retenues ; pour l'Oracle, on
    garde les deux modes. Rien ne change l'écran avant la phase 4.
-3. **Deux défauts garés** dans le registre, trouvés par la vitrine : les vignettes d'Image-OS vides
-   après une restauration ; le Markdown brut et l'emoji cassé (`âš”ï¸`) des chroniques.
+3. ✅ **Les deux défauts trouvés par la vitrine, corrigés le 2026-09-29** : les vignettes
+   d'Image-OS vides après une restauration ; le Markdown brut et l'emoji cassé (`âš”ï¸`) des
+   chroniques — l'emoji était cassé **dans la donnée**, réparé à la lecture (registre, § 76).
 4. **Repris du 27/09, rien n'a bougé** : les deux références de RPG Theme Builder remises dans
    ChatGPT ? ; les deux lectures souples du cahier ; §§ 87, 106 à 110, 114.
 

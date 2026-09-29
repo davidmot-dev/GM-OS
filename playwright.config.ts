@@ -52,5 +52,9 @@ export default defineConfig({
         trace: 'retain-on-failure',
     },
 
-    reporter: [['list'], ['html', { open: 'never', outputFolder: 'e2e-resultats' }]],
+    /* ⛔ **Le rapport HTML VIDE son dossier à chaque lancement.** Posé sur
+       `e2e-resultats/` lui-même, il a effacé le 2026-09-29 les 65 captures de la
+       vitrine (`e2e-resultats/vitrine/`) et les demandes de `themes-a-reparer/`.
+       Il a donc son sous-dossier à lui, où il n'y a rien d'autre à perdre. */
+    reporter: [['list'], ['html', { open: 'never', outputFolder: 'e2e-resultats/rapport' }]],
 });
