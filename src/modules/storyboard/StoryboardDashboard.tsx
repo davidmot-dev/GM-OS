@@ -596,7 +596,7 @@ const StoryboardDashboard: React.FC = () => {
                     </div>
                     <div>
                         <h2 className="text-xl font-black uppercase tracking-tighter text-white">{t('modules:storyboard.title')}</h2>
-                        <p className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('modules:storyboard.subtitle')}</p>
+                        <p className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">{t('modules:storyboard.subtitle')}</p>
                     </div>
                 </div>
                 
@@ -694,7 +694,7 @@ const StoryboardDashboard: React.FC = () => {
                         <div className="space-y-8 flex-1">
                             {/* Name Input */}
                             <div className="space-y-3">
-                                <label className="text-ui-10 font-black uppercase tracking-widest text-slate-500">{t('modules:storyboard.editor.name_label')}</label>
+                                <label className="text-ui-10 font-black uppercase tracking-widest text-app-subtle">{t('modules:storyboard.editor.name_label')}</label>
                                 <input 
                                     type="text" 
                                     value={name}
@@ -1036,7 +1036,7 @@ const StoryboardDashboard: React.FC = () => {
                                                 {t('modules:storyboard.editor.map_revealed')}
                                             </label>
                                             {mapRevelee && (
-                                                <p className="px-1 text-ui-10 text-slate-500 italic leading-snug">
+                                                <p className="px-1 text-ui-10 text-app-subtle italic leading-snug">
                                                     {t('modules:storyboard.editor.map_revealed_hint')}
                                                 </p>
                                             )}
@@ -1260,7 +1260,7 @@ const StoryboardDashboard: React.FC = () => {
                             </button>
                             <button 
                                 onClick={() => setIsEditing(false)}
-                                className="w-full bg-white/5 border border-white/5 text-slate-400 py-4 rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+                                className="w-full bg-white/5 border border-white/5 text-app-muted py-4 rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:bg-white/10 transition-all"
                             >
                                 {t('modules:storyboard.editor.cancel')}
                             </button>
