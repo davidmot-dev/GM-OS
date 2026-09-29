@@ -155,7 +155,7 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     // § 4.7 · Transparence et verre
     { cle: 'glass-bg', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.4, alphaMax: 0.95 }, versLInterface: '--glass-bg' },
     { cle: 'glass-border', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.05, alphaMax: 0.6 }, versLInterface: '--glass-border' },
-    { cle: 'glass-blur', section: '4.7', statut: 'V2', format: px(24) },
+    { cle: 'glass-blur', section: '4.7', statut: 'V2', format: px(24), versLInterface: '--glass-blur' },
 
     // § 4.8 · Le cadre — absents, ils valent bg, text et accent
     { cle: 'frame-bg', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-bg' },
@@ -163,9 +163,12 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'frame-accent', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-accent' },
 
     // § 7 · Matières
-    { cle: 'texture-bg', section: '7', statut: 'V2', format: MATIERE },
-    { cle: 'texture-panel', section: '7', statut: 'V2', format: MATIERE },
-    { cle: 'texture-opacity', section: '7', statut: 'V2', format: { type: 'nombre', min: 0, max: 0.35 } },
+    { cle: 'texture-bg', section: '7', statut: 'V2', format: MATIERE, versLInterface: '--texture-fond' },
+    { cle: 'texture-panel', section: '7', statut: 'V2', format: MATIERE, versLInterface: '--texture-panneau' },
+    {
+        cle: 'texture-opacity', section: '7', statut: 'V2',
+        format: { type: 'nombre', min: 0, max: 0.35 }, versLInterface: '--texture-opacite',
+    },
 ];
 
 /**

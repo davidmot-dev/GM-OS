@@ -183,6 +183,21 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
   `index.css`, deviennent `--rpg-texture-bg` et `--rpg-texture-opacity` : **un jeu pourra enfin
   donner sa matière**. Les SVG (grille du Cyberpunk, grain du parchemin) viennent en P1.7.
 - **Preuve** : captures identiques.
+- ✅ **Fait le 2026-09-29.** Les 20 captures passent — la grille du cyberpunk y est sur chaque
+  écran. Le grain du médiéval et la toile du thème clair n'y paraissent pas : un essai compare leurs
+  valeurs, au caractère près, aux règles d'`index.css` d'avant (`b3cab546`). Ce qui a été tranché :
+  - **la pose du motif n'est pas dans le contrat** (taille, position, fusion) : elle vit dans le
+    paquet de base (`matiere`) et s'écrit toujours, `auto` / `0% 0%` / `normal` par défaut. Un jeu n'en
+    a pas besoin : sa tuile `url('matieres/…')` se répète à sa taille ;
+  - ⚠️ **l'opacité des matières d'hier (1) dépasse le plafond du contrat (0,35)** : le plafond
+    protège la lisibilité d'une matière inconnue, et la couleur de ces motifs porte déjà sa
+    transparence. Rien à corriger à pixel constant ;
+  - `glass-blur` pilote le flou de `.glass-bento`, le seul verre qui lit déjà les `--glass-*` ;
+    les autres verres (`premium-glass`, `glass-panel`, `stitch-card`, `backdrop-blur-*`) attendent
+    les primitives ;
+  - ⚠️ **pour P1.6** : `url('matieres/…')` est relative au dossier du thème. Posée telle quelle en
+    variable sur le document, elle se résoudrait depuis la page : le chargeur du thème de jeu devra
+    la réécrire en adresse complète quand `texture-bg` passera à LU.
 
 ### P1.6 · Le contrat en v1.4 et les gardes
 

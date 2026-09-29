@@ -268,10 +268,11 @@ pre {
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   }
 
+  /* Le flou du verre vient du thème (`glass-blur`, P1.5) ; 20 px, celui d'aujourd'hui, en repli. */
   .glass-bento {
     background: var(--glass-bg, rgba(15, 23, 42, 0.45));
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur, 20px)) saturate(180%);
     border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
     box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.3);
     position: relative;
@@ -442,47 +443,27 @@ body {
   position: relative;
 }
 
+/*
+  **La matière de fond vient du thème — P1.5 de la refonte, 2026-09-29.**
+
+  Trois règles `[data-theme=…]` posaient ici la grille du cyberpunk, le grain
+  du médiéval et la toile du thème clair. Elles vivent désormais dans les
+  paquets de `themeDeLInterface.ts` (`texture-bg`, `texture-opacity`, et la pose
+  de chaque motif), au caractère près : **un jeu pourra enfin donner sa
+  matière**, par le même chemin. Sans matière déclarée — le moderne — rien.
+*/
 .bg-texture-overlay::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.8; /* Accentuted */
+  background-image: var(--texture-fond, none);
+  background-size: var(--texture-taille, auto);
+  background-position: var(--texture-position, 0% 0%);
+  mix-blend-mode: var(--texture-fusion, normal);
+  opacity: var(--texture-opacite, 0.8);
 }
-
-[data-theme='cyberpunk'] .bg-texture-overlay::before {
-  background-image: 
-    linear-gradient(rgba(34, 211, 238, 0.2) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.2) 2px, transparent 2px);
-  background-size: 80px 80px;
-  background-position: center;
-  opacity: 1;
-}
-
-[data-theme='medieval'] .bg-texture-overlay::before {
-  /* Effet Pierre / Parchemin sombre organique */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  background-size: 250px 250px;
-  opacity: 0.12;
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-}
-
-
-
-[data-theme='claire'] .bg-texture-overlay::before {
-  /* Effet toile / parchemin Très visible et contrasté */
-  background-image: 
-    repeating-linear-gradient(45deg, rgba(162, 120, 92, 0.15) 0px, rgba(162, 120, 92, 0.15) 1px, transparent 1px, transparent 10px),
-    repeating-linear-gradient(-45deg, rgba(162, 120, 92, 0.15) 0px, rgba(162, 120, 92, 0.15) 1px, transparent 1px, transparent 10px);
-  opacity: 1;
-}
-
-
-
-
-
 
 /* Specific component overrides to let textures show through */
 .bg-texture-overlay > * {

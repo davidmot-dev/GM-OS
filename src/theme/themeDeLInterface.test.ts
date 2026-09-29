@@ -438,3 +438,47 @@ describe('P1.4 · la forme et le relief', () => {
         expect(r.style.getPropertyValue('--app-accent')).toBe(PALETTES.cyberpunk.jetons.accent);
     });
 });
+
+/**
+ * **P1.5 · Le verre et les matières** — refonte, phase 1, 2026-09-29.
+ *
+ * Les textures de fond étaient trois règles `[data-theme=…]
+ * .bg-texture-overlay::before` d'`index.css`. Elles passent par les paquets,
+ * **au caractère près** : ces chaînes sont celles d'`index.css` au commit
+ * `b3cab546`, recopiées avant la modification.
+ */
+describe('P1.5 · le verre et les matières', () => {
+    const HIER = {
+        cyberpunk: {
+            '--texture-fond': 'linear-gradient(rgba(34, 211, 238, 0.2) 2px, transparent 2px), linear-gradient(90deg, rgba(34, 211, 238, 0.2) 2px, transparent 2px)',
+            '--texture-opacite': '1', '--texture-taille': '80px 80px', '--texture-position': 'center', '--texture-fusion': 'normal',
+        },
+        medieval: {
+            '--texture-opacite': '0.12', '--texture-taille': '250px 250px', '--texture-position': '0% 0%', '--texture-fusion': 'soft-light',
+        },
+        claire: {
+            '--texture-fond': 'repeating-linear-gradient(45deg, rgba(162, 120, 92, 0.15) 0px, rgba(162, 120, 92, 0.15) 1px, transparent 1px, transparent 10px), repeating-linear-gradient(-45deg, rgba(162, 120, 92, 0.15) 0px, rgba(162, 120, 92, 0.15) 1px, transparent 1px, transparent 10px)',
+            '--texture-opacite': '1', '--texture-taille': 'auto', '--texture-position': '0% 0%', '--texture-fusion': 'normal',
+        },
+    } as const;
+
+    it.each(Object.keys(HIER) as (keyof typeof HIER)[])('%s pose la matière d’hier', (t) => {
+        const v = variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent);
+        for (const [nom, valeur] of Object.entries(HIER[t])) expect(v[nom], `${t} ${nom}`).toBe(valeur);
+    });
+
+    it('le grain du médiéval est le bruit fractal en SVG d’hier', () => {
+        const v = variablesDuTheme(PALETTES.medieval, PALETTES.medieval.jetons.accent);
+        expect(v['--texture-fond']).toMatch(/^url\("data:image\/svg\+xml,.*feTurbulence type='fractalNoise' baseFrequency='0\.6' numOctaves='3'.*"\)$/);
+    });
+
+    it('le moderne n’a pas de matière', () => {
+        const v = variablesDuTheme(PALETTES.modern, PALETTES.modern.jetons.accent);
+        expect(v['--texture-fond']).toBeUndefined();
+        expect(v['--texture-opacite']).toBeUndefined();
+    });
+
+    it('aucun thème de base ne déclare de flou de verre — les 20 px d’hier restent', () => {
+        for (const t of THEMES) expect(variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent)['--glass-blur'], t).toBeUndefined();
+    });
+});

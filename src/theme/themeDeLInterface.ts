@@ -97,6 +97,13 @@ export interface ThemeDeBase {
      * parce qu'il doit reproduire l'écran d'aujourd'hui au pixel près.
      */
     subtil: string;
+    /**
+     * **Comment la matière de fond se pose** (`texture-bg`) — ce que le contrat
+     * ne dit pas : la taille du motif, sa position, son mode de fusion. Un
+     * thème de jeu n'en a pas besoin (une tuile `url('matieres/…')` se répète à
+     * sa taille), mais la grille du cyberpunk et le grain du médiéval d'hier, si.
+     */
+    matiere: { taille: string; position: string; fusion: string };
     /** Les pastilles proposées dans les réglages, pour surcharger l'accent à la main. */
     palettes: string[];
 }
@@ -116,6 +123,12 @@ export interface ThemeDeBase {
   - les états, les emerald, red, amber et sky 500 écrits en dur ;
   - `surface-2` n'a pas d'emploi : la surface éclaircie de 5 % vers le texte,
     **provisoire**, à juger avec les personnalités (P1.7).
+
+  **Les matières de P1.5 (2026-09-29)** sont les règles `[data-theme=…]
+  .bg-texture-overlay` d'`index.css`, déménagées ici. ⚠️ Leur opacité (1 pour la
+  grille et la toile) dépasse le plafond que le contrat impose à un jeu (0,35) :
+  ce plafond protège la lisibilité d'une matière **inconnue** ; celles-ci sont
+  l'écran d'aujourd'hui, et leur couleur porte déjà sa transparence.
 */
 export const PALETTES: Record<ThemeID, ThemeDeBase> = {
     cyberpunk: {
@@ -137,9 +150,13 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             danger: '#fb2c36',
             warning: '#fe9a00',
             info: '#00a6f4',
+            // § 7 · La grille d'hier (`index.css`, jusqu'au 2026-09-29), au caractère près.
+            'texture-bg': 'linear-gradient(rgba(34, 211, 238, 0.2) 2px, transparent 2px), linear-gradient(90deg, rgba(34, 211, 238, 0.2) 2px, transparent 2px)',
+            'texture-opacity': '1',
         },
         clarte: 'dark',
         reflet: 'rgba(34, 211, 238, 0.25)',
+        matiere: { taille: '80px 80px', position: 'center', fusion: 'normal' },
         subtil: '#62748e',
         palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'],
     },
@@ -163,9 +180,13 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             danger: '#fb2c36',
             warning: '#fe9a00',
             info: '#00a6f4',
+            // § 7 · Le grain de pierre d'hier, un bruit fractal en SVG.
+            'texture-bg': `url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            'texture-opacity': '0.12',
         },
         clarte: 'dark',
         reflet: 'rgba(217, 119, 6, 0.2)',
+        matiere: { taille: '250px 250px', position: '0% 0%', fusion: 'soft-light' },
         subtil: '#62748e',
         palettes: ['#d4af37', '#b91c1c', '#7c2d12', '#4c1d95', '#1e40af'],
     },
@@ -192,6 +213,8 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
         },
         clarte: 'dark',
         reflet: 'rgba(255, 255, 255, 0.2)',
+        // Pas de matière : le moderne n'en avait pas.
+        matiere: { taille: 'auto', position: '0% 0%', fusion: 'normal' },
         subtil: '#62748e',
         palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b'],
     },
@@ -217,11 +240,15 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             danger: '#fb2c36',
             warning: '#fe9a00',
             info: '#00a6f4',
+            // § 7 · La toile croisée d'hier.
+            'texture-bg': 'repeating-linear-gradient(45deg, rgba(162, 120, 92, 0.15) 0px, rgba(162, 120, 92, 0.15) 1px, transparent 1px, transparent 10px), repeating-linear-gradient(-45deg, rgba(162, 120, 92, 0.15) 0px, rgba(162, 120, 92, 0.15) 1px, transparent 1px, transparent 10px)',
+            'texture-opacity': '1',
         },
         clarte: 'light',
         reflet: 'rgba(255, 255, 255, 0.5)',
         // Comme `muted` : les règles `claire` d'`index.css` peignent slate-400 ET slate-500 en `--app-text`.
         subtil: '#2c2420',
+        matiere: { taille: 'auto', position: '0% 0%', fusion: 'normal' },
         palettes: ['#c2410c', '#0f766e', '#7c3aed', '#b91c1c', '#1e40af'],
     },
 };
@@ -277,6 +304,9 @@ export function variablesDuTheme(
     vars['--app-accent'] = accentEffectif;
     vars['--glass-highlight'] = theme.reflet;
     vars['--app-text-subtle'] = theme.subtil;
+    vars['--texture-taille'] = theme.matiere.taille;
+    vars['--texture-position'] = theme.matiere.position;
+    vars['--texture-fusion'] = theme.matiere.fusion;
     /*
       **La bordure douce est la bordure à moitié** — ce que `border-app-border/50`
       rend aujourd'hui, au même `color-mix` près (celui qu'écrit Tailwind 4). Par
