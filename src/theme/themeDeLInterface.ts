@@ -625,9 +625,42 @@ export function appliquerLeTheme(
     */
     racine.style.colorScheme = jeu?.clarte ?? palette.clarte;
 
+    /*
+      **Un jeu sans cadre ne garde pas celui du thème de base** — 2026-09-29,
+      trouvé en capturant chaque campagne sous chaque thème : Alien, sous la
+      personnalité médiévale, s'affichait dans un cadre de bois. Le jeu impose
+      ses couleurs ; le cadre suit alors les siennes (§ 4.8 : absent, il vaut
+      `bg`, `text` et `accent` — ceux du jeu).
+    */
+    const socle = variablesDuTheme(palette, accent);
+    const cadreDuJeu = !!jeu?.variables['--app-frame-bg'];
+    if (jeu && !cadreDuJeu) {
+        delete socle['--app-frame-bg'];
+        delete socle['--app-frame-text'];
+        delete socle['--app-frame-accent'];
+    }
+    /*
+      **Un jeu d'une autre polarité n'hérite ni du verre ni de la matière du
+      thème de base** — 2026-09-29, même capture : sous Clair, Alien posait ses
+      cartes sur le verre blanc à 60 % du thème clair, et sa toile brune sur un
+      fond noir. Ce que la base a choisi pour SON fond ne vaut pas pour l'autre
+      polarité. Le verre se dérive alors des couleurs du jeu ; la matière
+      disparaît (celle du jeu, s'il en a une, arrive par le pont sous les
+      personnalités).
+    */
+    if (jeu?.clarte && jeu.clarte !== palette.clarte) {
+        const fondDuJeu = jeu.variables['--app-bg'] ?? socle['--app-bg'];
+        const texteDuJeu = jeu.variables['--app-text'] ?? socle['--app-text'];
+        socle['--glass-bg'] = `color-mix(in srgb, ${fondDuJeu} 60%, transparent)`;
+        socle['--glass-border'] = `color-mix(in srgb, ${texteDuJeu} 10%, transparent)`;
+        socle['--glass-highlight'] = `color-mix(in srgb, ${texteDuJeu} 18%, transparent)`;
+        delete socle['--texture-fond'];
+        delete socle['--texture-opacite'];
+    }
+
     const vars = completerLesDerivees({
         // Le socle : la palette d'atelier, l'accent arbitré, et ses dérivées.
-        ...variablesDuTheme(palette, accent),
+        ...socle,
         /*
           Le jeu recouvre — mais **seulement ce qu'il déclare** : un thème
           partiel laisse le thème d'atelier combler le reste, au lieu d'effacer
@@ -668,11 +701,23 @@ export function appliquerLeTheme(
         }
     }
 
+    /*
+      **Le verre des colonnes suit la surface du jeu** — trouvé par David le
+      2026-09-29 : *« pour Dune, la colonne sombre ne va pas avec le reste »*.
+      `.premium-glass` (la colonne de la campagne, treize emplois) posait une
+      ardoise à 45 % écrite en dur : invisible sur le noir de Blade Runner et
+      d'Alien, bleue sur le brun de Dune. Sans jeu, l'ardoise d'aujourd'hui
+      reste, en repli dans `index.css`.
+    */
+    if (jeu?.variables['--app-surface']) {
+        vars['--verre-premium'] = `color-mix(in srgb, ${jeu.variables['--app-surface']} 45%, transparent)`;
+    }
+
     for (const [nom, valeur] of Object.entries(vars)) {
         racine.style.setProperty(nom, valeur);
     }
     // § 4.8 : un cadre déclaré est opaque — `index.css` le peint plein (`.cadre-gmos`).
-    racine.toggleAttribute('data-cadre', !!(palette.jetons['frame-bg'] || jeu?.variables['--app-frame-bg']));
+    racine.toggleAttribute('data-cadre', jeu ? cadreDuJeu : !!palette.jetons['frame-bg']);
     /*
       **Ce que le thème ne déclare plus s'efface** — P1.4, 2026-09-29.
 
@@ -724,6 +769,7 @@ export function appliquerLeTheme(
 /** Tout ce qu'un thème peut cesser de déclarer : les variables du contrat, et les accents de module. */
 const VARIABLES_EFFACABLES = new Set([
     ...Object.values(VARIABLE_DU_JETON),
+    '--verre-premium',
     ...Object.keys(ACCENTS_D_AUJOURD_HUI).map(m => `--gm-${m}`),
 ]);
 

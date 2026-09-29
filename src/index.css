@@ -251,8 +251,9 @@ pre {
     width: var(--progress-percent);
   }
 
+  /* Sous un thème de jeu, la surface du jeu (`--verre-premium`) ; sinon l'ardoise d'aujourd'hui. */
   .premium-glass {
-    background: rgba(15, 23, 42, 0.45);
+    background: var(--verre-premium, rgba(15, 23, 42, 0.45));
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -477,15 +478,24 @@ body {
   --app-text: #f8fafc;
 }
 
-:root[data-theme='claire'] .text-white,
-:root[data-theme='claire'] .text-slate-50,
-:root[data-theme='claire'] .text-slate-100,
-:root[data-theme='claire'] .text-slate-200,
-:root[data-theme='claire'] .text-slate-300,
-:root[data-theme='claire'] .text-slate-400,
-:root[data-theme='claire'] .text-slate-500 {
+:root[data-theme='claire'][data-clarte='light'] .text-white,
+:root[data-theme='claire'][data-clarte='light'] .text-slate-50,
+:root[data-theme='claire'][data-clarte='light'] .text-slate-100,
+:root[data-theme='claire'][data-clarte='light'] .text-slate-200,
+:root[data-theme='claire'][data-clarte='light'] .text-slate-300,
+:root[data-theme='claire'][data-clarte='light'] .text-slate-400,
+:root[data-theme='claire'][data-clarte='light'] .text-slate-500 {
   color: var(--app-text) !important;
 }
+
+/*
+  ⛔ **Toutes les règles `claire` exigent un écran CLAIR** (`data-clarte='light'`)
+  — corrigé le 2026-09-29, trouvé par David : *« Alien et Clair, les couleurs ne
+  sont pas cohérentes »*. Elles visaient le NOM du thème de base ; sous un jeu
+  sombre (Alien, Dune, Blade Runner), elles voilaient de blanc la barre
+  latérale et les panneaux d'un écran noir. Seul, le thème clair est clair :
+  rien n'a changé pour lui.
+*/
 
 /*
   **Le texte secondaire en jeton (P1.3, 2026-09-29) garde l'`!important` d'hier.**
@@ -498,67 +508,67 @@ body {
   clair (P1.7). Les tablettes et les écrans d'accueil gardent leurs classes
   `slate` : la règle du dessus reste pour eux.
 */
-:root[data-theme='claire'] .text-app-muted {
+:root[data-theme='claire'][data-clarte='light'] .text-app-muted {
   color: var(--app-text-muted) !important;
 }
 
-:root[data-theme='claire'] .text-app-subtle {
+:root[data-theme='claire'][data-clarte='light'] .text-app-subtle {
   color: var(--app-text-subtle) !important;
 }
 
-:root[data-theme='claire'] .text-slate-600 {
+:root[data-theme='claire'][data-clarte='light'] .text-slate-600 {
   color: #78716c !important; /* Stone 500 equivalent */
 }
 
 /* Force dark text for any text on lightened backgrounds */
-:root[data-theme='claire'] [class*='bg-slate-9'],
-:root[data-theme='claire'] [class*='bg-zinc-9'],
-:root[data-theme='claire'] [class*='bg-black'],
-:root[data-theme='claire'] [class*='bg-indigo-9'],
-:root[data-theme='claire'] [class*='bg-emerald-9'],
-:root[data-theme='claire'] [class*='bg-red-9'],
-:root[data-theme='claire'] .bg-slate-900\/50,
-:root[data-theme='claire'] .bg-zinc-900\/50 {
+:root[data-theme='claire'][data-clarte='light'] [class*='bg-slate-9'],
+:root[data-theme='claire'][data-clarte='light'] [class*='bg-zinc-9'],
+:root[data-theme='claire'][data-clarte='light'] [class*='bg-black'],
+:root[data-theme='claire'][data-clarte='light'] [class*='bg-indigo-9'],
+:root[data-theme='claire'][data-clarte='light'] [class*='bg-emerald-9'],
+:root[data-theme='claire'][data-clarte='light'] [class*='bg-red-9'],
+:root[data-theme='claire'][data-clarte='light'] .bg-slate-900\/50,
+:root[data-theme='claire'][data-clarte='light'] .bg-zinc-900\/50 {
   background-color: var(--claire-surface) !important;
   color: var(--app-text) !important;
 }
 
 /* Overlays and backdrops should be very subtle */
-:root[data-theme='claire'] .backdrop-blur-xl,
-:root[data-theme='claire'] .backdrop-blur-2xl,
-:root[data-theme='claire'] .backdrop-blur-3xl {
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-xl,
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-2xl,
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-3xl {
   background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-:root[data-theme='claire'] .border-slate-800,
-:root[data-theme='claire'] .border-slate-700,
-:root[data-theme='claire'] .border-white\/5,
-:root[data-theme='claire'] .border-white\/10 {
+:root[data-theme='claire'][data-clarte='light'] .border-slate-800,
+:root[data-theme='claire'][data-clarte='light'] .border-slate-700,
+:root[data-theme='claire'][data-clarte='light'] .border-white\/5,
+:root[data-theme='claire'][data-clarte='light'] .border-white\/10 {
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Le thème clair éteint les halos ; le souffle du morceau en est un, et il
    suit la même règle. Le `!important` l'emporte sur l'animation — la tuile en
    cours reste alors reconnaissable à sa bordure, son fond et sa taille. */
-:root[data-theme='claire'] .animate-souffle-du-morceau,
-:root[data-theme='claire'] .shadow-glow-accent,
-:root[data-theme='claire'] .shadow-glow-gold,
-:root[data-theme='claire'] .shadow-glow-cyan {
+:root[data-theme='claire'][data-clarte='light'] .animate-souffle-du-morceau,
+:root[data-theme='claire'][data-clarte='light'] .shadow-glow-accent,
+:root[data-theme='claire'][data-clarte='light'] .shadow-glow-gold,
+:root[data-theme='claire'][data-clarte='light'] .shadow-glow-cyan {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
 }
 
-:root[data-theme='claire'] .premium-glass {
+:root[data-theme='claire'][data-clarte='light'] .premium-glass {
   background: rgba(255, 255, 255, 0.5) !important;
   border-color: rgba(0, 0, 0, 0.05) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
 }
 
-:root[data-theme='claire'] .premium-glass::before {
+:root[data-theme='claire'][data-clarte='light'] .premium-glass::before {
   background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent) !important;
 }
 
 /* Force Lucide icons to follow text color */
-:root[data-theme='claire'] .lucide {
+:root[data-theme='claire'][data-clarte='light'] .lucide {
   stroke: currentColor;
 }
 

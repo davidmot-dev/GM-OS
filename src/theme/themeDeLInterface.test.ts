@@ -572,3 +572,54 @@ describe('P1.7 · appliquerLeTheme avec les personnalités', () => {
         expect(r().hasAttribute('data-cadre')).toBe(false);
     });
 });
+
+/**
+ * **Un jeu sans cadre ne garde pas celui du thème de base** — trouvé le
+ * 2026-09-29 en capturant chaque campagne sous chaque thème : Alien s'affichait
+ * dans le cadre de bois de la personnalité médiévale.
+ */
+describe('le cadre sous un thème de jeu', () => {
+    const r = () => document.documentElement;
+    const alien = { variables: { '--app-bg': '#060909', '--app-text': '#d8e2de', '--app-accent': '#8fb7b1' }, jetons: { accent: '#8fb7b1' }, clarte: 'dark' as const };
+    beforeEach(() => { r().removeAttribute('style'); r().removeAttribute('data-cadre'); });
+
+    it('le cadre suit les couleurs du jeu, pas le bois du Médiéval', () => {
+        appliquerLeTheme('medieval', undefined, alien, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-frame-bg')).toBe('#060909');
+        expect(r().hasAttribute('data-cadre')).toBe(false);
+    });
+
+    it('un jeu qui déclare son cadre le garde', () => {
+        const avecCadre = { ...alien, variables: { ...alien.variables, '--app-frame-bg': '#101818', '--app-frame-text': '#e0e8e4' } };
+        appliquerLeTheme('medieval', undefined, avecCadre, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-frame-bg')).toBe('#101818');
+        expect(r().hasAttribute('data-cadre')).toBe(true);
+    });
+
+    it('un jeu sombre sous le thème clair n’hérite ni de son verre blanc ni de sa toile', () => {
+        appliquerLeTheme('claire', undefined, alien);
+        expect(r().style.getPropertyValue('--glass-bg')).toBe('color-mix(in srgb, #060909 60%, transparent)');
+        expect(r().style.getPropertyValue('--texture-fond')).toBe('');
+    });
+
+    it('le verre des colonnes prend la surface du jeu, et la rend en quittant la campagne', () => {
+        const dune = { variables: { '--app-bg': '#302d29', '--app-surface': '#241d1b' }, jetons: {}, clarte: 'dark' as const };
+        appliquerLeTheme('cyberpunk', undefined, dune);
+        expect(r().style.getPropertyValue('--verre-premium')).toBe('color-mix(in srgb, #241d1b 45%, transparent)');
+        appliquerLeTheme('cyberpunk');
+        expect(r().style.getPropertyValue('--verre-premium')).toBe('');
+    });
+
+    it('un jeu de même polarité garde le verre et la matière du thème de base', () => {
+        appliquerLeTheme('cyberpunk', undefined, alien);
+        expect(r().style.getPropertyValue('--glass-bg')).toBe(PALETTES.cyberpunk.jetons['glass-bg']);
+        expect(r().style.getPropertyValue('--texture-fond')).toBe(PALETTES.cyberpunk.jetons['texture-bg']);
+    });
+
+    it('la polarité affichée est celle du jeu : les règles du thème clair ne visent qu’un écran clair', () => {
+        appliquerLeTheme('claire', undefined, alien);
+        expect(r().getAttribute('data-clarte')).toBe('dark');
+        appliquerLeTheme('claire');
+        expect(r().getAttribute('data-clarte')).toBe('light');
+    });
+});

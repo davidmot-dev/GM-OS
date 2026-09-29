@@ -5798,6 +5798,24 @@ v1.2.
   héritent du rattrapage du thème clair ; le cadre est plein, avec sa surface. Copie complète des
   données avant : `Security_Backup_GMOS/_ABRI_2026-09-29_avant-P1.7/`. **Pas fait** : SVG et coins
   (phase 3), atelier du thème pour les jetons LU ⚙.
+- ✅ **Corrigé le 2026-09-29 — Alien sous le thème Clair, « les couleurs ne sont pas cohérentes »**
+  (trouvé par David). Trois causes, vues sur `e2e/campagnesEtThemes.spec.ts` — **chaque campagne
+  réelle × chaque thème de base × l'interrupteur**, semé par la dernière sauvegarde, dossiers
+  `theme/` des jeux copiés dans le corpus jetable (`GMOS_CAMPAGNES=1`, planches contact) :
+  1. **les 32 règles de rattrapage du thème clair visaient le NOM du thème**, pas la polarité de
+     l'écran : sous un jeu sombre, elles voilaient de blanc la barre latérale et les panneaux. Elles
+     exigent maintenant `data-clarte='light'` — *défaut antérieur à la refonte* ;
+  2. **un jeu d'une autre polarité héritait du verre et de la matière du thème de base** (le verre
+     blanc à 60 % et la toile brune du Clair sous Alien) : écartés, le verre se dérive du jeu ;
+  3. sous les personnalités, **un jeu sans cadre gardait celui de la base** (Alien dans le bois du
+     Médiéval) : le cadre suit désormais le jeu.
+  4. *« Pour Dune, la colonne sombre ne va pas avec le reste »* (David) : `.premium-glass` — la
+     colonne de la campagne, treize emplois — posait une ardoise à 45 % écrite en dur, invisible
+     sur le noir de Blade Runner et d'Alien, bleue sur le brun de Dune. Sous un thème de jeu, elle
+     prend la surface du jeu (`--verre-premium`) ; sans jeu, l'ardoise d'aujourd'hui.
+  Le Clair seul est inchangé (captures comparées au pixel). ⚠️ **Reste, non traité** : un jeu
+  **clair** (Star Trek) sous un thème de base **sombre** n'a aucun rattrapage — aucune campagne
+  actuelle n'y joue.
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.
