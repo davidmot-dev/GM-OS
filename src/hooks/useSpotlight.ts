@@ -16,8 +16,10 @@ import {
   Settings,
   Hammer,
   LayoutGrid,
+  Shapes,
   type LucideIcon
 } from 'lucide-react';
+import { gmCustom } from '../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
 import { CATALOGUE_DES_MODULES, MODULES_DE_LA_PALETTE } from '../data/catalogueDesModules';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
@@ -288,6 +290,25 @@ export const useSpotlight = () => {
         });
       }
     });
+
+    /*
+      **La vitrine du socle** (refonte, P3.8) — décision de David du 2026-09-30 :
+      un écran dans GM-OS, ouvert d'ici, pour juger les composants du socle sous
+      le thème et le jeu actifs.
+    */
+    if (searchStr.length >= 3 && ('vitrine du socle'.includes(searchStr) || /vitrine|socle/.test(searchStr))) {
+      matches.push({
+        id: 'action-vitrine-du-socle',
+        type: 'action',
+        title: 'Vitrine du socle',
+        subtitle: 'Refonte · les composants sous le thème actif',
+        icon: Shapes,
+        action: () => {
+          gmCustom('vitrine-du-socle');
+          setIsOpen(false);
+        }
+      });
+    }
 
     // 7. Core Actions
     if ('settings'.includes(searchStr)) {

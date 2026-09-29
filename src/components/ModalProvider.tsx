@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
     History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare,
-    Keyboard, Swords, ScrollText, Music2 } from 'lucide-react';
+    Keyboard, Swords, ScrollText, Music2, Shapes } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
@@ -32,6 +32,7 @@ import NarrativeModal from '../modules/map/components/NarrativeModal';
 // Secondary imports consolidated above
 import LootOS from '../modules/session/components/LootOS';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
+import VitrineDuSocle from './socle/VitrineDuSocle';
 
 const ModalProvider: React.FC = () => {
     const { 
@@ -212,7 +213,7 @@ const ModalProvider: React.FC = () => {
                     <div className={`bg-slate-900 border border-slate-800/50 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
                         customVariant === 'campaign-add' || customVariant === 'campaign-edit'
                             ? 'w-full h-full rounded-none'
-                            : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os' || customVariant === 'aide-du-meneur'
+                            : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os' || customVariant === 'aide-du-meneur' || customVariant === 'vitrine-du-socle'
                                 ? 'max-w-6xl w-full h-[90vh] rounded-[2rem]'
                                 : 'max-w-2xl w-full max-h-[90vh] rounded-[2rem]'
                     }`}>
@@ -246,6 +247,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'aide-du-meneur' && <Keyboard size={18} />}
                                         {customVariant === 'atelier-adversaires' && <Swords size={18} />}
                                         {customVariant === 'fiche-combattant' && <ScrollText size={18} />}
+                                        {customVariant === 'vitrine-du-socle' && <Shapes size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
@@ -276,6 +278,8 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'fiche-combattant' && 'Fiche du combattant'}
                                         {/* Littéral comme ses voisins : cet écran n'a qu'un lecteur. */}
                                         {customVariant === 'music-pad-edit' && 'Pastille'}
+                                        {/* Littéral : un écran de refonte, pour un seul lecteur. */}
+                                        {customVariant === 'vitrine-du-socle' && 'Vitrine du socle'}
                                     </h3>
                                 </div>
                                 <button 
@@ -296,6 +300,7 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'session-select' && <SessionSelectModal />}
                             {customVariant === 'npc-detail' && <NpcDetail embeddedId={defaultValue as string} />}
                             {customVariant === 'favorite-dossier' && <FavoriteFullDossier />}
+                            {customVariant === 'vitrine-du-socle' && <VitrineDuSocle />}
                             {customVariant === 'timeline-event-add' && <TimelineEventForm onClose={closeModal} />}
                             {customVariant === 'timeline-event-edit' && <TimelineEventForm event={defaultValue as TimelineEvent} onClose={closeModal} />}
                             {customVariant === 'wiki-entry-add' && <WikiEntryForm onClose={closeModal} />}
