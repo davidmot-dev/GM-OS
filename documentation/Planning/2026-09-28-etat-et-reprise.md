@@ -2,8 +2,13 @@
 
 > **Base inchangée depuis le 27/09.** Aucun fichier de `src/` ni d'`electron/` n'a bougé : le
 > travail est dans `e2e/vitrine.spec.ts` et `documentation/Planning/`. `tsc -b` et les essais
-> Vitest ne sont donc pas concernés ; la vitrine du deuxième tour passe (`1 passed`, 65 captures).
-> Branche `feature/tablet-hub-pwa`.
+> Vitest n'ont pas été relancés — rien de ce qu'ils couvrent n'a changé ; la vitrine du deuxième
+> tour passe (`1 passed`, 65 captures).
+>
+> Branche `feature/tablet-hub-pwa`, **poussée jusqu'à `a5b66855`**, pré-push local réussi ;
+> **copie de travail propre**. *(Le guide `01-Prise-en-main.md` paraissait modifié : son contenu
+> était identique au dépôt, seules ses fins de ligne différaient du réglage `core.autocrlf` —
+> rien à commiter.)* La mise à jour de ce document et du § 76 est à commiter.
 >
 > ⛔ **La liste de ce qui reste n'est PAS ici.** Elle vit dans la section ⭐ de
 > [`2026-08-23-chantiers-gares.md`](./2026-08-23-chantiers-gares.md) — pour la refonte, § 76.
@@ -41,10 +46,9 @@ hors refonte.
 
 1. **P1.2** du [plan de la phase 1](./2026-09-27-refonte-phase-1.md), **à pixel constant**. Avant de
    coder : *« GM-OS tourne-t-il ? »*. Rien du deuxième tour ne change l'écran avant la **phase 4**.
-2. **Idées de Stitch à trancher avec David**, notées « à décider » dans `stitch/README.md` (ne rien
-   reprendre d'office) : enchaîner les moments du storyboard, « Changer de scène » au cockpit,
-   partager la monnaie du butin, l'aperçu dans la palette, pions et règle sur le tableau blanc,
-   saisons du calendrier, la source de l'Oracle côte à côte (⛔ NotebookLM refuse d'être intégré).
+2. ✅ **Idées de Stitch tranchées par David le 2026-09-29** : les douze sont dans le tableau
+   « Les idées tranchées », à la fin de `stitch/README.md`. Onze sont retenues ; pour l'Oracle, on
+   garde les deux modes. Rien ne change l'écran avant la phase 4.
 3. **Deux défauts garés** dans le registre, trouvés par la vitrine : les vignettes d'Image-OS vides
    après une restauration ; le Markdown brut et l'emoji cassé (`âš”ï¸`) des chroniques.
 4. **Repris du 27/09, rien n'a bougé** : les deux références de RPG Theme Builder remises dans

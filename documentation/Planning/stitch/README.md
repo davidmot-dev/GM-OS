@@ -479,7 +479,8 @@ butin, Proposer des objets, Log session** ; à droite, l'historique récent (tot
 brut, heure) avec « Effacer l'historique », et l'accès à l'atelier.
 
 **À régler à l'intégration** : le raccourci « [Espace] » et « Réinjecter » dans l'historique
-n'existent pas (l'historique n'est pas cliquable) — ajouts de confort, à décider ; « p. 112 »,
+n'existent pas (l'historique n'est pas cliquable) — ✅ **les deux retenus par David le
+2026-09-29** (voir « Les idées tranchées » en fin) ; « p. 112 »,
 « Malus régie », « Prêt au déclenchement », « Subsystem 08-T », « −6 dB » sont décoratifs.
 
 ### Loot-OS — retenu le 2026-09-27
@@ -498,7 +499,7 @@ l'objet, sa rareté, « Donné à », « il y a 5 min » ; à droite, toujours v
 trésor et le conseil au meneur.
 
 **À régler à l'intégration** : « Partager équitablement » (la monnaie entre les personnages) et
-« Archiver les reliquats » n'existent pas — deux idées à décider, pas à reprendre d'office ;
+« Archiver les reliquats » n'existent pas — ✅ **les deux retenus par David le 2026-09-29** ;
 « Transféré », « Trié par heure de remise », « Statut système : en ligne » sont décoratifs.
 
 ### La fiche du combattant — retenue le 2026-09-27
@@ -557,8 +558,8 @@ poignée ; « Jouer » par ligne, **« Arrêter » sur la ligne en cours**, qui 
 **le détail du moment en cours** (ce que chaque source joue).
 
 **À régler à l'intégration** : le lieu sous chaque nom n'existe pas (un moment n'a qu'un nom) ;
-« Séquence précédente / suivante » n'existe pas — **une idée à décider** (enchaîner les moments
-sans viser la ligne) ; inventés : le « retour vidéo » des joueurs, « Hardware & DMX master
+« Séquence précédente / suivante » n'existe pas — ✅ **retenu par David le 2026-09-29**
+(enchaîner les moments sans viser la ligne ; une touche ou un bouton de l'Ulanzi à envisager) ; inventés : le « retour vidéo » des joueurs, « Hardware & DMX master
 routing », « Vérifier flux DMX », « Exporter (.json) », « Réinitialiser ordre », « Matrice
 10 canaux tempo-synchrones », « Pupitre de scène DMX ». Il manque la colonne du **titre affiché
 sur l'écran des joueurs**, et le diaporama (dans la colonne image).
@@ -597,9 +598,11 @@ du destin, le jet rapide et son historique ; en tête, « Mettre en pause » (ex
 séance, axe G), Oracle, Règles, Snapshot.
 
 **À régler à l'intégration** : « Déclencheur d'urgence » et « Changer de scène » n'existent pas
-— le second est **une idée à décider** (la trame change la scène aujourd'hui) ; les indices :
+— le second : ✅ **décidé par David le 2026-09-29, un raccourci vers la trame** ouverte sur la
+scène en cours, pas un second écrivain de la scène ; les indices :
 GM-OS ne montre dans le cockpit que **les indices déjà révélés**, en carrousel
-(`SessionClueDeck`), pas des indices « à révéler » avec un bouton — ce bouton est une idée ;
+(`SessionClueDeck`), pas des indices « à révéler » avec un bouton — ✅ **retenu par David le
+2026-09-29** : les indices non révélés de la scène, chacun avec « Révéler » ;
 la carte « Gérer le groupe » et « Ajouter un PNJ » apparaissent deux fois (en tête et dans leur
 bloc) ; il manque la colonne des vues du tableau de bord (Cockpit, Rencontres, Storyboard,
 Galerie, Loot-OS…) et l'afficheur Ulanzi ; décoratifs : « Menace ambiante : haute tension »,
@@ -643,9 +646,11 @@ encadré ; la saisie en pied.
 discussion ET « l'extrait de la source » en deux colonnes ; dans GM-OS ce sont **deux modes**
 (Discussion / Voir la source), et pour une raison technique : **Google interdit d'intégrer
 NotebookLM dans une page** (`X-Frame-Options`, noté dans `OraclePanel.tsx`) — la colonne de
-droite ne pourrait pas afficher le carnet. Trois voies, à trancher à l'intégration : garder les
+droite ne pourrait pas afficher le carnet. Trois voies : garder les
 deux modes ; ou remplir la colonne avec **les passages cités par la réponse** (si NotebookLM les
-renvoie) ; ou la retirer et donner toute la largeur à la discussion.
+renvoie) ; ou la retirer et donner toute la largeur à la discussion. ✅ **David, le 2026-09-29 :
+on garde les deux modes.** *(Les passages cités ne sont pas vérifiés : `useNotebookLM.ts` ne
+garde de la réponse du serveur MCP que son texte.)*
 
 **À régler aussi** : « Annoter » n'existe pas ; « Rafraîchir la source » existe (« Actualiser la
 source ») ; le contenu de la réponse et de la source est d'exemple (les modificateurs de
@@ -694,8 +699,9 @@ en bouton de carte ; « Supprimer » discret ; les compteurs par statut en tête
 séance », « Retour cockpit ».
 
 **À régler à l'intégration** : les libellés du bouton varient (« Préparer », « Reprendre »,
-« Consulter ») — un seul geste existe, ouvrir la préparation : garder le libellé selon le statut
-est une idée à décider ; « Session prévue à 20:30 » (pas d'heure) ; inventés : « Repères
+« Consulter ») — un seul geste existe, ouvrir la préparation : ✅ **le libellé suit le statut,
+décidé par David le 2026-09-29** (Planifiée → Préparer, En cours → Reprendre, Terminée →
+Consulter) ; « Session prévue à 20:30 » (pas d'heure) ; inventés : « Repères
 d'actes » avec leur pourcentage (une séance porte bien l'acte prévu, `acteId`, mais sans
 avancement), « Navigation par date » (doublon du ruban), « Exporter résumé Markdown »,
 « Archiver le ruban », la règle « suppression verrouillée pendant la partie » ; décoratifs :
@@ -736,8 +742,8 @@ avec son geste à droite (« Ouvrir », « Exécuter ») ; **en pied, les touche
 Entrée ouvrir, Échap fermer) et le nombre de résultats.
 
 **À régler à l'intégration** : le panneau « Aperçu fiche » à droite (santé, sang-froid, « Ouvrir
-fiche ») et la touche « Aperçu » n'existent pas — **une idée à décider**, utile pour les
-entités, vide pour une musique ou une action ; le groupe **Cartes** manque (pas de carte pour
+fiche ») et la touche « Aperçu » n'existent pas — ✅ **retenu par David le 2026-09-29, pour
+les entités seulement** (vide pour une musique ou une action, il n'apparaît pas) ; le groupe **Cartes** manque (pas de carte pour
 « roy ») ; décoratifs : « Recherche // Spotlight », le matricule de l'aperçu, la durée d'une
 musique, « Livre de base ».
 
@@ -898,7 +904,8 @@ validation en clair (« Couverture annuelle valide : 365 jours ») ; « Enregist
 calendrier ».
 
 **À régler à l'intégration** : les saisons (« Hiver », « Printemps ») sur chaque mois n'existent
-pas dans le format — une idée à décider ; la règle bissextile est un nombre d'années, pas un
+pas dans le format — ✅ **retenu par David le 2026-09-29, en champ facultatif** (les
+calendriers existants restent valides ; l'affichage dans Clock-OS reste à décider) ; la règle bissextile est un nombre d'années, pas un
 texte (« Jour du Bouclier ») ; décoratifs : « Forge chronologique G13 », « Matrice 365J
 active », « Référence calendrier actif ».
 
@@ -914,7 +921,7 @@ grammaire ; ce qu'on garde tient donc en une ligne chacun.
 | `preparation-atlas` | Bibliothèque des cartes (sorte, « Visité »), la carte au centre, **sa fiche à droite** (description, PNJ, indices, lieux voisins) | Le plan tactique annoté au centre est un exemple ; « Échelle 1 case = 1,5 m », « Canal feed » inventés |
 | `preparation-forge` | **Les trois temps numérotés** (destination, dériver du corpus avec sa durée, intentions) ; le résultat en groupes de champs à relire, « Regénérer un groupe », « Valider l'ensemble » | « Régénérer un groupe » à vérifier contre la Forge ; « Station Cortex-L9 » décoratif |
 | `preparation-favoris` | Filtres avec leur compte, **dossiers**, cartes avec image, sorte, étoile, « dernière vue » | « Allocation mémoire 68 % », « 12 favoris épinglés » inventés |
-| `preparation-tableau-blanc` | La surface au plus large, **une barre d'outils compacte** (crayon, gomme, rectangle, cercle, pion), épaisseur et couleurs en pied ; Annuler, Rétablir, Tout effacer, Projeter | « Pion », « Cible » et « Règle / mesure rapide » n'existent pas — idées à décider ; « Flux tablette maître », « Retour joueurs » inventés |
+| `preparation-tableau-blanc` | La surface au plus large, **une barre d'outils compacte** (crayon, gomme, rectangle, cercle, pion), épaisseur et couleurs en pied ; Annuler, Rétablir, Tout effacer, Projeter | « Pion », « Cible » et « Règle / mesure rapide » n'existent pas — ✅ **les trois retenus par David le 2026-09-29** (l'unité de la règle vient du pilote) ; « Flux tablette maître », « Retour joueurs » inventés |
 
 ## L'outillage — retenu le 2026-09-28 (deuxième tour)
 
@@ -955,3 +962,30 @@ refonte).
 
 **Ce qui vient ensuite** : rien de ce tour ne change l'écran avant la **phase 4**
 (migration). La suite du code reste **P1.2** du plan de la phase 1.
+
+---
+
+## ✅ Les idées tranchées — David, le 2026-09-29
+
+Les idées de Stitch notées « à décider » dans les lots ci-dessus, passées en revue une à une.
+**Elles ne changent pas l'écran avant la phase 4** : ce tableau dit ce que la migration
+reprendra, en plus de ce qu'on garde.
+
+| Écran | Idée de Stitch | Décision |
+| --- | --- | --- |
+| L'Oracle | La source côte à côte | **Garder les deux modes** (Discussion / Voir la source) — Google interdit d'intégrer NotebookLM |
+| Le cockpit | « Changer de scène » | **Un raccourci vers la trame**, ouverte sur la scène en cours — la scène garde un seul écrivain |
+| Le cockpit | Les indices « à révéler » | **Oui** : les indices non révélés de la scène, chacun avec « Révéler », à côté du carrousel des révélés |
+| Le storyboard | Moment précédent / suivant | **Oui** — enchaîner sans viser la ligne ; une touche ou un bouton de l'Ulanzi à envisager |
+| La palette (Ctrl+K) | L'aperçu à droite | **Oui, pour les entités seulement** — absent pour une musique ou une action |
+| Loot-OS | « Partager équitablement » | **Oui** — la monnaie du butin répartie entre les personnages |
+| Loot-OS | « Archiver les reliquats » | **Oui** — ce que personne n'a pris est mis de côté |
+| Les tables aléatoires | Espace pour lancer | **Oui** |
+| Les tables aléatoires | « Réinjecter » depuis l'historique | **Oui** — l'historique devient cliquable |
+| La liste des séances | Le libellé selon le statut | **Oui** — Préparer / Reprendre / Consulter, un seul geste derrière |
+| L'atelier des calendriers | Une saison par mois | **Oui, champ facultatif** — les calendriers existants restent valides ; l'affichage dans Clock-OS reste à décider |
+| Le tableau blanc | Pion, Cible, Règle / mesure | **Les trois** — l'unité de la règle vient du pilote, comme pour le Cortex |
+
+**Restent « à vérifier »** (pas des idées, des doutes sur ce qui existe) : « Dupliquer pour
+forger » et « Exporter Obsidian » (modèles de fiche), « Régénérer un groupe » (Forge), les
+rétroliens et l'écriture de notes (Nexus).

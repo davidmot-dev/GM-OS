@@ -5448,9 +5448,10 @@ explicitement, jamais le défaut.
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
-⭐ **Où on en est — 2026-09-27** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
-fait**. **Reprendre à P1.2** du [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la
-fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
+⭐ **Où on en est — 2026-09-28** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
+fait**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
+soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.2** du
+[plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
 - `documentation/Architecture/Refonte-Interface.md` — l'état mesuré, les couches visées, les invariants.
@@ -5739,7 +5740,9 @@ v1.2.
   Nexus), prompts 10 à 17 dans `2026-09-27-prompts-stitch-tour-2.md`. La vitrine sait les capturer
   (`GMOS_VITRINE=2`, 65 captures vérifiées le 2026-09-27). ✅ **Terminé le 2026-09-28** : huit lots retenus, une soixantaine
   d'écrans (`stitch/README.md`, bilan en fin). **Ne change rien à l'écran avant la
-  phase 4** : P1.2 reste la suite du code.
+  phase 4** : P1.2 reste la suite du code. ✅ **Les idées « à décider » sont tranchées par David
+  le 2026-09-29** (tableau « Les idées tranchées », en fin de `stitch/README.md`) : elles seront
+  reprises à la migration.
 - 🐞 **Garé — Chroniques : le texte des événements s'affiche en Markdown brut** (trouvé par la
   vitrine le 2026-09-28, capture G9) : « ### ⚔️ Rapport de Combat … **Fin du Round** » apparaît
   tel quel, et l'emoji ⚔️ sort en caractères cassés (`âš”ï¸`) — un texte UTF-8 relu comme du
