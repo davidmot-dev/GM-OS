@@ -69,7 +69,7 @@ const WebDashboard: React.FC = () => {
                     <div className="flex bg-app-bg/50 p-1 rounded-xl border border-app-border focus-within:border-accent/30 transition-all">
                         <button
                             onClick={importLinks}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-ui-10 font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-ui-10 font-bold text-app-muted hover:text-accent uppercase tracking-widest group"
                             title="Importer une liste JSON"
                         >
                             <FileUp size={14} className="group-hover:scale-110 transition-transform" />
@@ -77,7 +77,7 @@ const WebDashboard: React.FC = () => {
                         </button>
                         <button
                             onClick={exportLinks}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-ui-10 font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-ui-10 font-bold text-app-muted hover:text-accent uppercase tracking-widest group"
                             title="Exporter la liste en JSON"
                         >
                             <FileDown size={14} className="group-hover:scale-110 transition-transform" />
@@ -124,7 +124,7 @@ const WebDashboard: React.FC = () => {
                                 <Info size={32} className="text-slate-600" />
                             </div>
                             <h2 className="text-xl font-bold text-slate-300">Aucun raccourci web</h2>
-                            <p className="text-slate-500 max-w-sm text-sm">
+                            <p className="text-app-subtle max-w-sm text-sm">
                                 Votre bibliothèque est vide. Ajoutez des liens SRD, des générateurs ou des playlists pour y accéder rapidement.
                             </p>
                             <button
@@ -152,7 +152,7 @@ const WebDashboard: React.FC = () => {
                                 <div className="w-12 h-12 rounded-full flex items-center justify-center bg-app-surface border border-app-border group-hover:bg-app-surface/80 group-hover:border-accent/30 transition-colors">
                                     <Plus size={24} className="text-slate-600 group-hover:text-slate-300" />
                                 </div>
-                                <span className="mt-4 text-ui-10 font-bold text-slate-500 group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">Add Link</span>
+                                <span className="mt-4 text-ui-10 font-bold text-app-subtle group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">Add Link</span>
                             </button>
                         </div>
                     )}
@@ -160,7 +160,7 @@ const WebDashboard: React.FC = () => {
             </main>
 
             {/* Footer status bar */}
-            <footer className="h-10 border-t border-app-border bg-app-surface/80 backdrop-blur-md px-6 flex items-center justify-between text-ui-10 font-mono text-slate-500 uppercase tracking-widest">
+            <footer className="h-10 border-t border-app-border bg-app-surface/80 backdrop-blur-md px-6 flex items-center justify-between text-ui-10 font-mono text-app-subtle uppercase tracking-widest">
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 pr-4 border-r border-app-border">
                         <div className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-glow-accent"></div>
@@ -172,7 +172,7 @@ const WebDashboard: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="bg-app-surface px-2 py-1 rounded text-slate-400 ring-1 ring-app-border">SRV: 127.0.0.1:4444</span>
+                    <span className="bg-app-surface px-2 py-1 rounded text-app-muted ring-1 ring-app-border">SRV: 127.0.0.1:4444</span>
                 </div>
             </footer>
 

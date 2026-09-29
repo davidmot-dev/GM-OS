@@ -88,7 +88,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
         blue: 'border-blue-500/30 hover:border-blue-500 text-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] bg-blue-500/10 hover:bg-blue-500/20',
         amber: 'border-amber-500/30 hover:border-amber-500 text-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] bg-amber-500/10 hover:bg-amber-500/20',
         rose: 'border-rose-500/30 hover:border-rose-500 text-rose-500 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] bg-rose-500/10 hover:bg-rose-500/20',
-        default: 'border-app-border/30 hover:border-accent/50 text-slate-400 hover:shadow-lg bg-app-surface/10 hover:bg-app-surface/20'
+        default: 'border-app-border/30 hover:border-accent/50 text-app-muted hover:shadow-lg bg-app-surface/10 hover:bg-app-surface/20'
     };
 
     const currentClasses = colorClasses[link.color] || colorClasses.default;
@@ -182,13 +182,13 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="flex items-center justify-between px-1 pb-1 shrink-0">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">
                             Projeter sur
                         </span>
                         <button
                             onClick={() => setChoixOuvert(false)}
                             aria-label="Fermer le choix de l'écran"
-                            className="p-1 rounded text-slate-500 hover:text-app-text"
+                            className="p-1 rounded text-app-subtle hover:text-app-text"
                         >
                             <X size={14} />
                         </button>

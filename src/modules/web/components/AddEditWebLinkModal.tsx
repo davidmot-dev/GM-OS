@@ -52,14 +52,14 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                     <h3 className="text-lg font-bold text-white uppercase tracking-tight">
                         {initialData ? 'Edit' : 'Add'} Web Link
                     </h3>
-                    <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-app-muted hover:text-white transition-colors">
                         <X size={20} />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div className="space-y-1.5">
-                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest px-1">Label</label>
+                        <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest px-1">Label</label>
                         <input
                             autoFocus
                             type="text"
@@ -72,7 +72,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest px-1">URL</label>
+                        <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest px-1">URL</label>
                         <input
                             type="url"
                             value={url}
@@ -84,7 +84,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest px-1 text-center block">Theme Color</label>
+                        <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest px-1 text-center block">Theme Color</label>
                         <div className="flex justify-center gap-3 py-2">
                             {COLORS.map((c) => (
                                 <button
@@ -104,7 +104,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-2.5 rounded-xl border border-app-border text-slate-400 font-bold text-xs uppercase hover:bg-app-surface transition-all"
+                            className="flex-1 px-4 py-2.5 rounded-xl border border-app-border text-app-muted font-bold text-xs uppercase hover:bg-app-surface transition-all"
                         >
                             Cancel
                         </button>
