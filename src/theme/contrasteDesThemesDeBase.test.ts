@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PALETTES, type ThemeID } from './themeDeLInterface';
+import { PALETTES, PERSONNALITES, type ThemeID } from './themeDeLInterface';
 import { PAIRES_DU_CONTRAT } from './contratDuTheme';
 import { contraste } from './editionDuTheme';
 
@@ -119,3 +119,32 @@ const PASTILLES_ILLISIBLES: Partial<Record<ThemeID, string[]>> = {
 const PAIRES_ILLISIBLES: Partial<Record<ThemeID, string[]>> = {
     claire: ['success sur bg', 'warning sur bg', 'info sur bg'],
 };
+
+/**
+ * **P1.7 · Les personnalités devant les mêmes seuils** — et sans cliquet :
+ * elles sont neuves, aucun défaut connu ne leur est permis. Le cadre se
+ * mesure avec ses propres couleurs quand elles sont déclarées (Médiéval,
+ * Moderne), par ses replis sinon.
+ */
+describe('les quatre personnalités, devant les seuils du contrat', () => {
+    for (const theme of THEMES) {
+        const j = PERSONNALITES[theme].jetons;
+        const jetons: Record<string, string> = { 'frame-bg': j.bg, 'frame-text': j.text, 'frame-accent': j.accent, ...j };
+
+        it.each(PAIRES_DU_CONTRAT.map(p => [`${p.avant} sur ${p.fond}`, p] as const))(`${theme} : %s`, (_nom, p) => {
+            const ratio = contraste(jetons[p.avant], jetons[p.fond]);
+            expect(ratio!, `${theme} : ${jetons[p.avant]} sur ${jetons[p.fond]} — minimum ${p.minimum}`).toBeGreaterThanOrEqual(p.minimum);
+        });
+
+        it(`${theme} : la polarité suit le fond`, () => {
+            const sombre = contraste('#ffffff', j.bg)! > contraste('#000000', j.bg)!;
+            expect(PERSONNALITES[theme].clarte).toBe(sombre ? 'dark' : 'light');
+        });
+
+        it(`${theme} : chaque pastille d'accent proposée se lit sur le fond`, () => {
+            const faibles = PERSONNALITES[theme].palettes.filter(c => contraste(c, j.bg)! < 3);
+            expect(faibles).toEqual([]);
+            expect(PERSONNALITES[theme].palettes[0]).toBe(j.accent);
+        });
+    }
+});

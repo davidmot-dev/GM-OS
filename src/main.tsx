@@ -45,7 +45,7 @@ surveillerLaFrappe((perdue) => {
   thème par défaut avant de basculer sur le bon.
 */
 const etat = useSessionStore.getState();
-appliquerLeTheme(etat.theme, etat.themeColor);
+appliquerLeTheme(etat.theme, etat.themeColor, undefined, { personnalites: etat.personnalites });
 
 /*
   **Une seule fois ici, et c'est délibéré.** La suite appartient à

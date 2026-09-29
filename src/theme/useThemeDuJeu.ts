@@ -3,6 +3,7 @@ import { jeuDeLaCampagneActive } from './jeuDeLaCampagne';
 import { useSessionStore } from '../store/useSessionStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { appliquerLeTheme, type ThemeDuJeuApplique } from './themeDeLInterface';
+import type { ThemeDuJeuCharge } from './themeDuJeu';
 import {
     chargerLeThemeDuJeu, pontVersLInterface, poserLesPolices, verifierLesPolices,
 } from './themeDuJeu';
@@ -28,6 +29,7 @@ import {
 export function useThemeDuJeu(): void {
     const theme = useSessionStore(s => s.theme);
     const themeColor = useSessionStore(s => s.themeColor);
+    const personnalites = useSessionStore(s => s.personnalites);
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
 
     /*
@@ -36,7 +38,18 @@ export function useThemeDuJeu(): void {
       repeindrait l'interface le temps d'un aller-retour. On ne relit que quand
       la campagne change.
     */
-    const duJeu = useRef<ThemeDuJeuApplique | null>(null);
+    const releveDuJeu = useRef<ThemeDuJeuCharge | null>(null);
+    /*
+      **Le pont se recalcule, le disque ne se relit pas** (P1.7) : allumer les
+      personnalités ouvre au jeu des jetons qu'il déclarait déjà. Le relevé
+      suffit ; seul le choix de ce qu'on en retient change.
+    */
+    const duJeu = (allumees: boolean): ThemeDuJeuApplique | undefined => {
+        const releve = releveDuJeu.current;
+        return releve
+            ? { variables: pontVersLInterface(releve.jetons, { personnalites: allumees }), jetons: releve.jetons, clarte: releve.clarte }
+            : undefined;
+    };
     const campagneLue = useRef<string | null>(null);
 
     // 1. La campagne change : on va voir si son jeu a une peau.
@@ -54,23 +67,17 @@ export function useThemeDuJeu(): void {
             if (annule) return;
 
             if (!jeu) {
-                duJeu.current = null;
+                releveDuJeu.current = null;
                 campagneLue.current = null;
                 poserLesPolices([]);
-                appliquerLeTheme(theme, themeColor, undefined);
+                appliquerLeTheme(theme, themeColor, undefined, { personnalites });
                 return;
             }
 
             const releve = await chargerLeThemeDuJeu(jeu.racine);
             if (annule) return;
 
-            duJeu.current = releve
-                ? {
-                    variables: pontVersLInterface(releve.jetons),
-                    jetons: releve.jetons,
-                    clarte: releve.clarte,
-                }
-                : null;
+            releveDuJeu.current = releve;
             campagneLue.current = activeCampaignId ?? null;
 
             /*
@@ -93,7 +100,7 @@ export function useThemeDuJeu(): void {
               changée.
             */
             poserLesPolices(releve?.polices ?? []);
-            appliquerLeTheme(theme, themeColor, duJeu.current ?? undefined);
+            appliquerLeTheme(theme, themeColor, duJeu(personnalites), { personnalites });
 
             /*
               Et on dit si elles ne sont pas arrivées. Une police absente ne
@@ -101,7 +108,7 @@ export function useThemeDuJeu(): void {
               paraît appliqué alors que sa typographie ne l'est pas. Hors ligne,
               c'est le cas garanti.
             */
-            if (releve) void verifierLesPolices(releve.jetons);
+            if (releve) void verifierLesPolices(releve.jetons, { personnalites });
         };
 
         void relire();
@@ -111,8 +118,10 @@ export function useThemeDuJeu(): void {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeCampaignId]);
 
-    // 2. Le thème d'atelier ou l'accent changent : on repeint, sans relire.
+    // 2. Le thème d'atelier, l'accent ou les personnalités changent : on repeint, sans relire.
     useEffect(() => {
-        appliquerLeTheme(theme, themeColor, duJeu.current ?? undefined);
-    }, [theme, themeColor]);
+        appliquerLeTheme(theme, themeColor, duJeu(personnalites), { personnalites });
+        if (personnalites && releveDuJeu.current) void verifierLesPolices(releveDuJeu.current.jetons, { personnalites });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [theme, themeColor, personnalites]);
 }

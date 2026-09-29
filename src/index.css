@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Special+Elite&family=MedievalSharp&family=Pinyon+Script&family=UnifrakturMaguntia&family=Cinzel:wght@400;700&family=Playfair+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Special+Elite&family=MedievalSharp&family=Pinyon+Script&family=UnifrakturMaguntia&family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital@0;1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @config "../tailwind.config.js";
@@ -561,6 +561,95 @@ body {
 :root[data-theme='claire'] .lucide {
   stroke: currentColor;
 }
+
+/*
+  **Les personnalités claires héritent du rattrapage du thème clair** — P1.7,
+  2026-09-29.
+
+  Sous l'interrupteur, le Médiéval (parchemin) et le Moderne (cartes blanches)
+  deviennent des thèmes clairs. Le reste de l'interface écrit encore ses
+  couleurs en dur pour un fond sombre (`text-white`, `bg-slate-900`…) : sans ces
+  règles, du texte blanc sur du parchemin. Ce sont celles du thème clair, **mot
+  pour mot**, sauf le halo de l'accent, que chaque personnalité déclare. Elles
+  tombent avec la migration des modules (phase 4).
+
+  Éteint, `data-personnalites` est absent : rien de ceci ne s'applique.
+*/
+:root[data-personnalites][data-clarte='light'] .text-white,
+:root[data-personnalites][data-clarte='light'] .text-slate-50,
+:root[data-personnalites][data-clarte='light'] .text-slate-100,
+:root[data-personnalites][data-clarte='light'] .text-slate-200,
+:root[data-personnalites][data-clarte='light'] .text-slate-300,
+:root[data-personnalites][data-clarte='light'] .text-slate-400,
+:root[data-personnalites][data-clarte='light'] .text-slate-500 {
+  color: var(--app-text) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .text-app-muted {
+  color: var(--app-text-muted) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .text-app-subtle {
+  color: var(--app-text-subtle) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .text-slate-600 {
+  color: #78716c !important; }
+
+:root[data-personnalites][data-clarte='light'] [class*='bg-slate-9'],
+:root[data-personnalites][data-clarte='light'] [class*='bg-zinc-9'],
+:root[data-personnalites][data-clarte='light'] [class*='bg-black'],
+:root[data-personnalites][data-clarte='light'] [class*='bg-indigo-9'],
+:root[data-personnalites][data-clarte='light'] [class*='bg-emerald-9'],
+:root[data-personnalites][data-clarte='light'] [class*='bg-red-9'],
+:root[data-personnalites][data-clarte='light'] .bg-slate-900\/50,
+:root[data-personnalites][data-clarte='light'] .bg-zinc-900\/50 {
+  background-color: var(--claire-surface) !important;
+  color: var(--app-text) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .backdrop-blur-xl:not(.cadre-gmos),
+:root[data-personnalites][data-clarte='light'] .backdrop-blur-2xl:not(.cadre-gmos),
+:root[data-personnalites][data-clarte='light'] .backdrop-blur-3xl:not(.cadre-gmos) {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .border-slate-800,
+:root[data-personnalites][data-clarte='light'] .border-slate-700,
+:root[data-personnalites][data-clarte='light'] .border-white\/5,
+:root[data-personnalites][data-clarte='light'] .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .shadow-glow-gold,
+:root[data-personnalites][data-clarte='light'] .shadow-glow-cyan {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .premium-glass {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border-color: rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .premium-glass::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent) !important;
+}
+
+:root[data-personnalites][data-clarte='light'] .lucide {
+  stroke: currentColor;
+}
+
+/*
+  **Le cadre plein** (§ 4.8, P1.7) : un cadre déclaré est opaque. La barre
+  latérale et le bandeau prennent sa couleur, par-dessus leur verre. ⚠️ Les
+  règles du dessus voilent de blanc tout `backdrop-blur-xl` avec un sélecteur
+  plus fort que celui-ci : elles excluent donc `.cadre-gmos` elles-mêmes.
+*/
+:root[data-cadre] .cadre-gmos {
+  background-color: var(--app-frame-bg) !important;
+}
+
 
 :root:not([data-theme='claire']) {
   --app-text: #f8fafc;

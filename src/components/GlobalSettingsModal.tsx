@@ -8,7 +8,8 @@ import {
 import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2, Brain, Palette } from 'lucide-react';
 import { AtelierDuTheme } from '../theme/AtelierDuTheme';
 import { flushApplication } from '../utils/appUtils';
-import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
+import { useSessionStore } from '../store/useSessionStore';
+import { themeDeBase } from '../theme/themeDeLInterface';
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '../config/languages';
 import type { ThemeID } from '../store/useSessionStore';
@@ -44,7 +45,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     const [connectionInfo, setConnectionInfo] = useState<InfoDeConnexion | null>(null);
     const [pairingSecret, setPairingSecret] = useState<string>('');
     const [storageUsage, setStorageUsage] = useState<StorageUsage | null>(null);
-    const { theme, setTheme, themeColor, setThemeColor, language, setLanguage } = useSessionStore();
+    const { theme, setTheme, themeColor, setThemeColor, language, setLanguage, personnalites, setPersonnalites } = useSessionStore();
     const { 
         audioDevices, fetchAudioDevices, aliasDeLaSortie, setAudioAlias,
         displays, fetchDisplays, aliasDeLEcran, setDisplayAlias 
@@ -254,6 +255,25 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 </button>
                                             ))}
                                         </div>
+                                        {/*
+                                          **L'interrupteur des personnalités** — P1.7, décision de
+                                          David du 2026-09-27 : un réglage, pour basculer en pleine
+                                          séance et comparer. Il ne change ni le thème, ni l'accent.
+                                        */}
+                                        <button
+                                            role="switch"
+                                            aria-checked={personnalites}
+                                            onClick={() => setPersonnalites(!personnalites)}
+                                            className={`w-full flex items-center justify-between gap-4 p-4 rounded-xl border text-left transition-all ${personnalites ? 'bg-accent/10 border-accent' : 'bg-app-surface/20 border-app-border/20 hover:border-app-border/40'}`}
+                                        >
+                                            <div>
+                                                <span className="text-sm font-black uppercase tracking-tight text-app-text">{t('settings:system.personnalites_label')}</span>
+                                                <p className="text-xs text-app-muted mt-1">{t(personnalites ? 'settings:system.personnalites_on' : 'settings:system.personnalites_off')}</p>
+                                            </div>
+                                            <span className={`relative shrink-0 w-10 h-6 rounded-full transition-colors ${personnalites ? 'bg-accent' : 'bg-app-border'}`}>
+                                                <span className={`absolute top-1 w-4 h-4 rounded-full bg-app-bg transition-all ${personnalites ? 'left-5' : 'left-1'}`} />
+                                            </span>
+                                        </button>
                                     </div>
 
                                     {/* Palette Selection */}
@@ -261,7 +281,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.palette_label', { theme })}</p>
                                         <div className="bg-app-surface/20 border border-app-border/20 rounded-xl p-6 h-[184px] flex flex-col items-center justify-center space-y-6">
                                             <div className="flex gap-3">
-                                                {(THEME_PALETTES[theme]?.palettes || []).map((color) => (
+                                                {themeDeBase(theme, personnalites).palettes.map((color) => (
                                                     <button
                                                         key={color}
                                                         onClick={() => setThemeColor(color)}

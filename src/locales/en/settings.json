@@ -33,6 +33,9 @@
     "theme_label": "Global Theme Choice",
     "palette_label": "Accent Palette ({{theme}})",
     "active_sample": "ACTIVE Sample",
+    "personnalites_label": "Personalities (redesign)",
+    "personnalites_on": "The new interface: each theme gets its shape, depth, frame and texture. A game theme applies its own too.",
+    "personnalites_off": "Today's interface. Turn on to compare — one click to come back.",
     "language_label": "Interface Language",
     "language_description": "Select the global language for the OS and AI."
   },

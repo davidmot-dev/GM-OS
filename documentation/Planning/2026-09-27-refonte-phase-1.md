@@ -257,6 +257,33 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
 - Les SVG : grille du Cyberpunk, grain du parchemin, coins en laiton, coins coupés.
 - **Ici, les captures changent — c'est le but.** Elles sont refaites, et tu les regardes avant
   qu'on les accepte comme nouvelle référence.
+- ✅ **Construit le 2026-09-29 — à juger par David.** Copie complète des données prise avant
+  (`Security_Backup_GMOS/_ABRI_2026-09-29_avant-P1.7/`, vérifiée octet par octet). Interrupteur
+  **éteint par défaut** : les 20 captures de référence restent identiques. Allumé :
+  `e2e/personnalites.spec.ts` range **48 captures** dans `e2e-resultats/personnalites/` (quatre
+  thèmes × six écrans, éteint puis allumé), en manœuvrant le réglage par l'écran des Paramètres.
+  - **Le réglage** : `personnalites` dans `useSessionStore` (persisté), un interrupteur sous le choix
+    du thème ; il passe à `appliquerLeTheme` (`main.tsx`, `useThemeDuJeu`, `AtelierDuTheme`) et au pont
+    du jeu, qui se recalcule sans relire le disque.
+  - **Les paquets** : `PERSONNALITES`, recopiés des fiches de T2.3 ; `electron/personnalites.test.ts`
+    les tient d'accord avec elles et les passe au validateur. Pastilles revues pour chaque fond, sans
+    cliquet ; T0.3 et la garde de distinction tournent aussi sur eux.
+  - ⛔ **Deux pièges de l'accent** : `setTheme` pose l'accent d'aujourd'hui, qui passait pour un choix
+    de la main (le Médiéval gardait son or sur le parchemin, 1,9) ; et hors choix de la main, l'arbitre
+    prenait cette surcharge avant l'accent du thème. Les deux accents comptent désormais comme hérités.
+  - ⚠️ **Le Médiéval et le Moderne deviennent clairs** : ils héritent, sous l'interrupteur
+    (`data-personnalites` + `data-clarte`), des règles de rattrapage du thème clair, mot pour mot, sauf
+    le halo de l'accent. Sans elles, du texte blanc sur du parchemin.
+  - **Le cadre plein** (`data-cadre`, `.cadre-gmos`) : opaque quand il est déclaré, avec **sa surface
+    et sa bordure** dérivées de ses couleurs — sinon le contrôle du son et les boutons d'outils
+    restaient en parchemin dans le bois. Sans cadre, elles valent celles du contenu.
+  - EB Garamond ajoutée à l'import des polices ; Inter n'a pas reçu de graisses (elles auraient changé
+    l'écran d'aujourd'hui).
+  - **Pas fait, et pourquoi** : les **SVG** (grille de points, grain du vélin) sont des matières de
+    **panneau**, et les **coins** (laiton, coupés) des **ornements** — ni l'un ni l'autre n'a encore de
+    lecteur, ils viennent avec les primitives (phase 3). L'**atelier du thème** ne sait pas encore
+    régler les jetons LU ⚙. Ce qui reste pâle dans les modules (boutons aux couleurs en dur) est la
+    phase 4.
 
 ## 4 · Ce que la phase 1 ne fait PAS
 

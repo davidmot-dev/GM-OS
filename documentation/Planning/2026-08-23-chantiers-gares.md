@@ -5449,8 +5449,8 @@ explicitement, jamais le défaut.
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
 ⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
-à P1.6 faits**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
-soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.7** du
+à P1.7 faits** (P1.7 à juger par David), et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
+soixantaine d'écrans retenus dans `stitch/`). **Reprendre au jugement de David sur P1.7** (T2.4) du
 [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
@@ -5792,6 +5792,12 @@ v1.2.
   sous l'interrupteur aussi), garde de distinction, T0.3 sur les 12 paires. 20 captures identiques.
   ⚠️ **La copie du cahier dans RPG Theme Builder est en v1.4 : à recharger dans ChatGPT.** Ce que
   P1.7 doit brancher : liste dans le plan de la phase 1.
+- ✅ **P1.7 construit le 2026-09-29 — à juger par David** : les quatre personnalités derrière un
+  interrupteur des Paramètres, éteint par défaut (20 captures de référence identiques). 48 captures
+  éteint/allumé dans `e2e-resultats/personnalites/`. Le Médiéval et le Moderne deviennent clairs et
+  héritent du rattrapage du thème clair ; le cadre est plein, avec sa surface. Copie complète des
+  données avant : `Security_Backup_GMOS/_ABRI_2026-09-29_avant-P1.7/`. **Pas fait** : SVG et coins
+  (phase 3), atelier du thème pour les jetons LU ⚙.
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.

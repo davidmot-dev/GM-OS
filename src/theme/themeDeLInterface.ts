@@ -254,9 +254,216 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
     },
 };
 
+/**
+ * **Les personnalités — le deuxième jeu de paquets** (refonte, P1.7,
+ * 2026-09-29).
+ *
+ * Les valeurs de Stitch, traduites en jetons du contrat à l'étape T2.3
+ * (`documentation/Planning/stitch/personnalites/*.theme.css`) et recopiées
+ * ici **au caractère près** — `electron/personnalites.test.ts` le vérifie.
+ * Elles ne s'appliquent que si le meneur allume le réglage des Paramètres
+ * (`personnalites`, décision de David du 2026-09-27) : un seul interrupteur
+ * compare l'interface d'aujourd'hui et la nouvelle.
+ *
+ * ⚠️ **Le Médiéval et le Moderne deviennent des thèmes CLAIRS** (parchemin,
+ * cartes blanches) dans un cadre sombre. Le reste de l'interface écrit encore
+ * ses couleurs en dur pour un fond sombre : ils héritent donc, sous
+ * l'interrupteur, des règles de rattrapage du thème clair (`index.css`).
+ *
+ * Ce qui n'est pas dans le contrat : `subtil` suit la règle des jeux (le
+ * `muted` fondu à 70 % dans le fond), le reflet du verre suit le thème, et
+ * **les pastilles d'accent sont revues pour le nouveau fond** — le Médiéval
+ * d'aujourd'hui en avait quatre illisibles (T0.3).
+ */
+export const PERSONNALITES: Record<ThemeID, ThemeDeBase> = {
+    cyberpunk: {
+        jetons: {
+            bg: '#020617',
+            surface: '#060c1a',
+            'surface-2': '#0d162d',
+            text: '#e2e8f0',
+            muted: '#94a3b8',
+            accent: '#00f0ff',
+            'accent-contrast': '#020617',
+            border: 'rgba(0, 240, 255, 0.22)',
+            'border-soft': 'rgba(255, 255, 255, 0.08)',
+            success: '#10b981',
+            danger: '#ff007f',
+            warning: '#facc15',
+            info: '#3b82f6',
+            'font-display': '"Orbitron", "Inter", sans-serif',
+            'font-body': '"Inter", sans-serif',
+            'font-mono': '"JetBrains Mono", monospace',
+            'title-tracking': '0.08em',
+            'kicker-tracking': '0.14em',
+            'title-transform': 'uppercase',
+            'radius-sm': '0px',
+            'radius-md': '0px',
+            'radius-lg': '0px',
+            'border-width': '1px',
+            'border-style': 'solid',
+            'elevation-1': 'none',
+            'elevation-2': '0 4px 20px rgba(0, 0, 0, 0.6)',
+            'elevation-3': '0 0 0 1px #020617, 0 8px 32px rgba(0, 0, 0, 0.85)',
+            glow: 'rgba(0, 240, 255, 0.35)',
+            'glow-strength': '0.8',
+            'glass-bg': 'rgba(8, 15, 30, 0.72)',
+            'glass-border': 'rgba(0, 240, 255, 0.22)',
+            'glass-blur': '16px',
+            'texture-bg': 'repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0px, rgba(0, 0, 0, 0.35) 2px, transparent 2px, transparent 4px)',
+            'texture-panel': 'radial-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px)',
+            'texture-opacity': '0.3',
+        },
+        clarte: 'dark',
+        reflet: 'rgba(0, 240, 255, 0.25)',
+        subtil: 'color-mix(in srgb, #94a3b8 70%, #020617)',
+        matiere: { taille: 'auto', position: '0% 0%', fusion: 'normal' },
+        palettes: ['#00f0ff', '#a78bfa', '#f472b6', '#34d399', '#fb923c'],
+    },
+    medieval: {
+        jetons: {
+            bg: '#dfcfb2',
+            surface: '#f7f2e7',
+            'surface-2': '#ebe0ca',
+            text: '#1b1108',
+            muted: '#5c4a38',
+            accent: '#7a5c20',
+            'accent-contrast': '#f7f2e7',
+            border: '#7c5c3b',
+            'border-soft': 'rgba(122, 92, 32, 0.25)',
+            success: '#1b6342',
+            danger: '#8f1d1d',
+            warning: '#b04f00',
+            info: '#3d3a82',
+            'font-display': '"Cinzel", "EB Garamond", serif',
+            'font-body': '"EB Garamond", "Georgia", serif',
+            'font-mono': '"Cinzel", "EB Garamond", serif',
+            'title-tracking': '0.06em',
+            'kicker-tracking': '0.12em',
+            'title-transform': 'uppercase',
+            'radius-sm': '2px',
+            'radius-md': '2px',
+            'radius-lg': '2px',
+            'border-width': '1px',
+            'border-style': 'solid',
+            'elevation-1': 'inset 0 0 0 1px #d6c4a5, 0 3px 10px rgba(28, 17, 8, 0.18)',
+            'elevation-2': '0 10px 24px rgba(28, 17, 8, 0.28)',
+            'elevation-3': '0 25px 50px -12px rgba(28, 17, 8, 0.45)',
+            glow: 'none',
+            'glow-strength': '0',
+            'glass-bg': 'rgba(247, 242, 231, 0.94)',
+            'glass-border': 'rgba(124, 92, 59, 0.45)',
+            'glass-blur': '0px',
+            'frame-bg': '#160e07',
+            'frame-text': '#e5d5b8',
+            'frame-accent': '#d4af37',
+            'texture-bg': 'radial-gradient(circle at 50% 30%, rgba(255, 250, 240, 0.45) 0%, transparent 70%), radial-gradient(circle at 15% 85%, rgba(180, 150, 100, 0.25) 0%, transparent 60%), repeating-linear-gradient(0deg, rgba(60, 42, 26, 0.03) 0px, rgba(60, 42, 26, 0.03) 1px, transparent 1px, transparent 4px)',
+            'texture-panel': 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(235, 222, 198, 0.5) 100%)',
+            'texture-opacity': '0.35',
+        },
+        clarte: 'light',
+        reflet: 'rgba(255, 250, 240, 0.5)',
+        subtil: 'color-mix(in srgb, #5c4a38 70%, #dfcfb2)',
+        matiere: { taille: 'auto', position: '0% 0%', fusion: 'normal' },
+        palettes: ['#7a5c20', '#7f1d1d', '#1e3a8a', '#4c1d95', '#14532d'],
+    },
+    modern: {
+        jetons: {
+            bg: '#e9eef5',
+            surface: '#ffffff',
+            'surface-2': '#f8fafc',
+            text: '#0f172a',
+            muted: '#475569',
+            accent: '#1d4ed8',
+            'accent-contrast': '#ffffff',
+            border: '#e2e8f0',
+            'border-soft': 'rgba(15, 23, 42, 0.08)',
+            success: '#047857',
+            danger: '#b91c1c',
+            warning: '#a16207',
+            info: '#6d28d9',
+            'font-display': '"Plus Jakarta Sans", sans-serif',
+            'font-body': '"Plus Jakarta Sans", sans-serif',
+            'font-mono': '"JetBrains Mono", monospace',
+            'title-tracking': '0em',
+            'kicker-tracking': '0.06em',
+            'title-transform': 'none',
+            'radius-sm': '6px',
+            'radius-md': '12px',
+            'radius-lg': '14px',
+            'border-width': '1px',
+            'border-style': 'solid',
+            'elevation-1': '0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
+            'elevation-2': '0 10px 30px -6px rgba(15, 23, 42, 0.16)',
+            'elevation-3': '0 24px 48px -12px rgba(15, 23, 42, 0.28)',
+            glow: 'rgba(37, 99, 235, 0.25)',
+            'glow-strength': '0.3',
+            'glass-bg': 'rgba(255, 255, 255, 0.85)',
+            'glass-border': 'rgba(15, 23, 42, 0.08)',
+            'glass-blur': '12px',
+            'frame-bg': '#0b1120',
+            'frame-text': '#e2e8f0',
+            'frame-accent': '#60a5fa',
+            'texture-bg': 'none',
+            'texture-panel': 'none',
+            'texture-opacity': '0',
+        },
+        clarte: 'light',
+        reflet: 'rgba(255, 255, 255, 0.6)',
+        subtil: 'color-mix(in srgb, #475569 70%, #e9eef5)',
+        matiere: { taille: 'auto', position: '0% 0%', fusion: 'normal' },
+        palettes: ['#1d4ed8', '#4338ca', '#0f766e', '#be123c', '#475569'],
+    },
+    claire: {
+        jetons: {
+            bg: '#f8fafc',
+            surface: '#ffffff',
+            'surface-2': '#f1f5f9',
+            text: '#0f172a',
+            muted: '#475569',
+            accent: '#1d4ed8',
+            'accent-contrast': '#ffffff',
+            border: '#e2e8f0',
+            'border-soft': 'rgba(15, 23, 42, 0.08)',
+            success: '#047857',
+            danger: '#b91c1c',
+            warning: '#a16207',
+            info: '#0369a1',
+            'font-display': '"Inter", sans-serif',
+            'font-body': '"Inter", sans-serif',
+            'font-mono': '"JetBrains Mono", monospace',
+            'title-tracking': '0em',
+            'kicker-tracking': '0.08em',
+            'title-transform': 'none',
+            'radius-sm': '6px',
+            'radius-md': '8px',
+            'radius-lg': '14px',
+            'border-width': '1px',
+            'border-style': 'solid',
+            'elevation-1': '0 1px 2px rgba(15, 23, 42, 0.06)',
+            'elevation-2': '0 4px 12px rgba(15, 23, 42, 0.10)',
+            'elevation-3': '0 16px 40px rgba(15, 23, 42, 0.18)',
+            glow: 'none',
+            'glow-strength': '0',
+            'glass-bg': 'rgba(255, 255, 255, 0.92)',
+            'glass-border': 'rgba(15, 23, 42, 0.10)',
+            'glass-blur': '8px',
+            'texture-bg': 'none',
+            'texture-panel': 'none',
+            'texture-opacity': '0',
+        },
+        clarte: 'light',
+        reflet: 'rgba(255, 255, 255, 0.5)',
+        subtil: 'color-mix(in srgb, #475569 70%, #f8fafc)',
+        matiere: { taille: 'auto', position: '0% 0%', fusion: 'normal' },
+        palettes: ['#1d4ed8', '#0f766e', '#7c3aed', '#b91c1c', '#c2410c'],
+    },
+};
+
 /** Le thème de base qui porte ce nom ; un identifiant inconnu retombe sur cyberpunk. */
-export function themeDeBase(theme: string): ThemeDeBase {
-    return PALETTES[theme as ThemeID] ?? PALETTES.cyberpunk;
+export function themeDeBase(theme: string, personnalites = false): ThemeDeBase {
+    const table = personnalites ? PERSONNALITES : PALETTES;
+    return table[theme as ThemeID] ?? table.cyberpunk;
 }
 
 /** L'accent par défaut d'un thème de base — ce que `setTheme` pose, et ce qu'une surcharge « héritée » vaut. */
@@ -370,7 +577,7 @@ export function appliquerLeTheme(
 ): void {
     if (typeof document === 'undefined') return;
 
-    const palette = themeDeBase(theme);
+    const palette = themeDeBase(theme, personnalites);
     const racine = document.documentElement;
 
     /*
@@ -389,12 +596,28 @@ export function appliquerLeTheme(
     // `|| undefined` et non `?.trim()` seul : `??` ne traverse pas la chaîne
     // vide, et une surcharge blanche donnerait alors un accent vide.
     const surcharge = accentSurcharge?.trim() || undefined;
-    const choisieALaMain = !!surcharge && surcharge !== palette.jetons.accent;
+    /*
+      **Deux accents hérités sous les personnalités** (P1.7) : `setTheme` pose
+      toujours celui d'aujourd'hui dans `themeColor`. Le prendre pour un choix
+      de la main ferait garder l'or du Médiéval d'aujourd'hui sur le parchemin de
+      sa personnalité — 1,9 de contraste.
+    */
+    const choisieALaMain = !!surcharge
+        && surcharge !== palette.jetons.accent
+        && surcharge !== accentDuTheme(theme);
     const accent = choisieALaMain
         ? surcharge
-        : jeu?.jetons.accent ?? surcharge ?? palette.jetons.accent;
+        : jeu?.jetons.accent ?? palette.jetons.accent;
 
     racine.setAttribute('data-theme', theme);
+    /*
+      **Les marques de la racine, pour les feuilles de style** (P1.7) :
+      `data-personnalites` quand l'interrupteur est allumé, `data-clarte` pour
+      la polarité affichée, `data-cadre` quand le cadre a sa propre couleur. Les
+      règles de rattrapage des thèmes clairs et le cadre plein s'y accrochent.
+    */
+    racine.toggleAttribute('data-personnalites', personnalites);
+    racine.setAttribute('data-clarte', jeu?.clarte ?? palette.clarte);
     /*
       **La polarité du jeu l'emporte, et il faut qu'elle l'emporte.** Star Trek
       est un thème clair : servi sous un `color-scheme: dark`, ses `<select>`
@@ -448,6 +671,8 @@ export function appliquerLeTheme(
     for (const [nom, valeur] of Object.entries(vars)) {
         racine.style.setProperty(nom, valeur);
     }
+    // § 4.8 : un cadre déclaré est opaque — `index.css` le peint plein (`.cadre-gmos`).
+    racine.toggleAttribute('data-cadre', !!(palette.jetons['frame-bg'] || jeu?.variables['--app-frame-bg']));
     /*
       **Ce que le thème ne déclare plus s'efface** — P1.4, 2026-09-29.
 
@@ -553,9 +778,19 @@ export function completerLesDerivees(
     if (cadreDeclare) {
         v['--app-frame-muted'] = `color-mix(in srgb, ${texte} 65%, ${fond})`;
         v['--app-frame-subtle'] = `color-mix(in srgb, ${v['--app-frame-muted']} 70%, ${fond})`;
+        /*
+          **Et sa surface, et sa bordure** (P1.7) : ce qui est posé DANS le cadre
+          — le contrôle du son du bandeau, les boutons d'outils de la barre —
+          prenait la surface du contenu, des pavés de parchemin dans le bois.
+          Le texte du cadre, fondu dans son fond.
+        */
+        v['--app-frame-surface'] = `color-mix(in srgb, ${texte} 8%, ${fond})`;
+        v['--app-frame-border'] = `color-mix(in srgb, ${texte} 18%, ${fond})`;
     } else {
         v['--app-frame-muted'] = v['--app-text-muted'];
         v['--app-frame-subtle'] = v['--app-text-subtle'];
+        v['--app-frame-surface'] = v['--app-surface'];
+        v['--app-frame-border'] = v['--app-border'];
     }
     return v;
 }
@@ -578,6 +813,8 @@ export const STYLE_DU_CADRE = {
     '--app-accent': 'var(--app-frame-accent)',
     '--app-text-muted': 'var(--app-frame-muted)',
     '--app-text-subtle': 'var(--app-frame-subtle)',
+    '--app-surface': 'var(--app-frame-surface)',
+    '--app-border': 'var(--app-frame-border)',
 } as const;
 
 /**

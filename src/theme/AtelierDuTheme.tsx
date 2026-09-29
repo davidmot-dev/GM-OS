@@ -50,6 +50,8 @@ export const AtelierDuTheme: React.FC = () => {
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
     const theme = useSessionStore(s => s.theme);
     const themeColor = useSessionStore(s => s.themeColor);
+    // P1.7 : l'aperçu suit l'interrupteur des personnalités, comme l'interface qu'il prépare.
+    const personnalites = useSessionStore(s => s.personnalites);
 
     const [racine, setRacine] = useState<string | null>(null);
     const [nomDuJeu, setNomDuJeu] = useState('');
@@ -128,16 +130,16 @@ export const AtelierDuTheme: React.FC = () => {
      */
     const appliquer = useCallback((jetons: Record<string, string>) => {
         appliquerLeTheme(theme, themeColor, {
-            variables: pontVersLInterface(jetons),
+            variables: pontVersLInterface(jetons, { personnalites }),
             jetons,
             clarte,
-        });
+        }, { personnalites });
         const url = requeteDePolices(
             JETONS_EDITABLES.filter(j => j.famille === 'police')
                 .map(j => familleDeLaPile(jetons[j.cle])),
         );
         poserLesPolices(url ? [url] : []);
-    }, [theme, themeColor, clarte]);
+    }, [theme, themeColor, clarte, personnalites]);
 
     useEffect(() => {
         if (chargement || !racine) return;
@@ -152,10 +154,10 @@ export const AtelierDuTheme: React.FC = () => {
     */
     useEffect(() => () => {
         appliquerLeTheme(theme, themeColor, {
-            variables: pontVersLInterface(enregistrees.current),
+            variables: pontVersLInterface(enregistrees.current, { personnalites }),
             jetons: enregistrees.current,
             clarte,
-        });
+        }, { personnalites });
         poserLesPolices(policesEnregistrees.current);
         // Volontairement sans dépendances : ce nettoyage ne doit jouer qu'une
         // fois, à la fermeture, avec les dernières valeurs enregistrées.

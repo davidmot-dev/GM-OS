@@ -33,6 +33,9 @@
     "theme_label": "Choix du Thème Global",
     "palette_label": "Palette de l'Accentuation ({{theme}})",
     "active_sample": "Échantillon ACTIF",
+    "personnalites_label": "Personnalités (refonte)",
+    "personnalites_on": "La nouvelle interface : chaque thème prend sa forme, son relief, son cadre et sa matière. Un thème de jeu applique aussi les siens.",
+    "personnalites_off": "L'interface d'aujourd'hui. Allumer pour comparer — on revient d'un clic.",
     "language_label": "Langue de l'interface",
     "language_description": "Sélectionnez la langue globale pour l'OS et l'IA."
   },

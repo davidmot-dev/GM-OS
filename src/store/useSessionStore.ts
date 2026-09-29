@@ -13,6 +13,17 @@ interface SessionState {
     theme: ThemeID;
     themeColor: string; // Hex color for global accents
     /**
+     * **Les personnalités de la refonte sont-elles allumées ?** — P1.7,
+     * 2026-09-29.
+     *
+     * Décision de David, 2026-09-27 : *un réglage dans les Paramètres*, pour
+     * basculer en pleine séance entre l'interface d'aujourd'hui et la nouvelle,
+     * et comparer. Il vit avec le choix du thème, **se retient d'une session à
+     * l'autre**, et ne change rien d'autre : ni le thème, ni l'accent, ni le
+     * thème du jeu. Éteint par défaut.
+     */
+    personnalites: boolean;
+    /**
      * **Le régime d'interface forcé à la main, ou `null` pour suivre la séance.**
      *
      * ⛔ Ce champ remplace `isSessionMode`, qui portait le commentaire « Mode MJ
@@ -41,6 +52,7 @@ interface SessionState {
     setActiveModule: (id: ModuleID) => void;
     setTheme: (theme: ThemeID) => void;
     setThemeColor: (color: string) => void;
+    setPersonnalites: (allumees: boolean) => void;
     /** Force un régime d'interface, ou rend la main à la séance avec `null`. */
     forcerLeRegime: (regime: MomentDeJeu | null) => void;
     toggleAIPanel: (force?: boolean) => void;
@@ -71,6 +83,7 @@ export const useSessionStore = create<SessionState>()(
             activeModule: 'dashboard',
             theme: 'cyberpunk',
             themeColor: accentDuTheme('cyberpunk'),
+            personnalites: false,
             surchargeDuRegime: null,
             isAIPanelOpen: false,
             isMessengerOpen: false,
@@ -84,6 +97,7 @@ export const useSessionStore = create<SessionState>()(
                 themeColor: accentDuTheme(theme)
             }),
             setThemeColor: (themeColor) => set({ themeColor }),
+            setPersonnalites: (personnalites) => set({ personnalites }),
             forcerLeRegime: (surchargeDuRegime) => set({ surchargeDuRegime }),
             toggleAIPanel: (force?: boolean) => set((state) => ({
                 isAIPanelOpen: force !== undefined ? force : !state.isAIPanelOpen

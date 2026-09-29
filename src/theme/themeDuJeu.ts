@@ -136,7 +136,10 @@ export function poserLesPolices(urls: string[]): void {
  * On attend `document.fonts.ready` : interroger avant que le chargement soit
  * fini rendrait un faux négatif à tous les coups.
  */
-export async function verifierLesPolices(jetons: Record<string, string>): Promise<string[]> {
+export async function verifierLesPolices(
+    jetons: Record<string, string>,
+    { personnalites = false }: { personnalites?: boolean } = {},
+): Promise<string[]> {
     if (typeof document === 'undefined' || !document.fonts) return [];
 
     try {
@@ -161,7 +164,9 @@ export async function verifierLesPolices(jetons: Record<string, string>): Promis
       jour sur mon propre contrôle.
     */
     const manquantes: string[] = [];
-    for (const jeton of POLICES_APPLIQUEES) {
+    // Sous les personnalités, la police du corps est appliquée aussi (contrat v1.4) : elle se vérifie.
+    const appliquees = personnalites ? [...POLICES_APPLIQUEES, 'font-body'] : POLICES_APPLIQUEES;
+    for (const jeton of appliquees) {
         const famille = premiereFamille(jetons[jeton]);
         if (!famille) continue;
         // `check` veut une police complète ; la taille n'a aucune importance.

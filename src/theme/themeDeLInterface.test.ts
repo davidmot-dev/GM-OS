@@ -6,6 +6,8 @@ import {
     appliquerLeTheme,
     completerLesDerivees,
     STYLE_DU_CADRE,
+    PERSONNALITES,
+    accentDuTheme,
     type ThemeID,
 } from './themeDeLInterface';
 import { VARIABLE_DU_JETON, JETONS_LUS_A_PART } from './contratDuTheme';
@@ -323,6 +325,8 @@ describe('P1.2 · les dérivées, une fois le jeu posé', () => {
         expect(v['--app-frame-accent']).toBe(v['--app-accent']);
         expect(v['--app-frame-muted']).toBe(v['--app-text-muted']);
         expect(v['--app-frame-subtle']).toBe(v['--app-text-subtle']);
+        expect(v['--app-frame-surface']).toBe(v['--app-surface']);
+        expect(v['--app-frame-border']).toBe(v['--app-border']);
     });
 
     it('un cadre déclaré dérive son texte estompé de son texte et de son fond', () => {
@@ -520,5 +524,51 @@ describe('P1.6 · sous l’interrupteur des personnalités', () => {
         const jeu = { variables: { '--texture-fond': 'linear-gradient(#000, #fff)' }, jetons: {} };
         appliquerLeTheme('cyberpunk', undefined, jeu, { personnalites: true });
         expect(r().style.getPropertyValue('--texture-taille')).toBe('auto');
+    });
+});
+
+/**
+ * **P1.7 · Les personnalités, sous l'interrupteur** — refonte, 2026-09-29.
+ */
+describe('P1.7 · appliquerLeTheme avec les personnalités', () => {
+    const r = () => document.documentElement;
+    beforeEach(() => { r().removeAttribute('style'); r().removeAttribute('data-personnalites'); r().removeAttribute('data-cadre'); });
+
+    it('allumées, le thème prend les valeurs de sa personnalité', () => {
+        appliquerLeTheme('medieval', accentDuTheme('medieval'), undefined, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-bg')).toBe(PERSONNALITES.medieval.jetons.bg);
+        expect(r().style.getPropertyValue('--rayon-md')).toBe('2px');
+        expect(r().getAttribute('data-clarte')).toBe('light');
+        expect(r().hasAttribute('data-personnalites')).toBe(true);
+    });
+
+    /** `setTheme` pose l'accent d'aujourd'hui : il ne doit pas passer pour un choix de la main. */
+    it('l’accent d’aujourd’hui, hérité, cède à celui de la personnalité', () => {
+        appliquerLeTheme('medieval', accentDuTheme('medieval'), undefined, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-accent')).toBe('#7a5c20');
+    });
+
+    it('un accent vraiment choisi à la main reste', () => {
+        appliquerLeTheme('medieval', '#1e3a8a', undefined, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-accent')).toBe('#1e3a8a');
+    });
+
+    it('le cadre du Médiéval est déclaré, celui du Cyberpunk non', () => {
+        appliquerLeTheme('medieval', undefined, undefined, { personnalites: true });
+        expect(r().hasAttribute('data-cadre')).toBe(true);
+        expect(r().style.getPropertyValue('--app-frame-bg')).toBe('#160e07');
+        appliquerLeTheme('cyberpunk', undefined, undefined, { personnalites: true });
+        expect(r().hasAttribute('data-cadre')).toBe(false);
+    });
+
+    it('éteintes, tout revient : valeurs d’aujourd’hui, rayons effacés, marques retirées', () => {
+        appliquerLeTheme('medieval', accentDuTheme('medieval'), undefined, { personnalites: true });
+        appliquerLeTheme('medieval', accentDuTheme('medieval'));
+        expect(r().style.getPropertyValue('--app-bg')).toBe(PALETTES.medieval.jetons.bg);
+        expect(r().style.getPropertyValue('--app-accent')).toBe('#d4af37');
+        expect(r().style.getPropertyValue('--rayon-md')).toBe('');
+        expect(r().style.getPropertyValue('--font-body')).toBe('');
+        expect(r().hasAttribute('data-personnalites')).toBe(false);
+        expect(r().hasAttribute('data-cadre')).toBe(false);
     });
 });
