@@ -70,29 +70,53 @@ test.beforeAll(async () => {
 
 test.afterAll(async () => { await gmos?.fermer(); });
 
-test.describe('les écrans de référence', () => {
-    for (const panneau of LES_PANNEAUX) {
-        test(panneau, async () => {
-            await ouvrirLeModule(gmos, panneau);
-            await expect.poll(() => gmos.fenetre.locator('main').last().innerText(), { timeout: 15_000 }).not.toBe('');
-            /* Les modules chargés à la demande, leurs images et leurs polices. */
-            await gmos.fenetre.waitForTimeout(1_500);
+/**
+ * **Deux séries, depuis que David a adopté les personnalités** (T2.5,
+ * 2026-09-29) : l'interface d'aujourd'hui et la nouvelle, tant que
+ * l'interrupteur existe. Chacune le règle elle-même par l'écran des
+ * Paramètres — le défaut est désormais allumé, et une série qui s'y fierait
+ * surveillerait l'autre sans le dire.
+ */
+async function reglerLesPersonnalites(allumees: boolean): Promise<void> {
+    await gmos.fenetre.getByTitle(/Paramètres de l’OS|Paramètres de l'OS/).click();
+    const interrupteur = gmos.fenetre.getByRole('switch');
+    if ((await interrupteur.getAttribute('aria-checked')) !== String(allumees)) await interrupteur.click();
+    await expect(interrupteur).toHaveAttribute('aria-checked', String(allumees));
+    await gmos.fenetre.getByLabel(/Fermer les paramètres/i).click();
+    await expect.poll(() => gmos.fenetre.evaluate(() => document.documentElement.hasAttribute('data-personnalites')))
+        .toBe(allumees);
+}
 
-            await expect(gmos.fenetre).toHaveScreenshot(nomDeFichier(panneau), {
-                animations: 'disabled',
-                caret: 'hide',
-                scale: 'css',
-                /* Un pixel anti-crénelé de travers n'est pas un changement d'habillage. */
-                maxDiffPixelRatio: 0.005,
-                timeout: 15_000,
+for (const [serie, allumees, suffixe] of [
+    ['les écrans de référence', false, ''],
+    ['les écrans de référence — personnalités', true, '-personnalite'],
+] as const) {
+    test.describe(serie, () => {
+        test.beforeAll(async () => { await reglerLesPersonnalites(allumees); });
+
+        for (const panneau of LES_PANNEAUX) {
+            test(panneau, async () => {
+                await ouvrirLeModule(gmos, panneau);
+                await expect.poll(() => gmos.fenetre.locator('main').last().innerText(), { timeout: 15_000 }).not.toBe('');
+                /* Les modules chargés à la demande, leurs images et leurs polices. */
+                await gmos.fenetre.waitForTimeout(1_500);
+
+                await expect(gmos.fenetre).toHaveScreenshot(nomDeFichier(panneau).replace('.png', `${suffixe}.png`), {
+                    animations: 'disabled',
+                    caret: 'hide',
+                    scale: 'css',
+                    /* Un pixel anti-crénelé de travers n'est pas un changement d'habillage. */
+                    maxDiffPixelRatio: 0.005,
+                    timeout: 15_000,
+                });
+
+                /*
+                  ⚠️ **Cortex IA n'est pas un module, c'est un panneau latéral** : il
+                  reste ouvert à droite après son clic, et couvrait un tiers de
+                  chaque écran capturé ensuite. On le referme par son bouton.
+                */
+                if (panneau === 'Cortex IA') await ouvrirLeModule(gmos, panneau);
             });
-
-            /*
-              ⚠️ **Cortex IA n'est pas un module, c'est un panneau latéral** : il
-              reste ouvert à droite après son clic, et couvrait un tiers de
-              chaque écran capturé ensuite. On le referme par son bouton.
-            */
-            if (panneau === 'Cortex IA') await ouvrirLeModule(gmos, panneau);
-        });
-    }
-});
+        }
+    });
+}

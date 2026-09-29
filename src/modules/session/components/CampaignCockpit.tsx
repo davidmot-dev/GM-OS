@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { AlertTriangle, BookOpen, Pause, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
+import { AlertTriangle, BookOpen, Palette, Pause, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
 import { tousLesPilotes } from '../store/tousLesPilotes';
@@ -37,6 +37,10 @@ const CampaignCockpit: React.FC = () => {
     const campaignSystem = activeCampaign?.system || 'generic';
     const hasLinkedDeck = decks.some(d => d.systemId === campaignSystem);
     const { theme } = useSessionStore();
+    const themeDuJeuDisponible = useSessionStore(s => s.themeDuJeuDisponible);
+    const updateCampaign = useSessionOSStore(s => s.updateCampaign);
+    // Absent : le thème du jeu s'applique (réglage par campagne, David, 2026-09-29).
+    const themeDuJeuApplique = activeCampaign?.themeDuJeu !== false;
 
     /**
      * À quel jeu cette campagne est rattachée — **et le dire quand elle ne
@@ -171,7 +175,29 @@ const CampaignCockpit: React.FC = () => {
                             {theme === 'medieval' ? t('modules:session.cockpit.active_chronicle') : t('modules:session.cockpit.active_campaign')}
                         </p>
                     </div>
-                    <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
+                    <div className="flex items-center gap-2">
+                        {/*
+                          **L'interrupteur du thème du jeu** — par campagne, décidé
+                          par David le 2026-09-29. Offert seulement si le jeu a un
+                          thème : ailleurs, il ne changerait rien.
+                        */}
+                        {activeCampaign && themeDuJeuDisponible && (
+                            <button
+                                type="button"
+                                aria-pressed={themeDuJeuApplique}
+                                title={t(themeDuJeuApplique ? 'modules:session.cockpit.game_theme_on' : 'modules:session.cockpit.game_theme_off')}
+                                aria-label={t(themeDuJeuApplique ? 'modules:session.cockpit.game_theme_on' : 'modules:session.cockpit.game_theme_off')}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateCampaign(activeCampaign.id, { themeDuJeu: !themeDuJeuApplique });
+                                }}
+                                className={`p-1.5 rounded-lg border transition-colors ${themeDuJeuApplique ? 'border-accent/40 bg-accent/15 text-accent' : 'border-app-border/40 text-app-muted hover:text-app-text'}`}
+                            >
+                                <Palette size={16} />
+                            </button>
+                        )}
+                        <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
+                    </div>
                 </div>
 
                 {/*

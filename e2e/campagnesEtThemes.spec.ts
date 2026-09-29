@@ -115,6 +115,27 @@ test.describe('chaque campagne sous chaque thème de base', () => {
             }
             const jeu = await gmos.fenetre.evaluate(() => document.documentElement.style.getPropertyValue('--app-bg'));
             console.log(`[Campagnes] ${nom} — fond sous le dernier thème : ${jeu}`);
+
+            /*
+              **L'interrupteur du thème du jeu, sur la carte de la campagne**
+              (David, 2026-09-29). Là où le jeu a un thème : un clic rend le
+              thème de base, un second rend le jeu.
+            */
+            // Le bouton vit sur la carte du tableau de bord : on y va AVANT de le chercher.
+            await ouvrirLeModule(gmos, 'Tableau de Bord');
+            await gmos.fenetre.waitForTimeout(1_000);
+            const interrupteur = gmos.fenetre.locator('button[aria-pressed][title*="Thème du jeu"]');
+            if (await interrupteur.count()) {
+                const fondDuJeu = await gmos.fenetre.evaluate(() => document.documentElement.style.getPropertyValue('--app-bg'));
+                await interrupteur.first().click();
+                await expect.poll(() => gmos.fenetre.evaluate(() => document.documentElement.style.getPropertyValue('--app-bg')))
+                    .not.toBe(fondDuJeu);
+                await gmos.fenetre.screenshot({ path: path.join(dossier, 'theme-du-jeu-eteint.png'), scale: 'css' });
+                await interrupteur.first().click();
+                await expect.poll(() => gmos.fenetre.evaluate(() => document.documentElement.style.getPropertyValue('--app-bg')))
+                    .toBe(fondDuJeu);
+                console.log(`[Campagnes] ${nom} — interrupteur du thème du jeu : éprouvé`);
+            }
         }
         await regler('cyberpunk', false);
     });

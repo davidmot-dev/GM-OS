@@ -1397,6 +1397,8 @@
       "none_active": "Aucune Campagne Active",
       "active_chronicle": "Chronique Active",
       "active_campaign": "Campagne Active",
+      "game_theme_on": "Thème du jeu appliqué — cliquer pour revenir au thème de base",
+      "game_theme_off": "Thème du jeu désactivé — cliquer pour l'appliquer",
       "session_progress": "Progression de la Session",
       "session_step": "Étape {{current}}/{{total}}",
       "management_arcanic": "GESTION ARCANIQUE",

@@ -210,7 +210,7 @@ précisément le travail pour lequel le filet a été posé en premier.
 | **T2.2** | Stitch | 4 à 5 directions, exportées en **Tailwind** |
 | **T2.3** | Claude | Chaque direction traduite en **valeurs C0 seulement** — aucune structure, aucun composant repris |
 | **T2.4** | David | Jugement **dans l'application réelle**, sept campagnes, de préférence un soir de jeu |
-| **T2.5** | David | **Décision** : une direction, ou aucune |
+| **T2.5** | David | **Décision** : une direction, ou aucune — ✅ **2026-09-29 : David adopte les personnalités**, allumées par défaut (chez lui compris, par une migration unique des réglages) ; l'interrupteur reste pour comparer pendant la migration |
 
 ⭐ **En cours depuis le 2026-09-26** — tout vit dans [`stitch/`](./stitch/README.md) :
 

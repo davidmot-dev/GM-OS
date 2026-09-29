@@ -99,6 +99,15 @@ export interface Campaign {
      * nouveauté à l'existant.*
      */
     langueDeForge?: string;
+    /**
+     * **Le thème du jeu s'applique-t-il à cette campagne ?** — réglage par
+     * campagne, décidé par David le 2026-09-29.
+     *
+     * `false` : l'interface garde le thème de base, même si le jeu a une peau
+     * (`docs/systems/<jeu>/theme/`). Absent : le thème du jeu s'applique, comme
+     * avant le réglage. *On ne fait pas payer une nouveauté à l'existant.*
+     */
+    themeDuJeu?: boolean;
 
     /**
      * Quand la campagne a été clôturée. C'est elle qui la range.

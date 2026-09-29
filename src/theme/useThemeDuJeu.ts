@@ -31,6 +31,13 @@ export function useThemeDuJeu(): void {
     const themeColor = useSessionStore(s => s.themeColor);
     const personnalites = useSessionStore(s => s.personnalites);
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
+    /*
+      **Le réglage de la campagne** (David, 2026-09-29) : `themeDuJeu: false`
+      laisse l'interface au thème de base. Absent, le jeu s'applique.
+    */
+    const themeDuJeuVoulu = useSessionOSStore(
+        s => s.campaigns.find(c => c.id === s.activeCampaignId)?.themeDuJeu !== false,
+    );
 
     /*
       **Le thème du jeu survit aux changements d'accent.** Sans ce garde-fou, un
@@ -65,17 +72,24 @@ export function useThemeDuJeu(): void {
             */
             const jeu = await jeuDeLaCampagneActive(activeCampaignId ?? null);
             if (annule) return;
+            const trouve = jeu ? await chargerLeThemeDuJeu(jeu.racine) : null;
+            if (annule) return;
 
-            if (!jeu) {
+            /*
+              **Le thème est cherché même quand la campagne n'en veut pas** : la
+              carte de la campagne n'offre son interrupteur que si le jeu en a
+              un. Il n'est simplement pas appliqué.
+            */
+            useSessionStore.getState().signalerLeThemeDuJeu(!!trouve);
+            const releve = themeDuJeuVoulu ? trouve : null;
+
+            if (!jeu || !releve) {
                 releveDuJeu.current = null;
                 campagneLue.current = null;
                 poserLesPolices([]);
                 appliquerLeTheme(theme, themeColor, undefined, { personnalites });
                 return;
             }
-
-            const releve = await chargerLeThemeDuJeu(jeu.racine);
-            if (annule) return;
 
             releveDuJeu.current = releve;
             campagneLue.current = activeCampaignId ?? null;
@@ -116,7 +130,7 @@ export function useThemeDuJeu(): void {
         // `theme` et `themeColor` sont volontairement hors dépendances : ils
         // sont réappliqués par l'effet suivant, sans relire le disque.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeCampaignId]);
+    }, [activeCampaignId, themeDuJeuVoulu]);
 
     // 2. Le thème d'atelier, l'accent ou les personnalités changent : on repeint, sans relire.
     useEffect(() => {

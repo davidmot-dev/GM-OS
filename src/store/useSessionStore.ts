@@ -24,6 +24,13 @@ interface SessionState {
      */
     personnalites: boolean;
     /**
+     * **Le jeu de la campagne ouverte a-t-il un thème ?** Posé par
+     * `useThemeDuJeu`, lu par la carte de la campagne pour n'offrir son
+     * interrupteur que s'il sert à quelque chose. Non persisté : c'est un
+     * constat du disque, pas un réglage.
+     */
+    themeDuJeuDisponible: boolean;
+    /**
      * **Le régime d'interface forcé à la main, ou `null` pour suivre la séance.**
      *
      * ⛔ Ce champ remplace `isSessionMode`, qui portait le commentaire « Mode MJ
@@ -53,6 +60,7 @@ interface SessionState {
     setTheme: (theme: ThemeID) => void;
     setThemeColor: (color: string) => void;
     setPersonnalites: (allumees: boolean) => void;
+    signalerLeThemeDuJeu: (disponible: boolean) => void;
     /** Force un régime d'interface, ou rend la main à la séance avec `null`. */
     forcerLeRegime: (regime: MomentDeJeu | null) => void;
     toggleAIPanel: (force?: boolean) => void;
@@ -76,6 +84,23 @@ interface SessionState {
  */
 export const THEME_PALETTES = PALETTES;
 
+/**
+ * **La migration des réglages enregistrés** — `persist` la joue une fois, quand
+ * la version lue est plus ancienne que `VERSION_DES_REGLAGES`.
+ *
+ * v1, 2026-09-29 — **David adopte les personnalités (T2.5)** et les veut
+ * allumées par défaut, chez lui compris. Un profil écrit depuis P1.7 porte
+ * `personnalites: false` : changer la valeur par défaut ne l'aurait pas touché.
+ * On l'allume donc **une fois** ; l'éteindre ensuite dans les Paramètres tient.
+ */
+export const VERSION_DES_REGLAGES = 1;
+
+export function migrerLesReglages(enregistre: unknown, version: number): unknown {
+    const etat = (enregistre ?? {}) as Record<string, unknown>;
+    if (version < 1) return { ...etat, personnalites: true };
+    return etat;
+}
+
 
 export const useSessionStore = create<SessionState>()(
     persist(
@@ -83,7 +108,8 @@ export const useSessionStore = create<SessionState>()(
             activeModule: 'dashboard',
             theme: 'cyberpunk',
             themeColor: accentDuTheme('cyberpunk'),
-            personnalites: false,
+            personnalites: true,
+            themeDuJeuDisponible: false,
             surchargeDuRegime: null,
             isAIPanelOpen: false,
             isMessengerOpen: false,
@@ -98,6 +124,7 @@ export const useSessionStore = create<SessionState>()(
             }),
             setThemeColor: (themeColor) => set({ themeColor }),
             setPersonnalites: (personnalites) => set({ personnalites }),
+            signalerLeThemeDuJeu: (themeDuJeuDisponible) => set({ themeDuJeuDisponible }),
             forcerLeRegime: (surchargeDuRegime) => set({ surchargeDuRegime }),
             toggleAIPanel: (force?: boolean) => set((state) => ({
                 isAIPanelOpen: force !== undefined ? force : !state.isAIPanelOpen
@@ -121,6 +148,8 @@ export const useSessionStore = create<SessionState>()(
         }),
         {
             name: 'gmos-session-storage',
+            version: VERSION_DES_REGLAGES,
+            migrate: (enregistre, version) => migrerLesReglages(enregistre, version) as SessionState,
             partialize: (state) => {
                 /*
                   `surchargeDuRegime` sort d'ici avec `isSystemReady` : **un
@@ -131,6 +160,7 @@ export const useSessionStore = create<SessionState>()(
                 const persistedState = { ...state } as Partial<SessionState>;
                 delete persistedState.isSystemReady;
                 delete persistedState.surchargeDuRegime;
+                delete persistedState.themeDuJeuDisponible;
                 return persistedState;
             }
         }

@@ -5449,8 +5449,8 @@ explicitement, jamais le défaut.
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
 ⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
-à P1.7 faits** (P1.7 à juger par David), et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
-soixantaine d'écrans retenus dans `stitch/`). **Reprendre au jugement de David sur P1.7** (T2.4) du
+à P1.7 faits**, **T2.5 tranché — David adopte les personnalités** (2026-09-29), et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
+soixantaine d'écrans retenus dans `stitch/`). **Reprendre à la phase 3** (grammaire d'écran, `<Panneau>`, éprouvés sur le lot L1) — voir le
 [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
@@ -5816,6 +5816,20 @@ v1.2.
   Le Clair seul est inchangé (captures comparées au pixel). ⚠️ **Reste, non traité** : un jeu
   **clair** (Star Trek) sous un thème de base **sombre** n'a aucun rattrapage — aucune campagne
   actuelle n'y joue.
+- ✅ **T2.5 — David adopte les personnalités (2026-09-29)**, et demande trois choses, faites le jour
+  même :
+  - **allumées par défaut**, chez lui compris : `personnalites: true` par défaut, et une migration
+    unique des réglages (`migrerLesReglages`, version 1) allume un profil enregistré éteint —
+    l'éteindre ensuite tient ;
+  - **un interrupteur du thème de jeu PAR CAMPAGNE** (`Campaign.themeDuJeu`, absent = appliqué) : un
+    bouton palette sur la carte de la campagne, **offert seulement si le jeu a un thème**
+    (`themeDuJeuDisponible`, constaté par `useThemeDuJeu`, qui cherche le thème même quand la
+    campagne n'en veut pas). Éprouvé sur les trois campagnes à thème ;
+  - **deux jeux de 20 références** (`ecransDeReference.spec.ts`) : « aujourd'hui » (les images
+    d'avant, inchangées) et « personnalités » (`*-personnalite-win32.png`, **à relire par David**).
+    Chaque série règle l'interrupteur elle-même — le défaut ayant changé, une série qui s'y fierait
+    surveillerait l'autre. ⚠️ Première écriture : deux références prises au mauvais moment (Cortex
+    IA ouvert sur le tableau de bord au lieu de Nexus Wiki) — réécrites, puis 40/40 deux fois.
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.
