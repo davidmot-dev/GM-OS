@@ -23,7 +23,7 @@ const LEVEL_ICONS: Record<LogLevel, React.ReactNode> = {
     info: <Info size={14} className="text-blue-400" />,
     warn: <AlertTriangle size={14} className="text-amber-400" />,
     error: <AlertCircle size={14} className="text-red-400" />,
-    debug: <Bug size={14} className="text-slate-400" />,
+    debug: <Bug size={14} className="text-app-muted" />,
 };
 
 const LEVEL_COLORS: Record<LogLevel, string> = {
@@ -40,7 +40,7 @@ const MODULE_COLORS: Record<string, string> = {
     MUSIC: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
     MAP: 'text-rose-400 border-rose-500/30 bg-rose-500/10',
     KEY: 'text-blue-400 border-blue-500/30 bg-blue-500/10',
-    SYSTEM: 'text-slate-400 border-slate-500/30 bg-slate-500/10',
+    SYSTEM: 'text-app-muted border-slate-500/30 bg-slate-500/10',
 };
 
 const DebugDashboard: React.FC = () => {
@@ -94,7 +94,7 @@ const DebugDashboard: React.FC = () => {
             <div className="p-4 border-b border-white/5 bg-slate-900/60 backdrop-blur-xl flex flex-col gap-3">
                 <div className="flex items-center justify-between gap-4">
                     <div className="relative flex-1 max-w-md">
-                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle" />
                         <input
                             type="text"
                             placeholder="Rechercher..."
@@ -110,7 +110,7 @@ const DebugDashboard: React.FC = () => {
                             className={`p-2 rounded-xl border transition-all flex items-center gap-2 text-ui-10 font-bold ${
                                 autoScroll 
                                 ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' 
-                                : 'bg-white/5 border-white/10 text-slate-500'
+                                : 'bg-white/5 border-white/10 text-app-subtle'
                             }`}
                             title="Auto-scroll"
                         >
@@ -122,21 +122,21 @@ const DebugDashboard: React.FC = () => {
 
                         <button
                             onClick={handleExport}
-                            className="p-2 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                            className="p-2 rounded-xl border border-white/10 bg-white/5 text-app-muted hover:text-white hover:bg-white/10 transition-all"
                             title="Exporter JSON"
                         >
                             <Download size={16} />
                         </button>
                         <button
                             onClick={handleCopyAll}
-                            className="p-2 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                            className="p-2 rounded-xl border border-white/10 bg-white/5 text-app-muted hover:text-white hover:bg-white/10 transition-all"
                             title="Copier tout"
                         >
                             <Copy size={16} />
                         </button>
                         <button
                             onClick={clearLogs}
-                            className="p-2 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                            className="p-2 rounded-xl border border-white/10 bg-white/5 text-app-muted hover:text-red-400 hover:bg-red-400/10 transition-all"
                             title="Effacer"
                         >
                             <Trash2 size={16} />
@@ -153,7 +153,7 @@ const DebugDashboard: React.FC = () => {
                                 className={`px-2.5 py-1 rounded-lg text-ui-9 font-black uppercase tracking-tighter transition-all ${
                                     levelFilter === level 
                                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-                                    : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                                    : 'text-app-subtle hover:text-slate-300 hover:bg-white/5'
                                 }`}
                             >
                                 {level}
@@ -168,7 +168,7 @@ const DebugDashboard: React.FC = () => {
                             className={`px-2 py-0.5 rounded-full border text-ui-9 font-bold transition-all whitespace-nowrap ${
                                 moduleFilter === 'all'
                                 ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-400'
-                                : 'bg-white/5 border-white/10 text-slate-500'
+                                : 'bg-white/5 border-white/10 text-app-subtle'
                             }`}
                         >
                             ALL MODULES
@@ -180,7 +180,7 @@ const DebugDashboard: React.FC = () => {
                                 className={`px-2 py-0.5 rounded-full border text-ui-9 font-bold transition-all whitespace-nowrap ${
                                     moduleFilter === mod
                                     ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-400'
-                                    : 'bg-white/5 border-white/10 text-slate-500'
+                                    : 'bg-white/5 border-white/10 text-app-subtle'
                                 }`}
                             >
                                 {mod}
@@ -231,7 +231,7 @@ const LogRow: React.FC<{
         fractionalSecondDigits: 3
     });
 
-    const moduleStyle = log.module ? (MODULE_COLORS[log.module] || 'text-slate-500 border-white/10 bg-white/5') : '';
+    const moduleStyle = log.module ? (MODULE_COLORS[log.module] || 'text-app-subtle border-white/10 bg-white/5') : '';
 
     return (
         <div className={`group border-l-2 transition-all ${LEVEL_COLORS[log.level]} ${isExpanded ? 'bg-white/5 border-white/40' : 'border-transparent hover:bg-white/5'}`}>
@@ -240,8 +240,8 @@ const LogRow: React.FC<{
                 onClick={onToggle}
             >
                 <div className="flex items-center gap-2 mt-0.5">
-                    {isExpanded ? <ChevronDown size={14} className="text-slate-500" /> : <ChevronRight size={14} className="text-slate-500" />}
-                    <span className="text-ui-10 font-mono text-slate-500 opacity-60 w-24">[{time}]</span>
+                    {isExpanded ? <ChevronDown size={14} className="text-app-subtle" /> : <ChevronRight size={14} className="text-app-subtle" />}
+                    <span className="text-ui-10 font-mono text-app-subtle opacity-60 w-24">[{time}]</span>
                 </div>
                 
                 <div className="flex items-center gap-3">
