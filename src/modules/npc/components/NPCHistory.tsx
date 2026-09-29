@@ -44,7 +44,7 @@ const NPCHistory: React.FC = () => {
     return (
         <div className="h-full flex flex-col">
             <div className="p-4 flex items-center justify-between border-b border-app-border bg-app-bg/30">
-                <span className="text-ui-10 uppercase font-bold text-slate-500 tracking-widest">{t('npc.history.title')}</span>
+                <span className="text-ui-10 uppercase font-bold text-app-subtle tracking-widest">{t('npc.history.title')}</span>
                 {/*
                     **Le massif était nu, et j'avais protégé le détail.**
 
@@ -91,12 +91,12 @@ const NPCHistory: React.FC = () => {
 
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                                <p className={`text-ui-11 font-bold truncate ${entity.isDead ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                                <p className={`text-ui-11 font-bold truncate ${entity.isDead ? 'text-app-subtle line-through' : 'text-slate-200'}`}>
                                     {entity.name}
                                 </p>
                                 {entity.isDead && <Skull size={10} className="text-rose-500 shrink-0" />}
                             </div>
-                            <p className="text-ui-8 text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
+                            <p className="text-ui-8 text-app-subtle uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
 
                         <HorsDePortee regime={regime} libelle={t('npc.history.delete_tooltip')} compact surInvitation icone={<Trash2 size={12} />}>
@@ -116,7 +116,7 @@ const NPCHistory: React.FC = () => {
                                         () => deleteFromMemo(entity.id),
                                     );
                                 }}
-                                className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-slate-500"
+                                className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-app-subtle"
                                 title={t('npc.history.delete_tooltip')}
                             >
                                 <Trash2 size={12} />

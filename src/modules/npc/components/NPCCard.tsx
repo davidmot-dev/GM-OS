@@ -57,7 +57,7 @@ const NPCCard: React.FC = () => {
 
     if (!currentEntity) {
         return (
-            <div className="text-center p-12 border-2 border-dashed border-app-border rounded-3xl text-slate-500 max-w-lg">
+            <div className="text-center p-12 border-2 border-dashed border-app-border rounded-3xl text-app-subtle max-w-lg">
                 <Share2 size={48} className="mx-auto mb-4 opacity-20" />
                 <p className="text-xl font-display uppercase tracking-widest italic">{t('npc.card.waiting_title')}</p>
                 <p className="text-sm mt-2 opacity-60">{t('npc.card.waiting_desc')}</p>
@@ -342,7 +342,7 @@ const NPCCard: React.FC = () => {
                         className={`p-2 rounded-lg border-2 transition-all flex items-center justify-center shadow-lg ${
                             currentEntity.isDead 
                             ? 'bg-rose-600 border-rose-400 text-white shadow-glow-rose scale-110' 
-                            : 'bg-app-surface/90 border-app-border text-slate-400 hover:text-rose-500 hover:border-rose-500/50 hover:bg-app-surface'
+                            : 'bg-app-surface/90 border-app-border text-app-muted hover:text-rose-500 hover:border-rose-500/50 hover:bg-app-surface'
                         }`}
                         title={currentEntity.isDead ? t('npc.card.revive') : t('npc.card.mark_dead')}
                     >
@@ -393,14 +393,14 @@ const NPCCard: React.FC = () => {
 
             {/* Content Area */}
             <div className="p-8 flex-1">
-                <h1 className={`text-4xl font-display font-black mb-6 tracking-tight border-b border-app-border pb-4 transition-colors ${currentEntity.isDead ? 'text-slate-500 line-through decoration-rose-600/50' : 'text-white'}`}>
+                <h1 className={`text-4xl font-display font-black mb-6 tracking-tight border-b border-app-border pb-4 transition-colors ${currentEntity.isDead ? 'text-app-subtle line-through decoration-rose-600/50' : 'text-white'}`}>
                     {currentEntity.name}
                 </h1>
 
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-4">
                     {Object.entries(currentEntity.fields).map(([key, value]) => (
                         <div key={key} className="flex flex-col">
-                            <span className="text-ui-10 uppercase font-bold text-slate-500 tracking-tighter">{key}</span>
+                            <span className="text-ui-10 uppercase font-bold text-app-subtle tracking-tighter">{key}</span>
                             <span className="text-slate-200 font-medium leading-tight">{value}</span>
                         </div>
                     ))}
@@ -423,28 +423,28 @@ const NPCCard: React.FC = () => {
                                 gmToast(t('npc.card.project_success', { name: currentEntity.name }));
                             }
                         }}
-                        className="p-2 bg-app-surface hover:bg-accent/20 text-slate-400 hover:text-accent transition-colors"
+                        className="p-2 bg-app-surface hover:bg-accent/20 text-app-muted hover:text-accent transition-colors"
                         title={t('npc.card.project')}
                     >
                         <Eye size={20} />
                     </button>
                     <button
                         onClick={handleAddToFavorite}
-                        className="p-2 bg-app-surface hover:bg-amber-500/20 rounded-lg text-slate-400 hover:text-amber-400 transition-colors"
+                        className="p-2 bg-app-surface hover:bg-amber-500/20 rounded-lg text-app-muted hover:text-amber-400 transition-colors"
                         title={t('npc.card.favorite_add')}
                     >
                         <Star size={20} />
                     </button>
                     <button
                         onClick={saveToMemo}
-                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-slate-400 hover:text-white transition-colors"
+                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-app-muted hover:text-white transition-colors"
                         title={t('npc.card.save_memo')}
                     >
                         <Save size={20} />
                     </button>
                     <button
                         onClick={handleAddToJournal}
-                        className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-slate-400 hover:text-white hover:bg-app-bg/50'}`}
+                        className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-app-muted hover:text-white hover:bg-app-bg/50'}`}
                         title={isSessionActive ? t('npc.card.wiki_export') : t('npc.card.wiki_export_hint')}
                     >
                         <FileText size={20} />
@@ -452,7 +452,7 @@ const NPCCard: React.FC = () => {
                     {(currentEntity.category === 'npcs' || currentEntity.category === 'places') && (
                         <button
                             onClick={handleSaveToGallery}
-                            className={`p-2 rounded-lg transition-all ${activeCampaignId ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30' : 'bg-app-surface text-slate-400 hover:text-white hover:bg-app-bg/50'}`}
+                            className={`p-2 rounded-lg transition-all ${activeCampaignId ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30' : 'bg-app-surface text-app-muted hover:text-white hover:bg-app-bg/50'}`}
                             title={activeCampaignId ? t('npc.card.gallery_export', { name: currentEntity.name }) : t('npc.card.gallery_error_session')}
                         >
                             <Database size={20} />
